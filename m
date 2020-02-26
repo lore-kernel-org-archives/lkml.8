@@ -2,143 +2,214 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFFAC4BA2D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42245C4BA24
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C9B120658
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18EFD20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:56:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BoAb9F5e"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="hN7MQL2e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbgBZWtq (ORCPT
+        id S1727967AbgBZW4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 17:49:46 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42021 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727857AbgBZWtp (ORCPT
+        Wed, 26 Feb 2020 17:56:05 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:38231 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727326AbgBZW4F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 17:49:45 -0500
-Received: by mail-pg1-f195.google.com with SMTP id h8so369769pgs.9
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 14:49:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=zrxYK5T4ryzAQ2/Coj4xWlYlr/YB5hTtCncd5uUc0tg=;
-        b=BoAb9F5e0xcUz/99univTBiDlbKMXwAMGASi71CgsY4GoUj7vPWfV8OCv9eQS5qo98
-         roRqj/8sbWDJNq8uFWg6paTRdw/Qf93w3hbv7lQckpl9Fr8DBSwKdUWsRt5x8nVvz66h
-         Kd6cFfvvC8u+EQh0vP0RB7rIXsQ473CE2lHok=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=zrxYK5T4ryzAQ2/Coj4xWlYlr/YB5hTtCncd5uUc0tg=;
-        b=rP0j7kdmbVDCUPa8kplaxIQPz3n0IeR/v4gKKgJ3o6WjaBSjAuRG13sRVL5DTnnUPt
-         rR7XWh48dr369ovvKAdsLe71SUs3N4F9nIJTZCt8o2j6c9b4j38f3nXCRFmwS3zO/LRu
-         S75tKNZaRhKgr/3iK5Qh/kVoexsSHHNqySr/pvwY/fkCRosjKHMRViqhUtVUZwKyMPB2
-         E78ERhnOFZkwBBS9gsfluNHt+7JrBMQFxrNcrzzCzWW2V+1RvAN3mENsauQGHK+fCr2d
-         RRIzktQ0SRhwn6LYu9SB5j/QUHCO1kn9EsVXRg4pEotXt4tWCNgNlnAvYj6JwGzYVc6V
-         JDTw==
-X-Gm-Message-State: APjAAAUGz6RG0seeq4ofeX2Jj5w3/YHAv4GVDjvRn5MsFF5qv2DaR5C2
-        gXK0IV2QKTaSlbwh6lo/h7FnQLsImdg=
-X-Google-Smtp-Source: APXvYqzWSwy1V4i2RZk6mQsWpopxq8C4OV64juHHo4XtneUSiu09Qomzsc0m6YYSZOzAGYVT+e38XQ==
-X-Received: by 2002:a63:8f5c:: with SMTP id r28mr1021763pgn.351.1582757384609;
-        Wed, 26 Feb 2020 14:49:44 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id k1sm2325744pgt.70.2020.02.26.14.49.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 14:49:44 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        Wed, 26 Feb 2020 17:56:05 -0500
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 313E023D1F;
+        Wed, 26 Feb 2020 23:56:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1582757762;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QFnQld1YiH3x+ajkB7e6XYXbnpe2ypKAY7GtqHCjuYs=;
+        b=hN7MQL2e09GMIp75aAe4eAFFGjlgIEhP9uFBmi7VsX9/9ofd8T5ehk+2unmrlkVI1QL1zQ
+        mBoglyV2GQ9OOvyI1l8MOmKkNgU8q/N6GN4Lrz6sFHSmrxTsWqkTekDBgF8QTGRVP2z45N
+        GereDqDozJ4jwn93DqB0K3PyZyXguNU=
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1582694833-9407-4-git-send-email-mkshah@codeaurora.org>
-References: <1582694833-9407-1-git-send-email-mkshah@codeaurora.org> <1582694833-9407-4-git-send-email-mkshah@codeaurora.org>
-Subject: Re: [PATCH v7 3/3] soc: qcom: rpmh: Invoke rpmh_flush for dirty caches
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, mka@chromium.org
-Date:   Wed, 26 Feb 2020 14:49:43 -0800
-Message-ID: <158275738312.177367.16582562675135073777@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Wed, 26 Feb 2020 23:56:02 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [RFC PATCH 1/2] net: phy: let the driver register its own IRQ
+ handler
+In-Reply-To: <60985489-a6e9-dc13-68af-765d98116eb8@gmail.com>
+References: <20200225230819.7325-1-michael@walle.cc>
+ <20200225230819.7325-2-michael@walle.cc>
+ <3c7e1064-845e-d193-24ad-965211bf1e9a@gmail.com>
+ <18f531a691d0c4905552794bbb1be1e5@walle.cc>
+ <60985489-a6e9-dc13-68af-765d98116eb8@gmail.com>
+Message-ID: <2e4371354d84231abf3a63deae1a0d04@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 313E023D1F
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[8];
+         NEURAL_HAM(-0.00)[-0.278];
+         FREEMAIL_TO(0.00)[gmail.com];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[vger.kernel.org,lunn.ch,gmail.com,armlinux.org.uk,davemloft.net];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Maulik Shah (2020-02-25 21:27:13)
-> Add changes to invoke rpmh flush when the data in cache is dirty.
->=20
-> This is done only if OSI is not supported in PSCI. If OSI is supported
-> rpmh_flush can get invoked when the last cpu going to power collapse
+Am 2020-02-26 22:17, schrieb Heiner Kallweit:
+> On 26.02.2020 12:12, Michael Walle wrote:
+>> Am 2020-02-26 08:27, schrieb Heiner Kallweit:
+>>> On 26.02.2020 00:08, Michael Walle wrote:
+>>>> There are more and more PHY drivers which has more than just the PHY
+>>>> link change interrupts. For example, temperature thresholds or PTP
+>>>> interrupts.
+>>>> 
+>>>> At the moment it is not possible to correctly handle interrupts for 
+>>>> PHYs
+>>>> which has a clear-on-read interrupt status register. It is also 
+>>>> likely
+>>>> that the current approach of the phylib isn't working for all PHYs 
+>>>> out
+>>>> there.
+>>>> 
+>>>> Therefore, this patch let the PHY driver register its own interrupt
+>>>> handler. To notify the phylib about a link change, the interrupt 
+>>>> handler
+>>>> has to call the new function phy_drv_interrupt().
+>>>> 
+>>> 
+>>> We have phy_driver callback handle_interrupt for custom interrupt
+>>> handlers. Any specific reason why you can't use it for your purposes?
+>> 
+>> Yes, as mentioned above this wont work for PHYs which has a 
+>> clear-on-read
+>> status register, because you may loose interrupts between 
+>> handle_interrupt()
+>> and phy_clear_interrupt().
+>> 
+>> See also
+>>  
+>> https://lore.kernel.org/netdev/bd47f8e1ebc04fa98856ed8d89b91419@walle.cc/
+>> 
+>> And esp. Russell reply. I tried using handle_interrupt() but it won't 
+>> work
+>> unless you make the ack_interrupt a NOOP. but even then it won't work 
+>> because
+>> the ack_interrupt is also used during setup etc.
+>> 
+> Right, now I remember .. So far we have only one user of the 
+> handle_interrupt
+> callback. Following a proposal from the quoted discussion, can you base 
+> your
+> patch on the following and check?
+> Note: Even though you implement handle_interrupt, you still have to 
+> implement
+> ack_interrupt too.
 
-Please write rpmh_flush() so we know it's a function and not a variable.
+I guess that should work, I can give that a try. But I'm also preparing 
+support
+for the BCM54140, a quad PHY. I guess we have the same problem with
+did_interrupt(). Eg. to tell if there actually was an interrupt from 
+that PHY
+you have to read the status register which clears the interrupt. So
+handle_interrupt() will left with no actual interrupt pending bits. I've 
+had a
+look at how the vsc8584 does it as it also uses did_interrupt() together 
+with
+handle_interrupt() and it looks like it only works because 
+handle_interrupt()
+doesn't actually read the pending bits again. Also I guess there is a 
+chance
+of missing interrupts between vsc8584_did_interrupt() and
+vsc85xx_ack_interrupt() which both clears interrupts. Although I'm not 
+sure
+if that matters for the current implementation.
 
-> deepest low power mode.
->=20
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> Reviewed-by: Srinivas Rao L <lsrao@codeaurora.org>
+-michael
+
+> 
+> 
 > ---
->  drivers/soc/qcom/rpmh.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->=20
-> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
-> index 83ba4e0..839af8d 100644
-> --- a/drivers/soc/qcom/rpmh.c
-> +++ b/drivers/soc/qcom/rpmh.c
-> @@ -12,6 +12,7 @@
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
-> +#include <linux/psci.h>
->  #include <linux/slab.h>
->  #include <linux/spinlock.h>
->  #include <linux/types.h>
-> @@ -163,6 +164,9 @@ static struct cache_req *cache_rpm_request(struct rpm=
-h_ctrlr *ctrlr,
->  unlock:
->         spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
-> =20
-> +       if (ctrlr->dirty && !psci_has_osi_support())
-
-Can we introduce a stub function for psci_has_osi_support() when
-CONFIG_ARM_PSCI_FW=3Dn? This driver currently has:
-
-  config QCOM_RPMH
-        bool "Qualcomm RPM-Hardened (RPMH) Communication"
-	depends on ARCH_QCOM && ARM64 || COMPILE_TEST
-
-
-which implies that this will break build testing once built on something
-that isn't arm64.
-
-
-> +               return rpmh_flush(ctrlr) ? ERR_PTR(-EINVAL) : req;
+>  drivers/net/phy/mscc.c | 3 ++-
+>  drivers/net/phy/phy.c  | 4 ++--
+>  include/linux/phy.h    | 4 +++-
+>  3 files changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
+> index 937ac7da2..20b9d3ef5 100644
+> --- a/drivers/net/phy/mscc.c
+> +++ b/drivers/net/phy/mscc.c
+> @@ -2868,7 +2868,8 @@ static int vsc8584_handle_interrupt(struct
+> phy_device *phydev)
+>  #endif
+> 
+>  	phy_mac_interrupt(phydev);
+> -	return 0;
 > +
->         return req;
+> +	return vsc85xx_ack_interrupt(phydev);
 >  }
-> =20
-> @@ -391,6 +395,8 @@ int rpmh_write_batch(const struct device *dev, enum r=
-pmh_state state,
-> =20
->         if (state !=3D RPMH_ACTIVE_ONLY_STATE) {
->                 cache_batch(ctrlr, req);
-> +               if (!psci_has_osi_support())
-> +                       return rpmh_flush(ctrlr);
-
-While the diff is small it is also sad that we turn around after adding
-it to a list and immediately take it off the list and send it. Can't we
-do this without having to do the list add/remove dance?
-
->                 return 0;
->         }
->
+> 
+>  static int vsc85xx_config_init(struct phy_device *phydev)
+> diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
+> index d76e038cf..de52f0e82 100644
+> --- a/drivers/net/phy/phy.c
+> +++ b/drivers/net/phy/phy.c
+> @@ -725,10 +725,10 @@ static irqreturn_t phy_interrupt(int irq, void 
+> *phy_dat)
+>  	} else {
+>  		/* reschedule state queue work to run as soon as possible */
+>  		phy_trigger_machine(phydev);
+> +		if (phy_clear_interrupt(phydev))
+> +			goto phy_err;
+>  	}
+> 
+> -	if (phy_clear_interrupt(phydev))
+> -		goto phy_err;
+>  	return IRQ_HANDLED;
+> 
+>  phy_err:
+> diff --git a/include/linux/phy.h b/include/linux/phy.h
+> index 80f8b2158..9e2895ee4 100644
+> --- a/include/linux/phy.h
+> +++ b/include/linux/phy.h
+> @@ -560,7 +560,9 @@ struct phy_driver {
+>  	 */
+>  	int (*did_interrupt)(struct phy_device *phydev);
+> 
+> -	/* Override default interrupt handling */
+> +	/* Override default interrupt handling. Handler has to ensure
+> +	 * that interrupt is ack'ed.
+> +	 */
+>  	int (*handle_interrupt)(struct phy_device *phydev);
+> 
+>  	/* Clears up any memory if needed */
