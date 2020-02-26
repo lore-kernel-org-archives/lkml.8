@@ -2,86 +2,163 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6991AC4BA2D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35CD1C4BA32
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 336F820658
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B13420658
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:25:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582759555;
+	bh=B+YnP0ht2MdSiz9kP73cb0eqPBYs4iIQUvvHhmQ6PYI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=lMZsSAY5wTqto+eepcZrT1HcgX9P9tU6Pja3D3c9+AK9szOCmV5+y+3IW9TXpBkrM
+	 1i2Jv/Kgu5xpK0nuFIVx7PMmRStivn3oQI7d8i9FvJZUVRlKIrZGcro405jCcI4dn5
+	 WMkKnWXduTygr+QCx8bbARUMoa3QJotsbwceUOUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbgBZXZH (ORCPT
+        id S1727989AbgBZXZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 18:25:07 -0500
-Received: from smtprelay0094.hostedemail.com ([216.40.44.94]:59350 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727910AbgBZXZG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 18:25:06 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id EFA36100E7B43;
-        Wed, 26 Feb 2020 23:25:04 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: error50_4912417d1f308
-X-Filterd-Recvd-Size: 2340
-Received: from XPS-9350 (47-209-22-207.mmlkcmtc01.res.dyn.suddenlink.net [47.209.22.207])
-        (Authenticated sender: joe@perches.com)
-        by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 26 Feb 2020 23:25:01 +0000 (UTC)
-Message-ID: <8b9eaca3ab7b05db8b5562284484a24d44bf6cce.camel@perches.com>
-Subject: Re: [PATCH] Documentation/llvm: add documentation on building w/
- Clang/LLVM
-From:   Joe Perches <joe@perches.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Date:   Wed, 26 Feb 2020 15:23:31 -0800
-In-Reply-To: <CAKwvOdmSix2hgDGsvcAzVD9L5XmM8tPDMyrdXmZjcvGXu_TMSQ@mail.gmail.com>
-References: <20200224174129.2664-1-ndesaulniers@google.com>
-         <202002242003.870E5F80@keescook>
-         <20200225041643.GA17425@ubuntu-m2-xlarge-x86>
-         <CAKwvOdn0_EETGtBVhbRKMPqv2K04Z1N4PuOZDZ6++Ejbi9-B-w@mail.gmail.com>
-         <202002251353.25A016CD@keescook>
-         <3b7b2b366220c9ba39ebc241ba22c0304f0d61b0.camel@perches.com>
-         <CAKwvOdmSix2hgDGsvcAzVD9L5XmM8tPDMyrdXmZjcvGXu_TMSQ@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Wed, 26 Feb 2020 18:25:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53898 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727910AbgBZXZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 18:25:53 -0500
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B20E20658;
+        Wed, 26 Feb 2020 23:25:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582759552;
+        bh=B+YnP0ht2MdSiz9kP73cb0eqPBYs4iIQUvvHhmQ6PYI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=2LLu6Q1haUBXAnpuUik1DxJptPj6NnQIqGRuxyVxJOgn89kTsfgNsp2/odBBdl9S4
+         lNcdhRTZxLrXNkoVcdursDSSIvTLCPuaki6yLV8Cb1/zXQSSij06us6VlnytOQioi9
+         VIIx4L4OIthJN8Css6/CMeK3lE3klewZ421wLZqI=
+Date:   Wed, 26 Feb 2020 17:25:50 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Fawad Lateef <fawadlateef@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org
+Subject: Re: Help needed in understanding weird PCIe issue on imx6q (PCIe
+ just goes bad)
+Message-ID: <20200226232550.GA191068@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGgoGu5u7WZUUaoVYvVWS5nuNZz25PgR=uHkqvzXV5xFOC7KuA@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-02-26 at 15:18 -0800, Nick Desaulniers wrote:
-> On Tue, Feb 25, 2020 at 2:21 PM Joe Perches <joe@perches.com> wrote:
-> > On Tue, 2020-02-25 at 13:56 -0800, Kees Cook wrote:
-> > > I think we should take a specific version stand as the
-> > > "minimum" version. Being able to build x86 defconfig is a good minimum
-> > > IMO.
-> > 
-> > Agree.
-> > 
-> > It's odd to say that clang 4 is fine for arm when it's
-> > not fine for x86.  It's also reasonable to expect arm
-> > users to upgrade their compiler to a more recent version
-> > when the only cost is a very small bit of time.
+On Sat, Feb 22, 2020 at 04:25:41PM +0100, Fawad Lateef wrote:
+> Hello,
 > 
-> That's a very x86 centric point of view.
+> I am trying to figure-out an issue on our i.MX6Q platform based design
+> where PCIe interface goes bad.
+> 
+> We have a Phytec i.MX6Q eMMC SOM, attached to our custom designed
+> board. PCIe root-complex from i.MX6Q is attached to PLX switch
+> (PEX8605).
+> 
+> Linux kernel version is 4.19.9x and also 4.14.134 (from phytec's
+> linux-mainline repo). Kernel do not have PCIe hot-plug and PNP enabled
+> in config.
+> 
+> PLX switch #PERST is attached to a GPIO pin and stays in disable state
+> until Linux is booted. So at boot time only PCIe root-complex is
+> initialized by kernel.
+> 
+> After boot if I do "lspci -v"  and see everything good from PCIe
+> root-complex (below):
+> 
+> ~ # lspci -v
+> 00:00.0 PCI bridge: Synopsys, Inc. Device abcd (rev 01) (prog-if 00
+> [Normal decode])
+> Flags: bus master, fast devsel, latency 0, IRQ 295
+> Memory at 01000000 (32-bit, non-prefetchable) [size=1M]
+> Bus: primary=00, secondary=01, subordinate=ff, sec-latency=0
+> I/O behind bridge: None
+> Memory behind bridge: None
+> Prefetchable memory behind bridge: None
+> [virtual] Expansion ROM at 01100000 [disabled] [size=64K]
+> Capabilities: [40] Power Management version 3
+> Capabilities: [50] MSI: Enable+ Count=1/1 Maskable+ 64bit+
+> Capabilities: [70] Express Root Port (Slot-), MSI 00
+> Capabilities: [100] Advanced Error Reporting
+> Capabilities: [140] Virtual Channel
+> Kernel driver in use: pcieport
+> 
+> 
+> Then I enable the #PERST pin of PLX switch, everything is still good
+> (no rescan on Linux is done yet)
+> 
+> ~ # echo 139 > /sys/class/gpio/export
+> ~ # echo out > /sys/class/gpio/gpio139/direction
+> ~ # echo 1 > /sys/class/gpio/gpio139/value
+> ~ # lspci -v
+> 00:00.0 PCI bridge: Synopsys, Inc. Device abcd (rev 01) (prog-if 00
+> [Normal decode])
+> Flags: bus master, fast devsel, latency 0, IRQ 295
+> Memory at 01000000 (32-bit, non-prefetchable) [size=1M]
+> Bus: primary=00, secondary=01, subordinate=ff, sec-latency=0
+> I/O behind bridge: None
+> Memory behind bridge: None
+> Prefetchable memory behind bridge: None
+> [virtual] Expansion ROM at 01100000 [disabled] [size=64K]
+> Capabilities: [40] Power Management version 3
+> Capabilities: [50] MSI: Enable+ Count=1/1 Maskable+ 64bit+
+> Capabilities: [70] Express Root Port (Slot-), MSI 00
+> Capabilities: [100] Advanced Error Reporting
+> Capabilities: [140] Virtual Channel
+> Kernel driver in use: pcieport
+> 
+> 
+> Now just disable/put-in-reset the PLX switch (Linux don't see the
+> switch yet, as no rescan on PCIe was done). Now "lspci -v" and
+> root-complex goes bad.
+> 
+> ~ # echo 0 > /sys/class/gpio/gpio139/value
+> ~ # lspci -v
+> 00:00.0 PCI bridge: Synopsys, Inc. Device abcd (rev 01) (prog-if 00
+> [Normal decode])
+> Flags: fast devsel, IRQ 295
+> Memory at 01000000 (64-bit, prefetchable) [disabled] [size=1M]
+> Bus: primary=00, secondary=00, subordinate=00, sec-latency=0
+> I/O behind bridge: 00000000-00000fff [size=4K]
+> Memory behind bridge: 00000000-000fffff [size=1M]
+> Prefetchable memory behind bridge: 00000000-000fffff [size=1M]
+> [virtual] Expansion ROM at 01100000 [disabled] [size=64K]
+> Capabilities: [40] Power Management version 3
+> Capabilities: [50] MSI: Enable- Count=1/1 Maskable+ 64bit+
+> Capabilities: [70] Express Root Port (Slot-), MSI 00
+> Capabilities: [100] Advanced Error Reporting
+> Capabilities: [140] Virtual Channel
+> Kernel driver in use: pcieport
+> 
+> ~ # uname -a
+> Linux buildroot-2019.08-imx6 4.14.134-phy2 #1 SMP Thu Feb 20 12:13:33
+> UTC 2020 armv7l GNU/Linux
+> ~ #
+> 
+> 
+> I am really not sure what is going wrong here. Did I am missing
+> something basic?
 
-Really?
+I agree, it looks like something's wrong, but I really don't have any
+ideas.
 
-How many code generation improvements and possible defects
-have been corrected between clang 4 and clang 10 for arm?
+I would start by using "lspci -xxxx" to see the actual values we get
+from config space.  It looks like we're reading zeros from at least
+the bus and window registers.
 
-I presume more than a few.
+You could also instrument the i.MX config accessors in case there's
+something strange going on there.  Maybe try to reproduce this on a
+current upstream kernel?
 
+Bjorn
