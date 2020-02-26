@@ -2,131 +2,73 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDF7C4BA06
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D3EC4BA09
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3062021927
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:59:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O+TIDjLe"
+	by mail.kernel.org (Postfix) with ESMTP id AE4E122464
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:00:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582678807;
+	bh=T4YrZ3QSyXAzpcDB+QtRd+ZBTLb9XELepdyL9uU+9Mk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XORE9JtIL/XiZ2IDQhDo2jScF4bJXri4qEQ6/KQMRv1w1Z4Jkch1U72ssCSs2RMKi
+	 IqUnT739r8NNQ+gk+ZGRHjqN/fAqjgJRi/i+TIyUFGhUExZvRf+L+rIX1pXCi1B6Zu
+	 ohvE+3bpC+BdNSAqZyLHQtuO03jbhw29alKZsAx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729765AbgBZA7Q (ORCPT
+        id S1729707AbgBZBAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 19:59:16 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:34000 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729277AbgBZA7Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 19:59:16 -0500
-Received: by mail-ed1-f66.google.com with SMTP id dm3so820616edb.1;
-        Tue, 25 Feb 2020 16:59:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=41dIRKzCHut5g8ULikn2zx6erU7p8Xh0VLc4jTiVCc4=;
-        b=O+TIDjLetEnT2gz+kRGSEfKzJ3gZm54fhVuuw2o9NH/TCdmpc530coe/gSUyy6JkVV
-         hp4I4Tt0D4oO6Jq7z3rPlT5qjP0pC2eAqX3fHvscjkk/rSoLXphauA4TQi5N8rUG2RJn
-         H9cMp9gTpeGK3EGLpkW15/eCBTfdTp+f7sNiP/2mCMQLmxywtMHas0sD8mQYeCOVCpLg
-         MykJsWuqmKNLL23XnKMoLa7+H92C1e7lF0KmHN9ZRr+9Seofo3+cczjalXrRV5jUQLc0
-         JQtvE6GOsgSni/HKHXgosx1LXU72/dYi2ptrteciLbu787zgnCQVsatna7aUZhM5ZPcA
-         njZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=41dIRKzCHut5g8ULikn2zx6erU7p8Xh0VLc4jTiVCc4=;
-        b=BuY4zHWvon4vi0UNgpiJr0cZxdXfPauXkVEgoMa9qiGOTvVJzHIHuRqtMIIfp7HEED
-         Eq6EvdbkHoOyvDzjiEcYDOhzkbwiGTQDLpKtDYuPYi96v5aYc7vwtp5aAvLkC9evBJkp
-         cktWY5gBnWGzoGGHBiue21IBUI9LHuBGm9OLdD8UY/W4wdBDXqnPN/0Qon3EcYaJfej8
-         zfB/phWEhTE06+1oQEOBLqWZ/N2ZHPXmEHSC50dtUxazdnXUXmebKlO7JYQfIZ6jWi00
-         9KKUYocZ3Tigj3oJV1j9Zn8EDH9VUE/XiyXMQbBZzVCFyp/bPM80LbeURCoB3Wq+CFOD
-         o6xQ==
-X-Gm-Message-State: APjAAAUDZwi0W3VZx55S54wWfuHTceBXyc5/swefT/rFUT0l4XpRyn2g
-        dlwvprQ5+d8QCLtEGnat6f9CKe9hoe6/PdpNeto=
-X-Google-Smtp-Source: APXvYqy+o+spYlkpd4xZ2v0xZdO4bB5nJGwJneHFcbDWmY6rMi3XrscjFYSA8O3XYDcxOfzTeyUYrAaPUgr+F/SUKz4=
-X-Received: by 2002:a17:906:5f89:: with SMTP id a9mr1635153eju.267.1582678754601;
- Tue, 25 Feb 2020 16:59:14 -0800 (PST)
+        Tue, 25 Feb 2020 20:00:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34652 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729277AbgBZBAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 20:00:06 -0500
+Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 532E021927;
+        Wed, 26 Feb 2020 01:00:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582678805;
+        bh=T4YrZ3QSyXAzpcDB+QtRd+ZBTLb9XELepdyL9uU+9Mk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WUnYLk31blOWf5bl+CIzwywqpBcuU3EJgSoA2fk2+PHNPm0MtkhkRUm0hTzpI/tje
+         tBQGoGY1/XAb599DpMWrDq6+s52Si48xIk1NTR4IuNjGs7TzbG/6Z4evAHiKO1WMiW
+         0LgfE4Aq273j5CGtWWSKhvW7Odzaw2KfFoA5MVQg=
+Date:   Wed, 26 Feb 2020 02:00:03 +0100
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org
+Subject: Re: [patch 01/10] x86/entry/32: Add missing ASM_CLAC to
+ general_protection entry
+Message-ID: <20200226010002.GF9599@lenoir>
+References: <20200225213636.689276920@linutronix.de>
+ <20200225220216.219537887@linutronix.de>
 MIME-Version: 1.0
-References: <1582223216-23459-1-git-send-email-jcrouse@codeaurora.org>
- <1582223216-23459-5-git-send-email-jcrouse@codeaurora.org> <CALAqxLWc4QQPyh=R6=0uFnLLicTYJ3NMO6QSc_yF31bJ2Z_rkQ@mail.gmail.com>
-In-Reply-To: <CALAqxLWc4QQPyh=R6=0uFnLLicTYJ3NMO6QSc_yF31bJ2Z_rkQ@mail.gmail.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 25 Feb 2020 16:59:02 -0800
-Message-ID: <CAF6AEGtYvjgoYxsxyu2-juuTsp9mBJUdRRUWAT3doLtpju4UmQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] drm/msm/a6xx: Use the DMA API for GMU memory objects
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Jordan Crouse <jcrouse@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Sean Paul <sean@poorly.run>,
-        Stephen Boyd <swboyd@chromium.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Daniel Vetter <daniel@ffwll.ch>, Todd Kjos <tkjos@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200225220216.219537887@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 3:54 PM John Stultz <john.stultz@linaro.org> wrote:
->
-> On Thu, Feb 20, 2020 at 10:27 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
-> >
-> > The GMU has very few memory allocations and uses a flat memory space so
-> > there is no good reason to go out of our way to bypass the DMA APIs which
-> > were basically designed for this exact scenario.
-> >
-> > v2: Pass force_dma false to of_dma_configure to require that the DMA
-> > region be set up and return error from of_dma_configure to fail probe.
-> >
-> > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> > ---
-> >
-> >  drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 112 +++-------------------------------
-> >  drivers/gpu/drm/msm/adreno/a6xx_gmu.h |   5 +-
-> >  2 files changed, 11 insertions(+), 106 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> > index 983afea..c36b38b 100644
-> > --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> > +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> ...
-> > -       count = bo->size >> PAGE_SHIFT;
-> > +       bo->virt = dma_alloc_attrs(gmu->dev, bo->size, &bo->iova, GFP_KERNEL,
-> > +               bo->attrs);
-> >
-> ...
-> > diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-> > index 2af91ed..31bd1987 100644
-> > --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-> > +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-> > @@ -13,7 +13,7 @@ struct a6xx_gmu_bo {
-> >         void *virt;
-> >         size_t size;
-> >         u64 iova;
-> > -       struct page **pages;
-> > +       unsigned long attrs;
-> >  };
->
-> As a head up, Todd reported that this patch is causing build trouble
-> w/ arm32, as the iova needs to be a dma_attr_t.
->
-> I've got a patch for the android-mainline tree to fix this, but you
-> might want to spin a v3 to address this.
->   https://android-review.googlesource.com/c/kernel/common/+/1243928
->
+On Tue, Feb 25, 2020 at 10:36:37PM +0100, Thomas Gleixner wrote:
+> All exception entry points must have ASM_CLAC right at the
+> beginning. The general_protection entry is missing one.
+> 
+> Fixes: e59d1b0a2419 ("x86-32, smap: Add STAC/CLAC instructions to 32-bit kernel entry")
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: stable@vger.kernel.org
 
-I guess based on robher's comments on the bindings, there will be a v3..
-
-BR,
--R
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
