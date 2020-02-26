@@ -2,104 +2,108 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D85AFC4BA21
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B72BC4BA21
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9B3D20732
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEE6920732
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 19:27:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JvaV8Kgi"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="mZNw0wYx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbgBZT0Q (ORCPT
+        id S1727296AbgBZT1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 14:26:16 -0500
-Received: from mail-pf1-f169.google.com ([209.85.210.169]:43480 "EHLO
-        mail-pf1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727035AbgBZT0Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 14:26:16 -0500
-Received: by mail-pf1-f169.google.com with SMTP id s1so258077pfh.10
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 11:26:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5DzNmsGKabIiqxsuQFEwzfHh7R7C4KklYepK1ybNRcI=;
-        b=JvaV8KgiqzoZBj6ydSQ9wuuSPmKsMcZlCBzIlL19/gYR0rinDPmvgQGXcIqtx1mDHc
-         vFuipNjmbQwwkwM7sTSAyvGWM+yoKuDdXDhC8yd7Aj+gtgkk17kno5FXqnhPg+UUAUxE
-         YbX/zPf26fsBftBmqKkM8PPSvOOCQ6ddOIvcLMPCHd5arVBaO/tFElf6CiY4LJ+cnWMw
-         xrd1hh8jCWfIFRgiGphyi3upMeyTQfi3R7ZI4EWrWm0sDRAeWvkN7BD8jNMs1xNchCMO
-         x0e0Y4TJYgMBYN6HA1qU1rDALtp0tPX+HlIQUUXZCFxzVEUJiyDhz2mVNfPsIWkhMNtU
-         gK5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5DzNmsGKabIiqxsuQFEwzfHh7R7C4KklYepK1ybNRcI=;
-        b=kIwdT9AAeph9soO0pYbrtsoLCmeUhZ+x+a81VymQGbT96XZq3UiWBIOFTJCm88vfcz
-         16RqnKsSRobfuZWrqI1JcJrwn47j3Toz9wOk2AlB9F7W5eHK7eDaQS23CFqeFu5zB8DC
-         DcnF3ZTjsl4KdOiLNyr8ASlwrFgPNMEQX+4F9o3N2k0YCOF7LoAnJkEXR9BbB3ygn2Ev
-         otHk3gswbeHpt/KYVXMMOL6RqHzHk90ECNwsE2AsjTC7bZtbggQDagEoWxaKYfu4kEdr
-         vDPzWAXRNll5ePxkUxZ56ZV1j7cPtHABENUhGA8Xh3LEd/pv3HhmvG7VxKXriSIKWzpz
-         kLPQ==
-X-Gm-Message-State: APjAAAUY5ChvxJcnA0e3A/DkO3crSdkpRyM5e7eRUXhmFRfDg5SSld76
-        8V5l3zEYYCtXn/ciwiWOqnBx5ulIiSvjaVWGra6RLw==
-X-Google-Smtp-Source: APXvYqzCv4FxJcU96d7Vawq5DT3fARMj+obiX5wNUed9wf7xv+ae1CrV4f6IlV+FQmKVwCj9r2U464S4CiH/TgtxTyE=
-X-Received: by 2002:a63:4e22:: with SMTP id c34mr356104pgb.263.1582745173398;
- Wed, 26 Feb 2020 11:26:13 -0800 (PST)
+        Wed, 26 Feb 2020 14:27:35 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:51790 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727035AbgBZT1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 14:27:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
+        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=0GMgWUbqUzIsyE6UgLwb/MaJmJqh4t9npOvnI6kW9zM=; b=mZNw0wYxd0Cqx7/VZU5/nVtul
+        EDFoAbXlz8d0Lgyhahw4MO/o1l6itibTjxWk9T6kCGcI+gSDBDyCwXBhdC8ISWhC5IhOokeeY5Oz6
+        G/qJ0kcOL4IYqCYRwJCwgG4G4ohPYu58OrSZU5tmruwuxLP1OWpI7trKviEZ/e6aTthek=;
+Received: from p200300ccff0a4d00e2cec3fffe93fc31.dip0.t-ipconnect.de ([2003:cc:ff0a:4d00:e2ce:c3ff:fe93:fc31] helo=eeepc)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1j72LA-00081x-Ag; Wed, 26 Feb 2020 20:27:28 +0100
+Received: from localhost ([::1])
+        by localhost with esmtp (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1j72L9-0001iu-Jj; Wed, 26 Feb 2020 20:27:27 +0100
+Date:   Wed, 26 Feb 2020 20:27:19 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        lee.jones@linaro.org, b.galvani@gmail.com,
+        linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, phh@phh.me, stefan@agner.ch,
+        letux-kernel@openphoenux.org, jic23@kernel.org
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v5 2/2] iio: adc: rn5t618: Add ADC driver for
+ RN5T618/RC5T619
+Message-ID: <20200226202719.46ce9600@kemnade.info>
+In-Reply-To: <20200223131638.12130-3-andreas@kemnade.info>
+References: <20200223131638.12130-1-andreas@kemnade.info>
+        <20200223131638.12130-3-andreas@kemnade.info>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200222072144.asqaxlv364s6ezbv@google.com> <20200222074254.GB11284@zn.tnic>
- <20200222162225.GA3326744@rani.riverdale.lan> <CAKwvOdnvMS21s9gLp5nUpDAOu=c7-iWYuKTeFUq+PMhsJOKUgw@mail.gmail.com>
- <202002242122.AA4D1B8@keescook> <20200225182951.GA1179890@rani.riverdale.lan>
- <202002251140.4F28F0A4F@keescook> <CAKwvOdnkr1W4LTm8XmTKGkSDUhSBRowLbKwJwyitDMAGLh9ywg@mail.gmail.com>
- <202002251358.EDA50C11F@keescook> <20200226015606.ij7wn7emuj4bfkvn@google.com>
- <202002252103.B4BBF01091@keescook> <16822a0460e37e7a388217c63da8882d2904d8fc.camel@linux.intel.com>
-In-Reply-To: <16822a0460e37e7a388217c63da8882d2904d8fc.camel@linux.intel.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 26 Feb 2020 11:26:02 -0800
-Message-ID: <CAKwvOdm1qoKdq=Cp3nrYPR6oXkGZ32Hmh2TPVgatKAvDHk7q4g@mail.gmail.com>
-Subject: Re: --orphan-handling=warn
-To:     Kristen Carlson Accardi <kristen@linux.intel.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Fangrui Song <maskray@google.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@alien8.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Michael Matz <matz@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/EmIe0/b1v4/JZB0O9CA8Hso"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 11:11 AM Kristen Carlson Accardi
-<kristen@linux.intel.com> wrote:
->
-> On Tue, 2020-02-25 at 21:35 -0800, Kees Cook wrote:
-> >
-> > Thanks for looking into this! It'll be really nice to have the orphan
-> > section warnings working in the kernel. And getting the ground work
-> > for
-> > FGKASLR ready will be nice!
-> >
-> > Kristen, can I convince you that FG stands for function-granular
-> > instead of fine-grain? :)
-> >
->
-> Yes, sounds good to me - that way if we ever do basic block reordering
-> or some crazy thing like that we don't have to say even-finer-fine-
-> grained KASLR :).
+--Sig_/EmIe0/b1v4/JZB0O9CA8Hso
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-LOL (I laugh now, but "never say never.")
--- 
-Thanks,
-~Nick Desaulniers
+Hi,
+
+On Sun, 23 Feb 2020 14:16:38 +0100
+Andreas Kemnade <andreas@kemnade.info> wrote:
+
+
+> +	if (rn5t618->irq_data)
+> +		adc->irq =3D regmap_irq_get_virq(rn5t618->irq_data,
+> +					       RN5T618_IRQ_ADC);
+> +
+RN5T618_IRQ_ADC is defined in the RTC patchset mentioned as dependency,
+which adds IRQ support and I am asked to rebase it on top of plain mainline.
+Does that mean that the kernel git source does not need to be bisectable
+anymore?
+
+
+Regards,
+Andreas
+
+--Sig_/EmIe0/b1v4/JZB0O9CA8Hso
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl5WxpcACgkQl4jFM1s/
+ye+72BAAtngnAhkbZ3h2LxZObD2b5dEtNpqJf/t+DgVyTkAqIjPg0wl9gs8sErW7
+9tuqCkUsrGgp2CYh1bYIep2EPJR39LMu2eCin9+B4x2Kx2zB2uMV2CVKmqZlDo63
+8zu07unuMCv1f37MojobdmiEOmMexLKM7ol5NmA/oNkB9LfG80seNZpDRQv+oOQu
+ESvMWbNoWUvGuXiejpTRDGnmHZzKKUb87JV4+ki/dKCaVA4uMswLWQ0m9ipDLJxV
+uVrs+DvjOWbQYBDpqLoEyxre7c0Ln5R6lOYk0DoYqihIMamvgLqJJ71UMHIqKnl5
+CPmVcwoYm1YG6kCU47EwuRtAg9qwFKN9+Ch5ApEgvQnBjrjZWKkk9lTsdBmAOkWQ
+j3cDnA/4UbJ10X7J8U5JPaZXQkgR7/dXLlzXqojIatRza1LTIIGTCcOw/IL2ic12
+nunrbYMC9cIL+k/u+e/NSCMmUWGE8lGeoUioxUikNCzPUkW/y73UWFUVeWhn8SX8
+tuoXhEvUWI1gpn2OC9sRFWqEkOFDeWYGbVhtJxW9lOFrspyq3TQ+/bYlxmpClWcf
+82Zg4zKFAIVOiCNKmxlgPYt+cgTrpegdV/9ZJWdhLUo+AnYHs6F5ZUu83LqCq4td
+F3SvugDza3cOydyP7YSN8Czebmg1e5/hRCrpPMyfJBaG3u7kJ1c=
+=Erno
+-----END PGP SIGNATURE-----
+
+--Sig_/EmIe0/b1v4/JZB0O9CA8Hso--
