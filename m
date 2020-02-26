@@ -2,122 +2,76 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E29C4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39309C4BA10
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D60E20637
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B5B920637
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:27:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbgBZL1c (ORCPT
+        id S1728224AbgBZL1s convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 06:27:32 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51314 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727974AbgBZL1c (ORCPT
+        Wed, 26 Feb 2020 06:27:48 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:32887 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727974AbgBZL1s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 06:27:32 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id C1302293937
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Collabora Kernel ML <kernel@collabora.com>,
-        linux-arm-kernel@lists.infradead.org, CK Hu <ck.hu@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        dri-devel@lists.freedesktop.org,
-        linux-mediatek@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH] drm/mediatek: Remove debug messages for function calls
-Date:   Wed, 26 Feb 2020 12:27:23 +0100
-Message-Id: <20200226112723.649954-1-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.25.0
+        Wed, 26 Feb 2020 06:27:48 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-221-jmmFPVgaPpuJ4wTdSCkJng-1; Wed, 26 Feb 2020 11:27:44 +0000
+X-MC-Unique: jmmFPVgaPpuJ4wTdSCkJng-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 26 Feb 2020 11:27:44 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 26 Feb 2020 11:27:44 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Tycho Andersen' <tycho@tycho.ws>, Jonathan Corbet <corbet@lwn.net>
+CC:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] doc: fix filesystems/porting.rst whitespace
+Thread-Topic: [PATCH] doc: fix filesystems/porting.rst whitespace
+Thread-Index: AQHV6/0CVU3EL3UBYk6CPBpDNZlfS6gtVxNA
+Date:   Wed, 26 Feb 2020 11:27:43 +0000
+Message-ID: <4635ca9f17344643816994dc267cc25d@AcuMS.aculab.com>
+References: <20200220214009.11645-1-tycho@tycho.ws>
+ <20200225032028.2bda9de8@lwn.net> <20200225165954.GA11763@cisco>
+In-Reply-To: <20200225165954.GA11763@cisco>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Equivalent information can be nowadays obtained using function tracer.
+> It's actually the default vim syntax highlighter that gets confused in
+> my case,
+> 
+> VIM - Vi IMproved 8.1 (2018 May 18, compiled Sep 05 2019 11:15:15)
+> Included patches: 1-875, 878, 884, 948, 1046, 1365-1368, 1382, 1401
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
+Yep, syntax highlighting doesn't stand a chance of getting it right.
+Just makes it look as though someone has vomited on the screen.
 
- drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 5 -----
- drivers/gpu/drm/mediatek/mtk_drm_drv.c  | 2 --
- 2 files changed, 7 deletions(-)
+Best to turn it off.
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-index a236499123aa..882c690d3f13 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-@@ -192,7 +192,6 @@ static int mtk_crtc_ddp_clk_enable(struct mtk_drm_crtc *mtk_crtc)
- 	int ret;
- 	int i;
- 
--	DRM_DEBUG_DRIVER("%s\n", __func__);
- 	for (i = 0; i < mtk_crtc->ddp_comp_nr; i++) {
- 		ret = clk_prepare_enable(mtk_crtc->ddp_comp[i]->clk);
- 		if (ret) {
-@@ -212,7 +211,6 @@ static void mtk_crtc_ddp_clk_disable(struct mtk_drm_crtc *mtk_crtc)
- {
- 	int i;
- 
--	DRM_DEBUG_DRIVER("%s\n", __func__);
- 	for (i = 0; i < mtk_crtc->ddp_comp_nr; i++)
- 		clk_disable_unprepare(mtk_crtc->ddp_comp[i]->clk);
- }
-@@ -257,7 +255,6 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
- 	int ret;
- 	int i;
- 
--	DRM_DEBUG_DRIVER("%s\n", __func__);
- 	if (WARN_ON(!crtc->state))
- 		return -EINVAL;
- 
-@@ -298,7 +295,6 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
- 		goto err_mutex_unprepare;
- 	}
- 
--	DRM_DEBUG_DRIVER("mediatek_ddp_ddp_path_setup\n");
- 	for (i = 0; i < mtk_crtc->ddp_comp_nr - 1; i++) {
- 		mtk_ddp_add_comp_to_path(mtk_crtc->config_regs,
- 					 mtk_crtc->ddp_comp[i]->id,
-@@ -348,7 +344,6 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
- 	struct drm_crtc *crtc = &mtk_crtc->base;
- 	int i;
- 
--	DRM_DEBUG_DRIVER("%s\n", __func__);
- 	for (i = 0; i < mtk_crtc->ddp_comp_nr; i++) {
- 		mtk_ddp_comp_stop(mtk_crtc->ddp_comp[i]);
- 		if (i == 1)
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index 17f118ee0e57..4934834977b3 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -570,7 +570,6 @@ static int mtk_drm_sys_suspend(struct device *dev)
- 	int ret;
- 
- 	ret = drm_mode_config_helper_suspend(drm);
--	DRM_DEBUG_DRIVER("mtk_drm_sys_suspend\n");
- 
- 	return ret;
- }
-@@ -582,7 +581,6 @@ static int mtk_drm_sys_resume(struct device *dev)
- 	int ret;
- 
- 	ret = drm_mode_config_helper_resume(drm);
--	DRM_DEBUG_DRIVER("mtk_drm_sys_resume\n");
- 
- 	return ret;
- }
--- 
-2.25.0
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
