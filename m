@@ -2,95 +2,149 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D058CC4BA12
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6B0C4BA10
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8A1224680
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:30:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582727411;
-	bh=FTavrhRvD3/cAi6dtPOZfJq/yT2BV2F/rKEuNXloXiw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rAB7jSdvRDhgO8fZWjrMNLYksI2cpWuzxM4eVtNgeYziREg9cMO5ylbuMisLDz1m1
-	 xdNxBP8Ha+qiIbfxfheRF+fPtAJMO/NQ9aqayxbBYxtT04RV+eYEUJ2H0JPRMBCzIx
-	 Z7WIV3M2Ufa0lrsKNPSwla2H8wW2sdNsZTkXy0Zc=
+	by mail.kernel.org (Postfix) with ESMTP id 3C8252467D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:33:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727742AbgBZOaK (ORCPT
+        id S1727551AbgBZOdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 09:30:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39914 "EHLO mail.kernel.org"
+        Wed, 26 Feb 2020 09:33:12 -0500
+Received: from mail5.windriver.com ([192.103.53.11]:50988 "EHLO mail5.wrs.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727426AbgBZOaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 09:30:10 -0500
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FAED2468C;
-        Wed, 26 Feb 2020 14:30:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582727409;
-        bh=FTavrhRvD3/cAi6dtPOZfJq/yT2BV2F/rKEuNXloXiw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UgKEAOVPqCjEnalnG/MJpctIDGJWpzc2VZ3liqn3FBmTSyRcGR6x0QQxl+hDA8K7m
-         0N/mJRIgoKmlNj5OsWGP15UXTpGPisYFxZ62tjsvVR5qzCWQS5DYFn4Ij5KrMu0G8J
-         JQK2IWg89VZASe7ljBjnu5MKAJcRa0Sws1CB9+HQ=
-Received: by mail-qk1-f176.google.com with SMTP id h4so2816941qkm.0;
-        Wed, 26 Feb 2020 06:30:09 -0800 (PST)
-X-Gm-Message-State: APjAAAVnxsmKLYfK6kHpNmMTtA6LikaK31ybVHrrTy9ybTp8MNsGxrm8
-        qICUM2RJNUhyWxM7TsC8MB1xUBai9I8ea1pf0A==
-X-Google-Smtp-Source: APXvYqx8P7fHvCOhAoSOWA8DnUwX4yyOHQiABO8b/bbXdZCaWKAxi3z6qQ+ITbxwwNfVk+W8jZLhM9/ZJQIl6x+NuTM=
-X-Received: by 2002:a05:620a:12a3:: with SMTP id x3mr2439558qki.254.1582727408199;
- Wed, 26 Feb 2020 06:30:08 -0800 (PST)
+        id S1727069AbgBZOdL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 09:33:11 -0500
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 01QEUIue031827
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=FAIL);
+        Wed, 26 Feb 2020 06:30:29 -0800
+Received: from pek-lpg-core2.corp.ad.wrs.com (128.224.153.41) by
+ ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
+ 14.3.468.0; Wed, 26 Feb 2020 06:30:08 -0800
+From:   <zhe.he@windriver.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <namhyung@kernel.org>, <mhiramat@kernel.org>,
+        <kstewart@linuxfoundation.org>, <tglx@linutronix.de>,
+        <linux-kernel@vger.kernel.org>, <zhe.he@windriver.com>
+Subject: [PATCH v2] perf: probe-file: Check return value of strlist__add for -ENOMEM
+Date:   Wed, 26 Feb 2020 22:30:04 +0800
+Message-ID: <1582727404-180095-1-git-send-email-zhe.he@windriver.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20200221053802.70716-1-evanbenn@chromium.org> <20200221163717.v2.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
- <CAL_JsqL94vtBEmV2gNWx-D==sLiRXjxBBFZS8fw1cR6=KjS7XQ@mail.gmail.com> <CAKz_xw2ETZ5eyNfdWU5cF6Qy23E1NqhpFHoLT_CzUDHWTCbw4Q@mail.gmail.com>
-In-Reply-To: <CAKz_xw2ETZ5eyNfdWU5cF6Qy23E1NqhpFHoLT_CzUDHWTCbw4Q@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 26 Feb 2020 08:29:56 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLYpSK6HRT4s=hq153xvU_aiPCq3Hk_oZC-7X7e7daA7Q@mail.gmail.com>
-Message-ID: <CAL_JsqLYpSK6HRT4s=hq153xvU_aiPCq3Hk_oZC-7X7e7daA7Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: watchdog: Add mt8173,smc-wdt watchdog
-To:     Evan Benn <evanbenn@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Julius Werner <jwerner@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 6:15 PM Evan Benn <evanbenn@chromium.org> wrote:
->
-> Thanks Rob
->
-> > This should be a child of some Mediatek firmware node. I assume
-> > watchdog is not the *only* function.
->
-> I am not quite sure what you mean, do you intend this:
->
->  firmware {
->    watchdog {
+From: He Zhe <zhe.he@windriver.com>
 
-Not quite. /firmware is generic container. I'd expect another layer in
-the middle for the overall set of Mediatek firmware behind smc calls.
-Look at 'xlnx,zynqmp-firmware' for an example.
+strlist__add may fail with -ENOMEM. Check it and give debugging hint in
+advance.
 
-Rob
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+---
+v2: Only catch -ENOMEM
+
+ tools/perf/builtin-probe.c   |  6 ++++--
+ tools/perf/util/probe-file.c | 28 ++++++++++++++++++++++++----
+ 2 files changed, 28 insertions(+), 6 deletions(-)
+
+diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
+index 26bc5923e6b5..70548df2abb9 100644
+--- a/tools/perf/builtin-probe.c
++++ b/tools/perf/builtin-probe.c
+@@ -449,7 +449,8 @@ static int perf_del_probe_events(struct strfilter *filter)
+ 		ret = probe_file__del_strlist(kfd, klist);
+ 		if (ret < 0)
+ 			goto error;
+-	}
++	} else if (ret == -ENOMEM)
++		goto error;
+ 
+ 	ret2 = probe_file__get_events(ufd, filter, ulist);
+ 	if (ret2 == 0) {
+@@ -459,7 +460,8 @@ static int perf_del_probe_events(struct strfilter *filter)
+ 		ret2 = probe_file__del_strlist(ufd, ulist);
+ 		if (ret2 < 0)
+ 			goto error;
+-	}
++	} else if (ret2 == -ENOMEM)
++		goto error;
+ 
+ 	if (ret == -ENOENT && ret2 == -ENOENT)
+ 		pr_warning("\"%s\" does not hit any event.\n", str);
+diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
+index cf44c05f89c1..b6a7e8b7aaab 100644
+--- a/tools/perf/util/probe-file.c
++++ b/tools/perf/util/probe-file.c
+@@ -307,10 +307,15 @@ int probe_file__get_events(int fd, struct strfilter *filter,
+ 		p = strchr(ent->s, ':');
+ 		if ((p && strfilter__compare(filter, p + 1)) ||
+ 		    strfilter__compare(filter, ent->s)) {
+-			strlist__add(plist, ent->s);
++			ret = strlist__add(plist, ent->s);
++			if (ret == -ENOMEM) {
++				pr_err("strlist__add failed with -ENOMEM\n");
++				goto out;
++			}
+ 			ret = 0;
+ 		}
+ 	}
++out:
+ 	strlist__delete(namelist);
+ 
+ 	return ret;
+@@ -517,7 +522,11 @@ static int probe_cache__load(struct probe_cache *pcache)
+ 				ret = -EINVAL;
+ 				goto out;
+ 			}
+-			strlist__add(entry->tevlist, buf);
++			ret = strlist__add(entry->tevlist, buf);
++			if (ret == -ENOMEM) {
++				pr_err("strlist__add failed with -ENOMEM\n");
++				goto out;
++			}
+ 		}
+ 	}
+ out:
+@@ -678,7 +687,12 @@ int probe_cache__add_entry(struct probe_cache *pcache,
+ 		command = synthesize_probe_trace_command(&tevs[i]);
+ 		if (!command)
+ 			goto out_err;
+-		strlist__add(entry->tevlist, command);
++		ret = strlist__add(entry->tevlist, command);
++		if (ret == -ENOMEM) {
++			pr_err("strlist__add failed with -ENOMEM\n");
++			goto out_err;
++		}
++
+ 		free(command);
+ 	}
+ 	list_add_tail(&entry->node, &pcache->entries);
+@@ -859,9 +873,15 @@ int probe_cache__scan_sdt(struct probe_cache *pcache, const char *pathname)
+ 			break;
+ 		}
+ 
+-		strlist__add(entry->tevlist, buf);
++		ret = strlist__add(entry->tevlist, buf);
++
+ 		free(buf);
+ 		entry = NULL;
++
++		if (ret == -ENOMEM) {
++			pr_err("strlist__add failed with -ENOMEM\n");
++			break;
++		}
+ 	}
+ 	if (entry) {
+ 		list_del_init(&entry->node);
+-- 
+2.24.1
+
