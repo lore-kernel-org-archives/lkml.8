@@ -2,531 +2,194 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D17C4BA0D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED37C4BA0D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1214222C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A786320838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:10:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ES4ZCoKU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IY9HnMtv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbgBZGK2 (ORCPT
+        id S1727258AbgBZGKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 01:10:28 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23795 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726089AbgBZGK1 (ORCPT
+        Wed, 26 Feb 2020 01:10:32 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42598 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727201AbgBZGKa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 01:10:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582697424;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5n1hxywg+jwCJtZND0BfCUELE1byT6nhGLbkxFJQk0M=;
-        b=ES4ZCoKUwJXVGE1j+P/Lhs2Ewz163F+aWy09y0AYRM8Vszu9j3k/EqglL5W8fLgF0UeF75
-        O8nbnhSuAir7CmfWf7gbFiKHpwPeljXkwoJqY8IBTfyVEc3yt/BOSBiGn4ufYZMZCAsAlQ
-        VGi9vIk8pFU3PVtNRdHgfejw540RUc4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-444-sxshb8XlPE6OJICAV926_g-1; Wed, 26 Feb 2020 01:10:19 -0500
-X-MC-Unique: sxshb8XlPE6OJICAV926_g-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CECBB800D6C;
-        Wed, 26 Feb 2020 06:10:16 +0000 (UTC)
-Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-13-217.pek2.redhat.com [10.72.13.217])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8EB4C8704B;
-        Wed, 26 Feb 2020 06:09:07 +0000 (UTC)
-From:   Jason Wang <jasowang@redhat.com>
-To:     mst@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Cc:     tiwei.bie@intel.com, jgg@mellanox.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, lingshan.zhu@intel.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        kevin.tian@intel.com, stefanha@redhat.com, rdunlap@infradead.org,
-        hch@infradead.org, aadam@redhat.com, jiri@mellanox.com,
-        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com,
-        gdawar@xilinx.com, saugatm@xilinx.com, vmireyno@marvell.com,
-        Jason Wang <jasowang@redhat.com>
-Subject: [PATCH V5 4/5] virtio: introduce a vDPA based transport
-Date:   Wed, 26 Feb 2020 14:04:55 +0800
-Message-Id: <20200226060456.27275-5-jasowang@redhat.com>
-In-Reply-To: <20200226060456.27275-1-jasowang@redhat.com>
-References: <20200226060456.27275-1-jasowang@redhat.com>
+        Wed, 26 Feb 2020 01:10:30 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 66so1901157otd.9;
+        Tue, 25 Feb 2020 22:10:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=Ifn+NNyVN913MBeGM2/bu4dOZv1ZXnQnqRtnV2d3aEw=;
+        b=IY9HnMtvY3wXhhQJbieZobipuz04B0Ra7f89lDEI0yJWXsPT7mwgBdww5zWTapZK/J
+         eU6cNJrJwjzbvqRxAiFnV/MiThWF0fPx2TEGVcxME2GJtRF1uZq+9pg7ypG5tLxiehkc
+         mw2jUsBURHa0CoeGQ8PXcuIo4JlAFUUfRXYiuTv1OIOOGu47BLCxSQVAlsumu7m/DH1z
+         TfuDeFfyruJePPCf0V1PJJcmdcLEpMh1IfJwsZU9ldhjBeBkRTdJNDUNZpWNMKirv2KF
+         On9JeAGtJyUzLDAFeXxGyQwjHrA9gzbxaoh7c+3CbVuDrEviHXgyqj6OXqvu9PG5DAwr
+         nT3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=Ifn+NNyVN913MBeGM2/bu4dOZv1ZXnQnqRtnV2d3aEw=;
+        b=AtfBjGsqevF8zaPwJU6n5FGcCq48X3oRhKqOLmMWENyw1ctTIPN+c3zow7f89BGWaR
+         G3mte1XPLIoOVaMle5vMq9bT/X0dGklyn6GXzP8ypmfShvFSworgZC35UgNkHBJTpRC7
+         YWFtUQ0Ko/eImOkOEjmAp/dhgBBZ8Zi7HeL4lYJlfS+ERLBkCyE85LTk7xy0VZDbGu4R
+         nMs5KV49/qjiOszdhW0wLzg9MLR6zoYvkH8mJl2AyccKlQeDoOE3ffMBneZayvF0u96b
+         9INfX28Rr115lKLewsDfUpMm8cyIoqHGBHDmktuU42GJM3kOQRB8mOS1+KqgqjgcLpUL
+         zmGQ==
+X-Gm-Message-State: APjAAAWCIVgnn5c8XDf0eu9YwiveQ8GmktO3wWKWLiNu5ysy8iduZNzA
+        E2je20tM0fl3HRx4ES9g60zyalMtXJy0yCSL1oY=
+X-Google-Smtp-Source: APXvYqxNlkFs8lRBsGBBItMATzlZD49iescGEtIRwUTubSnT+FL5F2jXAbkjNGyRIDlEWQG0QuSxjigszvvsAK77cbY=
+X-Received: by 2002:a9d:7590:: with SMTP id s16mr1624035otk.89.1582697428768;
+ Tue, 25 Feb 2020 22:10:28 -0800 (PST)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
+Received: by 2002:a9d:74d9:0:0:0:0:0 with HTTP; Tue, 25 Feb 2020 22:10:28
+ -0800 (PST)
+In-Reply-To: <20200225212054.09865e0b@fido6>
+References: <20191029170250.GA43972@google.com> <20200222165617.GA207731@google.com>
+ <CAPDyKFq_exHufHyibFCjS78PTZ7duS9ZSt3vi18CNM6+jMmwnw@mail.gmail.com>
+ <20200226011310.GA2116625@rani.riverdale.lan> <CAFjuqNg_NW7hcssWmMTtt=ioY143qn76ooT7GRhxEEe9ZVCqeQ@mail.gmail.com>
+ <6e9db1f6-60c4-872b-c7c8-96ee411aa3ca@aol.com> <20200226045104.GA2191053@rani.riverdale.lan>
+ <20200225212054.09865e0b@fido6>
+From:   "Michael ." <keltoiboy@gmail.com>
+Date:   Wed, 26 Feb 2020 17:10:28 +1100
+Message-ID: <CAFjuqNh8ja3maOFev4S9zOSi04yAvnyEo2GTTxjr1pbQvmAW=A@mail.gmail.com>
+Subject: Re: PCI device function not being enumerated [Was: PCMCIA not working
+ on Panasonic Toughbook CF-29]
+To:     Philip Langdale <philipl@overt.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Trevor Jacobs <trevor_jacobs@aol.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kris Cleveland <tridentperfusion@yahoo.com>,
+        Jeff <bluerocksaddles@willitsonline.com>,
+        Morgan Klym <moklym@gmail.com>,
+        Pierre Ossman <pierre@ossman.eu>,
+        Maxim Levitsky <maximlevitsky@gmail.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch introduces a vDPA transport for virtio. This is used to
-use kernel virtio driver to drive the vDPA device that is capable
-of populating virtqueue directly.
+>Someone with access to real hardware could
+>easily experiment with changing that magic value and seeing if it
+>changes which function is disabled.
 
-A new virtio-vdpa driver will be registered to the vDPA bus, when a
-new virtio-vdpa device is probed, it will register the device with
-vdpa based config ops. This means it is a software transport between
-vDPA driver and vDPA device. The transport was implemented through
-bus_ops of vDPA parent.
+One of our members has offered to supply a machine to a dev that can
+use it to test any theory.
 
-Signed-off-by: Jason Wang <jasowang@redhat.com>
----
- drivers/virtio/Kconfig       |  13 ++
- drivers/virtio/Makefile      |   1 +
- drivers/virtio/virtio_vdpa.c | 396 +++++++++++++++++++++++++++++++++++
- 3 files changed, 410 insertions(+)
- create mode 100644 drivers/virtio/virtio_vdpa.c
+It is nearly beyond the scope of the majority of us to do much more
+than just testing. We appreciate all the effort the devs put in and
+are willing to help in anyway we can but we aren't kernel devs.
 
-diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
-index 9c4fdb64d9ac..99e424570644 100644
---- a/drivers/virtio/Kconfig
-+++ b/drivers/virtio/Kconfig
-@@ -43,6 +43,19 @@ config VIRTIO_PCI_LEGACY
-=20
- 	  If unsure, say Y.
-=20
-+config VIRTIO_VDPA
-+	tristate "vDPA driver for virtio devices"
-+	select VDPA
-+	select VIRTIO
-+	help
-+	  This driver provides support for virtio based paravirtual
-+	  device driver over vDPA bus. For this to be useful, you need
-+	  an appropriate vDPA device implementation that operates on a
-+	  physical device to allow the datapath of virtio to be
-+	  offloaded to hardware.
-+
-+	  If unsure, say M.
-+
- config VIRTIO_PMEM
- 	tristate "Support for virtio pmem driver"
- 	depends on VIRTIO
-diff --git a/drivers/virtio/Makefile b/drivers/virtio/Makefile
-index fdf5eacd0d0a..3407ac03fe60 100644
---- a/drivers/virtio/Makefile
-+++ b/drivers/virtio/Makefile
-@@ -6,4 +6,5 @@ virtio_pci-y :=3D virtio_pci_modern.o virtio_pci_common.o
- virtio_pci-$(CONFIG_VIRTIO_PCI_LEGACY) +=3D virtio_pci_legacy.o
- obj-$(CONFIG_VIRTIO_BALLOON) +=3D virtio_balloon.o
- obj-$(CONFIG_VIRTIO_INPUT) +=3D virtio_input.o
-+obj-$(CONFIG_VIRTIO_VDPA) +=3D virtio_vdpa.o
- obj-$(CONFIG_VDPA) +=3D vdpa/
-diff --git a/drivers/virtio/virtio_vdpa.c b/drivers/virtio/virtio_vdpa.c
-new file mode 100644
-index 000000000000..c30eb55030be
---- /dev/null
-+++ b/drivers/virtio/virtio_vdpa.c
-@@ -0,0 +1,396 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * VIRTIO based driver for vDPA device
-+ *
-+ * Copyright (c) 2020, Red Hat. All rights reserved.
-+ *     Author: Jason Wang <jasowang@redhat.com>
-+ *
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/device.h>
-+#include <linux/kernel.h>
-+#include <linux/slab.h>
-+#include <linux/uuid.h>
-+#include <linux/virtio.h>
-+#include <linux/vdpa.h>
-+#include <linux/virtio_config.h>
-+#include <linux/virtio_ring.h>
-+
-+#define MOD_VERSION  "0.1"
-+#define MOD_AUTHOR   "Jason Wang <jasowang@redhat.com>"
-+#define MOD_DESC     "vDPA bus driver for virtio devices"
-+#define MOD_LICENSE  "GPL v2"
-+
-+struct virtio_vdpa_device {
-+	struct virtio_device vdev;
-+	struct vdpa_device *vdpa;
-+	u64 features;
-+
-+	/* The lock to protect virtqueue list */
-+	spinlock_t lock;
-+	/* List of virtio_vdpa_vq_info */
-+	struct list_head virtqueues;
-+};
-+
-+struct virtio_vdpa_vq_info {
-+	/* the actual virtqueue */
-+	struct virtqueue *vq;
-+
-+	/* the list node for the virtqueues list */
-+	struct list_head node;
-+};
-+
-+static inline struct virtio_vdpa_device *
-+to_virtio_vdpa_device(struct virtio_device *dev)
-+{
-+	return container_of(dev, struct virtio_vdpa_device, vdev);
-+}
-+
-+static struct vdpa_device *vd_get_vdpa(struct virtio_device *vdev)
-+{
-+	return to_virtio_vdpa_device(vdev)->vdpa;
-+}
-+
-+static void virtio_vdpa_get(struct virtio_device *vdev, unsigned offset,
-+			    void *buf, unsigned len)
-+{
-+	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
-+	const struct vdpa_config_ops *ops =3D vdpa->config;
-+
-+	ops->get_config(vdpa, offset, buf, len);
-+}
-+
-+static void virtio_vdpa_set(struct virtio_device *vdev, unsigned offset,
-+			    const void *buf, unsigned len)
-+{
-+	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
-+	const struct vdpa_config_ops *ops =3D vdpa->config;
-+
-+	ops->set_config(vdpa, offset, buf, len);
-+}
-+
-+static u32 virtio_vdpa_generation(struct virtio_device *vdev)
-+{
-+	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
-+	const struct vdpa_config_ops *ops =3D vdpa->config;
-+
-+	if (ops->get_generation)
-+		return ops->get_generation(vdpa);
-+
-+	return 0;
-+}
-+
-+static u8 virtio_vdpa_get_status(struct virtio_device *vdev)
-+{
-+	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
-+	const struct vdpa_config_ops *ops =3D vdpa->config;
-+
-+	return ops->get_status(vdpa);
-+}
-+
-+static void virtio_vdpa_set_status(struct virtio_device *vdev, u8 status=
-)
-+{
-+	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
-+	const struct vdpa_config_ops *ops =3D vdpa->config;
-+
-+	return ops->set_status(vdpa, status);
-+}
-+
-+static void virtio_vdpa_reset(struct virtio_device *vdev)
-+{
-+	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
-+	const struct vdpa_config_ops *ops =3D vdpa->config;
-+
-+	return ops->set_status(vdpa, 0);
-+}
-+
-+static bool virtio_vdpa_notify(struct virtqueue *vq)
-+{
-+	struct vdpa_device *vdpa =3D vd_get_vdpa(vq->vdev);
-+	const struct vdpa_config_ops *ops =3D vdpa->config;
-+
-+	ops->kick_vq(vdpa, vq->index);
-+
-+	return true;
-+}
-+
-+static irqreturn_t virtio_vdpa_config_cb(void *private)
-+{
-+	struct virtio_vdpa_device *vd_dev =3D private;
-+
-+	virtio_config_changed(&vd_dev->vdev);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t virtio_vdpa_virtqueue_cb(void *private)
-+{
-+	struct virtio_vdpa_vq_info *info =3D private;
-+
-+	return vring_interrupt(0, info->vq);
-+}
-+
-+static struct virtqueue *
-+virtio_vdpa_setup_vq(struct virtio_device *vdev, unsigned int index,
-+		     void (*callback)(struct virtqueue *vq),
-+		     const char *name, bool ctx)
-+{
-+	struct virtio_vdpa_device *vd_dev =3D to_virtio_vdpa_device(vdev);
-+	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
-+	const struct vdpa_config_ops *ops =3D vdpa->config;
-+	struct virtio_vdpa_vq_info *info;
-+	struct vdpa_callback cb;
-+	struct virtqueue *vq;
-+	u64 desc_addr, driver_addr, device_addr;
-+	unsigned long flags;
-+	u32 align, num;
-+	int err;
-+
-+	if (!name)
-+		return NULL;
-+
-+	/* Queue shouldn't already be set up. */
-+	if (ops->get_vq_ready(vdpa, index))
-+		return ERR_PTR(-ENOENT);
-+
-+	/* Allocate and fill out our active queue description */
-+	info =3D kmalloc(sizeof(*info), GFP_KERNEL);
-+	if (!info)
-+		return ERR_PTR(-ENOMEM);
-+
-+	num =3D ops->get_vq_num_max(vdpa);
-+	if (num =3D=3D 0) {
-+		err =3D -ENOENT;
-+		goto error_new_virtqueue;
-+	}
-+
-+	/* Create the vring */
-+	align =3D ops->get_vq_align(vdpa);
-+	vq =3D vring_create_virtqueue(index, num, align, vdev,
-+				    true, true, ctx,
-+				    virtio_vdpa_notify, callback, name);
-+	if (!vq) {
-+		err =3D -ENOMEM;
-+		goto error_new_virtqueue;
-+	}
-+
-+	/* Setup virtqueue callback */
-+	cb.callback =3D virtio_vdpa_virtqueue_cb;
-+	cb.private =3D info;
-+	ops->set_vq_cb(vdpa, index, &cb);
-+	ops->set_vq_num(vdpa, index, virtqueue_get_vring_size(vq));
-+
-+	desc_addr =3D virtqueue_get_desc_addr(vq);
-+	driver_addr =3D virtqueue_get_avail_addr(vq);
-+	device_addr =3D virtqueue_get_used_addr(vq);
-+
-+	if (ops->set_vq_address(vdpa, index,
-+				desc_addr, driver_addr,
-+				device_addr)) {
-+		err =3D -EINVAL;
-+		goto err_vq;
-+	}
-+
-+	ops->set_vq_ready(vdpa, index, 1);
-+
-+	vq->priv =3D info;
-+	info->vq =3D vq;
-+
-+	spin_lock_irqsave(&vd_dev->lock, flags);
-+	list_add(&info->node, &vd_dev->virtqueues);
-+	spin_unlock_irqrestore(&vd_dev->lock, flags);
-+
-+	return vq;
-+
-+err_vq:
-+	vring_del_virtqueue(vq);
-+error_new_virtqueue:
-+	ops->set_vq_ready(vdpa, index, 0);
-+	/* VDPA driver should make sure vq is stopeed here */
-+	WARN_ON(ops->get_vq_ready(vdpa, index));
-+	kfree(info);
-+	return ERR_PTR(err);
-+}
-+
-+static void virtio_vdpa_del_vq(struct virtqueue *vq)
-+{
-+	struct virtio_vdpa_device *vd_dev =3D to_virtio_vdpa_device(vq->vdev);
-+	struct vdpa_device *vdpa =3D vd_dev->vdpa;
-+	const struct vdpa_config_ops *ops =3D vdpa->config;
-+	struct virtio_vdpa_vq_info *info =3D vq->priv;
-+	unsigned int index =3D vq->index;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&vd_dev->lock, flags);
-+	list_del(&info->node);
-+	spin_unlock_irqrestore(&vd_dev->lock, flags);
-+
-+	/* Select and deactivate the queue */
-+	ops->set_vq_ready(vdpa, index, 0);
-+	WARN_ON(ops->get_vq_ready(vdpa, index));
-+
-+	vring_del_virtqueue(vq);
-+
-+	kfree(info);
-+}
-+
-+static void virtio_vdpa_del_vqs(struct virtio_device *vdev)
-+{
-+	struct virtqueue *vq, *n;
-+
-+	list_for_each_entry_safe(vq, n, &vdev->vqs, list)
-+		virtio_vdpa_del_vq(vq);
-+}
-+
-+static int virtio_vdpa_find_vqs(struct virtio_device *vdev, unsigned nvq=
-s,
-+				struct virtqueue *vqs[],
-+				vq_callback_t *callbacks[],
-+				const char * const names[],
-+				const bool *ctx,
-+				struct irq_affinity *desc)
-+{
-+	struct virtio_vdpa_device *vd_dev =3D to_virtio_vdpa_device(vdev);
-+	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
-+	const struct vdpa_config_ops *ops =3D vdpa->config;
-+	struct vdpa_callback cb;
-+	int i, err, queue_idx =3D 0;
-+
-+	for (i =3D 0; i < nvqs; ++i) {
-+		if (!names[i]) {
-+			vqs[i] =3D NULL;
-+			continue;
-+		}
-+
-+		vqs[i] =3D virtio_vdpa_setup_vq(vdev, queue_idx++,
-+					      callbacks[i], names[i], ctx ?
-+					      ctx[i] : false);
-+		if (IS_ERR(vqs[i])) {
-+			err =3D PTR_ERR(vqs[i]);
-+			goto err_setup_vq;
-+		}
-+	}
-+
-+	cb.callback =3D virtio_vdpa_config_cb;
-+	cb.private =3D vd_dev;
-+	ops->set_config_cb(vdpa, &cb);
-+
-+	return 0;
-+
-+err_setup_vq:
-+	virtio_vdpa_del_vqs(vdev);
-+	return err;
-+}
-+
-+static u64 virtio_vdpa_get_features(struct virtio_device *vdev)
-+{
-+	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
-+	const struct vdpa_config_ops *ops =3D vdpa->config;
-+
-+	return ops->get_features(vdpa);
-+}
-+
-+static int virtio_vdpa_finalize_features(struct virtio_device *vdev)
-+{
-+	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
-+	const struct vdpa_config_ops *ops =3D vdpa->config;
-+
-+	/* Give virtio_ring a chance to accept features. */
-+	vring_transport_features(vdev);
-+
-+	return ops->set_features(vdpa, vdev->features);
-+}
-+
-+static const char *virtio_vdpa_bus_name(struct virtio_device *vdev)
-+{
-+	struct virtio_vdpa_device *vd_dev =3D to_virtio_vdpa_device(vdev);
-+	struct vdpa_device *vdpa =3D vd_dev->vdpa;
-+
-+	return dev_name(&vdpa->dev);
-+}
-+
-+static const struct virtio_config_ops virtio_vdpa_config_ops =3D {
-+	.get		=3D virtio_vdpa_get,
-+	.set		=3D virtio_vdpa_set,
-+	.generation	=3D virtio_vdpa_generation,
-+	.get_status	=3D virtio_vdpa_get_status,
-+	.set_status	=3D virtio_vdpa_set_status,
-+	.reset		=3D virtio_vdpa_reset,
-+	.find_vqs	=3D virtio_vdpa_find_vqs,
-+	.del_vqs	=3D virtio_vdpa_del_vqs,
-+	.get_features	=3D virtio_vdpa_get_features,
-+	.finalize_features =3D virtio_vdpa_finalize_features,
-+	.bus_name	=3D virtio_vdpa_bus_name,
-+};
-+
-+static void virtio_vdpa_release_dev(struct device *_d)
-+{
-+	struct virtio_device *vdev =3D
-+	       container_of(_d, struct virtio_device, dev);
-+	struct virtio_vdpa_device *vd_dev =3D
-+	       container_of(vdev, struct virtio_vdpa_device, vdev);
-+
-+	kfree(vd_dev);
-+}
-+
-+static int virtio_vdpa_probe(struct vdpa_device *vdpa)
-+{
-+	const struct vdpa_config_ops *ops =3D vdpa->config;
-+	struct virtio_vdpa_device *vd_dev, *reg_dev =3D NULL;
-+	int ret =3D -EINVAL;
-+
-+	vd_dev =3D kzalloc(sizeof(*vd_dev), GFP_KERNEL);
-+	if (!vd_dev)
-+		return -ENOMEM;
-+
-+	vd_dev->vdev.dev.parent =3D vdpa_get_dma_dev(vdpa);
-+	vd_dev->vdev.dev.release =3D virtio_vdpa_release_dev;
-+	vd_dev->vdev.config =3D &virtio_vdpa_config_ops;
-+	vd_dev->vdpa =3D vdpa;
-+	INIT_LIST_HEAD(&vd_dev->virtqueues);
-+	spin_lock_init(&vd_dev->lock);
-+
-+	vd_dev->vdev.id.device =3D ops->get_device_id(vdpa);
-+	if (vd_dev->vdev.id.device =3D=3D 0)
-+		goto err;
-+
-+	vd_dev->vdev.id.vendor =3D ops->get_vendor_id(vdpa);
-+	ret =3D register_virtio_device(&vd_dev->vdev);
-+	reg_dev =3D vd_dev;
-+	if (ret)
-+		goto err;
-+
-+	vdpa_set_drvdata(vdpa, vd_dev);
-+
-+	return 0;
-+
-+err:
-+	if (reg_dev)
-+		put_device(&vd_dev->vdev.dev);
-+	else
-+		kfree(vd_dev);
-+	return ret;
-+}
-+
-+static void virtio_vdpa_remove(struct vdpa_device *vdpa)
-+{
-+	struct virtio_vdpa_device *vd_dev =3D vdpa_get_drvdata(vdpa);
-+
-+	unregister_virtio_device(&vd_dev->vdev);
-+}
-+
-+static struct vdpa_driver virtio_vdpa_driver =3D {
-+	.driver =3D {
-+		.name	=3D "virtio_vdpa",
-+	},
-+	.probe	=3D virtio_vdpa_probe,
-+	.remove =3D virtio_vdpa_remove,
-+};
-+
-+module_vdpa_driver(virtio_vdpa_driver);
-+
-+MODULE_VERSION(MOD_VERSION);
-+MODULE_LICENSE(MOD_LICENSE);
-+MODULE_AUTHOR(MOD_AUTHOR);
-+MODULE_DESCRIPTION(MOD_DESC);
---=20
-2.19.1
+I, personally, use Debian. Others use Debian based distros such as MX
+and Mint. We have been able to test many different distros such as
+those listed in other comments but don't have the skills or expertise
+to do much more. It is our hope that this discussion and subsequent
+effort may enable others who prefer distros other than Debian based
+distros can use a CF-29 (and possibly earlier) Toughbook with the
+distro of their choice without having to rebuild a kernel so they can
+use hardware that worked back in 2010. To do this the fix needs to be
+at the kernel dev level not a local enthusiast level because while I
+can rebuild a Debian kernel I can't rebuild a Fedora or Arch or
+Slackware kernel.
 
+I did a search about this issue before I made initial contact late
+last year and the issue was discovered on more than Toughbooks and
+posted about on various sites not long after distros moved from
+2.6.32. It seems back then people just got new machines that didn't
+have a 2nd slot so the search for an answer stopped. Us Toughbook
+users are a loyal group we use our machines because they are exactly
+what we need and they take alot of "punishment" taht other machines
+simply cannot handle. Our machines are used rather than recycled or
+worse still just left to sit in waste management facilities in a
+country that the western world dumps its rubbish in, we are Linux and
+Toughbook enthusiasts and hope to be able to keep our machines running
+for many years to come with all their native capabilities working as
+they were designed to but using a modern Linux instead of Windows XP
+or Windows 7. (that wasn't a pep talk, its just an explanation of why
+we are passionate about this).
+
+Let us know what you need us to do, we will let you know if we are
+capable of it and give you any feedback you ask for. Over the weekend
+I will try to rebuild a Debian kernel with the relevant option
+disabled, provide it to my peers for testing and report back here what
+the outcome is.
+
+Thank you all for all your time and effort, it is truly appreciated.
+Cheers.
+Michael.
+
+On 26/02/2020, Philip Langdale <philipl@overt.org> wrote:
+> On Tue, 25 Feb 2020 23:51:05 -0500
+> Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+>> On Tue, Feb 25, 2020 at 09:12:48PM -0600, Trevor Jacobs wrote:
+>> > That's correct, I tested a bunch of the old distros including
+>> > slackware, and 2.6.32 is where the problem began.
+>> >
+>> > Also, the Panasonic Toughbook CF-29s effected that we tested are
+>> > the later marks, MK4 and MK5 for certain. The MK2 CF-29 worked just
+>> > fine because it has different hardware supporting the PCMCIA slots.
+>> > I have not tested a MK3 but suspect it would work ok as it also
+>> > uses the older hardware.
+>> >
+>> > Thanks for your help guys!
+>> > Trevor
+>> >
+>>
+>> Right, the distros probably all enabled MMC_RICOH_MMC earlier than
+>> upstream. Can you test a custom kernel based off your distro kernel
+>> but just disabling that config option? That's probably the easiest fix
+>> currently, even though not ideal. Perhaps there should be a command
+>> line option to disable specific pci quirks to make this easier.
+>>
+>> An ideal fix is I feel hard, given this quirk is based on undocumented
+>> config registers -- it worked on Dell machines (that's where the
+>> original authors seem to have gotten their info from), perhaps they
+>> had only one Cardbus slot, but the code ends up disabling your second
+>> Cardbus slot instead of disabling the MMC controller.
+>
+> Keeping in mind that this was 12+ years ago, you can at least still
+> read the original discussion in the archives. My original Dell laptop
+> (XPS m1330) had no cardbus slots at all, and used the r5c832
+> controller. There was a subsequent change that I was not involved with
+> which added support for the rl5c476, which is the problematic device in
+> this thread.
+>
+> As a hypothesis, based on the observed behaviour, the quirk (keeping in
+> mind that these are magic configuration register values that are not
+> documented) probably disabled function 1, regardless of what it is, and
+> the original example that motivated adding the rl5c476 quirk probably
+> had one cardbus slot and the card reader functions were all moved up
+> one, or something along those lines.
+>
+> Truly making this smart would then involve having the code enumerate
+> the pci functions and identify the one that is the unwanted mmc
+> controller, based on function ID or class or whatever, and then
+> disabling that (assuming the magic can be reverse engineered: eg, the
+> current magic ORs the disable flag with 0x02 - chances are, that's the
+> index of the function: 0x01 would be the 0th function, 0x04 would be
+> the 2nd function, etc). Someone with access to real hardware could
+> easily experiment with changing that magic value and seeing if it
+> changes which function is disabled.
+>
+> Good luck.
+>
+> --phil
+>
