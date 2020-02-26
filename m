@@ -2,86 +2,92 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7C2C4BA0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 369FEC4BA0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A116124685
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 002D424685
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:18:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="d4tmsZnw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728033AbgBZLRn (ORCPT
+        id S1728042AbgBZLSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 06:17:43 -0500
-Received: from mx2.suse.de ([195.135.220.15]:58540 "EHLO mx2.suse.de"
+        Wed, 26 Feb 2020 06:18:34 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:51638 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726555AbgBZLRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 06:17:43 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4917FACCE;
-        Wed, 26 Feb 2020 11:17:41 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 9D3F61E0EA2; Wed, 26 Feb 2020 12:17:40 +0100 (CET)
-Date:   Wed, 26 Feb 2020 12:17:40 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Christoph Hellwig <hch@lst.de>, ira.weiny@intel.com,
-        linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V4 07/13] fs: Add locking for a dynamic address space
- operations state
-Message-ID: <20200226111740.GF10728@quack2.suse.cz>
-References: <20200221004134.30599-1-ira.weiny@intel.com>
- <20200221004134.30599-8-ira.weiny@intel.com>
- <20200221174449.GB11378@lst.de>
- <20200221224419.GW10776@dread.disaster.area>
- <20200224175603.GE7771@lst.de>
- <20200225000937.GA10776@dread.disaster.area>
+        id S1726555AbgBZLSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 06:18:34 -0500
+Received: from zn.tnic (p200300EC2F08E300B4442D161B607307.dip0.t-ipconnect.de [IPv6:2003:ec:2f08:e300:b444:2d16:1b60:7307])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3C8441EC0CE8;
+        Wed, 26 Feb 2020 12:18:33 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1582715913;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=A6vGW6WUZ5u5dkVwvmxhlqIwrUUQElMkiVyfzpmoYNE=;
+        b=d4tmsZnwpqQRbWbXWbISqx/ToV3X/lDxjhdVx25tGVKzjZ6pF8Ga0vbGPlnafNAcqQPs/v
+        vUpXL/JJr6kqLKoZtMRTzjy1ku7xqROLqmGS3++KsmpjO4ZwQr8oUPCMW49baleRd0f6Nk
+        muU+bgepnGz0RQAIOefZOitsE2uN1aw=
+Date:   Wed, 26 Feb 2020 12:18:27 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [patch 02/10] x86/mce: Disable tracing and kprobes on
+ do_machine_check()
+Message-ID: <20200226111827.GA16756@zn.tnic>
+References: <20200225213636.689276920@linutronix.de>
+ <20200225220216.315548935@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200225000937.GA10776@dread.disaster.area>
+In-Reply-To: <20200225220216.315548935@linutronix.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 25-02-20 11:09:37, Dave Chinner wrote:
-> /me wonders if the best thing to do is to add a ->fault callout to
-> tell the filesystem to lock/unlock the inode right up at the top of
-> the page fault path, outside even the mmap_sem.  That means all the
-> methods that the page fault calls are protected against S_DAX
-> changes, and it gives us a low cost method of serialising page
-> faults against DIO (e.g. via inode_dio_wait())....
+On Tue, Feb 25, 2020 at 10:36:38PM +0100, Thomas Gleixner wrote:
+> --- a/arch/x86/kernel/cpu/mce/core.c
+> +++ b/arch/x86/kernel/cpu/mce/core.c
+> @@ -1213,8 +1213,14 @@ static void __mc_scan_banks(struct mce *
+>   * On Intel systems this is entered on all CPUs in parallel through
+>   * MCE broadcast. However some CPUs might be broken beyond repair,
+>   * so be always careful when synchronizing with others.
+> + *
+> + * Tracing and kprobes are disabled: if we interrupted a kernel context
+> + * with IF=1, we need to minimize stack usage.  There are also recursion
+> + * issues: if the machine check was due to a failure of the memory
+> + * backing the user stack, tracing that reads the user stack will cause
+			      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Well, that's going to be pretty hard. The main problem is: you cannot
-lookup VMA until you hold mmap_sem and the inode is inside the VMA. And
-this is a fundamental problem because until you hold mmap_sem, the address
-space can change and thus the virtual address you are faulting can be
-changing inode it is mapped to. So you would have to do some dance like:
+Had to read this a couple of times to parse that formulation properly.
+Make that
 
-lock mmap_sem
-lookup vma
-get inode reference
-drop mmap_sem
-tell fs about page fault
-lock mmap_sem
-is the vma still the same?
+"... backing the user stack, tracing code which accesses same user stack
+will potentially cause an infinite recursion."
 
-And I'm pretty confident the overhead will be visible in page fault
-intensive workloads...
+With that:
 
-								Honza
+Reviewed-by: Borislav Petkov <bp@suse.de>
+
+Thx.
 
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
