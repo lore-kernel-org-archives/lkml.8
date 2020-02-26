@@ -2,177 +2,354 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4272C4BA1C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE67C4BA18
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A316420637
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44EA620637
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:05:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="p/bZ0fff"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JaBj57zs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728221AbgBZRFC (ORCPT
+        id S1728139AbgBZRFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 26 Feb 2020 12:05:02 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17429 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727470AbgBZRFC (ORCPT
+Received: from userp2120.oracle.com ([156.151.31.85]:33038 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726214AbgBZRFB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:05:02 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e56a4ee0000>; Wed, 26 Feb 2020 09:03:42 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 26 Feb 2020 09:05:00 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 26 Feb 2020 09:05:00 -0800
-Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 26 Feb
- 2020 17:04:56 +0000
-Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Bitan Biswas <bbiswas@nvidia.com>
-CC:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        "Jens Axboe" <axboe@kernel.dk>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        <lkft-triage@lists.linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Kishon <kishon@ti.com>
-References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
- <CAPDyKFqqhxC-pmV_j8PLY-D=AbqCAbiipAAHXLpJ4N_BiYYOFw@mail.gmail.com>
- <CA+G9fYugQuAERqp3VXUFG-3QxXoF8bz7OSMh6WGSZcrGkbfDSQ@mail.gmail.com>
- <CAPDyKFo-vEO7zN_F+NqcKtnKmAo_deOZx3gYNiks3yTAQAjv-Q@mail.gmail.com>
- <a602a27a-b960-ce56-c541-3b4b95f5dce2@nvidia.com>
- <CAPDyKFrXQgtHa4gLaKUi_F0rs4FMBai3Y_+TcHZR_zpkb0B4QQ@mail.gmail.com>
- <6523119a-50ac-973a-d1cd-ab1569259411@nvidia.com>
- <f960aa98-5508-36fd-166d-7f41c7d85154@nvidia.com>
- <CAPDyKFokE6x0mn+v5B9=so-SyrdTn0JBU8Mrp3Zdu6kSaCie2g@mail.gmail.com>
- <0963b60f-15e7-4bc6-10df-6fc8003e4d42@nvidia.com>
- <CAPDyKFq5NoeHEBK3sv3yOSD2+pm9FueH1gaTyPq0j7GLfa6vnA@mail.gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <f1711223-91ba-c567-2983-b4783aa7601b@nvidia.com>
-Date:   Wed, 26 Feb 2020 17:04:54 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 26 Feb 2020 12:05:01 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01QGqeLo129561;
+        Wed, 26 Feb 2020 17:04:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=S3c1imBdrXesnECEIUhPvzeK2TsVUmEz+rSljuAcGGk=;
+ b=JaBj57zsd8KoaZ6J+UbdvRgMFv6irGsgA9bAcjDLVUF7bn4g8h02o+MpxlLC2oyfxyap
+ G12RSgmns4HxL8wprFT2B8wsmeYu7T7lscz8WuPtp+fiaL+xT7eF5iuoQ8L7Xt5otfeR
+ HBCBKFMWFtMRoW7lcIiC4juh1WiHwEYuVzqnOgJ9uLEP9ArmhQuJf5MKQBKZYMW78Etl
+ d0h2or+7GR5NRXQa7dHa0FF8L6jp4+uc2oNrMDtqBwX+5DE2mlSCe479krCY63uMSWfY
+ 4btrj7LQT0epHocIawZEKQ+sGfW4sU3p4Nt6mRXZ5JI0V5iuIbMez0DpyD/AoNjmPptC yw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2ydct3520v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Feb 2020 17:04:35 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01QGm5wY158454;
+        Wed, 26 Feb 2020 17:04:34 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3020.oracle.com with ESMTP id 2ydj4j01b9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 26 Feb 2020 17:04:34 +0000
+Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01QH0F0p039443;
+        Wed, 26 Feb 2020 17:04:34 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2ydj4j01ap-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Feb 2020 17:04:34 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01QH4RMn030167;
+        Wed, 26 Feb 2020 17:04:27 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 26 Feb 2020 09:04:27 -0800
+Date:   Wed, 26 Feb 2020 09:04:25 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v8 25/25] iomap: Convert from readpages to readahead
+Message-ID: <20200226170425.GD8045@magnolia>
+References: <20200225214838.30017-1-willy@infradead.org>
+ <20200225214838.30017-26-willy@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFq5NoeHEBK3sv3yOSD2+pm9FueH1gaTyPq0j7GLfa6vnA@mail.gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582736623; bh=6D+i0xe21mqqX6n5OUovAjoW11aRjUA9+tewaNzxrek=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=p/bZ0fff0n82hLSAwmcx0IFIA2eqFqLqQpyfZXDEcFPIUummqVfxXcQTIuqyWF1/i
-         SK/uMll2Si5bisQfKYh75ukgPugxg8f5/KJxFg5Tvyqxit8Zt0NkpaME9B18VW1yuW
-         JS0E1SOHEMh+5MYI7tHYpzV4sOHKWFn5VCNdIRLYbxNidMpYk2T5S5Ys9L511i8e9C
-         /p/NOzHkP9Ju5PZj83rIjEHNOtbqWncEHAArlMGWO6iKfvDzpmcDdRWl7Guy+uXUQT
-         /ShWW4i3pz16zR9rs4UhROn0VeKrSGkYunKEGxUh6mwVYDBCjAseQt3DxiwjneA60T
-         GUOFOGxsNEouA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200225214838.30017-26-willy@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9543 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 bulkscore=0
+ impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0 adultscore=0
+ phishscore=0 mlxlogscore=999 mlxscore=0 suspectscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002260113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Feb 25, 2020 at 01:48:38PM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> 
+> Use the new readahead operation in iomap.  Convert XFS and ZoneFS to
+> use it.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
+>  fs/iomap/buffered-io.c | 90 +++++++++++++++---------------------------
+>  fs/iomap/trace.h       |  2 +-
+>  fs/xfs/xfs_aops.c      | 13 +++---
+>  fs/zonefs/super.c      |  7 ++--
+>  include/linux/iomap.h  |  3 +-
+>  5 files changed, 41 insertions(+), 74 deletions(-)
+> 
+> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> index cb3511eb152a..83438b3257de 100644
+> --- a/fs/iomap/buffered-io.c
+> +++ b/fs/iomap/buffered-io.c
+> @@ -214,9 +214,8 @@ iomap_read_end_io(struct bio *bio)
+>  struct iomap_readpage_ctx {
+>  	struct page		*cur_page;
+>  	bool			cur_page_in_bio;
+> -	bool			is_readahead;
+>  	struct bio		*bio;
+> -	struct list_head	*pages;
+> +	struct readahead_control *rac;
+>  };
+>  
+>  static void
+> @@ -307,11 +306,11 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+>  		if (ctx->bio)
+>  			submit_bio(ctx->bio);
+>  
+> -		if (ctx->is_readahead) /* same as readahead_gfp_mask */
+> +		if (ctx->rac) /* same as readahead_gfp_mask */
+>  			gfp |= __GFP_NORETRY | __GFP_NOWARN;
+>  		ctx->bio = bio_alloc(gfp, min(BIO_MAX_PAGES, nr_vecs));
+>  		ctx->bio->bi_opf = REQ_OP_READ;
+> -		if (ctx->is_readahead)
+> +		if (ctx->rac)
+>  			ctx->bio->bi_opf |= REQ_RAHEAD;
+>  		ctx->bio->bi_iter.bi_sector = sector;
+>  		bio_set_dev(ctx->bio, iomap->bdev);
+> @@ -367,36 +366,8 @@ iomap_readpage(struct page *page, const struct iomap_ops *ops)
+>  }
+>  EXPORT_SYMBOL_GPL(iomap_readpage);
+>  
+> -static struct page *
+> -iomap_next_page(struct inode *inode, struct list_head *pages, loff_t pos,
+> -		loff_t length, loff_t *done)
+> -{
+> -	while (!list_empty(pages)) {
+> -		struct page *page = lru_to_page(pages);
+> -
+> -		if (page_offset(page) >= (u64)pos + length)
+> -			break;
+> -
+> -		list_del(&page->lru);
+> -		if (!add_to_page_cache_lru(page, inode->i_mapping, page->index,
+> -				GFP_NOFS))
+> -			return page;
+> -
+> -		/*
+> -		 * If we already have a page in the page cache at index we are
+> -		 * done.  Upper layers don't care if it is uptodate after the
+> -		 * readpages call itself as every page gets checked again once
+> -		 * actually needed.
+> -		 */
+> -		*done += PAGE_SIZE;
+> -		put_page(page);
+> -	}
+> -
+> -	return NULL;
+> -}
+> -
+>  static loff_t
+> -iomap_readpages_actor(struct inode *inode, loff_t pos, loff_t length,
+> +iomap_readahead_actor(struct inode *inode, loff_t pos, loff_t length,
+>  		void *data, struct iomap *iomap, struct iomap *srcmap)
+>  {
+>  	struct iomap_readpage_ctx *ctx = data;
+> @@ -410,10 +381,7 @@ iomap_readpages_actor(struct inode *inode, loff_t pos, loff_t length,
+>  			ctx->cur_page = NULL;
+>  		}
+>  		if (!ctx->cur_page) {
+> -			ctx->cur_page = iomap_next_page(inode, ctx->pages,
+> -					pos, length, &done);
+> -			if (!ctx->cur_page)
+> -				break;
+> +			ctx->cur_page = readahead_page(ctx->rac);
+>  			ctx->cur_page_in_bio = false;
+>  		}
+>  		ret = iomap_readpage_actor(inode, pos + done, length - done,
+> @@ -423,32 +391,43 @@ iomap_readpages_actor(struct inode *inode, loff_t pos, loff_t length,
+>  	return done;
+>  }
+>  
+> -int
+> -iomap_readpages(struct address_space *mapping, struct list_head *pages,
+> -		unsigned nr_pages, const struct iomap_ops *ops)
+> +/**
+> + * iomap_readahead - Attempt to read pages from a file.
+> + * @rac: Describes the pages to be read.
+> + * @ops: The operations vector for the filesystem.
+> + *
+> + * This function is for filesystems to call to implement their readahead
+> + * address_space operation.
+> + *
+> + * Context: The @ops callbacks may submit I/O (eg to read the addresses of
+> + * blocks from disc), and may wait for it.  The caller may be trying to
+> + * access a different page, and so sleeping excessively should be avoided.
+> + * It may allocate memory, but should avoid costly allocations.  This
+> + * function is called with memalloc_nofs set, so allocations will not cause
+> + * the filesystem to be reentered.
+> + */
+> +void iomap_readahead(struct readahead_control *rac, const struct iomap_ops *ops)
+>  {
+> +	struct inode *inode = rac->mapping->host;
+> +	loff_t pos = readahead_pos(rac);
+> +	loff_t length = readahead_length(rac);
+>  	struct iomap_readpage_ctx ctx = {
+> -		.pages		= pages,
+> -		.is_readahead	= true,
+> +		.rac	= rac,
+>  	};
+> -	loff_t pos = page_offset(list_entry(pages->prev, struct page, lru));
+> -	loff_t last = page_offset(list_entry(pages->next, struct page, lru));
+> -	loff_t length = last - pos + PAGE_SIZE, ret = 0;
+>  
+> -	trace_iomap_readpages(mapping->host, nr_pages);
+> +	trace_iomap_readahead(inode, readahead_count(rac));
+>  
+>  	while (length > 0) {
+> -		ret = iomap_apply(mapping->host, pos, length, 0, ops,
+> -				&ctx, iomap_readpages_actor);
+> +		loff_t ret = iomap_apply(inode, pos, length, 0, ops,
+> +				&ctx, iomap_readahead_actor);
+>  		if (ret <= 0) {
+>  			WARN_ON_ONCE(ret == 0);
+> -			goto done;
+> +			break;
+>  		}
+>  		pos += ret;
+>  		length -= ret;
+>  	}
+> -	ret = 0;
+> -done:
+> +
+>  	if (ctx.bio)
+>  		submit_bio(ctx.bio);
+>  	if (ctx.cur_page) {
+> @@ -456,15 +435,8 @@ iomap_readpages(struct address_space *mapping, struct list_head *pages,
+>  			unlock_page(ctx.cur_page);
+>  		put_page(ctx.cur_page);
+>  	}
+> -
+> -	/*
+> -	 * Check that we didn't lose a page due to the arcance calling
+> -	 * conventions..
+> -	 */
+> -	WARN_ON_ONCE(!ret && !list_empty(ctx.pages));
+> -	return ret;
 
-On 26/02/2020 15:21, Ulf Hansson wrote:
-> + Anders, Kishon
-> 
-> On Tue, 25 Feb 2020 at 17:24, Jon Hunter <jonathanh@nvidia.com> wrote:
->>
->>
->> On 25/02/2020 14:26, Ulf Hansson wrote:
->>
->> ...
->>
->>> However, from the core point of view, the response is still requested,
->>> only that we don't want the driver to wait for the card to stop
->>> signaling busy. Instead we want to deal with that via "polling" from
->>> the core.
->>>
->>> This is a rather worrying behaviour, as it seems like the host driver
->>> doesn't really follow this expectations from the core point of view.
->>> And mmc_flush_cache() is not the only case, as we have erase, bkops,
->>> sanitize, etc. Are all these working or not really well tested?
->>
->> I don't believe that they are well tested. We have a simple test to
->> mount an eMMC partition, create a file, check the contents, remove the
->> file and unmount. The timeouts always occur during unmounting.
->>
->>> Earlier, before my three patches, if the provided timeout_ms parameter
->>> to __mmc_switch() was zero, which was the case for
->>> mmc_mmc_flush_cache() - this lead to that __mmc_switch() simply
->>> ignored validating host->max_busy_timeout, which was wrong. In any
->>> case, this also meant that an R1B response was always used for
->>> mmc_flush_cache(), as you also indicated above. Perhaps this is the
->>> critical part where things can go wrong.
->>>
->>> BTW, have you tried erase commands for sdhci tegra driver? If those
->>> are working fine, do you have any special treatments for these?
->>
->> That I am not sure, but I will check.
-> 
-> Great, thanks. Looking forward to your report.
+After all the discussion about "if we still have ctx.cur_page we should
+just stop" in v7, I'm surprised that this patch now doesn't say much of
+anything, not even a WARN_ON()?
 
-So no I don't believe that we have explicitly tried erase commands and
-no there is nothing special that we are doing for erase.
+Other than that, it looks fine.
 
-> So, from my side, me and Anders Roxell, have been collaborating on
-> testing the behaviour on a TI Beagleboard x15 (remotely with limited
-> debug options), which is using the sdhci-omap variant. I am trying to
-> get hold of an Nvidia jetson-TX2, but not found one yet. These are the
-> conclusions from the observed behaviour on the Beagleboard for the
-> CMD6 cache flush command.
-> 
-> First, the reported host->max_busy_timeout is 2581 (ms) for the
-> sdhci-omap driver in this configuration.
-> 
-> 1. As we all know by now, the cache flush command (CMD6) fails with
-> -110 currently. This is when MMC_CACHE_FLUSH_TIMEOUT_MS is set to 30 *
-> 1000 (30s), which means __mmc_switch() drops the MMC_RSP_BUSY flag
-> from the command.
-> 
-> 2. Changing the MMC_CACHE_FLUSH_TIMEOUT_MS to 2000 (2s), means that
-> the MMC_RSP_BUSY flag becomes set by __mmc_switch, because of the
-> timeout_ms parameter is less than max_busy_timeout (2000 <  2581).
-> Then everything works fine.
-> 
-> 3. Updating the code to again use 30s as the
-> MMC_CACHE_FLUSH_TIMEOUT_MS, but instead forcing the MMC_RSP_BUSY to be
-> set, even when the timeout_ms becomes greater than max_busy_timeout.
-> This also works fine.
-> 
-> Clearly this indicates a problem that I think needs to be addressed in
-> the sdhci driver. However, of course I can revert the three discussed
-> patches to fix the problem, but that would only hide the issues and I
-> am sure we would then get back to this issue, sooner or later.
-> 
-> To fix the problem in the sdhci driver, I would appreciate if someone
-> from TI and Nvidia can step in to help, as I don't have the HW on my
-> desk.
+--D
 
-OK, let me check to see who can help from our side.
-
-Cheers
-Jon
-
--- 
-nvpublic
+>  }
+> -EXPORT_SYMBOL_GPL(iomap_readpages);
+> +EXPORT_SYMBOL_GPL(iomap_readahead);
+>  
+>  /*
+>   * iomap_is_partially_uptodate checks whether blocks within a page are
+> diff --git a/fs/iomap/trace.h b/fs/iomap/trace.h
+> index 6dc227b8c47e..d6ba705f938a 100644
+> --- a/fs/iomap/trace.h
+> +++ b/fs/iomap/trace.h
+> @@ -39,7 +39,7 @@ DEFINE_EVENT(iomap_readpage_class, name,	\
+>  	TP_PROTO(struct inode *inode, int nr_pages), \
+>  	TP_ARGS(inode, nr_pages))
+>  DEFINE_READPAGE_EVENT(iomap_readpage);
+> -DEFINE_READPAGE_EVENT(iomap_readpages);
+> +DEFINE_READPAGE_EVENT(iomap_readahead);
+>  
+>  DECLARE_EVENT_CLASS(iomap_page_class,
+>  	TP_PROTO(struct inode *inode, struct page *page, unsigned long off,
+> diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
+> index 58e937be24ce..6e68eeb50b07 100644
+> --- a/fs/xfs/xfs_aops.c
+> +++ b/fs/xfs/xfs_aops.c
+> @@ -621,14 +621,11 @@ xfs_vm_readpage(
+>  	return iomap_readpage(page, &xfs_read_iomap_ops);
+>  }
+>  
+> -STATIC int
+> -xfs_vm_readpages(
+> -	struct file		*unused,
+> -	struct address_space	*mapping,
+> -	struct list_head	*pages,
+> -	unsigned		nr_pages)
+> +STATIC void
+> +xfs_vm_readahead(
+> +	struct readahead_control	*rac)
+>  {
+> -	return iomap_readpages(mapping, pages, nr_pages, &xfs_read_iomap_ops);
+> +	iomap_readahead(rac, &xfs_read_iomap_ops);
+>  }
+>  
+>  static int
+> @@ -644,7 +641,7 @@ xfs_iomap_swapfile_activate(
+>  
+>  const struct address_space_operations xfs_address_space_operations = {
+>  	.readpage		= xfs_vm_readpage,
+> -	.readpages		= xfs_vm_readpages,
+> +	.readahead		= xfs_vm_readahead,
+>  	.writepage		= xfs_vm_writepage,
+>  	.writepages		= xfs_vm_writepages,
+>  	.set_page_dirty		= iomap_set_page_dirty,
+> diff --git a/fs/zonefs/super.c b/fs/zonefs/super.c
+> index 8bc6ef82d693..8327a01d3bac 100644
+> --- a/fs/zonefs/super.c
+> +++ b/fs/zonefs/super.c
+> @@ -78,10 +78,9 @@ static int zonefs_readpage(struct file *unused, struct page *page)
+>  	return iomap_readpage(page, &zonefs_iomap_ops);
+>  }
+>  
+> -static int zonefs_readpages(struct file *unused, struct address_space *mapping,
+> -			    struct list_head *pages, unsigned int nr_pages)
+> +static void zonefs_readahead(struct readahead_control *rac)
+>  {
+> -	return iomap_readpages(mapping, pages, nr_pages, &zonefs_iomap_ops);
+> +	iomap_readahead(rac, &zonefs_iomap_ops);
+>  }
+>  
+>  /*
+> @@ -128,7 +127,7 @@ static int zonefs_writepages(struct address_space *mapping,
+>  
+>  static const struct address_space_operations zonefs_file_aops = {
+>  	.readpage		= zonefs_readpage,
+> -	.readpages		= zonefs_readpages,
+> +	.readahead		= zonefs_readahead,
+>  	.writepage		= zonefs_writepage,
+>  	.writepages		= zonefs_writepages,
+>  	.set_page_dirty		= iomap_set_page_dirty,
+> diff --git a/include/linux/iomap.h b/include/linux/iomap.h
+> index 8b09463dae0d..bc20bd04c2a2 100644
+> --- a/include/linux/iomap.h
+> +++ b/include/linux/iomap.h
+> @@ -155,8 +155,7 @@ loff_t iomap_apply(struct inode *inode, loff_t pos, loff_t length,
+>  ssize_t iomap_file_buffered_write(struct kiocb *iocb, struct iov_iter *from,
+>  		const struct iomap_ops *ops);
+>  int iomap_readpage(struct page *page, const struct iomap_ops *ops);
+> -int iomap_readpages(struct address_space *mapping, struct list_head *pages,
+> -		unsigned nr_pages, const struct iomap_ops *ops);
+> +void iomap_readahead(struct readahead_control *, const struct iomap_ops *ops);
+>  int iomap_set_page_dirty(struct page *page);
+>  int iomap_is_partially_uptodate(struct page *page, unsigned long from,
+>  		unsigned long count);
+> -- 
+> 2.25.0
+> 
