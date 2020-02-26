@@ -2,239 +2,157 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92AE1C4BA15
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B29C4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:56:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6086324680
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D236E20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:56:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hN5Ggb6L"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jNL4sjC3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgBZOyz (ORCPT
+        id S1726880AbgBZO4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 09:54:55 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35794 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726063AbgBZOyy (ORCPT
+        Wed, 26 Feb 2020 09:56:00 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:33030 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726063AbgBZO4A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 09:54:54 -0500
+        Wed, 26 Feb 2020 09:56:00 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582728892;
+        s=mimecast20190719; t=1582728959;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=D9ZIih3G83c2i8VjB34cEpnw8W+3tjJJo3awnznjfu8=;
-        b=hN5Ggb6LERT6UZP8o+qCStp/QFWrd2doSdK3XRHrJPO+w5svXM+EK/QMgsj6O81xcmB/E0
-        jdHE6TP4zBlZ6EOi8RItnSpWqWbDHngbNmDtuHeNu/4djEcUZMlKtwh7Wk+XLs+uQvD8uG
-        322gt2AuK9hl8S7w+TWo34mvG/fQ47g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-291-kpeZS8rrMSiqNG-KzLcfbA-1; Wed, 26 Feb 2020 09:54:46 -0500
-X-MC-Unique: kpeZS8rrMSiqNG-KzLcfbA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E4288DB20;
-        Wed, 26 Feb 2020 14:54:41 +0000 (UTC)
-Received: from localhost (ovpn-12-39.pek2.redhat.com [10.72.12.39])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9FF585D9CD;
-        Wed, 26 Feb 2020 14:54:40 +0000 (UTC)
-Date:   Wed, 26 Feb 2020 22:54:37 +0800
-From:   'Baoquan He' <bhe@redhat.com>
-To:     Greg Kurz <groug@kaod.org>
-Cc:     Alastair D'Silva <alastair@d-silva.org>,
-        'Alastair D'Silva' <alastair@au1.ibm.com>,
-        "'Aneesh Kumar K . V'" <aneesh.kumar@linux.ibm.com>,
-        'Oliver O'Halloran' <oohall@gmail.com>,
-        'Benjamin Herrenschmidt' <benh@kernel.crashing.org>,
-        'Paul Mackerras' <paulus@samba.org>,
-        'Michael Ellerman' <mpe@ellerman.id.au>,
-        'Frederic Barrat' <fbarrat@linux.ibm.com>,
-        'Andrew Donnellan' <ajd@linux.ibm.com>,
-        'Arnd Bergmann' <arnd@arndb.de>,
-        'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>,
-        'Dan Williams' <dan.j.williams@intel.com>,
-        'Vishal Verma' <vishal.l.verma@intel.com>,
-        'Dave Jiang' <dave.jiang@intel.com>,
-        'Ira Weiny' <ira.weiny@intel.com>,
-        'Andrew Morton' <akpm@linux-foundation.org>,
-        'Mauro Carvalho Chehab' <mchehab+samsung@kernel.org>,
-        "'David S. Miller'" <davem@davemloft.net>,
-        'Rob Herring' <robh@kernel.org>,
-        'Anton Blanchard' <anton@ozlabs.org>,
-        'Krzysztof Kozlowski' <krzk@kernel.org>,
-        'Mahesh Salgaonkar' <mahesh@linux.vnet.ibm.com>,
-        'Madhavan Srinivasan' <maddy@linux.vnet.ibm.com>,
-        =?iso-8859-1?Q?'C=E9dric?= Le Goater' <clg@kaod.org>,
-        'Anju T Sudhakar' <anju@linux.vnet.ibm.com>,
-        'Hari Bathini' <hbathini@linux.ibm.com>,
-        'Thomas Gleixner' <tglx@linutronix.de>,
-        'Nicholas Piggin' <npiggin@gmail.com>,
-        'Masahiro Yamada' <yamada.masahiro@socionext.com>,
-        'Alexey Kardashevskiy' <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Subject: Re: [PATCH v3 04/27] ocxl: Remove unnecessary externs
-Message-ID: <20200226145437.GJ4937@MiWiFi-R3L-srv>
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
- <20200221032720.33893-5-alastair@au1.ibm.com>
- <20200226081447.GH4937@MiWiFi-R3L-srv>
- <4d49801d5ec7e$7a3e8610$6ebb9230$@d-silva.org>
- <20200226100102.0aab7dda@bahia.home>
- <20200226141523.GI4937@MiWiFi-R3L-srv>
- <20200226152050.45547219@bahia.home>
+        bh=fojZvLFP2Jo0NZ519XOD4dNh0bZ+gliF+8E6KslGYjA=;
+        b=jNL4sjC3L8n9CA2AYoEk9lLEYDMveZGcFiC5QHJrzFJbkeNmxZoqs5JsC8oOG27Fb0MhCz
+        G3A2KWjei64lj0ukHnESo6MPTfs0R3JNP+K3+tycHi0BIyuQdQ7+sozuG0mMBpw1ci6ynE
+        SlK68lTEiLjav3IQ0Om0NlHJ/lSrCnM=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-365-Sbbvt-jjMTudwm6EAQcQLw-1; Wed, 26 Feb 2020 09:55:58 -0500
+X-MC-Unique: Sbbvt-jjMTudwm6EAQcQLw-1
+Received: by mail-wr1-f70.google.com with SMTP id z1so1588406wrs.9
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 06:55:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=fojZvLFP2Jo0NZ519XOD4dNh0bZ+gliF+8E6KslGYjA=;
+        b=n1db+c1kPWTt9m83nh3mKLwOfj3/tnxXIVmNHyfSJu7AdybFDNbVIVXN1efiCUbo/P
+         M7vUwuOIIeodgAFkVRNeWwzFOoS7/R5HTnvQoVfOL7aWKU2vIKEp65JX53mIX2bsuiHY
+         fNMyFufGuF9gBd2qPzqaL8bQE4Az/ce9WyFdQUvaSu61by50RrjJH0H7Y/g5cZGfmrvV
+         sPTO1VSPz+Z9Cj1m0PHyBgClrUbdHj0Q9hrkc1Lm34vWCQCcPaceh6RF+g1fFHZldVhh
+         f7GRVQZXuSx1yOGoruWRk70mWi+YiL+sGA34gIbFUoihJu/NDC2pXujjVdLtei65f4gx
+         ikMg==
+X-Gm-Message-State: APjAAAUXL45399yfEOqhxfeAKZzTxbVXFl86YiVZqPdq533c4oAHHM11
+        KzocZT9U/Bzz5NoNxImj6/c8wdMu/sO8tFg+PhxWEhkAT6TvwTWBRYmdtsYNTC6uIATgCExQHsc
+        J041XfbWawQviWFZNy9rxcmy0
+X-Received: by 2002:a7b:cb86:: with SMTP id m6mr6238747wmi.51.1582728956952;
+        Wed, 26 Feb 2020 06:55:56 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzJF+v50o12fLqZ9qUKolYQX8x00JcZR0zCo7Dv+ZRryekuLYXWmSUoEu+PcKGHBmDxzTkTcg==
+X-Received: by 2002:a7b:cb86:: with SMTP id m6mr6238717wmi.51.1582728956677;
+        Wed, 26 Feb 2020 06:55:56 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id b10sm3342471wrt.90.2020.02.26.06.55.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 06:55:55 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 58/61] KVM: x86/mmu: Configure max page level during hardware setup
+In-Reply-To: <20200225210149.GH9245@linux.intel.com>
+References: <20200201185218.24473-1-sean.j.christopherson@intel.com> <20200201185218.24473-59-sean.j.christopherson@intel.com> <87blpmlobr.fsf@vitty.brq.redhat.com> <20200225210149.GH9245@linux.intel.com>
+Date:   Wed, 26 Feb 2020 15:55:55 +0100
+Message-ID: <87k149jt38.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20200226152050.45547219@bahia.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/26/20 at 03:20pm, Greg Kurz wrote:
-> On Wed, 26 Feb 2020 22:15:23 +0800
-> 'Baoquan He' <bhe@redhat.com> wrote:
->=20
-> > On 02/26/20 at 10:01am, Greg Kurz wrote:
-> > > On Wed, 26 Feb 2020 19:26:34 +1100
-> > > "Alastair D'Silva" <alastair@d-silva.org> wrote:
-> > >=20
-> > > > > -----Original Message-----
-> > > > > From: Baoquan He <bhe@redhat.com>
-> > > > > Sent: Wednesday, 26 February 2020 7:15 PM
-> > > > > To: Alastair D'Silva <alastair@au1.ibm.com>
-> > > > > Cc: alastair@d-silva.org; Aneesh Kumar K . V
-> > > > > <aneesh.kumar@linux.ibm.com>; Oliver O'Halloran <oohall@gmail.c=
-om>;
-> > > > > Benjamin Herrenschmidt <benh@kernel.crashing.org>; Paul Mackerr=
-as
-> > > > > <paulus@samba.org>; Michael Ellerman <mpe@ellerman.id.au>; Fred=
-eric
-> > > > > Barrat <fbarrat@linux.ibm.com>; Andrew Donnellan <ajd@linux.ibm=
-.com>;
-> > > > > Arnd Bergmann <arnd@arndb.de>; Greg Kroah-Hartman
-> > > > > <gregkh@linuxfoundation.org>; Dan Williams <dan.j.williams@inte=
-l.com>;
-> > > > > Vishal Verma <vishal.l.verma@intel.com>; Dave Jiang
-> > > > > <dave.jiang@intel.com>; Ira Weiny <ira.weiny@intel.com>; Andrew=
- Morton
-> > > > > <akpm@linux-foundation.org>; Mauro Carvalho Chehab
-> > > > > <mchehab+samsung@kernel.org>; David S. Miller <davem@davemloft.=
-net>;
-> > > > > Rob Herring <robh@kernel.org>; Anton Blanchard <anton@ozlabs.or=
-g>;
-> > > > > Krzysztof Kozlowski <krzk@kernel.org>; Mahesh Salgaonkar
-> > > > > <mahesh@linux.vnet.ibm.com>; Madhavan Srinivasan
-> > > > > <maddy@linux.vnet.ibm.com>; C=E9dric Le Goater <clg@kaod.org>; =
-Anju T
-> > > > > Sudhakar <anju@linux.vnet.ibm.com>; Hari Bathini
-> > > > > <hbathini@linux.ibm.com>; Thomas Gleixner <tglx@linutronix.de>;=
- Greg
-> > > > > Kurz <groug@kaod.org>; Nicholas Piggin <npiggin@gmail.com>; Mas=
-ahiro
-> > > > > Yamada <yamada.masahiro@socionext.com>; Alexey Kardashevskiy
-> > > > > <aik@ozlabs.ru>; linux-kernel@vger.kernel.org; linuxppc-
-> > > > > dev@lists.ozlabs.org; linux-nvdimm@lists.01.org; linux-mm@kvack=
-.org
-> > > > > Subject: Re: [PATCH v3 04/27] ocxl: Remove unnecessary externs
-> > > > >=20
-> > > > > On 02/21/20 at 02:26pm, Alastair D'Silva wrote:
-> > > > > > From: Alastair D'Silva <alastair@d-silva.org>
-> > > > > >
-> > > > > > Function declarations don't need externs, remove the existing=
- ones so
-> > > > > > they are consistent with newer code
-> > > > > >
-> > > > > > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> > > > > > ---
-> > > > > >  arch/powerpc/include/asm/pnv-ocxl.h | 32 ++++++++++++++-----=
-----------
-> > > > > >  include/misc/ocxl.h                 |  6 +++---
-> > > > > >  2 files changed, 18 insertions(+), 20 deletions(-)
-> > > > > >
-> > > > > > diff --git a/arch/powerpc/include/asm/pnv-ocxl.h
-> > > > > > b/arch/powerpc/include/asm/pnv-ocxl.h
-> > > > > > index 0b2a6707e555..b23c99bc0c84 100644
-> > > > > > --- a/arch/powerpc/include/asm/pnv-ocxl.h
-> > > > > > +++ b/arch/powerpc/include/asm/pnv-ocxl.h
-> > > > > > @@ -9,29 +9,27 @@
-> > > > > >  #define PNV_OCXL_TL_BITS_PER_RATE       4
-> > > > > >  #define PNV_OCXL_TL_RATE_BUF_SIZE
-> > > > > ((PNV_OCXL_TL_MAX_TEMPLATE+1) * PNV_OCXL_TL_BITS_PER_RATE / 8)
-> > > > > >
-> > > > > > -extern int pnv_ocxl_get_actag(struct pci_dev *dev, u16 *base=
-, u16
-> > > > > *enabled,
-> > > > > > -			u16 *supported);
-> > > > >=20
-> > > > > It works w or w/o extern when declare functions. Searching 'ext=
-ern'
-> > > > > under include can find so many functions with 'extern' adding. =
-Do we have
-> > > > a
-> > > > > explicit standard if we should add or remove 'exter' in functio=
-n
-> > > > declaration?
-> > > > >=20
-> > > > > I have no objection to this patch, just want to make clear so t=
-hat I can
-> > > > handle
-> > > > > it w/o confusion.
-> > > > >=20
-> > > > > Thanks
-> > > > > Baoquan
-> > > > >=20
-> > > >=20
-> > > > For the OpenCAPI driver, we have settled on not having 'extern' o=
-n
-> > > > functions.
-> > > >=20
-> > > > I don't think I've seen a standard that supports or refutes this,=
- but it
-> > > > does not value add.
-> > > >=20
-> > >=20
-> > > FWIW this is a warning condition for checkpatch:
-> > >=20
-> > > $ ./scripts/checkpatch.pl --strict -f include/misc/ocxl.h
-> >=20
-> > Good to know, thanks.
-> >=20
-> > I didn't know checkpatch.pl can run on header file directly. Tried to
-> > check patch with '--strict -f', the below info doesn't appear. But it
->=20
-> Hmm... -f is to check a source file, not a patch... What did you try
-> exactly ?
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-OK, that's it. I can see the 'CHECK' line when run checkpatch.pl on
-patch with '--strict' only. I think this can be a good reason that we
-should not add extern when add function declaration into header file.
-Thanks.
+> On Tue, Feb 25, 2020 at 03:43:36PM +0100, Vitaly Kuznetsov wrote:
+>> Sean Christopherson <sean.j.christopherson@intel.com> writes:
+>> 
+>> > Configure the max page level during hardware setup to avoid a retpoline
+>> > in the page fault handler.  Drop ->get_lpage_level() as the page fault
+>> > handler was the last user.
+>> > @@ -6064,11 +6064,6 @@ static void svm_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
+>> >  	}
+>> >  }
+>> >  
+>> > -static int svm_get_lpage_level(void)
+>> > -{
+>> > -	return PT_PDPE_LEVEL;
+>> > -}
+>> 
+>> I've probably missed something but before the change, get_lpage_level()
+>> on AMD was always returning PT_PDPE_LEVEL, but after the change and when
+>> NPT is disabled, we set max_page_level to either PT_PDPE_LEVEL (when
+>> boot_cpu_has(X86_FEATURE_GBPAGES)) or PT_DIRECTORY_LEVEL
+>> (otherwise). This sounds like a change) unless we think that
+>> boot_cpu_has(X86_FEATURE_GBPAGES) is always true on AMD.
+>
+> It looks like a functional change, but isn't.  kvm_mmu_hugepage_adjust()
+> caps the page size used by KVM's MMU at the minimum of ->get_lpage_level()
+> and the host's mapping level.  Barring an egregious bug in the kernel MMU,
+> the host page tables will max out at PT_DIRECTORY_LEVEL (2mb) unless
+> boot_cpu_has(X86_FEATURE_GBPAGES) is true.
+>
+> In other words, this is effectively a "documentation" change.  I'll figure
+> out a way to explain this in the changelog...
+>
+>         max_level = min(max_level, kvm_x86_ops->get_lpage_level());
+>         for ( ; max_level > PT_PAGE_TABLE_LEVEL; max_level--) {
+>                 linfo = lpage_info_slot(gfn, slot, max_level);
+>                 if (!linfo->disallow_lpage)
+>                         break;
+>         }
+>
+>         if (max_level == PT_PAGE_TABLE_LEVEL)
+>                 return PT_PAGE_TABLE_LEVEL;
+>
+>         level = host_pfn_mapping_level(vcpu, gfn, pfn, slot);
+>         if (level == PT_PAGE_TABLE_LEVEL)
+>                 return level;
+>
+>         level = min(level, max_level); <---------
 
->=20
-> > does give out below information when run on header file.
-> >=20
-> > >=20
-> > > [...]
-> > >=20
-> > > CHECK: extern prototypes should be avoided in .h files
-> > > #176: FILE: include/misc/ocxl.h:176:
-> > > +extern int ocxl_afu_irq_alloc(struct ocxl_context *ctx, int *irq_i=
-d);
-> > >=20
-> > > [...]
-> > >=20
-> >=20
->=20
->=20
+Ok, I see (I believe):
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
+It would've helped me a bit if kvm_configure_mmu() was written the
+following way:
+
+void kvm_configure_mmu(bool enable_tdp, int tdp_page_level)
+{
+        tdp_enabled = enable_tdp;
+
+	if (boot_cpu_has(X86_FEATURE_GBPAGES))
+                max_page_level = PT_PDPE_LEVEL;
+        else
+                max_page_level = PT_DIRECTORY_LEVEL;
+
+        if (tdp_enabled)
+		max_page_level = min(tdp_page_level, max_page_level);
+}
+
+(we can't have cpu_has_vmx_ept_1g_page() and not
+boot_cpu_has(X86_FEATURE_GBPAGES), right?)
+
+But this is certainly just a personal preference, feel free to ignore)
+
+-- 
+Vitaly
 
