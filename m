@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5BDC4BA24
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D22FC4BA24
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C0FD21D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:04:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 422BD21D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:04:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZFpUXwgX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/MIoEkI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727700AbgBZVE3 (ORCPT
+        id S1727744AbgBZVEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 16:04:29 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34667 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727553AbgBZVE1 (ORCPT
+        Wed, 26 Feb 2020 16:04:32 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33411 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727701AbgBZVE3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 16:04:27 -0500
-Received: by mail-pl1-f195.google.com with SMTP id j7so196725plt.1;
-        Wed, 26 Feb 2020 13:04:26 -0800 (PST)
+        Wed, 26 Feb 2020 16:04:29 -0500
+Received: by mail-pl1-f196.google.com with SMTP id ay11so200361plb.0;
+        Wed, 26 Feb 2020 13:04:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=O2R0xv9L03iHVU8fcy0iMduIxJYTTX4YSCNR8788OZI=;
-        b=ZFpUXwgXzxzsdK06WKBmBhm9sVDb1CcjViRzCFz1d0TmLYgH4x/uGQwRipAnzOrin/
-         nfOHwt5B5Z1YcDMbt2ullGh/jzWOOq+Unh8OuxyKvuBqIQoh8i4kPVTjMmSY5ZTZv/wa
-         MSH1Phve2N5EFli0hNKk+OaL24HoCP+p2vhoNX2uQAVFHu6tcjzNmo103Gr8ibLbxbfG
-         QZ5f/fixwGtXX0eLu9NBSBTpYkAcHdcd+5VDEzQIutrl15RBL8Rlx+KO5YaZBi//65FJ
-         VW0jfEAAO6msbk8csosVgxtLW/Bon88pmcj6ZplBNhpQC8i5vagiUlyLEuGmqduGRCbs
-         6kiQ==
+        bh=xAl1x+LpHJ0/VGX33EY28LK5EWDI6zzFinArxJkf/Us=;
+        b=i/MIoEkIkUelCWWx6h02qcZVRrQclgV7C5pVM14h6peF/Ryl4gGu6eXes/xJT1aE6E
+         mq+oM2W8jWqREiUFdm5SsrqNGQ8hnfXOZP2MrZxKwP9bCwAMoROzYXl2H6/XHKP6PZpj
+         FsBlJyU97lfwxT0sxx+SwL0eYdtK4+ZuFrT2mBVSHAov8oi4NKrG4jwLQJmYEvLqqsdf
+         6eaJhdFFEVINUGhxVi/AkY09abXyerQ9GcwFjRUUIA1DGA110o3rqtIsvbG2O0AesPWo
+         5NClYjADavsoI9fj6GiVslYvq1mASMgXVTJIA5lT0G800a3UNXGVqOEKnq7y/Kg2XpKb
+         Wt+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=O2R0xv9L03iHVU8fcy0iMduIxJYTTX4YSCNR8788OZI=;
-        b=hs87xWgSmPoAtJOJYjPF9BIzTWf4x3HsiNY7sPxXBkagRxro1Ycxc6s9Z75OL4xchf
-         Vl8ahSnw6Uw1dJ1pHcftD3lSZDszKEiJ1RocABBBujhJucVZ5N4tTBX5fsSFo7T4vfXl
-         p+0GHGBU2JI5TBtEYOyy+brLHTpg8anke6ANY+9dPmzX/D7czxacwWqOM1/RV+GVov7s
-         TpPkgrE/a94aP+0SPZZOpiuyR1J6crOuMHeHjJOFv9A3RVcLg+mYiF+tHx4BAvolc19b
-         PJaXIi2zRdTKRoENnRMF62fy2t2kEdvSqCtTTUK6jkEHJDfrogtnF1rAga5CAupIz6Ei
-         5jiQ==
-X-Gm-Message-State: APjAAAU1tcVYJUKqml/9/gtUFm65A44BFjkkEI2eX6Mu0DsMswSdIL3s
-        sO8rfZB2fRqw53D0C7PdP30=
-X-Google-Smtp-Source: APXvYqxggiQoe2ew7pSQ4cHEaegNrujnyAJVfCPiG0j+4IZz9M7i2zUIxdS7oJjZ2B2cC2/OyW4+Tw==
-X-Received: by 2002:a17:90a:cf08:: with SMTP id h8mr1015158pju.81.1582751065860;
-        Wed, 26 Feb 2020 13:04:25 -0800 (PST)
+        bh=xAl1x+LpHJ0/VGX33EY28LK5EWDI6zzFinArxJkf/Us=;
+        b=OUS0nIlp1cjVKTQhZ1h7EYiI36cedIz/FKom6wt3Jk4jWuV7dpHYezvApR5dvXWFed
+         8lfE/LsrWclmtljd6hD5sp0E/RBu0ZhuZGPjiIpLZm/93wDfm414eeHCgjHkV21rGlWd
+         jpCHuW14+4AXlKGoChmyltyhbyxpX3+g6N6pqDNBO9bne8+omuu+6MjbmflkP00CH5yq
+         ma06dbZ08skoo/6qsDpQQ7aSmOM3ajMkEMXoIcl5YkWqmoga+pTmrsKL6NlRSxZmxQYP
+         cdn51FODVavVHG5oweYSGk00+XYiNVYolcecKnQaHOPd6P9qe+PLPpdrQJmdi0FdRGrP
+         nivQ==
+X-Gm-Message-State: APjAAAV2iRI3XrDkdEky/Y8ftkgQZsvulE9DXUwvWk3tnF9PqSqmz2c3
+        NWgUfGzG2590YiWt4aclPXA=
+X-Google-Smtp-Source: APXvYqzmRD/mrN418qWZD5WexJgskKTDafa05gVsZZkbQReTFmVojqc2qHVQsWNNEWytgCR8y1/gLA==
+X-Received: by 2002:a17:902:7589:: with SMTP id j9mr1169794pll.312.1582751068697;
+        Wed, 26 Feb 2020 13:04:28 -0800 (PST)
 Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id o6sm4344756pfg.180.2020.02.26.13.04.25
+        by smtp.gmail.com with ESMTPSA id q8sm3966221pfs.161.2020.02.26.13.04.27
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 26 Feb 2020 13:04:25 -0800 (PST)
+        Wed, 26 Feb 2020 13:04:28 -0800 (PST)
 From:   Guenter Roeck <linux@roeck-us.net>
 To:     Minas Harutyunyan <hminas@synopsys.com>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -63,9 +63,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Douglas Anderson <dianders@chromium.org>,
         linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [RFT PATCH 2/4] usb: dwc2: Do not update data length if it is 0 on inbound transfers
-Date:   Wed, 26 Feb 2020 13:04:12 -0800
-Message-Id: <20200226210414.28133-3-linux@roeck-us.net>
+Subject: [RFT PATCH 4/4] usb: dwc2: Make "trimming xfer length" a debug message
+Date:   Wed, 26 Feb 2020 13:04:14 -0800
+Message-Id: <20200226210414.28133-5-linux@roeck-us.net>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200226210414.28133-1-linux@roeck-us.net>
 References: <20200226210414.28133-1-linux@roeck-us.net>
@@ -74,50 +74,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The DWC2 documentation states that transfers with zero data length should
-set the number of packets to 1 and the transfer length to 0. This is not
-currently the case for inbound transfers: the transfer length is set to
-the maximum packet length. This can have adverse effects if the chip
-actually does transfer data as it is programmed to do. Follow chip
-documentation and keep the transfer length set to 0 in that situation.
+With some USB network adapters, such as DM96xx, the following message
+is seen for each maximum size receive packet.
+
+dwc2 ff540000.usb: dwc2_update_urb_state(): trimming xfer length
+
+This happens because the packet size requested by the driver is 1522
+bytes, wMaxPacketSize is 64, the dwc2 driver configures the chip to
+receive 24*64 = 1536 bytes, and the chip does indeed send more than
+1522 bytes of data. Since the event does not indicate an error condition,
+the message is just noise. Demote it to debug level.
 
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
- drivers/usb/dwc2/hcd.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ drivers/usb/dwc2/hcd_intr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc2/hcd.c b/drivers/usb/dwc2/hcd.c
-index f6d8cc9cee34..506fdffd82ab 100644
---- a/drivers/usb/dwc2/hcd.c
-+++ b/drivers/usb/dwc2/hcd.c
-@@ -1313,19 +1313,20 @@ static void dwc2_hc_start_transfer(struct dwc2_hsotg *hsotg,
- 			if (num_packets > max_hc_pkt_count) {
- 				num_packets = max_hc_pkt_count;
- 				chan->xfer_len = num_packets * chan->max_packet;
-+			} else if (chan->ep_is_in) {
-+				/*
-+				 * Always program an integral # of max packets
-+				 * for IN transfers.
-+				 * Note: This assumes that the input buffer is
-+				 * aligned and sized accordingly.
-+				 */
-+				chan->xfer_len = num_packets * chan->max_packet;
- 			}
- 		} else {
- 			/* Need 1 packet for transfer length of 0 */
- 			num_packets = 1;
- 		}
+diff --git a/drivers/usb/dwc2/hcd_intr.c b/drivers/usb/dwc2/hcd_intr.c
+index 12819e019e13..d5f4ec1b73b1 100644
+--- a/drivers/usb/dwc2/hcd_intr.c
++++ b/drivers/usb/dwc2/hcd_intr.c
+@@ -500,7 +500,7 @@ static int dwc2_update_urb_state(struct dwc2_hsotg *hsotg,
+ 						      &short_read);
  
--		if (chan->ep_is_in)
--			/*
--			 * Always program an integral # of max packets for IN
--			 * transfers
--			 */
--			chan->xfer_len = num_packets * chan->max_packet;
--
- 		if (chan->ep_type == USB_ENDPOINT_XFER_INT ||
- 		    chan->ep_type == USB_ENDPOINT_XFER_ISOC)
- 			/*
+ 	if (urb->actual_length + xfer_length > urb->length) {
+-		dev_warn(hsotg->dev, "%s(): trimming xfer length\n", __func__);
++		dev_dbg(hsotg->dev, "%s(): trimming xfer length\n", __func__);
+ 		xfer_length = urb->length - urb->actual_length;
+ 	}
+ 
 -- 
 2.17.1
 
