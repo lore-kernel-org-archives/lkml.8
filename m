@@ -2,114 +2,112 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A7BC4BA0D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 03:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CCAC4BA0A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 03:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A51D2067C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 03:42:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O1MiNTbJ"
+	by mail.kernel.org (Postfix) with ESMTP id D58AD2067C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 03:43:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgBZDmv (ORCPT
+        id S1726671AbgBZDnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 22:42:51 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57592 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726024AbgBZDmu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 22:42:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582688568;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=PP+gBT/BOb2iXUdJHBBPJUOUIHHF8gedX5sekL2yHNo=;
-        b=O1MiNTbJH4OvRGrz38UaTx9C9RDixB5lg99VLRJ6c7TPipO0TiCqb000g2ExUsYl4BUqHu
-        5edapz/zn1Cr2EDUt4uZC8yA9LBoSiqseL+ABjenyWvnl26Rl2ovogJMEEdO8xBbcdORnP
-        t1TZlJlJwAPMupXESBuqHMxk15jbSF0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-43-euz-Ju7vOdib4MRddEPriQ-1; Tue, 25 Feb 2020 22:42:45 -0500
-X-MC-Unique: euz-Ju7vOdib4MRddEPriQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F402F801E6C;
-        Wed, 26 Feb 2020 03:42:42 +0000 (UTC)
-Received: from localhost (ovpn-12-39.pek2.redhat.com [10.72.12.39])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3A99C8C084;
-        Wed, 26 Feb 2020 03:42:38 +0000 (UTC)
-Date:   Wed, 26 Feb 2020 11:42:36 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Michal Hocko <mhocko@kernel.org>,
-        David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, richardw.yang@linux.intel.com,
-        osalvador@suse.de, dan.j.williams@intel.com, rppt@linux.ibm.com,
-        robin.murphy@arm.com
-Subject: Re: [PATCH v2 0/7] mm/hotplug: Only use subsection map in VMEMMAP
- case
-Message-ID: <20200226034236.GD24216@MiWiFi-R3L-srv>
-References: <20200220043316.19668-1-bhe@redhat.com>
- <20200220103849.GG20509@dhcp22.suse.cz>
- <20200221142847.GG4937@MiWiFi-R3L-srv>
- <75b4f840-7454-d6d0-5453-f0a045c852fa@redhat.com>
- <20200225100226.GM22443@dhcp22.suse.cz>
+        Tue, 25 Feb 2020 22:43:00 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:58586 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726024AbgBZDnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 22:43:00 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id BC343562B035809ED25D;
+        Wed, 26 Feb 2020 11:42:57 +0800 (CST)
+Received: from [127.0.0.1] (10.177.223.23) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 26 Feb 2020
+ 11:42:51 +0800
+Subject: Re: [PATCH] acpi/iort: check output reference for the real used
+ mapping
+To:     Heyi Guo <guoheyi@huawei.com>, <devel@edk2.groups.io>
+CC:     <wanghaibin.wang@huawei.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, <linux-acpi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200225090136.40989-1-guoheyi@huawei.com>
+From:   Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <120d5f92-eede-10bc-6d2b-b4a4ef763b24@huawei.com>
+Date:   Wed, 26 Feb 2020 11:42:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225100226.GM22443@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20200225090136.40989-1-guoheyi@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.223.23]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/25/20 at 11:02am, Michal Hocko wrote:
-> On Tue 25-02-20 10:10:45, David Hildenbrand wrote:
-> > >>>  include/linux/mmzone.h |   2 +
-> > >>>  mm/sparse.c            | 178 +++++++++++++++++++++++++++++------------
-> > >>>  2 files changed, 127 insertions(+), 53 deletions(-)
-> > >>
-> > >> Why do we need to add so much code to remove a functionality from one
-> > >> memory model?
-> > > 
-> > > Hmm, Dan also asked this before.
-> > > 
-> > > The adding mainly happens in patch 2, 3, 4, including the two newly
-> > > added function defitions, the code comments above them, and those added
-> > > dummy functions for !VMEMMAP.
-> > 
-> > AFAIKS, it's mostly a bunch of newly added comments on top of functions.
-> > E.g., the comment for fill_subsection_map() alone spans 12 LOC in total.
-> > I do wonder if we have to be that verbose. We are barely that verbose on
-> > MM code (and usually I don't see much benefit unless it's a function
-> > with many users from many different places).
+On 2020/2/25 17:01, Heyi Guo wrote:
+> The function iort_node_map_id() does the sanity check against the
+> first mapping in the node, but not the one which we really use.
 > 
-> I would tend to agree here. Not that I am against kernel doc
-> documentation but these are internal functions and the comment doesn't
-> really give any better insight IMHO. I would be much more inclined if
-> this was the general pattern in the respective file but it just stands
-> out.
+> Logically we need check the mapping we use, or check every mapping in
+> the node. Choose the first fix for we are not firmware tester.
+> 
+> Signed-off-by: Heyi Guo <guoheyi@huawei.com>
+> 
+> ---
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Hanjun Guo <guohanjun@huawei.com>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Len Brown <lenb@kernel.org>
+> Cc: linux-acpi@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/acpi/arm64/iort.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+> index ed3d2d1a7ae9..d0fe8d673240 100644
+> --- a/drivers/acpi/arm64/iort.c
+> +++ b/drivers/acpi/arm64/iort.c
+> @@ -470,13 +470,6 @@ static struct acpi_iort_node *iort_node_map_id(struct acpi_iort_node *node,
+>  		map = ACPI_ADD_PTR(struct acpi_iort_id_mapping, node,
+>  				   node->mapping_offset);
+>  
+> -		/* Firmware bug! */
+> -		if (!map->output_reference) {
+> -			pr_err(FW_BUG "[node %p type %d] ID map has NULL parent reference\n",
+> -			       node, node->type);
+> -			goto fail_map;
+> -		}
+> -
+>  		/*
+>  		 * Get the special ID mapping index (if any) and skip its
+>  		 * associated ID map to prevent erroneous multi-stage
+> @@ -497,6 +490,13 @@ static struct acpi_iort_node *iort_node_map_id(struct acpi_iort_node *node,
+>  		if (i == node->mapping_count)
+>  			goto fail_map;
+>  
+> +		/* Firmware bug! */
+> +		if (!map->output_reference) {
+> +			pr_err(FW_BUG "[node %p type %d] ID map has NULL parent reference\n",
+> +			       node, node->type);
+> +			goto fail_map;
+> +		}
 
-I saw there are internal functions which have code comments, e.g
-shrink_slab() in mm/vmscan.c, not only this one place, there are several
-places. I personally prefer to see code comment for function if
-possible, this can save time, e.g people can skip the bitmap operation
-when read code if not necessary. And here I mainly want to tell there
-are different returned value to note different behaviour when call them.
-
-Anyway, it's fine to me to remove them. The two functions are internal,
-and not so complicated. I will remove them since you both object.
-However, I disagree with the saying that we should not add code comment
-for internal function.
+I think we can warning on the NULL parent reference when
+scanning the mappings in the node, but don't bail out for
+the mappings we are not using.
 
 Thanks
-Baoquan
+Hanjun
 
