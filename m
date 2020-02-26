@@ -2,94 +2,95 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A87C4BA10
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D058CC4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35B252467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:29:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SxlL7VL7"
+	by mail.kernel.org (Postfix) with ESMTP id A8A1224680
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:30:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582727411;
+	bh=FTavrhRvD3/cAi6dtPOZfJq/yT2BV2F/rKEuNXloXiw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rAB7jSdvRDhgO8fZWjrMNLYksI2cpWuzxM4eVtNgeYziREg9cMO5ylbuMisLDz1m1
+	 xdNxBP8Ha+qiIbfxfheRF+fPtAJMO/NQ9aqayxbBYxtT04RV+eYEUJ2H0JPRMBCzIx
+	 Z7WIV3M2Ufa0lrsKNPSwla2H8wW2sdNsZTkXy0Zc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727716AbgBZO3f (ORCPT
+        id S1727742AbgBZOaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 09:29:35 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34710 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727446AbgBZO3e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 09:29:34 -0500
-Received: by mail-pl1-f193.google.com with SMTP id j7so1368166plt.1;
-        Wed, 26 Feb 2020 06:29:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VqCNHA5h8w+jm4PEJVkZoEzMGjj3RusmfQpFcLz71kQ=;
-        b=SxlL7VL7qMqN83Vvso8hSUbi49hAYfEoUzYu2R9ZrI87aIqWlHEMOd+fWOEDZRtYcC
-         q8dF3Mc/SVl3ZLi6h4yBCSH9mmhrhMGC8muEF5fhutVMAhhtSnePySit4x9ZpahsNeBl
-         nfasVgP3+25T/aCSV4MW8U2Nr6VdgAM8LkXbZs0aGBkSzYyzLOcwU2jn62HDDEBgcRmN
-         YZxKLp0HjFu1+N3Vf5X9xC39Wf1FLxa2yOoQaWMAWMp5reXN1/tStA+V4OLYFFzNwYon
-         qOsOowJ827TjvbYPr1EO2he+3fNAm/EjyYyzE/IbyBZ0HXOrO28FEcPJVn8uacHVQZ2O
-         eqFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VqCNHA5h8w+jm4PEJVkZoEzMGjj3RusmfQpFcLz71kQ=;
-        b=R5do90R0dRTG1zInFSZBgqMXJu+9J9Euw2udEcCtSvafbKnAm0Hl6LJHN46j6hvNt4
-         c9kKo5MNfaJ7sO3rJiHHBYTQCaFeoRyvsDafHcsa69EsqPmz6BpqszEmxMrCEYgE6J35
-         lyX51bG37f6aYCukeKo9+Da7SsND5Gh40GtDzUmLOdAsSPqv2goIx0LTU2HkpRPBuO8S
-         Rwsd4Peg72sGGf4HEhBwTveysrlH9ziBZ5GNYTkm7zrZlv7hhCNdCXeH+mLawY/xramV
-         nPN5UhxjCmI8qJ86ye6dUGfL1d+w5WJkhrRPKHdYTqGNCrlHo936SVul6eUUNEgZhmAo
-         +Dlw==
-X-Gm-Message-State: APjAAAUBssNcZl+p1jD59NFlkfotaUxjv4scQd57N0YfOYLVe3TuRvcU
-        IwpGMikDjhpgPhm1dXcsq6g=
-X-Google-Smtp-Source: APXvYqztqKU513mEFFjaQWr9RgsHnllKC23sYhZpMCUvhDkSE1h5hMSHaBx6pYKtZqThoiQ1HEkUhQ==
-X-Received: by 2002:a17:90a:e653:: with SMTP id ep19mr5755339pjb.58.1582727373802;
-        Wed, 26 Feb 2020 06:29:33 -0800 (PST)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id u23sm3281311pfm.29.2020.02.26.06.29.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 06:29:33 -0800 (PST)
-Date:   Wed, 26 Feb 2020 06:29:31 -0800
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [RFC PATCH 0/2] AT8031 PHY timestamping support
-Message-ID: <20200226142931.GA1651@localhost>
-References: <20200225230819.7325-1-michael@walle.cc>
- <20200225235040.GF9749@lunn.ch>
- <9955C44A-8105-4087-8555-BAC5AE4AF25D@walle.cc>
- <20200226025441.GB10271@localhost>
- <fa823a08fa6d50c57ca03bdc58bf4921@walle.cc>
+        Wed, 26 Feb 2020 09:30:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39914 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727426AbgBZOaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 09:30:10 -0500
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FAED2468C;
+        Wed, 26 Feb 2020 14:30:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582727409;
+        bh=FTavrhRvD3/cAi6dtPOZfJq/yT2BV2F/rKEuNXloXiw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UgKEAOVPqCjEnalnG/MJpctIDGJWpzc2VZ3liqn3FBmTSyRcGR6x0QQxl+hDA8K7m
+         0N/mJRIgoKmlNj5OsWGP15UXTpGPisYFxZ62tjsvVR5qzCWQS5DYFn4Ij5KrMu0G8J
+         JQK2IWg89VZASe7ljBjnu5MKAJcRa0Sws1CB9+HQ=
+Received: by mail-qk1-f176.google.com with SMTP id h4so2816941qkm.0;
+        Wed, 26 Feb 2020 06:30:09 -0800 (PST)
+X-Gm-Message-State: APjAAAVnxsmKLYfK6kHpNmMTtA6LikaK31ybVHrrTy9ybTp8MNsGxrm8
+        qICUM2RJNUhyWxM7TsC8MB1xUBai9I8ea1pf0A==
+X-Google-Smtp-Source: APXvYqx8P7fHvCOhAoSOWA8DnUwX4yyOHQiABO8b/bbXdZCaWKAxi3z6qQ+ITbxwwNfVk+W8jZLhM9/ZJQIl6x+NuTM=
+X-Received: by 2002:a05:620a:12a3:: with SMTP id x3mr2439558qki.254.1582727408199;
+ Wed, 26 Feb 2020 06:30:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fa823a08fa6d50c57ca03bdc58bf4921@walle.cc>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200221053802.70716-1-evanbenn@chromium.org> <20200221163717.v2.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
+ <CAL_JsqL94vtBEmV2gNWx-D==sLiRXjxBBFZS8fw1cR6=KjS7XQ@mail.gmail.com> <CAKz_xw2ETZ5eyNfdWU5cF6Qy23E1NqhpFHoLT_CzUDHWTCbw4Q@mail.gmail.com>
+In-Reply-To: <CAKz_xw2ETZ5eyNfdWU5cF6Qy23E1NqhpFHoLT_CzUDHWTCbw4Q@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 26 Feb 2020 08:29:56 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLYpSK6HRT4s=hq153xvU_aiPCq3Hk_oZC-7X7e7daA7Q@mail.gmail.com>
+Message-ID: <CAL_JsqLYpSK6HRT4s=hq153xvU_aiPCq3Hk_oZC-7X7e7daA7Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: watchdog: Add mt8173,smc-wdt watchdog
+To:     Evan Benn <evanbenn@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Julius Werner <jwerner@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 12:30:48PM +0100, Michael Walle wrote:
-> But then there would need to be such a hardware pin, correct? Unless
-> you'd misuse the INT# for it. Also, why should the PHY then have a PHC
-> which can be adjusted.
+On Tue, Feb 25, 2020 at 6:15 PM Evan Benn <evanbenn@chromium.org> wrote:
+>
+> Thanks Rob
+>
+> > This should be a child of some Mediatek firmware node. I assume
+> > watchdog is not the *only* function.
+>
+> I am not quite sure what you mean, do you intend this:
+>
+>  firmware {
+>    watchdog {
 
-I see.  Oh well.  I'll just have to remember the AR8031 on my list of "ptp
-hardware to be avoided".
+Not quite. /firmware is generic container. I'd expect another layer in
+the middle for the overall set of Mediatek firmware behind smc calls.
+Look at 'xlnx,zynqmp-firmware' for an example.
 
-:(
-
-Richard
+Rob
