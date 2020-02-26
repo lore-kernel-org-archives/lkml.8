@@ -2,89 +2,139 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDEDC4BA06
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 098D0C4BA06
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62B2E2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDD072082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:47:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P42MrSbU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730144AbgBZCqP (ORCPT
+        id S1730184AbgBZCrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 21:46:15 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11108 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728989AbgBZCqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 21:46:15 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id EFB8B26D42309F11D23E;
-        Wed, 26 Feb 2020 10:46:10 +0800 (CST)
-Received: from [127.0.0.1] (10.173.221.195) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Wed, 26 Feb 2020
- 10:46:02 +0800
-Subject: Re: [PATCH v3 6/6] powerpc/fsl_booke/kaslr: rename kaslr-booke32.rst
- to kaslr-booke.rst and add 64bit part
-To:     Christophe Leroy <christophe.leroy@c-s.fr>, <mpe@ellerman.id.au>,
-        <linuxppc-dev@lists.ozlabs.org>, <diana.craciun@nxp.com>,
-        <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>, <oss@buserror.net>
-CC:     <linux-kernel@vger.kernel.org>, <zhaohongjiang@huawei.com>
-References: <20200206025825.22934-1-yanaijie@huawei.com>
- <20200206025825.22934-7-yanaijie@huawei.com>
- <77c4a404-3ce5-5090-bbff-aaca71507146@c-s.fr>
-From:   Jason Yan <yanaijie@huawei.com>
-Message-ID: <1b1c7659-2eb0-81ab-78e1-061c1e300986@huawei.com>
-Date:   Wed, 26 Feb 2020 10:46:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Tue, 25 Feb 2020 21:47:11 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:32996 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728989AbgBZCrL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 21:47:11 -0500
+Received: by mail-pg1-f193.google.com with SMTP id 6so551358pgk.0;
+        Tue, 25 Feb 2020 18:47:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1Y1UZOFfTZ0N6C6Za7AR6jiLifnSzYiC7Rf6ZLlfNiw=;
+        b=P42MrSbUt/jDRdsuYTv73WxSBQYHL2ixhS9t3NbKGd9SNMfPqqbEfc8/ME9OkMgfdy
+         UxJQ2v//q3H1K9dDHdH/s0rmT2NorypFnBFmO/S1opc7MQSbVfW5A0dOjZIV6kMvT7uP
+         Kn47dTNifgZMlU2/BSTpjqfJgnP07NjdYPlS6Cm8Lj3vDSoERQSq+7P7OGgqKcNIc2gN
+         XxOCv1xsrSlmosu2wNYEUk1Hx/i5vAHgViV8ZB8zlBwZdaQRXuTJjmfJ3coEWzo+LSGc
+         x7etNWvB6gXGWXw21vWq/kmp6WONGtzPvkJWXBNYmBSelX5il7YJHlaZClzFl7hZ6jBD
+         20jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1Y1UZOFfTZ0N6C6Za7AR6jiLifnSzYiC7Rf6ZLlfNiw=;
+        b=YK2kJ0rd4V1U4oN5eE5cGZrg0+n097BxHEHuZgkI6nLgXgfTesUcsdqsS7honxOonP
+         zsK75+Y1HY2xWxjGO8Yp5SeZhzRYa7wYa+kqRGShA5v8MX65OQGM/amCxDXKlCNVNJ70
+         0Igq8/COktnuuU0bNBsAYqhz17yKf7xBnShqqvcqKYl0SpEERMYmRmUmHkaTrYM1N8Wd
+         RAPwAMkYSNjOFerSjvXgoNB5XYidzcIxX1NLLsLIxk+EwhHqR8HaWq7vMJIdJlAI1792
+         4shLy5QUoPMIqApMfEdplAxLX2XBKG/vIFiHUYHIhSgVjgbTagoEkq5lcpLlraXHQyc9
+         REsQ==
+X-Gm-Message-State: APjAAAWjzJy00t7wju1S21wQB5tjdE21PY9+JvbjuM4MySVY4CgI3S1/
+        l3ZzEuWusz9upm2VPyC+JTI=
+X-Google-Smtp-Source: APXvYqwAGBfDW1W1JoMhxUQofiKL5jbdmw6iHpPOI4qgkIdGrY+7eME4F8Iv+SLzWvp2tiziCUkfiA==
+X-Received: by 2002:aa7:8597:: with SMTP id w23mr1993190pfn.38.1582685229908;
+        Tue, 25 Feb 2020 18:47:09 -0800 (PST)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id z30sm451033pfq.154.2020.02.25.18.47.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 18:47:09 -0800 (PST)
+Date:   Tue, 25 Feb 2020 18:47:07 -0800
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     "Christopher S. Hall" <christopher.s.hall@intel.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, hpa@zytor.com, mingo@redhat.com,
+        x86@kernel.org, jacob.e.keller@intel.com, davem@davemloft.net,
+        sean.v.kelley@intel.com
+Subject: Re: [Intel PMC TGPIO Driver 0/5] Add support for Intel PMC Time GPIO
+ Driver with PHC interface changes to support additional H/W Features
+Message-ID: <20200226024707.GA10271@localhost>
+References: <20191211214852.26317-1-christopher.s.hall@intel.com>
+ <20200203040838.GA5851@localhost>
+ <20200225233707.GA32079@skl-build>
 MIME-Version: 1.0
-In-Reply-To: <77c4a404-3ce5-5090-bbff-aaca71507146@c-s.fr>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.221.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200225233707.GA32079@skl-build>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Feb 25, 2020 at 03:37:07PM -0800, Christopher S. Hall wrote:
+> On Sun, Feb 02, 2020 at 08:08:38PM -0800, Richard Cochran wrote:
+> > The TGPIO input clock, the ART, is a free running counter, but you
+> > want to support frequency adjustments.  Use a timecounter cyclecounter
+> > pair.
+> 
+> I'm concerned about the complexity that the timecounter adds to
+> the driver. Specifically, the complexity of dealing with any rate mismatches
+> between the timecounter and the periodic output signal. The phase
+> error between the output and timecounter needs to be zero.
 
+If I understood correctly, the device's outputs are generated from a
+non-adjustable counter.  So, no matter what, you will have the problem
+of changing the pulse period in concert with the user changing the
+desired frequency.
 
-在 2020/2/20 21:50, Christophe Leroy 写道:
-> 
-> 
-> Le 06/02/2020 à 03:58, Jason Yan a écrit :
->> Now we support both 32 and 64 bit KASLR for fsl booke. Add document for
->> 64 bit part and rename kaslr-booke32.rst to kaslr-booke.rst.
->>
->> Signed-off-by: Jason Yan <yanaijie@huawei.com>
->> Cc: Scott Wood <oss@buserror.net>
->> Cc: Diana Craciun <diana.craciun@nxp.com>
->> Cc: Michael Ellerman <mpe@ellerman.id.au>
->> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
->> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->> Cc: Paul Mackerras <paulus@samba.org>
->> Cc: Nicholas Piggin <npiggin@gmail.com>
->> Cc: Kees Cook <keescook@chromium.org>
->> ---
->>   .../{kaslr-booke32.rst => kaslr-booke.rst}    | 35 ++++++++++++++++---
->>   1 file changed, 31 insertions(+), 4 deletions(-)
->>   rename Documentation/powerpc/{kaslr-booke32.rst => kaslr-booke.rst} 
->> (59%)
-> 
-> Also update Documentation/powerpc/index.rst ?
-> 
+> My counter-proposal would be to use the real-time clock as the basis of the
+> device clock. This is fairly simple because the relation between ART and the
+> realtime clock is known. When output is enabled any phase error between
+> the realtime clock and the periodic output signal is accumulated in the
+> SYS_OFFSET result.
 
-Oh yes, thanks for reminding me of this.
+I don't understand how you intend to do this...
+ 
+> This leaves the PHC API behavior as it is currently and uses the frequency
+> adjust API to adjust the output rate.
+> 
+> > Let the user dial a periodic output signal in the normal way.
+> > 
+> > Let the user change the frequency in the normal way, and during this
+> > call, adjust the counter values accordingly.
+> 
+> Yes to both of the above.
+
+So, why then do you need this?
+
++#define PTP_EVENT_COUNT_TSTAMP2 \
++       _IOWR(PTP_CLK_MAGIC, 19, struct ptp_event_count_tstamp)
+
+If you can make the device work with the existing user space API,
+
+	ioctl(fd, PTP_PEROUT_REQUEST2, ...);
+	while (1) {
+		clock_adjtimex(FD_TO_CLOCKID(fd), ...);
+	}
+
+that would be ideal.  But I will push back on anything like the
+following.
+
+	ioctl(fd, PTP_PEROUT_REQUEST2, ...);
+	while (1) {
+		clock_adjtimex(FD_TO_CLOCKID(fd), ...);
+		ioctl(fd, PTP_EVENT_COUNT_TSTAMP, ...);
+	}
+
+But maybe I misunderstood?
 
 Thanks,
-Jason
-
-> Christophe
-> 
-> .
-
+Richard
