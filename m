@@ -2,579 +2,144 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD392C4BA21
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DC7C4BA21
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8238A20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E163120732
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:49:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uxYoywU0"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jA2Um2bn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727338AbgBZSsd (ORCPT
+        id S1727328AbgBZStb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 13:48:33 -0500
-Received: from mail-wr1-f74.google.com ([209.85.221.74]:51880 "EHLO
-        mail-wr1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726983AbgBZSsY (ORCPT
+        Wed, 26 Feb 2020 13:49:31 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36834 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727105AbgBZStb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 13:48:24 -0500
-Received: by mail-wr1-f74.google.com with SMTP id c6so139375wrm.18
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 10:48:20 -0800 (PST)
+        Wed, 26 Feb 2020 13:49:31 -0500
+Received: by mail-pg1-f194.google.com with SMTP id d9so106756pgu.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 10:49:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=CYcnpnSnqjD6IMjT+kQkPqoN0C+v5Fd0k1RUIUr/pzU=;
-        b=uxYoywU0ydOraG848cK7njCp4sKhiyVwyzzkEGjc3in8yK+QHEHtJt3LZbShGVZmJ3
-         6Hx67sSnxOMxPdiqlSmURzdywNYtaLqmb/1dNKxwnT/JagMS7EBqpu5tV5RWep9ZsN7D
-         r2VbdQJn7936I99cTmEJ3R//vHDByCg4lzN1spRvyNOySgNMorVvEVdW5LCWJyeG/pYF
-         nY8kb/7DpjmPWD9I/No1gfXNiYJdLliZJf14Xxd1usiUanR0HBuI5k03r/i0/R+g5Kwp
-         MqTrZQwWr15nnrDnUxrAiZXs1LMvQT2wi58MDQIaoD2xKnDZ180R2SGVZdn+DOHNJVMn
-         sF8Q==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=UE7SLV8s468yZbq8qcSb4sRo6dYTH3lmVINJK2pF/Rc=;
+        b=jA2Um2bnLQg3BAkezzgjpMtGTg858Rxq4CJkWx4LfvljkkqPbfDzwR3l96lR+/xhJB
+         VQkuio7/ZKPo9ZxiSc0BWA53DDAaxEC4Kig/1/MAwMPzTkxW0LsjsO9qRUWAG3+LwdxJ
+         bBcXP/Qq5cZkrwppbFNmSDm9gDmJqMY2Rb5Z0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=CYcnpnSnqjD6IMjT+kQkPqoN0C+v5Fd0k1RUIUr/pzU=;
-        b=kg3Y3GkVO4cph/ANhy0njlM8A+J8QWw3mtegoB2ckgKdzoY2k9LVX15DAnUHZKSnUf
-         6y/Kg9HoX/PRQIO5uq61uN386xBfcDZAcHNziRe7Jj4WrDw8zBcCwfL1S+kEZRailjYF
-         0D1aNbk8QQ6JIS8ytehM8v0HWzBELN7G9zYhyI7S6Fa2ymtUNzqx2eFFb3mB81yiVenc
-         EfDa0T/91TgsLLVaX3xNycZYPc4MeD8JxmsJsIBxnJsewHXWaNIDyVR5kw6anb8veLbS
-         R2a/XgvZnpCJSIaXOKPb5eWl7WFNmgxY4209edrWhd8xN2E/rAO4fsf0A7tjFMubacPj
-         prpw==
-X-Gm-Message-State: APjAAAWkr5HtLUlNFSNhD6KPWYBOfdKHX5kiwbutdPETxUwoLrxGRrBq
-        JGb4by8aE9sRBsKdiyeIr3YjjwYnYQ27pqfp
-X-Google-Smtp-Source: APXvYqxI8qDcuZKoXhJyevZmHLuRWLMt5cLYCioCDhLfthpRPaagVxjgv4gKdPACZbFY24Q23tSfUKTBuGLySTbP
-X-Received: by 2002:a5d:6544:: with SMTP id z4mr31908wrv.31.1582742899900;
- Wed, 26 Feb 2020 10:48:19 -0800 (PST)
-Date:   Wed, 26 Feb 2020 19:48:08 +0100
-In-Reply-To: <cover.1582742673.git.andreyknvl@google.com>
-Message-Id: <e407bf7bc0ee533b2ee28322074294273692b1af.1582742673.git.andreyknvl@google.com>
-Mime-Version: 1.0
-References: <cover.1582742673.git.andreyknvl@google.com>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-Subject: [PATCH v1 2/3] kcov: collect coverage from interrupts
-From:   Andrey Konovalov <andreyknvl@google.com>
-To:     Dmitry Vyukov <dvyukov@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UE7SLV8s468yZbq8qcSb4sRo6dYTH3lmVINJK2pF/Rc=;
+        b=mXSrFs8mnFWvO2cNFkaGZOpIKc9rcKzbmnZWIDn7aM6fqI4rPbSTWx5m+zstiGvS+X
+         Hbzz4OJYTpPPB6PHoktMZe3Eju+1XX+8kjZ7O2qD8DShvr5UzAFtiVQmKxVN8YFQQfwd
+         jkser9Cp1i0H8qCRudeDOMTboxmuJyRKHgxfBlmI+lEh5ublXpToQDabG6ykYDih5rzW
+         Fn+kQ1QFpObAnvet8a0figKzvK/mVy8s9Urte453EmH8gs+U7NJl172yPIv683ykoynj
+         ZZZEIdoi0Vp4b+QdKXV5NbNHcndaQ0noad/iRS3veyBQNFmuA0zUPBdF6dcMdofKz+WZ
+         rgLQ==
+X-Gm-Message-State: APjAAAWzNrMFff6WuHLiLCnHI6HAdOPCzfheegE6BHIkMLr7xMG6M3Gt
+        w58nb9eoxE67etqz5h2zksQl5A==
+X-Google-Smtp-Source: APXvYqxlTjlN/5RWPR7YFQfgZ7nC8YLL0uLCegeK1cb0d8ZefgQ7K7KigIJMn16KLKQbCje1JbcnoA==
+X-Received: by 2002:a63:cc4c:: with SMTP id q12mr198639pgi.443.1582742970078;
+        Wed, 26 Feb 2020 10:49:30 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k63sm3578966pjb.10.2020.02.26.10.49.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 10:49:29 -0800 (PST)
+Date:   Wed, 26 Feb 2020 10:49:28 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Cristian Marussi <cristian.marussi@arm.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        lkft-triage@lists.linaro.org,
+        open list <linux-kernel@vger.kernel.org>, ankita@in.ibm.com,
+        Will Deacon <will@kernel.org>, ardb@kernel.org,
+        "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>
+Subject: Re: selftests: Linux Kernel Dump Test Module output
+Message-ID: <202002261048.E9417B65D@keescook>
+References: <CA+G9fYu3682XJ2Kw2ZvQdUT80epKc9DWWXgDT1-D_65ajSXNTw@mail.gmail.com>
+ <fcb799d4-f316-60d6-9fd0-0bc1c174e63c@arm.com>
+ <202002251131.3216B3B50C@keescook>
+ <b485a8a9-5312-ca77-d091-3dbfac33ec5b@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b485a8a9-5312-ca77-d091-3dbfac33ec5b@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change extends kcov remote coverage support to allow collecting
-coverage from soft interrupts in addition to kernel background threads.
+On Wed, Feb 26, 2020 at 11:53:37AM +0000, Cristian Marussi wrote:
+> Sorry I lost track of this thread....tested now on v5.6rc3 on arm64 on a local
+> setup (not proper CI) with CONFIG_LKDTM=y and solves the above issue. (missing CONFIG_LKDTM?)
 
-To collect coverage from code that is executed in softirq context, a
-part of that code has to be annotated with kcov_remote_start/stop() in a
-similar way as how it is done for global kernel background threads. Then
-the handle used for the annotations has to be passed to the
-KCOV_REMOTE_ENABLE ioctl.
+Great!
 
-Internally this patch adjusts the __sanitizer_cov_trace_pc() compiler
-inserted callback to not bail out when called from softirq context.
-kcov_remote_start/stop() are updated to save/restore the current per
-task kcov state in a per-cpu area (in case the softirq came when the
-kernel was already collecting coverage in task context). Coverage from
-softirqs is collected into pre-allocated per-cpu areas, whose size is
-controlled by the new CONFIG_KCOV_IRQ_AREA_SIZE.
+> Looking at the general run though I have anyway a bunch of SKIP similar to Naresh
+> 
+> ./run_kselftest.sh 2>/dev/null | grep "SKIP"
+> not ok 1 selftests: lkdtm: PANIC.sh # SKIP
+> not ok 6 selftests: lkdtm: LOOP.sh # SKIP
+> not ok 7 selftests: lkdtm: EXHAUST_STACK.sh # SKIP
+> not ok 8 selftests: lkdtm: CORRUPT_STACK.sh # SKIP
+> not ok 9 selftests: lkdtm: CORRUPT_STACK_STRONG.sh # SKIP
+> not ok 15 selftests: lkdtm: UNSET_SMEP.sh # SKIP
+> not ok 16 selftests: lkdtm: DOUBLE_FAULT.sh # SKIP
+> not ok 18 selftests: lkdtm: OVERWRITE_ALLOCATION.sh # SKIP
+> not ok 19 selftests: lkdtm: WRITE_AFTER_FREE.sh # SKIP
+> not ok 21 selftests: lkdtm: WRITE_BUDDY_AFTER_FREE.sh # SKIP
+> not ok 26 selftests: lkdtm: SOFTLOCKUP.sh # SKIP
+> not ok 27 selftests: lkdtm: HARDLOCKUP.sh # SKIP
+> not ok 28 selftests: lkdtm: SPINLOCKUP.sh # SKIP
+> not ok 29 selftests: lkdtm: HUNG_TASK.sh # SKIP
+> not ok 59 selftests: lkdtm: REFCOUNT_TIMING.sh # SKIP
+> not ok 60 selftests: lkdtm: ATOMIC_TIMING.sh # SKIP
+> 
+> BUT, if I look at one LKDTM test script
+> (lkdtm/USERCOPY_STACK_FRAME_TO.sh):
+> 
+> ...
+> # If the test is commented out, report a skip
+> if echo "$test" | grep -q '^#' ; then
+> ...
+> 
+> and in fact:
+> 
+> root@sqwt-ubuntu:/opt/ksft# cat lkdtm/tests.txt | grep ^#
+> #PANIC
+> #LOOP Hangs the system
+> #EXHAUST_STACK Corrupts memory on failure
+> #CORRUPT_STACK Crashes entire system on success
+> #CORRUPT_STACK_STRONG Crashes entire system on success
+> #OVERWRITE_ALLOCATION Corrupts memory on failure
+> #WRITE_AFTER_FREE Corrupts memory on failure
+> #WRITE_BUDDY_AFTER_FREE Corrupts memory on failure
+> #SOFTLOCKUP Hangs the system
+> #HARDLOCKUP Hangs the system
+> #SPINLOCKUP Hangs the system
+> #HUNG_TASK Hangs the system
+> #REFCOUNT_TIMING timing only
+> #ATOMIC_TIMING timing only
+> 
+> so only two of the above tests are in fact unexpectedly skipped.
 
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
----
- Documentation/dev-tools/kcov.rst |  17 ++--
- include/linux/sched.h            |   3 +
- kernel/kcov.c                    | 165 ++++++++++++++++++++++---------
- lib/Kconfig.debug                |   9 ++
- 4 files changed, 142 insertions(+), 52 deletions(-)
+Yup, that is operating as expected. :)
 
-diff --git a/Documentation/dev-tools/kcov.rst b/Documentation/dev-tools/kcov.rst
-index 1c4e1825d769..8548b0b04e43 100644
---- a/Documentation/dev-tools/kcov.rst
-+++ b/Documentation/dev-tools/kcov.rst
-@@ -217,14 +217,15 @@ This allows to collect coverage from two types of kernel background
- threads: the global ones, that are spawned during kernel boot in a limited
- number of instances (e.g. one USB hub_event() worker thread is spawned per
- USB HCD); and the local ones, that are spawned when a user interacts with
--some kernel interface (e.g. vhost workers).
-+some kernel interface (e.g. vhost workers); as well as from soft
-+interrupts.
- 
--To enable collecting coverage from a global background thread, a unique
--global handle must be assigned and passed to the corresponding
--kcov_remote_start() call. Then a userspace process can pass a list of such
--handles to the KCOV_REMOTE_ENABLE ioctl in the handles array field of the
--kcov_remote_arg struct. This will attach the used kcov device to the code
--sections, that are referenced by those handles.
-+To enable collecting coverage from a global background thread or from a
-+softirq, a unique global handle must be assigned and passed to the
-+corresponding kcov_remote_start() call. Then a userspace process can pass
-+a list of such handles to the KCOV_REMOTE_ENABLE ioctl in the handles
-+array field of the kcov_remote_arg struct. This will attach the used kcov
-+device to the code sections, that are referenced by those handles.
- 
- Since there might be many local background threads spawned from different
- userspace processes, we can't use a single global handle per annotation.
-@@ -242,7 +243,7 @@ handles as they don't belong to a particular subsystem. The bytes 4-7 are
- currently reserved and must be zero. In the future the number of bytes
- used for the subsystem or handle ids might be increased.
- 
--When a particular userspace proccess collects coverage by via a common
-+When a particular userspace proccess collects coverage via a common
- handle, kcov will collect coverage for each code section that is annotated
- to use the common handle obtained as kcov_handle from the current
- task_struct. However non common handles allow to collect coverage
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 04278493bf15..ce47d685fa55 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1229,6 +1229,9 @@ struct task_struct {
- 
- 	/* KCOV sequence number: */
- 	int				kcov_sequence;
-+
-+	/* Collect coverage from softirq context: */
-+	bool				kcov_softirq;
- #endif
- 
- #ifdef CONFIG_MEMCG
-diff --git a/kernel/kcov.c b/kernel/kcov.c
-index f6bd119c9419..61b24fc7dfe0 100644
---- a/kernel/kcov.c
-+++ b/kernel/kcov.c
-@@ -26,6 +26,7 @@
- #include <asm/setup.h>
- 
- #define kcov_debug(fmt, ...) pr_debug("%s: " fmt, __func__, ##__VA_ARGS__)
-+#define kcov_err(fmt, ...) pr_err("%s: " fmt, __func__, ##__VA_ARGS__)
- 
- /* Number of 64-bit words written per one comparison: */
- #define KCOV_WORDS_PER_CMP 4
-@@ -86,6 +87,18 @@ static DEFINE_SPINLOCK(kcov_remote_lock);
- static DEFINE_HASHTABLE(kcov_remote_map, 4);
- static struct list_head kcov_remote_areas = LIST_HEAD_INIT(kcov_remote_areas);
- 
-+struct kcov_percpu_data {
-+	void			*irq_area;
-+
-+	unsigned int		saved_mode;
-+	unsigned int		saved_size;
-+	void			*saved_area;
-+	struct kcov		*saved_kcov;
-+	int			saved_sequence;
-+};
-+
-+DEFINE_PER_CPU(struct kcov_percpu_data, kcov_percpu_data);
-+
- /* Must be called with kcov_remote_lock locked. */
- static struct kcov_remote *kcov_remote_find(u64 handle)
- {
-@@ -145,9 +158,10 @@ static notrace bool check_kcov_mode(enum kcov_mode needed_mode, struct task_stru
- 
- 	/*
- 	 * We are interested in code coverage as a function of a syscall inputs,
--	 * so we ignore code executed in interrupts.
-+	 * so we ignore code executed in interrupts, unless we are in a remote
-+	 * coverage collection section in a softirq.
- 	 */
--	if (!in_task())
-+	if (!in_task() && !(in_serving_softirq() && t->kcov_softirq))
- 		return false;
- 	mode = READ_ONCE(t->kcov_mode);
- 	/*
-@@ -328,13 +342,13 @@ static void kcov_stop(struct task_struct *t)
- 	barrier();
- 	t->kcov_size = 0;
- 	t->kcov_area = NULL;
-+	t->kcov_sequence = 0;
-+	t->kcov = NULL;
- }
- 
- static void kcov_task_reset(struct task_struct *t)
- {
- 	kcov_stop(t);
--	t->kcov = NULL;
--	t->kcov_sequence = 0;
- 	t->kcov_handle = 0;
- }
- 
-@@ -358,8 +372,9 @@ static void kcov_remote_reset(struct kcov *kcov)
- 	int bkt;
- 	struct kcov_remote *remote;
- 	struct hlist_node *tmp;
-+	unsigned long flags;
- 
--	spin_lock(&kcov_remote_lock);
-+	spin_lock_irqsave(&kcov_remote_lock, flags);
- 	hash_for_each_safe(kcov_remote_map, bkt, tmp, remote, hnode) {
- 		if (remote->kcov != kcov)
- 			continue;
-@@ -368,7 +383,7 @@ static void kcov_remote_reset(struct kcov *kcov)
- 	}
- 	/* Do reset before unlock to prevent races with kcov_remote_start(). */
- 	kcov_reset(kcov);
--	spin_unlock(&kcov_remote_lock);
-+	spin_unlock_irqrestore(&kcov_remote_lock, flags);
- }
- 
- static void kcov_disable(struct task_struct *t, struct kcov *kcov)
-@@ -397,12 +412,13 @@ static void kcov_put(struct kcov *kcov)
- void kcov_task_exit(struct task_struct *t)
- {
- 	struct kcov *kcov;
-+	unsigned long flags;
- 
- 	kcov = t->kcov;
- 	if (kcov == NULL)
- 		return;
- 
--	spin_lock(&kcov->lock);
-+	spin_lock_irqsave(&kcov->lock, flags);
- 	kcov_debug("t = %px, kcov->t = %px\n", t, kcov->t);
- 	/*
- 	 * For KCOV_ENABLE devices we want to make sure that t->kcov->t == t,
-@@ -426,12 +442,12 @@ void kcov_task_exit(struct task_struct *t)
- 	 * By combining all three checks into one we get:
- 	 */
- 	if (WARN_ON(kcov->t != t)) {
--		spin_unlock(&kcov->lock);
-+		spin_unlock_irqrestore(&kcov->lock, flags);
- 		return;
- 	}
- 	/* Just to not leave dangling references behind. */
- 	kcov_disable(t, kcov);
--	spin_unlock(&kcov->lock);
-+	spin_unlock_irqrestore(&kcov->lock, flags);
- 	kcov_put(kcov);
- }
- 
-@@ -442,12 +458,13 @@ static int kcov_mmap(struct file *filep, struct vm_area_struct *vma)
- 	struct kcov *kcov = vma->vm_file->private_data;
- 	unsigned long size, off;
- 	struct page *page;
-+	unsigned long flags;
- 
- 	area = vmalloc_user(vma->vm_end - vma->vm_start);
- 	if (!area)
- 		return -ENOMEM;
- 
--	spin_lock(&kcov->lock);
-+	spin_lock_irqsave(&kcov->lock, flags);
- 	size = kcov->size * sizeof(unsigned long);
- 	if (kcov->mode != KCOV_MODE_INIT || vma->vm_pgoff != 0 ||
- 	    vma->vm_end - vma->vm_start != size) {
-@@ -457,7 +474,7 @@ static int kcov_mmap(struct file *filep, struct vm_area_struct *vma)
- 	if (!kcov->area) {
- 		kcov->area = area;
- 		vma->vm_flags |= VM_DONTEXPAND;
--		spin_unlock(&kcov->lock);
-+		spin_unlock_irqrestore(&kcov->lock, flags);
- 		for (off = 0; off < size; off += PAGE_SIZE) {
- 			page = vmalloc_to_page(kcov->area + off);
- 			if (vm_insert_page(vma, vma->vm_start + off, page))
-@@ -466,7 +483,7 @@ static int kcov_mmap(struct file *filep, struct vm_area_struct *vma)
- 		return 0;
- 	}
- exit:
--	spin_unlock(&kcov->lock);
-+	spin_unlock_irqrestore(&kcov->lock, flags);
- 	vfree(area);
- 	return res;
- }
-@@ -546,6 +563,7 @@ static int kcov_ioctl_locked(struct kcov *kcov, unsigned int cmd,
- 	int mode, i;
- 	struct kcov_remote_arg *remote_arg;
- 	struct kcov_remote *remote;
-+	unsigned long flags;
- 
- 	switch (cmd) {
- 	case KCOV_INIT_TRACE:
-@@ -619,17 +637,19 @@ static int kcov_ioctl_locked(struct kcov *kcov, unsigned int cmd,
- 		kcov->t = t;
- 		kcov->remote = true;
- 		kcov->remote_size = remote_arg->area_size;
--		spin_lock(&kcov_remote_lock);
-+		spin_lock_irqsave(&kcov_remote_lock, flags);
- 		for (i = 0; i < remote_arg->num_handles; i++) {
- 			if (!kcov_check_handle(remote_arg->handles[i],
- 						false, true, false)) {
--				spin_unlock(&kcov_remote_lock);
-+				spin_unlock_irqrestore(&kcov_remote_lock,
-+							flags);
- 				kcov_disable(t, kcov);
- 				return -EINVAL;
- 			}
- 			remote = kcov_remote_add(kcov, remote_arg->handles[i]);
- 			if (IS_ERR(remote)) {
--				spin_unlock(&kcov_remote_lock);
-+				spin_unlock_irqrestore(&kcov_remote_lock,
-+							flags);
- 				kcov_disable(t, kcov);
- 				return PTR_ERR(remote);
- 			}
-@@ -637,20 +657,22 @@ static int kcov_ioctl_locked(struct kcov *kcov, unsigned int cmd,
- 		if (remote_arg->common_handle) {
- 			if (!kcov_check_handle(remote_arg->common_handle,
- 						true, false, false)) {
--				spin_unlock(&kcov_remote_lock);
-+				spin_unlock_irqrestore(&kcov_remote_lock,
-+							flags);
- 				kcov_disable(t, kcov);
- 				return -EINVAL;
- 			}
- 			remote = kcov_remote_add(kcov,
- 					remote_arg->common_handle);
- 			if (IS_ERR(remote)) {
--				spin_unlock(&kcov_remote_lock);
-+				spin_unlock_irqrestore(&kcov_remote_lock,
-+							flags);
- 				kcov_disable(t, kcov);
- 				return PTR_ERR(remote);
- 			}
- 			t->kcov_handle = remote_arg->common_handle;
- 		}
--		spin_unlock(&kcov_remote_lock);
-+		spin_unlock_irqrestore(&kcov_remote_lock, flags);
- 		/* Put either in kcov_task_exit() or in KCOV_DISABLE. */
- 		kcov_get(kcov);
- 		return 0;
-@@ -666,6 +688,7 @@ static long kcov_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
- 	struct kcov_remote_arg *remote_arg = NULL;
- 	unsigned int remote_num_handles;
- 	unsigned long remote_arg_size;
-+	unsigned long flags;
- 
- 	if (cmd == KCOV_REMOTE_ENABLE) {
- 		if (get_user(remote_num_handles, (unsigned __user *)(arg +
-@@ -686,9 +709,9 @@ static long kcov_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
- 	}
- 
- 	kcov = filep->private_data;
--	spin_lock(&kcov->lock);
-+	spin_lock_irqsave(&kcov->lock, flags);
- 	res = kcov_ioctl_locked(kcov, cmd, arg);
--	spin_unlock(&kcov->lock);
-+	spin_unlock_irqrestore(&kcov->lock, flags);
- 
- 	kfree(remote_arg);
- 
-@@ -705,8 +728,8 @@ static const struct file_operations kcov_fops = {
- 
- /*
-  * kcov_remote_start() and kcov_remote_stop() can be used to annotate a section
-- * of code in a kernel background thread to allow kcov to be used to collect
-- * coverage from that part of code.
-+ * of code in a kernel background thread or in a softirq to allow kcov to be
-+ * used to collect coverage from that part of code.
-  *
-  * The handle argument of kcov_remote_start() identifies a code section that is
-  * used for coverage collection. A userspace process passes this handle to
-@@ -717,9 +740,9 @@ static const struct file_operations kcov_fops = {
-  * the type of the kernel thread whose code is being annotated.
-  *
-  * For global kernel threads that are spawned in a limited number of instances
-- * (e.g. one USB hub_event() worker thread is spawned per USB HCD), each
-- * instance must be assigned a unique 4-byte instance id. The instance id is
-- * then combined with a 1-byte subsystem id to get a handle via
-+ * (e.g. one USB hub_event() worker thread is spawned per USB HCD) and for
-+ * softirqs, each instance must be assigned a unique 4-byte instance id. The
-+ * instance id is then combined with a 1-byte subsystem id to get a handle via
-  * kcov_remote_handle(subsystem_id, instance_id).
-  *
-  * For local kernel threads that are spawned from system calls handler when a
-@@ -738,13 +761,37 @@ static const struct file_operations kcov_fops = {
-  *
-  * See Documentation/dev-tools/kcov.rst for more details.
-  *
-- * Internally, this function looks up the kcov device associated with the
-+ * Internally, kcov_remote_start() looks up the kcov device associated with the
-  * provided handle, allocates an area for coverage collection, and saves the
-  * pointers to kcov and area into the current task_struct to allow coverage to
-  * be collected via __sanitizer_cov_trace_pc()
-  * In turns kcov_remote_stop() clears those pointers from task_struct to stop
-  * collecting coverage and copies all collected coverage into the kcov area.
-  */
-+
-+void kcov_remote_softirq_start(struct task_struct *t)
-+{
-+	struct kcov_percpu_data *data = this_cpu_ptr(&kcov_percpu_data);
-+
-+	data->saved_kcov = t->kcov;
-+	data->saved_size = t->kcov_size;
-+	data->saved_area = t->kcov_area;
-+	data->saved_mode = t->kcov_mode;
-+	data->saved_sequence = t->kcov_sequence;
-+	kcov_stop(t);
-+	t->kcov_softirq = true;
-+}
-+
-+void kcov_remote_softirq_stop(struct task_struct *t)
-+{
-+	struct kcov_percpu_data *data = this_cpu_ptr(&kcov_percpu_data);
-+
-+	kcov_start(t, data->saved_size, data->saved_area,
-+			data->saved_mode, data->saved_sequence);
-+	t->kcov = data->saved_kcov;
-+	t->kcov_softirq = false;
-+}
-+
- void kcov_remote_start(u64 handle)
- {
- 	struct kcov_remote *remote;
-@@ -753,27 +800,32 @@ void kcov_remote_start(u64 handle)
- 	unsigned int size;
- 	enum kcov_mode mode;
- 	int sequence;
-+	unsigned long flags;
- 
- 	if (WARN_ON(!kcov_check_handle(handle, true, true, true)))
- 		return;
--	if (WARN_ON(!in_task()))
-+	if (WARN_ON(!in_task() && !in_serving_softirq()))
- 		return;
- 	t = current;
- 	/*
--	 * Check that kcov_remote_start is not called twice
--	 * nor called by user tasks (with enabled kcov).
-+	 * Check that kcov_remote_start() is not called twice in background
-+	 * threads nor called by user tasks (with enabled kcov). Note, that
-+	 * kcov_remote_start() can be called from a softirq that happened
-+	 * while collecting coverage from a background thread.
- 	 */
--	if (WARN_ON(t->kcov))
-+	if (WARN_ON(in_task() && t->kcov))
- 		return;
- 
--	kcov_debug("handle = %llx\n", handle);
--
--	spin_lock(&kcov_remote_lock);
-+	spin_lock_irqsave(&kcov_remote_lock, flags);
- 	remote = kcov_remote_find(handle);
- 	if (!remote) {
--		spin_unlock(&kcov_remote_lock);
-+		spin_unlock_irqrestore(&kcov_remote_lock, flags);
- 		return;
- 	}
-+	if (in_serving_softirq())
-+		kcov_remote_softirq_start(t);
-+	kcov_debug("handle = %llx, context: %s\n", handle,
-+			in_task() ? "task" : "softirq");
- 	/* Put in kcov_remote_stop(). */
- 	kcov_get(remote->kcov);
- 	t->kcov = remote->kcov;
-@@ -781,12 +833,18 @@ void kcov_remote_start(u64 handle)
- 	 * Read kcov fields before unlock to prevent races with
- 	 * KCOV_DISABLE / kcov_remote_reset().
- 	 */
--	size = remote->kcov->remote_size;
- 	mode = remote->kcov->mode;
- 	sequence = remote->kcov->sequence;
--	area = kcov_remote_area_get(size);
--	spin_unlock(&kcov_remote_lock);
-+	if (in_task()) {
-+		size = remote->kcov->remote_size;
-+		area = kcov_remote_area_get(size);
-+	} else {
-+		size = CONFIG_KCOV_IRQ_AREA_SIZE;
-+		area = this_cpu_ptr(&kcov_percpu_data)->irq_area;
-+	}
-+	spin_unlock_irqrestore(&kcov_remote_lock, flags);
- 
-+	/* Can only happen when in_task(). */
- 	if (!area) {
- 		area = vmalloc(size * sizeof(unsigned long));
- 		if (!area) {
-@@ -866,26 +924,32 @@ void kcov_remote_stop(void)
- 	void *area = t->kcov_area;
- 	unsigned int size = t->kcov_size;
- 	int sequence = t->kcov_sequence;
-+	unsigned long flags;
- 
- 	if (!kcov)
- 		return;
- 
- 	kcov_stop(t);
--	t->kcov = NULL;
- 
--	spin_lock(&kcov->lock);
-+	spin_lock_irqsave(&kcov->lock, flags);
- 	/*
- 	 * KCOV_DISABLE could have been called between kcov_remote_start()
--	 * and kcov_remote_stop(), hence the check.
-+	 * and kcov_remote_stop(), hence the sequence check.
- 	 */
- 	if (sequence == kcov->sequence && kcov->remote)
- 		kcov_move_area(kcov->mode, kcov->area, kcov->size, area);
--	spin_unlock(&kcov->lock);
-+	spin_unlock_irqrestore(&kcov->lock, flags);
- 
--	spin_lock(&kcov_remote_lock);
--	kcov_remote_area_put(area, size);
--	spin_unlock(&kcov_remote_lock);
-+	if (in_task()) {
-+		spin_lock_irqsave(&kcov_remote_lock, flags);
-+		kcov_remote_area_put(area, size);
-+		spin_unlock_irqrestore(&kcov_remote_lock, flags);
-+	}
-+
-+	if (in_serving_softirq())
-+		kcov_remote_softirq_stop(t);
- 
-+	/* Get in kcov_remote_start(). */
- 	kcov_put(kcov);
- }
- EXPORT_SYMBOL(kcov_remote_stop);
-@@ -899,6 +963,19 @@ EXPORT_SYMBOL(kcov_common_handle);
- 
- static int __init kcov_init(void)
- {
-+	int cpu;
-+
-+	for_each_possible_cpu(cpu) {
-+		void **area = &(per_cpu_ptr(&kcov_percpu_data, cpu)->irq_area);
-+
-+		*area = vmalloc(CONFIG_KCOV_IRQ_AREA_SIZE *
-+				sizeof(unsigned long));
-+		if (!*area) {
-+			kcov_err("failed to allocate irq coverage area\n");
-+			return -ENOMEM;
-+		}
-+	}
-+
- 	/*
- 	 * The kcov debugfs file won't ever get removed and thus,
- 	 * there is no need to protect it against removal races. The
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 69def4a9df00..a1f25b27d32d 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1740,6 +1740,15 @@ config KCOV_INSTRUMENT_ALL
- 	  filesystem fuzzing with AFL) then you will want to enable coverage
- 	  for more specific subsets of files, and should say n here.
- 
-+config KCOV_IRQ_AREA_SIZE
-+	hex "Size of interrupt coverage collection area in words"
-+	depends on KCOV
-+	default 0x40000
-+	help
-+	  KCOV uses preallocated per-cpu areas to collect coverage from
-+	  soft interrupts. This specifies the size of those areas in the
-+	  number of unsigned long words.
-+
- menuconfig RUNTIME_TESTING_MENU
- 	bool "Runtime Testing"
- 	def_bool y
+> not ok 15 selftests: lkdtm: UNSET_SMEP.sh # SKIP
+> not ok 16 selftests: lkdtm: DOUBLE_FAULT.sh # SKIP
+
+These are x86-specific, so that is correct as well.
+
+Thanks for following up!
+
 -- 
-2.25.1.481.gfbce0eb801-goog
-
+Kees Cook
