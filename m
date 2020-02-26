@@ -7,1242 +7,161 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5664BC4BA0A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0539C4BA0D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 111FC21927
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4EF821927
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:56:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NsmXEgpZ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y7BmXd6M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729403AbgBZAwv (ORCPT
+        id S1729627AbgBZA4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 19:52:51 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45374 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728865AbgBZAwv (ORCPT
+        Tue, 25 Feb 2020 19:56:02 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42251 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729465AbgBZA4C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 19:52:51 -0500
-Received: by mail-pg1-f196.google.com with SMTP id r77so390975pgr.12
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 16:52:49 -0800 (PST)
+        Tue, 25 Feb 2020 19:56:02 -0500
+Received: by mail-qt1-f193.google.com with SMTP id r5so1063513qtt.9
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 16:56:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=DIWHzvPJADJ0GD/U+7z22stLllh3yILvCAQmI7z3V8w=;
-        b=NsmXEgpZBnTxbp64yDQ7HHo5xMc4ClSeRO7HikSscl9LGg35eBKo2beVIkgIPkd24l
-         ShVAFkOKW+1Ll9VjGfX7GvD4SJXUEa1cibn2YkqHkTIjfYqZsk+Mv1rLrRsQiKs4RzOW
-         IOsJiVzAZk7mLI7fXWgYPmqj1HDuEz1R5EwZk=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KTr07x+ZuW+Wkx10CmLSTlKU+6ax9EaUyaBXKAF3OqM=;
+        b=Y7BmXd6Mfp+6AZ5v7tzuyEct+NldmkDhFbkaCIoOl6/SfR059Z2NK44rQkbVc+4j7t
+         n0RrGob1lJqy4jSvVTBHC3x7e53bCvZCs0af4K9zwmRDwcKU3x3vY+Goiu220sgiSxhg
+         LkPCOLYG0N6aE3fNLH+xw2IiIErd9z+gBVRxo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DIWHzvPJADJ0GD/U+7z22stLllh3yILvCAQmI7z3V8w=;
-        b=pul4YrLcY3jszgvZU3SSexwnsad3wYCZyw4wYxvihz+brdnXlpOowAqJnKNmbgSU0L
-         T/Fj61khH6yKWfCPtW3/WUvecv2TrFC4ruxC2Ja9U/DUgzkTsq+1VY/doJlfpPMFuZjS
-         FfwVds/MVXPa6rDFUPuZF4nB1G79xa+vmnjXzO/6/yVdOoWUX8UUNqBNPK7MXsm0No+q
-         CHl8utNWNrAFNGlszpqy16vA4XZ1aZKRfiDcaAwkAplNFTFS7QIY1BfI/D6BMIsqcGbw
-         i7oCQCZroT3vt7ZGlzVruxnL0TSJF36VIjHLYkp5CAl0OlZaHudr85VA+sy1yyS6AjHx
-         sIMg==
-X-Gm-Message-State: APjAAAUtVS4+W2536TGeA72v60Af8r6v7RTm5duoa89M/qpjkJmkPNCc
-        jl6xXCsrJLKOBCrOL7+yu2EqlA==
-X-Google-Smtp-Source: APXvYqxAZqC5Za4Hntc1tnfk8UJJ36aZlXiG21aNFea9YjY6bw+/XaowN2gPPqACtBDPoI3PfIEIAQ==
-X-Received: by 2002:a63:c401:: with SMTP id h1mr1227999pgd.262.1582678368587;
-        Tue, 25 Feb 2020 16:52:48 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g9sm271681pfm.150.2020.02.25.16.52.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 16:52:47 -0800 (PST)
-Date:   Tue, 25 Feb 2020 16:52:46 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     WeiXiong Liao <liaoweixiong@allwinnertech.com>
-Cc:     Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v2 01/11] pstore/blk: new support logger for block devices
-Message-ID: <202002251626.63FE3E7C6@keescook>
-References: <1581078355-19647-1-git-send-email-liaoweixiong@allwinnertech.com>
- <1581078355-19647-2-git-send-email-liaoweixiong@allwinnertech.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KTr07x+ZuW+Wkx10CmLSTlKU+6ax9EaUyaBXKAF3OqM=;
+        b=EvH2a2WamY9TlgTTqEaFKYdVo59zE4RhTJflNoG+oLDCDBBPNVfKnRXfa01Z+zC9tR
+         clqJMhXnOyQfnM9ovHIbWLUfTasfIreVLJyqXy5GBiSW/Kj4QaPQxhuHBdl3XTAdL6Uj
+         qKudUaHJENqXFKTtuwTnU3rptQDCvfjYgrgz+kwDkPgAjjSSRNftq59r+qed0MqPjts9
+         AN6h2c7x5R8ZXuOjmMKQirU3bVFrtnqwUWeZphY6FjlI3ZVMZjBlzS2VhP9UyK3HkT+O
+         Xk2qPRcNyMOyCatRhK5OngCmdVOmRg5Kkbwus8N2s2ym59YplvwLc9B57sRIP0b75PNt
+         3bSA==
+X-Gm-Message-State: APjAAAXUjV3Dr699m7gXYK6abs9VYz3oCNPu/TLTMpJ6tyvqyo0vHZhm
+        8uMavS9HzDrzMLQTwDsjmvQ9tQXhgGnRtuk3Q5VxbQ==
+X-Google-Smtp-Source: APXvYqwn/doZ3Sl5MivNf7aeBY0i9IjKThPIXnCkYsjm6+vHV5atNhFSLqXf91LmG+mgvcdhqR+658LdmJfFTgy7fYc=
+X-Received: by 2002:ac8:72d6:: with SMTP id o22mr1774873qtp.174.1582678561028;
+ Tue, 25 Feb 2020 16:56:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1581078355-19647-2-git-send-email-liaoweixiong@allwinnertech.com>
+References: <20200207052627.130118-1-drinkcat@chromium.org>
+ <20200207052627.130118-2-drinkcat@chromium.org> <20200225171613.GA7063@bogus>
+In-Reply-To: <20200225171613.GA7063@bogus>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Wed, 26 Feb 2020 08:55:50 +0800
+Message-ID: <CANMq1KAVX4o5yC7c_88Wq_O=F+MaSN_V4uNcs1nzS3wBS6A5AA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/7] dt-bindings: gpu: mali-bifrost: Add Mediatek MT8183
+To:     Rob Herring <robh@kernel.org>, Nick Fan <nick.fan@mediatek.com>,
+        Sj Huang <sj.huang@mediatek.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 08:25:45PM +0800, WeiXiong Liao wrote:
-> pstore/blk is similar to pstore/ram, but dump log to block devices
-> rather than persistent ram.
++Nick Fan +Sj Huang @ MTK
 
-Thanks for waiting for me to get to this review! Notes below...
+On Wed, Feb 26, 2020 at 1:16 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Fri, Feb 07, 2020 at 01:26:21PM +0800, Nicolas Boichat wrote:
+> > Define a compatible string for the Mali Bifrost GPU found in
+> > Mediatek's MT8183 SoCs.
+> >
+> > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> > Reviewed-by: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
+> > ---
+> >
+> > v4:
+> >  - Add power-domain-names description
+> >    (kept Alyssa's reviewed-by as the change is minor)
+> > v3:
+> >  - No change
+> >
+> >  .../bindings/gpu/arm,mali-bifrost.yaml        | 25 +++++++++++++++++++
+> >  1 file changed, 25 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
+> > index 4ea6a8789699709..0d93b3981445977 100644
+> > --- a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
+> > +++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
+> > @@ -17,6 +17,7 @@ properties:
+> >      items:
+> >        - enum:
+> >            - amlogic,meson-g12a-mali
+> > +          - mediatek,mt8183-mali
+> >            - realtek,rtd1619-mali
+> >            - rockchip,px30-mali
+> >        - const: arm,mali-bifrost # Mali Bifrost GPU model/revision is fully discoverable
+> > @@ -62,6 +63,30 @@ allOf:
+> >            minItems: 2
+> >        required:
+> >          - resets
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            const: mediatek,mt8183-mali
+> > +    then:
+> > +      properties:
+> > +        sram-supply: true
+> > +        power-domains:
+> > +          description:
+> > +            List of phandle and PM domain specifier as documented in
+> > +            Documentation/devicetree/bindings/power/power_domain.txt
+> > +          minItems: 3
+> > +          maxItems: 3
+> > +        power-domain-names:
+> > +          items:
+> > +            - const: core0
+> > +            - const: core1
+> > +            - const: 2d
+>
+> AFAIK, there's no '2d' block in bifrost GPUs. A power domain for each
+> core group is correct though.
 
-> 
-> Why do we need pstore/blk?
-> 1. Most embedded intelligent equipment have no persistent ram, which
-> increases costs. We perfer to cheaper solutions, like block devices.
-> 2. Do not any equipment have battery, which means that it lost all data
-> on general ram if power failure. Pstore has little to do for these
-> equipments.
-> 
-> pstore/blk is one of series patches, and provides the zones management
-> of partition of block device or non-block device likes mtd devices. It
-> only supports dmesg recorder right now.
-> 
-> To make pstore/blk work, the block/non-block driver should calls
-> blkz_register() and call blkz_unregister() when exits. On other patches
-> of series, a better wrapper for pstore/blk, named blkoops, will be
-> there.
-> 
-> It's different with pstore/ram, pstore/blk relies on read/write APIs
-> from device driver, especially, write operation for panic record.
-> 
-> Recommend that, the block/non-block driver should register to pstore/blk
-> only after devices have registered to Linux and ready to work.
-> 
-> Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
-> ---
->  fs/pstore/Kconfig          |  10 +
->  fs/pstore/Makefile         |   3 +
->  fs/pstore/blkzone.c        | 948 +++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/pstore_blk.h |  62 +++
->  4 files changed, 1023 insertions(+)
->  create mode 100644 fs/pstore/blkzone.c
->  create mode 100644 include/linux/pstore_blk.h
-> 
-> diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
-> index 8f0369aad22a..536fde9e13e8 100644
-> --- a/fs/pstore/Kconfig
-> +++ b/fs/pstore/Kconfig
-> @@ -153,3 +153,13 @@ config PSTORE_RAM
->  	  "ramoops.ko".
->  
->  	  For more information, see Documentation/admin-guide/ramoops.rst.
-> +
-> +config PSTORE_BLK
-> +	tristate "Log panic/oops to a block device"
-> +	depends on PSTORE
-> +	depends on BLOCK
-> +	help
-> +	  This enables panic and oops message to be logged to a block dev
-> +	  where it can be read back at some later point.
+Good question... Hopefully Nick/SJ@MTK can comment, the non-upstream DTS has:
+gpu: mali@13040000 {
+compatible = "mediatek,mt8183-mali", "arm,mali-bifrost";
+power-domains = <&scpsys MT8183_POWER_DOMAIN_MFG_CORE0>;
+...
+}
 
-I think more accurate would be:
-"... read back on the next boot via pstorefs."
+gpu_core1: mali_gpu_core1 {
+compatible = "mediatek,gpu_core1";
+power-domains = <&scpsys MT8183_POWER_DOMAIN_MFG_CORE1>;
+};
 
-> +
-> +	  If unsure, say N.
-> diff --git a/fs/pstore/Makefile b/fs/pstore/Makefile
-> index 967b5891f325..0ee2fc8d1bfb 100644
-> --- a/fs/pstore/Makefile
-> +++ b/fs/pstore/Makefile
-> @@ -12,3 +12,6 @@ pstore-$(CONFIG_PSTORE_PMSG)	+= pmsg.o
->  
->  ramoops-objs += ram.o ram_core.o
->  obj-$(CONFIG_PSTORE_RAM)	+= ramoops.o
-> +
-> +obj-$(CONFIG_PSTORE_BLK) += pstore_blk.o
-> +pstore_blk-y += blkzone.o
+gpu_core2: mali_gpu_core2 {
+compatible = "mediatek,gpu_core2";
+power-domains = <&scpsys MT8183_POWER_DOMAIN_MFG_2D>;
+};
 
-Why this dance with files? I would just expect:
+So I picked core0/core1/2d as names, but looking at this, it's likely
+core2 is more appropriate (and MT8183_POWER_DOMAIN_MFG_2D might just
+be a internal/legacy name, if there is no real 2d domain).
 
-obj-$(CONFIG_PSTORE_BLK)     += blkzone.o
+Thanks.
 
-(Regardless, please keep tabs lined up in this file)
-
-> diff --git a/fs/pstore/blkzone.c b/fs/pstore/blkzone.c
-> new file mode 100644
-> index 000000000000..f77f612b50ba
-> --- /dev/null
-> +++ b/fs/pstore/blkzone.c
-> @@ -0,0 +1,948 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#define MODNAME "pstore-blk"
-> +#define pr_fmt(fmt) MODNAME ": " fmt
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/blkdev.h>
-> +#include <linux/pstore.h>
-> +#include <linux/mount.h>
-> +#include <linux/printk.h>
-> +#include <linux/fs.h>
-> +#include <linux/pstore_blk.h>
-> +#include <linux/kdev_t.h>
-> +#include <linux/device.h>
-> +#include <linux/namei.h>
-> +#include <linux/fcntl.h>
-> +#include <linux/uio.h>
-> +#include <linux/writeback.h>
-> +
-> +/**
-> + * struct blkz_head - head of zone to flush to storage
-> + *
-> + * @sig: signature to indicate header (BLK_SIG xor BLKZONE-type value)
-> + * @datalen: length of data in @data
-> + * @data: zone data.
-> + */
-> +struct blkz_buffer {
-> +#define BLK_SIG (0x43474244) /* DBGC */
-
-I was going to suggest extracting PERSISTENT_RAM_SIG, renaming it and
-using it in here and in ram_core.c, but then I realize they're not
-marking the same structure. How about choosing a new magic sig for the
-blkzone data header?
-
-> +	uint32_t sig;
-> +	atomic_t datalen;
-> +	uint8_t data[];
-> +};
-> +
-> +/**
-> + * struct blkz_dmesg_header: dmesg information
-
-This is the on-disk structure also?
-
-> + *
-> + * @magic: magic num for dmesg header
-> + * @time: trigger time
-> + * @compressed: whether conpressed
-> + * @count: oops/panic counter
-> + * @reason: identify oops or panic
-> + */
-> +struct blkz_dmesg_header {
-> +#define DMESG_HEADER_MAGIC 0x4dfc3ae5
-
-How was this magic chosen?
-
-> +	uint32_t magic;
-> +	struct timespec64 time;
-> +	bool compressed;
-> +	uint32_t counter;
-> +	enum kmsg_dump_reason reason;
-> +	uint8_t data[0];
-
-Please use [] instead of [0].
-
-> +};
-> +
-> +/**
-> + * struct blkz_zone - zone information
-> + * @off:
-> + *	zone offset of block device
-> + * @type:
-> + *	frontent type for this zone
-> + * @name:
-> + *	frontent name for this zone
-> + * @buffer:
-> + *	pointer to data buffer managed by this zone
-> + * @oldbuf:
-> + *	pointer to old data buffer.
-> + * @buffer_size:
-> + *	bytes in @buffer->data
-> + * @should_recover:
-> + *	should recover from storage
-> + * @dirty:
-> + *	mark whether the data in @buffer are dirty (not flush to storage yet)
-> + */
-
-Thank you for the kerndoc! :) Is it linked to from any .rst files?
-
-> +struct blkz_zone {
-> +	unsigned long off;
-
-Should this be loff_t?
-
-> +	const char *name;
-> +	enum pstore_type_id type;
-> +
-> +	struct blkz_buffer *buffer;
-> +	struct blkz_buffer *oldbuf;
-> +	size_t buffer_size;
-> +	bool should_recover;
-> +	atomic_t dirty;
-> +};
-> +
-> +struct blkz_context {
-> +	struct blkz_zone **dbzs;	/* dmesg block zones */
-> +	unsigned int dmesg_max_cnt;
-> +	unsigned int dmesg_read_cnt;
-> +	unsigned int dmesg_write_cnt;
-> +	/*
-> +	 * the counter should be recovered when recover.
-> +	 * It records the oops/panic times after burning rather than booting.
-> +	 */
-> +	unsigned int oops_counter;
-> +	unsigned int panic_counter;
-> +	atomic_t recovered;
-> +	atomic_t on_panic;
-> +
-> +	/*
-> +	 * bzinfo_lock just protects "bzinfo" during calls to
-> +	 * blkz_register/blkz_unregister
-> +	 */
-> +	spinlock_t bzinfo_lock;
-> +	struct blkz_info *bzinfo;
-> +	struct pstore_info pstore;
-> +};
-> +static struct blkz_context blkz_cxt;
-> +
-> +enum blkz_flush_mode {
-> +	FLUSH_NONE = 0,
-> +	FLUSH_PART,
-> +	FLUSH_META,
-> +	FLUSH_ALL,
-> +};
-> +
-> +static inline int buffer_datalen(struct blkz_zone *zone)
-> +{
-> +	return atomic_read(&zone->buffer->datalen);
-> +}
-> +
-> +static inline bool is_on_panic(void)
-> +{
-> +	struct blkz_context *cxt = &blkz_cxt;
-> +
-> +	return atomic_read(&cxt->on_panic);
-> +}
-> +
-> +static int blkz_zone_read(struct blkz_zone *zone, char *buf,
-> +		size_t len, unsigned long off)
-> +{
-> +	if (!buf || !zone->buffer)
-> +		return -EINVAL;
-> +	if (off > zone->buffer_size)
-> +		return -EINVAL;
-> +	len = min_t(size_t, len, zone->buffer_size - off);
-> +	memcpy(buf, zone->buffer->data + off, len);
-
-Should the remainder of the buffer be zeroed if
-	len > zone->buffer_size - off
-? If not, I was expecting this to return how much was copied.
-
-> +	return 0;
-> +}
-> +
-> +static int blkz_zone_write(struct blkz_zone *zone,
-> +		enum blkz_flush_mode flush_mode, const char *buf,
-> +		size_t len, unsigned long off)
-> +{
-> +	struct blkz_info *info = blkz_cxt.bzinfo;
-> +	ssize_t wcnt = 0;
-> +	ssize_t (*writeop)(const char *buf, size_t bytes, loff_t pos);
-> +	size_t wlen;
-> +
-> +	if (off > zone->buffer_size)
-> +		return -EINVAL;
-> +	wlen = min_t(size_t, len, zone->buffer_size - off);
-> +	if (buf && wlen) {
-> +		memcpy(zone->buffer->data + off, buf, wlen);
-> +		atomic_set(&zone->buffer->datalen, wlen + off);
-> +	}
-
-If you're expecting concurrent writers (use of atomic_set(), I would
-expect the whole write to be locked instead. (i.e. what happens if
-multiple callers call blkz_zone_write()?)
-
-> +
-> +	/* avoid to damage old records */
-> +	if (!is_on_panic() && !atomic_read(&blkz_cxt.recovered))
-> +		goto set_dirty;
-> +
-> +	writeop = is_on_panic() ? info->panic_write : info->write;
-> +	if (!writeop)
-> +		goto set_dirty;
-> +
-> +	switch (flush_mode) {
-> +	case FLUSH_NONE:
-> +		if (unlikely(buf && wlen))
-> +			goto set_dirty;
-> +		return 0;
-> +	case FLUSH_PART:
-> +		wcnt = writeop((const char *)zone->buffer->data + off, wlen,
-> +				zone->off + sizeof(*zone->buffer) + off);
-> +		if (wcnt != wlen)
-> +			goto set_dirty;
-> +		/* fallthrough */
-> +	case FLUSH_META:
-> +		wlen = sizeof(struct blkz_buffer);
-> +		wcnt = writeop((const char *)zone->buffer, wlen, zone->off);
-> +		if (wcnt != wlen)
-> +			goto set_dirty;
-> +		break;
-> +	case FLUSH_ALL:
-> +		wlen = zone->buffer_size + sizeof(*zone->buffer);
-> +		wcnt = writeop((const char *)zone->buffer, wlen, zone->off);
-> +		if (wcnt != wlen)
-> +			goto set_dirty;
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +set_dirty:
-> +	atomic_set(&zone->dirty, true);
-> +	return -EBUSY;
-> +}
-> +
-> +static int blkz_flush_dirty_zone(struct blkz_zone *zone)
-> +{
-> +	int ret;
-> +
-> +	if (!zone)
-> +		return -EINVAL;
-> +
-> +	if (!atomic_read(&zone->dirty))
-> +		return 0;
-> +
-> +	if (!atomic_read(&blkz_cxt.recovered))
-> +		return -EBUSY;
-> +
-> +	ret = blkz_zone_write(zone, FLUSH_ALL, NULL, 0, 0);
-> +	if (!ret)
-> +		atomic_set(&zone->dirty, false);
-> +	return ret;
-> +}
-> +
-> +static int blkz_flush_dirty_zones(struct blkz_zone **zones, unsigned int cnt)
-> +{
-> +	int i, ret;
-> +	struct blkz_zone *zone;
-> +
-> +	if (!zones)
-> +		return -EINVAL;
-> +
-> +	for (i = 0; i < cnt; i++) {
-> +		zone = zones[i];
-> +		if (!zone)
-> +			return -EINVAL;
-> +		ret = blkz_flush_dirty_zone(zone);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +	return 0;
-> +}
-> +
-> +/**
-> + * blkz_move_zone: move data from a old zone to a new zone
-> + *
-> + * @old: the old zone
-> + * @new: the new zone
-> + *
-> + * NOTE:
-> + *	Call blkz_zone_write to copy and flush data. If it failed, we
-> + *	should reset new->dirty, because the new zone not really dirty.
-> + */
-> +static int blkz_move_zone(struct blkz_zone *old, struct blkz_zone *new)
-> +{
-> +	const char *data = (const char *)old->buffer->data;
-> +	int ret;
-> +
-> +	ret = blkz_zone_write(new, FLUSH_ALL, data, buffer_datalen(old), 0);
-> +	if (ret) {
-> +		atomic_set(&new->buffer->datalen, 0);
-> +		atomic_set(&new->dirty, false);
-> +		return ret;
-> +	}
-> +	atomic_set(&old->buffer->datalen, 0);
-> +	return 0;
-> +}
-> +
-> +static int blkz_recover_dmesg_data(struct blkz_context *cxt)
-
-What does "recover" mean in this context? Is this "read from storage"?
-
-> +{
-> +	struct blkz_info *info = cxt->bzinfo;
-> +	struct blkz_zone *zone = NULL;
-> +	struct blkz_buffer *buf;
-> +	unsigned long i;
-> +	ssize_t rcnt;
-> +
-> +	if (!info->read)
-> +		return -EINVAL;
-> +
-> +	for (i = 0; i < cxt->dmesg_max_cnt; i++) {
-> +		zone = cxt->dbzs[i];
-> +		if (unlikely(!zone))
-> +			return -EINVAL;
-> +		if (atomic_read(&zone->dirty)) {
-> +			unsigned int wcnt = cxt->dmesg_write_cnt;
-> +			struct blkz_zone *new = cxt->dbzs[wcnt];
-> +			int ret;
-> +
-> +			ret = blkz_move_zone(zone, new);
-> +			if (ret) {
-> +				pr_err("move zone from %lu to %d failed\n",
-> +						i, wcnt);
-> +				return ret;
-> +			}
-> +			cxt->dmesg_write_cnt = (wcnt + 1) % cxt->dmesg_max_cnt;
-> +		}
-> +		if (!zone->should_recover)
-> +			continue;
-> +		buf = zone->buffer;
-> +		rcnt = info->read((char *)buf, zone->buffer_size + sizeof(*buf),
-> +				zone->off);
-> +		if (rcnt != zone->buffer_size + sizeof(*buf))
-> +			return (int)rcnt < 0 ? (int)rcnt : -EIO;
-> +	}
-> +	return 0;
-> +}
-> +
-> +/*
-> + * blkz_recover_dmesg_meta: recover metadata of dmesg
-> + *
-> + * Recover metadata as follow:
-> + * @cxt->dmesg_write_cnt
-> + * @cxt->oops_counter
-> + * @cxt->panic_counter
-> + */
-> +static int blkz_recover_dmesg_meta(struct blkz_context *cxt)
-> +{
-> +	struct blkz_info *info = cxt->bzinfo;
-> +	struct blkz_zone *zone;
-> +	size_t rcnt, len;
-> +	struct blkz_buffer *buf;
-> +	struct blkz_dmesg_header *hdr;
-> +	struct timespec64 time = {0};
-> +	unsigned long i;
-> +	/*
-> +	 * Recover may on panic, we can't allocate any memory by kmalloc.
-> +	 * So, we use local array instead.
-> +	 */
-> +	char buffer_header[sizeof(*buf) + sizeof(*hdr)] = {0};
-> +
-> +	if (!info->read)
-> +		return -EINVAL;
-> +
-> +	len = sizeof(*buf) + sizeof(*hdr);
-> +	buf = (struct blkz_buffer *)buffer_header;
-> +	for (i = 0; i < cxt->dmesg_max_cnt; i++) {
-> +		zone = cxt->dbzs[i];
-> +		if (unlikely(!zone))
-> +			return -EINVAL;
-> +
-> +		rcnt = info->read((char *)buf, len, zone->off);
-> +		if (rcnt != len) {
-> +			pr_err("read %s with id %lu failed\n", zone->name, i);
-> +			return (int)rcnt < 0 ? (int)rcnt : -EIO;
-> +		}
-> +
-> +		if (buf->sig != zone->buffer->sig) {
-> +			pr_debug("no valid data in dmesg zone %lu\n", i);
-> +			continue;
-> +		}
-> +
-> +		if (zone->buffer_size < atomic_read(&buf->datalen)) {
-> +			pr_info("found overtop zone: %s: id %lu, off %lu, size %zu\n",
-> +					zone->name, i, zone->off,
-> +					zone->buffer_size);
-> +			continue;
-> +		}
-> +
-> +		hdr = (struct blkz_dmesg_header *)buf->data;
-> +		if (hdr->magic != DMESG_HEADER_MAGIC) {
-> +			pr_info("found invalid zone: %s: id %lu, off %lu, size %zu\n",
-> +					zone->name, i, zone->off,
-> +					zone->buffer_size);
-> +			continue;
-> +		}
-> +
-> +		/*
-> +		 * we get the newest zone, and the next one must be the oldest
-> +		 * or unused zone, because we do write one by one like a circle.
-> +		 */
-> +		if (hdr->time.tv_sec >= time.tv_sec) {
-> +			time.tv_sec = hdr->time.tv_sec;
-> +			cxt->dmesg_write_cnt = (i + 1) % cxt->dmesg_max_cnt;
-> +		}
-> +
-> +		if (hdr->reason == KMSG_DUMP_OOPS)
-> +			cxt->oops_counter =
-> +				max(cxt->oops_counter, hdr->counter);
-> +		else
-> +			cxt->panic_counter =
-> +				max(cxt->panic_counter, hdr->counter);
-> +
-> +		if (!atomic_read(&buf->datalen)) {
-> +			pr_debug("found erased zone: %s: id %ld, off %lu, size %zu, datalen %d\n",
-> +					zone->name, i, zone->off,
-> +					zone->buffer_size,
-> +					atomic_read(&buf->datalen));
-> +			continue;
-> +		}
-> +
-> +		if (!is_on_panic())
-> +			zone->should_recover = true;
-> +		pr_debug("found nice zone: %s: id %ld, off %lu, size %zu, datalen %d\n",
-> +				zone->name, i, zone->off,
-> +				zone->buffer_size, atomic_read(&buf->datalen));
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int blkz_recover_dmesg(struct blkz_context *cxt)
-> +{
-> +	int ret;
-> +
-> +	if (!cxt->dbzs)
-> +		return 0;
-> +
-> +	ret = blkz_recover_dmesg_meta(cxt);
-> +	if (ret)
-> +		goto recover_fail;
-> +
-> +	ret = blkz_recover_dmesg_data(cxt);
-> +	if (ret)
-> +		goto recover_fail;
-> +
-> +	return 0;
-> +recover_fail:
-> +	pr_debug("recover dmesg failed\n");
-> +	return ret;
-> +}
-> +
-> +static inline int blkz_recovery(struct blkz_context *cxt)
-> +{
-> +	int ret = -EBUSY;
-> +
-> +	if (atomic_read(&cxt->recovered))
-> +		return 0;
-> +
-> +	ret = blkz_recover_dmesg(cxt);
-> +	if (ret)
-> +		goto recover_fail;
-> +
-> +	pr_debug("recover end!\n");
-> +	atomic_set(&cxt->recovered, 1);
-> +	return 0;
-> +
-> +recover_fail:
-> +	pr_err("recover failed\n");
-> +	return ret;
-> +}
-> +
-> +static int blkz_pstore_open(struct pstore_info *psi)
-> +{
-> +	struct blkz_context *cxt = psi->data;
-> +
-> +	cxt->dmesg_read_cnt = 0;
-> +	return 0;
-> +}
-> +
-> +static inline bool blkz_ok(struct blkz_zone *zone)
-> +{
-> +	if (zone && zone->buffer && buffer_datalen(zone))
-> +		return true;
-> +	return false;
-> +}
-> +
-> +static inline int blkz_dmesg_erase(struct blkz_context *cxt,
-> +		struct blkz_zone *zone)
-> +{
-> +	if (unlikely(!blkz_ok(zone)))
-> +		return 0;
-> +
-> +	atomic_set(&zone->buffer->datalen, 0);
-> +	return blkz_zone_write(zone, FLUSH_META, NULL, 0, 0);
-> +}
-
-cxt is unused?
-
-> +
-> +static int blkz_pstore_erase(struct pstore_record *record)
-> +{
-> +	struct blkz_context *cxt = record->psi->data;
-> +
-
-Please sanity-check the record->id is in bounds before using it.
-
-> +	switch (record->type) {
-> +	case PSTORE_TYPE_DMESG:
-> +		return blkz_dmesg_erase(cxt, cxt->dbzs[record->id]);
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static void blkz_write_kmsg_hdr(struct blkz_zone *zone,
-> +		struct pstore_record *record)
-> +{
-> +	struct blkz_context *cxt = record->psi->data;
-> +	struct blkz_buffer *buffer = zone->buffer;
-> +	struct blkz_dmesg_header *hdr =
-> +		(struct blkz_dmesg_header *)buffer->data;
-> +
-> +	hdr->magic = DMESG_HEADER_MAGIC;
-> +	hdr->compressed = record->compressed;
-> +	hdr->time.tv_sec = record->time.tv_sec;
-> +	hdr->time.tv_nsec = record->time.tv_nsec;
-> +	hdr->reason = record->reason;
-> +	if (hdr->reason == KMSG_DUMP_OOPS)
-> +		hdr->counter = ++cxt->oops_counter;
-> +	else
-> +		hdr->counter = ++cxt->panic_counter;
-> +}
-> +
-> +static inline int notrace blkz_dmesg_write_do(struct blkz_context *cxt,
-> +		struct pstore_record *record)
-
-Instead of "..._do" maybe name this "..._record", since it writes one
-record?
-
-> +{
-> +	size_t size, hlen;
-> +	struct blkz_zone *zone;
-> +	unsigned int zonenum;
-> +
-> +	zonenum = cxt->dmesg_write_cnt;
-> +	zone = cxt->dbzs[zonenum];
-> +	if (unlikely(!zone))
-> +		return -ENOSPC;
-> +	cxt->dmesg_write_cnt = (zonenum + 1) % cxt->dmesg_max_cnt;
-> +
-> +	pr_debug("write %s to zone id %d\n", zone->name, zonenum);
-> +	blkz_write_kmsg_hdr(zone, record);
-> +	hlen = sizeof(struct blkz_dmesg_header);
-> +	size = min_t(size_t, record->size, zone->buffer_size - hlen);
-> +	return blkz_zone_write(zone, FLUSH_ALL, record->buf, size, hlen);
-> +}
-> +
-> +static int notrace blkz_dmesg_write(struct blkz_context *cxt,
-> +		struct pstore_record *record)
-> +{
-> +	int ret;
-> +	struct blkz_info *info = cxt->bzinfo;
-> +
-> +	/*
-> +	 * Out of the various dmesg dump types, pstore/blk is currently designed
-> +	 * to only store crash logs, rather than storing general kernel logs.
-> +	 */
-> +	if (record->reason != KMSG_DUMP_OOPS &&
-> +			record->reason != KMSG_DUMP_PANIC)
-> +		return -EINVAL;
-> +
-> +	/* Skip Oopes when configured to do so. */
-> +	if (record->reason == KMSG_DUMP_OOPS && !info->dump_oops)
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * Explicitly only take the first part of any new crash.
-> +	 * If our buffer is larger than kmsg_bytes, this can never happen,
-> +	 * and if our buffer is smaller than kmsg_bytes, we don't want the
-> +	 * report split across multiple records.
-> +	 */
-> +	if (record->part != 1)
-> +		return -ENOSPC;
-> +
-> +	if (!cxt->dbzs)
-> +		return -ENOSPC;
-> +
-> +	ret = blkz_dmesg_write_do(cxt, record);
-> +	if (!ret) {
-> +		pr_debug("try to flush other dirty dmesg zones\n");
-> +		blkz_flush_dirty_zones(cxt->dbzs, cxt->dmesg_max_cnt);
-> +	}
-> +
-> +	/* alway return 0 as we had handled it on buffer */
-> +	return 0;
-> +}
-> +
-> +static int notrace blkz_pstore_write(struct pstore_record *record)
-> +{
-> +	struct blkz_context *cxt = record->psi->data;
-> +
-> +	if (record->type == PSTORE_TYPE_DMESG &&
-> +			record->reason == KMSG_DUMP_PANIC)
-> +		atomic_set(&cxt->on_panic, 1);
-> +
-> +	switch (record->type) {
-> +	case PSTORE_TYPE_DMESG:
-> +		return blkz_dmesg_write(cxt, record);
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +#define READ_NEXT_ZONE ((ssize_t)(-1024))
-> +static struct blkz_zone *blkz_read_next_zone(struct blkz_context *cxt)
-> +{
-> +	struct blkz_zone *zone = NULL;
-> +
-> +	while (cxt->dmesg_read_cnt < cxt->dmesg_max_cnt) {
-> +		zone = cxt->dbzs[cxt->dmesg_read_cnt++];
-> +		if (blkz_ok(zone))
-> +			return zone;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> +static int blkz_read_dmesg_hdr(struct blkz_zone *zone,
-> +		struct pstore_record *record)
-> +{
-> +	struct blkz_buffer *buffer = zone->buffer;
-> +	struct blkz_dmesg_header *hdr =
-> +		(struct blkz_dmesg_header *)buffer->data;
-> +
-> +	if (hdr->magic != DMESG_HEADER_MAGIC)
-> +		return -EINVAL;
-> +	record->compressed = hdr->compressed;
-> +	record->time.tv_sec = hdr->time.tv_sec;
-> +	record->time.tv_nsec = hdr->time.tv_nsec;
-> +	record->reason = hdr->reason;
-> +	record->count = hdr->counter;
-> +	return 0;
-> +}
-> +
-> +static ssize_t blkz_dmesg_read(struct blkz_zone *zone,
-> +		struct pstore_record *record)
-> +{
-> +	size_t size, hlen = 0;
-> +
-> +	size = buffer_datalen(zone);
-> +	/* Clear and skip this DMESG record if it has no valid header */
-> +	if (blkz_read_dmesg_hdr(zone, record)) {
-> +		atomic_set(&zone->buffer->datalen, 0);
-> +		atomic_set(&zone->dirty, 0);
-> +		return READ_NEXT_ZONE;
-> +	}
-> +	size -= sizeof(struct blkz_dmesg_header);
-> +
-> +	if (!record->compressed) {
-> +		char *buf = kasprintf(GFP_KERNEL,
-> +				"%s: Total %d times\n",
-> +				record->reason == KMSG_DUMP_OOPS ? "Oops" :
-> +				"Panic", record->count);
-> +		hlen = strlen(buf);
-> +		record->buf = krealloc(buf, hlen + size, GFP_KERNEL);
-> +		if (!record->buf) {
-> +			kfree(buf);
-> +			return -ENOMEM;
-> +		}
-> +	} else {
-> +		record->buf = kmalloc(size, GFP_KERNEL);
-> +		if (!record->buf)
-> +			return -ENOMEM;
-> +	}
-> +
-> +	if (unlikely(blkz_zone_read(zone, record->buf + hlen, size,
-> +				sizeof(struct blkz_dmesg_header)) < 0)) {
-> +		kfree(record->buf);
-> +		return READ_NEXT_ZONE;
-> +	}
-> +
-> +	return size + hlen;
-> +}
-> +
-> +static ssize_t blkz_pstore_read(struct pstore_record *record)
-> +{
-> +	struct blkz_context *cxt = record->psi->data;
-> +	ssize_t (*blkz_read)(struct blkz_zone *zone,
-> +			struct pstore_record *record);
-> +	struct blkz_zone *zone;
-> +	ssize_t ret;
-> +
-> +	/* before read, we must recover from storage */
-> +	ret = blkz_recovery(cxt);
-> +	if (ret)
-> +		return ret;
-> +
-> +next_zone:
-> +	zone = blkz_read_next_zone(cxt);
-> +	if (!zone)
-> +		return 0;
-> +
-> +	record->type = zone->type;
-> +	switch (record->type) {
-> +	case PSTORE_TYPE_DMESG:
-> +		blkz_read = blkz_dmesg_read;
-> +		record->id = cxt->dmesg_read_cnt - 1;
-> +		break;
-> +	default:
-> +		goto next_zone;
-> +	}
-> +
-> +	ret = blkz_read(zone, record);
-> +	if (ret == READ_NEXT_ZONE)
-> +		goto next_zone;
-> +	return ret;
-> +}
-> +
-> +static struct blkz_context blkz_cxt = {
-> +	.bzinfo_lock = __SPIN_LOCK_UNLOCKED(blkz_cxt.bzinfo_lock),
-> +	.recovered = ATOMIC_INIT(0),
-> +	.on_panic = ATOMIC_INIT(0),
-> +	.pstore = {
-> +		.owner = THIS_MODULE,
-> +		.name = MODNAME,
-> +		.open = blkz_pstore_open,
-> +		.read = blkz_pstore_read,
-> +		.write = blkz_pstore_write,
-> +		.erase = blkz_pstore_erase,
-> +	},
-> +};
-> +
-> +static struct blkz_zone *blkz_init_zone(enum pstore_type_id type,
-> +		unsigned long *off, size_t size)
-> +{
-> +	struct blkz_info *info = blkz_cxt.bzinfo;
-> +	struct blkz_zone *zone;
-> +	const char *name = pstore_type_to_name(type);
-> +
-> +	if (!size)
-> +		return NULL;
-> +
-> +	if (*off + size > info->total_size) {
-> +		pr_err("no room for %s (0x%zx@0x%lx over 0x%lx)\n",
-> +			name, size, *off, info->total_size);
-> +		return ERR_PTR(-ENOMEM);
-> +	}
-> +
-> +	zone = kzalloc(sizeof(struct blkz_zone), GFP_KERNEL);
-> +	if (!zone)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	zone->buffer = kmalloc(size, GFP_KERNEL);
-> +	if (!zone->buffer) {
-> +		kfree(zone);
-> +		return ERR_PTR(-ENOMEM);
-> +	}
-> +	memset(zone->buffer, 0xFF, size);
-> +	zone->off = *off;
-> +	zone->name = name;
-> +	zone->type = type;
-> +	zone->buffer_size = size - sizeof(struct blkz_buffer);
-> +	zone->buffer->sig = type ^ BLK_SIG;
-> +	atomic_set(&zone->dirty, 0);
-> +	atomic_set(&zone->buffer->datalen, 0);
-> +
-> +	*off += size;
-> +
-> +	pr_debug("blkzone %s: off 0x%lx, %zu header, %zu data\n", zone->name,
-> +			zone->off, sizeof(*zone->buffer), zone->buffer_size);
-> +	return zone;
-> +}
-> +
-> +static struct blkz_zone **blkz_init_zones(enum pstore_type_id type,
-> +	unsigned long *off, size_t total_size, ssize_t record_size,
-> +	unsigned int *cnt)
-> +{
-> +	struct blkz_info *info = blkz_cxt.bzinfo;
-> +	struct blkz_zone **zones, *zone;
-> +	const char *name = pstore_type_to_name(type);
-> +	int c, i;
-> +
-> +	if (!total_size || !record_size)
-> +		return NULL;
-> +
-> +	if (*off + total_size > info->total_size) {
-> +		pr_err("no room for zones %s (0x%zx@0x%lx over 0x%lx)\n",
-> +			name, total_size, *off, info->total_size);
-> +		return ERR_PTR(-ENOMEM);
-> +	}
-> +
-> +	c = total_size / record_size;
-> +	zones = kcalloc(c, sizeof(*zones), GFP_KERNEL);
-> +	if (!zones) {
-> +		pr_err("allocate for zones %s failed\n", name);
-> +		return ERR_PTR(-ENOMEM);
-> +	}
-> +	memset(zones, 0, c * sizeof(*zones));
-> +
-> +	for (i = 0; i < c; i++) {
-> +		zone = blkz_init_zone(type, off, record_size);
-> +		if (!zone || IS_ERR(zone)) {
-> +			pr_err("initialize zones %s failed\n", name);
-> +			while (--i >= 0) {
-> +				kfree(zones[i]->buffer);
-> +				kfree(zones[i]);
-> +			}
-> +			kfree(zones);
-> +			return (void *)zone;
-> +		}
-> +		zones[i] = zone;
-> +	}
-> +
-> +	*cnt = c;
-> +	return zones;
-> +}
-> +
-> +static void blkz_free_zone(struct blkz_zone **blkzone)
-> +{
-> +	struct blkz_zone *zone = *blkzone;
-> +
-> +	if (!zone)
-> +		return;
-> +
-> +	kfree(zone->buffer);
-> +	kfree(zone);
-> +	*blkzone = NULL;
-> +}
-> +
-> +static void blkz_free_zones(struct blkz_zone ***blkzones, unsigned int *cnt)
-> +{
-> +	struct blkz_zone **zones = *blkzones;
-> +
-> +	if (!zones)
-> +		return;
-> +
-> +	while (*cnt > 0) {
-> +		blkz_free_zone(&zones[*cnt]);
-> +		(*cnt)--;
-> +	}
-> +	kfree(zones);
-> +	*blkzones = NULL;
-> +}
-> +
-> +static int blkz_cut_zones(struct blkz_context *cxt)
-
-What does "cut" mean here? Maybe "alloc" instead?
-
-> +{
-> +	struct blkz_info *info = cxt->bzinfo;
-> +	unsigned long off = 0;
-> +	int err;
-> +	size_t size;
-> +
-> +	size = info->total_size;
-> +	cxt->dbzs = blkz_init_zones(PSTORE_TYPE_DMESG, &off, size,
-> +			info->dmesg_size, &cxt->dmesg_max_cnt);
-> +	if (IS_ERR(cxt->dbzs)) {
-> +		err = PTR_ERR(cxt->dbzs);
-> +		goto fail_out;
-> +	}
-> +
-> +	return 0;
-> +fail_out:
-> +	return err;
-> +}
-> +
-> +int blkz_register(struct blkz_info *info)
-> +{
-> +	int err = -EINVAL;
-> +	struct blkz_context *cxt = &blkz_cxt;
-> +	struct module *owner = info->owner;
-> +
-> +	if (!info->total_size) {
-> +		pr_warn("the total size must be non-zero\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (!info->dmesg_size) {
-> +		pr_warn("at least one of the records be non-zero\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (!info->name || !info->name[0])
-> +		return -EINVAL;
-> +
-> +	if (info->total_size < 4096) {
-> +		pr_err("total size must be greater than 4096 bytes\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +#define check_size(name, size) {					\
-> +		if (info->name > 0 && info->name < (size)) {		\
-> +			pr_err(#name " must be over %d\n", (size));	\
-> +			return -EINVAL;					\
-> +		}							\
-> +		if (info->name & (size - 1)) {				\
-> +			pr_err(#name " must be a multiple of %d\n",	\
-> +					(size));			\
-> +			return -EINVAL;					\
-> +		}							\
-> +	}
-> +
-> +	check_size(total_size, 4096);
-> +	check_size(dmesg_size, SECTOR_SIZE);
-> +
-> +#undef check_size
-> +
-> +	/*
-> +	 * the @read and @write must be applied.
-> +	 * if no @read, pstore may mount failed.
-> +	 * if no @write, pstore do not support to remove record file.
-> +	 */
-> +	if (!info->read || !info->write) {
-> +		pr_err("no valid general read/write interface\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	spin_lock(&cxt->bzinfo_lock);
-> +	if (cxt->bzinfo) {
-> +		pr_warn("blk '%s' already loaded: ignoring '%s'\n",
-> +				cxt->bzinfo->name, info->name);
-> +		spin_unlock(&cxt->bzinfo_lock);
-> +		return -EBUSY;
-> +	}
-> +	cxt->bzinfo = info;
-> +	spin_unlock(&cxt->bzinfo_lock);
-> +
-> +	if (owner && !try_module_get(owner)) {
-> +		err = -EBUSY;
-> +		goto fail_out;
-> +	}
-> +
-> +	pr_debug("register %s with properties:\n", info->name);
-> +	pr_debug("\ttotal size : %ld Bytes\n", info->total_size);
-> +	pr_debug("\tdmesg size : %ld Bytes\n", info->dmesg_size);
-> +
-> +	err = blkz_cut_zones(cxt);
-> +	if (err) {
-> +		pr_err("cut zones fialed\n");
-
-typo: "failed"
-
-> +		goto put_module;
-> +	}
-> +
-> +	if (info->dmesg_size) {
-> +		cxt->pstore.bufsize = cxt->dbzs[0]->buffer_size -
-> +			sizeof(struct blkz_dmesg_header);
-> +		cxt->pstore.buf = kzalloc(cxt->pstore.bufsize, GFP_KERNEL);
-> +		if (!cxt->pstore.buf) {
-> +			err = -ENOMEM;
-
-I think the allocated zones need to be freed here.
-
-> +			goto put_module;
-> +		}
-> +	}
-> +	cxt->pstore.data = cxt;
-> +	if (info->dmesg_size)
-> +		cxt->pstore.flags = PSTORE_FLAGS_DMESG;
-> +
-> +	pr_info("Registered %s as blkzone backend for %s%s\n", info->name,
-> +			cxt->dbzs && cxt->bzinfo->dump_oops ? "Oops " : "",
-> +			cxt->dbzs && cxt->bzinfo->panic_write ? "Panic " : "");
-> +
-> +	err = pstore_register(&cxt->pstore);
-> +	if (err) {
-> +		pr_err("registering with pstore failed\n");
-
-Also here?
-
-> +		goto free_pstore_buf;
-> +	}
-> +
-> +	module_put(owner);
-> +	return 0;
-> +
-> +free_pstore_buf:
-> +	kfree(cxt->pstore.buf);
-> +put_module:
-> +	module_put(owner);
-> +fail_out:
-> +	spin_lock(&blkz_cxt.bzinfo_lock);
-> +	blkz_cxt.bzinfo = NULL;
-> +	spin_unlock(&blkz_cxt.bzinfo_lock);
-> +	return err;
-> +}
-> +EXPORT_SYMBOL_GPL(blkz_register);
-> +
-> +void blkz_unregister(struct blkz_info *info)
-> +{
-> +	struct blkz_context *cxt = &blkz_cxt;
-> +
-> +	pstore_unregister(&cxt->pstore);
-> +	kfree(cxt->pstore.buf);
-> +	cxt->pstore.bufsize = 0;
-> +
-> +	spin_lock(&cxt->bzinfo_lock);
-> +	blkz_cxt.bzinfo = NULL;
-> +	spin_unlock(&cxt->bzinfo_lock);
-> +
-> +	blkz_free_zones(&cxt->dbzs, &cxt->dmesg_max_cnt);
-> +}
-> +EXPORT_SYMBOL_GPL(blkz_unregister);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("WeiXiong Liao <liaoweixiong@allwinnertech.com>");
-> +MODULE_DESCRIPTION("Block device Oops/Panic logger");
-> diff --git a/include/linux/pstore_blk.h b/include/linux/pstore_blk.h
-> new file mode 100644
-> index 000000000000..589d276fa4e4
-> --- /dev/null
-> +++ b/include/linux/pstore_blk.h
-> @@ -0,0 +1,62 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +#ifndef __PSTORE_BLK_H_
-> +#define __PSTORE_BLK_H_
-> +
-> +#include <linux/types.h>
-> +#include <linux/blkdev.h>
-> +
-> +/**
-> + * struct blkz_info - backend blkzone driver structure
-> + *
-> + * @owner:
-> + *	Module which is responsible for this backend driver.
-> + * @name:
-> + *	Name of the backend driver.
-> + * @total_size:
-> + *	The total size in bytes pstore/blk can use. It must be greater than
-> + *	4096 and be multiple of 4096.
-> + * @dmesg_size:
-> + *	The size of each zones for dmesg (oops & panic). Zero means disabled,
-> + *	otherwise, it must be multiple of SECTOR_SIZE(512 Bytes).
-> + * @dump_oops:
-> + *	Dump oops and panic log or only panic.
-> + * @read, @write:
-> + *	The general (not panic) read/write operation. It's required unless you
-> + *	are block device and supply valid @bdev. In this case, blkzone will
-> + *	replace it as a general read/write interface.
-> + *
-> + *	Both of the @size and @offset parameters on this interface are
-> + *	the relative size of the space provided, not the whole disk/flash.
-> + *
-> + *	On success, the number of bytes read/write should be returned.
-> + *	On error, negative number should be returned.
-> + * @panic_write:
-> + *	The write operation only used for panic. It's optional if you do not
-> + *	care panic record. If panic occur but blkzone do not recover yet, the
-> + *	first zone of dmesg is used.
-> + *
-> + *	Both of the @size and @offset parameters on this interface are
-> + *	the relative size of the space provided, not the whole disk/flash.
-> + *
-> + *	On success, the number of bytes write should be returned.
-> + *	On error, negative number should be returned.
-> + */
-> +typedef ssize_t (*blkz_read_op)(char *, size_t, loff_t);
-> +typedef ssize_t (*blkz_write_op)(const char *, size_t, loff_t);
-> +struct blkz_info {
-> +	struct module *owner;
-> +	const char *name;
-> +
-> +	unsigned long total_size;
-> +	unsigned long dmesg_size;
-> +	int dump_oops;
-> +	blkz_read_op read;
-> +	blkz_write_op write;
-> +	blkz_write_op panic_write;
-> +};
-> +
-> +extern int blkz_register(struct blkz_info *info);
-> +extern void blkz_unregister(struct blkz_info *info);
-> +
-> +#endif
-> -- 
-> 1.9.1
-> 
-
--- 
-Kees Cook
+> Rob
