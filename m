@@ -2,146 +2,98 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FA2C4BA24
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2222BC4BA21
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 072662072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:14:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC87A2072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:14:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582755286;
+	bh=i+7/S81WydlhcrcdQ9KBb+ZDSbg6YX0wIuoqhIFxgeU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XM+3g5yMqJt0tIXHAioJg77YSnqkbs/bHBrZIIAKzh0TSZ4jM3RXrtKBAQ05a74oa
+	 8S4R9z5mFlfP90hAL9t83Pd4jCFhqzthom2dwzpr7Lj3EMAUv6JHQCJwmUXpTNC1dE
+	 GQuGoiEol0eomSZyFkXGaAmkcxLrK5x+h4DyCWow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbgBZWOi (ORCPT
+        id S1727841AbgBZWOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 17:14:38 -0500
-Received: from mga01.intel.com ([192.55.52.88]:55011 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727715AbgBZWOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 17:14:38 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 14:14:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,489,1574150400"; 
-   d="scan'208";a="410779776"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 26 Feb 2020 14:14:37 -0800
-Received: from [10.7.201.16] (skuppusw-desk.jf.intel.com [10.7.201.16])
-        by linux.intel.com (Postfix) with ESMTP id 44C9258052E;
-        Wed, 26 Feb 2020 14:14:37 -0800 (PST)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v15 4/5] PCI/DPC: Add Error Disconnect Recover (EDR)
- support
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com
-References: <20200226213233.GA168850@google.com>
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <6cabd520-f974-2c33-4ecb-3cfd2dfb00a4@linux.intel.com>
-Date:   Wed, 26 Feb 2020 14:11:53 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 26 Feb 2020 17:14:44 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37640 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727715AbgBZWOo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 17:14:44 -0500
+Received: by mail-oi1-f193.google.com with SMTP id q84so1220041oic.4;
+        Wed, 26 Feb 2020 14:14:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bok3LP1w1qmqsuO1k7gdAuotciHOwlDqvixeOQYTb0o=;
+        b=YGqpM8dZcGihH6WBlaxUkEguc+HOJxTEVgTtCCwcjVGb294UE8WCYrR66uqxmNw8Bc
+         8K4fsUlLwl4kNNGO/OoKjacdA3BvZFEg36DCkaSbmHX2X1WATOcxS6fZDysszstO5i5D
+         b1rJ9KPHQXijVVGzC8EukPXUD3A235ZmfWgpddYErNcOcIRVPY75Y1mtiC59HVRh+Ex/
+         qsLbx1sTsup2e11ahGXWTJHbRMQDzKs84ck271oArGWmj8rB0RDkT8tVhk1kIPeKHTjc
+         ClgRaLcvGVVfOptYTvlD94WSZVhFdv67Skl0D3N/s/EayEi5CMe5t4dXGMHPz0N59aHD
+         84Qw==
+X-Gm-Message-State: APjAAAWcu3pqsMf10plxJspB1GnPkNTb7SOTdtHrRq2ZgAWUpdQhelR9
+        ZVWAs3MS0w3s+gYJYNUVHw==
+X-Google-Smtp-Source: APXvYqxM2+l7pZyEyd1X9E2oBGjRy47x/nyBH4hVjeWJ+OHmmT1cq5nXasi2tof7gwpMjMdC0Ozchw==
+X-Received: by 2002:aca:55cc:: with SMTP id j195mr1017627oib.22.1582755282012;
+        Wed, 26 Feb 2020 14:14:42 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id z21sm1229903oto.52.2020.02.26.14.14.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 14:14:41 -0800 (PST)
+Received: (nullmailer pid 28496 invoked by uid 1000);
+        Wed, 26 Feb 2020 22:14:40 -0000
+Date:   Wed, 26 Feb 2020 16:14:40 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        masahiroy@kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] dt-bindings: dma: Convert UniPhier MIO DMA controller
+ to json-schema
+Message-ID: <20200226221440.GA28411@bogus>
+References: <20200222112042.32345-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-In-Reply-To: <20200226213233.GA168850@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200222112042.32345-1-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, 22 Feb 2020 20:20:42 +0900, Masahiro Yamada wrote:
+> Convert the UniPhier MIO (Media I/O) DMA controller binding to DT
+> schema format.
+> 
+> While I was here, I added the resets property.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+> 
+> Changes in v2:
+>  - add 'resets'
+> 
+>  .../dma/socionext,uniphier-mio-dmac.yaml      | 63 +++++++++++++++++++
+>  .../bindings/dma/uniphier-mio-dmac.txt        | 25 --------
+>  2 files changed, 63 insertions(+), 25 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
+> 
 
-On 2/26/20 1:32 PM, Bjorn Helgaas wrote:
-> On Wed, Feb 26, 2020 at 10:42:27AM -0800, Kuppuswamy Sathyanarayanan wrote:
->> On 2/25/20 5:02 PM, Bjorn Helgaas wrote:
->>> On Thu, Feb 13, 2020 at 10:20:16AM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>> ...
->
->> Yes, we could remove it. But it might need some more changes to
->> dpc driver functions. I can think of two ways,
->>
->> 1. Re-factor the DPC driver not to use dpc_dev structure and just use
->> pci_dev in their functions implementation. But this might lead to
->> re-reading following dpc_dev structure members every time we
->> use it in dpc driver functions.
->>
->> (Currently in dpc driver probe they cache the following device parameters )
->>
->>    9         u16                     cap_pos;
->>   10         bool                    rp_extensions;
->>   11         u8                      rp_log_size;
->>   12         u16                     ctl;
->>   13         u16                     cap;
-> I think this is basically what I proposed with the sample patch in my
-> response to your 3/5 patch.  But I don't see the ctl/cap part, so
-> maybe I missed something.
-if its costly to carry it in pci_dev, we can always re-read them.
-if its ok to use pci_dev, If you want, I can extend your patch to
-include the cap and ctl.
-> This message should be expanded somehow.  I think the point is that we
-> got an EDR notification, but firmware couldn't tell us where the
-> containment event occurred.  Should that ever happen?  Or is it a
-> firmware defect if it *does* happen?
-Yes, if we hit this error then its a firmware defect. Either
-firmware sent wrong BDF value or used invalid return type.
+Applied, thanks.
 
-I was planning to add some extra error info in acpi_locate_dpc_port()
-
-166 +       if (obj->type != ACPI_TYPE_INTEGER) {
-167 +               ACPI_FREE(obj);
-168 +               return NULL;
-169 +       }
-
->
-> In any event, I think the message should say something like "Can't
-> identify source of EDR notification".
-I will use your suggestion here along with above mentioned change.
->
->>> This seems...  I'm not sure what.  I guess it's really just reading
->>> the DPC capability for use by dpc_process_error(), so maybe it's OK.
->>> But it's a little strange to read.
-> I *think* maybe if we move the DPC info into the struct pci_dev it
-> will solve this issue too?  I.e., we won't have a struct dpc_dev, so
-> we won't have this funny-looking dpc_dev_init().
-Yes, your patch will resolve this issue.
->
->> No this is a valid case. it will only happen if we have a non-acpi
->> based switch attached to root port.
-> I agree this is a valid case (as I mentioned below).  My point was
-> just that if it is a valid case, we might not want to use pci_warn()
-> here.  Maybe pci_info() if you think it's important, or maybe no
-> message at all.  I don't think "Initializing dpc again" is going to be
-> useful to a user.
-Got it. Adding pci_info here will be helpful to understand the flow.
-Since EDR is a rare case, it should not pollute the dmesg. So I will add it.
->
->> Yes, ownership should be based on _OSC negotiation. I will add necessary
->> comments here.
-> Why are we not doing this via _OSC negotiation in this series?  It
-> would be much better if we could just do it instead of adding a
-> comment that we *should* do it.  Nobody knows more about this than you
-> do, so probably nobody else is going to come along and finish this
-> up :)
-Actually Alex G already proposed a patch to fix it.
-
-https://lkml.org/lkml/2018/11/16/202
-
-But that discussion never reached a conclusion. Since a proper fix
-for it would affect some legacy hardwares which solely relies on
-HEST tables, it did not make everyone happy. So it might take a
-lot to convince all the stake holders to merge such patch. So its
-better not to mix both of these patch sets together.
-
-Once this patch set is done, If Alex G is no longer working on it,
-I can work on it.
->
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
-
+Rob
