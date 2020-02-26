@@ -2,178 +2,71 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4134BC4BA2D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BCBC4BA24
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19E4424672
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 138EA222C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:08:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgBZXGO (ORCPT
+        id S1727896AbgBZXIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 18:06:14 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:60769 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbgBZXGO (ORCPT
+        Wed, 26 Feb 2020 18:08:42 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42343 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726413AbgBZXIm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 18:06:14 -0500
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j75kf-0008Pg-Lx; Thu, 27 Feb 2020 00:06:01 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 0D450100EA1; Thu, 27 Feb 2020 00:06:01 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Christopher S. Hall" <christopher.s.hall@intel.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hpa@zytor.com, mingo@redhat.com, x86@kernel.org,
-        jacob.e.keller@intel.com, richardcochran@gmail.com,
-        davem@davemloft.net, sean.v.kelley@intel.com
-Subject: Re: [Intel PMC TGPIO Driver 0/5] Add support for Intel PMC Time GPIO Driver with PHC interface changes to support additional H/W Features
-In-Reply-To: <20200224224059.GC1508@skl-build>
-References: <20191211214852.26317-1-christopher.s.hall@intel.com> <87eevf4hnq.fsf@nanos.tec.linutronix.de> <20200224224059.GC1508@skl-build>
-Date:   Thu, 27 Feb 2020 00:06:01 +0100
-Message-ID: <87mu95ne3q.fsf@nanos.tec.linutronix.de>
+        Wed, 26 Feb 2020 18:08:42 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 66so1112069otd.9
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 15:08:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
+        b=hQAkKTaL4JV4n57mkve8qkeDSm7tUdm9PuV50CXwuBqeq+OCAIVn405iKs89a6u7tV
+         Igoy0YDeb0HcNiQ+dnsEdWTJap6etF7XVgiAxpRO02ql2N6M0MKMxT7BUfU4WCfySjFL
+         KigHFaKxo6DpFCiXqgynB+Zr2UMqyXjDgv3EJw79avSapIBHTkMpAKhqDOdPrlSg2E8l
+         i2I9NNmBBuV3JzjR67hUrPqWUEOdzYXDPv5tdyXi4xNHvsEgdM2Nct1VqK3Wau2WUNCE
+         Ytu7QrqlbBL9D1d68bVET9b0goLWo+cohw9734LN7ZwUov67+WhU9Z3Mg/m9OyEsfd4U
+         QOAQ==
+X-Gm-Message-State: APjAAAU//RtTUfyK1rnBips5U6nBqGhsEa79jqt7nGLx4Lhfp+U3ppyK
+        1W7FpPhNrUrZ/sUQ6EwB1lw=
+X-Google-Smtp-Source: APXvYqzO+D732Y9sL6GiQeR8dO7WbtaCh1X0mxbtVIS1E9eqqPe3HHDpW2Ci2PyVA0ICc7GMmRdhJg==
+X-Received: by 2002:a05:6830:10d5:: with SMTP id z21mr1049677oto.30.1582758521904;
+        Wed, 26 Feb 2020 15:08:41 -0800 (PST)
+Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
+        by smtp.gmail.com with ESMTPSA id z10sm1308741oih.1.2020.02.26.15.08.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Feb 2020 15:08:41 -0800 (PST)
+Subject: Re: [PATCH v11 1/9] nvme-core: Clear any SGL flags in passthru
+ commands
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
+Cc:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
+        Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20200220203652.26734-1-logang@deltatee.com>
+ <20200220203652.26734-2-logang@deltatee.com>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <dee2201b-9bfe-c3f6-d381-eb478a311e04@grimberg.me>
+Date:   Wed, 26 Feb 2020 15:08:39 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20200220203652.26734-2-logang@deltatee.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christopher,
-
-"Christopher S. Hall" <christopher.s.hall@intel.com> writes:
-> On Fri, Jan 31, 2020 at 07:14:49PM +0100, Thomas Gleixner wrote:
->> christopher.s.hall@intel.com writes:
->> >
->> > The TGPIO hardware doesn't implement interrupts. For TGPIO input, the
->> > output edge-timestamp API is re-used to implement a user-space polling
->> > interface. For periodic input (e.g. PPS) this is fairly efficient,
->> > requiring only a marginally faster poll rate than the input event
->> > frequency.
->> 
->> I really have a hard time to understand why this is implemented as part
->> of PTP while you talk about PPS at the same time.
->
-> We primarily need support for periodic input and output uses cases.
-> Apologies for omitting the periodic output use case from the cover
-> letter. While TGPIO isn't associated with a PTP timestamp clock, the PHC
-> pin/clock interface fits the usage otherwise.
-
-Which usage? PTP like usage? I really have a hard time to make the
-connection. PTP is as the name says a protocol to synchronize time
-across a network.
-
-What you're having is a GPIO which has some magic timestamp clock which
-can be correlated back to ART/TSC, right?
-
-So squeezing this into PTP makes as much sense as squeezing a
-camera/video/audio interface which provides or consumes timestamps into
-it.
-
-> The PHC periodic output API is the closest fit for periodic output without
-> creating a new API.
-
-Well, you avoid creating a new API or extending one which makes sense by
-abusing the PTP interface for something which is not even remotely
-connected to PTP.
-
-> The PHC interface can also register as a PPS source. I am, however,
-> concerned in general about implementing PPS input in the driver
-> because the hardware doesn't implement interrupts - requiring polling.
-
-Really useful.
-
->> Proper information about why this approach was chosen and what that
->> magic device is used for would be really helpful.
->
-> The customer requested usages are 1 kHz and 1 Hz for both input and
-> output. Some higher level use cases are:
-> - using a GPS PPS signal to sync the system clock
-
-That makes at least some sense. See below.
-
-> - auditing timesync precision for financial services, especially high
-> 	frequency trading (e.g. MiFID).
-
-A good reason to not support it at all. Aside of that I have no idea how
-that auditing is supposed to work. Just throwing a few buzzwords around
-is not giving much technical context.
-
-> Apart from clock import/export applications, timestamping single I/O
-> events are potentially valuable for industrial control applications
-> (e.g. motor position sensing vs. time). As time sync precision
-> requirements for these applications are tightened, standard GPIO
-> timing precision will not be good enough.
-
-Well, coming from that industry I really doubt that you can do anything
-useful with it, but hey it's been 25 years since I stopped working on
-motor and motion controllers :)
-
-Anyway, the device we are talking about is a GPIO device with inputs and
-outputs plus bells and whistels attached to it.
-
-On the input side this provides a timestamp taken by the hardware when
-the input level changes, i.e. hardware based time stamping instead of
-software based interrupt arrival timestamping. Looks like an obvious
-extension to the GPIO subsystem.
-
-How that timestamp is processed/converted and what an application can
-actually do with it is a secondary problem:
-
-  - PPS mode:
-
-    This can be implemented as an actual PPS driver which consumes the
-    GPIO, does timer based polling and feeds the timestamp into the PPS
-    subsystem. Might be not the most accurate solution, so I can see why
-    you want to use the PTP interface for it, which provides the raw
-    clocksource (ART/TSC) and the correlated monotonic/realtime
-    timestamps. But then again this wants to be a PTP driver consuming
-    the GPIO and the timestamp via timer based polling.
-
-  - GPIO sampling
-  
-    That's totally disconnected from PPS/PTP and just provides a
-    correlated clock monotonic timestamp to the application.
-
-    That covers your motor example :)
-
-  - Timesync validation:
-
-    -Enocluehowthatshouldworkatall
-
-And of course you can use the GPIO input just as input without bells and
-whistels :)
-
-Now you have the output side which again is a GPIO in the first
-place. But then it also has a secondary function which allows to create
-a periodic output with a magic correlation to the ART and some way to
-actually adjust the frequency. Neither of those two functions are in
-anyway relatable to PTP AFAICT.
-
-The periodic, programmable and adjustable output is pretty much a PWM of
-some form and what you want to tell it is: Output a pulse at a given
-frequency. Due to the fact that the input clock of that thing is ART you
-can do the magic transformation from ART frequency to frequency adjusted
-clock monotonic in order to tweak the parameters so they actually end up
-generating your precise output frequency.  Tell the driver which
-frequency you want and it retrieves the correlation information from the
-kernel and uses it to achieve a precise output frequency. Doesn't sound
-like rocket science and does not required new magic ioctls.
-
-I might be missing something, but you surely can fill the blanks then.
-
-Thanks,
-
-        tglx
-
-
-
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
