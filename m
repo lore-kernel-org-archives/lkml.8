@@ -2,98 +2,163 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2222BC4BA21
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E94C4BA2D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC87A2072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:14:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582755286;
-	bh=i+7/S81WydlhcrcdQ9KBb+ZDSbg6YX0wIuoqhIFxgeU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XM+3g5yMqJt0tIXHAioJg77YSnqkbs/bHBrZIIAKzh0TSZ4jM3RXrtKBAQ05a74oa
-	 8S4R9z5mFlfP90hAL9t83Pd4jCFhqzthom2dwzpr7Lj3EMAUv6JHQCJwmUXpTNC1dE
-	 GQuGoiEol0eomSZyFkXGaAmkcxLrK5x+h4DyCWow=
+	by mail.kernel.org (Postfix) with ESMTP id A18DC2072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:15:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GyCX7V4M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727841AbgBZWOo (ORCPT
+        id S1727891AbgBZWPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 17:14:44 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37640 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727715AbgBZWOo (ORCPT
+        Wed, 26 Feb 2020 17:15:41 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:59308 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727715AbgBZWPl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 17:14:44 -0500
-Received: by mail-oi1-f193.google.com with SMTP id q84so1220041oic.4;
-        Wed, 26 Feb 2020 14:14:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bok3LP1w1qmqsuO1k7gdAuotciHOwlDqvixeOQYTb0o=;
-        b=YGqpM8dZcGihH6WBlaxUkEguc+HOJxTEVgTtCCwcjVGb294UE8WCYrR66uqxmNw8Bc
-         8K4fsUlLwl4kNNGO/OoKjacdA3BvZFEg36DCkaSbmHX2X1WATOcxS6fZDysszstO5i5D
-         b1rJ9KPHQXijVVGzC8EukPXUD3A235ZmfWgpddYErNcOcIRVPY75Y1mtiC59HVRh+Ex/
-         qsLbx1sTsup2e11ahGXWTJHbRMQDzKs84ck271oArGWmj8rB0RDkT8tVhk1kIPeKHTjc
-         ClgRaLcvGVVfOptYTvlD94WSZVhFdv67Skl0D3N/s/EayEi5CMe5t4dXGMHPz0N59aHD
-         84Qw==
-X-Gm-Message-State: APjAAAWcu3pqsMf10plxJspB1GnPkNTb7SOTdtHrRq2ZgAWUpdQhelR9
-        ZVWAs3MS0w3s+gYJYNUVHw==
-X-Google-Smtp-Source: APXvYqxM2+l7pZyEyd1X9E2oBGjRy47x/nyBH4hVjeWJ+OHmmT1cq5nXasi2tof7gwpMjMdC0Ozchw==
-X-Received: by 2002:aca:55cc:: with SMTP id j195mr1017627oib.22.1582755282012;
-        Wed, 26 Feb 2020 14:14:42 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id z21sm1229903oto.52.2020.02.26.14.14.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 14:14:41 -0800 (PST)
-Received: (nullmailer pid 28496 invoked by uid 1000);
-        Wed, 26 Feb 2020 22:14:40 -0000
-Date:   Wed, 26 Feb 2020 16:14:40 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        masahiroy@kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] dt-bindings: dma: Convert UniPhier MIO DMA controller
- to json-schema
-Message-ID: <20200226221440.GA28411@bogus>
-References: <20200222112042.32345-1-yamada.masahiro@socionext.com>
+        Wed, 26 Feb 2020 17:15:41 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01QMFYvx010050;
+        Wed, 26 Feb 2020 16:15:34 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582755334;
+        bh=31IwkFACdr77CIUf9TrZXycOQvg7ZjmTVme5kI0Me2k=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=GyCX7V4MYgq93RTraRpbtKUydot3q9l5OF8RLtt9O0VpJg8yOcmzjRqbW2RJVzNAp
+         n9SuFhFyBsWrY0dRqwOT4KfZ6e+xTMrpTcgODpd5ruTwNcKOEXjzVQBClijteMMiLs
+         9a4Vba06dCQEBv4iVMEetzj/GUcvCMV2vvRcT7vs=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01QMFYBQ050487
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 26 Feb 2020 16:15:34 -0600
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 26
+ Feb 2020 16:15:33 -0600
+Received: from localhost.localdomain (10.64.41.19) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 26 Feb 2020 16:15:33 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 01QMFXB8072817;
+        Wed, 26 Feb 2020 16:15:33 -0600
+Subject: Re: [RESEND PATCH v17 00/17] Multi Color LED Framework
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>
+CC:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200127150032.31350-1-dmurphy@ti.com>
+ <42d9687b-b488-22cf-0e9a-ff635b2094e3@ti.com> <20200225101940.GB16252@amd>
+ <be76fdac-9d32-b9b2-c01d-3aa315b14463@gmail.com>
+ <20200226125903.GA2800@duo.ucw.cz>
+ <20f6bdd5-e899-aead-8c35-1c3a3d09145f@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <2f349232-327c-eb3a-4f3a-c22cdbe98c24@ti.com>
+Date:   Wed, 26 Feb 2020 16:10:20 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200222112042.32345-1-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20f6bdd5-e899-aead-8c35-1c3a3d09145f@gmail.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 22 Feb 2020 20:20:42 +0900, Masahiro Yamada wrote:
-> Convert the UniPhier MIO (Media I/O) DMA controller binding to DT
-> schema format.
-> 
-> While I was here, I added the resets property.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
-> Changes in v2:
->  - add 'resets'
-> 
->  .../dma/socionext,uniphier-mio-dmac.yaml      | 63 +++++++++++++++++++
->  .../bindings/dma/uniphier-mio-dmac.txt        | 25 --------
->  2 files changed, 63 insertions(+), 25 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml
->  delete mode 100644 Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
-> 
+Hello
 
-Applied, thanks.
+On 2/26/20 2:45 PM, Jacek Anaszewski wrote:
+> Hi Greg,
+>
+> We have here long lasting discussion related to LED multicolor class
+> sysfs interface design. We went through several iterations and worked
+> out the solution with individual file per each color sub-LED in the
+> color directory as shown below:
+>
+> /sys/class/leds/<led>/colors/<color>_intensity
+>
+> This is in line with one-value-per-file sysfs rule, that is being
+> frequently highlighted, and we even had not so long ago a patch
+> for led cpu trigger solving the problem caused by this rule not
+> being adhered to.
+>
+> Now we have the voice below bringing to attention another caveat
+> from sysfs documentation:
+>
+> "it is socially acceptable to express an array of values of the same
+> type"
+>
+> and proposing the interface in the form of two files:
+>
+> channel_intensity (file containing array of u32's)
+> channel_names (usually containing "red green blue")
+>
+> In order to have this clarified once and for all, could you please
+> provide us with guidance on whether the fragment from
+> Documentation/filesystems/sysfs.txt is still in force and we
+> can benefit from it for LED multicolor framework, or not and then
+> it should be removed from the doc then?
 
-Rob
+I spent some time trying to find the conversation on the array 
+implementation for the multi color framework.
+
+It is buried here
+
+https://lore.kernel.org/patchwork/patch/1026515/
+
+The response from GKH on array's was sited in the above here:
+
+https://www.spinics.net/lists/devicetree/msg69730.html
+
+Repeating my objections to using arrays.
+
+Would this array of colors be fixed?  Well the answer is it would be 
+fixed per DT entries.  So if a user populates 10 LEDs for color then we 
+will have 10 entries in the array.  Another DT entry may only have 3.  
+So the array size is variable but bounded for now assuming no additional 
+colors are added.
+
+Another issue with this implementation is we expect channel_names and 
+channel_intensity arrays to be aligned.  Two different arrays need to 
+line up so that each element value in channel_intensity matches the 
+color in the channel_name.   This can be very easily mixed up in the 
+HLOS if the proper array tracking is not done. Can we guarantee that the 
+values we are getting are for the LED they are targeted for?
+
+Would this array be bounded?  Bounded yes by the number of supported 
+color IDs we have defined in the LED file.  But the size of the array is 
+completely variable from device to device
+
+Specific LEDs cannot be updated without re-sending the whole array.  If 
+the user would like to change just 1 color and it is the nth position 
+(possibly 10th from above) then all color intensities need to be 
+passed.  There would be no way to say I want "red" at the 10th position 
+to be 128 without passing in all the other color values as well.  So the 
+caller needs to keep a cache of the current values or call the framework 
+to get the current values just to pass them back in. This seems more 
+expensive then writing 2 sysfs files as writing to the color/<color> 
+intensity file does not perform any I/O it merely caches the values.  
+With the array the framework would need to process all the elements in 
+the array every time the array is passed.  And then still call the 
+brightness file to update the color outputs.  So we still have at 
+minimum two sysfs accesses.
+
+Neither implementation is perfect.
+
+Maybe we need to ask GKH to host this in the staging directory and 
+actually get some feedback from users as opposed to imposing our will on 
+people.
+
+Not sure if the ABI's can change in staging.
+
+Dan
+
