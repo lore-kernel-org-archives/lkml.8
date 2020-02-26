@@ -2,193 +2,142 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E95CDC4BA1C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A38C4BA1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B87A524687
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:01:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0AAA2467F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:01:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="P4XxdpRk"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SNNkUAvX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728171AbgBZRBv (ORCPT
+        id S1728432AbgBZRBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:01:51 -0500
-Received: from mail.efficios.com ([167.114.26.124]:37204 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726214AbgBZRBv (ORCPT
+        Wed, 26 Feb 2020 12:01:54 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:32782 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728073AbgBZRBw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:01:51 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id D0BA926DE05;
-        Wed, 26 Feb 2020 12:01:49 -0500 (EST)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id rzN0qM8C3Ax9; Wed, 26 Feb 2020 12:01:49 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 7A34826DE04;
-        Wed, 26 Feb 2020 12:01:49 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 7A34826DE04
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1582736509;
-        bh=CPFWpTU4FvoEboYMxaYMx+BSZ4BePWEjHEP8w+tky44=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=P4XxdpRk7VYlpjOLI5MM13ZaO40m7/widKGQ30vFqC3O+8Al3IxMpUe8bEVUz5Vax
-         acYtmuaoQbpU9wpHvqrO6dBJQquOvLqDf+X/cg4YIOWuhy00z33yApZbAYtdv057hm
-         +L5iPC4ITu041sck/pZIwTko898sw+IaYKpgx3LQtBUNhVRzJqxSyAduOmSc7R3rB2
-         8W3CpEthby1IdmMmcOOlsugUQcv4YFmKYUR2yHZdlaUURgwlu5aK6G+lMf4cqm37hg
-         1jJtvpfTt3NxBvu7On+i/zqDRfQ8Cg6SZGC5YJ5qbrgHTMJhNBhPG8ofpR3wl8hexr
-         kiVxroeRrUwqg==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id HnOMB7vfbHj9; Wed, 26 Feb 2020 12:01:49 -0500 (EST)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 6606F26D9FC;
-        Wed, 26 Feb 2020 12:01:49 -0500 (EST)
-Date:   Wed, 26 Feb 2020 12:01:49 -0500 (EST)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Chris Kennelly <ckennelly@google.com>
-Cc:     "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Paul Turner <pjt@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Carlos O'Donell <codonell@redhat.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        paulmck <paulmck@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
-        Brian Geffon <bgeffon@google.com>
-Message-ID: <1089333712.8657.1582736509318.JavaMail.zimbra@efficios.com>
-In-Reply-To: <CAEE+ybmQb02u-=c1sHozkJ+RXOi2Hno6qYJ0Vx9rOpKjSQ4fPQ@mail.gmail.com>
-References: <1503467992.2999.1582234410317.JavaMail.zimbra@efficios.com> <20200221154923.GC194360@google.com> <1683022606.3452.1582301632640.JavaMail.zimbra@efficios.com> <CAEXW_YRT7AjaJs7mPyNd=J6fhBicYwGbQMK2Senwm3cBhFvWPw@mail.gmail.com> <CAEE+ybmQb02u-=c1sHozkJ+RXOi2Hno6qYJ0Vx9rOpKjSQ4fPQ@mail.gmail.com>
-Subject: Re: Rseq registration: Google tcmalloc vs glibc
+        Wed, 26 Feb 2020 12:01:52 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01QH1VWD001892;
+        Wed, 26 Feb 2020 11:01:31 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582736491;
+        bh=CZdphqXj3swfr3rshZA/0w1MD1hpzkcAcBfN76SapQ8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=SNNkUAvXoggAOVNecqUg9xSNEJYjzrLU6umWjXK4EPh0R4/cJ/S47rUlRWY1b9T+P
+         QDhnsksn0ISK030JdOaEcCRXcUbbV17LamWBReCcdX8mRyEN9OyLX+FQAd/jH99MMd
+         UVOujwFW11cmasY9pEYlXh6M9mCuqTTCNzmHbROg=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01QH1V69116205
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 26 Feb 2020 11:01:31 -0600
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 26
+ Feb 2020 11:01:30 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 26 Feb 2020 11:01:31 -0600
+Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01QH1Ukv121969;
+        Wed, 26 Feb 2020 11:01:30 -0600
+Subject: Re: [PATCH] virtio_ring: Fix mem leak with vring_new_virtqueue()
+To:     Jason Wang <jasowang@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+CC:     Tiwei Bie <tiwei.bie@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        <virtualization@lists.linux-foundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>
+References: <20200224212643.30672-1-s-anna@ti.com>
+ <b622c831-9adb-b9af-dd4a-21605bc124a8@redhat.com>
+ <0ace3a3b-cf2f-7977-5337-f74f530afbe1@ti.com>
+ <1ce2bee4-64ed-f630-2695-8e8b9b8e27c1@redhat.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <90f85329-9bec-1204-6a0d-892c92219eb1@ti.com>
+Date:   Wed, 26 Feb 2020 11:01:30 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF72 (Linux)/8.8.15_GA_3895)
-Thread-Topic: Rseq registration: Google tcmalloc vs glibc
-Thread-Index: kibzHoftXFpKPvtOPIttnZNRigDBUg==
+In-Reply-To: <1ce2bee4-64ed-f630-2695-8e8b9b8e27c1@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Feb 25, 2020, at 10:38 PM, Chris Kennelly ckennelly@google.com wrote:
-
-> On Tue, Feb 25, 2020 at 10:25 PM Joel Fernandes <joel@joelfernandes.org> wrote:
->>
->> On Fri, Feb 21, 2020 at 11:13 AM Mathieu Desnoyers
->> <mathieu.desnoyers@efficios.com> wrote:
->> >
->> > ----- On Feb 21, 2020, at 10:49 AM, Joel Fernandes, Google
->> > joel@joelfernandes.org wrote:
->> >
->> > [...]
->> > >>
->> > >> 3) Use the  __rseq_abi TLS cpu_id field to know whether Rseq has been
->> > >> registered.
->> > >>
->> > >> - Current protocol in the most recent glibc integration patch set.
->> > >> - Not supported yet by Linux kernel rseq selftests,
->> > >> - Not supported yet by tcmalloc,
->> > >>
->> > >> Use the per-thread state to figure out whether each thread need to register
->> > >> Rseq individually.
->> > >>
->> > >> Works for integration between a library which exists for the entire lifetime
->> > >> of the executable (e.g. glibc) and other libraries. However, it does not
->> > >> allow a set of libraries which are dlopen'd/dlclose'd to co-exist without
->> > >> having a library like glibc handling the registration present.
->> > >
->> > > Mathieu, could you share more details about why during dlopen/close
->> > > libraries we cannot use the same __rseq_abi TLS to detect that rseq was
->> > > registered?
->> >
->> > Sure,
->> >
->> > A library which is only loaded and never closed during the execution of the
->> > program can let the kernel implicitly unregister rseq at thread exit. For
->> > the dlopen/dlclose use-case, we need to be able to explicitly unregister
->> > each thread's __rseq_abi which sit in a library which is going to be
->> > dlclose'd.
->>
->> Mathieu, Thanks a lot for the explanation, it makes complete sense. It
->> sounds from Chris's reply that tcmalloc already checks
->> __rseq_abi.cpu_id and is not dlopened/closed. Considering these, it
->> seems to already handle things properly - CMIIW.
+On 2/25/20 9:13 PM, Jason Wang wrote:
 > 
-> I'll make a note about this, since we can probably benefit from some
-> more comments about the assumptions/invariants the fastpath uses.
+> On 2020/2/26 上午12:51, Suman Anna wrote:
+>> Hi Jason,
+>>
+>> On 2/24/20 11:39 PM, Jason Wang wrote:
+>>> On 2020/2/25 上午5:26, Suman Anna wrote:
+>>>> The functions vring_new_virtqueue() and __vring_new_virtqueue() are
+>>>> used
+>>>> with split rings, and any allocations within these functions are
+>>>> managed
+>>>> outside of the .we_own_ring flag. The commit cbeedb72b97a
+>>>> ("virtio_ring:
+>>>> allocate desc state for split ring separately") allocates the desc
+>>>> state
+>>>> within the __vring_new_virtqueue() but frees it only when the
+>>>> .we_own_ring
+>>>> flag is set. This leads to a memory leak when freeing such allocated
+>>>> virtqueues with the vring_del_virtqueue() function.
+>>>>
+>>>> Fix this by moving the desc_state free code outside the flag and only
+>>>> for split rings. Issue was discovered during testing with remoteproc
+>>>> and virtio_rpmsg.
+>>>>
+>>>> Fixes: cbeedb72b97a ("virtio_ring: allocate desc state for split ring
+>>>> separately")
+>>>> Signed-off-by: Suman Anna<s-anna@ti.com>
+>>>> ---
+>>>>    drivers/virtio/virtio_ring.c | 4 ++--
+>>>>    1 file changed, 2 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/drivers/virtio/virtio_ring.c
+>>>> b/drivers/virtio/virtio_ring.c
+>>>> index 867c7ebd3f10..58b96baa8d48 100644
+>>>> --- a/drivers/virtio/virtio_ring.c
+>>>> +++ b/drivers/virtio/virtio_ring.c
+>>>> @@ -2203,10 +2203,10 @@ void vring_del_virtqueue(struct virtqueue *_vq)
+>>>>                         vq->split.queue_size_in_bytes,
+>>>>                         vq->split.vring.desc,
+>>>>                         vq->split.queue_dma_addr);
+>>>> -
+>>>> -            kfree(vq->split.desc_state);
+>>>>            }
+>>>>        }
+>>>> +    if (!vq->packed_ring)
+>>>> +        kfree(vq->split.desc_state);
+>>> Nitpick, it looks to me it would be more clear if we just free
+>>> desc_state unconditionally here (and remove the kfree for packed above).
+>> OK, are you sure you want that to be folded into this patch? It looks to
+>> me a separate cleanup/consolidation patch, and packed desc_state does
+>> not suffer this memleak, and need not be backported into stable kernels.
+>>
+>> regards
+>> Suman
+> 
+> 
+> Though it's just a small tweak, I'm fine for leaving it for future.
+> 
+> So
+> 
+> Acked-by: Jason Wang <jasowang@redhat.com>
 
-I suspect the integration with glibc and with dlopen'd/dlclose'd libraries will not
-behave correctly with the current tcmalloc implementation.
+Thanks Jason, will post a patch for the same once this is merged.
 
-Based on the tcmalloc code-base, InitFastPerCpu is only called from IsFast. As long
-as this is the only expected caller, having IsFast comparing the RseqCpuId detects
-whether glibc (or some other library) has already registered rseq for the current
-thread.
-
-However, if the application chooses to invoke InitFastPerCpu() directly, things become
-expected, because it invokes:
-
-  absl::base_internal::LowLevelCallOnce(&init_per_cpu_once, InitPerCpu);
-
-which AFAIU invokes InitPerCpu once after execution of the current program. Which
-does:
-
-static bool InitThreadPerCpu() {
-  if (__rseq_refcount++ > 0) {
-    return true;
-  }
-
-  auto ret = syscall(__NR_rseq, &__rseq_abi, sizeof(__rseq_abi), 0,
-                     PERCPU_RSEQ_SIGNATURE);
-  if (ret == 0) {
-    return true;
-  } else {
-    __rseq_refcount--;
-  }
-
-  return false;
-}
-
-static void InitPerCpu() {
-  // Based on the results of successfully initializing the first thread, mark
-  // init_status to initialize all subsequent threads.
-  if (InitThreadPerCpu()) {
-    init_status = kFastMode;
-  }
-}
-
-In a scenario where glibc has already registered Rseq, the __rseq_refcount will
-be incremented, the __NR_rseq syscall will fail with -1, errno=EBUSY, so the refcount
-will be immediately decremented and it will return false. Therefore, "init_status" will
-never be set fo kFastMode, leaving it in kSlowMode for the entire lifetime of this
-program. That being said, even though this state can come as a surprise, it seems to
-be entirely bypassed by the fast-paths IsFast() and IsFastNoInit(), so maybe it won't
-have any observable side-effects other than leaving init_status in a state that does not
-match reality.
-
-In the other use-case where tcmalloc co-exist with a dlopened/dlclosed library, but glibc
-does not provide Rseq registration, we run into issues as well if the dlopened library
-registers rseq first for a given thread. The IsFastNoInit() expects that if Rseq has been
-observed as registered in the past for a thread, it stays registered. However, if a
-dlclosed library unregisters Rseq, we need to be prepared to re-register it. So either
-tcmalloc needs to express its use of Rseq by incrementing __rseq_refcount even when Rseq
-is registered (this would hurt the fast-path however, and I would hate to have to do this),
-or tcmalloc needs to be able to handle the fact that Rseq may be unregistered by a dlclosed
-library which was the actual owner of the Rseq registration.
-
-Thanks,
-
-Mathieu
-
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+regards
+Suman
