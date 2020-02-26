@@ -2,214 +2,153 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42245C4BA24
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CCDC4BA24
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18EFD20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:56:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41F4424672
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:56:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="hN7MQL2e"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="EOGrQkgW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727967AbgBZW4F (ORCPT
+        id S1727980AbgBZW4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 17:56:05 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:38231 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727326AbgBZW4F (ORCPT
+        Wed, 26 Feb 2020 17:56:21 -0500
+Received: from gateway24.websitewelcome.com ([192.185.51.202]:30949 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727326AbgBZW4V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 17:56:05 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 313E023D1F;
-        Wed, 26 Feb 2020 23:56:02 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1582757762;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QFnQld1YiH3x+ajkB7e6XYXbnpe2ypKAY7GtqHCjuYs=;
-        b=hN7MQL2e09GMIp75aAe4eAFFGjlgIEhP9uFBmi7VsX9/9ofd8T5ehk+2unmrlkVI1QL1zQ
-        mBoglyV2GQ9OOvyI1l8MOmKkNgU8q/N6GN4Lrz6sFHSmrxTsWqkTekDBgF8QTGRVP2z45N
-        GereDqDozJ4jwn93DqB0K3PyZyXguNU=
+        Wed, 26 Feb 2020 17:56:21 -0500
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id F0B937EC2A
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 16:56:19 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 75bHjHikYXVkQ75bHjcvJz; Wed, 26 Feb 2020 16:56:19 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=6OsKS4Pggvge6Qv8uJBkrcDoGo57Sxfgw1/kh2kNtM8=; b=EOGrQkgWsiBWTzRH3oCXrK2pu8
+        IajlBozL1h9IirXVs9H4+X4qJT7QE1stKrOFqmDUsovfH2YDMZsuayvuWR7htos8u/hcTM0A1sF5h
+        Bin03MT6318lWVkKWTLLAMKD+V8XzNMaR+5SLaPObjSO7AFo78xf5Sp/cZbW6l00mXJeke/uVuzgU
+        XAlJjmy4jiI0J5yjZq1KtTYgqvRpB/LwnCnrvPy/TWCVM//flXO+zvxHR78+aL+zCU/Dy9qn4gPJK
+        9YYgvsQ4hWZs5AJR6b6VHP9jIrMPfm9f6+N3xrcolwAKmuj/uk3VySvc9uIYfzGRcLs36dPAU+kBk
+        qOUfWGVA==;
+Received: from [201.162.161.188] (port=41090 helo=[192.168.43.132])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j75bH-001Yz3-I4; Wed, 26 Feb 2020 16:56:19 -0600
+Subject: Re: [PATCH] Bluetooth: btintel: Replace zero-length array with
+ flexible-array member
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <20200212192807.GA25300@embeddedor>
+ <CEB64C73-3868-4D26-A610-560F2ABDAF9D@holtmann.org>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <69f110cb-f5e4-4312-c204-274a505780ba@embeddedor.com>
+Date:   Wed, 26 Feb 2020 16:59:07 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 26 Feb 2020 23:56:02 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [RFC PATCH 1/2] net: phy: let the driver register its own IRQ
- handler
-In-Reply-To: <60985489-a6e9-dc13-68af-765d98116eb8@gmail.com>
-References: <20200225230819.7325-1-michael@walle.cc>
- <20200225230819.7325-2-michael@walle.cc>
- <3c7e1064-845e-d193-24ad-965211bf1e9a@gmail.com>
- <18f531a691d0c4905552794bbb1be1e5@walle.cc>
- <60985489-a6e9-dc13-68af-765d98116eb8@gmail.com>
-Message-ID: <2e4371354d84231abf3a63deae1a0d04@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 313E023D1F
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[8];
-         NEURAL_HAM(-0.00)[-0.278];
-         FREEMAIL_TO(0.00)[gmail.com];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[vger.kernel.org,lunn.ch,gmail.com,armlinux.org.uk,davemloft.net];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+In-Reply-To: <CEB64C73-3868-4D26-A610-560F2ABDAF9D@holtmann.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.161.188
+X-Source-L: No
+X-Exim-ID: 1j75bH-001Yz3-I4
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.132]) [201.162.161.188]:41090
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 33
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-02-26 22:17, schrieb Heiner Kallweit:
-> On 26.02.2020 12:12, Michael Walle wrote:
->> Am 2020-02-26 08:27, schrieb Heiner Kallweit:
->>> On 26.02.2020 00:08, Michael Walle wrote:
->>>> There are more and more PHY drivers which has more than just the PHY
->>>> link change interrupts. For example, temperature thresholds or PTP
->>>> interrupts.
->>>> 
->>>> At the moment it is not possible to correctly handle interrupts for 
->>>> PHYs
->>>> which has a clear-on-read interrupt status register. It is also 
->>>> likely
->>>> that the current approach of the phylib isn't working for all PHYs 
->>>> out
->>>> there.
->>>> 
->>>> Therefore, this patch let the PHY driver register its own interrupt
->>>> handler. To notify the phylib about a link change, the interrupt 
->>>> handler
->>>> has to call the new function phy_drv_interrupt().
->>>> 
->>> 
->>> We have phy_driver callback handle_interrupt for custom interrupt
->>> handlers. Any specific reason why you can't use it for your purposes?
->> 
->> Yes, as mentioned above this wont work for PHYs which has a 
->> clear-on-read
->> status register, because you may loose interrupts between 
->> handle_interrupt()
->> and phy_clear_interrupt().
->> 
->> See also
->>  
->> https://lore.kernel.org/netdev/bd47f8e1ebc04fa98856ed8d89b91419@walle.cc/
->> 
->> And esp. Russell reply. I tried using handle_interrupt() but it won't 
->> work
->> unless you make the ack_interrupt a NOOP. but even then it won't work 
->> because
->> the ack_interrupt is also used during setup etc.
->> 
-> Right, now I remember .. So far we have only one user of the 
-> handle_interrupt
-> callback. Following a proposal from the quoted discussion, can you base 
-> your
-> patch on the following and check?
-> Note: Even though you implement handle_interrupt, you still have to 
-> implement
-> ack_interrupt too.
 
-I guess that should work, I can give that a try. But I'm also preparing 
-support
-for the BCM54140, a quad PHY. I guess we have the same problem with
-did_interrupt(). Eg. to tell if there actually was an interrupt from 
-that PHY
-you have to read the status register which clears the interrupt. So
-handle_interrupt() will left with no actual interrupt pending bits. I've 
-had a
-look at how the vsc8584 does it as it also uses did_interrupt() together 
-with
-handle_interrupt() and it looks like it only works because 
-handle_interrupt()
-doesn't actually read the pending bits again. Also I guess there is a 
-chance
-of missing interrupts between vsc8584_did_interrupt() and
-vsc85xx_ack_interrupt() which both clears interrupts. Although I'm not 
-sure
-if that matters for the current implementation.
 
--michael
+On 2/13/20 01:30, Marcel Holtmann wrote:
+> Hi Gustavo,
+> 
 
+>>
+>> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+>> [2] https://github.com/KSPP/linux/issues/21
+>> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+>> ---
+>> drivers/bluetooth/btintel.c | 4 ++--
+>> 1 file changed, 2 insertions(+), 2 deletions(-)
 > 
+> patch has been applied to bluetooth-next tree.
 > 
-> ---
->  drivers/net/phy/mscc.c | 3 ++-
->  drivers/net/phy/phy.c  | 4 ++--
->  include/linux/phy.h    | 4 +++-
->  3 files changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
-> index 937ac7da2..20b9d3ef5 100644
-> --- a/drivers/net/phy/mscc.c
-> +++ b/drivers/net/phy/mscc.c
-> @@ -2868,7 +2868,8 @@ static int vsc8584_handle_interrupt(struct
-> phy_device *phydev)
->  #endif
-> 
->  	phy_mac_interrupt(phydev);
-> -	return 0;
-> +
-> +	return vsc85xx_ack_interrupt(phydev);
->  }
-> 
->  static int vsc85xx_config_init(struct phy_device *phydev)
-> diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-> index d76e038cf..de52f0e82 100644
-> --- a/drivers/net/phy/phy.c
-> +++ b/drivers/net/phy/phy.c
-> @@ -725,10 +725,10 @@ static irqreturn_t phy_interrupt(int irq, void 
-> *phy_dat)
->  	} else {
->  		/* reschedule state queue work to run as soon as possible */
->  		phy_trigger_machine(phydev);
-> +		if (phy_clear_interrupt(phydev))
-> +			goto phy_err;
->  	}
-> 
-> -	if (phy_clear_interrupt(phydev))
-> -		goto phy_err;
->  	return IRQ_HANDLED;
-> 
->  phy_err:
-> diff --git a/include/linux/phy.h b/include/linux/phy.h
-> index 80f8b2158..9e2895ee4 100644
-> --- a/include/linux/phy.h
-> +++ b/include/linux/phy.h
-> @@ -560,7 +560,9 @@ struct phy_driver {
->  	 */
->  	int (*did_interrupt)(struct phy_device *phydev);
-> 
-> -	/* Override default interrupt handling */
-> +	/* Override default interrupt handling. Handler has to ensure
-> +	 * that interrupt is ack'ed.
-> +	 */
->  	int (*handle_interrupt)(struct phy_device *phydev);
-> 
->  	/* Clears up any memory if needed */
+
+Thank you, Marcel.
+--
+Gustavo
