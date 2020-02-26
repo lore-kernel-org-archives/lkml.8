@@ -2,173 +2,110 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D181CC4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E50C8C4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E8E621556
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:52:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="h89YR0UB"
+	by mail.kernel.org (Postfix) with ESMTP id B869421556
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:57:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727393AbgBZHwa (ORCPT
+        id S1727278AbgBZH5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 02:52:30 -0500
-Received: from mail-am6eur05on2082.outbound.protection.outlook.com ([40.107.22.82]:19866
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726587AbgBZHwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 02:52:30 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fzz4kGLneZpn+wBIjWhU0sleQx/v4+IRJ91118gtWH8EqbzV62cwrNEUCN6/CIgX/Oou6bmKjprYeVWDvj1et24G1/6VshRGpNd077/y1eFZ2WH6L8YJzAiTx4anLJRwD2kF4g+VSDHpfhRl7yGhEHO/BmzyvYg5tY9FLHQNYy7NGYAFH/4umhb12LOjmM1jCDBbrmd2v5p7VnzkXKGfB/8OqOdR1lhVlzfJYq9Gj36Z8GQDiE1tybZ23wQ+ZSgPul+yo09/b8bsW4ICw81SdzG6RYR7H/aCznv+jnnueqRgU1Gz+qdyc0Je2yICq+ZOdvyqPXjr66TWL7YluTGawg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZumS8FDF4CL5oVD/GwMXVaCddvVnnCPY7M6OJvdqogg=;
- b=ID9OgFEXtX0C0UWsSJUvkND5dXkTHRy3R9w8hSwoDBAm0MLzfWFneCZQFT+LFNdJort37MClwJnkl7NHbmX/BVQDqR8cvq2MNoH+NwIkEDY6kDjaqKwWbSbDWsdz4TX85q16iHBdY5BGAmCC5akveS2WuzHP2LqKuujioSS4A2Flo9tdKRx/CHljgl+I6fxk6JDFrVaUErMYOH2q78D5dNeyLtfNl/g+GOHO8YGt0AnTGaqI4vxw6hWxr6+yFJ/A2hC9zP7jHkpZs+fSjFm6vQ8e28fWUNqD0JRG2HtC1qdetmU8kH1g1hR++ILdRv83DtT+B4CxTkc82mvAId905A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZumS8FDF4CL5oVD/GwMXVaCddvVnnCPY7M6OJvdqogg=;
- b=h89YR0UB3S+Zix1bD2FCI48bsnw/LIg58jeDntnNyajZeOzHrCHNg2OCyR52qd4R+/jdu/awKpwzI04dN/SV545i+bxdQQYYftezqKaFTM9lEdcvAb7c6E8dtuKhOMdRJGh/SmLf9xKDLNYCS8/vSzFc0VtiFGwycF6sw5HgoCI=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=laurentiu.palcu@oss.nxp.com; 
-Received: from AM6PR04MB5766.eurprd04.prod.outlook.com (20.179.2.143) by
- AM6PR04MB4774.eurprd04.prod.outlook.com (20.177.33.85) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.22; Wed, 26 Feb 2020 07:52:26 +0000
-Received: from AM6PR04MB5766.eurprd04.prod.outlook.com
- ([fe80::4c26:a809:e360:5864]) by AM6PR04MB5766.eurprd04.prod.outlook.com
- ([fe80::4c26:a809:e360:5864%3]) with mapi id 15.20.2750.021; Wed, 26 Feb 2020
- 07:52:26 +0000
-Date:   Wed, 26 Feb 2020 09:52:23 +0200
-From:   Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, agx@sigxcpu.org,
-        lukas@mntmn.com, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v3 2/4] drm/imx: Add initial support for DCSS on iMX8MQ
-Message-ID: <20200226075222.6xurvlgexjxcgrwh@fsr-ub1864-141>
-References: <1575625964-27102-1-git-send-email-laurentiu.palcu@nxp.com>
- <1575625964-27102-3-git-send-email-laurentiu.palcu@nxp.com>
- <1515559adebe3a6206e9b8e84692b7818709890b.camel@pengutronix.de>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1515559adebe3a6206e9b8e84692b7818709890b.camel@pengutronix.de>
-User-Agent: NeoMutt/20171215
-X-ClientProxiedBy: LNXP265CA0035.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:5c::23) To AM6PR04MB5766.eurprd04.prod.outlook.com
- (2603:10a6:20b:ab::15)
+        Wed, 26 Feb 2020 02:57:13 -0500
+Received: from relay12.mail.gandi.net ([217.70.178.232]:52037 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727129AbgBZH5N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 02:57:13 -0500
+Received: from [10.30.1.20] (lneuilly-657-1-5-103.w81-250.abo.wanadoo.fr [81.250.144.103])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 65F62200002;
+        Wed, 26 Feb 2020 07:56:54 +0000 (UTC)
+Subject: Re: [GIT PULL] RISC-V Fixes for 5.6-rc4
+To:     Palmer Dabbelt <palmerdabbelt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>
+References: <mhng-464e74b9-125c-42e3-9384-60c871d22cfd@palmerdabbelt-glaptop1>
+From:   Alexandre Ghiti <alex@ghiti.fr>
+Message-ID: <5226d756-e348-29d1-258d-0ab4b63c0677@ghiti.fr>
+Date:   Wed, 26 Feb 2020 08:56:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from fsr-ub1864-141 (89.37.124.34) by LNXP265CA0035.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:5c::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Wed, 26 Feb 2020 07:52:25 +0000
-X-Originating-IP: [89.37.124.34]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: a6200724-348e-4f81-9750-08d7ba90d255
-X-MS-TrafficTypeDiagnostic: AM6PR04MB4774:|AM6PR04MB4774:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM6PR04MB4774B9F5CDFB53B63FBEFE0FBEEA0@AM6PR04MB4774.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 0325F6C77B
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(396003)(376002)(366004)(39860400002)(199004)(189003)(54906003)(478600001)(4326008)(6916009)(316002)(81166006)(81156014)(6496006)(966005)(8676002)(52116002)(55016002)(8936002)(86362001)(186003)(9686003)(26005)(16526019)(1076003)(956004)(5660300002)(7416002)(66946007)(44832011)(33716001)(2906002)(66476007)(66556008)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4774;H:AM6PR04MB5766.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-Received-SPF: None (protection.outlook.com: oss.nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: e486Bu5DP+0RKy+i8wEsCLaPyXyZDhX5aiebNqWzZCVQwZeNLcwpxf8itUD5DiWw1/STIcYLpPrWymqoE0QvM2D009iBWi34lEF1mk7iYiAXUj1c2MTiHWBn2Qg3/63wBaI7QGhs++vde1oza3nWEV8gmMj+Yrk1bRMdwy/CsVx+0rpeceYl2zN+m52I6YVs/4HKMXk4+Ux4ra/jllcdMASYOExMuW2R6SLH+1PRZCLUL+VMoGFBKkRMq+9VFOQW7gWBXNhTfKeonr+WNhMFPuBX8MxvVASqj4U/KAb5EqGVDZYnqpSafSMlAuyUk2s+ExYXdK1g5qONJMVbjLi1Op76u1q0I1y6XmKDW3REyzvNcESXVR98OejYPaN32ANvr9f4KbtSR/arconLpzhlIx0GA6nFNBdcu4Xr3vFPW0XEeW4eQ4T65lwb3NmXfyyivl/klMslvsNVSBfVHU85W7Qp0lAHsgULXFZwFQ8Rc+CkETQNQPNITzkbApIHDLBD63ZdhHAZ19qrN9HSjf3xNXTLsYYBLU2WL7yoV5KM0u2bIX4mPbfI5tEO4Mii5Hc3
-X-MS-Exchange-AntiSpam-MessageData: F+ZsKk7DP4sJTXE7GJvk+bV1k1aqxHyI2GO0JBP4Qj/0PJHzO0AQtI29f2F55RIXaQ9zYHjcw3ymV8BeU6NzTsDD60ZqCr9CgIS1pAVgU6+fi3Zmafe+cFTZkkXDpVVkkYLKiG0JLkEXJ8283qM/nA==
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a6200724-348e-4f81-9750-08d7ba90d255
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2020 07:52:26.6584
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DkTf8eXyecv5MTdVio8z9D7f9PK+yG4zTbWkQFNcO3tukH6FvlKOjDkM8b2IP9G0DSwtHKs4QVObIiIPxJy7dA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4774
+In-Reply-To: <mhng-464e74b9-125c-42e3-9384-60c871d22cfd@palmerdabbelt-glaptop1>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lucas,
+Hi Palmer,
 
-Thanks for taking some time to look over this series.
+On 2/25/20 6:37 PM, Palmer Dabbelt wrote:
+> The following changes since commit 11a48a5a18c63fd7621bb050228cebf13566e4d8:
+> 
+>    Linux 5.6-rc2 (2020-02-16 13:16:59 -0800)
+> 
+> are available in the Git repository at:
+> 
+>    git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linux-5.6-rc4
+> 
+> for you to fetch changes up to 8458ca147c204e7db124e8baa8fede219006e80d:
+> 
+>    riscv: adjust the indent (2020-02-24 13:12:53 -0800)
+> 
+> ----------------------------------------------------------------
+> RISC-V Fixes for 5.6-rc4
+> 
+> This tag contains a handful of RISC-V related fixes that I've collected and
+> would like to target for 5.6-rc4:
+> 
+> * A fix to set up the PMPs on boot, which allows the kernel to access memory on
+>    systems that don't set up permissive PMPs before getting to Linux.  This only
+>    effects machine-mode kernels, which currently means only NOMMU kernels.
+> * A fix to avoid enabling supervisor-mode interrupts when running in
+>    machine-mode, also only for NOMMU kernels.
+> * A pair of fixes to our KASAN support to avoid corrupting memory.
+> * A gitignore fix.
+> 
+> This boots on QEMU's virt board for me.
+> 
+> ----------------------------------------------------------------
+> Anup Patel (1):
+>        RISC-V: Don't enable all interrupts in trap_init()
+> 
+> Damien Le Moal (1):
+>        riscv: Fix gitignore
+> 
+> Greentime Hu (1):
+>        riscv: set pmp configuration if kernel is running in M-mode
+> 
+> Zong Li (2):
+>        riscv: allocate a complete page size for each page table
+>        riscv: adjust the indent
+> 
+>   arch/riscv/boot/.gitignore   |  2 ++
+>   arch/riscv/include/asm/csr.h | 12 ++++++++++
+>   arch/riscv/kernel/head.S     |  6 +++++
+>   arch/riscv/kernel/traps.c    |  4 ++--
+>   arch/riscv/mm/kasan_init.c   | 53 ++++++++++++++++++++++++++------------------
+>   5 files changed, 53 insertions(+), 24 deletions(-)
+> 
 
-On Mon, Feb 24, 2020 at 06:27:25PM +0100, Lucas Stach wrote:
-> Hi Laurentiu,
-> 
-> just a first drive-by comment, more in-depth review tomorrow.
-> 
-> On Fr, 2019-12-06 at 11:52 +0200, Laurentiu Palcu wrote:
-> > This adds initial support for iMX8MQ's Display Controller Subsystem (DCSS).
-> > Some of its capabilities include:
-> >  * 4K@60fps;
-> >  * HDR10;
-> >  * one graphics and 2 video pipelines;
-> >  * on-the-fly decompression of compressed video and graphics;
-> > 
-> > The reference manual can be found here:
-> > https://www.nxp.com/webapp/Download?colCode=IMX8MDQLQRM
-> > 
-> > The current patch adds only basic functionality: one primary plane for
-> > graphics, linear, tiled and super-tiled buffers support (no graphics
-> > decompression yet), no HDR10 and no video planes.
-> > 
-> > Video planes support and HDR10 will be added in subsequent patches once
-> > per-plane de-gamma/CSC/gamma support is in.
-> > 
-> > Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-> > ---
-> [...]
-> > diff --git a/drivers/gpu/drm/imx/dcss/Kconfig b/drivers/gpu/drm/imx/dcss/Kconfig
-> > new file mode 100644
-> > index 00000000..a189dac
-> > --- /dev/null
-> > +++ b/drivers/gpu/drm/imx/dcss/Kconfig
-> > @@ -0,0 +1,8 @@
-> > +config DRM_IMX_DCSS
-> > +	tristate "i.MX8MQ DCSS"
-> > +	select RESET_CONTROLLER
-> > +	select IMX_IRQSTEER
-> 
-> This driver has no build time dependency on the IRQSTEER driver. It
-> needs it at runtime, but those dependencies are normally not described
-> in Kconfig.
-> 
-> On the other hand this is missing a "select DRM_KMS_CMA_HELPER".
+What about this patch https://patchwork.kernel.org/patch/11395273/ from 
+Vincent that fixes module loading problems described here:
 
-Oops, I guess I missed this. I'll add it in next revision. Waiting for
-your in-depth review first.
+https://lore.kernel.org/linux-riscv/d868acf5-7242-93dc-0051-f97e64dc4387@ghiti.fr/T/
+
+Do you consider it for 5.6 ?
 
 Thanks,
-laurentiu
 
-> 
-> Regards,
-> Lucas
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
--- 
-Laurentiu
-NXP
+Alex
