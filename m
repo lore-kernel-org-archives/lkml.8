@@ -2,149 +2,244 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A21A2C4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 044C9C4BA10
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A94124680
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB8372467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:26:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582727185;
+	bh=ytxePLeD/G96wACd0ePqTIXUsy4t44NP+Ducb61scBw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=qCSXPwb6ngEPTFplz0NAEO+XeEdlNOOLCSTTSUH8sXSenO7BpUvOTCXC7Kqt8u5Cs
+	 5wYUdwm2BOKnmyVqstEsxmRSqn4fMwYkH64qpTTfZddmXJm3Dpk+CKQKvqlyI613MX
+	 TFY32x/lWgQs8oKW79BW72ZbiZStW53nacumVkNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbgBZOZl (ORCPT
+        id S1727520AbgBZO0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 09:25:41 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:49774 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727198AbgBZOZk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 09:25:40 -0500
-X-AuditID: c0a8fbf4-489ff70000004419-27-5e567fe12715
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 64.76.17433.1EF765E5; Wed, 26 Feb 2020 15:25:38 +0100 (CET)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0487.000; Wed, 26 Feb 2020 15:25:31 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "pavel@ucw.cz" <pavel@ucw.cz>
-CC:     "dmurphy@ti.com" <dmurphy@ti.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v10 00/13] Support ROHM BD71828 PMIC
-Thread-Topic: [PATCH v10 00/13] Support ROHM BD71828 PMIC
-Thread-Index: AQHVzRi5yTX4egnFhE+K8HvJn6t48qfuly8AgAAFDwCAPw3agIAADCWA
-Date:   Wed, 26 Feb 2020 14:25:31 +0000
-Message-ID: <b13161db0589951f86f241d5af8e8daa899be80d.camel@fi.rohmeurope.com>
-References: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
-         <20200117103000.GG15507@dell>
-         <9785531484b32da487a6016f5c32bf2e9bc45985.camel@fi.rohmeurope.com>
-         <20200226134203.GD4080@duo.ucw.cz>
-In-Reply-To: <20200226134203.GD4080@duo.ucw.cz>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <72136CBC761BB14EA0F28BD150670CB3@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGJsWRmVeSWpSXmKPExsVyYMXvjbqP6sPiDJ7OZrL4MvcUi8X8I+dY
-        LbpPb2G1uL11A4vF/a9HGS2m/FnOZHF51xw2i61v1jFazFl6gsXi7qmjbBate4+wO3B7vL/R
-        yu6xc9Zddo9NqzrZPO5c28PmcfzGdiaPFau/s3t83iQXwB7FbZOUWFIWnJmep2+XwJ2xtE2l
-        4IBWxcyOdsYGxi2aXYycHBICJhJN/2aydDFycQgJXGWUOHLzOJRzglFizZO3TF2MHBxsAjYS
-        XTfZQRpEBBQlNvd0soHYzALLWCT+7woEsYUFLCSWrb7GBlFjKfG48RIjhO0m8enNd7A4i4Cq
-        xJ5Tx1hARvIK+El8+GADseoio8SsG7dYQWo4BfQlLnyYzQRiMwrISnQ2vGOC2CUusenZd1aI
-        owUkluw5zwxhi0q8fPwPKq4ksffnQ7D5zAKaEut36UO0OkjsvPUO6mRFiSndD8Fe4RUQlDg5
-        8wnLBEaxWUg2zELonoWkexaS7llIuhcwsq5ilMhNzMxJTyxJNdQrSi3VK8rPyAVSyfm5mxgh
-        Mf5lB+P/Q56HGJk4GA8xSnIwKYnyqpiHxQnxJeWnVGYkFmfEF5XmpBYfYpTgYFYS4d34NTRO
-        iDclsbIqtSgfJiXNwaIkzqv+cGKskADIruzU1ILUIpisDAeHkgQvTx3QUMGi1PTUirTMnBKE
-        NBMHJ8hwLimR4tS8lNSixNKSjHhQ6ogvBiYPkBQP0F6LGqB23uKCxFygKETrKUZDjgkv5y5i
-        5rj5fgmQPDJ36SJmIZa8/LxUKXHeV0ZADQIgDRmleXDrXjGKczAqCfPeqgXK8gATP9y0V0CL
-        mIAWrf4TDLKoJBEhJdXAqFDIaujcG3Hzzr637fpnUxuiRSM5G/K/s0ULBKTMkw+ST14vVZZx
-        p2CPxRZWpyXtp65XMn++bc8453vo1JOzTfcqHJmcrGg5RbovRmTBL8XolAXq4XsYov3X3pwR
-        ryunqcfGyvyj7G/LhVJmqXdbj+m8DL+1y7+m47utrM3Tm1VZ8zTKD05TYinOSDTUYi4qTgQA
-        xWXANrkDAAA=
+        Wed, 26 Feb 2020 09:26:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38884 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727198AbgBZO0Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 09:26:24 -0500
+Received: from linux-8ccs.suse.de (p5B2812F9.dip0.t-ipconnect.de [91.40.18.249])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE9872467B;
+        Wed, 26 Feb 2020 14:26:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582727182;
+        bh=ytxePLeD/G96wACd0ePqTIXUsy4t44NP+Ducb61scBw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fJMMYe1qLwKI93WYdUmmFjlo1xgvL1rfmeukwTO99xkOnReuh/b9kRbMinyEkPB/x
+         uFr6KS4S3xzHVBcqu+/CvbzVm4FihrnpDtL9D8wqWhW0373kFDcXKKiUU6R9wst/MV
+         YpTlW5tA26wLFlGkMoFvfeTdXRGs2Xs28QMJkBeQ=
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Matthias Maennich <maennich@google.com>,
+        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
+        Jessica Yu <jeyu@kernel.org>
+Subject: [PATCH v2 1/2] modpost: rework and consolidate logging interface
+Date:   Wed, 26 Feb 2020 15:26:07 +0100
+Message-Id: <20200226142608.19499-1-jeyu@kernel.org>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gUGF2ZWwsDQoNCkkgZHJvcHBlZCBzb21lIG9mIHRoZSByZWNpcGllbnRzIGFzIEkgZG9u
-J3QgdGhpbmsgdGhpcyBpcyBpbnRlcmVzdGluZw0KZm9yIGV2ZXJ5Ym9keSA6KQ0KDQpPbiBXZWQs
-IDIwMjAtMDItMjYgYXQgMTQ6NDIgKzAxMDAsIFBhdmVsIE1hY2hlayB3cm90ZToNCj4gSGkhDQo+
-IA0KPiA+ID4gPiBDaGFuZ2Vsb2cgdjEwOg0KPiA+ID4gPiAgIC0gU3BsaXQgUlRDIHBhdGNoIHRv
-IGEgQkQ3MDUyOCBmaXggKHdoaWNoIGhvcGVmdWxseSBnb2VzIHRvDQo+ID4gPiA+IDUuNCkNCj4g
-PiA+ID4gYW5kIHRvDQo+ID4gPiA+ICAgICBCRDcxODI4IHN1cHBvcnQNCj4gPiA+IA0KPiA+ID4g
-U3RpbGwgbWlzc2luZyBMRUQgQWNrcy4NCj4gPiA+IA0KPiA+IA0KPiA+IFllcC4gSSBrbm93LiBJ
-IGhhdmVuJ3QgaGVhcmQgZnJvbSBQYXZlbCByZWNlbnRseSBhbmQgdGhlIHBhdGNoIDEyDQo+ID4g
-ZGVmaW5pdGVseSByZXF1aXJlcyBoaXMgYWNrLiBDYW4geW91IHRha2UgdGhlIG90aGVyIHBhdGNo
-ZXMgaW4gYW5kDQo+ID4gbGVhdmUgMTIgYW5kIDEzIG91dCBmb3Igbm93PyBJIGNhbiBjb250aW51
-ZSB3b3JrIG9uIExFRHMgd2l0aCBQYXZlbA0KPiA+IGJ1dA0KPiA+IEkgd291bGQgcmVhbGx5IGxp
-a2UgdG8gaGF2ZSB0aGUgcmVndWxhdG9ycyB3b3JraW5nIGFuZCBCRDcwNTI4IFJUQw0KPiA+IGZp
-eGVkIGluIG5leHQgcmVsZWFzZS4uLg0KPiANCj4gR29pbmcgdGhyb3VnaCBteSBiYWNrbG9ncyBu
-b3cuIFlvdSB0YWtpbmcgcGF0Y2hlcyB1cC10byAxMSBzbw0KPiB0aGF0IHdlIGhhdmUgdHdvIGxl
-ZnQgc291bmRzIGdvb2QgOi0pLg0KDQpOaWNlIHRvIGhlYXIgeW91J3JlIGJhY2sgaW4gdGhlIGJ1
-c2luZXNzIDopDQpUaGlzIHNlcmllcyAoZXhjZXB0IHBhdGNoZXMgMTIgYW5kIDEzKSB3YXMgbWVy
-Z2VkIHRvIGxpbnV4IDUuNi1yYzEuDQoNCkkgaGF2ZSBub3QgY29udGludWVkIHdvcmsgd2l0aCB0
-aGUgcGF0Y2ggMTIgYXMgSSBhbSBub3QgZW50aXJlbHkgaGFwcHkNCndpdGggdGhhdCBhcHByb2Fj
-aCBldmVuIG15c2VsZi4NCg0KSSBzdGlsbCB0aGluayB0aGUgbGVkIGNvcmUgc2hvdWxkIHBhcnNl
-IGNvbW1vbiBsZWQgYmluZGluZ3MuDQoNCldoYXQgSSBhbSB3b25kZXJpbmcgaXMgaWYgTEVEIGNv
-cmUgc2hvdWxkIHByb3ZpZGUgaW50ZXJmYWNlIHdoaWNoIGNvdWxkDQpyZWdpc3RlciBhbiBhcnJh
-eSBvZiBMRURzIGF0IG9uZSBnbyAtIGJ5IHRha2luZyBhbiBhcnJheSBvZiBMRUQgZGVzY3MNCmZy
-b20gdGhlIGRyaXZlciBhbmQgYnkgc2Nhbm5pbmcgdGhyb3VnaCB0aGUgY2hpbGQgbm9kZXMgaW4g
-Z2l2ZW4gTEVEDQpjb250cm9sbGVyJ3Mgcm9vdCBub2RlLiBPciBpZiB3ZSBzaG91bGQgc3RpY2sg
-dG8gdGhlIGFwcHJvYWNoDQppbnRyb2R1Y2VkIGluIHRoZSBwYXRjaCAxMiAtIHdoaWNoIHJlcXVp
-cmVzIG93biAncmVnaXN0ZXIgY2FsbCcgcGVyDQpMRUQuDQoNClByb2JsZW0gd2l0aCBsYXR0ZXIg
-YXBwcm9hY2ggaXMgdGhhdCBpdCByZXF1aXJlcyB0aGUgTEVEIGRyaXZlciB0byBrbm93DQpob3cg
-bWFueSBMRURzIHRoZXJlIGlzIGF0dGFjaGVkIC0gb3IgdGhlbiB0byBpZ25vcmUgdGhlIGVycm9y
-cyBmcm9tDQpyZWdpc3RlciBmdW5jdGlvbiBhc3N1bWluZyBlcnJvciBpcyBjYXVzZWQgYnkgbWlz
-c2luZyBMRUQuIFNvIGN1cnJlbnRseQ0KKGFmdGVyIEkgbG9va2VkIHRocm91Z2ggbW9yZSBvZiB0
-aGUgZXhpc3RpbmcgZHJpdmVycykgaXQgc2VlbXMgdG8gbWUNCnRoZSBpbmRpdmlkdWFsIGRyaXZl
-cnMgbmVlZCB0byBlaXRoZXIgaGFyZC1jb2RlIG51bWJlciBvZiBMRURzICh3aGljaA0KbWlnaHQg
-bm90IGJlIGEgcmVhbCBwcm9ibGVtIHRob3VnaCkgb3IgYW55d2F5cyBjaGVjayB0aGUgRFQgZm9y
-IExFRA0Kbm9kZXMgYW5kIGNhbGwgdGhlIHJlZ2lzdHJhdGlvbiBmb3IgZWFjaCBMRUQgYmFzZWQg
-b24gdGhlIERUIG5vZGVzLg0KDQpJZGVhbGx5IEkgd291bGQgbGlrZSB0byBzZWUgYXBwcm9hY2gg
-d2hlcmUgdGhlIExFRCBjb250cm9sbGVyIGRyaXZlcg0Kd291bGQgb25seSBmaWxsIExFRCBkZXNj
-cmlwdG9ycyBmb3IgcG9zc2libGUgTEVEIGNvbm5lY3Rpb25zIC0gYW5kIGdpdmUNCnRoYXQgdG8g
-YSByZWdpc3RyYXRpb24gQVBJLiBUaGUgcmVnaXN0cmF0aW9uIEFQSSB3b3VsZCBzZWUgdGhlDQpk
-ZXNjcmlwdG9ycyBhbmQgY2hlY2sgd2hpY2ggb2YgdGhlIGRlc2NzIG1hdGNoIHRvIGEgTEVEIGdp
-dmVuIGluIERUICYmDQpyZWdpc3RlciB0aG9zZSBMRUQgZGV2aWNlcy4gVGhhdCB3b3VsZCBoZWxw
-IExFRCBkcml2ZXJzIHdpdGggbm8gc3BlY2lhbA0KRFQgcHJvcGVydGllcyB0byB0cnVseSBnZXQg
-cmlkIG9mIERUIHBhcnNpbmcuDQoNCkVnLCBhcyBhIHF1aWNrbHkgd3JpdHRlbiBwc2V1ZG8gY29k
-ZSB0byBleHBsYWluIHRoZSBpZGVhOg0KZHJpdmVyIHdvdWxkIGZpbGwgc29tZSBhcnJheSBsaWtl
-Og0KDQpzdHJ1Y3QgY29uc3QgbGVkX2Rlc2NyaXB0b3JzIG15X2xlZHNbXSA9IHsNCgl7DQoJCS5p
-ZCA9IE1ZX0xFRDEsDQoJCS5vcHMgPSBsZWRfY29udHJvbF9mdW5jdGlvbnMsDQoJCS5tYXRjaF9k
-YXRhID0gJmR0X21hdGNoX2RhdGEsDQoJCS5pc19vcHRpb25hbCA9IHRydWUsDQoJCS5vZl9tYXRj
-aF9jYiA9IG15X2NvbnRyb2xsZXJfc3BlY2lmaWNfZHRfcGFyc2VyLA0KCX0sDQoJew0KCQkuaWQg
-PSBNWV9MRUQyLA0KCQkub3BzID0gbGVkX2NvbnRyb2xfZnVuY3Rpb25zLA0KCQkubWF0Y2hfDQpk
-YXRhID0gJmR0X21hdGNoX2RhdGEsDQoJCS5pc19vcHRpb25hbCA9IHRydWUsDQoJCS5vZl9tYXRj
-aF9jYiA9DQpteV9jb250cm9sbGVyX3NwZWNpZmljX2R0X3BhcnNlciwNCgl9LA0KfTsNCg0Kd2hl
-cmU6DQogLSBsZWRfY29udHJvbF9mdW5jdGlvbnMgd291bGQgYmUgZnVuY3Rpb24gcG9pbnRlcnMg
-dG8gc2V0IHRoZSBMRUQNCnN0YXRlcyBldGMuDQogLSBpZCB3b3VsZCBiZSBhIExFRCBJRCB3aGlj
-aCB0aGUgbGVkIGNvbnRyb2wgZnVuY3Rpb25zIGNvdWxkIHVzZSB0bw0KaWRlMW50aWZ5IExFRCBp
-biBjb250cm9sbGVyDQogLSBtYXRjaF9kYXRhIHdvdWxkIGNvbnRhaW4gRFQgbm9kZSBtYXRjaCBp
-bmZvcm1hdGlvbiB0aGUgTEVEIGNvcmUNCmNvdWxkIHVzZSB3aGVuIHNlYXJjaGluZyB0aGUgTEVE
-IGZyb20gRFQNCiAtIGlzX29wdGlvbmFsIHdvdWxkIHRlbGwgd2hldGhlciB0aGUgY29yZSBzaG91
-bGQgdHJlYXQgbWlzc2luZyBMRUQgRFQNCm5vZGUgYXMgZXJyb3INCiAtIG9mX21hdGNoX2NiIHdv
-dWxkIGJlIGEgY2FsbGJhY2sgdG8gY2FsbCB3aGVuIGNvcmUgaGFzIHBhcnNlZCBjb21tb24NCkRU
-IHByb3BlcnRpZXMgc28gdGhhdCB0aGUgZHJpdmVyIGNhbiBwYXJzZSBhbnkgZHJpdmVyIHNwZWNp
-ZmljIGR0DQpzdHVmZi4NCg0KYW5kIHRoZSBkcml2ZXIgY291bGQgcGFzcyB0aGlzIGFuZCB0aGUg
-TEVEIGNvbnRyb2xsZXIgRFQgbm9kZSB0bw0KcmVnaXN0cmF0aW9uIEFQSSB3aGljaCB3b3VsZCAi
-bWFzcyByZWdpc3RlciIgYWxsIGZvdW5kIExFRHMuDQoNCkkgdGhpbmsgaXQgd291bGQgbm90IGJl
-IGEgaHVnZSB0aGluZyB0byBpbXBsZW1lbnQgLSBidXQgaXQgZGVmaW5pdGVseQ0KaXMgc29tZSB3
-b3JrLiBBbmQgaWYgdGhpcyBpZGVhIGlzIHN0cm9uZ2x5IG9iamVjdGVkIC0gdGhlbiBJIG1heSBu
-b3QNCmhhdmUgdGhlIGVuZXJneSB0byBwdXNoIGl0IHRocm91Z2guLi4gU28uLiBJIHdvdWxkIGxp
-a2UgdG8ga25vdyB3aGF0DQpwZW9wbGUgdGhpbmsgb2YgaXQ/IElzIGl0IHJlYWxseSB3b3J0aCBv
-ZiB0cnlpbmc/IE9yIHNob3VsZCBJIHN0aWNrDQp3aXRoIHRoZSBhcHByb2FjaCBwcmVzZW50ZWQg
-aW4gdGhpcyBzZXJpZXM/IE9yIHNob3VsZCBJIGp1c3QgZm9yZ2V0IGl0DQphbmQgYWRkIHlldCBv
-bmUgbW9yZSBMRUQgZHJpdmVycyBpbXBsZW1lbnRpbmcgdGhlIHNhbWUgRFQgcGFyc2luZyBsb29w
-cw0KYXMgb3RoZXJzPw0KDQoNCkJlc3QgUmVnYXJkcw0KCU1hdHRpDQo=
+Rework modpost's logging interface by consolidating merror(), warn(),
+and fatal() to use a single function, modpost_log(). Introduce different
+logging levels (WARN, ERROR, FATAL) as well as a conditional warn
+(warn_unless()). The conditional warn is useful in determining whether
+to use merror() or warn() based on a condition. This reduces code
+duplication overall.
+
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
+---
+v2:
+  - modpost_log: initialize level to ""
+  - remove parens () from case labels
+
+ scripts/mod/modpost.c | 69 +++++++++++++++++++++++----------------------------
+ scripts/mod/modpost.h | 22 +++++++++++++---
+ 2 files changed, 50 insertions(+), 41 deletions(-)
+
+diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+index 7edfdb2f4497..3201a2ac5cc4 100644
+--- a/scripts/mod/modpost.c
++++ b/scripts/mod/modpost.c
+@@ -51,41 +51,37 @@ enum export {
+ 
+ #define MODULE_NAME_LEN (64 - sizeof(Elf_Addr))
+ 
+-#define PRINTF __attribute__ ((format (printf, 1, 2)))
++#define PRINTF __attribute__ ((format (printf, 2, 3)))
+ 
+-PRINTF void fatal(const char *fmt, ...)
++PRINTF void modpost_log(enum loglevel loglevel, const char *fmt, ...)
+ {
++	char *level = "";
+ 	va_list arglist;
+ 
+-	fprintf(stderr, "FATAL: ");
+-
+-	va_start(arglist, fmt);
+-	vfprintf(stderr, fmt, arglist);
+-	va_end(arglist);
+-
+-	exit(1);
+-}
+-
+-PRINTF void warn(const char *fmt, ...)
+-{
+-	va_list arglist;
++	switch(loglevel) {
++	case LOG_WARN:
++		level = "WARNING: ";
++		break;
++	case LOG_ERROR:
++		level = "ERROR: ";
++		break;
++	case LOG_FATAL:
++		level = "FATAL: ";
++		break;
++	default: /* invalid loglevel, ignore */
++		break;
++	}
+ 
+-	fprintf(stderr, "WARNING: ");
++	fprintf(stderr, level);
++	fprintf(stderr, "modpost: ");
+ 
+ 	va_start(arglist, fmt);
+ 	vfprintf(stderr, fmt, arglist);
+ 	va_end(arglist);
+-}
+ 
+-PRINTF void merror(const char *fmt, ...)
+-{
+-	va_list arglist;
+-
+-	fprintf(stderr, "ERROR: ");
++	if (loglevel == LOG_FATAL)
++		exit(1);
+ 
+-	va_start(arglist, fmt);
+-	vfprintf(stderr, fmt, arglist);
+-	va_end(arglist);
+ }
+ 
+ static inline bool strends(const char *str, const char *postfix)
+@@ -113,7 +109,7 @@ static int is_vmlinux(const char *modname)
+ void *do_nofail(void *ptr, const char *expr)
+ {
+ 	if (!ptr)
+-		fatal("modpost: Memory allocation failure: %s.\n", expr);
++		fatal("Memory allocation failure: %s.\n", expr);
+ 
+ 	return ptr;
+ }
+@@ -2021,7 +2017,7 @@ static void read_symbols(const char *modname)
+ 
+ 	license = get_modinfo(&info, "license");
+ 	if (!license && !is_vmlinux(modname))
+-		warn("modpost: missing MODULE_LICENSE() in %s\n"
++		warn("missing MODULE_LICENSE() in %s\n"
+ 		     "see include/linux/module.h for "
+ 		     "more information\n", modname);
+ 	while (license) {
+@@ -2152,15 +2148,15 @@ static void check_for_gpl_usage(enum export exp, const char *m, const char *s)
+ 
+ 	switch (exp) {
+ 	case export_gpl:
+-		fatal("modpost: GPL-incompatible module %s%s "
++		fatal("GPL-incompatible module %s%s "
+ 		      "uses GPL-only symbol '%s'\n", m, e, s);
+ 		break;
+ 	case export_unused_gpl:
+-		fatal("modpost: GPL-incompatible module %s%s "
++		fatal("GPL-incompatible module %s%s "
+ 		      "uses GPL-only symbol marked UNUSED '%s'\n", m, e, s);
+ 		break;
+ 	case export_gpl_future:
+-		warn("modpost: GPL-incompatible module %s%s "
++		warn("GPL-incompatible module %s%s "
+ 		      "uses future GPL-only symbol '%s'\n", m, e, s);
+ 		break;
+ 	case export_plain:
+@@ -2178,7 +2174,7 @@ static void check_for_unused(enum export exp, const char *m, const char *s)
+ 	switch (exp) {
+ 	case export_unused:
+ 	case export_unused_gpl:
+-		warn("modpost: module %s%s "
++		warn("module %s%s "
+ 		      "uses symbol '%s' marked UNUSED\n", m, e, s);
+ 		break;
+ 	default:
+@@ -2197,14 +2193,11 @@ static int check_exports(struct module *mod)
+ 		exp = find_symbol(s->name);
+ 		if (!exp || exp->module == mod) {
+ 			if (have_vmlinux && !s->weak) {
+-				if (warn_unresolved) {
+-					warn("\"%s\" [%s.ko] undefined!\n",
+-					     s->name, mod->name);
+-				} else {
+-					merror("\"%s\" [%s.ko] undefined!\n",
+-					       s->name, mod->name);
++				warn_unless(!warn_unresolved,
++					    "\"%s\" [%s.ko] undefined!\n",
++					    s->name, mod->name);
++				if (!warn_unresolved)
+ 					err = 1;
+-				}
+ 			}
+ 			continue;
+ 		}
+@@ -2653,7 +2646,7 @@ int main(int argc, char **argv)
+ 	if (dump_write)
+ 		write_dump(dump_write);
+ 	if (sec_mismatch_count && sec_mismatch_fatal)
+-		fatal("modpost: Section mismatches detected.\n"
++		fatal("Section mismatches detected.\n"
+ 		      "Set CONFIG_SECTION_MISMATCH_WARN_ONLY=y to allow them.\n");
+ 	for (n = 0; n < SYMBOL_HASH_SIZE; n++) {
+ 		struct symbol *s;
+diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
+index 64a82d2d85f6..631d07714f7a 100644
+--- a/scripts/mod/modpost.h
++++ b/scripts/mod/modpost.h
+@@ -198,6 +198,22 @@ void *grab_file(const char *filename, unsigned long *size);
+ char* get_next_line(unsigned long *pos, void *file, unsigned long size);
+ void release_file(void *file, unsigned long size);
+ 
+-void fatal(const char *fmt, ...);
+-void warn(const char *fmt, ...);
+-void merror(const char *fmt, ...);
++enum loglevel {
++	LOG_WARN,
++	LOG_ERROR,
++	LOG_FATAL
++};
++
++void modpost_log(enum loglevel loglevel, const char *fmt, ...);
++
++#define warn(fmt, args...)	modpost_log(LOG_WARN, fmt, ##args)
++#define merror(fmt, args...)	modpost_log(LOG_ERROR, fmt, ##args)
++#define fatal(fmt, args...)	modpost_log(LOG_FATAL, fmt, ##args)
++/* Warn unless condition is true, then use merror() */
++#define warn_unless(condition, fmt, args...)	\
++do {						\
++	if (condition)				\
++		merror(fmt, ##args);		\
++	else					\
++		warn(fmt, ##args);		\
++} while (0)
+-- 
+2.16.4
+
