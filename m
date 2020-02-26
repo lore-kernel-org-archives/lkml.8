@@ -2,128 +2,95 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE7CC4BA0D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7660C4BA0D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2709221927
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:31:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=overt.org header.i=@overt.org header.b="oDyZJcbc"
+	by mail.kernel.org (Postfix) with ESMTP id 8288D222C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:31:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbgBZFb3 (ORCPT
+        id S1726900AbgBZFbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 00:31:29 -0500
-Received: from mail.overt.org ([157.230.92.47]:35773 "EHLO mail.overt.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbgBZFb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 00:31:29 -0500
-X-Greylist: delayed 629 seconds by postgrey-1.27 at vger.kernel.org; Wed, 26 Feb 2020 00:31:29 EST
-Received: from authenticated-user (mail.overt.org [157.230.92.47])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.overt.org (Postfix) with ESMTPSA id D93143F238;
-        Tue, 25 Feb 2020 23:20:57 -0600 (CST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=overt.org; s=mail;
-        t=1582694459; bh=C+e4OY6fqGpnhwj+M3QG7h7Pf1ust5yrvgiTKuv00PU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oDyZJcbcIXMAl7hujRYzIBL4H6q0qjXBNlWMtFPBgoL+iz0DUd6w+AyZQydyFkLVX
-         KH/3myFgK+rukTN1Ouf70dt6iBFOfbz3NkrXM2tQaT1QUKatcJ0Oy47cYyVsXdG1lc
-         D3q01JpRSD6BsaFbmKjSKNZVRMbdJaBdEcS9auNLQPDC71mzTHAuhsRHReicBi2dzx
-         DZ1KAGe8Wcm2W5j7XiLJUE4N0a+LYUsqSTXh+scQhQ8ipVabCo6+TgoXxG+FeMEiX/
-         jsO2WKStydNbFOysvUlRExvhmSWjK9DZEb4XYpKDG7sv5psP0bBOtQ/GHEIuc2ayx6
-         8oDGiHfD5JkgA==
-Date:   Tue, 25 Feb 2020 21:20:54 -0800
-From:   Philip Langdale <philipl@overt.org>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Trevor Jacobs <trevor_jacobs@aol.com>,
-        "Michael ." <keltoiboy@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kris Cleveland <tridentperfusion@yahoo.com>,
-        Jeff <bluerocksaddles@willitsonline.com>,
-        Morgan Klym <moklym@gmail.com>,
-        Pierre Ossman <pierre@ossman.eu>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
-Subject: Re: PCI device function not being enumerated [Was: PCMCIA not
- working on Panasonic Toughbook CF-29]
-Message-ID: <20200225212054.09865e0b@fido6>
-In-Reply-To: <20200226045104.GA2191053@rani.riverdale.lan>
-References: <20191029170250.GA43972@google.com>
-        <20200222165617.GA207731@google.com>
-        <CAPDyKFq_exHufHyibFCjS78PTZ7duS9ZSt3vi18CNM6+jMmwnw@mail.gmail.com>
-        <20200226011310.GA2116625@rani.riverdale.lan>
-        <CAFjuqNg_NW7hcssWmMTtt=ioY143qn76ooT7GRhxEEe9ZVCqeQ@mail.gmail.com>
-        <6e9db1f6-60c4-872b-c7c8-96ee411aa3ca@aol.com>
-        <20200226045104.GA2191053@rani.riverdale.lan>
+        Wed, 26 Feb 2020 00:31:45 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45718 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgBZFbp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 00:31:45 -0500
+Received: by mail-pl1-f194.google.com with SMTP id b22so805880pls.12;
+        Tue, 25 Feb 2020 21:31:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=MH43w2ivxADrawY5wWEkcJfzZm+RFQcGzQ8+FfYQAPg=;
+        b=rKjpuOY+vAI+O2CmSjggJyRldZoitR3weK62xn64dJNwfFo6f9pfmNw8XeY0PTm3pe
+         fZF2Wrpok7lR5Azhn/hSlQw1rUFYIKclX2vJbOyzR/+I7mPT1arBl5ACiYhKYHhoMVPp
+         ahTYprTKRP0rsmX0cNYFd/khrhFCk5XZVinkaHTyUz5cxhQij5GHbH7xQHt31G9/I+4h
+         1ktXZ6/7U9bgesEqV5MMJGIRYqWufd2a8QbXtE1c1Vzkkf8UNsNau+oMd21WdTikjx5B
+         EeakFR7gqitE+lpujrS8CQLW/VzAAqdMEz022pq3WE8fdu1W+e47vjE13G7Ddvy4EiiV
+         Hf9Q==
+X-Gm-Message-State: APjAAAUNQz7rlthe5dhneYM5IiioaqWuBOi6qvEdwTNWbVBd0g+jUbh5
+        poKLmdgQp0604N31rRsrZ1ItALVjaJ8=
+X-Google-Smtp-Source: APXvYqzk/ilEnPzCnnwMIxBkcm4eFKv2uQoaS7ya7g0teP5oNRGqEtnvg93eOOx2jVhiowuUbrvDAg==
+X-Received: by 2002:a17:90a:cf11:: with SMTP id h17mr3181708pju.103.1582695104226;
+        Tue, 25 Feb 2020 21:31:44 -0800 (PST)
+Received: from ?IPv6:2601:647:4000:d7:1421:d554:52c5:9706? ([2601:647:4000:d7:1421:d554:52c5:9706])
+        by smtp.gmail.com with ESMTPSA id k63sm895901pjb.10.2020.02.25.21.31.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Feb 2020 21:31:43 -0800 (PST)
+Subject: Re: [PATCH] SCSI: use kobj_to_dev
+To:     guosongsu@gmail.com,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Guosong Su <suguosong@xiaomi.com>
+References: <20200225100411.10250-1-guosongsu@gmail.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <9abc13e0-3f5b-93e0-fc88-d37b7269d965@acm.org>
+Date:   Tue, 25 Feb 2020 21:31:41 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200225100411.10250-1-guosongsu@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Feb 2020 23:51:05 -0500
-Arvind Sankar <nivedita@alum.mit.edu> wrote:
-
-> On Tue, Feb 25, 2020 at 09:12:48PM -0600, Trevor Jacobs wrote:
-> > That's correct, I tested a bunch of the old distros including
-> > slackware, and 2.6.32 is where the problem began.
-> > 
-> > Also, the Panasonic Toughbook CF-29s effected that we tested are
-> > the later marks, MK4 and MK5 for certain. The MK2 CF-29 worked just
-> > fine because it has different hardware supporting the PCMCIA slots.
-> > I have not tested a MK3 but suspect it would work ok as it also
-> > uses the older hardware.
-> > 
-> > Thanks for your help guys!
-> > Trevor
-> > 
+On 2020-02-25 02:04, guosongsu@gmail.com wrote:
+> From: Guosong Su <suguosong@xiaomi.com>
 > 
-> Right, the distros probably all enabled MMC_RICOH_MMC earlier than
-> upstream. Can you test a custom kernel based off your distro kernel
-> but just disabling that config option? That's probably the easiest fix
-> currently, even though not ideal. Perhaps there should be a command
-> line option to disable specific pci quirks to make this easier.
-> 
-> An ideal fix is I feel hard, given this quirk is based on undocumented
-> config registers -- it worked on Dell machines (that's where the
-> original authors seem to have gotten their info from), perhaps they
-> had only one Cardbus slot, but the code ends up disabling your second
-> Cardbus slot instead of disabling the MMC controller.
+> Use kobj_to_dev to instead of open-coding it.
 
-Keeping in mind that this was 12+ years ago, you can at least still
-read the original discussion in the archives. My original Dell laptop
-(XPS m1330) had no cardbus slots at all, and used the r5c832
-controller. There was a subsequent change that I was not involved with
-which added support for the rl5c476, which is the problematic device in
-this thread.
-
-As a hypothesis, based on the observed behaviour, the quirk (keeping in
-mind that these are magic configuration register values that are not
-documented) probably disabled function 1, regardless of what it is, and
-the original example that motivated adding the rl5c476 quirk probably
-had one cardbus slot and the card reader functions were all moved up
-one, or something along those lines.
-
-Truly making this smart would then involve having the code enumerate
-the pci functions and identify the one that is the unwanted mmc
-controller, based on function ID or class or whatever, and then
-disabling that (assuming the magic can be reverse engineered: eg, the
-current magic ORs the disable flag with 0x02 - chances are, that's the
-index of the function: 0x01 would be the 0th function, 0x04 would be
-the 2nd function, etc). Someone with access to real hardware could
-easily experiment with changing that magic value and seeing if it
-changes which function is disabled.
-
-Good luck.
-
---phil
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
