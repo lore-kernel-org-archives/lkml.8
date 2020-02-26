@@ -2,96 +2,67 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF8AC4BA14
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E73C3C4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ADDB20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9DC320838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:59:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727311AbgBZO6O (ORCPT
+        id S1727044AbgBZO7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 09:58:14 -0500
-Received: from netrider.rowland.org ([192.131.102.5]:45985 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726926AbgBZO6N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 09:58:13 -0500
-Received: (qmail 5669 invoked by uid 500); 26 Feb 2020 09:58:12 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 26 Feb 2020 09:58:12 -0500
-Date:   Wed, 26 Feb 2020 09:58:12 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Boqun Feng <boqun.feng@gmail.com>
-cc:     linux-kernel@vger.kernel.org, <rcu@vger.kernel.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH] tools/memory-model: Remove lock-final checking in lock.cat
-In-Reply-To: <20200226032142.89424-1-boqun.feng@gmail.com>
-Message-ID: <Pine.LNX.4.44L0.2002260953110.3674-100000@netrider.rowland.org>
+        Wed, 26 Feb 2020 09:59:36 -0500
+Received: from elvis.franken.de ([193.175.24.41]:38970 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726063AbgBZO7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 09:59:36 -0500
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1j6y9t-0001cq-00; Wed, 26 Feb 2020 15:59:33 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 4FF4BC0E99; Wed, 26 Feb 2020 15:59:17 +0100 (CET)
+Date:   Wed, 26 Feb 2020 15:59:17 +0100
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Paul Burton <paulburton@kernel.org>, od@zcrc.me,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] MIPS: Fix CONFIG_MIPS_CMDLINE_DTB_EXTEND handling
+Message-ID: <20200226145917.GA12722@alpha.franken.de>
+References: <20200225152810.45048-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200225152810.45048-1-paul@crapouillou.net>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Feb 2020, Boqun Feng wrote:
-
-> In commit 30b795df11a1 ("tools/memory-model: Improve mixed-access
-> checking in lock.cat"), we have added the checking to disallow any
-> normal memory access to lock variables, and this checking is stronger
-> than lock-final. So remove the lock-final checking as it's unnecessary
-> now.
-
-I don't understand this description.  Why do you say that the
-normal-access checking is stronger than the lock-final check?
-
-> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> ---
->  tools/memory-model/lock.cat | 3 ---
->  1 file changed, 3 deletions(-)
+On Tue, Feb 25, 2020 at 12:28:09PM -0300, Paul Cercueil wrote:
+> The CONFIG_MIPS_CMDLINE_DTB_EXTEND option is used so that the kernel
+> arguments provided in the 'bootargs' property in devicetree are extended
+> with the kernel arguments provided by the bootloader.
 > 
-> diff --git a/tools/memory-model/lock.cat b/tools/memory-model/lock.cat
-> index 6b52f365d73a..827a3646607c 100644
-> --- a/tools/memory-model/lock.cat
-> +++ b/tools/memory-model/lock.cat
-> @@ -54,9 +54,6 @@ flag ~empty LKR \ domain(lk-rmw) as unpaired-LKR
->   *)
->  empty ([LKW] ; po-loc ; [LKR]) \ (po-loc ; [UL] ; po-loc) as lock-nest
->  
-> -(* The final value of a spinlock should not be tested *)
-> -flag ~empty [FW] ; loc ; [ALL-LOCKS] as lock-final
-> -
->  (*
->   * Put lock operations in their appropriate classes, but leave UL out of W
->   * until after the co relation has been generated.
+> The code was broken, as it didn't actually take any of the kernel
+> arguments provided in devicetree when that option was set.
+> 
+> Fixes: 7784cac69735 ("MIPS: cmdline: Clean up boot_command_line
+> initialization")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  arch/mips/kernel/setup.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-With this check removed, what will prevent people from writing litmus 
-tests like this?
+applied to mips-fixes.
 
-C test
+Thomas.
 
-{
-	spinlock_t s;
-}
-
-...
-
-exists (s=0)
-
-Alan
-
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
