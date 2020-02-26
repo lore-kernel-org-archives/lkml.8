@@ -2,95 +2,174 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82941C4BA24
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7961EC4BA24
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D50F24670
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:47:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582753669;
-	bh=lTM5DnJzX+o9VcncpqibMoTzvJCS8Sylu78pMF4X+zs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rS5F6KLM6VZjT2i11/Kn6xMeIHhRxzip5QF80iYboxWpVgbzOtjj8i+GenZYd/Bb0
-	 eEet7sgnu5q0BdhTwvdC/FFZhPWMFyBKrHBQY1CHR6/TonrzE5k0CrIHuvEp2rW3Kt
-	 V8zlTbHlpImZJ0kxXihiIxGkiRSPdC26eEhkMrpo=
+	by mail.kernel.org (Postfix) with ESMTP id 4F11924672
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:48:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gh+8mxxP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727715AbgBZVrs (ORCPT
+        id S1727740AbgBZVs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 16:47:48 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46079 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727503AbgBZVrr (ORCPT
+        Wed, 26 Feb 2020 16:48:28 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44047 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727503AbgBZVs1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 16:47:47 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 59so896477otp.12;
-        Wed, 26 Feb 2020 13:47:47 -0800 (PST)
+        Wed, 26 Feb 2020 16:48:27 -0500
+Received: by mail-wr1-f65.google.com with SMTP id m16so641265wrx.11;
+        Wed, 26 Feb 2020 13:48:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=TjTCBST6cpMsAppV8JBTTv+T9QV8G6JLefGJ8DTMePs=;
+        b=Gh+8mxxPRmBz5ItD/2Qpd2lmEFDJ6+UlANHisqcl1s46QRxFpBDscYtDqguT1fQo9f
+         bA3GBmdW+rgBSETWdnjzdCP10x3AkIeyT6Ks99zd+RQ1yqo5KrLNC8xMbHrgiBSR1l8g
+         e67fXMSsOsCRHiuMho9fcOYFJ0eUMDZ7A/CY7UkH3zZBjuKfsVUAMhuW2fp22FR0iHSY
+         9wUzotZczhrrPKW0rWhLpx9OPg7QTFQhdomvo5GYWO31AZViCiIaIMO14bNL1XhUV5FG
+         8qdLIigVf06b1l75aRmulDCPA8Mzn5KKvGsP+Z3vo/L/uCG1aUO4ojtmkmfCQxXP8d3K
+         EIFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UTmslN9q8kSwBcWhEIJNY/U1Xxha6MDPKoxaq0risEc=;
-        b=EgXxqWgs+A9N0rf2PIRtzYHF1ZTCV+YCqrB9t7MZM1YwMa34/KHbPBXx9+9Kkl3W+Q
-         lklNApFkILb2hmfppRDf6a3MJvDh3DpvZBj+rpM3puCjQ6CzxF4DvEYm/CQ7Bc0RZ9vQ
-         /rHEB1owPeVEeY/cqEHJaf+Hu6mK2nNvJGKWjKekWrfwpPqzfKHNDRIEPOPnMNGfzI1O
-         ntGeUngZfn8mSCE+iaasYS23sSuFUT8oifqQ8aIMiP5XV6Y1vX4kKCP4R7rMuDSKnpWU
-         5i/ftI28oECfpOIf+lPuNl/6TCgGmN9+SJg5T3XuQocx9dDH0ZOLfqgAJ6+WVf9V2Rgh
-         bkMg==
-X-Gm-Message-State: APjAAAXwIkjVN5gEv3NLVL0VDRcVf1l8TUarH560SyPvWhvmAyw03r6D
-        oP3jKJMqCPEy2Ln+Y3oqCUCiU7JC8M/vmTkL8F8=
-X-Google-Smtp-Source: APXvYqwbzFXeIj/jl4xZ31G9VSia8iaKygXmbc/nxomxgNxKOm738/8bVAuBII2Eqj6ZLhW5V3sEXoKtU4J1YvG9Le4=
-X-Received: by 2002:a05:6830:1651:: with SMTP id h17mr657127otr.167.1582753666933;
- Wed, 26 Feb 2020 13:47:46 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=TjTCBST6cpMsAppV8JBTTv+T9QV8G6JLefGJ8DTMePs=;
+        b=tqqhFZt9Ip6KutsmKh/RNMVJstlM29PtuWDHNwQoifvkEQBXW4OoLOmKjQLmnnKWwx
+         QeeTYQHA/gXqg68jijtqXIm6MxnvBwj+oIBVTC6LKQbxPT5cWEBodwsLTs4QHTHYfIaL
+         qyUoCAYrx2lXtP4YDTwsSIga7Ht0WEIG16TfqasZq9Ds9/h9kz2tDVjI4R6FwVIa/PNV
+         moHv03um2wD0Fub7AkWeABv2cG4XL36gOE5Bb6DIW1bg6L+2CR180JcGV0KHGF43vPvl
+         TP5AFI4WtGjr742Aaqk0ySDFsRshXfSqdI7Ez/klgyGF74AS5D/+oE3ot/INV/vH/gsL
+         MUMw==
+X-Gm-Message-State: APjAAAU4NhExX4Pe5vRTo1fV9uf11dDb9Z1m5oHwojtQ8wjjTOYmZamG
+        vOCu+TgbAlKUtWkLVGAeMr0=
+X-Google-Smtp-Source: APXvYqxsvbKla5iG6TBDnuXgehZINgcnbX8qokIuJnhf3kEFjluM7zyxhNtIpVVPpKQcT4yMIBK9+w==
+X-Received: by 2002:adf:90ee:: with SMTP id i101mr643052wri.417.1582753704877;
+        Wed, 26 Feb 2020 13:48:24 -0800 (PST)
+Received: from Ansuel-XPS.localdomain (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
+        by smtp.googlemail.com with ESMTPSA id b10sm4878846wrw.61.2020.02.26.13.48.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 13:48:24 -0800 (PST)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] clk: qcom: clk-rpm: add missing rpm clk for ipq806x
+Date:   Wed, 26 Feb 2020 22:48:12 +0100
+Message-Id: <20200226214812.390-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <robh@kernel.org>
+References: <robh@kernel.org>
 MIME-Version: 1.0
-References: <20200227013411.1.Ica3bb9fa898499d94e0b0a2bfa08ec46c89d84fa@changeid>
-In-Reply-To: <20200227013411.1.Ica3bb9fa898499d94e0b0a2bfa08ec46c89d84fa@changeid>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 26 Feb 2020 22:47:35 +0100
-Message-ID: <CAJZ5v0hX-DVLPQmjVAZkQUJy8gCBPTneJvaFHmjqqbCe66F_6w@mail.gmail.com>
-Subject: Re: [PATCH] intel_idle: Add Comet Lake support
-To:     Harry Pan <harry.pan@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Harry Pan <gs0622@gmail.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 6:34 PM Harry Pan <harry.pan@intel.com> wrote:
->
-> Add Comet Lake ID to enable intel_idle driver support.
-> This is required for PC10 and S0ix.
+Add missing definition of rpm clk for ipq806x soc
 
-That shouldn't be the case for Linux 5.6-rc as long as the ACPI tables
-expose C10 in _CST, so have you checked that?
+Signed-off-by: John Crispin <john@phrozen.org>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+Acked-by: John Crispin <john@phrozen.org>
+---
+ .../devicetree/bindings/clock/qcom,rpmcc.txt  |  1 +
+ drivers/clk/qcom/clk-rpm.c                    | 35 +++++++++++++++++++
+ include/dt-bindings/clock/qcom,rpmcc.h        |  4 +++
+ 3 files changed, 40 insertions(+)
 
-> Signed-off-by: Harry Pan <harry.pan@intel.com>
->
-> ---
->
->  drivers/idle/intel_idle.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
-> index 347b08b56042..3cf292b2b7f1 100644
-> --- a/drivers/idle/intel_idle.c
-> +++ b/drivers/idle/intel_idle.c
-> @@ -1086,6 +1086,8 @@ static const struct x86_cpu_id intel_idle_ids[] __initconst = {
->         INTEL_CPU_FAM6(KABYLAKE_L,              idle_cpu_skl),
->         INTEL_CPU_FAM6(KABYLAKE,                idle_cpu_skl),
->         INTEL_CPU_FAM6(SKYLAKE_X,               idle_cpu_skx),
-> +       INTEL_CPU_FAM6(COMETLAKE_L,             idle_cpu_skl),
-> +       INTEL_CPU_FAM6(COMETLAKE,               idle_cpu_skl),
->         INTEL_CPU_FAM6(XEON_PHI_KNL,            idle_cpu_knl),
->         INTEL_CPU_FAM6(XEON_PHI_KNM,            idle_cpu_knl),
->         INTEL_CPU_FAM6(ATOM_GOLDMONT,           idle_cpu_bxt),
-> --
-> 2.24.1
->
+diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+index 944719bd586f..4bb2cbeff2b4 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
++++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+@@ -15,6 +15,7 @@ Required properties :
+ 			"qcom,rpmcc-msm8916", "qcom,rpmcc"
+ 			"qcom,rpmcc-msm8974", "qcom,rpmcc"
+ 			"qcom,rpmcc-apq8064", "qcom,rpmcc"
++			"qcom,rpmcc-ipq806x", "qcom,rpmcc"
+ 			"qcom,rpmcc-msm8996", "qcom,rpmcc"
+ 			"qcom,rpmcc-msm8998", "qcom,rpmcc"
+ 			"qcom,rpmcc-qcs404", "qcom,rpmcc"
+diff --git a/drivers/clk/qcom/clk-rpm.c b/drivers/clk/qcom/clk-rpm.c
+index 9e3110a71f12..f71d228fd6bd 100644
+--- a/drivers/clk/qcom/clk-rpm.c
++++ b/drivers/clk/qcom/clk-rpm.c
+@@ -543,10 +543,45 @@ static const struct rpm_clk_desc rpm_clk_apq8064 = {
+ 	.num_clks = ARRAY_SIZE(apq8064_clks),
+ };
+ 
++/* ipq806x */
++DEFINE_CLK_RPM(ipq806x, afab_clk, afab_a_clk, QCOM_RPM_APPS_FABRIC_CLK);
++DEFINE_CLK_RPM(ipq806x, cfpb_clk, cfpb_a_clk, QCOM_RPM_CFPB_CLK);
++DEFINE_CLK_RPM(ipq806x, daytona_clk, daytona_a_clk, QCOM_RPM_DAYTONA_FABRIC_CLK);
++DEFINE_CLK_RPM(ipq806x, ebi1_clk, ebi1_a_clk, QCOM_RPM_EBI1_CLK);
++DEFINE_CLK_RPM(ipq806x, sfab_clk, sfab_a_clk, QCOM_RPM_SYS_FABRIC_CLK);
++DEFINE_CLK_RPM(ipq806x, sfpb_clk, sfpb_a_clk, QCOM_RPM_SFPB_CLK);
++DEFINE_CLK_RPM(ipq806x, nss_fabric_0_clk, nss_fabric_0_a_clk, QCOM_RPM_NSS_FABRIC_0_CLK);
++DEFINE_CLK_RPM(ipq806x, nss_fabric_1_clk, nss_fabric_1_a_clk, QCOM_RPM_NSS_FABRIC_1_CLK);
++
++static struct clk_rpm *ipq806x_clks[] = {
++	[RPM_APPS_FABRIC_CLK] = &ipq806x_afab_clk,
++	[RPM_APPS_FABRIC_A_CLK] = &ipq806x_afab_a_clk,
++	[RPM_CFPB_CLK] = &ipq806x_cfpb_clk,
++	[RPM_CFPB_A_CLK] = &ipq806x_cfpb_a_clk,
++	[RPM_DAYTONA_FABRIC_CLK] = &ipq806x_daytona_clk,
++	[RPM_DAYTONA_FABRIC_A_CLK] = &ipq806x_daytona_a_clk,
++	[RPM_EBI1_CLK] = &ipq806x_ebi1_clk,
++	[RPM_EBI1_A_CLK] = &ipq806x_ebi1_a_clk,
++	[RPM_SYS_FABRIC_CLK] = &ipq806x_sfab_clk,
++	[RPM_SYS_FABRIC_A_CLK] = &ipq806x_sfab_a_clk,
++	[RPM_SFPB_CLK] = &ipq806x_sfpb_clk,
++	[RPM_SFPB_A_CLK] = &ipq806x_sfpb_a_clk,
++	[RPM_NSS_FABRIC_0_CLK] = &ipq806x_nss_fabric_0_clk,
++	[RPM_NSS_FABRIC_0_A_CLK] = &ipq806x_nss_fabric_0_a_clk,
++	[RPM_NSS_FABRIC_1_CLK] = &ipq806x_nss_fabric_1_clk,
++	[RPM_NSS_FABRIC_1_A_CLK] = &ipq806x_nss_fabric_1_a_clk,
++};
++
++static const struct rpm_clk_desc rpm_clk_ipq806x = {
++	.clks = ipq806x_clks,
++	.num_clks = ARRAY_SIZE(ipq806x_clks),
++};
++
+ static const struct of_device_id rpm_clk_match_table[] = {
+ 	{ .compatible = "qcom,rpmcc-msm8660", .data = &rpm_clk_msm8660 },
+ 	{ .compatible = "qcom,rpmcc-apq8060", .data = &rpm_clk_msm8660 },
+ 	{ .compatible = "qcom,rpmcc-apq8064", .data = &rpm_clk_apq8064 },
++	{ .compatible = "qcom,rpmcc-ipq806x", .data = &rpm_clk_ipq806x },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, rpm_clk_match_table);
+diff --git a/include/dt-bindings/clock/qcom,rpmcc.h b/include/dt-bindings/clock/qcom,rpmcc.h
+index 8e3095720552..ae74c43c485d 100644
+--- a/include/dt-bindings/clock/qcom,rpmcc.h
++++ b/include/dt-bindings/clock/qcom,rpmcc.h
+@@ -37,6 +37,10 @@
+ #define RPM_XO_A0				27
+ #define RPM_XO_A1				28
+ #define RPM_XO_A2				29
++#define RPM_NSS_FABRIC_0_CLK			30
++#define RPM_NSS_FABRIC_0_A_CLK			31
++#define RPM_NSS_FABRIC_1_CLK			32
++#define RPM_NSS_FABRIC_1_A_CLK			33
+ 
+ /* SMD RPM clocks */
+ #define RPM_SMD_XO_CLK_SRC				0
+-- 
+2.25.0
+
