@@ -2,143 +2,214 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD903C4BA18
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C89E3C4BA1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8111B206E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:13:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96AE1206E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:15:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QmlbHnqc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WXDH/CMD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgBZRNn (ORCPT
+        id S1726579AbgBZRPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:13:43 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:30068 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726561AbgBZRNm (ORCPT
+        Wed, 26 Feb 2020 12:15:51 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:46590 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726214AbgBZRPu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:13:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582737221;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fqZFM5WybXIvQpsE6lMDlBCaWfGorF8koi4lLfvGmOg=;
-        b=QmlbHnqcdK3Lh//aa9gjsmhf1AvXFlsT0vRJ488uLLcZ2wlHbpw5u6G5JE7tugTzROcm53
-        0GrUybuHplFnxNasTvfHAzZIw7ThQ8ECFx1JJvZU4p2MkvLGP/dJn3ih43flnCzTP+pL2B
-        6lOFDygGd1Hk0Y49/ONmPbkwCsHQV9Y=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-423-ZRktkdm5My2W-CX_z7QKiw-1; Wed, 26 Feb 2020 12:13:40 -0500
-X-MC-Unique: ZRktkdm5My2W-CX_z7QKiw-1
-Received: by mail-wm1-f72.google.com with SMTP id x9so1160970wmc.7
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 09:13:39 -0800 (PST)
+        Wed, 26 Feb 2020 12:15:50 -0500
+Received: by mail-qk1-f196.google.com with SMTP id u124so85331qkh.13;
+        Wed, 26 Feb 2020 09:15:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=R5CxkaIVTY0HaJ9D8eCB6WdnU+YVYJtVOwAoTc9aGqs=;
+        b=WXDH/CMDQZYGSi/eYGAv/ziZ/Kath+bSx6jYB4GgTHD1m/q6tAb2ftqED/bmvqDkja
+         RS1qOwLC29AdSDKuQJNCf560UMMTg/iP4n3uou8F7rfZjletWYFtvbRIk86kC2wvgaGG
+         7Kr07LDtT1p0XW+VMSuqxduPva0ovFrcwYgAC4TBaZJK7lA0GibCM6fT7T7IyLdv+Dlo
+         Z7Ey1VCllHYQ0nuuEILba3eBMtQwSLgDE0VNPU5Mz6ecMc/h23Jt0SWtIuUSaUhf+Rdg
+         VcxRQP6NGfMtmqZH2Z+f1OJxWlULafkyR48fBcU7Iqh4Be3STgE8GAH+k+a3NnrFv6+R
+         3Aww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=fqZFM5WybXIvQpsE6lMDlBCaWfGorF8koi4lLfvGmOg=;
-        b=r/5w6Q7/wOaj40yEmewPi6T4GafJUhFxNgITZJy4DTXEzritZ/BvEpBdOx4DZjL2Ow
-         eRDdWzShzvEHedu5tXt6CJcuXzNNQdVU2Zsh27+LCgyGPniqauP7XSqNA34E4CmrOI/6
-         aQYVBBvHr4dqvSW1+PUZQZXqiD2FqdhD32H25Aw5S38LHGKy8HfaT99YVWIA3/LZEHOT
-         fxYXXRGjvXsWX/vYOrgGqrBcZvuqFyAHrfrmO6R/Yxr2o/miXisOnhCcR73BSpI6YWLx
-         CJemcKWV4CbdXDp5k1RQinJAsPtWgljdAxhWN60eBjGcEcuAYo22tU7P6Judyzpd+G5/
-         Wp/A==
-X-Gm-Message-State: APjAAAWLsODUFx4mxMM65XasYXKmRIcnWxuB18HXi/7EMS8Q/gMd06+h
-        BvrmCw51ExvAAE+zOfDEL9xvP5pva5CG7CkXVv4cfpo5pKlixAfZRC/YU+ZsvxJC7EUsF0ecitK
-        4siZXaBpHo3XqqxDCUPXaCQi0
-X-Received: by 2002:adf:80cb:: with SMTP id 69mr6274376wrl.320.1582737218629;
-        Wed, 26 Feb 2020 09:13:38 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxdQ3flDUJS3yOciIAFWcmCDmYkKBelGFeV/kFIBn5FjKHz6HuPhGD9HWhgO281p32eDfwCNA==
-X-Received: by 2002:adf:80cb:: with SMTP id 69mr6274361wrl.320.1582737218383;
-        Wed, 26 Feb 2020 09:13:38 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id x12sm3765817wmc.20.2020.02.26.09.13.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 09:13:37 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 07/13] KVM: x86: Refactor init_emulate_ctxt() to explicitly take context
-In-Reply-To: <20200218232953.5724-8-sean.j.christopherson@intel.com>
-References: <20200218232953.5724-1-sean.j.christopherson@intel.com> <20200218232953.5724-8-sean.j.christopherson@intel.com>
-Date:   Wed, 26 Feb 2020 18:13:37 +0100
-Message-ID: <87zhd5i85a.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R5CxkaIVTY0HaJ9D8eCB6WdnU+YVYJtVOwAoTc9aGqs=;
+        b=a0iuUOuip5tDXrwmTbBJFCpm3oWFeVNIdXr0PeV+s5ICBIx+nFiHevn858P9nOfTCD
+         MWwFuf28JKLn6faGqWS53rXTEBRtCC1jFd3zQs88VE6VoRbqeZ9k2xBrTva2Lq12Vm/U
+         EIRr3B8QtA9A3RxRdtS0Ucp280Zh27UfvNJ00dW452fKwBJvfP5luWnHYH/iFuMS9YnI
+         /2M7oEXlgQEc2dsvjVNnatlGkuZzfOgNPl+07OWDr2cYun0hGz8/P5EhSwXKRXLzKPVO
+         Xg9PiRXoGxuax8U+HAG7cnSjRjfT2yVokUp8anACN/8exEG4OJavVHSx+tksk6PfYE5W
+         3BBw==
+X-Gm-Message-State: APjAAAVZQKMnaS1GvY1QgCLnZa2laBRLoHy2xRk2XA8Us50cisOaLFNa
+        rP5ubwyQtjAmjj3v43Ey1/XJ6iqmH+Y0HOe9Dgyzns6+ixM=
+X-Google-Smtp-Source: APXvYqwRVpJ+rNp2Wc3lNOmF5kn+eN1/4ttVSLtk+NtQMQ6cs0LrcaTVF3D1uBty6j577ThS87zLPgJvA/V4ZP/T0hM=
+X-Received: by 2002:a37:b744:: with SMTP id h65mr109687qkf.85.1582737349337;
+ Wed, 26 Feb 2020 09:15:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <5e4b4889.1c69fb81.bc072.65a9@mx.google.com> <50f9ce8b-c303-3b25-313b-cfb62d7e8735@collabora.com>
+ <158215618721.184098.2077489323832918966@swboyd.mtv.corp.google.com> <20200225133815.fjc6apts3ns5zcm5@gilmour.lan>
+In-Reply-To: <20200225133815.fjc6apts3ns5zcm5@gilmour.lan>
+From:   Enric Balletbo Serra <eballetbo@gmail.com>
+Date:   Wed, 26 Feb 2020 18:15:38 +0100
+Message-ID: <CAFqH_52T7QATdhJktDQPx7CeBTKocZfZ8LPAZp4+RMqsOHu0gw@mail.gmail.com>
+Subject: Re: next/master bisection: baseline.login on sun8i-h2-plus-orangepi-zero
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Guillaume Tucker <guillaume.tucker@collabora.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Kevin Hilman <khilman@baylibre.com>, mgalka@collabora.com,
+        linux-clk@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+Hi all,
 
-> Explicitly pass the emulation context when initializing said context in
-> preparation of dynamically allocation the emulation context.
-
-"The said said context" :-)
-
+Missatge de Maxime Ripard <maxime@cerno.tech> del dia dt., 25 de febr.
+2020 a les 15:34:
 >
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/x86.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+> On Wed, Feb 19, 2020 at 03:49:47PM -0800, Stephen Boyd wrote:
+> > Adding some Allwinner folks. Presumably there is some sort of clk that
+> > is failing to calculate a phase when it gets registered. Maybe that's
+> > because the parent isn't registered yet?
 >
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 69d3dd64d90c..0e67f90db9a6 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -6414,9 +6414,9 @@ static bool inject_emulated_exception(struct x86_emulate_ctxt *ctxt)
->  	return false;
->  }
->  
-> -static void init_emulate_ctxt(struct kvm_vcpu *vcpu)
-> +static void init_emulate_ctxt(struct x86_emulate_ctxt *ctxt)
->  {
-> -	struct x86_emulate_ctxt *ctxt = &vcpu->arch.emulate_ctxt;
-> +	struct kvm_vcpu *vcpu = emul_to_vcpu(ctxt);
->  	int cs_db, cs_l;
->  
->  	kvm_x86_ops->get_cs_db_l_bits(vcpu, &cs_db, &cs_l);
-> @@ -6443,7 +6443,7 @@ void kvm_inject_realmode_interrupt(struct kvm_vcpu *vcpu, int irq, int inc_eip)
->  	struct x86_emulate_ctxt *ctxt = &vcpu->arch.emulate_ctxt;
->  	int ret;
->  
-> -	init_emulate_ctxt(vcpu);
-> +	init_emulate_ctxt(ctxt);
->  
->  	ctxt->op_bytes = 2;
->  	ctxt->ad_bytes = 2;
-> @@ -6770,7 +6770,7 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
->  	kvm_clear_exception_queue(vcpu);
->  
->  	if (!(emulation_type & EMULTYPE_NO_DECODE)) {
-> -		init_emulate_ctxt(vcpu);
-> +		init_emulate_ctxt(ctxt);
->  
->  		/*
->  		 * We will reenter on the same instruction since
-> @@ -8943,7 +8943,7 @@ int kvm_task_switch(struct kvm_vcpu *vcpu, u16 tss_selector, int idt_index,
->  	struct x86_emulate_ctxt *ctxt = &vcpu->arch.emulate_ctxt;
->  	int ret;
->  
-> -	init_emulate_ctxt(vcpu);
-> +	init_emulate_ctxt(ctxt);
->  
->  	ret = emulator_task_switch(ctxt, tss_selector, idt_index, reason,
->  				   has_error_code, error_code);
+> It's simpler than that :)
+>
+> > Quoting Guillaume Tucker (2020-02-17 23:45:41)
+> > > Hi Stephen,
+> > >
+> > > Please see the bisection report below about a boot failure.
+> > >
+> > > Reports aren't automatically sent to the public while we're
+> > > trialing new bisection features on kernelci.org but this one
+> > > looks valid.
+> > >
+> > > There's nothing in the serial console log, probably because it's
+> > > crashing too early during boot.  I'm not sure if other platforms
+> > > on kernelci.org were hit by this in the same way, it's tricky to
+> > > tell partly because there is no output.  It should possible to
+> > > run it again with earlyprintk enabled in BayLibre's test lab
+> > > though.
+> > >
+> > > Thanks,
+> > > Guillaume
+> > >
+> > >
+> > > On 18/02/2020 02:14, kernelci.org bot wrote:
+> > > > * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> > > > * This automated bisection report was sent to you on the basis  *
+> > > > * that you may be involved with the breaking commit it has      *
+> > > > * found.  No manual investigation has been done to verify it,   *
+> > > > * and the root cause of the problem may be somewhere else.      *
+> > > > *                                                               *
+> > > > * If you do send a fix, please include this trailer:            *
+> > > > *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+> > > > *                                                               *
+> > > > * Hope this helps!                                              *
+> > > > * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> > > >
+> > > > next/master bisection: baseline.login on sun8i-h2-plus-orangepi-zero
+> > > >
+> > > > Summary:
+> > > >   Start:      c25a951c50dc Add linux-next specific files for 20200217
+> > > >   Plain log:  https://storage.kernelci.org//next/master/next-20200217/arm/multi_v7_defconfig/gcc-8/lab-baylibre/baseline-sun8i-h2-plus-orangepi-zero.txt
+> > > >   HTML log:   https://storage.kernelci.org//next/master/next-20200217/arm/multi_v7_defconfig/gcc-8/lab-baylibre/baseline-sun8i-h2-plus-orangepi-zero.html
+> > > >   Result:     2760878662a2 clk: Bail out when calculating phase fails during clk registration
+> > > >
+> > > > Checks:
+> > > >   revert:     PASS
+> > > >   verify:     PASS
+> > > >
+> > > > Parameters:
+> > > >   Tree:       next
+> > > >   URL:        git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> > > >   Branch:     master
+> > > >   Target:     sun8i-h2-plus-orangepi-zero
+> > > >   CPU arch:   arm
+> > > >   Lab:        lab-baylibre
+> > > >   Compiler:   gcc-8
+> > > >   Config:     multi_v7_defconfig
+> > > >   Test case:  baseline.login
+> > > >
+> > > > Breaking commit found:
+> > > >
+> > > > -------------------------------------------------------------------------------
+> > > > commit 2760878662a290ac57cff8a5a8d8bda8f4dddc37
+> > > > Author: Stephen Boyd <sboyd@kernel.org>
+> > > > Date:   Wed Feb 5 15:28:02 2020 -0800
+> > > >
+> > > >     clk: Bail out when calculating phase fails during clk registration
+> > > >
+> > > >     Bail out of clk registration if we fail to get the phase for a clk that
+> > > >     has a clk_ops::get_phase() callback. Print a warning too so that driver
+> > > >     authors can easily figure out that some clk is unable to read back phase
+> > > >     information at boot.
+> > > >
+> > > >     Cc: Douglas Anderson <dianders@chromium.org>
+> > > >     Cc: Heiko Stuebner <heiko@sntech.de>
+> > > >     Suggested-by: Jerome Brunet <jbrunet@baylibre.com>
+> > > >     Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+> > > >     Link: https://lkml.kernel.org/r/20200205232802.29184-5-sboyd@kernel.org
+> > > >     Acked-by: Jerome Brunet <jbrunet@baylibre.com>
+> > > >
+> > > > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> > > > index dc8bdfbd6a0c..ed1797857bae 100644
+> > > > --- a/drivers/clk/clk.c
+> > > > +++ b/drivers/clk/clk.c
+> > > > @@ -3457,7 +3457,12 @@ static int __clk_core_init(struct clk_core *core)
+> > > >        * Since a phase is by definition relative to its parent, just
+> > > >        * query the current clock phase, or just assume it's in phase.
+> > > >        */
+> > > > -     clk_core_get_phase(core);
+> > > > +     ret = clk_core_get_phase(core);
+> > > > +     if (ret < 0) {
+> > > > +             pr_warn("%s: Failed to get phase for clk '%s'\n", __func__,
+> > > > +                     core->name);
+> > > > +             goto out;
+> > > > +     }
+>
+> The thing is, clk_core_get_phase actually returns the phase on success :)
+>
+> So, when you actually have a phase returned, and not an error, you end
+> up with a positive, non-zero, value for ret.
+>
+> And since it's the latest assignment of that value, and that we return
+> ret all the time, even on success, we end up returning that positive,
+> non-zero value to __clk_register, which in turn tests whether it's
+> non-zero for success (it's not), and then proceeds to garbage collect
+> everything.
+>
+> I guess we're just the odd ones actually returning non-zero phases at
+> init time and in kernelci.
+>
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Just to note that not only Allwiner is affected, Rockchip is also
+affected by this issue. Reverting the patch fixes the issue for me,
+but the patch proposed by Maxime [1] does _NOT_ fixes the issue for
+Rockchip, there is something else, I'll take a look. I can't answer
+that patch because didn't reach my inbox.
 
--- 
-Vitaly
+Regards,
+ Enric
 
+[1] https://patchwork.kernel.org/patch/11403837/
+
+
+> I'll send a patch
+>
+> Maxime
