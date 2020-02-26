@@ -2,146 +2,227 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 876C5C4BA15
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E8DFC4BA14
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56D1F20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:52:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD683222C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:53:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="PEkBC2gG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D59yYChx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728596AbgBZPwE (ORCPT
+        id S1728532AbgBZPx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:52:04 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:36141 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728497AbgBZPwD (ORCPT
+        Wed, 26 Feb 2020 10:53:58 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39631 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728205AbgBZPx6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:52:03 -0500
-Received: by mail-qk1-f194.google.com with SMTP id f3so3078372qkh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 07:52:02 -0800 (PST)
+        Wed, 26 Feb 2020 10:53:58 -0500
+Received: by mail-lj1-f195.google.com with SMTP id o15so3664649ljg.6;
+        Wed, 26 Feb 2020 07:53:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4GYwlf0Xa2QHt1cHVU8f4uTPVQEe66S6tW8iKIjB1EY=;
-        b=PEkBC2gGo9Wp0CTNFzcX/uGLGqh45la2h+234pEbgb0JKCTWiVwR5CK2qWd8o7GV9+
-         vZ0V3mJmWDxwpkokIiWuE2AK5D0JvSuKri12uT1Y5ZmnM2+2x1lk6TfjQrITZNEH8kqT
-         OpLenMqGsrmR+s2Jh+PZTctbpw7UkSpOJj3m46DAs7sTe9V+A8PrxIZxTU0Jx2ozkU+h
-         l2FfR5Vf/ZZGO7KqofRi3aS6TzSV2SHQoTpS42nUl+B16nz+oN/qYJaqXNzKW0WQZswg
-         b+O0gHwTc4Y9Ju+CjJy1uD3JRDYV9kySWYvBERLoM4RJvQwJnkBJANxBmrBhZlFtAjqz
-         NmYA==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nRV/ZP4gHjtmZI58ArlgV50vbukG5a7XrSGzPw4XlO0=;
+        b=D59yYChxABJVuiRSx3NvnkYsU3atQDD/8A4eIUwnEL0U6o+ezF8kcW9fFHkSeF9mlw
+         Wxqhr7lpZBOtxnjee9PGbcSG8DNXg0G+hnijcT2t0V6BcjIgS86+kug1SQDLPQtTnMm0
+         ZvwNv5OaIUss5PDhJKVQvNVizU/dYaueSJs+fWML+b+Li/Rj8f3eDtoAILkP//nqXG3M
+         jv9RSPsNDzid28di/eUzLjG+BlhQF6TGtT7lYmnh4f6SKZawcNqMtVIetpSqJgUWqDYg
+         8HkHEEBhutZH3E6sT+PqMO5FeE/l6VnxB1C5HN2m1Sj1Ct28FS50lpqjBUjFCwV6tQDJ
+         AsVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4GYwlf0Xa2QHt1cHVU8f4uTPVQEe66S6tW8iKIjB1EY=;
-        b=JjDCgHMZGDsrBNBPg2ebdm09DYMrl8QeMqQ9PQJ0T3sFCd5+DLPP9LJQ4R68XVOlq+
-         snKAzfOb7yhaoqfvkAztezZfxEPV8ZOij2DprT+tUo8lsgK4RgH2jaE+k4IJnJ1gMkKU
-         FlwTcyHjUQ4m4FNHnJ5Bv74zQIwsgI0wneGENcmRJnjEsiYpKzN6TLGHvHPmQYyl/o08
-         lBhzwbmmF9SIACH7jpKSaHzLfwnfQRw3nOHCRxywjMo/E4JU9uyE2eQeRNMs/nQ1gzEm
-         zvswrk3kuoltJcaVJXbIlJ54v8eOTO6YgOUZNy4JgG+ta/jBFNrIvOPhvJFXefI+PqwR
-         1gZA==
-X-Gm-Message-State: APjAAAX+7NQ7+UiCCLVftFGp8sDQMfORFWsUVdY6mh0UoIZpIpkjivvN
-        TQ36ZxZ9ySv24KWw+XSKuhtJFQ==
-X-Google-Smtp-Source: APXvYqxycYwltSMF6mRZHm7TjXsCzQqI/GC2y1t3waZQf56agLdqkPAjaYu5yvSrjxUQYf0tQtgA0w==
-X-Received: by 2002:a37:64cb:: with SMTP id y194mr5808427qkb.364.1582732321799;
-        Wed, 26 Feb 2020 07:52:01 -0800 (PST)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id 3sm1332599qte.59.2020.02.26.07.51.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Feb 2020 07:52:01 -0800 (PST)
-Message-ID: <1582732318.7365.129.camel@lca.pw>
-Subject: Re: [PATCH V14] mm/debug: Add tests validating architecture page
- table helpers
-From:   Qian Cai <cai@lca.pw>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-riscv@lists.infradead.org, x86@kernel.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 26 Feb 2020 10:51:58 -0500
-In-Reply-To: <7c707b7f-ce3d-993b-8042-44fdc1ed28bf@c-s.fr>
-References: <1581909460-19148-1-git-send-email-anshuman.khandual@arm.com>
-         <1582726182.7365.123.camel@lca.pw>
-         <7c707b7f-ce3d-993b-8042-44fdc1ed28bf@c-s.fr>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nRV/ZP4gHjtmZI58ArlgV50vbukG5a7XrSGzPw4XlO0=;
+        b=DFdgQHefDMYVs6dlSTmkfLCw0VEJuEliHXotMCvSOqJszQel+eIgqLUFwjLv+5GM7l
+         ooHGssz6xeUiotTaiBDk4D3y3l+z/I5tl1a07c4x3W3RM9AEScalROX99CgTpIcQSxEG
+         H5hMzg3mZSHL6rtkNpVM0bc8I37oYNmGUNqg9CEMRRnNZVknzYlu2yr6GFmodZbwgKQz
+         sd3bAE9XV+K3o5uCGkG7D7RaX6M7qrGk8uz0zx5z9kSJxX0xKiRUmmpasxeWwu0h+rz/
+         kOCbQ2yLfdNwmVrUxY9TOJsIp+wTLSucgViffnZ1MWPeVag2vwEuK+dRVIBVWldv1MW8
+         D1OA==
+X-Gm-Message-State: ANhLgQ1MhSdLwbpaLgq9g0GwnHhr6Y7DwujhCDSHSK7HdVnLKISMoegs
+        W6OnUfU13cgvmKYrCnZ/kb0=
+X-Google-Smtp-Source: APXvYqwJzR534F4/1UlXIrbEygIJDJzO5mNQYN3rQ1JR+d6FXFFN7Jx5ejo5oMUyolsi57Evy1WkbA==
+X-Received: by 2002:a2e:95c4:: with SMTP id y4mr3454093ljh.38.1582732435265;
+        Wed, 26 Feb 2020 07:53:55 -0800 (PST)
+Received: from pc636 ([37.139.158.167])
+        by smtp.gmail.com with ESMTPSA id f21sm1407986ljc.30.2020.02.26.07.53.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 07:53:54 -0800 (PST)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Wed, 26 Feb 2020 16:53:47 +0100
+To:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Suraj Jitindar Singh <surajjs@amazon.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC] ext4: fix potential race between online resizing and
+ write operations
+Message-ID: <20200226155347.GA31097@pc636>
+References: <20200221131455.GA4904@pc636>
+ <20200221202250.GK2935@paulmck-ThinkPad-P72>
+ <20200222222415.GC191380@google.com>
+ <20200223011018.GB2935@paulmck-ThinkPad-P72>
+ <20200224174030.GA22138@pc636>
+ <20200225020705.GA253171@google.com>
+ <20200225185400.GA27919@pc636>
+ <20200225224745.GX2935@paulmck-ThinkPad-P72>
+ <20200226130440.GA30008@pc636>
+ <20200226150656.GB2935@paulmck-ThinkPad-P72>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200226150656.GB2935@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-02-26 at 15:45 +0100, Christophe Leroy wrote:
-> 
-> Le 26/02/2020 à 15:09, Qian Cai a écrit :
-> > On Mon, 2020-02-17 at 08:47 +0530, Anshuman Khandual wrote:
-> > > This adds tests which will validate architecture page table helpers and
-> > > other accessors in their compliance with expected generic MM semantics.
-> > > This will help various architectures in validating changes to existing
-> > > page table helpers or addition of new ones.
+On Wed, Feb 26, 2020 at 07:06:56AM -0800, Paul E. McKenney wrote:
+> On Wed, Feb 26, 2020 at 02:04:40PM +0100, Uladzislau Rezki wrote:
+> > On Tue, Feb 25, 2020 at 02:47:45PM -0800, Paul E. McKenney wrote:
+> > > On Tue, Feb 25, 2020 at 07:54:00PM +0100, Uladzislau Rezki wrote:
+> > > > > > > > I was thinking a 2 fold approach (just thinking out loud..):
+> > > > > > > > 
+> > > > > > > > If kfree_call_rcu() is called in atomic context or in any rcu reader, then
+> > > > > > > > use GFP_ATOMIC to grow an rcu_head wrapper on the atomic memory pool and
+> > > > > > > > queue that.
+> > > > > > > > 
+> > > > > > I am not sure if that is acceptable, i mean what to do when GFP_ATOMIC
+> > > > > > gets failed in atomic context? Or we can just consider it as out of
+> > > > > > memory and another variant is to say that headless object can be called
+> > > > > > from preemptible context only.
+> > > > > 
+> > > > > Yes that makes sense, and we can always put disclaimer in the API's comments
+> > > > > saying if this object is expected to be freed a lot, then don't use the
+> > > > > headless-API to be extra safe.
+> > > > > 
+> > > > Agree.
+> > > > 
+> > > > > BTW, GFP_ATOMIC the documentation says if GFP_ATOMIC reserves are depleted,
+> > > > > the kernel can even panic some times, so if GFP_ATOMIC allocation fails, then
+> > > > > there seems to be bigger problems in the system any way. I would say let us
+> > > > > write a patch to allocate there and see what the -mm guys think.
+> > > > > 
+> > > > OK. It might be that they can offer something if they do not like our
+> > > > approach. I will try to compose something and send the patch to see.
+> > > > The tree.c implementation is almost done, whereas tiny one is on hold.
+> > > > 
+> > > > I think we should support batching as well as bulk interface there.
+> > > > Another way is to workaround head-less object, just to attach the head
+> > > > dynamically using kmalloc() and then call_rcu() but then it will not be
+> > > > a fair headless support :)
+> > > > 
+> > > > What is your view?
+> > > > 
+> > > > > > > > Otherwise, grow an rcu_head on the stack of kfree_call_rcu() and call
+> > > > > > > > synchronize_rcu() inline with it.
+> > > > > > > > 
+> > > > > > > >
+> > > > > > What do you mean here, Joel? "grow an rcu_head on the stack"?
+> > > > > 
+> > > > > By "grow on the stack", use the compiler-allocated rcu_head on the
+> > > > > kfree_rcu() caller's stack.
+> > > > > 
+> > > > > I meant here to say, if we are not in atomic context, then we use regular
+> > > > > GFP_KERNEL allocation, and if that fails, then we just use the stack's
+> > > > > rcu_head and call synchronize_rcu() or even synchronize_rcu_expedited since
+> > > > > the allocation failure would mean the need for RCU to free some memory is
+> > > > > probably great.
+> > > > > 
+> > > > Ah, i got it. I thought you meant something like recursion and then
+> > > > unwinding the stack back somehow :)
+> > > > 
+> > > > > > > > Use preemptible() andr task_struct's rcu_read_lock_nesting to differentiate
+> > > > > > > > between the 2 cases.
+> > > > > > > > 
+> > > > > > If the current context is preemptable then we can inline synchronize_rcu()
+> > > > > > together with freeing to handle such corner case, i mean when we are run
+> > > > > > out of memory.
+> > > > > 
+> > > > > Ah yes, exactly what I mean.
+> > > > > 
+> > > > OK.
+> > > > 
+> > > > > > As for "task_struct's rcu_read_lock_nesting". Will it be enough just
+> > > > > > have a look at preempt_count of current process? If we have for example
+> > > > > > nested rcu_read_locks:
+> > > > > > 
+> > > > > > <snip>
+> > > > > > rcu_read_lock()
+> > > > > >     rcu_read_lock()
+> > > > > >         rcu_read_lock()
+> > > > > > <snip>
+> > > > > > 
+> > > > > > the counter would be 3.
+> > > > > 
+> > > > > No, because preempt_count is not incremented during rcu_read_lock(). RCU
+> > > > > reader sections can be preempted, they just cannot goto sleep in a reader
+> > > > > section (unless the kernel is RT).
+> > > > > 
+> > > > So in CONFIG_PREEMPT kernel we can identify if we are in atomic or not by
+> > > > using rcu_preempt_depth() and in_atomic(). When it comes to !CONFIG_PREEMPT
+> > > > then we skip it and consider as atomic. Something like:
+> > > > 
+> > > > <snip>
+> > > > static bool is_current_in_atomic()
+> > > > {
+> > > > #ifdef CONFIG_PREEMPT_RCU
 > > > 
-> > > This test covers basic page table entry transformations including but not
-> > > limited to old, young, dirty, clean, write, write protect etc at various
-> > > level along with populating intermediate entries with next page table page
-> > > and validating them.
+> > > If possible: if (IS_ENABLED(CONFIG_PREEMPT_RCU))
 > > > 
-> > > Test page table pages are allocated from system memory with required size
-> > > and alignments. The mapped pfns at page table levels are derived from a
-> > > real pfn representing a valid kernel text symbol. This test gets called
-> > > inside kernel_init() right after async_synchronize_full().
+> > > Much nicer than #ifdef, and I -think- it should work in this case.
 > > > 
-> > > This test gets built and run when CONFIG_DEBUG_VM_PGTABLE is selected. Any
-> > > architecture, which is willing to subscribe this test will need to select
-> > > ARCH_HAS_DEBUG_VM_PGTABLE. For now this is limited to arc, arm64, x86, s390
-> > > and ppc32 platforms where the test is known to build and run successfully.
-> > > Going forward, other architectures too can subscribe the test after fixing
-> > > any build or runtime problems with their page table helpers. Meanwhile for
-> > > better platform coverage, the test can also be enabled with CONFIG_EXPERT
-> > > even without ARCH_HAS_DEBUG_VM_PGTABLE.
-> > > 
-> > > Folks interested in making sure that a given platform's page table helpers
-> > > conform to expected generic MM semantics should enable the above config
-> > > which will just trigger this test during boot. Any non conformity here will
-> > > be reported as an warning which would need to be fixed. This test will help
-> > > catch any changes to the agreed upon semantics expected from generic MM and
-> > > enable platforms to accommodate it thereafter.
+> > OK. Thank you, Paul!
 > > 
-> > How useful is this that straightly crash the powerpc?
+> > There is one point i would like to highlight it is about making caller
+> > instead to be responsible for atomic or not decision. Like how kmalloc()
+> > works, it does not really know the context it runs on, so it is up to
+> > caller to inform.
 > > 
-> > [   23.263425][    T1] debug_vm_pgtable: debug_vm_pgtable: Validating
-> > architecture page table helpers
-> > [   23.263625][    T1] ------------[ cut here ]------------
-> > [   23.263649][    T1] kernel BUG at arch/powerpc/mm/pgtable.c:274!
+> > The same way:
+> > 
+> > kvfree_rcu(p, atomic = true/false);
+> > 
+> > in this case we could cover !CONFIG_PREEMPT case also.
 > 
-> The problem on PPC64 is known and has to be investigated and fixed.
+> Understood, but couldn't we instead use IS_ENABLED() to work out the
+> actual situation at runtime and relieve the caller of this burden?
+> Or am I missing a corner case?
+> 
+Yes we can do it in run-time, i mean to detect context type, atomic or not.
+But only for CONFIG_PREEMPT kernel. In case of !CONFIG_PREEMPT configuration 
+i do not see a straight forward way how to detect it. For example when caller 
+holds "spinlock". Therefore for such configuration we can just consider it
+as atomic. But in reality it could be not in atomic.
 
-It might be interesting to hear what powerpc64 maintainers would say about it
-and if it is actually worth "fixing" in the arch code, but that BUG_ON() was
-there since 2009 and had not been exposed until this patch comes alone?
+We need it for emergency/corner case and head-less objects. When we are run
+of memory. So in this case we should attach the rcu_head dynamically and
+queue the freed object to be processed later on, after GP.
+
+If atomic context use GFP_ATOMIC flag if not use GFP_KERNEL. It is better 
+to allocate with GFP_KERNEL flag(if possible) because it has much less
+restrictions then GFP_ATOMIC one, i.e. GFP_KERNEL can sleep and wait until
+the memory is reclaimed.
+
+But that is a corner case and i agree that it would be good to avoid of
+such passing of extra info by the caller.
+
+Anyway i just share some extra info :)
+
+Thanks.
+
+--
+Vlad Rezki
