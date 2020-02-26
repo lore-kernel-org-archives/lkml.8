@@ -2,270 +2,253 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B318C4BA0A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA71C4BA0A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65B2921927
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:35:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="S60pJC8C"
+	by mail.kernel.org (Postfix) with ESMTP id 8B13520675
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:39:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbgBZFfx (ORCPT
+        id S1726587AbgBZFjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 00:35:53 -0500
-Received: from mail-pf1-f175.google.com ([209.85.210.175]:44610 "EHLO
-        mail-pf1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbgBZFfw (ORCPT
+        Wed, 26 Feb 2020 00:39:13 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:37135 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbgBZFjN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 00:35:52 -0500
-Received: by mail-pf1-f175.google.com with SMTP id y5so844018pfb.11
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 21:35:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=D5/Ju2tq5be6Ks63/zLa9GYBbQxPXMVnyMNgldjudzg=;
-        b=S60pJC8Coxc6xTAlQ3B/DrOh05QFUsCGdyRC1lQfv3tN+xGU5gMRuNfFHdgNsUJO7V
-         kVYivjTFO3HFjhm/cuZNSFMECNYzY6Bmy3e34+3galxUqkSJ5cTnTfHW/cJHU9Qrdl7y
-         pJ3jOHQ4GHudvRvxL15YQVHe95tTuTtAL6hLw=
+        Wed, 26 Feb 2020 00:39:13 -0500
+Received: by mail-il1-f199.google.com with SMTP id z79so2211977ilf.4
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 21:39:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=D5/Ju2tq5be6Ks63/zLa9GYBbQxPXMVnyMNgldjudzg=;
-        b=N/6jW3e+0o1Po018VLiiwg1j4f1HEzvvJB8Z3DxDGW89ejNdfaeQnxMBFFC1vqAYib
-         V8q85yLrJd1sJhPk6GmgLvN2rRiIKSdZY7633OUzRjMqlN4aH7vKzRrm0P1BzJg3Ri6E
-         6oOdqPvEHI9waz+x2e1U2Y4D3c9xUMem9GxYUOhG4+e1v3NkjUmXKBpWKUwwZAfcniPA
-         701mfwN1qHPLDAIG7XZZncC/wVOsW72LodgYLEABIpAxpUmBQsqVDumHGs2AZWAL0Drw
-         ubRm8gb7ncPGI7eMl/XjHdu1IJEL63PmwsoT3m0yb2hsXMQcNBkOh6mEjhk1GaMtKNhc
-         N76A==
-X-Gm-Message-State: APjAAAXfOgtJq7iOFr+VU04d4C1Tw9MdHRMJKQUlin9C8+JvYM/bWy1x
-        OlhsotxemIAQjT9HauWZgzxR9A==
-X-Google-Smtp-Source: APXvYqyaTtBE87vKm7yr6RjewtLzv4zAe7WXJOrZTEBz8pF9Mxqq2cQk5OgQjPBfbVgxO9muCSomZA==
-X-Received: by 2002:a62:cf07:: with SMTP id b7mr2397497pfg.77.1582695351516;
-        Tue, 25 Feb 2020 21:35:51 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z127sm822015pgb.64.2020.02.25.21.35.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 21:35:50 -0800 (PST)
-Date:   Tue, 25 Feb 2020 21:35:49 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Fangrui Song <maskray@google.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@alien8.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Michael Matz <matz@suse.de>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>
-Subject: Re: --orphan-handling=warn
-Message-ID: <202002252103.B4BBF01091@keescook>
-References: <20200222072144.asqaxlv364s6ezbv@google.com>
- <20200222074254.GB11284@zn.tnic>
- <20200222162225.GA3326744@rani.riverdale.lan>
- <CAKwvOdnvMS21s9gLp5nUpDAOu=c7-iWYuKTeFUq+PMhsJOKUgw@mail.gmail.com>
- <202002242122.AA4D1B8@keescook>
- <20200225182951.GA1179890@rani.riverdale.lan>
- <202002251140.4F28F0A4F@keescook>
- <CAKwvOdnkr1W4LTm8XmTKGkSDUhSBRowLbKwJwyitDMAGLh9ywg@mail.gmail.com>
- <202002251358.EDA50C11F@keescook>
- <20200226015606.ij7wn7emuj4bfkvn@google.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=uGxEoBZdEJyr2cCmVlxRKNDAv9nNidTX1NIELXjoNOc=;
+        b=DpgCf4BRq9WjfQpL48YnP6sf91JtICbbddwG/DF1x/WeOcLd4Sm0snSoGoCPjQLd09
+         yuImYIt+6rz8kJyGVcGwazt/NjyOCSm/ACc2PwpVXgCnq83DbEKKY+KCFkyxdwMZEIMx
+         UXMjScKbrkJS9iGcFZdc+uIBSu1SmbpWKtZ7du+yUveqV1jv0adCYx8c0y4nUVxNEjjS
+         3XTe2HYbConj6Shonzbf6/waYjjbdDZR74m07Emn4UnVaaH2+u3nBTiSPa4GTfqST6fl
+         Jk4uz66bCENnlutg4PHPDzzkM/YTLkJViVUolnfd9Wf0kJ5jI8VO2UUL3CNyT+uG3RFN
+         icxQ==
+X-Gm-Message-State: APjAAAX/NJKCGI2G5wysWVdg7WKa5N/wC4H5TcbjehWYGTtdufkOwZkG
+        F+VZwPK9n8sIoVgIA0swaQaSU3QFR0OtCpqr59iMXUuc7sPP
+X-Google-Smtp-Source: APXvYqy4gnuW9DglMt9Nv5AKwlkZy11b+ks+bWryygfXZGvB358RnZVYhqmqQCuE1vMEAOYnZraT5Nq1r5j5+kRXmaxEwauzjbBP
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200226015606.ij7wn7emuj4bfkvn@google.com>
+X-Received: by 2002:a02:cd82:: with SMTP id l2mr2059450jap.103.1582695550630;
+ Tue, 25 Feb 2020 21:39:10 -0800 (PST)
+Date:   Tue, 25 Feb 2020 21:39:10 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000153fac059f740693@google.com>
+Subject: possible deadlock in cma_netdev_callback
+From:   syzbot <syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com>
+To:     chuck.lever@oracle.com, dledford@redhat.com, jgg@ziepe.ca,
+        leon@kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        parav@mellanox.com, syzkaller-bugs@googlegroups.com,
+        willy@infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 05:56:06PM -0800, Fangrui Song wrote:
-> > > Kees is working on a series to just be explicit about what sections
-> > > are ordered where, and what's discarded, which should better handle
-> > > incompatibilities between linkers in regards to orphan section
-> > > placement and "what does `*` mean."  Kees, that series can't come soon
-> > 
-> > So, with my series[1] applied, ld.bfd builds clean. With ld.lld, I get a
-> > TON of warnings, such as:
-> > 
-> > (.bss.rel.ro) is being placed in '.bss.rel.ro'
-> 
-> .bss.rel.ro (SHT_NOBITS) is lld specific. GNU ld does not have it. It is
-> currently used for copy relocations of symbols in read-only PT_LOAD
-> segments. If a relro section's statically relocated data is all zeros,
-> we can move the section to .bss.rel.ro
-> 
-> > (.iplt) is being placed in '.iplt'
-> > (.plt) is being placed in '.plt'
-> > (.rela.altinstr_aux) is being placed in '.rela.altinstr_aux'
-> > (.rela.altinstr_replacement) is being placed in
-> > '.rela.altinstr_replacement'
-> > (.rela.altinstructions) is being placed in '.rela.altinstructions'
-> > (.rela.apicdrivers) is being placed in '.rela.apicdrivers'
-> > (.rela__bug_table) is being placed in '.rela__bug_table'
-> > (.rela.con_initcall.init) is being placed in '.rela.init.data'
-> > (.rela.cpuidle.text) is being placed in '.rela.text'
-> > (.rela.data..cacheline_aligned) is being placed in '.rela.data'
-> > (.rela.data) is being placed in '.rela.data'
-> > (.rela.data..percpu) is being placed in '.rela.data..percpu'
-> > (.rela.data..percpu..page_aligned) is being placed in '.rela.data..percpu'
-> > ...
-> 
-> I need to figure out the exact GNU ld rule for input SHT_REL[A] retained
-> by --emit-relocs.
-> 
->   ld.bfd: warning: orphan section `.rela.meminit.text' from `arch/x86/kernel/head_64.o' being placed in section `.rela.dyn'
->   ld.bfd: warning: orphan section `.rela___ksymtab+__ctzsi2' from `arch/x86/kernel/head_64.o' being placed in section `.rela.dyn'
->   ld.bfd: warning: orphan section `.rela___ksymtab+__clzsi2' from `arch/x86/kernel/head_64.o' being placed in section `.rela.dyn'
->   ld.bfd: warning: orphan section `.rela___ksymtab+__clzdi2' from `arch/x86/kernel/head_64.o' being placed in section `.rela.dyn'
->   ld.bfd: warning: orphan section `.rela___ksymtab+__ctzdi2' from `arch/x86/kernel/head_64.o' being placed in section `.rela.dyn'
-> 
-> lld simply ignores such SHT_REL[A] when checking input section descriptions.
-> A .rela.foo relocating .foo will be named .rela.foobar if .foo is placed in .foobar
-> 
-> It makes sense for --orphan-handling= not to warn/error.
-> https://reviews.llvm.org/D75151
+Hello,
 
-Awesome! I commented on the review, but just to follow up, this cuts out
-all the .rela warnings.
+syzbot found the following crash on:
 
-> 
-> > But as you can see in the /DISCARD/, these (and all the others), should
-> > be getting caught:
-> > 
-> >         /DISCARD/ : {
-> >                 *(.eh_frame)
-> > +               *(.rela.*) *(.rela_*)
-> > +               *(.rel.*) *(.rel_*)
-> > +               *(.got) *(.got.*)
-> > +               *(.igot.*) *(.iplt)
-> >         }
-> > 
-> > I don't understand what's happening here. I haven't minimized this case
-> > nor opened an lld bug yet.
-> 
-> --orphan-handling was implemented per
-> https://bugs.llvm.org/show_bug.cgi?id=34946
-> It seems the reporter did not follow up after the feature was implemented.
-> Now we have the Linux kernel case...
-> Last December I encountered another case in my company.
-> 
-> It is pretty clear that this feature is useful and we should fix it :)
-> 
-> https://reviews.llvm.org/D75149
+HEAD commit:    6132c1d9 net: core: devlink.c: Hold devlink->lock from the..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=16978909e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3b8906eb6a7d6028
+dashboard link: https://syzkaller.appspot.com/bug?extid=55de90ab5f44172b0c90
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12808281e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=134ca6fde00000
 
-Also commented in the review; this removes the following:
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com
 
-... (.bss.rel.ro) is being placed in '.bss.rel.ro'
-... (.iplt) is being placed in '.iplt'
-... (.plt) is being placed in '.plt'
-... (.symtab_shndx) is being placed in '.symtab_shndx'
+iwpm_register_pid: Unable to send a nlmsg (client = 2)
+infiniband syz1: RDMA CMA: cma_listen_on_dev, error -98
+netlink: 'syz-executor639': attribute type 1 has an invalid length.
+8021q: adding VLAN 0 to HW filter on device bond1
+bond1: (slave gretap1): making interface the new active one
+======================================================
+WARNING: possible circular locking dependency detected
+5.6.0-rc2-syzkaller #0 Not tainted
+------------------------------------------------------
+syz-executor639/9689 is trying to acquire lock:
+ffffffff8a5d2a60 (lock#3){+.+.}, at: cma_netdev_callback+0xc6/0x380 drivers/infiniband/core/cma.c:4605
 
-I'm now only left with:
+but task is already holding lock:
+ffffffff8a74da00 (rtnl_mutex){+.+.}, at: rtnl_lock net/core/rtnetlink.c:72 [inline]
+ffffffff8a74da00 (rtnl_mutex){+.+.}, at: rtnetlink_rcv_msg+0x405/0xaf0 net/core/rtnetlink.c:5433
 
-ld.lld: warning: <internal>:(.symtab) is being placed in '.symtab'
-ld.lld: warning: <internal>:(.shstrtab) is being placed in '.shstrtab'
-ld.lld: warning: <internal>:(.strtab) is being placed in '.strtab'
+which lock already depends on the new lock.
 
-> > enough. ;) (I think it's intended to help "fine grain" (per function)
-> > KASLR).  More comments in the other thread.
-> 
-> > Actually, it's rather opposed to the FGKASLR series, as for that, I need
-> > some kind of linker script directive like this:
-> > 
-> > 	/PASSTHRU/ : {
-> > 		*(.text.*)
-> > 	}
-> > 
-> > Where "PASSTHRU" would create a 1-to-1 input-section to output-section
-> > with the same name, flags, etc.
-> 
-> /PASSTHRU/ sections are still handled as orphan sections?
 
-If PASSTHRU existed, I wouldn't want them reported as orphan sections
-(since they'd be chosen). This "section" would serve two purposes:
+the existing dependency chain (in reverse order) is:
 
-- remove the warning about being orphan
-- position the sections in a known location (FGKASLR needs this so that
-  it can know where the end of the all the .text.* sections actually
-  are. Right now, the correct result is effectively accidental[1].)
+-> #1 (rtnl_mutex){+.+.}:
+       __mutex_lock_common kernel/locking/mutex.c:956 [inline]
+       __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
+       mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1118
+       rtnl_lock+0x17/0x20 net/core/rtnetlink.c:72
+       siw_create_listen+0x329/0xed0 drivers/infiniband/sw/siw/siw_cm.c:1951
+       iw_cm_listen+0x16e/0x1f0 drivers/infiniband/core/iwcm.c:582
+       cma_iw_listen drivers/infiniband/core/cma.c:2450 [inline]
+       rdma_listen+0x613/0x970 drivers/infiniband/core/cma.c:3614
+       cma_listen_on_dev+0x530/0x6a0 drivers/infiniband/core/cma.c:2501
+       cma_add_one+0x6fe/0xbf0 drivers/infiniband/core/cma.c:4666
+       add_client_context+0x3dd/0x550 drivers/infiniband/core/device.c:681
+       enable_device_and_get+0x1df/0x3c0 drivers/infiniband/core/device.c:1316
+       ib_register_device drivers/infiniband/core/device.c:1382 [inline]
+       ib_register_device+0xa89/0xe40 drivers/infiniband/core/device.c:1343
+       siw_device_register drivers/infiniband/sw/siw/siw_main.c:70 [inline]
+       siw_newlink drivers/infiniband/sw/siw/siw_main.c:565 [inline]
+       siw_newlink+0xdef/0x1310 drivers/infiniband/sw/siw/siw_main.c:542
+       nldev_newlink+0x28a/0x430 drivers/infiniband/core/nldev.c:1538
+       rdma_nl_rcv_msg drivers/infiniband/core/netlink.c:195 [inline]
+       rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
+       rdma_nl_rcv+0x5d9/0x980 drivers/infiniband/core/netlink.c:259
+       netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+       netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1329
+       netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1918
+       sock_sendmsg_nosec net/socket.c:652 [inline]
+       sock_sendmsg+0xd7/0x130 net/socket.c:672
+       ____sys_sendmsg+0x753/0x880 net/socket.c:2343
+       ___sys_sendmsg+0x100/0x170 net/socket.c:2397
+       __sys_sendmsg+0x105/0x1d0 net/socket.c:2430
+       __do_sys_sendmsg net/socket.c:2439 [inline]
+       __se_sys_sendmsg net/socket.c:2437 [inline]
+       __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2437
+       do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+       entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-[1] https://lore.kernel.org/lkml/20200205223950.1212394-7-kristen@linux.intel.com/
+-> #0 (lock#3){+.+.}:
+       check_prev_add kernel/locking/lockdep.c:2475 [inline]
+       check_prevs_add kernel/locking/lockdep.c:2580 [inline]
+       validate_chain kernel/locking/lockdep.c:2970 [inline]
+       __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3954
+       lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
+       __mutex_lock_common kernel/locking/mutex.c:956 [inline]
+       __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
+       mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1118
+       cma_netdev_callback+0xc6/0x380 drivers/infiniband/core/cma.c:4605
+       notifier_call_chain+0xc2/0x230 kernel/notifier.c:83
+       __raw_notifier_call_chain kernel/notifier.c:361 [inline]
+       raw_notifier_call_chain+0x2e/0x40 kernel/notifier.c:368
+       call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+       call_netdevice_notifiers_info+0xba/0x130 net/core/dev.c:1933
+       call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+       call_netdevice_notifiers+0x79/0xa0 net/core/dev.c:1974
+       bond_change_active_slave+0x185b/0x2050 drivers/net/bonding/bond_main.c:944
+       bond_select_active_slave+0x276/0xae0 drivers/net/bonding/bond_main.c:986
+       bond_enslave+0x44ef/0x4af0 drivers/net/bonding/bond_main.c:1823
+       do_set_master net/core/rtnetlink.c:2468 [inline]
+       do_set_master+0x1dd/0x240 net/core/rtnetlink.c:2441
+       __rtnl_newlink+0x13a3/0x1790 net/core/rtnetlink.c:3346
+       rtnl_newlink+0x69/0xa0 net/core/rtnetlink.c:3377
+       rtnetlink_rcv_msg+0x45e/0xaf0 net/core/rtnetlink.c:5436
+       netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2478
+       rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5454
+       netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+       netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1329
+       netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1918
+       sock_sendmsg_nosec net/socket.c:652 [inline]
+       sock_sendmsg+0xd7/0x130 net/socket.c:672
+       ____sys_sendmsg+0x753/0x880 net/socket.c:2343
+       ___sys_sendmsg+0x100/0x170 net/socket.c:2397
+       __sys_sendmsg+0x105/0x1d0 net/socket.c:2430
+       __do_sys_sendmsg net/socket.c:2439 [inline]
+       __se_sys_sendmsg net/socket.c:2437 [inline]
+       __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2437
+       do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+       entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-> Do you restrict { } to input section descriptions, not output section
-> data (https://sourceware.org/binutils/docs/ld/Output-Section-Data.html#Output-Section-Data)?
-> or symbol assignments?
+other info that might help us debug this:
 
-I only imagine it being input section descriptions. (I imagine PASSTHRU
-being much like DISCARD -- it won't make sense to put output section
-data there either.)
+ Possible unsafe locking scenario:
 
-> You can ask https://sourceware.org/ml/binutils/2020-02/ whether
-> they'd like to accept the feature request:)
-> 
-> (My personal feeling is that I want to see more use cases to add the new
-> feature...)
+       CPU0                    CPU1
+       ----                    ----
+  lock(rtnl_mutex);
+                               lock(lock#3);
+                               lock(rtnl_mutex);
+  lock(lock#3);
 
-This is the only case I've got for this right now. If the "do not merge
-the orphan .text.* into .text" bug is fixed, then FGKASLR can continue
-to work "on accident", and nothing like PASSTHRU would be needed. :)
-In this case, I would have FGKASLR disable the orphan section warning,
-since it would depend on orphan handling.
+ *** DEADLOCK ***
 
-> > ld.bfd's handling of orphan sections named .text.* is to put them each
-> > as a separate output section, after the existing .text output section.
-> > 
-> > ld.lld's handling of orphan sections named .text.* is to put them into
-> > the .text output section.
-> 
-> Confirmed. lld can adapt. I need to do some homework...
+1 lock held by syz-executor639/9689:
+ #0: ffffffff8a74da00 (rtnl_mutex){+.+.}, at: rtnl_lock net/core/rtnetlink.c:72 [inline]
+ #0: ffffffff8a74da00 (rtnl_mutex){+.+.}, at: rtnetlink_rcv_msg+0x405/0xaf0 net/core/rtnetlink.c:5433
 
-Awesome. If it matches bfd, then that'll be sufficient:
+stack backtrace:
+CPU: 0 PID: 9689 Comm: syz-executor639 Not tainted 5.6.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ print_circular_bug.isra.0.cold+0x163/0x172 kernel/locking/lockdep.c:1684
+ check_noncircular+0x32e/0x3e0 kernel/locking/lockdep.c:1808
+ check_prev_add kernel/locking/lockdep.c:2475 [inline]
+ check_prevs_add kernel/locking/lockdep.c:2580 [inline]
+ validate_chain kernel/locking/lockdep.c:2970 [inline]
+ __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3954
+ lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
+ __mutex_lock_common kernel/locking/mutex.c:956 [inline]
+ __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
+ mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1118
+ cma_netdev_callback+0xc6/0x380 drivers/infiniband/core/cma.c:4605
+ notifier_call_chain+0xc2/0x230 kernel/notifier.c:83
+ __raw_notifier_call_chain kernel/notifier.c:361 [inline]
+ raw_notifier_call_chain+0x2e/0x40 kernel/notifier.c:368
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xba/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers+0x79/0xa0 net/core/dev.c:1974
+ bond_change_active_slave+0x185b/0x2050 drivers/net/bonding/bond_main.c:944
+ bond_select_active_slave+0x276/0xae0 drivers/net/bonding/bond_main.c:986
+ bond_enslave+0x44ef/0x4af0 drivers/net/bonding/bond_main.c:1823
+ do_set_master net/core/rtnetlink.c:2468 [inline]
+ do_set_master+0x1dd/0x240 net/core/rtnetlink.c:2441
+ __rtnl_newlink+0x13a3/0x1790 net/core/rtnetlink.c:3346
+ rtnl_newlink+0x69/0xa0 net/core/rtnetlink.c:3377
+ rtnetlink_rcv_msg+0x45e/0xaf0 net/core/rtnetlink.c:5436
+ netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2478
+ rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5454
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:672
+ ____sys_sendmsg+0x753/0x880 net/socket.c:2343
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2397
+ __sys_sendmsg+0x105/0x1d0 net/socket.c:2430
+ __do_sys_sendmsg net/socket.c:2439 [inline]
+ __se_sys_sendmsg net/socket.c:2437 [inline]
+ __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2437
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x440509
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fff80af47a8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440509
+RDX: 0000000000000000 RSI: 00000000200000c0 RDI: 0000000000000004
+RBP: 00000000006ca018 R08: 00000000004002c8 R09: 00000000004002c8
+R10: 00000000004002c8 R11: 0000000000000246 R12: 0000000000401d90
+R13: 0000000000401e20 R14: 0000000000000000 R15: 0000000000000000
 
-https://sourceware.org/binutils/docs/ld/Orphan-Sections.html
 
-Namely:
-	"If there is no output section with a matching name then new
-	 output sections will be created."
-and:
-	"... the linker attempts to place orphan sections after sections
-	 of the same attribute ..."
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-So .text.blah would end up in .text.blah but after .text (since they're
-both code).
-
-(And as noted earlier, --unique support is needed too.)
-
-> > For FGKASLR (as it is currently implemented[2]), the sections need to be
-> > individually named output sections (as bfd does it). *However*, with the
-> > "warn on orphans" patch, FGKASLR's intentional orphaning will backfire
-> > (I guess the warning could be turned off, but I'd like lld to handle
-> > FGKASLR at some point.)
-> > 
-> > Note that cheating and doing the 1-to-1 mapping by handy with a 40,000
-> > entry linker script ... made ld.lld take about 15 minutes to do the
-> > final link. :(
-> 
-> Placing N orphan sections requires O(N^2) time (in both GNU ld and lld) :(
-
-Owchy. :)
-
-> [...]
-> Now I learned the term FGKASLR... I need to do some homework.
-
-Thanks for looking into this! It'll be really nice to have the orphan
-section warnings working in the kernel. And getting the ground work for
-FGKASLR ready will be nice!
-
-Kristen, can I convince you that FG stands for function-granular
-instead of fine-grain? :)
-
--- 
-Kees Cook
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
