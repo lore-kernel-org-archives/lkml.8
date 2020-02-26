@@ -2,74 +2,102 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B207AC4BA09
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF0CC4BA06
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8293B20732
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 281AD24650
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 01:10:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lF3nhPaU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Bt1I3Fe4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729707AbgBZBI0 (ORCPT
+        id S1729683AbgBZBKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 20:08:26 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:34150 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729170AbgBZBI0 (ORCPT
+        Tue, 25 Feb 2020 20:10:50 -0500
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:57148 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729170AbgBZBKu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 20:08:26 -0500
-Received: by mail-pj1-f67.google.com with SMTP id f2so1578575pjq.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 17:08:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GSRxDRR3QPnD6JuQNlJ6sV9ISRyrmt4YboW0nA2j284=;
-        b=lF3nhPaUVWXf5kzNLk6jWyIu9faR63oYBkMn1CEZg5RkrrCkY7zQKFzQXCVYObbbfN
-         54LXPq0209n1zs7QAix/dwsjXZrPlzIRrDH6tZtrXPbae0rXwPzQrXJD/RjUxf5QvAdb
-         FyrA9zC1M/oCxnSStu/89EvYdtyyQL3aSWOiR3LYITgdXuK7aMWE93NRnHZfqIVoiopo
-         JWt1ViBUMpQyIUvFNzz7zr4YyemDhWQ4HKE8GCnpguWFlhW+ggilnxLLQP09nl+j70cg
-         8316ccpDQrOi5Bf1XnKBSWLAeDPDqyD5x+eqJ8XNU20QP3AkMjQ9l52QKUzSz+ctyyg7
-         2OHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GSRxDRR3QPnD6JuQNlJ6sV9ISRyrmt4YboW0nA2j284=;
-        b=EtSA+TqrkUaEw2qjAuvbN/wX9jPHomi47b0t1PFQxqE7W7IGdChRhQeAoADvh2XzQq
-         7Uu038XBDqPInK85ZEuUtBFc/JahTkK+l6iYokpTXVFQS6NeucyxmKJ5DJtMWAWy8kUf
-         xrA2sfYaqihOfZEWd7Dy/fEjTARxVPFoRjS8oAsYq3A89o4qJMPuaE1z3cyvDMCqJIjz
-         sAgjMqaWcDyoipxzc1jOENRGnFrfOVaA8ofvQaFO+bz3Yb6I6qUiAH6Ma+PlDiz+oQ7h
-         064oIu7VM4GXK9zjylRrGrHq5aUaNbFUdSyF0c6uNvJ9fHTGd9HKweQhW1G6TD5ZaLJR
-         DRbA==
-X-Gm-Message-State: APjAAAXLzfinl/v3W83R/li+pYwoz3633lBsooo8ekinCiDV1yTXDpCm
-        wsC337WIdbMbXlUG784OzpM=
-X-Google-Smtp-Source: APXvYqyHJow8kKav0oGHIR31yE3aVuvG9BkoEd02oVkQ/clFawVQlD8gy4qC/7PX43MlFAOl5OoTMQ==
-X-Received: by 2002:a17:902:9342:: with SMTP id g2mr1240760plp.339.1582679304720;
-        Tue, 25 Feb 2020 17:08:24 -0800 (PST)
-Received: from D19-03074.biamp.com (tel3187236.lnk.telstra.net. [203.54.172.54])
-        by smtp.gmail.com with ESMTPSA id w18sm296386pfq.167.2020.02.25.17.08.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Feb 2020 17:08:24 -0800 (PST)
-From:   Shreyas Joshi <shreyasjoshi15@gmail.com>
-X-Google-Original-From: Shreyas Joshi <shreyas.joshi@biamp.com>
-To:     lee.jones@linaro.org, Support.Opensource@diasemi.com,
-        shreyasjoshi15@gmail.com, Adam.Thomson.Opensource@diasemi.com,
-        linus.walleij@linaro.org
-Cc:     linux-kernel@vger.kernel.org,
-        Shreyas Joshi <shreyas.joshi@biamp.com>
-Subject: [PATCH V6] mfd: da9062: Add support for interrupt polarity defined in device tree
-Date:   Wed, 26 Feb 2020 11:07:22 +1000
-Message-Id: <20200226010722.2042-1-shreyas.joshi@biamp.com>
-X-Mailer: git-send-email 2.23.0.windows.1
-In-Reply-To: <AM6PR10MB22635CBCBF559AEB9A5C2BFF80120@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
-References: <AM6PR10MB22635CBCBF559AEB9A5C2BFF80120@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+        Tue, 25 Feb 2020 20:10:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1582679450; x=1614215450;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=bpfOWeCDP3qbnbScpAF1BlT5s86+7Hl4XNmrh2YhN1Y=;
+  b=Bt1I3Fe4M2f/kWPpK72m3Cy5FpiwMrK/2nXwb8UvhQxJpiGow/udyNx1
+   DQCi/WmGPSlNluco+JKQaIrpGQH3wARsP8yQd34xEyl9fFUgvdnf3dQfb
+   eyVK1zgJqZPtFRUFBSd4js5Gr2Pf66p4pqx2Q96ekCCEShNEGWBF8MiIK
+   TrtEi6kHTP/2ZviimQKZRaQFl/Y2/4A6rPIWZanLqZXf27Fritm2z5Hb3
+   2bz4pi8HB0Kpi6iI+6S7Wdv4CPq7OPtUg9EbkvfWV8KVOKNhihcWX2E/W
+   dihHi3iFx+Eq2CfuJxUUUV3ZwR7Muy0RpyJZKPo+cx5HeOpSeaoVNSmZG
+   Q==;
+IronPort-SDR: bRi4BGtX/utCv7WcTWW4Z5pRnFgcz6YliGyvcjxTfFXWE44sLU1tgtgGAKNRjO5wbHiM7DuDme
+ u0YV8muX+wn1IwjmDSoXdgNl7WxxcELuJoWY8BqPbthl8lxhqSC/YDn1XvxjPdzGyKVjThizNm
+ 0932pGPQtkc2b24IqHhIidKpk4MK7z0Qso/RWVwgh3tVESuK5Ni9VPzUPBoH/XQy/3qzmkGNu7
+ PJaGqvCuSJUMFBS4GMS1fWasoaM1K4bmcmTTAly9c/U0blk1KP7/RtmfvLrKB0qwlxfr8NIMWB
+ RgA=
+X-IronPort-AV: E=Sophos;i="5.70,486,1574092800"; 
+   d="scan'208";a="131266498"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 26 Feb 2020 09:10:49 +0800
+IronPort-SDR: 7+j3amOod8YdN21IREgwZ5iSIsxHMhMv/aFUlDS8NDLTHxG4vk//fkrauf7aNdA0IU+StWryCA
+ +WJOhxG4QTRW18gxr1SH+xl1e/OdFP6MgOn2+VKeFc/+rWJd50srIreOSr4l9e1W2IScoZo5bf
+ dI7jmxHu4urfDkCJxBikjyrbNEsqyX/ZGBcf9WLgqvwQAPc/T1uABPIqdnVPbZVk2mOdntXTxl
+ T7NkuecZKbMZgJpeZqQjmLKwcdogpBA6OU8dkQsDu0uxG5Ml1+3CknyGtni+mQNmC0Iw1GwpDv
+ ECY4NW4sOO4PpIOOu+0tRYCy
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 17:03:15 -0800
+IronPort-SDR: S3s5fU4WRnyhz3CFMegfsbMTVbTiYo7e+DJDkRNBhGN+af39g/4653NJ55fbwl3ZwLTEzxeGQ6
+ 0y7u6IZK+LHZkkSvPjJnRkL1yQqHW/4zI49n1HCZC7R4N3Fc/NayLWAwkerOQ42NACl7mypfNH
+ ZOyi4Vbm8bSpydzxyBVBp5DQaeBB1MMoLtc1FZ0G1R5UeXfaxKMlmpFEXxw1C8kyajrZSPdg8C
+ GkY1aoNnADAN4NWnsJcQ0zgtxF1aPzxDBs1DMosaiomiu4NU1qr3nOAsuYJlcVuxgw9vvf7gO3
+ OlM=
+WDCIronportException: Internal
+Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
+  by uls-op-cesaip02.wdc.com with ESMTP; 25 Feb 2020 17:10:47 -0800
+From:   Atish Patra <atish.patra@wdc.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@suse.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-efi@vger.kernel.org, linux-riscv@lists.infradead.org,
+        Mao Han <han_mao@c-sky.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Alexander Graf <agraf@csgraf.de>,
+        "leif@nuviainc.com" <leif@nuviainc.com>,
+        "Chang, Abner (HPS SW/FW Technologist)" <abner.chang@hpe.com>,
+        daniel.schaefer@hpe.com
+Subject: [RFC PATCH 1/5] efi: Move arm-stub to a common file
+Date:   Tue, 25 Feb 2020 17:10:33 -0800
+Message-Id: <20200226011037.7179-2-atish.patra@wdc.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20200226011037.7179-1-atish.patra@wdc.com>
+References: <20200226011037.7179-1-atish.patra@wdc.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,124 +105,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The da9062 interrupt handler cannot necessarily be low active.
-Add a function to configure the interrupt type based on what is defined in the device tree.
-The allowable interrupt type is either low or high level trigger.
+Most of the arm-stub code is written in an architecture independent manner.
+As a result, RISC-V can reuse most of the arm-stub code.
 
-Signed-off-by: Shreyas Joshi <shreyas.joshi@biamp.com>
+Rename the arm-stub.c to efi-stub.c so that ARM, ARM64 and RISC-V can use it.
+This patch doesn't introduce any functional changes.
+
+Signed-off-by: Atish Patra <atish.patra@wdc.com>
 ---
+ arch/arm/Kconfig                                     |  2 +-
+ arch/arm64/Kconfig                                   |  2 +-
+ drivers/firmware/efi/Kconfig                         |  6 +++---
+ drivers/firmware/efi/libstub/Makefile                | 12 ++++++------
+ .../firmware/efi/libstub/{arm-stub.c => efi-stub.c}  |  7 ++++++-
+ 5 files changed, 17 insertions(+), 12 deletions(-)
+ rename drivers/firmware/efi/libstub/{arm-stub.c => efi-stub.c} (98%)
 
-V6:
-  Changed regmap_reg_range to exclude DA9062AA_CONFIG_B for writeable
-  Added regmap_reg_range DA9062AA_CONFIG_A for readable
-
-V5:
-  Added #define for DA9062_IRQ_HIGH and DA9062_IRQ_LOW 
-
-V4:
-  Changed return code to EINVAL rather than EIO for incorrect irq type
-  Corrected regmap_update_bits usage
-  
-V3:
-  Changed regmap_write to regmap_update_bits
-
-V2:
-  Added function to update the polarity of CONFIG_A IRQ_TYPE
-  
- drivers/mfd/da9062-core.c | 44 ++++++++++++++++++++++++++++++++++++---
- 1 file changed, 41 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/mfd/da9062-core.c b/drivers/mfd/da9062-core.c
-index 419c73533401..fc30726e2e27 100644
---- a/drivers/mfd/da9062-core.c
-+++ b/drivers/mfd/da9062-core.c
-@@ -21,6 +21,9 @@
- #define	DA9062_REG_EVENT_B_OFFSET	1
- #define	DA9062_REG_EVENT_C_OFFSET	2
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 97864aabc2a6..9931fea06076 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -1955,7 +1955,7 @@ config EFI
+ 	select UCS2_STRING
+ 	select EFI_PARAMS_FROM_FDT
+ 	select EFI_STUB
+-	select EFI_ARMSTUB
++	select EFI_GENERIC_ARCH_STUB
+ 	select EFI_RUNTIME_WRAPPERS
+ 	---help---
+ 	  This option provides support for runtime services provided
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 0b30e884e088..ae776d8ef2f9 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -1720,7 +1720,7 @@ config EFI
+ 	select EFI_PARAMS_FROM_FDT
+ 	select EFI_RUNTIME_WRAPPERS
+ 	select EFI_STUB
+-	select EFI_ARMSTUB
++	select EFI_GENERIC_ARCH_STUB
+ 	default y
+ 	help
+ 	  This option provides support for runtime services provided
+diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
+index ecc83e2f032c..1bcedb7812da 100644
+--- a/drivers/firmware/efi/Kconfig
++++ b/drivers/firmware/efi/Kconfig
+@@ -106,12 +106,12 @@ config EFI_PARAMS_FROM_FDT
+ config EFI_RUNTIME_WRAPPERS
+ 	bool
  
-+#define	DA9062_IRQ_LOW	0
-+#define	DA9062_IRQ_HIGH	1
-+
- static struct regmap_irq da9061_irqs[] = {
- 	/* EVENT A */
- 	[DA9061_IRQ_ONKEY] = {
-@@ -369,6 +372,33 @@ static int da9062_get_device_type(struct da9062 *chip)
- 	return ret;
- }
+-config EFI_ARMSTUB
++config EFI_GENERIC_ARCH_STUB
+ 	bool
  
-+static u32 da9062_configure_irq_type(struct da9062 *chip, int irq, u32 *trigger)
-+{
-+	u32 irq_type = 0;
-+	struct irq_data *irq_data = irq_get_irq_data(irq);
-+
-+	if (!irq_data) {
-+		dev_err(chip->dev, "Invalid IRQ: %d\n", irq);
-+		return -EINVAL;
-+	}
-+	*trigger = irqd_get_trigger_type(irq_data);
-+
-+	switch (*trigger) {
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		irq_type = DA9062_IRQ_HIGH;
-+		break;
-+	case IRQ_TYPE_LEVEL_LOW:
-+		irq_type = DA9062_IRQ_LOW;
-+		break;
-+	default:
-+		dev_warn(chip->dev, "Unsupported IRQ type: %d\n", *trigger);
-+		return -EINVAL;
-+	}
-+	return regmap_update_bits(chip->regmap, DA9062AA_CONFIG_A,
-+			DA9062AA_IRQ_TYPE_MASK,
-+			irq_type << DA9062AA_IRQ_TYPE_SHIFT);
-+}
-+
- static const struct regmap_range da9061_aa_readable_ranges[] = {
- 	regmap_reg_range(DA9062AA_PAGE_CON, DA9062AA_STATUS_B),
- 	regmap_reg_range(DA9062AA_STATUS_D, DA9062AA_EVENT_C),
-@@ -388,6 +418,7 @@ static const struct regmap_range da9061_aa_readable_ranges[] = {
- 	regmap_reg_range(DA9062AA_VBUCK1_A, DA9062AA_VBUCK4_A),
- 	regmap_reg_range(DA9062AA_VBUCK3_A, DA9062AA_VBUCK3_A),
- 	regmap_reg_range(DA9062AA_VLDO1_A, DA9062AA_VLDO4_A),
-+	regmap_reg_range(DA9062AA_CONFIG_A, DA9062AA_CONFIG_A),
- 	regmap_reg_range(DA9062AA_VBUCK1_B, DA9062AA_VBUCK4_B),
- 	regmap_reg_range(DA9062AA_VBUCK3_B, DA9062AA_VBUCK3_B),
- 	regmap_reg_range(DA9062AA_VLDO1_B, DA9062AA_VLDO4_B),
-@@ -417,6 +448,7 @@ static const struct regmap_range da9061_aa_writeable_ranges[] = {
- 	regmap_reg_range(DA9062AA_VBUCK1_A, DA9062AA_VBUCK4_A),
- 	regmap_reg_range(DA9062AA_VBUCK3_A, DA9062AA_VBUCK3_A),
- 	regmap_reg_range(DA9062AA_VLDO1_A, DA9062AA_VLDO4_A),
-+	regmap_reg_range(DA9062AA_CONFIG_A, DA9062AA_CONFIG_A),
- 	regmap_reg_range(DA9062AA_VBUCK1_B, DA9062AA_VBUCK4_B),
- 	regmap_reg_range(DA9062AA_VBUCK3_B, DA9062AA_VBUCK3_B),
- 	regmap_reg_range(DA9062AA_VLDO1_B, DA9062AA_VLDO4_B),
-@@ -596,6 +628,7 @@ static int da9062_i2c_probe(struct i2c_client *i2c,
- 	const struct regmap_irq_chip *irq_chip;
- 	const struct regmap_config *config;
- 	int cell_num;
-+	u32 trigger_type = 0;
- 	int ret;
+-config EFI_ARMSTUB_DTB_LOADER
++config EFI_STUB_DTB_LOADER
+ 	bool "Enable the DTB loader"
+-	depends on EFI_ARMSTUB
++	depends on EFI_GENERIC_ARCH_STUB
+ 	default y
+ 	help
+ 	  Select this config option to add support for the dtb= command
+diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+index 4d6246c6f651..2c5b76787126 100644
+--- a/drivers/firmware/efi/libstub/Makefile
++++ b/drivers/firmware/efi/libstub/Makefile
+@@ -22,7 +22,7 @@ cflags-$(CONFIG_ARM)		:= $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
+ 				   -fno-builtin -fpic \
+ 				   $(call cc-option,-mno-single-pic-base)
  
- 	chip = devm_kzalloc(&i2c->dev, sizeof(*chip), GFP_KERNEL);
-@@ -654,10 +687,15 @@ static int da9062_i2c_probe(struct i2c_client *i2c,
- 	if (ret)
- 		return ret;
+-cflags-$(CONFIG_EFI_ARMSTUB)	+= -I$(srctree)/scripts/dtc/libfdt
++cflags-$(CONFIG_EFI_GENERIC_ARCH_STUB)	+= -I$(srctree)/scripts/dtc/libfdt
  
-+	ret = da9062_configure_irq_type(chip, i2c->irq, &trigger_type);
-+	if (ret < 0) {
-+		dev_err(chip->dev, "Failed to configure IRQ type\n");
-+		return ret;
-+	}
+ KBUILD_CFLAGS			:= $(cflags-y) -DDISABLE_BRANCH_PROFILING \
+ 				   -include $(srctree)/drivers/firmware/efi/libstub/hidden.h \
+@@ -44,13 +44,13 @@ lib-y				:= efi-stub-helper.o gop.o secureboot.o tpm.o \
+ 				   skip_spaces.o lib-cmdline.o lib-ctype.o
+ 
+ # include the stub's generic dependencies from lib/ when building for ARM/arm64
+-arm-deps-y := fdt_rw.c fdt_ro.c fdt_wip.c fdt.c fdt_empty_tree.c fdt_sw.c
++efi-deps-y := fdt_rw.c fdt_ro.c fdt_wip.c fdt.c fdt_empty_tree.c fdt_sw.c
+ 
+ $(obj)/lib-%.o: $(srctree)/lib/%.c FORCE
+ 	$(call if_changed_rule,cc_o_c)
+ 
+-lib-$(CONFIG_EFI_ARMSTUB)	+= arm-stub.o fdt.o string.o \
+-				   $(patsubst %.c,lib-%.o,$(arm-deps-y))
++lib-$(CONFIG_EFI_GENERIC_ARCH_STUB)		+= efi-stub.o fdt.o string.o \
++				   $(patsubst %.c,lib-%.o,$(efi-deps-y))
+ 
+ lib-$(CONFIG_ARM)		+= arm32-stub.o
+ lib-$(CONFIG_ARM64)		+= arm64-stub.o
+@@ -72,8 +72,8 @@ CFLAGS_arm64-stub.o		:= -DTEXT_OFFSET=$(TEXT_OFFSET)
+ # a verification pass to see if any absolute relocations exist in any of the
+ # object files.
+ #
+-extra-$(CONFIG_EFI_ARMSTUB)	:= $(lib-y)
+-lib-$(CONFIG_EFI_ARMSTUB)	:= $(patsubst %.o,%.stub.o,$(lib-y))
++extra-$(CONFIG_EFI_GENERIC_ARCH_STUB)	:= $(lib-y)
++lib-$(CONFIG_EFI_GENERIC_ARCH_STUB)	:= $(patsubst %.o,%.stub.o,$(lib-y))
+ 
+ STUBCOPY_FLAGS-$(CONFIG_ARM64)	+= --prefix-alloc-sections=.init \
+ 				   --prefix-symbols=__efistub_
+diff --git a/drivers/firmware/efi/libstub/arm-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
+similarity index 98%
+rename from drivers/firmware/efi/libstub/arm-stub.c
+rename to drivers/firmware/efi/libstub/efi-stub.c
+index 13559c7e6643..b87c3f70430c 100644
+--- a/drivers/firmware/efi/libstub/arm-stub.c
++++ b/drivers/firmware/efi/libstub/efi-stub.c
+@@ -15,6 +15,7 @@
+ 
+ #include "efistub.h"
+ 
++#if IS_ENABLED(CONFIG_ARM64) || IS_ENABLED(CONFIG_ARM)
+ /*
+  * This is the base address at which to start allocating virtual memory ranges
+  * for UEFI Runtime Services. This is in the low TTBR0 range so that we can use
+@@ -27,6 +28,10 @@
+  * entire footprint of the UEFI runtime services memory regions)
+  */
+ #define EFI_RT_VIRTUAL_BASE	SZ_512M
++#else
++#define EFI_RT_VIRTUAL_BASE	SZ_2G
++#endif
 +
- 	ret = regmap_add_irq_chip(chip->regmap, i2c->irq,
--			IRQF_TRIGGER_LOW | IRQF_ONESHOT | IRQF_SHARED,
--			-1, irq_chip,
--			&chip->regmap_irq);
-+			trigger_type | IRQF_SHARED | IRQF_ONESHOT,
-+			-1, irq_chip, &chip->regmap_irq);
- 	if (ret) {
- 		dev_err(chip->dev, "Failed to request IRQ %d: %d\n",
- 			i2c->irq, ret);
+ #define EFI_RT_VIRTUAL_SIZE	SZ_512M
+ 
+ #ifdef CONFIG_ARM64
+@@ -243,7 +248,7 @@ efi_status_t efi_entry(efi_handle_t handle, efi_system_table_t *sys_table_arg)
+ 	 * 'dtb=' unless UEFI Secure Boot is disabled.  We assume that secure
+ 	 * boot is enabled if we can't determine its state.
+ 	 */
+-	if (!IS_ENABLED(CONFIG_EFI_ARMSTUB_DTB_LOADER) ||
++	if (!IS_ENABLED(CONFIG_EFI_STUB_DTB_LOADER) ||
+ 	     secure_boot != efi_secureboot_mode_disabled) {
+ 		if (strstr(cmdline_ptr, "dtb="))
+ 			pr_efi("Ignoring DTB from command line.\n");
 -- 
-2.20.1
+2.24.0
 
