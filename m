@@ -2,103 +2,143 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23BA5C4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD76C4BA0A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAD952084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:31:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z+L1wubO"
+	by mail.kernel.org (Postfix) with ESMTP id 9694421D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:37:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727252AbgBZHbg (ORCPT
+        id S1727307AbgBZHhL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 02:31:36 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:32997 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726903AbgBZHbg (ORCPT
+        Wed, 26 Feb 2020 02:37:11 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:48055 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726823AbgBZHhK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 02:31:36 -0500
-Received: by mail-wr1-f65.google.com with SMTP id u6so1682168wrt.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 23:31:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=hxZUYP0cQ4s+D1GPGSIg13NXENyBceeLiQgMnelW0Co=;
-        b=Z+L1wubOJ3gGRnqhuT1ZwDooxjKXaCTM3VWsZWLORPJqa9xxtrRYrmREYRwCw2YgO8
-         HKl4+knUWCmhZWZozBrcMIJxyqPx5GGSKZnevRzh1xx0OnU/NP6lHxYJfz5lWO3sNl50
-         iCRv3J5KH6YTeU5Jc1PD1pzvs4WdjkRnoRVGoOXrX1eH4VtS+U69d210rHLWlJB9C4wQ
-         B522/8AkfM69ES4+RnCqMnsj+cefCm9/rN54vriduVWNm+Iro0L+qHn63iB2Y2WutZyr
-         PCzo0LYEIiYvMJ4ZOsuGTEbSHq3w9FkXCz6rM11iGmi05xhHj526rEq3R+XF8Vw35qkN
-         XvWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hxZUYP0cQ4s+D1GPGSIg13NXENyBceeLiQgMnelW0Co=;
-        b=sG5COZsDkoUfSr4QVGcNRAsKrd87M4lb2P0p9cqZX0jDzqX0PO17ay3HyJEcYvENTw
-         ZoasROn2/oYoWbKxEYl1d0+g5RIAWNmT8ocUb+mEW1Ucklpqp/RPn3nclESQE7CZ7Lw1
-         IAS9U0xEtgi6C+XHC+GkET5ZoVKw3HB4y9oyuLusCemHsiUJGT3vNj5Ecd5OLhxqot3E
-         ipwjFjAMNDPRbr4sQ7qTAG7uFVx+zdJ4JSoMATMk2DP5GCI3/o/TaKBduXvdd0bXuf0E
-         HeXNmrm0tdol6zLP/A9/8lBzDtXhCf9tLqOpTlhCCAbL25dyT2jaitbgEnGZx5uAsIMF
-         GSBQ==
-X-Gm-Message-State: APjAAAUJDsH5NxodJf7IATN5dthtiK6t0cmSJZI39jhrJoafJ32KwKRE
-        SNrMUDKcamHEEVFdSNHkAgpQQw==
-X-Google-Smtp-Source: APXvYqymA4NRK8kSBnwzL1y5IBNFVoBdWsFFIcv2KQ0MszGN1eA/UpfEau7j9Zkxfu5RLu4gn4+TSw==
-X-Received: by 2002:adf:e884:: with SMTP id d4mr3961692wrm.12.1582702293931;
-        Tue, 25 Feb 2020 23:31:33 -0800 (PST)
-Received: from myrica ([2001:171b:c9a8:fbc0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id t187sm1820680wmt.25.2020.02.25.23.31.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 23:31:33 -0800 (PST)
-Date:   Wed, 26 Feb 2020 08:31:27 +0100
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>
-Subject: Re: [PATCH 2/2] iommu/vt-d: Replace intel SVM APIs with generic SVA
- APIs
-Message-ID: <20200226073127.GA438595@myrica>
-References: <1582586797-61697-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1582586797-61697-4-git-send-email-jacob.jun.pan@linux.intel.com>
- <20200225191034.GA29045@infradead.org>
+        Wed, 26 Feb 2020 02:37:10 -0500
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1j6rFi-0003lK-1n; Wed, 26 Feb 2020 08:37:06 +0100
+Received: from [IPv6:2a03:f580:87bc:d400:6ccf:3365:1a9c:55ad] (unknown [IPv6:2a03:f580:87bc:d400:6ccf:3365:1a9c:55ad])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits)
+         client-signature RSA-PSS (4096 bits))
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id 4EDEB4C0EEF;
+        Wed, 26 Feb 2020 07:37:04 +0000 (UTC)
+Subject: Re: [PATCH] can: mcp251x: convert to half-duplex SPI
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        linux-can@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>,
+        =?UTF-8?Q?Timo_Schl=c3=bc=c3=9fler?= <schluessler@krause.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <1582655734-20890-1-git-send-email-tharvey@gateworks.com>
+ <0ac77abd-0df5-e437-ea46-f6c77f59b81c@pengutronix.de>
+ <CAJ+vNU3vk92_1UnrYH72QgD3-q9Oy9As=jCiup42jzx_2LG9FA@mail.gmail.com>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
+ zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
+ QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
+ 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
+ Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
+ XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
+ nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
+ Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
+ eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
+ kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
+ ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
+ CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
+ iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
+ Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
+ Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
+ tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
+ yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
+ BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
+ mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
+ 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
+ Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
+ 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
+Message-ID: <0b351fe3-8fe9-572f-fd85-e2aed22873e3@pengutronix.de>
+Date:   Wed, 26 Feb 2020 08:37:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225191034.GA29045@infradead.org>
+In-Reply-To: <CAJ+vNU3vk92_1UnrYH72QgD3-q9Oy9As=jCiup42jzx_2LG9FA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 11:10:34AM -0800, Christoph Hellwig wrote:
-> On Mon, Feb 24, 2020 at 03:26:37PM -0800, Jacob Pan wrote:
-> > This patch is an initial step to replace Intel SVM code with the
-> > following IOMMU SVA ops:
-> > intel_svm_bind_mm() => iommu_sva_bind_device()
-> > intel_svm_unbind_mm() => iommu_sva_unbind_device()
-> > intel_svm_is_pasid_valid() => iommu_sva_get_pasid()
-> 
-> How did either set APIs end up being added to the kernel without users
-> to start with?
-> 
-> Please remove both the old intel and the iommu ones given that neither
-> has any users.
+On 2/25/20 11:25 PM, Tim Harvey wrote:
+>> On 2/25/20 7:35 PM, Tim Harvey wrote:
+>>> Some SPI host controllers such as the Cavium Thunder do not support
+>>> full-duplex SPI. Using half-duplex transfers allows the driver to work
+>>> with those host controllers.
 
-The hisilicon crypto accelerator will be using the new API in v5.7
-https://lore.kernel.org/linux-iommu/1581407665-13504-1-git-send-email-zhangfei.gao@linaro.org/
+Hmmm, at least none of the spi-cavium*.c have HALF_DUPLEX set....
 
-Thanks,
-Jean
+I only find these ones:
+> drivers/spi/spi-falcon.c:404:   master->flags = SPI_MASTER_HALF_DUPLEX;
+> drivers/spi/spi-lp8841-rtc.c:194:       master->flags = SPI_MASTER_HALF_DUPLEX;
+> drivers/spi/spi-mt7621.c:360:   master->flags = SPI_CONTROLLER_HALF_DUPLEX;
+> drivers/spi/spi-mxs.c:576:      master->flags = SPI_MASTER_HALF_DUPLEX;
+> drivers/spi/spi-omap-uwire.c:490:       master->flags = SPI_MASTER_HALF_DUPLEX;
+> drivers/spi/spi-pic32-sqi.c:651:        master->flags           = SPI_MASTER_HALF_DUPLEX;
+> drivers/spi/spi-pl022.c:1714:                           SSP_MICROWIRE_CHANNEL_HALF_DUPLEX)) {
+> drivers/spi/spi-qcom-qspi.c:478:        master->flags = SPI_MASTER_HALF_DUPLEX;
+> drivers/spi/spi-sprd-adi.c:521: ctlr->flags = SPI_MASTER_HALF_DUPLEX;
+> drivers/spi/spi-stm32.c:160:#define STM32H7_SPI_HALF_DUPLEX             3
+> drivers/spi/spi-stm32.c:1469:           mode = STM32H7_SPI_HALF_DUPLEX;
+> drivers/spi/spi-stm32.c:1472:           mode = STM32H7_SPI_HALF_DUPLEX;
+> drivers/spi/spi-ti-qspi.c:758:  master->flags = SPI_MASTER_HALF_DUPLEX;
+> drivers/spi/spi-xcomm.c:222:    master->flags = SPI_MASTER_HALF_DUPLEX;
+
+>> There are several transfers left in the driver, where both rx_buf and
+>> tx_buf are set. How does your host controller driver know which one to
+>> handle?
+
+I'm trying to answer my question:
+I think the spi host controller sets SPI_MASTER_HALF_DUPLEX if it only
+supports half duplex and the spi framework checks that only either TX or
+RX is set during one transfer.
+
+> Your right... there is the mcp251x_hw_rx_frame() call that also uses
+> spi_rx_buf after a synchronous transfer (I didn't see any others).
+> I'll look at this again.
+
+Have you hardware to test your changes? I think the SPI framework would
+return an -EINVAL in that case....though the return value is sometimes
+not checked by the driver :/
+
+> In general is it an ok approach to switch the driver to half-duplex
+> for this issue without the need of complicating things with a
+> module/dt param?
+
+AFAICS the chip doesn't do real full duplex. It either send or receives
+data at the same time. With splitting one pseudo full duplex transfer
+into two half duplex transfers brings some minor overhead, but I think
+that's hardly measurable.
+
+Marc
+
+-- 
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
