@@ -2,124 +2,109 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B46FC4BA12
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1F0C4BA10
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DB102467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46BBC2468C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:41:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582724515;
+	bh=CFivbeDC16Vex/a/sIDrC01sS730JjaXfcD6K0v8Wec=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=FZ2OiwJPvmZw8yADrEeoSP6i+8o5vmUpUpYMxRdRowsbgXeEOgTVRmPJocStEl5I/
+	 uqQfgvkB1DSxFNXdZ0uLIytX7L3txchiB+aGhOrPFPW2yAzQa/MiKhY1qTKFfffZ2G
+	 1SDJIpvSIfltNjpxHi4axh0yyndbay53Om2PmwSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727520AbgBZNlo (ORCPT
+        id S1727554AbgBZNly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 08:41:44 -0500
-Received: from relay.sw.ru ([185.231.240.75]:44736 "EHLO relay.sw.ru"
+        Wed, 26 Feb 2020 08:41:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726926AbgBZNlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 08:41:24 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104] helo=localhost.localdomain)
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1j6ww2-0006rb-RR; Wed, 26 Feb 2020 16:41:11 +0300
-Subject: [PATCH RFC 4/5] ext4: Prepare ext4_mb_discard_preallocations() for
- handling EXT4_MB_HINT_GOAL_ONLY
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-To:     tytso@mit.edu, viro@zeniv.linux.org.uk, adilger.kernel@dilger.ca,
-        snitzer@redhat.com, jack@suse.cz, ebiggers@google.com,
-        riteshh@linux.ibm.com, krisman@collabora.com, surajjs@amazon.com,
-        ktkhai@virtuozzo.com, dmonakhov@gmail.com,
-        mbobrowski@mbobrowski.org, enwlinux@gmail.com, sblbir@amazon.com,
-        khazhy@google.com, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Date:   Wed, 26 Feb 2020 16:41:10 +0300
-Message-ID: <158272447070.281342.755800197684231698.stgit@localhost.localdomain>
-In-Reply-To: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
-References: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
-User-Agent: StGit/0.19
+        id S1726926AbgBZNlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 08:41:53 -0500
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71D032467B;
+        Wed, 26 Feb 2020 13:41:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582724512;
+        bh=CFivbeDC16Vex/a/sIDrC01sS730JjaXfcD6K0v8Wec=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=fFrddYuvYg+1YT7T+dVwZ5UWKuydmMFGUlDj1oLCTimb8qXu1FRNmcfWH4zJcSdFd
+         cqeMfc7ZO2NxqKda+HhZNTcaOGD+x7UCgEBfEi3Ecmo51pgC7xJxJVt5utXiyFCCM8
+         trGCq5EEzNA5JJZ5Sg/fAuyHaJD6U321+5YovRzs=
+Date:   Wed, 26 Feb 2020 07:41:50 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, Keith Busch <keith.busch@intel.com>
+Subject: Re: [PATCH v15 1/5] PCI/ERR: Update error status after reset_link()
+Message-ID: <20200226134150.GA107992@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4e6c0ed2b56935187a58659d089e51ffc91a03fe.1581617873.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-EXT4_MB_HINT_GOAL_ONLY is currently unused. This patch teaches
-ext4_mb_discard_preallocations() to discard only that preallocated
-range, which contains a specified block, in case of the flag is set.
-Otherwise, a preallocated range is not discarded.
+On Thu, Feb 13, 2020 at 10:20:13AM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> Commit bdb5ac85777d ("PCI/ERR: Handle fatal error recovery") uses
+> reset_link() to recover from fatal errors. But during fatal error
+> recovery, if the initial value of error status is
+> PCI_ERS_RESULT_DISCONNECT or PCI_ERS_RESULT_NO_AER_DRIVER then
+> even after successful recovery (using reset_link()) pcie_do_recovery()
+> will report the recovery result as failure. So update the status of
+> error after reset_link().
+> 
+> Fixes: bdb5ac85777d ("PCI/ERR: Handle fatal error recovery")
+> Cc: Ashok Raj <ashok.raj@intel.com>
+> Cc: Keith Busch <keith.busch@intel.com>
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Acked-by: Keith Busch <keith.busch@intel.com>
 
-Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
----
- fs/ext4/mballoc.c |   28 +++++++++++++++++++++-------
- 1 file changed, 21 insertions(+), 7 deletions(-)
+I raised the possibility of a stable tag for this.  If you'd like
+that, please add the tag and some justification per
+Documentation/process/stable-kernel-rules.rst.
 
-diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-index 51a78eb65f3c..b1b3c5526d1a 100644
---- a/fs/ext4/mballoc.c
-+++ b/fs/ext4/mballoc.c
-@@ -3894,8 +3894,8 @@ ext4_mb_release_group_pa(struct ext4_buddy *e4b,
-  *   1) how many requested
-  */
- static noinline_for_stack int
--ext4_mb_discard_group_preallocations(struct super_block *sb,
--					ext4_group_t group, int needed)
-+ext4_mb_discard_group_preallocations(struct super_block *sb, ext4_group_t group,
-+				     int needed, ext4_fsblk_t goal)
- {
- 	struct ext4_group_info *grp = ext4_get_group_info(sb, group);
- 	struct buffer_head *bitmap_bh = NULL;
-@@ -3947,6 +3947,12 @@ ext4_mb_discard_group_preallocations(struct super_block *sb,
- 			continue;
- 		}
- 
-+		if (goal != (ext4_fsblk_t)-1 &&
-+		    (goal < pa->pa_pstart || goal >= pa->pa_pstart + pa->pa_len)) {
-+			spin_unlock(&pa->pa_lock);
-+			continue;
-+		}
-+
- 		/* seems this one can be freed ... */
- 		pa->pa_deleted = 1;
- 
-@@ -4462,15 +4468,23 @@ static int ext4_mb_release_context(struct ext4_allocation_context *ac)
- 	return 0;
- }
- 
--static int ext4_mb_discard_preallocations(struct super_block *sb, int needed)
-+static int ext4_mb_discard_preallocations(struct super_block *sb,
-+					  struct ext4_allocation_context *ac)
- {
--	ext4_group_t i, ngroups = ext4_get_groups_count(sb);
-+	ext4_group_t i = 0, ngroups = ext4_get_groups_count(sb);
-+	int needed = ac->ac_o_ex.fe_len;
-+	ext4_fsblk_t goal = (ext4_fsblk_t)-1;
- 	int ret;
- 	int freed = 0;
- 
-+	if (ac->ac_flags & EXT4_MB_HINT_GOAL_ONLY) {
-+		i = ac->ac_o_ex.fe_group;
-+		ngroups = i + 1;
-+		goal = ext4_grp_offs_to_block(ac->ac_sb, &ac->ac_g_ex);
-+	}
- 	trace_ext4_mb_discard_preallocations(sb, needed);
--	for (i = 0; i < ngroups && needed > 0; i++) {
--		ret = ext4_mb_discard_group_preallocations(sb, i, needed);
-+	for (; i < ngroups && needed > 0; i++) {
-+		ret = ext4_mb_discard_group_preallocations(sb, i, needed, goal);
- 		freed += ret;
- 		needed -= ret;
- 	}
-@@ -4585,7 +4599,7 @@ ext4_fsblk_t ext4_mb_new_blocks(handle_t *handle,
- 			ar->len = ac->ac_b_ex.fe_len;
- 		}
- 	} else {
--		freed  = ext4_mb_discard_preallocations(sb, ac->ac_o_ex.fe_len);
-+		freed  = ext4_mb_discard_preallocations(sb, ac);
- 		if (freed)
- 			goto repeat;
- 		*errp = -ENOSPC;
+A kernel.org bugzilla pointer to show the user-visible effect of this,
+e.g., "lspci -vv" and a dmesg log showing an error that should be
+recoverable but isn't, would be a good start.  That would actually be
+useful even if you don't want a stable tag.
 
-
+> ---
+>  drivers/pci/pcie/err.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index 01dfc8bb7ca0..eefefe03857a 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -208,9 +208,11 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+>  	else
+>  		pci_walk_bus(bus, report_normal_detected, &status);
+>  
+> -	if (state == pci_channel_io_frozen &&
+> -	    reset_link(dev, service) != PCI_ERS_RESULT_RECOVERED)
+> -		goto failed;
+> +	if (state == pci_channel_io_frozen) {
+> +		status = reset_link(dev, service);
+> +		if (status != PCI_ERS_RESULT_RECOVERED)
+> +			goto failed;
+> +	}
+>  
+>  	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+>  		status = PCI_ERS_RESULT_RECOVERED;
+> -- 
+> 2.21.0
+> 
