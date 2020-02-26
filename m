@@ -2,227 +2,302 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E8DFC4BA14
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9DEC4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD683222C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEEF721556
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:54:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D59yYChx"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="D2ge/CUQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728532AbgBZPx6 (ORCPT
+        id S1728584AbgBZPya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:53:58 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:39631 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728205AbgBZPx6 (ORCPT
+        Wed, 26 Feb 2020 10:54:30 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39255 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728470AbgBZPy2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:53:58 -0500
-Received: by mail-lj1-f195.google.com with SMTP id o15so3664649ljg.6;
-        Wed, 26 Feb 2020 07:53:56 -0800 (PST)
+        Wed, 26 Feb 2020 10:54:28 -0500
+Received: by mail-wm1-f66.google.com with SMTP id c84so3734979wme.4
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 07:54:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nRV/ZP4gHjtmZI58ArlgV50vbukG5a7XrSGzPw4XlO0=;
-        b=D59yYChxABJVuiRSx3NvnkYsU3atQDD/8A4eIUwnEL0U6o+ezF8kcW9fFHkSeF9mlw
-         Wxqhr7lpZBOtxnjee9PGbcSG8DNXg0G+hnijcT2t0V6BcjIgS86+kug1SQDLPQtTnMm0
-         ZvwNv5OaIUss5PDhJKVQvNVizU/dYaueSJs+fWML+b+Li/Rj8f3eDtoAILkP//nqXG3M
-         jv9RSPsNDzid28di/eUzLjG+BlhQF6TGtT7lYmnh4f6SKZawcNqMtVIetpSqJgUWqDYg
-         8HkHEEBhutZH3E6sT+PqMO5FeE/l6VnxB1C5HN2m1Sj1Ct28FS50lpqjBUjFCwV6tQDJ
-         AsVA==
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Wo0vVnrj7LlByM+obGlDBGQf7mdPxoHFFT3j3qcwsLQ=;
+        b=D2ge/CUQB7iGAkEt8HFgxp9DNF+UeoHLmFY/rCVFwsAshQNIff37GWOwSPUw4j1P8B
+         hwr1PUmCUAvOzdcVSCmpOBhHuHFiYwrwtEnoOb8baGokvQdGZ/ksIBJIq61zSoET3RHc
+         Abvkss2EMEyMSbCNmZJbKrckbYSyZnZwwoxgvBnAHvr9gcREEGZFiS9zVOlxtQCIBOKN
+         3J1SISCF9952GWPd0DDuLplZQ+H3QxjGMXiAbE7dbk1MPNx9lWbL4xJ5J0q1iN+lK/UP
+         dUoGaPvx9hayfHDVaedDlyYL0vUcGb7Dgef4C4cEqzjyeG5vnTdGGjNjy52exdTIR29e
+         Z63w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nRV/ZP4gHjtmZI58ArlgV50vbukG5a7XrSGzPw4XlO0=;
-        b=DFdgQHefDMYVs6dlSTmkfLCw0VEJuEliHXotMCvSOqJszQel+eIgqLUFwjLv+5GM7l
-         ooHGssz6xeUiotTaiBDk4D3y3l+z/I5tl1a07c4x3W3RM9AEScalROX99CgTpIcQSxEG
-         H5hMzg3mZSHL6rtkNpVM0bc8I37oYNmGUNqg9CEMRRnNZVknzYlu2yr6GFmodZbwgKQz
-         sd3bAE9XV+K3o5uCGkG7D7RaX6M7qrGk8uz0zx5z9kSJxX0xKiRUmmpasxeWwu0h+rz/
-         kOCbQ2yLfdNwmVrUxY9TOJsIp+wTLSucgViffnZ1MWPeVag2vwEuK+dRVIBVWldv1MW8
-         D1OA==
-X-Gm-Message-State: ANhLgQ1MhSdLwbpaLgq9g0GwnHhr6Y7DwujhCDSHSK7HdVnLKISMoegs
-        W6OnUfU13cgvmKYrCnZ/kb0=
-X-Google-Smtp-Source: APXvYqwJzR534F4/1UlXIrbEygIJDJzO5mNQYN3rQ1JR+d6FXFFN7Jx5ejo5oMUyolsi57Evy1WkbA==
-X-Received: by 2002:a2e:95c4:: with SMTP id y4mr3454093ljh.38.1582732435265;
-        Wed, 26 Feb 2020 07:53:55 -0800 (PST)
-Received: from pc636 ([37.139.158.167])
-        by smtp.gmail.com with ESMTPSA id f21sm1407986ljc.30.2020.02.26.07.53.54
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Wo0vVnrj7LlByM+obGlDBGQf7mdPxoHFFT3j3qcwsLQ=;
+        b=SOMf3W85etZr0W38k8637goleXeT5FQ4bMG6znyJ02AYkc+KY/3ep0WabBCXokeK7t
+         yRq+xrEyh9nLwjGmGhz4p6jgwFDvZI+Hoid7RvyNI8nZ7zuEvBkc6EwBhugpPOO+ByaK
+         rn/ZtM+zilrgHeFssUdjCQMQKTT51SmpVSiXt3QN0VUoSs9bNlLJ0v8QdFsFBNI2vMmE
+         tE4J6xpu5tZON5V3GenTWjn1cp81vw2+hRdcxkv45VIQGdkDLDMCcK5wVID6E+pqWbff
+         idlDwzdKB549knsH5YjFo3sqeHEhzycsxBOy5Ye62IzH/oiQ+t14vgksZmJkAk51SRdl
+         /qyg==
+X-Gm-Message-State: APjAAAUh1s/i1YZgePBZN19oGhs4fYPzBxZhZmgQ+i+72z/zguMDHMBP
+        BODjxhxHzzEq/yEzPU+vzGRWJqhdEu8=
+X-Google-Smtp-Source: APXvYqzqSPTE4HjVOU1QP0igqWnIMR7V1dfoLRxmTUsRdAA0o4XAaRn6Zaj/OkBlmBAV8XLFboN1XA==
+X-Received: by 2002:a05:600c:22c8:: with SMTP id 8mr6243279wmg.178.1582732464696;
+        Wed, 26 Feb 2020 07:54:24 -0800 (PST)
+Received: from localhost (ip-89-177-130-96.net.upcbroadband.cz. [89.177.130.96])
+        by smtp.gmail.com with ESMTPSA id j12sm3792291wrt.35.2020.02.26.07.54.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 07:53:54 -0800 (PST)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Wed, 26 Feb 2020 16:53:47 +0100
-To:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Suraj Jitindar Singh <surajjs@amazon.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC] ext4: fix potential race between online resizing and
- write operations
-Message-ID: <20200226155347.GA31097@pc636>
-References: <20200221131455.GA4904@pc636>
- <20200221202250.GK2935@paulmck-ThinkPad-P72>
- <20200222222415.GC191380@google.com>
- <20200223011018.GB2935@paulmck-ThinkPad-P72>
- <20200224174030.GA22138@pc636>
- <20200225020705.GA253171@google.com>
- <20200225185400.GA27919@pc636>
- <20200225224745.GX2935@paulmck-ThinkPad-P72>
- <20200226130440.GA30008@pc636>
- <20200226150656.GB2935@paulmck-ThinkPad-P72>
+        Wed, 26 Feb 2020 07:54:24 -0800 (PST)
+Date:   Wed, 26 Feb 2020 16:54:23 +0100
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Vadym Kochan <vadym.kochan@plvision.eu>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>
+Subject: Re: [RFC net-next 1/3] net: marvell: prestera: Add Switchdev driver
+ for Prestera family ASIC device 98DX325x (AC3x)
+Message-ID: <20200226155423.GC26061@nanopsycho>
+References: <20200225163025.9430-1-vadym.kochan@plvision.eu>
+ <20200225163025.9430-2-vadym.kochan@plvision.eu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200226150656.GB2935@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200225163025.9430-2-vadym.kochan@plvision.eu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 07:06:56AM -0800, Paul E. McKenney wrote:
-> On Wed, Feb 26, 2020 at 02:04:40PM +0100, Uladzislau Rezki wrote:
-> > On Tue, Feb 25, 2020 at 02:47:45PM -0800, Paul E. McKenney wrote:
-> > > On Tue, Feb 25, 2020 at 07:54:00PM +0100, Uladzislau Rezki wrote:
-> > > > > > > > I was thinking a 2 fold approach (just thinking out loud..):
-> > > > > > > > 
-> > > > > > > > If kfree_call_rcu() is called in atomic context or in any rcu reader, then
-> > > > > > > > use GFP_ATOMIC to grow an rcu_head wrapper on the atomic memory pool and
-> > > > > > > > queue that.
-> > > > > > > > 
-> > > > > > I am not sure if that is acceptable, i mean what to do when GFP_ATOMIC
-> > > > > > gets failed in atomic context? Or we can just consider it as out of
-> > > > > > memory and another variant is to say that headless object can be called
-> > > > > > from preemptible context only.
-> > > > > 
-> > > > > Yes that makes sense, and we can always put disclaimer in the API's comments
-> > > > > saying if this object is expected to be freed a lot, then don't use the
-> > > > > headless-API to be extra safe.
-> > > > > 
-> > > > Agree.
-> > > > 
-> > > > > BTW, GFP_ATOMIC the documentation says if GFP_ATOMIC reserves are depleted,
-> > > > > the kernel can even panic some times, so if GFP_ATOMIC allocation fails, then
-> > > > > there seems to be bigger problems in the system any way. I would say let us
-> > > > > write a patch to allocate there and see what the -mm guys think.
-> > > > > 
-> > > > OK. It might be that they can offer something if they do not like our
-> > > > approach. I will try to compose something and send the patch to see.
-> > > > The tree.c implementation is almost done, whereas tiny one is on hold.
-> > > > 
-> > > > I think we should support batching as well as bulk interface there.
-> > > > Another way is to workaround head-less object, just to attach the head
-> > > > dynamically using kmalloc() and then call_rcu() but then it will not be
-> > > > a fair headless support :)
-> > > > 
-> > > > What is your view?
-> > > > 
-> > > > > > > > Otherwise, grow an rcu_head on the stack of kfree_call_rcu() and call
-> > > > > > > > synchronize_rcu() inline with it.
-> > > > > > > > 
-> > > > > > > >
-> > > > > > What do you mean here, Joel? "grow an rcu_head on the stack"?
-> > > > > 
-> > > > > By "grow on the stack", use the compiler-allocated rcu_head on the
-> > > > > kfree_rcu() caller's stack.
-> > > > > 
-> > > > > I meant here to say, if we are not in atomic context, then we use regular
-> > > > > GFP_KERNEL allocation, and if that fails, then we just use the stack's
-> > > > > rcu_head and call synchronize_rcu() or even synchronize_rcu_expedited since
-> > > > > the allocation failure would mean the need for RCU to free some memory is
-> > > > > probably great.
-> > > > > 
-> > > > Ah, i got it. I thought you meant something like recursion and then
-> > > > unwinding the stack back somehow :)
-> > > > 
-> > > > > > > > Use preemptible() andr task_struct's rcu_read_lock_nesting to differentiate
-> > > > > > > > between the 2 cases.
-> > > > > > > > 
-> > > > > > If the current context is preemptable then we can inline synchronize_rcu()
-> > > > > > together with freeing to handle such corner case, i mean when we are run
-> > > > > > out of memory.
-> > > > > 
-> > > > > Ah yes, exactly what I mean.
-> > > > > 
-> > > > OK.
-> > > > 
-> > > > > > As for "task_struct's rcu_read_lock_nesting". Will it be enough just
-> > > > > > have a look at preempt_count of current process? If we have for example
-> > > > > > nested rcu_read_locks:
-> > > > > > 
-> > > > > > <snip>
-> > > > > > rcu_read_lock()
-> > > > > >     rcu_read_lock()
-> > > > > >         rcu_read_lock()
-> > > > > > <snip>
-> > > > > > 
-> > > > > > the counter would be 3.
-> > > > > 
-> > > > > No, because preempt_count is not incremented during rcu_read_lock(). RCU
-> > > > > reader sections can be preempted, they just cannot goto sleep in a reader
-> > > > > section (unless the kernel is RT).
-> > > > > 
-> > > > So in CONFIG_PREEMPT kernel we can identify if we are in atomic or not by
-> > > > using rcu_preempt_depth() and in_atomic(). When it comes to !CONFIG_PREEMPT
-> > > > then we skip it and consider as atomic. Something like:
-> > > > 
-> > > > <snip>
-> > > > static bool is_current_in_atomic()
-> > > > {
-> > > > #ifdef CONFIG_PREEMPT_RCU
-> > > 
-> > > If possible: if (IS_ENABLED(CONFIG_PREEMPT_RCU))
-> > > 
-> > > Much nicer than #ifdef, and I -think- it should work in this case.
-> > > 
-> > OK. Thank you, Paul!
-> > 
-> > There is one point i would like to highlight it is about making caller
-> > instead to be responsible for atomic or not decision. Like how kmalloc()
-> > works, it does not really know the context it runs on, so it is up to
-> > caller to inform.
-> > 
-> > The same way:
-> > 
-> > kvfree_rcu(p, atomic = true/false);
-> > 
-> > in this case we could cover !CONFIG_PREEMPT case also.
+Tue, Feb 25, 2020 at 05:30:54PM CET, vadym.kochan@plvision.eu wrote:
+>Marvell Prestera 98DX326x integrates up to 24 ports of 1GbE with 8
+>ports of 10GbE uplinks or 2 ports of 40Gbps stacking for a largely
+>wireless SMB deployment.
+>
+>This driver implementation includes only L1 & basic L2 support.
+>
+>The core Prestera switching logic is implemented in prestera.c, there is
+>an intermediate hw layer between core logic and firmware. It is
+>implemented in prestera_hw.c, the purpose of it is to encapsulate hw
+>related logic, in future there is a plan to support more devices with
+>different HW related configurations.
+>
+>The following Switchdev features are supported:
+>
+>    - VLAN-aware bridge offloading
+>    - VLAN-unaware bridge offloading
+>    - FDB offloading (learning, ageing)
+>    - Switchport configuration
+>
+>Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
+>Signed-off-by: Andrii Savka <andrii.savka@plvision.eu>
+>Signed-off-by: Oleksandr Mazur <oleksandr.mazur@plvision.eu>
+>Signed-off-by: Serhiy Boiko <serhiy.boiko@plvision.eu>
+>Signed-off-by: Serhiy Pshyk <serhiy.pshyk@plvision.eu>
+>Signed-off-by: Taras Chornyi <taras.chornyi@plvision.eu>
+>Signed-off-by: Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>
+>---
+> drivers/net/ethernet/marvell/Kconfig          |    1 +
+> drivers/net/ethernet/marvell/Makefile         |    1 +
+> drivers/net/ethernet/marvell/prestera/Kconfig |   13 +
+> .../net/ethernet/marvell/prestera/Makefile    |    3 +
+> .../net/ethernet/marvell/prestera/prestera.c  | 1502 +++++++++++++++++
+> .../net/ethernet/marvell/prestera/prestera.h  |  244 +++
+> .../marvell/prestera/prestera_drv_ver.h       |   23 +
+> .../ethernet/marvell/prestera/prestera_hw.c   | 1094 ++++++++++++
+> .../ethernet/marvell/prestera/prestera_hw.h   |  159 ++
+> .../marvell/prestera/prestera_switchdev.c     | 1217 +++++++++++++
+> 10 files changed, 4257 insertions(+)
+> create mode 100644 drivers/net/ethernet/marvell/prestera/Kconfig
+> create mode 100644 drivers/net/ethernet/marvell/prestera/Makefile
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera.c
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera.h
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_drv_ver.h
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_hw.c
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_hw.h
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_switchdev.c
+>
+>diff --git a/drivers/net/ethernet/marvell/Kconfig b/drivers/net/ethernet/marvell/Kconfig
+>index 3d5caea096fb..74313d9e1fc0 100644
+>--- a/drivers/net/ethernet/marvell/Kconfig
+>+++ b/drivers/net/ethernet/marvell/Kconfig
+>@@ -171,5 +171,6 @@ config SKY2_DEBUG
 > 
-> Understood, but couldn't we instead use IS_ENABLED() to work out the
-> actual situation at runtime and relieve the caller of this burden?
-> Or am I missing a corner case?
 > 
-Yes we can do it in run-time, i mean to detect context type, atomic or not.
-But only for CONFIG_PREEMPT kernel. In case of !CONFIG_PREEMPT configuration 
-i do not see a straight forward way how to detect it. For example when caller 
-holds "spinlock". Therefore for such configuration we can just consider it
-as atomic. But in reality it could be not in atomic.
+> source "drivers/net/ethernet/marvell/octeontx2/Kconfig"
+>+source "drivers/net/ethernet/marvell/prestera/Kconfig"
+> 
+> endif # NET_VENDOR_MARVELL
+>diff --git a/drivers/net/ethernet/marvell/Makefile b/drivers/net/ethernet/marvell/Makefile
+>index 89dea7284d5b..9f88fe822555 100644
+>--- a/drivers/net/ethernet/marvell/Makefile
+>+++ b/drivers/net/ethernet/marvell/Makefile
+>@@ -12,3 +12,4 @@ obj-$(CONFIG_PXA168_ETH) += pxa168_eth.o
+> obj-$(CONFIG_SKGE) += skge.o
+> obj-$(CONFIG_SKY2) += sky2.o
+> obj-y		+= octeontx2/
+>+obj-y		+= prestera/
+>diff --git a/drivers/net/ethernet/marvell/prestera/Kconfig b/drivers/net/ethernet/marvell/prestera/Kconfig
+>new file mode 100644
+>index 000000000000..d0b416dcb677
+>--- /dev/null
+>+++ b/drivers/net/ethernet/marvell/prestera/Kconfig
+>@@ -0,0 +1,13 @@
+>+# SPDX-License-Identifier: GPL-2.0-only
+>+#
+>+# Marvell Prestera drivers configuration
+>+#
+>+
+>+config PRESTERA
+>+	tristate "Marvell Prestera Switch ASICs support"
+>+	depends on NET_SWITCHDEV && VLAN_8021Q
+>+	---help---
+>+	  This driver supports Marvell Prestera Switch ASICs family.
+>+
+>+	  To compile this driver as a module, choose M here: the
+>+	  module will be called prestera_sw.
+>diff --git a/drivers/net/ethernet/marvell/prestera/Makefile b/drivers/net/ethernet/marvell/prestera/Makefile
+>new file mode 100644
+>index 000000000000..9446298fb7f4
+>--- /dev/null
+>+++ b/drivers/net/ethernet/marvell/prestera/Makefile
+>@@ -0,0 +1,3 @@
+>+# SPDX-License-Identifier: GPL-2.0
+>+obj-$(CONFIG_PRESTERA)	+= prestera_sw.o
+>+prestera_sw-objs	:= prestera.o prestera_hw.o prestera_switchdev.o
+>diff --git a/drivers/net/ethernet/marvell/prestera/prestera.c b/drivers/net/ethernet/marvell/prestera/prestera.c
+>new file mode 100644
+>index 000000000000..12d0eb590bbb
+>--- /dev/null
+>+++ b/drivers/net/ethernet/marvell/prestera/prestera.c
+>@@ -0,0 +1,1502 @@
+>+/* SPDX-License-Identifier: BSD-3-Clause OR GPL-2.0
+>+ *
+>+ * Copyright (c) 2019-2020 Marvell International Ltd. All rights reserved.
+>+ *
+>+ */
+>+#include <linux/kernel.h>
+>+#include <linux/module.h>
+>+#include <linux/list.h>
+>+#include <linux/netdevice.h>
+>+#include <linux/netdev_features.h>
+>+#include <linux/etherdevice.h>
+>+#include <linux/ethtool.h>
+>+#include <linux/jiffies.h>
+>+#include <net/switchdev.h>
+>+
+>+#include "prestera.h"
+>+#include "prestera_hw.h"
+>+#include "prestera_drv_ver.h"
+>+
+>+#define MVSW_PR_MTU_DEFAULT 1536
+>+
+>+#define PORT_STATS_CACHE_TIMEOUT_MS	(msecs_to_jiffies(1000))
+>+#define PORT_STATS_CNT	(sizeof(struct mvsw_pr_port_stats) / sizeof(u64))
 
-We need it for emergency/corner case and head-less objects. When we are run
-of memory. So in this case we should attach the rcu_head dynamically and
-queue the freed object to be processed later on, after GP.
+Keep the prefix for all defines withing the file. "PORT_STATS_CNT"
+looks way to generic on the first look.
 
-If atomic context use GFP_ATOMIC flag if not use GFP_KERNEL. It is better 
-to allocate with GFP_KERNEL flag(if possible) because it has much less
-restrictions then GFP_ATOMIC one, i.e. GFP_KERNEL can sleep and wait until
-the memory is reclaimed.
 
-But that is a corner case and i agree that it would be good to avoid of
-such passing of extra info by the caller.
+>+#define PORT_STATS_IDX(name) \
+>+	(offsetof(struct mvsw_pr_port_stats, name) / sizeof(u64))
+>+#define PORT_STATS_FIELD(name)	\
+>+	[PORT_STATS_IDX(name)] = __stringify(name)
+>+
+>+static struct list_head switches_registered;
+>+
+>+static const char mvsw_driver_kind[] = "prestera_sw";
 
-Anyway i just share some extra info :)
+Please be consistent. Make your prefixes, name, filenames the same.
+For example:
+prestera_driver_kind[] = "prestera";
 
-Thanks.
+Applied to the whole code.
 
---
-Vlad Rezki
+
+>+static const char mvsw_driver_name[] = "mvsw_switchdev";
+
+Why is this different from kind?
+
+Also, don't mention "switchdev" anywhere.
+
+
+>+static const char mvsw_driver_version[] = PRESTERA_DRV_VER;
+
+[...]
+
+
+>+static void mvsw_pr_port_remote_cap_get(struct ethtool_link_ksettings *ecmd,
+>+					struct mvsw_pr_port *port)
+>+{
+>+	u64 bitmap;
+>+
+>+	if (!mvsw_pr_hw_port_remote_cap_get(port, &bitmap)) {
+>+		mvsw_modes_to_eth(ecmd->link_modes.lp_advertising,
+>+				  bitmap, 0, MVSW_PORT_TYPE_NONE);
+>+	}
+
+Don't use {} for single statement. checkpatch.pl should warn you about
+this.
+
+
+
+>+}
+>+
+>+static void mvsw_pr_port_duplex_get(struct ethtool_link_ksettings *ecmd,
+>+				    struct mvsw_pr_port *port)
+>+{
+>+	u8 duplex;
+>+
+>+	if (!mvsw_pr_hw_port_duplex_get(port, &duplex)) {
+>+		ecmd->base.duplex = duplex == MVSW_PORT_DUPLEX_FULL ?
+>+				    DUPLEX_FULL : DUPLEX_HALF;
+>+	} else {
+>+		ecmd->base.duplex = DUPLEX_UNKNOWN;
+>+	}
+
+Same here.
+
+
+>+}
+
+[...]
+
+
+>+static void __exit mvsw_pr_module_exit(void)
+>+{
+>+	destroy_workqueue(mvsw_pr_wq);
+>+
+>+	pr_info("Unloading Marvell Prestera Switch Driver\n");
+
+No prints like this please.
+
+	
+	
+>+}
+>+
+>+module_init(mvsw_pr_module_init);
+>+module_exit(mvsw_pr_module_exit);
+>+
+>+MODULE_AUTHOR("Marvell Semi.");
+
+Does not look so :)
+
+
+>+MODULE_LICENSE("GPL");
+>+MODULE_DESCRIPTION("Marvell Prestera switch driver");
+>+MODULE_VERSION(PRESTERA_DRV_VER);
+
+[...]
