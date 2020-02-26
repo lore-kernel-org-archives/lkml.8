@@ -2,137 +2,211 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B35C4BA12
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FE6C4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB402467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EE3E24689
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:15:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="WgTEJSBQ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="1X4uKlKj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cftMV6Mw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbgBZOPO (ORCPT
+        id S1727253AbgBZOPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 09:15:14 -0500
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:53219 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726579AbgBZOPO (ORCPT
+        Wed, 26 Feb 2020 09:15:42 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55991 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727196AbgBZOPl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 09:15:14 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id E1B638363;
-        Wed, 26 Feb 2020 09:15:12 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Wed, 26 Feb 2020 09:15:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=bom162ac9gFcma9iDy1OFat3ZlF
-        vKtIzDMH8zrN0kDQ=; b=WgTEJSBQc0Giu0DeGNBqZ/LQw2ug88/mp3W/Ys3KlO8
-        LoB5f0/SCHWrQEHleI9Wp6rjzFK75hGqI+TovHWWv44ZDjGFrEUnP1bFnnNh9IqS
-        nnISRiK7YtF/2/Z3OQO/qnW6Ys5Q9iUylCq7MIpfZ1IYl3nID7Ekw2kT48mUudGx
-        IFrFO7ea234w9NDj0CR7wQ8KtgG1S29UnHb8m4YTiE4tnW/rJ4g1WisF9pLwJ8gJ
-        RHekUGi5GdabkCgbEYd0Vgk7Vj65IiZzu7xz+HsjUsS9PoQZ2m4mlz7QgbEccfa6
-        fFlXpJBnkAT94imNELyAyRx4kFeV8SubySmkce/QWNw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=bom162
-        ac9gFcma9iDy1OFat3ZlFvKtIzDMH8zrN0kDQ=; b=1X4uKlKjPafmoLx5sje8fN
-        Z5F2e61U76rNKHqHghkOcwD655QLYMt47hkt4N1d543s/Z+X56oWH53kfSlO8VO8
-        l7SqkCAmJG5FO40/GyRr59Vi4z6EmKnDBqe6lDthTOTg2O7GwDYKxFIFwPdr1LkG
-        XBeOv6LRm1u4sf2+qGmOJU/vAHRMCL5XUJHyqxlv+gIAsKvnJBHI0mZo58goCe/n
-        NjtOnRow9mZeXICIlU1Q2fYqVkGHhunIGbihqr+sC2pXeW/pN7BG0YliXK7nG7R+
-        9N5UJ5zraiGkWIVY03WhM+6iFW+9ZLx1VpGWZGq5wrtWp1Cv1lU5zTop7uEJFlrQ
-        ==
-X-ME-Sender: <xms:b31WXi4Z6d9VBrI7lGa7V6wGVLxCEg5J19Mn3-8ZyB3his6AWJqDNg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrleeggdeigecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:b31WXlM5-g_WtYHlWm-jrMwWExH9Z-Ts0OOLciJ7u5UvldkwC08iuA>
-    <xmx:b31WXgNFDN54P2k12Ebr9Uu0rsYfeu5P5PpdTPzKHdNkFFw7pwJHIw>
-    <xmx:b31WXqJk28cMiUtq82-O0kijFf-nA1Nve3KQRwkje6h_xTeFSHwYKA>
-    <xmx:cH1WXiyyCeM1sLeCCJd95c1VrD4DVpaEHcNxrdECjrdHAUDQM-oMSw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id C60B33060FCB;
-        Wed, 26 Feb 2020 09:15:10 -0500 (EST)
-Date:   Wed, 26 Feb 2020 15:15:09 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
-Subject: Re: [PATCH 22/89] clk: bcm: rpi: Discover the firmware clocks
-Message-ID: <20200226141509.awlydvh6bi7re27o@gilmour.lan>
-References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
- <d197ab836d84b89b94ff1927872126767d921e94.1582533919.git-series.maxime@cerno.tech>
- <2814be76-4006-4651-0a84-6dfaf2064e4a@gmail.com>
+        Wed, 26 Feb 2020 09:15:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582726540;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YYiCS+eVcBTRrN3rvxTuVWGNNaComENKS9pPobuvmFM=;
+        b=cftMV6MwSQWVmU5FPbuZCQ/30+rMNnURJyvDUr44gGUxK6eKAM6Ll6h/w4A+ABObAhILzS
+        8HmkN+cJrAI6az00/IjVdXVY+IAAbxpgm2he3ePc4K9CsHZjJCg6iAeb5qtS5r9OvwRCog
+        GpJD9g+nedK/J/zkSLsMohXz0brwh5c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-241-4OI28YrhOUmjxY_Ewb49Ww-1; Wed, 26 Feb 2020 09:15:32 -0500
+X-MC-Unique: 4OI28YrhOUmjxY_Ewb49Ww-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EBEAA8C8B4B;
+        Wed, 26 Feb 2020 14:15:27 +0000 (UTC)
+Received: from localhost (ovpn-12-39.pek2.redhat.com [10.72.12.39])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 60C9560BE1;
+        Wed, 26 Feb 2020 14:15:26 +0000 (UTC)
+Date:   Wed, 26 Feb 2020 22:15:23 +0800
+From:   'Baoquan He' <bhe@redhat.com>
+To:     Greg Kurz <groug@kaod.org>
+Cc:     Alastair D'Silva <alastair@d-silva.org>,
+        'Alastair D'Silva' <alastair@au1.ibm.com>,
+        "'Aneesh Kumar K . V'" <aneesh.kumar@linux.ibm.com>,
+        'Oliver O'Halloran' <oohall@gmail.com>,
+        'Benjamin Herrenschmidt' <benh@kernel.crashing.org>,
+        'Paul Mackerras' <paulus@samba.org>,
+        'Michael Ellerman' <mpe@ellerman.id.au>,
+        'Frederic Barrat' <fbarrat@linux.ibm.com>,
+        'Andrew Donnellan' <ajd@linux.ibm.com>,
+        'Arnd Bergmann' <arnd@arndb.de>,
+        'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>,
+        'Dan Williams' <dan.j.williams@intel.com>,
+        'Vishal Verma' <vishal.l.verma@intel.com>,
+        'Dave Jiang' <dave.jiang@intel.com>,
+        'Ira Weiny' <ira.weiny@intel.com>,
+        'Andrew Morton' <akpm@linux-foundation.org>,
+        'Mauro Carvalho Chehab' <mchehab+samsung@kernel.org>,
+        "'David S. Miller'" <davem@davemloft.net>,
+        'Rob Herring' <robh@kernel.org>,
+        'Anton Blanchard' <anton@ozlabs.org>,
+        'Krzysztof Kozlowski' <krzk@kernel.org>,
+        'Mahesh Salgaonkar' <mahesh@linux.vnet.ibm.com>,
+        'Madhavan Srinivasan' <maddy@linux.vnet.ibm.com>,
+        =?iso-8859-1?Q?'C=E9dric?= Le Goater' <clg@kaod.org>,
+        'Anju T Sudhakar' <anju@linux.vnet.ibm.com>,
+        'Hari Bathini' <hbathini@linux.ibm.com>,
+        'Thomas Gleixner' <tglx@linutronix.de>,
+        'Nicholas Piggin' <npiggin@gmail.com>,
+        'Masahiro Yamada' <yamada.masahiro@socionext.com>,
+        'Alexey Kardashevskiy' <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Subject: Re: [PATCH v3 04/27] ocxl: Remove unnecessary externs
+Message-ID: <20200226141523.GI4937@MiWiFi-R3L-srv>
+References: <20200221032720.33893-1-alastair@au1.ibm.com>
+ <20200221032720.33893-5-alastair@au1.ibm.com>
+ <20200226081447.GH4937@MiWiFi-R3L-srv>
+ <4d49801d5ec7e$7a3e8610$6ebb9230$@d-silva.org>
+ <20200226100102.0aab7dda@bahia.home>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="n5yxkfnp2qbxja73"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <2814be76-4006-4651-0a84-6dfaf2064e4a@gmail.com>
+In-Reply-To: <20200226100102.0aab7dda@bahia.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 02/26/20 at 10:01am, Greg Kurz wrote:
+> On Wed, 26 Feb 2020 19:26:34 +1100
+> "Alastair D'Silva" <alastair@d-silva.org> wrote:
+>=20
+> > > -----Original Message-----
+> > > From: Baoquan He <bhe@redhat.com>
+> > > Sent: Wednesday, 26 February 2020 7:15 PM
+> > > To: Alastair D'Silva <alastair@au1.ibm.com>
+> > > Cc: alastair@d-silva.org; Aneesh Kumar K . V
+> > > <aneesh.kumar@linux.ibm.com>; Oliver O'Halloran <oohall@gmail.com>;
+> > > Benjamin Herrenschmidt <benh@kernel.crashing.org>; Paul Mackerras
+> > > <paulus@samba.org>; Michael Ellerman <mpe@ellerman.id.au>; Frederic
+> > > Barrat <fbarrat@linux.ibm.com>; Andrew Donnellan <ajd@linux.ibm.com=
+>;
+> > > Arnd Bergmann <arnd@arndb.de>; Greg Kroah-Hartman
+> > > <gregkh@linuxfoundation.org>; Dan Williams <dan.j.williams@intel.co=
+m>;
+> > > Vishal Verma <vishal.l.verma@intel.com>; Dave Jiang
+> > > <dave.jiang@intel.com>; Ira Weiny <ira.weiny@intel.com>; Andrew Mor=
+ton
+> > > <akpm@linux-foundation.org>; Mauro Carvalho Chehab
+> > > <mchehab+samsung@kernel.org>; David S. Miller <davem@davemloft.net>=
+;
+> > > Rob Herring <robh@kernel.org>; Anton Blanchard <anton@ozlabs.org>;
+> > > Krzysztof Kozlowski <krzk@kernel.org>; Mahesh Salgaonkar
+> > > <mahesh@linux.vnet.ibm.com>; Madhavan Srinivasan
+> > > <maddy@linux.vnet.ibm.com>; C=E9dric Le Goater <clg@kaod.org>; Anju=
+ T
+> > > Sudhakar <anju@linux.vnet.ibm.com>; Hari Bathini
+> > > <hbathini@linux.ibm.com>; Thomas Gleixner <tglx@linutronix.de>; Gre=
+g
+> > > Kurz <groug@kaod.org>; Nicholas Piggin <npiggin@gmail.com>; Masahir=
+o
+> > > Yamada <yamada.masahiro@socionext.com>; Alexey Kardashevskiy
+> > > <aik@ozlabs.ru>; linux-kernel@vger.kernel.org; linuxppc-
+> > > dev@lists.ozlabs.org; linux-nvdimm@lists.01.org; linux-mm@kvack.org
+> > > Subject: Re: [PATCH v3 04/27] ocxl: Remove unnecessary externs
+> > >=20
+> > > On 02/21/20 at 02:26pm, Alastair D'Silva wrote:
+> > > > From: Alastair D'Silva <alastair@d-silva.org>
+> > > >
+> > > > Function declarations don't need externs, remove the existing one=
+s so
+> > > > they are consistent with newer code
+> > > >
+> > > > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> > > > ---
+> > > >  arch/powerpc/include/asm/pnv-ocxl.h | 32 ++++++++++++++---------=
+------
+> > > >  include/misc/ocxl.h                 |  6 +++---
+> > > >  2 files changed, 18 insertions(+), 20 deletions(-)
+> > > >
+> > > > diff --git a/arch/powerpc/include/asm/pnv-ocxl.h
+> > > > b/arch/powerpc/include/asm/pnv-ocxl.h
+> > > > index 0b2a6707e555..b23c99bc0c84 100644
+> > > > --- a/arch/powerpc/include/asm/pnv-ocxl.h
+> > > > +++ b/arch/powerpc/include/asm/pnv-ocxl.h
+> > > > @@ -9,29 +9,27 @@
+> > > >  #define PNV_OCXL_TL_BITS_PER_RATE       4
+> > > >  #define PNV_OCXL_TL_RATE_BUF_SIZE
+> > > ((PNV_OCXL_TL_MAX_TEMPLATE+1) * PNV_OCXL_TL_BITS_PER_RATE / 8)
+> > > >
+> > > > -extern int pnv_ocxl_get_actag(struct pci_dev *dev, u16 *base, u1=
+6
+> > > *enabled,
+> > > > -			u16 *supported);
+> > >=20
+> > > It works w or w/o extern when declare functions. Searching 'extern'
+> > > under include can find so many functions with 'extern' adding. Do w=
+e have
+> > a
+> > > explicit standard if we should add or remove 'exter' in function
+> > declaration?
+> > >=20
+> > > I have no objection to this patch, just want to make clear so that =
+I can
+> > handle
+> > > it w/o confusion.
+> > >=20
+> > > Thanks
+> > > Baoquan
+> > >=20
+> >=20
+> > For the OpenCAPI driver, we have settled on not having 'extern' on
+> > functions.
+> >=20
+> > I don't think I've seen a standard that supports or refutes this, but=
+ it
+> > does not value add.
+> >=20
+>=20
+> FWIW this is a warning condition for checkpatch:
+>=20
+> $ ./scripts/checkpatch.pl --strict -f include/misc/ocxl.h
 
---n5yxkfnp2qbxja73
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Good to know, thanks.
 
-Hi Florian,
+I didn't know checkpatch.pl can run on header file directly. Tried to
+check patch with '--strict -f', the below info doesn't appear. But it
+does give out below information when run on header file.
 
-On Mon, Feb 24, 2020 at 10:15:32AM -0800, Florian Fainelli wrote:
-> On 2/24/20 1:06 AM, Maxime Ripard wrote:
-> > The firmware has an interface to discover the clocks it exposes.
-> >
-> > Let's use it to discover, register the clocks in the clocks framework and
-> > then expose them through the device tree for consumers to use them.
-> >
-> > Cc: Michael Turquette <mturquette@baylibre.com>
-> > Cc: Stephen Boyd <sboyd@kernel.org>
-> > Cc: linux-clk@vger.kernel.org
-> > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
->
-> That seems like a re-implementaiton of SCMI without all of its
-> protocols, without being able to use the existing drivers, maybe a
-> firmware update should be considered so standard drivers can be leveraged?
+>=20
+> [...]
+>=20
+> CHECK: extern prototypes should be avoided in .h files
+> #176: FILE: include/misc/ocxl.h:176:
+> +extern int ocxl_afu_irq_alloc(struct ocxl_context *ctx, int *irq_id);
+>=20
+> [...]
+>=20
 
-I'm not really qualified to talk about how the firmware will evolve in
-the future, but you're right that it looks a lot like what SCMI can
-do.
-
-Even if a firmware update was to support SCMI at some point, since the
-firmware is flashed in an EEPROM, we'd still have to support that
-interface.
-
-Maxime
-
---n5yxkfnp2qbxja73
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXlZ9bQAKCRDj7w1vZxhR
-xfqTAP4vLh532NQ+/Wzxq6syIJ/bQnWdlyFvUKhuvHlwOVJikgD9EEvRQkVNQLSB
-OFFRQxI+ToWjkDElsX49T4eIov7qRAI=
-=N7b+
------END PGP SIGNATURE-----
-
---n5yxkfnp2qbxja73--
