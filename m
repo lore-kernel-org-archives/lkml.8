@@ -2,74 +2,153 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26613C4BA21
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B1AC4BA21
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00A1A24670
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AE442072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:12:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="W7u96SLq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbgBZVKl (ORCPT
+        id S1727554AbgBZVMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 16:10:41 -0500
-Received: from mga07.intel.com ([134.134.136.100]:58591 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727486AbgBZVKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 16:10:41 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 13:10:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,489,1574150400"; 
-   d="scan'208";a="261201001"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by fmsmga004.fm.intel.com with ESMTP; 26 Feb 2020 13:10:40 -0800
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 0D1513011A5; Wed, 26 Feb 2020 13:10:40 -0800 (PST)
-Date:   Wed, 26 Feb 2020 13:10:40 -0800
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Kyung Min Park <kyung.min.park@intel.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, hpa@zytor.com, gregkh@linuxfoundation.org,
-        tony.luck@intel.com, ashok.raj@intel.com, ravi.v.shankar@intel.com,
-        fenghua.yu@intel.com
-Subject: Re: [PATCH 2/2] x86/asm/delay: Introduce TPAUSE delay
-Message-ID: <20200226211040.GS160988@tassilo.jf.intel.com>
-References: <1582744258-42744-1-git-send-email-kyung.min.park@intel.com>
- <1582744258-42744-3-git-send-email-kyung.min.park@intel.com>
+        Wed, 26 Feb 2020 16:12:09 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:57626 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727446AbgBZVMJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 16:12:09 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01QL3gpZ060586;
+        Wed, 26 Feb 2020 21:11:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=rxC5xpipAUhGNNMWHp6ES0pv2giMw3uyxi5WN3U/eTE=;
+ b=W7u96SLqMZPUajqgxXsXKp5SlvSJRsCU4lFUHtcOIw50LnQnh55yHShfxPyHpGLFaJdI
+ tfBsRhcVYyzzFyN75ReZK/W0i5edQT7/SFvD8fXEzEQ8Ei8jp7msJxUwzVrEqSgYRMC5
+ jw8Q1sRzyh0tBImIBkBmvMCo3h/Tb39bdBhONkV75KkY+lbRFs7PqEH+x/SKk+TkRZqv
+ BiO0PCwBHnID2v48kVEG4whZpW1KZhZ+rA9dtJFjp3+LKVYo9WdESqm428pohaduMUm4
+ VliqkcSLA2Uvb2Mp7DK+4UgUarSnF6luFEII41+19BTJihGDKlqcmX6mpAfVAyXR/8et yg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2ydybcgatf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Feb 2020 21:11:33 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01QL2GQQ072854;
+        Wed, 26 Feb 2020 21:11:32 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2ydcs6965f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Feb 2020 21:11:32 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01QLBRJX014010;
+        Wed, 26 Feb 2020 21:11:27 GMT
+Received: from [10.209.227.41] (/10.209.227.41)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 26 Feb 2020 13:11:27 -0800
+Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
+ LRU
+To:     Arnd Bergmann <arnd@arndb.de>, Nishanth Menon <nm@ti.com>,
+        Tero Kristo <t-kristo@ti.com>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Rik van Riel <riel@surriel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>, kernel-team@fb.com,
+        Dave Chinner <david@fromorbit.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>
+References: <20200211175507.178100-1-hannes@cmpxchg.org>
+ <29b6e848ff4ad69b55201751c9880921266ec7f4.camel@surriel.com>
+ <20200211193101.GA178975@cmpxchg.org>
+ <20200211154438.14ef129db412574c5576facf@linux-foundation.org>
+ <CAHk-=wiGbz3oRvAVFtN-whW-d2F-STKsP1MZT4m_VeycAr1_VQ@mail.gmail.com>
+ <20200211164701.4ac88d9222e23d1e8cc57c51@linux-foundation.org>
+ <CAHk-=wg1ZDADD3Vuw_sXhmBOrQ2xsp8YWxmtWiA6vG0RT-ZQ+A@mail.gmail.com>
+ <20200212085004.GL25745@shell.armlinux.org.uk>
+ <CAK8P3a3pzgVvwyDhHPoiSOqyv+h_ixbsdWMqG3sELenRJqFuew@mail.gmail.com>
+ <671b05bc-7237-7422-3ece-f1a4a3652c92@oracle.com>
+ <CAK8P3a13jGdjVW1TzvCKjRBg-Yscs_WB2K1kw9AzRfn3G9a=-Q@mail.gmail.com>
+From:   santosh.shilimkar@oracle.com
+Organization: Oracle Corporation
+Message-ID: <7c4c1459-60d5-24c8-6eb9-da299ead99ea@oracle.com>
+Date:   Wed, 26 Feb 2020 13:11:26 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582744258-42744-3-git-send-email-kyung.min.park@intel.com>
+In-Reply-To: <CAK8P3a13jGdjVW1TzvCKjRBg-Yscs_WB2K1kw9AzRfn3G9a=-Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9543 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 phishscore=0
+ mlxlogscore=999 spamscore=0 suspectscore=0 mlxscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002260125
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9543 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 adultscore=0
+ priorityscore=1501 suspectscore=0 mlxlogscore=999 lowpriorityscore=0
+ phishscore=0 spamscore=0 clxscore=1015 malwarescore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002260125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 11:10:58AM -0800, Kyung Min Park wrote:
-> TPAUSE instructs the processor to enter an implementation-dependent
-> optimized state. The instruction execution wakes up when the time-stamp
-> counter reaches or exceeds the implicit EDX:EAX 64-bit input value.
-> The instruction execution also wakes up due to the expiration of
-> the operating system time-limit or by an external interrupt
++Nishant, Tero
 
-This is actually a behavior change. Today's udelay() will continue
-after processing the interrupt. Your patches don't
+On 2/26/20 1:01 PM, Arnd Bergmann wrote:
+> On Wed, Feb 26, 2020 at 7:04 PM <santosh.shilimkar@oracle.com> wrote:
+>>
+>> On 2/13/20 8:52 AM, Arnd Bergmann wrote:
+>>> On Wed, Feb 12, 2020 at 9:50 AM Russell King - ARM Linux admin
+>>> <linux@armlinux.org.uk> wrote:
+>>
+>> The Keystone generations of SOCs have been used in different areas and
+>> they will be used for long unless says otherwise.
+>>
+>> Apart from just split of lowmem and highmem, one of the peculiar thing
+>> with Keystome family of SOCs is the DDR is addressable from two
+>> addressing ranges. The lowmem address range is actually non-cached
+>> range and the higher range is the cacheable.
+> 
+> I'm aware of Keystone's special physical memory layout, but for the
+> discussion here, this is actually irrelevant for the discussion about
+> highmem here, which is only about the way we map all or part of the
+> available physical memory into the 4GB of virtual address space.
+> 
+> The far more important question is how much memory any users
+> (in particular the subset that are going to update their kernels
+> several years from now) actually have installed. Keystone-II is
+> one of the rare 32-bit chips with fairly wide memory interfaces,
+> having two 72-bit (with ECC) channels rather than the usual one
+>   or two channels of 32-bit DDR3. This means a relatively cheap
+> 4GB configuration using eight 256Mx16 chips is possible, or
+> even a 8GB using sixteen or eighteen 512Mx8.
+> 
+> Do you have an estimate on how common these 4GB and 8GB
+> configurations are in practice outside of the TI evaluation
+> board?
+> 
+ From my TI memories, many K2 customers were going to install
+more than 2G memory. Don't remember 8G, but 4G was the dominant
+one afair. Will let Nishant/Tero elaborate latest on this.
 
-I don't think it's a problem though. The interrupt will cause
-a long enough delay that exceed any reasonable udelay() requirements.
-
-There would be a difference if someone did really long udelay()s, much
-longer than typical interrupts, in this case you might end up
-with a truncated udelay, but such long udelays are not something that we
-would encourage.
-
-I don't think you need to change anything in the code, but should
-probably document this behavior.
-
--Andi
+regards,
+Santosh
