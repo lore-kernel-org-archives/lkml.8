@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2EAC4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4FCC4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 696CF24670
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 367C124670
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:15:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CO6qsjcw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xd5s++nj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgBZQPS (ORCPT
+        id S1728173AbgBZQPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 11:15:18 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:42834 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727862AbgBZQPQ (ORCPT
+        Wed, 26 Feb 2020 11:15:32 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47521 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727917AbgBZQPR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 11:15:16 -0500
+        Wed, 26 Feb 2020 11:15:17 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582733715;
+        s=mimecast20190719; t=1582733716;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=3ALKQxAFCE5F0LGykWYTT3UrmTGHD8OtYz0jmj8J0is=;
-        b=CO6qsjcwadaGoI5yOnX0FL7mtHGKQen9V4jOwFuV9aG/P8WDjDk29xGT2SyqywU0/au7nA
-        3X1M/tfwPBKkMcBdSj783WDA+Q83nyn4+qz4I9++/VfuePNpP5SX7lJ4NjlbYm051lrXe+
-        5LDl5VVE9BPrZyBetPMO9zpSlcOzIHk=
+        bh=uJRtUtLfopxQegOvimJxYCld7I/ihswh3Wfa9C5dXY4=;
+        b=Xd5s++njXwNc2s7v78x2sG5HebonNDAfUAXcAuEObJ5a3ApFYmj53myNyGaOPlY0Z9B7NF
+        MKZqdpfEf/d2kxPSf6LEqE5Bbijy8Igc9aqgPlaEOp1lncx0dkWi3a566IavCZKbWjFJt+
+        cuJ5nzcZLXbh9RFzs/MEC5H2Xib+aug=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-265-ZKqxeAOBPGuZTRtzGLOUIg-1; Wed, 26 Feb 2020 11:15:13 -0500
-X-MC-Unique: ZKqxeAOBPGuZTRtzGLOUIg-1
+ us-mta-462-IKwj9E_NMjSaT0s4LK-7Tg-1; Wed, 26 Feb 2020 11:15:14 -0500
+X-MC-Unique: IKwj9E_NMjSaT0s4LK-7Tg-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3FBEF1005513;
-        Wed, 26 Feb 2020 16:15:09 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 24792107ACCA;
+        Wed, 26 Feb 2020 16:15:11 +0000 (UTC)
 Received: from llong.com (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 871A960BE1;
-        Wed, 26 Feb 2020 16:15:07 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6E7B460BE1;
+        Wed, 26 Feb 2020 16:15:09 +0000 (UTC)
 From:   Waiman Long <longman@redhat.com>
 To:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Jonathan Corbet <corbet@lwn.net>,
@@ -56,9 +56,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         Dave Chinner <david@fromorbit.com>,
         Eric Sandeen <sandeen@redhat.com>,
         Waiman Long <longman@redhat.com>
-Subject: [PATCH 03/11] fs/dcache: Add a counter to track number of children
-Date:   Wed, 26 Feb 2020 11:13:56 -0500
-Message-Id: <20200226161404.14136-4-longman@redhat.com>
+Subject: [PATCH 04/11] fs/dcache: Add sysctl parameter dentry-dir-max
+Date:   Wed, 26 Feb 2020 11:13:57 -0500
+Message-Id: <20200226161404.14136-5-longman@redhat.com>
 In-Reply-To: <20200226161404.14136-1-longman@redhat.com>
 References: <20200226161404.14136-1-longman@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
@@ -67,107 +67,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a new field d_nchildren to struct dentry to track the number of
-children in a directory.
+The number of positive dentries in a system is limited by the actual
+number of files in the system. The number of negative dentries, however,
+has no such limit. As a result, it is possible that a system can have a
+significant amount of memory tied up in negative dentries. For example,
+running a negative dentry generator on a 4-socket 256GB x86-64 system,
+the system can use up more than 150GB of memory in dentries and more
+than 200GB in slabs and almost running out of free memory before memory
+reclaim kicks in.
 
-Theoretically, we could use reference count (d_lockref.count) as a
-proxy for the number of children. Normally the reference count should
-be quite close to the number of children. However, when the directory
-dentry is heavily contended, the reference count can differ from the
-number of children by quite a bit.
+There are two major problems with having too many negative dentries:
 
-The d_nchildren field is updated only when d_lock has already been held,
-so the performance cost of this tracking should be negligible.
+ 1) When a filesystem with too many negative dentries is being unmounted,
+    the process of draining the dentries associated with the filesystem
+    can take some time. To users, the system may seem to hang for
+    a while.  The long wait may also cause unexpected timeout error or
+    other warnings.  This can happen when a long running container with
+    many negative dentries is being destroyed, for instance.
+
+ 2) Tying up too much memory in unused negative dentries means there
+    are less memory available for other use. Even though the kernel is
+    able to reclaim unused dentries when running out of free memory,
+    it will still introduce additional latency to the application
+    reducing its performance.
+
+This patch introduces a new sysctl parameter "dentry-dir-max" to
+/proc/sys/fs. This syctl parameter represents a soft limit on the
+total number of negative dentries allowable under any given directory.
+Any non-negative integer is allowed. The default is 0 which means there
+is no limit.
+
+The actual negative dentry reclaim process to enforce the limit will
+be done in a later patch.
 
 Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- fs/dcache.c            | 16 ++++++++++++----
- include/linux/dcache.h |  7 ++++---
- 2 files changed, 16 insertions(+), 7 deletions(-)
+ Documentation/admin-guide/sysctl/fs.rst | 18 ++++++++++++++++++
+ fs/dcache.c                             | 10 ++++++++++
+ kernel/sysctl.c                         | 10 ++++++++++
+ 3 files changed, 38 insertions(+)
 
+diff --git a/Documentation/admin-guide/sysctl/fs.rst b/Documentation/admin-guide/sysctl/fs.rst
+index 2a45119e3331..7274a7b34ee4 100644
+--- a/Documentation/admin-guide/sysctl/fs.rst
++++ b/Documentation/admin-guide/sysctl/fs.rst
+@@ -28,6 +28,7 @@ Currently, these files are in /proc/sys/fs:
+ 
+ - aio-max-nr
+ - aio-nr
++- dentry-dir-max
+ - dentry-state
+ - dquot-max
+ - dquot-nr
+@@ -60,6 +61,23 @@ raising aio-max-nr does not result in the pre-allocation or re-sizing
+ of any kernel data structures.
+ 
+ 
++dentry-dir-max
++--------------
++
++This integer value specifies a soft limit on the maximum number
++of negative dentries that are allowed under any given directory.
++A negative dentry contains filename that is known to be nonexistent
++in the directory.  No restriction is placed on the number of positive
++dentries as it is naturally limited by the number of files in the
++directory.
++
++The default value is 0 which means there is no limit.  Any non-negative
++value is allowed.  However, internal tracking is done on all dentry
++types. So the value given, if non-zero, should be larger than the
++number of files in a typical large directory in order to reduce the
++tracking overhead.
++
++
+ dentry-state
+ ------------
+ 
 diff --git a/fs/dcache.c b/fs/dcache.c
-index a977f9e05840..0ee5aa2c31cf 100644
+index 0ee5aa2c31cf..8f3ac31a582b 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -526,6 +526,8 @@ static inline void dentry_unlist(struct dentry *dentry, struct dentry *parent)
- 	if (unlikely(list_empty(&dentry->d_child)))
- 		return;
- 	__list_del_entry(&dentry->d_child);
-+	parent->d_nchildren--;
-+
- 	/*
- 	 * Cursors can move around the list of children.  While we'd been
- 	 * a normal list member, it didn't matter - ->d_child.next would've
-@@ -1738,6 +1740,7 @@ static struct dentry *__d_alloc(struct super_block *sb, const struct qstr *name)
- 	dentry->d_sb = sb;
- 	dentry->d_op = NULL;
- 	dentry->d_fsdata = NULL;
-+	dentry->d_nchildren = 0;
- 	INIT_HLIST_BL_NODE(&dentry->d_hash);
- 	INIT_LIST_HEAD(&dentry->d_lru);
- 	INIT_LIST_HEAD(&dentry->d_subdirs);
-@@ -1782,6 +1785,7 @@ struct dentry *d_alloc(struct dentry * parent, const struct qstr *name)
- 	__dget_dlock(parent);
- 	dentry->d_parent = parent;
- 	list_add(&dentry->d_child, &parent->d_subdirs);
-+	parent->d_nchildren++;
- 	spin_unlock(&parent->d_lock);
+@@ -123,6 +123,16 @@ static DEFINE_PER_CPU(long, nr_dentry);
+ static DEFINE_PER_CPU(long, nr_dentry_unused);
+ static DEFINE_PER_CPU(long, nr_dentry_negative);
  
- 	return dentry;
-@@ -2762,10 +2766,10 @@ static void swap_names(struct dentry *dentry, struct dentry *target)
- 			 * Both are internal.
- 			 */
- 			unsigned int i;
--			BUILD_BUG_ON(!IS_ALIGNED(DNAME_INLINE_LEN, sizeof(long)));
--			for (i = 0; i < DNAME_INLINE_LEN / sizeof(long); i++) {
--				swap(((long *) &dentry->d_iname)[i],
--				     ((long *) &target->d_iname)[i]);
-+			BUILD_BUG_ON(!IS_ALIGNED(DNAME_INLINE_LEN, sizeof(int)));
-+			for (i = 0; i < DNAME_INLINE_LEN / sizeof(int); i++) {
-+				swap(((int *) &dentry->d_iname)[i],
-+				     ((int *) &target->d_iname)[i]);
- 			}
- 		}
- 	}
-@@ -2855,6 +2859,10 @@ static void __d_move(struct dentry *dentry, struct dentry *target,
- 		dentry->d_parent->d_lockref.count++;
- 		if (dentry != old_parent) /* wasn't IS_ROOT */
- 			WARN_ON(!--old_parent->d_lockref.count);
++/*
++ * dcache_dentry_dir_max_sysctl:
++ *
++ * This is sysctl parameter "dentry-dir-max" which specifies a limit on
++ * the maximum number of negative dentries that are allowed under any
++ * given directory.
++ */
++int dcache_dentry_dir_max_sysctl __read_mostly;
++EXPORT_SYMBOL_GPL(dcache_dentry_dir_max_sysctl);
 +
-+		/* Adjust d_nchildren */
-+		dentry->d_parent->d_nchildren++;
-+		old_parent->d_nchildren--;
- 	} else {
- 		target->d_parent = old_parent;
- 		swap_names(dentry, target);
-diff --git a/include/linux/dcache.h b/include/linux/dcache.h
-index 2762ca2508f9..e9e66eb50d1a 100644
---- a/include/linux/dcache.h
-+++ b/include/linux/dcache.h
-@@ -75,12 +75,12 @@ extern struct dentry_stat_t dentry_stat;
-  * large memory footprint increase).
-  */
- #ifdef CONFIG_64BIT
--# define DNAME_INLINE_LEN 32 /* 192 bytes */
-+# define DNAME_INLINE_LEN 28 /* 192 bytes */
- #else
- # ifdef CONFIG_SMP
--#  define DNAME_INLINE_LEN 36 /* 128 bytes */
-+#  define DNAME_INLINE_LEN 32 /* 128 bytes */
- # else
--#  define DNAME_INLINE_LEN 40 /* 128 bytes */
-+#  define DNAME_INLINE_LEN 36 /* 128 bytes */
- # endif
+ #if defined(CONFIG_SYSCTL) && defined(CONFIG_PROC_FS)
+ 
+ /*
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index d396aaaf19a3..cd0a83ff1029 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -118,6 +118,7 @@ extern unsigned int sysctl_nr_open_min, sysctl_nr_open_max;
+ #ifndef CONFIG_MMU
+ extern int sysctl_nr_trim_pages;
  #endif
++extern int dcache_dentry_dir_max_sysctl;
  
-@@ -96,6 +96,7 @@ struct dentry {
- 	struct inode *d_inode;		/* Where the name belongs to - NULL is
- 					 * negative */
- 	unsigned char d_iname[DNAME_INLINE_LEN];	/* small names */
-+	unsigned int d_nchildren;	/* # of children (directory only) */
+ /* Constants used for minimum and  maximum */
+ #ifdef CONFIG_LOCKUP_DETECTOR
+@@ -127,6 +128,7 @@ static int sixty = 60;
+ static int __maybe_unused neg_one = -1;
+ static int __maybe_unused two = 2;
+ static int __maybe_unused four = 4;
++static int __maybe_unused zero;
+ static unsigned long zero_ul;
+ static unsigned long one_ul = 1;
+ static unsigned long long_max = LONG_MAX;
+@@ -1949,6 +1951,14 @@ static struct ctl_table fs_table[] = {
+ 		.proc_handler	= proc_dointvec_minmax,
+ 		.extra1		= SYSCTL_ONE,
+ 	},
++	{
++		.procname	= "dentry-dir-max",
++		.data		= &dcache_dentry_dir_max_sysctl,
++		.maxlen		= sizeof(dcache_dentry_dir_max_sysctl),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= &zero,
++	},
+ 	{ }
+ };
  
- 	/* Ref lookup also touches following */
- 	struct lockref d_lockref;	/* per-dentry lock and refcount */
 -- 
 2.18.1
 
