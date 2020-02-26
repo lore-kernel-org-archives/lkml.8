@@ -2,115 +2,172 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B344AC4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C04E6C4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9450721556
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C85D21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:02:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Jp2sNT/f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbgBZH65 (ORCPT
+        id S1727327AbgBZICe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 02:58:57 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:63484 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbgBZH65 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 02:58:57 -0500
-X-AuditID: c0a8fbf4-473ff70000004419-e3-5e56253ff69e
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 89.74.17433.F35265E5; Wed, 26 Feb 2020 08:58:55 +0100 (CET)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0487.000; Wed, 26 Feb 2020 08:58:50 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>
-CC:     "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>
-Subject: Re: [PATCH v4 9/9] power: supply: Support ROHM bd99954 charger
-Thread-Topic: [PATCH v4 9/9] power: supply: Support ROHM bd99954 charger
-Thread-Index: AQHV67lhdTml9IRASUqjFOfVB9Uut6gsBxOAgAEF5AA=
-Date:   Wed, 26 Feb 2020 07:58:49 +0000
-Message-ID: <cce763015445ead7fbe5aafd929c52dedd375167.camel@fi.rohmeurope.com>
-References: <cover.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
-         <529dd6298be245051f333ab4d9264902bf889aa6.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
-         <c187bb77-e804-93bd-64db-9418be58f191@infradead.org>
-In-Reply-To: <c187bb77-e804-93bd-64db-9418be58f191@infradead.org>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6C94D26BEAFBF94BBBA6AD24B017A118@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Wed, 26 Feb 2020 03:02:34 -0500
+Received: from mail-am6eur05on2081.outbound.protection.outlook.com ([40.107.22.81]:47041
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727223AbgBZICe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 03:02:34 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mDRXPdF9ivvZIykRU1NrqGGaIzxu133lDuIbRdaJLJU/qICnlnqK7GlExWcuoiuRO8pii4Ue/kHFKlyOQX5pk+ugUXZimey6GBGWqISqRH4vAmCiXEWI3K1cqwEPIkRf7SxnUo/TJ/+zSfC1slVDlziUBIVwHXFVrHs//sY0xA/7E61PqurtOlMJ/JJx09rlC67GsarftVmx4pILNZ0xWWH/Gp3ZXmHHIsU4cEo08SEr8eWQZu5Z8YREoy+hBluE+agmO7AEHvPd0+qltjLkTIr79D5S+AyaQZ8Ke3NGLKHmZPDeB7klEmYOkIa5nq+0+6HMYRtGYWxlAod9OWxmcg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ubw8Gbl6XvHXPC/De3ehZs4cLA7iprv6PcCy5XOA4qM=;
+ b=EuTUUf8MSw6OR1gDU88R0frdWlypGwOAXYg9QgH14eqA+14tatPrgdLkLGP0sLVAODF9TqVCddYomu/LgSGnBK+Fs4cEyCAsp2vBc7Ow1rSQwpDNnWNjIHgHUzRTE+T5U/m5CHeKdrNMMZhPrdeWb28sfgiaN9Z+g2qakc46MfCwSSHiSDDVtpHsnqJfet0sN0cGFL5/T4lUiiPsmuPbr/wcw8veJjuvtZE/T0iCEzymwuMAH8FcGUrWtZbZWyDspqVze2eu7Tn1fVIsDtBCMjxZ+0Yf4PjqZ6LGS2PAItSxNBR1c+LnhBkBLwbD/LCNE+12aAYT5QMQZxaYm3+fZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ubw8Gbl6XvHXPC/De3ehZs4cLA7iprv6PcCy5XOA4qM=;
+ b=Jp2sNT/fB8fwl17Zzm834zl277h8BK46X28oq78liM2k1Gs+KwRSB7E0zqIojo/um2XtSaIAP8BSPcmJeJVPEkFMmI/T8O02uPAbncL47UhddHg4FQNAskBvCnYU+9gCX/6ievqkMvppKqGyVLAjKV0wf0e1d7FC9sx7NMWyMXc=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=laurentiu.palcu@nxp.com; 
+Received: from AM6PR04MB5766.eurprd04.prod.outlook.com (20.179.2.143) by
+ AM6PR04MB5510.eurprd04.prod.outlook.com (20.178.86.202) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2750.17; Wed, 26 Feb 2020 08:02:29 +0000
+Received: from AM6PR04MB5766.eurprd04.prod.outlook.com
+ ([fe80::4c26:a809:e360:5864]) by AM6PR04MB5766.eurprd04.prod.outlook.com
+ ([fe80::4c26:a809:e360:5864%3]) with mapi id 15.20.2750.021; Wed, 26 Feb 2020
+ 08:02:29 +0000
+Date:   Wed, 26 Feb 2020 10:02:26 +0200
+From:   Laurentiu Palcu <laurentiu.palcu@nxp.com>
+To:     Lucas Stach <l.stach@pengutronix.de>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>, agx@sigxcpu.org,
+        lukas@mntmn.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH v3 4/4] arm64: dts: imx8mq: add DCSS node
+Message-ID: <20200226080226.xppukafx7453xm2d@fsr-ub1864-141>
+References: <1575625964-27102-1-git-send-email-laurentiu.palcu@nxp.com>
+ <1575625964-27102-5-git-send-email-laurentiu.palcu@nxp.com>
+ <5d0f20b76e31360372a410983b013551062e9a91.camel@pengutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5d0f20b76e31360372a410983b013551062e9a91.camel@pengutronix.de>
+User-Agent: NeoMutt/20171215
+X-ClientProxiedBy: LO2P265CA0310.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a5::34) To AM6PR04MB5766.eurprd04.prod.outlook.com
+ (2603:10a6:20b:ab::15)
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAJsWRmVeSWpSXmKPExsVyYMXvjbr2qmFxBvtOKFhMffiEzWL+kXOs
-        Fs2L17NZfLvSwWRxedccNovPvUcYLZZev8hkMWfpCRaLuV+mMlu8vTOdxaJ17xF2i9O7Sxx4
-        PNbMW8PosXPWXXaPzSu0PDat6mTz2D93DbvH501yAWxR3DZJiSVlwZnpefp2CdwZO5ZOYy64
-        IlKxfvc/5gbGCSJdjJwcEgImEl2/97GA2EICVxklFp5h7GLkArJPMErMPD0TyOHgYBOwkei6
-        yQ5SIyKQI7F6Uh8bSA2zwCMWieMzethAEsIC7hJfmnYwQhR5SJxY188EYVtJzDr9AKyZRUBV
-        4tiiCWA1vAJ+Ep8uPmWHWHabUWLvh19gDZwCjhJvFm4Da2AUkJXobHgHFmcWEJfY9Ow7K8TV
-        AhJL9pxnhrBFJV4+/gcVV5LY+/MhC8jRzAKaEut36UO0OkgcWX6dEcJWlJjS/ZAd4gZBiZMz
-        n7BMYBSbhWTDLITuWUi6ZyHpnoWkewEj6ypGidzEzJz0xJJUQ72i1FK9ovyMXCCVnJ+7iRES
-        4192MP4/5HmIkYmD8RCjJAeTkihvnnxYnBBfUn5KZUZicUZ8UWlOavEhRgkOZiUR3o1fQ+OE
-        eFMSK6tSi/JhUtIcLErivOoPJ8YKCYDsyk5NLUgtgsnKcHAoSfBOkgYaKliUmp5akZaZU4KQ
-        ZuLgBBnOJSVSnJqXklqUWFqSEQ9KH/HFwAQCkuIB2uukDNTOW1yQmAsUhWg9xajNMeHl3EXM
-        HEfmLl3ELMSSl5+XKiXOy6kCVCoAUppRmge36BWjOAejkjDvTCWgLA8w2cPNeQW0ggloxeo/
-        wSArShIRUlINjE1a14X8fS2uM8pXeMhGOU0JdPFpnRGarHDQpdRy/+1pnPMOlq7x7oqq6Q1o
-        kGTYwqr7YsFOvca0Weu0K29NLPObH7OtP7dOVeGV7fFbkr+uvDZ0Zf+bpJno78s6TzpkbUxe
-        3LlZj/tWGapvDjdT7+SNCzO0XLhUfMkUhwsqu7dou51fdzRSiaU4I9FQi7moOBEAFVnpXbMD
-        AAA=
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from fsr-ub1864-141 (89.37.124.34) by LO2P265CA0310.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:a5::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Wed, 26 Feb 2020 08:02:28 +0000
+X-Originating-IP: [89.37.124.34]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: f663fe35-a783-48f3-a5ff-08d7ba9239e9
+X-MS-TrafficTypeDiagnostic: AM6PR04MB5510:|AM6PR04MB5510:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM6PR04MB5510FB5ECB81ACA5DC86653EFFEA0@AM6PR04MB5510.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 0325F6C77B
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(376002)(366004)(396003)(346002)(189003)(199004)(7416002)(1076003)(33716001)(8936002)(5660300002)(81156014)(316002)(81166006)(2906002)(478600001)(4326008)(54906003)(8676002)(44832011)(66946007)(66556008)(956004)(55016002)(86362001)(186003)(26005)(9686003)(6916009)(6496006)(52116002)(66476007)(16526019)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB5510;H:AM6PR04MB5766.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: M+SwYr+swCDsHI3G6FgqooKf4A+dtz4TFZ8C8mIp0ZYGcS7tsHt6BqiX4/gZOMjFW82Kk9kPvvDzUL+Lt1xxP8r0aIJ5hcqrH9fr2FjB6UlkZ+tryGrx60vhOyvK4vkLXjXguTSrHuZqIgS3i1x0/Tn98qyQY0u9mj2Dt6T/yMLMD8ZjSqY6kjLIExv70B3XKU8VvnNNzHvLc76arSMYTiVs4O78s93+5Hx31uDZwz8+gPNMe+kiE1GwFWF9SfVBaNzWG7VAniCl1SbFRyFuoxUCyronPe3eJ0MpLUxs16EYuJuKIBqGj8FUZj+7RsiPaOPETYTcCgJlciQf6SQ5AUCjsAUGQc8rsC7qbMoDUUjxjJzOAhggQtmqsAzlHqCwwRXp45JmTiH+H5MvwjnVsiHj2wNNWVcB4zJB0GlH2eXUxRxd8f3XKXmOwyYcc+00p6HwajstRR9/Z+pEAyZmef0rx45LNfujI1G+LZL0eOE=
+X-MS-Exchange-AntiSpam-MessageData: eSTfkwJ7bTImUH3LlamRv+EsHsG1S0bPMqFP4Y0MvQ2GcBEDCrvxZHHjFd6O4ei+N2SFiRouAxxeG+pSsJN7dDFXtp4loiOtZut31CTuL/vfu1t1gnI2yPN1H2eBldYQ/PmfIGUG8JwbF0SUjVEx0w==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f663fe35-a783-48f3-a5ff-08d7ba9239e9
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2020 08:02:29.8068
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0PG4r0mktqvD+9xQ9MQ7w2iuJeKllXFBJ0pdYXwvsxhmFFPDyrXHp6Sl5iN3CFcuP+MIT+0yqzNEOpZzejJhew==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5510
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gUmFuZHksDQoNCk9uIFR1ZSwgMjAyMC0wMi0yNSBhdCAwODoyMSAtMDgwMCwgUmFuZHkg
-RHVubGFwIHdyb3RlOg0KPiBPbiAyLzI1LzIwIDEyOjU1IEFNLCBNYXR0aSBWYWl0dGluZW4gd3Jv
-dGU6DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcG93ZXIvc3VwcGx5L0tjb25maWcNCj4gPiBi
-L2RyaXZlcnMvcG93ZXIvc3VwcGx5L0tjb25maWcNCj4gPiBpbmRleCA4NzgxYzY3NGVkMDcuLjBi
-M2JhZDZmYzczNiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3Bvd2VyL3N1cHBseS9LY29uZmln
-DQo+ID4gKysrIGIvZHJpdmVycy9wb3dlci9zdXBwbHkvS2NvbmZpZw0KPiA+IEBAIC03MDIsNiAr
-NzAyLDE2IEBAIGNvbmZpZyBDSEFSR0VSX0JENzA1MjgNCj4gPiAgCSBpbmZvcm1hdGlvbiBhbmQg
-YWx0ZXJpbmcgY2hhcmdlciBjb25maWd1cmF0aW9ucyBmcm9tIGNoYXJnZXINCj4gPiAgCSBibG9j
-ayBvZiB0aGUgUk9ITSBCRDcwNTI4IFBvd2VyIE1hbmFnZW1lbnQgSUMuDQo+ID4gIA0KPiANCj4g
-SGksDQo+IA0KPiA+ICtjb25maWcgQ0hBUkdFUl9CRDk5OTU0DQo+ID4gKwl0cmlzdGF0ZSAiUk9I
-TSBiZDk5OTU0IGNoYXJnZXIgZHJpdmVyIg0KPiA+ICsJZGVwZW5kcyBvbiBJMkMNCj4gPiArCXNl
-bGVjdCBMSU5FQVJfUkFOR0VTDQo+ID4gKwlkZWZhdWx0IG4NCj4gDQo+IERyb3AgdGhlICJkZWZh
-dWx0IG4iLCBzaW5jZSBpdCBpcyBhbHJlYWR5IHRoZSBkZWZhdWx0Lg0KPiANCj4gPiArCWhlbHAN
-Cj4gPiArCSBTYXkgWSBoZXJlIHRvIGVuYWJsZSBzdXBwb3J0IGZvciBnZXR0aW5nIGJhdHRlcnkg
-YW5kIGNoYXJnZXINCj4gPiArCSBpbmZvcm1hdGlvbiBhbmQgYWx0ZXJpbmcgY2hhcmdlciBjb25m
-aWd1cmF0aW9ucyBmcm9tIHRoZSBST0hNDQo+ID4gKwkgQkQ5OTk1NCBjaGFyZ2VyIElDLg0KPiAN
-Cj4gUGxlYXNlIGluZGVudCB0aGUgMyBsaW5lcyBvZiBoZWxwIHRleHQgd2l0aCBvbmUgYWRkaXRp
-b25hbCBzcGFjZSAoMg0KPiB0b3RhbCkuDQo+IFNlZSBEb2N1bWVudGF0aW9uL3Byb2Nlc3MvY29k
-aW5nLXN0eWxlLnJzdDoNCj4gDQo+IDEwKSBLY29uZmlnIGNvbmZpZ3VyYXRpb24gZmlsZXMNCj4g
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiANCj4gRm9yIGFsbCBvZiB0aGUgS2Nv
-bmZpZyogY29uZmlndXJhdGlvbiBmaWxlcyB0aHJvdWdob3V0IHRoZSBzb3VyY2UNCj4gdHJlZSwN
-Cj4gdGhlIGluZGVudGF0aW9uIGlzIHNvbWV3aGF0IGRpZmZlcmVudC4gIExpbmVzIHVuZGVyIGEg
-YGBjb25maWdgYA0KPiBkZWZpbml0aW9uDQo+IGFyZSBpbmRlbnRlZCB3aXRoIG9uZSB0YWIsIHdo
-aWxlIGhlbHAgdGV4dCBpcyBpbmRlbnRlZCBhbiBhZGRpdGlvbmFsDQo+IHR3bw0KPiBzcGFjZXMu
-ICBFeGFtcGxlOjoNCj4gDQo+ICAgY29uZmlnIEFVRElUDQo+IAlib29sICJBdWRpdGluZyBzdXBw
-b3J0Ig0KPiAJZGVwZW5kcyBvbiBORVQNCj4gCWhlbHANCj4gCSAgRW5hYmxlIGF1ZGl0aW5nIGlu
-ZnJhc3RydWN0dXJlIHRoYXQgY2FuIGJlIHVzZWQgd2l0aCBhbm90aGVyDQo+IAkgIGtlcm5lbCBz
-dWJzeXN0ZW0sIHN1Y2ggYXMgU0VMaW51eCAod2hpY2ggcmVxdWlyZXMgdGhpcyBmb3INCj4gCSAg
-bG9nZ2luZyBvZiBhdmMgbWVzc2FnZXMgb3V0cHV0KS4gIERvZXMgbm90IGRvIHN5c3RlbS1jYWxs
-DQo+IAkgIGF1ZGl0aW5nIHdpdGhvdXQgQ09ORklHX0FVRElUU1lTQ0FMTC4NCj4gDQo+ID4gKw0K
-PiA+ICBjb25maWcgQ0hBUkdFUl9XSUxDTw0KPiA+ICAJdHJpc3RhdGUgIldpbGNvIEVDIGJhc2Vk
-IGNoYXJnZXIgZm9yIENocm9tZU9TIg0KPiA+ICAJZGVwZW5kcyBvbiBXSUxDT19FQw0KPiANCj4g
-dGhhbmtzLg0KDQpUaGFua3MgYWdhaW4gZm9yIHRoZSByZXZpZXcuIEknbGwgZml4IHRoZXNlIGZv
-ciB0aGUgbmV4dCB2ZXJzaW9uIDopDQoNCkJyLA0KCU1hdHRpIFZhaXR0aW5lbg0KDQo=
+Hi Lucas,
+
+On Mon, Feb 24, 2020 at 06:23:51PM +0100, Lucas Stach wrote:
+> On Fr, 2019-12-06 at 11:52 +0200, Laurentiu Palcu wrote:
+> > This patch adds the node for iMX8MQ Display Controller Subsystem.
+> >
+> > Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> > ---
+> >  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 25 +++++++++++++++++++++++++
+> >  1 file changed, 25 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > index f6e840c..da7e485 100644
+> > --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > @@ -981,6 +981,31 @@
+> >                               interrupt-controller;
+> >                               #interrupt-cells = <1>;
+> >                       };
+> > +
+> > +                     dcss: display-controller@32e00000 {
+> 
+> Node address is lower than the irqsteer node, so the dcss node should
+> be added before, not after the irqsteer node in the DT.
+
+That's correct, I'll move it.
+
+
+> 
+> > +                             #address-cells = <1>;
+> > +                             #size-cells = <0>;
+> > +                             compatible = "nxp,imx8mq-dcss";
+> > +                             reg = <0x32e00000 0x2d000>, <0x32e2f000 0x1000>;
+> > +                             interrupts = <6>, <8>, <9>;
+> > +                             interrupt-names = "ctx_ld", "ctxld_kick", "vblank";
+> > +                             interrupt-parent = <&irqsteer>;
+> > +                             clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>,
+> > +                                      <&clk IMX8MQ_CLK_DISP_AXI_ROOT>,
+> > +                                      <&clk IMX8MQ_CLK_DISP_RTRM_ROOT>,
+> > +                                      <&clk IMX8MQ_VIDEO2_PLL_OUT>,
+> > +                                      <&clk IMX8MQ_CLK_DISP_DTRC>;
+> > +                             clock-names = "apb", "axi", "rtrm", "pix", "dtrc";
+> > +                             assigned-clocks = <&clk IMX8MQ_CLK_DISP_AXI>,
+> > +                                               <&clk IMX8MQ_CLK_DISP_RTRM>,
+> > +                                               <&clk IMX8MQ_VIDEO2_PLL1_REF_SEL>;
+> > +                             assigned-clock-parents = <&clk IMX8MQ_SYS1_PLL_800M>,
+> > +                                                      <&clk IMX8MQ_SYS1_PLL_800M>,
+> > +                                                      <&clk IMX8MQ_CLK_27M>;
+> > +                             assigned-clock-rates = <800000000>,
+> > +                                                        <400000000>;
+> 
+> Second line is not aligned to the first one.
+
+ack
+
+Thanks,
+laurentiu
+
+> 
+> > +                             status = "disabled";
+> > +                     };
+> >               };
+> >
+> >               gpu: gpu@38000000 {
+> 
+
+-- 
+Laurentiu
+NXP
