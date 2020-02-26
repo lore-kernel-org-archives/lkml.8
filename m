@@ -2,474 +2,153 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF068C4BA0D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B90C4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 669F121556
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:14:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582701265;
-	bh=Z98ON1hUeAoPuZyzybLMb3+lvXHsoPQFWByBsOmMJps=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1BLtLdbAJ+SS8EwKxP8mYVpDA//1fVoRCIoe3/MooVY4s0ucoE8jCg8MPi2uo5Feu
-	 mtBKeqQFhzugW1tnHGvuXwvPaQMFL4ELisk8mtneQ4tGV1L901slh5chtmpm7+3Elk
-	 f5IiW/w1ja75gFdIjqlKA8vPPvpBcSm1ghPCX7WI=
+	by mail.kernel.org (Postfix) with ESMTP id 192A121556
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:16:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="AdvfF+DV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbgBZHOY (ORCPT
+        id S1727201AbgBZHQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 02:14:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43912 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726823AbgBZHOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 02:14:23 -0500
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3703924676
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 07:14:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582701262;
-        bh=Z98ON1hUeAoPuZyzybLMb3+lvXHsoPQFWByBsOmMJps=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zqD6Lz1W0sTug8zTxHzCoVXuTCK/qlxn7R8HSRLul8XBW3MnIO7ZfhpYvOmRqB/tu
-         3+XMvMi5lKrlsS6dbjH/N7w9jhfygSSTo5s1ybqAUpfW3qklPHsnzefRwr0IhBtnlQ
-         ayXGdoC+e0i5zMNKMe9/BUYqyANXywv6K8urkZlk=
-Received: by mail-wm1-f49.google.com with SMTP id f15so942390wml.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 23:14:22 -0800 (PST)
-X-Gm-Message-State: APjAAAUwchHz1NXvOwfe8GL6mITLJ4pQ+LqaG58iQXgaIoBQ2vLZByug
-        zaNm12sAdO8W2VOPqpNGhllPXl18MYImE6tgzUXKrQ==
-X-Google-Smtp-Source: APXvYqy38I+zeTvtcqHgC9uwnKQDf/w10sxjlQcggGr2HFUGpE7CI22mAK6Eep8G2S00zd7Wb1tHeepQReuvP9YpFMY=
-X-Received: by 2002:a7b:c4cc:: with SMTP id g12mr3972846wmk.68.1582701260448;
- Tue, 25 Feb 2020 23:14:20 -0800 (PST)
+        Wed, 26 Feb 2020 02:16:32 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:32806 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726823AbgBZHQb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 02:16:31 -0500
+Received: by mail-pl1-f196.google.com with SMTP id ay11so942897plb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 23:16:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=bUll3MF+KOORxkWKae6CeWZqF5RK093f70VhPi5nTaA=;
+        b=AdvfF+DViD2Iihe2gGoCejFW6L9CR4CRCuvhd702kHXMW9aLKiXKfmFyTpucUBXYvN
+         cEZRvzdUlmSDzOLcdBFaPWO/Gqx8canJLTZTZUnf4NBrmhRAHnjLBh4VPtK3yWqwsia0
+         ED/nVdqp1ZBaUikJEfLHTuQiqHyge9lN9SdrA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=bUll3MF+KOORxkWKae6CeWZqF5RK093f70VhPi5nTaA=;
+        b=ezedIkS0dtRFhXBt79qK1g76ZJN3j+gpCpJCJJwcN0orfNyTiJidNSGWAt/Uxhdc4i
+         WZsGMYPQa8fRpFXLjU/H2Nu1uf8GCVvlCHivpsx1kgGSZOi5zvEeY/UOgFXHYxV50pnB
+         yVaNkRddBKU7GixwIPZiru+xZqMrIontI8VAX4g5VfkCBClwdJ9IfLLgAEXWhIjOwXu5
+         Mm0zX/wFjZJcDIc0qogMQa1MXUVt400er02YlsiOx/PqfuSlBW6sFhgWjrx8nDGCTEX+
+         yLFrDvA+kn7bRr/UJ9lgI895CdfzpOsHhloXaMMLARpt/vLSmwfxq8UFtDuI8n1/H1Bs
+         7Tag==
+X-Gm-Message-State: APjAAAXCVDQOaGvILFAWKbIP7GKTPfg+6Z7mQc+41HTswalzdlaYSQH8
+        SEyBdjBBJlu0vGOHDvUQSfqI7Q==
+X-Google-Smtp-Source: APXvYqyTVYEdw3GG568w+1dNFzY9ZMbswpQ8Fc19s42h9JN/v4uscW8ujuBJbXp4NXq4DVrPra5Yow==
+X-Received: by 2002:a17:902:bf49:: with SMTP id u9mr2644385pls.199.1582701390378;
+        Tue, 25 Feb 2020 23:16:30 -0800 (PST)
+Received: from localhost (2001-44b8-111e-5c00-5952-947b-051c-ea5f.static.ipv6.internode.on.net. [2001:44b8:111e:5c00:5952:947b:51c:ea5f])
+        by smtp.gmail.com with ESMTPSA id p23sm1364024pgn.92.2020.02.25.23.16.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 23:16:29 -0800 (PST)
+From:   Daniel Axtens <dja@axtens.net>
+To:     Jason Yan <yanaijie@huawei.com>, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com,
+        christophe.leroy@c-s.fr, benh@kernel.crashing.org,
+        paulus@samba.org, npiggin@gmail.com, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com, oss@buserror.net
+Cc:     linux-kernel@vger.kernel.org, zhaohongjiang@huawei.com,
+        Jason Yan <yanaijie@huawei.com>
+Subject: Re: [PATCH v3 0/6] implement KASLR for powerpc/fsl_booke/64
+In-Reply-To: <20200206025825.22934-1-yanaijie@huawei.com>
+References: <20200206025825.22934-1-yanaijie@huawei.com>
+Date:   Wed, 26 Feb 2020 18:16:26 +1100
+Message-ID: <87tv3drf79.fsf@dja-thinkpad.axtens.net>
 MIME-Version: 1.0
-References: <20200226011037.7179-1-atish.patra@wdc.com> <20200226011037.7179-5-atish.patra@wdc.com>
-In-Reply-To: <20200226011037.7179-5-atish.patra@wdc.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 26 Feb 2020 08:14:09 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu8pQ3sATCc_XysQ0GUj_ahcQvjP6idgVHek8L7+ENdXKw@mail.gmail.com>
-Message-ID: <CAKv+Gu8pQ3sATCc_XysQ0GUj_ahcQvjP6idgVHek8L7+ENdXKw@mail.gmail.com>
-Subject: Re: [RFC PATCH 4/5] RISC-V: Add PE/COFF header for EFI stub
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anup Patel <Anup.Patel@wdc.com>, Arnd Bergmann <arnd@arndb.de>,
-        Borislav Petkov <bp@suse.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-riscv@lists.infradead.org, Mao Han <han_mao@c-sky.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Alexander Graf <agraf@csgraf.de>,
-        "leif@nuviainc.com" <leif@nuviainc.com>,
-        "Chang, Abner (HPS SW/FW Technologist)" <abner.chang@hpe.com>,
-        "Schaefer, Daniel (DualStudy)" <daniel.schaefer@hpe.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Feb 2020 at 02:10, Atish Patra <atish.patra@wdc.com> wrote:
->
-> Linux kernel Image can appear as an EFI application With appropriate
-> PE/COFF header fields in the beginning of the Image header. An EFI
-> application loader can directly load a Linux kernel Image and an EFI
-> stub residing in kernel can boot Linux kernel directly.
->
-> Add the necessary PE/COFF header.
->
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> ---
->  arch/riscv/include/asm/Kbuild     |   1 -
->  arch/riscv/include/asm/sections.h |  13 ++++
->  arch/riscv/kernel/Makefile        |   4 ++
->  arch/riscv/kernel/efi-header.S    | 107 ++++++++++++++++++++++++++++++
->  arch/riscv/kernel/head.S          |  15 +++++
->  arch/riscv/kernel/image-vars.h    |  52 +++++++++++++++
->  arch/riscv/kernel/vmlinux.lds.S   |  27 ++++++--
->  7 files changed, 212 insertions(+), 7 deletions(-)
->  create mode 100644 arch/riscv/include/asm/sections.h
->  create mode 100644 arch/riscv/kernel/efi-header.S
->  create mode 100644 arch/riscv/kernel/image-vars.h
->
-> diff --git a/arch/riscv/include/asm/Kbuild b/arch/riscv/include/asm/Kbuild
-> index 517394390106..ef797fe44934 100644
-> --- a/arch/riscv/include/asm/Kbuild
-> +++ b/arch/riscv/include/asm/Kbuild
-> @@ -24,7 +24,6 @@ generic-y += local64.h
->  generic-y += mm-arch-hooks.h
->  generic-y += percpu.h
->  generic-y += preempt.h
-> -generic-y += sections.h
->  generic-y += serial.h
->  generic-y += shmparam.h
->  generic-y += topology.h
-> diff --git a/arch/riscv/include/asm/sections.h b/arch/riscv/include/asm/sections.h
-> new file mode 100644
-> index 000000000000..3a9971b1210f
-> --- /dev/null
-> +++ b/arch/riscv/include/asm/sections.h
-> @@ -0,0 +1,13 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (C) 2020 Western Digital Corporation or its affiliates.
-> + */
-> +#ifndef __ASM_SECTIONS_H
-> +#define __ASM_SECTIONS_H
-> +
-> +#include <asm-generic/sections.h>
-> +
-> +extern char _start[];
-> +extern char _start_kernel[];
-> +
-> +#endif /* __ASM_SECTIONS_H */
-> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-> index 9601ac907f70..471b1c73f77d 100644
-> --- a/arch/riscv/kernel/Makefile
-> +++ b/arch/riscv/kernel/Makefile
-> @@ -29,6 +29,10 @@ obj-y        += cacheinfo.o
->  obj-$(CONFIG_MMU) += vdso.o vdso/
->
->  obj-$(CONFIG_RISCV_M_MODE)     += clint.o
-> +OBJCOPYFLAGS := --prefix-symbols=__efistub_
-> +$(obj)/%.stub.o: $(obj)/%.o FORCE
-> +       $(call if_changed,objcopy)
-> +
->  obj-$(CONFIG_FPU)              += fpu.o
->  obj-$(CONFIG_SMP)              += smpboot.o
->  obj-$(CONFIG_SMP)              += smp.o
-> diff --git a/arch/riscv/kernel/efi-header.S b/arch/riscv/kernel/efi-header.S
-> new file mode 100644
-> index 000000000000..af959e748d93
-> --- /dev/null
-> +++ b/arch/riscv/kernel/efi-header.S
-> @@ -0,0 +1,107 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (C) 2019 Western Digital Corporation or its affiliates.
-> + * Adapted from arch/arm64/kernel/efi-header.S
-> + */
-> +
-> +#include <linux/pe.h>
-> +#include <linux/sizes.h>
-> +
-> +       .macro  __EFI_PE_HEADER
-> +       .long   PE_MAGIC
-> +coff_header:
-> +       .short  IMAGE_FILE_MACHINE_RISCV64              // Machine
-> +       .short  section_count                           // NumberOfSections
-> +       .long   0                                       // TimeDateStamp
-> +       .long   0                                       // PointerToSymbolTable
-> +       .long   0                                       // NumberOfSymbols
-> +       .short  section_table - optional_header         // SizeOfOptionalHeader
-> +       .short  IMAGE_FILE_DEBUG_STRIPPED | \
-> +               IMAGE_FILE_EXECUTABLE_IMAGE | \
-> +               IMAGE_FILE_LINE_NUMS_STRIPPED           // Characteristics
-> +
-> +optional_header:
-> +       .short  PE_OPT_MAGIC_PE32PLUS                   // PE32+ format
-> +       .byte   0x02                                    // MajorLinkerVersion
-> +       .byte   0x14                                    // MinorLinkerVersion
-> +       .long   __text_end - efi_header_end             // SizeOfCode
-> +       .long   _end - __text_end                       // SizeOfInitializedData
-> +       .long   0                                       // SizeOfUninitializedData
-> +       .long   __efistub_efi_entry - _start            // AddressOfEntryPoint
-> +       .long   efi_header_end - _start                 // BaseOfCode
-> +
-> +extra_header_fields:
-> +       .quad   0                                       // ImageBase
-> +       .long   SZ_4K                                   // SectionAlignment
-> +       .long   PECOFF_FILE_ALIGNMENT                   // FileAlignment
-> +       .short  0                                       // MajorOperatingSystemVersion
-> +       .short  0                                       // MinorOperatingSystemVersion
-> +       .short  0                                       // MajorImageVersion
-> +       .short  0                                       // MinorImageVersion
+Hi Jason,
 
-Put LINUX_EFISTUB_MAJOR_VERSION and LINUX_EFISTUB_MINOR_VERSION here
+> This is a try to implement KASLR for Freescale BookE64 which is based on
+> my earlier implementation for Freescale BookE32:
+> https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=131718
+>
+> The implementation for Freescale BookE64 is similar as BookE32. One
+> difference is that Freescale BookE64 set up a TLB mapping of 1G during
+> booting. Another difference is that ppc64 needs the kernel to be
+> 64K-aligned. So we can randomize the kernel in this 1G mapping and make
+> it 64K-aligned. This can save some code to creat another TLB map at
+> early boot. The disadvantage is that we only have about 1G/64K = 16384
+> slots to put the kernel in.
+>
+>     KERNELBASE
+>
+>           64K                     |--> kernel <--|
+>            |                      |              |
+>         +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
+>         |  |  |  |....|  |  |  |  |  |  |  |  |  |....|  |  |
+>         +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
+>         |                         |                        1G
+>         |----->   offset    <-----|
+>
+>                               kernstart_virt_addr
+>
+> I'm not sure if the slot numbers is enough or the design has any
+> defects. If you have some better ideas, I would be happy to hear that.
+>
+> Thank you all.
+>
 
-> +       .short  0                                       // MajorSubsystemVersion
-> +       .short  0                                       // MinorSubsystemVersion
-> +       .long   0                                       // Win32VersionValue
-> +
-> +       .long   _end - _start                           // SizeOfImage
-> +
-> +       // Everything before the kernel image is considered part of the header
-> +       .long   efi_header_end - _start                 // SizeOfHeaders
-> +       .long   0                                       // CheckSum
-> +       .short  IMAGE_SUBSYSTEM_EFI_APPLICATION         // Subsystem
-> +       .short  0                                       // DllCharacteristics
-> +       .quad   0                                       // SizeOfStackReserve
-> +       .quad   0                                       // SizeOfStackCommit
-> +       .quad   0                                       // SizeOfHeapReserve
-> +       .quad   0                                       // SizeOfHeapCommit
-> +       .long   0                                       // LoaderFlags
-> +       .long   (section_table - .) / 8                 // NumberOfRvaAndSizes
-> +
-> +       .quad   0                                       // ExportTable
-> +       .quad   0                                       // ImportTable
-> +       .quad   0                                       // ResourceTable
-> +       .quad   0                                       // ExceptionTable
-> +       .quad   0                                       // CertificationTable
-> +       .quad   0                                       // BaseRelocationTable
-> +
-> +       // Section table
-> +section_table:
-> +       .ascii  ".text\0\0\0"
-> +       .long   __text_end - efi_header_end             // VirtualSize
-> +       .long   efi_header_end - _start                 // VirtualAddress
-> +       .long   __text_end - efi_header_end             // SizeOfRawData
-> +       .long   efi_header_end - _start                 // PointerToRawData
-> +
-> +       .long   0                                       // PointerToRelocations
-> +       .long   0                                       // PointerToLineNumbers
-> +       .short  0                                       // NumberOfRelocations
-> +       .short  0                                       // NumberOfLineNumbers
-> +       .long   IMAGE_SCN_CNT_CODE | \
-> +               IMAGE_SCN_MEM_READ | \
-> +               IMAGE_SCN_MEM_EXECUTE                   // Characteristics
-> +
-> +       .ascii  ".data\0\0\0"
-> +       .long   __data_virt_size                        // VirtualSize
-> +       .long   __text_end - _start                     // VirtualAddress
-> +       .long   __data_raw_size                         // SizeOfRawData
-> +       .long   __text_end - _start                     // PointerToRawData
-> +
-> +       .long   0                                       // PointerToRelocations
-> +       .long   0                                       // PointerToLineNumbers
-> +       .short  0                                       // NumberOfRelocations
-> +       .short  0                                       // NumberOfLineNumbers
-> +       .long   IMAGE_SCN_CNT_INITIALIZED_DATA | \
-> +               IMAGE_SCN_MEM_READ | \
-> +               IMAGE_SCN_MEM_WRITE                     // Characteristics
-> +
-> +       .set    section_count, (. - section_table) / 40
-> +
+Are you making any attempt to hide kernel address leaks in this series?
+I've just been looking at the stackdump code just now, and it directly
+prints link registers and stack pointers, which is probably enough to
+determine the kernel base address:
 
-You dropped the debug header here, which is actually *very* useful if
-you want to single step through the stub from DEBUG edk2 firmware.
+                  SPs:               LRs:             %pS pointer
+[    0.424506] [c0000000de403970] [c000000001fc0458] dump_stack+0xfc/0x154 (unreliable)
+[    0.424593] [c0000000de4039c0] [c000000000267eec] panic+0x258/0x5ac
+[    0.424659] [c0000000de403a60] [c0000000024d7a00] mount_block_root+0x634/0x7c0
+[    0.424734] [c0000000de403be0] [c0000000024d8100] prepare_namespace+0x1ec/0x23c
+[    0.424811] [c0000000de403c60] [c0000000024d7010] kernel_init_freeable+0x804/0x880
 
-> +       /*
-> +        * EFI will load .text onwards at the 4k section alignment
-> +        * described in the PE/COFF header. To ensure that instruction
-> +        * sequences using an adrp and a :lo12: immediate will function
+git grep \\\"REG\\\" arch/powerpc shows a few other uses like this, all
+in process.c or in xmon.
 
-Surely, this is inaccurate for RISC-V?
+Maybe replacing the REG format string in KASLR mode would be sufficient?
 
-> +        * correctly at this alignment, we must ensure that .text is
-> +        * placed at a 4k boundary in the Image to begin with.
-> +        */
-> +       .align 12
-> +efi_header_end:
-> +       .endm
-> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-> index ac5b0e0a02f6..835dc76de285 100644
-> --- a/arch/riscv/kernel/head.S
-> +++ b/arch/riscv/kernel/head.S
-> @@ -13,6 +13,7 @@
->  #include <asm/csr.h>
->  #include <asm/hwcap.h>
->  #include <asm/image.h>
-> +#include "efi-header.S"
->
->  __HEAD
->  ENTRY(_start)
-> @@ -22,10 +23,17 @@ ENTRY(_start)
->          * Do not modify it without modifying the structure and all bootloaders
->          * that expects this header format!!
->          */
-> +#ifdef CONFIG_EFI
-> +       /*
-> +        * This instruction decodes to "MZ" ASCII required by UEFI.
-> +        */
-> +       li s4,-13
+Regards,
+Daniel
 
-What happens if you try to do plain boot on an EFI kernel? On ARM and
-x86, we took care to use a 'MZ' opcode that behaves as a pseudo-NOP,
-and jump to start_kernel right after, so if you boot the EFI kernel as
-a normal kernel, it still works.
 
-> +#else
->         /* jump to start kernel */
->         j _start_kernel
->         /* reserved */
->         .word 0
-> +#endif
->         .balign 8
->  #if __riscv_xlen == 64
->         /* Image load offset(2MB) from start of RAM */
-> @@ -43,7 +51,14 @@ ENTRY(_start)
->         .ascii RISCV_IMAGE_MAGIC
->         .balign 4
->         .ascii RISCV_IMAGE_MAGIC2
-> +#ifdef CONFIG_EFI
-> +       .word pe_head_start - _start
-> +pe_head_start:
-> +
-> +       __EFI_PE_HEADER
-> +#else
->         .word 0
-> +#endif
+> v2->v3:
+>   Fix build error when KASLR is disabled.
+> v1->v2:
+>   Add __kaslr_offset for the secondary cpu boot up.
 >
->  .align 2
->  #ifdef CONFIG_MMU
-> diff --git a/arch/riscv/kernel/image-vars.h b/arch/riscv/kernel/image-vars.h
-> new file mode 100644
-> index 000000000000..57abb85065e9
-> --- /dev/null
-> +++ b/arch/riscv/kernel/image-vars.h
-> @@ -0,0 +1,52 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Linker script variables to be set after section resolution, as
-> + * ld.lld does not like variables assigned before SECTIONS is processed.
-> + * Based on arch/arm64/kerne/image-vars.h
-> + */
-> +#ifndef __RISCV_KERNEL_IMAGE_VARS_H
-> +#define __RISCV_KERNEL_IMAGE_VARS_H
-> +
-> +#ifndef LINKER_SCRIPT
-> +#error This file should only be included in vmlinux.lds.S
-> +#endif
-> +
-> +#ifdef CONFIG_EFI
-> +
-> +__efistub_stext_offset = _start_kernel - _start;
-> +
-> +/*
-> + * The EFI stub has its own symbol namespace prefixed by __efistub_, to
-> + * isolate it from the kernel proper. The following symbols are legally
-> + * accessed by the stub, so provide some aliases to make them accessible.
-> + * Only include data symbols here, or text symbols of functions that are
-> + * guaranteed to be safe when executed at another offset than they were
-> + * linked at. The routines below are all implemented in assembler in a
-> + * position independent manner
-> + */
-> +__efistub_memcmp               = memcmp;
-> +__efistub_memchr               = memchr;
-> +__efistub_memcpy               = memcpy;
-> +__efistub_memmove              = memmove;
-> +__efistub_memset               = memset;
-> +__efistub_strlen               = strlen;
-> +__efistub_strnlen              = strnlen;
-> +__efistub_strcmp               = strcmp;
-> +__efistub_strncmp              = strncmp;
-> +__efistub_strrchr              = strrchr;
-> +
-> +#ifdef CONFIG_KASAN
-> +__efistub___memcpy             = memcpy;
-> +__efistub___memmove            = memmove;
-> +__efistub___memset             = memset;
-> +#endif
-> +
-> +__efistub__start               = _start;
-> +__efistub__start_kernel                = _start_kernel;
-> +__efistub__end                 = _end;
-> +__efistub__edata               = _edata;
-> +__efistub_screen_info          = screen_info;
-> +
-> +#endif
-> +
-> +#endif /* __RISCV_KERNEL_IMAGE_VARS_H */
-> diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
-> index b32640300d07..933b9e9a4b39 100644
-> --- a/arch/riscv/kernel/vmlinux.lds.S
-> +++ b/arch/riscv/kernel/vmlinux.lds.S
-> @@ -9,6 +9,7 @@
->  #include <asm/page.h>
->  #include <asm/cache.h>
->  #include <asm/thread_info.h>
-> +#include "image-vars.h"
+> Jason Yan (6):
+>   powerpc/fsl_booke/kaslr: refactor kaslr_legal_offset() and
+>     kaslr_early_init()
+>   powerpc/fsl_booke/64: introduce reloc_kernel_entry() helper
+>   powerpc/fsl_booke/64: implement KASLR for fsl_booke64
+>   powerpc/fsl_booke/64: do not clear the BSS for the second pass
+>   powerpc/fsl_booke/64: clear the original kernel if randomized
+>   powerpc/fsl_booke/kaslr: rename kaslr-booke32.rst to kaslr-booke.rst
+>     and add 64bit part
 >
->  #include <linux/sizes.h>
->  OUTPUT_ARCH(riscv)
-> @@ -16,6 +17,14 @@ ENTRY(_start)
+>  .../{kaslr-booke32.rst => kaslr-booke.rst}    | 35 +++++++--
+>  arch/powerpc/Kconfig                          |  2 +-
+>  arch/powerpc/kernel/exceptions-64e.S          | 23 ++++++
+>  arch/powerpc/kernel/head_64.S                 | 14 ++++
+>  arch/powerpc/kernel/setup_64.c                |  4 +-
+>  arch/powerpc/mm/mmu_decl.h                    | 19 ++---
+>  arch/powerpc/mm/nohash/kaslr_booke.c          | 71 +++++++++++++------
+>  7 files changed, 132 insertions(+), 36 deletions(-)
+>  rename Documentation/powerpc/{kaslr-booke32.rst => kaslr-booke.rst} (59%)
 >
->  jiffies = jiffies_64;
->
-> +PECOFF_FILE_ALIGNMENT = 0x200;
-> +#ifdef CONFIG_EFI
-> +#define PECOFF_EDATA_PADDING   \
-> +       .pecoff_edata_padding : { BYTE(0); . = ALIGN(PECOFF_FILE_ALIGNMENT); }
-> +#else
-> +#define PECOFF_EDATA_PADDING
-> +#endif
-> +
->  SECTIONS
->  {
->         /* Beginning of code and text segment */
-> @@ -26,12 +35,15 @@ SECTIONS
->
->         __init_begin = .;
->         INIT_TEXT_SECTION(PAGE_SIZE)
-> +
-> +       /* Start of data section */
->         INIT_DATA_SECTION(16)
->         /* we have to discard exit text and such at runtime, not link time */
->         .exit.text :
->         {
->                 EXIT_TEXT
->         }
-> +
->         .exit.data :
->         {
->                 EXIT_DATA
-> @@ -54,7 +66,8 @@ SECTIONS
->                 _etext = .;
->         }
->
-> -       /* Start of data section */
-> +       __text_end = .;
-> +
->         _sdata = .;
->         RO_DATA(L1_CACHE_BYTES)
->         .srodata : {
-> @@ -65,19 +78,21 @@ SECTIONS
->         .sdata : {
->                 __global_pointer$ = . + 0x800;
->                 *(.sdata*)
-> -               /* End of data section */
-> -               _edata = .;
->                 *(.sbss*)
->         }
-> -
-> -       BSS_SECTION(PAGE_SIZE, PAGE_SIZE, 0)
-> -
-> +       PECOFF_EDATA_PADDING
-> +       __data_raw_size = ABSOLUTE(. - __text_end);
-> +       /* End of data section */
-> +       _edata = .;
->         EXCEPTION_TABLE(0x10)
->
->         .rel.dyn : {
->                 *(.rel.dyn*)
->         }
->
-> +       BSS_SECTION(PAGE_SIZE, PAGE_SIZE, 0)
-> +       __data_virt_size = ABSOLUTE(. - __text_end);
-> +
->         _end = .;
->
->         STABS_DEBUG
-> --
-> 2.24.0
->
+> -- 
+> 2.17.2
