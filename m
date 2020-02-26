@@ -2,78 +2,97 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DBA6C4BA24
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 155E8C4BA24
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC88C21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF09824672
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:17:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cDSk6gAE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727527AbgBZUPX (ORCPT
+        id S1727440AbgBZURo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 15:15:23 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:59428 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727277AbgBZUPX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 15:15:23 -0500
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j735M-0005eC-Mq; Wed, 26 Feb 2020 21:15:12 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 1BD5C104099; Wed, 26 Feb 2020 21:15:12 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [patch 05/15] x86/entry: Provide IDTEnTRY_SYSVEC
-In-Reply-To: <49a8589f-de01-d08a-69f0-b98106e8b715@kernel.org>
-References: <20200225224719.950376311@linutronix.de> <20200225231609.412892623@linutronix.de> <49a8589f-de01-d08a-69f0-b98106e8b715@kernel.org>
-Date:   Wed, 26 Feb 2020 21:15:12 +0100
-Message-ID: <87h7zdp0kv.fsf@nanos.tec.linutronix.de>
+        Wed, 26 Feb 2020 15:17:44 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:53763 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727240AbgBZURo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 15:17:44 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48SRtX2Byyz9sP7;
+        Thu, 27 Feb 2020 07:17:40 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1582748262;
+        bh=w8Bl+jm/s3dXNYwwhBW0f4fxyzFVtgaq08H1fuuT+Ys=;
+        h=Date:From:To:Cc:Subject:From;
+        b=cDSk6gAEr5Ah9XHv546qz2AGx81dzUVfwxZlNqcWKEWEPgQaUnp4zSEddl+OmgBhq
+         qqP832PgTTTqLrLi2fbC+6S6rDOnjRkVXLYqQPlu8a50hxfJHYpMeoX2YhxyFZWNge
+         KgelaWs0Hi+FL9ZrKfv2FjPKLhcrnauiLbQdpMiyXBC4RHGq/Fwu0hqu0Z+BOvFkEV
+         o3xRg4I+Y8QxwW6vIztSU79Y5Sb6PD4GR1Kiu7foZHZjxHeXuT7vwA43+HtDESDYBf
+         /Pho6ItdWLAQLFQcifFNUKm2IjB2xDO0dTOC6OslMzR2jmCQCfTCbJbiymYrvE9lvt
+         FKDVIjMOGR+fQ==
+Date:   Thu, 27 Feb 2020 07:17:18 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     James Hogan <jhogan@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Subject: linux-next: Fixes tag needs some work in the mips-fixes tree
+Message-ID: <20200227071718.5aac4713@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; boundary="Sig_/tjWP9pweg6DvKRdwhhQ.f_T";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Lutomirski <luto@kernel.org> writes:
+--Sig_/tjWP9pweg6DvKRdwhhQ.f_T
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> On 2/25/20 2:47 PM, Thomas Gleixner wrote:
->> Provide a IDTENTRY variant for system vectors to consolidate the differnt
->> mechanisms to emit the ASM stubs for 32 an 64 bit.
->
-> $SUBJECT has an obvious typo.
+Hi all,
 
-Indeed.
+In commit
 
->> --- a/arch/x86/entry/entry_32.S
->> +++ b/arch/x86/entry/entry_32.S
->> @@ -1261,6 +1261,10 @@ SYM_CODE_START_LOCAL(asm_\cfunc)
->>  SYM_CODE_END(asm_\cfunc)
->>  .endm
->>  
->> +.macro idtentry_sysvec vector cfunc
->> +	idtentry \vector asm_\cfunc \cfunc has_error_code=0
->> +.endm
->
-> irq_stack?
+  3944dee0c6cd ("MIPS: Fix CONFIG_MIPS_CMDLINE_DTB_EXTEND handling")
 
-System vectors have never used irq stacks.
+Fixes tag
 
-Thanks,
+  Fixes: 7784cac69735 ("MIPS: cmdline: Clean up boot_command_line
 
-        tglx
+has these problem(s):
+
+  - Subject has leading but no trailing parentheses
+  - Subject has leading but no trailing quotes
+
+Please do not split Fixes tags over more than one line.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/tjWP9pweg6DvKRdwhhQ.f_T
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5W0k8ACgkQAVBC80lX
+0GyWBAgAhO2i3i88Bv8yJcvRjSPgKstNsKuS02T8mHX3CkOJLv36UEIK+DV8Xks1
+Rt8ukgLZWiJgGa1R//b5swoFycgdbRm88nQjP6WWPKiSCU8iME0vvYLXTJwpjkOh
+rJUaFNDPSx1WYqL1tq1OCfxCi/nOJLZNHFO4tX3RDHjCzHfFrOwHKO1gCcrjRlj0
+hJBXPO38riaDAkRCWToU5xza+RqRKqU7OAetD3AS1tG8+GYZfQwciQE3U8GRVHtq
+gQy1OzRRJQ2wYhhbbF/tU/KmtoscJz1CZ24kzjLrUjj5fEZSaHrsvbhLZ90e3Ic0
+TEhwj7hPjbOIuTVGfNLGRJDCIz8cGA==
+=aEhZ
+-----END PGP SIGNATURE-----
+
+--Sig_/tjWP9pweg6DvKRdwhhQ.f_T--
