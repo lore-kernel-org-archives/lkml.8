@@ -2,120 +2,143 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3D6C4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD903C4BA18
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7D0A206E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8111B206E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:13:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="M7uNS8Wb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QmlbHnqc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbgBZRNf (ORCPT
+        id S1726988AbgBZRNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:13:35 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:18005 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbgBZRNf (ORCPT
+        Wed, 26 Feb 2020 12:13:43 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:30068 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726561AbgBZRNm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:13:35 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e56a6ef0000>; Wed, 26 Feb 2020 09:12:16 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 26 Feb 2020 09:13:34 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 26 Feb 2020 09:13:34 -0800
-Received: from [172.16.126.1] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 26 Feb
- 2020 17:13:32 +0000
-From:   Zi Yan <ziy@nvidia.com>
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     <linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <linux-btrfs@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, <linux-ext4@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <cluster-devel@redhat.com>, <ocfs2-devel@oss.oracle.com>,
-        <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH v8 07/25] mm: Rename various 'offset' parameters to
- 'index'
-Date:   Wed, 26 Feb 2020 12:13:30 -0500
-X-Mailer: MailMate (1.13.1r5676)
-Message-ID: <0681AC00-BFA7-4C1B-9E92-6B36FA906924@nvidia.com>
-In-Reply-To: <20200225214838.30017-8-willy@infradead.org>
-References: <20200225214838.30017-1-willy@infradead.org>
- <20200225214838.30017-8-willy@infradead.org>
+        Wed, 26 Feb 2020 12:13:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582737221;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fqZFM5WybXIvQpsE6lMDlBCaWfGorF8koi4lLfvGmOg=;
+        b=QmlbHnqcdK3Lh//aa9gjsmhf1AvXFlsT0vRJ488uLLcZ2wlHbpw5u6G5JE7tugTzROcm53
+        0GrUybuHplFnxNasTvfHAzZIw7ThQ8ECFx1JJvZU4p2MkvLGP/dJn3ih43flnCzTP+pL2B
+        6lOFDygGd1Hk0Y49/ONmPbkwCsHQV9Y=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-423-ZRktkdm5My2W-CX_z7QKiw-1; Wed, 26 Feb 2020 12:13:40 -0500
+X-MC-Unique: ZRktkdm5My2W-CX_z7QKiw-1
+Received: by mail-wm1-f72.google.com with SMTP id x9so1160970wmc.7
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 09:13:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=fqZFM5WybXIvQpsE6lMDlBCaWfGorF8koi4lLfvGmOg=;
+        b=r/5w6Q7/wOaj40yEmewPi6T4GafJUhFxNgITZJy4DTXEzritZ/BvEpBdOx4DZjL2Ow
+         eRDdWzShzvEHedu5tXt6CJcuXzNNQdVU2Zsh27+LCgyGPniqauP7XSqNA34E4CmrOI/6
+         aQYVBBvHr4dqvSW1+PUZQZXqiD2FqdhD32H25Aw5S38LHGKy8HfaT99YVWIA3/LZEHOT
+         fxYXXRGjvXsWX/vYOrgGqrBcZvuqFyAHrfrmO6R/Yxr2o/miXisOnhCcR73BSpI6YWLx
+         CJemcKWV4CbdXDp5k1RQinJAsPtWgljdAxhWN60eBjGcEcuAYo22tU7P6Judyzpd+G5/
+         Wp/A==
+X-Gm-Message-State: APjAAAWLsODUFx4mxMM65XasYXKmRIcnWxuB18HXi/7EMS8Q/gMd06+h
+        BvrmCw51ExvAAE+zOfDEL9xvP5pva5CG7CkXVv4cfpo5pKlixAfZRC/YU+ZsvxJC7EUsF0ecitK
+        4siZXaBpHo3XqqxDCUPXaCQi0
+X-Received: by 2002:adf:80cb:: with SMTP id 69mr6274376wrl.320.1582737218629;
+        Wed, 26 Feb 2020 09:13:38 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxdQ3flDUJS3yOciIAFWcmCDmYkKBelGFeV/kFIBn5FjKHz6HuPhGD9HWhgO281p32eDfwCNA==
+X-Received: by 2002:adf:80cb:: with SMTP id 69mr6274361wrl.320.1582737218383;
+        Wed, 26 Feb 2020 09:13:38 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id x12sm3765817wmc.20.2020.02.26.09.13.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 09:13:37 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 07/13] KVM: x86: Refactor init_emulate_ctxt() to explicitly take context
+In-Reply-To: <20200218232953.5724-8-sean.j.christopherson@intel.com>
+References: <20200218232953.5724-1-sean.j.christopherson@intel.com> <20200218232953.5724-8-sean.j.christopherson@intel.com>
+Date:   Wed, 26 Feb 2020 18:13:37 +0100
+Message-ID: <87zhd5i85a.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: multipart/signed;
-        boundary="=_MailMate_07A99A6D-503B-4120-84DB-898871E175DC_=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582737136; bh=mg3n04aLS3/0aW0eyWChE9vpAgeCbiunpfGU7AghRnM=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
-         In-Reply-To:References:MIME-Version:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type;
-        b=M7uNS8WbS5inK7ffF1gDGqi6BEnQKPsrcjMLXdvezxqm0AiTFvwllSVW/w8n59f9F
-         V34n2s9nEVY/4D6//i/EKK3lz0KuHjR3/AgLEuzhAH8zTRapedCwdzvdMzLgfssxVk
-         6uuoU0/a0CeBBeWlpM+GBiX4U36tZbBkrzY2AgMOcah+bFG40dbvC3bzNBqVuiQfnn
-         7B23COHktbG67CvYwyCLEeevESVB1M0ttcUXyjDxpyKQzFZ/o14kx7Vlnjp1Vl3kYh
-         QPNIQpY+qazBjfLuQS9hBZsPPYD+/0AGowk4y/Yrv7Es5gxHxuSBtcU0OCfz4sOxIR
-         54TA+M6T9wTUg==
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=_MailMate_07A99A6D-503B-4120-84DB-898871E175DC_=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-On 25 Feb 2020, at 16:48, Matthew Wilcox wrote:
+> Explicitly pass the emulation context when initializing said context in
+> preparation of dynamically allocation the emulation context.
 
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+"The said said context" :-)
+
 >
-> The word 'offset' is used ambiguously to mean 'byte offset within
-> a page', 'byte offset from the start of the file' and 'page offset
-> from the start of the file'.  Use 'index' to mean 'page offset
-> from the start of the file' throughout the readahead code.
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/x86.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 >
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 69d3dd64d90c..0e67f90db9a6 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -6414,9 +6414,9 @@ static bool inject_emulated_exception(struct x86_emulate_ctxt *ctxt)
+>  	return false;
+>  }
+>  
+> -static void init_emulate_ctxt(struct kvm_vcpu *vcpu)
+> +static void init_emulate_ctxt(struct x86_emulate_ctxt *ctxt)
+>  {
+> -	struct x86_emulate_ctxt *ctxt = &vcpu->arch.emulate_ctxt;
+> +	struct kvm_vcpu *vcpu = emul_to_vcpu(ctxt);
+>  	int cs_db, cs_l;
+>  
+>  	kvm_x86_ops->get_cs_db_l_bits(vcpu, &cs_db, &cs_l);
+> @@ -6443,7 +6443,7 @@ void kvm_inject_realmode_interrupt(struct kvm_vcpu *vcpu, int irq, int inc_eip)
+>  	struct x86_emulate_ctxt *ctxt = &vcpu->arch.emulate_ctxt;
+>  	int ret;
+>  
+> -	init_emulate_ctxt(vcpu);
+> +	init_emulate_ctxt(ctxt);
+>  
+>  	ctxt->op_bytes = 2;
+>  	ctxt->ad_bytes = 2;
+> @@ -6770,7 +6770,7 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+>  	kvm_clear_exception_queue(vcpu);
+>  
+>  	if (!(emulation_type & EMULTYPE_NO_DECODE)) {
+> -		init_emulate_ctxt(vcpu);
+> +		init_emulate_ctxt(ctxt);
+>  
+>  		/*
+>  		 * We will reenter on the same instruction since
+> @@ -8943,7 +8943,7 @@ int kvm_task_switch(struct kvm_vcpu *vcpu, u16 tss_selector, int idt_index,
+>  	struct x86_emulate_ctxt *ctxt = &vcpu->arch.emulate_ctxt;
+>  	int ret;
+>  
+> -	init_emulate_ctxt(vcpu);
+> +	init_emulate_ctxt(ctxt);
+>  
+>  	ret = emulator_task_switch(ctxt, tss_selector, idt_index, reason,
+>  				   has_error_code, error_code);
 
-Looks good to me.
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-Reviewed-by: Zi Yan <ziy@nvidia.com>
+-- 
+Vitaly
 
-=E2=80=94
-Best Regards,
-Yan Zi
-
---=_MailMate_07A99A6D-503B-4120-84DB-898871E175DC_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJDBAEBCgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAl5WpzoPHHppeUBudmlk
-aWEuY29tAAoJEJ2yUfNrYfqKV10P/3wdODr0Q7tZ/M8jMum6zEQU0MY220Wz5wz6
-/mYps3gNEW6eEhbFsQpnK4823yVMDfBih1WwZLdS/6HbJlXHjhTfcLtEFLdkxyPJ
-DuWVLGx0uTRwFpUI9Lafd/SpIKAYfnyNi82WlR85zfoFbD4aQSkH19hRScGERL0B
-sig3qcFbjLk9Ej7AbviIflLo7gvPaui2EgVjubLfWgUW66U0X7vnCu355fRnlkmK
-3Fa9Ipx8EoTp6CG4PWteDdp8lP8CvdJwZKfluaHj/NJjOqxpL/SUTuF9FXtr8nov
-l6pElk5cSwy4T4gvyhfmUIYSptxeU+KJSx3hA687R53i9gCQqLepFRwbhe03M87h
-2p63F1KGiqm4uzJSDTiKyRLBJOrpDQRjpZSSQ2XBQUOHd2tDHSN5l/2ADupYaF2Y
-zXvGbPgzVdHRVY0Ijsu6DqPk0aJfbvtOPZHWfZ9FEVoSj+viLH/AB/8l7OEEGS9M
-3h1dW2ghyuDEZfbTB6ow7XVEd2d1B8xxiGTlg13HU2KSuJQlkVGbEZV2Zw9Z/bQx
-sYt9io5U0tZ2Q4M8pBiuHeEK3LbKSdXf0kHj0Ovnxg+njzZlZgCfnn2mJOPSdBqs
-YksF5IfUgMM+j9I94cj8dJJIz1HyLGox6fq4DxluYIIBkOcVFfinqTqRjgr/AxX+
-P6tLcgNH
-=g1cC
------END PGP SIGNATURE-----
-
---=_MailMate_07A99A6D-503B-4120-84DB-898871E175DC_=--
