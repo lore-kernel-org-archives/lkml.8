@@ -2,255 +2,145 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A97C4BA21
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0FB1C4BA24
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C52724653
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:21:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F9CF24653
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:23:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="CMbMcWy9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="BZl1WCjg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727693AbgBZVVs (ORCPT
+        id S1727640AbgBZVXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 16:21:48 -0500
-Received: from mail.efficios.com ([167.114.26.124]:46600 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727503AbgBZVVr (ORCPT
+        Wed, 26 Feb 2020 16:23:33 -0500
+Received: from gateway24.websitewelcome.com ([192.185.51.202]:46198 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727503AbgBZVXd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 16:21:47 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 8DEEA26FC16;
-        Wed, 26 Feb 2020 16:21:45 -0500 (EST)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id uIPLYfupRLTf; Wed, 26 Feb 2020 16:21:45 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 11C8C26FA48;
-        Wed, 26 Feb 2020 16:21:45 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 11C8C26FA48
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1582752105;
-        bh=OED3DPvD9JClZeVEY6Ljgwb6qq2mHEoFGrtuVQS5EI4=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=CMbMcWy95vo7qOs7HBt0d6VKI4o5J6kHFD09o9IQBiNPC/g9cS3w40K6vR3MGlVhn
-         +7jTFgwRBZ5dHjTOAYltplO9HFwU5Do+hgwrE00HhZrRvWKf/8QYvaa9sSnrS+pEjw
-         y4hE2IkBuqoXdDw41BJmhDCulO0LCFtsSChZmrYc1AlfHVuacD4aQPZ4/V6u0OKWym
-         kx3WBekDkC/OxhB4LV5SVPiadltl79jS2kCq8DSGVk3kOqfRkHndpcliBrgdO1XiJU
-         5kbymq9hHWZyWGLiZN4JxAySpABj4cpXqUKD2b5EttCaW/V8Y+s9XIbSOV52PHzxb7
-         4CrFXWZE9petg==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id jFMq9slHgwXY; Wed, 26 Feb 2020 16:21:45 -0500 (EST)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id EE57F26FBAD;
-        Wed, 26 Feb 2020 16:21:44 -0500 (EST)
-Date:   Wed, 26 Feb 2020 16:21:44 -0500 (EST)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Chris Kennelly <ckennelly@google.com>
-Cc:     "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Paul Turner <pjt@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Carlos O'Donell <codonell@redhat.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        paulmck <paulmck@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
-        Brian Geffon <bgeffon@google.com>
-Message-ID: <1484567919.9131.1582752104880.JavaMail.zimbra@efficios.com>
-In-Reply-To: <CAEE+ybkz0YDddbLh+f0UnykcAcH+FoZrysQcckjh0S6YjYQvFg@mail.gmail.com>
-References: <1503467992.2999.1582234410317.JavaMail.zimbra@efficios.com> <1683022606.3452.1582301632640.JavaMail.zimbra@efficios.com> <CAEXW_YRT7AjaJs7mPyNd=J6fhBicYwGbQMK2Senwm3cBhFvWPw@mail.gmail.com> <CAEE+ybmQb02u-=c1sHozkJ+RXOi2Hno6qYJ0Vx9rOpKjSQ4fPQ@mail.gmail.com> <1089333712.8657.1582736509318.JavaMail.zimbra@efficios.com> <CAEE+ybkTs4U7h-Js818k1QEqpVfHwAHSTXaEwHs3g37LwOsjLQ@mail.gmail.com> <982202794.8791.1582743392060.JavaMail.zimbra@efficios.com> <CAEE+ybkz0YDddbLh+f0UnykcAcH+FoZrysQcckjh0S6YjYQvFg@mail.gmail.com>
-Subject: Re: Rseq registration: Google tcmalloc vs glibc
+        Wed, 26 Feb 2020 16:23:33 -0500
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id 7E02954B5A
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 15:23:31 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 749TjFxwYXVkQ749TjbBCH; Wed, 26 Feb 2020 15:23:31 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=96f8kZdh7WxJBTeep/qoxEO5hEENwT7hPTi1FGgDDyQ=; b=BZl1WCjgZtTNu6aGLvvU4/iPRW
+        KLaA1o7tDonP3BUGMMHpFTH76EWmdNlvIEgVkNuMfKiiZDRQe7i00Bf5C2djTnOF+TcPoYjgNKncA
+        Rlqx5Ed5Ra7TtDi9045eAvLfhpfmdWkr6BdOj1U1j6rxT+1kY/qpWzi2R72Qh49C2R7mauhdDHCTG
+        snYO5LP6796MkyQirOLPQ+m483LtTmhx20oZlAze2cojPgR01142altotg30XfkciRi+LRxCckTCd
+        HPHeyB5uYVzEWI5qUaAsA2gTE8sOZ2IFKcI4zv9NnCa5B7N0FTXEmmOKZlauQzSKfqO/Ro6LjxnZ8
+        gzd3TRow==;
+Received: from [201.162.161.180] (port=47722 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j749R-000nRw-Iy; Wed, 26 Feb 2020 15:23:30 -0600
+Date:   Wed, 26 Feb 2020 15:26:12 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>
+Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] xen: Replace zero-length array with flexible-array member
+Message-ID: <20200226212612.GA4663@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF72 (Linux)/8.8.15_GA_3895)
-Thread-Topic: Rseq registration: Google tcmalloc vs glibc
-Thread-Index: Q56Z9F8Xedj3u3qgHl3iGhH6fyNEzA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.161.180
+X-Source-L: No
+X-Exim-ID: 1j749R-000nRw-Iy
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.162.161.180]:47722
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 21
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Feb 26, 2020, at 2:12 PM, Chris Kennelly ckennelly@google.com wrote:
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-> On Wed, Feb 26, 2020 at 1:56 PM Mathieu Desnoyers
-> <mathieu.desnoyers@efficios.com> wrote:
->>
->> ----- On Feb 26, 2020, at 12:27 PM, Chris Kennelly ckennelly@google.com wrote:
->>
->> > On Wed, Feb 26, 2020 at 12:01 PM Mathieu Desnoyers
->> > <mathieu.desnoyers@efficios.com> wrote:
->> >>
->> >> ----- On Feb 25, 2020, at 10:38 PM, Chris Kennelly ckennelly@google.com wrote:
->> >>
->> >> > On Tue, Feb 25, 2020 at 10:25 PM Joel Fernandes <joel@joelfernandes.org> wrote:
->> >> >>
->> >> >> On Fri, Feb 21, 2020 at 11:13 AM Mathieu Desnoyers
->> >> >> <mathieu.desnoyers@efficios.com> wrote:
->> >> >> >
->> >> >> > ----- On Feb 21, 2020, at 10:49 AM, Joel Fernandes, Google
->> >> >> > joel@joelfernandes.org wrote:
->> >> >> >
->> >> >> > [...]
->> >> >> > >>
->> >> >> > >> 3) Use the  __rseq_abi TLS cpu_id field to know whether Rseq has been
->> >> >> > >> registered.
->> >> >> > >>
->> >> >> > >> - Current protocol in the most recent glibc integration patch set.
->> >> >> > >> - Not supported yet by Linux kernel rseq selftests,
->> >> >> > >> - Not supported yet by tcmalloc,
->> >> >> > >>
->> >> >> > >> Use the per-thread state to figure out whether each thread need to register
->> >> >> > >> Rseq individually.
->> >> >> > >>
->> >> >> > >> Works for integration between a library which exists for the entire lifetime
->> >> >> > >> of the executable (e.g. glibc) and other libraries. However, it does not
->> >> >> > >> allow a set of libraries which are dlopen'd/dlclose'd to co-exist without
->> >> >> > >> having a library like glibc handling the registration present.
->> >> >> > >
->> >> >> > > Mathieu, could you share more details about why during dlopen/close
->> >> >> > > libraries we cannot use the same __rseq_abi TLS to detect that rseq was
->> >> >> > > registered?
->> >> >> >
->> >> >> > Sure,
->> >> >> >
->> >> >> > A library which is only loaded and never closed during the execution of the
->> >> >> > program can let the kernel implicitly unregister rseq at thread exit. For
->> >> >> > the dlopen/dlclose use-case, we need to be able to explicitly unregister
->> >> >> > each thread's __rseq_abi which sit in a library which is going to be
->> >> >> > dlclose'd.
->> >> >>
->> >> >> Mathieu, Thanks a lot for the explanation, it makes complete sense. It
->> >> >> sounds from Chris's reply that tcmalloc already checks
->> >> >> __rseq_abi.cpu_id and is not dlopened/closed. Considering these, it
->> >> >> seems to already handle things properly - CMIIW.
->> >> >
->> >> > I'll make a note about this, since we can probably benefit from some
->> >> > more comments about the assumptions/invariants the fastpath uses.
->> >>
->> >> I suspect the integration with glibc and with dlopen'd/dlclose'd libraries will
->> >> not
->> >> behave correctly with the current tcmalloc implementation.
->> >>
->> >> Based on the tcmalloc code-base, InitFastPerCpu is only called from IsFast. As
->> >> long
->> >> as this is the only expected caller, having IsFast comparing the RseqCpuId
->> >> detects
->> >> whether glibc (or some other library) has already registered rseq for the
->> >> current
->> >> thread.
->> >>
->> >> However, if the application chooses to invoke InitFastPerCpu() directly, things
->> >> become
->> >> expected, because it invokes:
->> >>
->> >>   absl::base_internal::LowLevelCallOnce(&init_per_cpu_once, InitPerCpu);
->> >>
->> >> which AFAIU invokes InitPerCpu once after execution of the current program.
->> >> Which
->> >> does:
->> >>
->> >> static bool InitThreadPerCpu() {
->> >>   if (__rseq_refcount++ > 0) {
->> >>     return true;
->> >>   }
->> >>
->> >>   auto ret = syscall(__NR_rseq, &__rseq_abi, sizeof(__rseq_abi), 0,
->> >>                      PERCPU_RSEQ_SIGNATURE);
->> >>   if (ret == 0) {
->> >>     return true;
->> >>   } else {
->> >>     __rseq_refcount--;
->> >>   }
->> >>
->> >>   return false;
->> >> }
->> >>
->> >> static void InitPerCpu() {
->> >>   // Based on the results of successfully initializing the first thread, mark
->> >>   // init_status to initialize all subsequent threads.
->> >>   if (InitThreadPerCpu()) {
->> >>     init_status = kFastMode;
->> >>   }
->> >> }
->> >>
->> >> In a scenario where glibc has already registered Rseq, the __rseq_refcount will
->> >> be incremented, the __NR_rseq syscall will fail with -1, errno=EBUSY, so the
->> >> refcount
->> >> will be immediately decremented and it will return false. Therefore,
->> >> "init_status" will
->> >> never be set fo kFastMode, leaving it in kSlowMode for the entire lifetime of
->> >> this
->> >> program. That being said, even though this state can come as a surprise, it
->> >> seems to
->> >> be entirely bypassed by the fast-paths IsFast() and IsFastNoInit(), so maybe it
->> >> won't
->> >> have any observable side-effects other than leaving init_status in a state that
->> >> does not
->> >> match reality.
->> >
->> > I agree that this could potentially violate inviarants, but
->> > InitFastPerCpu is not intended to be called by the application.
->>
->> OK, explicitly documenting this would be a good thing. In my own projects,
->> I prefix those symbols with double-underscores (__) to indicate that those
->> are not meant to be called by other means than the static inlines in the API.
->>
->> There may be use-cases which justify exposing InitFastPerCpu as a public API for
->> applications though, especially for those which require some level of
->> real-time guarantees from the malloc/free APIs. I've run into this situation
->> with liburcu which I maintain.
->>
->> >
->> >> In the other use-case where tcmalloc co-exist with a dlopened/dlclosed library,
->> >> but glibc
->> >> does not provide Rseq registration, we run into issues as well if the dlopened
->> >> library
->> >> registers rseq first for a given thread. The IsFastNoInit() expects that if Rseq
->> >> has been
->> >> observed as registered in the past for a thread, it stays registered. However,
->> >> if a
->> >> dlclosed library unregisters Rseq, we need to be prepared to re-register it. So
->> >> either
->> >> tcmalloc needs to express its use of Rseq by incrementing __rseq_refcount even
->> >> when Rseq
->> >> is registered (this would hurt the fast-path however, and I would hate to have
->> >> to do this),
->> >> or tcmalloc needs to be able to handle the fact that Rseq may be unregistered by
->> >> a dlclosed
->> >> library which was the actual owner of the Rseq registration.
->> >
->> > We have a bit of an opportunity to figure out whether this is the
->> > first time--from TCMalloc's perspective--a thread is doing per-CPU and
->> > bump the __rseq_count accordingly.  I think this could be done off of
->> > the fast path.
->>
->> Is there an explicit tcmalloc API call that each thread need to do before
->> starting
->> to use tcmalloc to allocate and free memory ? If not, you'll probably need to
->> add
->> at least a load of __rseq_refcount (or some other TLS variable), test and
->> conditional
->> branch on the fast-path, which is an additional cost I would ideally prefer to
->> avoid.
->> Or do you have something else in mind ?
-> 
-> No explicit call is necessary.  This is something that can be done in
-> the slow path, since we can recognize the transition from slow -> fast
-> path for that thread
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-Got it, it should work. Thanks!
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-Mathieu
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/xen/xen-pciback/pciback.h | 2 +-
+ include/xen/interface/io/tpmif.h  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/xen/xen-pciback/pciback.h b/drivers/xen/xen-pciback/pciback.h
+index ce1077e32466..7c95516a860f 100644
+--- a/drivers/xen/xen-pciback/pciback.h
++++ b/drivers/xen/xen-pciback/pciback.h
+@@ -52,7 +52,7 @@ struct xen_pcibk_dev_data {
+ 	unsigned int ack_intr:1; /* .. and ACK-ing */
+ 	unsigned long handled;
+ 	unsigned int irq; /* Saved in case device transitions to MSI/MSI-X */
+-	char irq_name[0]; /* xen-pcibk[000:04:00.0] */
++	char irq_name[]; /* xen-pcibk[000:04:00.0] */
+ };
+ 
+ /* Used by XenBus and xen_pcibk_ops.c */
+diff --git a/include/xen/interface/io/tpmif.h b/include/xen/interface/io/tpmif.h
+index 28e7dcd75e82..f8aa8bac5196 100644
+--- a/include/xen/interface/io/tpmif.h
++++ b/include/xen/interface/io/tpmif.h
+@@ -46,7 +46,7 @@ struct vtpm_shared_page {
+ 	uint8_t pad;
+ 
+ 	uint8_t nr_extra_pages;  /* extra pages for long packets; may be zero */
+-	uint32_t extra_pages[0]; /* grant IDs; length in nr_extra_pages */
++	uint32_t extra_pages[]; /* grant IDs; length in nr_extra_pages */
+ };
+ 
+ #endif
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+2.25.0
+
