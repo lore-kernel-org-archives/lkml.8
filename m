@@ -2,99 +2,71 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4264C4BA10
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DBDC4BA10
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A30821927
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:43:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oQ1YXDo6"
+	by mail.kernel.org (Postfix) with ESMTP id 4E51121927
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:46:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgBZMnC (ORCPT
+        id S1726892AbgBZMp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 07:43:02 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41770 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgBZMnB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 07:43:01 -0500
-Received: by mail-lj1-f193.google.com with SMTP id h23so2923646ljc.8;
-        Wed, 26 Feb 2020 04:43:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=naHmwMkEZlsq2F2BdV78t7a2n6KXkH4cArO0DzqKw9s=;
-        b=oQ1YXDo6+jB9aH9a05GU0xwO2NeTx0pZ2jpQW5sC7FObezAamb9GLR1j9y80Vd7PW4
-         5XEffKqjS2T8VLrsMUL0B2r14bi6hf7ak0FjH/qafJEHkGVUiPpOwEC2K/SotBZqNBdT
-         I+xDbdHSXNJZgX2OTKDz5Vc3iMPuXVCPpvMLeAy3NPWzFm1nmue6F3HMibuTpfGnayE+
-         SyzzsNrJ6YpQLC0V2Bkc85eHEJ8Yu/7h9Bj3XtOnkGKqumkYA9Zv2fUGZW4rRP7XZJG1
-         HxEaYpF9FFJMrft2C6sK5HsayCuwHzrqHHWgJ8KAOXTKT0rjr9T+KJL5lwtaAOtbpBc5
-         7TkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=naHmwMkEZlsq2F2BdV78t7a2n6KXkH4cArO0DzqKw9s=;
-        b=EtxSzbmchcmJjktcb4SoSENIZxGQPTQyT8gfAQt+AaA84jxHSfb4421fachBs/J2rx
-         DvKDPyKAuUb2O+tQ8t/YPm97r2A/EWsrKjX/NERI85V1omFPpzwnyatxtA0IT7dP4OEA
-         3GF2FWSFfMPJSC/cPV1ca6KwKaI6EPuTbAZAxfxJ2MWLlgVX+OuBF5o57EBKtdCgxrdt
-         xP3LDGZCgX0jnlDjnoaRvvfKehf2J5uIzW3FLjzjkKcedLdJn/rKNUdcdxU6cOLr2dAm
-         Y5IBCoe6Icq/s75vllkhDOXKrmd0Gy4pfmTRA+Ap7kd85ASVEaI1+sDNGFAyKqz32EUi
-         QgJg==
-X-Gm-Message-State: APjAAAUu7ntuq4HjmiF5nJnG5eToRTDBiGTwdDzfwsBAdL/G8IRD5Nur
-        VViM816/jg3rDqPN2LsG3BdnQVb/NSaeX5YSvwA=
-X-Google-Smtp-Source: ADFU+vtwr9qHZQRp7nOQn9p0PoE3msDjcGJRvRyC8H+RwcRzDCO3GQIm5dNAC1Bue/fML340D2kMrue/X63xSXz+WfQ=
-X-Received: by 2002:a05:651c:d4:: with SMTP id 20mr2838816ljr.269.1582720979846;
- Wed, 26 Feb 2020 04:42:59 -0800 (PST)
+        Wed, 26 Feb 2020 07:45:59 -0500
+Received: from foss.arm.com ([217.140.110.172]:35310 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726277AbgBZMp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 07:45:58 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2AF651FB;
+        Wed, 26 Feb 2020 04:45:58 -0800 (PST)
+Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DFA2E3FA00;
+        Wed, 26 Feb 2020 04:45:56 -0800 (PST)
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+        Dietmar.Eggemann@arm.com, patrick.bellasi@matbug.net,
+        qais.yousef@arm.com, t1zhou@aliyun.com
+Subject: [PATCH v2 0/3] sched/debug: Add uclamp values to procfs
+Date:   Wed, 26 Feb 2020 12:45:40 +0000
+Message-Id: <20200226124543.31986-1-valentin.schneider@arm.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <20200224062917.4895-1-martin.kepplinger@puri.sm> <20200224062917.4895-2-martin.kepplinger@puri.sm>
-In-Reply-To: <20200224062917.4895-2-martin.kepplinger@puri.sm>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 26 Feb 2020 09:42:49 -0300
-Message-ID: <CAOMZO5BxS-+1=NVgZ4nJcneVGMr7B8sLL+gYidXfgrvPSRB0JQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/8] arm64: dts: librem5-devkit: enable sai2 and sai6
- audio interface
-To:     Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, kernel@puri.sm,
-        Yongcai Huang <Anson.Huang@nxp.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Martin,
+Hi,
 
-On Mon, Feb 24, 2020 at 3:31 AM Martin Kepplinger
-<martin.kepplinger@puri.sm> wrote:
->
-> From: "Angus Ainslie (Purism)" <angus@akkea.ca>
->
-> Add missing sai2 and sai6 audio interface and pinctrl definitions for the
-> Librem 5 devkit.
->
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+This is a small debug series I've been sitting on. It's been helpful in
+testing and reviewing some uclamp stuff, for instance the issue Qais fixed
+at [1] was really easy to observe with those debug prints.
 
-Maybe you could rearrange patches 1 and 2 like this:
+[1]: https://lore.kernel.org/lkml/20191224115405.30622-1-qais.yousef@arm.com/
 
-Add simcom 7100 modem support
-Add sgtl5000 support
+Cheers,
+Valentin
 
-This way it is clearer where SAI2 and SAI6 ports are actually used.
+Revisions
+=========
+
+v1 -> v2
+--------
+o Added parentheses for the casting part of the macros (Tao)
+
+Valentin Schneider (3):
+  sched/debug: Remove redundant macro define
+  sched/debug: Bunch up printing formats in common macros
+  sched/debug: Add task uclamp values to SCHED_DEBUG procfs
+
+ kernel/sched/debug.c | 44 ++++++++++++++++++--------------------------
+ 1 file changed, 18 insertions(+), 26 deletions(-)
+
+--
+2.24.0
+
