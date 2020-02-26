@@ -2,188 +2,143 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1874C4BA06
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58739C4BA06
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A55D221744
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 303B522464
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 02:11:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lmu0ChZ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729987AbgBZCL3 (ORCPT
+        id S1730071AbgBZCLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 21:11:29 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:33316 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727809AbgBZCL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 21:11:29 -0500
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 57653B096422AAF2A1D2;
-        Wed, 26 Feb 2020 10:11:27 +0800 (CST)
-Received: from [127.0.0.1] (10.173.221.195) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Wed, 26 Feb 2020
- 10:11:17 +0800
-Subject: Re: [PATCH v3 1/6] powerpc/fsl_booke/kaslr: refactor
- kaslr_legal_offset() and kaslr_early_init()
-To:     Christophe Leroy <christophe.leroy@c-s.fr>, <mpe@ellerman.id.au>,
-        <linuxppc-dev@lists.ozlabs.org>, <diana.craciun@nxp.com>,
-        <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>, <oss@buserror.net>
-CC:     <linux-kernel@vger.kernel.org>, <zhaohongjiang@huawei.com>
-References: <20200206025825.22934-1-yanaijie@huawei.com>
- <20200206025825.22934-2-yanaijie@huawei.com>
- <6c0b0720-6998-f43a-a2b6-0632d4df1126@c-s.fr>
-From:   Jason Yan <yanaijie@huawei.com>
-Message-ID: <f80cce40-804e-12a3-7429-74923a3cb7f7@huawei.com>
-Date:   Wed, 26 Feb 2020 10:11:16 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Tue, 25 Feb 2020 21:11:46 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:34253 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730008AbgBZCLq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 21:11:46 -0500
+Received: by mail-oi1-f193.google.com with SMTP id l136so1489178oig.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 18:11:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4u/uS1fMpbXSukMymnz41XCHPdcIu8TO2CU/VdEdie8=;
+        b=lmu0ChZ/FgDPtQGlWK6Rbqd83+DdMZgjE5nbcUq4IGpNTsD1zkXL2dTUlxIJN5wILC
+         06IuFW1ag+mdNilLpWx4948QwaoOg+eafZlc4nYzd97PXBHBe2ccQGB9u9v9sRPg/WsS
+         JSQxqVPzW61PyEO6v9vaWT5OAzh8uOwzYvZ9u1aXXQKwq+mOW5yHe+luKixTmR3CIyHz
+         LAvVan4VZ03VO6CVX1DbeqA8Corv8uE5bncIuqrIVp4wvUEGUPZvb8/42RPdm1IWAGWL
+         d5cEok/AA0bnc9KzhZK86HIdWB7c49mruzHN1N+O6wNtDhrqrEFI9AeQzIB6SadDtIxz
+         //oQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4u/uS1fMpbXSukMymnz41XCHPdcIu8TO2CU/VdEdie8=;
+        b=adp3DWzxX89fq1b4Rf5rINTsy1V5VG/upQI6gJb3aDtLzgL/fyKbg0Iia47lZAO2gw
+         yVLUaXKIvmyzaQwI2wcXmDsR2B5lr7KxvZYe/NJMZCJv8hYExEPHo71uGlIx1jM7lNIE
+         aD+O4cLACNN/KDOGnQMnkxK6jzY6ttLSzaPOjJqGQFo6xb0fi8L5zbPDCdj/nS7jLAU7
+         WktACGrXPnRtXhgqKRmxPbazhhtLTSLxCj033Hkvm6IugnQ6n+c9zqlGNTXbDrklz+Gp
+         1eCbnIRWH3xX4xjZWcD3nwJrEu27ulXKn6j0g0OI+l1zwWzuAy5mgewHEYvyyldivv0H
+         AH9w==
+X-Gm-Message-State: APjAAAVzNGJaYdTq9WDXDDxDDFhoOMghADwhnjd9V9H+iJrscUby7XRR
+        S3hV6Jhm1x4JMqMqRu1PvU7/uFQu+fSn8pQdUYp93A==
+X-Google-Smtp-Source: APXvYqzZdInnLy1DDni0f4aafChdUAgr22n+6IwChbEzWLmta8PK1dpLF7BWtYyYmXpKRVxz5b8I4y474iMM/AQarqA=
+X-Received: by 2002:aca:ea43:: with SMTP id i64mr1441788oih.30.1582683105454;
+ Tue, 25 Feb 2020 18:11:45 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <6c0b0720-6998-f43a-a2b6-0632d4df1126@c-s.fr>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.221.195]
-X-CFilter-Loop: Reflected
+References: <20200225050828.56458-1-john.stultz@linaro.org> <20200225050828.56458-4-john.stultz@linaro.org>
+In-Reply-To: <20200225050828.56458-4-john.stultz@linaro.org>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 25 Feb 2020 18:11:09 -0800
+Message-ID: <CAGETcx_x4O_M4OJvCSZNu_wroYoyog9nAW7OivS56qzEhFmnHg@mail.gmail.com>
+Subject: Re: [PATCH v5 3/6] pinctrl: Remove use of driver_deferred_probe_check_state_continue()
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Todd Kjos <tkjos@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Sending again because of accidental HTML email.
 
+On Mon, Feb 24, 2020 at 9:08 PM John Stultz <john.stultz@linaro.org> wrote:
+>
+> With the earlier sanity fixes to
+> driver_deferred_probe_check_state() it should be usable for the
+> pinctrl logic here.
+>
+> So tweak the logic to use driver_deferred_probe_check_state()
+> instead of driver_deferred_probe_check_state_continue()
+>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Kevin Hilman <khilman@kernel.org>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Len Brown <len.brown@intel.com>
+> Cc: Todd Kjos <tkjos@google.com>
+> Cc: Saravana Kannan <saravanak@google.com>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Thierry Reding <treding@nvidia.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: linux-pm@vger.kernel.org
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+>  drivers/pinctrl/devicetree.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
+> index 9357f7c46cf3..1ed20ac2243f 100644
+> --- a/drivers/pinctrl/devicetree.c
+> +++ b/drivers/pinctrl/devicetree.c
+> @@ -127,11 +127,12 @@ static int dt_to_map_one_config(struct pinctrl *p,
+>                 np_pctldev = of_get_next_parent(np_pctldev);
+>                 if (!np_pctldev || of_node_is_root(np_pctldev)) {
+>                         of_node_put(np_pctldev);
+> +                       ret = driver_deferred_probe_check_state(p->dev);
+>                         /* keep deferring if modules are enabled unless we've timed out */
+> -                       if (IS_ENABLED(CONFIG_MODULES) && !allow_default)
+> -                               return driver_deferred_probe_check_state_continue(p->dev);
+> -
+> -                       return driver_deferred_probe_check_state(p->dev);
+> +                       if (IS_ENABLED(CONFIG_MODULES) && !allow_default &&
 
-在 2020/2/20 21:40, Christophe Leroy 写道:
-> 
-> 
-> Le 06/02/2020 à 03:58, Jason Yan a écrit :
->> Some code refactor in kaslr_legal_offset() and kaslr_early_init(). No
->> functional change. This is a preparation for KASLR fsl_booke64.
->>
->> Signed-off-by: Jason Yan <yanaijie@huawei.com>
->> Cc: Scott Wood <oss@buserror.net>
->> Cc: Diana Craciun <diana.craciun@nxp.com>
->> Cc: Michael Ellerman <mpe@ellerman.id.au>
->> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
->> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->> Cc: Paul Mackerras <paulus@samba.org>
->> Cc: Nicholas Piggin <npiggin@gmail.com>
->> Cc: Kees Cook <keescook@chromium.org>
->> ---
->>   arch/powerpc/mm/nohash/kaslr_booke.c | 40 ++++++++++++++--------------
->>   1 file changed, 20 insertions(+), 20 deletions(-)
->>
->> diff --git a/arch/powerpc/mm/nohash/kaslr_booke.c 
->> b/arch/powerpc/mm/nohash/kaslr_booke.c
->> index 4a75f2d9bf0e..07b036e98353 100644
->> --- a/arch/powerpc/mm/nohash/kaslr_booke.c
->> +++ b/arch/powerpc/mm/nohash/kaslr_booke.c
->> @@ -25,6 +25,7 @@ struct regions {
->>       unsigned long pa_start;
->>       unsigned long pa_end;
->>       unsigned long kernel_size;
->> +    unsigned long linear_sz;
->>       unsigned long dtb_start;
->>       unsigned long dtb_end;
->>       unsigned long initrd_start;
->> @@ -260,11 +261,23 @@ static __init void get_cell_sizes(const void 
->> *fdt, int node, int *addr_cells,
->>           *size_cells = fdt32_to_cpu(*prop);
->>   }
->> -static unsigned long __init kaslr_legal_offset(void *dt_ptr, unsigned 
->> long index,
->> -                           unsigned long offset)
->> +static unsigned long __init kaslr_legal_offset(void *dt_ptr, unsigned 
->> long random)
->>   {
->>       unsigned long koffset = 0;
->>       unsigned long start;
->> +    unsigned long index;
->> +    unsigned long offset;
->> +
->> +    /*
->> +     * Decide which 64M we want to start
->> +     * Only use the low 8 bits of the random seed
->> +     */
->> +    index = random & 0xFF;
->> +    index %= regions.linear_sz / SZ_64M;
->> +
->> +    /* Decide offset inside 64M */
->> +    offset = random % (SZ_64M - regions.kernel_size);
->> +    offset = round_down(offset, SZ_16K);
->>       while ((long)index >= 0) {
->>           offset = memstart_addr + index * SZ_64M + offset;
->> @@ -289,10 +302,9 @@ static inline __init bool kaslr_disabled(void)
->>   static unsigned long __init kaslr_choose_location(void *dt_ptr, 
->> phys_addr_t size,
->>                             unsigned long kernel_sz)
->>   {
->> -    unsigned long offset, random;
->> +    unsigned long random;
->>       unsigned long ram, linear_sz;
->>       u64 seed;
->> -    unsigned long index;
->>       kaslr_get_cmdline(dt_ptr);
->>       if (kaslr_disabled())
->> @@ -333,22 +345,12 @@ static unsigned long __init 
->> kaslr_choose_location(void *dt_ptr, phys_addr_t size
->>       regions.dtb_start = __pa(dt_ptr);
->>       regions.dtb_end = __pa(dt_ptr) + fdt_totalsize(dt_ptr);
->>       regions.kernel_size = kernel_sz;
->> +    regions.linear_sz = linear_sz;
->>       get_initrd_range(dt_ptr);
->>       get_crash_kernel(dt_ptr, ram);
->> -    /*
->> -     * Decide which 64M we want to start
->> -     * Only use the low 8 bits of the random seed
->> -     */
->> -    index = random & 0xFF;
->> -    index %= linear_sz / SZ_64M;
->> -
->> -    /* Decide offset inside 64M */
->> -    offset = random % (SZ_64M - kernel_sz);
->> -    offset = round_down(offset, SZ_16K);
->> -
->> -    return kaslr_legal_offset(dt_ptr, index, offset);
->> +    return kaslr_legal_offset(dt_ptr, random);
->>   }
->>   /*
->> @@ -358,8 +360,6 @@ static unsigned long __init 
->> kaslr_choose_location(void *dt_ptr, phys_addr_t size
->>    */
->>   notrace void __init kaslr_early_init(void *dt_ptr, phys_addr_t size)
->>   {
->> -    unsigned long tlb_virt;
->> -    phys_addr_t tlb_phys;
->>       unsigned long offset;
->>       unsigned long kernel_sz;
->> @@ -375,8 +375,8 @@ notrace void __init kaslr_early_init(void *dt_ptr, 
->> phys_addr_t size)
->>       is_second_reloc = 1;
->>       if (offset >= SZ_64M) {
->> -        tlb_virt = round_down(kernstart_virt_addr, SZ_64M);
->> -        tlb_phys = round_down(kernstart_addr, SZ_64M);
->> +        unsigned long tlb_virt = round_down(kernstart_virt_addr, 
->> SZ_64M);
->> +        phys_addr_t tlb_phys = round_down(kernstart_addr, SZ_64M);
-> 
-> That looks like cleanup unrelated to the patch itself.
+Is this IS_ENABLED(CONFIG_MODULES) still necessary? At the end of this
+series, doesn't driver_deferred_probe_check_state() already return
+-EPROBE_DEFER if modules are enabled and timeout hasn't happened?
 
-Hi, Christophe
+-Saravana
 
-These two variables is only for the booke32 code, so I moved the
-definition here so that I can save a "#ifdef CONFIG_PPC32" for them.
-
-Thanks,
-Jason
-
-> 
->>           /* Create kernel map to relocate in */
->>           create_kaslr_tlb_entry(1, tlb_virt, tlb_phys);
->>
-> 
-> Christophe
-> 
-> .
-
+> +                           (ret == -ENODEV))
+> +                               ret = -EPROBE_DEFER;
+> +                       return ret;
+>                 }
+>                 /* If we're creating a hog we can use the passed pctldev */
+>                 if (hog_pctldev && (np_pctldev == p->dev->of_node)) {
+> --
+> 2.17.1
+>
