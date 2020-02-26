@@ -2,93 +2,216 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4952C4BA09
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:34:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C74DC4BA06
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3E9F20732
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:34:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="egLSHHnk"
+	by mail.kernel.org (Postfix) with ESMTP id 0B3B320732
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:35:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729493AbgBZAeV (ORCPT
+        id S1729426AbgBZAfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 19:34:21 -0500
-Received: from mail-qk1-f180.google.com ([209.85.222.180]:42008 "EHLO
-        mail-qk1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728865AbgBZAeV (ORCPT
+        Tue, 25 Feb 2020 19:35:39 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48090 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728989AbgBZAfj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 19:34:21 -0500
-Received: by mail-qk1-f180.google.com with SMTP id o28so1032183qkj.9
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 16:34:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=dcOce3PoshJ+NY86BbuLlniUku7fXlpuSXAZ8LGYJdw=;
-        b=egLSHHnk9JOP89pQ+k1B3mbni7p4N0tKpBslDS2rPS1BjzYxUw8Ton4W8ZeKUfaCCa
-         uybfbl+0gPLICpocoLH9Ag86nk2V29oEpjj4te8uRyqqzmMT3sIANuVIvIfi8Yyy3uAz
-         balr9ZS2hcpP86kln1EavIcj/mo28FKW0nZLM9uBkHpQrO1wbrf8tSO3wF5NRsqqfjb0
-         hBYHRaKdwbTjjodWlVbk6kk/4G6Hzbwrws8fCbSNtLGrb2LlkLxShUJlNfN1KytmPxDP
-         mrFEhKmlGeOcb70AJ6K3tdR6dCnyO289dGsdXrJzkOnadWsiaP35kJwXmACJ/OzlLRFk
-         hNvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=dcOce3PoshJ+NY86BbuLlniUku7fXlpuSXAZ8LGYJdw=;
-        b=K6cWn7YzeulAJ8QIUsXId7Xj5ZTQpWOdlBKxu2IptFhssBkxhrRS4onVswep7N9EhW
-         EvxT+Suz+bfaaogy5nU8nR0efGBXaU5bLYIkSSrL6QuOSbgE1glLFou1YbXQqodTH7HN
-         tiw776mL9iw0bd3j5kFBxoVLcE6SYrv7jr+3cTABmQZM0URJRyBiSnH3EL498n+rQAWD
-         TfZbMMlrc3mfLv6hNFOsJA5b2E7TKqTRV0ZUTKrc+rIKRMEAo/BhXKUyzyfzvPeVGZCA
-         wY4snGmmnsJwUdqOqIb32N3I3Kid/LiKKrWWuTq6/nuPhnM0BbH+l/Xz+9wrDgUG97r2
-         JUvA==
-X-Gm-Message-State: APjAAAUm2Ukkhyx0LcXxubF+1tZoK/jJjUQkGKccJNJSwonYrw+gxKpP
-        CDb8vKVUGLSidBF+si8ORxcq1g==
-X-Google-Smtp-Source: APXvYqxpE+tID1QWX19eu18atq1kyUmwXoOU0fn0POXwu3rdeVE5y2Mb1HWpaN/jsxiDDo08DLz3lw==
-X-Received: by 2002:a37:9b45:: with SMTP id d66mr2147082qke.84.1582677259776;
-        Tue, 25 Feb 2020 16:34:19 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id j4sm168618qkk.84.2020.02.25.16.34.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2020 16:34:19 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH -next] power/qos: fix a data race in pm_qos_*_value
-Date:   Tue, 25 Feb 2020 19:34:18 -0500
-Message-Id: <705D8B35-FBB5-4D32-AE63-DD4E773CEC1E@lca.pw>
-References: <CAJZ5v0jDjK63R4kbBb_aU7ZBXbCG_vfOW33aVBRbYV7hEOWYqA@mail.gmail.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Marco Elver <elver@google.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-In-Reply-To: <CAJZ5v0jDjK63R4kbBb_aU7ZBXbCG_vfOW33aVBRbYV7hEOWYqA@mail.gmail.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-X-Mailer: iPhone Mail (17D50)
+        Tue, 25 Feb 2020 19:35:39 -0500
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01Q0KNiv161112
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 19:35:37 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ydcq62c2c-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 19:35:37 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Wed, 26 Feb 2020 00:35:34 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 26 Feb 2020 00:35:28 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01Q0ZRs843254056
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Feb 2020 00:35:27 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6BA844C04E;
+        Wed, 26 Feb 2020 00:35:27 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BE81D4C044;
+        Wed, 26 Feb 2020 00:35:26 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 26 Feb 2020 00:35:26 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 138A1A00F1;
+        Wed, 26 Feb 2020 11:35:22 +1100 (AEDT)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     "Oliver O'Halloran" <oohall@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux MM <linux-mm@kvack.org>
+Date:   Wed, 26 Feb 2020 11:35:25 +1100
+In-Reply-To: <CAPcyv4g_762vho=L21BuO=97zr9Cq14np88bnFieiYN25BvJtA@mail.gmail.com>
+References: <20200221032720.33893-1-alastair@au1.ibm.com>
+         <CAPcyv4j2hut1YDrotC=QkcM+S0SZwpd9_4hD2aChn+cKD+62oA@mail.gmail.com>
+         <240fbefc6275ac0a6f2aa68715b3b73b0e7a8310.camel@au1.ibm.com>
+         <20200224043750.GM24185@bombadil.infradead.org>
+         <83034494d5c3da1fa63b172e844f85d0fec7910a.camel@au1.ibm.com>
+         <CAOSf1CHYEJf02EV0kYMk+D9s=4PiTXSM1eFcRGYe7XJrHvtAtA@mail.gmail.com>
+         <b981f4e6cc308a617e7944e3ce23009e804cfdbf.camel@au1.ibm.com>
+         <CAPcyv4g_762vho=L21BuO=97zr9Cq14np88bnFieiYN25BvJtA@mail.gmail.com>
+Organization: IBM Australia
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022600-0012-0000-0000-0000038A44FB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022600-0013-0000-0000-000021C6E901
+Message-Id: <0e605b595cd03ef34c41a0b3d2304d7fb3ed7690.camel@au1.ibm.com>
+Subject: RE: [PATCH v3 00/27] Add support for OpenCAPI Persistent Memory devices
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-25_09:2020-02-25,2020-02-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ adultscore=0 priorityscore=1501 mlxscore=0 malwarescore=0 impostorscore=0
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=999 spamscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002260000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 2020-02-25 at 16:32 -0800, Dan Williams wrote:
+> On Tue, Feb 25, 2020 at 4:14 PM Alastair D'Silva <
+> alastair@au1.ibm.com> wrote:
+> > On Mon, 2020-02-24 at 17:51 +1100, Oliver O'Halloran wrote:
+> > > On Mon, Feb 24, 2020 at 3:43 PM Alastair D'Silva <
+> > > alastair@au1.ibm.com> wrote:
+> > > > On Sun, 2020-02-23 at 20:37 -0800, Matthew Wilcox wrote:
+> > > > > On Mon, Feb 24, 2020 at 03:34:07PM +1100, Alastair D'Silva
+> > > > > wrote:
+> > > > > > V3:
+> > > > > >   - Rebase against next/next-20200220
+> > > > > >   - Move driver to arch/powerpc/platforms/powernv, we now
+> > > > > > expect
+> > > > > > this
+> > > > > >     driver to go upstream via the powerpc tree
+> > > > > 
+> > > > > That's rather the opposite direction of normal; mostly
+> > > > > drivers
+> > > > > live
+> > > > > under
+> > > > > drivers/ and not in arch/.  It's easier for drivers to get
+> > > > > overlooked
+> > > > > when doing tree-wide changes if they're hiding.
+> > > > 
+> > > > This is true, however, given that it was not all that desirable
+> > > > to
+> > > > have
+> > > > it under drivers/nvdimm, it's sister driver (for the same
+> > > > hardware)
+> > > > is
+> > > > also under arch, and that we don't expect this driver to be
+> > > > used on
+> > > > any
+> > > > platform other than powernv, we think this was the most
+> > > > reasonable
+> > > > place to put it.
+> > > 
+> > > Historically powernv specific platform drivers go in their
+> > > respective
+> > > subsystem trees rather than in arch/ and I'd prefer we kept it
+> > > that
+> > > way. When I added the papr_scm driver I put it in the pseries
+> > > platform
+> > > directory because most of the pseries paravirt code lives there
+> > > for
+> > > some reason; I don't know why. Luckily for me that followed the
+> > > same
+> > > model that Dan used when he put the NFIT driver in drivers/acpi/
+> > > and
+> > > the libnvdimm core in drivers/nvdimm/ so we didn't have anything
+> > > to
+> > > argue about. However, as Matthew pointed out, it is at odds with
+> > > how
+> > > most subsystems operate. Is there any particular reason we're
+> > > doing
+> > > things this way or should we think about moving libnvdimm users
+> > > to
+> > > drivers/nvdimm/?
+> > > 
+> > > Oliver
+> > 
+> > I'm not too fussed where it ends up, as long as it ends up
+> > somewhere :)
+> > 
+> > From what I can tell, the issue is that we have both
+> > "infrastructure"
+> > drivers, and end-device drivers. To me, it feels like
+> > drivers/nvdimm
+> > should contain both, and I think this feels like the right
+> > approach.
+> > 
+> > I could move it back to drivers/nvdimm/ocxl, but I felt that it was
+> > only tolerated there, not desired. This could be cleared up with a
+> > response from Dan Williams, and if it is indeed dersired, this is
+> > my
+> > preferred location.
+> 
+> Apologies if I gave the impression it was only tolerated. I'm ok with
+> drivers/nvdimm/ocxl/, and to the larger point I'd also be ok with a
+> drivers/{acpi => nvdimm}/nfit and {arch/powerpc/platforms/pseries =>
+> drivers/nvdimm}/papr_scm.c move as well to keep all the consumers of
+> the nvdimm related code together with the core.
 
+Great, thanks for clarifying, text is so imprecise when it comes to
+nuance :)
 
-> On Feb 25, 2020, at 7:10 PM, Rafael J. Wysocki <rafael@kernel.org> wrote:
->=20
-> The target_value field in struct pm_qos_constraints is used for
-> lockless access to the effective constraint value of a given QoS list,
-> so the readers of it cannot expect it to always reflect the most
-> recent effective constraint value.  However, they can and do expect it
-> to be equal to a valid effective constraint value computed at a
-> certain time in the past (event though it may not be the most recent
-> one), so add READ|WRITE_ONCE() annotations around the target_value
-> accesses to prevent the compiler from possibly causing that
-> expectation to be unmet by generating code in an exceptionally
-> convoluted way.
+I'll move ti back to drivers/nvdimm/ocxl then.
 
-Perfect. I=E2=80=99ll send a v2 for that unless you would like to squash it i=
-n.=
+-- 
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
+
