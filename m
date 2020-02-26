@@ -2,195 +2,107 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47400C4BA0A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C50E2C4BA0A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12120222C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:33:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OFfWmgW/"
+	by mail.kernel.org (Postfix) with ESMTP id A18CF20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:36:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbgBZIdW (ORCPT
+        id S1727377AbgBZIgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 03:33:22 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42022 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726425AbgBZIdW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 03:33:22 -0500
-Received: by mail-pg1-f193.google.com with SMTP id h8so944249pgs.9;
-        Wed, 26 Feb 2020 00:33:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XqlxF81Ri1fm02o+lsTCsP4GTUvxZgWE/G6mwZn7NMg=;
-        b=OFfWmgW/gYHRAZpBGxkDWL0DtZcua2+xHMA15CCD9P1f899OfOItFHWzBT0bVm10sv
-         nGvy+baVNbXyP/if3rC3KlukKmlFEavseT/069nLGmeHSxbJM8QVFUCnDqvhOkQADZIj
-         uVtkHadsa5YelUuxNRxDDT8u1pT3qIyBQXfstFeq8tWcQoPtIFBviho4E8cj9NlhvaXa
-         5g51dV1hHmsRrHGQr1P/cjYm04Xk7EblzsD/swLpUEqu6+nNWo/zU59m/Vu075NN3l6t
-         JHAG1eiqOAUW8WMdMAZj7TiW2OwPYkjkyFZMxxCJYwHyKpsmnDKSzmBYx4T6VXu+9389
-         AiBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XqlxF81Ri1fm02o+lsTCsP4GTUvxZgWE/G6mwZn7NMg=;
-        b=eKjaUDQjFowJEOw5M1OUekR1MmyNAN3jPVwmDJCZwqQ4XR3O6og86dPob12qyIlJhc
-         1qst3irNfc5yGIxc8xukOJbuNnsPkRNdSHpBAgMNrCBJaxki2H5nqr3cy34LUn3rMokO
-         X4jhRVbeaaJZEM8YM2bKuKtFFk+Hc74qPUAPntZ0DgelDzhNK8tX4cGb4pYvI2ZH7Lg/
-         R0HInPK55aKzOaUpZM0Kw7ar1Kjiyetcx3cU0BcuGYUFsrzhfRtyTNE3rY5cdwA3GEyw
-         pLzV8ZA79RqD/FiWzB640WNd2aWofeWJXLa8HNvQrbmePe4mrFZd5B2BzIZ9lfF8Pe/1
-         t5Pg==
-X-Gm-Message-State: APjAAAXEOy/BuvX3Zt1lJgJd0cyH9aX/ODGsfDzIC2JgrOYoISgCmavK
-        Bsa1oq5U0tYr34s/3APGM3dz6S5P2y3LHXSchIM=
-X-Google-Smtp-Source: APXvYqxSrK38j0pUinifgPK5b5g707sn/C8uL7DptCzOZtLnjxvEKjEPsB3FOBFYIx3TUnX4UMm3w1N77GYYH6ltC7A=
-X-Received: by 2002:a62:1a09:: with SMTP id a9mr3201886pfa.64.1582706000275;
- Wed, 26 Feb 2020 00:33:20 -0800 (PST)
+        Wed, 26 Feb 2020 03:36:10 -0500
+Received: from mail.loongson.cn ([114.242.206.163]:60150 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726425AbgBZIgK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 03:36:10 -0500
+Received: from [10.130.0.70] (unknown [123.138.236.242])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxf2jkLVZeS+QTAA--.18S3;
+        Wed, 26 Feb 2020 16:35:57 +0800 (CST)
+Subject: Re: [PATCH 1/2] USB: core: Fix build warning in
+ usb_get_configuration()
+To:     Johan Hovold <johan@kernel.org>
+References: <1582697723-7274-1-git-send-email-yangtiezhu@loongson.cn>
+ <20200226080459.GU32540@localhost>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <d9637b5a-6d5e-17a1-e615-f828d311f654@loongson.cn>
+Date:   Wed, 26 Feb 2020 16:35:48 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-References: <20200220033335.106963-1-chenzhou10@huawei.com>
- <CAHp75Vf3Bsjj+0ebkxMatZfUGDJ=upOHBFHfOs_PDOnFTnRJYQ@mail.gmail.com>
- <BN8PR11MB362069564569B69E42C00086F2ED0@BN8PR11MB3620.namprd11.prod.outlook.com>
- <BYAPR11MB3624FB3A1FC8F5C43D8F6DC4F2EA0@BYAPR11MB3624.namprd11.prod.outlook.com>
-In-Reply-To: <BYAPR11MB3624FB3A1FC8F5C43D8F6DC4F2EA0@BYAPR11MB3624.namprd11.prod.outlook.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 26 Feb 2020 10:33:08 +0200
-Message-ID: <CAHp75VfkZyuu8QZ-Kc+9-yZkD_OUGxzBiXQDAQQ0oKxrJ_KR_w@mail.gmail.com>
-Subject: Re: [PATCH -next] platform/x86: intel_pmc_core: fix build error
- without CONFIG_DEBUG_FS
-To:     "Kammela, Gayatri" <gayatri.kammela@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Cc:     Chen Zhou <chenzhou10@huawei.com>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
-        "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200226080459.GU32540@localhost>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf9Dxf2jkLVZeS+QTAA--.18S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7CF1kJFy3Kr1kJF18tw17GFg_yoW8Xr1Dpr
+        47tayUAFWUJF43Gay7Ga9Yga1Sgws7AFW8GryfX345Xr17Aa4DCFykKry5Zrn7WrZ7JF4I
+        qFySgF1j9rZrG3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkE14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+        6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+        xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+        6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+        0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7Mxk0xIA0c2IEe2xFo4CE
+        bIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
+        AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIY
+        rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+        v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j
+        6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUywZ
+        7UUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 3:56 AM Kammela, Gayatri
-<gayatri.kammela@intel.com> wrote:
-> > -----Original Message-----
-> > From: Kammela, Gayatri
-> > Sent: Tuesday, February 25, 2020 9:11 AM
-> > To: Andy Shevchenko <andy.shevchenko@gmail.com>; Chen Zhou
-> > <chenzhou10@huawei.com>
-> > Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>; Somayaji,
-> > Vishwanath <vishwanath.somayaji@intel.com>; Darren Hart
-> > <dvhart@infradead.org>; Andy Shevchenko <andy@infradead.org>;
-> > Platform Driver <platform-driver-x86@vger.kernel.org>; Linux Kernel Mailing
-> > List <linux-kernel@vger.kernel.org>
-> > Subject: RE: [PATCH -next] platform/x86: intel_pmc_core: fix build error
-> > without CONFIG_DEBUG_FS
-> >
-> > > -----Original Message-----
-> > > From: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > > Sent: Tuesday, February 25, 2020 2:13 AM
-> > > To: Chen Zhou <chenzhou10@huawei.com>; Kammela, Gayatri
-> > > <gayatri.kammela@intel.com>
-> > > Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>; Somayaji,
-> > > Vishwanath <vishwanath.somayaji@intel.com>; Darren Hart
-> > > <dvhart@infradead.org>; Andy Shevchenko <andy@infradead.org>;
-> > Platform
-> > > Driver <platform-driver-x86@vger.kernel.org>; Linux Kernel Mailing
-> > > List <linux-kernel@vger.kernel.org>
-> > > Subject: Re: [PATCH -next] platform/x86: intel_pmc_core: fix build
-> > > error without CONFIG_DEBUG_FS
-> > >
-> > > On Thu, Feb 20, 2020 at 5:40 AM Chen Zhou <chenzhou10@huawei.com>
-> > > wrote:
-> > > >
-> > > > If CONFIG_DEBUG_FS is n, build fails:
-> > > >
-> > > > drivers/platform/x86/intel_pmc_core.c: In function pmc_core_resume:
-> > > > drivers/platform/x86/intel_pmc_core.c:1327:3: error: implicit
-> > > > declaration
-> > > of function pmc_core_slps0_display; did you mean
-> > > pmc_core_is_pc10_failed? [-Werror=implicit-function-declaration]
-> > > >    pmc_core_slps0_display(pmcdev, dev, NULL);
-> > > >       ^~~~~~~~~~~~~~~~~~~~~~
-> > > >
-> > > > Function pmc_core_slps0_display() is responsible for displaying
-> > > > debug registers, which is under CONFIG_DEBUG_FS.
-> > > >
-> > > > Providing the static inline stub whenever CONFIG_DEBUG_FS is
-> > > > disabled to fix this. Function pmc_core_lpm_display() is the same.
-> > >
-> > > Thank you for the patch, but I think it's not the right approach.
-> > > Basically we need to move those functions outside of #if
-> > > IS_ENABLED(CONFIG_DEBUG_FS).
-> > > (Move them upper).
-> > Agreed
-> > >
-> > > Also I have noticed another issue in pmc_core_lpm_display(). It uses
-> > > tgl_lpm_maps directly. It shouldn't.
-> > >
-> > > Cc: Gayatri.
-> > >
-> > > Gayatri, care to fix?
-> > Hi Andy, caught this bug in our internal regression too. I will send the patch
-> > shortly. Thanks!
+On 02/26/2020 04:04 PM, Johan Hovold wrote:
+> On Wed, Feb 26, 2020 at 02:15:22PM +0800, Tiezhu Yang wrote:
+>> There is no functional issue, just fix the following build warning:
+>>
+>>    CC      drivers/usb/core/config.o
+>> drivers/usb/core/config.c: In function ‘usb_get_configuration’:
+>> drivers/usb/core/config.c:868:6: warning: ‘result’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+>>    int result;
+>>        ^
+> What compiler are you using? The warning is clearly bogus and it hasn't
+> been seen with any recent gcc at least.
+
+[yangtiezhu@linux ~]$ gcc --version
+gcc (GCC) 4.9.4 20160726 (Red Hat 4.9.4-14)
+Copyright (C) 2015 Free Software Foundation, Inc.
+
+The gcc version I used maybe too old,
+if the warning is bogus, please ignore this patch.
+
+Thanks,
+
+Tiezhu Yang
+
 >
-> Update: Andy, I have 4 small fixes for the patch series merged in for-next branch.
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>> ---
+>>   drivers/usb/core/config.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/usb/core/config.c b/drivers/usb/core/config.c
+>> index b7918f6..bb63ee0 100644
+>> --- a/drivers/usb/core/config.c
+>> +++ b/drivers/usb/core/config.c
+>> @@ -865,7 +865,7 @@ int usb_get_configuration(struct usb_device *dev)
+>>   	unsigned int cfgno, length;
+>>   	unsigned char *bigbuffer;
+>>   	struct usb_config_descriptor *desc;
+>> -	int result;
+>> +	int result = 0;
+>>   
+>>   	if (ncfg > USB_MAXCONFIG) {
+>>   		dev_warn(ddev, "too many configurations: %d, "
+> Johan
 
-I don't see it in the mailing list.
-Please check if you send them correctly.
-
-There are more bug reports coming. We must fix this ASAP.
-
->  I am wondering if I should send the fixup patches or if you drop the patch series from for-next branch, I can send out the new version that includes all these fixes. Please suggest. Thanks!
->
-> > >
-> > > > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > > > Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-> > > > ---
-> > > >  drivers/platform/x86/intel_pmc_core.c | 14 ++++++++++++++
-> > > >  1 file changed, 14 insertions(+)
-> > > >
-> > > > diff --git a/drivers/platform/x86/intel_pmc_core.c
-> > > > b/drivers/platform/x86/intel_pmc_core.c
-> > > > index f4a36fb..939f8e0 100644
-> > > > --- a/drivers/platform/x86/intel_pmc_core.c
-> > > > +++ b/drivers/platform/x86/intel_pmc_core.c
-> > > > @@ -1117,6 +1117,20 @@ static void pmc_core_dbgfs_register(struct
-> > > pmc_dev *pmcdev)
-> > > >         }
-> > > >  }
-> > > >  #else
-> > > > +static inline void pmc_core_slps0_display(struct pmc_dev *pmcdev,
-> > > > +                                          struct device *dev,
-> > > > +                                          struct seq_file *s) { }
-> > > > +
-> > > > +static inline void pmc_core_lpm_display(struct pmc_dev *pmcdev,
-> > > > +                                        struct device *dev,
-> > > > +                                        struct seq_file *s, u32 offset,
-> > > > +                                        const char *str,
-> > > > +                                        const struct pmc_bit_map
-> > > > +**maps) { }
-> > > > +
-> > > >  static inline void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
-> > > > { }
-> > > > --
-> > > > 2.7.4
-> > > >
-> > >
-> > >
-> > > --
-> > > With Best Regards,
-> > > Andy Shevchenko
-
-
-
---
-With Best Regards,
-Andy Shevchenko
