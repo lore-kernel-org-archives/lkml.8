@@ -2,295 +2,70 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D992C4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F8FC4BA18
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2458124683
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D664C24684
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:01:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="l13oCQ55"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b4gRu9Om"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbgBZRBP (ORCPT
+        id S1728424AbgBZRBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:01:15 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:56448 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727922AbgBZRBO (ORCPT
+        Wed, 26 Feb 2020 12:01:21 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:56034 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728388AbgBZRBT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:01:14 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582736473; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=Nh370IV7/tuXsA62xsNP3yYz1b4ndIzPFw3Fvrsbx0k=; b=l13oCQ55rEXNMn4mfbgxnzsly0vyL0JK7QUmFUP8Lpzvp4BL8VGfxgbM9xBYL6VoCHvuHycb
- xdlc0G7Xv4frtPCtqk4DF+0YHyS8kj/9o0tybcxA4npmyEouPiD3eWgKEftzBxXHUBLFU5mm
- 4x8LrarSlyLIzH7z1XZBXksWbqE=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e56a42f.7f3c9c86bb58-smtp-out-n01;
- Wed, 26 Feb 2020 17:00:31 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A67C5C447A0; Wed, 26 Feb 2020 17:00:31 +0000 (UTC)
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5A740C447A0;
-        Wed, 26 Feb 2020 17:00:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5A740C447A0
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org, srinivas.kandagatla@linaro.org,
-        robh+dt@kernel.org
-Cc:     agross@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        tsoni@codeaurora.org, vnkgutta@codeaurora.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v4 3/3] soc: qcom: apr: Add avs/audio tracking functionality
-Date:   Wed, 26 Feb 2020 22:30:01 +0530
-Message-Id: <20200226170001.24234-4-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200226170001.24234-1-sibis@codeaurora.org>
-References: <20200226170001.24234-1-sibis@codeaurora.org>
+        Wed, 26 Feb 2020 12:01:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=hhQ9YBl81zQvhfWadY0dEbDydMLxnfW9YM0h14jX4a0=; b=b4gRu9OmDpOpG4+91cUD2P0Fvx
+        rwIA1FZxWgyqg54ixZ2mlE7je+4s02JEfApEECCDtBJZOsOCCCQypvdX4wlnpTzyq3GzniYslygSp
+        0JLM3hJczJhHf6sPZnzEVoXaF0BjXMr7Sau/bOjj78BwbTBoLYT0As4XBg3LZA4cCSraqX2yl635x
+        P0GeGjaSAjr/yoe31Xsg5u1v6aDOjH3+k/QDvhsXylJIuy7m6nJ0VChbG4oj9ux1VoZSn++eE6CLS
+        nvwJVc8B+ap1PhLLk3dgexnb7LCihqx+unp7n6RFCEuxFFJLK99PLd8EgLQxWjGh2LTvEZCdFHFm2
+        mjT6Qmyw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j703j-0006LS-7W; Wed, 26 Feb 2020 17:01:19 +0000
+Date:   Wed, 26 Feb 2020 09:01:19 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v8 05/25] mm: Add new readahead_control API
+Message-ID: <20200226170119.GA22837@infradead.org>
+References: <20200225214838.30017-1-willy@infradead.org>
+ <20200225214838.30017-6-willy@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200225214838.30017-6-willy@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use PDR helper functions to track the protection domains that the apr
-services are dependent upon on SDM845 SoC, specifically the "avs/audio"
-service running on ADSP Q6.
+On Tue, Feb 25, 2020 at 01:48:18PM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> 
+> Filesystems which implement the upcoming ->readahead method will get
+> their pages by calling readahead_page() or readahead_page_batch().
+> These functions support large pages, even though none of the filesystems
+> to be converted do yet.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- drivers/soc/qcom/Kconfig     |   1 +
- drivers/soc/qcom/apr.c       | 123 ++++++++++++++++++++++++++++++++---
- include/linux/soc/qcom/apr.h |   1 +
- 3 files changed, 116 insertions(+), 9 deletions(-)
+Looks good,
 
-diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index cca6a43e771d9..57000f1615ada 100644
---- a/drivers/soc/qcom/Kconfig
-+++ b/drivers/soc/qcom/Kconfig
-@@ -202,6 +202,7 @@ config QCOM_APR
- 	tristate "Qualcomm APR Bus (Asynchronous Packet Router)"
- 	depends on ARCH_QCOM || COMPILE_TEST
- 	depends on RPMSG
-+	select QCOM_PDR_HELPERS
- 	help
- 	  Enable APR IPC protocol support between
- 	  application processor and QDSP6. APR is
-diff --git a/drivers/soc/qcom/apr.c b/drivers/soc/qcom/apr.c
-index 4fcc32420c474..1f35b097c6356 100644
---- a/drivers/soc/qcom/apr.c
-+++ b/drivers/soc/qcom/apr.c
-@@ -11,6 +11,7 @@
- #include <linux/workqueue.h>
- #include <linux/of_device.h>
- #include <linux/soc/qcom/apr.h>
-+#include <linux/soc/qcom/pdr.h>
- #include <linux/rpmsg.h>
- #include <linux/of.h>
- 
-@@ -21,6 +22,7 @@ struct apr {
- 	spinlock_t rx_lock;
- 	struct idr svcs_idr;
- 	int dest_domain_id;
-+	struct pdr_handle *pdr;
- 	struct workqueue_struct *rxwq;
- 	struct work_struct rx_work;
- 	struct list_head rx_list;
-@@ -289,6 +291,9 @@ static int apr_add_device(struct device *dev, struct device_node *np,
- 		  id->svc_id + 1, GFP_ATOMIC);
- 	spin_unlock(&apr->svcs_lock);
- 
-+	of_property_read_string_index(np, "qcom,protection-domain",
-+				      1, &adev->service_path);
-+
- 	dev_info(dev, "Adding APR dev: %s\n", dev_name(&adev->dev));
- 
- 	ret = device_register(&adev->dev);
-@@ -300,14 +305,75 @@ static int apr_add_device(struct device *dev, struct device_node *np,
- 	return ret;
- }
- 
--static void of_register_apr_devices(struct device *dev)
-+static int of_apr_add_pd_lookups(struct device *dev)
-+{
-+	const char *service_name, *service_path;
-+	struct apr *apr = dev_get_drvdata(dev);
-+	struct device_node *node;
-+	struct pdr_service *pds;
-+	int ret;
-+
-+	for_each_child_of_node(dev->of_node, node) {
-+		ret = of_property_read_string_index(node, "qcom,protection-domain",
-+						    0, &service_name);
-+		if (ret < 0)
-+			continue;
-+
-+		ret = of_property_read_string_index(node, "qcom,protection-domain",
-+						    1, &service_path);
-+		if (ret < 0) {
-+			dev_err(dev, "pdr service path missing: %d\n", ret);
-+			return ret;
-+		}
-+
-+		pds = pdr_add_lookup(apr->pdr, service_name, service_path);
-+		if (IS_ERR(pds) && PTR_ERR(pds) != -EALREADY) {
-+			dev_err(dev, "pdr add lookup failed: %d\n", ret);
-+			return PTR_ERR(pds);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void of_register_apr_devices(struct device *dev, const char *svc_path)
- {
- 	struct apr *apr = dev_get_drvdata(dev);
- 	struct device_node *node;
-+	const char *service_path;
-+	int ret;
- 
- 	for_each_child_of_node(dev->of_node, node) {
- 		struct apr_device_id id = { {0} };
- 
-+		/*
-+		 * This function is called with svc_path NULL during
-+		 * apr_probe(), in which case we register any apr devices
-+		 * without a qcom,protection-domain specified.
-+		 *
-+		 * Then as the protection domains becomes available
-+		 * (if applicable) this function is again called, but with
-+		 * svc_path representing the service becoming available. In
-+		 * this case we register any apr devices with a matching
-+		 * qcom,protection-domain.
-+		 */
-+
-+		ret = of_property_read_string_index(node, "qcom,protection-domain",
-+						    1, &service_path);
-+		if (svc_path) {
-+			/* skip APR services that are PD independent */
-+			if (ret)
-+				continue;
-+
-+			/* skip APR services whose PD paths don't match */
-+			if (strcmp(service_path, svc_path))
-+				continue;
-+		} else {
-+			/* skip APR services whose PD lookups are registered */
-+			if (ret == 0)
-+				continue;
-+		}
-+
- 		if (of_property_read_u32(node, "reg", &id.svc_id))
- 			continue;
- 
-@@ -318,6 +384,34 @@ static void of_register_apr_devices(struct device *dev)
- 	}
- }
- 
-+static int apr_remove_device(struct device *dev, void *svc_path)
-+{
-+	struct apr_device *adev = to_apr_device(dev);
-+
-+	if (svc_path && adev->service_path) {
-+		if (!strcmp(adev->service_path, (char *)svc_path))
-+			device_unregister(&adev->dev);
-+	} else {
-+		device_unregister(&adev->dev);
-+	}
-+
-+	return 0;
-+}
-+
-+static void apr_pd_status(int state, char *svc_path, void *priv)
-+{
-+	struct apr *apr = (struct apr *)priv;
-+
-+	switch (state) {
-+	case SERVREG_SERVICE_STATE_UP:
-+		of_register_apr_devices(apr->dev, svc_path);
-+		break;
-+	case SERVREG_SERVICE_STATE_DOWN:
-+		device_for_each_child(apr->dev, svc_path, apr_remove_device);
-+		break;
-+	}
-+}
-+
- static int apr_probe(struct rpmsg_device *rpdev)
- {
- 	struct device *dev = &rpdev->dev;
-@@ -343,28 +437,39 @@ static int apr_probe(struct rpmsg_device *rpdev)
- 		return -ENOMEM;
- 	}
- 	INIT_WORK(&apr->rx_work, apr_rxwq);
-+
-+	apr->pdr = pdr_handle_alloc(apr_pd_status, apr);
-+	if (IS_ERR(apr->pdr)) {
-+		dev_err(dev, "Failed to init PDR handle\n");
-+		ret = PTR_ERR(apr->pdr);
-+		goto destroy_wq;
-+	}
-+
- 	INIT_LIST_HEAD(&apr->rx_list);
- 	spin_lock_init(&apr->rx_lock);
- 	spin_lock_init(&apr->svcs_lock);
- 	idr_init(&apr->svcs_idr);
--	of_register_apr_devices(dev);
--
--	return 0;
--}
- 
--static int apr_remove_device(struct device *dev, void *null)
--{
--	struct apr_device *adev = to_apr_device(dev);
-+	ret = of_apr_add_pd_lookups(dev);
-+	if (ret)
-+		goto handle_release;
- 
--	device_unregister(&adev->dev);
-+	of_register_apr_devices(dev, NULL);
- 
- 	return 0;
-+
-+handle_release:
-+	pdr_handle_release(apr->pdr);
-+destroy_wq:
-+	destroy_workqueue(apr->rxwq);
-+	return ret;
- }
- 
- static void apr_remove(struct rpmsg_device *rpdev)
- {
- 	struct apr *apr = dev_get_drvdata(&rpdev->dev);
- 
-+	pdr_handle_release(apr->pdr);
- 	device_for_each_child(&rpdev->dev, NULL, apr_remove_device);
- 	flush_workqueue(apr->rxwq);
- 	destroy_workqueue(apr->rxwq);
-diff --git a/include/linux/soc/qcom/apr.h b/include/linux/soc/qcom/apr.h
-index c5d52e2cb275f..7f0bc3cf4d610 100644
---- a/include/linux/soc/qcom/apr.h
-+++ b/include/linux/soc/qcom/apr.h
-@@ -85,6 +85,7 @@ struct apr_device {
- 	uint16_t	domain_id;
- 	uint32_t	version;
- 	char name[APR_NAME_SIZE];
-+	const char *service_path;
- 	spinlock_t	lock;
- 	struct list_head node;
- };
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Reviewed-by: Christoph Hellwig <hch@lst.de>
