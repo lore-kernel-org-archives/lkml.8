@@ -1,315 +1,156 @@
-Return-Path: <SRS0=NmTw=4N=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DCFC4BA04
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D075C4BA06
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8120C2075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Feb 2020 23:59:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C68A21D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:05:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=jlekstrand-net.20150623.gappssmtp.com header.i=@jlekstrand-net.20150623.gappssmtp.com header.b="uh/33vTQ"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="P0gmdkmA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729277AbgBYX7L (ORCPT
+        id S1729299AbgBZAEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 18:59:11 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:40540 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727135AbgBYX7L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 18:59:11 -0500
-Received: by mail-pj1-f66.google.com with SMTP id 12so450887pjb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 15:59:08 -0800 (PST)
+        Tue, 25 Feb 2020 19:04:48 -0500
+Received: from mail-dm6nam12on2043.outbound.protection.outlook.com ([40.107.243.43]:6243
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727135AbgBZAEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 19:04:48 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VCg9sipByLtvSLlseke4mFy/fQOxwwjuzR73elGoxuXnstC3sg2S1i4qO6FZNfIuVI5jbqUYMfBYsG6zAZkv+wbslFN57PbChCBE/dA5Qv8eJkJQdcmKlDZ+a746oN2k2ywDqKT0d7rvuTG8FqfJI6TdGSIxPobNleXExT9Z6xXQDOKUbQWmoJPL+GX2CK1oUv8n9OX2p9BNqG3hUXjzvspAae9VMqHEVsod/Re5zrkU/VEFhjsMZBekiCZ8SOYhqz8EijO/TQYQDBB9tT9IDShFzwjGyVkAcx11F6frxZ4qS1iIjm/sduSnnqA9F1iSgK82nBlJIXplFqKVa7cVyw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t/LLQdr1poyhFFLAgKasMXpIUyfTn496MmtbVJsq1Hk=;
+ b=DVQsyzFaJiwy10iPy46Sa+P8Hgs5Dmuq+UxGOTUeqK4KemEfLK/tAU8hnXQZQ5EgeQW9uoK/pbI8Pziww80jfoS4Qu029urDGXs3kCp7+K6NY277baB/hLs63uxYGwTa4hGYK4msFWXWppzZTWalcFz4LOkO6KgJJtstrgXl9UyuWBMDKQZKVkbPgN1x+523VZeNSbfgRAoF+mcCe+/1vLKPWiCqxsu9J0H0EVhGgA1iKLlO1YEDNwqSIR/OeKe+anDjT8GqHpfCBzHfSgDbU3FXxALr0F5Q8JxjSwydcmn4AoZC0NFH7NdPkL95vhgCw9fmXdkJLMuK3NFUZJBwzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=linaro.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jlekstrand-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AF4yId+y/TfljEnxGOV4fCMRwsfaIal7EqJaU81pYYw=;
-        b=uh/33vTQP+CF+n38KTauF2k2uBHZqxp8SnnNcBSRoRZX/gQ3o0rdcAYdUzw4HPkWGR
-         39YqylYPPNc8n/zdAzMqETA+F2vLwSR/MIMkOFfx2M4Aucz5qFquRZJ2QMIyE+ZzNCXq
-         mYV7d6JH3e23j+QqLFAD1PhCm8c1QHkz6PxBRfBxIs2JpbHw9NWeo14B3v+W5s51E/n/
-         ngD2N0zbmXYJTCiuiykcrb5/0Pc0B3rCcdcBpiAZwwxoOsKoLY7v68ZAfraqUmgUCT5N
-         JWzvd84LRlIzYA1QNK2UyXZxXY4EmZh8c3UafeF7oUHItNOBO34cvDbj6JcXiUpypxkF
-         bOUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AF4yId+y/TfljEnxGOV4fCMRwsfaIal7EqJaU81pYYw=;
-        b=GVNlg9Ugv0N8yJ6Mcqin+Ls98N716gCpYnr6UirqT/0HTn5tZAX1mBPqpA0e5AlOvU
-         VIh68sQwcI6bbxkTyNVmjgRbmpBFlNP4a/5AstyshdcqFc7uWyfX8/uDrs6mVCyOK4rx
-         E+2Y5MiFiTSUoVPtuJ0gTsM7QR9jSecat7KWpf43aKmn7MQ7rIfKLdRP0WbauibNB7C0
-         0izr8OGszBUCrnGZD2Sx9gxs7tYPAzdvEHLMvI3ndqkC/5/fsgobrw/0EBOerqjxtSGQ
-         wxYGB6k5zQQpa/IEGX0Z+gc1uiQHyu6qAvvr+cbGmo/l70NeckfGJY4W1r3+VVpAocR7
-         9sJQ==
-X-Gm-Message-State: APjAAAVaNEvlzi8vcKM+NGX1muQZV8R8grfMqtG5kuGxaO8qiMF4iHul
-        a6/nfKl6CCd7YzhJgVdTLa2aCg==
-X-Google-Smtp-Source: APXvYqyaHbelULqZTMmN5KRFJiybbwwtp/zlDU+4paYLXPdoByk2DmIr7ueSCRJEhZcykFH/Cj08IQ==
-X-Received: by 2002:a17:902:8b89:: with SMTP id ay9mr1002292plb.309.1582675148262;
-        Tue, 25 Feb 2020 15:59:08 -0800 (PST)
-Received: from omlet.com ([2605:6000:1026:c273::594])
-        by smtp.gmail.com with ESMTPSA id b15sm213974pft.58.2020.02.25.15.59.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 15:59:07 -0800 (PST)
-From:   Jason Ekstrand <jason@jlekstrand.net>
-Cc:     airlied@redhat.com, daniel.vetter@ffwll.ch, jessehall@google.com,
-        jajones@nvidia.com, bas@basnieuwenhuizen.nl,
-        christian.koenig@amd.com, daniels@collabora.com,
-        hoegsberg@google.com, Jason Ekstrand <jason@jlekstrand.net>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Chenbo Feng <fengc@google.com>,
-        Greg Hackmann <ghackmann@google.com>,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] RFC: dma-buf: Add an API for importing and exporting sync files
-Date:   Tue, 25 Feb 2020 17:58:55 -0600
-Message-Id: <20200225235856.975366-1-jason@jlekstrand.net>
-X-Mailer: git-send-email 2.24.1
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t/LLQdr1poyhFFLAgKasMXpIUyfTn496MmtbVJsq1Hk=;
+ b=P0gmdkmA6ZViBbm2kUDpsz/J2zOGRCZ6fbZi1I8m1+802a1qHjHE4gy2ukOltRMVd/xUO2vIIGbBGgniZ10ujrkrlyzuWiuaFaDRh9zsoKW2tBon9uxPw1jopQnvaOIlLFSR1vDuiNaCUMCtaZdFjoomXFgOqdrE5vLChSHtOlQ=
+Received: from CY4PR22CA0026.namprd22.prod.outlook.com (2603:10b6:903:ed::12)
+ by SN6PR02MB4415.namprd02.prod.outlook.com (2603:10b6:805:a7::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Wed, 26 Feb
+ 2020 00:04:43 +0000
+Received: from CY1NAM02FT040.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:903:ed:cafe::9e) by CY4PR22CA0026.outlook.office365.com
+ (2603:10b6:903:ed::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend
+ Transport; Wed, 26 Feb 2020 00:04:43 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; linaro.org; dkim=none (message not signed)
+ header.d=none;linaro.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT040.mail.protection.outlook.com (10.152.75.135) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2750.18
+ via Frontend Transport; Wed, 26 Feb 2020 00:04:42 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <jolly.shah@xilinx.com>)
+        id 1j6kBu-0006Ht-GR; Tue, 25 Feb 2020 16:04:42 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <jolly.shah@xilinx.com>)
+        id 1j6kBp-00049U-DR; Tue, 25 Feb 2020 16:04:37 -0800
+Received: from [172.19.2.91] (helo=xsjjollys50.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <jolly.shah@xilinx.com>)
+        id 1j6kBg-00048g-Dn; Tue, 25 Feb 2020 16:04:28 -0800
+From:   Jolly Shah <jolly.shah@xilinx.com>
+To:     ard.biesheuvel@linaro.org, mingo@kernel.org,
+        gregkh@linuxfoundation.org, matt@codeblueprint.co.uk,
+        sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org,
+        dmitry.torokhov@gmail.com, michal.simek@xilinx.com
+Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Tejas Patel <tejas.patel@xilinx.com>,
+        Jolly Shah <jolly.shah@xilinx.com>
+Subject: [PATCH] arch: arm64: xilinx: Make zynqmp_firmware driver optional
+Date:   Tue, 25 Feb 2020 16:04:20 -0800
+Message-Id: <1582675460-26914-1-git-send-email-jolly.shah@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(396003)(346002)(136003)(199004)(189003)(7696005)(186003)(478600001)(36756003)(5660300002)(7416002)(6666004)(70206006)(356004)(2906002)(70586007)(2616005)(26005)(4326008)(336012)(316002)(6636002)(81156014)(54906003)(107886003)(9786002)(81166006)(426003)(8936002)(8676002)(44832011);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB4415;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5c85e4bd-4b17-4c8b-b4df-08d7ba4f7b5e
+X-MS-TrafficTypeDiagnostic: SN6PR02MB4415:
+X-Microsoft-Antispam-PRVS: <SN6PR02MB4415582C933A2747359CDF8CB8EA0@SN6PR02MB4415.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
+X-Forefront-PRVS: 0325F6C77B
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 1OMs0QFQsLLU3Afn2CKGB0P0PrrxTWolQEKu773Z1RLgcmBU22wrSRKWY4oDXKueSThd52BOlnVgYqmipskcHQsehifFvmFPjZMR7mehHYXYbvWPSmtTqbGI9rV8kY2Nc4oknK6k81R3fh0/1wfMkVec5ogawNIfZu6gRiWlgEe0fGOuTjpGQGnpPDru1bH+LKN885xNVY1tmVWyXIFLCes0KQOjGwDRvw4V0QEzFze2AgtR9U55MKlnf+37pYaVJsDIRlcNP80JBdNrWHJWshL3eQEJ4l6/mLQWeDWnibCpi6xzYb4BLS9cdDw80cLGkSyvIpO3jaypKk+AB34HjXStKFTOCVW745MHTE3+wvJ2w5J7E2nffMyn+hQmeBq86gKIjwgecuNCQoNDeX8McCPAjA+b3KydP59i9TB1Lbny6oOgGNCtSDfU0KEV5p6j
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2020 00:04:42.9910
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5c85e4bd-4b17-4c8b-b4df-08d7ba4f7b5e
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4415
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Explicit synchronization is the future.  At least, that seems to be what
-most userspace APIs are agreeing on at this point.  However, most of our
-Linux APIs (both userspace and kernel UAPI) are currently built around
-implicit synchronization with dma-buf.  While work is ongoing to change
-many of the userspace APIs and protocols to an explicit synchronization
-model, switching over piecemeal is difficult due to the number of
-potential components involved.  On the kernel side, many drivers use
-dma-buf including GPU (3D/compute), display, v4l, and others.  In
-userspace, we have X11, several Wayland compositors, 3D drivers, compute
-drivers (OpenCL etc.), media encode/decode, and the list goes on.
+From: Tejas Patel <tejas.patel@xilinx.com>
 
-This patch provides a path forward by allowing userspace to manually
-manage the fences attached to a dma-buf.  Alternatively, one can think
-of this as making dma-buf's implicit synchronization simply a carrier
-for an explicit fence.  This is accomplished by adding two IOCTLs to
-dma-buf for importing and exporting a sync file to/from the dma-buf.
-This way a userspace component which is uses explicit synchronization,
-such as a Vulkan driver, can manually set the write fence on a buffer
-before handing it off to an implicitly synchronized component such as a
-Wayland compositor or video encoder.  In this way, each of the different
-components can be upgraded to an explicit synchronization model one at a
-time as long as the userspace pieces connecting them are aware of it and
-import/export fences at the right times.
+Make zynqmp_firmware driver as optional to disable it, if user don't
+want to use default zynqmp firmware interface.
 
-There is a potential race condition with this API if userspace is not
-careful.  A typical use case for implicit synchronization is to wait for
-the dma-buf to be ready, use it, and then signal it for some other
-component.  Because a sync_file cannot be created until it is guaranteed
-to complete in finite time, userspace can only signal the dma-buf after
-it has already submitted the work which uses it to the kernel and has
-received a sync_file back.  There is no way to atomically submit a
-wait-use-signal operation.  This is not, however, really a problem with
-this API so much as it is a problem with explicit synchronization
-itself.  The way this is typically handled is to have very explicit
-ownership transfer points in the API or protocol which ensure that only
-one component is using it at any given time.  Both X11 (via the PRESENT
-extension) and Wayland provide such ownership transfer points via
-explicit present and idle messages.
-
-The decision was intentionally made in this patch to make the import and
-export operations IOCTLs on the dma-buf itself rather than as a DRM
-IOCTL.  This makes it the import/export operation universal across all
-components which use dma-buf including GPU, display, v4l, and others.
-It also means that a userspace component can do the import/export
-without access to the DRM fd which may be tricky to get in cases where
-the client communicates with DRM via a userspace API such as OpenGL or
-Vulkan.  At a future date we may choose to add direct import/export APIs
-to components such as drm_syncobj to avoid allocating a file descriptor
-and going through two ioctls.  However, that seems to be something of a
-micro-optimization as import/export operations are likely to happen at a
-rate of a few per frame of rendered or decoded video.
-
-Signed-off-by: Jason Ekstrand <jason@jlekstrand.net>
+Signed-off-by: Tejas Patel <tejas.patel@xilinx.com>
+Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
 ---
+ arch/arm64/Kconfig.platforms    | 1 -
+ drivers/firmware/xilinx/Kconfig | 2 ++
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-This is marked as an RFC because I intend it to start a discussion about
-how to solve a problem.  The current patch compiles but that's it for now.
-I'll be writing IGT tests and Vulkan driver patches which exercise it over
-the next couple of days.  In the mean time, feel free to tell me why you
-think this is a great and/or terrible idea. :-)
-
---Jason
-
-
- drivers/dma-buf/dma-buf.c    | 115 +++++++++++++++++++++++++++++++++++
- include/uapi/linux/dma-buf.h |  13 +++-
- 2 files changed, 126 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-index d4097856c86b..3845b87e209e 100644
---- a/drivers/dma-buf/dma-buf.c
-+++ b/drivers/dma-buf/dma-buf.c
-@@ -20,6 +20,7 @@
- #include <linux/debugfs.h>
- #include <linux/module.h>
- #include <linux/seq_file.h>
-+#include <linux/sync_file.h>
- #include <linux/poll.h>
- #include <linux/dma-resv.h>
- #include <linux/mm.h>
-@@ -348,6 +349,114 @@ static long dma_buf_set_name(struct dma_buf *dmabuf, const char __user *buf)
- 	return ret;
- }
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index b2b504e..563c93d 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -301,7 +301,6 @@ config ARCH_ZX
  
-+static long dma_buf_wait_sync_file(struct dma_buf *dmabuf,
-+				   const void __user *user_data)
-+{
-+	struct dma_buf_sync_file arg;
-+	struct dma_fence *fence;
-+
-+	if (copy_from_user(&arg, user_data, sizeof(arg)))
-+		return -EFAULT;
-+
-+	if (arg.flags != 0 && arg.flags != DMA_BUF_SYNC_FILE_SYNC_WRITE)
-+		return -EINVAL;
-+
-+	fence = sync_file_get_fence(arg.fd);
-+	if (!fence)
-+		return -EINVAL;
-+
-+	if (arg.flags & DMA_BUF_SYNC_FILE_SYNC_WRITE) {
-+		dma_resv_add_excl_fence(dmabuf->resv, fence);
-+	} else {
-+		dma_resv_add_shared_fence(dmabuf->resv, fence);
-+	}
-+
-+	return 0;
-+}
-+
-+static long dma_buf_signal_sync_file(struct dma_buf *dmabuf,
-+				     void __user *user_data)
-+{
-+	struct dma_buf_sync_file arg;
-+	struct dma_fence *fence = NULL;
-+	struct sync_file *sync_file;
-+	int fd, ret;
-+
-+	if (copy_from_user(&arg, user_data, sizeof(arg)))
-+		return -EFAULT;
-+
-+	if (arg.flags != 0 && arg.flags != DMA_BUF_SYNC_FILE_SYNC_WRITE)
-+		return -EINVAL;
-+
-+	fd = get_unused_fd_flags(O_CLOEXEC);
-+	if (fd < 0)
-+		return fd;
-+
-+	if (arg.flags & DMA_BUF_SYNC_FILE_SYNC_WRITE) {
-+		/* We need to include both the exclusive fence and all of
-+		 * the shared fences in our fence.
-+		 */
-+		struct dma_fence **fences = NULL;
-+		unsigned i, num_fences = 0;
-+
-+		ret = dma_resv_get_fences_rcu(dmabuf->resv, NULL,
-+					      &num_fences, &fences);
-+		if (ret)
-+			goto err_put_fd;
-+
-+		if (num_fences == 0) {
-+			fence = dma_fence_get_stub();
-+		} else if (num_fences == 1) {
-+			fence = fences[0];
-+			kfree(fences);
-+		} else {
-+			struct dma_fence_array *fence_arr;
-+
-+			fence_arr = dma_fence_array_create(num_fences, fences,
-+							   dma_fence_context_alloc(1),
-+							   1, false);
-+			if (!fence_arr) {
-+				for (i = 0; i < num_fences; i++)
-+					dma_fence_put(fences[i]);
-+				kfree(fences);
-+				ret = -ENOMEM;
-+				goto err_put_fd;
-+			}
-+
-+			/* The fence array now owns fences_arr and our
-+			 * references to each of the individual fences.  We
-+			 * only own a reference to the one array fence.
-+			 */
-+			fence = &fence_arr->base;
-+		}
-+	} else {
-+		fence = dma_resv_get_excl_rcu(dmabuf->resv);
-+		if (!fence)
-+			fence = dma_fence_get_stub();
-+	}
-+
-+	sync_file = sync_file_create(fence);
-+
-+	dma_fence_put(fence);
-+
-+	if (!sync_file) {
-+		ret = -EINVAL;
-+		goto err_put_fd;
-+	}
-+
-+	fd_install(fd, sync_file->file);
-+
-+	arg.fd = fd;
-+	if (copy_to_user(user_data, &arg, sizeof(arg)))
-+		return -EFAULT;
-+
-+	return 0;
-+
-+err_put_fd:
-+	put_unused_fd(fd);
-+	return ret;
-+}
-+
- static long dma_buf_ioctl(struct file *file,
- 			  unsigned int cmd, unsigned long arg)
- {
-@@ -390,6 +499,12 @@ static long dma_buf_ioctl(struct file *file,
- 	case DMA_BUF_SET_NAME:
- 		return dma_buf_set_name(dmabuf, (const char __user *)arg);
+ config ARCH_ZYNQMP
+ 	bool "Xilinx ZynqMP Family"
+-	select ZYNQMP_FIRMWARE
+ 	help
+ 	  This enables support for Xilinx ZynqMP Family
  
-+	case DMA_BUF_IOCTL_WAIT_SYNC_FILE:
-+		return dma_buf_wait_sync_file(dmabuf, (const void __user *)arg);
-+
-+	case DMA_BUF_IOCTL_SIGNAL_SYNC_FILE:
-+		return dma_buf_signal_sync_file(dmabuf, (void __user *)arg);
-+
- 	default:
- 		return -ENOTTY;
- 	}
-diff --git a/include/uapi/linux/dma-buf.h b/include/uapi/linux/dma-buf.h
-index dbc7092e04b5..825b9a913c89 100644
---- a/include/uapi/linux/dma-buf.h
-+++ b/include/uapi/linux/dma-buf.h
-@@ -37,8 +37,17 @@ struct dma_buf_sync {
+diff --git a/drivers/firmware/xilinx/Kconfig b/drivers/firmware/xilinx/Kconfig
+index bd33bbf..9a9bd19 100644
+--- a/drivers/firmware/xilinx/Kconfig
++++ b/drivers/firmware/xilinx/Kconfig
+@@ -6,6 +6,8 @@ menu "Zynq MPSoC Firmware Drivers"
  
- #define DMA_BUF_NAME_LEN	32
- 
-+struct dma_buf_sync_file {
-+	__u32 flags;
-+	__s32 fd;
-+};
-+
-+#define DMA_BUF_SYNC_FILE_SYNC_WRITE	(1 << 0)
-+
- #define DMA_BUF_BASE		'b'
--#define DMA_BUF_IOCTL_SYNC	_IOW(DMA_BUF_BASE, 0, struct dma_buf_sync)
--#define DMA_BUF_SET_NAME	_IOW(DMA_BUF_BASE, 1, const char *)
-+#define DMA_BUF_IOCTL_SYNC	    _IOW(DMA_BUF_BASE, 0, struct dma_buf_sync)
-+#define DMA_BUF_SET_NAME	    _IOW(DMA_BUF_BASE, 1, const char *)
-+#define DMA_BUF_IOCTL_WAIT_SYNC_FILE	_IOW(DMA_BUF_BASE, 2, struct dma_buf_sync)
-+#define DMA_BUF_IOCTL_SIGNAL_SYNC_FILE	_IOW(DMA_BUF_BASE, 3, struct dma_buf_sync)
- 
- #endif
+ config ZYNQMP_FIRMWARE
+ 	bool "Enable Xilinx Zynq MPSoC firmware interface"
++	depends on ARCH_ZYNQMP
++	default y if ARCH_ZYNQMP
+ 	select MFD_CORE
+ 	help
+ 	  Firmware interface driver is used by different
 -- 
-2.24.1
+2.7.4
 
