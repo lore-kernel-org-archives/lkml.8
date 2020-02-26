@@ -2,142 +2,155 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0EBC4BA18
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2B5C4BA18
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08FEE20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBF98222C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:26:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="msHn3fsn"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Oqz14OHi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgBZRZe (ORCPT
+        id S1726773AbgBZR0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:25:34 -0500
-Received: from mail-eopbgr80045.outbound.protection.outlook.com ([40.107.8.45]:3047
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726695AbgBZRZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:25:33 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FXPu0SvHwlJIlD43A9U4ovACWPxripq3otY+ps9ZlAel2PZpq/IqLeD+e56cwUfQco7FJKES/OpvWiUVwZOpBm78qsiJQ0/O8jpn5r1+dezxHJlCfCoswslVl1zAKkGcFmWRuLwV9K4C6PV6JE6XH0QHKqWGowWPhiGG6YdaBWqMuF2phid3AqdDlGBCRb/o5h9eqXUdtsCTRWrjBAURV8HVm5BdTb4qtUxAfGJ33BHtGYi1eGpqXnY8JzPpGFAPqkr/2RoNLqHPSEgELQAGkJcgTBEAY/eY24DVtDmfu6aVkiWb5fiTaFxJ5gp7oR/tsIAQAKD+6QJeU3naWzDcoA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nINrzYt5axeuYB4ToGYDVzkBeXj6USkow1njw6kT7ww=;
- b=UWcRsjXXcvVmsSlam6iHouS/6q/NfAOOg/JHHtilFUdgcSi/qknnob3alfw5Z6NNBwfjQ9n2VZBWqiEv/F6Jjlhn9GsIYbvTZg2Q7qwq8MGQfqWzbimUlRokHNFZzGyfUM+OcyVLFNl1WI2iwjrmFgRndYJpYPmIPahXRtbn8q+/ODF2BBavvNLo2bqyfRrEdHfkaral45DFc/aFl5iExjOUYWrsc690kAWM6H6QLZE5mAuIO7XCPu40nhs3b5FUKd/kLZ17Qsn8dpfC+snnG7EA3xGFNQQR8+NqknTNjkNpJgSAdsNLwtlz6qIj+J4HHjsbNzuHbHirD/FiSzS8DQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nINrzYt5axeuYB4ToGYDVzkBeXj6USkow1njw6kT7ww=;
- b=msHn3fsnUOLzES9Qhsx0MZLuoIcmFv3bkidnRYi6ili/R1BMCOYIK9TF/lfoeX2VrCcUMCx58jmLetiOAkfevG4FXEcl12xJHCMQJM3zKE/AODnTVNEA3CpzzUE8Qw03mJAASC7SiljZMvFrtCS0BVH0QIiICODYBfAZaI2hTEk=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
- VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.22; Wed, 26 Feb 2020 17:25:30 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2750.021; Wed, 26 Feb 2020
- 17:25:29 +0000
-Date:   Wed, 26 Feb 2020 13:25:25 -0400
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Doug Ledford <dledford@redhat.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Devesh Sharma <devesh.sharma@broadcom.com>,
-        Naresh Kumar PBS <nareshkumar.pbs@broadcom.com>,
-        Selvin Xavier <selvin.xavier@broadcom.com>
-Subject: Re: linux-next: build failure after merge of the rdma tree
-Message-ID: <20200226172525.GU26318@mellanox.com>
-References: <20200226135127.31667f48@canb.auug.org.au>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200226135127.31667f48@canb.auug.org.au>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: MN2PR08CA0016.namprd08.prod.outlook.com
- (2603:10b6:208:239::21) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
+        Wed, 26 Feb 2020 12:26:36 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:43452 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726687AbgBZR0g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 12:26:36 -0500
+Received: by mail-ed1-f66.google.com with SMTP id dc19so4718372edb.10
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 09:26:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=u6NFKZzpCKzAm09UV+6OqhLyyOr9a9s3KYdDjjgRVgU=;
+        b=Oqz14OHitpVB9YhQkwhsBoBrMUI9vWzQrOJAlr4WSqNywbJDSzqm+UuHZx3oZJDV6v
+         WVFKHshigY/3B9acvFOVldncB8OJVY3uIbMcOdZaDkmApMH5M7tUJbqNUjGmqp1dI5fB
+         YxoWO9DfRSfweyNryHPcSbyLNXJrCAYkmMnidvqba2yVMP0jzINQF7v/ScwltfHcI4q5
+         kdG/Y2g+jNgQoNqQfW4Qj+QkLtEQ7qbk715cJURbqWQcrSMiIlSk/LAADDVZo3hTa0rb
+         jXkaAWbCqk0OQ8W+yjOdMerZYw8lk6us9SpoMN6lTu9E3yunpWHvxWpENmW+CAz0Xvz/
+         qEyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=u6NFKZzpCKzAm09UV+6OqhLyyOr9a9s3KYdDjjgRVgU=;
+        b=JwZoJkIw611HQaqZC59St8OKpvlTE45wt41RqvkcqeSZtMKsCcvKOi3RA0j+mfCms/
+         FhptNf3qEZLaubCFvcF0XAz6EsIKaSuygQzCADPY/cvjSaU9cwQ34/T9w5N4w+RENWCN
+         TF1vBSVwqM18Sukp6AWB0fNG4/9IxJdIvZ8Ii+D3+ERhpt2g690/KQ4qpcBTVqKGGt/q
+         T+hodRFgLZclgog9bM+Rdqw0ScqwB/cp0XbRGiNKSs0u2mFl0uiJxk1Dy04h6qGy8w/5
+         dFfiCFp80/tBSfcjj6S5IZULFEb7qxW5xjKS56CaUfI2kNSEnVFpxbK0evuFYj+Cgn9E
+         vFCA==
+X-Gm-Message-State: APjAAAUPB9Nlpr2qFGa+qTqykFcZrlB8/wSsYm65wB4OryUuqfDLQoze
+        FBdMzE20Pzer5NGTuqwur4Fh1GIjoRnuwi5WB2xwvQ==
+X-Google-Smtp-Source: APXvYqzA+U2tOD6ym1ptFsTq19xZniuF8RsVzypQKRFfH0LYNBF80/VOiS/C4U72OssZ+bLkwOjtgEDd0ofQrNDFuBg=
+X-Received: by 2002:aa7:c2cb:: with SMTP id m11mr369181edp.89.1582737994055;
+ Wed, 26 Feb 2020 09:26:34 -0800 (PST)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR08CA0016.namprd08.prod.outlook.com (2603:10b6:208:239::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Wed, 26 Feb 2020 17:25:28 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1j70R3-0004b5-7y; Wed, 26 Feb 2020 13:25:25 -0400
-X-Originating-IP: [142.68.57.212]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 325bc450-bc72-4e0f-a3f3-08d7bae0df94
-X-MS-TrafficTypeDiagnostic: VI1PR05MB4141:
-X-Microsoft-Antispam-PRVS: <VI1PR05MB41414E25B23EB46FCC565DA6CFEA0@VI1PR05MB4141.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:590;
-X-Forefront-PRVS: 0325F6C77B
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(136003)(346002)(376002)(366004)(199004)(189003)(5660300002)(478600001)(54906003)(6916009)(4326008)(316002)(1076003)(86362001)(33656002)(8676002)(2616005)(81156014)(26005)(186003)(53546011)(36756003)(66946007)(2906002)(66476007)(66556008)(81166006)(9786002)(9746002)(8936002)(52116002)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4141;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: CHgGXXpSKIi96pL/cM2lNaV+AJlgP245oZur1o/YTq8xDlZeOCLBd73e+6F7uaDkGvgoBLk3tYxmhh5fAAq2RKnODL1qBCEzqcHSVaVKapziNzmW5o0BF4Yl9aV6mEsyspgV7xxf+m46E6LBFJ0FnIPIwR2ZfmwYdnf6iw4wbafg0a6yO/ERG4xiK4ZxFkWZrGr6HetfdD17NaNhAEyRZ6ybxWEbZmxSXzTat8md3g1o9zAO4KDd97Xbp512Kuo3wrKjbXytgBVKbiIFJHB3h2OpXq+q4T5UTeZPchn19/RtuZ9rnAZ57CKgeziMdb4NJYO49YFuqk5A1gtHnonFrEeQkipmyuEdsIpuemJvQlLM7tzJpoOGRBCkLrJTqhOokfTtGC0ZVjIKkbMVrfTh8+V2NlGJxdZ89xoPZL32TlayVJ6B/SQYgZSg7idtRBbiys2I7FfWtAi1iSCM7ycwd1C0GNiJC+jpnlOL0i6e6RCucL46EDJN8i6NEDYKcfQv
-X-MS-Exchange-AntiSpam-MessageData: OHDRzD0qR3dWHFafYvXxea76jGVT1iImgUlIuyihCjigcELtjZG75Ykia+ugu29pwDQ3R0vBKYYiZG3ja2zeZe3FL7Y/nhBaDWnwYRIvYkbFUrkNmBtDXP3YZoqcjaiyacxU1naWfqxkGCJEgpOETQ==
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 325bc450-bc72-4e0f-a3f3-08d7bae0df94
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2020 17:25:29.6647
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zP6CKOrPwRfYn6tmRqDhEU2Gvj9AxTPm6L6G3ZoEDXf9/WvwsYmQnBYeY1K5PInKyXHZOAPl1lYbw+xH+Ca9Qw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4141
+References: <20200226135027.34538-1-lrizzo@google.com> <87ftexz93y.fsf@toke.dk>
+In-Reply-To: <87ftexz93y.fsf@toke.dk>
+From:   Luigi Rizzo <lrizzo@google.com>
+Date:   Wed, 26 Feb 2020 09:26:22 -0800
+Message-ID: <CAMOZA0Lzf2r7rFvgBEWpf-B=wXvyED2CxfzuO7qUA_qVsNtL7g@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] kstats: kernel metric collector
+To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        naveen.n.rao@linux.ibm.com, ardb@kernel.org,
+        Luigi Rizzo <rizzo@iet.unipi.it>,
+        Paolo Abeni <pabeni@redhat.com>, giuseppe.lettieri@unipi.it,
+        Jesper Dangaard Brouer <hawk@kernel.org>, mingo@redhat.com,
+        acme@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        peterz@infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 01:51:27PM +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the rdma tree, today's linux-next build (powerpc
-> allyesconfig) failed like this:
-> 
-> drivers/infiniband/hw/bnxt_re/qplib_res.c: In function '__free_pbl':
-> drivers/infiniband/hw/bnxt_re/qplib_res.c:78:2: error: implicit declaration of function 'vfree'; did you mean 'kfree'? [-Werror=implicit-function-declaration]
->    78 |  vfree(pbl->pg_arr);
->       |  ^~~~~
->       |  kfree
-> drivers/infiniband/hw/bnxt_re/qplib_res.c: In function '__alloc_pbl':
-> drivers/infiniband/hw/bnxt_re/qplib_res.c:117:16: error: implicit declaration of function 'vmalloc'; did you mean 'kmalloc'? [-Werror=implicit-function-declaration]
->   117 |  pbl->pg_arr = vmalloc(pages * sizeof(void *));
->       |                ^~~~~~~
->       |                kmalloc
-> drivers/infiniband/hw/bnxt_re/qplib_res.c:117:14: warning: assignment to 'void **' from 'int' makes pointer from integer without a cast [-Wint-conversion]
->   117 |  pbl->pg_arr = vmalloc(pages * sizeof(void *));
->       |              ^
-> drivers/infiniband/hw/bnxt_re/qplib_res.c:121:18: warning: assignment to 'dma_addr_t *' {aka 'long long unsigned int *'} from 'int' makes pointer from integer without a cast [-Wint-conversion]
->   121 |  pbl->pg_map_arr = vmalloc(pages * sizeof(dma_addr_t));
->       |                  ^
-> 
-> Caused by commit
-> 
->   0c4dcd602817 ("RDMA/bnxt_re: Refactor hardware queue memory allocation")
-> 
-> I added the following fix for today:
-> 
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Wed, 26 Feb 2020 13:46:02 +1100
-> Subject: [PATCH] RDMA/bnxt_re: using vmalloc requires including vmalloc.h
-> 
-> Fixes: 0c4dcd602817 ("RDMA/bnxt_re: Refactor hardware queue memory allocation")
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
->  drivers/infiniband/hw/bnxt_re/qplib_res.c | 1 +
->  1 file changed, 1 insertion(+)
+[this reply also addresses comments from Alexei and Peter]
 
-Okay applied, thanks
+On Wed, Feb 26, 2020 at 7:00 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@redh=
+at.com> wrote:
+>
+> Luigi Rizzo <lrizzo@google.com> writes:
+>
+> > This patchset introduces a small library to collect per-cpu samples and
+> > accumulate distributions to be exported through debugfs.
+> >
+> > This v3 series addresses some initial comments (mostly style fixes in t=
+he
+> > code) and revises commit logs.
+>
+> Could you please add a proper changelog spanning all versions of the
+> patch as you iterate?
 
-Jason
+Will do (v2->v3 was just a removal of stray Change-Id from the log messages=
+)
+
+> As for the idea itself; picking up this argument you made on v1:
+>
+> > The tracepoint/kprobe/kretprobe solution is much more expensive --
+> > from my measurements, the hooks that invoke the various handlers take
+> > ~250ns with hot cache, 1500+ns with cold cache, and tracing an empty
+> > function this way reports 90ns with hot cache, 500ns with cold cache.
+>
+> I think it would be good if you could include an equivalent BPF-based
+> implementation of your instrumentation example so people can (a) see the
+> difference for themselves and get a better idea of how the approaches
+> differ in a concrete case and (b) quantify the difference in performance
+> between the two implementations.
+
+At the moment, a bpf version is probably beyond my skills and goals,
+but I hope the
+following comments can clarify the difference in approach/performance:
+
+-  my primary goal, implemented in patch 1/2, is to have this code embedded=
+ in
+  the kernel, _always available_ , even to users without the skills to
+hack up the
+  necessary bpf code, or load a bpf program (which may not be allowed in
+  certain environments), and eventually replace and possibly improve custom
+  variants of metric collections which we already have (or wished to,
+but don't have
+  because there wasn't a convenient library to use for them).
+
+- I agree that this code can be recompiled in bpf (using a
+  BPF_MAP_TYPE_PERCPU_ARRAY for storage, and kstats_record() and
+  ks_show_entry() should be easy to convert).
+
+- the runtime cost and complexity of hooking bpf code is still a bit
+unclear to me.
+  kretprobe or tracepoints are expensive, I suppose that some lean hook
+  replace register_kretprobe() may exist and the difference from inline
+  annotations would be marginal (we'd still need to put in the hooks around
+  the code we want to time, though, so it wouldn't be a pure bpf solution).
+  Any pointers to this are welcome; Alexei mentioned fentry/fexit and
+  bpf trampolines, but I haven't found an example that lets me do something
+  equivalent to kretprobe (take a timestamp before and one after a function
+  without explicit instrumentation)
+
+- I still see some huge differences in usability, and this is in my opinion
+  one very big difference between the two approaches. The systems where dat=
+a
+  collection may be of interest are not necessarily accessible to developer=
+s
+  with the skills to write custom bpf code, or load bpf modules
+(security policies
+  may prevent that). One thing is to tell a sysadmin to run
+  "echo trace foo > /sys/kernel/debug/kstats/_config"
+  or "watch grep CPUS /sys/kernel/debug/kstats/bar",
+  another one is to tell them to load a bpf program (or write their own one=
+).
+
+thanks for the feedback
+luigi
