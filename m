@@ -2,87 +2,151 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C92C0C4BA21
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9567C4BA28
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:28:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94B9A2072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:27:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Somggjd3"
+	by mail.kernel.org (Postfix) with ESMTP id AE25824656
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:28:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582748930;
+	bh=X+heKnO6iZTZfGKI6KSWMm0otaVfMYMz/2QFDt5Deug=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LZI0gPjZYJBp7pi8rBpxes0kpqHYQi8/NzADWeTmMuSux2R/HwH9TzyZr/rVgd2v0
+	 NTm708JDNa4ayi+6fbm5yp2ynHt011BTEeh/rJIBBiETslv6coSu8UhUZ/D7hFf90h
+	 FhUsSDvod2zLQiUQgRJGca1s16VSzcHKPil/iO04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbgBZU1B (ORCPT
+        id S1727448AbgBZU2t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 15:27:01 -0500
-Received: from ozlabs.org ([203.11.71.1]:54353 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727260AbgBZU1B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 15:27:01 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48SS5H328jz9sP7;
-        Thu, 27 Feb 2020 07:26:59 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1582748819;
-        bh=oY/iKkm51MiwcxmelQFrfFmvG31r59pUeL9thyiTnBs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Somggjd3nEvgqaar6icbnz76SAj6/AjtYZ+8Kb+lEeOjofIfRvp1kMsXa0CSzregm
-         9EiA91JRfVnfd4p58PT12E4QEYYIqICJhRb6N3F1hJPsSuzoCUbMxmEiR8EXWMyhob
-         UQ8fxaLv8viz+RGnNWLiSeuCjFq7cICEfKWvzEJAntk6W25WSF8PNTi+mJsOBj6fm7
-         lDDiHNOibx/t2fLj8lweUuU94M4Nm3h+eHnDDXEy1FfCfjuCDLUvYxYG0hLh4LYD+m
-         zokfwDn5ZXxVgtA5cdZZ/ThWn8SqR9f74kSpnnc0/GZMrOcYs29psXLVqeQqsyJPt6
-         exNauHH++upew==
-Date:   Thu, 27 Feb 2020 07:26:54 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the leds tree
-Message-ID: <20200227072654.63bd8f28@canb.auug.org.au>
+        Wed, 26 Feb 2020 15:28:49 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40817 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727289AbgBZU2t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 15:28:49 -0500
+Received: by mail-ot1-f66.google.com with SMTP id i6so716301otr.7;
+        Wed, 26 Feb 2020 12:28:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=O/ZmfWy9/9XjBdv30P0G0kcHPh66hW3ql84KTaPPF/A=;
+        b=tejn9+7PuRfQB+7/Y8fniQ4VqaUBICLZRN/doe5HIMv9P8kDr3uiephZvF0PAYP97a
+         SmEhM5DiBrvJbV9S/rGBzWecQV/B+3uwfGR7mfYC2+fASqkpw/oCGE/8UJuZ07vYArxt
+         OV7oBOt6lZL3H8ZN86bcBLGYTFdpIeldA7G+kX7sSYhsLOUeu98seB6K6UcCPGVmBQSu
+         aq31XkoKdp2wUfzZkwnQ6c1SKOWpeGLXqD2Nqz7+j7x9edlLST4ie+ZHwjxcxWeFER2S
+         RDOwBpG1pwKAHUiNf6KIhnFc5IMrFHIgHafnd7pPizmsQSL0ueFprj0zPQIqqHuSBVnv
+         LghQ==
+X-Gm-Message-State: APjAAAVAAYvj5Lr0+rTxmaUNTkX4XOCqYvl1nYDXqv7W131dWz05kWhy
+        dKNbArzhDIb62c1TBxOFSw==
+X-Google-Smtp-Source: APXvYqx+ekwwPkyIdV8FoaGq7rSPdBmF6vtqNYcfh4IlzHYSrpmvQXBFhWXQgJrWcFqq1sadnCd3OA==
+X-Received: by 2002:a9d:74c4:: with SMTP id a4mr456108otl.119.1582748926618;
+        Wed, 26 Feb 2020 12:28:46 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id e10sm507605otl.0.2020.02.26.12.28.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 12:28:45 -0800 (PST)
+Received: (nullmailer pid 4643 invoked by uid 1000);
+        Wed, 26 Feb 2020 20:28:44 -0000
+Date:   Wed, 26 Feb 2020 14:28:44 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Macpaul Lin <macpaul.lin@mediatek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Fabien Parent <fparent@baylibre.com>,
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        Mars Cheng <mars.cheng@mediatek.com>,
+        Sean Wang <Sean.Wang@mediatek.com>,
+        Owen Chen <owen.chen@mediatek.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Evan Green <evgreen@chromium.org>,
+        Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <jroedel@suse.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Ryder Lee <Ryder.Lee@mediatek.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org,
+        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>
+Subject: Re: [PATCH 2/5] dt-bindings: clock: mediatek: document clk bindings
+ mipi0a for Mediatek MT6765 SoC
+Message-ID: <20200226202844.GA18610@bogus>
+References: <1582278742-1626-1-git-send-email-macpaul.lin@mediatek.com>
+ <1582278742-1626-3-git-send-email-macpaul.lin@mediatek.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/pw._w/D/YBj9t=0ZZooqA_a";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582278742-1626-3-git-send-email-macpaul.lin@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/pw._w/D/YBj9t=0ZZooqA_a
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, Feb 21, 2020 at 05:52:19PM +0800, Macpaul Lin wrote:
+> This patch adds the binding documentation for mipi0a.
+> 
+> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> Signed-off-by: Owen Chen <owen.chen@mediatek.com>
+> Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
+> ---
+>  .../bindings/arm/mediatek/mediatek,mipi0a.txt | 28 +++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,mipi0a.txt
 
-Hi all,
+Please use DT schema for new bindings. See 
+Documentation/devicetree/writing-schema.rst.
 
-Commits
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mipi0a.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mipi0a.txt
+> new file mode 100644
+> index 000000000000..8be5978f388d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mipi0a.txt
+> @@ -0,0 +1,28 @@
+> +Mediatek mipi0a (mipi_rx_ana_csi0a) controller
+> +============================
+> +
+> +The Mediatek mipi0a controller provides various clocks
+> +to the system.
+> +
+> +Required Properties:
+> +
+> +- compatible: Should be one of:
+> +	- "mediatek,mt6765-mipi0a", "syscon"
+> +- #clock-cells: Must be 1
+> +
+> +The mipi0a controller uses the common clk binding from
+> +Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +The available clocks are defined in dt-bindings/clock/mt*-clk.h.
+> +
+> +The mipi0a controller also uses the common power domain from
+> +Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+> +The available power doamins are defined in dt-bindings/power/mt*-power.h.
+> +
+> +Example:
+> +
+> +mipi0a: clock-controller@11c10000 {
+> +	compatible = "mediatek,mt6765-mipi0a", "syscon";
+> +	reg = <0 0x11c10000 0 0x1000>;
 
-  111798333210 ("leds: add SGI IP30 led support")
-  0b24e7c74537 ("leds: lm3697: fix spelling mistake "To" -> "Too"")
+Not documented.
 
-are missing a Signed-off-by from their committer.
+> +	power-domains = <&scpsys MT6765_POWER_DOMAIN_CAM>;
 
---=20
-Cheers,
-Stephen Rothwell
+Not documented.
 
---Sig_/pw._w/D/YBj9t=0ZZooqA_a
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5W1I4ACgkQAVBC80lX
-0GzCMgf/UGqg6KZA7IRAHYkSUQ9+rn2d3IpccOjH200NTR6DrYijvf27rvJz42jp
-OHWVjp71Al15Q6RtPGG1RcLjd18Pg5TqP8NK0JA6K/MlwJkWK4eITkoDYmHW4c6y
-ud5GZg0oKganorfU/0BQ7I0NSvm4vC0SyydWBkR8AsLecnSNsLCdcSAGzYfkMyG2
-+nV8yHMbwd0xuKWBcCDqYSu1YpOJz6HDDxepO8ZY4bimcWerlsjN2vDrDVrT0m6y
-T98VcYlujHKk9etsPrZcBz690KRd2Zk6GqbwaWkUdHxQnHxPNQdcTzVf+WWyrZ/v
-VRH2PDA2Nm9Uain7Pz9Y5K6HHAklDQ==
-=8DSw
------END PGP SIGNATURE-----
-
---Sig_/pw._w/D/YBj9t=0ZZooqA_a--
+> +	#clock-cells = <1>;
+> +};
+> -- 
+> 2.18.0
