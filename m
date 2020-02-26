@@ -7,82 +7,105 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C197C4BA24
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1C8C4BA2D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC97824653
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13BEB24653
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:24:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582755814;
-	bh=DRbnv7ByILKaVrFS6ngLIJawwXaIjDRjR8b7AyBLvzU=;
+	s=default; t=1582755890;
+	bh=utBCZfTn36KBym26hNMCRPLKzjQ4GLb5oB+eAEGEawc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AXj7gde0HnDhWouTpV1VeBbOvd6xLfJOofqGbNm4cAXm8oGh+fYLQ4f7dJpztbX6B
-	 e+5Q1D0edw1FRwlIkFcp39hpgKthUFm3NmrZuqEQzRA0Ku9BHI6Q2oNmv0dbDxoH4C
-	 2Iwj+GQftTnHJGsk7klZ2JDR/aWhg0HCCzIYVwl4=
+	b=agq6Ad1h/qJbIkQVDDJm/w4X4y9xSl9n4xB3TnC+IWOnV003gtvDtQsl6SqkVVjCI
+	 dMX8nZaffoH95DAlkh4K3xcdxl7d+qa3P1xrw11CmFH4PRO2rEYVQAlkja6GppglII
+	 I89oxPY4Hg9BbqK3SvlgC1ut0/OhD5PGkaeC6NkI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgBZWXc (ORCPT
+        id S1727918AbgBZWYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 17:23:32 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36679 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727736AbgBZWXc (ORCPT
+        Wed, 26 Feb 2020 17:24:49 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35826 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727709AbgBZWYs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 17:23:32 -0500
-Received: by mail-ot1-f68.google.com with SMTP id j20so1047250otq.3;
-        Wed, 26 Feb 2020 14:23:31 -0800 (PST)
+        Wed, 26 Feb 2020 17:24:48 -0500
+Received: by mail-ot1-f65.google.com with SMTP id r16so1054452otd.2;
+        Wed, 26 Feb 2020 14:24:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9/KR8/ro7ANRurfSfz9QDDSqoIKmisafRnjItkiqO1U=;
-        b=E0KQnAPlQ4Ou8K8JODSGbFeMdPRlSRn/4oRFkG3yY8Nm12sj0GNS/OcqcvQpHW9KGw
-         t4xT1+XJ/ynY14Bp3CEAIpgXrrMpFxQHhqAHTOsrDFnpI7mm2vnYDwH9qKJR1/NzuXO3
-         H3JBmUsIQc4jxo4zJlMHTkiXrJjZh7d3+hyIwzK8wS2X9qCyERL5SbMGnl/iPkCDv1EQ
-         rAMtXXcbcHqutb+PbaD/+Ra1BKrzt80kglMIhnb56IzH2Dc0TanEIVWpoNRHJrUO2BrW
-         puXyFPM3U3/D6UKtg6gTJ5MWEBCa3Q6Dwyyp9AAA751k3AzPJoF2XVLLotgyk82l1ak0
-         VU8A==
-X-Gm-Message-State: APjAAAWTWKopRrgzYu2HZOk4qkyorWU1E/3x87CVNauhxgCOisJvNYmi
-        xig3i/C3U2CZ41PyfTzYbA==
-X-Google-Smtp-Source: APXvYqxQoc+Y2Yxgre6xns0v4FBKE/B92IK5PIDzgAyBU4JtbAuTWwoJBOY8QPJnsvQfCddn4rj14g==
-X-Received: by 2002:a9d:2dea:: with SMTP id g97mr841706otb.33.1582755811422;
-        Wed, 26 Feb 2020 14:23:31 -0800 (PST)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=7Tc2pp6tfwt+3v34tpbOx19kPSdtNqYuqm/8GY/cfw4=;
+        b=ui0X/+wq3tOeJAS9wzI/U+gx79VRj7YYPEZB9pXU3E1IMe++89jfGJLvgCwt1uRSYl
+         Wb4l5zd1n6luzHCZaQUvJb/8iMZMQ19lKpPWCdEBBJKkz627ubPau2/0XOfYExWAzqoj
+         l8u4oUXQKOMejEaEAy6xHXuo5jcAa/GeJCPndUdom9WBHWbc9PYO6jdpG/1rdndmYoVq
+         yfaIc9Ac+GrdXDqcoLWZcemoXWl8NZt4zonSmz02av66wOd7rsi01/WRF9y6ZRxl8V5T
+         EW6WIiTp27Grg5xPxQR25TMogd9+xtglKIAfIcirKM4s0eoZMU+Sr3H/AS5BuW+QC286
+         T6qQ==
+X-Gm-Message-State: APjAAAVcJFzAdrh7B2GA3mfqpiZKnNhD6ZKHRyQKtAWdXxeKD39Dwdat
+        FwISw6eW0DR3GfahB/t1zw==
+X-Google-Smtp-Source: APXvYqxl4VG5brncJNWe6fMfCvBfkuDhRp8hGrhJHHYhzyTZwH2sy+iDxqHEY0c1dykRMxt3Vt/Phw==
+X-Received: by 2002:a05:6830:13da:: with SMTP id e26mr781681otq.97.1582755887742;
+        Wed, 26 Feb 2020 14:24:47 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a30sm1226839otc.79.2020.02.26.14.23.30
+        by smtp.gmail.com with ESMTPSA id b4sm1250798oie.55.2020.02.26.14.24.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 14:23:30 -0800 (PST)
-Received: (nullmailer pid 9442 invoked by uid 1000);
-        Wed, 26 Feb 2020 22:23:30 -0000
-Date:   Wed, 26 Feb 2020 16:23:30 -0600
+        Wed, 26 Feb 2020 14:24:47 -0800 (PST)
+Received: (nullmailer pid 11405 invoked by uid 1000);
+        Wed, 26 Feb 2020 22:24:46 -0000
+Date:   Wed, 26 Feb 2020 16:24:46 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     matthias.bgg@gmail.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        adamboardman@gmail.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 1/4] dt-bindings: i2c: Document I2C controller binding
- for MT6797 SoC
-Message-ID: <20200226222330.GA9392@bogus>
-References: <20200222162444.11590-1-manivannan.sadhasivam@linaro.org>
- <20200222162444.11590-2-manivannan.sadhasivam@linaro.org>
+To:     =?iso-8859-1?Q?N=EDcolas_F=2E_R=2E_A=2E?= Prado 
+        <nfraprado@protonmail.com>
+Cc:     devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        lkcamp@lists.libreplanetbr.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Scott Branden <sbranden@broadcom.com>,
+        linux-arm-kernel@lists.infradead.org, Ray Jui <rjui@broadcom.com>,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-crypto@vger.kernel.org, Matt Mackall <mpm@selenic.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-rpi-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] dt-bindings: rng: Convert BCM2835 to DT schema
+Message-ID: <20200226222446.GA11350@bogus>
+References: <20200222200037.3203931-1-nfraprado@protonmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200222162444.11590-2-manivannan.sadhasivam@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200222200037.3203931-1-nfraprado@protonmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 22 Feb 2020 21:54:41 +0530, Manivannan Sadhasivam wrote:
-> I2C controller driver for MT6577 SoC is reused for MT6797 SoC. Hence,
-> document that in DT binding.
+On Sat, 22 Feb 2020 20:00:59 +0000, =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= wrote:
+> Convert BCM2835/6368 Random number generator bindings to DT schema.
 > 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@protonmail.com>
 > ---
->  Documentation/devicetree/bindings/i2c/i2c-mt65xx.txt | 1 +
->  1 file changed, 1 insertion(+)
+> 
+> Changes in v2:
+> - Remove description for common properties
+> - Drop label from example
+> 
+> This patch was tested with:
+> make ARCH=arm dt_binding_check
+> make ARCH=arm DT_SCHEMA_FILES=Documentation/devicetree/bindings/rng/brcm,bcm2835.yaml dtbs_check
+> 
+> Thanks,
+> Nícolas
+> 
+>  .../devicetree/bindings/rng/brcm,bcm2835.txt  | 40 -------------
+>  .../devicetree/bindings/rng/brcm,bcm2835.yaml | 59 +++++++++++++++++++
+>  2 files changed, 59 insertions(+), 40 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/rng/brcm,bcm2835.txt
+>  create mode 100644 Documentation/devicetree/bindings/rng/brcm,bcm2835.yaml
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Applied, thanks.
+
+Rob
