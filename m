@@ -2,257 +2,101 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_RHS_DOB,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C45C4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A49EAC4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7118B206E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:29:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582734553;
-	bh=l2nuJCyNbqSdbQikb0aZK9APBcSliY2KaIsbBQ355BI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e15bHz7AZxJBwU5VjD50pt6O2L/ReCRZhrDyfPdnR6eE7M99C1iqmqa6UqH827tLg
-	 vHxrdNxD8fmSlBuTGbru6SQaMYsDPoNaSPEMTSl/OIezlsGvoWdL/jyWpY25V5hqrx
-	 DuJOU42TmAizCX4j6RNCJHjgz74z5nwAenj6iAi4=
+	by mail.kernel.org (Postfix) with ESMTP id 7A010206E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:29:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="drlUX7Ct"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727479AbgBZQ3M (ORCPT
+        id S1727695AbgBZQ36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 11:29:12 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34909 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbgBZQ3L (ORCPT
+        Wed, 26 Feb 2020 11:29:58 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:59040 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgBZQ36 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 11:29:11 -0500
-Received: by mail-ot1-f68.google.com with SMTP id r16so3539674otd.2;
-        Wed, 26 Feb 2020 08:29:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=N6xzgWnvG9GnDucTt/KJELhYr9ugnkjtItBaJ6wFEc4=;
-        b=pTVhMP3x3q5LmFBKPqasm+8plYmEsRVF6A4yPV5o2b/MxATb1Ijpnbw9fMXc9u5wr7
-         ehjDhqcLuDuupRHanoyit+xzS9cnW2YZ9abWxHT/rDoeCeXh7+nlZl3VYrXscH9rcX0C
-         FXHqX5unSbetvux4hituRtc1wfD/vrBBceHS6rOqjFqwn2HcHOMoXJv3Km41AzazWyAL
-         wm+BNhMB/IyiZrT2cltjG76+YWF68ntLylWaz8gjirx1rQJuZlFh+C0ah7NK0+CVEEmk
-         zNfE/ckP6Qeaidh4XSMCtNllxzcUkFxcqZjR2Rc9zh16D9OkPRtjJ3xHRCbS8XBzcxut
-         cFmw==
-X-Gm-Message-State: APjAAAVK5ATWX8WD9EX9toupnYNzssVVgUiuHSM1Xsqol9Tr4jxC5+Bw
-        2dFlKnjHmBTVQA5SaIFwNg==
-X-Google-Smtp-Source: APXvYqy6Xg9l4BYtpmsxJmpFyy0bDN/OPmMkZRktcNgKD2aLUwscbPU2kJgPRg/G/F0gCFrqE/9oIQ==
-X-Received: by 2002:a9d:6a90:: with SMTP id l16mr3533796otq.353.1582734550281;
-        Wed, 26 Feb 2020 08:29:10 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e16sm933404otp.72.2020.02.26.08.29.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 08:29:09 -0800 (PST)
-Received: (nullmailer pid 24095 invoked by uid 1000);
-        Wed, 26 Feb 2020 16:29:07 -0000
-Date:   Wed, 26 Feb 2020 10:29:07 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        tglx@linutronix.de, ralf@linux-mips.org, paulburton@kernel.org,
-        jiaxun.yang@flygoat.com, chenhc@lemote.com, sboyd@kernel.org,
-        mturquette@baylibre.com, mark.rutland@arm.com,
-        daniel.lezcano@linaro.org, paul@crapouillou.net,
-        geert+renesas@glider.be, krzk@kernel.org, ebiederm@xmission.com,
-        miquel.raynal@bootlin.com, keescook@chromium.org,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
-        dongsheng.qiu@ingenic.com
-Subject: Re: [PATCH v6 5/7] dt-bindings: MIPS: Document Ingenic SoCs binding.
-Message-ID: <20200226162907.GA13489@bogus>
-References: <1582215889-113034-1-git-send-email-zhouyanjie@wanyeetech.com>
- <1582215889-113034-7-git-send-email-zhouyanjie@wanyeetech.com>
+        Wed, 26 Feb 2020 11:29:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=f1bv7k+aR95JLaRnibgjh33tWs/5T1jZciQ/wlmBMxs=; b=drlUX7Cthr4H9sggJz4h6/3Y5G
+        mo/5uBnR1hfM10WWin7v8ZrcDr7KIs1mpcF6JYjbDP8axE8K12+2yE1dRgEoe0JkNdBVR6konO36L
+        v3FvtY2daDQI3Gxc6w0U1zAJaYE5qtmKV9inPLcETf2TyHgRdeS9kfssNNk9mpuPmtIEmOX0yrQIQ
+        yG1PVIGbktpGvcMbun68CEcwUVIut75rKPT3wx1/X5WQiCz0SF/+G0iN43AS5VQqvGKzrN33qoWRY
+        uCiTaJkuWH3Ve0ffsRDJDWjzD68U4huwGUTkXyUiK713MvpoLADsSp5G/y3jyvL0y2l36IORoC94R
+        FUg4DiEA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j6zZK-0008I8-Rs; Wed, 26 Feb 2020 16:29:54 +0000
+Date:   Wed, 26 Feb 2020 08:29:54 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Eric Biggers <ebiggers@google.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Eric Sandeen <sandeen@redhat.com>
+Subject: Re: [PATCH 00/11] fs/dcache: Limit # of negative dentries
+Message-ID: <20200226162954.GC24185@bombadil.infradead.org>
+References: <20200226161404.14136-1-longman@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1582215889-113034-7-git-send-email-zhouyanjie@wanyeetech.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200226161404.14136-1-longman@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 12:24:47AM +0800, 周琰杰 (Zhou Yanjie) wrote:
-> Document the available properties for the SoC root node and the
-> CPU nodes of the devicetree for the Ingenic XBurst SoCs.
-> 
-> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Tested-by: Paul Boddie <paul@boddie.org.uk>
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> ---
-> 
-> Notes:
->     v1->v2:
->     Change the two Document from txt to yaml.
->     
->     v2->v3:
->     Fix formatting errors.
->     
->     v3->v4:
->     Fix bugs in the two yaml files.
->     
->     v4->v5:
->     No change.
->     
->     v5->v6:
->     Rewrite the two yaml files.
-> 
->  .../bindings/mips/ingenic/ingenic,cpu.yaml         | 61 ++++++++++++++++++++++
->  .../bindings/mips/ingenic/ingenic,soc.yaml         | 34 ++++++++++++
->  2 files changed, 95 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
->  create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
-> new file mode 100644
-> index 00000000..ad1fd86
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
-> @@ -0,0 +1,61 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mips/ingenic/ingenic,cpu.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Bindings for Ingenic XBurst family CPUs
-> +
-> +maintainers:
-> +  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+On Wed, Feb 26, 2020 at 11:13:53AM -0500, Waiman Long wrote:
+> A new sysctl parameter "dentry-dir-max" is introduced which accepts a
+> value of 0 (default) for no limit or a positive integer 256 and up. Small
+> dentry-dir-max numbers are forbidden to avoid excessive dentry count
+> checking which can impact system performance.
 
-Blank line here.
+This is always the wrong approach.  A sysctl is just a way of blaming
+the sysadmin for us not being very good at programming.
 
-> +description: |
+I agree that we need a way to limit the number of negative dentries.
+But that limit needs to be dynamic and depend on how the system is being
+used, not on how some overworked sysadmin has configured it.
 
-Drop the '|'.
+So we need an initial estimate for the number of negative dentries that
+we need for good performance.  Maybe it's 1000.  It doesn't really matter;
+it's going to change dynamically.
 
-> +  Ingenic XBurst family CPUs shall have the following properties.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +
-> +      - description: Ingenic XBurst®1 CPU Core
-> +        items:
-> +          - const: ingenic,xburst
-> +
-> +      - description: Ingenic XBurst®2 CPU Core
-> +        items:
-> +          - const: ingenic,xburst2
+Then we need a metric to let us know whether it needs to be increased.
+Perhaps that's "number of new negative dentries created in the last
+second".  And we need to decide how much to increase it; maybe it's by
+50% or maybe by 10%.  Perhaps somewhere between 10-100% depending on
+how high the recent rate of negative dentry creation has been.
 
-enum:
-  - ingenic,xburst  # Ingenic XBurst®1 CPU Core
-  - ingenic,xburst2 # Ingenic XBurst®2 CPU Core
+We also need a metric to let us know whether it needs to be decreased.
+I'm reluctant to say that memory pressure should be that metric because
+very large systems can let the number of dentries grow in an unbounded
+way.  Perhaps that metric is "number of hits in the negative dentry
+cache in the last ten seconds".  Again, we'll need to decide how much
+to shrink the target number by.
 
-Though I don't find the description really adds much.
+If the number of negative dentries is at or above the target, then
+creating a new negative dentry means evicting an existing negative dentry.
+If the number of negative dentries is lower than the target, then we
+can just create a new one.
 
-> +
-> +  reg:
-> +    description: |
-> +      The number of the CPU.
-
-Drop this.
-
-Add:
-
-maxItems: 1
-
-> +
-> +required:
-> +  - device_type
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/jz4780-cgu.h>
-> +
-> +    cpus {
-> +    	#address-cells = <1>;
-> +    	#size-cells = <0>;
-> +
-> +    	cpu0: cpu@0 {
-> +    		device_type = "cpu";
-> +    		compatible = "ingenic,xburst";
-> +    		reg = <0>;
-> +
-
-> +    		clocks = <&cgu JZ4780_CLK_CPU>;
-> +    		clock-names = "cpu";
-
-Not documented.
-
-> +    	};
-> +
-> +    	cpu1: cpu@1 {
-> +    		device_type = "cpu";
-> +    		compatible = "ingenic,xburst";
-> +    		reg = <1>;
-> +
-> +    		clocks = <&cgu JZ4780_CLK_CORE1>;
-> +    		clock-names = "cpu";
-> +    	};
-> +    };
-> +...
-> diff --git a/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml b/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml
-> new file mode 100644
-> index 00000000..8943e73
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml
-> @@ -0,0 +1,34 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mips/ingenic/ingenic,soc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Bindings for Ingenic SoCs with XBurst CPU inside.
-> +
-> +maintainers:
-> +  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-
-Blank line.
-
-> +description: |
-> +  Ingenic SoCs with XBurst CPU inside shall have the following properties.
-> +
-> +properties:
-> +  $nodename:
-> +    const: '/'
-> +  compatible:
-> +    oneOf:
-> +
-> +      - description: Ingenic JZ47 Series Mobile Application Processor
-> +        items:
-> +          - const: ingenic,jz4740
-> +          - const: ingenic,jz4725b
-> +          - const: ingenic,jz4760
-> +          - const: ingenic,jz4760b
-> +          - const: ingenic,jz4770
-> +          - const: ingenic,jz4780
-
-This is defining the root compatible is 6 strings. You want a enum here 
-I think.
-
-> +
-> +      - description: Ingenic X Series IoT Application Processor
-> +        items:
-> +          - const: ingenic,x1000
-> +          - const: ingenic,x1000e
-> +          - const: ingenic,x1500
-
-Same here.
-
-Did you validate your dts file with this schema using 'make dtbs_check'?
-
-Rob
+Of course, memory pressure (and shrinking the target number) should
+cause negative dentries to be evicted from the old end of the LRU list.
+But memory pressure shouldn't cause us to change the target number;
+the target number is what we think we need to keep the system running
+smoothly.
