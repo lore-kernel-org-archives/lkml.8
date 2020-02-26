@@ -2,116 +2,77 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1D7C4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF53C4BA0A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 308D8206E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:47:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GG34xp+s"
+	by mail.kernel.org (Postfix) with ESMTP id D33EE24650
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:47:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582696074;
+	bh=P593FGjMiFSyqNhPqxCl6EBKFcqaO+XUWMo+/sOtY50=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=ybZHkqoXkzp4X1rk+LtTSHsKwrsAv9oNUAglwosFKhRLtg30PuFRMuvIgNwFjqm+4
+	 cLTihPWM1CL3tOlU57zu2M88T/l1lk27JuZkJZUZlVZKegc1UOlXzO7E+YeVTKQjLx
+	 2yOSJooOgPHcvhOIIFNRA6m4Xkct68MNMKlL1ld8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgBZFri (ORCPT
+        id S1727068AbgBZFrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 00:47:38 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35299 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbgBZFrh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 00:47:37 -0500
-Received: by mail-pf1-f196.google.com with SMTP id i19so879443pfa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 21:47:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mptYcm23xnKvc9dgW9yrQXDjYvemyNk9HOkOd35jyu0=;
-        b=GG34xp+sWUcxvfNAwlpF2R/g3l9vUFYZh5jCdgnO1j5GJFdkhJ8n8xO7GULcjNoKEp
-         QxNEXfAL5rOSEhshwXbzHaFc2qzrx7b9Gwp0mbHXHVCjBSiWC1UNiT8q6G9dTjhshfOG
-         ocqn8ZnQkBG8WTcYA/SDlaoUa0SHMRrTDEjZ4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mptYcm23xnKvc9dgW9yrQXDjYvemyNk9HOkOd35jyu0=;
-        b=K+O6cT1pUn1CJPmJk05JLCusoqAA+ToNhs88/mipsXLdFetLPhbCE6yojdAYiR+HuM
-         5DYGzJUNbeYWP8QfkNmylxwQ+GZX0vbnjLOCHnCWWIFQk2HNMTL0JcioPCVg48wUv900
-         3UYHCLV9ft9chtFXdcaeJxnxNzIbZSmHm1Ra4ls2V3vqJEEZNdHcqIcF24QNZfJyufTa
-         Kc4k6xf7pA7uho6/lwRFiM5ZPIkSosK+jerJRZhjSexBt6nHfsv9cQJRGJKmy/ZDr7wY
-         Af+3cL93xtMXZEnkPijPu5R2acAqzMVv9sf94riFbQh3m/Mt48AhWHtD1cdd+yS1s4Tw
-         xaew==
-X-Gm-Message-State: APjAAAWy6NwX9rqGXTofm+TRE4kKdwtXZdH6ZnmCmNaZq0BNc56bIipB
-        poFoFfnqIF5yTfu5+G+AvVdCAw==
-X-Google-Smtp-Source: APXvYqw9Hah4jb9PwhTerdiDuprKFah9gRyTjuGaX0a1kpnDdbyuJ+/fWg81/jtilUouDk0Nrkg0Fg==
-X-Received: by 2002:aa7:85d8:: with SMTP id z24mr2682501pfn.202.1582696054765;
-        Tue, 25 Feb 2020 21:47:34 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o22sm898504pgj.58.2020.02.25.21.47.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 21:47:33 -0800 (PST)
-Date:   Tue, 25 Feb 2020 21:47:32 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        "H . J . Lu " <hjl.tools@gmail.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Florian Weimer <fweimer@redhat.com>,
-        Sudakshina Das <sudi.das@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH v6 05/11] arm64: elf: Enable BTI at exec based on ELF
- program properties
-Message-ID: <202002252146.7230873E@keescook>
-References: <20200212192906.53366-1-broonie@kernel.org>
- <20200212192906.53366-6-broonie@kernel.org>
+        Wed, 26 Feb 2020 00:47:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39510 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725789AbgBZFrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 00:47:53 -0500
+Received: from [192.168.0.217] (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1254206E2;
+        Wed, 26 Feb 2020 05:47:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582696073;
+        bh=P593FGjMiFSyqNhPqxCl6EBKFcqaO+XUWMo+/sOtY50=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ExGlz+jzi6fzSq8Sb7OpeytLapzqH+r/7nxMr7PfXGOG5pp5VvATzQb0GfJHc5jug
+         1nOheQNzThP534NEZnbaX5JkV/Fhm6IIVDuIEcfuOhu8+y9Cnfkn5wbqI+6roXcru1
+         7Yh0/rA3+Fr49sbwXEt5UJvPppP1p+7CDeBgcqfU=
+Subject: Re: [patch 6/8] x86/entry: Move irq tracing to syscall_slow_exit_work
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>
+References: <20200225220801.571835584@linutronix.de>
+ <20200225221305.813084267@linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Message-ID: <e6951061-a397-21e5-3bb7-72de97d37d49@kernel.org>
+Date:   Tue, 25 Feb 2020 21:47:52 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212192906.53366-6-broonie@kernel.org>
+In-Reply-To: <20200225221305.813084267@linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 07:29:00PM +0000, Mark Brown wrote:
-> diff --git a/include/linux/elf.h b/include/linux/elf.h
-> index 1b6e8955c597..5d5b0321da0b 100644
-> --- a/include/linux/elf.h
-> +++ b/include/linux/elf.h
-> @@ -63,7 +63,11 @@ extern int elf_coredump_extra_notes_size(void);
->  extern int elf_coredump_extra_notes_write(struct coredump_params *cprm);
->  #endif
->  
-> -/* NT_GNU_PROPERTY_TYPE_0 header */
-> +/*
-> + * NT_GNU_PROPERTY_TYPE_0 header:
-> + * Keep this internal until/unless there is an agreed UAPI definition.
-> + * pr_type values (GNU_PROPERTY_*) are public and defined in the UAPI header.
-> + */
->  struct gnu_property {
->  	u32 pr_type;
->  	u32 pr_datasz;
+On 2/25/20 2:08 PM, Thomas Gleixner wrote:
+> which removes the ASM IRQ tracepoints.
 
-I think this hunk should be in patch 1.
+It's still after we re-enter rcuidle.  Is tracing actually okay?
 
--- 
-Kees Cook
+I always had the impression that tracing was okay in rcuidle mode
+because the tracing code was smart enough to do the right thing, but
+your patch 3/8 changelog says:
+
+Anything before enter_from_user_mode() is not safe to be traced or probed.
+
+
+--Andy
