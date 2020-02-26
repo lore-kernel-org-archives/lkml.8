@@ -2,96 +2,139 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B606C4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C7E4C4BA18
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0480224670
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:46:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582735615;
-	bh=5OpPjbfOUoYkheZj1nQy9Vjfb+Ezcm54r1AV24If9Sk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1Yy29hp3pZzOcOBAtLJazvKZePrMt9AJizb71rMaLjCo4LhXkId62FcwxO5przJrQ
-	 ynd3iC4dhREE230j/R++hDekTx2lGjDgF+9DT+kJiGKYJsw/sWckd4xKXMhXFVQLG7
-	 6QlpKAuxvAVB6yKeiq4CHW4DHn3xeT09yWdkMD5s=
+	by mail.kernel.org (Postfix) with ESMTP id 1EEF024670
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:46:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="LLkXP/3Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbgBZQqx (ORCPT
+        id S1728031AbgBZQq6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 11:46:53 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44405 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726490AbgBZQqx (ORCPT
+        Wed, 26 Feb 2020 11:46:58 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39395 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727993AbgBZQqy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 11:46:53 -0500
-Received: by mail-ot1-f66.google.com with SMTP id h9so3528005otj.11;
-        Wed, 26 Feb 2020 08:46:52 -0800 (PST)
+        Wed, 26 Feb 2020 11:46:54 -0500
+Received: by mail-oi1-f194.google.com with SMTP id 18so144604oij.6
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 08:46:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jfFrdPdZ9FoWsLEItIHfFzP9ymFVjyGzad5UqI1rEBE=;
+        b=LLkXP/3YzNaP8jdt0z93QGulQGLXQX0Trzd+WFJYkXo7XFWuAJ6wZlyGff03QwBHLf
+         4Plc4q/Qd0QJCdIf1e9GoeaXEwKZlw9ETZjCukpkMrdt9ZR/Sr44zYE50Gip8IOl5r/m
+         JYB1LSlrJ5+0Ka91jrB29f9SbGT869H3/DqAXOp34IH/Yoc3vP+//hshViJUUDDqS/LJ
+         QNCuX04I8VWPdsbprpmw1cyzBOjBzRkd1MECp+iNhZ3/lxaXqckVfJPRynNgiP/ijnQg
+         eiPa77p4MyvubAypJgQy1RxojQg1rNwgRioANNu+yBxI55olFfbCnrSGU/LHQ65MMRHT
+         vO+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bPkNgrD0XTEQh+3xIosJggjfUocBUIxTPyEHiivVmyY=;
-        b=auh8ITFvOYAfhMX0LsCZDzppMl4SZu0U7dJ2/bqLjFoyTCRWabhQCL7Lg7k7lNDq4j
-         9SDU4h6L4ZSqk5HqRbLF5e68LHeiIGdMgIMzujiMoaDGv7O3itKxgzXri3ceEtUJrfDJ
-         gz2wOst91xmiGIJvjm2NG4CEr7h1N+Ux7rtu3uFiTP7hCxkQLtBndUJ7HeGzAoVzH0ix
-         hnikpk2pfSJYQEMGDO1sYoDUq3jyzDk2FgRTCUlUQ+2QYjQ0qYsM4pHMXBnoBQSZ1AbC
-         bLg645sK0mIWRrmHMkQsnnAhkhVlpMX7UPRf0wWuYsB2H8hPY1Z/M/Acv8F/9/YUSdeN
-         YZ7Q==
-X-Gm-Message-State: APjAAAXq49rCxVQ9/e5qeMDNwZiTeehHitou+sTA8rLBGUgij/pFxBQ5
-        gBdXixekXLGaAlWYBUwJtPsEyvNSrw==
-X-Google-Smtp-Source: APXvYqyOCcGsXxIhYjcUqRhhtA1NArKYIhwPJu9E5shGzCoArkou36oa+gAYqrwlQK0Yxez0Y7uH/w==
-X-Received: by 2002:a05:6830:134c:: with SMTP id r12mr3794075otq.126.1582735612311;
-        Wed, 26 Feb 2020 08:46:52 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id g5sm948027otp.10.2020.02.26.08.46.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 08:46:51 -0800 (PST)
-Received: (nullmailer pid 17801 invoked by uid 1000);
-        Wed, 26 Feb 2020 16:46:51 -0000
-Date:   Wed, 26 Feb 2020 10:46:51 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-i2c@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/2] dt-bindings: i2c: Convert UniPhier FI2C controller
- to  json-schema
-Message-ID: <20200226164651.GA17752@bogus>
-References: <20200221025535.30311-1-yamada.masahiro@socionext.com>
- <20200221025535.30311-2-yamada.masahiro@socionext.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jfFrdPdZ9FoWsLEItIHfFzP9ymFVjyGzad5UqI1rEBE=;
+        b=H1ADkCHafNEO4gdA319QMq8bGT/6AEynYGh4uCMU3baN4a5Ioj/8OYiH2YIHFT1XB2
+         a4znvjlUL9aE66OsXCKqsJMhOJXekarAsZZ/WdEeGu2QwAbIjuxl0W0xlgtRkANnArBJ
+         ZwYT6Rjmxz7F+2RNZ+SVMGYuoaOc0UCPf2J9A7kKejRXJlTAxntxIKTOc3+uQ9Eq1Bzm
+         xTLblPT5/Q0MrdmR774NDAr9BtiWEpZZg4ETYEH91jQ5kF5uzveCL9YVTaNM+yDPbYhd
+         7+pFJbBmc7FPQW2Q+ox8+nJZm2YIDe9RzHcAtkgTzeav9mWj65hQy+8TQop6M6VG6Btd
+         +4QA==
+X-Gm-Message-State: APjAAAUT3BcRNv70DqZkayho8p6umyLQYnytta+RkIOzgC7jx5pm0Fwa
+        de8lxpDHwuxBlAedNTZRMxvM5zz0yEKLfX13XV9H5g==
+X-Google-Smtp-Source: APXvYqxqs6rTVc9eevxeNThlba+uZVaIe7nbgX9rqBRXGHLdPOffytT7975QEGYC3CSiSUYJqJj/25GH1DMT/gSZElU=
+X-Received: by 2002:aca:4c9:: with SMTP id 192mr4075244oie.105.1582735614183;
+ Wed, 26 Feb 2020 08:46:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221025535.30311-2-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200221004134.30599-1-ira.weiny@intel.com> <20200221004134.30599-8-ira.weiny@intel.com>
+ <20200221174449.GB11378@lst.de> <20200221224419.GW10776@dread.disaster.area>
+ <20200224175603.GE7771@lst.de> <20200225000937.GA10776@dread.disaster.area>
+ <20200225173633.GA30843@lst.de> <x49fteyh313.fsf@segfault.boston.devel.redhat.com>
+ <a126276c-d252-6050-b6ee-4d6448d45fac@redhat.com>
+In-Reply-To: <a126276c-d252-6050-b6ee-4d6448d45fac@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 26 Feb 2020 08:46:42 -0800
+Message-ID: <CAPcyv4iuWpHi-0SK_HS0zmfH87=G64U47VhthhpTjDCw_BMG8A@mail.gmail.com>
+Subject: Re: [PATCH V4 07/13] fs: Add locking for a dynamic address space
+ operations state
+To:     Jonathan Halliday <jonathan.halliday@redhat.com>
+Cc:     Jeff Moyer <jmoyer@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Dave Chinner <david@fromorbit.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Feb 2020 11:55:34 +0900, Masahiro Yamada wrote:
-> Convert the UniPhier FIFO-builtin I2C (a.k.a. FIFO) controller binding
-> to DT schema format.
-> 
-> There are two types of I2C controllers used on the UniPhier platform.
-> This is the new one with FIFO support, which is used on the Pro4 SoC
-> or newer.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
->  .../bindings/i2c/i2c-uniphier-f.txt           | 25 ----------
->  .../bindings/i2c/socionext,uniphier-fi2c.yaml | 50 +++++++++++++++++++
->  2 files changed, 50 insertions(+), 25 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-uniphier-f.txt
->  create mode 100644 Documentation/devicetree/bindings/i2c/socionext,uniphier-fi2c.yaml
-> 
+On Wed, Feb 26, 2020 at 1:29 AM Jonathan Halliday
+<jonathan.halliday@redhat.com> wrote:
+>
+>
+> Hi All
+>
+> I'm a middleware developer, focused on how Java (JVM) workloads can
+> benefit from app-direct mode pmem. Initially the target is apps that
+> need a fast binary log for fault tolerance: the classic database WAL use
+> case; transaction coordination systems; enterprise message bus
+> persistence and suchlike. Critically, there are cases where we use log
+> based storage, i.e. it's not the strict 'read rarely, only on recovery'
+> model that a classic db may have, but more of a 'append only, read many
+> times' event stream model.
+>
+> Think of the log oriented data storage as having logical segments (let's
+> implement them as files), of which the most recent is being appended to
+> (read_write) and the remaining N-1 older segments are full and sealed,
+> so effectively immutable (read_only) until discarded. The tail segment
+> needs to be in DAX mode for optimal write performance, as the size of
+> the append may be sub-block and we don't want the overhead of the kernel
+> call anyhow. So that's clearly a good fit for putting on a DAX fs mount
+> and using mmap with MAP_SYNC.
+>
+> However, we want fast read access into the segments, to retrieve stored
+> records. The small access index can be built in volatile RAM (assuming
+> we're willing to take the startup overhead of a full file scan at
+> recovery time) but the data itself is big and we don't want to move it
+> all off pmem. Which means the requirements are now different: we want
+> the O/S cache to pull hot data into fast volatile RAM for us, which DAX
+> explicitly won't do. Effectively a poor man's 'memory mode' pmem, rather
+> than app-direct mode, except here we're using the O/S rather than the
+> hardware memory controller to do the cache management for us.
+>
+> Currently this requires closing the full (read_write) file, then copying
+> it to a non-DAX device and reopening it (read_only) there. Clearly
+> that's expensive and rather tedious. Instead, I'd like to close the
+> MAP_SYNC mmap, then, leaving the file where it is, reopen it in a mode
+> that will instead go via the O/S cache in the traditional manner. Bonus
+> points if I can do it over non-overlapping ranges in a file without
+> closing the DAX mode mmap, since then the segments are entirely logical
+> instead of needing separate physical files.
 
-Applied, thanks.
+Hi John,
 
-Rob
+IIRC we chatted about this at PIRL, right?
+
+At the time it sounded more like mixed mode dax, i.e. dax writes, but
+cached reads. To me that's an optimization to optionally use dax for
+direct-I/O writes, with its existing set of page-cache coherence
+warts, and not a capability to dynamically switch the dax-mode.
+mmap+MAP_SYNC seems the wrong interface for this. This writeup
+mentions bypassing kernel call overhead, but I don't see how a
+dax-write syscall is cheaper than an mmap syscall plus fault. If
+direct-I/O to a dax capable file bypasses the block layer, isn't that
+about the maximum of kernel overhead that can be cut out of this use
+case? Otherwise MAP_SYNC is a facility to achieve efficient sub-block
+update-in-place writes not append writes.
