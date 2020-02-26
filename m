@@ -2,138 +2,169 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC159C4BA10
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9124C4BA10
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A39ED21927
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:21:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M0uKCWNA"
+	by mail.kernel.org (Postfix) with ESMTP id A9B872468A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:22:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbgBZNVl (ORCPT
+        id S1726997AbgBZNWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 08:21:41 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:39934 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727185AbgBZNVj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 08:21:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=QkkzX/tuVP1Ba8wqck7KvV7FsmKeJNx2lhKIiv2qRmY=; b=M0uKCWNAzqDxteCkykLkwBOgtX
-        vrl6ynGXqz4FhQA+m65tf+weg2JzoRAs0/x0/fZ0BLbkiFh4eZP886pxfFwbp6vFUktyGiMIuu2p9
-        uHJg/dE69xotoWJyIcSYfqi/6GwPj3naW6Xcl7v+Xe9JUPaPMmJBZ2NopfKB45S8xXkfvZr9+urbD
-        osuXOr4SgR7A8erHsdJVQDzTxgFyr7fd7e0SuxNhLhyjmeMF7Db7Y+WrlVPBIo5zzXDQJiFKGX0o+
-        gFguD1EoGDZpEUuQTd8/Yr63An1/XYFzW+5D1lO4+CyiWxtTm5/vwtTE0ZETccE7SghPSoHchZtx/
-        Nl9OLOrg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6wd5-0005Vp-1X; Wed, 26 Feb 2020 13:21:35 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4A080305EFE;
-        Wed, 26 Feb 2020 14:19:38 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BE5902B264904; Wed, 26 Feb 2020 14:21:33 +0100 (CET)
-Date:   Wed, 26 Feb 2020 14:21:33 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, luto@amacapital.net, axboe@kernel.dk,
-        keescook@chromium.org, torvalds@linux-foundation.org,
-        jannh@google.com, will@kernel.org
-Subject: [PATCH v2] mm: Fix use_mm() vs TLB invalidate
-Message-ID: <20200226132133.GM14946@hirez.programming.kicks-ass.net>
+        Wed, 26 Feb 2020 08:22:47 -0500
+Received: from mx2.suse.de ([195.135.220.15]:37544 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726277AbgBZNWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 08:22:47 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 33620B18D;
+        Wed, 26 Feb 2020 13:22:45 +0000 (UTC)
+Date:   Wed, 26 Feb 2020 14:22:37 +0100
+From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
+Message-ID: <20200226132237.GA16746@blackbody.suse.cz>
+References: <20191219200718.15696-1-hannes@cmpxchg.org>
+ <20191219200718.15696-4-hannes@cmpxchg.org>
+ <20200221171256.GB23476@blackbody.suse.cz>
+ <20200221185839.GB70967@cmpxchg.org>
+ <20200225133720.GA6709@blackbody.suse.cz>
+ <20200225150304.GA10257@cmpxchg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200225150304.GA10257@cmpxchg.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello
+and thanks for continuing the debate.
 
-For SMP systems using IPI based TLB invalidation, looking at
-current->active_mm is entirely reasonable. This then presents the
-following race condition:
+On Tue, Feb 25, 2020 at 10:03:04AM -0500, Johannes Weiner <hannes@cmpxchg.org> wrote:
+> By origin protection I mean protection [...]
+> If global reclaim occurs, [...]
+> However, if limit reclaim in A occurs due to the 12G max limit [...]
+My previous thinking was too bound to the absolute/global POV. Hence,
+effectiveness of memory.low is relative to reclaim origin:
+- full value -- protection against siblings (i.e. limit in parent).
+- reduced value (share) -- protection against (great)-uncles (i.e. limit in
+  (great)-grandparent).
+
+(And depending on the absolute depth, it means respective protection
+against global reclaim too.)
+
+I see this didn't change since the original implementation w/out
+effective protections. So it was just me being confused that protection
+can be overcommited locally (but not globally/at higher level, so it's
+consistent).
+
+> That hinges on whether an opt-out mechanism makes sense, and we
+> disagree on that part.
+After my correction above, the calculation I had proposed would reduce
+protection unnecessarily for reclaims triggered by nearby limits.
+
+> > Simplest approach would be likely to introduce the special "inherit"
+> > value (such a literal name may be misleading as it would be also
+> > "dont-care").
+> 
+> Again, a complication of the interface for *everybody* 
+Not if the special value is the new default (alas, that would still need
+the mount option).
 
 
-  CPU0			CPU1
+> Can you explain why you think protection is different from a weight?
+- weights are dimension-less, they represent no real resource
+- sum of sibling weights is meaningless (and independent from parent
+  weight)
+- to me this protection is closer to limits (actually I like your simile
+  that they're very lazily enforced limits)
 
-  flush_tlb_mm(mm)	use_mm(mm)
-    <send-IPI>
-			  tsk->active_mm = mm;
-			  <IPI>
-			    if (tsk->active_mm == mm)
-			      // flush TLBs
-			  </IPI>
-			  switch_mm(old_mm,mm,tsk);
+> Both specify a minimum amount of a resource that the cgroup can use
+> under contention, while allowing the cgroup to use more than that
+> share if there is no contention with siblings.
+>
+> You configure memory in bytes instead of a relative proportion, but
+> that's only because bytes are a natural unit of memory whereas a
+> relative proportion of time is a natural unit of CPU and IO.
+Weights specify ratio (between siblings), not the amount. Single weight
+is meaningless, (the meaningful proportion would be the fraction from
+cpu.max, i.e. relative to absolute resource).
 
+With weights, non-competing siblings drop out of denominator,
+with protection, non-competing siblings (in the sense of not consuming
+their allowance) may add resource back to the pool (given by parent).
 
-Where it is possible the IPI flushed the TLBs for @old_mm, not @mm,
-because the IPI lands before we actually switched.
+> For example, if you assign a share of CPU or IO to a subtree, that
+> applies to the entire subtree. Nobody has proposed being able to
+> opt-out of shares in a subtree, let alone forcing individual cgroups
+> to *opt-in* to receive these shares.
+The former is because it makes no sense to deny all CPU/IO, the latter
+consequence of that too.
 
-Avoid this by disabling IRQs across changing ->active_mm and
-switch_mm().
+> Now you apply memory pressure, what happens?. D isn't reclaimed, C is
+> somewhat reclaimed, E is reclaimed hard. D will not page, C will page
+> a little bit, E will page hard *with the higher IO priority of B*.
+> 
+> Now C is stuck behind E. This is a priority inversion.
+This is how I understand the weights to work.
 
-[ There are all sorts of reasons this might be harmless for various
-architecture specific reasons, but best not leave the door open at
-all. ]
+    A				
+    `- B		io.weight=200
+       `- D		io.weight=100 (e.g.)
+       `- E		io.weight=100 (e.g.)
+    `- C		io.weight=50
 
-Cc: stable@kernel.org
-Reported-by: Andy Lutomirski <luto@amacapital.net>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
-v2 now with WARN_ON_ONCE
+Whatever weights I assign to D and E, when only E and C compete, E will
+have higher weight (200 to 50, work-conservacy of weights).
 
- mmu_context.c |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+I don't think this inversion is wrong because E's work is still on
+behalf of B.
 
-Index: linux-2.6/mm/mmu_context.c
-===================================================================
---- linux-2.6.orig/mm/mmu_context.c
-+++ linux-2.6/mm/mmu_context.c
-@@ -24,14 +24,19 @@ void use_mm(struct mm_struct *mm)
- 	struct mm_struct *active_mm;
- 	struct task_struct *tsk = current;
- 
-+	WARN_ON(!(tsk->flags & PF_KTHREAD));
-+	WARN_ON(tsk->mm != NULL);
-+
- 	task_lock(tsk);
-+	local_irq_disable();
- 	active_mm = tsk->active_mm;
- 	if (active_mm != mm) {
- 		mmgrab(mm);
- 		tsk->active_mm = mm;
- 	}
- 	tsk->mm = mm;
--	switch_mm(active_mm, mm, tsk);
-+	switch_mm_irqs_off(active_mm, mm, tsk);
-+	local_irq_enable();
- 	task_unlock(tsk);
- #ifdef finish_arch_post_lock_switch
- 	finish_arch_post_lock_switch();
-@@ -54,11 +59,15 @@ void unuse_mm(struct mm_struct *mm)
- {
- 	struct task_struct *tsk = current;
- 
-+	WARN_ON(!(tsk->flags & PF_KTHREAD));
-+
- 	task_lock(tsk);
- 	sync_mm_rss(mm);
-+	local_irq_disable();
- 	tsk->mm = NULL;
- 	/* active_mm is still 'mm' */
- 	enter_lazy_tlb(mm, tsk);
-+	local_irq_enable();
- 	task_unlock(tsk);
- }
- EXPORT_SYMBOL_GPL(unuse_mm);
+Or did you mean that if protections were transformed (via effective
+calculation) to have ratios only in the same range as io.weights
+(1e-4..1e4 instead of 0..inf), then it'd prevent the inversion? (By
+setting D,E weights in same ratios as D,E protections.)
+
+> 1. Can you please make a practical use case for having scape goats or
+>    donor groups to justify retaining what I consider to be an
+>    unimportant artifact in the memory.low semantics?
+    A.low=10G
+    `- B.low=X   u=6G
+    `- C.low=X   u=4G
+    `- D.low=0G  u=5G
+
+B,C   run the workload which should be protected
+D     runs job that doesn't need any protection 
+u     denotes usage
+(I made the example with more than one important sibling to illustrate
+usefulness of some implicit distribution X.)
+
+When outer reclaim comes, reclaiming from B,C would be detrimental to
+their performance, while impact on D is unimportant. (And induced IO
+load on the rest (out of A) too.)
+
+It's not possible to move D to the A's level, since only A is all what a
+given user can control.
+
+> 2. If you think opting out of hierarchically assigned resources is a
+>    fundamentally important usecase, can you please either make an
+>    argument why it should also apply to CPU and IO, or alternatively
+>    explain in detail why they are meaningfully different?
+I'd say that protected memory is a disposable resource in contrast with
+CPU/IO. If you don't have latter, you don't progress; if you lack the
+former, you are refaulting but can make progress. Even more, you should
+be able to give up memory.min.
+
+Michal
