@@ -2,166 +2,86 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0539C4BA0D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D887C4BA06
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4EF821927
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:56:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y7BmXd6M"
+	by mail.kernel.org (Postfix) with ESMTP id 6D98721927
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 00:58:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729627AbgBZA4C (ORCPT
+        id S1729727AbgBZA6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Feb 2020 19:56:02 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:42251 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729465AbgBZA4C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Feb 2020 19:56:02 -0500
-Received: by mail-qt1-f193.google.com with SMTP id r5so1063513qtt.9
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 16:56:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KTr07x+ZuW+Wkx10CmLSTlKU+6ax9EaUyaBXKAF3OqM=;
-        b=Y7BmXd6Mfp+6AZ5v7tzuyEct+NldmkDhFbkaCIoOl6/SfR059Z2NK44rQkbVc+4j7t
-         n0RrGob1lJqy4jSvVTBHC3x7e53bCvZCs0af4K9zwmRDwcKU3x3vY+Goiu220sgiSxhg
-         LkPCOLYG0N6aE3fNLH+xw2IiIErd9z+gBVRxo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KTr07x+ZuW+Wkx10CmLSTlKU+6ax9EaUyaBXKAF3OqM=;
-        b=EvH2a2WamY9TlgTTqEaFKYdVo59zE4RhTJflNoG+oLDCDBBPNVfKnRXfa01Z+zC9tR
-         clqJMhXnOyQfnM9ovHIbWLUfTasfIreVLJyqXy5GBiSW/Kj4QaPQxhuHBdl3XTAdL6Uj
-         qKudUaHJENqXFKTtuwTnU3rptQDCvfjYgrgz+kwDkPgAjjSSRNftq59r+qed0MqPjts9
-         AN6h2c7x5R8ZXuOjmMKQirU3bVFrtnqwUWeZphY6FjlI3ZVMZjBlzS2VhP9UyK3HkT+O
-         Xk2qPRcNyMOyCatRhK5OngCmdVOmRg5Kkbwus8N2s2ym59YplvwLc9B57sRIP0b75PNt
-         3bSA==
-X-Gm-Message-State: APjAAAXUjV3Dr699m7gXYK6abs9VYz3oCNPu/TLTMpJ6tyvqyo0vHZhm
-        8uMavS9HzDrzMLQTwDsjmvQ9tQXhgGnRtuk3Q5VxbQ==
-X-Google-Smtp-Source: APXvYqwn/doZ3Sl5MivNf7aeBY0i9IjKThPIXnCkYsjm6+vHV5atNhFSLqXf91LmG+mgvcdhqR+658LdmJfFTgy7fYc=
-X-Received: by 2002:ac8:72d6:: with SMTP id o22mr1774873qtp.174.1582678561028;
- Tue, 25 Feb 2020 16:56:01 -0800 (PST)
+        Tue, 25 Feb 2020 19:58:43 -0500
+Received: from mga03.intel.com ([134.134.136.65]:23424 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729170AbgBZA6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Feb 2020 19:58:42 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Feb 2020 16:58:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,486,1574150400"; 
+   d="scan'208";a="230293262"
+Received: from jekeller-mobl1.amr.corp.intel.com (HELO [134.134.177.78]) ([134.134.177.78])
+  by fmsmga007.fm.intel.com with ESMTP; 25 Feb 2020 16:58:40 -0800
+Subject: Re: [PATCH v5 13/19] x86/cpufeatures: Add flag to track whether MSR
+ IA32_FEAT_CTL is configured
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     TonyWWang-oc@zhaoxin.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, bp@alien8.de, bp@suse.de,
+        hpa@zytor.com, jacob.jun.pan@linux.intel.com,
+        jarkko.sakkinen@linux.intel.com, jmattson@google.com,
+        jolsa@redhat.com, joro@8bytes.org, kvm@vger.kernel.org,
+        lenb@kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-pm@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com,
+        namhyung@kernel.org, pbonzini@redhat.com, peterz@infradead.org,
+        rkrcmar@redhat.com, shuah@kernel.org, tglx@linutronix.de,
+        tony.luck@intel.com, vkuznets@redhat.com, wanpengli@tencent.com,
+        x86@kernel.org
+References: <20191221044513.21680-14-sean.j.christopherson@intel.com>
+ <e741196d-52aa-0f5e-8f1e-a37ddf2e5025@intel.com>
+ <20200225221234.GL9245@linux.intel.com>
+ <1eaf6fbe-0adb-5074-3bc4-1e8327e0cdb3@intel.com>
+ <20200225232900.GO9245@linux.intel.com>
+ <5434303a-0742-3811-fd14-6445d296c0f0@intel.com>
+ <20200226004258.GP9245@linux.intel.com>
+From:   Jacob Keller <jacob.e.keller@intel.com>
+Organization: Intel Corporation
+Message-ID: <a9c4b363-1569-f03e-6155-a869dd186ced@intel.com>
+Date:   Tue, 25 Feb 2020 16:58:40 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200207052627.130118-1-drinkcat@chromium.org>
- <20200207052627.130118-2-drinkcat@chromium.org> <20200225171613.GA7063@bogus>
-In-Reply-To: <20200225171613.GA7063@bogus>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Wed, 26 Feb 2020 08:55:50 +0800
-Message-ID: <CANMq1KAVX4o5yC7c_88Wq_O=F+MaSN_V4uNcs1nzS3wBS6A5AA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/7] dt-bindings: gpu: mali-bifrost: Add Mediatek MT8183
-To:     Rob Herring <robh@kernel.org>, Nick Fan <nick.fan@mediatek.com>,
-        Sj Huang <sj.huang@mediatek.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200226004258.GP9245@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Nick Fan +Sj Huang @ MTK
+On 2/25/2020 4:42 PM, Sean Christopherson wrote>> So there's something
+weird going on. Maybe "boot_cpu_has" in the
+>> vmx_disabled_by_bios is wrong? Hmm.
+> 
+> Hmm, perhaps a bug somewhere else is overwriting the cpufeatures bit for
+> X86_FEATURE_VMX.  Let me see if I can reproduce from net-next.
+> 
 
-On Wed, Feb 26, 2020 at 1:16 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, Feb 07, 2020 at 01:26:21PM +0800, Nicolas Boichat wrote:
-> > Define a compatible string for the Mali Bifrost GPU found in
-> > Mediatek's MT8183 SoCs.
-> >
-> > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-> > Reviewed-by: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-> > ---
-> >
-> > v4:
-> >  - Add power-domain-names description
-> >    (kept Alyssa's reviewed-by as the change is minor)
-> > v3:
-> >  - No change
-> >
-> >  .../bindings/gpu/arm,mali-bifrost.yaml        | 25 +++++++++++++++++++
-> >  1 file changed, 25 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
-> > index 4ea6a8789699709..0d93b3981445977 100644
-> > --- a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
-> > +++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
-> > @@ -17,6 +17,7 @@ properties:
-> >      items:
-> >        - enum:
-> >            - amlogic,meson-g12a-mali
-> > +          - mediatek,mt8183-mali
-> >            - realtek,rtd1619-mali
-> >            - rockchip,px30-mali
-> >        - const: arm,mali-bifrost # Mali Bifrost GPU model/revision is fully discoverable
-> > @@ -62,6 +63,30 @@ allOf:
-> >            minItems: 2
-> >        required:
-> >          - resets
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            const: mediatek,mt8183-mali
-> > +    then:
-> > +      properties:
-> > +        sram-supply: true
-> > +        power-domains:
-> > +          description:
-> > +            List of phandle and PM domain specifier as documented in
-> > +            Documentation/devicetree/bindings/power/power_domain.txt
-> > +          minItems: 3
-> > +          maxItems: 3
-> > +        power-domain-names:
-> > +          items:
-> > +            - const: core0
-> > +            - const: core1
-> > +            - const: 2d
->
-> AFAIK, there's no '2d' block in bifrost GPUs. A power domain for each
-> core group is correct though.
+If you have any further suggestions for debugging, I'm happy to help try
+to figure this out. To my eyes, it looks like somehow bits get reset...
+It's definitely not clear to me how this happens.
 
-Good question... Hopefully Nick/SJ@MTK can comment, the non-upstream DTS has:
-gpu: mali@13040000 {
-compatible = "mediatek,mt8183-mali", "arm,mali-bifrost";
-power-domains = <&scpsys MT8183_POWER_DOMAIN_MFG_CORE0>;
-...
-}
+There is the get_cpu_caps call.. but that seems to correctly call
+apply_forced_caps at the end.
 
-gpu_core1: mali_gpu_core1 {
-compatible = "mediatek,gpu_core1";
-power-domains = <&scpsys MT8183_POWER_DOMAIN_MFG_CORE1>;
-};
+That's all I have time for today.
 
-gpu_core2: mali_gpu_core2 {
-compatible = "mediatek,gpu_core2";
-power-domains = <&scpsys MT8183_POWER_DOMAIN_MFG_2D>;
-};
-
-So I picked core0/core1/2d as names, but looking at this, it's likely
-core2 is more appropriate (and MT8183_POWER_DOMAIN_MFG_2D might just
-be a internal/legacy name, if there is no real 2d domain).
-
-Thanks.
-
-> Rob
+Thanks,
+Jake
