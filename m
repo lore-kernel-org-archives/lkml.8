@@ -2,309 +2,206 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A98CFC4BA21
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C54C4BA2C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 790CB21D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C0CA21D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:02:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbgBZWCE (ORCPT
+        id S1727802AbgBZWCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 17:02:04 -0500
-Received: from mga12.intel.com ([192.55.52.136]:51445 "EHLO mga12.intel.com"
+        Wed, 26 Feb 2020 17:02:08 -0500
+Received: from mga06.intel.com ([134.134.136.31]:10191 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727672AbgBZWCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 17:02:04 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1727672AbgBZWCI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 17:02:08 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 14:02:03 -0800
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 14:02:07 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,489,1574150400"; 
-   d="scan'208";a="438592705"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga006.fm.intel.com with ESMTP; 26 Feb 2020 14:02:03 -0800
-Date:   Wed, 26 Feb 2020 14:02:02 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>
-Cc:     rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
-        luto@kernel.org, peterz@infradead.org, x86@kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, konrad.wilk@oracle.com,
-        jan.setjeeilers@oracle.com, liran.alon@oracle.com,
-        junaids@google.com, graf@amazon.de, rppt@linux.vnet.ibm.com,
-        kuzuno@gmail.com, mgross@linux.intel.com
-Subject: Re: [RFC PATCH v3 2/7] mm/asi: ASI entry/exit interface
-Message-ID: <20200226220202.GA28721@iweiny-DESK2.sc.intel.com>
-References: <1582734120-26757-1-git-send-email-alexandre.chartre@oracle.com>
- <1582734120-26757-3-git-send-email-alexandre.chartre@oracle.com>
+   d="scan'208";a="241822675"
+Received: from pkabrax-mobl.amr.corp.intel.com (HELO [10.251.2.6]) ([10.251.2.6])
+  by orsmga006.jf.intel.com with ESMTP; 26 Feb 2020 14:02:06 -0800
+Subject: Re: [RFC PATCH v9 10/27] x86/mm: Update pte_modify, pmd_modify, and
+ _PAGE_CHG_MASK for _PAGE_DIRTY_SW
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
+References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
+ <20200205181935.3712-11-yu-cheng.yu@intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <c215a795-1411-9ab0-10a6-520dd4771016@intel.com>
+Date:   Wed, 26 Feb 2020 14:02:06 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582734120-26757-3-git-send-email-alexandre.chartre@oracle.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20200205181935.3712-11-yu-cheng.yu@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 05:21:55PM +0100, Alexandre Chartre wrote:
-> Address Space Isolation (ASI) is entered by calling asi_enter() which
-> switches the kernel page-table to the ASI page-table. Isolation is then
-> exited by calling asi_exit() which switches the page-table back to the
-> original kernel page-table.
-> 
-> The ASI being used and its state is tracked in a per-cpu ASI session
-> structure (struct asi_session).
-> 
-> Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
-> ---
->  arch/x86/include/asm/asi.h         |    4 ++
->  arch/x86/include/asm/asi_session.h |   17 +++++++
->  arch/x86/include/asm/mmu_context.h |   19 +++++++-
->  arch/x86/include/asm/tlbflush.h    |   12 +++++
->  arch/x86/mm/asi.c                  |   90 ++++++++++++++++++++++++++++++++++++
->  5 files changed, 140 insertions(+), 2 deletions(-)
->  create mode 100644 arch/x86/include/asm/asi_session.h
-> 
-> diff --git a/arch/x86/include/asm/asi.h b/arch/x86/include/asm/asi.h
-> index 844a81f..29b745a 100644
-> --- a/arch/x86/include/asm/asi.h
-> +++ b/arch/x86/include/asm/asi.h
-> @@ -44,6 +44,8 @@
->  
->  #include <linux/export.h>
->  
-> +#include <asm/asi_session.h>
+The subject really needs work.  Could you think of a way to summarize
+the changes here in english as opposed to just listing the symbols you
+modified?
+
+I think we could probably just auto-generate subjects for patches if the
+existing one were sufficient.
+
+On 2/5/20 10:19 AM, Yu-cheng Yu wrote:
+> After the introduction of _PAGE_DIRTY_SW, pte_modify and pmd_modify need to
+> set the Dirty bit accordingly: if Shadow Stack is enabled and _PAGE_RW is
+> cleared, use _PAGE_DIRTY_SW; otherwise _PAGE_DIRTY_HW.
+
+You've basically gone and written the code's if() statement in english
+here.  That doesn't really help me understand the patch.
+
+> Since the Dirty bit is modify by pte_modify(), remove _PAGE_DIRTY_HW from
+> PAGE_CHG_MASK.
+
+			 ^ modified
+
+This is a great example of a changelog that adds very little value.
+It's following the comments and doing what they say, but it's pretty
+obvious that the analysis stopped there.
+
+What *kinds* of bits are in _PAGE_CHG_MASK or not?  What changed about
+_PAGE_DIRTY_HW.  By this definition, shouldn't _PAGE_DIRTY_SW have
+technically been in this mask before this patch?
+
+> diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+> index 62aeb118bc36..2733e7ec16b3 100644
+> --- a/arch/x86/include/asm/pgtable.h
+> +++ b/arch/x86/include/asm/pgtable.h
+> @@ -702,6 +702,14 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+>  	val &= _PAGE_CHG_MASK;
+>  	val |= check_pgprot(newprot) & ~_PAGE_CHG_MASK;
+>  	val = flip_protnone_guard(oldval, val, PTE_PFN_MASK);
 > +
->  struct asi_type {
->  	int			pcid_prefix;	/* PCID prefix */
->  };
-> @@ -80,6 +82,8 @@ struct asi {
->  extern struct asi *asi_create(struct asi_type *type);
->  extern void asi_destroy(struct asi *asi);
->  extern void asi_set_pagetable(struct asi *asi, pgd_t *pagetable);
-> +extern int asi_enter(struct asi *asi);
-> +extern void asi_exit(struct asi *asi);
->  
->  #endif	/* __ASSEMBLY__ */
->  
-> diff --git a/arch/x86/include/asm/asi_session.h b/arch/x86/include/asm/asi_session.h
-> new file mode 100644
-> index 0000000..9d39c93
-> --- /dev/null
-> +++ b/arch/x86/include/asm/asi_session.h
-> @@ -0,0 +1,17 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef ARCH_X86_MM_ASI_SESSION_H
-> +#define ARCH_X86_MM_ASI_SESSION_H
-> +
-> +#ifdef CONFIG_ADDRESS_SPACE_ISOLATION
-> +
-> +struct asi;
-> +
-> +struct asi_session {
-> +	struct asi		*asi;		/* ASI for this session */
-> +	unsigned long		isolation_cr3;	/* cr3 when ASI is active */
-> +	unsigned long		original_cr3;	/* cr3 before entering ASI */
-> +};
-> +
-> +#endif	/* CONFIG_ADDRESS_SPACE_ISOLATION */
-> +
-> +#endif
-> diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
-> index 5f33924..2d65443 100644
-> --- a/arch/x86/include/asm/mmu_context.h
-> +++ b/arch/x86/include/asm/mmu_context.h
-> @@ -14,6 +14,7 @@
->  #include <asm/paravirt.h>
->  #include <asm/mpx.h>
->  #include <asm/debugreg.h>
-> +#include <asm/asi.h>
->  
->  extern atomic64_t last_mm_ctx_id;
->  
-> @@ -349,8 +350,22 @@ static inline bool arch_vma_access_permitted(struct vm_area_struct *vma,
->   */
->  static inline unsigned long __get_current_cr3_fast(void)
->  {
-> -	unsigned long cr3 = build_cr3(this_cpu_read(cpu_tlbstate.loaded_mm)->pgd,
-> -		this_cpu_read(cpu_tlbstate.loaded_mm_asid));
-> +	unsigned long cr3;
-> +
-> +	/*
-> +	 * If isolation is active then we need to return the CR3 for the
-> +	 * currently active ASI. This value is stored in the isolation_cr3
-> +	 * field of the ASI session.
-> +	 */
-> +	if (IS_ENABLED(CONFIG_ADDRESS_SPACE_ISOLATION) &&
-> +	    this_cpu_read(cpu_asi_session.asi)) {
-> +		cr3 = this_cpu_read(cpu_asi_session.isolation_cr3);
-> +		/* CR3 read never returns with the NOFLUSH bit */
-> +		cr3 &= ~X86_CR3_PCID_NOFLUSH;
-> +	} else {
-> +		cr3 = build_cr3(this_cpu_read(cpu_tlbstate.loaded_mm)->pgd,
-> +				this_cpu_read(cpu_tlbstate.loaded_mm_asid));
+> +	if (pte_dirty(pte)) {
+> +		if (static_cpu_has(X86_FEATURE_SHSTK) && !(val & _PAGE_RW))
+> +			val |= _PAGE_DIRTY_SW;
+> +		else
+> +			val |= _PAGE_DIRTY_HW;
 > +	}
->  
->  	/* For now, be very restrictive about when this can be called. */
->  	VM_WARN_ON(in_nmi() || preemptible());
-> diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
-> index 6f66d84..241058f 100644
-> --- a/arch/x86/include/asm/tlbflush.h
-> +++ b/arch/x86/include/asm/tlbflush.h
-> @@ -12,6 +12,7 @@
->  #include <asm/invpcid.h>
->  #include <asm/pti.h>
->  #include <asm/processor-flags.h>
-> +#include <asm/asi.h>
->  
->  /*
->   * The x86 feature is called PCID (Process Context IDentifier). It is similar
-> @@ -239,9 +240,20 @@ struct tlb_state {
->  	 * context 0.
->  	 */
->  	struct tlb_context ctxs[TLB_NR_DYN_ASIDS];
 > +
-> +#ifdef CONFIG_ADDRESS_SPACE_ISOLATION
-> +	/*
-> +	 * The ASI session tracks the ASI being used and its state.
-> +	 */
-> +	struct asi_session asi_session;
-> +#endif
->  };
->  DECLARE_PER_CPU_SHARED_ALIGNED(struct tlb_state, cpu_tlbstate);
->  
-> +#ifdef CONFIG_ADDRESS_SPACE_ISOLATION
-> +#define cpu_asi_session	(cpu_tlbstate.asi_session)
-> +#endif
-> +
->  /*
->   * Blindly accessing user memory from NMI context can be dangerous
->   * if we're in the middle of switching the current user task or
-> diff --git a/arch/x86/mm/asi.c b/arch/x86/mm/asi.c
-> index 0a0ac9d..9fbc921 100644
-> --- a/arch/x86/mm/asi.c
-> +++ b/arch/x86/mm/asi.c
-> @@ -10,6 +10,8 @@
->  
->  #include <asm/asi.h>
->  #include <asm/bug.h>
-> +#include <asm/mmu_context.h>
-> +#include <asm/tlbflush.h>
->  
->  struct asi *asi_create(struct asi_type *type)
->  {
-> @@ -58,3 +60,91 @@ void asi_set_pagetable(struct asi *asi, pgd_t *pagetable)
->  
+>  	return __pte(val);
 >  }
->  EXPORT_SYMBOL(asi_set_pagetable);
+
+OK, so this is a path we use for changing bunches of PTEs to 'newprot'.
+ It doesn't use the pte_*() helpers that the previous patch fixed up, so
+we need a new site.
+
+Right?
+
+Maybe that would make good changelog text.
+
+Also, couldn't we just have a pte_fixup() function or something that did
+this logic and could be shared?
+
+> @@ -712,6 +720,14 @@ static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
+>  	val &= _HPAGE_CHG_MASK;
+>  	val |= check_pgprot(newprot) & ~_HPAGE_CHG_MASK;
+>  	val = flip_protnone_guard(oldval, val, PHYSICAL_PMD_PAGE_MASK);
 > +
-> +static void asi_switch_to_asi_cr3(struct asi *asi)
-> +{
-> +	unsigned long original_cr3, asi_cr3;
-> +	struct asi_session *asi_session;
-> +	u16 pcid;
-> +
-> +	WARN_ON(!irqs_disabled());
-> +
-> +	original_cr3 = __get_current_cr3_fast();
-> +
-> +	/* build the ASI cr3 value */
-> +	asi_cr3 = asi->base_cr3;
-> +	if (boot_cpu_has(X86_FEATURE_PCID)) {
-> +		pcid = original_cr3 & ASI_KERNEL_PCID_MASK;
-> +		asi_cr3 |= pcid;
+> +	if (pmd_dirty(pmd)) {
+> +		if (static_cpu_has(X86_FEATURE_SHSTK) && !(val & _PAGE_RW))
+> +			val |= _PAGE_DIRTY_SW;
+> +		else
+> +			val |= _PAGE_DIRTY_HW;
 > +	}
 > +
-> +	/* get the ASI session ready for entering ASI */
-> +	asi_session = &get_cpu_var(cpu_asi_session);
-> +	asi_session->asi = asi;
-> +	asi_session->original_cr3 = original_cr3;
-> +	asi_session->isolation_cr3 = asi_cr3;
-> +
-> +	/* Update CR3 to immediately enter ASI */
-> +	native_write_cr3(asi_cr3);
-> +}
-> +
-> +static void asi_switch_to_kernel_cr3(struct asi *asi)
+>  	return __pmd(val);
+>  }
+>  
+> diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
+> index 826823df917f..e7e28bf7e919 100644
+> --- a/arch/x86/include/asm/pgtable_types.h
+> +++ b/arch/x86/include/asm/pgtable_types.h
+> @@ -150,8 +150,8 @@
+>   * instance, and is *not* included in this mask since
+>   * pte_modify() does modify it.
+>   */
+> -#define _PAGE_CHG_MASK	(PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT |		\
+> -			 _PAGE_SPECIAL | _PAGE_ACCESSED | _PAGE_DIRTY_HW |	\
+> +#define _PAGE_CHG_MASK	(PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT |	\
+> +			 _PAGE_SPECIAL | _PAGE_ACCESSED |	\
+>  			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP)
+>  #define _HPAGE_CHG_MASK (_PAGE_CHG_MASK | _PAGE_PSE)
 
-asi is not used in this function?
 
-> +{
-> +	struct asi_session *asi_session;
-> +	unsigned long original_cr3;
-> +
-> +	WARN_ON(!irqs_disabled());
-> +
-> +	original_cr3 = this_cpu_read(cpu_asi_session.original_cr3);
-> +	if (boot_cpu_has(X86_FEATURE_PCID))
-> +		original_cr3 |= X86_CR3_PCID_NOFLUSH;
-> +	native_write_cr3(original_cr3);
-> +
-> +	asi_session = &get_cpu_var(cpu_asi_session);
-> +	asi_session->asi = NULL;
-> +}
-> +
-> +int asi_enter(struct asi *asi)
-> +{
-> +	struct asi *current_asi;
-> +	unsigned long flags;
-> +
-> +	/*
-> +	 * We can re-enter isolation, but only with the same ASI (we don't
-> +	 * support nesting isolation).
-> +	 */
-> +	current_asi = this_cpu_read(cpu_asi_session.asi);
-> +	if (current_asi) {
-> +		if (current_asi != asi) {
-> +			WARN_ON(1);
-> +			return -EBUSY;
-> +		}
-
-if (WARN_ON(current_asi != asi)) {
-	return -EBUSY;
-
-???
-
-Ira
-
-> +		return 0;
-> +	}
-> +
-> +	local_irq_save(flags);
-> +	asi_switch_to_asi_cr3(asi);
-> +	local_irq_restore(flags);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(asi_enter);
-> +
-> +void asi_exit(struct asi *asi)
-> +{
-> +	struct asi *current_asi;
-> +	unsigned long flags;
-> +
-> +	current_asi = this_cpu_read(cpu_asi_session.asi);
-> +	if (!current_asi) {
-> +		/* already exited */
-> +		return;
-> +	}
-> +
-> +	WARN_ON(current_asi != asi);
-> +
-> +	local_irq_save(flags);
-> +	asi_switch_to_kernel_cr3(asi);
-> +	local_irq_restore(flags);
-> +}
-> +EXPORT_SYMBOL(asi_exit);
-> -- 
-> 1.7.1
-> 
-> 
