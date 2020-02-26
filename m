@@ -2,102 +2,120 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C6BC4BA21
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EAE8C4BA21
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7CDB24653
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:16:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UF7GZ0n1"
+	by mail.kernel.org (Postfix) with ESMTP id 04E5F21D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:17:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582755466;
+	bh=cs+KD5MTlL+9h4Tj3lAJWI9MH0tgnD0DmNQnuZrw/9c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=F1VGLvvGpxN5V+hgqkscB29PgwnsexPNOF/dswG9KozIhIMpEvS2vgbitl9yJqCtA
+	 5//a4TO07Ej8I6HY5ca1KbkhUsJ6mUmjX/Hx78lSSe3XSVo1aQeGRP24xnfx2b9WXU
+	 BLt3yKe5O4tC13XVO3Ju7sleyQUVzeAclFFgQl3Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbgBZWQn (ORCPT
+        id S1727880AbgBZWRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 17:16:43 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51597 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727715AbgBZWQn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 17:16:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582755402;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=adv2gMDHdJrSNT8UFFETSumaGBAQt4WCebanQKid9IU=;
-        b=UF7GZ0n1Xz9E8U1XFr5pg5NJ85mz7zOf5kvFcVwVDNbjJSa17Yn91xuac4VLHYUE+g8zWp
-        zHynoIvNUMOFrpviNgNEhAFmDheH6MuddT2TFJHNyw/KwLORBuGqeYwN9+/UK5++JD5mbF
-        ewB4vYHZlOAs0sckW6JuCvOIx5gP9pk=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-207-C06umtVxPMyCySJwEmO88w-1; Wed, 26 Feb 2020 17:16:35 -0500
-X-MC-Unique: C06umtVxPMyCySJwEmO88w-1
-Received: by mail-wr1-f70.google.com with SMTP id p8so392743wrw.5
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 14:16:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=adv2gMDHdJrSNT8UFFETSumaGBAQt4WCebanQKid9IU=;
-        b=mDbtSSOcNghX3frbVS9m/WBhGMjwjQtKQJVG3iXjeBDhsayqEZpzmTKj22r+t5sKfx
-         E/zbQ4PkfxASB3nX9zm8HSrxfIrQ0Qx87Aw0E5Vkh3JMkLdrNuoKWlH0DddFHd+nQFot
-         g5J0zW3V5UNEl9lx22pCKzFvYRJY9mj3XybQ9EtlkmprN+CK9ifyFR4NMf2mir6UuMb0
-         vw3foDc0oBMMYAi9FkOH5Qrq6z8gwGc6niOC4rhPgittf8fE3Lzds8XuYPZ5kp/INOeN
-         GHaTjAhJ9BnNCoMmAqvLCsemb/aJQoYIt+20KNspo0jdG+JvqD4GAgDoXaI/w0OARW+w
-         Cx9g==
-X-Gm-Message-State: APjAAAV8D49ialL6TG/aDWLLfMO/O4aOv6vQkUiBAN2YFftyJOu6O5Fw
-        xaIHiIJMYaLaKw/ughlE4rgLQEACAy09jL0SbPWYJh41zrdToYLZJMitygV6UrxQlpu5KGjzLsH
-        ZIKhz3vLej17zgvjSmx04tfcl
-X-Received: by 2002:a1c:9a13:: with SMTP id c19mr987169wme.134.1582755394159;
-        Wed, 26 Feb 2020 14:16:34 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxmsicT3h4tLxMLXoSzTW55n/I22wHMyHI3oCwdmxH72apFzjH20mlpy8BOATYE62y6EP1+Dw==
-X-Received: by 2002:a1c:9a13:: with SMTP id c19mr987142wme.134.1582755393863;
-        Wed, 26 Feb 2020 14:16:33 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
-        by smtp.gmail.com with ESMTPSA id b10sm4974284wrw.61.2020.02.26.14.16.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2020 14:16:32 -0800 (PST)
-From:   Hans de Goede <hdegoede@redhat.com>
-Subject: Updating cypress/brcm firmware in linux-firmware for CVE-2019-15126
-To:     Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Chirjeev Singh <Chirjeev.Singh@cypress.com>,
-        Chung-Hsien Hsu <cnhu@cypress.com>
-List-Id: <linux-firmware.lore.kernel.org>
-Cc:     linux-firmware@kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-ID: <93dba8d2-6e46-9157-d292-4d93feb8ec1a@redhat.com>
-Date:   Wed, 26 Feb 2020 23:16:32 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 26 Feb 2020 17:17:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34802 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727715AbgBZWRo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 17:17:44 -0500
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC7702072D;
+        Wed, 26 Feb 2020 22:17:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582755463;
+        bh=cs+KD5MTlL+9h4Tj3lAJWI9MH0tgnD0DmNQnuZrw/9c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DAebMMviU1D71LPXnPss901gxpWeddvg5oFWeaWscNgSXKScZnKkl2Dw9x39ynyOG
+         QmpkTRir9i88Bu7uB45IQ0SkYdFKHAzxqgQy4R6/Mi0MFma4i1a/cj2K591KSfyOgG
+         mCSzF8p+g5KzQHhHWKmt7G6rV/26BKVg8kbF6Tk8=
+Date:   Wed, 26 Feb 2020 14:17:42 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Gilad Ben-Yossef <gilad@benyossef.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ofir Drang <ofir.drang@arm.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] crypto: testmgr - use generic algs making test vecs
+Message-ID: <20200226221742.GA135806@gmail.com>
+References: <20200225154834.25108-1-gilad@benyossef.com>
+ <20200225154834.25108-2-gilad@benyossef.com>
+ <20200225194551.GA114977@gmail.com>
+ <CAOtvUMeWB=MiYfzkrPjOctOufKJ8Q81E3m6bq8GJY-enbG6Qjg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOtvUMeWB=MiYfzkrPjOctOufKJ8Q81E3m6bq8GJY-enbG6Qjg@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Cypress people,
+On Wed, Feb 26, 2020 at 04:42:45PM +0200, Gilad Ben-Yossef wrote:
+> 
+> The impetus to write this patch came from my experience debugging a
+> test failure with the ccree driver.
+> At some point while tweaking around I got into a situation where the
+> test was succeeding (that is, declaring the message inauthentic) not
+> because the mutation was being detected but because the generation of
+> the origin was producing a bogus ICV.
 
-Can we please get updated firmware for
-brcm/brcmfmac4356-pcie.bin and brcm/brcmfmac4356-sdio.bin
-fixing CVE-2019-15126 as well as for any other affected
-models (the 4356 is explicitly named in the CVE description) ?
+That's being fixed by your patch 2/2 though, right?
 
-The current Cypress firmware files in linux-firmware are
-quite old, e.g. for brcm/brcmfmac4356-pcie.bin linux-firmware has:
-version 7.35.180.176 dated 2017-10-23, way before the CVE
+> At that point it seemed to me that it would be safer to "isolate" the
+> original AEAD messages generation from the code that was being teste.
+> 
+> > We could also just move test_aead_inauthentic_inputs() to below
+> > test_aead_vs_generic_impl() so that it runs last.
+> 
+> This would probably be better, although I think that this stage also
+> generates inauthentic messages from time to time, no?
 
-Where as https://community.cypress.com/docs/DOC-19000 /
-cypress-fmac-v4.14.77-2020_0115.zip has:
-version 7.35.180.197 which presumably contains a fix (no changelog)
+That's correct, but in test_aead_vs_generic_impl() the generic implementation is
+used to generate the test vectors.
 
-Regards,
+> At any rate, I don't have strong feelings about it either way. I defer
+> to your judgment whether it is worth it to add a fallback to use the
+> same implementation and fix what needs fixing or drop the patch
+> altogether if you think this isn't worth the trouble - just let me
+> know.
 
-Hans
+I just want to avoid adding complexity that isn't worthwhile.
+Beyond your patch 2, how about we just do:
 
+diff --git a/crypto/testmgr.c b/crypto/testmgr.c
+index 79b431545249a9..2ab48d4d317250 100644
+--- a/crypto/testmgr.c
++++ b/crypto/testmgr.c
+@@ -2564,11 +2564,11 @@ static int test_aead_extra(const char *driver,
+ 		goto out;
+ 	}
+ 
+-	err = test_aead_inauthentic_inputs(ctx);
++	err = test_aead_vs_generic_impl(ctx);
+ 	if (err)
+ 		goto out;
+ 
+-	err = test_aead_vs_generic_impl(ctx);
++	err = test_aead_inauthentic_inputs(ctx);
+ out:
+ 	kfree(ctx->vec.key);
+ 	kfree(ctx->vec.iv);
+
+
+Then the dedicated tests for inauthentic inputs wouldn't be run until the fuzz
+tests vs. generic have already passed.
+
+- Eric
