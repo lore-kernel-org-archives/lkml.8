@@ -2,350 +2,116 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBC0C4BA0A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1D7C4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68B44222C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 308D8206E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:47:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GG34xp+s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgBZFqe (ORCPT
+        id S1726900AbgBZFri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 00:46:34 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:47795 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbgBZFqc (ORCPT
+        Wed, 26 Feb 2020 00:47:38 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35299 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbgBZFrh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 00:46:32 -0500
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1j6pWe-00029i-1M; Wed, 26 Feb 2020 06:46:28 +0100
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1j6pWb-0003hy-DZ; Wed, 26 Feb 2020 06:46:25 +0100
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Chris Snook <chris.snook@gmail.com>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Russell King <linux@armlinux.org.uk>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org,
-        Vivien Didelot <vivien.didelot@gmail.com>
-Subject: [PATCH v8 1/1] net: ag71xx: port to phylink
-Date:   Wed, 26 Feb 2020 06:46:24 +0100
-Message-Id: <20200226054624.14199-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.25.0
+        Wed, 26 Feb 2020 00:47:37 -0500
+Received: by mail-pf1-f196.google.com with SMTP id i19so879443pfa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 21:47:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=mptYcm23xnKvc9dgW9yrQXDjYvemyNk9HOkOd35jyu0=;
+        b=GG34xp+sWUcxvfNAwlpF2R/g3l9vUFYZh5jCdgnO1j5GJFdkhJ8n8xO7GULcjNoKEp
+         QxNEXfAL5rOSEhshwXbzHaFc2qzrx7b9Gwp0mbHXHVCjBSiWC1UNiT8q6G9dTjhshfOG
+         ocqn8ZnQkBG8WTcYA/SDlaoUa0SHMRrTDEjZ4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mptYcm23xnKvc9dgW9yrQXDjYvemyNk9HOkOd35jyu0=;
+        b=K+O6cT1pUn1CJPmJk05JLCusoqAA+ToNhs88/mipsXLdFetLPhbCE6yojdAYiR+HuM
+         5DYGzJUNbeYWP8QfkNmylxwQ+GZX0vbnjLOCHnCWWIFQk2HNMTL0JcioPCVg48wUv900
+         3UYHCLV9ft9chtFXdcaeJxnxNzIbZSmHm1Ra4ls2V3vqJEEZNdHcqIcF24QNZfJyufTa
+         Kc4k6xf7pA7uho6/lwRFiM5ZPIkSosK+jerJRZhjSexBt6nHfsv9cQJRGJKmy/ZDr7wY
+         Af+3cL93xtMXZEnkPijPu5R2acAqzMVv9sf94riFbQh3m/Mt48AhWHtD1cdd+yS1s4Tw
+         xaew==
+X-Gm-Message-State: APjAAAWy6NwX9rqGXTofm+TRE4kKdwtXZdH6ZnmCmNaZq0BNc56bIipB
+        poFoFfnqIF5yTfu5+G+AvVdCAw==
+X-Google-Smtp-Source: APXvYqw9Hah4jb9PwhTerdiDuprKFah9gRyTjuGaX0a1kpnDdbyuJ+/fWg81/jtilUouDk0Nrkg0Fg==
+X-Received: by 2002:aa7:85d8:: with SMTP id z24mr2682501pfn.202.1582696054765;
+        Tue, 25 Feb 2020 21:47:34 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id o22sm898504pgj.58.2020.02.25.21.47.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2020 21:47:33 -0800 (PST)
+Date:   Tue, 25 Feb 2020 21:47:32 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H . J . Lu " <hjl.tools@gmail.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH v6 05/11] arm64: elf: Enable BTI at exec based on ELF
+ program properties
+Message-ID: <202002252146.7230873E@keescook>
+References: <20200212192906.53366-1-broonie@kernel.org>
+ <20200212192906.53366-6-broonie@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200212192906.53366-6-broonie@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The port to phylink was done as close as possible to initial
-functionality.
+On Wed, Feb 12, 2020 at 07:29:00PM +0000, Mark Brown wrote:
+> diff --git a/include/linux/elf.h b/include/linux/elf.h
+> index 1b6e8955c597..5d5b0321da0b 100644
+> --- a/include/linux/elf.h
+> +++ b/include/linux/elf.h
+> @@ -63,7 +63,11 @@ extern int elf_coredump_extra_notes_size(void);
+>  extern int elf_coredump_extra_notes_write(struct coredump_params *cprm);
+>  #endif
+>  
+> -/* NT_GNU_PROPERTY_TYPE_0 header */
+> +/*
+> + * NT_GNU_PROPERTY_TYPE_0 header:
+> + * Keep this internal until/unless there is an agreed UAPI definition.
+> + * pr_type values (GNU_PROPERTY_*) are public and defined in the UAPI header.
+> + */
+>  struct gnu_property {
+>  	u32 pr_type;
+>  	u32 pr_datasz;
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
-changes v8:
-- set the autoneg bit
-- provide implementations for the mac_pcs_get_state and mac_an_restart
-  methods
-- do phylink_disconnect_phy() on _stop()
-- rename ag71xx_phy_setup() to ag71xx_phylink_setup() 
+I think this hunk should be in patch 1.
 
- drivers/net/ethernet/atheros/Kconfig  |   2 +-
- drivers/net/ethernet/atheros/ag71xx.c | 150 +++++++++++++++++---------
- 2 files changed, 98 insertions(+), 54 deletions(-)
-
-diff --git a/drivers/net/ethernet/atheros/Kconfig b/drivers/net/ethernet/atheros/Kconfig
-index 0058051ba925..2720bde5034e 100644
---- a/drivers/net/ethernet/atheros/Kconfig
-+++ b/drivers/net/ethernet/atheros/Kconfig
-@@ -20,7 +20,7 @@ if NET_VENDOR_ATHEROS
- config AG71XX
- 	tristate "Atheros AR7XXX/AR9XXX built-in ethernet mac support"
- 	depends on ATH79
--	select PHYLIB
-+	select PHYLINK
- 	help
- 	  If you wish to compile a kernel for AR7XXX/91XXX and enable
- 	  ethernet support, then you should always answer Y to this.
-diff --git a/drivers/net/ethernet/atheros/ag71xx.c b/drivers/net/ethernet/atheros/ag71xx.c
-index e95687a780fb..9692ae1734a8 100644
---- a/drivers/net/ethernet/atheros/ag71xx.c
-+++ b/drivers/net/ethernet/atheros/ag71xx.c
-@@ -32,6 +32,7 @@
- #include <linux/of_mdio.h>
- #include <linux/of_net.h>
- #include <linux/of_platform.h>
-+#include <linux/phylink.h>
- #include <linux/regmap.h>
- #include <linux/reset.h>
- #include <linux/clk.h>
-@@ -314,6 +315,8 @@ struct ag71xx {
- 	dma_addr_t stop_desc_dma;
- 
- 	phy_interface_t phy_if_mode;
-+	struct phylink *phylink;
-+	struct phylink_config phylink_config;
- 
- 	struct delayed_work restart_work;
- 	struct timer_list oom_timer;
-@@ -845,24 +848,23 @@ static void ag71xx_hw_start(struct ag71xx *ag)
- 	netif_wake_queue(ag->ndev);
- }
- 
--static void ag71xx_link_adjust(struct ag71xx *ag, bool update)
-+static void ag71xx_mac_config(struct phylink_config *config, unsigned int mode,
-+			      const struct phylink_link_state *state)
- {
--	struct phy_device *phydev = ag->ndev->phydev;
-+	struct ag71xx *ag = netdev_priv(to_net_dev(config->dev));
- 	u32 cfg2;
- 	u32 ifctl;
- 	u32 fifo5;
- 
--	if (!phydev->link && update) {
--		ag71xx_hw_stop(ag);
-+	if (phylink_autoneg_inband(mode))
- 		return;
--	}
- 
- 	if (!ag71xx_is(ag, AR7100) && !ag71xx_is(ag, AR9130))
- 		ag71xx_fast_reset(ag);
- 
- 	cfg2 = ag71xx_rr(ag, AG71XX_REG_MAC_CFG2);
- 	cfg2 &= ~(MAC_CFG2_IF_1000 | MAC_CFG2_IF_10_100 | MAC_CFG2_FDX);
--	cfg2 |= (phydev->duplex) ? MAC_CFG2_FDX : 0;
-+	cfg2 |= (state->duplex) ? MAC_CFG2_FDX : 0;
- 
- 	ifctl = ag71xx_rr(ag, AG71XX_REG_MAC_IFCTL);
- 	ifctl &= ~(MAC_IFCTL_SPEED);
-@@ -870,7 +872,7 @@ static void ag71xx_link_adjust(struct ag71xx *ag, bool update)
- 	fifo5 = ag71xx_rr(ag, AG71XX_REG_FIFO_CFG5);
- 	fifo5 &= ~FIFO_CFG5_BM;
- 
--	switch (phydev->speed) {
-+	switch (state->speed) {
- 	case SPEED_1000:
- 		cfg2 |= MAC_CFG2_IF_1000;
- 		fifo5 |= FIFO_CFG5_BM;
-@@ -883,7 +885,6 @@ static void ag71xx_link_adjust(struct ag71xx *ag, bool update)
- 		cfg2 |= MAC_CFG2_IF_10_100;
- 		break;
- 	default:
--		WARN(1, "not supported speed %i\n", phydev->speed);
- 		return;
- 	}
- 
-@@ -897,58 +898,91 @@ static void ag71xx_link_adjust(struct ag71xx *ag, bool update)
- 	ag71xx_wr(ag, AG71XX_REG_MAC_CFG2, cfg2);
- 	ag71xx_wr(ag, AG71XX_REG_FIFO_CFG5, fifo5);
- 	ag71xx_wr(ag, AG71XX_REG_MAC_IFCTL, ifctl);
-+}
- 
--	ag71xx_hw_start(ag);
-+static void ag71xx_mac_validate(struct phylink_config *config,
-+			    unsigned long *supported,
-+			    struct phylink_link_state *state)
-+{
-+	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
-+
-+	if (state->interface != PHY_INTERFACE_MODE_NA &&
-+	    state->interface != PHY_INTERFACE_MODE_GMII &&
-+	    state->interface != PHY_INTERFACE_MODE_MII) {
-+		bitmap_zero(supported, __ETHTOOL_LINK_MODE_MASK_NBITS);
-+		return;
-+	}
-+
-+	phylink_set(mask, MII);
-+
-+	phylink_set(mask, Autoneg);
-+	phylink_set(mask, 10baseT_Half);
-+	phylink_set(mask, 10baseT_Full);
-+	phylink_set(mask, 100baseT_Half);
-+	phylink_set(mask, 100baseT_Full);
-+
-+	if (state->interface == PHY_INTERFACE_MODE_NA ||
-+	    state->interface == PHY_INTERFACE_MODE_GMII) {
-+		phylink_set(mask, 1000baseT_Full);
-+		phylink_set(mask, 1000baseX_Full);
-+	}
- 
--	if (update)
--		phy_print_status(phydev);
-+	bitmap_and(supported, supported, mask,
-+		   __ETHTOOL_LINK_MODE_MASK_NBITS);
-+	bitmap_and(state->advertising, state->advertising, mask,
-+		   __ETHTOOL_LINK_MODE_MASK_NBITS);
- }
- 
--static void ag71xx_phy_link_adjust(struct net_device *ndev)
-+static void ag71xx_mac_pcs_get_state(struct phylink_config *config,
-+				     struct phylink_link_state *state)
- {
--	struct ag71xx *ag = netdev_priv(ndev);
-+	state->link = 0;
-+}
- 
--	ag71xx_link_adjust(ag, true);
-+static void ag71xx_mac_an_restart(struct phylink_config *config)
-+{
-+	/* Not Supported */
- }
- 
--static int ag71xx_phy_connect(struct ag71xx *ag)
-+static void ag71xx_mac_link_down(struct phylink_config *config,
-+				 unsigned int mode, phy_interface_t interface)
- {
--	struct device_node *np = ag->pdev->dev.of_node;
--	struct net_device *ndev = ag->ndev;
--	struct device_node *phy_node;
--	struct phy_device *phydev;
--	int ret;
-+	struct ag71xx *ag = netdev_priv(to_net_dev(config->dev));
- 
--	if (of_phy_is_fixed_link(np)) {
--		ret = of_phy_register_fixed_link(np);
--		if (ret < 0) {
--			netif_err(ag, probe, ndev, "Failed to register fixed PHY link: %d\n",
--				  ret);
--			return ret;
--		}
-+	ag71xx_hw_stop(ag);
-+}
- 
--		phy_node = of_node_get(np);
--	} else {
--		phy_node = of_parse_phandle(np, "phy-handle", 0);
--	}
-+static void ag71xx_mac_link_up(struct phylink_config *config, unsigned int mode,
-+			       phy_interface_t interface,
-+			       struct phy_device *phy)
-+{
-+	struct ag71xx *ag = netdev_priv(to_net_dev(config->dev));
- 
--	if (!phy_node) {
--		netif_err(ag, probe, ndev, "Could not find valid phy node\n");
--		return -ENODEV;
--	}
-+	ag71xx_hw_start(ag);
-+}
- 
--	phydev = of_phy_connect(ag->ndev, phy_node, ag71xx_phy_link_adjust,
--				0, ag->phy_if_mode);
-+static const struct phylink_mac_ops ag71xx_phylink_mac_ops = {
-+	.validate = ag71xx_mac_validate,
-+	.mac_pcs_get_state = ag71xx_mac_pcs_get_state,
-+	.mac_an_restart = ag71xx_mac_an_restart,
-+	.mac_config = ag71xx_mac_config,
-+	.mac_link_down = ag71xx_mac_link_down,
-+	.mac_link_up = ag71xx_mac_link_up,
-+};
- 
--	of_node_put(phy_node);
-+static int ag71xx_phylink_setup(struct ag71xx *ag)
-+{
-+	struct phylink *phylink;
- 
--	if (!phydev) {
--		netif_err(ag, probe, ndev, "Could not connect to PHY device\n");
--		return -ENODEV;
--	}
-+	ag->phylink_config.dev = &ag->ndev->dev;
-+	ag->phylink_config.type = PHYLINK_NETDEV;
- 
--	phy_attached_info(phydev);
-+	phylink = phylink_create(&ag->phylink_config, ag->pdev->dev.fwnode,
-+				 ag->phy_if_mode, &ag71xx_phylink_mac_ops);
-+	if (IS_ERR(phylink))
-+		return PTR_ERR(phylink);
- 
-+	ag->phylink = phylink;
- 	return 0;
- }
- 
-@@ -1239,6 +1273,13 @@ static int ag71xx_open(struct net_device *ndev)
- 	unsigned int max_frame_len;
- 	int ret;
- 
-+	ret = phylink_of_phy_connect(ag->phylink, ag->pdev->dev.of_node, 0);
-+	if (ret) {
-+		netif_err(ag, link, ndev, "phylink_of_phy_connect filed with err: %i\n",
-+			  ret);
-+		goto err;
-+	}
-+
- 	max_frame_len = ag71xx_max_frame_len(ndev->mtu);
- 	ag->rx_buf_size =
- 		SKB_DATA_ALIGN(max_frame_len + NET_SKB_PAD + NET_IP_ALIGN);
-@@ -1251,11 +1292,7 @@ static int ag71xx_open(struct net_device *ndev)
- 	if (ret)
- 		goto err;
- 
--	ret = ag71xx_phy_connect(ag);
--	if (ret)
--		goto err;
--
--	phy_start(ndev->phydev);
-+	phylink_start(ag->phylink);
- 
- 	return 0;
- 
-@@ -1268,8 +1305,8 @@ static int ag71xx_stop(struct net_device *ndev)
- {
- 	struct ag71xx *ag = netdev_priv(ndev);
- 
--	phy_stop(ndev->phydev);
--	phy_disconnect(ndev->phydev);
-+	phylink_stop(ag->phylink);
-+	phylink_disconnect_phy(ag->phylink);
- 	ag71xx_hw_disable(ag);
- 
- 	return 0;
-@@ -1414,13 +1451,14 @@ static void ag71xx_restart_work_func(struct work_struct *work)
- {
- 	struct ag71xx *ag = container_of(work, struct ag71xx,
- 					 restart_work.work);
--	struct net_device *ndev = ag->ndev;
- 
- 	rtnl_lock();
- 	ag71xx_hw_disable(ag);
- 	ag71xx_hw_enable(ag);
--	if (ndev->phydev->link)
--		ag71xx_link_adjust(ag, false);
-+
-+	phylink_stop(ag->phylink);
-+	phylink_start(ag->phylink);
-+
- 	rtnl_unlock();
- }
- 
-@@ -1759,6 +1797,12 @@ static int ag71xx_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, ndev);
- 
-+	err = ag71xx_phylink_setup(ag);
-+	if (err) {
-+		netif_err(ag, probe, ndev, "failed to setup phylink (%d)\n", err);
-+		goto err_mdio_remove;
-+	}
-+
- 	err = register_netdev(ndev);
- 	if (err) {
- 		netif_err(ag, probe, ndev, "unable to register net device\n");
 -- 
-2.25.0
-
+Kees Cook
