@@ -2,105 +2,69 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD85DC4BA14
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20651C4BA14
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:46:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0D7F2468D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:45:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eNHjTAaA"
+	by mail.kernel.org (Postfix) with ESMTP id 0372920637
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:46:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728499AbgBZPpn (ORCPT
+        id S1728441AbgBZPqs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:45:43 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:44976 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbgBZPpm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:45:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=44++bZYwMLEcKWsWEdjH2TMBF93T+j8iNKdpvJ43O1c=; b=eNHjTAaAiO0uN1Hq0VhbkU3MfM
-        OJ/BukAcIMd/vz2VAp5dFX26CbeBlt/altF651kHn5siaSDa4lxIMXWtyWBGoqL6JoxlWowW3e3Vg
-        Ubl9VdHjYOtSfdNHVWl2jWT42wAVHBRH1e2Ztv5jDd0SwT+LRHvBCs+4K13YdiWYi6ClhHN+4h+dk
-        AkyKPgLkLnsnZ0+Vm5Ayn7LM4nKjPeYsJr7Ojkmtt5v+pI668Hp4HKzfLtA70MzRcv2TSz0sGuJlF
-        vkiChdLf3dHErobRul2XeqU3Hm+ezUQCqFQo8ooGSdsxnU1E684lQ5NE9sT3ask7Xh5iE+Qpqcb/D
-        HMRnGUGA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6ysW-0003sn-FG; Wed, 26 Feb 2020 15:45:40 +0000
-Subject: Re: [PATCH v2] Documentation/llvm: add documentation on building w/
- Clang/LLVM
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-References: <20200224174129.2664-1-ndesaulniers@google.com>
- <20200225210250.64366-1-ndesaulniers@google.com>
- <CAK7LNAQJuF__26R+fEsdfYH1SAJuo3-8grGQAE4htjxzEG-nqw@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <d70e7d82-4f08-0a30-e54b-8b0f225145df@infradead.org>
-Date:   Wed, 26 Feb 2020 07:45:39 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 26 Feb 2020 10:46:48 -0500
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:31596 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728244AbgBZPqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 10:46:48 -0500
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id 01QFkesY002182;
+        Wed, 26 Feb 2020 16:46:40 +0100
+Date:   Wed, 26 Feb 2020 16:46:40 +0100
+From:   Willy Tarreau <w@1wt.eu>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 15/16] floppy: separate the FDC's base address from its
+ registers
+Message-ID: <20200226154640.GB2054@1wt.eu>
+References: <20200224212352.8640-1-w@1wt.eu>
+ <20200226080732.1913-1-w@1wt.eu>
+ <20200226080732.1913-5-w@1wt.eu>
+ <ab69fbdc-7ccb-05ef-6c25-7fb6ed6fce59@linux.com>
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNAQJuF__26R+fEsdfYH1SAJuo3-8grGQAE4htjxzEG-nqw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ab69fbdc-7ccb-05ef-6c25-7fb6ed6fce59@linux.com>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/26/20 3:30 AM, Masahiro Yamada wrote:
-> Hi.
+On Wed, Feb 26, 2020 at 06:36:52PM +0300, Denis Efremov wrote:
+> > One place in the ARM code used to check if the port was equal to FD_DOR,
+> > this was changed to testing the register by applying a mask to the port,
+> > as was already done in the sparc code.
+> > 
+> > The sparc, m68k and parisc code could now be slightly cleaned up to
+> > benefit from the macro definitions above instead of the equivalent
+> > hard-coded values.
 > 
-> 
-> On Wed, Feb 26, 2020 at 6:02 AM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
->>
->> Added to kbuild documentation. Provides more official info on building
->> kernels with Clang and LLVM than our wiki.
->>
->> Suggested-by: Randy Dunlap <rdunlap@infradead.org>
->> Reviewed-by: Kees Cook <keescook@chromium.org>
->> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
->> Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
->> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
->> ---
->> Changes V1 -> V2:
->> * s/On going/ongoing/
->> * add Randy's Suggested-by
-> 
-> 
-> I do not understand this tag update.
-> 
-> As far as I saw the review process,
-> I do not think Randy deserves to have Suggested-by
-> because he just pointed out a typo (on going -> ongoing) :
+> Just to note for future ref: the mask (7) can be introduced as define
+> during future clean up of these magic constants.
 
-I agree.
+I'd rather not add it because if we finish to clean up the internal API,
+then we can have fd_outb(value, base, reg) and fd_inb(base, reg) where
+reg is one of FD_* and base the base address. In this context we don't
+need the mask anymore since the register is placed there verbatim.
 
-> https://patchwork.kernel.org/patch/11401189/#23179575
-> 
-> (or, was there off-line activity I had missed?)
+I do have another earlier patch which did just that, its just that I
+attacked the problem from the wrong side, resulting in too many changes
+at once for my taste. But I definitely see how we can finish that job
+and make everything almost elegant.
 
-
--- 
-~Randy
-
+Willy
