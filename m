@@ -2,32 +2,31 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B8CC4BA12
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C3B9C4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED48321556
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E4B1222C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:55:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728610AbgBZPzG (ORCPT
+        id S1728626AbgBZPzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:55:06 -0500
-Received: from ns.iliad.fr ([212.27.33.1]:48512 "EHLO ns.iliad.fr"
+        Wed, 26 Feb 2020 10:55:07 -0500
+Received: from ns.iliad.fr ([212.27.33.1]:48486 "EHLO ns.iliad.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728511AbgBZPzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728470AbgBZPzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 26 Feb 2020 10:55:06 -0500
 Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id E996020025;
+        by ns.iliad.fr (Postfix) with ESMTP id D19A620076;
         Wed, 26 Feb 2020 16:55:04 +0100 (CET)
 Received: from [192.168.108.51] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id D6430204B1;
+        by ns.iliad.fr (Postfix) with ESMTP id BF00C20025;
         Wed, 26 Feb 2020 16:55:04 +0100 (CET)
-Subject: [RFC PATCH v4 1/2] devres: Provide new helper for devm functions
 From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Subject: [RFC PATCH v4 0/2] Small devm helper for devm implementations
 To:     Stephen Boyd <sboyd@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
         Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
@@ -47,13 +46,11 @@ To:     Stephen Boyd <sboyd@kernel.org>,
 Cc:     linux-clk <linux-clk@vger.kernel.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
         LKML <linux-kernel@vger.kernel.org>
-References: <68219a85-295d-7b7c-9658-c3045bbcbaeb@free.fr>
-Message-ID: <f53767e0-e533-74bc-2967-e2cc4c3df15e@free.fr>
-Date:   Wed, 26 Feb 2020 16:49:57 +0100
+Message-ID: <68219a85-295d-7b7c-9658-c3045bbcbaeb@free.fr>
+Date:   Wed, 26 Feb 2020 16:44:51 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <68219a85-295d-7b7c-9658-c3045bbcbaeb@free.fr>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -63,66 +60,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide a simple wrapper for devres_alloc / devres_add.
+Hello,
 
-Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
----
- drivers/base/devres.c  | 28 ++++++++++++++++++++++++++++
- include/linux/device.h |  3 +++
- 2 files changed, 31 insertions(+)
+Differences from v3 to v4
+x Add a bunch of kerneldoc above devm_add() [Greg KH]
+x Split patch in two [Greg KH]
 
-diff --git a/drivers/base/devres.c b/drivers/base/devres.c
-index 0bbb328bd17f..7fe6cc34411e 100644
---- a/drivers/base/devres.c
-+++ b/drivers/base/devres.c
-@@ -685,6 +685,34 @@ int devres_release_group(struct device *dev, void *id)
- }
- EXPORT_SYMBOL_GPL(devres_release_group);
- 
-+/**
-+ * devm_add - allocate and register new device resource
-+ * @dev: device to add resource to
-+ * @func: resource release function
-+ * @arg: resource data
-+ * @size: resource data size
-+ *
-+ * Simple wrapper for devres_alloc / devres_add.
-+ * Release the resource if the allocation fails.
-+ *
-+ * RETURNS:
-+ * 0 if the allocation succeeds, -ENOMEM otherwise.
-+ */
-+int devm_add(struct device *dev, dr_release_t func, void *arg, size_t size)
-+{
-+	void *data = devres_alloc(func, size, GFP_KERNEL);
-+
-+	if (!data) {
-+		func(dev, arg);
-+		return -ENOMEM;
-+	}
-+
-+	memcpy(data, arg, size);
-+	devres_add(dev, data);
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(devm_add);
-+
- /*
-  * Custom devres actions allow inserting a simple function call
-  * into the teadown sequence.
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 0cd7c647c16c..55be3be9b276 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -247,6 +247,9 @@ void __iomem *devm_of_iomap(struct device *dev,
- 			    struct device_node *node, int index,
- 			    resource_size_t *size);
- 
-+int devm_add(struct device *dev, dr_release_t func, void *arg, size_t size);
-+#define devm_vadd(dev, func, type, args...) \
-+	devm_add(dev, func, &(struct type){args}, sizeof(struct type))
- /* allows to add/remove a custom action to devres stack */
- int devm_add_action(struct device *dev, void (*action)(void *), void *data);
- void devm_remove_action(struct device *dev, void (*action)(void *), void *data);
+Differences from v2 to v3
+x Make devm_add() return an error-code rather than the raw data pointer
+  (in case devres_alloc ever returns an ERR_PTR) as suggested by Geert
+x Provide a variadic version devm_vadd() to work with structs as suggested
+  by Geert
+x Don't use nested ifs in clk_devm* implementations (hopefully simpler
+  code logic to follow) as suggested by Geert
+
+Marc Gonzalez (2):
+  devres: Provide new helper for devm functions
+  clk: Use devm_add in managed functions
+
+ drivers/base/devres.c    |  28 +++++++++++
+ drivers/clk/clk-devres.c | 101 ++++++++++++++-------------------------
+ include/linux/device.h   |   3 ++
+ 3 files changed, 68 insertions(+), 64 deletions(-)
+
 -- 
 2.17.1
