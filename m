@@ -2,143 +2,146 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C130AC4BA21
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FA2C4BA24
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96E5D2072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:13:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582755209;
-	bh=77DYgHeZVhVX2ILtf2aQ/Hu/FiKPxj+mqYEd8Q8oPfI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QIwJzNiWd8hAtqRlr4kGx+cROgtavfdOayhA499yr7j3irvs5TV5RIj2y+95GADBy
-	 6YyuklAB2pRQBk5ULmXi4AbwBgjO+EzwuZIQJvGpz3XRdUxWRAK2JLPtbvYbT/oBoz
-	 dMecSgAzSHIA9yAj7+qatIffW72CJmdiV3SkM+Gw=
+	by mail.kernel.org (Postfix) with ESMTP id 072662072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 22:14:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727757AbgBZWN2 (ORCPT
+        id S1727785AbgBZWOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 17:13:28 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39071 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727715AbgBZWN2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 17:13:28 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 77so1005415oty.6;
-        Wed, 26 Feb 2020 14:13:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VADzarmrxahCNR8FX+Jii1uaWPHIPd0BL4EYC9qsa5g=;
-        b=uhckIdmUzIyw7CVjvy3KDxYz2Qr30DCBHCHUfEe01Oz6Ejuiy8Tj3x/QiLhbp96E7n
-         6KkNmPsnwxwBrjYxo9QvLSSD+ig2IddnNDMKzuevf9JZLfxKk8DE55cVFUVJnDypDV69
-         ZnR6hh/X0x5GyEim/MMpxfWgVhOMykv71ecd0NopDEdvnLX2Zg5hi4InkjhQG5fApefJ
-         8T6jKLyRPNkt/JLDQEF63R07t/mUT9FtC0JqD/JqXnxMPbVVcUp0UeDRT4XF6T1JX3Fr
-         N+22caQibtZI+BTM2ROmGph2SZZx8PEbXQSi+wRQ04PCCaJghqDkLwb++lBNwTieKwzC
-         xELQ==
-X-Gm-Message-State: APjAAAVNgxonM+oAjNiPnqEyKqZRMZyMYMWhEEkb9erjY4oDlaZ/Er0U
-        RPTbH2fYzgXzeLQmslVIiQ==
-X-Google-Smtp-Source: APXvYqyVYmNd9TzqdRK69Cf9KTihwGV0Co1KZ2Djifo2WvE+upUX9u8H7iL2I4n/LK1KC0WI9bHjwg==
-X-Received: by 2002:a9d:2264:: with SMTP id o91mr802190ota.328.1582755207398;
-        Wed, 26 Feb 2020 14:13:27 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w20sm1226848otj.21.2020.02.26.14.13.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 14:13:26 -0800 (PST)
-Received: (nullmailer pid 26464 invoked by uid 1000);
-        Wed, 26 Feb 2020 22:13:25 -0000
-Date:   Wed, 26 Feb 2020 16:13:25 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, masahiroy@kernel.org,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2] dt-bindings: interrupt-controller: Convert UniPhier
- AIDET to json-schema
-Message-ID: <20200226221325.GA19817@bogus>
-References: <20200222110435.18772-1-yamada.masahiro@socionext.com>
+        Wed, 26 Feb 2020 17:14:38 -0500
+Received: from mga01.intel.com ([192.55.52.88]:55011 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727715AbgBZWOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 17:14:38 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 14:14:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,489,1574150400"; 
+   d="scan'208";a="410779776"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 26 Feb 2020 14:14:37 -0800
+Received: from [10.7.201.16] (skuppusw-desk.jf.intel.com [10.7.201.16])
+        by linux.intel.com (Postfix) with ESMTP id 44C9258052E;
+        Wed, 26 Feb 2020 14:14:37 -0800 (PST)
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v15 4/5] PCI/DPC: Add Error Disconnect Recover (EDR)
+ support
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+References: <20200226213233.GA168850@google.com>
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Organization: Intel
+Message-ID: <6cabd520-f974-2c33-4ecb-3cfd2dfb00a4@linux.intel.com>
+Date:   Wed, 26 Feb 2020 14:11:53 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200222110435.18772-1-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200226213233.GA168850@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 08:04:35PM +0900, Masahiro Yamada wrote:
-> Convert the UniPhier AIDET (ARM Interrupt Detector) binding to DT
-> schema format.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Some qeustions:
-> 
-> I was wondering when 'additionalProperties: false' should be added.
-> 
-> If I add it to a bus controller device (e.g. I2C),
-> I see some schema warnings because various sub-nodes
-> are added depending on which device you connect.
-> 
-> On the other hand, the interrupt controller like this
-> does not have a subnode.
-> So, probably this is the case where we can add
-> 'additionalProperties: false'.
-> 
-> Is this correct?
 
-Yes.
+On 2/26/20 1:32 PM, Bjorn Helgaas wrote:
+> On Wed, Feb 26, 2020 at 10:42:27AM -0800, Kuppuswamy Sathyanarayanan wrote:
+>> On 2/25/20 5:02 PM, Bjorn Helgaas wrote:
+>>> On Thu, Feb 13, 2020 at 10:20:16AM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+>>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>>> ...
+>
+>> Yes, we could remove it. But it might need some more changes to
+>> dpc driver functions. I can think of two ways,
+>>
+>> 1. Re-factor the DPC driver not to use dpc_dev structure and just use
+>> pci_dev in their functions implementation. But this might lead to
+>> re-reading following dpc_dev structure members every time we
+>> use it in dpc driver functions.
+>>
+>> (Currently in dpc driver probe they cache the following device parameters )
+>>
+>>    9         u16                     cap_pos;
+>>   10         bool                    rp_extensions;
+>>   11         u8                      rp_log_size;
+>>   12         u16                     ctl;
+>>   13         u16                     cap;
+> I think this is basically what I proposed with the sample patch in my
+> response to your 3/5 patch.  But I don't see the ctl/cap part, so
+> maybe I missed something.
+if its costly to carry it in pci_dev, we can always re-read them.
+if its ok to use pci_dev, If you want, I can extend your patch to
+include the cap and ctl.
+> This message should be expanded somehow.  I think the point is that we
+> got an EDR notification, but firmware couldn't tell us where the
+> containment event occurred.  Should that ever happen?  Or is it a
+> firmware defect if it *does* happen?
+Yes, if we hit this error then its a firmware defect. Either
+firmware sent wrong BDF value or used invalid return type.
 
-The problem with 'additionalProperties: false' is it doesn't include 
-what any $ref includes. There's a json-schema fix for this coming with 
-'unevaluatedProperties', but the json-schema python lib we use doesn't 
-yet support that.
+I was planning to add some extra error info in acpi_locate_dpc_port()
 
-> 
-> One more thing.
-> 
-> There are multiple ways to do a similar thing:
-> 
->    compatible:
->      enum:
->         - socionext,uniphier-ld4-aidet
->         - socionext,uniphier-pro4-aidet
->         ...
-> vs
-> 
->    compatible:
->      oneOf:
->         - const: socionext,uniphier-ld4-aidet
->         - const: socionext,uniphier-pro4-aidet
->         ...
-> 
-> I adopted the former because I can save 'const'.
-> If there is a preferred way, I will follow it.
+166 +       if (obj->type != ACPI_TYPE_INTEGER) {
+167 +               ACPI_FREE(obj);
+168 +               return NULL;
+169 +       }
 
-I prefer the former.
+>
+> In any event, I think the message should say something like "Can't
+> identify source of EDR notification".
+I will use your suggestion here along with above mentioned change.
+>
+>>> This seems...  I'm not sure what.  I guess it's really just reading
+>>> the DPC capability for use by dpc_process_error(), so maybe it's OK.
+>>> But it's a little strange to read.
+> I *think* maybe if we move the DPC info into the struct pci_dev it
+> will solve this issue too?  I.e., we won't have a struct dpc_dev, so
+> we won't have this funny-looking dpc_dev_init().
+Yes, your patch will resolve this issue.
+>
+>> No this is a valid case. it will only happen if we have a non-acpi
+>> based switch attached to root port.
+> I agree this is a valid case (as I mentioned below).  My point was
+> just that if it is a valid case, we might not want to use pci_warn()
+> here.  Maybe pci_info() if you think it's important, or maybe no
+> message at all.  I don't think "Initializing dpc again" is going to be
+> useful to a user.
+Got it. Adding pci_info here will be helpful to understand the flow.
+Since EDR is a rare case, it should not pollute the dmesg. So I will add it.
+>
+>> Yes, ownership should be based on _OSC negotiation. I will add necessary
+>> comments here.
+> Why are we not doing this via _OSC negotiation in this series?  It
+> would be much better if we could just do it instead of adding a
+> comment that we *should* do it.  Nobody knows more about this than you
+> do, so probably nobody else is going to come along and finish this
+> up :)
+Actually Alex G already proposed a patch to fix it.
 
-> 
-> END
-> 
-> ---
-> 
-> Changes in v2:
->   - fix the schema warning in the example
-> 
->  .../socionext,uniphier-aidet.txt              | 32 ----------
->  .../socionext,uniphier-aidet.yaml             | 61 +++++++++++++++++++
->  2 files changed, 61 insertions(+), 32 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/socionext,uniphier-aidet.txt
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/socionext,uniphier-aidet.yaml
+https://lkml.org/lkml/2018/11/16/202
 
-It all looks fine, so I'll drop the questions and apply.
+But that discussion never reached a conclusion. Since a proper fix
+for it would affect some legacy hardwares which solely relies on
+HEST tables, it did not make everyone happy. So it might take a
+lot to convince all the stake holders to merge such patch. So its
+better not to mix both of these patch sets together.
 
-Rob
+Once this patch set is done, If Alex G is no longer working on it,
+I can work on it.
+>
+-- 
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
+
