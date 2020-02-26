@@ -2,90 +2,203 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E62C9C4BA14
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C298C4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B06F6206E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:37:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582731459;
-	bh=+qylfP2svw3GzUbhdzwhFg/ECBTAJnouwsutnI92lf0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=n+Kepprm2+n1cxJbC34KcDTiHbKEaedt0etlnBRgxRdsAMyBl7C+IXZXd7IUFEe44
-	 8b7RhQoMhUMKitm4dTxWt+L82YjNRgc3KA61OIE8GnzinG9W0eExhdJb57AbmasoyO
-	 fXnGpawnPBN/NiB3cU3ova/VXpxieJiUzbGeSkBU=
+	by mail.kernel.org (Postfix) with ESMTP id DBBF5206E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:37:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bmpwcnnr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbgBZPhi (ORCPT
+        id S1728392AbgBZPh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:37:38 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45827 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728014AbgBZPhi (ORCPT
+        Wed, 26 Feb 2020 10:37:57 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45302 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728206AbgBZPh5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:37:38 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 59so3282550otp.12;
-        Wed, 26 Feb 2020 07:37:36 -0800 (PST)
+        Wed, 26 Feb 2020 10:37:57 -0500
+Received: by mail-pg1-f193.google.com with SMTP id r77so1445980pgr.12;
+        Wed, 26 Feb 2020 07:37:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=bVyxLUdFZ6k2/LWuzpd/gZEBBa95t0IpAukk6u0aGLU=;
+        b=BmpwcnnraZvpu2po0fbuvHX0FFdBeYXSwaFAtSXuwcctk2j7Bvlt0TSXXTwtOow//z
+         7nsyLLf2sl0dDYAd1W33LSWZoQ6H2aj9QjDev0UnBqx7Ct76RPn2Adt1V2jU7nr1TIN5
+         N5lW+fLjb4JQvs6Rrdu+Tzxmp+NU2HqKGLTNerWdXE6aM3JrmtlTeNlH+wdXzyGsI5eQ
+         NNsGetqthvYf/WTjNI0t4ghT71SiXZcw8yOu/E7DRcCoGVtoJvHj47+E3qs4ZexsgzIl
+         2mWucXhwmoYGmfmcSwp5cBHZ3bQWdRoJMbxk+Id2WQxMoCVbi/6SKyYiHTYImpLU6+aX
+         pn5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6FzyO6AECYlm7QMzzyrk9pWi96fxzU1V5qZ0EPieTIk=;
-        b=NOjztxD6+tbu0i7MJz9NepMaYts6hrnhEl2klJYPTiCa+rdo33kKIu3N7ZD9lNfrB1
-         qWbaxGKZD04fa8rdr6x/aXPPurtDZ68P1M4hJcTU+FDLb20pTvsn8eYq7vSu9jk6xtee
-         RRqAP/xy+QsMtIzrzQEl8tiEGBxLLdYtL7SO83VsScpFVW43dZTzNDII+zajh81Okow5
-         VQ5chuangHVyXWuatYQZV5tnK9o078brASxGTKcaRR/pzX0gJlO7/wsaWddmDWHiotKo
-         R+pgufLD84dukBW6hhwc4wVzWsYb+qiCBgS7G4KBOD3acbDbgg8eEUqhKG8uUWLa3zv3
-         SpIw==
-X-Gm-Message-State: APjAAAVQjgKo0/2KfzTnKFZy6bRlWKikclYiAMz35tTY3+cRE9PHPLp8
-        2dIsqvuPB6fOQ9RJgZwLwg==
-X-Google-Smtp-Source: APXvYqyLgpMB7D/d5PMJHvcv2asfZGnuMiD3nzHW0Qu43FA9IBj88j6MyezXGcYeLRBnE0xJV0LiHg==
-X-Received: by 2002:a05:6830:10d7:: with SMTP id z23mr3555808oto.114.1582731456203;
-        Wed, 26 Feb 2020 07:37:36 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q9sm878846otl.53.2020.02.26.07.37.35
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=bVyxLUdFZ6k2/LWuzpd/gZEBBa95t0IpAukk6u0aGLU=;
+        b=GSujQr7Iz9ZY0FL8DYCrna5ByuqtDbW6XUBz78IZdxmStzI3+gvn1iVfxULemgkSlF
+         YPKZcz0nGhHkVUfGAY9kGhxcPpksXdfNt6OU341JuF1TY3BetGctniAxxejvSYaDv9mL
+         ETpZDLdyturFMBiKAYZNFwUStyhRO5OnI+XumvUgYgByPRPIz3Hedm3DjFYY13dFva7l
+         KudJNjIbF5xZg8DaVWDiagzqTMJMPIODzSGER75kVaOOK05HZur68uLkpu/fKeTICEFS
+         7MPosS6j19XN6++oNa2GwD0AVl9vfzzWoSWlxrScclryXZ+wVcErxd+Dmklqcz1SlR/q
+         4LXQ==
+X-Gm-Message-State: APjAAAVCMZSy27/O6OXMEWZu2xZNlO4/bThXCzCTcn82ZkTKzsHhoc0p
+        lnKVfjvef/sg2sfGVtEheMg=
+X-Google-Smtp-Source: APXvYqzXUOD2tiaHtoxdp2NNpqiW9o8kJJbfJcIh+ZUZ2dcaNFlqZ8NdnApwBtzOL6KhoTi11XmbaA==
+X-Received: by 2002:a63:cf4f:: with SMTP id b15mr4286585pgj.287.1582731473931;
+        Wed, 26 Feb 2020 07:37:53 -0800 (PST)
+Received: from localhost (114-136-150-109.emome-ip.hinet.net. [114.136.150.109])
+        by smtp.gmail.com with ESMTPSA id c15sm3499768pja.30.2020.02.26.07.37.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 07:37:35 -0800 (PST)
-Received: (nullmailer pid 17418 invoked by uid 1000);
-        Wed, 26 Feb 2020 15:37:34 -0000
-Date:   Wed, 26 Feb 2020 09:37:34 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Adrian Panella <ianchi74@outlook.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] regulator: add smb208 support
-Message-ID: <20200226153734.GA17365@bogus>
-References: <20200219163711.479-1-ansuelsmth@gmail.com>
+        Wed, 26 Feb 2020 07:37:52 -0800 (PST)
+From:   You-Sheng Yang <vicamo@gmail.com>
+To:     davem@davemloft.net
+Cc:     grundler@chromium.org, hayeswang@realtek.com,
+        kai.heng.feng@canonical.com, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org, pmalani@chromium.org,
+        vicamo.yang@canonical.com, vicamo@gmail.com
+Subject: [PATCH v2] r8152: check disconnect status after long sleep
+Date:   Wed, 26 Feb 2020 23:37:10 +0800
+Message-Id: <20200226153710.239838-1-vicamo@gmail.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200224.144714.329725174070305071.davem@davemloft.net>
+References: <20200224.144714.329725174070305071.davem@davemloft.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219163711.479-1-ansuelsmth@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 17:37:11 +0100, Ansuel Smith wrote:
-> Smb208 regulators are used on some ipq806x soc.
-> Add support for it to make it avaiable on some routers
-> that use it.
-> 
-> Signed-off-by: Adrian Panella <ianchi74@outlook.com>
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
->  Documentation/devicetree/bindings/mfd/qcom-rpm.txt | 4 ++++
->  drivers/regulator/qcom_rpm-regulator.c             | 9 +++++++++
->  2 files changed, 13 insertions(+)
-> 
+From: You-Sheng Yang <vicamo.yang@canonical.com>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Dell USB Type C docking WD19/WD19DC attaches additional peripherals as:
+
+  /: Bus 02.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/6p, 5000M
+      |__ Port 1: Dev 11, If 0, Class=Hub, Driver=hub/4p, 5000M
+          |__ Port 3: Dev 12, If 0, Class=Hub, Driver=hub/4p, 5000M
+          |__ Port 4: Dev 13, If 0, Class=Vendor Specific Class,
+              Driver=r8152, 5000M
+
+where usb 2-1-3 is a hub connecting all USB Type-A/C ports on the dock.
+
+When hotplugging such dock with additional usb devices already attached on
+it, the probing process may reset usb 2.1 port, therefore r8152 ethernet
+device is also reset. However, during r8152 device init there are several
+for-loops that, when it's unable to retrieve hardware registers due to
+being disconnected from USB, may take up to 14 seconds each in practice,
+and that has to be completed before USB may re-enumerate devices on the
+bus. As a result, devices attached to the dock will only be available
+after nearly 1 minute after the dock was plugged in:
+
+  [ 216.388290] [250] r8152 2-1.4:1.0: usb_probe_interface
+  [ 216.388292] [250] r8152 2-1.4:1.0: usb_probe_interface - got id
+  [ 258.830410] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): PHY not ready
+  [ 258.830460] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): Invalid header when reading pass-thru MAC addr
+  [ 258.830464] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): Get ether addr fail
+
+This happens in, for example, r8153_init:
+
+  static int generic_ocp_read(struct r8152 *tp, u16 index, u16 size,
+			    void *data, u16 type)
+  {
+    if (test_bit(RTL8152_UNPLUG, &tp->flags))
+      return -ENODEV;
+    ...
+  }
+
+  static u16 ocp_read_word(struct r8152 *tp, u16 type, u16 index)
+  {
+    u32 data;
+    ...
+    generic_ocp_read(tp, index, sizeof(tmp), &tmp, type | byen);
+
+    data = __le32_to_cpu(tmp);
+    ...
+    return (u16)data;
+  }
+
+  static void r8153_init(struct r8152 *tp)
+  {
+    ...
+    if (test_bit(RTL8152_UNPLUG, &tp->flags))
+      return;
+
+    for (i = 0; i < 500; i++) {
+      if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
+          AUTOLOAD_DONE)
+        break;
+      msleep(20);
+    }
+    ...
+  }
+
+Since ocp_read_word() doesn't check the return status of
+generic_ocp_read(), and the only exit condition for the loop is to have
+a match in the returned value, such loops will only ends after exceeding
+its maximum runs when the device has been marked as disconnected, which
+takes 500 * 20ms = 10 seconds in theory, 14 in practice.
+
+To solve this long latency another test to RTL8152_UNPLUG flag should be
+added after those 20ms sleep to skip unnecessary loops, so that the device
+probe can complete early and proceed to parent port reset/reprobe process.
+
+This can be reproduced on all kernel versions up to latest v5.6-rc2, but
+after v5.5-rc7 the reproduce rate is dramatically lowered to 1/30 or less
+while it was around 1/2.
+
+Signed-off-by: You-Sheng Yang <vicamo.yang@canonical.com>
+
+---
+Changes since v1:
+ - update patch title, commit messages.
+
+---
+ drivers/net/usb/r8152.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+index 78ddbaf6401b..95b19ce96513 100644
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -3221,6 +3221,8 @@ static u16 r8153_phy_status(struct r8152 *tp, u16 desired)
+ 		}
+ 
+ 		msleep(20);
++		if (test_bit(RTL8152_UNPLUG, &tp->flags))
++			break;
+ 	}
+ 
+ 	return data;
+@@ -5402,7 +5404,10 @@ static void r8153_init(struct r8152 *tp)
+ 		if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
+ 		    AUTOLOAD_DONE)
+ 			break;
++
+ 		msleep(20);
++		if (test_bit(RTL8152_UNPLUG, &tp->flags))
++			break;
+ 	}
+ 
+ 	data = r8153_phy_status(tp, 0);
+@@ -5539,7 +5544,10 @@ static void r8153b_init(struct r8152 *tp)
+ 		if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
+ 		    AUTOLOAD_DONE)
+ 			break;
++
+ 		msleep(20);
++		if (test_bit(RTL8152_UNPLUG, &tp->flags))
++			break;
+ 	}
+ 
+ 	data = r8153_phy_status(tp, 0);
+-- 
+2.25.0
+
