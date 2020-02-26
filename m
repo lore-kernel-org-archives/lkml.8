@@ -2,262 +2,267 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3060C4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A54D7C4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 701472467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 657662467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:11:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bXFoOW3g"
+	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="zETpQePI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbgBZMK2 (ORCPT
+        id S1727185AbgBZMLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 07:10:28 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:55740 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726920AbgBZMK1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 07:10:27 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01QCAHY1055884;
-        Wed, 26 Feb 2020 06:10:17 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582719017;
-        bh=0LOC/6nXllmJ01Scp9Ne1ZHs66GMbn2DqRM1UOuEpwQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=bXFoOW3gTIBp6z5gzLq/iqr4SFm6wpSfxpH7tADWcgAZYy0sf4bTDrjlTz29rds58
-         KNsBweY69FCc+NDsK2/WaSPoyKVdHVN0WfENlWdCYAAa5U6VbzJSdSxdw3AKVPMFFZ
-         PkgO0I+gEZhy2kXzYSW6jAjSr+DEkCoY25tgXD3k=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01QCAHVI077541
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 26 Feb 2020 06:10:17 -0600
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 26
- Feb 2020 06:10:17 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 26 Feb 2020 06:10:17 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01QCAFZf107786;
-        Wed, 26 Feb 2020 06:10:16 -0600
-Subject: Re: [PATCH v3] dmaengine: Add basic debugfs support
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dan.j.williams@intel.com>, <geert@linux-m68k.org>
-References: <20200205111557.24125-1-peter.ujfalusi@ti.com>
- <20200224163707.GA2618@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <71231b0e-a9a2-4795-da71-b484f4992278@ti.com>
-Date:   Wed, 26 Feb 2020 14:10:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 26 Feb 2020 07:11:48 -0500
+Received: from vps.xff.cz ([195.181.215.36]:35596 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726822AbgBZMLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 07:11:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
+        t=1582719104; bh=SoYp9DhfHAjPbrC3dmLWXsvXKf6l44IkKCrn8ju7SDM=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=zETpQePIiot7QZMf+rf9fmemFQX+rwAgMK+iDw4H9kfkhWgUPGH1Dt80IHDGFvzMy
+         30unF+DeX2pNMKgnrB0j/13yFWExfRnzjZrOBayhO6Udz1zLbyUAVNWEx6lhz1Tb0b
+         imveYuPh2p48ulPt480UYRt6S0slnrQG2QOpzmnE=
+Date:   Wed, 26 Feb 2020 13:11:43 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] Writes stoped working on f2fs after the compression
+ support was added
+Message-ID: <20200226121143.uag224cqzqossvlv@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+References: <20200222181721.tzrrohep5l3yklpf@core.my.home>
+ <bec3798b-f861-b132-9138-221027bb5195@huawei.com>
+ <b1eb9b22-b570-41ab-5177-2c89105428a2@huawei.com>
+ <20200224135837.k54ke4ppca26ibec@core.my.home>
+ <20200224140349.74yagjdwewmclx4v@core.my.home>
+ <20200224143149.au6hvmmfw4ajsq2g@core.my.home>
+ <39712bf4-210b-d7b6-cbb1-eb57585d991a@huawei.com>
+ <20200225120814.gjm4dby24cs22lux@core.my.home>
+ <20200225122706.d6pngz62iwyowhym@core.my.home>
+ <72d28eba-53b9-b6f4-01a5-45b2352f4285@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200224163707.GA2618@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <72d28eba-53b9-b6f4-01a5-45b2352f4285@huawei.com>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
-
-On 2/24/20 6:37 PM, Vinod Koul wrote:
-> On 05-02-20, 13:15, Peter Ujfalusi wrote:
->> Via the /sys/kernel/debug/dmaengine users can get information about the
->> DMA devices and the used channels.
->>
->> Example output on am654-evm with audio using two channels and after running
->> dmatest on 6 channels:
->>
->> # cat /sys/kernel/debug/dmaengine
->> dma0 (285c0000.dma-controller): number of channels: 96
->>
->> dma1 (31150000.dma-controller): number of channels: 267
->>  dma1chan0    | 2b00000.mcasp:tx
->>  dma1chan1    | 2b00000.mcasp:rx
->>  dma1chan2    | in-use
->>  dma1chan3    | in-use
->>  dma1chan4    | in-use
->>  dma1chan5    | in-use
->>  dma1chan6    | in-use
->>  dma1chan7    | in-use
->>
->> For slave channels we can show the device and the channel name a given
->> channel is requested.
->> For non slave devices the only information we know is that the channel is
->> in use.
->>
->> DMA drivers can implement the optional dbg_show callback to provide
->> controller specific information instead of the generic one.
->>
->> It is easy to extend the generic dmaengine_dbg_show() to print additional
->> information about the used channels.
->>
->> I have taken the idea from gpiolib.
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> ---
->> Hi,
->>
->> Changes since v2:
->> - Use dma_chan_name() for printing the channel's name
->>
->> Changes since v1:
->> - Use much more simplified fops for the debugfs file (via DEFINE_SHOW_ATTRIBUTE)
->> - do not allow modification to dma_device_list while the debugfs file is read
->> - rename the slave_name to dbg_client_name (it is only for debugging)
->> - print information about dma_router if it is used by the channel
->> - Formating of the output slightly changed
->>
->> Regards,
->> Peter
->>
->>  drivers/dma/dmaengine.c   | 65 +++++++++++++++++++++++++++++++++++++++
->>  include/linux/dmaengine.h | 12 +++++++-
->>  2 files changed, 76 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
->> index c3b1283b6d31..37c3a4cd5b1a 100644
->> --- a/drivers/dma/dmaengine.c
->> +++ b/drivers/dma/dmaengine.c
->> @@ -32,6 +32,7 @@
->>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->>  
->>  #include <linux/platform_device.h>
->> +#include <linux/debugfs.h>
->>  #include <linux/dma-mapping.h>
->>  #include <linux/init.h>
->>  #include <linux/module.h>
->> @@ -760,6 +761,11 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
->>  		return chan ? chan : ERR_PTR(-EPROBE_DEFER);
->>  
->>  found:
->> +#ifdef CONFIG_DEBUG_FS
->> +	chan->dbg_client_name = kasprintf(GFP_KERNEL, "%s:%s", dev_name(dev),
->> +					  name);
->> +#endif
->> +
->>  	chan->name = kasprintf(GFP_KERNEL, "dma:%s", name);
->>  	if (!chan->name)
->>  		return chan;
->> @@ -837,6 +843,11 @@ void dma_release_channel(struct dma_chan *chan)
->>  		chan->name = NULL;
->>  		chan->slave = NULL;
->>  	}
->> +
->> +#ifdef CONFIG_DEBUG_FS
->> +	kfree(chan->dbg_client_name);
->> +	chan->dbg_client_name = NULL;
->> +#endif
->>  	mutex_unlock(&dma_list_mutex);
->>  }
->>  EXPORT_SYMBOL_GPL(dma_release_channel);
->> @@ -1562,3 +1573,57 @@ static int __init dma_bus_init(void)
->>  	return class_register(&dma_devclass);
->>  }
->>  arch_initcall(dma_bus_init);
->> +
->> +#ifdef CONFIG_DEBUG_FS
->> +static void dmaengine_dbg_show(struct seq_file *s, struct dma_device *dma_dev)
->> +{
->> +	struct dma_chan *chan;
->> +
->> +	list_for_each_entry(chan, &dma_dev->channels, device_node) {
->> +		if (chan->client_count) {
->> +			seq_printf(s, " %-13s| %s", dma_chan_name(chan),
->> +				   chan->dbg_client_name ?: "in-use");
->> +
->> +			if (chan->router)
->> +				seq_printf(s, " (via router: %s)\n",
->> +					dev_name(chan->router->dev));
->> +			else
->> +				seq_puts(s, "\n");
->> +		}
->> +	}
->> +}
->> +
->> +static int dmaengine_debugfs_show(struct seq_file *s, void *data)
->> +{
->> +	struct dma_device *dma_dev = NULL;
->> +
->> +	mutex_lock(&dma_list_mutex);
->> +	list_for_each_entry(dma_dev, &dma_device_list, global_node) {
->> +		seq_printf(s, "dma%d (%s): number of channels: %u\n",
->> +			   dma_dev->dev_id, dev_name(dma_dev->dev),
->> +			   dma_dev->chancnt);
->> +
->> +		if (dma_dev->dbg_show)
->> +			dma_dev->dbg_show(s, dma_dev);
->  do we really want a custom dbg_show()..? Drivers can add their own
-> files...
-
-They could do that already ;)
-
-With the custom dbg_show() DMA drivers can save on the surrounding
-code and just fill in the information regarding to their HW.
-Again, on am654 the default information is:
-# cat /sys/kernel/debug/dmaengine 
-dma0 (285c0000.dma-controller): number of channels: 96
-
-dma1 (31150000.dma-controller): number of channels: 267
- dma1chan0    | 2b00000.mcasp:tx
- dma1chan1    | 2b00000.mcasp:rx
- dma1chan2    | in-use
- dma1chan3    | in-use
- dma1chan4    | in-use
- dma1chan5    | in-use
-
-With my current .dbg_show implementation for k3-udma:
-# cat /sys/kernel/debug/dmaengine 
-dma0 (285c0000.dma-controller): number of channels: 96
-
-dma1 (31150000.dma-controller): number of channels: 267
- dma1chan0    | 2b00000.mcasp:tx (MEM_TO_DEV, tchan8 [0x1008 -> 0xc400], PDMA, TR mode)
- dma1chan1    | 2b00000.mcasp:rx (DEV_TO_MEM, rchan8 [0x4400 -> 0x9008], PDMA, TR mode)
- dma1chan2    | in-use (MEM_TO_MEM, chan2 pair [0x1002 -> 0x9002], PSI-L Native, TR mode)
- dma1chan3    | in-use (MEM_TO_MEM, chan3 pair [0x1003 -> 0x9003], PSI-L Native, TR mode)
- dma1chan4    | in-use (MEM_TO_MEM, chan4 pair [0x1004 -> 0x9004], PSI-L Native, TR mode)
- dma1chan5    | in-use (MEM_TO_MEM, chan5 pair [0x1005 -> 0x9005], PSI-L Native, TR mode)
-
-For me this makes a huge difference.
-
+On Wed, Feb 26, 2020 at 09:58:03AM +0800, Chao Yu wrote:
+> On 2020/2/25 20:27, Ondřej Jirman wrote:
+> > So this time it just took several times longer to appear (8-20mins to the hang):
+> > 
+> > https://megous.com/dl/tmp/dmesg1
+> > https://megous.com/dl/tmp/dmesg2
 > 
->> +		else
->> +			dmaengine_dbg_show(s, dma_dev);
->> +
->> +		if (!list_is_last(&dma_dev->global_node, &dma_device_list))
->> +			seq_puts(s, "\n");
->> +	}
->> +	mutex_unlock(&dma_list_mutex);
->> +
->> +	return 0;
->> +}
->> +DEFINE_SHOW_ATTRIBUTE(dmaengine_debugfs);
->> +
->> +static int __init dmaengine_debugfs_init(void)
->> +{
->> +	/* /sys/kernel/debug/dmaengine */
->> +	debugfs_create_file("dmaengine", 0444, NULL, NULL,
->> +			    &dmaengine_debugfs_fops);
+> Alright, I still didn't see any possible deadlock in f2fs.
 > 
-> Should we add a directory? That way we can keep adding stuff into that
-> one
+> Can you try below patch? I'd like to see whether spinlock can cause the same issue.
 
-and have this file as 'summary' underneath?
-I like the fact hat I can get all the information via one file.
-Saves a lot of time (and explaining to users) on finding the correct
-one to cat...
- - Péter
+Uptime 60 minutes and it didn't hang so far. I applied it on top of the previous
+patch:
+  
+  https://megous.com/git/linux/log/?h=f2fs-debug-5.6
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+regards,
+	o.
+
+> From 3e9e8daf922eaa2c5db195ce278e89e10191c516 Mon Sep 17 00:00:00 2001
+> From: Chao Yu <yuchao0@huawei.com>
+> Date: Wed, 26 Feb 2020 09:53:03 +0800
+> Subject: [PATCH] fix
+> 
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> ---
+>  fs/f2fs/compress.c | 4 ++--
+>  fs/f2fs/data.c     | 4 ++--
+>  fs/f2fs/f2fs.h     | 5 +++--
+>  fs/f2fs/file.c     | 4 ++--
+>  fs/f2fs/super.c    | 1 +
+>  5 files changed, 10 insertions(+), 8 deletions(-)
+> 
+> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+> index b4ff25dc55a9..6de0872ad881 100644
+> --- a/fs/f2fs/compress.c
+> +++ b/fs/f2fs/compress.c
+> @@ -906,10 +906,10 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+>  	f2fs_put_dnode(&dn);
+>  	f2fs_unlock_op(sbi);
+> 
+> -	down_write(&fi->i_sem);
+> +	spin_lock(&fi->i_size_lock);
+>  	if (fi->last_disk_size < psize)
+>  		fi->last_disk_size = psize;
+> -	up_write(&fi->i_sem);
+> +	spin_unlock(&fi->i_size_lock);
+> 
+>  	f2fs_put_rpages(cc);
+>  	f2fs_destroy_compress_ctx(cc);
+> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> index cb41260ca941..5c9b072cf0de 100644
+> --- a/fs/f2fs/data.c
+> +++ b/fs/f2fs/data.c
+> @@ -2651,10 +2651,10 @@ int f2fs_write_single_data_page(struct page *page, int *submitted,
+>  	if (err) {
+>  		file_set_keep_isize(inode);
+>  	} else {
+> -		down_write(&F2FS_I(inode)->i_sem);
+> +		spin_lock(&F2FS_I(inode)->i_size_lock);
+>  		if (F2FS_I(inode)->last_disk_size < psize)
+>  			F2FS_I(inode)->last_disk_size = psize;
+> -		up_write(&F2FS_I(inode)->i_sem);
+> +		spin_unlock(&F2FS_I(inode)->i_size_lock);
+>  	}
+> 
+>  done:
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index 4a02edc2454b..1a8af2020e72 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -701,6 +701,7 @@ struct f2fs_inode_info {
+>  	struct task_struct *cp_task;	/* separate cp/wb IO stats*/
+>  	nid_t i_xattr_nid;		/* node id that contains xattrs */
+>  	loff_t	last_disk_size;		/* lastly written file size */
+> +	spinlock_t i_size_lock;		/* protect last_disk_size */
+> 
+>  #ifdef CONFIG_QUOTA
+>  	struct dquot *i_dquot[MAXQUOTAS];
+> @@ -2882,9 +2883,9 @@ static inline bool f2fs_skip_inode_update(struct inode *inode, int dsync)
+>  	if (!f2fs_is_time_consistent(inode))
+>  		return false;
+> 
+> -	down_read(&F2FS_I(inode)->i_sem);
+> +	spin_lock(&F2FS_I(inode)->i_size_lock);
+>  	ret = F2FS_I(inode)->last_disk_size == i_size_read(inode);
+> -	up_read(&F2FS_I(inode)->i_sem);
+> +	spin_unlock(&F2FS_I(inode)->i_size_lock);
+> 
+>  	return ret;
+>  }
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index fdb492c2f248..56fe18fbb2ef 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -938,10 +938,10 @@ int f2fs_setattr(struct dentry *dentry, struct iattr *attr)
+>  		if (err)
+>  			return err;
+> 
+> -		down_write(&F2FS_I(inode)->i_sem);
+> +		spin_lock(&F2FS_I(inode)->i_size_lock);
+>  		inode->i_mtime = inode->i_ctime = current_time(inode);
+>  		F2FS_I(inode)->last_disk_size = i_size_read(inode);
+> -		up_write(&F2FS_I(inode)->i_sem);
+> +		spin_unlock(&F2FS_I(inode)->i_size_lock);
+>  	}
+> 
+>  	__setattr_copy(inode, attr);
+> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> index 0b16204d3b7d..2d0e5d1269f5 100644
+> --- a/fs/f2fs/super.c
+> +++ b/fs/f2fs/super.c
+> @@ -957,6 +957,7 @@ static struct inode *f2fs_alloc_inode(struct super_block *sb)
+>  	/* Initialize f2fs-specific inode info */
+>  	atomic_set(&fi->dirty_pages, 0);
+>  	init_rwsem(&fi->i_sem);
+> +	spin_lock_init(&fi->i_size_lock);
+>  	INIT_LIST_HEAD(&fi->dirty_list);
+>  	INIT_LIST_HEAD(&fi->gdirty_list);
+>  	INIT_LIST_HEAD(&fi->inmem_ilist);
+> -- 
+> 2.18.0.rc1
+> 
+> 
+> 
+> 
+> > 
+> > thank you and regards,
+> > 	o.
+> > 
+> >> thank you and regards,
+> >> 	o.
+> >>
+> >>> Thanks,
+> >>>
+> >>>>
+> >>>> So it's probably not inode locking.
+> >>>>
+> >>>>> root@tbs2[/proc/sys/kernel] # dmesg | grep down_read | wc -l
+> >>>>> 16
+> >>>>> root@tbs2[/proc/sys/kernel] # dmesg | grep up_read | wc -l
+> >>>>> 16
+> >>>>>
+> >>>>> regards,
+> >>>>> 	o.
+> >>>>>
+> >>>>>> thank you,
+> >>>>>> 	o.
+> >>>>>>
+> >>>>>>>> Thanks,
+> >>>>>>>>
+> >>>>>>>>> [  246.758190]  r5:eff213b0 r4:da283c60
+> >>>>>>>>> [  246.758198] [<c0435578>] (f2fs_write_single_data_page) from [<c0435fd8>] (f2fs_write_cache_pages+0x2b4/0x7c4)
+> >>>>>>>>> [  246.758204]  r10:da645c28 r9:da283d60 r8:da283c60 r7:0000000f r6:da645d80 r5:00000001
+> >>>>>>>>> [  246.758206]  r4:eff213b0
+> >>>>>>>>> [  246.758214] [<c0435d24>] (f2fs_write_cache_pages) from [<c043682c>] (f2fs_write_data_pages+0x344/0x35c)
+> >>>>>>>>> [  246.758220]  r10:00000000 r9:d9ed002c r8:d9ed0000 r7:00000004 r6:da283d60 r5:da283c60
+> >>>>>>>>> [  246.758223]  r4:da645d80
+> >>>>>>>>> [  246.758238] [<c04364e8>] (f2fs_write_data_pages) from [<c0267ee8>] (do_writepages+0x3c/0xd4)
+> >>>>>>>>> [  246.758244]  r10:0000000a r9:c0e03d00 r8:00000c00 r7:c0264ddc r6:da645d80 r5:da283d60
+> >>>>>>>>> [  246.758246]  r4:da283c60
+> >>>>>>>>> [  246.758254] [<c0267eac>] (do_writepages) from [<c0310cbc>] (__writeback_single_inode+0x44/0x454)
+> >>>>>>>>> [  246.758259]  r7:da283d60 r6:da645eac r5:da645d80 r4:da283c60
+> >>>>>>>>> [  246.758266] [<c0310c78>] (__writeback_single_inode) from [<c03112d0>] (writeback_sb_inodes+0x204/0x4b0)
+> >>>>>>>>> [  246.758272]  r10:0000000a r9:c0e03d00 r8:da283cc8 r7:da283c60 r6:da645eac r5:da283d08
+> >>>>>>>>> [  246.758274]  r4:d9dc9848
+> >>>>>>>>> [  246.758281] [<c03110cc>] (writeback_sb_inodes) from [<c03115cc>] (__writeback_inodes_wb+0x50/0xe4)
+> >>>>>>>>> [  246.758287]  r10:da3797a8 r9:c0e03d00 r8:d9dc985c r7:da645eac r6:00000000 r5:d9dc9848
+> >>>>>>>>> [  246.758289]  r4:da5a8800
+> >>>>>>>>> [  246.758296] [<c031157c>] (__writeback_inodes_wb) from [<c03118f4>] (wb_writeback+0x294/0x338)
+> >>>>>>>>> [  246.758302]  r10:fffbf200 r9:da644000 r8:c0e04e64 r7:d9dc9848 r6:d9dc9874 r5:da645eac
+> >>>>>>>>> [  246.758305]  r4:d9dc9848
+> >>>>>>>>> [  246.758312] [<c0311660>] (wb_writeback) from [<c0312dac>] (wb_workfn+0x35c/0x54c)
+> >>>>>>>>> [  246.758318]  r10:da5f2005 r9:d9dc984c r8:d9dc9948 r7:d9dc9848 r6:00000000 r5:d9dc9954
+> >>>>>>>>> [  246.758321]  r4:000031e6
+> >>>>>>>>> [  246.758334] [<c0312a50>] (wb_workfn) from [<c014f2b8>] (process_one_work+0x214/0x544)
+> >>>>>>>>> [  246.758340]  r10:da5f2005 r9:00000200 r8:00000000 r7:da5f2000 r6:ef044400 r5:da5eb000
+> >>>>>>>>> [  246.758343]  r4:d9dc9954
+> >>>>>>>>> [  246.758350] [<c014f0a4>] (process_one_work) from [<c014f634>] (worker_thread+0x4c/0x574)
+> >>>>>>>>> [  246.758357]  r10:ef044400 r9:c0e03d00 r8:ef044418 r7:00000088 r6:ef044400 r5:da5eb014
+> >>>>>>>>> [  246.758359]  r4:da5eb000
+> >>>>>>>>> [  246.758368] [<c014f5e8>] (worker_thread) from [<c01564fc>] (kthread+0x144/0x170)
+> >>>>>>>>> [  246.758374]  r10:ec9e5e90 r9:dabf325c r8:da5eb000 r7:da644000 r6:00000000 r5:da5fe000
+> >>>>>>>>> [  246.758377]  r4:dabf3240
+> >>>>>>>>> [  246.758386] [<c01563b8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+> >>>>>>>>> [  246.758391] Exception stack(0xda645fb0 to 0xda645ff8)
+> >>>>>>>>> [  246.758397] 5fa0:                                     00000000 00000000 00000000 00000000
+> >>>>>>>>> [  246.758402] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> >>>>>>>>> [  246.758407] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> >>>>>>>>> [  246.758413]  r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:00000000 r5:c01563b8
+> >>>>>>>>> [  246.758416]  r4:da5fe000
+> >>>>>>>>> .
+> >>>>>>>>>
+> >>>>>>>>
+> >>>>>>>>
+> >>>>>>>> _______________________________________________
+> >>>>>>>> Linux-f2fs-devel mailing list
+> >>>>>>>> Linux-f2fs-devel@lists.sourceforge.net
+> >>>>>>>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+> >>>>>>>>
+> >>>> .
+> >>>>
+> > .
+> > 
