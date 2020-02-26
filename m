@@ -7,72 +7,71 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C73FCC4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF5AC4BA0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AB1320801
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3FB820801
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:32:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bbq+sfrS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Sqv2FNlb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbgBZKcF (ORCPT
+        id S1728014AbgBZKcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 05:32:05 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52220 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727785AbgBZKcF (ORCPT
+        Wed, 26 Feb 2020 05:32:15 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33842 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbgBZKcP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 05:32:05 -0500
-Received: by mail-wm1-f68.google.com with SMTP id t23so2394058wmi.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 02:32:03 -0800 (PST)
+        Wed, 26 Feb 2020 05:32:15 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z15so2337615wrl.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 02:32:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=w59D/LVQiWX2kMmXZwRywK/7r0DCCnLO8yLj1pspTDM=;
-        b=Bbq+sfrSy+mPrK43DZyZF7brUtmbLoK2mr0li4wr2PXtYF8yDGOGIDJzDlvFo/Fwm6
-         RgI2jxodLEhCOFcR5bmcQ5cZIAtGVWIiYhaMzGIAbTBK9Uttow1cKv19MS6rTLrApLnn
-         2JkQah7TtthyJ4XZJAZiL1UZXH1V/vfxijOPhKnmkNc8RB97nGGKTOpbEXRmHHxvudbq
-         7f7xKFFJMfpI3EuemXUayXrstfb8MG4uxIGEO7B/i6Zaqq8u0WjXC92uxFwxh5X2+3kx
-         ePcH2vQMVIepb4eyy6G+w4rYEEqbv7JfvJCeFg82AWSwSfn/cHO5DiZC5zvyOcdzFWhg
-         vwnw==
+        bh=otmCATSRYiYfcNTEa190T1n7T2AvRdBbV2LD1HclObE=;
+        b=Sqv2FNlb4QYJOkmyUbBO7bwbAk95t9jcY7coAj0MhyHXegl3TMNKJvFObYocSZ8TVH
+         fE16W1DoLXT2oQPG/aNmFqpU6ZXv3Ia55o9FGPlbjEq8vpybtd+abBUXZVhOSKEpNjj6
+         MDiWtFeX7Itw4oL4mpZqPk/hWLVmWyFG595B76ymrD5Fd18ftU0ZtOZ0h9SRD74mazRg
+         AGTWF7uuOz055tKJIP7rP0cibf1q5bxSR7w1i3dg2H4+FZv5x1xnhGMqY7WfFjZQYn2x
+         oukn8WVJ99SDK9yTpv0KGZos2yGWAezAuGyKQ7jXQFDUrMRykdQj5x8pATXsYMqlvgzl
+         TEHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=w59D/LVQiWX2kMmXZwRywK/7r0DCCnLO8yLj1pspTDM=;
-        b=o7rBvMhuJd8CQy0cUq+N4dfZfsiM6rDOezARPBJP7wJwPIOaiCGvHvDx+8o7oiS22l
-         XKqeLJs6FXqTT6ywnV9pGRiu3Ek9EK4cNILFjDesu6BImWFDrDVLy5+BRtnLipcwSV/x
-         N0hkABEaEdOVaR8qojYNHkNo8sMmIq3cfC9ilTn1MwotuOIMobpeNOW5HOUCSpgjFHn1
-         KFeOyRznd9fhcp9I+a8m5wmsekaRTtfR6LK3lALQo4Ebf2tZzCODSi6l8IGRRMmCZ57n
-         oLMoLVp1W+UN/EjKai//3JYiNEajsF1hkyDZIFaTgrE19Ew8CTh2K+tycp4dBCjc4WGH
-         7Y4A==
-X-Gm-Message-State: APjAAAVDdOzYikDOiSzjBvRsECvEiHu3Fma4axCSeF0DkSJCYkrT7Oxk
-        MFKB25zR3ZqNDlza983VoK0BvjcioAs=
-X-Google-Smtp-Source: APXvYqw+6JzPd0GKqk4Ny40w87NETlhuo5LnVkzXtMB4r8NPlDMsYZopsIKzOzizRosRMrVwZaZFCQ==
-X-Received: by 2002:a1c:9811:: with SMTP id a17mr2297141wme.8.1582713123080;
-        Wed, 26 Feb 2020 02:32:03 -0800 (PST)
+        bh=otmCATSRYiYfcNTEa190T1n7T2AvRdBbV2LD1HclObE=;
+        b=X8CZ8Qte6nut0/A2IZm3DhFV3l2rDAi6qJ1EOCIeGdb+KkKZH9wcJAtQzapY9bSxYS
+         bhbSiKGrMJzhuMwC03bn0O2oESIesAZOIt8ClCMBWYTXh8a5TFTKeVD0Py1oiRlnR5vd
+         zajNp2/4LRdsaxzLjvdrROPBFt+SZC15rbo+lPdldAzVvqzKRRIiBsM1rSmUJN9S3BPD
+         q/0ZSTL3iZUm9Ik+6Fny1c7T9oJZ1ocFYTGwiG1eioy7pCYw7w/MUdV0/guk8BjAFdXX
+         mI+jlB9OLNrDgA264ijIV6xKFX6zSyHccHanwmy9icOXDeCVJ1GomZ2lJv6vY2B2ejr/
+         SO1Q==
+X-Gm-Message-State: APjAAAWQuJpf0ocujdVPUdqQY/9vhwwj7zucKN0H6qNqDhqQpGEVAnwx
+        OZWoenLplTv0/3NJpLUaHJH8gcoNKC4=
+X-Google-Smtp-Source: APXvYqxJ0189fHCzXgNjZsRc+7OHH4aLOzN4lIHEZg0t6OgJRwoj3QJCIAmzJd350lmE/9RTYJ4FIA==
+X-Received: by 2002:adf:80cb:: with SMTP id 69mr4546464wrl.320.1582713133328;
+        Wed, 26 Feb 2020 02:32:13 -0800 (PST)
 Received: from dell ([2.31.163.122])
-        by smtp.gmail.com with ESMTPSA id n13sm2412184wmd.21.2020.02.26.02.32.02
+        by smtp.gmail.com with ESMTPSA id t131sm2460789wmb.13.2020.02.26.02.32.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 02:32:02 -0800 (PST)
-Date:   Wed, 26 Feb 2020 10:32:34 +0000
+        Wed, 26 Feb 2020 02:32:12 -0800 (PST)
+Date:   Wed, 26 Feb 2020 10:32:45 +0000
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Robin Murphy <robin.murphy@arm.com>
 Cc:     linux-kernel@vger.kernel.org, heiko@sntech.de,
         linux-rockchip@lists.infradead.org, smoch@web.de
-Subject: Re: [PATCH v2 2/5] mfd: rk808: Ensure suspend/resume hooks always
- work
-Message-ID: <20200226103234.GF3494@dell>
+Subject: Re: [PATCH v2 3/5] mfd: rk808: Stop using syscore ops
+Message-ID: <20200226103245.GG3494@dell>
 References: <cover.1578789410.git.robin.murphy@arm.com>
- <e2cd9aa88c96f69fd931d606e0e70784c3020551.1578789410.git.robin.murphy@arm.com>
+ <7fdcdb900c7dc4fba38266e1db637131c3090a67.1578789410.git.robin.murphy@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <e2cd9aa88c96f69fd931d606e0e70784c3020551.1578789410.git.robin.murphy@arm.com>
+In-Reply-To: <7fdcdb900c7dc4fba38266e1db637131c3090a67.1578789410.git.robin.murphy@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -81,17 +80,16 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Sun, 12 Jan 2020, Robin Murphy wrote:
 
-> The RK809/RK817 suspend/resume hooks should not have to depend on
-> whether this driver owns the pm_power_off hook, and thus the global
-> rk808_i2c_client is set - indeed, the GPIO-based control is really
-> only relevant when PSCI firmware is in charge of power rather than
-> the kernel. As driver model callbacks, they have an appropriate
-> device argument to hand, so can just always use that.
+> Setting the SLEEP pin to its shutdown function for appropriate PMICs
+> doesn't need to happen in single-CPU context, so there's really no point
+> involving the syscore machinery. Hook it up to the standard driver model
+> shutdown method instead. This also obviates the issue that the syscore
+> ops weren't being unregistered on probe failure or module removal.
 > 
 > Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 > ---
->  drivers/mfd/rk808.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/mfd/rk808.c | 26 ++++++++++++--------------
+>  1 file changed, 12 insertions(+), 14 deletions(-)
 
 Applied, thanks.
 
