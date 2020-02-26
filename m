@@ -2,74 +2,70 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,PDS_TONAME_EQ_TOLOCAL_SHORT,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E27C4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C658C4BA14
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 910DE21D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D50E2467D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:30:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728278AbgBZPaa (ORCPT
+        id S1728301AbgBZPah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:30:30 -0500
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:39619 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728274AbgBZPaa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:30:30 -0500
-X-Originating-IP: 90.89.41.158
-Received: from localhost (lfbn-tou-1-1473-158.w90-89.abo.wanadoo.fr [90.89.41.158])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 5503D1BF215;
-        Wed, 26 Feb 2020 15:30:01 +0000 (UTC)
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        foss@0leil.net
-Subject: [PATCH net] net: phy: mscc: fix firmware paths
-Date:   Wed, 26 Feb 2020 16:26:50 +0100
-Message-Id: <20200226152650.1525515-1-antoine.tenart@bootlin.com>
-X-Mailer: git-send-email 2.24.1
+        Wed, 26 Feb 2020 10:30:37 -0500
+Received: from mga04.intel.com ([192.55.52.120]:32395 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728221AbgBZPag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 10:30:36 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 07:30:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,488,1574150400"; 
+   d="scan'208";a="271772074"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga002.fm.intel.com with ESMTP; 26 Feb 2020 07:30:35 -0800
+Date:   Wed, 26 Feb 2020 07:30:35 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     linmiaohe <linmiaohe@huawei.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>
+Subject: Re: [PATCH] KVM: Fix some obsolete comments
+Message-ID: <20200226153035.GB9940@linux.intel.com>
+References: <3e25a121a6754020ac3a1eda9fb7fad6@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3e25a121a6754020ac3a1eda9fb7fad6@huawei.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The firmware paths for the VSC8584 PHYs not not contain the leading
-'microchip/' directory, as used in linux-firmware, resulting in an
-error when probing the driver. This patch fixes it.
+On Wed, Feb 26, 2020 at 01:48:28AM +0000, linmiaohe wrote:
+> Vitaly Kuznetsov <vkuznets@redhat.com> writes:
+> >linmiaohe <linmiaohe@huawei.com> writes:
+> >> throws
+> >> - * #UD or #GP.
+> >> + * #UD, #GP or #SS.
+> >
+> >Oxford comma, anyone? :-)))
+> 
+> I have no strong preference. ^_^
 
-Fixes: a5afc1678044 ("net: phy: mscc: add support for VSC8584 PHY")
-Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
----
- drivers/net/phy/mscc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
-index 937ac7da2789..f686f40f6bdc 100644
---- a/drivers/net/phy/mscc.c
-+++ b/drivers/net/phy/mscc.c
-@@ -345,11 +345,11 @@ enum macsec_bank {
- 				BIT(VSC8531_FORCE_LED_OFF) | \
- 				BIT(VSC8531_FORCE_LED_ON))
- 
--#define MSCC_VSC8584_REVB_INT8051_FW		"mscc_vsc8584_revb_int8051_fb48.bin"
-+#define MSCC_VSC8584_REVB_INT8051_FW		"microchip/mscc_vsc8584_revb_int8051_fb48.bin"
- #define MSCC_VSC8584_REVB_INT8051_FW_START_ADDR	0xe800
- #define MSCC_VSC8584_REVB_INT8051_FW_CRC	0xfb48
- 
--#define MSCC_VSC8574_REVB_INT8051_FW		"mscc_vsc8574_revb_int8051_29e8.bin"
-+#define MSCC_VSC8574_REVB_INT8051_FW		"microchip/mscc_vsc8574_revb_int8051_29e8.bin"
- #define MSCC_VSC8574_REVB_INT8051_FW_START_ADDR	0x4000
- #define MSCC_VSC8574_REVB_INT8051_FW_CRC	0x29e8
- 
--- 
-2.24.1
-
+I'm also a fan of the Oxford comma when it comes to describing code.
