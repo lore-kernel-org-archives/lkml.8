@@ -2,28 +2,30 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE27FC4BA12
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BAAC4BA10
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A56802467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A5652467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:41:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727429AbgBZNlZ (ORCPT
+        id S1727146AbgBZNla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 08:41:25 -0500
-Received: from relay.sw.ru ([185.231.240.75]:44732 "EHLO relay.sw.ru"
+        Wed, 26 Feb 2020 08:41:30 -0500
+Received: from relay.sw.ru ([185.231.240.75]:44734 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726400AbgBZNlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 08:41:23 -0500
+        id S1726992AbgBZNlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 08:41:24 -0500
 Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104] helo=localhost.localdomain)
         by relay.sw.ru with esmtp (Exim 4.92.3)
         (envelope-from <ktkhai@virtuozzo.com>)
-        id 1j6wvs-0006rT-7k; Wed, 26 Feb 2020 16:41:00 +0300
-Subject: [PATCH RFC 2/5] fs: Add new argument to vfs_fallocate()
+        id 1j6wvh-0006r8-Hg; Wed, 26 Feb 2020 16:40:49 +0300
+Subject: [PATCH RFC 0/5] fs,
+ ext4: Physical blocks placement hint for fallocate(0): fallocate2(). TP
+ defrag.
 From:   Kirill Tkhai <ktkhai@virtuozzo.com>
 To:     tytso@mit.edu, viro@zeniv.linux.org.uk, adilger.kernel@dilger.ca,
         snitzer@redhat.com, jack@suse.cz, ebiggers@google.com,
@@ -32,10 +34,8 @@ To:     tytso@mit.edu, viro@zeniv.linux.org.uk, adilger.kernel@dilger.ca,
         mbobrowski@mbobrowski.org, enwlinux@gmail.com, sblbir@amazon.com,
         khazhy@google.com, linux-ext4@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Date:   Wed, 26 Feb 2020 16:41:00 +0300
-Message-ID: <158272446003.281342.778131694693628667.stgit@localhost.localdomain>
-In-Reply-To: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
-References: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
+Date:   Wed, 26 Feb 2020 16:40:49 +0300
+Message-ID: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -45,162 +45,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch propagates @physical into vfs_fallocate().
-No functional changes.
+When discard granuality of a block device is bigger than filesystem block size,
+fstrim does not effectively release device blocks. During the filesystem life,
+some files become deleted, some remain alive, and this results in that many
+device blocks are used incomletely (of course, the reason is not only in this,
+but since this is not a problem of a filesystem, this is not a subject
+of the patchset). This results in space lose for thin provisioning devices.
 
-Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Say, a filesystem on a block device, which is provided by another filesystem
+(say, distributed network filesystem). Semi-used blocks of the block device
+result in bad performance and worse space usage of underlining filesystem.
+Another example is ext4 with 4k block on loop on ext4 with 1m block. This
+case also results in bad disk space usage.
+
+Choosing a bigger block size is not a solution here, since small files become
+taking much more disk space, than they used before, and the result excess
+disk usage is the same.
+
+The proposed solution is defragmentation of files based on block device
+discard granuality knowledge. Files, which were not modified for a long time,
+and read-only files, small files, etc, may be placed in the same block device
+block together. I.e., compaction of some device blocks, which results
+in releasing another device blocks.
+
+The problem is current fallocate() does not allow to implement effective
+way for such the defragmentation. The below describes the situation for ext4,
+but this should touch all filesystems.
+
+fallocate() goes thru standard blocks allocator, which try to behave very
+good for life allocation cases: block placement and future file size
+prediction, delayed blocks allocation, etc. But it almost impossible
+to allocate blocks from specified place for our specific case. The only
+ext4 block allocator option possible to use is that the allocator firstly
+tries to allocate blocks from the same block group, that inode is related to.
+But this is not enough for effective files compaction.
+
+This patchset implements an extension of fallocate():
+
+	fallocate2(int fd, int mode, loff_t offset, loff_t len,
+		   unsigned long long physical)
+
+The new argument is @physical offset from start of device, which is must
+for block allocation. In case of [@physical, @physical + len] block range
+is available for allocation, the syscall assigns the corresponding extent/
+extents to inode. In case of the range or its part is occupied, the syscall
+returns with error (maybe, smaller range will be allocated. The behavior
+is the same as when fallocate() meets no space in the middle).
+
+This interface allows to solve the formulated problem. Also, note, this
+interface may allow to improve existing e4defrag algorithm: decrease
+number of file extents more effective.
+
+[1-2/5] are refactoring.
+[3/5] adds fallocate2() body.
+[4/5] prepares ext4_mb_discard_preallocations() for handling EXT4_MB_HINT_GOAL_ONLY
+[5/5] adds fallocate2() support for ext4
+
+Any comments are welcomed!
+
 ---
- drivers/nvme/target/io-cmd-file.c |    4 ++--
- fs/io_uring.c                     |    2 +-
- fs/ioctl.c                        |    5 +++--
- fs/nfsd/vfs.c                     |    2 +-
- fs/open.c                         |    7 ++++---
- fs/overlayfs/file.c               |    2 +-
- include/linux/fs.h                |    2 +-
- mm/madvise.c                      |    2 +-
- 8 files changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/nvme/target/io-cmd-file.c b/drivers/nvme/target/io-cmd-file.c
-index cd5670b83118..f86ea0dc4638 100644
---- a/drivers/nvme/target/io-cmd-file.c
-+++ b/drivers/nvme/target/io-cmd-file.c
-@@ -306,7 +306,7 @@ static void nvmet_file_execute_discard(struct nvmet_req *req)
- 			break;
- 		}
- 
--		ret = vfs_fallocate(req->ns->file, mode, offset, len);
-+		ret = vfs_fallocate(req->ns->file, mode, offset, len, (u64)-1);
- 		if (ret && ret != -EOPNOTSUPP) {
- 			req->error_slba = le64_to_cpu(range.slba);
- 			status = errno_to_nvme_status(req, ret);
-@@ -360,7 +360,7 @@ static void nvmet_file_write_zeroes_work(struct work_struct *w)
- 		return;
- 	}
- 
--	ret = vfs_fallocate(req->ns->file, mode, offset, len);
-+	ret = vfs_fallocate(req->ns->file, mode, offset, len, (u64)-1);
- 	nvmet_req_complete(req, ret < 0 ? errno_to_nvme_status(req, ret) : 0);
- }
- 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 8866bd60783f..03be497747da 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2512,7 +2512,7 @@ static void io_fallocate_finish(struct io_wq_work **workptr)
- 		return;
- 
- 	ret = vfs_fallocate(req->file, req->sync.mode, req->sync.off,
--				req->sync.len);
-+				req->sync.len, (u64)-1);
- 	if (ret < 0)
- 		req_set_fail_links(req);
- 	io_cqring_add_event(req, ret);
-diff --git a/fs/ioctl.c b/fs/ioctl.c
-index 282d45be6f45..5f3222434e05 100644
---- a/fs/ioctl.c
-+++ b/fs/ioctl.c
-@@ -502,7 +502,7 @@ static int ioctl_preallocate(struct file *filp, int mode, void __user *argp)
- 	}
- 
- 	return vfs_fallocate(filp, mode | FALLOC_FL_KEEP_SIZE, sr.l_start,
--			sr.l_len);
-+			sr.l_len, (u64)-1);
- }
- 
- /* on ia32 l_start is on a 32-bit boundary */
-@@ -530,7 +530,8 @@ static int compat_ioctl_preallocate(struct file *file, int mode,
- 		return -EINVAL;
- 	}
- 
--	return vfs_fallocate(file, mode | FALLOC_FL_KEEP_SIZE, sr.l_start, sr.l_len);
-+	return vfs_fallocate(file, mode | FALLOC_FL_KEEP_SIZE,
-+			     sr.l_start, sr.l_len, (u64)-1);
- }
- #endif
- 
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 0aa02eb18bd3..a6b0acb795f5 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -590,7 +590,7 @@ __be32 nfsd4_vfs_fallocate(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	if (!S_ISREG(file_inode(file)->i_mode))
- 		return nfserr_inval;
- 
--	error = vfs_fallocate(file, flags, offset, len);
-+	error = vfs_fallocate(file, flags, offset, len, (u64)-1);
- 	if (!error)
- 		error = commit_metadata(fhp);
- 
-diff --git a/fs/open.c b/fs/open.c
-index 73f27c9b518c..596fd3dc3988 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -226,7 +226,8 @@ SYSCALL_DEFINE2(ftruncate64, unsigned int, fd, loff_t, length)
- #endif /* BITS_PER_LONG == 32 */
- 
- 
--int vfs_fallocate(struct file *file, int mode, loff_t offset, loff_t len)
-+int vfs_fallocate(struct file *file, int mode,
-+		  loff_t offset, loff_t len, u64 physical)
- {
- 	struct inode *inode = file_inode(file);
- 	long ret;
-@@ -306,7 +307,7 @@ int vfs_fallocate(struct file *file, int mode, loff_t offset, loff_t len)
- 		return -EOPNOTSUPP;
- 
- 	file_start_write(file);
--	ret = file->f_op->fallocate(file, mode, offset, len, (u64)-1);
-+	ret = file->f_op->fallocate(file, mode, offset, len, physical);
- 
- 	/*
- 	 * Create inotify and fanotify events.
-@@ -329,7 +330,7 @@ int ksys_fallocate(int fd, int mode, loff_t offset, loff_t len)
- 	int error = -EBADF;
- 
- 	if (f.file) {
--		error = vfs_fallocate(f.file, mode, offset, len);
-+		error = vfs_fallocate(f.file, mode, offset, len, (u64)-1);
- 		fdput(f);
- 	}
- 	return error;
-diff --git a/fs/overlayfs/file.c b/fs/overlayfs/file.c
-index abe34162d9d4..e1857861c7ba 100644
---- a/fs/overlayfs/file.c
-+++ b/fs/overlayfs/file.c
-@@ -476,7 +476,7 @@ static long ovl_fallocate(struct file *file, int mode,
- 		return ret;
- 
- 	old_cred = ovl_override_creds(file_inode(file)->i_sb);
--	ret = vfs_fallocate(real.file, mode, offset, len);
-+	ret = vfs_fallocate(real.file, mode, offset, len, (u64)-1);
- 	revert_creds(old_cred);
- 
- 	/* Update size */
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 17c111e164d2..0222599a4b9b 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2538,7 +2538,7 @@ extern long vfs_truncate(const struct path *, loff_t);
- extern int do_truncate(struct dentry *, loff_t start, unsigned int time_attrs,
- 		       struct file *filp);
- extern int vfs_fallocate(struct file *file, int mode, loff_t offset,
--			loff_t len);
-+			loff_t len, u64 physical);
- extern long do_sys_open(int dfd, const char __user *filename, int flags,
- 			umode_t mode);
- extern struct file *file_open_name(struct filename *, int, umode_t);
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 43b47d3fae02..89c2e8bab44a 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -849,7 +849,7 @@ static long madvise_remove(struct vm_area_struct *vma,
- 	}
- 	error = vfs_fallocate(f,
- 				FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
--				offset, end - start);
-+				offset, end - start, (u64)-1);
- 	fput(f);
- 	down_read(&current->mm->mmap_sem);
- 	return error;
+Kirill Tkhai (5):
+      fs: Add new argument to file_operations::fallocate()
+      fs: Add new argument to vfs_fallocate()
+      fs: Add fallocate2() syscall
+      ext4: Prepare ext4_mb_discard_preallocations() for handling EXT4_MB_HINT_GOAL_ONLY
+      ext4: Add fallocate2() support
 
+
+ arch/x86/entry/syscalls/syscall_32.tbl |    1 +
+ arch/x86/entry/syscalls/syscall_64.tbl |    1 +
+ arch/x86/ia32/sys_ia32.c               |   10 +++++++
+ drivers/block/loop.c                   |    2 +
+ drivers/nvme/target/io-cmd-file.c      |    4 +--
+ drivers/staging/android/ashmem.c       |    2 +
+ drivers/target/target_core_file.c      |    2 +
+ fs/block_dev.c                         |    4 +--
+ fs/btrfs/file.c                        |    4 ++-
+ fs/ceph/file.c                         |    5 +++-
+ fs/cifs/cifsfs.c                       |    7 +++--
+ fs/cifs/smb2ops.c                      |    5 +++-
+ fs/ext4/ext4.h                         |    5 +++-
+ fs/ext4/extents.c                      |   35 ++++++++++++++++++++-----
+ fs/ext4/inode.c                        |   14 ++++++++++
+ fs/ext4/mballoc.c                      |   45 +++++++++++++++++++++++++-------
+ fs/f2fs/file.c                         |    4 ++-
+ fs/fat/file.c                          |    7 ++++-
+ fs/fuse/file.c                         |    5 +++-
+ fs/gfs2/file.c                         |    5 +++-
+ fs/hugetlbfs/inode.c                   |    5 +++-
+ fs/io_uring.c                          |    2 +
+ fs/ioctl.c                             |    5 ++--
+ fs/nfs/nfs4file.c                      |    6 ++++
+ fs/nfsd/vfs.c                          |    2 +
+ fs/ocfs2/file.c                        |    4 ++-
+ fs/open.c                              |   21 +++++++++++----
+ fs/overlayfs/file.c                    |    8 ++++--
+ fs/xfs/xfs_file.c                      |    5 +++-
+ include/linux/fs.h                     |    4 +--
+ include/linux/syscalls.h               |    8 +++++-
+ ipc/shm.c                              |    6 ++--
+ mm/madvise.c                           |    2 +
+ mm/shmem.c                             |    4 ++-
+ 34 files changed, 190 insertions(+), 59 deletions(-)
+
+--
+Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
 
