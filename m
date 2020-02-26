@@ -2,283 +2,136 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-17.2 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE90C4BA2C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB8DC4BA21
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D6B221D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92A6B21D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:44:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="imPKf9um"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OzRmdZuY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727741AbgBZVnV (ORCPT
+        id S1727670AbgBZVor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 16:43:21 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:41207 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727584AbgBZVnV (ORCPT
+        Wed, 26 Feb 2020 16:44:47 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33865 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727550AbgBZVor (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 16:43:21 -0500
-Received: by mail-pl1-f195.google.com with SMTP id t14so220700plr.8
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 13:43:20 -0800 (PST)
+        Wed, 26 Feb 2020 16:44:47 -0500
+Received: by mail-pl1-f193.google.com with SMTP id j7so237557plt.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 13:44:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=hgnKizZ1LNZ1/7A/IJ99LWJR1HO7jmNhhyis79Qnr60=;
-        b=imPKf9umLzwdYDhQggEBl9e4ToNBXNNVON+kK1TJ+uk0+ZLljXquYPffKziNovmy2I
-         jikF8Stj2PXeTpynKemInXah8AkuFiUlmAlruPDpfecS8D7U1+/EtolYDekkiiyJzR0L
-         xQVaChv9CeeV5BH+OJ0LpRon0QJEihFy8wlUo=
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=AZZieTb0ooqXHRXN3smm7F8J1uHIqS+LbMJIDQk//CQ=;
+        b=OzRmdZuY7JrcPH64OgmXaEXDNA3tbPgT/H+Y1d0GQ0MnRm4cVGhgSDVEwVMIMVDIjt
+         0Cas6UuejrObJK4CFwbuSUCwDiLkSI0kzFL2P0kzhDV9+m/hwibAWz2zPtO4Rdcap9H5
+         lfQgaMVkRI2x0BuKAPZmLr29nK5ZEt7uCmwnSUezQ22I76VmPHnvffP3tl4QF0X1Y10G
+         2WKdT6Vchv9UEcKcdA4euQODrF/mFn9NL+H3MpVkQJAdeE70hqkXcTv2nhnCsm6z7dqv
+         pnYtSYpQrcGqKkgiPDKBqK5rT/+bG3jDY0W4Up0o3cfwt51doqnzceASdQAKUbxILKUj
+         cEVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hgnKizZ1LNZ1/7A/IJ99LWJR1HO7jmNhhyis79Qnr60=;
-        b=c3AsqdFLdQo4jf6Hj6P0RPvgFNzbRSzO24p4MXZKY/CfBe0louC1imdfT7g99JxZN1
-         CU8kXpf4j4Zen9uTeas1HRCDUUih0WuK5ikWHuAAHkv//uu7IKy3817xAnDFfjY/WUCO
-         0s2Fkn+MAwk8oLdJmBprJFC68eKyqpWlRUxuG84oZvlA41j1zQOXYB9sDykWIqDZQ6OS
-         NOU3JAdMznEeXzCCT2qXoWsmgYNVDrDIHI1RDHEBTjLm1TwLkIvnMWb28sOnIC0E3t0s
-         ZWsD85XPsrskR2y4tUo7Fwys13nrcYIxwLZzrimngtRPTDbYFc/iYwVKXZHi/pwBzr9n
-         QBbQ==
-X-Gm-Message-State: APjAAAVaItdZbJrF4G3C+fig5W8iYb2tzw7U0epLvdC7LHS3FbXW+5tW
-        KL1r1p/AwUyc84kzq4V4eeIISw==
-X-Google-Smtp-Source: APXvYqwGwPpLn6uZNtEIwvru0jb8ckaRTjGt+8bMvcl7Mr+2qZiRBDB62qZdspDVpqRhvm6+PUN88w==
-X-Received: by 2002:a17:902:6ac7:: with SMTP id i7mr1238742plt.314.1582753399559;
-        Wed, 26 Feb 2020 13:43:19 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q6sm4042454pfh.127.2020.02.26.13.43.18
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=AZZieTb0ooqXHRXN3smm7F8J1uHIqS+LbMJIDQk//CQ=;
+        b=Wdp2xrJae8pAsmVVYxp4dOuAcvgt5SEcn5xAC6389ZWuDxiD+Es3MP6NA+J0qvQSQu
+         OJjnxPLtGKTFG/0hkqbYyYI1FOkjEyZXYveQMmX6SDkXwBQmcVr/2ETpp4r81E9dtMXh
+         TV+jieCLRb3dz6jgrYloPfJigBvtdistoFijLqx9Aqkf4CyJ/IuwH+iWg4cV4470o/ua
+         LBD+xeDXN1y1APd2WRboPmuNg3Kum0bqncWuo8rFxMQoSUT+uU+Vsoeyf/TtdxVF7N6V
+         V19qCVvA/IQXgvEb+pqCGkSYIfF5arhzSWF1qjBOGd2u2LYd087lZ5I+Jnllrv6p24gA
+         O0SQ==
+X-Gm-Message-State: APjAAAXDaYhy0s3PZTiiOAmWqv6BRQp2Q/HBtQk2Ig03BEP/hQz0uKPp
+        UGqTjop7QcSUZ96RVqeGKrG0Kg==
+X-Google-Smtp-Source: APXvYqy/ub3YyEQgwwAdSIbBr+DSZkYESGjl2lep12UqTi7HOQSKdVkIwxxsFeWpNiSj357LDQQx3A==
+X-Received: by 2002:a17:902:76c7:: with SMTP id j7mr1337449plt.45.1582753485548;
+        Wed, 26 Feb 2020 13:44:45 -0800 (PST)
+Received: from google.com ([2620:15c:202:201:bc61:d85d:eb16:9036])
+        by smtp.gmail.com with ESMTPSA id q66sm3470604pgq.50.2020.02.26.13.44.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 13:43:18 -0800 (PST)
-Date:   Wed, 26 Feb 2020 13:43:17 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        "H . J . Lu " <hjl.tools@gmail.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Florian Weimer <fweimer@redhat.com>,
-        Sudakshina Das <sudi.das@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH v7 05/11] arm64: elf: Enable BTI at exec based on ELF
- program properties
-Message-ID: <202002261343.1D0FC8DBE@keescook>
-References: <20200226155714.43937-1-broonie@kernel.org>
- <20200226155714.43937-6-broonie@kernel.org>
+        Wed, 26 Feb 2020 13:44:44 -0800 (PST)
+Date:   Wed, 26 Feb 2020 13:44:38 -0800
+From:   Benson Leung <bleung@google.com>
+To:     torvalds@linux-foundation.org
+Cc:     bleung@kernel.org, bleung@chromium.org, bleung@google.com,
+        enric.balletbo@collabora.com, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] chrome-platform fixes for v5.6-rc4
+Message-ID: <20200226214438.GA207119@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="17pEHd4RhPHOinZp"
 Content-Disposition: inline
-In-Reply-To: <20200226155714.43937-6-broonie@kernel.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 03:57:08PM +0000, Mark Brown wrote:
-> From: Dave Martin <Dave.Martin@arm.com>
-> 
-> For BTI protection to be as comprehensive as possible, it is
-> desirable to have BTI enabled from process startup.  If this is not
-> done, the process must use mprotect() to enable BTI for each of its
-> executable mappings, but this is painful to do in the libc startup
-> code.  It's simpler and more sound to have the kernel do it
-> instead.
-> 
-> To this end, detect BTI support in the executable (or ELF
-> interpreter, as appropriate), via the
-> NT_GNU_PROGRAM_PROPERTY_TYPE_0 note, and tweak the initial prot
-> flags for the process' executable pages to include PROT_BTI as
-> appropriate.
-> 
-> Signed-off-by: Dave Martin <Dave.Martin@arm.com>
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+--17pEHd4RhPHOinZp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--Kees
+Hi Linus,
 
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> ---
->  arch/arm64/Kconfig           |  3 +++
->  arch/arm64/include/asm/elf.h | 51 ++++++++++++++++++++++++++++++++++++
->  arch/arm64/kernel/process.c  | 19 ++++++++++++++
->  include/uapi/linux/elf.h     |  6 +++++
->  4 files changed, 79 insertions(+)
-> 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index e37f4f07b990..d65d226a77ec 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -9,6 +9,7 @@ config ARM64
->  	select ACPI_MCFG if (ACPI && PCI)
->  	select ACPI_SPCR_TABLE if ACPI
->  	select ACPI_PPTT if ACPI
-> +	select ARCH_BINFMT_ELF_STATE
->  	select ARCH_CLOCKSOURCE_DATA
->  	select ARCH_HAS_DEBUG_VIRTUAL
->  	select ARCH_HAS_DEVMEM_IS_ALLOWED
-> @@ -33,6 +34,7 @@ config ARM64
->  	select ARCH_HAS_SYSCALL_WRAPPER
->  	select ARCH_HAS_TEARDOWN_DMA_OPS if IOMMU_SUPPORT
->  	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
-> +	select ARCH_HAVE_ELF_PROT
->  	select ARCH_HAVE_NMI_SAFE_CMPXCHG
->  	select ARCH_INLINE_READ_LOCK if !PREEMPTION
->  	select ARCH_INLINE_READ_LOCK_BH if !PREEMPTION
-> @@ -62,6 +64,7 @@ config ARM64
->  	select ARCH_INLINE_SPIN_UNLOCK_IRQRESTORE if !PREEMPTION
->  	select ARCH_KEEP_MEMBLOCK
->  	select ARCH_USE_CMPXCHG_LOCKREF
-> +	select ARCH_USE_GNU_PROPERTY if BINFMT_ELF
->  	select ARCH_USE_QUEUED_RWLOCKS
->  	select ARCH_USE_QUEUED_SPINLOCKS
->  	select ARCH_SUPPORTS_MEMORY_FAILURE
-> diff --git a/arch/arm64/include/asm/elf.h b/arch/arm64/include/asm/elf.h
-> index b618017205a3..c72e381fa86d 100644
-> --- a/arch/arm64/include/asm/elf.h
-> +++ b/arch/arm64/include/asm/elf.h
-> @@ -114,7 +114,11 @@
->  
->  #ifndef __ASSEMBLY__
->  
-> +#include <uapi/linux/elf.h>
->  #include <linux/bug.h>
-> +#include <linux/errno.h>
-> +#include <linux/fs.h>
-> +#include <linux/types.h>
->  #include <asm/processor.h> /* for signal_minsigstksz, used by ARCH_DLINFO */
->  
->  typedef unsigned long elf_greg_t;
-> @@ -224,6 +228,53 @@ extern int aarch32_setup_additional_pages(struct linux_binprm *bprm,
->  
->  #endif /* CONFIG_COMPAT */
->  
-> +struct arch_elf_state {
-> +	int flags;
-> +};
-> +
-> +#define ARM64_ELF_BTI		(1 << 0)
-> +
-> +#define INIT_ARCH_ELF_STATE {			\
-> +	.flags = 0,				\
-> +}
-> +
-> +static inline int arch_parse_elf_property(u32 type, const void *data,
-> +					  size_t datasz, bool compat,
-> +					  struct arch_elf_state *arch)
-> +{
-> +	/* No known properties for AArch32 yet */
-> +	if (IS_ENABLED(CONFIG_COMPAT) && compat)
-> +		return 0;
-> +
-> +	if (type == GNU_PROPERTY_AARCH64_FEATURE_1_AND) {
-> +		const u32 *p = data;
-> +
-> +		if (datasz != sizeof(*p))
-> +			return -ENOEXEC;
-> +
-> +		if (IS_ENABLED(CONFIG_ARM64_BTI) &&
-> +		    system_supports_bti() &&
-> +		    (*p & GNU_PROPERTY_AARCH64_FEATURE_1_BTI))
-> +			arch->flags |= ARM64_ELF_BTI;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static inline int arch_elf_pt_proc(void *ehdr, void *phdr,
-> +				   struct file *f, bool is_interp,
-> +				   struct arch_elf_state *state)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline int arch_check_elf(void *ehdr, bool has_interp,
-> +				 void *interp_ehdr,
-> +				 struct arch_elf_state *state)
-> +{
-> +	return 0;
-> +}
-> +
->  #endif /* !__ASSEMBLY__ */
->  
->  #endif
-> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-> index 00626057a384..b8e3faa8d406 100644
-> --- a/arch/arm64/kernel/process.c
-> +++ b/arch/arm64/kernel/process.c
-> @@ -11,6 +11,7 @@
->  
->  #include <linux/compat.h>
->  #include <linux/efi.h>
-> +#include <linux/elf.h>
->  #include <linux/export.h>
->  #include <linux/sched.h>
->  #include <linux/sched/debug.h>
-> @@ -18,6 +19,7 @@
->  #include <linux/sched/task_stack.h>
->  #include <linux/kernel.h>
->  #include <linux/lockdep.h>
-> +#include <linux/mman.h>
->  #include <linux/mm.h>
->  #include <linux/stddef.h>
->  #include <linux/sysctl.h>
-> @@ -654,3 +656,20 @@ asmlinkage void __sched arm64_preempt_schedule_irq(void)
->  	if (system_capabilities_finalized())
->  		preempt_schedule_irq();
->  }
-> +
-> +#ifdef CONFIG_BINFMT_ELF
-> +int arch_elf_adjust_prot(int prot, const struct arch_elf_state *state,
-> +			 bool has_interp, bool is_interp)
-> +{
-> +	if (is_interp != has_interp)
-> +		return prot;
-> +
-> +	if (!(state->flags & ARM64_ELF_BTI))
-> +		return prot;
-> +
-> +	if (prot & PROT_EXEC)
-> +		prot |= PROT_BTI;
-> +
-> +	return prot;
-> +}
-> +#endif
-> diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
-> index 20900f4496b7..c6dd0215482e 100644
-> --- a/include/uapi/linux/elf.h
-> +++ b/include/uapi/linux/elf.h
-> @@ -448,4 +448,10 @@ typedef struct elf64_note {
->    Elf64_Word n_type;	/* Content type */
->  } Elf64_Nhdr;
->  
-> +/* .note.gnu.property types for EM_AARCH64: */
-> +#define GNU_PROPERTY_AARCH64_FEATURE_1_AND	0xc0000000
-> +
-> +/* Bits for GNU_PROPERTY_AARCH64_FEATURE_1_BTI */
-> +#define GNU_PROPERTY_AARCH64_FEATURE_1_BTI	(1U << 0)
-> +
->  #endif /* _UAPI_LINUX_ELF_H */
-> -- 
-> 2.20.1
-> 
+The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
 
--- 
-Kees Cook
+  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git t=
+ags/tag-chrome-platform-fixes-for-v5.6-rc4
+
+for you to fetch changes up to 0cbb4f9c69827decf56519c2f63918f16904ede5:
+
+  platform/chrome: wilco_ec: Include asm/unaligned instead of linux/ path (=
+2020-02-11 09:10:36 +0100)
+
+----------------------------------------------------------------
+platform/chrome fixes for v5.6-rc4
+
+Includes this commit:
+platform/chrome: wilco_ec: Include asm/unaligned instead of linux/ path
+
+Fixes a compilation warning.
+
+----------------------------------------------------------------
+Stephen Boyd (1):
+      platform/chrome: wilco_ec: Include asm/unaligned instead of linux/ pa=
+th
+
+ drivers/platform/chrome/wilco_ec/properties.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Thanks,
+Benson
+--=20
+Benson Leung
+Staff Software Engineer
+Chrome OS Kernel
+Google Inc.
+bleung@google.com
+Chromium OS Project
+bleung@chromium.org
+
+--17pEHd4RhPHOinZp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCXlbmxgAKCRBzbaomhzOw
+woZrAP9McK3b9SKIttjcjQhoDNuzao9mPF+hPYoLHXZLg4tCqAD8DAVUNFaCPxcf
+5QJ3SRq9aL9bHkkY0q54zXfxEWvoDwQ=
+=+GDJ
+-----END PGP SIGNATURE-----
+
+--17pEHd4RhPHOinZp--
