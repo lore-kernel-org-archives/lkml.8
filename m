@@ -2,138 +2,109 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87629C4BA15
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 955FDC4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E64C206E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AB58206E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:31:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="PWVHdGOK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FqjUlrOV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgBZQbg (ORCPT
+        id S1727851AbgBZQbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 26 Feb 2020 11:31:36 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:43840 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbgBZQbg (ORCPT
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35647 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726905AbgBZQbg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 26 Feb 2020 11:31:36 -0500
-Received: by mail-ed1-f65.google.com with SMTP id dc19so4482351edb.10
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 08:31:34 -0800 (PST)
+Received: by mail-lj1-f194.google.com with SMTP id q8so3830224ljb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 08:31:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cumulusnetworks.com; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Z1w+58dOrrZr3wo5mk8rJB/ZJsesTkU2LXg6fDoYot4=;
-        b=PWVHdGOKeZeBrmZqjFNWON3PpXWLD/9F+byeDjIJWy+ytRge7nUh9NGmyX86dkURx+
-         e0mLG9bX4960huPEWOL+TWR+I1cgCsC/A9WJEuvwqSBaMzaTqV0o7c4/0zm9hdj7F82H
-         URmRnPcaEgXmpKdkbmcIvzfhb5rKpkH41i0l4=
+         :cc:content-transfer-encoding;
+        bh=YsK7RC3jNyUUCAI8YO0dZwG1LLhNnYXoQcGVITBKQgY=;
+        b=FqjUlrOV8kswPqn7o8fKaz4tyZlXfb7BTWpJani82vjG7UqF6G+efcPzvAeQe4zEsV
+         bGwdnsP5NukTjOJUrgVOa8huSecOxD/WvjSVeN0HOfLfHkU+WAszYS44z0hZUvwvVCFu
+         Ljg+COePTAEsA05Ictyg/e7HEPgmoU0uOADLJO+I7AEETdBdZ9yA/woOmk7nDbB0ECs+
+         IoqIhHimkBQbEvN/1jZNgvri3qT5+y3ii26QaACMzVUidNPxUko1zu7mdbzdSlmGfmyu
+         mvm23TnDjbFfB856j7Ik5jmEjsJWV6C+Nx17PEgNrJCWrxuNFZ+LDnm2NlpLW69zxVyJ
+         WgKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Z1w+58dOrrZr3wo5mk8rJB/ZJsesTkU2LXg6fDoYot4=;
-        b=CE8BDyhPoNxWQVZcvf3b4VAkktP9DTzFIi2mvd8KGS9Ezh95QBR+r2ATPEMYnRsqYs
-         YE6IfXA8d7WZA1vTihKSIqmnNs4np4CqP7QzFx+KHM9wUFnHvSESeuxHheK11INfhNxb
-         AMGdlIdZ9pPQhAgYG0Cv/JnIBHbZQvP68Efl5SPf3NXpR9zjv0CobCbnHJ7cPg6Wd8k/
-         VblcDVmm+YF7cOBOgLcQgjq9JZ7X5PpW/b5/iMcm/RLu67kA8MW3A7zyRyX2jF3Qapeg
-         5qdTHgMxPwyE3ydnev9FJFo5Wsn+hZLWzPX6iew6agt+MOADrub2AhOS5cdNrxMrdfXQ
-         IzHw==
-X-Gm-Message-State: APjAAAUt0bJjJnuc8T2+h83UhDNt8OZT8fW6rVJkaQgcRm5qiMZIxIAG
-        W0pdznB7RJ6TdUkdknlGfSztJpozLSe5rrhEc7Mb/w==
-X-Google-Smtp-Source: APXvYqzrSAOseHb5MIcTw/nawhJsW3ES0aHkvgiuyVEnigJi8uZOuBz/tTxOvsOzYVVPzvAU4zYwgIzxXALT47g6rdA=
-X-Received: by 2002:a17:906:f105:: with SMTP id gv5mr5259642ejb.135.1582734694188;
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=YsK7RC3jNyUUCAI8YO0dZwG1LLhNnYXoQcGVITBKQgY=;
+        b=CXR/mQRwdNXaSDpmGWCH/mEF5P5SwOBQ+p6S0+0Eyn1nGIqZTh8qTTOcBQugeZ702x
+         ek827Gi9UvPDM8gOELzH7u+JPaw0dzyQArMh8Kp5zM6u1D4AzO15FGvRd0tsxzPzDcFF
+         x3TkGNKS+hAQupXpw2mzpIi0xeu+xzoo6gdqLI0f1qYh+U+lw2XCdJ+5kZdQrnuTtIrb
+         40i9YtbHYmpIVPzqm6bKoY8tDmV1o9CmnmFqGBNvRM1HzyfdRe3UwAzpGK6M6rjmq27s
+         pM4SYmDMxALSruQLs5374FyWnj9Q/gLSrvm7q6BH+/OUNMnrK3lbmtO1idmWYkcenhnW
+         eOQw==
+X-Gm-Message-State: APjAAAVyelXvQckRPuKfbqJLK+O7qVy9Cf85EeBOaUavmwMwkTzGMUpT
+        OZ63oaYn6J4oGayrBt0DZx9IwMs/qtFGC6F9zNk=
+X-Google-Smtp-Source: APXvYqzfUaNr53ByN0SUMx5zeay0A7sIAhFDSzMfOEZgwDjEfFmGfSA3A6lwsFJopUoYfrQri+E3zGBj+imVdqYOX34=
+X-Received: by 2002:a2e:9d89:: with SMTP id c9mr3601778ljj.212.1582734694451;
  Wed, 26 Feb 2020 08:31:34 -0800 (PST)
 MIME-Version: 1.0
-References: <20200225163025.9430-1-vadym.kochan@plvision.eu>
-In-Reply-To: <20200225163025.9430-1-vadym.kochan@plvision.eu>
-From:   Roopa Prabhu <roopa@cumulusnetworks.com>
-Date:   Wed, 26 Feb 2020 08:38:32 -0800
-Message-ID: <CAJieiUg8ycCnNtUCuHfc55nQXCQx9+f4rdw161AM+py3i2zpfg@mail.gmail.com>
-Subject: Re: [RFC net-next 0/3] net: marvell: prestera: Add Switchdev driver
- for Prestera family ASIC device 98DX326x (AC3x)
-To:     Vadym Kochan <vadym.kochan@plvision.eu>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
-        David Ahern <dsahern@gmail.com>
+References: <20200226135027.34538-1-lrizzo@google.com> <87ftexz93y.fsf@toke.dk>
+In-Reply-To: <87ftexz93y.fsf@toke.dk>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Wed, 26 Feb 2020 08:31:23 -0800
+Message-ID: <CAADnVQKYEk0yWzSoubV3_6G0Sx2ZA6KwERE+Cyg0nYKCRSEvEQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] kstats: kernel metric collector
+To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
+Cc:     Luigi Rizzo <lrizzo@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>, ardb@kernel.org,
+        rizzo@iet.unipi.it, Paolo Abeni <pabeni@redhat.com>,
+        giuseppe.lettieri@unipi.it,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 8:31 AM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
+On Wed, Feb 26, 2020 at 7:03 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@redh=
+at.com> wrote:
 >
-> Marvell Prestera 98DX326x integrates up to 24 ports of 1GbE with 8
-> ports of 10GbE uplinks or 2 ports of 40Gbps stacking for a largely
-> wireless SMB deployment.
+> > The tracepoint/kprobe/kretprobe solution is much more expensive --
+> > from my measurements, the hooks that invoke the various handlers take
+> > ~250ns with hot cache, 1500+ns with cold cache, and tracing an empty
+> > function this way reports 90ns with hot cache, 500ns with cold cache.
 >
-> Prestera Switchdev is a firmware based driver which operates via PCI
-> bus. The driver is split into 2 modules:
->
->     - prestera_sw.ko - main generic Switchdev Prestera ASIC related logic.
->
->     - prestera_pci.ko - bus specific code which also implements firmware
->                         loading and low-level messaging protocol between
->                         firmware and the switchdev driver.
->
-> This driver implementation includes only L1 & basic L2 support.
->
-> The core Prestera switching logic is implemented in prestera.c, there is
-> an intermediate hw layer between core logic and firmware. It is
-> implemented in prestera_hw.c, the purpose of it is to encapsulate hw
-> related logic, in future there is a plan to support more devices with
-> different HW related configurations.
->
-> The firmware has to be loaded each time device is reset. The driver is
-> loading it from:
->
->     /lib/firmware/marvell/prestera_fw_img.bin
->
-> The firmware image version is located within internal header and consists
-> of 3 numbers - MAJOR.MINOR.PATCH. Additionally, driver has hard-coded
-> minimum supported firmware version which it can work with:
->
->     MAJOR - reflects the support on ABI level between driver and loaded
->             firmware, this number should be the same for driver and
->             loaded firmware.
->
->     MINOR - this is the minimal supported version between driver and the
->             firmware.
->
->     PATCH - indicates only fixes, firmware ABI is not changed.
->
-> The firmware image will be submitted to the linux-firmware after the
-> driver is accepted.
->
-> The following Switchdev features are supported:
->
->     - VLAN-aware bridge offloading
->     - VLAN-unaware bridge offloading
->     - FDB offloading (learning, ageing)
->     - Switchport configuration
->
-> CPU RX/TX support will be provided in the next contribution.
->
-> Vadym Kochan (3):
->   net: marvell: prestera: Add Switchdev driver for Prestera family ASIC
->     device 98DX325x (AC3x)
->   net: marvell: prestera: Add PCI interface support
->   dt-bindings: marvell,prestera: Add address mapping for Prestera
->     Switchdev PCIe driver
->
+> I think it would be good if you could include an equivalent BPF-based
+> implementation of your instrumentation example so people can (a) see the
+> difference for themselves and get a better idea of how the approaches
+> differ in a concrete case and (b) quantify the difference in performance
+> between the two implementations.
 
-Have not looked at the patches yet, but very excited to see another
-switchdev driver making it into the kernel!.
++1
 
-Thanks Marvell!.
+kprobe/kretprobe are expensive.
+That was the reason we switched to bpf fentry/fexit based on bpf trampoline=
+.
+The overhead is close to zero. Currently it's used to collect stats for
+bpf programs themselves, but the framework is there to collect these
+stats for any kernel function. Please see:
+https://lore.kernel.org/bpf/20200213210115.1455809-1-songliubraving@fb.com/=
+T/#mae90f23e545f03bde837239e159909f4e4a1acaa
+One of the ideas that came up during discussion is to
+teach 'perf stat' to do the same.
+So the kernel has all the facilities to instrument itself.
+Only user space work left.
