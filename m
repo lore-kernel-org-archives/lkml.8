@@ -6,117 +6,150 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A6FC4BA0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BC2C4BA0A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D900A20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D7D22084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:18:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbgBZISO (ORCPT
+        id S1727709AbgBZISq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 03:18:14 -0500
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:31587 "EHLO 1wt.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727247AbgBZISO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 03:18:14 -0500
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id 01Q8I8dH001973;
-        Wed, 26 Feb 2020 09:18:08 +0100
-Date:   Wed, 26 Feb 2020 09:18:08 +0100
-From:   Willy Tarreau <w@1wt.eu>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Denis Efremov <efremov@linux.com>, Jens Axboe <axboe@kernel.dk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>
-Subject: Re: [PATCH 01/10] floppy: cleanup: expand macro FDCS
-Message-ID: <20200226081808.GA1589@1wt.eu>
-References: <20200224212352.8640-1-w@1wt.eu>
- <20200224212352.8640-2-w@1wt.eu>
- <CAHk-=wi4R_nPdE4OuNW9daKFD4FpV74PkG4USHqub+nuvOWYFg@mail.gmail.com>
- <28e72058-021d-6de0-477e-6038a10d96da@linux.com>
- <20200225034529.GA8908@1wt.eu>
- <c181b184-1785-b221-76fa-4313bbada09d@linux.com>
- <20200225140207.GA31782@1wt.eu>
- <10bc7df1-7a80-a05a-3434-ed0d668d0c6c@linux.com>
- <CAHk-=wggnfCR2JcC-U9LxfeBo2UMagd-neEs8PwDHsGVfLfS=Q@mail.gmail.com>
+        Wed, 26 Feb 2020 03:18:46 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:43254 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727247AbgBZISp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 03:18:45 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 4AFED4A428E75A358071;
+        Wed, 26 Feb 2020 16:18:37 +0800 (CST)
+Received: from [127.0.0.1] (10.173.221.195) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Wed, 26 Feb 2020
+ 16:18:29 +0800
+Subject: Re: [PATCH v3 0/6] implement KASLR for powerpc/fsl_booke/64
+To:     Daniel Axtens <dja@axtens.net>, <mpe@ellerman.id.au>,
+        <linuxppc-dev@lists.ozlabs.org>, <diana.craciun@nxp.com>,
+        <christophe.leroy@c-s.fr>, <benh@kernel.crashing.org>,
+        <paulus@samba.org>, <npiggin@gmail.com>, <keescook@chromium.org>,
+        <kernel-hardening@lists.openwall.com>, <oss@buserror.net>
+CC:     <linux-kernel@vger.kernel.org>, <zhaohongjiang@huawei.com>
+References: <20200206025825.22934-1-yanaijie@huawei.com>
+ <87tv3drf79.fsf@dja-thinkpad.axtens.net>
+From:   Jason Yan <yanaijie@huawei.com>
+Message-ID: <8171d326-5138-4f5c-cff6-ad3ee606f0c2@huawei.com>
+Date:   Wed, 26 Feb 2020 16:18:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wggnfCR2JcC-U9LxfeBo2UMagd-neEs8PwDHsGVfLfS=Q@mail.gmail.com>
-User-Agent: Mutt/1.6.1 (2016-04-27)
+In-Reply-To: <87tv3drf79.fsf@dja-thinkpad.axtens.net>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.221.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 10:08:51AM -0800, Linus Torvalds wrote:
-> We should at least try moving those bits to the floppy.c file and
-> remove it from the header file.
+Hi Daniel,
+
+ÔÚ 2020/2/26 15:16, Daniel Axtens Ð´µÀ:
+> Hi Jason,
 > 
-> For example, doing a Debian code search on "FDPATCHES" doesn't find
-> any user space hits. Searching for "FD_STATUS" gets a lot of hits, but
-> thos all seem to be because it's a symbol used by user space programs,
-> ("file descriptor status"), not because those hits actually used the
-> fdreg.h header file.
+>> This is a try to implement KASLR for Freescale BookE64 which is based on
+>> my earlier implementation for Freescale BookE32:
+>> https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=131718
+>>
+>> The implementation for Freescale BookE64 is similar as BookE32. One
+>> difference is that Freescale BookE64 set up a TLB mapping of 1G during
+>> booting. Another difference is that ppc64 needs the kernel to be
+>> 64K-aligned. So we can randomize the kernel in this 1G mapping and make
+>> it 64K-aligned. This can save some code to creat another TLB map at
+>> early boot. The disadvantage is that we only have about 1G/64K = 16384
+>> slots to put the kernel in.
+>>
+>>      KERNELBASE
+>>
+>>            64K                     |--> kernel <--|
+>>             |                      |              |
+>>          +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
+>>          |  |  |  |....|  |  |  |  |  |  |  |  |  |....|  |  |
+>>          +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
+>>          |                         |                        1G
+>>          |----->   offset    <-----|
+>>
+>>                                kernstart_virt_addr
+>>
+>> I'm not sure if the slot numbers is enough or the design has any
+>> defects. If you have some better ideas, I would be happy to hear that.
+>>
+>> Thank you all.
+>>
 > 
-> So we can remove at least the FD_IOPORT mess from the header file, I bet.
+> Are you making any attempt to hide kernel address leaks in this series?
 
-OK so I think this time I managed to get it done after two failed attempts.
+Yes.
 
-I've sent in response to this thread 6 new patches to the series just for
-validation (11 to 16), I'll spam relevant people when resending the whole
-if we agree on the principle already.
+> I've just been looking at the stackdump code just now, and it directly
+> prints link registers and stack pointers, which is probably enough to
+> determine the kernel base address:
+> 
+>                    SPs:               LRs:             %pS pointer
+> [    0.424506] [c0000000de403970] [c000000001fc0458] dump_stack+0xfc/0x154 (unreliable)
+> [    0.424593] [c0000000de4039c0] [c000000000267eec] panic+0x258/0x5ac
+> [    0.424659] [c0000000de403a60] [c0000000024d7a00] mount_block_root+0x634/0x7c0
+> [    0.424734] [c0000000de403be0] [c0000000024d8100] prepare_namespace+0x1ec/0x23c
+> [    0.424811] [c0000000de403c60] [c0000000024d7010] kernel_init_freeable+0x804/0x880
+> 
+> git grep \\\"REG\\\" arch/powerpc shows a few other uses like this, all
+> in process.c or in xmon.
+> 
 
-First, still no single byte change in the output code:
-  willy@wtap:master$ diff -u floppy-{before,after}.s
-  --- floppy-before.s     2020-02-26 08:59:04.185152450 +0100
-  +++ floppy-after.s      2020-02-26 08:58:58.253156733 +0100
-  @@ -1,5 +1,5 @@
-   
-  -floppy-before.o:     file format elf64-x86-64
-  +floppy-after.o:     file format elf64-x86-64
-   
-   
-   Disassembly of section .text:
+Thanks for reminding this.
 
-Second, I could kill FD_IOPORT entirely. The FD_* macros are now
-just the registers offsets. I've added two local functions fdc_inb()
-and fdc_outb() which take an fdc and the register, and remap this
-to fd_inb() and fd_outb() so that we don't need to fiddle anymore
-with "fdc". I had one attempt at propagating that cleanup (base+reg
-instead of port) to various archs, it was OK but didn't bring any
-visible value in my opinion.
+> Maybe replacing the REG format string in KASLR mode would be sufficient?
+> 
 
-Third, I renamed "fdc" to "current_fdc" and carefully replaced all
-"fdc" instances which didn't build with "current_fdc". This revealed
-that at many places we iterate over current_fdc just because it was
-the required name for the register macro (which used to derive from
-FD_IOPORT). So at this point I'm still seeing a lot of possible
-cleanups which will produce different binary output but will be quite
-more reviewable. The common pattern in floppy.c is :
+Most archs have removed the address printing when dumping stack. Do we 
+really have to print this?
 
-    for (current_fdc = 0; current_fdc < N_FDC; current_fdc++) {
-        do_something(current_fdc);
-    }
-    current_fdc = 0;
-
-  or:
-
-    for (i = 0; i < N_FDC; i++) {
-        current_fdc = i;
-        do_something(current_fdc);
-    }
-    current_fdc = 0;
-
-These ones can safely be cleaned up.
-
-I also thought that once done we could have a "current_fdc" being a
-struct floppy_fdc_state* instead of an int and directly point to the
-correct fdc_state. This way we'll regain a lot of readability in the
-code.
-
-Please just tell me what you think and if I should repost a whole
-series and/or continue the cleanup.
+If we have to do this, maybe we can use "%pK" so that they will be 
+hidden from unprivileged users.
 
 Thanks,
-Willy
+Jason
+
+> Regards,
+> Daniel
+> 
+> 
+>> v2->v3:
+>>    Fix build error when KASLR is disabled.
+>> v1->v2:
+>>    Add __kaslr_offset for the secondary cpu boot up.
+>>
+>> Jason Yan (6):
+>>    powerpc/fsl_booke/kaslr: refactor kaslr_legal_offset() and
+>>      kaslr_early_init()
+>>    powerpc/fsl_booke/64: introduce reloc_kernel_entry() helper
+>>    powerpc/fsl_booke/64: implement KASLR for fsl_booke64
+>>    powerpc/fsl_booke/64: do not clear the BSS for the second pass
+>>    powerpc/fsl_booke/64: clear the original kernel if randomized
+>>    powerpc/fsl_booke/kaslr: rename kaslr-booke32.rst to kaslr-booke.rst
+>>      and add 64bit part
+>>
+>>   .../{kaslr-booke32.rst => kaslr-booke.rst}    | 35 +++++++--
+>>   arch/powerpc/Kconfig                          |  2 +-
+>>   arch/powerpc/kernel/exceptions-64e.S          | 23 ++++++
+>>   arch/powerpc/kernel/head_64.S                 | 14 ++++
+>>   arch/powerpc/kernel/setup_64.c                |  4 +-
+>>   arch/powerpc/mm/mmu_decl.h                    | 19 ++---
+>>   arch/powerpc/mm/nohash/kaslr_booke.c          | 71 +++++++++++++------
+>>   7 files changed, 132 insertions(+), 36 deletions(-)
+>>   rename Documentation/powerpc/{kaslr-booke32.rst => kaslr-booke.rst} (59%)
+>>
+>> -- 
+>> 2.17.2
+> 
+> .
+> 
+
