@@ -2,80 +2,241 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C851C4BA15
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0F4C4BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30CD6206E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:31:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3552D24670
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:33:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582734826;
+	bh=K/0b0iuJYo4oZt1f734dFYPpXmagB5MKcKdJqNjGBUw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wuizmI4f/y4oy/Ll4AcO1Q7vgkZrC0pDcdFgg9k4grIANKW44O99nLNpuA7op/mVy
+	 ToqokWlthl5xYRBrMdTITOouaS8G1OpeJ43bCgNo4r8VEgIjoxSob95THSzYjq0r8q
+	 ytDqqOjjkDEv3FhnezsmIZn7PS5I4Tl2oxJvV8hE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgBZQbq (ORCPT
+        id S1727554AbgBZQdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 11:31:46 -0500
-Received: from muru.com ([72.249.23.125]:57758 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726905AbgBZQbp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 11:31:45 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 9BCE38022;
-        Wed, 26 Feb 2020 16:32:28 +0000 (UTC)
-Date:   Wed, 26 Feb 2020 08:31:40 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     afzal mohammed <afzal.mohd.ma@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, Krzysztof Halasa <khalasa@piap.pl>,
-        Russell King <linux@armlinux.org.uk>,
-        Hartley Sweeten <hsweeten@visionengravers.com>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Kevin Hilman <khilman@kernel.org>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Shiraz Hashim <shiraz.linux.kernel@gmail.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>, Enrico Weigelt <info@metux.net>
-Subject: Re: [PATCH v2 02/18] ARM: replace setup_irq() by request_irq()
-Message-ID: <20200226163140.GP37466@atomide.com>
-References: <cover.1582471508.git.afzal.mohd.ma@gmail.com>
- <cbc4859788bd30d6ddc9d9483ed641d6f2d0fd42.1582471508.git.afzal.mohd.ma@gmail.com>
+        Wed, 26 Feb 2020 11:33:45 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44961 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726905AbgBZQdp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 11:33:45 -0500
+Received: by mail-ot1-f67.google.com with SMTP id h9so3484525otj.11;
+        Wed, 26 Feb 2020 08:33:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lbFvo5HuT3obVT0xk8fNIbu0p3dI4t+br6icB8M92zo=;
+        b=lq1hcc27//EHILMiQihpJH943Ti1+3StL/a9MLJbF71YcpcYzbqXCNxO7Zazorl3h7
+         9I9KVkMWujkf1lgAMhisB6iI5JBUFdIMXZyfW4gTgcyZ7bQ84EABln3ETze6v4R9oyWb
+         Q7fCUapMgvX0dc9M6S1sDRc4OxagDE6xMF0OzI88p7/gOfh9RPZsWyOHKAeEFeUc3x0Y
+         65m5/TtD7yVviw2G0VBhzL7PFaoVcuimBuepY7cOCuN/Lh5HjAmw9tmApLbpnxbKvbAI
+         rsXqRaW1w9YVBM/PSTncFTSCCStWOd+OJKnzgBTFjOjQ84cePy/P/MhZvsk9m315bHQK
+         MmNw==
+X-Gm-Message-State: APjAAAWjWXUp7t0GThvesLRHi1o2HbXVjPoLYNUajVUkkUytthj5Odvq
+        Ok+eY7xP7CJUtUHevFRUuQ==
+X-Google-Smtp-Source: APXvYqxAh2WjxmOlqFeKqAx/quOrMLgdoA8tQvbTL8tmC9NEpFZlnmrg8hnVq+U0peeFAT+su5Ug4A==
+X-Received: by 2002:a9d:7c95:: with SMTP id q21mr1668568otn.278.1582734823559;
+        Wed, 26 Feb 2020 08:33:43 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id i7sm970117oib.42.2020.02.26.08.33.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 08:33:42 -0800 (PST)
+Received: (nullmailer pid 30554 invoked by uid 1000);
+        Wed, 26 Feb 2020 16:33:42 -0000
+Date:   Wed, 26 Feb 2020 10:33:42 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, smasetty@codeaurora.org,
+        John Stultz <john.stultz@linaro.org>,
+        Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Rob Clark <robdclark@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Mark Rutland <mark.rutland@arm.com>,
+        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v2 1/4] dt-bindings: display: msm: Convert GMU bindings
+ to YAML
+Message-ID: <20200226163342.GA26694@bogus>
+References: <1582223216-23459-1-git-send-email-jcrouse@codeaurora.org>
+ <1582223216-23459-2-git-send-email-jcrouse@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cbc4859788bd30d6ddc9d9483ed641d6f2d0fd42.1582471508.git.afzal.mohd.ma@gmail.com>
+In-Reply-To: <1582223216-23459-2-git-send-email-jcrouse@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* afzal mohammed <afzal.mohd.ma@gmail.com> [200224 00:49]:
-> request_irq() is preferred over setup_irq(). The early boot setup_irq()
-> invocations happen either via 'init_IRQ()' or 'time_init()', while
-> memory allocators are ready by 'mm_init()'.
+On Thu, Feb 20, 2020 at 11:26:53AM -0700, Jordan Crouse wrote:
+> Convert display/msm/gmu.txt to display/msm/gmu.yaml and remove the old
+> text bindings.
 > 
-> Per tglx[1], setup_irq() existed in olden days when allocators were not
-> ready by the time early interrupts were initialized.
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> ---
 > 
-> Hence replace setup_irq() by request_irq().
-> 
-> Seldom remove_irq() usage has been observed coupled with setup_irq(),
-> wherever that has been found, it too has been replaced by free_irq().
-> 
-> [1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
-> 
-> Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> Acked-by: Alexander Sverdlin <alexander.sverdlin@gmail.com> # EP93xx
-> Tested-by: Alexander Sverdlin <alexander.sverdlin@gmail.com> # EP93xx
+>  .../devicetree/bindings/display/msm/gmu.txt        | 116 ------------------
+>  .../devicetree/bindings/display/msm/gmu.yaml       | 130 +++++++++++++++++++++
+>  2 files changed, 130 insertions(+), 116 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/msm/gmu.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/gmu.yaml
 
-Works for me:
 
-Tested-by: Tony Lindgren <tony@atomide.com> # omap1 osk
+> diff --git a/Documentation/devicetree/bindings/display/msm/gmu.yaml b/Documentation/devicetree/bindings/display/msm/gmu.yaml
+> new file mode 100644
+> index 0000000..776ff92
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/msm/gmu.yaml
+> @@ -0,0 +1,130 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +# Copyright 2019-2020, The Linux Foundation, All Rights Reserved
+> +%YAML 1.2
+> +---
+> +
+> +$id: "http://devicetree.org/schemas/display/msm/gmu.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Devicetree bindings for the GMU attached to certain Adreno GPUs
+> +
+> +maintainers:
+> +  - Rob Clark <robdclark@gmail.com>
+> +
+> +description: |
+> +  These bindings describe the Graphics Management Unit (GMU) that is attached
+> +  to members of the Adreno A6xx GPU family. The GMU provides on-device power
+> +  management and support to improve power efficiency and reduce the load on
+> +  the CPU.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - qcom,adreno-gmu-630.2
+> +      - const: qcom,adreno-gmu
+> +
+> +  reg:
+> +    items:
+> +      - description: Core GMU registers
+> +      - description: GMU PDC registers
+> +      - description: GMU PDC sequence registers
+> +
+> +  reg-names:
+> +    items:
+> +      - const: gmu
+> +      - const: gmu_pdc
+> +      - const: gmu_pdc_seq
+> +
+> +  clocks:
+> +    items:
+> +     - description: GMU clock
+> +     - description: GPU CX clock
+> +     - description: GPU AXI clock
+> +     - description: GPU MEMNOC clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: gmu
+> +      - const: cxo
+> +      - const: axi
+> +      - const: memnoc
+> +
+> +  interrupts:
+> +    items:
+> +     - description: GMU HFI interrupt
+> +     - description: GMU interrupt
+> +
+> +
+> +  interrupt-names:
+> +    items:
+> +      - const: hfi
+> +      - const: gmu
+> +
+> +  power-domains:
+> +     items:
+> +       - description: CX power domain
+> +       - description: GX power domain
+> +
+> +  power-domain-names:
+> +     items:
+> +       - const: cx
+> +       - const: gx
+> +
+> +  iommus:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+
+Already has a type. Just need to define how many entries (maxItems).
+
+> +    description:
+> +       Phandle to a IOMMU device and stream ID. Refer to ../../iommu/iommu.txt
+> +       for more information.
+
+Drop. That's all iommus entries.
+
+> +
+> +  operating-points-v2:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      Phandle to the OPP table for the available GMU frequencies. Refer to
+> +      ../../opp/opp.txt for more information.
+
+Just 'true' is enough here.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +  - interrupt-names
+> +  - power-domains
+> +  - power-domain-names
+> +  - iommus
+> +  - operating-points-v2
+> +
+> +examples:
+> + - |
+> +   #include <dt-bindings/clock/qcom,gpucc-sdm845.h>
+> +   #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+> +   #include <dt-bindings/interrupt-controller/irq.h>
+> +   #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +   gmu: gmu@506a000 {
+> +        compatible="qcom,adreno-gmu-630.2", "qcom,adreno-gmu";
+> +
+> +        reg = <0x506a000 0x30000>,
+> +              <0xb280000 0x10000>,
+> +              <0xb480000 0x10000>;
+> +        reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
+> +
+> +        clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
+> +                 <&gpucc GPU_CC_CXO_CLK>,
+> +                 <&gcc GCC_DDRSS_GPU_AXI_CLK>,
+> +                 <&gcc GCC_GPU_MEMNOC_GFX_CLK>;
+> +        clock-names = "gmu", "cxo", "axi", "memnoc";
+> +
+> +        interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
+> +        interrupt-names = "hfi", "gmu";
+> +
+> +        power-domains = <&gpucc GPU_CX_GDSC>,
+> +                        <&gpucc GPU_GX_GDSC>;
+> +        power-domain-names = "cx", "gx";
+> +
+> +        iommus = <&adreno_smmu 5>;
+> +        operating-points-v2 = <&gmu_opp_table>;
+> +   };
+> -- 
+> 2.7.4
+> 
