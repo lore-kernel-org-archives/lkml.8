@@ -2,135 +2,122 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B095C4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD015C4BA0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E733D24680
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:48:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A230924684
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 10:51:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="iUmc3+8l"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wem60q21"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgBZKsM (ORCPT
+        id S1728000AbgBZKvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 05:48:12 -0500
-Received: from mail-mw2nam10on2043.outbound.protection.outlook.com ([40.107.94.43]:6173
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727860AbgBZKsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 05:48:12 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jlm4NdWdxKoCoLRfR4c50s88mvBEVGMebcU9SkahPTAzHNkHBxQ7DHC+lOeZtkG1kO8iQQOD0ZxecPpdbth+h6DaaaLiN87fi4kS2s1GjGWZ6Yul+7KFFKSiu4Br+0ILqQnpFq6jW5ajM9FWwMBk6gZ5fK31dHhMxq1Su60GsgxzMTJR3GzWF9C6K29CSc70ZGj0iTEedGPTbhKw07FNvZqlLokFScapaGrRu47F4Q8W+J8LDEo5cmbny/BghnvOQ2WIevlLs8VxcBejjNE9Z4myZzSeK7wsYZFe+fErtKeehR9YqbEUD03z8uBj/DFIlHe7Q2vdl2sBPxIme3kfmQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e05O7S0fVACmLEUf4sQLdymJPZrazZng7CpD9B9TZqc=;
- b=DyEGUlxlSkluRnCTaAJxTaey3Kt5XxSQbRQ5ZMoRA2Yud0BQzgrhIIv6/JXI2x2saP1/meR/GxXIpnTMAK8kSrJSyzchXP4hLyoVbfYsHLqVfyEMfI47EOeZFwNzZutkzDhsp213u6vb2SDALdL1XjqeVBptSZ6/ZQyfD9c04Ymw+G9j2xDRUGHzxXxR7t/qtggzmp91gWYZQLCiqBE1p0KiUupGHP3hqtXDcyCLYARtxoS3MotAf5jHmoochP8fMCV9oJlBoSWOgl60BRH1g3g+NosKG5CAcAL9QtrWlMKCmFNQwCzRhrKho3OLt3W5OrVhzhguwg4/ot7Rdh7vlQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e05O7S0fVACmLEUf4sQLdymJPZrazZng7CpD9B9TZqc=;
- b=iUmc3+8lEBxNmrrmvGoiwLhpii89biNTF+/92YInBEoPeJZ9IE8H4p/mxX3h9NGee1CO/NMJTBh21xUTJ4uTLvAIScb10I0MQFp0ngJwKlDqsx0o242kXLzfXrcD1PHb2OoZO0SSrEu+HaSM3WTHrJJBaFwdoiSDU6XtEDbHRVU=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Akshu.Agrawal@amd.com; 
-Received: from MN2PR12MB2878.namprd12.prod.outlook.com (2603:10b6:208:aa::15)
- by MN2PR12MB3933.namprd12.prod.outlook.com (2603:10b6:208:162::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Wed, 26 Feb
- 2020 10:48:09 +0000
-Received: from MN2PR12MB2878.namprd12.prod.outlook.com
- ([fe80::c895:8c76:61ae:980f]) by MN2PR12MB2878.namprd12.prod.outlook.com
- ([fe80::c895:8c76:61ae:980f%3]) with mapi id 15.20.2750.021; Wed, 26 Feb 2020
- 10:48:09 +0000
-From:   Akshu Agrawal <akshu.agrawal@amd.com>
-Cc:     akshu.agrawal@amd.com, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        alsa-devel@alsa-project.org (moderated list:SOUND - SOC LAYER / DYNAMIC
-        AUDIO POWER MANAGEM...), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] ASoC: amd: Allow I2S wake event after ACP is powerd On
-Date:   Wed, 26 Feb 2020 16:17:44 +0530
-Message-Id: <20200226104746.208656-1-akshu.agrawal@amd.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: MAXPR0101CA0011.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:c::21) To MN2PR12MB2878.namprd12.prod.outlook.com
- (2603:10b6:208:aa::15)
+        Wed, 26 Feb 2020 05:51:14 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55753 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727785AbgBZKvO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 05:51:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582714272;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DIx6zuwqR++Y3FFjikNlSkaH8sZ2FNTsX9QKVbo0PI8=;
+        b=Wem60q21aBylUqmCxIz0X0o2ulCA+P9J/RQkAMaMahWAgkV/9RGR62YyqKPKoev9T98n4n
+        s9ikbdjZshO0xKLip95KRFpW/OvZmerfNLdgbRxlPX0UAGqHplt9w3riwM7k4aP6uP6ZtS
+        v6qA4Uh36ikDpFkCbB8Oa4MHs1C1viE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-340-uxeWjtzYOB67Z4LxYrMwyg-1; Wed, 26 Feb 2020 05:51:08 -0500
+X-MC-Unique: uxeWjtzYOB67Z4LxYrMwyg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 31F3318B642C;
+        Wed, 26 Feb 2020 10:51:06 +0000 (UTC)
+Received: from fogou.chygwyn.com (unknown [10.33.36.14])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 900595DA2C;
+        Wed, 26 Feb 2020 10:51:02 +0000 (UTC)
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
+ #17]
+To:     Miklos Szeredi <mszeredi@redhat.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>,
+        David Howells <dhowells@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+References: <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk>
+ <1582316494.3376.45.camel@HansenPartnership.com>
+ <CAOssrKehjnTwbc6A1VagM5hG_32hy3mXZenx_PdGgcUGxYOaLQ@mail.gmail.com>
+ <1582556135.3384.4.camel@HansenPartnership.com>
+ <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com>
+ <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com>
+ <1582644535.3361.8.camel@HansenPartnership.com>
+ <CAOssrKfaxnHswrKejedFzmYTbYivJ++cPes4c91+BJDfgH4xJA@mail.gmail.com>
+From:   Steven Whitehouse <swhiteho@redhat.com>
+Message-ID: <39284de5-8eb8-ba1d-7ea6-be9b9b5df42c@redhat.com>
+Date:   Wed, 26 Feb 2020 10:51:00 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ETHANOL2.amd.com (165.204.156.251) by MAXPR0101CA0011.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:c::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Wed, 26 Feb 2020 10:48:06 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [165.204.156.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 05ecfdab-50cc-4128-2458-08d7baa95e35
-X-MS-TrafficTypeDiagnostic: MN2PR12MB3933:|MN2PR12MB3933:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR12MB3933B7DE54A25F2EFFE6850CF8EA0@MN2PR12MB3933.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2582;
-X-Forefront-PRVS: 0325F6C77B
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(136003)(396003)(39860400002)(376002)(189003)(199004)(7696005)(52116002)(4326008)(86362001)(109986005)(26005)(186003)(4744005)(6666004)(6486002)(66476007)(66556008)(66946007)(16526019)(478600001)(81166006)(316002)(36756003)(8936002)(1076003)(8676002)(81156014)(44832011)(2906002)(2616005)(956004)(5660300002)(54906003)(266003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB3933;H:MN2PR12MB2878.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: C5J+773CcQoj6IuBubWZfetl0KizZytqnnJWyVQlHXrGOFdob+VotnsGQlLWKYj8CZ2U2l6A3EjNwr6AhhbO9Rm3Jj2JAORqSANuUhnfGbVpGn+TnJ1NO+SCLdtJBV8BR6yt5LuQ8iNLJlbRyaiqYUfeCR11VDot/jX1B/BFgJLo9u2AFUu3qHAffOLDNhPzN144kTwmEpTYu0DXphol4kGhK8cE33pbnYCIk76ozfv1bupQBWEfISeswbZDWlsyCqeXmSuEWkOy7NDyjD2kp0kCUX7dSQqsUM7LMl4X36kWCB8Hi5oP+R73wX0+NTGJgVKIol+2W6V6RjPwr0tjIB49I9mqVKIcjo37jecH1Daw+AQqapCBrINN32jsSwuqWfojTNkpPgy5sWE9b/qbKk8HyjEJ9WWRH4u7NaCkLfQWkL249j70PpRhT9IzMVSPQ+QG3+5VLmCa6Lg+6e7ilRYkp3vytl8Lgcj83UocewA=
-X-MS-Exchange-AntiSpam-MessageData: Z7DxFJib44MiGgv53aQjZjx9fioIo37G2p/9E+33yZfiYAwDbrPSyM7p33XjFd5IcKjyxhZiGMoCsA58geqLIYCD2cB0fmwKC1MEzd3hOgb8YDfCRkhrzNUxFthkSpcfuFAmzbDM01aE3r+g56uoMw==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 05ecfdab-50cc-4128-2458-08d7baa95e35
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2020 10:48:09.3652
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7zhSEfmkIPS3deL0oQEhhFZUa6J2sLzH+8wRXS85CogxsJgiRp1TKYQHk3bbtpBaHYTJBwUajiIqsmGgK/PwVQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3933
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <CAOssrKfaxnHswrKejedFzmYTbYivJ++cPes4c91+BJDfgH4xJA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ACP_PME_EN allows wake interrupt to be generated when I2S wake
-feature is enabled. On turning ACP On, ACP_PME_EN gets cleared.
-Setting the bit back ensures that wake event can be received
-when ACP is On.
+Hi,
 
-Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
----
- sound/soc/amd/raven/pci-acp3x.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+On 26/02/2020 09:11, Miklos Szeredi wrote:
+> On Tue, Feb 25, 2020 at 4:29 PM James Bottomley
+> <James.Bottomley@hansenpartnership.com> wrote:
+>
+>> The other thing a file descriptor does that sysfs doesn't is that it
+>> solves the information leak: if I'm in a mount namespace that has no
+>> access to certain mounts, I can't fspick them and thus I can't see the
+>> information.  By default, with sysfs I can.
+> That's true, but procfs/sysfs has to deal with various namespacing
+> issues anyway.  If this is just about hiding a number of entries, then
+> I don't think that's going to be a big deal.
+>
+> The syscall API is efficient: single syscall per query instead of
+> several, no parsing necessary.
+>
+> However, it is difficult to extend, because the ABI must be updated,
+> possibly libc and util-linux also, so that scripts can also consume
+> the new parameter.  With the sysfs approach only the kernel needs to
+> be updated, and possibly only the filesystem code, not even the VFS.
+>
+> So I think the question comes down to:  do we need a highly efficient
+> way to query the superblock parameters all at once, or not?
+>
+> Thanks,
+> Miklos
+>
 
-diff --git a/sound/soc/amd/raven/pci-acp3x.c b/sound/soc/amd/raven/pci-acp3x.c
-index da60e2ec5535..f25ce50f1a90 100644
---- a/sound/soc/amd/raven/pci-acp3x.c
-+++ b/sound/soc/amd/raven/pci-acp3x.c
-@@ -38,8 +38,13 @@ static int acp3x_power_on(void __iomem *acp3x_base)
- 	timeout = 0;
- 	while (++timeout < 500) {
- 		val = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
--		if (!val)
-+		if (!val) {
-+			/* Set PME_EN as after ACP power On,
-+			 * PME_EN gets cleared
-+			 */
-+			rv_writel(0x1, acp3x_base + mmACP_PME_EN);
- 			return 0;
-+		}
- 		udelay(1);
- 	}
- 	return -ETIMEDOUT;
--- 
-2.17.1
+That is Ian's use case for autofs I think, and it will also be what is 
+needed at start up of most applications using the fs notifications, as 
+well as at resync time if there has been an overrun leading to lost fs 
+notification messages. We do need a solution that can scale to large 
+numbers of mounts efficiently. Being able to extend it is also an 
+important consideration too, so hopefully David has a solution to that,
+
+Steve.
+
 
