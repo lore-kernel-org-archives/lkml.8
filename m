@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDC0C4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E45EC4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52CF824653
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E559724653
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:38:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="No0k3OIx"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GC3+4ikY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgBZJiE (ORCPT
+        id S1728042AbgBZJh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 04:38:04 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:45698 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727457AbgBZJiC (ORCPT
+        Wed, 26 Feb 2020 04:37:57 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:37304 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727998AbgBZJhv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 04:38:02 -0500
+        Wed, 26 Feb 2020 04:37:51 -0500
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01Q9bpYG048469;
-        Wed, 26 Feb 2020 03:37:51 -0600
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01Q9bQ06108032;
+        Wed, 26 Feb 2020 03:37:26 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582709872;
-        bh=f73KydanqCBfpggGnWafdMQaZ6wiesDHl1RvZlVeYSw=;
+        s=ti-com-17Q1; t=1582709846;
+        bh=UK9ViJ8/KnZTmqsh0WaZJUAW35YfoP4ZW7jL8CyJPoQ=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=No0k3OIxU014MkfBvJ/fgCEQgTU7Z/CIgPHeLbBZuNxg97HCQabtuGeyb9bWOr/+H
-         NBRwuOutUGuYTPlp9TIJ63sj5HHaz5l+8TMVBu76ri4gs1VS+EqUgVtcuc4F55DO+J
-         1sLHBaf1ZOvmd1rXzk0+7N8QkkBuz9qMjSA0Imuc=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01Q9bpPI119216
+        b=GC3+4ikYVuIib89/kVsUWrJZzTCfta5uFhsQ1rmOJebR3ekvGJGeZ/1/IltvlnZ3b
+         1B7gis80R3HV0fd0WoUUl8MBUIm9j83v2hKHf1gn3oxlGbVRwx6L0/EUnWrtTHLrud
+         uHENnCYDJ3D4byp3UnfSnxEEeMQh0Hbmkkz3SmfU=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01Q9bQqZ118902
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 26 Feb 2020 03:37:51 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 26 Feb 2020 03:37:26 -0600
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 26
- Feb 2020 03:37:51 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ Feb 2020 03:37:25 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 26 Feb 2020 03:37:51 -0600
+ Frontend Transport; Wed, 26 Feb 2020 03:37:25 -0600
 Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01Q9b4AF110613;
-        Wed, 26 Feb 2020 03:37:47 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01Q9b4A9110613;
+        Wed, 26 Feb 2020 03:37:22 -0600
 From:   Pratyush Yadav <p.yadav@ti.com>
 To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -59,9 +59,9 @@ To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
 CC:     Pratyush Yadav <p.yadav@ti.com>, <linux-mtd@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
         <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>
-Subject: [PATCH v2 10/11] mtd: spi-nor: enable octal DTR mode when possible
-Date:   Wed, 26 Feb 2020 15:07:02 +0530
-Message-ID: <20200226093703.19765-11-p.yadav@ti.com>
+Subject: [PATCH v2 04/11] spi: spi-mem: allow specifying a command's extension
+Date:   Wed, 26 Feb 2020 15:06:56 +0530
+Message-ID: <20200226093703.19765-5-p.yadav@ti.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200226093703.19765-1-p.yadav@ti.com>
 References: <20200226093703.19765-1-p.yadav@ti.com>
@@ -74,84 +74,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow flashes to specify a hook to enable octal DTR mode. Use this hook
-whenever possible to get optimal transfer speeds.
+In xSPI mode, flashes expect 2-byte opcodes. The second byte is called
+the "command extension". There can be 3 types of extensions in xSPI:
+repeat, invert, and hex. When the extension type is "repeat", the same
+opcode is sent twice. When it is "invert", the second byte is the
+inverse of the opcode. When it is "hex" an additional opcode byte based
+is sent with the command whose value can be anything.
 
 Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
 ---
- drivers/mtd/spi-nor/spi-nor.c | 31 +++++++++++++++++++++++++++++++
- include/linux/mtd/spi-nor.h   |  2 ++
- 2 files changed, 33 insertions(+)
+ drivers/spi/spi-mem.c       | 23 +++++++++++++++++++++++
+ include/linux/spi/spi-mem.h | 24 ++++++++++++++++++++++++
+ 2 files changed, 47 insertions(+)
 
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index 06cfc525260c..fdcc1b4abc3f 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -5184,6 +5184,31 @@ static void spi_nor_init_params(struct spi_nor *nor)
- 	spi_nor_late_init_params(nor);
+diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
+index cb13e0878b95..3838ddc9aeec 100644
+--- a/drivers/spi/spi-mem.c
++++ b/drivers/spi/spi-mem.c
+@@ -462,6 +462,29 @@ int spi_mem_adjust_op_size(struct spi_mem *mem, struct spi_mem_op *op)
  }
+ EXPORT_SYMBOL_GPL(spi_mem_adjust_op_size);
  
-+/** spi_nor_octal_dtr_enable() - enable Octal DTR I/O if needed
-+ * @nor:                 pointer to a 'struct spi_nor'
-+ *
-+ * Return: 0 on success, -errno otherwise.
-+ */
-+static int spi_nor_octal_dtr_enable(struct spi_nor *nor)
++int spi_mem_get_cmd_ext(const struct spi_mem_op *op, u8 *ext)
 +{
-+	int ret;
++	switch (op->cmd.ext_type) {
++	case SPI_MEM_EXT_INVERT:
++		*ext = ~op->cmd.opcode;
++		break;
 +
-+	if (!nor->params.octal_dtr_enable)
-+		return 0;
++	case SPI_MEM_EXT_REPEAT:
++		*ext = op->cmd.opcode;
++		break;
 +
-+	if (!(spi_nor_get_protocol_width(nor->read_proto) == 8 ||
-+	      spi_nor_get_protocol_width(nor->write_proto) == 8))
-+		return 0;
++	case SPI_MEM_EXT_HEX:
++		*ext = op->cmd.ext;
++		break;
 +
-+	ret = nor->params.octal_dtr_enable(nor);
-+	if (ret)
-+		return ret;
-+
-+	nor->reg_proto = SNOR_PROTO_8_8_8_DTR;
++	default:
++		return -EINVAL;
++	}
 +
 +	return 0;
 +}
++EXPORT_SYMBOL_GPL(spi_mem_get_cmd_ext);
++
+ static ssize_t spi_mem_no_dirmap_read(struct spi_mem_dirmap_desc *desc,
+ 				      u64 offs, size_t len, void *buf)
+ {
+diff --git a/include/linux/spi/spi-mem.h b/include/linux/spi/spi-mem.h
+index 4669082b4e3b..06ccab17e4d0 100644
+--- a/include/linux/spi/spi-mem.h
++++ b/include/linux/spi/spi-mem.h
+@@ -67,11 +67,31 @@ enum spi_mem_data_dir {
+ 	SPI_MEM_DATA_OUT,
+ };
+ 
++/**
++ * enum spi_mem_cmd_ext - describes the command opcode extension in DTR mode
++ * @SPI_MEM_EXT_NONE: no extension. This is the default, and is used in Legacy
++ *		      SPI mode
++ * @SPI_MEM_EXT_REPEAT: the extension is same as the opcode
++ * @SPI_MEM_EXT_INVERT: the extension is the bitwise inverse of the opcode
++ * @SPI_MEM_EXT_HEX: the extension is any hex value. The command and opcode
++ *		     combine to form a 16-bit opcode.
++ */
++enum spi_mem_cmd_ext {
++	SPI_MEM_EXT_NONE = 0,
++	SPI_MEM_EXT_REPEAT,
++	SPI_MEM_EXT_INVERT,
++	SPI_MEM_EXT_HEX,
++};
 +
  /**
-  * spi_nor_quad_enable() - enable Quad I/O if needed.
-  * @nor:                pointer to a 'struct spi_nor'
-@@ -5223,6 +5248,12 @@ static int spi_nor_init(struct spi_nor *nor)
- {
- 	int err;
+  * struct spi_mem_op - describes a SPI memory operation
+  * @cmd.buswidth: number of IO lines used to transmit the command
+  * @cmd.opcode: operation opcode
+  * @cmd.is_dtr: whether the command opcode should be sent in DTR mode or not
++ * @cmd.ext_type: type of the command opcode extension in DTR mode
++ * @cmd.ext: value of the command opcode extension in DTR mode. It is
++ *	     only set when 'ext_type' is 'SPI_MEM_EXT_HEX'. In all other
++ *	     cases, the extension can be directly derived from the opcode.
+  * @addr.nbytes: number of address bytes to send. Can be zero if the operation
+  *		 does not need to send an address
+  * @addr.buswidth: number of IO lines used to transmit the address cycles
+@@ -97,6 +117,8 @@ struct spi_mem_op {
+ 		u8 buswidth;
+ 		u8 opcode;
+ 		bool is_dtr;
++		enum spi_mem_cmd_ext ext_type;
++		u8 ext;
+ 	} cmd;
  
-+	err = spi_nor_octal_dtr_enable(nor);
-+	if (err) {
-+		dev_dbg(nor->dev, "octal mode not supported\n");
-+		return err;
-+	}
+ 	struct {
+@@ -361,6 +383,8 @@ int spi_mem_driver_register_with_owner(struct spi_mem_driver *drv,
+ 
+ void spi_mem_driver_unregister(struct spi_mem_driver *drv);
+ 
++int spi_mem_get_cmd_ext(const struct spi_mem_op *op, u8 *ext);
 +
- 	err = spi_nor_quad_enable(nor);
- 	if (err) {
- 		dev_dbg(nor->dev, "quad mode not supported\n");
-diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-index f54dbd0f86ab..c653f6713cfc 100644
---- a/include/linux/mtd/spi-nor.h
-+++ b/include/linux/mtd/spi-nor.h
-@@ -526,6 +526,7 @@ struct spi_nor_locking_ops {
-  *                      higher index in the array, the higher priority.
-  * @erase_map:		the erase map parsed from the SFDP Sector Map Parameter
-  *                      Table.
-+ * @octal_dtr_enable:	enables SPI NOR octal DTR mode.
-  * @quad_enable:	enables SPI NOR quad mode.
-  * @set_4byte:		puts the SPI NOR in 4 byte addressing mode.
-  * @convert_addr:	converts an absolute address into something the flash
-@@ -549,6 +550,7 @@ struct spi_nor_flash_parameter {
+ #define spi_mem_driver_register(__drv)                                  \
+ 	spi_mem_driver_register_with_owner(__drv, THIS_MODULE)
  
- 	struct spi_nor_erase_map        erase_map;
- 
-+	int (*octal_dtr_enable)(struct spi_nor *nor);
- 	int (*quad_enable)(struct spi_nor *nor);
- 	int (*set_4byte)(struct spi_nor *nor, bool enable);
- 	u32 (*convert_addr)(struct spi_nor *nor, u32 addr);
 -- 
 2.25.0
 
