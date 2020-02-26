@@ -2,145 +2,91 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F24AC4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB7FC4BA0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 761FD24685
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52F9524688
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 11:17:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=isovalent-com.20150623.gappssmtp.com header.i=@isovalent-com.20150623.gappssmtp.com header.b="D5KgMuEP"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BC9afpeS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbgBZLRZ (ORCPT
+        id S1728441AbgBZLR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 06:17:25 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34076 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728164AbgBZLRZ (ORCPT
+        Wed, 26 Feb 2020 06:17:28 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:32938 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728147AbgBZLR0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 06:17:25 -0500
-Received: by mail-wm1-f65.google.com with SMTP id i10so3216177wmd.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 03:17:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=isovalent-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+aewCnTNGy8KuaeqGtx90I+oSQVy+5V29tI+27/JzTo=;
-        b=D5KgMuEPCN514AD3a5eUqIdkkIe9aHOLwMX6eisi+8vWMQ0Q9l1ABDAfIarIU4NYB6
-         eXITWDgzdZfGC3ZR0IQEPGVoxAnxUz1vT/7GOL15j+LoJ35Q2LEN71Ur1L7YFU27N7j6
-         EJPAYGERRcDA5KwHBW6XyhINrXF065mGb1Cr/AQ5TyqasNZ2cn/QcWAVikJ376p31Ics
-         k38acqY8gYslHMQQGC8Wi76z0cPYrTllrdyNy+yYlHweSdTSZm/MOOh67ABJxyqn94M3
-         YHZh+GwcuETQL9VvFi877MPKW77tiCglJqe7F9BP0oo4F/Nq+6AKpBaHxmWiCHXArTjU
-         0K4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+aewCnTNGy8KuaeqGtx90I+oSQVy+5V29tI+27/JzTo=;
-        b=l2QgtshBMCmDrhWpBurKRlfJrc6TRb/Esm1Zr3duQNfHRpLkcFmGYErVU6qEV0hC8v
-         qnXerUCF59RmEOjk/l+59o1rZD6FQ5wlRA9Kxk7pQ9Mgn+C7aAtnP+ZqTREYDck83SoT
-         2m8Ri42hLEPXQVzexaA/w70nIfRFNh0CX5cilyZj6McoeMer2vIv7zcAkADHM5miBB1Z
-         H3+P40cnbUX+5PGbCyhFbZxPDKcuQKK2KxxA9baIzOK5d6ePiPh8N12l4cX90JBA2rX1
-         7VbUf4Xg4wv3t6FtYo6qD/+fCUsu8vBCW47XjM2bKGzMFWQ+NzNG2LHKgJvmngozuBz7
-         Y1vQ==
-X-Gm-Message-State: APjAAAXMJClRCdUfdRFZrtB3LUh9iJXEPoJVfRkPXgyrvc9H+tl0bGGN
-        B8Q7QaVsOA65vooZ8pwR3CC0+g==
-X-Google-Smtp-Source: APXvYqwW7X83G2uoPsVuS+xc1lYqGj2pts2NmdFwwGGKVZzwiMOH6f6iH/O7vNJglR+Cr+Y7yAqBPw==
-X-Received: by 2002:a1c:6308:: with SMTP id x8mr5118270wmb.80.1582715843459;
-        Wed, 26 Feb 2020 03:17:23 -0800 (PST)
-Received: from [192.168.1.10] ([194.35.116.65])
-        by smtp.gmail.com with ESMTPSA id o27sm2828658wro.27.2020.02.26.03.17.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2020 03:17:22 -0800 (PST)
-Subject: Re: [PATCH bpf-next v3 0/5] bpftool: Make probes which emit dmesg
- warnings optional
-To:     Michal Rostecki <mrostecki@opensuse.org>, bpf@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
-        linux-kselftest@vger.kernel.org
-References: <20200225194446.20651-1-mrostecki@opensuse.org>
-From:   Quentin Monnet <quentin@isovalent.com>
-Message-ID: <e4929660-21ff-e394-37a0-d72b67a3770a@isovalent.com>
-Date:   Wed, 26 Feb 2020 11:17:21 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Wed, 26 Feb 2020 06:17:26 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582715846; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=JeLBIZJhvP42B2sTx6JhqGirHZU0I0l6TtJa1fPw4Ic=; b=BC9afpeSdEfzfHR5GIeu0WYfP25RDUaPur6RMLpTldFAzewxDNE6RO5PCSNnmIt4c6Kx7ZRB
+ 4/VY74dI5+uOL4Xb7axwYW9wSTGZbU/zzlIbwV+VvI8Ikc4VfkX4j6ok5qdCOmZx1U3oIjA1
+ p1shlMgSsA2Sr9S7ihl8HWbEa6I=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e5653bb.7f8d2db86ca8-smtp-out-n02;
+ Wed, 26 Feb 2020 11:17:15 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1618EC447A2; Wed, 26 Feb 2020 11:17:14 +0000 (UTC)
+Received: from [10.204.67.17] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: smasetty)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4C585C43383;
+        Wed, 26 Feb 2020 11:17:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4C585C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
+Subject: Re: [PATCH] dt-bindings: arm-smmu: update the list of clocks
+To:     Rob Herring <robh@kernel.org>
+Cc:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        dianders@chromium.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
+        mka@chromium.org, dri-devel@freedesktop.org
+References: <1582186342-3484-1-git-send-email-smasetty@codeaurora.org>
+ <1582186342-3484-2-git-send-email-smasetty@codeaurora.org>
+ <20200220203509.GA14697@bogus>
+From:   Sharat Masetty <smasetty@codeaurora.org>
+Message-ID: <6a7c1f39-a85f-4a99-fed3-71001bdb6128@codeaurora.org>
+Date:   Wed, 26 Feb 2020 16:47:07 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200225194446.20651-1-mrostecki@opensuse.org>
+In-Reply-To: <20200220203509.GA14697@bogus>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020-02-25 20:44 UTC+0100 ~ Michal Rostecki <mrostecki@opensuse.org>
-> Feature probes in bpftool related to bpf_probe_write_user and
-> bpf_trace_printk helpers emit dmesg warnings which might be confusing
-> for people running bpftool on production environments. This patch series
-> addresses that by filtering them out by default and introducing the new
-> positional argument "full" which enables all available probes.
-> 
-> The main motivation behind those changes is ability the fact that some
-> probes (for example those related to "trace" or "write_user" helpers)
-> emit dmesg messages which might be confusing for people who are running
-> on production environments. For details see the Cilium issue[0].
-> 
-> v1 -> v2:
-> - Do not expose regex filters to users, keep filtering logic internal,
-> expose only the "full" option for including probes which emit dmesg
-> warnings.
-> 
-> v2 -> v3:
-> - Do not use regex for filtering out probes, use function IDs directly.
-> - Fix bash completion - in v2 only "prefix" was proposed after "macros",
->    "dev" and "kernel" were not.
-> - Rephrase the man page paragraph, highlight helper function names.
-> - Remove tests which parse the plain output of bpftool (except the
->    header/macros test), focus on testing JSON output instead.
-> - Add test which compares the output with and without "full" option.
-> 
-> [0] https://github.com/cilium/cilium/issues/10048
-> 
-> Michal Rostecki (5):
->    bpftool: Move out sections to separate functions
->    bpftool: Make probes which emit dmesg warnings optional
->    bpftool: Update documentation of "bpftool feature" command
->    bpftool: Update bash completion for "bpftool feature" command
->    selftests/bpf: Add test for "bpftool feature" command
-> 
->   .../bpftool/Documentation/bpftool-feature.rst |  19 +-
->   tools/bpf/bpftool/bash-completion/bpftool     |   3 +-
->   tools/bpf/bpftool/feature.c                   | 283 +++++++++++-------
->   tools/testing/selftests/.gitignore            |   5 +-
->   tools/testing/selftests/bpf/Makefile          |   3 +-
->   tools/testing/selftests/bpf/test_bpftool.py   | 179 +++++++++++
->   tools/testing/selftests/bpf/test_bpftool.sh   |   5 +
->   7 files changed, 374 insertions(+), 123 deletions(-)
->   create mode 100644 tools/testing/selftests/bpf/test_bpftool.py
->   create mode 100755 tools/testing/selftests/bpf/test_bpftool.sh
-> 
 
-This version looks good to me, thanks!
-
-Reviewed-by: Quentin Monnet <quentin@isovalent.com>
-
-(Please keep Acked-by/Reviewed-by tags between versions if there are no 
-significant changes, here for patch 1.)
-
-That's a lot of tests now that we don't have the regex and filtering is 
-very straightforward, but it does not hurt. I checked and they all pass 
-on my system.
-
-Thanks,
-Quentin
+On 2/21/2020 2:05 AM, Rob Herring wrote:
+> On Thu, 20 Feb 2020 13:42:22 +0530, Sharat Masetty wrote:
+>> This patch adds a clock definition needed for powering on the GPU TBUs
+>> and the GPU TCU.
+>>
+>> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+>> ---
+>>   Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+> My bot found errors running 'make dt_binding_check' on your patch:
+>
+> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iommu/arm,smmu.example.dt.yaml: iommu@d00000: clock-names: ['bus', 'iface'] is too short
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iommu/arm,smmu.example.dt.yaml: iommu@d00000: clocks: [[4294967295, 123], [4294967295, 124]] is too short
+>
+> See https://patchwork.ozlabs.org/patch/1241297
+> Please check and re-submit.
+Hi Rob, These issues seem to be from the original code and not related 
+to my patch. Are these going to be blocking errors?
