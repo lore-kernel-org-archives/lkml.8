@@ -2,109 +2,174 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C51CCC4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A7BC4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96F1920637
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:44:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qj/tpUst"
+	by mail.kernel.org (Postfix) with ESMTP id F09D02084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 06:47:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582699625;
+	bh=dDJbRXLqJpypI/z+Vf+XskAsJXHyrxLuka4Lu27xsRQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=B+ujyJYUohbfQG251iOADKr8imuOlvK2nqUWBnrOv6zEK5PLMGu65c5zK67zEyOvu
+	 nC/Zzh9ByvNutFe2Ja3OCcS9GL/+8lgVU/yxe8kUFD4rd9U42/R+0Ya/XmPM5HN5xI
+	 d5ByFyH6ZnTJsew8jyyM2onxqLh8coPtDq+WmYTc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbgBZGol (ORCPT
+        id S1727180AbgBZGrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 01:44:41 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44541 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbgBZGol (ORCPT
+        Wed, 26 Feb 2020 01:47:04 -0500
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:58785 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbgBZGrD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 01:44:41 -0500
-Received: by mail-wr1-f65.google.com with SMTP id m16so1487250wrx.11
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 22:44:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=+KPHLK60Od8Tz3at5CtY8IsfsFpWA/aEWA5NAOhb0WU=;
-        b=Qj/tpUstLELK5vv6XqennEvqhI9Dn1aambXr8LWCAJ6RuIMxB4e0WMnhKK5YG/SBdd
-         hByGxHZcQhTwcMBvErtFpZIRGnXN5cjYHubnkEswYSUXOcwaGjaKJyolTBbvUlUbxybe
-         2/mjGV4Oc+ubFZ9mAfVT7rDyiWVJr3Db4gbr64XQc6JXYc9WBJK7L+FiGWITA6ZPIfaz
-         KXCLkXdbt2luMqQsf7MjdoZqzFyrxj0RJ60O+aCRx5ACbZ997AYNKLJYFtSWoMyL8hzn
-         yP6fjO2FqSLFJVwfqlO22iGfHrdfyfvq6IWt1Z7IVFMwUwStXWHe8flFmc80KUMBWT0C
-         cDBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=+KPHLK60Od8Tz3at5CtY8IsfsFpWA/aEWA5NAOhb0WU=;
-        b=UoupXOPzWVSOF8bZozEjRxgGqgwzoeMzdNjKoOfj2AR0fj2EPuvsN+GasOvOSTlp06
-         awQFRFtM4IZTMCBfBbBGvKgiDU5BTc5Iv2XXvpwIUHX92cbGS1dn4YF5L6O+ET3LsKbE
-         RAeUX2HU4FvaVdz0hlXTiCOF4TbeHUXExEmI7cULY08H1d7tSJQjbBsekF7oHgnT/Ncb
-         G04M/aMA6+6H/tuhiErHzO3OqrL0SSHrEqUAENxTeAj8P9lLDPHwWSKpIcu/CFBgQnyy
-         ryyHKKLLBwSpw6PZLm88Oho+e0giEuy7FM/C9P3amXlDmSfSY26el6zQNmYFCSrLUa8R
-         ESyA==
-X-Gm-Message-State: APjAAAXAoOScAyOgwPFAY9wOsv85YjqaWcVOUdCsI923JMWYrpvaj/ao
-        GiCJymIekw+0/3pC1ZD7J30Y8Q==
-X-Google-Smtp-Source: APXvYqzzKWMArtaFbi5nyEZ/y+P8oPK5jIkuzcSZocgxqUWUIHT0bV17ls7m2M7xepaDkZ5R4ou4BQ==
-X-Received: by 2002:a5d:56ca:: with SMTP id m10mr3653907wrw.313.1582699479274;
-        Tue, 25 Feb 2020 22:44:39 -0800 (PST)
-Received: from dell ([2.31.163.122])
-        by smtp.gmail.com with ESMTPSA id g25sm8002307wmh.3.2020.02.25.22.44.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2020 22:44:38 -0800 (PST)
-Date:   Wed, 26 Feb 2020 06:45:10 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 12/19] mfd: intel_soc_pmic_mrfld: Convert to use new
- SCU IPC API
-Message-ID: <20200226064510.GZ3494@dell>
-References: <20200217131446.32818-1-mika.westerberg@linux.intel.com>
- <20200217131446.32818-13-mika.westerberg@linux.intel.com>
+        Wed, 26 Feb 2020 01:47:03 -0500
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 01Q6kp4P019600;
+        Wed, 26 Feb 2020 15:46:52 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 01Q6kp4P019600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582699612;
+        bh=2VfJIOCvZH0NY/dmW/3ZDhtzj0Q1UN635jNbPpjGUr4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Jd5pA8iRcjCYKKrF3kgDrZanUYxXyWnIGkH8aWK1zVz+hOhh5UuIc28UrLYFjAflt
+         y62ne42vRqsltkLP5ktMoipKgdRhCwepMx8ru4XYHN52FfsmLDKrVn3Im1vBGbtnpw
+         7j380mcPGbIyOjTiDs8v3kZGpyacRgQv7uWaI1mhyS0nE818GDI9QPPAKAZiEIY124
+         KwNTPcfflqDai2cpBzdWOqaHFV55nQ0ZPLELDaN7iLVKDfT9/6kPKidaHbmrQUT+Jr
+         CGpohC7LXixtKupCEa3Wb70aPbN7TAmZrjGf71GYQ0gNtOv008kp+yXs4/6pntXOFz
+         tyAguIycaYenA==
+X-Nifty-SrcIP: [209.85.217.49]
+Received: by mail-vs1-f49.google.com with SMTP id x123so1134533vsc.2;
+        Tue, 25 Feb 2020 22:46:52 -0800 (PST)
+X-Gm-Message-State: APjAAAXtBYA0/g5dJV4g1J8YZ71mtXZPoz/7rBm3UG/xHMv/ftTggx5T
+        C7hPljBxc5wDmJsZx5aFW9fY8+A1w0mYsOs1/cU=
+X-Google-Smtp-Source: APXvYqwkW77CBgQ1pHwOq8iqy4JwoPCgSKHrG7tUDS7YsQUWfdeloJMDAwvhYvtwEDKhmGNtwpbc+CI4rGqKqE3AHTQ=
+X-Received: by 2002:a05:6102:3102:: with SMTP id e2mr2881251vsh.179.1582699611202;
+ Tue, 25 Feb 2020 22:46:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200217131446.32818-13-mika.westerberg@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200222190435.11767-1-masahiroy@kernel.org> <20200222190435.11767-5-masahiroy@kernel.org>
+In-Reply-To: <20200222190435.11767-5-masahiroy@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 26 Feb 2020 15:46:15 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT14XvMLp+CFJk4QdgvYCTanXz8KPQ=5C90N+VCOYPu1g@mail.gmail.com>
+Message-ID: <CAK7LNAT14XvMLp+CFJk4QdgvYCTanXz8KPQ=5C90N+VCOYPu1g@mail.gmail.com>
+Subject: Re: [PATCH 5/5] kbuild: allow to run dt_binding_check and dtbs_check
+ in a single command
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Feb 2020, Mika Westerberg wrote:
-
-> This converts the Intel Merrifield PMIC driver over the new SCU IPC API
-> where the SCU IPC instance is passed to the functions.
-> 
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Sun, Feb 23, 2020 at 4:04 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> Since commit 93512dad334d ("dt-bindings: Improve validation build error
+> handling"), 'make dtbs_check' does not validate the schema fully.
+>
+> If you want to check everything, you need to run two commands.
+>
+>   $ make ARCH=arm dt_binding_check
+>   $ make ARCH=arm dtbs_check
+>
+> You cannot do:
+>
+>   $ make ARCH=arm dt_binding_check dtbs_check
+>
+> Because CHECK_DTBS is set, dt-doc-validate and dt-extract-example
+> are skipped.
+>
+> Making it work will be useful for schema writers.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 > ---
->  drivers/mfd/intel_soc_pmic_mrfld.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+
+
+Sorry, I take back this patch.
+
+'make dtbs_check dt_binding_chec' does not work.
+
+
+
+>
+>  Documentation/devicetree/bindings/Makefile  | 6 ++----
+>  Documentation/devicetree/writing-schema.rst | 4 ++++
+>  Makefile                                    | 8 +++++---
+>  3 files changed, 11 insertions(+), 7 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
+> index 646cb3525373..6efa2094b95e 100644
+> --- a/Documentation/devicetree/bindings/Makefile
+> +++ b/Documentation/devicetree/bindings/Makefile
+> @@ -25,10 +25,8 @@ DT_DOCS = $(shell \
+>
+>  DT_SCHEMA_FILES ?= $(addprefix $(src)/,$(DT_DOCS))
+>
+> -ifeq ($(CHECK_DTBS),)
+> -extra-y += $(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
+> -extra-y += $(patsubst $(src)/%.yaml,%.example.dt.yaml, $(DT_SCHEMA_FILES))
+> -endif
+> +extra-$(CHECK_DT_BINDING) += $(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
+> +extra-$(CHECK_DT_BINDING) += $(patsubst $(src)/%.yaml,%.example.dt.yaml, $(DT_SCHEMA_FILES))
+>
+>  $(obj)/$(DT_TMP_SCHEMA): $(DT_SCHEMA_FILES) FORCE
+>         $(call if_changed,mk_schema)
+> diff --git a/Documentation/devicetree/writing-schema.rst b/Documentation/devicetree/writing-schema.rst
+> index 7635ab230456..220cf464ed77 100644
+> --- a/Documentation/devicetree/writing-schema.rst
+> +++ b/Documentation/devicetree/writing-schema.rst
+> @@ -147,6 +147,10 @@ Note that ``dtbs_check`` will skip any binding schema files with errors. It is
+>  necessary to use ``dt_binding_check`` to get all the validation errors in the
+>  binding schema files.
+>
+> +It is possible to run both in a single command::
+> +
+> +    make dt_binding_check dtbs_check
+> +
+>  It is also possible to run checks with a single schema file by setting the
+>  ``DT_SCHEMA_FILES`` variable to a specific schema file.
+>
+> diff --git a/Makefile b/Makefile
+> index 83f9b8f6fbaf..59dd768a1c1e 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1243,7 +1243,7 @@ dtbs dtbs_check: include/config/kernel.release scripts_dtc
+>         $(Q)$(MAKE) $(build)=$(dtstree)
+>
+>  dtbs_check: export CHECK_DTBS=1
+> -dtbs_check: dt_binding_check
+> +dtbs_check: __dt_binding_check
+>
+>  dtbs_install:
+>         $(Q)$(MAKE) $(dtbinst)=$(dtstree)
+> @@ -1258,8 +1258,10 @@ PHONY += scripts_dtc
+>  scripts_dtc: scripts_basic
+>         $(Q)$(MAKE) $(build)=scripts/dtc
+>
+> -PHONY += dt_binding_check
+> -dt_binding_check: scripts_dtc
+> +PHONY += dt_binding_check __dt_binding_check
+> +dt_binding_check: export CHECK_DT_BINDING=y
+> +dt_binding_check: __dt_binding_check
+> +__dt_binding_check: scripts_dtc
+>         $(Q)$(MAKE) $(build)=Documentation/devicetree/bindings
+>
+>  # ---------------------------------------------------------------------------
+> --
+> 2.17.1
+>
+
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Best Regards
+Masahiro Yamada
