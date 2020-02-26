@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A636FC4BA1E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3552DC4BA18
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:09:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA5124650
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12F7D2465D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:09:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727309AbgBZSJa (ORCPT
+        id S1727387AbgBZSJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 13:09:30 -0500
-Received: from foss.arm.com ([217.140.110.172]:40518 "EHLO foss.arm.com"
+        Wed, 26 Feb 2020 13:09:34 -0500
+Received: from foss.arm.com ([217.140.110.172]:40542 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727262AbgBZSJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 13:09:26 -0500
+        id S1727289AbgBZSJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 13:09:29 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7074A31B;
-        Wed, 26 Feb 2020 10:09:25 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F164331B;
+        Wed, 26 Feb 2020 10:09:28 -0800 (PST)
 Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DF2163F881;
-        Wed, 26 Feb 2020 10:09:23 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C8493F881;
+        Wed, 26 Feb 2020 10:09:27 -0800 (PST)
 From:   Andre Przywara <andre.przywara@arm.com>
 To:     Rob Herring <robh@kernel.org>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
@@ -35,9 +35,9 @@ Cc:     Robert Richter <rric@kernel.org>, soc@kernel.org,
         Eric Auger <eric.auger@redhat.com>,
         Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 07/13] dt-bindings: net: Convert Calxeda Ethernet binding to json-schema
-Date:   Wed, 26 Feb 2020 18:08:55 +0000
-Message-Id: <20200226180901.89940-8-andre.przywara@arm.com>
+Subject: [PATCH 09/13] dt-bindings: arm: Convert Calxeda L2 cache controller to json-schema
+Date:   Wed, 26 Feb 2020 18:08:57 +0000
+Message-Id: <20200226180901.89940-10-andre.przywara@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200226180901.89940-1-andre.przywara@arm.com>
 References: <20200226180901.89940-1-andre.przywara@arm.com>
@@ -46,93 +46,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the Calxeda XGMAC Ethernet device binding to DT schema format
-using json-schema.
+Convert the L2-ECC controller binding to DT schema format using
+json-schema.
+This is indented to be just used for error reporting.
 
 Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 ---
- .../devicetree/bindings/net/calxeda-xgmac.txt | 18 -------
- .../bindings/net/calxeda-xgmac.yaml           | 47 +++++++++++++++++++
- 2 files changed, 47 insertions(+), 18 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/net/calxeda-xgmac.txt
- create mode 100644 Documentation/devicetree/bindings/net/calxeda-xgmac.yaml
+ .../devicetree/bindings/arm/calxeda/l2ecc.txt | 15 --------
+ .../bindings/arm/calxeda/l2ecc.yaml           | 36 +++++++++++++++++++
+ 2 files changed, 36 insertions(+), 15 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/calxeda/l2ecc.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/calxeda/l2ecc.yaml
 
-diff --git a/Documentation/devicetree/bindings/net/calxeda-xgmac.txt b/Documentation/devicetree/bindings/net/calxeda-xgmac.txt
+diff --git a/Documentation/devicetree/bindings/arm/calxeda/l2ecc.txt b/Documentation/devicetree/bindings/arm/calxeda/l2ecc.txt
 deleted file mode 100644
-index c8ae996bd8f2..000000000000
---- a/Documentation/devicetree/bindings/net/calxeda-xgmac.txt
+index 94e642a33db0..000000000000
+--- a/Documentation/devicetree/bindings/arm/calxeda/l2ecc.txt
 +++ /dev/null
-@@ -1,18 +0,0 @@
--* Calxeda Highbank 10Gb XGMAC Ethernet
+@@ -1,15 +0,0 @@
+-Calxeda Highbank L2 cache ECC
 -
--Required properties:
--- compatible : Should be "calxeda,hb-xgmac"
--- reg : Address and length of the register set for the device
--- interrupts : Should contain 3 xgmac interrupts. The 1st is main interrupt.
--  The 2nd is pwr mgt interrupt. The 3rd is low power state interrupt.
--
--Optional properties:
--- dma-coherent      : Present if dma operations are coherent
+-Properties:
+-- compatible : Should be "calxeda,hb-sregs-l2-ecc"
+-- reg : Address and size for ECC error interrupt clear registers.
+-- interrupts : Should be single bit error interrupt, then double bit error
+-	interrupt.
 -
 -Example:
 -
--ethernet@fff50000 {
--        compatible = "calxeda,hb-xgmac";
--        reg = <0xfff50000 0x1000>;
--        interrupts = <0 77 4  0 78 4  0 79 4>;
--};
-diff --git a/Documentation/devicetree/bindings/net/calxeda-xgmac.yaml b/Documentation/devicetree/bindings/net/calxeda-xgmac.yaml
+-	sregs@fff3c200 {
+-		compatible = "calxeda,hb-sregs-l2-ecc";
+-		reg = <0xfff3c200 0x100>;
+-		interrupts = <0 71 4  0 72 4>;
+-	};
+diff --git a/Documentation/devicetree/bindings/arm/calxeda/l2ecc.yaml b/Documentation/devicetree/bindings/arm/calxeda/l2ecc.yaml
 new file mode 100644
-index 000000000000..77b8be9ebb20
+index 000000000000..25c022766f0c
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/net/calxeda-xgmac.yaml
-@@ -0,0 +1,47 @@
++++ b/Documentation/devicetree/bindings/arm/calxeda/l2ecc.yaml
+@@ -0,0 +1,36 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/net/calxeda-xgmac.yaml#
++$id: http://devicetree.org/schemas/arm/calxeda/l2ecc.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Calxeda Highbank 10Gb XGMAC Ethernet controller
++title: Calxeda Highbank L2 cache ECC
 +
 +description: |
-+  The Calxeda XGMAC Ethernet controllers are directly connected to the
-+  internal machine "network fabric", which is set up, initialised and
-+  managed by the firmware. So there are no PHY properties in this
-+  binding. Switches in the fabric take care of routing and mapping the
-+  traffic to external network ports.
++  Binding for the Calxeda Highbank L2 cache controller ECC device.
++  This does not cover the actual L2 cache controller control registers,
++  but just the error reporting functionality.
 +
 +maintainers:
 +  - Andre Przywara <andre.przywara@arm.com>
 +
 +properties:
 +  compatible:
-+    const: calxeda,hb-xgmac
++    const: "calxeda,hb-sregs-l2-ecc"
 +
 +  reg:
 +    maxItems: 1
 +
 +  interrupts:
 +    description: |
-+      Can point to at most 3 xgmac interrupts. The 1st one is the main
-+      interrupt, the 2nd one is used for power management. The optional
-+      3rd one is the low power state interrupt.
++      Should be single bit error interrupt, then double bit error interrupt.
 +    minItems: 2
-+    maxItems: 3
-+
-+  dma-coherent: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
++    maxItems: 2
 +
 +examples:
 +  - |
-+    ethernet@fff50000 {
-+        compatible = "calxeda,hb-xgmac";
-+        reg = <0xfff50000 0x1000>;
-+        interrupts = <0 77 4>, <0 78 4>, <0 79 4>;
++    sregs@fff3c200 {
++        compatible = "calxeda,hb-sregs-l2-ecc";
++        reg = <0xfff3c200 0x100>;
++        interrupts = <0 71 4>, <0 72 4>;
 +    };
 -- 
 2.17.1
