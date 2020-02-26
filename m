@@ -2,91 +2,92 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD16C4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FFA1C4BA0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52DE42467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E7722467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 09:57:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=displaylink.com header.i=@displaylink.com header.b="BA2vK/9v"
+	dkim=pass (1024-bit key) header.d=displaylink.com header.i=@displaylink.com header.b="WAeNLX8u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727867AbgBZJ5c (ORCPT
+        id S1727968AbgBZJ5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 04:57:32 -0500
-Received: from eu-smtp-delivery-167.mimecast.com ([207.82.80.167]:40333 "EHLO
+        Wed, 26 Feb 2020 04:57:51 -0500
+Received: from eu-smtp-delivery-167.mimecast.com ([146.101.78.167]:23551 "EHLO
         eu-smtp-delivery-167.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727359AbgBZJ5c (ORCPT
+        by vger.kernel.org with ESMTP id S1727882AbgBZJ5u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 04:57:32 -0500
+        Wed, 26 Feb 2020 04:57:50 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=displaylink.com;
-        s=mimecast20151025; t=1582711048;
+        s=mimecast20151025; t=1582711067;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding;
-        bh=GMAeEUisq/fTEGN18JFOBILvZMEP1SjsMBORCeLkH6M=;
-        b=BA2vK/9vnJn+oU1vN4LmUDIzH+zWA4F2MC2AErllJmoLou6Bpu3s7MowP93okGF0sIlayh
-        Rxgtv2v6Ff3f09uJB6Ffp7SdEnQFt718XlaWMD3bJEOp9bg+89Ri53psB0b78LYEeTikNb
-        qmoaIS0XvMAwkhzC5Z6DCBu27wWNZpI=
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com
- (mail-db3eur04lp2054.outbound.protection.outlook.com [104.47.12.54]) (Using
+        bh=XKkZ8px1iWfl8gzZykIBSANpFkwqkf6p6eNDWaPSF4M=;
+        b=WAeNLX8u/qtfqif0RGyxZYCB0FaWnx2n4XC7/689owloCT/fAGJck/MTfSscLKEKg3E1Rk
+        bSyEmt4SJ7k5Bo51tOJ554mlgt/qOVl2mZazLv+x9OQw0y3g/PC8VOA2IY77BmSGE6mXlc
+        xt2/1djOX1fbplZLTwt7Qf/P9SpSLnQ=
+Received: from EUR03-AM5-obe.outbound.protection.outlook.com
+ (mail-am5eur03lp2052.outbound.protection.outlook.com [104.47.8.52]) (Using
  TLS) by relay.mimecast.com with ESMTP id
- uk-mta-26-m23DxplwOT67jpSSWbFKPw-1; Wed, 26 Feb 2020 09:57:26 +0000
-X-MC-Unique: m23DxplwOT67jpSSWbFKPw-1
+ uk-mta-255-Z-k3_lweOZWpc70EAHjYBg-1; Wed, 26 Feb 2020 09:57:46 +0000
+X-MC-Unique: Z-k3_lweOZWpc70EAHjYBg-1
 Received: from AM0PR10MB1954.EURPRD10.PROD.OUTLOOK.COM (52.133.63.154) by
- AM0PR10MB2676.EURPRD10.PROD.OUTLOOK.COM (20.178.119.88) with Microsoft SMTP
+ AM0PR10MB3553.EURPRD10.PROD.OUTLOOK.COM (10.186.174.143) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.21; Wed, 26 Feb 2020 09:57:24 +0000
+ 15.20.2750.21; Wed, 26 Feb 2020 09:57:44 +0000
 Received: from AM0PR10MB1954.EURPRD10.PROD.OUTLOOK.COM
  ([fe80::d07a:2e67:4515:dba6]) by AM0PR10MB1954.EURPRD10.PROD.OUTLOOK.COM
  ([fe80::d07a:2e67:4515:dba6%3]) with mapi id 15.20.2750.021; Wed, 26 Feb 2020
- 09:57:24 +0000
-Received: from [172.17.183.132] (80.93.235.40) by VI1PR07CA0255.eurprd07.prod.outlook.com (2603:10a6:803:b4::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.12 via Frontend Transport; Wed, 26 Feb 2020 09:57:23 +0000
+ 09:57:44 +0000
+Received: from [172.17.183.132] (80.93.235.40) by VI1PR07CA0268.eurprd07.prod.outlook.com (2603:10a6:803:b4::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.13 via Frontend Transport; Wed, 26 Feb 2020 09:57:44 +0000
 From:   Vladimir Stankovic <vladimir.stankovic@displaylink.com>
 To:     Greg KH <gregkh@linuxfoundation.org>
 CC:     linux-kernel <linux-kernel@vger.kernel.org>,
         linux-usb <linux-usb@vger.kernel.org>,
         mausb-host-devel <mausb-host-devel@displaylink.com>
-Subject: [PATCH v2 0/8] Add MA USB Host driver
-Thread-Topic: [PATCH v2 0/8] Add MA USB Host driver
-Thread-Index: AQHV7IskUwNNQv/Aj0qPQBxaE+JY1Q==
-Date:   Wed, 26 Feb 2020 09:57:24 +0000
-Message-ID: <013d6b8e-3e61-b41d-614a-8c115f2e2c9f@displaylink.com>
+Subject: [PATCH v2 1/8] usb: Add MA-USB Host kernel module
+Thread-Topic: [PATCH v2 1/8] usb: Add MA-USB Host kernel module
+Thread-Index: AQHV7IsxaG6eCq+TZEikiWNbTpJ3fQ==
+Date:   Wed, 26 Feb 2020 09:57:44 +0000
+Message-ID: <0dbf7da8-a0af-8750-6e91-c6d29f7e1a72@displaylink.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR07CA0255.eurprd07.prod.outlook.com
- (2603:10a6:803:b4::22) To AM0PR10MB1954.EURPRD10.PROD.OUTLOOK.COM
+x-clientproxiedby: VI1PR07CA0268.eurprd07.prod.outlook.com
+ (2603:10a6:803:b4::35) To AM0PR10MB1954.EURPRD10.PROD.OUTLOOK.COM
  (2603:10a6:208:40::26)
 x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [80.93.235.40]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1477a866-d3b9-45c9-a7ae-08d7baa2474f
-x-ms-traffictypediagnostic: AM0PR10MB2676:
+x-ms-office365-filtering-correlation-id: 0ed24769-7f9e-4677-eb09-08d7baa2537c
+x-ms-traffictypediagnostic: AM0PR10MB3553:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR10MB2676ABF587540B5C3CADE75391EA0@AM0PR10MB2676.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-microsoft-antispam-prvs: <AM0PR10MB35536FCAA9586C6386B2EC9B91EA0@AM0PR10MB3553.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:21;
 x-forefront-prvs: 0325F6C77B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(396003)(366004)(39840400004)(346002)(189003)(199004)(81166006)(8936002)(44832011)(8676002)(81156014)(956004)(36756003)(478600001)(71200400001)(2906002)(5660300002)(16576012)(316002)(54906003)(86362001)(66946007)(26005)(64756008)(66446008)(2616005)(31686004)(4326008)(6916009)(66476007)(66556008)(16526019)(52116002)(107886003)(31696002)(186003)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR10MB2676;H:AM0PR10MB1954.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(376002)(366004)(396003)(39840400004)(189003)(199004)(36756003)(8936002)(71200400001)(956004)(2616005)(6916009)(16526019)(66446008)(66946007)(44832011)(66476007)(66556008)(86362001)(64756008)(6486002)(81166006)(8676002)(81156014)(31686004)(5660300002)(478600001)(52116002)(26005)(2906002)(316002)(186003)(4326008)(31696002)(107886003)(54906003)(16576012);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR10MB3553;H:AM0PR10MB1954.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: cZtMWrSIxlP8DMbpOND9uO7kgYk9GWVIDyK4QQEsRBDlqdOG/p3CW67ERyn1tx2YgpWdstyVOASJNsqA+T8b26KBLiYQaXbCXJPIMy2D7+IvdEqJtyoJxljwHiybmedn3yUb5MYOrWnbn8bL8KbQNb4ve8ERqyi8Cm3jIvZlOv3j2Gucws9woP7X5sfuol5ZC2zwhRW+qsE2kuPz5uUdQ8GYypSjpk5V/ZWYUcABzuv3YYNyh8zU4sY0cY/kdZvh70O9YhGxkDkAoDYc4nPOyRXYLLdtmHSSYjs51vFuwPg3cTbTQRSe5tzCXLalW4cfDKbkl+kStjG/61uqMvmmTKI/IqZUOUwDEPRu1Jpry+ByFjF7U4DI9fGLRjfdIC2JfMhzFHQeOS5MrpdQj1pd8hM2Ovh+CaB3jOJXtWq5d6/AFlaLZT70PO6tRXekChl7
-x-ms-exchange-antispam-messagedata: pYG6m5x+KtsU4r15mMZI1dJv+vPLZCELErVh2d7PYo/shtihhSBMVlciXi6l/LD8KT6FYydULhEJeL2W/ROcYRrAPGLA0I62xuXv3H8U5GgsV0HIIrUGY9/yqGaBhdDe5p/rJGEEJeCpXpY5J6NyeA==
-Content-ID: <333849C2BFF7A14AADF543C1FE7B9EAD@EURPRD10.PROD.OUTLOOK.COM>
+x-microsoft-antispam-message-info: gsu7t6a5p8RSm9XMkuh+rvypgIZ+PRKdAWK97ZNAUEd5dma2lgMy41XnKV71PWhBbMt7xBeFu7ThNNdjV5n/gMk6iKlDyaBr3qzlwL7qeftBpI740PdirisWFx6jodc1kWYEYOIpq8nRh2sIxLywaBra5xBgkUMwl1MCektOWpFMH14c7vk+OONSz7eANqXNPhC2eTzRjqiYhkSW/af4dk7ecZRDuQUaN7jNqLJ1fnwmYHMwywLtJceqz+JZQ2mzEQuI1E4USNRPNqMPXcLUg4bKTbZU3EsfIkd1Fx5xnn2Ye4lGKTqkS2Zoq+kgR1LLovM2OJhKkw5XGkSnIy3vo8iX0V5XcuJvIeRUwfRF8ILqp15bxCnLw9twqhEvwKwG82IZ1QChrle8aWuEUR1SnSaI3b7UtpVytpN29O+I87P4+oDG+Nl/KT+qLGf2KShHSHAW4e8Gar1MTjW411ub6dCgec6/L5f6sMcBtRLujcGx/BQcVd+aD7weMvHPoBGt8A8w3VEd1ObDK39dv8O5tg==
+x-ms-exchange-antispam-messagedata: 6bbA+pxXZzxT48XIP6mji9S/ZpHFDDnJrCatgYCyP4z4zzq6fdEAkuzenQRT4SRWFRaB688wFfkR0KsDg3jy3yl8PqLZw6cHZB54jm5uvpyJMOtTGznGuf8HVCSo2Y5FxhVC1A7xg7Q4I0LrNxHfaQ==
+Content-ID: <E7D34997B1EEDE40B642A398BBFE2A63@EURPRD10.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
 X-OriginatorOrg: displaylink.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1477a866-d3b9-45c9-a7ae-08d7baa2474f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Feb 2020 09:57:24.1654
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0ed24769-7f9e-4677-eb09-08d7baa2537c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Feb 2020 09:57:44.5427
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: a4bda75a-b444-4312-9c90-44a7c4b2c91a
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lWPhAtYqFGIRjvYHgCWohTF6cCFM8iZGPiwpYuuzXZN2hDz0Vf5+SWA1OEt/wNjdKlACRBmyiggFMN6J/S8vYV4UdKdZNEG44Ppi/inCW7I3+RWO503/dzuIXvP1jFPX
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR10MB2676
+X-MS-Exchange-CrossTenant-userprincipalname: npzxNB2thEonxDs5o+G777j2v8EcnsdPKrqX7kUMvKUXAUDb72LWPhMt1yufNmB3KR+pU+cjchEbqNaTX88N/xZcjWked9AptVg41+HDS3fUA+nIFoLfu8htF33zO8EW
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR10MB3553
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: displaylink.com
 Content-Type: text/plain; charset=WINDOWS-1252
@@ -96,78 +97,341 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MA USB Host driver provides USB connectivity over an available
-network, allowing host device to access remote USB devices attached
-to one or more MA USB devices (accessible via network).
+Added utility macros, kernel device creation and cleanup, functions for
+handling log formatting and a placeholder module for MA-USB Host device
+driver.
 
-This driver has been developed to enable the host to communicate
-with DisplayLink products supporting MA USB protocol (MA USB device,
-in terms of MA USB Specification).
-
-MA USB protocol used by MA USB Host driver has been implemented in
-accordance with MA USB Specification Release 1.0b.
-
-This driver depends on the functions provided by DisplayLink's
-user-space driver.
-
-v2:
-- Fixed licensing info in headers
-- Reorganized code to lower file count
-- Patch has been split into 8 smaller patches
-
-Vladimir Stankovic (8):
-   usb: Add MA-USB Host kernel module
-   usb: mausb_host: Add link layer implementation
-   usb: mausb_host: HCD initialization
-   usb: mausb_host: Implement initial hub handlers
-   usb: mausb_host: Introduce PAL processing
-   usb: mausb_host: Add logic for PAL-to-PAL communication
-   usb: mausb_host: MA-USB PAL events processing
-   usb: mausb_host: Process MA-USB data packets
-
-  MAINTAINERS                                  |    7 +
-  drivers/usb/Kconfig                          |    2 +
-  drivers/usb/Makefile                         |    2 +
-  drivers/usb/mausb_host/Kconfig               |   14 +
-  drivers/usb/mausb_host/Makefile              |   18 +
-  drivers/usb/mausb_host/hcd.c                 | 1897 ++++++++++++++++
-  drivers/usb/mausb_host/hcd.h                 |  162 ++
-  drivers/usb/mausb_host/hpal.c                | 2082 ++++++++++++++++++
-  drivers/usb/mausb_host/hpal.h                |  339 +++
-  drivers/usb/mausb_host/hpal_data.c           |  719 ++++++
-  drivers/usb/mausb_host/hpal_data.h           |   34 +
-  drivers/usb/mausb_host/hpal_events.c         |  611 +++++
-  drivers/usb/mausb_host/hpal_events.h         |   85 +
-  drivers/usb/mausb_host/ip_link.c             |  346 +++
-  drivers/usb/mausb_host/ip_link.h             |   83 +
-  drivers/usb/mausb_host/ma_usb.h              |  869 ++++++++
-  drivers/usb/mausb_host/mausb_address.h       |   34 +
-  drivers/usb/mausb_host/mausb_driver_status.h |   17 +
-  drivers/usb/mausb_host/mausb_event.h         |  224 ++
-  drivers/usb/mausb_host/mausb_host.c          |  213 ++
-  drivers/usb/mausb_host/utils.c               |  360 +++
-  drivers/usb/mausb_host/utils.h               |   45 +
-  22 files changed, 8163 insertions(+)
+Signed-off-by: Vladimir Stankovic <vladimir.stankovic@displaylink.com>
+---
+  MAINTAINERS                         |  7 +++
+  drivers/usb/Kconfig                 |  2 +
+  drivers/usb/Makefile                |  2 +
+  drivers/usb/mausb_host/Kconfig      | 14 +++++
+  drivers/usb/mausb_host/Makefile     | 13 +++++
+  drivers/usb/mausb_host/mausb_host.c | 90 +++++++++++++++++++++++++++++
+  drivers/usb/mausb_host/utils.c      | 85 +++++++++++++++++++++++++++
+  drivers/usb/mausb_host/utils.h      | 40 +++++++++++++
+  8 files changed, 253 insertions(+)
   create mode 100644 drivers/usb/mausb_host/Kconfig
   create mode 100644 drivers/usb/mausb_host/Makefile
-  create mode 100644 drivers/usb/mausb_host/hcd.c
-  create mode 100644 drivers/usb/mausb_host/hcd.h
-  create mode 100644 drivers/usb/mausb_host/hpal.c
-  create mode 100644 drivers/usb/mausb_host/hpal.h
-  create mode 100644 drivers/usb/mausb_host/hpal_data.c
-  create mode 100644 drivers/usb/mausb_host/hpal_data.h
-  create mode 100644 drivers/usb/mausb_host/hpal_events.c
-  create mode 100644 drivers/usb/mausb_host/hpal_events.h
-  create mode 100644 drivers/usb/mausb_host/ip_link.c
-  create mode 100644 drivers/usb/mausb_host/ip_link.h
-  create mode 100644 drivers/usb/mausb_host/ma_usb.h
-  create mode 100644 drivers/usb/mausb_host/mausb_address.h
-  create mode 100644 drivers/usb/mausb_host/mausb_driver_status.h
-  create mode 100644 drivers/usb/mausb_host/mausb_event.h
   create mode 100644 drivers/usb/mausb_host/mausb_host.c
   create mode 100644 drivers/usb/mausb_host/utils.c
   create mode 100644 drivers/usb/mausb_host/utils.h
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8f27f40d22bb..6088f9aa640a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10226,6 +10226,13 @@ W:=09https://linuxtv.org
+  S:=09Maintained
+  F:=09drivers/media/radio/radio-maxiradio*
+  +MA USB HOST DRIVER
++M:=09Vladimir Stankovic <vladimir.stankovic@displaylink.com>
++L:=09mausb-host-devel@displaylink.com
++W:=09https://www.displaylink.com
++S:=09Maintained
++F:=09drivers/usb/mausb_host/*
++
+  MCAN MMIO DEVICE DRIVER
+  M:=09Dan Murphy <dmurphy@ti.com>
+  M:=09Sriram Dash <sriram.dash@samsung.com>
+diff --git a/drivers/usb/Kconfig b/drivers/usb/Kconfig
+index 275568abc670..4e92f1fa0fa5 100644
+--- a/drivers/usb/Kconfig
++++ b/drivers/usb/Kconfig
+@@ -164,6 +164,8 @@ source "drivers/usb/misc/Kconfig"
+   source "drivers/usb/atm/Kconfig"
+  +source "drivers/usb/mausb_host/Kconfig"
++
+  endif # USB
+   source "drivers/usb/phy/Kconfig"
+diff --git a/drivers/usb/Makefile b/drivers/usb/Makefile
+index 1c1c1d659394..22d1998db0e2 100644
+--- a/drivers/usb/Makefile
++++ b/drivers/usb/Makefile
+@@ -66,3 +66,5 @@ obj-$(CONFIG_USBIP_CORE)=09+=3D usbip/
+  obj-$(CONFIG_TYPEC)=09=09+=3D typec/
+   obj-$(CONFIG_USB_ROLE_SWITCH)=09+=3D roles/
++
++obj-$(CONFIG_HOST_MAUSB)        +=3D mausb_host/
+diff --git a/drivers/usb/mausb_host/Kconfig b/drivers/usb/mausb_host/Kconfi=
+g
+new file mode 100644
+index 000000000000..2465aac713fe
+--- /dev/null
++++ b/drivers/usb/mausb_host/Kconfig
+@@ -0,0 +1,14 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Kernel configuration file for MA-USB Host driver.
++#
++# Copyright (c) 2019 - 2020 DisplayLink (UK) Ltd.
++#
++
++config HOST_MAUSB
++=09tristate "MA-USB Host Driver"
++=09depends on USB=3Dy
++=09default n
++=09help
++=09=09This is a MA-USB Host driver which enables host communication
++=09=09via MA-USB protocol stack.
+diff --git a/drivers/usb/mausb_host/Makefile=20
+b/drivers/usb/mausb_host/Makefile
+new file mode 100644
+index 000000000000..ad7fec4d9ff9
+--- /dev/null
++++ b/drivers/usb/mausb_host/Makefile
+@@ -0,0 +1,13 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Makefile for DisplayLink MA-USB Host driver.
++#
++# Copyright (c) 2019 - 2020 DisplayLink (UK) Ltd.
++#
++
++obj-$(CONFIG_HOST_MAUSB) +=3D mausb_host.o
++mausb_host-y :=3D mausb_host.o
++mausb_host-y +=3D utils.o
++
++ccflags-y +=3D -I$(srctree)/$(src)
++ccflags-y +=3D -g
+diff --git a/drivers/usb/mausb_host/mausb_host.c=20
+b/drivers/usb/mausb_host/mausb_host.c
+new file mode 100644
+index 000000000000..8638dd0a4856
+--- /dev/null
++++ b/drivers/usb/mausb_host/mausb_host.c
+@@ -0,0 +1,90 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2019 - 2020 DisplayLink (UK) Ltd.
++ */
++#include <linux/in.h>
++#include <linux/inet.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/kobject.h>
++#include <linux/module.h>
++#include <linux/moduleparam.h>
++#include <linux/net.h>
++
++#include "utils.h"
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("DisplayLink (UK) Ltd.");
++MODULE_VERSION(MAUSB_DRIVER_VERSION);
++
++static int mausb_client_connect(const char *value,
++=09=09=09=09const struct kernel_param *kp)
++{
++=09mausb_pr_info("Version=3D%s", MAUSB_DRIVER_VERSION);
++
++=09return 0;
++}
++
++static int mausb_client_disconnect(const char *value,
++=09=09=09=09   const struct kernel_param *kp)
++{
++=09mausb_pr_info("Version=3D%s", MAUSB_DRIVER_VERSION);
++
++=09return 0;
++}
++
++static int mausb_device_connect(const char *value,
++=09=09=09=09const struct kernel_param *kp)
++{
++=09mausb_pr_info("Version=3D%s", MAUSB_DRIVER_VERSION);
++
++=09return 0;
++}
++
++static int mausb_device_disconnect(const char *value,
++=09=09=09=09   const struct kernel_param *kp)
++{
++=09mausb_pr_info("Version=3D%s", MAUSB_DRIVER_VERSION);
++
++=09return 0;
++}
++
++static const struct kernel_param_ops mausb_device_connect_ops =3D {
++=09.set =3D mausb_device_connect
++};
++
++static const struct kernel_param_ops mausb_device_disconnect_ops =3D {
++=09.set =3D mausb_device_disconnect
++};
++
++static const struct kernel_param_ops mausb_client_connect_ops =3D {
++=09.set =3D mausb_client_connect
++};
++
++static const struct kernel_param_ops mausb_client_disconnect_ops =3D {
++=09.set =3D mausb_client_disconnect
++};
++
++static int mausb_host_init(void)
++{
++=09int status =3D mausb_create_dev();
++
++=09mausb_pr_info("Module load. Version=3D%s", MAUSB_DRIVER_VERSION);
++
++=09if (status < 0) {
++=09=09mausb_pr_alert("Failed to load MAUSB module!");
++=09=09return status;
++=09}
++
++=09return 0;
++}
++
++static void mausb_host_exit(void)
++{
++=09mausb_pr_info("Module unloading started...");
++=09mausb_cleanup_dev(1);
++=09mausb_pr_info("Module unloaded. Version=3D%s", MAUSB_DRIVER_VERSION);
++}
++
++module_init(mausb_host_init);
++module_exit(mausb_host_exit);
+diff --git a/drivers/usb/mausb_host/utils.c b/drivers/usb/mausb_host/utils.=
+c
+new file mode 100644
+index 000000000000..c055b578e402
+--- /dev/null
++++ b/drivers/usb/mausb_host/utils.c
+@@ -0,0 +1,85 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2019 - 2020 DisplayLink (UK) Ltd.
++ */
++#include "utils.h"
++
++#include <linux/atomic.h>
++#include <linux/cdev.h>
++#include <linux/completion.h>
++#include <linux/device.h>
++#include <linux/fs.h>
++#include <linux/mm.h>
++#include <linux/slab.h>
++#include <linux/uaccess.h>
++
++#define MAUSB_KERNEL_DEV_NAME "mausb_host"
++#define MAUSB_READ_DEVICE_TIMEOUT_MS 500
++
++static dev_t mausb_major_kernel;
++static struct cdev  mausb_kernel_dev;
++static struct class *mausb_kernel_class;
++
++static int mausb_file_open(struct inode *inode, struct file *filp)
++{
++=09filp->private_data =3D NULL;
++
++=09return 0;
++}
++
++static int mausb_file_close(struct inode *inode, struct file *filp)
++{
++=09kfree(filp->private_data);
++=09filp->private_data =3D NULL;
++
++=09return 0;
++}
++
++static const struct file_operations mausb_file_ops =3D {
++=09.open=09 =3D mausb_file_open,
++=09.release =3D mausb_file_close,
++};
++
++int mausb_create_dev(void)
++{
++=09int device_created =3D 0;
++=09int status =3D alloc_chrdev_region(&mausb_major_kernel, 0, 1,
++=09=09=09=09=09 MAUSB_KERNEL_DEV_NAME "_proc");
++=09if (status)
++=09=09goto cleanup;
++
++=09mausb_kernel_class =3D class_create(THIS_MODULE,
++=09=09=09=09=09  MAUSB_KERNEL_DEV_NAME "_sys");
++=09if (!mausb_kernel_class) {
++=09=09status =3D -ENOMEM;
++=09=09goto cleanup;
++=09}
++
++=09if (!device_create(mausb_kernel_class, NULL, mausb_major_kernel, NULL,
++=09=09=09   MAUSB_KERNEL_DEV_NAME "_dev")) {
++=09=09status =3D -ENOMEM;
++=09=09goto cleanup;
++=09}
++=09device_created =3D 1;
++=09cdev_init(&mausb_kernel_dev, &mausb_file_ops);
++=09status =3D cdev_add(&mausb_kernel_dev, mausb_major_kernel, 1);
++=09if (status)
++=09=09goto cleanup;
++=09return 0;
++cleanup:
++=09mausb_cleanup_dev(device_created);
++=09return status;
++}
++
++void mausb_cleanup_dev(int device_created)
++{
++=09if (device_created) {
++=09=09device_destroy(mausb_kernel_class, mausb_major_kernel);
++=09=09cdev_del(&mausb_kernel_dev);
++=09}
++
++=09if (mausb_kernel_class)
++=09=09class_destroy(mausb_kernel_class);
++
++=09unregister_chrdev_region(mausb_major_kernel, 1);
++}
+diff --git a/drivers/usb/mausb_host/utils.h b/drivers/usb/mausb_host/utils.=
+h
+new file mode 100644
+index 000000000000..a5378ee4c4f0
+--- /dev/null
++++ b/drivers/usb/mausb_host/utils.h
+@@ -0,0 +1,40 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2019 - 2020 DisplayLink (UK) Ltd.
++ */
++#ifndef __MAUSB_UTILS_H__
++#define __MAUSB_UTILS_H__
++
++#if defined(MAUSB_NO_LOGS)
++#define mausb_pr_logs(...)
++#else
++#include <linux/printk.h>
++#include <linux/sched.h>
++#define mausb_pr_logs(level_str, level, log, ...)\
++=09pr_##level_str("MAUSB " #level " [%x:%x] [%s] " log "\n",\
++=09current->pid, current->tgid, __func__, ##__VA_ARGS__)
++#endif /* MAUSB_NO_LOGS */
++
++#define mausb_pr_alert(...) mausb_pr_logs(alert, 1, ##__VA_ARGS__)
++
++#define mausb_pr_err(...) mausb_pr_logs(err, 2, ##__VA_ARGS__)
++
++#define mausb_pr_warn(...) mausb_pr_logs(warn, 3, ##__VA_ARGS__)
++
++#define mausb_pr_info(...)  mausb_pr_logs(info, 4, ##__VA_ARGS__)
++
++#if defined(MAUSB_LOG_VERBOSE)
++=09#define mausb_pr_debug(...) mausb_pr_logs(debug, 5, ##__VA_ARGS__)
++#else
++=09#define mausb_pr_debug(...)
++#endif /* defined(MAUSB_LOG_VERBOSE) */
++
++#define MAUSB_STRINGIFY2(x) #x
++#define MAUSB_STRINGIFY(x) MAUSB_STRINGIFY2(x)
++
++#define MAUSB_DRIVER_VERSION MAUSB_STRINGIFY(1.2.0.0.fb3296e6)
++
++int mausb_create_dev(void);
++void mausb_cleanup_dev(int device_created);
++
++#endif /* __MAUSB_UTILS_H__ */
 --=20
 2.17.1
+
 
