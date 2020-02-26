@@ -4,35 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 025DDC4BA0B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD70C4BA0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC5C820714
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BC4924650
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 08:11:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727553AbgBZILp (ORCPT
+        id S1727796AbgBZILt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 03:11:45 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:58022 "EHLO huawei.com"
+        Wed, 26 Feb 2020 03:11:49 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10694 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727341AbgBZILp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 03:11:45 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 63636B788565C2E2F043;
-        Wed, 26 Feb 2020 16:11:41 +0800 (CST)
+        id S1727341AbgBZILs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 03:11:48 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A634F2CE09A151771A07;
+        Wed, 26 Feb 2020 16:11:46 +0800 (CST)
 Received: from architecture4.huawei.com (10.160.196.180) by smtp.huawei.com
  (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 26 Feb
- 2020 16:11:35 +0800
+ 2020 16:11:36 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     Chao Yu <yuchao0@huawei.com>, <linux-erofs@lists.ozlabs.org>
 CC:     LKML <linux-kernel@vger.kernel.org>, Miao Xie <miaoxie@huawei.com>,
-        "Gao Xiang" <gaoxiang25@huawei.com>, <stable@vger.kernel.org>
-Subject: [PATCH v2 1/3] erofs: correct the remaining shrink objects
-Date:   Wed, 26 Feb 2020 16:10:06 +0800
-Message-ID: <20200226081008.86348-1-gaoxiang25@huawei.com>
+        "Gao Xiang" <gaoxiang25@huawei.com>,
+        Lasse Collin <lasse.collin@tukaani.org>
+Subject: [PATCH v2 2/3] erofs: use LZ4_decompress_safe() for full decoding
+Date:   Wed, 26 Feb 2020 16:10:07 +0800
+Message-ID: <20200226081008.86348-2-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200226081008.86348-1-gaoxiang25@huawei.com>
+References: <20200226081008.86348-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.160.196.180]
@@ -42,40 +45,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The remaining count should not include successful
-shrink attempts.
+As Lasse pointed out, "EROFS uses LZ4_decompress_safe_partial
+for both partial and full blocks. Thus when it is decoding a
+full block, it doesn't know if the LZ4 decoder actually decoded
+all the input. The real uncompressed size could be bigger than
+the value stored in the file system metadata.
 
-Fixes: e7e9a307be9d ("staging: erofs: introduce workstation for decompression")
-Cc: <stable@vger.kernel.org> # 4.19+
+Using LZ4_decompress_safe instead of _safe_partial when
+decompressing a full block would help to detect errors."
+
+So it's reasonable to use _safe in case of potential corrupted
+images and it might have some speed gain as well although
+I didn't observe much difference.
+
+Note that legacy compressor (< 5.3, no LZ4_0PADDING) could
+encode extra data in a pcluster, which is excluded as well.
+
+Cc: Lasse Collin <lasse.collin@tukaani.org>
+Fixes: 0ffd71bcc3a0 ("staging: erofs: introduce LZ4 decompression inplace")
+[ Gao Xiang: v5.3+, I will manually backport this to stable later. ]
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
+ fs/erofs/decompressor.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-Changes since v1:
- - Add "Fixes:" tags respectively suggested by Eric. I'd suggest
-   no rush to backport PATCH 2/3 and 3/3 since it's not quite
-   sure whether they behave well for normal images for now and
-   I will backport them manually later since they have no impact
-   on system stability with corrupted images;
-
- - Fix PATCH 2/3 to exclude legacy (no decompression inplace
-   support, < v5.3) images.
-
- fs/erofs/utils.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
-index fddc5059c930..df42ea552a44 100644
---- a/fs/erofs/utils.c
-+++ b/fs/erofs/utils.c
-@@ -286,7 +286,7 @@ static unsigned long erofs_shrink_scan(struct shrinker *shrink,
- 		spin_unlock(&erofs_sb_list_lock);
- 		sbi->shrinker_run_no = run_no;
+diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
+index 5779a15c2cd6..cd978af6bdb9 100644
+--- a/fs/erofs/decompressor.c
++++ b/fs/erofs/decompressor.c
+@@ -157,9 +157,15 @@ static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
+ 		}
+ 	}
  
--		freed += erofs_shrink_workstation(sbi, nr);
-+		freed += erofs_shrink_workstation(sbi, nr - freed);
- 
- 		spin_lock(&erofs_sb_list_lock);
- 		/* Get the next list element before we move this one */
+-	ret = LZ4_decompress_safe_partial(src + inputmargin, out,
+-					  inlen, rq->outputsize,
+-					  rq->outputsize);
++	/* legacy format could compress extra data in a pcluster. */
++	if (rq->partial_decoding || !support_0padding)
++		ret = LZ4_decompress_safe_partial(src + inputmargin, out,
++						  inlen, rq->outputsize,
++						  rq->outputsize);
++	else
++		ret = LZ4_decompress_safe(src + inputmargin, out,
++					  inlen, rq->outputsize);
++
+ 	if (ret < 0) {
+ 		erofs_err(rq->sb, "failed to decompress, in[%u, %u] out[%u]",
+ 			  inlen, inputmargin, rq->outputsize);
 -- 
 2.17.1
 
