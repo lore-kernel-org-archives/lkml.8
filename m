@@ -2,73 +2,75 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F5EC4BA24
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63825C4BA2D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0A6A20801
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E48520801
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 23:44:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbgBZXn0 (ORCPT
+        id S1728012AbgBZXoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 18:43:26 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:35935 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727935AbgBZXn0 (ORCPT
+        Wed, 26 Feb 2020 18:44:05 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:32786 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727987AbgBZXoF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 18:43:26 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1j76Kn-0006bS-6f; Wed, 26 Feb 2020 23:43:21 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] NFS: check for allocation failure from mempool_alloc
-Date:   Wed, 26 Feb 2020 23:43:20 +0000
-Message-Id: <20200226234320.7722-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.0
+        Wed, 26 Feb 2020 18:44:05 -0500
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j76LK-0000RN-A5; Thu, 27 Feb 2020 00:43:54 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id C9F5F100EA1; Thu, 27 Feb 2020 00:43:53 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Brian Gerst <brgerst@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Juergen Gross <jgross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [patch 01/15] x86/irq: Convey vector as argument and not in ptregs
+In-Reply-To: <CAMzpN2j7EHZ2bKg9SZ2Ri-qsmEoknAAJO6O5yoLn-fY8_h1B2A@mail.gmail.com>
+References: <20200225224719.950376311@linutronix.de> <20200225231609.000955823@linutronix.de> <CAMzpN2ij8ReOXZH00puhzraCGRdKY8qt+TMipd_14_XWTu8xtg@mail.gmail.com> <87k149p0na.fsf@nanos.tec.linutronix.de> <CAMzpN2j7EHZ2bKg9SZ2Ri-qsmEoknAAJO6O5yoLn-fY8_h1B2A@mail.gmail.com>
+Date:   Thu, 27 Feb 2020 00:43:53 +0100
+Message-ID: <87eeugoqx2.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Brian Gerst <brgerst@gmail.com> writes:
+> On Wed, Feb 26, 2020 at 3:13 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>> Brian Gerst <brgerst@gmail.com> writes:
+>> Now the question is whether we care about the packed stubs or just make
+>> them larger by using alignment to get rid of this silly +0x80 and
+>> ~vector fixup later on. The straight forward thing clearly has its charm
+>> and I doubt it matters in measurable ways.
+>
+> I think we can get rid of the inversion.  That was done so orig_ax had
+> a negative number (signifying it's not a syscall), but if you replace
+> it with -1 that isn't necessary.  A simple -0x80 offset should be
+> sufficient.
+>
+> I think it's a worthy optimization to keep.  There are 240 of these
+> stubs, so increasing the allocation to 16 bytes would add 1920 bytes
+> to the kernel text.
 
-It is possible for mempool_alloc to return null when using
-the GFP_KERNEL flag, so return NULL and avoid a null pointer
-dereference on the following memset of the null pointer.
+I rather pay the 2k text size for readable and straight forward
+code. Can you remind me why we are actually worrying at that level about
+32bit x86 instead of making it depend on CONFIG_OBSCURE?
 
-Addresses-Coverity: ("Dereference null return")
-Fixes: 2b17d725f9be ("NFS: Clean up writeback code")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- fs/nfs/write.c | 3 +++
- 1 file changed, 3 insertions(+)
+Thanks,
 
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index c478b772cc49..7ca036660dd1 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -106,6 +106,9 @@ static struct nfs_pgio_header *nfs_writehdr_alloc(void)
- {
- 	struct nfs_pgio_header *p = mempool_alloc(nfs_wdata_mempool, GFP_KERNEL);
- 
-+	if (!p)
-+		return NULL;
-+
- 	memset(p, 0, sizeof(*p));
- 	p->rw_mode = FMODE_WRITE;
- 	return p;
--- 
-2.25.0
-
+        tglx
