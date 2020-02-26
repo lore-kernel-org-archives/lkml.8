@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC498C4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2EAC4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9591C24670
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 696CF24670
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:15:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BpTzgq4G"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CO6qsjcw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbgBZQPX (ORCPT
+        id S1727984AbgBZQPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 11:15:23 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:23502 "EHLO
+        Wed, 26 Feb 2020 11:15:18 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:42834 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728121AbgBZQPU (ORCPT
+        by vger.kernel.org with ESMTP id S1727862AbgBZQPQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 11:15:20 -0500
+        Wed, 26 Feb 2020 11:15:16 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582733719;
+        s=mimecast20190719; t=1582733715;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=kCzGpCS1aNV/c/qW+M9GWrB1Cx2h9S+8mlMVAKZLeTI=;
-        b=BpTzgq4GHj6c64aqxeVvBRDP0qgEUr96+e2ipwx9QTKp6ckx5zUVV0NIk5y/fqJP/rB4r3
-        JRIJy24cxWxLn+unqbg3yZlajEUGjGpxYquYbTJZd0YNR7kCKhD8k7HsXyb/xUikgKi/55
-        7YMgZoJNWODQuAj+nbf+oXigZS1pr24=
+        bh=3ALKQxAFCE5F0LGykWYTT3UrmTGHD8OtYz0jmj8J0is=;
+        b=CO6qsjcwadaGoI5yOnX0FL7mtHGKQen9V4jOwFuV9aG/P8WDjDk29xGT2SyqywU0/au7nA
+        3X1M/tfwPBKkMcBdSj783WDA+Q83nyn4+qz4I9++/VfuePNpP5SX7lJ4NjlbYm051lrXe+
+        5LDl5VVE9BPrZyBetPMO9zpSlcOzIHk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-85-NJM5qrePP5WY2H0IdBsGmQ-1; Wed, 26 Feb 2020 11:15:15 -0500
-X-MC-Unique: NJM5qrePP5WY2H0IdBsGmQ-1
+ us-mta-265-ZKqxeAOBPGuZTRtzGLOUIg-1; Wed, 26 Feb 2020 11:15:13 -0500
+X-MC-Unique: ZKqxeAOBPGuZTRtzGLOUIg-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1C328800D5A;
-        Wed, 26 Feb 2020 16:15:13 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3FBEF1005513;
+        Wed, 26 Feb 2020 16:15:09 +0000 (UTC)
 Received: from llong.com (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 53DD660BE1;
-        Wed, 26 Feb 2020 16:15:11 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 871A960BE1;
+        Wed, 26 Feb 2020 16:15:07 +0000 (UTC)
 From:   Waiman Long <longman@redhat.com>
 To:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Jonathan Corbet <corbet@lwn.net>,
@@ -56,9 +56,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         Dave Chinner <david@fromorbit.com>,
         Eric Sandeen <sandeen@redhat.com>,
         Waiman Long <longman@redhat.com>
-Subject: [PATCH 05/11] fs/dcache: Reclaim excessive negative dentries in directories
-Date:   Wed, 26 Feb 2020 11:13:58 -0500
-Message-Id: <20200226161404.14136-6-longman@redhat.com>
+Subject: [PATCH 03/11] fs/dcache: Add a counter to track number of children
+Date:   Wed, 26 Feb 2020 11:13:56 -0500
+Message-Id: <20200226161404.14136-4-longman@redhat.com>
 In-Reply-To: <20200226161404.14136-1-longman@redhat.com>
 References: <20200226161404.14136-1-longman@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
@@ -67,271 +67,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the "dentry-dir-max" sysctl parameter is set, it will enable the
-checking of dentry count in the parent directory when a negative dentry
-is being retained. If the count exceeds the given limit, it will schedule
-a work function to scan the children of that parent directory to find
-negative dentries to be reclaimed. Positive dentries will not be touched.
+Add a new field d_nchildren to struct dentry to track the number of
+children in a directory.
+
+Theoretically, we could use reference count (d_lockref.count) as a
+proxy for the number of children. Normally the reference count should
+be quite close to the number of children. However, when the directory
+dentry is heavily contended, the reference count can differ from the
+number of children by quite a bit.
+
+The d_nchildren field is updated only when d_lock has already been held,
+so the performance cost of this tracking should be negligible.
 
 Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- fs/dcache.c            | 207 +++++++++++++++++++++++++++++++++++++++++
- include/linux/dcache.h |   2 +
- 2 files changed, 209 insertions(+)
+ fs/dcache.c            | 16 ++++++++++++----
+ include/linux/dcache.h |  7 ++++---
+ 2 files changed, 16 insertions(+), 7 deletions(-)
 
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 8f3ac31a582b..01c6d7277244 100644
+index a977f9e05840..0ee5aa2c31cf 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -133,6 +133,11 @@ static DEFINE_PER_CPU(long, nr_dentry_negative);
- int dcache_dentry_dir_max_sysctl __read_mostly;
- EXPORT_SYMBOL_GPL(dcache_dentry_dir_max_sysctl);
- 
-+static LLIST_HEAD(negative_reclaim_list);
-+static void negative_reclaim_check(struct dentry *parent);
-+static void negative_reclaim_workfn(struct work_struct *work);
-+static DECLARE_WORK(negative_reclaim_work, negative_reclaim_workfn);
+@@ -526,6 +526,8 @@ static inline void dentry_unlist(struct dentry *dentry, struct dentry *parent)
+ 	if (unlikely(list_empty(&dentry->d_child)))
+ 		return;
+ 	__list_del_entry(&dentry->d_child);
++	parent->d_nchildren--;
 +
- #if defined(CONFIG_SYSCTL) && defined(CONFIG_PROC_FS)
+ 	/*
+ 	 * Cursors can move around the list of children.  While we'd been
+ 	 * a normal list member, it didn't matter - ->d_child.next would've
+@@ -1738,6 +1740,7 @@ static struct dentry *__d_alloc(struct super_block *sb, const struct qstr *name)
+ 	dentry->d_sb = sb;
+ 	dentry->d_op = NULL;
+ 	dentry->d_fsdata = NULL;
++	dentry->d_nchildren = 0;
+ 	INIT_HLIST_BL_NODE(&dentry->d_hash);
+ 	INIT_LIST_HEAD(&dentry->d_lru);
+ 	INIT_LIST_HEAD(&dentry->d_subdirs);
+@@ -1782,6 +1785,7 @@ struct dentry *d_alloc(struct dentry * parent, const struct qstr *name)
+ 	__dget_dlock(parent);
+ 	dentry->d_parent = parent;
+ 	list_add(&dentry->d_child, &parent->d_subdirs);
++	parent->d_nchildren++;
+ 	spin_unlock(&parent->d_lock);
  
- /*
-@@ -869,7 +874,20 @@ void dput(struct dentry *dentry)
- 		rcu_read_unlock();
- 
- 		if (likely(retain_dentry(dentry))) {
-+			struct dentry *neg_parent = NULL;
-+
-+			if (d_is_negative(dentry)) {
-+				neg_parent = dentry->d_parent;
-+				rcu_read_lock();
-+			}
- 			spin_unlock(&dentry->d_lock);
-+
-+			/*
-+			 * Negative dentry reclaim check is only done when
-+			 * a negative dentry is being put into a LRU list.
-+			 */
-+			if (neg_parent)
-+				negative_reclaim_check(neg_parent);
- 			return;
+ 	return dentry;
+@@ -2762,10 +2766,10 @@ static void swap_names(struct dentry *dentry, struct dentry *target)
+ 			 * Both are internal.
+ 			 */
+ 			unsigned int i;
+-			BUILD_BUG_ON(!IS_ALIGNED(DNAME_INLINE_LEN, sizeof(long)));
+-			for (i = 0; i < DNAME_INLINE_LEN / sizeof(long); i++) {
+-				swap(((long *) &dentry->d_iname)[i],
+-				     ((long *) &target->d_iname)[i]);
++			BUILD_BUG_ON(!IS_ALIGNED(DNAME_INLINE_LEN, sizeof(int)));
++			for (i = 0; i < DNAME_INLINE_LEN / sizeof(int); i++) {
++				swap(((int *) &dentry->d_iname)[i],
++				     ((int *) &target->d_iname)[i]);
+ 			}
  		}
- 
-@@ -1261,6 +1279,195 @@ void shrink_dcache_sb(struct super_block *sb)
- }
- EXPORT_SYMBOL(shrink_dcache_sb);
- 
-+/*
-+ * Return true if reclaiming negative dentry can happen.
-+ */
-+static inline bool can_reclaim_dentry(unsigned int flags)
-+{
-+	return !(flags & (DCACHE_SHRINK_LIST | DCACHE_GENOCIDE |
-+			  DCACHE_DENTRY_KILLED));
-+}
+ 	}
+@@ -2855,6 +2859,10 @@ static void __d_move(struct dentry *dentry, struct dentry *target,
+ 		dentry->d_parent->d_lockref.count++;
+ 		if (dentry != old_parent) /* wasn't IS_ROOT */
+ 			WARN_ON(!--old_parent->d_lockref.count);
 +
-+struct reclaim_dentry
-+{
-+	struct llist_node reclaim_node;
-+	struct dentry *parent_dir;
-+};
-+
-+/*
-+ * Reclaim excess negative dentries in a directory
-+ */
-+static void reclaim_negative_dentry(struct dentry *parent,
-+				    struct list_head *dispose)
-+{
-+	struct dentry *child;
-+	int limit = READ_ONCE(dcache_dentry_dir_max_sysctl);
-+	int cnt;
-+
-+	lockdep_assert_held(&parent->d_lock);
-+
-+	cnt = parent->d_nchildren;
-+
-+	/*
-+	 * Compute # of negative dentries to be reclaimed
-+	 * An extra 1/8 of dcache_dentry_dir_max_sysctl is added.
-+	 */
-+	if (cnt <= limit)
-+		return;
-+	cnt -= limit;
-+	cnt += (limit >> 3);
-+
-+	/*
-+	 * The d_subdirs is treated like a kind of LRU where
-+	 * non-negative dentries are skipped. Negative dentries
-+	 * with DCACHE_REFERENCED bit set are also skipped but
-+	 * with DCACHE_REFERENCED cleared.
-+	 */
-+	list_for_each_entry(child, &parent->d_subdirs, d_child) {
-+		/*
-+		 * This check is racy and so it may not be accurate.
-+		 */
-+		if (!d_is_negative(child))
-+			continue;
-+
-+		if (!spin_trylock(&child->d_lock))
-+			continue;
-+
-+		/*
-+		 * Only reclaim zero-refcnt negative dentries in the
-+		 * LRU, but not in shrink list.
-+		 */
-+		if (can_reclaim_dentry(child->d_flags) &&
-+		    d_is_negative(child) && d_in_lru(child) &&
-+		    !child->d_lockref.count) {
-+			if (child->d_flags & DCACHE_REFERENCED) {
-+				child->d_flags &= ~DCACHE_REFERENCED;
-+			} else {
-+				cnt--;
-+				d_lru_del(child);
-+				d_shrink_add(child, dispose);
-+			}
-+		}
-+		spin_unlock(&child->d_lock);
-+		if (!cnt) {
-+			child = list_next_entry(child, d_child);
-+			break;
-+		}
-+	}
-+
-+	if (&child->d_child != &parent->d_subdirs) {
-+		/*
-+		 * Split out the childs from the head up to just
-+		 * before the current entry into a separate list and
-+		 * then splice it to the end of the child list so
-+		 * that the unscanned entries will be in the front.
-+		 * This simulates LRU.
-+		 */
-+		struct list_head list;
-+
-+		list_cut_before(&list, &parent->d_subdirs,
-+				&child->d_child);
-+		list_splice_tail(&list, &parent->d_subdirs);
-+	}
-+}
-+
-+/*
-+ * Excess negative dentry reclaim work function.
-+ */
-+static void negative_reclaim_workfn(struct work_struct *work)
-+{
-+	struct llist_node *nodes, *next;
-+	struct dentry *parent;
-+	struct reclaim_dentry *dentry_node;
-+
-+	/*
-+	 * Collect excess negative dentries in dispose list & shrink them.
-+	 */
-+	for (nodes = llist_del_all(&negative_reclaim_list);
-+	     nodes; nodes = next) {
-+		LIST_HEAD(dispose);
-+
-+		next = llist_next(nodes);
-+		dentry_node = container_of(nodes, struct reclaim_dentry,
-+					   reclaim_node);
-+		parent = dentry_node->parent_dir;
-+		spin_lock(&parent->d_lock);
-+
-+		if (d_is_dir(parent) &&
-+		    can_reclaim_dentry(parent->d_flags) &&
-+		    (parent->d_flags & DCACHE_RECLAIMING))
-+			reclaim_negative_dentry(parent, &dispose);
-+
-+		if (!list_empty(&dispose)) {
-+			spin_unlock(&parent->d_lock);
-+			shrink_dentry_list(&dispose);
-+			spin_lock(&parent->d_lock);
-+		}
-+
-+		parent->d_flags &= ~DCACHE_RECLAIMING;
-+		spin_unlock(&parent->d_lock);
-+		dput(parent);
-+		kfree(dentry_node);
-+		cond_resched();
-+	}
-+}
-+
-+/*
-+ * Check the parent to see if it has too many negative dentries and queue
-+ * it up for the negative dentry reclaim work function to handle it.
-+ */
-+static void negative_reclaim_check(struct dentry *parent)
-+	__releases(rcu)
-+{
-+	int limit = dcache_dentry_dir_max_sysctl;
-+	struct reclaim_dentry *dentry_node;
-+
-+	if (!limit)
-+		goto rcu_unlock_out;
-+
-+	/*
-+	 * These checks are racy before spin_lock().
-+	 */
-+	if (!can_reclaim_dentry(parent->d_flags) ||
-+	    (parent->d_flags & DCACHE_RECLAIMING) ||
-+	    (READ_ONCE(parent->d_nchildren) <= limit))
-+		goto rcu_unlock_out;
-+
-+	spin_lock(&parent->d_lock);
-+	if (!can_reclaim_dentry(parent->d_flags) ||
-+	    (parent->d_flags & DCACHE_RECLAIMING) ||
-+	    (READ_ONCE(parent->d_nchildren) <= limit))
-+		goto unlock_out;
-+
-+	if (!d_is_dir(parent))
-+		goto unlock_out;
-+
-+	dentry_node = kzalloc(sizeof(*dentry_node), GFP_NOWAIT);
-+	if (!dentry_node)
-+		goto unlock_out;
-+
-+	rcu_read_unlock();
-+	__dget_dlock(parent);
-+	dentry_node->parent_dir = parent;
-+	parent->d_flags |= DCACHE_RECLAIMING;
-+	spin_unlock(&parent->d_lock);
-+
-+	/*
-+	 * Only call schedule_work() if negative_reclaim_list is previously
-+	 * empty. Otherwise, schedule_work() had been called but the workfn
-+	 * workfn hasn't retrieved the list yet.
-+	 */
-+	if (llist_add(&dentry_node->reclaim_node, &negative_reclaim_list))
-+		schedule_work(&negative_reclaim_work);
-+	return;
-+
-+unlock_out:
-+	spin_unlock(&parent->d_lock);
-+rcu_unlock_out:
-+	rcu_read_unlock();
-+	return;
-+}
-+
- /**
-  * enum d_walk_ret - action to talke during tree walk
-  * @D_WALK_CONTINUE:	contrinue walk
++		/* Adjust d_nchildren */
++		dentry->d_parent->d_nchildren++;
++		old_parent->d_nchildren--;
+ 	} else {
+ 		target->d_parent = old_parent;
+ 		swap_names(dentry, target);
 diff --git a/include/linux/dcache.h b/include/linux/dcache.h
-index e9e66eb50d1a..f14d72738903 100644
+index 2762ca2508f9..e9e66eb50d1a 100644
 --- a/include/linux/dcache.h
 +++ b/include/linux/dcache.h
-@@ -13,6 +13,7 @@
- #include <linux/lockref.h>
- #include <linux/stringhash.h>
- #include <linux/wait.h>
-+#include <linux/llist.h>
+@@ -75,12 +75,12 @@ extern struct dentry_stat_t dentry_stat;
+  * large memory footprint increase).
+  */
+ #ifdef CONFIG_64BIT
+-# define DNAME_INLINE_LEN 32 /* 192 bytes */
++# define DNAME_INLINE_LEN 28 /* 192 bytes */
+ #else
+ # ifdef CONFIG_SMP
+-#  define DNAME_INLINE_LEN 36 /* 128 bytes */
++#  define DNAME_INLINE_LEN 32 /* 128 bytes */
+ # else
+-#  define DNAME_INLINE_LEN 40 /* 128 bytes */
++#  define DNAME_INLINE_LEN 36 /* 128 bytes */
+ # endif
+ #endif
  
- struct path;
- struct vfsmount;
-@@ -214,6 +215,7 @@ struct dentry_operations {
- #define DCACHE_FALLTHRU			0x01000000 /* Fall through to lower layer */
- #define DCACHE_ENCRYPTED_NAME		0x02000000 /* Encrypted name (dir key was unavailable) */
- #define DCACHE_OP_REAL			0x04000000
-+#define DCACHE_RECLAIMING		0x08000000 /* Reclaiming negative dentries */
+@@ -96,6 +96,7 @@ struct dentry {
+ 	struct inode *d_inode;		/* Where the name belongs to - NULL is
+ 					 * negative */
+ 	unsigned char d_iname[DNAME_INLINE_LEN];	/* small names */
++	unsigned int d_nchildren;	/* # of children (directory only) */
  
- #define DCACHE_PAR_LOOKUP		0x10000000 /* being looked up (with parent locked shared) */
- #define DCACHE_DENTRY_CURSOR		0x20000000
+ 	/* Ref lookup also touches following */
+ 	struct lockref d_lockref;	/* per-dentry lock and refcount */
 -- 
 2.18.1
 
