@@ -2,176 +2,171 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A6EC4BA1E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 028AFC4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1249420838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:23:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C399020838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 17:24:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tSugNI4f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbgBZRX0 (ORCPT
+        id S1726878AbgBZRYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 12:23:26 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38742 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbgBZRXZ (ORCPT
+        Wed, 26 Feb 2020 12:24:38 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37495 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726673AbgBZRYi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:23:25 -0500
-Received: by mail-wr1-f68.google.com with SMTP id e8so4098402wrm.5;
-        Wed, 26 Feb 2020 09:23:24 -0800 (PST)
+        Wed, 26 Feb 2020 12:24:38 -0500
+Received: by mail-wr1-f65.google.com with SMTP id l5so4111527wrx.4
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 09:24:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=kj3vKBfqwdtUMsVkoam3aZhNUqqxFgSB7BBAOEKkXrQ=;
+        b=tSugNI4f8xvtXzSsz/255xRa2EnOC4Xr9Oo/D7aJgWg2qUZEBqnZTLcG1ubVrAHx36
+         Qiy9iywii57ATOWohVTazWLEA++B5S9CziFR1vdrSqsrkxZftAFY54lORibLXsZQ6sQH
+         dSppNjsxfgOCcbJkdc6g1HZ5v9gTM+8H0aAxqbSVMf4F98POsTkpF2am4//hdaJUYxo/
+         c+mlDQmQHLXp+DjRhEYWb1OBom+szGqjQBL8zFIyckthsBde/2HiuhjQyjCvLu8EKYJQ
+         0vLYSwy0Won2Fnk5TTvq75pOnRdigNBjXJgZ+kIS2nc2+T5hHAnKP4h8USotkleTquHc
+         pu1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=aLmTyqAd/P94kRIyBjL+cb/Y+cTLarFng2zpE1bkPwE=;
-        b=U9mCjIWtwLbZtWh/eWgnPNP7lrTs1AJEZUNGnIwreIeBB/1Xo1px4bvLuMHzWgu5Ro
-         +n+LTCC+FLWa7CX8wWw0XI/j5xBRkQTXzdbQxbZEq1fH+muqeA22bmxa/i6dyrUVFZPr
-         I7Jr/37vMSpEdqt4ova00n28gHvUaWWbNl7EFoyqLZU6a3WF7mQEEbRs987Dmln2u2TI
-         pIDMy7AjBobcCTrjcFYRf4ILOgrWDDsv6TbnJ08zD4fdNT4AYOWFn5srgkkMnN6rBFP0
-         l+TbExYwpP44QMtX7+Lv1m7DrrMv5M+dUef/g9quDkSYYEhR8dNgFLIrkhgxxUHqPESf
-         3x9Q==
-X-Gm-Message-State: APjAAAV6sF1NilPzM0HWylJep4ro2X+JS1WocAoOhGin0xwa5v59UqnJ
-        oaKYaP5Z1f+8Qz5pudDunlk=
-X-Google-Smtp-Source: APXvYqyUjShzivLFLN+R84aLDGeH3LJmk13HXBtoRVbokmE0gc0Nd/SoVz2Mm3vNZuChMhpzJT59sA==
-X-Received: by 2002:adf:f3d1:: with SMTP id g17mr6281250wrp.378.1582737803473;
-        Wed, 26 Feb 2020 09:23:23 -0800 (PST)
-Received: from tfsielt31850 ([77.107.218.170])
-        by smtp.gmail.com with ESMTPSA id j12sm4121316wrt.35.2020.02.26.09.23.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 09:23:22 -0800 (PST)
-Message-ID: <f3c4f7791c86235683541a3d51ed02631b784bf6.camel@andred.net>
-Subject: Re: [PATCH v2 6/6] Input: snvs_pwrkey - only IRQ_HANDLED for our
- own events
-From:   =?ISO-8859-1?Q?Andr=E9?= Draszik <git@andred.net>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Wed, 26 Feb 2020 17:23:21 +0000
-In-Reply-To: <VE1PR04MB66385DDED7C654AE2181E08E89EA0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <20200225161201.1975-1-git@andred.net>
-         <20200225161201.1975-6-git@andred.net>
-         <VE1PR04MB66385DDED7C654AE2181E08E89EA0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=kj3vKBfqwdtUMsVkoam3aZhNUqqxFgSB7BBAOEKkXrQ=;
+        b=a3EH+6vY3mLHCMdTFSNUAhu9c4eon7oG2pbbre1C840Yq/4FOlysVfu32ppfB4iJfb
+         ICB1dwXHVXpnVdoawym9O2De3+fmF3fqYJ+mTjwLGRMfYbdnJmiat4cH/z3IClxqnbhJ
+         S9D2Q7n1f4Cg4ltZuNwjHzzejH69FnMLyqZdYzJnDg+U2kYLLsXbMabt4PfiWqUTwkav
+         mVWZ/xpm5SXLgmDwEbq+BGyAOKWI1cLdiVR3yMtA8Qixt1k2Q7EDh8WhZLDnq7diUhkB
+         5HR9NznNSqpxkCDh7wGLTnadYvt0MUZPAdMjlM9cdtG+0C+kF0nZ1dHd88PK2ZONa3T8
+         ZL9A==
+X-Gm-Message-State: APjAAAUa09Zmpd1AgS3659w35UnWgjYlHmdF9bNdtVfB/IFG80lpee2k
+        GnGNlcrSk46XT+pSNlUWlZDclrPebGg=
+X-Google-Smtp-Source: APXvYqy7HBMpFOe5/mA0FGyDFejLKPscfJ0sRmOPXa66xMrwsbE9WYg5t2IpF2N/QFu406cIAurV+w==
+X-Received: by 2002:adf:e542:: with SMTP id z2mr6970292wrm.150.1582737874859;
+        Wed, 26 Feb 2020 09:24:34 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:d916:1723:c1c1:22d? ([2a01:e34:ed2f:f020:d916:1723:c1c1:22d])
+        by smtp.googlemail.com with ESMTPSA id 4sm3603346wmg.22.2020.02.26.09.24.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Feb 2020 09:24:34 -0800 (PST)
+Subject: Re: [PATCH] clocksource: timer-ti-dm: Drop bogus
+ omap_dm_timer_of_set_source()
+To:     Tony Lindgren <tony@atomide.com>, Suman Anna <s-anna@ti.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        "H . Nikolaus Schaller" <hns@goldelico.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Keerthy <j-keerthy@ti.com>,
+        Ladislav Michl <ladis@linux-mips.org>,
+        Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
+References: <20200213053504.22638-1-s-anna@ti.com>
+ <20200226161602.GO37466@atomide.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <7f32f784-94e9-3105-cabd-ebf4093cbbf6@linaro.org>
+Date:   Wed, 26 Feb 2020 18:24:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <20200226161602.GO37466@atomide.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-02-26 at 01:15 +0000, Robin Gong wrote:
-> On 2020/02/26 André Draszik <git@andred.net> wrote: 
-> > The snvs_pwrkey shares the SNVS LPSR status register with the snvs_rtc.
-> > 
-> > This driver here should only return IRQ_HANDLED if the status register
-> > indicates that the event we're handling in the irq handler was genuinely
-> > intended for this driver. Otheriwse the interrupt subsystem will assume the
-> > interrupt was handled successfully even though it wasn't at all.
-> > 
-> > Signed-off-by: André Draszik <git@andred.net>
-> > Cc: "Horia Geantă" <horia.geanta@nxp.com>
-> > Cc: Aymen Sghaier <aymen.sghaier@nxp.com>
-> > Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> > Cc: "David S. Miller" <davem@davemloft.net>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Shawn Guo <shawnguo@kernel.org>
-> > Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> > Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-> > Cc: Fabio Estevam <festevam@gmail.com>
-> > Cc: NXP Linux Team <linux-imx@nxp.com>
-> > Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > Cc: Anson Huang <Anson.Huang@nxp.com>
-> > Cc: Robin Gong <yibin.gong@nxp.com>
-> > Cc: linux-crypto@vger.kernel.org
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Cc: linux-input@vger.kernel.org
-> > 
-> > ---
-> > v2:
-> > * no changes
-> > ---
-> >  drivers/input/keyboard/snvs_pwrkey.c | 12 +++++++-----
-> >  1 file changed, 7 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/input/keyboard/snvs_pwrkey.c
-> > b/drivers/input/keyboard/snvs_pwrkey.c
-> > index 382d2ae82c9b..980867886b34 100644
-> > --- a/drivers/input/keyboard/snvs_pwrkey.c
-> > +++ b/drivers/input/keyboard/snvs_pwrkey.c
-> > @@ -82,7 +82,9 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void
-> > *dev_id)
-> >  	clk_enable(pdata->clk);
-> > 
-> >  	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
-> > -	if (lp_status & SNVS_LPSR_SPO) {
-> > +	lp_status &= SNVS_LPSR_SPO;
-> > +
-> > +	if (lp_status) {
-> >  		if (pdata->minor_rev == 0) {
-> >  			/*
-> >  			 * The first generation i.MX[6|7] SoCs only send an @@ -98,14
-> > +100,14 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void
-> > *dev_id)
-> >  			mod_timer(&pdata->check_timer,
-> >  			          jiffies + msecs_to_jiffies(DEBOUNCE_TIME));
-> >  		}
-> > -	}
-> > 
-> > -	/* clear SPO status */
-> > -	regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO);
-> > +		/* clear SPO status */
-> > +		regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO);
-> But irq storm will come in once there is other interrupt triggered as unexpected,
-> although I never met it before. Could we drop this patch now? Others are ok for me.
+On 26/02/2020 17:16, Tony Lindgren wrote:
+> * Suman Anna <s-anna@ti.com> [200212 21:36]:
+>> Hi Tony,
+>>
+>> Do you have the history of why the 32 KHz source is set as parent during
+>> prepare? One of the current side-affects of this patch is that now instead
+>> of bailing out, the 32 KHz source is set, and consumers will still need
+>> to select their appropriate parent. Dropping that call should actually
+>> allow us to select the parents in the consumer nodes in dts files using
+>> the assigned-clocks and assigned-clock-parents properties. I prefer to
+>> drop it if you do not foresee any issues. For now, I do not anticipate
+>> any issues with omap-pwm-dmtimer with this patch.
+> 
+> Using the 32 KiHz source works better for PM. But yeah the
+> machine specific source clock should be configured with
+> assigned-clocks and assigned-clock-parents properites.
+> 
+> Things seem to behave just fine for me with this patch for both
+> pwm-leds and PM. Good to see this function gone:
+> 
+> Tested-by: Tony Lindgren <tony@atomide.com>
 
-I don't have strong feelings about this patch, but this bit merely changes behaviour to
-clear SP0 if SP0 was in fact != 0 in the first place, whereas before SP0 was always
-cleared, even if it was == 0 anyway. Seems more logical in my eyes.
+Thanks for testing
 
 
-> Reviewed-by: Robin Gong <yibin.gong@nxp>
-> > +	}
-> > 
-> >  	clk_disable(pdata->clk);
-> > 
-> > -	return IRQ_HANDLED;
-> > +	return lp_status ? IRQ_HANDLED : IRQ_NONE;
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-If you're talking about this part, the rtc-snvs driver does the same in its interrupt handler.
-In other words, this driver here could prevent the rtc-snvs driver from seeing its events.
-
-
-
-Cheers,
-Andre'
-
- 
-> >  }
-> > 
-> >  static void imx_snvs_pwrkey_act(void *pdata)
-> > --
-> > 2.23.0.rc1
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
