@@ -4,46 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C82C4BA10
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7686AC4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB5F420714
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55FDD2467F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 14:20:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbgBZOUv (ORCPT
+        id S1727559AbgBZOUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 09:20:51 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:57927 "EHLO
+        Wed, 26 Feb 2020 09:20:55 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:57936 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726278AbgBZOUv (ORCPT
+        with ESMTP id S1727091AbgBZOUw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 09:20:51 -0500
+        Wed, 26 Feb 2020 09:20:52 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1j6xYG-00080k-EN; Wed, 26 Feb 2020 15:20:40 +0100
+        id 1j6xYE-00080V-JW; Wed, 26 Feb 2020 15:20:38 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 12ABF1C2156;
-        Wed, 26 Feb 2020 15:20:40 +0100 (CET)
-Date:   Wed, 26 Feb 2020 14:20:39 -0000
-From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 357481C215A;
+        Wed, 26 Feb 2020 15:20:38 +0100 (CET)
+Date:   Wed, 26 Feb 2020 14:20:37 -0000
+From:   "tip-bot2 for Adrian Hunter" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf bpf: Remove bpf/ subdir from bpf.h headers
- used to build bpf events
+Subject: [tip: perf/urgent] perf arm-spe: Fix endless record after being terminated
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Tan Xiaojun <tanxiaojun@huawei.com>, stable@vger.kernel.org,
+        #@tip-bot2.tec.linutronix.de, 5.4+@tip-bot2.tec.linutronix.de,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <tip-d9myswhgo8gfi3vmehdqpxa7@git.kernel.org>
-References: <tip-d9myswhgo8gfi3vmehdqpxa7@git.kernel.org>
+In-Reply-To: <20200214132654.20395-5-adrian.hunter@intel.com>
+References: <20200214132654.20395-5-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Message-ID: <158272683976.28353.3519947924913490182.tip-bot2@tip-bot2>
+Message-ID: <158272683792.28353.5388500922946867357.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,88 +59,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     3b573bf318d894b4290e194c4d7dbcba8c1f6ead
-Gitweb:        https://git.kernel.org/tip/3b573bf318d894b4290e194c4d7dbcba8c1f6ead
-Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Fri, 14 Feb 2020 16:21:40 -03:00
+Commit-ID:     d6bc34c5ec18c3544c4b0d85963768dfbcd24184
+Gitweb:        https://git.kernel.org/tip/d6bc34c5ec18c3544c4b0d85963768dfbcd24184
+Author:        Adrian Hunter <adrian.hunter@intel.com>
+AuthorDate:    Fri, 14 Feb 2020 15:26:53 +02:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 18 Feb 2020 10:13:28 -03:00
+CommitterDate: Tue, 18 Feb 2020 10:13:29 -03:00
 
-perf bpf: Remove bpf/ subdir from bpf.h headers used to build bpf events
+perf arm-spe: Fix endless record after being terminated
 
-The bpf.h file needed gets installed in /usr/lib/include/perf/bpf/bpf.h,
-and /usr/lib/include/perf/ is added to the include path passed to clang
-to build the eBPF bytecode, so just remove "bpf/", its directly in the
-path passed already. This was working by accident, fix it.
+In __cmd_record(), when receiving SIGINT(ctrl + c), a 'done' flag will
+be set and the event list will be disabled by evlist__disable() once.
 
-I.e. now this is back working:
+While in auxtrace_record.read_finish(), the related events will be
+enabled again, if they are continuous, the recording seems to be
+endless.
 
-  # cat /home/acme/git/perf/tools/perf/examples/bpf/hello.c
-  #include <stdio.h>
+If the event is disabled, don't enable it again here.
 
-  int syscall_enter(openat)(void *args)
-  {
-  	puts("Hello, world\n");
-  	return 0;
-  }
-
-  license(GPL);
-  # perf trace -e /home/acme/git/perf/tools/perf/examples/bpf/hello.c
-       0.000 pickup/21493 __bpf_stdout__(Hello, world)
-      56.462 sh/13539 __bpf_stdout__(Hello, world)
-      56.536 sh/13539 __bpf_stdout__(Hello, world)
-      56.673 sh/13539 __bpf_stdout__(Hello, world)
-      56.781 sh/13539 __bpf_stdout__(Hello, world)
-      56.707 perf/13182 __bpf_stdout__(Hello, world)
-      56.849 perf/13182 __bpf_stdout__(Hello, world)
-  ^C
-  #
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-d9myswhgo8gfi3vmehdqpxa7@git.kernel.org
+Based-on-patch-by: Wei Li <liwei391@huawei.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Tan Xiaojun <tanxiaojun@huawei.com>
+Cc: stable@vger.kernel.org # 5.4+
+Link: http://lore.kernel.org/lkml/20200214132654.20395-5-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/include/bpf/pid_filter.h | 2 +-
- tools/perf/include/bpf/stdio.h      | 2 +-
- tools/perf/include/bpf/unistd.h     | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/arch/arm64/util/arm-spe.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/include/bpf/pid_filter.h b/tools/perf/include/bpf/pid_filter.h
-index 607189a..6e61c4b 100644
---- a/tools/perf/include/bpf/pid_filter.h
-+++ b/tools/perf/include/bpf/pid_filter.h
-@@ -3,7 +3,7 @@
- #ifndef _PERF_BPF_PID_FILTER_
- #define _PERF_BPF_PID_FILTER_
+diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
+index eba6541..1d993c2 100644
+--- a/tools/perf/arch/arm64/util/arm-spe.c
++++ b/tools/perf/arch/arm64/util/arm-spe.c
+@@ -165,9 +165,12 @@ static int arm_spe_read_finish(struct auxtrace_record *itr, int idx)
+ 	struct evsel *evsel;
  
--#include <bpf/bpf.h>
-+#include <bpf.h>
- 
- #define pid_filter(name) pid_map(name, bool)
- 
-diff --git a/tools/perf/include/bpf/stdio.h b/tools/perf/include/bpf/stdio.h
-index 7ca6fa5..316af5b 100644
---- a/tools/perf/include/bpf/stdio.h
-+++ b/tools/perf/include/bpf/stdio.h
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- 
--#include <bpf/bpf.h>
-+#include <bpf.h>
- 
- struct bpf_map SEC("maps") __bpf_stdout__ = {
-        .type = BPF_MAP_TYPE_PERF_EVENT_ARRAY,
-diff --git a/tools/perf/include/bpf/unistd.h b/tools/perf/include/bpf/unistd.h
-index d1a35b6..ca7877f 100644
---- a/tools/perf/include/bpf/unistd.h
-+++ b/tools/perf/include/bpf/unistd.h
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: LGPL-2.1
- 
--#include <bpf/bpf.h>
-+#include <bpf.h>
- 
- static int (*bpf_get_current_pid_tgid)(void) = (void *)BPF_FUNC_get_current_pid_tgid;
- 
+ 	evlist__for_each_entry(sper->evlist, evsel) {
+-		if (evsel->core.attr.type == sper->arm_spe_pmu->type)
++		if (evsel->core.attr.type == sper->arm_spe_pmu->type) {
++			if (evsel->disabled)
++				return 0;
+ 			return perf_evlist__enable_event_idx(sper->evlist,
+ 							     evsel, idx);
++		}
+ 	}
+ 	return -EINVAL;
+ }
