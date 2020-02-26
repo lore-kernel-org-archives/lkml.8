@@ -2,92 +2,156 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B10C4BA17
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 770BBC4BA15
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2455A206E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:21:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582734091;
-	bh=/t3Npmz0ziYRPUEw01AlkDHenvfuwVgllmRH8FcecUk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=N/DSb85WuHT6+gT1qKPNqYNCyih8SEyA6yo6EKXvNoevoDquq4q+JV7uaMQUkpKpQ
-	 P0JfyhSa/nE8gWOykrt/BT94tWp4dbL16/m/8TsD6JeyriXBXfaA2a0DdBTU0JOaJQ
-	 BCNJPYTlDFLmwc493M1ER/01+jklAkRH/UU1MWVU=
+	by mail.kernel.org (Postfix) with ESMTP id 59227206E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 16:21:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbgBZQVa (ORCPT
+        id S1727311AbgBZQV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 11:21:30 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:37380 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbgBZQV3 (ORCPT
+        Wed, 26 Feb 2020 11:21:58 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55791 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgBZQV5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 11:21:29 -0500
-Received: by mail-oi1-f194.google.com with SMTP id q84so65582oic.4;
-        Wed, 26 Feb 2020 08:21:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=R8CgB5ofq/CEo+Bbd71eYLol0DUjIXGKdAp6HQA/9d8=;
-        b=WXUtLvmQ3u/1TZxpMpTPUKrE/KEAeqbJczz5ZuaPKROK2TppNbJdB5WBS6dvKU3svD
-         f281IGiL8cWwhLtAiLtKn+BAGb7dKZzXuAgkAUhAfkZxBMj/y/pRtnTlTpsEbvIOJ7r7
-         I5d7LfzHL78FRqa9AbYMpbxFPIL4Y9HA+B/a1G50j2GcWwJkVX8xAWF9IKBg9XbALjZT
-         go52ZrackJPT1akPP7Y63RvqL8Lsc5k0wvUenX9y1Dkix3N6xlgzNa8H7YOimif9DBFQ
-         cPFKvdQYsVoDBYFN21W7kq4MbwJk+1ArEdBiZhHR+fSEx2K8/UKoY3PWtVmBwYu+uF4v
-         fIGQ==
-X-Gm-Message-State: APjAAAXB/apQltBC1HX0D8Dh4inbdcRinHjx+yQeBYsrlUWR78Ll41nG
-        LuvG/IizKgbxCBwr2D+9pw==
-X-Google-Smtp-Source: APXvYqx4y3t8f8l9YMHa0dnaCosRY7xiR2vi0DCieSBpahLqPG+tzB/Y2iH6dVgGLzxAw9q3lrEIRA==
-X-Received: by 2002:aca:ab53:: with SMTP id u80mr3693789oie.94.1582734089012;
-        Wed, 26 Feb 2020 08:21:29 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t20sm939037oij.19.2020.02.26.08.21.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 08:21:26 -0800 (PST)
-Received: (nullmailer pid 13405 invoked by uid 1000);
-        Wed, 26 Feb 2020 16:21:25 -0000
-Date:   Wed, 26 Feb 2020 10:21:25 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.co,
-        alexandre.torgue@st.com, linus.walleij@linaro.org,
-        amelie.delaunay@st.com, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: Re: [PATCH v3] dt-bindings: mfd: Convert stmfx bindings to
- json-schema
-Message-ID: <20200226162125.GA13349@bogus>
-References: <20200220162246.8334-1-benjamin.gaignard@st.com>
+        Wed, 26 Feb 2020 11:21:57 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j6zRa-0005Au-A1; Wed, 26 Feb 2020 17:21:54 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j6zRZ-0001L4-HM; Wed, 26 Feb 2020 17:21:53 +0100
+Date:   Wed, 26 Feb 2020 17:21:53 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH 4/4] pwm: omap-dmtimer: Implement .apply callback
+Message-ID: <20200226162153.4vlx2z6wurpdy4az@pengutronix.de>
+References: <20200224052135.17278-1-lokeshvutla@ti.com>
+ <20200224052135.17278-5-lokeshvutla@ti.com>
+ <20200224090706.xsujpc3yiqlmmrmm@pengutronix.de>
+ <cee31e10-17b4-1cfb-5c77-a58a142c338d@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200220162246.8334-1-benjamin.gaignard@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cee31e10-17b4-1cfb-5c77-a58a142c338d@ti.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Feb 2020 17:22:46 +0100, Benjamin Gaignard wrote:
-> Convert stmfx bindings to json-schema
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  .../devicetree/bindings/mfd/st,stmfx.yaml          | 124 +++++++++++++++++++++
->  Documentation/devicetree/bindings/mfd/stmfx.txt    |  28 -----
->  .../devicetree/bindings/pinctrl/pinctrl-stmfx.txt  | 116 -------------------
->  3 files changed, 124 insertions(+), 144 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/st,stmfx.yaml
->  delete mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
-> 
+Hello Lokesh,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Tue, Feb 25, 2020 at 10:31:45AM +0530, Lokesh Vutla wrote:
+> Hi Uwe,
+> 
+> On 24/02/20 2:37 PM, Uwe Kleine-König wrote:
+> > On Mon, Feb 24, 2020 at 10:51:35AM +0530, Lokesh Vutla wrote:
+> >> Implement .apply callback and drop the legacy callbacks(enable, disable,
+> >> config, set_polarity).
+> >>
+> >> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> >> ---
+> >>  drivers/pwm/pwm-omap-dmtimer.c | 141 +++++++++++++++++++--------------
+> >>  1 file changed, 80 insertions(+), 61 deletions(-)
+> >>
+> 
+> [..snip..]
+> 
+> >> -static int pwm_omap_dmtimer_set_polarity(struct pwm_chip *chip,
+> >> -					 struct pwm_device *pwm,
+> >> -					 enum pwm_polarity polarity)
+> >> +/**
+> >> + * pwm_omap_dmtimer_apply() - Changes the state of the pwm omap dm timer.
+> >> + * @chip:	Pointer to PWM controller
+> >> + * @pwm:	Pointer to PWM channel
+> >> + * @state:	New sate to apply
+> >> + *
+> >> + * Return 0 if successfully changed the state else appropriate error.
+> >> + */
+> >> +static int pwm_omap_dmtimer_apply(struct pwm_chip *chip,
+> >> +				  struct pwm_device *pwm,
+> >> +				  const struct pwm_state *state)
+> >>  {
+> >>  	struct pwm_omap_dmtimer_chip *omap = to_pwm_omap_dmtimer_chip(chip);
+> >> +	int ret = 0;
+> >>  
+> >> -	/*
+> >> -	 * PWM core will not call set_polarity while PWM is enabled so it's
+> >> -	 * safe to reconfigure the timer here without stopping it first.
+> >> -	 */
+> >>  	mutex_lock(&omap->mutex);
+> >> -	omap->pdata->set_pwm(omap->dm_timer,
+> >> -			     polarity == PWM_POLARITY_INVERSED,
+> >> -			     true, OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE);
+> >> +
+> >> +	if (pwm_is_enabled(pwm) && !state->enabled) {
+> > 
+> > In my book calling PWM API functions (designed for PWM consumers) is not
+> > so nice. I would prefer you checking the hardware registers or cache the
+> > state locally instead of relying on the core here.
+> 
+> .start and .stop apis does read the hardware registers and check the state
+> before making any changes. Do you want to drop off the pwm_is_enabled(pwm) check
+> here?
+
+The IMHO more natural approach would be to look into the hardware
+registers instead of asking the framework.
+
+> > It would be great to have a general description at the top of the driver
+> > (like for example drivers/pwm/pwm-sifive.c) that answers things like:
+> > 
+> >  - Does calling .stop completes the currently running period (it
+> >    should)?
+> 
+> Existing driver implementation abruptly stops the cycle. I can make changes such
+> that it completes the currently running period.
+
+That would be good for correctness.
+
+> >  - Does changing polarity, duty_cycle and period complete the running
+> >    period?
+> 
+> - Polarity can be changed only when the pwm is not running. Ill add extra guards
+> to reflect this behavior.
+> - Changing duty_cycle and period does complete the running period and new values
+> gets reflected in next cycle.
+
+Is there are race with the hardware? I.e. can it happen that when a new
+cycle starts just when you configured the new period but not the
+duty_cycle yet a mixed cycle is output?
+
+> >  - How does the hardware behave on disable? (i.e. does it output the
+> >    state the pin is at in that moment? Does it go High-Z?)
+> 
+> Now that I am making changes to complete the current period on disable, the pin
+> goes to Low after disabling(completing the cycle).
+> 
+> Ill add all these points as you mentioned in v2.
+
+Great
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
