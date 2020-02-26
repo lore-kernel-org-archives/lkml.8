@@ -2,199 +2,142 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCD6C4BA10
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E0CC4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F66124685
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E3062467F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:07:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ilKxL3+W"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SN77YI4L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727283AbgBZNEv (ORCPT
+        id S1726917AbgBZNHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 08:04:51 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43273 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726764AbgBZNEu (ORCPT
+        Wed, 26 Feb 2020 08:07:54 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46930 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726592AbgBZNHy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 08:04:50 -0500
-Received: by mail-lj1-f194.google.com with SMTP id e3so1935459lja.10;
-        Wed, 26 Feb 2020 05:04:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=O25EKQ/j7WjcsbpKkgnPuipDcLm308M3Qu8bOQqW64A=;
-        b=ilKxL3+WgTagCjZB+A3/fi+owewEyGmO6tSxsdWl9xJkdj7Ke3DEtDuwx/9VC/RPeg
-         ZGBvXcJHemljLzQtxT1+6NkxlbNIlH3Tr3BKXduLPEQi5B2vT3+nJ0TNoif9BT9oAVRq
-         rptC753JSjuGIzjpUVscH24MgHRdLBcbwpq37sVIsj0WUMFZcxeL1wDdI6Xg/L498ZxC
-         TSNSMTJSLUJqhcbXtWGkMRnHJMf3aLsAVyWbW1yebObQrr1/tOjLecAzHB9MACx+IaKy
-         n2GiaHut4k96a1e8EB1hEplUCzLlxrYC8qhEF12aP5P/Hjn1ivCpuE0gthxb/Se4HEqg
-         iNbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=O25EKQ/j7WjcsbpKkgnPuipDcLm308M3Qu8bOQqW64A=;
-        b=GwEMaLPGhm4KbcgmYCSfk2IRnNdhf+lkPEYAnsJdaPAbaAxjSxFjI6brUBE50zfFIm
-         FA+pEUWCAoa8FdGWZIY4sM4ruWv/MEnq0lYI1B9B6HDIF2vRFNVaXOsFRSzb3ulnXmBA
-         c+FDgYLaq3Q6vERGrP+k9+TDvUFbnm/jlhPxyALhxL6vFOtpmALzzIqOqoLO5rNBmtDR
-         lhGwbaK7bJmfomqIvXn+aDxUqZoslX8lk9GyMu9wA8xn2AOTGr/B5gGw3rcn72Bzzi3F
-         D1UlI6SFysVU/HdJLvNJC/7KARarKrsWLgHkISKRyWw01IgeMYc4YeUypRRKV0TkYQgM
-         luSA==
-X-Gm-Message-State: APjAAAVnlGcCu17qdNASLaM07BlSoi3tNHm+c3uxDdHQNI1apblnWKVt
-        fYLmW/xWIUjcnuCeTpH/wOk=
-X-Google-Smtp-Source: APXvYqy+w3/Rihtqgl84Z/m0zDxtBGcbJLHw6UD8Tbza68FJyTLvbIZ90z1QtoGVXcysYEmWUrDugw==
-X-Received: by 2002:a2e:8145:: with SMTP id t5mr3043598ljg.144.1582722288157;
-        Wed, 26 Feb 2020 05:04:48 -0800 (PST)
-Received: from pc636 ([37.139.158.167])
-        by smtp.gmail.com with ESMTPSA id f8sm1001149lfc.10.2020.02.26.05.04.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 05:04:47 -0800 (PST)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Wed, 26 Feb 2020 14:04:40 +0100
-To:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Suraj Jitindar Singh <surajjs@amazon.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC] ext4: fix potential race between online resizing and
- write operations
-Message-ID: <20200226130440.GA30008@pc636>
-References: <20200220045233.GC476845@mit.edu>
- <20200221003035.GC2935@paulmck-ThinkPad-P72>
- <20200221131455.GA4904@pc636>
- <20200221202250.GK2935@paulmck-ThinkPad-P72>
- <20200222222415.GC191380@google.com>
- <20200223011018.GB2935@paulmck-ThinkPad-P72>
- <20200224174030.GA22138@pc636>
- <20200225020705.GA253171@google.com>
- <20200225185400.GA27919@pc636>
- <20200225224745.GX2935@paulmck-ThinkPad-P72>
+        Wed, 26 Feb 2020 08:07:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582722472;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=I9Ln/3T7qXcU74IlWJ1bBpZpKyU+byQv4hYuFlbZtOA=;
+        b=SN77YI4Ld/0Itt0O1TKNQgVYI72CgqOXM0uk6jJhG81iokiIEvGcvHKnuVqW5QsaIsbSG2
+        BPjF0ItqcUKmUzDSkLC1mF9YYPARQNcYeRsGn4LSLhMGixocDuYa84cSQ2VxX3YqhRPRSM
+        5Fq96TPHd3hzGNDycVu0pLHOfKhNoCQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-232-o9q3gO2WPR-I-5yu0RIQLQ-1; Wed, 26 Feb 2020 08:07:49 -0500
+X-MC-Unique: o9q3gO2WPR-I-5yu0RIQLQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 59C16800D48;
+        Wed, 26 Feb 2020 13:07:47 +0000 (UTC)
+Received: from localhost (ovpn-12-39.pek2.redhat.com [10.72.12.39])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A51325DA60;
+        Wed, 26 Feb 2020 13:07:43 +0000 (UTC)
+Date:   Wed, 26 Feb 2020 21:07:41 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, richardw.yang@linux.intel.com,
+        osalvador@suse.de, dan.j.williams@intel.com, mhocko@suse.com,
+        rppt@linux.ibm.com, robin.murphy@arm.com
+Subject: Re: [PATCH v2 1/7] mm/hotplug: fix hot remove failure in
+ SPARSEMEM|!VMEMMAP case
+Message-ID: <20200226130741.GH24216@MiWiFi-R3L-srv>
+References: <20200220043316.19668-1-bhe@redhat.com>
+ <20200220043316.19668-2-bhe@redhat.com>
+ <93280f63-bed7-9677-a7fa-8ea2089d26d2@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200225224745.GX2935@paulmck-ThinkPad-P72>
+In-Reply-To: <93280f63-bed7-9677-a7fa-8ea2089d26d2@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 02:47:45PM -0800, Paul E. McKenney wrote:
-> On Tue, Feb 25, 2020 at 07:54:00PM +0100, Uladzislau Rezki wrote:
-> > > > > > I was thinking a 2 fold approach (just thinking out loud..):
-> > > > > > 
-> > > > > > If kfree_call_rcu() is called in atomic context or in any rcu reader, then
-> > > > > > use GFP_ATOMIC to grow an rcu_head wrapper on the atomic memory pool and
-> > > > > > queue that.
-> > > > > > 
-> > > > I am not sure if that is acceptable, i mean what to do when GFP_ATOMIC
-> > > > gets failed in atomic context? Or we can just consider it as out of
-> > > > memory and another variant is to say that headless object can be called
-> > > > from preemptible context only.
-> > > 
-> > > Yes that makes sense, and we can always put disclaimer in the API's comments
-> > > saying if this object is expected to be freed a lot, then don't use the
-> > > headless-API to be extra safe.
-> > > 
-> > Agree.
+On 02/26/20 at 01:31pm, David Hildenbrand wrote:
+> On 20.02.20 05:33, Baoquan He wrote:
+> > In section_deactivate(), pfn_to_page() doesn't work any more after
+> > ms->section_mem_map is resetting to NULL in SPARSEMEM|!VMEMMAP case.
+> > It caused hot remove failure:
 > > 
-> > > BTW, GFP_ATOMIC the documentation says if GFP_ATOMIC reserves are depleted,
-> > > the kernel can even panic some times, so if GFP_ATOMIC allocation fails, then
-> > > there seems to be bigger problems in the system any way. I would say let us
-> > > write a patch to allocate there and see what the -mm guys think.
-> > > 
-> > OK. It might be that they can offer something if they do not like our
-> > approach. I will try to compose something and send the patch to see.
-> > The tree.c implementation is almost done, whereas tiny one is on hold.
+> > kernel BUG at mm/page_alloc.c:4806!
+> > invalid opcode: 0000 [#1] SMP PTI
+> > CPU: 3 PID: 8 Comm: kworker/u16:0 Tainted: G        W         5.5.0-next-20200205+ #340
+> > Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+> > Workqueue: kacpi_hotplug acpi_hotplug_work_fn
+> > RIP: 0010:free_pages+0x85/0xa0
+> > Call Trace:
+> >  __remove_pages+0x99/0xc0
+> >  arch_remove_memory+0x23/0x4d
+> >  try_remove_memory+0xc8/0x130
+> >  ? walk_memory_blocks+0x72/0xa0
+> >  __remove_memory+0xa/0x11
+> >  acpi_memory_device_remove+0x72/0x100
+> >  acpi_bus_trim+0x55/0x90
+> >  acpi_device_hotplug+0x2eb/0x3d0
+> >  acpi_hotplug_work_fn+0x1a/0x30
+> >  process_one_work+0x1a7/0x370
+> >  worker_thread+0x30/0x380
+> >  ? flush_rcu_work+0x30/0x30
+> >  kthread+0x112/0x130
+> >  ? kthread_create_on_node+0x60/0x60
+> >  ret_from_fork+0x35/0x40
 > > 
-> > I think we should support batching as well as bulk interface there.
-> > Another way is to workaround head-less object, just to attach the head
-> > dynamically using kmalloc() and then call_rcu() but then it will not be
-> > a fair headless support :)
+> > Let's move the ->section_mem_map resetting after depopulate_section_memmap()
+> > to fix it.
 > > 
-> > What is your view?
-> > 
-> > > > > > Otherwise, grow an rcu_head on the stack of kfree_call_rcu() and call
-> > > > > > synchronize_rcu() inline with it.
-> > > > > > 
-> > > > > >
-> > > > What do you mean here, Joel? "grow an rcu_head on the stack"?
-> > > 
-> > > By "grow on the stack", use the compiler-allocated rcu_head on the
-> > > kfree_rcu() caller's stack.
-> > > 
-> > > I meant here to say, if we are not in atomic context, then we use regular
-> > > GFP_KERNEL allocation, and if that fails, then we just use the stack's
-> > > rcu_head and call synchronize_rcu() or even synchronize_rcu_expedited since
-> > > the allocation failure would mean the need for RCU to free some memory is
-> > > probably great.
-> > > 
-> > Ah, i got it. I thought you meant something like recursion and then
-> > unwinding the stack back somehow :)
-> > 
-> > > > > > Use preemptible() andr task_struct's rcu_read_lock_nesting to differentiate
-> > > > > > between the 2 cases.
-> > > > > > 
-> > > > If the current context is preemptable then we can inline synchronize_rcu()
-> > > > together with freeing to handle such corner case, i mean when we are run
-> > > > out of memory.
-> > > 
-> > > Ah yes, exactly what I mean.
-> > > 
-> > OK.
-> > 
-> > > > As for "task_struct's rcu_read_lock_nesting". Will it be enough just
-> > > > have a look at preempt_count of current process? If we have for example
-> > > > nested rcu_read_locks:
-> > > > 
-> > > > <snip>
-> > > > rcu_read_lock()
-> > > >     rcu_read_lock()
-> > > >         rcu_read_lock()
-> > > > <snip>
-> > > > 
-> > > > the counter would be 3.
-> > > 
-> > > No, because preempt_count is not incremented during rcu_read_lock(). RCU
-> > > reader sections can be preempted, they just cannot goto sleep in a reader
-> > > section (unless the kernel is RT).
-> > > 
-> > So in CONFIG_PREEMPT kernel we can identify if we are in atomic or not by
-> > using rcu_preempt_depth() and in_atomic(). When it comes to !CONFIG_PREEMPT
-> > then we skip it and consider as atomic. Something like:
-> > 
-> > <snip>
-> > static bool is_current_in_atomic()
-> > {
-> > #ifdef CONFIG_PREEMPT_RCU
 > 
-> If possible: if (IS_ENABLED(CONFIG_PREEMPT_RCU))
+> Fixes: Tag? Stable: Tag?
+
+Right, should add these. Will add them. Thanks for noticing.
+
 > 
-> Much nicer than #ifdef, and I -think- it should work in this case.
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > ---
+> >  mm/sparse.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/mm/sparse.c b/mm/sparse.c
+> > index 596b2a45b100..b8e52c8fed7f 100644
+> > --- a/mm/sparse.c
+> > +++ b/mm/sparse.c
+> > @@ -779,13 +779,15 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+> >  			ms->usage = NULL;
+> >  		}
+> >  		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
+> > -		ms->section_mem_map = (unsigned long)NULL;
+> >  	}
+> >  
+> >  	if (section_is_early && memmap)
+> >  		free_map_bootmem(memmap);
+> >  	else
+> >  		depopulate_section_memmap(pfn, nr_pages, altmap);
+> > +
+> > +	if (bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION))
+> > +		ms->section_mem_map = (unsigned long)NULL;
+> >  }
+> >  
+> >  static struct page * __meminit section_activate(int nid, unsigned long pfn,
+> > 
 > 
-OK. Thank you, Paul!
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+> 
+> -- 
+> Thanks,
+> 
+> David / dhildenb
 
-There is one point i would like to highlight it is about making caller
-instead to be responsible for atomic or not decision. Like how kmalloc()
-works, it does not really know the context it runs on, so it is up to
-caller to inform.
-
-The same way:
-
-kvfree_rcu(p, atomic = true/false);
-
-in this case we could cover !CONFIG_PREEMPT case also.
-
---
-Vlad Rezki
