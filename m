@@ -2,93 +2,95 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9439AC4BA0D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8534C4BA0D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 683C321927
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A1B824653
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 05:33:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UAtOqdCt"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Iw3TNNK6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbgBZFdS (ORCPT
+        id S1727175AbgBZFdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 00:33:18 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:52926 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbgBZFdJ (ORCPT
+        Wed, 26 Feb 2020 00:33:23 -0500
+Received: from mailgw02.mediatek.com ([1.203.163.81]:37566 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726039AbgBZFdT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 00:33:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=R7FlMG+Bvduqa3vWTZsVfXNdv+eGdfaeXD+EX3Ia40U=; b=UAtOqdCtIa1gxxR3pMDq5JylXx
-        azJWmvIewLWXM6fb3Qjt9wQI3hbwOlkb4pWp67FpIdIpxhf1bvjRPtdR//pAk7Knftf0K37ER/U6q
-        S+M704BB8ttr7c2kSFC5WOuxhse7/+E6qzczur9bqiLXOW3XatonRS0zQP1fQl0eJq3jh2mtnLLST
-        PBMXdDZq4uXi7rRYMojn0xEezZKWxQHQWR8WY2iHrnMeISKUtwpjLykJ5SG+rCgQsyA+jhxCCt4U1
-        1MvkeUIh20O0dwFwssEe8rDixIIp+GeBCjMGC8MekJj26ctgW2NaTqBzb8VShYmhprBK8h0i4PP8L
-        UXStqNzQ==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6pJV-0002Pr-Ll; Wed, 26 Feb 2020 05:32:53 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        moderated for non-subscribers <alsa-devel@alsa-project.org>,
-        Takashi Iwai <tiwai@suse.de>
-Cc:     Jaroslav Kysela <perex@perex.cz>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] sound: korg1212: fix if-statement empty body warnings
-Message-ID: <91fb1e97-a773-5790-3f65-8198403341e1@infradead.org>
-Date:   Tue, 25 Feb 2020 21:32:49 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 26 Feb 2020 00:33:19 -0500
+X-UUID: e2637b430b3a41c08b60d9d4f2b3468b-20200226
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=nRQYTzjhi5VJ+yL5RODrtCz2oct9vvHn8xRcEXxeiS8=;
+        b=Iw3TNNK6/EhCeuDDGA3pj2EwUSf89esSfhPq6VzY5XURqBJY/M0hz1xPL8iGM8poq27aDQXtir/QDgetd3SxtBC9QYnzf72v7Ia+Z6BEb3QQRnZU+zBZMclajIZwHmw2K2SUp3QvHM9+jAW6s+mx9GZY6yTLrFqbgCG96b19lfo=;
+X-UUID: e2637b430b3a41c08b60d9d4f2b3468b-20200226
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 139375375; Wed, 26 Feb 2020 13:32:50 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33DR.mediatek.inc
+ (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 26 Feb
+ 2020 13:28:49 +0800
+Received: from mszsdclx1018.gcn.mediatek.inc (10.16.6.18) by
+ MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1395.4 via Frontend Transport; Wed, 26 Feb 2020 13:31:24 +0800
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+CC:     <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
+        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
+        <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
+        <stonea168@163.com>, <huijuan.xie@mediatek.com>,
+        Jitao Shi <jitao.shi@mediatek.com>
+Subject: [PATCH v9 2/5] dt-bindings: display: mediatek: control dpi pins mode to avoid leakage
+Date:   Wed, 26 Feb 2020 13:32:35 +0800
+Message-ID: <20200226053238.31646-3-jitao.shi@mediatek.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200226053238.31646-1-jitao.shi@mediatek.com>
+References: <20200226053238.31646-1-jitao.shi@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: E03227202C9ABAD3B01A62D4F80E6575F83DBB92742E34792497078C91941B972000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
-
-Fix gcc warnings when -Wextra is used by using an empty do-while
-block instead of <nothing>.  Fixes these build warnings:
-
-../sound/pci/korg1212/korg1212.c:674:44: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-../sound/pci/korg1212/korg1212.c:708:43: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-../sound/pci/korg1212/korg1212.c:730:43: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-../sound/pci/korg1212/korg1212.c:853:43: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-../sound/pci/korg1212/korg1212.c:1013:44: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-../sound/pci/korg1212/korg1212.c:1035:43: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-../sound/pci/korg1212/korg1212.c:1052:43: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-../sound/pci/korg1212/korg1212.c:1066:43: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-../sound/pci/korg1212/korg1212.c:1087:43: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-../sound/pci/korg1212/korg1212.c:1094:43: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-../sound/pci/korg1212/korg1212.c:1208:43: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-../sound/pci/korg1212/korg1212.c:2360:102: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: alsa-devel@alsa-project.org
----
- sound/pci/korg1212/korg1212.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- linux-next-20200225.orig/sound/pci/korg1212/korg1212.c
-+++ linux-next-20200225/sound/pci/korg1212/korg1212.c
-@@ -30,7 +30,7 @@
- #if K1212_DEBUG_LEVEL > 0
- #define K1212_DEBUG_PRINTK(fmt,args...)	printk(KERN_DEBUG fmt,##args)
- #else
--#define K1212_DEBUG_PRINTK(fmt,...)
-+#define K1212_DEBUG_PRINTK(fmt,...)	do { } while (0)
- #endif
- #if K1212_DEBUG_LEVEL > 1
- #define K1212_DEBUG_PRINTK_VERBOSE(fmt,args...)	printk(KERN_DEBUG fmt,##args)
+QWRkIHByb3BlcnR5ICJwaW5jdHJsLW5hbWVzIiB0byBzd2FwIHBpbiBtb2RlIGJldHdlZW4gZ3Bp
+byBhbmQgZHBpIG1vZGUuIFNldA0KcGluIG1vZGUgdG8gZ3BpbyBvdXBwdXQtbG93IHRvIGF2b2lk
+IGxlYWthZ2UgY3VycmVudCB3aGVuIGRwaSBkaXNhYmxlLg0KDQpSZXZpZXdlZC1ieTogQ0sgSHUg
+PGNrLmh1QG1lZGlhdGVrLmNvbT4NClNpZ25lZC1vZmYtYnk6IEppdGFvIFNoaSA8aml0YW8uc2hp
+QG1lZGlhdGVrLmNvbT4NCi0tLQ0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVk
+aWF0ZWsvbWVkaWF0ZWssZHBpLnR4dCAgfCA3ICsrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgNyBp
+bnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkcGkudHh0IGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHBpLnR4dA0KaW5k
+ZXggNTg5MTRjZjY4MWI4Li5hN2IxYjhiZmI2NWUgMTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkcGkudHh0DQor
+KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9t
+ZWRpYXRlayxkcGkudHh0DQpAQCAtMTcsNiArMTcsMTAgQEAgUmVxdWlyZWQgcHJvcGVydGllczoN
+CiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQuIFRoaXMgcG9y
+dCBzaG91bGQgYmUgY29ubmVjdGVkDQogICB0byB0aGUgaW5wdXQgcG9ydCBvZiBhbiBhdHRhY2hl
+ZCBIRE1JIG9yIExWRFMgZW5jb2RlciBjaGlwLg0KIA0KK09wdGlvbmFsIHByb3BlcnRpZXM6DQor
+LSBwaW5jdHJsLW5hbWVzOiBDb250YWluICJncGlvbW9kZSIgYW5kICJkcGltb2RlIi4NCisgIHBp
+bmN0cmwtbmFtZXMgc2VlIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJs
+cGluY3RybC1iaW5kaW5ncy50eHQNCisNCiBFeGFtcGxlOg0KIA0KIGRwaTA6IGRwaUAxNDAxZDAw
+MCB7DQpAQCAtMjcsNiArMzEsOSBAQCBkcGkwOiBkcGlAMTQwMWQwMDAgew0KIAkJIDwmbW1zeXMg
+Q0xLX01NX0RQSV9FTkdJTkU+LA0KIAkJIDwmYXBtaXhlZHN5cyBDTEtfQVBNSVhFRF9UVkRQTEw+
+Ow0KIAljbG9jay1uYW1lcyA9ICJwaXhlbCIsICJlbmdpbmUiLCAicGxsIjsNCisJcGluY3RybC1u
+YW1lcyA9ICJncGlvbW9kZSIsICJkcGltb2RlIjsNCisJcGluY3RybC0wID0gPCZkcGlfcGluX2dw
+aW8+Ow0KKwlwaW5jdHJsLTEgPSA8JmRwaV9waW5fZnVuYz47DQogDQogCXBvcnQgew0KIAkJZHBp
+MF9vdXQ6IGVuZHBvaW50IHsNCi0tIA0KMi4yMS4wDQo=
 
