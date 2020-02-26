@@ -2,190 +2,374 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D51C4BA0A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E33C4BA0A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8673F2084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:28:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V7m0jjUV"
+	by mail.kernel.org (Postfix) with ESMTP id B77A22084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:28:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582702124;
+	bh=Jpmvaue+x7NvgWHz2Bnrr5J65mlxuyxU4weChioHbN4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FzxAklMDMRSDeJTICBV5N4yWXlr6rJXOKFGMc3/iJpBmX6FFKFY5LUUL/KNXPZXCM
+	 EBpUoKRusbhErZVt+roC1e+mX9WHazeSdsuY6tL25hrYJHnlDscgHY3fx3H0LICZeu
+	 MFRZREynBd7gNTW4vlN1fa00vhkB0Q/iqn8AFF18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbgBZH2J (ORCPT
+        id S1727317AbgBZH2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 02:28:09 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40162 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726903AbgBZH2I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 02:28:08 -0500
-Received: by mail-wr1-f68.google.com with SMTP id t3so1624488wru.7;
-        Tue, 25 Feb 2020 23:28:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ddjl8EDbhMbAtnqngI6RiTBP48+D/nMFpIcQwuofslY=;
-        b=V7m0jjUViSFT0qDE4Frwn1P3Qb37gVs4z3K7BUqGQEHA6H+xw0L+6woSTtJ9uGzpko
-         FO8pmxSE/JJto9rUq7MJN/OSPav7IjjHLaOjJ3RDwEW+yzyNmvq+ppMvu7x5pUbP6BGY
-         umhOhi1LCSfslVYSHfiEbFVF2G2Kxb6MwzHWL1Idizv71jaXry2HGbmnYr+4+iRY1y+0
-         sU4ObzVhcr3qvFHt281ngR2eG6y6vMRywczJTR1ccrjYIH7tR2KPm+YpF5d2sFBDu1Nk
-         Iy1HAfwOaVHgYV28GPGDdKZC+OADnfSax9GDX9dNhAMWtItvzIVJnq5Sbn91ESP1TyV3
-         D+lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ddjl8EDbhMbAtnqngI6RiTBP48+D/nMFpIcQwuofslY=;
-        b=kM41+H6ayQTU7Z2Ilwo/xZn674IojTE2aiECQBquDitUZuyhhEcxsiNotrE1hQTfoD
-         4Pp6+8Y004IAnrknC8sw3+LIjU8jgImmJLfCRbY6wfyiJifrjJ2b3XQhy44j0+cQCEP7
-         dX8+YA7zsgvTkG866f4woKGT4vxOIztk8iAKOO4+w2bSEGIcUPeE12bN8ofsWZmeXNEk
-         6jqneVvVVEDQE5+JlUj8w3c/PQ6A6MSOHUjRx1jc2or554O6a+yVNaTvMCDSCpgqBFlN
-         JoR9ZPAzJjTmEtcspRDjlVKMhAp3GZyAf6YW6jCRoSZ5uVg5kJTdS7SIselx3/GOrutR
-         YI4g==
-X-Gm-Message-State: APjAAAWXSDsiQLUkkZkmC4myKMibwhXqMSpx5Q6Si5WD3ohUihrpPfsF
-        2SjptqYQjOlBsFyGYZtyPFvT+ACU
-X-Google-Smtp-Source: APXvYqzonWono6/3OpIDSPmky5FrOb1OYMy68R1OVnoovK6y8l++ZaGF1mc7daRPKH5TBWekP9yo4g==
-X-Received: by 2002:a5d:5506:: with SMTP id b6mr3586994wrv.94.1582702085880;
-        Tue, 25 Feb 2020 23:28:05 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f29:6000:e467:10a7:6ccf:340e? (p200300EA8F296000E46710A76CCF340E.dip0.t-ipconnect.de. [2003:ea:8f29:6000:e467:10a7:6ccf:340e])
-        by smtp.googlemail.com with ESMTPSA id u23sm1756963wmu.14.2020.02.25.23.28.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2020 23:28:05 -0800 (PST)
-Subject: Re: [RFC PATCH 1/2] net: phy: let the driver register its own IRQ
- handler
-To:     Michael Walle <michael@walle.cc>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Richard Cochran <richardcochran@gmail.com>
-References: <20200225230819.7325-1-michael@walle.cc>
- <20200225230819.7325-2-michael@walle.cc>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <3c7e1064-845e-d193-24ad-965211bf1e9a@gmail.com>
-Date:   Wed, 26 Feb 2020 08:27:58 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 26 Feb 2020 02:28:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54814 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727303AbgBZH2n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 02:28:43 -0500
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FEB824673
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 07:28:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582702122;
+        bh=Jpmvaue+x7NvgWHz2Bnrr5J65mlxuyxU4weChioHbN4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tyKKpFPJuV40kHYnBsG1WZ9ovDUbWRrfCTcxsc3sq3zMEIOuuH6oqGAcbMasK3/a4
+         3dWgFPPyz9W1/RFn8pWncabUiqo5JP03yAFjMx29LcSYSA43eWH/5qodBSdMQkcGAK
+         TemdHhbI9L9gVzLNp7Ckqm+t8PREINhSPg4hxjxw=
+Received: by mail-wm1-f47.google.com with SMTP id t14so1805459wmi.5
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 23:28:41 -0800 (PST)
+X-Gm-Message-State: APjAAAXLr5kAotK1Wc/T3cJL4l7ZIULMwjWt55YVtpZcROx3G/LO9Wc6
+        6ohltgrBLqy8nUeh+Cqeuv1usrFrxJ0ihUHql2RX9A==
+X-Google-Smtp-Source: APXvYqxHz/cMCIa49mzKRSFHu7HetTOSInHkWucWqTWRmh2P7F5LW0LOP5J1CK2WGphjureM7ITUpY5lmLSZCUK+guo=
+X-Received: by 2002:a7b:c4cc:: with SMTP id g12mr4048163wmk.68.1582702119856;
+ Tue, 25 Feb 2020 23:28:39 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200225230819.7325-2-michael@walle.cc>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200226011037.7179-1-atish.patra@wdc.com> <20200226011037.7179-6-atish.patra@wdc.com>
+In-Reply-To: <20200226011037.7179-6-atish.patra@wdc.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 26 Feb 2020 08:28:28 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu_iAzQ6et13aACarqns8-xzQ+YSqj+m3mVGGy=ny8GJBg@mail.gmail.com>
+Message-ID: <CAKv+Gu_iAzQ6et13aACarqns8-xzQ+YSqj+m3mVGGy=ny8GJBg@mail.gmail.com>
+Subject: Re: [RFC PATCH 5/5] RISC-V: Add EFI stub support.
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anup Patel <Anup.Patel@wdc.com>, Arnd Bergmann <arnd@arndb.de>,
+        Borislav Petkov <bp@suse.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-riscv@lists.infradead.org, Mao Han <han_mao@c-sky.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Alexander Graf <agraf@csgraf.de>,
+        "leif@nuviainc.com" <leif@nuviainc.com>,
+        "Chang, Abner (HPS SW/FW Technologist)" <abner.chang@hpe.com>,
+        "Schaefer, Daniel (DualStudy)" <daniel.schaefer@hpe.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.02.2020 00:08, Michael Walle wrote:
-> There are more and more PHY drivers which has more than just the PHY
-> link change interrupts. For example, temperature thresholds or PTP
-> interrupts.
-> 
-> At the moment it is not possible to correctly handle interrupts for PHYs
-> which has a clear-on-read interrupt status register. It is also likely
-> that the current approach of the phylib isn't working for all PHYs out
-> there.
-> 
-> Therefore, this patch let the PHY driver register its own interrupt
-> handler. To notify the phylib about a link change, the interrupt handler
-> has to call the new function phy_drv_interrupt().
-> 
-
-We have phy_driver callback handle_interrupt for custom interrupt
-handlers. Any specific reason why you can't use it for your purposes?
-
-> Signed-off-by: Michael Walle <michael@walle.cc>
+On Wed, 26 Feb 2020 at 02:10, Atish Patra <atish.patra@wdc.com> wrote:
+>
+> Add a RISC-V architecture specific stub code that actually copies the
+> actual kernel image to a valid address and jump to it after boot services
+> are terminated. Enable UEFI related kernel configs as well for RISC-V.
+>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
 > ---
->  drivers/net/phy/phy.c        | 15 +++++++++++++++
->  drivers/net/phy/phy_device.c |  6 ++++--
->  include/linux/phy.h          |  2 ++
->  3 files changed, 21 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-> index d76e038cf2cb..f25aacbcf1d9 100644
-> --- a/drivers/net/phy/phy.c
-> +++ b/drivers/net/phy/phy.c
-> @@ -942,6 +942,21 @@ void phy_mac_interrupt(struct phy_device *phydev)
->  }
->  EXPORT_SYMBOL(phy_mac_interrupt);
->  
-> +/**
-> + * phy_drv_interrupt - PHY drivers says the link has changed
-> + * @phydev: phy_device struct with changed link
+>  arch/riscv/Kconfig                        |  20 ++++
+>  arch/riscv/Makefile                       |   1 +
+>  arch/riscv/configs/defconfig              |   1 +
+>  drivers/firmware/efi/libstub/Makefile     |   8 ++
+>  drivers/firmware/efi/libstub/riscv-stub.c | 135 ++++++++++++++++++++++
+>  5 files changed, 165 insertions(+)
+>  create mode 100644 drivers/firmware/efi/libstub/riscv-stub.c
+>
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index 42c122170cfd..68b1d565e51d 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -372,10 +372,30 @@ config CMDLINE_FORCE
+>
+>  endchoice
+>
+> +config EFI_STUB
+> +       bool
+> +
+> +config EFI
+> +       bool "UEFI runtime support"
+> +       depends on OF
+> +       select LIBFDT
+> +       select UCS2_STRING
+> +       select EFI_PARAMS_FROM_FDT
+> +       select EFI_STUB
+> +       select EFI_GENERIC_ARCH_STUB
+> +       default y
+> +       help
+> +         This option provides support for runtime services provided
+> +         by UEFI firmware (such as non-volatile variables, realtime
+> +          clock, and platform reset). A UEFI stub is also provided to
+> +         allow the kernel to be booted as an EFI application. This
+> +         is only useful on systems that have UEFI firmware.
+> +
+>  endmenu
+>
+>  menu "Power management options"
+>
+>  source "kernel/power/Kconfig"
+> +source "drivers/firmware/Kconfig"
+>
+>  endmenu
+> diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+> index b9009a2fbaf5..0afaa89ba9ad 100644
+> --- a/arch/riscv/Makefile
+> +++ b/arch/riscv/Makefile
+> @@ -78,6 +78,7 @@ head-y := arch/riscv/kernel/head.o
+>  core-y += arch/riscv/
+>
+>  libs-y += arch/riscv/lib/
+> +core-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+>
+>  PHONY += vdso_install
+>  vdso_install:
+> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+> index e2ff95cb3390..0a5d3578f51e 100644
+> --- a/arch/riscv/configs/defconfig
+> +++ b/arch/riscv/configs/defconfig
+> @@ -125,3 +125,4 @@ CONFIG_DEBUG_BLOCK_EXT_DEVT=y
+>  # CONFIG_FTRACE is not set
+>  # CONFIG_RUNTIME_TESTING_MENU is not set
+>  CONFIG_MEMTEST=y
+> +CONFIG_EFI=y
+> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+> index 2c5b76787126..38facb61745b 100644
+> --- a/drivers/firmware/efi/libstub/Makefile
+> +++ b/drivers/firmware/efi/libstub/Makefile
+> @@ -21,6 +21,8 @@ cflags-$(CONFIG_ARM64)                := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
+>  cflags-$(CONFIG_ARM)           := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
+>                                    -fno-builtin -fpic \
+>                                    $(call cc-option,-mno-single-pic-base)
+> +cflags-$(CONFIG_RISCV)         := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
+> +                                  -fpic
+>
+>  cflags-$(CONFIG_EFI_GENERIC_ARCH_STUB) += -I$(srctree)/scripts/dtc/libfdt
+>
+> @@ -55,6 +57,7 @@ lib-$(CONFIG_EFI_GENERIC_ARCH_STUB)           += efi-stub.o fdt.o string.o \
+>  lib-$(CONFIG_ARM)              += arm32-stub.o
+>  lib-$(CONFIG_ARM64)            += arm64-stub.o
+>  lib-$(CONFIG_X86)              += x86-stub.o
+> +lib-$(CONFIG_RISCV)            += riscv-stub.o
+>  CFLAGS_arm32-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
+>  CFLAGS_arm64-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
+>
+> @@ -79,6 +82,11 @@ STUBCOPY_FLAGS-$(CONFIG_ARM64)       += --prefix-alloc-sections=.init \
+>                                    --prefix-symbols=__efistub_
+>  STUBCOPY_RELOC-$(CONFIG_ARM64) := R_AARCH64_ABS
+>
+> +STUBCOPY_FLAGS-$(CONFIG_RISCV) += --prefix-alloc-sections=.init \
+> +                                  --prefix-symbols=__efistub_
+> +STUBCOPY_RELOC-$(CONFIG_RISCV) := R_RISCV_HI20
+> +
+> +
+>  $(obj)/%.stub.o: $(obj)/%.o FORCE
+>         $(call if_changed,stubcopy)
+>
+> diff --git a/drivers/firmware/efi/libstub/riscv-stub.c b/drivers/firmware/efi/libstub/riscv-stub.c
+> new file mode 100644
+> index 000000000000..3935b29ea93a
+> --- /dev/null
+> +++ b/drivers/firmware/efi/libstub/riscv-stub.c
+> @@ -0,0 +1,135 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2013, 2014 Linaro Ltd;  <roy.franz@linaro.org>
+> + * Copyright (C) 2020 Western Digital Corporation or its affiliates.
 > + *
-> + * The PHY driver may implement his own interrupt handler. It will call this
-> + * function to notify us about a link change. Trigger the state machine and
-> + * work a work queue.
+> + * This file implements the EFI boot stub for the RISC-V kernel.
+> + * Adapted from ARM64 version at drivers/firmware/efi/libstub/arm64-stub.c.
+> + */
+> +
+> +#include <linux/efi.h>
+> +#include <linux/libfdt.h>
+> +#include <linux/libfdt_env.h>
+> +#include <asm/efi.h>
+> +#include <asm/sections.h>
+> +
+> +#include "efistub.h"
+> +/*
+> + * RISCV requires the kernel image to placed TEXT_OFFSET bytes beyond a 2 MB
+> + * aligned base for 64 bit and 4MB for 32 bit.
+> + */
+> +#if IS_ENABLED(CONFIG_64BIT)
+
+You can use #ifdef here
+
+> +#define MIN_KIMG_ALIGN SZ_2M
+> +#else
+> +#define MIN_KIMG_ALIGN SZ_4M
+> +#endif
+> +/*
+> + * TEXT_OFFSET ensures that we don't overwrite the firmware that probably sits
+> + * at the beginning of the DRAM.
 > + */
 
-This function would duplicate phy_mac_interrupt().
+Ugh. Really? On an EFI system, that memory should be reserved in some
+way, we shouldn't be able to stomp on it like that.
 
-> +void phy_drv_interrupt(struct phy_device *phydev)
-> +{
-> +	/* Trigger a state machine change */
-> +	phy_trigger_machine(phydev);
-> +}
-> +EXPORT_SYMBOL(phy_drv_interrupt);
+> +#define TEXT_OFFSET MIN_KIMG_ALIGN
 > +
->  static void mmd_eee_adv_to_linkmode(unsigned long *advertising, u16 eee_adv)
->  {
->  	linkmode_zero(advertising);
-> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-> index 6a5056e0ae77..6d8c94e61251 100644
-> --- a/drivers/net/phy/phy_device.c
-> +++ b/drivers/net/phy/phy_device.c
-> @@ -965,7 +965,8 @@ int phy_connect_direct(struct net_device *dev, struct phy_device *phydev,
->  		return rc;
->  
->  	phy_prepare_link(phydev, handler);
-> -	if (phy_interrupt_is_valid(phydev))
-> +	if (phy_interrupt_is_valid(phydev) &&
-> +	    phydev->drv->flags & PHY_HAS_OWN_IRQ_HANDLER)
->  		phy_request_interrupt(phydev);
+> +typedef __attribute__((noreturn)) void (*jump_kernel_func)(unsigned int,
+> +                                                          unsigned long);
+> +
+> +efi_status_t check_platform_features(void)
+> +{
+> +       return EFI_SUCCESS;
+> +}
+> +
+> +u64 get_boot_hartid_from_fdt(unsigned long fdt)
 
-Here most likely a ! is missing. because as-is you would break
-current phylib interrupt mode. Where in the PHY driver (in which
-callback) do you want to register your own interrupt handler?
+static
 
->  
->  	return 0;
-> @@ -2411,7 +2412,8 @@ EXPORT_SYMBOL(phy_validate_pause);
->  
->  static bool phy_drv_supports_irq(struct phy_driver *phydrv)
->  {
-> -	return phydrv->config_intr && phydrv->ack_interrupt;
-> +	return ((phydrv->config_intr && phydrv->ack_interrupt) ||
-> +		phydrv->flags & PHY_HAS_OWN_IRQ_HANDLER);
->  }
->  
->  /**
-> diff --git a/include/linux/phy.h b/include/linux/phy.h
-> index c570e162e05e..46f73b94fd60 100644
-> --- a/include/linux/phy.h
-> +++ b/include/linux/phy.h
-> @@ -75,6 +75,7 @@ extern const int phy_10gbit_features_array[1];
->  
->  #define PHY_IS_INTERNAL		0x00000001
->  #define PHY_RST_AFTER_CLK_EN	0x00000002
-> +#define PHY_HAS_OWN_IRQ_HANDLER	0x00000004
->  #define MDIO_DEVICE_IS_PHY	0x80000000
->  
->  /* Interface Mode definitions */
-> @@ -1235,6 +1236,7 @@ int phy_drivers_register(struct phy_driver *new_driver, int n,
->  void phy_state_machine(struct work_struct *work);
->  void phy_queue_state_machine(struct phy_device *phydev, unsigned long jiffies);
->  void phy_mac_interrupt(struct phy_device *phydev);
-> +void phy_drv_interrupt(struct phy_device *phydev);
->  void phy_start_machine(struct phy_device *phydev);
->  void phy_stop_machine(struct phy_device *phydev);
->  void phy_ethtool_ksettings_get(struct phy_device *phydev,
-> 
+> +{
+> +       int chosen_node, len;
+> +       const fdt64_t *prop;
+> +       uint64_t hartid = U64_MAX;
+> +
+> +       chosen_node = fdt_path_offset((void *)fdt, "/chosen");
+> +       if (chosen_node < 0)
+> +               return hartid;
 
+Just return U64_MAX here
+
+> +       prop = fdt_getprop((void *)fdt, chosen_node, "efi-boot-hartid", &len);
+
+Please call this 'boot-hartid' not 'efi-boot-hartid' as the hartid
+value is independent of whether you boot via EFI or not.
+
+> +       if (!prop || len != sizeof(u64))
+> +               return hartid;
+> +
+
+Return U64_MAX
+
+> +       hartid = fdt64_to_cpu(*prop);
+> +
+
+and just return the swabbed value, so you can get rid of the local var.
+
+> +       return hartid;
+> +}
+> +
+> +/*
+> + * Jump to real kernel here with following constraints.
+> + * 1. MMU should be disabled.
+> + * 2. a0 should contain hartid
+> + * 3. a1 should DT address
+> + */
+> +void __noreturn efi_enter_kernel(unsigned long entrypoint, unsigned long fdt)
+
+This prototype has changed, and now includes the size of the fdt in param 3.
+
+> +{
+> +       unsigned long kernel_entry = entrypoint + _start_kernel - _start;
+
+stext_offset ? It has a terrible name though, and I'll probably
+propose to change it at some point, for all arches. But you can still
+use it here.
+
+> +       jump_kernel_func jump_kernel = (void (*)(unsigned int, unsigned long))kernel_entry;
+> +       u64 hartid = get_boot_hartid_from_fdt(fdt);
+> +
+> +       if (hartid == U64_MAX)
+> +               /* We can not use panic or BUG at this point */
+> +               __asm__ __volatile__ ("ebreak");
+> +       /* Disable MMU */
+> +       csr_write(CSR_SATP, 0);
+> +       jump_kernel(hartid, fdt);
+> +}
+> +
+> +efi_status_t handle_kernel_image(unsigned long *image_addr,
+> +                                unsigned long *image_size,
+> +                                unsigned long *reserve_addr,
+> +                                unsigned long *reserve_size,
+> +                                unsigned long dram_base,
+> +                                efi_loaded_image_t *image)
+> +{
+> +       efi_status_t status;
+> +       unsigned long kernel_size, kernel_memsize = 0;
+> +       unsigned long preferred_offset;
+> +
+> +       /*
+> +        * The preferred offset of the kernel Image is TEXT_OFFSET bytes beyond
+> +        * a KIMG_ALIGN aligned base.
+> +        */
+> +       preferred_offset = round_up(dram_base, MIN_KIMG_ALIGN) + TEXT_OFFSET;
+> +
+> +       kernel_size = _edata - _start;
+> +       kernel_memsize = kernel_size + (_end - _edata);
+> +
+> +       /*
+> +        * Try a straight allocation at the preferred offset.
+> +        * This will work around the issue where, if dram_base == 0x0,
+> +        * efi_low_alloc() refuses to allocate at 0x0 (to prevent the
+> +        * address of the allocation to be mistaken for a FAIL return
+> +        * value or a NULL pointer). It will also ensure that, on
+> +        * platforms where the [dram_base, dram_base + TEXT_OFFSET)
+> +        * interval is partially occupied by the firmware (like on APM
+> +        * Mustang), we can still place the kernel at the address
+> +        * 'dram_base + TEXT_OFFSET'.
+
+Better drop this entire last sentence (unless it is relevant, but then
+rework it to drop the APM Mustang reference)
+
+> +        */
+> +       if (*image_addr == preferred_offset)
+> +               return EFI_SUCCESS;
+> +
+> +       *image_addr = *reserve_addr = preferred_offset;
+> +       *reserve_size = round_up(kernel_memsize, EFI_ALLOC_ALIGN);
+> +
+> +       status = efi_bs_call(allocate_pages, EFI_ALLOCATE_ADDRESS,
+> +                               EFI_LOADER_DATA,
+> +                               *reserve_size / EFI_PAGE_SIZE,
+> +                               (efi_physical_addr_t *)reserve_addr);
+> +
+> +       if (status != EFI_SUCCESS) {
+> +               *reserve_size = kernel_memsize + TEXT_OFFSET;
+> +               status = efi_low_alloc(*reserve_size, MIN_KIMG_ALIGN,
+> +                                      reserve_addr);
+> +
+> +               if (status != EFI_SUCCESS) {
+> +                       pr_efi_err("Failed to relocate kernel\n");
+> +                       *reserve_size = 0;
+> +                       return status;
+> +               }
+> +               *image_addr = *reserve_addr + TEXT_OFFSET;
+> +       }
+> +       memcpy((void *)*image_addr, image->image_base, kernel_size);
+> +
+> +       return EFI_SUCCESS;
+> +}
+> --
+> 2.24.0
+>
