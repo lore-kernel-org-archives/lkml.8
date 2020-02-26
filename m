@@ -2,139 +2,102 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C63B2C4BA14
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4DCC4BA14
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F72020838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:17:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B27F024680
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:18:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582730256;
-	bh=QbvkJ7pUaSKaOk50O+V+6P1ajRDedKDnLBjdtDbWLMI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JeaHrYZyk56GXDOgkF4l8xpytr5to1o42DvYiqvDjHXJ3k9WHlL3jlEEH/2SRey85
-	 RcusCk/lMbqT3V0buhozDRkjIF9pqNcG6HDMuxv4hKc4kqj7EvrP6F3qyERhqOK4sY
-	 +d7kuw7HE28F5iLfd1PqNmAifC0s3yTo/+3tp7qw=
+	s=default; t=1582730299;
+	bh=lOBT0rdMCmtOqrkTD8P4KrT49+XAZOvwcefk8pJTKUE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=z3cfUF/nzPbZc2G/+I+gwpvhTwuaPxqWCd7Mc5A2Z98g1vdZdOTa15p2dQkLz9ltU
+	 YNgYooJQOfKkcGrKaF04mpreg8txQgGFFy7sbZhADMyGIV7boYt5TFvJpHLrCFXSrD
+	 TU9g6xuANRbfrDVKRwKO4PwdfvgTfXrdW4Jin3Uw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgBZPRf (ORCPT
+        id S1728037AbgBZPSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:17:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57056 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727941AbgBZPRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:17:35 -0500
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E15624687;
-        Wed, 26 Feb 2020 15:17:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582730254;
-        bh=QbvkJ7pUaSKaOk50O+V+6P1ajRDedKDnLBjdtDbWLMI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=IrQfPqoLka7BEsWptwul43UPtO+sHb2/jj39k9KJXXnQHjhGjTZDSzpLpIkq+1897
-         mpT+jaXTivYwii9Fj68e+3DuyiCY2ca0gdVDiFfFEVa+xZNcJdWg+rQvxJntnZpp0p
-         Yz1RRZ2Kgr3M/F7dz6IXYXHOTe59jOjoCwZiQOOk=
-Received: by mail-qk1-f179.google.com with SMTP id z19so2940885qkj.5;
-        Wed, 26 Feb 2020 07:17:34 -0800 (PST)
-X-Gm-Message-State: APjAAAWZK4EJPTm4bq25wWqLgp48FdKYCswr5FO3e2FfTlkG+3hN7Xyu
-        yyhcnQHVJMnQF2E+262rZ4P86AFFiaRdd7vcnA==
-X-Google-Smtp-Source: APXvYqwOBeVkQzDCVQhRRroVuItJt7tbfzF8jBjBWGkighsyGpHKqVvv0RuR0fNZzggl6WhCT14noYZJeodCe/v9itA=
-X-Received: by 2002:ae9:f205:: with SMTP id m5mr6100523qkg.152.1582730253143;
- Wed, 26 Feb 2020 07:17:33 -0800 (PST)
-MIME-Version: 1.0
-References: <20200220055250.196456-1-saravanak@google.com> <CANcMJZBQe5F=gbj6V2ybF-dK=kRsGZT2BX9CBJiBFoK=5Hg-kA@mail.gmail.com>
- <CAGETcx88H+aFTt=Vp8Q1KVOZYEaD3D6=i5WN8tWmnBAs1YdY1g@mail.gmail.com> <CAGETcx_n=fZYaY5q6yZRJR9daTXm2Ryz5frfZr3n1BKf-pXCEQ@mail.gmail.com>
-In-Reply-To: <CAGETcx_n=fZYaY5q6yZRJR9daTXm2Ryz5frfZr3n1BKf-pXCEQ@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 26 Feb 2020 09:17:21 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJUp6+FA8MCvpetk9UMAk+GWm9naASE-ddi-FcMKkcwQA@mail.gmail.com>
-Message-ID: <CAL_JsqJUp6+FA8MCvpetk9UMAk+GWm9naASE-ddi-FcMKkcwQA@mail.gmail.com>
-Subject: Re: [PATCH v1] of: property: Add device link support for
- power-domains and hwlocks
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Todd Kjos <tkjos@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Wed, 26 Feb 2020 10:18:18 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:32774 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727576AbgBZPSS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 10:18:18 -0500
+Received: by mail-oi1-f195.google.com with SMTP id q81so3405673oig.0;
+        Wed, 26 Feb 2020 07:18:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fYm1FLvzpWart8O8B29NpqJZu5CXwIwbKoUSVw9pzR8=;
+        b=tieY87XJGSGh1enXhQfyKlavXEM6nZl3IEh8Fhg9wTKpA4p4STWSeh4FhXzPbUb0i1
+         SDjzBcDAEnHcPR59ngRmDPmxXwA1Tan/y+NN/olwMpcbOT8pzn9/8Ik9Jy0qHtL+RofA
+         oa4he+4jQpfuN0cngszX7PTVVsebsS48OoKl81A964chGAu6W0OPKS1VAtz7wj1wD+v4
+         MbTc0aW9WfzuA26VDPd5asVHs7MM+e8Egp5L0vz4o5dunfCDWS+pkGxRqKnAnjPB96s/
+         ysxauk8JconpZCs+XiEqG422EnXIoE+cZKtlJxRQVroWkkTtL5S1IpiZG131Njx32e4C
+         fjog==
+X-Gm-Message-State: APjAAAXvhNmFR+XCqSIFS4RAkVXKhD5uQoNCW2ATmwaF+C0iF0BIslsz
+        GkQ4iC7MZEp/yaTIEy+h7g==
+X-Google-Smtp-Source: APXvYqx2YW5yQL3vP6vRMKcu64GAOBwTbSvG2qgbbAZWZqs/Hl8t2xyHxllc7hnR9+UoRACfoez3Mw==
+X-Received: by 2002:aca:5646:: with SMTP id k67mr3608068oib.166.1582730297617;
+        Wed, 26 Feb 2020 07:18:17 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id p18sm214800otl.70.2020.02.26.07.18.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 07:18:16 -0800 (PST)
+Received: (nullmailer pid 21302 invoked by uid 1000);
+        Wed, 26 Feb 2020 15:18:16 -0000
+Date:   Wed, 26 Feb 2020 09:18:16 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Mark Brown <broonie@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Chen-Yu Tsai <wens@csie.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        =?iso-8859-1?Q?Myl=E8ne?= Josserand 
+        <mylene.josserand@free-electrons.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Samuel Holland <samuel@sholland.org>,
+        stable@kernel.org
+Subject: Re: [RFC PATCH 01/34] ASoC: dt-bindings: Add a separate compatible
+ for the A64 codec
+Message-ID: <20200226151816.GA21237@bogus>
+References: <20200217064250.15516-1-samuel@sholland.org>
+ <20200217064250.15516-2-samuel@sholland.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200217064250.15516-2-samuel@sholland.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 3:46 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> On Thu, Feb 20, 2020 at 3:30 PM Saravana Kannan <saravanak@google.com> wrote:
-> >
-> > On Thu, Feb 20, 2020 at 3:26 PM John Stultz <john.stultz@linaro.org> wrote:
-> > >
-> > > On Wed, Feb 19, 2020 at 9:53 PM Saravana Kannan <saravanak@google.com> wrote:
-> > > >
-> > > > Add support for creating device links out of more DT properties.
-> > > >
-> > > > To: lkml <linux-kernel@vger.kernel.org>
-> > > > To: John Stultz <john.stultz@linaro.org>
-> > > > To: Rob Herring <robh@kernel.org>
-> > >
-> > > Just as a heads up, git-send-email doesn't seem to pick up these To:
-> > > lines, so I had to dig this out of an archive.
-> >
-> > Weird! Left out the main person who'd care about this patch.
-> >
-> > >
-> > > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > > > Cc: Kevin Hilman <khilman@kernel.org>
-> > > > Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> > > > Cc: Pavel Machek <pavel@ucw.cz>
-> > > > Cc: Len Brown <len.brown@intel.com>
-> > > > Cc: Todd Kjos <tkjos@google.com>
-> > > > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > > > Cc: Liam Girdwood <lgirdwood@gmail.com>
-> > > > Cc: Mark Brown <broonie@kernel.org>
-> > > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > Cc: linux-pm@vger.kernel.org
-> > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > > > ---
-> > > >  drivers/of/property.c | 4 ++++
-> > > >  1 file changed, 4 insertions(+)
-> > >
-> > > This does seem to work for me, allowing various clk drivers to be used
-> > > as modules! This removes the functional need for my recent driver core
-> > > patch series around the deferred_probe_timeout (though the cleanup
-> > > bits in there may still be worth while).
-> > >
-> > > Tested-by: John Stultz <john.stultz@linaro.org>
-> > >
-> > > Thanks for sending it out!
-> >
-> > Thanks for the Tested-by!
-> >
-> > Rob,
-> >
-> > Can you pick this up for the next rc?
+On Mon, 17 Feb 2020 00:42:17 -0600, Samuel Holland wrote:
+> The digital codec in the A64 is largely compatible with the one in the
+> A33, with two changes:
+>  - It is missing some muxing options for AIF1/2/3 (not currently
+>    supported by the driver)
+>  - It does not have the LRCK inversion issue that A33 has
+> 
+> To fix the Left/Right channel inversion on the A64 caused by the A33
+> LRCK fix, we need to introduce a new compatible for the codec in the
+> A64.
+> 
+> Cc: stable@kernel.org
+> Fixes: ec4a95409d5c ("arm64: dts: allwinner: a64: add nodes necessary for analog sound support")
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
+> ---
+>  .../devicetree/bindings/sound/allwinner,sun8i-a33-codec.yaml  | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
 
-You mean 5.7-rc1, right?
-
-> Friendly reminder.
-
-No need to ping. You can check patchwork[1] to see where you are in the queue.
-
-Rob
-
-[1] https://patchwork.ozlabs.org/project/devicetree-bindings/list/
+Acked-by: Rob Herring <robh@kernel.org>
