@@ -2,145 +2,135 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE03C4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B25EC4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A4A24687
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:30:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 422E024684
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 12:30:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RWRHua45"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VYvrhIlI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgBZMao (ORCPT
+        id S1727262AbgBZMar (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 07:30:44 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:44530 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726277AbgBZMan (ORCPT
+        Wed, 26 Feb 2020 07:30:47 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51991 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbgBZMap (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 07:30:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582720242;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=USc4GZx7VeByANQXh3m8ONczXPb4tD0GznPgTK+y2dM=;
-        b=RWRHua45/+GMj/Gcv7raJZzg9N2ToVdDtjmTfU2DTMn6bMaLYBO53UXHWZvM6bsiFtmYXr
-        TkZzutg2lTjZnMj+BB0EGDslGRPi55oVQMizn36K2Bgc1PtS1tk5i5kuqObJVRWA53BVR6
-        qJwRZZs0PSQMy7t/KrDKscIdzJgbZ5Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-115-SqhY_Z7XMm61uUtse-5Haw-1; Wed, 26 Feb 2020 07:30:38 -0500
-X-MC-Unique: SqhY_Z7XMm61uUtse-5Haw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AD166107ACC7;
-        Wed, 26 Feb 2020 12:30:36 +0000 (UTC)
-Received: from localhost (ovpn-12-39.pek2.redhat.com [10.72.12.39])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BAA8F5DA60;
-        Wed, 26 Feb 2020 12:30:32 +0000 (UTC)
-Date:   Wed, 26 Feb 2020 20:30:30 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        richardw.yang@linux.intel.com, osalvador@suse.de,
-        dan.j.williams@intel.com, rppt@linux.ibm.com, robin.murphy@arm.com
-Subject: Re: [PATCH v2 0/7] mm/hotplug: Only use subsection map in VMEMMAP
- case
-Message-ID: <20200226123030.GG24216@MiWiFi-R3L-srv>
-References: <20200220043316.19668-1-bhe@redhat.com>
- <20200220103849.GG20509@dhcp22.suse.cz>
- <20200221142847.GG4937@MiWiFi-R3L-srv>
- <75b4f840-7454-d6d0-5453-f0a045c852fa@redhat.com>
- <20200225100226.GM22443@dhcp22.suse.cz>
- <20200226034236.GD24216@MiWiFi-R3L-srv>
- <20200226091421.GE3771@dhcp22.suse.cz>
+        Wed, 26 Feb 2020 07:30:45 -0500
+Received: by mail-wm1-f67.google.com with SMTP id t23so2869694wmi.1;
+        Wed, 26 Feb 2020 04:30:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=SW3Nz/sbE0+KtIPXD7/IukM64fIQO4nr5iakHdwv+8c=;
+        b=VYvrhIlIc/nn4uIyORMlAtvbfxMOiT3mijSBmAkJOJCXlYHPKmAZWm8Qu8DjfNq69a
+         6qWc5BP6vQ6k+tbeSPHkcgwDT4gUGnl0IhvsdbC5+AhKVGl3hqF1BBB4amQzsMBu6Qu6
+         vLToXjRcqC2HC4ghB8LzPhJNF/LB1KFk85Tb5mthERwS7R7pP97Z4yy28/puGXRz5D6B
+         tbnC1k7V6psu06x6eq+MA6jTdorEwsPi6CdB/fY7TL/4FEFRo2LWLX60+wImu3QXmVHX
+         t7/EiXpONHX9WCAGF+JeAuMVT/VhBA42+KaydXVn5MtCTUuRozDX7Atn0CTUU8w0S62A
+         KPfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=SW3Nz/sbE0+KtIPXD7/IukM64fIQO4nr5iakHdwv+8c=;
+        b=F6rDIAy1TX8vJaW8W/sLLlZ6q4B1wBaj9eAbBM4FvHLIh9zUvAWOJy9IeSDqCvXigk
+         iDaNOq+MbCtk16q/HkC8j7EdxcD9G3hTnV8fB49+Tfo4PLkVdILVmRbxrNqPusevbcaY
+         0lN7aiczMn3E8IHQC2rRoHM+2JuykO/glQQuMmm+uP45S2EOTleODALNRummSZ2pxKlF
+         9OiJ9MCaU9SAovagEjWtL0Hf2BaWYkRgfxWtQaI8g2QGdNDJqDmAK/5LhSd3mp5DXQr+
+         7qyNakzPCrP7/qwEpgb/6zBp850hQlsV7fW7ZprfdSwWD3/bz555Paio7XPzrMNLgP9m
+         ZSdQ==
+X-Gm-Message-State: APjAAAUg5QlUCVTJJsCKymfd+jZiU1JFarfJqwIekBPwBPSyWinYnEbl
+        4YVuah9k5rap1nLmBe1FcMX7xH0jtzVQZiO8CI8=
+X-Google-Smtp-Source: APXvYqy8uKiowdSlomhD1NsRVW6CgtErWAKIm+QpbjJVYpi04BrtIv00ZlgOX+VPHSK95fB6a6qX2du+JM+QQ1T997A=
+X-Received: by 2002:a7b:cc69:: with SMTP id n9mr4924083wmj.163.1582720243510;
+ Wed, 26 Feb 2020 04:30:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200226091421.GE3771@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <20200224174129.2664-1-ndesaulniers@google.com>
+ <CAK7LNASNsOmyqFWYtJHB4UcHAed5C_isWvMJ4MKHu0O=yUy=8w@mail.gmail.com>
+ <CAKwvOd=mPg79CrYnDm8=z0iJpKL0FHm9J5qZF0_A6BFXBv8Dow@mail.gmail.com> <CAK7LNAQ83rLAm1GcvrgJbinyAVPpM_SoxfO7RdOAfmXyg2tBdQ@mail.gmail.com>
+In-Reply-To: <CAK7LNAQ83rLAm1GcvrgJbinyAVPpM_SoxfO7RdOAfmXyg2tBdQ@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Wed, 26 Feb 2020 13:33:13 +0100
+Message-ID: <CA+icZUWSQkYD2MzEY_8U1NMY8LO5NzD0CCuZ8+cH+dBndJm=yQ@mail.gmail.com>
+Subject: Re: [PATCH] Documentation/llvm: add documentation on building w/ Clang/LLVM
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/26/20 at 10:14am, Michal Hocko wrote:
-> On Wed 26-02-20 11:42:36, Baoquan He wrote:
-> > On 02/25/20 at 11:02am, Michal Hocko wrote:
-> > > On Tue 25-02-20 10:10:45, David Hildenbrand wrote:
-> > > > >>>  include/linux/mmzone.h |   2 +
-> > > > >>>  mm/sparse.c            | 178 +++++++++++++++++++++++++++++------------
-> > > > >>>  2 files changed, 127 insertions(+), 53 deletions(-)
-> > > > >>
-> > > > >> Why do we need to add so much code to remove a functionality from one
-> > > > >> memory model?
-> > > > > 
-> > > > > Hmm, Dan also asked this before.
-> > > > > 
-> > > > > The adding mainly happens in patch 2, 3, 4, including the two newly
-> > > > > added function defitions, the code comments above them, and those added
-> > > > > dummy functions for !VMEMMAP.
-> > > > 
-> > > > AFAIKS, it's mostly a bunch of newly added comments on top of functions.
-> > > > E.g., the comment for fill_subsection_map() alone spans 12 LOC in total.
-> > > > I do wonder if we have to be that verbose. We are barely that verbose on
-> > > > MM code (and usually I don't see much benefit unless it's a function
-> > > > with many users from many different places).
-> > > 
-> > > I would tend to agree here. Not that I am against kernel doc
-> > > documentation but these are internal functions and the comment doesn't
-> > > really give any better insight IMHO. I would be much more inclined if
-> > > this was the general pattern in the respective file but it just stands
-> > > out.
-> > 
-> > I saw there are internal functions which have code comments, e.g
-> > shrink_slab() in mm/vmscan.c, not only this one place, there are several
-> > places. I personally prefer to see code comment for function if
-> > possible, this can save time, e.g people can skip the bitmap operation
-> > when read code if not necessary. And here I mainly want to tell there
-> > are different returned value to note different behaviour when call them.
-> 
-> ... yet nobody really cares about different return code. It is an error
-> that is propagated up the call chain and that's all.
-> 
-> I also like when there is a kernel doc comment that helps to understand
-> the intented usage, context the function can be called from, potential
-> side effects, locking requirements and other details people need to know
+On Wed, Feb 26, 2020 at 1:01 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> On Wed, Feb 26, 2020 at 5:52 AM Nick Desaulniers
+> <ndesaulniers@google.com> wrote:
+> >
+> > On Mon, Feb 24, 2020 at 4:34 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > >
+> > > On Tue, Feb 25, 2020 at 2:41 AM Nick Desaulniers
+> > > <ndesaulniers@google.com> wrote:
+> > > >
+> > > > Added to kbuild documentation. Provides more official info on building
+> > > > kernels with Clang and LLVM than our wiki.
+> > > >
+> > > > Suggested-by: Kees Cook <keescook@chromium.org>
+> > > > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> > > > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> > > > ---
+> > >
+> > >
+> > > Perhaps, is it better to explicitly add it to MAINTAINERS?
+> > >
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -4118,6 +4118,7 @@ W:        https://clangbuiltlinux.github.io/
+> > >  B:     https://github.com/ClangBuiltLinux/linux/issues
+> > >  C:     irc://chat.freenode.net/clangbuiltlinux
+> > >  S:     Supported
+> > > +F:     Documentation/kbuild/llvm.rst
+> > >  K:     \b(?i:clang|llvm)\b
+> >
+> > I'm happy to leave it to the maintainers of Documentation/.  Otherwise
+> > we have a file for which there is no MAINTAINER, which seems
+> > ambiguous.
+>
+> It is common that MAINTAINERS lists per-file (per-driver) maintainers.
+> It does not necessarily mean a person who picks up patches.
+>
+> scripts/get_maintainer.pl lists maintainers that
+> match any F:, N:, K: patterns.
+> So, both Doc and Kbuild maintainers/ML will still be listed.
+>
+> Having said that, it is up to you. Either is fine with me.
+> Another pattern 'K: \b(?i:clang|llvm)\b'  covers this file anyway.
+>
+>
+> (BTW, I am also happy to see your name as the maintainer of this entry.)
+>
 
-Fair enough. As I have said, I didn't intend to stick to add kernel doc
-comments for these two functions. Will remove them. Thanks for
-reviewing.
++1 (Please drop the BTW - This was suggested in the brainstorming
+session on the ClangBuiltLinux Meetup in Zurich).
 
-> when calling functions. But have a look at 
-> /**
->  * clear_subsection_map - Clear subsection map of one memory region
->  *
->  * @pfn - start pfn of the memory range
->  * @nr_pages - number of pfns to add in the region
->  *
->  * This is only intended for hotplug, and clear the related subsection
->  * map inside one section.
->  *
->  * Return:
->  * * -EINVAL	- Section already deactived.
->  * * 0		- Subsection map is emptied.
->  * * 1		- Subsection map is not empty.
->  */
-> 
-> the only useful information in here is that this is a hotplug stuff but
-> I would be completely lost about the intention without already knowing
-> what is this whole subsection about.
-> 
-> -- 
-> Michal Hocko
-> SUSE Labs
-> 
+I suggest to add Nathan and Kees if they are willing to be responsible
+for the maintainer job.
 
+- Sedat -
