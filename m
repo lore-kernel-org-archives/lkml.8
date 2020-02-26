@@ -2,99 +2,124 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC43DC4BA24
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2686C4BA26
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B73CB2072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 968B620714
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 20:25:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YuXdKjW0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbgBZUZk convert rfc822-to-8bit (ORCPT
+        id S1727487AbgBZUZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 15:25:40 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:59565 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727260AbgBZUZk (ORCPT
+        Wed, 26 Feb 2020 15:25:48 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:37240 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727260AbgBZUZr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 15:25:40 -0500
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j73FF-0005pG-O5; Wed, 26 Feb 2020 21:25:25 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 36C5A104099; Wed, 26 Feb 2020 21:25:25 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@amacapital.net>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <JGross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [patch 13/16] x86/entry: Move irqflags and context tracking to C for simple idtentries
-In-Reply-To: <A4E714B9-ECBA-4984-986C-02B4EAF5018C@amacapital.net>
-References: <20200226162811.GA18400@hirez.programming.kicks-ass.net> <A4E714B9-ECBA-4984-986C-02B4EAF5018C@amacapital.net>
-Date:   Wed, 26 Feb 2020 21:25:25 +0100
-Message-ID: <87blplp03u.fsf@nanos.tec.linutronix.de>
+        Wed, 26 Feb 2020 15:25:47 -0500
+Received: by mail-ot1-f65.google.com with SMTP id b3so726320otp.4
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 12:25:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KwWaD9UNYEDZjJ4EPfYXtQOHPHFo1HH/Frc1ArcblIg=;
+        b=YuXdKjW0oghU8BUd9VZISKdnbYPb7Iij9fXMHDfJe6Jc2da/+3gxW0hpZVtNmG9HsD
+         EgJ+RO+EF51ANqkErW6DkmniTVm1OuwWvXCS/DeUCFFoC7Vg6l0+rsecJFI2MCsws2YZ
+         j4Ug5p4cr2T4EyGr7MQJ58Uc1nWUvJ0ZHX6WNhJ/sYLo7ClXiBwKQFJKsYPpYPRZi/LX
+         pcEkyCMRg5juMyH3rQD2+4+jjLvkP2F0mKSQ2RVAxPF4/BaYnCqS+LfpnBHSfSbsCrW2
+         ZSHA29PXfqFjNpsuNhDYO25EiDZCs+AABYp7G36xqJMvHoBYN0RH5TR4yiHd6KoaXuk8
+         dJKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KwWaD9UNYEDZjJ4EPfYXtQOHPHFo1HH/Frc1ArcblIg=;
+        b=UVIV3NgRcUmpxGprkEaB/cfWHWNZn1n42TFWY70f/naoQ9NcCimOL9WAKscs1e9GxZ
+         JsjsfByozDTew0Ma/2SQo+sFeUGPRG9ksK2Y5NiFjfmM1SXk15pWIfkT/7U0gMRNcrX9
+         hsfZjkr6x99Kr1ji7IJsoA1r/LNOcUI/67ecFj/czU5AhRo1jv/5BRkw0TTNsOLW96Dz
+         BzhiBfwbkc768E3QEHTJP3p+gHQY1mRB4jEhQrzZmV7KnM4v7W7vBO/U06OL5bSx0o00
+         YThbzQZVN3n9kaEGE/XPMzpe46zrn87ciEL9pOFWSoRK+YveNg5AjDon8ievMDxls3Gr
+         HsOg==
+X-Gm-Message-State: APjAAAVBdCHpnko+X6UJuhWPg89JhS5+dFcaIyEsHwXKY2kYW2nhdY1q
+        cgLusZixIhyy3Qa6Kn7Lwtb8oHbPYvcj6Lv78j+4ZQ==
+X-Google-Smtp-Source: APXvYqzHU2SxaDMnNTVfBJNIjx/bUh8/7WP9i2EqHRNqU74ZzhmkAOB+zj/HsL3Z5tGRsMjcKCesJovREGO3/obZoLM=
+X-Received: by 2002:a05:6830:1e2b:: with SMTP id t11mr449644otr.81.1582748745385;
+ Wed, 26 Feb 2020 12:25:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200219181219.54356-1-hannes@cmpxchg.org>
+In-Reply-To: <20200219181219.54356-1-hannes@cmpxchg.org>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Wed, 26 Feb 2020 12:25:33 -0800
+Message-ID: <CALvZod7fya+o8mO+qo=FXjk3WgNje=2P=sxM5StgdBoGNeXRMg@mail.gmail.com>
+Subject: Re: [PATCH] mm: memcontrol: asynchronous reclaim for memory.high
+To:     Johannes Weiner <hannes@cmpxchg.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, Tejun Heo <tj@kernel.org>,
+        Roman Gushchin <guro@fb.com>, Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Lutomirski <luto@amacapital.net> writes:
->> On Feb 26, 2020, at 8:28 AM, Peter Zijlstra <peterz@infradead.org> wrote:
->> 
->> ﻿On Wed, Feb 26, 2020 at 07:11:39AM -0800, Andy Lutomirski wrote:
->> 
->>> In some sense, this is a weakness of the magic macro approach.  Some
->>> of the entries just want to have code that runs before all the entry
->>> fixups.  This is an example of it.  So are the cr2 reads.  It can all
->>> be made to work, but it's a bit gross.
->> 
->> Right. In my current pile (new patche since last posting) I also have
->> one that makes #DB save-clear/restore DR7.
->> 
->> I got it early enough that only a watchpoint on the task stack can still
->> screw us over, since I also included your patch that excludes
->> cpu_entry_area.
+On Wed, Feb 19, 2020 at 10:12 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
 >
-> Hmm. It would be nice to prevent watchpoints on the task stack, but that would need some trickery.  It could be done.
+> We have received regression reports from users whose workloads moved
+> into containers and subsequently encountered new latencies. For some
+> users these were a nuisance, but for some it meant missing their SLA
+> response times. We tracked those delays down to cgroup limits, which
+> inject direct reclaim stalls into the workload where previously all
+> reclaim was handled my kswapd.
 >
->> 
->> Pushing it earlier still would require calling into C from the entry
->> stack, which I know is on your todo list, but we're not quite there yet.
+> This patch adds asynchronous reclaim to the memory.high cgroup limit
+> while keeping direct reclaim as a fallback. In our testing, this
+> eliminated all direct reclaim from the affected workload.
 >
-> Indeed.
+> memory.high has a grace buffer of about 4% between when it becomes
+> exceeded and when allocating threads get throttled. We can use the
+> same buffer for the async reclaimer to operate in. If the worker
+> cannot keep up and the grace buffer is exceeded, allocating threads
+> will fall back to direct reclaim before getting throttled.
 >
-> This is my main objection to the DEFINE_IDTENTRY stuff. It’s *great*
-> for the easy cases, but it’s not so great for the nasty cases. Maybe
-> we should open code PF, MC, DB, etc.  (And kill the kvm special case
-> for PF.  I have a working patch for that and I can send it.)
+> For irq-context, there's already async memory.high enforcement. Re-use
+> that work item for all allocating contexts, but switch it to the
+> unbound workqueue so reclaim work doesn't compete with the workload.
+> The work item is per cgroup, which means the workqueue infrastructure
+> will create at maximum one worker thread per reclaiming cgroup.
+>
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> ---
+>  mm/memcontrol.c | 60 +++++++++++++++++++++++++++++++++++++------------
+>  mm/vmscan.c     | 10 +++++++--
 
-I'm fine with that. I like the obvious easy ones as it spares to
-duplicate all the same crap all over the place.
+This reminds me of the per-memcg kswapd proposal from LSFMM 2018
+(https://lwn.net/Articles/753162/).
 
-Making the nasty ones have:
+If I understand this correctly, the use-case is that the job instead
+of direct reclaiming (potentially in latency sensitive tasks), prefers
+a background non-latency sensitive task to do the reclaim. I am
+wondering if we can use the memory.high notification along with a new
+memcg interface (like memory.try_to_free_pages) to implement a user
+space background reclaimer. That would resolve the cpu accounting
+concerns as the user space background reclaimer can share the cpu cost
+with the task.
 
-#define DEFINE_IDTENTRY_$NASTY(exc_name)	\
-__visible void notrace exc_name(args....)
+One concern with this approach will be that the memory.high
+notification is too late and the latency sensitive task has faced the
+stall. We can either introduce a threshold notification or another
+notification only limit like memory.near_high which can be set based
+on the job's rate of allocations and when the usage hits this limit
+just notify the user space.
 
-would solve this and you can stick whatever you want into it and have
-the NOPROBE added manually. Hmm?
-
-Thanks,
-
-        tglx
-
-
+Shakeel
