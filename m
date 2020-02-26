@@ -2,172 +2,197 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 834BBC4BA18
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 223E5C4BA1E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4064224653
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDF9024653
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 18:25:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="EfstPGpZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sCpHYtLs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbgBZSY6 (ORCPT
+        id S1727137AbgBZSZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 13:24:58 -0500
-Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:36928 "EHLO
-        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726789AbgBZSY5 (ORCPT
+        Wed, 26 Feb 2020 13:25:24 -0500
+Received: from mail-pj1-f74.google.com ([209.85.216.74]:37425 "EHLO
+        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726789AbgBZSZY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 13:24:57 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 5038D3F99D;
-        Wed, 26 Feb 2020 19:24:55 +0100 (CET)
-Authentication-Results: pio-pvt-msa2.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=EfstPGpZ;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id motlGi_xZ2hD; Wed, 26 Feb 2020 19:24:50 +0100 (CET)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 050CC3F971;
-        Wed, 26 Feb 2020 19:24:48 +0100 (CET)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 409C8360093;
-        Wed, 26 Feb 2020 19:24:48 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1582741488; bh=te/8IotpQEnl0o4n3vw2nGQFI/zVy4BNRconbR+LM4o=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=EfstPGpZpHtME6/a9f1AtAN+w3pJUClLCPuMW8qkPq/xbXVzrWpilFsvjN7HBNE9g
-         gGxQfQ6pJ0wTBXqODOLs+AENYvNgFWE/sVhbRkZXw+bmTtExcAvzX0IfO+dbWsZOFZ
-         Bgn5FG1CZvdQ53+LpDE9QA513jSr16J63LLReVqo=
-Subject: Re: [PATCH v5 1/3] drm/shmem: add support for per object caching
- flags.
-To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc:     Guillaume.Gardet@arm.com, David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org, gurchetansingh@chromium.org,
-        tzimmermann@suse.de
-References: <20200226154752.24328-1-kraxel@redhat.com>
- <20200226154752.24328-2-kraxel@redhat.com>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <f1afba4b-9c06-48a3-42c7-046695947e91@shipmail.org>
-Date:   Wed, 26 Feb 2020 19:24:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20200226154752.24328-2-kraxel@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Wed, 26 Feb 2020 13:25:24 -0500
+Received: by mail-pj1-f74.google.com with SMTP id dw15so2528934pjb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 10:25:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Dtrtcbd0ejslwf0LtU/qo17SJwpVcOcZfkxeu4K1Nao=;
+        b=sCpHYtLs0CJiIDfFY2EivUvDyEBwDVS4IdyueP9aMxN2OdJElMwgFW12llWW/o6ZZD
+         wCe/ArAU/FXTzlQY9UlwoBlqo91oLK1BFv0zYgjrjqQBbYd2RfJQHLftFcNUZAgnMj9G
+         PEd1dyDqYQwYLF0UTmlypkd92osz4D3V20OXyZz+o8vZHrV1Ax7MpfTBSJ9KzUNcvw5f
+         cwZ+2W6YKOW2M4KyLbGX+CuiAOOdr3KoOgdQWRdgnBsxb/Fh0yGaMUPKeQ5YuPYW+UTb
+         KDBQ7msaFEVcLUSFfJZ9jiS4CTNffnxX9yJF7eXUQZfF6QuWHeaNDVf5FSJFR0MI67Cr
+         gQyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Dtrtcbd0ejslwf0LtU/qo17SJwpVcOcZfkxeu4K1Nao=;
+        b=VDSu1N4eQrI8QaNmC3+gGMqQ/nWlsUTYSl9c5Xm7qwL2nGIGLiACIITn9+xpIBgWWq
+         aZJiRq4SDRLOzo/XXs6G+9ZqTdDOTg2C1EPYv+aBIQHUsRmPh6kNDmpV/Y+f+T864dbv
+         BeIGe5ghtkMv5QbouKFb6I8DgiX012I9hMmFGGFzbxzfKUc24iCmASyeLPkB42H+h19F
+         r2Pjia2aY9HhivPXqpm8BCnT/0sHQFHg/DUjJMll+Gj0G00PddYJ7/zZSxK6Qjezh8mI
+         FksU5rBBR+QLgPvFi5uEvnjgvpf3RFF07Qc7DENpyFXn2Il50XzesjebB+LRV0Tuj4lH
+         Jy5Q==
+X-Gm-Message-State: APjAAAX+l7ATSn8mwc2V/TeKPgpZKZ2Es1b2MYV1lCbkQv+Y5QHzeHRM
+        Xd22jT1iuO/I0i5bG4mnjjMwRRksS10=
+X-Google-Smtp-Source: APXvYqw+u9wtVgDicMKwUG8VALUmQI2Blv5D+mhPNo2OIBLp22vRIIzoyXmsOy1zUJI7CTyurwXK7GuLPJ4=
+X-Received: by 2002:a63:544:: with SMTP id 65mr172246pgf.72.1582741521124;
+ Wed, 26 Feb 2020 10:25:21 -0800 (PST)
+Date:   Wed, 26 Feb 2020 10:25:17 -0800
+Message-Id: <20200226182517.49214-1-badhri@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [PATCH v3] usb: typec: Add sysfs node to show cc orientation
+From:   Badhri Jagan Sridharan <badhri@google.com>
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pumahsu@google.com, Badhri Jagan Sridharan <badhri@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Gerd,
+Export Type-C orientation information when available.
+- "normal": CC1 orientation
+- "reverse": CC2 orientation
+- "unknown": Orientation cannot be determined.
 
-While looking at this patchset I came across some stuff that seems 
-strange but that was merged in a previous patchset.
+Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
+---
+Version history:
+V3:
+- Heikki's suggestion to us .is_visible callback.
+  unsigned int orientation_aware:1 has been introduced to
+  make support of this attribute optional for drivers such
+  as UCSI
+- Guenter's suggestion to rename to "orientation".
+- Heikki's suggestion to stick with string values instead
+  of exposing it as integer values.
+---
+ Documentation/ABI/testing/sysfs-class-typec |  9 +++++++
+ drivers/usb/typec/class.c                   | 27 +++++++++++++++++++++
+ drivers/usb/typec/tcpm/tcpm.c               |  1 +
+ include/linux/usb/typec.h                   |  1 +
+ 4 files changed, 38 insertions(+)
 
-(please refer to 
-https://lists.freedesktop.org/archives/dri-devel/2018-September/190001.html. 
-Forgive me if I've missed any discussion leading up to this).
-
-
-On 2/26/20 4:47 PM, Gerd Hoffmann wrote:
-> Add map_cached bool to drm_gem_shmem_object, to request cached mappings
-> on a per-object base.  Check the flag before adding writecombine to
-> pgprot bits.
->
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> ---
->   include/drm/drm_gem_shmem_helper.h     |  5 +++++
->   drivers/gpu/drm/drm_gem_shmem_helper.c | 15 +++++++++++----
->   2 files changed, 16 insertions(+), 4 deletions(-)
->
-> diff --git a/include/drm/drm_gem_shmem_helper.h b/include/drm/drm_gem_shmem_helper.h
-> index e34a7b7f848a..294b2931c4cc 100644
-> --- a/include/drm/drm_gem_shmem_helper.h
-> +++ b/include/drm/drm_gem_shmem_helper.h
-> @@ -96,6 +96,11 @@ struct drm_gem_shmem_object {
->   	 * The address are un-mapped when the count reaches zero.
->   	 */
->   	unsigned int vmap_use_count;
-> +
-> +	/**
-> +	 * @map_cached: map object cached (instead of using writecombine).
-> +	 */
-> +	bool map_cached;
->   };
->   
->   #define to_drm_gem_shmem_obj(obj) \
-> diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
-> index a421a2eed48a..aad9324dcf4f 100644
-> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
-> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
-> @@ -254,11 +254,16 @@ static void *drm_gem_shmem_vmap_locked(struct drm_gem_shmem_object *shmem)
->   	if (ret)
->   		goto err_zero_use;
->   
-> -	if (obj->import_attach)
-> +	if (obj->import_attach) {
->   		shmem->vaddr = dma_buf_vmap(obj->import_attach->dmabuf);
-> -	else
-> +	} else {
-> +		pgprot_t prot = PAGE_KERNEL;
-> +
-> +		if (!shmem->map_cached)
-> +			prot = pgprot_writecombine(prot);
->   		shmem->vaddr = vmap(shmem->pages, obj->size >> PAGE_SHIFT,
-> -				    VM_MAP, pgprot_writecombine(PAGE_KERNEL));
-> +				    VM_MAP, prot)
-
-
-Wouldn't a vmap with pgprot_writecombine() create conflicting mappings 
-with the linear kernel map which is not write-combined? Or do you change 
-the linear kernel map of the shmem pages somewhere? vmap bypassess at 
-least the x86 PAT core mapping consistency check and this could 
-potentially cause spuriously overwritten memory.
-
-
-> +	}
->   
->   	if (!shmem->vaddr) {
->   		DRM_DEBUG_KMS("Failed to vmap pages\n");
-> @@ -540,7 +545,9 @@ int drm_gem_shmem_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma)
->   	}
->   
->   	vma->vm_flags |= VM_MIXEDMAP | VM_DONTEXPAND;
-> -	vma->vm_page_prot = pgprot_writecombine(vm_get_page_prot(vma->vm_flags));
-> +	vma->vm_page_prot = vm_get_page_prot(vma->vm_flags);
-> +	if (!shmem->map_cached)
-> +		vma->vm_page_prot = pgprot_writecombine(vma->vm_page_prot);
-
-Same thing here. Note that vmf_insert_page() which is used by the fault 
-handler also bypasses the x86 PAT  consistency check, whereas 
-vmf_insert_mixed() doesn't.
-
->   	vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
-
-At least with SME or SEV encryption, where shmem memory has its kernel 
-map set to encrypted, creating conflicting mappings is explicitly 
-disallowed.
-BTW, why is mmap mapping decrypted while vmap isn't?
-
->   	vma->vm_ops = &drm_gem_shmem_vm_ops;
->   
-
-Thanks,
-Thomas
-
-
+diff --git a/Documentation/ABI/testing/sysfs-class-typec b/Documentation/ABI/testing/sysfs-class-typec
+index 0c2eb26fdc06b..b834671522d6f 100644
+--- a/Documentation/ABI/testing/sysfs-class-typec
++++ b/Documentation/ABI/testing/sysfs-class-typec
+@@ -108,6 +108,15 @@ Contact:	Heikki Krogerus <heikki.krogerus@linux.intel.com>
+ Description:
+ 		Revision number of the supported USB Type-C specification.
+ 
++What:		/sys/class/typec/<port>/orientation
++Date:		February 2020
++Contact:	Badhri Jagan Sridharan <badhri@google.com>
++Description:
++		Indicates the active orientation of the Type-C connector.
++		Valid values:
++		- "normal": CC1 orientation
++		- "reverse": CC2 orientation
++		- "unknown": Orientation cannot be determined.
+ 
+ USB Type-C partner devices (eg. /sys/class/typec/port0-partner/)
+ 
+diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
+index 12be5bb6d32ca..2524f1571e425 100644
+--- a/drivers/usb/typec/class.c
++++ b/drivers/usb/typec/class.c
+@@ -1244,6 +1244,26 @@ static ssize_t usb_power_delivery_revision_show(struct device *dev,
+ }
+ static DEVICE_ATTR_RO(usb_power_delivery_revision);
+ 
++static ssize_t orientation_show(struct device *dev,
++				   struct device_attribute *attr,
++				   char *buf)
++{
++	struct typec_port *p = to_typec_port(dev);
++	enum typec_orientation orientation = typec_get_orientation(p);
++
++	switch (orientation) {
++	case TYPEC_ORIENTATION_NONE:
++		return sprintf(buf, "%s\n", "unknown");
++	case TYPEC_ORIENTATION_NORMAL:
++		return sprintf(buf, "%s\n", "normal");
++	case TYPEC_ORIENTATION_REVERSE:
++		return sprintf(buf, "%s\n", "reverse");
++	default:
++		return sprintf(buf, "%s\n", "unknown");
++	}
++}
++static DEVICE_ATTR_RO(orientation);
++
+ static struct attribute *typec_attrs[] = {
+ 	&dev_attr_data_role.attr,
+ 	&dev_attr_power_operation_mode.attr,
+@@ -1254,6 +1274,7 @@ static struct attribute *typec_attrs[] = {
+ 	&dev_attr_usb_typec_revision.attr,
+ 	&dev_attr_vconn_source.attr,
+ 	&dev_attr_port_type.attr,
++	&dev_attr_orientation.attr,
+ 	NULL,
+ };
+ 
+@@ -1283,6 +1304,10 @@ static umode_t typec_attr_is_visible(struct kobject *kobj,
+ 			return 0;
+ 		if (port->cap->type != TYPEC_PORT_DRP)
+ 			return 0444;
++	} else if (attr == &dev_attr_orientation.attr) {
++		if (port->cap->orientation_aware)
++			return 0444;
++		return 0;
+ 	}
+ 
+ 	return attr->mode;
+@@ -1493,6 +1518,8 @@ int typec_set_orientation(struct typec_port *port,
+ 	}
+ 
+ 	port->orientation = orientation;
++	sysfs_notify(&port->dev.kobj, NULL, "orientation");
++	kobject_uevent(&port->dev.kobj, KOBJ_CHANGE);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
+index 78077c234ef27..bc0032a6b9a14 100644
+--- a/drivers/usb/typec/tcpm/tcpm.c
++++ b/drivers/usb/typec/tcpm/tcpm.c
+@@ -4742,6 +4742,7 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
+ 	port->typec_caps.pd_revision = 0x0300;	/* USB-PD spec release 3.0 */
+ 	port->typec_caps.driver_data = port;
+ 	port->typec_caps.ops = &tcpm_ops;
++	port->typec_caps.orientation_aware = 1;
+ 
+ 	port->partner_desc.identity = &port->partner_ident;
+ 	port->port_type = port->typec_caps.type;
+diff --git a/include/linux/usb/typec.h b/include/linux/usb/typec.h
+index 44d28387ced48..b00a2642a9cd6 100644
+--- a/include/linux/usb/typec.h
++++ b/include/linux/usb/typec.h
+@@ -211,6 +211,7 @@ struct typec_capability {
+ 	u16			pd_revision; /* 0300H = "3.0" */
+ 	int			prefer_role;
+ 	enum typec_accessory	accessory[TYPEC_MAX_ACCESSORY];
++	unsigned int		orientation_aware:1;
+ 
+ 	struct fwnode_handle	*fwnode;
+ 	void			*driver_data;
+-- 
+2.25.0.265.gbab2e86ba0-goog
 
