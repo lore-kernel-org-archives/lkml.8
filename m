@@ -2,50 +2,52 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF82DC4BA0A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B78CC4BA0A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D9921D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6409421D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 07:00:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbgBZHAO (ORCPT
+        id S1727207AbgBZHAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 02:00:14 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:33308 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726474AbgBZHAO (ORCPT
+        Wed, 26 Feb 2020 02:00:17 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:35643 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726474AbgBZHAP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 02:00:14 -0500
-Received: by mail-il1-f198.google.com with SMTP id i13so2512608ill.0
+        Wed, 26 Feb 2020 02:00:15 -0500
+Received: by mail-il1-f197.google.com with SMTP id h18so2499611ilc.2
         for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2020 23:00:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=c/z5xsfniKKSLpZLHpMNU5fa7JkGhvt2XH2XB+rUEog=;
-        b=nlDcGTuS38UmzkaFvrRzTozwQKAg1KA3sThLr6smcD7oYVZfuiEH+0MQfPwa4BaVLJ
-         E6OB2fWOBc615qwNLrHmyk7tcNO6lw/tqEJTSzAezbYdorho331n2DuXJYplKR0zq79e
-         NeMslw5QtWvRIQsRGo08/SniWm9ZPBZQCaNU1/QLj/iA9C8G1qIDiIvLyNMchdo+LlfL
-         vG8AQ3MACCp3FwpzHKeDavW0JEbgUt9sEcOZBv+oqkATyWTJyrLSCQz1Mw25DvpvUEcw
-         s57IX3dvxX7qX2pEdcLPE8fwxMrTKUE/ln1CGwEQMzDa7rGXslpHRUNpq3KxugvfQFR9
-         D8yg==
-X-Gm-Message-State: APjAAAVTkXu0R4etslsqQd6xES51k4OwCzjTgem0UYMT87KCgx3HDSR6
-        nCVMuVe0pkXtRJNCznUPCc/oEaKXYYXEDlojLL7sKDxbJXLG
-X-Google-Smtp-Source: APXvYqwWuL/1JuLhG0V0aEToyB8sL6RDX/CpmmMPCuFzxXT/5tOdtCxBL3WSIP5W6PGne9CFUr4CfzGXSogvGK6t3P21q/3PQnOK
+        bh=ZM4zSFD0p9Gcy0AqqOMlHJsUTIk3c+UXG36FqEVlS20=;
+        b=S5gOZpU8HKIF+7eqT+4r/f685hAr93BSVyTyhnxMwpcR9zkf3tciPMJ+byYmC9AFZK
+         IuWy4Enq2Qcb38AErd0MxRnxJp1/6BTcPJ49i2CAjhd5y9a57DayWDB5p6cdDoiOH35K
+         184aV0IS1wKbdC9u7AIFwu4jFDmDq2gTrixtBcF/EIvuV7Cos/aPyZX6QDzf9znsPzdN
+         qwjfliKqdY5j++mEVna625mcQm4nBECMgvw7ep3GEnueMSg48NVZeplcCnXbs6aIduCn
+         tzMCawsYpfCvjUMtHI0tH2cusAB1Gf3YAaeY1biBQAwMzmwp6DE6RPzKuMeTlQD8jP3H
+         01bg==
+X-Gm-Message-State: APjAAAUGsgGjelS76s2Bt0fZxqgkghKNcdhC+1PCyxl7pMz/3M0X4ucP
+        T/YTMlVx4hlJsuzMCQfOJrB42knjFNVI76ivfWaOrwO8S1vV
+X-Google-Smtp-Source: APXvYqxHoH7MV3i7PnOB7/GHzEDVXOK0je2QH77Mv1rHBMF223xfndpSk4uDYq2/wKcS4BMm3s6tamQ4zszOyl2GQJPyNKWQgCqS
 MIME-Version: 1.0
-X-Received: by 2002:a92:d610:: with SMTP id w16mr2624725ilm.283.1582700413344;
+X-Received: by 2002:a92:3cd7:: with SMTP id j84mr3100660ilf.176.1582700413125;
  Tue, 25 Feb 2020 23:00:13 -0800 (PST)
 Date:   Tue, 25 Feb 2020 23:00:13 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ec635b059f752700@google.com>
-Subject: KASAN: use-after-free Read in lockref_get
-From:   syzbot <syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Message-ID: <000000000000e908c5059f752767@google.com>
+Subject: KASAN: use-after-free Read in iwcm_deref_id
+From:   syzbot <syzbot+cb0c054eabfba4342146@syzkaller.appspotmail.com>
+To:     bmt@zurich.ibm.com, dledford@redhat.com, jgg@ziepe.ca,
+        kamalheib1@gmail.com, krishna2@chelsio.com,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -58,123 +60,130 @@ syzbot found the following crash on:
 
 HEAD commit:    f8788d86 Linux 5.6-rc3
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17f460e3e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9833e26bab355358
-dashboard link: https://syzkaller.appspot.com/bug?extid=603294af2d01acfdd6da
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+console output: https://syzkaller.appspot.com/x/log.txt?x=164503d9e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
+dashboard link: https://syzkaller.appspot.com/bug?extid=cb0c054eabfba4342146
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+Reported-by: syzbot+cb0c054eabfba4342146@syzkaller.appspotmail.com
 
 ==================================================================
-BUG: KASAN: use-after-free in perf_trace_lock_acquire+0x401/0x530 include/trace/events/lock.h:13
-Read of size 8 at addr ffff8880966bcef0 by task syz-executor.1/28128
+BUG: KASAN: use-after-free in dealloc_work_entries drivers/infiniband/core/iwcm.c:162 [inline]
+BUG: KASAN: use-after-free in free_cm_id drivers/infiniband/core/iwcm.c:202 [inline]
+BUG: KASAN: use-after-free in iwcm_deref_id+0xf6/0x170 drivers/infiniband/core/iwcm.c:215
+Read of size 8 at addr ffff8880a0d05978 by task syz-executor.2/15428
 
-CPU: 1 PID: 28128 Comm: syz-executor.1 Not tainted 5.6.0-rc3-syzkaller #0
+CPU: 1 PID: 15428 Comm: syz-executor.2 Not tainted 5.6.0-rc3-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 Call Trace:
  __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
- __kasan_report.cold+0x1b/0x32 mm/kasan/report.c:506
- kasan_report+0x12/0x20 mm/kasan/common.c:641
+ dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+ print_address_description+0x74/0x5c0 mm/kasan/report.c:374
+ __kasan_report+0x149/0x1c0 mm/kasan/report.c:506
+ kasan_report+0x26/0x50 mm/kasan/common.c:641
  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
- perf_trace_lock_acquire+0x401/0x530 include/trace/events/lock.h:13
- trace_lock_acquire include/trace/events/lock.h:13 [inline]
- lock_acquire+0x2de/0x410 kernel/locking/lockdep.c:4483
- __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
- _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
- lockref_get+0x16/0x60 include/linux/spinlock.h:338
- dget include/linux/dcache.h:321 [inline]
- simple_recursive_removal+0x3e/0x720 fs/libfs.c:268
- debugfs_remove fs/debugfs/inode.c:713 [inline]
- debugfs_remove+0x5e/0x80 fs/debugfs/inode.c:707
- blk_trace_free+0x38/0x140 kernel/trace/blktrace.c:311
- do_blk_trace_setup+0x735/0xb50 kernel/trace/blktrace.c:556
- __blk_trace_setup+0xe3/0x190 kernel/trace/blktrace.c:570
- blk_trace_ioctl+0x170/0x300 kernel/trace/blktrace.c:709
- blkdev_ioctl+0xc3/0x670 block/ioctl.c:710
- block_ioctl+0xee/0x130 fs/block_dev.c:1983
- vfs_ioctl fs/ioctl.c:47 [inline]
- ksys_ioctl+0x123/0x180 fs/ioctl.c:763
- __do_sys_ioctl fs/ioctl.c:772 [inline]
- __se_sys_ioctl fs/ioctl.c:770 [inline]
- __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:770
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ dealloc_work_entries drivers/infiniband/core/iwcm.c:162 [inline]
+ free_cm_id drivers/infiniband/core/iwcm.c:202 [inline]
+ iwcm_deref_id+0xf6/0x170 drivers/infiniband/core/iwcm.c:215
+ destroy_cm_id+0x4b2/0x5b0 drivers/infiniband/core/iwcm.c:442
+ iw_destroy_cm_id+0x15/0x20 drivers/infiniband/core/iwcm.c:453
+ cma_iw_listen drivers/infiniband/core/cma.c:2453 [inline]
+ rdma_listen+0x6dc/0x9a0 drivers/infiniband/core/cma.c:3614
+ cma_listen_on_dev+0x678/0x8e0 drivers/infiniband/core/cma.c:2501
+ cma_listen_on_all drivers/infiniband/core/cma.c:2514 [inline]
+ rdma_listen+0x43b/0x9a0 drivers/infiniband/core/cma.c:3622
+ ucma_listen+0x245/0x300 drivers/infiniband/core/ucma.c:1092
+ ucma_write+0x2da/0x360 drivers/infiniband/core/ucma.c:1684
+ __vfs_write+0xb8/0x740 fs/read_write.c:494
+ vfs_write+0x270/0x580 fs/read_write.c:558
+ ksys_write+0x117/0x220 fs/read_write.c:611
+ __do_sys_write fs/read_write.c:623 [inline]
+ __se_sys_write fs/read_write.c:620 [inline]
+ __x64_sys_write+0x7b/0x90 fs/read_write.c:620
+ do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 RIP: 0033:0x45c449
 Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f4acd2fec78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007f4acd2ff6d4 RCX: 000000000045c449
-RDX: 0000000020000080 RSI: 00000000c0481273 RDI: 0000000000000004
-RBP: 000000000076bfc0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000228 R14: 00000000004c40ce R15: 000000000076bfcc
+RSP: 002b:00007fe499194c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007fe4991956d4 RCX: 000000000045c449
+RDX: 0000000000000010 RSI: 0000000020000000 RDI: 0000000000000003
+RBP: 000000000076bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000008
+R13: 0000000000000cbe R14: 00000000004cea14 R15: 0000000000000007
 
-Allocated by task 28128:
- save_stack+0x23/0x90 mm/kasan/common.c:72
+Allocated by task 15428:
+ save_stack mm/kasan/common.c:72 [inline]
  set_track mm/kasan/common.c:80 [inline]
- __kasan_kmalloc mm/kasan/common.c:515 [inline]
- __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:488
- kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:523
- slab_post_alloc_hook mm/slab.h:584 [inline]
- slab_alloc mm/slab.c:3320 [inline]
- kmem_cache_alloc+0x121/0x710 mm/slab.c:3484
- __d_alloc+0x2e/0x8c0 fs/dcache.c:1690
- d_alloc+0x4d/0x280 fs/dcache.c:1769
- d_alloc_parallel+0xf4/0x1c00 fs/dcache.c:2521
- __lookup_slow+0x1ab/0x4d0 fs/namei.c:1742
- lookup_one_len+0x16d/0x1a0 fs/namei.c:2661
- start_creating+0x132/0x260 fs/debugfs/inode.c:338
- __debugfs_create_file+0x65/0x3f0 fs/debugfs/inode.c:383
- debugfs_create_file+0x5a/0x70 fs/debugfs/inode.c:440
- do_blk_trace_setup+0x361/0xb50 kernel/trace/blktrace.c:523
- __blk_trace_setup+0xe3/0x190 kernel/trace/blktrace.c:570
- blk_trace_ioctl+0x170/0x300 kernel/trace/blktrace.c:709
- blkdev_ioctl+0xc3/0x670 block/ioctl.c:710
- block_ioctl+0xee/0x130 fs/block_dev.c:1983
- vfs_ioctl fs/ioctl.c:47 [inline]
- ksys_ioctl+0x123/0x180 fs/ioctl.c:763
- __do_sys_ioctl fs/ioctl.c:772 [inline]
- __se_sys_ioctl fs/ioctl.c:770 [inline]
- __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:770
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ __kasan_kmalloc+0x118/0x1c0 mm/kasan/common.c:515
+ kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
+ kmem_cache_alloc_trace+0x221/0x2f0 mm/slab.c:3551
+ kmalloc include/linux/slab.h:555 [inline]
+ alloc_work_entries drivers/infiniband/core/iwcm.c:172 [inline]
+ iw_cm_listen+0xdd/0x4a0 drivers/infiniband/core/iwcm.c:571
+ cma_iw_listen drivers/infiniband/core/cma.c:2450 [inline]
+ rdma_listen+0x698/0x9a0 drivers/infiniband/core/cma.c:3614
+ cma_listen_on_dev+0x678/0x8e0 drivers/infiniband/core/cma.c:2501
+ cma_listen_on_all drivers/infiniband/core/cma.c:2514 [inline]
+ rdma_listen+0x43b/0x9a0 drivers/infiniband/core/cma.c:3622
+ ucma_listen+0x245/0x300 drivers/infiniband/core/ucma.c:1092
+ ucma_write+0x2da/0x360 drivers/infiniband/core/ucma.c:1684
+ __vfs_write+0xb8/0x740 fs/read_write.c:494
+ vfs_write+0x270/0x580 fs/read_write.c:558
+ ksys_write+0x117/0x220 fs/read_write.c:611
+ __do_sys_write fs/read_write.c:623 [inline]
+ __se_sys_write fs/read_write.c:620 [inline]
+ __x64_sys_write+0x7b/0x90 fs/read_write.c:620
+ do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Freed by task 28134:
- save_stack+0x23/0x90 mm/kasan/common.c:72
+Freed by task 15428:
+ save_stack mm/kasan/common.c:72 [inline]
  set_track mm/kasan/common.c:80 [inline]
  kasan_set_free_info mm/kasan/common.c:337 [inline]
- __kasan_slab_free+0x102/0x150 mm/kasan/common.c:476
+ __kasan_slab_free+0x12e/0x1e0 mm/kasan/common.c:476
  kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
  __cache_free mm/slab.c:3426 [inline]
- kmem_cache_free+0x86/0x320 mm/slab.c:3694
- __d_free+0x20/0x30 fs/dcache.c:271
- rcu_do_batch kernel/rcu/tree.c:2186 [inline]
- rcu_core+0x5e1/0x1390 kernel/rcu/tree.c:2410
- rcu_core_si+0x9/0x10 kernel/rcu/tree.c:2419
- __do_softirq+0x262/0x98c kernel/softirq.c:292
+ kfree+0x10d/0x220 mm/slab.c:3757
+ dealloc_work_entries drivers/infiniband/core/iwcm.c:163 [inline]
+ alloc_work_entries drivers/infiniband/core/iwcm.c:174 [inline]
+ iw_cm_listen+0x288/0x4a0 drivers/infiniband/core/iwcm.c:571
+ cma_iw_listen drivers/infiniband/core/cma.c:2450 [inline]
+ rdma_listen+0x698/0x9a0 drivers/infiniband/core/cma.c:3614
+ cma_listen_on_dev+0x678/0x8e0 drivers/infiniband/core/cma.c:2501
+ cma_listen_on_all drivers/infiniband/core/cma.c:2514 [inline]
+ rdma_listen+0x43b/0x9a0 drivers/infiniband/core/cma.c:3622
+ ucma_listen+0x245/0x300 drivers/infiniband/core/ucma.c:1092
+ ucma_write+0x2da/0x360 drivers/infiniband/core/ucma.c:1684
+ __vfs_write+0xb8/0x740 fs/read_write.c:494
+ vfs_write+0x270/0x580 fs/read_write.c:558
+ ksys_write+0x117/0x220 fs/read_write.c:611
+ __do_sys_write fs/read_write.c:623 [inline]
+ __se_sys_write fs/read_write.c:620 [inline]
+ __x64_sys_write+0x7b/0x90 fs/read_write.c:620
+ do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-The buggy address belongs to the object at ffff8880966bce40
- which belongs to the cache dentry(28:syz1) of size 288
-The buggy address is located 176 bytes inside of
- 288-byte region [ffff8880966bce40, ffff8880966bcf60)
+The buggy address belongs to the object at ffff8880a0d05800
+ which belongs to the cache kmalloc-512 of size 512
+The buggy address is located 376 bytes inside of
+ 512-byte region [ffff8880a0d05800, ffff8880a0d05a00)
 The buggy address belongs to the page:
-page:ffffea000259af00 refcount:1 mapcount:0 mapping:ffff888093c038c0 index:0x0
+page:ffffea0002834140 refcount:1 mapcount:0 mapping:ffff8880aa400a80 index:0x0
 flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea0002594908 ffffea000234d388 ffff888093c038c0
-raw: 0000000000000000 ffff8880966bc080 000000010000000b 0000000000000000
+raw: 00fffe0000000200 ffffea0001019988 ffffea000280e088 ffff8880aa400a80
+raw: 0000000000000000 ffff8880a0d05000 0000000100000004 0000000000000000
 page dumped because: kasan: bad access detected
 
 Memory state around the buggy address:
- ffff8880966bcd80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff8880966bce00: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
->ffff8880966bce80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                             ^
- ffff8880966bcf00: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
- ffff8880966bcf80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8880a0d05800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880a0d05880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8880a0d05900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                                ^
+ ffff8880a0d05980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880a0d05a00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
 ==================================================================
 
 
