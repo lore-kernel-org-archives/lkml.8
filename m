@@ -2,102 +2,95 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D49C4BA21
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E276FC4BA21
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2669424670
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:49:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582753740;
-	bh=I4qBE2Lu98HMylNu8wa2EtjZdqrPtZCAh9D+MOcEJNk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=GEJC9pfpY7lJnhPiBqpeF6SzacAsHIKEzJiiw9tKfXcFaLfgF/0U0Dqfdtdq1KJQ/
-	 Cfr4boQC/35gs9TB2ub/tisZ0BfOROLsIgfB6lBSPfwpNDY2MA/aKM4MH46gqKEc4l
-	 WP1hDd0OAnDM1oq8XAHZM3C+8aHRBERN8MX0TF/A=
+	by mail.kernel.org (Postfix) with ESMTP id AF85A24670
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 21:50:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727762AbgBZVs6 (ORCPT
+        id S1727695AbgBZVum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 16:48:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55866 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727503AbgBZVs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 16:48:58 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 858A124670;
-        Wed, 26 Feb 2020 21:48:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582753737;
-        bh=I4qBE2Lu98HMylNu8wa2EtjZdqrPtZCAh9D+MOcEJNk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=NnxTFGGUr3KKT4drrAzAbpkB8Aaz5HEG4CuhlLRbJDxSVvl3IY8wuOk6EL+N/rn0w
-         duNGEQNNOeyBX42TD218b4cONLlazx4fKSChHUyEhdxh9Wlsdka4l09jvHItR9PLCe
-         ITHaZhS4kFKOIbauEQiZSD8U1u2+W2ybobBzynWA=
-Date:   Wed, 26 Feb 2020 15:48:55 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com
-Subject: Re: [PATCH v15 3/5] PCI/EDR: Export AER, DPC and error recovery
- functions
-Message-ID: <20200226214855.GA175196@google.com>
+        Wed, 26 Feb 2020 16:50:42 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:42717 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727503AbgBZVum (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 16:50:42 -0500
+Received: by mail-qk1-f196.google.com with SMTP id o28so1104740qkj.9
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 13:50:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bVvtoF3dBwjUAYtU4MtEeTRU2gPLqCEKNNfUILCYJ2w=;
+        b=kGMXdz8RsI8BmUG5Z5gl5QRP+Bd48MZg+8N9So7ujcCno6UgK+3a8HqpIvbXl2SC6/
+         bamzBRZWzCuGtRqYCEPdlUEbEQkdq1s/qVjOsPjiLTlRGhRHdkMzYTt9k5VdK0HSz1j6
+         35mGRRjwu2JdhVCEresCRwoW/RDlf6l3af3/0DW4HQ6AmeFIHebZBGDDMONW5BSkB48v
+         jNfJln14QANgjYgdurlWIshvnZ2bA5WreUfdGt67S88fWEfNMyrIeMsTlR1TiZYTfwm3
+         cGlevCt9h4fAt5baN3zS1kPPqzd4rZTcZfR6k08XIsI6iSL4JEO0zd5OzG7XjlBXpy1d
+         vw6Q==
+X-Gm-Message-State: APjAAAXPq6I5hrBTPWaRLu3zuqpQXE7wQ24xAIROzjxm1GnCpaUzw8RD
+        KPeFFSTEjEmceWFyDm9LqrE=
+X-Google-Smtp-Source: APXvYqx8UV8YjcThLwuE4pseSIhWF+wgUfrcRuFfFy2RgtZSG7vFhqozsjyBFIY3a73ZGyacvn9lUA==
+X-Received: by 2002:a37:4e97:: with SMTP id c145mr1416125qkb.253.1582753841181;
+        Wed, 26 Feb 2020 13:50:41 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id y62sm1877659qka.19.2020.02.26.13.50.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 13:50:40 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     "Tobin C . Harding" <me@tobin.cc>, Tycho Andersen <tycho@tycho.ws>
+Cc:     kernel-hardening@lists.openwall.com,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/mm/init_32: Don't print out kernel memory layout if KASLR
+Date:   Wed, 26 Feb 2020 16:50:39 -0500
+Message-Id: <20200226215039.2842351-1-nivedita@alum.mit.edu>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2b37ed9b-3d6f-ea94-4591-86f9d5bbe543@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 01:26:09PM -0800, Kuppuswamy Sathyanarayanan wrote:
-> On 2/26/20 1:13 PM, Bjorn Helgaas wrote:
-> > On Wed, Feb 26, 2020 at 11:30:43AM -0800, Kuppuswamy Sathyanarayanan wrote:
-> > > On 2/25/20 5:02 PM, Bjorn Helgaas wrote:
-> > > > On Thu, Feb 13, 2020 at 10:20:15AM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> > > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > > > ...
+For security, only show the virtual kernel memory layout if KASLR is
+disabled.
 
-> > > > > diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> > > > > index 99fca8400956..acae12dbf9ff 100644
-> > > > > --- a/drivers/pci/pcie/dpc.c
-> > > > > +++ b/drivers/pci/pcie/dpc.c
-> > > > > @@ -15,15 +15,9 @@
-> > > > >    #include <linux/pci.h>
-> > > > >    #include "portdrv.h"
-> > > > > +#include "dpc.h"
-> > > > >    #include "../pci.h"
-> > > > > -struct dpc_dev {
-> > > > > -	struct pci_dev		*pdev;
-> > > > > -	u16			cap_pos;
-> > > > > -	bool			rp_extensions;
-> > > > > -	u8			rp_log_size;
-> > > > > -};
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+---
+ arch/x86/mm/init_32.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-> > > > Adding dpc.h shouldn't be in this patch because there's no need for a
-> > > > separate dpc.h file yet -- it's only included this one place.  I'm not
-> > > > positive a dpc.h is needed at all -- see comments on patch [4/5].
+diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
+index 23df4885bbed..53635be69102 100644
+--- a/arch/x86/mm/init_32.c
++++ b/arch/x86/mm/init_32.c
+@@ -788,6 +788,10 @@ void __init mem_init(void)
+ 	x86_init.hyper.init_after_bootmem();
+ 
+ 	mem_init_print_info(NULL);
++
++	if (kaslr_enabled())
++		goto skip_layout;
++
+ 	printk(KERN_INFO "virtual kernel memory layout:\n"
+ 		"    fixmap  : 0x%08lx - 0x%08lx   (%4ld kB)\n"
+ 		"  cpu_entry : 0x%08lx - 0x%08lx   (%4ld kB)\n"
+@@ -827,6 +831,7 @@ void __init mem_init(void)
+ 		(unsigned long)&_text, (unsigned long)&_etext,
+ 		((unsigned long)&_etext - (unsigned long)&_text) >> 10);
+ 
++skip_layout:
+ 	/*
+ 	 * Check boundaries twice: Some fundamental inconsistencies can
+ 	 * be detected at build time already.
+-- 
+2.24.1
 
-> > > Yes, if we use pdev in dpc functions used by EDR code, we should
-> > > not need it.
-
-> > I think struct dpc_dev might be more trouble than it's worth.  I
-> > attached a possible patch at the end that folds the 25 bits of
-> > DPC-related info into the struct pci_dev and gets rid of struct
-> > dpc_dev completely.  I compiled it but haven't tested it.
-
-> That would solve most of my export issues. Do you want me
-> to add it to my patch list or merge it separately.
-
-If you want to use that, I would merge it first, followed by the error
-clearing cleanup, followed by the other EDR stuff.
-
-Bjorn
