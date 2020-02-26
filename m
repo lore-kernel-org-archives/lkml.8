@@ -2,109 +2,105 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1F0C4BA10
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9165FC4BA13
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46BBC2468C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:41:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582724515;
-	bh=CFivbeDC16Vex/a/sIDrC01sS730JjaXfcD6K0v8Wec=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=FZ2OiwJPvmZw8yADrEeoSP6i+8o5vmUpUpYMxRdRowsbgXeEOgTVRmPJocStEl5I/
-	 uqQfgvkB1DSxFNXdZ0uLIytX7L3txchiB+aGhOrPFPW2yAzQa/MiKhY1qTKFfffZ2G
-	 1SDJIpvSIfltNjpxHi4axh0yyndbay53Om2PmwSI=
+	by mail.kernel.org (Postfix) with ESMTP id 73F6424685
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 13:42:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727554AbgBZNly (ORCPT
+        id S1727611AbgBZNmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 08:41:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51842 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726926AbgBZNlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 08:41:53 -0500
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71D032467B;
-        Wed, 26 Feb 2020 13:41:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582724512;
-        bh=CFivbeDC16Vex/a/sIDrC01sS730JjaXfcD6K0v8Wec=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=fFrddYuvYg+1YT7T+dVwZ5UWKuydmMFGUlDj1oLCTimb8qXu1FRNmcfWH4zJcSdFd
-         cqeMfc7ZO2NxqKda+HhZNTcaOGD+x7UCgEBfEi3Ecmo51pgC7xJxJVt5utXiyFCCM8
-         trGCq5EEzNA5JJZ5Sg/fAuyHaJD6U321+5YovRzs=
-Date:   Wed, 26 Feb 2020 07:41:50 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, Keith Busch <keith.busch@intel.com>
-Subject: Re: [PATCH v15 1/5] PCI/ERR: Update error status after reset_link()
-Message-ID: <20200226134150.GA107992@google.com>
+        Wed, 26 Feb 2020 08:42:06 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:38720 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbgBZNmG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 08:42:06 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id BBC4B1C0411; Wed, 26 Feb 2020 14:42:03 +0100 (CET)
+Date:   Wed, 26 Feb 2020 14:42:03 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>
+Subject: Re: [PATCH v10 00/13] Support ROHM BD71828 PMIC
+Message-ID: <20200226134203.GD4080@duo.ucw.cz>
+References: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
+ <20200117103000.GG15507@dell>
+ <9785531484b32da487a6016f5c32bf2e9bc45985.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="wULyF7TL5taEdwHz"
 Content-Disposition: inline
-In-Reply-To: <4e6c0ed2b56935187a58659d089e51ffc91a03fe.1581617873.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <9785531484b32da487a6016f5c32bf2e9bc45985.camel@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 10:20:13AM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> Commit bdb5ac85777d ("PCI/ERR: Handle fatal error recovery") uses
-> reset_link() to recover from fatal errors. But during fatal error
-> recovery, if the initial value of error status is
-> PCI_ERS_RESULT_DISCONNECT or PCI_ERS_RESULT_NO_AER_DRIVER then
-> even after successful recovery (using reset_link()) pcie_do_recovery()
-> will report the recovery result as failure. So update the status of
-> error after reset_link().
-> 
-> Fixes: bdb5ac85777d ("PCI/ERR: Handle fatal error recovery")
-> Cc: Ashok Raj <ashok.raj@intel.com>
-> Cc: Keith Busch <keith.busch@intel.com>
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Acked-by: Keith Busch <keith.busch@intel.com>
 
-I raised the possibility of a stable tag for this.  If you'd like
-that, please add the tag and some justification per
-Documentation/process/stable-kernel-rules.rst.
+--wULyF7TL5taEdwHz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-A kernel.org bugzilla pointer to show the user-visible effect of this,
-e.g., "lspci -vv" and a dmesg log showing an error that should be
-recoverable but isn't, would be a good start.  That would actually be
-useful even if you don't want a stable tag.
+Hi!
 
-> ---
->  drivers/pci/pcie/err.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index 01dfc8bb7ca0..eefefe03857a 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -208,9 +208,11 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
->  	else
->  		pci_walk_bus(bus, report_normal_detected, &status);
->  
-> -	if (state == pci_channel_io_frozen &&
-> -	    reset_link(dev, service) != PCI_ERS_RESULT_RECOVERED)
-> -		goto failed;
-> +	if (state == pci_channel_io_frozen) {
-> +		status = reset_link(dev, service);
-> +		if (status != PCI_ERS_RESULT_RECOVERED)
-> +			goto failed;
-> +	}
->  
->  	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
->  		status = PCI_ERS_RESULT_RECOVERED;
-> -- 
-> 2.21.0
-> 
+> > > Changelog v10:
+> > >   - Split RTC patch to a BD70528 fix (which hopefully goes to 5.4)
+> > > and to
+> > >     BD71828 support
+> >=20
+> > Still missing LED Acks.
+> >=20
+>=20
+> Yep. I know. I haven't heard from Pavel recently and the patch 12
+> definitely requires his ack. Can you take the other patches in and
+> leave 12 and 13 out for now? I can continue work on LEDs with Pavel but
+> I would really like to have the regulators working and BD70528 RTC
+> fixed in next release...
+
+Going through my backlogs now. You taking patches up-to 11 so
+that we have two left sounds good :-).
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--wULyF7TL5taEdwHz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXlZ1qwAKCRAw5/Bqldv6
+8gMmAJ4nQGRvqIIofy6kdcys+H/DvgwB6QCgnqsTHp2iWDANQfm15weQRR1P0SY=
+=boMf
+-----END PGP SIGNATURE-----
+
+--wULyF7TL5taEdwHz--
