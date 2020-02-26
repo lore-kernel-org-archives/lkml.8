@@ -2,82 +2,163 @@ Return-Path: <SRS0=/Zd0=4O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B282C4BA13
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F90FC4BA12
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 568F221D7E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:22:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E52C21D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Feb 2020 15:22:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KGb41qMI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mXNFScEP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbgBZPWM (ORCPT
+        id S1728135AbgBZPWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 10:22:12 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51207 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727023AbgBZPWM (ORCPT
+        Wed, 26 Feb 2020 10:22:20 -0500
+Received: from mail-vk1-f194.google.com ([209.85.221.194]:46342 "EHLO
+        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728037AbgBZPWT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 10:22:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582730531;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=pc7LaJTXjKzLJmjkIL4b44tzRohQzI/eJ799ofviMH4=;
-        b=KGb41qMINhLUivdxd8yUUAr0zaoJo1rbf/m7Zxp35JtQFyl+uQU0vEfi4YtlWR6GxOPX/Q
-        oInOViibxXce1QLocwWGy9D8dLPfyGXzeMqXLcsGwEPDqfOlCCeC1b33QLhGTKzKwiGMRV
-        CJ6oy1FXUiDN4QpM1KTgxwNLM86kojE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-192-QlTG60LHMvCtUvmSaNtxuA-1; Wed, 26 Feb 2020 10:22:07 -0500
-X-MC-Unique: QlTG60LHMvCtUvmSaNtxuA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6C7C4DB64;
-        Wed, 26 Feb 2020 15:22:05 +0000 (UTC)
-Received: from krava (unknown [10.43.17.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EF35790CC1;
-        Wed, 26 Feb 2020 15:22:02 +0000 (UTC)
-Date:   Wed, 26 Feb 2020 16:22:00 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 03/13] kprobes: Add symbols for kprobe insn pages
-Message-ID: <20200226152200.GB217283@krava>
-References: <20200212124949.3589-1-adrian.hunter@intel.com>
- <20200212124949.3589-4-adrian.hunter@intel.com>
+        Wed, 26 Feb 2020 10:22:19 -0500
+Received: by mail-vk1-f194.google.com with SMTP id u6so881596vkn.13
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 07:22:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=V8nWkCMD00cXwz4vSIcrFn9i/BES9/eV0AoGbar9kSU=;
+        b=mXNFScEPEXTZ4Y03CyiK+/TjkHLqnAjQPcxs+JNs+IyUVBpbdLw2mdhfel0dmuKPLk
+         W6OvSj/o0zdvXzCB9K+9m7F8SiVe1l183/R1TUoJcArgKBRRhoXq5crK7CUujf6EiXTA
+         PsnQ/ubtPHHwkYOhMOt3/D+OFo4vIsqkU3GrZh1Flo4rA1OijEUNJkjPl9z2qKTlgJIY
+         IE2tSomRkCv2tDlzf/anAOXlsMg+7A1wtK1hh+B9hCIcDrfBTNAYKxrpI8TS0hwqSio9
+         IQm2G/+ObyhefUuHtvD2xH8EEmoVoXNzjYR+CAhxeyhSzbk4rOgw2gQu8bs0ueut8kML
+         IoaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V8nWkCMD00cXwz4vSIcrFn9i/BES9/eV0AoGbar9kSU=;
+        b=GnJ/zVlAZRJwhrtfMjsg61rNpV72SqWXRnbc+/5vr+lKkmZBnU5hEnhPbYvlbdeGlf
+         77kQc9Q+/05Ey71JhSXtH84Ph41JO6gMeXzUDCCMvgb5G7cQwXFhcY789BufoURowsdn
+         rdX0zWKk5HUBw1O6+7mXO8PLJp2ngkc2dvqKsJzny1EJ3Os7llaf5vHTsxtmNhgEvOEn
+         vaS9KAN41gqOrm5yACH9MbHEyvlr73DR+DrgKcV925TUmEQESuKkXII2vju561zOuJnl
+         CXhIvAx8U5iDmHtj3oHhFQUZMgpBjZucsJRfXUw1iI2LjbhtWYVylmxF75mesdFb/ahv
+         jF5g==
+X-Gm-Message-State: APjAAAVK4r51N1FadhiqlgsCDj8TLjAXaJB15io8Bavp3LsvRra0fMw/
+        EweECjAKv0l6jOuZfPffgFljANxZervjkCk48y29eg==
+X-Google-Smtp-Source: APXvYqzF0V4RB8Y6fLHFPX/60gGn0XuOow45OeMPm8jjcH+gHUPO3SKB/DseAxYeF3stegFkmAxKJF8fZ82SZIMQzZc=
+X-Received: by 2002:a1f:914b:: with SMTP id t72mr4120155vkd.101.1582730538102;
+ Wed, 26 Feb 2020 07:22:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212124949.3589-4-adrian.hunter@intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
+ <CAPDyKFqqhxC-pmV_j8PLY-D=AbqCAbiipAAHXLpJ4N_BiYYOFw@mail.gmail.com>
+ <CA+G9fYugQuAERqp3VXUFG-3QxXoF8bz7OSMh6WGSZcrGkbfDSQ@mail.gmail.com>
+ <CAPDyKFo-vEO7zN_F+NqcKtnKmAo_deOZx3gYNiks3yTAQAjv-Q@mail.gmail.com>
+ <a602a27a-b960-ce56-c541-3b4b95f5dce2@nvidia.com> <CAPDyKFrXQgtHa4gLaKUi_F0rs4FMBai3Y_+TcHZR_zpkb0B4QQ@mail.gmail.com>
+ <6523119a-50ac-973a-d1cd-ab1569259411@nvidia.com> <f960aa98-5508-36fd-166d-7f41c7d85154@nvidia.com>
+ <CAPDyKFokE6x0mn+v5B9=so-SyrdTn0JBU8Mrp3Zdu6kSaCie2g@mail.gmail.com> <0963b60f-15e7-4bc6-10df-6fc8003e4d42@nvidia.com>
+In-Reply-To: <0963b60f-15e7-4bc6-10df-6fc8003e4d42@nvidia.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 26 Feb 2020 16:21:42 +0100
+Message-ID: <CAPDyKFq5NoeHEBK3sv3yOSD2+pm9FueH1gaTyPq0j7GLfa6vnA@mail.gmail.com>
+Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
+To:     Jon Hunter <jonathanh@nvidia.com>, Faiz Abbas <faiz_abbas@ti.com>,
+        Bitan Biswas <bbiswas@nvidia.com>
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        open list <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Kishon <kishon@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 02:49:39PM +0200, Adrian Hunter wrote:
-> Symbols are needed for tools to describe instruction addresses. Pages
-> allocated for kprobe's purposes need symbols to be created for them.
-> Add such symbols to be visible via /proc/kallsyms.
++ Anders, Kishon
 
-I can't see kprobes in /proc/kallsyms, I tried making some with
-perf probe and some of bcc-tools.. I'm greping for [kprobe]
+On Tue, 25 Feb 2020 at 17:24, Jon Hunter <jonathanh@nvidia.com> wrote:
+>
+>
+> On 25/02/2020 14:26, Ulf Hansson wrote:
+>
+> ...
+>
+> > However, from the core point of view, the response is still requested,
+> > only that we don't want the driver to wait for the card to stop
+> > signaling busy. Instead we want to deal with that via "polling" from
+> > the core.
+> >
+> > This is a rather worrying behaviour, as it seems like the host driver
+> > doesn't really follow this expectations from the core point of view.
+> > And mmc_flush_cache() is not the only case, as we have erase, bkops,
+> > sanitize, etc. Are all these working or not really well tested?
+>
+> I don't believe that they are well tested. We have a simple test to
+> mount an eMMC partition, create a file, check the contents, remove the
+> file and unmount. The timeouts always occur during unmounting.
+>
+> > Earlier, before my three patches, if the provided timeout_ms parameter
+> > to __mmc_switch() was zero, which was the case for
+> > mmc_mmc_flush_cache() - this lead to that __mmc_switch() simply
+> > ignored validating host->max_busy_timeout, which was wrong. In any
+> > case, this also meant that an R1B response was always used for
+> > mmc_flush_cache(), as you also indicated above. Perhaps this is the
+> > critical part where things can go wrong.
+> >
+> > BTW, have you tried erase commands for sdhci tegra driver? If those
+> > are working fine, do you have any special treatments for these?
+>
+> That I am not sure, but I will check.
 
-could you put to changelog soem example /proc/kallsyms output?
+Great, thanks. Looking forward to your report.
 
-jirka
+So, from my side, me and Anders Roxell, have been collaborating on
+testing the behaviour on a TI Beagleboard x15 (remotely with limited
+debug options), which is using the sdhci-omap variant. I am trying to
+get hold of an Nvidia jetson-TX2, but not found one yet. These are the
+conclusions from the observed behaviour on the Beagleboard for the
+CMD6 cache flush command.
 
+First, the reported host->max_busy_timeout is 2581 (ms) for the
+sdhci-omap driver in this configuration.
+
+1. As we all know by now, the cache flush command (CMD6) fails with
+-110 currently. This is when MMC_CACHE_FLUSH_TIMEOUT_MS is set to 30 *
+1000 (30s), which means __mmc_switch() drops the MMC_RSP_BUSY flag
+from the command.
+
+2. Changing the MMC_CACHE_FLUSH_TIMEOUT_MS to 2000 (2s), means that
+the MMC_RSP_BUSY flag becomes set by __mmc_switch, because of the
+timeout_ms parameter is less than max_busy_timeout (2000 <  2581).
+Then everything works fine.
+
+3. Updating the code to again use 30s as the
+MMC_CACHE_FLUSH_TIMEOUT_MS, but instead forcing the MMC_RSP_BUSY to be
+set, even when the timeout_ms becomes greater than max_busy_timeout.
+This also works fine.
+
+Clearly this indicates a problem that I think needs to be addressed in
+the sdhci driver. However, of course I can revert the three discussed
+patches to fix the problem, but that would only hide the issues and I
+am sure we would then get back to this issue, sooner or later.
+
+To fix the problem in the sdhci driver, I would appreciate if someone
+from TI and Nvidia can step in to help, as I don't have the HW on my
+desk.
+
+Comments or other ideas of how to move forward?
+
+Kind regards
+Uffe
