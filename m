@@ -2,70 +2,111 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F28C3F2C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BDACC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDE8E246A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:11:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582845090;
-	bh=NMVxdRyW7430xx8OHb0SuyAUzMc3aQvGxEHsdnsMvHE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AVc+pWZS/sU3rvL1FBk1aTmkDPZBBH1yz7Ws1CDePR94uPMFvpTEEq8K9IyNK1iyZ
-	 W156Q/iWalQmfI145Vx81+W/r/jezw3ijr0WUuvvr7++dN9aubr2E7UNzxUjQfY1Zk
-	 CCgwUqf5h+I2H6LsLiL1ofNixUypDDosDWMTtYiY=
+	by mail.kernel.org (Postfix) with ESMTP id 68C63246A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:12:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729849AbgB0XL3 (ORCPT
+        id S1729930AbgB0XMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 18:11:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35476 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 18:12:49 -0500
+Received: from mga07.intel.com ([134.134.136.100]:26298 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729656AbgB0XL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 18:11:29 -0500
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EE93246A3;
-        Thu, 27 Feb 2020 23:11:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582845089;
-        bh=NMVxdRyW7430xx8OHb0SuyAUzMc3aQvGxEHsdnsMvHE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Otg+LgVIC0ee/E0n2q2JTpD0TCn0ZBBbTB7xGNA5tn30fBbuub2gdCOGjY1tHxloJ
-         hk8KIxX0cy76gnhh3Bg3gIUnWtks1dKRR0Nt5nqyYo/4lAu9qMudQloIrxDkQNt5RZ
-         depdOCCEnLf6C5Z90wM9X7iAc8kM/zGQDdUJhuFc=
-Date:   Fri, 28 Feb 2020 00:11:26 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [patch 4/8] x86/entry: Move irq tracing on syscall entry to
- C-code
-Message-ID: <20200227231125.GE21795@lenoir>
-References: <20200225220801.571835584@linutronix.de>
- <20200225221305.605144982@linutronix.de>
+        id S1729656AbgB0XMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 18:12:49 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 15:12:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
+   d="scan'208";a="317948278"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
+  by orsmga001.jf.intel.com with ESMTP; 27 Feb 2020 15:12:47 -0800
+Message-ID: <77f3841a92df5d0c819699ee3612118d566b7445.camel@intel.com>
+Subject: Re: [PATCH v2 8/8] x86/fpu/xstate: Restore supervisor xstates for
+ __fpu__restore_sig()
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Date:   Thu, 27 Feb 2020 14:52:12 -0800
+In-Reply-To: <20200221175859.GL25747@zn.tnic>
+References: <20200121201843.12047-1-yu-cheng.yu@intel.com>
+         <20200121201843.12047-9-yu-cheng.yu@intel.com>
+         <20200221175859.GL25747@zn.tnic>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225221305.605144982@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 11:08:05PM +0100, Thomas Gleixner wrote:
-> Now that the C entry points are safe, move the irq flags tracing code into
-> the entry helper.
+On Fri, 2020-02-21 at 18:58 +0100, Borislav Petkov wrote:
+> On Tue, Jan 21, 2020 at 12:18:43PM -0800, Yu-cheng Yu wrote:
+> > [...]
+> >  arch/x86/kernel/fpu/signal.c | 26 +++++++++++++++++++++-----
+> >  1 file changed, 21 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
+> > index e3781a4a52a8..0d3e06a772b0 100644
+> > --- a/arch/x86/kernel/fpu/signal.c
+> > +++ b/arch/x86/kernel/fpu/signal.c
+> > @@ -327,14 +327,22 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+> >  	}
+> >  
+> >  	/*
+> > -	 * The current state of the FPU registers does not matter. By setting
+> > -	 * TIF_NEED_FPU_LOAD unconditionally it is ensured that the our xstate
+> > -	 * is not modified on context switch and that the xstate is considered
+> > +	 * Supervisor xstates are not modified by user space input, and
+> > +	 * need to be saved and restored.  Save the whole because doing
+> > +	 * partial XSAVES changes xcomp_bv.
+> > +	 * By setting TIF_NEED_FPU_LOAD it is ensured that our xstate is
+> > +	 * not modified on context switch and that the xstate is considered
 > 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Reflow those comments to 80 cols. There's room to the right.
+> 
+> >  	 * to be loaded again on return to userland (overriding last_cpu avoids
+> >  	 * the optimisation).
+> >  	 */
+> > -	set_thread_flag(TIF_NEED_FPU_LOAD);
+> > +	fpregs_lock();
+> > +	if (!test_thread_flag(TIF_NEED_FPU_LOAD)) {
+> > +		if (xfeatures_mask_supervisor())
+> > +			copy_xregs_to_kernel(&fpu->state.xsave);
+> > +		set_thread_flag(TIF_NEED_FPU_LOAD);
+> 
+> So the code sets TIF_NEED_FPU_LOAD unconditionally, why are you changing
+> this?
+> 
+> Why don't you simply do:
+> 
+> 		set_thread_flag(TIF_NEED_FPU_LOAD);
+> 		fpregs_lock();
+> 		if (xfeatures_mask_supervisor())
+> 			copy_xregs_to_kernel(&fpu->state.xsave);
+> 		fpregs_unlock();
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+If TIF_NEED_FPU_LOAD is set, then xstates are already in the xsave buffer. 
+We can skip saving them again.
+
+Yu-cheng
+
