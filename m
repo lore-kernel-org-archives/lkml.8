@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B17CC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3949C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E317F2468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A24E424656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814513;
-	bh=PoNBKzgoXee5I2KfSjRmarmvASvzYJj4HxwZCgU+UVk=;
+	s=default; t=1582814517;
+	bh=/7oW2mhu8wWnj5DDUWDZYvXti4pLIGAF/I6wwf5ES6s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZgK+6i/ZruGfITTB5zt9jrUX9nf+0RnbcRxogGp59LRE4EPL8++4yFMv0Nf6s5xiw
-	 VHO0ezpfBt2JkOLsyrbb/AL6czDKKDjDiR/GPaU3aRa9GypyCL6aNslpVoqm8v/pkH
-	 JFnN/L6IvlEBxcR9SP+8pbfpKw41CZ4MH7LqxG/M=
+	b=HEF9lMv6HMHCKlzC3uVTRK8msCmxhbWjOVBhZCiYjir/WWT7DjtqdBzsF1CyehCGf
+	 Of8QWVryfFk5j3+3SaVcGzMJd8YpDdUuH3lQt+tjhF6fkPG26jia4LATSeYJQM322A
+	 0vdjc7l/5SAQ7IEC9SY56Pz5CAk2Wxff9JzgPJTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729825AbgB0Nuy (ORCPT
+        id S1731920AbgB0Ol4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:50:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49268 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:41:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730461AbgB0Nut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:50:49 -0500
+        id S1731296AbgB0Nuv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:50:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D049A246AD;
-        Thu, 27 Feb 2020 13:50:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D7AB2084E;
+        Thu, 27 Feb 2020 13:50:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811448;
-        bh=PoNBKzgoXee5I2KfSjRmarmvASvzYJj4HxwZCgU+UVk=;
+        s=default; t=1582811450;
+        bh=/7oW2mhu8wWnj5DDUWDZYvXti4pLIGAF/I6wwf5ES6s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rytMCkxDHodrvyvRZvML5iChu/jgP0fP7lZJ5hui8286p//xzdM/Baf1TFZXmInJP
-         ayqywhxLmX//vlMPa29yvj9UKQCmBgsJdHrzcY2NCTlcJtCPJSUigWH9hUxZ8pUgz+
-         qIXs/ndHgSGblQR1+U9egZGAM5L5XH0D/FXukrk8=
+        b=vRg5q4M2ZpOPMJC8v8l2RvRr/8n7Ro00w6n/USiofIstO1FDE9oEvchlle5LZyeZt
+         RO1Z8R+UtuGrmbTi/QnVd5QQYgXCAQIHbvgbLqTaEjR7isWuwz0HVfOaeYRCRjNgzE
+         IaeAsHtoguw6l4a/3ewEYbaTklVzc3nVYEzixzhE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org, Michael Neuling <mikey@neuling.org>,
+        Cyril Bur <cyrilbur@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 137/165] vt: vt_ioctl: fix race in VT_RESIZEX
-Date:   Thu, 27 Feb 2020 14:36:51 +0100
-Message-Id: <20200227132251.084429853@linuxfoundation.org>
+Subject: [PATCH 4.9 138/165] powerpc/tm: P9 disable transactionally suspended sigcontexts
+Date:   Thu, 27 Feb 2020 14:36:52 +0100
+Message-Id: <20200227132251.222533328@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -60,105 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Michael Neuling <mikey@neuling.org>
 
-[ Upstream commit 6cd1ed50efd88261298577cd92a14f2768eddeeb ]
+[ Upstream commit 92fb8690bd04cb421d987d246deac60eef85d272 ]
 
-We need to make sure vc_cons[i].d is not NULL after grabbing
-console_lock(), or risk a crash.
+Unfortunately userspace can construct a sigcontext which enables
+suspend. Thus userspace can force Linux into a path where trechkpt is
+executed.
 
-general protection fault, probably for non-canonical address 0xdffffc0000000068: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000340-0x0000000000000347]
-CPU: 1 PID: 19462 Comm: syz-executor.5 Not tainted 5.5.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:vt_ioctl+0x1f96/0x26d0 drivers/tty/vt/vt_ioctl.c:883
-Code: 74 41 e8 bd a6 84 fd 48 89 d8 48 c1 e8 03 42 80 3c 28 00 0f 85 e4 04 00 00 48 8b 03 48 8d b8 40 03 00 00 48 89 fa 48 c1 ea 03 <42> 0f b6 14 2a 84 d2 74 09 80 fa 03 0f 8e b1 05 00 00 44 89 b8 40
-RSP: 0018:ffffc900086d7bb0 EFLAGS: 00010202
-RAX: 0000000000000000 RBX: ffffffff8c34ee88 RCX: ffffc9001415c000
-RDX: 0000000000000068 RSI: ffffffff83f0e6e3 RDI: 0000000000000340
-RBP: ffffc900086d7cd0 R08: ffff888054ce0100 R09: fffffbfff16a2f6d
-R10: ffff888054ce0998 R11: ffff888054ce0100 R12: 000000000000001d
-R13: dffffc0000000000 R14: 1ffff920010daf79 R15: 000000000000ff7f
-FS:  00007f7d13c12700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffd477e3c38 CR3: 0000000095d0a000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- tty_ioctl+0xa37/0x14f0 drivers/tty/tty_io.c:2660
- vfs_ioctl fs/ioctl.c:47 [inline]
- ksys_ioctl+0x123/0x180 fs/ioctl.c:763
- __do_sys_ioctl fs/ioctl.c:772 [inline]
- __se_sys_ioctl fs/ioctl.c:770 [inline]
- __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:770
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45b399
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f7d13c11c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007f7d13c126d4 RCX: 000000000045b399
-RDX: 0000000020000080 RSI: 000000000000560a RDI: 0000000000000003
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000666 R14: 00000000004c7f04 R15: 000000000075bf2c
-Modules linked in:
----[ end trace 80970faf7a67eb77 ]---
-RIP: 0010:vt_ioctl+0x1f96/0x26d0 drivers/tty/vt/vt_ioctl.c:883
-Code: 74 41 e8 bd a6 84 fd 48 89 d8 48 c1 e8 03 42 80 3c 28 00 0f 85 e4 04 00 00 48 8b 03 48 8d b8 40 03 00 00 48 89 fa 48 c1 ea 03 <42> 0f b6 14 2a 84 d2 74 09 80 fa 03 0f 8e b1 05 00 00 44 89 b8 40
-RSP: 0018:ffffc900086d7bb0 EFLAGS: 00010202
-RAX: 0000000000000000 RBX: ffffffff8c34ee88 RCX: ffffc9001415c000
-RDX: 0000000000000068 RSI: ffffffff83f0e6e3 RDI: 0000000000000340
-RBP: ffffc900086d7cd0 R08: ffff888054ce0100 R09: fffffbfff16a2f6d
-R10: ffff888054ce0998 R11: ffff888054ce0100 R12: 000000000000001d
-R13: dffffc0000000000 R14: 1ffff920010daf79 R15: 000000000000ff7f
-FS:  00007f7d13c12700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffd477e3c38 CR3: 0000000095d0a000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+This patch blocks this from happening on POWER9 by sanity checking
+sigcontexts passed in.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: stable <stable@vger.kernel.org>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Link: https://lore.kernel.org/r/20200210190721.200418-1-edumazet@google.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ptrace doesn't have this problem as only MSR SE and BE can be changed
+via ptrace.
+
+This patch also adds a number of WARN_ON()s in case we ever enter
+suspend when we shouldn't. This should not happen, but if it does the
+symptoms are soft lockup warnings which are not obviously TM related,
+so the WARN_ON()s should make it obvious what's happening.
+
+Signed-off-by: Michael Neuling <mikey@neuling.org>
+Signed-off-by: Cyril Bur <cyrilbur@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/vt/vt_ioctl.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ arch/powerpc/kernel/process.c   | 2 ++
+ arch/powerpc/kernel/signal_32.c | 4 ++++
+ arch/powerpc/kernel/signal_64.c | 5 +++++
+ 3 files changed, 11 insertions(+)
 
-diff --git a/drivers/tty/vt/vt_ioctl.c b/drivers/tty/vt/vt_ioctl.c
-index d4c1b100f3b6d..e8efb270dc8f9 100644
---- a/drivers/tty/vt/vt_ioctl.c
-+++ b/drivers/tty/vt/vt_ioctl.c
-@@ -879,15 +879,20 @@ int vt_ioctl(struct tty_struct *tty,
- 			return -EINVAL;
+diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+index 54c95e7c74cce..1a08c43a51f8c 100644
+--- a/arch/powerpc/kernel/process.c
++++ b/arch/powerpc/kernel/process.c
+@@ -890,6 +890,8 @@ static inline void tm_reclaim_task(struct task_struct *tsk)
+ 	if (!MSR_TM_ACTIVE(thr->regs->msr))
+ 		goto out_and_saveregs;
  
- 		for (i = 0; i < MAX_NR_CONSOLES; i++) {
-+			struct vc_data *vcp;
++	WARN_ON(tm_suspend_disabled);
 +
- 			if (!vc_cons[i].d)
- 				continue;
- 			console_lock();
--			if (v.v_vlin)
--				vc_cons[i].d->vc_scan_lines = v.v_vlin;
--			if (v.v_clin)
--				vc_cons[i].d->vc_font.height = v.v_clin;
--			vc_cons[i].d->vc_resize_user = 1;
--			vc_resize(vc_cons[i].d, v.v_cols, v.v_rows);
-+			vcp = vc_cons[i].d;
-+			if (vcp) {
-+				if (v.v_vlin)
-+					vcp->vc_scan_lines = v.v_vlin;
-+				if (v.v_clin)
-+					vcp->vc_font.height = v.v_clin;
-+				vcp->vc_resize_user = 1;
-+				vc_resize(vcp, v.v_cols, v.v_rows);
-+			}
- 			console_unlock();
- 		}
- 		break;
+ 	TM_DEBUG("--- tm_reclaim on pid %d (NIP=%lx, "
+ 		 "ccr=%lx, msr=%lx, trap=%lx)\n",
+ 		 tsk->pid, thr->regs->nip,
+diff --git a/arch/powerpc/kernel/signal_32.c b/arch/powerpc/kernel/signal_32.c
+index a378b1e80a1aa..bec09db6981ea 100644
+--- a/arch/powerpc/kernel/signal_32.c
++++ b/arch/powerpc/kernel/signal_32.c
+@@ -519,6 +519,8 @@ static int save_tm_user_regs(struct pt_regs *regs,
+ {
+ 	unsigned long msr = regs->msr;
+ 
++	WARN_ON(tm_suspend_disabled);
++
+ 	/* Remove TM bits from thread's MSR.  The MSR in the sigcontext
+ 	 * just indicates to userland that we were doing a transaction, but we
+ 	 * don't want to return in transactional state.  This also ensures
+@@ -769,6 +771,8 @@ static long restore_tm_user_regs(struct pt_regs *regs,
+ 	int i;
+ #endif
+ 
++	if (tm_suspend_disabled)
++		return 1;
+ 	/*
+ 	 * restore general registers but not including MSR or SOFTE. Also
+ 	 * take care of keeping r2 (TLS) intact if not a signal.
+diff --git a/arch/powerpc/kernel/signal_64.c b/arch/powerpc/kernel/signal_64.c
+index f4c46b0ec611a..9d8fd0c74b314 100644
+--- a/arch/powerpc/kernel/signal_64.c
++++ b/arch/powerpc/kernel/signal_64.c
+@@ -214,6 +214,8 @@ static long setup_tm_sigcontexts(struct sigcontext __user *sc,
+ 
+ 	BUG_ON(!MSR_TM_ACTIVE(regs->msr));
+ 
++	WARN_ON(tm_suspend_disabled);
++
+ 	/* Remove TM bits from thread's MSR.  The MSR in the sigcontext
+ 	 * just indicates to userland that we were doing a transaction, but we
+ 	 * don't want to return in transactional state.  This also ensures
+@@ -430,6 +432,9 @@ static long restore_tm_sigcontexts(struct task_struct *tsk,
+ 
+ 	BUG_ON(tsk != current);
+ 
++	if (tm_suspend_disabled)
++		return -EINVAL;
++
+ 	/* copy the GPRs */
+ 	err |= __copy_from_user(regs->gpr, tm_sc->gp_regs, sizeof(regs->gpr));
+ 	err |= __copy_from_user(&tsk->thread.ckpt_regs, sc->gp_regs,
 -- 
 2.20.1
 
