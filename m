@@ -2,103 +2,108 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DEF6C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C1C4C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16A152469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:45:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582821936;
-	bh=zU5mhQLFtC8qOIyeDHInzfjiSukilwewEIGjM2YptjY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=c9TFwHUuabYKpm8k095ce6NfG7+YbywsuX8LcpVRHc7Jo4X1pNeN77TN651Fif4MU
-	 kSlf6aWB3qh9wisl06x4gWCUmvceImHjZk1TjIMieean4b34WZX25wpxLLMebBmuVr
-	 xDD45wECPujCWIxdTnxNGvx+Ka432WpWDRJnSjIw=
+	by mail.kernel.org (Postfix) with ESMTP id 1307F2469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:45:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lo+lBayS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730478AbgB0Qpf (ORCPT
+        id S1730492AbgB0Qpv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 11:45:35 -0500
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:39879 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730245AbgB0Qpe (ORCPT
+        Thu, 27 Feb 2020 11:45:51 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42593 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729970AbgB0Qpu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 11:45:34 -0500
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 01RGjHj5018817;
-        Fri, 28 Feb 2020 01:45:18 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 01RGjHj5018817
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582821918;
-        bh=SFw1s2zS0IjJjISQmLxUGN24YaawNrIlTzAN8zWk6yc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pHrjFCewRtvMY7bbl9OpF647nX9RTyHdzhvhKV4DjrqI7jVxULfY6UK/dSIV+E/FE
-         wQwq5nxoBbXQpi+KDLcYI0weq48uJLqJDDzwYmQScibfpe8xlOzWB45QGDa6yq6YJ5
-         MGbVj80bPcLdTaa7ahGCfPeFwE1Sq4eUw0fpHYkvT3HBvKtN2Wvk4DjqYNeqZvCkjJ
-         cKhYymuJY1Wl/Oz2nL38f+nuxlTrp8n6ILHI9QGShJT7Me8Vq6AKklkt9VuikJESDc
-         KYXfWFqMsRaBtmU1owhg/LB5A9vQsowXu2COlaORsVXK5wpp5cKuEr8GAedHCrEgmh
-         vkbY5OB+yyw7w==
-X-Nifty-SrcIP: [209.85.221.179]
-Received: by mail-vk1-f179.google.com with SMTP id r5so81897vkf.2;
-        Thu, 27 Feb 2020 08:45:18 -0800 (PST)
-X-Gm-Message-State: ANhLgQ1UtdG/R/oWJ+W3DMF/QBZM+unzZYwtPjKgVUD2MCyrJU7BX7HV
-        J78Uvv2bRJfWWG722oynH/fmpwJro11O9h8WFWk=
-X-Google-Smtp-Source: ADFU+vufzGHT4b2Qk1L+M+Qsr4BWBYmkBX9BSlBugK7yH1xAwQBNk/3BRr+hoFehSYOBDdMB1utlLESQ9deo5l2iu20=
-X-Received: by 2002:a1f:1bc3:: with SMTP id b186mr54662vkb.96.1582821917207;
- Thu, 27 Feb 2020 08:45:17 -0800 (PST)
+        Thu, 27 Feb 2020 11:45:50 -0500
+Received: by mail-lj1-f193.google.com with SMTP id d10so4207730ljl.9;
+        Thu, 27 Feb 2020 08:45:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wVNFcIlBUE9RxinpT2V+KF01085Ap+cWrCWblxB3kzo=;
+        b=lo+lBayS6a01ISYJ7chK3YPXl8VJlAX+zC+JyxsrdKlxc54e7G9/IVxdFy+dbNJrLd
+         OjLppMBG9NAHXXqywhlJ6crXvV57lsMwk9f6YN+b3mddVt5a5aNY8Y4aUMm0AJSiepIg
+         WMr7TYua2I9JZSbtcwql76J/cLWQ61GLC2jwFcAMWkJyUjKKeoQiQmIR24yQMVyzWzdX
+         SLpcuFSIHDt2eZs5LmkqsPI3iItsXFxe9ZhqPK8Msk5Zz2Nvd0S6dRrO5NO8jzUx5ZHz
+         4rhRREC+MuW+JozkTC3Bu32df/mn5QSzr515Hv5K/GRgRnW/xhASukYfq3Ox4WuW/7Vv
+         v46g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wVNFcIlBUE9RxinpT2V+KF01085Ap+cWrCWblxB3kzo=;
+        b=GmZl1y+/grp2km6qcJ728ALIkXD5b3+jOxitgKzW0NsgxyFHtGE27QZozL12tlwBRq
+         GgsH63BrW0BAi6mAiwCMAOkJq17Z5vYnhlPy0siRlOeGN0MDbcusOnHZk+nIe4Rofkw0
+         rPWb24sdqetTKfyDvZ3Csn9yt0WrclBpheC3W2wprSBuTDtLCZqjvn2m++YqS/3W3sZE
+         BhcTEFN7puyTI/39BUDFr8fxkG6+xsJ50zEiXk92G1KRxVcoteO/BqmZz3lplCYpkeZD
+         JqTqKZgz2NS89boyh41MHeBX8rGrXnwMVmvaJVFTWlyy2AOGkd/Oij8RUUN6ETROeKVR
+         BrLQ==
+X-Gm-Message-State: ANhLgQ1GBI7BJv//aT8KZxsHD5zBbGSJE/DTJ0tZ9nI/OMn9l/13Qvg/
+        q4bCPrL+CigTI64MbrnZtmFChxlS
+X-Google-Smtp-Source: ADFU+vvl7Ppl4IgVJKzIc35yc7GsPEAc4o9RTr0Yf+7YCzTiSIFWHuhjs8G6wF6GCth9q9RI5/y+4g==
+X-Received: by 2002:a2e:9e19:: with SMTP id e25mr233139ljk.179.1582821947568;
+        Thu, 27 Feb 2020 08:45:47 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id i1sm3637987lji.71.2020.02.27.08.45.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Feb 2020 08:45:46 -0800 (PST)
+Subject: Re: [PATCH v11 14/17] cpuidle: tegra: Squash Tegra114 driver into the
+ common driver
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Jasper Korten <jja2000@gmail.com>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200224224057.21877-1-digetx@gmail.com>
+ <20200224224057.21877-15-digetx@gmail.com>
+ <dcf45352-8ea3-6273-b4e8-0142f5d5e9f2@linaro.org>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <4f452e32-10c4-b906-7d22-dc8977962666@gmail.com>
+Date:   Thu, 27 Feb 2020 19:45:45 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <20200218100031.10018-1-masahiroy@kernel.org>
-In-Reply-To: <20200218100031.10018-1-masahiroy@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 28 Feb 2020 01:44:41 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASvgJ2tBhM7s-cnpwuy1GZy0kZ96tLETBVuEZSCTCKmcA@mail.gmail.com>
-Message-ID: <CAK7LNASvgJ2tBhM7s-cnpwuy1GZy0kZ96tLETBVuEZSCTCKmcA@mail.gmail.com>
-Subject: Re: [PATCH] fixdep: remove redundant null character check
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <dcf45352-8ea3-6273-b4e8-0142f5d5e9f2@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 7:00 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> If *q is '\0', the condition (isalnum(*q) || *q == '_') is false anyway.
->
-> Ensuring non-zero *q is redundant.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
+27.02.2020 12:21, Daniel Lezcano пишет:
+> On 24/02/2020 23:40, Dmitry Osipenko wrote:
+>> Tegra20/30/114/124 SoCs have common idling states, thus there is no much
+>> point in having separate drivers for a similar hardware. This patch moves
+>> Tegra114/124 arch/ drivers into the common driver without any functional
+>> changes. The CC6 state is kept disabled on Tegra114/124 because the core
+>> Tegra PM code needs some more work in order to support that state.
+>>
+>> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+> 
+> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
+Awesome, thank you :)
 
-Applied to linux-kbuild.
-
->  scripts/basic/fixdep.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/scripts/basic/fixdep.c b/scripts/basic/fixdep.c
-> index ad2041817985..877ca2c88246 100644
-> --- a/scripts/basic/fixdep.c
-> +++ b/scripts/basic/fixdep.c
-> @@ -246,7 +246,7 @@ static void parse_config_file(const char *p)
->                 }
->                 p += 7;
->                 q = p;
-> -               while (*q && (isalnum(*q) || *q == '_'))
-> +               while (isalnum(*q) || *q == '_')
->                         q++;
->                 if (str_ends_with(p, q - p, "_MODULE"))
->                         r = q - 7;
-> --
-> 2.17.1
->
-
-
--- 
-Best Regards
-Masahiro Yamada
+@Thierry, could you please pick up the updated patches for linux-next +
+pick up the cpufreq series? Thanks in advance!
