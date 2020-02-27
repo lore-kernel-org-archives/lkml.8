@@ -2,94 +2,152 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 487A8C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE85C4BA06
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2025820714
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:07:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62DBA20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:07:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="B8I1xkOi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728480AbgB0IHK (ORCPT
+        id S1728517AbgB0IHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 03:07:10 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:37965 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726999AbgB0IHK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 03:07:10 -0500
-Received: from dread.disaster.area (pa49-195-202-68.pa.nsw.optusnet.com.au [49.195.202.68])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 4E1BE3A340D;
-        Thu, 27 Feb 2020 19:07:04 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1j7ECF-0007tA-Ly; Thu, 27 Feb 2020 19:07:03 +1100
-Date:   Thu, 27 Feb 2020 19:07:03 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Andreas Dilger <adilger@dilger.ca>,
-        Waiman Long <longman@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-doc@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Eric Biggers <ebiggers@google.com>,
-        Eric Sandeen <sandeen@redhat.com>
-Subject: Re: [PATCH 00/11] fs/dcache: Limit # of negative dentries
-Message-ID: <20200227080703.GK10737@dread.disaster.area>
-References: <20200226161404.14136-1-longman@redhat.com>
- <20200226162954.GC24185@bombadil.infradead.org>
- <2EDB6FFC-C649-4C80-999B-945678F5CE87@dilger.ca>
- <20200226214507.GE24185@bombadil.infradead.org>
+        Thu, 27 Feb 2020 03:07:37 -0500
+Received: from smtp1.axis.com ([195.60.68.17]:32369 "EHLO smtp1.axis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726999AbgB0IHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 03:07:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=axis.com; l=3202; q=dns/txt; s=axis-central1;
+  t=1582790855; x=1614326855;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-transfer-encoding;
+  bh=IUblToJWSxBgFlhnLquBrYBi+CsSdc+WRI3/2kSysr0=;
+  b=B8I1xkOiXgYOL4CVK3PMLOPBSboplU9P7lpNi/Fr5MOjcYWrFeefd4cb
+   MeYv1R6lbw6RpQvYVac5rAsALif2L3NUkWZX+UtVDf1EfjJbRJ0UrOY0V
+   yyRU0J6SlaH6bge5e0HkgSKRSXPdWZyLHCjxZD/RQOsF5Ln2C8svgKcjD
+   SXX5diybXgthZJTXtaK4xCn30AVRfrZD3KpuXeN4zjUnlc4IB+0YL2urI
+   K4RPjz+oZxamRULwQlRh4UbRN4CjhTlXzWTx46NQ0F8Au69/K616NIChF
+   GV6lA4hbe22VcZ8qsectCoajURMkK81wv9feNitQHTK9rRrYpH7rERSJ1
+   w==;
+IronPort-SDR: 4mylBMR7HB74vnqaSyqPRFX40dEnpjOoMnBlVuNPGIW7qs7HF5ObxIbo4N0k/fUcNr+n7UJGRt
+ RKx5NPXkF12ol2jEG3zjRlIB/WmUQLgzH5+Fxn5H2AAVQUgOQ+UUcpMEPMn7FoPW3+IQfw+gRM
+ 805besfOypi/tJWnMVHMfbND3++c2GZ6MI6V+l+vAIletvAux0ZksEFgnRu833nloHg5CGV8yG
+ ShkWLPAO6coCrsOzClChCelpYvdUthQjbxVgrGwF5DK7Pq07YgVEhwv6AW31pMADyCZSRDX4H9
+ 7bo=
+X-IronPort-AV: E=Sophos;i="5.70,491,1574118000"; 
+   d="scan'208";a="5877651"
+Date:   Thu, 27 Feb 2020 09:07:28 +0100
+From:   Ricard Wanderlof <ricardw@axis.com>
+X-X-Sender: ricardw@lnxricardw1.se.axis.com
+To:     Dan Murphy <dmurphy@ti.com>
+CC:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?ISO-8859-15?Q?Ricard_Wanderl=F6f?= <Ricard.Wanderlof@axis.com>
+Subject: Re: [PATCH for-next] ASoC: tlv320adcx140: Fix MIC_BIAS defines for
+ ADC full scale
+In-Reply-To: <20200226133439.15837-1-dmurphy@ti.com>
+Message-ID: <alpine.DEB.2.20.2002270906590.29598@lnxricardw1.se.axis.com>
+References: <20200226133439.15837-1-dmurphy@ti.com>
+User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200226214507.GE24185@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
-        a=mqTaRPt+QsUAtUurwE173Q==:117 a=mqTaRPt+QsUAtUurwE173Q==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
-        a=7-415B0cAAAA:8 a=tZu0WVHQ-7pqTbS7xfgA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.0.5.60]
+X-ClientProxiedBy: XBOX03.axis.com (10.0.5.17) To XBOX03.axis.com (10.0.5.17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 01:45:07PM -0800, Matthew Wilcox wrote:
-> had twice as many entries in it, would that significantly reduce the
-> thrash of new entries being created".  In the page cache, we end up
-> with a double LRU where once-used entries fall off the list quickly
-> but twice-or-more used entries get to stay around for a bit longer.
-> Maybe we could do something like that; keep a victim cache for recently
-> evicted dentries, and if we get a large hit rate in the victim cache,
-> expand the size of the primary cache.
 
-You know, I've been saying exactly the same thing about the inode
-LRU in response to people trying to hack behaviour out of the
-shrinker that is triggered by the working set getting trashed by
-excessive creation of single use inodes (i.e. large scale directory
-traversal).
+On Wed, 26 Feb 2020, Dan Murphy wrote:
 
-IOWs, both have the same problem with working set retention in the
-face of excessive growth pressure.
+> Change the #defines for the ADC full scale bits from MIC_BIAS to
+> ADC_FSCALE.  This also changes the error message to incidate ADC full
+> scale value error as opposed to the Mic bias.
+> 
+> Reported-by: Ricard Wanderlof <ricardw@axis.com>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  sound/soc/codecs/tlv320adcx140.c | 12 ++++++------
+>  sound/soc/codecs/tlv320adcx140.h |  8 ++++----
+>  2 files changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/sound/soc/codecs/tlv320adcx140.c
+> b/sound/soc/codecs/tlv320adcx140.c
+> index 93a0cb8e662c..825ace9b5fa7 100644
+> --- a/sound/soc/codecs/tlv320adcx140.c
+> +++ b/sound/soc/codecs/tlv320adcx140.c
+> @@ -758,12 +758,12 @@ static int adcx140_codec_probe(struct
+> snd_soc_component *component)
+>          ret = device_property_read_u8(adcx140->dev, "ti,vref-source",
+>                                        &vref_source);
+>          if (ret)
+> -               vref_source = ADCX140_MIC_BIAS_VREF_275V;
+> +               vref_source = ADCX140_ADC_FSCALE_VREF_275V;
+>  
+> -       if (vref_source != ADCX140_MIC_BIAS_VREF_275V &&
+> -           vref_source != ADCX140_MIC_BIAS_VREF_25V &&
+> -           vref_source != ADCX140_MIC_BIAS_VREF_1375V) {
+> -               dev_err(adcx140->dev, "Mic Bias source value is invalid\n");
+> +       if (vref_source != ADCX140_ADC_FSCALE_VREF_275V &&
+> +           vref_source != ADCX140_ADC_FSCALE_VREF_25V &&
+> +           vref_source != ADCX140_ADC_FSCALE_VREF_1375V) {
+> +               dev_err(adcx140->dev, "ADC full scale setting is
+> invalid\n");
+>                  return -EINVAL;
+>          }
+>  
+> @@ -787,7 +787,7 @@ static int adcx140_codec_probe(struct snd_soc_component
+> *component)
+>  
+>          ret = regmap_update_bits(adcx140->regmap, ADCX140_BIAS_CFG,
+>                                  ADCX140_MIC_BIAS_VAL_MSK |
+> -                               ADCX140_MIC_BIAS_VREF_MSK, bias_source);
+> +                               ADCX140_ADC_FSCALE_VREF_MSK, bias_source);
+>          if (ret)
+>                  dev_err(adcx140->dev, "setting MIC bias failed %d\n", ret);
+>  out:
+> diff --git a/sound/soc/codecs/tlv320adcx140.h
+> b/sound/soc/codecs/tlv320adcx140.h
+> index 6d055e55909e..adb9513900b1 100644
+> --- a/sound/soc/codecs/tlv320adcx140.h
+> +++ b/sound/soc/codecs/tlv320adcx140.h
+> @@ -117,10 +117,10 @@
+>  #define ADCX140_MIC_BIAS_VAL_AVDD       6
+>  #define ADCX140_MIC_BIAS_VAL_MSK GENMASK(6, 4)
+>  
+> -#define ADCX140_MIC_BIAS_VREF_275V     0
+> -#define ADCX140_MIC_BIAS_VREF_25V      1
+> -#define ADCX140_MIC_BIAS_VREF_1375V    2
+> -#define ADCX140_MIC_BIAS_VREF_MSK GENMASK(1, 0)
+> +#define ADCX140_ADC_FSCALE_VREF_275V   0
+> +#define ADCX140_ADC_FSCALE_VREF_25V    1
+> +#define ADCX140_ADC_FSCALE_VREF_1375V  2
+> +#define ADCX140_ADC_FSCALE_VREF_MSK GENMASK(1, 0)
+>  
+>  #define ADCX140_PWR_CFG_BIAS_PDZ        BIT(7)
+>  #define ADCX140_PWR_CFG_ADC_PDZ         BIT(6)
+> --
+> 2.25.0
+> 
+> 
+> 
 
-So, you know, perhaps two caches with the same problem, that use the
-same LRU implementation, could solve the same problem by enhancing
-the generic LRU code they use to an active/inactive style clocking
-LRU like the page LRUs?
+Looks good to me!
 
-Cheers,
-
-Dave.
+/Ricard
 -- 
-Dave Chinner
-david@fromorbit.com
+Ricard Wolf Wanderlof                           ricardw(at)axis.com
+Axis Communications AB, Lund, Sweden            www.axis.com
+Phone +46 46 272 2016                           Fax +46 46 13 61 30
