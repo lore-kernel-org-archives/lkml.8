@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF78EC52D5E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 525DAC52D54
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE1272469D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EE3E20578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:58:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811953;
-	bh=EAL46EwKLVJaEP2JtTsJWL3kefGYXgAvQpHvNA/cNMI=;
+	s=default; t=1582811936;
+	bh=0yK99yL8zKpPcOVGxgHL+LeT9F8hHMH66h3KyuMSC2o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QUlwjtud7ekKtYcgX1lXodrDAHDkDAUDwLrMGm8RKBE1SOPgrfn5gpmFgImruikGN
-	 +P6bL+3YT/hUSlZC+4NCzFiNSxMjgtACPAUwQSUy55LQMLszz3KFfMDn+sBZLMa7mn
-	 peUC6IHY9i0EV7rpKz08Ajzz8c29qL5rKzQitCwQ=
+	b=nZaY7Deai4tpR/rgLjbqGYS7aigA0JPmmJorgcbSqPrTHA/1/9bNkB0JV05EwmFOa
+	 DjkZ8LKFi2bPpGLWnW+8aikaeu9XDgo2KqQ4oLCP6FjfSUpH/UU445FAkgdvKsfTHX
+	 agHS+zvUiw/znMcELG2gYhug/M1YjbqF/7gbW0Bs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732586AbgB0N7M (ORCPT
+        id S1732538AbgB0N6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:59:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60476 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:58:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732577AbgB0N7J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:59:09 -0500
+        id S1732026AbgB0N6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:58:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 461CC24656;
-        Thu, 27 Feb 2020 13:59:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68A182084E;
+        Thu, 27 Feb 2020 13:58:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811948;
-        bh=EAL46EwKLVJaEP2JtTsJWL3kefGYXgAvQpHvNA/cNMI=;
+        s=default; t=1582811930;
+        bh=0yK99yL8zKpPcOVGxgHL+LeT9F8hHMH66h3KyuMSC2o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AxlNavhQmuJKQctN1xZ0WDt8se7uq9lwSjgOj5nI/CXh4Fvi2Wmgn+jUQntZ4Y6sR
-         +Kvej9C9xwlhxP9QunlNLgt/xJjjLkitwwiFVMm8vgJ/HJQ8dj0EihowDELBEhp7uT
-         7TqglYoWA74mAsD4N70JJJy5xXfLzupi5C5Ib9ko=
+        b=eGladwvypEXq5SymvP8oRfJVz9b/szS4qGWFshGAn+IleKnt74f1ILKnzjYaowM/r
+         855r7a+3INJMX1Co2eq9smQa3ZNdqTSX5hu9a+/tfCOkBp/lO0xQUUXdo8GDwxazSI
+         M1td8qLqg07KNlD+6USUU2cejiTFwqlzErOSbzVM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 164/237] virtio_balloon: prevent pfn array overflow
-Date:   Thu, 27 Feb 2020 14:36:18 +0100
-Message-Id: <20200227132308.555281547@linuxfoundation.org>
+Subject: [PATCH 4.14 119/237] drm/vmwgfx: prevent memory leak in vmw_cmdbuf_res_add
+Date:   Thu, 27 Feb 2020 14:35:33 +0100
+Message-Id: <20200227132305.578646199@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -60,34 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael S. Tsirkin <mst@redhat.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 6e9826e77249355c09db6ba41cd3f84e89f4b614 ]
+[ Upstream commit 40efb09a7f53125719e49864da008495e39aaa1e ]
 
-Make sure, at build time, that pfn array is big enough to hold a single
-page.  It happens to be true since the PAGE_SHIFT value at the moment is
-20, which is 1M - exactly 256 4K balloon pages.
+In vmw_cmdbuf_res_add if drm_ht_insert_item fails the allocated memory
+for cres should be released.
 
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
+Fixes: 18e4a4669c50 ("drm/vmwgfx: Fix compat shader namespace")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Reviewed-by: Thomas Hellstrom <thellstrom@vmware.com>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/virtio/virtio_balloon.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/vmwgfx/vmwgfx_cmdbuf_res.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-index 499531608fa26..71970773aad13 100644
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -132,6 +132,8 @@ static void set_page_pfns(struct virtio_balloon *vb,
- {
- 	unsigned int i;
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_cmdbuf_res.c b/drivers/gpu/drm/vmwgfx/vmwgfx_cmdbuf_res.c
+index 36c7b6c839c0d..738ad2fc79a25 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_cmdbuf_res.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_cmdbuf_res.c
+@@ -210,8 +210,10 @@ int vmw_cmdbuf_res_add(struct vmw_cmdbuf_res_manager *man,
  
-+	BUILD_BUG_ON(VIRTIO_BALLOON_PAGES_PER_PAGE > VIRTIO_BALLOON_ARRAY_PFNS_MAX);
-+
- 	/*
- 	 * Set balloon pfns pointing at this page.
- 	 * Note that the first pfn points at start of the page.
+ 	cres->hash.key = user_key | (res_type << 24);
+ 	ret = drm_ht_insert_item(&man->resources, &cres->hash);
+-	if (unlikely(ret != 0))
++	if (unlikely(ret != 0)) {
++		kfree(cres);
+ 		goto out_invalid_key;
++	}
+ 
+ 	cres->state = VMW_CMDBUF_RES_ADD;
+ 	cres->res = vmw_resource_reference(res);
 -- 
 2.20.1
 
