@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0309EC52D30
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4138C52D2C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC3B521D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9852021D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812091;
-	bh=85ksYen93kYh5gsGA7RMKMbAp/e0XnVYQSR6Nw4DHvI=;
+	s=default; t=1582812142;
+	bh=26byM/6/j3s9hAaGF69RZX3n3JrlqHW/MM5O10D9x0A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xGkiX3T9jG0jEvmV3PoxuSarBGAXLcOuwwVvNhHDaQ+qC6D5RSPF1KiyDPd13Oyo8
-	 AaH3qMu40pElOVxLopXGJSlIe9iQkvzbEnyZNvl9dpft7sDptIGi8k3vD2Z/hIpxNl
-	 zA5je5CE0KH84QVa8zFuGENXeqbel4AfaxixkNKQ=
+	b=taWsvbUyk4lvhuejKTxTbSxPRZrnoKbS6f7seOQXgKgamDYRdi0G3OkduBnCsndGY
+	 z27tN+aZ+mE1Wj+9HNdaGsnsf5i9uvlfG1QwO06W7v0NKeRN/PvSfixtvTbZsuqoCL
+	 qwQ0h2DSmgDydfGfFF+kzG5YuO8TYTcapomuV1D8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732938AbgB0OBa (ORCPT
+        id S1733103AbgB0OCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:01:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35504 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:02:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732912AbgB0OB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:01:28 -0500
+        id S1733021AbgB0OCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:02:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 896C520578;
-        Thu, 27 Feb 2020 14:01:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19D6520578;
+        Thu, 27 Feb 2020 14:02:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812088;
-        bh=85ksYen93kYh5gsGA7RMKMbAp/e0XnVYQSR6Nw4DHvI=;
+        s=default; t=1582812138;
+        bh=26byM/6/j3s9hAaGF69RZX3n3JrlqHW/MM5O10D9x0A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wMBVpsDyN6KSLNlOUrXGvorEKA61/JKFzdQ6yySaheeoN9iUNtO9D+4hnMpuqFDtz
-         rSfQPwxHShvkn4OlEu/dpmA6JkYM41tqoRcoZRb8O10PFxnKf8NJ2LeRh6hBRG0mbl
-         q0/ZLh8XsyDw+iifQN++PS/uvDe66XIPtYvg/B7s=
+        b=FOIFqrwZxCwcARYOuz6yEPKCX9uDg7Sj8TQeD1hCQ3rmn3H7slKgGuAY591pf+HOd
+         O1YfJc5NRAeUvjfWKeQQZ/x5sH7tJ7gpT45p1BFe7QUcSk8F9f/46qG4cHSxqNF0Zq
+         ceETymtUN+ehDvpdlgKqpkCrrANktElebllgU614=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Upton <oupton@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 217/237] KVM: nVMX: Check IO instruction VM-exit conditions
-Date:   Thu, 27 Feb 2020 14:37:11 +0100
-Message-Id: <20200227132312.136414700@linuxfoundation.org>
+        stable@vger.kernel.org, Gavin Shan <gshan@redhat.com>,
+        Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 198/237] mm/vmscan.c: dont round up scan size for online memory cgroup
+Date:   Thu, 27 Feb 2020 14:36:52 +0100
+Message-Id: <20200227132310.862038498@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -59,110 +61,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Upton <oupton@google.com>
+From: Gavin Shan <gshan@redhat.com>
 
-commit 35a571346a94fb93b5b3b6a599675ef3384bc75c upstream.
+commit 76073c646f5f4999d763f471df9e38a5a912d70d upstream.
 
-Consult the 'unconditional IO exiting' and 'use IO bitmaps' VM-execution
-controls when checking instruction interception. If the 'use IO bitmaps'
-VM-execution control is 1, check the instruction access against the IO
-bitmaps to determine if the instruction causes a VM-exit.
+Commit 68600f623d69 ("mm: don't miss the last page because of round-off
+error") makes the scan size round up to @denominator regardless of the
+memory cgroup's state, online or offline.  This affects the overall
+reclaiming behavior: the corresponding LRU list is eligible for
+reclaiming only when its size logically right shifted by @sc->priority
+is bigger than zero in the former formula.
 
-Signed-off-by: Oliver Upton <oupton@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+For example, the inactive anonymous LRU list should have at least 0x4000
+pages to be eligible for reclaiming when we have 60/12 for
+swappiness/priority and without taking scan/rotation ratio into account.
+
+After the roundup is applied, the inactive anonymous LRU list becomes
+eligible for reclaiming when its size is bigger than or equal to 0x1000
+in the same condition.
+
+    (0x4000 >> 12) * 60 / (60 + 140 + 1) = 1
+    ((0x1000 >> 12) * 60) + 200) / (60 + 140 + 1) = 1
+
+aarch64 has 512MB huge page size when the base page size is 64KB.  The
+memory cgroup that has a huge page is always eligible for reclaiming in
+that case.
+
+The reclaiming is likely to stop after the huge page is reclaimed,
+meaing the further iteration on @sc->priority and the silbing and child
+memory cgroups will be skipped.  The overall behaviour has been changed.
+This fixes the issue by applying the roundup to offlined memory cgroups
+only, to give more preference to reclaim memory from offlined memory
+cgroup.  It sounds reasonable as those memory is unlikedly to be used by
+anyone.
+
+The issue was found by starting up 8 VMs on a Ampere Mustang machine,
+which has 8 CPUs and 16 GB memory.  Each VM is given with 2 vCPUs and
+2GB memory.  It took 264 seconds for all VMs to be completely up and
+784MB swap is consumed after that.  With this patch applied, it took 236
+seconds and 60MB swap to do same thing.  So there is 10% performance
+improvement for my case.  Note that KSM is disable while THP is enabled
+in the testing.
+
+         total     used    free   shared  buff/cache   available
+   Mem:  16196    10065    2049       16        4081        3749
+   Swap:  8175      784    7391
+         total     used    free   shared  buff/cache   available
+   Mem:  16196    11324    3656       24        1215        2936
+   Swap:  8175       60    8115
+
+Link: http://lkml.kernel.org/r/20200211024514.8730-1-gshan@redhat.com
+Fixes: 68600f623d69 ("mm: don't miss the last page because of round-off error")
+Signed-off-by: Gavin Shan <gshan@redhat.com>
+Acked-by: Roman Gushchin <guro@fb.com>
+Cc: <stable@vger.kernel.org>	[4.20+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx.c |   59 ++++++++++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 52 insertions(+), 7 deletions(-)
+ mm/vmscan.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -4997,7 +4997,7 @@ static bool nested_vmx_exit_handled_io(s
- 				       struct vmcs12 *vmcs12)
- {
- 	unsigned long exit_qualification;
--	unsigned int port;
-+	unsigned short port;
- 	int size;
- 
- 	if (!nested_cpu_has(vmcs12, CPU_BASED_USE_IO_BITMAPS))
-@@ -12335,6 +12335,39 @@ static void nested_vmx_entry_failure(str
- 		to_vmx(vcpu)->nested.sync_shadow_vmcs = true;
- }
- 
-+static int vmx_check_intercept_io(struct kvm_vcpu *vcpu,
-+				  struct x86_instruction_info *info)
-+{
-+	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
-+	unsigned short port;
-+	bool intercept;
-+	int size;
-+
-+	if (info->intercept == x86_intercept_in ||
-+	    info->intercept == x86_intercept_ins) {
-+		port = info->src_val;
-+		size = info->dst_bytes;
-+	} else {
-+		port = info->dst_val;
-+		size = info->src_bytes;
-+	}
-+
-+	/*
-+	 * If the 'use IO bitmaps' VM-execution control is 0, IO instruction
-+	 * VM-exits depend on the 'unconditional IO exiting' VM-execution
-+	 * control.
-+	 *
-+	 * Otherwise, IO instruction VM-exits are controlled by the IO bitmaps.
-+	 */
-+	if (!nested_cpu_has(vmcs12, CPU_BASED_USE_IO_BITMAPS))
-+		intercept = nested_cpu_has(vmcs12,
-+					   CPU_BASED_UNCOND_IO_EXITING);
-+	else
-+		intercept = nested_vmx_check_io_bitmaps(vcpu, port, size);
-+
-+	return intercept ? X86EMUL_UNHANDLEABLE : X86EMUL_CONTINUE;
-+}
-+
- static int vmx_check_intercept(struct kvm_vcpu *vcpu,
- 			       struct x86_instruction_info *info,
- 			       enum x86_intercept_stage stage)
-@@ -12342,18 +12375,30 @@ static int vmx_check_intercept(struct kv
- 	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
- 	struct x86_emulate_ctxt *ctxt = &vcpu->arch.emulate_ctxt;
- 
-+	switch (info->intercept) {
- 	/*
- 	 * RDPID causes #UD if disabled through secondary execution controls.
- 	 * Because it is marked as EmulateOnUD, we need to intercept it here.
- 	 */
--	if (info->intercept == x86_intercept_rdtscp &&
--	    !nested_cpu_has2(vmcs12, SECONDARY_EXEC_RDTSCP)) {
--		ctxt->exception.vector = UD_VECTOR;
--		ctxt->exception.error_code_valid = false;
--		return X86EMUL_PROPAGATE_FAULT;
--	}
-+	case x86_intercept_rdtscp:
-+		if (!nested_cpu_has2(vmcs12, SECONDARY_EXEC_RDTSCP)) {
-+			ctxt->exception.vector = UD_VECTOR;
-+			ctxt->exception.error_code_valid = false;
-+			return X86EMUL_PROPAGATE_FAULT;
-+		}
-+		break;
-+
-+	case x86_intercept_in:
-+	case x86_intercept_ins:
-+	case x86_intercept_out:
-+	case x86_intercept_outs:
-+		return vmx_check_intercept_io(vcpu, info);
- 
- 	/* TODO: check more intercepts... */
-+	default:
-+		break;
-+	}
-+
- 	return X86EMUL_UNHANDLEABLE;
- }
- 
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -2369,10 +2369,13 @@ out:
+ 			/*
+ 			 * Scan types proportional to swappiness and
+ 			 * their relative recent reclaim efficiency.
+-			 * Make sure we don't miss the last page
+-			 * because of a round-off error.
++			 * Make sure we don't miss the last page on
++			 * the offlined memory cgroups because of a
++			 * round-off error.
+ 			 */
+-			scan = DIV64_U64_ROUND_UP(scan * fraction[file],
++			scan = mem_cgroup_online(memcg) ?
++			       div64_u64(scan * fraction[file], denominator) :
++			       DIV64_U64_ROUND_UP(scan * fraction[file],
+ 						  denominator);
+ 			break;
+ 		case SCAN_FILE:
 
 
