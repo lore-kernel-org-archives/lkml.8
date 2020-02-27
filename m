@@ -7,29 +7,28 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D233C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23719C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3998D2468E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3CE42469D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:31:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="cTr4OZYR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="OxZrtlxW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730420AbgB0Ta5 (ORCPT
+        id S1730456AbgB0TbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 14:30:57 -0500
-Received: from gateway20.websitewelcome.com ([192.185.68.24]:45814 "EHLO
+        Thu, 27 Feb 2020 14:31:19 -0500
+Received: from gateway20.websitewelcome.com ([192.185.68.24]:32456 "EHLO
         gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727268AbgB0Ta4 (ORCPT
+        by vger.kernel.org with ESMTP id S1729790AbgB0TbT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 14:30:56 -0500
-X-Greylist: delayed 1401 seconds by postgrey-1.27 at vger.kernel.org; Thu, 27 Feb 2020 14:30:56 EST
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 82E3C400D3184
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 12:16:32 -0600 (CST)
+        Thu, 27 Feb 2020 14:31:19 -0500
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 83D07400D4328
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 11:53:11 -0600 (CST)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id 7Os3jadkWSl8q7Os3jEqz3; Thu, 27 Feb 2020 13:30:55 -0600
+        id 7OVSjz6eNvBMd7OVSjugUD; Thu, 27 Feb 2020 13:07:34 -0600
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
@@ -37,24 +36,23 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=4bJAusBDDTCuVM+AvNG1uuSS+0lZFJhJbDhIue2pKek=; b=cTr4OZYRBo4vPeRfkic1DpqvI3
-        LQmKYe7NW8xeCHniNUZKBpPm/q7/zfBOfJgz0FSN/5R1NbYTs3wuqsofOAlXHB8symnav8Av+IlEZ
-        kqNaqik3kg7IZ0EiFtidx8vJG29FZY7T9yb2rxNifDpbgtL8yYxxNse5AueYbApifyACpxzqzv+lt
-        BmYOA9TFHaD+iu15VJ/RAj6apSRQ7ujB3chkB5EpqsAQxQOxwePEMmMYkGVjFlSRfz4U8s/is+1tv
-        Aclz98KWL4/h33dyar/TlpUUU0fhqcfp+SlZQbylmFsD9M667Wk/jD4uZWBdS1kIk3Ie7aCMWqzyy
-        UPEAEnWQ==;
-Received: from [201.162.169.69] (port=8108 helo=[192.168.43.132])
+        bh=uGxi4PbE3pDVOAAWxcjk27P48lGF3WiRPeIGGQXPXWA=; b=OxZrtlxWjd5hXwFXEhlhCDWKS8
+        TYvqnTR7pJwiPjoi5ZwUQqkFg9RmPU40TL2M4/dNMZEjt/puN9zI/6xash9MFbCvfe8L0TLNYCFI/
+        PoQiILT4bmwCgg3Qjm7n8m8GPaoBBVImjYr5Ezaz/mdw1JAUVWLNIgDQXoIUOy5C3Ug2a/0Cd3677
+        Xj+C5f0bl6Kbabik3kbI+yVBkCTEQvOfazAgOwsdAvsgD8qvsw1GMEqFf6P/w9d7wIQxTKx2UqH0Z
+        roaCi+p8wEE1XYoESN0lmaIthGyLi6bzngt1d2VciqRGwGRx16ua6szqt/Ic+gg9dssYGfOzcaXDw
+        fKmjYCZw==;
+Received: from [201.162.168.186] (port=14950 helo=[192.168.43.132])
         by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1j7Os2-0001yo-Us; Thu, 27 Feb 2020 13:30:55 -0600
-Subject: Re: [PATCH] amba: tegra-ahb: Replace zero-length array with
+        id 1j7OVR-004EOD-BX; Thu, 27 Feb 2020 13:07:34 -0600
+Subject: Re: [PATCH] rpmsg: virtio_rpmsg_bus: Replace zero-length array with
  flexible-array member
-To:     Russell King <linux@armlinux.org.uk>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200211210213.GA28043@embeddedor>
+To:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200213002239.GA30190@embeddedor.com>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 Autocrypt: addr=gustavo@embeddedor.com; keydata=
  xsFNBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
@@ -99,12 +97,12 @@ Autocrypt: addr=gustavo@embeddedor.com; keydata=
  YJWH93PN+ZUh6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9eh
  GZEO3+gCDFmKrjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrS
  VtSixD1uOgytAP7RWS474w==
-Message-ID: <292f9b65-c2b5-c719-ba79-c0db4a11f482@embeddedor.com>
-Date:   Thu, 27 Feb 2020 13:33:46 -0600
+Message-ID: <6d7bd66d-ebea-dc4a-03ff-5da9d313a75d@embeddedor.com>
+Date:   Thu, 27 Feb 2020 13:10:24 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200211210213.GA28043@embeddedor>
+In-Reply-To: <20200213002239.GA30190@embeddedor.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -114,15 +112,15 @@ X-AntiAbuse: Original Domain - vger.kernel.org
 X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
 X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
-X-Source-IP: 201.162.169.69
+X-Source-IP: 201.162.168.186
 X-Source-L: No
-X-Exim-ID: 1j7Os2-0001yo-Us
+X-Exim-ID: 1j7OVR-004EOD-BX
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: ([192.168.43.132]) [201.162.169.69]:8108
+X-Source-Sender: ([192.168.43.132]) [201.162.168.186]:14950
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 17
+X-Email-Count: 12
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -138,7 +136,7 @@ Thanks
 --
 Gustavo
 
-On 2/11/20 15:02, Gustavo A. R. Silva wrote:
+On 2/12/20 18:22, Gustavo A. R. Silva wrote:
 > The current codebase makes use of the zero-length array language
 > extension to the C90 standard, but the preferred mechanism to declare
 > variable-length types such as these ones is a flexible array member[1][2],
@@ -152,7 +150,16 @@ On 2/11/20 15:02, Gustavo A. R. Silva wrote:
 > By making use of the mechanism above, we will get a compiler warning
 > in case the flexible array does not occur last in the structure, which
 > will help us prevent some kind of undefined behavior bugs from being
-> inadvertenly introduced[3] to the codebase from now on.
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
 > 
 > [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
 > [2] https://github.com/KSPP/linux/issues/21
@@ -160,20 +167,20 @@ On 2/11/20 15:02, Gustavo A. R. Silva wrote:
 > 
 > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 > ---
->  drivers/amba/tegra-ahb.c | 2 +-
+>  drivers/rpmsg/virtio_rpmsg_bus.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/amba/tegra-ahb.c b/drivers/amba/tegra-ahb.c
-> index b0b688c481e8..e9e5c7bb580c 100644
-> --- a/drivers/amba/tegra-ahb.c
-> +++ b/drivers/amba/tegra-ahb.c
-> @@ -129,7 +129,7 @@ static const u32 tegra_ahb_gizmo[] = {
->  struct tegra_ahb {
->  	void __iomem	*regs;
->  	struct device	*dev;
-> -	u32		ctx[0];
-> +	u32		ctx[];
->  };
+> diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
+> index 376ebbf880d6..07d4f3374098 100644
+> --- a/drivers/rpmsg/virtio_rpmsg_bus.c
+> +++ b/drivers/rpmsg/virtio_rpmsg_bus.c
+> @@ -89,7 +89,7 @@ struct rpmsg_hdr {
+>  	u32 reserved;
+>  	u16 len;
+>  	u16 flags;
+> -	u8 data[0];
+> +	u8 data[];
+>  } __packed;
 >  
->  static inline u32 gizmo_readl(struct tegra_ahb *ahb, u32 offset)
+>  /**
 > 
