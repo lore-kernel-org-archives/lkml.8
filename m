@@ -2,52 +2,53 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DF0C35677
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B514DC11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1750524656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C25024656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:44:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814695;
-	bh=NQhSwyYXRqDIefeJAhsB5HufY4DubhhD3WurtJ5yuNs=;
+	s=default; t=1582814699;
+	bh=0ubQoE6C0WAvRll5HGGYLPPMP8RBxLY9TLlrh3Qox2s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m3oZexaQCjJtnUQd94VKcesnztpEE66dnDgNkqLLM9Zq+DYhi3CTqyrdmkt3oZ+ZI
-	 IKvYxQbigO82y0oGFFvvZr85ZLjakClU8ScYIU8vpN7ixvrk3tha9POZCnJnZzoZ1N
-	 ehS3rHx91dzJb1P2IHgOarsAd0kg3fLt54/90OZ8=
+	b=KjFy663puZ8mAikAbvrfAyoZdSvTMlzDX1zMRMOUjprLRsNXQVx4nLw6R0hpT1KCB
+	 mSfFwii8ICd2cGhXon0k2iHzO1LEhVu0NoC6ElLQNeqd4ujfHRG2IcYQFuXfJd6MyS
+	 T6c3Rtv+p6yD3KFvRmplQIyyanGE7Iz5Hzz+ENhc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731414AbgB0Oox (ORCPT
+        id S1730666AbgB0NrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:44:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43760 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:47:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730226AbgB0NrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:47:20 -0500
+        id S1729806AbgB0NrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:47:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9003020578;
-        Thu, 27 Feb 2020 13:47:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E26220578;
+        Thu, 27 Feb 2020 13:47:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811240;
-        bh=NQhSwyYXRqDIefeJAhsB5HufY4DubhhD3WurtJ5yuNs=;
+        s=default; t=1582811235;
+        bh=0ubQoE6C0WAvRll5HGGYLPPMP8RBxLY9TLlrh3Qox2s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1iNc9/xv6cPJPX2uLGpw4OqaYyw69LMMn0xiIubpbf+R3+Bm2kTDAJMxz0bFLhpYM
-         NZQqeS4MdQCzj1X61q3f+xAXFS7gvydrfF1qGoWf/XX8kAbqCgmSmJNeoUUFtZ/izq
-         fuMD8MsJtPEAhyal1XA6wLf/GpJvVXt6U72S5lvg=
+        b=P2OGBa9CQGqyv+xstO7X7m20UJO2eCBARkKqIoS0xZJs2GfiEDvugCzMgIzkTn9Cy
+         AnhNFqvf7bUgPU8W09Q+j/6n+i1Dg/5TAX7F8U2+b1L11a7faBuNFOOVVLZ5coCvR1
+         YMwv7rPJMWTT2DEuUWTX5vGYgChFiXbi0Fsx9kYY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        stable@vger.kernel.org, Phong Tran <tranmanphong@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 057/165] orinoco: avoid assertion in case of NULL pointer
-Date:   Thu, 27 Feb 2020 14:35:31 +0100
-Message-Id: <20200227132239.764198258@linuxfoundation.org>
+Subject: [PATCH 4.9 055/165] iwlegacy: Fix -Wcast-function-type
+Date:   Thu, 27 Feb 2020 14:35:29 +0100
+Message-Id: <20200227132239.408514722@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -60,35 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Phong Tran <tranmanphong@gmail.com>
 
-[ Upstream commit c705f9fc6a1736dcf6ec01f8206707c108dca824 ]
+[ Upstream commit da5e57e8a6a3e69dac2937ba63fa86355628fbb2 ]
 
-In ezusb_init, if upriv is NULL, the code crashes. However, the caller
-in ezusb_probe can handle the error and print the failure message.
-The patch replaces the BUG_ON call to error return.
+correct usage prototype of callback in tasklet_init().
+Report by https://github.com/KSPP/linux/issues/20
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intersil/orinoco/orinoco_usb.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlegacy/3945-mac.c | 5 +++--
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c | 5 +++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/intersil/orinoco/orinoco_usb.c b/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
-index 8244d82629511..4e91c74fcfad9 100644
---- a/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
-+++ b/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
-@@ -1351,7 +1351,8 @@ static int ezusb_init(struct hermes *hw)
- 	int retval;
+diff --git a/drivers/net/wireless/intel/iwlegacy/3945-mac.c b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
+index 466912eb2d874..d853ccbf74cb2 100644
+--- a/drivers/net/wireless/intel/iwlegacy/3945-mac.c
++++ b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
+@@ -1399,8 +1399,9 @@ il3945_dump_nic_error_log(struct il_priv *il)
+ }
  
- 	BUG_ON(in_interrupt());
--	BUG_ON(!upriv);
-+	if (!upriv)
-+		return -EINVAL;
+ static void
+-il3945_irq_tasklet(struct il_priv *il)
++il3945_irq_tasklet(unsigned long data)
+ {
++	struct il_priv *il = (struct il_priv *)data;
+ 	u32 inta, handled = 0;
+ 	u32 inta_fh;
+ 	unsigned long flags;
+@@ -3432,7 +3433,7 @@ il3945_setup_deferred_work(struct il_priv *il)
+ 	setup_timer(&il->watchdog, il_bg_watchdog, (unsigned long)il);
  
- 	upriv->reply_count = 0;
- 	/* Write the MAGIC number on the simulated registers to keep
+ 	tasklet_init(&il->irq_tasklet,
+-		     (void (*)(unsigned long))il3945_irq_tasklet,
++		     il3945_irq_tasklet,
+ 		     (unsigned long)il);
+ }
+ 
+diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+index a91d170a614b6..6c2dcd2367136 100644
+--- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
++++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+@@ -4361,8 +4361,9 @@ il4965_synchronize_irq(struct il_priv *il)
+ }
+ 
+ static void
+-il4965_irq_tasklet(struct il_priv *il)
++il4965_irq_tasklet(unsigned long data)
+ {
++	struct il_priv *il = (struct il_priv *)data;
+ 	u32 inta, handled = 0;
+ 	u32 inta_fh;
+ 	unsigned long flags;
+@@ -6260,7 +6261,7 @@ il4965_setup_deferred_work(struct il_priv *il)
+ 	setup_timer(&il->watchdog, il_bg_watchdog, (unsigned long)il);
+ 
+ 	tasklet_init(&il->irq_tasklet,
+-		     (void (*)(unsigned long))il4965_irq_tasklet,
++		     il4965_irq_tasklet,
+ 		     (unsigned long)il);
+ }
+ 
 -- 
 2.20.1
 
