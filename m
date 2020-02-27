@@ -2,120 +2,91 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3974EC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E93FEC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FE9A2469C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:29:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mrN83AWc"
+	by mail.kernel.org (Postfix) with ESMTP id C6AFB2469C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:30:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729891AbgB0X3r (ORCPT
+        id S1730022AbgB0Xay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 18:29:47 -0500
-Received: from ozlabs.org ([203.11.71.1]:48847 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729391AbgB0X3r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 18:29:47 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48T85h46BWz9sPk;
-        Fri, 28 Feb 2020 10:29:44 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1582846185;
-        bh=AimF7zFnDLGiRjkIKIYbj4qkmOdhvGUC2m3nzv39Agk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=mrN83AWcJ6/btlCRyg5pW8NkyQhOA/1Ts8Pf/WhimzGfcGLOi/vg3PO9gZgU0WvKE
-         LJcGxzRvNM8aCmAxWkMgWLyKD7pIqr8qwnQ0fIP+caPEg2XDd2m9hgJ66OpWacYYb8
-         2LvS9ZJU2oDDz93KP6GU7bv5T9XIGi/JKpwCuNt2j0Mec1yprm0ClAQz42hpdoVtNc
-         3mTW02Wb6NoBeTY5evNOjET3Crr7+PLbEmIhwmydRfs6f3eNYVEgqR607aftAlQhmv
-         AYBSIjf05qy/qylLpFrX5mfQtN/oaALjwMy5t4QbdYx4FGpOaLWvzaCkhbDbbemsuD
-         mDGgStFbndM4w==
-Date:   Fri, 28 Feb 2020 10:29:42 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>
-Subject: linux-next: manual merge of the net-next tree with the net tree
-Message-ID: <20200228102942.54a6fb76@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/C.hgIVj1Jct2d93PVo6HLu3";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Thu, 27 Feb 2020 18:30:54 -0500
+Received: from kernel.crashing.org ([76.164.61.194]:37124 "EHLO
+        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729838AbgB0Xay (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 18:30:54 -0500
+Received: from localhost (gate.crashing.org [63.228.1.57])
+        (authenticated bits=0)
+        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 01RNU3sQ030322
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Thu, 27 Feb 2020 17:30:06 -0600
+Message-ID: <3150424b9e9f5856c747a0fbf44647919f49209d.camel@kernel.crashing.org>
+Subject: Re: [PATCH v5 7/7] dt-bindings: usb: add documentation for aspeed
+ usb-vhub
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     rentao.bupt@gmail.com, Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
+        taoren@fb.com
+Date:   Fri, 28 Feb 2020 10:30:02 +1100
+In-Reply-To: <20200227230507.8682-8-rentao.bupt@gmail.com>
+References: <20200227230507.8682-1-rentao.bupt@gmail.com>
+         <20200227230507.8682-8-rentao.bupt@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/C.hgIVj1Jct2d93PVo6HLu3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, 2020-02-27 at 15:05 -0800, rentao.bupt@gmail.com wrote:
 
-Hi all,
+ .../...
 
-Today's linux-next merge of the net-next tree got a conflict in:
+You haven't fixed the problem spotted by Rob which is that the example
+is now out of sync, it's missing the required properties.
 
-  net/smc/smc_core.h
+Also long run I think best is going to have a child node per downstream
+port, so we create a matching linux struct device. This will make it
+easier to deal with the other device-controller in the ast2600 which is
+basically one of these without a vhub above it.
 
-between commit:
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - interrupts
+> +  - aspeed,vhub-downstream-ports
+> +  - aspeed,vhub-generic-endpoints
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/aspeed-clock.h>
+> +    vhub: usb-vhub@1e6a0000 {
+> +            compatible = "aspeed,ast2500-usb-vhub";
+> +            reg = <0x1e6a0000 0x300>;
+> +            interrupts = <5>;
+> +            clocks = <&syscon ASPEED_CLK_GATE_USBPORT1CLK>;
+> +            pinctrl-names = "default";
+> +            pinctrl-0 = <&pinctrl_usb2ad_default>;
+> +    };
+> -- 
 
-  51e3dfa8906a ("net/smc: fix cleanup for linkgroup setup failures")
-
-from the net tree and commits:
-
-  ba9520604209 ("net/smc: remove unused parameter of smc_lgr_terminate()")
-  5f78fe968d76 ("net/smc: simplify normal link termination")
-
-from the net-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc net/smc/smc_core.h
-index 234ae25f0025,5695c7bc639e..000000000000
---- a/net/smc/smc_core.h
-+++ b/net/smc/smc_core.h
-@@@ -296,8 -290,7 +290,8 @@@ struct smc_clc_msg_accept_confirm
-  struct smc_clc_msg_local;
- =20
-  void smc_lgr_forget(struct smc_link_group *lgr);
- +void smc_lgr_cleanup_early(struct smc_connection *conn);
-- void smc_lgr_terminate(struct smc_link_group *lgr, bool soft);
-+ void smc_lgr_terminate_sched(struct smc_link_group *lgr);
-  void smc_port_terminate(struct smc_ib_device *smcibdev, u8 ibport);
-  void smc_smcd_terminate(struct smcd_dev *dev, u64 peer_gid,
-  			unsigned short vlan);
-
---Sig_/C.hgIVj1Jct2d93PVo6HLu3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5YUOYACgkQAVBC80lX
-0Gy+7QgAh4GZUYZETO9wUtc7CK12z39t2M8I09br8zGCJrR2eo4d2t+u3Dk3hvzK
-EEedxJRjP779+WliOim3TStCh6yIn68CvLfhuNF131QnAsXdRAPJxgPbJ6l6qf2b
-bs46pY4M10F7Ba8ekRO5J698uxM35cvC2qMn3TUplgX8XbS0CR+fWsVgjVF+iK9X
-O9JafPF6l/vvF0YuJp5SSF67ICsPQovJkYe42Fe6YHLZ8nb3oshV29b2TTC+xh7W
-Dy5T2WBtvgdXmzBn4Ix4fWonav7pOG+pWgGAR9JXk1vOCQRdyW+P8NIfOA0ZDMwT
-4/iOD+ZiC03a3mCoohvwKoNtbUQF2g==
-=QsW9
------END PGP SIGNATURE-----
-
---Sig_/C.hgIVj1Jct2d93PVo6HLu3--
