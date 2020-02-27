@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B00A8C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A3CC4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CCDF24683
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5798124688
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:06:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AiRnlgiy"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="QQv44OYZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbgB0KF5 (ORCPT
+        id S1728779AbgB0KGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 05:05:57 -0500
-Received: from mail-db8eur05on2069.outbound.protection.outlook.com ([40.107.20.69]:48552
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        Thu, 27 Feb 2020 05:06:01 -0500
+Received: from mail-am6eur05on2084.outbound.protection.outlook.com ([40.107.22.84]:32321
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728630AbgB0KF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 05:05:57 -0500
+        id S1728630AbgB0KGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 05:06:00 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dyMcx0wpMI0LXTSsQHgn1lnQcY3wpH91vvWr9JFLkLfQklc6zLyp6b7ko9wknh7GTPaVbQIILANqVUiAMR+/yU1Ph5jPCT0P1txDoDZR8naw6V2eGtSJpJZxQjSreneA5lCmb1Zy8e+jNw92xFSOiYL9rCynNf/EXNm6yPDRtvyxn7dAFNnDXLB6iehbu5jL3RLkPMbqBKbsy59C2kzxN3+Ip7hmZISnAWtz81z4pOKOEDyeXq50n8iIjqum+Jp26RhmP+F0xkqHadUJp85qqtBDU26xGw9lHgdu9JvxTlxJ+t5FeOLCP1gnWKtkn58218BNawYwgVug3PEH1jPrIg==
+ b=ciJRW8Us6sUYaAeVtx1zg7ohx6rUnu10YWU2KFxG+y9IhJdLkRgDf+Rjfj25Qs83B0UUXBOg9/Y/MicOqCuE/6vF8KE4b2jjKf2IKJ4Daa95ln0r/z1iO0iQUEEWMLgEgoOA8CopBXgwZEDaYk1QK45kSiCqvcMVQr3ZWoDvJn8XbPpx4IPufvTm3Eq3CBe3uGZyBUCa3KLVPjOU7ykitw6mCOTnonSrVKicnIPY87XS9GsYTdip4uhAbM47XI0hORxkk15sx+uRwwC62YVFrSPe3I/Jjxq77dAKo56QHU3fkS0S5dvNHGrK7BPdvJckg66raQrcVrKzndN1HvMoFw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vp/LTPAvf0JpbewNnY3iEKWLkz04nuBGdl0Sv924GmI=;
- b=jYtVXecQsXzxR5T8WC8NkONalt6AKe4jPfQ7gu/8YAkTLSqNxy3KboaXducA4tlLF2Q4n3ouooklP1+Iot2vn2Cijn3rDvX+4fPqyE0uqRN6fzMoFMOShUbaRMtlzYdiPUz3YBIWeuZSBPRoISiBNOhfhQnlKaIGlSOsyC966ozTUEpnHwaAZXXqmhtuQ8IRdKk9CKnsTxB/Mu7CSfYzAqaRxoEB6/HlAASDgeQov835A8mtukfv3TLQvm9uTrE9EwtHLKKhRt3PD6zo5Nkrd6Fyb1Vwb3PEYoKLnDWwGHcJJ43pisTs2c2ASLcs6InEiSWZNPYNDSfZKqfi3VbiFQ==
+ bh=jLlmxo3F4Gx/ZLPQd1vZdy7uzn9E1hqWbQUmSJHTuto=;
+ b=je0AUJt9LqV/e2JL6lrZxf10H3VWonA46Mmbi3Ph4Ek1CWUD68sUWlmisfJj4+gjs8CrGRBoEkbmeVcksWifddrQ4sV9YJyfb91O0a6hPSOJmdTRQ3x09+j/YzuRlAm4Qzzrj+U6fgKZiBltj/979zhI4zkGhlljqbgN7v9I7TUCAonwzY1JBy7EuTVifPLVDb8oYymJc0CHdZTP/8rwVCCykHYAbXjQLfvGwdQdu+s3qaartmy0PDSaAc2Y+D96xMX2nxDX8RGd1x0ooGendCxKq7axFM/KC9FNIAUlasTOZYcZfZO4GRnd1APh5xDD05I5S4kdIl0GuFCHz4TcGA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vp/LTPAvf0JpbewNnY3iEKWLkz04nuBGdl0Sv924GmI=;
- b=AiRnlgiyOIRGHjbeR4yLnOUIoZZuK5L3RFuWOh6xlrCkEhsUcYdNfz424Rvgby9xlSpTSUDlai2DHXg3k5OVIIPXHkElT13LpB+EMxtGMxpJZM+VJMpGCFFkD3/OPjWCmD8LzjwrqISAczpp8fTjZLspuCYoynYLiyOEuERm5rY=
+ bh=jLlmxo3F4Gx/ZLPQd1vZdy7uzn9E1hqWbQUmSJHTuto=;
+ b=QQv44OYZWOSr3ebdR5+PzTJDK5pLjbLpMmPgyCZbKeiIRO0MgKSfB64WofDzK0qtFVS6RxSj2ryFDbL95qWVrwRKHx+aRZ+OwlWAzv+8z1uOIBp+GK9GbrF1rk/XeALk6Jf8tuzAOyOQs7D4kMS3KO96a1bTdrocNESBnMksetk=
 Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=laurentiu.tudor@nxp.com; 
 Received: from AM6PR04MB5878.eurprd04.prod.outlook.com (20.179.0.89) by
- AM6PR04MB4312.eurprd04.prod.outlook.com (52.135.165.146) with Microsoft SMTP
+ AM6PR04MB4069.eurprd04.prod.outlook.com (52.135.165.159) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.21; Thu, 27 Feb 2020 10:05:53 +0000
+ 15.20.2772.14; Thu, 27 Feb 2020 10:05:57 +0000
 Received: from AM6PR04MB5878.eurprd04.prod.outlook.com
  ([fe80::bcef:1c59:7d27:d0e]) by AM6PR04MB5878.eurprd04.prod.outlook.com
  ([fe80::bcef:1c59:7d27:d0e%6]) with mapi id 15.20.2750.021; Thu, 27 Feb 2020
- 10:05:53 +0000
+ 10:05:57 +0000
 From:   laurentiu.tudor@nxp.com
 To:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
         linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org
@@ -58,43 +58,45 @@ Cc:     robin.murphy@arm.com, lorenzo.pieralisi@arm.com,
         Stuart.Yoder@arm.com, jeremy.linton@arm.com, joro@8bytes.org,
         tglx@linutronix.de, jason@lakedaemon.net,
         Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: [RFC PATCH 1/4] bus: fsl-mc: add custom .dma_configure implementation
-Date:   Thu, 27 Feb 2020 12:05:39 +0200
-Message-Id: <20200227100542.13819-1-laurentiu.tudor@nxp.com>
+Subject: [RFC PATCH 4/4] iommu/of: get rid of fsl-mc specific code
+Date:   Thu, 27 Feb 2020 12:05:42 +0200
+Message-Id: <20200227100542.13819-4-laurentiu.tudor@nxp.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200227100542.13819-1-laurentiu.tudor@nxp.com>
+References: <20200227100542.13819-1-laurentiu.tudor@nxp.com>
 Content-Type: text/plain; charset="us-ascii"
 X-ClientProxiedBy: AM6P192CA0056.EURP192.PROD.OUTLOOK.COM
  (2603:10a6:209:82::33) To AM6PR04MB5878.eurprd04.prod.outlook.com
  (2603:10a6:20b:a2::25)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from fsr-ub1864-101.ea.freescale.net (89.37.124.34) by AM6P192CA0056.EURP192.PROD.OUTLOOK.COM (2603:10a6:209:82::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Thu, 27 Feb 2020 10:05:51 +0000
+Received: from fsr-ub1864-101.ea.freescale.net (89.37.124.34) by AM6P192CA0056.EURP192.PROD.OUTLOOK.COM (2603:10a6:209:82::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Thu, 27 Feb 2020 10:05:55 +0000
 X-Mailer: git-send-email 2.17.1
 X-Originating-IP: [89.37.124.34]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 7a84ab2c-a46d-4f98-a345-08d7bb6ca0fd
-X-MS-TrafficTypeDiagnostic: AM6PR04MB4312:|AM6PR04MB4312:
+X-MS-Office365-Filtering-Correlation-Id: 52036203-d487-44d7-39f1-08d7bb6ca340
+X-MS-TrafficTypeDiagnostic: AM6PR04MB4069:|AM6PR04MB4069:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM6PR04MB43129C1D33F2ED76B03C4D35ECEB0@AM6PR04MB4312.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-Microsoft-Antispam-PRVS: <AM6PR04MB4069D4ACEF8C0AD0C8206CC6ECEB0@AM6PR04MB4069.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
 X-Forefront-PRVS: 03264AEA72
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(346002)(136003)(366004)(376002)(199004)(189003)(66476007)(1076003)(66946007)(478600001)(52116002)(6486002)(5660300002)(66556008)(4326008)(7416002)(6666004)(2906002)(8936002)(6506007)(16526019)(86362001)(26005)(9686003)(36756003)(8676002)(186003)(6512007)(316002)(2616005)(81156014)(81166006)(956004)(142923001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4312;H:AM6PR04MB5878.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(346002)(136003)(366004)(396003)(199004)(189003)(478600001)(26005)(16526019)(186003)(4326008)(2616005)(956004)(6666004)(1076003)(6486002)(52116002)(2906002)(86362001)(6506007)(81166006)(5660300002)(8676002)(66946007)(66556008)(66476007)(81156014)(8936002)(9686003)(6512007)(36756003)(316002)(7416002)(26583001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4069;H:AM6PR04MB5878.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 Received-SPF: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: UsWi/zKS+FmNEMPuo7Io1USJz0q6K3qP+Y3v8mK3rLnaYzMISrq0dFn1D4svCi3QpDPIKVho8olOMSwQo2KWot8KMmx8IMTz4kAIDzitgyvR1mEj8a0lKYCK4Wt4nAFVbHx8J3ddEKkoG+QNbl18d4fJe/vh63ygiJUMZDNh82sqnFqZBKgWs9xUvFhicq0Z2Q4mypv0CoNThaqf2eHMg+i30DZDR/R6huMYRJZ+D+FV2FyEKTfNdGNJIcP2RRqSJd1gbw72GIPQ+bGn3PWW9UmEsDnyU4FDA154a/xpxbr3jNvqP6wJXJwYFm6sSJtjC3XL8yaYrqh1IMyKBnHkSjdlfQW7/Bpci66A52Tk72scT+tHwQ3N1BGHAhyeNVRPjeBJt0wI9o+cajXO4fzckqWDMVVZPIL0Q963ziMAJvAGuzvPdNLuTD6SgVuIIlbK/Y8qgDE400KUMidW6am3q6EZ4AtGUyl0RbhUbKUkQ+WjRl0b1IWl/du4xCoVhpjo
-X-MS-Exchange-AntiSpam-MessageData: PuJHmMkcQMRYDsFrr2TEsmbhMVieRqg4tbJwAogPxTIz6XX/TfRY3xK/AQtaA2FxmxOrnTkkBtbDn+Oy3LxT1Qki0GhUfsx33W4qTCX6wWNlTqYn6WKMzmG9KIlIyIFLrXz0VbP4Bwdt3jWrgbmJVg==
+X-Microsoft-Antispam-Message-Info: E1mBzZx05xD5eiHnLiCkSACV+x45nCV1dT2ITTNJnH5dkoOYef3iAQ34+QaG0Pi2EBazmQGhmtrHjP8J/G1EG8XMbbAl0KSMc/JuuklZV5BgJV1jpz0IgdHFBnwN5HtTFVea58Ocjaf/r/PdSeuMnqK2XV8MXscc+Zb6CHWxRAzMlc7o4T2KbbnHWwNzlUtkW/81ZnzHEKjAaTzvU3nUODt+XoiOJPJY2plGI8FkskZD0X23aZEodVpmbavN1S4gvtySjLGD59FmzuCWsZCmkTBvXYdFSLXLwrO6IIipPEi6KyuJebbGQ6Ian0cXWMK8bFwKDQy2lmXTblQAh987o5pNlX4h2D2rOqF88at9zsRqMjMDhFDK458FX3rprIBkgIL8gSfx6QN70NmhfFkPzQ3hDaIUcm8y/YDjAXF80bfN+Ya9O5t34GRNi+a/MAp13sZqpWVIwczn6mKaYzvSluJq1R0Za/vbcRaWUYgYDZfzUf3DAjUp0e6X0CBu51Aq
+X-MS-Exchange-AntiSpam-MessageData: +quKIS40JU+BkebzJKKIRLC8irz5mKI78HQEN0aUWWIgCb0c/2bHr1QDdRv/2OdTd1l4OeMeY7/fI9wV/NbAQM1WpMhc/wArYhqmWafBVLh1j43523hhiyIJbfO0jz5MPaaWDw4ESu2+dbyJdlRZjw==
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7a84ab2c-a46d-4f98-a345-08d7bb6ca0fd
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2020 10:05:53.0132
+X-MS-Exchange-CrossTenant-Network-Message-Id: 52036203-d487-44d7-39f1-08d7bb6ca340
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2020 10:05:56.7870
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pWpb5+TxiL+gjXLio7s/z96Pk59A9p7TCGNoeFsQ6V/oXOKl/LI9fTDGJaRdzfZeWRjgHTeD5HMyDwILvA4tQw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4312
+X-MS-Exchange-CrossTenant-UserPrincipalName: h9S2emav2JOVvH+ZrtxIDk0aA50T5BxZu+ITgTzYF/c4DwAO1TDHHsS66yVSV1h5E/59ubzzHWcbxfazr28fGw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4069
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -102,63 +104,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-The devices on this bus are not discovered by way of device tree
-but by queries to the firmware. It makes little sense to trick the
-generic of layer into thinking that these devices are of related so
-that we can get our dma configuration. Instead of doing that, add
-our custom dma configuration implementation.
+Changing the way we configure dma for fsl-mc devices allows
+us to get rid of our fsl-mc specific code in the generic
+of iommu code.
 
 Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 ---
- drivers/bus/fsl-mc/fsl-mc-bus.c | 31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+ drivers/iommu/of_iommu.c | 20 --------------------
+ 1 file changed, 20 deletions(-)
 
-diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
-index 36eb25f82c8e..eafaa0e0b906 100644
---- a/drivers/bus/fsl-mc/fsl-mc-bus.c
-+++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
-@@ -132,11 +132,40 @@ static int fsl_mc_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
- static int fsl_mc_dma_configure(struct device *dev)
- {
- 	struct device *dma_dev = dev;
-+	struct iommu_fwspec *fwspec;
-+	const struct iommu_ops *iommu_ops;
-+	struct fsl_mc_device *mc_dev = to_fsl_mc_device(dev);
-+	int ret;
-+	u32 icid;
+diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+index 20738aacac89..332072ada474 100644
+--- a/drivers/iommu/of_iommu.c
++++ b/drivers/iommu/of_iommu.c
+@@ -15,7 +15,6 @@
+ #include <linux/of_pci.h>
+ #include <linux/pci.h>
+ #include <linux/slab.h>
+-#include <linux/fsl/mc.h>
  
- 	while (dev_is_fsl_mc(dma_dev))
- 		dma_dev = dma_dev->parent;
+ #define NO_IOMMU	1
  
--	return of_dma_configure(dev, dma_dev->of_node, 0);
-+	fwspec = dev_iommu_fwspec_get(dma_dev);
-+	if (!fwspec)
-+		return -ENODEV;
-+	iommu_ops = iommu_ops_from_fwnode(fwspec->iommu_fwnode);
-+	if (!iommu_ops)
-+		return -ENODEV;
-+
-+	ret = iommu_fwspec_init(dev, fwspec->iommu_fwnode, iommu_ops);
-+	if (ret)
-+		return ret;
-+
-+	icid = mc_dev->icid;
-+	ret = iommu_fwspec_add_ids(dev, &icid, 1);
-+	if (ret)
-+		return ret;
-+
-+	if (!device_iommu_mapped(dev)) {
-+		ret = iommu_probe_device(dev);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	arch_setup_dma_ops(dev, 0, *dma_dev->dma_mask + 1, iommu_ops, true);
-+
-+	return 0;
+@@ -139,23 +138,6 @@ static int of_pci_iommu_init(struct pci_dev *pdev, u16 alias, void *data)
+ 	return err;
  }
  
- static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
+-static int of_fsl_mc_iommu_init(struct fsl_mc_device *mc_dev,
+-				struct device_node *master_np)
+-{
+-	struct of_phandle_args iommu_spec = { .args_count = 1 };
+-	int err;
+-
+-	err = of_map_rid(master_np, mc_dev->icid, "iommu-map",
+-			 "iommu-map-mask", &iommu_spec.np,
+-			 iommu_spec.args);
+-	if (err)
+-		return err == -ENODEV ? NO_IOMMU : err;
+-
+-	err = of_iommu_xlate(&mc_dev->dev, &iommu_spec);
+-	of_node_put(iommu_spec.np);
+-	return err;
+-}
+-
+ const struct iommu_ops *of_iommu_configure(struct device *dev,
+ 					   struct device_node *master_np)
+ {
+@@ -188,8 +170,6 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
+ 		pci_request_acs();
+ 		err = pci_for_each_dma_alias(to_pci_dev(dev),
+ 					     of_pci_iommu_init, &info);
+-	} else if (dev_is_fsl_mc(dev)) {
+-		err = of_fsl_mc_iommu_init(to_fsl_mc_device(dev), master_np);
+ 	} else {
+ 		struct of_phandle_args iommu_spec;
+ 		int idx = 0;
 -- 
 2.17.1
 
