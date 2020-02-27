@@ -2,52 +2,52 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11065C52D45
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BAC0C52D39
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE4BE20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8A0820801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812096;
-	bh=iXVwXUnzr99/i+tW6fsGq3C1giv6F2HQOb6WXBwSOZM=;
+	s=default; t=1582812070;
+	bh=cTtAzCUPbWALIG3BgIYSOQIv5rypzVCDWUfep5QZfj8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0pQekTJAiWZC+6p1UJEHNj3RA++T43Nw9WUziPILlAL/lnMOYLhLN5aV3aLah3GJb
-	 OOi61er0PDcLHcH/cyTHhQQAJVUyU0juaCAKu+M+UaA6o792H4kxsy9dqrj2KefMPN
-	 sJis/vekpDOlVhwU64AU+B8moUzXJ6lldkzGqRhE=
+	b=RRDLLCeYjZXbcdyoX3L6ew8T5ywQ74e5pHz0fNzDzSmn26TN8clGWJICdAvBVGw/+
+	 EqclRSBwDd70Lhttmz3d5k2uh04EpdZ2Z5EIBUYOVM/SzETx//taEJRzIlgs7k93Wy
+	 zkpqqpi5MvC4Zn/d8FnihPAf17mYqJ+RDxxVgAvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732957AbgB0OBf (ORCPT
+        id S1732654AbgB0OBI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:01:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35640 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:01:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732948AbgB0OBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:01:33 -0500
+        id S1732843AbgB0OBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:01:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C39620801;
-        Thu, 27 Feb 2020 14:01:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B94224697;
+        Thu, 27 Feb 2020 14:01:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812092;
-        bh=iXVwXUnzr99/i+tW6fsGq3C1giv6F2HQOb6WXBwSOZM=;
+        s=default; t=1582812062;
+        bh=cTtAzCUPbWALIG3BgIYSOQIv5rypzVCDWUfep5QZfj8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1k+ZJ1P3BBnqJLETNyzwCXGFFOFI5zJgR4TUF2uTPdRbcdbXkdrOewRbo4ZPe3l4+
-         hzYPG/jvzsPwiO18DhGW31Vy3DJaxpYMxsoR276+4yQElfSBEoPKbQzFv5vRXeCbWd
-         +ElCJs359x9JqCTfO4wmCBUCwQf6i8UGXZWnUQzg=
+        b=p1zQq3ZT2XzHxqPW7sNJXWw5LN9gadIqAkZy+D8YzGjIN7LEX3Dx+DOBZSKnsSXl5
+         BlQIGhS9iKmmp35zldBErfpBHgj3xNqq6nEOowzJh80lRatJVfoBBZYgS59cKDqeJQ
+         MYHqzjE1sLx5QIA8s6Ud+Y9Umq6LOiePnMyWJ7DY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 219/237] KVM: apic: avoid calculating pending eoi from an uninitialized val
-Date:   Thu, 27 Feb 2020 14:37:13 +0100
-Message-Id: <20200227132312.271268878@linuxfoundation.org>
+        stable@vger.kernel.org, Miles Chen <miles.chen@mediatek.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 208/237] lib/stackdepot: Fix outdated comments
+Date:   Thu, 27 Feb 2020 14:37:02 +0100
+Message-Id: <20200227132311.534503146@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -60,38 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+From: Miles Chen <miles.chen@mediatek.com>
 
-commit 23520b2def95205f132e167cf5b25c609975e959 upstream.
+[ Upstream commit ee050dc83bc326ad5ef8ee93bca344819371e7a5 ]
 
-When pv_eoi_get_user() fails, 'val' may remain uninitialized and the return
-value of pv_eoi_get_pending() becomes random. Fix the issue by initializing
-the variable.
+Replace "depot_save_stack" with "stack_depot_save" in code comments because
+depot_save_stack() was replaced in commit c0cfc337264c ("lib/stackdepot:
+Provide functions which operate on plain storage arrays") and removed in
+commit 56d8f079c51a ("lib/stackdepot: Remove obsolete functions")
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190815113246.18478-1-miles.chen@mediatek.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/lapic.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ lib/stackdepot.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -566,9 +566,11 @@ static inline bool pv_eoi_enabled(struct
- static bool pv_eoi_get_pending(struct kvm_vcpu *vcpu)
- {
- 	u8 val;
--	if (pv_eoi_get_user(vcpu, &val) < 0)
-+	if (pv_eoi_get_user(vcpu, &val) < 0) {
- 		apic_debug("Can't read EOI MSR value: 0x%llx\n",
- 			   (unsigned long long)vcpu->arch.pv_eoi.msr_val);
-+		return false;
-+	}
- 	return val & 0x1;
- }
- 
+diff --git a/lib/stackdepot.c b/lib/stackdepot.c
+index f87d138e96724..1724cb0d6283f 100644
+--- a/lib/stackdepot.c
++++ b/lib/stackdepot.c
+@@ -96,7 +96,7 @@ static bool init_stack_slab(void **prealloc)
+ 		stack_slabs[depot_index + 1] = *prealloc;
+ 		/*
+ 		 * This smp_store_release pairs with smp_load_acquire() from
+-		 * |next_slab_inited| above and in depot_save_stack().
++		 * |next_slab_inited| above and in stack_depot_save().
+ 		 */
+ 		smp_store_release(&next_slab_inited, 1);
+ 	}
+@@ -123,7 +123,7 @@ static struct stack_record *depot_alloc_stack(unsigned long *entries, int size,
+ 		depot_offset = 0;
+ 		/*
+ 		 * smp_store_release() here pairs with smp_load_acquire() from
+-		 * |next_slab_inited| in depot_save_stack() and
++		 * |next_slab_inited| in stack_depot_save() and
+ 		 * init_stack_slab().
+ 		 */
+ 		if (depot_index + 1 < STACK_ALLOC_MAX_SLABS)
+-- 
+2.20.1
+
 
 
