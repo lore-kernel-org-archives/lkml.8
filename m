@@ -5,67 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72416C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32270C4BA3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D13524695
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0938924699
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:03:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kfug0CJR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="szuXZwZC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729162AbgB0MDe (ORCPT
+        id S1729171AbgB0MDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 07:03:34 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43809 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728882AbgB0MDd (ORCPT
+        Thu, 27 Feb 2020 07:03:38 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54572 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728882AbgB0MDh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 07:03:33 -0500
-Received: by mail-wr1-f67.google.com with SMTP id c13so2969211wrq.10;
-        Thu, 27 Feb 2020 04:03:31 -0800 (PST)
+        Thu, 27 Feb 2020 07:03:37 -0500
+Received: by mail-wm1-f68.google.com with SMTP id z12so3232456wmi.4
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 04:03:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0cvkhpWMFxiLIeolS0V7/Qo+W3ZK761sN/9Z7LM3iPc=;
-        b=Kfug0CJRpde9XowA2nK2NNaW5lx1rUpjSYu8G4JseK84jXXjX6+qOHMxwTsPAlpXXd
-         1Z4SYEhLlLyqt+Nn6ZaWsF8Kb+ZX5KnEUIbWJzQF9FAQdruIwhXjli6XAnBUcdvu3hK9
-         9EMW5/fZUMYYsUrh8VHokFrfHPL0QDk+t9MNpfp4yBwu2nRwjIT5vdrcXIHhLi898GF3
-         u91OBgKR5jGTktue2OzE7RKHow6L0Y4iv6waxFzz1iDCkWLchsuRsVqHzC9hPmg0u3ay
-         nHyKdEPcSSCB7CbUgIQHIfQo1SJH5RLwr2SKi7FuTqNwGa5ao7H+MstVcCiJk/GtKmVw
-         4Bkg==
+        bh=Tv1b66VHXsMeh5NR7gAtTfq8XGx1hp57Pkw74uVLNqA=;
+        b=szuXZwZCgGMpeKcpOVV11orhHMphZe60+AHcLd7eNz9P3yjVvMzvLiUJiUgshDCHpa
+         b69cTkrGMy8WCkJBiF0Zb9E5ZbRLGeC/e0c085g2DAEZemzOtkaGzL72ivfodm71Ot3k
+         G2Ts52SAJcX/MLV/0elGr0wDkE5RHTcenvSkcig8StUDKPsOKArtl3c7eAXdr3+/RFpC
+         930eX7Ki1OEUEeHkWbpmL6wwZTjwdWtqe2vY+CbqhTslvLFKvqM59hGERsdQGJ03PUYN
+         WKll6Yd5JNB5V5JyRJIRjI7TD4fW3UVVws72L+00NiTy40YVPi8y9iYoA0/Khxhp9qaY
+         jd+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0cvkhpWMFxiLIeolS0V7/Qo+W3ZK761sN/9Z7LM3iPc=;
-        b=Fzhf8YwlpEweGjUnPA6NEF13Lz9YPIzoArBFa42uheFXhizxX9TMBxrr4q+5djZwfn
-         usIiYn3VIazQqIZZKC/YADrooX+GyrE0mCze+uZ3L2wAiE+xiKwTCE/TCu3z6ykNPNb9
-         mQydXa4rbbyFA7c9J11+hJwc54cQwgtjofh93ljGWKuALAH7Up8zAFk8tBOWWgQjVym8
-         2zydtTp1alp2DhTcWtnCiGtTVVe5qz16+0776UUf4g8olVZxeYPUZnTTwmMzuGD4UMZV
-         f4RLDRm10r+7esrsPNespIH/IIi35PQn9zCBMPWEX/4KWDqIa7biFUA7mTA1uWHWDnHe
-         3QGw==
-X-Gm-Message-State: APjAAAVsXtn8D/dFG/qpSsVQ1huN+msYtWBJuacBmTra9SDywvLqwtLm
-        /f5heYo8qy8cHzT55Q9hD9U=
-X-Google-Smtp-Source: APXvYqzcuxChGggWOSGvgfmoFNlVgp9QCuNqVaQ/y8Pchnv7mZ3b6MlfEcjxIgveqSKd5RdWwh0h1Q==
-X-Received: by 2002:a05:6000:12d1:: with SMTP id l17mr4335111wrx.327.1582805011298;
-        Thu, 27 Feb 2020 04:03:31 -0800 (PST)
+        bh=Tv1b66VHXsMeh5NR7gAtTfq8XGx1hp57Pkw74uVLNqA=;
+        b=DcG3B5Aep8aTdgfN0cNlONKYfx3DBKhc4cB2ht/6CXYN1d/Q9lZ1nwBFPd+FcywSrz
+         0ut/C99dbZ2tg13kMR6bIaNPtqj0Fw5dfPB3EIcz5NtzqWFqmiCHM+MOhYbXhtW9e02x
+         /4t5DC+rNprSfqO0KtJ8Rk9lFeWDQfzZgzXybyJU1DDbppznF4XRQhmhGfWWx/Bvyz59
+         9FyTjALg1nODIFlTF9wSu1Z2gkEdDEOkE8QxSBca+V071O3DpgFsfnOhPF35nfewvWWS
+         UX8N/dcp6hOt5gsmaBQ0xkI49zynywGKdN1mHsIr94+7bEAK/yoT5YCnTrSqFx8zzYQa
+         uupg==
+X-Gm-Message-State: APjAAAVcg/U1zN2IHpod0HhtCBHUZnBexuN6TyweTgDU+bt835wLD1zW
+        ZzcGzs6dol6qrmF7/Gh0C+4=
+X-Google-Smtp-Source: APXvYqyZ45URLS4OCvwl7pFZT+ggkw0Dgp9j3XUU0EO03gCbFAzyTvmLPyx+BMGDfIJeegvYHNIrsg==
+X-Received: by 2002:a1c:6a17:: with SMTP id f23mr1784802wmc.33.1582805014531;
+        Thu, 27 Feb 2020 04:03:34 -0800 (PST)
 Received: from wambui.zuku.co.ke ([197.237.61.225])
-        by smtp.googlemail.com with ESMTPSA id t10sm7655017wru.59.2020.02.27.04.03.27
+        by smtp.googlemail.com with ESMTPSA id t10sm7655017wru.59.2020.02.27.04.03.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 04:03:30 -0800 (PST)
+        Thu, 27 Feb 2020 04:03:34 -0800 (PST)
 From:   Wambui Karuga <wambui.karugax@gmail.com>
-To:     daniel@ffwll.ch, airlied@linux.ie, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>
+To:     daniel@ffwll.ch, airlied@linux.ie,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>
 Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org
-Subject: [PATCH 12/21] drm/msm: remove checks for return value of drm_debugfs functions.
-Date:   Thu, 27 Feb 2020 15:02:23 +0300
-Message-Id: <20200227120232.19413-13-wambui.karugax@gmail.com>
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH 13/21] drm/omapdrm: remove checks for return value of drm_debugfs functions.
+Date:   Thu, 27 Feb 2020 15:02:24 +0300
+Message-Id: <20200227120232.19413-14-wambui.karugax@gmail.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200227120232.19413-1-wambui.karugax@gmail.com>
 References: <20200227120232.19413-1-wambui.karugax@gmail.com>
@@ -76,153 +75,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 987d65d01356 (drm: debugfs: make
-drm_debugfs_create_files() never fail), drm_debugfs_create_files() does
-not fail, and should return void. This change therefore removes the
-checks of its return value in drm/msm and subsequent error handling.
+Since 987d65d01356 (drm: debugfs: make
+drm_debugfs_create_files() never fail), there is no need to ever check
+the return value for drm_debugfs_create_files(). Therefore remove the
+checks for the return value and subsequent error handling in
+omap_debugfs_init().
 
-These changes also enable the changing of various debugfs_init()
-functions to return void.
+These changes also enables the changing of omap_debugfs_init() to return
+void.
 
 Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
 ---
- drivers/gpu/drm/msm/adreno/a5xx_debugfs.c | 18 +++++-------------
- drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c  | 14 +++-----------
- drivers/gpu/drm/msm/msm_debugfs.c         | 21 ++++++---------------
- drivers/gpu/drm/msm/msm_debugfs.h         |  2 +-
- drivers/gpu/drm/msm/msm_gpu.h             |  2 +-
- 5 files changed, 16 insertions(+), 41 deletions(-)
+ drivers/gpu/drm/omapdrm/omap_debugfs.c | 29 +++++++-------------------
+ drivers/gpu/drm/omapdrm/omap_drv.h     |  2 +-
+ 2 files changed, 8 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/adreno/a5xx_debugfs.c b/drivers/gpu/drm/msm/adreno/a5xx_debugfs.c
-index 075ecce4b5e0..8cae2ca4af6b 100644
---- a/drivers/gpu/drm/msm/adreno/a5xx_debugfs.c
-+++ b/drivers/gpu/drm/msm/adreno/a5xx_debugfs.c
-@@ -148,27 +148,19 @@ reset_set(void *data, u64 val)
- DEFINE_SIMPLE_ATTRIBUTE(reset_fops, NULL, reset_set, "%llx\n");
+diff --git a/drivers/gpu/drm/omapdrm/omap_debugfs.c b/drivers/gpu/drm/omapdrm/omap_debugfs.c
+index 34dfb33145b4..b57fbe8a0ac2 100644
+--- a/drivers/gpu/drm/omapdrm/omap_debugfs.c
++++ b/drivers/gpu/drm/omapdrm/omap_debugfs.c
+@@ -80,31 +80,16 @@ static struct drm_info_list omap_dmm_debugfs_list[] = {
+ 	{"tiler_map", tiler_map_show, 0},
+ };
  
- 
--int a5xx_debugfs_init(struct msm_gpu *gpu, struct drm_minor *minor)
-+void a5xx_debugfs_init(struct msm_gpu *gpu, struct drm_minor *minor)
- {
- 	struct drm_device *dev;
--	int ret;
- 
- 	if (!minor)
--		return 0;
-+		return;
- 
- 	dev = minor->dev;
- 
--	ret = drm_debugfs_create_files(a5xx_debugfs_list,
--			ARRAY_SIZE(a5xx_debugfs_list),
--			minor->debugfs_root, minor);
--
--	if (ret) {
--		DRM_DEV_ERROR(dev->dev, "could not install a5xx_debugfs_list\n");
--		return ret;
--	}
-+	drm_debugfs_create_files(a5xx_debugfs_list,
-+				 ARRAY_SIZE(a5xx_debugfs_list),
-+				 minor->debugfs_root, minor);
- 
- 	debugfs_create_file("reset", S_IWUGO, minor->debugfs_root, dev,
- 			    &reset_fops);
--
--	return 0;
- }
-diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-index 6650f478b226..41b461128bbc 100644
---- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-+++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-@@ -259,17 +259,9 @@ static struct drm_info_list mdp5_debugfs_list[] = {
- 
- static int mdp5_kms_debugfs_init(struct msm_kms *kms, struct drm_minor *minor)
+-int omap_debugfs_init(struct drm_minor *minor)
++void omap_debugfs_init(struct drm_minor *minor)
  {
 -	struct drm_device *dev = minor->dev;
 -	int ret;
 -
--	ret = drm_debugfs_create_files(mdp5_debugfs_list,
--			ARRAY_SIZE(mdp5_debugfs_list),
+-	ret = drm_debugfs_create_files(omap_debugfs_list,
+-			ARRAY_SIZE(omap_debugfs_list),
 -			minor->debugfs_root, minor);
 -
 -	if (ret) {
--		DRM_DEV_ERROR(dev->dev, "could not install mdp5_debugfs_list\n");
+-		dev_err(dev->dev, "could not install omap_debugfs_list\n");
 -		return ret;
 -	}
-+	drm_debugfs_create_files(mdp5_debugfs_list,
-+				 ARRAY_SIZE(mdp5_debugfs_list),
++	drm_debugfs_create_files(omap_debugfs_list,
++				 ARRAY_SIZE(omap_debugfs_list),
 +				 minor->debugfs_root, minor);
  
- 	return 0;
- }
-diff --git a/drivers/gpu/drm/msm/msm_debugfs.c b/drivers/gpu/drm/msm/msm_debugfs.c
-index 1c74381a4fc9..3c958f311bbc 100644
---- a/drivers/gpu/drm/msm/msm_debugfs.c
-+++ b/drivers/gpu/drm/msm/msm_debugfs.c
-@@ -214,31 +214,22 @@ int msm_debugfs_late_init(struct drm_device *dev)
- 	return ret;
- }
- 
--int msm_debugfs_init(struct drm_minor *minor)
-+void msm_debugfs_init(struct drm_minor *minor)
- {
- 	struct drm_device *dev = minor->dev;
- 	struct msm_drm_private *priv = dev->dev_private;
--	int ret;
-+	int ret = 0;
- 
--	ret = drm_debugfs_create_files(msm_debugfs_list,
--			ARRAY_SIZE(msm_debugfs_list),
--			minor->debugfs_root, minor);
+ 	if (dmm_is_available())
+-		ret = drm_debugfs_create_files(omap_dmm_debugfs_list,
+-				ARRAY_SIZE(omap_dmm_debugfs_list),
+-				minor->debugfs_root, minor);
 -
 -	if (ret) {
--		DRM_DEV_ERROR(dev->dev, "could not install msm_debugfs_list\n");
+-		dev_err(dev->dev, "could not install omap_dmm_debugfs_list\n");
 -		return ret;
 -	}
-+	drm_debugfs_create_files(msm_debugfs_list,
-+				 ARRAY_SIZE(msm_debugfs_list),
-+				 minor->debugfs_root, minor);
- 
- 	debugfs_create_file("gpu", S_IRUSR, minor->debugfs_root,
- 		dev, &msm_gpu_fops);
- 
- 	if (priv->kms && priv->kms->funcs->debugfs_init) {
--		ret = priv->kms->funcs->debugfs_init(priv->kms, minor);
--		if (ret)
--			return ret;
-+		priv->kms->funcs->debugfs_init(priv->kms, minor);
- 	}
 -
 -	return ret;
++		drm_debugfs_create_files(omap_dmm_debugfs_list,
++					 ARRAY_SIZE(omap_dmm_debugfs_list),
++					 minor->debugfs_root, minor);
  }
- #endif
  
-diff --git a/drivers/gpu/drm/msm/msm_debugfs.h b/drivers/gpu/drm/msm/msm_debugfs.h
-index 2b91f8c178ad..ef58f66abbb3 100644
---- a/drivers/gpu/drm/msm/msm_debugfs.h
-+++ b/drivers/gpu/drm/msm/msm_debugfs.h
-@@ -8,7 +8,7 @@
- #define __MSM_DEBUGFS_H__
- 
- #ifdef CONFIG_DEBUG_FS
--int msm_debugfs_init(struct drm_minor *minor);
-+void msm_debugfs_init(struct drm_minor *minor);
  #endif
+diff --git a/drivers/gpu/drm/omapdrm/omap_drv.h b/drivers/gpu/drm/omapdrm/omap_drv.h
+index 7c4b66efcaa7..8a1fac680138 100644
+--- a/drivers/gpu/drm/omapdrm/omap_drv.h
++++ b/drivers/gpu/drm/omapdrm/omap_drv.h
+@@ -82,6 +82,6 @@ struct omap_drm_private {
+ };
  
- #endif /* __MSM_DEBUGFS_H__ */
-diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
-index be5bc2e8425c..6ccae4ba905c 100644
---- a/drivers/gpu/drm/msm/msm_gpu.h
-+++ b/drivers/gpu/drm/msm/msm_gpu.h
-@@ -57,7 +57,7 @@ struct msm_gpu_funcs {
- 	void (*show)(struct msm_gpu *gpu, struct msm_gpu_state *state,
- 			struct drm_printer *p);
- 	/* for generation specific debugfs: */
--	int (*debugfs_init)(struct msm_gpu *gpu, struct drm_minor *minor);
-+	void (*debugfs_init)(struct msm_gpu *gpu, struct drm_minor *minor);
- #endif
- 	unsigned long (*gpu_busy)(struct msm_gpu *gpu);
- 	struct msm_gpu_state *(*gpu_state_get)(struct msm_gpu *gpu);
+ 
+-int omap_debugfs_init(struct drm_minor *minor);
++void omap_debugfs_init(struct drm_minor *minor);
+ 
+ #endif /* __OMAPDRM_DRV_H__ */
 -- 
 2.25.0
 
