@@ -2,51 +2,53 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43584C3F358
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE64C3F35B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1089120726
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FA01246A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811138;
-	bh=TIjHdADiwkFjXfbpjDNPlSxovxMRHrZrzwi8QVZ2//w=;
+	s=default; t=1582811209;
+	bh=MMngjTS2tWGZAVOBbLke4DOA0L+3bxPVtTevO3i2o10=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tT0pYNuV3tTWI4TEULx3HhDtvqnbmmNGCWIeOxL6VtzMJwcYvaPiI3UkdH494ykVd
-	 5XTAImWIO1Gpenj3Y8TLtQ9+G2eA3I7X57i2OwB0MxG3wEcWAWaMvSmBRlszEsvpfq
-	 foSc/BcIWx8xfQv4W7/D1IWoIvK+IyfBolf7OQxI=
+	b=lzDBDSVpaQ5eN7qmUtnNlvv0jXU3iC2y6+LEOnmmJv496yE6ndXrAKDZhq9HIzAQ3
+	 OzqC6PqQ4wAu5776S6aIHgwHf54PWzwoRfiF+U0kaW+fsXvQoVNZzdB3MOmyX06Tgf
+	 Dy86rTSeORAU9IdEKDaQeUXr22iaYEBr394vfFS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729564AbgB0Nph (ORCPT
+        id S1730582AbgB0Nqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:45:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41524 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:46:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730387AbgB0Npd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:45:33 -0500
+        id S1730571AbgB0Nqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:46:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92AF321D7E;
-        Thu, 27 Feb 2020 13:45:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FA8A20578;
+        Thu, 27 Feb 2020 13:46:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811133;
-        bh=TIjHdADiwkFjXfbpjDNPlSxovxMRHrZrzwi8QVZ2//w=;
+        s=default; t=1582811204;
+        bh=MMngjTS2tWGZAVOBbLke4DOA0L+3bxPVtTevO3i2o10=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HL2XC2XxsjWOcUFfkDP2iYTlXESf+Xjn31JJwOuY1l5+UKLOAgx37lW/hVGvaVjJK
-         F/Vm72ygNV4bZ4rTuLnA52DEg4yDwmlqOo2gSCfMv6wtiROk6yckB+YCBX9vX+WWJX
-         hn8bMwfKxFh1zYK+9Q2VSv8lrm9eqQah8dDDksr0=
+        b=rh2Ogkob40kWNnQfe6AhNoaMqY5v+li8gKkEZbAC1mSnqshDYtCgJN3ZOmBOh3Bmo
+         SN40YD9tEKJCJ09qFlVDcarzjrPS7ITWa9+Wp7hGCi0mcDZaVjPPH0XHdp81ZJ8laT
+         DLQxjLNV3P2v8tzFD+pkwt/sIONbxndKc99zSMjM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Jones <michael-a1.jones@analog.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.9 016/165] hwmon: (pmbus/ltc2978) Fix PMBus polling of MFR_COMMON definitions.
-Date:   Thu, 27 Feb 2020 14:34:50 +0100
-Message-Id: <20200227132233.385054696@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Luis Henriques <luis.henriques@canonical.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 041/165] tracing: Fix very unlikely race of registering two stat tracers
+Date:   Thu, 27 Feb 2020 14:35:15 +0100
+Message-Id: <20200227132237.189408865@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -59,40 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Jones <michael-a1.jones@analog.com>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-commit cf2b012c90e74e85d8aea7d67e48868069cfee0c upstream.
+[ Upstream commit dfb6cd1e654315168e36d947471bd2a0ccd834ae ]
 
-Change 21537dc driver PMBus polling of MFR_COMMON from bits 5/4 to
-bits 6/5. This fixs a LTC297X family bug where polling always returns
-not busy even when the part is busy. This fixes a LTC388X and
-LTM467X bug where polling used PEND and NOT_IN_TRANS, and BUSY was
-not polled, which can lead to NACKing of commands. LTC388X and
-LTM467X modules now poll BUSY and PEND, increasing reliability by
-eliminating NACKing of commands.
+Looking through old emails in my INBOX, I came across a patch from Luis
+Henriques that attempted to fix a race of two stat tracers registering the
+same stat trace (extremely unlikely, as this is done in the kernel, and
+probably doesn't even exist). The submitted patch wasn't quite right as it
+needed to deal with clean up a bit better (if two stat tracers were the
+same, it would have the same files).
 
-Signed-off-by: Mike Jones <michael-a1.jones@analog.com>
-Link: https://lore.kernel.org/r/1580234400-2829-2-git-send-email-michael-a1.jones@analog.com
-Fixes: e04d1ce9bbb49 ("hwmon: (ltc2978) Add polling for chips requiring it")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+But to make the code cleaner, all we needed to do is to keep the
+all_stat_sessions_mutex held for most of the registering function.
 
+Link: http://lkml.kernel.org/r/1410299375-20068-1-git-send-email-luis.henriques@canonical.com
+
+Fixes: 002bb86d8d42f ("tracing/ftrace: separate events tracing and stats tracing engine")
+Reported-by: Luis Henriques <luis.henriques@canonical.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/pmbus/ltc2978.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/trace/trace_stat.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
---- a/drivers/hwmon/pmbus/ltc2978.c
-+++ b/drivers/hwmon/pmbus/ltc2978.c
-@@ -89,8 +89,8 @@ enum chips { ltc2974, ltc2975, ltc2977,
+diff --git a/kernel/trace/trace_stat.c b/kernel/trace/trace_stat.c
+index bc97b10e56ccc..d19f2191960ea 100644
+--- a/kernel/trace/trace_stat.c
++++ b/kernel/trace/trace_stat.c
+@@ -305,7 +305,7 @@ static int init_stat_file(struct stat_session *session)
+ int register_stat_tracer(struct tracer_stat *trace)
+ {
+ 	struct stat_session *session, *node;
+-	int ret;
++	int ret = -EINVAL;
  
- #define LTC_POLL_TIMEOUT		100	/* in milli-seconds */
+ 	if (!trace)
+ 		return -EINVAL;
+@@ -316,17 +316,15 @@ int register_stat_tracer(struct tracer_stat *trace)
+ 	/* Already registered? */
+ 	mutex_lock(&all_stat_sessions_mutex);
+ 	list_for_each_entry(node, &all_stat_sessions, session_list) {
+-		if (node->ts == trace) {
+-			mutex_unlock(&all_stat_sessions_mutex);
+-			return -EINVAL;
+-		}
++		if (node->ts == trace)
++			goto out;
+ 	}
+-	mutex_unlock(&all_stat_sessions_mutex);
  
--#define LTC_NOT_BUSY			BIT(5)
--#define LTC_NOT_PENDING			BIT(4)
-+#define LTC_NOT_BUSY			BIT(6)
-+#define LTC_NOT_PENDING			BIT(5)
++	ret = -ENOMEM;
+ 	/* Init the session */
+ 	session = kzalloc(sizeof(*session), GFP_KERNEL);
+ 	if (!session)
+-		return -ENOMEM;
++		goto out;
  
- /*
-  * LTC2978 clears peak data whenever the CLEAR_FAULTS command is executed, which
+ 	session->ts = trace;
+ 	INIT_LIST_HEAD(&session->session_list);
+@@ -335,15 +333,16 @@ int register_stat_tracer(struct tracer_stat *trace)
+ 	ret = init_stat_file(session);
+ 	if (ret) {
+ 		destroy_session(session);
+-		return ret;
++		goto out;
+ 	}
+ 
++	ret = 0;
+ 	/* Register */
+-	mutex_lock(&all_stat_sessions_mutex);
+ 	list_add_tail(&session->session_list, &all_stat_sessions);
++ out:
+ 	mutex_unlock(&all_stat_sessions_mutex);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ void unregister_stat_tracer(struct tracer_stat *trace)
+-- 
+2.20.1
+
 
 
