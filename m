@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC53BC52D2C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 534D4C3F34E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3DE224688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21FEA24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813880;
-	bh=nFipeVugtVswHfpnVxsrrfKfmR2Tjq+wQ2MwbxCg2TU=;
+	s=default; t=1582813905;
+	bh=QisveVIqzmKwUGoJ8Sy17j3fPQyxBUWHRj/ky++yg78=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2qrZkFxqpVooglzEl1zkrUdquiXkjBpilTTjPn0yT8zrfqwAxi3ETpxywVznP6Uvn
-	 4eeMR8Q3WaIznWYjCUztFV9OdmIr3ngB2t2WKymRFpF0FDpOO/IFexBf950rwnwn72
-	 D8MKLHDXtUT4efekHnLX1TqKN+8GleJhAVDr5fKo=
+	b=Iqp5hDEKIeH3sXUdYE2VjH3HbpkHMloMZmnZkC/iTIsZBEsuvmykRvE8yYCF4xLnk
+	 bdsSOiYl6nnkS0+alkazKexBxlH6asC5MaZNW7QkY4rZt3Uv9McnwrVUmOZXI3BaIt
+	 ahuWetVE1LWZ3sTaDby5GCYdRNS86tSMVzLtVUpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388152AbgB0ObT (ORCPT
+        id S1733294AbgB0ODN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:31:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39906 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:03:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387516AbgB0OEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:04:04 -0500
+        id S1733268AbgB0ODL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:03:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FE8F20578;
-        Thu, 27 Feb 2020 14:04:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF32420801;
+        Thu, 27 Feb 2020 14:03:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812242;
-        bh=nFipeVugtVswHfpnVxsrrfKfmR2Tjq+wQ2MwbxCg2TU=;
+        s=default; t=1582812190;
+        bh=QisveVIqzmKwUGoJ8Sy17j3fPQyxBUWHRj/ky++yg78=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RsDgClC6xLCQ7U0vAc2A9lQfFwr8jnFOZik9ddhIPVoqWg/lvv3KvwQyDsuaKUd6C
-         M8Drdtw1PlUv5pRdyb9/ekZi77aLDJyGlhn2lCw65cb4Elwskhi3p4QV4QyCSB5eZc
-         0lMTGCgndi8E91OeL+J8Ql9pwTtwnG7H0PrRjmAI=
+        b=FQArhGeW8SSHKgj+iHzoC71+PLcq1tpgPrHO7HG3dOLZitNcp0Ot2aa6syJDOwsRu
+         xdqAIpM7kWxDrAC0ngoDtcDWnKZIvx4z7S6F5k7TU1sj/Vfhsn7Dcy2L2BSviQLCT/
+         9jNnZHZ5NkRM0J1Hq0xnxVy82y6T++0ZG/oppcTg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
-        Borislav Petkov <bp@suse.de>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 4.19 39/97] x86/cpu/amd: Enable the fixed Instructions Retired counter IRPERF
-Date:   Thu, 27 Feb 2020 14:36:47 +0100
-Message-Id: <20200227132220.935540589@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 03/97] ALSA: hda/realtek - Apply quirk for MSI GP63, too
+Date:   Thu, 27 Feb 2020 14:36:11 +0100
+Message-Id: <20200227132215.101907309@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
 References: <20200227132214.553656188@linuxfoundation.org>
@@ -60,113 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 21b5ee59ef18e27d85810584caf1f7ddc705ea83 upstream.
+commit a655e2b107d463ce2745188ce050d07daed09a71 upstream.
 
-Commit
+The same quirk that was applied to MSI GL73 is needed for MSI GP63,
+too.  Adding the entry with the SSID 1462:1228.
 
-  aaf248848db50 ("perf/x86/msr: Add AMD IRPERF (Instructions Retired)
-		  performance counter")
-
-added support for access to the free-running counter via 'perf -e
-msr/irperf/', but when exercised, it always returns a 0 count:
-
-BEFORE:
-
-  $ perf stat -e instructions,msr/irperf/ true
-
-   Performance counter stats for 'true':
-
-             624,833      instructions
-                   0      msr/irperf/
-
-Simply set its enable bit - HWCR bit 30 - to make it start counting.
-
-Enablement is restricted to all machines advertising IRPERF capability,
-except those susceptible to an erratum that makes the IRPERF return
-bad values.
-
-That erratum occurs in Family 17h models 00-1fh [1], but not in F17h
-models 20h and above [2].
-
-AFTER (on a family 17h model 31h machine):
-
-  $ perf stat -e instructions,msr/irperf/ true
-
-   Performance counter stats for 'true':
-
-             621,690      instructions
-             622,490      msr/irperf/
-
-[1] Revision Guide for AMD Family 17h Models 00h-0Fh Processors
-[2] Revision Guide for AMD Family 17h Models 30h-3Fh Processors
-
-The revision guides are available from the bugzilla Link below.
-
- [ bp: Massage commit message. ]
-
-Fixes: aaf248848db50 ("perf/x86/msr: Add AMD IRPERF (Instructions Retired) performance counter")
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: stable@vger.kernel.org
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
-Link: http://lkml.kernel.org/r/20200214201805.13830-1-kim.phillips@amd.com
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206503
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200217151947.17528-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/msr-index.h |    2 ++
- arch/x86/kernel/cpu/amd.c        |   14 ++++++++++++++
- 2 files changed, 16 insertions(+)
+ sound/pci/hda/patch_realtek.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -455,6 +455,8 @@
- #define MSR_K7_HWCR			0xc0010015
- #define MSR_K7_HWCR_SMMLOCK_BIT		0
- #define MSR_K7_HWCR_SMMLOCK		BIT_ULL(MSR_K7_HWCR_SMMLOCK_BIT)
-+#define MSR_K7_HWCR_IRPERF_EN_BIT	30
-+#define MSR_K7_HWCR_IRPERF_EN		BIT_ULL(MSR_K7_HWCR_IRPERF_EN_BIT)
- #define MSR_K7_FID_VID_CTL		0xc0010041
- #define MSR_K7_FID_VID_STATUS		0xc0010042
- 
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -25,6 +25,7 @@
- 
- static const int amd_erratum_383[];
- static const int amd_erratum_400[];
-+static const int amd_erratum_1054[];
- static bool cpu_has_amd_erratum(struct cpuinfo_x86 *cpu, const int *erratum);
- 
- /*
-@@ -983,6 +984,15 @@ static void init_amd(struct cpuinfo_x86
- 	/* AMD CPUs don't reset SS attributes on SYSRET, Xen does. */
- 	if (!cpu_has(c, X86_FEATURE_XENPV))
- 		set_cpu_bug(c, X86_BUG_SYSRET_SS_ATTRS);
-+
-+	/*
-+	 * Turn on the Instructions Retired free counter on machines not
-+	 * susceptible to erratum #1054 "Instructions Retired Performance
-+	 * Counter May Be Inaccurate".
-+	 */
-+	if (cpu_has(c, X86_FEATURE_IRPERF) &&
-+	    !cpu_has_amd_erratum(c, amd_erratum_1054))
-+		msr_set_bit(MSR_K7_HWCR, MSR_K7_HWCR_IRPERF_EN_BIT);
- }
- 
- #ifdef CONFIG_X86_32
-@@ -1110,6 +1120,10 @@ static const int amd_erratum_400[] =
- static const int amd_erratum_383[] =
- 	AMD_OSVW_ERRATUM(3, AMD_MODEL_RANGE(0x10, 0, 0, 0xff, 0xf));
- 
-+/* #1054: Instructions Retired Performance Counter May Be Inaccurate */
-+static const int amd_erratum_1054[] =
-+	AMD_OSVW_ERRATUM(0, AMD_MODEL_RANGE(0x17, 0, 0, 0x2f, 0xf));
-+
- 
- static bool cpu_has_amd_erratum(struct cpuinfo_x86 *cpu, const int *erratum)
- {
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -2442,6 +2442,7 @@ static const struct snd_pci_quirk alc882
+ 	SND_PCI_QUIRK(0x1071, 0x8258, "Evesham Voyaeger", ALC882_FIXUP_EAPD),
+ 	SND_PCI_QUIRK(0x1458, 0xa002, "Gigabyte EP45-DS3/Z87X-UD3H", ALC889_FIXUP_FRONT_HP_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1458, 0xa0b8, "Gigabyte AZ370-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
++	SND_PCI_QUIRK(0x1462, 0x1228, "MSI-GP63", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x7350, "MSI-7350", ALC889_FIXUP_CD),
+ 	SND_PCI_QUIRK(0x1462, 0xda57, "MSI Z270-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
 
 
