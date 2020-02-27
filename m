@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD58C3F355
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D53C3F341
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 604C621D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25D3D20578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:45:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811108;
-	bh=NhUQGsnafUe+C5Bx0IIl7hrgX87gytrWYkGTQoNos+0=;
+	s=default; t=1582811101;
+	bh=E2lpMDbqta8jB7/yNfjQFpQNGqpux5LNdzpHvwvrAE4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TVEDyOpczStIeQWc1YR182IfDVoCMV80qxxUqd042J91DOmlQaUl/sPBKWGcLayTU
-	 WXi7fQ2AjIYJv3h/mx7URqDgasIHvybq0IUP2xcZuCqQdUKfmHnx9bpqbk3gvWkXBC
-	 K/sWuZQVc5Vqe5ScarhY6TbkfmtrymFHUaSUSDN0=
+	b=OdwLTp/K7HJepAKEzsXvtknqsPloW5Kv/8juyYavTLpLW7tvNjpARnu1SdeesO+7P
+	 nV7xrSVu/K2eUDIH26D7Ra0299FR43202C/eLOiGoz88pGSPI6NOo3dcOOThYonJCN
+	 BUvF7vp0gGbv2H0TEwOt2AjT2zjTMZ14+jkGn+0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730339AbgB0NpH (ORCPT
+        id S1730305AbgB0No7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:45:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40712 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:44:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729949AbgB0No6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:44:58 -0500
+        id S1730278AbgB0Nox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:44:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB42A20578;
-        Thu, 27 Feb 2020 13:44:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B96820726;
+        Thu, 27 Feb 2020 13:44:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811097;
-        bh=NhUQGsnafUe+C5Bx0IIl7hrgX87gytrWYkGTQoNos+0=;
+        s=default; t=1582811092;
+        bh=E2lpMDbqta8jB7/yNfjQFpQNGqpux5LNdzpHvwvrAE4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0UpdUNz6Jtza2BQnHQH7DZvRtMBSIlufY4eFpexim7O9j4bztuWDZ9ZvG+vWZOSNb
-         XpFpE0p1UlFTdR4tMsw60mpZ6CQjXj5sGJGgCCZ9ztUrW2uqNQl4bMDmg5WKWKVD6p
-         PmHfk2Y+2dbiDI8m7pwUVk6C/pGkR3qXPcJQcTgw=
+        b=Ut+qBOzXDaM90dB8U9L2DAdFhxeDoXWuNNpp669wJ+JzEtrGul+VR5gOw0TE7Xbne
+         m1yT3HsoNMJLJHFc+H4JiNmBxe1jY3KgtoKATA+0nTCH9Q52vLADFwfkYgAKQa+t0/
+         Es1bXerx/NDqlinkPM2rVsbRRiZaQxdGL4TtE7zk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Zubin Mithra <zsm@chromium.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 100/113] netfilter: xt_bpf: add overflow checks
-Date:   Thu, 27 Feb 2020 14:36:56 +0100
-Message-Id: <20200227132227.741017495@linuxfoundation.org>
+Subject: [PATCH 4.4 098/113] vt: vt_ioctl: fix race in VT_RESIZEX
+Date:   Thu, 27 Feb 2020 14:36:54 +0100
+Message-Id: <20200227132227.423425180@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
 References: <20200227132211.791484803@linuxfoundation.org>
@@ -61,73 +60,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 6ab405114b0b229151ef06f4e31c7834dd09d0c0 ]
+[ Upstream commit 6cd1ed50efd88261298577cd92a14f2768eddeeb ]
 
-Check whether inputs from userspace are too long (explicit length field too
-big or string not null-terminated) to avoid out-of-bounds reads.
+We need to make sure vc_cons[i].d is not NULL after grabbing
+console_lock(), or risk a crash.
 
-As far as I can tell, this can at worst lead to very limited kernel heap
-memory disclosure or oopses.
-
-This bug can be triggered by an unprivileged user even if the xt_bpf module
-is not loaded: iptables is available in network namespaces, and the xt_bpf
-module can be autoloaded.
-
-Triggering the bug with a classic BPF filter with fake length 0x1000 causes
-the following KASAN report:
-
-==================================================================
-BUG: KASAN: slab-out-of-bounds in bpf_prog_create+0x84/0xf0
-Read of size 32768 at addr ffff8801eff2c494 by task test/4627
-
-CPU: 0 PID: 4627 Comm: test Not tainted 4.15.0-rc1+ #1
-[...]
+general protection fault, probably for non-canonical address 0xdffffc0000000068: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000340-0x0000000000000347]
+CPU: 1 PID: 19462 Comm: syz-executor.5 Not tainted 5.5.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:vt_ioctl+0x1f96/0x26d0 drivers/tty/vt/vt_ioctl.c:883
+Code: 74 41 e8 bd a6 84 fd 48 89 d8 48 c1 e8 03 42 80 3c 28 00 0f 85 e4 04 00 00 48 8b 03 48 8d b8 40 03 00 00 48 89 fa 48 c1 ea 03 <42> 0f b6 14 2a 84 d2 74 09 80 fa 03 0f 8e b1 05 00 00 44 89 b8 40
+RSP: 0018:ffffc900086d7bb0 EFLAGS: 00010202
+RAX: 0000000000000000 RBX: ffffffff8c34ee88 RCX: ffffc9001415c000
+RDX: 0000000000000068 RSI: ffffffff83f0e6e3 RDI: 0000000000000340
+RBP: ffffc900086d7cd0 R08: ffff888054ce0100 R09: fffffbfff16a2f6d
+R10: ffff888054ce0998 R11: ffff888054ce0100 R12: 000000000000001d
+R13: dffffc0000000000 R14: 1ffff920010daf79 R15: 000000000000ff7f
+FS:  00007f7d13c12700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffd477e3c38 CR3: 0000000095d0a000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
- dump_stack+0x5c/0x85
- print_address_description+0x6a/0x260
- kasan_report+0x254/0x370
- ? bpf_prog_create+0x84/0xf0
- memcpy+0x1f/0x50
- bpf_prog_create+0x84/0xf0
- bpf_mt_check+0x90/0xd6 [xt_bpf]
-[...]
-Allocated by task 4627:
- kasan_kmalloc+0xa0/0xd0
- __kmalloc_node+0x47/0x60
- xt_alloc_table_info+0x41/0x70 [x_tables]
-[...]
-The buggy address belongs to the object at ffff8801eff2c3c0
-                which belongs to the cache kmalloc-2048 of size 2048
-The buggy address is located 212 bytes inside of
-                2048-byte region [ffff8801eff2c3c0, ffff8801eff2cbc0)
-[...]
-==================================================================
+ tty_ioctl+0xa37/0x14f0 drivers/tty/tty_io.c:2660
+ vfs_ioctl fs/ioctl.c:47 [inline]
+ ksys_ioctl+0x123/0x180 fs/ioctl.c:763
+ __do_sys_ioctl fs/ioctl.c:772 [inline]
+ __se_sys_ioctl fs/ioctl.c:770 [inline]
+ __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:770
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45b399
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f7d13c11c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007f7d13c126d4 RCX: 000000000045b399
+RDX: 0000000020000080 RSI: 000000000000560a RDI: 0000000000000003
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000666 R14: 00000000004c7f04 R15: 000000000075bf2c
+Modules linked in:
+---[ end trace 80970faf7a67eb77 ]---
+RIP: 0010:vt_ioctl+0x1f96/0x26d0 drivers/tty/vt/vt_ioctl.c:883
+Code: 74 41 e8 bd a6 84 fd 48 89 d8 48 c1 e8 03 42 80 3c 28 00 0f 85 e4 04 00 00 48 8b 03 48 8d b8 40 03 00 00 48 89 fa 48 c1 ea 03 <42> 0f b6 14 2a 84 d2 74 09 80 fa 03 0f 8e b1 05 00 00 44 89 b8 40
+RSP: 0018:ffffc900086d7bb0 EFLAGS: 00010202
+RAX: 0000000000000000 RBX: ffffffff8c34ee88 RCX: ffffc9001415c000
+RDX: 0000000000000068 RSI: ffffffff83f0e6e3 RDI: 0000000000000340
+RBP: ffffc900086d7cd0 R08: ffff888054ce0100 R09: fffffbfff16a2f6d
+R10: ffff888054ce0998 R11: ffff888054ce0100 R12: 000000000000001d
+R13: dffffc0000000000 R14: 1ffff920010daf79 R15: 000000000000ff7f
+FS:  00007f7d13c12700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffd477e3c38 CR3: 0000000095d0a000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-Fixes: e6f30c731718 ("netfilter: x_tables: add xt_bpf match")
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Zubin Mithra <zsm@chromium.org>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: stable <stable@vger.kernel.org>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Link: https://lore.kernel.org/r/20200210190721.200418-1-edumazet@google.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/xt_bpf.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/tty/vt/vt_ioctl.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/net/netfilter/xt_bpf.c b/net/netfilter/xt_bpf.c
-index dffee9d47ec4b..7b993f25aab92 100644
---- a/net/netfilter/xt_bpf.c
-+++ b/net/netfilter/xt_bpf.c
-@@ -25,6 +25,9 @@ static int bpf_mt_check(const struct xt_mtchk_param *par)
- 	struct xt_bpf_info *info = par->matchinfo;
- 	struct sock_fprog_kern program;
+diff --git a/drivers/tty/vt/vt_ioctl.c b/drivers/tty/vt/vt_ioctl.c
+index a1e5c408c931b..e9d9f9f3dc886 100644
+--- a/drivers/tty/vt/vt_ioctl.c
++++ b/drivers/tty/vt/vt_ioctl.c
+@@ -879,15 +879,20 @@ int vt_ioctl(struct tty_struct *tty,
+ 			return -EINVAL;
  
-+	if (info->bpf_program_num_elem > XT_BPF_MAX_NUM_INSTR)
-+		return -EINVAL;
+ 		for (i = 0; i < MAX_NR_CONSOLES; i++) {
++			struct vc_data *vcp;
 +
- 	program.len = info->bpf_program_num_elem;
- 	program.filter = info->bpf_program;
- 
+ 			if (!vc_cons[i].d)
+ 				continue;
+ 			console_lock();
+-			if (v.v_vlin)
+-				vc_cons[i].d->vc_scan_lines = v.v_vlin;
+-			if (v.v_clin)
+-				vc_cons[i].d->vc_font.height = v.v_clin;
+-			vc_cons[i].d->vc_resize_user = 1;
+-			vc_resize(vc_cons[i].d, v.v_cols, v.v_rows);
++			vcp = vc_cons[i].d;
++			if (vcp) {
++				if (v.v_vlin)
++					vcp->vc_scan_lines = v.v_vlin;
++				if (v.v_clin)
++					vcp->vc_font.height = v.v_clin;
++				vcp->vc_resize_user = 1;
++				vc_resize(vcp, v.v_cols, v.v_rows);
++			}
+ 			console_unlock();
+ 		}
+ 		break;
 -- 
 2.20.1
 
