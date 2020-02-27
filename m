@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BB7C3F36B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B6CC3F35D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9714721D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:54:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 406C6246AD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:54:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811686;
-	bh=k+XzV/W9UPSf5JZG4LsaLccqrAu0LZ7Ag9WTLrAZBPE=;
+	s=default; t=1582811661;
+	bh=7RRHpMykAdOs5O0+EcuC9a2h+AH/pE0k9fVN9Vx7LXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I1sll0NSQwzI9spjeJIGR8A7TNMjW47OD2I3MF9RpAzOqZ9Lv88L7qYKge20Y3s35
-	 o50B7RqgHXT6vcfWHcsgvf/w2eJCbl27e3XaCHL3hrBCVK9yUNlXON7fA8/BAfXBvP
-	 qPNKWB/0oMfRvRWtaQMhxdFsLI0BNwrnz0TU//9w=
+	b=KesE4koQ3TVmwZlMo17rKb5HDdPhZRRH+8ox21P4xAgGy944SS9ORjROFZsgKgXu6
+	 tTVXXHTHw+JP3rv/eNj5kE6BNLKY7id5LJH6QjWWhBGxdDvjbder5FijjyxChcMGrn
+	 YUEtj37oRtb28NN1VyA0GzQvF66nhXkYXgAS4shw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731900AbgB0Nyo (ORCPT
+        id S1731577AbgB0NyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:54:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54658 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:54:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731851AbgB0Nye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:54:34 -0500
+        id S1731846AbgB0NyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:54:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE63A20578;
-        Thu, 27 Feb 2020 13:54:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEE682469D;
+        Thu, 27 Feb 2020 13:54:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811673;
-        bh=k+XzV/W9UPSf5JZG4LsaLccqrAu0LZ7Ag9WTLrAZBPE=;
+        s=default; t=1582811655;
+        bh=7RRHpMykAdOs5O0+EcuC9a2h+AH/pE0k9fVN9Vx7LXk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0l8QRQEB3z2Ec1AxKNGuNCtjcvdDlnYmOATLeZYimimbkJdFLKsxeI5ibMDJ9fbbn
-         nWC4YSSJCJNKyT8NM/5U64djGANw5Zx+BbfYOuJWlc4jkMVMM/VBOWeAraqonsdLIY
-         XuDuSZgq+UBlbzBHuneFRpsVQPdB+06ywSZyX7wM=
+        b=b713NFkPx2YbN6n4w7VsMGSRKyhlp61wqpt2++YMppE7CHKIfd6/rQY/UoYR/fSBc
+         PAJOOG+L1WSUYhUKohCzTv8m9TLzPUNgXNbtEElN/W/Q+4iPdvfp3M+wnVQ4CYHdYh
+         /IztS/pLJZP7N3UyTdiiyByPU7MHu+3KFDTYz1Xc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 057/237] uio: fix a sleep-in-atomic-context bug in uio_dmem_genirq_irqcontrol()
-Date:   Thu, 27 Feb 2020 14:34:31 +0100
-Message-Id: <20200227132301.094280994@linuxfoundation.org>
+Subject: [PATCH 4.14 050/237] gpio: gpio-grgpio: fix possible sleep-in-atomic-context bugs in grgpio_irq_map/unmap()
+Date:   Thu, 27 Feb 2020 14:34:24 +0100
+Message-Id: <20200227132300.420182645@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -61,52 +62,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit b74351287d4bd90636c3f48bc188c2f53824c2d4 ]
+[ Upstream commit e36eaf94be8f7bc4e686246eed3cf92d845e2ef8 ]
 
 The driver may sleep while holding a spinlock.
 The function call path (from bottom to top) in Linux 4.19 is:
 
-kernel/irq/manage.c, 523:
-	synchronize_irq in disable_irq
-drivers/uio/uio_dmem_genirq.c, 140:
-	disable_irq in uio_dmem_genirq_irqcontrol
-drivers/uio/uio_dmem_genirq.c, 134:
-	_raw_spin_lock_irqsave in uio_dmem_genirq_irqcontrol
+drivers/gpio/gpio-grgpio.c, 261:
+	request_irq in grgpio_irq_map
+drivers/gpio/gpio-grgpio.c, 255:
+	_raw_spin_lock_irqsave in grgpio_irq_map
 
-synchronize_irq() can sleep at runtime.
+drivers/gpio/gpio-grgpio.c, 318:
+	free_irq in grgpio_irq_unmap
+drivers/gpio/gpio-grgpio.c, 299:
+	_raw_spin_lock_irqsave in grgpio_irq_unmap
 
-To fix this bug, disable_irq() is called without holding the spinlock.
+request_irq() and free_irq() can sleep at runtime.
 
-This bug is found by a static analysis tool STCheck written by myself.
+To fix these bugs, request_irq() and free_irq() are called without
+holding the spinlock.
+
+These bugs are found by a static analysis tool STCheck written by myself.
 
 Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Link: https://lore.kernel.org/r/20191218094405.6009-1-baijiaju1990@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20191218132605.10594-1-baijiaju1990@gmail.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/uio/uio_dmem_genirq.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpio/gpio-grgpio.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/uio/uio_dmem_genirq.c b/drivers/uio/uio_dmem_genirq.c
-index e1134a4d97f3f..a00b4aee6c799 100644
---- a/drivers/uio/uio_dmem_genirq.c
-+++ b/drivers/uio/uio_dmem_genirq.c
-@@ -135,11 +135,13 @@ static int uio_dmem_genirq_irqcontrol(struct uio_info *dev_info, s32 irq_on)
- 	if (irq_on) {
- 		if (test_and_clear_bit(0, &priv->flags))
- 			enable_irq(dev_info->irq);
-+		spin_unlock_irqrestore(&priv->lock, flags);
- 	} else {
--		if (!test_and_set_bit(0, &priv->flags))
-+		if (!test_and_set_bit(0, &priv->flags)) {
-+			spin_unlock_irqrestore(&priv->lock, flags);
- 			disable_irq(dev_info->irq);
+diff --git a/drivers/gpio/gpio-grgpio.c b/drivers/gpio/gpio-grgpio.c
+index 6544a16ab02e9..7541bd327e6c5 100644
+--- a/drivers/gpio/gpio-grgpio.c
++++ b/drivers/gpio/gpio-grgpio.c
+@@ -259,17 +259,16 @@ static int grgpio_irq_map(struct irq_domain *d, unsigned int irq,
+ 	lirq->irq = irq;
+ 	uirq = &priv->uirqs[lirq->index];
+ 	if (uirq->refcnt == 0) {
++		spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
+ 		ret = request_irq(uirq->uirq, grgpio_irq_handler, 0,
+ 				  dev_name(priv->dev), priv);
+ 		if (ret) {
+ 			dev_err(priv->dev,
+ 				"Could not request underlying irq %d\n",
+ 				uirq->uirq);
+-
+-			spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
+-
+ 			return ret;
+ 		}
++		spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
+ 	}
+ 	uirq->refcnt++;
+ 
+@@ -315,8 +314,11 @@ static void grgpio_irq_unmap(struct irq_domain *d, unsigned int irq)
+ 	if (index >= 0) {
+ 		uirq = &priv->uirqs[lirq->index];
+ 		uirq->refcnt--;
+-		if (uirq->refcnt == 0)
++		if (uirq->refcnt == 0) {
++			spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
+ 			free_irq(uirq->uirq, priv);
++			return;
 +		}
  	}
--	spin_unlock_irqrestore(&priv->lock, flags);
  
- 	return 0;
- }
+ 	spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
 -- 
 2.20.1
 
