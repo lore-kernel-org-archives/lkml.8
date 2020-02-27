@@ -2,116 +2,120 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 608E1C4BA06
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE10C4BA06
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31F9C20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:33:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cigMLSyB"
+	by mail.kernel.org (Postfix) with ESMTP id DA74C20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:33:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbgB0Hdg (ORCPT
+        id S1728464AbgB0Hdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 02:33:36 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:60780 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726999AbgB0Hdf (ORCPT
+        Thu, 27 Feb 2020 02:33:46 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:58589 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726999AbgB0Hdp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 02:33:35 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01R7XTIT040474;
-        Thu, 27 Feb 2020 01:33:29 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582788809;
-        bh=abTfs0WCkipC+5DpyvzMs7iFbPPM4oI7lFIyUfPaM0I=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=cigMLSyBzxnMQd2VmFMe0UPTF7EAE4d9p6K6ZwsOd/RVG50BazAZCzR4jSN9fOeT4
-         8dKTqv8bZYOkz/rF7oikBsbTK1UFxnlYcz+KUllFZqAAHsBIdiCHBTWJMMaDSK5ZLk
-         P7D8J9RpG5DkqVZbwHXGWgVd5TiVCvSPcgE9mQus=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01R7XSVe075275
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 27 Feb 2020 01:33:29 -0600
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 27
- Feb 2020 01:33:28 -0600
-Received: from localhost.localdomain (10.64.41.19) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 27 Feb 2020 01:33:28 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 01R7XQek104387;
-        Thu, 27 Feb 2020 01:33:26 -0600
-Subject: Re: [PATCH][next] dmaengine: ti: edma: fix null dereference because
- of a typo in pointer name
-To:     Colin King <colin.king@canonical.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, <dmaengine@vger.kernel.org>
-CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200226185921.351693-1-colin.king@canonical.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <d7b23176-2e0c-e771-74a7-432123f74dcb@ti.com>
-Date:   Thu, 27 Feb 2020 09:33:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 27 Feb 2020 02:33:45 -0500
+Received: from dread.disaster.area (pa49-195-202-68.pa.nsw.optusnet.com.au [49.195.202.68])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 0A6A93A30FA;
+        Thu, 27 Feb 2020 18:33:37 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j7Dfs-0007i4-5j; Thu, 27 Feb 2020 18:33:36 +1100
+Date:   Thu, 27 Feb 2020 18:33:36 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     Christoph Hellwig <hch@infradead.org>, tytso@mit.edu,
+        viro@zeniv.linux.org.uk, adilger.kernel@dilger.ca,
+        snitzer@redhat.com, jack@suse.cz, ebiggers@google.com,
+        riteshh@linux.ibm.com, krisman@collabora.com, surajjs@amazon.com,
+        dmonakhov@gmail.com, mbobrowski@mbobrowski.org, enwlinux@gmail.com,
+        sblbir@amazon.com, khazhy@google.com, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH RFC 5/5] ext4: Add fallocate2() support
+Message-ID: <20200227073336.GJ10737@dread.disaster.area>
+References: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
+ <158272447616.281342.14858371265376818660.stgit@localhost.localdomain>
+ <20200226155521.GA24724@infradead.org>
+ <06f9b82c-a519-7053-ec68-a549e02c6f6c@virtuozzo.com>
 MIME-Version: 1.0
-In-Reply-To: <20200226185921.351693-1-colin.king@canonical.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <06f9b82c-a519-7053-ec68-a549e02c6f6c@virtuozzo.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=mqTaRPt+QsUAtUurwE173Q==:117 a=mqTaRPt+QsUAtUurwE173Q==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=SSkiD6HNAAAA:20 a=7-415B0cAAAA:8 a=Rrx9BAELJYaVBBxEqmIA:9
+        a=dm0UahiCclTZQYsM:21 a=WexPZ7QWWnMIFWoD:21 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Colin,
-
-On 26/02/2020 20.59, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On Wed, Feb 26, 2020 at 11:05:23PM +0300, Kirill Tkhai wrote:
+> On 26.02.2020 18:55, Christoph Hellwig wrote:
+> > On Wed, Feb 26, 2020 at 04:41:16PM +0300, Kirill Tkhai wrote:
+> >> This adds a support of physical hint for fallocate2() syscall.
+> >> In case of @physical argument is set for ext4_fallocate(),
+> >> we try to allocate blocks only from [@phisical, @physical + len]
+> >> range, while other blocks are not used.
+> > 
+> > Sorry, but this is a complete bullshit interface.  Userspace has
+> > absolutely no business even thinking of physical placement.  If you
+> > want to align allocations to physical block granularity boundaries
+> > that is the file systems job, not the applications job.
 > 
-> Currently there is a dereference of the null pointer m_ddev.  This appears
-> to be a typo on the pointer, I believe s_ddev should be used instead.
-> Fix this by using the correct pointer.
-
-Thank you for catching it!
-This is a mostly unused case to keep supporting the legacy EDMA binding
-which should be gone by now for some time, but there might be boards out
-there still booting in that way...
-
-I have copied the dma_cap_set() line from the testable code path.
-
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-
-> Addresses-Coverity: ("Explicit null dereferenced")
-> Fixes: eb0249d50153 ("dmaengine: ti: edma: Support for interleaved mem to mem transfer")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/dma/ti/edma.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Why? There are two contradictory actions that filesystem can't do at the same time:
 > 
-> diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
-> index 2b1fdd438e7f..c4a5c170c1f9 100644
-> --- a/drivers/dma/ti/edma.c
-> +++ b/drivers/dma/ti/edma.c
-> @@ -1992,7 +1992,7 @@ static void edma_dma_init(struct edma_cc *ecc, bool legacy_mode)
->  			 "Legacy memcpy is enabled, things might not work\n");
->  
->  		dma_cap_set(DMA_MEMCPY, s_ddev->cap_mask);
-> -		dma_cap_set(DMA_INTERLEAVE, m_ddev->cap_mask);
-> +		dma_cap_set(DMA_INTERLEAVE, s_ddev->cap_mask);
->  		s_ddev->device_prep_dma_memcpy = edma_prep_dma_memcpy;
->  		s_ddev->device_prep_interleaved_dma = edma_prep_dma_interleaved;
->  		s_ddev->directions = BIT(DMA_MEM_TO_MEM);
+> 1)place files on a distance from each other to minimize number of extents
+>   on possible future growth;
+
+Speculative EOF preallocation at delayed allocation reservation time
+provides this.
+
+> 2)place small files in the same big block of block device.
+
+Delayed allocation during writeback packs files smaller than the
+stripe unit of the filesystem tightly.
+
+So, yes, we do both of these things at the same time in XFS, and
+have for the past 10 years.
+
+> At initial allocation time you never know, which file will stop grow in some future,
+> i.e. which file is suitable for compaction. This knowledge becomes available some time later.
+> Say, if a file has not been changed for a month, it is suitable for compaction with
+> another files like it.
 > 
+> If at allocation time you can determine a file, which won't grow in the future, don't be afraid,
+> and just share your algorithm here.
+> 
+> In Virtuozzo we tried to compact ext4 with existing kernel interface:
+> 
+> https://github.com/dmonakhov/e2fsprogs/blob/e4defrag2/misc/e4defrag2.c
+> 
+> But it does not work well in many situations, and the main problem is blocks allocation
+> in desired place is not possible. Block allocator can't behave excellent for everything.
+> 
+> If this interface bad, can you suggest another interface to make block allocator to know
+> the behavior expected from him in this specific case?
 
-- Péter
+Write once, long term data:
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+	fcntl(fd, F_SET_RW_HINT, RWH_WRITE_LIFE_EXTREME);
+
+That will allow the the storage stack to group all data with the
+same hint together, both in software and in hardware.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
