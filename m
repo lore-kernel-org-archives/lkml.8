@@ -2,55 +2,51 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68103C3F349
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97EDBC3F34C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39EAC20726
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:44:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 698BE222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:44:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811084;
-	bh=QfhNG+2Bqggo8/TPGsYpzPuD4HNyMRGUQS3IdG4mdnQ=;
+	s=default; t=1582811071;
+	bh=2j9IIT2JYjYm4/5MWQQiDIMrm9oM+yuL54XZpkKfbyU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BCK/yH18/BkwrYEkaC38+A/6sFr3lwWNqFgyoSffJjt4T09bnN1du1q42zlPVUb0V
-	 8AH7KVtzVApnhQYlq6zzQhy8i3vr0TS/DvdEQ7vWDZDhtqzg00ACSGzPvuvM7jo3NL
-	 9wa63TQ6Jk+33GlZ84jVYPWRgU+g/tO+AFv8PB30=
+	b=fUCQUh6VAI2ZNT7EN2Y0hYs/VdnK1QFf4kY4tId9l5sIEqvsXA8X1Xiej39I49DEX
+	 s70zSLW6unrJi/om73mARLYDmfDYtk6Qu4DPQH+UU+5nP4gpNfy8THAgjbOAwaGnKj
+	 Cep9+3F4/nLKeL0UIORXmVe0yEWAaKNtsmkjPh3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730248AbgB0Nol (ORCPT
+        id S1730233AbgB0Noa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:44:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40140 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:44:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729436AbgB0Nog (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:44:36 -0500
+        id S1730218AbgB0No3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:44:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89161246A9;
-        Thu, 27 Feb 2020 13:44:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4600920578;
+        Thu, 27 Feb 2020 13:44:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811076;
-        bh=QfhNG+2Bqggo8/TPGsYpzPuD4HNyMRGUQS3IdG4mdnQ=;
+        s=default; t=1582811068;
+        bh=2j9IIT2JYjYm4/5MWQQiDIMrm9oM+yuL54XZpkKfbyU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cgPTQ8Ry7GbJucrcUUzWD5HMB7ggNwRyunvX7oqvv/yvYwPV6doPTvStCCQgaIlum
-         7Srpdv1GXZDYSsbnRyjtXuT9X3gT2snUrUL/jvLL6fVVcs67ToBuiFkkzD4j4bxXa4
-         eWE/G3FnG6Py/Z4bNKZU73Fz9kLUUSnmcQCs/QrI=
+        b=0c4saDxlxmpw5M1LDZBxqL1TwtqNVaj3d+lWPkvL1rgwJOWUWsQumGVHDh0n1ExoX
+         kgY64kUsZDQhIsS9BGV3BsfkwYc97YaBqfKrRBdajDcd2IJ7HGBV4jMR1ZVmSEGcB7
+         Y8YISYhXdTqt39HJPDVDQQeaVgDIagOjoB/rbp+s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rahul Kundu <rahul.kundu@chelsio.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Dakshaja Uppalapati <dakshaja@chelsio.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.4 108/113] scsi: Revert "target: iscsi: Wait for all commands to finish before freeing a session"
-Date:   Thu, 27 Feb 2020 14:37:04 +0100
-Message-Id: <20200227132229.067564398@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 097/113] VT_RESIZEX: get rid of field-by-field copyin
+Date:   Thu, 27 Feb 2020 14:36:53 +0100
+Message-Id: <20200227132227.248273302@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
 References: <20200227132211.791484803@linuxfoundation.org>
@@ -63,70 +59,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-commit 807b9515b7d044cf77df31f1af9d842a76ecd5cb upstream.
+[ Upstream commit 1b3bce4d6bf839304a90951b4b25a5863533bf2a ]
 
-Since commit e9d3009cb936 introduced a regression and since the fix for
-that regression was not perfect, revert this commit.
-
-Link: https://marc.info/?l=target-devel&m=158157054906195
-Cc: Rahul Kundu <rahul.kundu@chelsio.com>
-Cc: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Cc: Sagi Grimberg <sagi@grimberg.me>
-Reported-by: Dakshaja Uppalapati <dakshaja@chelsio.com>
-Fixes: e9d3009cb936 ("scsi: target: iscsi: Wait for all commands to finish before freeing a session")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/iscsi/iscsi_target.c |   10 ++--------
- include/scsi/iscsi_proto.h          |    1 -
- 2 files changed, 2 insertions(+), 9 deletions(-)
+ drivers/tty/vt/vt_ioctl.c | 68 ++++++++++++++++-----------------------
+ 1 file changed, 27 insertions(+), 41 deletions(-)
 
---- a/drivers/target/iscsi/iscsi_target.c
-+++ b/drivers/target/iscsi/iscsi_target.c
-@@ -993,9 +993,7 @@ int iscsit_setup_scsi_cmd(struct iscsi_c
- 		hdr->cmdsn, be32_to_cpu(hdr->data_length), payload_length,
- 		conn->cid);
+diff --git a/drivers/tty/vt/vt_ioctl.c b/drivers/tty/vt/vt_ioctl.c
+index a86bc7afb3b28..a1e5c408c931b 100644
+--- a/drivers/tty/vt/vt_ioctl.c
++++ b/drivers/tty/vt/vt_ioctl.c
+@@ -850,58 +850,44 @@ int vt_ioctl(struct tty_struct *tty,
  
--	if (target_get_sess_cmd(&cmd->se_cmd, true) < 0)
--		return iscsit_add_reject_cmd(cmd,
--				ISCSI_REASON_WAITING_FOR_LOGOUT, buf);
-+	target_get_sess_cmd(&cmd->se_cmd, true);
+ 	case VT_RESIZEX:
+ 	{
+-		struct vt_consize __user *vtconsize = up;
+-		ushort ll,cc,vlin,clin,vcol,ccol;
++		struct vt_consize v;
+ 		if (!perm)
+ 			return -EPERM;
+-		if (!access_ok(VERIFY_READ, vtconsize,
+-				sizeof(struct vt_consize))) {
+-			ret = -EFAULT;
+-			break;
+-		}
++		if (copy_from_user(&v, up, sizeof(struct vt_consize)))
++			return -EFAULT;
+ 		/* FIXME: Should check the copies properly */
+-		__get_user(ll, &vtconsize->v_rows);
+-		__get_user(cc, &vtconsize->v_cols);
+-		__get_user(vlin, &vtconsize->v_vlin);
+-		__get_user(clin, &vtconsize->v_clin);
+-		__get_user(vcol, &vtconsize->v_vcol);
+-		__get_user(ccol, &vtconsize->v_ccol);
+-		vlin = vlin ? vlin : vc->vc_scan_lines;
+-		if (clin) {
+-			if (ll) {
+-				if (ll != vlin/clin) {
+-					/* Parameters don't add up */
+-					ret = -EINVAL;
+-					break;
+-				}
+-			} else 
+-				ll = vlin/clin;
++		if (!v.v_vlin)
++			v.v_vlin = vc->vc_scan_lines;
++		if (v.v_clin) {
++			int rows = v.v_vlin/v.v_clin;
++			if (v.v_rows != rows) {
++				if (v.v_rows) /* Parameters don't add up */
++					return -EINVAL;
++				v.v_rows = rows;
++			}
+ 		}
+-		if (vcol && ccol) {
+-			if (cc) {
+-				if (cc != vcol/ccol) {
+-					ret = -EINVAL;
+-					break;
+-				}
+-			} else
+-				cc = vcol/ccol;
++		if (v.v_vcol && v.v_ccol) {
++			int cols = v.v_vcol/v.v_ccol;
++			if (v.v_cols != cols) {
++				if (v.v_cols)
++					return -EINVAL;
++				v.v_cols = cols;
++			}
+ 		}
  
- 	cmd->sense_reason = transport_lookup_cmd_lun(&cmd->se_cmd,
- 						     scsilun_to_int(&hdr->lun));
-@@ -1806,9 +1804,7 @@ iscsit_handle_task_mgt_cmd(struct iscsi_
- 			      conn->sess->se_sess, 0, DMA_NONE,
- 			      TCM_SIMPLE_TAG, cmd->sense_buffer + 2);
- 
--	if (target_get_sess_cmd(&cmd->se_cmd, true) < 0)
--		return iscsit_add_reject_cmd(cmd,
--				ISCSI_REASON_WAITING_FOR_LOGOUT, buf);
-+	target_get_sess_cmd(&cmd->se_cmd, true);
- 
- 	/*
- 	 * TASK_REASSIGN for ERL=2 / connection stays inside of
-@@ -4394,8 +4390,6 @@ int iscsit_close_connection(
- 	 * must wait until they have completed.
- 	 */
- 	iscsit_check_conn_usage_count(conn);
--	target_sess_cmd_list_set_waiting(sess->se_sess);
--	target_wait_for_sess_cmds(sess->se_sess);
- 
- 	if (conn->conn_rx_hash.tfm)
- 		crypto_free_hash(conn->conn_rx_hash.tfm);
---- a/include/scsi/iscsi_proto.h
-+++ b/include/scsi/iscsi_proto.h
-@@ -638,7 +638,6 @@ struct iscsi_reject {
- #define ISCSI_REASON_BOOKMARK_INVALID	9
- #define ISCSI_REASON_BOOKMARK_NO_RESOURCES	10
- #define ISCSI_REASON_NEGOTIATION_RESET	11
--#define ISCSI_REASON_WAITING_FOR_LOGOUT	12
- 
- /* Max. number of Key=Value pairs in a text message */
- #define MAX_KEY_VALUE_PAIRS	8192
+-		if (clin > 32) {
+-			ret =  -EINVAL;
+-			break;
+-		}
+-		    
++		if (v.v_clin > 32)
++			return -EINVAL;
++
+ 		for (i = 0; i < MAX_NR_CONSOLES; i++) {
+ 			if (!vc_cons[i].d)
+ 				continue;
+ 			console_lock();
+-			if (vlin)
+-				vc_cons[i].d->vc_scan_lines = vlin;
+-			if (clin)
+-				vc_cons[i].d->vc_font.height = clin;
++			if (v.v_vlin)
++				vc_cons[i].d->vc_scan_lines = v.v_vlin;
++			if (v.v_clin)
++				vc_cons[i].d->vc_font.height = v.v_clin;
+ 			vc_cons[i].d->vc_resize_user = 1;
+-			vc_resize(vc_cons[i].d, cc, ll);
++			vc_resize(vc_cons[i].d, v.v_cols, v.v_rows);
+ 			console_unlock();
+ 		}
+ 		break;
+-- 
+2.20.1
+
 
 
