@@ -2,126 +2,187 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E59BC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F90EC35E1C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 500882469C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E3DD2469C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:42:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="tcjbM6ns"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="XTOT3JI4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729711AbgB0UkF (ORCPT
+        id S1729750AbgB0Umx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 15:40:05 -0500
-Received: from gateway36.websitewelcome.com ([192.185.193.119]:25353 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726758AbgB0UkE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 15:40:04 -0500
-X-Greylist: delayed 1417 seconds by postgrey-1.27 at vger.kernel.org; Thu, 27 Feb 2020 15:40:04 EST
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id 11F6B400C2F5F
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 13:31:19 -0600 (CST)
-Received: from br164.hostgator.com.br ([192.185.176.180])
-        by cmsmtp with SMTP
-        id 7Pa5jzwbiRP4z7Pa5jOUPN; Thu, 27 Feb 2020 14:16:25 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=qoO2qsaKDDkITqEnriWbR9MEmzTrNQCsMHlNkFBYJ7c=; b=tcjbM6nsjXMnB1U50YJqJ0Xpq+
-        qnb6sizE41zDg6WWUl6+PgNcBLucBF18ilJ0ekjStyF0ZK+qs9laPZeAs4HULnEnQJAPcUYmJhJh3
-        iNANGLYl0YuK6SGCRzH2kwFqTtzFPqn065TDn2wj+R8SSpz9sqOrctyNxJ7dlKjIGHuo/lxgZJ7gW
-        4QE368So677rBzP33fUqD1UHd+Z5E1rOKM1ck0LnzvKzZWMkTYPLf2n/ieBR1K0zTtFiUfv6wle1v
-        dp+OsSgF9hYl1BG91kGTsc5PPX0iJg/vbfN2VOy0Txc/DcxMMZxqGE8gjOwKZQLcNBPMf5yjUSZCA
-        mj2+zzYA==;
-Received: from [191.31.195.84] (port=40030 helo=castello.castello)
-        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <matheus@castello.eng.br>)
-        id 1j7Pa4-002xJo-Nh; Thu, 27 Feb 2020 17:16:25 -0300
-From:   Matheus Castello <matheus@castello.eng.br>
-To:     afaerber@suse.de, manivannan.sadhasivam@linaro.org,
-        mark.rutland@arm.com, robh+dt@kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH v1 1/2] dt-bindings: arm: actions: Document Caninos Loucos Labrador
-Date:   Thu, 27 Feb 2020 17:15:56 -0300
-Message-Id: <20200227201557.368533-2-matheus@castello.eng.br>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200227201557.368533-1-matheus@castello.eng.br>
-References: <20200227201557.368533-1-matheus@castello.eng.br>
+        Thu, 27 Feb 2020 15:42:53 -0500
+Received: from mout.gmx.net ([212.227.15.18]:48587 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726758AbgB0Umw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 15:42:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1582836168;
+        bh=PHxdA84CrVPUIQek2Fft/b4EaOEn4nC0NYq+qVH2pGQ=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=XTOT3JI4FLsMtWNreRSOt6sFzctcr3KXD4ItJGqY/5rwo54JfZaJ0EYgCv1EIw1j1
+         4P2GJTbCxIqDKqJgqelCUViOO204MHYCQGn8gicC0nK5zkbTRx1J9OR765JDJx9nAF
+         liD5Qo1y/Gi3p6gbwQ6oAOcugIpkNrrDe/Qswh2Y=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.195.162]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MfYLa-1jaA6p3lf6-00g46V; Thu, 27
+ Feb 2020 21:42:47 +0100
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-media@vger.kernel.org
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] media: v4l2: Switch to new kerneldoc syntax for named variable macro arguments
+Date:   Thu, 27 Feb 2020 21:42:36 +0100
+Message-Id: <20200227204237.24620-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - castello.eng.br
-X-BWhitelist: no
-X-Source-IP: 191.31.195.84
-X-Source-L: No
-X-Exim-ID: 1j7Pa4-002xJo-Nh
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (castello.castello) [191.31.195.84]:40030
-X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 10
-X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
-X-Local-Domain: yes
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:uk5ZfMvYwaTXAmyp41ifb0s/h/5zpkPMsArdN+226tMoQwFFJge
+ z5e5eRWKvIfYMhJzlXhjabY63A2c3s1+i9+ViGiidru4KsmxT6ZAPWGHHTd2jdioUNC0CQ3
+ 0N/XpDDIdMP2QB2w9psYTE44caliSzwbfuRFr1HmyZtLWvbVS8JsfddU9vBkzm5ZAEAzP8p
+ YLya3VVyLmUy0T9oyx7yw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:wfuyONb7hyM=:YUyJNxnd0v83v1a3K5hMHo
+ 8IogDwoDNww1c9s53aLv5GkcyvYTDgTqdnMqSDxJrAgVKqdQFomXI0Jp4MnwyYaQXL4qpztiu
+ qeap7PZCdYJl1KoF6UjirqAc0PdTYxBEJouURpVv9dsgoMEImFOVSlSJfNphJwTuGDvHBwY61
+ Dx0fHmbNo48Tqh5CIjlkFgRkg+2toaolJ42DHqdpEdlCpprHIXpHOa1wvSYZaeveP6q2gDbO4
+ kuzRuJ/s43nAasTr/kRSW8Cjm5lQrZgamOWyxjq9R7p19dw7I1tZvlSiuHZDpABamWzmWRGFl
+ nYjYlmkgouqrpbBeQRGmTcKi8QPxOcxmGdI/Z8SdM09OwWpb97z4AsSxrj1lAbspg+VadKWpu
+ iAhsDqsH1BJSrNEOjLRaq6C/vlOOSCGYlsyr9Eg4OUAb7hfZ3LlucvkRzRW8B/Lk0jg6dGNFN
+ SE0+DlQYEoilacOeyfTCs1k+n0iL4O63988O2MimQHaiKUCwo2LDIwSf0PLqzEIdPtgFU7EFV
+ 6FdgzAQoZh1NBu8PxXR8ak+kZyEj8aW7Lsl5mt+YzMZOJUDG0au9k/HX7nmK5SGMG4kAMKEM0
+ 77xWvNVMVi5puYggzG7+hiQizV+ac4iC5KsdVJxhf4lAmGY7p+PQ7KWeIVecF9dINri1KHeXE
+ G+XrG6HwcRL8lA+druv8OLlvL+8brksv+K230Lz2of0MLzd+Aycp1tG/6N04CCEJX0rt/pkbZ
+ 4j+1D/mctzcrZZBXs7WHz/7Rs8Jg9Wm4H5sbks8uNAhBIy6SBit6/hmvHa2+PaSgXDM6njvEq
+ b7KBWQuul/MpJTdiSltWEWYtLRKi7toh5XWQT758vtU5X+kt05fCtbEOKfYA/IjX/gcAIS7gA
+ QDKZHeELBsIBQbkSjCkCEQG5QhNr6dClsUqiJarOAhg0gJ9Z6jc6f/c1O5yYBXJZbcWenR80i
+ 5+otE8ZPjqeNNV29l2rCngcSOWlH+nv97BmtH00DOFDY+DVHeqBNtN9YQ7BiYJ+B7uwFbhElo
+ lLJ9HqEtHmd01T4Krrj05gUGsqS+bVSEGBnYTdsaFVMFqMczatbbpO5yLpnk0BdqIzCFC1pKM
+ B6ZUOm1Yi/P1URsB294RiMuRA+Bh0YthmeMv0GiQrTJNiVbY9HxxhudBu2FfiFGIv6rrfig8m
+ LLX9M0riUluqhGqcWX24T7YVnUj0zCvE9gDKIIFV3LrqrASZmWxpebvmfqUaFtI+skvOtnb6e
+ yWnG+eMyvxlopjLqU
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the documentation to add the Caninos Loucos Labrador
-vendor-prefix and items that were included in the device tree files.
+The new syntax is available since commit 43756e347f21
+("scripts/kernel-doc: Add support for named variable macro arguments").
 
-Signed-off-by: Matheus Castello <matheus@castello.eng.br>
----
- Documentation/devicetree/bindings/arm/actions.yaml     | 5 +++++
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 2 files changed, 7 insertions(+)
+The same HTML output is produced with and without this patch.
 
-diff --git a/Documentation/devicetree/bindings/arm/actions.yaml b/Documentation/devicetree/bindings/arm/actions.yaml
-index ace3fdaa8396..1b131ceb884a 100644
---- a/Documentation/devicetree/bindings/arm/actions.yaml
-+++ b/Documentation/devicetree/bindings/arm/actions.yaml
-@@ -24,6 +24,11 @@ properties:
-               - lemaker,guitar-bb-rev-b # LeMaker Guitar Base Board rev. B
-           - const: lemaker,guitar
-           - const: actions,s500
-+      - items:
-+          - enum:
-+              - caninos,labrador-bb # Caninos Loucos Labrador Base Board
-+          - const: caninos,labrador
-+          - const: actions,s500
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ include/media/v4l2-device.h | 16 ++++++++--------
+ include/media/v4l2-subdev.h |  2 +-
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
-       # The Actions Semi S700 is a quad-core ARM Cortex-A53 SoC.
-       - items:
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 9e67944bec9c..3e974dd563cf 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -167,6 +167,8 @@ patternProperties:
-     description: Calxeda
-   "^capella,.*":
-     description: Capella Microsystems, Inc
-+  "^caninos,.*":
-+    description: Caninos Loucos LSI-TEC NPO
-   "^cascoda,.*":
-     description: Cascoda, Ltd.
-   "^catalyst,.*":
---
-2.25.0
+diff --git a/include/media/v4l2-device.h b/include/media/v4l2-device.h
+index 95353ae476a1..7c912b7d2870 100644
+=2D-- a/include/media/v4l2-device.h
++++ b/include/media/v4l2-device.h
+@@ -240,7 +240,7 @@ static inline bool v4l2_device_supports_requests(struc=
+t v4l2_device *v4l2_dev)
+  * @f: operation function that will be called if @cond matches.
+  *	The operation functions are defined in groups, according to
+  *	each element at &struct v4l2_subdev_ops.
+- * @args...: arguments for @f.
++ * @args: arguments for @f.
+  *
+  * Ignore any errors.
+  *
+@@ -265,7 +265,7 @@ static inline bool v4l2_device_supports_requests(struc=
+t v4l2_device *v4l2_dev)
+  * @f: operation function that will be called if @cond matches.
+  *	The operation functions are defined in groups, according to
+  *	each element at &struct v4l2_subdev_ops.
+- * @args...: arguments for @f.
++ * @args: arguments for @f.
+  *
+  * Ignore any errors.
+  *
+@@ -293,7 +293,7 @@ static inline bool v4l2_device_supports_requests(struc=
+t v4l2_device *v4l2_dev)
+  * @f: operation function that will be called if @cond matches.
+  *	The operation functions are defined in groups, according to
+  *	each element at &struct v4l2_subdev_ops.
+- * @args...: arguments for @f.
++ * @args: arguments for @f.
+  *
+  * Return:
+  *
+@@ -328,7 +328,7 @@ static inline bool v4l2_device_supports_requests(struc=
+t v4l2_device *v4l2_dev)
+  * @f: operation function that will be called if @cond matches.
+  *	The operation functions are defined in groups, according to
+  *	each element at &struct v4l2_subdev_ops.
+- * @args...: arguments for @f.
++ * @args: arguments for @f.
+  *
+  * Return:
+  *
+@@ -359,7 +359,7 @@ static inline bool v4l2_device_supports_requests(struc=
+t v4l2_device *v4l2_dev)
+  * @f: operation function that will be called if @cond matches.
+  *	The operation functions are defined in groups, according to
+  *	each element at &struct v4l2_subdev_ops.
+- * @args...: arguments for @f.
++ * @args: arguments for @f.
+  *
+  * Ignore any errors.
+  *
+@@ -388,7 +388,7 @@ static inline bool v4l2_device_supports_requests(struc=
+t v4l2_device *v4l2_dev)
+  * @f: operation function that will be called if @cond matches.
+  *	The operation functions are defined in groups, according to
+  *	each element at &struct v4l2_subdev_ops.
+- * @args...: arguments for @f.
++ * @args: arguments for @f.
+  *
+  * Return:
+  *
+@@ -419,7 +419,7 @@ static inline bool v4l2_device_supports_requests(struc=
+t v4l2_device *v4l2_dev)
+  * @f: operation function that will be called if @cond matches.
+  *	The operation functions are defined in groups, according to
+  *	each element at &struct v4l2_subdev_ops.
+- * @args...: arguments for @f.
++ * @args: arguments for @f.
+  *
+  * Ignore any errors.
+  *
+@@ -447,7 +447,7 @@ static inline bool v4l2_device_supports_requests(struc=
+t v4l2_device *v4l2_dev)
+  * @f: operation function that will be called if @cond matches.
+  *	The operation functions are defined in groups, according to
+  *	each element at &struct v4l2_subdev_ops.
+- * @args...: arguments for @f.
++ * @args: arguments for @f.
+  *
+  * Return:
+  *
+diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
+index 761aa83a3f3c..a4848de59852 100644
+=2D-- a/include/media/v4l2-subdev.h
++++ b/include/media/v4l2-subdev.h
+@@ -1093,7 +1093,7 @@ extern const struct v4l2_subdev_ops v4l2_subdev_call=
+_wrappers;
+  * @f: callback function to be called.
+  *     The callback functions are defined in groups, according to
+  *     each element at &struct v4l2_subdev_ops.
+- * @args...: arguments for @f.
++ * @args: arguments for @f.
+  *
+  * Example: err =3D v4l2_subdev_call(sd, video, s_std, norm);
+  */
+=2D-
+2.20.1
 
