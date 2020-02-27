@@ -2,53 +2,52 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A65ABC52D5A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA57C52D2D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E8F124656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0862324656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812162;
-	bh=4Q9zxIWr3nzH1lCkmXbXCZriRxQ09zVPUbdUTtpjbjc=;
+	s=default; t=1582812158;
+	bh=PiciUWh6trivm2waRdUpYO3vt8+/QQj86XcJO2eDsJc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SbuIabOlEwE8IA+qdEy/gsb3ROaHs5M8wgI4laXP0yFRe0OCUY5BVrPQ2q+FvardA
-	 Jwejm+LuNcE1SgxOUdsrid3yZXaDxU1r5yeTSr3z8MgLGnqwF0bEVoO2volsW+odOk
-	 B2FKCnM/vN5r1ttjaIil3Sff/DDVIuQLrKlvgMyI=
+	b=wW1BOpf73tmAdgV/WBZR8TNPRQfjtAshVYk3/8puzecrk9rRmc57xbg+WZAZUeWpu
+	 U5RgxR9sSsTEE0zp5k10DttYR9XWTc7mu2O5dtO/7xepVrqg+X3QPlkvIUhu7y+wXP
+	 jmrfvp7ElSiN9jRwzi3D7PB7Yr5edGHpwOoxqTLQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733174AbgB0OCk (ORCPT
+        id S1732881AbgB0OCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:02:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37328 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733170AbgB0OCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Feb 2020 09:02:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37292 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733149AbgB0OCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:02:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4543A20578;
-        Thu, 27 Feb 2020 14:02:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 918F82469B;
+        Thu, 27 Feb 2020 14:02:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812156;
-        bh=4Q9zxIWr3nzH1lCkmXbXCZriRxQ09zVPUbdUTtpjbjc=;
+        s=default; t=1582812154;
+        bh=PiciUWh6trivm2waRdUpYO3vt8+/QQj86XcJO2eDsJc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GCswms/94mMBOlbwFEGK7opSydTkzR1SfUiglRZ8CDCdKY+aNVLxnR+cj14HRmAMk
-         rUXyRjon0ZkRe7Xle+cD9SSmRhZSLVd+nmvRsxwlfvHN67yxB84dcmTXDlmMCIan/O
-         gEEDiSq8oGu1Ny3NQjvtZ4mEIKcCJoOOiO1//WQo=
+        b=hyPqyM3U6r2jwnbaWLwqSVHvm0HOxiGE0j/RCIP7PtMnuy80lTM2pY3PNTyd54S8Y
+         dOyMNJaopb0T6RjZTi4mfqM9eQfGyk7mlBrRs+s24YvrZRT+jtGF+0bHmyHrmXRzks
+         jiwhhCHQ/3VzZEH98gfeANGSKagm111pUyyWF4Bo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 4.14 237/237] s390/mm: Explicitly compare PAGE_DEFAULT_KEY against zero in storage_key_init_range
-Date:   Thu, 27 Feb 2020 14:37:31 +0100
-Message-Id: <20200227132313.499491929@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Subject: [PATCH 4.14 236/237] xen: Enable interrupts when calling _cond_resched()
+Date:   Thu, 27 Feb 2020 14:37:30 +0100
+Message-Id: <20200227132313.432076948@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -61,54 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit 380324734956c64cd060e1db4304f3117ac15809 upstream.
+commit 8645e56a4ad6dcbf504872db7f14a2f67db88ef2 upstream.
 
-Clang warns:
+xen_maybe_preempt_hcall() is called from the exception entry point
+xen_do_hypervisor_callback with interrupts disabled.
 
- In file included from ../arch/s390/purgatory/purgatory.c:10:
- In file included from ../include/linux/kexec.h:18:
- In file included from ../include/linux/crash_core.h:6:
- In file included from ../include/linux/elfcore.h:5:
- In file included from ../include/linux/user.h:1:
- In file included from ../arch/s390/include/asm/user.h:11:
- ../arch/s390/include/asm/page.h:45:6: warning: converting the result of
- '<<' to a boolean always evaluates to false
- [-Wtautological-constant-compare]
-         if (PAGE_DEFAULT_KEY)
-            ^
- ../arch/s390/include/asm/page.h:23:44: note: expanded from macro
- 'PAGE_DEFAULT_KEY'
- #define PAGE_DEFAULT_KEY        (PAGE_DEFAULT_ACC << 4)
-                                                  ^
- 1 warning generated.
+_cond_resched() evades the might_sleep() check in cond_resched() which
+would have caught that and schedule_debug() unfortunately lacks a check
+for irqs_disabled().
 
-Explicitly compare this against zero to silence the warning as it is
-intended to be used in a boolean context.
+Enable interrupts around the call and use cond_resched() to catch future
+issues.
 
-Fixes: de3fa841e429 ("s390/mm: fix compile for PAGE_DEFAULT_KEY != 0")
-Link: https://github.com/ClangBuiltLinux/linux/issues/860
-Link: https://lkml.kernel.org/r/20200214064207.10381-1-natechancellor@gmail.com
-Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: fdfd811ddde3 ("x86/xen: allow privcmd hypercalls to be preempted")
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/878skypjrh.fsf@nanos.tec.linutronix.de
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/include/asm/page.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/xen/preempt.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/s390/include/asm/page.h
-+++ b/arch/s390/include/asm/page.h
-@@ -42,7 +42,7 @@ void __storage_key_init_range(unsigned l
- 
- static inline void storage_key_init_range(unsigned long start, unsigned long end)
- {
--	if (PAGE_DEFAULT_KEY)
-+	if (PAGE_DEFAULT_KEY != 0)
- 		__storage_key_init_range(start, end);
+--- a/drivers/xen/preempt.c
++++ b/drivers/xen/preempt.c
+@@ -37,7 +37,9 @@ asmlinkage __visible void xen_maybe_pree
+ 		 * cpu.
+ 		 */
+ 		__this_cpu_write(xen_in_preemptible_hcall, false);
+-		_cond_resched();
++		local_irq_enable();
++		cond_resched();
++		local_irq_disable();
+ 		__this_cpu_write(xen_in_preemptible_hcall, true);
+ 	}
  }
- 
 
 
