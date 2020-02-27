@@ -2,169 +2,128 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B3FEC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE93C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 460AD246A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:59:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582826347;
-	bh=yuxtO3e/a768sMDv+0KsbT2pPeVNtHRCp8kO9r0yIco=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VH4h4vsSDYtgYOciPr6bjC9Vt2d6D9hukkBQHcWnGiC+xdomqMPNk25QAeMMgwbVj
-	 GkrM906L73FOrWs35Xxu1mynQr/Ek7kfZj6gc6+pZFiGKVkvcp815wiN1SJSsCauC8
-	 g+sb1/NHDDFcuhkwDPM4r/lq2kcmSg69+lJDDPgw=
+	by mail.kernel.org (Postfix) with ESMTP id 981DE246A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:00:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Unb+r7E+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730391AbgB0R7G (ORCPT
+        id S1729942AbgB0SAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 12:59:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59202 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729859AbgB0R7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 12:59:06 -0500
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCB65246A3;
-        Thu, 27 Feb 2020 17:59:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582826344;
-        bh=yuxtO3e/a768sMDv+0KsbT2pPeVNtHRCp8kO9r0yIco=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DFkAvsxqy1V/ZWShlgqlvikVPya1vUke31kyn5q1UbLlHAZsz5+db0hNRYbsBZxmQ
-         gLo813UATdkWf9cjFbnIzh1bpxxYgR+RrF2oljFdUVD8sMb29ahZY6sEECxxPHHQwj
-         WXLaFbxLqDdGBaFMjLS/1u2nIdA/8z0BuZo2bVJE=
-Date:   Thu, 27 Feb 2020 09:59:04 -0800
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [f2fs-dev] [PATCH] f2fs: show mounted time
-Message-ID: <20200227175904.GA33965@google.com>
-References: <20200226164615.170424-1-jaegeuk@kernel.org>
- <ace413a8-639d-24c9-f36f-5da949be76e3@huawei.com>
+        Thu, 27 Feb 2020 13:00:40 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22947 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726805AbgB0SAj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 13:00:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582826438;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=B1a+jNTb4Orz5c9qxW8szumduw/KGeqpv62VeNode+w=;
+        b=Unb+r7E+Mm9gZnfZxfuwRFHtoqGhCHCRhsue5jjjJ8CsimX03HATy3Tq6sSiljiJTj4hY9
+        3DtNDB8pmkhvzSs0BZov53v9sc6AaONy73PIQNxQ4Ryg8JzJs7CwMRJw+mUKyDos95YmgL
+        flCpjFBkTJc6yQ3sk+3NeeXgSrfYUAQ=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-274-t0uidZAxOLylW34OIusRoA-1; Thu, 27 Feb 2020 13:00:37 -0500
+X-MC-Unique: t0uidZAxOLylW34OIusRoA-1
+Received: by mail-wm1-f71.google.com with SMTP id x9so69306wmc.7
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 10:00:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=B1a+jNTb4Orz5c9qxW8szumduw/KGeqpv62VeNode+w=;
+        b=qNzKzlIf1LwCUcFp4KwtGUEbmUwOH/LgoCgl6dOnOrn62uyFbjWuPwP6WuesNyOQxK
+         2FVCri0/sKFJuzY6N2BUe5FxT9DNhSzpsTLgIev8yLxyx8Rz8clX6vx3CTTJ4dKqQxBt
+         FSwp9QNMMTib6fncbMHzXmzxdzB5Xm5zM+c0SZ15Ba3NJJubgGfyNdOz45BsBt8YR3kr
+         nGA37WeIV1BuYZZY2cWzUyYbtccD9UBURvkAhbSEBbnUR+E+77sQ+cMz6Bw53+y9BUKS
+         XLOxf1I490bL5STXN/4JNLYUYgg7m4W7qpXez9pOhuocA5yhu56nckQHYip++pymF2eY
+         ksgA==
+X-Gm-Message-State: APjAAAVm7qlRjYqIiy69z8f2oyWMt58nt0IVc+qP2Wn9poiITsFVDDlJ
+        FwV25pfECGinMYgFFaH7OJ+WK4qkSFXoKltBXiKkatibKY9gOinzHcHVwpg+0o0TTnIHuPH+WFw
+        Bz02sAA1eSa3CcbuUxLFjWeCO
+X-Received: by 2002:adf:e506:: with SMTP id j6mr34517wrm.309.1582826435242;
+        Thu, 27 Feb 2020 10:00:35 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxxEXgel+e/Cr10Eg2mSUgtpkv3oomTVYQQ91dnsRyuh9Zrri6FyoSRaQfd8YKoTsQFnJzluA==
+X-Received: by 2002:adf:e506:: with SMTP id j6mr34495wrm.309.1582826435009;
+        Thu, 27 Feb 2020 10:00:35 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:30cb:d037:e500:2b47? ([2001:b07:6468:f312:30cb:d037:e500:2b47])
+        by smtp.gmail.com with ESMTPSA id p26sm8207428wmc.24.2020.02.27.10.00.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Feb 2020 10:00:34 -0800 (PST)
+Subject: Re: [PATCH 5/5] KVM: x86: mmu: Add guest physical address check in
+ translate_gpa()
+To:     Mohammed Gamal <mgamal@redhat.com>, kvm@vger.kernel.org
+Cc:     sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        linux-kernel@vger.kernel.org
+References: <20200227172306.21426-1-mgamal@redhat.com>
+ <20200227172306.21426-6-mgamal@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <f81e0503-bc35-d682-4440-68b81c10784f@redhat.com>
+Date:   Thu, 27 Feb 2020 19:00:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ace413a8-639d-24c9-f36f-5da949be76e3@huawei.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200227172306.21426-6-mgamal@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/27, Chao Yu wrote:
-> On 2020/2/27 0:46, Jaegeuk Kim wrote:
-> > Let's show mounted time.
-> > 
-> > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> > ---
-> >  Documentation/ABI/testing/sysfs-fs-f2fs | 5 +++++
-> >  fs/f2fs/debug.c                         | 3 +++
-> >  fs/f2fs/segment.c                       | 2 +-
-> >  fs/f2fs/segment.h                       | 2 +-
-> >  fs/f2fs/sysfs.c                         | 8 ++++++++
-> >  5 files changed, 18 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/Documentation/ABI/testing/sysfs-fs-f2fs b/Documentation/ABI/testing/sysfs-fs-f2fs
-> > index 1a6cd5397129..ddee45e88270 100644
-> > --- a/Documentation/ABI/testing/sysfs-fs-f2fs
-> > +++ b/Documentation/ABI/testing/sysfs-fs-f2fs
-> > @@ -318,3 +318,8 @@ Date:		September 2019
-> >  Contact:	"Hridya Valsaraju" <hridya@google.com>
-> >  Description:	Average number of valid blocks.
-> >  		Available when CONFIG_F2FS_STAT_FS=y.
-> > +
-> > +What:		/sys/fs/f2fs/<disk>/mounted_time
-> > +Date:		February 2020
-> > +Contact:	"Jaegeuk Kim" <jaegeuk@kernel.org>
-> > +Description:	Show the mounted time of this partition.
+On 27/02/20 18:23, Mohammed Gamal wrote:
+> In case of running a guest with 4-level page tables on a 5-level page
+> table host, it might happen that a guest might have a physical address
+> with reserved bits set, but the host won't see that and trap it.
 > 
-> It's better to describe its unit: second, otherwise, it looks good to me.
+> Hence, we need to check page faults' physical addresses against the guest's
+> maximum physical memory and if it's exceeded, we need to add
+> the PFERR_RSVD_MASK bits to the PF's error code.
 
-I've added it. Thanks.
+You can just set it to PFERR_RSVD_MASK | PFERR_PRESENT_MASK (no need to
+use an "|") and return UNMAPPED_GBA.  But I would have thought that this
+is not needed and the
 
-> 
-> Reviewed-by: Chao Yu <yuchao0@huawei.com>
-> 
-> Thanks,
-> 
-> > diff --git a/fs/f2fs/debug.c b/fs/f2fs/debug.c
-> > index 6b89eae5e4ca..a8cf9626f71f 100644
-> > --- a/fs/f2fs/debug.c
-> > +++ b/fs/f2fs/debug.c
-> > @@ -301,6 +301,9 @@ static int stat_show(struct seq_file *s, void *v)
-> >  			   si->ssa_area_segs, si->main_area_segs);
-> >  		seq_printf(s, "(OverProv:%d Resv:%d)]\n\n",
-> >  			   si->overp_segs, si->rsvd_segs);
-> > +		seq_printf(s, "Current Time: %llu s / Mounted Time: %llu s\n\n",
-> > +					ktime_get_boottime_seconds(),
-> > +					SIT_I(si->sbi)->mounted_time);
-> >  		if (test_opt(si->sbi, DISCARD))
-> >  			seq_printf(s, "Utilization: %u%% (%u valid blocks, %u discard blocks)\n",
-> >  				si->utilization, si->valid_count, si->discard_blks);
-> > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> > index fb3e531a36d2..601d67e72c50 100644
-> > --- a/fs/f2fs/segment.c
-> > +++ b/fs/f2fs/segment.c
-> > @@ -4073,7 +4073,7 @@ static int build_sit_info(struct f2fs_sb_info *sbi)
-> >  	sit_i->dirty_sentries = 0;
-> >  	sit_i->sents_per_block = SIT_ENTRY_PER_BLOCK;
-> >  	sit_i->elapsed_time = le64_to_cpu(sbi->ckpt->elapsed_time);
-> > -	sit_i->mounted_time = ktime_get_real_seconds();
-> > +	sit_i->mounted_time = ktime_get_boottime_seconds();
-> >  	init_rwsem(&sit_i->sentry_lock);
-> >  	return 0;
-> >  }
-> > diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
-> > index 459dc3901a57..7a83bd530812 100644
-> > --- a/fs/f2fs/segment.h
-> > +++ b/fs/f2fs/segment.h
-> > @@ -756,7 +756,7 @@ static inline unsigned long long get_mtime(struct f2fs_sb_info *sbi,
-> >  						bool base_time)
-> >  {
-> >  	struct sit_info *sit_i = SIT_I(sbi);
-> > -	time64_t diff, now = ktime_get_real_seconds();
-> > +	time64_t diff, now = ktime_get_boottime_seconds();
-> >  
-> >  	if (now >= sit_i->mounted_time)
-> >  		return sit_i->elapsed_time + now - sit_i->mounted_time;
-> > diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-> > index 4e8aae03f26c..7bfbead98c04 100644
-> > --- a/fs/f2fs/sysfs.c
-> > +++ b/fs/f2fs/sysfs.c
-> > @@ -187,6 +187,12 @@ static ssize_t encoding_show(struct f2fs_attr *a,
-> >  	return sprintf(buf, "(none)");
-> >  }
-> >  
-> > +static ssize_t mounted_time_show(struct f2fs_attr *a,
-> > +		struct f2fs_sb_info *sbi, char *buf)
-> > +{
-> > +	return sprintf(buf, "%llu", SIT_I(sbi)->mounted_time);
-> > +}
-> > +
-> >  #ifdef CONFIG_F2FS_STAT_FS
-> >  static ssize_t moved_blocks_foreground_show(struct f2fs_attr *a,
-> >  				struct f2fs_sb_info *sbi, char *buf)
-> > @@ -546,6 +552,7 @@ F2FS_GENERAL_RO_ATTR(features);
-> >  F2FS_GENERAL_RO_ATTR(current_reserved_blocks);
-> >  F2FS_GENERAL_RO_ATTR(unusable);
-> >  F2FS_GENERAL_RO_ATTR(encoding);
-> > +F2FS_GENERAL_RO_ATTR(mounted_time);
-> >  #ifdef CONFIG_F2FS_STAT_FS
-> >  F2FS_STAT_ATTR(STAT_INFO, f2fs_stat_info, cp_foreground_calls, cp_count);
-> >  F2FS_STAT_ATTR(STAT_INFO, f2fs_stat_info, cp_background_calls, bg_cp_count);
-> > @@ -623,6 +630,7 @@ static struct attribute *f2fs_attrs[] = {
-> >  	ATTR_LIST(reserved_blocks),
-> >  	ATTR_LIST(current_reserved_blocks),
-> >  	ATTR_LIST(encoding),
-> > +	ATTR_LIST(mounted_time),
-> >  #ifdef CONFIG_F2FS_STAT_FS
-> >  	ATTR_LIST(cp_foreground_calls),
-> >  	ATTR_LIST(cp_background_calls),
-> > 
+                if (unlikely(FNAME(is_rsvd_bits_set)(mmu, pte, walker->level))) {
+                        errcode = PFERR_RSVD_MASK | PFERR_PRESENT_MASK;
+                        goto error;
+                }
+
+code would have catch the reserved bits.
+
+> Also make sure the error code isn't overwritten by the page table walker.
+
+Returning UNMAPPED_GVA would remove that as well.
+
+I'm not sure this patch is enough however.  For a usermode access with
+"!pte.u pte.40" for example you should be getting:
+
+- a #PF with PRESENT|USER error code on a machine with physical address
+width >=41; in this case you don't get an EPT violation or misconfig.
+
+- a #PF with RSVD error code on a machine with physical address with <41.
+
+You can enable verbose mode in access.c to see if this case is being generated,
+and if so debug it.
+
+The solution for this would be to trap page faults and do a page table
+walk (with vcpu->arch.walk_mmu->gva_to_gpa) to find the correct error
+code.
+
+Paolo
+
