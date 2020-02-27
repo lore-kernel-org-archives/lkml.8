@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0000C54FE9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15671C76563
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88A952468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8CA624688
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:27:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813644;
-	bh=jyVEhKbOvfiFnc9zwlVMqvuOOZFN6caQIquxtfzfJEk=;
+	s=default; t=1582813661;
+	bh=IAbXsdKThfWp5kflFnf+H5CpkjsYJ220+iv2NJURT2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hDow6z37Kla/sIleOUzS8H9h3CfC6iWW7gPhdxMzQdm7bieVCSi1E8DuxsDgb744R
-	 Xa5XC10+8lb/k0Qe/ReTRYPohOGAFXzGSqu5DWK2Yk6WPAMt9eWNOViygMq9kVKK5X
-	 HwsdT9BO371Kg8IBdj7VXGEDMMuHrWnOpD3ACJm0=
+	b=ewk2By69ImMW1QPV4lANTkyzTiOiXcp4QhY02Ir1LgR9NHrJ6+JFYcg2HGuLs2gTH
+	 9FBlKyOamHXeUKbpyLkgiskuiW++nfkXlgy3rnFsVWhd+OtK2Yx2T9ovMr1oJ0AGfw
+	 ST+XRGmy3nwGDtUNrtniT1kakBHq/XUfrXx8gz5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388321AbgB0OI7 (ORCPT
+        id S2388892AbgB0O1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:08:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46716 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:27:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387620AbgB0OIw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:08:52 -0500
+        id S2387557AbgB0OIo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:08:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E62824697;
-        Thu, 27 Feb 2020 14:08:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4316021D7E;
+        Thu, 27 Feb 2020 14:08:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812531;
-        bh=jyVEhKbOvfiFnc9zwlVMqvuOOZFN6caQIquxtfzfJEk=;
+        s=default; t=1582812523;
+        bh=IAbXsdKThfWp5kflFnf+H5CpkjsYJ220+iv2NJURT2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dkbBrHnj7U88qOZUGezrm6iGccI41woIOWsuU6h08zhE8GYIZ7KD8CHfDCUm5nre8
-         iKqcO/aH3MPIIW+zCLjjQTQgzysh2EzRYdQgJc+K/sls9NRp+OIsNTOclQ6gQ+CRdW
-         OeACo7Lb0+VZOCjVPSh7gpVe0ULt1f5j7f4S5z8k=
+        b=n/466QPAey9PRYYFGeB/APO/njvw9wMjGM8ylAmhvcJlkFaDxVJa6gOtPF6AjRDKL
+         rFPDNgjTnuFPBQ1x1JH4BZg+V1pADmeD+Zkhc7p0bp+7bkrMJpFk5ImessUJLNsrhI
+         RCv1+J97QLKcqqyOoHWf2LMDyctvXyYl3lNc9reY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Saar Amar <Saar.Amar@microsoft.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Borislav Petkov <bp@suse.de>
-Subject: [PATCH 5.4 052/135] x86/mce/amd: Publish the bank pointer only after setup has succeeded
-Date:   Thu, 27 Feb 2020 14:36:32 +0100
-Message-Id: <20200227132236.967222687@linuxfoundation.org>
+        stable@vger.kernel.org, Rene D Obermueller <cmdrrdo@gmail.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 5.4 023/135] xhci: Force Maximum Packet size for Full-speed bulk devices to valid range.
+Date:   Thu, 27 Feb 2020 14:36:03 +0100
+Message-Id: <20200227132232.702723589@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -60,104 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-commit 6e5cf31fbe651bed7ba1df768f2e123531132417 upstream.
+commit f148b9f402ef002b57bcff3964d45abc8ffb6c3f upstream.
 
-threshold_create_bank() creates a bank descriptor per MCA error
-thresholding counter which can be controlled over sysfs. It publishes
-the pointer to that bank in a per-CPU variable and then goes on to
-create additional thresholding blocks if the bank has such.
+A Full-speed bulk USB audio device (DJ-Tech CTRL) with a invalid Maximum
+Packet Size of 4 causes a xHC "Parameter Error" at enumeration.
 
-However, that creation of additional blocks in
-allocate_threshold_blocks() can fail, leading to a use-after-free
-through the per-CPU pointer.
+This is because valid Maximum packet sizes for Full-speed bulk endpoints
+are 8, 16, 32 and 64 bytes. Hosts are not required to support other values
+than these. See usb 2 specs section 5.8.3 for details.
 
-Therefore, publish that pointer only after all blocks have been setup
-successfully.
+The device starts working after forcing the maximum packet size to 8.
+This is most likely the case with other devices as well, so force the
+maximum packet size to a valid range.
 
-Fixes: 019f34fccfd5 ("x86, MCE, AMD: Move shared bank to node descriptor")
-Reported-by: Saar Amar <Saar.Amar@microsoft.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200128140846.phctkvx5btiexvbx@kili.mountain
+Cc: stable@vger.kernel.org
+Reported-by: Rene D Obermueller <cmdrrdo@gmail.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200210134553.9144-2-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/cpu/mce/amd.c |   33 ++++++++++++++++-----------------
- 1 file changed, 16 insertions(+), 17 deletions(-)
+ drivers/usb/host/xhci-mem.c |   12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
---- a/arch/x86/kernel/cpu/mce/amd.c
-+++ b/arch/x86/kernel/cpu/mce/amd.c
-@@ -1196,8 +1196,9 @@ static const char *get_name(unsigned int
- 	return buf_mcatype;
- }
- 
--static int allocate_threshold_blocks(unsigned int cpu, unsigned int bank,
--				     unsigned int block, u32 address)
-+static int allocate_threshold_blocks(unsigned int cpu, struct threshold_bank *tb,
-+				     unsigned int bank, unsigned int block,
-+				     u32 address)
- {
- 	struct threshold_block *b = NULL;
- 	u32 low, high;
-@@ -1241,16 +1242,12 @@ static int allocate_threshold_blocks(uns
- 
- 	INIT_LIST_HEAD(&b->miscj);
- 
--	if (per_cpu(threshold_banks, cpu)[bank]->blocks) {
--		list_add(&b->miscj,
--			 &per_cpu(threshold_banks, cpu)[bank]->blocks->miscj);
--	} else {
--		per_cpu(threshold_banks, cpu)[bank]->blocks = b;
--	}
-+	if (tb->blocks)
-+		list_add(&b->miscj, &tb->blocks->miscj);
-+	else
-+		tb->blocks = b;
- 
--	err = kobject_init_and_add(&b->kobj, &threshold_ktype,
--				   per_cpu(threshold_banks, cpu)[bank]->kobj,
--				   get_name(bank, b));
-+	err = kobject_init_and_add(&b->kobj, &threshold_ktype, tb->kobj, get_name(bank, b));
- 	if (err)
- 		goto out_free;
- recurse:
-@@ -1258,7 +1255,7 @@ recurse:
- 	if (!address)
- 		return 0;
- 
--	err = allocate_threshold_blocks(cpu, bank, block, address);
-+	err = allocate_threshold_blocks(cpu, tb, bank, block, address);
- 	if (err)
- 		goto out_free;
- 
-@@ -1343,8 +1340,6 @@ static int threshold_create_bank(unsigne
- 		goto out_free;
- 	}
- 
--	per_cpu(threshold_banks, cpu)[bank] = b;
--
- 	if (is_shared_bank(bank)) {
- 		refcount_set(&b->cpus, 1);
- 
-@@ -1355,9 +1350,13 @@ static int threshold_create_bank(unsigne
- 		}
- 	}
- 
--	err = allocate_threshold_blocks(cpu, bank, 0, msr_ops.misc(bank));
--	if (!err)
--		goto out;
-+	err = allocate_threshold_blocks(cpu, b, bank, 0, msr_ops.misc(bank));
-+	if (err)
-+		goto out_free;
-+
-+	per_cpu(threshold_banks, cpu)[bank] = b;
-+
-+	return 0;
- 
-  out_free:
- 	kfree(b);
+--- a/drivers/usb/host/xhci-mem.c
++++ b/drivers/usb/host/xhci-mem.c
+@@ -1475,9 +1475,15 @@ int xhci_endpoint_init(struct xhci_hcd *
+ 	/* Allow 3 retries for everything but isoc, set CErr = 3 */
+ 	if (!usb_endpoint_xfer_isoc(&ep->desc))
+ 		err_count = 3;
+-	/* Some devices get this wrong */
+-	if (usb_endpoint_xfer_bulk(&ep->desc) && udev->speed == USB_SPEED_HIGH)
+-		max_packet = 512;
++	/* HS bulk max packet should be 512, FS bulk supports 8, 16, 32 or 64 */
++	if (usb_endpoint_xfer_bulk(&ep->desc)) {
++		if (udev->speed == USB_SPEED_HIGH)
++			max_packet = 512;
++		if (udev->speed == USB_SPEED_FULL) {
++			max_packet = rounddown_pow_of_two(max_packet);
++			max_packet = clamp_val(max_packet, 8, 64);
++		}
++	}
+ 	/* xHCI 1.0 and 1.1 indicates that ctrl ep avg TRB Length should be 8 */
+ 	if (usb_endpoint_xfer_control(&ep->desc) && xhci->hci_version >= 0x100)
+ 		avg_trb_len = 8;
 
 
