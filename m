@@ -2,70 +2,99 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EABB6C3F2C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E32DC3F2CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE37A246A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:45:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582843507;
-	bh=KE6d1FyD4vCuDWtt9ILqMivwZIi6i5fxzq6HNRIt1oI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hJS3KoqM6nkfvw3ZgP0k/FW6+pmFfqZiu3QJ3oXwopQ94FQ8d1MfJNiVmbelpP69m
-	 VezPwoUqi8Ai8TMBh5elNB38Cu1gUm+du88NV2pUCsNbSArozbsftaaNlH7llNxBmf
-	 9PM2vN546eWI9W5COGvO0qVl65TqupKEOQV3acXw=
+	by mail.kernel.org (Postfix) with ESMTP id 4AF03246A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:49:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730224AbgB0WpG (ORCPT
+        id S1730155AbgB0WtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 17:45:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45292 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729722AbgB0WpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 17:45:06 -0500
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46FE8246A1;
-        Thu, 27 Feb 2020 22:45:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582843505;
-        bh=KE6d1FyD4vCuDWtt9ILqMivwZIi6i5fxzq6HNRIt1oI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yUSHmQpLA/ur/9DuxTjQYlNR2kkODsyBeWrbG59d1FHIPfmOZnaY+W5S1khI/H4xz
-         lExwDtKgXzcNkEz/5ktZWbWn5MNNYwUs1EMj69IPyI5txOkLr0iAC2qoJ+8ctPPDkQ
-         no4vauhKQg6ij8MSZPfFDbbTrVeVAXRaxoAUeZoA=
-Date:   Thu, 27 Feb 2020 23:45:03 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [patch 1/8] x86/entry/64: Trace irqflags unconditionally on when
- returing to user space
-Message-ID: <20200227224502.GC21795@lenoir>
-References: <20200225220801.571835584@linutronix.de>
- <20200225221305.295289073@linutronix.de>
+        Thu, 27 Feb 2020 17:49:07 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39296 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbgB0WtH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 17:49:07 -0500
+Received: by mail-oi1-f196.google.com with SMTP id r16so953578oie.6;
+        Thu, 27 Feb 2020 14:49:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qrt5LAslHCMpZZk+1bFnZB1hkmKt9afE9QUzznOIIn4=;
+        b=kkk5YPWWktEuu8H0UZD1PlKmpLPT1sBXpdkYPvE68ooL/mYn6bRUmkPCVuIcetMOjX
+         qKgiUVbx8acQMRBrgABTPGK/rm9oiU9pgEVhny0ozfbcDIEPF6PSiTw/gnaMDifNMSxg
+         QPqgiLPel/dMlCxGdecXStBIxkUUbLceXJLcwZfxTJQGCkwDurJ9YR4AVnwCBpALYHEV
+         CJJoueBjkekD+dyOmEwnNXFLCg7EM/0FS7hZFFEc2SKMjIp9XaMkaoExY/B/Z3yZcbp2
+         KLdE4oABAWA6K4ePyyoR6QU5swhUl4vXrmUfjKkd+BA9PuZtva9tZ686W4dWBPT7gPTP
+         wc+A==
+X-Gm-Message-State: APjAAAWyRaABHf3OYY8cuKaVwtKGu1wjpjQMnkXz8VhZ3IUwoNIb/Acp
+        nT5JxjUOX+t7uyP9PwF+Q5FdWDeo
+X-Google-Smtp-Source: APXvYqytrr7sXI8/ORwW3w1WJBltPaUj5Vk6Zc295697nPlBcBzHRpbBPGsqcCZ1z/giQlhX+C40zQ==
+X-Received: by 2002:aca:d0a:: with SMTP id 10mr1009456oin.50.1582843745837;
+        Thu, 27 Feb 2020 14:49:05 -0800 (PST)
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com. [209.85.210.42])
+        by smtp.gmail.com with ESMTPSA id g8sm2431795otq.19.2020.02.27.14.49.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Feb 2020 14:49:05 -0800 (PST)
+Received: by mail-ot1-f42.google.com with SMTP id r16so844674otd.2;
+        Thu, 27 Feb 2020 14:49:05 -0800 (PST)
+X-Received: by 2002:a05:6830:1184:: with SMTP id u4mr892613otq.221.1582843745073;
+ Thu, 27 Feb 2020 14:49:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225221305.295289073@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200221174754.5295-1-michael@walle.cc> <20200221174754.5295-4-michael@walle.cc>
+ <CAL_JsqL8QGKARtRAfjCMyk4Pp7EWhFMV8JQpveHoJ2OyH5kBPA@mail.gmail.com>
+In-Reply-To: <CAL_JsqL8QGKARtRAfjCMyk4Pp7EWhFMV8JQpveHoJ2OyH5kBPA@mail.gmail.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Thu, 27 Feb 2020 16:48:54 -0600
+X-Gmail-Original-Message-ID: <CADRPPNR1n1sviJnhq_zuUFJcMYqsVKy0O7NOF1pxF_4VH+dasg@mail.gmail.com>
+Message-ID: <CADRPPNR1n1sviJnhq_zuUFJcMYqsVKy0O7NOF1pxF_4VH+dasg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/9] tty: serial: fsl_lpuart: handle EPROBE_DEFER for DMA
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Michael Walle <michael@walle.cc>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        Vabhav Sharma <vabhav.sharma@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 11:08:02PM +0100, Thomas Gleixner wrote:
-> User space cannot longer disable interrupts so trace return to user space
-> unconditionally as IRQS_ON.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+On Thu, Feb 27, 2020 at 4:35 PM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Fri, Feb 21, 2020 at 11:48 AM Michael Walle <michael@walle.cc> wrote:
+> >
+> > The DMA channel might not be available at the first probe time. This is
+> > esp. the case if the DMA controller has an IOMMU mapping.
+> >
+> > Use the new dma_request_chan() API and handle EPROBE_DEFER errors. Also
+> > reorder the code a bit, so that we don't prepare the whole UART just to
+> > determine that the DMA channel is not ready yet and we have to undo all
+> > the stuff. Try to map the DMA channels earlier.
+>
+> Changing this means you never probe successfully if you boot a kernel
+> with the DMA driver disabled (or it's IOMMU disabled). Some other
+> drivers request DMA in open() and can work either way.
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+We got this exact issue previously with another driver.  When the
+required DMA driver is disabled, the DMA framework cannot figure out
+this situation and keeps returning EPROBE_DEFER.  I'm wondering if we
+should update the DMA framework to use your deferred probe timeout
+mechanism.  Is it still only used for debug purpose?
+
+Regards,
+Leo
