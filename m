@@ -2,171 +2,248 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 876DDC35DEE
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 325ACC11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 554A124656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00FD42468F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:46:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="csZxDWdp"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="jqpN3cjh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731556AbgB0OqB (ORCPT
+        id S1731458AbgB0OqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:46:01 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:42251 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730401AbgB0Npj (ORCPT
+        Thu, 27 Feb 2020 09:46:07 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33520 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730401AbgB0OqE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:45:39 -0500
-Received: by mail-il1-f193.google.com with SMTP id x2so2438240ila.9
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 05:45:39 -0800 (PST)
+        Thu, 27 Feb 2020 09:46:04 -0500
+Received: by mail-wm1-f67.google.com with SMTP id m10so7163297wmc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 06:46:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o8OnTzg5LRFjVMbn8DLKRBIEARILm6ghNdG6yQfmP38=;
-        b=csZxDWdp9Kg2a9YfxdWiQA3V9+CoKoVZc0EZnmskUOShlrcXcpWMgE9o4u6YRiHDII
-         3lY1aufSeabIIc6erb1oS/km4U0n3lTdwzbGWKhOCS7bpEQ8U3Zh6X5Ldpb/jYnFuL/e
-         x43KESU3syYK2PxnF02uwj9pUFlwx7F4kS80Y=
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=F2gjVLSODMHUZo+chy/rw+dNvmT9xzhamxH2f5vMKWE=;
+        b=jqpN3cjh8bM99imYmGKQ+LsS32Sq3BGys6BFB8o5Y5pOyENRq6tVroncKq6wQe1aI8
+         6jKlJHtdoSKWQSuHZQEr6oBtK74QoD8JX/6fIhvPSac+Ox/q97TjWlg0EkQMvra9jqHT
+         Bxeg0lWGca5nWSscjtLYJUFT3Y2MROlincY98=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o8OnTzg5LRFjVMbn8DLKRBIEARILm6ghNdG6yQfmP38=;
-        b=XGZWN0atfVoAVeX+tW2Ctb8s+V6Kf1bFjnkjt6RWRu73FcfMKCDV2JCXOBfzJjaOcH
-         ShAk+xBhXzuoZzCDGFn0SYd4EnWyB6xdstl7EOMUDO+FWqXL490J2RAkAl/ZVwph+UTV
-         UVcqq9kc3G63EkbeDiJ2seHgtR57OlXvcwVeCoKI8rD3RMA/PXZIlsdVwdjlbV86wk7E
-         pCHTVkwZX3hN+TUTAS/BnzRRI+nJ0mBDsxzZ7EZtF/LovuADickflBiytBxAW7cn0ZgU
-         FLps8snmuqO/sBgTbKFL7Xv5QKZvrchJjvA5zbiXmrRr7D2l9if0Mp8BFxfd4jy2e1w/
-         CsZQ==
-X-Gm-Message-State: APjAAAVrQxfH1wniIxU3B1WbdKtz9foKoJFrtu2sLFHrhL7ChtoKROb3
-        PhJbp39vO59YXla4No4Nh9kyPuOOMyaRiNAXfDGtWA==
-X-Google-Smtp-Source: APXvYqzQ6BzhXtXlhNTUi8rTkHy3riEAJKrSKAZv8W+W43+NLOCgkCwSk3m7m7xDRMSgpYjkil26fYRlpnCcNnc0xlc=
-X-Received: by 2002:a92:89c2:: with SMTP id w63mr5483209ilk.252.1582811138833;
- Thu, 27 Feb 2020 05:45:38 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=F2gjVLSODMHUZo+chy/rw+dNvmT9xzhamxH2f5vMKWE=;
+        b=UJxPnjSrKplSM9EXPQsEPVE0r3ga4hPfiz5W3hhJ+cA3iV9cS5u1JooCNcLMDXScEJ
+         Frdm7688663wXIwoM2MZ/yIPCFPeTKygtP9krVORZX+lZbqBpNfdeRxz4ZL7Rlz5odb+
+         voqO2zm1AQxUYh8iWQz1G5S95wsc6iSh69SbD79NGGp0f7b+Wl1TA6kf1zicEXgAnUZ9
+         y5Q801W/LnwLOSR00yzD80aSRUQZoFp3rn+4e+DmKOXOxWQJfVVl2eWsecGCWhpECuru
+         tFAMWcq0BRnBEBCSYg9TPYXLJ8rQkZdG5h7/ul+V8CBNWCeMyH+RtIoNLHgxbg4dnWBU
+         jU2w==
+X-Gm-Message-State: APjAAAXdMweTwIVH5hvKjN8qO7000vm7ALc8llrNZE6BXYxNyGn5am9F
+        jLvriPX7w2Ik8YHmIjF75bSYug==
+X-Google-Smtp-Source: APXvYqwxrKj4WniunzHatT5iQR5GkZCjpM1cDCopQReD4SqDThK+dYg+hWhCi064b9V73MhyjjAJoQ==
+X-Received: by 2002:a1c:9915:: with SMTP id b21mr5361405wme.24.1582814762530;
+        Thu, 27 Feb 2020 06:46:02 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id a9sm8150099wmm.15.2020.02.27.06.46.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 06:46:01 -0800 (PST)
+Date:   Thu, 27 Feb 2020 15:45:58 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Wambui Karuga <wambui.karugax@gmail.com>
+Cc:     daniel@ffwll.ch, airlied@linux.ie, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, dri-devel@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org
+Subject: Re: [PATCH 12/21] drm/msm: remove checks for return value of
+ drm_debugfs functions.
+Message-ID: <20200227144558.GW2363188@phenom.ffwll.local>
+Mail-Followup-To: Wambui Karuga <wambui.karugax@gmail.com>,
+        airlied@linux.ie, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, dri-devel@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org
+References: <20200227120232.19413-1-wambui.karugax@gmail.com>
+ <20200227120232.19413-13-wambui.karugax@gmail.com>
 MIME-Version: 1.0
-References: <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk>
- <1582316494.3376.45.camel@HansenPartnership.com> <CAOssrKehjnTwbc6A1VagM5hG_32hy3mXZenx_PdGgcUGxYOaLQ@mail.gmail.com>
- <1582556135.3384.4.camel@HansenPartnership.com> <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com>
- <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com> <1582644535.3361.8.camel@HansenPartnership.com>
- <CAOssrKfaxnHswrKejedFzmYTbYivJ++cPes4c91+BJDfgH4xJA@mail.gmail.com>
- <1c8db4e2b707f958316941d8edd2073ee7e7b22c.camel@themaw.net>
- <CAJfpegtRoXnPm5_sMYPL2L6FCZU52Tn8wk7NcW-dm4_2x=dD3Q@mail.gmail.com> <3e656465c427487e4ea14151b77d391d52cd6bad.camel@themaw.net>
-In-Reply-To: <3e656465c427487e4ea14151b77d391d52cd6bad.camel@themaw.net>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Thu, 27 Feb 2020 14:45:27 +0100
-Message-ID: <CAJfpegu5xLcR=QbAOnUrL49QTem6X6ok7nPU+kLFnNHdPXSh1A@mail.gmail.com>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
-To:     Ian Kent <raven@themaw.net>
-Cc:     Miklos Szeredi <mszeredi@redhat.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, Karel Zak <kzak@redhat.com>,
-        Lennart Poettering <lennart@poettering.net>,
-        =?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>,
-        util-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227120232.19413-13-wambui.karugax@gmail.com>
+X-Operating-System: Linux phenom 5.3.0-3-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 12:34 PM Ian Kent <raven@themaw.net> wrote:
->
-> On Thu, 2020-02-27 at 10:36 +0100, Miklos Szeredi wrote:
-> > On Thu, Feb 27, 2020 at 6:06 AM Ian Kent <raven@themaw.net> wrote:
-> >
-> > > At the least the question of "do we need a highly efficient way
-> > > to query the superblock parameters all at once" needs to be
-> > > extended to include mount table enumeration as well as getting
-> > > the info.
-> > >
-> > > But this is just me thinking about mount table handling and the
-> > > quite significant problem we now have with user space scanning
-> > > the proc mount tables to get this information.
-> >
-> > Right.
-> >
-> > So the problem is that currently autofs needs to rescan the proc
-> > mount
-> > table on every change.   The solution to that is to
->
-> Actually no, that's not quite the problem I see.
->
-> autofs handles large mount tables fairly well (necessarily) and
-> in time I plan to remove the need to read the proc tables at all
-> (that's proven very difficult but I'll get back to that).
->
-> This has to be done to resolve the age old problem of autofs not
-> being able to handle large direct mount maps. But, because of
-> the large number of mounts associated with large direct mount
-> maps, other system processes are badly affected too.
->
-> So the problem I want to see fixed is the effect of very large
-> mount tables on other user space applications, particularly the
-> effect when a large number of mounts or umounts are performed.
->
-> Clearly large mount tables not only result from autofs and the
-> problems caused by them are slightly different to the mount and
-> umount problem I describe. But they are a problem nevertheless
-> in the sense that frequent notifications that lead to reading
-> a large proc mount table has significant overhead that can't be
-> avoided because the table may have changed since the last time
-> it was read.
->
-> It's easy to cause several system processes to peg a fair number
-> of CPU's when a large number of mounts/umounts are being performed,
-> namely systemd, udisks2 and a some others. Also I've seen couple
-> of application processes badly affected purely by the presence of
-> a large number of mounts in the proc tables, that's not quite so
-> bad though.
->
-> >
-> >  - add a notification mechanism   - lookup a mount based on path
-> >  - and a way to selectively query mount/superblock information
-> based on path ...
-> >
-> > right?
-> >
-> > For the notification we have uevents in sysfs, which also supplies
-> > the
-> > changed parameters.  Taking aside namespace issues and addressing
-> > mounts would this work for autofs?
->
-> The parameters supplied by the notification mechanism are important.
->
-> The place this is needed will be libmount since it catches a broad
-> number of user space applications, including those I mentioned above
-> (well at least systemd, I think also udisks2, very probably others).
->
-> So that means mount table info. needs to be maintained, whether that
-> can be achieved using sysfs I don't know. Creating and maintaining
-> the sysfs tree would be a big challenge I think.
->
-> But before trying to work out how to use a notification mechanism
-> just having a way to get the info provided by the proc tables using
-> a path alone should give initial immediate improvement in libmount.
+On Thu, Feb 27, 2020 at 03:02:23PM +0300, Wambui Karuga wrote:
+> Since commit 987d65d01356 (drm: debugfs: make
+> drm_debugfs_create_files() never fail), drm_debugfs_create_files() does
+> not fail, and should return void. This change therefore removes the
+> checks of its return value in drm/msm and subsequent error handling.
+> 
+> These changes also enable the changing of various debugfs_init()
+> functions to return void.
+> 
+> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
 
-Adding Karel, Lennart, Zbigniew and util-linux@vger...
+I think msm_kms_funcs->debugfs_init could also be made to return void. But
+that's quite a bit more involved so doesn't make much sense to do that as
+part of this patch series.
 
-At a quick glance at libmount and systemd code, it appears that just
-switching out the implementation in libmount will not be enough:
-systemd is calling functions like mnt_table_parse_*() when it receives
-a notification that the mount table changed.
+Also the debug/core_perf/ files look kinda funny, if I'd bet this is used
+by the qualcomm hwc somewhere to make it's decisions :-) That's at least
+what's been the case everywhere else I spotted something like that.
+-Daniel
 
-What is the end purpose of parsing the mount tables?  Can systemd guys
-comment on that?
+> ---
+>  drivers/gpu/drm/msm/adreno/a5xx_debugfs.c | 18 +++++-------------
+>  drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c  | 14 +++-----------
+>  drivers/gpu/drm/msm/msm_debugfs.c         | 21 ++++++---------------
+>  drivers/gpu/drm/msm/msm_debugfs.h         |  2 +-
+>  drivers/gpu/drm/msm/msm_gpu.h             |  2 +-
+>  5 files changed, 16 insertions(+), 41 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/adreno/a5xx_debugfs.c b/drivers/gpu/drm/msm/adreno/a5xx_debugfs.c
+> index 075ecce4b5e0..8cae2ca4af6b 100644
+> --- a/drivers/gpu/drm/msm/adreno/a5xx_debugfs.c
+> +++ b/drivers/gpu/drm/msm/adreno/a5xx_debugfs.c
+> @@ -148,27 +148,19 @@ reset_set(void *data, u64 val)
+>  DEFINE_SIMPLE_ATTRIBUTE(reset_fops, NULL, reset_set, "%llx\n");
+>  
+>  
+> -int a5xx_debugfs_init(struct msm_gpu *gpu, struct drm_minor *minor)
+> +void a5xx_debugfs_init(struct msm_gpu *gpu, struct drm_minor *minor)
+>  {
+>  	struct drm_device *dev;
+> -	int ret;
+>  
+>  	if (!minor)
+> -		return 0;
+> +		return;
+>  
+>  	dev = minor->dev;
+>  
+> -	ret = drm_debugfs_create_files(a5xx_debugfs_list,
+> -			ARRAY_SIZE(a5xx_debugfs_list),
+> -			minor->debugfs_root, minor);
+> -
+> -	if (ret) {
+> -		DRM_DEV_ERROR(dev->dev, "could not install a5xx_debugfs_list\n");
+> -		return ret;
+> -	}
+> +	drm_debugfs_create_files(a5xx_debugfs_list,
+> +				 ARRAY_SIZE(a5xx_debugfs_list),
+> +				 minor->debugfs_root, minor);
+>  
+>  	debugfs_create_file("reset", S_IWUGO, minor->debugfs_root, dev,
+>  			    &reset_fops);
+> -
+> -	return 0;
+>  }
+> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+> index 6650f478b226..41b461128bbc 100644
+> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+> @@ -259,17 +259,9 @@ static struct drm_info_list mdp5_debugfs_list[] = {
+>  
+>  static int mdp5_kms_debugfs_init(struct msm_kms *kms, struct drm_minor *minor)
+>  {
+> -	struct drm_device *dev = minor->dev;
+> -	int ret;
+> -
+> -	ret = drm_debugfs_create_files(mdp5_debugfs_list,
+> -			ARRAY_SIZE(mdp5_debugfs_list),
+> -			minor->debugfs_root, minor);
+> -
+> -	if (ret) {
+> -		DRM_DEV_ERROR(dev->dev, "could not install mdp5_debugfs_list\n");
+> -		return ret;
+> -	}
+> +	drm_debugfs_create_files(mdp5_debugfs_list,
+> +				 ARRAY_SIZE(mdp5_debugfs_list),
+> +				 minor->debugfs_root, minor);
+>  
+>  	return 0;
+>  }
+> diff --git a/drivers/gpu/drm/msm/msm_debugfs.c b/drivers/gpu/drm/msm/msm_debugfs.c
+> index 1c74381a4fc9..3c958f311bbc 100644
+> --- a/drivers/gpu/drm/msm/msm_debugfs.c
+> +++ b/drivers/gpu/drm/msm/msm_debugfs.c
+> @@ -214,31 +214,22 @@ int msm_debugfs_late_init(struct drm_device *dev)
+>  	return ret;
+>  }
+>  
+> -int msm_debugfs_init(struct drm_minor *minor)
+> +void msm_debugfs_init(struct drm_minor *minor)
+>  {
+>  	struct drm_device *dev = minor->dev;
+>  	struct msm_drm_private *priv = dev->dev_private;
+> -	int ret;
+> +	int ret = 0;
+>  
+> -	ret = drm_debugfs_create_files(msm_debugfs_list,
+> -			ARRAY_SIZE(msm_debugfs_list),
+> -			minor->debugfs_root, minor);
+> -
+> -	if (ret) {
+> -		DRM_DEV_ERROR(dev->dev, "could not install msm_debugfs_list\n");
+> -		return ret;
+> -	}
+> +	drm_debugfs_create_files(msm_debugfs_list,
+> +				 ARRAY_SIZE(msm_debugfs_list),
+> +				 minor->debugfs_root, minor);
+>  
+>  	debugfs_create_file("gpu", S_IRUSR, minor->debugfs_root,
+>  		dev, &msm_gpu_fops);
+>  
+>  	if (priv->kms && priv->kms->funcs->debugfs_init) {
+> -		ret = priv->kms->funcs->debugfs_init(priv->kms, minor);
+> -		if (ret)
+> -			return ret;
+> +		priv->kms->funcs->debugfs_init(priv->kms, minor);
+>  	}
+> -
+> -	return ret;
+>  }
+>  #endif
+>  
+> diff --git a/drivers/gpu/drm/msm/msm_debugfs.h b/drivers/gpu/drm/msm/msm_debugfs.h
+> index 2b91f8c178ad..ef58f66abbb3 100644
+> --- a/drivers/gpu/drm/msm/msm_debugfs.h
+> +++ b/drivers/gpu/drm/msm/msm_debugfs.h
+> @@ -8,7 +8,7 @@
+>  #define __MSM_DEBUGFS_H__
+>  
+>  #ifdef CONFIG_DEBUG_FS
+> -int msm_debugfs_init(struct drm_minor *minor);
+> +void msm_debugfs_init(struct drm_minor *minor);
+>  #endif
+>  
+>  #endif /* __MSM_DEBUGFS_H__ */
+> diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
+> index be5bc2e8425c..6ccae4ba905c 100644
+> --- a/drivers/gpu/drm/msm/msm_gpu.h
+> +++ b/drivers/gpu/drm/msm/msm_gpu.h
+> @@ -57,7 +57,7 @@ struct msm_gpu_funcs {
+>  	void (*show)(struct msm_gpu *gpu, struct msm_gpu_state *state,
+>  			struct drm_printer *p);
+>  	/* for generation specific debugfs: */
+> -	int (*debugfs_init)(struct msm_gpu *gpu, struct drm_minor *minor);
+> +	void (*debugfs_init)(struct msm_gpu *gpu, struct drm_minor *minor);
+>  #endif
+>  	unsigned long (*gpu_busy)(struct msm_gpu *gpu);
+>  	struct msm_gpu_state *(*gpu_state_get)(struct msm_gpu *gpu);
+> -- 
+> 2.25.0
+> 
 
-Thanks,
-Miklos
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
