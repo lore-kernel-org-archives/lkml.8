@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 273DFC54FEE
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB91C5ED5C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8B4824656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:21:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B392E24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:21:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813317;
-	bh=8dJc3VjqGnWWFG3e8ysCnj4VZcKV3ZJX84/9oq8ZYP8=;
+	s=default; t=1582813268;
+	bh=bJ0SkaoT0tHBLaUk3sTig7xfYiyECBhloF/CD+tvZBE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kPKekY1AEwVPISjQzBUjZIsEpo6FlVy7k97ZMmwypHrWO6oZNQO6xLsWpRsCRprdf
-	 0gSs1wJBrlWioxnVMm1g83bEu/9S9mJnMyERGtvjjddQnB6oBL/wnt7bSF8QerZpwo
-	 lxZTHR43u6d+NztteGOovsTQ6rLgGvISopAJK9Eg=
+	b=NoKl/jSIpsFhLv6glSDztKGu/3SfVTXfoLnfrNp7KtjDqoUfSxJ+VixSK4vc2D/iP
+	 3ArW1h7HPokDRKDuUbm7Zl/Rcs14UyZ2JIWvRu9Bp9nBldKaoHBH9+MuYA4yOUV/Lq
+	 nTjUBDMa+/zsYk8B4QTC7cuOso6RudpZRNcs0Abo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389484AbgB0OQU (ORCPT
+        id S2389702AbgB0ORZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:16:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56208 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:17:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389446AbgB0OQL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:16:11 -0500
+        id S2389204AbgB0ORR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:17:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DF802468F;
-        Thu, 27 Feb 2020 14:16:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 638342469D;
+        Thu, 27 Feb 2020 14:17:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812971;
-        bh=8dJc3VjqGnWWFG3e8ysCnj4VZcKV3ZJX84/9oq8ZYP8=;
+        s=default; t=1582813036;
+        bh=bJ0SkaoT0tHBLaUk3sTig7xfYiyECBhloF/CD+tvZBE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jLuz1sE3haEaIvcnw+y+V1safsUnRWq8HGVjjlpptr/snF6IKcmHlYc98FRENsP1L
-         MKlQK4IMEXZxZmOeJKwLtKLQVZv9M6VI7Zl4Ni2NC8wNFkvhbyUZUJ0E2ZOIIldbVT
-         CxJshZJv1FeW4sKtTguP4sURl6o3XWRhoOPqcbV4=
+        b=j0bmWzKhCz+HKipp1vd4nS3T3R7rbLTv67siHF2+fxJgaQ/TKBY+UUOpGWkgk0M5l
+         1DKCyX6EVwngt7Si8Yjpc8aQSLCurZ3x6cE85FIXlFKzjULWKEwtJOvQsRvOW/y/J0
+         QaG4tcTsIUFsmstJQjLKSpL+HCzV5PNOFW3InC1s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Suren Baghdasaryan <surenb@google.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Subject: [PATCH 5.5 086/150] sched/psi: Fix OOB write when writing 0 bytes to PSI files
-Date:   Thu, 27 Feb 2020 14:37:03 +0100
-Message-Id: <20200227132245.564108676@linuxfoundation.org>
+        stable@vger.kernel.org, Bruce Allan <bruce.w.allan@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Subject: [PATCH 5.5 113/150] ice: Remove possible null dereference
+Date:   Thu, 27 Feb 2020 14:37:30 +0100
+Message-Id: <20200227132249.447765879@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -61,37 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suren Baghdasaryan <surenb@google.com>
+From: Tony Nguyen <anthony.l.nguyen@intel.com>
 
-commit 6fcca0fa48118e6d63733eb4644c6cd880c15b8f upstream.
+commit 0a6ea04e3bbd20833d2b49296e5adc1c5bb86386 upstream.
 
-Issuing write() with count parameter set to 0 on any file under
-/proc/pressure/ will cause an OOB write because of the access to
-buf[buf_size-1] when NUL-termination is performed. Fix this by checking
-for buf_size to be non-zero.
+Commit 1f45ebe0d8fb ("ice: add extra check for null Rx descriptor") moved
+the call to ice_construct_skb() under a null check as Coverity reported a
+possible use of null skb. However, the original call was not deleted, do so
+now.
 
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-Link: https://lkml.kernel.org/r/20200203212216.7076-1-surenb@google.com
+Fixes: 1f45ebe0d8fb ("ice: add extra check for null Rx descriptor")
+Reported-by: Bruce Allan <bruce.w.allan@intel.com>
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/sched/psi.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/intel/ice/ice_txrx.c |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/kernel/sched/psi.c
-+++ b/kernel/sched/psi.c
-@@ -1199,6 +1199,9 @@ static ssize_t psi_write(struct file *fi
- 	if (static_branch_likely(&psi_disabled))
- 		return -EOPNOTSUPP;
- 
-+	if (!nbytes)
-+		return -EINVAL;
-+
- 	buf_size = min(nbytes, sizeof(buf));
- 	if (copy_from_user(buf, user_buf, buf_size))
- 		return -EFAULT;
+--- a/drivers/net/ethernet/intel/ice/ice_txrx.c
++++ b/drivers/net/ethernet/intel/ice/ice_txrx.c
+@@ -1078,8 +1078,6 @@ construct_skb:
+ 				skb = ice_build_skb(rx_ring, rx_buf, &xdp);
+ 			else
+ 				skb = ice_construct_skb(rx_ring, rx_buf, &xdp);
+-		} else {
+-			skb = ice_construct_skb(rx_ring, rx_buf, &xdp);
+ 		}
+ 		/* exit if we failed to retrieve a buffer */
+ 		if (!skb) {
 
 
