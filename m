@@ -2,139 +2,138 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F78AC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6594CC11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF3F32469C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3522E2468F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:24:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="UorAoA/b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DSXCmNT9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729714AbgB0UUn (ORCPT
+        id S1729796AbgB0UYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 15:20:43 -0500
-Received: from gateway31.websitewelcome.com ([192.185.144.218]:33158 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726758AbgB0UUn (ORCPT
+        Thu, 27 Feb 2020 15:24:16 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43003 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726758AbgB0UYQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 15:20:43 -0500
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 7A8094C593B
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 14:20:42 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 7PeEj0239RP4z7PeEjOZp8; Thu, 27 Feb 2020 14:20:42 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=uf8a9vBAJSYVV5Wk+v1AR61ZSb+YDaIsUBmlQZO8jm8=; b=UorAoA/beGmNp854mZM6EhCWQJ
-        Wff6qCXV1quzre04qY8DTcR/JJUSLrQBjm5DYFEfnsRnIR6aZMWZsqeAuz4K+AEn+W+Sr6OCdMVJs
-        HlUDttPh2a6lKQImcyMasvc0zBxQTJbtdm06fY0LimHxusfcLSnFPVVXI/1Nu6HsIy+6hSYrzGTe7
-        D5uKJBoVsOKHXmIt5Vy8WV1TexJmHM0ufOpYBb7tPvTBOa5rbAOt+F4MwaFsPxSWlCOEHCcOQerzT
-        fHS48Y9zpNPqpCXhfZKJkz6/ZtEnOD2FecYQMvpLrWqM/QfOmd+xZyWVHuFKy7eEkaYvQ0+u97dK4
-        o/f/1cmA==;
-Received: from [201.162.169.69] (port=6534 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j7PeC-000TA7-FV; Thu, 27 Feb 2020 14:20:40 -0600
-Date:   Thu, 27 Feb 2020 14:23:32 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Evgeniy Polyakov <zbr@ioremap.net>
+        Thu, 27 Feb 2020 15:24:16 -0500
+Received: by mail-pg1-f195.google.com with SMTP id h8so256505pgs.9
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 12:24:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=zIepTc7bMQWLXwQxod933KYZK3Dy1h3YkRXIGK0QEKQ=;
+        b=DSXCmNT9RejcTnluGJFe5hiSuaRsXgyezu+zWABAFuzLoNina/m+NDis8mRPkzGHNZ
+         Mvvdqwg/XBlOfe0htHQF/j2wK2nrgyHWZJmv4sx6cQ5/VP6sQC+mbm+M9X2xuUSUg+hU
+         PHhCNHvHQhylpSLDDEB+w6ogSQMG60hM7uU1SiNecNIL23TjXV1wKbDKy4AHGEILdL0b
+         pCYAHmSKG6FYm4wU+LiPwBhha/QZK+fBDKYYNH2aydKrnSspiBwpDhkPpm64z3pByhGK
+         eth0A+2fOT6AwjeLXIoVyBYDZ1CFs+bQNkSCCAeKFYoJsC/f7V8TBL/WtVAe6w+mG6AH
+         sb3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zIepTc7bMQWLXwQxod933KYZK3Dy1h3YkRXIGK0QEKQ=;
+        b=XjmLCav5tn/PE7liHS3jhZDcqwiso/l+H6klqeex4oSq0/54JB/5M2IohMaN5bKJ4g
+         t9v92p5RuUsEp+nlTnoGCKUotjulucOnFoCOYM7i6AGdeasOK1izXGOM/10QlLf7nmUA
+         Bw5W76sMTgGH02ZDk27GzsquRRa5I7Ls0YYIgjDhAS/xu1/4gBKuuprnUj0Nn3/rUc3P
+         dX1v8wPXibmUELkhTdMOVnf/2BHk339QZPs9YdB/zzVIT01q0FLRH+NC+0dvkRLv6f7e
+         AbJWWDPfCl9gIGChX6wcLanovNW6Cd7TOO4vx5Is4v5W0LwOIErXfM4/L2sIBLJ0jBnT
+         YK5w==
+X-Gm-Message-State: APjAAAV30MW5vpm0HTtRXwR/jnfD2ctpY7JlTikxU771RHYwbC6f7Z1/
+        kf9oADgzTUGmAt/HGgMr/w==
+X-Google-Smtp-Source: APXvYqwQY7TXBRyIGmfKNS8/G+RehgmoWqARF/Kh9J4SGoHtjuR5a5SqJGmzHNcbmzyC54rzi2S1uA==
+X-Received: by 2002:a62:e411:: with SMTP id r17mr678292pfh.119.1582835055394;
+        Thu, 27 Feb 2020 12:24:15 -0800 (PST)
+Received: from localhost.localdomain ([2402:3a80:1ee1:f31f:74cd:ab46:bb74:a4a3])
+        by smtp.gmail.com with ESMTPSA id f9sm7954694pfd.141.2020.02.27.12.24.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 12:24:14 -0800 (PST)
+From:   madhuparnabhowmik10@gmail.com
+To:     paulmck@kernel.org, josh@joshtriplett.org, rostedt@goodmis.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        joel@joelfernandes.org
 Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] w1_netlink.h: Replace zero-length array with flexible-array
- member
-Message-ID: <20200227202332.GA15501@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.169.69
-X-Source-L: No
-X-Exim-ID: 1j7PeC-000TA7-FV
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.162.169.69]:6534
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 11
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Amol Grover <frextrite@gmail.com>
+Subject: [PATCH] Enable RCU list lockdep debugging and drop CONFIG_PROVE_RCU_LIST
+Date:   Fri, 28 Feb 2020 01:53:55 +0530
+Message-Id: <20200227202355.6163-1-madhuparnabhowmik10@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+This patch drops the CONFIG_PROVE_RCU_LIST option and instead
+uses CONFIG_PROVE_RCU for RCU list lockdep debugging.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+With this change, RCU list lockdep debugging will be default
+enabled in CONFIG_PROVE_RCU=y kernels.
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+Most of the RCU users (in core kernel/, drivers/, and net/
+subsystem) have already been modified to include lockdep
+expressions hence RCU list debugging can be enabled by
+default.
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+However, there are still chances of enountering
+false-positive lockdep splats because not everything is converted,
+in case RCU list primitives are used in non-RCU read-side critical
+section but under the protection of a lock. It would be okay to
+have a few false-positives, as long as bugs are identified, since this
+patch only affects debugging kernels.
 
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Co-developed-by: Amol Grover <frextrite@gmail.com>
+Signed-off-by: Amol Grover <frextrite@gmail.com>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 ---
- drivers/w1/w1_netlink.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/rculist.h  |  2 +-
+ kernel/rcu/Kconfig.debug | 11 -----------
+ 2 files changed, 1 insertion(+), 12 deletions(-)
 
-diff --git a/drivers/w1/w1_netlink.h b/drivers/w1/w1_netlink.h
-index 3041092e84b3..449680a61569 100644
---- a/drivers/w1/w1_netlink.h
-+++ b/drivers/w1/w1_netlink.h
-@@ -73,7 +73,7 @@ struct w1_netlink_msg
- 			__u32		res;
- 		} mst;
- 	} id;
--	__u8				data[0];
-+	__u8				data[];
- };
+diff --git a/include/linux/rculist.h b/include/linux/rculist.h
+index 63726577c6b8..f517eb421b5e 100644
+--- a/include/linux/rculist.h
++++ b/include/linux/rculist.h
+@@ -56,7 +56,7 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
  
- /**
-@@ -122,7 +122,7 @@ struct w1_netlink_cmd
- 	__u8				cmd;
- 	__u8				res;
- 	__u16				len;
--	__u8				data[0];
-+	__u8				data[];
- };
+ #define check_arg_count_one(dummy)
  
- #ifdef __KERNEL__
+-#ifdef CONFIG_PROVE_RCU_LIST
++#ifdef CONFIG_PROVE_RCU
+ #define __list_check_rcu(dummy, cond, extra...)				\
+ 	({								\
+ 	check_arg_count_one(extra);					\
+diff --git a/kernel/rcu/Kconfig.debug b/kernel/rcu/Kconfig.debug
+index 4aa02eee8f6c..5ec3ea4028e2 100644
+--- a/kernel/rcu/Kconfig.debug
++++ b/kernel/rcu/Kconfig.debug
+@@ -8,17 +8,6 @@ menu "RCU Debugging"
+ config PROVE_RCU
+ 	def_bool PROVE_LOCKING
+ 
+-config PROVE_RCU_LIST
+-	bool "RCU list lockdep debugging"
+-	depends on PROVE_RCU && RCU_EXPERT
+-	default n
+-	help
+-	  Enable RCU lockdep checking for list usages. By default it is
+-	  turned off since there are several list RCU users that still
+-	  need to be converted to pass a lockdep expression. To prevent
+-	  false-positive splats, we keep it default disabled but once all
+-	  users are converted, we can remove this config option.
+-
+ config TORTURE_TEST
+ 	tristate
+ 	default n
 -- 
-2.25.0
+2.17.1
 
