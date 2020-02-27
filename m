@@ -2,166 +2,200 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9ADAC4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AF0C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5A912467F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:33:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dTZZPicr"
+	by mail.kernel.org (Postfix) with ESMTP id F38DB2467F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:33:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbgB0FdG (ORCPT
+        id S1728566AbgB0FdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 00:33:06 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:14781 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728522AbgB0FdE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 00:33:04 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582781583; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=z5QCR+5CQZXJeKsaK1cOJr/DwfcXkvDbVqkcSQPZeS0=; b=dTZZPicrsXfQx0LtihyTIpnlHtEWoqFTkRP1prDVrKhHV90kqVDxDKcB7xdpfBBNHmEML5XO
- t6VDN65CA4TruDhNkkzKRJXsPxjRekf7l3aYL0N3pa+vBrBf6tXmO3J8lk93wKN1lJrokOUn
- zZ4X+Tp+okHkJ5TY5/5cvVopfjA=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e57547a.7f45e60cea08-smtp-out-n02;
- Thu, 27 Feb 2020 05:32:42 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1C20FC4479F; Thu, 27 Feb 2020 05:32:41 +0000 (UTC)
-Received: from [10.206.13.37] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5888BC43383;
-        Thu, 27 Feb 2020 05:32:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5888BC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v7 2/3] soc: qcom: rpmh: Update dirty flag only when data
- changes
-To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org
-References: <1582694833-9407-1-git-send-email-mkshah@codeaurora.org>
- <1582694833-9407-3-git-send-email-mkshah@codeaurora.org>
- <158275700389.177367.5843608826404724304@swboyd.mtv.corp.google.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <3f7c689b-700a-1d76-505e-76446c62439f@codeaurora.org>
-Date:   Thu, 27 Feb 2020 11:02:34 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 27 Feb 2020 00:33:10 -0500
+Received: from mga01.intel.com ([192.55.52.88]:17726 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728451AbgB0Fcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 00:32:47 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 21:32:45 -0800
+X-IronPort-AV: E=Sophos;i="5.70,490,1574150400"; 
+   d="scan'208";a="438703029"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 21:32:45 -0800
+From:   ira.weiny@intel.com
+To:     linux-kernel@vger.kernel.org
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH V5 10/12] fs/xfs: Allow toggle of effective DAX flag
+Date:   Wed, 26 Feb 2020 21:24:40 -0800
+Message-Id: <20200227052442.22524-11-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200227052442.22524-1-ira.weiny@intel.com>
+References: <20200227052442.22524-1-ira.weiny@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <158275700389.177367.5843608826404724304@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Ira Weiny <ira.weiny@intel.com>
 
-On 2/27/2020 4:13 AM, Stephen Boyd wrote:
-> Quoting Maulik Shah (2020-02-25 21:27:12)
->> Currently rpmh ctrlr dirty flag is set for all cases regardless
->> of data is really changed or not. Add changes to update it when
->> data is updated to newer values.
->>
->> Also move dirty flag updates to happen from within cache_lock.
->>
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
->> Reviewed-by: Srinivas Rao L <lsrao@codeaurora.org>
-> Probably worth adding a Fixes tag here? Doesn't make sense to mark
-> something dirty when it isn't changed.
-Done. will update in v8.
->> ---
->>   drivers/soc/qcom/rpmh.c | 21 ++++++++++++++++-----
->>   1 file changed, 16 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
->> index eb0ded0..83ba4e0 100644
->> --- a/drivers/soc/qcom/rpmh.c
->> +++ b/drivers/soc/qcom/rpmh.c
->> @@ -139,20 +139,27 @@ static struct cache_req *cache_rpm_request(struct rpmh_ctrlr *ctrlr,
->>   existing:
->>          switch (state) {
->>          case RPMH_ACTIVE_ONLY_STATE:
->> -               if (req->sleep_val != UINT_MAX)
->> +               if (req->sleep_val != UINT_MAX) {
->>                          req->wake_val = cmd->data;
->> +                       ctrlr->dirty = true;
->> +               }
->>                  break;
->>          case RPMH_WAKE_ONLY_STATE:
->> -               req->wake_val = cmd->data;
->> +               if (req->wake_val != cmd->data) {
->> +                       req->wake_val = cmd->data;
->> +                       ctrlr->dirty = true;
->> +               }
->>                  break;
->>          case RPMH_SLEEP_STATE:
->> -               req->sleep_val = cmd->data;
->> +               if (req->sleep_val != cmd->data) {
->> +                       req->sleep_val = cmd->data;
->> +                       ctrlr->dirty = true;
->> +               }
->>                  break;
->>          default:
->>                  break;
-> Please remove the default case. There are only three states in the enum. The
-> compiler will warn if a switch statement doesn't cover all cases and
-> we'll know to add something here if another enum value is added in the
-> future.
-Done.
->>          }
->>   
->> -       ctrlr->dirty = true;
->>   unlock:
->>          spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
->>   
->> @@ -323,6 +331,7 @@ static void invalidate_batch(struct rpmh_ctrlr *ctrlr)
->>          list_for_each_entry_safe(req, tmp, &ctrlr->batch_cache, list)
->>                  kfree(req);
->>          INIT_LIST_HEAD(&ctrlr->batch_cache);
->> +       ctrlr->dirty = true;
->>          spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
->>   }
->>   
->> @@ -456,6 +465,7 @@ static int send_single(struct rpmh_ctrlr *ctrlr, enum rpmh_state state,
->>   int rpmh_flush(struct rpmh_ctrlr *ctrlr)
->>   {
->>          struct cache_req *p;
->> +       unsigned long flags;
->>          int ret;
->>   
->>          if (!ctrlr->dirty) {
->> @@ -488,7 +498,9 @@ int rpmh_flush(struct rpmh_ctrlr *ctrlr)
->>                          return ret;
->>          }
->>   
->> +       spin_lock_irqsave(&ctrlr->cache_lock, flags);
->>          ctrlr->dirty = false;
->> +       spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
-> So we take the spinlock to update it here. But we don't hold the
-> spinlock to test for !dirty up above. Seems like either rpmh_flush() can
-> only be called sequentially, or the lock added here needs to be held
-> during the whole flush. Which way is it?
+Now that locking of the inode aops is in place we can allow a DAX state
+change.
 
-Thanks, i will remove !ctrlr->dirty check within rpmh_flush() as 
-currently we invoke it only when caches are dirty.
+Use the new xfs_inode_enable_dax() to set IS_DAX() as needed and update
+the aops vector after the enabled state change.
 
-Last cpu going down can first check dirty flag outside rpmh_flush() and 
-decide to invoke it accoringly.
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
+---
+Changes from v4:
+	Adjust for open coding of the aops lock
+
+Changes from V3:
+	Remove static branch stuff.
+	Fix bugs found by Jeff by using xfs_inode_enable_dax()
+	Condition xfs_ioctl_setattr_dax_invalidate() on CONFIG_FS_DAX
+
+Changes from V2:
+	Add in lock_dax_state_static_key static branch enabling.
+	Rebase updates
+---
+ fs/xfs/xfs_inode.h |  2 ++
+ fs/xfs/xfs_ioctl.c | 20 +++++++++++++++++---
+ fs/xfs/xfs_iops.c  | 17 ++++++++++++-----
+ 3 files changed, 31 insertions(+), 8 deletions(-)
+
+diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
+index 492e53992fa9..7d4968915dec 100644
+--- a/fs/xfs/xfs_inode.h
++++ b/fs/xfs/xfs_inode.h
+@@ -466,6 +466,8 @@ int	xfs_break_layouts(struct inode *inode, uint *iolock,
+ /* from xfs_iops.c */
+ extern void xfs_setup_inode(struct xfs_inode *ip);
+ extern void xfs_setup_iops(struct xfs_inode *ip);
++extern void xfs_setup_a_ops(struct xfs_inode *ip);
++extern bool xfs_inode_enable_dax(struct xfs_inode *ip);
+ 
+ /*
+  * When setting up a newly allocated inode, we need to call
+diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+index 40ae791cfb41..38e91de44a6f 100644
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -1123,12 +1123,11 @@ xfs_diflags_to_linux(
+ 		inode->i_flags |= S_NOATIME;
+ 	else
+ 		inode->i_flags &= ~S_NOATIME;
+-#if 0	/* disabled until the flag switching races are sorted out */
+-	if (xflags & FS_XFLAG_DAX)
++
++	if (xfs_inode_enable_dax(ip))
+ 		inode->i_flags |= S_DAX;
+ 	else
+ 		inode->i_flags &= ~S_DAX;
+-#endif
+ }
+ 
+ static int
+@@ -1183,6 +1182,7 @@ xfs_ioctl_setattr_xflags(
+  * so that the cache invalidation is atomic with respect to the DAX flag
+  * manipulation.
+  */
++#if defined(CONFIG_FS_DAX)
+ static int
+ xfs_ioctl_setattr_dax_invalidate(
+ 	struct xfs_inode	*ip,
+@@ -1233,6 +1233,16 @@ xfs_ioctl_setattr_dax_invalidate(
+ 	return error;
+ 
+ }
++#else /* !CONFIG_FS_DAX */
++static int
++xfs_ioctl_setattr_dax_invalidate(
++	struct xfs_inode	*ip,
++	struct fsxattr		*fa,
++	int			*join_flags)
++{
++	return 0;
++}
++#endif
+ 
+ /*
+  * Set up the transaction structure for the setattr operation, checking that we
+@@ -1524,6 +1534,8 @@ xfs_ioctl_setattr(
+ 	else
+ 		ip->i_d.di_cowextsize = 0;
+ 
++	xfs_setup_a_ops(ip);
++
+ 	code = xfs_trans_commit(tp);
+ 
+ 	/*
+@@ -1639,6 +1651,8 @@ xfs_ioc_setxflags(
+ 		goto out_drop_write;
+ 	}
+ 
++	xfs_setup_a_ops(ip);
++
+ 	error = xfs_trans_commit(tp);
+ out_drop_write:
+ 	mnt_drop_write_file(filp);
+diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+index ff711efc5247..8f023be39705 100644
+--- a/fs/xfs/xfs_iops.c
++++ b/fs/xfs/xfs_iops.c
+@@ -1259,7 +1259,7 @@ xfs_inode_supports_dax(
+ 	return xfs_inode_buftarg(ip)->bt_daxdev != NULL;
+ }
+ 
+-STATIC bool
++bool
+ xfs_inode_enable_dax(
+ 	struct xfs_inode *ip)
+ {
+@@ -1355,6 +1355,16 @@ xfs_setup_inode(
+ 	}
+ }
+ 
++void xfs_setup_a_ops(struct xfs_inode *ip)
++{
++	struct inode		*inode = &ip->i_vnode;
++
++	if (IS_DAX(inode))
++		inode->i_mapping->a_ops = &xfs_dax_aops;
++	else
++		inode->i_mapping->a_ops = &xfs_address_space_operations;
++}
++
+ void
+ xfs_setup_iops(
+ 	struct xfs_inode	*ip)
+@@ -1365,10 +1375,7 @@ xfs_setup_iops(
+ 	case S_IFREG:
+ 		inode->i_op = &xfs_inode_operations;
+ 		inode->i_fop = &xfs_file_operations;
+-		if (IS_DAX(inode))
+-			inode->i_mapping->a_ops = &xfs_dax_aops;
+-		else
+-			inode->i_mapping->a_ops = &xfs_address_space_operations;
++		xfs_setup_a_ops(ip);
+ 		break;
+ 	case S_IFDIR:
+ 		if (xfs_sb_version_hasasciici(&XFS_M(inode->i_sb)->m_sb))
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+2.21.0
+
