@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3CCC35677
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 344F6C728F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D58CA2468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03CAF24688
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:23:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813277;
-	bh=kUKSzHdRRHXlQaZVmuHIoD/S65nhOWHRv5mf2gtz24U=;
+	s=default; t=1582813409;
+	bh=+aqyWWYn7K1Jqt2esBmrsHiElG8yI/T2Tl7qzGvNYJU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mznScxEKaz3K2V91bxD2lejmwiFYUrnJBhq/6qW8R1k4XB9S4SW28Fzf/1KtltAJA
-	 gd5Xt2hIYXtITWZizGrtaas67tY0JGj9DWXzDXOUNR1CZLHB2rGV1E8r8WTsLyB7N3
-	 7AmKtibVVdAsOypEnbytlOO06ceqOP0miirlgXho=
+	b=vBBpYh4Pz8LNxRcGFiztKaz2O5+q2qXSv68w7hjRaLQWY0qtBPYiBM7f+0n9J6Vo6
+	 z00z4weebc/BqSH/2NPqC5wQU6wIEs3YtqQOSI66HFZmD5FgW7NOj0hkRxvBrdo0CU
+	 r08kuXn98rPMtboBB3Qazy77RdtDLH8ACTPxCeFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389655AbgB0ORH (ORCPT
+        id S2389328AbgB0OX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:17:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57422 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:23:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389642AbgB0ORE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:17:04 -0500
+        id S2388869AbgB0OOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:14:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B388120801;
-        Thu, 27 Feb 2020 14:17:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52DBC20578;
+        Thu, 27 Feb 2020 14:14:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813024;
-        bh=kUKSzHdRRHXlQaZVmuHIoD/S65nhOWHRv5mf2gtz24U=;
+        s=default; t=1582812877;
+        bh=+aqyWWYn7K1Jqt2esBmrsHiElG8yI/T2Tl7qzGvNYJU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CQ83uEtRZwqxnuvpvmMRpE7eK0zXjeye5FhFaiajnTY++w3bU226Axdzc+X0PMg8H
-         E6UyBcov/DGRqiD4xpQPa/BvsvjWeHUMybUrpC/Ane11ImDa4UzYZWbidFnn5klU3L
-         EuNzEGofwniRU1JvxRwXBL4x/05aTrRR2ECRpX7I=
+        b=p3uVmKbnDGPvICLaqktHO7lniTgYQuKLJgo8nkARNvMENjyrKnLl8uxVaOESfTPBO
+         vlURzYIfoziSlVArMbkwNwxKchNZ2Gj67L9KVWmtAyjqTq3sMA64uScZrXFum7a26u
+         T0sj6r9s6rF+39+2X3C3Pl0TO0UT0Yvxf4i0Vt0E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Loic Poulain <loic.poulain@linaro.org>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.5 068/150] serdev: ttyport: restore client ops on deregistration
-Date:   Thu, 27 Feb 2020 14:36:45 +0100
-Message-Id: <20200227132243.004997059@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Antonio Caggiano <antonio.caggiano@collabora.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH 5.5 050/150] drm/panfrost: perfcnt: Reserve/use the AS attached to the perfcnt MMU context
+Date:   Thu, 27 Feb 2020 14:36:27 +0100
+Message-Id: <20200227132240.467574688@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -59,107 +62,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Boris Brezillon <boris.brezillon@collabora.com>
 
-commit 0c5aae59270fb1f827acce182786094c9ccf598e upstream.
+commit dde2bb2da01e96c17f0a44b4a3cf72a30e66e3ef upstream.
 
-The serdev tty-port controller driver should reset the tty-port client
-operations also on deregistration to avoid a NULL-pointer dereference in
-case the port is later re-registered as a normal tty device.
+We need to use the AS attached to the opened FD when dumping counters.
 
-Note that this can only happen with tty drivers such as 8250 which have
-statically allocated port structures that can end up being reused and
-where a later registration would not register a serdev controller (e.g.
-due to registration errors or if the devicetree has been changed in
-between).
-
-Specifically, this can be an issue for any statically defined ports that
-would be registered by 8250 core when an 8250 driver is being unbound.
-
-Fixes: bed35c6dfa6a ("serdev: add a tty port controller driver")
-Cc: stable <stable@vger.kernel.org>     # 4.11
-Reported-by: Loic Poulain <loic.poulain@linaro.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20200210145730.22762-1-johan@kernel.org
+Reported-by: Antonio Caggiano <antonio.caggiano@collabora.com>
+Fixes: 7282f7645d06 ("drm/panfrost: Implement per FD address spaces")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+Reviewed-by: Steven Price <steven.price@arm.com>
+Tested-by: Antonio Caggiano <antonio.caggiano@collabora.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200206141327.446127-1-boris.brezillon@collabora.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serdev/serdev-ttyport.c |    6 ++----
- drivers/tty/tty_port.c              |    5 +++--
- include/linux/tty.h                 |    2 ++
- 3 files changed, 7 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/panfrost/panfrost_mmu.c     |    7 ++++++-
+ drivers/gpu/drm/panfrost/panfrost_perfcnt.c |   11 ++++-------
+ 2 files changed, 10 insertions(+), 8 deletions(-)
 
---- a/drivers/tty/serdev/serdev-ttyport.c
-+++ b/drivers/tty/serdev/serdev-ttyport.c
-@@ -265,7 +265,6 @@ struct device *serdev_tty_port_register(
- 					struct device *parent,
- 					struct tty_driver *drv, int idx)
- {
--	const struct tty_port_client_operations *old_ops;
- 	struct serdev_controller *ctrl;
- 	struct serport *serport;
- 	int ret;
-@@ -284,7 +283,6 @@ struct device *serdev_tty_port_register(
- 
- 	ctrl->ops = &ctrl_ops;
- 
--	old_ops = port->client_ops;
- 	port->client_ops = &client_ops;
- 	port->client_data = ctrl;
- 
-@@ -297,7 +295,7 @@ struct device *serdev_tty_port_register(
- 
- err_reset_data:
- 	port->client_data = NULL;
--	port->client_ops = old_ops;
-+	port->client_ops = &tty_port_default_client_ops;
- 	serdev_controller_put(ctrl);
- 
- 	return ERR_PTR(ret);
-@@ -312,8 +310,8 @@ int serdev_tty_port_unregister(struct tt
- 		return -ENODEV;
- 
- 	serdev_controller_remove(ctrl);
--	port->client_ops = NULL;
- 	port->client_data = NULL;
-+	port->client_ops = &tty_port_default_client_ops;
- 	serdev_controller_put(ctrl);
- 
- 	return 0;
---- a/drivers/tty/tty_port.c
-+++ b/drivers/tty/tty_port.c
-@@ -52,10 +52,11 @@ static void tty_port_default_wakeup(stru
- 	}
- }
- 
--static const struct tty_port_client_operations default_client_ops = {
-+const struct tty_port_client_operations tty_port_default_client_ops = {
- 	.receive_buf = tty_port_default_receive_buf,
- 	.write_wakeup = tty_port_default_wakeup,
- };
-+EXPORT_SYMBOL_GPL(tty_port_default_client_ops);
- 
- void tty_port_init(struct tty_port *port)
- {
-@@ -68,7 +69,7 @@ void tty_port_init(struct tty_port *port
- 	spin_lock_init(&port->lock);
- 	port->close_delay = (50 * HZ) / 100;
- 	port->closing_wait = (3000 * HZ) / 100;
--	port->client_ops = &default_client_ops;
-+	port->client_ops = &tty_port_default_client_ops;
- 	kref_init(&port->kref);
- }
- EXPORT_SYMBOL(tty_port_init);
---- a/include/linux/tty.h
-+++ b/include/linux/tty.h
-@@ -225,6 +225,8 @@ struct tty_port_client_operations {
- 	void (*write_wakeup)(struct tty_port *port);
- };
- 
-+extern const struct tty_port_client_operations tty_port_default_client_ops;
+--- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
++++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+@@ -151,7 +151,12 @@ u32 panfrost_mmu_as_get(struct panfrost_
+ 	as = mmu->as;
+ 	if (as >= 0) {
+ 		int en = atomic_inc_return(&mmu->as_count);
+-		WARN_ON(en >= NUM_JOB_SLOTS);
 +
- struct tty_port {
- 	struct tty_bufhead	buf;		/* Locked internally */
- 	struct tty_struct	*tty;		/* Back pointer */
++		/*
++		 * AS can be retained by active jobs or a perfcnt context,
++		 * hence the '+ 1' here.
++		 */
++		WARN_ON(en >= (NUM_JOB_SLOTS + 1));
+ 
+ 		list_move(&mmu->list, &pfdev->as_lru_list);
+ 		goto out;
+--- a/drivers/gpu/drm/panfrost/panfrost_perfcnt.c
++++ b/drivers/gpu/drm/panfrost/panfrost_perfcnt.c
+@@ -73,7 +73,7 @@ static int panfrost_perfcnt_enable_locke
+ 	struct panfrost_file_priv *user = file_priv->driver_priv;
+ 	struct panfrost_perfcnt *perfcnt = pfdev->perfcnt;
+ 	struct drm_gem_shmem_object *bo;
+-	u32 cfg;
++	u32 cfg, as;
+ 	int ret;
+ 
+ 	if (user == perfcnt->user)
+@@ -126,12 +126,8 @@ static int panfrost_perfcnt_enable_locke
+ 
+ 	perfcnt->user = user;
+ 
+-	/*
+-	 * Always use address space 0 for now.
+-	 * FIXME: this needs to be updated when we start using different
+-	 * address space.
+-	 */
+-	cfg = GPU_PERFCNT_CFG_AS(0) |
++	as = panfrost_mmu_as_get(pfdev, perfcnt->mapping->mmu);
++	cfg = GPU_PERFCNT_CFG_AS(as) |
+ 	      GPU_PERFCNT_CFG_MODE(GPU_PERFCNT_CFG_MODE_MANUAL);
+ 
+ 	/*
+@@ -195,6 +191,7 @@ static int panfrost_perfcnt_disable_lock
+ 	drm_gem_shmem_vunmap(&perfcnt->mapping->obj->base.base, perfcnt->buf);
+ 	perfcnt->buf = NULL;
+ 	panfrost_gem_close(&perfcnt->mapping->obj->base.base, file_priv);
++	panfrost_mmu_as_put(pfdev, perfcnt->mapping->mmu);
+ 	panfrost_gem_mapping_put(perfcnt->mapping);
+ 	perfcnt->mapping = NULL;
+ 	pm_runtime_mark_last_busy(pfdev->dev);
 
 
