@@ -2,86 +2,400 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB59C4BA06
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C36CC4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8EAB2467B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:42:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mtQ+Hiq+"
+	by mail.kernel.org (Postfix) with ESMTP id 25CE62467B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:44:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728653AbgB0ImT (ORCPT
+        id S1728643AbgB0IoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 03:42:19 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:46694 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728539AbgB0ImT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 03:42:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=NchcK2F8lTU+wLCCB53RMFq8FiC3rzaeN3BsRLSDq10=; b=mtQ+Hiq+AjYfDtqxea6fYM7MjP
-        kQhalP4tsN4PpuxR/h6RsiXOtMDQiTJZ+ee/SCSNNRj/8b6TETlYpB7vuxnzOAvI5Q54CgV571mC0
-        Zu8Z+fKALdkt89d3xvq9lkFubNz/0fMI5s8Eb9enZCFZjXPvKtAIX5KBV2lYlahXjZUuXqV2H+40i
-        JQll+dNODUHr//z30Zhq0EjX3ngGXhovvvXqX7xBZxBWRRjkX7OBgkFymjL6tzz1RDillFJqaOh9Y
-        TVHAf1yZZN5WMwyi1S0poSDXHEcvdS5E6MW22u6oBrtrgxR3Uc14JlWJ9LcoY09mFxKkN+IspUIlm
-        94j3k31Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j7Ek5-0001Td-L6; Thu, 27 Feb 2020 08:42:01 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 90B8530018B;
-        Thu, 27 Feb 2020 09:40:03 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 37DBC2B9AF8C6; Thu, 27 Feb 2020 09:41:59 +0100 (CET)
-Date:   Thu, 27 Feb 2020 09:41:59 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [patch 16/16] x86/entry: Disable interrupts in IDTENTRY
-Message-ID: <20200227084159.GF18400@hirez.programming.kicks-ass.net>
-References: <20200225223321.231477305@linutronix.de>
- <20200225224145.764810350@linutronix.de>
- <20200226092335.GS18400@hirez.programming.kicks-ass.net>
- <87eeuhp0aw.fsf@nanos.tec.linutronix.de>
+        Thu, 27 Feb 2020 03:44:01 -0500
+Received: from foss.arm.com ([217.140.110.172]:46996 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728440AbgB0IoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 03:44:01 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E20111FB;
+        Thu, 27 Feb 2020 00:43:57 -0800 (PST)
+Received: from [10.37.12.169] (unknown [10.37.12.169])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2FF4C3F819;
+        Thu, 27 Feb 2020 00:43:52 -0800 (PST)
+Subject: Re: [PATCH v5 6/7] arm64: use activity monitors for frequency
+ invariance
+To:     Ionela Voinescu <ionela.voinescu@arm.com>, catalin.marinas@arm.com,
+        will@kernel.org, mark.rutland@arm.com, maz@kernel.org,
+        suzuki.poulose@arm.com, sudeep.holla@arm.com,
+        valentin.schneider@arm.com, dietmar.eggemann@arm.com,
+        rjw@rjwysocki.net, pkondeti@codeaurora.org
+Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+References: <20200226132947.29738-1-ionela.voinescu@arm.com>
+ <20200226132947.29738-7-ionela.voinescu@arm.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <1da054d0-fef2-8a0b-b513-f2709b6d0208@arm.com>
+Date:   Thu, 27 Feb 2020 08:43:50 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87eeuhp0aw.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200226132947.29738-7-ionela.voinescu@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 09:21:11PM +0100, Thomas Gleixner wrote:
-> Peter Zijlstra <peterz@infradead.org> writes:
-> 
-> > On Tue, Feb 25, 2020 at 11:33:37PM +0100, Thomas Gleixner wrote:
-> >> Not all exceptions guarantee to return with interrupts disabled. Disable
-> >> them in idtentry_exit() which is invoked on all regular (non IST) exception
-> >> entry points. Preparatory patch for further consolidation of the return
-> >> code.
-> >
-> > ISTR a patch that undoes cond_local_irq_enable() in the various trap
-> > handlers. Did that get lost or is that still on the TODO list
-> > somewhere?
-> 
-> Hmm. I ditched it after we decided that fixing the #PF cases is ugly as
-> hell. Lemme find that stuff again.
 
-Hmm, vague memories. Anyway, we can leave that for later, but maybe put
-in a comment so we don't forget.
+
+On 2/26/20 1:29 PM, Ionela Voinescu wrote:
+> The Frequency Invariance Engine (FIE) is providing a frequency
+> scaling correction factor that helps achieve more accurate
+> load-tracking.
+> 
+> So far, for arm and arm64 platforms, this scale factor has been
+> obtained based on the ratio between the current frequency and the
+> maximum supported frequency recorded by the cpufreq policy. The
+> setting of this scale factor is triggered from cpufreq drivers by
+> calling arch_set_freq_scale. The current frequency used in computation
+> is the frequency requested by a governor, but it may not be the
+> frequency that was implemented by the platform.
+> 
+> This correction factor can also be obtained using a core counter and a
+> constant counter to get information on the performance (frequency based
+> only) obtained in a period of time. This will more accurately reflect
+> the actual current frequency of the CPU, compared with the alternative
+> implementation that reflects the request of a performance level from
+> the OS.
+> 
+> Therefore, implement arch_scale_freq_tick to use activity monitors, if
+> present, for the computation of the frequency scale factor.
+> 
+> The use of AMU counters depends on:
+>   - CONFIG_ARM64_AMU_EXTN - depents on the AMU extension being present
+>   - CONFIG_CPU_FREQ - the current frequency obtained using counter
+>     information is divided by the maximum frequency obtained from the
+>     cpufreq policy.
+> 
+> While it is possible to have a combination of CPUs in the system with
+> and without support for activity monitors, the use of counters for
+> frequency invariance is only enabled for a CPU if all related CPUs
+> (CPUs in the same frequency domain) support and have enabled the core
+> and constant activity monitor counters. In this way, there is a clear
+> separation between the policies for which arch_set_freq_scale (cpufreq
+> based FIE) is used, and the policies for which arch_scale_freq_tick
+> (counter based FIE) is used to set the frequency scale factor. For
+> this purpose, a late_initcall_sync is registered to trigger validation
+> work for policies that will enable or disable the use of AMU counters
+> for frequency invariance. If CONFIG_CPU_FREQ is not defined, the use
+> of counters is enabled on all CPUs only if all possible CPUs correctly
+> support the necessary counters.
+> 
+> Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>   arch/arm64/include/asm/topology.h |   9 ++
+>   arch/arm64/kernel/cpufeature.c    |   4 +
+>   arch/arm64/kernel/topology.c      | 180 ++++++++++++++++++++++++++++++
+>   drivers/base/arch_topology.c      |  12 ++
+>   include/linux/arch_topology.h     |   2 +
+>   5 files changed, 207 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/topology.h b/arch/arm64/include/asm/topology.h
+> index a4d945db95a2..21d4d40d6243 100644
+> --- a/arch/arm64/include/asm/topology.h
+> +++ b/arch/arm64/include/asm/topology.h
+> @@ -16,6 +16,15 @@ int pcibus_to_node(struct pci_bus *bus);
+>   
+>   #include <linux/arch_topology.h>
+>   
+> +#ifdef CONFIG_ARM64_AMU_EXTN
+> +/*
+> + * Replace task scheduler's default counter-based
+> + * frequency-invariance scale factor setting.
+> + */
+> +void topology_scale_freq_tick(void);
+> +#define arch_scale_freq_tick topology_scale_freq_tick
+> +#endif /* CONFIG_ARM64_AMU_EXTN */
+> +
+>   /* Replace task scheduler's default frequency-invariant accounting */
+>   #define arch_scale_freq_capacity topology_get_freq_scale
+>   
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index 60cebc071603..b8ec6c544d32 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -1241,12 +1241,16 @@ bool cpu_has_amu_feat(int cpu)
+>   	return cpumask_test_cpu(cpu, &amu_cpus);
+>   }
+>   
+> +/* Initialize the use of AMU counters for frequency invariance */
+> +extern void init_cpu_freq_invariance_counters(void);
+> +
+>   static void cpu_amu_enable(struct arm64_cpu_capabilities const *cap)
+>   {
+>   	if (has_cpuid_feature(cap, SCOPE_LOCAL_CPU)) {
+>   		pr_info("detected CPU%d: Activity Monitors Unit (AMU)\n",
+>   			smp_processor_id());
+>   		cpumask_set_cpu(smp_processor_id(), &amu_cpus);
+> +		init_cpu_freq_invariance_counters();
+>   	}
+>   }
+>   
+> diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
+> index fa9528dfd0ce..0801a0f3c156 100644
+> --- a/arch/arm64/kernel/topology.c
+> +++ b/arch/arm64/kernel/topology.c
+> @@ -14,6 +14,7 @@
+>   #include <linux/acpi.h>
+>   #include <linux/arch_topology.h>
+>   #include <linux/cacheinfo.h>
+> +#include <linux/cpufreq.h>
+>   #include <linux/init.h>
+>   #include <linux/percpu.h>
+>   
+> @@ -120,4 +121,183 @@ int __init parse_acpi_topology(void)
+>   }
+>   #endif
+>   
+> +#ifdef CONFIG_ARM64_AMU_EXTN
+>   
+> +#undef pr_fmt
+> +#define pr_fmt(fmt) "AMU: " fmt
+> +
+> +static DEFINE_PER_CPU_READ_MOSTLY(unsigned long, arch_max_freq_scale);
+> +static DEFINE_PER_CPU(u64, arch_const_cycles_prev);
+> +static DEFINE_PER_CPU(u64, arch_core_cycles_prev);
+> +static cpumask_var_t amu_fie_cpus;
+> +
+> +/* Initialize counter reference per-cpu variables for the current CPU */
+> +void init_cpu_freq_invariance_counters(void)
+> +{
+> +	this_cpu_write(arch_core_cycles_prev,
+> +		       read_sysreg_s(SYS_AMEVCNTR0_CORE_EL0));
+> +	this_cpu_write(arch_const_cycles_prev,
+> +		       read_sysreg_s(SYS_AMEVCNTR0_CONST_EL0));
+> +}
+> +
+> +static int validate_cpu_freq_invariance_counters(int cpu)
+> +{
+> +	u64 max_freq_hz, ratio;
+> +
+> +	if (!cpu_has_amu_feat(cpu)) {
+> +		pr_debug("CPU%d: counters are not supported.\n", cpu);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (unlikely(!per_cpu(arch_const_cycles_prev, cpu) ||
+> +		     !per_cpu(arch_core_cycles_prev, cpu))) {
+> +		pr_debug("CPU%d: cycle counters are not enabled.\n", cpu);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Convert maximum frequency from KHz to Hz and validate */
+> +	max_freq_hz = cpufreq_get_hw_max_freq(cpu) * 1000;
+> +	if (unlikely(!max_freq_hz)) {
+> +		pr_debug("CPU%d: invalid maximum frequency.\n", cpu);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/*
+> +	 * Pre-compute the fixed ratio between the frequency of the constant
+> +	 * counter and the maximum frequency of the CPU.
+> +	 *
+> +	 *			      const_freq
+> +	 * arch_max_freq_scale =   ---------------- * SCHED_CAPACITY_SCALE²
+> +	 *			   cpuinfo_max_freq
+> +	 *
+> +	 * We use a factor of 2 * SCHED_CAPACITY_SHIFT -> SCHED_CAPACITY_SCALE²
+> +	 * in order to ensure a good resolution for arch_max_freq_scale for
+> +	 * very low arch timer frequencies (down to the KHz range which should
+> +	 * be unlikely).
+> +	 */
+> +	ratio = (u64)arch_timer_get_rate() << (2 * SCHED_CAPACITY_SHIFT);
+> +	ratio = div64_u64(ratio, max_freq_hz);
+> +	if (!ratio) {
+> +		WARN_ONCE(1, "System timer frequency too low.\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	per_cpu(arch_max_freq_scale, cpu) = (unsigned long)ratio;
+> +
+> +	return 0;
+> +}
+> +
+> +static inline bool
+> +enable_policy_freq_counters(int cpu, cpumask_var_t valid_cpus)
+> +{
+> +	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
+> +
+> +	if (!policy) {
+> +		pr_debug("CPU%d: No cpufreq policy found.\n", cpu);
+> +		return false;
+> +	}
+> +
+> +	if (cpumask_subset(policy->related_cpus, valid_cpus))
+> +		cpumask_or(amu_fie_cpus, policy->related_cpus,
+> +			   amu_fie_cpus);
+> +
+> +	cpufreq_cpu_put(policy);
+> +
+> +	return true;
+> +}
+> +
+> +static DEFINE_STATIC_KEY_FALSE(amu_fie_key);
+> +#define amu_freq_invariant() static_branch_unlikely(&amu_fie_key)
+> +
+> +static int __init init_amu_fie(void)
+> +{
+> +	cpumask_var_t valid_cpus;
+> +	bool have_policy = false;
+> +	int ret = 0;
+> +	int cpu;
+> +
+> +	if (!zalloc_cpumask_var(&valid_cpus, GFP_KERNEL))
+> +		return -ENOMEM;
+> +
+> +	if (!zalloc_cpumask_var(&amu_fie_cpus, GFP_KERNEL)) {
+> +		ret = -ENOMEM;
+> +		goto free_valid_mask;
+> +	}
+> +
+> +	for_each_present_cpu(cpu) {
+> +		if (validate_cpu_freq_invariance_counters(cpu))
+> +			continue;
+> +		cpumask_set_cpu(cpu, valid_cpus);
+> +		have_policy |= enable_policy_freq_counters(cpu, valid_cpus);
+> +	}
+> +
+> +	/*
+> +	 * If we are not restricted by cpufreq policies, we only enable
+> +	 * the use of the AMU feature for FIE if all CPUs support AMU.
+> +	 * Otherwise, enable_policy_freq_counters has already enabled
+> +	 * policy cpus.
+> +	 */
+> +	if (!have_policy && cpumask_equal(valid_cpus, cpu_present_mask))
+> +		cpumask_or(amu_fie_cpus, amu_fie_cpus, valid_cpus);
+> +
+> +	if (!cpumask_empty(amu_fie_cpus)) {
+> +		pr_info("CPUs[%*pbl]: counters will be used for FIE.",
+> +			cpumask_pr_args(amu_fie_cpus));
+> +		static_branch_enable(&amu_fie_key);
+> +	}
+> +
+> +free_valid_mask:
+> +	free_cpumask_var(valid_cpus);
+> +
+> +	return ret;
+> +}
+> +late_initcall_sync(init_amu_fie);
+> +
+> +bool arch_freq_counters_available(struct cpumask *cpus)
+> +{
+> +	return amu_freq_invariant() &&
+> +	       cpumask_subset(cpus, amu_fie_cpus);
+> +}
+> +
+> +void topology_scale_freq_tick(void)
+> +{
+> +	u64 prev_core_cnt, prev_const_cnt;
+> +	u64 core_cnt, const_cnt, scale;
+> +	int cpu = smp_processor_id();
+> +
+> +	if (!amu_freq_invariant())
+> +		return;
+> +
+> +	if (!cpumask_test_cpu(cpu, amu_fie_cpus))
+> +		return;
+> +
+> +	const_cnt = read_sysreg_s(SYS_AMEVCNTR0_CONST_EL0);
+> +	core_cnt = read_sysreg_s(SYS_AMEVCNTR0_CORE_EL0);
+> +	prev_const_cnt = this_cpu_read(arch_const_cycles_prev);
+> +	prev_core_cnt = this_cpu_read(arch_core_cycles_prev);
+> +
+> +	if (unlikely(core_cnt <= prev_core_cnt ||
+> +		     const_cnt <= prev_const_cnt))
+> +		goto store_and_exit;
+> +
+> +	/*
+> +	 *	    /\core    arch_max_freq_scale
+> +	 * scale =  ------- * --------------------
+> +	 *	    /\const   SCHED_CAPACITY_SCALE
+> +	 *
+> +	 * See validate_cpu_freq_invariance_counters() for details on
+> +	 * arch_max_freq_scale and the use of SCHED_CAPACITY_SHIFT.
+> +	 */
+> +	scale = core_cnt - prev_core_cnt;
+> +	scale *= this_cpu_read(arch_max_freq_scale);
+> +	scale = div64_u64(scale >> SCHED_CAPACITY_SHIFT,
+> +			  const_cnt - prev_const_cnt);
+> +
+> +	scale = min_t(unsigned long, scale, SCHED_CAPACITY_SCALE);
+> +	this_cpu_write(freq_scale, (unsigned long)scale);
+> +
+> +store_and_exit:
+> +	this_cpu_write(arch_core_cycles_prev, core_cnt);
+> +	this_cpu_write(arch_const_cycles_prev, const_cnt);
+> +}
+> +#endif /* CONFIG_ARM64_AMU_EXTN */
+> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+> index 6119e11a9f95..8d63673c1689 100644
+> --- a/drivers/base/arch_topology.c
+> +++ b/drivers/base/arch_topology.c
+> @@ -21,6 +21,10 @@
+>   #include <linux/sched.h>
+>   #include <linux/smp.h>
+>   
+> +__weak bool arch_freq_counters_available(struct cpumask *cpus)
+> +{
+> +	return false;
+> +}
+>   DEFINE_PER_CPU(unsigned long, freq_scale) = SCHED_CAPACITY_SCALE;
+>   
+>   void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
+> @@ -29,6 +33,14 @@ void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
+>   	unsigned long scale;
+>   	int i;
+>   
+> +	/*
+> +	 * If the use of counters for FIE is enabled, just return as we don't
+> +	 * want to update the scale factor with information from CPUFREQ.
+> +	 * Instead the scale factor will be updated from arch_scale_freq_tick.
+> +	 */
+> +	if (arch_freq_counters_available(cpus))
+> +		return;
+> +
+>   	scale = (cur_freq << SCHED_CAPACITY_SHIFT) / max_freq;
+>   
+>   	for_each_cpu(i, cpus)
+> diff --git a/include/linux/arch_topology.h b/include/linux/arch_topology.h
+> index 3015ecbb90b1..1ccdddb541a7 100644
+> --- a/include/linux/arch_topology.h
+> +++ b/include/linux/arch_topology.h
+> @@ -33,6 +33,8 @@ unsigned long topology_get_freq_scale(int cpu)
+>   	return per_cpu(freq_scale, cpu);
+>   }
+>   
+> +bool arch_freq_counters_available(struct cpumask *cpus);
+> +
+>   struct cpu_topology {
+>   	int thread_id;
+>   	int core_id;
+> 
+
+
+Looks good
+
+Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+
+Regards,
+Lukasz
