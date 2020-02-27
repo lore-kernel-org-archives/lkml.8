@@ -2,115 +2,112 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC090C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 456BFC11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96AA321D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:23:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VAtT8x1x"
+	by mail.kernel.org (Postfix) with ESMTP id 2351324691
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:25:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730442AbgB0RX4 (ORCPT
+        id S1730135AbgB0RZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 12:23:56 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57782 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730384AbgB0RXz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 12:23:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582824234;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6XC36jUNMrRkhe8v5qZn1zVMtVX2JPkjS3b1Prtcpv4=;
-        b=VAtT8x1xtlsjQTp1WTDDwnFC/pqkHt4cUFRigyaJkyjO5whVYYP9VJkIkwriXHf9k32F+c
-        NqnetouCVnf2dc6zN+rdSfK4FXFsm2sAcayVHrZmXat9Ulw+/Y9MOpWcbAi4Z11tJ5g7EF
-        udbFGjsfWIR05/etBrivqr6ot/Vseu0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-233-ezsQoYhqMwCkTfO-IVeMCg-1; Thu, 27 Feb 2020 12:23:53 -0500
-X-MC-Unique: ezsQoYhqMwCkTfO-IVeMCg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6812F107ACCA;
-        Thu, 27 Feb 2020 17:23:50 +0000 (UTC)
-Received: from millenium-falcon.redhat.com (unknown [10.36.118.42])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AEC9C1001B2C;
-        Thu, 27 Feb 2020 17:23:44 +0000 (UTC)
-From:   Mohammed Gamal <mgamal@redhat.com>
-To:     kvm@vger.kernel.org, pbonzini@redhat.com
-Cc:     sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        linux-kernel@vger.kernel.org, Mohammed Gamal <mgamal@redhat.com>
-Subject: [PATCH 5/5] KVM: x86: mmu: Add guest physical address check in translate_gpa()
-Date:   Thu, 27 Feb 2020 19:23:06 +0200
-Message-Id: <20200227172306.21426-6-mgamal@redhat.com>
-In-Reply-To: <20200227172306.21426-1-mgamal@redhat.com>
-References: <20200227172306.21426-1-mgamal@redhat.com>
+        Thu, 27 Feb 2020 12:25:50 -0500
+Received: from mga17.intel.com ([192.55.52.151]:47782 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729648AbgB0RZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 12:25:50 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 09:25:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,492,1574150400"; 
+   d="scan'208";a="437111728"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga005.fm.intel.com with ESMTP; 27 Feb 2020 09:25:49 -0800
+Date:   Thu, 27 Feb 2020 09:25:49 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V5 01/12] fs/xfs: Remove unnecessary initialization of
+ i_rwsem
+Message-ID: <20200227172549.GA6468@iweiny-DESK2.sc.intel.com>
+References: <20200227052442.22524-1-ira.weiny@intel.com>
+ <20200227052442.22524-2-ira.weiny@intel.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227052442.22524-2-ira.weiny@intel.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case of running a guest with 4-level page tables on a 5-level page
-table host, it might happen that a guest might have a physical address
-with reserved bits set, but the host won't see that and trap it.
+On Wed, Feb 26, 2020 at 09:24:31PM -0800, 'Ira Weiny' wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> xfs_reinit_inode() -> inode_init_always() already handles calling
+> init_rwsem(i_rwsem).  Doing so again is unneeded.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-Hence, we need to check page faults' physical addresses against the guest=
-'s
-maximum physical memory and if it's exceeded, we need to add
-the PFERR_RSVD_MASK bits to the PF's error code.
+Ok...  I'm going to blame exchange...
 
-Also make sure the error code isn't overwritten by the page table walker.
+Dan just pointed out that I mist this response from Dave...
 
-Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
----
- arch/x86/kvm/mmu/mmu.c         | 4 ++++
- arch/x86/kvm/mmu/paging_tmpl.h | 2 +-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+Saying this patch was wrong.
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 099643edfdeb..994e8377b65f 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -523,6 +523,10 @@ static bool check_mmio_spte(struct kvm_vcpu *vcpu, u=
-64 spte)
- static gpa_t translate_gpa(struct kvm_vcpu *vcpu, gpa_t gpa, u32 access,
-                                   struct x86_exception *exception)
- {
-+	/* Check if guest physical address doesn't exceed guest maximum */
-+	if (gpa >=3D (1ull << cpuid_maxphyaddr(vcpu)))
-+		exception->error_code |=3D PFERR_RSVD_MASK;
-+
-         return gpa;
- }
-=20
-diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmp=
-l.h
-index e4c8a4cbf407..aa3db722604b 100644
---- a/arch/x86/kvm/mmu/paging_tmpl.h
-+++ b/arch/x86/kvm/mmu/paging_tmpl.h
-@@ -476,7 +476,7 @@ static int FNAME(walk_addr_generic)(struct guest_walk=
-er *walker,
-=20
- 	walker->fault.vector =3D PF_VECTOR;
- 	walker->fault.error_code_valid =3D true;
--	walker->fault.error_code =3D errcode;
-+	walker->fault.error_code |=3D errcode;
-=20
- #if PTTYPE =3D=3D PTTYPE_EPT
- 	/*
---=20
-2.21.1
+https://lore.kernel.org/lkml/20200221012625.GT10776@dread.disaster.area/
 
+Sorry,  I need to read that email and look at it.
+
+Ira
+
+> 
+> ---
+> New for V4:
+> 
+> NOTE: This was found while ensuring the new i_aops_sem was properly
+> handled.  It seems like this is a layering violation so I think it is
+> worth cleaning up so as to not confuse others.
+> ---
+>  fs/xfs/xfs_icache.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+> index 8dc2e5414276..836a1f09be03 100644
+> --- a/fs/xfs/xfs_icache.c
+> +++ b/fs/xfs/xfs_icache.c
+> @@ -419,6 +419,7 @@ xfs_iget_cache_hit(
+>  		spin_unlock(&ip->i_flags_lock);
+>  		rcu_read_unlock();
+>  
+> +		ASSERT(!rwsem_is_locked(&inode->i_rwsem));
+>  		error = xfs_reinit_inode(mp, inode);
+>  		if (error) {
+>  			bool wake;
+> @@ -452,9 +453,6 @@ xfs_iget_cache_hit(
+>  		ip->i_sick = 0;
+>  		ip->i_checked = 0;
+>  
+> -		ASSERT(!rwsem_is_locked(&inode->i_rwsem));
+> -		init_rwsem(&inode->i_rwsem);
+> -
+>  		spin_unlock(&ip->i_flags_lock);
+>  		spin_unlock(&pag->pag_ici_lock);
+>  	} else {
+> -- 
+> 2.21.0
+> 
