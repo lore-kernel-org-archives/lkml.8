@@ -7,49 +7,54 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FDBC52D3A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA637C3F353
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F77A21556
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A28D21556
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812128;
-	bh=01jRytznLKB9NL/cMXLTYI82segSPQc/GI+tj9vZssA=;
+	s=default; t=1582812276;
+	bh=0rMUxxJqoUo9Hj3EVyu8UAM3u1JjhMDhKTbNyY/K6X4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dhAn7mMJ2g2b4COeBZFXX0hoZH/DR1LeAGkWf41XORiUWVlUdNtyjbba956lF7D9K
-	 4ot0FnpRMawmt4dzKXYcXyIv5AW4AwkcWGIliqpsQFGqgIF/2bqCnLvF7isOjDhcuy
-	 9DMrj1UNGnp2usisA9mzJmaGXajLVsdDc38f+ZHg=
+	b=pHjhg6wv0aIJmsZzkKpup9RvQRD66tBu2iRuK0lP6F8PI+gE53LoG92GcnTmLcARn
+	 Uc+SAkHW4jsFOEYicHmTGNzA3P8G/N/8F2YwrqouUh2B42SExBPzvvVz+2xguro5mr
+	 G9BlQ6ZumZgCLqq0iQQGjzxWPO9cGT4T2S2T0RAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733055AbgB0OCG (ORCPT
+        id S2387614AbgB0OEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:02:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36396 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:04:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733040AbgB0OCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:02:01 -0500
+        id S2387566AbgB0OEW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:04:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 577802469D;
-        Thu, 27 Feb 2020 14:02:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78CED21556;
+        Thu, 27 Feb 2020 14:04:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812120;
-        bh=01jRytznLKB9NL/cMXLTYI82segSPQc/GI+tj9vZssA=;
+        s=default; t=1582812260;
+        bh=0rMUxxJqoUo9Hj3EVyu8UAM3u1JjhMDhKTbNyY/K6X4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ds6oAPzotBAXJaxxn9wAM1vVAoraKBRs9/UmRz6alqVcMSOEPPasodzyLWuJyaa32
-         KzIcyVuzzdmsRrKgTihzoj3s111AgypcsoYfZ3kn1GM5ArlnyPSnBW/y+R+ovkUIe3
-         VaT5tpv7WkKri0ZIkv+qN3f507d4m+Lp6nsvMoOs=
+        b=yDeZPBQJ1Fa4v4274XEaXwegTwdlv5bIdh3H6hpqvb0d/7KpEh0WcbzknfWfYfaDy
+         uHcljAcpoRF80fbJU+RESBjrlVA5reUYBiOQpWHFXb8Fhceu5So2xn9US7vP0erads
+         89xVgpSUzHPi8N6Zt8wUEfy+78iLxtLzj3JYyr84=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 4.14 229/237] iommu/vt-d: Fix compile warning from intel-svm.h
-Date:   Thu, 27 Feb 2020 14:37:23 +0100
-Message-Id: <20200227132312.957605861@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 46/97] mm/memcontrol.c: lost css_put in memcg_expand_shrinker_maps()
+Date:   Thu, 27 Feb 2020 14:36:54 +0100
+Message-Id: <20200227132222.094263817@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
-References: <20200227132255.285644406@linuxfoundation.org>
+In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
+References: <20200227132214.553656188@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,38 +64,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-commit e7598fac323aad0e502415edeffd567315994dd6 upstream.
+commit 75866af62b439859d5146b7093ceb6b482852683 upstream.
 
-The intel_svm_is_pasid_valid() needs to be marked inline, otherwise it
-causes the compile warning below:
+for_each_mem_cgroup() increases css reference counter for memory cgroup
+and requires to use mem_cgroup_iter_break() if the walk is cancelled.
 
-  CC [M]  drivers/dma/idxd/cdev.o
-In file included from drivers/dma/idxd/cdev.c:9:0:
-./include/linux/intel-svm.h:125:12: warning: ‘intel_svm_is_pasid_valid’ defined but not used [-Wunused-function]
- static int intel_svm_is_pasid_valid(struct device *dev, int pasid)
-            ^~~~~~~~~~~~~~~~~~~~~~~~
-
-Reported-by: Borislav Petkov <bp@alien8.de>
-Fixes: 15060aba71711 ('iommu/vt-d: Helper function to query if a pasid has any active users')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Link: http://lkml.kernel.org/r/c98414fb-7e1f-da0f-867a-9340ec4bd30b@virtuozzo.com
+Fixes: 0a4465d34028 ("mm, memcg: assign memcg-aware shrinkers bitmap to memcg")
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Acked-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Reviewed-by: Roman Gushchin <guro@fb.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/intel-svm.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/memcontrol.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/include/linux/intel-svm.h
-+++ b/include/linux/intel-svm.h
-@@ -130,7 +130,7 @@ static inline int intel_svm_unbind_mm(st
- 	BUG();
- }
- 
--static int intel_svm_is_pasid_valid(struct device *dev, int pasid)
-+static inline int intel_svm_is_pasid_valid(struct device *dev, int pasid)
- {
- 	return -EINVAL;
- }
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -419,8 +419,10 @@ int memcg_expand_shrinker_maps(int new_i
+ 		if (mem_cgroup_is_root(memcg))
+ 			continue;
+ 		ret = memcg_expand_one_shrinker_map(memcg, size, old_size);
+-		if (ret)
++		if (ret) {
++			mem_cgroup_iter_break(NULL, memcg);
+ 			goto unlock;
++		}
+ 	}
+ unlock:
+ 	if (!ret)
 
 
