@@ -2,117 +2,130 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5935EC4BA06
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 558BDC4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36FBF222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:33:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30CDC222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:35:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbgB0Ic6 convert rfc822-to-8bit (ORCPT
+        id S1728593AbgB0IfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 03:32:58 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:32881 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728440AbgB0Ic6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 03:32:58 -0500
-Received: by mail-ot1-f68.google.com with SMTP id w6so2186515otk.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 00:32:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=OeGtTXktVcqacz7cYnWdrEZYsOucMfq/ZWYQMhH1UAI=;
-        b=Vg1yt3ftDzobeDLlbheHZBnRkwGlD2gpWJjHqM5Qs/TKNaPBqhYgNGOk1o7bzXZbnO
-         jU4db5dj9/7aZ1GMtUKq/1ah3stww9AFEOzIpAuhkljZ5vR9pdaFqHi8nGf4gwbiUw2g
-         vHvZEpAp4PVjWmyQ9dCmM2XPhd5VMYiLUeqFYUSSE4/Pt/mfiW3u8H+EpPmjt/dzR8pa
-         dMUbRYT/hVH9WuwJFUA/2W4KKNDAjCOG/TfNT4TMb/D8JKJy3khRJZyr3gJDvW7piv7B
-         kebLbrzyCEQqPQFqkCKC5Oqct/b+qZVl8MPJbXPZC+/+2PTgy+aQEMhZcN8cuSN9YAXi
-         b24Q==
-X-Gm-Message-State: APjAAAXwzB4vu8rZTLmSYIxEBZvrNkgv7crtPdDpQTYyEdlJaJn+CSSi
-        7pUD8RNFsokxGJrMFBdY9cHdV3zXHWUcHJgd4nM=
-X-Google-Smtp-Source: APXvYqzdoCVOtrlrzUXT8HEP1lYZ4KzJVPdQN1Q3Woonf40gMgnK+NC4wo5cm8aEXvQipTsQHhdVLVpRzTFU+2KkZBw=
-X-Received: by 2002:a05:6830:10e:: with SMTP id i14mr2360889otp.39.1582792377824;
- Thu, 27 Feb 2020 00:32:57 -0800 (PST)
+        Thu, 27 Feb 2020 03:35:25 -0500
+Received: from mga05.intel.com ([192.55.52.43]:49942 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728440AbgB0IfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 03:35:25 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 00:35:25 -0800
+X-IronPort-AV: E=Sophos;i="5.70,491,1574150400"; 
+   d="scan'208";a="231749398"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.169.149]) ([10.249.169.149])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 27 Feb 2020 00:35:20 -0800
+Subject: Re: [PATCH 1/2] kvm: vmx: Use basic exit reason to check if it's the
+ specific VM EXIT
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <20200224020751.1469-1-xiaoyao.li@intel.com>
+ <20200224020751.1469-2-xiaoyao.li@intel.com>
+ <87lfosp9xs.fsf@vitty.brq.redhat.com>
+ <d9744594-4a66-d867-f785-64ce4d42b848@intel.com>
+ <87imjwp24x.fsf@vitty.brq.redhat.com>
+ <20200224161728.GC29865@linux.intel.com>
+ <50134028-ef7a-46c6-7602-095c47406ed7@intel.com>
+ <20200225061317.GV29865@linux.intel.com>
+ <bb2d36b4-a077-691e-d59e-f65bf534d1ff@intel.com>
+ <20200226235924.GW9940@linux.intel.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <022bf970-1b86-d952-5563-0d18c9eea6e2@intel.com>
+Date:   Thu, 27 Feb 2020 16:35:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <alpine.LNX.2.22.394.2002270908380.8@nippy.intranet>
- <a682c89d-baf2-3d3c-647f-a07b2a146c9f@linux-m68k.org> <alpine.LNX.2.22.394.2002261637400.8@nippy.intranet>
- <caa5686a-5be3-5848-fdee-36f54237ccb6@linux-m68k.org> <alpine.LNX.2.22.394.2002261151220.9@nippy.intranet>
- <73c3ad08-963d-fea2-91d7-b06e4ef8d3ef@linux-m68k.org> <20200227081805.GA5746@afzalpc>
-In-Reply-To: <20200227081805.GA5746@afzalpc>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 27 Feb 2020 09:32:46 +0100
-Message-ID: <CAMuHMdWVVWaoHA1Tie5APYBq3Pa3s4BAoWN1jAACAZZS65UA7w@mail.gmail.com>
-Subject: Re: [PATCH v2 06/18] m68k: Replace setup_irq() by request_irq()
-To:     afzal mohammed <afzal.mohd.ma@gmail.com>
-Cc:     Greg Ungerer <gerg@linux-m68k.org>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200226235924.GW9940@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Afzal,
+On 2/27/2020 7:59 AM, Sean Christopherson wrote:
+> On Tue, Feb 25, 2020 at 02:41:20PM +0800, Xiaoyao Li wrote:
+>> On 2/25/2020 2:13 PM, Sean Christopherson wrote:
+>>> On Tue, Feb 25, 2020 at 08:13:15AM +0800, Xiaoyao Li wrote:
+>>>> On 2/25/2020 12:17 AM, Sean Christopherson wrote:
+>>>> I have thought about union, but it seems
+>>>>
+>>>> union {
+>>>> 	u16 exit_reason;
+>>>> 	u32 full_exit_reason;
+>>>> }
+>>>>
+>>>> is not a good name. Since there are many codes in vmx.c and nested.c assume
+>>>> that exit_reason stands for 32-bit EXIT REASON vmcs field as well as
+>>>> evmcs->vm_exit_reason and vmcs12->vm_exit_reason. Do we really want to also
+>>>> rename them to full_exit_reason?
+>>>
+>>> It's actually the opposite, almost all of the VMX code assumes exit_reason
+>>> holds only the basic exit reason, i.e. a 16-bit value.  For example, SGX
+>>> adds a modifier flag to denote a VM-Exit was from enclave mode, and that
+>>> bit needs to be stripped from exit_reason, otherwise all the checks like
+>>> "if (exit_reason == blah_blah_blah)" fail.
+>>>
+>>> Making exit_reason a 16-bit alias of the full/extended exit_reason neatly
+>>> sidesteps that issue.  And it is an issue that has caused actual problems
+>>> in the past, e.g. see commit beb8d93b3e42 ("KVM: VMX: Fix handling of #MC
+>>> that occurs during VM-Entry").  Coincidentally, that commit also removes a
+>>> local "u16 basic_exit_reason" :-).
+>>>
+>>> Except for one mistake, the pseudo-patch below is the entirety of required
+>>> changes.  Most (all?) of the functions that take "u32 exit_reason" can (and
+>>> should) continue to take a u32.
+>>>
+>>> As for the name, I strongly prefer keeping the exit_reason name for the
+>>> basic exit reason.  The vast majority of VM-Exits do not have modifiers
+>>> set, i.e. "basic exit reason" == vmcs.EXIT_REASON for nearly all normal
+>>> usage.  This holds true in every form of communication, e.g. when discussing
+>>> VM-Exit reasons, it's never qualified with "basic", it's simply the exit
+>>> reason.  IMO the code is better off following the colloquial usage of "exit
+>>> reason".  A simple comment above the union would suffice to clear up any
+>>> confusion with respect to the SDM.
+>>
+>> Well, for this reason we can keep exit_reason for 16-bit usage, and define
+>> full/extended_exit_reason for 32-bit cases. This makes less code churn.
+>>
+>> But after we choose to use exit_reason and full/extended_exit_reason, what
+>> if someday new modifier flags are added and we want to enable some modifier
+>> flags for nested case?
+>> I guess we need to change existing exit_reason to full/extended_exit_reason
+>> in nested.c/nested.h to keep the naming rule consistent.
+> 
+> Ah, good point.  But, that's just another bug in my psuedo patch :-)
+> It's literally one call site that needs to be updated.  E.g.
+> 
+> 	if (is_guest_mode(vcpu) && nested_vmx_exit_reflected(vcpu, exit_reason))
+> 		return nested_vmx_reflect_vmexit(vcpu, full_exit_reason);
+> 
 
-On Thu, Feb 27, 2020 at 9:18 AM afzal mohammed <afzal.mohd.ma@gmail.com> wrote:
-> On Wed, Feb 26, 2020 at 10:42:00AM +1000, Greg Ungerer wrote:
-> > > -   setup_irq(TMR_IRQ_NUM, &m68328_timer_irq);
-> > > +   if (request_irq(TMR_IRQ_NUM, hw_tick, IRQF_TIMER, "timer", NULL))
-> > > +           pr_err("%s: request_irq() failed\n", "timer");
-> >
-> > Why not just:
-> >
-> >                 pr_err("timer: request_irq() failed\n");
->
-> The reason to use %s was that it could be automated by cocci script &
-> the o/p didn't look bad. Second arg to pr_err is what cocci
-> presents me & there is wide variation in the name across the tree as
-> Finn noted.
->
-> Excerpts from v1 cover letter [1],
->
-> - setup_irq(E1,&act);
-> + if (request_irq(E1,f_handler,f_flags,f_name,f_dev_id))
-> +       pr_err("request_irq() on %s failed\n", f_name);
->
-> [ don't get mislead by string contents used, this was for v1, just to
->  show how the result was obtained. To take care of Finn's suggesstion,
->  instead of modifying cocci & then making changes other changes over
->  that (i could not fully automate w/ cocci, and Julia said my script
->  is fine as is), it was easier to run sed over the v1  patches ]
->
-> > And maybe would it be useful to print out the error return code from a
-> > failed request_irq()?
->
-> Since most of the existing setup_irq() didn't even check & handle
-> error return, my first thought was just s/setup_irq/request_irq, it
-> was easier from scripting pointing of view. i felt uncomfortable doing
-> nothing in case of error. Also noted that request_irq() definition has
-> a "__much_check", so decided to add it.
+shouldn't we also pass full_exit_reason to nested_vmx_exit_reflected()?
 
-Most (all?) of the code calling setup_irq() is very old, and most of the calls
-happen very early, so any such failures are hard failures that prevent the
-system from booting at all.  Hence printing a message may be futile, as it
-may happen before the console has been initialized (modulo early-printk).
+> Everywhere else KVM calls nested_vmx_reflect_vmexit() is (currently) done
 
-Just my 2 €c.
+I guess you wanted to say nested_vmx_vmexit() not 
+nested_vmx_reflect_vmexit() here.
 
-Gr{oetje,eeting}s,
+> with a hardcoded value (except handle_vmfunc(), but I actually want to
+> change that one).
+> 
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
