@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C487C54FE1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E28FC52D4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E432B2468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA2A424690
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813128;
-	bh=TlzoMjyNG2u4Ib2N/3F6iUTNBTdeDCjPpAz3vkK992E=;
+	s=default; t=1582813007;
+	bh=fIbIHdKoVC8BBdOOAk/IjBOIaUu4oAJVa3qmLISHSLc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W5lcODba//y8gnvAAd+QzIKmDv1BqjZFbvpsEHFaz/UdNm+ncFzscEl4i8aQDEk6N
-	 qia9DaBCu14stkOyl33Po1kFyuZgljLr182GdsXLvUQluHpfDjNJZ42DxMziu47ch+
-	 pdLAViYkARhc00tjaY+UBSGcXce6SA2qWMYySaFE=
+	b=qDyHQhjfLxTbhd0xariPWGu0U1jl+W7tF82Yn9w+r78pPnIopCw1jjo+FBSQEX2U0
+	 cFXx6VUzDR0nNwEPBPT+vXlS6J7aDDIFp/idKukd3A3+UQA8zqowkAhImeFhhBOqUS
+	 x/TVxYr9RVIAx1o7hO3IOuQHJzPBmRqCFX2KV/q4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389524AbgB0OSp (ORCPT
+        id S2389263AbgB0OQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:18:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59248 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:16:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730171AbgB0OSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:18:39 -0500
+        id S2389570AbgB0OQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:16:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F50E24697;
-        Thu, 27 Feb 2020 14:18:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 618AC24690;
+        Thu, 27 Feb 2020 14:16:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813118;
-        bh=TlzoMjyNG2u4Ib2N/3F6iUTNBTdeDCjPpAz3vkK992E=;
+        s=default; t=1582813003;
+        bh=fIbIHdKoVC8BBdOOAk/IjBOIaUu4oAJVa3qmLISHSLc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NC7MVIrQ7cC9MaWbXRjbdhxzczxEshZ4YyIQStDfzzY+2UwntpXhD98coMi5iQa9M
-         j6KXABQ2bBRC83DaJ4MAgEFzlD1CR0TDJOtMRFr2tdZFeeeYiJAnO9aP4sdmQmR3+2
-         SSYziKqX4hDiOSUFNwpN1WAulJ6ZgHuhhJ8sPw3E=
+        b=ss/F/55kpQg/cTnEzZkjZ+UzUIs+Xw21QL/jHg7Gi/T4f2wp+FF+Z6iVGFCS30/dM
+         Dh+QJqlkdRDyYlHfMaw6IerMpCNpMXy/2qCfCWgYBn+hvMRksZ7t7sqMquwE4rwDhZ
+         hxk1rr5N2vgezk1ySi/5f2aqt1jsTMB6U2Brgfyo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Prabhakar Kushwaha <pkushwaha@marvell.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.5 142/150] ata: ahci: Add shutdown to freeze hardware resources of ahci
-Date:   Thu, 27 Feb 2020 14:37:59 +0100
-Message-Id: <20200227132253.229816038@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Upton <oupton@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.5 098/150] KVM: nVMX: Refactor IO bitmap checks into helper function
+Date:   Thu, 27 Feb 2020 14:37:15 +0100
+Message-Id: <20200227132247.321902030@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -59,105 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prabhakar Kushwaha <pkushwaha@marvell.com>
+From: Oliver Upton <oupton@google.com>
 
-commit 10a663a1b15134a5a714aa515e11425a44d4fdf7 upstream.
+commit e71237d3ff1abf9f3388337cfebf53b96df2020d upstream.
 
-device_shutdown() called from reboot or power_shutdown expect
-all devices to be shutdown. Same is true for even ahci pci driver.
-As no ahci shutdown function is implemented, the ata subsystem
-always remains alive with DMA & interrupt support. File system
-related calls should not be honored after device_shutdown().
+Checks against the IO bitmap are useful for both instruction emulation
+and VM-exit reflection. Refactor the IO bitmap checks into a helper
+function.
 
-So defining ahci pci driver shutdown to freeze hardware (mask
-interrupt, stop DMA engine and free DMA resources).
-
-Signed-off-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Oliver Upton <oupton@google.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/ata/ahci.c        |    7 +++++++
- drivers/ata/libata-core.c |   21 +++++++++++++++++++++
- include/linux/libata.h    |    1 +
- 3 files changed, 29 insertions(+)
+ arch/x86/kvm/vmx/nested.c |   39 +++++++++++++++++++++++++--------------
+ arch/x86/kvm/vmx/nested.h |    2 ++
+ 2 files changed, 27 insertions(+), 14 deletions(-)
 
---- a/drivers/ata/ahci.c
-+++ b/drivers/ata/ahci.c
-@@ -81,6 +81,7 @@ enum board_ids {
- 
- static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent);
- static void ahci_remove_one(struct pci_dev *dev);
-+static void ahci_shutdown_one(struct pci_dev *dev);
- static int ahci_vt8251_hardreset(struct ata_link *link, unsigned int *class,
- 				 unsigned long deadline);
- static int ahci_avn_hardreset(struct ata_link *link, unsigned int *class,
-@@ -606,6 +607,7 @@ static struct pci_driver ahci_pci_driver
- 	.id_table		= ahci_pci_tbl,
- 	.probe			= ahci_init_one,
- 	.remove			= ahci_remove_one,
-+	.shutdown		= ahci_shutdown_one,
- 	.driver = {
- 		.pm		= &ahci_pci_pm_ops,
- 	},
-@@ -1877,6 +1879,11 @@ static int ahci_init_one(struct pci_dev
- 	return 0;
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -5304,24 +5304,17 @@ fail:
+ 	return 1;
  }
  
-+static void ahci_shutdown_one(struct pci_dev *pdev)
-+{
-+	ata_pci_shutdown_one(pdev);
-+}
-+
- static void ahci_remove_one(struct pci_dev *pdev)
+-
+-static bool nested_vmx_exit_handled_io(struct kvm_vcpu *vcpu,
+-				       struct vmcs12 *vmcs12)
++/*
++ * Return true if an IO instruction with the specified port and size should cause
++ * a VM-exit into L1.
++ */
++bool nested_vmx_check_io_bitmaps(struct kvm_vcpu *vcpu, unsigned int port,
++				 int size)
  {
- 	pm_runtime_get_noresume(&pdev->dev);
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -6767,6 +6767,26 @@ void ata_pci_remove_one(struct pci_dev *
- 	ata_host_detach(host);
+-	unsigned long exit_qualification;
++	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
+ 	gpa_t bitmap, last_bitmap;
+-	unsigned int port;
+-	int size;
+ 	u8 b;
+ 
+-	if (!nested_cpu_has(vmcs12, CPU_BASED_USE_IO_BITMAPS))
+-		return nested_cpu_has(vmcs12, CPU_BASED_UNCOND_IO_EXITING);
+-
+-	exit_qualification = vmcs_readl(EXIT_QUALIFICATION);
+-
+-	port = exit_qualification >> 16;
+-	size = (exit_qualification & 7) + 1;
+-
+ 	last_bitmap = (gpa_t)-1;
+ 	b = -1;
+ 
+@@ -5348,6 +5341,24 @@ static bool nested_vmx_exit_handled_io(s
+ 	return false;
  }
  
-+void ata_pci_shutdown_one(struct pci_dev *pdev)
++static bool nested_vmx_exit_handled_io(struct kvm_vcpu *vcpu,
++				       struct vmcs12 *vmcs12)
 +{
-+	struct ata_host *host = pci_get_drvdata(pdev);
-+	int i;
++	unsigned long exit_qualification;
++	unsigned int port;
++	int size;
 +
-+	for (i = 0; i < host->n_ports; i++) {
-+		struct ata_port *ap = host->ports[i];
++	if (!nested_cpu_has(vmcs12, CPU_BASED_USE_IO_BITMAPS))
++		return nested_cpu_has(vmcs12, CPU_BASED_UNCOND_IO_EXITING);
 +
-+		ap->pflags |= ATA_PFLAG_FROZEN;
++	exit_qualification = vmcs_readl(EXIT_QUALIFICATION);
 +
-+		/* Disable port interrupts */
-+		if (ap->ops->freeze)
-+			ap->ops->freeze(ap);
++	port = exit_qualification >> 16;
++	size = (exit_qualification & 7) + 1;
 +
-+		/* Stop the port DMA engines */
-+		if (ap->ops->port_stop)
-+			ap->ops->port_stop(ap);
-+	}
++	return nested_vmx_check_io_bitmaps(vcpu, port, size);
 +}
 +
- /* move to PCI subsystem */
- int pci_test_config_bits(struct pci_dev *pdev, const struct pci_bits *bits)
+ /*
+  * Return 1 if we should exit from L2 to L1 to handle an MSR access access,
+  * rather than handle it ourselves in L0. I.e., check whether L1 expressed
+--- a/arch/x86/kvm/vmx/nested.h
++++ b/arch/x86/kvm/vmx/nested.h
+@@ -34,6 +34,8 @@ int vmx_get_vmx_msr(struct nested_vmx_ms
+ int get_vmx_mem_address(struct kvm_vcpu *vcpu, unsigned long exit_qualification,
+ 			u32 vmx_instruction_info, bool wr, int len, gva_t *ret);
+ void nested_vmx_pmu_entry_exit_ctls_update(struct kvm_vcpu *vcpu);
++bool nested_vmx_check_io_bitmaps(struct kvm_vcpu *vcpu, unsigned int port,
++				 int size);
+ 
+ static inline struct vmcs12 *get_vmcs12(struct kvm_vcpu *vcpu)
  {
-@@ -7387,6 +7407,7 @@ EXPORT_SYMBOL_GPL(ata_timing_cycle2mode)
- 
- #ifdef CONFIG_PCI
- EXPORT_SYMBOL_GPL(pci_test_config_bits);
-+EXPORT_SYMBOL_GPL(ata_pci_shutdown_one);
- EXPORT_SYMBOL_GPL(ata_pci_remove_one);
- #ifdef CONFIG_PM
- EXPORT_SYMBOL_GPL(ata_pci_device_do_suspend);
---- a/include/linux/libata.h
-+++ b/include/linux/libata.h
-@@ -1221,6 +1221,7 @@ struct pci_bits {
- };
- 
- extern int pci_test_config_bits(struct pci_dev *pdev, const struct pci_bits *bits);
-+extern void ata_pci_shutdown_one(struct pci_dev *pdev);
- extern void ata_pci_remove_one(struct pci_dev *pdev);
- 
- #ifdef CONFIG_PM
 
 
