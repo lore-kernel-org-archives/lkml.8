@@ -2,98 +2,93 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD9DC3F2C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CD3C3F2C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 906B82469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:52:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582840332;
-	bh=YLXCleFm1NkklXXaZAYKs9oeGWD4D6WAcvWOVfS/Yds=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=RfxJ9+bMXC+Ang5XcF01NQm/nLfwGootajAERhJq3hHSD7X1Gc3UlRaixkvbUHVDG
-	 2c35upDCQleWek3uhFt4RcjhtrC98SurhmsPr7gpoLLd9o6FkxvzfNQqsvpUNAcJML
-	 jFehuer6wib7F+ewD0585yhT0KkleGw3EdCm/LdQ=
+	by mail.kernel.org (Postfix) with ESMTP id B07F72469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:52:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PfZO1glI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729861AbgB0VwJ (ORCPT
+        id S1729984AbgB0Vwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 16:52:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35166 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726791AbgB0VwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 16:52:09 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 27 Feb 2020 16:52:41 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36583 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729535AbgB0Vwk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 16:52:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582840359;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=UXkdCtTkO49ytr+egfYOWUQHFCGfaWE6lMIRwlJTVOE=;
+        b=PfZO1glI+Xxg6MnP0YjLFyV7KsMu49az6GEro0Gb68q08TmPoz45e1CqkUhZcu3pKdSDT9
+        GosKo8susoNutoSIaPKESq+9TFu8yYxEX+RRM4XMgXRChcBx/lThs5Tuw9mTcLXY0Ismj+
+        g69zeut4erEmzyAkt2tRvsiiyo10bGc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-57-SOFEDrlRNbWXKgxjkOOMeg-1; Thu, 27 Feb 2020 16:52:31 -0500
+X-MC-Unique: SOFEDrlRNbWXKgxjkOOMeg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FA222469F;
-        Thu, 27 Feb 2020 21:52:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582840329;
-        bh=YLXCleFm1NkklXXaZAYKs9oeGWD4D6WAcvWOVfS/Yds=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=KUpG0iuBefzm2uAQI7WMmOBdna/ED1rYoPmTnh50Hmf0hYfPmfxDqnNcvK8XIZKnZ
-         h8ynJuHrNhfDB8Jxz7TebXoXKykU5LX04SjWPVns2lWXZCOLcbPe4w9bQQxyEg/s5v
-         y/FLYa40/vS/VpnAdE/1JM/temjC7d3e+wylbJ2c=
-Date:   Thu, 27 Feb 2020 15:52:06 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, Joe Perches <joe@perches.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: adjust entry to moving cadence drivers
-Message-ID: <20200227215206.GA146772@google.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D3444800D5E;
+        Thu, 27 Feb 2020 21:52:28 +0000 (UTC)
+Received: from treble (ovpn-121-128.rdu2.redhat.com [10.10.121.128])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 91E1460BE0;
+        Thu, 27 Feb 2020 21:52:26 +0000 (UTC)
+Date:   Thu, 27 Feb 2020 15:52:24 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: mmotm 2020-02-24-19-53 uploaded (objtool warning)
+Message-ID: <20200227215224.5q7slx2eikkxwhwi@treble>
+References: <20200225035348.xf9KRK471%akpm@linux-foundation.org>
+ <c15a7c7e-df7c-8a30-0bb1-03f8b04b7be5@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200221185402.4703-1-lukas.bulwahn@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <c15a7c7e-df7c-8a30-0bb1-03f8b04b7be5@infradead.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 07:54:02PM +0100, Lukas Bulwahn wrote:
-> Commit de80f95ccb9c ("PCI: cadence: Move all files to per-device cadence
-> directory") moved files of the pci cadence drivers, but did not adjust
-> the entry in MAINTAINERS.
+On Tue, Feb 25, 2020 at 09:01:54AM -0800, Randy Dunlap wrote:
+> On 2/24/20 7:53 PM, Andrew Morton wrote:
+> > The mm-of-the-moment snapshot 2020-02-24-19-53 has been uploaded to
+> > 
+> >    http://www.ozlabs.org/~akpm/mmotm/
+> > 
+> > mmotm-readme.txt says
+> > 
+> > README for mm-of-the-moment:
+> > 
+> > http://www.ozlabs.org/~akpm/mmotm/
+> > 
+> > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> > more than once a week.
+> > 
 > 
-> Since then, ./scripts/get_maintainer.pl --self-test complains:
+> Still seeing this one:
 > 
->   warning: no file matches F: drivers/pci/controller/pcie-cadence*
+> on x86_64:
 > 
-> So, repair the MAINTAINERS entry now.
-> 
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool: i915_gem_execbuffer2_ioctl()+0x5b7: call to gen8_canonical_addr() with UACCESS enabled
 
-Applied to for-linus for v5.6, thanks!
+Forgot I had a patch for this.  Posting shortly.
 
-> ---
-> Tom, Andrew, please ack. Lorenzo, please pick this patch.
-> applies cleanly on current master and next-20200221
-> 
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 4beb8dc4c7eb..d8f690f0e838 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12740,7 +12740,7 @@ M:	Tom Joseph <tjoseph@cadence.com>
->  L:	linux-pci@vger.kernel.org
->  S:	Maintained
->  F:	Documentation/devicetree/bindings/pci/cdns,*.txt
-> -F:	drivers/pci/controller/pcie-cadence*
-> +F:	drivers/pci/controller/cadence/
->  
->  PCI DRIVER FOR FREESCALE LAYERSCAPE
->  M:	Minghuan Lian <minghuan.Lian@nxp.com>
-> -- 
-> 2.17.1
-> 
+-- 
+Josh
+
