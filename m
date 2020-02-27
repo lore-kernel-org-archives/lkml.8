@@ -2,138 +2,156 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EAE5C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FD9C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 243F12468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EB732468F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:16:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bfs.de header.i=@bfs.de header.b="hZTek6b2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728883AbgB0LNU (ORCPT
+        id S1728886AbgB0LP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 06:13:20 -0500
-Received: from relay.sw.ru ([185.231.240.75]:58372 "EHLO relay.sw.ru"
+        Thu, 27 Feb 2020 06:15:59 -0500
+Received: from mx01-muc.bfs.de ([193.174.230.67]:37607 "EHLO mx01-muc.bfs.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728762AbgB0LNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 06:13:19 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1j7H66-0005H7-As; Thu, 27 Feb 2020 14:12:54 +0300
-Subject: Re: [PATCH RFC 5/5] ext4: Add fallocate2() support
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Christoph Hellwig <hch@infradead.org>, tytso@mit.edu,
-        viro@zeniv.linux.org.uk, adilger.kernel@dilger.ca,
-        snitzer@redhat.com, jack@suse.cz, ebiggers@google.com,
-        riteshh@linux.ibm.com, krisman@collabora.com, surajjs@amazon.com,
-        dmonakhov@gmail.com, mbobrowski@mbobrowski.org, enwlinux@gmail.com,
-        sblbir@amazon.com, khazhy@google.com, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-References: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
- <158272447616.281342.14858371265376818660.stgit@localhost.localdomain>
- <20200226155521.GA24724@infradead.org>
- <06f9b82c-a519-7053-ec68-a549e02c6f6c@virtuozzo.com>
- <20200227073336.GJ10737@dread.disaster.area>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <2e2ae13e-0757-0831-216d-b363b1727a0d@virtuozzo.com>
-Date:   Thu, 27 Feb 2020 14:12:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1728759AbgB0LP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 06:15:59 -0500
+Received: from SRVEX01-SZ.bfs.intern (exchange-sz.bfs.de [10.129.90.31])
+        by mx01-muc.bfs.de (Postfix) with ESMTPS id E1BCE20342;
+        Thu, 27 Feb 2020 12:15:55 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bfs.de; s=dkim201901;
+        t=1582802155; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PSPfkAcD4QDEe9iSfKSFzw4oTZNpL0r5C0vE0nEBfi8=;
+        b=hZTek6b2Y4HMl5mxHAmJ4zxsXbSz4FzU8KeGrX18+sHYSvU2k5tt2oM0qYHB6psoEXGHFq
+        Uho6MeghLCDarNitxYByWjE2JP2spLWNKY0P6iWggFJHne8qpiCnbqoZuxx8sJvyUTRsUV
+        p0Syd7KVDaU3JtvOgkHmu1xUd8mrvTt6c67MW7fXuwtKRtXS/Ssk2ZVbY9BhmrnvcQAvFh
+        LYSSifQCD2THJP5f4u+Rn2Vwo5g4uv9EkTRAKlNWpFuwzWwCxc1sjscHUiwQ9Hixv0Ab5t
+        wic11wWremaDuctMTYuKnhuouxIcK/5FO69d6XQ18rHZbFwDbQFxjUqwJiodow==
+Received: from SRVEX01-SZ.bfs.intern (10.129.90.31) by SRVEX01-SZ.bfs.intern
+ (10.129.90.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.1913.5; Thu, 27 Feb
+ 2020 12:15:55 +0100
+Received: from SRVEX01-SZ.bfs.intern ([fe80::7d2d:f9cb:2761:d24a]) by
+ SRVEX01-SZ.bfs.intern ([fe80::7d2d:f9cb:2761:d24a%6]) with mapi id
+ 15.01.1913.005; Thu, 27 Feb 2020 12:15:55 +0100
+From:   Walter Harms <wharms@bfs.de>
+To:     Colin King <colin.king@canonical.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Gyungoh Yoo <jack.yoo@skyworksinc.com>,
+        Bryan Wu <cooloney@gmail.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
+CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: AW: [PATCH][V2] backlight: sky81452: insure while loop does not allow
+ negative array indexing
+Thread-Topic: [PATCH][V2] backlight: sky81452: insure while loop does not
+ allow negative array indexing
+Thread-Index: AQHV7N8n5fHjoG7xokCkDx0n/hJSlagu4ztb
+Date:   Thu, 27 Feb 2020 11:15:55 +0000
+Message-ID: <cb14e57edc1c4f3a81b0aef6f1099b9c@bfs.de>
+References: <20200226195826.6567-1-colin.king@canonical.com>
+In-Reply-To: <20200226195826.6567-1-colin.king@canonical.com>
+Accept-Language: de-DE, en-US
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.137.16.39]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20200227073336.GJ10737@dread.disaster.area>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Authentication-Results: mx01-muc.bfs.de
+X-Spamd-Result: default: False [-2.99 / 7.00];
+         ARC_NA(0.00)[];
+         TO_DN_EQ_ADDR_SOME(0.00)[];
+         HAS_XOIP(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[11];
+         NEURAL_HAM(-0.00)[-0.990,0];
+         RCVD_NO_TLS_LAST(0.10)[];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         RCVD_COUNT_TWO(0.00)[2];
+         MID_RHS_MATCH_FROM(0.00)[];
+         BAYES_HAM(-2.99)[99.98%]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27.02.2020 10:33, Dave Chinner wrote:
-> On Wed, Feb 26, 2020 at 11:05:23PM +0300, Kirill Tkhai wrote:
->> On 26.02.2020 18:55, Christoph Hellwig wrote:
->>> On Wed, Feb 26, 2020 at 04:41:16PM +0300, Kirill Tkhai wrote:
->>>> This adds a support of physical hint for fallocate2() syscall.
->>>> In case of @physical argument is set for ext4_fallocate(),
->>>> we try to allocate blocks only from [@phisical, @physical + len]
->>>> range, while other blocks are not used.
->>>
->>> Sorry, but this is a complete bullshit interface.  Userspace has
->>> absolutely no business even thinking of physical placement.  If you
->>> want to align allocations to physical block granularity boundaries
->>> that is the file systems job, not the applications job.
->>
->> Why? There are two contradictory actions that filesystem can't do at the same time:
->>
->> 1)place files on a distance from each other to minimize number of extents
->>   on possible future growth;
-> 
-> Speculative EOF preallocation at delayed allocation reservation time
-> provides this.
-> 
->> 2)place small files in the same big block of block device.
-> 
-> Delayed allocation during writeback packs files smaller than the
-> stripe unit of the filesystem tightly.
-> 
-> So, yes, we do both of these things at the same time in XFS, and
-> have for the past 10 years.
-> 
->> At initial allocation time you never know, which file will stop grow in some future,
->> i.e. which file is suitable for compaction. This knowledge becomes available some time later.
->> Say, if a file has not been changed for a month, it is suitable for compaction with
->> another files like it.
->>
->> If at allocation time you can determine a file, which won't grow in the future, don't be afraid,
->> and just share your algorithm here.
->>
->> In Virtuozzo we tried to compact ext4 with existing kernel interface:
->>
->> https://github.com/dmonakhov/e2fsprogs/blob/e4defrag2/misc/e4defrag2.c
->>
->> But it does not work well in many situations, and the main problem is blocks allocation
->> in desired place is not possible. Block allocator can't behave excellent for everything.
->>
->> If this interface bad, can you suggest another interface to make block allocator to know
->> the behavior expected from him in this specific case?
-> 
-> Write once, long term data:
-> 
-> 	fcntl(fd, F_SET_RW_HINT, RWH_WRITE_LIFE_EXTREME);
-> 
-> That will allow the the storage stack to group all data with the
-> same hint together, both in software and in hardware.
+hi all,
+i would suggest converting this in to a more common for() loop.
+Programmers are bad in counting backwards. that kind of bug is=20
+common.
 
-This is interesting option, but it only applicable before write is made. And it's only
-applicable on your own applications. My usecase is defragmentation of containers, where
-any applications may run. Most of applications never care whether long or short-term
-data they write.
+re,
+ wh
+________________________________________
+Von: kernel-janitors-owner@vger.kernel.org <kernel-janitors-owner@vger.kern=
+el.org> im Auftrag von Colin King <colin.king@canonical.com>
+Gesendet: Mittwoch, 26. Februar 2020 20:58
+An: Lee Jones; Daniel Thompson; Jingoo Han; Bartlomiej Zolnierkiewicz; Gyun=
+goh Yoo; Bryan Wu; dri-devel@lists.freedesktop.org; linux-fbdev@vger.kernel=
+.org
+Cc: kernel-janitors@vger.kernel.org; linux-kernel@vger.kernel.org
+Betreff: [PATCH][V2] backlight: sky81452: insure while loop does not allow =
+negative array indexing
 
-Maybe, we can make fallocate() care about F_SET_RW_HINT? Say, if RWH_WRITE_LIFE_EXTREME
-is set, fallocate() tries to allocate space around another inodes with the same hint.
+From: Colin Ian King <colin.king@canonical.com>
 
-E.g., we have 1Mb discard granuality on block device and two files in different block
-device clusters: one is 4Kb of length, another's size is 1Mb-4Kb. The biggest file is
-situated on the start of block device cluster:
+In the unlikely event that num_entry is zero, the while loop
+pre-decrements num_entry to cause negative array indexing into the
+array sources. Fix this by iterating only if num_entry >=3D 0.
 
-[      1Mb cluster0       ][      1Mb cluster1     ]
-[****BIG_FILE****|free 4Kb][small_file|free 1Mb-4Kb]
+Addresses-Coverity: ("Out-of-bounds read")
+Fixes: f705806c9f35 ("backlight: Add support Skyworks SKY81452 backlight dr=
+iver")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
 
-defrag util wants to move small file into free space in cluster0. To do that it opens
-BIG_FILE and sets F_SET_RW_HINT for its inode. Then it opens tmp file, sets the hint
-and calls fallocate():
+V2: fix typo in commit subject line
 
-fd1 = open("BIG_FILE", O_RDONLY);
-ioctl(fd1, F_SET_RW_HINT, RWH_WRITE_LIFE_EXTREME);
+---
+ drivers/video/backlight/sky81452-backlight.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-fd2 = open("donor", O_WRONLY|O_TMPFILE|O_CREAT);
-ioctl(fd2, F_SET_RW_HINT, RWH_WRITE_LIFE_EXTREME);
+diff --git a/drivers/video/backlight/sky81452-backlight.c b/drivers/video/b=
+acklight/sky81452-backlight.c
+index 2355f00f5773..f456930ce78e 100644
+--- a/drivers/video/backlight/sky81452-backlight.c
++++ b/drivers/video/backlight/sky81452-backlight.c
+@@ -200,7 +200,7 @@ static struct sky81452_bl_platform_data *sky81452_bl_pa=
+rse_dt(
+                }
 
-fallocate(fd2, 0, 0, 4Kb); // firstly seeks a space around files with RWH_WRITE_LIFE_EXTREME hint
+                pdata->enable =3D 0;
+-               while (--num_entry)
++               while (--num_entry >=3D 0)
+                        pdata->enable |=3D (1 << sources[num_entry]);
+=20
+              int i;
+                for(i=3D0;i<num_entry;i++)
+                         pdata->enable |=3D (1 << sources[i]);
 
-How about this?
+        }
 
-Kirill
+--
+2.25.0
+
