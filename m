@@ -7,53 +7,55 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F1CC7658C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B042C76591
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3C0124656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F89824656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:28:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813732;
-	bh=/iuYmGxKkhEQ8WmsH4Hhfvfu+Oar/Tmm+cjOuYZFPVA=;
+	s=default; t=1582813739;
+	bh=uPZNUo6hZRw9EESZm12SGL2n6SkjBacg92Va+/AxakM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hKQgdlVqb3vTRL99AGknTvUC6Mz4Bex12gfDkY+iblTxwdSPFfHiLZxTzwsLFvNiZ
-	 X5BiITzKGg08n7L0W0neFCCSxSrgxZ8GypC2vlkfqrnNJrTGvdxY7+wYm9dOOOfsgQ
-	 w0eoH20b13JCcIHKnQK2z4oCWv0JycaUnJgljOjg=
+	b=moLF0QJRbT+DA1wS4wvPgEOnEy5lOJ468sgklgM33Mwiv9CMnoD6MwpPVIKeyrPKP
+	 +pgt1C06XKdavDyesdnuesMy/F/3z+UvNPly+C9NizFRqv70paLr1WqMqrKoZuvkLt
+	 uaRHdxhFmNd1J7UOxWTvQxVEFwtdL+CHqlYf+Czc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388021AbgB0OHG (ORCPT
+        id S2388013AbgB0OHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:07:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44284 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:07:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388001AbgB0OG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:06:57 -0500
+        id S2387995AbgB0OGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:06:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7CC820578;
-        Thu, 27 Feb 2020 14:06:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3818421D7E;
+        Thu, 27 Feb 2020 14:06:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812417;
-        bh=/iuYmGxKkhEQ8WmsH4Hhfvfu+Oar/Tmm+cjOuYZFPVA=;
+        s=default; t=1582812414;
+        bh=uPZNUo6hZRw9EESZm12SGL2n6SkjBacg92Va+/AxakM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c0ccpi+NGETd9Am6rUzVxgBsgwf3QGeon+eRL+y5iB3G07N3YmsvlVHjOJ7qcS7GG
-         0jWmuiAeAODFrbc+4VgOX7cFfqR4FUOebuEVI9PpAkF4SEy8okW72mqq2sEYWwfhjE
-         UUEsA+6BDQB9NirmnvEUUhrN9Dt+sYjGRp48HJxc=
+        b=t3gSnPa0iz84SYkLVicvPEzwWgyV3lx7aL7zKx7fDJ/iO4qHPznw5kTKU1yx6fxWs
+         4WC0pCbesqmYqMKObbc9yRPV++tClDtRww7264iUQc1EW7+zol+QqyqHiovd6BR/P3
+         tNglbppIrYZ2WBaxMRYFqSRwltuB0LqpcAqmhO0w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Nikolay Borisov <nborisov@suse.com>, Qu Wenruo <wqu@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 010/135] btrfs: handle logged extent failure properly
-Date:   Thu, 27 Feb 2020 14:35:50 +0100
-Message-Id: <20200227132230.586544434@linuxfoundation.org>
+        stable@vger.kernel.org, Brian Masney <masneyb@onstation.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 5.4 001/135] iommu/qcom: Fix bogus detach logic
+Date:   Thu, 27 Feb 2020 14:35:41 +0100
+Message-Id: <20200227132228.973307226@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,43 +64,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Robin Murphy <robin.murphy@arm.com>
 
-commit bd727173e4432fe6cb70ba108dc1f3602c5409d7 upstream.
+commit faf305c51aeabd1ea2d7131e798ef5f55f4a7750 upstream.
 
-If we're allocating a logged extent we attempt to insert an extent
-record for the file extent directly.  We increase
-space_info->bytes_reserved, because the extent entry addition will call
-btrfs_update_block_group(), which will convert the ->bytes_reserved to
-->bytes_used.  However if we fail at any point while inserting the
-extent entry we will bail and leave space on ->bytes_reserved, which
-will trigger a WARN_ON() on umount.  Fix this by pinning the space if we
-fail to insert, which is what happens in every other failure case that
-involves adding the extent entry.
+Currently, the implementation of qcom_iommu_domain_free() is guaranteed
+to do one of two things: WARN() and leak everything, or dereference NULL
+and crash. That alone is terrible, but in fact the whole idea of trying
+to track the liveness of a domain via the qcom_domain->iommu pointer as
+a sanity check is full of fundamentally flawed assumptions. Make things
+robust and actually functional by not trying to be quite so clever.
 
-CC: stable@vger.kernel.org # 5.4+
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Reported-by: Brian Masney <masneyb@onstation.org>
+Tested-by: Brian Masney <masneyb@onstation.org>
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Fixes: 0ae349a0f33f ("iommu/qcom: Add qcom_iommu")
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Tested-by: Stephan Gerhold <stephan@gerhold.net>
+Cc: stable@vger.kernel.org # v4.14+
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/extent-tree.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/iommu/qcom_iommu.c |   28 ++++++++++++----------------
+ 1 file changed, 12 insertions(+), 16 deletions(-)
 
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -4411,6 +4411,8 @@ int btrfs_alloc_logged_file_extent(struc
+--- a/drivers/iommu/qcom_iommu.c
++++ b/drivers/iommu/qcom_iommu.c
+@@ -345,21 +345,19 @@ static void qcom_iommu_domain_free(struc
+ {
+ 	struct qcom_iommu_domain *qcom_domain = to_qcom_iommu_domain(domain);
  
- 	ret = alloc_reserved_file_extent(trans, 0, root_objectid, 0, owner,
- 					 offset, ins, 1);
-+	if (ret)
-+		btrfs_pin_extent(fs_info, ins->objectid, ins->offset, 1);
- 	btrfs_put_block_group(block_group);
- 	return ret;
+-	if (WARN_ON(qcom_domain->iommu))    /* forgot to detach? */
+-		return;
+-
+ 	iommu_put_dma_cookie(domain);
+ 
+-	/* NOTE: unmap can be called after client device is powered off,
+-	 * for example, with GPUs or anything involving dma-buf.  So we
+-	 * cannot rely on the device_link.  Make sure the IOMMU is on to
+-	 * avoid unclocked accesses in the TLB inv path:
+-	 */
+-	pm_runtime_get_sync(qcom_domain->iommu->dev);
+-
+-	free_io_pgtable_ops(qcom_domain->pgtbl_ops);
+-
+-	pm_runtime_put_sync(qcom_domain->iommu->dev);
++	if (qcom_domain->iommu) {
++		/*
++		 * NOTE: unmap can be called after client device is powered
++		 * off, for example, with GPUs or anything involving dma-buf.
++		 * So we cannot rely on the device_link.  Make sure the IOMMU
++		 * is on to avoid unclocked accesses in the TLB inv path:
++		 */
++		pm_runtime_get_sync(qcom_domain->iommu->dev);
++		free_io_pgtable_ops(qcom_domain->pgtbl_ops);
++		pm_runtime_put_sync(qcom_domain->iommu->dev);
++	}
+ 
+ 	kfree(qcom_domain);
  }
+@@ -405,7 +403,7 @@ static void qcom_iommu_detach_dev(struct
+ 	struct qcom_iommu_domain *qcom_domain = to_qcom_iommu_domain(domain);
+ 	unsigned i;
+ 
+-	if (!qcom_domain->iommu)
++	if (WARN_ON(!qcom_domain->iommu))
+ 		return;
+ 
+ 	pm_runtime_get_sync(qcom_iommu->dev);
+@@ -418,8 +416,6 @@ static void qcom_iommu_detach_dev(struct
+ 		ctx->domain = NULL;
+ 	}
+ 	pm_runtime_put_sync(qcom_iommu->dev);
+-
+-	qcom_domain->iommu = NULL;
+ }
+ 
+ static int qcom_iommu_map(struct iommu_domain *domain, unsigned long iova,
 
 
