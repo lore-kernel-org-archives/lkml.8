@@ -2,118 +2,104 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBA0C4BA3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67BB7C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53CC224695
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EDC324696
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:56:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NVw9q6+O"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FNNkRHSB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728873AbgB0K4s (ORCPT
+        id S1728895AbgB0K4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 05:56:48 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:46785 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728753AbgB0K4s (ORCPT
+        Thu, 27 Feb 2020 05:56:54 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56222 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728876AbgB0K4y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 05:56:48 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582801007; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=Cw0CW6iCAIbZGkzVU91jLfCC2FwoX1zIJun9pAYPr3I=; b=NVw9q6+OL/lpWJn71g2OdhFe4jyEKgnWDNUuOnsdsZ9SOxM4wlOrJNqx4JvKdmwlV+RMGjPK
- QA84EbjvwVOqbLRxHMQsaLv6mQrlOkqhAvhq8+t+6J9Ur3h4xXfXXDkxVJs2UncHex9IMRhI
- QjopyZSZMyo7/5vf91Upfe7tSw0=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e57a06f.7f951fd74570-smtp-out-n01;
- Thu, 27 Feb 2020 10:56:47 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 829A6C447A0; Thu, 27 Feb 2020 10:56:46 +0000 (UTC)
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Thu, 27 Feb 2020 05:56:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582801013;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=DYpy6RJTXglkEu2oTovR+MB3265JeXuBkFoSO+vFOFs=;
+        b=FNNkRHSBPyxwq5Ll7qEgjvrdTfohJOvFZxl9s1TlF2y2NRSrue2G+hs9JerYEHQq21DkIQ
+        2KRBVe2xdtRUEFY3/eWqA4ypxSE27TeOChxRM5v0j4Xfs4iHoVKs/xU+twW9X8PrBbHo0j
+        XRKprR69Kno55mL3jpqR/kPFlZi9I4k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-243-EQVjFHmoPeexcX8WUqiLWQ-1; Thu, 27 Feb 2020 05:56:49 -0500
+X-MC-Unique: EQVjFHmoPeexcX8WUqiLWQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 29AFFC43383;
-        Thu, 27 Feb 2020 10:56:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 29AFFC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     robh+dt@kernel.org, georgi.djakov@linaro.org, evgreen@chromium.org
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mark.rutland@arm.com,
-        saravanak@google.com, viresh.kumar@linaro.org,
-        okukatla@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v5 0/7] Add OSM L3 Interconnect Provider
-Date:   Thu, 27 Feb 2020 16:26:24 +0530
-Message-Id: <20200227105632.15041-1-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.25.0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1E7E9107ACC7;
+        Thu, 27 Feb 2020 10:56:45 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-150.ams2.redhat.com [10.36.116.150])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 999838D540;
+        Thu, 27 Feb 2020 10:56:44 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id C6B561744A; Thu, 27 Feb 2020 11:56:43 +0100 (CET)
+Date:   Thu, 27 Feb 2020 11:56:43 +0100
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Thomas =?utf-8?Q?Hellstr=C3=B6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     dri-devel@lists.freedesktop.org, Guillaume.Gardet@arm.com,
+        David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org, gurchetansingh@chromium.org,
+        tzimmermann@suse.de
+Subject: Re: [PATCH v5 1/3] drm/shmem: add support for per object caching
+ flags.
+Message-ID: <20200227105643.h4klc3ybhpwv2l3x@sirius.home.kraxel.org>
+References: <20200226154752.24328-1-kraxel@redhat.com>
+ <20200226154752.24328-2-kraxel@redhat.com>
+ <f1afba4b-9c06-48a3-42c7-046695947e91@shipmail.org>
+ <20200227075321.ki74hfjpnsqv2yx2@sirius.home.kraxel.org>
+ <41ca197c-136a-75d8-b269-801db44d4cba@shipmail.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <41ca197c-136a-75d8-b269-801db44d4cba@shipmail.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series aims to add Operating State Manager (OSM) L3
-interconnect provider support on SDM845 and SC7180 SoCs to handle
-bandwidth requests from CPU to scale L3 caches.
+  Hi,
 
-V5:
- * addressed misc review comments from Georgi
- * allow icc node ids to be used across multiple providers
- * picked up Rob's R-b and Ack
+> I think it might be safe for some integrated graphics where the driver
+> maintainers can guarantee that it's safe on all particular processors used
+> with that driver, but then IMO it should be moved out to those drivers.
+> 
+> Other drivers needing write-combine shouldn't really use shmem.
+> 
+> So again, to fix the regression, could we revert 0be895893607f ("drm/shmem:
+> switch shmem helper to &drm_gem_object_funcs.mmap") or does that have other
+> implications?
 
-V4:
- * add SC7180 support
- * use icc_std_aggregate
- * use icc_nodes_remove
- * fixup Evan's review comments.
+This patch isn't a regression.  The old code path has the
+pgprot_writecombine() call in drm_gem_mmap_obj(), so the behavior
+is the same before and afterwards.
 
-v3:
- * switched the dt-bindings to dual-license
- * rebased to linux-next
+But with the patch in place we can easily have shmem helpers do their
+own thing instead of depending on whatever drm_gem_mmap_obj() is doing.
+Just using cached mappings unconditionally would be perfectly fine for
+virtio-gpu.
 
-v2:
- * addressed review comments from Evan
- * dropped unused gpu icc node on SDM845 SoC
+Not sure about the other users though.  I'd like to fix the virtio-gpu
+regression (coming from ttm -> shmem switch) asap, and I don't feel like
+changing the behavior for other drivers in 5.6-rc is a good idea.
 
-Depends on:
-SDM845 icc refactor: https://patchwork.kernel.org/cover/11372211/
-SC7180 icc support: https://patchwork.kernel.org/cover/11404167/
+So I'd like to push patches 1+2 to -fixes and sort everything else later
+in -next.  OK?
 
-Sibi Sankar (7):
-  interconnect: qcom: Allow icc node to be used across icc providers
-  dt-bindings: interconnect: Add OSM L3 DT bindings
-  interconnect: qcom: Add OSM L3 interconnect provider support
-  dt-bindings: interconnect: Add OSM L3 DT binding on SC7180
-  interconnect: qcom: Add OSM L3 support on SC7180
-  arm64: dts: qcom: sdm845: Add OSM L3 interconnect provider
-  arm64: dts: qcom: sc7180: Add OSM L3 interconnect provider
+cheers,
+  Gerd
 
- .../bindings/interconnect/qcom,osm-l3.yaml    |  62 ++++
- arch/arm64/boot/dts/qcom/sc7180.dtsi          |  11 +
- arch/arm64/boot/dts/qcom/sdm845.dtsi          |  11 +
- drivers/interconnect/qcom/Kconfig             |   7 +
- drivers/interconnect/qcom/Makefile            |   2 +
- drivers/interconnect/qcom/osm-l3.c            | 276 ++++++++++++++++++
- drivers/interconnect/qcom/sc7180.h            |   2 +
- drivers/interconnect/qcom/sdm845.c            | 134 +--------
- drivers/interconnect/qcom/sdm845.h            | 142 +++++++++
- .../dt-bindings/interconnect/qcom,osm-l3.h    |  12 +
- 10 files changed, 526 insertions(+), 133 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
- create mode 100644 drivers/interconnect/qcom/osm-l3.c
- create mode 100644 drivers/interconnect/qcom/sdm845.h
- create mode 100644 include/dt-bindings/interconnect/qcom,osm-l3.h
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
