@@ -2,71 +2,124 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A04C5ED49
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 718E3C3F370
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1CF720801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:20:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49ED724688
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:21:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582813282;
+	bh=4i914oy72634ngbPTasVtJ9HokkeB25gdGfM/Zoz6Oo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=SAVaKgUwBM90af6ZNZ3SVZBAHMnon4PZvQNKxVU8l2v7/kX3FlXToHkqzPkoyZrqk
+	 EkoY3LdwcSlpq6vl5GrZzAVGOAUBQr8dMENffftYwR2Vss97xbUnupMVVS2VVTDp0o
+	 WJb/4xe4Se1XUb4JnZWyVY/Rh3l2tMSPm88f+eRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390076AbgB0OUh (ORCPT
+        id S2389856AbgB0OVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:20:37 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:54696 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389914AbgB0OUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:20:34 -0500
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 86CB185F19145C58DE54;
-        Thu, 27 Feb 2020 22:20:22 +0800 (CST)
-Received: from localhost.localdomain (10.175.34.53) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 27 Feb 2020 22:20:15 +0800
-From:   Luo bin <luobin9@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <luoxianjun@huawei.com>, Luo bin <luobin9@huawei.com>
-Subject: [PATCH net v1 3/3] hinic: fix a bug of rss configuration
-Date:   Thu, 27 Feb 2020 06:34:44 +0000
-Message-ID: <20200227063444.2143-4-luobin9@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200227063444.2143-1-luobin9@huawei.com>
-References: <20200227063444.2143-1-luobin9@huawei.com>
+        Thu, 27 Feb 2020 09:21:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57332 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389631AbgB0ORC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:17:02 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45B352468F;
+        Thu, 27 Feb 2020 14:17:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582813021;
+        bh=4i914oy72634ngbPTasVtJ9HokkeB25gdGfM/Zoz6Oo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hW2EYL637uSftS7gaoeLygNik62A8qP7oCo5POnYJbmJ6DbK5tOyw05yb+HkAohfO
+         ysGkuCACCKNNgkQS1HON4rkTun/Lz2spal+3T01fzXw4pOoR5xuxAkPjsyU8xNlmmA
+         FANqNEexIJtLWvQ6wGJ6ABwi6gz07PtKQ9FzsTtk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, satya priya <skakit@codeaurora.org>
+Subject: [PATCH 5.5 067/150] tty: serial: qcom_geni_serial: Fix RX cancel command failure
+Date:   Thu, 27 Feb 2020 14:36:44 +0100
+Message-Id: <20200227132242.865884014@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
+References: <20200227132232.815448360@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.34.53]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-should use real receive queue number to configure hw rss
-indirect table rather than maximal queue number
+From: satya priya <skakit@codeaurora.org>
 
-Signed-off-by: Luo bin <luobin9@huawei.com>
+commit 679aac5ead2f18d223554a52b543e1195e181811 upstream.
+
+RX cancel command fails when BT is switched on and off multiple times.
+
+To handle this, poll for the cancel bit in SE_GENI_S_IRQ_STATUS register
+instead of SE_GENI_S_CMD_CTRL_REG.
+
+As per the HPG update, handle the RX last bit after cancel command
+and flush out the RX FIFO buffer.
+
+Signed-off-by: satya priya <skakit@codeaurora.org>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1581415982-8793-1-git-send-email-skakit@codeaurora.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/huawei/hinic/hinic_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/tty/serial/qcom_geni_serial.c |   18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_main.c b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-index 2411ad270c98..42d00b049c6e 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-@@ -356,7 +356,8 @@ static void hinic_enable_rss(struct hinic_dev *nic_dev)
- 	if (!num_cpus)
- 		num_cpus = num_online_cpus();
+--- a/drivers/tty/serial/qcom_geni_serial.c
++++ b/drivers/tty/serial/qcom_geni_serial.c
+@@ -128,6 +128,7 @@ static int handle_rx_console(struct uart
+ static int handle_rx_uart(struct uart_port *uport, u32 bytes, bool drop);
+ static unsigned int qcom_geni_serial_tx_empty(struct uart_port *port);
+ static void qcom_geni_serial_stop_rx(struct uart_port *uport);
++static void qcom_geni_serial_handle_rx(struct uart_port *uport, bool drop);
  
--	nic_dev->num_qps = min_t(u16, nic_dev->max_qps, num_cpus);
-+	nic_dev->num_qps = hinic_hwdev_num_qps(hwdev);
-+	nic_dev->num_qps = min_t(u16, nic_dev->num_qps, num_cpus);
+ static const unsigned long root_freq[] = {7372800, 14745600, 19200000, 29491200,
+ 					32000000, 48000000, 64000000, 80000000,
+@@ -618,7 +619,7 @@ static void qcom_geni_serial_stop_rx(str
+ 	u32 irq_en;
+ 	u32 status;
+ 	struct qcom_geni_serial_port *port = to_dev_port(uport, uport);
+-	u32 irq_clear = S_CMD_DONE_EN;
++	u32 s_irq_status;
  
- 	nic_dev->rss_limit = nic_dev->num_qps;
- 	nic_dev->num_rss = nic_dev->num_qps;
--- 
-2.17.1
+ 	irq_en = readl(uport->membase + SE_GENI_S_IRQ_EN);
+ 	irq_en &= ~(S_RX_FIFO_WATERMARK_EN | S_RX_FIFO_LAST_EN);
+@@ -634,10 +635,19 @@ static void qcom_geni_serial_stop_rx(str
+ 		return;
+ 
+ 	geni_se_cancel_s_cmd(&port->se);
+-	qcom_geni_serial_poll_bit(uport, SE_GENI_S_CMD_CTRL_REG,
+-					S_GENI_CMD_CANCEL, false);
++	qcom_geni_serial_poll_bit(uport, SE_GENI_S_IRQ_STATUS,
++					S_CMD_CANCEL_EN, true);
++	/*
++	 * If timeout occurs secondary engine remains active
++	 * and Abort sequence is executed.
++	 */
++	s_irq_status = readl(uport->membase + SE_GENI_S_IRQ_STATUS);
++	/* Flush the Rx buffer */
++	if (s_irq_status & S_RX_FIFO_LAST_EN)
++		qcom_geni_serial_handle_rx(uport, true);
++	writel(s_irq_status, uport->membase + SE_GENI_S_IRQ_CLEAR);
++
+ 	status = readl(uport->membase + SE_GENI_STATUS);
+-	writel(irq_clear, uport->membase + SE_GENI_S_IRQ_CLEAR);
+ 	if (status & S_GENI_CMD_ACTIVE)
+ 		qcom_geni_serial_abort_rx(uport);
+ }
+
 
