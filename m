@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C72C3F34E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BB7C3F36B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44C9620578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9714721D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:54:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811561;
-	bh=6yTA9J7M6UqIl53dhGVKg5suYmxT0bix2lCGeHbCN7s=;
+	s=default; t=1582811686;
+	bh=k+XzV/W9UPSf5JZG4LsaLccqrAu0LZ7Ag9WTLrAZBPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iBhOjbqDE1ljMBlfly1V3iVbdO9Fvm1ccyaR4qhOqQXznPMfwVcDusW3XqkB9zgG/
-	 qDozEqePNDxIJaVM0FRPnLUypA8BAHXLMvylTstyqacL+ULOW5VUd8YK4nLSdP1qu6
-	 GlLnlnYVyaQ10cW9Eu5Unxv/jwCj96fT1L+40vpg=
+	b=I1sll0NSQwzI9spjeJIGR8A7TNMjW47OD2I3MF9RpAzOqZ9Lv88L7qYKge20Y3s35
+	 o50B7RqgHXT6vcfWHcsgvf/w2eJCbl27e3XaCHL3hrBCVK9yUNlXON7fA8/BAfXBvP
+	 qPNKWB/0oMfRvRWtaQMhxdFsLI0BNwrnz0TU//9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731428AbgB0Nwk (ORCPT
+        id S1731900AbgB0Nyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:52:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52100 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:54:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730455AbgB0Nwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:52:34 -0500
+        id S1731851AbgB0Nye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:54:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C89CC20578;
-        Thu, 27 Feb 2020 13:52:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE63A20578;
+        Thu, 27 Feb 2020 13:54:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811553;
-        bh=6yTA9J7M6UqIl53dhGVKg5suYmxT0bix2lCGeHbCN7s=;
+        s=default; t=1582811673;
+        bh=k+XzV/W9UPSf5JZG4LsaLccqrAu0LZ7Ag9WTLrAZBPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IxibzYiSxLA0WHr9oSHK1WPjLZtUnw+Img6tQNLVRLpgJSPgJqc5N40gaJJonegHT
-         d6sj8QaRJRTaRcyKdbtt65RNLbBcw0Z+jo444TxHuMxGb6soaq+e0CFUc01O3HVT3d
-         9MmnDBSw3WUmW6LhHzCFtEgpiPVY/ULVvbMyuWm0=
+        b=0l8QRQEB3z2Ec1AxKNGuNCtjcvdDlnYmOATLeZYimimbkJdFLKsxeI5ibMDJ9fbbn
+         nWC4YSSJCJNKyT8NM/5U64djGANw5Zx+BbfYOuJWlc4jkMVMM/VBOWeAraqonsdLIY
+         XuDuSZgq+UBlbzBHuneFRpsVQPdB+06ywSZyX7wM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 012/237] arm64: ptrace: nofpsimd: Fail FP/SIMD regset operations
-Date:   Thu, 27 Feb 2020 14:33:46 +0100
-Message-Id: <20200227132256.888148215@linuxfoundation.org>
+Subject: [PATCH 4.14 057/237] uio: fix a sleep-in-atomic-context bug in uio_dmem_genirq_irqcontrol()
+Date:   Thu, 27 Feb 2020 14:34:31 +0100
+Message-Id: <20200227132301.094280994@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -63,98 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-commit c9d66999f064947e6b577ceacc1eb2fbca6a8d3c upstream
+[ Upstream commit b74351287d4bd90636c3f48bc188c2f53824c2d4 ]
 
-When fp/simd is not supported on the system, fail the operations
-of FP/SIMD regsets.
+The driver may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-Cc: stable@vger.kernel.org # v4.14
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+kernel/irq/manage.c, 523:
+	synchronize_irq in disable_irq
+drivers/uio/uio_dmem_genirq.c, 140:
+	disable_irq in uio_dmem_genirq_irqcontrol
+drivers/uio/uio_dmem_genirq.c, 134:
+	_raw_spin_lock_irqsave in uio_dmem_genirq_irqcontrol
+
+synchronize_irq() can sleep at runtime.
+
+To fix this bug, disable_irq() is called without holding the spinlock.
+
+This bug is found by a static analysis tool STCheck written by myself.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Link: https://lore.kernel.org/r/20191218094405.6009-1-baijiaju1990@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/ptrace.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/uio/uio_dmem_genirq.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
-index 242527f29c410..e230b4dff9602 100644
---- a/arch/arm64/kernel/ptrace.c
-+++ b/arch/arm64/kernel/ptrace.c
-@@ -624,6 +624,13 @@ static int gpr_set(struct task_struct *target, const struct user_regset *regset,
+diff --git a/drivers/uio/uio_dmem_genirq.c b/drivers/uio/uio_dmem_genirq.c
+index e1134a4d97f3f..a00b4aee6c799 100644
+--- a/drivers/uio/uio_dmem_genirq.c
++++ b/drivers/uio/uio_dmem_genirq.c
+@@ -135,11 +135,13 @@ static int uio_dmem_genirq_irqcontrol(struct uio_info *dev_info, s32 irq_on)
+ 	if (irq_on) {
+ 		if (test_and_clear_bit(0, &priv->flags))
+ 			enable_irq(dev_info->irq);
++		spin_unlock_irqrestore(&priv->lock, flags);
+ 	} else {
+-		if (!test_and_set_bit(0, &priv->flags))
++		if (!test_and_set_bit(0, &priv->flags)) {
++			spin_unlock_irqrestore(&priv->lock, flags);
+ 			disable_irq(dev_info->irq);
++		}
+ 	}
+-	spin_unlock_irqrestore(&priv->lock, flags);
+ 
  	return 0;
  }
- 
-+static int fpr_active(struct task_struct *target, const struct user_regset *regset)
-+{
-+	if (!system_supports_fpsimd())
-+		return -ENODEV;
-+	return regset->n;
-+}
-+
- /*
-  * TODO: update fp accessors for lazy context switching (sync/flush hwstate)
-  */
-@@ -634,6 +641,9 @@ static int fpr_get(struct task_struct *target, const struct user_regset *regset,
- 	struct user_fpsimd_state *uregs;
- 	uregs = &target->thread.fpsimd_state.user_fpsimd;
- 
-+	if (!system_supports_fpsimd())
-+		return -EINVAL;
-+
- 	if (target == current)
- 		fpsimd_preserve_current_state();
- 
-@@ -648,6 +658,9 @@ static int fpr_set(struct task_struct *target, const struct user_regset *regset,
- 	struct user_fpsimd_state newstate =
- 		target->thread.fpsimd_state.user_fpsimd;
- 
-+	if (!system_supports_fpsimd())
-+		return -EINVAL;
-+
- 	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf, &newstate, 0, -1);
- 	if (ret)
- 		return ret;
-@@ -740,6 +753,7 @@ static const struct user_regset aarch64_regsets[] = {
- 		 */
- 		.size = sizeof(u32),
- 		.align = sizeof(u32),
-+		.active = fpr_active,
- 		.get = fpr_get,
- 		.set = fpr_set
- 	},
-@@ -914,6 +928,9 @@ static int compat_vfp_get(struct task_struct *target,
- 	compat_ulong_t fpscr;
- 	int ret, vregs_end_pos;
- 
-+	if (!system_supports_fpsimd())
-+		return -EINVAL;
-+
- 	uregs = &target->thread.fpsimd_state.user_fpsimd;
- 
- 	if (target == current)
-@@ -947,6 +964,9 @@ static int compat_vfp_set(struct task_struct *target,
- 	compat_ulong_t fpscr;
- 	int ret, vregs_end_pos;
- 
-+	if (!system_supports_fpsimd())
-+		return -EINVAL;
-+
- 	uregs = &target->thread.fpsimd_state.user_fpsimd;
- 
- 	vregs_end_pos = VFP_STATE_SIZE - sizeof(compat_ulong_t);
-@@ -1004,6 +1024,7 @@ static const struct user_regset aarch32_regsets[] = {
- 		.n = VFP_STATE_SIZE / sizeof(compat_ulong_t),
- 		.size = sizeof(compat_ulong_t),
- 		.align = sizeof(compat_ulong_t),
-+		.active = fpr_active,
- 		.get = compat_vfp_get,
- 		.set = compat_vfp_set
- 	},
 -- 
 2.20.1
 
