@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD23C3F377
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B13E5C3F35C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4606A246A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88EE9246A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:13:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812856;
-	bh=9va24nQcUnztpfTBbAc1NT0YuuUGrt7nm98NPeeF0k0=;
+	s=default; t=1582812785;
+	bh=s9PRbJgZoRfil7RlXNlak23YZ7mHVGiUFrYZ5T47Uj4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PoyOle8Bm0kwIoR69R/vkSGisnZ5OdlVKHlVxXqxVkcg+W8x/C8Bo89UmKe6tuMSy
-	 JwSnA+wJLu258isfpH84gL3rJZycKuz/nbseU7ZoFT5YFyraruiM+NYeqkH3/xiHbQ
-	 l6KeVgeAuKhwt6nAekmtuVpKB7J1lw4cz1iiPHfw=
+	b=c2ohJZn4xemw3xCQYcpuxFiUDLFHkfrZW5kpq0jHCyKsmOu834W5i1nbVEBOMkhEq
+	 WMy4as8u05Xzt/G+Sv3GHov1fwoE5i/50z9Nd+qVca4eU1yOPrrMy4T6Kg3D5wdopr
+	 NxErsvSmxXklUpRKfRcwe2aDwr8QoSIrbCohNwCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389097AbgB0OOO (ORCPT
+        id S2388939AbgB0ONE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:14:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53262 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:13:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730942AbgB0OOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:14:10 -0500
+        id S2388719AbgB0OM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:12:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C53C420578;
-        Thu, 27 Feb 2020 14:14:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F10020578;
+        Thu, 27 Feb 2020 14:12:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812849;
-        bh=9va24nQcUnztpfTBbAc1NT0YuuUGrt7nm98NPeeF0k0=;
+        s=default; t=1582812777;
+        bh=s9PRbJgZoRfil7RlXNlak23YZ7mHVGiUFrYZ5T47Uj4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=etEzOyWoAhpiGa2LG4cJIOgT1qfST0tWGgVGHZEp+swndVCCznrjReWoHJ2mNuzaY
-         uKbzSQSM+Wf+tKN6tYA4wRc7MfUJH+zJ9eBYz+f38Fo19aSUvTHG4JPJcbmmSa/ywB
-         F4EPqlqqf3yjb3SiyogTKimDCBpL8emowqipb9z8=
+        b=gm266H4odsENRqXeYb9OMerYowz57EWRmKkM7c4zM3iVF8BboEElFK9XlmARYvUEC
+         Kmdpz/iDOTJ8sbj636pJWaLiHW0qDiBOkzTG1ZXEomuRosVVdzCr7Fw1cQUjLW0skk
+         LnyccmFV0Dur2I93Wglosgym0DzGTtjNRXYMqkIc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Hardik Gajjar <hgajjar@de.adit-jv.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>
-Subject: [PATCH 5.5 040/150] USB: hub: Fix the broken detection of USB3 device in SMSC hub
-Date:   Thu, 27 Feb 2020 14:36:17 +0100
-Message-Id: <20200227132238.759227845@linuxfoundation.org>
+        stable@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
+        Petr Vorel <pvorel@suse.cz>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH 5.5 013/150] tpm: Initialize crypto_id of allocated_banks to HASH_ALGO__LAST
+Date:   Thu, 27 Feb 2020 14:35:50 +0100
+Message-Id: <20200227132234.635198004@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -60,109 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hardik Gajjar <hgajjar@de.adit-jv.com>
+From: Roberto Sassu <roberto.sassu@huawei.com>
 
-commit 1208f9e1d758c991b0a46a1bd60c616b906bbe27 upstream.
+commit dc10e4181c05a2315ddc375e963b7c763b5ee0df upstream.
 
-Renesas R-Car H3ULCB + Kingfisher Infotainment Board is either not able
-to detect the USB3.0 mass storage devices or is detecting those as
-USB2.0 high speed devices.
+chip->allocated_banks, an array of tpm_bank_info structures, contains the
+list of TPM algorithm IDs of allocated PCR banks. It also contains the
+corresponding ID of the crypto subsystem, so that users of the TPM driver
+can calculate a digest for a PCR extend operation.
 
-The explanation given by Renesas is that, due to a HW issue, the XHCI
-driver does not wake up after going to sleep on connecting a USB3.0
-device.
+However, if there is no mapping between TPM algorithm ID and crypto ID, the
+crypto_id field of tpm_bank_info remains set to zero (the array is
+allocated and initialized with kcalloc() in tpm2_get_pcr_allocation()).
+Zero should not be used as value for unknown mappings, as it is a valid
+crypto ID (HASH_ALGO_MD4).
 
-In order to mitigate that, disable the auto-suspend feature
-specifically for SMSC hubs from hub_probe() function, as a quirk.
+Thus, initialize crypto_id to HASH_ALGO__LAST.
 
-Renesas Kingfisher Infotainment Board has two USB3.0 ports (CN2) which
-are connected via USB5534B 4-port SuperSpeed/Hi-Speed, low-power,
-configurable hub controller.
-
-[1] SanDisk USB 3.0 device detected as USB-2.0 before the patch
- [   74.036390] usb 5-1.1: new high-speed USB device number 4 using xhci-hcd
- [   74.061598] usb 5-1.1: New USB device found, idVendor=0781, idProduct=5581, bcdDevice= 1.00
- [   74.069976] usb 5-1.1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
- [   74.077303] usb 5-1.1: Product: Ultra
- [   74.080980] usb 5-1.1: Manufacturer: SanDisk
- [   74.085263] usb 5-1.1: SerialNumber: 4C530001110208116550
-
-[2] SanDisk USB 3.0 device detected as USB-3.0 after the patch
- [   34.565078] usb 6-1.1: new SuperSpeed Gen 1 USB device number 3 using xhci-hcd
- [   34.588719] usb 6-1.1: New USB device found, idVendor=0781, idProduct=5581, bcdDevice= 1.00
- [   34.597098] usb 6-1.1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
- [   34.604430] usb 6-1.1: Product: Ultra
- [   34.608110] usb 6-1.1: Manufacturer: SanDisk
- [   34.612397] usb 6-1.1: SerialNumber: 4C530001110208116550
-
-Suggested-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Hardik Gajjar <hgajjar@de.adit-jv.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1580989763-32291-1-git-send-email-hgajjar@de.adit-jv.com
+Cc: stable@vger.kernel.org # 5.1.x
+Fixes: 879b589210a9 ("tpm: retrieve digest size of unknown algorithms with PCR read")
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Reviewed-by: Petr Vorel <pvorel@suse.cz>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/hub.c |   15 +++++++++++++++
- drivers/usb/core/hub.h |    1 +
- 2 files changed, 16 insertions(+)
+ drivers/char/tpm/tpm2-cmd.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -38,7 +38,9 @@
- #include "otg_whitelist.h"
- 
- #define USB_VENDOR_GENESYS_LOGIC		0x05e3
-+#define USB_VENDOR_SMSC				0x0424
- #define HUB_QUIRK_CHECK_PORT_AUTOSUSPEND	0x01
-+#define HUB_QUIRK_DISABLE_AUTOSUSPEND		0x02
- 
- #define USB_TP_TRANSMISSION_DELAY	40	/* ns */
- #define USB_TP_TRANSMISSION_DELAY_MAX	65535	/* ns */
-@@ -1726,6 +1728,10 @@ static void hub_disconnect(struct usb_in
- 	kfree(hub->buffer);
- 
- 	pm_suspend_ignore_children(&intf->dev, false);
-+
-+	if (hub->quirk_disable_autosuspend)
-+		usb_autopm_put_interface(intf);
-+
- 	kref_put(&hub->kref, hub_release);
- }
- 
-@@ -1858,6 +1864,11 @@ static int hub_probe(struct usb_interfac
- 	if (id->driver_info & HUB_QUIRK_CHECK_PORT_AUTOSUSPEND)
- 		hub->quirk_check_port_auto_suspend = 1;
- 
-+	if (id->driver_info & HUB_QUIRK_DISABLE_AUTOSUSPEND) {
-+		hub->quirk_disable_autosuspend = 1;
-+		usb_autopm_get_interface(intf);
-+	}
-+
- 	if (hub_configure(hub, &desc->endpoint[0].desc) >= 0)
+--- a/drivers/char/tpm/tpm2-cmd.c
++++ b/drivers/char/tpm/tpm2-cmd.c
+@@ -525,6 +525,8 @@ static int tpm2_init_bank_info(struct tp
  		return 0;
+ 	}
  
-@@ -5594,6 +5605,10 @@ out_hdev_lock:
++	bank->crypto_id = HASH_ALGO__LAST;
++
+ 	return tpm2_pcr_read(chip, 0, &digest, &bank->digest_size);
  }
- 
- static const struct usb_device_id hub_id_table[] = {
-+    { .match_flags = USB_DEVICE_ID_MATCH_VENDOR | USB_DEVICE_ID_MATCH_INT_CLASS,
-+      .idVendor = USB_VENDOR_SMSC,
-+      .bInterfaceClass = USB_CLASS_HUB,
-+      .driver_info = HUB_QUIRK_DISABLE_AUTOSUSPEND},
-     { .match_flags = USB_DEVICE_ID_MATCH_VENDOR
- 			| USB_DEVICE_ID_MATCH_INT_CLASS,
-       .idVendor = USB_VENDOR_GENESYS_LOGIC,
---- a/drivers/usb/core/hub.h
-+++ b/drivers/usb/core/hub.h
-@@ -61,6 +61,7 @@ struct usb_hub {
- 	unsigned		quiescing:1;
- 	unsigned		disconnected:1;
- 	unsigned		in_reset:1;
-+	unsigned		quirk_disable_autosuspend:1;
- 
- 	unsigned		quirk_check_port_auto_suspend:1;
  
 
 
