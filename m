@@ -2,158 +2,169 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84344C4BA3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF27C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55E0024695
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7282424692
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:56:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="Q1HCX6eT"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="h5wF6WN9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728962AbgB0L4B (ORCPT
+        id S1728972AbgB0L4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 06:56:01 -0500
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:42017 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728865AbgB0L4B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 06:56:01 -0500
-Received: from [IPv6:2001:420:44c1:2577:70b8:9d46:3264:f0c0]
- ([IPv6:2001:420:44c1:2577:70b8:9d46:3264:f0c0])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id 7HlijDj97jmHT7HlmjiPmT; Thu, 27 Feb 2020 12:55:59 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1582804559; bh=rkvyyVta2hxnKW42ty2q7HDwkXGODZ7Lq9syVkbUKMI=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=Q1HCX6eTnJ8xhzLzR7sSIMgqyWH6maEG+r8PXqkC0tQuvY1k0HyCQ13jSEFzkwFip
-         vcmDnxFD/ykEI2vL8SO84DQtsSfyLs+0L5hsSvCOe1q8nWH3RkcbxxzJ6tU/V1r31b
-         7HERQBrps3k18qfHgP9WkWWKwvQogdljXJVf7mwHcF69XUhrDjEJIDr2feGO821MuM
-         N1JDFyfG8aH1Lha6Yq9asJoyi3qjZJndnvhDvg87QuZBbUcasvPFXCKirodUo38yA+
-         7PKbfPvcZCr6f+YWXyorfsfSNE3fJzVh8W0m4P31cr7sjwg3vuZ3N0wtl3h/YQtX5K
-         3QiSl7PyMzCXw==
-Subject: Re: [PATCHv3 01/11] videobuf2: add cache management members
-To:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200226111529.180197-1-senozhatsky@chromium.org>
- <20200226111529.180197-2-senozhatsky@chromium.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <3c20606f-5cde-47d3-afd2-d1bbde668136@xs4all.nl>
-Date:   Thu, 27 Feb 2020 12:55:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 27 Feb 2020 06:56:32 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:35364 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728893AbgB0L4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 06:56:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
+        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=hs+/+Dh4GQJI5ywUkkMPMrtyW5zokXX7/ak0kxRWiMw=; b=h5wF6WN9eECO+56oBJLDA7m5r
+        2BmPipHiHuQxhnjdM8ONt3yFGPM8mIpMSF9eg/LQyLgCypmnhitz9olHW7WdocG+RNJ/5Qld6/mf0
+        qf7iTLN9gpRf+S4BZF+R+gmvzitRJKKig6RhU9Ne7cb3qXnBADwG9mvLMqo7dZftAbhug=;
+Received: from [2a02:790:ff:1019:e2ce:c3ff:fe93:fc31] (helo=localhost)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1j7HmE-00024s-7e; Thu, 27 Feb 2020 12:56:27 +0100
+Received: from localhost ([::1])
+        by localhost with esmtp (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1j7Hm9-000108-AU; Thu, 27 Feb 2020 12:56:21 +0100
+Date:   Thu, 27 Feb 2020 12:56:14 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        b.galvani@gmail.com, linus.walleij@linaro.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        phh@phh.me, stefan@agner.ch, letux-kernel@openphoenux.org,
+        jic23@kernel.org
+Subject: Re: [PATCH v5 1/2] mfd: rn5t618: add ADC subdevice for RC5T619
+Message-ID: <20200227125544.510a10f7@kemnade.info>
+In-Reply-To: <20200227094006.GV3494@dell>
+References: <20200223131638.12130-1-andreas@kemnade.info>
+        <20200223131638.12130-2-andreas@kemnade.info>
+        <20200226154055.GQ3494@dell>
+        <20200226174914.047667d5@kemnade.info>
+        <20200226174640.GR3494@dell>
+        <20200226190028.0de5c095@kemnade.info>
+        <20200227094006.GV3494@dell>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200226111529.180197-2-senozhatsky@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfIqKjjcCBwBp3JGQQwP+FSOkPJM19LYUTMhtVyPpW8TGo26I6R4Kfwcm4enP15VDw2ViWHWfFAZC+MakWscTm8G/iAFi9Ue9EbRyBUTBet/SQGNqdEap
- 71ulWCMO5lHVhWdHmb3QuTTZSfXvFB8Ygz/2tv/IgU71DbfXu/aqilJJXUM1g8JKvMidaJnvK3j8X5FfIGmv7osu08gPNkogxsBHbtO1qjJ32L9gPkufDspw
- eEkgOvX2o/OQi/x3xcDCJjQUk8rA0ETne2xSdWTi5p3EKGdpJPMGEvDm2QpDJHotox+uj58xlFtXZ11QOLe8e2grHvuaey8yKse8n4gSJuENUHADXeuxDu+s
- Pmhkk2MqTcbqn4RSE8f3FQN3FfNo5gPHeqjuFkEAAGCmtY7b3u84nZ9RGfUGN4m2rlxM/wrYC52v1CHJ9FiVa+rPc0mTvPKmaC+5eWqgnscZkIHP+lnX5ZLN
- 8EAZcs3DUY3SvqA4CxFnDAo8m8UpKlknS2l/63r8rrQF38Mg8QoPgXy7RvGfdLl/KAiY8fFMPStqCbC17Uhw5oVracjXEkqYwFs2qJALPIr+NU9AV8YX2XRQ
- s3dIkuVf8sQk0WzBLGIfIs3qS/HpS29j2iBwAXrfExz6GO+T3xJkH+fsN6BcXHICWic=
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/yc8PI1h7Z/61=XnB+ULCMgZ"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/26/20 12:15 PM, Sergey Senozhatsky wrote:
-> Extend vb2_buffer and vb2_queue structs with cache management
-> members.
-> 
-> V4L2 UAPI already contains two buffer flags which user-space,
-> supposedly, can use to control buffer cache sync:
-> 
-> - V4L2_BUF_FLAG_NO_CACHE_INVALIDATE
-> - V4L2_BUF_FLAG_NO_CACHE_CLEAN
-> 
-> None of these, however, do anything at the moment. This patch
-> set is intended to change it.
-> 
-> Since user-space cache management hints are supposed to be
-> implemented on a per-buffer basis we need to extend vb2_buffer
-> struct with two new memebers ->need_cache_sync_on_prepare and
+--Sig_/yc8PI1h7Z/61=XnB+ULCMgZ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-memebers -> members
+On Thu, 27 Feb 2020 09:40:06 +0000
+Lee Jones <lee.jones@linaro.org> wrote:
+
+> On Wed, 26 Feb 2020, Andreas Kemnade wrote:
+>=20
+> > On Wed, 26 Feb 2020 17:46:40 +0000
+> > Lee Jones <lee.jones@linaro.org> wrote:
+> >  =20
+> > > On Wed, 26 Feb 2020, Andreas Kemnade wrote:
+> > >  =20
+> > > > On Wed, 26 Feb 2020 15:40:55 +0000
+> > > > Lee Jones <lee.jones@linaro.org> wrote:
+> > > >    =20
+> > > > > On Sun, 23 Feb 2020, Andreas Kemnade wrote:
+> > > > >    =20
+> > > > > > This adds a subdevice for the ADC in the RC5T619
+> > > > > >=20
+> > > > > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> > > > > > ---
+> > > > > > depends on:
+> > > > > > https://lore.kernel.org/lkml/20191220122416.31881-1-andreas@kem=
+nade.info/
+> > > > > >=20
+> > > > > > Changes in v3:
+> > > > > > re-added it to the series because of
+> > > > > > "Oh, it looks like there was a conflict.  Could you collect any=
+ Acks
+> > > > > > (including mine) rebase and resend please?"     =20
+> > > > >=20
+> > > > > Looks like there is still a conflict.  Sure, it's not a complicat=
+ed
+> > > > > fix, but that's beside the point.  What tree is this set based on?
+> > > > >    =20
+> > > > It must be applied on top of my rc5t619 rtc series here:
+> > > > https://lore.kernel.org/lkml/20191220122416.31881-1-andreas@kemnade=
+.info/
+> > > >=20
+> > > > I expected it to make it into 5.6 and when I first sent the RTC ser=
+ies
+> > > >  (in October) I had no idea when I will continue with other stuff.
+> > > >=20
+> > > > That is why I sent this ADC series separately, also to give the IIO
+> > > > maintainer plenty of time to review.    =20
+> > >=20
+> > > If a patch-set can or should be applied on its own, you should send it
+> > > based on an upstream commit, or else things like this happen.
+> > >  =20
+> > It cannot without breaking bisectability. The RTC series adds IRQ suppo=
+rt in
+> > the PMIC which is used here. =20
+>=20
+> Then Kconfig should reflect that.
+>=20
+> Or, if that's not possible, then you should not break-up and submit
+> sets which cannot be applied by themselves.  Either submit the whole
+> set together, or submit them piece by piece, not submitting the next
+> part until it's predecessor has been applied.
+>=20
+I will send you a complete series containing both RTC and ADC support.
+Then you can decide wether you
+1. apply the whole series (both things)
+2. apply RTC for 5.7 and this series later
+3. ignore them  (not my preferred choice ;-) ).
+
+BTW: The way I did was based on the following note in=20
+Documentation/process/submitting-patches.rst
+
+"If one patch depends on another patch in order for a change to be
+complete, that is OK.  Simply note **"this patch depends on patch X"**
+in your patch description."
+
 
 Regards,
+Andreas
 
-	Hans
+--Sig_/yc8PI1h7Z/61=XnB+ULCMgZ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-> ->need_cache_sync_on_finish, which will store corresponding
-> user-space hints.
-> 
-> In order to preserve the existing behaviour, user-space cache
-> managements flags will be handled only by those drivers that
-> permit user-space cache hints. That's the purpose of vb2_queue
-> ->allow_cache_hints member. Driver must set ->allow_cache_hints
-> during queue initialisation to enable cache management hints
-> mechanism.
-> 
-> Only drivers that set ->allow_cache_hints during queue initialisation
-> will handle user-space cache management hints. Otherwise hints
-> will be ignored.
-> 
-> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> ---
->  include/media/videobuf2-core.h | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/include/media/videobuf2-core.h b/include/media/videobuf2-core.h
-> index a2b2208b02da..4a19170672ac 100644
-> --- a/include/media/videobuf2-core.h
-> +++ b/include/media/videobuf2-core.h
-> @@ -263,6 +263,10 @@ struct vb2_buffer {
->  	 *			after the 'buf_finish' op is called.
->  	 * copied_timestamp:	the timestamp of this capture buffer was copied
->  	 *			from an output buffer.
-> +	 * need_cache_sync_on_prepare: when set buffer's ->prepare() function
-> +	 *			performs cache sync/invalidation.
-> +	 * need_cache_sync_on_finish: when set buffer's ->finish() function
-> +	 *			performs cache sync/invalidation.
->  	 * queued_entry:	entry on the queued buffers list, which holds
->  	 *			all buffers queued from userspace
->  	 * done_entry:		entry on the list that stores all buffers ready
-> @@ -273,6 +277,8 @@ struct vb2_buffer {
->  	unsigned int		synced:1;
->  	unsigned int		prepared:1;
->  	unsigned int		copied_timestamp:1;
-> +	unsigned int		need_cache_sync_on_prepare:1;
-> +	unsigned int		need_cache_sync_on_finish:1;
->  
->  	struct vb2_plane	planes[VB2_MAX_PLANES];
->  	struct list_head	queued_entry;
-> @@ -491,6 +497,9 @@ struct vb2_buf_ops {
->   * @uses_requests: requests are used for this queue. Set to 1 the first time
->   *		a request is queued. Set to 0 when the queue is canceled.
->   *		If this is 1, then you cannot queue buffers directly.
-> + * @allow_cache_hints: when set user-space can pass cache management hints in
-> + * 		order to skip cache flush/invalidation on ->prepare() or/and
-> + * 		->finish().
->   * @lock:	pointer to a mutex that protects the &struct vb2_queue. The
->   *		driver can set this to a mutex to let the v4l2 core serialize
->   *		the queuing ioctls. If the driver wants to handle locking
-> @@ -564,6 +573,7 @@ struct vb2_queue {
->  	unsigned			requires_requests:1;
->  	unsigned			uses_qbuf:1;
->  	unsigned			uses_requests:1;
-> +	unsigned			allow_cache_hints:1;
->  
->  	struct mutex			*lock;
->  	void				*owner;
-> 
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl5Xrl4ACgkQl4jFM1s/
+ye+f3A//WjqnfE2Ok7w+zmm/hu9FQonJQnp77QUGgDJxnG9IE2f0pdcQO+PZwLTF
+bqP3/lyDiFhCUI425h2UHNm3YB2CxnNDUqcqzmvTKRQVqlNIgInBySfX8VGpLT/J
+AKEV7bwkfpS7J9SxIEV+Gj0ljjkRktc7kFufkXjeMoGaVcflXk981CsfNFQJV5QQ
+ZLx/DDrosKKOB7CzEo5brffI1o7dD64n3qTWlXgBaU56uO/DKQGwqAE1Vfa+V7Jb
+l6IeBJ6cp03ywEHtXdGxSBkmrOxUx39fdWbCnCc+KY9LGzgXf72MSmKfMHJlADmc
+DCg/ZQ0yfpAt+a8LlCTCuhmQ8w3XpapNrDItS8Y0oVp3hqwUt2ttDyKq1Hl4ytqV
+hmf9fz1VAKHnccQ+87T/qYgVuu5HETorKeF9L+EJWYC7Y2yWB4vhPvg7nhOp57nI
+VGV8Vbcz9pdHVWZVTPB+N0D2J1lFZeEKMCNf+GwrEinbLEru5Nq6iybyA1/yHLCA
+FHnAa/sHZnelLqgvpKU09VOMm1T1J+A40TKAENigHCmgkv4TdA1SvgIk++2+qYEY
+dZr/qGv3/9hMpqVBbguifvM1onF8KiyIIh5DpRhFoVLqfrdQ6VzeC8iP/M2rU+RZ
+xi4zqSmPUfai4QpgIHlnwhs7nJJ8GpUZlwPbrFxKlOao3VNLGFo=
+=EWRZ
+-----END PGP SIGNATURE-----
+
+--Sig_/yc8PI1h7Z/61=XnB+ULCMgZ--
