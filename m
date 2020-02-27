@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D63C7C52D22
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C06AC52D23
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CDD62073D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10B7820801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:59:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812021;
-	bh=RZ4sZQnU/cHEVTj6PZ7/lt+uTsueIQ45+x1PBUD6DLk=;
+	s=default; t=1582811981;
+	bh=pxjce3r46L/EQbcrQrcK0UOGjI+bXzSAe2pNJJEVYtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fXkUobroyX7dRPI+0jPHQcUsO9xIVBkmFOVannpECSNpLjKPvJ37zWmI2Gr452HsJ
-	 YPjfKH/4dFP4E8MaFFSJadnuQV0WFErLCuLK+MJ2qwfdPQuoUGG9zC2WmfgW/xVPwF
-	 5j2ogrkWpQ45SZ58HEBgNi8u2Uu/8Tvizlyv72Is=
+	b=LAfb+MaLhiAbEi9jtCOUHRnN538/GR0F/2ThI6JhzcxTY4b5LyYT/PtF/6fCKu2uz
+	 S3RjCbwpe6hAIWUcYwpW8ZQnp3pXYxnLTkKGefgSrEf8n4TP8RlwG3A4dz38H7GaD4
+	 23ta18R7A8CIdDuu7fi0/cvvFOv7ivbFfsgzpU14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732464AbgB0OAU (ORCPT
+        id S1732626AbgB0N7i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:00:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33630 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:59:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732713AbgB0OAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:00:16 -0500
+        id S1732611AbgB0N7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:59:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C0EC24691;
-        Thu, 27 Feb 2020 14:00:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92C912084E;
+        Thu, 27 Feb 2020 13:59:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812015;
-        bh=RZ4sZQnU/cHEVTj6PZ7/lt+uTsueIQ45+x1PBUD6DLk=;
+        s=default; t=1582811972;
+        bh=pxjce3r46L/EQbcrQrcK0UOGjI+bXzSAe2pNJJEVYtQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lq0hH58oW9NZYjylD/2E1/0+Q3s0WqiHp/V48pS9/IW7WFHtbV6HA4yIxMPEPrIzp
-         h7Yr6kYaCJFtJ5lFqzAMNjSfRQHd/zUr4rrrQxnzDIZ4ikuMZr2bYn8+OrF9Hr1Brr
-         InBjsfWjZ3dhQWXhJXEVpV8ssQpTHiid7j12uCgo=
+        b=PZ2gwio0SNzJkmZNZJUV0GdW8IAnpUJDv8qP7WBTV1rOWGiF4xx70neXaeXcpjqgJ
+         O36RZB6q48uvuRE438w/OFxIJoCZ3ElYKr/cdmjwQPBJbwzrfkBR6e3NJxwd68WwGf
+         P7mflFzLV+BOdyj4rIQ/bGEYSwLcCjq8O6DlWXTE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pietro Oliva <pietroliva@gmail.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>
-Subject: [PATCH 4.14 188/237] staging: rtl8188eu: Fix potential overuse of kernel memory
-Date:   Thu, 27 Feb 2020 14:36:42 +0100
-Message-Id: <20200227132310.165912808@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH 4.14 172/237] thunderbolt: Prevent crash if non-active NVMem file is read
+Date:   Thu, 27 Feb 2020 14:36:26 +0100
+Message-Id: <20200227132309.084489003@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -59,38 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Larry Finger <Larry.Finger@lwfinger.net>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-commit 4ddf8ab8d15ddbc52eefb44eb64e38466ce1f70f upstream.
+commit 03cd45d2e219301880cabc357e3cf478a500080f upstream.
 
-In routine wpa_supplicant_ioctl(), the user-controlled p->length is
-checked to be at least the size of struct ieee_param size, but the code
-does not detect the case where p->length is greater than the size
-of the struct, thus a malicious user could be wasting kernel memory.
-Fixes commit a2c60d42d97c ("Add files for new driver - part 16").
+The driver does not populate .reg_read callback for the non-active NVMem
+because the file is supposed to be write-only. However, it turns out
+NVMem subsystem does not yet support this and expects that the .reg_read
+callback is provided. If user reads the binary attribute it triggers
+NULL pointer dereference like this one:
 
-Reported by: Pietro Oliva <pietroliva@gmail.com>
-Cc: Pietro Oliva <pietroliva@gmail.com>
-Cc: Stable <stable@vger.kernel.org>
-Fixes commit a2c60d42d97c ("Add files for new driver - part 16").
-Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
-Link: https://lore.kernel.org/r/20200210180235.21691-4-Larry.Finger@lwfinger.net
+  BUG: kernel NULL pointer dereference, address: 0000000000000000
+  ...
+  Call Trace:
+   bin_attr_nvmem_read+0x64/0x80
+   kernfs_fop_read+0xa7/0x180
+   vfs_read+0xbd/0x170
+   ksys_read+0x5a/0xd0
+   do_syscall_64+0x43/0x150
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fix this in the driver by providing .reg_read callback that always
+returns an error.
+
+Reported-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Fixes: e6b245ccd524 ("thunderbolt: Add support for host and device NVM firmware upgrade")
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200213095604.1074-1-mika.westerberg@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/rtl8188eu/os_dep/ioctl_linux.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/thunderbolt/switch.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
-+++ b/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
-@@ -2051,7 +2051,7 @@ static int wpa_supplicant_ioctl(struct n
- 	struct ieee_param *param;
- 	uint ret = 0;
+--- a/drivers/thunderbolt/switch.c
++++ b/drivers/thunderbolt/switch.c
+@@ -240,6 +240,12 @@ static int tb_switch_nvm_read(void *priv
+ 	return dma_port_flash_read(sw->dma_port, offset, val, bytes);
+ }
  
--	if (p->length < sizeof(struct ieee_param) || !p->pointer) {
-+	if (!p->pointer || p->length != sizeof(struct ieee_param)) {
- 		ret = -EINVAL;
- 		goto out;
++static int tb_switch_nvm_no_read(void *priv, unsigned int offset, void *val,
++				 size_t bytes)
++{
++	return -EPERM;
++}
++
+ static int tb_switch_nvm_write(void *priv, unsigned int offset, void *val,
+ 			       size_t bytes)
+ {
+@@ -285,6 +291,7 @@ static struct nvmem_device *register_nvm
+ 		config.read_only = true;
+ 	} else {
+ 		config.name = "nvm_non_active";
++		config.reg_read = tb_switch_nvm_no_read;
+ 		config.reg_write = tb_switch_nvm_write;
+ 		config.root_only = true;
  	}
 
 
