@@ -2,54 +2,53 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DA6C3F35B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7100CC3F35E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E2332468D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3466720801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811488;
-	bh=LSV0V8m3fs4ZVGDxKq0z3FSwNFr/OOYfoP/QbZ3Ei3Y=;
+	s=default; t=1582811460;
+	bh=NWoqqcRvkARgzo8Ue2Hk3NscqpAjN0tb33dOjcd04nI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lsv0j8/dPAvm03E24FxrS7/RqwNAMiYGJ51NsOD5PcwqPzU0bKieO+qZHm+kuJgCB
-	 zJ1gVAuWkpJFFroBzBTbCD1S+5yifGGeMEK1iyZY0XFa1B6/iK8jMAs3zLCuNEK78I
-	 9TSxI6dSewtpmqe7LzizhX9YK2fsojx0VylLYsDg=
+	b=mZBY0R//saJpU8QiACd78F8oldvTpscAnR2SOcrqPJQl6zs/E1OqPi7nE6LT1LJ+o
+	 WmWGwLThW8mJlZ9ryThbyQuSI9Afw+fzLa1Ji6uQw00MU6doqtYPjD6CeHB0rMOaFL
+	 KnQZi6btGvm8KiKFadClh99hxxoHIvOyZ9IMaL3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730588AbgB0Nv1 (ORCPT
+        id S1731317AbgB0Nu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:51:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50438 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:50:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731142AbgB0NvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:51:23 -0500
+        id S1731301AbgB0Nuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:50:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2252920801;
-        Thu, 27 Feb 2020 13:51:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E142B20578;
+        Thu, 27 Feb 2020 13:50:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811481;
-        bh=LSV0V8m3fs4ZVGDxKq0z3FSwNFr/OOYfoP/QbZ3Ei3Y=;
+        s=default; t=1582811453;
+        bh=NWoqqcRvkARgzo8Ue2Hk3NscqpAjN0tb33dOjcd04nI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2CjHP8v5/yGFtzCMYKI9hhcO4VsXk5dFTCjlMhfG5Dhxvy/sX/dq+3MjkErORYqqr
-         mTlgcn/1YKah2mIITSurUrKgn97APoNURwT1b5k/wAcLE0djhHoxLNvyaYyB0u+Sr8
-         S1ihDP//jeZicBwvEw/+mo+KoU43oWnLvlNa6mJo=
+        b=sleT6nu4cZMPsvuk32UHU8fRb1QP33UCl5mJsdOp3tYxt/eHTsGb78CkWA6cLRX5N
+         H2NAzXFPmuAmQSmORZcBFAOALk3S4g0pMcda3B3HN4ytjYWz8JVmtVJ0dbWlCrNJfE
+         LwenpLS9T3n3MDFnVXchVKKU9q2z4OCc2syXjzOI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+2202a584a00fffd19fbf@syzkaller.appspotmail.com,
-        Eric Biggers <ebiggers@google.com>,
-        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        stable@kernel.org
-Subject: [PATCH 4.9 149/165] ext4: fix race between writepages and enabling EXT4_EXTENTS_FL
-Date:   Thu, 27 Feb 2020 14:37:03 +0100
-Message-Id: <20200227132252.530531456@linuxfoundation.org>
+        Gustavo Romero <gromero@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 139/165] powerpc/tm: Fix endianness flip on trap
+Date:   Thu, 27 Feb 2020 14:36:53 +0100
+Message-Id: <20200227132251.358799007@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -62,167 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Gustavo Romero <gromero@linux.vnet.ibm.com>
 
-commit cb85f4d23f794e24127f3e562cb3b54b0803f456 upstream.
+[ Upstream commit 1c200e63d055ec0125e44a5e386b9b78aada7eb3 ]
 
-If EXT4_EXTENTS_FL is set on an inode while ext4_writepages() is running
-on it, the following warning in ext4_add_complete_io() can be hit:
+Currently it's possible that a thread on PPC64 LE has its endianness
+flipped inadvertently to Big-Endian resulting in a crash once the process
+is back from the signal handler.
 
-WARNING: CPU: 1 PID: 0 at fs/ext4/page-io.c:234 ext4_put_io_end_defer+0xf0/0x120
+If giveup_all() is called when regs->msr has the bits MSR.FP and MSR.VEC
+disabled (and hence MSR.VSX disabled too) it returns without calling
+check_if_tm_restore_required() which copies regs->msr to ckpt_regs->msr if
+the process caught a signal whilst in transactional mode. Then once in
+setup_tm_sigcontexts() MSR from ckpt_regs.msr is used, but since
+check_if_tm_restore_required() was not called previuosly, gp_regs[PT_MSR]
+gets a copy of invalid MSR bits as MSR in ckpt_regs was not updated from
+regs->msr and so is zeroed. Later when leaving the signal handler once in
+sys_rt_sigreturn() the TS bits of gp_regs[PT_MSR] are checked to determine
+if restore_tm_sigcontexts() must be called to pull in the correct MSR state
+into the user context. Because TS bits are zeroed
+restore_tm_sigcontexts() is never called and MSR restored from the user
+context on returning from the signal handler has the MSR.LE (the endianness
+bit) forced to zero (Big-Endian). That leads, for instance, to 'nop' being
+treated as an illegal instruction in the following sequence:
 
-Here's a minimal reproducer (not 100% reliable) (root isn't required):
+	tbegin.
+	beq	1f
+	trap
+	tend.
+1:	nop
 
-        while true; do
-                sync
-        done &
-        while true; do
-                rm -f file
-                touch file
-                chattr -e file
-                echo X >> file
-                chattr +e file
-        done
+on PPC64 LE machines and the process dies just after returning from the
+signal handler.
 
-The problem is that in ext4_writepages(), ext4_should_dioread_nolock()
-(which only returns true on extent-based files) is checked once to set
-the number of reserved journal credits, and also again later to select
-the flags for ext4_map_blocks() and copy the reserved journal handle to
-ext4_io_end::handle.  But if EXT4_EXTENTS_FL is being concurrently set,
-the first check can see dioread_nolock disabled while the later one can
-see it enabled, causing the reserved handle to unexpectedly be NULL.
+PPC64 BE is also affected but in a subtle way since forcing Big-Endian on
+a BE machine does not change the endianness.
 
-Since changing EXT4_EXTENTS_FL is uncommon, and there may be other races
-related to doing so as well, fix this by synchronizing changing
-EXT4_EXTENTS_FL with ext4_writepages() via the existing
-s_writepages_rwsem (previously called s_journal_flag_rwsem).
+This commit fixes the issue described above by ensuring that once in
+setup_tm_sigcontexts() the MSR used is from regs->msr instead of from
+ckpt_regs->msr and by ensuring that we pull in only the MSR.FP, MSR.VEC,
+and MSR.VSX bits from ckpt_regs->msr.
 
-This was originally reported by syzbot without a reproducer at
-https://syzkaller.appspot.com/bug?extid=2202a584a00fffd19fbf,
-but now that dioread_nolock is the default I also started seeing this
-when running syzkaller locally.
+The fix was tested both on LE and BE machines and no regression regarding
+the powerpc/tm selftests was observed.
 
-Link: https://lore.kernel.org/r/20200219183047.47417-3-ebiggers@kernel.org
-Reported-by: syzbot+2202a584a00fffd19fbf@syzkaller.appspotmail.com
-Fixes: 6b523df4fb5a ("ext4: use transaction reservation for extent conversion in ext4_end_io")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: stable@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Gustavo Romero <gromero@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/ext4.h    |    5 ++++-
- fs/ext4/migrate.c |   27 +++++++++++++++++++--------
- 2 files changed, 23 insertions(+), 9 deletions(-)
+ arch/powerpc/kernel/signal_64.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -1514,7 +1514,10 @@ struct ext4_sb_info {
- 	struct ratelimit_state s_warning_ratelimit_state;
- 	struct ratelimit_state s_msg_ratelimit_state;
+diff --git a/arch/powerpc/kernel/signal_64.c b/arch/powerpc/kernel/signal_64.c
+index 9d8fd0c74b314..459c4adf47841 100644
+--- a/arch/powerpc/kernel/signal_64.c
++++ b/arch/powerpc/kernel/signal_64.c
+@@ -207,7 +207,7 @@ static long setup_tm_sigcontexts(struct sigcontext __user *sc,
+ 	elf_vrreg_t __user *tm_v_regs = sigcontext_vmx_regs(tm_sc);
+ #endif
+ 	struct pt_regs *regs = tsk->thread.regs;
+-	unsigned long msr = tsk->thread.ckpt_regs.msr;
++	unsigned long msr = tsk->thread.regs->msr;
+ 	long err = 0;
  
--	/* Barrier between changing inodes' journal flags and writepages ops. */
-+	/*
-+	 * Barrier between writepages ops and changing any inode's JOURNAL_DATA
-+	 * or EXTENTS flag.
+ 	BUG_ON(tsk != current);
+@@ -216,6 +216,12 @@ static long setup_tm_sigcontexts(struct sigcontext __user *sc,
+ 
+ 	WARN_ON(tm_suspend_disabled);
+ 
++	/* Restore checkpointed FP, VEC, and VSX bits from ckpt_regs as
++	 * it contains the correct FP, VEC, VSX state after we treclaimed
++	 * the transaction and giveup_all() was called on reclaiming.
 +	 */
- 	struct percpu_rw_semaphore s_writepages_rwsem;
- 
- 	/* Encryption support */
---- a/fs/ext4/migrate.c
-+++ b/fs/ext4/migrate.c
-@@ -434,6 +434,7 @@ static int free_ext_block(handle_t *hand
- 
- int ext4_ext_migrate(struct inode *inode)
- {
-+	struct ext4_sb_info *sbi = EXT4_SB(inode->i_sb);
- 	handle_t *handle;
- 	int retval = 0, i;
- 	__le32 *i_data;
-@@ -458,6 +459,8 @@ int ext4_ext_migrate(struct inode *inode
- 		 */
- 		return retval;
- 
-+	percpu_down_write(&sbi->s_writepages_rwsem);
++	msr |= tsk->thread.ckpt_regs.msr & (MSR_FP | MSR_VEC | MSR_VSX);
 +
- 	/*
- 	 * Worst case we can touch the allocation bitmaps, a bgd
- 	 * block, and a block to link in the orphan list.  We do need
-@@ -468,7 +471,7 @@ int ext4_ext_migrate(struct inode *inode
- 
- 	if (IS_ERR(handle)) {
- 		retval = PTR_ERR(handle);
--		return retval;
-+		goto out_unlock;
- 	}
- 	goal = (((inode->i_ino - 1) / EXT4_INODES_PER_GROUP(inode->i_sb)) *
- 		EXT4_INODES_PER_GROUP(inode->i_sb)) + 1;
-@@ -479,7 +482,7 @@ int ext4_ext_migrate(struct inode *inode
- 	if (IS_ERR(tmp_inode)) {
- 		retval = PTR_ERR(tmp_inode);
- 		ext4_journal_stop(handle);
--		return retval;
-+		goto out_unlock;
- 	}
- 	i_size_write(tmp_inode, i_size_read(inode));
- 	/*
-@@ -521,7 +524,7 @@ int ext4_ext_migrate(struct inode *inode
- 		 */
- 		ext4_orphan_del(NULL, tmp_inode);
- 		retval = PTR_ERR(handle);
--		goto out;
-+		goto out_tmp_inode;
- 	}
- 
- 	ei = EXT4_I(inode);
-@@ -602,10 +605,11 @@ err_out:
- 	/* Reset the extent details */
- 	ext4_ext_tree_init(handle, tmp_inode);
- 	ext4_journal_stop(handle);
--out:
-+out_tmp_inode:
- 	unlock_new_inode(tmp_inode);
- 	iput(tmp_inode);
--
-+out_unlock:
-+	percpu_up_write(&sbi->s_writepages_rwsem);
- 	return retval;
- }
- 
-@@ -615,7 +619,8 @@ out:
- int ext4_ind_migrate(struct inode *inode)
- {
- 	struct ext4_extent_header	*eh;
--	struct ext4_super_block		*es = EXT4_SB(inode->i_sb)->s_es;
-+	struct ext4_sb_info		*sbi = EXT4_SB(inode->i_sb);
-+	struct ext4_super_block		*es = sbi->s_es;
- 	struct ext4_inode_info		*ei = EXT4_I(inode);
- 	struct ext4_extent		*ex;
- 	unsigned int			i, len;
-@@ -639,9 +644,13 @@ int ext4_ind_migrate(struct inode *inode
- 	if (test_opt(inode->i_sb, DELALLOC))
- 		ext4_alloc_da_blocks(inode);
- 
-+	percpu_down_write(&sbi->s_writepages_rwsem);
-+
- 	handle = ext4_journal_start(inode, EXT4_HT_MIGRATE, 1);
--	if (IS_ERR(handle))
--		return PTR_ERR(handle);
-+	if (IS_ERR(handle)) {
-+		ret = PTR_ERR(handle);
-+		goto out_unlock;
-+	}
- 
- 	down_write(&EXT4_I(inode)->i_data_sem);
- 	ret = ext4_ext_check_inode(inode);
-@@ -676,5 +685,7 @@ int ext4_ind_migrate(struct inode *inode
- errout:
- 	ext4_journal_stop(handle);
- 	up_write(&EXT4_I(inode)->i_data_sem);
-+out_unlock:
-+	percpu_up_write(&sbi->s_writepages_rwsem);
- 	return ret;
- }
+ 	/* Remove TM bits from thread's MSR.  The MSR in the sigcontext
+ 	 * just indicates to userland that we were doing a transaction, but we
+ 	 * don't want to return in transactional state.  This also ensures
+-- 
+2.20.1
+
 
 
