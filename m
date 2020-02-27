@@ -2,124 +2,180 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9245C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE83EC35677
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A173E2468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:42:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814562;
-	bh=S0yGJG0Id9N1yY6MyKdC5gdWa6cxWpV1/yYUVgykXEg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S/d5dlapD/ARX6kPyv+46VGZyxcK7gYvyXxohlv7l4XIWeTFJZOrlyA5XBSZIOqk6
-	 H+XwBOxLjoVUIyLV5P7N9ZtNC4OhYkuu03peWDsqRdE8wPh0ED6MTduulMvM3gJJ53
-	 jWzpIXiLBKl64uKabLFmscozORaA1SQzbmqdXIys=
+	by mail.kernel.org (Postfix) with ESMTP id CE21D24699
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:42:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731655AbgB0Oml (ORCPT
+        id S1731134AbgB0Nt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:42:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47900 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731159AbgB0NuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:50:07 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E194B20578;
-        Thu, 27 Feb 2020 13:50:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811407;
-        bh=S0yGJG0Id9N1yY6MyKdC5gdWa6cxWpV1/yYUVgykXEg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UiYB6m+RtZ5T4jy0BaKKlxbu39S0pa4KUb/TnkbHIKKKDlEfo3Y+jS1gT06PAZbSg
-         dnpPFfRHPFtgKszKzHJJf6I5FTblgFrZ4ycSyDwrRPPBOn5a8hyYdS40r00fw3rh8w
-         Z2/0HAubyz4flXpmA2NWIeiEEUYoTMPXwR+U6PEg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jordy Zomer <jordy@simplyhacker.com>,
-        Willy Tarreau <w@1wt.eu>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 119/165] floppy: check FDC index for errors before assigning it
-Date:   Thu, 27 Feb 2020 14:36:33 +0100
-Message-Id: <20200227132248.501258745@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
-References: <20200227132230.840899170@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 27 Feb 2020 08:49:59 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:14972 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731069AbgB0Ntk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:49:40 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01RDlNZc009483;
+        Thu, 27 Feb 2020 08:49:39 -0500
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ydtrwka5r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Feb 2020 08:49:39 -0500
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 01RDncNl059116
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Thu, 27 Feb 2020 08:49:38 -0500
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 27 Feb 2020 08:49:37 -0500
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 27 Feb 2020 08:49:37 -0500
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Thu, 27 Feb 2020 08:49:37 -0500
+Received: from saturn.ad.analog.com ([10.48.65.109])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01RDnVom027892;
+        Thu, 27 Feb 2020 08:49:35 -0500
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH 5/8] iio: core: drop devm_iio_trigger_free() API call
+Date:   Thu, 27 Feb 2020 15:52:24 +0200
+Message-ID: <20200227135227.12433-5-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200227135227.12433-1-alexandru.ardelean@analog.com>
+References: <20200227135227.12433-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="y"
 Content-Transfer-Encoding: 8bit
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-27_04:2020-02-26,2020-02-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ phishscore=0 adultscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ suspectscore=2 clxscore=1015 lowpriorityscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002270109
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+It's unused so far, so it can't be removed. Also makes sense to remove it
+to discourage weird uses of this call during review.
 
-commit 2e90ca68b0d2f5548804f22f0dd61145516171e3 upstream.
-
-Jordy Zomer reported a KASAN out-of-bounds read in the floppy driver in
-wait_til_ready().
-
-Which on the face of it can't happen, since as Willy Tarreau points out,
-the function does no particular memory access.  Except through the FDCS
-macro, which just indexes a static allocation through teh current fdc,
-which is always checked against N_FDC.
-
-Except the checking happens after we've already assigned the value.
-
-The floppy driver is a disgrace (a lot of it going back to my original
-horrd "design"), and has no real maintainer.  Nobody has the hardware,
-and nobody really cares.  But it still gets used in virtual environment
-because it's one of those things that everybody supports.
-
-The whole thing should be re-written, or at least parts of it should be
-seriously cleaned up.  The 'current fdc' index, which is used by the
-FDCS macro, and which is often shadowed by a local 'fdc' variable, is a
-prime example of how not to write code.
-
-But because nobody has the hardware or the motivation, let's just fix up
-the immediate problem with a nasty band-aid: test the fdc index before
-actually assigning it to the static 'fdc' variable.
-
-Reported-by: Jordy Zomer <jordy@simplyhacker.com>
-Cc: Willy Tarreau <w@1wt.eu>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/block/floppy.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ .../driver-api/driver-model/devres.rst        |  1 -
+ Documentation/driver-api/iio/triggers.rst     |  1 -
+ drivers/iio/industrialio-trigger.c            | 32 -------------------
+ include/linux/iio/iio.h                       |  2 --
+ 4 files changed, 36 deletions(-)
 
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -848,14 +848,17 @@ static void reset_fdc_info(int mode)
- /* selects the fdc and drive, and enables the fdc's input/dma. */
- static void set_fdc(int drive)
+diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
+index f638a035e6d2..6c401c74e480 100644
+--- a/Documentation/driver-api/driver-model/devres.rst
++++ b/Documentation/driver-api/driver-model/devres.rst
+@@ -289,7 +289,6 @@ IIO
+   devm_iio_kfifo_free()
+   devm_iio_triggered_buffer_setup()
+   devm_iio_trigger_alloc()
+-  devm_iio_trigger_free()
+   devm_iio_trigger_register()
+   devm_iio_channel_get()
+   devm_iio_channel_release()
+diff --git a/Documentation/driver-api/iio/triggers.rst b/Documentation/driver-api/iio/triggers.rst
+index 160faa810d12..dfd7ba3eabde 100644
+--- a/Documentation/driver-api/iio/triggers.rst
++++ b/Documentation/driver-api/iio/triggers.rst
+@@ -4,7 +4,6 @@ Triggers
+ 
+ * struct :c:type:`iio_trigger` — industrial I/O trigger device
+ * :c:func:`devm_iio_trigger_alloc` — Resource-managed iio_trigger_alloc
+-* :c:func:`devm_iio_trigger_free` — Resource-managed iio_trigger_free
+ * :c:func:`devm_iio_trigger_register` — Resource-managed iio_trigger_register
+   iio_trigger_unregister
+ * :c:func:`iio_trigger_validate_own_device` — Check if a trigger and IIO
+diff --git a/drivers/iio/industrialio-trigger.c b/drivers/iio/industrialio-trigger.c
+index 611f608a9da2..53d1931f6be8 100644
+--- a/drivers/iio/industrialio-trigger.c
++++ b/drivers/iio/industrialio-trigger.c
+@@ -585,18 +585,6 @@ static void devm_iio_trigger_release(struct device *dev, void *res)
+ 	iio_trigger_free(*(struct iio_trigger **)res);
+ }
+ 
+-static int devm_iio_trigger_match(struct device *dev, void *res, void *data)
+-{
+-	struct iio_trigger **r = res;
+-
+-	if (!r || !*r) {
+-		WARN_ON(!r || !*r);
+-		return 0;
+-	}
+-
+-	return *r == data;
+-}
+-
+ /**
+  * devm_iio_trigger_alloc - Resource-managed iio_trigger_alloc()
+  * @dev:		Device to allocate iio_trigger for
+@@ -608,9 +596,6 @@ static int devm_iio_trigger_match(struct device *dev, void *res, void *data)
+  * Managed iio_trigger_alloc.  iio_trigger allocated with this function is
+  * automatically freed on driver detach.
+  *
+- * If an iio_trigger allocated with this function needs to be freed separately,
+- * devm_iio_trigger_free() must be used.
+- *
+  * RETURNS:
+  * Pointer to allocated iio_trigger on success, NULL on failure.
+  */
+@@ -640,23 +625,6 @@ struct iio_trigger *devm_iio_trigger_alloc(struct device *dev,
+ }
+ EXPORT_SYMBOL_GPL(devm_iio_trigger_alloc);
+ 
+-/**
+- * devm_iio_trigger_free - Resource-managed iio_trigger_free()
+- * @dev:		Device this iio_dev belongs to
+- * @iio_trig:		the iio_trigger associated with the device
+- *
+- * Free iio_trigger allocated with devm_iio_trigger_alloc().
+- */
+-void devm_iio_trigger_free(struct device *dev, struct iio_trigger *iio_trig)
+-{
+-	int rc;
+-
+-	rc = devres_release(dev, devm_iio_trigger_release,
+-			    devm_iio_trigger_match, iio_trig);
+-	WARN_ON(rc);
+-}
+-EXPORT_SYMBOL_GPL(devm_iio_trigger_free);
+-
+ static void devm_iio_trigger_unreg(struct device *dev, void *res)
  {
-+	unsigned int new_fdc = fdc;
-+
- 	if (drive >= 0 && drive < N_DRIVE) {
--		fdc = FDC(drive);
-+		new_fdc = FDC(drive);
- 		current_drive = drive;
- 	}
--	if (fdc != 1 && fdc != 0) {
-+	if (new_fdc >= N_FDC) {
- 		pr_info("bad fdc value\n");
- 		return;
- 	}
-+	fdc = new_fdc;
- 	set_dor(fdc, ~0, 8);
- #if N_FDC > 1
- 	set_dor(1 - fdc, ~8, 0);
-
+ 	iio_trigger_unregister(*(struct iio_trigger **)res);
+diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+index 2920c065ab9b..1a5d3d630ec1 100644
+--- a/include/linux/iio/iio.h
++++ b/include/linux/iio/iio.h
+@@ -689,8 +689,6 @@ void iio_device_free(struct iio_dev *indio_dev);
+ struct iio_dev *devm_iio_device_alloc(struct device *dev, int sizeof_priv);
+ struct iio_trigger *devm_iio_trigger_alloc(struct device *dev,
+ 						const char *fmt, ...);
+-void devm_iio_trigger_free(struct device *dev, struct iio_trigger *iio_trig);
+-
+ /**
+  * iio_buffer_enabled() - helper function to test if the buffer is enabled
+  * @indio_dev:		IIO device structure for device
+-- 
+2.20.1
 
