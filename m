@@ -2,147 +2,188 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F05C4BA2D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC27C4BA2D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12B9F24656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 382D524656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:37:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="JZZ7gJZb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729262AbgB0NhR (ORCPT
+        id S1729269AbgB0Nhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:37:17 -0500
-Received: from mail-io1-f70.google.com ([209.85.166.70]:44863 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729124AbgB0NhQ (ORCPT
+        Thu, 27 Feb 2020 08:37:33 -0500
+Received: from gateway36.websitewelcome.com ([192.185.187.5]:17311 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729124AbgB0Nhc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:37:16 -0500
-Received: by mail-io1-f70.google.com with SMTP id i15so3540864ioe.11
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 05:37:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=91gKwAo30RdFaoLYbTACNeuWe8Uq9JMFGOgZLkn6DM0=;
-        b=iB0WmxqlavRtizhA6p9nhKk46bKU5gMMUadg/slgoQlGbmBgRlZ9eLd0wPMJkISMn4
-         DRQgAJJA5kBEq4OcjZEuGwFGTq7YYWTDdgavFFpG6bLhPf/NG1BFBMJkirmydCrqZL+p
-         u34Vgc0rUnVkJOYz58F9ORRdQhGSz/z0qftZakISE1EKYil9G5TOmG22ET0uIYzAdx77
-         ceLw/Fpj1C9Yr2gs7Hy6lEmPw7rZJVP/wch5/GaB0vvRds4CfreH0j0EIacgNTuRVydX
-         8Son96OVIgxNdJpqMxwVQHAIoh/aLmWonyUbvprcPLW4tnjsm7w+kfmC6Gd3g0oys6B1
-         yXVA==
-X-Gm-Message-State: APjAAAWtfUEevl5YabtfKVmNT7aVKfY9DudZFkqquOEJ/QA6hb5lF9Sg
-        MTgRR/d6yPW35MYAs21r9YAHB1ihDNZhJUHIt6jSLRBWBUK4
-X-Google-Smtp-Source: APXvYqywGKnMFJjs3rWZe5+hj65axWzzB3kF4VtBPQi5BXaiJgAILiOuOj0JukUfrY/DGKVti4s28K4XgJrVV2ZrQrQZRCY6QLH9
+        Thu, 27 Feb 2020 08:37:32 -0500
+X-Greylist: delayed 1495 seconds by postgrey-1.27 at vger.kernel.org; Thu, 27 Feb 2020 08:37:31 EST
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id 15F7C404B66F8
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 06:27:27 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 7IxujMF3FEfyq7IxujRpxg; Thu, 27 Feb 2020 07:12:34 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=IoLddeJ6IArEsrKKaZSjMF0GRMnGCiOIluL+k8B2lqw=; b=JZZ7gJZbvA02AykOVuISfPfJQM
+        l06e6+aH8UVA/HzXCJaeGUjecnqYdM2spSevb/fIWqg/EE8dJL9fq3uMP9PLn/2gOIELkWusOcvhK
+        PtoihG33LPRqhxYa6ilX4Th9mbUsHKaHaYqJgoqurO0ce5cP/WEihSxL7K7KdLUMLPT/UqFc06sbi
+        xM7Kc2bPNmMZ4KRcD6jlQgFrITmwrhgctBTdIhWwL74rN/bQZoSiXj5s1+Fz9uK0VbjxFFNwJXQ88
+        oU8r6IDdAy48i6ohdHdBAJyd83qIc67HK3gQEB0r+7eYM5lSYjctRUPWK+1GJ4CbOyZ37Xlb+JY+d
+        pHdb/64Q==;
+Received: from [201.162.161.137] (port=56782 helo=[192.168.43.132])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j7Ixt-000tHc-TK; Thu, 27 Feb 2020 07:12:34 -0600
+Subject: Re: [PATCH] stm class: Replace zero-length array with flexible-array
+ member
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200212235443.GA18334@embeddedor.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <deed275f-49bf-b432-8c91-e00b9969e3b8@embeddedor.com>
+Date:   Thu, 27 Feb 2020 07:15:25 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-Received: by 2002:a5e:8c0d:: with SMTP id n13mr4788017ioj.138.1582810634019;
- Thu, 27 Feb 2020 05:37:14 -0800 (PST)
-Date:   Thu, 27 Feb 2020 05:37:14 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000966862059f8ed1c8@google.com>
-Subject: general protection fault in alb_fasten_mac_swap
-From:   syzbot <syzbot+d54e40cf758e447e088e@syzkaller.appspotmail.com>
-To:     andy@greyhouse.net, davem@davemloft.net, j.vosburgh@gmail.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, vfalico@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200212235443.GA18334@embeddedor.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.161.137
+X-Source-L: No
+X-Exim-ID: 1j7Ixt-000tHc-TK
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.132]) [201.162.161.137]:56782
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 11
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi all,
 
-syzbot found the following crash on:
+Friendly ping: Who can take this?
 
-HEAD commit:    54dedb5b Merge tag 'for-linus-5.6-rc3-tag' of git://git.ke..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15d7da7ee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3e57a6b450fb9883
-dashboard link: https://syzkaller.appspot.com/bug?extid=d54e40cf758e447e088e
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+Thanks
+--
+Gustavo
 
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+d54e40cf758e447e088e@syzkaller.appspotmail.com
-
-bond189: (slave bridge130): making interface the new active one
-device bridge130 entered promiscuous mode
-general protection fault, probably for non-canonical address 0xdffffc0000000006: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000030-0x0000000000000037]
-CPU: 0 PID: 2313 Comm: syz-executor.3 Not tainted 5.6.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:rlb_req_update_slave_clients drivers/net/bonding/bond_alb.c:505 [inline]
-RIP: 0010:alb_fasten_mac_swap+0x67c/0xda0 drivers/net/bonding/bond_alb.c:1063
-Code: f7 48 8b 45 98 42 80 3c 30 00 74 08 48 89 df e8 6a bd e4 fc 4c 8b 33 45 89 e4 49 c1 e4 06 4b 8d 5c 26 30 48 89 d8 48 c1 e8 03 <42> 80 3c 38 00 74 08 48 89 df e8 45 bd e4 fc 48 8b 45 90 48 39 03
-RSP: 0018:ffffc90004edee40 EFLAGS: 00010206
-RAX: 0000000000000006 RBX: 0000000000000030 RCX: 0000000000000002
-RDX: 0000000000000001 RSI: 0000000000000000 RDI: 00000000ffffffff
-RBP: ffffc90004edeeb0 R08: ffffffff84cf74ca R09: fffff520009dbdbc
-R10: fffff520009dbdbc R11: 0000000000000000 R12: 0000000000000000
-R13: ffff888044db0b80 R14: 0000000000000000 R15: dffffc0000000000
-FS:  00007fcb902f3700(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000071a158 CR3: 00000000a816b000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- bond_alb_handle_active_change+0x147f/0x1ba0 drivers/net/bonding/bond_alb.c:1750
- bond_change_active_slave+0x8c0/0x2b20 drivers/net/bonding/bond_main.c:910
- bond_select_active_slave+0x584/0xa80 drivers/net/bonding/bond_main.c:986
- bond_enslave+0x42af/0x59c0 drivers/net/bonding/bond_main.c:1823
- do_set_master net/core/rtnetlink.c:2468 [inline]
- __rtnl_newlink net/core/rtnetlink.c:3346 [inline]
- rtnl_newlink+0x182f/0x1c00 net/core/rtnetlink.c:3377
- rtnetlink_rcv_msg+0x889/0xd40 net/core/rtnetlink.c:5436
- netlink_rcv_skb+0x19e/0x3e0 net/netlink/af_netlink.c:2478
- rtnetlink_rcv+0x1c/0x20 net/core/rtnetlink.c:5454
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x766/0x920 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0xa2b/0xd40 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- ____sys_sendmsg+0x4f7/0x7f0 net/socket.c:2343
- ___sys_sendmsg net/socket.c:2397 [inline]
- __sys_sendmsg+0x1ed/0x290 net/socket.c:2430
- __do_sys_sendmsg net/socket.c:2439 [inline]
- __se_sys_sendmsg net/socket.c:2437 [inline]
- __x64_sys_sendmsg+0x7f/0x90 net/socket.c:2437
- do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45c429
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fcb902f2c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007fcb902f36d4 RCX: 000000000045c429
-RDX: 0000000006000000 RSI: 0000000020000080 RDI: 0000000000000003
-RBP: 000000000076bfc0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 00000000000009f9 R14: 00000000004cc6da R15: 000000000076bfcc
-Modules linked in:
----[ end trace 360aa5d46d32c48b ]---
-RIP: 0010:rlb_req_update_slave_clients drivers/net/bonding/bond_alb.c:505 [inline]
-RIP: 0010:alb_fasten_mac_swap+0x67c/0xda0 drivers/net/bonding/bond_alb.c:1063
-Code: f7 48 8b 45 98 42 80 3c 30 00 74 08 48 89 df e8 6a bd e4 fc 4c 8b 33 45 89 e4 49 c1 e4 06 4b 8d 5c 26 30 48 89 d8 48 c1 e8 03 <42> 80 3c 38 00 74 08 48 89 df e8 45 bd e4 fc 48 8b 45 90 48 39 03
-RSP: 0018:ffffc90004edee40 EFLAGS: 00010206
-RAX: 0000000000000006 RBX: 0000000000000030 RCX: 0000000000000002
-RDX: 0000000000000001 RSI: 0000000000000000 RDI: 00000000ffffffff
-RBP: ffffc90004edeeb0 R08: ffffffff84cf74ca R09: fffff520009dbdbc
-R10: fffff520009dbdbc R11: 0000000000000000 R12: 0000000000000000
-R13: ffff888044db0b80 R14: 0000000000000000 R15: dffffc0000000000
-FS:  00007fcb902f3700(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000071a158 CR3: 00000000a816b000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+On 2/12/20 17:54, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  drivers/hwtracing/stm/policy.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwtracing/stm/policy.c b/drivers/hwtracing/stm/policy.c
+> index 4f932a419752..603b4a9969d3 100644
+> --- a/drivers/hwtracing/stm/policy.c
+> +++ b/drivers/hwtracing/stm/policy.c
+> @@ -34,7 +34,7 @@ struct stp_policy_node {
+>  	unsigned int		first_channel;
+>  	unsigned int		last_channel;
+>  	/* this is the one that's exposed to the attributes */
+> -	unsigned char		priv[0];
+> +	unsigned char		priv[];
+>  };
+>  
+>  void *stp_policy_node_priv(struct stp_policy_node *pn)
+> 
