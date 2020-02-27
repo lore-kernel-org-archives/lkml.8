@@ -2,166 +2,81 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB8AC4BA06
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 03:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD362C4BA06
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 03:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8CF724672
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 03:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DA4F222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 03:21:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbgB0DUN (ORCPT
+        id S1728404AbgB0DV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 22:20:13 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10701 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728220AbgB0DUN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 22:20:13 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 90D6C3EA773AAD8D60D2;
-        Thu, 27 Feb 2020 11:20:08 +0800 (CST)
-Received: from huawei.com (10.175.105.18) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Thu, 27 Feb 2020
- 11:19:59 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
-        <sean.j.christopherson@intel.com>, <vkuznets@redhat.com>,
-        <wanpengli@tencent.com>, <jmattson@google.com>, <joro@8bytes.org>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>
-CC:     <linmiaohe@huawei.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <x86@kernel.org>
-Subject: [PATCH v2] KVM: X86: deprecate obsolete KVM_GET_CPUID2 ioctl
-Date:   Thu, 27 Feb 2020 11:21:28 +0800
-Message-ID: <1582773688-4956-1-git-send-email-linmiaohe@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 26 Feb 2020 22:21:29 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:39916 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728238AbgB0DV3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 22:21:29 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j79jr-0002Dc-2p; Thu, 27 Feb 2020 03:21:27 +0000
+Date:   Thu, 27 Feb 2020 04:21:26 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, rafael@kernel.org, pavel@ucw.cz,
+        kuba@kernel.org, edumazet@google.com, stephen@networkplumber.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v6 0/9] net: fix sysfs permssions when device changes
+ network
+Message-ID: <20200227032126.ajmxq44epabdldwg@wittgenstein>
+References: <20200225131938.120447-1-christian.brauner@ubuntu.com>
+ <20200226081757.GF24447@kroah.com>
+ <20200226.173750.2149877624295674225.davem@davemloft.net>
+ <20200226.190644.1695114419188031888.davem@davemloft.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.105.18]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200226.190644.1695114419188031888.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+On Wed, Feb 26, 2020 at 07:06:44PM -0800, David Miller wrote:
+> From: David Miller <davem@davemloft.net>
+> Date: Wed, 26 Feb 2020 17:37:50 -0800 (PST)
+> 
+> > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Date: Wed, 26 Feb 2020 09:17:57 +0100
+> > 
+> >> On Tue, Feb 25, 2020 at 02:19:29PM +0100, Christian Brauner wrote:
+> >>> Hey everyone,
+> >>> 
+> >>> /* v6 */
+> >>> This is v6 with two small fixups. I missed adapting the commit message
+> >>> to reflect the renamed helper for changing the owner of sysfs files and
+> >>> I also forgot to make the new dpm helper static inline.
+> >> 
+> >> All of the sysfs and driver core bits look good to me now.  Thanks for
+> >> taking the time to update the documentation and other bits based on
+> >> reviews.
+> >> 
+> >> So now it's just up to the netdev developers to review the netdev parts :)
+> >> 
+> >> The sysfs and driver core patches can all go through the netdev tree to
+> >> make it easier for you.
+> > 
+> > I'm fine with these changes, and will apply this series to net-next.
+> 
+> Actually, you'll need to respin this with these warnings fixed, thanks:
 
-When kvm_vcpu_ioctl_get_cpuid2() fails, we set cpuid->nent to the value of
-vcpu->arch.cpuid_nent. But this is in vain as cpuid->nent is not copied to
-userspace by copy_to_user() from call site. Also cpuid->nent is not updated
-to indicate how many entries were retrieved on success case. So this ioctl
-is straight up broken. And in fact, it's not used anywhere. So it should be
-deprecated.
+Hm, I haven't caught those, sorry! Give me a few minutes to fix and do a
+test-compile and run.
 
-Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- arch/x86/kvm/cpuid.c           | 20 --------------------
- arch/x86/kvm/cpuid.h           |  3 ---
- arch/x86/kvm/x86.c             | 16 ++--------------
- include/uapi/linux/kvm.h       |  1 +
- tools/include/uapi/linux/kvm.h |  1 +
- 5 files changed, 4 insertions(+), 37 deletions(-)
-
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index b1c469446b07..5e041a1282b8 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -261,26 +261,6 @@ int kvm_vcpu_ioctl_set_cpuid2(struct kvm_vcpu *vcpu,
- 	return r;
- }
- 
--int kvm_vcpu_ioctl_get_cpuid2(struct kvm_vcpu *vcpu,
--			      struct kvm_cpuid2 *cpuid,
--			      struct kvm_cpuid_entry2 __user *entries)
--{
--	int r;
--
--	r = -E2BIG;
--	if (cpuid->nent < vcpu->arch.cpuid_nent)
--		goto out;
--	r = -EFAULT;
--	if (copy_to_user(entries, &vcpu->arch.cpuid_entries,
--			 vcpu->arch.cpuid_nent * sizeof(struct kvm_cpuid_entry2)))
--		goto out;
--	return 0;
--
--out:
--	cpuid->nent = vcpu->arch.cpuid_nent;
--	return r;
--}
--
- static __always_inline void cpuid_mask(u32 *word, int wordnum)
- {
- 	reverse_cpuid_check(wordnum);
-diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-index 7366c618aa04..76555de38e1b 100644
---- a/arch/x86/kvm/cpuid.h
-+++ b/arch/x86/kvm/cpuid.h
-@@ -19,9 +19,6 @@ int kvm_vcpu_ioctl_set_cpuid(struct kvm_vcpu *vcpu,
- int kvm_vcpu_ioctl_set_cpuid2(struct kvm_vcpu *vcpu,
- 			      struct kvm_cpuid2 *cpuid,
- 			      struct kvm_cpuid_entry2 __user *entries);
--int kvm_vcpu_ioctl_get_cpuid2(struct kvm_vcpu *vcpu,
--			      struct kvm_cpuid2 *cpuid,
--			      struct kvm_cpuid_entry2 __user *entries);
- bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
- 	       u32 *ecx, u32 *edx, bool check_limit);
- 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index ddd1d296bd20..a6d99abedb2c 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -4295,21 +4295,9 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
- 					      cpuid_arg->entries);
- 		break;
- 	}
-+	/* KVM_GET_CPUID2 is deprecated, should not be used. */
- 	case KVM_GET_CPUID2: {
--		struct kvm_cpuid2 __user *cpuid_arg = argp;
--		struct kvm_cpuid2 cpuid;
--
--		r = -EFAULT;
--		if (copy_from_user(&cpuid, cpuid_arg, sizeof(cpuid)))
--			goto out;
--		r = kvm_vcpu_ioctl_get_cpuid2(vcpu, &cpuid,
--					      cpuid_arg->entries);
--		if (r)
--			goto out;
--		r = -EFAULT;
--		if (copy_to_user(cpuid_arg, &cpuid, sizeof(cpuid)))
--			goto out;
--		r = 0;
-+		r = -EINVAL;
- 		break;
- 	}
- 	case KVM_GET_MSRS: {
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 4b95f9a31a2f..61524780603d 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -1380,6 +1380,7 @@ struct kvm_s390_ucas_mapping {
- #define KVM_GET_LAPIC             _IOR(KVMIO,  0x8e, struct kvm_lapic_state)
- #define KVM_SET_LAPIC             _IOW(KVMIO,  0x8f, struct kvm_lapic_state)
- #define KVM_SET_CPUID2            _IOW(KVMIO,  0x90, struct kvm_cpuid2)
-+/* KVM_GET_CPUID2 is deprecated, should not be used. */
- #define KVM_GET_CPUID2            _IOWR(KVMIO, 0x91, struct kvm_cpuid2)
- /* Available with KVM_CAP_VAPIC */
- #define KVM_TPR_ACCESS_REPORTING  _IOWR(KVMIO, 0x92, struct kvm_tpr_access_ctl)
-diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
-index f0a16b4adbbd..2ef719af4c57 100644
---- a/tools/include/uapi/linux/kvm.h
-+++ b/tools/include/uapi/linux/kvm.h
-@@ -1379,6 +1379,7 @@ struct kvm_s390_ucas_mapping {
- #define KVM_GET_LAPIC             _IOR(KVMIO,  0x8e, struct kvm_lapic_state)
- #define KVM_SET_LAPIC             _IOW(KVMIO,  0x8f, struct kvm_lapic_state)
- #define KVM_SET_CPUID2            _IOW(KVMIO,  0x90, struct kvm_cpuid2)
-+/* KVM_GET_CPUID2 is deprecated, should not be used. */
- #define KVM_GET_CPUID2            _IOWR(KVMIO, 0x91, struct kvm_cpuid2)
- /* Available with KVM_CAP_VAPIC */
- #define KVM_TPR_ACCESS_REPORTING  _IOWR(KVMIO, 0x92, struct kvm_tpr_access_ctl)
--- 
-2.19.1
-
+Christian
