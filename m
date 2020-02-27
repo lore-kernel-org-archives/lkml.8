@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D69FC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEBAC3567B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6D2246A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08B14246A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:40:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582810836;
-	bh=CA9hpk+8+vKiu9AMeZbpWkmXezxgRu0IVoffnAhetDk=;
+	s=default; t=1582810832;
+	bh=twDeaA3E8H64oXuNU14NkQ+qAzM0EdL9jMbpT1e9nmw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MKVK9Ik1PnNyNO8hI3nNCTVLfx7KSBZqfn1XObvl3AU0L0//SbO0L5+z3Pv6vgT27
-	 b3Yd177UCbwj8/dQ/uAadwSiGaciVX+7xqQ5u/NUXmMTYunU7c19rspy8WU/hCUYhJ
-	 0LjeUf9XN2W8DqAwjHlLp+tZ4CUXk0l75udePltQ=
+	b=ySxNrjN94wh2SakV6sd2bJZrUSHi+UMQnPGnrk8AF8sDIuwdhjqIGrRDmhx5joyo0
+	 /ZCLRF86o/i7xNlNQnMin0dMS/nrKwZ5RZNXRUilzW0OUecX51KWvDwkM+pnVXfYM0
+	 iFtWXdGYfuBklh95c0PsLQPMJk96R28cvDPfyYlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729308AbgB0Nkf (ORCPT
+        id S1729279AbgB0Nka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:40:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34826 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:40:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729291AbgB0Nkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:40:32 -0500
+        id S1729124AbgB0Nk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:40:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24F5824656;
-        Thu, 27 Feb 2020 13:40:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD138246A1;
+        Thu, 27 Feb 2020 13:40:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582810831;
-        bh=CA9hpk+8+vKiu9AMeZbpWkmXezxgRu0IVoffnAhetDk=;
+        s=default; t=1582810829;
+        bh=twDeaA3E8H64oXuNU14NkQ+qAzM0EdL9jMbpT1e9nmw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f9cmdBlx4wmN4O6dzO0gJLQ4NLGEgeYtTZR0LaTC607GeUVA+WgoUPnwK/UaZrpAp
-         ywpbelIUg80T0F28ubiC3XeCGCfNP5I1cSkW3IZdtZ7FDRH8WwIPU2VheKAe5sh7tw
-         H4i5/084jM7QAF2TbNKgt5lcrRnOcKlr92ioPxBQ=
+        b=c9t2FAow9y5FgHfVmB3B3wZ8MAAm22eg7kXiXhYPnjeVQBg8dngkxJS2cZNF5dhL/
+         DHLJe1f93quRGpFyUYJ3dAmpMiId5RkTcxqmuTCILQVzxD/ZUPjrEB4cgrik0Rgyuz
+         zV2twqMjDKChiKsAtqFnbtofz/q1KO6uAk9n0j1w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        Tyler Hicks <tyhicks@canonical.com>
-Subject: [PATCH 4.4 004/113] ecryptfs: fix a memory leak bug in parse_tag_1_packet()
-Date:   Thu, 27 Feb 2020 14:35:20 +0100
-Message-Id: <20200227132212.516450291@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.4 003/113] ALSA: hda: Use scnprintf() for printing texts for sysfs/procfs
+Date:   Thu, 27 Feb 2020 14:35:19 +0100
+Message-Id: <20200227132212.363987694@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
 References: <20200227132211.791484803@linuxfoundation.org>
@@ -59,35 +58,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit fe2e082f5da5b4a0a92ae32978f81507ef37ec66 upstream.
+commit 44eeb081b8630bb3ad3cd381d1ae1831463e48bb upstream.
 
-In parse_tag_1_packet(), if tag 1 packet contains a key larger than
-ECRYPTFS_MAX_ENCRYPTED_KEY_BYTES, no cleanup is executed, leading to a
-memory leak on the allocated 'auth_tok_list_item'. To fix this issue, go to
-the label 'out_free' to perform the cleanup work.
+Some code in HD-audio driver calls snprintf() in a loop and still
+expects that the return value were actually written size, while
+snprintf() returns the expected would-be length instead.  When the
+given buffer limit were small, this leads to a buffer overflow.
 
-Cc: stable@vger.kernel.org
-Fixes: dddfa461fc89 ("[PATCH] eCryptfs: Public key; packet management")
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: Tyler Hicks <tyhicks@canonical.com>
+Use scnprintf() for addressing those issues.  It returns the actually
+written size unlike snprintf().
+
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200218091409.27162-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ecryptfs/keystore.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/hda_codec.c |    2 +-
+ sound/pci/hda/hda_eld.c   |    2 +-
+ sound/pci/hda/hda_sysfs.c |    4 ++--
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
---- a/fs/ecryptfs/keystore.c
-+++ b/fs/ecryptfs/keystore.c
-@@ -1280,7 +1280,7 @@ parse_tag_1_packet(struct ecryptfs_crypt
- 		printk(KERN_ERR "Enter w/ first byte != 0x%.2x\n",
- 		       ECRYPTFS_TAG_1_PACKET_TYPE);
- 		rc = -EINVAL;
--		goto out;
-+		goto out_free;
+--- a/sound/pci/hda/hda_codec.c
++++ b/sound/pci/hda/hda_codec.c
+@@ -4098,7 +4098,7 @@ void snd_print_pcm_bits(int pcm, char *b
+ 
+ 	for (i = 0, j = 0; i < ARRAY_SIZE(bits); i++)
+ 		if (pcm & (AC_SUPPCM_BITS_8 << i))
+-			j += snprintf(buf + j, buflen - j,  " %d", bits[i]);
++			j += scnprintf(buf + j, buflen - j,  " %d", bits[i]);
+ 
+ 	buf[j] = '\0'; /* necessary when j == 0 */
+ }
+--- a/sound/pci/hda/hda_eld.c
++++ b/sound/pci/hda/hda_eld.c
+@@ -385,7 +385,7 @@ static void hdmi_print_pcm_rates(int pcm
+ 
+ 	for (i = 0, j = 0; i < ARRAY_SIZE(alsa_rates); i++)
+ 		if (pcm & (1 << i))
+-			j += snprintf(buf + j, buflen - j,  " %d",
++			j += scnprintf(buf + j, buflen - j,  " %d",
+ 				alsa_rates[i]);
+ 
+ 	buf[j] = '\0'; /* necessary when j == 0 */
+--- a/sound/pci/hda/hda_sysfs.c
++++ b/sound/pci/hda/hda_sysfs.c
+@@ -221,7 +221,7 @@ static ssize_t init_verbs_show(struct de
+ 	mutex_lock(&codec->user_mutex);
+ 	for (i = 0; i < codec->init_verbs.used; i++) {
+ 		struct hda_verb *v = snd_array_elem(&codec->init_verbs, i);
+-		len += snprintf(buf + len, PAGE_SIZE - len,
++		len += scnprintf(buf + len, PAGE_SIZE - len,
+ 				"0x%02x 0x%03x 0x%04x\n",
+ 				v->nid, v->verb, v->param);
  	}
- 	/* Released: wipe_auth_tok_list called in ecryptfs_parse_packet_set or
- 	 * at end of function upon failure */
+@@ -271,7 +271,7 @@ static ssize_t hints_show(struct device
+ 	mutex_lock(&codec->user_mutex);
+ 	for (i = 0; i < codec->hints.used; i++) {
+ 		struct hda_hint *hint = snd_array_elem(&codec->hints, i);
+-		len += snprintf(buf + len, PAGE_SIZE - len,
++		len += scnprintf(buf + len, PAGE_SIZE - len,
+ 				"%s = %s\n", hint->key, hint->val);
+ 	}
+ 	mutex_unlock(&codec->user_mutex);
 
 
