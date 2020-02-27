@@ -2,78 +2,164 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FREEMAIL_REPLYTO_END_DIGIT,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A26DC4BA3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C63F7C4BA06
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 674FD222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C823222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:30:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tyDk7PYl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728621AbgB0I2x (ORCPT
+        id S1728584AbgB0IaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 03:28:53 -0500
-Received: from mga02.intel.com ([134.134.136.20]:27621 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728454AbgB0I2w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 03:28:52 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 00:28:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,491,1574150400"; 
-   d="scan'208";a="261376670"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP; 27 Feb 2020 00:28:47 -0800
-Received: from abityuts-desk1.fi.intel.com (abityuts-desk1.fi.intel.com [10.237.68.148])
-        by linux.intel.com (Postfix) with ESMTP id 4CCA6580107;
-        Thu, 27 Feb 2020 00:28:45 -0800 (PST)
-Message-ID: <b73cc46a633bac90b9538355b1befeb45814e84e.camel@gmail.com>
-Subject: Re: [PATCH] cpufreq: Fix policy initialization for internal
- governor drivers
-From:   Artem Bityutskiy <dedekind1@gmail.com>
-Reply-To: dedekind1@gmail.com
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Thu, 27 Feb 2020 10:28:44 +0200
-In-Reply-To: <3873122.F9s1CIEcb3@kreacher>
-References: <3873122.F9s1CIEcb3@kreacher>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Thu, 27 Feb 2020 03:30:20 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40064 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728454AbgB0IaU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 03:30:20 -0500
+Received: by mail-pf1-f194.google.com with SMTP id b185so1237682pfb.7;
+        Thu, 27 Feb 2020 00:30:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Tvby+wcv0BQs9h7cjR7fY7Khx0epyt1ALylZ/rOptsk=;
+        b=tyDk7PYlcOkw+gGiTcjC/6Qa3T7IV3N+PomawQkDEiJGrEoCCxSnWkYJ5O/Fpgwyy4
+         ZtOLBWdGNND4hNkyWa3dHc/ut8slDRK9rgLL8XyEfLxxueDkU/GItIt+OIyNcySmM6zR
+         /qBcX92xLsADWlEomsFtB9+iYXpvy0e7guWXKMwEwgYrjdMuXHCRwFT6Kftn/IgbFTHr
+         PBh442mhEugo9AJJLOM3S9Rj2ruJuhDOGfsldCMqRsLAQ6Wlbz8iWawZSfVHHd0XrQQb
+         vI5L1Z98bkcjdrwpQXy9a/ATMieVCkUD1K5O0r6nVJActWwc24pkfIkMPk65i3+CJevR
+         2DMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Tvby+wcv0BQs9h7cjR7fY7Khx0epyt1ALylZ/rOptsk=;
+        b=myGNPCF9gen1McJAPMNypCTJwaqRPnJZRF8FQ3s1koIDYnLctwuCeOR6k+87shJRNg
+         4frPR/32P4MoY54qY7Zz+zX0985Tp2Hc0UEWBbhkk5X1M7AU7rNGxSQ3rJShJ0vJMI3N
+         vQxX4rFs2L/2I2zRLhVV99NHYzoy/18VGU+EpT6xBJLPxDOag+ALjavG/EJJpHR+bKwx
+         /IZU5NDodl9LNoj5/FYWcMDcvv/g3JxZt/TsoAvvKObDIDcmL4pY/IzE4ITDmj4Ge580
+         P5SnMSfBg0oDrYEnnE0CfKBj3VH1GAWl1Tqur27ypF607rXOQLduGk91LN6aRcjSoG2e
+         U67A==
+X-Gm-Message-State: APjAAAV6VMbuhy9e3Yf+irxu5T2kWwul5O1VEqy8uOgfAm/jWS+fty9v
+        04PfHMxD5ASNGYoCHAnQo8E=
+X-Google-Smtp-Source: APXvYqwbdwa5z/Mw8fsv5fDjzzdIQEE48+SMUMGxedgroSV5O6Mz8Opk8lbDY2FoQaMBU2tprUKiPg==
+X-Received: by 2002:a63:a741:: with SMTP id w1mr3064761pgo.131.1582792218623;
+        Thu, 27 Feb 2020 00:30:18 -0800 (PST)
+Received: from workstation-portable ([103.87.56.152])
+        by smtp.gmail.com with ESMTPSA id r145sm6174967pfr.5.2020.02.27.00.30.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 00:30:18 -0800 (PST)
+Date:   Thu, 27 Feb 2020 14:00:10 +0530
+From:   Amol Grover <frextrite@gmail.com>
+To:     amanharitsh123 <amanharitsh123@gmail.com>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [Linux-kernel-mentees] [PATCH] doc: Convert to checklist.txt to
+ checklist.rst
+Message-ID: <20200227083010.GB5241@workstation-portable>
+References: <20200225183916.4555-1-amanharitsh123@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200225183916.4555-1-amanharitsh123@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-02-26 at 22:39 +0100, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Wed, Feb 26, 2020 at 12:09:16AM +0530, amanharitsh123 wrote:
+> This patch converts checklist.txt to checklist.rst and
+> adds it to index.rst
 > 
-> Before commit 1e4f63aecb53 ("cpufreq: Avoid creating excessively
-> large stack frames") the initial value of the policy field in struct
-> cpufreq_policy set by the driver's ->init() callback was implicitly
-> passed from cpufreq_init_policy() to cpufreq_set_policy() if the
-> default governor was neither "performance" nor "powersave".  After
-> that commit, however, cpufreq_init_policy() must take that case into
-> consideration explicitly and handle it as appropriate, so make that
-> happen.
+
+Hi Aman,
+
+Thank you for the patch! But before this can be accepted there are a few
+things that you need to take care of.
+
+> Signed-off-by: amanharitsh123 <amanharitsh123@gmail.com>
+
+1. Signed-off-by *must* *always* include your full real name. You can
+modify .gitconfig, or run `git config user.name "Your Name"` to change
+this.
+
+> ---
+>  Documentation/RCU/{checklist.txt => checklist.rst} | 8 +++++---
+>  Documentation/RCU/index.rst                        | 1 +
+>  2 files changed, 6 insertions(+), 3 deletions(-)
+>  rename Documentation/RCU/{checklist.txt => checklist.rst} (99%)
 > 
-> Fixes: 1e4f63aecb53 ("cpufreq: Avoid creating excessively large stack frames")
-> Link: https://lore.kernel.org/linux-pm/39fb762880c27da110086741315ca8b111d781cd.camel@gmail.com/
-> Reported-by: Artem Bityutskiy <dedekind1@gmail.com>
-> Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> diff --git a/Documentation/RCU/checklist.txt b/Documentation/RCU/checklist.rst
+> similarity index 99%
+> rename from Documentation/RCU/checklist.txt
+> rename to Documentation/RCU/checklist.rst
+> index e98ff261a438..49bf7862c950 100644
+> --- a/Documentation/RCU/checklist.txt
+> +++ b/Documentation/RCU/checklist.rst
+> @@ -1,5 +1,7 @@
+> -Review Checklist for RCU Patches
+> +.. checklist doc:
 
-Many thanks, fixes the issue.
+2. The document identifier must always start with an underscore and
+should not contain white spaces, something like:
+.. _checklist_doc:
+should work.
 
-Artem.
+>  
+> +Review Checklist for RCU Patches
+> +================================
+>  
+>  This document contains a checklist for producing and reviewing patches
+>  that make use of RCU.  Violating any of the rules listed below will
+> @@ -442,8 +444,8 @@ over a rather long period of time, but improvements are always welcome!
+>  
+>  	You instead need to use one of the barrier functions:
+>  
+> -	o	call_rcu() -> rcu_barrier()
+> -	o	call_srcu() -> srcu_barrier()
+> +	-	call_rcu() -> rcu_barrier()
+> +	-	call_srcu() -> srcu_barrier()
+>  
+>  	However, these barrier functions are absolutely -not- guaranteed
+>  	to wait for a grace period.  In fact, if there are no call_rcu()
+> diff --git a/Documentation/RCU/index.rst b/Documentation/RCU/index.rst
+> index 81a0a1e5f767..d60eb4ba2cd0 100644
+> --- a/Documentation/RCU/index.rst
+> +++ b/Documentation/RCU/index.rst
+> @@ -10,6 +10,7 @@ RCU concepts
+>     arrayRCU
+>     rcubarrier
+>     rcu_dereference
+> +   checklist
+>     whatisRCU
+>     rcu
+>     listRCU
 
+3. The subject line needs a bit of tweaking.
+
+Apart from the above mentioned changes, everything looks good!
+
+Thanks
+Amol
+
+> -- 
+> 2.20.1
+> 
+> _______________________________________________
+> Linux-kernel-mentees mailing list
+> Linux-kernel-mentees@lists.linuxfoundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/linux-kernel-mentees
