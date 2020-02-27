@@ -2,174 +2,141 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A60C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3D5C4BA3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B937C24683
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71D57222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbgB0JvI (ORCPT
+        id S1728699AbgB0Jz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 04:51:08 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35879 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728653AbgB0JvI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 04:51:08 -0500
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1j7Fod-0006mu-IK; Thu, 27 Feb 2020 10:50:47 +0100
-Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1j7FoZ-0003jq-SI; Thu, 27 Feb 2020 10:50:43 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     stern@rowland.harvard.edu, gregkh@linuxfoundation.org,
-        Thinh.Nguyen@synopsys.com, harry.pan@intel.com,
-        nobuta.keiya@fujitsu.com, malat@debian.org,
-        kai.heng.feng@canonical.com, chiasheng.lee@intel.com,
-        andreyknvl@google.com, heinzelmann.david@gmail.com
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: [RFC PATCH] USB: hub: fix port suspend/resume
-Date:   Thu, 27 Feb 2020 10:50:40 +0100
-Message-Id: <20200227095040.10208-1-m.felsch@pengutronix.de>
-X-Mailer: git-send-email 2.20.1
+        Thu, 27 Feb 2020 04:55:26 -0500
+Received: from foss.arm.com ([217.140.110.172]:47780 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728454AbgB0Jz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 04:55:26 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B70461FB;
+        Thu, 27 Feb 2020 01:55:25 -0800 (PST)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4E7FB3F881;
+        Thu, 27 Feb 2020 01:55:23 -0800 (PST)
+Date:   Thu, 27 Feb 2020 09:55:21 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Macpaul Lin <macpaul.lin@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Shen Jing <jingx.shen@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Vincent Pelletier <plr.vincent@gmail.com>,
+        Jerry Zhang <zhangjerry@google.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, stable@vger.kernel.org,
+        andreyknvl@google.com, Peter Chen <peter.chen@nxp.com>,
+        Miles Chen <miles.chen@mediatek.com>
+Subject: Re: [PATCH v4] usb: gadget: f_fs: try to fix AIO issue under ARM 64
+ bit TAGGED mode
+Message-ID: <20200227095521.GA3281767@arrakis.emea.arm.com>
+References: <1582627315-21123-1-git-send-email-macpaul.lin@mediatek.com>
+ <1582718512-28923-1-git-send-email-macpaul.lin@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582718512-28923-1-git-send-email-macpaul.lin@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At the momemnt the usb-port driver has only runime_pm hooks.
-Suspending the port and turn off the VBUS supply should be triggered by
-the hub device suspend callback usb_port_suspend() which calls the
-pm_runtime_put_sync() if all pre-conditions are meet. This mechanism
-don't work correctly due to the global PM behaviour, for more information
-see [1]. According [1] I added the suspend/resume callbacks for the port
-device to fix this. While on it I replaced the #ifdef's by
-__maybe_unused.
+On Wed, Feb 26, 2020 at 08:01:52PM +0800, Macpaul Lin wrote:
+> This issue was found when adbd trying to open functionfs with AIO mode.
+> Usually, we need to set "setprop sys.usb.ffs.aio_compat 0" to enable
+> adbd with AIO mode on Android.
+> 
+> When adbd is opening functionfs, it will try to read 24 bytes at the
+> first read I/O control. If this reading has been failed, adbd will
+> try to send FUNCTIONFS_CLEAR_HALT to functionfs. When adbd is in AIO
+> mode, functionfs will be acted with asyncronized I/O path. After the
+> successful read transfer has been completed by gadget hardware, the
+> following series of functions will be called.
+>   ffs_epfile_async_io_complete() -> ffs_user_copy_worker() ->
+>     copy_to_iter() -> _copy_to_iter() -> copyout() ->
+>     iterate_and_advance() -> iterate_iovec()
+> 
+> Adding debug trace to these functions, it has been found that in
+> copyout(), access_ok() will check if the user space address is valid
+> to write. However if CONFIG_ARM64_TAGGED_ADDR_ABI is enabled, adbd
+> always passes user space address start with "0x3C" to gadget's AIO
+> blocks. This tagged address will cause access_ok() check always fail.
+> Which causes later calculation in iterate_iovec() turn zero.
+> Copyout() won't copy data to user space since the length to be copied
+> "v.iov_len" will be zero. Finally leads ffs_copy_to_iter() always return
+> -EFAULT, causes adbd cannot open functionfs and send
+> FUNCTIONFS_CLEAR_HALT.
+> 
+> Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
+> Cc: Peter Chen <peter.chen@nxp.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Miles Chen <miles.chen@mediatek.com>
+> ---
+> Changes for v4:
+>   - Abandon solution v3 by adding "TIF_TAGGED_ADDR" flag to gadget driver.
+>     According to Catalin's suggestion, change the solution by untagging 
+>     user space address passed by AIO in gadget driver.
 
-[1] https://www.spinics.net/lists/linux-usb/msg190537.html
+Well, this was suggested in case you have a strong reason not to do the
+untagging in adbd. As I said, tagged pointers in user space were
+supported long before we introduced CONFIG_ARM64_TAGGED_ADDR_ABI. How
+did adb cope with such tagged pointers before? It was not supposed to
+pass them to the kernel.
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- drivers/usb/core/hub.c  | 13 -------------
- drivers/usb/core/port.c | 39 +++++++++++++++++++++++++++++++--------
- 2 files changed, 31 insertions(+), 21 deletions(-)
+> diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+> index ce1d023..192935f 100644
+> --- a/drivers/usb/gadget/function/f_fs.c
+> +++ b/drivers/usb/gadget/function/f_fs.c
+> @@ -715,7 +715,20 @@ static void ffs_epfile_io_complete(struct usb_ep *_ep, struct usb_request *req)
+>  
+>  static ssize_t ffs_copy_to_iter(void *data, int data_len, struct iov_iter *iter)
+>  {
+> -	ssize_t ret = copy_to_iter(data, data_len, iter);
+> +	ssize_t ret;
+> +
+> +#if defined(CONFIG_ARM64)
+> +	/*
+> +	 * Replace tagged address passed by user space application before
+> +	 * copying.
+> +	 */
+> +	if (IS_ENABLED(CONFIG_ARM64_TAGGED_ADDR_ABI) &&
+> +		(iter->type == ITER_IOVEC)) {
+> +		*(unsigned long *)&iter->iov->iov_base =
+> +			(unsigned long)untagged_addr(iter->iov->iov_base);
+> +	}
+> +#endif
+> +	ret = copy_to_iter(data, data_len, iter);
 
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-index 3405b146edc9..c294484e478d 100644
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -3323,10 +3323,6 @@ int usb_port_suspend(struct usb_device *udev, pm_message_t msg)
- 		usb_set_device_state(udev, USB_STATE_SUSPENDED);
- 	}
- 
--	if (status == 0 && !udev->do_remote_wakeup && udev->persist_enabled
--			&& test_and_clear_bit(port1, hub->child_usage_bits))
--		pm_runtime_put_sync(&port_dev->dev);
--
- 	usb_mark_last_busy(hub->hdev);
- 
- 	usb_unlock_port(port_dev);
-@@ -3514,15 +3510,6 @@ int usb_port_resume(struct usb_device *udev, pm_message_t msg)
- 	int		status;
- 	u16		portchange, portstatus;
- 
--	if (!test_and_set_bit(port1, hub->child_usage_bits)) {
--		status = pm_runtime_get_sync(&port_dev->dev);
--		if (status < 0) {
--			dev_dbg(&udev->dev, "can't resume usb port, status %d\n",
--					status);
--			return status;
--		}
--	}
--
- 	usb_lock_port(port_dev);
- 
- 	/* Skip the initial Clear-Suspend step for a remote wakeup */
-diff --git a/drivers/usb/core/port.c b/drivers/usb/core/port.c
-index bbbb35fa639f..9efa6b2ef31b 100644
---- a/drivers/usb/core/port.c
-+++ b/drivers/usb/core/port.c
-@@ -187,8 +187,7 @@ static void usb_port_device_release(struct device *dev)
- 	kfree(port_dev);
- }
- 
--#ifdef CONFIG_PM
--static int usb_port_runtime_resume(struct device *dev)
-+static int __maybe_unused usb_port_runtime_resume(struct device *dev)
- {
- 	struct usb_port *port_dev = to_usb_port(dev);
- 	struct usb_device *hdev = to_usb_device(dev->parent->parent);
-@@ -244,7 +243,7 @@ static int usb_port_runtime_resume(struct device *dev)
- 	return retval;
- }
- 
--static int usb_port_runtime_suspend(struct device *dev)
-+static int __maybe_unused usb_port_runtime_suspend(struct device *dev)
- {
- 	struct usb_port *port_dev = to_usb_port(dev);
- 	struct usb_device *hdev = to_usb_device(dev->parent->parent);
-@@ -283,7 +282,33 @@ static int usb_port_runtime_suspend(struct device *dev)
- 
- 	return retval;
- }
--#endif
-+
-+static int __maybe_unused _usb_port_suspend(struct device *dev)
-+{
-+	struct usb_port *port_dev = to_usb_port(dev);
-+	struct usb_device *udev = port_dev->child;
-+	int retval;
-+
-+	if (!udev->do_remote_wakeup && udev->persist_enabled)
-+		retval = usb_port_runtime_suspend(dev);
-+
-+	/* Do not force the user to enable the power-off feature */
-+	if (retval && retval != -EAGAIN)
-+		return retval;
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused _usb_port_resume(struct device *dev)
-+{
-+	struct usb_port *port_dev = to_usb_port(dev);
-+	struct usb_device *udev = port_dev->child;
-+
-+	if (!udev->do_remote_wakeup && udev->persist_enabled)
-+		return usb_port_runtime_resume(dev);
-+
-+	return 0;
-+}
- 
- static void usb_port_shutdown(struct device *dev)
- {
-@@ -294,10 +319,8 @@ static void usb_port_shutdown(struct device *dev)
- }
- 
- static const struct dev_pm_ops usb_port_pm_ops = {
--#ifdef CONFIG_PM
--	.runtime_suspend =	usb_port_runtime_suspend,
--	.runtime_resume =	usb_port_runtime_resume,
--#endif
-+	SET_SYSTEM_SLEEP_PM_OPS(_usb_port_suspend, _usb_port_resume)
-+	SET_RUNTIME_PM_OPS(usb_port_runtime_suspend, usb_port_runtime_resume, NULL)
- };
- 
- struct device_type usb_port_device_type = {
+Here you should probably drop all the #ifdefs and IS_ENABLED checks
+since untagged_addr() is defined globally as a no-op (and overridden by
+arm64 and sparc).
+
+Please don't send another patch until we understand (a) whether this is
+a user-space problem to fix or (b) if we fix it in the kernel, is this
+the only/right place? If we settle for the in-kernel untagging, do we
+explicitly untag the addresses in such kernel threads or we default to
+TIF_TAGGED_ADDR for all kernel threads, in case they ever call use_mm()
+(or we could even hook something in use_mm() to set this TIF flag
+temporarily).
+
+Looking for feedback from the Android folk and a better analysis of the
+possible solution.
+
 -- 
-2.20.1
-
+Catalin
