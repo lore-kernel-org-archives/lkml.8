@@ -2,169 +2,103 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66622C7656A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC35C76572
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4537424656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:37:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BFE324656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:37:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582814238;
+	bh=rjrhQW09Vso9tajVY7leCL9tNge/xnc21nLf2tfe578=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mns3BRdbaY+9/Ue6XMpJDip9LcjE2XulAPCqFRj8R7XwwOYZQNVNbD7242O3sHEBX
+	 2QdnPPBW2O+jo23eduPoXnc26kTkZRrYZJr5+zTlI1Ge1tvE1RKPU4tVpO7CCkyd05
+	 y4xdXx1nSsfhgOuEFw3cuQGrntHI0bvJR7Ni+2Yw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732216AbgB0N4v (ORCPT
+        id S1731731AbgB0N5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:56:51 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:42765 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732191AbgB0N4q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:56:46 -0500
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1j7JeX-0001bH-7W; Thu, 27 Feb 2020 14:56:37 +0100
-Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1j7JeT-0004VH-8w; Thu, 27 Feb 2020 14:56:33 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     stern@rowland.harvard.edu, gregkh@linuxfoundation.org,
-        Thinh.Nguyen@synopsys.com, harry.pan@intel.com,
-        nobuta.keiya@fujitsu.com, malat@debian.org,
-        kai.heng.feng@canonical.com, chiasheng.lee@intel.com,
-        andreyknvl@google.com, heinzelmann.david@gmail.com
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de, kbuild test robot <lkp@intel.com>
-Subject: [RFC PATCH v2] USB: hub: fix port suspend/resume
-Date:   Thu, 27 Feb 2020 14:56:31 +0100
-Message-Id: <20200227135631.13983-1-m.felsch@pengutronix.de>
-X-Mailer: git-send-email 2.20.1
+        Thu, 27 Feb 2020 08:57:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58672 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732321AbgB0N5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:57:41 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED25020801;
+        Thu, 27 Feb 2020 13:57:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582811860;
+        bh=rjrhQW09Vso9tajVY7leCL9tNge/xnc21nLf2tfe578=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=MsUSRlNJTXYsXJP6xVHCH56COxVWKjyiImnRT/+khiAqsnxH+xP09w3cXMfN0fX8M
+         6Vf8YY2AT1l6yYcrwVqZ5NQW9y2deouPWfQx0gPanTb+Xtih4Zh9QsdwIakXcFmnt8
+         LqG9ypSB314skRs5MjyC1oCJnUce/eS5pjYQXESA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 130/237] ide: serverworks: potential overflow in svwks_set_pio_mode()
+Date:   Thu, 27 Feb 2020 14:35:44 +0100
+Message-Id: <20200227132306.302999900@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
+References: <20200227132255.285644406@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At the momemnt the usb-port driver has only runime_pm hooks.
-Suspending the port and turn off the VBUS supply should be triggered by
-the hub device suspend callback usb_port_suspend() which calls the
-pm_runtime_put_sync() if all pre-conditions are meet. This mechanism
-don't work correctly due to the global PM behaviour, for more information
-see [1]. According [1] I added the suspend/resume callbacks for the port
-device to fix this.
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[1] https://www.spinics.net/lists/linux-usb/msg190537.html
+[ Upstream commit ce1f31b4c0b9551dd51874dd5364654ed4ca13ae ]
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+The "drive->dn" variable is a u8 controlled by root.
+
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-Hi,
+ drivers/ide/serverworks.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-this v2 contains the fixes
-
-Reported-by: kbuild test robot <lkp@intel.com>
-
-Regards,
-  Marco
-
-Changes:
-- init retval to zero
-- keep CONFIG_PM due to do_remote_wakeup availability
-- adapt commit message
-
- drivers/usb/core/hub.c  | 13 -------------
- drivers/usb/core/port.c | 35 ++++++++++++++++++++++++++++++-----
- 2 files changed, 30 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-index 3405b146edc9..c294484e478d 100644
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -3323,10 +3323,6 @@ int usb_port_suspend(struct usb_device *udev, pm_message_t msg)
- 		usb_set_device_state(udev, USB_STATE_SUSPENDED);
- 	}
+diff --git a/drivers/ide/serverworks.c b/drivers/ide/serverworks.c
+index a97affca18abe..0f57d45484d1d 100644
+--- a/drivers/ide/serverworks.c
++++ b/drivers/ide/serverworks.c
+@@ -114,6 +114,9 @@ static void svwks_set_pio_mode(ide_hwif_t *hwif, ide_drive_t *drive)
+ 	struct pci_dev *dev = to_pci_dev(hwif->dev);
+ 	const u8 pio = drive->pio_mode - XFER_PIO_0;
  
--	if (status == 0 && !udev->do_remote_wakeup && udev->persist_enabled
--			&& test_and_clear_bit(port1, hub->child_usage_bits))
--		pm_runtime_put_sync(&port_dev->dev);
--
- 	usb_mark_last_busy(hub->hdev);
- 
- 	usb_unlock_port(port_dev);
-@@ -3514,15 +3510,6 @@ int usb_port_resume(struct usb_device *udev, pm_message_t msg)
- 	int		status;
- 	u16		portchange, portstatus;
- 
--	if (!test_and_set_bit(port1, hub->child_usage_bits)) {
--		status = pm_runtime_get_sync(&port_dev->dev);
--		if (status < 0) {
--			dev_dbg(&udev->dev, "can't resume usb port, status %d\n",
--					status);
--			return status;
--		}
--	}
--
- 	usb_lock_port(port_dev);
- 
- 	/* Skip the initial Clear-Suspend step for a remote wakeup */
-diff --git a/drivers/usb/core/port.c b/drivers/usb/core/port.c
-index bbbb35fa639f..13f130b67efe 100644
---- a/drivers/usb/core/port.c
-+++ b/drivers/usb/core/port.c
-@@ -283,7 +283,34 @@ static int usb_port_runtime_suspend(struct device *dev)
- 
- 	return retval;
- }
--#endif
++	if (drive->dn >= ARRAY_SIZE(drive_pci))
++		return;
 +
-+static int __maybe_unused _usb_port_suspend(struct device *dev)
-+{
-+	struct usb_port *port_dev = to_usb_port(dev);
-+	struct usb_device *udev = port_dev->child;
-+	int retval = 0;
-+
-+	if (!udev->do_remote_wakeup && udev->persist_enabled)
-+		retval = usb_port_runtime_suspend(dev);
-+
-+	/* Do not force the user to enable the power-off feature */
-+	if (retval && retval != -EAGAIN)
-+		return retval;
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused _usb_port_resume(struct device *dev)
-+{
-+	struct usb_port *port_dev = to_usb_port(dev);
-+	struct usb_device *udev = port_dev->child;
-+
-+	if (!udev->do_remote_wakeup && udev->persist_enabled)
-+		return usb_port_runtime_resume(dev);
-+
-+	return 0;
-+}
-+#endif /* CONFIG_PM */
+ 	pci_write_config_byte(dev, drive_pci[drive->dn], pio_modes[pio]);
  
- static void usb_port_shutdown(struct device *dev)
- {
-@@ -294,10 +321,8 @@ static void usb_port_shutdown(struct device *dev)
- }
+ 	if (svwks_csb_check(dev)) {
+@@ -140,6 +143,9 @@ static void svwks_set_dma_mode(ide_hwif_t *hwif, ide_drive_t *drive)
  
- static const struct dev_pm_ops usb_port_pm_ops = {
--#ifdef CONFIG_PM
--	.runtime_suspend =	usb_port_runtime_suspend,
--	.runtime_resume =	usb_port_runtime_resume,
--#endif
-+	SET_SYSTEM_SLEEP_PM_OPS(_usb_port_suspend, _usb_port_resume)
-+	SET_RUNTIME_PM_OPS(usb_port_runtime_suspend, usb_port_runtime_resume, NULL)
- };
+ 	u8 ultra_enable	 = 0, ultra_timing = 0, dma_timing = 0;
  
- struct device_type usb_port_device_type = {
++	if (drive->dn >= ARRAY_SIZE(drive_pci2))
++		return;
++
+ 	pci_read_config_byte(dev, (0x56|hwif->channel), &ultra_timing);
+ 	pci_read_config_byte(dev, 0x54, &ultra_enable);
+ 
 -- 
 2.20.1
+
+
 
