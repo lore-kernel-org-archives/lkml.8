@@ -2,134 +2,81 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 168E7C4BA3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC14C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E81F42067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A59E24670
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:32:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728704AbgB0J3L (ORCPT
+        id S1728688AbgB0JcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 04:29:11 -0500
-Received: from mail-io1-f70.google.com ([209.85.166.70]:55459 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728655AbgB0J3L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 04:29:11 -0500
-Received: by mail-io1-f70.google.com with SMTP id k5so2782545ioa.22
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 01:29:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=a5nwarW/Ch1YAxFwUTvooBTTNGZG4Pb2BJatlqPFCQE=;
-        b=ki5hYLBo/RV+p7bLsxF7+gMdUDdcT3CCmoWb8QAS2Yh+Z3rlbcZBOALNhtfpAotU99
-         2qSCspzmbDOC4Mo2gpkwstUWconYJjDtyohDzLWSZBGoLpYa8fHY/F6xRlkZKxB9/Awo
-         x9h3MgQZB2/J4m0xzukSAfLIwS8QH9b2biGyQ8sjQW5VhPqdAsLOpxppv8spFe63ORY4
-         YbmtDZ6XUIvJDGac7eKu2Lchn0zqODetTDEgh9JoT9P66cTgM/V7SKCRlcBdf8bjkUfy
-         I2y8OLZfcqnYNpexUirPHBbgHPjMDlWyrhuZn2qxyyctnhO0nwKR0hMmPK5HyjuNWHqm
-         ARcA==
-X-Gm-Message-State: APjAAAXm/vu8tZRnCAj2zWPoQxuobT21oYX5OXcjeX82mjQRKD1kUrLc
-        6n0Sc7UKaTm8V2gAp5oNegAWkyZjXMa6C7BIYZkB5hbFQe4E
-X-Google-Smtp-Source: APXvYqympk9d8+qZ5FGZeZTSzTy5FAkbhvFXKmFCYRmxoq7y6pwo/OYAI9WUHGn71WYxNNKY1Asd80Nj+Lp1VgEx/dW2UJ0G4aaA
+        Thu, 27 Feb 2020 04:32:02 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34174 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728624AbgB0JcC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 04:32:02 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 1BF34ACD7;
+        Thu, 27 Feb 2020 09:31:59 +0000 (UTC)
+Subject: Re: [PATCH] xen: Replace zero-length array with flexible-array member
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>
+Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+References: <20200226212612.GA4663@embeddedor>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <77d23b72-e16b-e63a-7700-3afe6c77d327@suse.com>
+Date:   Thu, 27 Feb 2020 10:31:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:ca8a:: with SMTP id t10mr2702434ilo.210.1582795750709;
- Thu, 27 Feb 2020 01:29:10 -0800 (PST)
-Date:   Thu, 27 Feb 2020 01:29:10 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007b25c1059f8b5a4f@google.com>
-Subject: KMSAN: uninit-value in simple_attr_read
-From:   syzbot <syzbot+fcab69d1ada3e8d6f06b@syzkaller.appspotmail.com>
-To:     glider@google.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200226212612.GA4663@embeddedor>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 26.02.20 22:26, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>          int stuff;
+>          struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-syzbot found the following crash on:
-
-HEAD commit:    8bbbc5cf kmsan: don't compile memmove
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=14394265e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cd0e9a6b0e555cc3
-dashboard link: https://syzkaller.appspot.com/bug?extid=fcab69d1ada3e8d6f06b
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1338127ee00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=161403ede00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+fcab69d1ada3e8d6f06b@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: uninit-value in strlen+0x5e/0xa0 lib/string.c:552
-CPU: 1 PID: 11402 Comm: syz-executor230 Not tainted 5.6.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- strlen+0x5e/0xa0 lib/string.c:552
- simple_attr_read+0x1ec/0x740 fs/libfs.c:935
- debugfs_attr_read+0x13e/0x290 fs/debugfs/file.c:360
- __vfs_read+0x1a9/0xc80 fs/read_write.c:425
- vfs_read+0x346/0x6a0 fs/read_write.c:461
- ksys_read+0x267/0x450 fs/read_write.c:587
- __do_sys_read fs/read_write.c:597 [inline]
- __se_sys_read+0x92/0xb0 fs/read_write.c:595
- __x64_sys_read+0x4a/0x70 fs/read_write.c:595
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x440269
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fff09d3bc68 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440269
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000004
-RBP: 00000000006ca018 R08: 000000000000000a R09: 000000000000000a
-R10: 0000000000010001 R11: 0000000000000246 R12: 0000000000401af0
-R13: 0000000000401b80 R14: 0000000000000000 R15: 0000000000000000
-
-Uninit was created at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
- kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:82
- slab_alloc_node mm/slub.c:2793 [inline]
- slab_alloc mm/slub.c:2802 [inline]
- kmem_cache_alloc_trace+0x6f3/0xd70 mm/slub.c:2819
- kmalloc include/linux/slab.h:555 [inline]
- simple_attr_open+0xd4/0x400 fs/libfs.c:894
- lowpan_enable_fops_open+0x94/0xb0 net/bluetooth/6lowpan.c:1105
- open_proxy_open+0x657/0x800 fs/debugfs/file.c:189
- do_dentry_open+0xf89/0x1820 fs/open.c:797
- vfs_open+0xaf/0xe0 fs/open.c:914
- do_last fs/namei.c:3490 [inline]
- path_openat+0x4d57/0x6bd0 fs/namei.c:3607
- do_filp_open+0x2b8/0x710 fs/namei.c:3637
- do_sys_openat2+0x92e/0xd40 fs/open.c:1149
- do_sys_open fs/open.c:1165 [inline]
- __do_sys_openat fs/open.c:1179 [inline]
- __se_sys_openat+0x24a/0x2b0 fs/open.c:1174
- __x64_sys_openat+0x56/0x70 fs/open.c:1174
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-=====================================================
+Reviewed-by: Juergen Gross <jgross@suse.com>
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Juergen
