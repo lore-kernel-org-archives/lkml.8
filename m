@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D53C3F341
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 079C9C3F34F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25D3D20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBF0D20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811101;
-	bh=E2lpMDbqta8jB7/yNfjQFpQNGqpux5LNdzpHvwvrAE4=;
+	s=default; t=1582811186;
+	bh=ZKUtbs4x9z+XJALSmUTrVhdPGVdU/ZvRtqluld9BoZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OdwLTp/K7HJepAKEzsXvtknqsPloW5Kv/8juyYavTLpLW7tvNjpARnu1SdeesO+7P
-	 nV7xrSVu/K2eUDIH26D7Ra0299FR43202C/eLOiGoz88pGSPI6NOo3dcOOThYonJCN
-	 BUvF7vp0gGbv2H0TEwOt2AjT2zjTMZ14+jkGn+0c=
+	b=AMn5UCHrlFbkhPCYmKCuDtfnEnvk66AyJWPVQ387bWJqvmQihcntEvd5Cdyo6h5RI
+	 cfWYHKCNiN/oJkNkR70Yb64xaIShfPms1PHUZ9x1wY53/QRVXQMO8P8InNaHBaOvLB
+	 2OuIYi+EiSNkoC41t4XoG5Dzb++GMZecrQkIGM2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730305AbgB0No7 (ORCPT
+        id S1730172AbgB0NqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:44:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40568 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:46:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730278AbgB0Nox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:44:53 -0500
+        id S1729646AbgB0NqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:46:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B96820726;
-        Thu, 27 Feb 2020 13:44:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E77A920578;
+        Thu, 27 Feb 2020 13:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811092;
-        bh=E2lpMDbqta8jB7/yNfjQFpQNGqpux5LNdzpHvwvrAE4=;
+        s=default; t=1582811181;
+        bh=ZKUtbs4x9z+XJALSmUTrVhdPGVdU/ZvRtqluld9BoZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ut+qBOzXDaM90dB8U9L2DAdFhxeDoXWuNNpp669wJ+JzEtrGul+VR5gOw0TE7Xbne
-         m1yT3HsoNMJLJHFc+H4JiNmBxe1jY3KgtoKATA+0nTCH9Q52vLADFwfkYgAKQa+t0/
-         Es1bXerx/NDqlinkPM2rVsbRRiZaQxdGL4TtE7zk=
+        b=MOiW8R5f0sdK43MybmKHZt9LshHOb9aGuSiJjmz2lEiBHMNrOlds1zpPMfV7Rz7AS
+         HBql2Dbbuz5jK0PYy2dk0JVxG3hY8Xri8aJ4nTOyFzbfhJrQCE2pQkfauTb5wk/pKj
+         vo8sJGhL6Iv3edE/vTwRbZZrLSJUpn84isY4Jleg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 098/113] vt: vt_ioctl: fix race in VT_RESIZEX
-Date:   Thu, 27 Feb 2020 14:36:54 +0100
-Message-Id: <20200227132227.423425180@linuxfoundation.org>
+Subject: [PATCH 4.9 032/165] pinctrl: baytrail: Do not clear IRQ flags on direct-irq enabled pins
+Date:   Thu, 27 Feb 2020 14:35:06 +0100
+Message-Id: <20200227132235.750238456@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
-References: <20200227132211.791484803@linuxfoundation.org>
+In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
+References: <20200227132230.840899170@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,105 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 6cd1ed50efd88261298577cd92a14f2768eddeeb ]
+[ Upstream commit a23680594da7a9e2696dbcf4f023e9273e2fa40b ]
 
-We need to make sure vc_cons[i].d is not NULL after grabbing
-console_lock(), or risk a crash.
+Suspending Goodix touchscreens requires changing the interrupt pin to
+output before sending them a power-down command. Followed by wiggling
+the interrupt pin to wake the device up, after which it is put back
+in input mode.
 
-general protection fault, probably for non-canonical address 0xdffffc0000000068: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000340-0x0000000000000347]
-CPU: 1 PID: 19462 Comm: syz-executor.5 Not tainted 5.5.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:vt_ioctl+0x1f96/0x26d0 drivers/tty/vt/vt_ioctl.c:883
-Code: 74 41 e8 bd a6 84 fd 48 89 d8 48 c1 e8 03 42 80 3c 28 00 0f 85 e4 04 00 00 48 8b 03 48 8d b8 40 03 00 00 48 89 fa 48 c1 ea 03 <42> 0f b6 14 2a 84 d2 74 09 80 fa 03 0f 8e b1 05 00 00 44 89 b8 40
-RSP: 0018:ffffc900086d7bb0 EFLAGS: 00010202
-RAX: 0000000000000000 RBX: ffffffff8c34ee88 RCX: ffffc9001415c000
-RDX: 0000000000000068 RSI: ffffffff83f0e6e3 RDI: 0000000000000340
-RBP: ffffc900086d7cd0 R08: ffff888054ce0100 R09: fffffbfff16a2f6d
-R10: ffff888054ce0998 R11: ffff888054ce0100 R12: 000000000000001d
-R13: dffffc0000000000 R14: 1ffff920010daf79 R15: 000000000000ff7f
-FS:  00007f7d13c12700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffd477e3c38 CR3: 0000000095d0a000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- tty_ioctl+0xa37/0x14f0 drivers/tty/tty_io.c:2660
- vfs_ioctl fs/ioctl.c:47 [inline]
- ksys_ioctl+0x123/0x180 fs/ioctl.c:763
- __do_sys_ioctl fs/ioctl.c:772 [inline]
- __se_sys_ioctl fs/ioctl.c:770 [inline]
- __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:770
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45b399
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f7d13c11c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007f7d13c126d4 RCX: 000000000045b399
-RDX: 0000000020000080 RSI: 000000000000560a RDI: 0000000000000003
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000666 R14: 00000000004c7f04 R15: 000000000075bf2c
-Modules linked in:
----[ end trace 80970faf7a67eb77 ]---
-RIP: 0010:vt_ioctl+0x1f96/0x26d0 drivers/tty/vt/vt_ioctl.c:883
-Code: 74 41 e8 bd a6 84 fd 48 89 d8 48 c1 e8 03 42 80 3c 28 00 0f 85 e4 04 00 00 48 8b 03 48 8d b8 40 03 00 00 48 89 fa 48 c1 ea 03 <42> 0f b6 14 2a 84 d2 74 09 80 fa 03 0f 8e b1 05 00 00 44 89 b8 40
-RSP: 0018:ffffc900086d7bb0 EFLAGS: 00010202
-RAX: 0000000000000000 RBX: ffffffff8c34ee88 RCX: ffffc9001415c000
-RDX: 0000000000000068 RSI: ffffffff83f0e6e3 RDI: 0000000000000340
-RBP: ffffc900086d7cd0 R08: ffff888054ce0100 R09: fffffbfff16a2f6d
-R10: ffff888054ce0998 R11: ffff888054ce0100 R12: 000000000000001d
-R13: dffffc0000000000 R14: 1ffff920010daf79 R15: 000000000000ff7f
-FS:  00007f7d13c12700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffd477e3c38 CR3: 0000000095d0a000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+On Bay Trail devices with a Goodix touchscreen direct-irq mode is used
+in combination with listing the pin as a normal GpioIo resource.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: stable <stable@vger.kernel.org>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Link: https://lore.kernel.org/r/20200210190721.200418-1-edumazet@google.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This works fine, until the goodix driver gets rmmod-ed and then insmod-ed
+again. In this case byt_gpio_disable_free() calls
+byt_gpio_clear_triggering() which clears the IRQ flags and after that the
+(direct) IRQ no longer triggers.
+
+This commit fixes this by adding a check for the BYT_DIRECT_IRQ_EN flag
+to byt_gpio_clear_triggering().
+
+Note that byt_gpio_clear_triggering() only gets called from
+byt_gpio_disable_free() for direct-irq enabled pins, as these are excluded
+from the irq_valid mask by byt_init_irq_valid_mask().
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/vt/vt_ioctl.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ drivers/pinctrl/intel/pinctrl-baytrail.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/tty/vt/vt_ioctl.c b/drivers/tty/vt/vt_ioctl.c
-index a1e5c408c931b..e9d9f9f3dc886 100644
---- a/drivers/tty/vt/vt_ioctl.c
-+++ b/drivers/tty/vt/vt_ioctl.c
-@@ -879,15 +879,20 @@ int vt_ioctl(struct tty_struct *tty,
- 			return -EINVAL;
+diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
+index f83a2a60d9c9b..1e945aa77734b 100644
+--- a/drivers/pinctrl/intel/pinctrl-baytrail.c
++++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
+@@ -958,7 +958,13 @@ static void byt_gpio_clear_triggering(struct byt_gpio *vg, unsigned int offset)
  
- 		for (i = 0; i < MAX_NR_CONSOLES; i++) {
-+			struct vc_data *vcp;
+ 	raw_spin_lock_irqsave(&byt_lock, flags);
+ 	value = readl(reg);
+-	value &= ~(BYT_TRIG_POS | BYT_TRIG_NEG | BYT_TRIG_LVL);
 +
- 			if (!vc_cons[i].d)
- 				continue;
- 			console_lock();
--			if (v.v_vlin)
--				vc_cons[i].d->vc_scan_lines = v.v_vlin;
--			if (v.v_clin)
--				vc_cons[i].d->vc_font.height = v.v_clin;
--			vc_cons[i].d->vc_resize_user = 1;
--			vc_resize(vc_cons[i].d, v.v_cols, v.v_rows);
-+			vcp = vc_cons[i].d;
-+			if (vcp) {
-+				if (v.v_vlin)
-+					vcp->vc_scan_lines = v.v_vlin;
-+				if (v.v_clin)
-+					vcp->vc_font.height = v.v_clin;
-+				vcp->vc_resize_user = 1;
-+				vc_resize(vcp, v.v_cols, v.v_rows);
-+			}
- 			console_unlock();
- 		}
- 		break;
++	/* Do not clear direct-irq enabled IRQs (from gpio_disable_free) */
++	if (value & BYT_DIRECT_IRQ_EN)
++		/* nothing to do */ ;
++	else
++		value &= ~(BYT_TRIG_POS | BYT_TRIG_NEG | BYT_TRIG_LVL);
++
+ 	writel(value, reg);
+ 	raw_spin_unlock_irqrestore(&byt_lock, flags);
+ }
 -- 
 2.20.1
 
