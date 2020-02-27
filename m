@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E16BC52D29
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7488C3F361
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36FD520801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B48582469B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812112;
-	bh=0C0pTTKbZx4Ck1f1jcDyhaaeDVBADdCEi8tIy34GJh4=;
+	s=default; t=1582812117;
+	bh=fIQ9dRT5falEOKAiEhOmoWhkW76BUdeoKlh3hMghr8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fjz8dBk5THAk1bM+5zCA7eTtI6OXW3DAmWQTJWnGGg727LNDUfnX1CbhcIxbh8/Rq
-	 P1c/uU7Zt7wJo5MzW8kvX2BAtuaUJPZPdux0pwnd0wJolYBudtKgiTsUnvA4Kxf4Sd
-	 Y2bTb3sw9yQBvNNu02y+1NM9DfLyLxSM7czQuU3g=
+	b=YMKS8+0YezAiu/R1lFZHUyioJMyfCy1gR/BQQgVDEW/LJxxnXtqpYILUMfPpF/xUN
+	 OHncwvaW0feXugBImkZM/3N7sQzo9F4ixhbMnO+TXj7OJAIaTAH5H4T/WKCtqzjEPh
+	 OXej3Bfak2c8TQZsNiBrhi/ngSca0aJXAh75PXUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732786AbgB0OBu (ORCPT
+        id S1733028AbgB0OB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:01:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36056 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:01:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732994AbgB0OBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:01:49 -0500
+        id S1733011AbgB0OBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:01:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8D6F20801;
-        Thu, 27 Feb 2020 14:01:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABF2D20801;
+        Thu, 27 Feb 2020 14:01:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812108;
-        bh=0C0pTTKbZx4Ck1f1jcDyhaaeDVBADdCEi8tIy34GJh4=;
+        s=default; t=1582812113;
+        bh=fIQ9dRT5falEOKAiEhOmoWhkW76BUdeoKlh3hMghr8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D0T+iTL1Bi4FqQr4O5icytLsweFq6GfOd4p1YpFDjsCC3hTsMJNGwLa+4reYp/x7E
-         ocNpYOk6rf8vANnXlsIGYLQWAjp0mj4g41KQF9qe7cgqfCsKXoS/mRAVvlQywp5V4x
-         d+MFklPLMSFWI8XRUOMjiNu4nR4dzB50AmrmLFm4=
+        b=YCc59oIcl+5Nd5zfQCfSH32ksUdIGJr3XB5UqvLe5j5CLGK8VpKKWDm9XIljADc16
+         AYrRsAnjApw6s9gUcJ9o3Uai1jvEsSYqec4Zv7cA201rp3NTLEz+M+zFjID6tZOEGq
+         NQiPRtaHakCG3NpTR4btRQbtYfAwzPPg5NuWL5eI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rahul Kundu <rahul.kundu@chelsio.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Dakshaja Uppalapati <dakshaja@chelsio.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.14 224/237] scsi: Revert "target: iscsi: Wait for all commands to finish before freeing a session"
-Date:   Thu, 27 Feb 2020 14:37:18 +0100
-Message-Id: <20200227132312.620607932@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH 4.14 226/237] staging: rtl8723bs: fix copy of overlapping memory
+Date:   Thu, 27 Feb 2020 14:37:20 +0100
+Message-Id: <20200227132312.756569432@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -63,70 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit 807b9515b7d044cf77df31f1af9d842a76ecd5cb upstream.
+commit 8ae9a588ca35eb9c32dc03299c5e1f4a1e9a9617 upstream.
 
-Since commit e9d3009cb936 introduced a regression and since the fix for
-that regression was not perfect, revert this commit.
+Currently the rtw_sprintf prints the contents of thread_name
+onto thread_name and this can lead to a potential copy of a
+string over itself. Avoid this by printing the literal string RTWHALXT
+instread of the contents of thread_name.
 
-Link: https://marc.info/?l=target-devel&m=158157054906195
-Cc: Rahul Kundu <rahul.kundu@chelsio.com>
-Cc: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Cc: Sagi Grimberg <sagi@grimberg.me>
-Reported-by: Dakshaja Uppalapati <dakshaja@chelsio.com>
-Fixes: e9d3009cb936 ("scsi: target: iscsi: Wait for all commands to finish before freeing a session")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Addresses-Coverity: ("copy of overlapping memory")
+Fixes: 554c0a3abf21 ("staging: Add rtl8723bs sdio wifi driver")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20200126220549.9849-1-colin.king@canonical.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/target/iscsi/iscsi_target.c |   10 ++--------
- include/scsi/iscsi_proto.h          |    1 -
- 2 files changed, 2 insertions(+), 9 deletions(-)
+ drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/drivers/target/iscsi/iscsi_target.c
-+++ b/drivers/target/iscsi/iscsi_target.c
-@@ -1158,9 +1158,7 @@ int iscsit_setup_scsi_cmd(struct iscsi_c
- 		hdr->cmdsn, be32_to_cpu(hdr->data_length), payload_length,
- 		conn->cid);
+--- a/drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c
++++ b/drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c
+@@ -486,14 +486,13 @@ int rtl8723bs_xmit_thread(void *context)
+ 	s32 ret;
+ 	struct adapter *padapter;
+ 	struct xmit_priv *pxmitpriv;
+-	u8 thread_name[20] = "RTWHALXT";
+-
++	u8 thread_name[20];
  
--	if (target_get_sess_cmd(&cmd->se_cmd, true) < 0)
--		return iscsit_add_reject_cmd(cmd,
--				ISCSI_REASON_WAITING_FOR_LOGOUT, buf);
-+	target_get_sess_cmd(&cmd->se_cmd, true);
+ 	ret = _SUCCESS;
+ 	padapter = context;
+ 	pxmitpriv = &padapter->xmitpriv;
  
- 	cmd->sense_reason = transport_lookup_cmd_lun(&cmd->se_cmd,
- 						     scsilun_to_int(&hdr->lun));
-@@ -2006,9 +2004,7 @@ iscsit_handle_task_mgt_cmd(struct iscsi_
- 			      conn->sess->se_sess, 0, DMA_NONE,
- 			      TCM_SIMPLE_TAG, cmd->sense_buffer + 2);
+-	rtw_sprintf(thread_name, 20, "%s-"ADPT_FMT, thread_name, ADPT_ARG(padapter));
++	rtw_sprintf(thread_name, 20, "RTWHALXT-" ADPT_FMT, ADPT_ARG(padapter));
+ 	thread_enter(thread_name);
  
--	if (target_get_sess_cmd(&cmd->se_cmd, true) < 0)
--		return iscsit_add_reject_cmd(cmd,
--				ISCSI_REASON_WAITING_FOR_LOGOUT, buf);
-+	target_get_sess_cmd(&cmd->se_cmd, true);
- 
- 	/*
- 	 * TASK_REASSIGN for ERL=2 / connection stays inside of
-@@ -4240,8 +4236,6 @@ int iscsit_close_connection(
- 	 * must wait until they have completed.
- 	 */
- 	iscsit_check_conn_usage_count(conn);
--	target_sess_cmd_list_set_waiting(sess->se_sess);
--	target_wait_for_sess_cmds(sess->se_sess);
- 
- 	ahash_request_free(conn->conn_tx_hash);
- 	if (conn->conn_rx_hash) {
---- a/include/scsi/iscsi_proto.h
-+++ b/include/scsi/iscsi_proto.h
-@@ -638,7 +638,6 @@ struct iscsi_reject {
- #define ISCSI_REASON_BOOKMARK_INVALID	9
- #define ISCSI_REASON_BOOKMARK_NO_RESOURCES	10
- #define ISCSI_REASON_NEGOTIATION_RESET	11
--#define ISCSI_REASON_WAITING_FOR_LOGOUT	12
- 
- /* Max. number of Key=Value pairs in a text message */
- #define MAX_KEY_VALUE_PAIRS	8192
+ 	DBG_871X("start "FUNC_ADPT_FMT"\n", FUNC_ADPT_ARG(padapter));
 
 
