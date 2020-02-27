@@ -2,102 +2,115 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF65C4BA3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78435C4BA3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEEEF24699
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 567A124699
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:19:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbgB0MSl (ORCPT
+        id S1729001AbgB0MT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 07:18:41 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:26280 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728856AbgB0MSl (ORCPT
+        Thu, 27 Feb 2020 07:19:56 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:56424 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728929AbgB0MTz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 07:18:41 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01RCHa5Z028892;
-        Thu, 27 Feb 2020 07:18:36 -0500
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ydtrwk24n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Feb 2020 07:18:36 -0500
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 01RCIZHk044665
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Thu, 27 Feb 2020 07:18:35 -0500
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 27 Feb
- 2020 04:18:33 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Thu, 27 Feb 2020 04:18:33 -0800
-Received: from analog.ad.analog.com ([10.48.65.180])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01RCIUEO030445;
-        Thu, 27 Feb 2020 07:18:31 -0500
-From:   Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <jic23@kernel.org>
-CC:     <pmeerw@pmeerw.net>, <Michael.Hennerich@analog.com>,
-        <marcelo.schmitt1@gmail.com>,
-        Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-Subject: [PATCH] iio: adc: ad9292: Use new structure for SPI transfer delays
-Date:   Thu, 27 Feb 2020 14:18:14 +0200
-Message-ID: <20200227121814.14442-1-sergiu.cuciurean@analog.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 27 Feb 2020 07:19:55 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j7I8v-0004CK-6h; Thu, 27 Feb 2020 12:19:53 +0000
+Date:   Thu, 27 Feb 2020 13:19:52 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Stafford Horne <shorne@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Openrisc <openrisc@lists.librecores.org>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Christian Brauner <christian@brauner.io>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>
+Subject: Re: [PATCH 1/3] openrisc: Convert copy_thread to copy_thread_tls
+Message-ID: <20200227121952.hywkuydswvdn3myc@wittgenstein>
+References: <20200226225625.28935-1-shorne@gmail.com>
+ <20200226225625.28935-2-shorne@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-27_03:2020-02-26,2020-02-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- phishscore=0 adultscore=0 spamscore=0 mlxscore=0 mlxlogscore=960
- suspectscore=0 clxscore=1011 lowpriorityscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002270100
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200226225625.28935-2-shorne@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In a recent change to the SPI subsystem [1], a new `delay` struct was added
-to replace the `delay_usecs`. This change replaces the current
-`delay_usecs` with `delay` for this driver.
+On Thu, Feb 27, 2020 at 07:56:23AM +0900, Stafford Horne wrote:
+> This is required for clone3 which passes the TLS value through a
+> struct rather than a register.
+> 
+> Signed-off-by: Stafford Horne <shorne@gmail.com>
+> ---
+>  arch/openrisc/Kconfig          |  1 +
+>  arch/openrisc/kernel/process.c | 15 +++++----------
+>  2 files changed, 6 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/openrisc/Kconfig b/arch/openrisc/Kconfig
+> index 1928e061ff96..5debdbe6fc35 100644
+> --- a/arch/openrisc/Kconfig
+> +++ b/arch/openrisc/Kconfig
+> @@ -14,6 +14,7 @@ config OPENRISC
+>  	select HANDLE_DOMAIN_IRQ
+>  	select GPIOLIB
+>  	select HAVE_ARCH_TRACEHOOK
+> +	select HAVE_COPY_THREAD_TLS
+>  	select SPARSE_IRQ
+>  	select GENERIC_IRQ_CHIP
+>  	select GENERIC_IRQ_PROBE
+> diff --git a/arch/openrisc/kernel/process.c b/arch/openrisc/kernel/process.c
+> index b06f84f6676f..6695f167e126 100644
+> --- a/arch/openrisc/kernel/process.c
+> +++ b/arch/openrisc/kernel/process.c
+> @@ -117,12 +117,13 @@ void release_thread(struct task_struct *dead_task)
+>  extern asmlinkage void ret_from_fork(void);
+>  
+>  /*
+> - * copy_thread
+> + * copy_thread_tls
+>   * @clone_flags: flags
+>   * @usp: user stack pointer or fn for kernel thread
+>   * @arg: arg to fn for kernel thread; always NULL for userspace thread
+>   * @p: the newly created task
+>   * @regs: CPU context to copy for userspace thread; always NULL for kthread
+> + * @tls: the Thread Local Storate pointer for the new process
+>   *
+>   * At the top of a newly initialized kernel stack are two stacked pt_reg
+>   * structures.  The first (topmost) is the userspace context of the thread.
+> @@ -148,8 +149,8 @@ extern asmlinkage void ret_from_fork(void);
+>   */
+>  
+>  int
+> -copy_thread(unsigned long clone_flags, unsigned long usp,
+> -	    unsigned long arg, struct task_struct *p)
+> +copy_thread_tls(unsigned long clone_flags, unsigned long usp,
+> +		unsigned long arg, struct task_struct *p, unsigned long tls)
+>  {
+>  	struct pt_regs *userregs;
+>  	struct pt_regs *kregs;
+> @@ -180,15 +181,9 @@ copy_thread(unsigned long clone_flags, unsigned long usp,
+>  
+>  		/*
+>  		 * For CLONE_SETTLS set "tp" (r10) to the TLS pointer passed to sys_clone.
 
-The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
-that both `delay_usecs` & `delay` are used (in this order to preserve
-backwards compatibility).
+Maybe reword this to:
 
-[1] commit bebcfd272df6 ("spi: introduce `delay` field for
-`spi_transfer` + spi_transfer_delay_exec()")
+For CLONE_SETTLS set "tp" (r10) to the TLS pointer. We probably
+shouldn't mention clone() explicitly anymore, since we now have
+clone3() and therefore two callers that pass in tls arguments.
 
-Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
----
- drivers/iio/adc/ad7292.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iio/adc/ad7292.c b/drivers/iio/adc/ad7292.c
-index a6798f7dfdb8..6595fd196288 100644
---- a/drivers/iio/adc/ad7292.c
-+++ b/drivers/iio/adc/ad7292.c
-@@ -122,7 +122,10 @@ static int ad7292_single_conversion(struct ad7292_state *st,
- 		{
- 			.tx_buf = &st->d8,
- 			.len = 4,
--			.delay_usecs = 6,
-+			.delay = {
-+				.value = 6,
-+				.unit = SPI_DELAY_UNIT_USECS
-+			},
- 		}, {
- 			.rx_buf = &st->d16,
- 			.len = 2,
--- 
-2.17.1
-
+Thanks!
+Christian
