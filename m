@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09FD1C3F35A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A634C3F35E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CABCA21D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23D6920801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811322;
-	bh=UO55tRwkGBNUjjrj++FD29xVqIkGuWGsESnDe4rEb70=;
+	s=default; t=1582811259;
+	bh=Cha20+Xxu9phiLA7J1NZ6jfSosSBjKixo2UuHu/w2zM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1OiHCxG6Nj78Z7BwECUstVE1AJHpaOjfhnh2uqyv9uzsLfBM+yTB9KdEw+l7lZf1Z
-	 uLcGIiLPuuWXvNka+cZzs0RzMMhO5iwejHUCu+jt4k+7UsmRhv1Ek8f6HOi790ba5T
-	 4vKZarpH8bo3vvH8wOaJ+cBTV3IQcJnp/kDI2Piw=
+	b=PY518as9WKxTh5SC70g3z6E7jLn1VXGW8tUaI01DyNJEmJFZ2QFRsuB83YALZe40E
+	 rZe9R4GA7qUQ5nlm6ZDx/4Dd9e+rNPp1r/Ib4aW8RiD4iWmE1kADMFMUn4/Lv82ZHN
+	 g0E5QDKVT9z9AUmGxuMOzof/89LB4RnUkFmVBoL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730914AbgB0Nsl (ORCPT
+        id S1730300AbgB0Nrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:48:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45496 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:47:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730865AbgB0Nsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:48:38 -0500
+        id S1730713AbgB0Nrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:47:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4DE224688;
-        Thu, 27 Feb 2020 13:48:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCD832468D;
+        Thu, 27 Feb 2020 13:47:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811318;
-        bh=UO55tRwkGBNUjjrj++FD29xVqIkGuWGsESnDe4rEb70=;
+        s=default; t=1582811255;
+        bh=Cha20+Xxu9phiLA7J1NZ6jfSosSBjKixo2UuHu/w2zM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IglicqJmCDf0rJgutXNubwD2kfjyluIk9fZkKf785Ev4MS5+gRjW11urr91CfW795
-         HRv2XluVWhjeFkWrdmXAVnCUAlns0uzfUQl9rL8/gsxhJABO79N3YRTQUwCRU2iGsm
-         EX3Gbp33iabOQeubw+RV07fQTvwzNu7WJA70B32g=
+        b=PHP6RoQn8NSSZLakDzF1kWv8Z3JdlLrk/cZ8w3gVii8bgI7Pmzrg+WcB+bU3sc03l
+         /e5EFGH+nklwdyXTM8PItKpV3b91WMTUdQuhT7BF6nAX99hejzVkaEtAPnoJxihnE2
+         7qFRkJnI0M/h/d9YVOMtHJjwjBsSwCM5WgsZ7nUQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiang Zhao <qiang.zhao@nxp.com>,
-        Timur Tabi <timur@kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Li Yang <leoyang.li@nxp.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 047/165] net/wan/fsl_ucc_hdlc: reject muram offsets above 64K
-Date:   Thu, 27 Feb 2020 14:35:21 +0100
-Message-Id: <20200227132238.056381768@linuxfoundation.org>
+        stable@vger.kernel.org, Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 062/165] x86/vdso: Provide missing include file
+Date:   Thu, 27 Feb 2020 14:35:36 +0100
+Message-Id: <20200227132240.547831980@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -62,42 +63,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+From: Valdis Klētnieks <valdis.kletnieks@vt.edu>
 
-[ Upstream commit 148587a59f6b85831695e0497d9dd1af5f0495af ]
+[ Upstream commit bff47c2302cc249bcd550b17067f8dddbd4b6f77 ]
 
-Qiang Zhao points out that these offsets get written to 16-bit
-registers, and there are some QE platforms with more than 64K
-muram. So it is possible that qe_muram_alloc() gives us an allocation
-that can't actually be used by the hardware, so detect and reject
-that.
+When building with C=1, sparse issues a warning:
 
-Reported-by: Qiang Zhao <qiang.zhao@nxp.com>
-Reviewed-by: Timur Tabi <timur@kernel.org>
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Acked-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Li Yang <leoyang.li@nxp.com>
+  CHECK   arch/x86/entry/vdso/vdso32-setup.c
+  arch/x86/entry/vdso/vdso32-setup.c:28:28: warning: symbol 'vdso32_enabled' was not declared. Should it be static?
+
+Provide the missing header file.
+
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/36224.1575599767@turing-police
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wan/fsl_ucc_hdlc.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/x86/entry/vdso/vdso32-setup.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wan/fsl_ucc_hdlc.c b/drivers/net/wan/fsl_ucc_hdlc.c
-index af85a1b3135e2..87bf05a81db50 100644
---- a/drivers/net/wan/fsl_ucc_hdlc.c
-+++ b/drivers/net/wan/fsl_ucc_hdlc.c
-@@ -209,6 +209,11 @@ static int uhdlc_init(struct ucc_hdlc_private *priv)
- 		ret = -ENOMEM;
- 		goto free_riptr;
- 	}
-+	if (riptr != (u16)riptr || tiptr != (u16)tiptr) {
-+		dev_err(priv->dev, "MURAM allocation out of addressable range\n");
-+		ret = -ENOMEM;
-+		goto free_tiptr;
-+	}
+diff --git a/arch/x86/entry/vdso/vdso32-setup.c b/arch/x86/entry/vdso/vdso32-setup.c
+index 3f9d1a83891ad..50c1f77cab150 100644
+--- a/arch/x86/entry/vdso/vdso32-setup.c
++++ b/arch/x86/entry/vdso/vdso32-setup.c
+@@ -10,6 +10,7 @@
+ #include <linux/smp.h>
+ #include <linux/kernel.h>
+ #include <linux/mm_types.h>
++#include <linux/elf.h>
  
- 	/* Set RIPTR, TIPTR */
- 	iowrite16be(riptr, &priv->ucc_pram->riptr);
+ #include <asm/processor.h>
+ #include <asm/vdso.h>
 -- 
 2.20.1
 
