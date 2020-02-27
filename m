@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2689AC3F373
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE1EC52D53
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F27DB24688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E0EA24690
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813290;
-	bh=NgAudH2365eYL/7DmH6FlmstAmvV6nBUOhVZ+EeAuMM=;
+	s=default; t=1582813061;
+	bh=olQspT26Sz3U/qdOKRzl0GLxkS06gPYTh0YSj+Nn+Nw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v/iQMtWuW56c9srXkz7y5JY4etocCCHvLj8udbddv+DbM+nMORi9ZzHaEm9ty8kwO
-	 0wx/uFqlJhf7oOz4rDDXIeJkqFTSLWPI036iW9EmT7dYz69bsQq3HJmMzYot6aFa/h
-	 Tu7kKQpfmRnBVt3slZ37Y5/VtcJTlmhVrt6eDu1Y=
+	b=Q9/Wm9xgec1sx1FAvZjsquNQHj4bhxbRp2VBgF/+IN73/zFhoalVH7+gU8syOoYmU
+	 9tG7KCWBm9KMdE9ddERVAnLvQPRfebKiFrdkBzK/nU3P+RLYmklzteamrwT9tx0ztb
+	 XrPtuSMYowEjeMOp0oWWpxbltBDD9yBcPKlhcfBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389327AbgB0OQ5 (ORCPT
+        id S2389746AbgB0ORk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:16:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57174 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:17:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388545AbgB0OQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:16:54 -0500
+        id S2389739AbgB0ORh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:17:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25DB0246AE;
-        Thu, 27 Feb 2020 14:16:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B129524697;
+        Thu, 27 Feb 2020 14:17:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813013;
-        bh=NgAudH2365eYL/7DmH6FlmstAmvV6nBUOhVZ+EeAuMM=;
+        s=default; t=1582813057;
+        bh=olQspT26Sz3U/qdOKRzl0GLxkS06gPYTh0YSj+Nn+Nw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T8mzDUu3pLtGxpvxtEd/HVhff4pg7KsNc95Z+zZPJwJLvyC2oV1mfdaPGEJjXPURd
-         1phH2oz+r6K897QDxdVjv5hqikr8B9JhCR0SyfucutA6DeA25pRvHJKuUuCsIdh+yf
-         68Di2IgCq5wUIpkfr+SiZvYeK9F/k5bsCmTLzrSw=
+        b=YiVMPMUIyCEJ7AgBIOcUoNzie1wF0iKNASeJskmk/UKmUGy/8ET12CkmhE66ZJwtU
+         lQyJNzUYBY/wW4frCY4NHBofOOnJ5bB/r6YGY3JdDIA9RU9ArBPmHCpzuPiBick7Ui
+         WoiaziB51pPUArDLto3revYsNfUIX7yDM2UkW1bI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: [PATCH 5.5 101/150] KVM: nVMX: handle nested posted interrupts when apicv is disabled for L1
-Date:   Thu, 27 Feb 2020 14:37:18 +0100
-Message-Id: <20200227132247.708240590@linuxfoundation.org>
+        stable@vger.kernel.org, Jack Pham <jackp@codeaurora.org>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 5.5 121/150] usb: gadget: composite: Fix bMaxPower for SuperSpeedPlus
+Date:   Thu, 27 Feb 2020 14:37:38 +0100
+Message-Id: <20200227132250.510284281@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -59,113 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
+From: Jack Pham <jackp@codeaurora.org>
 
-commit 91a5f413af596ad01097e59bf487eb07cb3f1331 upstream.
+commit c724417baf162bd3e035659e22cdf990cfb0d917 upstream.
 
-Even when APICv is disabled for L1 it can (and, actually, is) still
-available for L2, this means we need to always call
-vmx_deliver_nested_posted_interrupt() when attempting an interrupt
-delivery.
+SuperSpeedPlus peripherals must report their bMaxPower of the
+configuration descriptor in units of 8mA as per the USB 3.2
+specification. The current switch statement in encode_bMaxPower()
+only checks for USB_SPEED_SUPER but not USB_SPEED_SUPER_PLUS so
+the latter falls back to USB 2.0 encoding which uses 2mA units.
+Replace the switch with a simple if/else.
 
-Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: eae5820b852f ("usb: gadget: composite: Write SuperSpeedPlus config descriptors")
+Signed-off-by: Jack Pham <jackp@codeaurora.org>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/kvm_host.h |    2 +-
- arch/x86/kvm/lapic.c            |    5 +----
- arch/x86/kvm/svm.c              |    7 ++++++-
- arch/x86/kvm/vmx/vmx.c          |   13 +++++++++----
- 4 files changed, 17 insertions(+), 10 deletions(-)
+ drivers/usb/gadget/composite.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1115,7 +1115,7 @@ struct kvm_x86_ops {
- 	void (*load_eoi_exitmap)(struct kvm_vcpu *vcpu, u64 *eoi_exit_bitmap);
- 	void (*set_virtual_apic_mode)(struct kvm_vcpu *vcpu);
- 	void (*set_apic_access_page_addr)(struct kvm_vcpu *vcpu, hpa_t hpa);
--	void (*deliver_posted_interrupt)(struct kvm_vcpu *vcpu, int vector);
-+	int (*deliver_posted_interrupt)(struct kvm_vcpu *vcpu, int vector);
- 	int (*sync_pir_to_irr)(struct kvm_vcpu *vcpu);
- 	int (*set_tss_addr)(struct kvm *kvm, unsigned int addr);
- 	int (*set_identity_map_addr)(struct kvm *kvm, u64 ident_addr);
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1049,11 +1049,8 @@ static int __apic_accept_irq(struct kvm_
- 						       apic->regs + APIC_TMR);
- 		}
- 
--		if (vcpu->arch.apicv_active)
--			kvm_x86_ops->deliver_posted_interrupt(vcpu, vector);
--		else {
-+		if (kvm_x86_ops->deliver_posted_interrupt(vcpu, vector)) {
- 			kvm_lapic_set_irr(vector, apic);
--
- 			kvm_make_request(KVM_REQ_EVENT, vcpu);
- 			kvm_vcpu_kick(vcpu);
- 		}
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -5160,8 +5160,11 @@ static void svm_load_eoi_exitmap(struct
- 	return;
+--- a/drivers/usb/gadget/composite.c
++++ b/drivers/usb/gadget/composite.c
+@@ -437,12 +437,10 @@ static u8 encode_bMaxPower(enum usb_devi
+ 		val = CONFIG_USB_GADGET_VBUS_DRAW;
+ 	if (!val)
+ 		return 0;
+-	switch (speed) {
+-	case USB_SPEED_SUPER:
+-		return DIV_ROUND_UP(val, 8);
+-	default:
++	if (speed < USB_SPEED_SUPER)
+ 		return DIV_ROUND_UP(val, 2);
+-	}
++	else
++		return DIV_ROUND_UP(val, 8);
  }
  
--static void svm_deliver_avic_intr(struct kvm_vcpu *vcpu, int vec)
-+static int svm_deliver_avic_intr(struct kvm_vcpu *vcpu, int vec)
- {
-+	if (!vcpu->arch.apicv_active)
-+		return -1;
-+
- 	kvm_lapic_set_irr(vec, vcpu->arch.apic);
- 	smp_mb__after_atomic();
- 
-@@ -5173,6 +5176,8 @@ static void svm_deliver_avic_intr(struct
- 		put_cpu();
- 	} else
- 		kvm_vcpu_wake_up(vcpu);
-+
-+	return 0;
- }
- 
- static bool svm_dy_apicv_has_pending_interrupt(struct kvm_vcpu *vcpu)
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -3848,24 +3848,29 @@ static int vmx_deliver_nested_posted_int
-  * 2. If target vcpu isn't running(root mode), kick it to pick up the
-  * interrupt from PIR in next vmentry.
-  */
--static void vmx_deliver_posted_interrupt(struct kvm_vcpu *vcpu, int vector)
-+static int vmx_deliver_posted_interrupt(struct kvm_vcpu *vcpu, int vector)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	int r;
- 
- 	r = vmx_deliver_nested_posted_interrupt(vcpu, vector);
- 	if (!r)
--		return;
-+		return 0;
-+
-+	if (!vcpu->arch.apicv_active)
-+		return -1;
- 
- 	if (pi_test_and_set_pir(vector, &vmx->pi_desc))
--		return;
-+		return 0;
- 
- 	/* If a previous notification has sent the IPI, nothing to do.  */
- 	if (pi_test_and_set_on(&vmx->pi_desc))
--		return;
-+		return 0;
- 
- 	if (!kvm_vcpu_trigger_posted_interrupt(vcpu, false))
- 		kvm_vcpu_kick(vcpu);
-+
-+	return 0;
- }
- 
- /*
+ static int config_buf(struct usb_configuration *config,
 
 
