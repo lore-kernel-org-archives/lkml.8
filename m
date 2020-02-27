@@ -2,189 +2,106 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E80FC4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF690C4BA2D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5479424695
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:39:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="heqqcEDG"
+	by mail.kernel.org (Postfix) with ESMTP id B65A724695
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:43:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582807415;
+	bh=YziCh5RfRjGRbrEFqGpPxtb+NAbvdYamyvPjRGczxG0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kjroYfWx1y0+1f+k5f8jrUc1tqkbkqSvLabQkqFAct95FgKtQqviuGxXeJUVXpEuH
+	 iP/NhN9VVHOXSFJp61QeotZWKB2Td1F3Dvi6Es1BBZQdtK4dyVUg07gBuKx+srnDDi
+	 dC+cL4jRMQOV8aRoU5NOgDS+Ewfi3jnnBRjzkoRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729121AbgB0Mju (ORCPT
+        id S1729037AbgB0Mnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 07:39:50 -0500
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:49941 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728977AbgB0Mjt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 07:39:49 -0500
-Received: from [IPv6:2001:420:44c1:2577:70b8:9d46:3264:f0c0]
- ([IPv6:2001:420:44c1:2577:70b8:9d46:3264:f0c0])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id 7IS7jE0Y8jmHT7ISBjielx; Thu, 27 Feb 2020 13:39:47 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1582807187; bh=SppaRo1Hod25rsdmHJB5MZdZ32/T0CqLTslF/uXHkrE=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=heqqcEDGtkmETf2Mmzet70PQHrXMcVUCaOZRezDoXcSYAc1bgnZF6sPY0oyU0nfYP
-         iGj3cfaMiyyOWtQyBUdI3Un1RFGWhU9xg33y/ggCmg/NyYsD8yIklhHod9zl0TIzZC
-         9B79uLMIqaBhVQz/ZXl/J0a3JbQN0bM8mZVp6dviSLXeMuEYeA1FnP/JF1AXWHGJ2A
-         ppSsom456bWnkVYj0iLzC6RNjxjEaoFK31bZn1WSMCK4uuWGJ2e94HzcbX1IbpbVw7
-         GS9eQiZ+3mYBiYdfGv3/seP81WJvUr13wqWByQEVTsxdJHT4SQFNZkw9pQHgU7jHQV
-         RRTZy8hOJ52Qg==
-Subject: Re: [PATCHv3 00/11] Implement V4L2_BUF_FLAG_NO_CACHE_* flags
-To:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200226111529.180197-1-senozhatsky@chromium.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <98205145-1a39-ce29-a2a0-c5abf8376349@xs4all.nl>
-Date:   Thu, 27 Feb 2020 13:39:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 27 Feb 2020 07:43:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40558 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728977AbgB0Mnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 07:43:33 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5449724695;
+        Thu, 27 Feb 2020 12:43:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582807411;
+        bh=YziCh5RfRjGRbrEFqGpPxtb+NAbvdYamyvPjRGczxG0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pNjU2Ahi4rlB1blPiCQmcukYcXPdWue3UzZRh8NOCawRsvTTPA+TB4ourbXemwswi
+         +Zb32Y6KjD9zTFWGNWGlRFT0CHHpqHqZOb/HUWVDO0jVn/bBcSYGD8Kd8Ve+H9TTTB
+         lShd613bsGATtZwE7hYkoF74Vp+9gpbVrbYHdRbE=
+Date:   Thu, 27 Feb 2020 13:43:29 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH v17 00/17] Multi Color LED Framework
+Message-ID: <20200227124329.GA994747@kroah.com>
+References: <20200127150032.31350-1-dmurphy@ti.com>
+ <42d9687b-b488-22cf-0e9a-ff635b2094e3@ti.com>
+ <20200225101940.GB16252@amd>
+ <be76fdac-9d32-b9b2-c01d-3aa315b14463@gmail.com>
+ <20200226125903.GA2800@duo.ucw.cz>
+ <20f6bdd5-e899-aead-8c35-1c3a3d09145f@gmail.com>
+ <20200227105808.GA27003@duo.ucw.cz>
 MIME-Version: 1.0
-In-Reply-To: <20200226111529.180197-1-senozhatsky@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfIJA8jAKsvKUT+TpJDhqLkEuikjN7i5FZsZ558ClqGVzOf546hR5oEByTPTvV7XJXeRhg4n/RVzT6KhaF8wJFez0kI5nmuXzPZ7VOvjdNk/56wOvVFCb
- lHe5/EADe/5PzjUITHoweP0fANHxjHv8IUtv3LgF2a87hHL/CWSyTZgvPiayby/6V4TPzpaPx9jit1LNDil4yTXxhv1C83lvPG/XoIYFK+n1Y85wOHmdHdYZ
- M3uxIQaVAShd3lKQeqVjgZh7wXFvKAkYDcXGznlQ6s294O31qD6ErxMk2NbEN9J/FTjHV/1sTKpYmTao75+wR0jowBDSiTkjHVT1kfR3SPfYjMFrLwwNUgLh
- voslG1dIlcZDyWfeCJUlOKyd62rysJEbfbLFFUp7BxIZZtOKzuSSv2wtiN/p0e0nltQ0xWCM1cp7TIND56BQbZjtYU+SIZ9QnkUamymDPa+LoN4jl9ebKyu6
- GknDnVkUDXArlYwOp/yZTsXxJ+VT1XWWgub/Vi33qBzKNt8f5kvcbBipWZZNFA+MBYX0GVpsKahR9pqOvnbRh7GLTdGawxYSkdlZeCdainIbDv4ZMq6CKo4H
- Si2ukrVu37Xuyt8Ux1g8OknYU/kOGtUJbWNCsZe9cjPQrsw9wfTph31sDNmuYXstCIo=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227105808.GA27003@duo.ucw.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/26/20 12:15 PM, Sergey Senozhatsky wrote:
-> Hello,
+On Thu, Feb 27, 2020 at 11:58:08AM +0100, Pavel Machek wrote:
+> Hi, Jacek!
 > 
-> 	V3 of the patchset, reshuffled and updated.
+> (and thanks for doing this).
 > 
-> - Most notable changes:
+> > We have here long lasting discussion related to LED multicolor class
+> > sysfs interface design. We went through several iterations and worked
+> > out the solution with individual file per each color sub-LED in the
+> > color directory as shown below:
+> > 
+> > /sys/class/leds/<led>/colors/<color>_intensity
+> > 
+> > This is in line with one-value-per-file sysfs rule, that is being
+> > frequently highlighted, and we even had not so long ago a patch
+> > for led cpu trigger solving the problem caused by this rule not
+> > being adhered to.
 > 
-> a) Added a simple helper function vb2_queue_allows_cache_hints(),
->    which return true if queue has ->allow_cache_hints and when
->    ->memory is VB2_MEMORY_MMAP.
->    That is - user space cache and memory consistency hints are now
->    specifically for MMAP buffers and queues that support hints.
+> Yep. One of the problems is that it is nice to change all the hardware
+> channels at once to produce color (it is often on i2c -- and slow), so
+> current proposals use "interesting" kind of latching.
 > 
-> b) Set V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS capability bit only when queue
->    has ->allow_cache_hints and ->io_modes has VB2_MMAP bit set
+> > Now we have the voice below bringing to attention another caveat
+> > from sysfs documentation:
+> > 
+> > "it is socially acceptable to express an array of values of the same
+> > type"
+> > 
+> > and proposing the interface in the form of two files:
+> > 
+> > channel_intensity (file containing array of u32's)
+> > channel_names (usually containing "red green blue")
 > 
-> c) Clear "incompatible" request's flags when queue does not permit
->    cache and memory consistency hints (IOW, when vb2_queue_allows_cache_hints()
->    return false)
-> 
-> 
-> Minor changes:
-> 
-> - Squashed V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS and V4L2_FLAG_MEMORY_NON_CONSISTENT
->   patches.
-> 
-> - Added more documentation and code comments.
-> 
-> 
-> Previous series:
-> v2 link: https://lore.kernel.org/lkml/20200204025641.218376-1-senozhatsky@chromium.org/
-> v1 link: https://lore.kernel.org/lkml/20191217032034.54897-1-senozhatsky@chromium.org/
-> 
-> 
-> Series Intro
-> ========================================================================
-> 
->         This is a reworked version of the vb2 cache hints
-> (V4L2_BUF_FLAG_NO_CACHE_INVALIDATE / V4L2_BUF_FLAG_NO_CACHE_CLEAN)
-> support patch series which previsouly was developed by Sakari and
-> Laurent [0].
-> 
-> The patch set attempts to preserve the existing behvaiour - cache
-> sync is performed in ->prepare() and ->finish() (unless the buffer
-> is DMA exported). User space can request “default behavior” override
-> with cache management hints, which are handled on a per-buffer basis
-> and should be supplied with v4l2_buffer ->flags during buffer
-> preparation. There are two possible hints:
-> 
-> - V4L2_BUF_FLAG_NO_CACHE_INVALIDATE
->         No cache sync on ->finish()
-> 
-> - V4L2_BUF_FLAG_NO_CACHE_CLEAN
->         No cache sync on ->prepare()
-> 
-> In order to keep things on the safe side, we also require driver
-> to explicitly state which of its queues (if any) support user space
-> cache management hints (such queues should have ->allow_cache_hints
-> bit set).
-> 
-> The patch set also (to some extent) simplifies allocators' ->prepare()
-> and ->finish() callbacks. Namely, we move cache management decision
-> making to the upper - core - layer. For example, if, previously, we
-> would have something like this
-> 
->         vb2_buffer_done()
->           vb2_dc_finish()
->             if (buf->db_attach)
->                return;
-> 
-> where each allocators' ->finish() callback would either bail
-> out (DMA exported buffer, for instance) or sync, now that "bail
-> out or sync" decision is made before we call into the allocator.
-> 
-> Along with cache management hints, user space is also able to
-> adjust queue's memory consistency attributes. Memory consistency
-> attribute (dma_attrs) is per-queue, yet it plays its role on the
-> allocator level, when we allocate buffers’ private memory (planes).
-> For the time being, only one consistency attribute is supported:
-> DMA_ATTR_NON_CONSISTENT.
+> And thus I want to have it in one file, so it is naturaly atomic. RGB
+> leds with 3 channels are common; I have not user yet, but there are
+> RGBW with 4 channels (and some more exotic stuff). I don't expect to
+> have more than 5 channels.
 
-v3 looks very good, I only found some minor issues.
+Writing 3 or 4 or 5 numbers all at once in a single sysfs file to
+represent a single output should be fine.
 
-I think v4 should be ready to be merged, unless others have more comments.
+thanks,
 
-Regards,
-
-	Hans
-
-> 
-> [0] https://www.mail-archive.com/linux-media@vger.kernel.org/msg112459.html
-> 
-> Sergey Senozhatsky (11):
->   videobuf2: add cache management members
->   videobuf2: handle V4L2 buffer cache flags
->   videobuf2: add V4L2_FLAG_MEMORY_NON_CONSISTENT flag
->   videobuf2: add queue memory consistency parameter
->   videobuf2: handle V4L2_FLAG_MEMORY_NON_CONSISTENT flag
->   videobuf2: factor out planes prepare/finish functions
->   videobuf2: do not sync caches when we are allowed not to
->   videobuf2: check ->synced flag in prepare() and finish()
->   videobuf2: add begin/end cpu_access callbacks to dma-contig
->   videobuf2: add begin/end cpu_access callbacks to dma-sg
->   videobuf2: don't test db_attach in dma-contig prepare and finish
-> 
->  Documentation/media/uapi/v4l/buffer.rst       |  29 +++++
->  .../media/uapi/v4l/vidioc-create-bufs.rst     |   8 +-
->  .../media/uapi/v4l/vidioc-reqbufs.rst         |  22 +++-
->  .../media/common/videobuf2/videobuf2-core.c   | 110 +++++++++++++-----
->  .../common/videobuf2/videobuf2-dma-contig.c   |  39 ++++++-
->  .../media/common/videobuf2/videobuf2-dma-sg.c |  36 ++++--
->  .../media/common/videobuf2/videobuf2-v4l2.c   |  82 ++++++++++++-
->  drivers/media/dvb-core/dvb_vb2.c              |   2 +-
->  drivers/media/v4l2-core/v4l2-ioctl.c          |   5 +-
->  include/media/videobuf2-core.h                |  28 ++++-
->  include/uapi/linux/videodev2.h                |  11 +-
->  11 files changed, 314 insertions(+), 58 deletions(-)
-> 
-
+greg k-h
