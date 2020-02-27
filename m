@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE20C52D29
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51725C52D3C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1B022084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DB0D24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811825;
-	bh=GVGRG8gK82aBCwUZLoqTcSU04M881wJnQ7d3V3BZkjw=;
+	s=default; t=1582811875;
+	bh=UHz6U+bje1bnx38zQBhWgN+LYj72XjeYmLgrKfw5bt0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B5iYD6GiOjX9JxK0/L6nw8UBXsyYufmiUBTh42CJSbCPxORn9WbFeXQmDbdbxO5vy
-	 Zs/Xt0EFBiagyJkcNGqyircwIzfBLE32j57ACkgKKOftl4aQKTUYZjoB+vaq2kDhGT
-	 v8lCMSNhum5UjMfBZXEzQucblLlrH4+yy1W10peQ=
+	b=e7orEckUE+XmJFv5MnLKbvNVXj40x0ntoPJwW+0YzOK/raN7FVIF4o+tXWu/m00kV
+	 W1SIlwumUFIVu/bKiI0Ia02WPdKADlui9UaCQgTHGI97DW+m8wvGbWrpqIQIfvq2F7
+	 hY0kJgwc5Puzo0Ny6srvJ20X4AIcfSXmo2Vwp1r0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732233AbgB0N5E (ORCPT
+        id S1732367AbgB0N5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:57:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57588 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:57:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732015AbgB0N4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:56:54 -0500
+        id S1732211AbgB0N5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:57:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B58612073D;
-        Thu, 27 Feb 2020 13:56:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE90B24691;
+        Thu, 27 Feb 2020 13:57:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811814;
-        bh=GVGRG8gK82aBCwUZLoqTcSU04M881wJnQ7d3V3BZkjw=;
+        s=default; t=1582811871;
+        bh=UHz6U+bje1bnx38zQBhWgN+LYj72XjeYmLgrKfw5bt0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2QvHD0+JfaHPBKujeFtVhJ59SadobQdxMjDgb6IGa6VNaRszK6v0k4ZAE+aNoAb0B
-         PwB+Pg/TQpIgEFNe8i4ersbPw6jd65VGfTNtt5TECl3eZd2Yp7ZmimPzl668U1kmqB
-         HQFMoTcyk6VY3aGsr54dHBaPghEDB+WHbs6+F2j4=
+        b=Std5Qpd6PSAQJpCgQiC8uF+CRDvT7kMmbC4FjUlOzd+wm5t/Yks2BhBdfXuy45Sw1
+         qdALH7cL1r71Uej47dQ7Jd6syw9gugnT+NpWPSw9yui62UInh2WtmEMwWJu622Ga6M
+         CT7EE+/i7E89qLssqT+8DWBgOmA4Gph0uYrCWrDQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Chen Zhou <chenzhou10@huawei.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 110/237] ASoC: atmel: fix build error with CONFIG_SND_ATMEL_SOC_DMA=m
-Date:   Thu, 27 Feb 2020 14:35:24 +0100
-Message-Id: <20200227132304.988250589@linuxfoundation.org>
+Subject: [PATCH 4.14 133/237] btrfs: safely advance counter when looking up bio csums
+Date:   Thu, 27 Feb 2020 14:35:47 +0100
+Message-Id: <20200227132306.503206704@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -61,41 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Zhou <chenzhou10@huawei.com>
+From: David Sterba <dsterba@suse.com>
 
-[ Upstream commit 8fea78029f5e6ed734ae1957bef23cfda1af4354 ]
+[ Upstream commit 4babad10198fa73fe73239d02c2e99e3333f5f5c ]
 
-If CONFIG_SND_ATMEL_SOC_DMA=m, build error:
+Dan's smatch tool reports
 
-sound/soc/atmel/atmel_ssc_dai.o: In function `atmel_ssc_set_audio':
-(.text+0x7cd): undefined reference to `atmel_pcm_dma_platform_register'
+  fs/btrfs/file-item.c:295 btrfs_lookup_bio_sums()
+  warn: should this be 'count == -1'
 
-Function atmel_pcm_dma_platform_register is defined under
-CONFIG SND_ATMEL_SOC_DMA, so select SND_ATMEL_SOC_DMA in
-CONFIG SND_ATMEL_SOC_SSC, same to CONFIG_SND_ATMEL_SOC_PDC.
+which points to the while (count--) loop. With count == 0 the check
+itself could decrement it to -1. There's a WARN_ON a few lines below
+that has never been seen in practice though.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-Link: https://lore.kernel.org/r/20200113133242.144550-1-chenzhou10@huawei.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+It turns out that the value of page_bytes_left matches the count (by
+sectorsize multiples). The loop never reaches the state where count
+would go to -1, because page_bytes_left == 0 is found first and this
+breaks out.
+
+For clarity, use only plain check on count (and only for positive
+value), decrement safely inside the loop. Any other discrepancy after
+the whole bio list processing should be reported by the exising
+WARN_ON_ONCE as well.
+
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/atmel/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/btrfs/file-item.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
-index 4a56f3dfba513..23887613b5c39 100644
---- a/sound/soc/atmel/Kconfig
-+++ b/sound/soc/atmel/Kconfig
-@@ -25,6 +25,8 @@ config SND_ATMEL_SOC_DMA
- 
- config SND_ATMEL_SOC_SSC_DMA
- 	tristate
-+	select SND_ATMEL_SOC_DMA
-+	select SND_ATMEL_SOC_PDC
- 
- config SND_ATMEL_SOC_SSC
- 	tristate
+diff --git a/fs/btrfs/file-item.c b/fs/btrfs/file-item.c
+index 702b3606ad0ec..717d82d51bb13 100644
+--- a/fs/btrfs/file-item.c
++++ b/fs/btrfs/file-item.c
+@@ -288,7 +288,8 @@ found:
+ 		csum += count * csum_size;
+ 		nblocks -= count;
+ next:
+-		while (count--) {
++		while (count > 0) {
++			count--;
+ 			disk_bytenr += fs_info->sectorsize;
+ 			offset += fs_info->sectorsize;
+ 			page_bytes_left -= fs_info->sectorsize;
 -- 
 2.20.1
 
