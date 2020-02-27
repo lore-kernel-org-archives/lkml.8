@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81561C54FE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF7EC3F37C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58BAF20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 379CC20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812711;
-	bh=P6ve4YLl/tTD98oyYfZFuy1vti5trftE7wEQ/bg91sA=;
+	s=default; t=1582812604;
+	bh=BOzoi9lkMAY+Td1+7TDcoWC0IM5Mo+0Ns0xY4jmUkA0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1NjPQTpoOLzR1H1acHiyW1hS8dgE7J7gljBS+C98CSjvPnQbkwZzzrPXWX3+0Yksg
-	 XYDbCnEJXvVBhguJmgljB3liXiCnjvu4zCb47j6tCNot3s1XYXFXZDyOv/7WGeQ1RQ
-	 fm9QUKptx/xiC+pnQ8VhWkU+53S4ei0wZSvXQdDY=
+	b=Pa5MhsOGRAFzDLP3CLQSpUuK7c0s56ZtLTgeSah5mEfV36g61MDasR0J1G1Qu75I1
+	 mryp8Umckt8Y3JgmenDUjJdFNsjTA8Ix7dp9f2pdOo5NzTkKo5+Xogki8w4sXuu3fL
+	 R6U1mbAJ5IE3wGZ1UQeu9GvCvhXXv7eL+NoneZ9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388759AbgB0OLu (ORCPT
+        id S2388461AbgB0OKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:11:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50336 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:10:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388318AbgB0OLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:11:48 -0500
+        id S2388437AbgB0OJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:09:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA22F246AD;
-        Thu, 27 Feb 2020 14:11:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6460821D7E;
+        Thu, 27 Feb 2020 14:09:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812706;
-        bh=P6ve4YLl/tTD98oyYfZFuy1vti5trftE7wEQ/bg91sA=;
+        s=default; t=1582812595;
+        bh=BOzoi9lkMAY+Td1+7TDcoWC0IM5Mo+0Ns0xY4jmUkA0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kqm2AP8E6hZWN4XnbDjdGcwnmXh7MezjwSz5ueseccNovLggDpwfIEy1z2dBfu87A
-         JKqoZvWsWcfTOf5qs+awd9EvChpy/aejkn3NTKki/LuTdF/HOxt4/H1M/jErs85gkG
-         5BzzAiPBXpaT3m1WvffXjX74GicYxjhofeFX84jY=
+        b=s2DQ9VBVhUSftW0FX4Z6KPzMAc72BplWqQq3AX0DodAATeMVns80wxFkRbLbYOnb+
+         Eouf8Xif8WzyIa7C6dn7U0APwdxg2XWqlosZChh+UTmE4ku3Zk9mwIaCR9/OA6BHE0
+         YPTAzEYIxn4RV2eFGKGML5tM39nisjoVpUpjFGp4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.4 121/135] io_uring: fix __io_iopoll_check deadlock in io_sq_thread
-Date:   Thu, 27 Feb 2020 14:37:41 +0100
-Message-Id: <20200227132247.269204084@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Theodore Tso <tytso@mit.edu>, stable@kernel.org
+Subject: [PATCH 5.4 079/135] ext4: fix a data race in EXT4_I(inode)->i_disksize
+Date:   Thu, 27 Feb 2020 14:36:59 +0100
+Message-Id: <20200227132241.272894137@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -60,83 +59,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>
+From: Qian Cai <cai@lca.pw>
 
-commit c7849be9cc2dd2754c48ddbaca27c2de6d80a95d upstream.
+commit 35df4299a6487f323b0aca120ea3f485dfee2ae3 upstream.
 
-Since commit a3a0e43fd770 ("io_uring: don't enter poll loop if we have
-CQEs pending"), if we already events pending, we won't enter poll loop.
-In case SETUP_IOPOLL and SETUP_SQPOLL are both enabled, if app has
-been terminated and don't reap pending events which are already in cq
-ring, and there are some reqs in poll_list, io_sq_thread will enter
-__io_iopoll_check(), and find pending events, then return, this loop
-will never have a chance to exit.
+EXT4_I(inode)->i_disksize could be accessed concurrently as noticed by
+KCSAN,
 
-I have seen this issue in fio stress tests, to fix this issue, let
-io_sq_thread call io_iopoll_getevents() with argument 'min' being zero,
-and remove __io_iopoll_check().
+ BUG: KCSAN: data-race in ext4_write_end [ext4] / ext4_writepages [ext4]
 
-Fixes: a3a0e43fd770 ("io_uring: don't enter poll loop if we have CQEs pending")
-Signed-off-by: Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+ write to 0xffff91c6713b00f8 of 8 bytes by task 49268 on cpu 127:
+  ext4_write_end+0x4e3/0x750 [ext4]
+  ext4_update_i_disksize at fs/ext4/ext4.h:3032
+  (inlined by) ext4_update_inode_size at fs/ext4/ext4.h:3046
+  (inlined by) ext4_write_end at fs/ext4/inode.c:1287
+  generic_perform_write+0x208/0x2a0
+  ext4_buffered_write_iter+0x11f/0x210 [ext4]
+  ext4_file_write_iter+0xce/0x9e0 [ext4]
+  new_sync_write+0x29c/0x3b0
+  __vfs_write+0x92/0xa0
+  vfs_write+0x103/0x260
+  ksys_write+0x9d/0x130
+  __x64_sys_write+0x4c/0x60
+  do_syscall_64+0x91/0xb47
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+ read to 0xffff91c6713b00f8 of 8 bytes by task 24872 on cpu 37:
+  ext4_writepages+0x10ac/0x1d00 [ext4]
+  mpage_map_and_submit_extent at fs/ext4/inode.c:2468
+  (inlined by) ext4_writepages at fs/ext4/inode.c:2772
+  do_writepages+0x5e/0x130
+  __writeback_single_inode+0xeb/0xb20
+  writeback_sb_inodes+0x429/0x900
+  __writeback_inodes_wb+0xc4/0x150
+  wb_writeback+0x4bd/0x870
+  wb_workfn+0x6b4/0x960
+  process_one_work+0x54c/0xbe0
+  worker_thread+0x80/0x650
+  kthread+0x1e0/0x200
+  ret_from_fork+0x27/0x50
+
+ Reported by Kernel Concurrency Sanitizer on:
+ CPU: 37 PID: 24872 Comm: kworker/u261:2 Tainted: G        W  O L 5.5.0-next-20200204+ #5
+ Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+ Workqueue: writeback wb_workfn (flush-7:0)
+
+Since only the read is operating as lockless (outside of the
+"i_data_sem"), load tearing could introduce a logic bug. Fix it by
+adding READ_ONCE() for the read and WRITE_ONCE() for the write.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Link: https://lore.kernel.org/r/1581085751-31793-1-git-send-email-cai@lca.pw
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/io_uring.c |   27 +++++++++------------------
- 1 file changed, 9 insertions(+), 18 deletions(-)
+ fs/ext4/ext4.h  |    2 +-
+ fs/ext4/inode.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -882,11 +882,17 @@ static void io_iopoll_reap_events(struct
- 	mutex_unlock(&ctx->uring_lock);
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -2969,7 +2969,7 @@ static inline void ext4_update_i_disksiz
+ 		     !inode_is_locked(inode));
+ 	down_write(&EXT4_I(inode)->i_data_sem);
+ 	if (newsize > EXT4_I(inode)->i_disksize)
+-		EXT4_I(inode)->i_disksize = newsize;
++		WRITE_ONCE(EXT4_I(inode)->i_disksize, newsize);
+ 	up_write(&EXT4_I(inode)->i_data_sem);
  }
  
--static int __io_iopoll_check(struct io_ring_ctx *ctx, unsigned *nr_events,
--			    long min)
-+static int io_iopoll_check(struct io_ring_ctx *ctx, unsigned *nr_events,
-+			   long min)
- {
- 	int iters = 0, ret = 0;
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -2573,7 +2573,7 @@ update_disksize:
+ 	 * truncate are avoided by checking i_size under i_data_sem.
+ 	 */
+ 	disksize = ((loff_t)mpd->first_page) << PAGE_SHIFT;
+-	if (disksize > EXT4_I(inode)->i_disksize) {
++	if (disksize > READ_ONCE(EXT4_I(inode)->i_disksize)) {
+ 		int err2;
+ 		loff_t i_size;
  
-+	/*
-+	 * We disallow the app entering submit/complete with polling, but we
-+	 * still need to lock the ring to prevent racing with polled issue
-+	 * that got punted to a workqueue.
-+	 */
-+	mutex_lock(&ctx->uring_lock);
- 	do {
- 		int tmin = 0;
- 
-@@ -922,21 +928,6 @@ static int __io_iopoll_check(struct io_r
- 		ret = 0;
- 	} while (min && !*nr_events && !need_resched());
- 
--	return ret;
--}
--
--static int io_iopoll_check(struct io_ring_ctx *ctx, unsigned *nr_events,
--			   long min)
--{
--	int ret;
--
--	/*
--	 * We disallow the app entering submit/complete with polling, but we
--	 * still need to lock the ring to prevent racing with polled issue
--	 * that got punted to a workqueue.
--	 */
--	mutex_lock(&ctx->uring_lock);
--	ret = __io_iopoll_check(ctx, nr_events, min);
- 	mutex_unlock(&ctx->uring_lock);
- 	return ret;
- }
-@@ -2721,7 +2712,7 @@ static int io_sq_thread(void *data)
- 				 */
- 				mutex_lock(&ctx->uring_lock);
- 				if (!list_empty(&ctx->poll_list))
--					__io_iopoll_check(ctx, &nr_events, 0);
-+					io_iopoll_getevents(ctx, &nr_events, 0);
- 				else
- 					inflight = 0;
- 				mutex_unlock(&ctx->uring_lock);
 
 
