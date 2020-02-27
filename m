@@ -2,52 +2,46 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACD7C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82766C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AFF024672
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5188D24650
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:06:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbgB0AFa (ORCPT
+        id S1728010AbgB0AGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 19:05:30 -0500
-Received: from mga02.intel.com ([134.134.136.20]:61872 "EHLO mga02.intel.com"
+        Wed, 26 Feb 2020 19:06:45 -0500
+Received: from foss.arm.com ([217.140.110.172]:43922 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726413AbgB0AF3 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 19:05:29 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 16:05:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,490,1574150400"; 
-   d="scan'208";a="230599029"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.4.151]) ([10.238.4.151])
-  by fmsmga007.fm.intel.com with ESMTP; 26 Feb 2020 16:05:26 -0800
-Subject: Re: [PATCH v4 2/2] perf report: Support interactive annotation of
- code without symbols
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20200225051438.16253-1-yao.jin@linux.intel.com>
- <20200225051438.16253-3-yao.jin@linux.intel.com>
- <20200226153810.GE217283@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <44c538f5-7b39-1aa1-26a6-3862920f8e53@linux.intel.com>
-Date:   Thu, 27 Feb 2020 08:05:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1726413AbgB0AGp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 19:06:45 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 789341FB;
+        Wed, 26 Feb 2020 16:06:44 -0800 (PST)
+Received: from [192.168.0.129] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E71373F73B;
+        Wed, 26 Feb 2020 16:06:42 -0800 (PST)
+Subject: Re: [PATCH 1/3] mm/vma: Move VM_NO_KHUGEPAGED into generic header
+To:     Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+References: <1582692658-3294-1-git-send-email-anshuman.khandual@arm.com>
+ <1582692658-3294-2-git-send-email-anshuman.khandual@arm.com>
+ <9899b82b-1295-97de-27da-a0a20dbe1a60@suse.cz>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <6e50e08d-8892-684f-dc0a-e65cde8d632a@arm.com>
+Date:   Thu, 27 Feb 2020 05:36:42 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20200226153810.GE217283@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <9899b82b-1295-97de-27da-a0a20dbe1a60@suse.cz>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -55,73 +49,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 2/26/2020 11:38 PM, Jiri Olsa wrote:
-> On Tue, Feb 25, 2020 at 01:14:38PM +0800, Jin Yao wrote:
->> For perf report on stripped binaries it is currently impossible to do
->> annotation. The annotation state is all tied to symbols, but there are
->> either no symbols, or symbols are not covering all the code.
+On 02/26/2020 05:04 PM, Vlastimil Babka wrote:
+> On 2/26/20 5:50 AM, Anshuman Khandual wrote:
+>> Move VM_NO_KHUGEPAGED into generic header (include/linux/mm.h). This just
+>> makes sure that no VMA flag is scattered in individual function files any
+>> longer. While at this, fix an old comment which is no longer valid.
 >>
->> We should support the annotation functionality even without symbols.
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: linux-mm@kvack.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>  include/linux/mm.h | 3 ++-
+>>  mm/khugepaged.c    | 2 --
+>>  2 files changed, 2 insertions(+), 3 deletions(-)
 >>
->> This patch fakes a dummy symbol and the symbol name is the string of
->> address. After that, we just follow current annotation working flow.
->>
->> For example,
->>
->> 1. perf report
->>
->> Overhead  Command  Shared Object     Symbol
->>    20.67%  div      libc-2.27.so      [.] __random_r
->>    17.29%  div      libc-2.27.so      [.] __random
->>    10.59%  div      div               [.] 0x0000000000000628
->>     9.25%  div      div               [.] 0x0000000000000612
->>     6.11%  div      div               [.] 0x0000000000000645
->>
->> 2. Select the line of "10.59%  div      div               [.] 0x0000000000000628" and ENTER.
->>
->> Annotate 0x0000000000000628
->> Zoom into div thread
->> Zoom into div DSO (use the 'k' hotkey to zoom directly into the kernel)
->> Browse map details
->> Run scripts for samples of symbol [0x0000000000000628]
->> Run scripts for all samples
->> Switch to another data file in PWD
->> Exit
->>
->> 3. Select the "Annotate 0x0000000000000628" and ENTER.
->>
->> Percent│
->>         │
->>         │
->>         │     Disassembly of section .text:
->>         │
->>         │     0000000000000628 <.text+0x68>:
->>         │       divsd %xmm4,%xmm0
->>         │       divsd %xmm3,%xmm1
->>         │       movsd (%rsp),%xmm2
->>         │       addsd %xmm1,%xmm0
->>         │       addsd %xmm2,%xmm0
->>         │       movsd %xmm0,(%rsp)
->>
->> Now we can see the dump of object starting from 0x628.
->>
->> We can also press hotkey 'a' on address in report view.
->> For branch mode, we only support the annotation for
->> "branch to" address.
->>
->>   v4:
->>   ---
->>   1. Support the hotkey 'a'. When we press 'a' on address,
->>      now it supports the annotation.
+>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+>> index 52269e56c514..6f7e400e6ea3 100644
+>> --- a/include/linux/mm.h
+>> +++ b/include/linux/mm.h
+>> @@ -287,6 +287,8 @@ extern unsigned int kobjsize(const void *objp);
+>>  #define VM_NOHUGEPAGE	0x40000000	/* MADV_NOHUGEPAGE marked this vma */
+>>  #define VM_MERGEABLE	0x80000000	/* KSM may merge identical pages */
+>>  
+>> +#define VM_NO_KHUGEPAGED (VM_SPECIAL | VM_HUGETLB)
 > 
-> please move this to separate patch, AFAICS it's separate change
-> and was broken before your change
-> 
-> thanks,
-> jirka
-> 
+> While the preprocessor doesn't mind that VM_SPECIAL is only defined later, I
+> would have moved this below VM_SPECIAL definition anyway, where it fits better,
+> and add a comment like other defines there do?
 
-OK, I will move it to a separate patch.
-
-Thanks
-Jin Yao
+Sure, will do.
