@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE152C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DF0C35677
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81C9B24656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1750524656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:44:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814688;
-	bh=Omc6XSnNs5KMFz1tBz8lSNoR8tkXrcQQyKZa4berMYg=;
+	s=default; t=1582814695;
+	bh=NQhSwyYXRqDIefeJAhsB5HufY4DubhhD3WurtJ5yuNs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RDIdQsqTB+GCPmF9B23ECKxKuFY0qDBy7pZ78CPTkDPVH+HZJxMHcbmR3xKm9x2vz
-	 QIDfyG6y6sG3xQI4tXU8CifLrIfzW1AJdjeATYPxkZrvbEOjPnebAar2JojpZogpyO
-	 +pi6g1WMm7HI1DkkrVl0MsQZZbzGd07b8gUeZuYM=
+	b=m3oZexaQCjJtnUQd94VKcesnztpEE66dnDgNkqLLM9Zq+DYhi3CTqyrdmkt3oZ+ZI
+	 IKvYxQbigO82y0oGFFvvZr85ZLjakClU8ScYIU8vpN7ixvrk3tha9POZCnJnZzoZ1N
+	 ehS3rHx91dzJb1P2IHgOarsAd0kg3fLt54/90OZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731329AbgB0Oor (ORCPT
+        id S1731414AbgB0Oox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:44:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44020 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:44:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729221AbgB0Nrd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:47:33 -0500
+        id S1730226AbgB0NrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:47:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7618820801;
-        Thu, 27 Feb 2020 13:47:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9003020578;
+        Thu, 27 Feb 2020 13:47:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811252;
-        bh=Omc6XSnNs5KMFz1tBz8lSNoR8tkXrcQQyKZa4berMYg=;
+        s=default; t=1582811240;
+        bh=NQhSwyYXRqDIefeJAhsB5HufY4DubhhD3WurtJ5yuNs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iBODG+WNT9uI7XWDudHRAIdDtRxZeItuCOQnv3TB4wWCQyREdf+S0FwJePeDPT9H2
-         LKKVSqTK1ut7a8LWrjmA1PyOZiDhVDIlC65iCU2skqlHCQfPxvmY4BeHTvO61/9zbw
-         1NcZmpbDxUBJgIcrOIyB1Q5X+yyRMPOYwndGP8dw=
+        b=1iNc9/xv6cPJPX2uLGpw4OqaYyw69LMMn0xiIubpbf+R3+Bm2kTDAJMxz0bFLhpYM
+         NZQqeS4MdQCzj1X61q3f+xAXFS7gvydrfF1qGoWf/XX8kAbqCgmSmJNeoUUFtZ/izq
+         fuMD8MsJtPEAhyal1XA6wLf/GpJvVXt6U72S5lvg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 044/165] clk: qcom: rcg2: Dont crash if our parent cant be found; return an error
-Date:   Thu, 27 Feb 2020 14:35:18 +0100
-Message-Id: <20200227132237.653154997@linuxfoundation.org>
+Subject: [PATCH 4.9 057/165] orinoco: avoid assertion in case of NULL pointer
+Date:   Thu, 27 Feb 2020 14:35:31 +0100
+Message-Id: <20200227132239.764198258@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -61,68 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit 908b050114d8fefdddc57ec9fbc213c3690e7f5f ]
+[ Upstream commit c705f9fc6a1736dcf6ec01f8206707c108dca824 ]
 
-When I got my clock parenting slightly wrong I ended up with a crash
-that looked like this:
+In ezusb_init, if upriv is NULL, the code crashes. However, the caller
+in ezusb_probe can handle the error and print the failure message.
+The patch replaces the BUG_ON call to error return.
 
-  Unable to handle kernel NULL pointer dereference at virtual
-  address 0000000000000000
-  ...
-  pc : clk_hw_get_rate+0x14/0x44
-  ...
-  Call trace:
-   clk_hw_get_rate+0x14/0x44
-   _freq_tbl_determine_rate+0x94/0xfc
-   clk_rcg2_determine_rate+0x2c/0x38
-   clk_core_determine_round_nolock+0x4c/0x88
-   clk_core_round_rate_nolock+0x6c/0xa8
-   clk_core_round_rate_nolock+0x9c/0xa8
-   clk_core_set_rate_nolock+0x70/0x180
-   clk_set_rate+0x3c/0x6c
-   of_clk_set_defaults+0x254/0x360
-   platform_drv_probe+0x28/0xb0
-   really_probe+0x120/0x2dc
-   driver_probe_device+0x64/0xfc
-   device_driver_attach+0x4c/0x6c
-   __driver_attach+0xac/0xc0
-   bus_for_each_dev+0x84/0xcc
-   driver_attach+0x2c/0x38
-   bus_add_driver+0xfc/0x1d0
-   driver_register+0x64/0xf8
-   __platform_driver_register+0x4c/0x58
-   msm_drm_register+0x5c/0x60
-   ...
-
-It turned out that clk_hw_get_parent_by_index() was returning NULL and
-we weren't checking.  Let's check it so that we don't crash.
-
-Fixes: ac269395cdd8 ("clk: qcom: Convert to clk_hw based provider APIs")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Link: https://lkml.kernel.org/r/20200203103049.v4.1.I7487325fe8e701a68a07d3be8a6a4b571eca9cfa@changeid
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/clk-rcg2.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/wireless/intersil/orinoco/orinoco_usb.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/qcom/clk-rcg2.c b/drivers/clk/qcom/clk-rcg2.c
-index 0ae1b0a66eb55..d8601b138dc1e 100644
---- a/drivers/clk/qcom/clk-rcg2.c
-+++ b/drivers/clk/qcom/clk-rcg2.c
-@@ -194,6 +194,9 @@ static int _freq_tbl_determine_rate(struct clk_hw *hw,
+diff --git a/drivers/net/wireless/intersil/orinoco/orinoco_usb.c b/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
+index 8244d82629511..4e91c74fcfad9 100644
+--- a/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
++++ b/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
+@@ -1351,7 +1351,8 @@ static int ezusb_init(struct hermes *hw)
+ 	int retval;
  
- 	clk_flags = clk_hw_get_flags(hw);
- 	p = clk_hw_get_parent_by_index(hw, index);
-+	if (!p)
+ 	BUG_ON(in_interrupt());
+-	BUG_ON(!upriv);
++	if (!upriv)
 +		return -EINVAL;
-+
- 	if (clk_flags & CLK_SET_RATE_PARENT) {
- 		if (f->pre_div) {
- 			if (!rate)
+ 
+ 	upriv->reply_count = 0;
+ 	/* Write the MAGIC number on the simulated registers to keep
 -- 
 2.20.1
 
