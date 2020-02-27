@@ -7,46 +7,53 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49903C3F354
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A49C4C3F357
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D53D246A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7741D24690
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:14:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813011;
-	bh=eOcxFwmWkQk9XmOZttVQ3mxnYSn1M7VLVjF42WBJrTY=;
+	s=default; t=1582812865;
+	bh=Dqe8peYwQwuHYE4wE7HzqKcEV4TelEPWey30f3hiVvk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dLAEbLCXFpudg67ID8UnfkAwP3OsEo1ZUURhUtvpkW/QTVIRtFFZ2xKxavB3P+HHN
-	 vnJqPoCkXlVBKWhObCRg4VmhNrAFMbxFKPGsvZi8AX2SiyXUJj9T+7jGrYZ2K1wMPl
-	 5dPwTrhIptkQvi7L2g8DfRVGoodFKSsV/xsBY7wo=
+	b=EHw8K+a6g2kXKau9fPKf6zD28M4OwSeuMjJMVyoICpUphkny+4O9e8biFkKV9rGCB
+	 UJtcVBrGyNaR+ZBV/7H74btCJL9zOpVjT1cdbOSdsHFz4fsF2S+P8Jfkj4/9yjFPL8
+	 dg6VpHe+DCNAKUlFybWjw9HbRIh5fge43miNYa1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389054AbgB0OQu (ORCPT
+        id S2388932AbgB0OOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:16:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57004 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:14:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389583AbgB0OQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:16:47 -0500
+        id S2389105AbgB0OOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:14:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAC3F246A0;
-        Thu, 27 Feb 2020 14:16:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D740B24697;
+        Thu, 27 Feb 2020 14:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813006;
-        bh=eOcxFwmWkQk9XmOZttVQ3mxnYSn1M7VLVjF42WBJrTY=;
+        s=default; t=1582812857;
+        bh=Dqe8peYwQwuHYE4wE7HzqKcEV4TelEPWey30f3hiVvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GtfdA5yK9uuoSJfa1MEiBDGCuqE10nff+PaQ18xnC15lhjcwc3BZe+fMU8JF9sYRK
-         vrnLQU1U6CdTtjaX9JDccz12lBBnAcjGbSJ9ZT3DdhJ1rnwxjqEdImCFZs4t917T5O
-         H/RGPFcCeOWysj3KPReeYY1V1MIg6dVNeq4IyRTs=
+        b=VaYxrrnUVztyfLYJ/Dhq4e7af7CMcAnaCqrHofBQmf5YokhRNO1SHDERZ9kQgwzyK
+         o8YYHlt0x+ztB4jTQQ3R+ZwCE/jdJxSqSGABOKb6SXjBz7egLUVzM/BbAiPNcrR8vx
+         9bc+7D0JlMDJIQMlYSQiSunSVkxeyBjk9eWoeteQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Upton <oupton@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.5 099/150] KVM: nVMX: Check IO instruction VM-exit conditions
-Date:   Thu, 27 Feb 2020 14:37:16 +0100
-Message-Id: <20200227132247.434364874@linuxfoundation.org>
+        stable@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
+        Yang Fei <fei.yang@intel.com>,
+        Thinh Nguyen <thinhn@synopsys.com>,
+        Tejas Joglekar <tejas.joglekar@synopsys.com>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Jack Pham <jackp@codeaurora.org>, Todd Kjos <tkjos@google.com>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        John Stultz <john.stultz@linaro.org>
+Subject: [PATCH 5.5 042/150] usb: dwc3: gadget: Check for IOC/LST bit in TRB->ctrl fields
+Date:   Thu, 27 Feb 2020 14:36:19 +0100
+Message-Id: <20200227132239.087998024@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -59,113 +66,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Upton <oupton@google.com>
+From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
 
-commit 35a571346a94fb93b5b3b6a599675ef3384bc75c upstream.
+commit 5ee858975b13a9b40db00f456989a689fdbb296c upstream.
 
-Consult the 'unconditional IO exiting' and 'use IO bitmaps' VM-execution
-controls when checking instruction interception. If the 'use IO bitmaps'
-VM-execution control is 1, check the instruction access against the IO
-bitmaps to determine if the instruction causes a VM-exit.
+The current code in dwc3_gadget_ep_reclaim_completed_trb() will
+check for IOC/LST bit in the event->status and returns if
+IOC/LST bit is set. This logic doesn't work if multiple TRBs
+are queued per request and the IOC/LST bit is set on the last
+TRB of that request.
 
-Signed-off-by: Oliver Upton <oupton@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Consider an example where a queued request has multiple queued
+TRBs and IOC/LST bit is set only for the last TRB. In this case,
+the core generates XferComplete/XferInProgress events only for
+the last TRB (since IOC/LST are set only for the last TRB). As
+per the logic in dwc3_gadget_ep_reclaim_completed_trb()
+event->status is checked for IOC/LST bit and returns on the
+first TRB. This leaves the remaining TRBs left unhandled.
+
+Similarly, if the gadget function enqueues an unaligned request
+with sglist already in it, it should fail the same way, since we
+will append another TRB to something that already uses more than
+one TRB.
+
+To aviod this, this patch changes the code to check for IOC/LST
+bits in TRB->ctrl instead.
+
+At a practical level, this patch resolves USB transfer stalls seen
+with adb on dwc3 based HiKey960 after functionfs gadget added
+scatter-gather support around v4.20.
+
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Yang Fei <fei.yang@intel.com>
+Cc: Thinh Nguyen <thinhn@synopsys.com>
+Cc: Tejas Joglekar <tejas.joglekar@synopsys.com>
+Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Cc: Jack Pham <jackp@codeaurora.org>
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Linux USB List <linux-usb@vger.kernel.org>
+Cc: stable <stable@vger.kernel.org>
+Tested-by: Tejas Joglekar <tejas.joglekar@synopsys.com>
+Reviewed-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+[jstultz: forward ported to mainline, reworded commit log, reworked
+ to only check trb->ctrl as suggested by Felipe]
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx/nested.c |    2 -
- arch/x86/kvm/vmx/vmx.c    |   57 +++++++++++++++++++++++++++++++++++++++++-----
- 2 files changed, 52 insertions(+), 7 deletions(-)
+ drivers/usb/dwc3/gadget.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -5345,7 +5345,7 @@ static bool nested_vmx_exit_handled_io(s
- 				       struct vmcs12 *vmcs12)
- {
- 	unsigned long exit_qualification;
--	unsigned int port;
-+	unsigned short port;
- 	int size;
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -2426,7 +2426,8 @@ static int dwc3_gadget_ep_reclaim_comple
+ 	if (event->status & DEPEVT_STATUS_SHORT && !chain)
+ 		return 1;
  
- 	if (!nested_cpu_has(vmcs12, CPU_BASED_USE_IO_BITMAPS))
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7146,6 +7146,39 @@ static void vmx_request_immediate_exit(s
- 	to_vmx(vcpu)->req_immediate_exit = true;
- }
+-	if (event->status & DEPEVT_STATUS_IOC)
++	if ((trb->ctrl & DWC3_TRB_CTRL_IOC) ||
++	    (trb->ctrl & DWC3_TRB_CTRL_LST))
+ 		return 1;
  
-+static int vmx_check_intercept_io(struct kvm_vcpu *vcpu,
-+				  struct x86_instruction_info *info)
-+{
-+	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
-+	unsigned short port;
-+	bool intercept;
-+	int size;
-+
-+	if (info->intercept == x86_intercept_in ||
-+	    info->intercept == x86_intercept_ins) {
-+		port = info->src_val;
-+		size = info->dst_bytes;
-+	} else {
-+		port = info->dst_val;
-+		size = info->src_bytes;
-+	}
-+
-+	/*
-+	 * If the 'use IO bitmaps' VM-execution control is 0, IO instruction
-+	 * VM-exits depend on the 'unconditional IO exiting' VM-execution
-+	 * control.
-+	 *
-+	 * Otherwise, IO instruction VM-exits are controlled by the IO bitmaps.
-+	 */
-+	if (!nested_cpu_has(vmcs12, CPU_BASED_USE_IO_BITMAPS))
-+		intercept = nested_cpu_has(vmcs12,
-+					   CPU_BASED_UNCOND_IO_EXITING);
-+	else
-+		intercept = nested_vmx_check_io_bitmaps(vcpu, port, size);
-+
-+	return intercept ? X86EMUL_UNHANDLEABLE : X86EMUL_CONTINUE;
-+}
-+
- static int vmx_check_intercept(struct kvm_vcpu *vcpu,
- 			       struct x86_instruction_info *info,
- 			       enum x86_intercept_stage stage)
-@@ -7153,18 +7186,30 @@ static int vmx_check_intercept(struct kv
- 	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
- 	struct x86_emulate_ctxt *ctxt = &vcpu->arch.emulate_ctxt;
- 
-+	switch (info->intercept) {
- 	/*
- 	 * RDPID causes #UD if disabled through secondary execution controls.
- 	 * Because it is marked as EmulateOnUD, we need to intercept it here.
- 	 */
--	if (info->intercept == x86_intercept_rdtscp &&
--	    !nested_cpu_has2(vmcs12, SECONDARY_EXEC_RDTSCP)) {
--		ctxt->exception.vector = UD_VECTOR;
--		ctxt->exception.error_code_valid = false;
--		return X86EMUL_PROPAGATE_FAULT;
--	}
-+	case x86_intercept_rdtscp:
-+		if (!nested_cpu_has2(vmcs12, SECONDARY_EXEC_RDTSCP)) {
-+			ctxt->exception.vector = UD_VECTOR;
-+			ctxt->exception.error_code_valid = false;
-+			return X86EMUL_PROPAGATE_FAULT;
-+		}
-+		break;
-+
-+	case x86_intercept_in:
-+	case x86_intercept_ins:
-+	case x86_intercept_out:
-+	case x86_intercept_outs:
-+		return vmx_check_intercept_io(vcpu, info);
- 
- 	/* TODO: check more intercepts... */
-+	default:
-+		break;
-+	}
-+
- 	return X86EMUL_UNHANDLEABLE;
- }
- 
+ 	return 0;
 
 
