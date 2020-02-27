@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89064C54FDE
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F39AC3F358
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5314D20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D06324691
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:12:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812699;
-	bh=sevjY8YSiEJ4WfRWOh772n1GYlFHoWmY89hx6uednB0=;
+	s=default; t=1582812764;
+	bh=ecMOeFQMbz8SkIbgVEjWiLYsH1nkU3TSO9zEKVRK7qg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EkrzLvd7b7z1mLrl9VZfTsMq6ysxhEj6mKcxyCEuByilv2t/uvisOlxDUhEaqen9L
-	 1qky6oV0L1eKYyhkzdtSPCUA8ZfjnfEkkz3kU6veR+nVor9AvFIRDWi1yQ2wFbCxqj
-	 zFxk69yS2PiG9ujILDTHsndmM0jf17gCw6Lj3zbo=
+	b=vos8EzbnXwmmvZ9HKso79siewLjZ5Rm29QpqEqx3+LWR1ZG5R8xkeZXsJevCvYgd6
+	 jbdfvil9irIV2yT5+AIDnFiq5bvwIXxZZNI9u8qMP1EJs2BC+0lf4oC7sJLFCAj+Je
+	 TgLnytNhCnVPtdpXoAKyYH1p5WRhcc17jCTGze5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388725AbgB0OLi (ORCPT
+        id S2388891AbgB0OMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:11:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50000 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:12:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387598AbgB0OLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:11:31 -0500
+        id S2388868AbgB0OMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:12:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED63520578;
-        Thu, 27 Feb 2020 14:11:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D90E20578;
+        Thu, 27 Feb 2020 14:12:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812690;
-        bh=sevjY8YSiEJ4WfRWOh772n1GYlFHoWmY89hx6uednB0=;
+        s=default; t=1582812759;
+        bh=ecMOeFQMbz8SkIbgVEjWiLYsH1nkU3TSO9zEKVRK7qg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WZ8AXBeR1MB8f9kDtg6OxlX1I+jniXLDbx39gOrW+5xlvt6FetEn1kxTcvmuCLFOF
-         N4TG7JZetvOUZVxg3KPl+dUgvoiete5jWsnWFhCoVeEJW2rbi3ob/cnzQDpmxftr9f
-         GpSnNSKcIqn9IhIEVSQViwcBKMQEVKfe8QvoWH1w=
+        b=BZo71bR7XuUEvEvHsyXeN0j8ajPBV4kRQAmowGyepX9wGRyKE3QNiQcQUztBBY6k2
+         A8Qt+x9ce4HZyVht63Ret8cCtFkvGjrh/CnfIR6UNVX1ad11ITSf1mM+INpqMfIUsZ
+         4F3UPo2BTiwJ433KblLucnbEwDN5t6val8yZ7EoU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Tyler Hicks <code@tyhicks.com>
-Subject: [PATCH 5.4 115/135] ecryptfs: replace BUG_ON with error handling code
-Date:   Thu, 27 Feb 2020 14:37:35 +0100
-Message-Id: <20200227132246.425973449@linuxfoundation.org>
+        stable@vger.kernel.org, Minas Harutyunyan <hminas@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 5.4 110/135] usb: dwc2: Fix in ISOC request length checking
+Date:   Thu, 27 Feb 2020 14:37:30 +0100
+Message-Id: <20200227132245.741859163@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -59,39 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>
 
-commit 2c2a7552dd6465e8fde6bc9cccf8d66ed1c1eb72 upstream.
+commit 860ef6cd3f90b84a1832f8a6485c90c34d3b588b upstream.
 
-In crypt_scatterlist, if the crypt_stat argument is not set up
-correctly, the kernel crashes. Instead, by returning an error code
-upstream, the error is handled safely.
+Moved ISOC request length checking from dwc2_hsotg_start_req() function to
+dwc2_hsotg_ep_queue().
 
-The issue is detected via a static analysis tool written by us.
-
-Fixes: 237fead619984 (ecryptfs: fs/Makefile and fs/Kconfig)
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Tyler Hicks <code@tyhicks.com>
+Fixes: 4fca54aa58293 ("usb: gadget: s3c-hsotg: add multi count support")
+Signed-off-by: Minas Harutyunyan <hminas@synopsys.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ecryptfs/crypto.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/usb/dwc2/gadget.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/fs/ecryptfs/crypto.c
-+++ b/fs/ecryptfs/crypto.c
-@@ -311,8 +311,10 @@ static int crypt_scatterlist(struct ecry
- 	struct extent_crypt_result ecr;
- 	int rc = 0;
+--- a/drivers/usb/dwc2/gadget.c
++++ b/drivers/usb/dwc2/gadget.c
+@@ -1083,11 +1083,6 @@ static void dwc2_hsotg_start_req(struct
+ 	else
+ 		packets = 1;	/* send one packet if length is zero. */
  
--	BUG_ON(!crypt_stat || !crypt_stat->tfm
--	       || !(crypt_stat->flags & ECRYPTFS_STRUCT_INITIALIZED));
-+	if (!crypt_stat || !crypt_stat->tfm
-+	       || !(crypt_stat->flags & ECRYPTFS_STRUCT_INITIALIZED))
+-	if (hs_ep->isochronous && length > (hs_ep->mc * hs_ep->ep.maxpacket)) {
+-		dev_err(hsotg->dev, "req length > maxpacket*mc\n");
+-		return;
+-	}
+-
+ 	if (dir_in && index != 0)
+ 		if (hs_ep->isochronous)
+ 			epsize = DXEPTSIZ_MC(packets);
+@@ -1391,6 +1386,13 @@ static int dwc2_hsotg_ep_queue(struct us
+ 	req->actual = 0;
+ 	req->status = -EINPROGRESS;
+ 
++	/* Don't queue ISOC request if length greater than mps*mc */
++	if (hs_ep->isochronous &&
++	    req->length > (hs_ep->mc * hs_ep->ep.maxpacket)) {
++		dev_err(hs->dev, "req length > maxpacket*mc\n");
 +		return -EINVAL;
++	}
 +
- 	if (unlikely(ecryptfs_verbosity > 0)) {
- 		ecryptfs_printk(KERN_DEBUG, "Key size [%zd]; key:\n",
- 				crypt_stat->key_size);
+ 	/* In DDMA mode for ISOC's don't queue request if length greater
+ 	 * than descriptor limits.
+ 	 */
 
 
