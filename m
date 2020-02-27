@@ -2,102 +2,93 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B779C3F2C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB267C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:20:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E74B2469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:16:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="FQ+Ch8yW"
+	by mail.kernel.org (Postfix) with ESMTP id 8A2F2246A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:20:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730174AbgB0WQT (ORCPT
+        id S1729982AbgB0WUL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 17:16:19 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:33557 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726460AbgB0WQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 17:16:18 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48T6Sw6TCWz9sNg;
-        Fri, 28 Feb 2020 09:16:16 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1582841777;
-        bh=C0sQUbJcUy3SCxluJOVutQ4Q/pprgmEge+rCNcrvXlw=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=FQ+Ch8yWcGWV3+pKERY7iAIiROMwV+lINicwcODo5g+5qp73grrdmzJPe3+NXh+7r
-         0gB1l5PijcsfeopK9gvtr2ju3aY1x16Am0t12VIEg6gG57lUa+SykMgWF0xPI66mnj
-         5WGmRjOlGY54euU0vvGvYGv3wRAoTWTzr4ChBPu1L5+ywoT10GVX+IVvPYOjCvPMva
-         ujZLPsqpDJjD7TkwVSos3+XQieM/mtqnINm/fwqhpXhYfUwueYx3li1IgOlkdhM8SS
-         szoooUY/aS5MaO1U9a4+lHcDzxPuWrzSjKuH6uTvC2pEOmTlh/klsqVlelMi/1F7ta
-         dJLGiMUJQiI+w==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, mikey@neuling.org,
-        Russell Currey <ruscur@russell.cc>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v4 13/13] powerpc/ptrace: move ptrace_triggered() into hw_breakpoint.c
-In-Reply-To: <4e528bf2-2b53-ae93-cdcc-0c80953f40f2@c-s.fr>
-References: <cover.1582803998.git.christophe.leroy@c-s.fr> <d45c91cf5f83424b8f3989b7ead28c50d8d765a9.1582803998.git.christophe.leroy@c-s.fr> <4e528bf2-2b53-ae93-cdcc-0c80953f40f2@c-s.fr>
-Date:   Fri, 28 Feb 2020 09:16:16 +1100
-Message-ID: <87pndz1xsf.fsf@mpe.ellerman.id.au>
+        Thu, 27 Feb 2020 17:20:11 -0500
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:32996 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729728AbgB0WUK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 17:20:10 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by kvm5.telegraphics.com.au (Postfix) with ESMTP id C9BB02A160;
+        Thu, 27 Feb 2020 17:20:07 -0500 (EST)
+Date:   Fri, 28 Feb 2020 09:19:29 +1100 (AEDT)
+From:   Finn Thain <fthain@telegraphics.com.au>
+To:     Greg Ungerer <gerg@linux-m68k.org>
+cc:     afzal mohammed <afzal.mohd.ma@gmail.com>,
+        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 06/18] m68k: Replace setup_irq() by request_irq()
+In-Reply-To: <1a16c680-2bbe-eb24-6ea3-4b50d0c3e377@linux-m68k.org>
+Message-ID: <alpine.LNX.2.22.394.2002280902070.8@nippy.intranet>
+References: <cover.1582471508.git.afzal.mohd.ma@gmail.com> <00b0bf964278dd0bb3e093283994399ff796cca5.1582471508.git.afzal.mohd.ma@gmail.com> <73c3ad08-963d-fea2-91d7-b06e4ef8d3ef@linux-m68k.org> <alpine.LNX.2.22.394.2002261151220.9@nippy.intranet>
+ <caa5686a-5be3-5848-fdee-36f54237ccb6@linux-m68k.org> <alpine.LNX.2.22.394.2002261637400.8@nippy.intranet> <a682c89d-baf2-3d3c-647f-a07b2a146c9f@linux-m68k.org> <alpine.LNX.2.22.394.2002270908380.8@nippy.intranet>
+ <1a16c680-2bbe-eb24-6ea3-4b50d0c3e377@linux-m68k.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy <christophe.leroy@c-s.fr> writes:
-> Russel,
->
-> Le 27/02/2020 =C3=A0 12:49, Christophe Leroy a =C3=A9crit=C2=A0:
->> ptrace_triggered() is declared in asm/hw_breakpoint.h and
->> only needed when CONFIG_HW_BREAKPOINT is set, so move it
->> into hw_breakpoint.c
->
-> My series v4 is definitely buggy (I included ptrace_decl.h instead=20
-> instead of ptrace-decl.h), how can Snowpatch say build succeeded=20
-> (https://patchwork.ozlabs.org/patch/1245807/) ?
+On Thu, 27 Feb 2020, Greg Ungerer wrote:
 
-Which links to:
-  https://openpower.xyz/job/snowpatch/job/snowpatch-linux-sparse/15895//art=
-ifact/linux/report.txt
+> On 27/2/20 8:31 am, Finn Thain wrote:
+> 
+> >>>
+> >>> BTW, one of the benefits of "%s: request_irq failed" is that a 
+> >>> compilation unit with multiple request_irq calls permits the 
+> >>> compiler to coalesce all duplicated format strings. Whereas, that's 
+> >>> not possible with "foo: request_irq failed" and "bar: request_irq 
+> >>> failed".
+> >>
+> >> Given the wide variety of message text used with failed request_irq() 
+> >> calls it would be shear luck that this matched anything else. A quick 
+> >> grep shows that "%s: request_irq() failed\n" has no other exact 
+> >> matches in the current kernel source.
+> > 
+> > You are overlooking the patches in this series that produce multiple 
+> > identical format strings.
+> 
+> No I didn't :-)  None of these will end up compiled in at the same time. 
+> The various ColdFire SoC parts have a single timer hardware module - and 
+> only the required one will be compiled in, not all of them.
+> 
 
-The actual build log of which is:
-  https://openpower.xyz/job/snowpatch/job/snowpatch-linux-sparse/15895/arti=
-fact/linux/build_new.log
+I was referring to e.g. [PATCH v2 08/18] MIPS: Replace setup_irq() by 
+request_irq(), in which you can find this:
 
-Which contains:
-  scripts/Makefile.build:267: recipe for target 'arch/powerpc/kernel/ptrace=
-/ptrace-altivec.o' failed
-  make[3]: *** [arch/powerpc/kernel/ptrace/ptrace-altivec.o] Error 1
-  make[3]: *** Waiting for unfinished jobs....
-  scripts/Makefile.build:505: recipe for target 'arch/powerpc/kernel/ptrace=
-' failed
-  make[2]: *** [arch/powerpc/kernel/ptrace] Error 2
-  make[2]: *** Waiting for unfinished jobs....
-  scripts/Makefile.build:505: recipe for target 'arch/powerpc/kernel' failed
-  make[1]: *** [arch/powerpc/kernel] Error 2
-  make[1]: *** Waiting for unfinished jobs....
-  Makefile:1681: recipe for target 'arch/powerpc' failed
-  make: *** [arch/powerpc] Error 2
-  make: *** Waiting for unfinished jobs....
-
-Same for ppc64le:
-  https://openpower.xyz/job/snowpatch/job/snowpatch-linux-sparse/15896/arti=
-fact/linux/build_new.log
-
-
-So it seems like snowpatch always reports the build as succeeded even
-when it fails.
-
-cheers
+@@ -116,8 +110,16 @@ static void __init ar7_irq_init(int base)
+                                                 handle_level_irq);
+        }
+ 
+-       setup_irq(2, &ar7_cascade_action);
+-       setup_irq(ar7_irq_base, &ar7_cascade_action);
++       if (request_irq(2, no_action, IRQF_NO_THREAD, "AR7 cascade interrupt",
++                       NULL)) {
++               pr_err("%s: request_irq() failed\n",
++                      "AR7 cascade interrupt");
++       }
++       if (request_irq(ar7_irq_base, no_action, IRQF_NO_THREAD,
++                       "AR7 cascade interrupt", NULL)) {
++               pr_err("%s: request_irq() failed\n",
++                      "AR7 cascade interrupt");
++       }
+        set_c0_status(IE_IRQ0);
+ }
+ 
+BTW, I think that deduplication of string constants can happen during LTO, 
+so the benefit of consistency need not be confined to a compilation unit. 
+I don't think this is relevant to kernel builds.
