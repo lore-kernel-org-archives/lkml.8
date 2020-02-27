@@ -2,171 +2,145 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61248C4BA3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37533C4BA3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D66E24691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A3ED24696
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:31:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="lAnsoNzv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbgB0LbF (ORCPT
+        id S1728903AbgB0Lb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 06:31:05 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:58626 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728895AbgB0LbE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 06:31:04 -0500
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id ADEEF9AEEC0A57C61D86;
-        Thu, 27 Feb 2020 19:30:18 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 27 Feb 2020 19:30:10 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH 1/3] f2fs: cover last_disk_size update with spinlock
-Date:   Thu, 27 Feb 2020 19:30:03 +0800
-Message-ID: <20200227113005.127729-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+        Thu, 27 Feb 2020 06:31:29 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:55890 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728850AbgB0Lb3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 06:31:29 -0500
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 58A8C43B5E;
+        Thu, 27 Feb 2020 11:31:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1582803088; bh=0syuIutiUjjVU8By23MObQ0rqTkTVnHNZjjdVWTlCqQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=lAnsoNzvlDmMDq0uoorCMIboX8tc9QBfiOgezLXHISO68H7eBIyVjG9X7p58hnkHp
+         A8wz6YpeeGHrKO2Z2KlDK1dHG07dlWBcMtWfQihxne9AmTcVc/SYVPQ0WFAULDjiCB
+         PtZQVoHyc0GUxso8Q2Xh7WJ7QcHcAPmugXRC6EsbhpLgLnAIFEZcXkRWi/ImLBkc0s
+         VeUj6mjHqz9Gy8p8KFJW7fRuz78AsLYRduTR74sR7Wmf7u1xumv8Ni4GNun1i2tPDf
+         cdz2oEoKFmj9Z18y2xZZV1OzPQlaOKqiZQzE1czLOh/nrL7plvmEoNvRqPyIGE8d3N
+         EoJPEglN+nIGQ==
+Received: from de02.synopsys.com (germany.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 94C1BA005F;
+        Thu, 27 Feb 2020 11:31:26 +0000 (UTC)
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by de02.synopsys.com (Postfix) with ESMTP id 7EF5D3E9EB;
+        Thu, 27 Feb 2020 12:31:26 +0100 (CET)
+From:   Vitor Soares <Vitor.Soares@synopsys.com>
+To:     pgaj@cadence.com, bbrezillon@kernel.org,
+        linux-i3c@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Vitor Soares <Vitor.Soares@synopsys.com>
+Subject: [PATCH v2 4/4] i3c: Simplify i3c_device_match_id()
+Date:   Thu, 27 Feb 2020 12:31:09 +0100
+Message-Id: <8c5d6523e1c161783db834a3447954f7fd6267e6.1582796652.git.vitor.soares@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1582796652.git.vitor.soares@synopsys.com>
+References: <cover.1582796652.git.vitor.soares@synopsys.com>
+In-Reply-To: <cover.1582796652.git.vitor.soares@synopsys.com>
+References: <cover.1582796652.git.vitor.soares@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change solves below hangtask issue:
+From: Boris Brezillon <boris.brezillon@collabora.com>
 
-INFO: task kworker/u16:1:58 blocked for more than 122 seconds.
-      Not tainted 5.6.0-rc2-00590-g9983bdae4974e #11
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-kworker/u16:1   D    0    58      2 0x00000000
-Workqueue: writeback wb_workfn (flush-179:0)
-Backtrace:
- (__schedule) from [<c0913234>] (schedule+0x78/0xf4)
- (schedule) from [<c017ec74>] (rwsem_down_write_slowpath+0x24c/0x4c0)
- (rwsem_down_write_slowpath) from [<c0915f2c>] (down_write+0x6c/0x70)
- (down_write) from [<c0435b80>] (f2fs_write_single_data_page+0x608/0x7ac)
- (f2fs_write_single_data_page) from [<c0435fd8>] (f2fs_write_cache_pages+0x2b4/0x7c4)
- (f2fs_write_cache_pages) from [<c043682c>] (f2fs_write_data_pages+0x344/0x35c)
- (f2fs_write_data_pages) from [<c0267ee8>] (do_writepages+0x3c/0xd4)
- (do_writepages) from [<c0310cbc>] (__writeback_single_inode+0x44/0x454)
- (__writeback_single_inode) from [<c03112d0>] (writeback_sb_inodes+0x204/0x4b0)
- (writeback_sb_inodes) from [<c03115cc>] (__writeback_inodes_wb+0x50/0xe4)
- (__writeback_inodes_wb) from [<c03118f4>] (wb_writeback+0x294/0x338)
- (wb_writeback) from [<c0312dac>] (wb_workfn+0x35c/0x54c)
- (wb_workfn) from [<c014f2b8>] (process_one_work+0x214/0x544)
- (process_one_work) from [<c014f634>] (worker_thread+0x4c/0x574)
- (worker_thread) from [<c01564fc>] (kthread+0x144/0x170)
- (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+Simply match against ->match_flags instead of trying to be smart and
+fix drivers inconsistent ID tables.
 
-Reported-and-tested-by: Ondřej Jirman <megi@xff.cz>
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
 ---
- fs/f2fs/compress.c | 4 ++--
- fs/f2fs/data.c     | 4 ++--
- fs/f2fs/f2fs.h     | 5 +++--
- fs/f2fs/file.c     | 4 ++--
- fs/f2fs/super.c    | 1 +
- 5 files changed, 10 insertions(+), 8 deletions(-)
+ drivers/i3c/device.c | 50 ++++++++++++++++++++++----------------------------
+ 1 file changed, 22 insertions(+), 28 deletions(-)
 
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index 7e220ec8f843..10a8b3b40051 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -897,10 +897,10 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
- 	f2fs_put_dnode(&dn);
- 	f2fs_unlock_op(sbi);
+diff --git a/drivers/i3c/device.c b/drivers/i3c/device.c
+index 9e2e140..bb8e60d 100644
+--- a/drivers/i3c/device.c
++++ b/drivers/i3c/device.c
+@@ -213,40 +213,34 @@ i3c_device_match_id(struct i3c_device *i3cdev,
+ {
+ 	struct i3c_device_info devinfo;
+ 	const struct i3c_device_id *id;
++	u16 manuf, part, ext_info;
++	bool rndpid;
  
--	down_write(&fi->i_sem);
-+	spin_lock(&fi->i_size_lock);
- 	if (fi->last_disk_size < psize)
- 		fi->last_disk_size = psize;
--	up_write(&fi->i_sem);
-+	spin_unlock(&fi->i_size_lock);
+ 	i3c_device_get_info(i3cdev, &devinfo);
  
- 	f2fs_put_rpages(cc);
- 	f2fs_destroy_compress_ctx(cc);
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 081e172fa130..4249296a71f9 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -2643,10 +2643,10 @@ int f2fs_write_single_data_page(struct page *page, int *submitted,
- 	if (err) {
- 		file_set_keep_isize(inode);
- 	} else {
--		down_write(&F2FS_I(inode)->i_sem);
-+		spin_lock(&F2FS_I(inode)->i_size_lock);
- 		if (F2FS_I(inode)->last_disk_size < psize)
- 			F2FS_I(inode)->last_disk_size = psize;
--		up_write(&F2FS_I(inode)->i_sem);
-+		spin_unlock(&F2FS_I(inode)->i_size_lock);
+-	/*
+-	 * The lower 32bits of the provisional ID is just filled with a random
+-	 * value, try to match using DCR info.
+-	 */
+-	if (!I3C_PID_RND_LOWER_32BITS(devinfo.pid)) {
+-		u16 manuf = I3C_PID_MANUF_ID(devinfo.pid);
+-		u16 part = I3C_PID_PART_ID(devinfo.pid);
+-		u16 ext_info = I3C_PID_EXTRA_INFO(devinfo.pid);
+-
+-		/* First try to match by manufacturer/part ID. */
+-		for (id = id_table; id->match_flags != 0; id++) {
+-			if ((id->match_flags & I3C_MATCH_MANUF_AND_PART) !=
+-			    I3C_MATCH_MANUF_AND_PART)
+-				continue;
+-
+-			if (manuf != id->manuf_id || part != id->part_id)
+-				continue;
+-
+-			if ((id->match_flags & I3C_MATCH_EXTRA_INFO) &&
+-			    ext_info != id->extra_info)
+-				continue;
+-
+-			return id;
+-		}
+-	}
++	manuf = I3C_PID_MANUF_ID(devinfo.pid);
++	part = I3C_PID_PART_ID(devinfo.pid);
++	ext_info = I3C_PID_EXTRA_INFO(devinfo.pid);
++	rndpid = I3C_PID_RND_LOWER_32BITS(devinfo.pid);
+ 
+-	/* Fallback to DCR match. */
+ 	for (id = id_table; id->match_flags != 0; id++) {
+ 		if ((id->match_flags & I3C_MATCH_DCR) &&
+-		    id->dcr == devinfo.dcr)
+-			return id;
++		    id->dcr != devinfo.dcr)
++			continue;
++
++		if ((id->match_flags & I3C_MATCH_MANUF) &&
++		    id->manuf_id != manuf)
++			continue;
++
++		if ((id->match_flags & I3C_MATCH_PART) &&
++		    (rndpid || id->part_id != part))
++			continue;
++
++		if ((id->match_flags & I3C_MATCH_EXTRA_INFO) &&
++		    (rndpid || id->extra_info != ext_info))
++			continue;
++
++		return id;
  	}
  
- done:
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 4a02edc2454b..1a8af2020e72 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -701,6 +701,7 @@ struct f2fs_inode_info {
- 	struct task_struct *cp_task;	/* separate cp/wb IO stats*/
- 	nid_t i_xattr_nid;		/* node id that contains xattrs */
- 	loff_t	last_disk_size;		/* lastly written file size */
-+	spinlock_t i_size_lock;		/* protect last_disk_size */
- 
- #ifdef CONFIG_QUOTA
- 	struct dquot *i_dquot[MAXQUOTAS];
-@@ -2882,9 +2883,9 @@ static inline bool f2fs_skip_inode_update(struct inode *inode, int dsync)
- 	if (!f2fs_is_time_consistent(inode))
- 		return false;
- 
--	down_read(&F2FS_I(inode)->i_sem);
-+	spin_lock(&F2FS_I(inode)->i_size_lock);
- 	ret = F2FS_I(inode)->last_disk_size == i_size_read(inode);
--	up_read(&F2FS_I(inode)->i_sem);
-+	spin_unlock(&F2FS_I(inode)->i_size_lock);
- 
- 	return ret;
- }
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index b8f01ee9d698..40ed78026a25 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -931,10 +931,10 @@ int f2fs_setattr(struct dentry *dentry, struct iattr *attr)
- 		if (err)
- 			return err;
- 
--		down_write(&F2FS_I(inode)->i_sem);
-+		spin_lock(&F2FS_I(inode)->i_size_lock);
- 		inode->i_mtime = inode->i_ctime = current_time(inode);
- 		F2FS_I(inode)->last_disk_size = i_size_read(inode);
--		up_write(&F2FS_I(inode)->i_sem);
-+		spin_unlock(&F2FS_I(inode)->i_size_lock);
- 	}
- 
- 	__setattr_copy(inode, attr);
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 0b16204d3b7d..2d0e5d1269f5 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -957,6 +957,7 @@ static struct inode *f2fs_alloc_inode(struct super_block *sb)
- 	/* Initialize f2fs-specific inode info */
- 	atomic_set(&fi->dirty_pages, 0);
- 	init_rwsem(&fi->i_sem);
-+	spin_lock_init(&fi->i_size_lock);
- 	INIT_LIST_HEAD(&fi->dirty_list);
- 	INIT_LIST_HEAD(&fi->gdirty_list);
- 	INIT_LIST_HEAD(&fi->inmem_ilist);
+ 	return NULL;
 -- 
-2.18.0.rc1
+2.7.4
 
