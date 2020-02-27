@@ -2,42 +2,42 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E8AC4BA3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61248C4BA3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4C0024693
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D66E24691
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:31:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728919AbgB0LaW (ORCPT
+        id S1728941AbgB0LbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 06:30:22 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:58638 "EHLO huawei.com"
+        Thu, 27 Feb 2020 06:31:05 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:58626 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728860AbgB0LaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 06:30:22 -0500
+        id S1728895AbgB0LbE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 06:31:04 -0500
 Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B28805F8665974ABA421;
+        by Forcepoint Email with ESMTP id ADEEF9AEEC0A57C61D86;
         Thu, 27 Feb 2020 19:30:18 +0800 (CST)
 Received: from szvp000203569.huawei.com (10.120.216.130) by
  DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 27 Feb 2020 19:30:11 +0800
+ 14.3.439.0; Thu, 27 Feb 2020 19:30:10 +0800
 From:   Chao Yu <yuchao0@huawei.com>
 To:     <jaegeuk@kernel.org>
 CC:     <linux-f2fs-devel@lists.sourceforge.net>,
         <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
         Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH 3/3] f2fs: fix inconsistent comments
-Date:   Thu, 27 Feb 2020 19:30:05 +0800
-Message-ID: <20200227113005.127729-3-yuchao0@huawei.com>
+Subject: [PATCH 1/3] f2fs: cover last_disk_size update with spinlock
+Date:   Thu, 27 Feb 2020 19:30:03 +0800
+Message-ID: <20200227113005.127729-1-yuchao0@huawei.com>
 X-Mailer: git-send-email 2.18.0.rc1
-In-Reply-To: <20200227113005.127729-1-yuchao0@huawei.com>
-References: <20200227113005.127729-1-yuchao0@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-Originating-IP: [10.120.216.130]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
@@ -45,272 +45,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lack of maintenance on comments may mislead developers, fix them.
+This change solves below hangtask issue:
 
+INFO: task kworker/u16:1:58 blocked for more than 122 seconds.
+      Not tainted 5.6.0-rc2-00590-g9983bdae4974e #11
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+kworker/u16:1   D    0    58      2 0x00000000
+Workqueue: writeback wb_workfn (flush-179:0)
+Backtrace:
+ (__schedule) from [<c0913234>] (schedule+0x78/0xf4)
+ (schedule) from [<c017ec74>] (rwsem_down_write_slowpath+0x24c/0x4c0)
+ (rwsem_down_write_slowpath) from [<c0915f2c>] (down_write+0x6c/0x70)
+ (down_write) from [<c0435b80>] (f2fs_write_single_data_page+0x608/0x7ac)
+ (f2fs_write_single_data_page) from [<c0435fd8>] (f2fs_write_cache_pages+0x2b4/0x7c4)
+ (f2fs_write_cache_pages) from [<c043682c>] (f2fs_write_data_pages+0x344/0x35c)
+ (f2fs_write_data_pages) from [<c0267ee8>] (do_writepages+0x3c/0xd4)
+ (do_writepages) from [<c0310cbc>] (__writeback_single_inode+0x44/0x454)
+ (__writeback_single_inode) from [<c03112d0>] (writeback_sb_inodes+0x204/0x4b0)
+ (writeback_sb_inodes) from [<c03115cc>] (__writeback_inodes_wb+0x50/0xe4)
+ (__writeback_inodes_wb) from [<c03118f4>] (wb_writeback+0x294/0x338)
+ (wb_writeback) from [<c0312dac>] (wb_workfn+0x35c/0x54c)
+ (wb_workfn) from [<c014f2b8>] (process_one_work+0x214/0x544)
+ (process_one_work) from [<c014f634>] (worker_thread+0x4c/0x574)
+ (worker_thread) from [<c01564fc>] (kthread+0x144/0x170)
+ (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+
+Reported-and-tested-by: Ondřej Jirman <megi@xff.cz>
 Signed-off-by: Chao Yu <yuchao0@huawei.com>
 ---
- fs/f2fs/checkpoint.c | 18 ++++--------------
- fs/f2fs/data.c       | 19 ++++++-------------
- fs/f2fs/f2fs.h       |  2 +-
- fs/f2fs/file.c       |  1 -
- fs/f2fs/gc.c         |  5 ++++-
- fs/f2fs/inode.c      |  2 +-
- fs/f2fs/namei.c      |  2 +-
- fs/f2fs/node.c       |  6 +-----
- fs/f2fs/shrinker.c   |  2 +-
- fs/f2fs/super.c      |  4 ++--
- 10 files changed, 21 insertions(+), 40 deletions(-)
+ fs/f2fs/compress.c | 4 ++--
+ fs/f2fs/data.c     | 4 ++--
+ fs/f2fs/f2fs.h     | 5 +++--
+ fs/f2fs/file.c     | 4 ++--
+ fs/f2fs/super.c    | 1 +
+ 5 files changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index fdd7f3df2480..46fc9c1542fe 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -50,9 +50,6 @@ struct page *f2fs_grab_meta_page(struct f2fs_sb_info *sbi, pgoff_t index)
- 	return page;
- }
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index 7e220ec8f843..10a8b3b40051 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -897,10 +897,10 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+ 	f2fs_put_dnode(&dn);
+ 	f2fs_unlock_op(sbi);
  
--/*
-- * We guarantee no failure on the returned page.
-- */
- static struct page *__get_meta_page(struct f2fs_sb_info *sbi, pgoff_t index,
- 							bool is_meta)
- {
-@@ -206,7 +203,7 @@ bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
- }
+-	down_write(&fi->i_sem);
++	spin_lock(&fi->i_size_lock);
+ 	if (fi->last_disk_size < psize)
+ 		fi->last_disk_size = psize;
+-	up_write(&fi->i_sem);
++	spin_unlock(&fi->i_size_lock);
  
- /*
-- * Readahead CP/NAT/SIT/SSA pages
-+ * Readahead CP/NAT/SIT/SSA/POR pages
-  */
- int f2fs_ra_meta_pages(struct f2fs_sb_info *sbi, block_t start, int nrpages,
- 							int type, bool sync)
-@@ -898,7 +895,7 @@ int f2fs_get_valid_checkpoint(struct f2fs_sb_info *sbi)
- 		return -ENOMEM;
- 	/*
- 	 * Finding out valid cp block involves read both
--	 * sets( cp pack1 and cp pack 2)
-+	 * sets( cp pack 1 and cp pack 2)
- 	 */
- 	cp_start_blk_no = le32_to_cpu(fsb->cp_blkaddr);
- 	cp1 = validate_checkpoint(sbi, cp_start_blk_no, &cp1_version);
-@@ -1385,10 +1382,7 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
- 	/* Flush all the NAT/SIT pages */
- 	f2fs_sync_meta_pages(sbi, META, LONG_MAX, FS_CP_META_IO);
- 
--	/*
--	 * modify checkpoint
--	 * version number is already updated
--	 */
-+	/* start to update checkpoint, cp ver is already updated previously */
- 	ckpt->elapsed_time = cpu_to_le64(get_mtime(sbi, true));
- 	ckpt->free_segment_count = cpu_to_le32(free_segments(sbi));
- 	for (i = 0; i < NR_CURSEG_NODE_TYPE; i++) {
-@@ -1541,9 +1535,6 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
- 	return unlikely(f2fs_cp_error(sbi)) ? -EIO : 0;
- }
- 
--/*
-- * We guarantee that this checkpoint procedure will not fail.
-- */
- int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
- {
- 	struct f2fs_checkpoint *ckpt = F2FS_CKPT(sbi);
-@@ -1611,7 +1602,6 @@ int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
- 
- 	f2fs_flush_sit_entries(sbi, cpc);
- 
--	/* unlock all the fs_lock[] in do_checkpoint() */
- 	err = do_checkpoint(sbi, cpc);
- 	if (err)
- 		f2fs_release_discard_addrs(sbi);
-@@ -1624,7 +1614,7 @@ int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
- 	if (cpc->reason & CP_RECOVERY)
- 		f2fs_notice(sbi, "checkpoint: version = %llx", ckpt_ver);
- 
--	/* do checkpoint periodically */
-+	/* update CP_TIME to trigger checkpoint periodically */
- 	f2fs_update_time(sbi, CP_TIME);
- 	trace_f2fs_write_checkpoint(sbi->sb, cpc->reason, "finish checkpoint");
- out:
+ 	f2fs_put_rpages(cc);
+ 	f2fs_destroy_compress_ctx(cc);
 diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 4249296a71f9..dbde309349d0 100644
+index 081e172fa130..4249296a71f9 100644
 --- a/fs/f2fs/data.c
 +++ b/fs/f2fs/data.c
-@@ -360,9 +360,6 @@ static void f2fs_write_end_io(struct bio *bio)
- 	bio_put(bio);
- }
+@@ -2643,10 +2643,10 @@ int f2fs_write_single_data_page(struct page *page, int *submitted,
+ 	if (err) {
+ 		file_set_keep_isize(inode);
+ 	} else {
+-		down_write(&F2FS_I(inode)->i_sem);
++		spin_lock(&F2FS_I(inode)->i_size_lock);
+ 		if (F2FS_I(inode)->last_disk_size < psize)
+ 			F2FS_I(inode)->last_disk_size = psize;
+-		up_write(&F2FS_I(inode)->i_sem);
++		spin_unlock(&F2FS_I(inode)->i_size_lock);
+ 	}
  
--/*
-- * Return true, if pre_bio's bdev is same as its target device.
-- */
- struct block_device *f2fs_target_device(struct f2fs_sb_info *sbi,
- 				block_t blk_addr, struct bio *bio)
- {
-@@ -399,6 +396,9 @@ int f2fs_target_device_index(struct f2fs_sb_info *sbi, block_t blkaddr)
- 	return 0;
- }
- 
-+/*
-+ * Return true, if pre_bio's bdev is same as its target device.
-+ */
- static bool __same_bdev(struct f2fs_sb_info *sbi,
- 				block_t blk_addr, struct bio *bio)
- {
-@@ -406,9 +406,6 @@ static bool __same_bdev(struct f2fs_sb_info *sbi,
- 	return bio->bi_disk == b->bd_disk && bio->bi_partno == b->bd_partno;
- }
- 
--/*
-- * Low-level block read/write IO operations.
-- */
- static struct bio *__bio_alloc(struct f2fs_io_info *fio, int npages)
- {
- 	struct f2fs_sb_info *sbi = fio->sbi;
-@@ -1383,13 +1380,9 @@ void __do_map_lock(struct f2fs_sb_info *sbi, int flag, bool lock)
- }
- 
- /*
-- * f2fs_map_blocks() now supported readahead/bmap/rw direct_IO with
-- * f2fs_map_blocks structure.
-- * If original data blocks are allocated, then give them to blockdev.
-- * Otherwise,
-- *     a. preallocate requested block addresses
-- *     b. do not use extent cache for better performance
-- *     c. give the block addresses to blockdev
-+ * f2fs_map_blocks() tries to find or build mapping relationship which
-+ * maps continuous logical blocks to physical blocks, and return such
-+ * info via f2fs_map_blocks structure.
-  */
- int f2fs_map_blocks(struct inode *inode, struct f2fs_map_blocks *map,
- 						int create, int flag)
+ done:
 diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 1a8af2020e72..5ca9efaf2ddc 100644
+index 4a02edc2454b..1a8af2020e72 100644
 --- a/fs/f2fs/f2fs.h
 +++ b/fs/f2fs/f2fs.h
-@@ -2410,9 +2410,9 @@ static inline block_t data_blkaddr(struct inode *inode,
+@@ -701,6 +701,7 @@ struct f2fs_inode_info {
+ 	struct task_struct *cp_task;	/* separate cp/wb IO stats*/
+ 	nid_t i_xattr_nid;		/* node id that contains xattrs */
+ 	loff_t	last_disk_size;		/* lastly written file size */
++	spinlock_t i_size_lock;		/* protect last_disk_size */
  
- 	raw_node = F2FS_NODE(node_page);
+ #ifdef CONFIG_QUOTA
+ 	struct dquot *i_dquot[MAXQUOTAS];
+@@ -2882,9 +2883,9 @@ static inline bool f2fs_skip_inode_update(struct inode *inode, int dsync)
+ 	if (!f2fs_is_time_consistent(inode))
+ 		return false;
  
--	/* from GC path only */
- 	if (is_inode) {
- 		if (!inode)
-+			/* from GC path only */
- 			base = offset_in_addr(&raw_node->i);
- 		else if (f2fs_has_extra_attr(inode))
- 			base = get_extra_isize(inode);
+-	down_read(&F2FS_I(inode)->i_sem);
++	spin_lock(&F2FS_I(inode)->i_size_lock);
+ 	ret = F2FS_I(inode)->last_disk_size == i_size_read(inode);
+-	up_read(&F2FS_I(inode)->i_sem);
++	spin_unlock(&F2FS_I(inode)->i_size_lock);
+ 
+ 	return ret;
+ }
 diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 40ed78026a25..09164c6a1d39 100644
+index b8f01ee9d698..40ed78026a25 100644
 --- a/fs/f2fs/file.c
 +++ b/fs/f2fs/file.c
-@@ -112,7 +112,6 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
- 		}
+@@ -931,10 +931,10 @@ int f2fs_setattr(struct dentry *dentry, struct iattr *attr)
+ 		if (err)
+ 			return err;
+ 
+-		down_write(&F2FS_I(inode)->i_sem);
++		spin_lock(&F2FS_I(inode)->i_size_lock);
+ 		inode->i_mtime = inode->i_ctime = current_time(inode);
+ 		F2FS_I(inode)->last_disk_size = i_size_read(inode);
+-		up_write(&F2FS_I(inode)->i_sem);
++		spin_unlock(&F2FS_I(inode)->i_size_lock);
  	}
  
--	/* fill the page */
- 	f2fs_wait_on_page_writeback(page, DATA, false, true);
- 
- 	/* wait for GCed page writeback via META_MAPPING */
-diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-index a92fa493a3dc..9ead93fcf78a 100644
---- a/fs/f2fs/gc.c
-+++ b/fs/f2fs/gc.c
-@@ -196,7 +196,10 @@ static void select_policy(struct f2fs_sb_info *sbi, int gc_type,
- 		p->ofs_unit = sbi->segs_per_sec;
- 	}
- 
--	/* we need to check every dirty segments in the FG_GC case */
-+	/*
-+	 * adjust candidates range, should select all dirty segments for
-+	 * foreground GC and urgent GC cases.
-+	 */
- 	if (gc_type != FG_GC &&
- 			(sbi->gc_mode != GC_URGENT) &&
- 			p->max_search > sbi->max_victim_search)
-diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-index 299611562f7e..3010706bac13 100644
---- a/fs/f2fs/inode.c
-+++ b/fs/f2fs/inode.c
-@@ -776,7 +776,7 @@ void f2fs_evict_inode(struct inode *inode)
- 	else
- 		f2fs_inode_synced(inode);
- 
--	/* ino == 0, if f2fs_new_inode() was failed t*/
-+	/* for the case f2fs_new_inode() was failed, .i_ino is zero, skip it */
- 	if (inode->i_ino)
- 		invalidate_mapping_pages(NODE_MAPPING(sbi), inode->i_ino,
- 							inode->i_ino);
-diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
-index 2aa035422c0f..b75c70813f9e 100644
---- a/fs/f2fs/namei.c
-+++ b/fs/f2fs/namei.c
-@@ -177,7 +177,7 @@ static inline int is_extension_exist(const unsigned char *s, const char *sub)
- }
- 
- /*
-- * Set multimedia files as cold files for hot/cold data separation
-+ * Set file's temperature for hot/cold data separation
-  */
- static inline void set_file_temperature(struct f2fs_sb_info *sbi, struct inode *inode,
- 		const unsigned char *name)
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index a8396ee98551..542335bdc100 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -510,9 +510,6 @@ int f2fs_try_to_free_nats(struct f2fs_sb_info *sbi, int nr_shrink)
- 	return nr - nr_shrink;
- }
- 
--/*
-- * This function always returns success
-- */
- int f2fs_get_node_info(struct f2fs_sb_info *sbi, nid_t nid,
- 						struct node_info *ni)
- {
-@@ -716,8 +713,7 @@ static int get_node_path(struct inode *inode, long block,
- /*
-  * Caller should call f2fs_put_dnode(dn).
-  * Also, it should grab and release a rwsem by calling f2fs_lock_op() and
-- * f2fs_unlock_op() only if ro is not set RDONLY_NODE.
-- * In the case of RDONLY_NODE, we don't need to care about mutex.
-+ * f2fs_unlock_op() only if mode is set with ALLOC_NODE.
-  */
- int f2fs_get_dnode_of_data(struct dnode_of_data *dn, pgoff_t index, int mode)
- {
-diff --git a/fs/f2fs/shrinker.c b/fs/f2fs/shrinker.c
-index a467aca29cfe..d66de5999a26 100644
---- a/fs/f2fs/shrinker.c
-+++ b/fs/f2fs/shrinker.c
-@@ -58,7 +58,7 @@ unsigned long f2fs_shrink_count(struct shrinker *shrink,
- 		/* count extent cache entries */
- 		count += __count_extent_cache(sbi);
- 
--		/* shrink clean nat cache entries */
-+		/* count clean nat cache entries */
- 		count += __count_nat_entries(sbi);
- 
- 		/* count free nids cache entries */
+ 	__setattr_copy(inode, attr);
 diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 2d0e5d1269f5..9f435191f1e5 100644
+index 0b16204d3b7d..2d0e5d1269f5 100644
 --- a/fs/f2fs/super.c
 +++ b/fs/f2fs/super.c
-@@ -1657,7 +1657,7 @@ static int f2fs_disable_checkpoint(struct f2fs_sb_info *sbi)
- out_unlock:
- 	up_write(&sbi->gc_lock);
- restore_flag:
--	sbi->sb->s_flags = s_flags;	/* Restore MS_RDONLY status */
-+	sbi->sb->s_flags = s_flags;	/* Restore SB_RDONLY status */
- 	return err;
- }
- 
-@@ -3597,7 +3597,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
- 			f2fs_err(sbi, "Cannot turn on quotas: error %d", err);
- 	}
- #endif
--	/* if there are nt orphan nodes free them */
-+	/* if there are any orphan inodes, free them */
- 	err = f2fs_recover_orphan_inodes(sbi);
- 	if (err)
- 		goto free_meta;
+@@ -957,6 +957,7 @@ static struct inode *f2fs_alloc_inode(struct super_block *sb)
+ 	/* Initialize f2fs-specific inode info */
+ 	atomic_set(&fi->dirty_pages, 0);
+ 	init_rwsem(&fi->i_sem);
++	spin_lock_init(&fi->i_size_lock);
+ 	INIT_LIST_HEAD(&fi->dirty_list);
+ 	INIT_LIST_HEAD(&fi->gdirty_list);
+ 	INIT_LIST_HEAD(&fi->inmem_ilist);
 -- 
 2.18.0.rc1
 
