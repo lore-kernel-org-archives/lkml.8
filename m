@@ -2,52 +2,53 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C38C3F34A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D2EC3F350
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D918D2084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 789E924656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:53:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811620;
-	bh=9ywhAYA701m1EHwH2msV5Pz/2sBLkQudXHocBsn18Ew=;
+	s=default; t=1582811629;
+	bh=CUISSiBSlSrDmC+eVEdnDHyB3n0xiY+2COTGTTS0AcM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VhGNmFbgHb1sktDyrLDK2+oJGTT61eskoSV9tD+eElyxTrER4En3bplx08MkaV+uA
-	 yT/FlPLRcJYPJkTB7z50OzNMm1uq9dH8+wQ3V+V8zrzefpMU+nVgCSOjTneuZKFc+s
-	 K8yjhB+jJK99VvkXTfsTxgwLbZdhXXWMSyE2Qnt8=
+	b=yenZkp3arXXu6R63w1HovcWHolaRHOIkcU2xu9o4f7PUPlrBt6fABFj92dH3zpdfY
+	 C03kxqw6jvEP9EvCFtvf0Xp9gF1uACqb1fMzbjPMVnci4XbUaHZuMaYN2pocFM+QSP
+	 iLURIz37+IgpkbBiw8Z6CZv/no71EqtATDflLGig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731742AbgB0Nxi (ORCPT
+        id S1731764AbgB0Nxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:53:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53450 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:53:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730589AbgB0Nxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:53:37 -0500
+        id S1731752AbgB0Nxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:53:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BBA52084E;
-        Thu, 27 Feb 2020 13:53:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4B3C246A5;
+        Thu, 27 Feb 2020 13:53:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811616;
-        bh=9ywhAYA701m1EHwH2msV5Pz/2sBLkQudXHocBsn18Ew=;
+        s=default; t=1582811624;
+        bh=CUISSiBSlSrDmC+eVEdnDHyB3n0xiY+2COTGTTS0AcM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S5NLEsSWhUjz9fmsOhuPqbkE7e1/STii5Qt6cwoWTQXXEA87UrBPZV+k41Mt752gP
-         yhLFsG35NOc87ixh26j26JJbpZ73LSHK0GNFU5sMCUe5V0kk+TCq03c05L1u3nzwxG
-         0MJmnyEQdMM5cHoCnBx7nZnGyHf9fyWztDUVx+cs=
+        b=RpzKz7ybE3THolykG8mKkC62VXjC7/4+X0eATi48Ey4fFg+DHY1TqQWik50WnU9dW
+         FkurbT3j8nT87vrjQVUpsqfwETJjWh4Ww+Wn2urVJDjmHRL6ni90dNLDvCb2tSnYSp
+         OxhFZVVirgrhwrGuYGojxAaspo+7hrr/XxxCfRCo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.14 009/237] Input: synaptics - remove the LEN0049 dmi id from topbuttonpad list
-Date:   Thu, 27 Feb 2020 14:33:43 +0100
-Message-Id: <20200227132256.566614184@linuxfoundation.org>
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 039/237] drm/gma500: Fixup fbdev stolen size usage evaluation
+Date:   Thu, 27 Feb 2020 14:34:13 +0100
+Message-Id: <20200227132259.606365818@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -60,44 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-commit 5179a9dfa9440c1781816e2c9a183d1d2512dc61 upstream.
+[ Upstream commit fd1a5e521c3c083bb43ea731aae0f8b95f12b9bd ]
 
-The Yoga 11e is using LEN0049, but it doesn't have a trackstick.
+psbfb_probe performs an evaluation of the required size from the stolen
+GTT memory, but gets it wrong in two distinct ways:
+- The resulting size must be page-size-aligned;
+- The size to allocate is derived from the surface dimensions, not the fb
+  dimensions.
 
-Thus, there is no need to create a software top buttons row.
+When two connectors are connected with different modes, the smallest will
+be stored in the fb dimensions, but the size that needs to be allocated must
+match the largest (surface) dimensions. This is what is used in the actual
+allocation code.
 
-However, it seems that the device works under SMBus, so keep it as part
-of the smbus_pnp_ids.
+Fix this by correcting the evaluation to conform to the two points above.
+It allows correctly switching to 16bpp when one connector is e.g. 1920x1080
+and the other is 1024x768.
 
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200115013023.9710-1-benjamin.tissoires@redhat.com
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191107153048.843881-1-paul.kocialkowski@bootlin.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/mouse/synaptics.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/gma500/framebuffer.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/drivers/input/mouse/synaptics.c
-+++ b/drivers/input/mouse/synaptics.c
-@@ -149,7 +149,6 @@ static const char * const topbuttonpad_p
- 	"LEN0042", /* Yoga */
- 	"LEN0045",
- 	"LEN0047",
--	"LEN0049",
- 	"LEN2000", /* S540 */
- 	"LEN2001", /* Edge E431 */
- 	"LEN2002", /* Edge E531 */
-@@ -169,6 +168,7 @@ static const char * const smbus_pnp_ids[
- 	/* all of the topbuttonpad_pnp_ids are valid, we just add some extras */
- 	"LEN0048", /* X1 Carbon 3 */
- 	"LEN0046", /* X250 */
-+	"LEN0049", /* Yoga 11e */
- 	"LEN004a", /* W541 */
- 	"LEN005b", /* P50 */
- 	"LEN005e", /* T560 */
+diff --git a/drivers/gpu/drm/gma500/framebuffer.c b/drivers/gpu/drm/gma500/framebuffer.c
+index 2570c7f647a63..883fc45870dd9 100644
+--- a/drivers/gpu/drm/gma500/framebuffer.c
++++ b/drivers/gpu/drm/gma500/framebuffer.c
+@@ -486,6 +486,7 @@ static int psbfb_probe(struct drm_fb_helper *helper,
+ 		container_of(helper, struct psb_fbdev, psb_fb_helper);
+ 	struct drm_device *dev = psb_fbdev->psb_fb_helper.dev;
+ 	struct drm_psb_private *dev_priv = dev->dev_private;
++	unsigned int fb_size;
+ 	int bytespp;
+ 
+ 	bytespp = sizes->surface_bpp / 8;
+@@ -495,8 +496,11 @@ static int psbfb_probe(struct drm_fb_helper *helper,
+ 	/* If the mode will not fit in 32bit then switch to 16bit to get
+ 	   a console on full resolution. The X mode setting server will
+ 	   allocate its own 32bit GEM framebuffer */
+-	if (ALIGN(sizes->fb_width * bytespp, 64) * sizes->fb_height >
+-	                dev_priv->vram_stolen_size) {
++	fb_size = ALIGN(sizes->surface_width * bytespp, 64) *
++		  sizes->surface_height;
++	fb_size = ALIGN(fb_size, PAGE_SIZE);
++
++	if (fb_size > dev_priv->vram_stolen_size) {
+                 sizes->surface_bpp = 16;
+                 sizes->surface_depth = 16;
+         }
+-- 
+2.20.1
+
 
 
