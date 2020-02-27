@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A799AC3F342
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 579B1C3F379
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 810FC2469B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D4332084E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:54:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811651;
-	bh=+zIrdqNPkEd6fY5EVhJZkgvBuBmEdUWSwmsgVa5DgUQ=;
+	s=default; t=1582811681;
+	bh=Xk19oTYE9u70HyDvvNyK9NTAXEnNkO6YRsK6c/paOMs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CROaqMRNaFAvkhFFizaIaLfkKmSdWOnNF+1omDvkJlPRifK/D7prCLr/8lOR0sUgz
-	 8L4AAzUvqlRLOE4qVhTF+fmaBOsXZRq30w1Vio+ZQtLV+ElxEe6jtKGtaokHK+HLzU
-	 Kx+LJ9Hunp13C3xU5eG0vrzPdDMishi5tjfG36Us=
+	b=iRi8CyXk7shc4VwQ85LqMmDIZqL0DHlBvscWr0iZfCO0qTfj3u1LRGBknmvz/wwO1
+	 ogovPEkkozCYqLLYXpafWS/7u5qUcpbl8rF5B959SxSjtVE707zDIkPEViFHGcxGlm
+	 Yi6mG9AxYoIYimpXkMR2yqDwPj0NE1A+zaze3ukE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731832AbgB0NyJ (ORCPT
+        id S1731050AbgB0Nyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:54:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54118 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:54:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731279AbgB0NyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:54:05 -0500
+        id S1731187AbgB0Nyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:54:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC91120801;
-        Thu, 27 Feb 2020 13:54:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2631C246A5;
+        Thu, 27 Feb 2020 13:54:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811645;
-        bh=+zIrdqNPkEd6fY5EVhJZkgvBuBmEdUWSwmsgVa5DgUQ=;
+        s=default; t=1582811675;
+        bh=Xk19oTYE9u70HyDvvNyK9NTAXEnNkO6YRsK6c/paOMs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QbHxjfiYBS47XWSxUSHabfjUPzomGGP0tXOOHZb6fuCaOgMQBwvCwu9Hunt5guPh+
-         Xmj7P3H4MBKmK/6g75y0PQqsBtJ9U68siBxBtGQys5LK2g3QO7ZaOdY6ouIz1gc/ml
-         87D4PeH2d2Op3BZ7swfSsMOyAWBriEmPQ2QsJPbo=
+        b=UMBJLpVj+Cn+7WW5afLrqZahOfhdW8kK85s7UipZu2JzetilPhWRpWjYFn2HPQ7NQ
+         osVE+m+xHyp3pik7svWPaBrQJXD1A+odlQPdvllV6nfFAfTRYSPW7jGq2G86qIRzNl
+         GPqLqyYZxgqSMuZbWoZvMHYYvJZ+IwwHH+55hCu8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 047/237] pxa168fb: Fix the function used to release some memory in an error handling path
-Date:   Thu, 27 Feb 2020 14:34:21 +0100
-Message-Id: <20200227132300.170429950@linuxfoundation.org>
+Subject: [PATCH 4.14 058/237] usb: gadget: udc: fix possible sleep-in-atomic-context bugs in gr_probe()
+Date:   Thu, 27 Feb 2020 14:34:32 +0100
+Message-Id: <20200227132301.181413152@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -63,54 +60,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 3c911fe799d1c338d94b78e7182ad452c37af897 ]
+[ Upstream commit 9c1ed62ae0690dfe5d5e31d8f70e70a95cb48e52 ]
 
-In the probe function, some resources are allocated using 'dma_alloc_wc()',
-they should be released with 'dma_free_wc()', not 'dma_free_coherent()'.
+The driver may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-We already use 'dma_free_wc()' in the remove function, but not in the
-error handling path of the probe function.
+drivers/usb/gadget/udc/core.c, 1175:
+	kzalloc(GFP_KERNEL) in usb_add_gadget_udc_release
+drivers/usb/gadget/udc/core.c, 1272:
+	usb_add_gadget_udc_release in usb_add_gadget_udc
+drivers/usb/gadget/udc/gr_udc.c, 2186:
+	usb_add_gadget_udc in gr_probe
+drivers/usb/gadget/udc/gr_udc.c, 2183:
+	spin_lock in gr_probe
 
-Also, remove a useless 'PAGE_ALIGN()'. 'info->fix.smem_len' is already
-PAGE_ALIGNed.
+drivers/usb/gadget/udc/core.c, 1195:
+	mutex_lock in usb_add_gadget_udc_release
+drivers/usb/gadget/udc/core.c, 1272:
+	usb_add_gadget_udc_release in usb_add_gadget_udc
+drivers/usb/gadget/udc/gr_udc.c, 2186:
+	usb_add_gadget_udc in gr_probe
+drivers/usb/gadget/udc/gr_udc.c, 2183:
+	spin_lock in gr_probe
 
-Fixes: 638772c7553f ("fb: add support of LCD display controller on pxa168/910 (base layer)")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Reviewed-by: Lubomir Rintel <lkundrak@v3.sk>
-CC: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190831100024.3248-1-christophe.jaillet@wanadoo.fr
+drivers/usb/gadget/udc/gr_udc.c, 212:
+	debugfs_create_file in gr_probe
+drivers/usb/gadget/udc/gr_udc.c, 2197:
+	gr_dfs_create in gr_probe
+drivers/usb/gadget/udc/gr_udc.c, 2183:
+    spin_lock in gr_probe
+
+drivers/usb/gadget/udc/gr_udc.c, 2114:
+	devm_request_threaded_irq in gr_request_irq
+drivers/usb/gadget/udc/gr_udc.c, 2202:
+	gr_request_irq in gr_probe
+drivers/usb/gadget/udc/gr_udc.c, 2183:
+    spin_lock in gr_probe
+
+kzalloc(GFP_KERNEL), mutex_lock(), debugfs_create_file() and
+devm_request_threaded_irq() can sleep at runtime.
+
+To fix these possible bugs, usb_add_gadget_udc(), gr_dfs_create() and
+gr_request_irq() are called without handling the spinlock.
+
+These bugs are found by a static analysis tool STCheck written by myself.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/pxa168fb.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/usb/gadget/udc/gr_udc.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/video/fbdev/pxa168fb.c b/drivers/video/fbdev/pxa168fb.c
-index d059d04c63acd..20195d3dbf088 100644
---- a/drivers/video/fbdev/pxa168fb.c
-+++ b/drivers/video/fbdev/pxa168fb.c
-@@ -769,8 +769,8 @@ failed_free_cmap:
- failed_free_clk:
- 	clk_disable_unprepare(fbi->clk);
- failed_free_fbmem:
--	dma_free_coherent(fbi->dev, info->fix.smem_len,
--			info->screen_base, fbi->fb_start_dma);
-+	dma_free_wc(fbi->dev, info->fix.smem_len,
-+		    info->screen_base, fbi->fb_start_dma);
- failed_free_info:
- 	kfree(info);
+diff --git a/drivers/usb/gadget/udc/gr_udc.c b/drivers/usb/gadget/udc/gr_udc.c
+index 1f9941145746e..feb73a1c42ef9 100644
+--- a/drivers/usb/gadget/udc/gr_udc.c
++++ b/drivers/usb/gadget/udc/gr_udc.c
+@@ -2200,8 +2200,6 @@ static int gr_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	}
  
-@@ -804,7 +804,7 @@ static int pxa168fb_remove(struct platform_device *pdev)
+-	spin_lock(&dev->lock);
+-
+ 	/* Inside lock so that no gadget can use this udc until probe is done */
+ 	retval = usb_add_gadget_udc(dev->dev, &dev->gadget);
+ 	if (retval) {
+@@ -2210,15 +2208,21 @@ static int gr_probe(struct platform_device *pdev)
+ 	}
+ 	dev->added = 1;
  
- 	irq = platform_get_irq(pdev, 0);
++	spin_lock(&dev->lock);
++
+ 	retval = gr_udc_init(dev);
+-	if (retval)
++	if (retval) {
++		spin_unlock(&dev->lock);
+ 		goto out;
+-
+-	gr_dfs_create(dev);
++	}
  
--	dma_free_wc(fbi->dev, PAGE_ALIGN(info->fix.smem_len),
-+	dma_free_wc(fbi->dev, info->fix.smem_len,
- 		    info->screen_base, info->fix.smem_start);
+ 	/* Clear all interrupt enables that might be left on since last boot */
+ 	gr_disable_interrupts_and_pullup(dev);
  
- 	clk_disable_unprepare(fbi->clk);
++	spin_unlock(&dev->lock);
++
++	gr_dfs_create(dev);
++
+ 	retval = gr_request_irq(dev, dev->irq);
+ 	if (retval) {
+ 		dev_err(dev->dev, "Failed to request irq %d\n", dev->irq);
+@@ -2247,8 +2251,6 @@ static int gr_probe(struct platform_device *pdev)
+ 		dev_info(dev->dev, "regs: %p, irq %d\n", dev->regs, dev->irq);
+ 
+ out:
+-	spin_unlock(&dev->lock);
+-
+ 	if (retval)
+ 		gr_remove(pdev);
+ 
 -- 
 2.20.1
 
