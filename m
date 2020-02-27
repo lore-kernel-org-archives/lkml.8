@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6115C3F351
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB38BC3F352
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EB3D20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A929320801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811198;
-	bh=ajpB8eecB8S6mcm+Ep69bc4C07rF0kg9REsPpgf97+0=;
+	s=default; t=1582811305;
+	bh=QF+GM9/wVb1HaoupTgbLeTFq/iwqSRZpYgfw/Bq0fhQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xF8w2dDY82DQQ4YLJfVSQQMGzbzDZpnwyr8ymIKG08moCr6OCxwSujlMsy+RerGPj
-	 dSwzD2ybN4Z9I5xoEonm6AgGJ/3Bj7+uWEykAAqSE6DxwMUes/K0/DWr/tuE9b33r3
-	 WlVUg1rRT6qwDDmi81qX1kGNBcCQNxxs2Rvk1rPE=
+	b=FFwS9bzt7/0gGJ84MCC/XBkk3CxAyPtq0neFwc2Kul2Mk8RJjaBjgWCkPSDcxY3pY
+	 hIIIl5FmYoSZ71G3BIP4CsQ6MG1rwFBPA3ezX265//CEFcHcPdcfgK1T9SC5iXODo8
+	 /NZZlPgIMUNXlUxrPzSMUgWo4qEfMV5QvmeP1d5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730298AbgB0Nqh (ORCPT
+        id S1730872AbgB0NsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:46:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42842 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:48:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730535AbgB0Nqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:46:35 -0500
+        id S1730514AbgB0NsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:48:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E12E621D7E;
-        Thu, 27 Feb 2020 13:46:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C318E20578;
+        Thu, 27 Feb 2020 13:48:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811194;
-        bh=ajpB8eecB8S6mcm+Ep69bc4C07rF0kg9REsPpgf97+0=;
+        s=default; t=1582811300;
+        bh=QF+GM9/wVb1HaoupTgbLeTFq/iwqSRZpYgfw/Bq0fhQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WPWF+s/ZBBC8WVACUrOUITSvOF2I4IzurtZQnwNu+PFOxci7TP01k/TFFWSr0FXPx
-         TBkhSG4+zrK8U59E/NO7uilV8uFiAkWYA2jBL/GCiFhTWaaky81/EueYXJYYX9Ok8f
-         HSHMQTQdwkkxWs7W8OkywQX3/w+geDMwgORTe8xo=
+        b=Dpp9lgRgsl/jCmdFlhZXcDJmUW0CYR7o5VAkWv9Reen3PJYKARDJQc9CujBi2mgNB
+         9BnZPpEdkPFWyIWfAsDxyiFd9KTyo5pHd9TqxC1hi+yNruSNkY+vBcQXs3CzlagY7y
+         m0TeJPGCcaJYrTgfwAc/Qacm6M4/bbVNvOlpYKYE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 037/165] usb: gadget: udc: fix possible sleep-in-atomic-context bugs in gr_probe()
-Date:   Thu, 27 Feb 2020 14:35:11 +0100
-Message-Id: <20200227132236.608102745@linuxfoundation.org>
+Subject: [PATCH 4.9 078/165] driver core: Print device when resources present in really_probe()
+Date:   Thu, 27 Feb 2020 14:35:52 +0100
+Message-Id: <20200227132242.780012307@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -60,108 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 9c1ed62ae0690dfe5d5e31d8f70e70a95cb48e52 ]
+[ Upstream commit 7c35e699c88bd60734277b26962783c60e04b494 ]
 
-The driver may sleep while holding a spinlock.
-The function call path (from bottom to top) in Linux 4.19 is:
+If a device already has devres items attached before probing, a warning
+backtrace is printed.  However, this backtrace does not reveal the
+offending device, leaving the user uninformed.  Furthermore, using
+WARN_ON() causes systems with panic-on-warn to reboot.
 
-drivers/usb/gadget/udc/core.c, 1175:
-	kzalloc(GFP_KERNEL) in usb_add_gadget_udc_release
-drivers/usb/gadget/udc/core.c, 1272:
-	usb_add_gadget_udc_release in usb_add_gadget_udc
-drivers/usb/gadget/udc/gr_udc.c, 2186:
-	usb_add_gadget_udc in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2183:
-	spin_lock in gr_probe
+Fix this by replacing the WARN_ON() by a dev_crit() message.
+Abort probing the device, to prevent doing more damage to the device's
+resources.
 
-drivers/usb/gadget/udc/core.c, 1195:
-	mutex_lock in usb_add_gadget_udc_release
-drivers/usb/gadget/udc/core.c, 1272:
-	usb_add_gadget_udc_release in usb_add_gadget_udc
-drivers/usb/gadget/udc/gr_udc.c, 2186:
-	usb_add_gadget_udc in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2183:
-	spin_lock in gr_probe
-
-drivers/usb/gadget/udc/gr_udc.c, 212:
-	debugfs_create_file in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2197:
-	gr_dfs_create in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2183:
-    spin_lock in gr_probe
-
-drivers/usb/gadget/udc/gr_udc.c, 2114:
-	devm_request_threaded_irq in gr_request_irq
-drivers/usb/gadget/udc/gr_udc.c, 2202:
-	gr_request_irq in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2183:
-    spin_lock in gr_probe
-
-kzalloc(GFP_KERNEL), mutex_lock(), debugfs_create_file() and
-devm_request_threaded_irq() can sleep at runtime.
-
-To fix these possible bugs, usb_add_gadget_udc(), gr_dfs_create() and
-gr_request_irq() are called without handling the spinlock.
-
-These bugs are found by a static analysis tool STCheck written by myself.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191206132219.28908-1-geert+renesas@glider.be
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/gr_udc.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ drivers/base/dd.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/udc/gr_udc.c b/drivers/usb/gadget/udc/gr_udc.c
-index 39b7136d31d9c..9e246d2e55ca3 100644
---- a/drivers/usb/gadget/udc/gr_udc.c
-+++ b/drivers/usb/gadget/udc/gr_udc.c
-@@ -2200,8 +2200,6 @@ static int gr_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	}
- 
--	spin_lock(&dev->lock);
--
- 	/* Inside lock so that no gadget can use this udc until probe is done */
- 	retval = usb_add_gadget_udc(dev->dev, &dev->gadget);
- 	if (retval) {
-@@ -2210,15 +2208,21 @@ static int gr_probe(struct platform_device *pdev)
- 	}
- 	dev->added = 1;
- 
-+	spin_lock(&dev->lock);
-+
- 	retval = gr_udc_init(dev);
--	if (retval)
-+	if (retval) {
-+		spin_unlock(&dev->lock);
- 		goto out;
--
--	gr_dfs_create(dev);
+diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+index ee25a69630c3a..854d218ea76ac 100644
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -341,7 +341,10 @@ static int really_probe(struct device *dev, struct device_driver *drv)
+ 	atomic_inc(&probe_count);
+ 	pr_debug("bus: '%s': %s: probing driver %s with device %s\n",
+ 		 drv->bus->name, __func__, drv->name, dev_name(dev));
+-	WARN_ON(!list_empty(&dev->devres_head));
++	if (!list_empty(&dev->devres_head)) {
++		dev_crit(dev, "Resources present before probing\n");
++		return -EBUSY;
 +	}
  
- 	/* Clear all interrupt enables that might be left on since last boot */
- 	gr_disable_interrupts_and_pullup(dev);
- 
-+	spin_unlock(&dev->lock);
-+
-+	gr_dfs_create(dev);
-+
- 	retval = gr_request_irq(dev, dev->irq);
- 	if (retval) {
- 		dev_err(dev->dev, "Failed to request irq %d\n", dev->irq);
-@@ -2247,8 +2251,6 @@ static int gr_probe(struct platform_device *pdev)
- 		dev_info(dev->dev, "regs: %p, irq %d\n", dev->regs, dev->irq);
- 
- out:
--	spin_unlock(&dev->lock);
--
- 	if (retval)
- 		gr_remove(pdev);
- 
+ re_probe:
+ 	dev->driver = drv;
 -- 
 2.20.1
 
