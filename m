@@ -7,258 +7,163 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDFEC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2844C4BA3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B9EC24693
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:49:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A712824693
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:49:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="USUS+1jK"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Apiz0zKp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729024AbgB0LtJ (ORCPT
+        id S1728977AbgB0LtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 06:49:09 -0500
+        Thu, 27 Feb 2020 06:49:03 -0500
 Received: from pegase1.c-s.fr ([93.17.236.30]:64995 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728969AbgB0LtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 06:49:05 -0500
+        id S1728958AbgB0LtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 06:49:02 -0500
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48SrYC13zRz9tyhx;
-        Thu, 27 Feb 2020 12:49:03 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 48SrY66zFlz9tyj4;
+        Thu, 27 Feb 2020 12:48:58 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=USUS+1jK; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=Apiz0zKp; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id Ipm_Qa5HxxWc; Thu, 27 Feb 2020 12:49:03 +0100 (CET)
+        with ESMTP id qSBArqc1uHq3; Thu, 27 Feb 2020 12:48:58 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48SrYC01yqz9tyhM;
-        Thu, 27 Feb 2020 12:49:03 +0100 (CET)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48SrY65ngmz9tyhM;
+        Thu, 27 Feb 2020 12:48:58 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1582804143; bh=uf9kHFohIIPyVydQkYJqQZCBFiY/xz5h8N0infTzpjI=;
+        t=1582804138; bh=L4yqb0BCFkaKadMOOwxR17ksmx4VcmckLGkRTHxYdrQ=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=USUS+1jKgKn7FRMSKXdrEjVXqrAXvj0BA0DgcM9/eJj0v+kbvNqjy6euh/WcwRdWp
-         QWNhsbQ1d2udvxRVADC6GomvVZXNCqssLyqLkCFulj5+6f/nkL/HUcMBDxETChZHeq
-         iml0abI3SiAue2cjuz4cm4Php5xOnms3jS/u3JUU=
+        b=Apiz0zKp0f/FX6OsDYh8rIOpNJCYWq5fNH8+7vPej20WKvaJ5CkAUgV3YswGPqkHT
+         U1QX3RJt3+dbUBCTB1BBzK993tku1PFOB7eEQ0sDRjJP6cnjn3X4etkbgI2NmSRPir
+         3eLiyYbRUfUz8mmmeYcR67Nmw1PHl9yOxyKFF0rw=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 406DE8B872;
-        Thu, 27 Feb 2020 12:49:04 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0F8028B872;
+        Thu, 27 Feb 2020 12:49:00 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id TCgCSuvJpXnE; Thu, 27 Feb 2020 12:49:04 +0100 (CET)
+        with ESMTP id oq2c8moz3D3v; Thu, 27 Feb 2020 12:48:59 +0100 (CET)
 Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E80048B799;
-        Thu, 27 Feb 2020 12:49:03 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A35AB8B799;
+        Thu, 27 Feb 2020 12:48:59 +0100 (CET)
 Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id B946665402; Thu, 27 Feb 2020 11:49:03 +0000 (UTC)
-Message-Id: <82efef54724a6cc025c83f19c57e36ffe703798f.1582803998.git.christophe.leroy@c-s.fr>
+        id 6C1DC65402; Thu, 27 Feb 2020 11:48:59 +0000 (UTC)
+Message-Id: <af38b87a7e1e3efe4f9b664eaeb029e6e7d69fdb.1582803998.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1582803998.git.christophe.leroy@c-s.fr>
 References: <cover.1582803998.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v4 07/13] powerpc/ptrace: split out SPE related functions.
+Subject: [PATCH v4 03/13] powerpc/ptrace: drop unnecessary #ifdefs
+ CONFIG_PPC64
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>, mikey@neuling.org
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Thu, 27 Feb 2020 11:49:03 +0000 (UTC)
+Date:   Thu, 27 Feb 2020 11:48:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move CONFIG_SPE functions out of ptrace.c, into
-ptrace-spe.c
+Drop a bunch of #ifdefs CONFIG_PPC64 that are not vital.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/kernel/ptrace/Makefile      |  1 +
- arch/powerpc/kernel/ptrace/ptrace-decl.h |  9 ++++
- arch/powerpc/kernel/ptrace/ptrace-spe.c  | 66 ++++++++++++++++++++++++
- arch/powerpc/kernel/ptrace/ptrace.c      | 66 ------------------------
- 4 files changed, 76 insertions(+), 66 deletions(-)
- create mode 100644 arch/powerpc/kernel/ptrace/ptrace-spe.c
+ arch/powerpc/include/asm/ptrace.h   |  2 ++
+ arch/powerpc/kernel/ptrace/ptrace.c | 18 +++---------------
+ 2 files changed, 5 insertions(+), 15 deletions(-)
 
-diff --git a/arch/powerpc/kernel/ptrace/Makefile b/arch/powerpc/kernel/ptrace/Makefile
-index 522e6fd0b5b8..f87eadf6e072 100644
---- a/arch/powerpc/kernel/ptrace/Makefile
-+++ b/arch/powerpc/kernel/ptrace/Makefile
-@@ -12,3 +12,4 @@ ifneq ($(CONFIG_VSX),y)
- obj-y				+= ptrace-novsx.o
- endif
- obj-$(CONFIG_ALTIVEC)		+= ptrace-altivec.o
-+obj-$(CONFIG_SPE)		+= ptrace-spe.o
-diff --git a/arch/powerpc/kernel/ptrace/ptrace-decl.h b/arch/powerpc/kernel/ptrace/ptrace-decl.h
-index 0f9282cb52fc..8a362f97f1d6 100644
---- a/arch/powerpc/kernel/ptrace/ptrace-decl.h
-+++ b/arch/powerpc/kernel/ptrace/ptrace-decl.h
-@@ -26,6 +26,15 @@ int vr_set(struct task_struct *target, const struct user_regset *regset,
- 	   unsigned int pos, unsigned int count,
- 	   const void *kbuf, const void __user *ubuf);
+diff --git a/arch/powerpc/include/asm/ptrace.h b/arch/powerpc/include/asm/ptrace.h
+index ee3ada66deb5..8e1953d99353 100644
+--- a/arch/powerpc/include/asm/ptrace.h
++++ b/arch/powerpc/include/asm/ptrace.h
+@@ -276,6 +276,8 @@ static inline unsigned long regs_get_kernel_stack_nth(struct pt_regs *regs,
+ #endif /* __ASSEMBLY__ */
  
-+/* ptrace-spe */
-+
-+int evr_active(struct task_struct *target, const struct user_regset *regset);
-+int evr_get(struct task_struct *target, const struct user_regset *regset,
-+	    unsigned int pos, unsigned int count, void *kbuf, void __user *ubuf);
-+int evr_set(struct task_struct *target, const struct user_regset *regset,
-+	    unsigned int pos, unsigned int count,
-+	    const void *kbuf, const void __user *ubuf);
-+
- /* ptrace */
- 
- #ifdef CONFIG_PPC_TRANSACTIONAL_MEM
-diff --git a/arch/powerpc/kernel/ptrace/ptrace-spe.c b/arch/powerpc/kernel/ptrace/ptrace-spe.c
-new file mode 100644
-index 000000000000..c2e1a15c4343
---- /dev/null
-+++ b/arch/powerpc/kernel/ptrace/ptrace-spe.c
-@@ -0,0 +1,66 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+
-+#include <linux/regset.h>
-+
-+#include <asm/switch_to.h>
-+
-+/*
-+ * For get_evrregs/set_evrregs functions 'data' has the following layout:
-+ *
-+ * struct {
-+ *   u32 evr[32];
-+ *   u64 acc;
-+ *   u32 spefscr;
-+ * }
-+ */
-+
-+int evr_active(struct task_struct *target, const struct user_regset *regset)
-+{
-+	flush_spe_to_thread(target);
-+	return target->thread.used_spe ? regset->n : 0;
-+}
-+
-+int evr_get(struct task_struct *target, const struct user_regset *regset,
-+	    unsigned int pos, unsigned int count, void *kbuf, void __user *ubuf)
-+{
-+	int ret;
-+
-+	flush_spe_to_thread(target);
-+
-+	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
-+				  &target->thread.evr,
-+				  0, sizeof(target->thread.evr));
-+
-+	BUILD_BUG_ON(offsetof(struct thread_struct, acc) + sizeof(u64) !=
-+		     offsetof(struct thread_struct, spefscr));
-+
-+	if (!ret)
-+		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
-+					  &target->thread.acc,
-+					  sizeof(target->thread.evr), -1);
-+
-+	return ret;
-+}
-+
-+int evr_set(struct task_struct *target, const struct user_regset *regset,
-+	    unsigned int pos, unsigned int count,
-+	    const void *kbuf, const void __user *ubuf)
-+{
-+	int ret;
-+
-+	flush_spe_to_thread(target);
-+
-+	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
-+				 &target->thread.evr,
-+				 0, sizeof(target->thread.evr));
-+
-+	BUILD_BUG_ON(offsetof(struct thread_struct, acc) + sizeof(u64) !=
-+		     offsetof(struct thread_struct, spefscr));
-+
-+	if (!ret)
-+		ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
-+					 &target->thread.acc,
-+					 sizeof(target->thread.evr), -1);
-+
-+	return ret;
-+}
+ #ifndef __powerpc64__
++/* We need PT_SOFTE defined at all time to avoid #ifdefs */
++#define PT_SOFTE PT_MQ
+ #else /* __powerpc64__ */
+ #define PT_FPSCR32 (PT_FPR0 + 2*32 + 1)	/* each FP reg occupies 2 32-bit userspace slots */
+ #define PT_VR0_32 164	/* each Vector reg occupies 4 slots in 32-bit */
 diff --git a/arch/powerpc/kernel/ptrace/ptrace.c b/arch/powerpc/kernel/ptrace/ptrace.c
-index c383325db4a6..ca2b4d804992 100644
+index 7ed54dbb2d7e..3dd94c296ac7 100644
 --- a/arch/powerpc/kernel/ptrace/ptrace.c
 +++ b/arch/powerpc/kernel/ptrace/ptrace.c
-@@ -403,72 +403,6 @@ static int gpr_set(struct task_struct *target, const struct user_regset *regset,
- 	return ret;
+@@ -274,17 +274,15 @@ int ptrace_get_reg(struct task_struct *task, int regno, unsigned long *data)
+ 	if (regno == PT_DSCR)
+ 		return get_user_dscr(task, data);
+ 
+-#ifdef CONFIG_PPC64
+ 	/*
+ 	 * softe copies paca->irq_soft_mask variable state. Since irq_soft_mask is
+ 	 * no more used as a flag, lets force usr to alway see the softe value as 1
+ 	 * which means interrupts are not soft disabled.
+ 	 */
+-	if (regno == PT_SOFTE) {
++	if (IS_ENABLED(CONFIG_PPC64) && regno == PT_SOFTE) {
+ 		*data = 1;
+ 		return  0;
+ 	}
+-#endif
+ 
+ 	regs_max = sizeof(struct user_pt_regs) / sizeof(unsigned long);
+ 	if (regno < regs_max) {
+@@ -1998,7 +1996,6 @@ static const struct user_regset_view user_ppc_native_view = {
+ 	.regsets = native_regsets, .n = ARRAY_SIZE(native_regsets)
+ };
+ 
+-#ifdef CONFIG_PPC64
+ #include <linux/compat.h>
+ 
+ static int gpr32_get_common(struct task_struct *target,
+@@ -2272,14 +2269,11 @@ static const struct user_regset_view user_ppc_compat_view = {
+ 	.name = "ppc", .e_machine = EM_PPC, .ei_osabi = ELF_OSABI,
+ 	.regsets = compat_regsets, .n = ARRAY_SIZE(compat_regsets)
+ };
+-#endif	/* CONFIG_PPC64 */
+ 
+ const struct user_regset_view *task_user_regset_view(struct task_struct *task)
+ {
+-#ifdef CONFIG_PPC64
+-	if (test_tsk_thread_flag(task, TIF_32BIT))
++	if (IS_ENABLED(CONFIG_PPC64) && test_tsk_thread_flag(task, TIF_32BIT))
+ 		return &user_ppc_compat_view;
+-#endif
+ 	return &user_ppc_native_view;
  }
  
--#ifdef CONFIG_SPE
--
--/*
-- * For get_evrregs/set_evrregs functions 'data' has the following layout:
-- *
-- * struct {
-- *   u32 evr[32];
-- *   u64 acc;
-- *   u32 spefscr;
-- * }
-- */
--
--static int evr_active(struct task_struct *target,
--		      const struct user_regset *regset)
--{
--	flush_spe_to_thread(target);
--	return target->thread.used_spe ? regset->n : 0;
--}
--
--static int evr_get(struct task_struct *target, const struct user_regset *regset,
--		   unsigned int pos, unsigned int count,
--		   void *kbuf, void __user *ubuf)
--{
--	int ret;
--
--	flush_spe_to_thread(target);
--
--	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
--				  &target->thread.evr,
--				  0, sizeof(target->thread.evr));
--
--	BUILD_BUG_ON(offsetof(struct thread_struct, acc) + sizeof(u64) !=
--		     offsetof(struct thread_struct, spefscr));
--
--	if (!ret)
--		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
--					  &target->thread.acc,
--					  sizeof(target->thread.evr), -1);
--
--	return ret;
--}
--
--static int evr_set(struct task_struct *target, const struct user_regset *regset,
--		   unsigned int pos, unsigned int count,
--		   const void *kbuf, const void __user *ubuf)
--{
--	int ret;
--
--	flush_spe_to_thread(target);
--
--	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
--				 &target->thread.evr,
--				 0, sizeof(target->thread.evr));
--
--	BUILD_BUG_ON(offsetof(struct thread_struct, acc) + sizeof(u64) !=
--		     offsetof(struct thread_struct, spefscr));
--
--	if (!ret)
--		ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
--					 &target->thread.acc,
--					 sizeof(target->thread.evr), -1);
--
--	return ret;
--}
--#endif /* CONFIG_SPE */
--
- #ifdef CONFIG_PPC_TRANSACTIONAL_MEM
- /**
-  * tm_cgpr_active - get active number of registers in CGPR
+@@ -3063,11 +3057,7 @@ long arch_ptrace(struct task_struct *child, long request,
+ 		else
+ 			dbginfo.num_data_bps = 0;
+ 		dbginfo.num_condition_regs = 0;
+-#ifdef CONFIG_PPC64
+-		dbginfo.data_bp_alignment = 8;
+-#else
+-		dbginfo.data_bp_alignment = 4;
+-#endif
++		dbginfo.data_bp_alignment = sizeof(long);
+ 		dbginfo.sizeof_condition = 0;
+ #ifdef CONFIG_HAVE_HW_BREAKPOINT
+ 		dbginfo.features = PPC_DEBUG_FEATURE_DATA_BP_RANGE;
+@@ -3304,12 +3294,10 @@ long do_syscall_trace_enter(struct pt_regs *regs)
+ 	if (unlikely(test_thread_flag(TIF_SYSCALL_TRACEPOINT)))
+ 		trace_sys_enter(regs, regs->gpr[0]);
+ 
+-#ifdef CONFIG_PPC64
+ 	if (!is_32bit_task())
+ 		audit_syscall_entry(regs->gpr[0], regs->gpr[3], regs->gpr[4],
+ 				    regs->gpr[5], regs->gpr[6]);
+ 	else
+-#endif
+ 		audit_syscall_entry(regs->gpr[0],
+ 				    regs->gpr[3] & 0xffffffff,
+ 				    regs->gpr[4] & 0xffffffff,
 -- 
 2.25.0
 
