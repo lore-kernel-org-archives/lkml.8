@@ -2,130 +2,118 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB34C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 06:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB05DC4BA06
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 06:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E901724656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 06:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E87B24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 06:09:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="IdRx2Km3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbgB0GJO (ORCPT
+        id S1727360AbgB0GJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 01:09:14 -0500
-Received: from mail-io1-f70.google.com ([209.85.166.70]:52842 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbgB0GJN (ORCPT
+        Thu, 27 Feb 2020 01:09:44 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:59856 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725790AbgB0GJn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 01:09:13 -0500
-Received: by mail-io1-f70.google.com with SMTP id l62so2176889ioa.19
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 22:09:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Mghh8SCiDdbHvDX8JBCxoVgF15o5weHGC4OfyCFcXZQ=;
-        b=dy5TdNYaiqTeBqO490ZH/u7Jbjcu1Kbw6g7z3bMmQiBmzT1j+3SnDEiAyz3DjdhxcU
-         NROhcg/YdKuKRKsK/9BZC7x/Ep8H+K1fN0GC//RuZMvZW6nZp4OoQYyK18RHhPQz8NWU
-         XaaWZwa+/gqwipbpE71foSShp+FosKnpqomB5CcFWSK12pwO95JyI0qxauVURAm2C+yg
-         rTZA2QB0G1F6rRYXZy7QkLZbnwMGmN7J9L8HUCfdeg4XHk8f7YGEbJ7yte+CubQ4HU3p
-         9c+g/hysB8Cm/HC7kxbns4daqxzgsiC9b8BZEoBDz47fzLjjTRrFCNMh7Y8jFDB/omXR
-         A1DQ==
-X-Gm-Message-State: APjAAAXps9nOuOACaz6eualBCYQ2br7iWkhP038/O49fFpx7xR085gJF
-        AcfcdNELu4n5sMSCzuT/V3cG/6XvzvfTCaIEfY2IL++wqR+/
-X-Google-Smtp-Source: APXvYqxGwmUJGnFtTxD5+jkI1/WYe0cDkI2Jl/oNwZusdut3sLbK9MlFM4lt46RaRvKB1AL9aWkHOzFomVNoiZKInuaEu5vlsFxa
-MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:ea9:: with SMTP id u9mr3571292ilj.40.1582783753318;
- Wed, 26 Feb 2020 22:09:13 -0800 (PST)
-Date:   Wed, 26 Feb 2020 22:09:13 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005f77d6059f888f2e@google.com>
-Subject: WARNING: kobject bug in add_one_compat_dev
-From:   syzbot <syzbot+ab4dae63f7d310641ded@syzkaller.appspotmail.com>
-To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, rafael@kernel.org,
-        syzkaller-bugs@googlegroups.com
+        Thu, 27 Feb 2020 01:09:43 -0500
+X-UUID: 090e36d2203c48729c8b76f2daca3830-20200227
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=8hObMDkCZhI/DRnWGjAJpxpuzXkK7SPUl3OhA8dm39o=;
+        b=IdRx2Km31sN0fY3wFTEotJ/PWfrQ+GfiQdnfHck4R92x/7fk5b3SmddFlVXYUnJh5uUkCTTqNxgMTiXyMsfkKmPDPDD4/ZCGudXlhUpvOFVttzeccpdVabIs1ESzVgfnSwHHuuk/j5TXRAZv4jbu1RF3lFPCCFcXKjJz938M+3o=;
+X-UUID: 090e36d2203c48729c8b76f2daca3830-20200227
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 180435795; Thu, 27 Feb 2020 14:09:37 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 27 Feb 2020 14:08:39 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by mtkcas08.mediatek.inc
+ (172.21.101.126) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 27 Feb
+ 2020 14:09:40 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 27 Feb 2020 14:09:25 +0800
+Message-ID: <1582783776.30808.1.camel@mtksdaap41>
+Subject: Re: [PATCH] drm/mediatek: Remove debug messages for function calls
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-mediatek@lists.infradead.org>,
+        David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Date:   Thu, 27 Feb 2020 14:09:36 +0800
+In-Reply-To: <20200226112723.649954-1-enric.balletbo@collabora.com>
+References: <20200226112723.649954-1-enric.balletbo@collabora.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+SGksIEVucmljOg0KDQpPbiBXZWQsIDIwMjAtMDItMjYgYXQgMTI6MjcgKzAxMDAsIEVucmljIEJh
+bGxldGJvIGkgU2VycmEgd3JvdGU6DQo+IEVxdWl2YWxlbnQgaW5mb3JtYXRpb24gY2FuIGJlIG5v
+d2FkYXlzIG9idGFpbmVkIHVzaW5nIGZ1bmN0aW9uIHRyYWNlci4NCj4gDQoNClJldmlld2VkLWJ5
+OiBDSyBIdSA8Y2suaHVAbWVkaWF0ZWsuY29tPg0KDQo+IFNpZ25lZC1vZmYtYnk6IEVucmljIEJh
+bGxldGJvIGkgU2VycmEgPGVucmljLmJhbGxldGJvQGNvbGxhYm9yYS5jb20+DQo+IC0tLQ0KPiAN
+Cj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYyB8IDUgLS0tLS0NCj4g
+IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jICB8IDIgLS0NCj4gIDIgZmls
+ZXMgY2hhbmdlZCwgNyBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
+dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
+bXRrX2RybV9jcnRjLmMNCj4gaW5kZXggYTIzNjQ5OTEyM2FhLi44ODJjNjkwZDNmMTMgMTAwNjQ0
+DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYw0KPiArKysg
+Yi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMNCj4gQEAgLTE5Miw3ICsx
+OTIsNiBAQCBzdGF0aWMgaW50IG10a19jcnRjX2RkcF9jbGtfZW5hYmxlKHN0cnVjdCBtdGtfZHJt
+X2NydGMgKm10a19jcnRjKQ0KPiAgCWludCByZXQ7DQo+ICAJaW50IGk7DQo+ICANCj4gLQlEUk1f
+REVCVUdfRFJJVkVSKCIlc1xuIiwgX19mdW5jX18pOw0KPiAgCWZvciAoaSA9IDA7IGkgPCBtdGtf
+Y3J0Yy0+ZGRwX2NvbXBfbnI7IGkrKykgew0KPiAgCQlyZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUo
+bXRrX2NydGMtPmRkcF9jb21wW2ldLT5jbGspOw0KPiAgCQlpZiAocmV0KSB7DQo+IEBAIC0yMTIs
+NyArMjExLDYgQEAgc3RhdGljIHZvaWQgbXRrX2NydGNfZGRwX2Nsa19kaXNhYmxlKHN0cnVjdCBt
+dGtfZHJtX2NydGMgKm10a19jcnRjKQ0KPiAgew0KPiAgCWludCBpOw0KPiAgDQo+IC0JRFJNX0RF
+QlVHX0RSSVZFUigiJXNcbiIsIF9fZnVuY19fKTsNCj4gIAlmb3IgKGkgPSAwOyBpIDwgbXRrX2Ny
+dGMtPmRkcF9jb21wX25yOyBpKyspDQo+ICAJCWNsa19kaXNhYmxlX3VucHJlcGFyZShtdGtfY3J0
+Yy0+ZGRwX2NvbXBbaV0tPmNsayk7DQo+ICB9DQo+IEBAIC0yNTcsNyArMjU1LDYgQEAgc3RhdGlj
+IGludCBtdGtfY3J0Y19kZHBfaHdfaW5pdChzdHJ1Y3QgbXRrX2RybV9jcnRjICptdGtfY3J0YykN
+Cj4gIAlpbnQgcmV0Ow0KPiAgCWludCBpOw0KPiAgDQo+IC0JRFJNX0RFQlVHX0RSSVZFUigiJXNc
+biIsIF9fZnVuY19fKTsNCj4gIAlpZiAoV0FSTl9PTighY3J0Yy0+c3RhdGUpKQ0KPiAgCQlyZXR1
+cm4gLUVJTlZBTDsNCj4gIA0KPiBAQCAtMjk4LDcgKzI5NSw2IEBAIHN0YXRpYyBpbnQgbXRrX2Ny
+dGNfZGRwX2h3X2luaXQoc3RydWN0IG10a19kcm1fY3J0YyAqbXRrX2NydGMpDQo+ICAJCWdvdG8g
+ZXJyX211dGV4X3VucHJlcGFyZTsNCj4gIAl9DQo+ICANCj4gLQlEUk1fREVCVUdfRFJJVkVSKCJt
+ZWRpYXRla19kZHBfZGRwX3BhdGhfc2V0dXBcbiIpOw0KPiAgCWZvciAoaSA9IDA7IGkgPCBtdGtf
+Y3J0Yy0+ZGRwX2NvbXBfbnIgLSAxOyBpKyspIHsNCj4gIAkJbXRrX2RkcF9hZGRfY29tcF90b19w
+YXRoKG10a19jcnRjLT5jb25maWdfcmVncywNCj4gIAkJCQkJIG10a19jcnRjLT5kZHBfY29tcFtp
+XS0+aWQsDQo+IEBAIC0zNDgsNyArMzQ0LDYgQEAgc3RhdGljIHZvaWQgbXRrX2NydGNfZGRwX2h3
+X2Zpbmkoc3RydWN0IG10a19kcm1fY3J0YyAqbXRrX2NydGMpDQo+ICAJc3RydWN0IGRybV9jcnRj
+ICpjcnRjID0gJm10a19jcnRjLT5iYXNlOw0KPiAgCWludCBpOw0KPiAgDQo+IC0JRFJNX0RFQlVH
+X0RSSVZFUigiJXNcbiIsIF9fZnVuY19fKTsNCj4gIAlmb3IgKGkgPSAwOyBpIDwgbXRrX2NydGMt
+PmRkcF9jb21wX25yOyBpKyspIHsNCj4gIAkJbXRrX2RkcF9jb21wX3N0b3AobXRrX2NydGMtPmRk
+cF9jb21wW2ldKTsNCj4gIAkJaWYgKGkgPT0gMSkNCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1
+L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
+a19kcm1fZHJ2LmMNCj4gaW5kZXggMTdmMTE4ZWUwZTU3Li40OTM0ODM0OTc3YjMgMTAwNjQ0DQo+
+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jDQo+ICsrKyBiL2Ry
+aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jDQo+IEBAIC01NzAsNyArNTcwLDYg
+QEAgc3RhdGljIGludCBtdGtfZHJtX3N5c19zdXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldikNCj4g
+IAlpbnQgcmV0Ow0KPiAgDQo+ICAJcmV0ID0gZHJtX21vZGVfY29uZmlnX2hlbHBlcl9zdXNwZW5k
+KGRybSk7DQo+IC0JRFJNX0RFQlVHX0RSSVZFUigibXRrX2RybV9zeXNfc3VzcGVuZFxuIik7DQo+
+ICANCj4gIAlyZXR1cm4gcmV0Ow0KPiAgfQ0KPiBAQCAtNTgyLDcgKzU4MSw2IEBAIHN0YXRpYyBp
+bnQgbXRrX2RybV9zeXNfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikNCj4gIAlpbnQgcmV0Ow0K
+PiAgDQo+ICAJcmV0ID0gZHJtX21vZGVfY29uZmlnX2hlbHBlcl9yZXN1bWUoZHJtKTsNCj4gLQlE
+Uk1fREVCVUdfRFJJVkVSKCJtdGtfZHJtX3N5c19yZXN1bWVcbiIpOw0KPiAgDQo+ICAJcmV0dXJu
+IHJldDsNCj4gIH0NCg0K
 
-syzbot found the following crash on:
-
-HEAD commit:    732a0dee Merge branch 'mlxfw-Improve-error-reporting-and-F..
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=17a17a29e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3b8906eb6a7d6028
-dashboard link: https://syzkaller.appspot.com/bug?extid=ab4dae63f7d310641ded
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+ab4dae63f7d310641ded@syzkaller.appspotmail.com
-
-kobject: (0000000004952746): attempted to be registered with empty name!
-WARNING: CPU: 0 PID: 329 at lib/kobject.c:234 kobject_add_internal+0x7ac/0x9a0 lib/kobject.c:234
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 329 Comm: syz-executor.5 Not tainted 5.6.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- __warn.cold+0x2f/0x3e kernel/panic.c:582
- report_bug+0x289/0x300 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- fixup_bug arch/x86/kernel/traps.c:169 [inline]
- do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
- do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:kobject_add_internal+0x7ac/0x9a0 lib/kobject.c:234
-Code: 1a 98 ca f9 e9 f0 f8 ff ff 4c 89 f7 e8 6d 98 ca f9 e9 95 f9 ff ff e8 c3 f0 8b f9 4c 89 e6 48 c7 c7 a0 0e 1a 89 e8 e3 41 5c f9 <0f> 0b 41 bd ea ff ff ff e9 52 ff ff ff e8 a2 f0 8b f9 0f 0b e8 9b
-RSP: 0018:ffffc90005b27908 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000040000 RSI: ffffffff815eae46 RDI: fffff52000b64f13
-RBP: ffffc90005b27960 R08: ffff88805aeba480 R09: ffffed1015d06659
-R10: ffffed1015d06658 R11: ffff8880ae8332c7 R12: ffff8880a37fd000
-R13: 0000000000000000 R14: ffff888096691780 R15: 0000000000000001
- kobject_add_varg lib/kobject.c:390 [inline]
- kobject_add+0x150/0x1c0 lib/kobject.c:442
- device_add+0x3be/0x1d00 drivers/base/core.c:2412
- add_one_compat_dev drivers/infiniband/core/device.c:901 [inline]
- add_one_compat_dev+0x46a/0x7e0 drivers/infiniband/core/device.c:857
- rdma_dev_init_net+0x2eb/0x490 drivers/infiniband/core/device.c:1120
- ops_init+0xb3/0x420 net/core/net_namespace.c:137
- setup_net+0x2d5/0x8b0 net/core/net_namespace.c:327
- copy_net_ns+0x29e/0x5a0 net/core/net_namespace.c:468
- create_new_namespaces+0x403/0xb50 kernel/nsproxy.c:108
- unshare_nsproxy_namespaces+0xc2/0x200 kernel/nsproxy.c:229
- ksys_unshare+0x444/0x980 kernel/fork.c:2955
- __do_sys_unshare kernel/fork.c:3023 [inline]
- __se_sys_unshare kernel/fork.c:3021 [inline]
- __x64_sys_unshare+0x31/0x40 kernel/fork.c:3021
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45c429
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f3be2b6dc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000110
-RAX: ffffffffffffffda RBX: 00007f3be2b6e6d4 RCX: 000000000045c429
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000040000000
-RBP: 000000000076bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000c3e R14: 00000000004ce1f6 R15: 000000000076bf2c
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
