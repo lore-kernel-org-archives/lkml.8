@@ -7,47 +7,55 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7886C3F346
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13061C3F351
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74AB72469B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C908421D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:52:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811496;
-	bh=gYdai52U37RmyPM0NQABvNslU8zWV5vhBd978yIcdmA=;
+	s=default; t=1582811543;
+	bh=FfWYgf8sGKkIJNFBCXsGswy3RkWWHB9mZbbsaehKW6s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a/20OBmgs3HiWh/ljQ77nJfJavhXT4eSlKhzXJbtqPReoj/Coi6aMQ1ylOeSsO/NZ
-	 acJ6FOEjK2bHY+BYcoituc6CBR6h9MWeG0v5DN7k5mx95lDtA5CloBYV1kjjWG0bR0
-	 maoDVksDSTL7Ol7VZienSrNyA3+YoLlyR6b0EOsk=
+	b=1RjVvQzTVwI2l1Jmok6TtHer5xl9wiWz9sLYrmrbpYaZXgb9KIVQuFNxbD73DOGOs
+	 2nQviEEas+qquxcS2W+H0V37DIP3RTzp+T3MsAyLiJmJI4ZTlzflo5b22rgtffC3yr
+	 umbGjH7tMAVDp2AVug78aOGvbR3UFnwx4rTIDHsw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731190AbgB0Nvf (ORCPT
+        id S1731520AbgB0NwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:51:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50628 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:52:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731162AbgB0Nva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:51:30 -0500
+        id S1731341AbgB0NwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:52:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42EC220578;
-        Thu, 27 Feb 2020 13:51:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 130DC2469B;
+        Thu, 27 Feb 2020 13:52:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811489;
-        bh=gYdai52U37RmyPM0NQABvNslU8zWV5vhBd978yIcdmA=;
+        s=default; t=1582811538;
+        bh=FfWYgf8sGKkIJNFBCXsGswy3RkWWHB9mZbbsaehKW6s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rWRiJVZM0Vr9ActhuC0rhLYnEKdcuMEeMPs0HZcsXKAbjmmEG3TIQRLu3RQZlUrMk
-         Gor+IaWXMhZ3b8Z6sqYor7CZphW1HgWxFuEVcDErR4c+cKmN+j0q5IDnwB9Gob2lSC
-         0mcWH6BTrqPK1HDQQLrmdSICjoTYZMx5cmEFZsNw=
+        b=lPAFc+ioaB0NduQG6/wnDOGY09GfyfWH1jmziz1stwTMni+1ccjydKOOpG0wK1hAe
+         OYoD46iOb4b3wJc4IPgQn+/160/lW+0rmOoAAWBXf8OgcPPFYyTtBJ5Vp4mmUqnHTE
+         apZr+y4JqQgasWEHhqLmS9H1MpouTCc3RKtjI79w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.9 152/165] KVM: apic: avoid calculating pending eoi from an uninitialized val
-Date:   Thu, 27 Feb 2020 14:37:06 +0100
-Message-Id: <20200227132252.910073462@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Ioanna Alifieraki <ioanna-maria.alifieraki@canonical.com>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        "Herton R. Krzesinski" <herton@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>, malat@debian.org,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Jay Vosburgh <jay.vosburgh@canonical.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 133/165] Revert "ipc,sem: remove uneeded sem_undo_list lock usage in exit_sem()"
+Date:   Thu, 27 Feb 2020 14:36:47 +0100
+Message-Id: <20200227132250.453942241@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -60,38 +68,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+From: Ioanna Alifieraki <ioanna-maria.alifieraki@canonical.com>
 
-commit 23520b2def95205f132e167cf5b25c609975e959 upstream.
+commit edf28f4061afe4c2d9eb1c3323d90e882c1d6800 upstream.
 
-When pv_eoi_get_user() fails, 'val' may remain uninitialized and the return
-value of pv_eoi_get_pending() becomes random. Fix the issue by initializing
-the variable.
+This reverts commit a97955844807e327df11aa33869009d14d6b7de0.
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Commit a97955844807 ("ipc,sem: remove uneeded sem_undo_list lock usage
+in exit_sem()") removes a lock that is needed.  This leads to a process
+looping infinitely in exit_sem() and can also lead to a crash.  There is
+a reproducer available in [1] and with the commit reverted the issue
+does not reproduce anymore.
+
+Using the reproducer found in [1] is fairly easy to reach a point where
+one of the child processes is looping infinitely in exit_sem between
+for(;;) and if (semid == -1) block, while it's trying to free its last
+sem_undo structure which has already been freed by freeary().
+
+Each sem_undo struct is on two lists: one per semaphore set (list_id)
+and one per process (list_proc).  The list_id list tracks undos by
+semaphore set, and the list_proc by process.
+
+Undo structures are removed either by freeary() or by exit_sem().  The
+freeary function is invoked when the user invokes a syscall to remove a
+semaphore set.  During this operation freeary() traverses the list_id
+associated with the semaphore set and removes the undo structures from
+both the list_id and list_proc lists.
+
+For this case, exit_sem() is called at process exit.  Each process
+contains a struct sem_undo_list (referred to as "ulp") which contains
+the head for the list_proc list.  When the process exits, exit_sem()
+traverses this list to remove each sem_undo struct.  As in freeary(),
+whenever a sem_undo struct is removed from list_proc, it is also removed
+from the list_id list.
+
+Removing elements from list_id is safe for both exit_sem() and freeary()
+due to sem_lock().  Removing elements from list_proc is not safe;
+freeary() locks &un->ulp->lock when it performs
+list_del_rcu(&un->list_proc) but exit_sem() does not (locking was
+removed by commit a97955844807 ("ipc,sem: remove uneeded sem_undo_list
+lock usage in exit_sem()").
+
+This can result in the following situation while executing the
+reproducer [1] : Consider a child process in exit_sem() and the parent
+in freeary() (because of semctl(sid[i], NSEM, IPC_RMID)).
+
+ - The list_proc for the child contains the last two undo structs A and
+   B (the rest have been removed either by exit_sem() or freeary()).
+
+ - The semid for A is 1 and semid for B is 2.
+
+ - exit_sem() removes A and at the same time freeary() removes B.
+
+ - Since A and B have different semid sem_lock() will acquire different
+   locks for each process and both can proceed.
+
+The bug is that they remove A and B from the same list_proc at the same
+time because only freeary() acquires the ulp lock. When exit_sem()
+removes A it makes ulp->list_proc.next to point at B and at the same
+time freeary() removes B setting B->semid=-1.
+
+At the next iteration of for(;;) loop exit_sem() will try to remove B.
+
+The only way to break from for(;;) is for (&un->list_proc ==
+&ulp->list_proc) to be true which is not. Then exit_sem() will check if
+B->semid=-1 which is and will continue looping in for(;;) until the
+memory for B is reallocated and the value at B->semid is changed.
+
+At that point, exit_sem() will crash attempting to unlink B from the
+lists (this can be easily triggered by running the reproducer [1] a
+second time).
+
+To prove this scenario instrumentation was added to keep information
+about each sem_undo (un) struct that is removed per process and per
+semaphore set (sma).
+
+          CPU0                                CPU1
+  [caller holds sem_lock(sma for A)]      ...
+  freeary()                               exit_sem()
+  ...                                     ...
+  ...                                     sem_lock(sma for B)
+  spin_lock(A->ulp->lock)                 ...
+  list_del_rcu(un_A->list_proc)           list_del_rcu(un_B->list_proc)
+
+Undo structures A and B have different semid and sem_lock() operations
+proceed.  However they belong to the same list_proc list and they are
+removed at the same time.  This results into ulp->list_proc.next
+pointing to the address of B which is already removed.
+
+After reverting commit a97955844807 ("ipc,sem: remove uneeded
+sem_undo_list lock usage in exit_sem()") the issue was no longer
+reproducible.
+
+[1] https://bugzilla.redhat.com/show_bug.cgi?id=1694779
+
+Link: http://lkml.kernel.org/r/20191211191318.11860-1-ioanna-maria.alifieraki@canonical.com
+Fixes: a97955844807 ("ipc,sem: remove uneeded sem_undo_list lock usage in exit_sem()")
+Signed-off-by: Ioanna Alifieraki <ioanna-maria.alifieraki@canonical.com>
+Acked-by: Manfred Spraul <manfred@colorfullife.com>
+Acked-by: Herton R. Krzesinski <herton@redhat.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: <malat@debian.org>
+Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Jay Vosburgh <jay.vosburgh@canonical.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/lapic.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ ipc/sem.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -532,9 +532,11 @@ static inline bool pv_eoi_enabled(struct
- static bool pv_eoi_get_pending(struct kvm_vcpu *vcpu)
- {
- 	u8 val;
--	if (pv_eoi_get_user(vcpu, &val) < 0)
-+	if (pv_eoi_get_user(vcpu, &val) < 0) {
- 		apic_debug("Can't read EOI MSR value: 0x%llx\n",
- 			   (unsigned long long)vcpu->arch.pv_eoi.msr_val);
-+		return false;
-+	}
- 	return val & 0x1;
- }
+--- a/ipc/sem.c
++++ b/ipc/sem.c
+@@ -2159,11 +2159,9 @@ void exit_sem(struct task_struct *tsk)
+ 		ipc_assert_locked_object(&sma->sem_perm);
+ 		list_del(&un->list_id);
  
+-		/* we are the last process using this ulp, acquiring ulp->lock
+-		 * isn't required. Besides that, we are also protected against
+-		 * IPC_RMID as we hold sma->sem_perm lock now
+-		 */
++		spin_lock(&ulp->lock);
+ 		list_del_rcu(&un->list_proc);
++		spin_unlock(&ulp->lock);
+ 
+ 		/* perform adjustments registered in un */
+ 		for (i = 0; i < sma->sem_nsems; i++) {
 
 
