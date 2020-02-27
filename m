@@ -2,100 +2,203 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D970C52D55
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A16F6C54FCF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 204E721D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:26:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iOIpUz8y"
+	by mail.kernel.org (Postfix) with ESMTP id 7029F21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:26:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582813619;
+	bh=eXF2rV6X3gjuGXC82hTXXdpx13WqeW4mL0pDL5T2YyQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=azl0+wOxRkNaR9fMJAd75rZAdBOoB7SYTx4H9o5GkD/QeDPNuQmGz7CesZtS2FOlz
+	 6Ct5HgU4HPaGSVcQqsAKz127YdvKzaz7ccvrscjjJf1GlNlS7s94WUep+EfwD3NyIJ
+	 +Z7xQStK15dbyp5w1bL4Ir0qLbqMNLTNA1OFlOKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388852AbgB0O0w (ORCPT
+        id S2388729AbgB0O06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:26:52 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35106 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388212AbgB0O0r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:26:47 -0500
-Received: by mail-pl1-f193.google.com with SMTP id g6so1223669plt.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 06:26:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ycQ4OM0GuiKa4B6agMtr6e0DcA3u66okRRNHJak9QaQ=;
-        b=iOIpUz8yFMYlcEm1UZYDNFzSJAykarKnN0dZBkN7DkYhUOowyXt7D4TMvTw2xJBRnq
-         +GzAaKP+Tk45ZozBwVSlKcS0zXDyEyp786dqV2wzOsdEM96Lw7SFVDoJmyEWOa6UnHI8
-         7912HltfPziYci9i1f5q1G0kAO9lOWY4p5SUCOmUFv+RUOIMfWcvfeNf5eIfnxfyo4YA
-         fL17rHV1YKvr8N4y3K8n7Re0ZU1oriE+W4pDB1flp+zLgqx1z3H/bf0UlqPh3i1SE/uQ
-         OPUUPdNZgfyeq9KTx/wySfgA0Nfqqe2cRiRmPur0TB66Xpdsg3G5qha/Kqr1rSDVZSFa
-         2SDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ycQ4OM0GuiKa4B6agMtr6e0DcA3u66okRRNHJak9QaQ=;
-        b=UpJrP43trXMDefkO2Wb0fxdzMk+e7wiH8qV035Ope3hURDDhTHOP/mrjjI6ChHiZpB
-         hdiUsR2sMeM12pp415oK4pF7ChAEORxlVFszokd9jKoJY5/ortt9Ffa90MtoSdQ40NPC
-         iraKMEHr75g1tJN7SMjPslMHR9RX523QfJ29GXHnBXVygC4xpAcBq8WMuyD4aGs2vzE1
-         iz3JLU0YdlcD9ZaCjW0Y2kXbWA6hfU9CUbFRljhOt7JoIamNU2lQqrFopv+cx1cm1zbp
-         T+Tfti3k8gYYIdm0tysBY8J3b6WJqYsrTqvQ6FKxKpSuHmnDjHvK8RzLeFfkS3aaRHLV
-         Dpww==
-X-Gm-Message-State: APjAAAVWu+aKONtieVvfuA/z92i5zfOr1rIx3SKqr0o4TjeHmD9+0sea
-        o5YNu6Qkk3y2uKd2Jq08HVM=
-X-Google-Smtp-Source: APXvYqxolMZqMWoY5TQziUPfnPR+KyZmZpb4dquHkMYZpkch3u5nJuNvgMtX3kN+YRhF59rVGoOL+g==
-X-Received: by 2002:a17:902:7283:: with SMTP id d3mr20329pll.118.1582813606112;
-        Thu, 27 Feb 2020 06:26:46 -0800 (PST)
-Received: from localhost ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id u1sm7303392pfn.133.2020.02.27.06.26.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 27 Feb 2020 06:26:45 -0800 (PST)
-Date:   Thu, 27 Feb 2020 19:56:43 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 14/18] x86: Replace setup_irq() by request_irq()
-Message-ID: <20200227142643.GA5610@afzalpc>
-References: <cover.1581478323.git.afzal.mohd.ma@gmail.com>
- <a3116b3b1a03a943cd89efd57d2db32284c3a574.1581478324.git.afzal.mohd.ma@gmail.com>
- <87v9nsmhjj.fsf@nanos.tec.linutronix.de>
- <20200227113648.GA5760@afzalpc>
- <87sgiwma3x.fsf@nanos.tec.linutronix.de>
+        Thu, 27 Feb 2020 09:26:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47420 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387776AbgB0OJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:09:28 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE59A21D7E;
+        Thu, 27 Feb 2020 14:09:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582812567;
+        bh=eXF2rV6X3gjuGXC82hTXXdpx13WqeW4mL0pDL5T2YyQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=E3CjCDANr9gIPdBA4u9zNzYetOZF6Bd25m+f1N2jdd+x4f6ZoviPyQlsTxpoqEhsH
+         3DKqqBiNwFJIgNpeQl2b1/yIV8QOmGLjlQsxKNbXRAtWQQ1Vx+iYRVLODH++zpHUeB
+         oX91i22IAKWZ1mMJSvk/W/PSemOuJIlhIvlwls+M=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, edes <edes@gmx.net>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.4 029/135] USB: quirks: blacklist duplicate ep on Sound Devices USBPre2
+Date:   Thu, 27 Feb 2020 14:36:09 +0100
+Message-Id: <20200227132233.502602893@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
+References: <20200227132228.710492098@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87sgiwma3x.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+From: Johan Hovold <johan@kernel.org>
 
-On Thu, Feb 27, 2020 at 02:29:54PM +0100, Thomas Gleixner wrote:
+commit bdd1b147b8026df0e4260b387026b251d888ed01 upstream.
 
-> Using scripting to find the spots and automatically convert them to
-> something which is functionally and semantically correct is perfectly
-> fine. But scripts neither have taste nor common sense.
-> 
-> So going over a scripted conversion and fixing non-sensical stuff up
-> manually is a good thing.
+This device has a broken vendor-specific altsetting for interface 1,
+where endpoint 0x85 is declared as an isochronous endpoint despite being
+used by interface 2 for audio capture.
 
-> The easy route is fine for the initial step. See above.
+Device Descriptor:
+  bLength                18
+  bDescriptorType         1
+  bcdUSB               2.00
+  bDeviceClass          239 Miscellaneous Device
+  bDeviceSubClass         2
+  bDeviceProtocol         1 Interface Association
+  bMaxPacketSize0        64
+  idVendor           0x0926
+  idProduct          0x0202
+  bcdDevice            1.00
+  iManufacturer           1 Sound Devices
+  iProduct                2 USBPre2
+  iSerial                 3 [...]
+  bNumConfigurations      1
 
-Sure, i will do the changes as per your suggestion.
+[...]
 
-Regards
-afzal
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        1
+      bAlternateSetting       3
+      bNumEndpoints           2
+      bInterfaceClass       255 Vendor Specific Class
+      bInterfaceSubClass      0
+      bInterfaceProtocol      0
+      iInterface              0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x85  EP 5 IN
+        bmAttributes            5
+          Transfer Type            Isochronous
+          Synch Type               Asynchronous
+          Usage Type               Data
+        wMaxPacketSize     0x0126  1x 294 bytes
+        bInterval               1
+
+[...]
+
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        2
+      bAlternateSetting       1
+      bNumEndpoints           1
+      bInterfaceClass         1 Audio
+      bInterfaceSubClass      2 Streaming
+      bInterfaceProtocol      0
+      iInterface              0
+      AudioStreaming Interface Descriptor:
+        bLength                 7
+        bDescriptorType        36
+        bDescriptorSubtype      1 (AS_GENERAL)
+        bTerminalLink           4
+        bDelay                  1 frames
+        wFormatTag         0x0001 PCM
+      AudioStreaming Interface Descriptor:
+        bLength                26
+        bDescriptorType        36
+        bDescriptorSubtype      2 (FORMAT_TYPE)
+        bFormatType             1 (FORMAT_TYPE_I)
+        bNrChannels             2
+        bSubframeSize           2
+        bBitResolution         16
+        bSamFreqType            6 Discrete
+        tSamFreq[ 0]         8000
+        tSamFreq[ 1]        16000
+        tSamFreq[ 2]        24000
+        tSamFreq[ 3]        32000
+        tSamFreq[ 4]        44100
+        tSamFreq[ 5]        48000
+      Endpoint Descriptor:
+        bLength                 9
+        bDescriptorType         5
+        bEndpointAddress     0x85  EP 5 IN
+        bmAttributes            5
+          Transfer Type            Isochronous
+          Synch Type               Asynchronous
+          Usage Type               Data
+        wMaxPacketSize     0x0126  1x 294 bytes
+        bInterval               4
+        bRefresh                0
+        bSynchAddress           0
+        AudioStreaming Endpoint Descriptor:
+          bLength                 7
+          bDescriptorType        37
+          bDescriptorSubtype      1 (EP_GENERAL)
+          bmAttributes         0x01
+            Sampling Frequency
+          bLockDelayUnits         2 Decoded PCM samples
+          wLockDelay         0x0000
+
+Since commit 3e4f8e21c4f2 ("USB: core: fix check for duplicate
+endpoints") USB core ignores any duplicate endpoints found during
+descriptor parsing, but in this case we need to ignore the first
+instance in order to avoid breaking the audio capture interface.
+
+Fixes: 3e4f8e21c4f2 ("USB: core: fix check for duplicate endpoints")
+Cc: stable <stable@vger.kernel.org>
+Reported-by: edes <edes@gmx.net>
+Tested-by: edes <edes@gmx.net>
+Link: https://lore.kernel.org/r/20200201105829.5682c887@acme7.acmenet
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20200203153830.26394-3-johan@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/usb/core/quirks.c |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -354,6 +354,10 @@ static const struct usb_device_id usb_qu
+ 	{ USB_DEVICE(0x0904, 0x6103), .driver_info =
+ 			USB_QUIRK_LINEAR_FRAME_INTR_BINTERVAL },
+ 
++	/* Sound Devices USBPre2 */
++	{ USB_DEVICE(0x0926, 0x0202), .driver_info =
++			USB_QUIRK_ENDPOINT_BLACKLIST },
++
+ 	/* Keytouch QWERTY Panel keyboard */
+ 	{ USB_DEVICE(0x0926, 0x3333), .driver_info =
+ 			USB_QUIRK_CONFIG_INTF_STRINGS },
+@@ -479,6 +483,7 @@ static const struct usb_device_id usb_am
+  * Matched for devices with USB_QUIRK_ENDPOINT_BLACKLIST.
+  */
+ static const struct usb_device_id usb_endpoint_blacklist[] = {
++	{ USB_DEVICE_INTERFACE_NUMBER(0x0926, 0x0202, 1), .driver_info = 0x85 },
+ 	{ }
+ };
+ 
+
+
