@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D74C52D2A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B111C52D35
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4623E20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6703A24691
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811828;
-	bh=POQBEBmj9YQfomHR0dXXKcpPqERbDd5yZUvqqBkcoNE=;
+	s=default; t=1582811860;
+	bh=pMNCXhCm4QmotpzdA3S8UoGF3R5REzG4ykqsUsLmkIg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EMqUSqd90ijWWQfGsQYOQqvVQxex5OKrD8V6moAChlKYqwEPwth2kiiwHrxaUW2jE
-	 xSdRrZ2FEyFRprxmM2cBcPyqRVs8jDnbc1l1KIT1vAi+anUZpcldgb0pZOLJU6+mX1
-	 USysLr2uXckr7DDeSgyNeMqOiJOCIkLd0enS8etY=
+	b=Dd9wuQu+/BCPap/VQBPnrKWv4JbO7zsx0R6CcG48ANE2Ri3xL3kLosPgGgmxexfKE
+	 xkaAV4cCw+DKAQPTPpir0Sj4GUVjWOcPC5n1Tye6MgwPzOqECMt08LXAYpRhNJyWZ9
+	 u0BAcRh817xqatRmSmlachHG4mQzK6kKe6o6pj98=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732242AbgB0N5H (ORCPT
+        id S1732172AbgB0N5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:57:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57776 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:57:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729788AbgB0N5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:57:02 -0500
+        id S1732298AbgB0N5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:57:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B95D120801;
-        Thu, 27 Feb 2020 13:57:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9083D2073D;
+        Thu, 27 Feb 2020 13:57:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811822;
-        bh=POQBEBmj9YQfomHR0dXXKcpPqERbDd5yZUvqqBkcoNE=;
+        s=default; t=1582811853;
+        bh=pMNCXhCm4QmotpzdA3S8UoGF3R5REzG4ykqsUsLmkIg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mm0aMRC2Ucf3YOZLw4Fz54Dgoi3Jw3PylZ315ndrelTVbciEWzbfgckG/uY7IDCwZ
-         /3itAk4b0uMxiwcKhCsD3EbQ2beG6X+kAqF94aXT1nFUArm4pFGI0eGyD+SNUu6jQT
-         52kVH0pggnVA/A8GUl+Qcj1G5K6RiE9PK1198LKA=
+        b=g1EDqtV1yNxAcX7LdYobFMIUTgd0mOuSZS710Dor+PHtgchD0zMN3rHGnOqL5P9TD
+         F7lK5WOXTPdJf+iIsiMN0dVBsqjK0qfhfQveg5OLpAhS7um0kSnneeCq9d3qUCvxpm
+         cXa6LzV1pboPMb0TFl7h+DlJBfq3oOfE3xYUFCeg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
-        Paolo Pisati <p.pisati@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 076/237] arm64: dts: qcom: msm8996: Disable USB2 PHY suspend by core
-Date:   Thu, 27 Feb 2020 14:34:50 +0100
-Message-Id: <20200227132302.721710336@linuxfoundation.org>
+        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 127/237] x86/mm: Fix NX bit clearing issue in kernel_map_pages_in_pgd
+Date:   Thu, 27 Feb 2020 14:35:41 +0100
+Message-Id: <20200227132306.105107595@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -61,49 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manu Gautam <mgautam@codeaurora.org>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit d026c96b25b7ce5df89526aad2df988d553edb4d ]
+[ Upstream commit 75fbef0a8b6b4bb19b9a91b5214f846c2dc5139e ]
 
-QUSB2 PHY on msm8996 doesn't work well when autosuspend by
-dwc3 core using USB2PHYCFG register is enabled. One of the
-issue seen is that PHY driver reports PLL lock failure and
-fails phy_init() if dwc3 core has USB2 PHY suspend enabled.
-Fix this by using quirks to disable USB2 PHY LPM/suspend and
-dwc3 core already takes care of explicitly suspending PHY
-during suspend if quirks are specified.
+The following commit:
 
-Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
-Signed-off-by: Paolo Pisati <p.pisati@gmail.com>
-Link: https://lore.kernel.org/r/20191209151501.26993-1-p.pisati@gmail.com
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+  15f003d20782 ("x86/mm/pat: Don't implicitly allow _PAGE_RW in kernel_map_pages_in_pgd()")
+
+modified kernel_map_pages_in_pgd() to manage writable permissions
+of memory mappings in the EFI page table in a different way, but
+in the process, it removed the ability to clear NX attributes from
+read-only mappings, by clobbering the clear mask if _PAGE_RW is not
+being requested.
+
+Failure to remove the NX attribute from read-only mappings is
+unlikely to be a security issue, but it does prevent us from
+tightening the permissions in the EFI page tables going forward,
+so let's fix it now.
+
+Fixes: 15f003d20782 ("x86/mm/pat: Don't implicitly allow _PAGE_RW in kernel_map_pages_in_pgd()
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20200113172245.27925-5-ardb@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/mm/pageattr.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 6f372ec055dd3..da2949586c7a3 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -788,6 +788,8 @@
- 				interrupts = <0 138 0>;
- 				phys = <&hsusb_phy2>;
- 				phy-names = "usb2-phy";
-+				snps,dis_u2_susphy_quirk;
-+				snps,dis_enblslpm_quirk;
- 			};
- 		};
- 
-@@ -817,6 +819,8 @@
- 				interrupts = <0 131 0>;
- 				phys = <&hsusb_phy1>, <&ssusb_phy_0>;
- 				phy-names = "usb2-phy", "usb3-phy";
-+				snps,dis_u2_susphy_quirk;
-+				snps,dis_enblslpm_quirk;
- 			};
- 		};
+diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
+index 835620ab435fd..eaee1a7ed0b50 100644
+--- a/arch/x86/mm/pageattr.c
++++ b/arch/x86/mm/pageattr.c
+@@ -2077,19 +2077,13 @@ int kernel_map_pages_in_pgd(pgd_t *pgd, u64 pfn, unsigned long address,
+ 		.pgd = pgd,
+ 		.numpages = numpages,
+ 		.mask_set = __pgprot(0),
+-		.mask_clr = __pgprot(0),
++		.mask_clr = __pgprot(~page_flags & (_PAGE_NX|_PAGE_RW)),
+ 		.flags = 0,
  	};
+ 
+ 	if (!(__supported_pte_mask & _PAGE_NX))
+ 		goto out;
+ 
+-	if (!(page_flags & _PAGE_NX))
+-		cpa.mask_clr = __pgprot(_PAGE_NX);
+-
+-	if (!(page_flags & _PAGE_RW))
+-		cpa.mask_clr = __pgprot(_PAGE_RW);
+-
+ 	if (!(page_flags & _PAGE_ENC))
+ 		cpa.mask_clr = pgprot_encrypted(cpa.mask_clr);
+ 
 -- 
 2.20.1
 
