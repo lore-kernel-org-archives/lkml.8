@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15305C52D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2FFC52D4E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD30121D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 364AB21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:26:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813558;
-	bh=7C14fBJVfL8ckx4LyvL4nrA4ekCR7lDWGPs6KCsLP6I=;
+	s=default; t=1582813586;
+	bh=gXEv9AwRo9KfG6wELhy75P1nWv/0fTeMF95Dm0lXkyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u2zH23slgcg78sqU3bpNE/mjTmTC4rZMjM6TASz/nZIjPIJ64As+9ZQ5C5PfFVElx
-	 lz4j/lLnDG1Mryh11hqjQqGy2b4Fj3dE8wjC/Y/GnXHn0UMioiMz38h4QBMlDBqo9B
-	 YIldf/V9UKf9ztWVyGjGiQOkqj5VElM6R0WypRnE=
+	b=h1jkpWtZ7w/mC1zO5pmO2EuSvML3d3rMjlyST6+z4fVT9Ibw85mqXF0N6X3I8UupR
+	 i3No7DYndy3uCkrb71ikpJNZHKXOk9U7aJnzCR/ga37rghXJoI8BcOVqSq/Gc0rKi4
+	 o7aB7weUwtywprvYH9wmckRPINkUpp9fH2jqVaqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388534AbgB0OZ5 (ORCPT
+        id S2388472AbgB0OKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:25:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49054 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:10:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388594AbgB0OKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:10:48 -0500
+        id S2388455AbgB0OKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:10:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9123E24697;
-        Thu, 27 Feb 2020 14:10:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2B4121D7E;
+        Thu, 27 Feb 2020 14:10:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812648;
-        bh=7C14fBJVfL8ckx4LyvL4nrA4ekCR7lDWGPs6KCsLP6I=;
+        s=default; t=1582812601;
+        bh=gXEv9AwRo9KfG6wELhy75P1nWv/0fTeMF95Dm0lXkyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u7vfL+V/ksTDOHCOI+lgec7bfJGeAECtCjds1r2FvntmKhup1QdaTI68CQAnCzI4N
-         OT6rT2In6H+nfqMnmtF2eixy0iRQD3+KZvEX9peFJxCrVZdyJJX0k8OVuyrk2CE4mX
-         RExqbjkBXNR80QlIf+K0hcCn1fJPOhMZd1wztA/M=
+        b=ei6/ogCpbXdgs7KpqDMQeC80q7v064ihgih766vPlolATwG4lhabqjK84N1OJnLAJ
+         FS8aAoq7YieSDnkZuRD90m3LLcfpH+3Ege9YMAOjE8e36qpK7WPMPOJr7L9AEbQ/V9
+         kXa4n0/yIPrPUNscP83LbyVNVYJ9sqEkJkgJXlY0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 097/135] Btrfs: fix race between shrinking truncate and fiemap
-Date:   Thu, 27 Feb 2020 14:37:17 +0100
-Message-Id: <20200227132243.804135072@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 063/135] mm/memcontrol.c: lost css_put in memcg_expand_shrinker_maps()
+Date:   Thu, 27 Feb 2020 14:36:43 +0100
+Message-Id: <20200227132238.614620688@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -60,112 +64,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-commit 28553fa992cb28be6a65566681aac6cafabb4f2d upstream.
+commit 75866af62b439859d5146b7093ceb6b482852683 upstream.
 
-When there is a fiemap executing in parallel with a shrinking truncate
-we can end up in a situation where we have extent maps for which we no
-longer have corresponding file extent items. This is generally harmless
-and at the moment the only consequences are missing file extent items
-representing holes after we expand the file size again after the
-truncate operation removed the prealloc extent items, and stale
-information for future fiemap calls (reporting extents that no longer
-exist or may have been reallocated to other files for example).
+for_each_mem_cgroup() increases css reference counter for memory cgroup
+and requires to use mem_cgroup_iter_break() if the walk is cancelled.
 
-Consider the following example:
-
-1) Our inode has a size of 128KiB, one 128KiB extent at file offset 0
-   and a 1MiB prealloc extent at file offset 128KiB;
-
-2) Task A starts doing a shrinking truncate of our inode to reduce it to
-   a size of 64KiB. Before it searches the subvolume tree for file
-   extent items to delete, it drops all the extent maps in the range
-   from 64KiB to (u64)-1 by calling btrfs_drop_extent_cache();
-
-3) Task B starts doing a fiemap against our inode. When looking up for
-   the inode's extent maps in the range from 128KiB to (u64)-1, it
-   doesn't find any in the inode's extent map tree, since they were
-   removed by task A.  Because it didn't find any in the extent map
-   tree, it scans the inode's subvolume tree for file extent items, and
-   it finds the 1MiB prealloc extent at file offset 128KiB, then it
-   creates an extent map based on that file extent item and adds it to
-   inode's extent map tree (this ends up being done by
-   btrfs_get_extent() <- btrfs_get_extent_fiemap() <-
-   get_extent_skip_holes());
-
-4) Task A then drops the prealloc extent at file offset 128KiB and
-   shrinks the 128KiB extent file offset 0 to a length of 64KiB. The
-   truncation operation finishes and we end up with an extent map
-   representing a 1MiB prealloc extent at file offset 128KiB, despite we
-   don't have any more that extent;
-
-After this the two types of problems we have are:
-
-1) Future calls to fiemap always report that a 1MiB prealloc extent
-   exists at file offset 128KiB. This is stale information, no longer
-   correct;
-
-2) If the size of the file is increased, by a truncate operation that
-   increases the file size or by a write into a file offset > 64KiB for
-   example, we end up not inserting file extent items to represent holes
-   for any range between 128KiB and 128KiB + 1MiB, since the hole
-   expansion function, btrfs_cont_expand() will skip hole insertion for
-   any range for which an extent map exists that represents a prealloc
-   extent. This causes fsck to complain about missing file extent items
-   when not using the NO_HOLES feature.
-
-The second issue could be often triggered by test case generic/561 from
-fstests, which runs fsstress and duperemove in parallel, and duperemove
-does frequent fiemap calls.
-
-Essentially the problems happens because fiemap does not acquire the
-inode's lock while truncate does, and fiemap locks the file range in the
-inode's iotree while truncate does not. So fix the issue by making
-btrfs_truncate_inode_items() lock the file range from the new file size
-to (u64)-1, so that it serializes with fiemap.
-
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Link: http://lkml.kernel.org/r/c98414fb-7e1f-da0f-867a-9340ec4bd30b@virtuozzo.com
+Fixes: 0a4465d34028 ("mm, memcg: assign memcg-aware shrinkers bitmap to memcg")
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Acked-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Reviewed-by: Roman Gushchin <guro@fb.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/inode.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ mm/memcontrol.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -4734,6 +4734,8 @@ int btrfs_truncate_inode_items(struct bt
- 	u64 bytes_deleted = 0;
- 	bool be_nice = false;
- 	bool should_throttle = false;
-+	const u64 lock_start = ALIGN_DOWN(new_size, fs_info->sectorsize);
-+	struct extent_state *cached_state = NULL;
- 
- 	BUG_ON(new_size > 0 && min_type != BTRFS_EXTENT_DATA_KEY);
- 
-@@ -4750,6 +4752,9 @@ int btrfs_truncate_inode_items(struct bt
- 		return -ENOMEM;
- 	path->reada = READA_BACK;
- 
-+	lock_extent_bits(&BTRFS_I(inode)->io_tree, lock_start, (u64)-1,
-+			 &cached_state);
-+
- 	/*
- 	 * We want to drop from the next block forward in case this new size is
- 	 * not block aligned since we will be keeping the last block of the
-@@ -5016,6 +5021,9 @@ out:
- 		btrfs_ordered_update_i_size(inode, last_size, NULL);
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -418,8 +418,10 @@ int memcg_expand_shrinker_maps(int new_i
+ 		if (mem_cgroup_is_root(memcg))
+ 			continue;
+ 		ret = memcg_expand_one_shrinker_map(memcg, size, old_size);
+-		if (ret)
++		if (ret) {
++			mem_cgroup_iter_break(NULL, memcg);
+ 			goto unlock;
++		}
  	}
- 
-+	unlock_extent_cached(&BTRFS_I(inode)->io_tree, lock_start, (u64)-1,
-+			     &cached_state);
-+
- 	btrfs_free_path(path);
- 	return ret;
- }
+ unlock:
+ 	if (!ret)
 
 
