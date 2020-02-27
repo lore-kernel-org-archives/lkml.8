@@ -2,194 +2,150 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD5DC4BA06
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 04:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73991C4BA06
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 04:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A37C24650
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 04:31:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49E5F24670
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 04:38:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="fOwe1dq6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kdLDp3x1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728386AbgB0Ebl (ORCPT
+        id S1728397AbgB0Eip (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 23:31:41 -0500
-Received: from mail-am6eur05on2043.outbound.protection.outlook.com ([40.107.22.43]:6187
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728221AbgB0Ebk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 23:31:40 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U4M3UiT+YM5Intam3IwD5vHWKhYjwnux/ExNfZKnlQvH1PbRD65hF/1W886Sqms9C6G6u8LBmaN4bVIY970vrtTj+3Cb8zQ1I5mA8fOHS4adci5rVh3QjVgFKuc0XRxlqA5S9N3MMbINZqS5Fgpz7ceD+ydKRpdQRMJuOU0Q3QhvKHwEGs8mmfePEBY7HznlSTmjsNhOj0M53r+T6132DQ4x4ReArVFbdKWm/8M25UXvK4c0A67Cftcyt+bmwPRsyucRT/BIkNWCzh0FAJjbEGWL9AaQXaAIFeKrERi5azZ/UEGsl6t0dZioELDW3TfuWojEEQdJ57uKF9G0EZV+YQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h/KYc+1Aaz4A2WCEIWsEwkh1y5okitHp6hhClW0favg=;
- b=M27x6P/B3TCqexgaul+tuTNLxK9zV4y+8KLZYyT1yMgeYZg+RwZdt4GIBT2TRDceQimpKDQgtG5jzhkLA+L2LsgTepYJcCSv4lzarhVHXdra+lpn/gOnNMdUB3E2sZXmSoplPKeZ/wpx0EIrD6BDTFLorb5+hugew3O6CwrsYn7e36qD+yOVDDx1IbvgwVW/rpkXXYdIxFhYvAl/Ac1G/45IPpdw0R1A9f7riAGRG88NoCA5xedJ4Sbo+1LvX9BHY7R0mjKw4gPdWK9DQYhdgy7ECj9nXL1uhkbjOHpqDK0WctDSB9xI6pFXRTytjGNciiMCPLbqQiCZGOUGs1dohA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h/KYc+1Aaz4A2WCEIWsEwkh1y5okitHp6hhClW0favg=;
- b=fOwe1dq6Q6SLGitoAmzvhuOPZBu3OVYqCcOLHN4OyQl2n1+7RewLtDKihH3dTK5Y8JKoUyPSeyEiZm4AaNBX9uMtCJPrnAXeWT1HR+BShHcICwHbFRv4Wz5xY7hx+R4R+rUk2d30WWGo9NUPXyVi4qDyZV7hkbx4FaSjoifgTHQ=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=peng.ma@nxp.com; 
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com (20.177.55.205) by
- VI1PR04MB3006.eurprd04.prod.outlook.com (10.170.226.33) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.21; Thu, 27 Feb 2020 04:31:36 +0000
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::10f0:dc6d:c9f9:edfc]) by VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::10f0:dc6d:c9f9:edfc%5]) with mapi id 15.20.2772.012; Thu, 27 Feb 2020
- 04:31:35 +0000
-From:   Peng Ma <peng.ma@nxp.com>
-To:     vkoul@kernel.org, dan.j.williams@intel.com
-Cc:     natechancellor@gmail.com, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Peng Ma <peng.ma@nxp.com>
-Subject: [PATCH] dmaengine: fsl-dpaa2-qdma: Adding shutdown hook
-Date:   Thu, 27 Feb 2020 12:28:41 +0800
-Message-Id: <20200227042841.18358-1-peng.ma@nxp.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: SG2P153CA0009.APCP153.PROD.OUTLOOK.COM (2603:1096::19) To
- VI1PR04MB4431.eurprd04.prod.outlook.com (2603:10a6:803:6f::13)
+        Wed, 26 Feb 2020 23:38:45 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37777 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728221AbgB0Eio (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 23:38:44 -0500
+Received: by mail-oi1-f193.google.com with SMTP id q84so2025187oic.4;
+        Wed, 26 Feb 2020 20:38:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ByzwXjxxAjc7Zga7QIoH1Dg/JplDufewPb/z1LrV5Dk=;
+        b=kdLDp3x1MIQtmih87WTkMiiMAbRpaovl8h89fbI87FYlWtGHlNSrClwC+2JubV/CXt
+         FZC3mMO7khvELquq9q1Xjri3l4atSrKdVSSH0vLq8UKqEPHpwOzXVUiyq3+JNMAA8WEy
+         pZZRo4es2IoL9UcvsQ1JFwIuph7aiOludae903qIlaZMJQNrZ2Ywlcy0wRimD6Um+vzU
+         nYMmupk37n5RH18CupKLJiLwlpFpui0lHn/9jSWqYY78CdOWwsPSazaeyi8hP/XsLRGM
+         OxwvQ83eQLfpTUY0cE5L5FHVQ+U8CSM8D+oZ58btk1SPCYFQJq7NP338I0jFoOeTZa4C
+         Clog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ByzwXjxxAjc7Zga7QIoH1Dg/JplDufewPb/z1LrV5Dk=;
+        b=iBT/Jq7Afua1HlC/E2BhIdjA1YwlYnr3s6yymaT+P7HTmRWTHGtjOSSSNxkEmy7PIp
+         Ba1MOnpGq9Dbaa6u0QJ7bIHrzZzgDmNaPfs8dW2Hri/M9vHk1bwpJAshc6febR75fkUF
+         7J81YD5Yxrz/5/I4V1z+Wpv8dEPLv6qhsa8bb9JgEwPa20IiZjp16IM/NNqQ66ZAYNb9
+         UG+xgW4ux2L9EEhrZYBLDeREQJ4pjBbQQl0jG68XknXnl0lwHh/IAgSN8XQbS3zIwnPe
+         9s7G9DFE4q3bAJbaSJcSQP+xbx8UygkvRGUciThRSh6RpRw8aaN5uft2nBD6+kIcIO6E
+         Gftw==
+X-Gm-Message-State: APjAAAXKMET6pPWWOn9eHN/fk3YcTsWpa1vAPTSg9nrz8wIpeXnLKZuF
+        rcS7SlqwUzF2HXsG+7XzNEKDW+6w
+X-Google-Smtp-Source: APXvYqxiBCcYOuupKnBfUUvrtLrDYRgnMgguiQOMiiK+c6TGX7tTNFpcXJyd1Oq3jTgVO2kbYmNtIw==
+X-Received: by 2002:aca:c3c2:: with SMTP id t185mr1990201oif.26.1582778323474;
+        Wed, 26 Feb 2020 20:38:43 -0800 (PST)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id n25sm1592674oic.6.2020.02.26.20.38.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 26 Feb 2020 20:38:42 -0800 (PST)
+Date:   Wed, 26 Feb 2020 21:38:41 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] Documentation/llvm: add documentation on building w/
+ Clang/LLVM
+Message-ID: <20200227043841.GA55684@ubuntu-m2-xlarge-x86>
+References: <20200224174129.2664-1-ndesaulniers@google.com>
+ <CAK7LNASNsOmyqFWYtJHB4UcHAed5C_isWvMJ4MKHu0O=yUy=8w@mail.gmail.com>
+ <CAKwvOd=mPg79CrYnDm8=z0iJpKL0FHm9J5qZF0_A6BFXBv8Dow@mail.gmail.com>
+ <CAK7LNAQ83rLAm1GcvrgJbinyAVPpM_SoxfO7RdOAfmXyg2tBdQ@mail.gmail.com>
+ <CA+icZUWSQkYD2MzEY_8U1NMY8LO5NzD0CCuZ8+cH+dBndJm=yQ@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.73) by SG2P153CA0009.APCP153.PROD.OUTLOOK.COM (2603:1096::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.3 via Frontend Transport; Thu, 27 Feb 2020 04:31:33 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [119.31.174.73]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: ece945fa-29a7-4a89-be6f-08d7bb3dedf2
-X-MS-TrafficTypeDiagnostic: VI1PR04MB3006:|VI1PR04MB3006:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB30065ECBCFC08C9C62189831EDEB0@VI1PR04MB3006.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-Forefront-PRVS: 03264AEA72
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(346002)(136003)(366004)(376002)(199004)(189003)(1076003)(6512007)(26005)(6506007)(2616005)(52116002)(8936002)(44832011)(81156014)(81166006)(86362001)(6666004)(8676002)(69590400006)(36756003)(478600001)(6486002)(956004)(316002)(66476007)(5660300002)(16526019)(66556008)(4326008)(66946007)(2906002)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB3006;H:VI1PR04MB4431.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2asagvhXpivzRjdAy07yAkds1PedvsiZE2enAC9MpZhwjaCUFCDARApS8ARh7f59XVDw6ponIu+9KLfErnj+4OoGpWmBJAUETGqjrsbu7o5glM38KlIhifi7St9Zd+24SEV2n93aXP3605AsIMTts5pyn/B9O7fYTEpa9ONmEjt9OtaT96yyfrp6ykAKC0adlWBkcHHVZzwADp+M/iziS57PSVq32gwj8kvqkrEKfrrCQMibsN9ou4ZUNheu+WC8CUW8ew1P4Lf9U8w9mES94kv/xoR7qNqdEF6xhnCxbXll+FcK1jfz1rhlQC1fg/ptMoGg0qKX7OwpVYrOe+59REfIKMIDEbq93Hny0aZ6s4JWOyL2DCLtt0tFLE5OsTEUQ9lbANjT/U4X0KOUX2CqUj43LpJjYWMfPgBfu2Bh78wRlwlGWdZcqfjEQn78Skkmlquug/QQaUvYuTdbbQ9QsLrrusmBvWcmd5BTGimMoMcsPkfXNK6cyvNWkwnXuW82zVa6MnEbQd0L0AaVExYsxe6PzXCDiSi22M3LTCEMZs8=
-X-MS-Exchange-AntiSpam-MessageData: yvUHAjGZrUoa6BjHa9+GJgCtClSyIvY2bl8jgSUXxAASqqeST0UDPxDNCq8MQLuxjP89ckvUbmQYEFknrC+17+x10ZqMqQ2OSyTJMhyrUgq+0pTeNNLQhB//o7yw+YgzIFfkuvkW+HMrJvu5SpFeFg==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ece945fa-29a7-4a89-be6f-08d7bb3dedf2
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2020 04:31:35.7851
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3jDQ6F+y7Rzt2zNybts9tkG6cH63tzuSTHdNlWfvXzxSxAPC4/PfyKTYXL9mQA9+
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3006
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+icZUWSQkYD2MzEY_8U1NMY8LO5NzD0CCuZ8+cH+dBndJm=yQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to ensure DMA engine could be stopped in order for kexec
-to start the next kernel.
-So add the shutdown operation support.
+On Wed, Feb 26, 2020 at 01:33:13PM +0100, Sedat Dilek wrote:
+> On Wed, Feb 26, 2020 at 1:01 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > On Wed, Feb 26, 2020 at 5:52 AM Nick Desaulniers
+> > <ndesaulniers@google.com> wrote:
+> > >
+> > > On Mon, Feb 24, 2020 at 4:34 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > > >
+> > > > On Tue, Feb 25, 2020 at 2:41 AM Nick Desaulniers
+> > > > <ndesaulniers@google.com> wrote:
+> > > > >
+> > > > > Added to kbuild documentation. Provides more official info on building
+> > > > > kernels with Clang and LLVM than our wiki.
+> > > > >
+> > > > > Suggested-by: Kees Cook <keescook@chromium.org>
+> > > > > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> > > > > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> > > > > ---
+> > > >
+> > > >
+> > > > Perhaps, is it better to explicitly add it to MAINTAINERS?
+> > > >
+> > > > --- a/MAINTAINERS
+> > > > +++ b/MAINTAINERS
+> > > > @@ -4118,6 +4118,7 @@ W:        https://clangbuiltlinux.github.io/
+> > > >  B:     https://github.com/ClangBuiltLinux/linux/issues
+> > > >  C:     irc://chat.freenode.net/clangbuiltlinux
+> > > >  S:     Supported
+> > > > +F:     Documentation/kbuild/llvm.rst
+> > > >  K:     \b(?i:clang|llvm)\b
+> > >
+> > > I'm happy to leave it to the maintainers of Documentation/.  Otherwise
+> > > we have a file for which there is no MAINTAINER, which seems
+> > > ambiguous.
+> >
+> > It is common that MAINTAINERS lists per-file (per-driver) maintainers.
+> > It does not necessarily mean a person who picks up patches.
+> >
+> > scripts/get_maintainer.pl lists maintainers that
+> > match any F:, N:, K: patterns.
+> > So, both Doc and Kbuild maintainers/ML will still be listed.
+> >
+> > Having said that, it is up to you. Either is fine with me.
+> > Another pattern 'K: \b(?i:clang|llvm)\b'  covers this file anyway.
+> >
+> >
+> > (BTW, I am also happy to see your name as the maintainer of this entry.)
+> >
+> 
+> +1 (Please drop the BTW - This was suggested in the brainstorming
+> session on the ClangBuiltLinux Meetup in Zurich).
+> 
+> I suggest to add Nathan and Kees if they are willing to be responsible
+> for the maintainer job.
+> 
+> - Sedat -
 
-Signed-off-by: Peng Ma <peng.ma@nxp.com>
----
- drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c | 17 +++++++++++++++++
- drivers/dma/fsl-dpaa2-qdma/dpdmai.c     | 21 +++++++++++++++++++++
- drivers/dma/fsl-dpaa2-qdma/dpdmai.h     |  2 ++
- 3 files changed, 40 insertions(+)
+I would not mind having my name added under this MAINTAINERS entry but I
+definitely think that is a conversation for a different thread.
 
-diff --git a/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c b/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
-index c70a7965f140..fabbbb90b2c7 100644
---- a/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
-+++ b/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
-@@ -790,6 +790,22 @@ static int dpaa2_qdma_remove(struct fsl_mc_device *ls_dev)
- 	return 0;
- }
- 
-+static void dpaa2_qdma_shutdown(struct fsl_mc_device *ls_dev)
-+{
-+	struct dpaa2_qdma_engine *dpaa2_qdma;
-+	struct dpaa2_qdma_priv *priv;
-+	struct device *dev;
-+
-+	dev = &ls_dev->dev;
-+	priv = dev_get_drvdata(dev);
-+	dpaa2_qdma = priv->dpaa2_qdma;
-+
-+	dpdmai_disable(priv->mc_io, 0, ls_dev->mc_handle);
-+	dpaa2_dpdmai_dpio_unbind(priv);
-+	dpdmai_close(priv->mc_io, 0, ls_dev->mc_handle);
-+	dpdmai_destroy(priv->mc_io, 0, ls_dev->mc_handle);
-+}
-+
- static const struct fsl_mc_device_id dpaa2_qdma_id_table[] = {
- 	{
- 		.vendor = FSL_MC_VENDOR_FREESCALE,
-@@ -805,6 +821,7 @@ static struct fsl_mc_driver dpaa2_qdma_driver = {
- 	},
- 	.probe          = dpaa2_qdma_probe,
- 	.remove		= dpaa2_qdma_remove,
-+	.shutdown	= dpaa2_qdma_shutdown,
- 	.match_id_table	= dpaa2_qdma_id_table
- };
- 
-diff --git a/drivers/dma/fsl-dpaa2-qdma/dpdmai.c b/drivers/dma/fsl-dpaa2-qdma/dpdmai.c
-index f8d22115154a..878662aaa1c2 100644
---- a/drivers/dma/fsl-dpaa2-qdma/dpdmai.c
-+++ b/drivers/dma/fsl-dpaa2-qdma/dpdmai.c
-@@ -159,6 +159,27 @@ int dpdmai_create(struct fsl_mc_io *mc_io, u32 cmd_flags,
- 	return 0;
- }
- 
-+/**
-+ * dpdmai_destroy() - Destroy the DPDMAI object and release all its resources.
-+ * @mc_io:      Pointer to MC portal's I/O object
-+ * @cmd_flags:  Command flags; one or more of 'MC_CMD_FLAG_'
-+ * @token:      Token of DPDMAI object
-+ *
-+ * Return:      '0' on Success; error code otherwise.
-+ */
-+int dpdmai_destroy(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token)
-+{
-+	struct fsl_mc_command cmd = { 0 };
-+
-+	/* prepare command */
-+	cmd.header = mc_encode_cmd_header(DPDMAI_CMDID_DESTROY,
-+					  cmd_flags, token);
-+
-+	/* send command to mc*/
-+	return mc_send_command(mc_io, &cmd);
-+}
-+EXPORT_SYMBOL_GPL(dpdmai_destroy);
-+
- /**
-  * dpdmai_enable() - Enable the DPDMAI, allow sending and receiving frames.
-  * @mc_io:	Pointer to MC portal's I/O object
-diff --git a/drivers/dma/fsl-dpaa2-qdma/dpdmai.h b/drivers/dma/fsl-dpaa2-qdma/dpdmai.h
-index 6d785093da8e..b13b9bf0c003 100644
---- a/drivers/dma/fsl-dpaa2-qdma/dpdmai.h
-+++ b/drivers/dma/fsl-dpaa2-qdma/dpdmai.h
-@@ -18,6 +18,7 @@
- #define DPDMAI_CMDID_CLOSE		DPDMAI_CMDID_FORMAT(0x800)
- #define DPDMAI_CMDID_OPEN               DPDMAI_CMDID_FORMAT(0x80E)
- #define DPDMAI_CMDID_CREATE             DPDMAI_CMDID_FORMAT(0x90E)
-+#define DPDMAI_CMDID_DESTROY            DPDMAI_CMDID_FORMAT(0x900)
- 
- #define DPDMAI_CMDID_ENABLE             DPDMAI_CMDID_FORMAT(0x002)
- #define DPDMAI_CMDID_DISABLE            DPDMAI_CMDID_FORMAT(0x003)
-@@ -160,6 +161,7 @@ struct dpdmai_rx_queue_attr {
- int dpdmai_open(struct fsl_mc_io *mc_io, u32 cmd_flags,
- 		int dpdmai_id, u16 *token);
- int dpdmai_close(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token);
-+int dpdmai_destroy(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token);
- int dpdmai_create(struct fsl_mc_io *mc_io, u32 cmd_flags,
- 		  const struct dpdmai_cfg *cfg, u16 *token);
- int dpdmai_enable(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token);
--- 
-2.17.1
-
+Cheers,
+Nathan
