@@ -2,146 +2,174 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B792C4BA3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A60C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 020E424672
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:50:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="jAldvDjU"
+	by mail.kernel.org (Postfix) with ESMTP id B937C24683
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:51:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728741AbgB0Jur (ORCPT
+        id S1728760AbgB0JvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 04:50:47 -0500
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:39633 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728666AbgB0Juq (ORCPT
+        Thu, 27 Feb 2020 04:51:08 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:35879 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728653AbgB0JvI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 04:50:46 -0500
-Received: from [IPv6:2001:420:44c1:2577:f10e:c7d:8cc0:4dc1]
- ([IPv6:2001:420:44c1:2577:f10e:c7d:8cc0:4dc1])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id 7FoQjCsjZjmHT7FoTjhgWE; Thu, 27 Feb 2020 10:50:44 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1582797044; bh=ByJVUEPLZ7tIhy2q8vr9cuIU5zHaJVyikWn1UOZGCH0=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=jAldvDjUP+2sch8FAjl3tRgQbtP30TxMccHRfBTx0AG7qcuIATR+YS9Nz2VyI7z6b
-         2bdvHiX6Z/L6mJI7b4nv54bKnRliMEVQM7ySwyQNAkoDNchfxN8t4CYHzfevXfB9f8
-         LybufA3No+1VRB5FQcWflrscC6WbERot2gpInO67/M0n6IFDADfiZx2PIF3g4pSwHx
-         z/7p8fhwJ085la0RM6nw3Uw2TbL/on46LEYh1L4i8LFEemmBCgZg8m8lvoTBW42kTb
-         lmP1Ema0sJ4YMTnvpQQV7+hlWMN1SEz349s++ZvojelgkPLdmfbl7iI+GBcwETKL68
-         d1DrVrZF7v6fw==
-Subject: Re: [PATCH v3] media: mtk-vpu: avoid unaligned access to DTCM buffer.
-To:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20200225172437.106679-1-hsinyi@chromium.org>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <6986e879-cf35-13a5-baae-9ab09ba1a0d7@xs4all.nl>
-Date:   Thu, 27 Feb 2020 10:50:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 27 Feb 2020 04:51:08 -0500
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1j7Fod-0006mu-IK; Thu, 27 Feb 2020 10:50:47 +0100
+Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1j7FoZ-0003jq-SI; Thu, 27 Feb 2020 10:50:43 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     stern@rowland.harvard.edu, gregkh@linuxfoundation.org,
+        Thinh.Nguyen@synopsys.com, harry.pan@intel.com,
+        nobuta.keiya@fujitsu.com, malat@debian.org,
+        kai.heng.feng@canonical.com, chiasheng.lee@intel.com,
+        andreyknvl@google.com, heinzelmann.david@gmail.com
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: [RFC PATCH] USB: hub: fix port suspend/resume
+Date:   Thu, 27 Feb 2020 10:50:40 +0100
+Message-Id: <20200227095040.10208-1-m.felsch@pengutronix.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200225172437.106679-1-hsinyi@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfEmWyewWtYOmHee0wLG9KVhzvdC+vZ2Yn3M5QK7toJOjegKaoNuwTebMFlNUkX4g5ubItYRWYyIhs9fGxCf8cD1rUEnuEdF4lkw2Txy5JZSTdCcXpB5B
- pzO5NkIdXaxs9P+pVHBrmJIkOsU5Eroa9DV8ZTMnglUWubr8LP9y9m4lrANhiZiELvr2vgtUaNnUrH/z4wjpIQouugabPCkx5QqnrCnfi2V6tgsdVHr8zOA8
- mskhshBV7XjDMTd5xLYZ0Sm9OpE9a0gr0ElTGRjFT+FJQNuLIVgUwDTN961nhIssd25SFvemCatJXt34OY1tWo5jOU+tteyyXulpyXgchGIMPBQTTaJL4Ji/
- BDZeOQ+aZfeJoA0ppicA6MUd7/lCyKg6hL1KWvDnx/ZLDMY6VT1KNZ9+CVD6Y4XoIfaYgurc68lAMRXyukwMzOUhuDJ/fXoZyVy7cakzf2yVCHIFr1MQkom2
- 6uXVTJbJJ2ntKSdMcuzDzxxLVI/BioY4HHz9HrFB0kvsXSZ85OlEwY/El9R2R4b62kVs1vAMd79qJR06ewzsBO5vcefSk/KCV3UTXq0dtsHArbHy35bC8iLR
- Rah4L33UxuNXea6VawerW38hGGj3VKbG0GGWnNC73+Jstfp45IVOhkAtbTCX7EpKdn0ZIfFxhHTwpxpDIZAvShcQMHLyEncijo0icB4e/D51NB9J3TYHYJbP
- PGwtJwvHsA+s8xkxnt2oMOeUDgII1xG2
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/25/20 6:24 PM, Hsin-Yi Wang wrote:
-> struct vpu_run *run in vpu_init_ipi_handler() is an ioremapped DTCM (Data
-> Tightly Coupled Memory) buffer shared with AP.  It's not able to do
-> unaligned access. Otherwise kernel would crash due to unable to handle
-> kernel paging request.
-> 
-> struct vpu_run {
-> 	u32 signaled;
-> 	char fw_ver[VPU_FW_VER_LEN];
-> 	unsigned int	dec_capability;
-> 	unsigned int	enc_capability;
-> 	wait_queue_head_t wq;
-> };
-> 
-> fw_ver starts at 4 byte boundary. If system enables
-> CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS, strscpy() will do
-> read_word_at_a_time(), which tries to read 8-byte: *(unsigned long *)addr
-> 
-> Copy the string by memcpy_fromio() for this buffer to avoid unaligned
-> access.
-> 
-> Fixes: 85709cbf1524 ("media: replace strncpy() by strscpy()")
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> ---
-> Change in v3:
-> - fix sparse warnings.
-> Change in v2:
-> - fix sparse warnings.
-> ---
->  drivers/media/platform/mtk-vpu/mtk_vpu.c | 14 ++++++++------
->  1 file changed, 8 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/media/platform/mtk-vpu/mtk_vpu.c b/drivers/media/platform/mtk-vpu/mtk_vpu.c
-> index a768707abb94..e3fd2d1814f3 100644
-> --- a/drivers/media/platform/mtk-vpu/mtk_vpu.c
-> +++ b/drivers/media/platform/mtk-vpu/mtk_vpu.c
-> @@ -603,12 +603,14 @@ EXPORT_SYMBOL_GPL(vpu_load_firmware);
->  static void vpu_init_ipi_handler(void *data, unsigned int len, void *priv)
->  {
->  	struct mtk_vpu *vpu = (struct mtk_vpu *)priv;
-> -	struct vpu_run *run = (struct vpu_run *)data;
-> -
-> -	vpu->run.signaled = run->signaled;
-> -	strscpy(vpu->run.fw_ver, run->fw_ver, sizeof(vpu->run.fw_ver));
-> -	vpu->run.dec_capability = run->dec_capability;
-> -	vpu->run.enc_capability = run->enc_capability;
-> +	struct vpu_run __iomem *run = (struct vpu_run __iomem __force *)data;
+At the momemnt the usb-port driver has only runime_pm hooks.
+Suspending the port and turn off the VBUS supply should be triggered by
+the hub device suspend callback usb_port_suspend() which calls the
+pm_runtime_put_sync() if all pre-conditions are meet. This mechanism
+don't work correctly due to the global PM behaviour, for more information
+see [1]. According [1] I added the suspend/resume callbacks for the port
+device to fix this. While on it I replaced the #ifdef's by
+__maybe_unused.
 
-The use of __force is generally a bad sign. Shouldn't the 'void *data' be a
-'void __iomem *data'? And vpu->recv_buf should be 'struct share_obj __iomem *recv_buf;'.
-Probably send_buf as well.
+[1] https://www.spinics.net/lists/linux-usb/msg190537.html
 
-In other words, the __iomem attribute should be wired up correctly throughout the
-driver code, and not forcibly applied in one place. That is asking for trouble in
-the future. Also, sparse only works well in detecting problems if such attributes
-are applied at the right level.
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+---
+ drivers/usb/core/hub.c  | 13 -------------
+ drivers/usb/core/port.c | 39 +++++++++++++++++++++++++++++++--------
+ 2 files changed, 31 insertions(+), 21 deletions(-)
 
-Regards,
-
-	Hans
-
-> +
-> +	vpu->run.signaled = readl(&run->signaled);
-> +	memcpy_fromio(vpu->run.fw_ver, run->fw_ver, sizeof(vpu->run.fw_ver));
-> +	/* Make sure the string is NUL-terminated */
-> +	vpu->run.fw_ver[sizeof(vpu->run.fw_ver) - 1] = '\0';
-> +	vpu->run.dec_capability = readl(&run->dec_capability);
-> +	vpu->run.enc_capability = readl(&run->enc_capability);
->  	wake_up_interruptible(&vpu->run.wq);
->  }
->  
-> 
+diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+index 3405b146edc9..c294484e478d 100644
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -3323,10 +3323,6 @@ int usb_port_suspend(struct usb_device *udev, pm_message_t msg)
+ 		usb_set_device_state(udev, USB_STATE_SUSPENDED);
+ 	}
+ 
+-	if (status == 0 && !udev->do_remote_wakeup && udev->persist_enabled
+-			&& test_and_clear_bit(port1, hub->child_usage_bits))
+-		pm_runtime_put_sync(&port_dev->dev);
+-
+ 	usb_mark_last_busy(hub->hdev);
+ 
+ 	usb_unlock_port(port_dev);
+@@ -3514,15 +3510,6 @@ int usb_port_resume(struct usb_device *udev, pm_message_t msg)
+ 	int		status;
+ 	u16		portchange, portstatus;
+ 
+-	if (!test_and_set_bit(port1, hub->child_usage_bits)) {
+-		status = pm_runtime_get_sync(&port_dev->dev);
+-		if (status < 0) {
+-			dev_dbg(&udev->dev, "can't resume usb port, status %d\n",
+-					status);
+-			return status;
+-		}
+-	}
+-
+ 	usb_lock_port(port_dev);
+ 
+ 	/* Skip the initial Clear-Suspend step for a remote wakeup */
+diff --git a/drivers/usb/core/port.c b/drivers/usb/core/port.c
+index bbbb35fa639f..9efa6b2ef31b 100644
+--- a/drivers/usb/core/port.c
++++ b/drivers/usb/core/port.c
+@@ -187,8 +187,7 @@ static void usb_port_device_release(struct device *dev)
+ 	kfree(port_dev);
+ }
+ 
+-#ifdef CONFIG_PM
+-static int usb_port_runtime_resume(struct device *dev)
++static int __maybe_unused usb_port_runtime_resume(struct device *dev)
+ {
+ 	struct usb_port *port_dev = to_usb_port(dev);
+ 	struct usb_device *hdev = to_usb_device(dev->parent->parent);
+@@ -244,7 +243,7 @@ static int usb_port_runtime_resume(struct device *dev)
+ 	return retval;
+ }
+ 
+-static int usb_port_runtime_suspend(struct device *dev)
++static int __maybe_unused usb_port_runtime_suspend(struct device *dev)
+ {
+ 	struct usb_port *port_dev = to_usb_port(dev);
+ 	struct usb_device *hdev = to_usb_device(dev->parent->parent);
+@@ -283,7 +282,33 @@ static int usb_port_runtime_suspend(struct device *dev)
+ 
+ 	return retval;
+ }
+-#endif
++
++static int __maybe_unused _usb_port_suspend(struct device *dev)
++{
++	struct usb_port *port_dev = to_usb_port(dev);
++	struct usb_device *udev = port_dev->child;
++	int retval;
++
++	if (!udev->do_remote_wakeup && udev->persist_enabled)
++		retval = usb_port_runtime_suspend(dev);
++
++	/* Do not force the user to enable the power-off feature */
++	if (retval && retval != -EAGAIN)
++		return retval;
++
++	return 0;
++}
++
++static int __maybe_unused _usb_port_resume(struct device *dev)
++{
++	struct usb_port *port_dev = to_usb_port(dev);
++	struct usb_device *udev = port_dev->child;
++
++	if (!udev->do_remote_wakeup && udev->persist_enabled)
++		return usb_port_runtime_resume(dev);
++
++	return 0;
++}
+ 
+ static void usb_port_shutdown(struct device *dev)
+ {
+@@ -294,10 +319,8 @@ static void usb_port_shutdown(struct device *dev)
+ }
+ 
+ static const struct dev_pm_ops usb_port_pm_ops = {
+-#ifdef CONFIG_PM
+-	.runtime_suspend =	usb_port_runtime_suspend,
+-	.runtime_resume =	usb_port_runtime_resume,
+-#endif
++	SET_SYSTEM_SLEEP_PM_OPS(_usb_port_suspend, _usb_port_resume)
++	SET_RUNTIME_PM_OPS(usb_port_runtime_suspend, usb_port_runtime_resume, NULL)
+ };
+ 
+ struct device_type usb_port_device_type = {
+-- 
+2.20.1
 
