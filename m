@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADA4C52D33
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9689C3F345
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3CA92084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FE36246AD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811854;
-	bh=YB3D0iZgRzMNCP01kx62vYyspe5tHFfHvQ8FVTj2XZA=;
+	s=default; t=1582811845;
+	bh=xJg2/+8a3kimda2ACtyICgbF1VdFKEy1dqOZoifXZvs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hci0/CDpiboUWGLm2tgJItuqjfa83kWwJBRJi9PA1kBZrr98XlxtiJffmwxPaMbx2
-	 a2mCqVewLpnNAzJ2yBepa+0WmJNTEINbUiS/86zMPePF5muHhIl6louoYhtULvnoDb
-	 WUO5U/3Sb46+JRujwungWMhku0BWBlZqHiSQrqJ0=
+	b=GGUDO1sau/7uTnUM4k4Dkt1CpJWE7TGgCJfXAfRhpTCk+N9EP/sXMNDHDu9j3RO4i
+	 nqXOpMzi2dQlHOBfoVhd+5HH4dyqogNS1pja7BVVpFkx3HjiL3KqkjOazzX4wVgOMA
+	 H6vRhDDDCpfxIJpzRGRVdMYcUiKdM+GuYbsyt+r0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732296AbgB0N5d (ORCPT
+        id S1732274AbgB0N5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:57:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58396 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:57:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731969AbgB0N52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:57:28 -0500
+        id S1730241AbgB0N5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:57:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25D0920801;
-        Thu, 27 Feb 2020 13:57:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF59D2084E;
+        Thu, 27 Feb 2020 13:57:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811847;
-        bh=YB3D0iZgRzMNCP01kx62vYyspe5tHFfHvQ8FVTj2XZA=;
+        s=default; t=1582811835;
+        bh=xJg2/+8a3kimda2ACtyICgbF1VdFKEy1dqOZoifXZvs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BtBws7xk58h8t1/KYY6hkfBcnIiav3jg2cUUu1MqT+xVV7eWc3VHRAAkgC+Zka7qT
-         dXwK6BcavjnRpbwOvJUNNYWiVg7iqIu4z0vRToOjeOkdyb+93VN62EBk+FgYB7O1WF
-         /xTpe52/nQTivsKJyDy9kPwPzglRof7C6hfCGR2U=
+        b=oMIp65t1o8KC2oLvngDarX9Kp9x0pLpkW5NrxpeJZOGGX00Qo8vDUT8aQH69nIAb7
+         ASuj1LtornWfSoSLDjMoL8aCmx3TVyaqZkNpPgm7tlG/WPl55hx2/pbFAf/oEdJ8GD
+         U1P4WEVYHPMy5KZ8FPw6DjvxxvqxGlYcxMWMmdvo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Richter <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        stable@vger.kernel.org, yu kuai <yukuai3@huawei.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 125/237] watchdog/softlockup: Enforce that timestamp is valid on boot
-Date:   Thu, 27 Feb 2020 14:35:39 +0100
-Message-Id: <20200227132305.972662190@linuxfoundation.org>
+Subject: [PATCH 4.14 071/237] drm/amdgpu: remove 4 set but not used variable in amdgpu_atombios_get_connector_info_from_object_table
+Date:   Thu, 27 Feb 2020 14:34:45 +0100
+Message-Id: <20200227132302.364591623@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -60,79 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit 11e31f608b499f044f24b20be73f1dcab3e43f8a ]
+[ Upstream commit bae028e3e521e8cb8caf2cc16a455ce4c55f2332 ]
 
-Robert reported that during boot the watchdog timestamp is set to 0 for one
-second which is the indicator for a watchdog reset.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-The reason for this is that the timestamp is in seconds and the time is
-taken from sched clock and divided by ~1e9. sched clock starts at 0 which
-means that for the first second during boot the watchdog timestamp is 0,
-i.e. reset.
+drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c: In function
+'amdgpu_atombios_get_connector_info_from_object_table':
+drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c:376:26: warning: variable
+'grph_obj_num' set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c:376:13: warning: variable
+'grph_obj_id' set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c:341:37: warning: variable
+'con_obj_type' set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c:341:24: warning: variable
+'con_obj_num' set but not used [-Wunused-but-set-variable]
 
-Use ULONG_MAX as the reset indicator value so the watchdog works correctly
-right from the start. ULONG_MAX would only conflict with a real timestamp
-if the system reaches an uptime of 136 years on 32bit and almost eternity
-on 64bit.
+They are never used, so can be removed.
 
-Reported-by: Robert Richter <rrichter@marvell.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/87o8v3uuzl.fsf@nanos.tec.linutronix.de
+Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/watchdog.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c | 19 ++-----------------
+ 1 file changed, 2 insertions(+), 17 deletions(-)
 
-diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-index 087994b23f8b9..e4db5d54c07c0 100644
---- a/kernel/watchdog.c
-+++ b/kernel/watchdog.c
-@@ -164,6 +164,8 @@ static void lockup_detector_update_enable(void)
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c
+index cc4e18dcd8b6f..4779740421a88 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c
+@@ -336,17 +336,9 @@ bool amdgpu_atombios_get_connector_info_from_object_table(struct amdgpu_device *
+ 		path_size += le16_to_cpu(path->usSize);
  
- #ifdef CONFIG_SOFTLOCKUP_DETECTOR
+ 		if (device_support & le16_to_cpu(path->usDeviceTag)) {
+-			uint8_t con_obj_id, con_obj_num, con_obj_type;
+-
+-			con_obj_id =
++			uint8_t con_obj_id =
+ 			    (le16_to_cpu(path->usConnObjectId) & OBJECT_ID_MASK)
+ 			    >> OBJECT_ID_SHIFT;
+-			con_obj_num =
+-			    (le16_to_cpu(path->usConnObjectId) & ENUM_ID_MASK)
+-			    >> ENUM_ID_SHIFT;
+-			con_obj_type =
+-			    (le16_to_cpu(path->usConnObjectId) &
+-			     OBJECT_TYPE_MASK) >> OBJECT_TYPE_SHIFT;
  
-+#define SOFTLOCKUP_RESET	ULONG_MAX
-+
- /* Global variables, exported for sysctl */
- unsigned int __read_mostly softlockup_panic =
- 			CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC_VALUE;
-@@ -271,7 +273,7 @@ notrace void touch_softlockup_watchdog_sched(void)
- 	 * Preemption can be enabled.  It doesn't matter which CPU's timestamp
- 	 * gets zeroed here, so use the raw_ operation.
- 	 */
--	raw_cpu_write(watchdog_touch_ts, 0);
-+	raw_cpu_write(watchdog_touch_ts, SOFTLOCKUP_RESET);
- }
- 
- notrace void touch_softlockup_watchdog(void)
-@@ -295,14 +297,14 @@ void touch_all_softlockup_watchdogs(void)
- 	 * the softlockup check.
- 	 */
- 	for_each_cpu(cpu, &watchdog_allowed_mask)
--		per_cpu(watchdog_touch_ts, cpu) = 0;
-+		per_cpu(watchdog_touch_ts, cpu) = SOFTLOCKUP_RESET;
- 	wq_watchdog_touch(-1);
- }
- 
- void touch_softlockup_watchdog_sync(void)
- {
- 	__this_cpu_write(softlockup_touch_sync, true);
--	__this_cpu_write(watchdog_touch_ts, 0);
-+	__this_cpu_write(watchdog_touch_ts, SOFTLOCKUP_RESET);
- }
- 
- static int is_softlockup(unsigned long touch_ts)
-@@ -354,7 +356,7 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
- 	/* .. and repeat */
- 	hrtimer_forward_now(hrtimer, ns_to_ktime(sample_period));
- 
--	if (touch_ts == 0) {
-+	if (touch_ts == SOFTLOCKUP_RESET) {
- 		if (unlikely(__this_cpu_read(softlockup_touch_sync))) {
- 			/*
- 			 * If the time stamp was touched atomically
+ 			/* Skip TV/CV support */
+ 			if ((le16_to_cpu(path->usDeviceTag) ==
+@@ -371,14 +363,7 @@ bool amdgpu_atombios_get_connector_info_from_object_table(struct amdgpu_device *
+ 			router.ddc_valid = false;
+ 			router.cd_valid = false;
+ 			for (j = 0; j < ((le16_to_cpu(path->usSize) - 8) / 2); j++) {
+-				uint8_t grph_obj_id, grph_obj_num, grph_obj_type;
+-
+-				grph_obj_id =
+-				    (le16_to_cpu(path->usGraphicObjIds[j]) &
+-				     OBJECT_ID_MASK) >> OBJECT_ID_SHIFT;
+-				grph_obj_num =
+-				    (le16_to_cpu(path->usGraphicObjIds[j]) &
+-				     ENUM_ID_MASK) >> ENUM_ID_SHIFT;
++				uint8_t grph_obj_type=
+ 				grph_obj_type =
+ 				    (le16_to_cpu(path->usGraphicObjIds[j]) &
+ 				     OBJECT_TYPE_MASK) >> OBJECT_TYPE_SHIFT;
 -- 
 2.20.1
 
