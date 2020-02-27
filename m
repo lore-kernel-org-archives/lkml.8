@@ -2,123 +2,112 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1E0C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7AB5C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33026246AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:45:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93A872468E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:51:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729786AbgB0Upt (ORCPT
+        id S1729753AbgB0Uvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 15:45:49 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:35257 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbgB0Ups (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 15:45:48 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1j7Q2Q-0004in-Ts; Thu, 27 Feb 2020 21:45:43 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 771831C217A;
-        Thu, 27 Feb 2020 21:45:42 +0100 (CET)
-Date:   Thu, 27 Feb 2020 20:45:42 -0000
-From:   "tip-bot2 for Tony Luck" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: ras/urgent] x86/mce: Fix logic and comments around MSR_PPIN_CTL
-Cc:     Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
-        <stable@vger.kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200226011737.9958-1-tony.luck@intel.com>
-References: <20200226011737.9958-1-tony.luck@intel.com>
+        Thu, 27 Feb 2020 15:51:54 -0500
+Received: from mga05.intel.com ([192.55.52.43]:41482 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726758AbgB0Uvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 15:51:54 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 12:51:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
+   d="scan'208";a="272366192"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga002.fm.intel.com with ESMTP; 27 Feb 2020 12:51:53 -0800
+Date:   Thu, 27 Feb 2020 12:51:53 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: Re: [PATCH] KVM: nVMX: Consult only the "basic" exit reason when
+ routing nested exit
+Message-ID: <20200227205153.GC17014@linux.intel.com>
+References: <20200227174430.26371-1-sean.j.christopherson@intel.com>
+ <ee8c5eb6-9e3d-620b-d51f-bf0534a05d43@oracle.com>
 MIME-Version: 1.0
-Message-ID: <158283634211.28353.177653676147385432.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ee8c5eb6-9e3d-620b-d51f-bf0534a05d43@oracle.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the ras/urgent branch of tip:
+On Thu, Feb 27, 2020 at 12:08:55PM -0800, Krish Sadhukhan wrote:
+> 
+> On 2/27/20 9:44 AM, Sean Christopherson wrote:
+> >Consult only the basic exit reason, i.e. bits 15:0 of vmcs.EXIT_REASON,
+> >when determining whether a nested VM-Exit should be reflected into L1 or
+> >handled by KVM in L0.
+> >
+> >For better or worse, the switch statement in nested_vmx_exit_reflected()
+> >currently defaults to "true", i.e. reflects any nested VM-Exit without
+> >dedicated logic.  Because the case statements only contain the basic
+> >exit reason, any VM-Exit with modifier bits set will be reflected to L1,
+> >even if KVM intended to handle it in L0.
+> >
+> >Practically speaking, this only affects EXIT_REASON_MCE_DURING_VMENTRY,
+> >i.e. a #MC that occurs on nested VM-Enter would be incorrectly routed to
+> >L1, as "failed VM-Entry" is the only modifier that KVM can currently
+> >encounter.  The SMM modifiers will never be generated as KVM doesn't
+> >support/employ a SMI Transfer Monitor.  Ditto for "exit from enclave",
+> >as KVM doesn't yet support virtualizing SGX, i.e. it's impossible to
+> >enter an enclave in a KVM guest (L1 or L2).
+> 
+> 
+> It seems nested_vmx_exit_reflected() deals only with the basic exit reason.
+> If it doesn't need anything beyond bits 15:0, may be vmx_handle_exit() can
+> pass just the base exit reason ?
 
-Commit-ID:     59b5809655bdafb0767d3fd00a3e41711aab07e6
-Gitweb:        https://git.kernel.org/tip/59b5809655bdafb0767d3fd00a3e41711aab07e6
-Author:        Tony Luck <tony.luck@intel.com>
-AuthorDate:    Tue, 25 Feb 2020 17:17:37 -08:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Thu, 27 Feb 2020 21:36:42 +01:00
+Argh.  I was going to simply respond with "It traces exit_reason via
+trace_kvm_nested_vmexit().", but then I looked at the tracing code :-(
 
-x86/mce: Fix logic and comments around MSR_PPIN_CTL
+The tracepoints that print the names of the VM-Exit are flawed in the sense
+that they'll always print the raw value for VM-Exits with modifiers.  E.g.
+a consistency check VM-Exit on invalid guest state will print 0x80000021
+instead of INVALID_STATE.
 
-There are two implemented bits in the PPIN_CTL MSR:
+Stripping bits 31:16 when invoking the tracepoint would fix the immediate
+issue, but I'm not sure I like that approach because doing so drops
+information that could potentially be quite helpful, e.g. if nested VM-Exit
+injection injected EXIT_REASON_MSR_LOAD_FAIL without also setting
+VMX_EXIT_REASONS_FAILED_VMENTRY, which could break/confuse the L1 VMM.
+I'm also not remotely confident that we won't screw this up again in the
+future :-)
 
-Bit 0: LockOut (R/WO)
-      Set 1 to prevent further writes to MSR_PPIN_CTL.
+So part of me thinks the best way to resolve the printing would be to
+modify VMX_EXIT_REASONS to do "| VMX_EXIT_REASONS_FAILED_VMENTRY" where
+appropriate, i.e. on INVALID_STATE, MSR_LOAD_FAIL and MCE_DURING_VMENTRY.
+The downside of that approach is it breaks again when new modifiers come
+along, e.g. SGX's ENCLAVE_EXIT.  But again, the modifier is likely useful
+information.
 
-Bit 1: Enable_PPIN (R/W)
-       If 1, enables MSR_PPIN to be accessible using RDMSR.
-       If 0, an attempt to read MSR_PPIN will cause #GP.
+I think the most foolproof and informative way to handle this would be to
+add a macro and/or helper function, e.g. kvm_print_vmx_exit_reason(), to
+wrap __print_symbolic(__entry->exit_code, VMX_EXIT_REASONS) so that it
+prints both the name of the basic exit reason as well as the names for
+any modifiers.
 
-So there are four defined values:
-	0: PPIN is disabled, PPIN_CTL may be updated
-	1: PPIN is disabled. PPIN_CTL is locked against updates
-	2: PPIN is enabled. PPIN_CTL may be updated
-	3: PPIN is enabled. PPIN_CTL is locked against updates
+TL;DR: I still like this patch as is, especially since it'll be easy to
+backport.  I'll send a separate patch for the tracepoint issue.
 
-Code would only enable the X86_FEATURE_INTEL_PPIN feature for case "2".
-When it should have done so for both case "2" and case "3".
-
-Fix the final test to just check for the enable bit. Also fix some of
-the other comments in this function.
-
-Fixes: 3f5a7896a509 ("x86/mce: Include the PPIN in MCE records when available")
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20200226011737.9958-1-tony.luck@intel.com
----
- arch/x86/kernel/cpu/mce/intel.c |  9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/intel.c
-index 5627b10..f996ffb 100644
---- a/arch/x86/kernel/cpu/mce/intel.c
-+++ b/arch/x86/kernel/cpu/mce/intel.c
-@@ -493,17 +493,18 @@ static void intel_ppin_init(struct cpuinfo_x86 *c)
- 			return;
- 
- 		if ((val & 3UL) == 1UL) {
--			/* PPIN available but disabled: */
-+			/* PPIN locked in disabled mode */
- 			return;
- 		}
- 
--		/* If PPIN is disabled, but not locked, try to enable: */
--		if (!(val & 3UL)) {
-+		/* If PPIN is disabled, try to enable */
-+		if (!(val & 2UL)) {
- 			wrmsrl_safe(MSR_PPIN_CTL,  val | 2UL);
- 			rdmsrl_safe(MSR_PPIN_CTL, &val);
- 		}
- 
--		if ((val & 3UL) == 2UL)
-+		/* Is the enable bit set? */
-+		if (val & 2UL)
- 			set_cpu_cap(c, X86_FEATURE_INTEL_PPIN);
- 	}
- }
