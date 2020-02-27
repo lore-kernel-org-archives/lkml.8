@@ -2,62 +2,115 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 310E7C7656D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A8F1C76564
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E39B24656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E179324656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:38:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582814286;
+	bh=NTq86b0DCPvXQOu5B4YCHjoybaZyE1rhW4Q21+e191c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=GExCc1kTkqIfZzTD67wPvTrvM9YRNXK3urvhJzMD33fMTZqZBDHCJ+cXFgXH1m8Yz
+	 1F1HMpiuj9Rg3dfI/GkvydY8b9fTRu9Vqt61Vz2gkScy5DYPrN3hJWYoOPf3/HKlna
+	 sQIQcXPXKaxCvvRecRwwdnL8UgoQ5y764+Pg2dgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732359AbgB0N5w (ORCPT
+        id S2387967AbgB0OiE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:57:52 -0500
-Received: from foss.arm.com ([217.140.110.172]:51144 "EHLO foss.arm.com"
+        Thu, 27 Feb 2020 09:38:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732199AbgB0N5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:57:50 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 210A030E;
-        Thu, 27 Feb 2020 05:57:50 -0800 (PST)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5674D3F881;
-        Thu, 27 Feb 2020 05:57:49 -0800 (PST)
-Date:   Thu, 27 Feb 2020 13:57:47 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Will Deacon <will@kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] arm64: fix NUMA Kconfig typos
-Message-ID: <20200227135747.GF3281767@arrakis.emea.arm.com>
-References: <2c69f4d8-03a1-20a6-e8ef-a4518a7c6d07@infradead.org>
+        id S1732207AbgB0N4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:56:49 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7128C20578;
+        Thu, 27 Feb 2020 13:56:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582811808;
+        bh=NTq86b0DCPvXQOu5B4YCHjoybaZyE1rhW4Q21+e191c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lCfR+2HdJMr0fZRf3+hNECqTsHbK/OET5IxqAI511qyqj67mmJffSEfITa+ye83Mq
+         or8ecu0Sp7v9itSt+8+ApIQNn/sk8tr93VXuhqfx12rWHynYCj8FOOI2FVZQn1fG1M
+         maL0vWzGioOZ9k2B9LTMG3L5n67PurqwQbE1pSn4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 108/237] Input: edt-ft5x06 - work around first register access error
+Date:   Thu, 27 Feb 2020 14:35:22 +0100
+Message-Id: <20200227132304.849850280@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
+References: <20200227132255.285644406@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2c69f4d8-03a1-20a6-e8ef-a4518a7c6d07@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 05:51:06PM -0800, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
-> 
-> Fix typos in arch/arm64/Kconfig:
-> 
-> - spell Numa as NUMA
-> - add hyphenation to Non-Uniform
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: linux-arm-kernel@lists.infradead.org
+From: Philipp Zabel <p.zabel@pengutronix.de>
 
-Queued for 5.7. Thanks.
+[ Upstream commit e112324cc0422c046f1cf54c56f333d34fa20885 ]
 
+The EP0700MLP1 returns bogus data on the first register read access
+(reading the threshold parameter from register 0x00):
+
+    edt_ft5x06 2-0038: crc error: 0xfc expected, got 0x40
+
+It ignores writes until then. This patch adds a dummy read after which
+the number of sensors and parameter read/writes work correctly.
+
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/input/touchscreen/edt-ft5x06.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+index 5bf63f76dddac..4eff5b44640cf 100644
+--- a/drivers/input/touchscreen/edt-ft5x06.c
++++ b/drivers/input/touchscreen/edt-ft5x06.c
+@@ -888,6 +888,7 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
+ {
+ 	const struct edt_i2c_chip_data *chip_data;
+ 	struct edt_ft5x06_ts_data *tsdata;
++	u8 buf[2] = { 0xfc, 0x00 };
+ 	struct input_dev *input;
+ 	unsigned long irq_flags;
+ 	int error;
+@@ -957,6 +958,12 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
+ 		return error;
+ 	}
+ 
++	/*
++	 * Dummy read access. EP0700MLP1 returns bogus data on the first
++	 * register read access and ignores writes.
++	 */
++	edt_ft5x06_ts_readwrite(tsdata->client, 2, buf, 2, buf);
++
+ 	edt_ft5x06_ts_set_regs(tsdata);
+ 	edt_ft5x06_ts_get_defaults(&client->dev, tsdata);
+ 	edt_ft5x06_ts_get_parameters(tsdata);
 -- 
-Catalin
+2.20.1
+
+
+
