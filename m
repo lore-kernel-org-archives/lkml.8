@@ -2,138 +2,154 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6594CC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BEC9C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3522E2468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61C9A2469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:24:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DSXCmNT9"
+	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="LrRlfds0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729796AbgB0UYQ (ORCPT
+        id S1729912AbgB0UY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 15:24:16 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43003 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbgB0UYQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 15:24:16 -0500
-Received: by mail-pg1-f195.google.com with SMTP id h8so256505pgs.9
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 12:24:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=zIepTc7bMQWLXwQxod933KYZK3Dy1h3YkRXIGK0QEKQ=;
-        b=DSXCmNT9RejcTnluGJFe5hiSuaRsXgyezu+zWABAFuzLoNina/m+NDis8mRPkzGHNZ
-         Mvvdqwg/XBlOfe0htHQF/j2wK2nrgyHWZJmv4sx6cQ5/VP6sQC+mbm+M9X2xuUSUg+hU
-         PHhCNHvHQhylpSLDDEB+w6ogSQMG60hM7uU1SiNecNIL23TjXV1wKbDKy4AHGEILdL0b
-         pCYAHmSKG6FYm4wU+LiPwBhha/QZK+fBDKYYNH2aydKrnSspiBwpDhkPpm64z3pByhGK
-         eth0A+2fOT6AwjeLXIoVyBYDZ1CFs+bQNkSCCAeKFYoJsC/f7V8TBL/WtVAe6w+mG6AH
-         sb3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=zIepTc7bMQWLXwQxod933KYZK3Dy1h3YkRXIGK0QEKQ=;
-        b=XjmLCav5tn/PE7liHS3jhZDcqwiso/l+H6klqeex4oSq0/54JB/5M2IohMaN5bKJ4g
-         t9v92p5RuUsEp+nlTnoGCKUotjulucOnFoCOYM7i6AGdeasOK1izXGOM/10QlLf7nmUA
-         Bw5W76sMTgGH02ZDk27GzsquRRa5I7Ls0YYIgjDhAS/xu1/4gBKuuprnUj0Nn3/rUc3P
-         dX1v8wPXibmUELkhTdMOVnf/2BHk339QZPs9YdB/zzVIT01q0FLRH+NC+0dvkRLv6f7e
-         AbJWWDPfCl9gIGChX6wcLanovNW6Cd7TOO4vx5Is4v5W0LwOIErXfM4/L2sIBLJ0jBnT
-         YK5w==
-X-Gm-Message-State: APjAAAV30MW5vpm0HTtRXwR/jnfD2ctpY7JlTikxU771RHYwbC6f7Z1/
-        kf9oADgzTUGmAt/HGgMr/w==
-X-Google-Smtp-Source: APXvYqwQY7TXBRyIGmfKNS8/G+RehgmoWqARF/Kh9J4SGoHtjuR5a5SqJGmzHNcbmzyC54rzi2S1uA==
-X-Received: by 2002:a62:e411:: with SMTP id r17mr678292pfh.119.1582835055394;
-        Thu, 27 Feb 2020 12:24:15 -0800 (PST)
-Received: from localhost.localdomain ([2402:3a80:1ee1:f31f:74cd:ab46:bb74:a4a3])
-        by smtp.gmail.com with ESMTPSA id f9sm7954694pfd.141.2020.02.27.12.24.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 12:24:14 -0800 (PST)
-From:   madhuparnabhowmik10@gmail.com
-To:     paulmck@kernel.org, josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org
-Cc:     linux-kernel@vger.kernel.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Amol Grover <frextrite@gmail.com>
-Subject: [PATCH] Enable RCU list lockdep debugging and drop CONFIG_PROVE_RCU_LIST
-Date:   Fri, 28 Feb 2020 01:53:55 +0530
-Message-Id: <20200227202355.6163-1-madhuparnabhowmik10@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 27 Feb 2020 15:24:26 -0500
+Received: from mail-dm6nam11on2085.outbound.protection.outlook.com ([40.107.223.85]:13664
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726758AbgB0UYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 15:24:25 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=J7RYP7wPuyMtXlInKAfCy0KlWkNXoti3fiaRjIbP1yiFIS0/ZARjwH9zQY34sh1vA8FrF6rA4qJF7pOQVshdP+L3S+0OeKi+kWmJxOZL8Hw6NJhzbFUTJ/YUsKtMxApSqJmCQPmqJ6iJ3YuESC1NRx9TL8oNLjQlorIbUXzhldfVEzrA97XGM0CK/IeHzCn7KHx5RYXFW/LBm1Nq8K+ZZltm66kc6upgr8+4X7NAzSWMaFmkuhTXZJGg1n8wObJUUoP2uClx3CD0YgSNdQd/xO009z1XHDwdp7ORclbdEJv3B0SpBOIxPBcfVP7l9gt9pxzgDofkauybDkY+43Dt2A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BDfWROweiK7qIR793QDQD30pwX6Vl91e+/VkMgr18H4=;
+ b=TwgThDfTrG5vILQ83QQJ19pi9Vv15LykTBBXrMk9L5DDxRTNWRYbFSe0AzjeWIdCcdnHHozbZoQhE1TgphME7alNvsD94Os6+OAKXXqpA1OWg45OTxkMwYO1q/IHmzKBwSZjj2lXZPmLcMriCuFPYwCPHBGcr6p0O1Dkatn/lvyRREJHky6j/f1/SjDpVmlijbxpD9yqxxTSyK9ph/fq2/ESAHZEIlDXXzqrEL8T4yRIvWKfOpsAj9slqKCpe4HZgnHhSRF1D/H4h99+x17nDM83EggpMFzp3WpRR24Dd8CXUYUDAXBS58CQc2+3HjQrHySLWfW1hSJQIBKCDc/AlQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
+ dkim=pass header.d=micron.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BDfWROweiK7qIR793QDQD30pwX6Vl91e+/VkMgr18H4=;
+ b=LrRlfds0I0yA/6cFFu9t6MUBZjva0JkiSIVrOT/5+UC02BjO3dqVvmnlQ8PaxeJg8gSNkr/o0JHx9Pe37fTLnRd2sigi9uIiNdTEXYGcbvMuBFHpd4637/DSNLA/JXRnkzSy/PTZNiJ6H4nMkN2t9rvfxSehrN27N0MIS/xhDmQ=
+Received: from MN2PR08MB6397.namprd08.prod.outlook.com (2603:10b6:208:1aa::10)
+ by MN2PR08MB5982.namprd08.prod.outlook.com (2603:10b6:208:114::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15; Thu, 27 Feb
+ 2020 20:24:22 +0000
+Received: from MN2PR08MB6397.namprd08.prod.outlook.com
+ ([fe80::884a:b0f5:3cf5:f4a4]) by MN2PR08MB6397.namprd08.prod.outlook.com
+ ([fe80::884a:b0f5:3cf5:f4a4%4]) with mapi id 15.20.2750.021; Thu, 27 Feb 2020
+ 20:24:22 +0000
+From:   "Shivamurthy Shastri (sshivamurthy)" <sshivamurthy@micron.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+CC:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "shiva.linuxworks@gmail.com" <shiva.linuxworks@gmail.com>
+Subject: RE: [EXT] Re: [PATCH v4 2/5] mtd: spinand: micron: Add new Micron SPI
+ NAND devices
+Thread-Topic: [EXT] Re: [PATCH v4 2/5] mtd: spinand: micron: Add new Micron
+ SPI NAND devices
+Thread-Index: AQHV7Zrt8nxb4M5o4EyJweDi+Kt0uqgveTTwgAABmICAAADTkA==
+Date:   Thu, 27 Feb 2020 20:24:22 +0000
+Message-ID: <MN2PR08MB639762D89F85C2556F51D48EB8EB0@MN2PR08MB6397.namprd08.prod.outlook.com>
+References: <20200206202206.14770-1-sshivamurthy@micron.com>
+        <20200206202206.14770-3-sshivamurthy@micron.com>
+        <20200227192247.52f84723@collabora.com>
+        <MN2PR08MB6397477172BAC14986175E6DB8EB0@MN2PR08MB6397.namprd08.prod.outlook.com>
+ <20200227211759.7ba02273@collabora.com>
+In-Reply-To: <20200227211759.7ba02273@collabora.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-rorf: true
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcc3NoaXZhbXVydGh5XGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctMjBlZTliNGItNTk5Zi0xMWVhLWIxZTktOTgzYjhmNzQ1MjUxXGFtZS10ZXN0XDIwZWU5YjRkLTU5OWYtMTFlYS1iMWU5LTk4M2I4Zjc0NTI1MWJvZHkudHh0IiBzej0iMTQyMiIgdD0iMTMyMjczMDg2NTg1NjgyNTE3IiBoPSJaVi9PZFhVRXptOWNRSUt3WHZqYm1Mak5aUm89IiBpZD0iIiBibD0iMCIgYm89IjEiIGNpPSJjQUFBQUVSSFUxUlNSVUZOQ2dVQUFIQUFBQUJWdWtqanErM1ZBZCtwNnRwT1d3V2wzNm5xMms1YkJhVUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFCQUFBQUFYbTFpZ0FBQUFBQUFBQUFBQUFBQUE9PSIvPjwvbWV0YT4=
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=sshivamurthy@micron.com; 
+x-originating-ip: [165.225.86.137]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 32d8784e-3436-482d-13b0-08d7bbc30834
+x-ms-traffictypediagnostic: MN2PR08MB5982:|MN2PR08MB5982:|MN2PR08MB5982:
+x-microsoft-antispam-prvs: <MN2PR08MB598219082C9D6FE3492C8342B8EB0@MN2PR08MB5982.namprd08.prod.outlook.com>
+x-ms-exchange-transport-forked: True
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 03264AEA72
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(376002)(39860400002)(366004)(346002)(199004)(189003)(55236004)(26005)(4326008)(6506007)(2906002)(7696005)(54906003)(86362001)(186003)(478600001)(316002)(76116006)(66556008)(64756008)(8936002)(9686003)(81156014)(52536014)(5660300002)(8676002)(55016002)(71200400001)(33656002)(6916009)(66476007)(81166006)(66946007)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR08MB5982;H:MN2PR08MB6397.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: micron.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ROWOrv8tsawYM6LAzq1Ta6khJbvUvDR4mR1nswnCbC7V8fQikr/U3OgqojH4OkXxwvZbAy5tunfzRp+x/QG1VZ74XgR/DUr+NR6lOIcsuSEDohoRpDV+0MjryXY5lyzG2q/bI146R+xJ/Bsbqpy/K++z6BlXyFHlmijqpiWqWQCOcFAFeYSZ+zeEgvnx+2wtY6TuuNbceDXGJdMIR3iKMczf1MuacrGwCHqvTTUwJqx5CpLR6B1YtF0lm+aFkxCbfXJ4BXmW2mEqJFc5Mp4bFZT0Q1ILDPaUuUThKlM7BZiw2tiADkQK5Fk6D5a0wz53yy9ontMKFQfAdWJYnoR5kBprJqAH96YroYtJEhERvZaPLgRbFoHlAZyLfHXmtPTD1zaIilgwTy65YrobIdthm7nOeVdt6E7bj516t7q8XSyMRFNliLEWOobB874DRTXG
+x-ms-exchange-antispam-messagedata: f3STYP3uigmdMpClsO7wTmppLNbHUJOdAhYqISLPjMQeIY4iPFI6TsTS+Ao76n3NlbvYthYSZxEaqLdOIPjL9PW5itpdISz83I55LtO/rINIQriUENJHq8DYtWHJQGMc25omjuFnEeIEgV/nr3evBQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: micron.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 32d8784e-3436-482d-13b0-08d7bbc30834
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Feb 2020 20:24:22.5229
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cR1OeIEpPtmH0I+jt9TGg2s4bm7ELGJOgpydOyynsf3yxhtIVP+lCkBN0Jjdk/WECME2YbgwBYRnf8FxGF4dPw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR08MB5982
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Hi Boris,
 
-This patch drops the CONFIG_PROVE_RCU_LIST option and instead
-uses CONFIG_PROVE_RCU for RCU list lockdep debugging.
+>=20
+> On Thu, 27 Feb 2020 20:16:46 +0000
+> "Shivamurthy Shastri (sshivamurthy)" <sshivamurthy@micron.com> wrote:
+>=20
+> > Hi Boris,
+> >
+> > Thanks for the review.
+> >
+> > >
+> > > On Thu,  6 Feb 2020 21:22:03 +0100
+> > > shiva.linuxworks@gmail.com wrote:
+> > >
+> > > > From: Shivamurthy Shastri <sshivamurthy@micron.com>
+> > > >
+> > > > Add device table for M79A and M78A series Micron SPI NAND devices.
+> > > >
+> > > > Signed-off-by: Shivamurthy Shastri <sshivamurthy@micron.com>
+> > > > ---
+> > > >  drivers/mtd/nand/spi/micron.c | 31
+> > > +++++++++++++++++++++++++++++++
+> > > >  1 file changed, 31 insertions(+)
+> > > >
+> > > > diff --git a/drivers/mtd/nand/spi/micron.c
+> > > b/drivers/mtd/nand/spi/micron.c
+> > > > index c028d0d7e236..5fd1f921ef12 100644
+> > > > --- a/drivers/mtd/nand/spi/micron.c
+> > > > +++ b/drivers/mtd/nand/spi/micron.c
+> > > > @@ -91,6 +91,7 @@ static int micron_8_ecc_get_status(struct
+> > > spinand_device *spinand,
+> > > >  }
+> > > >
+> > > >  static const struct spinand_info micron_spinand_table[] =3D {
+> > > > +	/* M79A 2Gb 3.3V */
+> > >
+> > > Should be added in a separate patch.
+> >
+> > Okay, I will create separate patch for each device.
+>=20
+> No, I meant just for this line.
 
-With this change, RCU list lockdep debugging will be default
-enabled in CONFIG_PROVE_RCU=y kernels.
-
-Most of the RCU users (in core kernel/, drivers/, and net/
-subsystem) have already been modified to include lockdep
-expressions hence RCU list debugging can be enabled by
-default.
-
-However, there are still chances of enountering
-false-positive lockdep splats because not everything is converted,
-in case RCU list primitives are used in non-RCU read-side critical
-section but under the protection of a lock. It would be okay to
-have a few false-positives, as long as bugs are identified, since this
-patch only affects debugging kernels.
-
-Co-developed-by: Amol Grover <frextrite@gmail.com>
-Signed-off-by: Amol Grover <frextrite@gmail.com>
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
----
- include/linux/rculist.h  |  2 +-
- kernel/rcu/Kconfig.debug | 11 -----------
- 2 files changed, 1 insertion(+), 12 deletions(-)
-
-diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-index 63726577c6b8..f517eb421b5e 100644
---- a/include/linux/rculist.h
-+++ b/include/linux/rculist.h
-@@ -56,7 +56,7 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
- 
- #define check_arg_count_one(dummy)
- 
--#ifdef CONFIG_PROVE_RCU_LIST
-+#ifdef CONFIG_PROVE_RCU
- #define __list_check_rcu(dummy, cond, extra...)				\
- 	({								\
- 	check_arg_count_one(extra);					\
-diff --git a/kernel/rcu/Kconfig.debug b/kernel/rcu/Kconfig.debug
-index 4aa02eee8f6c..5ec3ea4028e2 100644
---- a/kernel/rcu/Kconfig.debug
-+++ b/kernel/rcu/Kconfig.debug
-@@ -8,17 +8,6 @@ menu "RCU Debugging"
- config PROVE_RCU
- 	def_bool PROVE_LOCKING
- 
--config PROVE_RCU_LIST
--	bool "RCU list lockdep debugging"
--	depends on PROVE_RCU && RCU_EXPERT
--	default n
--	help
--	  Enable RCU lockdep checking for list usages. By default it is
--	  turned off since there are several list RCU users that still
--	  need to be converted to pass a lockdep expression. To prevent
--	  false-positive splats, we keep it default disabled but once all
--	  users are converted, we can remove this config option.
--
- config TORTURE_TEST
- 	tristate
- 	default n
--- 
-2.17.1
-
+How about including this line with 1st Patch?
