@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB03C35677
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B06C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A99D524691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B6EE24691
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:43:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814610;
-	bh=RQoQ8frxlbI1QjilHnH3/LmzPQ60HcJMzxc+C18UY60=;
+	s=default; t=1582814622;
+	bh=f3FB7IBIjO231L3q8BcFPZb+tImF0hnLMlwnUYFEUMk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P/pBQN5VaQ2WfnjQCirWg6XN7Nf0BLs2AdHbP6asLfKLjKGX/3Xve+1KnoBM3ZTca
-	 vLAtEP7F967tdp6kk+aTQQmdUvmNjAuqQehG5jUrZ6C71b20RRO4JUKKJDeXha5D4r
-	 4fP2vb75umQWUcxVHA5KljhERJWmzcRRzYLIEGPE=
+	b=Jo5VeUjd6p+9b7fcKc3vKBRBqEWHjalny0WjYc1uS1UvvsA9LRIUjfAoJoQqRoeqk
+	 LSbFx4Ub8OjSxajl0ZFIDxPxSADx7PLGHNtnLRKcXIjefJe3rIuYXBm+7pl9Hb5W+8
+	 NHtHya3fnT8+b4VChtmYDg428mjlB40BFuaBbaUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731366AbgB0On3 (ORCPT
+        id S1731506AbgB0Onl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:43:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47184 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:43:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731056AbgB0Ntj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:49:39 -0500
+        id S1730349AbgB0NtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:49:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17D3124688;
-        Thu, 27 Feb 2020 13:49:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4221E20578;
+        Thu, 27 Feb 2020 13:49:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811377;
-        bh=RQoQ8frxlbI1QjilHnH3/LmzPQ60HcJMzxc+C18UY60=;
+        s=default; t=1582811359;
+        bh=f3FB7IBIjO231L3q8BcFPZb+tImF0hnLMlwnUYFEUMk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t5mu2pT86/ErcXMTD4+TkfS0OzIWThrZDlWPXljY3nvaLGuNdyU4CU8CeIgTmE7g4
-         gMFwlPAiuopH24ZRCgkphp/37RPzVjN0nVklakWTaVX6pUzdDHC3Lv2jgC452ur1fK
-         V0rEBz1wjq7T0DGxkIJZTwDui17UmfVE4hpHyO5A=
+        b=2eyIZ5uzt4BQXc24aHv+y0NnZarnpjm6gRYx/O4gfCKhDf+ChUftn0oCY9TkRL8bq
+         qkwC+snV3oiL86zAWU8zl0EdPoVqZHq5Gd64mOt5uny3fMiYbbuZQN6H/VtYb55IeA
+         AzsXxCdjwWd67KOQnuMZkww9i86nf1AhTJk6METU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 109/165] bcache: explicity type cast in bset_bkey_last()
-Date:   Thu, 27 Feb 2020 14:36:23 +0100
-Message-Id: <20200227132247.075670600@linuxfoundation.org>
+Subject: [PATCH 4.9 103/165] ftrace: fpid_next() should increase position index
+Date:   Thu, 27 Feb 2020 14:36:17 +0100
+Message-Id: <20200227132246.178585643@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -60,50 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit 7c02b0055f774ed9afb6e1c7724f33bf148ffdc0 ]
+[ Upstream commit e4075e8bdffd93a9b6d6e1d52fabedceeca5a91b ]
 
-In bset.h, macro bset_bkey_last() is defined as,
-    bkey_idx((struct bkey *) (i)->d, (i)->keys)
+if seq_file .next fuction does not change position index,
+read after some lseek can generate unexpected output.
 
-Parameter i can be variable type of data structure, the macro always
-works once the type of struct i has member 'd' and 'keys'.
+Without patch:
+ # dd bs=4 skip=1 if=/sys/kernel/tracing/set_ftrace_pid
+ dd: /sys/kernel/tracing/set_ftrace_pid: cannot skip to specified offset
+ id
+ no pid
+ 2+1 records in
+ 2+1 records out
+ 10 bytes copied, 0.000213285 s, 46.9 kB/s
 
-bset_bkey_last() is also used in macro csum_set() to calculate the
-checksum of a on-disk data structure. When csum_set() is used to
-calculate checksum of on-disk bcache super block, the parameter 'i'
-data type is struct cache_sb_disk. Inside struct cache_sb_disk (also in
-struct cache_sb) the member keys is __u16 type. But bkey_idx() expects
-unsigned int (a 32bit width), so there is problem when sending
-parameters via stack to call bkey_idx().
+Notice the "id" followed by "no pid".
 
-Sparse tool from Intel 0day kbuild system reports this incompatible
-problem. bkey_idx() is part of user space API, so the simplest fix is
-to cast the (i)->keys to unsigned int type in macro bset_bkey_last().
+With the patch:
+ # dd bs=4 skip=1 if=/sys/kernel/tracing/set_ftrace_pid
+ dd: /sys/kernel/tracing/set_ftrace_pid: cannot skip to specified offset
+ id
+ 0+1 records in
+ 0+1 records out
+ 3 bytes copied, 0.000202112 s, 14.8 kB/s
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Notice that it only prints "id" and not the "no pid" afterward.
+
+Link: http://lkml.kernel.org/r/4f87c6ad-f114-30bb-8506-c32274ce2992@virtuozzo.com
+
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/bset.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/trace/ftrace.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/md/bcache/bset.h b/drivers/md/bcache/bset.h
-index b935839ab79c6..f483041eed986 100644
---- a/drivers/md/bcache/bset.h
-+++ b/drivers/md/bcache/bset.h
-@@ -380,7 +380,8 @@ void bch_btree_keys_stats(struct btree_keys *, struct bset_stats *);
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 71a40e5c3a9f0..2ae98f8bce81b 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -5455,9 +5455,10 @@ static void *fpid_next(struct seq_file *m, void *v, loff_t *pos)
+ 	struct trace_array *tr = m->private;
+ 	struct trace_pid_list *pid_list = rcu_dereference_sched(tr->function_pids);
  
- /* Bkey utility code */
+-	if (v == FTRACE_NO_PIDS)
++	if (v == FTRACE_NO_PIDS) {
++		(*pos)++;
+ 		return NULL;
+-
++	}
+ 	return trace_pid_next(pid_list, v, pos);
+ }
  
--#define bset_bkey_last(i)	bkey_idx((struct bkey *) (i)->d, (i)->keys)
-+#define bset_bkey_last(i)	bkey_idx((struct bkey *) (i)->d, \
-+					 (unsigned int)(i)->keys)
- 
- static inline struct bkey *bset_bkey_idx(struct bset *i, unsigned idx)
- {
 -- 
 2.20.1
 
