@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1807BC76562
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4846C76560
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA51624699
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:38:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ACF924656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:38:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814319;
-	bh=fKD8wdPrLOdn12bMz4B1mbh7BH7QGRNFFPpUKkbUYic=;
+	s=default; t=1582814321;
+	bh=xHtMxxoPF/hZUvPjSzLSqsgIEzYTBbxy7+bvmauwNsA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zlb+7Iq+b6FScdbCcJDa3pjAYXsAxlFhZZLEsRJimD29aNuCevV/7jvCEUOHGIoz1
-	 HUJmqMulsKd2sPrJQHBTiu13VOdKFnq79E5nSUAE0QvUHykq1O4zeUxJCZ876+ovXZ
-	 c/QauPU4B4RbcKS8XRBEByLVh/qz7GS/5ddLYUAM=
+	b=PRO6XnnGQ4mfGjh15WLCxldDR69UtbFD0LmBBuQhCBOOcmQnB6bMl8Hc5bu8OZ23m
+	 h/B4MAENmlQuXuQbLPPaAfS1bM2BkLl75DI+rap5+GZ0VAsaQO6+BuREwCwa6X0TQ1
+	 C+/zCvEar4KleWt2vBvXele508lhkY2lcP15smxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732063AbgB0N4A (ORCPT
+        id S1732407AbgB0Oik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:56:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56346 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:38:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730199AbgB0Nz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:55:57 -0500
+        id S1731787AbgB0N4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:56:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0F902073D;
-        Thu, 27 Feb 2020 13:55:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15ECC21D7E;
+        Thu, 27 Feb 2020 13:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811757;
-        bh=fKD8wdPrLOdn12bMz4B1mbh7BH7QGRNFFPpUKkbUYic=;
+        s=default; t=1582811764;
+        bh=xHtMxxoPF/hZUvPjSzLSqsgIEzYTBbxy7+bvmauwNsA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ir3hPrgFt2tUZOng2qv7JxfZSXNxG3CeHDbiP26bKhii+ydHtiZMETdka0bk7XD2B
-         4Qq9oMk5SFCLfEfQREyZ0cYIoRsby015B41k19tn4QTlTIJEH1OvCUdnw2PG5Z2Kl6
-         NSAztiUXIn81j9FGR/7PBPNO1zrZQkk3WnyT6vTM=
+        b=HyGJVUi2BZpxMi/4glxGKN5RA5rWxsu0cVTTBQA/krJYhMKQmDl0SNJm2Mi9Ji+L/
+         AgUwXrqjOcfwjU9Yu+JnYVCSNBKSgMk6uMK36Rycn1APnZyRMgivfThfDW0YFxDI6X
+         FTXe8wVAXVoMMoZb3++wCpcOTO+klqITFIom0efE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 090/237] drm/mediatek: handle events when enabling/disabling crtc
-Date:   Thu, 27 Feb 2020 14:35:04 +0100
-Message-Id: <20200227132303.658480261@linuxfoundation.org>
+        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 092/237] dmaengine: Store module owner in dma_device struct
+Date:   Thu, 27 Feb 2020 14:35:06 +0100
+Message-Id: <20200227132303.789587508@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -59,49 +59,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bibby Hsieh <bibby.hsieh@mediatek.com>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit 411f5c1eacfebb1f6e40b653d29447cdfe7282aa ]
+[ Upstream commit dae7a589c18a4d979d5f14b09374e871b995ceb1 ]
 
-The driver currently handles vblank events only when updating planes on
-an already enabled CRTC. The atomic update API however allows requesting
-an event when enabling or disabling a CRTC. This currently leads to
-event objects being leaked in the kernel and to events not being sent
-out. Fix it.
+dma_chan_to_owner() dereferences the driver from the struct device to
+obtain the owner and call module_[get|put](). However, if the backing
+device is unbound before the dma_device is unregistered, the driver
+will be cleared and this will cause a NULL pointer dereference.
 
-Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
+Instead, store a pointer to the owner module in the dma_device struct
+so the module reference can be properly put when the channel is put, even
+if the backing device was destroyed first.
+
+This change helps to support a safer unbind of DMA engines.
+If the dma_device is unregistered in the driver's remove function,
+there's no guarantee that there are no existing clients and a users
+action may trigger the WARN_ONCE in dma_async_device_unregister()
+which is unlikely to leave the system in a consistent state.
+Instead, a better approach is to allow the backing driver to go away
+and fail any subsequent requests to it.
+
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Link: https://lore.kernel.org/r/20191216190120.21374-2-logang@deltatee.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/dma/dmaengine.c   | 4 +++-
+ include/linux/dmaengine.h | 2 ++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-index 658b8dd45b834..3ea311d32fa9e 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-@@ -307,6 +307,7 @@ err_pm_runtime_put:
- static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index b451354735d3d..faaaf10311ec0 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -192,7 +192,7 @@ __dma_device_satisfies_mask(struct dma_device *device,
+ 
+ static struct module *dma_chan_to_owner(struct dma_chan *chan)
  {
- 	struct drm_device *drm = mtk_crtc->base.dev;
-+	struct drm_crtc *crtc = &mtk_crtc->base;
- 	int i;
- 
- 	DRM_DEBUG_DRIVER("%s\n", __func__);
-@@ -328,6 +329,13 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
- 	mtk_disp_mutex_unprepare(mtk_crtc->mutex);
- 
- 	pm_runtime_put(drm->dev);
-+
-+	if (crtc->state->event && !crtc->state->active) {
-+		spin_lock_irq(&crtc->dev->event_lock);
-+		drm_crtc_send_vblank_event(crtc, crtc->state->event);
-+		crtc->state->event = NULL;
-+		spin_unlock_irq(&crtc->dev->event_lock);
-+	}
+-	return chan->device->dev->driver->owner;
++	return chan->device->owner;
  }
  
- static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
+ /**
+@@ -928,6 +928,8 @@ int dma_async_device_register(struct dma_device *device)
+ 		return -EIO;
+ 	}
+ 
++	device->owner = device->dev->driver->owner;
++
+ 	if (dma_has_cap(DMA_MEMCPY, device->cap_mask) && !device->device_prep_dma_memcpy) {
+ 		dev_err(device->dev,
+ 			"Device claims capability %s, but op is not defined\n",
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 087cbe7768680..8089e28539f16 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -677,6 +677,7 @@ struct dma_filter {
+  * @fill_align: alignment shift for memset operations
+  * @dev_id: unique device ID
+  * @dev: struct device reference for dma mapping api
++ * @owner: owner module (automatically set based on the provided dev)
+  * @src_addr_widths: bit mask of src addr widths the device supports
+  * @dst_addr_widths: bit mask of dst addr widths the device supports
+  * @directions: bit mask of slave direction the device supports since
+@@ -738,6 +739,7 @@ struct dma_device {
+ 
+ 	int dev_id;
+ 	struct device *dev;
++	struct module *owner;
+ 
+ 	u32 src_addr_widths;
+ 	u32 dst_addr_widths;
 -- 
 2.20.1
 
