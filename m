@@ -4,36 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EBD9C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAFE4C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D0932469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:30:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCAF22469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:30:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730058AbgB0PaR (ORCPT
+        id S1731019AbgB0PaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 10:30:17 -0500
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:49165 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728205AbgB0PaQ (ORCPT
+        Thu, 27 Feb 2020 10:30:19 -0500
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:39053 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728205AbgB0PaS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 10:30:16 -0500
+        Thu, 27 Feb 2020 10:30:18 -0500
 X-Originating-IP: 90.89.41.158
 Received: from localhost (lfbn-tou-1-1473-158.w90-89.abo.wanadoo.fr [90.89.41.158])
         (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 873171BF213;
-        Thu, 27 Feb 2020 15:30:08 +0000 (UTC)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id E0AB61C000F;
+        Thu, 27 Feb 2020 15:30:15 +0000 (UTC)
 From:   Antoine Tenart <antoine.tenart@bootlin.com>
 To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
         hkallweit1@gmail.com
 Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         foss@0leil.net
-Subject: [PATCH net-next 2/3] dt-bindings: net: phy: mscc: document rgmii skew properties
-Date:   Thu, 27 Feb 2020 16:28:58 +0100
-Message-Id: <20200227152859.1687119-3-antoine.tenart@bootlin.com>
+Subject: [PATCH net-next 3/3] net: phy: mscc: implement RGMII skew delay configuration
+Date:   Thu, 27 Feb 2020 16:28:59 +0100
+Message-Id: <20200227152859.1687119-4-antoine.tenart@bootlin.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200227152859.1687119-1-antoine.tenart@bootlin.com>
 References: <20200227152859.1687119-1-antoine.tenart@bootlin.com>
@@ -44,53 +44,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch documents two new properties to describe RGMII skew delays in
-both Rx and Tx: vsc8584,rgmii-skew-rx and vsc8584,rgmii-skew-tx.
+This patch adds support for configuring the RGMII skews in Rx and Tx
+thanks to properties defined in the device tree.
 
 Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
 ---
- .../devicetree/bindings/net/mscc-phy-vsc8531.txt       |  8 ++++++++
- include/dt-bindings/net/mscc-phy-vsc8531.h             | 10 ++++++++++
- 2 files changed, 18 insertions(+)
+ drivers/net/phy/mscc.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-index 5ff37c68c941..c682b6e74b14 100644
---- a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-+++ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-@@ -31,6 +31,14 @@ Optional properties:
- 			  VSC8531_LINK_100_ACTIVITY (2),
- 			  VSC8531_LINK_ACTIVITY (0) and
- 			  VSC8531_DUPLEX_COLLISION (8).
-+- vsc8584,rgmii-skew-rx	: RGMII skew delay in Rx.
-+			  Allowed values are defined in
-+			  "include/dt-bindings/net/mscc-phy-vsc8531.h".
-+			  Default value is VSC8584_RGMII_SKEW_0_2.
-+- vsc8584,rgmii-skew-tx	: RGMII skew delay in Tx.
-+			  Allowed values are defined in
-+			  "include/dt-bindings/net/mscc-phy-vsc8531.h".
-+			  Default value is VSC8584_RGMII_SKEW_0_2.
+diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
+index ecb45c43e5ed..56d6a45a90c2 100644
+--- a/drivers/net/phy/mscc.c
++++ b/drivers/net/phy/mscc.c
+@@ -192,6 +192,10 @@ enum macsec_bank {
+ /* Extended Page 2 Registers */
+ #define MSCC_PHY_CU_PMD_TX_CNTL		  16
  
- 
- Table: 1 - Edge rate change
-diff --git a/include/dt-bindings/net/mscc-phy-vsc8531.h b/include/dt-bindings/net/mscc-phy-vsc8531.h
-index 9eb2ec2b2ea9..02313cb3fc35 100644
---- a/include/dt-bindings/net/mscc-phy-vsc8531.h
-+++ b/include/dt-bindings/net/mscc-phy-vsc8531.h
-@@ -28,4 +28,14 @@
- #define VSC8531_FORCE_LED_OFF           14
- #define VSC8531_FORCE_LED_ON            15
- 
-+/* RGMII skew values, in ns */
-+#define VSC8584_RGMII_SKEW_0_2		0
-+#define VSC8584_RGMII_SKEW_0_8		1
-+#define VSC8584_RGMII_SKEW_1_1		2
-+#define VSC8584_RGMII_SKEW_1_7		3
-+#define VSC8584_RGMII_SKEW_2_0		4
-+#define VSC8584_RGMII_SKEW_2_3		5
-+#define VSC8584_RGMII_SKEW_2_6		6
-+#define VSC8584_RGMII_SKEW_3_4		7
++#define MSCC_PHY_RGMII_SETTINGS		  18
++#define RGMII_SKEW_RX_POS		  1
++#define RGMII_SKEW_TX_POS		  4
 +
- #endif
+ #define MSCC_PHY_RGMII_CNTL		  20
+ #define RGMII_RX_CLK_DELAY_MASK		  0x0070
+ #define RGMII_RX_CLK_DELAY_POS		  4
+@@ -2682,6 +2686,7 @@ static bool vsc8584_is_pkg_init(struct phy_device *phydev, bool reversed)
+ 
+ static int vsc8584_config_init(struct phy_device *phydev)
+ {
++	u32 skew_rx = VSC8584_RGMII_SKEW_0_2, skew_tx = VSC8584_RGMII_SKEW_0_2;
+ 	struct vsc8531_private *vsc8531 = phydev->priv;
+ 	u16 addr, val;
+ 	int ret, i;
+@@ -2830,6 +2835,19 @@ static int vsc8584_config_init(struct phy_device *phydev)
+ 	if (ret)
+ 		return ret;
+ 
++	if (of_find_property(dev->of_node, "vsc8584,rgmii-skew-rx", NULL) ||
++	    of_find_property(dev->of_node, "vsc8584,rgmii-skew-tx", NULL)) {
++		of_property_read_u32(dev->of_node, "vsc8584,rgmii-skew-rx", &skew_rx);
++		of_property_read_u32(dev->of_node, "vsc8584,rgmii-skew-tx", &skew_tx);
++
++		phy_modify_paged(phydev, MSCC_PHY_PAGE_EXTENDED_2,
++				 MSCC_PHY_RGMII_SETTINGS,
++				 (0x7 << RGMII_SKEW_RX_POS) |
++				 (0x7 << RGMII_SKEW_TX_POS),
++				 (skew_rx << RGMII_SKEW_RX_POS) |
++				 (skew_tx << RGMII_SKEW_TX_POS));
++	}
++
+ 	for (i = 0; i < vsc8531->nleds; i++) {
+ 		ret = vsc85xx_led_cntl_set(phydev, i, vsc8531->leds_mode[i]);
+ 		if (ret)
 -- 
 2.24.1
 
