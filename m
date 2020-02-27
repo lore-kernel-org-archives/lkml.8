@@ -2,155 +2,86 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 474ACC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC1CC11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E51624688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:14:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dRoiOdVV"
+	by mail.kernel.org (Postfix) with ESMTP id 63269246A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:15:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582816521;
+	bh=5O4hf1BrKm48izkdW6Iogp2FlShcWcKB/R1PR+9baw8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xPp0bfCTQV7mxEw7P+9p3Emxx4CxZnBh2TGY/KuhqJImJ3velJ9T3ehxNkBKF0UzD
+	 m2bz9+2hj16c1QGYwFtsgFsyRuupOGU4QmwJo4tAYlM9LW3PosLp6YHSThcattjdM1
+	 kdukCMasd/Yip5mJRagT3FGrFtH+4nLsEbL5uXrg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730675AbgB0POi (ORCPT
+        id S1729600AbgB0PPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 10:14:38 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29089 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730383AbgB0POi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 10:14:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582816477;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=KsXD7OC/j5gaz+S/O9WvlSstDKGTM7c7shTcNdfT6SA=;
-        b=dRoiOdVVzPUlgTOstGMQllOMu/E1P9qioktA0cvF4owXeTcFrkEv7vHe/noK8UZiNcjCD+
-        8ofHZhNxlwRcqK42YdNZLJwkeeNwbaZJmR13z3QQxuvySEOjUp193EAow80Hj5W5hOT6NA
-        TuDaBIov2EO0MgJ12QUShlSCh+GEBEw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-354-WDNOwscoO72aO4dxQsI4uw-1; Thu, 27 Feb 2020 10:14:30 -0500
-X-MC-Unique: WDNOwscoO72aO4dxQsI4uw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 693DD1005514;
-        Thu, 27 Feb 2020 15:14:28 +0000 (UTC)
-Received: from ws.net.home (ovpn-204-202.brq.redhat.com [10.40.204.202])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 807061036B25;
-        Thu, 27 Feb 2020 15:14:23 +0000 (UTC)
-Date:   Thu, 27 Feb 2020 16:14:21 +0100
-From:   Karel Zak <kzak@redhat.com>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Ian Kent <raven@themaw.net>, Miklos Szeredi <mszeredi@redhat.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Lennart Poettering <lennart@poettering.net>,
-        Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
-        util-linux@vger.kernel.org
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
- #17]
-Message-ID: <20200227151421.3u74ijhqt6ekbiss@ws.net.home>
-References: <CAOssrKehjnTwbc6A1VagM5hG_32hy3mXZenx_PdGgcUGxYOaLQ@mail.gmail.com>
- <1582556135.3384.4.camel@HansenPartnership.com>
- <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com>
- <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com>
- <1582644535.3361.8.camel@HansenPartnership.com>
- <CAOssrKfaxnHswrKejedFzmYTbYivJ++cPes4c91+BJDfgH4xJA@mail.gmail.com>
- <1c8db4e2b707f958316941d8edd2073ee7e7b22c.camel@themaw.net>
- <CAJfpegtRoXnPm5_sMYPL2L6FCZU52Tn8wk7NcW-dm4_2x=dD3Q@mail.gmail.com>
- <3e656465c427487e4ea14151b77d391d52cd6bad.camel@themaw.net>
- <CAJfpegu5xLcR=QbAOnUrL49QTem6X6ok7nPU+kLFnNHdPXSh1A@mail.gmail.com>
+        Thu, 27 Feb 2020 10:15:20 -0500
+Received: from foss.arm.com ([217.140.110.172]:53416 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729174AbgB0PPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 10:15:20 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 746D830E;
+        Thu, 27 Feb 2020 07:15:19 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DEDA43F7B4;
+        Thu, 27 Feb 2020 07:15:18 -0800 (PST)
+Date:   Thu, 27 Feb 2020 15:15:17 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     tangbin <tangbin@cmss.chinamobile.com>
+Cc:     jun.nie@linaro.org, shawnguo@kernel.org, lgirdwood@gmail.com,
+        perex@perex.cz, tiwai@suse.com,
+        linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] zte:zx-spdif:remove redundant dev_err message
+Message-ID: <20200227151517.GC4062@sirena.org.uk>
+References: <20200227150701.15652-1-tangbin@cmss.chinamobile.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="jousvV0MzM2p6OtC"
 Content-Disposition: inline
-In-Reply-To: <CAJfpegu5xLcR=QbAOnUrL49QTem6X6ok7nPU+kLFnNHdPXSh1A@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200227150701.15652-1-tangbin@cmss.chinamobile.com>
+X-Cookie: Edwin Meese made me wear CORDOVANS!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 02:45:27PM +0100, Miklos Szeredi wrote:
-> > So the problem I want to see fixed is the effect of very large
-> > mount tables on other user space applications, particularly the
-> > effect when a large number of mounts or umounts are performed.
 
-Yes, now you have to generate (in kernel) and parse (in
-userspace) all mount table to get information about just 
-one mount table entry. This is typical for umount or systemd.
+--jousvV0MzM2p6OtC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > >  - add a notification mechanism   - lookup a mount based on path
-> > >  - and a way to selectively query mount/superblock information
-> > based on path ...
+On Thu, Feb 27, 2020 at 11:07:01PM +0800, tangbin wrote:
+> devm_ioremap_resource has already contains error message, so remove
+> the redundant dev_err message
 
-For umount-like use-cases we need mountpoint/ to mount entry
-conversion; I guess something like open(mountpoint/) + fsinfo() 
-should be good enough.
+Please submit patches using subject lines reflecting the style for the
+subsystem, this makes it easier for people to identify relevant patches.
+Look at what existing commits in the area you're changing are doing and
+make sure your subject lines visually resemble what they're doing.
+There's no need to resubmit to fix this alone.
 
-For systemd we need the same, but triggered by notification. The ideal
-solution is to get mount entry ID or FD from notification and later use this
-ID or FD to ask for details about the mount entry (probably again fsinfo()).
-The notification has to be usable with in epoll() set.
+--jousvV0MzM2p6OtC
+Content-Type: application/pgp-signature; name="signature.asc"
 
-This solves 99% of our performance issues I guess.
+-----BEGIN PGP SIGNATURE-----
 
-> > So that means mount table info. needs to be maintained, whether that
-> > can be achieved using sysfs I don't know. Creating and maintaining
-> > the sysfs tree would be a big challenge I think.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5X3QQACgkQJNaLcl1U
+h9ClgQgAhVigaSedyPLajRpUX2vIOrqhnhTyoVj19iSU3QJ1uooXc/UR/CSyoPqA
+cAz7Zl8hPiUmn4OaNu6331KZE6ihk5m19Qmw0KUoSvR5GqbJ5gIRwoEYeVeeBiZf
+uB2oaosHLC0Y+f9rRdZIyj0jIBRC+aHcJX0l4Pjw1QMfilofa+LGhYa2/WUGexHp
+0WrgNwrjSgAWDm5MN3xeR4GVd2u8cIKnmomA3u13VJDfAlIgNJCm+u9IKcteYc8W
+m3BywhwFNs76Kbh9uqxWV6jhHdFok3McPs42ZgO7Sj7MOTZm8Usp6aqhCjesVVwX
+hb5zdSpVV2CkMeQ9lz6oiDDjHjs2Fg==
+=RASF
+-----END PGP SIGNATURE-----
 
-It will be still necessary to get complete mount table sometimes, but 
-not in performance sensitive scenarios.
-
-I'm not sure about sysfs/, you need somehow resolve namespaces, order
-of the mount entries (which one is the last one), etc. IMHO translate
-mountpoint path to sysfs/ path will be complicated.
-
-> > But before trying to work out how to use a notification mechanism
-> > just having a way to get the info provided by the proc tables using
-> > a path alone should give initial immediate improvement in libmount.
-> 
-> Adding Karel, Lennart, Zbigniew and util-linux@vger...
-> 
-> At a quick glance at libmount and systemd code, it appears that just
-> switching out the implementation in libmount will not be enough:
-> systemd is calling functions like mnt_table_parse_*() when it receives
-> a notification that the mount table changed.
-
-We're ready to change this stuff in systemd if there will be something
-better (something per-mount-entry).
-
-My plan is add new API to libmount to query information about one
-mount entry (but I had no time to play with fsinfo yet).
-
-> What is the end purpose of parsing the mount tables?  Can systemd guys
-> comment on that?
-
-If mount/umount is triggered by systemd than it need verification
-about success and final version of the mount options. It also reads
-information from libmount to get userspace mount options (.e.g.
-_netdev -- libmount uses mount source, target and fsroot to join
-kernel and userpace stuff).
-
-And don't forget that mount units are part of systemd dependencies, so
-umount/mount is important event for systemd and it need details about
-the changes (what, where, ... etc.)
-
-    Karel
-
--- 
- Karel Zak  <kzak@redhat.com>
- http://karelzak.blogspot.com
-
+--jousvV0MzM2p6OtC--
