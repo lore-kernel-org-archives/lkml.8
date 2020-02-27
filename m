@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F66DC3F368
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C77AFC54FCA
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 372B824688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EDA324656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:27:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813506;
-	bh=VHH1pgBpBfoQ9NtBvtNG+mjfNiBMiLbkZq/twEG0pP8=;
+	s=default; t=1582813625;
+	bh=kUKSzHdRRHXlQaZVmuHIoD/S65nhOWHRv5mf2gtz24U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LoSDH/Tks5arQV15UuoVGjXd+qKP6jjWv9jmRM+6fqQscYX0IEhjbbAYRuICS0kGa
-	 UisuiANKpsq1xDtla7CYJ3m29ayVFxMdWrBR1r3P+QRGxErhzpjIl7kFyE89Jieogf
-	 pQJLoAL+pUiPLIB0deBU0gj7T950Dr9Vca+ixoVE=
+	b=gquwPUUctbQd3A5EC6vHDkyd8oJb4tg3rBn/xNYeaICoKtLZLYSSrIuLycZvxwvuZ
+	 V4qwQlxm68FH4UXS1zy4HxfzyyPDLJgV3JwbKFlnc5EefX10TPnEIKlGquAN5axR94
+	 PKXA1n+B3NFEeNrRy99PVJ9Y2VpDvsWB9IdfCVQ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389295AbgB0OZF (ORCPT
+        id S2387721AbgB0OJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:25:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50484 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:09:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388311AbgB0OLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:11:55 -0500
+        id S2388311AbgB0OJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:09:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05EC520578;
-        Thu, 27 Feb 2020 14:11:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8192E24656;
+        Thu, 27 Feb 2020 14:09:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812713;
-        bh=VHH1pgBpBfoQ9NtBvtNG+mjfNiBMiLbkZq/twEG0pP8=;
+        s=default; t=1582812549;
+        bh=kUKSzHdRRHXlQaZVmuHIoD/S65nhOWHRv5mf2gtz24U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rfzJJT3GimQbqFhgn6RZFWoOeHo5G7tAzaU8VBFHB2D8saeyE64Y2/SCNHNRhMIEp
-         FQghX7HxLf9tt8XKI+fyzybLt1ukkvHp0z5hzwnABOxWQTa9WDc8k5BMTvvxRx5Tb0
-         Lk/Np9bANsJ3D00GAKncU8LS32SMtaTSMjuwysHE=
+        b=YYGnjdSdEDs+yfquiP/T7IL7Lc0ZQyZLcNtmufrTms4+e4x9FAOduO367FpUrPq/H
+         t0PKm4/RRlbJFVh5LU14S4YVr7/8WfjNmga0NqzKQudjhBZXA8m4YK4v8iRLvbPXjW
+         0qlcg7X+kdxdX7qkYGYmi9ZNYqCJde8VEGx/xeLE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+65c6c92d04304d0a8efc@syzkaller.appspotmail.com,
-        syzbot+e60ddfa48717579799dd@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 123/135] ALSA: seq: Avoid concurrent access to queue flags
-Date:   Thu, 27 Feb 2020 14:37:43 +0100
-Message-Id: <20200227132247.559799553@linuxfoundation.org>
+        stable@vger.kernel.org, Loic Poulain <loic.poulain@linaro.org>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.4 059/135] serdev: ttyport: restore client ops on deregistration
+Date:   Thu, 27 Feb 2020 14:36:39 +0100
+Message-Id: <20200227132237.907077913@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -61,96 +59,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Johan Hovold <johan@kernel.org>
 
-commit bb51e669fa49feb5904f452b2991b240ef31bc97 upstream.
+commit 0c5aae59270fb1f827acce182786094c9ccf598e upstream.
 
-The queue flags are represented in bit fields and the concurrent
-access may result in unexpected results.  Although the current code
-should be mostly OK as it's only reading a field while writing other
-fields as KCSAN reported, it's safer to cover both with a proper
-spinlock protection.
+The serdev tty-port controller driver should reset the tty-port client
+operations also on deregistration to avoid a NULL-pointer dereference in
+case the port is later re-registered as a normal tty device.
 
-This patch fixes the possible concurrent read by protecting with
-q->owner_lock.  Also the queue owner field is protected as well since
-it's the field to be protected by the lock itself.
+Note that this can only happen with tty drivers such as 8250 which have
+statically allocated port structures that can end up being reused and
+where a later registration would not register a serdev controller (e.g.
+due to registration errors or if the devicetree has been changed in
+between).
 
-Reported-by: syzbot+65c6c92d04304d0a8efc@syzkaller.appspotmail.com
-Reported-by: syzbot+e60ddfa48717579799dd@syzkaller.appspotmail.com
-Link: https://lore.kernel.org/r/20200214111316.26939-2-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Specifically, this can be an issue for any statically defined ports that
+would be registered by 8250 core when an 8250 driver is being unbound.
+
+Fixes: bed35c6dfa6a ("serdev: add a tty port controller driver")
+Cc: stable <stable@vger.kernel.org>     # 4.11
+Reported-by: Loic Poulain <loic.poulain@linaro.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20200210145730.22762-1-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/seq/seq_queue.c |   20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ drivers/tty/serdev/serdev-ttyport.c |    6 ++----
+ drivers/tty/tty_port.c              |    5 +++--
+ include/linux/tty.h                 |    2 ++
+ 3 files changed, 7 insertions(+), 6 deletions(-)
 
---- a/sound/core/seq/seq_queue.c
-+++ b/sound/core/seq/seq_queue.c
-@@ -392,6 +392,7 @@ int snd_seq_queue_check_access(int queue
- int snd_seq_queue_set_owner(int queueid, int client, int locked)
+--- a/drivers/tty/serdev/serdev-ttyport.c
++++ b/drivers/tty/serdev/serdev-ttyport.c
+@@ -265,7 +265,6 @@ struct device *serdev_tty_port_register(
+ 					struct device *parent,
+ 					struct tty_driver *drv, int idx)
  {
- 	struct snd_seq_queue *q = queueptr(queueid);
-+	unsigned long flags;
+-	const struct tty_port_client_operations *old_ops;
+ 	struct serdev_controller *ctrl;
+ 	struct serport *serport;
+ 	int ret;
+@@ -284,7 +283,6 @@ struct device *serdev_tty_port_register(
  
- 	if (q == NULL)
- 		return -EINVAL;
-@@ -401,8 +402,10 @@ int snd_seq_queue_set_owner(int queueid,
- 		return -EPERM;
+ 	ctrl->ops = &ctrl_ops;
+ 
+-	old_ops = port->client_ops;
+ 	port->client_ops = &client_ops;
+ 	port->client_data = ctrl;
+ 
+@@ -297,7 +295,7 @@ struct device *serdev_tty_port_register(
+ 
+ err_reset_data:
+ 	port->client_data = NULL;
+-	port->client_ops = old_ops;
++	port->client_ops = &tty_port_default_client_ops;
+ 	serdev_controller_put(ctrl);
+ 
+ 	return ERR_PTR(ret);
+@@ -312,8 +310,8 @@ int serdev_tty_port_unregister(struct tt
+ 		return -ENODEV;
+ 
+ 	serdev_controller_remove(ctrl);
+-	port->client_ops = NULL;
+ 	port->client_data = NULL;
++	port->client_ops = &tty_port_default_client_ops;
+ 	serdev_controller_put(ctrl);
+ 
+ 	return 0;
+--- a/drivers/tty/tty_port.c
++++ b/drivers/tty/tty_port.c
+@@ -52,10 +52,11 @@ static void tty_port_default_wakeup(stru
  	}
+ }
  
-+	spin_lock_irqsave(&q->owner_lock, flags);
- 	q->locked = locked ? 1 : 0;
- 	q->owner = client;
-+	spin_unlock_irqrestore(&q->owner_lock, flags);
- 	queue_access_unlock(q);
- 	queuefree(q);
+-static const struct tty_port_client_operations default_client_ops = {
++const struct tty_port_client_operations tty_port_default_client_ops = {
+ 	.receive_buf = tty_port_default_receive_buf,
+ 	.write_wakeup = tty_port_default_wakeup,
+ };
++EXPORT_SYMBOL_GPL(tty_port_default_client_ops);
  
-@@ -539,15 +542,17 @@ void snd_seq_queue_client_termination(in
- 	unsigned long flags;
- 	int i;
- 	struct snd_seq_queue *q;
-+	bool matched;
+ void tty_port_init(struct tty_port *port)
+ {
+@@ -68,7 +69,7 @@ void tty_port_init(struct tty_port *port
+ 	spin_lock_init(&port->lock);
+ 	port->close_delay = (50 * HZ) / 100;
+ 	port->closing_wait = (3000 * HZ) / 100;
+-	port->client_ops = &default_client_ops;
++	port->client_ops = &tty_port_default_client_ops;
+ 	kref_init(&port->kref);
+ }
+ EXPORT_SYMBOL(tty_port_init);
+--- a/include/linux/tty.h
++++ b/include/linux/tty.h
+@@ -225,6 +225,8 @@ struct tty_port_client_operations {
+ 	void (*write_wakeup)(struct tty_port *port);
+ };
  
- 	for (i = 0; i < SNDRV_SEQ_MAX_QUEUES; i++) {
- 		if ((q = queueptr(i)) == NULL)
- 			continue;
- 		spin_lock_irqsave(&q->owner_lock, flags);
--		if (q->owner == client)
-+		matched = (q->owner == client);
-+		if (matched)
- 			q->klocked = 1;
- 		spin_unlock_irqrestore(&q->owner_lock, flags);
--		if (q->owner == client) {
-+		if (matched) {
- 			if (q->timer->running)
- 				snd_seq_timer_stop(q->timer);
- 			snd_seq_timer_reset(q->timer);
-@@ -739,6 +744,8 @@ void snd_seq_info_queues_read(struct snd
- 	int i, bpm;
- 	struct snd_seq_queue *q;
- 	struct snd_seq_timer *tmr;
-+	bool locked;
-+	int owner;
- 
- 	for (i = 0; i < SNDRV_SEQ_MAX_QUEUES; i++) {
- 		if ((q = queueptr(i)) == NULL)
-@@ -750,9 +757,14 @@ void snd_seq_info_queues_read(struct snd
- 		else
- 			bpm = 0;
- 
-+		spin_lock_irq(&q->owner_lock);
-+		locked = q->locked;
-+		owner = q->owner;
-+		spin_unlock_irq(&q->owner_lock);
++extern const struct tty_port_client_operations tty_port_default_client_ops;
 +
- 		snd_iprintf(buffer, "queue %d: [%s]\n", q->queue, q->name);
--		snd_iprintf(buffer, "owned by client    : %d\n", q->owner);
--		snd_iprintf(buffer, "lock status        : %s\n", q->locked ? "Locked" : "Free");
-+		snd_iprintf(buffer, "owned by client    : %d\n", owner);
-+		snd_iprintf(buffer, "lock status        : %s\n", locked ? "Locked" : "Free");
- 		snd_iprintf(buffer, "queued time events : %d\n", snd_seq_prioq_avail(q->timeq));
- 		snd_iprintf(buffer, "queued tick events : %d\n", snd_seq_prioq_avail(q->tickq));
- 		snd_iprintf(buffer, "timer state        : %s\n", tmr->running ? "Running" : "Stopped");
+ struct tty_port {
+ 	struct tty_bufhead	buf;		/* Locked internally */
+ 	struct tty_struct	*tty;		/* Back pointer */
 
 
