@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C8E1C35E15
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96235C35E1C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAFCE246AD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:23:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F95C246AD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:23:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="KZIm0HVb"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="vHYd3xWc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731168AbgB0SX1 (ORCPT
+        id S1731177AbgB0SX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 13:23:27 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:39703 "EHLO
+        Thu, 27 Feb 2020 13:23:28 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:39715 "EHLO
         mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730978AbgB0SWu (ORCPT
+        with ESMTP id S1730991AbgB0SWt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 13:22:50 -0500
+        Thu, 27 Feb 2020 13:22:49 -0500
 Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200227182249euoutp01fab51e46ff663cacef33e2a22c1f7545~3VXhkUsAH1216412164euoutp01t
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 18:22:49 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200227182249euoutp01fab51e46ff663cacef33e2a22c1f7545~3VXhkUsAH1216412164euoutp01t
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200227182248euoutp0193e6c3e2c881823a564290394141906e~3VXgMvq_R1369313693euoutp01V
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 18:22:48 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200227182248euoutp0193e6c3e2c881823a564290394141906e~3VXgMvq_R1369313693euoutp01V
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1582827769;
-        bh=gZO8awiK7kH8eFJRB9zG2w/BhF1oQWwLfwiRBkAy9do=;
+        s=mail20170921; t=1582827768;
+        bh=8xuRiV9wBbmT3y/ytbo3ymgr+5UeWNtwn/zbxK7zuzI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KZIm0HVbptf8WkCl09sZHNIGBPzur7sWNi0kbVDVDT1aXzDwxZJVT9VBsm86JfcLZ
-         AJFmvkq2Rwu/QKnLAgd0pm0oMJUNIUKpZHh4JfIS4pVBnU34L7yK/62iY5Mb5HoY0Q
-         S5HtDIrmu2GnGMrX1ZYz9KApFQjgakCfN8q1o9Ak=
+        b=vHYd3xWc0bx3wlgFTHuhXx1Ldzq+eP3X2zPxKKsxOichKRxQ643HqPQaxpz46VVBs
+         fgELGi4V8yg2z4Vlrcz3RXxpcGV7aFdYWEGaFW+4ZkmsYBJ0x4tB2F66mLeROWmh8A
+         /T0HzrgyiBaFEV4I+jKcbk99t6slzKoZoN87IgHE=
 Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
         eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200227182249eucas1p2a39b2fcf88bce9f91d0a767d2258b560~3VXhSplw53195531955eucas1p2J;
-        Thu, 27 Feb 2020 18:22:49 +0000 (GMT)
+        20200227182247eucas1p22961663202ea51bdc14d843dddb84f78~3VXf-LBjK3194731947eucas1p2I;
+        Thu, 27 Feb 2020 18:22:47 +0000 (GMT)
 Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 7A.05.60698.9F8085E5; Thu, 27
-        Feb 2020 18:22:49 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200227182248eucas1p296773cdb2ab7ae9f4114f7052ff08414~3VXggZ1gP3196231962eucas1p2J;
-        Thu, 27 Feb 2020 18:22:48 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200227182248eusmtrp27cf5eeb2555186c6f343746e14447a53~3VXgf36eu1813218132eusmtrp2v;
-        Thu, 27 Feb 2020 18:22:48 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-08-5e5808f9f085
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 99.05.60698.7F8085E5; Thu, 27
+        Feb 2020 18:22:47 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200227182247eucas1p1e9042300d9ad7dd56a1319afb980bdfe~3VXflFboR0494604946eucas1p1J;
+        Thu, 27 Feb 2020 18:22:47 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200227182247eusmtrp15e0a12fa55bec1ddcde5282ac27beae2~3VXfkcuAp0110301103eusmtrp1e;
+        Thu, 27 Feb 2020 18:22:47 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-04-5e5808f79908
 Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 03.C1.08375.8F8085E5; Thu, 27
-        Feb 2020 18:22:48 +0000 (GMT)
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 45.61.07950.7F8085E5; Thu, 27
+        Feb 2020 18:22:47 +0000 (GMT)
 Received: from AMDC3058.digital.local (unknown [106.120.51.71]) by
         eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200227182247eusmtip2b89f3c4e861b8f74f3e97b7cfeeed142~3VXgCVRtY1203512035eusmtip2R;
-        Thu, 27 Feb 2020 18:22:47 +0000 (GMT)
+        20200227182247eusmtip2e59f4b892303e67c711d3e98ea62a2ae~3VXfJL_4B2149421494eusmtip2K;
+        Thu, 27 Feb 2020 18:22:46 +0000 (GMT)
 From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Michael Schmitz <schmitzmic@gmail.com>,
@@ -64,392 +64,304 @@ Cc:     Michael Schmitz <schmitzmic@gmail.com>,
         Christoph Hellwig <hch@lst.de>, linux-ide@vger.kernel.org,
         linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
         b.zolnierkie@samsung.com
-Subject: [PATCH v3 20/27] ata: move sata_link_hardreset() to libata-sata.c
-Date:   Thu, 27 Feb 2020 19:22:19 +0100
-Message-Id: <20200227182226.19188-21-b.zolnierkie@samsung.com>
+Subject: [PATCH v3 18/27] ata: move *sata_set_spd*() to libata-sata.c
+Date:   Thu, 27 Feb 2020 19:22:17 +0100
+Message-Id: <20200227182226.19188-19-b.zolnierkie@samsung.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200227182226.19188-1-b.zolnierkie@samsung.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLKsWRmVeSWpSXmKPExsWy7djP87o/OSLiDCZ857FYfbefzWLjjPWs
-        Fs9u7WWyWLn6KJPFsR2PmCwu75rDZrH8yVpmi7mt09kdODx2zrrL7nH5bKnHocMdjB4nW7+x
-        eOy+2cDm0bdlFaPH501yAexRXDYpqTmZZalF+nYJXBlb/79hLfgVWtHS+J25gXG7SxcjJ4eE
-        gInE3p4rbF2MXBxCAisYJe70v2aBcL4wSnTtP8UE4XxmlDiy+zZQhgOspfeKLER8OaPEqptr
-        2OA6zl29xwIyl03ASmJi+ypGEFtEQEGi5/dKsCJmgfeMEism7QUrEhbwkth1eB+YzSKgKtFz
-        rQesgVfATmL/wivMEAfKS2z99okVxOYEit/o284GUSMocXLmE7BeZqCa5q2zmUEWSAgsY5d4
-        tXkPK0Szi8SHVzsYIWxhiVfHt7BD2DIS/3fOZ4JoWMco8bfjBVT3dkaJ5ZP/sUFUWUvcOfeL
-        DeRpZgFNifW79CH+d5TofCgIYfJJ3HgrCHEDn8SkbdOZIcK8Eh1tQhAz1CQ2LNvABrO1a+dK
-        qLc8JLoufWefwKg4C8k3s5B8Mwth7QJG5lWM4qmlxbnpqcXGeanlesWJucWleel6yfm5mxiB
-        iej0v+NfdzDu+5N0iFGAg1GJh3fBjvA4IdbEsuLK3EOMEhzMSiK8G7+GxgnxpiRWVqUW5ccX
-        leakFh9ilOZgURLnNV70MlZIID2xJDU7NbUgtQgmy8TBKdXAeNX1dYrAyt6fMtVyz6RLP2R8
-        MEr9tUBN6+hV3dpXyd/nvizjfM7xfuH8Qw5rT5U5c2966dTanListWn961TeihXy3qedQnc+
-        2f2m6Mz8SZFNuo/rOrIqN6eKepWIHLrZFSkW5vcq132G+vGe6yf4JmhdcZITrW9rTXvYk82U
-        sqi296WT3qZ3SizFGYmGWsxFxYkAHvnqUUADAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsVy+t/xe7o/OCLiDD5flrBYfbefzWLjjPWs
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDKsWRmVeSWpSXmKPExsWy7djP87rfOSLiDK72mlisvtvPZrFxxnpW
+        i2e39jJZrFx9lMni2I5HTBaXd81hs1j+ZC2zxdzW6ewOHB47Z91l97h8ttTj0OEORo+Trd9Y
+        PHbfbGDz6NuyitHj8ya5APYoLpuU1JzMstQifbsEroxvs7axFBywquhsm8LSwDhfv4uRg0NC
+        wETiT1tYFyMXh5DACkaJnkkn2SCcL4wSn5e+Y+xi5ARyPjNKXL/vAWKDNNyd1cEIUbScUeLL
+        jHXscB1t/3axg1SxCVhJTGxfBdYtIqAg0fN7JdhYZoH3jBIrJu1lAUkIC7hKfJs/hxXEZhFQ
+        lVjx5SFYA6+AncSX/k4miHXyElu/fQKr4QSK3+jbzgZRIyhxcuYTsDnMQDXNW2czgyyQEFjG
+        LnFm0w42iGYXiU2HHjBC2MISr45vYYewZSROT+5hgWhYxyjxt+MFVPd2Ronlk/9BdVtL3Dn3
+        iw0UTMwCmhLrd+lDhB0l7vbeZYSEHp/EjbeCEEfwSUzaNp0ZIswr0dEmBFGtJrFh2QY2mLVd
+        O1dClXhInP5WPIFRcRaSb2Yh+WYWwtoFjMyrGMVTS4tz01OLjfNSy/WKE3OLS/PS9ZLzczcx
+        AtPQ6X/Hv+5g3Pcn6RCjAAejEg/vgh3hcUKsiWXFlbmHGCU4mJVEeDd+DY0T4k1JrKxKLcqP
+        LyrNSS0+xCjNwaIkzmu86GWskEB6YklqdmpqQWoRTJaJg1OqgXF55d2p2TtqajZ2c7P3saYn
+        2tfMeXTiW+/bSzcO/zmydJHud4ZwM/bz6YXPZO6/XR1Wtkho5hLZTSERNTbmNSuqLvY9eR2v
+        mxIluInpx9Q3vx5pz3X6MPXit8JKuae6TQsKBKZ8Xxq3qu1o9V+nDR+vTj61emt71qaX26bU
+        bb8SHBemq1dyoOSsEktxRqKhFnNRcSIAB+cKFz8DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNIsWRmVeSWpSXmKPExsVy+t/xe7rfOSLiDO6/lbJYfbefzWLjjPWs
         Fs9u7WWyWLn6KJPFsR2PmCwu75rDZrH8yVpmi7mt09kdODx2zrrL7nH5bKnHocMdjB4nW7+x
         eOy+2cDm0bdlFaPH501yAexRejZF+aUlqQoZ+cUltkrRhhZGeoaWFnpGJpZ6hsbmsVZGpkr6
-        djYpqTmZZalF+nYJehlb/79hLfgVWtHS+J25gXG7SxcjB4eEgIlE7xXZLkYuDiGBpYwS6/f8
-        YIOIy0gcX1/WxcgJZApL/LnWxQZiCwl8YpR4f8UKxGYTsJKY2L6KEcQWEVCQ6Pm9kg1kDrPA
-        V0aJpZO6mUESwgJeErsO72MBsVkEVCV6rvWANfAK2EnsX3iFGWKBvMTWb59YQWxOoPiNvu1Q
-        y2wlujqeQtULSpyc+QRsDjNQffPW2cwTGAVmIUnNQpJawMi0ilEktbQ4Nz232FCvODG3uDQv
-        XS85P3cTIzBath37uXkH46WNwYcYBTgYlXh4F+wIjxNiTSwrrsw9xCjBwawkwrvxa2icEG9K
-        YmVValF+fFFpTmrxIUZToCcmMkuJJucDIzmvJN7Q1NDcwtLQ3Njc2MxCSZy3Q+BgjJBAemJJ
-        anZqakFqEUwfEwenVANjC+P1G123fSLKbe+Kr+CouRAivYGraObeE3tsWnle6W5Q3cDyOc9W
-        SruteM0BeWZRXX7Jkx7MTDaSpyaLfdaZeUnov8xFS+/Ak6cbH6r/9OjuPPu79ubVzLcxfrW1
-        nlxWqjJH67dpGX6Y+8R8WWud85Tr4ncXanypNvvJmPb330ITeY3dtjOVWIozEg21mIuKEwFM
-        cT3XrAIAAA==
-X-CMS-MailID: 20200227182248eucas1p296773cdb2ab7ae9f4114f7052ff08414
+        djYpqTmZZalF+nYJehnfZm1jKThgVdHZNoWlgXG+fhcjJ4eEgInE3VkdjF2MXBxCAksZJQ5u
+        v8XWxcgBlJCROL6+DKJGWOLPtS42iJpPjBJtnTsYQRJsAlYSE9tXgdkiAgoSPb9XghUxC3xl
+        lFg6qZsZJCEs4Crxbf4cVhCbRUBVYsWXh2ANvAJ2El/6O5kgNshLbP32CayGEyh+o287G4gt
+        JGAr0dXxFKpeUOLkzCcsIDYzUH3z1tnMExgFZiFJzUKSWsDItIpRJLW0ODc9t9hIrzgxt7g0
+        L10vOT93EyMwYrYd+7kF6Il3wYcYBTgYlXh4PbaFxwmxJpYVV+YeYpTgYFYS4d34NTROiDcl
+        sbIqtSg/vqg0J7X4EKMp0BMTmaVEk/OB0ZxXEm9oamhuYWlobmxubGahJM7bIXAwRkggPbEk
+        NTs1tSC1CKaPiYNTqoFRoOzsLaGiDdbVQh/rc6tFug9XlTSIee+5ue38kglP3XkcuXo2X26+
+        nyMm5P59/9Z2Z+fIZbonP66oST9xpsDjQcvlzbzHPgoItP9dc/QB26uay+8epp1d27h4u5lZ
+        VJj7W2ajPBtF/SwLn0A+t6hCGc171kUzWu9ntF7ZnHLi5IbI24ULA9KVWIozEg21mIuKEwFB
+        Cpn3rgIAAA==
+X-CMS-MailID: 20200227182247eucas1p1e9042300d9ad7dd56a1319afb980bdfe
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200227182248eucas1p296773cdb2ab7ae9f4114f7052ff08414
+X-RootMTR: 20200227182247eucas1p1e9042300d9ad7dd56a1319afb980bdfe
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200227182248eucas1p296773cdb2ab7ae9f4114f7052ff08414
+X-CMS-RootMailID: 20200227182247eucas1p1e9042300d9ad7dd56a1319afb980bdfe
 References: <20200227182226.19188-1-b.zolnierkie@samsung.com>
-        <CGME20200227182248eucas1p296773cdb2ab7ae9f4114f7052ff08414@eucas1p2.samsung.com>
+        <CGME20200227182247eucas1p1e9042300d9ad7dd56a1319afb980bdfe@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* move sata_link_hardreset() to libata-sata.c
+* move *sata_set_spd*() to libata-sata.c
 
-* add static inline for CONFIG_SATA_HOST=n case
-
-* make sata_set_spd_needed() static
+* add static inlines for CONFIG_SATA_HOST=n case
 
 Code size savings on m68k arch using (modified) atari_defconfig:
 
    text    data     bss     dec     hex filename
 before:
-  32724     572      40   33336    8238 drivers/ata/libata-core.o
+  32842     572      40   33458    82ae drivers/ata/libata-core.o
 after:
-  32559     572      40   33171    8193 drivers/ata/libata-core.o
+  32812     572      40   33428    8290 drivers/ata/libata-core.o
 
 Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 ---
- drivers/ata/libata-core.c | 113 -------------------------------------
- drivers/ata/libata-sata.c | 115 +++++++++++++++++++++++++++++++++++++-
- drivers/ata/libata.h      |   7 ---
- include/linux/libata.h    |  16 +++++-
- 4 files changed, 127 insertions(+), 124 deletions(-)
+ drivers/ata/libata-core.c | 81 ---------------------------------------
+ drivers/ata/libata-sata.c | 81 +++++++++++++++++++++++++++++++++++++++
+ drivers/ata/libata.h      |  7 ++++
+ include/linux/libata.h    |  3 +-
+ 4 files changed, 90 insertions(+), 82 deletions(-)
 
 diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index 4ca81ef7c8bd..19624d056d92 100644
+index ba1e5c4d3c09..13214ebd0e5c 100644
 --- a/drivers/ata/libata-core.c
 +++ b/drivers/ata/libata-core.c
-@@ -3531,119 +3531,6 @@ int ata_std_prereset(struct ata_link *link, unsigned long deadline)
+@@ -3050,87 +3050,6 @@ int sata_down_spd_limit(struct ata_link *link, u32 spd_limit)
+ 	return 0;
  }
- EXPORT_SYMBOL_GPL(ata_std_prereset);
  
+-static int __sata_set_spd_needed(struct ata_link *link, u32 *scontrol)
+-{
+-	struct ata_link *host_link = &link->ap->link;
+-	u32 limit, target, spd;
+-
+-	limit = link->sata_spd_limit;
+-
+-	/* Don't configure downstream link faster than upstream link.
+-	 * It doesn't speed up anything and some PMPs choke on such
+-	 * configuration.
+-	 */
+-	if (!ata_is_host_link(link) && host_link->sata_spd)
+-		limit &= (1 << host_link->sata_spd) - 1;
+-
+-	if (limit == UINT_MAX)
+-		target = 0;
+-	else
+-		target = fls(limit);
+-
+-	spd = (*scontrol >> 4) & 0xf;
+-	*scontrol = (*scontrol & ~0xf0) | ((target & 0xf) << 4);
+-
+-	return spd != target;
+-}
+-
 -/**
-- *	sata_link_hardreset - reset link via SATA phy reset
-- *	@link: link to reset
-- *	@timing: timing parameters { interval, duration, timeout } in msec
-- *	@deadline: deadline jiffies for the operation
-- *	@online: optional out parameter indicating link onlineness
-- *	@check_ready: optional callback to check link readiness
+- *	sata_set_spd_needed - is SATA spd configuration needed
+- *	@link: Link in question
 - *
-- *	SATA phy-reset @link using DET bits of SControl register.
-- *	After hardreset, link readiness is waited upon using
-- *	ata_wait_ready() if @check_ready is specified.  LLDs are
-- *	allowed to not specify @check_ready and wait itself after this
-- *	function returns.  Device classification is LLD's
-- *	responsibility.
-- *
-- *	*@online is set to one iff reset succeeded and @link is online
-- *	after reset.
+- *	Test whether the spd limit in SControl matches
+- *	@link->sata_spd_limit.  This function is used to determine
+- *	whether hardreset is necessary to apply SATA spd
+- *	configuration.
 - *
 - *	LOCKING:
-- *	Kernel thread context (may sleep)
+- *	Inherited from caller.
 - *
 - *	RETURNS:
-- *	0 on success, -errno otherwise.
+- *	1 if SATA spd configuration is needed, 0 otherwise.
 - */
--int sata_link_hardreset(struct ata_link *link, const unsigned long *timing,
--			unsigned long deadline,
--			bool *online, int (*check_ready)(struct ata_link *))
+-static int sata_set_spd_needed(struct ata_link *link)
+-{
+-	u32 scontrol;
+-
+-	if (sata_scr_read(link, SCR_CONTROL, &scontrol))
+-		return 1;
+-
+-	return __sata_set_spd_needed(link, &scontrol);
+-}
+-
+-/**
+- *	sata_set_spd - set SATA spd according to spd limit
+- *	@link: Link to set SATA spd for
+- *
+- *	Set SATA spd of @link according to sata_spd_limit.
+- *
+- *	LOCKING:
+- *	Inherited from caller.
+- *
+- *	RETURNS:
+- *	0 if spd doesn't need to be changed, 1 if spd has been
+- *	changed.  Negative errno if SCR registers are inaccessible.
+- */
+-int sata_set_spd(struct ata_link *link)
 -{
 -	u32 scontrol;
 -	int rc;
 -
--	DPRINTK("ENTER\n");
--
--	if (online)
--		*online = false;
--
--	if (sata_set_spd_needed(link)) {
--		/* SATA spec says nothing about how to reconfigure
--		 * spd.  To be on the safe side, turn off phy during
--		 * reconfiguration.  This works for at least ICH7 AHCI
--		 * and Sil3124.
--		 */
--		if ((rc = sata_scr_read(link, SCR_CONTROL, &scontrol)))
--			goto out;
--
--		scontrol = (scontrol & 0x0f0) | 0x304;
--
--		if ((rc = sata_scr_write(link, SCR_CONTROL, scontrol)))
--			goto out;
--
--		sata_set_spd(link);
--	}
--
--	/* issue phy wake/reset */
 -	if ((rc = sata_scr_read(link, SCR_CONTROL, &scontrol)))
--		goto out;
+-		return rc;
 -
--	scontrol = (scontrol & 0x0f0) | 0x301;
+-	if (!__sata_set_spd_needed(link, &scontrol))
+-		return 0;
 -
--	if ((rc = sata_scr_write_flush(link, SCR_CONTROL, scontrol)))
--		goto out;
+-	if ((rc = sata_scr_write(link, SCR_CONTROL, scontrol)))
+-		return rc;
 -
--	/* Couldn't find anything in SATA I/II specs, but AHCI-1.1
--	 * 10.4.2 says at least 1 ms.
--	 */
--	ata_msleep(link->ap, 1);
--
--	/* bring link back */
--	rc = sata_link_resume(link, timing, deadline);
--	if (rc)
--		goto out;
--	/* if link is offline nothing more to do */
--	if (ata_phys_link_offline(link))
--		goto out;
--
--	/* Link is online.  From this point, -ENODEV too is an error. */
--	if (online)
--		*online = true;
--
--	if (sata_pmp_supported(link->ap) && ata_is_host_link(link)) {
--		/* If PMP is supported, we have to do follow-up SRST.
--		 * Some PMPs don't send D2H Reg FIS after hardreset if
--		 * the first port is empty.  Wait only for
--		 * ATA_TMOUT_PMP_SRST_WAIT.
--		 */
--		if (check_ready) {
--			unsigned long pmp_deadline;
--
--			pmp_deadline = ata_deadline(jiffies,
--						    ATA_TMOUT_PMP_SRST_WAIT);
--			if (time_after(pmp_deadline, deadline))
--				pmp_deadline = deadline;
--			ata_wait_ready(link, pmp_deadline, check_ready);
--		}
--		rc = -EAGAIN;
--		goto out;
--	}
--
--	rc = 0;
--	if (check_ready)
--		rc = ata_wait_ready(link, deadline, check_ready);
-- out:
--	if (rc && rc != -EAGAIN) {
--		/* online is set iff link is online && reset succeeded */
--		if (online)
--			*online = false;
--		ata_link_err(link, "COMRESET failed (errno=%d)\n", rc);
--	}
--	DPRINTK("EXIT, rc=%d\n", rc);
--	return rc;
+-	return 1;
 -}
--EXPORT_SYMBOL_GPL(sata_link_hardreset);
+-EXPORT_SYMBOL_GPL(sata_set_spd);
 -
+ #ifdef CONFIG_ATA_ACPI
  /**
-  *	sata_std_hardreset - COMRESET w/o waiting or classification
-  *	@link: link to reset
+  *	ata_timing_cycle2mode - find xfer mode for the specified cycle duration
 diff --git a/drivers/ata/libata-sata.c b/drivers/ata/libata-sata.c
-index 34852fced999..05a1872ba329 100644
+index 1ef4c19864ac..d66afdc33d54 100644
 --- a/drivers/ata/libata-sata.c
 +++ b/drivers/ata/libata-sata.c
-@@ -449,7 +449,7 @@ static int __sata_set_spd_needed(struct ata_link *link, u32 *scontrol)
-  *	RETURNS:
-  *	1 if SATA spd configuration is needed, 0 otherwise.
-  */
--int sata_set_spd_needed(struct ata_link *link)
-+static int sata_set_spd_needed(struct ata_link *link)
- {
- 	u32 scontrol;
- 
-@@ -490,6 +490,119 @@ int sata_set_spd(struct ata_link *link)
+@@ -271,6 +271,87 @@ int sata_link_scr_lpm(struct ata_link *link, enum ata_lpm_policy policy,
  }
- EXPORT_SYMBOL_GPL(sata_set_spd);
+ EXPORT_SYMBOL_GPL(sata_link_scr_lpm);
  
++static int __sata_set_spd_needed(struct ata_link *link, u32 *scontrol)
++{
++	struct ata_link *host_link = &link->ap->link;
++	u32 limit, target, spd;
++
++	limit = link->sata_spd_limit;
++
++	/* Don't configure downstream link faster than upstream link.
++	 * It doesn't speed up anything and some PMPs choke on such
++	 * configuration.
++	 */
++	if (!ata_is_host_link(link) && host_link->sata_spd)
++		limit &= (1 << host_link->sata_spd) - 1;
++
++	if (limit == UINT_MAX)
++		target = 0;
++	else
++		target = fls(limit);
++
++	spd = (*scontrol >> 4) & 0xf;
++	*scontrol = (*scontrol & ~0xf0) | ((target & 0xf) << 4);
++
++	return spd != target;
++}
++
 +/**
-+ *	sata_link_hardreset - reset link via SATA phy reset
-+ *	@link: link to reset
-+ *	@timing: timing parameters { interval, duration, timeout } in msec
-+ *	@deadline: deadline jiffies for the operation
-+ *	@online: optional out parameter indicating link onlineness
-+ *	@check_ready: optional callback to check link readiness
++ *	sata_set_spd_needed - is SATA spd configuration needed
++ *	@link: Link in question
 + *
-+ *	SATA phy-reset @link using DET bits of SControl register.
-+ *	After hardreset, link readiness is waited upon using
-+ *	ata_wait_ready() if @check_ready is specified.  LLDs are
-+ *	allowed to not specify @check_ready and wait itself after this
-+ *	function returns.  Device classification is LLD's
-+ *	responsibility.
-+ *
-+ *	*@online is set to one iff reset succeeded and @link is online
-+ *	after reset.
++ *	Test whether the spd limit in SControl matches
++ *	@link->sata_spd_limit.  This function is used to determine
++ *	whether hardreset is necessary to apply SATA spd
++ *	configuration.
 + *
 + *	LOCKING:
-+ *	Kernel thread context (may sleep)
++ *	Inherited from caller.
 + *
 + *	RETURNS:
-+ *	0 on success, -errno otherwise.
++ *	1 if SATA spd configuration is needed, 0 otherwise.
 + */
-+int sata_link_hardreset(struct ata_link *link, const unsigned long *timing,
-+			unsigned long deadline,
-+			bool *online, int (*check_ready)(struct ata_link *))
++int sata_set_spd_needed(struct ata_link *link)
++{
++	u32 scontrol;
++
++	if (sata_scr_read(link, SCR_CONTROL, &scontrol))
++		return 1;
++
++	return __sata_set_spd_needed(link, &scontrol);
++}
++
++/**
++ *	sata_set_spd - set SATA spd according to spd limit
++ *	@link: Link to set SATA spd for
++ *
++ *	Set SATA spd of @link according to sata_spd_limit.
++ *
++ *	LOCKING:
++ *	Inherited from caller.
++ *
++ *	RETURNS:
++ *	0 if spd doesn't need to be changed, 1 if spd has been
++ *	changed.  Negative errno if SCR registers are inaccessible.
++ */
++int sata_set_spd(struct ata_link *link)
 +{
 +	u32 scontrol;
 +	int rc;
 +
-+	DPRINTK("ENTER\n");
-+
-+	if (online)
-+		*online = false;
-+
-+	if (sata_set_spd_needed(link)) {
-+		/* SATA spec says nothing about how to reconfigure
-+		 * spd.  To be on the safe side, turn off phy during
-+		 * reconfiguration.  This works for at least ICH7 AHCI
-+		 * and Sil3124.
-+		 */
-+		if ((rc = sata_scr_read(link, SCR_CONTROL, &scontrol)))
-+			goto out;
-+
-+		scontrol = (scontrol & 0x0f0) | 0x304;
-+
-+		if ((rc = sata_scr_write(link, SCR_CONTROL, scontrol)))
-+			goto out;
-+
-+		sata_set_spd(link);
-+	}
-+
-+	/* issue phy wake/reset */
 +	if ((rc = sata_scr_read(link, SCR_CONTROL, &scontrol)))
-+		goto out;
++		return rc;
 +
-+	scontrol = (scontrol & 0x0f0) | 0x301;
++	if (!__sata_set_spd_needed(link, &scontrol))
++		return 0;
 +
-+	if ((rc = sata_scr_write_flush(link, SCR_CONTROL, scontrol)))
-+		goto out;
++	if ((rc = sata_scr_write(link, SCR_CONTROL, scontrol)))
++		return rc;
 +
-+	/* Couldn't find anything in SATA I/II specs, but AHCI-1.1
-+	 * 10.4.2 says at least 1 ms.
-+	 */
-+	ata_msleep(link->ap, 1);
-+
-+	/* bring link back */
-+	rc = sata_link_resume(link, timing, deadline);
-+	if (rc)
-+		goto out;
-+	/* if link is offline nothing more to do */
-+	if (ata_phys_link_offline(link))
-+		goto out;
-+
-+	/* Link is online.  From this point, -ENODEV too is an error. */
-+	if (online)
-+		*online = true;
-+
-+	if (sata_pmp_supported(link->ap) && ata_is_host_link(link)) {
-+		/* If PMP is supported, we have to do follow-up SRST.
-+		 * Some PMPs don't send D2H Reg FIS after hardreset if
-+		 * the first port is empty.  Wait only for
-+		 * ATA_TMOUT_PMP_SRST_WAIT.
-+		 */
-+		if (check_ready) {
-+			unsigned long pmp_deadline;
-+
-+			pmp_deadline = ata_deadline(jiffies,
-+						    ATA_TMOUT_PMP_SRST_WAIT);
-+			if (time_after(pmp_deadline, deadline))
-+				pmp_deadline = deadline;
-+			ata_wait_ready(link, pmp_deadline, check_ready);
-+		}
-+		rc = -EAGAIN;
-+		goto out;
-+	}
-+
-+	rc = 0;
-+	if (check_ready)
-+		rc = ata_wait_ready(link, deadline, check_ready);
-+ out:
-+	if (rc && rc != -EAGAIN) {
-+		/* online is set iff link is online && reset succeeded */
-+		if (online)
-+			*online = false;
-+		ata_link_err(link, "COMRESET failed (errno=%d)\n", rc);
-+	}
-+	DPRINTK("EXIT, rc=%d\n", rc);
-+	return rc;
++	return 1;
 +}
-+EXPORT_SYMBOL_GPL(sata_link_hardreset);
++EXPORT_SYMBOL_GPL(sata_set_spd);
 +
  /**
   *	ata_slave_link_init - initialize slave link
   *	@ap: port to initialize slave link for
 diff --git a/drivers/ata/libata.h b/drivers/ata/libata.h
-index 53b45ebe3d55..cd8090ad43e5 100644
+index cd8090ad43e5..53b45ebe3d55 100644
 --- a/drivers/ata/libata.h
 +++ b/drivers/ata/libata.h
-@@ -87,13 +87,6 @@ extern unsigned int ata_read_log_page(struct ata_device *dev, u8 log,
+@@ -87,6 +87,13 @@ extern unsigned int ata_read_log_page(struct ata_device *dev, u8 log,
  
  #define to_ata_port(d) container_of(d, struct ata_port, tdev)
  
--/* libata-sata.c */
--#ifdef CONFIG_SATA_HOST
--int sata_set_spd_needed(struct ata_link *link);
--#else
--static inline int sata_set_spd_needed(struct ata_link *link) { return 1; }
--#endif
--
++/* libata-sata.c */
++#ifdef CONFIG_SATA_HOST
++int sata_set_spd_needed(struct ata_link *link);
++#else
++static inline int sata_set_spd_needed(struct ata_link *link) { return 1; }
++#endif
++
  /* libata-acpi.c */
  #ifdef CONFIG_ATA_ACPI
  extern unsigned int ata_acpi_gtf_filter;
 diff --git a/include/linux/libata.h b/include/linux/libata.h
-index 3981e413f582..bf13af0c47ae 100644
+index 372070a9d92e..3f0bdc2c30d3 100644
 --- a/include/linux/libata.h
 +++ b/include/linux/libata.h
-@@ -1079,9 +1079,6 @@ static inline int ata_port_is_dummy(struct ata_port *ap)
+@@ -1076,7 +1076,6 @@ static inline int ata_port_is_dummy(struct ata_port *ap)
+ 	return ap->ops == &ata_dummy_port_ops;
+ }
+ 
+-extern int sata_set_spd(struct ata_link *link);
  extern int ata_std_prereset(struct ata_link *link, unsigned long deadline);
  extern int ata_wait_after_reset(struct ata_link *link, unsigned long deadline,
  				int (*check_ready)(struct ata_link *link));
--extern int sata_link_hardreset(struct ata_link *link,
--			const unsigned long *timing, unsigned long deadline,
--			bool *online, int (*check_ready)(struct ata_link *));
- extern int sata_std_hardreset(struct ata_link *link, unsigned int *class,
- 			      unsigned long deadline);
- extern void ata_std_postreset(struct ata_link *link, unsigned int *classes);
-@@ -1192,6 +1189,9 @@ extern int sata_scr_read(struct ata_link *link, int reg, u32 *val);
+@@ -1196,6 +1195,7 @@ extern int sata_scr_valid(struct ata_link *link);
+ extern int sata_scr_read(struct ata_link *link, int reg, u32 *val);
  extern int sata_scr_write(struct ata_link *link, int reg, u32 val);
  extern int sata_scr_write_flush(struct ata_link *link, int reg, u32 val);
- extern int sata_set_spd(struct ata_link *link);
-+extern int sata_link_hardreset(struct ata_link *link,
-+			const unsigned long *timing, unsigned long deadline,
-+			bool *online, int (*check_ready)(struct ata_link *));
- extern int sata_link_resume(struct ata_link *link, const unsigned long *params,
- 			    unsigned long deadline);
++extern int sata_set_spd(struct ata_link *link);
  #else
-@@ -1209,6 +1209,16 @@ static inline int sata_scr_write_flush(struct ata_link *link, int reg, u32 val)
+ static inline int sata_scr_valid(struct ata_link *link) { return 0; }
+ static inline int sata_scr_read(struct ata_link *link, int reg, u32 *val)
+@@ -1210,6 +1210,7 @@ static inline int sata_scr_write_flush(struct ata_link *link, int reg, u32 val)
+ {
  	return -EOPNOTSUPP;
  }
- static inline int sata_set_spd(struct ata_link *link) { return -EOPNOTSUPP; }
-+static inline int sata_link_hardreset(struct ata_link *link,
-+				      const unsigned long *timing,
-+				      unsigned long deadline,
-+				      bool *online,
-+				      int (*check_ready)(struct ata_link *))
-+{
-+	if (online)
-+		*online = false;
-+	return -EOPNOTSUPP;
-+}
- static inline int sata_link_resume(struct ata_link *link,
- 				   const unsigned long *params,
- 				   unsigned long deadline)
++static inline int sata_set_spd(struct ata_link *link) { return -EOPNOTSUPP; }
+ #endif
+ extern int sata_link_scr_lpm(struct ata_link *link, enum ata_lpm_policy policy,
+ 			     bool spm_wakeup);
 -- 
 2.24.1
 
