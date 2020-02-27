@@ -2,106 +2,129 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF690C4BA2D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8890BC4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B65A724695
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:43:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582807415;
-	bh=YziCh5RfRjGRbrEFqGpPxtb+NAbvdYamyvPjRGczxG0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kjroYfWx1y0+1f+k5f8jrUc1tqkbkqSvLabQkqFAct95FgKtQqviuGxXeJUVXpEuH
-	 iP/NhN9VVHOXSFJp61QeotZWKB2Td1F3Dvi6Es1BBZQdtK4dyVUg07gBuKx+srnDDi
-	 dC+cL4jRMQOV8aRoU5NOgDS+Ewfi3jnnBRjzkoRs=
+	by mail.kernel.org (Postfix) with ESMTP id 69B2724697
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:45:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbgB0Mnd (ORCPT
+        id S1729058AbgB0Mp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 07:43:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40558 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728977AbgB0Mnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 07:43:33 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5449724695;
-        Thu, 27 Feb 2020 12:43:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582807411;
-        bh=YziCh5RfRjGRbrEFqGpPxtb+NAbvdYamyvPjRGczxG0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pNjU2Ahi4rlB1blPiCQmcukYcXPdWue3UzZRh8NOCawRsvTTPA+TB4ourbXemwswi
-         +Zb32Y6KjD9zTFWGNWGlRFT0CHHpqHqZOb/HUWVDO0jVn/bBcSYGD8Kd8Ve+H9TTTB
-         lShd613bsGATtZwE7hYkoF74Vp+9gpbVrbYHdRbE=
-Date:   Thu, 27 Feb 2020 13:43:29 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH v17 00/17] Multi Color LED Framework
-Message-ID: <20200227124329.GA994747@kroah.com>
-References: <20200127150032.31350-1-dmurphy@ti.com>
- <42d9687b-b488-22cf-0e9a-ff635b2094e3@ti.com>
- <20200225101940.GB16252@amd>
- <be76fdac-9d32-b9b2-c01d-3aa315b14463@gmail.com>
- <20200226125903.GA2800@duo.ucw.cz>
- <20f6bdd5-e899-aead-8c35-1c3a3d09145f@gmail.com>
- <20200227105808.GA27003@duo.ucw.cz>
+        Thu, 27 Feb 2020 07:45:56 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:54986 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728964AbgB0Mpz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 07:45:55 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01RChLTh030151;
+        Thu, 27 Feb 2020 07:45:50 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ydtrwk4ga-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Feb 2020 07:45:50 -0500
+Received: from m0167089.ppops.net (m0167089.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01RCjosb031849;
+        Thu, 27 Feb 2020 07:45:50 -0500
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ydtrwk4g4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Feb 2020 07:45:50 -0500
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 01RCjm49048102
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Thu, 27 Feb 2020 07:45:48 -0500
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 27 Feb
+ 2020 04:45:47 -0800
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Thu, 27 Feb 2020 04:45:46 -0800
+Received: from analog.ad.analog.com ([10.48.65.180])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01RCjd88032054;
+        Thu, 27 Feb 2020 07:45:40 -0500
+From:   Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
+        <dmitry.torokhov@gmail.com>, <nikolas@gnu.org>,
+        <gregkh@linuxfoundation.org>
+CC:     <ronald@innovation.ch>, <andriy.shevchenko@linux.intel.com>,
+        <maowenan@huawei.com>,
+        Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+Subject: [PATCH] input: keyboard: applespi: Use new structure for SPI transfer delays
+Date:   Thu, 27 Feb 2020 14:45:34 +0200
+Message-ID: <20200227124534.23399-1-sergiu.cuciurean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200227105808.GA27003@duo.ucw.cz>
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-27_03:2020-02-26,2020-02-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ phishscore=0 adultscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ suspectscore=0 clxscore=1011 lowpriorityscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002270102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 11:58:08AM +0100, Pavel Machek wrote:
-> Hi, Jacek!
-> 
-> (and thanks for doing this).
-> 
-> > We have here long lasting discussion related to LED multicolor class
-> > sysfs interface design. We went through several iterations and worked
-> > out the solution with individual file per each color sub-LED in the
-> > color directory as shown below:
-> > 
-> > /sys/class/leds/<led>/colors/<color>_intensity
-> > 
-> > This is in line with one-value-per-file sysfs rule, that is being
-> > frequently highlighted, and we even had not so long ago a patch
-> > for led cpu trigger solving the problem caused by this rule not
-> > being adhered to.
-> 
-> Yep. One of the problems is that it is nice to change all the hardware
-> channels at once to produce color (it is often on i2c -- and slow), so
-> current proposals use "interesting" kind of latching.
-> 
-> > Now we have the voice below bringing to attention another caveat
-> > from sysfs documentation:
-> > 
-> > "it is socially acceptable to express an array of values of the same
-> > type"
-> > 
-> > and proposing the interface in the form of two files:
-> > 
-> > channel_intensity (file containing array of u32's)
-> > channel_names (usually containing "red green blue")
-> 
-> And thus I want to have it in one file, so it is naturaly atomic. RGB
-> leds with 3 channels are common; I have not user yet, but there are
-> RGBW with 4 channels (and some more exotic stuff). I don't expect to
-> have more than 5 channels.
+In a recent change to the SPI subsystem [1], a new `delay` struct was added
+to replace the `delay_usecs`. This change replaces the current
+`delay_usecs` with `delay` for this driver.
 
-Writing 3 or 4 or 5 numbers all at once in a single sysfs file to
-represent a single output should be fine.
+The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
+that both `delay_usecs` & `delay` are used (in this order to preserve
+backwards compatibility).
 
-thanks,
+[1] commit bebcfd272df6 ("spi: introduce `delay` field for
+`spi_transfer` + spi_transfer_delay_exec()")
 
-greg k-h
+Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+---
+ drivers/input/keyboard/applespi.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/input/keyboard/applespi.c b/drivers/input/keyboard/applespi.c
+index d38398526965..d6a847e5f7e4 100644
+--- a/drivers/input/keyboard/applespi.c
++++ b/drivers/input/keyboard/applespi.c
+@@ -545,7 +545,8 @@ static void applespi_setup_read_txfrs(struct applespi_data *applespi)
+ 	memset(dl_t, 0, sizeof(*dl_t));
+ 	memset(rd_t, 0, sizeof(*rd_t));
+ 
+-	dl_t->delay_usecs = applespi->spi_settings.spi_cs_delay;
++	dl_t->delay.value = applespi->spi_settings.spi_cs_delay;
++	dl_t->delay.unit = SPI_DELAY_UNIT_USECS;
+ 
+ 	rd_t->rx_buf = applespi->rx_buffer;
+ 	rd_t->len = APPLESPI_PACKET_SIZE;
+@@ -574,14 +575,17 @@ static void applespi_setup_write_txfrs(struct applespi_data *applespi)
+ 	 * end up with an extra unnecessary (but harmless) cs assertion and
+ 	 * deassertion.
+ 	 */
+-	wt_t->delay_usecs = SPI_RW_CHG_DELAY_US;
++	wt_t->delay.value = SPI_RW_CHG_DELAY_US;
++	wt_t->delay.unit = SPI_DELAY_UNIT_USECS;
+ 	wt_t->cs_change = 1;
+ 
+-	dl_t->delay_usecs = applespi->spi_settings.spi_cs_delay;
++	dl_t->delay.value = applespi->spi_settings.spi_cs_delay;
++	dl_t->delay.unit = SPI_DELAY_UNIT_USECS;
+ 
+ 	wr_t->tx_buf = applespi->tx_buffer;
+ 	wr_t->len = APPLESPI_PACKET_SIZE;
+-	wr_t->delay_usecs = SPI_RW_CHG_DELAY_US;
++	wr_t->delay.value = SPI_RW_CHG_DELAY_US;
++	wr_t->delay.unit = SPI_DELAY_UNIT_USECS;
+ 
+ 	st_t->rx_buf = applespi->tx_status;
+ 	st_t->len = APPLESPI_STATUS_SIZE;
+-- 
+2.17.1
+
