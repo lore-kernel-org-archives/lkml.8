@@ -2,52 +2,52 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46917C3F349
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA07C3F372
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F29652084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20C9D20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811450;
-	bh=boCaJ9AjUkm8HQ1bECcY0cYl3TSL6GThXcOQvvRZlhA=;
+	s=default; t=1582811485;
+	bh=zPI+G63XN7GA5JIiv3P2eKVG5/EXsBnIsCOe9KKoThs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x/xLNZlsmAm1/W9FBEqibWosMKhsNcE8icdcb8zcr837iF89uj+/o9CefMNe5GeK0
-	 GMOZL8NWXd8ijZxwJWuyU3n8SKHcQgorhCrZQtNiJr8J6WY4ZvdLgQ8uzQOqWEqS1L
-	 yBxKb1DcEI4CgtUe+VdBukHv47SmIaMZtXnsSzgY=
+	b=ahLW+wvfbQXav78SFbnjYHWRqv5XFe4XRjKsYqTY/sJ6cHAjsLw+tesZs7iQdnPeO
+	 dh/64ul9oZYqmhBrUodrrqH2pc1y4ddohF504DqpHni2yUkdhrbFw27VC7kOwpqcsP
+	 +NQmvvvDZYc+oxoNfBZ9Ol3NRG8ms6VThIoVWXTo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731276AbgB0Nun (ORCPT
+        id S1731384AbgB0NvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:50:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48872 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:51:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731254AbgB0Nug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:50:36 -0500
+        id S1731370AbgB0NvT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:51:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D69C20578;
-        Thu, 27 Feb 2020 13:50:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A383520578;
+        Thu, 27 Feb 2020 13:51:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811435;
-        bh=boCaJ9AjUkm8HQ1bECcY0cYl3TSL6GThXcOQvvRZlhA=;
+        s=default; t=1582811479;
+        bh=zPI+G63XN7GA5JIiv3P2eKVG5/EXsBnIsCOe9KKoThs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c6tSug40LnuCIFpNugHcXlnTYKYQY8PefaHaSeZBb2ZPgdYlttnrENJaQgDv1hrtd
-         Y/wtB8P8zYxme9dQr91O3Cqmx7xxwjU7GQC21f6msddBP3qwgOPDKcbJHrK8GbnfF/
-         gA/6bnSnB09oN/9xWwgLfFwAbZAJTQVsjiG1EDBk=
+        b=M3qul+TgLOGVJzoMBj5ebcuzRMEONdbkCwMpTbQgHF453bBQeNmFGllYLcc85I+yr
+         JWgjYl/Nl2Ennq2M0ctX6A3hSUcXU+QI7f+lhiWUL4y/ZB1p2u7aeY3Ja+Xm+DAlhG
+         a2GPjrYy4MnPNQfgTQwWXGZ3YmTP5PC2FS/u+QPo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 093/165] driver core: platform: fix u32 greater or equal to zero comparison
-Date:   Thu, 27 Feb 2020 14:36:07 +0100
-Message-Id: <20200227132244.897097243@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        stable@kernel.org
+Subject: [PATCH 4.9 148/165] ext4: rename s_journal_flag_rwsem to s_writepages_rwsem
+Date:   Thu, 27 Feb 2020 14:37:02 +0100
+Message-Id: <20200227132252.381564558@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -60,41 +60,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 0707cfa5c3ef58effb143db9db6d6e20503f9dec ]
+commit bbd55937de8f2754adc5792b0f8e5ff7d9c0420e upstream.
 
-Currently the check that a u32 variable i is >= 0 is always true because
-the unsigned variable will never be negative, causing the loop to run
-forever.  Fix this by changing the pre-decrement check to a zero check on
-i followed by a decrement of i.
+In preparation for making s_journal_flag_rwsem synchronize
+ext4_writepages() with changes to both the EXTENTS and JOURNAL_DATA
+flags (rather than just JOURNAL_DATA as it does currently), rename it to
+s_writepages_rwsem.
 
-Addresses-Coverity: ("Unsigned compared against 0")
-Fixes: 39cc539f90d0 ("driver core: platform: Prevent resouce overflow from causing infinite loops")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Link: https://lore.kernel.org/r/20200116175758.88396-1-colin.king@canonical.com
+Link: https://lore.kernel.org/r/20200219183047.47417-2-ebiggers@kernel.org
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/base/platform.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 6cdc198965f5a..bef299ef62276 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -418,7 +418,7 @@ int platform_device_add(struct platform_device *pdev)
- 		pdev->id = PLATFORM_DEVID_AUTO;
+---
+ fs/ext4/ext4.h  |    2 +-
+ fs/ext4/inode.c |   10 +++++-----
+ fs/ext4/super.c |    6 +++---
+ 3 files changed, 9 insertions(+), 9 deletions(-)
+
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -1515,7 +1515,7 @@ struct ext4_sb_info {
+ 	struct ratelimit_state s_msg_ratelimit_state;
+ 
+ 	/* Barrier between changing inodes' journal flags and writepages ops. */
+-	struct percpu_rw_semaphore s_journal_flag_rwsem;
++	struct percpu_rw_semaphore s_writepages_rwsem;
+ 
+ 	/* Encryption support */
+ #ifdef CONFIG_EXT4_FS_ENCRYPTION
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -2652,7 +2652,7 @@ static int ext4_writepages(struct addres
+ 	struct blk_plug plug;
+ 	bool give_up_on_write = false;
+ 
+-	percpu_down_read(&sbi->s_journal_flag_rwsem);
++	percpu_down_read(&sbi->s_writepages_rwsem);
+ 	trace_ext4_writepages(inode, wbc);
+ 
+ 	if (dax_mapping(mapping)) {
+@@ -2853,7 +2853,7 @@ retry:
+ out_writepages:
+ 	trace_ext4_writepages_result(inode, wbc, ret,
+ 				     nr_to_write - wbc->nr_to_write);
+-	percpu_up_read(&sbi->s_journal_flag_rwsem);
++	percpu_up_read(&sbi->s_writepages_rwsem);
+ 	return ret;
+ }
+ 
+@@ -5688,7 +5688,7 @@ int ext4_change_inode_journal_flag(struc
+ 		}
  	}
  
--	while (--i >= 0) {
-+	while (i--) {
- 		struct resource *r = &pdev->resource[i];
- 		if (r->parent)
- 			release_resource(r);
--- 
-2.20.1
-
+-	percpu_down_write(&sbi->s_journal_flag_rwsem);
++	percpu_down_write(&sbi->s_writepages_rwsem);
+ 	jbd2_journal_lock_updates(journal);
+ 
+ 	/*
+@@ -5705,7 +5705,7 @@ int ext4_change_inode_journal_flag(struc
+ 		err = jbd2_journal_flush(journal);
+ 		if (err < 0) {
+ 			jbd2_journal_unlock_updates(journal);
+-			percpu_up_write(&sbi->s_journal_flag_rwsem);
++			percpu_up_write(&sbi->s_writepages_rwsem);
+ 			ext4_inode_resume_unlocked_dio(inode);
+ 			return err;
+ 		}
+@@ -5714,7 +5714,7 @@ int ext4_change_inode_journal_flag(struc
+ 	ext4_set_aops(inode);
+ 
+ 	jbd2_journal_unlock_updates(journal);
+-	percpu_up_write(&sbi->s_journal_flag_rwsem);
++	percpu_up_write(&sbi->s_writepages_rwsem);
+ 
+ 	if (val)
+ 		up_write(&EXT4_I(inode)->i_mmap_sem);
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -865,7 +865,7 @@ static void ext4_put_super(struct super_
+ 	percpu_counter_destroy(&sbi->s_freeinodes_counter);
+ 	percpu_counter_destroy(&sbi->s_dirs_counter);
+ 	percpu_counter_destroy(&sbi->s_dirtyclusters_counter);
+-	percpu_free_rwsem(&sbi->s_journal_flag_rwsem);
++	percpu_free_rwsem(&sbi->s_writepages_rwsem);
+ 	brelse(sbi->s_sbh);
+ #ifdef CONFIG_QUOTA
+ 	for (i = 0; i < EXT4_MAXQUOTAS; i++)
+@@ -4223,7 +4223,7 @@ no_journal:
+ 		err = percpu_counter_init(&sbi->s_dirtyclusters_counter, 0,
+ 					  GFP_KERNEL);
+ 	if (!err)
+-		err = percpu_init_rwsem(&sbi->s_journal_flag_rwsem);
++		err = percpu_init_rwsem(&sbi->s_writepages_rwsem);
+ 
+ 	if (err) {
+ 		ext4_msg(sb, KERN_ERR, "insufficient memory");
+@@ -4322,7 +4322,7 @@ failed_mount6:
+ 	percpu_counter_destroy(&sbi->s_freeinodes_counter);
+ 	percpu_counter_destroy(&sbi->s_dirs_counter);
+ 	percpu_counter_destroy(&sbi->s_dirtyclusters_counter);
+-	percpu_free_rwsem(&sbi->s_journal_flag_rwsem);
++	percpu_free_rwsem(&sbi->s_writepages_rwsem);
+ failed_mount5:
+ 	ext4_ext_release(sb);
+ 	ext4_release_system_zone(sb);
 
 
