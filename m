@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE28C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DFBC35E0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 037C420801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2CB524697
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:31:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813870;
-	bh=mrtOhv2bAUzWQQXwPb0/OSm7lZmeSixm0DRUqFTk9Mo=;
+	s=default; t=1582813876;
+	bh=+pzRS0Eq/EejrHs1nCrQ67XWl4l3uQT0FLGO4g6YOfo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sTXzczkR07YGY7KuIzC+B773GScGeUXAzqEJzvtEM7WqMWHk5ZAdFi3RMYy4/BjUm
-	 m0kKvVq+HqAYVHMhgp/MXVNsy65KUubKy79aKvknSB6RY2VJfvPX8/hE30ai+8tCmd
-	 I+1uvTHS6z6hrCwqo497SSaPHLH/0RVL9zj8lqVU=
+	b=fK5L9zpqaiM6V/lg+diFQZHn8cXEDqluLwYEwnxInRILlx9C6q5Y4+Jxv28Za8KPa
+	 OZ1NSwGkGsGMHWukeWWVWGqaigGSCIZvhQkDxD+A/EiXVzcYVhsi+FQsb5Wz+NZP+Q
+	 hMrWK8/y1/XJxwlJFP2wWHUxMokjiZm+4s9bKF+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387531AbgB0OEH (ORCPT
+        id S2387958AbgB0ObP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:04:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39662 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:31:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387491AbgB0ODz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:03:55 -0500
+        id S2387519AbgB0OEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:04:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45D5020578;
-        Thu, 27 Feb 2020 14:03:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B8A721556;
+        Thu, 27 Feb 2020 14:04:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812234;
-        bh=mrtOhv2bAUzWQQXwPb0/OSm7lZmeSixm0DRUqFTk9Mo=;
+        s=default; t=1582812244;
+        bh=+pzRS0Eq/EejrHs1nCrQ67XWl4l3uQT0FLGO4g6YOfo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KwNRhbTaKEY3yFa6X0LlSMhZ5TOdyR0Caoup2c/YVX4IYAAtOvCPasarJr8D9ql2O
-         wGkjCHun35oK5cOHOiKxCVzkxmMGQwAoPrmnEqPdSaUKHXlZDo8o+pqDC1BJjFCyHO
-         Owz91VG5lvF7m816Qv4DUBLPBdm9petMqgoGTEU4=
+        b=y+OnMnGKY1IKwtDiYvzqKCjUw1X6LiZCyY7wa1Z5zIv+9qqN/6AayjcHLZZwjU7Sm
+         awfhFwDHeI8CuS9p8Ox4GrV9up4BNLgApAiNUKnHaYQ12kqPRtpqsGTdEXvCVwjsW8
+         46tdPN4uGzdtDNaN3WiulZlE8KYV9OwrtjCHXU7A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Saar Amar <Saar.Amar@microsoft.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Borislav Petkov <bp@suse.de>
-Subject: [PATCH 4.19 37/97] x86/mce/amd: Publish the bank pointer only after setup has succeeded
-Date:   Thu, 27 Feb 2020 14:36:45 +0100
-Message-Id: <20200227132220.626313876@linuxfoundation.org>
+        stable@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
+        Kurt Kanzenbach <kurt@linutronix.de>,
+        Vikram Pandita <vikram.pandita@ti.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 4.19 40/97] serial: 8250: Check UPF_IRQ_SHARED in advance
+Date:   Thu, 27 Feb 2020 14:36:48 +0100
+Message-Id: <20200227132221.097160479@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
 References: <20200227132214.553656188@linuxfoundation.org>
@@ -60,104 +61,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit 6e5cf31fbe651bed7ba1df768f2e123531132417 upstream.
+commit 7febbcbc48fc92e3f33863b32ed715ba4aff18c4 upstream.
 
-threshold_create_bank() creates a bank descriptor per MCA error
-thresholding counter which can be controlled over sysfs. It publishes
-the pointer to that bank in a per-CPU variable and then goes on to
-create additional thresholding blocks if the bank has such.
+The commit 54e53b2e8081
+  ("tty: serial: 8250: pass IRQ shared flag to UART ports")
+nicely explained the problem:
 
-However, that creation of additional blocks in
-allocate_threshold_blocks() can fail, leading to a use-after-free
-through the per-CPU pointer.
+---8<---8<---
 
-Therefore, publish that pointer only after all blocks have been setup
-successfully.
+On some systems IRQ lines between multiple UARTs might be shared. If so, the
+irqflags have to be configured accordingly. The reason is: The 8250 port startup
+code performs IRQ tests *before* the IRQ handler for that particular port is
+registered. This is performed in serial8250_do_startup(). This function checks
+whether IRQF_SHARED is configured and only then disables the IRQ line while
+testing.
 
-Fixes: 019f34fccfd5 ("x86, MCE, AMD: Move shared bank to node descriptor")
-Reported-by: Saar Amar <Saar.Amar@microsoft.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200128140846.phctkvx5btiexvbx@kili.mountain
+This test is performed upon each open() of the UART device. Imagine two UARTs
+share the same IRQ line: On is already opened and the IRQ is active. When the
+second UART is opened, the IRQ line has to be disabled while performing IRQ
+tests. Otherwise an IRQ might handler might be invoked, but the IRQ itself
+cannot be handled, because the corresponding handler isn't registered,
+yet. That's because the 8250 code uses a chain-handler and invokes the
+corresponding port's IRQ handling routines himself.
+
+Unfortunately this IRQF_SHARED flag isn't configured for UARTs probed via device
+tree even if the IRQs are shared. This way, the actual and shared IRQ line isn't
+disabled while performing tests and the kernel correctly detects a spurious
+IRQ. So, adding this flag to the DT probe solves the issue.
+
+Note: The UPF_SHARE_IRQ flag is configured unconditionally. Therefore, the
+IRQF_SHARED flag can be set unconditionally as well.
+
+Example stack trace by performing `echo 1 > /dev/ttyS2` on a non-patched system:
+
+|irq 85: nobody cared (try booting with the "irqpoll" option)
+| [...]
+|handlers:
+|[<ffff0000080fc628>] irq_default_primary_handler threaded [<ffff00000855fbb8>] serial8250_interrupt
+|Disabling IRQ #85
+
+---8<---8<---
+
+But unfortunately didn't fix the root cause. Let's try again here by moving
+IRQ flag assignment from serial_link_irq_chain() to serial8250_do_startup().
+
+This should fix the similar issue reported for 8250_pnp case.
+
+Since this change we don't need to have custom solutions in 8250_aspeed_vuart
+and 8250_of drivers, thus, drop them.
+
+Fixes: 1c2f04937b3e ("serial: 8250: add IRQ trigger support")
+Reported-by: Li RongQing <lirongqing@baidu.com>
+Cc: Kurt Kanzenbach <kurt@linutronix.de>
+Cc: Vikram Pandita <vikram.pandita@ti.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: stable <stable@vger.kernel.org>
+Acked-by: Kurt Kanzenbach <kurt@linutronix.de>
+Link: https://lore.kernel.org/r/20200211135559.85960-1-andriy.shevchenko@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/cpu/mcheck/mce_amd.c |   33 ++++++++++++++++-----------------
- 1 file changed, 16 insertions(+), 17 deletions(-)
+ drivers/tty/serial/8250/8250_aspeed_vuart.c |    1 -
+ drivers/tty/serial/8250/8250_core.c         |    5 ++---
+ drivers/tty/serial/8250/8250_of.c           |    1 -
+ drivers/tty/serial/8250/8250_port.c         |    4 ++++
+ 4 files changed, 6 insertions(+), 5 deletions(-)
 
---- a/arch/x86/kernel/cpu/mcheck/mce_amd.c
-+++ b/arch/x86/kernel/cpu/mcheck/mce_amd.c
-@@ -1152,8 +1152,9 @@ static const char *get_name(unsigned int
- 	return buf_mcatype;
- }
+--- a/drivers/tty/serial/8250/8250_aspeed_vuart.c
++++ b/drivers/tty/serial/8250/8250_aspeed_vuart.c
+@@ -375,7 +375,6 @@ static int aspeed_vuart_probe(struct pla
+ 		port.port.line = rc;
  
--static int allocate_threshold_blocks(unsigned int cpu, unsigned int bank,
--				     unsigned int block, u32 address)
-+static int allocate_threshold_blocks(unsigned int cpu, struct threshold_bank *tb,
-+				     unsigned int bank, unsigned int block,
-+				     u32 address)
- {
- 	struct threshold_block *b = NULL;
- 	u32 low, high;
-@@ -1197,16 +1198,12 @@ static int allocate_threshold_blocks(uns
+ 	port.port.irq = irq_of_parse_and_map(np, 0);
+-	port.port.irqflags = IRQF_SHARED;
+ 	port.port.handle_irq = aspeed_vuart_handle_irq;
+ 	port.port.iotype = UPIO_MEM;
+ 	port.port.type = PORT_16550A;
+--- a/drivers/tty/serial/8250/8250_core.c
++++ b/drivers/tty/serial/8250/8250_core.c
+@@ -177,7 +177,7 @@ static int serial_link_irq_chain(struct
+ 	struct hlist_head *h;
+ 	struct hlist_node *n;
+ 	struct irq_info *i;
+-	int ret, irq_flags = up->port.flags & UPF_SHARE_IRQ ? IRQF_SHARED : 0;
++	int ret;
  
- 	INIT_LIST_HEAD(&b->miscj);
+ 	mutex_lock(&hash_mutex);
  
--	if (per_cpu(threshold_banks, cpu)[bank]->blocks) {
--		list_add(&b->miscj,
--			 &per_cpu(threshold_banks, cpu)[bank]->blocks->miscj);
--	} else {
--		per_cpu(threshold_banks, cpu)[bank]->blocks = b;
--	}
-+	if (tb->blocks)
-+		list_add(&b->miscj, &tb->blocks->miscj);
-+	else
-+		tb->blocks = b;
- 
--	err = kobject_init_and_add(&b->kobj, &threshold_ktype,
--				   per_cpu(threshold_banks, cpu)[bank]->kobj,
--				   get_name(bank, b));
-+	err = kobject_init_and_add(&b->kobj, &threshold_ktype, tb->kobj, get_name(bank, b));
- 	if (err)
- 		goto out_free;
- recurse:
-@@ -1214,7 +1211,7 @@ recurse:
- 	if (!address)
- 		return 0;
- 
--	err = allocate_threshold_blocks(cpu, bank, block, address);
-+	err = allocate_threshold_blocks(cpu, tb, bank, block, address);
- 	if (err)
- 		goto out_free;
- 
-@@ -1299,8 +1296,6 @@ static int threshold_create_bank(unsigne
- 		goto out_free;
+@@ -212,9 +212,8 @@ static int serial_link_irq_chain(struct
+ 		INIT_LIST_HEAD(&up->list);
+ 		i->head = &up->list;
+ 		spin_unlock_irq(&i->lock);
+-		irq_flags |= up->port.irqflags;
+ 		ret = request_irq(up->port.irq, serial8250_interrupt,
+-				  irq_flags, up->port.name, i);
++				  up->port.irqflags, up->port.name, i);
+ 		if (ret < 0)
+ 			serial_do_unlink(i, up);
  	}
+--- a/drivers/tty/serial/8250/8250_of.c
++++ b/drivers/tty/serial/8250/8250_of.c
+@@ -171,7 +171,6 @@ static int of_platform_serial_setup(stru
  
--	per_cpu(threshold_banks, cpu)[bank] = b;
--
- 	if (is_shared_bank(bank)) {
- 		refcount_set(&b->cpus, 1);
+ 	port->type = type;
+ 	port->uartclk = clk;
+-	port->irqflags |= IRQF_SHARED;
  
-@@ -1311,9 +1306,13 @@ static int threshold_create_bank(unsigne
+ 	if (of_property_read_bool(np, "no-loopback-test"))
+ 		port->flags |= UPF_SKIP_TEST;
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -2253,6 +2253,10 @@ int serial8250_do_startup(struct uart_po
  		}
  	}
  
--	err = allocate_threshold_blocks(cpu, bank, 0, msr_ops.misc(bank));
--	if (!err)
--		goto out;
-+	err = allocate_threshold_blocks(cpu, b, bank, 0, msr_ops.misc(bank));
-+	if (err)
-+		goto out_free;
++	/* Check if we need to have shared IRQs */
++	if (port->irq && (up->port.flags & UPF_SHARE_IRQ))
++		up->port.irqflags |= IRQF_SHARED;
 +
-+	per_cpu(threshold_banks, cpu)[bank] = b;
-+
-+	return 0;
- 
-  out_free:
- 	kfree(b);
+ 	if (port->irq && !(up->port.flags & UPF_NO_THRE_TEST)) {
+ 		unsigned char iir1;
+ 		/*
 
 
