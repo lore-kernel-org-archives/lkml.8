@@ -2,125 +2,143 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF789C3F2C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3A5C3F2C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C35CD246A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:12:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fDKEw6TO"
+	by mail.kernel.org (Postfix) with ESMTP id 5D55B246A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:16:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582838174;
+	bh=UrHtwRX+59wxj5FsZ103No416/pe7XwytFFHZcMTKG0=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=N5mClV+IkMHvIQ/5WZ1NRB68BDP8dB+MymYz+BO3OuXrEC9Qq1QTCgistn0EamGdQ
+	 gi6D8bYuMxgLxWzWEDS9osaYdoSW9+NU2wQ5VLDBG2v5iJ5+S5uNGfa9zL+c8ybZ+k
+	 UMDO0buTE0S2LJXYDFni1br79oyBOOBHu0Qlfrf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729956AbgB0VM0 (ORCPT
+        id S1729708AbgB0VQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 16:12:26 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:38024 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbgB0VMZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 16:12:25 -0500
-Received: by mail-yw1-f68.google.com with SMTP id 10so1036441ywv.5;
-        Thu, 27 Feb 2020 13:12:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=tsMhk98GzPgpcErAxRpJjxVe9/TO3Gwgz+pYvXXSyds=;
-        b=fDKEw6TOTnfDJTZ+XYkXKPvUW3h8IbJfS9HdA9cubhD+9s307B8p/b5CBK2BzTJPo8
-         +iuRdZJ7qrkHhWQql9HclIBzL8VNZN5ByV2an66CeWTEAcjzT7sWLSeJuMcwUnUz8UaY
-         4kny427QNBfPL/9hNq5AJJArd5JXz4kWX9GVe4lZmLzAS/4ZZZDC0fCWNX+vmbiqytOa
-         qJVC1PROqJ8hPUTP2/W1ZjmImBOMRQWfWWJ0Z+JB3Pj+Ngu3A/GQJcHoMje92Lb0zd1N
-         lm0RPHHYufH37yySJCs65NP87A3nkmy/fFjPMAzh/ppYfbekYc/kV9EZa7bplswQN8HH
-         d8fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tsMhk98GzPgpcErAxRpJjxVe9/TO3Gwgz+pYvXXSyds=;
-        b=PaVWnwg+iMpWPzn6NhLIseUUYOwWVwUxwCPN0djAGDKf4ZDtGEcb7fPmJs/iDCdELs
-         nNBDV664MB803Chufp19m9kk3hII8MTg2Lv6myYCSaRg4OkjM6bc6+6FltKu1HCaJLOX
-         RE6WiFFdijpleY/rr8qJRwA7OND4Uzsw/7Q6Hdgl6GONfqd3m4QqfumG+Om5S+dHHn2Q
-         0dPoDLF1V4Mk9qI9BDi1ryGz0cEbtTWgm/LPB4D0c7ZSpp/YQ2HosfYAyjO1GCXhYS4w
-         kdq2SfmuQ9dlzbhzQrbX6QHAYXoDYgk3lfpargiEwDbBLCgLXNLL9ZiJAurb+047/CAp
-         kMOg==
-X-Gm-Message-State: APjAAAVd/uhAeX8BtU5X6KVDO9xIRSo0Ies9xSeK5dlcLF9YnRlVQC0C
-        Ll+K9hp1z5cPidy//PBsc3ZboMjs
-X-Google-Smtp-Source: APXvYqxbOPF4d1PWj+9QXa5jghXS/+e5SEzFkoJU/d7A8wINmDIWlmCIjPZmvpgNfwxnWeXg+H3vaQ==
-X-Received: by 2002:a0d:f086:: with SMTP id z128mr1301805ywe.450.1582837943818;
-        Thu, 27 Feb 2020 13:12:23 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id x84sm3028467ywg.47.2020.02.27.13.12.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Feb 2020 13:12:23 -0800 (PST)
-Subject: Re: linux-next: Tree for Feb 27 (drivers/of/unittest.c)
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-References: <20200227152223.3d8442f0@canb.auug.org.au>
- <ed57c797-1d40-0786-2cdc-adae7047a86f@infradead.org>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <0bd9179f-c448-c40d-f520-d568547bc810@gmail.com>
-Date:   Thu, 27 Feb 2020 15:12:22 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 27 Feb 2020 16:16:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46256 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726758AbgB0VQM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 16:16:12 -0500
+Received: from paulmck-ThinkPad-P72.home (unknown [163.114.132.128])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23631246A1;
+        Thu, 27 Feb 2020 21:16:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582838172;
+        bh=UrHtwRX+59wxj5FsZ103No416/pe7XwytFFHZcMTKG0=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=Lzi9gISWF37BTk5WlvsEV0DmcMyXH7kVG9kJkP8IIfk1Q0UYPIC2zvCNX7Y/BHNXK
+         i6na91nmvmvY4KaL+/elQnQhyzC41efAbYMxC8hi4ONKbfN/c02JVWCf1spjgMqI3D
+         RbT+57gypKIq4ki6CWYnhFVcfPJzhWO0dMHGX5lI=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 9A73F35226F3; Thu, 27 Feb 2020 13:16:11 -0800 (PST)
+Date:   Thu, 27 Feb 2020 13:16:11 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     madhuparnabhowmik10@gmail.com
+Cc:     josh@joshtriplett.org, rostedt@goodmis.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        joel@joelfernandes.org, linux-kernel@vger.kernel.org,
+        Amol Grover <frextrite@gmail.com>
+Subject: Re: [PATCH] Enable RCU list lockdep debugging and drop
+ CONFIG_PROVE_RCU_LIST
+Message-ID: <20200227211611.GF2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200227202355.6163-1-madhuparnabhowmik10@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <ed57c797-1d40-0786-2cdc-adae7047a86f@infradead.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227202355.6163-1-madhuparnabhowmik10@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Randy,
-
-On 2/27/20 10:23 AM, Randy Dunlap wrote:
-> On 2/26/20 8:22 PM, Stephen Rothwell wrote:
->> Hi all,
->>
->> Changes since 20200226:
->>
+On Fri, Feb 28, 2020 at 01:53:55AM +0530, madhuparnabhowmik10@gmail.com wrote:
+> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 > 
-> on x86_64:
+> This patch drops the CONFIG_PROVE_RCU_LIST option and instead
+> uses CONFIG_PROVE_RCU for RCU list lockdep debugging.
 > 
-> # CONFIG_GPIOLIB is not set
+> With this change, RCU list lockdep debugging will be default
+> enabled in CONFIG_PROVE_RCU=y kernels.
 > 
-> ../drivers/of/unittest.c: In function ‘unittest_gpio_probe’:
-> ../drivers/of/unittest.c:94:14: error: ‘struct gpio_chip’ has no member named ‘of_node’
->   devptr->chip.of_node = pdev->dev.of_node;
->               ^
-> In file included from ../include/linux/kernel.h:15:0,
->                  from ../include/asm-generic/bug.h:19,
->                  from ../arch/x86/include/asm/bug.h:83,
->                  from ../include/linux/bug.h:5,
->                  from ../include/linux/mmdebug.h:5,
->                  from ../include/linux/mm.h:9,
->                  from ../include/linux/memblock.h:13,
->                  from ../drivers/of/unittest.c:8:
-> ../drivers/of/unittest.c:103:73: error: ‘struct gpio_chip’ has no member named ‘of_node’
->     "gpiochip_add_data() for node @%pOF failed, ret = %d\n", devptr->chip.of_node, ret);
->                                                                          ^
+> Most of the RCU users (in core kernel/, drivers/, and net/
+> subsystem) have already been modified to include lockdep
+> expressions hence RCU list debugging can be enabled by
+> default.
 > 
-> Full randconfig file is attached.
+> However, there are still chances of enountering
+> false-positive lockdep splats because not everything is converted,
+> in case RCU list primitives are used in non-RCU read-side critical
+> section but under the protection of a lock. It would be okay to
+> have a few false-positives, as long as bugs are identified, since this
+> patch only affects debugging kernels.
 > 
+> Co-developed-by: Amol Grover <frextrite@gmail.com>
+> Signed-off-by: Amol Grover <frextrite@gmail.com>
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-I am trying to build a kernel with the randconfig you provided.
+Good idea, but could you please left PROVE_RCU_LIST and "select" it from
+CONFIG_PROVE_RCU instead?  This gets the same effect, but also makes it
+easier to change our minds later if we wish to.  It also makes it easier
+to find the various different types of debugging.
 
-I am trying to figure out how to build with the exact configuration,
-but every way I've tried to build modifies the .config file.
+For a template, please see how CONFIG_PROVE_LOCKING controls the
+value of CONFIG_PROVE_RCU in kernel/rcu/Kconfig.debug.
 
-Do you have any pointers to info on how to get the build system
-to use exactly the .config without modification?
+							Thanx, Paul
 
-(Just in case it is pertinent, I am using Linux 5.6-rc1 instead
-of -next.)
-
--Frank
+> ---
+>  include/linux/rculist.h  |  2 +-
+>  kernel/rcu/Kconfig.debug | 11 -----------
+>  2 files changed, 1 insertion(+), 12 deletions(-)
+> 
+> diff --git a/include/linux/rculist.h b/include/linux/rculist.h
+> index 63726577c6b8..f517eb421b5e 100644
+> --- a/include/linux/rculist.h
+> +++ b/include/linux/rculist.h
+> @@ -56,7 +56,7 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
+>  
+>  #define check_arg_count_one(dummy)
+>  
+> -#ifdef CONFIG_PROVE_RCU_LIST
+> +#ifdef CONFIG_PROVE_RCU
+>  #define __list_check_rcu(dummy, cond, extra...)				\
+>  	({								\
+>  	check_arg_count_one(extra);					\
+> diff --git a/kernel/rcu/Kconfig.debug b/kernel/rcu/Kconfig.debug
+> index 4aa02eee8f6c..5ec3ea4028e2 100644
+> --- a/kernel/rcu/Kconfig.debug
+> +++ b/kernel/rcu/Kconfig.debug
+> @@ -8,17 +8,6 @@ menu "RCU Debugging"
+>  config PROVE_RCU
+>  	def_bool PROVE_LOCKING
+>  
+> -config PROVE_RCU_LIST
+> -	bool "RCU list lockdep debugging"
+> -	depends on PROVE_RCU && RCU_EXPERT
+> -	default n
+> -	help
+> -	  Enable RCU lockdep checking for list usages. By default it is
+> -	  turned off since there are several list RCU users that still
+> -	  need to be converted to pass a lockdep expression. To prevent
+> -	  false-positive splats, we keep it default disabled but once all
+> -	  users are converted, we can remove this config option.
+> -
+>  config TORTURE_TEST
+>  	tristate
+>  	default n
+> -- 
+> 2.17.1
+> 
