@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE59C7659B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E711C76594
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BAC024688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0144724688
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:35:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814164;
-	bh=i6x5Qh8hMlaagzIr8Q9WVmUCG+H+9lNY3RPagOVKOHc=;
+	s=default; t=1582814150;
+	bh=S0yGJG0Id9N1yY6MyKdC5gdWa6cxWpV1/yYUVgykXEg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u91+yboqFzXu8qMFWZERXhIYOaF0bcOpezZJcyKQWiOHvXbbPnrLi5TIqyl9Gkaw/
-	 +/rlePFJS/rdyl90p2JtZIPZyNCLJcr9kIMbDbPp0LREz8oucJ5QvboKQNa4H4vYo7
-	 posoBnNsjM6dwNejmBV17+5t+rGNI2gMq5CPiuYw=
+	b=hB28rQiZ3T4J8+m3NkyZ1VNZcHrUCJbRlDByABgyES60gc3pdE7+MczL/emPgMDmx
+	 ayntfBliFNf9IZOAtnZm0YdNGLsYCJIWkqLaCkKIaaLvqmgxNJ8tuFgJbvuhjmmfWR
+	 duDN47PbrCAsf+cCryzoJlsH2Pgtxoa6tK7pAkPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387834AbgB0OgD (ORCPT
+        id S1732641AbgB0N7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:36:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32792 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:59:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732463AbgB0N7h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:59:37 -0500
+        id S1732633AbgB0N7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:59:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7358B20578;
-        Thu, 27 Feb 2020 13:59:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DB4B20578;
+        Thu, 27 Feb 2020 13:59:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811976;
-        bh=i6x5Qh8hMlaagzIr8Q9WVmUCG+H+9lNY3RPagOVKOHc=;
+        s=default; t=1582811982;
+        bh=S0yGJG0Id9N1yY6MyKdC5gdWa6cxWpV1/yYUVgykXEg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RILeiyty255WzpCa6M/CuI1slU2EgQIsAXtM30YAoBYZ1Oo2/oUNjB84s1Wp0wS+u
-         mxEqN18GhWzUv4L6SEQHIzC8tqePJiTdqmeDGvCqyWfuUgqh6lzj4vJW5xRGDtQoob
-         3/o49VQqtbIzgyJMNMPZbadjVCcOMjDytfDT6ayc=
+        b=V0ydJYk59tHvBowLVopOmnkmiJbX/haxgz205dzK6dZZPJI2WJ0Ebqkk0RhuO4WXR
+         cBxEyIMW+iPeC1HvoSIsbwWCMpcxjmFSxjabKTL7dBIiJRLQnWssaHil4rKDh/SBSo
+         xqoRsgjdEfTZ6oIC7567Op7wh2MxvpGCWTHr2qHQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Jung <jung@codemercs.com>
-Subject: [PATCH 4.14 174/237] USB: misc: iowarrior: add support for the 28 and 28L devices
-Date:   Thu, 27 Feb 2020 14:36:28 +0100
-Message-Id: <20200227132309.217146827@linuxfoundation.org>
+        stable@vger.kernel.org, Jordy Zomer <jordy@simplyhacker.com>,
+        Willy Tarreau <w@1wt.eu>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 176/237] floppy: check FDC index for errors before assigning it
+Date:   Thu, 27 Feb 2020 14:36:30 +0100
+Message-Id: <20200227132309.349166224@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -58,74 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit 5f6f8da2d7b5a431d3f391d0d73ace8edfb42af7 upstream.
+commit 2e90ca68b0d2f5548804f22f0dd61145516171e3 upstream.
 
-Add new device ids for the 28 and 28L devices.  These have 4 interfaces
-instead of 2, but the driver binds the same, so the driver changes are
-minimal.
+Jordy Zomer reported a KASAN out-of-bounds read in the floppy driver in
+wait_til_ready().
 
-Cc: Christoph Jung <jung@codemercs.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200212040422.2991-2-gregkh@linuxfoundation.org
+Which on the face of it can't happen, since as Willy Tarreau points out,
+the function does no particular memory access.  Except through the FDCS
+macro, which just indexes a static allocation through teh current fdc,
+which is always checked against N_FDC.
+
+Except the checking happens after we've already assigned the value.
+
+The floppy driver is a disgrace (a lot of it going back to my original
+horrd "design"), and has no real maintainer.  Nobody has the hardware,
+and nobody really cares.  But it still gets used in virtual environment
+because it's one of those things that everybody supports.
+
+The whole thing should be re-written, or at least parts of it should be
+seriously cleaned up.  The 'current fdc' index, which is used by the
+FDCS macro, and which is often shadowed by a local 'fdc' variable, is a
+prime example of how not to write code.
+
+But because nobody has the hardware or the motivation, let's just fix up
+the immediate problem with a nasty band-aid: test the fdc index before
+actually assigning it to the static 'fdc' variable.
+
+Reported-by: Jordy Zomer <jordy@simplyhacker.com>
+Cc: Willy Tarreau <w@1wt.eu>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/iowarrior.c |   15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ drivers/block/floppy.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/misc/iowarrior.c
-+++ b/drivers/usb/misc/iowarrior.c
-@@ -32,6 +32,9 @@
- #define USB_DEVICE_ID_CODEMERCS_IOWPV2	0x1512
- /* full speed iowarrior */
- #define USB_DEVICE_ID_CODEMERCS_IOW56	0x1503
-+/* fuller speed iowarrior */
-+#define USB_DEVICE_ID_CODEMERCS_IOW28	0x1504
-+#define USB_DEVICE_ID_CODEMERCS_IOW28L	0x1505
- 
- /* OEMed devices */
- #define USB_DEVICE_ID_CODEMERCS_IOW24SAG	0x158a
-@@ -143,6 +146,8 @@ static const struct usb_device_id iowarr
- 	{USB_DEVICE(USB_VENDOR_ID_CODEMERCS, USB_DEVICE_ID_CODEMERCS_IOW56)},
- 	{USB_DEVICE(USB_VENDOR_ID_CODEMERCS, USB_DEVICE_ID_CODEMERCS_IOW24SAG)},
- 	{USB_DEVICE(USB_VENDOR_ID_CODEMERCS, USB_DEVICE_ID_CODEMERCS_IOW56AM)},
-+	{USB_DEVICE(USB_VENDOR_ID_CODEMERCS, USB_DEVICE_ID_CODEMERCS_IOW28)},
-+	{USB_DEVICE(USB_VENDOR_ID_CODEMERCS, USB_DEVICE_ID_CODEMERCS_IOW28L)},
- 	{}			/* Terminating entry */
- };
- MODULE_DEVICE_TABLE(usb, iowarrior_ids);
-@@ -386,6 +391,8 @@ static ssize_t iowarrior_write(struct fi
- 		break;
- 	case USB_DEVICE_ID_CODEMERCS_IOW56:
- 	case USB_DEVICE_ID_CODEMERCS_IOW56AM:
-+	case USB_DEVICE_ID_CODEMERCS_IOW28:
-+	case USB_DEVICE_ID_CODEMERCS_IOW28L:
- 		/* The IOW56 uses asynchronous IO and more urbs */
- 		if (atomic_read(&dev->write_busy) == MAX_WRITES_IN_FLIGHT) {
- 			/* Wait until we are below the limit for submitted urbs */
-@@ -796,7 +803,9 @@ static int iowarrior_probe(struct usb_in
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -848,14 +848,17 @@ static void reset_fdc_info(int mode)
+ /* selects the fdc and drive, and enables the fdc's input/dma. */
+ static void set_fdc(int drive)
+ {
++	unsigned int new_fdc = fdc;
++
+ 	if (drive >= 0 && drive < N_DRIVE) {
+-		fdc = FDC(drive);
++		new_fdc = FDC(drive);
+ 		current_drive = drive;
  	}
- 
- 	if ((dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56) ||
--	    (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56AM)) {
-+	    (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56AM) ||
-+	    (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28) ||
-+	    (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28L)) {
- 		res = usb_find_last_int_out_endpoint(iface_desc,
- 				&dev->int_out_endpoint);
- 		if (res) {
-@@ -810,7 +819,9 @@ static int iowarrior_probe(struct usb_in
- 	dev->report_size = usb_endpoint_maxp(dev->int_in_endpoint);
- 	if ((dev->interface->cur_altsetting->desc.bInterfaceNumber == 0) &&
- 	    ((dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56) ||
--	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56AM)))
-+	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56AM) ||
-+	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28) ||
-+	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28L)))
- 		/* IOWarrior56 has wMaxPacketSize different from report size */
- 		dev->report_size = 7;
- 
+-	if (fdc != 1 && fdc != 0) {
++	if (new_fdc >= N_FDC) {
+ 		pr_info("bad fdc value\n");
+ 		return;
+ 	}
++	fdc = new_fdc;
+ 	set_dor(fdc, ~0, 8);
+ #if N_FDC > 1
+ 	set_dor(1 - fdc, ~8, 0);
 
 
