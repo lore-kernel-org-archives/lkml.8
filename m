@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE63C35E17
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 680DBC35E15
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C6A42469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4016820726
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:41:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582810872;
-	bh=yi9QOP/il3GJcu7Kn35kfDf8jWGVv+A/VKq1CrPmysg=;
+	s=default; t=1582810880;
+	bh=/uhP3ZwQ5abxbXuZsmYwVHtt+b2kPXwWmXQHgMYq7mE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=18a7avbCpACJWZdmo7Le3AL6IdDbqHRtfX0nVYzsa+zO4tRThrcP/DCG/btUHjDKQ
-	 kSUxgPw8NIQqEiv9XoFhMDUHwdzQ/3rVrBC2QVURyyyY3cX/NJza+Bc6G/SXR0h4Lq
-	 EWOf9HjVVSy+NysOGVLl7RQbnPvw5zuwp6hY4z3s=
+	b=HB3JWQQrhrdQWUEJoM7n4oRbbyB0oxOvfS2vglnOD9fCb0PooDkM4ctJsQkml937L
+	 mJ4BoscEoX3aDafbgO3Qnu6qhBnXomqan431uLxScmHy/sLphjfip7qyrmTb+4HeGW
+	 ayzoAkujCSQIyEGX6IjbxZPu8F0o1RgQfk7GGEQY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729525AbgB0NlL (ORCPT
+        id S1729558AbgB0NlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:41:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35698 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:41:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729502AbgB0NlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:41:08 -0500
+        id S1729502AbgB0NlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:41:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6433220578;
-        Thu, 27 Feb 2020 13:41:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 617D720578;
+        Thu, 27 Feb 2020 13:41:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582810867;
-        bh=yi9QOP/il3GJcu7Kn35kfDf8jWGVv+A/VKq1CrPmysg=;
+        s=default; t=1582810872;
+        bh=/uhP3ZwQ5abxbXuZsmYwVHtt+b2kPXwWmXQHgMYq7mE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Oc1bvhtUwsvyYAPPkmilejCow9BWqOZsUoxXAKWw9mhLFEtzvTAdY1t0mHimzuiB5
-         4j/PMaDnShq1uBLhsbORNPta3dP8mrsqWg22qtJ2wguOC6gfrWf2qi8+cS3JW2NsIQ
-         OgAuCZFXCQJhhNe5jxDWrTFB/mcOaCKQ8vPvoziY=
+        b=NIZSOCCIUIDujhnp2jd/zo8FcYW15IJFDSZ7sx9D1GdimWElmWeP8ToBs3G94Ep/S
+         rzw8kyQtxjAinhQhnJl+GksTkuPsV2rzFFGI3ycZOSThBojos2eKIdzK0IJ+PYhicZ
+         YFrvPe9ZR7Ium+883S0rg/nGd15fvgb/NRKPJnlg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Luis Henriques <luis.henriques@canonical.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 029/113] nfs: NFS_SWAP should depend on SWAP
-Date:   Thu, 27 Feb 2020 14:35:45 +0100
-Message-Id: <20200227132216.370596761@linuxfoundation.org>
+Subject: [PATCH 4.4 031/113] tracing: Fix very unlikely race of registering two stat tracers
+Date:   Thu, 27 Feb 2020 14:35:47 +0100
+Message-Id: <20200227132216.707719460@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
 References: <20200227132211.791484803@linuxfoundation.org>
@@ -61,40 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-[ Upstream commit 474c4f306eefbb21b67ebd1de802d005c7d7ecdc ]
+[ Upstream commit dfb6cd1e654315168e36d947471bd2a0ccd834ae ]
 
-If CONFIG_SWAP=n, it does not make much sense to offer the user the
-option to enable support for swapping over NFS, as that will still fail
-at run time:
+Looking through old emails in my INBOX, I came across a patch from Luis
+Henriques that attempted to fix a race of two stat tracers registering the
+same stat trace (extremely unlikely, as this is done in the kernel, and
+probably doesn't even exist). The submitted patch wasn't quite right as it
+needed to deal with clean up a bit better (if two stat tracers were the
+same, it would have the same files).
 
-    # swapon /swap
-    swapon: /swap: swapon failed: Function not implemented
+But to make the code cleaner, all we needed to do is to keep the
+all_stat_sessions_mutex held for most of the registering function.
 
-Fix this by adding a dependency on CONFIG_SWAP.
+Link: http://lkml.kernel.org/r/1410299375-20068-1-git-send-email-luis.henriques@canonical.com
 
-Fixes: a564b8f0398636ba ("nfs: enable swap on NFS")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Fixes: 002bb86d8d42f ("tracing/ftrace: separate events tracing and stats tracing engine")
+Reported-by: Luis Henriques <luis.henriques@canonical.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace_stat.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
-diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
-index b1daeafbea920..c3428767332c2 100644
---- a/fs/nfs/Kconfig
-+++ b/fs/nfs/Kconfig
-@@ -89,7 +89,7 @@ config NFS_V4
- config NFS_SWAP
- 	bool "Provide swap over NFS support"
- 	default n
--	depends on NFS_FS
-+	depends on NFS_FS && SWAP
- 	select SUNRPC_SWAP
- 	help
- 	  This option enables swapon to work on files located on NFS mounts.
+diff --git a/kernel/trace/trace_stat.c b/kernel/trace/trace_stat.c
+index 6cf9353167696..a2081a7f0c2cd 100644
+--- a/kernel/trace/trace_stat.c
++++ b/kernel/trace/trace_stat.c
+@@ -302,7 +302,7 @@ static int init_stat_file(struct stat_session *session)
+ int register_stat_tracer(struct tracer_stat *trace)
+ {
+ 	struct stat_session *session, *node;
+-	int ret;
++	int ret = -EINVAL;
+ 
+ 	if (!trace)
+ 		return -EINVAL;
+@@ -313,17 +313,15 @@ int register_stat_tracer(struct tracer_stat *trace)
+ 	/* Already registered? */
+ 	mutex_lock(&all_stat_sessions_mutex);
+ 	list_for_each_entry(node, &all_stat_sessions, session_list) {
+-		if (node->ts == trace) {
+-			mutex_unlock(&all_stat_sessions_mutex);
+-			return -EINVAL;
+-		}
++		if (node->ts == trace)
++			goto out;
+ 	}
+-	mutex_unlock(&all_stat_sessions_mutex);
+ 
++	ret = -ENOMEM;
+ 	/* Init the session */
+ 	session = kzalloc(sizeof(*session), GFP_KERNEL);
+ 	if (!session)
+-		return -ENOMEM;
++		goto out;
+ 
+ 	session->ts = trace;
+ 	INIT_LIST_HEAD(&session->session_list);
+@@ -332,15 +330,16 @@ int register_stat_tracer(struct tracer_stat *trace)
+ 	ret = init_stat_file(session);
+ 	if (ret) {
+ 		destroy_session(session);
+-		return ret;
++		goto out;
+ 	}
+ 
++	ret = 0;
+ 	/* Register */
+-	mutex_lock(&all_stat_sessions_mutex);
+ 	list_add_tail(&session->session_list, &all_stat_sessions);
++ out:
+ 	mutex_unlock(&all_stat_sessions_mutex);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ void unregister_stat_tracer(struct tracer_stat *trace)
 -- 
 2.20.1
 
