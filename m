@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43473C3F352
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA698C3F353
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 121D724656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6720246A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:43:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811014;
-	bh=bsY2Ez2fjYKqL4INXHo6t0AnfkI2oIAHfv+cfuoZhC0=;
+	s=default; t=1582811019;
+	bh=2Q4c/sIWhZgo3m9iu4W8f4+/LGZhyEmn/WSfWt0XLVY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xLMNFSxbAwY7FxF+HGAa+4vREp59NbbgFBdcmlZ6w60QQ4JGwSkgRp4j6PAWlzt2M
-	 Egfp2PVSb6FETo89iRDPaOLDfHsmliC85DqMLPQbvFLE8L89jPo/CMHhP4Nlu9eqUh
-	 68FCVkFutmY2UOf3V3fRFT79nvr773qCzV2EPANE=
+	b=EIYaDTGES/QyI9XPrpnzw3OmY81vmn8abuFbRluK2gTJ19qddDqUsTZzyItjD0LyL
+	 4sSyxRMhFriGy66OkdNLjb8WRx9uMDQbPXWkox7c4ULNSO/JkfOcN1H1Wl3gilmoUl
+	 z5scmt1XdVVkqYk6O4p8c7AmxOYSmPxals/w+GxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729304AbgB0Nnc (ORCPT
+        id S1730002AbgB0Nni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:43:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38706 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:43:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729458AbgB0Nn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:43:29 -0500
+        id S1729992AbgB0Nnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:43:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC96C20578;
-        Thu, 27 Feb 2020 13:43:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD30621D7E;
+        Thu, 27 Feb 2020 13:43:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811009;
-        bh=bsY2Ez2fjYKqL4INXHo6t0AnfkI2oIAHfv+cfuoZhC0=;
+        s=default; t=1582811014;
+        bh=2Q4c/sIWhZgo3m9iu4W8f4+/LGZhyEmn/WSfWt0XLVY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jpV8c6ONedMemG9qXiAS218wg+t0C8CIyW6Upm6JxobesSkOY3w+Z1tM9oClH4xie
-         rf9MJZ4K0CUJcM0BE3cj+Eg3CuwVNT6JdlafJoo7wfoGjx7xikOHul+Vrxrn52U5KE
-         lWyGrZq0fr9V65dF+WEvfS3Oy0i1+Z33vIwVh+nY=
+        b=GWlGW6YQ3bYiKW76M/2Dblm/pYvzNlCLEKbwT/klNfz6o+z152ulkmkZLlmjYvtzu
+         R8FnjUoPZbwf5IzSfOtfHc15d92Ct+4Vjj0KU2CWRvgZSrL+htwrMjxOi27/LYZzQf
+         tGxZDyCpPrGLGPIZhKVZ+CGZjlzodVxAXgJ09UV8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
+        Jaihind Yadav <jaihindyadav@codeaurora.org>,
+        Ravi Kumar Siddojigari <rsiddoji@codeaurora.org>,
+        Paul Moore <paul@paul-moore.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 081/113] microblaze: Prevent the overflow of the start
-Date:   Thu, 27 Feb 2020 14:36:37 +0100
-Message-Id: <20200227132224.745809443@linuxfoundation.org>
+Subject: [PATCH 4.4 083/113] selinux: ensure we cleanup the internal AVC counters on error in avc_update()
+Date:   Thu, 27 Feb 2020 14:36:39 +0100
+Message-Id: <20200227132225.050004539@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
 References: <20200227132211.791484803@linuxfoundation.org>
@@ -61,35 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+From: Jaihind Yadav <jaihindyadav@codeaurora.org>
 
-[ Upstream commit 061d2c1d593076424c910cb1b64ecdb5c9a6923f ]
+[ Upstream commit 030b995ad9ece9fa2d218af4429c1c78c2342096 ]
 
-In case the start + cache size is more than the max int the
-start overflows.
-Prevent the same.
+In AVC update we don't call avc_node_kill() when avc_xperms_populate()
+fails, resulting in the avc->avc_cache.active_nodes counter having a
+false value.  In last patch this changes was missed , so correcting it.
 
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Fixes: fa1aa143ac4a ("selinux: extended permissions for ioctls")
+Signed-off-by: Jaihind Yadav <jaihindyadav@codeaurora.org>
+Signed-off-by: Ravi Kumar Siddojigari <rsiddoji@codeaurora.org>
+[PM: merge fuzz, minor description cleanup]
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/microblaze/kernel/cpu/cache.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ security/selinux/avc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/microblaze/kernel/cpu/cache.c b/arch/microblaze/kernel/cpu/cache.c
-index 0bde47e4fa694..dcba53803fa5f 100644
---- a/arch/microblaze/kernel/cpu/cache.c
-+++ b/arch/microblaze/kernel/cpu/cache.c
-@@ -92,7 +92,8 @@ static inline void __disable_dcache_nomsr(void)
- #define CACHE_LOOP_LIMITS(start, end, cache_line_length, cache_size)	\
- do {									\
- 	int align = ~(cache_line_length - 1);				\
--	end = min(start + cache_size, end);				\
-+	if (start <  UINT_MAX - cache_size)				\
-+		end = min(start + cache_size, end);			\
- 	start &= align;							\
- } while (0)
- 
+diff --git a/security/selinux/avc.c b/security/selinux/avc.c
+index 52f3c550abcc4..f3c473791b698 100644
+--- a/security/selinux/avc.c
++++ b/security/selinux/avc.c
+@@ -865,7 +865,7 @@ static int avc_update_node(u32 event, u32 perms, u8 driver, u8 xperm, u32 ssid,
+ 	if (orig->ae.xp_node) {
+ 		rc = avc_xperms_populate(node, orig->ae.xp_node);
+ 		if (rc) {
+-			kmem_cache_free(avc_node_cachep, node);
++			avc_node_kill(node);
+ 			goto out_unlock;
+ 		}
+ 	}
 -- 
 2.20.1
 
