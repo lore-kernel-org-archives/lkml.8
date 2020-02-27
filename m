@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0E0C52D20
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C570C3F368
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 367C224656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:09:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F4FE24691
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812563;
-	bh=vJaNTU8zSb9HaUMYb/1v/ZOoPd5jm4mXAI/E2YV4/vs=;
+	s=default; t=1582812552;
+	bh=/N/Zzy75PVs3te+xDvgGtvNhWvS2dss1xvvFHApiltc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l/5McjCQB8MpFR2JVnFQ78eM/xX9ocDcs2eKnFFDtOoVTRsEXENZrsFweEza/O4gi
-	 A+G5uZ3Aks3rCkWgZ+18vZWx12yRe7C/E2h7yFFAXkoaJxaMOEm19DHClUnverCIDu
-	 EAJpdSHTd+Ziv8yWhtKR1AFHI9+IA1AzTPBWBLE8=
+	b=Bi9XMCfHN4zCA7nUrmNyzeF8SDTuyAmjzopyhbjrz/dxgr+0JuQ0XX7Mzv/+ugQXh
+	 wBwP/0eeFQFrUnidPfpzM35v45oOAEJkT0xdCx7veGYjQCbo8vJQm4Hyxq3aJDd2Sh
+	 4aHSBwD2rA19dSxXARjF5zy/6NR4MNoJ99dCQUvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388382AbgB0OJW (ORCPT
+        id S2388132AbgB0OJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:09:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47238 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:09:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733305AbgB0OJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:09:18 -0500
+        id S2388335AbgB0OJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:09:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B38620714;
-        Thu, 27 Feb 2020 14:09:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B43E24656;
+        Thu, 27 Feb 2020 14:09:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812557;
-        bh=vJaNTU8zSb9HaUMYb/1v/ZOoPd5jm4mXAI/E2YV4/vs=;
+        s=default; t=1582812546;
+        bh=/N/Zzy75PVs3te+xDvgGtvNhWvS2dss1xvvFHApiltc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q6aNNAkgzyFsZLuvN6JpiStbpl7YiNnV5ntXkJNkIsA9meb9EWrpL5H/EFPMOEk7B
-         SjJXUU7ZYk1jx2eMW3ZrFX1LWrJF2QQMZS5D7iLSrdxGkl3AZZYQWf3nngaBrkbO69
-         zcSoTlbCPoyHqmlmV0SwfLIW0HOiJq5FVvYQk+QE=
+        b=2hZDGHv4pzmmqiCj/wvICjQ2cB+YKE3z3HdqRV+e6cfZdqfET90XZzyB4T8YzGcVv
+         SikLVyaoDJcjo0XAKzBsWHKA/to4rJrJ5ke7Cd8cAhBbpoDKdq0eGuAZhJ4P10XUhl
+         M0JBX2w6WizQyIkPIt2fd20F4E1Dz4RZomDEE7J0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 5.4 025/135] xhci: apply XHCI_PME_STUCK_QUIRK to Intel Comet Lake platforms
-Date:   Thu, 27 Feb 2020 14:36:05 +0100
-Message-Id: <20200227132232.969739996@linuxfoundation.org>
+        stable@vger.kernel.org, satya priya <skakit@codeaurora.org>
+Subject: [PATCH 5.4 058/135] tty: serial: qcom_geni_serial: Fix RX cancel command failure
+Date:   Thu, 27 Feb 2020 14:36:38 +0100
+Message-Id: <20200227132237.768120779@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -59,41 +58,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: satya priya <skakit@codeaurora.org>
 
-commit a3ae87dce3a5abe0b57c811bab02b2564b574106 upstream.
+commit 679aac5ead2f18d223554a52b543e1195e181811 upstream.
 
-Intel Comet Lake based platform require the XHCI_PME_STUCK_QUIRK
-quirk as well. Without this xHC can not enter D3 in runtime suspend.
+RX cancel command fails when BT is switched on and off multiple times.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200210134553.9144-5-mathias.nyman@linux.intel.com
+To handle this, poll for the cancel bit in SE_GENI_S_IRQ_STATUS register
+instead of SE_GENI_S_CMD_CTRL_REG.
+
+As per the HPG update, handle the RX last bit after cancel command
+and flush out the RX FIFO buffer.
+
+Signed-off-by: satya priya <skakit@codeaurora.org>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1581415982-8793-1-git-send-email-skakit@codeaurora.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-pci.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/tty/serial/qcom_geni_serial.c |   18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -49,6 +49,7 @@
- #define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_4C_XHCI		0x15ec
- #define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_DD_XHCI		0x15f0
- #define PCI_DEVICE_ID_INTEL_ICE_LAKE_XHCI		0x8a13
-+#define PCI_DEVICE_ID_INTEL_CML_XHCI			0xa3af
+--- a/drivers/tty/serial/qcom_geni_serial.c
++++ b/drivers/tty/serial/qcom_geni_serial.c
+@@ -125,6 +125,7 @@ static int handle_rx_console(struct uart
+ static int handle_rx_uart(struct uart_port *uport, u32 bytes, bool drop);
+ static unsigned int qcom_geni_serial_tx_empty(struct uart_port *port);
+ static void qcom_geni_serial_stop_rx(struct uart_port *uport);
++static void qcom_geni_serial_handle_rx(struct uart_port *uport, bool drop);
  
- #define PCI_DEVICE_ID_AMD_PROMONTORYA_4			0x43b9
- #define PCI_DEVICE_ID_AMD_PROMONTORYA_3			0x43ba
-@@ -187,7 +188,8 @@ static void xhci_pci_quirks(struct devic
- 		 pdev->device == PCI_DEVICE_ID_INTEL_BROXTON_M_XHCI ||
- 		 pdev->device == PCI_DEVICE_ID_INTEL_BROXTON_B_XHCI ||
- 		 pdev->device == PCI_DEVICE_ID_INTEL_APL_XHCI ||
--		 pdev->device == PCI_DEVICE_ID_INTEL_DNV_XHCI)) {
-+		 pdev->device == PCI_DEVICE_ID_INTEL_DNV_XHCI ||
-+		 pdev->device == PCI_DEVICE_ID_INTEL_CML_XHCI)) {
- 		xhci->quirks |= XHCI_PME_STUCK_QUIRK;
- 	}
- 	if (pdev->vendor == PCI_VENDOR_ID_INTEL &&
+ static const unsigned long root_freq[] = {7372800, 14745600, 19200000, 29491200,
+ 					32000000, 48000000, 64000000, 80000000,
+@@ -615,7 +616,7 @@ static void qcom_geni_serial_stop_rx(str
+ 	u32 irq_en;
+ 	u32 status;
+ 	struct qcom_geni_serial_port *port = to_dev_port(uport, uport);
+-	u32 irq_clear = S_CMD_DONE_EN;
++	u32 s_irq_status;
+ 
+ 	irq_en = readl(uport->membase + SE_GENI_S_IRQ_EN);
+ 	irq_en &= ~(S_RX_FIFO_WATERMARK_EN | S_RX_FIFO_LAST_EN);
+@@ -631,10 +632,19 @@ static void qcom_geni_serial_stop_rx(str
+ 		return;
+ 
+ 	geni_se_cancel_s_cmd(&port->se);
+-	qcom_geni_serial_poll_bit(uport, SE_GENI_S_CMD_CTRL_REG,
+-					S_GENI_CMD_CANCEL, false);
++	qcom_geni_serial_poll_bit(uport, SE_GENI_S_IRQ_STATUS,
++					S_CMD_CANCEL_EN, true);
++	/*
++	 * If timeout occurs secondary engine remains active
++	 * and Abort sequence is executed.
++	 */
++	s_irq_status = readl(uport->membase + SE_GENI_S_IRQ_STATUS);
++	/* Flush the Rx buffer */
++	if (s_irq_status & S_RX_FIFO_LAST_EN)
++		qcom_geni_serial_handle_rx(uport, true);
++	writel(s_irq_status, uport->membase + SE_GENI_S_IRQ_CLEAR);
++
+ 	status = readl(uport->membase + SE_GENI_STATUS);
+-	writel(irq_clear, uport->membase + SE_GENI_S_IRQ_CLEAR);
+ 	if (status & S_GENI_CMD_ACTIVE)
+ 		qcom_geni_serial_abort_rx(uport);
+ }
 
 
