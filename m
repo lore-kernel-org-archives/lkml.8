@@ -2,89 +2,163 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 185B8C35677
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE6DC35DF1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7F70246A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:34:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8353F246A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:34:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Shxap+36"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730384AbgB0ReX (ORCPT
+        id S1730447AbgB0Re0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 12:34:23 -0500
-Received: from muru.com ([72.249.23.125]:58076 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729512AbgB0ReW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 12:34:22 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 12E2F80C0;
-        Thu, 27 Feb 2020 17:35:06 +0000 (UTC)
-Date:   Thu, 27 Feb 2020 09:34:19 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     santosh.shilimkar@oracle.com
-Cc:     Dave Gerlach <d-gerlach@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 0/5] ARM: OMAP2+: Introduce cpuidle for am335x/am437x
-Message-ID: <20200227173419.GG37466@atomide.com>
-References: <20191213030755.16096-1-d-gerlach@ti.com>
- <20191213150344.GJ35479@atomide.com>
- <20200226184328.GY37466@atomide.com>
- <5d775a75-3013-fac2-91e3-ac1967b0f698@oracle.com>
+        Thu, 27 Feb 2020 12:34:26 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25824 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729678AbgB0ReZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 12:34:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582824864;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JIy4soTckrnNxIx60AnqK7b811MaH6RrRiwbpQXEFw0=;
+        b=Shxap+36t61ZN/S52XrGY27G3pOpNv6as8LVdPv84pYDh7WwZgkEZi136riQ5feq8PtB/J
+        5vVobmJNaUJa1GJIG+58DyuYSSEwWBJdj3NU8Il1RKJiXvIPe8NqMAw8w6Uy3biuSCN3Z3
+        YAIoCgjMmQoUZB8r8T20lW5+jZCRYSY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-168-IVUUXeErOcCf36RRUaAqvA-1; Thu, 27 Feb 2020 12:34:16 -0500
+X-MC-Unique: IVUUXeErOcCf36RRUaAqvA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 26AD2800D54;
+        Thu, 27 Feb 2020 17:34:15 +0000 (UTC)
+Received: from gondolin (ovpn-117-2.ams2.redhat.com [10.36.117.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BAE625C578;
+        Thu, 27 Feb 2020 17:34:10 +0000 (UTC)
+Date:   Thu, 27 Feb 2020 18:34:07 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dev@dpdk.org, mtosatti@redhat.com,
+        thomas@monjalon.net, bluca@debian.org, jerinjacobk@gmail.com,
+        bruce.richardson@intel.com
+Subject: Re: [PATCH v2 4/7] vfio: Introduce VFIO_DEVICE_FEATURE ioctl and
+ first user
+Message-ID: <20200227183407.74a5c5b4.cohuck@redhat.com>
+In-Reply-To: <158213845865.17090.13613582696110253458.stgit@gimli.home>
+References: <158213716959.17090.8399427017403507114.stgit@gimli.home>
+        <158213845865.17090.13613582696110253458.stgit@gimli.home>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5d775a75-3013-fac2-91e3-ac1967b0f698@oracle.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* santosh.shilimkar@oracle.com <santosh.shilimkar@oracle.com> [200226 19:56]:
-> On 2/26/20 10:43 AM, Tony Lindgren wrote:
-> > Santosh,
-> > 
-> > * Tony Lindgren <tony@atomide.com> [191213 15:04]:
-> > > * Dave Gerlach <d-gerlach@ti.com> [191212 19:07]:
-> > > > Hi,
-> > > > This series adds support for cpuidle on am335x and am437x using the
-> > > > cpuidle_arm driver. When testing on am335x-evm and am437x-gp-evm the
-> > > > follow power consumption reductions are seen on v5.5-rc1 baseline:
-> > > > 
-> > > > 
-> > > > Idling at command line, CPUFreq userspace governor to 300MHz:
-> > > >    am335x-evm:
-> > > >      VDD_MPU: 48 mW -> 5 mW
-> > > > 
-> > > >    am437x-gp-evm:
-> > > >      VDD_MPU: 32 mW -> 3 mW
-> > > > 
-> > > > 
-> > > > Idling at command line, CPUFreq userspace governor to 1GHz:
-> > > >    am335x-evm:
-> > > >      VDD_MPU: 313 mW -> 18 mW
-> > > > 
-> > > >    am437x-gp-evm:
-> > > >      VDD_MPU: 208 mW -> 10 mW
-> > > 
-> > > Hey this is great! A beverage on me when we get a chance :)
-> > > 
-> > > For merging, looks like I should take the series after folks are happy
-> > > with it. Santosh, care to review and ack if it looks OK?
-> > 
-> > Looks like this series of changes is still pending. Care
-> > to ack?
-> > 
-> Was scanning this series today. It looks good to me Tony.
+On Wed, 19 Feb 2020 11:54:18 -0700
+Alex Williamson <alex.williamson@redhat.com> wrote:
+
+> The VFIO_DEVICE_FEATURE ioctl is meant to be a general purpose, device
+> agnostic ioctl for setting, retrieving, and probing device features.
+> This implementation provides a 16-bit field for specifying a feature
+> index, where the data porition of the ioctl is determined by the
+> semantics for the given feature.  Additional flag bits indicate the
+> direction and nature of the operation; SET indicates user data is
+> provided into the device feature, GET indicates the device feature is
+> written out into user data.  The PROBE flag augments determining
+> whether the given feature is supported, and if provided, whether the
+> given operation on the feature is supported.
 > 
-> Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
+> The first user of this ioctl is for setting the vfio-pci VF token,
+> where the user provides a shared secret key (UUID) on a SR-IOV PF
+> device, which users must provide when opening associated VF devices.
+> 
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> ---
+>  drivers/vfio/pci/vfio_pci.c |   52 +++++++++++++++++++++++++++++++++++++++++++
+>  include/uapi/linux/vfio.h   |   37 +++++++++++++++++++++++++++++++
+>  2 files changed, 89 insertions(+)
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> index 8dd6ef9543ca..e4d5d26e5e71 100644
+> --- a/drivers/vfio/pci/vfio_pci.c
+> +++ b/drivers/vfio/pci/vfio_pci.c
+> @@ -1180,6 +1180,58 @@ static long vfio_pci_ioctl(void *device_data,
+>  
+>  		return vfio_pci_ioeventfd(vdev, ioeventfd.offset,
+>  					  ioeventfd.data, count, ioeventfd.fd);
+> +	} else if (cmd == VFIO_DEVICE_FEATURE) {
+> +		struct vfio_device_feature feature;
+> +		uuid_t uuid;
+> +
+> +		minsz = offsetofend(struct vfio_device_feature, flags);
+> +
+> +		if (copy_from_user(&feature, (void __user *)arg, minsz))
+> +			return -EFAULT;
+> +
+> +		if (feature.argsz < minsz)
+> +			return -EINVAL;
+> +
+> +		if (feature.flags & ~(VFIO_DEVICE_FEATURE_MASK |
+> +				      VFIO_DEVICE_FEATURE_SET |
+> +				      VFIO_DEVICE_FEATURE_GET |
+> +				      VFIO_DEVICE_FEATURE_PROBE))
+> +			return -EINVAL;
 
-Thanks applying this series into omap-for-v5.7/pm33xx.
+GET|SET|PROBE is well-defined, but what about GET|SET without PROBE? Do
+we want to fence this in the generic ioctl handler part? Or is there
+any sane way to implement that (read and then write back something?)
 
-Regards,
+> +
+> +		switch (feature.flags & VFIO_DEVICE_FEATURE_MASK) {
+> +		case VFIO_DEVICE_FEATURE_PCI_VF_TOKEN:
+> +			if (!vdev->vf_token)
+> +				return -ENOTTY;
+> +
+> +			/*
+> +			 * We do not support GET of the VF Token UUID as this
+> +			 * could expose the token of the previous device user.
+> +			 */
+> +			if (feature.flags & VFIO_DEVICE_FEATURE_GET)
+> +				return -EINVAL;
+> +
+> +			if (feature.flags & VFIO_DEVICE_FEATURE_PROBE)
+> +				return 0;
+> +
+> +			/* Don't SET unless told to do so */
+> +			if (!(feature.flags & VFIO_DEVICE_FEATURE_SET))
+> +				return -EINVAL;
+> +
+> +			if (feature.argsz < minsz + sizeof(uuid))
+> +				return -EINVAL;
+> +
+> +			if (copy_from_user(&uuid, (void __user *)(arg + minsz),
+> +					   sizeof(uuid)))
+> +				return -EFAULT;
+> +
+> +			mutex_lock(&vdev->vf_token->lock);
+> +			uuid_copy(&vdev->vf_token->uuid, &uuid);
+> +			mutex_unlock(&vdev->vf_token->lock);
+> +
+> +			return 0;
+> +		default:
+> +			return -ENOTTY;
+> +		}
+>  	}
+>  
+>  	return -ENOTTY;
+(...)
 
-Tony
