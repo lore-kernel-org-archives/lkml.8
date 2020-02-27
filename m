@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4704C52D46
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A707C76573
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B04724688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:26:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31DD724656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:28:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813596;
-	bh=OplUeZx0IXYjIbcexHEFD7xTQr5eyEdeBJJSWhU1C1k=;
+	s=default; t=1582813690;
+	bh=ImgNB/z+9lNWbrJyxI5t4XZKpkhiRLRHF/MHapmegAw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O8Rin7M3oQpaqlFuyR1hM4ZT2pKCcmEsWfB6ltOvX39nxN2l6UtdOaXwnluFaENTp
-	 Qz1TjIbDQKl4yC7vGBJcxziWeg/c5EltU5XrjF8fr4t3p7KgUitU1/V8DrbA/62bex
-	 HdMdO/ia7ft3ULqxoAAKJSNsb5VrlBKR1uUyot/M=
+	b=xgTrdfn5e7ZRByEDqb+diC2Gb13F7GO9d3WOOUzph94y3Q+QjesvEOCNprU/i6iCK
+	 Xpelg9k/ySe8wTesRKywCVIHabzPqze7v4WxFkNXOMWXc+4Hob2Y83avoCn0EWxS6y
+	 QkiZvRp+q/5nr7bi8iLyvfOIB5sJXXpeoS+ycxe4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388181AbgB0O0e (ORCPT
+        id S2388214AbgB0O2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:26:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47970 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:28:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388426AbgB0OJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:09:54 -0500
+        id S2388195AbgB0OIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:08:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E307D20578;
-        Thu, 27 Feb 2020 14:09:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D7C520578;
+        Thu, 27 Feb 2020 14:08:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812593;
-        bh=OplUeZx0IXYjIbcexHEFD7xTQr5eyEdeBJJSWhU1C1k=;
+        s=default; t=1582812484;
+        bh=ImgNB/z+9lNWbrJyxI5t4XZKpkhiRLRHF/MHapmegAw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TjsDwMOAB4p0XSSLmAlCcWd2PcALDjhPkL3pd1q8eRFzyRfWoNzvl/zcYOgOrxoQM
-         NKUlNy9umhbQksTz7qnBVNNKcQDSulQPDURF/F7KBqQu1zFeU/bDUm/fKBhTavMFbA
-         0oDASzS+hfmBJu5246xtXevY49t1F7lSQoHFuEjg=
+        b=U3WdK5RagMUWb0NuqpxrUUmYheJf6BtRZF/Yax8LJUvG4xvbqSHcMzzYnQGo2TEJw
+         GN0gsN45X62hZDlk9A02/025uR8NYmATowpdeGvJx5FSe3qZmQMFWkjlHERTIrYedT
+         GXD3aO9wwaBQXVWqnSaAlecp9r1y7g/DWzHFwzK8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.4 078/135] KVM: x86: dont notify userspace IOAPIC on edge-triggered interrupt EOI
-Date:   Thu, 27 Feb 2020 14:36:58 +0100
-Message-Id: <20200227132241.142358474@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH 5.4 036/135] usb: dwc3: debug: fix string position formatting mixup with ret and len
+Date:   Thu, 27 Feb 2020 14:36:16 +0100
+Message-Id: <20200227132234.392432944@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -59,38 +59,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit 7455a8327674e1a7c9a1f5dd1b0743ab6713f6d1 upstream.
+commit b32196e35bd7bbc8038db1aba1fbf022dc469b6a upstream.
 
-Commit 13db77347db1 ("KVM: x86: don't notify userspace IOAPIC on edge
-EOI") said, edge-triggered interrupts don't set a bit in TMR, which means
-that IOAPIC isn't notified on EOI. And var level indicates level-triggered
-interrupt.
-But commit 3159d36ad799 ("KVM: x86: use generic function for MSI parsing")
-replace var level with irq.level by mistake. Fix it by changing irq.level
-to irq.trig_mode.
+Currently the string formatting is mixing up the offset of ret and
+len. Re-work the code to use just len, remove ret and use scnprintf
+instead of snprintf and len position accumulation where required.
+Remove the -ve return check since scnprintf never returns a failure
+-ve size. Also break overly long lines to clean up checkpatch
+warnings.
 
-Cc: stable@vger.kernel.org
-Fixes: 3159d36ad799 ("KVM: x86: use generic function for MSI parsing")
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Addresses-Coverity: ("Unused value")
+Fixes: 1381a5113caf ("usb: dwc3: debug: purge usage of strcat")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200210095139.328711-1-colin.king@canonical.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/irq_comm.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/dwc3/debug.h |   39 +++++++++++++++------------------------
+ 1 file changed, 15 insertions(+), 24 deletions(-)
 
---- a/arch/x86/kvm/irq_comm.c
-+++ b/arch/x86/kvm/irq_comm.c
-@@ -416,7 +416,7 @@ void kvm_scan_ioapic_routes(struct kvm_v
+--- a/drivers/usb/dwc3/debug.h
++++ b/drivers/usb/dwc3/debug.h
+@@ -256,86 +256,77 @@ static inline const char *dwc3_ep_event_
+ 	u8 epnum = event->endpoint_number;
+ 	size_t len;
+ 	int status;
+-	int ret;
  
- 			kvm_set_msi_irq(vcpu->kvm, entry, &irq);
+-	ret = snprintf(str, size, "ep%d%s: ", epnum >> 1,
++	len = scnprintf(str, size, "ep%d%s: ", epnum >> 1,
+ 			(epnum & 1) ? "in" : "out");
+-	if (ret < 0)
+-		return "UNKNOWN";
  
--			if (irq.level && kvm_apic_match_dest(vcpu, NULL, 0,
-+			if (irq.trig_mode && kvm_apic_match_dest(vcpu, NULL, 0,
- 						irq.dest_id, irq.dest_mode))
- 				__set_bit(irq.vector, ioapic_handled_vectors);
+ 	status = event->status;
+ 
+ 	switch (event->endpoint_event) {
+ 	case DWC3_DEPEVT_XFERCOMPLETE:
+-		len = strlen(str);
+-		snprintf(str + len, size - len, "Transfer Complete (%c%c%c)",
++		len += scnprintf(str + len, size - len,
++				"Transfer Complete (%c%c%c)",
+ 				status & DEPEVT_STATUS_SHORT ? 'S' : 's',
+ 				status & DEPEVT_STATUS_IOC ? 'I' : 'i',
+ 				status & DEPEVT_STATUS_LST ? 'L' : 'l');
+ 
+-		len = strlen(str);
+-
+ 		if (epnum <= 1)
+-			snprintf(str + len, size - len, " [%s]",
++			scnprintf(str + len, size - len, " [%s]",
+ 					dwc3_ep0_state_string(ep0state));
+ 		break;
+ 	case DWC3_DEPEVT_XFERINPROGRESS:
+-		len = strlen(str);
+-
+-		snprintf(str + len, size - len, "Transfer In Progress [%d] (%c%c%c)",
++		scnprintf(str + len, size - len,
++				"Transfer In Progress [%d] (%c%c%c)",
+ 				event->parameters,
+ 				status & DEPEVT_STATUS_SHORT ? 'S' : 's',
+ 				status & DEPEVT_STATUS_IOC ? 'I' : 'i',
+ 				status & DEPEVT_STATUS_LST ? 'M' : 'm');
+ 		break;
+ 	case DWC3_DEPEVT_XFERNOTREADY:
+-		len = strlen(str);
+-
+-		snprintf(str + len, size - len, "Transfer Not Ready [%d]%s",
++		len += scnprintf(str + len, size - len,
++				"Transfer Not Ready [%d]%s",
+ 				event->parameters,
+ 				status & DEPEVT_STATUS_TRANSFER_ACTIVE ?
+ 				" (Active)" : " (Not Active)");
+ 
+-		len = strlen(str);
+-
+ 		/* Control Endpoints */
+ 		if (epnum <= 1) {
+ 			int phase = DEPEVT_STATUS_CONTROL_PHASE(event->status);
+ 
+ 			switch (phase) {
+ 			case DEPEVT_STATUS_CONTROL_DATA:
+-				snprintf(str + ret, size - ret,
++				scnprintf(str + len, size - len,
+ 						" [Data Phase]");
+ 				break;
+ 			case DEPEVT_STATUS_CONTROL_STATUS:
+-				snprintf(str + ret, size - ret,
++				scnprintf(str + len, size - len,
+ 						" [Status Phase]");
+ 			}
  		}
+ 		break;
+ 	case DWC3_DEPEVT_RXTXFIFOEVT:
+-		snprintf(str + ret, size - ret, "FIFO");
++		scnprintf(str + len, size - len, "FIFO");
+ 		break;
+ 	case DWC3_DEPEVT_STREAMEVT:
+ 		status = event->status;
+ 
+ 		switch (status) {
+ 		case DEPEVT_STREAMEVT_FOUND:
+-			snprintf(str + ret, size - ret, " Stream %d Found",
++			scnprintf(str + len, size - len, " Stream %d Found",
+ 					event->parameters);
+ 			break;
+ 		case DEPEVT_STREAMEVT_NOTFOUND:
+ 		default:
+-			snprintf(str + ret, size - ret, " Stream Not Found");
++			scnprintf(str + len, size - len, " Stream Not Found");
+ 			break;
+ 		}
+ 
+ 		break;
+ 	case DWC3_DEPEVT_EPCMDCMPLT:
+-		snprintf(str + ret, size - ret, "Endpoint Command Complete");
++		scnprintf(str + len, size - len, "Endpoint Command Complete");
+ 		break;
+ 	default:
+-		snprintf(str, size, "UNKNOWN");
++		scnprintf(str + len, size - len, "UNKNOWN");
+ 	}
+ 
+ 	return str;
 
 
