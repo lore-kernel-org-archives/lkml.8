@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C62BC3F340
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A05BC3F348
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 441E324656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7102220578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811334;
-	bh=XiaQdHenxGYUj1Xl1On946SBIYhXQ9a+VSiUdXWqUws=;
+	s=default; t=1582811317;
+	bh=1ncGh5Rk9EITS77TL+pGGDb/7PSP3K5PnHevgyuW3vM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jKrOahmMlQrVDjQ8eC01GepceOjCRu88AewYSXc2qVT6Ev4iMXBVZZntDsQZTCk5h
-	 ZDCQjkWxfkHtwlH2xu/Ph1jRsxxQ7fxqhPPCLZQUjXd1epa/05vREUHAGfQvuHHg6y
-	 vkO2xfToK6DbvHOAgL01wqGzbvKcdpSYu1+vD9pY=
+	b=mVKs2pSZYDXnuHQfmeuMZSCXPuKYu6aOnDmDEjkVNEv3q2VkVCYMR8LcdqkWPUjKe
+	 gr6A948BtduW8EDlEk1mifb8l2r5DNeO6MCLCzkHKZ4tY/2wuy5qsW/ITlXr6yNjo0
+	 x5beJBwjmu4TWzsRgCO1HAyNi3Bwhkh8gWIt/q90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730961AbgB0Nsx (ORCPT
+        id S1730896AbgB0Nsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:48:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45848 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:48:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730951AbgB0Nsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:48:51 -0500
+        id S1730425AbgB0Nsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:48:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9353724688;
-        Thu, 27 Feb 2020 13:48:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA96020578;
+        Thu, 27 Feb 2020 13:48:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811331;
-        bh=XiaQdHenxGYUj1Xl1On946SBIYhXQ9a+VSiUdXWqUws=;
+        s=default; t=1582811313;
+        bh=1ncGh5Rk9EITS77TL+pGGDb/7PSP3K5PnHevgyuW3vM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pNMHcthOnoNOQYrz/bYoAkhVi76UnggQFgxWba9o791XjlxVxwKFCUHYbmTUI0oJZ
-         g0P3mwmravWGG9FwAkPQNeXlmNCUSClCYjZgniLRMCH7McjewAm8j/JM1VomFBUU6q
-         eWnKDqObYGMksXGF1awcYTKuniJTPFXLdkd7NsGQ=
+        b=KvmIkrOfOeISQxFa5sMXPdxkfP2Y5L+Sid6k8A8rU5bnf26Jvni2rgqbDiLS0UqBZ
+         xTwwrXeRloWYZApONPEwZgZxjSQAkp2+4Ih5vKHyOB/uhzIIMqLkwZXKEqc9cWPiCO
+         DDCsqt88qhZO2sij+sa9oI31tu9VaB+6iyhrlTl8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
-        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 042/165] ext4, jbd2: ensure panic when aborting with zero errno
-Date:   Thu, 27 Feb 2020 14:35:16 +0100
-Message-Id: <20200227132237.370250697@linuxfoundation.org>
+Subject: [PATCH 4.9 082/165] drm/vmwgfx: prevent memory leak in vmw_cmdbuf_res_add
+Date:   Thu, 27 Feb 2020 14:35:56 +0100
+Message-Id: <20200227132243.304829733@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -60,74 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 51f57b01e4a3c7d7bdceffd84de35144e8c538e7 ]
+[ Upstream commit 40efb09a7f53125719e49864da008495e39aaa1e ]
 
-JBD2_REC_ERR flag used to indicate the errno has been updated when jbd2
-aborted, and then __ext4_abort() and ext4_handle_error() can invoke
-panic if ERRORS_PANIC is specified. But if the journal has been aborted
-with zero errno, jbd2_journal_abort() didn't set this flag so we can
-no longer panic. Fix this by always record the proper errno in the
-journal superblock.
+In vmw_cmdbuf_res_add if drm_ht_insert_item fails the allocated memory
+for cres should be released.
 
-Fixes: 4327ba52afd03 ("ext4, jbd2: ensure entering into panic after recording an error in superblock")
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191204124614.45424-3-yi.zhang@huawei.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: 18e4a4669c50 ("drm/vmwgfx: Fix compat shader namespace")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Reviewed-by: Thomas Hellstrom <thellstrom@vmware.com>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/checkpoint.c |  2 +-
- fs/jbd2/journal.c    | 15 ++++-----------
- 2 files changed, 5 insertions(+), 12 deletions(-)
+ drivers/gpu/drm/vmwgfx/vmwgfx_cmdbuf_res.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/jbd2/checkpoint.c b/fs/jbd2/checkpoint.c
-index 4d5a5a4cc017c..addb0784dd1c4 100644
---- a/fs/jbd2/checkpoint.c
-+++ b/fs/jbd2/checkpoint.c
-@@ -168,7 +168,7 @@ void __jbd2_log_wait_for_space(journal_t *journal)
- 				       "journal space in %s\n", __func__,
- 				       journal->j_devname);
- 				WARN_ON(1);
--				jbd2_journal_abort(journal, 0);
-+				jbd2_journal_abort(journal, -EIO);
- 			}
- 			write_lock(&journal->j_state_lock);
- 		} else {
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index 40c754854b29e..efc8cfd060730 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -2100,12 +2100,10 @@ static void __journal_abort_soft (journal_t *journal, int errno)
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_cmdbuf_res.c b/drivers/gpu/drm/vmwgfx/vmwgfx_cmdbuf_res.c
+index 1f013d45c9e9a..0c7c3005594cc 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_cmdbuf_res.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_cmdbuf_res.c
+@@ -210,8 +210,10 @@ int vmw_cmdbuf_res_add(struct vmw_cmdbuf_res_manager *man,
  
- 	__jbd2_journal_abort_hard(journal);
+ 	cres->hash.key = user_key | (res_type << 24);
+ 	ret = drm_ht_insert_item(&man->resources, &cres->hash);
+-	if (unlikely(ret != 0))
++	if (unlikely(ret != 0)) {
++		kfree(cres);
+ 		goto out_invalid_key;
++	}
  
--	if (errno) {
--		jbd2_journal_update_sb_errno(journal);
--		write_lock(&journal->j_state_lock);
--		journal->j_flags |= JBD2_REC_ERR;
--		write_unlock(&journal->j_state_lock);
--	}
-+	jbd2_journal_update_sb_errno(journal);
-+	write_lock(&journal->j_state_lock);
-+	journal->j_flags |= JBD2_REC_ERR;
-+	write_unlock(&journal->j_state_lock);
- }
- 
- /**
-@@ -2147,11 +2145,6 @@ static void __journal_abort_soft (journal_t *journal, int errno)
-  * failure to disk.  ext3_error, for example, now uses this
-  * functionality.
-  *
-- * Errors which originate from within the journaling layer will NOT
-- * supply an errno; a null errno implies that absolutely no further
-- * writes are done to the journal (unless there are any already in
-- * progress).
-- *
-  */
- 
- void jbd2_journal_abort(journal_t *journal, int errno)
+ 	cres->state = VMW_CMDBUF_RES_ADD;
+ 	cres->res = vmw_resource_reference(res);
 -- 
 2.20.1
 
