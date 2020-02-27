@@ -2,103 +2,82 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03614C4BA3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D347C4BA3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9E7C2467F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0A7E20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582788164;
-	bh=RbDs5D0nGO+vLKC9chqe6xT6asU3XQm2I5A+ZEGGg30=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NIoQbFKA/MfITeFkjeXikskbXnGUx3UDkhqk8KA5hZo8mi+AObIwJV4D9IF5Hl2Na
-	 r7/gsvg2E0MtJHMol+RWAFSBk/XGNdMzjj1Gnxt0FfZeMgKX2aq6VWmrKFLapnqHSL
-	 W590PtCbgqwGF8SDju8z/K5WZK2+sYfb4de3JQd0=
+	s=default; t=1582788349;
+	bh=3BJS1fwCXkPIehkComn8dtpK8P07gYtIM3huuSL3+rs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Plns+O3r/basnyONWBo3+JXLRZZWOvcGSoBmbeC1fnUdt5EPK4piwFf033+ZkOGGR
+	 JUOVn0pZu2zdeaOcvg3WJIoPPlduuwZIPgMJSE3IjwRDxRz3R6MsWr13cqbGsvOImN
+	 zHgZHUod73mRNh6WK8BPjRZSOlPGvHRSMWNp4V7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728426AbgB0HWn (ORCPT
+        id S1728430AbgB0HZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 02:22:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36866 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 02:25:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726999AbgB0HWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 02:22:43 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726999AbgB0HZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 02:25:47 -0500
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2491324656;
-        Thu, 27 Feb 2020 07:22:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99C1A24656;
+        Thu, 27 Feb 2020 07:25:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582788162;
-        bh=RbDs5D0nGO+vLKC9chqe6xT6asU3XQm2I5A+ZEGGg30=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EeRVSMSKtTKj5BSkvh6pQaXH6NIeNegVZVhesmofU/epROFA3hT4OqohMnHScvyu2
-         e5Saj4vzK4x/scPLcc111WKhiJAsL7js91cWKjJJHxIHJy21F7Kjvxqb9sdLNLwFa7
-         i5KWB/DcoW699ImceiQkIh28aOI+h7k8iyTJbLio=
-Date:   Thu, 27 Feb 2020 08:22:39 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     ycho1399@gmail.com
-Cc:     linux-input@vger.kernel.org, voyandrea@gmail.com,
-        andrea.ho@advantech.com.tw, oakley.ding@advantech.com.tw,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Luca Weiss <luca@z3ntu.xyz>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org
-Subject: Re: [V1,1/1] Input/misc: add support for Advantech software defined
- button
-Message-ID: <20200227072239.GA293173@kroah.com>
-References: <20200227031721.17703-1-Andrea.Ho@advantech.com.tw>
+        s=default; t=1582788347;
+        bh=3BJS1fwCXkPIehkComn8dtpK8P07gYtIM3huuSL3+rs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fyxIsWdgvOtNDzMGZaoLc+7SE62lPjV1gXtmRr7Fgv5OJU2lJyk/TIUgjUi8m4vw+
+         LTbGjpIw8FQIuTDNqRiM5U5rL1KNvUrs6GqYiZJJoYUBaBa6LGE/Uv5CCfFz6oJC4F
+         BaKD/3Km59wX/hU9DHmKsLvi2uDLTkSvi210yWSE=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH 0/2] Documentation: bootconfig: Documentaiton updates
+Date:   Thu, 27 Feb 2020 16:25:42 +0900
+Message-Id: <158278834245.14966.6179457011671073018.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200227031721.17703-1-Andrea.Ho@advantech.com.tw>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 03:15:31AM +0000, ycho1399@gmail.com wrote:
-> From: "Andrea.Ho" <Andrea.Ho@advantech.com.tw>
-> 
-> Advantech sw_button is a ACPI event trigger button.
-> 
-> With this driver, we can report KEY_EVENTs on the
-> Advantech Tabletop Network Appliances products and it has been
-> tested in FWA1112VC.
-> 
-> Add the software define button support to report KEY_EVENTs by
-> different acts of pressing button (like double-click, long pressed
-> and tick) that cloud be get on user interface and trigger the
-> customized actions.
-> 
-> Signed-off-by: Andrea.Ho <Andrea.Ho@advantech.com.tw>
-> ---
->  ...define.patch.EXPERIMENTAL-checkpatch-fixes | 554 ++++++++++++++++++
->  MAINTAINERS                                   |   5 +
->  drivers/input/misc/Kconfig                    |  11 +
->  drivers/input/misc/Makefile                   |   2 +-
->  drivers/input/misc/adv_swbutton.c             | 473 +++++++++++++++
->  5 files changed, 1044 insertions(+), 1 deletion(-)
->  create mode 100644 0001-Input-misc-add-support-for-Advantech-software-define.patch.EXPERIMENTAL-checkpatch-fixes
->  create mode 100644 drivers/input/misc/adv_swbutton.c
-> 
-> diff --git a/0001-Input-misc-add-support-for-Advantech-software-define.patch.EXPERIMENTAL-checkpatch-fixes b/0001-Input-misc-add-support-for-Advantech-software-define.patch.EXPERIMENTAL-checkpatch-fixes
-> new file mode 100644
-> index 000000000000..45e49aee5b47
-> --- /dev/null
-> +++ b/0001-Input-misc-add-support-for-Advantech-software-define.patch.EXPERIMENTAL-checkpatch-fixes
+Hello,
 
-<snip>
+Here is a couple of patches to update the bootconfig documentation.
+I hope this clarify what the boot configuration is :)
 
-I doubt you ment to commit the patch itself into the patch :(
+Thank you,
+
+---
+
+Masami Hiramatsu (2):
+      Documentation: bootconfig: Update boot configuration documentation
+      Documentation: bootconfig: Add EBNF syntax file
+
+
+ Documentation/admin-guide/bootconfig.ebnf |   41 +++++++
+ Documentation/admin-guide/bootconfig.rst  |  180 +++++++++++++++++++----------
+ Documentation/trace/boottime-trace.rst    |    2 
+ MAINTAINERS                               |    1 
+ 4 files changed, 162 insertions(+), 62 deletions(-)
+ create mode 100644 Documentation/admin-guide/bootconfig.ebnf
+
+--
+Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
