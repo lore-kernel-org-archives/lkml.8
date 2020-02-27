@@ -2,125 +2,111 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F93C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 02:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97EEBC4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 02:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0CB624680
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 02:11:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ayBMgFwV"
+	by mail.kernel.org (Postfix) with ESMTP id 76C2424650
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 02:12:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728323AbgB0CL4 (ORCPT
+        id S1728354AbgB0CMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 21:11:56 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:36100 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728178AbgB0CL4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 21:11:56 -0500
-Received: by mail-oi1-f195.google.com with SMTP id c16so1748713oic.3;
-        Wed, 26 Feb 2020 18:11:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=he1uRJhimWdmXlH4KMyv7rZ5+f5TpR3yYZ1SBC2Q6M4=;
-        b=ayBMgFwVIB4RZSA8nsIkYYFeLoUweLRhh+hyZe9/kfucORdETI97Ul78g9Qph+9BgM
-         qu5gKbVjpy1/EPdroqPimYar+XVDAmoGWOnWfSArE33rqk2BF+cCY4OcIKbVq+0Bjtob
-         7YqFBywBuOdSgMu9muQgiFrzTobGdJVHbMuxpxbKh0c0Cnqqli/Jquqtb6kBMIcDOxAO
-         SiO97iJEgur8kaTx3rnGaHspC7w9UHps2kEIU809vgqlclK2xf62C8yXHgxZEU5fKc7R
-         sT+s9Azj0270BniGkp8FXfaJrXGu6msYhhJIqYdY0fWF50HHlaFeBymqkSVyNYvx1CVh
-         SZ7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=he1uRJhimWdmXlH4KMyv7rZ5+f5TpR3yYZ1SBC2Q6M4=;
-        b=aNggrHctv4FhbdlsuzzhQZBUMZ4KYbsFKljkG9Pw5o1LWZFNG/8RfkAwu0b0H9t9SH
-         8ipJ5n+3DDB++UvpcN2/EiVM+AnNNXJOWrRP+JpCBwv4LcZ9zEJmVVnj8Hz1EgrVworN
-         fHD4yqZh/UrJflO4PF23gRRMtEFfUvvn8YvtkKx4mYJWAuh2wwPztTUONcg/XSEnb7wm
-         pKQ4CZfn3yguoGmoLmRO1bBo3b5WCODolZ4qJPx7L2nUhPWtkOxT5T95PGfXbEKlYCwl
-         sRnVCKtqbjeEENOGdHBv1m3RvY/yAVWc9fsSGAUSWpdT2UaJtrakGJAB5Wxl+nwzsmgR
-         F5WA==
-X-Gm-Message-State: APjAAAXi1hvHHoYdD5YhEZC7bAX1sslk6WWt0mjKxkEnzi0Nr3g/Nre5
-        mTHi3mdeFj9GInZ6Gi8dsse4Hmd1FIFxtoJCouk=
-X-Google-Smtp-Source: APXvYqxsFL01V4pX4VvSoQr/+nsogbthwMlTWrKppZURcCyyczEcgFcrencOXJXVDfPnbtJSq4aFT1/nkXVy7GOU+7w=
-X-Received: by 2002:aca:43c1:: with SMTP id q184mr1584492oia.116.1582769513861;
- Wed, 26 Feb 2020 18:11:53 -0800 (PST)
+        Wed, 26 Feb 2020 21:12:23 -0500
+Received: from mga03.intel.com ([134.134.136.65]:55531 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728178AbgB0CMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 21:12:23 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 18:12:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,490,1574150400"; 
+   d="scan'208";a="241882156"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga006.jf.intel.com with ESMTP; 26 Feb 2020 18:12:21 -0800
+Date:   Wed, 26 Feb 2020 18:12:21 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jacob Keller <jacob.e.keller@intel.com>
+Cc:     TonyWWang-oc@zhaoxin.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, bp@alien8.de, bp@suse.de,
+        hpa@zytor.com, jacob.jun.pan@linux.intel.com,
+        jarkko.sakkinen@linux.intel.com, jmattson@google.com,
+        jolsa@redhat.com, joro@8bytes.org, kvm@vger.kernel.org,
+        lenb@kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-pm@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com,
+        namhyung@kernel.org, pbonzini@redhat.com, peterz@infradead.org,
+        rkrcmar@redhat.com, shuah@kernel.org, tglx@linutronix.de,
+        tony.luck@intel.com, vkuznets@redhat.com, wanpengli@tencent.com,
+        x86@kernel.org
+Subject: Re: [PATCH v5 13/19] x86/cpufeatures: Add flag to track whether MSR
+ IA32_FEAT_CTL is configured
+Message-ID: <20200227021221.GA14478@linux.intel.com>
+References: <20191221044513.21680-14-sean.j.christopherson@intel.com>
+ <e741196d-52aa-0f5e-8f1e-a37ddf2e5025@intel.com>
 MIME-Version: 1.0
-References: <20200205181935.3712-1-yu-cheng.yu@intel.com> <20200205181935.3712-6-yu-cheng.yu@intel.com>
- <d4dabb84-5636-2657-c45e-795f3f2dcbbc@intel.com> <CAMe9rOouOwNC873v=LOv5rJWcbe9Zvg+od8229J33V=ZfrB1rg@mail.gmail.com>
- <71791bbf-7ee3-fa70-b569-ae643151646e@intel.com>
-In-Reply-To: <71791bbf-7ee3-fa70-b569-ae643151646e@intel.com>
-From:   "H.J. Lu" <hjl.tools@gmail.com>
-Date:   Wed, 26 Feb 2020 18:11:17 -0800
-Message-ID: <CAMe9rOqhf4y+e6h8i7P8+70pwLSg8n=ise6LEqABNPKarECdeA@mail.gmail.com>
-Subject: Re: [RFC PATCH v9 05/27] x86/cet/shstk: Add Kconfig option for
- user-mode Shadow Stack protection
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e741196d-52aa-0f5e-8f1e-a37ddf2e5025@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 5:16 PM Dave Hansen <dave.hansen@intel.com> wrote:
->
-> On 2/26/20 5:02 PM, H.J. Lu wrote:
-> >> That way everybody with old toolchains can still build the kernel (and
-> >> run/test code with your config option on, btw...).
-> > CET requires a complete new OS image from kernel, toolchain, run-time.
-> > CET enabled kernel without the rest of updated OS won't give you CET
-> > at all.
->
-> If you require a new toolchain, nobody even builds your fancy feature.
-> Probably including 0day and all of the lazy maintainers with crufty old
-> distros.
+On Tue, Feb 25, 2020 at 01:49:13PM -0800, Jacob Keller wrote:
+> I recently ran into a general protection fault that I believe is the
+> fault of this patch:
+> 
+> > [   32.189584] general protection fault, maybe for address 0xffffb567801bcf58: 0000 [#1] SMP PTI
+> > [   32.198103] CPU: 1 PID: 2600 Comm: rngd Not tainted 5.6.0-rc2-jk+ #2
+> > [   32.204454] Hardware name: Intel Corporation S2600STQ/S2600STQ, BIOS SE5C620.86B.02.01.0008.031920191559 03/19/2019
+> > [   32.214887] RIP: 0010:hardware_enable+0x100/0x1a0 [kvm_intel]
+> > [   32.220628] Code: <f3> 0f c7 34 24 31 c0 80 3d 59 8d 03 00 00 75 36 48 8b 5c 24 10 65
+> > [   32.239373] RSP: 0000:ffffb567801bcf58 EFLAGS: 00010002
+> > [   32.244598] RAX: 0000000000300000 RBX: 0000000000000086 RCX: ffff8f2650440000
+> > [   32.251730] RDX: 0000000000300000 RSI: 0000000000000000 RDI: ffff8f2650457020
+> > [   32.258862] RBP: 0000000000000007 R08: 000000077ea5d531 R09: 0000000000000000
+> > [   32.265986] R10: 000001432bf20982 R11: 0000000000000000 R12: ffffd55b80467110
+> > [   32.273118] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+> > [   32.280243] FS:  00007facfe66f700(0000) GS:ffff8f2650440000(0000) knlGS:0000000000000000
+> > [   32.288329] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [   32.294077] CR2: 00007facf0003000 CR3: 0000000b7d402006 CR4: 00000000007626e0
+> > [   32.301210] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > [   32.308342] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > [   32.315474] PKRU: 55555554
+> > [   32.318186] Call Trace:
+> > [   32.320642]  <IRQ>
+> > [   32.322689]  kvm_arch_hardware_enable+0x84/0x240 [kvm]
+> > [   32.327836]  hardware_enable_nolock+0x31/0x60 [kvm]
+> > [   32.332717]  flush_smp_call_function_queue+0x4d/0xe0
+> > [   32.337683]  smp_call_function_interrupt+0x3a/0xd0
+> > [   32.342471]  call_function_interrupt+0xf/0x20
+> > [   32.346830]  </IRQ>
+> > [   32.498314] ---[ end trace bfeeeba337a01208 ]---
+> 
+> I noticed that a slightly older commit from before this does not fail.
+> Additionally, the system reports the following during boot:
+> 
+> kvm: disabled by bios
 
-GCC 8 or above is needed since vDSO must be compiled with
---fcf-protection=branch.
+One other thing that's been bothering me; you mention in a later email that
+this bug resulting in a crash during boot.  The low timestamps also suggest
+the system is fairly early in its bringup.
 
-> The point isn't to actually run CET at all.  The point is to get as many
-> people as possible testing as much of it as possible.  Testing includes
-> compile testing, static analysis and bloat watching.  It also includes
-> functional and performance testing when you've got the feature compiled
-> in but unavailable at runtime.  Did this hurt anything even when I'm not
-> using it?
->
+But KVM only does VMXON when it actually creates a VM[*].  During boot I
+would expect the bug to result in KVM being incorrectly loaded/enabled, but
+that alone wouldn't trigger a crash.
 
-I will leave the CET toolchain issue to Yu-cheng.
+I assume/hope your system is automatically running some form of virt
+process at boot?  Not that there's anything wrong with that, it's just
+suprising and I want to make sure there's not something really funky going
+on.
 
--- 
-H.J.
+[*] KVM also does VMXON when hotplugging a CPU, but only if KVM has active
+    VMs, and the IPI callback above indicates this isn't the hotplug case.
