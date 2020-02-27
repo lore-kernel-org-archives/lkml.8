@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 613B5C7658F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5067C52D5A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35A3E24656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C8C224688
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:29:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813737;
-	bh=oy3JXFVtuovHSbwn/6OeH3Anas8ue2THvxVsmTNABYw=;
+	s=default; t=1582813777;
+	bh=O7+a3czqmgcI1ZaOHH8iisAy2x3FGIOG3rrb5TM3SZk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HLCmDHP1beGkyezULMtZIYJiFzCX+wa0Mcw6iS4D5udcr3pzpIpzB1cVyUXoB/z9B
-	 UMP0/+jM5MyQ6frT13VoJRFBOAxLcmVHvn1OZr4gzSGfZKS6ZD502EKUJ8inWTLBPV
-	 OU267xgu0clOCVWOkw6cBDQdo9FzHMvXh3AIxiig=
+	b=q5V4SsdCHXV9+pa+bdsAIY8aMPjtLUcB1Bj9uzFtaBuYjY49QMr9VDgtHRkbUIWJ/
+	 qwtcXE8H7wUrvdqCfQObjefiCYrzJ/sgX0DmbYwXKq8j/N9266X4xjZecy8n28j3NE
+	 4w68Pg7S0rWok3FBSsGMTZaAXzoQ9PppBDd5kl2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388422AbgB0O2z (ORCPT
+        id S2387878AbgB0OGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:28:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44484 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:06:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387668AbgB0OHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:07:06 -0500
+        id S2387863AbgB0OGB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:06:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2966A20578;
-        Thu, 27 Feb 2020 14:07:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35E3E246AD;
+        Thu, 27 Feb 2020 14:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812425;
-        bh=oy3JXFVtuovHSbwn/6OeH3Anas8ue2THvxVsmTNABYw=;
+        s=default; t=1582812360;
+        bh=O7+a3czqmgcI1ZaOHH8iisAy2x3FGIOG3rrb5TM3SZk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EHk55uRZE/x0cwIirPr6Hg6QI266nCQApjxiYcUwkzCGPeRVwRGSQtG+wmzQLixHy
-         Bi7Lzr3Brg0LKC34anKwSuDKqlr3CYzUroOuIo2f5yHFXX32aHsXn+V7g7LevpB1oh
-         2C3QVBgEaUJ5q005M1cKeFn6CDEOQExjoBzsg/sg=
+        b=UtyM1Dxezd+3lxEQi6WvBDJxbouBokq/N8uhaPQCrgu7dNKA9lwBdaw3+2ZoGfK7j
+         wqAa4riUBl5BVFmjhuKsaxOjahIQ5xPPjegy6TA60c7hQWi9P+4vA+nX5BiuJCHcRb
+         uRGjYD3OzH3HfLy3D+VHHquNMcbsv+q8WSko/5P0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Jung <jung@codemercs.com>
-Subject: [PATCH 5.4 013/135] USB: misc: iowarrior: add support for the 28 and 28L devices
-Date:   Thu, 27 Feb 2020 14:35:53 +0100
-Message-Id: <20200227132231.081719725@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vaibhav Agarwal <vaibhav.sr@gmail.com>
+Subject: [PATCH 4.19 85/97] staging: greybus: use after free in gb_audio_manager_remove_all()
+Date:   Thu, 27 Feb 2020 14:37:33 +0100
+Message-Id: <20200227132228.491814386@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
-References: <20200227132228.710492098@linuxfoundation.org>
+In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
+References: <20200227132214.553656188@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,74 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 5f6f8da2d7b5a431d3f391d0d73ace8edfb42af7 upstream.
+commit b7db58105b80fa9232719c8329b995b3addfab55 upstream.
 
-Add new device ids for the 28 and 28L devices.  These have 4 interfaces
-instead of 2, but the driver binds the same, so the driver changes are
-minimal.
+When we call kobject_put() and it's the last reference to the kobject
+then it calls gb_audio_module_release() and frees module.  We dereference
+"module" on the next line which is a use after free.
 
-Cc: Christoph Jung <jung@codemercs.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200212040422.2991-2-gregkh@linuxfoundation.org
+Fixes: c77f85bbc91a ("greybus: audio: Fix incorrect counting of 'ida'")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Reviewed-by: Vaibhav Agarwal <vaibhav.sr@gmail.com>
+Link: https://lore.kernel.org/r/20200205123217.jreendkyxulqsool@kili.mountain
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/iowarrior.c |   15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ drivers/staging/greybus/audio_manager.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/misc/iowarrior.c
-+++ b/drivers/usb/misc/iowarrior.c
-@@ -33,6 +33,9 @@
- #define USB_DEVICE_ID_CODEMERCS_IOWPV2	0x1512
- /* full speed iowarrior */
- #define USB_DEVICE_ID_CODEMERCS_IOW56	0x1503
-+/* fuller speed iowarrior */
-+#define USB_DEVICE_ID_CODEMERCS_IOW28	0x1504
-+#define USB_DEVICE_ID_CODEMERCS_IOW28L	0x1505
+--- a/drivers/staging/greybus/audio_manager.c
++++ b/drivers/staging/greybus/audio_manager.c
+@@ -89,8 +89,8 @@ void gb_audio_manager_remove_all(void)
  
- /* OEMed devices */
- #define USB_DEVICE_ID_CODEMERCS_IOW24SAG	0x158a
-@@ -139,6 +142,8 @@ static const struct usb_device_id iowarr
- 	{USB_DEVICE(USB_VENDOR_ID_CODEMERCS, USB_DEVICE_ID_CODEMERCS_IOW56)},
- 	{USB_DEVICE(USB_VENDOR_ID_CODEMERCS, USB_DEVICE_ID_CODEMERCS_IOW24SAG)},
- 	{USB_DEVICE(USB_VENDOR_ID_CODEMERCS, USB_DEVICE_ID_CODEMERCS_IOW56AM)},
-+	{USB_DEVICE(USB_VENDOR_ID_CODEMERCS, USB_DEVICE_ID_CODEMERCS_IOW28)},
-+	{USB_DEVICE(USB_VENDOR_ID_CODEMERCS, USB_DEVICE_ID_CODEMERCS_IOW28L)},
- 	{}			/* Terminating entry */
- };
- MODULE_DEVICE_TABLE(usb, iowarrior_ids);
-@@ -379,6 +384,8 @@ static ssize_t iowarrior_write(struct fi
- 		break;
- 	case USB_DEVICE_ID_CODEMERCS_IOW56:
- 	case USB_DEVICE_ID_CODEMERCS_IOW56AM:
-+	case USB_DEVICE_ID_CODEMERCS_IOW28:
-+	case USB_DEVICE_ID_CODEMERCS_IOW28L:
- 		/* The IOW56 uses asynchronous IO and more urbs */
- 		if (atomic_read(&dev->write_busy) == MAX_WRITES_IN_FLIGHT) {
- 			/* Wait until we are below the limit for submitted urbs */
-@@ -777,7 +784,9 @@ static int iowarrior_probe(struct usb_in
+ 	list_for_each_entry_safe(module, next, &modules_list, list) {
+ 		list_del(&module->list);
+-		kobject_put(&module->kobj);
+ 		ida_simple_remove(&module_id, module->id);
++		kobject_put(&module->kobj);
  	}
  
- 	if ((dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56) ||
--	    (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56AM)) {
-+	    (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56AM) ||
-+	    (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28) ||
-+	    (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28L)) {
- 		res = usb_find_last_int_out_endpoint(iface_desc,
- 				&dev->int_out_endpoint);
- 		if (res) {
-@@ -791,7 +800,9 @@ static int iowarrior_probe(struct usb_in
- 	dev->report_size = usb_endpoint_maxp(dev->int_in_endpoint);
- 	if ((dev->interface->cur_altsetting->desc.bInterfaceNumber == 0) &&
- 	    ((dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56) ||
--	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56AM)))
-+	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56AM) ||
-+	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28) ||
-+	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28L)))
- 		/* IOWarrior56 has wMaxPacketSize different from report size */
- 		dev->report_size = 7;
- 
+ 	is_empty = list_empty(&modules_list);
 
 
