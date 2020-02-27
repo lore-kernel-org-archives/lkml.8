@@ -2,160 +2,166 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31443C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9ADAC4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10B9324679
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5A912467F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:33:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dTZZPicr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727220AbgB0Fc7 (ORCPT
+        id S1728536AbgB0FdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 00:32:59 -0500
-Received: from mga01.intel.com ([192.55.52.88]:17728 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728453AbgB0Fcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 00:32:47 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 21:32:46 -0800
-X-IronPort-AV: E=Sophos;i="5.70,490,1574150400"; 
-   d="scan'208";a="261320404"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 21:32:46 -0800
-From:   ira.weiny@intel.com
-To:     linux-kernel@vger.kernel.org
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH V5 12/12] Documentation/dax: Update Usage section
-Date:   Wed, 26 Feb 2020 21:24:42 -0800
-Message-Id: <20200227052442.22524-13-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200227052442.22524-1-ira.weiny@intel.com>
-References: <20200227052442.22524-1-ira.weiny@intel.com>
+        Thu, 27 Feb 2020 00:33:06 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:14781 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728522AbgB0FdE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 00:33:04 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582781583; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=z5QCR+5CQZXJeKsaK1cOJr/DwfcXkvDbVqkcSQPZeS0=; b=dTZZPicrsXfQx0LtihyTIpnlHtEWoqFTkRP1prDVrKhHV90kqVDxDKcB7xdpfBBNHmEML5XO
+ t6VDN65CA4TruDhNkkzKRJXsPxjRekf7l3aYL0N3pa+vBrBf6tXmO3J8lk93wKN1lJrokOUn
+ zZ4X+Tp+okHkJ5TY5/5cvVopfjA=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e57547a.7f45e60cea08-smtp-out-n02;
+ Thu, 27 Feb 2020 05:32:42 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1C20FC4479F; Thu, 27 Feb 2020 05:32:41 +0000 (UTC)
+Received: from [10.206.13.37] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5888BC43383;
+        Thu, 27 Feb 2020 05:32:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5888BC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v7 2/3] soc: qcom: rpmh: Update dirty flag only when data
+ changes
+To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, mka@chromium.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org
+References: <1582694833-9407-1-git-send-email-mkshah@codeaurora.org>
+ <1582694833-9407-3-git-send-email-mkshah@codeaurora.org>
+ <158275700389.177367.5843608826404724304@swboyd.mtv.corp.google.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <3f7c689b-700a-1d76-505e-76446c62439f@codeaurora.org>
+Date:   Thu, 27 Feb 2020 11:02:34 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <158275700389.177367.5843608826404724304@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
 
-Update the Usage section to reflect the new individual dax selection
-functionality.
+On 2/27/2020 4:13 AM, Stephen Boyd wrote:
+> Quoting Maulik Shah (2020-02-25 21:27:12)
+>> Currently rpmh ctrlr dirty flag is set for all cases regardless
+>> of data is really changed or not. Add changes to update it when
+>> data is updated to newer values.
+>>
+>> Also move dirty flag updates to happen from within cache_lock.
+>>
+>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>> Reviewed-by: Srinivas Rao L <lsrao@codeaurora.org>
+> Probably worth adding a Fixes tag here? Doesn't make sense to mark
+> something dirty when it isn't changed.
+Done. will update in v8.
+>> ---
+>>   drivers/soc/qcom/rpmh.c | 21 ++++++++++++++++-----
+>>   1 file changed, 16 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
+>> index eb0ded0..83ba4e0 100644
+>> --- a/drivers/soc/qcom/rpmh.c
+>> +++ b/drivers/soc/qcom/rpmh.c
+>> @@ -139,20 +139,27 @@ static struct cache_req *cache_rpm_request(struct rpmh_ctrlr *ctrlr,
+>>   existing:
+>>          switch (state) {
+>>          case RPMH_ACTIVE_ONLY_STATE:
+>> -               if (req->sleep_val != UINT_MAX)
+>> +               if (req->sleep_val != UINT_MAX) {
+>>                          req->wake_val = cmd->data;
+>> +                       ctrlr->dirty = true;
+>> +               }
+>>                  break;
+>>          case RPMH_WAKE_ONLY_STATE:
+>> -               req->wake_val = cmd->data;
+>> +               if (req->wake_val != cmd->data) {
+>> +                       req->wake_val = cmd->data;
+>> +                       ctrlr->dirty = true;
+>> +               }
+>>                  break;
+>>          case RPMH_SLEEP_STATE:
+>> -               req->sleep_val = cmd->data;
+>> +               if (req->sleep_val != cmd->data) {
+>> +                       req->sleep_val = cmd->data;
+>> +                       ctrlr->dirty = true;
+>> +               }
+>>                  break;
+>>          default:
+>>                  break;
+> Please remove the default case. There are only three states in the enum. The
+> compiler will warn if a switch statement doesn't cover all cases and
+> we'll know to add something here if another enum value is added in the
+> future.
+Done.
+>>          }
+>>   
+>> -       ctrlr->dirty = true;
+>>   unlock:
+>>          spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+>>   
+>> @@ -323,6 +331,7 @@ static void invalidate_batch(struct rpmh_ctrlr *ctrlr)
+>>          list_for_each_entry_safe(req, tmp, &ctrlr->batch_cache, list)
+>>                  kfree(req);
+>>          INIT_LIST_HEAD(&ctrlr->batch_cache);
+>> +       ctrlr->dirty = true;
+>>          spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+>>   }
+>>   
+>> @@ -456,6 +465,7 @@ static int send_single(struct rpmh_ctrlr *ctrlr, enum rpmh_state state,
+>>   int rpmh_flush(struct rpmh_ctrlr *ctrlr)
+>>   {
+>>          struct cache_req *p;
+>> +       unsigned long flags;
+>>          int ret;
+>>   
+>>          if (!ctrlr->dirty) {
+>> @@ -488,7 +498,9 @@ int rpmh_flush(struct rpmh_ctrlr *ctrlr)
+>>                          return ret;
+>>          }
+>>   
+>> +       spin_lock_irqsave(&ctrlr->cache_lock, flags);
+>>          ctrlr->dirty = false;
+>> +       spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+> So we take the spinlock to update it here. But we don't hold the
+> spinlock to test for !dirty up above. Seems like either rpmh_flush() can
+> only be called sequentially, or the lock added here needs to be held
+> during the whole flush. Which way is it?
 
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
----
- Documentation/filesystems/dax.txt | 84 ++++++++++++++++++++++++++++++-
- 1 file changed, 82 insertions(+), 2 deletions(-)
+Thanks, i will remove !ctrlr->dirty check within rpmh_flush() as 
+currently we invoke it only when caches are dirty.
 
-diff --git a/Documentation/filesystems/dax.txt b/Documentation/filesystems/dax.txt
-index 679729442fd2..32e37c550f76 100644
---- a/Documentation/filesystems/dax.txt
-+++ b/Documentation/filesystems/dax.txt
-@@ -20,8 +20,88 @@ Usage
- If you have a block device which supports DAX, you can make a filesystem
- on it as usual.  The DAX code currently only supports files with a block
- size equal to your kernel's PAGE_SIZE, so you may need to specify a block
--size when creating the filesystem.  When mounting it, use the "-o dax"
--option on the command line or add 'dax' to the options in /etc/fstab.
-+size when creating the filesystem.
-+
-+Enabling DAX on an individual file basis (XFS)
-+----------------------------------------------
-+
-+There are 2 per file dax flags.  One is a physical configuration setting and
-+the other a currently enabled state.
-+
-+The physical configuration setting is maintained on individual file and
-+directory inodes.  It is preserved within the file system.  This 'physical'
-+config setting can be set using an ioctl and/or an application such as "xfs_io
-+-c 'chattr [-+]x'".  Files and directories automatically inherit their physical
-+dax setting from their parent directory when created.  Therefore, setting the
-+physical dax setting at directory creation time can be used to set a default
-+behavior for that sub-tree.  Doing so on the root directory acts to set a
-+default for the entire file system.
-+
-+To clarify inheritance here are 3 examples:
-+
-+Example A:
-+
-+mkdir -p a/b/c
-+xfs_io 'chattr +x' a
-+mkdir a/b/c/d
-+mkdir a/e
-+
-+	dax: a,e
-+	no dax: b,c,d
-+
-+Example B:
-+
-+mkdir a
-+xfs_io 'chattr +x' a
-+mkdir -p a/b/c/d
-+
-+	dax: a,b,c,d
-+	no dax:
-+
-+Example C:
-+
-+mkdir -p a/b/c
-+xfs_io 'chattr +x' c
-+mkdir a/b/c/d
-+
-+	dax: c,d
-+	no dax: a,b
-+
-+
-+The current inode enabled state is set when a file inode is loaded and it is
-+determined that the underlying media supports dax.
-+
-+statx can be used to query the file's current enabled state.  NOTE that a
-+directory will never be operating in a dax state.  Therefore, the dax config
-+state must be queried to see what config state a file or sub-directory will
-+inherit from a directory.
-+
-+NOTE: Setting a file or directory's config state with xfs_io is possible even
-+if the underlying media does not support dax.
-+
-+
-+Enabling dax on a file system wide basis ('-o dax' mount option)
-+----------------------------------------------------------------
-+
-+The physical dax configuration of all files can be overridden using a mount
-+option.  In summary:
-+
-+	(physical flag || mount option) && capable device == dax in effect
-+	(  <xfs_io>    ||  <'-o dax'> ) && capable device == <statx dax true>
-+
-+To enable the mount override, use "-o dax" on the command line or add
-+'dax' to the options in /etc/fstab
-+
-+Using the mount option does not change the physical configured state of
-+individual files.  Therefore, remounting _without_ the mount option will allow
-+the file system to set file's enabled state directly based on their config
-+setting.
-+
-+NOTE: Setting a file or directory's physical config state is possible while the
-+file system is mounted with the dax override.  However, the file's enabled
-+state will continue to be overridden and "dax enabled" until the mount option
-+is removed and a remount performed.  At that point the file's physical config
-+state dictates the enabled state.
- 
- 
- Implementation Tips for Block Driver Writers
+Last cpu going down can first check dirty flag outside rpmh_flush() and 
+decide to invoke it accoringly.
+
 -- 
-2.21.0
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
