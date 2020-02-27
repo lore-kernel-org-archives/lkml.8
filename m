@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20960C3F347
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E679C35E0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E87CA20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:53:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13D03246A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:55:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811635;
-	bh=60GmdPh2XpeV0iJcUXIp/N+gnXAsjfWyw7DREWS2aig=;
+	s=default; t=1582811717;
+	bh=6EtQis6mQeE6kHIL6mvjafifQGOLz1qYtzxe86M3JsQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IAcl2spdUBTO2vIFuy9IuXPge/32zxeonJzoX4UcbLkEvf07XLc4XxOSYxqIt74EF
-	 dq3L02Z0u7n/biB1cloYmC9HSSWrJj/liA4bVwlcVJmglLZVZnUPCins8geANcu0mh
-	 4rC4EWin6V2q7mr8452Urhj2oLhseUS71v2U9QzU=
+	b=VgD9trioVasNwGLWOuuzDh8egfhhHWa1sbIZ1JWIzEb5/ah06fVDG63cFj5szj6EW
+	 t/PImWXd+10uIx3xgjJuhvgyFo60q6spHpuOnGDwWGrop0Q6BVEj6uYNXZbdYf1qzh
+	 /KtJM/8Oxt32gKtmYkkQKvHmY5aoTuDvvpzIiK7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731792AbgB0Nxx (ORCPT
+        id S1731654AbgB0NzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:53:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53816 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:55:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731767AbgB0Nxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:53:52 -0500
+        id S1731951AbgB0NzK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:55:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F1A920578;
-        Thu, 27 Feb 2020 13:53:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 497972469B;
+        Thu, 27 Feb 2020 13:55:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811632;
-        bh=60GmdPh2XpeV0iJcUXIp/N+gnXAsjfWyw7DREWS2aig=;
+        s=default; t=1582811709;
+        bh=6EtQis6mQeE6kHIL6mvjafifQGOLz1qYtzxe86M3JsQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YUgdpytVbSdSGQjrB8EMZHxdL3cnrrwu2TYkHr/yO26Ujmo0JcpMEEAtX3xSPndiw
-         WDSsCWucs9TrrKH9IJ9ad6Y4PjjkU/fuLHCJRjnjxnAhN6O+30s8W8twmBhbO+xbWB
-         Z1p+HAaPxqsL1Tik2kdCQclei/BQbbVts1bUdNAI=
+        b=MHFt2wluUr3K0O/IjnVgxvjUQKVSUfccHJFVSRjyvLZHrX1WzQrf4Q2OdWRcFauUc
+         zRXERts+OO7THd5tPTWObZbh0vKexvqaA+aCxc/tYrUsRVqustEKa9gH7yiL6fb1y2
+         VdSdDujvstYG3qqK3Y8gBgTcbmIKwLgM1xs/LxOw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zahari Petkov <zahari@balena.io>,
-        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 042/237] leds: pca963x: Fix open-drain initialization
-Date:   Thu, 27 Feb 2020 14:34:16 +0100
-Message-Id: <20200227132259.811370412@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 069/237] kconfig: fix broken dependency in randconfig-generated .config
+Date:   Thu, 27 Feb 2020 14:34:43 +0100
+Message-Id: <20200227132302.186328629@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -59,67 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zahari Petkov <zahari@balena.io>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 697529091ac7a0a90ca349b914bb30641c13c753 ]
+[ Upstream commit c8fb7d7e48d11520ad24808cfce7afb7b9c9f798 ]
 
-Before commit bb29b9cccd95 ("leds: pca963x: Add bindings to invert
-polarity") Mode register 2 was initialized directly with either 0x01
-or 0x05 for open-drain or totem pole (push-pull) configuration.
+Running randconfig on arm64 using KCONFIG_SEED=0x40C5E904 (e.g. on v5.5)
+produces the .config with CONFIG_EFI=y and CONFIG_CPU_BIG_ENDIAN=y,
+which does not meet the !CONFIG_CPU_BIG_ENDIAN dependency.
 
-Afterwards, MODE2 initialization started using bitwise operations on
-top of the default MODE2 register value (0x05). Using bitwise OR for
-setting OUTDRV with 0x01 and 0x05 does not produce correct results.
-When open-drain is used, instead of setting OUTDRV to 0, the driver
-keeps it as 1:
+This is because the user choice for CONFIG_CPU_LITTLE_ENDIAN vs
+CONFIG_CPU_BIG_ENDIAN is set by randomize_choice_values() after the
+value of CONFIG_EFI is calculated.
 
-Open-drain: 0x05 | 0x01 -> 0x05 (0b101 - incorrect)
-Totem pole: 0x05 | 0x05 -> 0x05 (0b101 - correct but still wrong)
+When this happens, the has_changed flag should be set.
 
-Now OUTDRV setting uses correct bitwise operations for initialization:
+Currently, it takes the result from the last iteration. It should
+accumulate all the results of the loop.
 
-Open-drain: 0x05 & ~0x04 -> 0x01 (0b001 - correct)
-Totem pole: 0x05 | 0x04 -> 0x05 (0b101 - correct)
-
-Additional MODE2 register definitions are introduced now as well.
-
-Fixes: bb29b9cccd95 ("leds: pca963x: Add bindings to invert polarity")
-Signed-off-by: Zahari Petkov <zahari@balena.io>
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
+Fixes: 3b9a19e08960 ("kconfig: loop as long as we changed some symbols in randconfig")
+Reported-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/leds-pca963x.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ scripts/kconfig/confdata.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/leds/leds-pca963x.c b/drivers/leds/leds-pca963x.c
-index 3bf9a12718192..88c7313cf8693 100644
---- a/drivers/leds/leds-pca963x.c
-+++ b/drivers/leds/leds-pca963x.c
-@@ -43,6 +43,8 @@
- #define PCA963X_LED_PWM		0x2	/* Controlled through PWM */
- #define PCA963X_LED_GRP_PWM	0x3	/* Controlled through PWM/GRPPWM */
+diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
+index 27aac273205ba..fa423fcd1a928 100644
+--- a/scripts/kconfig/confdata.c
++++ b/scripts/kconfig/confdata.c
+@@ -1238,7 +1238,7 @@ bool conf_set_all_new_symbols(enum conf_def_mode mode)
  
-+#define PCA963X_MODE2_OUTDRV	0x04	/* Open-drain or totem pole */
-+#define PCA963X_MODE2_INVRT	0x10	/* Normal or inverted direction */
- #define PCA963X_MODE2_DMBLNK	0x20	/* Enable blinking */
- 
- #define PCA963X_MODE1		0x00
-@@ -462,12 +464,12 @@ static int pca963x_probe(struct i2c_client *client,
- 						    PCA963X_MODE2);
- 		/* Configure output: open-drain or totem pole (push-pull) */
- 		if (pdata->outdrv == PCA963X_OPEN_DRAIN)
--			mode2 |= 0x01;
-+			mode2 &= ~PCA963X_MODE2_OUTDRV;
- 		else
--			mode2 |= 0x05;
-+			mode2 |= PCA963X_MODE2_OUTDRV;
- 		/* Configure direction: normal or inverted */
- 		if (pdata->dir == PCA963X_INVERTED)
--			mode2 |= 0x10;
-+			mode2 |= PCA963X_MODE2_INVRT;
- 		i2c_smbus_write_byte_data(pca963x->chip->client, PCA963X_MODE2,
- 					  mode2);
- 	}
+ 		sym_calc_value(csym);
+ 		if (mode == def_random)
+-			has_changed = randomize_choice_values(csym);
++			has_changed |= randomize_choice_values(csym);
+ 		else {
+ 			set_all_choice_values(csym);
+ 			has_changed = true;
 -- 
 2.20.1
 
