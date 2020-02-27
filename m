@@ -2,149 +2,221 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C462C3F2C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CCEC3F2C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8C05246A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10ACA246A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:22:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Fw8G9blv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SZLLoYPk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729767AbgB0VUf (ORCPT
+        id S1729746AbgB0VWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 16:20:35 -0500
-Received: from mail-dm6nam11on2051.outbound.protection.outlook.com ([40.107.223.51]:50528
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726460AbgB0VUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 16:20:35 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AlIdeu/pFMqznDJdqPM5er7sxeCT9Dw0bpsSfy9Z0yomfV73etaVM/LH/JErl2jkVzpP0ikyJ22Q3LksryIh+z8rvTN7vWgS3VSjQONL3nVHGe1siRUNsp+LdZVxPVLC6JN58uLcYCuofLxj+9rGVRO5v7/AEnSI7syGOA6r3cb/cuc+64j5FmLExukMwZCKKl9QMNj9JvdDI7E4iQEyUYmFTfFwGyE6+c7FTijELMZglcetpH3502vvxShhpLxauK+Y8WzidI1k72OJZLfjkr0SRbLOBszvSDeT4xQHsuYr7AwHSUc/C9jmcIOAN8kf2PeRz01jVP8Gq1esQcGrRg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hlDBZ30+Y+4Xx/9wGB+v2LKRo+M4teDHIA4JAHgThJs=;
- b=ODIeqcyrAcPd+NJcQRDJeUP+ADvr3tuP6armEoRma3STCgRJoAwJvvIQoeS6dAx5wl8hpFCyJUCHe9g/ikRoHpUETTLsL+mY0st281GpRLADuoSWjq8hVgF1BrfOCAJeDI49rj0mzUtewyrDbbz0TH4+Bpq2VdKq77+3GmUaIRGTEOqI8RA7RvPjTUWpftwTtDf9DaxtFp6D8QFN8lo/5BP4EgVSxh5H6fnLujPiggdwgyuHI9P7g+O0bgHh06e60Hfjgoutf3LxU1JyKWnDL8duNGexilg5ocwvHN6lC2G3ggAw7oL9uopjXsKazvwWjNHb8wh7OvpnHxIrumd5wA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Thu, 27 Feb 2020 16:22:49 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37547 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbgB0VWt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 16:22:49 -0500
+Received: by mail-wm1-f65.google.com with SMTP id a141so1013954wme.2;
+        Thu, 27 Feb 2020 13:22:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hlDBZ30+Y+4Xx/9wGB+v2LKRo+M4teDHIA4JAHgThJs=;
- b=Fw8G9blvILlYSCtlOD4MSjnVS9ZFu8UXQubUEbx7hN+3aZgKXrfiaoVaOCtUYhCB+XNBBzU4GUR4TDzFyJ0wdVuDIevx/BjFgg4sxsEwZyWl8GmsQthauIBUqGwDg46l1DCBpPgHinyG97CgCvxRhHK2AXPeySUYqT7LUZ3J1Wc=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=kim.phillips@amd.com; 
-Received: from SN6PR12MB2845.namprd12.prod.outlook.com (2603:10b6:805:75::33)
- by SN6PR12MB2688.namprd12.prod.outlook.com (2603:10b6:805:6f::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15; Thu, 27 Feb
- 2020 21:20:30 +0000
-Received: from SN6PR12MB2845.namprd12.prod.outlook.com
- ([fe80::dd6f:a575:af8e:4f1b]) by SN6PR12MB2845.namprd12.prod.outlook.com
- ([fe80::dd6f:a575:af8e:4f1b%7]) with mapi id 15.20.2750.024; Thu, 27 Feb 2020
- 21:20:30 +0000
-Subject: Re: [PATCH v2 3/3] perf vendor events amd: update Zen1 events to V2
-To:     Vijay Thakkar <vijaythakkar@me.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>,
-        Jon Grimm <jon.grimm@amd.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-References: <20200225192815.50388-1-vijaythakkar@me.com>
- <20200225192815.50388-4-vijaythakkar@me.com>
- <73b5b731-9597-1243-485a-788437500c7a@amd.com>
- <20200227200026.GA8493@shwetrath.localdomain>
-From:   Kim Phillips <kim.phillips@amd.com>
-Message-ID: <164d3a93-c607-2bd4-c9a3-dc4d8b275d42@amd.com>
-Date:   Thu, 27 Feb 2020 15:20:29 -0600
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jjTC00oz0xJS2EtroPNnlXO/khwGqHM7na+1CB2ga9Q=;
+        b=SZLLoYPk2ycxEmWzdxcVp9dB8L3T888idnFfa+DNUjRLDCFQ1+eocQ7Y404eg3Iw66
+         MvVDcdOhhaM5AMnpX0EAzzuHKrqa5smyP5dIfnH4QjdjZpxeKIab9rYi2l5prNwWWbia
+         i+moZQbwyzqLjLtgIWX+f+bKfiaFAnW0QCT6aAIRlQZu0uZZk0Nwg1dlUX0zj7J5V7Id
+         9PsrjOnXnP4yYXNGrFLW8miKmTLZEVpZJAt1ADWgmISPmOtcF1DjYM9BVsYgoIOKxyYW
+         tXn2JwLC6OqYLLXULlOKnsBRAu2FSALakMc+abRjGhDo7Vx+6LVu+KM3dB6qANjDbnNK
+         v5nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=jjTC00oz0xJS2EtroPNnlXO/khwGqHM7na+1CB2ga9Q=;
+        b=NoMoc9QndHxqEfidmC+eAqNQ1pMJHA0UBa4/f2rldxWnPuAWGRYt3xfPYAjsPD0My4
+         FkNf6SUL5rG6WxztlVkLMcLpPLIW7EirPLO2XIkZjytPqpXCdFmzAM4Z3N8Jjg+Vq/n5
+         EMxCJHp4uIjuaDOGD28qpvMCZJbw2WElslFjtSp93M/ybzg29ylNjqRNVnChy7VvEuCL
+         kBbiPHXDDzTYW8wqbctJGHQGZ+ktJFxoCsUJAbNFcepN/CpWyk0Wkm2utP4P8fX1ZI8l
+         yE2T3U72G65LMPZMFI/81vFvRFwA0D/T233ufcUQNbVytn2XjKSGwoUh4bqDhUQy7K2X
+         0PLw==
+X-Gm-Message-State: APjAAAWU9CbwOpEFSpw+PelkVW/V/SctQ+AYr6q4UyyYNXjzemueJWMH
+        r6BcHhu6XSAuVy6/HMN1A4KCH8Td
+X-Google-Smtp-Source: APXvYqya7eEhj7G7UENVqfpt8He9TD7I0fYw+9NXp7vM+b2Tvdl7IX+jVpzduHGEkg4j1521krlWOw==
+X-Received: by 2002:a7b:cb86:: with SMTP id m6mr741164wmi.51.1582838565953;
+        Thu, 27 Feb 2020 13:22:45 -0800 (PST)
+Received: from [192.168.1.23] (afcq9.neoplus.adsl.tpnet.pl. [95.49.68.9])
+        by smtp.gmail.com with ESMTPSA id c2sm941815wma.39.2020.02.27.13.22.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Feb 2020 13:22:45 -0800 (PST)
+Subject: Re: [RESEND PATCH v17 00/17] Multi Color LED Framework
+To:     Dan Murphy <dmurphy@ti.com>, Greg KH <gregkh@linuxfoundation.org>,
+        Pavel Machek <pavel@denx.de>
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200127150032.31350-1-dmurphy@ti.com>
+ <42d9687b-b488-22cf-0e9a-ff635b2094e3@ti.com> <20200225101940.GB16252@amd>
+ <be76fdac-9d32-b9b2-c01d-3aa315b14463@gmail.com>
+ <20200226125903.GA2800@duo.ucw.cz>
+ <20f6bdd5-e899-aead-8c35-1c3a3d09145f@gmail.com>
+ <20200227105808.GA27003@duo.ucw.cz> <20200227124329.GA994747@kroah.com>
+ <4c273c06-5024-b2d4-c656-b165015090be@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <96a31ff6-5ecf-05a7-d61f-2804f2488d1b@gmail.com>
+Date:   Thu, 27 Feb 2020 22:22:43 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-In-Reply-To: <20200227200026.GA8493@shwetrath.localdomain>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN4PR0501CA0040.namprd05.prod.outlook.com
- (2603:10b6:803:41::17) To SN6PR12MB2845.namprd12.prod.outlook.com
- (2603:10b6:805:75::33)
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.236.136.247] (165.204.77.1) by SN4PR0501CA0040.namprd05.prod.outlook.com (2603:10b6:803:41::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.5 via Frontend Transport; Thu, 27 Feb 2020 21:20:30 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 17e0c052-012c-48fe-e5f6-08d7bbcadf86
-X-MS-TrafficTypeDiagnostic: SN6PR12MB2688:|SN6PR12MB2688:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN6PR12MB26887BD762F9B5467F5A243F87EB0@SN6PR12MB2688.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 03264AEA72
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(346002)(366004)(39860400002)(136003)(199004)(189003)(956004)(52116002)(54906003)(2616005)(6916009)(44832011)(66476007)(66946007)(31686004)(66556008)(53546011)(5660300002)(2906002)(966005)(86362001)(4326008)(31696002)(36756003)(478600001)(81156014)(7416002)(186003)(16526019)(8676002)(316002)(6486002)(16576012)(26005)(8936002)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2688;H:SN6PR12MB2845.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: y6/zwTAd6khStm7YJvOn2j8CoFBSKSEv3lKRXLPf/EM5RKxdsrgej8EDWaj3a8AvC77Cn5Ticr3OGfHy/HK6dEEstr7Dlx5G0VQwntcBB3agfUQyHbsjAKUk148Y3bVG6Bcabf6guJ0iVvFxx2gvJt76xNW2llPGM/i2EK1ybUHiMzaD2eN1PlT85WkUzuYXoNg8xCWmszTHgTauzAa+a4WXN5DKCToi3w1qCcnEdzT53F7r4VU/mM9mgm0/Ek8ed2pJIpF6EFNuPxpVwvrcKnwvsyo7VL2PWKmoZs0Yc73VxWDnJO94yRHCmGA2EE4uiPzqHYQECLeRcd11QABh2Uz9FD0/fq/SLZjaOlHtUm56UsnlHecMofK9sKlRt59qQMPDNRq/TWM0Po8kMItOj4mxbPbSkvJBoW3ZgDYDvaPZtFnY7tq8v1yCi1mHGLvkxihsTRXWTOTDWwggJx10e+2RYvaZrYKuF9BSqHEBlwhUawew33uvXhz4km5F9EG6U0ha8YFZJURz87nVOl1Yaw==
-X-MS-Exchange-AntiSpam-MessageData: 4qYdMT5KLVRzccxKz9ZczAUzlpWEj+0vm3QbyLiHL/kIgGcSbAQFdwGvmJiCRbpZU6lIam44AfeAx963+riGCpkCBaT3IvbLJEz8UVNLNbWE4i0kWRqhxqstMJk3bdNsYzFwZHhxyPGKojmKXsMB8w==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 17e0c052-012c-48fe-e5f6-08d7bbcadf86
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2020 21:20:30.6341
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: W8ALZPtbX5solri4qGDXM0bTpjIV34wQWsdZTPmROk5z4NVEyilIv6liBadP4gVV27MA6/dBrbZdhA5gR4Cz6Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2688
+In-Reply-To: <4c273c06-5024-b2d4-c656-b165015090be@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/27/20 2:00 PM, Vijay Thakkar wrote:
->> OSRR for AMD Family 17h processors, Models 00h-2Fh, 56255 Rev 3.03 - July, 2018
-> I have included this for v3 that I will submit later, including all the
-> changes for the FPU counters. Sorry, I messed up copy-pasting the text
-> and forgot to change the trailing pipe number.
-
-Please also look at addressing the review comments for patch 2 of 3.
-
->> and their counts don't seem to match up very well when running
->> various workloads.  The microarchitecture is likely to have changed
->> in this area from families prior to 17h, so a MAB alloc can likely
->> count different events than what is presumed here: a Data cache
->> load/store/prefetch miss.
->>
->> I think it's safer to just leave the PPR text "LS MAB Allocates
->> by Type" as-is, instead of assuming they are L1 load/store misses.
->> What do you think?
+On 2/27/20 2:07 PM, Dan Murphy wrote:
+> Pavel
 > 
-> I did some checking accross PPRs, and this counter seems to have changed
-> names multiple times throughout the PPR revisions. 
+> On 2/27/20 6:43 AM, Greg KH wrote:
+>> On Thu, Feb 27, 2020 at 11:58:08AM +0100, Pavel Machek wrote:
+>>> Hi, Jacek!
+>>>
+>>> (and thanks for doing this).
+>>>
+>>>> We have here long lasting discussion related to LED multicolor class
+>>>> sysfs interface design. We went through several iterations and worked
+>>>> out the solution with individual file per each color sub-LED in the
+>>>> color directory as shown below:
+>>>>
+>>>> /sys/class/leds/<led>/colors/<color>_intensity
+>>>>
+>>>> This is in line with one-value-per-file sysfs rule, that is being
+>>>> frequently highlighted, and we even had not so long ago a patch
+>>>> for led cpu trigger solving the problem caused by this rule not
+>>>> being adhered to.
+>>> Yep. One of the problems is that it is nice to change all the hardware
+>>> channels at once to produce color (it is often on i2c -- and slow), so
+>>> current proposals use "interesting" kind of latching.
+>>>
+>>>> Now we have the voice below bringing to attention another caveat
+>>>> from sysfs documentation:
+>>>>
+>>>> "it is socially acceptable to express an array of values of the same
+>>>> type"
+>>>>
+>>>> and proposing the interface in the form of two files:
+>>>>
+>>>> channel_intensity (file containing array of u32's)
+>>>> channel_names (usually containing "red green blue")
+>>> And thus I want to have it in one file, so it is naturaly atomic. RGB
+>>> leds with 3 channels are common; I have not user yet, but there are
+>>> RGBW with 4 channels (and some more exotic stuff). I don't expect to
+>>> have more than 5 channels.
 > 
-> Zen1 PPR (54945 Rev 1.14 - April 15, 2017) lists counter called "LsMabAllocPipe"
-> with 5 subcounters that have different names compared to ones we see in
-> the mainline right now. PPRs for stepping B2
-> onwards change this to the 3 sub-counter and primary counter name
-> we see right now. This public description still changes accross various
-> PPR revisions, which is why I had this set to what it was. The lastest
-> PPR I can find is indeed lists it as "LS MAB Allocates by Type";
-> I will change it to that with the fuffix of tehe sub-counter name. Since
-> the same counter is in Zen2 as well, I will make the same changes there
-> too.
+> This is not an accurate statement.  Right now a user can have up to 8
+> channels to cover all the LEDs defined in the LED core
+> 
+> And if the led_colors array expands then this array can expand.
+> 
+> We have no control on how many entries the user will put in their DT so
+> again this number is completely arbitrary.
 
-Thanks, yes, and if you look at the Software Optimization Guide that I
-just added to the bugzilla [1], Figure 7 "Load-Store Unit" on page 40
-shows a MAB block separate from the Data Cache block.
+I believe that some of mechanisms that were devised for the most
+recent implementation proposal of LED mc class will need
+to be reused for the array approach. E.g. available_colors bitmask
+will make the parsing resistant to duplicates.
 
-Kim
+Of course LED multicolor DT node design should be applicable as well
+to the array approach.
 
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=206537
+>> Writing 3 or 4 or 5 numbers all at once in a single sysfs file to
+>> represent a single output should be fine.
+>> thanks,
+
+Thank you for making this clear.
+
+Effectively, the way to go as I see it now is just moving from
+colors directory to channel_intensity and channel_names files.
+
+Besides that, since the issue of backwards compatibility with
+LED class still remains, we need to apply the already worked out
+formula for mapping brightness to color iout values.
+
+This implies that color values written to channel_intensity file
+will be written unchanged to the hw only when global brightness
+is equal to max_brightness. This is because they will be multiplied
+by brightness / max_brightness ratio.
+
+Do you agree, Pavel?
+
+-- 
+Best regards,
+Jacek Anaszewski
