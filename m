@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C96A8C3F368
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2474C3F340
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AB9C21D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73F3E2469D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:53:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811571;
-	bh=RNLN69BGm8fANgSoBTtbZd9/AhSz5a+ERLa+TyBFI1c=;
+	s=default; t=1582811600;
+	bh=4AjuisLq/Q618j1pGEwedVKONd7Arpt8wzmOlrKxZqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LVapTfE6eFbLEbiiM+rZel+TCvqebrNiuBqNywqQMvQHNBa1b4Bh6KDoLt66o/9M8
-	 eVkCNL/7XJ23q6oaEd9OxScHjby6lwaPOjwHpm2Aabh6Uj2QjQBo8ao3DHbHSNIPdS
-	 Y/uiQxIfMQXz2zfKTgOD2ZNevRUyx9nUMIuzMh/U=
+	b=NjEGqrGi82y4dVK0tkJtDz3u/Qwj/85BnwZ5IzHUG+22dZ1S+Twh425wf46Mm0R64
+	 LmRYGuEefjzBxYlDQs6AQddR1Fxxh35c5TrH4O4Qsq44mynw8AOAjWfCCfISDOs8d3
+	 c7zx6E4v8fJmQqpci5m6XKW1cYojU89zr6PJ6mgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731585AbgB0Nwu (ORCPT
+        id S1731670AbgB0NxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:52:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52424 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:53:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731101AbgB0Nwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:52:47 -0500
+        id S1731657AbgB0NxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:53:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6486920801;
-        Thu, 27 Feb 2020 13:52:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9ACD624656;
+        Thu, 27 Feb 2020 13:53:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811566;
-        bh=RNLN69BGm8fANgSoBTtbZd9/AhSz5a+ERLa+TyBFI1c=;
+        s=default; t=1582811595;
+        bh=4AjuisLq/Q618j1pGEwedVKONd7Arpt8wzmOlrKxZqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KC93wqKsllWw50dMh+umJyy5yeZ1nVpNn4iOoqtn49ItEegoSrcLbd83oKGC1ndBT
-         JRS0YGS/hJYsG4oocUqEXy5RpTUMP8um3Hi88OhcPkVJ7buidojEHOxpmLEwl906eT
-         OC5WM6svSl38GsTypadC5/1AAz/8pzDjPsYoDBEo=
+        b=nqhjfmgyetNU6sEBcQjrgEtIAQ6lovE7suVMZGSO4kQkYNnAKEMjrnzcJ7sOZQuTK
+         RY0mijj1Yr82VP7rjS2DNy68R/1p38oU3Z3Rut1CAif76jTnmT3daicAjSEVBUKS6g
+         iheYJUu7gZMHrf2UXr3jeH6/O1GRlr47O2d61QMc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Dilger <adilger@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
-        stable@kernel.org
-Subject: [PATCH 4.14 017/237] ext4: fix checksum errors with indexed dirs
-Date:   Thu, 27 Feb 2020 14:33:51 +0100
-Message-Id: <20200227132257.356800487@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>
+Subject: [PATCH 4.14 027/237] serial: imx: Only handle irqs that are actually enabled
+Date:   Thu, 27 Feb 2020 14:34:01 +0100
+Message-Id: <20200227132258.427992937@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -60,125 +61,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-commit 48a34311953d921235f4d7bbd2111690d2e469cf upstream.
+commit 437768962f754d9501e5ba4d98b1f2a89dc62028 upstream.
 
-DIR_INDEX has been introduced as a compat ext4 feature. That means that
-even kernels / tools that don't understand the feature may modify the
-filesystem. This works because for kernels not understanding indexed dir
-format, internal htree nodes appear just as empty directory entries.
-Index dir aware kernels then check the htree structure is still
-consistent before using the data. This all worked reasonably well until
-metadata checksums were introduced. The problem is that these
-effectively made DIR_INDEX only ro-compatible because internal htree
-nodes store checksums in a different place than normal directory blocks.
-Thus any modification ignorant to DIR_INDEX (or just clearing
-EXT4_INDEX_FL from the inode) will effectively cause checksum mismatch
-and trigger kernel errors. So we have to be more careful when dealing
-with indexed directories on filesystems with checksumming enabled.
+Handling an irq that isn't enabled can have some undesired side effects.
+Some of these are mentioned in the newly introduced code comment. Some
+of the irq sources already had their handling right, some don't. Handle
+them all in the same consistent way.
 
-1) We just disallow loading any directory inodes with EXT4_INDEX_FL when
-DIR_INDEX is not enabled. This is harsh but it should be very rare (it
-means someone disabled DIR_INDEX on existing filesystem and didn't run
-e2fsck), e2fsck can fix the problem, and we don't want to answer the
-difficult question: "Should we rather corrupt the directory more or
-should we ignore that DIR_INDEX feature is not set?"
+The change for USR1_RRDY and USR1_AGTIM drops the check for
+dma_is_enabled. This is correct as UCR1_RRDYEN and UCR2_ATEN are always
+off if dma is enabled.
 
-2) When we find out htree structure is corrupted (but the filesystem and
-the directory should in support htrees), we continue just ignoring htree
-information for reading but we refuse to add new entries to the
-directory to avoid corrupting it more.
-
-Link: https://lore.kernel.org/r/20200210144316.22081-1-jack@suse.cz
-Fixes: dbe89444042a ("ext4: Calculate and verify checksums for htree nodes")
-Reviewed-by: Andreas Dilger <adilger@dilger.ca>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Reviewed-by: Shawn Guo <shawnguo@kernel.org>
+[Backport to v4.14]
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/ext4/dir.c   |   14 ++++++++------
- fs/ext4/ext4.h  |    5 ++++-
- fs/ext4/inode.c |   12 ++++++++++++
- fs/ext4/namei.c |    7 +++++++
- 4 files changed, 31 insertions(+), 7 deletions(-)
+ drivers/tty/serial/imx.c |   53 ++++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 39 insertions(+), 14 deletions(-)
 
---- a/fs/ext4/dir.c
-+++ b/fs/ext4/dir.c
-@@ -125,12 +125,14 @@ static int ext4_readdir(struct file *fil
- 		if (err != ERR_BAD_DX_DIR) {
- 			return err;
- 		}
--		/*
--		 * We don't set the inode dirty flag since it's not
--		 * critical that it get flushed back to the disk.
--		 */
--		ext4_clear_inode_flag(file_inode(file),
--				      EXT4_INODE_INDEX);
-+		/* Can we just clear INDEX flag to ignore htree information? */
-+		if (!ext4_has_metadata_csum(sb)) {
-+			/*
-+			 * We don't set the inode dirty flag since it's not
-+			 * critical that it gets flushed back to the disk.
-+			 */
-+			ext4_clear_inode_flag(inode, EXT4_INODE_INDEX);
-+		}
+--- a/drivers/tty/serial/imx.c
++++ b/drivers/tty/serial/imx.c
+@@ -843,14 +843,42 @@ static void imx_mctrl_check(struct imx_p
+ static irqreturn_t imx_int(int irq, void *dev_id)
+ {
+ 	struct imx_port *sport = dev_id;
+-	unsigned int sts;
+-	unsigned int sts2;
++	unsigned int usr1, usr2, ucr1, ucr2, ucr3, ucr4;
+ 	irqreturn_t ret = IRQ_NONE;
+ 
+-	sts = readl(sport->port.membase + USR1);
+-	sts2 = readl(sport->port.membase + USR2);
++	usr1 = readl(sport->port.membase + USR1);
++	usr2 = readl(sport->port.membase + USR2);
++	ucr1 = readl(sport->port.membase + UCR1);
++	ucr2 = readl(sport->port.membase + UCR2);
++	ucr3 = readl(sport->port.membase + UCR3);
++	ucr4 = readl(sport->port.membase + UCR4);
++
++	/*
++	 * Even if a condition is true that can trigger an irq only handle it if
++	 * the respective irq source is enabled. This prevents some undesired
++	 * actions, for example if a character that sits in the RX FIFO and that
++	 * should be fetched via DMA is tried to be fetched using PIO. Or the
++	 * receiver is currently off and so reading from URXD0 results in an
++	 * exception. So just mask the (raw) status bits for disabled irqs.
++	 */
++	if ((ucr1 & UCR1_RRDYEN) == 0)
++		usr1 &= ~USR1_RRDY;
++	if ((ucr2 & UCR2_ATEN) == 0)
++		usr1 &= ~USR1_AGTIM;
++	if ((ucr1 & UCR1_TXMPTYEN) == 0)
++		usr1 &= ~USR1_TRDY;
++	if ((ucr4 & UCR4_TCEN) == 0)
++		usr2 &= ~USR2_TXDC;
++	if ((ucr3 & UCR3_DTRDEN) == 0)
++		usr1 &= ~USR1_DTRD;
++	if ((ucr1 & UCR1_RTSDEN) == 0)
++		usr1 &= ~USR1_RTSD;
++	if ((ucr3 & UCR3_AWAKEN) == 0)
++		usr1 &= ~USR1_AWAKE;
++	if ((ucr4 & UCR4_OREN) == 0)
++		usr2 &= ~USR2_ORE;
+ 
+-	if (sts & (USR1_RRDY | USR1_AGTIM)) {
++	if (usr1 & (USR1_RRDY | USR1_AGTIM)) {
+ 		if (sport->dma_is_enabled)
+ 			imx_dma_rxint(sport);
+ 		else
+@@ -858,18 +886,15 @@ static irqreturn_t imx_int(int irq, void
+ 		ret = IRQ_HANDLED;
  	}
  
- 	if (ext4_has_inline_data(inode)) {
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -2386,8 +2386,11 @@ void ext4_insert_dentry(struct inode *in
- 			struct ext4_filename *fname);
- static inline void ext4_update_dx_flag(struct inode *inode)
- {
--	if (!ext4_has_feature_dir_index(inode->i_sb))
-+	if (!ext4_has_feature_dir_index(inode->i_sb)) {
-+		/* ext4_iget() should have caught this... */
-+		WARN_ON_ONCE(ext4_has_feature_metadata_csum(inode->i_sb));
- 		ext4_clear_inode_flag(inode, EXT4_INODE_INDEX);
-+	}
- }
- static const unsigned char ext4_filetype_table[] = {
- 	DT_UNKNOWN, DT_REG, DT_DIR, DT_CHR, DT_BLK, DT_FIFO, DT_SOCK, DT_LNK
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -4817,6 +4817,18 @@ struct inode *ext4_iget(struct super_blo
- 		ret = -EFSCORRUPTED;
- 		goto bad_inode;
+-	if ((sts & USR1_TRDY &&
+-	     readl(sport->port.membase + UCR1) & UCR1_TXMPTYEN) ||
+-	    (sts2 & USR2_TXDC &&
+-	     readl(sport->port.membase + UCR4) & UCR4_TCEN)) {
++	if ((usr1 & USR1_TRDY) || (usr2 & USR2_TXDC)) {
+ 		imx_txint(irq, dev_id);
+ 		ret = IRQ_HANDLED;
  	}
-+	/*
-+	 * If dir_index is not enabled but there's dir with INDEX flag set,
-+	 * we'd normally treat htree data as empty space. But with metadata
-+	 * checksumming that corrupts checksums so forbid that.
-+	 */
-+	if (!ext4_has_feature_dir_index(sb) && ext4_has_metadata_csum(sb) &&
-+	    ext4_test_inode_flag(inode, EXT4_INODE_INDEX)) {
-+		EXT4_ERROR_INODE(inode,
-+				 "iget: Dir with htree data on filesystem without dir_index feature.");
-+		ret = -EFSCORRUPTED;
-+		goto bad_inode;
-+	}
- 	ei->i_disksize = inode->i_size;
- #ifdef CONFIG_QUOTA
- 	ei->i_reserved_quota = 0;
---- a/fs/ext4/namei.c
-+++ b/fs/ext4/namei.c
-@@ -2094,6 +2094,13 @@ static int ext4_add_entry(handle_t *hand
- 		retval = ext4_dx_add_entry(handle, &fname, dir, inode);
- 		if (!retval || (retval != ERR_BAD_DX_DIR))
- 			goto out;
-+		/* Can we just ignore htree data? */
-+		if (ext4_has_metadata_csum(sb)) {
-+			EXT4_ERROR_INODE(dir,
-+				"Directory has corrupted htree index.");
-+			retval = -EFSCORRUPTED;
-+			goto out;
-+		}
- 		ext4_clear_inode_flag(dir, EXT4_INODE_INDEX);
- 		dx_fallback++;
- 		ext4_mark_inode_dirty(handle, dir);
+ 
+-	if (sts & USR1_DTRD) {
++	if (usr1 & USR1_DTRD) {
+ 		unsigned long flags;
+ 
+-		if (sts & USR1_DTRD)
++		if (usr1 & USR1_DTRD)
+ 			writel(USR1_DTRD, sport->port.membase + USR1);
+ 
+ 		spin_lock_irqsave(&sport->port.lock, flags);
+@@ -879,17 +904,17 @@ static irqreturn_t imx_int(int irq, void
+ 		ret = IRQ_HANDLED;
+ 	}
+ 
+-	if (sts & USR1_RTSD) {
++	if (usr1 & USR1_RTSD) {
+ 		imx_rtsint(irq, dev_id);
+ 		ret = IRQ_HANDLED;
+ 	}
+ 
+-	if (sts & USR1_AWAKE) {
++	if (usr1 & USR1_AWAKE) {
+ 		writel(USR1_AWAKE, sport->port.membase + USR1);
+ 		ret = IRQ_HANDLED;
+ 	}
+ 
+-	if (sts2 & USR2_ORE) {
++	if (usr2 & USR2_ORE) {
+ 		sport->port.icount.overrun++;
+ 		writel(USR2_ORE, sport->port.membase + USR2);
+ 		ret = IRQ_HANDLED;
 
 
