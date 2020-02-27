@@ -2,155 +2,140 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B581AC3F350
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC78EC3F34E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CAB5222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:44:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811093;
-	bh=Zqa2Lb07ENrV+14mEoLnG9RRpmguim7blZ99C4OTWqM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xNsnCmWNYFmVJyA57pEFEoeuozuehRqGT103f1I3X8/KKY/s2asnXX0oCpAbS6FhJ
-	 Ib+IJJQzLGxOMp93khjfvrg7M1ECVDI9J45Hk8ypp2VEVaj0289+0anl7Rb1Uvwj/E
-	 72LSGbWchkwb17OwYz91v8bT4FiHkNuJozg0IT7Y=
+	by mail.kernel.org (Postfix) with ESMTP id 86D34246A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:45:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DtblLM/H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730276AbgB0Now (ORCPT
+        id S1730354AbgB0NpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:44:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40338 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730254AbgB0Noo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:44:44 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D60F420578;
-        Thu, 27 Feb 2020 13:44:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811084;
-        bh=Zqa2Lb07ENrV+14mEoLnG9RRpmguim7blZ99C4OTWqM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aMMreT4GlsvxINut1CshsbYSudXjb9gfuzNBlCTbkQxAjo2l2qk7aIrgEt0npYH+3
-         hQnTrsfkmWWeXXOE/5D6gc0Kp1gVPd5/krOy0WTAxfK+0MydIQKmV9GOSIyWTg7Ln9
-         tzx6TUaXl08I3vns9UATpGhH1fPjFu7QlZ4BnNoQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+65c6c92d04304d0a8efc@syzkaller.appspotmail.com,
-        syzbot+e60ddfa48717579799dd@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 111/113] ALSA: seq: Avoid concurrent access to queue flags
-Date:   Thu, 27 Feb 2020 14:37:07 +0100
-Message-Id: <20200227132229.592257081@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
-References: <20200227132211.791484803@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 27 Feb 2020 08:45:13 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53038 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729976AbgB0NpE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:45:04 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p9so3638796wmc.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 05:45:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PRpjg7VfxAWAXWCyVK3TF778q7i9qgrUQjd7ke8MZGM=;
+        b=DtblLM/HbuiDe6npECTn3ll10Od90J455eJP7dLeDSNxFNbJ5yW3943M5CWNGBGCca
+         3ENV/gwcavsjWQMKfAYy7zoj1Km8KGj4ULjZkpaKfwNFmkCLyc70QJHDLKw3V4etqwGn
+         aa/6HN3YZyIiRCgvoKIGN9egLIIAA5YQWrfSOBmlw3uxPm2+FxEI9spvtBwDYeLVgJnR
+         0iYg5Rtrce/IuzWJA2QArG+fSNwYxnD85Y3keU55NPvTPmDG47k9izsaHWVJcNJNAAgB
+         FcseVC3Y4T+U8L9JPYQpYurbrHHJDhrMtyCcFFmK6h3lBPOjCwDEocwGgBRkPCFTxLLa
+         2w2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PRpjg7VfxAWAXWCyVK3TF778q7i9qgrUQjd7ke8MZGM=;
+        b=GxZd4Jyk+94EaxhT3mjanK01AfKtB6aAwPj4nj6bIguVe1epXXkL6NNvTg6Zvrh+Nl
+         f5smL9vm31fC1gDQUvqLV8YNKlCNm1U39O1zJX5bnccr/TA7ZacyZrhil6UED/k3FHnm
+         eTZPihyWkuq0OSVlwrsP9MEYBCo/wTa9Umm29ZbIfjLI/s5eencvSId7ajCj2O2OdBJf
+         L9isNiUolcKZVEXOhDLeHmJuDQTLs2OUkMmBAbRfIG96GmeKdzD7lTVCzmf226bvLJgh
+         FDAMR3UpKhlcEBFhdmPf0ZfZcuCu6WK6lpSpa4WisnFK6XM9MVr8E6nebEaW4bMoJE8P
+         X+Uw==
+X-Gm-Message-State: APjAAAV0JknuXsQCo7gP02EXV+mP/c9YaH7ZmPkUEELiNb9WSG4J/uZA
+        oT1Ixl13IE8K2CnkPNkdk6tv/g==
+X-Google-Smtp-Source: APXvYqxbH2LzNiuz8OUFlrSiYa48j4DRaQWKby7I1has1etckZRz2eo+zWt7xkZGhT2Zx67Nss+abA==
+X-Received: by 2002:a1c:f712:: with SMTP id v18mr5639230wmh.155.1582811102353;
+        Thu, 27 Feb 2020 05:45:02 -0800 (PST)
+Received: from [10.44.66.8] ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id a198sm8024152wme.12.2020.02.27.05.45.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Feb 2020 05:45:01 -0800 (PST)
+Subject: Re: [PATCH v3 6/6] arm64: dts: sdm845: Redefine interconnect provider
+ DT nodes
+To:     bjorn.andersson@linaro.org
+Cc:     Sibi Sankar <sibis@codeaurora.org>, robh+dt@kernel.org,
+        evgreen@chromium.org, agross@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, mark.rutland@arm.com,
+        daidavid1@codeaurora.org, saravanak@google.com, mka@chromium.org,
+        linux-pm@vger.kernel.org, Odelu Kukatla <okukatla@codeaurora.org>
+References: <20200209183411.17195-1-sibis@codeaurora.org>
+ <20200209183411.17195-7-sibis@codeaurora.org>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ mQINBFjTuRcBEACyAOVzghvyN19Sa/Nit4LPBWkICi5W20p6bwiZvdjhtuh50H5q4ktyxJtp
+ 1+s8dMSa/j58hAWhrc2SNL3fttOCo+MM1bQWwe8uMBQJP4swgXf5ZUYkSssQlXxGKqBSbWLB
+ uFHOOBTzaQBaNgsdXo+mQ1h8UCgM0zQOmbs2ort8aHnH2i65oLs5/Xgv/Qivde/FcFtvEFaL
+ 0TZ7odM67u+M32VetH5nBVPESmnEDjRBPw/DOPhFBPXtal53ZFiiRr6Bm1qKVu3dOEYXHHDt
+ nF13gB+vBZ6x5pjl02NUEucSHQiuCc2Aaavo6xnuBc3lnd4z/xk6GLBqFP3P/eJ56eJv4d0B
+ 0LLgQ7c1T3fU4/5NDRRCnyk6HJ5+HSxD4KVuluj0jnXW4CKzFkKaTxOp7jE6ZD/9Sh74DM8v
+ etN8uwDjtYsM07I3Szlh/I+iThxe/4zVtUQsvgXjwuoOOBWWc4m4KKg+W4zm8bSCqrd1DUgL
+ f67WiEZgvN7tPXEzi84zT1PiUOM98dOnmREIamSpKOKFereIrKX2IcnZn8jyycE12zMkk+Sc
+ ASMfXhfywB0tXRNmzsywdxQFcJ6jblPNxscnGMh2VlY2rezmqJdcK4G4Lprkc0jOHotV/6oJ
+ mj9h95Ouvbq5TDHx+ERn8uytPygDBR67kNHs18LkvrEex/Z1cQARAQABtChHZW9yZ2kgRGph
+ a292IDxnZW9yZ2kuZGpha292QGxpbmFyby5vcmc+iQI+BBMBAgAoBQJY07kXAhsDBQkHhM4A
+ BgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRCyi/eZcnWWUuvsD/4miikUeAO6fU2Xy3fT
+ l7RUCeb2Uuh1/nxYoE1vtXcow6SyAvIVTD32kHXucJJfYy2zFzptWpvD6Sa0Sc58qe4iLY4j
+ M54ugOYK7XeRKkQHFqqR2T3g/toVG1BOLS2atooXEU+8OFbpLkBXbIdItqJ1M1SEw8YgKmmr
+ JlLAaKMq3hMb5bDQx9erq7PqEKOB/Va0nNu17IL58q+Q5Om7S1x54Oj6LiG/9kNOxQTklOQZ
+ t61oW1Ewjbl325fW0/Lk0QzmfLCrmGXXiedFEMRLCJbVImXVKdIt/Ubk6SAAUrA5dFVNBzm2
+ L8r+HxJcfDeEpdOZJzuwRyFnH96u1Xz+7X2V26zMU6Wl2+lhvr2Tj7spxjppR+nuFiybQq7k
+ MIwyEF0mb75RLhW33sdGStCZ/nBsXIGAUS7OBj+a5fm47vQKv6ekg60oRTHWysFSJm1mlRyq
+ exhI6GwUo5GM/vE36rIPSJFRRgkt6nynoba/1c4VXxfhok2rkP0x3CApJ5RimbvITTnINY0o
+ CU6f1ng1I0A1UTi2YcLjFq/gmCdOHExT4huywfu1DDf0p1xDyPA1FJaii/gJ32bBP3zK53hM
+ dj5S7miqN7F6ZpvGSGXgahQzkGyYpBR5pda0m0k8drV2IQn+0W8Qwh4XZ6/YdfI81+xyFlXc
+ CJjljqsMCJW6PdgEH7kCDQRY07kXARAAvupGd4Jdd8zRRiF+jMpv6ZGz8L55Di1fl1YRth6m
+ lIxYTLwGf0/p0oDLIRldKswena3fbWh5bbTMkJmRiOQ/hffhPSNSyyh+WQeLY2kzl6geiHxD
+ zbw37e2hd3rWAEfVFEXOLnmenaUeJFyhA3Wd8OLdRMuoV+RaLhNfeHctiEn1YGy2gLCq4VNb
+ 4Wj5hEzABGO7+LZ14hdw3hJIEGKtQC65Jh/vTayGD+qdwedhINnIqslk9tCQ33a+jPrCjXLW
+ X29rcgqigzsLHH7iVHWA9R5Aq7pCy5hSFsl4NBn1uV6UHlyOBUuiHBDVwTIAUnZ4S8EQiwgv
+ WQxEkXEWLM850V+G6R593yZndTr3yydPgYv0xEDACd6GcNLR/x8mawmHKzNmnRJoOh6Rkfw2
+ fSiVGesGo83+iYq0NZASrXHAjWgtZXO1YwjW9gCQ2jYu9RGuQM8zIPY1VDpQ6wJtjO/KaOLm
+ NehSR2R6tgBJK7XD9it79LdbPKDKoFSqxaAvXwWgXBj0Oz+Y0BqfClnAbxx3kYlSwfPHDFYc
+ R/ppSgnbR5j0Rjz/N6Lua3S42MDhQGoTlVkgAi1btbdV3qpFE6jglJsJUDlqnEnwf03EgjdJ
+ 6KEh0z57lyVcy5F/EUKfTAMZweBnkPo+BF2LBYn3Qd+CS6haZAWaG7vzVJu4W/mPQzsAEQEA
+ AYkCJQQYAQIADwUCWNO5FwIbDAUJB4TOAAAKCRCyi/eZcnWWUhlHD/0VE/2x6lKh2FGP+QHH
+ UTKmiiwtMurYKJsSJlQx0T+j/1f+zYkY3MDX+gXa0d0xb4eFv8WNlEjkcpSPFr+pQ7CiAI33
+ 99kAVMQEip/MwoTYvM9NXSMTpyRJ/asnLeqa0WU6l6Z9mQ41lLzPFBAJ21/ddT4xeBDv0dxM
+ GqaH2C6bSnJkhSfSja9OxBe+F6LIAZgCFzlogbmSWmUdLBg+sh3K6aiBDAdZPUMvGHzHK3fj
+ gHK4GqGCFK76bFrHQYgiBOrcR4GDklj4Gk9osIfdXIAkBvRGw8zg1zzUYwMYk+A6v40gBn00
+ OOB13qJe9zyKpReWMAhg7BYPBKIm/qSr82aIQc4+FlDX2Ot6T/4tGUDr9MAHaBKFtVyIqXBO
+ xOf0vQEokkUGRKWBE0uA3zFVRfLiT6NUjDQ0vdphTnsdA7h01MliZLQ2lLL2Mt5lsqU+6sup
+ Tfql1omgEpjnFsPsyFebzcKGbdEr6vySGa3Cof+miX06hQXKe99a5+eHNhtZJcMAIO89wZmj
+ 7ayYJIXFqjl/X0KBcCbiAl4vbdBw1bqFnO4zd1lMXKVoa29UHqby4MPbQhjWNVv9kqp8A39+
+ E9xw890l1xdERkjVKX6IEJu2hf7X3MMl9tOjBK6MvdOUxvh1bNNmXh7OlBL1MpJYY/ydIm3B
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <261391af-18c2-5da1-a094-326be58b313f@linaro.org>
+Date:   Thu, 27 Feb 2020 15:45:00 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200209183411.17195-7-sibis@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+On 2/9/20 20:34, Sibi Sankar wrote:
+> From: David Dai <daidavid1@codeaurora.org>
+> 
+> Add the DT nodes for each of the Network-On-Chip interconnect
+> buses found on SDM845 based platform and redefine the rsc_hlos
+> child node as a bcm-voter device to better represent the hardware.
+> 
+> Signed-off-by: David Dai <daidavid1@codeaurora.org>
+> Signed-off-by: Odelu Kukatla <okukatla@codeaurora.org>
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 
-commit bb51e669fa49feb5904f452b2991b240ef31bc97 upstream.
+Acked-by: Georgi Djakov <georgi.djakov@linaro.org>
 
-The queue flags are represented in bit fields and the concurrent
-access may result in unexpected results.  Although the current code
-should be mostly OK as it's only reading a field while writing other
-fields as KCSAN reported, it's safer to cover both with a proper
-spinlock protection.
-
-This patch fixes the possible concurrent read by protecting with
-q->owner_lock.  Also the queue owner field is protected as well since
-it's the field to be protected by the lock itself.
-
-Reported-by: syzbot+65c6c92d04304d0a8efc@syzkaller.appspotmail.com
-Reported-by: syzbot+e60ddfa48717579799dd@syzkaller.appspotmail.com
-Link: https://lore.kernel.org/r/20200214111316.26939-2-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- sound/core/seq/seq_queue.c |   20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
-
---- a/sound/core/seq/seq_queue.c
-+++ b/sound/core/seq/seq_queue.c
-@@ -415,6 +415,7 @@ int snd_seq_queue_check_access(int queue
- int snd_seq_queue_set_owner(int queueid, int client, int locked)
- {
- 	struct snd_seq_queue *q = queueptr(queueid);
-+	unsigned long flags;
- 
- 	if (q == NULL)
- 		return -EINVAL;
-@@ -424,8 +425,10 @@ int snd_seq_queue_set_owner(int queueid,
- 		return -EPERM;
- 	}
- 
-+	spin_lock_irqsave(&q->owner_lock, flags);
- 	q->locked = locked ? 1 : 0;
- 	q->owner = client;
-+	spin_unlock_irqrestore(&q->owner_lock, flags);
- 	queue_access_unlock(q);
- 	queuefree(q);
- 
-@@ -564,15 +567,17 @@ void snd_seq_queue_client_termination(in
- 	unsigned long flags;
- 	int i;
- 	struct snd_seq_queue *q;
-+	bool matched;
- 
- 	for (i = 0; i < SNDRV_SEQ_MAX_QUEUES; i++) {
- 		if ((q = queueptr(i)) == NULL)
- 			continue;
- 		spin_lock_irqsave(&q->owner_lock, flags);
--		if (q->owner == client)
-+		matched = (q->owner == client);
-+		if (matched)
- 			q->klocked = 1;
- 		spin_unlock_irqrestore(&q->owner_lock, flags);
--		if (q->owner == client) {
-+		if (matched) {
- 			if (q->timer->running)
- 				snd_seq_timer_stop(q->timer);
- 			snd_seq_timer_reset(q->timer);
-@@ -764,6 +769,8 @@ void snd_seq_info_queues_read(struct snd
- 	int i, bpm;
- 	struct snd_seq_queue *q;
- 	struct snd_seq_timer *tmr;
-+	bool locked;
-+	int owner;
- 
- 	for (i = 0; i < SNDRV_SEQ_MAX_QUEUES; i++) {
- 		if ((q = queueptr(i)) == NULL)
-@@ -775,9 +782,14 @@ void snd_seq_info_queues_read(struct snd
- 		else
- 			bpm = 0;
- 
-+		spin_lock_irq(&q->owner_lock);
-+		locked = q->locked;
-+		owner = q->owner;
-+		spin_unlock_irq(&q->owner_lock);
-+
- 		snd_iprintf(buffer, "queue %d: [%s]\n", q->queue, q->name);
--		snd_iprintf(buffer, "owned by client    : %d\n", q->owner);
--		snd_iprintf(buffer, "lock status        : %s\n", q->locked ? "Locked" : "Free");
-+		snd_iprintf(buffer, "owned by client    : %d\n", owner);
-+		snd_iprintf(buffer, "lock status        : %s\n", locked ? "Locked" : "Free");
- 		snd_iprintf(buffer, "queued time events : %d\n", snd_seq_prioq_avail(q->timeq));
- 		snd_iprintf(buffer, "queued tick events : %d\n", snd_seq_prioq_avail(q->tickq));
- 		snd_iprintf(buffer, "timer state        : %s\n", tmr->running ? "Running" : "Stopped");
-
-
+Thanks,
+Georgi
