@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D60EC54FE2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31414C52D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 266A620801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0509D24690
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813146;
-	bh=pl9p7NpwxVwE86wSMxeGVRBF3jUMxTbbyU0SDmJweOo=;
+	s=default; t=1582813099;
+	bh=pFlqS0oVMrE05Ga1rfqDuJWkhwUyK39vt3gc/t375Js=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OxcTbWyIj99E9buVNMT88nQzla6tGJ26uzINjvkU/6gZ3nKzgjKABs31/hLn/8JhR
-	 82pyhc2blem1668fWZVosDSt6XmrRU8+XgKSj2Ws92NnSm6Q6eToJRUPiHGYz2BRab
-	 s2v2qC+sKYXGSYL++lxjTLdXave3WHyBEWp7xyS4=
+	b=G6oN3kPIUtlG/ftdWIBTpxFhlBVPu5+DTV3FGIWX7hep2r+MrdixbN37zfsFKyRe5
+	 F1YSUkS0WgnbUi/RY0mn4lx9sNqg1CXHhtRqMXerQ41jRNiYOAJ9iWJ3XuBRqbR/HY
+	 Fqk3qIgbPaYCiu58RdpgashRmCpcYgMAS5PsA7F0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389962AbgB0OTE (ORCPT
+        id S2389851AbgB0OSR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:19:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59570 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:18:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731124AbgB0OS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:18:58 -0500
+        id S2389818AbgB0OSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:18:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 692662468F;
-        Thu, 27 Feb 2020 14:18:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDC0E24690;
+        Thu, 27 Feb 2020 14:18:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813136;
-        bh=pl9p7NpwxVwE86wSMxeGVRBF3jUMxTbbyU0SDmJweOo=;
+        s=default; t=1582813087;
+        bh=pFlqS0oVMrE05Ga1rfqDuJWkhwUyK39vt3gc/t375Js=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LFkbYh5TBU5Rs7xh1/lsWTHfbthjWSqWykaXZJrsZYbPCd43Nj5XKYrvHWNEvk+ca
-         OdLU12dALyCnfEsrKwClLlNCfLol8pSOfYPobYXSguV0RNA+wTAhZSmdk4m3L7EX+W
-         19vwcK+RxPwEIhLWBwHr70c0WjTUzEOec6hk7AgQ=
+        b=eNCCX22kkz6qc9/ZPlQQc5ynMUgrqhEquY61Oyeqt96QJqrC5+jTvANYo7e1p8jLu
+         dDlvyJFkrK2KsDcAjEMC4Vmd3otmtwsG4TMmtEgUP4TEnhGEx5MOejdEkCfFHWGrAw
+         ILKaryWCTMNp83HZx/TVFswHCcZJSk1aoHKh1R+E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Tobler <andreas.tobler@onway.ch>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 110/150] Revert "dmaengine: imx-sdma: Fix memory leak"
-Date:   Thu, 27 Feb 2020 14:37:27 +0100
-Message-Id: <20200227132249.006359879@linuxfoundation.org>
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.5 105/150] btrfs: fix bytes_may_use underflow in prealloc error condtition
+Date:   Thu, 27 Feb 2020 14:37:22 +0100
+Message-Id: <20200227132248.284207698@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -61,70 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Josef Bacik <josef@toxicpanda.com>
 
-This reverts commit 7ac78dd1e0992fd6d2ae375cc0dd6456c632f605 which is
-commit 02939cd167095f16328a1bd5cab5a90b550606df upstream.
+commit b778cf962d71a0e737923d55d0432f3bd287258e upstream.
 
-Andreas writes:
-	This patch breaks our imx6 board with the attached trace.
-	Reverting the patch makes it boot again.
+I hit the following warning while running my error injection stress
+testing:
 
-Reported-by: Andreas Tobler <andreas.tobler@onway.ch>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Robin Gong <yibin.gong@nxp.com>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: Sasha Levin <sashal@kernel.org>
+  WARNING: CPU: 3 PID: 1453 at fs/btrfs/space-info.h:108 btrfs_free_reserved_data_space_noquota+0xfd/0x160 [btrfs]
+  RIP: 0010:btrfs_free_reserved_data_space_noquota+0xfd/0x160 [btrfs]
+  Call Trace:
+  btrfs_free_reserved_data_space+0x4f/0x70 [btrfs]
+  __btrfs_prealloc_file_range+0x378/0x470 [btrfs]
+  elfcorehdr_read+0x40/0x40
+  ? elfcorehdr_read+0x40/0x40
+  ? btrfs_commit_transaction+0xca/0xa50 [btrfs]
+  ? dput+0xb4/0x2a0
+  ? btrfs_log_dentry_safe+0x55/0x70 [btrfs]
+  ? btrfs_sync_file+0x30e/0x420 [btrfs]
+  ? do_fsync+0x38/0x70
+  ? __x64_sys_fdatasync+0x13/0x20
+  ? do_syscall_64+0x5b/0x1b0
+  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+This happens if we fail to insert our reserved file extent.  At this
+point we've already converted our reservation from ->bytes_may_use to
+->bytes_reserved.  However once we break we will attempt to free
+everything from [cur_offset, end] from ->bytes_may_use, but our extent
+reservation will overlap part of this.
+
+Fix this problem by adding ins.offset (our extent allocation size) to
+cur_offset so we remove the actual remaining part from ->bytes_may_use.
+
+I validated this fix using my inject-error.py script
+
+python inject-error.py -o should_fail_bio -t cache_save_setup -t \
+	__btrfs_prealloc_file_range \
+	-t insert_reserved_file_extent.constprop.0 \
+	-r "-5" ./run-fsstress.sh
+
+where run-fsstress.sh simply mounts and runs fsstress on a disk.
+
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/dma/imx-sdma.c |   19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
 
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -760,8 +760,12 @@ static void sdma_start_desc(struct sdma_
- 		return;
+---
+ fs/btrfs/inode.c |   16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
+
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -10487,6 +10487,7 @@ static int __btrfs_prealloc_file_range(s
+ 	struct btrfs_root *root = BTRFS_I(inode)->root;
+ 	struct btrfs_key ins;
+ 	u64 cur_offset = start;
++	u64 clear_offset = start;
+ 	u64 i_size;
+ 	u64 cur_bytes;
+ 	u64 last_alloc = (u64)-1;
+@@ -10521,6 +10522,15 @@ static int __btrfs_prealloc_file_range(s
+ 				btrfs_end_transaction(trans);
+ 			break;
+ 		}
++
++		/*
++		 * We've reserved this space, and thus converted it from
++		 * ->bytes_may_use to ->bytes_reserved.  Any error that happens
++		 * from here on out we will only need to clear our reservation
++		 * for the remaining unreserved area, so advance our
++		 * clear_offset by our extent size.
++		 */
++		clear_offset += ins.offset;
+ 		btrfs_dec_block_group_reservations(fs_info, ins.objectid);
+ 
+ 		last_alloc = ins.offset;
+@@ -10600,9 +10610,9 @@ next:
+ 		if (own_trans)
+ 			btrfs_end_transaction(trans);
  	}
- 	sdmac->desc = desc = to_sdma_desc(&vd->tx);
--
--	list_del(&vd->node);
-+	/*
-+	 * Do not delete the node in desc_issued list in cyclic mode, otherwise
-+	 * the desc allocated will never be freed in vchan_dma_desc_free_list
-+	 */
-+	if (!(sdmac->flags & IMX_DMA_SG_LOOP))
-+		list_del(&vd->node);
- 
- 	sdma->channel_control[channel].base_bd_ptr = desc->bd_phys;
- 	sdma->channel_control[channel].current_bd_ptr = desc->bd_phys;
-@@ -1067,6 +1071,7 @@ static void sdma_channel_terminate_work(
- 
- 	spin_lock_irqsave(&sdmac->vc.lock, flags);
- 	vchan_get_all_descriptors(&sdmac->vc, &head);
-+	sdmac->desc = NULL;
- 	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
- 	vchan_dma_desc_free_list(&sdmac->vc, &head);
- 	sdmac->context_loaded = false;
-@@ -1075,19 +1080,11 @@ static void sdma_channel_terminate_work(
- static int sdma_disable_channel_async(struct dma_chan *chan)
- {
- 	struct sdma_channel *sdmac = to_sdma_chan(chan);
--	unsigned long flags;
--
--	spin_lock_irqsave(&sdmac->vc.lock, flags);
- 
- 	sdma_disable_channel(chan);
- 
--	if (sdmac->desc) {
--		vchan_terminate_vdesc(&sdmac->desc->vd);
--		sdmac->desc = NULL;
-+	if (sdmac->desc)
- 		schedule_work(&sdmac->terminate_worker);
--	}
--
--	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
- 
- 	return 0;
+-	if (cur_offset < end)
+-		btrfs_free_reserved_data_space(inode, NULL, cur_offset,
+-			end - cur_offset + 1);
++	if (clear_offset < end)
++		btrfs_free_reserved_data_space(inode, NULL, clear_offset,
++			end - clear_offset + 1);
+ 	return ret;
  }
+ 
 
 
