@@ -2,122 +2,104 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55ACAC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BEC9C3567B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BD0724697
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13954246B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:09:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cBmmg033"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729847AbgB0RJO (ORCPT
+        id S1730124AbgB0RJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 12:09:14 -0500
-Received: from hosting.gsystem.sk ([212.5.213.30]:58530 "EHLO
-        hosting.gsystem.sk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbgB0RJN (ORCPT
+        Thu, 27 Feb 2020 12:09:28 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39290 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbgB0RJ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 12:09:13 -0500
-Received: from [192.168.0.2] (188-167-68-178.dynamic.chello.sk [188.167.68.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by hosting.gsystem.sk (Postfix) with ESMTPSA id 256C87A0123;
-        Thu, 27 Feb 2020 18:09:12 +0100 (CET)
-From:   Ondrej Zary <linux@zary.sk>
-To:     Bart Van Assche <bvanassche@acm.org>
-Subject: Re: NULL pointer dereference in qla24xx_abort_command, kernel 4.19.98 (Debian)
-Date:   Thu, 27 Feb 2020 18:09:07 +0100
-User-Agent: KMail/1.9.10
-Cc:     qla2xxx-upstream@qlogic.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <202002231929.01662.linux@zary.sk> <202002240920.17691.linux@zary.sk> <1fbad673-1b8c-0813-c60e-a4f56330a972@acm.org>
-In-Reply-To: <1fbad673-1b8c-0813-c60e-a4f56330a972@acm.org>
-X-KMail-QuotePrefix: > 
+        Thu, 27 Feb 2020 12:09:28 -0500
+Received: by mail-lj1-f193.google.com with SMTP id o15so40220ljg.6;
+        Thu, 27 Feb 2020 09:09:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0d2ikdqfSzyCyHKBwzyOB/NzazDViDKr5gLhXg7TE5w=;
+        b=cBmmg033uMjVyyiiZzBQ6LYyy+VgUvpGxjDYnJbqsFA5QYw4c0+iBD+yt8NL3fyA0z
+         1mhds+EI/xVyu45GOaJ12WhmGvH3xJ4r8WG8AXlPRIgvu/FZ6FEeemJCuIz+Wpwov7m2
+         AT1+Y90aYC9YIILe1wY5yqYOvyStCo09yByNLSItCx+gkhB6dGCJJQdX69wXJOpMDx5Q
+         kv5wJcBKwIUyY2qFVR8zCsY4CzWjhPtccyMk4ZvVFe5jsVGdiUnTx2fXJKMtD3jvKMqv
+         q4UExMEqTsprti7lEPu3ezmD8PS3vUPu4YT4Xbg3onwy2gaYHmDmUzyimxrwl5kgBCt1
+         KJFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0d2ikdqfSzyCyHKBwzyOB/NzazDViDKr5gLhXg7TE5w=;
+        b=iKTLlkwG7+GMd6i4/bGmxIuoMa+C4pZL5Oa1KxPMWNZYqihToYsjrmE94irzvYt3e9
+         rqCw5XHcJIKEuKg7YGcQVzbp65b+6PjQSiwUno/GTncBxJ3G0P5Fu5chN56WhOIU52be
+         eDVhRXUjYgtYURFcp7A5wLY2byjomg+B8+o7i7RaHBZZNwncR/6uWWNbexQo/kNPapiw
+         UCWAzoO6zrila/m04kSwBywhIBvIrghQph6i/Y2pyamCxnBSsyW0tnC7X8c1O+q1zx5I
+         NWl/v03GKW0HC35hgUA0fbwn4msA47nGJ02P7fvw8jiAu+F2jAszHgts4wfanjwVoJlP
+         nhUw==
+X-Gm-Message-State: ANhLgQ23NwqsGVS2ZTaYQOjhbXx9DVHsQTq3cHu8sBaN8ch4WzZaP2Gx
+        FO+xb1yuQqo7dYxsHa9lAPLcqQbp
+X-Google-Smtp-Source: ADFU+vvgTDPwZpbNLylJZlslLydu4OjybK/HBSQ1vL7bDA6o+HD8DhCJKwHAJcYdOChS2Co1JE4Yaw==
+X-Received: by 2002:a2e:a58e:: with SMTP id m14mr59358ljp.68.1582823366131;
+        Thu, 27 Feb 2020 09:09:26 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id j11sm3049513lfb.58.2020.02.27.09.09.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 09:09:24 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH RE-SEND v1] PM / devfreq: Replace strncpy with strscpy
+Date:   Thu, 27 Feb 2020 20:08:54 +0300
+Message-Id: <20200227170854.9949-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <202002271809.07717.linux@zary.sk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+GCC produces this warning when kernel compiled using `make W=1`:
 
+  warning: ‘strncpy’ specified bound 16 equals destination size [-Wstringop-truncation]
+  772 |  strncpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
 
-On Tuesday 25 February 2020 04:41:48 Bart Van Assche wrote:
-> On 2020-02-24 00:20, Ondrej Zary wrote:
-> > Looks like it's in some inlined function.
-> > 
-> > /usr/src/linux-source-4.19# gdb /lib/modules/4.19.0-8-amd64/kernel/drivers/scsi/qla2xxx/qla2xxx.ko
-> > GNU gdb (Debian 8.2.1-2+b3) 8.2.1
-> > ...
-> > Reading symbols from /lib/modules/4.19.0-8-amd64/kernel/drivers/scsi/qla2xxx/qla2xxx.ko...Reading symbols 
-> > from /usr/lib/debug//lib/modules/4.19.0-8-amd64/kernel/drivers/scsi/qla2xxx/qla2xxx.ko...done.
-> > done.
-> > 
-> > (gdb) list *(qla24xx_async_abort_cmd+0x1b)
-> > 0xf88b is in qla24xx_async_abort_cmd (./arch/x86/include/asm/atomic.h:97).
-> > 92       *
-> > 93       * Atomically increments @v by 1.
-> > 94       */
-> > 95      static __always_inline void arch_atomic_inc(atomic_t *v)
-> > 96      {
-> > 97              asm volatile(LOCK_PREFIX "incl %0"
-> > 98                           : "+m" (v->counter) :: "memory");
-> > 99      }
-> > 100     #define arch_atomic_inc arch_atomic_inc
-> >
-> > [ ... ]
-> > 
-> > (gdb) disassemble qla24xx_async_abort_cmd
-> > Dump of assembler code for function qla24xx_async_abort_cmd:
-> >    0x000000000000f870 <+0>:     callq  0xf875 <qla24xx_async_abort_cmd+5>
-> >    0x000000000000f875 <+5>:     push   %r15
-> >    0x000000000000f877 <+7>:     push   %r14
-> >    0x000000000000f879 <+9>:     push   %r13
-> >    0x000000000000f87b <+11>:    push   %r12
-> >    0x000000000000f87d <+13>:    push   %rbp
-> >    0x000000000000f87e <+14>:    push   %rbx
-> >    0x000000000000f87f <+15>:    mov    0x28(%rdi),%r13
-> >    0x000000000000f883 <+19>:    mov    0x20(%rdi),%r15
-> >    0x000000000000f887 <+23>:    mov    0x48(%rdi),%r14
-> >    0x000000000000f88b <+27>:    lock incl 0x4(%r14)
-> >    0x000000000000f890 <+32>:    mfence
-> 
-> Thanks, this is very helpful. I think the above means that the crash is
-> triggered by the following code:
-> 
-> 	sp = qla2xxx_get_qpair_sp(cmd_sp->qpair, cmd_sp->fcport,
-> 		GFP_KERNEL);
-> 
-> From the start of qla2xxx_get_qpair_sp():
-> 
-> 	QLA_QPAIR_MARK_BUSY(qpair, bail);
-> 
-> From qla_def.h:
-> 
-> #define QLA_QPAIR_MARK_BUSY(__qpair, __bail) do {	\
-> 	atomic_inc(&__qpair->ref_count);		\
-> 	mb();						\
-> 	if (__qpair->delete_in_progress) {		\
-> 		atomic_dec(&__qpair->ref_count);	\
-> 		__bail = 1;				\
-> 	} else {					\
-> 	       __bail = 0;				\
-> 	}						\
-> } while (0)
-> 
-> One of the changes between kernel version v4.9.210 and v4.19.98 is the
-> following: "qla2xxx: Add multiple queue pair functionality". I think the
->  above information means that the cmd_sp->qpair pointer is NULL. I will
-> let QLogic recommend a solution.
+The strncpy doesn't take care of NULL-termination of the destination
+buffer, while the strscpy does.
 
-Thank you very much for the analysis.
-Unfortunately, QLogic does not seem to care...
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/devfreq/devfreq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index 8494c5f05a73..2011f64bfa3a 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -769,7 +769,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
+ 	devfreq->dev.release = devfreq_dev_release;
+ 	INIT_LIST_HEAD(&devfreq->node);
+ 	devfreq->profile = profile;
+-	strncpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
++	strscpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
+ 	devfreq->previous_freq = profile->initial_freq;
+ 	devfreq->last_status.current_frequency = profile->initial_freq;
+ 	devfreq->data = data;
 -- 
-Ondrej Zary
+2.24.0
+
