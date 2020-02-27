@@ -2,73 +2,99 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F395AC4BA3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE70FC4BA3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D24242468E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEB4C2468E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:33:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729010AbgB0Mbh (ORCPT
+        id S1729042AbgB0MdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 07:31:37 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42233 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728928AbgB0Mbh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 07:31:37 -0500
-Received: by ozlabs.org (Postfix, from userid 1034)
-        id 48SsVH2qCSz9sRY; Thu, 27 Feb 2020 23:31:34 +1100 (AEDT)
-X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: e08658a657f974590809290c62e889f0fd420200
-In-Reply-To: <20200222082049.330435-1-ravi.bangoria@linux.ibm.com>
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, mikey@neuling.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc/watchpoint: Don't call dar_within_range() for Book3S
-Message-Id: <48SsVH2qCSz9sRY@ozlabs.org>
-Date:   Thu, 27 Feb 2020 23:31:34 +1100 (AEDT)
+        Thu, 27 Feb 2020 07:33:17 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55181 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728964AbgB0MdR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 07:33:17 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j7ILr-00083D-5Z; Thu, 27 Feb 2020 13:33:15 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j7ILq-0005l7-Ir; Thu, 27 Feb 2020 13:33:14 +0100
+Date:   Thu, 27 Feb 2020 13:33:14 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Sam Shih <sam.shih@mediatek.com>
+Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-mediatek@lists.infradead.org,
+        John Crispin <john@phrozen.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/1] pwm: mediatek: add longer period support
+Message-ID: <20200227123314.mkg6jqai64b3paxw@pengutronix.de>
+References: <1582789610-23133-1-git-send-email-sam.shih@mediatek.com>
+ <1582789610-23133-2-git-send-email-sam.shih@mediatek.com>
+ <20200227080450.rkvwfjx6vikn5ls3@pengutronix.de>
+ <1582797590.25607.10.camel@mtksdccf07>
+ <20200227105244.orwitjst3wzoqcsq@pengutronix.de>
+ <1582806427.27775.1.camel@mtksdccf07>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1582806427.27775.1.camel@mtksdccf07>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-02-22 at 08:20:49 UTC, Ravi Bangoria wrote:
-> DAR is set to the first byte of overlap between actual access and
-> watched range at DSI on Book3S processor. But actual access range
-> might or might not be within user asked range. So for Book3S, it
-> must not call dar_within_range().
-> 
-> This revert portion of commit 39413ae00967 ("powerpc/hw_breakpoints:
-> Rewrite 8xx breakpoints to allow any address range size.").
-> 
-> Before patch:
->   # ./tools/testing/selftests/powerpc/ptrace/perf-hwbreak
->   ...
->   TESTED: No overlap
->   FAILED: Partial overlap: 0 != 2
->   TESTED: Partial overlap
->   TESTED: No overlap
->   FAILED: Full overlap: 0 != 2
->   failure: perf_hwbreak
-> 
-> After patch:
->   TESTED: No overlap
->   TESTED: Partial overlap
->   TESTED: Partial overlap
->   TESTED: No overlap
->   TESTED: Full overlap
->   success: perf_hwbreak
-> 
-> Fixes: 39413ae00967 ("powerpc/hw_breakpoints: Rewrite 8xx breakpoints to allow any address range size.")
-> Reported-by: Michael Ellerman <mpe@ellerman.id.au>
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Hello Sam,
 
-Applied to powerpc fixes, thanks.
+On Thu, Feb 27, 2020 at 08:27:07PM +0800, Sam Shih wrote:
+> > > 
+> > > + /* The pwm source clock can be divided by 2^clkdiv. When the clksel  +
+> > > * bit is set to 1, The final clock output needs to be divided by an +  *
+> > > extra 1625.
+> > > +  */
+> > 
+> > I'd write:
+> > 
+> > The source clock is divided by 2^clkdiv or iff the clksel bit is set by
+> > 2^clkdiv + 1625.
+> > 
+> 
+> Great, the comment is short and clear. 
+> But maybe change “2^clkdiv + 1625” to “the product of 2^clkdiv and 1625”
+> is clearer ?
 
-https://git.kernel.org/powerpc/c/e08658a657f974590809290c62e889f0fd420200
+Writing a formula in words isn't helpful. If my formula was wrong use
+the right one. I wrote
 
-cheers
+	2^clkdiv + 1625
+
+(which implicitly means (2^clkdiv) + 1625), if this is wrong write
+
+	2^clkdiv * 1625
+
+or whatever is the right one then. And use parenthesis if you doubt
+clearness.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
