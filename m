@@ -2,51 +2,55 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A2EC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E2EC34022
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 530FC24691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B11D2469B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:45:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814733;
-	bh=+wZu/w2pg+fy8WGtwN3eCFrO6E82uY8hmEVZgEpUAfA=;
+	s=default; t=1582814736;
+	bh=KNL8q96VW054YfXBZfeHGlfLCZJ5LleWzR+KoB/9j4w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xlR69WxYx6F6f0vXUUIYg47mxYESXp+rST64mEgzBp5B/ng4jivMN+Enltodu1yNj
-	 4FX3awkRla7OYh1i0yqFoahaqsPPlPv4KKZxBU9p1omeIYMuh4XoeJR6WpTOmrUx8P
-	 ddJd5phcuv40xaeKOvNr1VMtpoKQKtRjSlRbilSY=
+	b=2kLzK0cK17HtkESpGTGpS/n30h6ilI6EIMTQZIBrusqDBGN7mo99qnOxK/I78r3tO
+	 tjpDa9r0mv6ssIS/VBb9cSrTpXBELruK4yFLtlvijwLLNjvwo7LRJ6X84vU17C6kYC
+	 /eWj+YZh9feuvV6uNWEY4OrZUU5WAVcKOzSvJhrA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730030AbgB0Nq2 (ORCPT
+        id S1730994AbgB0Opf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:46:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42546 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:45:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730491AbgB0NqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:46:19 -0500
+        id S1730055AbgB0Nq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:46:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7424D24688;
-        Thu, 27 Feb 2020 13:46:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA4A720578;
+        Thu, 27 Feb 2020 13:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811178;
-        bh=+wZu/w2pg+fy8WGtwN3eCFrO6E82uY8hmEVZgEpUAfA=;
+        s=default; t=1582811186;
+        bh=KNL8q96VW054YfXBZfeHGlfLCZJ5LleWzR+KoB/9j4w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B0UGqTLA9Hk4fjvRJMbgAyxfg1/AVxpgDo9qTTjOFcC9aIC2VKLhu9bgLcUSBtC07
-         xl1jN4EkWJvcCaHScMeSmMBqZza385o17t620ZbifjR+rufmnewaCopwj/9j+Ln6W+
-         YnKvPbJ5x24AFP+PCnoy48iSkAKOt2fGrfbyswgU=
+        b=HSQDU5VQDAzbq6/OSSqJYd007RN5t4Y2QYunkuSr1rHkd78c3ynF94d7DZ29jE1DA
+         IKyATR4ESdr1/MMAB2gjcQDjJMrKpiZvfLoMFrmOy7txTTtWv0LVrsbiYRDqWDWQYp
+         TSiTJV4yi4y8R4WNj//nP4IqKf7JyfVkQe77pgPw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        Tyler Hicks <tyhicks@canonical.com>
-Subject: [PATCH 4.9 005/165] ecryptfs: fix a memory leak bug in ecryptfs_init_messaging()
-Date:   Thu, 27 Feb 2020 14:34:39 +0100
-Message-Id: <20200227132231.855991610@linuxfoundation.org>
+        stable@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 034/165] MIPS: Loongson: Fix potential NULL dereference in loongson3_platform_init()
+Date:   Thu, 27 Feb 2020 14:35:08 +0100
+Message-Id: <20200227132236.102534187@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -59,34 +63,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-commit b4a81b87a4cfe2bb26a4a943b748d96a43ef20e8 upstream.
+[ Upstream commit 72d052e28d1d2363f9107be63ef3a3afdea6143c ]
 
-In ecryptfs_init_messaging(), if the allocation for 'ecryptfs_msg_ctx_arr'
-fails, the previously allocated 'ecryptfs_daemon_hash' is not deallocated,
-leading to a memory leak bug. To fix this issue, free
-'ecryptfs_daemon_hash' before returning the error.
+If kzalloc fails, it should return -ENOMEM, otherwise may trigger a NULL
+pointer dereference.
 
-Cc: stable@vger.kernel.org
-Fixes: 88b4a07e6610 ("[PATCH] eCryptfs: Public key transport mechanism")
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: Tyler Hicks <tyhicks@canonical.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 3adeb2566b9b ("MIPS: Loongson: Improve LEFI firmware interface")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Huacai Chen <chenhc@lemote.com>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ecryptfs/messaging.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/mips/loongson64/loongson-3/platform.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/fs/ecryptfs/messaging.c
-+++ b/fs/ecryptfs/messaging.c
-@@ -397,6 +397,7 @@ int __init ecryptfs_init_messaging(void)
- 					* ecryptfs_message_buf_len),
- 				       GFP_KERNEL);
- 	if (!ecryptfs_msg_ctx_arr) {
-+		kfree(ecryptfs_daemon_hash);
- 		rc = -ENOMEM;
- 		printk(KERN_ERR "%s: Failed to allocate memory\n", __func__);
- 		goto out;
+diff --git a/arch/mips/loongson64/loongson-3/platform.c b/arch/mips/loongson64/loongson-3/platform.c
+index 25a97cc0ee336..0db4cc3196ebd 100644
+--- a/arch/mips/loongson64/loongson-3/platform.c
++++ b/arch/mips/loongson64/loongson-3/platform.c
+@@ -31,6 +31,9 @@ static int __init loongson3_platform_init(void)
+ 			continue;
+ 
+ 		pdev = kzalloc(sizeof(struct platform_device), GFP_KERNEL);
++		if (!pdev)
++			return -ENOMEM;
++
+ 		pdev->name = loongson_sysconf.sensors[i].name;
+ 		pdev->id = loongson_sysconf.sensors[i].id;
+ 		pdev->dev.platform_data = &loongson_sysconf.sensors[i];
+-- 
+2.20.1
+
 
 
