@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AC1C54FC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BA5C54FF1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2FA020578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 974AA246B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:12:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812655;
-	bh=4Ha7FMeopvq5rImbybGAUymlfZTN71ObR/RK0QDYoZ8=;
+	s=default; t=1582812744;
+	bh=OWTPxU+/A5iHErJHBufe6ko4/tT/IkEB8jQDEA3c+Po=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C14VMEk7c+8Z/LScaDtL7MKalE52LdQoxLJcgyVVsisd5FbXGC6GwZeClVX06afVV
-	 M+MOUfyOLs+d1Dh31KQShK+mwdOAJZMFDI4SReGVY8LNuxVNvw9iSmOQSms8QulPz+
-	 ZANacPtTjefZEsZ8K9+RxoAW0wuTCSVaewRk8bKA=
+	b=WvGC6rvYAdHurCEgokO1Wl2HxnnjfqzjLf5z4QfP67+gqoZLEmBlxBLGkClUR2KAm
+	 cAszntN3D5LWt8WgDrQpoCSaZyDjjQTSg3x4GNlEYc7yzqk/ZdBEIViNyn7sGT2MOd
+	 Sj3trXGPdt3kstZHAuaO2rAyZDDQKUAATE5yOGK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733253AbgB0OKx (ORCPT
+        id S2388835AbgB0OMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:10:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49108 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:12:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388606AbgB0OKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:10:51 -0500
+        id S2388653AbgB0OMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:12:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24CEA20578;
-        Thu, 27 Feb 2020 14:10:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73ED420578;
+        Thu, 27 Feb 2020 14:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812650;
-        bh=4Ha7FMeopvq5rImbybGAUymlfZTN71ObR/RK0QDYoZ8=;
+        s=default; t=1582812738;
+        bh=OWTPxU+/A5iHErJHBufe6ko4/tT/IkEB8jQDEA3c+Po=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ybt6upbornCMS1O8vdFEb2udIIaTLOCsYT1IBNo4EIS8hxdO82R8ftJ9dWEPjOYV5
-         pY9c25SKydAqTp0B3ey/pvka7wk+V/LEcvmAj+sgBLwJdPaY7wHSvgHjYdkKMbp1Hi
-         pvKAx4iBAV1uYpP2y208aGbvCnsE5Egz6A1ppTrQ=
+        b=ivmO1LoR+aa88Bk5VLVcHlN3/12BR5nG4BdjsXGNenNOFPqLPglKu0U64Ze1d17aL
+         ODXwtuf4Vh1ffZg19bUGJMwrwkdtkvzxfu0t1AbsoGwmyblorit/DOKZ6UmJ3zsw8h
+         Z3tFH6X2B8DDCYazVjRnGfjrOsWU755ofcpcPNoc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Jones <davej@codemonkey.org.uk>,
-        Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 098/135] btrfs: dont set path->leave_spinning for truncate
-Date:   Thu, 27 Feb 2020 14:37:18 +0100
-Message-Id: <20200227132243.962862242@linuxfoundation.org>
+        stable@vger.kernel.org, Aya Levin <ayal@mellanox.com>,
+        Parav Pandit <parav@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.4 132/135] net/mlx5e: Fix crash in recovery flow without devlink reporter
+Date:   Thu, 27 Feb 2020 14:37:52 +0100
+Message-Id: <20200227132248.906407764@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -61,79 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Aya Levin <ayal@mellanox.com>
 
-commit 52e29e331070cd7d52a64cbf1b0958212a340e28 upstream.
+commit 1ad6c43c6a7b8627240c6cc19c69e31fedc596a7 upstream.
 
-The only time we actually leave the path spinning is if we're truncating
-a small amount and don't actually free an extent, which is not a common
-occurrence.  We have to set the path blocking in order to add the
-delayed ref anyway, so the first extent we find we set the path to
-blocking and stay blocking for the duration of the operation.  With the
-upcoming file extent map stuff there will be another case that we have
-to have the path blocking, so just swap to blocking always.
+When health reporters are not supported, recovery function is invoked
+directly, not via devlink health reporters.
 
-Note: this patch also fixes a warning after 28553fa992cb ("Btrfs: fix
-race between shrinking truncate and fiemap") got merged that inserts
-extent locks around truncation so the path must not leave spinning locks
-after btrfs_search_slot.
+In this direct flow, the recover function input parameter was passed
+incorrectly and is causing a kernel oops. This patch is fixing the input
+parameter.
 
-  [70.794783] BUG: sleeping function called from invalid context at mm/slab.h:565
-  [70.794834] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 1141, name: rsync
-  [70.794863] 5 locks held by rsync/1141:
-  [70.794876]  #0: ffff888417b9c408 (sb_writers#17){.+.+}, at: mnt_want_write+0x20/0x50
-  [70.795030]  #1: ffff888428de28e8 (&type->i_mutex_dir_key#13/1){+.+.}, at: lock_rename+0xf1/0x100
-  [70.795051]  #2: ffff888417b9c608 (sb_internal#2){.+.+}, at: start_transaction+0x394/0x560
-  [70.795124]  #3: ffff888403081768 (btrfs-fs-01){++++}, at: btrfs_try_tree_write_lock+0x2f/0x160
-  [70.795203]  #4: ffff888403086568 (btrfs-fs-00){++++}, at: btrfs_try_tree_write_lock+0x2f/0x160
-  [70.795222] CPU: 5 PID: 1141 Comm: rsync Not tainted 5.6.0-rc2-backup+ #2
-  [70.795362] Call Trace:
-  [70.795374]  dump_stack+0x71/0xa0
-  [70.795445]  ___might_sleep.part.96.cold.106+0xa6/0xb6
-  [70.795459]  kmem_cache_alloc+0x1d3/0x290
-  [70.795471]  alloc_extent_state+0x22/0x1c0
-  [70.795544]  __clear_extent_bit+0x3ba/0x580
-  [70.795557]  ? _raw_spin_unlock_irq+0x24/0x30
-  [70.795569]  btrfs_truncate_inode_items+0x339/0xe50
-  [70.795647]  btrfs_evict_inode+0x269/0x540
-  [70.795659]  ? dput.part.38+0x29/0x460
-  [70.795671]  evict+0xcd/0x190
-  [70.795682]  __dentry_kill+0xd6/0x180
-  [70.795754]  dput.part.38+0x2ad/0x460
-  [70.795765]  do_renameat2+0x3cb/0x540
-  [70.795777]  __x64_sys_rename+0x1c/0x20
+Following call trace is observed on rx error health reporting.
 
-Reported-by: Dave Jones <davej@codemonkey.org.uk>
-Fixes: 28553fa992cb ("Btrfs: fix race between shrinking truncate and fiemap")
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-[ add note ]
-Signed-off-by: David Sterba <dsterba@suse.com>
+Internal error: Oops: 96000007 [#1] PREEMPT SMP
+Process kworker/u16:4 (pid: 4584, stack limit = 0x00000000c9e45703)
+Call trace:
+mlx5e_rx_reporter_err_rq_cqe_recover+0x30/0x164 [mlx5_core]
+mlx5e_health_report+0x60/0x6c [mlx5_core]
+mlx5e_reporter_rq_cqe_err+0x6c/0x90 [mlx5_core]
+mlx5e_rq_err_cqe_work+0x20/0x2c [mlx5_core]
+process_one_work+0x168/0x3d0
+worker_thread+0x58/0x3d0
+kthread+0x108/0x134
+
+Fixes: c50de4af1d63 ("net/mlx5e: Generalize tx reporter's functionality")
+Signed-off-by: Aya Levin <ayal@mellanox.com>
+Signed-off-by: Parav Pandit <parav@mellanox.com>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/inode.c |    2 --
- 1 file changed, 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en/health.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -4791,7 +4791,6 @@ search_again:
- 		goto out;
- 	}
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/health.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/health.c
+@@ -200,7 +200,7 @@ int mlx5e_health_report(struct mlx5e_pri
+ 	netdev_err(priv->netdev, err_str);
  
--	path->leave_spinning = 1;
- 	ret = btrfs_search_slot(trans, root, &key, path, -1, 1);
- 	if (ret < 0)
- 		goto out;
-@@ -4943,7 +4942,6 @@ delete:
- 		     root == fs_info->tree_root)) {
- 			struct btrfs_ref ref = { 0 };
+ 	if (!reporter)
+-		return err_ctx->recover(&err_ctx->ctx);
++		return err_ctx->recover(err_ctx->ctx);
  
--			btrfs_set_path_blocking(path);
- 			bytes_deleted += extent_num_bytes;
- 
- 			btrfs_init_generic_ref(&ref, BTRFS_DROP_DELAYED_REF,
+ 	return devlink_health_report(reporter, err_str, err_ctx);
+ }
 
 
