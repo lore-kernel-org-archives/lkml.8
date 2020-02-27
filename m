@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCABC3F34F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 866E4C3F349
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1471C20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54C5F20726
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:43:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811006;
-	bh=63sz3Thyttw1FbNhqZLo79IV/ZETdQw4X+tidP6GY9U=;
+	s=default; t=1582810988;
+	bh=IEqL5xJdvkCDBxzC/BErSDTVMFN7oI3hvjjONr0p9Tw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hd5e3zrilpEQdQkbm/2iAxaoHEI8D+73Sg9AqA4h7zTo9bXz7hg6RkyuqN4E21K9S
-	 GPrqLycus8/U6rbgf4EArBtpaoPXkPPBOpZwitTaZFRZv/ws++mWyxw1hMtIMU8rUP
-	 sVhz9lLxpPKvTjMN3+PSamI0zDvdLSEf8h4978M8=
+	b=jPcL/WFRdXVsJe+LYHDjJahvFdEVXy5q5ca6h5+/T3Sp7A04Z9I42a8eTQvdoA14c
+	 1O50Ey1ry9vFwk2lKU+nhvkrrvmEco3Nk0P6an5pn3/uQGJdQ8KuOCBhIEesg2SWXa
+	 W2W+QsZCShDhCzDvyxroN1LLNADqA0z/3nlAO1rk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729958AbgB0NnY (ORCPT
+        id S1729908AbgB0NnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:43:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38552 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:43:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729655AbgB0NnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:43:21 -0500
+        id S1729580AbgB0NnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:43:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5A4621D7E;
-        Thu, 27 Feb 2020 13:43:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E52A020726;
+        Thu, 27 Feb 2020 13:43:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811001;
-        bh=63sz3Thyttw1FbNhqZLo79IV/ZETdQw4X+tidP6GY9U=;
+        s=default; t=1582810984;
+        bh=IEqL5xJdvkCDBxzC/BErSDTVMFN7oI3hvjjONr0p9Tw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rchZ+6Fkutdx+EhZCH3zZb6hESfWWBM1z1logVEYph8U9lhBMd4mSjx2vv9OO1PSJ
-         ccEvm785WRkUORq8EVifkWBxuxZQf6vuQhmSjxah/hF1eNJUtTXTaWATHSBE0O5Ggo
-         GGgABsz+Wso3ZcvQcoPTZBS9ikBLNK8wttK4VvHI=
+        b=m7r6GJI2m/q861am+/PTQ4S6EU+5gsHzVepu6/noGOz7aAd7ugIA2S1BdjGXvtfZH
+         pizRB6pk8pyyySJYlcPXhAxIjuhUUSViuH+RROBgwA196Fiphgn7ulfvJCMzWWK4sm
+         fvfj7N+M6ZVOCWksQtw3iwj0RFyDJU3UOgvRxGIg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
-        zhengbin <zhengbin13@huawei.com>,
-        Hu Shiyuan <hushiyuan@huawei.com>,
-        Feilong Lin <linfeilong@huawei.com>, Jan Kara <jack@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 078/113] reiserfs: prevent NULL pointer dereference in reiserfs_insert_item()
-Date:   Thu, 27 Feb 2020 14:36:34 +0100
-Message-Id: <20200227132224.254475491@linuxfoundation.org>
+Subject: [PATCH 4.4 073/113] drm/nouveau/disp/nv50-: prevent oops when no channel method map provided
+Date:   Thu, 27 Feb 2020 14:36:29 +0100
+Message-Id: <20200227132223.480230801@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
 References: <20200227132211.791484803@linuxfoundation.org>
@@ -64,42 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunfeng Ye <yeyunfeng@huawei.com>
+From: Ben Skeggs <bskeggs@redhat.com>
 
-[ Upstream commit aacee5446a2a1aa35d0a49dab289552578657fb4 ]
+[ Upstream commit 0e6176c6d286316e9431b4f695940cfac4ffe6c2 ]
 
-The variable inode may be NULL in reiserfs_insert_item(), but there is
-no check before accessing the member of inode.
+The implementations for most channel types contains a map of methods to
+priv registers in order to provide debugging info when a disp exception
+has been raised.
 
-Fix this by adding NULL pointer check before calling reiserfs_debug().
+This info is missing from the implementation of PIO channels as they're
+rather simplistic already, however, if an exception is raised by one of
+them, we'd end up triggering a NULL-pointer deref.  Not ideal...
 
-Link: http://lkml.kernel.org/r/79c5135d-ff25-1cc9-4e99-9f572b88cc00@huawei.com
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Cc: zhengbin <zhengbin13@huawei.com>
-Cc: Hu Shiyuan <hushiyuan@huawei.com>
-Cc: Feilong Lin <linfeilong@huawei.com>
-Cc: Jan Kara <jack@suse.cz>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=206299
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/reiserfs/stree.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/reiserfs/stree.c b/fs/reiserfs/stree.c
-index 24cbe013240fa..e3a4cbad9620c 100644
---- a/fs/reiserfs/stree.c
-+++ b/fs/reiserfs/stree.c
-@@ -2249,7 +2249,8 @@ error_out:
- 	/* also releases the path */
- 	unfix_nodes(&s_ins_balance);
- #ifdef REISERQUOTA_DEBUG
--	reiserfs_debug(th->t_super, REISERFS_DEBUG_CODE,
-+	if (inode)
-+		reiserfs_debug(th->t_super, REISERFS_DEBUG_CODE,
- 		       "reiserquota insert_item(): freeing %u id=%u type=%c",
- 		       quota_bytes, inode->i_uid, head2type(ih));
- #endif
+diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c b/drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c
+index 01803c0679b68..d012df9fb9df0 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c
++++ b/drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c
+@@ -72,6 +72,8 @@ nv50_disp_chan_mthd(struct nv50_disp_chan *chan, int debug)
+ 
+ 	if (debug > subdev->debug)
+ 		return;
++	if (!mthd)
++		return;
+ 
+ 	for (i = 0; (list = mthd->data[i].mthd) != NULL; i++) {
+ 		u32 base = chan->head * mthd->addr;
 -- 
 2.20.1
 
