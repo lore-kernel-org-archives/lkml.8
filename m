@@ -2,138 +2,67 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C7B9C35677
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C759C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13C0224688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EAFE246A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:54:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rvLmXyZA"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="d2SWqEpT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729723AbgB0PyZ (ORCPT
+        id S1729870AbgB0Pyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 10:54:25 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:36377 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727909AbgB0PyZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 10:54:25 -0500
-Received: by mail-qv1-f66.google.com with SMTP id ff2so1757048qvb.3;
-        Thu, 27 Feb 2020 07:54:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nN5StkZhBPB1bomAet4pyT21cw9J/HKtdZwKDjPE0eg=;
-        b=rvLmXyZA/IxBS1OlS3qfN8VToBe8emDsE+K8JoTaGl1JKc33elugYxpKdpPxVbFnPh
-         8Ph2lPelrcldDYtbLwP4KWQNLuYW5jRQeRxbJ4W5FtcvJBViIfPHTzmk9kJyu8xyJTUn
-         kz+83cmMFpIYqPv2I/AbU4aT+VIp9mKjpI3Qa0sAFkeUay03MjeGpQ/mU6AORIlPYheh
-         zdYYU5XcJFWuFt6VCeBgEzNLraQG9Atoyk+pAzAmsetEuY0uBvDXTIwQDSA02oyoCnBo
-         JC/m0HQdJs8LyWbLAIiqQujUbBakz6MzqmBmbDgXA7aKRHmvVSJWIt1EX+R71ztEc0Si
-         iHwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nN5StkZhBPB1bomAet4pyT21cw9J/HKtdZwKDjPE0eg=;
-        b=HA27MA8gB9TK9XVO8qLO2mp0bTBUEaT2QKmTF6WvzJC1eLYUeb7LJB0nzyDBIIkqMd
-         V84mTIOXLXLw30MWdbpF7UOqXUyGTWATh5VqQ0URFK6JpX77dxkpRFWKDkk5Hmpgfruh
-         dBSflWXmZmmbBPM1O8a0+/+XheuTqTEDaCs32gsDQ7evt5/hrwuM+WBEKA4VSm7WrICl
-         pA/PRQA+0lCX2v2KrVqWubX0isMyXQBlGwbN+q4fFrLLMuqTZuD4AGlCm/Xo1cEGkDp3
-         u8xMrdHXyD+PaksMRE+6sc0XdprHnnxAbo0PY6Rbv/J5kKvrQS0llIrEr/+AgsIHbOPW
-         C54A==
-X-Gm-Message-State: APjAAAWHCnzlzZ5FzJE5Nzd3tYdzKruflCj7SjNI3TH0EJqsu31LeauA
-        4V3/1Mf5h7aehj5uOqfjNbk=
-X-Google-Smtp-Source: APXvYqzrUJfmfU6iKq2qxt23kKeEvf1D0g3jKD0dYzq5Ct834YUIZuQ/t8akVLD9C3g1MSGYhqDgdA==
-X-Received: by 2002:ad4:57b1:: with SMTP id g17mr287092qvx.167.1582818864130;
-        Thu, 27 Feb 2020 07:54:24 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id v9sm3221613qkv.79.2020.02.27.07.54.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 07:54:23 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Thu, 27 Feb 2020 10:54:22 -0500
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v2 1/1] x86/boot/compressed: Fix reloading of GDTR
- post-relocation
-Message-ID: <20200227155421.GA3507597@rani.riverdale.lan>
-References: <20200226204515.2752095-1-nivedita@alum.mit.edu>
- <20200226230031.3011645-2-nivedita@alum.mit.edu>
- <20200227081229.GA29411@gmail.com>
- <20200227151643.GA3498170@rani.riverdale.lan>
- <CAKv+Gu8BiW6P6Xv3EAPUEmbS3GQMJW=eRr-yygRbForaGDQyyw@mail.gmail.com>
+        Thu, 27 Feb 2020 10:54:44 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:37110 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727909AbgB0Pyn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 10:54:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=zHHu7uxl1TzDluMl9in9OmdrZA/yJJUaPHGV/HDELSI=; b=d2SWqEpTYc4/VsbeZu+W6FYy93
+        0oZigveIoNEF5ttFeDl3Mm0PR1mPZOIhJdKZ3Xo8Ngu2SU0WwAE+G4UWjpqc6mXGrCe5akII2s4+C
+        EI7hRTGKMJF4vNxIqrH1FCDbG9MUL7O1D6NxBmek7/COwzd2yOImqoezR7ave+vyirGE=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1j7LUm-0005xD-KW; Thu, 27 Feb 2020 16:54:40 +0100
+Date:   Thu, 27 Feb 2020 16:54:40 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Antoine Tenart <antoine.tenart@bootlin.com>
+Cc:     davem@davemloft.net, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 0/2] net: phy: mscc: support LOS active low
+Message-ID: <20200227155440.GC5245@lunn.ch>
+References: <20200227154033.1688498-1-antoine.tenart@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKv+Gu8BiW6P6Xv3EAPUEmbS3GQMJW=eRr-yygRbForaGDQyyw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200227154033.1688498-1-antoine.tenart@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 04:21:32PM +0100, Ard Biesheuvel wrote:
-> On Thu, 27 Feb 2020 at 16:16, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> >
-> > On Thu, Feb 27, 2020 at 09:12:29AM +0100, Ingo Molnar wrote:
-> > >
-> > > * Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> > >
-> > > > Commit ef5a7b5eb13e ("efi/x86: Remove GDT setup from efi_main")
-> > > > introduced GDT setup into the 32-bit kernel's startup_32, and reloads
-> > > > the GDTR after relocating the kernel for paranoia's sake.
-> > > >
-> > > > Commit 32d009137a56 ("x86/boot: Reload GDTR after copying to the end of
-> > > > the buffer") introduced a similar GDTR reload in the 64-bit kernel.
-> > > >
-> > > > The GDTR is adjusted by init_size - _end, however this may not be the
-> > > > correct offset to apply if the kernel was loaded at a misaligned address
-> > > > or below LOAD_PHYSICAL_ADDR, as in that case the decompression buffer
-> > > > has an additional offset from the original load address.
-> > > >
-> > > > This should never happen for a conformant bootloader, but we're being
-> > > > paranoid anyway, so just store the new GDT address in there instead of
-> > > > adding any offsets, which is simpler as well.
-> > > >
-> > > > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> > > > Fixes: ef5a7b5eb13e ("efi/x86: Remove GDT setup from efi_main")
-> > > > Fixes: 32d009137a56 ("x86/boot: Reload GDTR after copying to the end of the buffer")
-> > >
-> > > Have you or anyone else observed this condition practice, or have a
-> > > suspicion that this could happen - or is this a mostly theoretical
-> > > concern?
-> > >
-> > > Thanks,
-> > >
-> > >       Ingo
-> >
-> > Right now it's a theoretical concern.
-> >
-> > I'm working on another patch, to tell the EFI firmware PE loader what
-> > the kernel's preferred address is, so that we can avoid having to
-> > relocate the kernel in the EFI stub in most cases (ie if the PE loader
-> > manages to load us at that address). With those changes, the required
-> > adjustment won't be init_size - _end any more, and while fixing it up
-> > there, I noticed that it could already be the case that the required
-> > adjustment is different.
-> >
+On Thu, Feb 27, 2020 at 04:40:31PM +0100, Antoine Tenart wrote:
+> Hello,
 > 
-> Do you mean setting the image address in the PE/COFF header to the
-> preferred address?
+> This series adds a device tree property for the VSC8584 PHY family to
+> describe the LOS pin connected to the PHY as being active low. This new
+> property is then used in the MSCC PHY driver.
 
-Yep. I'm doing that and then making a few adjustments to the PE entry
-code and head_* so that it can decompress starting at image_base instead
-of startup_32.
+Hi Antoine
+
+I think i'm missing the big picture.
+
+Is this for when an SFP is connected directly to the PHY? The SFP
+output LOS, indicating loss of received fibre/copper signal, is active
+low?
+
+	Andrew
