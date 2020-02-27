@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55235C76564
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1807BC76562
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:38:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2488124656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA51624699
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:38:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814311;
-	bh=h21jDjk2H0/a9rRsPntXF0nJgP2UuDLNmtc3OLrc6Vg=;
+	s=default; t=1582814319;
+	bh=fKD8wdPrLOdn12bMz4B1mbh7BH7QGRNFFPpUKkbUYic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wK0XABdpF0OBuBlfBJ+DKIjqQOFLHCJlO46G7xrv7tGFAG3dMpL8DBM0IZQ9tyBMb
-	 XJEcIHQCA4+yqh4XUU3BHHsKsz10d+XJyGIu1eBxUULhW4td5Yex/CAptRvgcAA3yI
-	 IkBaRECRsKMpsDSAltNlgldyHBq8uyejuHPxDV1g=
+	b=zlb+7Iq+b6FScdbCcJDa3pjAYXsAxlFhZZLEsRJimD29aNuCevV/7jvCEUOHGIoz1
+	 HUJmqMulsKd2sPrJQHBTiu13VOdKFnq79E5nSUAE0QvUHykq1O4zeUxJCZ876+ovXZ
+	 c/QauPU4B4RbcKS8XRBEByLVh/qz7GS/5ddLYUAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731958AbgB0N4U (ORCPT
+        id S1732063AbgB0N4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:56:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56738 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:56:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732077AbgB0N4Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:56:16 -0500
+        id S1730199AbgB0Nz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:55:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5581D2073D;
-        Thu, 27 Feb 2020 13:56:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0F902073D;
+        Thu, 27 Feb 2020 13:55:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811775;
-        bh=h21jDjk2H0/a9rRsPntXF0nJgP2UuDLNmtc3OLrc6Vg=;
+        s=default; t=1582811757;
+        bh=fKD8wdPrLOdn12bMz4B1mbh7BH7QGRNFFPpUKkbUYic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aooLd0i/0TuKIbS17S/j4YQCwO3FXxWXYbnXKS4vSDt+sHbOsx8tmTdzAO6/q4US1
-         LSVkns3Dn23H2lAVtOPHKTlUGKfQWBnFVVRqOVK8LbNpf62a+Q9lFRwylP8iRJi5hz
-         rRPrv3Bl4c6KoQUqTrttB2TuNPIKopfDdfsngDiU=
+        b=ir3hPrgFt2tUZOng2qv7JxfZSXNxG3CeHDbiP26bKhii+ydHtiZMETdka0bk7XD2B
+         4Qq9oMk5SFCLfEfQREyZ0cYIoRsby015B41k19tn4QTlTIJEH1OvCUdnw2PG5Z2Kl6
+         NSAztiUXIn81j9FGR/7PBPNO1zrZQkk3WnyT6vTM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiewei Ke <kejiewei.cn@gmail.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 096/237] RDMA/rxe: Fix error type of mmap_offset
-Date:   Thu, 27 Feb 2020 14:35:10 +0100
-Message-Id: <20200227132304.052561593@linuxfoundation.org>
+        stable@vger.kernel.org, Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 090/237] drm/mediatek: handle events when enabling/disabling crtc
+Date:   Thu, 27 Feb 2020 14:35:04 +0100
+Message-Id: <20200227132303.658480261@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -60,36 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiewei Ke <kejiewei.cn@gmail.com>
+From: Bibby Hsieh <bibby.hsieh@mediatek.com>
 
-[ Upstream commit 6ca18d8927d468c763571f78c9a7387a69ffa020 ]
+[ Upstream commit 411f5c1eacfebb1f6e40b653d29447cdfe7282aa ]
 
-The type of mmap_offset should be u64 instead of int to match the type of
-mminfo.offset. If otherwise, after we create several thousands of CQs, it
-will run into overflow issues.
+The driver currently handles vblank events only when updating planes on
+an already enabled CRTC. The atomic update API however allows requesting
+an event when enabling or disabling a CRTC. This currently leads to
+event objects being leaked in the kernel and to events not being sent
+out. Fix it.
 
-Link: https://lore.kernel.org/r/20191227113613.5020-1-kejiewei.cn@gmail.com
-Signed-off-by: Jiewei Ke <kejiewei.cn@gmail.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Signed-off-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe_verbs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
-index d1cc89f6f2e33..46c8a66731e6c 100644
---- a/drivers/infiniband/sw/rxe/rxe_verbs.h
-+++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
-@@ -408,7 +408,7 @@ struct rxe_dev {
- 	struct list_head	pending_mmaps;
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+index 658b8dd45b834..3ea311d32fa9e 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+@@ -307,6 +307,7 @@ err_pm_runtime_put:
+ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
+ {
+ 	struct drm_device *drm = mtk_crtc->base.dev;
++	struct drm_crtc *crtc = &mtk_crtc->base;
+ 	int i;
  
- 	spinlock_t		mmap_offset_lock; /* guard mmap_offset */
--	int			mmap_offset;
-+	u64			mmap_offset;
+ 	DRM_DEBUG_DRIVER("%s\n", __func__);
+@@ -328,6 +329,13 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
+ 	mtk_disp_mutex_unprepare(mtk_crtc->mutex);
  
- 	atomic64_t		stats_counters[RXE_NUM_OF_COUNTERS];
+ 	pm_runtime_put(drm->dev);
++
++	if (crtc->state->event && !crtc->state->active) {
++		spin_lock_irq(&crtc->dev->event_lock);
++		drm_crtc_send_vblank_event(crtc, crtc->state->event);
++		crtc->state->event = NULL;
++		spin_unlock_irq(&crtc->dev->event_lock);
++	}
+ }
  
+ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
 -- 
 2.20.1
 
