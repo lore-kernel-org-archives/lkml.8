@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC364C35E1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4E7C3F343
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85D96246A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A175820578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582810946;
-	bh=AHEsC+E3W2xJQbzUvuMY92P8qdh5Jea/uQfL/fYkVJo=;
+	s=default; t=1582810957;
+	bh=ceEKIn991IqRty82jZ7YFd0bpyp4Qtq2iCa6roB5hYk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tXloHk7JG+NmxK9RBweivGTWItD877A6esy/JfVRJ3jSNZ8LHH1B1WYPsgCb1T2KK
-	 KmxwR4cwSLZV9O9Sg7PsoIcFAdknCCwALve6H9YXwGB1aneiIdfB04CmEWxZkW+I1m
-	 dnmpmHM6T2A2uWb4hFGC3aK7Kd2YL4xfcivH8Jh4=
+	b=QlYhGG65k3LLkGFAC+HJ9pjkX+THRPIlgL46w40LiN7U4k53v4d6ptv/vlUoC7XxB
+	 EpEWSjXmr1ERIw8NFax9f0yVXZIKXApX/14+I1PO16iLREoTDpnwhFnqMWJ5d4Kdfl
+	 eka/Nk0SXNgLc5j2qUefA/0OTSXhui8OcnsR5Vmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729750AbgB0NmR (ORCPT
+        id S1729813AbgB0Nmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:42:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37158 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:42:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729739AbgB0NmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:42:14 -0500
+        id S1729784AbgB0Nma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:42:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE75C21D7E;
-        Thu, 27 Feb 2020 13:42:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D5F720726;
+        Thu, 27 Feb 2020 13:42:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582810933;
-        bh=AHEsC+E3W2xJQbzUvuMY92P8qdh5Jea/uQfL/fYkVJo=;
+        s=default; t=1582810950;
+        bh=ceEKIn991IqRty82jZ7YFd0bpyp4Qtq2iCa6roB5hYk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y5ef+Det/fpy9EB+K2Hf307uPw4LQLIQMLuNmUZpEobRL6Of9V9f4ObhcfKxVCedh
-         GWxePoc+s2QRY/AlVIqH0uUCYCVNK/hVDsst5eK5sF3moSSKFTsjLBDgvTlYMUmon4
-         tN11la7XwwkgKUO91bFvBu0VdlJIgn098753C7GA=
+        b=FBUGHRd6vlp8whaKyaWpjAlKCSfGaiAY2oH+l6WsdxDaG+pdHY8IuFJIwYxvKnR95
+         Gkfwswu872wdDj2uEP71kEuc4XzQybUcHS/OIFlQo3bOnBYGNJRRRONlDO4BYeiz1N
+         lVUQ+WUX+3EnHPDTtCAFNokSNgv3eBtNeaCl0lkQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>,
+        stable@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 052/113] usbip: Fix unsafe unaligned pointer usage
-Date:   Thu, 27 Feb 2020 14:36:08 +0100
-Message-Id: <20200227132220.080009840@linuxfoundation.org>
+Subject: [PATCH 4.4 021/113] gianfar: Fix TX timestamping with a stacked DSA driver
+Date:   Thu, 27 Feb 2020 14:35:37 +0100
+Message-Id: <20200227132215.055211164@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
 References: <20200227132211.791484803@linuxfoundation.org>
@@ -59,151 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shuah Khan <skhan@linuxfoundation.org>
+From: Vladimir Oltean <olteanv@gmail.com>
 
-[ Upstream commit 585c91f40d201bc564d4e76b83c05b3b5363fe7e ]
+[ Upstream commit c26a2c2ddc0115eb088873f5c309cf46b982f522 ]
 
-Fix unsafe unaligned pointer usage in usbip network interfaces. usbip tool
-build fails with new gcc -Werror=address-of-packed-member checks.
+The driver wrongly assumes that it is the only entity that can set the
+SKBTX_IN_PROGRESS bit of the current skb. Therefore, in the
+gfar_clean_tx_ring function, where the TX timestamp is collected if
+necessary, the aforementioned bit is used to discriminate whether or not
+the TX timestamp should be delivered to the socket's error queue.
 
-usbip_network.c: In function ‘usbip_net_pack_usb_device’:
-usbip_network.c:79:32: error: taking address of packed member of ‘struct usbip_usb_device’ may result in an unaligned pointer value [-Werror=address-of-packed-member]
-   79 |  usbip_net_pack_uint32_t(pack, &udev->busnum);
+But a stacked driver such as a DSA switch can also set the
+SKBTX_IN_PROGRESS bit, which is actually exactly what it should do in
+order to denote that the hardware timestamping process is undergoing.
 
-Fix with minor changes to pass by value instead of by address.
+Therefore, gianfar would misinterpret the "in progress" bit as being its
+own, and deliver a second skb clone in the socket's error queue,
+completely throwing off a PTP process which is not expecting to receive
+it, _even though_ TX timestamping is not enabled for gianfar.
 
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-Link: https://lore.kernel.org/r/20200109012416.2875-1-skhan@linuxfoundation.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+There have been discussions [0] as to whether non-MAC drivers need or
+not to set SKBTX_IN_PROGRESS at all (whose purpose is to avoid sending 2
+timestamps, a sw and a hw one, to applications which only expect one).
+But as of this patch, there are at least 2 PTP drivers that would break
+in conjunction with gianfar: the sja1105 DSA switch and the felix
+switch, by way of its ocelot core driver.
+
+So regardless of that conclusion, fix the gianfar driver to not do stuff
+based on flags set by others and not intended for it.
+
+[0]: https://www.spinics.net/lists/netdev/msg619699.html
+
+Fixes: f0ee7acfcdd4 ("gianfar: Add hardware TX timestamping support")
+Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+Acked-by: Richard Cochran <richardcochran@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/usb/usbip/src/usbip_network.c | 40 +++++++++++++++++------------
- tools/usb/usbip/src/usbip_network.h | 12 +++------
- 2 files changed, 27 insertions(+), 25 deletions(-)
+ drivers/net/ethernet/freescale/gianfar.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/tools/usb/usbip/src/usbip_network.c b/tools/usb/usbip/src/usbip_network.c
-index b4c37e76a6e08..187dfaa67d0a2 100644
---- a/tools/usb/usbip/src/usbip_network.c
-+++ b/tools/usb/usbip/src/usbip_network.c
-@@ -62,39 +62,39 @@ void usbip_setup_port_number(char *arg)
- 	info("using port %d (\"%s\")", usbip_port, usbip_port_string);
- }
+diff --git a/drivers/net/ethernet/freescale/gianfar.c b/drivers/net/ethernet/freescale/gianfar.c
+index 2d61369f586f7..37cc1f838dd8b 100644
+--- a/drivers/net/ethernet/freescale/gianfar.c
++++ b/drivers/net/ethernet/freescale/gianfar.c
+@@ -2679,13 +2679,17 @@ static void gfar_clean_tx_ring(struct gfar_priv_tx_q *tx_queue)
+ 	skb_dirtytx = tx_queue->skb_dirtytx;
  
--void usbip_net_pack_uint32_t(int pack, uint32_t *num)
-+uint32_t usbip_net_pack_uint32_t(int pack, uint32_t num)
- {
- 	uint32_t i;
- 
- 	if (pack)
--		i = htonl(*num);
-+		i = htonl(num);
- 	else
--		i = ntohl(*num);
-+		i = ntohl(num);
- 
--	*num = i;
-+	return i;
- }
- 
--void usbip_net_pack_uint16_t(int pack, uint16_t *num)
-+uint16_t usbip_net_pack_uint16_t(int pack, uint16_t num)
- {
- 	uint16_t i;
- 
- 	if (pack)
--		i = htons(*num);
-+		i = htons(num);
- 	else
--		i = ntohs(*num);
-+		i = ntohs(num);
- 
--	*num = i;
-+	return i;
- }
- 
- void usbip_net_pack_usb_device(int pack, struct usbip_usb_device *udev)
- {
--	usbip_net_pack_uint32_t(pack, &udev->busnum);
--	usbip_net_pack_uint32_t(pack, &udev->devnum);
--	usbip_net_pack_uint32_t(pack, &udev->speed);
-+	udev->busnum = usbip_net_pack_uint32_t(pack, udev->busnum);
-+	udev->devnum = usbip_net_pack_uint32_t(pack, udev->devnum);
-+	udev->speed = usbip_net_pack_uint32_t(pack, udev->speed);
- 
--	usbip_net_pack_uint16_t(pack, &udev->idVendor);
--	usbip_net_pack_uint16_t(pack, &udev->idProduct);
--	usbip_net_pack_uint16_t(pack, &udev->bcdDevice);
-+	udev->idVendor = usbip_net_pack_uint16_t(pack, udev->idVendor);
-+	udev->idProduct = usbip_net_pack_uint16_t(pack, udev->idProduct);
-+	udev->bcdDevice = usbip_net_pack_uint16_t(pack, udev->bcdDevice);
- }
- 
- void usbip_net_pack_usb_interface(int pack __attribute__((unused)),
-@@ -141,6 +141,14 @@ ssize_t usbip_net_send(int sockfd, void *buff, size_t bufflen)
- 	return usbip_net_xmit(sockfd, buff, bufflen, 1);
- }
- 
-+static inline void usbip_net_pack_op_common(int pack,
-+					    struct op_common *op_common)
-+{
-+	op_common->version = usbip_net_pack_uint16_t(pack, op_common->version);
-+	op_common->code = usbip_net_pack_uint16_t(pack, op_common->code);
-+	op_common->status = usbip_net_pack_uint32_t(pack, op_common->status);
-+}
+ 	while ((skb = tx_queue->tx_skbuff[skb_dirtytx])) {
++		bool do_tstamp;
 +
- int usbip_net_send_op_common(int sockfd, uint32_t code, uint32_t status)
- {
- 	struct op_common op_common;
-@@ -152,7 +160,7 @@ int usbip_net_send_op_common(int sockfd, uint32_t code, uint32_t status)
- 	op_common.code    = code;
- 	op_common.status  = status;
++		do_tstamp = (skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) &&
++			    priv->hwts_tx_en;
  
--	PACK_OP_COMMON(1, &op_common);
-+	usbip_net_pack_op_common(1, &op_common);
+ 		frags = skb_shinfo(skb)->nr_frags;
  
- 	rc = usbip_net_send(sockfd, &op_common, sizeof(op_common));
- 	if (rc < 0) {
-@@ -176,7 +184,7 @@ int usbip_net_recv_op_common(int sockfd, uint16_t *code)
- 		goto err;
- 	}
+ 		/* When time stamping, one additional TxBD must be freed.
+ 		 * Also, we need to dma_unmap_single() the TxPAL.
+ 		 */
+-		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS))
++		if (unlikely(do_tstamp))
+ 			nr_txbds = frags + 2;
+ 		else
+ 			nr_txbds = frags + 1;
+@@ -2699,7 +2703,7 @@ static void gfar_clean_tx_ring(struct gfar_priv_tx_q *tx_queue)
+ 		    (lstatus & BD_LENGTH_MASK))
+ 			break;
  
--	PACK_OP_COMMON(0, &op_common);
-+	usbip_net_pack_op_common(0, &op_common);
+-		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS)) {
++		if (unlikely(do_tstamp)) {
+ 			next = next_txbd(bdp, base, tx_ring_size);
+ 			buflen = be16_to_cpu(next->length) +
+ 				 GMAC_FCB_LEN + GMAC_TXPAL_LEN;
+@@ -2709,7 +2713,7 @@ static void gfar_clean_tx_ring(struct gfar_priv_tx_q *tx_queue)
+ 		dma_unmap_single(priv->dev, be32_to_cpu(bdp->bufPtr),
+ 				 buflen, DMA_TO_DEVICE);
  
- 	if (op_common.version != USBIP_VERSION) {
- 		dbg("version mismatch: %d %d", op_common.version,
-diff --git a/tools/usb/usbip/src/usbip_network.h b/tools/usb/usbip/src/usbip_network.h
-index c1e875cf1078c..573fa839b66b7 100644
---- a/tools/usb/usbip/src/usbip_network.h
-+++ b/tools/usb/usbip/src/usbip_network.h
-@@ -33,12 +33,6 @@ struct op_common {
- 
- } __attribute__((packed));
- 
--#define PACK_OP_COMMON(pack, op_common)  do {\
--	usbip_net_pack_uint16_t(pack, &(op_common)->version);\
--	usbip_net_pack_uint16_t(pack, &(op_common)->code);\
--	usbip_net_pack_uint32_t(pack, &(op_common)->status);\
--} while (0)
--
- /* ---------------------------------------------------------------------- */
- /* Dummy Code */
- #define OP_UNSPEC	0x00
-@@ -164,11 +158,11 @@ struct op_devlist_reply_extra {
- } while (0)
- 
- #define PACK_OP_DEVLIST_REPLY(pack, reply)  do {\
--	usbip_net_pack_uint32_t(pack, &(reply)->ndev);\
-+	(reply)->ndev = usbip_net_pack_uint32_t(pack, (reply)->ndev);\
- } while (0)
- 
--void usbip_net_pack_uint32_t(int pack, uint32_t *num);
--void usbip_net_pack_uint16_t(int pack, uint16_t *num);
-+uint32_t usbip_net_pack_uint32_t(int pack, uint32_t num);
-+uint16_t usbip_net_pack_uint16_t(int pack, uint16_t num);
- void usbip_net_pack_usb_device(int pack, struct usbip_usb_device *udev);
- void usbip_net_pack_usb_interface(int pack, struct usbip_usb_interface *uinf);
- 
+-		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS)) {
++		if (unlikely(do_tstamp)) {
+ 			struct skb_shared_hwtstamps shhwtstamps;
+ 			u64 *ns = (u64 *)(((uintptr_t)skb->data + 0x10) &
+ 					  ~0x7UL);
 -- 
 2.20.1
 
