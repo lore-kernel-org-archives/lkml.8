@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C58A5C7290C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A54F7C72900
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D0B92468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F87B24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813454;
-	bh=vgHyGpEbgkvdFyWPBhyjtuKYzDwd/vBivZUC26r7QHk=;
+	s=default; t=1582813437;
+	bh=3EolLwvc+k88M83+i/a854yj4iSWyAk5AmAkLOkVqFg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I1kECCZCO34AYLoaoWJX54pTnOdAZcatoJnH+VjALxQBBE9VkqApHU003a4KTEAc6
-	 t9SYw4L1x1oMLIEGom92wQVxAEmaZ1lzcMSv+jeUiZxOyNa/283/gDTM2laWGcSt9f
-	 NzXAhprM5P+ciQq9ZNi8CBw1ZNsX/bHEdvx2XFTM=
+	b=nCuXyaXF2J9eQG/lgbe/kL0kAMAf0PJWJf5PHkw4Yk0hNmgx6HRdUHeqhqSuWvvhM
+	 LJ6190Iars9PK7gYUigpUnn8DCUToChNN5ap7e6hLfK+GYSO1NuOnYLan7JXp8vX79
+	 gilFboTm4A5XgZwa0VWXYvlGrDzxZVCCjkaGfQrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388956AbgB0ONP (ORCPT
+        id S2388991AbgB0ONl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:13:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52024 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:13:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730803AbgB0ONK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:13:10 -0500
+        id S2388646AbgB0ONf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:13:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA94624690;
-        Thu, 27 Feb 2020 14:13:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42D9F20578;
+        Thu, 27 Feb 2020 14:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812788;
-        bh=vgHyGpEbgkvdFyWPBhyjtuKYzDwd/vBivZUC26r7QHk=;
+        s=default; t=1582812814;
+        bh=3EolLwvc+k88M83+i/a854yj4iSWyAk5AmAkLOkVqFg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aMJSGqT2/w+FUkOE+MvymPjZBetuksln9pDn/zznDLRCdxvvCDjnWYyZtIh/26jmR
-         kIg1NdYFiaDhb7DfPcgFrgcs5w+nuAom1QzL+8/ne2vjvMSN6SAZyRcTbfwWdZbccR
-         H5nWHUgLOmz4ii2f+zaYymZiNrO9CRw8O6XT2D6w=
+        b=w9wqs9A60ILELBqCBPd/YU0yOEXiMSjzIZp+jMI6o3X82rMNr0u1Q3CZFmgUxNgTO
+         6FYskGNNTNLutczM1DhxNO1U5NUAM4/81n/s5wsHnHN9cyy1tKVm7W9b4woapd1Est
+         W5W+8trYh6iBlbd/5ga0K5j8iClZiLLUAfUJDpJ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Jones <davej@codemonkey.org.uk>,
-        Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.5 017/150] btrfs: dont set path->leave_spinning for truncate
-Date:   Thu, 27 Feb 2020 14:35:54 +0100
-Message-Id: <20200227132235.183018429@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.5 008/150] ALSA: hda/realtek - Apply quirk for MSI GP63, too
+Date:   Thu, 27 Feb 2020 14:35:45 +0100
+Message-Id: <20200227132233.951343970@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -61,79 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 52e29e331070cd7d52a64cbf1b0958212a340e28 upstream.
+commit a655e2b107d463ce2745188ce050d07daed09a71 upstream.
 
-The only time we actually leave the path spinning is if we're truncating
-a small amount and don't actually free an extent, which is not a common
-occurrence.  We have to set the path blocking in order to add the
-delayed ref anyway, so the first extent we find we set the path to
-blocking and stay blocking for the duration of the operation.  With the
-upcoming file extent map stuff there will be another case that we have
-to have the path blocking, so just swap to blocking always.
+The same quirk that was applied to MSI GL73 is needed for MSI GP63,
+too.  Adding the entry with the SSID 1462:1228.
 
-Note: this patch also fixes a warning after 28553fa992cb ("Btrfs: fix
-race between shrinking truncate and fiemap") got merged that inserts
-extent locks around truncation so the path must not leave spinning locks
-after btrfs_search_slot.
-
-  [70.794783] BUG: sleeping function called from invalid context at mm/slab.h:565
-  [70.794834] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 1141, name: rsync
-  [70.794863] 5 locks held by rsync/1141:
-  [70.794876]  #0: ffff888417b9c408 (sb_writers#17){.+.+}, at: mnt_want_write+0x20/0x50
-  [70.795030]  #1: ffff888428de28e8 (&type->i_mutex_dir_key#13/1){+.+.}, at: lock_rename+0xf1/0x100
-  [70.795051]  #2: ffff888417b9c608 (sb_internal#2){.+.+}, at: start_transaction+0x394/0x560
-  [70.795124]  #3: ffff888403081768 (btrfs-fs-01){++++}, at: btrfs_try_tree_write_lock+0x2f/0x160
-  [70.795203]  #4: ffff888403086568 (btrfs-fs-00){++++}, at: btrfs_try_tree_write_lock+0x2f/0x160
-  [70.795222] CPU: 5 PID: 1141 Comm: rsync Not tainted 5.6.0-rc2-backup+ #2
-  [70.795362] Call Trace:
-  [70.795374]  dump_stack+0x71/0xa0
-  [70.795445]  ___might_sleep.part.96.cold.106+0xa6/0xb6
-  [70.795459]  kmem_cache_alloc+0x1d3/0x290
-  [70.795471]  alloc_extent_state+0x22/0x1c0
-  [70.795544]  __clear_extent_bit+0x3ba/0x580
-  [70.795557]  ? _raw_spin_unlock_irq+0x24/0x30
-  [70.795569]  btrfs_truncate_inode_items+0x339/0xe50
-  [70.795647]  btrfs_evict_inode+0x269/0x540
-  [70.795659]  ? dput.part.38+0x29/0x460
-  [70.795671]  evict+0xcd/0x190
-  [70.795682]  __dentry_kill+0xd6/0x180
-  [70.795754]  dput.part.38+0x2ad/0x460
-  [70.795765]  do_renameat2+0x3cb/0x540
-  [70.795777]  __x64_sys_rename+0x1c/0x20
-
-Reported-by: Dave Jones <davej@codemonkey.org.uk>
-Fixes: 28553fa992cb ("Btrfs: fix race between shrinking truncate and fiemap")
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-[ add note ]
-Signed-off-by: David Sterba <dsterba@suse.com>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206503
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200217151947.17528-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/inode.c |    2 --
- 1 file changed, 2 deletions(-)
+ sound/pci/hda/patch_realtek.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -4814,7 +4814,6 @@ search_again:
- 		goto out;
- 	}
- 
--	path->leave_spinning = 1;
- 	ret = btrfs_search_slot(trans, root, &key, path, -1, 1);
- 	if (ret < 0)
- 		goto out;
-@@ -4966,7 +4965,6 @@ delete:
- 		     root == fs_info->tree_root)) {
- 			struct btrfs_ref ref = { 0 };
- 
--			btrfs_set_path_blocking(path);
- 			bytes_deleted += extent_num_bytes;
- 
- 			btrfs_init_generic_ref(&ref, BTRFS_DROP_DELAYED_REF,
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -2447,6 +2447,7 @@ static const struct snd_pci_quirk alc882
+ 	SND_PCI_QUIRK(0x1071, 0x8258, "Evesham Voyaeger", ALC882_FIXUP_EAPD),
+ 	SND_PCI_QUIRK(0x1458, 0xa002, "Gigabyte EP45-DS3/Z87X-UD3H", ALC889_FIXUP_FRONT_HP_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1458, 0xa0b8, "Gigabyte AZ370-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
++	SND_PCI_QUIRK(0x1462, 0x1228, "MSI-GP63", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x7350, "MSI-7350", ALC889_FIXUP_CD),
+ 	SND_PCI_QUIRK(0x1462, 0xda57, "MSI Z270-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
 
 
