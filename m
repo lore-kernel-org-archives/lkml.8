@@ -2,84 +2,112 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95055C4BA3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EACFC4BA3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77D1024691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 003FA24690
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:42:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728886AbgB0KmZ (ORCPT
+        id S1728904AbgB0Kmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 05:42:25 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:33742 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728844AbgB0KmZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 05:42:25 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 2949D1C0311; Thu, 27 Feb 2020 11:42:23 +0100 (CET)
-Date:   Thu, 27 Feb 2020 11:42:22 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Andrea.Ho@advantech.com.tw
-Cc:     linux-input@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
-        linux-kernel@vger.kernel.org, voyandrea@gmail.com,
-        amy.shih@advantech.com.tw, oakley.ding@advantech.com.tw
-Subject: Re: [V2,1/1] Input/misc: add support for Advantech software defined
- button
-Message-ID: <20200227104222.GA25104@duo.ucw.cz>
-References: <20200227101738.22389-1-Andrea.Ho@advantech.com.tw>
+        Thu, 27 Feb 2020 05:42:36 -0500
+Received: from relay.sw.ru ([185.231.240.75]:57428 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728844AbgB0Kmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 05:42:35 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1j7GcL-00055Y-C5; Thu, 27 Feb 2020 13:42:09 +0300
+Subject: Re: [PATCH RFC 5/5] ext4: Add fallocate2() support
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     tytso@mit.edu, viro@zeniv.linux.org.uk, adilger.kernel@dilger.ca,
+        snitzer@redhat.com, jack@suse.cz, ebiggers@google.com,
+        riteshh@linux.ibm.com, krisman@collabora.com, surajjs@amazon.com,
+        dmonakhov@gmail.com, mbobrowski@mbobrowski.org, enwlinux@gmail.com,
+        sblbir@amazon.com, khazhy@google.com, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
+ <158272447616.281342.14858371265376818660.stgit@localhost.localdomain>
+ <20200226155521.GA24724@infradead.org>
+ <06f9b82c-a519-7053-ec68-a549e02c6f6c@virtuozzo.com>
+ <19bddb89-c3c4-0f38-dca3-70164dc81a57@yandex-team.ru>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <ef3f2efc-88b9-401e-7b01-5e40a2412f5b@virtuozzo.com>
+Date:   Thu, 27 Feb 2020 13:42:08 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
-Content-Disposition: inline
-In-Reply-To: <20200227101738.22389-1-Andrea.Ho@advantech.com.tw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <19bddb89-c3c4-0f38-dca3-70164dc81a57@yandex-team.ru>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 27.02.2020 09:59, Konstantin Khlebnikov wrote:
+> On 26/02/2020 23.05, Kirill Tkhai wrote:
+>> On 26.02.2020 18:55, Christoph Hellwig wrote:
+>>> On Wed, Feb 26, 2020 at 04:41:16PM +0300, Kirill Tkhai wrote:
+>>>> This adds a support of physical hint for fallocate2() syscall.
+>>>> In case of @physical argument is set for ext4_fallocate(),
+>>>> we try to allocate blocks only from [@phisical, @physical + len]
+>>>> range, while other blocks are not used.
+>>>
+>>> Sorry, but this is a complete bullshit interface.  Userspace has
+>>> absolutely no business even thinking of physical placement.  If you
+>>> want to align allocations to physical block granularity boundaries
+>>> that is the file systems job, not the applications job.
+>>
+>> Why? There are two contradictory actions that filesystem can't do at the same time:
+>>
+>> 1)place files on a distance from each other to minimize number of extents
+>>    on possible future growth;
+>> 2)place small files in the same big block of block device.
+>>
+>> At initial allocation time you never know, which file will stop grow in some future,
+>> i.e. which file is suitable for compaction. This knowledge becomes available some time later.
+>> Say, if a file has not been changed for a month, it is suitable for compaction with
+>> another files like it.
+>>
+>> If at allocation time you can determine a file, which won't grow in the future, don't be afraid,
+>> and just share your algorithm here.
+>>
+>> In Virtuozzo we tried to compact ext4 with existing kernel interface:
+>>
+>> https://github.com/dmonakhov/e2fsprogs/blob/e4defrag2/misc/e4defrag2.c
+>>
+>> But it does not work well in many situations, and the main problem is blocks allocation
+>> in desired place is not possible. Block allocator can't behave excellent for everything.
+>>
+>> If this interface bad, can you suggest another interface to make block allocator to know
+>> the behavior expected from him in this specific case?
+> 
+> Controlling exact place is odd. I suppose main reason for this that defragmentation
+> process wants to control fragmentation during allocating new space.
+> 
+> Maybe flag FALLOC_FL_DONT_FRAGMENT (allocate exactly one extent or fail) could solve that problem?
+>
+> Defragmentator could try allocate different sizes and automatically balance fragmentation factor
+> without controlling exact disk offsets. Also it could reserve space for expected file growth.
 
---ZPt4rx8FFjLCG7dd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I don't think this will helps. The problem is not in allocation a single extent (fallocate() already
+tries to allocate as small number of extents as possible), but in that it's impossible to allocate it
+in desired bounds. Say, you have 1Mb discard granuality on block device and two files in different
+block device clusters: one is 4Kb of length, another's size is 1Mb-4Kb. The biggest file is situated
+on the start of block device cluster:
 
-Hi!
+[      1Mb cluster0       ][      1Mb cluster1     ]
+[****BIG_FILE****|free 4Kb][small_file|free 1Mb-4Kb]
 
-> +/* Defined keycodes */
-> +static short swbtn_keycodes[]  =3D {
-> +	BTN_TRIGGER_HAPPY2, /* double click */
-> +	BTN_TRIGGER_HAPPY,  /* tick */
-> +	BTN_TRIGGER_HAPPY3, BTN_TRIGGER_HAPPY4, /* long press */
-> +	BTN_TRIGGER_HAPPY5, BTN_TRIGGER_HAPPY6, BTN_TRIGGER_HAPPY7,
-> +	BTN_TRIGGER_HAPPY8, BTN_TRIGGER_HAPPY9, BTN_TRIGGER_HAPPY10
-> +};
-
-NAK. See my prev email.
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---ZPt4rx8FFjLCG7dd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXledDgAKCRAw5/Bqldv6
-8oV9AKCi6b7noclyjt7mj4GvMMIWU9Xo+wCeMjTPUj85fu6rwD5+0AVCXbnc62U=
-=AEx8
------END PGP SIGNATURE-----
-
---ZPt4rx8FFjLCG7dd--
+The best defragmentation will be to move small_file into free 4Kb of cluster0. Allocation of single
+extent does not help here: you have to allocate very big bunch of such extents in cycle before
+allocator returns you desired block, and then it's need to return the rest of extents back. This
+has very bad performance.
