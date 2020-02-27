@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 693A8C3F344
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E481C52D44
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DD8D20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75EF321D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812079;
-	bh=0WEPTYqZ5Y4oG4shErs6HA0zfDpS3Vlm3zVRv8t6hA4=;
+	s=default; t=1582812094;
+	bh=NLZDNgH+JCzASQdqmltQXuwK1A91CMeMs19qt5lj1TY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hZGO0C/4Jxo+TJXiCNUKD5KuDUYxXc9Z18r6Ij08k3/5aFbs1bug/+Ze5gEg8vYtg
-	 8Xjo1CBhD8Te84KBAig1YMQ9YW5IMd+ldCQJXf8kW6rJFC3pNbwX0MnMGmiU9hcVN1
-	 +/qJuz1h355o2dv/2SiGbr1Ox1bJ8WGokEK7YjZo=
+	b=vM/b8OGrjy4wsdsZNefi0aJWdQFnHMk+xkfNyUfsmYFTJuj58WV7rH7Fxm3IQVz5G
+	 4xBoNrhiH5hVRfiyAThbVJ+NNnwKiZVuNsyjq0zoe2Nx+Rvan2+1QJ8eGFfax6KcBD
+	 ZKNrMGOuTFlaObXA2jmawohzLbDrpE0b01HCdvb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732897AbgB0OBS (ORCPT
+        id S1732947AbgB0OBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:01:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35106 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:01:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732890AbgB0OBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:01:15 -0500
+        id S1732939AbgB0OBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:01:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29C342073D;
-        Thu, 27 Feb 2020 14:01:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 015C221556;
+        Thu, 27 Feb 2020 14:01:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812074;
-        bh=0WEPTYqZ5Y4oG4shErs6HA0zfDpS3Vlm3zVRv8t6hA4=;
+        s=default; t=1582812090;
+        bh=NLZDNgH+JCzASQdqmltQXuwK1A91CMeMs19qt5lj1TY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qHQG1Ac9CL9m4JhcVSMbU9Sl5YZtU3+lpR80p8S3F/wQvML1AFDfsqZwUQv0kiRHZ
-         PbxeJNjSm1yzSVZTqChUHNdIfxRl7/fb6tF5xyvo1BkijpS1o12hBEl1dfbM3WkIE3
-         Ccnp6//0pOzPhYNSykoSXzLwbqnRSufEUBNbRUEY=
+        b=JH3xYOSRr1O49EugPFyAhn307oi2ybhOp7c5lWESLDqkdaps1RlWh5wN+dWIggBVG
+         QQV3fUxn7D0IBkbjslafWR2vAtEBNNbXxEkz34Dcn4XOTz8CmegzbGSXusOyYAtmPT
+         jb7I+hKYLbsY6smNlUF+K9irLqQLIjkQZHo5ihJM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Loic Poulain <loic.poulain@linaro.org>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 195/237] serdev: ttyport: restore client ops on deregistration
-Date:   Thu, 27 Feb 2020 14:36:49 +0100
-Message-Id: <20200227132310.657779420@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: [PATCH 4.14 218/237] KVM: nVMX: handle nested posted interrupts when apicv is disabled for L1
+Date:   Thu, 27 Feb 2020 14:37:12 +0100
+Message-Id: <20200227132312.203908410@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -59,107 +59,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-commit 0c5aae59270fb1f827acce182786094c9ccf598e upstream.
+commit 91a5f413af596ad01097e59bf487eb07cb3f1331 upstream.
 
-The serdev tty-port controller driver should reset the tty-port client
-operations also on deregistration to avoid a NULL-pointer dereference in
-case the port is later re-registered as a normal tty device.
+Even when APICv is disabled for L1 it can (and, actually, is) still
+available for L2, this means we need to always call
+vmx_deliver_nested_posted_interrupt() when attempting an interrupt
+delivery.
 
-Note that this can only happen with tty drivers such as 8250 which have
-statically allocated port structures that can end up being reused and
-where a later registration would not register a serdev controller (e.g.
-due to registration errors or if the devicetree has been changed in
-between).
-
-Specifically, this can be an issue for any statically defined ports that
-would be registered by 8250 core when an 8250 driver is being unbound.
-
-Fixes: bed35c6dfa6a ("serdev: add a tty port controller driver")
-Cc: stable <stable@vger.kernel.org>     # 4.11
-Reported-by: Loic Poulain <loic.poulain@linaro.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20200210145730.22762-1-johan@kernel.org
+Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serdev/serdev-ttyport.c |    6 ++----
- drivers/tty/tty_port.c              |    5 +++--
- include/linux/tty.h                 |    2 ++
- 3 files changed, 7 insertions(+), 6 deletions(-)
+ arch/x86/include/asm/kvm_host.h |    2 +-
+ arch/x86/kvm/lapic.c            |    5 +----
+ arch/x86/kvm/svm.c              |    7 ++++++-
+ arch/x86/kvm/vmx.c              |   13 +++++++++----
+ 4 files changed, 17 insertions(+), 10 deletions(-)
 
---- a/drivers/tty/serdev/serdev-ttyport.c
-+++ b/drivers/tty/serdev/serdev-ttyport.c
-@@ -238,7 +238,6 @@ struct device *serdev_tty_port_register(
- 					struct device *parent,
- 					struct tty_driver *drv, int idx)
- {
--	const struct tty_port_client_operations *old_ops;
- 	struct serdev_controller *ctrl;
- 	struct serport *serport;
- 	int ret;
-@@ -257,7 +256,6 @@ struct device *serdev_tty_port_register(
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1006,7 +1006,7 @@ struct kvm_x86_ops {
+ 	void (*load_eoi_exitmap)(struct kvm_vcpu *vcpu, u64 *eoi_exit_bitmap);
+ 	void (*set_virtual_apic_mode)(struct kvm_vcpu *vcpu);
+ 	void (*set_apic_access_page_addr)(struct kvm_vcpu *vcpu, hpa_t hpa);
+-	void (*deliver_posted_interrupt)(struct kvm_vcpu *vcpu, int vector);
++	int (*deliver_posted_interrupt)(struct kvm_vcpu *vcpu, int vector);
+ 	int (*sync_pir_to_irr)(struct kvm_vcpu *vcpu);
+ 	int (*set_tss_addr)(struct kvm *kvm, unsigned int addr);
+ 	int (*get_tdp_level)(struct kvm_vcpu *vcpu);
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -993,11 +993,8 @@ static int __apic_accept_irq(struct kvm_
+ 				apic_clear_vector(vector, apic->regs + APIC_TMR);
+ 		}
  
- 	ctrl->ops = &ctrl_ops;
- 
--	old_ops = port->client_ops;
- 	port->client_ops = &client_ops;
- 	port->client_data = ctrl;
- 
-@@ -270,7 +268,7 @@ struct device *serdev_tty_port_register(
- 
- err_reset_data:
- 	port->client_data = NULL;
--	port->client_ops = old_ops;
-+	port->client_ops = &tty_port_default_client_ops;
- 	serdev_controller_put(ctrl);
- 
- 	return ERR_PTR(ret);
-@@ -285,8 +283,8 @@ int serdev_tty_port_unregister(struct tt
- 		return -ENODEV;
- 
- 	serdev_controller_remove(ctrl);
--	port->client_ops = NULL;
- 	port->client_data = NULL;
-+	port->client_ops = &tty_port_default_client_ops;
- 	serdev_controller_put(ctrl);
- 
- 	return 0;
---- a/drivers/tty/tty_port.c
-+++ b/drivers/tty/tty_port.c
-@@ -51,10 +51,11 @@ static void tty_port_default_wakeup(stru
- 	}
+-		if (vcpu->arch.apicv_active)
+-			kvm_x86_ops->deliver_posted_interrupt(vcpu, vector);
+-		else {
++		if (kvm_x86_ops->deliver_posted_interrupt(vcpu, vector)) {
+ 			kvm_lapic_set_irr(vector, apic);
+-
+ 			kvm_make_request(KVM_REQ_EVENT, vcpu);
+ 			kvm_vcpu_kick(vcpu);
+ 		}
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -4631,8 +4631,11 @@ static void svm_load_eoi_exitmap(struct
+ 	return;
  }
  
--static const struct tty_port_client_operations default_client_ops = {
-+const struct tty_port_client_operations tty_port_default_client_ops = {
- 	.receive_buf = tty_port_default_receive_buf,
- 	.write_wakeup = tty_port_default_wakeup,
- };
-+EXPORT_SYMBOL_GPL(tty_port_default_client_ops);
- 
- void tty_port_init(struct tty_port *port)
+-static void svm_deliver_avic_intr(struct kvm_vcpu *vcpu, int vec)
++static int svm_deliver_avic_intr(struct kvm_vcpu *vcpu, int vec)
  {
-@@ -67,7 +68,7 @@ void tty_port_init(struct tty_port *port
- 	spin_lock_init(&port->lock);
- 	port->close_delay = (50 * HZ) / 100;
- 	port->closing_wait = (3000 * HZ) / 100;
--	port->client_ops = &default_client_ops;
-+	port->client_ops = &tty_port_default_client_ops;
- 	kref_init(&port->kref);
- }
- EXPORT_SYMBOL(tty_port_init);
---- a/include/linux/tty.h
-+++ b/include/linux/tty.h
-@@ -224,6 +224,8 @@ struct tty_port_client_operations {
- 	void (*write_wakeup)(struct tty_port *port);
- };
- 
-+extern const struct tty_port_client_operations tty_port_default_client_ops;
++	if (!vcpu->arch.apicv_active)
++		return -1;
 +
- struct tty_port {
- 	struct tty_bufhead	buf;		/* Locked internally */
- 	struct tty_struct	*tty;		/* Back pointer */
+ 	kvm_lapic_set_irr(vec, vcpu->arch.apic);
+ 	smp_mb__after_atomic();
+ 
+@@ -4641,6 +4644,8 @@ static void svm_deliver_avic_intr(struct
+ 		       kvm_cpu_get_apicid(vcpu->cpu));
+ 	else
+ 		kvm_vcpu_wake_up(vcpu);
++
++	return 0;
+ }
+ 
+ static bool svm_dy_apicv_has_pending_interrupt(struct kvm_vcpu *vcpu)
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -5541,24 +5541,29 @@ static int vmx_deliver_nested_posted_int
+  * 2. If target vcpu isn't running(root mode), kick it to pick up the
+  * interrupt from PIR in next vmentry.
+  */
+-static void vmx_deliver_posted_interrupt(struct kvm_vcpu *vcpu, int vector)
++static int vmx_deliver_posted_interrupt(struct kvm_vcpu *vcpu, int vector)
+ {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 	int r;
+ 
+ 	r = vmx_deliver_nested_posted_interrupt(vcpu, vector);
+ 	if (!r)
+-		return;
++		return 0;
++
++	if (!vcpu->arch.apicv_active)
++		return -1;
+ 
+ 	if (pi_test_and_set_pir(vector, &vmx->pi_desc))
+-		return;
++		return 0;
+ 
+ 	/* If a previous notification has sent the IPI, nothing to do.  */
+ 	if (pi_test_and_set_on(&vmx->pi_desc))
+-		return;
++		return 0;
+ 
+ 	if (!kvm_vcpu_trigger_posted_interrupt(vcpu, false))
+ 		kvm_vcpu_kick(vcpu);
++
++	return 0;
+ }
+ 
+ /*
 
 
