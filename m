@@ -2,52 +2,54 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A66C1C3F342
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3714C3F349
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7087224656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A1A824656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:32:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813962;
-	bh=/W5HUgLROjaLknRqFXz3IQUcQ1wn8g28oMY+0ptuQm8=;
+	s=default; t=1582813971;
+	bh=su+lVkvXj4YnUg0KZ1JzxartEVlUDy0dSo/DFGUz0x0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hBFiurhYDU3zUSwmK59y08xuP+bmrRoW4D0vtPtSp0Zb7ijf+YKJ+A/JLcP5OvOuw
-	 G8NEDjcYsRzNvL9GLw94rs563XAA0nCx32iJoFu0snH/LFq4s34oNTHPmcaIXRSdcJ
-	 Wx8ijrLs8KOMH/uYmJ5M7ISHZ7tYHPxlBnF/aXXA=
+	b=OdhaSEmaNFt5yFCiPVhqaDVg2kxl7Z6ZBhyr9jQWqZxZbaliHo3LSUp773kpN6DkO
+	 6Aai0MUCHO9O7dPsgWqM8GPvnccvQD+ueE+bOGkwRTdE3Lm9srOcEth1ORCF1Rvpoc
+	 O+d6Y1UlozZGNFtgyDIbdg4YowDvcFIP8DKr+pAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732991AbgB0OBr (ORCPT
+        id S1732917AbgB0OB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:01:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35946 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:01:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726378AbgB0OBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:01:44 -0500
+        id S1732910AbgB0OBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:01:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEDA221556;
-        Thu, 27 Feb 2020 14:01:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 580B324697;
+        Thu, 27 Feb 2020 14:01:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812103;
-        bh=/W5HUgLROjaLknRqFXz3IQUcQ1wn8g28oMY+0ptuQm8=;
+        s=default; t=1582812082;
+        bh=su+lVkvXj4YnUg0KZ1JzxartEVlUDy0dSo/DFGUz0x0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wsF1d04IABVYcC4v5EA18wROyNahjIhDzRzb5QnZh5PVPkcER1qnaUQHjm2W8gXSl
-         EStfLuVRZnJOWi9JF55TOLfb++cPQf5bN6Rmxz/0Xwn6IVU2ww1eX0BjjHwz/4lbOf
-         3JJRJ6GLnYCf1BMsFSLtLUBtrVtG6MXuJSRTEuuk=
+        b=tjl1IFCS3hgbh+1gvTmMWNx70MrOn6o5LblEJUsFda8gSbQKEzcxwRloSTsf5GgW5
+         6+Z0+sQyvtBOpUVpcy1kHSGWgjtL5N4WQoMYsrTd0zmKRKhFHhWCivXjHyYuOBqvZS
+         CFS4wx7HGB13DJdc1zmgpJKcLfftDU891Co9g+BY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Jani Nikula <jani.nikula@intel.com>
-Subject: [PATCH 4.14 196/237] MAINTAINERS: Update drm/i915 bug filing URL
-Date:   Thu, 27 Feb 2020 14:36:50 +0100
-Message-Id: <20200227132310.724009522@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+2202a584a00fffd19fbf@syzkaller.appspotmail.com,
+        Eric Biggers <ebiggers@google.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        stable@kernel.org
+Subject: [PATCH 4.14 215/237] ext4: fix race between writepages and enabling EXT4_EXTENTS_FL
+Date:   Thu, 27 Feb 2020 14:37:09 +0100
+Message-Id: <20200227132311.998284001@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -60,34 +62,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jani Nikula <jani.nikula@intel.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 96228b7df33f8eb9006f8ae96949400aed9bd303 upstream.
+commit cb85f4d23f794e24127f3e562cb3b54b0803f456 upstream.
 
-We've moved from bugzilla to gitlab.
+If EXT4_EXTENTS_FL is set on an inode while ext4_writepages() is running
+on it, the following warning in ext4_add_complete_io() can be hit:
 
-Cc: stable@vger.kernel.org
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200212160434.6437-1-jani.nikula@intel.com
-(cherry picked from commit 3a6a4f0810c8ade6f1ff63c34aa9834176b9d88b)
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+WARNING: CPU: 1 PID: 0 at fs/ext4/page-io.c:234 ext4_put_io_end_defer+0xf0/0x120
+
+Here's a minimal reproducer (not 100% reliable) (root isn't required):
+
+        while true; do
+                sync
+        done &
+        while true; do
+                rm -f file
+                touch file
+                chattr -e file
+                echo X >> file
+                chattr +e file
+        done
+
+The problem is that in ext4_writepages(), ext4_should_dioread_nolock()
+(which only returns true on extent-based files) is checked once to set
+the number of reserved journal credits, and also again later to select
+the flags for ext4_map_blocks() and copy the reserved journal handle to
+ext4_io_end::handle.  But if EXT4_EXTENTS_FL is being concurrently set,
+the first check can see dioread_nolock disabled while the later one can
+see it enabled, causing the reserved handle to unexpectedly be NULL.
+
+Since changing EXT4_EXTENTS_FL is uncommon, and there may be other races
+related to doing so as well, fix this by synchronizing changing
+EXT4_EXTENTS_FL with ext4_writepages() via the existing
+s_writepages_rwsem (previously called s_journal_flag_rwsem).
+
+This was originally reported by syzbot without a reproducer at
+https://syzkaller.appspot.com/bug?extid=2202a584a00fffd19fbf,
+but now that dioread_nolock is the default I also started seeing this
+when running syzkaller locally.
+
+Link: https://lore.kernel.org/r/20200219183047.47417-3-ebiggers@kernel.org
+Reported-by: syzbot+2202a584a00fffd19fbf@syzkaller.appspotmail.com
+Fixes: 6b523df4fb5a ("ext4: use transaction reservation for extent conversion in ext4_end_io")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- MAINTAINERS |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext4/ext4.h    |    5 ++++-
+ fs/ext4/migrate.c |   27 +++++++++++++++++++--------
+ 2 files changed, 23 insertions(+), 9 deletions(-)
 
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6877,7 +6877,7 @@ M:	Joonas Lahtinen <joonas.lahtinen@linu
- M:	Rodrigo Vivi <rodrigo.vivi@intel.com>
- L:	intel-gfx@lists.freedesktop.org
- W:	https://01.org/linuxgraphics/
--B:	https://01.org/linuxgraphics/documentation/how-report-bugs
-+B:	https://gitlab.freedesktop.org/drm/intel/-/wikis/How-to-file-i915-bugs
- C:	irc://chat.freenode.net/intel-gfx
- Q:	http://patchwork.freedesktop.org/project/intel-gfx/
- T:	git git://anongit.freedesktop.org/drm-intel
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -1532,7 +1532,10 @@ struct ext4_sb_info {
+ 	struct ratelimit_state s_warning_ratelimit_state;
+ 	struct ratelimit_state s_msg_ratelimit_state;
+ 
+-	/* Barrier between changing inodes' journal flags and writepages ops. */
++	/*
++	 * Barrier between writepages ops and changing any inode's JOURNAL_DATA
++	 * or EXTENTS flag.
++	 */
+ 	struct percpu_rw_semaphore s_writepages_rwsem;
+ 	struct dax_device *s_daxdev;
+ };
+--- a/fs/ext4/migrate.c
++++ b/fs/ext4/migrate.c
+@@ -434,6 +434,7 @@ static int free_ext_block(handle_t *hand
+ 
+ int ext4_ext_migrate(struct inode *inode)
+ {
++	struct ext4_sb_info *sbi = EXT4_SB(inode->i_sb);
+ 	handle_t *handle;
+ 	int retval = 0, i;
+ 	__le32 *i_data;
+@@ -458,6 +459,8 @@ int ext4_ext_migrate(struct inode *inode
+ 		 */
+ 		return retval;
+ 
++	percpu_down_write(&sbi->s_writepages_rwsem);
++
+ 	/*
+ 	 * Worst case we can touch the allocation bitmaps, a bgd
+ 	 * block, and a block to link in the orphan list.  We do need
+@@ -468,7 +471,7 @@ int ext4_ext_migrate(struct inode *inode
+ 
+ 	if (IS_ERR(handle)) {
+ 		retval = PTR_ERR(handle);
+-		return retval;
++		goto out_unlock;
+ 	}
+ 	goal = (((inode->i_ino - 1) / EXT4_INODES_PER_GROUP(inode->i_sb)) *
+ 		EXT4_INODES_PER_GROUP(inode->i_sb)) + 1;
+@@ -479,7 +482,7 @@ int ext4_ext_migrate(struct inode *inode
+ 	if (IS_ERR(tmp_inode)) {
+ 		retval = PTR_ERR(tmp_inode);
+ 		ext4_journal_stop(handle);
+-		return retval;
++		goto out_unlock;
+ 	}
+ 	i_size_write(tmp_inode, i_size_read(inode));
+ 	/*
+@@ -521,7 +524,7 @@ int ext4_ext_migrate(struct inode *inode
+ 		 */
+ 		ext4_orphan_del(NULL, tmp_inode);
+ 		retval = PTR_ERR(handle);
+-		goto out;
++		goto out_tmp_inode;
+ 	}
+ 
+ 	ei = EXT4_I(inode);
+@@ -602,10 +605,11 @@ err_out:
+ 	/* Reset the extent details */
+ 	ext4_ext_tree_init(handle, tmp_inode);
+ 	ext4_journal_stop(handle);
+-out:
++out_tmp_inode:
+ 	unlock_new_inode(tmp_inode);
+ 	iput(tmp_inode);
+-
++out_unlock:
++	percpu_up_write(&sbi->s_writepages_rwsem);
+ 	return retval;
+ }
+ 
+@@ -615,7 +619,8 @@ out:
+ int ext4_ind_migrate(struct inode *inode)
+ {
+ 	struct ext4_extent_header	*eh;
+-	struct ext4_super_block		*es = EXT4_SB(inode->i_sb)->s_es;
++	struct ext4_sb_info		*sbi = EXT4_SB(inode->i_sb);
++	struct ext4_super_block		*es = sbi->s_es;
+ 	struct ext4_inode_info		*ei = EXT4_I(inode);
+ 	struct ext4_extent		*ex;
+ 	unsigned int			i, len;
+@@ -639,9 +644,13 @@ int ext4_ind_migrate(struct inode *inode
+ 	if (test_opt(inode->i_sb, DELALLOC))
+ 		ext4_alloc_da_blocks(inode);
+ 
++	percpu_down_write(&sbi->s_writepages_rwsem);
++
+ 	handle = ext4_journal_start(inode, EXT4_HT_MIGRATE, 1);
+-	if (IS_ERR(handle))
+-		return PTR_ERR(handle);
++	if (IS_ERR(handle)) {
++		ret = PTR_ERR(handle);
++		goto out_unlock;
++	}
+ 
+ 	down_write(&EXT4_I(inode)->i_data_sem);
+ 	ret = ext4_ext_check_inode(inode);
+@@ -676,5 +685,7 @@ int ext4_ind_migrate(struct inode *inode
+ errout:
+ 	ext4_journal_stop(handle);
+ 	up_write(&EXT4_I(inode)->i_data_sem);
++out_unlock:
++	percpu_up_write(&sbi->s_writepages_rwsem);
+ 	return ret;
+ }
 
 
