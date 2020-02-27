@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E75C35677
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3C2C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E51FC2468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBDE52468F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814453;
-	bh=EwYfUOnmtfFffy16it4zCFunWeADkB2Shz4MSOMEUtc=;
+	s=default; t=1582814462;
+	bh=K0B0Z7CgJNm+MfOSOZXUlyldslzUSiCVlH0pKDouAYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L17cLx39Rjg/7Egjm7KDAQWnFtGJySnaOw+kyWQ/kqZiPDxxc0Cc7g1ivj7iUy8e0
-	 fcK4XX/BctbPtzmrDwuHbzQfmD5FTyNBuVPlHu55I3/m1jHswUDERdLMOqOpM7jBS9
-	 7M4JDHO4QpQrxzAdTgNvPpWa7+dmPKdEE+YAv+us=
+	b=zT+SleZZ/8DLL8AQ1wdEnxwWO1CmZSBmNhXQVsEUL49jNZQpnLu8D+7yC2Aqzj/pz
+	 VfFh2JaEMMYqnOU3SPXrbVA7nWLjyvBJLTx8zhoMSk/P3nH0R7Ihw2Q55FTkAmSiyn
+	 IT74nXBg9/f1Dzq1FNX8PqT5RG7NR7gMt2XX0apY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731836AbgB0Okv (ORCPT
+        id S1731502AbgB0NwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:40:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52314 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:52:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731561AbgB0Nwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:52:42 -0500
+        id S1731203AbgB0NwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:52:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8748C21D7E;
-        Thu, 27 Feb 2020 13:52:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D6C321D7E;
+        Thu, 27 Feb 2020 13:52:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811562;
-        bh=EwYfUOnmtfFffy16it4zCFunWeADkB2Shz4MSOMEUtc=;
+        s=default; t=1582811533;
+        bh=K0B0Z7CgJNm+MfOSOZXUlyldslzUSiCVlH0pKDouAYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wW2/QdRkt3PZ566YgymFaDS/dAs6Z1gkzHPBKEs+A2XmpM2EaLSxPfw3Tkozwqwxj
-         Gy6XYP7nZXQXBVugRU3/QjgpQbNTlnMyOtAIZZXWRodxsxJ73cFuHeAO/JbqS6WglK
-         GEucHP9ce4XkWy4plotLKGGSiMsIaQPUi4rZXKg0=
+        b=JtRC8NV2vkb6/HrrBcIWyWlh/FeF3FZLeqRM4wAYj9czZb3PEiS30h85mzppX7xBk
+         xOvadA34z/u6cM3PPomVCTHftU93uMwBoaJ49Tg+gkk0B6e1EXIDp5slGN0F5/M0Ax
+         ITM6BXqyKVFmpv+h2ib0P8uYRnfaHl64jnc6hvc8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Dilger <adilger@dilger.ca>,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org
-Subject: [PATCH 4.14 015/237] ext4: dont assume that mmp_nodename/bdevname have NUL
-Date:   Thu, 27 Feb 2020 14:33:49 +0100
-Message-Id: <20200227132257.164230443@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: [PATCH 4.9 131/165] tty/serial: atmel: manage shutdown in case of RS485 or ISO7816 mode
+Date:   Thu, 27 Feb 2020 14:36:45 +0100
+Message-Id: <20200227132250.161039162@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
-References: <20200227132255.285644406@linuxfoundation.org>
+In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
+References: <20200227132230.840899170@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,58 +58,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Dilger <adilger@dilger.ca>
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-commit 14c9ca0583eee8df285d68a0e6ec71053efd2228 upstream.
+commit 04b5bfe3dc94e64d0590c54045815cb5183fb095 upstream.
 
-Don't assume that the mmp_nodename and mmp_bdevname strings are NUL
-terminated, since they are filled in by snprintf(), which is not
-guaranteed to do so.
+In atmel_shutdown() we call atmel_stop_rx() and atmel_stop_tx() functions.
+Prevent the rx restart that is implemented in RS485 or ISO7816 modes when
+calling atmel_stop_tx() by using the atomic information tasklet_shutdown
+that is already in place for this purpose.
 
-Link: https://lore.kernel.org/r/1580076215-1048-1-git-send-email-adilger@dilger.ca
-Signed-off-by: Andreas Dilger <adilger@dilger.ca>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
+Fixes: 98f2082c3ac4 ("tty/serial: atmel: enforce tasklet init and termination sequences")
+Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200210152053.8289-1-nicolas.ferre@microchip.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/mmp.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/tty/serial/atmel_serial.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/ext4/mmp.c
-+++ b/fs/ext4/mmp.c
-@@ -120,10 +120,10 @@ void __dump_mmp_msg(struct super_block *
- {
- 	__ext4_warning(sb, function, line, "%s", msg);
- 	__ext4_warning(sb, function, line,
--		       "MMP failure info: last update time: %llu, last update "
--		       "node: %s, last update device: %s",
--		       (long long unsigned int) le64_to_cpu(mmp->mmp_time),
--		       mmp->mmp_nodename, mmp->mmp_bdevname);
-+		       "MMP failure info: last update time: %llu, last update node: %.*s, last update device: %.*s",
-+		       (unsigned long long)le64_to_cpu(mmp->mmp_time),
-+		       (int)sizeof(mmp->mmp_nodename), mmp->mmp_nodename,
-+		       (int)sizeof(mmp->mmp_bdevname), mmp->mmp_bdevname);
+--- a/drivers/tty/serial/atmel_serial.c
++++ b/drivers/tty/serial/atmel_serial.c
+@@ -501,7 +501,8 @@ static void atmel_stop_tx(struct uart_po
+ 	atmel_uart_writel(port, ATMEL_US_IDR, atmel_port->tx_done_mask);
+ 
+ 	if (atmel_uart_is_half_duplex(port))
+-		atmel_start_rx(port);
++		if (!atomic_read(&atmel_port->tasklet_shutdown))
++			atmel_start_rx(port);
+ 
  }
  
- /*
-@@ -154,6 +154,7 @@ static int kmmpd(void *data)
- 	mmp_check_interval = max(EXT4_MMP_CHECK_MULT * mmp_update_interval,
- 				 EXT4_MMP_MIN_CHECK_INTERVAL);
- 	mmp->mmp_check_interval = cpu_to_le16(mmp_check_interval);
-+	BUILD_BUG_ON(sizeof(mmp->mmp_bdevname) < BDEVNAME_SIZE);
- 	bdevname(bh->b_bdev, mmp->mmp_bdevname);
- 
- 	memcpy(mmp->mmp_nodename, init_utsname()->nodename,
-@@ -375,7 +376,8 @@ skip:
- 	/*
- 	 * Start a kernel thread to update the MMP block periodically.
- 	 */
--	EXT4_SB(sb)->s_mmp_tsk = kthread_run(kmmpd, mmpd_data, "kmmpd-%s",
-+	EXT4_SB(sb)->s_mmp_tsk = kthread_run(kmmpd, mmpd_data, "kmmpd-%.*s",
-+					     (int)sizeof(mmp->mmp_bdevname),
- 					     bdevname(bh->b_bdev,
- 						      mmp->mmp_bdevname));
- 	if (IS_ERR(EXT4_SB(sb)->s_mmp_tsk)) {
 
 
