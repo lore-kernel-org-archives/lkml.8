@@ -2,128 +2,103 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1507C4BA3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03614C4BA3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82BFD2072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:19:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9E7C2467F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:22:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582788164;
+	bh=RbDs5D0nGO+vLKC9chqe6xT6asU3XQm2I5A+ZEGGg30=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NIoQbFKA/MfITeFkjeXikskbXnGUx3UDkhqk8KA5hZo8mi+AObIwJV4D9IF5Hl2Na
+	 r7/gsvg2E0MtJHMol+RWAFSBk/XGNdMzjj1Gnxt0FfZeMgKX2aq6VWmrKFLapnqHSL
+	 W590PtCbgqwGF8SDju8z/K5WZK2+sYfb4de3JQd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728409AbgB0HTb (ORCPT
+        id S1728426AbgB0HWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 02:19:31 -0500
-Received: from mga12.intel.com ([192.55.52.136]:22237 "EHLO mga12.intel.com"
+        Thu, 27 Feb 2020 02:22:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726999AbgB0HTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 02:19:31 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 23:19:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,491,1574150400"; 
-   d="scan'208";a="238310161"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 26 Feb 2020 23:19:30 -0800
-Received: from [10.226.38.56] (unknown [10.226.38.56])
-        by linux.intel.com (Postfix) with ESMTP id 50F62580544;
-        Wed, 26 Feb 2020 23:19:27 -0800 (PST)
-Subject: Re: [PATCH v5 2/2] clk: intel: Add CGU clock driver for a new SoC
-To:     Randy Dunlap <rdunlap@infradead.org>, mturquette@baylibre.com,
-        sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com,
-        linux-clk@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
-        rtanwar <rahul.tanwar@intel.com>
-References: <cover.1582096982.git.rahul.tanwar@linux.intel.com>
- <6148b5b25d4a6833f0a72801d569ed97ac6ca55b.1582096982.git.rahul.tanwar@linux.intel.com>
- <e8259928-cb2a-a453-8f2a-1b57c8abdb8c@infradead.org>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <4fb7a643-cbe1-da82-2629-2dbd0c0d143b@linux.intel.com>
-Date:   Thu, 27 Feb 2020 15:19:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        id S1726999AbgB0HWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 02:22:43 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2491324656;
+        Thu, 27 Feb 2020 07:22:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582788162;
+        bh=RbDs5D0nGO+vLKC9chqe6xT6asU3XQm2I5A+ZEGGg30=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EeRVSMSKtTKj5BSkvh6pQaXH6NIeNegVZVhesmofU/epROFA3hT4OqohMnHScvyu2
+         e5Saj4vzK4x/scPLcc111WKhiJAsL7js91cWKjJJHxIHJy21F7Kjvxqb9sdLNLwFa7
+         i5KWB/DcoW699ImceiQkIh28aOI+h7k8iyTJbLio=
+Date:   Thu, 27 Feb 2020 08:22:39 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     ycho1399@gmail.com
+Cc:     linux-input@vger.kernel.org, voyandrea@gmail.com,
+        andrea.ho@advantech.com.tw, oakley.ding@advantech.com.tw,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Luca Weiss <luca@z3ntu.xyz>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org
+Subject: Re: [V1,1/1] Input/misc: add support for Advantech software defined
+ button
+Message-ID: <20200227072239.GA293173@kroah.com>
+References: <20200227031721.17703-1-Andrea.Ho@advantech.com.tw>
 MIME-Version: 1.0
-In-Reply-To: <e8259928-cb2a-a453-8f2a-1b57c8abdb8c@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227031721.17703-1-Andrea.Ho@advantech.com.tw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Feb 27, 2020 at 03:15:31AM +0000, ycho1399@gmail.com wrote:
+> From: "Andrea.Ho" <Andrea.Ho@advantech.com.tw>
+> 
+> Advantech sw_button is a ACPI event trigger button.
+> 
+> With this driver, we can report KEY_EVENTs on the
+> Advantech Tabletop Network Appliances products and it has been
+> tested in FWA1112VC.
+> 
+> Add the software define button support to report KEY_EVENTs by
+> different acts of pressing button (like double-click, long pressed
+> and tick) that cloud be get on user interface and trigger the
+> customized actions.
+> 
+> Signed-off-by: Andrea.Ho <Andrea.Ho@advantech.com.tw>
+> ---
+>  ...define.patch.EXPERIMENTAL-checkpatch-fixes | 554 ++++++++++++++++++
+>  MAINTAINERS                                   |   5 +
+>  drivers/input/misc/Kconfig                    |  11 +
+>  drivers/input/misc/Makefile                   |   2 +-
+>  drivers/input/misc/adv_swbutton.c             | 473 +++++++++++++++
+>  5 files changed, 1044 insertions(+), 1 deletion(-)
+>  create mode 100644 0001-Input-misc-add-support-for-Advantech-software-define.patch.EXPERIMENTAL-checkpatch-fixes
+>  create mode 100644 drivers/input/misc/adv_swbutton.c
+> 
+> diff --git a/0001-Input-misc-add-support-for-Advantech-software-define.patch.EXPERIMENTAL-checkpatch-fixes b/0001-Input-misc-add-support-for-Advantech-software-define.patch.EXPERIMENTAL-checkpatch-fixes
+> new file mode 100644
+> index 000000000000..45e49aee5b47
+> --- /dev/null
+> +++ b/0001-Input-misc-add-support-for-Advantech-software-define.patch.EXPERIMENTAL-checkpatch-fixes
 
-Hi Randy,
+<snip>
 
-On 19/2/2020 3:59 PM, Randy Dunlap wrote:
-> On 2/18/20 11:40 PM, Rahul Tanwar wrote:
->> From: rtanwar <rahul.tanwar@intel.com>
->>
->> Clock Generation Unit(CGU) is a new clock controller IP of a forthcoming
->> Intel network processor SoC named Lightning Mountain(LGM). It provides
->> programming interfaces to control & configure all CPU & peripheral clocks.
->> Add common clock framework based clock controller driver for CGU.
->>
->> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
->> ---
->>  drivers/clk/Kconfig           |   1 +
->>  drivers/clk/x86/Kconfig       |   8 +
->>  drivers/clk/x86/Makefile      |   1 +
->>  drivers/clk/x86/clk-cgu-pll.c | 156 +++++++++++
->>  drivers/clk/x86/clk-cgu.c     | 636 ++++++++++++++++++++++++++++++++++++++++++
->>  drivers/clk/x86/clk-cgu.h     | 335 ++++++++++++++++++++++
->>  drivers/clk/x86/clk-lgm.c     | 492 ++++++++++++++++++++++++++++++++
->>  7 files changed, 1629 insertions(+)
->>  create mode 100644 drivers/clk/x86/Kconfig
->>  create mode 100644 drivers/clk/x86/clk-cgu-pll.c
->>  create mode 100644 drivers/clk/x86/clk-cgu.c
->>  create mode 100644 drivers/clk/x86/clk-cgu.h
->>  create mode 100644 drivers/clk/x86/clk-lgm.c
->>
->> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
->> index bcb257baed06..43dab257e7aa 100644
->> --- a/drivers/clk/Kconfig
->> +++ b/drivers/clk/Kconfig
->> @@ -360,6 +360,7 @@ source "drivers/clk/sunxi-ng/Kconfig"
->>  source "drivers/clk/tegra/Kconfig"
->>  source "drivers/clk/ti/Kconfig"
->>  source "drivers/clk/uniphier/Kconfig"
->> +source "drivers/clk/x86/Kconfig"
->>  source "drivers/clk/zynqmp/Kconfig"
->>  
->>  endmenu
-> Hi,
->
->> diff --git a/drivers/clk/x86/Kconfig b/drivers/clk/x86/Kconfig
->> new file mode 100644
->> index 000000000000..2e2b9730541f
->> --- /dev/null
->> +++ b/drivers/clk/x86/Kconfig
->> @@ -0,0 +1,8 @@
->> +# SPDX-License-Identifier: GPL-2.0-only
->> +config CLK_LGM_CGU
->> +	depends on (OF && HAS_IOMEM) || COMPILE_TEST
-> This "depends on" looks problematic to me. I guess we shall see when
-> all the build bots get to it.
-
-At the moment, i am not able to figure out possible problems in this..
-
->> +	select OF_EARLY_FLATTREE
-> If OF is not set and HAS_IOMEM is not set, but COMPILE_TEST is set,
-> I expect that this should not be attempting to select OF_EARLY_FLATTREE.
->
-> Have you tried such a config combination?
-
-Agree, that would be a problem. I will change it to
-
-select OF_EARLY_FLATTREE if OF
-
-Thanks.
-
-Regards,
-Rahul
+I doubt you ment to commit the patch itself into the patch :(
