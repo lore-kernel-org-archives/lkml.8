@@ -2,215 +2,88 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A80CEC4BA3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:40:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A290DC4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB892468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:40:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74B1724690
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:42:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbgB0Kku (ORCPT
+        id S1728794AbgB0KmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 05:40:50 -0500
-Received: from mx04.melco.co.jp ([192.218.140.144]:60548 "EHLO
-        mx04.melco.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728729AbgB0Kku (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 05:40:50 -0500
-Received: from mr04.melco.co.jp (mr04 [133.141.98.166])
-        by mx04.melco.co.jp (Postfix) with ESMTP id E9B943A4438;
-        Thu, 27 Feb 2020 19:40:47 +0900 (JST)
-Received: from mr04.melco.co.jp (unknown [127.0.0.1])
-        by mr04.imss (Postfix) with ESMTP id 48Sq2R5xyrzRk3C;
-        Thu, 27 Feb 2020 19:40:47 +0900 (JST)
-Received: from mf03_second.melco.co.jp (unknown [192.168.20.183])
-        by mr04.melco.co.jp (Postfix) with ESMTP id 48Sq2R5f58zRk2c;
-        Thu, 27 Feb 2020 19:40:47 +0900 (JST)
-Received: from mf03.melco.co.jp (unknown [133.141.98.183])
-        by mf03_second.melco.co.jp (Postfix) with ESMTP id 48Sq2R5nCdzRk5y;
-        Thu, 27 Feb 2020 19:40:47 +0900 (JST)
-Received: from tux532.tad.melco.co.jp (unknown [133.141.243.226])
-        by mf03.melco.co.jp (Postfix) with ESMTP id 48Sq2R5JSlzRkBN;
-        Thu, 27 Feb 2020 19:40:47 +0900 (JST)
-Received:  from tux532.tad.melco.co.jp
-        by tux532.tad.melco.co.jp (unknown) with ESMTP id 01RAel1o017859;
-        Thu, 27 Feb 2020 19:40:47 +0900
-Received: from tux390.tad.melco.co.jp (tux390.tad.melco.co.jp [127.0.0.1])
-        by postfix.imss70 (Postfix) with ESMTP id 7358B17E075;
-        Thu, 27 Feb 2020 19:40:47 +0900 (JST)
-Received: from tux554.tad.melco.co.jp (mailgw1.tad.melco.co.jp [10.168.7.223])
-        by tux390.tad.melco.co.jp (Postfix) with ESMTP id 670B817E073;
-        Thu, 27 Feb 2020 19:40:47 +0900 (JST)
-Received: from tux554.tad.melco.co.jp
-        by tux554.tad.melco.co.jp (unknown) with ESMTP id 01RAelAs011251;
-        Thu, 27 Feb 2020 19:40:47 +0900
-From:   Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-To:     Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp
-Cc:     Mori.Takahiro@ab.MitsubishiElectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: exfat: rename buf_cache_t's 'flag' to 'locked'
-Date:   Thu, 27 Feb 2020 19:40:43 +0900
-Message-Id: <20200227104043.11503-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-X-Mailer: git-send-email 2.25.1
+        Thu, 27 Feb 2020 05:42:18 -0500
+Received: from foss.arm.com ([217.140.110.172]:48318 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728729AbgB0KmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 05:42:18 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ABDD91FB;
+        Thu, 27 Feb 2020 02:42:17 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 916A73F881;
+        Thu, 27 Feb 2020 02:42:16 -0800 (PST)
+Date:   Thu, 27 Feb 2020 10:42:14 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        peterz@infradead.org, vincent.guittot@linaro.org,
+        Dietmar.Eggemann@arm.com, patrick.bellasi@matbug.net,
+        t1zhou@aliyun.com
+Subject: Re: [PATCH v2 0/3] sched/debug: Add uclamp values to procfs
+Message-ID: <20200227104213.4viewcfy5povydpj@e107158-lin.cambridge.arm.com>
+References: <20200226124543.31986-1-valentin.schneider@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200226124543.31986-1-valentin.schneider@arm.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-buf_cache_t.flag is used only for lock.
-Change the variable name from 'flag' to 'locked' and remove unused definitions.
+On 02/26/20 12:45, Valentin Schneider wrote:
+> Hi,
+> 
+> This is a small debug series I've been sitting on. It's been helpful in
+> testing and reviewing some uclamp stuff, for instance the issue Qais fixed
+> at [1] was really easy to observe with those debug prints.
+> 
+> [1]: https://lore.kernel.org/lkml/20191224115405.30622-1-qais.yousef@arm.com/
 
-Reviewed-by: Takahiro Mori <Mori.Takahiro@ab.MitsubishiElectric.co.jp>
-Signed-off-by: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
----
- drivers/staging/exfat/exfat.h       |  2 +-
- drivers/staging/exfat/exfat_cache.c | 27 ++++++++++++---------------
- 2 files changed, 13 insertions(+), 16 deletions(-)
+That would be handy indeed. And nice cleanup along the way.
 
-diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
-index cd3479fc78ba..f588538c67a8 100644
---- a/drivers/staging/exfat/exfat.h
-+++ b/drivers/staging/exfat/exfat.h
-@@ -457,7 +457,7 @@ struct buf_cache_t {
- 	struct buf_cache_t *hash_prev;
- 	s32                drv;
- 	sector_t          sec;
--	u32               flag;
-+	bool              locked;
- 	struct buffer_head   *buf_bh;
- };
- 
-diff --git a/drivers/staging/exfat/exfat_cache.c b/drivers/staging/exfat/exfat_cache.c
-index 87d019972050..b15203d4e0ae 100644
---- a/drivers/staging/exfat/exfat_cache.c
-+++ b/drivers/staging/exfat/exfat_cache.c
-@@ -8,9 +8,6 @@
- #include <linux/mutex.h>
- #include "exfat.h"
- 
--#define LOCKBIT		0x01
--#define DIRTYBIT	0x02
--
- /* Local variables */
- static DEFINE_MUTEX(f_mutex);
- static DEFINE_MUTEX(b_mutex);
-@@ -141,7 +138,7 @@ void exfat_buf_init(struct super_block *sb)
- 	for (i = 0; i < FAT_CACHE_SIZE; i++) {
- 		p_fs->FAT_cache_array[i].drv = -1;
- 		p_fs->FAT_cache_array[i].sec = ~0;
--		p_fs->FAT_cache_array[i].flag = 0;
-+		p_fs->FAT_cache_array[i].locked = false;
- 		p_fs->FAT_cache_array[i].buf_bh = NULL;
- 		p_fs->FAT_cache_array[i].prev = NULL;
- 		p_fs->FAT_cache_array[i].next = NULL;
-@@ -155,7 +152,7 @@ void exfat_buf_init(struct super_block *sb)
- 	for (i = 0; i < BUF_CACHE_SIZE; i++) {
- 		p_fs->buf_cache_array[i].drv = -1;
- 		p_fs->buf_cache_array[i].sec = ~0;
--		p_fs->buf_cache_array[i].flag = 0;
-+		p_fs->buf_cache_array[i].locked = false;
- 		p_fs->buf_cache_array[i].buf_bh = NULL;
- 		p_fs->buf_cache_array[i].prev = NULL;
- 		p_fs->buf_cache_array[i].next = NULL;
-@@ -289,7 +286,7 @@ u8 *exfat_fat_getblk(struct super_block *sb, sector_t sec)
- 
- 	bp->drv = p_fs->drv;
- 	bp->sec = sec;
--	bp->flag = 0;
-+	bp->locked = false;
- 
- 	FAT_cache_insert_hash(sb, bp);
- 
-@@ -297,7 +294,7 @@ u8 *exfat_fat_getblk(struct super_block *sb, sector_t sec)
- 		FAT_cache_remove_hash(bp);
- 		bp->drv = -1;
- 		bp->sec = ~0;
--		bp->flag = 0;
-+		bp->locked = false;
- 		bp->buf_bh = NULL;
- 
- 		move_to_lru(bp, &p_fs->FAT_cache_lru_list);
-@@ -328,7 +325,7 @@ void exfat_fat_release_all(struct super_block *sb)
- 		if (bp->drv == p_fs->drv) {
- 			bp->drv = -1;
- 			bp->sec = ~0;
--			bp->flag = 0;
-+			bp->locked = false;
- 
- 			if (bp->buf_bh) {
- 				__brelse(bp->buf_bh);
-@@ -366,7 +363,7 @@ static struct buf_cache_t *buf_cache_get(struct super_block *sb, sector_t sec)
- 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
- 
- 	bp = p_fs->buf_cache_lru_list.prev;
--	while (bp->flag & LOCKBIT)
-+	while (bp->locked)
- 		bp = bp->prev;
- 
- 	move_to_mru(bp, &p_fs->buf_cache_lru_list);
-@@ -390,7 +387,7 @@ static u8 *__exfat_buf_getblk(struct super_block *sb, sector_t sec)
- 
- 	bp->drv = p_fs->drv;
- 	bp->sec = sec;
--	bp->flag = 0;
-+	bp->locked = false;
- 
- 	buf_cache_insert_hash(sb, bp);
- 
-@@ -398,7 +395,7 @@ static u8 *__exfat_buf_getblk(struct super_block *sb, sector_t sec)
- 		buf_cache_remove_hash(bp);
- 		bp->drv = -1;
- 		bp->sec = ~0;
--		bp->flag = 0;
-+		bp->locked = false;
- 		bp->buf_bh = NULL;
- 
- 		move_to_lru(bp, &p_fs->buf_cache_lru_list);
-@@ -443,7 +440,7 @@ void exfat_buf_lock(struct super_block *sb, sector_t sec)
- 
- 	bp = buf_cache_find(sb, sec);
- 	if (likely(bp))
--		bp->flag |= LOCKBIT;
-+		bp->locked = true;
- 
- 	WARN(!bp, "[EXFAT] failed to find buffer_cache(sector:%llu).\n",
- 	     (unsigned long long)sec);
-@@ -459,7 +456,7 @@ void exfat_buf_unlock(struct super_block *sb, sector_t sec)
- 
- 	bp = buf_cache_find(sb, sec);
- 	if (likely(bp))
--		bp->flag &= ~(LOCKBIT);
-+		bp->locked = false;
- 
- 	WARN(!bp, "[EXFAT] failed to find buffer_cache(sector:%llu).\n",
- 	     (unsigned long long)sec);
-@@ -478,7 +475,7 @@ void exfat_buf_release(struct super_block *sb, sector_t sec)
- 	if (likely(bp)) {
- 		bp->drv = -1;
- 		bp->sec = ~0;
--		bp->flag = 0;
-+		bp->locked = false;
- 
- 		if (bp->buf_bh) {
- 			__brelse(bp->buf_bh);
-@@ -503,7 +500,7 @@ void exfat_buf_release_all(struct super_block *sb)
- 		if (bp->drv == p_fs->drv) {
- 			bp->drv = -1;
- 			bp->sec = ~0;
--			bp->flag = 0;
-+			bp->locked = false;
- 
- 			if (bp->buf_bh) {
- 				__brelse(bp->buf_bh);
--- 
-2.25.1
+For the series
 
+Reviewed-by: Qais Yousef <qais.yousef@arm.com>
+
+Cheers
+
+--
+Qais Yousef
+
+> 
+> Cheers,
+> Valentin
+> 
+> Revisions
+> =========
+> 
+> v1 -> v2
+> --------
+> o Added parentheses for the casting part of the macros (Tao)
+> 
+> Valentin Schneider (3):
+>   sched/debug: Remove redundant macro define
+>   sched/debug: Bunch up printing formats in common macros
+>   sched/debug: Add task uclamp values to SCHED_DEBUG procfs
+> 
+>  kernel/sched/debug.c | 44 ++++++++++++++++++--------------------------
+>  1 file changed, 18 insertions(+), 26 deletions(-)
+> 
+> --
+> 2.24.0
+> 
