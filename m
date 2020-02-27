@@ -2,86 +2,144 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE86C3567B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A1FC11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A42524697
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:47:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Cl6/llDE"
+	by mail.kernel.org (Postfix) with ESMTP id BAC4E24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:47:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582814859;
+	bh=QA3jeg9gW/R8f7Sgn3etd/gjp/5Lbr+aIijXiYDZ0Yc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=aqv0jwbqKiIkA9+/vdPFRC2UIgyGJH2IKRT/8oZFuiAkJkJV2hAc4zco6ifTf3sr6
+	 aSKNTiFTQxIgWnhph5DNJ8R/zuH1Q7AbHzWvUp/unX+pftOLQezEmd3IFCMVyh84gc
+	 dwLHqXUdsgHtX70duPq4WnU0eX3WNwhpmtY7/EXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730144AbgB0NoH (ORCPT
+        id S1730193AbgB0Ori (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:44:07 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:33440 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730110AbgB0NoD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:47:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39448 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729591AbgB0NoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Feb 2020 08:44:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1582811040; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dBge0kS8tI19aaA+U6Z+hsWiHxFZ2KXAdWiVap/eqqA=;
-        b=Cl6/llDEP5OoU+GcLqllvfpyAM+YbijAbig6InwGEyoE6a0g898ihqnuI/YS0kMUufiJtc
-        znEE47nfhCB/ZtziZpxYDzP2nC+h4Z+eXtoe8b6qNoZq0NAUoXn7iIMq3EIa3fa2KJV5XP
-        DKtkCqKr7zVNLUyk9gK7LG7ztuPXiQU=
-Date:   Thu, 27 Feb 2020 10:43:44 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: linux-next: Fixes tag needs some work in the mips-fixes tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     James Hogan <jhogan@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Message-Id: <1582811024.3.0@crapouillou.net>
-In-Reply-To: <20200227071718.5aac4713@canb.auug.org.au>
-References: <20200227071718.5aac4713@canb.auug.org.au>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E50320726;
+        Thu, 27 Feb 2020 13:44:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582811042;
+        bh=QA3jeg9gW/R8f7Sgn3etd/gjp/5Lbr+aIijXiYDZ0Yc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KfuPhHmoPtgr3+cEspurKPrQ/Vo63cqKgxWMoQ8ZmytJN5kC1TMq1spbxqvp6BphL
+         Wxo3CrKU7te8XRths7jL4LVqLJf+rKzmEc1J+kjPVk+GULMAc2bYqCy7wbpEYSOv6T
+         f6hAu9BrSy4Gp5BkGQvEIHadk0PUHXT0TXOx9zOU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@suse.de>
+Subject: [PATCH 4.4 093/113] x86/mce/amd: Fix kobject lifetime
+Date:   Thu, 27 Feb 2020 14:36:49 +0100
+Message-Id: <20200227132226.622931292@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
+References: <20200227132211.791484803@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+From: Thomas Gleixner <tglx@linutronix.de>
 
+commit 51dede9c05df2b78acd6dcf6a17d21f0877d2d7b upstream.
 
-Le jeu., f=E9vr. 27, 2020 at 07:17, Stephen Rothwell=20
-<sfr@canb.auug.org.au> a =E9crit :
-> Hi all,
->=20
-> In commit
->=20
->   3944dee0c6cd ("MIPS: Fix CONFIG_MIPS_CMDLINE_DTB_EXTEND handling")
->=20
-> Fixes tag
->=20
->   Fixes: 7784cac69735 ("MIPS: cmdline: Clean up boot_command_line
->=20
-> has these problem(s):
->=20
->   - Subject has leading but no trailing parentheses
->   - Subject has leading but no trailing quotes
->=20
-> Please do not split Fixes tags over more than one line.
+Accessing the MCA thresholding controls in sysfs concurrently with CPU
+hotplug can lead to a couple of KASAN-reported issues:
 
-My fault, sorry. I did not know they could not be splitted.
+  BUG: KASAN: use-after-free in sysfs_file_ops+0x155/0x180
+  Read of size 8 at addr ffff888367578940 by task grep/4019
 
-Cheers,
--Paul
+and
 
->=20
-> --
-> Cheers,
-> Stephen Rothwell
+  BUG: KASAN: use-after-free in show_error_count+0x15c/0x180
+  Read of size 2 at addr ffff888368a05514 by task grep/4454
 
-=
+for example. Both result from the fact that the threshold block
+creation/teardown code frees the descriptor memory itself instead of
+defining proper ->release function and leaving it to the driver core to
+take care of that, after all sysfs accesses have completed.
+
+Do that and get rid of the custom freeing code, fixing the above UAFs in
+the process.
+
+  [ bp: write commit message. ]
+
+Fixes: 95268664390b ("[PATCH] x86_64: mce_amd support for family 0x10 processors")
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: <stable@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20200214082801.13836-1-bp@alien8.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/x86/kernel/cpu/mcheck/mce_amd.c |   17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
+
+--- a/arch/x86/kernel/cpu/mcheck/mce_amd.c
++++ b/arch/x86/kernel/cpu/mcheck/mce_amd.c
+@@ -560,9 +560,12 @@ static const struct sysfs_ops threshold_
+ 	.store			= store,
+ };
+ 
++static void threshold_block_release(struct kobject *kobj);
++
+ static struct kobj_type threshold_ktype = {
+ 	.sysfs_ops		= &threshold_ops,
+ 	.default_attrs		= default_attrs,
++	.release		= threshold_block_release,
+ };
+ 
+ static int allocate_threshold_blocks(unsigned int cpu, unsigned int bank,
+@@ -765,8 +768,12 @@ static int threshold_create_device(unsig
+ 	return err;
+ }
+ 
+-static void deallocate_threshold_block(unsigned int cpu,
+-						 unsigned int bank)
++static void threshold_block_release(struct kobject *kobj)
++{
++	kfree(to_block(kobj));
++}
++
++static void deallocate_threshold_block(unsigned int cpu, unsigned int bank)
+ {
+ 	struct threshold_block *pos = NULL;
+ 	struct threshold_block *tmp = NULL;
+@@ -776,13 +783,11 @@ static void deallocate_threshold_block(u
+ 		return;
+ 
+ 	list_for_each_entry_safe(pos, tmp, &head->blocks->miscj, miscj) {
+-		kobject_put(&pos->kobj);
+ 		list_del(&pos->miscj);
+-		kfree(pos);
++		kobject_put(&pos->kobj);
+ 	}
+ 
+-	kfree(per_cpu(threshold_banks, cpu)[bank]->blocks);
+-	per_cpu(threshold_banks, cpu)[bank]->blocks = NULL;
++	kobject_put(&head->blocks->kobj);
+ }
+ 
+ static void __threshold_remove_blocks(struct threshold_bank *b)
+
 
