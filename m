@@ -7,52 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A851FC3F37A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FBAC3F358
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A85F20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B9BA20578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:52:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811550;
-	bh=3QgU0zVYU/DB0NZNSNdbXIMHpD8QXRb9p3oe8blVHA0=;
+	s=default; t=1582811532;
+	bh=wrU3ea9/TGo7Ex9gJ6sYgelucHAoTWTgbTJ3elt/NWs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Slt1Q9OwO/YVBSpn+PEHKRY3/Mje1YjeeIDdGt14T5CnIYGJddrUgZEruXhRDgIfH
-	 xDd+5Qyw434oiQnLxgvjKHasc5TSVXQ4f4DT23pEo2od9KAVya3f5c/PM3QXMbY5z+
-	 JsYMBx/nXHh9m00F+kPJL92CTIV9DpzVV8EfUISw=
+	b=iA+3s8dJmRwRjvH2Hgpj7I5CxWe2ff+a9pj+vIQkYb2ROTasi/JswswkjbpbnSxXx
+	 nsj9NTSaclh/ffCsPUH8mj4aft0yLvg7pd/x84p8tMSagucoFVcELY9xtUUMKByyxF
+	 KupbDf/jVUto5KNrGqF5C+eurvcnCxIEFbCqhZMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731530AbgB0Nw3 (ORCPT
+        id S1731494AbgB0NwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:52:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51940 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:52:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731528AbgB0Nw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:52:26 -0500
+        id S1731487AbgB0NwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:52:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EB8420801;
-        Thu, 27 Feb 2020 13:52:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5326A2084E;
+        Thu, 27 Feb 2020 13:52:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811545;
-        bh=3QgU0zVYU/DB0NZNSNdbXIMHpD8QXRb9p3oe8blVHA0=;
+        s=default; t=1582811525;
+        bh=wrU3ea9/TGo7Ex9gJ6sYgelucHAoTWTgbTJ3elt/NWs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qjusFdXG0yxy9Bq+HhRIeQ1DZ5AxYiIt/vfbxD8Jx4s+cc+TpW/lkH8A+v5QTdicC
-         ffyVO9H2ToPnroSFrXyW2zlUB02Ya2Ds7H1xmXO+oOMlKsAXrmuSo6K/GTijEwjDpO
-         GDZBxJVsF+pNCZi9qE5JmTYOyctJLBKnij2HrDXo=
+        b=t/ubvbUofzl0bMI1+XR9/IjCS6RSTrJSnTGej/yPH3+6gQcSw9SmnKs9toctyiiuo
+         xOVPSxMhzTUiHSYIgICGauURp6VFQ4LIEEZaWyUW/ZW140q1HvrMY0ZZdov71oqnY4
+         zzVG9cm53qxgwjQgUWHILn/E8eep6gpEnq79PMA4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wanpeng Li <wanpeng.li@hotmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 001/237] KVM: x86: emulate RDPID
-Date:   Thu, 27 Feb 2020 14:33:35 +0100
-Message-Id: <20200227132255.491283768@linuxfoundation.org>
+        stable@vger.kernel.org, Saar Amar <Saar.Amar@microsoft.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Borislav Petkov <bp@suse.de>
+Subject: [PATCH 4.9 129/165] x86/mce/amd: Publish the bank pointer only after setup has succeeded
+Date:   Thu, 27 Feb 2020 14:36:43 +0100
+Message-Id: <20200227132249.887243780@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
-References: <20200227132255.285644406@linuxfoundation.org>
+In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
+References: <20200227132230.840899170@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,110 +60,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Borislav Petkov <bp@suse.de>
 
-commit fb6d4d340e0532032c808a9933eaaa7b8de435ab upstream.
+commit 6e5cf31fbe651bed7ba1df768f2e123531132417 upstream.
 
-This is encoded as F3 0F C7 /7 with a register argument.  The register
-argument is the second array in the group9 GroupDual, while F3 is the
-fourth element of a Prefix.
+threshold_create_bank() creates a bank descriptor per MCA error
+thresholding counter which can be controlled over sysfs. It publishes
+the pointer to that bank in a per-CPU variable and then goes on to
+create additional thresholding blocks if the bank has such.
 
-Reviewed-by: Wanpeng Li <wanpeng.li@hotmail.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+However, that creation of additional blocks in
+allocate_threshold_blocks() can fail, leading to a use-after-free
+through the per-CPU pointer.
+
+Therefore, publish that pointer only after all blocks have been setup
+successfully.
+
+Fixes: 019f34fccfd5 ("x86, MCE, AMD: Move shared bank to node descriptor")
+Reported-by: Saar Amar <Saar.Amar@microsoft.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200128140846.phctkvx5btiexvbx@kili.mountain
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/cpuid.c   |    7 ++++++-
- arch/x86/kvm/emulate.c |   22 +++++++++++++++++++++-
- arch/x86/kvm/vmx.c     |   15 +++++++++++++++
- 3 files changed, 42 insertions(+), 2 deletions(-)
+ arch/x86/kernel/cpu/mcheck/mce_amd.c |   33 ++++++++++++++++-----------------
+ 1 file changed, 16 insertions(+), 17 deletions(-)
 
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -291,13 +291,18 @@ static int __do_cpuid_ent_emulated(struc
+--- a/arch/x86/kernel/cpu/mcheck/mce_amd.c
++++ b/arch/x86/kernel/cpu/mcheck/mce_amd.c
+@@ -879,8 +879,9 @@ static const char *get_name(unsigned int
+ 	return buf_mcatype;
+ }
+ 
+-static int allocate_threshold_blocks(unsigned int cpu, unsigned int bank,
+-				     unsigned int block, u32 address)
++static int allocate_threshold_blocks(unsigned int cpu, struct threshold_bank *tb,
++				     unsigned int bank, unsigned int block,
++				     u32 address)
  {
- 	switch (func) {
- 	case 0:
--		entry->eax = 1;		/* only one leaf currently */
-+		entry->eax = 7;
- 		++*nent;
- 		break;
- 	case 1:
- 		entry->ecx = F(MOVBE);
- 		++*nent;
- 		break;
-+	case 7:
-+		entry->flags |= KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
-+		if (index == 0)
-+			entry->ecx = F(RDPID);
-+		++*nent;
- 	default:
- 		break;
+ 	struct threshold_block *b = NULL;
+ 	u32 low, high;
+@@ -924,16 +925,12 @@ static int allocate_threshold_blocks(uns
+ 
+ 	INIT_LIST_HEAD(&b->miscj);
+ 
+-	if (per_cpu(threshold_banks, cpu)[bank]->blocks) {
+-		list_add(&b->miscj,
+-			 &per_cpu(threshold_banks, cpu)[bank]->blocks->miscj);
+-	} else {
+-		per_cpu(threshold_banks, cpu)[bank]->blocks = b;
+-	}
++	if (tb->blocks)
++		list_add(&b->miscj, &tb->blocks->miscj);
++	else
++		tb->blocks = b;
+ 
+-	err = kobject_init_and_add(&b->kobj, &threshold_ktype,
+-				   per_cpu(threshold_banks, cpu)[bank]->kobj,
+-				   get_name(bank, b));
++	err = kobject_init_and_add(&b->kobj, &threshold_ktype, tb->kobj, get_name(bank, b));
+ 	if (err)
+ 		goto out_free;
+ recurse:
+@@ -941,7 +938,7 @@ recurse:
+ 	if (!address)
+ 		return 0;
+ 
+-	err = allocate_threshold_blocks(cpu, bank, block, address);
++	err = allocate_threshold_blocks(cpu, tb, bank, block, address);
+ 	if (err)
+ 		goto out_free;
+ 
+@@ -1026,8 +1023,6 @@ static int threshold_create_bank(unsigne
+ 		goto out_free;
  	}
---- a/arch/x86/kvm/emulate.c
-+++ b/arch/x86/kvm/emulate.c
-@@ -3539,6 +3539,16 @@ static int em_cwd(struct x86_emulate_ctx
- 	return X86EMUL_CONTINUE;
- }
  
-+static int em_rdpid(struct x86_emulate_ctxt *ctxt)
-+{
-+	u64 tsc_aux = 0;
-+
-+	if (ctxt->ops->get_msr(ctxt, MSR_TSC_AUX, &tsc_aux))
-+		return emulate_gp(ctxt, 0);
-+	ctxt->dst.val = tsc_aux;
-+	return X86EMUL_CONTINUE;
-+}
-+
- static int em_rdtsc(struct x86_emulate_ctxt *ctxt)
- {
- 	u64 tsc = 0;
-@@ -4431,10 +4441,20 @@ static const struct opcode group8[] = {
- 	F(DstMem | SrcImmByte | Lock | PageTable,	em_btc),
- };
+-	per_cpu(threshold_banks, cpu)[bank] = b;
+-
+ 	if (is_shared_bank(bank)) {
+ 		atomic_set(&b->cpus, 1);
  
-+/*
-+ * The "memory" destination is actually always a register, since we come
-+ * from the register case of group9.
-+ */
-+static const struct gprefix pfx_0f_c7_7 = {
-+	N, N, N, II(DstMem | ModRM | Op3264 | EmulateOnUD, em_rdpid, rdtscp),
-+};
-+
-+
- static const struct group_dual group9 = { {
- 	N, I(DstMem64 | Lock | PageTable, em_cmpxchg8b), N, N, N, N, N, N,
- }, {
--	N, N, N, N, N, N, N, N,
-+	N, N, N, N, N, N, N,
-+	GP(0, &pfx_0f_c7_7),
- } };
+@@ -1038,9 +1033,13 @@ static int threshold_create_bank(unsigne
+ 		}
+ 	}
  
- static const struct opcode group11[] = {
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -12322,6 +12322,21 @@ static int vmx_check_intercept(struct kv
- 			       struct x86_instruction_info *info,
- 			       enum x86_intercept_stage stage)
- {
-+	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
-+	struct x86_emulate_ctxt *ctxt = &vcpu->arch.emulate_ctxt;
+-	err = allocate_threshold_blocks(cpu, bank, 0, msr_ops.misc(bank));
+-	if (!err)
+-		goto out;
++	err = allocate_threshold_blocks(cpu, b, bank, 0, msr_ops.misc(bank));
++	if (err)
++		goto out_free;
 +
-+	/*
-+	 * RDPID causes #UD if disabled through secondary execution controls.
-+	 * Because it is marked as EmulateOnUD, we need to intercept it here.
-+	 */
-+	if (info->intercept == x86_intercept_rdtscp &&
-+	    !nested_cpu_has2(vmcs12, SECONDARY_EXEC_RDTSCP)) {
-+		ctxt->exception.vector = UD_VECTOR;
-+		ctxt->exception.error_code_valid = false;
-+		return X86EMUL_PROPAGATE_FAULT;
-+	}
++	per_cpu(threshold_banks, cpu)[bank] = b;
 +
-+	/* TODO: check more intercepts... */
- 	return X86EMUL_CONTINUE;
- }
++	return 0;
  
+  out_free:
+ 	kfree(b);
 
 
