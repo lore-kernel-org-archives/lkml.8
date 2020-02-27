@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D73C3F347
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB91C3F341
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06FCD21D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2E6D20578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812473;
-	bh=C0X1eN/mQTcLrfe+YatQD403Tc0+xjgrfS0IoDO4LpY=;
+	s=default; t=1582812491;
+	bh=IzUhqFyqkl3dMF0O/IH/ZJ6MJuwVTQ07z70oJ/G8tEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PyxwxNTtkUM6jpz1UhNoIa4gR4B2X5fiwesT2STYbri8wGRNgJThxI10vGoI0F69y
-	 2oiCTlFjXuSfAmUXFDCYsa8d9c4zKr8fIXkbikLRZM+MI9vJglSaMfSWpflbDc2ZT1
-	 IWe+qxQou1YpGhidZt4HOGWlUTTkNe37tkdFW8+E=
+	b=K4m4Mb5ZSshMbUNcmSRGbLpqXdhLAlqRLdRDX6YhTgtiCS84EmsJv40EYCFgdDZ1A
+	 ccpWWtfs1EZM4+f2Ri7d1gBIJioCwGxwzwLiwOcNGNZIhAT0TkVdzPVMlm5/0uCzJv
+	 meTAQKZ9mrdB7e4JZ4yhwporwD6ihUPdByjmXTkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387770AbgB0OHv (ORCPT
+        id S1732800AbgB0OIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:07:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45430 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:08:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388142AbgB0OHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:07:49 -0500
+        id S1730186AbgB0OIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:08:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 353BA24691;
-        Thu, 27 Feb 2020 14:07:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0E9B20801;
+        Thu, 27 Feb 2020 14:08:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812468;
-        bh=C0X1eN/mQTcLrfe+YatQD403Tc0+xjgrfS0IoDO4LpY=;
+        s=default; t=1582812487;
+        bh=IzUhqFyqkl3dMF0O/IH/ZJ6MJuwVTQ07z70oJ/G8tEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mTb8exi3jyu/l1LAEDQIraKc2YG4nPKMX1v81vOdlBi2r7rZfE+bOAPrHJIOY5A6B
-         P+41lf/4bpuy69DD3IIGEz8at5zDrS32MdYiVZcZkdCK21K92HSQIc/XI4HEVKcDRV
-         cpLA4i6vQI2oK0jZd49D5mBJOWIK7Y106ye8x/Nc=
+        b=OqqTWe+u/kUDgJq66/x7uOsXGuT3v4rYUyaVppEqi4D3mQ5BtQLx35nUCATilhug7
+         x0YmNaYTNyJ8thxvZq8dOaPC7H2XdY/d0KlkW9WIbJQrMhwVrDfnhV73ivozGvdjjw
+         LfCcZJuklsdKHhwFPutUgc5U32/RGbyya2LeYZps=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, EJ Hsu <ejh@nvidia.com>,
-        Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH 5.4 030/135] usb: uas: fix a plug & unplug racing
-Date:   Thu, 27 Feb 2020 14:36:10 +0100
-Message-Id: <20200227132233.626897855@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Pavel Zakharov <pavel.zakharov@delphix.com>,
+        Mike Christie <mchristi@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.4 037/135] scsi: Revert "target/core: Inline transport_lun_remove_cmd()"
+Date:   Thu, 27 Feb 2020 14:36:17 +0100
+Message-Id: <20200227132234.513109266@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -59,100 +62,148 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: EJ Hsu <ejh@nvidia.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-commit 3e99862c05a9caa5a27969f41566b428696f5a9a upstream.
+commit c14335ebb92a98646ddbf447e6cacc66de5269ad upstream.
 
-When a uas disk is plugged into an external hub, uas_probe()
-will be called by the hub thread to do the probe. It will
-first create a SCSI host and then do the scan for this host.
-During the scan, it will probe the LUN using SCSI INQUERY command
-which will be packed in the URB and submitted to uas disk.
+Commit 83f85b8ec305 postponed the percpu_ref_put(&se_cmd->se_lun->lun_ref)
+call from command completion to the time when the final command reference
+is dropped. That approach is not compatible with the iSCSI target driver
+because the iSCSI target driver keeps the command with the highest stat_sn
+after it has completed until the next command is received (see also
+iscsit_ack_from_expstatsn()). Fix this regression by reverting commit
+83f85b8ec305.
 
-There might be a chance that this external hub with uas disk
-attached is unplugged during the scan. In this case, uas driver
-will fail to submit the URB (due to the NOTATTACHED state of uas
-device) and try to put this SCSI command back to request queue
-waiting for next chance to run.
-
-In normal case, this cycle will terminate when hub thread gets
-disconnection event and calls into uas_disconnect() accordingly.
-But in this case, uas_disconnect() will not be called because
-hub thread of external hub gets stuck waiting for the completion
-of this SCSI command. A deadlock happened.
-
-In this fix, uas will call scsi_scan_host() asynchronously to
-avoid the blocking of hub thread.
-
-Signed-off-by: EJ Hsu <ejh@nvidia.com>
-Acked-by: Oliver Neukum <oneukum@suse.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200130092506.102760-1-ejh@nvidia.com
+Fixes: 83f85b8ec305 ("scsi: target/core: Inline transport_lun_remove_cmd()")
+Cc: Pavel Zakharov <pavel.zakharov@delphix.com>
+Cc: Mike Christie <mchristi@redhat.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200210051202.12934-1-bvanassche@acm.org
+Reported-by: Pavel Zakharov <pavel.zakharov@delphix.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/storage/uas.c |   23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ drivers/target/target_core_transport.c |   31 ++++++++++++++++++++++++++++---
+ 1 file changed, 28 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/storage/uas.c
-+++ b/drivers/usb/storage/uas.c
-@@ -45,6 +45,7 @@ struct uas_dev_info {
- 	struct scsi_cmnd *cmnd[MAX_CMNDS];
- 	spinlock_t lock;
- 	struct work_struct work;
-+	struct work_struct scan_work;      /* for async scanning */
- };
+--- a/drivers/target/target_core_transport.c
++++ b/drivers/target/target_core_transport.c
+@@ -666,6 +666,11 @@ static int transport_cmd_check_stop_to_f
  
- enum {
-@@ -114,6 +115,17 @@ out:
- 	spin_unlock_irqrestore(&devinfo->lock, flags);
- }
- 
-+static void uas_scan_work(struct work_struct *work)
-+{
-+	struct uas_dev_info *devinfo =
-+		container_of(work, struct uas_dev_info, scan_work);
-+	struct Scsi_Host *shost = usb_get_intfdata(devinfo->intf);
-+
-+	dev_dbg(&devinfo->intf->dev, "starting scan\n");
-+	scsi_scan_host(shost);
-+	dev_dbg(&devinfo->intf->dev, "scan complete\n");
-+}
-+
- static void uas_add_work(struct uas_cmd_info *cmdinfo)
- {
- 	struct scsi_pointer *scp = (void *)cmdinfo;
-@@ -983,6 +995,7 @@ static int uas_probe(struct usb_interfac
- 	init_usb_anchor(&devinfo->data_urbs);
- 	spin_lock_init(&devinfo->lock);
- 	INIT_WORK(&devinfo->work, uas_do_work);
-+	INIT_WORK(&devinfo->scan_work, uas_scan_work);
- 
- 	result = uas_configure_endpoints(devinfo);
- 	if (result)
-@@ -999,7 +1012,9 @@ static int uas_probe(struct usb_interfac
- 	if (result)
- 		goto free_streams;
- 
--	scsi_scan_host(shost);
-+	/* Submit the delayed_work for SCSI-device scanning */
-+	schedule_work(&devinfo->scan_work);
-+
- 	return result;
- 
- free_streams:
-@@ -1167,6 +1182,12 @@ static void uas_disconnect(struct usb_in
- 	usb_kill_anchored_urbs(&devinfo->data_urbs);
- 	uas_zap_pending(devinfo, DID_NO_CONNECT);
+ 	target_remove_from_state_list(cmd);
  
 +	/*
-+	 * Prevent SCSI scanning (if it hasn't started yet)
-+	 * or wait for the SCSI-scanning routine to stop.
++	 * Clear struct se_cmd->se_lun before the handoff to FE.
 +	 */
-+	cancel_work_sync(&devinfo->scan_work);
++	cmd->se_lun = NULL;
 +
- 	scsi_remove_host(shost);
- 	uas_free_streams(devinfo);
- 	scsi_host_put(shost);
+ 	spin_lock_irqsave(&cmd->t_state_lock, flags);
+ 	/*
+ 	 * Determine if frontend context caller is requesting the stopping of
+@@ -693,6 +698,17 @@ static int transport_cmd_check_stop_to_f
+ 	return cmd->se_tfo->check_stop_free(cmd);
+ }
+ 
++static void transport_lun_remove_cmd(struct se_cmd *cmd)
++{
++	struct se_lun *lun = cmd->se_lun;
++
++	if (!lun)
++		return;
++
++	if (cmpxchg(&cmd->lun_ref_active, true, false))
++		percpu_ref_put(&lun->lun_ref);
++}
++
+ static void target_complete_failure_work(struct work_struct *work)
+ {
+ 	struct se_cmd *cmd = container_of(work, struct se_cmd, work);
+@@ -783,6 +799,8 @@ static void target_handle_abort(struct s
+ 
+ 	WARN_ON_ONCE(kref_read(&cmd->cmd_kref) == 0);
+ 
++	transport_lun_remove_cmd(cmd);
++
+ 	transport_cmd_check_stop_to_fabric(cmd);
+ }
+ 
+@@ -1695,6 +1713,7 @@ static void target_complete_tmr_failure(
+ 	se_cmd->se_tmr_req->response = TMR_LUN_DOES_NOT_EXIST;
+ 	se_cmd->se_tfo->queue_tm_rsp(se_cmd);
+ 
++	transport_lun_remove_cmd(se_cmd);
+ 	transport_cmd_check_stop_to_fabric(se_cmd);
+ }
+ 
+@@ -1885,6 +1904,7 @@ void transport_generic_request_failure(s
+ 		goto queue_full;
+ 
+ check_stop:
++	transport_lun_remove_cmd(cmd);
+ 	transport_cmd_check_stop_to_fabric(cmd);
+ 	return;
+ 
+@@ -2182,6 +2202,7 @@ queue_status:
+ 		transport_handle_queue_full(cmd, cmd->se_dev, ret, false);
+ 		return;
+ 	}
++	transport_lun_remove_cmd(cmd);
+ 	transport_cmd_check_stop_to_fabric(cmd);
+ }
+ 
+@@ -2276,6 +2297,7 @@ static void target_complete_ok_work(stru
+ 		if (ret)
+ 			goto queue_full;
+ 
++		transport_lun_remove_cmd(cmd);
+ 		transport_cmd_check_stop_to_fabric(cmd);
+ 		return;
+ 	}
+@@ -2301,6 +2323,7 @@ static void target_complete_ok_work(stru
+ 			if (ret)
+ 				goto queue_full;
+ 
++			transport_lun_remove_cmd(cmd);
+ 			transport_cmd_check_stop_to_fabric(cmd);
+ 			return;
+ 		}
+@@ -2336,6 +2359,7 @@ queue_rsp:
+ 			if (ret)
+ 				goto queue_full;
+ 
++			transport_lun_remove_cmd(cmd);
+ 			transport_cmd_check_stop_to_fabric(cmd);
+ 			return;
+ 		}
+@@ -2371,6 +2395,7 @@ queue_status:
+ 		break;
+ 	}
+ 
++	transport_lun_remove_cmd(cmd);
+ 	transport_cmd_check_stop_to_fabric(cmd);
+ 	return;
+ 
+@@ -2697,6 +2722,9 @@ int transport_generic_free_cmd(struct se
+ 		 */
+ 		if (cmd->state_active)
+ 			target_remove_from_state_list(cmd);
++
++		if (cmd->se_lun)
++			transport_lun_remove_cmd(cmd);
+ 	}
+ 	if (aborted)
+ 		cmd->free_compl = &compl;
+@@ -2768,9 +2796,6 @@ static void target_release_cmd_kref(stru
+ 	struct completion *abrt_compl = se_cmd->abrt_compl;
+ 	unsigned long flags;
+ 
+-	if (se_cmd->lun_ref_active)
+-		percpu_ref_put(&se_cmd->se_lun->lun_ref);
+-
+ 	if (se_sess) {
+ 		spin_lock_irqsave(&se_sess->sess_cmd_lock, flags);
+ 		list_del_init(&se_cmd->se_cmd_list);
 
 
