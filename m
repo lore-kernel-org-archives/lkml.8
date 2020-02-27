@@ -2,359 +2,168 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 931EEC76581
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A9FC34022
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53B7424699
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5139924656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:36:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814119;
-	bh=oZlGyTrTmWIy+rfdCVKvtcbE3ih/71FTR3tolEsL+rw=;
-	h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
-	 References:List-ID:From;
-	b=Nx4JnolIso+DyvH0VTRPdV9mrNrfaQItOCd8kEEfMQN9dZKd01OtYnx7GIdeguMwu
-	 KtNASL24YvPwtBXI41Mb/moPiCmMSF5OHrtyYWeI5nZse31D+nOVG8uj+3sDHKE5m0
-	 qmSWKDprm7atBK7HS6pslwUf2wIyfjupKSHGD300=
+	s=default; t=1582814175;
+	bh=rapufAdiscSfGxsJxujikOHpX7lD7tMF8JSSsAdT9r4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=vcis/3ULqav4ke+f5/Cb/n2C//lo7HFow2ZwMcWYlXFe9n0ahkx+3eTxIy66eX6cS
+	 MfOWfTdRrF+joGB4w33jqzohRKAqsk47XUy3nr5qJ/1WwfWniyWAdaF8JB+6Krvt2o
+	 33BfQ2BgXovcSi4P4d/B8LNQOT8zYkOG6QPkiFZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388888AbgB0OfR (ORCPT
+        id S2388614AbgB0OgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:35:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45144 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:36:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387739AbgB0OeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:34:09 -0500
-Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1732269AbgB0N72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:59:28 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D490D246B6;
-        Thu, 27 Feb 2020 14:34:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A65E520801;
+        Thu, 27 Feb 2020 13:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582814048;
-        bh=oZlGyTrTmWIy+rfdCVKvtcbE3ih/71FTR3tolEsL+rw=;
-        h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=z/WNeIqq+Zqldu/bna33xIipBy3oDvXJotwXZcV9wf/8m1rKEGdIXgR0ayepl3fZq
-         V/ew26E1NNC1j9imqmBo/YN/aj0Uk4KA9zU0acQG3lxQ6jyRFieBR1faXeRw/9iJJ8
-         jW+aAjTRXwAX8haTvHPFPfaA7NG3G/YjbLbscWOk=
-From:   zanussi@kernel.org
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Daniel Wagner <wagi@monom.org>,
-        Tom Zanussi <zanussi@kernel.org>
-Subject: [PATCH RT 13/23] kmemleak: Change the lock of kmemleak_object to raw_spinlock_t
-Date:   Thu, 27 Feb 2020 08:33:24 -0600
-Message-Id: <9ce629055f40f6755875c938278af9dfb3c65b80.1582814004.git.zanussi@kernel.org>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <cover.1582814004.git.zanussi@kernel.org>
-References: <cover.1582814004.git.zanussi@kernel.org>
-In-Reply-To: <cover.1582814004.git.zanussi@kernel.org>
-References: <cover.1582814004.git.zanussi@kernel.org>
+        s=default; t=1582811967;
+        bh=rapufAdiscSfGxsJxujikOHpX7lD7tMF8JSSsAdT9r4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Kv8DineLjOtrh/mPDCFmzrEyEdgQWQmfuCrVMFEgemj/YK4StRdIL+QRgzbCvL3N2
+         x+eQRuMqCdbcWS6/+NZsuAcTwygtmjQlD3atp83wI1MuUMd/RWC5GT9vetgrE14v07
+         4mIm6pVrEoymHHFyXBzvXh1z6w7dJHUCUivAQCv4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Ursula Braun <ubraun@linux.vnet.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 171/237] net/smc: fix leak of kernel memory to user space
+Date:   Thu, 27 Feb 2020 14:36:25 +0100
+Message-Id: <20200227132309.016994919@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
+References: <20200227132255.285644406@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liu Haitao <haitao.liu@windriver.com>
+From: Eric Dumazet <edumazet@google.com>
 
-v4.14.170-rt75-rc2 stable review patch.
-If anyone has any objections, please let me know.
+[ Upstream commit 457fed775c97ac2c0cd1672aaf2ff2c8a6235e87 ]
 
------------
+As nlmsg_put() does not clear the memory that is reserved,
+it this the caller responsability to make sure all of this
+memory will be written, in order to not reveal prior content.
 
+While we are at it, we can provide the socket cookie even
+if clsock is not set.
 
-[ Upstream commit 217847f57119b5fdd377bfa3d344613ddb98d9fc ]
+syzbot reported :
 
-The commit ("kmemleak: Turn kmemleak_lock to raw spinlock on RT")
-changed the kmemleak_lock to raw spinlock. However the
-kmemleak_object->lock is held after the kmemleak_lock is held in
-scan_block().
+BUG: KMSAN: uninit-value in __arch_swab32 arch/x86/include/uapi/asm/swab.h:10 [inline]
+BUG: KMSAN: uninit-value in __fswab32 include/uapi/linux/swab.h:59 [inline]
+BUG: KMSAN: uninit-value in __swab32p include/uapi/linux/swab.h:179 [inline]
+BUG: KMSAN: uninit-value in __be32_to_cpup include/uapi/linux/byteorder/little_endian.h:82 [inline]
+BUG: KMSAN: uninit-value in get_unaligned_be32 include/linux/unaligned/access_ok.h:30 [inline]
+BUG: KMSAN: uninit-value in ____bpf_skb_load_helper_32 net/core/filter.c:240 [inline]
+BUG: KMSAN: uninit-value in ____bpf_skb_load_helper_32_no_cache net/core/filter.c:255 [inline]
+BUG: KMSAN: uninit-value in bpf_skb_load_helper_32_no_cache+0x14a/0x390 net/core/filter.c:252
+CPU: 1 PID: 5262 Comm: syz-executor.5 Not tainted 5.5.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ __arch_swab32 arch/x86/include/uapi/asm/swab.h:10 [inline]
+ __fswab32 include/uapi/linux/swab.h:59 [inline]
+ __swab32p include/uapi/linux/swab.h:179 [inline]
+ __be32_to_cpup include/uapi/linux/byteorder/little_endian.h:82 [inline]
+ get_unaligned_be32 include/linux/unaligned/access_ok.h:30 [inline]
+ ____bpf_skb_load_helper_32 net/core/filter.c:240 [inline]
+ ____bpf_skb_load_helper_32_no_cache net/core/filter.c:255 [inline]
+ bpf_skb_load_helper_32_no_cache+0x14a/0x390 net/core/filter.c:252
 
-Make the object->lock a raw_spinlock_t.
+Uninit was created at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
+ kmsan_kmalloc_large+0x73/0xc0 mm/kmsan/kmsan_hooks.c:128
+ kmalloc_large_node_hook mm/slub.c:1406 [inline]
+ kmalloc_large_node+0x282/0x2c0 mm/slub.c:3841
+ __kmalloc_node_track_caller+0x44b/0x1200 mm/slub.c:4368
+ __kmalloc_reserve net/core/skbuff.c:141 [inline]
+ __alloc_skb+0x2fd/0xac0 net/core/skbuff.c:209
+ alloc_skb include/linux/skbuff.h:1049 [inline]
+ netlink_dump+0x44b/0x1ab0 net/netlink/af_netlink.c:2224
+ __netlink_dump_start+0xbb2/0xcf0 net/netlink/af_netlink.c:2352
+ netlink_dump_start include/linux/netlink.h:233 [inline]
+ smc_diag_handler_dump+0x2ba/0x300 net/smc/smc_diag.c:242
+ sock_diag_rcv_msg+0x211/0x610 net/core/sock_diag.c:256
+ netlink_rcv_skb+0x451/0x650 net/netlink/af_netlink.c:2477
+ sock_diag_rcv+0x63/0x80 net/core/sock_diag.c:275
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0xf9e/0x1100 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0x1248/0x14d0 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:639 [inline]
+ sock_sendmsg net/socket.c:659 [inline]
+ kernel_sendmsg+0x433/0x440 net/socket.c:679
+ sock_no_sendpage+0x235/0x300 net/core/sock.c:2740
+ kernel_sendpage net/socket.c:3776 [inline]
+ sock_sendpage+0x1e1/0x2c0 net/socket.c:937
+ pipe_to_sendpage+0x38c/0x4c0 fs/splice.c:458
+ splice_from_pipe_feed fs/splice.c:512 [inline]
+ __splice_from_pipe+0x539/0xed0 fs/splice.c:636
+ splice_from_pipe fs/splice.c:671 [inline]
+ generic_splice_sendpage+0x1d5/0x2d0 fs/splice.c:844
+ do_splice_from fs/splice.c:863 [inline]
+ do_splice fs/splice.c:1170 [inline]
+ __do_sys_splice fs/splice.c:1447 [inline]
+ __se_sys_splice+0x2380/0x3350 fs/splice.c:1427
+ __x64_sys_splice+0x6e/0x90 fs/splice.c:1427
+ do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Cc: stable-rt@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190927082230.34152-1-yongxin.liu@windriver.com
-Signed-off-by: Liu Haitao <haitao.liu@windriver.com>
-Signed-off-by: Yongxin Liu <yongxin.liu@windriver.com>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+Fixes: f16a7dd5cf27 ("smc: netlink interface for SMC sockets")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Ursula Braun <ubraun@linux.vnet.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- mm/kmemleak.c | 72 +++++++++++++++++++++++++++++------------------------------
- 1 file changed, 36 insertions(+), 36 deletions(-)
+ net/smc/smc_diag.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/mm/kmemleak.c b/mm/kmemleak.c
-index c18e23619f95..17718a11782b 100644
---- a/mm/kmemleak.c
-+++ b/mm/kmemleak.c
-@@ -148,7 +148,7 @@ struct kmemleak_scan_area {
-  * (use_count) and freed using the RCU mechanism.
-  */
- struct kmemleak_object {
--	spinlock_t lock;
-+	raw_spinlock_t lock;
- 	unsigned int flags;		/* object status flags */
- 	struct list_head object_list;
- 	struct list_head gray_list;
-@@ -562,7 +562,7 @@ static struct kmemleak_object *create_object(unsigned long ptr, size_t size,
- 	INIT_LIST_HEAD(&object->object_list);
- 	INIT_LIST_HEAD(&object->gray_list);
- 	INIT_HLIST_HEAD(&object->area_list);
--	spin_lock_init(&object->lock);
-+	raw_spin_lock_init(&object->lock);
- 	atomic_set(&object->use_count, 1);
- 	object->flags = OBJECT_ALLOCATED;
- 	object->pointer = ptr;
-@@ -643,9 +643,9 @@ static void __delete_object(struct kmemleak_object *object)
- 	 * Locking here also ensures that the corresponding memory block
- 	 * cannot be freed when it is being scanned.
- 	 */
--	spin_lock_irqsave(&object->lock, flags);
-+	raw_spin_lock_irqsave(&object->lock, flags);
- 	object->flags &= ~OBJECT_ALLOCATED;
--	spin_unlock_irqrestore(&object->lock, flags);
-+	raw_spin_unlock_irqrestore(&object->lock, flags);
- 	put_object(object);
- }
- 
-@@ -717,9 +717,9 @@ static void paint_it(struct kmemleak_object *object, int color)
+--- a/net/smc/smc_diag.c
++++ b/net/smc/smc_diag.c
+@@ -38,15 +38,14 @@ static void smc_diag_msg_common_fill(str
  {
- 	unsigned long flags;
+ 	struct smc_sock *smc = smc_sk(sk);
  
--	spin_lock_irqsave(&object->lock, flags);
-+	raw_spin_lock_irqsave(&object->lock, flags);
- 	__paint_it(object, color);
--	spin_unlock_irqrestore(&object->lock, flags);
-+	raw_spin_unlock_irqrestore(&object->lock, flags);
- }
- 
- static void paint_ptr(unsigned long ptr, int color)
-@@ -779,7 +779,7 @@ static void add_scan_area(unsigned long ptr, size_t size, gfp_t gfp)
- 		goto out;
- 	}
- 
--	spin_lock_irqsave(&object->lock, flags);
-+	raw_spin_lock_irqsave(&object->lock, flags);
- 	if (size == SIZE_MAX) {
- 		size = object->pointer + object->size - ptr;
- 	} else if (ptr + size > object->pointer + object->size) {
-@@ -795,7 +795,7 @@ static void add_scan_area(unsigned long ptr, size_t size, gfp_t gfp)
- 
- 	hlist_add_head(&area->node, &object->area_list);
- out_unlock:
--	spin_unlock_irqrestore(&object->lock, flags);
-+	raw_spin_unlock_irqrestore(&object->lock, flags);
- out:
- 	put_object(object);
- }
-@@ -818,9 +818,9 @@ static void object_set_excess_ref(unsigned long ptr, unsigned long excess_ref)
++	memset(r, 0, sizeof(*r));
+ 	r->diag_family = sk->sk_family;
++	sock_diag_save_cookie(sk, r->id.idiag_cookie);
+ 	if (!smc->clcsock)
  		return;
- 	}
- 
--	spin_lock_irqsave(&object->lock, flags);
-+	raw_spin_lock_irqsave(&object->lock, flags);
- 	object->excess_ref = excess_ref;
--	spin_unlock_irqrestore(&object->lock, flags);
-+	raw_spin_unlock_irqrestore(&object->lock, flags);
- 	put_object(object);
+ 	r->id.idiag_sport = htons(smc->clcsock->sk->sk_num);
+ 	r->id.idiag_dport = smc->clcsock->sk->sk_dport;
+ 	r->id.idiag_if = smc->clcsock->sk->sk_bound_dev_if;
+-	sock_diag_save_cookie(sk, r->id.idiag_cookie);
+-	memset(&r->id.idiag_src, 0, sizeof(r->id.idiag_src));
+-	memset(&r->id.idiag_dst, 0, sizeof(r->id.idiag_dst));
+ 	r->id.idiag_src[0] = smc->clcsock->sk->sk_rcv_saddr;
+ 	r->id.idiag_dst[0] = smc->clcsock->sk->sk_daddr;
  }
- 
-@@ -840,9 +840,9 @@ static void object_no_scan(unsigned long ptr)
- 		return;
- 	}
- 
--	spin_lock_irqsave(&object->lock, flags);
-+	raw_spin_lock_irqsave(&object->lock, flags);
- 	object->flags |= OBJECT_NO_SCAN;
--	spin_unlock_irqrestore(&object->lock, flags);
-+	raw_spin_unlock_irqrestore(&object->lock, flags);
- 	put_object(object);
- }
- 
-@@ -903,11 +903,11 @@ static void early_alloc(struct early_log *log)
- 			       log->min_count, GFP_ATOMIC);
- 	if (!object)
- 		goto out;
--	spin_lock_irqsave(&object->lock, flags);
-+	raw_spin_lock_irqsave(&object->lock, flags);
- 	for (i = 0; i < log->trace_len; i++)
- 		object->trace[i] = log->trace[i];
- 	object->trace_len = log->trace_len;
--	spin_unlock_irqrestore(&object->lock, flags);
-+	raw_spin_unlock_irqrestore(&object->lock, flags);
- out:
- 	rcu_read_unlock();
- }
-@@ -1097,9 +1097,9 @@ void __ref kmemleak_update_trace(const void *ptr)
- 		return;
- 	}
- 
--	spin_lock_irqsave(&object->lock, flags);
-+	raw_spin_lock_irqsave(&object->lock, flags);
- 	object->trace_len = __save_stack_trace(object->trace);
--	spin_unlock_irqrestore(&object->lock, flags);
-+	raw_spin_unlock_irqrestore(&object->lock, flags);
- 
- 	put_object(object);
- }
-@@ -1335,7 +1335,7 @@ static void scan_block(void *_start, void *_end,
- 		 * previously acquired in scan_object(). These locks are
- 		 * enclosed by scan_mutex.
- 		 */
--		spin_lock_nested(&object->lock, SINGLE_DEPTH_NESTING);
-+		raw_spin_lock_nested(&object->lock, SINGLE_DEPTH_NESTING);
- 		/* only pass surplus references (object already gray) */
- 		if (color_gray(object)) {
- 			excess_ref = object->excess_ref;
-@@ -1344,7 +1344,7 @@ static void scan_block(void *_start, void *_end,
- 			excess_ref = 0;
- 			update_refs(object);
- 		}
--		spin_unlock(&object->lock);
-+		raw_spin_unlock(&object->lock);
- 
- 		if (excess_ref) {
- 			object = lookup_object(excess_ref, 0);
-@@ -1353,9 +1353,9 @@ static void scan_block(void *_start, void *_end,
- 			if (object == scanned)
- 				/* circular reference, ignore */
- 				continue;
--			spin_lock_nested(&object->lock, SINGLE_DEPTH_NESTING);
-+			raw_spin_lock_nested(&object->lock, SINGLE_DEPTH_NESTING);
- 			update_refs(object);
--			spin_unlock(&object->lock);
-+			raw_spin_unlock(&object->lock);
- 		}
- 	}
- 	raw_spin_unlock_irqrestore(&kmemleak_lock, flags);
-@@ -1391,7 +1391,7 @@ static void scan_object(struct kmemleak_object *object)
- 	 * Once the object->lock is acquired, the corresponding memory block
- 	 * cannot be freed (the same lock is acquired in delete_object).
- 	 */
--	spin_lock_irqsave(&object->lock, flags);
-+	raw_spin_lock_irqsave(&object->lock, flags);
- 	if (object->flags & OBJECT_NO_SCAN)
- 		goto out;
- 	if (!(object->flags & OBJECT_ALLOCATED))
-@@ -1410,9 +1410,9 @@ static void scan_object(struct kmemleak_object *object)
- 			if (start >= end)
- 				break;
- 
--			spin_unlock_irqrestore(&object->lock, flags);
-+			raw_spin_unlock_irqrestore(&object->lock, flags);
- 			cond_resched();
--			spin_lock_irqsave(&object->lock, flags);
-+			raw_spin_lock_irqsave(&object->lock, flags);
- 		} while (object->flags & OBJECT_ALLOCATED);
- 	} else
- 		hlist_for_each_entry(area, &object->area_list, node)
-@@ -1420,7 +1420,7 @@ static void scan_object(struct kmemleak_object *object)
- 				   (void *)(area->start + area->size),
- 				   object);
- out:
--	spin_unlock_irqrestore(&object->lock, flags);
-+	raw_spin_unlock_irqrestore(&object->lock, flags);
- }
- 
- /*
-@@ -1473,7 +1473,7 @@ static void kmemleak_scan(void)
- 	/* prepare the kmemleak_object's */
- 	rcu_read_lock();
- 	list_for_each_entry_rcu(object, &object_list, object_list) {
--		spin_lock_irqsave(&object->lock, flags);
-+		raw_spin_lock_irqsave(&object->lock, flags);
- #ifdef DEBUG
- 		/*
- 		 * With a few exceptions there should be a maximum of
-@@ -1490,7 +1490,7 @@ static void kmemleak_scan(void)
- 		if (color_gray(object) && get_object(object))
- 			list_add_tail(&object->gray_list, &gray_list);
- 
--		spin_unlock_irqrestore(&object->lock, flags);
-+		raw_spin_unlock_irqrestore(&object->lock, flags);
- 	}
- 	rcu_read_unlock();
- 
-@@ -1555,14 +1555,14 @@ static void kmemleak_scan(void)
- 	 */
- 	rcu_read_lock();
- 	list_for_each_entry_rcu(object, &object_list, object_list) {
--		spin_lock_irqsave(&object->lock, flags);
-+		raw_spin_lock_irqsave(&object->lock, flags);
- 		if (color_white(object) && (object->flags & OBJECT_ALLOCATED)
- 		    && update_checksum(object) && get_object(object)) {
- 			/* color it gray temporarily */
- 			object->count = object->min_count;
- 			list_add_tail(&object->gray_list, &gray_list);
- 		}
--		spin_unlock_irqrestore(&object->lock, flags);
-+		raw_spin_unlock_irqrestore(&object->lock, flags);
- 	}
- 	rcu_read_unlock();
- 
-@@ -1582,13 +1582,13 @@ static void kmemleak_scan(void)
- 	 */
- 	rcu_read_lock();
- 	list_for_each_entry_rcu(object, &object_list, object_list) {
--		spin_lock_irqsave(&object->lock, flags);
-+		raw_spin_lock_irqsave(&object->lock, flags);
- 		if (unreferenced_object(object) &&
- 		    !(object->flags & OBJECT_REPORTED)) {
- 			object->flags |= OBJECT_REPORTED;
- 			new_leaks++;
- 		}
--		spin_unlock_irqrestore(&object->lock, flags);
-+		raw_spin_unlock_irqrestore(&object->lock, flags);
- 	}
- 	rcu_read_unlock();
- 
-@@ -1740,10 +1740,10 @@ static int kmemleak_seq_show(struct seq_file *seq, void *v)
- 	struct kmemleak_object *object = v;
- 	unsigned long flags;
- 
--	spin_lock_irqsave(&object->lock, flags);
-+	raw_spin_lock_irqsave(&object->lock, flags);
- 	if ((object->flags & OBJECT_REPORTED) && unreferenced_object(object))
- 		print_unreferenced(seq, object);
--	spin_unlock_irqrestore(&object->lock, flags);
-+	raw_spin_unlock_irqrestore(&object->lock, flags);
- 	return 0;
- }
- 
-@@ -1773,9 +1773,9 @@ static int dump_str_object_info(const char *str)
- 		return -EINVAL;
- 	}
- 
--	spin_lock_irqsave(&object->lock, flags);
-+	raw_spin_lock_irqsave(&object->lock, flags);
- 	dump_object_info(object);
--	spin_unlock_irqrestore(&object->lock, flags);
-+	raw_spin_unlock_irqrestore(&object->lock, flags);
- 
- 	put_object(object);
- 	return 0;
-@@ -1794,11 +1794,11 @@ static void kmemleak_clear(void)
- 
- 	rcu_read_lock();
- 	list_for_each_entry_rcu(object, &object_list, object_list) {
--		spin_lock_irqsave(&object->lock, flags);
-+		raw_spin_lock_irqsave(&object->lock, flags);
- 		if ((object->flags & OBJECT_REPORTED) &&
- 		    unreferenced_object(object))
- 			__paint_it(object, KMEMLEAK_GREY);
--		spin_unlock_irqrestore(&object->lock, flags);
-+		raw_spin_unlock_irqrestore(&object->lock, flags);
- 	}
- 	rcu_read_unlock();
- 
--- 
-2.14.1
+
 
