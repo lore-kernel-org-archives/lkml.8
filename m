@@ -2,108 +2,96 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D1BBC54FCC
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F52C52D52
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F79824656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:26:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7565521D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:26:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582813594;
+	bh=8dJc3VjqGnWWFG3e8ysCnj4VZcKV3ZJX84/9oq8ZYP8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=U2DjTWXTbyjPH3RWRb80GtwJkcjcq1MV35PBT5hFXSjIAuQ+MbPpgl8gxud3Bos49
+	 sHJWXCi9Boq1VQ/ZBULjqPQaeoZda0ABiLZ1iduJeZpWkMGnFZnNVRlehlz6OBktc/
+	 +aamB1WqVpVzqO5aAF3f/CwD+BaG7PsWOdcVlJdQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388629AbgB0O0q (ORCPT
+        id S2388425AbgB0OJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:26:46 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:26320 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388212AbgB0OJf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:09:35 -0500
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01RE56BE019795;
-        Thu, 27 Feb 2020 09:09:32 -0500
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ydtrx3c1x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Feb 2020 09:09:31 -0500
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 01RE9UrK022376
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Thu, 27 Feb 2020 09:09:30 -0500
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 27 Feb
- 2020 06:09:29 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Thu, 27 Feb 2020 06:09:28 -0800
-Received: from analog.ad.analog.com ([10.48.65.180])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01RE9PWg029677;
-        Thu, 27 Feb 2020 09:09:25 -0500
-From:   Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-To:     <linux-kernel@vger.kernel.org>, <groeck@chromium.org>,
-        <enric.balletbo@collabora.com>, <bleung@chromium.org>
-CC:     Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-Subject: [PATCH] platform: chrome: cros_ec_spi: Use new structure for SPI transfer delays
-Date:   Thu, 27 Feb 2020 16:09:17 +0200
-Message-ID: <20200227140917.10131-1-sergiu.cuciurean@analog.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 27 Feb 2020 09:09:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47810 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733262AbgB0OJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:09:48 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 876C120801;
+        Thu, 27 Feb 2020 14:09:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582812588;
+        bh=8dJc3VjqGnWWFG3e8ysCnj4VZcKV3ZJX84/9oq8ZYP8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AjAiW/PduskoKG/aLvKEthuUq/oF5Sp8nQ8Zav5gY4mS0gAeM1Hu5sJmqFA/ZgGpx
+         Tm9gLoVTkSoKmBJBS5ugJRRP2Dob+z010eR7geATHQsYKhoKFez1epVUm75SDMUqSt
+         tjcbpiU8fzr+4uJHe39rZxsI3VMh5IyfC3HPwJMc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Suren Baghdasaryan <surenb@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Subject: [PATCH 5.4 076/135] sched/psi: Fix OOB write when writing 0 bytes to PSI files
+Date:   Thu, 27 Feb 2020 14:36:56 +0100
+Message-Id: <20200227132240.815487769@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
+References: <20200227132228.710492098@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-27_04:2020-02-26,2020-02-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- malwarescore=0 impostorscore=0 clxscore=1011 priorityscore=1501
- lowpriorityscore=0 phishscore=0 spamscore=0 adultscore=0 mlxlogscore=999
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002270112
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In a recent change to the SPI subsystem [1], a new `delay` struct was added
-to replace the `delay_usecs`. This change replaces the current
-`delay_usecs` with `delay` for this driver.
+From: Suren Baghdasaryan <surenb@google.com>
 
-The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
-that both `delay_usecs` & `delay` are used (in this order to preserve
-backwards compatibility).
+commit 6fcca0fa48118e6d63733eb4644c6cd880c15b8f upstream.
 
-[1] commit bebcfd272df6 ("spi: introduce `delay` field for
-`spi_transfer` + spi_transfer_delay_exec()")
+Issuing write() with count parameter set to 0 on any file under
+/proc/pressure/ will cause an OOB write because of the access to
+buf[buf_size-1] when NUL-termination is performed. Fix this by checking
+for buf_size to be non-zero.
 
-Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Link: https://lkml.kernel.org/r/20200203212216.7076-1-surenb@google.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/platform/chrome/cros_ec_spi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ kernel/sched/psi.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/platform/chrome/cros_ec_spi.c b/drivers/platform/chrome/cros_ec_spi.c
-index 46786d2d679a..665ab154bb4f 100644
---- a/drivers/platform/chrome/cros_ec_spi.c
-+++ b/drivers/platform/chrome/cros_ec_spi.c
-@@ -127,7 +127,8 @@ static int terminate_request(struct cros_ec_device *ec_dev)
- 	 */
- 	spi_message_init(&msg);
- 	memset(&trans, 0, sizeof(trans));
--	trans.delay_usecs = ec_spi->end_of_msg_delay;
-+	trans.delay.value = ec_spi->end_of_msg_delay;
-+	trans.delay.unit = SPI_DELAY_UNIT_NSECS;
- 	spi_message_add_tail(&trans, &msg);
+--- a/kernel/sched/psi.c
++++ b/kernel/sched/psi.c
+@@ -1199,6 +1199,9 @@ static ssize_t psi_write(struct file *fi
+ 	if (static_branch_likely(&psi_disabled))
+ 		return -EOPNOTSUPP;
  
- 	ret = spi_sync_locked(ec_spi->spi, &msg);
-@@ -416,7 +417,8 @@ static int do_cros_ec_pkt_xfer_spi(struct cros_ec_device *ec_dev,
- 	spi_message_init(&msg);
- 	if (ec_spi->start_of_msg_delay) {
- 		memset(&trans_delay, 0, sizeof(trans_delay));
--		trans_delay.delay_usecs = ec_spi->start_of_msg_delay;
-+		trans_delay.delay.value = ec_spi->start_of_msg_delay;
-+		trans_delay.delay.unit = SPI_DELAY_UNIT_USECS;
- 		spi_message_add_tail(&trans_delay, &msg);
- 	}
- 
--- 
-2.17.1
++	if (!nbytes)
++		return -EINVAL;
++
+ 	buf_size = min(nbytes, sizeof(buf));
+ 	if (copy_from_user(buf, user_buf, buf_size))
+ 		return -EFAULT;
+
 
