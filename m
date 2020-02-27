@@ -2,176 +2,116 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 621CEC4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D354EC4BA06
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3642A24656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABA4D24679
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:10:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H4jCUaLf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725884AbgB0FJM (ORCPT
+        id S1725970AbgB0FKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 00:09:12 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64848 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725790AbgB0FJM (ORCPT
+        Thu, 27 Feb 2020 00:10:32 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46540 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbgB0FKb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 00:09:12 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01R54Ite080318
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 00:09:11 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ydq60ers0-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 00:09:11 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
-        Thu, 27 Feb 2020 05:09:09 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 27 Feb 2020 05:09:01 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01R591Io53542972
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Feb 2020 05:09:01 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EAA95A404D;
-        Thu, 27 Feb 2020 05:09:00 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 417E3A4040;
-        Thu, 27 Feb 2020 05:09:00 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 27 Feb 2020 05:09:00 +0000 (GMT)
-Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 2E3BFA01C0;
-        Thu, 27 Feb 2020 16:08:55 +1100 (AEDT)
-Subject: Re: [PATCH v3 12/27] powerpc/powernv/pmem: Add register addresses &
- status values to the header
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
- <20200221032720.33893-13-alastair@au1.ibm.com>
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-Date:   Thu, 27 Feb 2020 16:08:58 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 27 Feb 2020 00:10:31 -0500
+Received: by mail-qt1-f195.google.com with SMTP id i14so1355795qtv.13;
+        Wed, 26 Feb 2020 21:10:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pivyxHSyqwryDPI9Gp60bBQcqgh4EowGAu7KJlQgz8E=;
+        b=H4jCUaLfJYUfLLqA3eJUJTu4b5XveFIshSWzC8Y9ln+QPHPxLUrzmrpESy/4akroJp
+         Z1nDx07X+MlLtNHzVPHE0eRY5Ki3r78WV31qoXhY51kbpvG/tDwciXC480UedUkCVCLI
+         CfSE9KcQk9zWNnCwGGaiXi0+XGAOA+cUPGSLF1Kl8WM911mYZ5WBeZjtQ4p7/trNAmiG
+         lee0S5ks436Q82ah/K+yp4MxHyjN4E9/4sbSeYHC8ECGGPVvAIYYtbLsEKwL6P41B1Jg
+         5juA7vU9RxBBlarCdwpP1F6wZhIcVRvZZ8LOzUBwNwcutzQsS1no+Zbav7A+e8MY9XBO
+         f9ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pivyxHSyqwryDPI9Gp60bBQcqgh4EowGAu7KJlQgz8E=;
+        b=P+rfVjrCmQdv7CjsQC6DA6IBYdcYOYo3uZ59w2bV6YXx1hggcaM2T1IoLAP8eI+kCn
+         HIQ69jISmeDCan93DqUuFNILyT6dYD+01s0dz4o/RAqfkwYloje15WfrqMxrUJIGS6tZ
+         E1D+ue13+F5MWC2v5BsPLTWOWmEx0fceKtrHIuiwVzYuGt55r9MnJx0c48e6AMRrdTfO
+         RkVcdUdVHWqKo9KFkMuMIuvp3KzVtdZC2hOwwJgYLN6BsbKmA3l7ssc02yN2SgNcf0Sb
+         sHFX0Km4weYzUTE2oquvtJqOIKmOliEdjfInPpyUpfriZtZN/hQ5aE1KefP/8pkkOh+K
+         1hVA==
+X-Gm-Message-State: APjAAAUaSxgH5NG8UiziUsX1uUXWzje3RxWi0/UQxwzOmGdr5E47opUF
+        NxSUkdvBH1H6LFDTM31rDG4udjb3SQoZM9Q4UKk=
+X-Google-Smtp-Source: APXvYqycq8WwBFtqjVUYzXazfM0rpHuJEyxghtCnM5oaWtr3OyjFzAOxbLU+lLoU9oiDrDjLlu176P4wnMzSmLHlnG0=
+X-Received: by 2002:ac8:5298:: with SMTP id s24mr2831317qtn.54.1582780230751;
+ Wed, 26 Feb 2020 21:10:30 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200221032720.33893-13-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022705-0028-0000-0000-000003DE5EF4
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022705-0029-0000-0000-000024A37CF0
-Message-Id: <e335ed2d-7381-e95c-a6b5-0efe60746cf4@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-26_09:2020-02-26,2020-02-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- lowpriorityscore=0 adultscore=0 malwarescore=0 mlxlogscore=999
- clxscore=1015 bulkscore=0 suspectscore=0 mlxscore=0 phishscore=0
- priorityscore=1501 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2001150001 definitions=main-2002270037
+References: <cover.1582770784.git.shengjiu.wang@nxp.com> <ffd5ff2fd0e8ad03a97f6a640630cff767d73fa7.1582770784.git.shengjiu.wang@nxp.com>
+ <20200227034121.GA20540@Asurada-Nvidia.nvidia.com>
+In-Reply-To: <20200227034121.GA20540@Asurada-Nvidia.nvidia.com>
+From:   Shengjiu Wang <shengjiu.wang@gmail.com>
+Date:   Thu, 27 Feb 2020 13:10:19 +0800
+Message-ID: <CAA+D8AMzqpC35_CR2dCG6a_h4FzvZ6orXkPSYh_1o1d8hv+BMg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] ASoC: fsl_asrc: Change asrc_width to asrc_format
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/2/20 2:27 pm, Alastair D'Silva wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
-> 
-> These values have been taken from the device specifications.
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+On Thu, Feb 27, 2020 at 11:43 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
+>
+> On Thu, Feb 27, 2020 at 10:41:55AM +0800, Shengjiu Wang wrote:
+> > asrc_format is more inteligent variable, which is align
+> > with the alsa definition snd_pcm_format_t.
+> >
+> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > ---
+> >  sound/soc/fsl/fsl_asrc.c     | 23 +++++++++++------------
+> >  sound/soc/fsl/fsl_asrc.h     |  4 ++--
+> >  sound/soc/fsl/fsl_asrc_dma.c |  2 +-
+> >  3 files changed, 14 insertions(+), 15 deletions(-)
+> >
+> > diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
+> > index 0dcebc24c312..2b6a1643573c 100644
+> > --- a/sound/soc/fsl/fsl_asrc.c
+> > +++ b/sound/soc/fsl/fsl_asrc.c
+>
+> > @@ -600,11 +599,6 @@ static int fsl_asrc_dai_hw_params(struct snd_pcm_substream *substream,
+> >
+> >       pair->config = &config;
+> >
+> > -     if (asrc_priv->asrc_width == 16)
+> > -             format = SNDRV_PCM_FORMAT_S16_LE;
+> > -     else
+> > -             format = SNDRV_PCM_FORMAT_S24_LE;
+>
+> It feels better to me that we have format settings in hw_params().
+>
+> Why not let fsl_easrc align with this? Any reason that I'm missing?
 
-I've compared these values against the internal version of the device 
-specifications that I have access to, and they appear to match.
+because the asrc_width is not formal,  in the future we can direct
+input the format from the dts. format involve the info about width.
 
-A few minor comments below, otherwise:
-
-Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
-
-> +#define GLOBAL_MMIO_HCI_ACRW				BIT_ULL(0)
-> +#define GLOBAL_MMIO_HCI_NSCRW				BIT_ULL(1)
-> +#define GLOBAL_MMIO_HCI_AFU_RESET			BIT_ULL(2)
-> +#define GLOBAL_MMIO_HCI_FW_DEBUG			BIT_ULL(3)
-> +#define GLOBAL_MMIO_HCI_CONTROLLER_DUMP			BIT_ULL(4)
-> +#define GLOBAL_MMIO_HCI_CONTROLLER_DUMP_COLLECTED	BIT_ULL(5)
-> +#define GLOBAL_MMIO_HCI_REQ_HEALTH_PERF			BIT_ULL(6)
-
-The labelling of some of these bits deviates from the standard 
-abbreviations in the spec, which is fine I guess as these names are more 
-descriptive, but maybe add a brief comment with the original abbreviation?
-
-> +
-> +#define ADMIN_COMMAND_HEARTBEAT		0x00u
-> +#define ADMIN_COMMAND_SHUTDOWN		0x01u
-> +#define ADMIN_COMMAND_FW_UPDATE		0x02u
-> +#define ADMIN_COMMAND_FW_DEBUG		0x03u
-> +#define ADMIN_COMMAND_ERRLOG		0x04u
-> +#define ADMIN_COMMAND_SMART		0x05u
-> +#define ADMIN_COMMAND_CONTROLLER_STATS	0x06u
-> +#define ADMIN_COMMAND_CONTROLLER_DUMP	0x07u
-> +#define ADMIN_COMMAND_CMD_CAPS		0x08u
-> +#define ADMIN_COMMAND_MAX		0x08u
-> +
-> +#define STATUS_SUCCESS		0x00
-> +#define STATUS_MEM_UNAVAILABLE	0x20
-
-There's also a "blocked on account of background task" code, 0x21.
-
-> +#define STATUS_BAD_OPCODE	0x50
-> +#define STATUS_BAD_REQUEST_PARM	0x51
-> +#define STATUS_BAD_DATA_PARM	0x52
-> +#define STATUS_DEBUG_BLOCKED	0x70
-> +#define STATUS_FAIL		0xFF
-> +
-> +#define STATUS_FW_UPDATE_BLOCKED 0x21
-> +#define STATUS_FW_ARG_INVALID	0x51
-> +#define STATUS_FW_INVALID	0x52
-
-These status codes seem, from the specification, to correspond to the 
-generic error codes above, so perhaps they're not needed.
-
-
--- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
-
+best regards
+wang shengjiu
