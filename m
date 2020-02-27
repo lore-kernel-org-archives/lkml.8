@@ -2,135 +2,137 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F7C8C35DF9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 494BBC11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8268B2469B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 205EB2469B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:52:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rszqU/q6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730345AbgB0Rwb (ORCPT
+        id S1730435AbgB0Rww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 12:52:31 -0500
-Received: from mga04.intel.com ([192.55.52.120]:14627 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726877AbgB0Rwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 12:52:31 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 09:52:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,492,1574150400"; 
-   d="scan'208";a="232269369"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga008.fm.intel.com with ESMTP; 27 Feb 2020 09:52:30 -0800
-Date:   Thu, 27 Feb 2020 09:52:30 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dave Chinner <david@fromorbit.com>
+        Thu, 27 Feb 2020 12:52:52 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:34906 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbgB0Rwv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 12:52:51 -0500
+Received: by mail-wm1-f68.google.com with SMTP id m3so359744wmi.0;
+        Thu, 27 Feb 2020 09:52:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oJzOQyGUdiyuY3HBRX4a1v3LKWNPTj5lhD17LyMZ2gU=;
+        b=rszqU/q6TjoEHSZvLU3SjjNtlZUhdmojbgbag/J2EiP37I/+eMwD5f/30vb9DmCDUY
+         eilL7t0XZevD+Fv6+5Eock2xfk+JJx7wwZgoCQtnfa/i3aothEYuzNCx0fjEgMOYiv+L
+         PE3qisnuQrNZNZjNXWp4pe8OJjaYTBFWNzuHbpVUkmXuWBRLIVQPfbZCKYRzEbk2q+Ff
+         Uqj5EgEQG8hE54jE/IubEcN7NPHdGdMug78Pd9XOK6U6Hch19txBjO9/JOq9zawM4jHb
+         NATB7p0wZ/tshoGalieBmEQNNW9sOqCNfKiqEEkrURvRwOzYJssZ0r2zib17lPKZPTEj
+         X60g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oJzOQyGUdiyuY3HBRX4a1v3LKWNPTj5lhD17LyMZ2gU=;
+        b=BXC5OnZ7syPU7nnlqXcSeaV6F9rOBN4T6zp9mgW6FMHUyN+PsqRPe1BetrleKnH9DQ
+         Dc4WoWQZ6ErINqAfJyeDNWh1LiwfCh2Fqr2QN1ecqbx3C71ullFEJH5X0c+tz+NEBqwd
+         C0buXV89l9K3eSV85mhRWJNmBYtMBgPvZNnYN7t4xJjVd1mPhvyW0J/gZCimboG42Ztw
+         Jm5xcWXrljv9ELS7Plvc/EPzPxjf0jfXSnjjoVuGMiuKVDr9eZEV5giCiQjfXbqmNEZn
+         y961w5SQlfffRbUVXCJejZBycCiYJISQKYGaGmIwX9HDe5EFjjNpG7Z0qkU1LZPshn9E
+         lJ7g==
+X-Gm-Message-State: APjAAAUnWg+DQOrsf4KrQi3PV+DyDpIWER8xokO6QiyjTgSvA8GFWCCB
+        NO78jLdaCwUWD55wtk1gTU8=
+X-Google-Smtp-Source: APXvYqxT+Z+0UBIpflHvqZ0pgfzA3CLtgsKUXQb+gdNtOOaStPTtxk+2QEj6M+dWRhmjbTPIuFIPNg==
+X-Received: by 2002:a1c:cc06:: with SMTP id h6mr720524wmb.118.1582825967439;
+        Thu, 27 Feb 2020 09:52:47 -0800 (PST)
+Received: from andrea (ip-213-220-200-127.net.upcbroadband.cz. [213.220.200.127])
+        by smtp.gmail.com with ESMTPSA id y7sm12885124wmd.1.2020.02.27.09.52.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 09:52:46 -0800 (PST)
+Date:   Thu, 27 Feb 2020 18:52:40 +0100
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Boqun Feng <boqun.feng@gmail.com>
 Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V4 01/13] fs/xfs: Remove unnecessary initialization of
- i_rwsem
-Message-ID: <20200227175229.GA7072@iweiny-DESK2.sc.intel.com>
-References: <20200221004134.30599-1-ira.weiny@intel.com>
- <20200221004134.30599-2-ira.weiny@intel.com>
- <20200221012625.GT10776@dread.disaster.area>
+        Alan Stern <stern@rowland.harvard.edu>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 1/5] tools/memory-model: Add an exception for
+ limitations on _unless() family
+Message-ID: <20200227175240.GA12046@andrea>
+References: <20200227004049.6853-1-boqun.feng@gmail.com>
+ <20200227004049.6853-2-boqun.feng@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200221012625.GT10776@dread.disaster.area>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20200227004049.6853-2-boqun.feng@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 12:26:25PM +1100, Dave Chinner wrote:
-> On Thu, Feb 20, 2020 at 04:41:22PM -0800, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > xfs_reinit_inode() -> inode_init_always() already handles calling
-> > init_rwsem(i_rwsem).  Doing so again is unneeded.
-> > 
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+On Thu, Feb 27, 2020 at 08:40:45AM +0800, Boqun Feng wrote:
+> According to Luc, atomic_add_unless() is directly provided by herd7,
+> therefore it can be used in litmus tests. So change the limitation
+> section in README to unlimit the use of atomic_add_unless().
 > 
-> Except that this inode has been destroyed and freed by the VFS, and
-> we are now recycling it back into the VFS before we actually
-> physically freed it.
+> Cc: Luc Maranget <luc.maranget@inria.fr>
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> ---
+>  tools/memory-model/README | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
 > 
-> Hence we have re-initialise the semaphore because the semaphore can
-> contain internal state that is specific to it's new life cycle (e.g.
-> the lockdep context) that will cause problems if we just assume that
-> the inode is the same inode as it was before we recycled it back
-> into the VFS caches.
-> 
-> So, yes, we actually do need to re-initialise the rwsem here.
+> diff --git a/tools/memory-model/README b/tools/memory-model/README
+> index fc07b52f2028..409211b1c544 100644
+> --- a/tools/memory-model/README
+> +++ b/tools/memory-model/README
+> @@ -207,11 +207,15 @@ The Linux-kernel memory model (LKMM) has the following limitations:
+>  		case as a store release.
+>  
+>  	b.	The "unless" RMW operations are not currently modeled:
+> -		atomic_long_add_unless(), atomic_add_unless(),
+> -		atomic_inc_unless_negative(), and
+> -		atomic_dec_unless_positive().  These can be emulated
+> +		atomic_long_add_unless(), atomic_inc_unless_negative(),
+> +		and atomic_dec_unless_positive().  These can be emulated
+>  		in litmus tests, for example, by using atomic_cmpxchg().
+>  
+> +		One exception of this limitation is atomic_add_unless(),
+> +		which is provided directly by herd7 (so no corresponding
+> +		definition in linux-kernel.def). atomic_add_unless() is
 
-I'm fine dropping the patch...
+Nit: Two spaces after period?
 
-But I'm not following how the xfs_reinit_inode() on line 422 does not take care
-of this?
+  Andrea
 
-fs/xfs/xfs_icache.c:
 
- 422                 error = xfs_reinit_inode(mp, inode);
- 423                 if (error) {
- 424                         bool wake;
- 425                         /*
- 426                          * Re-initializing the inode failed, and we are in deep
- 427                          * trouble.  Try to re-add it to the reclaim list.
- 428                          */
- 429                         rcu_read_lock();
- 430                         spin_lock(&ip->i_flags_lock);
- 431                         wake = !!__xfs_iflags_test(ip, XFS_INEW);
- 432                         ip->i_flags &= ~(XFS_INEW | XFS_IRECLAIM);
- 433                         if (wake)
- 434                                 wake_up_bit(&ip->i_flags, __XFS_INEW_BIT);
- 435                         ASSERT(ip->i_flags & XFS_IRECLAIMABLE);
- 436                         trace_xfs_iget_reclaim_fail(ip);
- 437                         goto out_error;
- 438                 }
- 439 
- 440                 spin_lock(&pag->pag_ici_lock);
- 441                 spin_lock(&ip->i_flags_lock);
- 442 
- 443                 /*
- 444                  * Clear the per-lifetime state in the inode as we are now
- 445                  * effectively a new inode and need to return to the initial
- 446                  * state before reuse occurs.
- 447                  */
- 448                 ip->i_flags &= ~XFS_IRECLAIM_RESET_FLAGS;
- 449                 ip->i_flags |= XFS_INEW;
- 450                 xfs_inode_clear_reclaim_tag(pag, ip->i_ino);
- 451                 inode->i_state = I_NEW;
- 452                 ip->i_sick = 0;
- 453                 ip->i_checked = 0;
- 454 
- 455                 ASSERT(!rwsem_is_locked(&inode->i_rwsem));
- 456                 init_rwsem(&inode->i_rwsem);
- 457 
- 458                 spin_unlock(&ip->i_flags_lock);
- 459                 spin_unlock(&pag->pag_ici_lock);
-
-Does this need to be done under one of these locks?
-
-Ira
-
-> 
-> Cheers,
-> 
-> Dave.
+> +		modeled by herd7 therefore it can be used in litmus tests.
+> +
+>  	c.	The call_rcu() function is not modeled.  It can be
+>  		emulated in litmus tests by adding another process that
+>  		invokes synchronize_rcu() and the body of the callback
 > -- 
-> Dave Chinner
-> david@fromorbit.com
+> 2.25.0
+> 
