@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5398C54FD9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0566C52D5E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD5B824697
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 888E220801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813121;
-	bh=2Irz/ai7lFL54EAKsN4JXT+pLexL5zki13sArYeysTo=;
+	s=default; t=1582813168;
+	bh=FIgjdj1w7IAWYyZl/p9F1x2kOjAClWaNTPRGjZiUd8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x7LUTTA9wL/mJCdH3P8/YSB0KSw6a2gB/H9h/Gn8MI7wcHXk1NgRbNE0chFbP18wc
-	 GqjN8HAEs20m67B7/WwTn9BxVKYiu5NZYSEV6qRoZf3rBa8vGO6NuGdzGTnqptY7R0
-	 XYBNg3HgY1JmeUOux9qkk8Ze2s1GhqkWd9lvhmHc=
+	b=xkxUY58B+vmuXzvQjRczJ9FtDJ67ay9+/dwyY9ReqDjSXX7AqEDC8cX/TaSD48J/r
+	 eNyo4Jf/pJFKyE1XNyrnnyjsvQOAAELr1pxlhsfSqwyD2f4a7qvJGNxJKD/ui7S/Gw
+	 rWATkMMKUQaSTWnqX77dJfko2zI8pdy1zCQI41NM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389921AbgB0OSk (ORCPT
+        id S2389082AbgB0OT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:18:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59202 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:19:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389895AbgB0OSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:18:35 -0500
+        id S2389985AbgB0OTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:19:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECEB62468F;
-        Thu, 27 Feb 2020 14:18:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D21720801;
+        Thu, 27 Feb 2020 14:19:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813113;
-        bh=2Irz/ai7lFL54EAKsN4JXT+pLexL5zki13sArYeysTo=;
+        s=default; t=1582813151;
+        bh=FIgjdj1w7IAWYyZl/p9F1x2kOjAClWaNTPRGjZiUd8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bi4PpfVdafIfu5rVe1o+O3oDebNSrZaVIiiDdvrRd4Na998puUmvRWz+N6PhWTJGy
-         HNXMghzAVy1NG6/8PDyw9lK59bu7AjKLK4/j+uzhnEwQx5wwr7+aa4/1DYdUefCVCa
-         19hShwBD1VSlaRmpSSfcBruIonOe9OxD3dgc/rPY=
+        b=zNnpfVXaZyGv9bVgQDBvOjBHClgJNKP4vxaPzoWwzdMguKQfgUeGrXenSHVkphIS7
+         9YZltuWeeIE4tbr/uudLWCwWb0fmvMj5bVh73aMcaN51BTCKaK2xJVjMmb/8lYHoAA
+         MpjmHAYF9IDsRVQdBvRHR9PICc4RrbCLAJccwvzQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+d82f3ac8d87e7ccbb2c9@syzkaller.appspotmail.com,
-        syzbot+3f1fd6b8cbf8702d134e@syzkaller.appspotmail.com,
-        David Howells <dhowells@redhat.com>,
-        Hillf Danton <hdanton@sina.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 141/150] rxrpc: Fix call RCU cleanup using non-bh-safe locks
-Date:   Thu, 27 Feb 2020 14:37:58 +0100
-Message-Id: <20200227132253.057860908@linuxfoundation.org>
+        stable@vger.kernel.org, John Fastabend <john.fastabend@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jakub Sitnicki <jakub@cloudflare.com>
+Subject: [PATCH 5.5 150/150] bpf: Selftests build error in sockmap_basic.c
+Date:   Thu, 27 Feb 2020 14:38:07 +0100
+Message-Id: <20200227132254.402971343@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -63,85 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: John Fastabend <john.fastabend@gmail.com>
 
-commit 963485d436ccc2810177a7b08af22336ec2af67b upstream.
+commit f2e97dc126b712c0d21219ed0c42710006c1cf52 upstream.
 
-rxrpc_rcu_destroy_call(), which is called as an RCU callback to clean up a
-put call, calls rxrpc_put_connection() which, deep in its bowels, takes a
-number of spinlocks in a non-BH-safe way, including rxrpc_conn_id_lock and
-local->client_conns_lock.  RCU callbacks, however, are normally called from
-softirq context, which can cause lockdep to notice the locking
-inconsistency.
+Fix following build error. We could push a tcp.h header into one of the
+include paths, but I think its easy enough to simply pull in the three
+defines we need here. If we end up using more of tcp.h at some point
+we can pull it in later.
 
-To get lockdep to detect this, it's necessary to have the connection
-cleaned up on the put at the end of the last of its calls, though normally
-the clean up is deferred.  This can be induced, however, by starting a call
-on an AF_RXRPC socket and then closing the socket without reading the
-reply.
+/home/john/git/bpf/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c: In function ‘connected_socket_v4’:
+/home/john/git/bpf/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c:20:11: error: ‘TCP_REPAIR_ON’ undeclared (first use in this function)
+  repair = TCP_REPAIR_ON;
+           ^
+/home/john/git/bpf/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c:20:11: note: each undeclared identifier is reported only once for each function it appears in
+/home/john/git/bpf/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c:29:11: error: ‘TCP_REPAIR_OFF_NO_WP’ undeclared (first use in this function)
+  repair = TCP_REPAIR_OFF_NO_WP;
 
-Fix this by having rxrpc_rcu_destroy_call() punt the destruction to a
-workqueue if in softirq-mode and defer the destruction to process context.
+Then with fix,
 
-Note that another way to fix this could be to add a bunch of bh-disable
-annotations to the spinlocks concerned - and there might be more than just
-those two - but that means spending more time with BHs disabled.
+$ ./test_progs -n 44
+#44/1 sockmap create_update_free:OK
+#44/2 sockhash create_update_free:OK
+#44 sockmap_basic:OK
 
-Note also that some of these places were covered by bh-disable spinlocks
-belonging to the rxrpc_transport object, but these got removed without the
-_bh annotation being retained on the next lock in.
-
-Fixes: 999b69f89241 ("rxrpc: Kill the client connection bundle concept")
-Reported-by: syzbot+d82f3ac8d87e7ccbb2c9@syzkaller.appspotmail.com
-Reported-by: syzbot+3f1fd6b8cbf8702d134e@syzkaller.appspotmail.com
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Hillf Danton <hdanton@sina.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 5d3919a953c3c ("selftests/bpf: Test freeing sockmap/sockhash with a socket in it")
+Signed-off-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
+Link: https://lore.kernel.org/bpf/158131347731.21414.12120493483848386652.stgit@john-Precision-5820-Tower
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/rxrpc/call_object.c |   22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ tools/testing/selftests/bpf/prog_tests/sockmap_basic.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/net/rxrpc/call_object.c
-+++ b/net/rxrpc/call_object.c
-@@ -562,11 +562,11 @@ void rxrpc_put_call(struct rxrpc_call *c
- }
+--- a/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c
++++ b/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c
+@@ -3,6 +3,11 @@
  
- /*
-- * Final call destruction under RCU.
-+ * Final call destruction - but must be done in process context.
-  */
--static void rxrpc_rcu_destroy_call(struct rcu_head *rcu)
-+static void rxrpc_destroy_call(struct work_struct *work)
+ #include "test_progs.h"
+ 
++#define TCP_REPAIR		19	/* TCP sock is under repair right now */
++
++#define TCP_REPAIR_ON		1
++#define TCP_REPAIR_OFF_NO_WP	-1	/* Turn off without window probes */
++
+ static int connected_socket_v4(void)
  {
--	struct rxrpc_call *call = container_of(rcu, struct rxrpc_call, rcu);
-+	struct rxrpc_call *call = container_of(work, struct rxrpc_call, processor);
- 	struct rxrpc_net *rxnet = call->rxnet;
- 
- 	rxrpc_put_connection(call->conn);
-@@ -579,6 +579,22 @@ static void rxrpc_rcu_destroy_call(struc
- }
- 
- /*
-+ * Final call destruction under RCU.
-+ */
-+static void rxrpc_rcu_destroy_call(struct rcu_head *rcu)
-+{
-+	struct rxrpc_call *call = container_of(rcu, struct rxrpc_call, rcu);
-+
-+	if (in_softirq()) {
-+		INIT_WORK(&call->processor, rxrpc_destroy_call);
-+		if (!rxrpc_queue_work(&call->processor))
-+			BUG();
-+	} else {
-+		rxrpc_destroy_call(&call->processor);
-+	}
-+}
-+
-+/*
-  * clean up a call
-  */
- void rxrpc_cleanup_call(struct rxrpc_call *call)
+ 	struct sockaddr_in addr = {
 
 
