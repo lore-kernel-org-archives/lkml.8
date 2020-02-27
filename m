@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D20DFC76588
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70651C76578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAAA92468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BD9024697
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:34:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814130;
-	bh=dRaUUL+pxDwH61ORk0fXVR97JB5oqk3DOF9JstM3jIA=;
+	s=default; t=1582814098;
+	bh=XC+WPtSkfTm5ePQdr+PHvKYb9iGLo7xCq4HxNroYENU=;
 	h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=T+8wQ6grG1qyQseZHgXAk1JArYajWySs1/I1d8NJJW5Dl2pHCOQpgd/P+bijC3qcX
-	 5hgeuCCCwcStTFVSDyzg/bMjN8hmlqb+xQD+8iHNOLWV8vtdnt0vKyXXWSj87C8WOl
-	 me1ttLRoyfaczcOaoOvYLjNpaBgtSTf4pkswBqcE=
+	b=v8M2C32VZhnbRQFYE4JBPJHi9dzBHCs1JE3BypkmIR4bzUe5Yq6Rrebl+w0shhPfT
+	 5oXJwfFl8NI5w70Iyp9U6rcvqNZTCXA8zmJ2b8hkAdF1BetYjEnwjjCPO96qZvmizR
+	 oRj4fwxIuCV29Ut5HfFtGo/6SlTt8BurzYo8fab0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387703AbgB0OeG (ORCPT
+        id S2387982AbgB0OeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:34:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44996 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:34:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387542AbgB0OeB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:34:01 -0500
+        id S2387434AbgB0OeF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:34:05 -0500
 Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10CAB2469C;
-        Thu, 27 Feb 2020 14:34:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA247246B1;
+        Thu, 27 Feb 2020 14:34:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582814040;
-        bh=dRaUUL+pxDwH61ORk0fXVR97JB5oqk3DOF9JstM3jIA=;
+        s=default; t=1582814044;
+        bh=XC+WPtSkfTm5ePQdr+PHvKYb9iGLo7xCq4HxNroYENU=;
         h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=G8fnLZxlouo0f999umOZ0icsH8EI7Lwk1I60UsGcsZT2d/JbrZLSMDHUNNfl8jbui
-         /s01eKFW40jpu4vzEyWKgc6kY88Dm3J4H3ERHM8OsnlgoMVaK7vwfyPNebk/EOSfDl
-         FPa0XPrulHbk9zF64tY5HB1LeCC2WyhA5EgnpLkQ=
+        b=x0B0/y/zBgjCbMsNzn4PMOOwaNeQLcJaRag7kp/vzs+l3GS1X4A9B/5asiEHb349p
+         tta1we1QLW7MGZOK7myu04khcQWUaSNjRzGw6yMxDPFDS4W4I6LxALtBIhRv3I+iRu
+         4D2NC+WYK/OcBRsH7RocNrOt+wRBm/f88GtNHV4M=
 From:   zanussi@kernel.org
 To:     LKML <linux-kernel@vger.kernel.org>,
         linux-rt-users <linux-rt-users@vger.kernel.org>,
@@ -51,23 +51,20 @@ To:     LKML <linux-kernel@vger.kernel.org>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         Daniel Wagner <wagi@monom.org>,
         Tom Zanussi <zanussi@kernel.org>
-Subject: [PATCH RT 05/23] =?UTF-8?q?sched:=20migrate=5Fdis/enable:=20Use?= =?UTF-8?q?=20sleeping=5Flock=E2=80=A6()=20to=20annotate=20sleeping=20poin?= =?UTF-8?q?ts?=
-Date:   Thu, 27 Feb 2020 08:33:16 -0600
-Message-Id: <0078d43bf3e62b36f0890731c2f6fd277a93927b.1582814004.git.zanussi@kernel.org>
+Subject: [PATCH RT 09/23] lib/smp_processor_id: Don't use cpumask_equal()
+Date:   Thu, 27 Feb 2020 08:33:20 -0600
+Message-Id: <dc9753ab1be6bcd124b6e96dca353571dbdbaac7.1582814004.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1582814004.git.zanussi@kernel.org>
 References: <cover.1582814004.git.zanussi@kernel.org>
 In-Reply-To: <cover.1582814004.git.zanussi@kernel.org>
 References: <cover.1582814004.git.zanussi@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Scott Wood <swood@redhat.com>
+From: Waiman Long <longman@redhat.com>
 
 v4.14.170-rt75-rc2 stable review patch.
 If anyone has any objections, please let me know.
@@ -75,54 +72,42 @@ If anyone has any objections, please let me know.
 -----------
 
 
-[ Upstream commit 4230dd3824c3e1785504e6f757ce79a4b55651fa ]
+[ Upstream commit 659252061477862f45b79e1de169e6030f5c8918 ]
 
-Without this, rcu_note_context_switch() will complain if an RCU read lock
-is held when migrate_enable() calls stop_one_cpu().  Likewise when
-migrate_disable() calls pin_current_cpu() which calls __read_rt_lock() --
-which bypasses the part of the mutex code that calls sleeping_lock_inc().
+The check_preemption_disabled() function uses cpumask_equal() to see
+if the task is bounded to the current CPU only. cpumask_equal() calls
+memcmp() to do the comparison. As x86 doesn't have __HAVE_ARCH_MEMCMP,
+the slow memcmp() function in lib/string.c is used.
 
-Signed-off-by: Scott Wood <swood@redhat.com>
-[bigeasy: use sleeping_lock_…() ]
+On a RT kernel that call check_preemption_disabled() very frequently,
+below is the perf-record output of a certain microbenchmark:
+
+  42.75%  2.45%  testpmd [kernel.kallsyms] [k] check_preemption_disabled
+  40.01% 39.97%  testpmd [kernel.kallsyms] [k] memcmp
+
+We should avoid calling memcmp() in performance critical path. So the
+cpumask_equal() call is now replaced with an equivalent simpler check.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Tom Zanussi <zanussi@kernel.org>
-
- Conflicts:
-	kernel/sched/core.c
 ---
- kernel/cpu.c        | 2 ++
- kernel/sched/core.c | 3 +++
- 2 files changed, 5 insertions(+)
+ lib/smp_processor_id.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 05b93cfa6fd9..9be794896d87 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -314,7 +314,9 @@ void pin_current_cpu(void)
- 	preempt_lazy_enable();
- 	preempt_enable();
+diff --git a/lib/smp_processor_id.c b/lib/smp_processor_id.c
+index 6f4a4ae881c8..9f3c8bb62e57 100644
+--- a/lib/smp_processor_id.c
++++ b/lib/smp_processor_id.c
+@@ -23,7 +23,7 @@ notrace static unsigned int check_preemption_disabled(const char *what1,
+ 	 * Kernel threads bound to a single CPU can safely use
+ 	 * smp_processor_id():
+ 	 */
+-	if (cpumask_equal(current->cpus_ptr, cpumask_of(this_cpu)))
++	if (current->nr_cpus_allowed == 1)
+ 		goto out;
  
-+	sleeping_lock_inc();
- 	__read_rt_lock(cpuhp_pin);
-+	sleeping_lock_dec();
- 
- 	preempt_disable();
- 	preempt_lazy_disable();
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index fde47216af94..fcff75934bdc 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -7045,7 +7045,10 @@ void migrate_enable(void)
- 			unpin_current_cpu();
- 			preempt_lazy_enable();
- 			preempt_enable();
-+
-+			sleeping_lock_inc();
- 			stop_one_cpu(task_cpu(p), migration_cpu_stop, &arg);
-+			sleeping_lock_dec();
- 			tlb_migrate_finish(p->mm);
- 
- 			return;
+ 	/*
 -- 
 2.14.1
 
