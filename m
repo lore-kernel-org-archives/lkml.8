@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B13E5C3F35C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3007FC54FE8
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88EE9246A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFBFA24690
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812785;
-	bh=s9PRbJgZoRfil7RlXNlak23YZ7mHVGiUFrYZ5T47Uj4=;
+	s=default; t=1582812721;
+	bh=z1j6aTnUEqkUTnFIiJsPY/xhbrZ5X1v0IBrmGglsaCY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c2ohJZn4xemw3xCQYcpuxFiUDLFHkfrZW5kpq0jHCyKsmOu834W5i1nbVEBOMkhEq
-	 WMy4as8u05Xzt/G+Sv3GHov1fwoE5i/50z9Nd+qVca4eU1yOPrrMy4T6Kg3D5wdopr
-	 NxErsvSmxXklUpRKfRcwe2aDwr8QoSIrbCohNwCk=
+	b=qvXcA4dyDJjJdtOjKJdvgEye+HFpcBXGbzKVZ6RQrlFBeFOm5ZC0rvnyMTTyOO11w
+	 ryTkDW+fRTnLdXyQ3SvxGi01VEpWN2jm9kM6ggbLJx3PSNn19hj8dNVdkngvHdZ9jJ
+	 lTnRV1fAAyjj7QKQRCq1bVDLXbQrPs8asKy9NuWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388939AbgB0ONE (ORCPT
+        id S2388384AbgB0OL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:13:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51814 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:11:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388719AbgB0OM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:12:58 -0500
+        id S2388553AbgB0OL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:11:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F10020578;
-        Thu, 27 Feb 2020 14:12:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76BAC20578;
+        Thu, 27 Feb 2020 14:11:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812777;
-        bh=s9PRbJgZoRfil7RlXNlak23YZ7mHVGiUFrYZ5T47Uj4=;
+        s=default; t=1582812715;
+        bh=z1j6aTnUEqkUTnFIiJsPY/xhbrZ5X1v0IBrmGglsaCY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gm266H4odsENRqXeYb9OMerYowz57EWRmKkM7c4zM3iVF8BboEElFK9XlmARYvUEC
-         Kmdpz/iDOTJ8sbj636pJWaLiHW0qDiBOkzTG1ZXEomuRosVVdzCr7Fw1cQUjLW0skk
-         LnyccmFV0Dur2I93Wglosgym0DzGTtjNRXYMqkIc=
+        b=l9R1g324OxM98yfapBqhG0laq6KKSqi4oNvZOHxqqU54XaQigwGkVLL4eoWHOpQp3
+         Wsb02l6Aj8md8Pwc8qvjTiU/oukZ8iJxU2SClIuiNuKxY0g6gICRhkQp7I4nNEO9Sw
+         ELhLHiXTGQdiQ2N8KUiGps0w67+m8qPrg12qr2E4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
-        Petr Vorel <pvorel@suse.cz>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH 5.5 013/150] tpm: Initialize crypto_id of allocated_banks to HASH_ALGO__LAST
-Date:   Thu, 27 Feb 2020 14:35:50 +0100
-Message-Id: <20200227132234.635198004@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+fd5e0eaa1a32999173b2@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 124/135] ALSA: seq: Fix concurrent access to queue current tick/time
+Date:   Thu, 27 Feb 2020 14:37:44 +0100
+Message-Id: <20200227132247.710648244@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
-References: <20200227132232.815448360@linuxfoundation.org>
+In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
+References: <20200227132228.710492098@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,45 +60,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roberto Sassu <roberto.sassu@huawei.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit dc10e4181c05a2315ddc375e963b7c763b5ee0df upstream.
+commit dc7497795e014d84699c3b8809ed6df35352dd74 upstream.
 
-chip->allocated_banks, an array of tpm_bank_info structures, contains the
-list of TPM algorithm IDs of allocated PCR banks. It also contains the
-corresponding ID of the crypto subsystem, so that users of the TPM driver
-can calculate a digest for a PCR extend operation.
+snd_seq_check_queue() passes the current tick and time of the given
+queue as a pointer to snd_seq_prioq_cell_out(), but those might be
+updated concurrently by the seq timer update.
 
-However, if there is no mapping between TPM algorithm ID and crypto ID, the
-crypto_id field of tpm_bank_info remains set to zero (the array is
-allocated and initialized with kcalloc() in tpm2_get_pcr_allocation()).
-Zero should not be used as value for unknown mappings, as it is a valid
-crypto ID (HASH_ALGO_MD4).
+Fix it by retrieving the current tick and time via the proper helper
+functions at first, and pass those values to snd_seq_prioq_cell_out()
+later in the loops.
 
-Thus, initialize crypto_id to HASH_ALGO__LAST.
+snd_seq_timer_get_cur_time() takes a new argument and adjusts with the
+current system time only when it's requested so; this update isn't
+needed for snd_seq_check_queue(), as it's called either from the
+interrupt handler or right after queuing.
 
-Cc: stable@vger.kernel.org # 5.1.x
-Fixes: 879b589210a9 ("tpm: retrieve digest size of unknown algorithms with PCR read")
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-Reviewed-by: Petr Vorel <pvorel@suse.cz>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Also, snd_seq_timer_get_cur_tick() is changed to read the value in the
+spinlock for the concurrency, too.
+
+Reported-by: syzbot+fd5e0eaa1a32999173b2@syzkaller.appspotmail.com
+Link: https://lore.kernel.org/r/20200214111316.26939-3-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/tpm/tpm2-cmd.c |    2 ++
- 1 file changed, 2 insertions(+)
+ sound/core/seq/seq_clientmgr.c |    4 ++--
+ sound/core/seq/seq_queue.c     |    9 ++++++---
+ sound/core/seq/seq_timer.c     |   13 ++++++++++---
+ sound/core/seq/seq_timer.h     |    3 ++-
+ 4 files changed, 20 insertions(+), 9 deletions(-)
 
---- a/drivers/char/tpm/tpm2-cmd.c
-+++ b/drivers/char/tpm/tpm2-cmd.c
-@@ -525,6 +525,8 @@ static int tpm2_init_bank_info(struct tp
- 		return 0;
+--- a/sound/core/seq/seq_clientmgr.c
++++ b/sound/core/seq/seq_clientmgr.c
+@@ -580,7 +580,7 @@ static int update_timestamp_of_queue(str
+ 	event->queue = queue;
+ 	event->flags &= ~SNDRV_SEQ_TIME_STAMP_MASK;
+ 	if (real_time) {
+-		event->time.time = snd_seq_timer_get_cur_time(q->timer);
++		event->time.time = snd_seq_timer_get_cur_time(q->timer, true);
+ 		event->flags |= SNDRV_SEQ_TIME_STAMP_REAL;
+ 	} else {
+ 		event->time.tick = snd_seq_timer_get_cur_tick(q->timer);
+@@ -1659,7 +1659,7 @@ static int snd_seq_ioctl_get_queue_statu
+ 	tmr = queue->timer;
+ 	status->events = queue->tickq->cells + queue->timeq->cells;
+ 
+-	status->time = snd_seq_timer_get_cur_time(tmr);
++	status->time = snd_seq_timer_get_cur_time(tmr, true);
+ 	status->tick = snd_seq_timer_get_cur_tick(tmr);
+ 
+ 	status->running = tmr->running;
+--- a/sound/core/seq/seq_queue.c
++++ b/sound/core/seq/seq_queue.c
+@@ -238,6 +238,8 @@ void snd_seq_check_queue(struct snd_seq_
+ {
+ 	unsigned long flags;
+ 	struct snd_seq_event_cell *cell;
++	snd_seq_tick_time_t cur_tick;
++	snd_seq_real_time_t cur_time;
+ 
+ 	if (q == NULL)
+ 		return;
+@@ -254,17 +256,18 @@ void snd_seq_check_queue(struct snd_seq_
+ 
+       __again:
+ 	/* Process tick queue... */
++	cur_tick = snd_seq_timer_get_cur_tick(q->timer);
+ 	for (;;) {
+-		cell = snd_seq_prioq_cell_out(q->tickq,
+-					      &q->timer->tick.cur_tick);
++		cell = snd_seq_prioq_cell_out(q->tickq, &cur_tick);
+ 		if (!cell)
+ 			break;
+ 		snd_seq_dispatch_event(cell, atomic, hop);
  	}
  
-+	bank->crypto_id = HASH_ALGO__LAST;
-+
- 	return tpm2_pcr_read(chip, 0, &digest, &bank->digest_size);
+ 	/* Process time queue... */
++	cur_time = snd_seq_timer_get_cur_time(q->timer, false);
+ 	for (;;) {
+-		cell = snd_seq_prioq_cell_out(q->timeq, &q->timer->cur_time);
++		cell = snd_seq_prioq_cell_out(q->timeq, &cur_time);
+ 		if (!cell)
+ 			break;
+ 		snd_seq_dispatch_event(cell, atomic, hop);
+--- a/sound/core/seq/seq_timer.c
++++ b/sound/core/seq/seq_timer.c
+@@ -422,14 +422,15 @@ int snd_seq_timer_continue(struct snd_se
  }
  
+ /* return current 'real' time. use timeofday() to get better granularity. */
+-snd_seq_real_time_t snd_seq_timer_get_cur_time(struct snd_seq_timer *tmr)
++snd_seq_real_time_t snd_seq_timer_get_cur_time(struct snd_seq_timer *tmr,
++					       bool adjust_ktime)
+ {
+ 	snd_seq_real_time_t cur_time;
+ 	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&tmr->lock, flags);
+ 	cur_time = tmr->cur_time;
+-	if (tmr->running) { 
++	if (adjust_ktime && tmr->running) {
+ 		struct timespec64 tm;
+ 
+ 		ktime_get_ts64(&tm);
+@@ -446,7 +447,13 @@ snd_seq_real_time_t snd_seq_timer_get_cu
+  high PPQ values) */
+ snd_seq_tick_time_t snd_seq_timer_get_cur_tick(struct snd_seq_timer *tmr)
+ {
+-	return tmr->tick.cur_tick;
++	snd_seq_tick_time_t cur_tick;
++	unsigned long flags;
++
++	spin_lock_irqsave(&tmr->lock, flags);
++	cur_tick = tmr->tick.cur_tick;
++	spin_unlock_irqrestore(&tmr->lock, flags);
++	return cur_tick;
+ }
+ 
+ 
+--- a/sound/core/seq/seq_timer.h
++++ b/sound/core/seq/seq_timer.h
+@@ -120,7 +120,8 @@ int snd_seq_timer_set_tempo_ppq(struct s
+ int snd_seq_timer_set_position_tick(struct snd_seq_timer *tmr, snd_seq_tick_time_t position);
+ int snd_seq_timer_set_position_time(struct snd_seq_timer *tmr, snd_seq_real_time_t position);
+ int snd_seq_timer_set_skew(struct snd_seq_timer *tmr, unsigned int skew, unsigned int base);
+-snd_seq_real_time_t snd_seq_timer_get_cur_time(struct snd_seq_timer *tmr);
++snd_seq_real_time_t snd_seq_timer_get_cur_time(struct snd_seq_timer *tmr,
++					       bool adjust_ktime);
+ snd_seq_tick_time_t snd_seq_timer_get_cur_tick(struct snd_seq_timer *tmr);
+ 
+ extern int seq_default_timer_class;
 
 
