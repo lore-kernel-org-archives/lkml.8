@@ -2,106 +2,189 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA748C3F2C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85110C3F2C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 895152469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:11:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AONhiIW3"
+	by mail.kernel.org (Postfix) with ESMTP id 4D9DD246A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:11:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582837882;
+	bh=a0k3dQtn0xIAtZFfz5o9NyeAnbxdMiSKnb2eX/p6TCU=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=w1OM02LqJK9yYvYBsVrPzrOSYs2tR0EBE0oJLm7RHOykGhu5dqpswg+PmwBc34G4E
+	 LQNQegdFbIn3UnxsPk1786MfWiePXgxZii5l2auV0tFw2cfusqs8vYlTdl37XsReEe
+	 75s0Jw/PEbrqCr1CcJw9bfPP1ag7AHB5HO9Hehws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729740AbgB0VLP (ORCPT
+        id S1729855AbgB0VLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 16:11:15 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:54820 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbgB0VLO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 16:11:14 -0500
-Received: by mail-pj1-f67.google.com with SMTP id dw13so313540pjb.4;
-        Thu, 27 Feb 2020 13:11:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Vn2qdMNVtzmTptemarLkmeAQtuC77a4d836dzPxB5VY=;
-        b=AONhiIW3W0Ge7r2OROQVTEDOY/Muz6N+l/AJQzVAQTeiymt7Ls7JttstYeqYGLjLJV
-         fBU+97SrxyDB4jStEuufV+ZiGmMQtDNJCi44m9c7hMoIuwCMlAG0XKKRutTKxKKvKC0F
-         9xx6fj8RxOTY+aglMrEMhXQMEjazSVjBQlMsxW0WhZz4InOzRiIYlDU/4WjJ8kJl7ty+
-         LUVvi4vatINRq5BdBV9V+4TxtA8bhrtFbR2xoy0B0/z/hXlh8xRnrNr8xwKYrE99RRwz
-         +zFFtYFwiUx5r61wlNGeu8d9d/Dbtptyr4uTKSwdidYvSykkZ5Io6GYj7XlGUleud57H
-         N1Ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Vn2qdMNVtzmTptemarLkmeAQtuC77a4d836dzPxB5VY=;
-        b=FDLg7SegWMuMjjZ8nrQkOPf0gOcuZQJZsB9OkdXguZGk6FlnxyLHL3YpnE6CAFaM98
-         pCX9gjT3/fmC4/+n2JV2sTqxOqj+C/ekplfY9J+6FF6wQedvSI9XZK5QD1Yr4qtxkaIa
-         E0OA6uUwB0PTEF4NHGUHUMFn7SMXy2S9qlBCL4yDUDq7Rc7SVSJ7dGtF1J8CcjGyY4zy
-         bepcj1pvpNqCghh7YsY9nzVlx3DxLQ8JpuVxhZQmmkUaW5MLambp33ZJc+BfLSyELPFo
-         BRpK5bXaRU9co7MtU5Q3dNyXGabSvoMB9EwMq9cbLloJdi2n02eD+xYMMvnFI+YCE49A
-         yBkg==
-X-Gm-Message-State: APjAAAXnRQtHxGzdoJQ8AXsFtMSUMxBc5U6EOk28Nfnp21nqKYCTkGGD
-        BdbEceDPVMXhIn6gbLo+8g==
-X-Google-Smtp-Source: APXvYqxoQQj1fnYLsu6+7XFbap7bfIOGjDd5lJFw8GC9SapC3mUGkSf3sK+q2+ztL0Gc2aOZBbTGMw==
-X-Received: by 2002:a17:90b:3590:: with SMTP id mm16mr878870pjb.112.1582837873689;
-        Thu, 27 Feb 2020 13:11:13 -0800 (PST)
-Received: from localhost.localdomain ([157.41.21.90])
-        by smtp.gmail.com with ESMTPSA id z27sm8548016pfj.107.2020.02.27.13.11.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 27 Feb 2020 13:11:13 -0800 (PST)
-From:   vivek m <bitu.kv@gmail.com>
-To:     valdis.kletnieks@vt.edu
-Cc:     gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        vivek m <bitu.kv@gmail.com>
-Subject: [PATCH] Staging: exfat: fixed a long line coding style issue
-Date:   Thu, 27 Feb 2020 21:11:05 +0000
-Message-Id: <1582837865-2219-1-git-send-email-bitu.kv@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 27 Feb 2020 16:11:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44758 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726758AbgB0VLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 16:11:20 -0500
+Received: from paulmck-ThinkPad-P72.home (unknown [163.114.132.128])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BDAA2469F;
+        Thu, 27 Feb 2020 21:11:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582837880;
+        bh=a0k3dQtn0xIAtZFfz5o9NyeAnbxdMiSKnb2eX/p6TCU=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=UqAMnfOdc8LJ4TdDA3g3AkalEFSQapnQpW4Jl2sbZRrx+2bAG5ZwYh8bU4gCHK3Z1
+         niS8jpSFG8gY1Bv2xb25CptSVrU0mTzQEN5Aa48QrE3fYZSbsN4MiwL3CSlwgaAcq5
+         o4IRib8EWEP0Nmc8b1y5o5gUonoPY+gpljRDtXjk=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 9563535226F3; Thu, 27 Feb 2020 13:11:19 -0800 (PST)
+Date:   Thu, 27 Feb 2020 13:11:19 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Chris Kennelly <ckennelly@google.com>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Paul Turner <pjt@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Carlos O'Donell <codonell@redhat.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Brian Geffon <bgeffon@google.com>, davidgoldblatt@fb.com
+Subject: Re: Rseq registration: Google tcmalloc vs glibc
+Message-ID: <20200227211119.GE2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <1503467992.2999.1582234410317.JavaMail.zimbra@efficios.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1503467992.2999.1582234410317.JavaMail.zimbra@efficios.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixed a coding style issue
+Apologies for top-posting, and adding David Goldblatt of the jemalloc()
+group on CC.  I have bounced the rest of the email chain to him.
 
-Signed-off-by: Vivek M <bitu.kv@gmail.com>
----
- drivers/staging/exfat/exfat_blkdev.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+							Thanx, Paul
 
-diff --git a/drivers/staging/exfat/exfat_blkdev.c b/drivers/staging/exfat/exfat_blkdev.c
-index 0a3dc35..ddff019 100644
---- a/drivers/staging/exfat/exfat_blkdev.c
-+++ b/drivers/staging/exfat/exfat_blkdev.c
-@@ -30,8 +30,9 @@ void exfat_bdev_close(struct super_block *sb)
- 	p_bd->opened = false;
- }
- 
--int exfat_bdev_read(struct super_block *sb, sector_t secno, struct buffer_head **bh,
--		    u32 num_secs, bool read)
-+int exfat_bdev_read(struct super_block *sb, sector_t secno,
-+		    struct buffer_head **bh, u32 num_secs,
-+		    bool read)
- {
- 	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
- 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
-@@ -65,7 +66,8 @@ int exfat_bdev_read(struct super_block *sb, sector_t secno, struct buffer_head *
- 	return -EIO;
- }
- 
--int exfat_bdev_write(struct super_block *sb, sector_t secno, struct buffer_head *bh,
-+int exfat_bdev_write(struct super_block *sb, sector_t secno,
-+		     struct buffer_head *bh,
- 		     u32 num_secs, bool sync)
- {
- 	s32 count;
--- 
-2.7.4
-
+On Thu, Feb 20, 2020 at 04:33:30PM -0500, Mathieu Desnoyers wrote:
+> Hi Chris,
+> 
+> As one of the maintainers of the Rseq system call in the Linux kernel, I would
+> like to thank the Google team for open sourcing a tcmalloc implementation based
+> on Rseq!
+> 
+> I've looked into some critical integration aspects of the tcmalloc implementation,
+> and would like to bring up a topic which involves both tcmalloc developers and the
+> glibc community.
+> 
+> I have been discussing aspects of co-existence between early Rseq adopter libraries
+> and glibc for the past year with the glibc community, and tcmalloc happens to be the
+> first project to publicly use Rseq outside of prototype branches or selftests code.
+> Considering that there can only be one Rseq registration per thread (as imposed by
+> the rseq ABI), there needs to be some kind of protocol between libraries to ensure we
+> don't introduce regressions when we eventually combine a newer glibc which takes care
+> of registration of the __rseq_abi TLS along with tcmalloc which also try to perform
+> that registration within the same thread.
+> 
+> Throughout the various rounds of review of the glibc Rseq integration patch set,
+> there were a few solutions envisioned. Here is a brief history:
+> 
+> 1) Introduce a __rseq_refcount TLS variable.
+> 
+> - Currently used by Linux tools/testing/selftests/rseq/rseq.c,
+> - Currently used by Google tcmalloc,
+> - Emitted by glibc as well my the original patchset (but was later removed),
+> 
+> A user incrementing the refcount from 0 -> 1 performs rseq registration.
+> The last user decrementing from 1 -> 0 performs rseq unregistration.
+> 
+> Works for co-existence of dlopen'd/dlclose'd libraries, for dynamically
+> linked libraries, and for the main executable.
+> 
+> The refcounting was deemed too complex for glibc's needs (it always
+> exists for the entire executable's lifetime), so we moved to
+> __rseq_handled instead.
+> 
+> 
+> 2) Introduce a __rseq_handled global variable.
+> 
+> - Currently used by Linux tools/testing/selftests/rseq/rseq.c,
+> - At some point emitted by glibc as well in my patch set (but was later
+>   removed),
+> 
+> A library may take rseq ownership if it is still 0 when executing the
+> library constructor. Set to 1 by library constructor when handling rseq.
+> Set to 0 in destructor if handling rseq.
+> 
+> Not meant to be set by dlopen'd/dlclose'd libraries, only by libraries
+> existing for the whole lifetime of the executable and/or the main executable.
+> 
+> This __rseq_handled symbol has been identified as being somewhat redundant
+> with the information provided in the __rseq_abi.cpu_id field (uninitialized
+> state), which motivated removing this symbol from the glibc integration
+> entirely. The only reason for having __rseq_handled separate from
+> __rseq_abi.cpu_id was because it was then impossible to touch TLS data
+> early in the glibc initialization. This issue was later resolved within
+> glibc.
+> 
+> 
+> 3) Use the  __rseq_abi TLS cpu_id field to know whether Rseq has been
+> registered.
+> 
+> - Current protocol in the most recent glibc integration patch set.
+> - Not supported yet by Linux kernel rseq selftests,
+> - Not supported yet by tcmalloc,
+> 
+> Use the per-thread state to figure out whether each thread need to register
+> Rseq individually.
+> 
+> Works for integration between a library which exists for the entire lifetime
+> of the executable (e.g. glibc) and other libraries. However, it does not
+> allow a set of libraries which are dlopen'd/dlclose'd to co-exist without
+> having a library like glibc handling the registration present.
+> 
+> So overall, I suspect the protocol we want for early adopters is that they
+> only register Rseq if __rseq_abi.cpu_id == RSEQ_CPU_ID_UNINITIALIZED, which
+> ensure they do not get -1, errno = EBUSY when linked against a newer glibc
+> which handles Rseq registration. In order to handle multiple early adopters
+> dlopen'd/dlclose'd in the same executable, those should synchronize with a
+> __rseq_refcount TLS reference count, but it does not have to be taken into
+> account by the main executable or libraries present for the entire executable
+> lifetime (like glibc).
+> 
+> Based on this, what I think would be missing from the current Google tcmalloc
+> implementation is a check for __rseq_abi.cpu_id == RSEQ_CPU_ID_UNINITIALIZED
+> in InitThreadPerCpu().
+> 
+> Is tcmalloc ever meant to be dlopen'd/dlclose'd (either directly or indirectly),
+> or is it required to exist for the entire executable lifetime ? The check and
+> increment of __rseq_refcount is only useful to co-exist with dlopen'd/dlclose'd
+> libraries, but it would not allow discovering the presence of a glibc which
+> takes care of the rseq registration with the planned protocol. A dlopen'd
+> library should then only perform rseq unregistration if if brings the
+> __rseq_refcount back to 0 (e.g. in a pthread_key destructor).
+> 
+> Adding this check for __rseq_abi.cpu_id == RSEQ_CPU_ID_UNINITIALIZED is something
+> I need to do in the Linux rseq selftests, but I refrained from submitting any
+> further change to those tests until the glibc rseq integration gets finally
+> merged.
+> 
+> Is it something that could be easily changed at this stage in Google tcmalloc,
+> or should we reconsider adding back __rseq_refcount within the glibc integration
+> patch set, even though it is not strictly useful to glibc ?
+> 
+> Thanks,
+> 
+> Mathieu
+> 
+> -- 
+> Mathieu Desnoyers
+> EfficiOS Inc.
+> http://www.efficios.com
