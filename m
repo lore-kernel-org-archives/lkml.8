@@ -2,189 +2,105 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF00C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28DB9C35677
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 992CA2469C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00C62246A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:05:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="d+HtWXCN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729751AbgB0QFM (ORCPT
+        id S1729926AbgB0QFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 11:05:12 -0500
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:38944 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729134AbgB0QFM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 11:05:12 -0500
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Eugen.Hristev@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="Eugen.Hristev@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: FjceEtYSB+UnStdLVlMcw4Vf7NArZkglw6A4SBlhuQQeh0UyiNgfpLej9+QyV9E/ek62q7k7zd
- Wn4BsHcn+N+BToTFz6ki32sIjVbAROPqtoVfomhdu670oRIaCRd6DkVXLSwS/Dt7sMbUzfDGn6
- PY0EBOG9tGaNMT37f3BfQ9I812NdFVzxApaJzAh1REPUqIMmyOivNp27ojt6u3KPv2bIyv4krF
- 2Wr8GEaUKiwvCCtH0eiPlLugGwhimAzLs8P4Ey6IoLFHz+WcdQGINbalxpUl1GcJavhz005dKe
- BM0=
-X-IronPort-AV: E=Sophos;i="5.70,492,1574146800"; 
-   d="scan'208";a="68213347"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Feb 2020 09:05:10 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 27 Feb 2020 09:05:10 -0700
-Received: from ROB-ULT-M18282.microchip.com (10.10.115.15) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Thu, 27 Feb 2020 09:05:21 -0700
-From:   Eugen Hristev <eugen.hristev@microchip.com>
-To:     <dave.stevenson@raspberrypi.com>, <andrey.konovalov@linaro.org>,
-        <sakari.ailus@iki.fi>, <linux-media@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Eugen Hristev <eugen.hristev@microchip.com>
-Subject: [PATCH v2] media: i2c: imx219: add support for enum frame interval
-Date:   Thu, 27 Feb 2020 18:03:43 +0200
-Message-ID: <20200227160343.2833-1-eugen.hristev@microchip.com>
+        Thu, 27 Feb 2020 11:05:32 -0500
+Received: from mout.gmx.net ([212.227.15.19]:60517 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729134AbgB0QFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 11:05:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1582819527;
+        bh=eWtVTwa1th7imei13HiGdPvoztRW0QEQEO0StELpaQk=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=d+HtWXCNUAi3CZGJK9aNSrgaENvpX7uPKj9Af+PmU5hZ/rAkkCW3M584V56PE47nC
+         xz+6+iD8zMU1MN3UUDIQSq6ZNQXV2iiaeAMPK9BIG1gGLF8JBhNLf861rixZrpBIxL
+         UFfVjvX7LQXfgoSu3oz4pwcbSUo66LTQgeKpuu4c=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.194.148]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MF3DW-1jDvFn09Ky-00FUlX; Thu, 27
+ Feb 2020 17:05:27 +0100
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     devicetree@vger.kernel.org
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: mfd: tps65910: Improve grammar
+Date:   Thu, 27 Feb 2020 17:05:21 +0100
+Message-Id: <20200227160522.17582-1-j.neuschaefer@gmx.net>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:zPc9krwbnc26FIFGxqw464VWx4CGeOTSxHzZVRxdjjCbFkGxwf1
+ LuMRkl/p9EEACIl8yy5z/DhEvEoGJpWeGWhDYEdDJ7AdNiru2BpCLPy4gdunbcTVL8LnTIr
+ k3X1mdqaEYyjUeyd8byhw4O70W1vVMb193X3V6+jkca67sPbRbF2wDGDH/0yQ6BKmgirxC6
+ 4vBJ/ZWaLwqoET+vbKXyg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:9EOg5/1GM1Q=:mQOiaxLiwsvUT53LiglLrt
+ qthwv7B6MKJLBegv4s6JBK0KxBy+BDC0Q4xTgs4pFQ7rCct3MVFTt0FJWShtaMTkTFvMNLunG
+ 3sgK6fKN7h6qBP6NJixnKl5Di6GTFVV5M07UZhlwJTIzw/wiHkoDXDBVDDWE7Ee7Ukb69PXI2
+ P8Oc7ltQNtv1+NkDiy58RSnxR/2xR1LBr+udyTPYFDuyIWeNqSzw0mA9Jqqw5et1aYkQe6U8l
+ THqXxIL7Jtq2Vbk6zHfu5c3EE6mvDEAJXiCmATgSKdwun8v6x4GWD/oXAGvW+QWwfhB8gBXwb
+ DyQnhuLSYGlmnry+RfOU558ZSL78yKwrNHGJMHZD0IjEHkfoz1CAR8brnYhuVCHUQl3Hb3Epq
+ CdVbqm2YskMsUuJoBlE2iriI5Tvj4S8fizmqM7g+Dg7enkLKTTrtU6nnINYLGy6OCYmiCez0n
+ fAxXWBC8+ToBk4knznHSY4MiNCinLeMmPM/A25W+dME9ruhtpgjNBXXyYJYlviik/5cEYIcbY
+ XHDOm0G14sqO1aTe7bFFaQwhI4hORj/6WKI0OovsT2mV/9+s2Ex63Y1jfIHG9qAxlmfIhknEf
+ MnGX9dojPcjQoK/jap8Q2h3v5+LPKgkUuhmeUk/95hlZiY5zBaEP0Sm6METjHstaGxCiJ3exY
+ kCJY4r/JfL6yTk+mTZzdQU7QO3WaIyVRYy3SPhqpu5ReOgRisfgSuzkCCdqnHVUSf7+hEz/aF
+ iHN+iaabTh0+o/b3mgdrlvLruwFWQ5UDgZ+sCzFVo/R6/5wr8LZwK08gaghEUeKOGAiY3nJsf
+ KJ2NvrBAm4LQmltd1mX9oHzmNjQPNdVT7DZJPIie2yE3ySk6sgvLIjNuz4BOBeyaXZE36SeQi
+ 6MM4a7H9u48QSgU1nF1Z6l2Zt/7pjuYdflO6CrqCXm6Pvh+AaMRSRGlTJNJAPNheDg3gVTVOQ
+ SHjAixUo0ppHw7mrb2+al5mxtTvbDVUHyIp8QIsLwLu0VIgvzJ/eOxxj1JEGSS30T4dnTHiDo
+ TSs3PL2Yow57dNyHUzwvnyNf1SNhAcs3dnHISR/ICIkkaA2cV1AX5xmJg/vBJXOxXIewwh/RI
+ T8DAOaZWcP/FwsvtZk0VKAYPIo9lnduK9E/LVQq8pMMK6fSk506u3Ey2cEEyQl3doaKbSUv3q
+ MrkTXFG3uCKv11f09Sf6vCx5BTGB+Nun7RR0dbJQtsf6uJ0C0Oz0joRJuv7N6aWJBeizMMD55
+ uefSV7U0sFOQgyV4V
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for enum frame intervals IOCTL.
-The current supported framerates are only available as comments inside
-the code.
-Add support for VIDIOC_ENUM_FRAMEINTERVALS as the enum_frame_interval
-callback as pad ops.
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ Documentation/devicetree/bindings/mfd/tps65910.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- # v4l2-ctl --list-frameintervals width=1920,height=1080,pixelformat=RG10
- ioctl: VIDIOC_ENUM_FRAMEINTERVALS
-        Interval: Discrete 0.067s (15.000 fps)
-        Interval: Discrete 0.033s (30.000 fps)
-        Interval: Discrete 0.033s (30.000 fps)
+diff --git a/Documentation/devicetree/bindings/mfd/tps65910.txt b/Document=
+ation/devicetree/bindings/mfd/tps65910.txt
+index 4f62143afd24..a5ced46bbde9 100644
+=2D-- a/Documentation/devicetree/bindings/mfd/tps65910.txt
++++ b/Documentation/devicetree/bindings/mfd/tps65910.txt
+@@ -26,8 +26,8 @@ Required properties:
+             ldo6, ldo7, ldo8
 
-test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
----
-
-Changes in v2:
-
-v4l2-compliance was failing on setting another resolution:
-
-fail: v4l2-test-formats.cpp(126): found frame intervals for invalid size 3281x2464
-
-So fixed now by checking size:
-
-test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-
-
- drivers/media/i2c/imx219.c | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
-
-diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
-index f1effb5a5f66..2bdcaef0c89f 100644
---- a/drivers/media/i2c/imx219.c
-+++ b/drivers/media/i2c/imx219.c
-@@ -127,6 +127,8 @@ struct imx219_mode {
- 	unsigned int width;
- 	/* Frame height */
- 	unsigned int height;
-+	/* Frame rate */
-+	u8 fps;
- 
- 	/* V-timing */
- 	unsigned int vts_def;
-@@ -381,6 +383,7 @@ static const struct imx219_mode supported_modes[] = {
- 		/* 8MPix 15fps mode */
- 		.width = 3280,
- 		.height = 2464,
-+		.fps = 15,
- 		.vts_def = IMX219_VTS_15FPS,
- 		.reg_list = {
- 			.num_of_regs = ARRAY_SIZE(mode_3280x2464_regs),
-@@ -391,6 +394,7 @@ static const struct imx219_mode supported_modes[] = {
- 		/* 1080P 30fps cropped */
- 		.width = 1920,
- 		.height = 1080,
-+		.fps = 30,
- 		.vts_def = IMX219_VTS_30FPS_1080P,
- 		.reg_list = {
- 			.num_of_regs = ARRAY_SIZE(mode_1920_1080_regs),
-@@ -401,6 +405,7 @@ static const struct imx219_mode supported_modes[] = {
- 		/* 2x2 binned 30fps mode */
- 		.width = 1640,
- 		.height = 1232,
-+		.fps = 30,
- 		.vts_def = IMX219_VTS_30FPS_BINNED,
- 		.reg_list = {
- 			.num_of_regs = ARRAY_SIZE(mode_1640_1232_regs),
-@@ -680,6 +685,36 @@ static int imx219_enum_frame_size(struct v4l2_subdev *sd,
- 	return 0;
- }
- 
-+static int imx219_enum_frame_interval(struct v4l2_subdev *sd,
-+				      struct v4l2_subdev_pad_config *cfg,
-+				      struct v4l2_subdev_frame_interval_enum *fie)
-+{
-+	struct imx219 *imx219 = to_imx219(sd);
-+	const struct imx219_mode *mode;
-+
-+	if (fie->index >= ARRAY_SIZE(supported_modes))
-+		return -EINVAL;
-+
-+	if (fie->code != imx219_get_format_code(imx219))
-+		return -EINVAL;
-+
-+	if (fie->pad)
-+		return -EINVAL;
-+
-+	mode = v4l2_find_nearest_size(supported_modes,
-+				      ARRAY_SIZE(supported_modes),
-+				      width, height,
-+				      fie->width, fie->height);
-+
-+	if (mode->width != fie->width || mode->height != fie->height)
-+		return -EINVAL;
-+
-+	fie->interval.numerator = 1;
-+	fie->interval.denominator = supported_modes[fie->index].fps;
-+
-+	return 0;
-+}
-+
- static void imx219_reset_colorspace(struct v4l2_mbus_framefmt *fmt)
- {
- 	fmt->colorspace = V4L2_COLORSPACE_SRGB;
-@@ -1004,6 +1039,7 @@ static const struct v4l2_subdev_pad_ops imx219_pad_ops = {
- 	.get_fmt = imx219_get_pad_format,
- 	.set_fmt = imx219_set_pad_format,
- 	.enum_frame_size = imx219_enum_frame_size,
-+	.enum_frame_interval = imx219_enum_frame_interval,
- };
- 
- static const struct v4l2_subdev_ops imx219_subdev_ops = {
--- 
+ - xxx-supply: Input voltage supply regulator.
+-  These entries are require if regulators are enabled for a device. Missi=
+ng of these
+-  properties can cause the regulator registration fails.
++  These entries are required if regulators are enabled for a device. Miss=
+ing these
++  properties can cause the regulator registration to fail.
+   If some of input supply is powered through battery or always-on supply =
+then
+   also it is require to have these parameters with proper node handle of =
+always
+   on power supply.
+=2D-
 2.20.1
 
