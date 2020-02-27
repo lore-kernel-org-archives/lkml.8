@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC361C3F352
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24335C54FDA
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 849532468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0FAD246A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813142;
-	bh=pJEZ+mxYnsHGTqanPK8HsJfcvSEjj2ll8edp+o/tCM8=;
+	s=default; t=1582813085;
+	bh=sevjY8YSiEJ4WfRWOh772n1GYlFHoWmY89hx6uednB0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1MhEdSxMrfr31CjGZkKjQ1D4CAP6CnHTyDVgggUCaeeMli8dWGVoh+S+AU6DE7BhM
-	 ULhTqOF9wnAl1drylSbwVyziXFrlUtNafxMOSaGZB84kJL1UR6bb0yLoGZBCC5lFQ4
-	 CeGmHzvEZBdhvBgKRw1LzfwOIZYxqSqwKpu7EGYA=
+	b=wPwdFQPnyJeYeU43Db0DijmZK6vJ/cFTcARvOy6EB2dAhau6/ak6BoR7JoHW05sac
+	 hglSFPVdC6gXy521HjzaZubvgMpFu09laYYuzcoC+CgWMLDY7CTGLZKcxLL+dCl8EZ
+	 0KnjTtWQZGpRxj7CWRAwA5gq1DIUOcDb/tjRRUKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389944AbgB0OSw (ORCPT
+        id S2389806AbgB0OSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:18:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59368 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:18:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389932AbgB0OSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:18:46 -0500
+        id S2389254AbgB0ORz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:17:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF0D824697;
-        Thu, 27 Feb 2020 14:18:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4B75246A4;
+        Thu, 27 Feb 2020 14:17:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813126;
-        bh=pJEZ+mxYnsHGTqanPK8HsJfcvSEjj2ll8edp+o/tCM8=;
+        s=default; t=1582813075;
+        bh=sevjY8YSiEJ4WfRWOh772n1GYlFHoWmY89hx6uednB0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XVFKQu2dDHOdQ/7HU5ZOThdjA5izRJd7WPpkt2XmI3ABzt7Heefs6kqWvr9PSMWLs
-         40rZODLVlp8tyPfnEjIWNCnDiCPL+mmctgHzUlO++FEck8fnpVqkGaV8YYZNDC31is
-         E9K3IMqVW4uORbbHuWHfp1t4HsCgbk/mLlObKtpk=
+        b=TuTTpcC5203f8pTHjWPK0gOTe+7Z2xMPgj+8BSWfOBvWJSBJKYZ0PmXYp9xq0gBCJ
+         p67+NbUHCGoiR9aJ3ZEuIgRqPjDXdOxhNFtRkv89MDGjbHzYM5+CXGrMNtcJnld32F
+         Ta2AOp7r8q0XdBLNP3gEtHlSYyZtTs+aS4kWra78=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huy Nguyen <huyn@mellanox.com>,
-        Mark Bloch <markb@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.5 145/150] net/mlx5: Fix sleep while atomic in mlx5_eswitch_get_vepa
-Date:   Thu, 27 Feb 2020 14:38:02 +0100
-Message-Id: <20200227132253.720377575@linuxfoundation.org>
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Tyler Hicks <code@tyhicks.com>
+Subject: [PATCH 5.5 127/150] ecryptfs: replace BUG_ON with error handling code
+Date:   Thu, 27 Feb 2020 14:37:44 +0100
+Message-Id: <20200227132251.383291850@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -60,61 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huy Nguyen <huyn@mellanox.com>
+From: Aditya Pakki <pakki001@umn.edu>
 
-commit 3d9c5e023a0dbf3e117bb416cfefd9405bf5af0c upstream.
+commit 2c2a7552dd6465e8fde6bc9cccf8d66ed1c1eb72 upstream.
 
-rtnl_bridge_getlink is protected by rcu lock, so mlx5_eswitch_get_vepa
-cannot take mutex lock. Two possible issues can happen:
-1. User at the same time change vepa mode via RTM_SETLINK command.
-2. User at the same time change the switchdev mode via devlink netlink
-interface.
+In crypt_scatterlist, if the crypt_stat argument is not set up
+correctly, the kernel crashes. Instead, by returning an error code
+upstream, the error is handled safely.
 
-Case 1 cannot happen because rtnl executes one message in order.
-Case 2 can happen but we do not expect user to change the switchdev mode
-when changing vepa. Even if a user does it, so he will read a value
-which is no longer valid.
+The issue is detected via a static analysis tool written by us.
 
-Fixes: 8da202b24913 ("net/mlx5: E-Switch, Add support for VEPA in legacy mode.")
-Signed-off-by: Huy Nguyen <huyn@mellanox.com>
-Reviewed-by: Mark Bloch <markb@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: 237fead619984 (ecryptfs: fs/Makefile and fs/Kconfig)
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Tyler Hicks <code@tyhicks.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/mellanox/mlx5/core/eswitch.c |   14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+ fs/ecryptfs/crypto.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-@@ -2449,25 +2449,17 @@ out:
+--- a/fs/ecryptfs/crypto.c
++++ b/fs/ecryptfs/crypto.c
+@@ -311,8 +311,10 @@ static int crypt_scatterlist(struct ecry
+ 	struct extent_crypt_result ecr;
+ 	int rc = 0;
  
- int mlx5_eswitch_get_vepa(struct mlx5_eswitch *esw, u8 *setting)
- {
--	int err = 0;
--
- 	if (!esw)
- 		return -EOPNOTSUPP;
- 
- 	if (!ESW_ALLOWED(esw))
- 		return -EPERM;
- 
--	mutex_lock(&esw->state_lock);
--	if (esw->mode != MLX5_ESWITCH_LEGACY) {
--		err = -EOPNOTSUPP;
--		goto out;
--	}
-+	if (esw->mode != MLX5_ESWITCH_LEGACY)
-+		return -EOPNOTSUPP;
- 
- 	*setting = esw->fdb_table.legacy.vepa_uplink_rule ? 1 : 0;
--
--out:
--	mutex_unlock(&esw->state_lock);
--	return err;
-+	return 0;
- }
- 
- int mlx5_eswitch_set_vport_trust(struct mlx5_eswitch *esw,
+-	BUG_ON(!crypt_stat || !crypt_stat->tfm
+-	       || !(crypt_stat->flags & ECRYPTFS_STRUCT_INITIALIZED));
++	if (!crypt_stat || !crypt_stat->tfm
++	       || !(crypt_stat->flags & ECRYPTFS_STRUCT_INITIALIZED))
++		return -EINVAL;
++
+ 	if (unlikely(ecryptfs_verbosity > 0)) {
+ 		ecryptfs_printk(KERN_DEBUG, "Key size [%zd]; key:\n",
+ 				crypt_stat->key_size);
 
 
