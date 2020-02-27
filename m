@@ -2,98 +2,105 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15695C5ED48
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C4AC3F377
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6E7824690
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27C6D24688
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:22:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390062AbgB0OUd (ORCPT
+        id S2389938AbgB0OWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:20:33 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:54694 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390036AbgB0OUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:20:31 -0500
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 7D95397FE62D3885DD04;
-        Thu, 27 Feb 2020 22:20:22 +0800 (CST)
-Received: from localhost.localdomain (10.175.34.53) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 27 Feb 2020 22:20:14 +0800
-From:   Luo bin <luobin9@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <luoxianjun@huawei.com>, Luo bin <luobin9@huawei.com>
-Subject: [PATCH net v1 2/3] hinic: fix a bug of setting hw_ioctxt
-Date:   Thu, 27 Feb 2020 06:34:43 +0000
-Message-ID: <20200227063444.2143-3-luobin9@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200227063444.2143-1-luobin9@huawei.com>
-References: <20200227063444.2143-1-luobin9@huawei.com>
+        Thu, 27 Feb 2020 09:22:15 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:34459 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389020AbgB0OQK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:16:10 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1j7JxF-0005AW-Cp; Thu, 27 Feb 2020 15:15:57 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 014FF1C216F;
+        Thu, 27 Feb 2020 15:15:57 +0100 (CET)
+Date:   Thu, 27 Feb 2020 14:15:56 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/entry] x86/entry/entry_32: Route int3 through common_exception
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200225220217.042369808@linutronix.de>
+References: <20200225220217.042369808@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.34.53]
-X-CFilter-Loop: Reflected
+Message-ID: <158281295675.28353.17857855711857005767.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-a reserved field is used to signify prime physical function index
-in the latest firmware version, so we must assign a value to it
-correctly
+The following commit has been merged into the x86/entry branch of tip:
 
-Signed-off-by: Luo bin <luobin9@huawei.com>
+Commit-ID:     ac3607f92f70c762e24d0ae731168f7584de51ec
+Gitweb:        https://git.kernel.org/tip/ac3607f92f70c762e24d0ae731168f7584de51ec
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Tue, 25 Feb 2020 22:36:45 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 27 Feb 2020 14:48:41 +01:00
+
+x86/entry/entry_32: Route int3 through common_exception
+
+int3 is not using the common_exception path for purely historical reasons,
+but there is no reason to keep it the only exception which is different.
+
+Make it use common_exception so the upcoming changes to autogenerate the
+entry stubs do not have to special case int3.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+Reviewed-by: Andy Lutomirski <luto@kernel.org>
+Link: https://lkml.kernel.org/r/20200225220217.042369808@linutronix.de
+
 ---
- drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c | 1 +
- drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h | 2 +-
- drivers/net/ethernet/huawei/hinic/hinic_hw_if.h  | 1 +
- 3 files changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/entry/entry_32.S | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-index 6f2cf569a283..79b3d53f2fbf 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-@@ -297,6 +297,7 @@ static int set_hw_ioctxt(struct hinic_hwdev *hwdev, unsigned int rq_depth,
- 	}
+diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+index a8b4438..0753f48 100644
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -1683,14 +1683,8 @@ SYM_CODE_END(nmi)
+ SYM_CODE_START(int3)
+ 	ASM_CLAC
+ 	pushl	$-1				# mark this as an int
+-
+-	SAVE_ALL switch_stacks=1
+-	ENCODE_FRAME_POINTER
+-	TRACE_IRQS_OFF
+-	xorl	%edx, %edx			# zero error code
+-	movl	%esp, %eax			# pt_regs pointer
+-	call	do_int3
+-	jmp	ret_from_exception
++	pushl	$do_int3
++	jmp	common_exception
+ SYM_CODE_END(int3)
  
- 	hw_ioctxt.func_idx = HINIC_HWIF_FUNC_IDX(hwif);
-+	hw_ioctxt.ppf_idx = HINIC_HWIF_PPF_IDX(hwif);
- 
- 	hw_ioctxt.set_cmdq_depth = HW_IOCTXT_SET_CMDQ_DEPTH_DEFAULT;
- 	hw_ioctxt.cmdq_depth = 0;
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-index b069045de416..66fd2340d447 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-@@ -151,8 +151,8 @@ struct hinic_cmd_hw_ioctxt {
- 
- 	u8      lro_en;
- 	u8      rsvd3;
-+	u8      ppf_idx;
- 	u8      rsvd4;
--	u8      rsvd5;
- 
- 	u16     rq_depth;
- 	u16     rx_buf_sz_idx;
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_if.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_if.h
-index 517794509eb2..c7bb9ceca72c 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_if.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_if.h
-@@ -137,6 +137,7 @@
- #define HINIC_HWIF_FUNC_IDX(hwif)       ((hwif)->attr.func_idx)
- #define HINIC_HWIF_PCI_INTF(hwif)       ((hwif)->attr.pci_intf_idx)
- #define HINIC_HWIF_PF_IDX(hwif)         ((hwif)->attr.pf_idx)
-+#define HINIC_HWIF_PPF_IDX(hwif)        ((hwif)->attr.ppf_idx)
- 
- #define HINIC_FUNC_TYPE(hwif)           ((hwif)->attr.func_type)
- #define HINIC_IS_PF(hwif)               (HINIC_FUNC_TYPE(hwif) == HINIC_PF)
--- 
-2.17.1
-
+ SYM_CODE_START(general_protection)
