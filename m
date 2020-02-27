@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22423C7657A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9852DC76570
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE46A24656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62E9D2468F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:37:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814255;
-	bh=agC9fpc9shS0ol0DmwsOsTG2MRRLqjwAGGAcbuCRoyQ=;
+	s=default; t=1582814237;
+	bh=JrqyDo3x/1o+v5c62+1zKO0XnJlzXMNnrtph6kSO1Tc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wR7MgkPGlgPjelF8TRKSfauUCb5kE/OcWiC36PdaYGREg9UI7JBJruaO+kpfFmcPB
-	 H+usSrrJK9KFtpxXXvqkL8rmeJAcPruG5kYmaUZAgSKCdsWZoIW7l3sqkNYRP21pry
-	 OYf3AuVNAA2Q8PM4RcdxS04Pbjt2ua0Q2pIacDTY=
+	b=MHrwjeKrsIJNJmOA/wCi9SDX9ph8o+ulhLYxzMqnkVReRwfaLgfv/CYA79hdwcMe2
+	 lOntYzGLyEtBoS55OOiOE75CFuO0An24SpoHkqDHiyu12tdP43PwwKArmJCfO9awSl
+	 3NGGAkji11aFkw3htvEd4DEoGEsKWgXBjDB0wN+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387490AbgB0Ohd (ORCPT
+        id S1732933AbgB0OhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:37:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58266 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:37:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732268AbgB0N5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:57:23 -0500
+        id S1732349AbgB0N5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:57:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 363D020801;
-        Thu, 27 Feb 2020 13:57:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB3C92084E;
+        Thu, 27 Feb 2020 13:57:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811842;
-        bh=agC9fpc9shS0ol0DmwsOsTG2MRRLqjwAGGAcbuCRoyQ=;
+        s=default; t=1582811868;
+        bh=JrqyDo3x/1o+v5c62+1zKO0XnJlzXMNnrtph6kSO1Tc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IrS4iasp3I8uF1SGP7rPpWP2AFLJAQbGDh2JDoNLqVNZt/NUybCcNZzR6JelG17Ig
-         llws89VZMFT7QxISVgfRnWefOFWtrlBfg1kN8R/s5Hf71BRchlxoYBDfRrOn4AkJt6
-         AJ9/3WHtHtu5F7n1u92JKSaGD6VXCSYjdkD4rw44=
+        b=DPqF235rwKp8fDNj0fJWeXyJWSBvzhDaS7wkoge+bZdrqMUI4+y2C+byPVLmyOns3
+         OSgI0YsPsoZZXoL5MtxWnzwk13tJ07pKr2lXVfL+XFXEJrPUV0bVAfSoEDl4MrwV/W
+         rYjSuS+G61ijUo6WBRt02RqrIT9VdwUiWUZvSifY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Black <nlb@google.com>,
-        Salman Qazi <sqazi@google.com>, Junho Ryu <jayr@google.com>,
-        Khazhismel Kumykov <khazhy@google.com>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        Lee Duncan <lduncan@suse.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Johannes Thumshirn <jth@kernel.org>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 123/237] scsi: iscsi: Dont destroy session if there are outstanding connections
-Date:   Thu, 27 Feb 2020 14:35:37 +0100
-Message-Id: <20200227132305.839507914@linuxfoundation.org>
+Subject: [PATCH 4.14 132/237] btrfs: fix possible NULL-pointer dereference in integrity checks
+Date:   Thu, 27 Feb 2020 14:35:46 +0100
+Message-Id: <20200227132306.434413161@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -64,135 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Black <nlb@google.com>
+From: Johannes Thumshirn <jth@kernel.org>
 
-[ Upstream commit 54155ed4199c7aa3fd20866648024ab63c96d579 ]
+[ Upstream commit 3dbd351df42109902fbcebf27104149226a4fcd9 ]
 
-A faulty userspace that calls destroy_session() before destroying the
-connections can trigger the failure.  This patch prevents the issue by
-refusing to destroy the session if there are outstanding connections.
+A user reports a possible NULL-pointer dereference in
+btrfsic_process_superblock(). We are assigning state->fs_info to a local
+fs_info variable and afterwards checking for the presence of state.
 
-------------[ cut here ]------------
-kernel BUG at mm/slub.c:306!
-invalid opcode: 0000 [#1] SMP PTI
-CPU: 1 PID: 1224 Comm: iscsid Not tainted 5.4.0-rc2.iscsi+ #7
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-RIP: 0010:__slab_free+0x181/0x350
-[...]
-[ 1209.686056] RSP: 0018:ffffa93d4074fae0 EFLAGS: 00010246
-[ 1209.686694] RAX: ffff934efa5ad800 RBX: 000000008010000a RCX: ffff934efa5ad800
-[ 1209.687651] RDX: ffff934efa5ad800 RSI: ffffeb4041e96b00 RDI: ffff934efd402c40
-[ 1209.688582] RBP: ffffa93d4074fb80 R08: 0000000000000001 R09: ffffffffbb5dfa26
-[ 1209.689425] R10: ffff934efa5ad800 R11: 0000000000000001 R12: ffffeb4041e96b00
-[ 1209.690285] R13: ffff934efa5ad800 R14: ffff934efd402c40 R15: 0000000000000000
-[ 1209.691213] FS:  00007f7945dfb540(0000) GS:ffff934efda80000(0000) knlGS:0000000000000000
-[ 1209.692316] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1209.693013] CR2: 000055877fd3da80 CR3: 0000000077384000 CR4: 00000000000006e0
-[ 1209.693897] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 1209.694773] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[ 1209.695631] Call Trace:
-[ 1209.695957]  ? __wake_up_common_lock+0x8a/0xc0
-[ 1209.696712]  iscsi_pool_free+0x26/0x40
-[ 1209.697263]  iscsi_session_teardown+0x2f/0xf0
-[ 1209.698117]  iscsi_sw_tcp_session_destroy+0x45/0x60
-[ 1209.698831]  iscsi_if_rx+0xd88/0x14e0
-[ 1209.699370]  netlink_unicast+0x16f/0x200
-[ 1209.699932]  netlink_sendmsg+0x21a/0x3e0
-[ 1209.700446]  sock_sendmsg+0x4f/0x60
-[ 1209.700902]  ___sys_sendmsg+0x2ae/0x320
-[ 1209.701451]  ? cp_new_stat+0x150/0x180
-[ 1209.701922]  __sys_sendmsg+0x59/0xa0
-[ 1209.702357]  do_syscall_64+0x52/0x160
-[ 1209.702812]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[ 1209.703419] RIP: 0033:0x7f7946433914
-[...]
-[ 1209.706084] RSP: 002b:00007fffb99f2378 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-[ 1209.706994] RAX: ffffffffffffffda RBX: 000055bc869eac20 RCX: 00007f7946433914
-[ 1209.708082] RDX: 0000000000000000 RSI: 00007fffb99f2390 RDI: 0000000000000005
-[ 1209.709120] RBP: 00007fffb99f2390 R08: 000055bc84fe9320 R09: 00007fffb99f1f07
-[ 1209.710110] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000038
-[ 1209.711085] R13: 000055bc8502306e R14: 0000000000000000 R15: 0000000000000000
- Modules linked in:
- ---[ end trace a2d933ede7f730d8 ]---
+While we would BUG_ON() a NULL state anyways, we can also just remove
+the local fs_info copy, as fs_info is only used once as the first
+argument for btrfs_num_copies(). There we can just pass in
+state->fs_info as well.
 
-Link: https://lore.kernel.org/r/20191226203148.2172200-1-krisman@collabora.com
-Signed-off-by: Nick Black <nlb@google.com>
-Co-developed-by: Salman Qazi <sqazi@google.com>
-Signed-off-by: Salman Qazi <sqazi@google.com>
-Co-developed-by: Junho Ryu <jayr@google.com>
-Signed-off-by: Junho Ryu <jayr@google.com>
-Co-developed-by: Khazhismel Kumykov <khazhy@google.com>
-Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
-Co-developed-by: Gabriel Krisman Bertazi <krisman@collabora.com>
-Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
-Reviewed-by: Lee Duncan <lduncan@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205003
+Signed-off-by: Johannes Thumshirn <jth@kernel.org>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/iscsi_tcp.c            |  4 ++++
- drivers/scsi/scsi_transport_iscsi.c | 26 +++++++++++++++++++++++---
- 2 files changed, 27 insertions(+), 3 deletions(-)
+ fs/btrfs/check-integrity.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/iscsi_tcp.c b/drivers/scsi/iscsi_tcp.c
-index 7e3a77d3c6f01..e3ca16043f9af 100644
---- a/drivers/scsi/iscsi_tcp.c
-+++ b/drivers/scsi/iscsi_tcp.c
-@@ -890,6 +890,10 @@ free_host:
- static void iscsi_sw_tcp_session_destroy(struct iscsi_cls_session *cls_session)
+diff --git a/fs/btrfs/check-integrity.c b/fs/btrfs/check-integrity.c
+index 7d5a9b51f0d7a..4be07cf31d74c 100644
+--- a/fs/btrfs/check-integrity.c
++++ b/fs/btrfs/check-integrity.c
+@@ -642,7 +642,6 @@ static struct btrfsic_dev_state *btrfsic_dev_state_hashtable_lookup(dev_t dev,
+ static int btrfsic_process_superblock(struct btrfsic_state *state,
+ 				      struct btrfs_fs_devices *fs_devices)
  {
- 	struct Scsi_Host *shost = iscsi_session_to_shost(cls_session);
-+	struct iscsi_session *session = cls_session->dd_data;
-+
-+	if (WARN_ON_ONCE(session->leadconn))
-+		return;
+-	struct btrfs_fs_info *fs_info = state->fs_info;
+ 	struct btrfs_super_block *selected_super;
+ 	struct list_head *dev_head = &fs_devices->devices;
+ 	struct btrfs_device *device;
+@@ -713,7 +712,7 @@ static int btrfsic_process_superblock(struct btrfsic_state *state,
+ 			break;
+ 		}
  
- 	iscsi_tcp_r2tpool_free(cls_session->dd_data);
- 	iscsi_session_teardown(cls_session);
-diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
-index 95d71e301a534..aecb563a2b4e3 100644
---- a/drivers/scsi/scsi_transport_iscsi.c
-+++ b/drivers/scsi/scsi_transport_iscsi.c
-@@ -2945,6 +2945,24 @@ iscsi_set_path(struct iscsi_transport *transport, struct iscsi_uevent *ev)
- 	return err;
- }
- 
-+static int iscsi_session_has_conns(int sid)
-+{
-+	struct iscsi_cls_conn *conn;
-+	unsigned long flags;
-+	int found = 0;
-+
-+	spin_lock_irqsave(&connlock, flags);
-+	list_for_each_entry(conn, &connlist, conn_list) {
-+		if (iscsi_conn_get_sid(conn) == sid) {
-+			found = 1;
-+			break;
-+		}
-+	}
-+	spin_unlock_irqrestore(&connlock, flags);
-+
-+	return found;
-+}
-+
- static int
- iscsi_set_iface_params(struct iscsi_transport *transport,
- 		       struct iscsi_uevent *ev, uint32_t len)
-@@ -3522,10 +3540,12 @@ iscsi_if_recv_msg(struct sk_buff *skb, struct nlmsghdr *nlh, uint32_t *group)
- 		break;
- 	case ISCSI_UEVENT_DESTROY_SESSION:
- 		session = iscsi_session_lookup(ev->u.d_session.sid);
--		if (session)
--			transport->destroy_session(session);
--		else
-+		if (!session)
- 			err = -EINVAL;
-+		else if (iscsi_session_has_conns(ev->u.d_session.sid))
-+			err = -EBUSY;
-+		else
-+			transport->destroy_session(session);
- 		break;
- 	case ISCSI_UEVENT_UNBIND_SESSION:
- 		session = iscsi_session_lookup(ev->u.d_session.sid);
+-		num_copies = btrfs_num_copies(fs_info, next_bytenr,
++		num_copies = btrfs_num_copies(state->fs_info, next_bytenr,
+ 					      state->metablock_size);
+ 		if (state->print_mask & BTRFSIC_PRINT_MASK_NUM_COPIES)
+ 			pr_info("num_copies(log_bytenr=%llu) = %d\n",
 -- 
 2.20.1
 
