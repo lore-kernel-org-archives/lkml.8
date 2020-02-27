@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D847DC52D55
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E62C52D2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADA9624690
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:08:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F27220578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:09:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812533;
-	bh=hTb/1GuHF2M2JOtCgLljW2B8Dk7zHQrkGnfDwohYq90=;
+	s=default; t=1582812575;
+	bh=3YCO4uAhKW5WB1BmMc7ir2iC2XygsWoz0wg8AB9GHNc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xMhuGSKNy+rdvxO8/T7H1NZMfeSdEgb21ey4cRg8U6yi8bgctIFOHW8YJO8MiASxj
-	 aDwQiOVucrs0yZeDzLy97ykQWbEPMD5Osqkh6Jr+Vc5I+kDIPCDN1PtyaXXeAtZ82S
-	 fMqwvTdG+Wv6DKCM5/HBrSwMjt/wyGzNCKeBQMlw=
+	b=wopI3BgMgtdGF8bO2j/HJnYSzailfUYF8HwWrAXBWnND4rkwAo+K9zDXOoGwERjGh
+	 31ZCE1BmbJ4ynp+Wc+UlphkxFNFmO+UaI1Fw294eUyq4NH7hyLnD7b9QkAmEqbuNpJ
+	 IuHb9pkAWSTb9G6RkV8dNlv5GUFREoiS46H/sFL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388299AbgB0OIw (ORCPT
+        id S2388405AbgB0OJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:08:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46670 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:09:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388293AbgB0OIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:08:49 -0500
+        id S2388398AbgB0OJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:09:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1599A24690;
-        Thu, 27 Feb 2020 14:08:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 649FD24690;
+        Thu, 27 Feb 2020 14:09:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812528;
-        bh=hTb/1GuHF2M2JOtCgLljW2B8Dk7zHQrkGnfDwohYq90=;
+        s=default; t=1582812569;
+        bh=3YCO4uAhKW5WB1BmMc7ir2iC2XygsWoz0wg8AB9GHNc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xgVtXGww0CSFgopSuB/ms12sp2ZdHl6ZUtUkIefMR2JJCVvom7MY2tvtZcfcwUZKZ
-         nfdAd74IkDbnR2GvaTKcFrx7lSQqlLpB6O1xZkOir8TfLcBVrWLWdg002T9sm5BJzR
-         ZlIqX+dX36s4ZxkvTHVq4KlmdIq1c5DtMj72FJWQ=
+        b=iPZfXRpumb4pv9C8Dt2X+ekw+NMULsNcPtpPhPJvo8aIi2w0b6lzHW8LA6lsGi2NV
+         QpPYx02TGRCaQb7dlyZa2+FKgm5cQ4tP3rAWqSg/PClwZLx0Bhd9WUyageTQGeW8yF
+         tzcVIdBnFvcYEj43u5I4XVpPhgv4i1+2ZZSFVjA4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthew Garrett <mjg59@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Mimi Zohar <zohar@linux.ibm.com>
-Subject: [PATCH 5.4 051/135] x86/ima: use correct identifier for SetupMode variable
-Date:   Thu, 27 Feb 2020 14:36:31 +0100
-Message-Id: <20200227132236.833158415@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>
+Subject: [PATCH 5.4 020/135] vt: vt_ioctl: fix race in VT_RESIZEX
+Date:   Thu, 27 Feb 2020 14:36:00 +0100
+Message-Id: <20200227132232.291683274@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -60,59 +59,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Eric Dumazet <edumazet@google.com>
 
-commit ff5ac61ee83c13f516544d29847d28be093a40ee upstream.
+commit 6cd1ed50efd88261298577cd92a14f2768eddeeb upstream.
 
-The IMA arch code attempts to inspect the "SetupMode" EFI variable
-by populating a variable called efi_SetupMode_name with the string
-"SecureBoot" and passing that to the EFI GetVariable service, which
-obviously does not yield the expected result.
+We need to make sure vc_cons[i].d is not NULL after grabbing
+console_lock(), or risk a crash.
 
-Given that the string is only referenced a single time, let's get
-rid of the intermediate variable, and pass the correct string as
-an immediate argument. While at it, do the same for "SecureBoot".
+general protection fault, probably for non-canonical address 0xdffffc0000000068: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000340-0x0000000000000347]
+CPU: 1 PID: 19462 Comm: syz-executor.5 Not tainted 5.5.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:vt_ioctl+0x1f96/0x26d0 drivers/tty/vt/vt_ioctl.c:883
+Code: 74 41 e8 bd a6 84 fd 48 89 d8 48 c1 e8 03 42 80 3c 28 00 0f 85 e4 04 00 00 48 8b 03 48 8d b8 40 03 00 00 48 89 fa 48 c1 ea 03 <42> 0f b6 14 2a 84 d2 74 09 80 fa 03 0f 8e b1 05 00 00 44 89 b8 40
+RSP: 0018:ffffc900086d7bb0 EFLAGS: 00010202
+RAX: 0000000000000000 RBX: ffffffff8c34ee88 RCX: ffffc9001415c000
+RDX: 0000000000000068 RSI: ffffffff83f0e6e3 RDI: 0000000000000340
+RBP: ffffc900086d7cd0 R08: ffff888054ce0100 R09: fffffbfff16a2f6d
+R10: ffff888054ce0998 R11: ffff888054ce0100 R12: 000000000000001d
+R13: dffffc0000000000 R14: 1ffff920010daf79 R15: 000000000000ff7f
+FS:  00007f7d13c12700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffd477e3c38 CR3: 0000000095d0a000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ tty_ioctl+0xa37/0x14f0 drivers/tty/tty_io.c:2660
+ vfs_ioctl fs/ioctl.c:47 [inline]
+ ksys_ioctl+0x123/0x180 fs/ioctl.c:763
+ __do_sys_ioctl fs/ioctl.c:772 [inline]
+ __se_sys_ioctl fs/ioctl.c:770 [inline]
+ __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:770
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45b399
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f7d13c11c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007f7d13c126d4 RCX: 000000000045b399
+RDX: 0000000020000080 RSI: 000000000000560a RDI: 0000000000000003
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000666 R14: 00000000004c7f04 R15: 000000000075bf2c
+Modules linked in:
+---[ end trace 80970faf7a67eb77 ]---
+RIP: 0010:vt_ioctl+0x1f96/0x26d0 drivers/tty/vt/vt_ioctl.c:883
+Code: 74 41 e8 bd a6 84 fd 48 89 d8 48 c1 e8 03 42 80 3c 28 00 0f 85 e4 04 00 00 48 8b 03 48 8d b8 40 03 00 00 48 89 fa 48 c1 ea 03 <42> 0f b6 14 2a 84 d2 74 09 80 fa 03 0f 8e b1 05 00 00 44 89 b8 40
+RSP: 0018:ffffc900086d7bb0 EFLAGS: 00010202
+RAX: 0000000000000000 RBX: ffffffff8c34ee88 RCX: ffffc9001415c000
+RDX: 0000000000000068 RSI: ffffffff83f0e6e3 RDI: 0000000000000340
+RBP: ffffc900086d7cd0 R08: ffff888054ce0100 R09: fffffbfff16a2f6d
+R10: ffff888054ce0998 R11: ffff888054ce0100 R12: 000000000000001d
+R13: dffffc0000000000 R14: 1ffff920010daf79 R15: 000000000000ff7f
+FS:  00007f7d13c12700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffd477e3c38 CR3: 0000000095d0a000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-Fixes: 399574c64eaf ("x86/ima: retry detecting secure boot mode")
-Fixes: 980ef4d22a95 ("x86/ima: check EFI SetupMode too")
-Cc: Matthew Garrett <mjg59@google.com>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Cc: stable@vger.kernel.org # v5.3
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: stable <stable@vger.kernel.org>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Link: https://lore.kernel.org/r/20200210190721.200418-1-edumazet@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/ima_arch.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/tty/vt/vt_ioctl.c |   17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
---- a/arch/x86/kernel/ima_arch.c
-+++ b/arch/x86/kernel/ima_arch.c
-@@ -10,8 +10,6 @@ extern struct boot_params boot_params;
+--- a/drivers/tty/vt/vt_ioctl.c
++++ b/drivers/tty/vt/vt_ioctl.c
+@@ -876,15 +876,20 @@ int vt_ioctl(struct tty_struct *tty,
+ 			return -EINVAL;
  
- static enum efi_secureboot_mode get_sb_mode(void)
- {
--	efi_char16_t efi_SecureBoot_name[] = L"SecureBoot";
--	efi_char16_t efi_SetupMode_name[] = L"SecureBoot";
- 	efi_guid_t efi_variable_guid = EFI_GLOBAL_VARIABLE_GUID;
- 	efi_status_t status;
- 	unsigned long size;
-@@ -25,7 +23,7 @@ static enum efi_secureboot_mode get_sb_m
- 	}
- 
- 	/* Get variable contents into buffer */
--	status = efi.get_variable(efi_SecureBoot_name, &efi_variable_guid,
-+	status = efi.get_variable(L"SecureBoot", &efi_variable_guid,
- 				  NULL, &size, &secboot);
- 	if (status == EFI_NOT_FOUND) {
- 		pr_info("ima: secureboot mode disabled\n");
-@@ -38,7 +36,7 @@ static enum efi_secureboot_mode get_sb_m
- 	}
- 
- 	size = sizeof(setupmode);
--	status = efi.get_variable(efi_SetupMode_name, &efi_variable_guid,
-+	status = efi.get_variable(L"SetupMode", &efi_variable_guid,
- 				  NULL, &size, &setupmode);
- 
- 	if (status != EFI_SUCCESS)	/* ignore unknown SetupMode */
+ 		for (i = 0; i < MAX_NR_CONSOLES; i++) {
++			struct vc_data *vcp;
++
+ 			if (!vc_cons[i].d)
+ 				continue;
+ 			console_lock();
+-			if (v.v_vlin)
+-				vc_cons[i].d->vc_scan_lines = v.v_vlin;
+-			if (v.v_clin)
+-				vc_cons[i].d->vc_font.height = v.v_clin;
+-			vc_cons[i].d->vc_resize_user = 1;
+-			vc_resize(vc_cons[i].d, v.v_cols, v.v_rows);
++			vcp = vc_cons[i].d;
++			if (vcp) {
++				if (v.v_vlin)
++					vcp->vc_scan_lines = v.v_vlin;
++				if (v.v_clin)
++					vcp->vc_font.height = v.v_clin;
++				vcp->vc_resize_user = 1;
++				vc_resize(vcp, v.v_cols, v.v_rows);
++			}
+ 			console_unlock();
+ 		}
+ 		break;
 
 
