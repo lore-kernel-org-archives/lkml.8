@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A718C3F340
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C490C3567B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7F1920578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3285920578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:42:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582810951;
-	bh=kqobUzNIK0zbxE3SOKiTCuJq60wEzhM2JkGtXbIxiek=;
+	s=default; t=1582810949;
+	bh=ic5XZ/UIf6CG8K2KkoDyIq/iKKAzInXFBfZ/v8K1LU8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kuWFsSBAUEjwxTrzq6TwClHFKJaMiS0Hy3DFDUHCeMs224gAcn8Km9kcZOQ9UutSe
-	 RwMW6wGPoWI+lBc+PmYsyo+XYSPZt3zfOfPe0wZTyNXuULr0Opu9v+beJpGpFDrTyW
-	 9JlVxm1omoYFshNLmCR53TThCwD51nuK30ZpqOLA=
+	b=GfLk4Z/GvPEpTs0QA5uZTk4c5qYhXXEh+xYBxN/5DhcrAo/KFMDQ2JsgxbFIKVqH/
+	 W1OE0wlZr/L1VDaIyz4Mlh69c2dRF5GFlEq3gmvHp7Zh9xFBwVi3TH8XqWHWiwuIbX
+	 MTnTQmWvRIJqfY8smn2yhY6alnW8FPbHIe7IxoEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729789AbgB0Nma (ORCPT
+        id S1729776AbgB0Nm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:42:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37460 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:42:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729405AbgB0Nm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:42:28 -0500
+        id S1729405AbgB0NmZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:42:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B06420726;
-        Thu, 27 Feb 2020 13:42:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AA5121D7E;
+        Thu, 27 Feb 2020 13:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582810947;
-        bh=kqobUzNIK0zbxE3SOKiTCuJq60wEzhM2JkGtXbIxiek=;
+        s=default; t=1582810944;
+        bh=ic5XZ/UIf6CG8K2KkoDyIq/iKKAzInXFBfZ/v8K1LU8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VELWjLah64bOEGfb93o7s5kT2GOWSIDX6QP7XBpdNu6JYZgsYPKUzS81UGoajXprZ
-         gMaiwGMV5ah+JuyPmF17meeOg+j/UPXgW8wakY8w/Q/kZlZ7A2EJGApSzLRpfUeZru
-         yx5Ua0Sm09785nYah9cDpujNQJPhmrkuMhIRrFLM=
+        b=vFI0Vmij68pR57In0uMDeNVBTFlHVj13ouqxa4r8rSfBqjA9jWzjeeSJNlnBAWE8Z
+         enErNO7yFnHkWSR6B4qBsUeWgdIHjzH5LLFDHWY9egrpLsKPJUlgJN2LfKtMlRLk3C
+         Oc+Sqikvj8SYX9bNAotkejmtpYVzWImkD5EcSFx0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 020/113] brcmfmac: Fix use after free in brcmf_sdio_readframes()
-Date:   Thu, 27 Feb 2020 14:35:36 +0100
-Message-Id: <20200227132214.894649720@linuxfoundation.org>
+Subject: [PATCH 4.4 019/113] drm/gma500: Fixup fbdev stolen size usage evaluation
+Date:   Thu, 27 Feb 2020 14:35:35 +0100
+Message-Id: <20200227132214.740316667@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
 References: <20200227132211.791484803@linuxfoundation.org>
@@ -61,39 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-[ Upstream commit 216b44000ada87a63891a8214c347e05a4aea8fe ]
+[ Upstream commit fd1a5e521c3c083bb43ea731aae0f8b95f12b9bd ]
 
-The brcmu_pkt_buf_free_skb() function frees "pkt" so it leads to a
-static checker warning:
+psbfb_probe performs an evaluation of the required size from the stolen
+GTT memory, but gets it wrong in two distinct ways:
+- The resulting size must be page-size-aligned;
+- The size to allocate is derived from the surface dimensions, not the fb
+  dimensions.
 
-    drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c:1974 brcmf_sdio_readframes()
-    error: dereferencing freed memory 'pkt'
+When two connectors are connected with different modes, the smallest will
+be stored in the fb dimensions, but the size that needs to be allocated must
+match the largest (surface) dimensions. This is what is used in the actual
+allocation code.
 
-It looks like there was supposed to be a continue after we free "pkt".
+Fix this by correcting the evaluation to conform to the two points above.
+It allows correctly switching to 16bpp when one connector is e.g. 1920x1080
+and the other is 1024x768.
 
-Fixes: 4754fceeb9a6 ("brcmfmac: streamline SDIO read frame routine")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Franky Lin <franky.lin@broadcom.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191107153048.843881-1-paul.kocialkowski@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/brcm80211/brcmfmac/sdio.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/gma500/framebuffer.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/brcm80211/brcmfmac/sdio.c
-index 9954e641c943d..8bb028f740fd8 100644
---- a/drivers/net/wireless/brcm80211/brcmfmac/sdio.c
-+++ b/drivers/net/wireless/brcm80211/brcmfmac/sdio.c
-@@ -2027,6 +2027,7 @@ static uint brcmf_sdio_readframes(struct brcmf_sdio *bus, uint maxframes)
- 					       BRCMF_SDIO_FT_NORMAL)) {
- 				rd->len = 0;
- 				brcmu_pkt_buf_free_skb(pkt);
-+				continue;
- 			}
- 			bus->sdcnt.rx_readahead_cnt++;
- 			if (rd->len != roundup(rd_new.len, 16)) {
+diff --git a/drivers/gpu/drm/gma500/framebuffer.c b/drivers/gpu/drm/gma500/framebuffer.c
+index 2eaf1b31c7bd8..ef60bb1971951 100644
+--- a/drivers/gpu/drm/gma500/framebuffer.c
++++ b/drivers/gpu/drm/gma500/framebuffer.c
+@@ -533,6 +533,7 @@ static int psbfb_probe(struct drm_fb_helper *helper,
+ 		container_of(helper, struct psb_fbdev, psb_fb_helper);
+ 	struct drm_device *dev = psb_fbdev->psb_fb_helper.dev;
+ 	struct drm_psb_private *dev_priv = dev->dev_private;
++	unsigned int fb_size;
+ 	int bytespp;
+ 
+ 	bytespp = sizes->surface_bpp / 8;
+@@ -542,8 +543,11 @@ static int psbfb_probe(struct drm_fb_helper *helper,
+ 	/* If the mode will not fit in 32bit then switch to 16bit to get
+ 	   a console on full resolution. The X mode setting server will
+ 	   allocate its own 32bit GEM framebuffer */
+-	if (ALIGN(sizes->fb_width * bytespp, 64) * sizes->fb_height >
+-	                dev_priv->vram_stolen_size) {
++	fb_size = ALIGN(sizes->surface_width * bytespp, 64) *
++		  sizes->surface_height;
++	fb_size = ALIGN(fb_size, PAGE_SIZE);
++
++	if (fb_size > dev_priv->vram_stolen_size) {
+                 sizes->surface_bpp = 16;
+                 sizes->surface_depth = 16;
+         }
 -- 
 2.20.1
 
