@@ -2,55 +2,52 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EC4C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7530C3567B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79E3B246BD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92EA624697
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:47:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814837;
-	bh=xAni1UWMXYE4zuIVjCcTlK87vyWdYkYH97cNEZFhvig=;
+	s=default; t=1582814839;
+	bh=M2GwOBsJPTU/gH5nnLIvxg5gkcietonzkfSQO9QeHZs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XZncW/pA2RAKUykdpIemSlFnzgJ5QxZUidGjj5SemlRGNQoReh1XP0LKtn2YZC291
-	 JxaAnaI6MOxAcoD8qPh9nRn0Ci5TOGjEs3DWdzJpvLELr8jD9LpEYjFqczKxU+O2z0
-	 0pedjH/ouGRzlgfeXR/mf5oeY3kxPgm3emrBbnVo=
+	b=rjkGKovBYNBO9aqxc1WYoEQbBGqGf5Gt+iZXKVLzi0XM3QJ9O2Xy+xKBXyO8aHLqS
+	 3G5gKc833wCZe5x0EaE53IpmA4t+kCy8F8Sm8aNasPA9aybfNPZoxEPVucHRAnKb8j
+	 Uik1zykPPLF1gisrFLsCMh3sPnnxkme0ZIZxnOnk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730240AbgB0Noi (ORCPT
+        id S1730224AbgB0No3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:44:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40074 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:44:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730235AbgB0Noe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:44:34 -0500
+        id S1730212AbgB0No1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:44:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F1B7222C2;
-        Thu, 27 Feb 2020 13:44:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6F7020726;
+        Thu, 27 Feb 2020 13:44:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811073;
-        bh=xAni1UWMXYE4zuIVjCcTlK87vyWdYkYH97cNEZFhvig=;
+        s=default; t=1582811066;
+        bh=M2GwOBsJPTU/gH5nnLIvxg5gkcietonzkfSQO9QeHZs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UITcKQdR5Bwq4DaqiFlF3Tq3OIwByo5I218lq8Af7bUH7DSUyGvkA2gtyA4qdVGmv
-         +wYKLWrLvvWKCFgBMuhyeeq9zaDC/ofCmMz15pGuAbyg8QULWKGTn2sc2Astn7XaoV
-         RvdDRzS5SJBVoYl4OaaIElDm4/ewtsEcztKWNe8k=
+        b=MOvuH9bOcvkww9BQ9onOx62rCPPw9uEC34MoawRn1SLrI1sKwD/duj+KicOCfbX1J
+         AJkopgcfgoHDTtmNmsNsSILcF7VwKdHTNNEnJ/HLXL+QAXv9bwVAjcrfMmzFjKjJJj
+         oWfSqVurnJ6oiWhu2qtns9HeJ/0W5vWYq8MawKqc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rahul Kundu <rahul.kundu@chelsio.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Dakshaja Uppalapati <dakshaja@chelsio.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.4 107/113] scsi: Revert "RDMA/isert: Fix a recently introduced regression related to logout"
-Date:   Thu, 27 Feb 2020 14:37:03 +0100
-Message-Id: <20200227132228.892845198@linuxfoundation.org>
+        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Eric Dumazet <edumazet@google.com>
+Subject: [PATCH 4.4 054/113] rcu: Use WRITE_ONCE() for assignments to ->pprev for hlist_nulls
+Date:   Thu, 27 Feb 2020 14:36:10 +0100
+Message-Id: <20200227132220.401442785@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
 References: <20200227132211.791484803@linuxfoundation.org>
@@ -63,77 +60,169 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Paul E. McKenney <paulmck@kernel.org>
 
-commit 76261ada16dcc3be610396a46d35acc3efbda682 upstream.
+[ Upstream commit 860c8802ace14c646864795e057349c9fb2d60ad ]
 
-Since commit 04060db41178 introduces soft lockups when toggling network
-interfaces, revert it.
+Eric Dumazet supplied a KCSAN report of a bug that forces use
+of hlist_unhashed_lockless() from sk_unhashed():
 
-Link: https://marc.info/?l=target-devel&m=158157054906196
-Cc: Rahul Kundu <rahul.kundu@chelsio.com>
-Cc: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Cc: Sagi Grimberg <sagi@grimberg.me>
-Reported-by: Dakshaja Uppalapati <dakshaja@chelsio.com>
-Fixes: 04060db41178 ("scsi: RDMA/isert: Fix a recently introduced regression related to logout")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+------------------------------------------------------------------------
 
+BUG: KCSAN: data-race in inet_unhash / inet_unhash
+
+write to 0xffff8880a69a0170 of 8 bytes by interrupt on cpu 1:
+ __hlist_nulls_del include/linux/list_nulls.h:88 [inline]
+ hlist_nulls_del_init_rcu include/linux/rculist_nulls.h:36 [inline]
+ __sk_nulls_del_node_init_rcu include/net/sock.h:676 [inline]
+ inet_unhash+0x38f/0x4a0 net/ipv4/inet_hashtables.c:612
+ tcp_set_state+0xfa/0x3e0 net/ipv4/tcp.c:2249
+ tcp_done+0x93/0x1e0 net/ipv4/tcp.c:3854
+ tcp_write_err+0x7e/0xc0 net/ipv4/tcp_timer.c:56
+ tcp_retransmit_timer+0x9b8/0x16d0 net/ipv4/tcp_timer.c:479
+ tcp_write_timer_handler+0x42d/0x510 net/ipv4/tcp_timer.c:599
+ tcp_write_timer+0xd1/0xf0 net/ipv4/tcp_timer.c:619
+ call_timer_fn+0x5f/0x2f0 kernel/time/timer.c:1404
+ expire_timers kernel/time/timer.c:1449 [inline]
+ __run_timers kernel/time/timer.c:1773 [inline]
+ __run_timers kernel/time/timer.c:1740 [inline]
+ run_timer_softirq+0xc0c/0xcd0 kernel/time/timer.c:1786
+ __do_softirq+0x115/0x33f kernel/softirq.c:292
+ invoke_softirq kernel/softirq.c:373 [inline]
+ irq_exit+0xbb/0xe0 kernel/softirq.c:413
+ exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+ smp_apic_timer_interrupt+0xe6/0x280 arch/x86/kernel/apic/apic.c:1137
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+ native_safe_halt+0xe/0x10 arch/x86/kernel/paravirt.c:71
+ arch_cpu_idle+0x1f/0x30 arch/x86/kernel/process.c:571
+ default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
+ cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+ do_idle+0x1af/0x280 kernel/sched/idle.c:263
+ cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:355
+ start_secondary+0x208/0x260 arch/x86/kernel/smpboot.c:264
+ secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
+
+read to 0xffff8880a69a0170 of 8 bytes by interrupt on cpu 0:
+ sk_unhashed include/net/sock.h:607 [inline]
+ inet_unhash+0x3d/0x4a0 net/ipv4/inet_hashtables.c:592
+ tcp_set_state+0xfa/0x3e0 net/ipv4/tcp.c:2249
+ tcp_done+0x93/0x1e0 net/ipv4/tcp.c:3854
+ tcp_write_err+0x7e/0xc0 net/ipv4/tcp_timer.c:56
+ tcp_retransmit_timer+0x9b8/0x16d0 net/ipv4/tcp_timer.c:479
+ tcp_write_timer_handler+0x42d/0x510 net/ipv4/tcp_timer.c:599
+ tcp_write_timer+0xd1/0xf0 net/ipv4/tcp_timer.c:619
+ call_timer_fn+0x5f/0x2f0 kernel/time/timer.c:1404
+ expire_timers kernel/time/timer.c:1449 [inline]
+ __run_timers kernel/time/timer.c:1773 [inline]
+ __run_timers kernel/time/timer.c:1740 [inline]
+ run_timer_softirq+0xc0c/0xcd0 kernel/time/timer.c:1786
+ __do_softirq+0x115/0x33f kernel/softirq.c:292
+ invoke_softirq kernel/softirq.c:373 [inline]
+ irq_exit+0xbb/0xe0 kernel/softirq.c:413
+ exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+ smp_apic_timer_interrupt+0xe6/0x280 arch/x86/kernel/apic/apic.c:1137
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+ native_safe_halt+0xe/0x10 arch/x86/kernel/paravirt.c:71
+ arch_cpu_idle+0x1f/0x30 arch/x86/kernel/process.c:571
+ default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
+ cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+ do_idle+0x1af/0x280 kernel/sched/idle.c:263
+ cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:355
+ rest_init+0xec/0xf6 init/main.c:452
+ arch_call_rest_init+0x17/0x37
+ start_kernel+0x838/0x85e init/main.c:786
+ x86_64_start_reservations+0x29/0x2b arch/x86/kernel/head64.c:490
+ x86_64_start_kernel+0x72/0x76 arch/x86/kernel/head64.c:471
+ secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-rc6+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine,
+BIOS Google 01/01/2011
+
+------------------------------------------------------------------------
+
+This commit therefore replaces C-language assignments with WRITE_ONCE()
+in include/linux/list_nulls.h and include/linux/rculist_nulls.h.
+
+Reported-by: Eric Dumazet <edumazet@google.com> # For KCSAN
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/isert/ib_isert.c |   12 ++++++++++++
- drivers/target/iscsi/iscsi_target.c     |    6 +++---
- 2 files changed, 15 insertions(+), 3 deletions(-)
+ include/linux/list_nulls.h    | 8 ++++----
+ include/linux/rculist_nulls.h | 8 ++++----
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
---- a/drivers/infiniband/ulp/isert/ib_isert.c
-+++ b/drivers/infiniband/ulp/isert/ib_isert.c
-@@ -3295,6 +3295,17 @@ isert_wait4flush(struct isert_conn *iser
- 	wait_for_completion(&isert_conn->wait_comp_err);
+diff --git a/include/linux/list_nulls.h b/include/linux/list_nulls.h
+index 444d2b1313bda..703928e4fd42d 100644
+--- a/include/linux/list_nulls.h
++++ b/include/linux/list_nulls.h
+@@ -66,10 +66,10 @@ static inline void hlist_nulls_add_head(struct hlist_nulls_node *n,
+ 	struct hlist_nulls_node *first = h->first;
+ 
+ 	n->next = first;
+-	n->pprev = &h->first;
++	WRITE_ONCE(n->pprev, &h->first);
+ 	h->first = n;
+ 	if (!is_a_nulls(first))
+-		first->pprev = &n->next;
++		WRITE_ONCE(first->pprev, &n->next);
  }
  
-+static void
-+isert_wait4cmds(struct iscsi_conn *conn)
-+{
-+	isert_info("iscsi_conn %p\n", conn);
-+
-+	if (conn->sess) {
-+		target_sess_cmd_list_set_waiting(conn->sess->se_sess);
-+		target_wait_for_sess_cmds(conn->sess->se_sess);
-+	}
-+}
-+
+ static inline void __hlist_nulls_del(struct hlist_nulls_node *n)
+@@ -79,13 +79,13 @@ static inline void __hlist_nulls_del(struct hlist_nulls_node *n)
+ 
+ 	WRITE_ONCE(*pprev, next);
+ 	if (!is_a_nulls(next))
+-		next->pprev = pprev;
++		WRITE_ONCE(next->pprev, pprev);
+ }
+ 
+ static inline void hlist_nulls_del(struct hlist_nulls_node *n)
+ {
+ 	__hlist_nulls_del(n);
+-	n->pprev = LIST_POISON2;
++	WRITE_ONCE(n->pprev, LIST_POISON2);
+ }
+ 
  /**
-  * isert_put_unsol_pending_cmds() - Drop commands waiting for
-  *     unsolicitate dataout
-@@ -3350,6 +3361,7 @@ static void isert_wait_conn(struct iscsi
+diff --git a/include/linux/rculist_nulls.h b/include/linux/rculist_nulls.h
+index 1c33dd7da4a7d..f35dc0a1d6ebc 100644
+--- a/include/linux/rculist_nulls.h
++++ b/include/linux/rculist_nulls.h
+@@ -33,7 +33,7 @@ static inline void hlist_nulls_del_init_rcu(struct hlist_nulls_node *n)
+ {
+ 	if (!hlist_nulls_unhashed(n)) {
+ 		__hlist_nulls_del(n);
+-		n->pprev = NULL;
++		WRITE_ONCE(n->pprev, NULL);
+ 	}
+ }
  
- 	isert_wait4flush(isert_conn);
- 	isert_put_unsol_pending_cmds(conn);
-+	isert_wait4cmds(conn);
- 	isert_wait4logout(isert_conn);
+@@ -65,7 +65,7 @@ static inline void hlist_nulls_del_init_rcu(struct hlist_nulls_node *n)
+ static inline void hlist_nulls_del_rcu(struct hlist_nulls_node *n)
+ {
+ 	__hlist_nulls_del(n);
+-	n->pprev = LIST_POISON2;
++	WRITE_ONCE(n->pprev, LIST_POISON2);
+ }
  
- 	queue_work(isert_release_wq, &isert_conn->release_work);
---- a/drivers/target/iscsi/iscsi_target.c
-+++ b/drivers/target/iscsi/iscsi_target.c
-@@ -4309,6 +4309,9 @@ int iscsit_close_connection(
- 	iscsit_stop_nopin_response_timer(conn);
- 	iscsit_stop_nopin_timer(conn);
+ /**
+@@ -93,10 +93,10 @@ static inline void hlist_nulls_add_head_rcu(struct hlist_nulls_node *n,
+ 	struct hlist_nulls_node *first = h->first;
  
-+	if (conn->conn_transport->iscsit_wait_conn)
-+		conn->conn_transport->iscsit_wait_conn(conn);
-+
- 	/*
- 	 * During Connection recovery drop unacknowledged out of order
- 	 * commands for this connection, and prepare the other commands
-@@ -4394,9 +4397,6 @@ int iscsit_close_connection(
- 	target_sess_cmd_list_set_waiting(sess->se_sess);
- 	target_wait_for_sess_cmds(sess->se_sess);
- 
--	if (conn->conn_transport->iscsit_wait_conn)
--		conn->conn_transport->iscsit_wait_conn(conn);
--
- 	if (conn->conn_rx_hash.tfm)
- 		crypto_free_hash(conn->conn_rx_hash.tfm);
- 	if (conn->conn_tx_hash.tfm)
+ 	n->next = first;
+-	n->pprev = &h->first;
++	WRITE_ONCE(n->pprev, &h->first);
+ 	rcu_assign_pointer(hlist_nulls_first_rcu(h), n);
+ 	if (!is_a_nulls(first))
+-		first->pprev = &n->next;
++		WRITE_ONCE(first->pprev, &n->next);
+ }
+ /**
+  * hlist_nulls_for_each_entry_rcu - iterate over rcu list of given type
+-- 
+2.20.1
+
 
 
