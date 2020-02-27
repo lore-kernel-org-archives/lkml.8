@@ -2,188 +2,103 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 957DFC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB8BC34022
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 696E324656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:40:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814438;
-	bh=PN70iUaMI2vVCsiu0IR/4OKL5dOUbpqzS8SEM07qHbk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xPCnk4LPT2ysFjVQud4SFh3kbO+4Zcz/fmk6zH7r258swtMKWbwKHuo2oz3MKC6jY
-	 V66NuGgWCnoS8W60L2Up+PbyZFWL4EzmjSVF4tOnelZQwOIfZG/1wFjdGfE1skBf52
-	 sobO/BlQ1E3qyvDuSJNia+jUYqNIlEnbMmWnYyio=
+	by mail.kernel.org (Postfix) with ESMTP id D24AA24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:40:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="M/B+wVKT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731604AbgB0Nw4 (ORCPT
+        id S1731868AbgB0Okk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:52:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52530 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731450AbgB0Nwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:40:40 -0500
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:38854 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731448AbgB0Nwx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Feb 2020 08:52:53 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4340B20578;
-        Thu, 27 Feb 2020 13:52:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811571;
-        bh=PN70iUaMI2vVCsiu0IR/4OKL5dOUbpqzS8SEM07qHbk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uwtXV9tGZ5osvVf6zsgPayD/CYis1cpA5pCH+2JtrM9LygCDrQ4mVBun3qM/3YFIf
-         YoncGx5+Md3HbbT8V5Gg4KrK3cHV9Bg7EtoKRgSTOCQByrP4YsTJhWuSMcZgvn3ndC
-         ZcQ54FJOeC+yXCHVAF5dnf7edJVL4jvWl8eQF4Mc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, ryusuke1925 <st13s20@gm.ibaraki-ct.ac.jp>,
-        Koki Mitani <koki.mitani.xg@hco.ntt.co.jp>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 019/237] Btrfs: fix race between using extent maps and merging them
-Date:   Thu, 27 Feb 2020 14:33:53 +0100
-Message-Id: <20200227132257.521979695@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
-References: <20200227132255.285644406@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01RDqCX8026476;
+        Thu, 27 Feb 2020 07:52:44 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=cslc29hczETAlQa0X23hPQTj91TBsgGjB1S2qq30ylY=;
+ b=M/B+wVKT5KIY+EntGHNNSZmwep7JogzZUSHR9y5Lu1mtdz+qaXHl6WUBeazJOMmcPMZn
+ V2ADsuQHEMe0IwJtbsDkeyvi7RfXBX4LGQBtDllcAp47SjURfr3/ygBwfxwgRELGeHM7
+ BHbxihSv89oKLzzc8RkbfKVrcJiA4YSY8Iidxia9rgTvnPDIIp2n5j9i1SlrmE4LrI/0
+ agCe7zQUga4ocNJiHd6oCmdcuyq8mEQrzcZDsrcAHnSBjBb4kGknLwUUPU8OHZ8Rdqwd
+ mAm6TRMjIeKcI6ipuEC5/bD+iUrsfA3hI6B3ZXELjrxl9d+1g/SX/M8uZY8QSyfUStnP RQ== 
+Authentication-Results: ppops.net;
+        spf=pass smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex01.ad.cirrus.com ([5.172.152.52])
+        by mx0b-001ae601.pphosted.com with ESMTP id 2ydcmbbkgp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 27 Feb 2020 07:52:44 -0600
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 27 Feb
+ 2020 13:52:43 +0000
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Thu, 27 Feb 2020 13:52:43 +0000
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 0E48645D;
+        Thu, 27 Feb 2020 13:52:43 +0000 (UTC)
+Date:   Thu, 27 Feb 2020 13:52:43 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH v2 1/2] mfd: wm8994: Fix driver operation if loaded as
+ modules
+Message-ID: <20200227135243.GI108283@ediswmail.ad.cirrus.com>
+References: <CGME20200226100814eucas1p1ef5e4d5eb763f37bcd4eceffc798792d@eucas1p1.samsung.com>
+ <20200226100802.16384-1-m.szyprowski@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200226100802.16384-1-m.szyprowski@samsung.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-SPF-Result: pass
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ ip4:5.172.152.52 -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 adultscore=0
+ bulkscore=0 malwarescore=0 clxscore=1011 priorityscore=1501 mlxscore=0
+ lowpriorityscore=0 mlxlogscore=999 suspectscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002270110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+On Wed, Feb 26, 2020 at 11:08:01AM +0100, Marek Szyprowski wrote:
+> WM8994 chip has built-in regulators, which might be used for chip
+> operation. They are controlled by a separate wm8994-regulator driver,
+> which should be loaded before this driver calls regulator_get(), because
+> that driver also provides consumer-supply mapping for the them. If that
+> driver is not yet loaded, regulator core substitute them with dummy
+> regulator, what breaks chip operation, because the built-in regulators are
+> never enabled. Fix this by annotating this driver with MODULE_SOFTDEP()
+> "pre" dependency to "wm8994_regulator" module.
+> 
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
 
-commit ac05ca913e9f3871126d61da275bfe8516ff01ca upstream.
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-We have a few cases where we allow an extent map that is in an extent map
-tree to be merged with other extents in the tree. Such cases include the
-unpinning of an extent after the respective ordered extent completed or
-after logging an extent during a fast fsync. This can lead to subtle and
-dangerous problems because when doing the merge some other task might be
-using the same extent map and as consequence see an inconsistent state of
-the extent map - for example sees the new length but has seen the old start
-offset.
+Be good to ensure patches@opensource.cirrus.com is CCed on
+patches for the old Wolfson CODECs.
 
-With luck this triggers a BUG_ON(), and not some silent bug, such as the
-following one in __do_readpage():
-
-  $ cat -n fs/btrfs/extent_io.c
-  3061  static int __do_readpage(struct extent_io_tree *tree,
-  3062                           struct page *page,
-  (...)
-  3127                  em = __get_extent_map(inode, page, pg_offset, cur,
-  3128                                        end - cur + 1, get_extent, em_cached);
-  3129                  if (IS_ERR_OR_NULL(em)) {
-  3130                          SetPageError(page);
-  3131                          unlock_extent(tree, cur, end);
-  3132                          break;
-  3133                  }
-  3134                  extent_offset = cur - em->start;
-  3135                  BUG_ON(extent_map_end(em) <= cur);
-  (...)
-
-Consider the following example scenario, where we end up hitting the
-BUG_ON() in __do_readpage().
-
-We have an inode with a size of 8KiB and 2 extent maps:
-
-  extent A: file offset 0, length 4KiB, disk_bytenr = X, persisted on disk by
-            a previous transaction
-
-  extent B: file offset 4KiB, length 4KiB, disk_bytenr = X + 4KiB, not yet
-            persisted but writeback started for it already. The extent map
-	    is pinned since there's writeback and an ordered extent in
-	    progress, so it can not be merged with extent map A yet
-
-The following sequence of steps leads to the BUG_ON():
-
-1) The ordered extent for extent B completes, the respective page gets its
-   writeback bit cleared and the extent map is unpinned, at that point it
-   is not yet merged with extent map A because it's in the list of modified
-   extents;
-
-2) Due to memory pressure, or some other reason, the MM subsystem releases
-   the page corresponding to extent B - btrfs_releasepage() is called and
-   returns 1, meaning the page can be released as it's not dirty, not under
-   writeback anymore and the extent range is not locked in the inode's
-   iotree. However the extent map is not released, either because we are
-   not in a context that allows memory allocations to block or because the
-   inode's size is smaller than 16MiB - in this case our inode has a size
-   of 8KiB;
-
-3) Task B needs to read extent B and ends up __do_readpage() through the
-   btrfs_readpage() callback. At __do_readpage() it gets a reference to
-   extent map B;
-
-4) Task A, doing a fast fsync, calls clear_em_loggin() against extent map B
-   while holding the write lock on the inode's extent map tree - this
-   results in try_merge_map() being called and since it's possible to merge
-   extent map B with extent map A now (the extent map B was removed from
-   the list of modified extents), the merging begins - it sets extent map
-   B's start offset to 0 (was 4KiB), but before it increments the map's
-   length to 8KiB (4kb + 4KiB), task A is at:
-
-   BUG_ON(extent_map_end(em) <= cur);
-
-   The call to extent_map_end() sees the extent map has a start of 0
-   and a length still at 4KiB, so it returns 4KiB and 'cur' is 4KiB, so
-   the BUG_ON() is triggered.
-
-So it's dangerous to modify an extent map that is in the tree, because some
-other task might have got a reference to it before and still using it, and
-needs to see a consistent map while using it. Generally this is very rare
-since most paths that lookup and use extent maps also have the file range
-locked in the inode's iotree. The fsync path is pretty much the only
-exception where we don't do it to avoid serialization with concurrent
-reads.
-
-Fix this by not allowing an extent map do be merged if if it's being used
-by tasks other then the one attempting to merge the extent map (when the
-reference count of the extent map is greater than 2).
-
-Reported-by: ryusuke1925 <st13s20@gm.ibaraki-ct.ac.jp>
-Reported-by: Koki Mitani <koki.mitani.xg@hco.ntt.co.jp>
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=206211
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/btrfs/extent_map.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
-
---- a/fs/btrfs/extent_map.c
-+++ b/fs/btrfs/extent_map.c
-@@ -228,6 +228,17 @@ static void try_merge_map(struct extent_
- 	struct extent_map *merge = NULL;
- 	struct rb_node *rb;
- 
-+	/*
-+	 * We can't modify an extent map that is in the tree and that is being
-+	 * used by another task, as it can cause that other task to see it in
-+	 * inconsistent state during the merging. We always have 1 reference for
-+	 * the tree and 1 for this task (which is unpinning the extent map or
-+	 * clearing the logging flag), so anything > 2 means it's being used by
-+	 * other tasks too.
-+	 */
-+	if (refcount_read(&em->refs) > 2)
-+		return;
-+
- 	if (em->start != 0) {
- 		rb = rb_prev(&em->rb_node);
- 		if (rb)
-
-
+Thanks,
+Charles
