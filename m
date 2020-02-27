@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0A0C52D23
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C21EC52D20
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39E5221D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:04:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB73921556
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:03:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812251;
-	bh=+TFOXBk75S8bLqdzidN0IZTgL72Fo3EFA7peJq32h5s=;
+	s=default; t=1582812235;
+	bh=YoImnijzEvH+A8LvlTxzAcelxjt7YPf0k7Fc6BGfJag=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=typHLOSdnPKKUeUdE5HZpu0KxYIK9IVqlc8wZ2Ry2fUP3Sr9Jd6cIiDyOzC2z8PN3
-	 uxOsAOmwP3oef3Jh0X47vSNbnQ4a89iOGAcK36ytDZVTeBpP3OxR7wKdffrVLFD7X5
-	 mr1/TW5+FYjCGAAa6NufIGgrgSoIIf7MYYZjQ3GU=
+	b=ELu50GaDxZgA23M/NLiJPyaqcrzDm04epDMV7IupNh/YarTB/4xfC6bYI1NWDmsBw
+	 3DG/Epna/rPBys1/LhUrwv5RL02BLywehQYc0zx0aRUZOK/71p5yMyg4gKsi0uf0S3
+	 JwJdBEt8tXknMV/baOtvCI1qTvhhMP5cIq6vEimU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387540AbgB0OEK (ORCPT
+        id S2387487AbgB0ODx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:04:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39756 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:03:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730232AbgB0OD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:03:57 -0500
+        id S2387463AbgB0ODo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:03:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2F8B21D7E;
-        Thu, 27 Feb 2020 14:03:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 830AE24691;
+        Thu, 27 Feb 2020 14:03:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812237;
-        bh=+TFOXBk75S8bLqdzidN0IZTgL72Fo3EFA7peJq32h5s=;
+        s=default; t=1582812224;
+        bh=YoImnijzEvH+A8LvlTxzAcelxjt7YPf0k7Fc6BGfJag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JUaJG7ejud+R5ir549L1Ep6jtBQvOIy5knAN+VSJBBDCXlJqsK/o7ElrahqV2SDAx
-         6SxpwV1BAR8NRcUGw/lAAgZ0/ZrAZHRISD+mlSaoPveFylt4Oe9Wx832TOR/4evcsZ
-         b3sRFkJGVlbEq5UR8jVsjii+JlCTe+y+W+1+YGvA=
+        b=dkJkxj4UbYB3GeZFlceG3I0IeMBubl0hoX4TTBUAYEDRz6Cnhyg68TC7cJE4yJ/sC
+         JRSC7lenf2gG8LBMRykUXpX24wcnDH6PRksKQ4rwbmQn/gZz2cCvpFHhg+xjVXps+Y
+         psaIhD/52qljZIoUrTfk+zAF8J+w7/fWzWaMhsp8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@suse.de>
-Subject: [PATCH 4.19 38/97] x86/mce/amd: Fix kobject lifetime
-Date:   Thu, 27 Feb 2020 14:36:46 +0100
-Message-Id: <20200227132220.767800679@linuxfoundation.org>
+        stable@vger.kernel.org, Pietro Oliva <pietroliva@gmail.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>
+Subject: [PATCH 4.19 33/97] staging: rtl8723bs: Fix potential security hole
+Date:   Thu, 27 Feb 2020 14:36:41 +0100
+Message-Id: <20200227132220.020655108@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
 References: <20200227132214.553656188@linuxfoundation.org>
@@ -59,87 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Larry Finger <Larry.Finger@lwfinger.net>
 
-commit 51dede9c05df2b78acd6dcf6a17d21f0877d2d7b upstream.
+commit ac33597c0c0d1d819dccfe001bcd0acef7107e7c upstream.
 
-Accessing the MCA thresholding controls in sysfs concurrently with CPU
-hotplug can lead to a couple of KASAN-reported issues:
+In routine rtw_hostapd_ioctl(), the user-controlled p->length is assumed
+to be at least the size of struct ieee_param size, but this assumption is
+never checked. This could result in out-of-bounds read/write on kernel
+heap in case a p->length less than the size of struct ieee_param is
+specified by the user. If p->length is allowed to be greater than the size
+of the struct, then a malicious user could be wasting kernel memory.
+Fixes commit 554c0a3abf216 ("0taging: Add rtl8723bs sdio wifi driver").
 
-  BUG: KASAN: use-after-free in sysfs_file_ops+0x155/0x180
-  Read of size 8 at addr ffff888367578940 by task grep/4019
-
-and
-
-  BUG: KASAN: use-after-free in show_error_count+0x15c/0x180
-  Read of size 2 at addr ffff888368a05514 by task grep/4454
-
-for example. Both result from the fact that the threshold block
-creation/teardown code frees the descriptor memory itself instead of
-defining proper ->release function and leaving it to the driver core to
-take care of that, after all sysfs accesses have completed.
-
-Do that and get rid of the custom freeing code, fixing the above UAFs in
-the process.
-
-  [ bp: write commit message. ]
-
-Fixes: 95268664390b ("[PATCH] x86_64: mce_amd support for family 0x10 processors")
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20200214082801.13836-1-bp@alien8.de
+Reported by: Pietro Oliva <pietroliva@gmail.com>
+Cc: Pietro Oliva <pietroliva@gmail.com>
+Cc: Stable <stable@vger.kernel.org>
+Fixes 554c0a3abf216 ("0taging: Add rtl8723bs sdio wifi driver").
+Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
+Link: https://lore.kernel.org/r/20200210180235.21691-3-Larry.Finger@lwfinger.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/cpu/mcheck/mce_amd.c |   17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ drivers/staging/rtl8723bs/os_dep/ioctl_linux.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kernel/cpu/mcheck/mce_amd.c
-+++ b/arch/x86/kernel/cpu/mcheck/mce_amd.c
-@@ -1117,9 +1117,12 @@ static const struct sysfs_ops threshold_
- 	.store			= store,
- };
+--- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
++++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+@@ -4236,7 +4236,7 @@ static int rtw_hostapd_ioctl(struct net_
  
-+static void threshold_block_release(struct kobject *kobj);
-+
- static struct kobj_type threshold_ktype = {
- 	.sysfs_ops		= &threshold_ops,
- 	.default_attrs		= default_attrs,
-+	.release		= threshold_block_release,
- };
  
- static const char *get_name(unsigned int bank, struct threshold_block *b)
-@@ -1321,8 +1324,12 @@ static int threshold_create_bank(unsigne
- 	return err;
- }
- 
--static void deallocate_threshold_block(unsigned int cpu,
--						 unsigned int bank)
-+static void threshold_block_release(struct kobject *kobj)
-+{
-+	kfree(to_block(kobj));
-+}
-+
-+static void deallocate_threshold_block(unsigned int cpu, unsigned int bank)
- {
- 	struct threshold_block *pos = NULL;
- 	struct threshold_block *tmp = NULL;
-@@ -1332,13 +1339,11 @@ static void deallocate_threshold_block(u
- 		return;
- 
- 	list_for_each_entry_safe(pos, tmp, &head->blocks->miscj, miscj) {
--		kobject_put(&pos->kobj);
- 		list_del(&pos->miscj);
--		kfree(pos);
-+		kobject_put(&pos->kobj);
+ 	/* if (p->length < sizeof(struct ieee_param) || !p->pointer) { */
+-	if (!p->pointer) {
++	if (!p->pointer || p->length != sizeof(*param)) {
+ 		ret = -EINVAL;
+ 		goto out;
  	}
- 
--	kfree(per_cpu(threshold_banks, cpu)[bank]->blocks);
--	per_cpu(threshold_banks, cpu)[bank]->blocks = NULL;
-+	kobject_put(&head->blocks->kobj);
- }
- 
- static void __threshold_remove_blocks(struct threshold_bank *b)
 
 
