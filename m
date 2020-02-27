@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C79C54FF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3304CC3F375
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F39C24697
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E496B2469D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:14:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812755;
-	bh=Tjc+VNTIwPmQo8lQytQmKQARh+VJKu0de2ydV+Hpy3g=;
+	s=default; t=1582812844;
+	bh=eXF2rV6X3gjuGXC82hTXXdpx13WqeW4mL0pDL5T2YyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YwXcs2YKIsc6ZfPT49JL3KwmfqCNglaGng+NGDwbqHqExKEa8+kWdgtp0lkQRa7Fm
-	 uSn5jLauKYUYJwwRoKSo+B6IlXAJI+YYYB1IVJEXmKeRO/dPr5CD5mlB3ptX0XcnMH
-	 MtrVhicHx49mWA87wiVEj2pYOTqHxtDKkJxM6FqA=
+	b=lMbTIBUS2xAmg01docwI9rsvMcpRD6SdTaisCDbVWXowToklVAKT9ku2Yn1W6ZKGF
+	 wC948tMsMDYV0e82aoo8UuXJLzS70xeFbWyRYnG97ZZfMacF+0Tjcq2HrDztDKNIge
+	 IsO+AAMh9QiPAf+w3YtJ1S67rOAKhyeWyekS/JZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388857AbgB0OMd (ORCPT
+        id S2389059AbgB0OOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:12:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51164 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:14:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730886AbgB0OMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:12:30 -0500
+        id S2389043AbgB0ON7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:13:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66DCD20578;
-        Thu, 27 Feb 2020 14:12:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EC7E2469D;
+        Thu, 27 Feb 2020 14:13:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812749;
-        bh=Tjc+VNTIwPmQo8lQytQmKQARh+VJKu0de2ydV+Hpy3g=;
+        s=default; t=1582812838;
+        bh=eXF2rV6X3gjuGXC82hTXXdpx13WqeW4mL0pDL5T2YyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KLqL0t/hSBpR+m9gG/fhsykQ3FI0tBFYqZkblPG+u8tEiCDycTq+/a1QeZYIvKX4R
-         bwbz8jWBmespnxMJMPx4kMhADebD/81BN1XYS4xQ+18pHKthXBnd4q2v3QAdZloCvR
-         LlYPW6LcMqvpBI4gByvL/JyOVJSqN9+DqVDhxRXQ=
+        b=CRdCxlVwtdjpD+U2qM7jxa+K2ODzmLyWzhUQ+4OT5v3kIJOzp26gOEIqmp+0SUGvi
+         GCszdODUPHXTcKkiJ9zxHVjNqBnGAMpnLPXkK0ufiuaNhtN8EM+94DbNPLRjIVfVVv
+         bGTvKbc6zM3exZJ0Ok4ItfOF33OyzPN/9Vr1e/vQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>
-Subject: [PATCH 5.4 106/135] drm/msm/dpu: fix BGR565 vs RGB565 confusion
-Date:   Thu, 27 Feb 2020 14:37:26 +0100
-Message-Id: <20200227132245.163850701@linuxfoundation.org>
+        stable@vger.kernel.org, edes <edes@gmx.net>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.5 036/150] USB: quirks: blacklist duplicate ep on Sound Devices USBPre2
+Date:   Thu, 27 Feb 2020 14:36:13 +0100
+Message-Id: <20200227132238.093589920@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
-References: <20200227132228.710492098@linuxfoundation.org>
+In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
+References: <20200227132232.815448360@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,41 +59,146 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+From: Johan Hovold <johan@kernel.org>
 
-commit 8fc7036ee652207ca992fbb9abb64090c355a9e0 upstream.
+commit bdd1b147b8026df0e4260b387026b251d888ed01 upstream.
 
-The component order between the two was swapped, resulting in incorrect
-color when games with 565 visual hit the overlay path instead of GPU
-composition.
+This device has a broken vendor-specific altsetting for interface 1,
+where endpoint 0x85 is declared as an isochronous endpoint despite being
+used by interface 2 for audio capture.
 
-Fixes: 25fdd5933e4c ("drm/msm: Add SDM845 DPU support")
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Reviewed-by: Sean Paul <seanpaul@chromium.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Device Descriptor:
+  bLength                18
+  bDescriptorType         1
+  bcdUSB               2.00
+  bDeviceClass          239 Miscellaneous Device
+  bDeviceSubClass         2
+  bDeviceProtocol         1 Interface Association
+  bMaxPacketSize0        64
+  idVendor           0x0926
+  idProduct          0x0202
+  bcdDevice            1.00
+  iManufacturer           1 Sound Devices
+  iProduct                2 USBPre2
+  iSerial                 3 [...]
+  bNumConfigurations      1
+
+[...]
+
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        1
+      bAlternateSetting       3
+      bNumEndpoints           2
+      bInterfaceClass       255 Vendor Specific Class
+      bInterfaceSubClass      0
+      bInterfaceProtocol      0
+      iInterface              0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x85  EP 5 IN
+        bmAttributes            5
+          Transfer Type            Isochronous
+          Synch Type               Asynchronous
+          Usage Type               Data
+        wMaxPacketSize     0x0126  1x 294 bytes
+        bInterval               1
+
+[...]
+
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        2
+      bAlternateSetting       1
+      bNumEndpoints           1
+      bInterfaceClass         1 Audio
+      bInterfaceSubClass      2 Streaming
+      bInterfaceProtocol      0
+      iInterface              0
+      AudioStreaming Interface Descriptor:
+        bLength                 7
+        bDescriptorType        36
+        bDescriptorSubtype      1 (AS_GENERAL)
+        bTerminalLink           4
+        bDelay                  1 frames
+        wFormatTag         0x0001 PCM
+      AudioStreaming Interface Descriptor:
+        bLength                26
+        bDescriptorType        36
+        bDescriptorSubtype      2 (FORMAT_TYPE)
+        bFormatType             1 (FORMAT_TYPE_I)
+        bNrChannels             2
+        bSubframeSize           2
+        bBitResolution         16
+        bSamFreqType            6 Discrete
+        tSamFreq[ 0]         8000
+        tSamFreq[ 1]        16000
+        tSamFreq[ 2]        24000
+        tSamFreq[ 3]        32000
+        tSamFreq[ 4]        44100
+        tSamFreq[ 5]        48000
+      Endpoint Descriptor:
+        bLength                 9
+        bDescriptorType         5
+        bEndpointAddress     0x85  EP 5 IN
+        bmAttributes            5
+          Transfer Type            Isochronous
+          Synch Type               Asynchronous
+          Usage Type               Data
+        wMaxPacketSize     0x0126  1x 294 bytes
+        bInterval               4
+        bRefresh                0
+        bSynchAddress           0
+        AudioStreaming Endpoint Descriptor:
+          bLength                 7
+          bDescriptorType        37
+          bDescriptorSubtype      1 (EP_GENERAL)
+          bmAttributes         0x01
+            Sampling Frequency
+          bLockDelayUnits         2 Decoded PCM samples
+          wLockDelay         0x0000
+
+Since commit 3e4f8e21c4f2 ("USB: core: fix check for duplicate
+endpoints") USB core ignores any duplicate endpoints found during
+descriptor parsing, but in this case we need to ignore the first
+instance in order to avoid breaking the audio capture interface.
+
+Fixes: 3e4f8e21c4f2 ("USB: core: fix check for duplicate endpoints")
+Cc: stable <stable@vger.kernel.org>
+Reported-by: edes <edes@gmx.net>
+Tested-by: edes <edes@gmx.net>
+Link: https://lore.kernel.org/r/20200201105829.5682c887@acme7.acmenet
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20200203153830.26394-3-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/core/quirks.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c
-@@ -255,13 +255,13 @@ static const struct dpu_format dpu_forma
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -354,6 +354,10 @@ static const struct usb_device_id usb_qu
+ 	{ USB_DEVICE(0x0904, 0x6103), .driver_info =
+ 			USB_QUIRK_LINEAR_FRAME_INTR_BINTERVAL },
  
- 	INTERLEAVED_RGB_FMT(RGB565,
- 		0, COLOR_5BIT, COLOR_6BIT, COLOR_5BIT,
--		C2_R_Cr, C0_G_Y, C1_B_Cb, 0, 3,
-+		C1_B_Cb, C0_G_Y, C2_R_Cr, 0, 3,
- 		false, 2, 0,
- 		DPU_FETCH_LINEAR, 1),
- 
- 	INTERLEAVED_RGB_FMT(BGR565,
- 		0, COLOR_5BIT, COLOR_6BIT, COLOR_5BIT,
--		C1_B_Cb, C0_G_Y, C2_R_Cr, 0, 3,
-+		C2_R_Cr, C0_G_Y, C1_B_Cb, 0, 3,
- 		false, 2, 0,
- 		DPU_FETCH_LINEAR, 1),
++	/* Sound Devices USBPre2 */
++	{ USB_DEVICE(0x0926, 0x0202), .driver_info =
++			USB_QUIRK_ENDPOINT_BLACKLIST },
++
+ 	/* Keytouch QWERTY Panel keyboard */
+ 	{ USB_DEVICE(0x0926, 0x3333), .driver_info =
+ 			USB_QUIRK_CONFIG_INTF_STRINGS },
+@@ -479,6 +483,7 @@ static const struct usb_device_id usb_am
+  * Matched for devices with USB_QUIRK_ENDPOINT_BLACKLIST.
+  */
+ static const struct usb_device_id usb_endpoint_blacklist[] = {
++	{ USB_DEVICE_INTERFACE_NUMBER(0x0926, 0x0202, 1), .driver_info = 0x85 },
+ 	{ }
+ };
  
 
 
