@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DBDC3F379
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B701BC54FC6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 940E524690
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E8252468F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812940;
-	bh=j2T53C+XhosR0b6W3HCOPsfXuad/ruqDqPW93fkEP5Q=;
+	s=default; t=1582813068;
+	bh=7QqwOjNJtbd9xkAn4TsVI4GpOYlFQLC1fz7u+pjqbpg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fnei4kBMe7NDo6IcPB7uJvZbyOkEMT32HUGzo+ph0Kno7q5voEeSiW24hlqtFiVIR
-	 1Ef0DwXSu+3hHhB3TNFHw2/3HQCTJZLUBLaZp712IBs1SFtL222PUuH4kl1f4TtDtX
-	 CX54uAqaWsAMMNLbU2ESxpsAQCLmFSUPUGm07UbM=
+	b=PkH1HVOg0oOcg/o0ExKI1n7GC+S5xbvBz1DuraeBwcCr5O0ZBm8gBsoIaXUEYh28z
+	 EtU9oSiq2nVKE1EBe3rv15NZhvHUkZusn7Sa9Sv+JsVvuURX0TJBf//vxMtJSomRj9
+	 wj2iWgZjFbG0A+OwDe3ESMDtqXa8uFGIq9tSXvR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389336AbgB0OPj (ORCPT
+        id S2389776AbgB0ORr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:15:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55208 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:17:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389084AbgB0OPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:15:35 -0500
+        id S2389444AbgB0ORp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:17:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A490B20578;
-        Thu, 27 Feb 2020 14:15:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 415B124690;
+        Thu, 27 Feb 2020 14:17:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812935;
-        bh=j2T53C+XhosR0b6W3HCOPsfXuad/ruqDqPW93fkEP5Q=;
+        s=default; t=1582813064;
+        bh=7QqwOjNJtbd9xkAn4TsVI4GpOYlFQLC1fz7u+pjqbpg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eRCdr+GIEYhPlO2eJXgxUCdWapZYeEt+2Ngb5EmKRS2x5fbh0GbTAK+2ogCkOesZK
-         drTp/ncGuO2axNXI+x/Rf024CVE6OsW3FoRa7NvecbWO/tHE569qcd1ab2/qJpzqfB
-         XdIQBZUIsLDw7Uk9HJE4sU9w4rgCPGxlPZtBPKYg=
+        b=du3JdpVUN//Qr1/qVOPmJdtUsQyWbLz1t3ncpN2sV49Cd4IB7PfU314uUyGdh/uvq
+         8v/53mhiES8hI/yTGtGCEQ0mXrwu9zH6PleOXQMVrqKNS47EkcKXmuy775PGarHZM5
+         vhKMVH+G0bNtqXLEK2D0kEFjWTE2yUt/7j57S1fY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.5 073/150] mm/memcontrol.c: lost css_put in memcg_expand_shrinker_maps()
-Date:   Thu, 27 Feb 2020 14:36:50 +0100
-Message-Id: <20200227132243.674420842@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH 5.5 123/150] staging: rtl8723bs: fix copy of overlapping memory
+Date:   Thu, 27 Feb 2020 14:37:40 +0100
+Message-Id: <20200227132250.806079083@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -64,43 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit 75866af62b439859d5146b7093ceb6b482852683 upstream.
+commit 8ae9a588ca35eb9c32dc03299c5e1f4a1e9a9617 upstream.
 
-for_each_mem_cgroup() increases css reference counter for memory cgroup
-and requires to use mem_cgroup_iter_break() if the walk is cancelled.
+Currently the rtw_sprintf prints the contents of thread_name
+onto thread_name and this can lead to a potential copy of a
+string over itself. Avoid this by printing the literal string RTWHALXT
+instread of the contents of thread_name.
 
-Link: http://lkml.kernel.org/r/c98414fb-7e1f-da0f-867a-9340ec4bd30b@virtuozzo.com
-Fixes: 0a4465d34028 ("mm, memcg: assign memcg-aware shrinkers bitmap to memcg")
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Acked-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Roman Gushchin <guro@fb.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Addresses-Coverity: ("copy of overlapping memory")
+Fixes: 554c0a3abf21 ("staging: Add rtl8723bs sdio wifi driver")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20200126220549.9849-1-colin.king@canonical.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/memcontrol.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -409,8 +409,10 @@ int memcg_expand_shrinker_maps(int new_i
- 		if (mem_cgroup_is_root(memcg))
- 			continue;
- 		ret = memcg_expand_one_shrinker_map(memcg, size, old_size);
--		if (ret)
-+		if (ret) {
-+			mem_cgroup_iter_break(NULL, memcg);
- 			goto unlock;
-+		}
- 	}
- unlock:
- 	if (!ret)
+--- a/drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c
++++ b/drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c
+@@ -476,14 +476,13 @@ int rtl8723bs_xmit_thread(void *context)
+ 	s32 ret;
+ 	struct adapter *padapter;
+ 	struct xmit_priv *pxmitpriv;
+-	u8 thread_name[20] = "RTWHALXT";
+-
++	u8 thread_name[20];
+ 
+ 	ret = _SUCCESS;
+ 	padapter = context;
+ 	pxmitpriv = &padapter->xmitpriv;
+ 
+-	rtw_sprintf(thread_name, 20, "%s-"ADPT_FMT, thread_name, ADPT_ARG(padapter));
++	rtw_sprintf(thread_name, 20, "RTWHALXT-" ADPT_FMT, ADPT_ARG(padapter));
+ 	thread_enter(thread_name);
+ 
+ 	DBG_871X("start "FUNC_ADPT_FMT"\n", FUNC_ADPT_ARG(padapter));
 
 
