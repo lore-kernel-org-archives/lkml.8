@@ -2,348 +2,76 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5F7C76595
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A6EC76597
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DA7621D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:29:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813747;
-	bh=g/TMolZHmVOSyHJsC+BjTpADaxnWORCWbhIYZqOId4I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F9YwHAkjMKKRVkO5AvkCh7yk73d2Zyo3k3rpM9pCYWItVjgeMGOYNFQ4mfKObAA5n
-	 vhSM8kTxYfClW/D5y6WEkV4UcqjcyL0V8hI6z+kBITEhXs10GgXPBwNGhIpePZYYtf
-	 IvI1+sskWFeLic+yDnzByyVvRRa9JzG0dvTLnfzY=
+	by mail.kernel.org (Postfix) with ESMTP id BF70021D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:29:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387996AbgB0OGy (ORCPT
+        id S2388454AbgB0O3I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:06:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44078 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:29:08 -0500
+Received: from elvis.franken.de ([193.175.24.41]:40353 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387980AbgB0OGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:06:49 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF13220578;
-        Thu, 27 Feb 2020 14:06:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812407;
-        bh=g/TMolZHmVOSyHJsC+BjTpADaxnWORCWbhIYZqOId4I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BT2cPGMNMRxsbaCwv0Iga51imXJV/S+8ZKn7EUQ/kC/B9xolNYvirsSXO5hctW0Jl
-         q0igmWeohONOstt2D6dqx9q+68I3h+7OtLLrW+HRv2OoulGyQPLEMtEmBma3pKr3vN
-         HB+um6KfB6fjXzJL2n9CVE971ojxF/7yCfNP++9k=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Suraj Jitindar Singh <surajjs@amazon.com>,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org
-Subject: [PATCH 4.19 67/97] ext4: fix potential race between s_flex_groups online resizing and access
-Date:   Thu, 27 Feb 2020 14:37:15 +0100
-Message-Id: <20200227132225.438095218@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
-References: <20200227132214.553656188@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1731272AbgB0O3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:29:06 -0500
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1j7K9u-0004ld-00; Thu, 27 Feb 2020 15:29:02 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 93A06C0EB2; Thu, 27 Feb 2020 15:02:11 +0100 (CET)
+Date:   Thu, 27 Feb 2020 15:02:11 +0100
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        James Hogan <jhogan@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Fixes tag needs some work in the mips-fixes tree
+Message-ID: <20200227140211.GA17887@alpha.franken.de>
+References: <20200227071718.5aac4713@canb.auug.org.au>
+ <1582811024.3.0@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1582811024.3.0@crapouillou.net>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suraj Jitindar Singh <surajjs@amazon.com>
+On Thu, Feb 27, 2020 at 10:43:44AM -0300, Paul Cercueil wrote:
+> Le jeu., févr. 27, 2020 at 07:17, Stephen Rothwell <sfr@canb.auug.org.au> a
+> écrit :
+> >Hi all,
+> >
+> >In commit
+> >
+> >  3944dee0c6cd ("MIPS: Fix CONFIG_MIPS_CMDLINE_DTB_EXTEND handling")
+> >
+> >Fixes tag
+> >
+> >  Fixes: 7784cac69735 ("MIPS: cmdline: Clean up boot_command_line
+> >
+> >has these problem(s):
+> >
+> >  - Subject has leading but no trailing parentheses
+> >  - Subject has leading but no trailing quotes
+> >
+> >Please do not split Fixes tags over more than one line.
+> 
+> My fault, sorry. I did not know they could not be splitted.
 
-commit 7c990728b99ed6fbe9c75fc202fce1172d9916da upstream.
+I've fixed it.
 
-During an online resize an array of s_flex_groups structures gets replaced
-so it can get enlarged. If there is a concurrent access to the array and
-this memory has been reused then this can lead to an invalid memory access.
+Thomas.
 
-The s_flex_group array has been converted into an array of pointers rather
-than an array of structures. This is to ensure that the information
-contained in the structures cannot get out of sync during a resize due to
-an accessor updating the value in the old structure after it has been
-copied but before the array pointer is updated. Since the structures them-
-selves are no longer copied but only the pointers to them this case is
-mitigated.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206443
-Link: https://lore.kernel.org/r/20200221053458.730016-4-tytso@mit.edu
-Signed-off-by: Suraj Jitindar Singh <surajjs@amazon.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/ext4/ext4.h    |    2 -
- fs/ext4/ialloc.c  |   23 ++++++++++-------
- fs/ext4/mballoc.c |    9 ++++--
- fs/ext4/resize.c  |    7 +++--
- fs/ext4/super.c   |   72 +++++++++++++++++++++++++++++++++++++-----------------
- 5 files changed, 76 insertions(+), 37 deletions(-)
-
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -1480,7 +1480,7 @@ struct ext4_sb_info {
- 	unsigned int s_extent_max_zeroout_kb;
- 
- 	unsigned int s_log_groups_per_flex;
--	struct flex_groups *s_flex_groups;
-+	struct flex_groups * __rcu *s_flex_groups;
- 	ext4_group_t s_flex_groups_allocated;
- 
- 	/* workqueue for reserved extent conversions (buffered io) */
---- a/fs/ext4/ialloc.c
-+++ b/fs/ext4/ialloc.c
-@@ -330,11 +330,13 @@ void ext4_free_inode(handle_t *handle, s
- 
- 	percpu_counter_inc(&sbi->s_freeinodes_counter);
- 	if (sbi->s_log_groups_per_flex) {
--		ext4_group_t f = ext4_flex_group(sbi, block_group);
-+		struct flex_groups *fg;
- 
--		atomic_inc(&sbi->s_flex_groups[f].free_inodes);
-+		fg = sbi_array_rcu_deref(sbi, s_flex_groups,
-+					 ext4_flex_group(sbi, block_group));
-+		atomic_inc(&fg->free_inodes);
- 		if (is_directory)
--			atomic_dec(&sbi->s_flex_groups[f].used_dirs);
-+			atomic_dec(&fg->used_dirs);
- 	}
- 	BUFFER_TRACE(bh2, "call ext4_handle_dirty_metadata");
- 	fatal = ext4_handle_dirty_metadata(handle, NULL, bh2);
-@@ -370,12 +372,13 @@ static void get_orlov_stats(struct super
- 			    int flex_size, struct orlov_stats *stats)
- {
- 	struct ext4_group_desc *desc;
--	struct flex_groups *flex_group = EXT4_SB(sb)->s_flex_groups;
- 
- 	if (flex_size > 1) {
--		stats->free_inodes = atomic_read(&flex_group[g].free_inodes);
--		stats->free_clusters = atomic64_read(&flex_group[g].free_clusters);
--		stats->used_dirs = atomic_read(&flex_group[g].used_dirs);
-+		struct flex_groups *fg = sbi_array_rcu_deref(EXT4_SB(sb),
-+							     s_flex_groups, g);
-+		stats->free_inodes = atomic_read(&fg->free_inodes);
-+		stats->free_clusters = atomic64_read(&fg->free_clusters);
-+		stats->used_dirs = atomic_read(&fg->used_dirs);
- 		return;
- 	}
- 
-@@ -1056,7 +1059,8 @@ got:
- 		if (sbi->s_log_groups_per_flex) {
- 			ext4_group_t f = ext4_flex_group(sbi, group);
- 
--			atomic_inc(&sbi->s_flex_groups[f].used_dirs);
-+			atomic_inc(&sbi_array_rcu_deref(sbi, s_flex_groups,
-+							f)->used_dirs);
- 		}
- 	}
- 	if (ext4_has_group_desc_csum(sb)) {
-@@ -1079,7 +1083,8 @@ got:
- 
- 	if (sbi->s_log_groups_per_flex) {
- 		flex_group = ext4_flex_group(sbi, group);
--		atomic_dec(&sbi->s_flex_groups[flex_group].free_inodes);
-+		atomic_dec(&sbi_array_rcu_deref(sbi, s_flex_groups,
-+						flex_group)->free_inodes);
- 	}
- 
- 	inode->i_ino = ino + group * EXT4_INODES_PER_GROUP(sb);
---- a/fs/ext4/mballoc.c
-+++ b/fs/ext4/mballoc.c
-@@ -3036,7 +3036,8 @@ ext4_mb_mark_diskspace_used(struct ext4_
- 		ext4_group_t flex_group = ext4_flex_group(sbi,
- 							  ac->ac_b_ex.fe_group);
- 		atomic64_sub(ac->ac_b_ex.fe_len,
--			     &sbi->s_flex_groups[flex_group].free_clusters);
-+			     &sbi_array_rcu_deref(sbi, s_flex_groups,
-+						  flex_group)->free_clusters);
- 	}
- 
- 	err = ext4_handle_dirty_metadata(handle, NULL, bitmap_bh);
-@@ -4930,7 +4931,8 @@ do_more:
- 	if (sbi->s_log_groups_per_flex) {
- 		ext4_group_t flex_group = ext4_flex_group(sbi, block_group);
- 		atomic64_add(count_clusters,
--			     &sbi->s_flex_groups[flex_group].free_clusters);
-+			     &sbi_array_rcu_deref(sbi, s_flex_groups,
-+						  flex_group)->free_clusters);
- 	}
- 
- 	if (!(flags & EXT4_FREE_BLOCKS_NO_QUOT_UPDATE))
-@@ -5079,7 +5081,8 @@ int ext4_group_add_blocks(handle_t *hand
- 	if (sbi->s_log_groups_per_flex) {
- 		ext4_group_t flex_group = ext4_flex_group(sbi, block_group);
- 		atomic64_add(clusters_freed,
--			     &sbi->s_flex_groups[flex_group].free_clusters);
-+			     &sbi_array_rcu_deref(sbi, s_flex_groups,
-+						  flex_group)->free_clusters);
- 	}
- 
- 	ext4_mb_unload_buddy(&e4b);
---- a/fs/ext4/resize.c
-+++ b/fs/ext4/resize.c
-@@ -1452,11 +1452,14 @@ static void ext4_update_super(struct sup
- 		   percpu_counter_read(&sbi->s_freeclusters_counter));
- 	if (ext4_has_feature_flex_bg(sb) && sbi->s_log_groups_per_flex) {
- 		ext4_group_t flex_group;
-+		struct flex_groups *fg;
-+
- 		flex_group = ext4_flex_group(sbi, group_data[0].group);
-+		fg = sbi_array_rcu_deref(sbi, s_flex_groups, flex_group);
- 		atomic64_add(EXT4_NUM_B2C(sbi, free_blocks),
--			     &sbi->s_flex_groups[flex_group].free_clusters);
-+			     &fg->free_clusters);
- 		atomic_add(EXT4_INODES_PER_GROUP(sb) * flex_gd->count,
--			   &sbi->s_flex_groups[flex_group].free_inodes);
-+			   &fg->free_inodes);
- 	}
- 
- 	/*
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -970,6 +970,7 @@ static void ext4_put_super(struct super_
- 	struct ext4_sb_info *sbi = EXT4_SB(sb);
- 	struct ext4_super_block *es = sbi->s_es;
- 	struct buffer_head **group_desc;
-+	struct flex_groups **flex_groups;
- 	int aborted = 0;
- 	int i, err;
- 
-@@ -1005,8 +1006,13 @@ static void ext4_put_super(struct super_
- 	for (i = 0; i < sbi->s_gdb_count; i++)
- 		brelse(group_desc[i]);
- 	kvfree(group_desc);
-+	flex_groups = rcu_dereference(sbi->s_flex_groups);
-+	if (flex_groups) {
-+		for (i = 0; i < sbi->s_flex_groups_allocated; i++)
-+			kvfree(flex_groups[i]);
-+		kvfree(flex_groups);
-+	}
- 	rcu_read_unlock();
--	kvfree(sbi->s_flex_groups);
- 	percpu_counter_destroy(&sbi->s_freeclusters_counter);
- 	percpu_counter_destroy(&sbi->s_freeinodes_counter);
- 	percpu_counter_destroy(&sbi->s_dirs_counter);
-@@ -2291,8 +2297,8 @@ done:
- int ext4_alloc_flex_bg_array(struct super_block *sb, ext4_group_t ngroup)
- {
- 	struct ext4_sb_info *sbi = EXT4_SB(sb);
--	struct flex_groups *new_groups;
--	int size;
-+	struct flex_groups **old_groups, **new_groups;
-+	int size, i;
- 
- 	if (!sbi->s_log_groups_per_flex)
- 		return 0;
-@@ -2301,22 +2307,37 @@ int ext4_alloc_flex_bg_array(struct supe
- 	if (size <= sbi->s_flex_groups_allocated)
- 		return 0;
- 
--	size = roundup_pow_of_two(size * sizeof(struct flex_groups));
--	new_groups = kvzalloc(size, GFP_KERNEL);
-+	new_groups = kvzalloc(roundup_pow_of_two(size *
-+			      sizeof(*sbi->s_flex_groups)), GFP_KERNEL);
- 	if (!new_groups) {
--		ext4_msg(sb, KERN_ERR, "not enough memory for %d flex groups",
--			 size / (int) sizeof(struct flex_groups));
-+		ext4_msg(sb, KERN_ERR,
-+			 "not enough memory for %d flex group pointers", size);
- 		return -ENOMEM;
- 	}
--
--	if (sbi->s_flex_groups) {
--		memcpy(new_groups, sbi->s_flex_groups,
--		       (sbi->s_flex_groups_allocated *
--			sizeof(struct flex_groups)));
--		kvfree(sbi->s_flex_groups);
-+	for (i = sbi->s_flex_groups_allocated; i < size; i++) {
-+		new_groups[i] = kvzalloc(roundup_pow_of_two(
-+					 sizeof(struct flex_groups)),
-+					 GFP_KERNEL);
-+		if (!new_groups[i]) {
-+			for (i--; i >= sbi->s_flex_groups_allocated; i--)
-+				kvfree(new_groups[i]);
-+			kvfree(new_groups);
-+			ext4_msg(sb, KERN_ERR,
-+				 "not enough memory for %d flex groups", size);
-+			return -ENOMEM;
-+		}
- 	}
--	sbi->s_flex_groups = new_groups;
--	sbi->s_flex_groups_allocated = size / sizeof(struct flex_groups);
-+	rcu_read_lock();
-+	old_groups = rcu_dereference(sbi->s_flex_groups);
-+	if (old_groups)
-+		memcpy(new_groups, old_groups,
-+		       (sbi->s_flex_groups_allocated *
-+			sizeof(struct flex_groups *)));
-+	rcu_read_unlock();
-+	rcu_assign_pointer(sbi->s_flex_groups, new_groups);
-+	sbi->s_flex_groups_allocated = size;
-+	if (old_groups)
-+		ext4_kvfree_array_rcu(old_groups);
- 	return 0;
- }
- 
-@@ -2324,6 +2345,7 @@ static int ext4_fill_flex_info(struct su
- {
- 	struct ext4_sb_info *sbi = EXT4_SB(sb);
- 	struct ext4_group_desc *gdp = NULL;
-+	struct flex_groups *fg;
- 	ext4_group_t flex_group;
- 	int i, err;
- 
-@@ -2341,12 +2363,11 @@ static int ext4_fill_flex_info(struct su
- 		gdp = ext4_get_group_desc(sb, i, NULL);
- 
- 		flex_group = ext4_flex_group(sbi, i);
--		atomic_add(ext4_free_inodes_count(sb, gdp),
--			   &sbi->s_flex_groups[flex_group].free_inodes);
-+		fg = sbi_array_rcu_deref(sbi, s_flex_groups, flex_group);
-+		atomic_add(ext4_free_inodes_count(sb, gdp), &fg->free_inodes);
- 		atomic64_add(ext4_free_group_clusters(sb, gdp),
--			     &sbi->s_flex_groups[flex_group].free_clusters);
--		atomic_add(ext4_used_dirs_count(sb, gdp),
--			   &sbi->s_flex_groups[flex_group].used_dirs);
-+			     &fg->free_clusters);
-+		atomic_add(ext4_used_dirs_count(sb, gdp), &fg->used_dirs);
- 	}
- 
- 	return 1;
-@@ -3555,6 +3576,7 @@ static int ext4_fill_super(struct super_
- 	struct buffer_head *bh, **group_desc;
- 	struct ext4_super_block *es = NULL;
- 	struct ext4_sb_info *sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
-+	struct flex_groups **flex_groups;
- 	ext4_fsblk_t block;
- 	ext4_fsblk_t sb_block = get_sb_block(&data);
- 	ext4_fsblk_t logical_sb_block;
-@@ -4561,8 +4583,14 @@ failed_mount7:
- 	ext4_unregister_li_request(sb);
- failed_mount6:
- 	ext4_mb_release(sb);
--	if (sbi->s_flex_groups)
--		kvfree(sbi->s_flex_groups);
-+	rcu_read_lock();
-+	flex_groups = rcu_dereference(sbi->s_flex_groups);
-+	if (flex_groups) {
-+		for (i = 0; i < sbi->s_flex_groups_allocated; i++)
-+			kvfree(flex_groups[i]);
-+		kvfree(flex_groups);
-+	}
-+	rcu_read_unlock();
- 	percpu_counter_destroy(&sbi->s_freeclusters_counter);
- 	percpu_counter_destroy(&sbi->s_freeinodes_counter);
- 	percpu_counter_destroy(&sbi->s_dirs_counter);
-
-
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
