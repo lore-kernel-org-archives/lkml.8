@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C9DC3F345
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8F6C3F34B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55F02246A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:43:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B526321D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811034;
-	bh=PM8QjGQZ2ZJUFP66loWBfd2IIb6HmzMMvFumoNXypcY=;
+	s=default; t=1582811110;
+	bh=X0N4qAhIcSGQX/+onXxgznseKCjCioKEWftFRkvE8Gc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tVfCuBZy/8yQ4W9TLaLZr8i6c0Fs0FXw7xgP3ppj50gJdaI7gx8OajoeXoth3U1rU
-	 waKpuTtySPHUdOM6A3svpE/oXP69TOp6oatR8cf3FtZym95ANW32UM1NYeBOYF82Lt
-	 hD5lo3PaDklzI6aOMJJcqaI2MNcu0JfPX9g0nCJI=
+	b=KLscNSsfCRBfxmgKoAzOMkTCpF/SC2DtFcosfIwwn8ocOMctTmSJjWBU3Zwryyvx8
+	 vW6cjrWFhM3VcDQXFLEsgDlAOXu+bOOb80XrpBjpDOhsvlR3/XPDAGPgqUA2wMbOXf
+	 /dCqhSVr4v9CAuSpA7VVRFLEnagk0gMuAPpge2KI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730059AbgB0Nnw (ORCPT
+        id S1730346AbgB0NpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:43:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39138 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:45:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730035AbgB0Nnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:43:49 -0500
+        id S1730314AbgB0NpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:45:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86F5B20726;
-        Thu, 27 Feb 2020 13:43:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9BE620578;
+        Thu, 27 Feb 2020 13:45:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811029;
-        bh=PM8QjGQZ2ZJUFP66loWBfd2IIb6HmzMMvFumoNXypcY=;
+        s=default; t=1582811102;
+        bh=X0N4qAhIcSGQX/+onXxgznseKCjCioKEWftFRkvE8Gc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vKFRfA/IjGit7f0iORwFTbJ4pdmY7upfCiCf2zXerVrrGB1I6B2v/Xxb7ipY55FzU
-         K9XvGTzFGYJO0ukBn/vgiuNxiNCOuAse3tEg6H7NaQo+rYCZ+N+nTFtRQz0PcrHlfV
-         +KSe8SzMcPzTv/dfGq/Wy1AkQHqXpqyYLMHnEYi0=
+        b=dN9SSTpq2PAmTn7uLJnEXsCQts+G0hePMAkJMGy1brdwrmft5ZsEvTCGf3Eb6v1zN
+         1KF1SDESDYKeUodIL7CIXkT7eHzsfJcgUNV8IiHuYIy4nccw5tUBv8VpzuvLE9kCGG
+         eQ6FPB3+A8w5sPtd89CSCiuxbvhDgYdN7qy47JNk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, EJ Hsu <ejh@nvidia.com>,
-        Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH 4.4 088/113] usb: uas: fix a plug & unplug racing
-Date:   Thu, 27 Feb 2020 14:36:44 +0100
-Message-Id: <20200227132225.839694024@linuxfoundation.org>
+        stable@vger.kernel.org, Shijie Luo <luoshijie1@huawei.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        stable@kernel.org
+Subject: [PATCH 4.4 102/113] ext4: add cond_resched() to __ext4_find_entry()
+Date:   Thu, 27 Feb 2020 14:36:58 +0100
+Message-Id: <20200227132228.098577351@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
 References: <20200227132211.791484803@linuxfoundation.org>
@@ -59,100 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: EJ Hsu <ejh@nvidia.com>
+From: Shijie Luo <luoshijie1@huawei.com>
 
-commit 3e99862c05a9caa5a27969f41566b428696f5a9a upstream.
+commit 9424ef56e13a1f14c57ea161eed3ecfdc7b2770e upstream.
 
-When a uas disk is plugged into an external hub, uas_probe()
-will be called by the hub thread to do the probe. It will
-first create a SCSI host and then do the scan for this host.
-During the scan, it will probe the LUN using SCSI INQUERY command
-which will be packed in the URB and submitted to uas disk.
+We tested a soft lockup problem in linux 4.19 which could also
+be found in linux 5.x.
 
-There might be a chance that this external hub with uas disk
-attached is unplugged during the scan. In this case, uas driver
-will fail to submit the URB (due to the NOTATTACHED state of uas
-device) and try to put this SCSI command back to request queue
-waiting for next chance to run.
+When dir inode takes up a large number of blocks, and if the
+directory is growing when we are searching, it's possible the
+restart branch could be called many times, and the do while loop
+could hold cpu a long time.
 
-In normal case, this cycle will terminate when hub thread gets
-disconnection event and calls into uas_disconnect() accordingly.
-But in this case, uas_disconnect() will not be called because
-hub thread of external hub gets stuck waiting for the completion
-of this SCSI command. A deadlock happened.
+Here is the call trace in linux 4.19.
 
-In this fix, uas will call scsi_scan_host() asynchronously to
-avoid the blocking of hub thread.
+[  473.756186] Call trace:
+[  473.756196]  dump_backtrace+0x0/0x198
+[  473.756199]  show_stack+0x24/0x30
+[  473.756205]  dump_stack+0xa4/0xcc
+[  473.756210]  watchdog_timer_fn+0x300/0x3e8
+[  473.756215]  __hrtimer_run_queues+0x114/0x358
+[  473.756217]  hrtimer_interrupt+0x104/0x2d8
+[  473.756222]  arch_timer_handler_virt+0x38/0x58
+[  473.756226]  handle_percpu_devid_irq+0x90/0x248
+[  473.756231]  generic_handle_irq+0x34/0x50
+[  473.756234]  __handle_domain_irq+0x68/0xc0
+[  473.756236]  gic_handle_irq+0x6c/0x150
+[  473.756238]  el1_irq+0xb8/0x140
+[  473.756286]  ext4_es_lookup_extent+0xdc/0x258 [ext4]
+[  473.756310]  ext4_map_blocks+0x64/0x5c0 [ext4]
+[  473.756333]  ext4_getblk+0x6c/0x1d0 [ext4]
+[  473.756356]  ext4_bread_batch+0x7c/0x1f8 [ext4]
+[  473.756379]  ext4_find_entry+0x124/0x3f8 [ext4]
+[  473.756402]  ext4_lookup+0x8c/0x258 [ext4]
+[  473.756407]  __lookup_hash+0x8c/0xe8
+[  473.756411]  filename_create+0xa0/0x170
+[  473.756413]  do_mkdirat+0x6c/0x140
+[  473.756415]  __arm64_sys_mkdirat+0x28/0x38
+[  473.756419]  el0_svc_common+0x78/0x130
+[  473.756421]  el0_svc_handler+0x38/0x78
+[  473.756423]  el0_svc+0x8/0xc
+[  485.755156] watchdog: BUG: soft lockup - CPU#2 stuck for 22s! [tmp:5149]
 
-Signed-off-by: EJ Hsu <ejh@nvidia.com>
-Acked-by: Oliver Neukum <oneukum@suse.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200130092506.102760-1-ejh@nvidia.com
+Add cond_resched() to avoid soft lockup and to provide a better
+system responding.
+
+Link: https://lore.kernel.org/r/20200215080206.13293-1-luoshijie1@huawei.com
+Signed-off-by: Shijie Luo <luoshijie1@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/storage/uas.c |   23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ fs/ext4/namei.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/usb/storage/uas.c
-+++ b/drivers/usb/storage/uas.c
-@@ -46,6 +46,7 @@ struct uas_dev_info {
- 	struct scsi_cmnd *cmnd[MAX_CMNDS];
- 	spinlock_t lock;
- 	struct work_struct work;
-+	struct work_struct scan_work;      /* for async scanning */
- };
- 
- enum {
-@@ -115,6 +116,17 @@ out:
- 	spin_unlock_irqrestore(&devinfo->lock, flags);
- }
- 
-+static void uas_scan_work(struct work_struct *work)
-+{
-+	struct uas_dev_info *devinfo =
-+		container_of(work, struct uas_dev_info, scan_work);
-+	struct Scsi_Host *shost = usb_get_intfdata(devinfo->intf);
-+
-+	dev_dbg(&devinfo->intf->dev, "starting scan\n");
-+	scsi_scan_host(shost);
-+	dev_dbg(&devinfo->intf->dev, "scan complete\n");
-+}
-+
- static void uas_add_work(struct uas_cmd_info *cmdinfo)
- {
- 	struct scsi_pointer *scp = (void *)cmdinfo;
-@@ -929,6 +941,7 @@ static int uas_probe(struct usb_interfac
- 	init_usb_anchor(&devinfo->data_urbs);
- 	spin_lock_init(&devinfo->lock);
- 	INIT_WORK(&devinfo->work, uas_do_work);
-+	INIT_WORK(&devinfo->scan_work, uas_scan_work);
- 
- 	result = uas_configure_endpoints(devinfo);
- 	if (result)
-@@ -945,7 +958,9 @@ static int uas_probe(struct usb_interfac
- 	if (result)
- 		goto free_streams;
- 
--	scsi_scan_host(shost);
-+	/* Submit the delayed_work for SCSI-device scanning */
-+	schedule_work(&devinfo->scan_work);
-+
- 	return result;
- 
- free_streams:
-@@ -1113,6 +1128,12 @@ static void uas_disconnect(struct usb_in
- 	usb_kill_anchored_urbs(&devinfo->data_urbs);
- 	uas_zap_pending(devinfo, DID_NO_CONNECT);
- 
-+	/*
-+	 * Prevent SCSI scanning (if it hasn't started yet)
-+	 * or wait for the SCSI-scanning routine to stop.
-+	 */
-+	cancel_work_sync(&devinfo->scan_work);
-+
- 	scsi_remove_host(shost);
- 	uas_free_streams(devinfo);
- 	scsi_host_put(shost);
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -1418,6 +1418,7 @@ restart:
+ 		/*
+ 		 * We deal with the read-ahead logic here.
+ 		 */
++		cond_resched();
+ 		if (ra_ptr >= ra_max) {
+ 			/* Refill the readahead buffer */
+ 			ra_ptr = 0;
 
 
