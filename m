@@ -2,201 +2,162 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D70B1C3F34B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B10EC3F34E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4B2520578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:44:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811053;
-	bh=5LpiuVQR4boJBXcfrHIAnyU+ztcPJ+Wm0GQPtVjfVXg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LuDafCQgjya6sYwGHHlTVZySQ+NHF4jh/Vz0RqcvGBr96+zuNO2E7GgD7KlrHYXPA
-	 WaupCpg7TQfZtpLfamgZxu9XbRhrHZq6ySoDwJMtggcjmHL418v1BDcUw2s2RYidip
-	 VrIgJ05dpr91Riy+vhWWIqsusnHLNBF1B3L6QR7Y=
+	by mail.kernel.org (Postfix) with ESMTP id D715A24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:44:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XuBVxWyk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729753AbgB0NoM (ORCPT
+        id S1730133AbgB0NoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:44:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39604 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729207AbgB0NoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:44:11 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4AA120578;
-        Thu, 27 Feb 2020 13:44:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811050;
-        bh=5LpiuVQR4boJBXcfrHIAnyU+ztcPJ+Wm0GQPtVjfVXg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cjoSby5lJ2SMGXYB8yMNaXNPDmMhpJTs77fO1NGMAz1/VTvr71asTBQ7IV4bykLCs
-         lx0OpjIqmE0GBYjIoMFK3Kzkw7IbRIcFokGDoBqjYuDVMs8cj5JUi3seOljYBDOgpq
-         GJHAPSekBhvTehh3gDx5/LsGzTGqbKiemWQKp4vc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ioanna Alifieraki <ioanna-maria.alifieraki@canonical.com>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        "Herton R. Krzesinski" <herton@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>, malat@debian.org,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jay Vosburgh <jay.vosburgh@canonical.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 095/113] Revert "ipc,sem: remove uneeded sem_undo_list lock usage in exit_sem()"
-Date:   Thu, 27 Feb 2020 14:36:51 +0100
-Message-Id: <20200227132226.936465375@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
-References: <20200227132211.791484803@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 27 Feb 2020 08:44:05 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:46598 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730082AbgB0Nn5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:43:57 -0500
+Received: by mail-qt1-f196.google.com with SMTP id i14so2231034qtv.13
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 05:43:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Jys7Gbail/zgLiwqIBiO/p0dxCFqFpihM2t+GeeAp1g=;
+        b=XuBVxWyk5pATRPOLJKW8C0BAZtupQu6Cp5Uu375u1kh7JcL9ubmJQqIKWsPK+VcFzI
+         OCZfMLf5c3Ca76chbIE7+t2TbqIPRpWD+tAH6dhM+4Z91uFHWA1tTCi1CfEJ/1fELDCL
+         98gBOsoAGQUUKd1GCdp3nrzf3GQRdy5HLVN4X5Ll6XVAVrCRDrkQfXu/KuJcMzjeWgdq
+         66hu6pPajMpxDEUiyIXXaplTFkaOecUJpVtOz86fhOtclANh4ESeY3mZKBCSz+lQTT3M
+         ItJ/ZyMCS/xp4i/hwRjWJ7V7kJq5ZtGCMZ4pNvEt0YLNJSj/2gI1/5SYivQVGTtmbpBZ
+         WtWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Jys7Gbail/zgLiwqIBiO/p0dxCFqFpihM2t+GeeAp1g=;
+        b=q7kxUfSY72OFIpnLggfmH/+59ERHnJ/32qMcWX3nN5uwoyKf8n/V+KcsIKFr4iQJcw
+         WxFp9kTupEIelAKwzukHuk3pF1rXPnxxEmJMy1AqFp7AbJrcomdUn6qxK9JNfecjZ8al
+         elJcwH2Ps39ZOlyYrY0M+NE2q5csUVrpGbwk7YJ6nOWoVwXchvVeGWk3NQIed0q1INQH
+         a01CRucJ0PXHGo4H3kWilFs70vy4bu+AHIlk47odt1v0LqwtZd5dzXr5tEZotGjfsVJl
+         jrTnw3+KiT/U6OZesZRNXnOg2EzgJnVAEGJ0m6WeMj8q8v5u1o0MdY+TXj9ELdCbqyQ7
+         UvTQ==
+X-Gm-Message-State: APjAAAWaazpp0RxC+H6bYVMHzAsfM/teLPxOMWjD0CcJOzFUIRsD7UrI
+        dTKXos2uVJtK3BLToKqmtSY=
+X-Google-Smtp-Source: APXvYqzjeJpCG3nDwSfUL+wIfkaFeqy1WGsg3GMCO1vZKso83jGAejz9yEOnG+WNLMLINPOdF3Oy2w==
+X-Received: by 2002:aed:29a4:: with SMTP id o33mr4749739qtd.316.1582811036068;
+        Thu, 27 Feb 2020 05:43:56 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id 17sm464665qkc.81.2020.02.27.05.43.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 05:43:55 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 9E9CA403AD; Thu, 27 Feb 2020 10:43:53 -0300 (-03)
+Date:   Thu, 27 Feb 2020 10:43:53 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        xieyisheng1@huawei.com, alexey.budankov@linux.intel.com,
+        treeze.taeung@gmail.com, adrian.hunter@intel.com,
+        tmricht@linux.ibm.com, namhyung@kernel.org, irogers@google.com,
+        songliubraving@fb.com, yao.jin@linux.intel.com,
+        changbin.du@intel.com, leo.yan@linaro.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/8] perf annotate/config: More fixes
+Message-ID: <20200227134353.GB10761@kernel.org>
+References: <20200213064306.160480-1-ravi.bangoria@linux.ibm.com>
+ <20200216211549.GA157041@krava>
+ <20200227130846.GA9899@kernel.org>
+ <20200227131648.GF34774@krava>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227131648.GF34774@krava>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ioanna Alifieraki <ioanna-maria.alifieraki@canonical.com>
+Em Thu, Feb 27, 2020 at 02:16:48PM +0100, Jiri Olsa escreveu:
+> On Thu, Feb 27, 2020 at 10:08:46AM -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Sun, Feb 16, 2020 at 10:15:49PM +0100, Jiri Olsa escreveu:
+> > > On Thu, Feb 13, 2020 at 12:12:58PM +0530, Ravi Bangoria wrote:
+> > > > These are the additional set of fixes on top of previous series:
+> > > > http://lore.kernel.org/r/20200204045233.474937-1-ravi.bangoria@linux.ibm.com
+> > > > 
+> > > > Note for the last patch:
+> > > > I couldn't understand what intel-pt.cache-divisor is really used for.
+> > > > Adrian, can you please help.
+> > > > 
+> > > > Ravi Bangoria (8):
+> > > >   perf annotate/tui: Re-render title bar after switching back from
+> > > >     script browser
+> > > >   perf annotate: Fix --show-total-period for tui/stdio2
+> > > >   perf annotate: Fix --show-nr-samples for tui/stdio2
+> > > >   perf config: Introduce perf_config_u8()
+> > > >   perf annotate: Make perf config effective
+> > > >   perf annotate: Prefer cmdline option over default config
+> > > >   perf annotate: Fix perf config option description
+> > > >   perf config: Document missing config options
+> > > 
+> > > nice, I guess this all worked in the past but got broken because
+> > > we don't have any tests for annotation code.. any chance you could
+> > 
+> > I'm going thru them, can I take that "nice" as an Acked-by? Have you
+> > gone thru those patches?
+> 
+> nope, I just real fast checked on them.. I expected more discussion on tests ;-)
 
-commit edf28f4061afe4c2d9eb1c3323d90e882c1d6800 upstream.
+Ok, I tested all of the patches, and merged them, thanks,
 
-This reverts commit a97955844807e327df11aa33869009d14d6b7de0.
-
-Commit a97955844807 ("ipc,sem: remove uneeded sem_undo_list lock usage
-in exit_sem()") removes a lock that is needed.  This leads to a process
-looping infinitely in exit_sem() and can also lead to a crash.  There is
-a reproducer available in [1] and with the commit reverted the issue
-does not reproduce anymore.
-
-Using the reproducer found in [1] is fairly easy to reach a point where
-one of the child processes is looping infinitely in exit_sem between
-for(;;) and if (semid == -1) block, while it's trying to free its last
-sem_undo structure which has already been freed by freeary().
-
-Each sem_undo struct is on two lists: one per semaphore set (list_id)
-and one per process (list_proc).  The list_id list tracks undos by
-semaphore set, and the list_proc by process.
-
-Undo structures are removed either by freeary() or by exit_sem().  The
-freeary function is invoked when the user invokes a syscall to remove a
-semaphore set.  During this operation freeary() traverses the list_id
-associated with the semaphore set and removes the undo structures from
-both the list_id and list_proc lists.
-
-For this case, exit_sem() is called at process exit.  Each process
-contains a struct sem_undo_list (referred to as "ulp") which contains
-the head for the list_proc list.  When the process exits, exit_sem()
-traverses this list to remove each sem_undo struct.  As in freeary(),
-whenever a sem_undo struct is removed from list_proc, it is also removed
-from the list_id list.
-
-Removing elements from list_id is safe for both exit_sem() and freeary()
-due to sem_lock().  Removing elements from list_proc is not safe;
-freeary() locks &un->ulp->lock when it performs
-list_del_rcu(&un->list_proc) but exit_sem() does not (locking was
-removed by commit a97955844807 ("ipc,sem: remove uneeded sem_undo_list
-lock usage in exit_sem()").
-
-This can result in the following situation while executing the
-reproducer [1] : Consider a child process in exit_sem() and the parent
-in freeary() (because of semctl(sid[i], NSEM, IPC_RMID)).
-
- - The list_proc for the child contains the last two undo structs A and
-   B (the rest have been removed either by exit_sem() or freeary()).
-
- - The semid for A is 1 and semid for B is 2.
-
- - exit_sem() removes A and at the same time freeary() removes B.
-
- - Since A and B have different semid sem_lock() will acquire different
-   locks for each process and both can proceed.
-
-The bug is that they remove A and B from the same list_proc at the same
-time because only freeary() acquires the ulp lock. When exit_sem()
-removes A it makes ulp->list_proc.next to point at B and at the same
-time freeary() removes B setting B->semid=-1.
-
-At the next iteration of for(;;) loop exit_sem() will try to remove B.
-
-The only way to break from for(;;) is for (&un->list_proc ==
-&ulp->list_proc) to be true which is not. Then exit_sem() will check if
-B->semid=-1 which is and will continue looping in for(;;) until the
-memory for B is reallocated and the value at B->semid is changed.
-
-At that point, exit_sem() will crash attempting to unlink B from the
-lists (this can be easily triggered by running the reproducer [1] a
-second time).
-
-To prove this scenario instrumentation was added to keep information
-about each sem_undo (un) struct that is removed per process and per
-semaphore set (sma).
-
-          CPU0                                CPU1
-  [caller holds sem_lock(sma for A)]      ...
-  freeary()                               exit_sem()
-  ...                                     ...
-  ...                                     sem_lock(sma for B)
-  spin_lock(A->ulp->lock)                 ...
-  list_del_rcu(un_A->list_proc)           list_del_rcu(un_B->list_proc)
-
-Undo structures A and B have different semid and sem_lock() operations
-proceed.  However they belong to the same list_proc list and they are
-removed at the same time.  This results into ulp->list_proc.next
-pointing to the address of B which is already removed.
-
-After reverting commit a97955844807 ("ipc,sem: remove uneeded
-sem_undo_list lock usage in exit_sem()") the issue was no longer
-reproducible.
-
-[1] https://bugzilla.redhat.com/show_bug.cgi?id=1694779
-
-Link: http://lkml.kernel.org/r/20191211191318.11860-1-ioanna-maria.alifieraki@canonical.com
-Fixes: a97955844807 ("ipc,sem: remove uneeded sem_undo_list lock usage in exit_sem()")
-Signed-off-by: Ioanna Alifieraki <ioanna-maria.alifieraki@canonical.com>
-Acked-by: Manfred Spraul <manfred@colorfullife.com>
-Acked-by: Herton R. Krzesinski <herton@redhat.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: <malat@debian.org>
-Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Jay Vosburgh <jay.vosburgh@canonical.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- ipc/sem.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
---- a/ipc/sem.c
-+++ b/ipc/sem.c
-@@ -2151,11 +2151,9 @@ void exit_sem(struct task_struct *tsk)
- 		ipc_assert_locked_object(&sma->sem_perm);
- 		list_del(&un->list_id);
+- Arnaldo
  
--		/* we are the last process using this ulp, acquiring ulp->lock
--		 * isn't required. Besides that, we are also protected against
--		 * IPC_RMID as we hold sma->sem_perm lock now
--		 */
-+		spin_lock(&ulp->lock);
- 		list_del_rcu(&un->list_proc);
-+		spin_unlock(&ulp->lock);
- 
- 		/* perform adjustments registered in un */
- 		for (i = 0; i < sma->sem_nsems; i++) {
+> but as Ravi wrote, it could take some time
+> 
+> jirka
+> 
+> > 
+> > - Arnaldo
+> > 
+> > > think of some way to test annotations?
+> >  
+> > > perhaps some shell script, or prepare all the needed data for annotation
+> > > manualy.. sort of like we did in tests/hists_*.c
+> > > 
+> > > thanks,
+> > > jirka
+> > > 
+> > > > 
+> > > >  tools/perf/Documentation/perf-config.txt | 74 +++++++++++++++++++-
+> > > >  tools/perf/builtin-annotate.c            |  4 +-
+> > > >  tools/perf/builtin-report.c              |  2 +-
+> > > >  tools/perf/builtin-top.c                 |  2 +-
+> > > >  tools/perf/ui/browsers/annotate.c        | 19 +++--
+> > > >  tools/perf/util/annotate.c               | 89 +++++++++---------------
+> > > >  tools/perf/util/annotate.h               |  6 +-
+> > > >  tools/perf/util/config.c                 | 12 ++++
+> > > >  tools/perf/util/config.h                 |  1 +
+> > > >  9 files changed, 134 insertions(+), 75 deletions(-)
+> > > > 
+> > > > -- 
+> > > > 2.24.1
+> > > > 
+> > > 
+> > 
+> > -- 
+> > 
+> > - Arnaldo
+> > 
+> 
 
+-- 
 
+- Arnaldo
