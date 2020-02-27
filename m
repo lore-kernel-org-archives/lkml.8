@@ -2,128 +2,100 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB93C54FD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF78C54FF6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DA6B20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:11:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nOvxEUD+"
+	by mail.kernel.org (Postfix) with ESMTP id 2750920578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:12:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582812761;
+	bh=olQspT26Sz3U/qdOKRzl0GLxkS06gPYTh0YSj+Nn+Nw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=aRYx3uBBbnyFgw34qqsEk6R5Tdo6z83yVKiNOrLDZsqMU/kfDma2CfuSMPAuDkqpx
+	 5HrODw2HK5r3ZOmbJtAdbECit/H/X45ArADtfTbgyuvmxLYjuAZe+9C2QNnEqpT9w8
+	 9jJAK/Hiy2lq/YdCHJYPUMV5f1xMvDy75Z+T/kHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388686AbgB0OLW (ORCPT
+        id S2388881AbgB0OMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:11:22 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:45996 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388676AbgB0OLP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:11:15 -0500
-Received: by mail-qv1-f66.google.com with SMTP id l14so1558220qvu.12
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 06:11:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=oLr0ZAwrO1mv1uzfnhw0tAaDfT0XQ1i/nVn5S42DxGA=;
-        b=nOvxEUD+oAOLn9Sm/1KnVy17oeAhV/GzYfJ5fTgj/DwHvgL8OD1QaPwDS1TV5cp8q9
-         IKjr49ROwLGj8GZWRMANPRLD6DuzMGvoKhvjv4Jf7+5S1ulG+1I2/MwoXuAOLLTwVMeO
-         2vJ+q6voNgjE3xMsDDAxRJ79JoclIaMyn6g4EN8hqjljc/Dg4NkLmSOag/RWEuBFdIIs
-         tPXvmYqIn0ycczi5RoSaj9jMzFiCnMk7VkdlfQDcVMYqNQkXjzBeU0NW/jFugpkQ3Cxq
-         limHqCevatoynv24lvMPruyE4lFf8YXd8O+KIwWWaQMUsgOTRCwK0njYnsvn/sPYzzlh
-         zahQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=oLr0ZAwrO1mv1uzfnhw0tAaDfT0XQ1i/nVn5S42DxGA=;
-        b=ctiYVHTWmTsK0zre9cWUyre/rOGrf1G8xe0Wk9i5lE+zLWpkAPBtkh8Ydwl+fD/FnK
-         clBEGhSt5+dmAfvV8jd5EkfyjOSESJN1u3dr5LlF3Rsyxsx5CAdj6XpRy43eWhjGWj77
-         LCyhBjdUmKQZN1O88AUa/aCqxP+gjLMdGG8gnXHKvbfga5LwLlvKmSaeB2xv9QmNknP2
-         UdQKcQlJa51eDjsOHy+EKjJGe9vxxEd7138N6FUdgxCx8GJk1Pc8YesP8VkpYd9mEWV7
-         SOo72X3/7YsHGj6yaS/XVeAKI/yBAWbGpGnIOgILwxnlDCcGyInWFWYWUbCnxG75IRAY
-         vGIg==
-X-Gm-Message-State: APjAAAX6tgfdq4+9IOifNAqtGvO6woG/OursMTJ1OzTWlIv9NYnkMrdj
-        fweYSyoXLoqC4F0ICVQ7jfE=
-X-Google-Smtp-Source: APXvYqwBStL+b0Z0v+Q1EI4wHJ/9f9/po04jkKPFbG5MD2yI7XTyGuAhQ0CgZ4TeZZf37ekbw+dTAg==
-X-Received: by 2002:ad4:4511:: with SMTP id k17mr4866897qvu.135.1582812673342;
-        Thu, 27 Feb 2020 06:11:13 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id n32sm3225222qtk.66.2020.02.27.06.11.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 06:11:12 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 697C4403AD; Thu, 27 Feb 2020 11:11:10 -0300 (-03)
-Date:   Thu, 27 Feb 2020 11:11:10 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, namhyung@kernel.org,
-        irogers@google.com, songliubraving@fb.com, yao.jin@linux.intel.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] perf annotate: Misc fixes / improvements
-Message-ID: <20200227141110.GF10761@kernel.org>
-References: <20200204045233.474937-1-ravi.bangoria@linux.ibm.com>
- <20200206190412.GD1669706@krava>
+        Thu, 27 Feb 2020 09:12:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51336 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388868AbgB0OMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:12:37 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA73524691;
+        Thu, 27 Feb 2020 14:12:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582812757;
+        bh=olQspT26Sz3U/qdOKRzl0GLxkS06gPYTh0YSj+Nn+Nw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=y39OlRJDp9HSdCOWQOqJoMCGdlETd9Q5dfjRYnVan1Sd93mxTjxP33EIsmsU/VrvC
+         rnJst/o4NYIa7HpgeGoIn62xZD/Y77UvxpNCWlKZ8i007gLvWmatJpMjADVIWwmw8B
+         UXPkOd/Bvxet0QOqD1VU19O15LAIisEqyXJ/XVVM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jack Pham <jackp@codeaurora.org>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 5.4 109/135] usb: gadget: composite: Fix bMaxPower for SuperSpeedPlus
+Date:   Thu, 27 Feb 2020 14:37:29 +0100
+Message-Id: <20200227132245.604773096@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
+References: <20200227132228.710492098@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200206190412.GD1669706@krava>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Feb 06, 2020 at 08:04:12PM +0100, Jiri Olsa escreveu:
-> On Tue, Feb 04, 2020 at 10:22:27AM +0530, Ravi Bangoria wrote:
-> > Few fixes / improvements related to perf annotate.
-> > 
-> > v2: https://lore.kernel.org/r/20200124080432.8065-1-ravi.bangoria@linux.ibm.com
-> > 
-> > v2->v3:
-> >  - [PATCH v3 2/6] New function annotation_line__exit() to clear
-> >    annotation_line objects.
-> 
-> Acked-by: Jiri Olsa <jolsa@redhat.com>
+From: Jack Pham <jackp@codeaurora.org>
 
-Thanks applied the series to perf/urgent as it contains a fix.
+commit c724417baf162bd3e035659e22cdf990cfb0d917 upstream.
 
-- Arnaldo
+SuperSpeedPlus peripherals must report their bMaxPower of the
+configuration descriptor in units of 8mA as per the USB 3.2
+specification. The current switch statement in encode_bMaxPower()
+only checks for USB_SPEED_SUPER but not USB_SPEED_SUPER_PLUS so
+the latter falls back to USB 2.0 encoding which uses 2mA units.
+Replace the switch with a simple if/else.
+
+Fixes: eae5820b852f ("usb: gadget: composite: Write SuperSpeedPlus config descriptors")
+Signed-off-by: Jack Pham <jackp@codeaurora.org>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/usb/gadget/composite.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+
+--- a/drivers/usb/gadget/composite.c
++++ b/drivers/usb/gadget/composite.c
+@@ -437,12 +437,10 @@ static u8 encode_bMaxPower(enum usb_devi
+ 		val = CONFIG_USB_GADGET_VBUS_DRAW;
+ 	if (!val)
+ 		return 0;
+-	switch (speed) {
+-	case USB_SPEED_SUPER:
+-		return DIV_ROUND_UP(val, 8);
+-	default:
++	if (speed < USB_SPEED_SUPER)
+ 		return DIV_ROUND_UP(val, 2);
+-	}
++	else
++		return DIV_ROUND_UP(val, 8);
+ }
  
-> thanks,
-> jirka
-> 
-> > 
-> > v1: http://lore.kernel.org/r/20200117092612.30874-1-ravi.bangoria@linux.ibm.com
-> > 
-> > v1->v2:
-> >  - Split [PATCH v1 1/3] into two patches.
-> >  - Patch 5 and patch 6 are new.
-> > 
-> > Ravi Bangoria (6):
-> >   perf annotate: Remove privsize from symbol__annotate() args
-> >   perf annotate: Simplify disasm_line allocation and freeing code
-> >   perf annotate: Align struct annotate_args
-> >   perf annotate: Fix segfault with source toggle
-> >   perf annotate: Make few functions static
-> >   perf annotate: Get rid of annotation->nr_jumps
-> > 
-> >  tools/perf/builtin-top.c     |   2 +-
-> >  tools/perf/ui/gtk/annotate.c |   2 +-
-> >  tools/perf/util/annotate.c   | 115 ++++++++++++++---------------------
-> >  tools/perf/util/annotate.h   |   8 +--
-> >  4 files changed, 49 insertions(+), 78 deletions(-)
-> > 
-> > -- 
-> > 2.24.1
-> > 
-> 
+ static int config_buf(struct usb_configuration *config,
 
--- 
 
-- Arnaldo
