@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A0EC4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F2BC4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2627C222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:01:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 043482467F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:01:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="B1BE1DhD"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bnoYAbcs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728753AbgB0KBD (ORCPT
+        id S1728739AbgB0KBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 05:01:03 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:49342 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728630AbgB0KBC (ORCPT
+        Thu, 27 Feb 2020 05:01:45 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:35442 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728630AbgB0KBp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 05:01:02 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01RA0vBN053937;
-        Thu, 27 Feb 2020 04:00:57 -0600
+        Thu, 27 Feb 2020 05:01:45 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01RA1VnX024013;
+        Thu, 27 Feb 2020 04:01:31 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582797657;
-        bh=R2oXGyxfGZAIAht4Ygej+8m0Ze1bPVeCtUI8iA90Ows=;
+        s=ti-com-17Q1; t=1582797691;
+        bh=h/h2pZI6iB1U7Ieb3b2HEqM1PJKH8Ueb8aWvXTCFBPg=;
         h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=B1BE1DhDhRg3tMOIjqHHQU0y82ep2twF3zw/CCCqIKRlVFdce0DRqZ66et1NL732m
-         oDrGLtlqUv/1AqrWnOArfL3ocsvy62gIuyt0FZiQt4eC0Hi4fHxByVceI8uyHV7fHn
-         tMx1E7YGixTaQAfW1DRGKwRjuGysaAdwhf26XezA=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01RA0vIQ035902
+        b=bnoYAbcsjOmPtj9LyhWW+Tfn7ijw9DWRN7jbp4CnQ4Vd9aNQ5MDIPNYin1jcG+6ta
+         YMCKnuemw/qrYZZA2txK17k0vzmcF5FKdCTeGHYgY38r9hYBO4a0NBCxiozGuKJ2u2
+         sRzGWj/WWuGStLVxkItWPWKWpsE+Ioo8aN+EQjfA=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01RA1UDR032013
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 27 Feb 2020 04:00:57 -0600
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 27 Feb 2020 04:01:31 -0600
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 27
- Feb 2020 04:00:56 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ Feb 2020 04:01:30 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 27 Feb 2020 04:00:56 -0600
+ Frontend Transport; Thu, 27 Feb 2020 04:01:30 -0600
 Received: from [10.1.3.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01RA0rkN097206;
-        Thu, 27 Feb 2020 04:00:55 -0600
-Subject: Re: [PATCH][next][V2] drm/tidss: fix spelling mistakes "bufer" and
- "requsted"
-To:     Colin King <colin.king@canonical.com>,
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01RA1Q68092396;
+        Thu, 27 Feb 2020 04:01:27 -0600
+Subject: Re: [PATCH -next] drm/tidss: Drop pointless static qualifier in
+ dispc_find_csc()
+To:     YueHaibing <yuehaibing@huawei.com>,
         Tomi Valkeinen <tomi.valkeinen@ti.com>,
         David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>
-CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200224174226.387874-1-colin.king@canonical.com>
+        Daniel Vetter <daniel@ffwll.ch>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+References: <20200227065057.92766-1-yuehaibing@huawei.com>
 From:   Jyri Sarha <jsarha@ti.com>
 Autocrypt: addr=jsarha@ti.com; prefer-encrypt=mutual; keydata=
  xsFNBFbdWt8BEADnCIkQrHIvAmuDcDzp1h2pO9s22nacEffl0ZyzIS//ruiwjMfSnuzhhB33
@@ -100,12 +100,12 @@ Autocrypt: addr=jsarha@ti.com; prefer-encrypt=mutual; keydata=
  uBrUXDDhCoiZnjQaNz/J+o9iYjuMTpY1Wp+igjIretYr9+kLvGsoPo/kTPWyiuh/WiFU2d6J
  PMCGFGhodTS5qmQA6IOuazek1qSZIl475u3E2uG98AEX/kRhSzgpsbvADPEUPaz75uvlmOCX
  tv+Sye9QT4Z1QCh3lV/Zh4GlY5lt4MwYnqFCxroK/1LpkLgdyQ4rRVw=
-Message-ID: <61a9d7f0-ad42-b347-4a4c-0e5cd0deb11c@ti.com>
-Date:   Thu, 27 Feb 2020 12:00:53 +0200
+Message-ID: <06fb1070-9c4c-c776-6379-fe27b0a7b220@ti.com>
+Date:   Thu, 27 Feb 2020 12:01:26 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200224174226.387874-1-colin.king@canonical.com>
+In-Reply-To: <20200227065057.92766-1-yuehaibing@huawei.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
@@ -115,13 +115,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/02/2020 19:42, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On 27/02/2020 08:50, YueHaibing wrote:
+> There is no need to have the 'const struct dispc_csc_coef *coef'
+> variable static since new value always be assigned before use it.
 > 
-> There are two spelling mistakes in warning and debug messages.
-> Fix them.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
 Reviewed-by: Jyri Sarha <jsarha@ti.com>
 Tested-by: Jyri Sarha <jsarha@ti.com>
@@ -133,35 +131,26 @@ Jyri
 
 
 > ---
-> 
-> V2: Add spelling mistake fix for "requsted"
-> 
-> ---
->  drivers/gpu/drm/tidss/tidss_dispc.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/gpu/drm/tidss/tidss_dispc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > diff --git a/drivers/gpu/drm/tidss/tidss_dispc.c b/drivers/gpu/drm/tidss/tidss_dispc.c
-> index eeb160dc047b..b3dc83d2f668 100644
+> index eeb160dc047b..e6cb176484a9 100644
 > --- a/drivers/gpu/drm/tidss/tidss_dispc.c
 > +++ b/drivers/gpu/drm/tidss/tidss_dispc.c
-> @@ -1235,7 +1235,7 @@ int dispc_vp_set_clk_rate(struct dispc_device *dispc, u32 hw_videoport,
+> @@ -1510,7 +1510,7 @@ struct dispc_csc_coef *dispc_find_csc(enum drm_color_encoding encoding,
+>  static void dispc_vid_csc_setup(struct dispc_device *dispc, u32 hw_plane,
+>  				const struct drm_plane_state *state)
+>  {
+> -	static const struct dispc_csc_coef *coef;
+> +	const struct dispc_csc_coef *coef;
 >  
->  	if (dispc_pclk_diff(rate, new_rate) > 5)
->  		dev_warn(dispc->dev,
-> -			 "vp%d: Clock rate %lu differs over 5%% from requsted %lu\n",
-> +			 "vp%d: Clock rate %lu differs over 5%% from requested %lu\n",
->  			 hw_videoport, new_rate, rate);
->  
->  	dev_dbg(dispc->dev, "vp%d: new rate %lu Hz (requested %lu Hz)\n",
-> @@ -1699,7 +1699,7 @@ static int dispc_vid_calc_scaling(struct dispc_device *dispc,
->  
->  		if (sp->xinc > f->xinc_max) {
->  			dev_dbg(dispc->dev,
-> -				"%s: Too wide input bufer %u > %u\n", __func__,
-> +				"%s: Too wide input buffer %u > %u\n", __func__,
->  				state->src_w >> 16, in_width_max * f->xinc_max);
->  			return -EINVAL;
->  		}
+>  	coef = dispc_find_csc(state->color_encoding, state->color_range);
+>  	if (!coef) {
+> 
+> 
+> 
+> 
 > 
 
 
