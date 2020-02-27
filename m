@@ -2,70 +2,71 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD3CC4BA3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D6CC35677
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1453224695
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6B3F24699
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:03:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="naP9EBM/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AR7qKUbT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729198AbgB0MDq (ORCPT
+        id S1729214AbgB0MDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 07:03:46 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44514 "EHLO
+        Thu, 27 Feb 2020 07:03:48 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36490 "EHLO
         mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728882AbgB0MDp (ORCPT
+        with ESMTP id S1728882AbgB0MDr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 07:03:45 -0500
-Received: by mail-wr1-f65.google.com with SMTP id m16so2959224wrx.11
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 04:03:42 -0800 (PST)
+        Thu, 27 Feb 2020 07:03:47 -0500
+Received: by mail-wr1-f65.google.com with SMTP id j16so1458123wrt.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 04:03:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5f1Pooy00AQQBl1T3bhqw3NWEQnIeGJmfgCAqZdVpes=;
-        b=naP9EBM/phmgv8EK80mVVAXMPTmFsf+TLSEG7qtQYZWcalKFHt5+155A6UfNIESuwf
-         O1UQ2mJOmjpYh4lYqElypgsppnAcNeZLU1H7DLGJdgU8icfMzyhp5OZzDl/MWtzRJz+1
-         8RxOzW/t29eYp4MRWj9HLix10iOitAL628WozW7MPU0D/heuB0KSKU/m0PbRBFWElIP7
-         DiZugdRMyLor3mn/A0lnt2cO3SNkynaWEWzVFMtIaOTsFz5tiELIRjzfMSlEbIyeVOJh
-         XKv763cwgBKLeKSc89z1FVEbfeGMg0tlbmD0yUQoL3KJ7j35rP0AgreyGskQih/mB32x
-         0IHw==
+        bh=JDFiHtXUYpw9/7YjF6hgsTU6zXp0udoM7RVARL/tRI4=;
+        b=AR7qKUbTnFZFJhUbiw2wILy8YBU7aRm24uEVrizIZeXUZNnuow1AiJSWkZHsm+ROIT
+         TCuXxcqqWo/c4+PP1chfR05ZAFk0Y37cjOB+LzVCs/7Yv+GqQkguY0Qd4tmjDKPe2gmk
+         04FjLuFbkYSWXn2+Lw+RsmCYLI0MOPl9L65a6ANyK8JA06Xjdwx/x5d7Oh9P5FS5d6W4
+         99WcOdHriz+O90flwURtV17N23h0QHARXF3s1oltpvS4r7MzNcVZR2r0o1UMMaJQ1j/t
+         B/BCuUaqv8/tVWdN+iOp7z+A7DftT0ZMcTEY9Eq0JYCTRHJB7WFMiI9QOQjZ5wtQnpxL
+         syQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5f1Pooy00AQQBl1T3bhqw3NWEQnIeGJmfgCAqZdVpes=;
-        b=BqENHSgDr3O5WHq0Ttp5mBDWKp9SS06mJR9eLjAt1VFAECpEpy20jGHR5HZDbR0qEY
-         PGEYMeT16qOSCCiKXnFitniZaSaes97X0cVQEwmqnfsP2x0Msp7/d7bOMCeA9ywr6BTl
-         goklghTX2bJ2laNdMNXsOaE+ivRM3FJ6DQOy0cGIydHcX4uqtqV77HS0lSjKCEM5HE6K
-         nXipPfFHRS3hkt/k9haTi/M06v9jYeWJ6wFi5gxQPzbuuJIdU/9s7dTtkeE7+KDis59D
-         rpeU93/f+A6UmjIa2I5PfRmycDcwfllozA8FxjfN3eKYVOqi0wJ4eHviHTni6Z0hxorz
-         JCUw==
-X-Gm-Message-State: APjAAAVuRgIBSxXZ/vNaw0E5zjVgG/x2cIt+LZpHGT72fDBCICYdlh+Y
-        YAqlkt2WvTtVXzO/O8ja4BA=
-X-Google-Smtp-Source: APXvYqwIsnHm8D2ianGvCwtS9l5+AocsIfAh3V7HgM2+E9Kro7erwT8QcQCDIs50vqz9YHWTwkVZpQ==
-X-Received: by 2002:adf:fc12:: with SMTP id i18mr4562449wrr.354.1582805021673;
-        Thu, 27 Feb 2020 04:03:41 -0800 (PST)
+        bh=JDFiHtXUYpw9/7YjF6hgsTU6zXp0udoM7RVARL/tRI4=;
+        b=meGmb4E7zgwIBQrIcsIHqB5UJe/VfBJSe4mm99Gpphww4Sxmm3QrHqAS22imEO2zaH
+         Dk2Oye/d+eDN6dc/KKbDzBN3wr47vJrE5mBnXtVh0fymdE8eWILuh00QVi+QKGtkQea2
+         14mVOLBK/S7QEeDsaEZl8WUW/tLJwn/L52Q37aRwwETJ59fqlisIa3uJV1pCsNH4aSi5
+         CwBD4wh68aw1BWWjVPcRNnmRp5ruzBhPtuKxZPwm11pAEss6EIag1i/viQ4kDdjuKo+L
+         k+rIdA9MgbjOTHgIaWJ33tYLOfFOCFlCWzQnmMjNLxnsAiWFBKkYzh1SSYiBKaNdAjjd
+         q0mw==
+X-Gm-Message-State: APjAAAUEtBk9waEtb0cEaNMCwr/EtRB28/2PsXTuCQ4bBzWludxKYvvh
+        SoO4pYDgbPNjuBka98WWrhofkTbtUImDeg==
+X-Google-Smtp-Source: APXvYqycfeHEVSwOmkH9aHMERPJ5uUBCwE6v7YS6/+KssWDzjjGaXBNUPLF6j1vpk0YqR5PazYwqlg==
+X-Received: by 2002:adf:a746:: with SMTP id e6mr4572634wrd.329.1582805025787;
+        Thu, 27 Feb 2020 04:03:45 -0800 (PST)
 Received: from wambui.zuku.co.ke ([197.237.61.225])
-        by smtp.googlemail.com with ESMTPSA id t10sm7655017wru.59.2020.02.27.04.03.38
+        by smtp.googlemail.com with ESMTPSA id t10sm7655017wru.59.2020.02.27.04.03.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 04:03:41 -0800 (PST)
+        Thu, 27 Feb 2020 04:03:45 -0800 (PST)
 From:   Wambui Karuga <wambui.karugax@gmail.com>
 To:     daniel@ffwll.ch, airlied@linux.ie,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Vincent Abriou <vincent.abriou@st.com>
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
 Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH 15/21] drm/sti: remove use drm_debugfs functions as return value
-Date:   Thu, 27 Feb 2020 15:02:26 +0300
-Message-Id: <20200227120232.19413-16-wambui.karugax@gmail.com>
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
+Subject: [PATCH 16/21] drm/i915: make *_debugfs_register() functions return void.
+Date:   Thu, 27 Feb 2020 15:02:27 +0300
+Message-Id: <20200227120232.19413-17-wambui.karugax@gmail.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200227120232.19413-1-wambui.karugax@gmail.com>
 References: <20200227120232.19413-1-wambui.karugax@gmail.com>
@@ -76,361 +77,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 987d65d01356 (drm: debugfs: make
+Since 987d65d01356 (drm: debugfs: make
 drm_debugfs_create_files() never fail), drm_debugfs_create_files() never
-fails, and should return void. This change therefore removes it uses as
-a return value in various functions across drm/sti.
-
-With these changes, the affected functions have been changed to use a void
-return value.
+fails and should return void. Therefore, remove its use as the
+return value of i915_debugfs_register() and
+intel_display_debugfs_register() and have both functions return void.
 
 Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
 ---
- drivers/gpu/drm/sti/sti_cursor.c | 14 ++++++++------
- drivers/gpu/drm/sti/sti_drv.c    | 16 ++++------------
- drivers/gpu/drm/sti/sti_dvo.c    | 13 +++++--------
- drivers/gpu/drm/sti/sti_gdp.c    |  7 ++++---
- drivers/gpu/drm/sti/sti_hda.c    | 13 +++++--------
- drivers/gpu/drm/sti/sti_hdmi.c   | 13 +++++--------
- drivers/gpu/drm/sti/sti_hqvdp.c  | 12 +++++++-----
- drivers/gpu/drm/sti/sti_mixer.c  |  7 ++++---
- drivers/gpu/drm/sti/sti_tvout.c  | 13 +++++--------
- drivers/gpu/drm/sti/sti_vid.c    |  8 ++++----
- drivers/gpu/drm/sti/sti_vid.h    |  2 +-
- 11 files changed, 52 insertions(+), 66 deletions(-)
+ drivers/gpu/drm/i915/display/intel_display_debugfs.c | 8 ++++----
+ drivers/gpu/drm/i915/display/intel_display_debugfs.h | 4 ++--
+ drivers/gpu/drm/i915/i915_debugfs.c                  | 8 ++++----
+ drivers/gpu/drm/i915/i915_debugfs.h                  | 4 ++--
+ 4 files changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/gpu/drm/sti/sti_cursor.c b/drivers/gpu/drm/sti/sti_cursor.c
-index ea64c1dcaf63..a98057431023 100644
---- a/drivers/gpu/drm/sti/sti_cursor.c
-+++ b/drivers/gpu/drm/sti/sti_cursor.c
-@@ -131,17 +131,17 @@ static struct drm_info_list cursor_debugfs_files[] = {
- 	{ "cursor", cursor_dbg_show, 0, NULL },
+diff --git a/drivers/gpu/drm/i915/display/intel_display_debugfs.c b/drivers/gpu/drm/i915/display/intel_display_debugfs.c
+index 46954cc7b6c0..3b877c34c420 100644
+--- a/drivers/gpu/drm/i915/display/intel_display_debugfs.c
++++ b/drivers/gpu/drm/i915/display/intel_display_debugfs.c
+@@ -1922,7 +1922,7 @@ static const struct {
+ 	{"i915_edp_psr_debug", &i915_edp_psr_debug_fops},
  };
  
--static int cursor_debugfs_init(struct sti_cursor *cursor,
--			       struct drm_minor *minor)
-+static void cursor_debugfs_init(struct sti_cursor *cursor,
-+				struct drm_minor *minor)
+-int intel_display_debugfs_register(struct drm_i915_private *i915)
++void intel_display_debugfs_register(struct drm_i915_private *i915)
  {
- 	unsigned int i;
+ 	struct drm_minor *minor = i915->drm.primary;
+ 	int i;
+@@ -1935,9 +1935,9 @@ int intel_display_debugfs_register(struct drm_i915_private *i915)
+ 				    intel_display_debugfs_files[i].fops);
+ 	}
  
- 	for (i = 0; i < ARRAY_SIZE(cursor_debugfs_files); i++)
- 		cursor_debugfs_files[i].data = cursor;
- 
--	return drm_debugfs_create_files(cursor_debugfs_files,
--					ARRAY_SIZE(cursor_debugfs_files),
+-	return drm_debugfs_create_files(intel_display_debugfs_list,
+-					ARRAY_SIZE(intel_display_debugfs_list),
 -					minor->debugfs_root, minor);
-+	drm_debugfs_create_files(cursor_debugfs_files,
-+				 ARRAY_SIZE(cursor_debugfs_files),
++	drm_debugfs_create_files(intel_display_debugfs_list,
++				 ARRAY_SIZE(intel_display_debugfs_list),
 +				 minor->debugfs_root, minor);
  }
  
- static void sti_cursor_argb8888_to_clut8(struct sti_cursor *cursor, u32 *src)
-@@ -342,7 +342,9 @@ static int sti_cursor_late_register(struct drm_plane *drm_plane)
- 	struct sti_plane *plane = to_sti_plane(drm_plane);
- 	struct sti_cursor *cursor = to_sti_cursor(plane);
+ static int i915_panel_show(struct seq_file *m, void *data)
+diff --git a/drivers/gpu/drm/i915/display/intel_display_debugfs.h b/drivers/gpu/drm/i915/display/intel_display_debugfs.h
+index a3bea1ce04c2..a5cf7a6d3d34 100644
+--- a/drivers/gpu/drm/i915/display/intel_display_debugfs.h
++++ b/drivers/gpu/drm/i915/display/intel_display_debugfs.h
+@@ -10,10 +10,10 @@ struct drm_connector;
+ struct drm_i915_private;
  
--	return cursor_debugfs_init(cursor, drm_plane->dev->primary);
-+	cursor_debugfs_init(cursor, drm_plane->dev->primary);
-+
-+	return 0;
- }
- 
- static const struct drm_plane_funcs sti_cursor_plane_helpers_funcs = {
-diff --git a/drivers/gpu/drm/sti/sti_drv.c b/drivers/gpu/drm/sti/sti_drv.c
-index 50870d8cbb76..3f9db3e3f397 100644
---- a/drivers/gpu/drm/sti/sti_drv.c
-+++ b/drivers/gpu/drm/sti/sti_drv.c
-@@ -92,24 +92,16 @@ static struct drm_info_list sti_drm_dbg_list[] = {
- 	{"fps_get", sti_drm_fps_dbg_show, 0},
- };
- 
--static int sti_drm_dbg_init(struct drm_minor *minor)
-+static void sti_drm_dbg_init(struct drm_minor *minor)
- {
--	int ret;
--
--	ret = drm_debugfs_create_files(sti_drm_dbg_list,
--				       ARRAY_SIZE(sti_drm_dbg_list),
--				       minor->debugfs_root, minor);
--	if (ret)
--		goto err;
-+	drm_debugfs_create_files(sti_drm_dbg_list,
-+				 ARRAY_SIZE(sti_drm_dbg_list),
-+				 minor->debugfs_root, minor);
- 
- 	debugfs_create_file("fps_show", S_IRUGO | S_IWUSR, minor->debugfs_root,
- 			    minor->dev, &sti_drm_fps_fops);
- 
- 	DRM_INFO("%s: debugfs installed\n", DRIVER_NAME);
--	return 0;
--err:
--	DRM_ERROR("%s: cannot install debugfs\n", DRIVER_NAME);
--	return ret;
- }
- 
- static const struct drm_mode_config_funcs sti_mode_config_funcs = {
-diff --git a/drivers/gpu/drm/sti/sti_dvo.c b/drivers/gpu/drm/sti/sti_dvo.c
-index a0709647f678..0032e1830bc5 100644
---- a/drivers/gpu/drm/sti/sti_dvo.c
-+++ b/drivers/gpu/drm/sti/sti_dvo.c
-@@ -197,16 +197,16 @@ static struct drm_info_list dvo_debugfs_files[] = {
- 	{ "dvo", dvo_dbg_show, 0, NULL },
- };
- 
--static int dvo_debugfs_init(struct sti_dvo *dvo, struct drm_minor *minor)
-+static void dvo_debugfs_init(struct sti_dvo *dvo, struct drm_minor *minor)
- {
- 	unsigned int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(dvo_debugfs_files); i++)
- 		dvo_debugfs_files[i].data = dvo;
- 
--	return drm_debugfs_create_files(dvo_debugfs_files,
--					ARRAY_SIZE(dvo_debugfs_files),
--					minor->debugfs_root, minor);
-+	drm_debugfs_create_files(dvo_debugfs_files,
-+				 ARRAY_SIZE(dvo_debugfs_files),
-+				 minor->debugfs_root, minor);
- }
- 
- static void sti_dvo_disable(struct drm_bridge *bridge)
-@@ -406,10 +406,7 @@ static int sti_dvo_late_register(struct drm_connector *connector)
- 		= to_sti_dvo_connector(connector);
- 	struct sti_dvo *dvo = dvo_connector->dvo;
- 
--	if (dvo_debugfs_init(dvo, dvo->drm_dev->primary)) {
--		DRM_ERROR("DVO debugfs setup failed\n");
--		return -EINVAL;
--	}
-+	dvo_debugfs_init(dvo, dvo->drm_dev->primary);
- 
- 	return 0;
- }
-diff --git a/drivers/gpu/drm/sti/sti_gdp.c b/drivers/gpu/drm/sti/sti_gdp.c
-index 11595c748844..2d5a2b5b78b8 100644
---- a/drivers/gpu/drm/sti/sti_gdp.c
-+++ b/drivers/gpu/drm/sti/sti_gdp.c
-@@ -343,9 +343,10 @@ static int gdp_debugfs_init(struct sti_gdp *gdp, struct drm_minor *minor)
- 	for (i = 0; i < nb_files; i++)
- 		gdp_debugfs_files[i].data = gdp;
- 
--	return drm_debugfs_create_files(gdp_debugfs_files,
--					nb_files,
--					minor->debugfs_root, minor);
-+	drm_debugfs_create_files(gdp_debugfs_files,
-+				 nb_files,
-+				 minor->debugfs_root, minor);
-+	return 0;
- }
- 
- static int sti_gdp_fourcc2format(int fourcc)
-diff --git a/drivers/gpu/drm/sti/sti_hda.c b/drivers/gpu/drm/sti/sti_hda.c
-index f3f28d79b0e4..a1ec891eaf3a 100644
---- a/drivers/gpu/drm/sti/sti_hda.c
-+++ b/drivers/gpu/drm/sti/sti_hda.c
-@@ -367,16 +367,16 @@ static struct drm_info_list hda_debugfs_files[] = {
- 	{ "hda", hda_dbg_show, 0, NULL },
- };
- 
--static int hda_debugfs_init(struct sti_hda *hda, struct drm_minor *minor)
-+static void hda_debugfs_init(struct sti_hda *hda, struct drm_minor *minor)
- {
- 	unsigned int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(hda_debugfs_files); i++)
- 		hda_debugfs_files[i].data = hda;
- 
--	return drm_debugfs_create_files(hda_debugfs_files,
--					ARRAY_SIZE(hda_debugfs_files),
--					minor->debugfs_root, minor);
-+	drm_debugfs_create_files(hda_debugfs_files,
-+				 ARRAY_SIZE(hda_debugfs_files),
-+				 minor->debugfs_root, minor);
- }
- 
- /**
-@@ -643,10 +643,7 @@ static int sti_hda_late_register(struct drm_connector *connector)
- 		= to_sti_hda_connector(connector);
- 	struct sti_hda *hda = hda_connector->hda;
- 
--	if (hda_debugfs_init(hda, hda->drm_dev->primary)) {
--		DRM_ERROR("HDA debugfs setup failed\n");
--		return -EINVAL;
--	}
-+	hda_debugfs_init(hda, hda->drm_dev->primary);
- 
- 	return 0;
- }
-diff --git a/drivers/gpu/drm/sti/sti_hdmi.c b/drivers/gpu/drm/sti/sti_hdmi.c
-index 18eaf786ffa4..5b15c4974e6b 100644
---- a/drivers/gpu/drm/sti/sti_hdmi.c
-+++ b/drivers/gpu/drm/sti/sti_hdmi.c
-@@ -727,16 +727,16 @@ static struct drm_info_list hdmi_debugfs_files[] = {
- 	{ "hdmi", hdmi_dbg_show, 0, NULL },
- };
- 
--static int hdmi_debugfs_init(struct sti_hdmi *hdmi, struct drm_minor *minor)
-+static void hdmi_debugfs_init(struct sti_hdmi *hdmi, struct drm_minor *minor)
- {
- 	unsigned int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(hdmi_debugfs_files); i++)
- 		hdmi_debugfs_files[i].data = hdmi;
- 
--	return drm_debugfs_create_files(hdmi_debugfs_files,
--					ARRAY_SIZE(hdmi_debugfs_files),
--					minor->debugfs_root, minor);
-+	drm_debugfs_create_files(hdmi_debugfs_files,
-+				 ARRAY_SIZE(hdmi_debugfs_files),
-+				 minor->debugfs_root, minor);
- }
- 
- static void sti_hdmi_disable(struct drm_bridge *bridge)
-@@ -1113,10 +1113,7 @@ static int sti_hdmi_late_register(struct drm_connector *connector)
- 		= to_sti_hdmi_connector(connector);
- 	struct sti_hdmi *hdmi = hdmi_connector->hdmi;
- 
--	if (hdmi_debugfs_init(hdmi, hdmi->drm_dev->primary)) {
--		DRM_ERROR("HDMI debugfs setup failed\n");
--		return -EINVAL;
--	}
-+	hdmi_debugfs_init(hdmi, hdmi->drm_dev->primary);
- 
- 	return 0;
- }
-diff --git a/drivers/gpu/drm/sti/sti_hqvdp.c b/drivers/gpu/drm/sti/sti_hqvdp.c
-index 1015abe0ce08..5a4e12194a77 100644
---- a/drivers/gpu/drm/sti/sti_hqvdp.c
-+++ b/drivers/gpu/drm/sti/sti_hqvdp.c
-@@ -639,16 +639,16 @@ static struct drm_info_list hqvdp_debugfs_files[] = {
- 	{ "hqvdp", hqvdp_dbg_show, 0, NULL },
- };
- 
--static int hqvdp_debugfs_init(struct sti_hqvdp *hqvdp, struct drm_minor *minor)
-+static void hqvdp_debugfs_init(struct sti_hqvdp *hqvdp, struct drm_minor *minor)
- {
- 	unsigned int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(hqvdp_debugfs_files); i++)
- 		hqvdp_debugfs_files[i].data = hqvdp;
- 
--	return drm_debugfs_create_files(hqvdp_debugfs_files,
--					ARRAY_SIZE(hqvdp_debugfs_files),
--					minor->debugfs_root, minor);
-+	drm_debugfs_create_files(hqvdp_debugfs_files,
-+				 ARRAY_SIZE(hqvdp_debugfs_files),
-+				 minor->debugfs_root, minor);
- }
- 
- /**
-@@ -1274,7 +1274,9 @@ static int sti_hqvdp_late_register(struct drm_plane *drm_plane)
- 	struct sti_plane *plane = to_sti_plane(drm_plane);
- 	struct sti_hqvdp *hqvdp = to_sti_hqvdp(plane);
- 
--	return hqvdp_debugfs_init(hqvdp, drm_plane->dev->primary);
-+	hqvdp_debugfs_init(hqvdp, drm_plane->dev->primary);
-+
-+	return 0;
- }
- 
- static const struct drm_plane_funcs sti_hqvdp_plane_helpers_funcs = {
-diff --git a/drivers/gpu/drm/sti/sti_mixer.c b/drivers/gpu/drm/sti/sti_mixer.c
-index c3a3e1e5fc8a..0ee084049555 100644
---- a/drivers/gpu/drm/sti/sti_mixer.c
-+++ b/drivers/gpu/drm/sti/sti_mixer.c
-@@ -200,9 +200,10 @@ int sti_mixer_debugfs_init(struct sti_mixer *mixer, struct drm_minor *minor)
- 	for (i = 0; i < nb_files; i++)
- 		mixer_debugfs_files[i].data = mixer;
- 
--	return drm_debugfs_create_files(mixer_debugfs_files,
--					nb_files,
--					minor->debugfs_root, minor);
-+	drm_debugfs_create_files(mixer_debugfs_files,
-+				 nb_files,
-+				 minor->debugfs_root, minor);
-+	return 0;
- }
- 
- void sti_mixer_set_background_status(struct sti_mixer *mixer, bool enable)
-diff --git a/drivers/gpu/drm/sti/sti_tvout.c b/drivers/gpu/drm/sti/sti_tvout.c
-index c36a8da373cb..df3817f0fd30 100644
---- a/drivers/gpu/drm/sti/sti_tvout.c
-+++ b/drivers/gpu/drm/sti/sti_tvout.c
-@@ -570,16 +570,16 @@ static struct drm_info_list tvout_debugfs_files[] = {
- 	{ "tvout", tvout_dbg_show, 0, NULL },
- };
- 
--static int tvout_debugfs_init(struct sti_tvout *tvout, struct drm_minor *minor)
-+static void tvout_debugfs_init(struct sti_tvout *tvout, struct drm_minor *minor)
- {
- 	unsigned int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(tvout_debugfs_files); i++)
- 		tvout_debugfs_files[i].data = tvout;
- 
--	return drm_debugfs_create_files(tvout_debugfs_files,
--					ARRAY_SIZE(tvout_debugfs_files),
--					minor->debugfs_root, minor);
-+	drm_debugfs_create_files(tvout_debugfs_files,
-+				 ARRAY_SIZE(tvout_debugfs_files),
-+				 minor->debugfs_root, minor);
- }
- 
- static void sti_tvout_encoder_dpms(struct drm_encoder *encoder, int mode)
-@@ -603,14 +603,11 @@ static void sti_tvout_encoder_destroy(struct drm_encoder *encoder)
- static int sti_tvout_late_register(struct drm_encoder *encoder)
- {
- 	struct sti_tvout *tvout = to_sti_tvout(encoder);
--	int ret;
- 
- 	if (tvout->debugfs_registered)
- 		return 0;
- 
--	ret = tvout_debugfs_init(tvout, encoder->dev->primary);
--	if (ret)
--		return ret;
-+	tvout_debugfs_init(tvout, encoder->dev->primary);
- 
- 	tvout->debugfs_registered = true;
- 	return 0;
-diff --git a/drivers/gpu/drm/sti/sti_vid.c b/drivers/gpu/drm/sti/sti_vid.c
-index 2d4230410464..2d818397918d 100644
---- a/drivers/gpu/drm/sti/sti_vid.c
-+++ b/drivers/gpu/drm/sti/sti_vid.c
-@@ -124,16 +124,16 @@ static struct drm_info_list vid_debugfs_files[] = {
- 	{ "vid", vid_dbg_show, 0, NULL },
- };
- 
--int vid_debugfs_init(struct sti_vid *vid, struct drm_minor *minor)
-+void vid_debugfs_init(struct sti_vid *vid, struct drm_minor *minor)
- {
- 	unsigned int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(vid_debugfs_files); i++)
- 		vid_debugfs_files[i].data = vid;
- 
--	return drm_debugfs_create_files(vid_debugfs_files,
--					ARRAY_SIZE(vid_debugfs_files),
--					minor->debugfs_root, minor);
-+	drm_debugfs_create_files(vid_debugfs_files,
-+				 ARRAY_SIZE(vid_debugfs_files),
-+				 minor->debugfs_root, minor);
- }
- 
- void sti_vid_commit(struct sti_vid *vid,
-diff --git a/drivers/gpu/drm/sti/sti_vid.h b/drivers/gpu/drm/sti/sti_vid.h
-index 9dbd78461de1..991849ba50b5 100644
---- a/drivers/gpu/drm/sti/sti_vid.h
-+++ b/drivers/gpu/drm/sti/sti_vid.h
-@@ -26,6 +26,6 @@ void sti_vid_disable(struct sti_vid *vid);
- struct sti_vid *sti_vid_create(struct device *dev, struct drm_device *drm_dev,
- 			       int id, void __iomem *baseaddr);
- 
--int vid_debugfs_init(struct sti_vid *vid, struct drm_minor *minor);
-+void vid_debugfs_init(struct sti_vid *vid, struct drm_minor *minor);
- 
+ #ifdef CONFIG_DEBUG_FS
+-int intel_display_debugfs_register(struct drm_i915_private *i915);
++void intel_display_debugfs_register(struct drm_i915_private *i915);
+ int intel_connector_debugfs_add(struct drm_connector *connector);
+ #else
+-static inline int intel_display_debugfs_register(struct drm_i915_private *i915) { return 0; }
++static inline int intel_display_debugfs_register(struct drm_i915_private *i915) {}
+ static inline int intel_connector_debugfs_add(struct drm_connector *connector) { return 0; }
  #endif
+ 
+diff --git a/drivers/gpu/drm/i915/i915_debugfs.c b/drivers/gpu/drm/i915/i915_debugfs.c
+index 8f2525e4ce0f..de313199c714 100644
+--- a/drivers/gpu/drm/i915/i915_debugfs.c
++++ b/drivers/gpu/drm/i915/i915_debugfs.c
+@@ -2392,7 +2392,7 @@ static const struct i915_debugfs_files {
+ 	{"i915_guc_log_relay", &i915_guc_log_relay_fops},
+ };
+ 
+-int i915_debugfs_register(struct drm_i915_private *dev_priv)
++void i915_debugfs_register(struct drm_i915_private *dev_priv)
+ {
+ 	struct drm_minor *minor = dev_priv->drm.primary;
+ 	int i;
+@@ -2409,7 +2409,7 @@ int i915_debugfs_register(struct drm_i915_private *dev_priv)
+ 				    i915_debugfs_files[i].fops);
+ 	}
+ 
+-	return drm_debugfs_create_files(i915_debugfs_list,
+-					I915_DEBUGFS_ENTRIES,
+-					minor->debugfs_root, minor);
++	drm_debugfs_create_files(i915_debugfs_list,
++				 I915_DEBUGFS_ENTRIES,
++				 minor->debugfs_root, minor);
+ }
+diff --git a/drivers/gpu/drm/i915/i915_debugfs.h b/drivers/gpu/drm/i915/i915_debugfs.h
+index 6da39c76ab5e..1de2736f1248 100644
+--- a/drivers/gpu/drm/i915/i915_debugfs.h
++++ b/drivers/gpu/drm/i915/i915_debugfs.h
+@@ -12,10 +12,10 @@ struct drm_i915_private;
+ struct seq_file;
+ 
+ #ifdef CONFIG_DEBUG_FS
+-int i915_debugfs_register(struct drm_i915_private *dev_priv);
++void i915_debugfs_register(struct drm_i915_private *dev_priv);
+ void i915_debugfs_describe_obj(struct seq_file *m, struct drm_i915_gem_object *obj);
+ #else
+-static inline int i915_debugfs_register(struct drm_i915_private *dev_priv) { return 0; }
++static inline void i915_debugfs_register(struct drm_i915_private *dev_priv) {}
+ static inline void i915_debugfs_describe_obj(struct seq_file *m, struct drm_i915_gem_object *obj) {}
+ #endif
+ 
 -- 
 2.25.0
 
