@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7705BC5ED27
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E8FC54FF3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 497B3246A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 150C420801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813190;
-	bh=dByLz4wxVQiW4fPXs9eq0rPvhSQmGiayskHLEij1fk8=;
+	s=default; t=1582813166;
+	bh=arbXllttc7sXYByydEClyO69CaPDVAGy+H48oV7qm04=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WFyE2ckD7k2G2DUK1wblY4LiFOrKEbuoILAdyJvUO4324g/4qZAuFs+MC3dtyENUD
-	 BtFKJa3B727mRSdUqleqBt2VuxL9XRaQ3crgGljgGodx7kxOmfkuDp7c9kfDLNuH8T
-	 uBG7Dtm56o8sUE8sgtQIlReaEV/DX2Zz3kC5UNtA=
+	b=eYLGf4Jh3LsiYsEPqvfBbtl+w4A+UvELaYgfCPWCJFPEOa+mU7ekjEFSL+199TkPL
+	 72cMK/lR8xKDRqbra5eLM72Ud01N4WeHN2zBDlNRZs2SeH8JtM/yXHYiaHSGktNWKa
+	 AuMKLr2uBTcYYUtweBlBGQXoNbKiqPwKkYnz1b5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390022AbgB0OTs (ORCPT
+        id S2390015AbgB0OTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:19:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59294 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:19:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389895AbgB0OSl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:18:41 -0500
+        id S2389993AbgB0OTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:19:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0E1124690;
-        Thu, 27 Feb 2020 14:18:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86EDB2468F;
+        Thu, 27 Feb 2020 14:19:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813121;
-        bh=dByLz4wxVQiW4fPXs9eq0rPvhSQmGiayskHLEij1fk8=;
+        s=default; t=1582813155;
+        bh=arbXllttc7sXYByydEClyO69CaPDVAGy+H48oV7qm04=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UDU9MPVwzar0zbIgNN7fMwcGdGD2FdGNbMPGOFGG6/KImVHoKmYLwifrdJoVJ1Bz/
-         XXKSs8bTaEST5gLAv6a7uqvUttb6JOohfNojXbPmqfYjQqls5eUaJA9hTufNUPtKmP
-         xgBTOdhTBUnYX8wooQJ6I53L832PX7MTd6SjBuWE=
+        b=Xs1QEeTPRO3nJfp7eKrW65Dsa6JPcb3agwwG0NkAK90X1RldgZrwjfHaOqGZqKeaz
+         XJw+5p0/I9Ke0wrxBxxt++bugd3KOGvpqkCKuo9X4YP8vuCEeEdAM6/FGvhj9L6AUC
+         4keWC0Zs94WccgoFAsGhohHEux/GXq2bRYGO//RA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Subject: [PATCH 5.5 143/150] xen: Enable interrupts when calling _cond_resched()
-Date:   Thu, 27 Feb 2020 14:38:00 +0100
-Message-Id: <20200227132253.398078492@linuxfoundation.org>
+        stable@vger.kernel.org, Dmytro Linkin <dmitrolin@mellanox.com>,
+        Roi Dayan <roid@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.5 146/150] net/mlx5e: Dont clear the whole vf config when switching modes
+Date:   Thu, 27 Feb 2020 14:38:03 +0100
+Message-Id: <20200227132253.848331877@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -60,43 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Dmytro Linkin <dmitrolin@mellanox.com>
 
-commit 8645e56a4ad6dcbf504872db7f14a2f67db88ef2 upstream.
+commit 383de108157c881074f32914b61125e299820bd2 upstream.
 
-xen_maybe_preempt_hcall() is called from the exception entry point
-xen_do_hypervisor_callback with interrupts disabled.
+There is no need to reset all vf config (except link state) between
+legacy and switchdev modes changes.
+Also, set link state to AUTO, when legacy enabled.
 
-_cond_resched() evades the might_sleep() check in cond_resched() which
-would have caught that and schedule_debug() unfortunately lacks a check
-for irqs_disabled().
-
-Enable interrupts around the call and use cond_resched() to catch future
-issues.
-
-Fixes: fdfd811ddde3 ("x86/xen: allow privcmd hypercalls to be preempted")
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/878skypjrh.fsf@nanos.tec.linutronix.de
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Fixes: 3b83b6c2e024 ("net/mlx5e: Clear VF config when switching modes")
+Signed-off-by: Dmytro Linkin <dmitrolin@mellanox.com>
+Reviewed-by: Roi Dayan <roid@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/xen/preempt.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/eswitch.c          |    6 +++++-
+ drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c |    4 ++--
+ 2 files changed, 7 insertions(+), 3 deletions(-)
 
---- a/drivers/xen/preempt.c
-+++ b/drivers/xen/preempt.c
-@@ -33,7 +33,9 @@ asmlinkage __visible void xen_maybe_pree
- 		 * cpu.
- 		 */
- 		__this_cpu_write(xen_in_preemptible_hcall, false);
--		_cond_resched();
-+		local_irq_enable();
-+		cond_resched();
-+		local_irq_disable();
- 		__this_cpu_write(xen_in_preemptible_hcall, true);
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+@@ -456,12 +456,16 @@ static void esw_destroy_legacy_table(str
+ 
+ static int esw_legacy_enable(struct mlx5_eswitch *esw)
+ {
+-	int ret;
++	struct mlx5_vport *vport;
++	int ret, i;
+ 
+ 	ret = esw_create_legacy_table(esw);
+ 	if (ret)
+ 		return ret;
+ 
++	mlx5_esw_for_each_vf_vport(esw, i, vport, esw->esw_funcs.num_vfs)
++		vport->info.link_state = MLX5_VPORT_ADMIN_STATE_AUTO;
++
+ 	ret = mlx5_eswitch_enable_pf_vf_vports(esw, MLX5_LEGACY_SRIOV_VPORT_EVENTS);
+ 	if (ret)
+ 		esw_destroy_legacy_table(esw);
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
+@@ -1377,7 +1377,7 @@ static int esw_offloads_start(struct mlx
+ 		return -EINVAL;
  	}
- }
+ 
+-	mlx5_eswitch_disable(esw, true);
++	mlx5_eswitch_disable(esw, false);
+ 	mlx5_eswitch_update_num_of_vfs(esw, esw->dev->priv.sriov.num_vfs);
+ 	err = mlx5_eswitch_enable(esw, MLX5_ESWITCH_OFFLOADS);
+ 	if (err) {
+@@ -2271,7 +2271,7 @@ static int esw_offloads_stop(struct mlx5
+ {
+ 	int err, err1;
+ 
+-	mlx5_eswitch_disable(esw, true);
++	mlx5_eswitch_disable(esw, false);
+ 	err = mlx5_eswitch_enable(esw, MLX5_ESWITCH_LEGACY);
+ 	if (err) {
+ 		NL_SET_ERR_MSG_MOD(extack, "Failed setting eswitch to legacy");
 
 
