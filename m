@@ -2,52 +2,53 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E39AC3F35C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4356DC3F37D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27F912073D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1055320578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:55:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811779;
-	bh=Vs4JIXKOY68VcmDg9hGYy8Jl4dneukZoBexeHZyaEZc=;
+	s=default; t=1582811758;
+	bh=Wy0ESkAAYpyXO0+bJMScLBBEcP2TxBQqGnkYsNs4JPI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UQWzknhrTWIYTcyYnOwgUQFwCRUN0I9KIDUIaFzCN5fmKwx8pbnxEmSwKXnQ6hC29
-	 GnVLqieSehziU0k6SgoxlQFZ6Ym+PukMMSErdNoGIeoU/dPzZq/clN5YFMj0c3O4ej
-	 yMD+2rQgyYwKR38joFOyJe0jv8BmHNeGuKsta/1c=
+	b=xMM1t99w5jAAUvOEbsYqe4IJiDKpl+jrpQuZ2IRPyMl1YLDeVMzEzlYmHCvcx66Kr
+	 aKLV9BmE27VwiKuXQnC5Hdjj1bbww2arDH33COaMhUTVg3XX+uOs46YrB4Ndmyv6wr
+	 EyelyhV4MQK65F+3+9CxtLOahTP8wtkNHQ0RWFGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731843AbgB0N4S (ORCPT
+        id S1729616AbgB0Nz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:56:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56666 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:55:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732086AbgB0N4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:56:13 -0500
+        id S1731770AbgB0Nzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:55:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 388EC2084E;
-        Thu, 27 Feb 2020 13:56:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B812D21D7E;
+        Thu, 27 Feb 2020 13:55:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811772;
-        bh=Vs4JIXKOY68VcmDg9hGYy8Jl4dneukZoBexeHZyaEZc=;
+        s=default; t=1582811752;
+        bh=Wy0ESkAAYpyXO0+bJMScLBBEcP2TxBQqGnkYsNs4JPI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y1liA/dq4fa8BWjUa6o3UZzbIheFLBBtrPqUJ7J+Zs4JdFdBYmtBoeNb2B20Mt0Ce
-         JcWcdNB1u43Jj9QmJKKU4azkpiX9CkRoddHP200ECWnnO8ef6iAx9brWg6rFpTtA+F
-         3SCE7pLt2/EfSdfTZZHf65ja0e3owZ4rvLWdn3O8=
+        b=TjeWxpvkWCRjFjWlgl1PaoiIdgIN6OPksYwBFBUEWn8+AchsX6nqkh+BoKvwuNOk8
+         tfM8f6nUr3gVvdsDxUrHVG3o2HNjU+KuKTWGi2toDmG5D8Cb0A+akCePzj4mV60zSF
+         FmzF2qWUAgpYr0SYijZw571YEX/6hiBVlSo+Ook0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+        stable@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
+        Bean Huo <beanhuo@micron.com>, Can Guo <cang@codeaurora.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 095/237] pinctrl: sh-pfc: sh7269: Fix CAN function GPIOs
-Date:   Thu, 27 Feb 2020 14:35:09 +0100
-Message-Id: <20200227132303.985398059@linuxfoundation.org>
+Subject: [PATCH 4.14 088/237] scsi: ufs: Complete pending requests in host reset and restore path
+Date:   Thu, 27 Feb 2020 14:35:02 +0100
+Message-Id: <20200227132303.527766772@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -60,179 +61,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Can Guo <cang@codeaurora.org>
 
-[ Upstream commit 02aeb2f21530c98fc3ca51028eda742a3fafbd9f ]
+[ Upstream commit 2df74b6985b51e77756e2e8faa16c45ca3ba53c5 ]
 
-pinmux_func_gpios[] contains a hole due to the missing function GPIO
-definition for the "CTX0&CTX1" signal, which is the logical "AND" of the
-first two CAN outputs.
+In UFS host reset and restore path, before probe, we stop and start the
+host controller once. After host controller is stopped, the pending
+requests, if any, are cleared from the doorbell, but no completion IRQ
+would be raised due to the hba is stopped.  These pending requests shall be
+completed along with the first NOP_OUT command (as it is the first command
+which can raise a transfer completion IRQ) sent during probe.  Since the
+OCSs of these pending requests are not SUCCESS (because they are not yet
+literally finished), their UPIUs shall be dumped. When there are multiple
+pending requests, the UPIU dump can be overwhelming and may lead to
+stability issues because it is in atomic context.  Therefore, before probe,
+complete these pending requests right after host controller is stopped and
+silence the UPIU dump from them.
 
-A closer look reveals other issues:
-  - Some functionality is available on alternative pins, but the
-    PINMUX_DATA() entries is using the wrong marks,
-  - Several configurations are missing.
-
-Fix this by:
-  - Renaming CTX0CTX1CTX2_MARK, CRX0CRX1_PJ22_MARK, and
-    CRX0CRX1CRX2_PJ20_MARK to CTX0_CTX1_CTX2_MARK, CRX0_CRX1_PJ22_MARK,
-    resp. CRX0_CRX1_CRX2_PJ20_MARK for consistency with the
-    corresponding enum IDs,
-  - Adding all missing enum IDs and marks,
-  - Use the right (*_PJ2x) variants for alternative pins,
-  - Adding all missing configurations to pinmux_data[],
-  - Adding all missing function GPIO definitions to pinmux_func_gpios[].
-
-See SH7268 Group, SH7269 Group User’s Manual: Hardware, Rev. 2.00:
-  [1] Table 1.4 List of Pins
-  [2] Figure 23.29 Connection Example when Using Channels 0 and 1 as One
-      Channel (64 Mailboxes × 1 Channel) and Channel 2 as One Channel
-      (32 Mailboxes × 1 Channel),
-  [3] Figure 23.30 Connection Example when Using Channels 0, 1, and 2 as
-      One Channel (96 Mailboxes × 1 Channel),
-  [4] Table 48.3 Multiplexed Pins (Port B),
-  [5] Table 48.4 Multiplexed Pins (Port C),
-  [6] Table 48.10 Multiplexed Pins (Port J),
-  [7] Section 48.2.4 Port B Control Registers 0 to 5 (PBCR0 to PBCR5).
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191218194812.12741-5-geert+renesas@glider.be
+Link: https://lore.kernel.org/r/1574751214-8321-5-git-send-email-cang@qti.qualcomm.com
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Tested-by: Bean Huo <beanhuo@micron.com>
+Signed-off-by: Can Guo <cang@codeaurora.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sh/include/cpu-sh2a/cpu/sh7269.h | 11 ++++++--
- drivers/pinctrl/sh-pfc/pfc-sh7269.c   | 39 ++++++++++++++++++---------
- 2 files changed, 36 insertions(+), 14 deletions(-)
+ drivers/scsi/ufs/ufshcd.c | 24 ++++++++++--------------
+ drivers/scsi/ufs/ufshcd.h |  2 ++
+ 2 files changed, 12 insertions(+), 14 deletions(-)
 
-diff --git a/arch/sh/include/cpu-sh2a/cpu/sh7269.h b/arch/sh/include/cpu-sh2a/cpu/sh7269.h
-index d516e5d488180..b887cc402b712 100644
---- a/arch/sh/include/cpu-sh2a/cpu/sh7269.h
-+++ b/arch/sh/include/cpu-sh2a/cpu/sh7269.h
-@@ -78,8 +78,15 @@ enum {
- 	GPIO_FN_WDTOVF,
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index ce40de334f112..c350453246952 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -4580,7 +4580,7 @@ ufshcd_transfer_rsp_status(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
+ 		break;
+ 	} /* end of switch */
  
- 	/* CAN */
--	GPIO_FN_CTX1, GPIO_FN_CRX1, GPIO_FN_CTX0, GPIO_FN_CTX0_CTX1,
--	GPIO_FN_CRX0, GPIO_FN_CRX0_CRX1, GPIO_FN_CRX0_CRX1_CRX2,
-+	GPIO_FN_CTX2, GPIO_FN_CRX2,
-+	GPIO_FN_CTX1, GPIO_FN_CRX1,
-+	GPIO_FN_CTX0, GPIO_FN_CRX0,
-+	GPIO_FN_CTX0_CTX1, GPIO_FN_CRX0_CRX1,
-+	GPIO_FN_CTX0_CTX1_CTX2, GPIO_FN_CRX0_CRX1_CRX2,
-+	GPIO_FN_CTX2_PJ21, GPIO_FN_CRX2_PJ20,
-+	GPIO_FN_CTX1_PJ23, GPIO_FN_CRX1_PJ22,
-+	GPIO_FN_CTX0_CTX1_PJ23, GPIO_FN_CRX0_CRX1_PJ22,
-+	GPIO_FN_CTX0_CTX1_CTX2_PJ21, GPIO_FN_CRX0_CRX1_CRX2_PJ20,
+-	if (host_byte(result) != DID_OK)
++	if ((host_byte(result) != DID_OK) && !hba->silence_err_logs)
+ 		ufshcd_print_trs(hba, 1 << lrbp->task_tag, true);
+ 	return result;
+ }
+@@ -5109,8 +5109,8 @@ static void ufshcd_err_handler(struct work_struct *work)
  
- 	/* DMAC */
- 	GPIO_FN_TEND0, GPIO_FN_DACK0, GPIO_FN_DREQ0,
-diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7269.c b/drivers/pinctrl/sh-pfc/pfc-sh7269.c
-index cfdb4fc177c3e..3df0c0d139d08 100644
---- a/drivers/pinctrl/sh-pfc/pfc-sh7269.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh7269.c
-@@ -740,13 +740,12 @@ enum {
- 	CRX0_MARK, CTX0_MARK,
- 	CRX1_MARK, CTX1_MARK,
- 	CRX2_MARK, CTX2_MARK,
--	CRX0_CRX1_MARK,
--	CRX0_CRX1_CRX2_MARK,
--	CTX0CTX1CTX2_MARK,
-+	CRX0_CRX1_MARK, CTX0_CTX1_MARK,
-+	CRX0_CRX1_CRX2_MARK, CTX0_CTX1_CTX2_MARK,
- 	CRX1_PJ22_MARK, CTX1_PJ23_MARK,
- 	CRX2_PJ20_MARK, CTX2_PJ21_MARK,
--	CRX0CRX1_PJ22_MARK,
--	CRX0CRX1CRX2_PJ20_MARK,
-+	CRX0_CRX1_PJ22_MARK, CTX0_CTX1_PJ23_MARK,
-+	CRX0_CRX1_CRX2_PJ20_MARK, CTX0_CTX1_CTX2_PJ21_MARK,
+ 	/*
+ 	 * if host reset is required then skip clearing the pending
+-	 * transfers forcefully because they will automatically get
+-	 * cleared after link startup.
++	 * transfers forcefully because they will get cleared during
++	 * host reset and restore
+ 	 */
+ 	if (needs_reset)
+ 		goto skip_pending_xfer_clear;
+@@ -5749,9 +5749,15 @@ static int ufshcd_host_reset_and_restore(struct ufs_hba *hba)
+ 	int err;
+ 	unsigned long flags;
  
- 	/* VDC */
- 	DV_CLK_MARK,
-@@ -824,6 +823,7 @@ static const u16 pinmux_data[] = {
- 	PINMUX_DATA(CS3_MARK, PC8MD_001),
- 	PINMUX_DATA(TXD7_MARK, PC8MD_010),
- 	PINMUX_DATA(CTX1_MARK, PC8MD_011),
-+	PINMUX_DATA(CTX0_CTX1_MARK, PC8MD_100),
+-	/* Reset the host controller */
++	/*
++	 * Stop the host controller and complete the requests
++	 * cleared by h/w
++	 */
+ 	spin_lock_irqsave(hba->host->host_lock, flags);
+ 	ufshcd_hba_stop(hba, false);
++	hba->silence_err_logs = true;
++	ufshcd_complete_requests(hba);
++	hba->silence_err_logs = false;
+ 	spin_unlock_irqrestore(hba->host->host_lock, flags);
  
- 	PINMUX_DATA(PC7_DATA, PC7MD_000),
- 	PINMUX_DATA(CKE_MARK, PC7MD_001),
-@@ -836,11 +836,12 @@ static const u16 pinmux_data[] = {
- 	PINMUX_DATA(CAS_MARK, PC6MD_001),
- 	PINMUX_DATA(SCK7_MARK, PC6MD_010),
- 	PINMUX_DATA(CTX0_MARK, PC6MD_011),
-+	PINMUX_DATA(CTX0_CTX1_CTX2_MARK, PC6MD_100),
+ 	/* scale up clocks to max frequency before full reinitialization */
+@@ -5785,22 +5791,12 @@ out:
+ static int ufshcd_reset_and_restore(struct ufs_hba *hba)
+ {
+ 	int err = 0;
+-	unsigned long flags;
+ 	int retries = MAX_HOST_RESET_RETRIES;
  
- 	PINMUX_DATA(PC5_DATA, PC5MD_000),
- 	PINMUX_DATA(RAS_MARK, PC5MD_001),
- 	PINMUX_DATA(CRX0_MARK, PC5MD_011),
--	PINMUX_DATA(CTX0CTX1CTX2_MARK, PC5MD_100),
-+	PINMUX_DATA(CTX0_CTX1_CTX2_MARK, PC5MD_100),
- 	PINMUX_DATA(IRQ0_PC_MARK, PC5MD_101),
+ 	do {
+ 		err = ufshcd_host_reset_and_restore(hba);
+ 	} while (err && --retries);
  
- 	PINMUX_DATA(PC4_DATA, PC4MD_00),
-@@ -1292,30 +1293,32 @@ static const u16 pinmux_data[] = {
- 	PINMUX_DATA(LCD_DATA23_PJ23_MARK, PJ23MD_010),
- 	PINMUX_DATA(LCD_TCON6_MARK, PJ23MD_011),
- 	PINMUX_DATA(IRQ3_PJ_MARK, PJ23MD_100),
--	PINMUX_DATA(CTX1_MARK, PJ23MD_101),
-+	PINMUX_DATA(CTX1_PJ23_MARK, PJ23MD_101),
-+	PINMUX_DATA(CTX0_CTX1_PJ23_MARK, PJ23MD_110),
+-	/*
+-	 * After reset the door-bell might be cleared, complete
+-	 * outstanding requests in s/w here.
+-	 */
+-	spin_lock_irqsave(hba->host->host_lock, flags);
+-	ufshcd_transfer_req_compl(hba);
+-	ufshcd_tmc_handler(hba);
+-	spin_unlock_irqrestore(hba->host->host_lock, flags);
+-
+ 	return err;
+ }
  
- 	PINMUX_DATA(PJ22_DATA, PJ22MD_000),
- 	PINMUX_DATA(DV_DATA22_MARK, PJ22MD_001),
- 	PINMUX_DATA(LCD_DATA22_PJ22_MARK, PJ22MD_010),
- 	PINMUX_DATA(LCD_TCON5_MARK, PJ22MD_011),
- 	PINMUX_DATA(IRQ2_PJ_MARK, PJ22MD_100),
--	PINMUX_DATA(CRX1_MARK, PJ22MD_101),
--	PINMUX_DATA(CRX0_CRX1_MARK, PJ22MD_110),
-+	PINMUX_DATA(CRX1_PJ22_MARK, PJ22MD_101),
-+	PINMUX_DATA(CRX0_CRX1_PJ22_MARK, PJ22MD_110),
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index cdc8bd05f7dfc..4aac4d86f57b3 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -485,6 +485,7 @@ struct ufs_stats {
+  * @uic_error: UFS interconnect layer error status
+  * @saved_err: sticky error mask
+  * @saved_uic_err: sticky UIC error mask
++ * @silence_err_logs: flag to silence error logs
+  * @dev_cmd: ufs device management command information
+  * @last_dme_cmd_tstamp: time stamp of the last completed DME command
+  * @auto_bkops_enabled: to track whether bkops is enabled in device
+@@ -621,6 +622,7 @@ struct ufs_hba {
+ 	u32 saved_err;
+ 	u32 saved_uic_err;
+ 	struct ufs_stats ufs_stats;
++	bool silence_err_logs;
  
- 	PINMUX_DATA(PJ21_DATA, PJ21MD_000),
- 	PINMUX_DATA(DV_DATA21_MARK, PJ21MD_001),
- 	PINMUX_DATA(LCD_DATA21_PJ21_MARK, PJ21MD_010),
- 	PINMUX_DATA(LCD_TCON4_MARK, PJ21MD_011),
- 	PINMUX_DATA(IRQ1_PJ_MARK, PJ21MD_100),
--	PINMUX_DATA(CTX2_MARK, PJ21MD_101),
-+	PINMUX_DATA(CTX2_PJ21_MARK, PJ21MD_101),
-+	PINMUX_DATA(CTX0_CTX1_CTX2_PJ21_MARK, PJ21MD_110),
- 
- 	PINMUX_DATA(PJ20_DATA, PJ20MD_000),
- 	PINMUX_DATA(DV_DATA20_MARK, PJ20MD_001),
- 	PINMUX_DATA(LCD_DATA20_PJ20_MARK, PJ20MD_010),
- 	PINMUX_DATA(LCD_TCON3_MARK, PJ20MD_011),
- 	PINMUX_DATA(IRQ0_PJ_MARK, PJ20MD_100),
--	PINMUX_DATA(CRX2_MARK, PJ20MD_101),
--	PINMUX_DATA(CRX0CRX1CRX2_PJ20_MARK, PJ20MD_110),
-+	PINMUX_DATA(CRX2_PJ20_MARK, PJ20MD_101),
-+	PINMUX_DATA(CRX0_CRX1_CRX2_PJ20_MARK, PJ20MD_110),
- 
- 	PINMUX_DATA(PJ19_DATA, PJ19MD_000),
- 	PINMUX_DATA(DV_DATA19_MARK, PJ19MD_001),
-@@ -1666,12 +1669,24 @@ static const struct pinmux_func pinmux_func_gpios[] = {
- 	GPIO_FN(WDTOVF),
- 
- 	/* CAN */
-+	GPIO_FN(CTX2),
-+	GPIO_FN(CRX2),
- 	GPIO_FN(CTX1),
- 	GPIO_FN(CRX1),
- 	GPIO_FN(CTX0),
- 	GPIO_FN(CRX0),
-+	GPIO_FN(CTX0_CTX1),
- 	GPIO_FN(CRX0_CRX1),
-+	GPIO_FN(CTX0_CTX1_CTX2),
- 	GPIO_FN(CRX0_CRX1_CRX2),
-+	GPIO_FN(CTX2_PJ21),
-+	GPIO_FN(CRX2_PJ20),
-+	GPIO_FN(CTX1_PJ23),
-+	GPIO_FN(CRX1_PJ22),
-+	GPIO_FN(CTX0_CTX1_PJ23),
-+	GPIO_FN(CRX0_CRX1_PJ22),
-+	GPIO_FN(CTX0_CTX1_CTX2_PJ21),
-+	GPIO_FN(CRX0_CRX1_CRX2_PJ20),
- 
- 	/* DMAC */
- 	GPIO_FN(TEND0),
+ 	/* Device management request data */
+ 	struct ufs_dev_cmd dev_cmd;
 -- 
 2.20.1
 
