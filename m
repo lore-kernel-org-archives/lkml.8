@@ -2,52 +2,55 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA5FC3F357
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 374A6C3F34C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6198246A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 054CC20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811218;
-	bh=mUr4reYLoAEnHk+1kcjav4hCT/FUkm9BEbDfdhCOAxE=;
+	s=default; t=1582811191;
+	bh=lL4pFfsrsx5IvHqyB0CeDf2N+rjFEBCQR0PaBMWEcVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=apM6YM9fkA7nUJCqpgPrki/Iby70YeQtZrsVPqs6qyFk/PpkRPrx79bJdDt9luXpr
-	 9SYt24G9gotkAhSWxZzgnq2AsO+DJKCm+FnPeFWcpuowwb0TZ0dh8SuA8TA48W2A8r
-	 RQFU60zK0Omh2N41YhnucrfOxEdMiKPgO7jBJWmE=
+	b=eedSdP1EEfZ/q8UtJxmzgymgYMXbqnQAcMpOwgiNha3fAVieinmD6Gg4cDY7iW0Zy
+	 LH+U+DZN9oyX8xxxIv/e+pcBsdSxmClmTexQjFgCw1TCo+PMSGk82JX4d41nA/qTiD
+	 q78C5cjj0pIJIerl0YxaQxsG+wPmoi1pfnJCSTak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730369AbgB0Nq5 (ORCPT
+        id S1730521AbgB0Nq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:46:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43202 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:46:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730112AbgB0Nqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:46:52 -0500
+        id S1730167AbgB0NqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:46:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D19CA2469F;
-        Thu, 27 Feb 2020 13:46:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CFAF20801;
+        Thu, 27 Feb 2020 13:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811212;
-        bh=mUr4reYLoAEnHk+1kcjav4hCT/FUkm9BEbDfdhCOAxE=;
+        s=default; t=1582811183;
+        bh=lL4pFfsrsx5IvHqyB0CeDf2N+rjFEBCQR0PaBMWEcVk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i+kYYFTxvuFpOGtqgcTDf1UXHLEjOmzBiZecuGFDFreRn85nsTt9dAVBByX2AwDwA
-         ntypBg0nA3+vUTVcHgEQ698J/Ro76kBiW7C+pTlDDeNVUxVwtKjZbbQIwKN1bZaO0U
-         fZaBHEIRN6z2GXJDqGCDWAib4he+tZ9KY1NhsYss=
+        b=PVp4SjeiFz35pquMUycb8QbT+IrhrBfQOhmh81KcehNylXW1KhkwImNLMR10GIOtA
+         EzMwZodVzyYqXcs3wkMh3mspQC5LdWh8D5hIurinx3YrUhMU17iMQc/fkMWmo1ckdq
+         Xd7lGcUNdv+dQAWHpUVEGLQL17jJ35VjwRzZsE3k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Dilger <adilger@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
-        stable@kernel.org
-Subject: [PATCH 4.9 008/165] ext4: fix checksum errors with indexed dirs
-Date:   Thu, 27 Feb 2020 14:34:42 +0100
-Message-Id: <20200227132232.335020824@linuxfoundation.org>
+        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Matthew Garrett <mjg59@google.com>, linux-efi@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 033/165] efi/x86: Map the entire EFI vendor string before copying it
+Date:   Thu, 27 Feb 2020 14:35:07 +0100
+Message-Id: <20200227132235.916584144@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -60,125 +63,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-commit 48a34311953d921235f4d7bbd2111690d2e469cf upstream.
+[ Upstream commit ffc2760bcf2dba0dbef74013ed73eea8310cc52c ]
 
-DIR_INDEX has been introduced as a compat ext4 feature. That means that
-even kernels / tools that don't understand the feature may modify the
-filesystem. This works because for kernels not understanding indexed dir
-format, internal htree nodes appear just as empty directory entries.
-Index dir aware kernels then check the htree structure is still
-consistent before using the data. This all worked reasonably well until
-metadata checksums were introduced. The problem is that these
-effectively made DIR_INDEX only ro-compatible because internal htree
-nodes store checksums in a different place than normal directory blocks.
-Thus any modification ignorant to DIR_INDEX (or just clearing
-EXT4_INDEX_FL from the inode) will effectively cause checksum mismatch
-and trigger kernel errors. So we have to be more careful when dealing
-with indexed directories on filesystems with checksumming enabled.
+Fix a couple of issues with the way we map and copy the vendor string:
+- we map only 2 bytes, which usually works since you get at least a
+  page, but if the vendor string happens to cross a page boundary,
+  a crash will result
+- only call early_memunmap() if early_memremap() succeeded, or we will
+  call it with a NULL address which it doesn't like,
+- while at it, switch to early_memremap_ro(), and array indexing rather
+  than pointer dereferencing to read the CHAR16 characters.
 
-1) We just disallow loading any directory inodes with EXT4_INDEX_FL when
-DIR_INDEX is not enabled. This is harsh but it should be very rare (it
-means someone disabled DIR_INDEX on existing filesystem and didn't run
-e2fsck), e2fsck can fix the problem, and we don't want to answer the
-difficult question: "Should we rather corrupt the directory more or
-should we ignore that DIR_INDEX feature is not set?"
-
-2) When we find out htree structure is corrupted (but the filesystem and
-the directory should in support htrees), we continue just ignoring htree
-information for reading but we refuse to add new entries to the
-directory to avoid corrupting it more.
-
-Link: https://lore.kernel.org/r/20200210144316.22081-1-jack@suse.cz
-Fixes: dbe89444042a ("ext4: Calculate and verify checksums for htree nodes")
-Reviewed-by: Andreas Dilger <adilger@dilger.ca>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Arvind Sankar <nivedita@alum.mit.edu>
+Cc: Matthew Garrett <mjg59@google.com>
+Cc: linux-efi@vger.kernel.org
+Fixes: 5b83683f32b1 ("x86: EFI runtime service support")
+Link: https://lkml.kernel.org/r/20200103113953.9571-5-ardb@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/dir.c   |   14 ++++++++------
- fs/ext4/ext4.h  |    5 ++++-
- fs/ext4/inode.c |   12 ++++++++++++
- fs/ext4/namei.c |    7 +++++++
- 4 files changed, 31 insertions(+), 7 deletions(-)
+ arch/x86/platform/efi/efi.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
---- a/fs/ext4/dir.c
-+++ b/fs/ext4/dir.c
-@@ -124,12 +124,14 @@ static int ext4_readdir(struct file *fil
- 		if (err != ERR_BAD_DX_DIR) {
- 			return err;
- 		}
--		/*
--		 * We don't set the inode dirty flag since it's not
--		 * critical that it get flushed back to the disk.
--		 */
--		ext4_clear_inode_flag(file_inode(file),
--				      EXT4_INODE_INDEX);
-+		/* Can we just clear INDEX flag to ignore htree information? */
-+		if (!ext4_has_metadata_csum(sb)) {
-+			/*
-+			 * We don't set the inode dirty flag since it's not
-+			 * critical that it gets flushed back to the disk.
-+			 */
-+			ext4_clear_inode_flag(inode, EXT4_INODE_INDEX);
-+		}
- 	}
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index b6669d326545a..f08abdf8bb676 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -478,7 +478,6 @@ void __init efi_init(void)
+ 	efi_char16_t *c16;
+ 	char vendor[100] = "unknown";
+ 	int i = 0;
+-	void *tmp;
  
- 	if (ext4_has_inline_data(inode)) {
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -2375,8 +2375,11 @@ int ext4_insert_dentry(struct inode *dir
- 		       struct ext4_filename *fname);
- static inline void ext4_update_dx_flag(struct inode *inode)
- {
--	if (!ext4_has_feature_dir_index(inode->i_sb))
-+	if (!ext4_has_feature_dir_index(inode->i_sb)) {
-+		/* ext4_iget() should have caught this... */
-+		WARN_ON_ONCE(ext4_has_feature_metadata_csum(inode->i_sb));
- 		ext4_clear_inode_flag(inode, EXT4_INODE_INDEX);
+ #ifdef CONFIG_X86_32
+ 	if (boot_params.efi_info.efi_systab_hi ||
+@@ -503,14 +502,16 @@ void __init efi_init(void)
+ 	/*
+ 	 * Show what we know for posterity
+ 	 */
+-	c16 = tmp = early_memremap(efi.systab->fw_vendor, 2);
++	c16 = early_memremap_ro(efi.systab->fw_vendor,
++				sizeof(vendor) * sizeof(efi_char16_t));
+ 	if (c16) {
+-		for (i = 0; i < sizeof(vendor) - 1 && *c16; ++i)
+-			vendor[i] = *c16++;
++		for (i = 0; i < sizeof(vendor) - 1 && c16[i]; ++i)
++			vendor[i] = c16[i];
+ 		vendor[i] = '\0';
+-	} else
++		early_memunmap(c16, sizeof(vendor) * sizeof(efi_char16_t));
++	} else {
+ 		pr_err("Could not map the firmware vendor!\n");
+-	early_memunmap(tmp, 2);
 +	}
- }
- static unsigned char ext4_filetype_table[] = {
- 	DT_UNKNOWN, DT_REG, DT_DIR, DT_CHR, DT_BLK, DT_FIFO, DT_SOCK, DT_LNK
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -4594,6 +4594,18 @@ struct inode *ext4_iget(struct super_blo
- 		ret = -EFSCORRUPTED;
- 		goto bad_inode;
- 	}
-+	/*
-+	 * If dir_index is not enabled but there's dir with INDEX flag set,
-+	 * we'd normally treat htree data as empty space. But with metadata
-+	 * checksumming that corrupts checksums so forbid that.
-+	 */
-+	if (!ext4_has_feature_dir_index(sb) && ext4_has_metadata_csum(sb) &&
-+	    ext4_test_inode_flag(inode, EXT4_INODE_INDEX)) {
-+		EXT4_ERROR_INODE(inode,
-+				 "iget: Dir with htree data on filesystem without dir_index feature.");
-+		ret = -EFSCORRUPTED;
-+		goto bad_inode;
-+	}
- 	ei->i_disksize = inode->i_size;
- #ifdef CONFIG_QUOTA
- 	ei->i_reserved_quota = 0;
---- a/fs/ext4/namei.c
-+++ b/fs/ext4/namei.c
-@@ -2148,6 +2148,13 @@ static int ext4_add_entry(handle_t *hand
- 		retval = ext4_dx_add_entry(handle, &fname, dir, inode);
- 		if (!retval || (retval != ERR_BAD_DX_DIR))
- 			goto out;
-+		/* Can we just ignore htree data? */
-+		if (ext4_has_metadata_csum(sb)) {
-+			EXT4_ERROR_INODE(dir,
-+				"Directory has corrupted htree index.");
-+			retval = -EFSCORRUPTED;
-+			goto out;
-+		}
- 		ext4_clear_inode_flag(dir, EXT4_INODE_INDEX);
- 		dx_fallback++;
- 		ext4_mark_inode_dirty(handle, dir);
+ 
+ 	pr_info("EFI v%u.%.02u by %s\n",
+ 		efi.systab->hdr.revision >> 16,
+-- 
+2.20.1
+
 
 
