@@ -2,103 +2,150 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 144FDC4BA06
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E670C4BA06
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD14E2467B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:56:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582782989;
-	bh=R9VEd0NDGHG23l9/8f5bs/P9pgnOwscgs82TKBNxFEs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HIOrKybRcRk4xABpciBLUwQcvJNNUULZY/D3u3ORasj2xx3bb1s5nWFOquydtuq7U
-	 pwiEEV5I4AwcNZl3H19sUz8330MzA+oJg5SvLLTff7oaf3IqefDQk2qpce0hPewFD4
-	 qMupyLNknRXIOPUBLxuIYWdLWG/wULsavszL4saw=
+	by mail.kernel.org (Postfix) with ESMTP id 0F58C24672
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:56:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbgB0F43 (ORCPT
+        id S1728432AbgB0F4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 00:56:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55024 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 00:56:32 -0500
+Received: from foss.arm.com ([217.140.110.172]:46038 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725805AbgB0F41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 00:56:27 -0500
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2612B24672;
-        Thu, 27 Feb 2020 05:56:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582782987;
-        bh=R9VEd0NDGHG23l9/8f5bs/P9pgnOwscgs82TKBNxFEs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=O0AdVHRQx3VDctsBvC4N0ZihEthjvsr47cIp4X2kbDDo0TpIBiIJYkWRRyTETJfm4
-         WBnTiFWPOEu7ubiL5KG7koSy3y1RoaqAcmRXw/1c7Ww7wJeHptWKYWJxQt10pargoD
-         w5Sr27uxuvChFnoxAAAnC/XoMCPptP/Cd4rnMq4o=
-Received: by mail-lf1-f52.google.com with SMTP id c23so1119976lfi.7;
-        Wed, 26 Feb 2020 21:56:27 -0800 (PST)
-X-Gm-Message-State: ANhLgQ3hGWWRy1Rn6jZMmpyWGwLOQeQYXJK06gofew1DP6d1MSGQpQVq
-        1ru7R1sS3HIMqDA8fPTAq34jVxrn2URFg2A6lL0=
-X-Google-Smtp-Source: ADFU+vtg0fGzcYoaye5t1/UsBTkwUsvyGZXKcDkqdmLZOhJ19DxxGVywxm78hjafHzS5LYzWchS/gfPFmj7IZ0Oq6Nc=
-X-Received: by 2002:a19:4a0f:: with SMTP id x15mr1096322lfa.172.1582782985300;
- Wed, 26 Feb 2020 21:56:25 -0800 (PST)
-MIME-Version: 1.0
-References: <20200227001744.GA3317@embeddedor>
-In-Reply-To: <20200227001744.GA3317@embeddedor>
-From:   Song Liu <song@kernel.org>
-Date:   Wed, 26 Feb 2020 21:56:13 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW6EWnMWL6QeJaXDwsT4_aFmCAc_aEFGrvKwJsTFg_B2Cg@mail.gmail.com>
-Message-ID: <CAPhsuW6EWnMWL6QeJaXDwsT4_aFmCAc_aEFGrvKwJsTFg_B2Cg@mail.gmail.com>
-Subject: Re: [PATCH] bpf: Replace zero-length array with flexible-array member
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1725805AbgB0F4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 00:56:30 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A66431B;
+        Wed, 26 Feb 2020 21:56:29 -0800 (PST)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.1.119])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AF98C3F73B;
+        Wed, 26 Feb 2020 21:56:25 -0800 (PST)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org
+Cc:     vbabka@suse.cz, Anshuman Khandual <anshuman.khandual@arm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V2 2/3] mm/vma: Make vma_is_foreign() available for general use
+Date:   Thu, 27 Feb 2020 11:26:04 +0530
+Message-Id: <1582782965-3274-3-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1582782965-3274-1-git-send-email-anshuman.khandual@arm.com>
+References: <1582782965-3274-1-git-send-email-anshuman.khandual@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 4:16 PM Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
->
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
->
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
->
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
->
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
->
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
->
-> This issue was found with the help of Coccinelle.
->
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Idea of a foreign VMA with respect to the present context is very generic.
+But currently there are two identical definitions for this in powerpc and
+x86 platforms. Lets consolidate those redundant definitions while making
+vma_is_foreign() available for general use later. This should not cause
+any functional change.
 
-Acked-by: Song Liu <songliubraving@fb.com>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: x86@kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+ arch/powerpc/mm/book3s64/pkeys.c   | 12 ------------
+ arch/x86/include/asm/mmu_context.h | 15 ---------------
+ include/linux/mm.h                 | 11 +++++++++++
+ 3 files changed, 11 insertions(+), 27 deletions(-)
+
+diff --git a/arch/powerpc/mm/book3s64/pkeys.c b/arch/powerpc/mm/book3s64/pkeys.c
+index 59e0ebbd8036..07527f1ed108 100644
+--- a/arch/powerpc/mm/book3s64/pkeys.c
++++ b/arch/powerpc/mm/book3s64/pkeys.c
+@@ -381,18 +381,6 @@ bool arch_pte_access_permitted(u64 pte, bool write, bool execute)
+  * So do not enforce things if the VMA is not from the current mm, or if we are
+  * in a kernel thread.
+  */
+-static inline bool vma_is_foreign(struct vm_area_struct *vma)
+-{
+-	if (!current->mm)
+-		return true;
+-
+-	/* if it is not our ->mm, it has to be foreign */
+-	if (current->mm != vma->vm_mm)
+-		return true;
+-
+-	return false;
+-}
+-
+ bool arch_vma_access_permitted(struct vm_area_struct *vma, bool write,
+ 			       bool execute, bool foreign)
+ {
+diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
+index b538d9ddee9c..4e55370e48e8 100644
+--- a/arch/x86/include/asm/mmu_context.h
++++ b/arch/x86/include/asm/mmu_context.h
+@@ -213,21 +213,6 @@ static inline void arch_unmap(struct mm_struct *mm, unsigned long start,
+  * So do not enforce things if the VMA is not from the current
+  * mm, or if we are in a kernel thread.
+  */
+-static inline bool vma_is_foreign(struct vm_area_struct *vma)
+-{
+-	if (!current->mm)
+-		return true;
+-	/*
+-	 * Should PKRU be enforced on the access to this VMA?  If
+-	 * the VMA is from another process, then PKRU has no
+-	 * relevance and should not be enforced.
+-	 */
+-	if (current->mm != vma->vm_mm)
+-		return true;
+-
+-	return false;
+-}
+-
+ static inline bool arch_vma_access_permitted(struct vm_area_struct *vma,
+ 		bool write, bool execute, bool foreign)
+ {
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 7cb7a5c564fb..c5d2fd889bdf 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -27,6 +27,7 @@
+ #include <linux/memremap.h>
+ #include <linux/overflow.h>
+ #include <linux/sizes.h>
++#include <linux/sched.h>
+ 
+ struct mempolicy;
+ struct anon_vma;
+@@ -543,6 +544,16 @@ static inline bool vma_is_anonymous(struct vm_area_struct *vma)
+ 	return !vma->vm_ops;
+ }
+ 
++static inline bool vma_is_foreign(struct vm_area_struct *vma)
++{
++	if (!current->mm)
++		return true;
++
++	if (current->mm != vma->vm_mm)
++		return true;
++
++	return false;
++}
+ #ifdef CONFIG_SHMEM
+ /*
+  * The vma_is_shmem is not inline because it is used only by slow
+-- 
+2.20.1
+
