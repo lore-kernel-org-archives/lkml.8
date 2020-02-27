@@ -2,94 +2,97 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7188C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A19C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77A47246A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:53:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 080FB246A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:53:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="PMtqoD+Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729831AbgB0PxT (ORCPT
+        id S1729867AbgB0Pxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 10:53:19 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:34680 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729110AbgB0PxS (ORCPT
+        Thu, 27 Feb 2020 10:53:38 -0500
+Received: from mail-qk1-f179.google.com ([209.85.222.179]:44669 "EHLO
+        mail-qk1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729375AbgB0Pxh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 10:53:18 -0500
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j7LTB-0000G5-Ed; Thu, 27 Feb 2020 16:53:01 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 27C2C1040A9; Thu, 27 Feb 2020 16:53:00 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [patch 5/8] x86/entry/common: Provide trace/kprobe safe exit to user space functions
-In-Reply-To: <71271e39-1dbd-0bd6-2435-fc8a30f47b7d@oracle.com>
-References: <20200225220801.571835584@linutronix.de> <20200225221305.719921962@linutronix.de> <71271e39-1dbd-0bd6-2435-fc8a30f47b7d@oracle.com>
-Date:   Thu, 27 Feb 2020 16:53:00 +0100
-Message-ID: <87h7zcm3hf.fsf@nanos.tec.linutronix.de>
+        Thu, 27 Feb 2020 10:53:37 -0500
+Received: by mail-qk1-f179.google.com with SMTP id f140so3540713qke.11
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 07:53:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EH0SNO5Rcc4XYOUSFVK7bK7rNzgEXpv0OLPCvUs1MKM=;
+        b=PMtqoD+Qorl+adIp7K03I0mEvU1rioCUSaRdmWReGiwltATTH6RJtRscNq5iIqT9cY
+         JSA9CN5t7cEAsNpiP/S+TdjCZcTKeZJ7h8ZLu9IL9vsnjmxAe95o1Ckuho0hdEY+xmNL
+         CEMDj98AiR3AVKxOVA67huauMos3yZqp1HaKRkhsgTyCF1cBspSyrV/tJ29QVVd5jreq
+         w1KuhoOK/p1h2CGmmtI3EtJOoNYVhOHIwcABWJUfIsCW9XUbZe25fZvxtRdPN6d4SWIp
+         wAezUlU0JJj25Yv2HvrdtSeIUrtAoCBHpz/VsuoRmrD7sJUQdQ9hHwbfqYD5c3XQp6ND
+         1fCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EH0SNO5Rcc4XYOUSFVK7bK7rNzgEXpv0OLPCvUs1MKM=;
+        b=J+Lrc7oN1w6obtgOnRKOmTVyFySOGspCfVZF7TAZ011MXo2YwKuWdYWc/3LGndVB5U
+         b2gJnshKi4aEaB4MC7disdXfyfrk0WIXx4s0GvOVFuiWff5C3jvZ8wdUYBVmB9D/iJDb
+         A09NepmkH5uCgYBFuNixsnmcf5ZcyZusxTQTVsNBSHPSGC/7uubWw5jDuRGbLtMqy1w7
+         AjBfq5l/UjncPg7zm0URGIrKC0rfjFPLRowgnfLr0P0EI3JHQXHOZ+7YWfmjJ8p642HS
+         2DkFYocHNuO4cIXDAVkUS2VyOp6aOXMYeKvEcNMOWQHmCKavKf0b8J7lfS5hJQU3xkTF
+         N0Ew==
+X-Gm-Message-State: APjAAAWjtTvgcAfka548pyZVKYfOACInrhYH/yDiSPDsUKMFQr93MlKU
+        81sE/rRHhWzEdFNqHFMXijIYVQ==
+X-Google-Smtp-Source: APXvYqwdqVD1HKLQD9Dk+yGMQZm/xAmaIFr/8snWfVHM3u7MryqrGdgt6o3CYFD+XYsHevMncfcZeg==
+X-Received: by 2002:ae9:ed06:: with SMTP id c6mr6871655qkg.7.1582818816659;
+        Thu, 27 Feb 2020 07:53:36 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id h12sm3241397qtn.56.2020.02.27.07.53.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 27 Feb 2020 07:53:36 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1j7LTj-0005VV-D2; Thu, 27 Feb 2020 11:53:35 -0400
+Date:   Thu, 27 Feb 2020 11:53:35 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Bernard Metzler <BMT@zurich.ibm.com>
+Cc:     syzbot <syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com>,
+        chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        netdev@vger.kernel.org, parav@mellanox.com,
+        syzkaller-bugs@googlegroups.com, willy@infradead.org
+Subject: Re: possible deadlock in cma_netdev_callback
+Message-ID: <20200227155335.GI31668@ziepe.ca>
+References: <20200226204238.GC31668@ziepe.ca>
+ <000000000000153fac059f740693@google.com>
+ <OF0B62EDE7.E13D40E8-ON0025851B.0037F560-0025851B.0037F56C@notes.na.collabserv.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <OF0B62EDE7.E13D40E8-ON0025851B.0037F560-0025851B.0037F56C@notes.na.collabserv.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alexandre Chartre <alexandre.chartre@oracle.com> writes:
+On Thu, Feb 27, 2020 at 10:11:13AM +0000, Bernard Metzler wrote:
 
-> On 2/25/20 11:08 PM, Thomas Gleixner wrote:
->> Split prepare_enter_to_user_mode() and mark it notrace/noprobe so the irq
->> flags tracing on return can be put into it.
->
-> This splits prepare_exit_to_usermode() not prepare_enter_to_user_mode().
+> Thanks for letting me know! Hmm, we cannot use RCU locks since
+> we potentially sleep. One solution would be to create a list
+> of matching interfaces while under lock, unlock and use that
+> list for calling siw_listen_address() (which may sleep),
+> right...?
 
-Ooops
+Why do you need to iterate over addresses anyhow? Shouldn't the listen
+just be done with the address the user gave and a BIND DEVICE to the
+device siw is connected to?
 
->>   /* Called with IRQs disabled. */
->> -__visible inline void prepare_exit_to_usermode(struct pt_regs *regs)
->> +static inline void __prepare_exit_to_usermode(struct pt_regs *regs)
->>   {
->>   	struct thread_info *ti = current_thread_info();
->>   	u32 cached_flags;
->> @@ -241,6 +241,12 @@ static void exit_to_usermode_loop(struct
->>   	mds_user_clear_cpu_buffers();
->>   }
->>   
->> +__visible inline notrace void prepare_exit_to_usermode(struct pt_regs *regs)
->> +{
->> +	__prepare_exit_to_usermode(regs);
->> +}
->> +NOKPROBE_SYMBOL(prepare_exit_to_usermode);
->
->
-> Would it be worth grouping local_irq_disable() and prepare_exit_to_usermode()
-> (similarly to what was done entry with syscall_entry_fixups()) and then put
-> trace_hardirqs_on() there too. For example:
->
-> static __always_inline void syscall_exit_fixups(struct pt_regs *regs)
-> {
->          local_irq_disable();
->          prepare_exit_to_usermode(regs);
->          trace_hardirqs_on();
-> }
->
-> Or is this planned once prepare_exit_from_usermode() is not used by idtentry
-> anymore?
+Also that loop in siw_create looks wrong to me
 
-This should be consolidated at the very end when all the interrupt muck
-is done, but maybe I forgot.
+Jason
