@@ -2,93 +2,156 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED4DC4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F221C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E26842468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:26:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582799168;
-	bh=A5Nxs+Tz9etdlXZrR4yAuk4Jz12s40tnYW52A1O0FyY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fWUcmmzwGtjxE1HoDzcQ/oLiU45vdtjzocTjpn5fE42/Gpnz5JfR4WCDQESMkeHpO
-	 TPaRoqP8sDTlIGxM1eFs3GR2mM0tLPj2/bWzOdPdP2CLyr6x2hr2T2NQoO2miAWcGs
-	 Q9xPnFWvs+Sr6Od8gkoqHBjMGZ+ehL47KRweJlNI=
+	by mail.kernel.org (Postfix) with ESMTP id F07F324691
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:28:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hd69dLLI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728741AbgB0K0H (ORCPT
+        id S1728748AbgB0K2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 05:26:07 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:34017 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728680AbgB0K0G (ORCPT
+        Thu, 27 Feb 2020 05:28:34 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:17818 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728652AbgB0K2d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 05:26:06 -0500
-Received: by mail-oi1-f193.google.com with SMTP id l136so2800511oig.1;
-        Thu, 27 Feb 2020 02:26:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bXNrhQnn6fU6FETSoNq6OA/MgRDG1RJ4qtgoBTgezDc=;
-        b=gz8f5hgEc1zayjVXbHU01/XDO7Sd4j7T/urZckWWhVCjf10BKSsz7dOJbu0rKTb8c9
-         0ZSE4CqILfmI23I6yOEDac/4axReyO1gRLitJnxki0bHGC/paEbgO80nc+4V+/lPpfeU
-         vpQ7ChScIOxGiLqlkS+xLtt2n+ww//OEeJnhNY51qhmQJkzYeW/cknEUMcYCB4g0LMsv
-         YWhSBOp5hElayP1+oRN6s0q8WWoZWZA0i2D4dKoJfsUncnFcugoI4aFCk98LA5QZYnBd
-         um4TSkdPa5WsqHfzOaZoFoCoBbDP1HSmPh1XNqZc3iAGAtE0ZRvyOr+9cYSvSObw0Lmd
-         +RgA==
-X-Gm-Message-State: APjAAAUwfJUUNV8On+cPhyMlNicj7gfdlPCHS913q3yG4a5TmSX6lA9A
-        9XCqS5s0gDo6oX5q/RmdheVtLg/x6IROlIpzu7cyAA==
-X-Google-Smtp-Source: APXvYqxVYq9YmdoFBUYgnwZt6K/DqYgnSkRVd19l0aEbuGCnpmsJNeXxN6aMJ7HqNVCeiO5b77mXU+elvUGy3LUH7nA=
-X-Received: by 2002:aca:4d82:: with SMTP id a124mr907319oib.103.1582799165729;
- Thu, 27 Feb 2020 02:26:05 -0800 (PST)
-MIME-Version: 1.0
-References: <CGME20200227042233epcas1p2541b00baa994f262d07c4dc65da99c1c@epcas1p2.samsung.com>
- <c9cf6c14-2ff7-6809-2bc7-83ca7974c3b7@samsung.com>
-In-Reply-To: <c9cf6c14-2ff7-6809-2bc7-83ca7974c3b7@samsung.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 27 Feb 2020 11:25:54 +0100
-Message-ID: <CAJZ5v0iEpnYG1TZz-kd3cavWU84CGU6Rsk+tsMo5xAh_L1NCPw@mail.gmail.com>
-Subject: Re: [GIT PULL] devfreq fixes for v5.6-rc4
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     "Rafael J. Wysocki <rjw@rjwysocki.net>" <rjw@rjwysocki.net>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chanwoo Choi (samsung.com)" <chanwoo@kernel.org>,
-        =?UTF-8?B?7ZWo66qF7KO8?= <myungjoo.ham@samsung.com>
+        Thu, 27 Feb 2020 05:28:33 -0500
+X-UUID: 595f9f8033474e46bb46bd07602317cc-20200227
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=LEaZatPGQmSTfFljV7UsLw7F1kUhEvQfFkNEr7oUNNE=;
+        b=hd69dLLIulXRKM4L8dzuOAO0bc1n/LqO4Bhzsq3RRc2lahOAQhpDH9w3rmsK11b6U8vR8PeQ4wr0qnSGQ/IKcO4CalqELPXGuEcAtu+YW1+8LXEs5WpjAm+mseCw5vP84MA+PGvooxwUv6wwQdiFalQUrJa3E2qi5KTTfwa+EYI=;
+X-UUID: 595f9f8033474e46bb46bd07602317cc-20200227
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <macpaul.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 198747016; Thu, 27 Feb 2020 18:28:27 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 27 Feb 2020 18:28:25 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 27 Feb 2020 18:28:13 +0800
+Message-ID: <1582799305.12083.12.camel@mtkswgap22>
+Subject: Re: [PATCH v4] usb: gadget: f_fs: try to fix AIO issue under ARM 64
+ bit TAGGED mode
+From:   Macpaul Lin <macpaul.lin@mediatek.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Shen Jing <jingx.shen@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Vincent Pelletier <plr.vincent@gmail.com>,
+        Jerry Zhang <zhangjerry@google.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, <stable@vger.kernel.org>,
+        <andreyknvl@google.com>, Peter Chen <peter.chen@nxp.com>,
+        Miles Chen <miles.chen@mediatek.com>
+Date:   Thu, 27 Feb 2020 18:28:25 +0800
+In-Reply-To: <20200227095521.GA3281767@arrakis.emea.arm.com>
+References: <1582627315-21123-1-git-send-email-macpaul.lin@mediatek.com>
+         <1582718512-28923-1-git-send-email-macpaul.lin@mediatek.com>
+         <20200227095521.GA3281767@arrakis.emea.arm.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 5:22 AM Chanwoo Choi <cw00.choi@samsung.com> wrote:
->
-> Dear Rafael,
->
-> This is devfreq-fixes pull request for v5.6-rc4. I add detailed description of
-> this pull request on the following tag. Please pull devfreq with following updates.
-> And this patch will be applied to stable tree.
-> - tag name : devfreq-fixes-for-5.6-rc4
->
-> Best Regards,
-> Chanwoo Choi
->
->
-> The following changes since commit f8788d86ab28f61f7b46eb6be375f8a726783636:
->
->   Linux 5.6-rc3 (2020-02-23 16:17:42 -0800)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git tags/devfreq-fixes-for-5.6-rc4
->
-> for you to fetch changes up to 66d0e797bf095d407479c89952d42b1d96ef0a7f:
->
->   Revert "PM / devfreq: Modify the device name as devfreq(X) for sysfs" (2020-02-24 11:14:29 +0900)
+T24gVGh1LCAyMDIwLTAyLTI3IGF0IDA5OjU1ICswMDAwLCBDYXRhbGluIE1hcmluYXMgd3JvdGU6
+DQo+IE9uIFdlZCwgRmViIDI2LCAyMDIwIGF0IDA4OjAxOjUyUE0gKzA4MDAsIE1hY3BhdWwgTGlu
+IHdyb3RlOg0KPiA+IFRoaXMgaXNzdWUgd2FzIGZvdW5kIHdoZW4gYWRiZCB0cnlpbmcgdG8gb3Bl
+biBmdW5jdGlvbmZzIHdpdGggQUlPIG1vZGUuDQo+ID4gVXN1YWxseSwgd2UgbmVlZCB0byBzZXQg
+InNldHByb3Agc3lzLnVzYi5mZnMuYWlvX2NvbXBhdCAwIiB0byBlbmFibGUNCj4gPiBhZGJkIHdp
+dGggQUlPIG1vZGUgb24gQW5kcm9pZC4NCj4gPiANCj4gPiBXaGVuIGFkYmQgaXMgb3BlbmluZyBm
+dW5jdGlvbmZzLCBpdCB3aWxsIHRyeSB0byByZWFkIDI0IGJ5dGVzIGF0IHRoZQ0KPiA+IGZpcnN0
+IHJlYWQgSS9PIGNvbnRyb2wuIElmIHRoaXMgcmVhZGluZyBoYXMgYmVlbiBmYWlsZWQsIGFkYmQg
+d2lsbA0KPiA+IHRyeSB0byBzZW5kIEZVTkNUSU9ORlNfQ0xFQVJfSEFMVCB0byBmdW5jdGlvbmZz
+LiBXaGVuIGFkYmQgaXMgaW4gQUlPDQo+ID4gbW9kZSwgZnVuY3Rpb25mcyB3aWxsIGJlIGFjdGVk
+IHdpdGggYXN5bmNyb25pemVkIEkvTyBwYXRoLiBBZnRlciB0aGUNCj4gPiBzdWNjZXNzZnVsIHJl
+YWQgdHJhbnNmZXIgaGFzIGJlZW4gY29tcGxldGVkIGJ5IGdhZGdldCBoYXJkd2FyZSwgdGhlDQo+
+ID4gZm9sbG93aW5nIHNlcmllcyBvZiBmdW5jdGlvbnMgd2lsbCBiZSBjYWxsZWQuDQo+ID4gICBm
+ZnNfZXBmaWxlX2FzeW5jX2lvX2NvbXBsZXRlKCkgLT4gZmZzX3VzZXJfY29weV93b3JrZXIoKSAt
+Pg0KPiA+ICAgICBjb3B5X3RvX2l0ZXIoKSAtPiBfY29weV90b19pdGVyKCkgLT4gY29weW91dCgp
+IC0+DQo+ID4gICAgIGl0ZXJhdGVfYW5kX2FkdmFuY2UoKSAtPiBpdGVyYXRlX2lvdmVjKCkNCj4g
+PiANCj4gPiBBZGRpbmcgZGVidWcgdHJhY2UgdG8gdGhlc2UgZnVuY3Rpb25zLCBpdCBoYXMgYmVl
+biBmb3VuZCB0aGF0IGluDQo+ID4gY29weW91dCgpLCBhY2Nlc3Nfb2soKSB3aWxsIGNoZWNrIGlm
+IHRoZSB1c2VyIHNwYWNlIGFkZHJlc3MgaXMgdmFsaWQNCj4gPiB0byB3cml0ZS4gSG93ZXZlciBp
+ZiBDT05GSUdfQVJNNjRfVEFHR0VEX0FERFJfQUJJIGlzIGVuYWJsZWQsIGFkYmQNCj4gPiBhbHdh
+eXMgcGFzc2VzIHVzZXIgc3BhY2UgYWRkcmVzcyBzdGFydCB3aXRoICIweDNDIiB0byBnYWRnZXQn
+cyBBSU8NCj4gPiBibG9ja3MuIFRoaXMgdGFnZ2VkIGFkZHJlc3Mgd2lsbCBjYXVzZSBhY2Nlc3Nf
+b2soKSBjaGVjayBhbHdheXMgZmFpbC4NCj4gPiBXaGljaCBjYXVzZXMgbGF0ZXIgY2FsY3VsYXRp
+b24gaW4gaXRlcmF0ZV9pb3ZlYygpIHR1cm4gemVyby4NCj4gPiBDb3B5b3V0KCkgd29uJ3QgY29w
+eSBkYXRhIHRvIHVzZXIgc3BhY2Ugc2luY2UgdGhlIGxlbmd0aCB0byBiZSBjb3BpZWQNCj4gPiAi
+di5pb3ZfbGVuIiB3aWxsIGJlIHplcm8uIEZpbmFsbHkgbGVhZHMgZmZzX2NvcHlfdG9faXRlcigp
+IGFsd2F5cyByZXR1cm4NCj4gPiAtRUZBVUxULCBjYXVzZXMgYWRiZCBjYW5ub3Qgb3BlbiBmdW5j
+dGlvbmZzIGFuZCBzZW5kDQo+ID4gRlVOQ1RJT05GU19DTEVBUl9IQUxULg0KPiA+IA0KPiA+IFNp
+Z25lZC1vZmYtYnk6IE1hY3BhdWwgTGluIDxtYWNwYXVsLmxpbkBtZWRpYXRlay5jb20+DQo+ID4g
+Q2M6IFBldGVyIENoZW4gPHBldGVyLmNoZW5AbnhwLmNvbT4NCj4gPiBDYzogQ2F0YWxpbiBNYXJp
+bmFzIDxjYXRhbGluLm1hcmluYXNAYXJtLmNvbT4NCj4gPiBDYzogTWlsZXMgQ2hlbiA8bWlsZXMu
+Y2hlbkBtZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+ID4gQ2hhbmdlcyBmb3IgdjQ6DQo+ID4gICAt
+IEFiYW5kb24gc29sdXRpb24gdjMgYnkgYWRkaW5nICJUSUZfVEFHR0VEX0FERFIiIGZsYWcgdG8g
+Z2FkZ2V0IGRyaXZlci4NCj4gPiAgICAgQWNjb3JkaW5nIHRvIENhdGFsaW4ncyBzdWdnZXN0aW9u
+LCBjaGFuZ2UgdGhlIHNvbHV0aW9uIGJ5IHVudGFnZ2luZyANCj4gPiAgICAgdXNlciBzcGFjZSBh
+ZGRyZXNzIHBhc3NlZCBieSBBSU8gaW4gZ2FkZ2V0IGRyaXZlci4NCj4gDQo+IFdlbGwsIHRoaXMg
+d2FzIHN1Z2dlc3RlZCBpbiBjYXNlIHlvdSBoYXZlIGEgc3Ryb25nIHJlYXNvbiBub3QgdG8gZG8g
+dGhlDQo+IHVudGFnZ2luZyBpbiBhZGJkLiBBcyBJIHNhaWQsIHRhZ2dlZCBwb2ludGVycyBpbiB1
+c2VyIHNwYWNlIHdlcmUNCj4gc3VwcG9ydGVkIGxvbmcgYmVmb3JlIHdlIGludHJvZHVjZWQgQ09O
+RklHX0FSTTY0X1RBR0dFRF9BRERSX0FCSS4gSG93DQo+IGRpZCBhZGIgY29wZSB3aXRoIHN1Y2gg
+dGFnZ2VkIHBvaW50ZXJzIGJlZm9yZT8gSXQgd2FzIG5vdCBzdXBwb3NlZCB0bw0KPiBwYXNzIHRo
+ZW0gdG8gdGhlIGtlcm5lbC4NCg0KVGhhbmsgZm9yIHlvdXIgZXhwbGFuYXRpb24uIFNpbmNlIGFk
+YmQgd2FzIGRldmVsb3BlZCBieSBHb29nbGUgYW5kIHdlDQpjYW4gb25seSBzdWdnZXN0IChsaWtl
+LCBmaWxlIGFuIGlzc3VlKSB0byB0aGVtLiBIZXJlIHByb3ZpZGVzIGENCnRlbXBvcmFyeSBzb2x1
+dGlvbiBmb3Igb3RoZXIgZGV2ZWxvcGVyIHRvIHNvbHZlIHRoZXJlIG5lZWRzIGluIGEgc2hvcnQN
+CnBlcmlvZC4gWWVzLCBJIHVuZGVyc3Rvb2Qgbm90IHN1cHBvc2VkIHRvIHBhc3MgdGhvc2UgdGFn
+Z2VkIHBvaW50ZXJzIHRvDQprZXJuZWwgYW5kIHdpbGwgYWxzbyBleHBsYWluIHRoaXMgdG8gR29v
+Z2xlIGFkYmQgb3duZXJzLg0KDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL2dhZGdldC9m
+dW5jdGlvbi9mX2ZzLmMgYi9kcml2ZXJzL3VzYi9nYWRnZXQvZnVuY3Rpb24vZl9mcy5jDQo+ID4g
+aW5kZXggY2UxZDAyMy4uMTkyOTM1ZiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3VzYi9nYWRn
+ZXQvZnVuY3Rpb24vZl9mcy5jDQo+ID4gKysrIGIvZHJpdmVycy91c2IvZ2FkZ2V0L2Z1bmN0aW9u
+L2ZfZnMuYw0KPiA+IEBAIC03MTUsNyArNzE1LDIwIEBAIHN0YXRpYyB2b2lkIGZmc19lcGZpbGVf
+aW9fY29tcGxldGUoc3RydWN0IHVzYl9lcCAqX2VwLCBzdHJ1Y3QgdXNiX3JlcXVlc3QgKnJlcSkN
+Cj4gPiAgDQo+ID4gIHN0YXRpYyBzc2l6ZV90IGZmc19jb3B5X3RvX2l0ZXIodm9pZCAqZGF0YSwg
+aW50IGRhdGFfbGVuLCBzdHJ1Y3QgaW92X2l0ZXIgKml0ZXIpDQo+ID4gIHsNCj4gPiAtCXNzaXpl
+X3QgcmV0ID0gY29weV90b19pdGVyKGRhdGEsIGRhdGFfbGVuLCBpdGVyKTsNCj4gPiArCXNzaXpl
+X3QgcmV0Ow0KPiA+ICsNCj4gPiArI2lmIGRlZmluZWQoQ09ORklHX0FSTTY0KQ0KPiA+ICsJLyoN
+Cj4gPiArCSAqIFJlcGxhY2UgdGFnZ2VkIGFkZHJlc3MgcGFzc2VkIGJ5IHVzZXIgc3BhY2UgYXBw
+bGljYXRpb24gYmVmb3JlDQo+ID4gKwkgKiBjb3B5aW5nLg0KPiA+ICsJICovDQo+ID4gKwlpZiAo
+SVNfRU5BQkxFRChDT05GSUdfQVJNNjRfVEFHR0VEX0FERFJfQUJJKSAmJg0KPiA+ICsJCShpdGVy
+LT50eXBlID09IElURVJfSU9WRUMpKSB7DQo+ID4gKwkJKih1bnNpZ25lZCBsb25nICopJml0ZXIt
+Pmlvdi0+aW92X2Jhc2UgPQ0KPiA+ICsJCQkodW5zaWduZWQgbG9uZyl1bnRhZ2dlZF9hZGRyKGl0
+ZXItPmlvdi0+aW92X2Jhc2UpOw0KPiA+ICsJfQ0KPiA+ICsjZW5kaWYNCj4gPiArCXJldCA9IGNv
+cHlfdG9faXRlcihkYXRhLCBkYXRhX2xlbiwgaXRlcik7DQo+IA0KPiBIZXJlIHlvdSBzaG91bGQg
+cHJvYmFibHkgZHJvcCBhbGwgdGhlICNpZmRlZnMgYW5kIElTX0VOQUJMRUQgY2hlY2tzDQo+IHNp
+bmNlIHVudGFnZ2VkX2FkZHIoKSBpcyBkZWZpbmVkIGdsb2JhbGx5IGFzIGEgbm8tb3AgKGFuZCBv
+dmVycmlkZGVuIGJ5DQo+IGFybTY0IGFuZCBzcGFyYykuDQo+IA0KPiBQbGVhc2UgZG9uJ3Qgc2Vu
+ZCBhbm90aGVyIHBhdGNoIHVudGlsIHdlIHVuZGVyc3RhbmQgKGEpIHdoZXRoZXIgdGhpcyBpcw0K
+PiBhIHVzZXItc3BhY2UgcHJvYmxlbSB0byBmaXggb3IgKGIpIGlmIHdlIGZpeCBpdCBpbiB0aGUg
+a2VybmVsLCBpcyB0aGlzDQo+IHRoZSBvbmx5L3JpZ2h0IHBsYWNlPyBJZiB3ZSBzZXR0bGUgZm9y
+IHRoZSBpbi1rZXJuZWwgdW50YWdnaW5nLCBkbyB3ZQ0KPiBleHBsaWNpdGx5IHVudGFnIHRoZSBh
+ZGRyZXNzZXMgaW4gc3VjaCBrZXJuZWwgdGhyZWFkcyBvciB3ZSBkZWZhdWx0IHRvDQo+IFRJRl9U
+QUdHRURfQUREUiBmb3IgYWxsIGtlcm5lbCB0aHJlYWRzLCBpbiBjYXNlIHRoZXkgZXZlciBjYWxs
+IHVzZV9tbSgpDQo+IChvciB3ZSBjb3VsZCBldmVuIGhvb2sgc29tZXRoaW5nIGluIHVzZV9tbSgp
+IHRvIHNldCB0aGlzIFRJRiBmbGFnDQo+IHRlbXBvcmFyaWx5KS4NCj4gDQo+IExvb2tpbmcgZm9y
+IGZlZWRiYWNrIGZyb20gdGhlIEFuZHJvaWQgZm9sayBhbmQgYSBiZXR0ZXIgYW5hbHlzaXMgb2Yg
+dGhlDQo+IHBvc3NpYmxlIHNvbHV0aW9uLg0KPiANCg0KSWYgd2UgaGF2ZSBhbnkgZnVydGhlciB1
+cGRhdGUgYWJvdXQgdGhpcyB1c2VyIHNwYWNlIGlzc3VlLCBJJ2xsIHVwZGF0ZQ0KdGhlIHNvbHV0
+aW9uIHRvIHRoaXMgdGhyZWFkIGZvciBvdGhlciBkZXZlbG9wZXJzIHdobyBuZWVkIHRvIHNvbHZl
+IHRoaXMNCmlzc3VlLg0KDQpUaGFua3MhDQpNYWNwYXVsIExpbg0KDQo=
 
-Pulled, thanks!
