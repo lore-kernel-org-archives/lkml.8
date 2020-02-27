@@ -2,125 +2,86 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C52FEC4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B82F6C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90F4224672
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:55:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="I2KS5PW/"
+	by mail.kernel.org (Postfix) with ESMTP id 86C9424672
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:56:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbgB0FzC (ORCPT
+        id S1726890AbgB0F4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 00:55:02 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:39506 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgB0FzC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 00:55:02 -0500
-Received: by mail-qk1-f196.google.com with SMTP id e16so2056233qkl.6;
-        Wed, 26 Feb 2020 21:55:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BT+Y4zDOpTN8aRnsqq1qa2mSs9wu0N9tys2uzX7EM7Q=;
-        b=I2KS5PW/7Kw7fTHC3Wxq8Osxk8ug/lmvcU2moEvkCzfofFm2FVnq73DDl0YTEDLd3u
-         Q3v+LTl0KnhEidEoGD8Az1KBh2NbkQHyMlUWo/6cNu49XIQ3CYxqXnQVbFsadGjrS6pN
-         Z9IgLoO5G01BEyRaeY6NY+Ey62eqAglnXlFMk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BT+Y4zDOpTN8aRnsqq1qa2mSs9wu0N9tys2uzX7EM7Q=;
-        b=k7PdoSG/E9mO4QBqwQaPzbseEai9UV3GMxCyEPHyRkfQpPdbSVTkMkKqrMlBGUb+sH
-         yhzRVdoPwii9yvnKz2fMYAZxV9yYpFW1t4ng0pnfEz/nyw8UQmhGNzz9Jco6TqwGGFqS
-         1UhjsJrep3aQC0X9fGEAruGDBei9OogT40LOVfeY/t6HEZzf7TqdrMkUIGPEqFKWwYmS
-         8loDmhewWWTlAQ8+P+llbdPGsKg/IX2GoruLW9HPL9lPFGDliRfPT6lFg6vK2Z1rheX9
-         CiPg/etLswNxWMqbla6tIr36jYfBYAeZd+n0DWFVdLlBLdEpo0rxfgCkotwJnoEGvyVq
-         IWdw==
-X-Gm-Message-State: APjAAAVD9Qa08Zm2mc22mUlUHcos0lRueamgVYkl8Vn9doC8HOM2faXJ
-        tX3uBt00RRKJ0L1SJbdTTwWTQ8asPN6zTVeX+UI=
-X-Google-Smtp-Source: APXvYqzT52XJX1ayxGeNKzjAkfyJjllIsA3MS1ZOUJZUZBT6z2y1pnNAw6jRX/tZyQhZlu/wqAmNLrhydyjZY7ZzuqU=
-X-Received: by 2002:a37:a493:: with SMTP id n141mr1860258qke.330.1582782900930;
- Wed, 26 Feb 2020 21:55:00 -0800 (PST)
-MIME-Version: 1.0
-References: <20200226230346.672-1-rentao.bupt@gmail.com> <20200226230346.672-6-rentao.bupt@gmail.com>
- <c1f990ad2fd35deeba9e4e937cb19ee5080ea2a8.camel@kernel.crashing.org>
-In-Reply-To: <c1f990ad2fd35deeba9e4e937cb19ee5080ea2a8.camel@kernel.crashing.org>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Thu, 27 Feb 2020 05:54:49 +0000
-Message-ID: <CACPK8XfALBpAUmvAmBLDGa-oEMaZSqaKsHjs0EEPYP=_riGJVA@mail.gmail.com>
-Subject: Re: [PATCH v4 5/7] ARM: dts: aspeed-g5: add vhub port and endpoint properties
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Tao Ren <rentao.bupt@gmail.com>, Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Tao Ren <taoren@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 27 Feb 2020 00:56:23 -0500
+Received: from foss.arm.com ([217.140.110.172]:45994 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725805AbgB0F4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 00:56:23 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6FFDE30E;
+        Wed, 26 Feb 2020 21:56:22 -0800 (PST)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.1.119])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D0CC53F73B;
+        Wed, 26 Feb 2020 21:56:18 -0800 (PST)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org
+Cc:     vbabka@suse.cz, Anshuman Khandual <anshuman.khandual@arm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V2 0/3] mm/vma: some more minor changes
+Date:   Thu, 27 Feb 2020 11:26:02 +0530
+Message-Id: <1582782965-3274-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Feb 2020 at 04:11, Benjamin Herrenschmidt
-<benh@kernel.crashing.org> wrote:
->
-> On Wed, 2020-02-26 at 15:03 -0800, rentao.bupt@gmail.com wrote:
-> > From: Tao Ren <rentao.bupt@gmail.com>
-> >
-> > Add "aspeed,vhub-downstream-ports" and "aspeed,vhub-generic-
-> > endpoints"
-> > properties to describe supported number of vhub ports and endpoints.
-> >
-> > Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
->
-> Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+The motivation here is to consolidate VMA flags and helpers in generic
+memory header and reduce code duplication when ever applicable. If there
+are other possible similar instances which might be missing here, please
+do let me me know. I will be happy to incorporate them.
 
-Reviewed-by: Joel Stanley <joel@jms.id.au>
+This series is based on v5.6-rc3. This series has been build tested on
+multiple platforms but boot tested only on arm64 and x86.
 
-I will take this patch through the aspeed tree for 5.7.
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: x86@kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org
 
-Cheers,
+Changes in V2:
 
-Joel
+- Moved VM_NO_KHUGEPAGED after VM_SPECIAL with a comment per Vlastimil
+- Renamed is_vma_temporary_stack() as vma_is_temporary_stack() per Vlastimil
 
+Changes in V1: (https://patchwork.kernel.org/cover/11405177/)
 
->
-> > ---
-> >  No change in v2/v3/v4.
-> >    - It's given v4 to align with the version of the patch series.
-> >
-> >  arch/arm/boot/dts/aspeed-g5.dtsi | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi
-> > b/arch/arm/boot/dts/aspeed-g5.dtsi
-> > index ebec0fa8baa7..f12ec04d3cbc 100644
-> > --- a/arch/arm/boot/dts/aspeed-g5.dtsi
-> > +++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-> > @@ -195,6 +195,8 @@
-> >                       reg = <0x1e6a0000 0x300>;
-> >                       interrupts = <5>;
-> >                       clocks = <&syscon ASPEED_CLK_GATE_USBPORT1CLK>;
-> > +                     aspeed,vhub-downstream-ports = <5>;
-> > +                     aspeed,vhub-generic-endpoints = <15>;
-> >                       pinctrl-names = "default";
-> >                       pinctrl-0 = <&pinctrl_usb2ad_default>;
-> >                       status = "disabled";
->
+Anshuman Khandual (3):
+  mm/vma: Move VM_NO_KHUGEPAGED into generic header
+  mm/vma: Make vma_is_foreign() available for general use
+  mm/vma: Make is_vma_temporary_stack() available for general use
+
+ arch/powerpc/mm/book3s64/pkeys.c   | 12 ------------
+ arch/x86/include/asm/mmu_context.h | 15 ---------------
+ include/linux/huge_mm.h            |  4 +---
+ include/linux/mm.h                 | 29 ++++++++++++++++++++++++++++-
+ mm/khugepaged.c                    |  4 +---
+ mm/mremap.c                        |  2 +-
+ mm/rmap.c                          | 16 +---------------
+ 7 files changed, 32 insertions(+), 50 deletions(-)
+
+-- 
+2.20.1
+
