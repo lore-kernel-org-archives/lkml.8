@@ -2,104 +2,104 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE6FC3567B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF139C3567B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 352832469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:52:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E6ED246A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:53:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oRLJ3DCL"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="szBodkbw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730598AbgB0Qwn (ORCPT
+        id S1730502AbgB0Qxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 11:52:43 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:42107 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730245AbgB0Qwn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 11:52:43 -0500
-Received: by mail-ed1-f65.google.com with SMTP id n18so3777274edw.9;
-        Thu, 27 Feb 2020 08:52:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ivstkqAc2jBTEhbTH0moaUv+ywd1mANmLsnT4sGxaf4=;
-        b=oRLJ3DCLUdlQ8CO7KWH+bg60QqHSKOVPuWAk0vqDM5EdwmNloknnBn142+nMTNQoPm
-         b3p/S8pPec8UQukUYQhvGLDq0LfDQUFkVjE+P+mW2f2DJpWSRx0Y2jwbYHvu00LrH3Vo
-         AXhpY5mFgmqS3K5euSDd2b+8xwFk/XxLZoadkoig2Q5M1KkXtxCfhHU3aUeGbjp4yg0H
-         2gaZdORkbNCqiFRA4FDP+/kkCpvuJzSVtaVg1okPbuVvvlTMntUcSI6nrT05VqbvRKks
-         sibhYxGQAAYOA/StYtTXVn2DBl4XmQBhyiNxEZkjWfRRojQ3d4CeXXnltmXtfr68vnYN
-         +mZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ivstkqAc2jBTEhbTH0moaUv+ywd1mANmLsnT4sGxaf4=;
-        b=PD3uR38TBknSJrd/OMPEhUvv1iCC7eRs9HlPiUBknVJ8ushiL139KST6k5gDC7yU8S
-         yvJivitkd2IyyB7Gcag8hLfBmdL0+8hLi2Xw2B5Yah6000/EL7DcYCnzx+qxgs8iVNRl
-         mOlJ2o3/8mq780DQRM5e5P8ll4M0rIFapvpE77+exW+75icZmaqoZ5Rh1/sSEVGQKQiY
-         9AWwBhXLijnn6cs8CmEZAksCGweHj6cYmExz1Dzv+eb+yrazrl8Ta07qJIFzvlgtt2Wh
-         vx1HJFKcWRC7Tkd1buGSW8Zb3lTiub3kecif1Rv2zXRzLO8CBcRmDZ+ee5lT3nwmfRAr
-         IA3Q==
-X-Gm-Message-State: APjAAAXuUvzgofv3uwD+rxGom6oie0n1injwkWSWH0puBFonFyOFEWS6
-        Sr9YcUK1F30V0252G5qeqb0=
-X-Google-Smtp-Source: APXvYqwMntBRGuKgTGlUYF8FPtdnWphoE5YRSZavfhj8926aPLeCq19BiEK36bddRONndGmfKDXyvQ==
-X-Received: by 2002:aa7:c552:: with SMTP id s18mr5325160edr.331.1582822361093;
-        Thu, 27 Feb 2020 08:52:41 -0800 (PST)
-Received: from localhost.localdomain ([5.2.67.190])
-        by smtp.googlemail.com with ESMTPSA id f13sm388541edq.26.2020.02.27.08.52.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 08:52:40 -0800 (PST)
-From:   Tomasz Maciej Nowak <tmn505@gmail.com>
-To:     jason@lakedaemon.net, andrew@lunn.ch,
-        sebastian.hesselbarth@gmail.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, gregory.clement@bootlin.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: marvell: espressobin: add ethernet alias
-Date:   Thu, 27 Feb 2020 17:52:32 +0100
-Message-Id: <20200227165232.11263-1-tmn505@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 27 Feb 2020 11:53:35 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:16772 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727211AbgB0Qxf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 11:53:35 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48SzJW5t3qz9tyMh;
+        Thu, 27 Feb 2020 17:53:31 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=szBodkbw; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id enQnzjnstZrM; Thu, 27 Feb 2020 17:53:31 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48SzJW4rPgz9tyMf;
+        Thu, 27 Feb 2020 17:53:31 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1582822411; bh=05WQ6al5jzZMimryD6lRxQEh3VR9LceJfbJ+E6FUjq0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=szBodkbw9tyFJe+8XAfaFtMeAoCGwJquE4NznxQM3LZpkoZuXXN5rRWLtbTZ+OoZ2
+         igGQvvuO+jBqnIXXFrRheeXENZJgaebYckby2HJHuW1pFJtjD6V/VMNFs1B/1+WMsQ
+         snPnab3Dv1nIEZaf6Nbgxqo1/9eXMDdTKvWSBhIw=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3E4938B880;
+        Thu, 27 Feb 2020 17:53:33 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id JxAcSkmoZNsM; Thu, 27 Feb 2020 17:53:33 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 082038B799;
+        Thu, 27 Feb 2020 17:53:31 +0100 (CET)
+Subject: Re: [PATCH] selftest/lkdtm: Use local .gitignore
+To:     Shuah Khan <skhan@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org
+References: <e4ba4f716599d1d66c8bc60489f4b05764ea8470.1582812034.git.christophe.leroy@c-s.fr>
+ <202002270817.1C32C98@keescook>
+ <f804d7bc-134d-27f8-daa5-6bbf9f28b54d@linuxfoundation.org>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <30df72ac-dd78-315e-9f00-35320e0ee187@c-s.fr>
+Date:   Thu, 27 Feb 2020 17:53:17 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <f804d7bc-134d-27f8-daa5-6bbf9f28b54d@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The maker of this board and its variants, stores MAC address in U-Boot
-environment. Add alias for bootloader to recognise, to which ethernet
-node inject the factory MAC address.
 
-Signed-off-by: Tomasz Maciej Nowak <tmn505@gmail.com>
----
- arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
-index c8e2e993c69c..42e992f9c8a5 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
-@@ -11,6 +11,12 @@
- #include "armada-372x.dtsi"
- 
- / {
-+	aliases {
-+		ethernet0 = &eth0;
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
--- 
-2.25.1
+Le 27/02/2020 à 17:45, Shuah Khan a écrit :
+> On 2/27/20 9:17 AM, Kees Cook wrote:
+>> On Thu, Feb 27, 2020 at 02:07:10PM +0000, Christophe Leroy wrote:
+>>> Commit 68ca0fd272da ("selftest/lkdtm: Don't pollute 'git status'")
+>>> introduced patterns for git to ignore files generated in
+>>> tools/testing/selftests/lkdtm/
+>>>
+>>> Use local .gitignore file instead of using the root one.
+>>>
+>>> Fixes: 68ca0fd272da ("selftest/lkdtm: Don't pollute 'git status'")
+>>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>>
+>> Yeah, that's better. Thanks!
+>>
+>> Acked-by: Kees Cook <keescook@chromium.org>
+>>
+> 
+> I will apply it for next rc.
+> 
+> Thanks. I should have noticed the problem in the previous version.
+> It slipped by me. :(
+> 
 
+My fault, I didn't even know we could have .gitignore in subdirectories.
+
+Christophe
