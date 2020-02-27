@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA468C54FEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E15C5C54FD5
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9071D24691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B76FF24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813825;
-	bh=owgbSkQuyuKWV97co5YSL6DxPE/cE2jQQs4y/xcXZ/g=;
+	s=default; t=1582813806;
+	bh=9Rm7FboJR5u6DSKxWNcSjEtbnTqTU1SriE20FSZRexk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KrK+l9khZ1eNLVrxeWj2WHcHlblojadK+VD/EgyMEAdW/dTajEwXDiPW+aR2VhJeQ
-	 fu3juSWrN4n3EIa5tkoMR6+AZV7fYLrAAyjL0clhhKLExFIXlNuryeP5d/S4Jy882M
-	 AKmynOBRdof9gd7bFQy0a0XPHVkMjUD72S5tvyAA=
+	b=NuEdIob+KDQH2VjA7Ux9GS593VWT8suq/Ojhp7LPC6RWDkC7rnaJ+bBMwmkUbVFK2
+	 8KSuuHQjRBtVKSRPZv0NbhKE2aItO7OfQ3HpJNngQ1KhED3yEBa+HktgoJQYHffwtp
+	 R8y6hBGmULKzmQ7btzfhHws/Hd/sJbArS+x7sgaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388340AbgB0OaY (ORCPT
+        id S2388296AbgB0OaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:30:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41740 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:30:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733260AbgB0OFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:05:09 -0500
+        id S2387757AbgB0OFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:05:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B600E20801;
-        Thu, 27 Feb 2020 14:05:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C93424691;
+        Thu, 27 Feb 2020 14:05:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812309;
-        bh=owgbSkQuyuKWV97co5YSL6DxPE/cE2jQQs4y/xcXZ/g=;
+        s=default; t=1582812319;
+        bh=9Rm7FboJR5u6DSKxWNcSjEtbnTqTU1SriE20FSZRexk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PAm4P1V9EbSRcIsUYXJr7lWVoUblpv4yl2Zi2b4yMbOOGu7vNf6kSPmNBzwBpcy0l
-         ANv+3NDjI1B/JegSD8zYR2AxcyGOXdAXpCyxgzO0vxYqLEV1vXLDyWLM2HIQGUns3T
-         CBSQnhKyyPK+AOyxwUV7bKMmoSBLjF7UyMfnyy1M=
+        b=BbEhvUHC0oKkCGK/uhkYMSgnBzgHtimZXlFpOiRBIf/n7Inff5fWhHYCPWsBRFLhH
+         ozU/IPy/GTOrny7R5XGecxE2Ocj76yGi6j4BbW/6Ho4/PUOruOv7VjpFBGa1SMPvNz
+         IUIk4NAqOna2vidzOIOgGvpazHYmdmzhW8odSHSQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Hardik Gajjar <hgajjar@de.adit-jv.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>
-Subject: [PATCH 4.19 28/97] USB: hub: Fix the broken detection of USB3 device in SMSC hub
-Date:   Thu, 27 Feb 2020 14:36:36 +0100
-Message-Id: <20200227132219.193999847@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+2202a584a00fffd19fbf@syzkaller.appspotmail.com,
+        Eric Biggers <ebiggers@google.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        stable@kernel.org
+Subject: [PATCH 4.19 70/97] ext4: fix race between writepages and enabling EXT4_EXTENTS_FL
+Date:   Thu, 27 Feb 2020 14:37:18 +0100
+Message-Id: <20200227132225.913901998@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
 References: <20200227132214.553656188@linuxfoundation.org>
@@ -60,109 +62,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hardik Gajjar <hgajjar@de.adit-jv.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 1208f9e1d758c991b0a46a1bd60c616b906bbe27 upstream.
+commit cb85f4d23f794e24127f3e562cb3b54b0803f456 upstream.
 
-Renesas R-Car H3ULCB + Kingfisher Infotainment Board is either not able
-to detect the USB3.0 mass storage devices or is detecting those as
-USB2.0 high speed devices.
+If EXT4_EXTENTS_FL is set on an inode while ext4_writepages() is running
+on it, the following warning in ext4_add_complete_io() can be hit:
 
-The explanation given by Renesas is that, due to a HW issue, the XHCI
-driver does not wake up after going to sleep on connecting a USB3.0
-device.
+WARNING: CPU: 1 PID: 0 at fs/ext4/page-io.c:234 ext4_put_io_end_defer+0xf0/0x120
 
-In order to mitigate that, disable the auto-suspend feature
-specifically for SMSC hubs from hub_probe() function, as a quirk.
+Here's a minimal reproducer (not 100% reliable) (root isn't required):
 
-Renesas Kingfisher Infotainment Board has two USB3.0 ports (CN2) which
-are connected via USB5534B 4-port SuperSpeed/Hi-Speed, low-power,
-configurable hub controller.
+        while true; do
+                sync
+        done &
+        while true; do
+                rm -f file
+                touch file
+                chattr -e file
+                echo X >> file
+                chattr +e file
+        done
 
-[1] SanDisk USB 3.0 device detected as USB-2.0 before the patch
- [   74.036390] usb 5-1.1: new high-speed USB device number 4 using xhci-hcd
- [   74.061598] usb 5-1.1: New USB device found, idVendor=0781, idProduct=5581, bcdDevice= 1.00
- [   74.069976] usb 5-1.1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
- [   74.077303] usb 5-1.1: Product: Ultra
- [   74.080980] usb 5-1.1: Manufacturer: SanDisk
- [   74.085263] usb 5-1.1: SerialNumber: 4C530001110208116550
+The problem is that in ext4_writepages(), ext4_should_dioread_nolock()
+(which only returns true on extent-based files) is checked once to set
+the number of reserved journal credits, and also again later to select
+the flags for ext4_map_blocks() and copy the reserved journal handle to
+ext4_io_end::handle.  But if EXT4_EXTENTS_FL is being concurrently set,
+the first check can see dioread_nolock disabled while the later one can
+see it enabled, causing the reserved handle to unexpectedly be NULL.
 
-[2] SanDisk USB 3.0 device detected as USB-3.0 after the patch
- [   34.565078] usb 6-1.1: new SuperSpeed Gen 1 USB device number 3 using xhci-hcd
- [   34.588719] usb 6-1.1: New USB device found, idVendor=0781, idProduct=5581, bcdDevice= 1.00
- [   34.597098] usb 6-1.1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
- [   34.604430] usb 6-1.1: Product: Ultra
- [   34.608110] usb 6-1.1: Manufacturer: SanDisk
- [   34.612397] usb 6-1.1: SerialNumber: 4C530001110208116550
+Since changing EXT4_EXTENTS_FL is uncommon, and there may be other races
+related to doing so as well, fix this by synchronizing changing
+EXT4_EXTENTS_FL with ext4_writepages() via the existing
+s_writepages_rwsem (previously called s_journal_flag_rwsem).
 
-Suggested-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Hardik Gajjar <hgajjar@de.adit-jv.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1580989763-32291-1-git-send-email-hgajjar@de.adit-jv.com
+This was originally reported by syzbot without a reproducer at
+https://syzkaller.appspot.com/bug?extid=2202a584a00fffd19fbf,
+but now that dioread_nolock is the default I also started seeing this
+when running syzkaller locally.
+
+Link: https://lore.kernel.org/r/20200219183047.47417-3-ebiggers@kernel.org
+Reported-by: syzbot+2202a584a00fffd19fbf@syzkaller.appspotmail.com
+Fixes: 6b523df4fb5a ("ext4: use transaction reservation for extent conversion in ext4_end_io")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/hub.c |   15 +++++++++++++++
- drivers/usb/core/hub.h |    1 +
- 2 files changed, 16 insertions(+)
+ fs/ext4/ext4.h    |    5 ++++-
+ fs/ext4/migrate.c |   27 +++++++++++++++++++--------
+ 2 files changed, 23 insertions(+), 9 deletions(-)
 
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -36,7 +36,9 @@
- #include "otg_whitelist.h"
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -1520,7 +1520,10 @@ struct ext4_sb_info {
+ 	struct ratelimit_state s_warning_ratelimit_state;
+ 	struct ratelimit_state s_msg_ratelimit_state;
  
- #define USB_VENDOR_GENESYS_LOGIC		0x05e3
-+#define USB_VENDOR_SMSC				0x0424
- #define HUB_QUIRK_CHECK_PORT_AUTOSUSPEND	0x01
-+#define HUB_QUIRK_DISABLE_AUTOSUSPEND		0x02
+-	/* Barrier between changing inodes' journal flags and writepages ops. */
++	/*
++	 * Barrier between writepages ops and changing any inode's JOURNAL_DATA
++	 * or EXTENTS flag.
++	 */
+ 	struct percpu_rw_semaphore s_writepages_rwsem;
+ 	struct dax_device *s_daxdev;
+ };
+--- a/fs/ext4/migrate.c
++++ b/fs/ext4/migrate.c
+@@ -427,6 +427,7 @@ static int free_ext_block(handle_t *hand
  
- #define USB_TP_TRANSMISSION_DELAY	40	/* ns */
- #define USB_TP_TRANSMISSION_DELAY_MAX	65535	/* ns */
-@@ -1695,6 +1697,10 @@ static void hub_disconnect(struct usb_in
- 	kfree(hub->buffer);
+ int ext4_ext_migrate(struct inode *inode)
+ {
++	struct ext4_sb_info *sbi = EXT4_SB(inode->i_sb);
+ 	handle_t *handle;
+ 	int retval = 0, i;
+ 	__le32 *i_data;
+@@ -451,6 +452,8 @@ int ext4_ext_migrate(struct inode *inode
+ 		 */
+ 		return retval;
  
- 	pm_suspend_ignore_children(&intf->dev, false);
++	percpu_down_write(&sbi->s_writepages_rwsem);
 +
-+	if (hub->quirk_disable_autosuspend)
-+		usb_autopm_put_interface(intf);
-+
- 	kref_put(&hub->kref, hub_release);
+ 	/*
+ 	 * Worst case we can touch the allocation bitmaps, a bgd
+ 	 * block, and a block to link in the orphan list.  We do need
+@@ -461,7 +464,7 @@ int ext4_ext_migrate(struct inode *inode
+ 
+ 	if (IS_ERR(handle)) {
+ 		retval = PTR_ERR(handle);
+-		return retval;
++		goto out_unlock;
+ 	}
+ 	goal = (((inode->i_ino - 1) / EXT4_INODES_PER_GROUP(inode->i_sb)) *
+ 		EXT4_INODES_PER_GROUP(inode->i_sb)) + 1;
+@@ -472,7 +475,7 @@ int ext4_ext_migrate(struct inode *inode
+ 	if (IS_ERR(tmp_inode)) {
+ 		retval = PTR_ERR(tmp_inode);
+ 		ext4_journal_stop(handle);
+-		return retval;
++		goto out_unlock;
+ 	}
+ 	i_size_write(tmp_inode, i_size_read(inode));
+ 	/*
+@@ -514,7 +517,7 @@ int ext4_ext_migrate(struct inode *inode
+ 		 */
+ 		ext4_orphan_del(NULL, tmp_inode);
+ 		retval = PTR_ERR(handle);
+-		goto out;
++		goto out_tmp_inode;
+ 	}
+ 
+ 	ei = EXT4_I(inode);
+@@ -595,10 +598,11 @@ err_out:
+ 	/* Reset the extent details */
+ 	ext4_ext_tree_init(handle, tmp_inode);
+ 	ext4_journal_stop(handle);
+-out:
++out_tmp_inode:
+ 	unlock_new_inode(tmp_inode);
+ 	iput(tmp_inode);
+-
++out_unlock:
++	percpu_up_write(&sbi->s_writepages_rwsem);
+ 	return retval;
  }
  
-@@ -1825,6 +1831,11 @@ static int hub_probe(struct usb_interfac
- 	if (id->driver_info & HUB_QUIRK_CHECK_PORT_AUTOSUSPEND)
- 		hub->quirk_check_port_auto_suspend = 1;
+@@ -608,7 +612,8 @@ out:
+ int ext4_ind_migrate(struct inode *inode)
+ {
+ 	struct ext4_extent_header	*eh;
+-	struct ext4_super_block		*es = EXT4_SB(inode->i_sb)->s_es;
++	struct ext4_sb_info		*sbi = EXT4_SB(inode->i_sb);
++	struct ext4_super_block		*es = sbi->s_es;
+ 	struct ext4_inode_info		*ei = EXT4_I(inode);
+ 	struct ext4_extent		*ex;
+ 	unsigned int			i, len;
+@@ -632,9 +637,13 @@ int ext4_ind_migrate(struct inode *inode
+ 	if (test_opt(inode->i_sb, DELALLOC))
+ 		ext4_alloc_da_blocks(inode);
  
-+	if (id->driver_info & HUB_QUIRK_DISABLE_AUTOSUSPEND) {
-+		hub->quirk_disable_autosuspend = 1;
-+		usb_autopm_get_interface(intf);
++	percpu_down_write(&sbi->s_writepages_rwsem);
++
+ 	handle = ext4_journal_start(inode, EXT4_HT_MIGRATE, 1);
+-	if (IS_ERR(handle))
+-		return PTR_ERR(handle);
++	if (IS_ERR(handle)) {
++		ret = PTR_ERR(handle);
++		goto out_unlock;
 +	}
-+
- 	if (hub_configure(hub, &desc->endpoint[0].desc) >= 0)
- 		return 0;
  
-@@ -5405,6 +5416,10 @@ out_hdev_lock:
+ 	down_write(&EXT4_I(inode)->i_data_sem);
+ 	ret = ext4_ext_check_inode(inode);
+@@ -669,5 +678,7 @@ int ext4_ind_migrate(struct inode *inode
+ errout:
+ 	ext4_journal_stop(handle);
+ 	up_write(&EXT4_I(inode)->i_data_sem);
++out_unlock:
++	percpu_up_write(&sbi->s_writepages_rwsem);
+ 	return ret;
  }
- 
- static const struct usb_device_id hub_id_table[] = {
-+    { .match_flags = USB_DEVICE_ID_MATCH_VENDOR | USB_DEVICE_ID_MATCH_INT_CLASS,
-+      .idVendor = USB_VENDOR_SMSC,
-+      .bInterfaceClass = USB_CLASS_HUB,
-+      .driver_info = HUB_QUIRK_DISABLE_AUTOSUSPEND},
-     { .match_flags = USB_DEVICE_ID_MATCH_VENDOR
- 			| USB_DEVICE_ID_MATCH_INT_CLASS,
-       .idVendor = USB_VENDOR_GENESYS_LOGIC,
---- a/drivers/usb/core/hub.h
-+++ b/drivers/usb/core/hub.h
-@@ -61,6 +61,7 @@ struct usb_hub {
- 	unsigned		quiescing:1;
- 	unsigned		disconnected:1;
- 	unsigned		in_reset:1;
-+	unsigned		quirk_disable_autosuspend:1;
- 
- 	unsigned		quirk_check_port_auto_suspend:1;
- 
 
 
