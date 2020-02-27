@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0566C52D5E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F67C52D5A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 888E220801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A66E12468F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813168;
-	bh=FIgjdj1w7IAWYyZl/p9F1x2kOjAClWaNTPRGjZiUd8M=;
+	s=default; t=1582813104;
+	bh=xesT2UlzCbBoPZ3jCcAKGHwDsacdBqRyufulwajcqKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xkxUY58B+vmuXzvQjRczJ9FtDJ67ay9+/dwyY9ReqDjSXX7AqEDC8cX/TaSD48J/r
-	 eNyo4Jf/pJFKyE1XNyrnnyjsvQOAAELr1pxlhsfSqwyD2f4a7qvJGNxJKD/ui7S/Gw
-	 rWATkMMKUQaSTWnqX77dJfko2zI8pdy1zCQI41NM=
+	b=SqfA6ucd1huKNr9rnK1t9GuAtyKtJkhUEADjM0pkNFyXG9eJAWLfAhgmfcCAXXsKD
+	 cmYYL5xjiJ3VlWbJU2W/RAR6unW7dWWfjFdaRQgVNhRFBfrCsAMV5HLdX/XEzkxLGV
+	 ebW/y452gERlS9mGXQTE968oY1WqHlwWZr/4bz+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389082AbgB0OT1 (ORCPT
+        id S2389871AbgB0OSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:19:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59842 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:18:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389985AbgB0OTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:19:12 -0500
+        id S2389848AbgB0OSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:18:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D21720801;
-        Thu, 27 Feb 2020 14:19:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 390B42468F;
+        Thu, 27 Feb 2020 14:18:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813151;
-        bh=FIgjdj1w7IAWYyZl/p9F1x2kOjAClWaNTPRGjZiUd8M=;
+        s=default; t=1582813095;
+        bh=xesT2UlzCbBoPZ3jCcAKGHwDsacdBqRyufulwajcqKE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zNnpfVXaZyGv9bVgQDBvOjBHClgJNKP4vxaPzoWwzdMguKQfgUeGrXenSHVkphIS7
-         9YZltuWeeIE4tbr/uudLWCwWb0fmvMj5bVh73aMcaN51BTCKaK2xJVjMmb/8lYHoAA
-         MpjmHAYF9IDsRVQdBvRHR9PICc4RrbCLAJccwvzQ=
+        b=y+XKHBY+XcNSllwW7z9AzSeKt7uavNjJ5rattRqD1PCDKxnAOEyodEgMMFyG5LQx5
+         hrLD1Yn2QvitVChcOON0jNm2TWGdh6qj+uUPmyUmZKg8mzVXDPPV07Mahe4oepee/P
+         JMbUhwGIQ6jTX/4NGw9iC4kPyq0GREUSuN3qv3sA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Fastabend <john.fastabend@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jakub Sitnicki <jakub@cloudflare.com>
-Subject: [PATCH 5.5 150/150] bpf: Selftests build error in sockmap_basic.c
-Date:   Thu, 27 Feb 2020 14:38:07 +0100
-Message-Id: <20200227132254.402971343@linuxfoundation.org>
+        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.5 134/150] io_uring: prevent sq_thread from spinning when it should stop
+Date:   Thu, 27 Feb 2020 14:37:51 +0100
+Message-Id: <20200227132252.180011700@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -60,54 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Fastabend <john.fastabend@gmail.com>
+From: Stefano Garzarella <sgarzare@redhat.com>
 
-commit f2e97dc126b712c0d21219ed0c42710006c1cf52 upstream.
+commit 7143b5ac5750f404ff3a594b34fdf3fc2f99f828 upstream.
 
-Fix following build error. We could push a tcp.h header into one of the
-include paths, but I think its easy enough to simply pull in the three
-defines we need here. If we end up using more of tcp.h at some point
-we can pull it in later.
+This patch drops 'cur_mm' before calling cond_resched(), to prevent
+the sq_thread from spinning even when the user process is finished.
 
-/home/john/git/bpf/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c: In function ‘connected_socket_v4’:
-/home/john/git/bpf/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c:20:11: error: ‘TCP_REPAIR_ON’ undeclared (first use in this function)
-  repair = TCP_REPAIR_ON;
-           ^
-/home/john/git/bpf/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c:20:11: note: each undeclared identifier is reported only once for each function it appears in
-/home/john/git/bpf/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c:29:11: error: ‘TCP_REPAIR_OFF_NO_WP’ undeclared (first use in this function)
-  repair = TCP_REPAIR_OFF_NO_WP;
+Before this patch, if the user process ended without closing the
+io_uring fd, the sq_thread continues to spin until the
+'sq_thread_idle' timeout ends.
 
-Then with fix,
+In the worst case where the 'sq_thread_idle' parameter is bigger than
+INT_MAX, the sq_thread will spin forever.
 
-$ ./test_progs -n 44
-#44/1 sockmap create_update_free:OK
-#44/2 sockhash create_update_free:OK
-#44 sockmap_basic:OK
-
-Fixes: 5d3919a953c3c ("selftests/bpf: Test freeing sockmap/sockhash with a socket in it")
-Signed-off-by: John Fastabend <john.fastabend@gmail.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
-Link: https://lore.kernel.org/bpf/158131347731.21414.12120493483848386652.stgit@john-Precision-5820-Tower
+Fixes: 6c271ce2f1d5 ("io_uring: add submission polling")
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/testing/selftests/bpf/prog_tests/sockmap_basic.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ fs/io_uring.c |   24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
---- a/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c
-+++ b/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c
-@@ -3,6 +3,11 @@
- 
- #include "test_progs.h"
- 
-+#define TCP_REPAIR		19	/* TCP sock is under repair right now */
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -3909,6 +3909,18 @@ static int io_sq_thread(void *data)
+ 		 */
+ 		if (!to_submit || ret == -EBUSY) {
+ 			/*
++			 * Drop cur_mm before scheduling, we can't hold it for
++			 * long periods (or over schedule()). Do this before
++			 * adding ourselves to the waitqueue, as the unuse/drop
++			 * may sleep.
++			 */
++			if (cur_mm) {
++				unuse_mm(cur_mm);
++				mmput(cur_mm);
++				cur_mm = NULL;
++			}
 +
-+#define TCP_REPAIR_ON		1
-+#define TCP_REPAIR_OFF_NO_WP	-1	/* Turn off without window probes */
-+
- static int connected_socket_v4(void)
- {
- 	struct sockaddr_in addr = {
++			/*
+ 			 * We're polling. If we're within the defined idle
+ 			 * period, then let us spin without work before going
+ 			 * to sleep. The exception is if we got EBUSY doing
+@@ -3922,18 +3934,6 @@ static int io_sq_thread(void *data)
+ 				continue;
+ 			}
+ 
+-			/*
+-			 * Drop cur_mm before scheduling, we can't hold it for
+-			 * long periods (or over schedule()). Do this before
+-			 * adding ourselves to the waitqueue, as the unuse/drop
+-			 * may sleep.
+-			 */
+-			if (cur_mm) {
+-				unuse_mm(cur_mm);
+-				mmput(cur_mm);
+-				cur_mm = NULL;
+-			}
+-
+ 			prepare_to_wait(&ctx->sqo_wait, &wait,
+ 						TASK_INTERRUPTIBLE);
+ 
 
 
