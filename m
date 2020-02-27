@@ -2,979 +2,235 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A6FC35677
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF4F7C34022
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:18:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8072324688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:17:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8507024688
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:18:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="yxuYR0lP"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Sut+2ak8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730697AbgB0PR2 (ORCPT
+        id S1730746AbgB0PSR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 10:17:28 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:46302 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729279AbgB0PR1 (ORCPT
+        Thu, 27 Feb 2020 10:18:17 -0500
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:45356 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730413AbgB0PSR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 10:17:27 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01RFCfhH189143;
-        Thu, 27 Feb 2020 15:17:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2020-01-29;
- bh=NIrt8DLOTCiTn1u43oa8BpUGmklEw/eKmX+oORZyk04=;
- b=yxuYR0lPb7ZATBFepZ2dq7Xih6SgJEF0HkWs8TBn8VGsPkVzduO1SKvuo1cNjGFjPky6
- tXaioAwcQgfLjOkHrAAXXeqaAo6BJsKtWTJEAqgFZLSYa74Tde+wVQwzQb345As+i1RZ
- GuZbzJvYFwNdu8Ytw5Mv/um/W+uF4MomDMFuT4MmK6Cm1/EkiUVZ6YzNc5hjZVbzU+Lf
- eAjCAvFFqyLy39xUNyEIPAiOfTNofaKJvvN/kmSFJ+2Jg9UF5oxiTUI7dbGa+JO48TUa
- 6wKnW0Qq1GdWfkJPMQZLs3rsWJhRmQ83RCqp2lxpfzqDYTC1OwplGqJ3xHPy1teHzule 9Q== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2ydct3bjwu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Feb 2020 15:17:07 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01RFETgV127100;
-        Thu, 27 Feb 2020 15:17:06 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2ydj4mssye-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Feb 2020 15:17:06 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01RFH3tW003664;
-        Thu, 27 Feb 2020 15:17:03 GMT
-Received: from dhcp-10-175-190-15.vpn.oracle.com (/10.175.190.15)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 27 Feb 2020 07:17:02 -0800
-Date:   Thu, 27 Feb 2020 15:16:53 +0000 (GMT)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@dhcp-10-175-190-15.vpn.oracle.com
-To:     Andrey Konovalov <andreyknvl@google.com>
-cc:     Patricia Alfonso <trishalfonso@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        davidgow@google.com, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com
-Subject: Re: [RFC PATCH 1/2] Port KASAN Tests to KUnit
-In-Reply-To: <CAAeHK+yA1ibD2yYT++==pc5PLKfisFv3ieru54PDDYF4EE_Hfg@mail.gmail.com>
-Message-ID: <alpine.LRH.2.20.2002271507110.17675@dhcp-10-175-190-15.vpn.oracle.com>
-References: <20200227024301.217042-1-trishalfonso@google.com> <CAAeHK+yA1ibD2yYT++==pc5PLKfisFv3ieru54PDDYF4EE_Hfg@mail.gmail.com>
-User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
+        Thu, 27 Feb 2020 10:18:17 -0500
+Received: by mail-vs1-f66.google.com with SMTP id m4so2035145vsa.12
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 07:18:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FE9YlwPCylw4bc5huhKNNCWtGjQT2jR1xXhEcwAql+c=;
+        b=Sut+2ak8Mv+vayB+HbdLvSIcnwFFJMBzHgirvH66v+6Br77Lbl/4SxBwinK+bfEORy
+         KQ5K1Mbv5yaOHdlKTzLUdTUUhZV6hr1sPf+UGQPbdt96i7fvZHDFAOrayy2+V+i4ksAo
+         6QaJNImWXrC4TGUvNVs/B+fEwNUf1hQAe0KTqj1JEeelSbczr0CWEvXHITo8aexG+rjd
+         8xZipEnxAciGpbNAEeRoYeiih7H0AJwHbFWkhquccA4sjl+/0jlNCtgsceK84yfuVUGf
+         h3LKbzuDoDUi7zFP1yCYRQ7A0JHRh2XABAIv1U+lO/QnHnfXYraENOxLHHFqv523I3hT
+         MNuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FE9YlwPCylw4bc5huhKNNCWtGjQT2jR1xXhEcwAql+c=;
+        b=SlMdsKwbyv53nAxBmtTFFmamZapQWowK7PIqOGnpoZpLefXpG0Xf5Ywnbhlo2q33rN
+         bQL2wcew4gXHyLRP3eSZe3sPWqiuRENyK6S7VqASWAhSCuR64MQqdZLAQxrrOjbnIQT1
+         QKKqO43XIadckvyePsUH8M5eZHeFerdBhWJTGrXBe7iRLJ+OA9hJFh/Y2RrSAnpGFyNe
+         flyoiXvPgnIIwH+1ar8KP6phQ+3CVVeYxnDaxLY79fbHko+uUHPdv46WE0QWNwY8ltYV
+         utXAnfxl/Ie5xjriDWK6HA+66uoOZGqUjwolB4Aq6SWahWEyCyKl2hi0fPJ65pvwmN/g
+         4g7Q==
+X-Gm-Message-State: APjAAAXT6Z8hqzlemNc1DgLNyFXTzpSgY5IR+qdoSo3ImrBdwujI1ZSX
+        rWw1e0Wwmp8F0TaWftFeabBbLiDGBAtBaFzvV9rEQw==
+X-Google-Smtp-Source: APXvYqzEB8eUMArq/U0KUS5PJA8nccEaL08bwTgxMEoRDx9khUaRXx7qH5jym/bnPJLKAeBLgAwjaS+1JRqsFWkGO2A=
+X-Received: by 2002:a05:6102:90:: with SMTP id t16mr2849491vsp.140.1582816694984;
+ Thu, 27 Feb 2020 07:18:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9543 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 suspectscore=3
- spamscore=0 adultscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002270121
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9543 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 bulkscore=0
- impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0 adultscore=0
- phishscore=0 mlxlogscore=999 mlxscore=0 suspectscore=3 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002270121
+References: <000000000000c0bffa0586795098@google.com> <0000000000005edcd0059503b4aa@google.com>
+ <20191016100134.GA20076@architecture4>
+In-Reply-To: <20191016100134.GA20076@architecture4>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 27 Feb 2020 16:18:04 +0100
+Message-ID: <CACT4Y+bG+DyGuj__tTaVqzr3D7jxEaxL=vbtcsfhnAS2iSWvTQ@mail.gmail.com>
+Subject: Re: WARNING: bad unlock balance in rcu_core
+To:     Gao Xiang <gaoxiang25@huawei.com>
+Cc:     syzbot <syzbot+36baa6c2180e959e19b1@syzkaller.appspotmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Jan Kara <jack@suse.cz>,
+        Miao Xie <miaoxie@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Feb 2020, Andrey Konovalov wrote:
-
-> On Thu, Feb 27, 2020 at 3:44 AM 'Patricia Alfonso' via kasan-dev
-> <kasan-dev@googlegroups.com> wrote:
-> >
-> > Transfer all previous tests for KASAN to KUnit so they can be run
-> > more easily. With proper KASAN integration into KUnit, developers can
-> > run these tests with their other KUnit tests and see "pass" or "fail"
-> > with the appropriate KASAN report instead of needing to parse each KASAN
-> > report to test KASAN functionalities.
-> >
-> > Stack tests do not work in UML so those tests are protected inside an
-> > "#if (CONFIG_KASAN_STACK == 1)" so this only runs if stack
-> > instrumentation is enabled.
-> >
-> > Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
-> > ---
-> > The KUnit version of these tests could be in addition to the existing
-> > tests if that is preferred.
-> 
-> Will it be possible to run KASAN tests with KUnit on arbitrary
-> hardware/vm with arbitrary architecture (like it is possible now by
-> loading test_kasan.ko)?
+On Wed, Oct 16, 2019 at 11:58 AM Gao Xiang <gaoxiang25@huawei.com> wrote:
 >
+> Hi,
+>
+> On Wed, Oct 16, 2019 at 02:27:07AM -0700, syzbot wrote:
+> > syzbot has found a reproducer for the following crash on:
+> >
+> > HEAD commit:    0e9d28bc Add linux-next specific files for 20191015
+> > git tree:       linux-next
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=11745608e00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3d84ca04228b0bf4
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=36baa6c2180e959e19b1
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=159d297f600000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16289b30e00000
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+36baa6c2180e959e19b1@syzkaller.appspotmail.com
+> >
+> > =====================================
+> > WARNING: bad unlock balance detected!
+> > 5.4.0-rc3-next-20191015 #0 Not tainted
+> > -------------------------------------
+> > syz-executor276/8897 is trying to release lock (rcu_callback) at:
+> > [<ffffffff8160e7a4>] __write_once_size include/linux/compiler.h:226 [inline]
+> > [<ffffffff8160e7a4>] __rcu_reclaim kernel/rcu/rcu.h:221 [inline]
+> > [<ffffffff8160e7a4>] rcu_do_batch kernel/rcu/tree.c:2157 [inline]
+> > [<ffffffff8160e7a4>] rcu_core+0x574/0x1560 kernel/rcu/tree.c:2377
+> > but there are no more locks to release!
+> >
+> > other info that might help us debug this:
+> > 1 lock held by syz-executor276/8897:
+> >  #0: ffff88809a3cc0d8 (&type->s_umount_key#40/1){+.+.}, at:
+> > alloc_super+0x158/0x910 fs/super.c:229
+> >
+> > stack backtrace:
+> > CPU: 0 PID: 8897 Comm: syz-executor276 Not tainted 5.4.0-rc3-next-20191015
+> > #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > Call Trace:
+> >  <IRQ>
+> >  __dump_stack lib/dump_stack.c:77 [inline]
+> >  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+> >  print_unlock_imbalance_bug kernel/locking/lockdep.c:4008 [inline]
+> >  print_unlock_imbalance_bug.cold+0x114/0x123 kernel/locking/lockdep.c:3984
+> >  __lock_release kernel/locking/lockdep.c:4244 [inline]
+> >  lock_release+0x5f2/0x960 kernel/locking/lockdep.c:4505
+> >  rcu_lock_release include/linux/rcupdate.h:213 [inline]
+> >  __rcu_reclaim kernel/rcu/rcu.h:223 [inline]
+>
+> I have little knowledge about this kind of stuff, but after seeing
+> the dashboard https://syzkaller.appspot.com/bug?extid=36baa6c2180e959e19b1
+>
+> I guess this is highly related with ntfs, and in ntfs_fill_super, it
+> has lockdep_off() in ntfs_fill_super...
+>
+> In detail, commit 90c1cba2b3b3 ("locking/lockdep: Zap lock classes even
+> with lock debugging disabled") [1], and free_zapped_rcu....
+>
+> static void free_zapped_rcu(struct rcu_head *ch)
+> {
+>         struct pending_free *pf;
+>         unsigned long flags;
+>
+>         if (WARN_ON_ONCE(ch != &delayed_free.rcu_head))
+>                 return;
+>
+>         raw_local_irq_save(flags);
+>         arch_spin_lock(&lockdep_lock);
+>         current->lockdep_recursion = 1;   <--- here
+>
+>         /* closed head */
+>         pf = delayed_free.pf + (delayed_free.index ^ 1);
+>         __free_zapped_classes(pf);
+>         delayed_free.scheduled = false;
+>
+>         /*
+>          * If there's anything on the open list, close and start a new callback.
+>          */
+>         call_rcu_zapped(delayed_free.pf + delayed_free.index);
+>
+>         current->lockdep_recursion = 0;
+>         arch_spin_unlock(&lockdep_lock);
+>         raw_local_irq_restore(flags);
+> }
+>
+> Completely guess and untest since I am not familar with that,
+> but in case of that, Cc related people...
+> If I'm wrong, ignore my comments and unintentional noise....
+>
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=90c1cba2b3b3851c151229f61801919b2904d437
+>
+> Thanks,
+> Gao Xiang
 
-Yep - KUnit tests can be run on bare metal/VMs as
-well as within a UML instance.  In the bare metal/VM
-case we're working to add some ease-of-use features
-such as results avaiable in /sys/kernel/debug/kunit.
-Looks like CONFIG_TEST_KASAN is tristate too, so that
-means it can be built as a module (KUnit itself can be
-built as a module too) so running the tests becomes
-a matter of executing "modprobe test_kasan.ko"; presumably
-similar to what is done with non-KUnit test_kasan?
 
-The tests execute on module loading automatically, and
-results are retrievable via dmesg, and soon hopefully
-via debugfs also.
+Still happens a lot for the past 10 months:
+https://syzkaller.appspot.com/bug?id=0d5bdaf028e4283ad7404609d17e5077f48ff26d
 
-I'd be really interested in any feedback regarding running
-KUnit tests this way, so if you get a chance to try it
-out do let us know if you see things that are missing.
 
-Thanks!
-
-Alan
-
-> >
-> >  lib/Kconfig.kasan |   2 +-
-> >  lib/test_kasan.c  | 352 +++++++++++++++++++++-------------------------
-> >  2 files changed, 161 insertions(+), 193 deletions(-)
-> >
-> > diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
-> > index 5b54f3c9a741..f8cc9ed60677 100644
-> > --- a/lib/Kconfig.kasan
-> > +++ b/lib/Kconfig.kasan
-> > @@ -160,7 +160,7 @@ config KASAN_VMALLOC
-> >
-> >  config TEST_KASAN
-> >         tristate "Module for testing KASAN for bug detection"
-> > -       depends on m && KASAN
-> > +       depends on KASAN && KUNIT
-> >         help
-> >           This is a test module doing various nasty things like
-> >           out of bounds accesses, use after free. It is useful for testing
-> > diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-> > index 3872d250ed2c..988650387a2a 100644
-> > --- a/lib/test_kasan.c
-> > +++ b/lib/test_kasan.c
-> > @@ -23,17 +23,18 @@
-> >
-> >  #include <asm/page.h>
-> >
-> > +#include <kunit/test.h>
-> > +
-> >  /*
-> >   * Note: test functions are marked noinline so that their names appear in
-> >   * reports.
-> >   */
-> >
-> > -static noinline void __init kmalloc_oob_right(void)
-> > +static noinline void kmalloc_oob_right(void)
-> >  {
-> >         char *ptr;
-> >         size_t size = 123;
-> >
-> > -       pr_info("out-of-bounds to right\n");
-> >         ptr = kmalloc(size, GFP_KERNEL);
-> >         if (!ptr) {
-> >                 pr_err("Allocation failed\n");
-> > @@ -44,12 +45,11 @@ static noinline void __init kmalloc_oob_right(void)
-> >         kfree(ptr);
-> >  }
-> >
-> > -static noinline void __init kmalloc_oob_left(void)
-> > +static noinline void kmalloc_oob_left(void)
-> >  {
-> >         char *ptr;
-> >         size_t size = 15;
-> >
-> > -       pr_info("out-of-bounds to left\n");
-> >         ptr = kmalloc(size, GFP_KERNEL);
-> >         if (!ptr) {
-> >                 pr_err("Allocation failed\n");
-> > @@ -60,12 +60,11 @@ static noinline void __init kmalloc_oob_left(void)
-> >         kfree(ptr);
-> >  }
-> >
-> > -static noinline void __init kmalloc_node_oob_right(void)
-> > +static noinline void kmalloc_node_oob_right(void)
-> >  {
-> >         char *ptr;
-> >         size_t size = 4096;
-> >
-> > -       pr_info("kmalloc_node(): out-of-bounds to right\n");
-> >         ptr = kmalloc_node(size, GFP_KERNEL, 0);
-> >         if (!ptr) {
-> >                 pr_err("Allocation failed\n");
-> > @@ -77,7 +76,7 @@ static noinline void __init kmalloc_node_oob_right(void)
-> >  }
-> >
-> >  #ifdef CONFIG_SLUB
-> > -static noinline void __init kmalloc_pagealloc_oob_right(void)
-> > +static noinline void kmalloc_pagealloc_oob_right(void)
-> >  {
-> >         char *ptr;
-> >         size_t size = KMALLOC_MAX_CACHE_SIZE + 10;
-> > @@ -85,7 +84,6 @@ static noinline void __init kmalloc_pagealloc_oob_right(void)
-> >         /* Allocate a chunk that does not fit into a SLUB cache to trigger
-> >          * the page allocator fallback.
-> >          */
-> > -       pr_info("kmalloc pagealloc allocation: out-of-bounds to right\n");
-> >         ptr = kmalloc(size, GFP_KERNEL);
-> >         if (!ptr) {
-> >                 pr_err("Allocation failed\n");
-> > @@ -96,12 +94,11 @@ static noinline void __init kmalloc_pagealloc_oob_right(void)
-> >         kfree(ptr);
-> >  }
-> >
-> > -static noinline void __init kmalloc_pagealloc_uaf(void)
-> > +static noinline void kmalloc_pagealloc_uaf(void)
-> >  {
-> >         char *ptr;
-> >         size_t size = KMALLOC_MAX_CACHE_SIZE + 10;
-> >
-> > -       pr_info("kmalloc pagealloc allocation: use-after-free\n");
-> >         ptr = kmalloc(size, GFP_KERNEL);
-> >         if (!ptr) {
-> >                 pr_err("Allocation failed\n");
-> > @@ -112,12 +109,11 @@ static noinline void __init kmalloc_pagealloc_uaf(void)
-> >         ptr[0] = 0;
-> >  }
-> >
-> > -static noinline void __init kmalloc_pagealloc_invalid_free(void)
-> > +static noinline void kmalloc_pagealloc_invalid_free(void)
-> >  {
-> >         char *ptr;
-> >         size_t size = KMALLOC_MAX_CACHE_SIZE + 10;
-> >
-> > -       pr_info("kmalloc pagealloc allocation: invalid-free\n");
-> >         ptr = kmalloc(size, GFP_KERNEL);
-> >         if (!ptr) {
-> >                 pr_err("Allocation failed\n");
-> > @@ -128,14 +124,13 @@ static noinline void __init kmalloc_pagealloc_invalid_free(void)
-> >  }
-> >  #endif
-> >
-> > -static noinline void __init kmalloc_large_oob_right(void)
-> > +static noinline void kmalloc_large_oob_right(void)
-> >  {
-> >         char *ptr;
-> >         size_t size = KMALLOC_MAX_CACHE_SIZE - 256;
-> >         /* Allocate a chunk that is large enough, but still fits into a slab
-> >          * and does not trigger the page allocator fallback in SLUB.
-> >          */
-> > -       pr_info("kmalloc large allocation: out-of-bounds to right\n");
-> >         ptr = kmalloc(size, GFP_KERNEL);
-> >         if (!ptr) {
-> >                 pr_err("Allocation failed\n");
-> > @@ -146,13 +141,12 @@ static noinline void __init kmalloc_large_oob_right(void)
-> >         kfree(ptr);
-> >  }
-> >
-> > -static noinline void __init kmalloc_oob_krealloc_more(void)
-> > +static noinline void kmalloc_oob_krealloc_more(void)
-> >  {
-> >         char *ptr1, *ptr2;
-> >         size_t size1 = 17;
-> >         size_t size2 = 19;
-> >
-> > -       pr_info("out-of-bounds after krealloc more\n");
-> >         ptr1 = kmalloc(size1, GFP_KERNEL);
-> >         ptr2 = krealloc(ptr1, size2, GFP_KERNEL);
-> >         if (!ptr1 || !ptr2) {
-> > @@ -166,13 +160,12 @@ static noinline void __init kmalloc_oob_krealloc_more(void)
-> >         kfree(ptr2);
-> >  }
-> >
-> > -static noinline void __init kmalloc_oob_krealloc_less(void)
-> > +static noinline void kmalloc_oob_krealloc_less(void)
-> >  {
-> >         char *ptr1, *ptr2;
-> >         size_t size1 = 17;
-> >         size_t size2 = 15;
-> >
-> > -       pr_info("out-of-bounds after krealloc less\n");
-> >         ptr1 = kmalloc(size1, GFP_KERNEL);
-> >         ptr2 = krealloc(ptr1, size2, GFP_KERNEL);
-> >         if (!ptr1 || !ptr2) {
-> > @@ -184,13 +177,12 @@ static noinline void __init kmalloc_oob_krealloc_less(void)
-> >         kfree(ptr2);
-> >  }
-> >
-> > -static noinline void __init kmalloc_oob_16(void)
-> > +static noinline void kmalloc_oob_16(void)
-> >  {
-> >         struct {
-> >                 u64 words[2];
-> >         } *ptr1, *ptr2;
-> >
-> > -       pr_info("kmalloc out-of-bounds for 16-bytes access\n");
-> >         ptr1 = kmalloc(sizeof(*ptr1) - 3, GFP_KERNEL);
-> >         ptr2 = kmalloc(sizeof(*ptr2), GFP_KERNEL);
-> >         if (!ptr1 || !ptr2) {
-> > @@ -204,12 +196,11 @@ static noinline void __init kmalloc_oob_16(void)
-> >         kfree(ptr2);
-> >  }
-> >
-> > -static noinline void __init kmalloc_oob_memset_2(void)
-> > +static noinline void kmalloc_oob_memset_2(void)
-> >  {
-> >         char *ptr;
-> >         size_t size = 8;
-> >
-> > -       pr_info("out-of-bounds in memset2\n");
-> >         ptr = kmalloc(size, GFP_KERNEL);
-> >         if (!ptr) {
-> >                 pr_err("Allocation failed\n");
-> > @@ -220,12 +211,11 @@ static noinline void __init kmalloc_oob_memset_2(void)
-> >         kfree(ptr);
-> >  }
-> >
-> > -static noinline void __init kmalloc_oob_memset_4(void)
-> > +static noinline void kmalloc_oob_memset_4(void)
-> >  {
-> >         char *ptr;
-> >         size_t size = 8;
-> >
-> > -       pr_info("out-of-bounds in memset4\n");
-> >         ptr = kmalloc(size, GFP_KERNEL);
-> >         if (!ptr) {
-> >                 pr_err("Allocation failed\n");
-> > @@ -237,12 +227,11 @@ static noinline void __init kmalloc_oob_memset_4(void)
-> >  }
-> >
-> >
-> > -static noinline void __init kmalloc_oob_memset_8(void)
-> > +static noinline void kmalloc_oob_memset_8(void)
-> >  {
-> >         char *ptr;
-> >         size_t size = 8;
-> >
-> > -       pr_info("out-of-bounds in memset8\n");
-> >         ptr = kmalloc(size, GFP_KERNEL);
-> >         if (!ptr) {
-> >                 pr_err("Allocation failed\n");
-> > @@ -253,12 +242,11 @@ static noinline void __init kmalloc_oob_memset_8(void)
-> >         kfree(ptr);
-> >  }
-> >
-> > -static noinline void __init kmalloc_oob_memset_16(void)
-> > +static noinline void kmalloc_oob_memset_16(void)
-> >  {
-> >         char *ptr;
-> >         size_t size = 16;
-> >
-> > -       pr_info("out-of-bounds in memset16\n");
-> >         ptr = kmalloc(size, GFP_KERNEL);
-> >         if (!ptr) {
-> >                 pr_err("Allocation failed\n");
-> > @@ -269,12 +257,11 @@ static noinline void __init kmalloc_oob_memset_16(void)
-> >         kfree(ptr);
-> >  }
-> >
-> > -static noinline void __init kmalloc_oob_in_memset(void)
-> > +static noinline void kmalloc_oob_in_memset(void)
-> >  {
-> >         char *ptr;
-> >         size_t size = 666;
-> >
-> > -       pr_info("out-of-bounds in memset\n");
-> >         ptr = kmalloc(size, GFP_KERNEL);
-> >         if (!ptr) {
-> >                 pr_err("Allocation failed\n");
-> > @@ -285,12 +272,11 @@ static noinline void __init kmalloc_oob_in_memset(void)
-> >         kfree(ptr);
-> >  }
-> >
-> > -static noinline void __init kmalloc_uaf(void)
-> > +static noinline void kmalloc_uaf(void)
-> >  {
-> >         char *ptr;
-> >         size_t size = 10;
-> >
-> > -       pr_info("use-after-free\n");
-> >         ptr = kmalloc(size, GFP_KERNEL);
-> >         if (!ptr) {
-> >                 pr_err("Allocation failed\n");
-> > @@ -301,12 +287,11 @@ static noinline void __init kmalloc_uaf(void)
-> >         *(ptr + 8) = 'x';
-> >  }
-> >
-> > -static noinline void __init kmalloc_uaf_memset(void)
-> > +static noinline void kmalloc_uaf_memset(void)
-> >  {
-> >         char *ptr;
-> >         size_t size = 33;
-> >
-> > -       pr_info("use-after-free in memset\n");
-> >         ptr = kmalloc(size, GFP_KERNEL);
-> >         if (!ptr) {
-> >                 pr_err("Allocation failed\n");
-> > @@ -317,12 +302,11 @@ static noinline void __init kmalloc_uaf_memset(void)
-> >         memset(ptr, 0, size);
-> >  }
-> >
-> > -static noinline void __init kmalloc_uaf2(void)
-> > +static noinline void kmalloc_uaf2(void)
-> >  {
-> >         char *ptr1, *ptr2;
-> >         size_t size = 43;
-> >
-> > -       pr_info("use-after-free after another kmalloc\n");
-> >         ptr1 = kmalloc(size, GFP_KERNEL);
-> >         if (!ptr1) {
-> >                 pr_err("Allocation failed\n");
-> > @@ -342,14 +326,13 @@ static noinline void __init kmalloc_uaf2(void)
-> >         kfree(ptr2);
-> >  }
-> >
-> > -static noinline void __init kfree_via_page(void)
-> > +static noinline void kfree_via_page(void)
-> >  {
-> >         char *ptr;
-> >         size_t size = 8;
-> >         struct page *page;
-> >         unsigned long offset;
-> >
-> > -       pr_info("invalid-free false positive (via page)\n");
-> >         ptr = kmalloc(size, GFP_KERNEL);
-> >         if (!ptr) {
-> >                 pr_err("Allocation failed\n");
-> > @@ -361,13 +344,12 @@ static noinline void __init kfree_via_page(void)
-> >         kfree(page_address(page) + offset);
-> >  }
-> >
-> > -static noinline void __init kfree_via_phys(void)
-> > +static noinline void kfree_via_phys(void)
-> >  {
-> >         char *ptr;
-> >         size_t size = 8;
-> >         phys_addr_t phys;
-> >
-> > -       pr_info("invalid-free false positive (via phys)\n");
-> >         ptr = kmalloc(size, GFP_KERNEL);
-> >         if (!ptr) {
-> >                 pr_err("Allocation failed\n");
-> > @@ -378,7 +360,7 @@ static noinline void __init kfree_via_phys(void)
-> >         kfree(phys_to_virt(phys));
-> >  }
-> >
-> > -static noinline void __init kmem_cache_oob(void)
-> > +static noinline void kmem_cache_oob(void)
-> >  {
-> >         char *p;
-> >         size_t size = 200;
-> > @@ -389,7 +371,6 @@ static noinline void __init kmem_cache_oob(void)
-> >                 pr_err("Cache allocation failed\n");
-> >                 return;
-> >         }
-> > -       pr_info("out-of-bounds in kmem_cache_alloc\n");
-> >         p = kmem_cache_alloc(cache, GFP_KERNEL);
-> >         if (!p) {
-> >                 pr_err("Allocation failed\n");
-> > @@ -402,7 +383,7 @@ static noinline void __init kmem_cache_oob(void)
-> >         kmem_cache_destroy(cache);
-> >  }
-> >
-> > -static noinline void __init memcg_accounted_kmem_cache(void)
-> > +static noinline void memcg_accounted_kmem_cache(void)
-> >  {
-> >         int i;
-> >         char *p;
-> > @@ -415,7 +396,6 @@ static noinline void __init memcg_accounted_kmem_cache(void)
-> >                 return;
-> >         }
-> >
-> > -       pr_info("allocate memcg accounted object\n");
-> >         /*
-> >          * Several allocations with a delay to allow for lazy per memcg kmem
-> >          * cache creation.
-> > @@ -435,31 +415,19 @@ static noinline void __init memcg_accounted_kmem_cache(void)
-> >
-> >  static char global_array[10];
-> >
-> > -static noinline void __init kasan_global_oob(void)
-> > +static noinline void kasan_global_oob(void)
-> >  {
-> >         volatile int i = 3;
-> >         char *p = &global_array[ARRAY_SIZE(global_array) + i];
-> >
-> > -       pr_info("out-of-bounds global variable\n");
-> > -       *(volatile char *)p;
-> > -}
-> > -
-> > -static noinline void __init kasan_stack_oob(void)
-> > -{
-> > -       char stack_array[10];
-> > -       volatile int i = 0;
-> > -       char *p = &stack_array[ARRAY_SIZE(stack_array) + i];
-> > -
-> > -       pr_info("out-of-bounds on stack\n");
-> >         *(volatile char *)p;
-> >  }
-> >
-> > -static noinline void __init ksize_unpoisons_memory(void)
-> > +static noinline void ksize_unpoisons_memory(void)
-> >  {
-> >         char *ptr;
-> >         size_t size = 123, real_size;
-> >
-> > -       pr_info("ksize() unpoisons the whole allocated chunk\n");
-> >         ptr = kmalloc(size, GFP_KERNEL);
-> >         if (!ptr) {
-> >                 pr_err("Allocation failed\n");
-> > @@ -473,72 +441,36 @@ static noinline void __init ksize_unpoisons_memory(void)
-> >         kfree(ptr);
-> >  }
-> >
-> > -static noinline void __init copy_user_test(void)
-> > +#if (CONFIG_KASAN_STACK == 1)
-> > +static noinline void kasan_stack_oob(void)
-> >  {
-> > -       char *kmem;
-> > -       char __user *usermem;
-> > -       size_t size = 10;
-> > -       int unused;
-> > -
-> > -       kmem = kmalloc(size, GFP_KERNEL);
-> > -       if (!kmem)
-> > -               return;
-> > -
-> > -       usermem = (char __user *)vm_mmap(NULL, 0, PAGE_SIZE,
-> > -                           PROT_READ | PROT_WRITE | PROT_EXEC,
-> > -                           MAP_ANONYMOUS | MAP_PRIVATE, 0);
-> > -       if (IS_ERR(usermem)) {
-> > -               pr_err("Failed to allocate user memory\n");
-> > -               kfree(kmem);
-> > -               return;
-> > -       }
-> > -
-> > -       pr_info("out-of-bounds in copy_from_user()\n");
-> > -       unused = copy_from_user(kmem, usermem, size + 1);
-> > -
-> > -       pr_info("out-of-bounds in copy_to_user()\n");
-> > -       unused = copy_to_user(usermem, kmem, size + 1);
-> > -
-> > -       pr_info("out-of-bounds in __copy_from_user()\n");
-> > -       unused = __copy_from_user(kmem, usermem, size + 1);
-> > -
-> > -       pr_info("out-of-bounds in __copy_to_user()\n");
-> > -       unused = __copy_to_user(usermem, kmem, size + 1);
-> > -
-> > -       pr_info("out-of-bounds in __copy_from_user_inatomic()\n");
-> > -       unused = __copy_from_user_inatomic(kmem, usermem, size + 1);
-> > -
-> > -       pr_info("out-of-bounds in __copy_to_user_inatomic()\n");
-> > -       unused = __copy_to_user_inatomic(usermem, kmem, size + 1);
-> > -
-> > -       pr_info("out-of-bounds in strncpy_from_user()\n");
-> > -       unused = strncpy_from_user(kmem, usermem, size + 1);
-> > +       char stack_array[10];
-> > +       volatile int i = 0;
-> > +       char *p = &stack_array[ARRAY_SIZE(stack_array) + i];
-> >
-> > -       vm_munmap((unsigned long)usermem, PAGE_SIZE);
-> > -       kfree(kmem);
-> > +       *(volatile char *)p;
-> >  }
-> >
-> > -static noinline void __init kasan_alloca_oob_left(void)
-> > +static noinline void kasan_alloca_oob_left(void)
-> >  {
-> >         volatile int i = 10;
-> >         char alloca_array[i];
-> >         char *p = alloca_array - 1;
-> >
-> > -       pr_info("out-of-bounds to left on alloca\n");
-> >         *(volatile char *)p;
-> >  }
-> >
-> > -static noinline void __init kasan_alloca_oob_right(void)
-> > +static noinline void kasan_alloca_oob_right(void)
-> >  {
-> >         volatile int i = 10;
-> >         char alloca_array[i];
-> >         char *p = alloca_array + i;
-> >
-> > -       pr_info("out-of-bounds to right on alloca\n");
-> >         *(volatile char *)p;
-> >  }
-> > +#endif /* CONFIG_KASAN_STACK */
-> >
-> > -static noinline void __init kmem_cache_double_free(void)
-> > +static noinline void kmem_cache_double_free(void)
-> >  {
-> >         char *p;
-> >         size_t size = 200;
-> > @@ -549,7 +481,6 @@ static noinline void __init kmem_cache_double_free(void)
-> >                 pr_err("Cache allocation failed\n");
-> >                 return;
-> >         }
-> > -       pr_info("double-free on heap object\n");
-> >         p = kmem_cache_alloc(cache, GFP_KERNEL);
-> >         if (!p) {
-> >                 pr_err("Allocation failed\n");
-> > @@ -562,7 +493,7 @@ static noinline void __init kmem_cache_double_free(void)
-> >         kmem_cache_destroy(cache);
-> >  }
-> >
-> > -static noinline void __init kmem_cache_invalid_free(void)
-> > +static noinline void kmem_cache_invalid_free(void)
-> >  {
-> >         char *p;
-> >         size_t size = 200;
-> > @@ -574,7 +505,6 @@ static noinline void __init kmem_cache_invalid_free(void)
-> >                 pr_err("Cache allocation failed\n");
-> >                 return;
-> >         }
-> > -       pr_info("invalid-free of heap object\n");
-> >         p = kmem_cache_alloc(cache, GFP_KERNEL);
-> >         if (!p) {
-> >                 pr_err("Allocation failed\n");
-> > @@ -594,12 +524,11 @@ static noinline void __init kmem_cache_invalid_free(void)
-> >         kmem_cache_destroy(cache);
-> >  }
-> >
-> > -static noinline void __init kasan_memchr(void)
-> > +static noinline void kasan_memchr(void)
-> >  {
-> >         char *ptr;
-> >         size_t size = 24;
-> >
-> > -       pr_info("out-of-bounds in memchr\n");
-> >         ptr = kmalloc(size, GFP_KERNEL | __GFP_ZERO);
-> >         if (!ptr)
-> >                 return;
-> > @@ -608,13 +537,12 @@ static noinline void __init kasan_memchr(void)
-> >         kfree(ptr);
-> >  }
-> >
-> > -static noinline void __init kasan_memcmp(void)
-> > +static noinline void kasan_memcmp(void)
-> >  {
-> >         char *ptr;
-> >         size_t size = 24;
-> >         int arr[9];
-> >
-> > -       pr_info("out-of-bounds in memcmp\n");
-> >         ptr = kmalloc(size, GFP_KERNEL | __GFP_ZERO);
-> >         if (!ptr)
-> >                 return;
-> > @@ -624,12 +552,11 @@ static noinline void __init kasan_memcmp(void)
-> >         kfree(ptr);
-> >  }
-> >
-> > -static noinline void __init kasan_strings(void)
-> > +static noinline void kasan_strings(void)
-> >  {
-> >         char *ptr;
-> >         size_t size = 24;
-> >
-> > -       pr_info("use-after-free in strchr\n");
-> >         ptr = kmalloc(size, GFP_KERNEL | __GFP_ZERO);
-> >         if (!ptr)
-> >                 return;
-> > @@ -645,23 +572,18 @@ static noinline void __init kasan_strings(void)
-> >         ptr += 16;
-> >         strchr(ptr, '1');
-> >
-> > -       pr_info("use-after-free in strrchr\n");
-> >         strrchr(ptr, '1');
-> >
-> > -       pr_info("use-after-free in strcmp\n");
-> >         strcmp(ptr, "2");
-> >
-> > -       pr_info("use-after-free in strncmp\n");
-> >         strncmp(ptr, "2", 1);
-> >
-> > -       pr_info("use-after-free in strlen\n");
-> >         strlen(ptr);
-> >
-> > -       pr_info("use-after-free in strnlen\n");
-> >         strnlen(ptr, 1);
-> >  }
-> >
-> > -static noinline void __init kasan_bitops(void)
-> > +static noinline void kasan_bitops(void)
-> >  {
-> >         /*
-> >          * Allocate 1 more byte, which causes kzalloc to round up to 16-bytes;
-> > @@ -676,70 +598,52 @@ static noinline void __init kasan_bitops(void)
-> >          * below accesses are still out-of-bounds, since bitops are defined to
-> >          * operate on the whole long the bit is in.
-> >          */
-> > -       pr_info("out-of-bounds in set_bit\n");
-> >         set_bit(BITS_PER_LONG, bits);
-> >
-> > -       pr_info("out-of-bounds in __set_bit\n");
-> >         __set_bit(BITS_PER_LONG, bits);
-> >
-> > -       pr_info("out-of-bounds in clear_bit\n");
-> >         clear_bit(BITS_PER_LONG, bits);
-> >
-> > -       pr_info("out-of-bounds in __clear_bit\n");
-> >         __clear_bit(BITS_PER_LONG, bits);
-> >
-> > -       pr_info("out-of-bounds in clear_bit_unlock\n");
-> >         clear_bit_unlock(BITS_PER_LONG, bits);
-> >
-> > -       pr_info("out-of-bounds in __clear_bit_unlock\n");
-> >         __clear_bit_unlock(BITS_PER_LONG, bits);
-> >
-> > -       pr_info("out-of-bounds in change_bit\n");
-> >         change_bit(BITS_PER_LONG, bits);
-> >
-> > -       pr_info("out-of-bounds in __change_bit\n");
-> >         __change_bit(BITS_PER_LONG, bits);
-> >
-> >         /*
-> >          * Below calls try to access bit beyond allocated memory.
-> >          */
-> > -       pr_info("out-of-bounds in test_and_set_bit\n");
-> >         test_and_set_bit(BITS_PER_LONG + BITS_PER_BYTE, bits);
-> >
-> > -       pr_info("out-of-bounds in __test_and_set_bit\n");
-> >         __test_and_set_bit(BITS_PER_LONG + BITS_PER_BYTE, bits);
-> >
-> > -       pr_info("out-of-bounds in test_and_set_bit_lock\n");
-> >         test_and_set_bit_lock(BITS_PER_LONG + BITS_PER_BYTE, bits);
-> >
-> > -       pr_info("out-of-bounds in test_and_clear_bit\n");
-> >         test_and_clear_bit(BITS_PER_LONG + BITS_PER_BYTE, bits);
-> >
-> > -       pr_info("out-of-bounds in __test_and_clear_bit\n");
-> >         __test_and_clear_bit(BITS_PER_LONG + BITS_PER_BYTE, bits);
-> >
-> > -       pr_info("out-of-bounds in test_and_change_bit\n");
-> >         test_and_change_bit(BITS_PER_LONG + BITS_PER_BYTE, bits);
-> >
-> > -       pr_info("out-of-bounds in __test_and_change_bit\n");
-> >         __test_and_change_bit(BITS_PER_LONG + BITS_PER_BYTE, bits);
-> >
-> > -       pr_info("out-of-bounds in test_bit\n");
-> >         (void)test_bit(BITS_PER_LONG + BITS_PER_BYTE, bits);
-> >
-> >  #if defined(clear_bit_unlock_is_negative_byte)
-> > -       pr_info("out-of-bounds in clear_bit_unlock_is_negative_byte\n");
-> >         clear_bit_unlock_is_negative_byte(BITS_PER_LONG + BITS_PER_BYTE, bits);
-> >  #endif
-> >         kfree(bits);
-> >  }
-> >
-> > -static noinline void __init kmalloc_double_kzfree(void)
-> > +static noinline void kmalloc_double_kzfree(void)
-> >  {
-> >         char *ptr;
-> >         size_t size = 16;
-> >
-> > -       pr_info("double-free (kzfree)\n");
-> >         ptr = kmalloc(size, GFP_KERNEL);
-> >         if (!ptr) {
-> >                 pr_err("Allocation failed\n");
-> > @@ -750,29 +654,130 @@ static noinline void __init kmalloc_double_kzfree(void)
-> >         kzfree(ptr);
-> >  }
-> >
-> > -#ifdef CONFIG_KASAN_VMALLOC
-> > -static noinline void __init vmalloc_oob(void)
-> > +static void kunit_test_oob(struct kunit *test)
-> > +{
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kmalloc_oob_right());
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kmalloc_oob_left());
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kmalloc_node_oob_right());
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kmalloc_large_oob_right());
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kmalloc_oob_krealloc_more());
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kmalloc_oob_krealloc_less());
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kmalloc_oob_16());
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kmalloc_oob_in_memset());
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kmalloc_oob_memset_2());
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kmalloc_oob_memset_4());
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kmalloc_oob_memset_8());
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kmalloc_oob_memset_16());
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kmem_cache_oob());
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kasan_global_oob());
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, ksize_unpoisons_memory());
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kasan_memchr());
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kasan_memcmp());
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kasan_strings());
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kasan_bitops());
-> > +#ifdef CONFIG_SLUB
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kmalloc_pagealloc_oob_right());
-> > +#endif /* CONFIG_SLUB */
-> > +
-> > +#if (CONFIG_KASAN_STACK == 1)
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kasan_stack_oob());
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kasan_alloca_oob_right());
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kasan_alloca_oob_left());
-> > +#endif /*CONFIG_KASAN_STACK*/
-> > +}
-> > +
-> > +static void kunit_test_uaf(struct kunit *test)
-> > +{
-> > +#ifdef CONFIG_SLUB
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kmalloc_pagealloc_uaf());
-> > +#endif
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kmalloc_uaf());
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kmalloc_uaf_memset());
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kmalloc_uaf2());
-> > +}
-> > +
-> > +static void kunit_test_invalid_free(struct kunit *test)
-> >  {
-> > -       void *area;
-> > +#ifdef CONFIG_SLUB
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kmalloc_pagealloc_invalid_free());
-> > +#endif
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kmem_cache_invalid_free());
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kmem_cache_double_free());
-> > +       KUNIT_EXPECT_KASAN_FAIL(test, kmalloc_double_kzfree());
-> > +}
-> >
-> > -       pr_info("vmalloc out-of-bounds\n");
-> > +static void kunit_test_false_positives(struct kunit *test)
-> > +{
-> > +       kfree_via_page();
-> > +       kfree_via_phys();
-> > +}
-> >
-> > -       /*
-> > -        * We have to be careful not to hit the guard page.
-> > -        * The MMU will catch that and crash us.
-> > -        */
-> > -       area = vmalloc(3000);
-> > -       if (!area) {
-> > -               pr_err("Allocation failed\n");
-> > +static void kunit_test_memcg(struct kunit *test)
-> > +{
-> > +       memcg_accounted_kmem_cache();
-> > +}
-> > +
-> > +static struct kunit_case kasan_kunit_test_cases[] = {
-> > +       KUNIT_CASE(kunit_test_oob),
-> > +       KUNIT_CASE(kunit_test_uaf),
-> > +       KUNIT_CASE(kunit_test_invalid_free),
-> > +       KUNIT_CASE(kunit_test_false_positives),
-> > +       KUNIT_CASE(kunit_test_memcg),
-> > +       {}
-> > +};
-> > +
-> > +static struct kunit_suite kasan_kunit_test_suite = {
-> > +       .name = "kasan_kunit_test",
-> > +       .test_cases = kasan_kunit_test_cases,
-> > +};
-> > +
-> > +kunit_test_suite(kasan_kunit_test_suite);
-> > +
-> > +#if IS_MODULE(CONFIG_TEST_KASAN)
-> > +static noinline void __init copy_user_test(void)
-> > +{
-> > +       char *kmem;
-> > +       char __user *usermem;
-> > +       size_t size = 10;
-> > +       int unused;
-> > +
-> > +       kmem = kmalloc(size, GFP_KERNEL);
-> > +       if (!kmem)
-> > +               return;
-> > +
-> > +       usermem = (char __user *)vm_mmap(NULL, 0, PAGE_SIZE,
-> > +                           PROT_READ | PROT_WRITE | PROT_EXEC,
-> > +                           MAP_ANONYMOUS | MAP_PRIVATE, 0);
-> > +       if (IS_ERR(usermem)) {
-> > +               pr_err("Failed to allocate user memory\n");
-> > +               kfree(kmem);
-> >                 return;
-> >         }
-> >
-> > -       ((volatile char *)area)[3100];
-> > -       vfree(area);
-> > +       pr_info("out-of-bounds in copy_from_user()\n");
-> > +       unused = copy_from_user(kmem, usermem, size + 1);
-> > +
-> > +       pr_info("out-of-bounds in copy_to_user()\n");
-> > +       unused = copy_to_user(usermem, kmem, size + 1);
-> > +
-> > +       pr_info("out-of-bounds in __copy_from_user()\n");
-> > +       unused = __copy_from_user(kmem, usermem, size + 1);
-> > +
-> > +       pr_info("out-of-bounds in __copy_to_user()\n");
-> > +       unused = __copy_to_user(usermem, kmem, size + 1);
-> > +
-> > +       pr_info("out-of-bounds in __copy_from_user_inatomic()\n");
-> > +       unused = __copy_from_user_inatomic(kmem, usermem, size + 1);
-> > +
-> > +       pr_info("out-of-bounds in __copy_to_user_inatomic()\n");
-> > +       unused = __copy_to_user_inatomic(usermem, kmem, size + 1);
-> > +
-> > +       pr_info("out-of-bounds in strncpy_from_user()\n");
-> > +       unused = strncpy_from_user(kmem, usermem, size + 1);
-> > +
-> > +       vm_munmap((unsigned long)usermem, PAGE_SIZE);
-> > +       kfree(kmem);
-> >  }
-> > -#else
-> > -static void __init vmalloc_oob(void) {}
-> > -#endif
-> >
-> >  static int __init kmalloc_tests_init(void)
-> >  {
-> > @@ -782,44 +787,7 @@ static int __init kmalloc_tests_init(void)
-> >          */
-> >         bool multishot = kasan_save_enable_multi_shot();
-> >
-> > -       kmalloc_oob_right();
-> > -       kmalloc_oob_left();
-> > -       kmalloc_node_oob_right();
-> > -#ifdef CONFIG_SLUB
-> > -       kmalloc_pagealloc_oob_right();
-> > -       kmalloc_pagealloc_uaf();
-> > -       kmalloc_pagealloc_invalid_free();
-> > -#endif
-> > -       kmalloc_large_oob_right();
-> > -       kmalloc_oob_krealloc_more();
-> > -       kmalloc_oob_krealloc_less();
-> > -       kmalloc_oob_16();
-> > -       kmalloc_oob_in_memset();
-> > -       kmalloc_oob_memset_2();
-> > -       kmalloc_oob_memset_4();
-> > -       kmalloc_oob_memset_8();
-> > -       kmalloc_oob_memset_16();
-> > -       kmalloc_uaf();
-> > -       kmalloc_uaf_memset();
-> > -       kmalloc_uaf2();
-> > -       kfree_via_page();
-> > -       kfree_via_phys();
-> > -       kmem_cache_oob();
-> > -       memcg_accounted_kmem_cache();
-> > -       kasan_stack_oob();
-> > -       kasan_global_oob();
-> > -       kasan_alloca_oob_left();
-> > -       kasan_alloca_oob_right();
-> > -       ksize_unpoisons_memory();
-> >         copy_user_test();
-> > -       kmem_cache_double_free();
-> > -       kmem_cache_invalid_free();
-> > -       kasan_memchr();
-> > -       kasan_memcmp();
-> > -       kasan_strings();
-> > -       kasan_bitops();
-> > -       kmalloc_double_kzfree();
-> > -       vmalloc_oob();
-> >
-> >         kasan_restore_multi_shot(multishot);
-> >
-> > @@ -827,4 +795,4 @@ static int __init kmalloc_tests_init(void)
-> >  }
-> >
-> >  module_init(kmalloc_tests_init);
-> > -MODULE_LICENSE("GPL");
-> > +#endif /* IS_MODULE(CONFIG_TEST_KASAN) */
-> > --
-> > 2.25.0.265.gbab2e86ba0-goog
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> > To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200227024301.217042-1-trishalfonso%40google.com.
-> 
+> >  rcu_do_batch kernel/rcu/tree.c:2157 [inline]
+> >  rcu_core+0x594/0x1560 kernel/rcu/tree.c:2377
+> >  rcu_core_si+0x9/0x10 kernel/rcu/tree.c:2386
+> >  __do_softirq+0x262/0x98c kernel/softirq.c:292
+> >  invoke_softirq kernel/softirq.c:373 [inline]
+> >  irq_exit+0x19b/0x1e0 kernel/softirq.c:413
+> >  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+> >  smp_apic_timer_interrupt+0x1a3/0x610 arch/x86/kernel/apic/apic.c:1137
+> >  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+> >  </IRQ>
+> > RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:756
+> > [inline]
+> > RIP: 0010:console_unlock+0xbb8/0xf00 kernel/printk/printk.c:2481
+> > Code: f3 88 48 c1 e8 03 42 80 3c 30 00 0f 85 e4 02 00 00 48 83 3d 99 9c 96
+> > 07 00 0f 84 91 01 00 00 e8 be c4 16 00 48 8b 7d 98 57 9d <0f> 1f 44 00 00 e9
+> > 6d ff ff ff e8 a9 c4 16 00 48 8b 7d 08 c7 05 eb
+> > RSP: 0018:ffff88809fd7f8f0 EFLAGS: 00000293 ORIG_RAX: ffffffffffffff13
+> > RAX: ffff8880a8bee540 RBX: 0000000000000200 RCX: 1ffffffff138eea6
+> > RDX: 0000000000000000 RSI: ffffffff815c8592 RDI: 0000000000000293
+> > RBP: ffff88809fd7f978 R08: ffff8880a8bee540 R09: fffffbfff11f4119
+> > R10: fffffbfff11f4118 R11: 0000000000000001 R12: 0000000000000000
+> > R13: ffffffff843f8ca0 R14: dffffc0000000000 R15: ffffffff895e1130
+> >  vprintk_emit+0x2a0/0x700 kernel/printk/printk.c:1996
+> >  vprintk_default+0x28/0x30 kernel/printk/printk.c:2023
+> >  vprintk_func+0x7e/0x189 kernel/printk/printk_safe.c:386
+> >  printk+0xba/0xed kernel/printk/printk.c:2056
+> >  __ntfs_error.cold+0x91/0xc7 fs/ntfs/debug.c:89
+> >  read_ntfs_boot_sector fs/ntfs/super.c:682 [inline]
+> >  ntfs_fill_super+0x1ad3/0x3160 fs/ntfs/super.c:2784
+> >  mount_bdev+0x304/0x3c0 fs/super.c:1415
+> >  ntfs_mount+0x35/0x40 fs/ntfs/super.c:3051
+> >  legacy_get_tree+0x108/0x220 fs/fs_context.c:647
+> >  vfs_get_tree+0x8e/0x300 fs/super.c:1545
+> >  do_new_mount fs/namespace.c:2823 [inline]
+> >  do_mount+0x142e/0x1cf0 fs/namespace.c:3143
+> >  ksys_mount+0xdb/0x150 fs/namespace.c:3352
+> >  __do_sys_mount fs/namespace.c:3366 [inline]
+> >  __se_sys_mount fs/namespace.c:3363 [inline]
+> >  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3363
+> >  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > RIP: 0033:0x4411a9
+> > Code: e8 fc ab 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7
+> > 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff
+> > 0f 83 9b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> > RSP: 002b:00007ffffff57cf8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+> > RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004411a9
+> > RDX: 0000000020000140 RSI: 0000000020000280 RDI: 00000000200004c0
+> > RBP: 00000000000114e0 R08: 0000000000000000 R09: 00000000004002c8
+> > R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401fd0
+> > R13: 0000000000402060 R14: 0000000000000000 R15: 0000000000000000
+> >
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/20191016100134.GA20076%40architecture4.
