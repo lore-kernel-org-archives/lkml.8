@@ -2,92 +2,133 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AADF7C35E15
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E134C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8394B24691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:41:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W/Ru7BIO"
+	by mail.kernel.org (Postfix) with ESMTP id D83D024691
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:41:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582832499;
+	bh=k6N5oj36ZlppU4GOSyWAfOkeWWTZ5QFedDz1m1O+qSc=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=hBUqBId/v0XbERdmPlRG77wl6dp8F7Cv//UAHi3gurHzzSuFiEkc7q3iRvXX8e+1N
+	 VzrmyRgdmUR7DfoRavXBc5sLyirmHMatQmjzfax9xSfvI22NVjboOLQiSA8TBTT1a4
+	 qpQSN2Cz2YZA8U8hC3MgjpJWCVh9gR2KHKETSLzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730229AbgB0Tl3 (ORCPT
+        id S1730470AbgB0Tli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 14:41:29 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35827 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727159AbgB0Tl3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 14:41:29 -0500
-Received: by mail-pf1-f195.google.com with SMTP id i19so365003pfa.2;
-        Thu, 27 Feb 2020 11:41:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=r/qRYjeiSH0RCb5MgICwLWWZNUGQnFkuzUB/u8uhRsA=;
-        b=W/Ru7BIOLV4XOK1Frj0h450Y22FHD4Uov0/7FQfa1uihzASYejb6y8KjMW0NtWu5DN
-         FGmMHPgU8OSdh4GtMq+CO1ZGoSUwmSBleexZj5OtbJ5eo6DcBQOMsVv8WKDJyKuUkNu4
-         qpBKF3W9c8B7fXJH4UR2ZoZqu0C2UH/Oy7vmaLLw2WiQq7TQRjuoyf8WEW3fXg5Ori1T
-         8mlKHeJYGCYmfvR9IannPzAsPVNGazmq/yFcy2PUHcXf6x+ykki9pmMrD1Zz1xzyY43v
-         utAbvy8IfiMtA4N72oh9tl6SVG2lKpyB4vXrzPEaz+i8xAE7KPwXPcAHiijBJQvgf/g9
-         0TzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=r/qRYjeiSH0RCb5MgICwLWWZNUGQnFkuzUB/u8uhRsA=;
-        b=nMEMBGI18sVn8g0oRdtPcwivpDnIxkWp2s7WyoUJLMy8+HlVgaeBBkn8hBfp+FeZA7
-         tGw8CevnopB+an+lNSiwTa1D8dhZA0h6JtRowwuYyRxTnBW4cLDXXnqEs7gZDdKV/Q95
-         orEYJYOuiInkt5IvQjbbPmkDAWiAFJYuNve/pONO16Bks8uDrF0bmFi6SBgasHRGJlpo
-         meiHBajqcS+H7Zn8W19Y2horrAFjCSqdKGkUh7UsCUsHkNLJcsSn5UZdJbomTLW54QEy
-         VdfjLIZO0Dq1acU8BunE2CBbGCNEfjwJd28BkoLcD6qztzHXLHi2E0BPpa/GRgGuO5Ve
-         oZ7g==
-X-Gm-Message-State: APjAAAVCuNiniHyc4U8ol60iVnNGZdmKmXRPo2f8Sp4ooyrqoLBcN1/9
-        tEyT2wjwtT+Bd7YZNtrEqpY=
-X-Google-Smtp-Source: APXvYqx273e/gHvPykM7JDPBDq2XhKAg/w3etk3YKmJNxdxCyqmPC9PYF3Nk5HyVnEvtHFHIrs/vjA==
-X-Received: by 2002:a62:fb06:: with SMTP id x6mr525651pfm.149.1582832488361;
-        Thu, 27 Feb 2020 11:41:28 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k1sm6002206pgt.70.2020.02.27.11.41.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 27 Feb 2020 11:41:27 -0800 (PST)
-Date:   Thu, 27 Feb 2020 11:41:27 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 00/97] 4.19.107-stable review
-Message-ID: <20200227194127.GD31847@roeck-us.net>
-References: <20200227132214.553656188@linuxfoundation.org>
+        Thu, 27 Feb 2020 14:41:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51702 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727159AbgB0Tli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 14:41:38 -0500
+Received: from paulmck-ThinkPad-P72.home (unknown [163.114.132.128])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABCE624690;
+        Thu, 27 Feb 2020 19:41:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582832497;
+        bh=k6N5oj36ZlppU4GOSyWAfOkeWWTZ5QFedDz1m1O+qSc=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=AqqDzSsSDHGCz710MPcIRq3W/0Vye8JiMnVtwZ/PDVo2C7hCCIc4eUTfhKmAFHwwe
+         YBX6iY/vLgy7eqOi46xmxco2A309xzT6ZFlU6OZD8kgbYyDlTLcMsOH6oKRYCIIGDu
+         z8icQmyH6CE5aPGAuPUt87EieYI5kotVYFCj4tBU=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 3217335211EA; Thu, 27 Feb 2020 11:41:37 -0800 (PST)
+Date:   Thu, 27 Feb 2020 11:41:37 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Ingo Molnar <mingo@kernel.org>, Qian Cai <cai@lca.pw>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/numa: Acquire RCU lock for checking idle cores
+ during NUMA balancing
+Message-ID: <20200227194137.GO2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200227191804.GJ3818@techsingularity.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
+In-Reply-To: <20200227191804.GJ3818@techsingularity.net>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 02:36:08PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.107 release.
-> There are 97 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Thu, Feb 27, 2020 at 07:18:04PM +0000, Mel Gorman wrote:
+> Qian Cai reported the following
 > 
-> Responses should be made by Sat, 29 Feb 2020 13:21:24 +0000.
-> Anything received after that time might be too late.
+>   The linux-next commit ff7db0bf24db ("sched/numa: Prefer using an idle CPU as a
+>   migration target instead of comparing tasks") introduced a boot warning,
 > 
+>   [   86.520534][    T1] WARNING: suspicious RCU usage
+>   [   86.520540][    T1] 5.6.0-rc3-next-20200227 #7 Not tainted
+>   [   86.520545][    T1] -----------------------------
+>   [   86.520551][    T1] kernel/sched/fair.c:5914 suspicious rcu_dereference_check() usage!
+>   [   86.520555][    T1]
+>   [   86.520555][    T1] other info that might help us debug this:
+>   [   86.520555][    T1]
+>   [   86.520561][    T1]
+>   [   86.520561][    T1] rcu_scheduler_active = 2, debug_locks = 1
+>   [   86.520567][    T1] 1 lock held by systemd/1:
+>   [   86.520571][    T1]  #0: ffff8887f4b14848 (&mm->mmap_sem#2){++++}, at: do_page_fault+0x1d2/0x998
+>   [   86.520594][    T1]
+>   [   86.520594][    T1] stack backtrace:
+>   [   86.520602][    T1] CPU: 1 PID: 1 Comm: systemd Not tainted 5.6.0-rc3-next-20200227 #7
+> 
+> task_numa_migrate() checks for idle cores when updating NUMA-related statistics.
+> This relies on reading a RCU-protected structure in test_idle_cores() via this
+> call chain
+> 
+> task_numa_migrate
+>   -> update_numa_stats
+>     -> numa_idle_core
+>       -> test_idle_cores
+> 
+> While the locking could be fine-grained, it is more appropriate to acquire
+> the RCU lock for the entire scan of the domain. This patch removes the
+> warning triggered at boot time.
+> 
+> Fixes: ff7db0bf24db ("sched/numa: Prefer using an idle CPU as a migration target instead of comparing tasks")
+> Reported-by: Qian Cai <cai@lca.pw>
+> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
 
-Build results:
-	total: 156 pass: 156 fail: 0
-Qemu test results:
-	total: 407 pass: 407 fail: 0
+From an RCU viewpoint:
 
-Guenter
+Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+
+> ---
+>  kernel/sched/fair.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 10f9e6729fcf..1592b6d26239 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -1595,6 +1595,7 @@ static void update_numa_stats(struct task_numa_env *env,
+>  	memset(ns, 0, sizeof(*ns));
+>  	ns->idle_cpu = -1;
+>  
+> +	rcu_read_lock();
+>  	for_each_cpu(cpu, cpumask_of_node(nid)) {
+>  		struct rq *rq = cpu_rq(cpu);
+>  
+> @@ -1614,6 +1615,7 @@ static void update_numa_stats(struct task_numa_env *env,
+>  			idle_core = numa_idle_core(idle_core, cpu);
+>  		}
+>  	}
+> +	rcu_read_unlock();
+>  
+>  	ns->weight = cpumask_weight(cpumask_of_node(nid));
+>  
