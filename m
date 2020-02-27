@@ -2,93 +2,147 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC1DBC4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CB6C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91CE3222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:59:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582797544;
-	bh=06Vr4fb9S78h9bNlh0lKeEo/QOWCjp42tLzTIj4gp6c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=g9gQyq6lYRFNYrX5F0b1mZFbTJH0XAMvanIStEwsVSENTTWUhQgDcim+rO5mM4i8a
-	 3n705o1yuAFA503vN4i4Xc+9DXxqvE/+F3AhI/xVnNkqjcHAcCIaxa+hr+eKtrYDmY
-	 n9h49SFAqcSTNtA69TNxOtg2yxjP34XwP+rGyMR4=
+	by mail.kernel.org (Postfix) with ESMTP id DFCD2222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:59:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="BakoIO05"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728687AbgB0J7D (ORCPT
+        id S1728729AbgB0J7z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 04:59:03 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46207 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728627AbgB0J7D (ORCPT
+        Thu, 27 Feb 2020 04:59:55 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:31747 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728627AbgB0J7z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 04:59:03 -0500
-Received: by mail-wr1-f68.google.com with SMTP id j7so2451309wrp.13;
-        Thu, 27 Feb 2020 01:59:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VQ5cODCZxfkuaY7C2X27hLMvpBk5ErfD2dcMR1H0vUQ=;
-        b=JJU0oNnazQsJt2bms+AMLR/OzVoAGmRebYNrmf2enIBVhIyVEh8UKPSPvU1QAB1yxw
-         ISl9/mGH+qEazp4gKqF5/ZIsIvfbLfhqWyW9IzJZrliSNHkAv1WkrFSQVlArErG3ujm5
-         uSt0nk0gRc3EWkoWcy3un2IhRZAkCe3rLZKX6J3C8S/Y35XzHuTrfEj3dx3ZfrTx3idv
-         dmKwIhW9+K3luWrlcViyVjptuR+jLjX2YMXxgrdCBf/odKqoA211p962V9/O0k6aXU2T
-         KGT/0l/9B9x8Q2SIybxCyHmGV1+yt4/4pO4qtdM23qcbA/sJezmG+DowwYNdU/f0llPU
-         /eTg==
-X-Gm-Message-State: APjAAAUvp7Ny8+kJ3XiSPxzoPWYMJDHeXcDiOrA+dRcU00q302rVCra7
-        wy1n0fgGGnMX3xiFGdNyfxE=
-X-Google-Smtp-Source: APXvYqyIHDqVdj4EvcgNGGEOqLGP0YnWFvgtDohXEArkdrFlu3228O8uGCdziWphEpOylyvx14xPRQ==
-X-Received: by 2002:adf:ed84:: with SMTP id c4mr3890509wro.24.1582797540999;
-        Thu, 27 Feb 2020 01:59:00 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id a198sm7226849wme.12.2020.02.27.01.58.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 01:58:59 -0800 (PST)
-Date:   Thu, 27 Feb 2020 10:58:59 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>, Roman Gushchin <guro@fb.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>
-Subject: Re: [PATCH] mm: memcontrol: asynchronous reclaim for memory.high
-Message-ID: <20200227095859.GA3771@dhcp22.suse.cz>
-References: <20200219181219.54356-1-hannes@cmpxchg.org>
- <CALvZod7fya+o8mO+qo=FXjk3WgNje=2P=sxM5StgdBoGNeXRMg@mail.gmail.com>
- <20200226222642.GB30206@cmpxchg.org>
- <2be6ac8d-e290-0a85-5cfa-084968a7fe36@linux.alibaba.com>
+        Thu, 27 Feb 2020 04:59:55 -0500
+X-UUID: 77da96573f4642a78da32690f8465f85-20200227
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=eLO7gTFF1vCEAIYROkM8MZuVGCM3sjjAWL8M+r6/05Y=;
+        b=BakoIO05e70F2zY4x9CluisQoeR2XSAUbzcWYoBfojDKRB1rabr2ND/3Fc3BDv/lMD4vRzT0evUdvNnSw44hiIW09QV1L/mWtF9KgXsXt6kEnc3NHimSorPXgazAkfYlCxf4yMFJ+Pp2FT2IrCe9OAS7dVxONIKUsyBrzLxNMj0=;
+X-UUID: 77da96573f4642a78da32690f8465f85-20200227
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <sam.shih@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1065449779; Thu, 27 Feb 2020 17:59:51 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 27 Feb 2020 17:59:00 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 27 Feb 2020 17:59:53 +0800
+Message-ID: <1582797590.25607.10.camel@mtksdccf07>
+Subject: Re: [PATCH 1/1] pwm: mediatek: add longer period support
+From:   Sam Shih <sam.shih@mediatek.com>
+To:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Thu, 27 Feb 2020 17:59:50 +0800
+In-Reply-To: <20200227080450.rkvwfjx6vikn5ls3@pengutronix.de>
+References: <1582789610-23133-1-git-send-email-sam.shih@mediatek.com>
+         <1582789610-23133-2-git-send-email-sam.shih@mediatek.com>
+         <20200227080450.rkvwfjx6vikn5ls3@pengutronix.de>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2be6ac8d-e290-0a85-5cfa-084968a7fe36@linux.alibaba.com>
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 26-02-20 16:12:23, Yang Shi wrote:
-[...]
-> Actually I'm wondering if we really need account CPU cycles used by
-> background reclaimer or not. For our usecase (this may be not general), the
-> purpose of background reclaimer is to avoid latency sensitive workloads get
-> into direct relcaim (avoid the stall from direct relcaim). In fact it just
-> "steal" CPU cycles from lower priority or best-effort workloads to guarantee
-> latency sensitive workloads behave well. If the "stolen" CPU cycles are
-> accounted, it means the latency sensitive workloads would get throttled from
-> somewhere else later, i.e. by CPU share.
+T24gVGh1LCAyMDIwLTAyLTI3IGF0IDA5OjA0ICswMTAwLCBVd2UgS2xlaW5lLUv2bmlnIHdyb3Rl
+Og0KT24gVGh1LCBGZWIgMjcsIDIwMjAgYXQgMDM6NDY6NTBQTSArMDgwMCwgU2FtIFNoaWggd3Jv
+dGU6DQo+ID4gVGhlIHB3bSBjbG9jayBzb3VyY2UgY291bGQgYmUgZGl2aWRlZCBieSAxNjI1IHdp
+dGggUFdNX0NPTg0KPiA+IEJJVCgzKSBzZXR0aW5nIGluIG1lZGlhdGVrIGhhcmR3YXJlLg0KPiA+
+IA0KPiA+IFRoaXMgcGF0Y2ggYWRkIHN1cHBvcnQgZm9yIGxvbmdlciBwd20gcGVyaW9kIGNvbmZp
+Z3VyYXRpb24sDQo+ID4gd2hpY2ggYWxsb3dpbmcgYmxpbmtpbmcgTEVEcyB2aWEgcHdtIGludGVy
+ZmFjZS4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBTYW0gU2hpaCA8c2FtLnNoaWhAbWVkaWF0
+ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3B3bS9wd20tbWVkaWF0ZWsuYyB8IDIxICsr
+KysrKysrKysrKysrKysrLS0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTcgaW5zZXJ0aW9ucygr
+KSwgNCBkZWxldGlvbnMoLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wd20vcHdt
+LW1lZGlhdGVrLmMgYi9kcml2ZXJzL3B3bS9wd20tbWVkaWF0ZWsuYw0KPiA+IGluZGV4IGI5NGUw
+ZDA5YzMwMC4uOWFmMzA5YmVhMDFhIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcHdtL3B3bS1t
+ZWRpYXRlay5jDQo+ID4gKysrIGIvZHJpdmVycy9wd20vcHdtLW1lZGlhdGVrLmMNCj4gPiBAQCAt
+MTIxLDggKzEyMSw4IEBAIHN0YXRpYyBpbnQgcHdtX21lZGlhdGVrX2NvbmZpZyhzdHJ1Y3QgcHdt
+X2NoaXANCipjaGlwLCBzdHJ1Y3QgcHdtX2RldmljZSAqcHdtLA0KPiA+ICAJCQkgICAgICAgaW50
+IGR1dHlfbnMsIGludCBwZXJpb2RfbnMpDQo+ID4gIHsNCj4gPiAgCXN0cnVjdCBwd21fbWVkaWF0
+ZWtfY2hpcCAqcGMgPSB0b19wd21fbWVkaWF0ZWtfY2hpcChjaGlwKTsNCj4gPiAtCXUzMiBjbGtk
+aXYgPSAwLCBjbnRfcGVyaW9kLCBjbnRfZHV0eSwgcmVnX3dpZHRoID0gUFdNRFdJRFRILA0KPiA+
+IC0JICAgIHJlZ190aHJlcyA9IFBXTVRIUkVTOw0KPiA+ICsJdTMyIGNsa2RpdiA9IDAsIGNsa3Nl
+bCA9IDAsIGNudF9wZXJpb2QsIGNudF9kdXR5LA0KPiA+ICsJICAgIHJlZ193aWR0aCA9IFBXTURX
+SURUSCwgcmVnX3RocmVzID0gUFdNVEhSRVM7DQo+ID4gIAl1NjQgcmVzb2x1dGlvbjsNCj4gPiAg
+CWludCByZXQ7DQo+ID4gIA0KPiBBZGRpbmcgc29tZSBtb3JlIGNvbnRleHQ6DQo+IA0KDQorIC8q
+IFRoZSBwd20gc291cmNlIGNsb2NrIGNhbiBiZSBkaXZpZGVkIGJ5IDJeY2xrZGl2LiBXaGVuIHRo
+ZSBjbGtzZWwgICsNCiogYml0IGlzIHNldCB0byAxLCBUaGUgZmluYWwgY2xvY2sgb3V0cHV0IG5l
+ZWRzIHRvIGJlIGRpdmlkZWQgYnkgYW4gKyAgKg0KZXh0cmEgMTYyNS4NCisgICovDQoNCklzIHRo
+aXMgb2sgPw0KDQoNCj4gPiBAQCAtMTM5LDExICsxMzksMjAgQEAgc3RhdGljIGludCBwd21fbWVk
+aWF0ZWtfY29uZmlnKHN0cnVjdCBwd21fY2hpcA0KKmNoaXAsIHN0cnVjdCBwd21fZGV2aWNlICpw
+d20sDQo+ID4gCXdoaWxlIChjbnRfcGVyaW9kID4gODE5MSkgew0KPiA+ICAJCXJlc29sdXRpb24g
+Kj0gMjsNCj4gPiAgCQljbGtkaXYrKzsNCj4gPiAgCQljbnRfcGVyaW9kID0gRElWX1JPVU5EX0NM
+T1NFU1RfVUxMKCh1NjQpcGVyaW9kX25zICogMTAwMCwNCj4gPiAgCQkJCQkJICAgcmVzb2x1dGlv
+bik7DQo+ID4gKwkJaWYgKGNsa2RpdiA+IFBXTV9DTEtfRElWX01BWCAmJiAhY2xrc2VsKSB7DQo+
+ID4gKwkJCWNsa3NlbCA9IDE7DQo+ID4gKwkJCWNsa2RpdiA9IDA7DQo+ID4gKwkJCXJlc29sdXRp
+b24gPSAodTY0KU5TRUNfUEVSX1NFQyAqIDEwMDAgKiAxNjI1Ow0KPiA+ICsJCQlkb19kaXYocmVz
+b2x1dGlvbiwNCj4gPiArCQkJCWNsa19nZXRfcmF0ZShwYy0+Y2xrX3B3bXNbcHdtLT5od3B3bV0p
+KTsNCj4gPiArCQkJY250X3BlcmlvZCA9IERJVl9ST1VORF9DTE9TRVNUX1VMTCgNCj4gPiArCQkJ
+CQkodTY0KXBlcmlvZF9ucyAqIDEwMDAsIHJlc29sdXRpb24pOw0KPiANCj4gVGhlIGFzc2lnbm1l
+bnQgaXMgYSByZXBldGl0aW9uIGZyb20ganVzdCBhYm92ZSB0aGUgaWYuIE1heWJlIGp1c3QgcHV0
+DQppdA0KPiBvbmNlIGFmdGVyIHRoaXMgaWYgYmxvY2s/DQoNClRoZSBjbnRfcGVyaW9kIHJlcHJl
+c2VudHMgdGhlIGVmZmVjdGl2ZSByYW5nZSBvZiB0aGUgUFdNIHBlcmlvZCBjb3VudGVyLA0Kd2hl
+biB3ZSBuZWVkIGNoYW5naW5nIHRoZSBwd20gb3V0cHV0IHBlcmlvZCB0byBhIGxvbmdlciB2YWx1
+ZSBhdCB0aGUNCnNhbWUgY2xvY2sgZnJlcXVlbmN5LCB3ZSBjYW4gc2V0dGluZyBhIGxhcmdlciBj
+bnRfcGVyaW9kLCBidXQgdGhlIHdpZHRoDQpvZiB0aGUgY250X3Blcm9pZCByZWdpc3RlciBpcyAx
+MiBiaXRzLA0KV2hlbiB0aGUgcmVxdWVzdCBwZXJpb2QgaXMgdG9vIGxvbmcsIHdlIG5lZWQgdG8g
+ZGl2aWRlIHRoZSBjbG9jayBzb3VyY2UNCmFuZCB0aGVuIHJlY2FsY3VsYXRlIGNudF9wZXJpb2Qg
+b3V0cHV0cyB0aGUgY29ycmVjdCB3YXZlZm9ybS4NCkFzIG1lbnRpb25lZCBhYm92ZSwgd2hlbiBj
+aGFuZ2luZyBjbGtkaXYsIHdlIG5lZWQgdG8gcmVjYWxjdWxhdGUNCmNudF9wZXJpb2QgaW1tZWRp
+YXRlbHkuDQoNCklmIHRoZSByZXF1ZXN0IHBlcmlvZCBpcyB2ZXJ5IGxvbmcgKGZvciBleGFtcGxl
+LCBMRUQgYmxpbmtpbmcpLCBjbGtkaXYNCm1heSBiZSBpbnN1ZmZpY2llbnQuIA0KSW4gdGhpcyBj
+YXNlLCB3ZSB3aWxsIHVzZSBjbGtzZWwgdG8gZGl2aWRlIHRoZSBwd20gc291cmNlIGNsb2NrIGJ5
+IGFuDQphZGRpdGlvbmFsIDE2MjUsIGFuZCByZWNhbGN1bGF0ZSBjbGtkaXYgYW5kIGNudF9wZXJp
+b2QuDQoNCkkgZG9uJ3QgdGhpbmsgd2UgY2FuIGp1c3QgcGxhY2UgYXNzaWdubWVudHMgYWZ0ZXIg
+dGhlIGlmIGJsb2NrLg0KDQo+IA0KPiA+ICsJCX0NCj4gPiAgCX0NCj4gPiAgDQo+ID4gLQlpZiAo
+Y2xrZGl2ID4gUFdNX0NMS19ESVZfTUFYKSB7DQo+ID4gKwlpZiAoY2xrZGl2ID4gUFdNX0NMS19E
+SVZfTUFYICYmIGNsa3NlbCkgew0KPiANCj4gSXMgdGhpcyBjaGFuZ2UgYWN0dWFsbHkgcmVsZXZh
+bnQ/IElmIHRoZSB3aGlsZSBsb29wIHRoYXQgc3RhcnRzIGF0DQpsaW5lDQo+IDEzOSBpcyBuZXZl
+ciBydW4gKGJlY2F1c2UgY250X3BlcmlvZCBpcyA8PSA4MTkxKSBjbGtkaXYgaXMgemVybyBhbmQg
+c28NCj4gdGhlIGNvbmRpdGlvbiBpcyBmYWxzZSB3aXRoIGFuZCB3aXRob3V0ICImJiBjbGtzZWwi
+LiBJZiBob3dldmVyIHRoZQ0KPiB3aGlsZSBsb29wIGlzIGVudGVyZWQgYW5kIGNsa2RpdiBiZWNv
+bWVzIGJpZ2dlciB0aGFuIFBXTV9DTEtfRElWX01BWA0KPiBjbGtzZWwgaXMgMSBhbmQgdGhlICIm
+JiBjbGtzZWwiIGRvZXNuJ3QgbWFrZSBhIGRpZmZlcmVuY2UsIHRvby4NCj4gDQoNCllvdSBhcmUg
+cmlnaHQsIEkgd2lsbCByZW1vdmUgdGhpcy4NCg0KPiBUaGUgY29kZSBpcyBoYXJkIHRvIGZvbGxv
+dywgSSB3b25kZXIgaWYgdGhpcyBjb3VsZCBiZSBjbGVhbmVkIHVwIHdpdGgNCj4gc29tZSBjb21t
+ZW50cyBhZGRlZCB0aGF0IGV4cGxhaW4gdGhlIGhhcmR3YXJlIGRldGFpbHMgZW5vdWdoIHRvIGJl
+DQphYmxlDQo+IHRvIGFjdHVhbGx5IHVuZGVyc3RhbmQgdGhlIGNvZGUgd2l0aG91dCBoYXZpbmcg
+dGhlIGhhcmR3YXJlIHJlZmVyZW5jZQ0KPiBtYW51YWwgaGFuZHkuDQo+IA0KDQpJcyBpdCBzdWZm
+aWNpZW50IHRvIGFkZCBzb21lIGNvbnRleHQgaW50byBjb21tZW50IGxpa2UgdGhlIHJlc3BvbnNl
+IG9mDQp0aGUgc2Vjb25kIHF1ZXN0aW9uPw0KDQoNCj4gPiAgCQlwd21fbWVkaWF0ZWtfY2xrX2Rp
+c2FibGUoY2hpcCwgcHdtKTsNCj4gPiAgCQlkZXZfZXJyKGNoaXAtPmRldiwgInBlcmlvZCAlZCBu
+b3Qgc3VwcG9ydGVkXG4iLCBwZXJpb2RfbnMpOw0KPiA+ICAJCXJldHVybiAtRUlOVkFMOw0KPiA+
+IEBAIC0xNTksNyArMTY4LDExIEBAIHN0YXRpYyBpbnQgcHdtX21lZGlhdGVrX2NvbmZpZyhzdHJ1
+Y3QgcHdtX2NoaXANCipjaGlwLCBzdHJ1Y3QgcHdtX2RldmljZSAqcHdtLA0KPiA+ICAJfQ0KPiA+
+ICANCj4gPiAgCWNudF9kdXR5ID0gRElWX1JPVU5EX0NMT1NFU1RfVUxMKCh1NjQpZHV0eV9ucyAq
+IDEwMDAsIHJlc29sdXRpb24pOw0KPiA+IC0JcHdtX21lZGlhdGVrX3dyaXRlbChwYywgcHdtLT5o
+d3B3bSwgUFdNQ09OLCBCSVQoMTUpIHwgY2xrZGl2KTsNCj4gPiArCWlmIChjbGtzZWwpDQo+ID4g
+KwkJcHdtX21lZGlhdGVrX3dyaXRlbChwYywgcHdtLT5od3B3bSwgUFdNQ09OLCBCSVQoMTUpIHwg
+QklUKDMpIHwNCj4gPiArCQkJCSAgICBjbGtkaXYpOw0KPiA+ICsJZWxzZQ0KPiA+ICsJCXB3bV9t
+ZWRpYXRla193cml0ZWwocGMsIHB3bS0+aHdwd20sIFBXTUNPTiwgQklUKDE1KSB8IGNsa2Rpdik7
+DQo+ID4gIAlwd21fbWVkaWF0ZWtfd3JpdGVsKHBjLCBwd20tPmh3cHdtLCByZWdfd2lkdGgsIGNu
+dF9wZXJpb2QpOw0KPiA+ICAJcHdtX21lZGlhdGVrX3dyaXRlbChwYywgcHdtLT5od3B3bSwgcmVn
+X3RocmVzLCBjbnRfZHV0eSk7DQo+ID4gIA0KPiA+IC0tIA0KPiA+IDIuMTcuMQ0KPiANCj4gQmVz
+dCByZWdhcmRzDQo+IFV3ZQ0KPiANCj4NCg0KQmVzdCBSZWdhcmRzLA0KU2FtDQo=
 
-I believe we need to because that work is not for free and so you are
-essentially stealing those CPUs cycles from everybody else outside of
-your throttled cgroup.
--- 
-Michal Hocko
-SUSE Labs
