@@ -2,181 +2,272 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC60FC5ED3A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 591EDC3F343
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9249C20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E41D20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582813138;
+	bh=ppMQH/pYveAkoCYcW2YZk1hkbHpiaBc68PW8hHvy1Ek=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Bfk06YC+n88ZRHXEdIF3ZqsjWROruIsaIXcnjGoURW12wkvXHIZYArVl8JyFqE1Hp
+	 w5X9iFnW0e27WAn7yZe4EIvSYC/PWZ1mbk+tVAkiU0tZ31HyfTYeiXWMxxwJzGO0wz
+	 oRBtsWP1jGOcI4z4T+SYlZWikrc1wdTctfWzySKA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389868AbgB0OUQ (ORCPT
+        id S2389957AbgB0OS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:20:16 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:54298 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389821AbgB0OUM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:20:12 -0500
-Received: by mail-io1-f71.google.com with SMTP id r62so3605416ior.21
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 06:20:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Hd0HpDzmbpNnrsFjBCVh0lTrAR3AwaF5k/G21OfNRZE=;
-        b=P5Ttz+grtxf/ySk7SJ38I4rA6SJ36ACq77jX1G20Yv/7Eh+CFzOnylaVPpPkoE3fOX
-         f3YOY/r+qq8RivowltbfVrgLZDLba5NqKso2SJSIJRBLQQuWBVdN+PHT8uuaMIzrjC6H
-         MRTRwpkxKjkoQbMWjnvSFR3ON9EPimaEWecVSFz4cExny4JcJJ6mXFTNpveN5kN3EVIl
-         5k100/pbxqIfd3/CUW3r8N7mMfxja9ppkOl6t6DcczPzGbtEHEfiZEVui4YSTKzH0aCP
-         0EDRN061MbwvXiExt5egWlDx2IuJ9k193APgUQdBDd9EnyUi3oDfKriKvqgObuMqYqBK
-         65Sw==
-X-Gm-Message-State: APjAAAUbtAwskQkPjGW6uTQFGiR7MTXFIbci9gC08tM4p9ghLNd4CIxU
-        91rjOwNqCdtEk8cAJwwyueIu2JIaKn1ALdTmmVeAhfTPe+i4
-X-Google-Smtp-Source: APXvYqxrL+yfikkTvPKB29UhXktlBL4AiKejOtMiNK8Hhjlmbqchlq8feXCDyp/fSJLjlFl48Ik1xd73rIyf5UanbrxRlSowwVVh
+        Thu, 27 Feb 2020 09:18:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59502 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389937AbgB0OSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:18:55 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ECB824690;
+        Thu, 27 Feb 2020 14:18:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582813133;
+        bh=ppMQH/pYveAkoCYcW2YZk1hkbHpiaBc68PW8hHvy1Ek=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VuYGNaYABpEYkpYJNf9aX9EDXABlcpMps2PS9aDm7qEvEGd1aZTYE1JofgRPvwxvG
+         qVvAWNKTtWKHEB03QgaN2ul6o8shUORcQjktVu7YkUCSfd8kWb6S5Z4vKcsz1ghK/R
+         H9bdklHixhXj1UaYv8218CwW9NT0TkYc54VfX7JE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.5 109/150] Btrfs: fix deadlock during fast fsync when logging prealloc extents beyond eof
+Date:   Thu, 27 Feb 2020 14:37:26 +0100
+Message-Id: <20200227132248.875439548@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
+References: <20200227132232.815448360@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-Received: by 2002:a6b:5c0a:: with SMTP id z10mr4836117ioh.228.1582813212155;
- Thu, 27 Feb 2020 06:20:12 -0800 (PST)
-Date:   Thu, 27 Feb 2020 06:20:12 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000041a20d059f8f6bd3@google.com>
-Subject: KASAN: use-after-free Read in load_firmware_cb
-From:   syzbot <syzbot+434bc1054077aac11da3@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
-        mchehab@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Filipe Manana <fdmanana@suse.com>
 
-syzbot found the following crash on:
+commit a5ae50dea9111db63d30d700766dd5509602f7ad upstream.
 
-HEAD commit:    d6ff8147 usb: gadget: add raw-gadget interface
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=136b9c91e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=90a3d9bed5648419
-dashboard link: https://syzkaller.appspot.com/bug?extid=434bc1054077aac11da3
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10c32fd9e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14fd1531e00000
+While logging the prealloc extents of an inode during a fast fsync we call
+btrfs_truncate_inode_items(), through btrfs_log_prealloc_extents(), while
+holding a read lock on a leaf of the inode's root (not the log root, the
+fs/subvol root), and then that function locks the file range in the inode's
+iotree. This can lead to a deadlock when:
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+434bc1054077aac11da3@syzkaller.appspotmail.com
+* the fsync is ranged
 
-usb 1-1:0.254: Direct firmware load for xc3028-v27.fw failed with error -2
-==================================================================
-BUG: KASAN: use-after-free in load_firmware_cb+0x173/0x18c drivers/media/tuners/tuner-xc2028.c:1364
-Read of size 8 at addr ffff8881cd828308 by task kworker/0:1/12
+* the file has prealloc extents beyond eof
 
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.6.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events request_firmware_work_func
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xef/0x16e lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd3/0x314 mm/kasan/report.c:374
- __kasan_report.cold+0x37/0x77 mm/kasan/report.c:506
- kasan_report+0xe/0x20 mm/kasan/common.c:641
- load_firmware_cb+0x173/0x18c drivers/media/tuners/tuner-xc2028.c:1364
- request_firmware_work_func+0x126/0x242 drivers/base/firmware_loader/main.c:976
- process_one_work+0x94b/0x1620 kernel/workqueue.c:2264
- worker_thread+0x96/0xe20 kernel/workqueue.c:2410
- kthread+0x318/0x420 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+* writeback for a range different from the fsync range starts
+  during the fsync
 
-Allocated by task 12:
- save_stack+0x1b/0x80 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- __kasan_kmalloc mm/kasan/common.c:515 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:488
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- tuner_probe+0xa4/0x1182 drivers/media/v4l2-core/tuner-core.c:638
- i2c_device_probe+0x51a/0x800 drivers/i2c/i2c-core-base.c:396
- really_probe+0x290/0xac0 drivers/base/dd.c:551
- driver_probe_device+0x223/0x350 drivers/base/dd.c:724
- __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:831
- bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:431
- __device_attach+0x217/0x390 drivers/base/dd.c:897
- bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
- device_add+0x1459/0x1bf0 drivers/base/core.c:2487
- i2c_new_client_device+0x589/0xa70 drivers/i2c/i2c-core-base.c:784
- i2c_new_device+0x19/0x50 drivers/i2c/i2c-core-base.c:827
- v4l2_i2c_new_subdev_board+0xaf/0x2a0 drivers/media/v4l2-core/v4l2-i2c.c:80
- v4l2_i2c_new_subdev+0xb8/0xf0 drivers/media/v4l2-core/v4l2-i2c.c:135
- em28xx_v4l2_init drivers/media/usb/em28xx/em28xx-video.c:2627 [inline]
- em28xx_v4l2_init.cold+0x9cc/0x33eb drivers/media/usb/em28xx/em28xx-video.c:2520
- em28xx_init_extension+0x12f/0x1f0 drivers/media/usb/em28xx/em28xx-core.c:1128
- request_module_async+0x5d/0x70 drivers/media/usb/em28xx/em28xx-cards.c:3320
- process_one_work+0x94b/0x1620 kernel/workqueue.c:2264
- process_scheduled_works kernel/workqueue.c:2326 [inline]
- worker_thread+0x73e/0xe20 kernel/workqueue.c:2415
- kthread+0x318/0x420 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+* the size of the file is not sector size aligned
 
-Freed by task 12:
- save_stack+0x1b/0x80 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- kasan_set_free_info mm/kasan/common.c:337 [inline]
- __kasan_slab_free+0x117/0x160 mm/kasan/common.c:476
- slab_free_hook mm/slub.c:1444 [inline]
- slab_free_freelist_hook mm/slub.c:1477 [inline]
- slab_free mm/slub.c:3024 [inline]
- kfree+0xd5/0x300 mm/slub.c:3976
- tuner_remove+0x198/0x200 drivers/media/v4l2-core/tuner-core.c:791
- i2c_device_remove+0xcf/0x250 drivers/i2c/i2c-core-base.c:426
- __device_release_driver drivers/base/dd.c:1135 [inline]
- device_release_driver_internal+0x231/0x500 drivers/base/dd.c:1168
- bus_remove_device+0x2eb/0x5a0 drivers/base/bus.c:533
- device_del+0x481/0xd30 drivers/base/core.c:2664
- device_unregister+0x22/0xc0 drivers/base/core.c:2696
- i2c_unregister_device+0x38/0x40 include/linux/err.h:41
- v4l2_i2c_subdev_unregister+0xa2/0xc0 drivers/media/v4l2-core/v4l2-i2c.c:28
- v4l2_device_unregister drivers/media/v4l2-core/v4l2-device.c:102 [inline]
- v4l2_device_unregister+0x18a/0x220 drivers/media/v4l2-core/v4l2-device.c:88
- em28xx_v4l2_init drivers/media/usb/em28xx/em28xx-video.c:2908 [inline]
- em28xx_v4l2_init.cold+0xd26/0x33eb drivers/media/usb/em28xx/em28xx-video.c:2520
- em28xx_init_extension+0x12f/0x1f0 drivers/media/usb/em28xx/em28xx-core.c:1128
- request_module_async+0x5d/0x70 drivers/media/usb/em28xx/em28xx-cards.c:3320
- process_one_work+0x94b/0x1620 kernel/workqueue.c:2264
- process_scheduled_works kernel/workqueue.c:2326 [inline]
- worker_thread+0x73e/0xe20 kernel/workqueue.c:2415
- kthread+0x318/0x420 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Because when finishing an ordered extent we lock first a file range and
+then try to COW the fs/subvol tree to insert an extent item.
 
-The buggy address belongs to the object at ffff8881cd828000
- which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 776 bytes inside of
- 2048-byte region [ffff8881cd828000, ffff8881cd828800)
-The buggy address belongs to the page:
-page:ffffea0007360a00 refcount:1 mapcount:0 mapping:ffff8881da00c000 index:0x0 compound_mapcount: 0
-flags: 0x200000000010200(slab|head)
-raw: 0200000000010200 dead000000000100 dead000000000122 ffff8881da00c000
-raw: 0000000000000000 0000000080080008 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
+The following diagram shows how the deadlock can happen.
 
-Memory state around the buggy address:
- ffff8881cd828200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8881cd828280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff8881cd828300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                      ^
- ffff8881cd828380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8881cd828400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+           CPU 1                                        CPU 2
 
+  btrfs_sync_file()
+    --> for range [0, 1MiB)
+
+    --> inode has a size of
+        1MiB and has 1 prealloc
+        extent beyond the
+        i_size, starting at offset
+        4MiB
+
+    flushes all delalloc for the
+    range [0MiB, 1MiB) and waits
+    for the respective ordered
+    extents to complete
+
+                                              --> before task at CPU 1 locks the
+                                                  inode, a write into file range
+                                                  [1MiB, 2MiB + 1KiB) is made
+
+                                              --> i_size is updated to 2MiB + 1KiB
+
+                                              --> writeback is started for that
+                                                  range, [1MiB, 2MiB + 4KiB)
+                                                  --> end offset rounded up to
+                                                      be sector size aligned
+
+    btrfs_log_dentry_safe()
+      btrfs_log_inode_parent()
+        btrfs_log_inode()
+
+          btrfs_log_changed_extents()
+            btrfs_log_prealloc_extents()
+              --> does a search on the
+                  inode's root
+              --> holds a read lock on
+                  leaf X
+
+                                              btrfs_finish_ordered_io()
+                                                --> locks range [1MiB, 2MiB + 4KiB)
+                                                    --> end offset rounded up
+                                                        to be sector size aligned
+
+                                                --> tries to cow leaf X, through
+                                                    insert_reserved_file_extent()
+                                                    --> already locked by the
+                                                        task at CPU 1
+
+              btrfs_truncate_inode_items()
+
+                --> gets an i_size of
+                    2MiB + 1KiB, which is
+                    not sector size
+                    aligned
+
+                --> tries to lock file
+                    range [2MiB, (u64)-1)
+                    --> the start range
+                        is rounded down
+                        from 2MiB + 1K
+                        to 2MiB to be sector
+                        size aligned
+
+                    --> but the subrange
+                        [2MiB, 2MiB + 4KiB) is
+                        already locked by
+                        task at CPU 2 which
+                        is waiting to get a
+                        write lock on leaf X
+                        for which we are
+                        holding a read lock
+
+                                *** deadlock ***
+
+This results in a stack trace like the following, triggered by test case
+generic/561 from fstests:
+
+  [ 2779.973608] INFO: task kworker/u8:6:247 blocked for more than 120 seconds.
+  [ 2779.979536]       Not tainted 5.6.0-rc2-btrfs-next-53 #1
+  [ 2779.984503] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+  [ 2779.990136] kworker/u8:6    D    0   247      2 0x80004000
+  [ 2779.990457] Workqueue: btrfs-endio-write btrfs_work_helper [btrfs]
+  [ 2779.990466] Call Trace:
+  [ 2779.990491]  ? __schedule+0x384/0xa30
+  [ 2779.990521]  schedule+0x33/0xe0
+  [ 2779.990616]  btrfs_tree_read_lock+0x19e/0x2e0 [btrfs]
+  [ 2779.990632]  ? remove_wait_queue+0x60/0x60
+  [ 2779.990730]  btrfs_read_lock_root_node+0x2f/0x40 [btrfs]
+  [ 2779.990782]  btrfs_search_slot+0x510/0x1000 [btrfs]
+  [ 2779.990869]  btrfs_lookup_file_extent+0x4a/0x70 [btrfs]
+  [ 2779.990944]  __btrfs_drop_extents+0x161/0x1060 [btrfs]
+  [ 2779.990987]  ? mark_held_locks+0x6d/0xc0
+  [ 2779.990994]  ? __slab_alloc.isra.49+0x99/0x100
+  [ 2779.991060]  ? insert_reserved_file_extent.constprop.19+0x64/0x300 [btrfs]
+  [ 2779.991145]  insert_reserved_file_extent.constprop.19+0x97/0x300 [btrfs]
+  [ 2779.991222]  ? start_transaction+0xdd/0x5c0 [btrfs]
+  [ 2779.991291]  btrfs_finish_ordered_io+0x4f4/0x840 [btrfs]
+  [ 2779.991405]  btrfs_work_helper+0xaa/0x720 [btrfs]
+  [ 2779.991432]  process_one_work+0x26d/0x6a0
+  [ 2779.991460]  worker_thread+0x4f/0x3e0
+  [ 2779.991481]  ? process_one_work+0x6a0/0x6a0
+  [ 2779.991489]  kthread+0x103/0x140
+  [ 2779.991499]  ? kthread_create_worker_on_cpu+0x70/0x70
+  [ 2779.991515]  ret_from_fork+0x3a/0x50
+  (...)
+  [ 2780.026211] INFO: task fsstress:17375 blocked for more than 120 seconds.
+  [ 2780.027480]       Not tainted 5.6.0-rc2-btrfs-next-53 #1
+  [ 2780.028482] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+  [ 2780.030035] fsstress        D    0 17375  17373 0x00004000
+  [ 2780.030038] Call Trace:
+  [ 2780.030044]  ? __schedule+0x384/0xa30
+  [ 2780.030052]  schedule+0x33/0xe0
+  [ 2780.030075]  lock_extent_bits+0x20c/0x320 [btrfs]
+  [ 2780.030094]  ? btrfs_truncate_inode_items+0xf4/0x1150 [btrfs]
+  [ 2780.030098]  ? rcu_read_lock_sched_held+0x59/0xa0
+  [ 2780.030102]  ? remove_wait_queue+0x60/0x60
+  [ 2780.030122]  btrfs_truncate_inode_items+0x133/0x1150 [btrfs]
+  [ 2780.030151]  ? btrfs_set_path_blocking+0xb2/0x160 [btrfs]
+  [ 2780.030165]  ? btrfs_search_slot+0x379/0x1000 [btrfs]
+  [ 2780.030195]  btrfs_log_changed_extents.isra.8+0x841/0x93e [btrfs]
+  [ 2780.030202]  ? do_raw_spin_unlock+0x49/0xc0
+  [ 2780.030215]  ? btrfs_get_num_csums+0x10/0x10 [btrfs]
+  [ 2780.030239]  btrfs_log_inode+0xf83/0x1124 [btrfs]
+  [ 2780.030251]  ? __mutex_unlock_slowpath+0x45/0x2a0
+  [ 2780.030275]  btrfs_log_inode_parent+0x2a0/0xe40 [btrfs]
+  [ 2780.030282]  ? dget_parent+0xa1/0x370
+  [ 2780.030309]  btrfs_log_dentry_safe+0x4a/0x70 [btrfs]
+  [ 2780.030329]  btrfs_sync_file+0x3f3/0x490 [btrfs]
+  [ 2780.030339]  do_fsync+0x38/0x60
+  [ 2780.030343]  __x64_sys_fdatasync+0x13/0x20
+  [ 2780.030345]  do_syscall_64+0x5c/0x280
+  [ 2780.030348]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  [ 2780.030356] RIP: 0033:0x7f2d80f6d5f0
+  [ 2780.030361] Code: Bad RIP value.
+  [ 2780.030362] RSP: 002b:00007ffdba3c8548 EFLAGS: 00000246 ORIG_RAX: 000000000000004b
+  [ 2780.030364] RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f2d80f6d5f0
+  [ 2780.030365] RDX: 00007ffdba3c84b0 RSI: 00007ffdba3c84b0 RDI: 0000000000000003
+  [ 2780.030367] RBP: 000000000000004a R08: 0000000000000001 R09: 00007ffdba3c855c
+  [ 2780.030368] R10: 0000000000000078 R11: 0000000000000246 R12: 00000000000001f4
+  [ 2780.030369] R13: 0000000051eb851f R14: 00007ffdba3c85f0 R15: 0000557a49220d90
+
+So fix this by making btrfs_truncate_inode_items() not lock the range in
+the inode's iotree when the target root is a log root, since it's not
+needed to lock the range for log roots as the protection from the inode's
+lock and log_mutex are all that's needed.
+
+Fixes: 28553fa992cb28 ("Btrfs: fix race between shrinking truncate and fiemap")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ fs/btrfs/inode.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -4775,8 +4775,9 @@ int btrfs_truncate_inode_items(struct bt
+ 		return -ENOMEM;
+ 	path->reada = READA_BACK;
+ 
+-	lock_extent_bits(&BTRFS_I(inode)->io_tree, lock_start, (u64)-1,
+-			 &cached_state);
++	if (root->root_key.objectid != BTRFS_TREE_LOG_OBJECTID)
++		lock_extent_bits(&BTRFS_I(inode)->io_tree, lock_start, (u64)-1,
++				 &cached_state);
+ 
+ 	/*
+ 	 * We want to drop from the next block forward in case this new size is
+@@ -5040,11 +5041,10 @@ out:
+ 		if (!ret && last_size > new_size)
+ 			last_size = new_size;
+ 		btrfs_ordered_update_i_size(inode, last_size, NULL);
++		unlock_extent_cached(&BTRFS_I(inode)->io_tree, lock_start,
++				     (u64)-1, &cached_state);
+ 	}
+ 
+-	unlock_extent_cached(&BTRFS_I(inode)->io_tree, lock_start, (u64)-1,
+-			     &cached_state);
+-
+ 	btrfs_free_path(path);
+ 	return ret;
+ }
+
+
