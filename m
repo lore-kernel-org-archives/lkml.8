@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7DEC52D3C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B07B2C52D38
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11F3220801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AFE624656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:04:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812363;
-	bh=apxBqNn1wa0p78dndwZBig5FR8gtA63mS3EE8s4/EVE=;
+	s=default; t=1582812295;
+	bh=tkX7IT/camgFM6jbO3GLdfGBeihm6AXHJgh2WLvr+38=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XpRseWxNLar+8nCsl7ijNmR6tM4p0PGM6pZa12qGa06nTRL+wXC991Jg5WMAPVU24
-	 NKATeNQ7LDQAHMggHoIl5ETwSrFlI+QEJ01nqhA8a3rpcWnuy/oTD8GrvPLoHLZtb+
-	 ln/+vbTmJRfb1ilg4geO6liG/P7IFKeWcC/1il58=
+	b=PuOHRUeos42ZbX9Oyn2VCVzyfyG/kJSHnbweEtTlPIdW5jeHtrNKq57oVyQv0qgbk
+	 QWpE5SPxpSotVGj/8hHgXG11JfAX5Ja1iAe10/rF5NqAddh7Rgyugq2gaB6WK9uKRn
+	 ouOzAyaQnkHWxfM6CZ17iNh7budMArKEz6aFr/+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387869AbgB0OGC (ORCPT
+        id S2387653AbgB0OEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:06:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42928 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:04:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387854AbgB0OF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:05:58 -0500
+        id S2387566AbgB0OEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:04:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 328C320578;
-        Thu, 27 Feb 2020 14:05:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73F5920578;
+        Thu, 27 Feb 2020 14:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812357;
-        bh=apxBqNn1wa0p78dndwZBig5FR8gtA63mS3EE8s4/EVE=;
+        s=default; t=1582812275;
+        bh=tkX7IT/camgFM6jbO3GLdfGBeihm6AXHJgh2WLvr+38=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k7OngbH0vI5OMddruJHrIplNCvCdl379N9kaEtqZ/8LaOjal2C94Ad+K3F26VKmfy
-         GJnZWJg+jhspuREPKcxIZHaGYCCh5EsmMI8yNEx6i791nEUT0EUN46nIK+u1d5IZIv
-         C+dNSxQPhTSK1xWrNj6Zm/7uYfJ3wJdUpzkTZNY8=
+        b=BRMTdgaeUSMiZfad1K4XNnhTJlgaArlXLLx+U7q8beRUbqkjMJ/V4gWNgtuEje7BF
+         rgQpsvrlK3nC0c9E82jcQRAjTlhoWQIXWYcBE52jq/gW1Xcv6897/CRLwZkGoMXNOC
+         2xUzN6hYew+FDixi9DaI/ygoq7z5OQfEiTs83zWk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 4.19 84/97] staging: rtl8723bs: fix copy of overlapping memory
-Date:   Thu, 27 Feb 2020 14:37:32 +0100
-Message-Id: <20200227132228.322272705@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 4.19 51/97] xhci: apply XHCI_PME_STUCK_QUIRK to Intel Comet Lake platforms
+Date:   Thu, 27 Feb 2020 14:36:59 +0100
+Message-Id: <20200227132222.924216246@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
 References: <20200227132214.553656188@linuxfoundation.org>
@@ -59,45 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-commit 8ae9a588ca35eb9c32dc03299c5e1f4a1e9a9617 upstream.
+commit a3ae87dce3a5abe0b57c811bab02b2564b574106 upstream.
 
-Currently the rtw_sprintf prints the contents of thread_name
-onto thread_name and this can lead to a potential copy of a
-string over itself. Avoid this by printing the literal string RTWHALXT
-instread of the contents of thread_name.
+Intel Comet Lake based platform require the XHCI_PME_STUCK_QUIRK
+quirk as well. Without this xHC can not enter D3 in runtime suspend.
 
-Addresses-Coverity: ("copy of overlapping memory")
-Fixes: 554c0a3abf21 ("staging: Add rtl8723bs sdio wifi driver")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20200126220549.9849-1-colin.king@canonical.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200210134553.9144-5-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/usb/host/xhci-pci.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c
-+++ b/drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c
-@@ -478,14 +478,13 @@ int rtl8723bs_xmit_thread(void *context)
- 	s32 ret;
- 	struct adapter *padapter;
- 	struct xmit_priv *pxmitpriv;
--	u8 thread_name[20] = "RTWHALXT";
--
-+	u8 thread_name[20];
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -41,6 +41,7 @@
+ #define PCI_DEVICE_ID_INTEL_BROXTON_B_XHCI		0x1aa8
+ #define PCI_DEVICE_ID_INTEL_APL_XHCI			0x5aa8
+ #define PCI_DEVICE_ID_INTEL_DNV_XHCI			0x19d0
++#define PCI_DEVICE_ID_INTEL_CML_XHCI			0xa3af
  
- 	ret = _SUCCESS;
- 	padapter = context;
- 	pxmitpriv = &padapter->xmitpriv;
- 
--	rtw_sprintf(thread_name, 20, "%s-"ADPT_FMT, thread_name, ADPT_ARG(padapter));
-+	rtw_sprintf(thread_name, 20, "RTWHALXT-" ADPT_FMT, ADPT_ARG(padapter));
- 	thread_enter(thread_name);
- 
- 	DBG_871X("start "FUNC_ADPT_FMT"\n", FUNC_ADPT_ARG(padapter));
+ #define PCI_DEVICE_ID_AMD_PROMONTORYA_4			0x43b9
+ #define PCI_DEVICE_ID_AMD_PROMONTORYA_3			0x43ba
+@@ -179,7 +180,8 @@ static void xhci_pci_quirks(struct devic
+ 		 pdev->device == PCI_DEVICE_ID_INTEL_BROXTON_M_XHCI ||
+ 		 pdev->device == PCI_DEVICE_ID_INTEL_BROXTON_B_XHCI ||
+ 		 pdev->device == PCI_DEVICE_ID_INTEL_APL_XHCI ||
+-		 pdev->device == PCI_DEVICE_ID_INTEL_DNV_XHCI)) {
++		 pdev->device == PCI_DEVICE_ID_INTEL_DNV_XHCI ||
++		 pdev->device == PCI_DEVICE_ID_INTEL_CML_XHCI)) {
+ 		xhci->quirks |= XHCI_PME_STUCK_QUIRK;
+ 	}
+ 	if (pdev->vendor == PCI_VENDOR_ID_INTEL &&
 
 
