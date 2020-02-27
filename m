@@ -2,51 +2,52 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD523C3F36D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46917C3F349
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95CC32084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F29652084E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811475;
-	bh=QIxfv9IqXqjEULyp9k88AQixp8pBPBBWvgWwqIt/4mo=;
+	s=default; t=1582811450;
+	bh=boCaJ9AjUkm8HQ1bECcY0cYl3TSL6GThXcOQvvRZlhA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SQF/PTzW0p/iNb51xkOZcNeiXXHZLrg9leHQLLc6HFm9MkSaKxnz8PZPWI4qww+fa
-	 vuA2Qop53GJgLAoc6oAz9aLHPSmc7t9fDG/O8bqQ+YIPgmIfNY3lrYcD2yL8U+b9Y6
-	 7swX0C+J94vx5th2TYpvaiCzdzvvZIuSlN1Q9D0o=
+	b=x/xLNZlsmAm1/W9FBEqibWosMKhsNcE8icdcb8zcr837iF89uj+/o9CefMNe5GeK0
+	 GMOZL8NWXd8ijZxwJWuyU3n8SKHcQgorhCrZQtNiJr8J6WY4ZvdLgQ8uzQOqWEqS1L
+	 yBxKb1DcEI4CgtUe+VdBukHv47SmIaMZtXnsSzgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731354AbgB0NvO (ORCPT
+        id S1731276AbgB0Nun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:51:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49992 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:50:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731082AbgB0NvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:51:09 -0500
+        id S1731254AbgB0Nug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:50:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A00E8246AF;
-        Thu, 27 Feb 2020 13:51:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D69C20578;
+        Thu, 27 Feb 2020 13:50:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811469;
-        bh=QIxfv9IqXqjEULyp9k88AQixp8pBPBBWvgWwqIt/4mo=;
+        s=default; t=1582811435;
+        bh=boCaJ9AjUkm8HQ1bECcY0cYl3TSL6GThXcOQvvRZlhA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HQf1pYc2W0P25Uyse8ZuS287tNXmX8sX/TkyyX8k+Bm3K6NFxQ8eA96VS//ngxD+n
-         PPL3bKPGSDRZD6MmktCkiaab+87RxCRTTpQBR6XuVOdwNnPn6m1YfL6z7NlyIlu4BD
-         yZlU/w+/DQQ/MHE/AhTR8UF8I65eCQZmMAJ/rntQ=
+        b=c6tSug40LnuCIFpNugHcXlnTYKYQY8PefaHaSeZBb2ZPgdYlttnrENJaQgDv1hrtd
+         Y/wtB8P8zYxme9dQr91O3Cqmx7xxwjU7GQC21f6msddBP3qwgOPDKcbJHrK8GbnfF/
+         gA/6bnSnB09oN/9xWwgLfFwAbZAJTQVsjiG1EDBk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pietro Oliva <pietroliva@gmail.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>
-Subject: [PATCH 4.9 127/165] staging: rtl8188eu: Fix potential security hole
-Date:   Thu, 27 Feb 2020 14:36:41 +0100
-Message-Id: <20200227132249.642490750@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 093/165] driver core: platform: fix u32 greater or equal to zero comparison
+Date:   Thu, 27 Feb 2020 14:36:07 +0100
+Message-Id: <20200227132244.897097243@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -59,40 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Larry Finger <Larry.Finger@lwfinger.net>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit 499c405b2b80bb3a04425ba3541d20305e014d3e upstream.
+[ Upstream commit 0707cfa5c3ef58effb143db9db6d6e20503f9dec ]
 
-In routine rtw_hostapd_ioctl(), the user-controlled p->length is assumed
-to be at least the size of struct ieee_param size, but this assumption is
-never checked. This could result in out-of-bounds read/write on kernel
-heap in case a p->length less than the size of struct ieee_param is
-specified by the user. If p->length is allowed to be greater than the size
-of the struct, then a malicious user could be wasting kernel memory.
-Fixes commit a2c60d42d97c ("Add files for new driver - part 16").
+Currently the check that a u32 variable i is >= 0 is always true because
+the unsigned variable will never be negative, causing the loop to run
+forever.  Fix this by changing the pre-decrement check to a zero check on
+i followed by a decrement of i.
 
-Reported by: Pietro Oliva <pietroliva@gmail.com>
-Cc: Pietro Oliva <pietroliva@gmail.com>
-Cc: Stable <stable@vger.kernel.org>
-Fixes: a2c60d42d97c ("staging: r8188eu: Add files for new driver - part 16")
-Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
-Link: https://lore.kernel.org/r/20200210180235.21691-2-Larry.Finger@lwfinger.net
+Addresses-Coverity: ("Unsigned compared against 0")
+Fixes: 39cc539f90d0 ("driver core: platform: Prevent resouce overflow from causing infinite loops")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Link: https://lore.kernel.org/r/20200116175758.88396-1-colin.king@canonical.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/rtl8188eu/os_dep/ioctl_linux.c |    2 +-
+ drivers/base/platform.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
-+++ b/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
-@@ -2859,7 +2859,7 @@ static int rtw_hostapd_ioctl(struct net_
- 		goto out;
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 6cdc198965f5a..bef299ef62276 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -418,7 +418,7 @@ int platform_device_add(struct platform_device *pdev)
+ 		pdev->id = PLATFORM_DEVID_AUTO;
  	}
  
--	if (!p->pointer) {
-+	if (!p->pointer || p->length != sizeof(struct ieee_param)) {
- 		ret = -EINVAL;
- 		goto out;
- 	}
+-	while (--i >= 0) {
++	while (i--) {
+ 		struct resource *r = &pdev->resource[i];
+ 		if (r->parent)
+ 			release_resource(r);
+-- 
+2.20.1
+
 
 
