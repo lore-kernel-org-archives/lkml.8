@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C56C5ED2A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A560C5ED28
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32DB720801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1574B24690
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813197;
-	bh=wrQyzlkTVJsIuG6RhczZKrYJFH7Mb49YCuVssq9BS0U=;
+	s=default; t=1582813193;
+	bh=qG7L3omsE9Soo2/tazuOT2I0Z+DQxknam2ce7i8Y+LY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vYiKhwrNKvbk2eNnkPHm5VQs/2Eg/yOXOkXdef65GlSS4SOJLmilAMDxrM4FP2aHQ
-	 DquDXzUFXNtBH/1CLeZeXrwDM6ZjqEO6i0dCzjgp+iTW3sXmJaBhsm9G4AX+XzeeOv
-	 C1sAUYQu+QwjJ8g8pIpAatrekgh/f8cOntuN9eik=
+	b=Q3liRco/i2WxcU3QP0ljdHytmnqDVosgbzwaHCkIREoHD7dBeppxf8MuL2AVIdpDS
+	 YLm0KMme6EdpQnZsjCiiGGPV8B2wWAwDle21pSIrqWaO/S95g7MIuyyBxDGJXyq5DZ
+	 8C8RSAjE4BK4HVxFooOpqbzzZd4nAG5bskhszl1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390029AbgB0OT4 (ORCPT
+        id S2389908AbgB0OSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:19:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59226 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389902AbgB0OSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Feb 2020 09:18:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59148 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389382AbgB0OSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:18:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A32624690;
-        Thu, 27 Feb 2020 14:18:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 638B424690;
+        Thu, 27 Feb 2020 14:18:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813115;
-        bh=wrQyzlkTVJsIuG6RhczZKrYJFH7Mb49YCuVssq9BS0U=;
+        s=default; t=1582813110;
+        bh=qG7L3omsE9Soo2/tazuOT2I0Z+DQxknam2ce7i8Y+LY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fe707PaRnl3v++ukWOq3Sgesdhh2JG72cTpk6IjFglXBeHspG1SANx8mz3fmTzigQ
-         HRwQ65snBPc0wLOUQ0zZfm+/RVykIXbEhptg9HhfFSUyYlt1HBxshgR1Fn6DSfVTXh
-         E9K5e4n4HEhrzzdn2WMxptnTDNYkc7ZpnZrDJJZc=
+        b=fwCdPvfzaIox+xDf8LjaIgO6NT8GQvYMII1plbTVi2Uvh13zW63sPsHmm/JrC/3ez
+         bbHn/oTBOoXS5NnJj7R3V/Ew7Y6bwqoRu/a5BiXVS3Z5EOKtRpS3WxV0DVF5Y8I86w
+         OvPsAerTe/DCo/KkgBNqXsFkfS23q3Z95LGr1mI4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Qu Wenruo <wqu@suse.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.5 106/150] btrfs: reset fs_root to NULL on error in open_ctree
-Date:   Thu, 27 Feb 2020 14:37:23 +0100
-Message-Id: <20200227132248.442137596@linuxfoundation.org>
+        stable@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        syzbot+adf6c6c2be1c3a718121@syzkaller.appspotmail.com
+Subject: [PATCH 5.5 140/150] netfilter: xt_hashlimit: limit the max size of hashtable
+Date:   Thu, 27 Feb 2020 14:37:57 +0100
+Message-Id: <20200227132252.929522395@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -61,37 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-commit 315bf8ef914f31d51d084af950703aa1e09a728c upstream.
+commit 8d0015a7ab76b8b1e89a3e5f5710a6e5103f2dd5 upstream.
 
-While running my error injection script I hit a panic when we tried to
-clean up the fs_root when freeing the fs_root.  This is because
-fs_info->fs_root == PTR_ERR(-EIO), which isn't great.  Fix this by
-setting fs_info->fs_root = NULL; if we fail to read the root.
+The user-specified hashtable size is unbound, this could
+easily lead to an OOM or a hung task as we hold the global
+mutex while allocating and initializing the new hashtable.
 
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Add a max value to cap both cfg->size and cfg->max, as
+suggested by Florian.
+
+Reported-and-tested-by: syzbot+adf6c6c2be1c3a718121@syzkaller.appspotmail.com
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Reviewed-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/disk-io.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/netfilter/xt_hashlimit.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -3200,6 +3200,7 @@ int __cold open_ctree(struct super_block
- 	if (IS_ERR(fs_info->fs_root)) {
- 		err = PTR_ERR(fs_info->fs_root);
- 		btrfs_warn(fs_info, "failed to read fs tree: %d", err);
-+		fs_info->fs_root = NULL;
- 		goto fail_qgroup;
- 	}
+--- a/net/netfilter/xt_hashlimit.c
++++ b/net/netfilter/xt_hashlimit.c
+@@ -851,6 +851,8 @@ hashlimit_mt(const struct sk_buff *skb,
+ 	return hashlimit_mt_common(skb, par, hinfo, &info->cfg, 3);
+ }
  
++#define HASHLIMIT_MAX_SIZE 1048576
++
+ static int hashlimit_mt_check_common(const struct xt_mtchk_param *par,
+ 				     struct xt_hashlimit_htable **hinfo,
+ 				     struct hashlimit_cfg3 *cfg,
+@@ -861,6 +863,14 @@ static int hashlimit_mt_check_common(con
+ 
+ 	if (cfg->gc_interval == 0 || cfg->expire == 0)
+ 		return -EINVAL;
++	if (cfg->size > HASHLIMIT_MAX_SIZE) {
++		cfg->size = HASHLIMIT_MAX_SIZE;
++		pr_info_ratelimited("size too large, truncated to %u\n", cfg->size);
++	}
++	if (cfg->max > HASHLIMIT_MAX_SIZE) {
++		cfg->max = HASHLIMIT_MAX_SIZE;
++		pr_info_ratelimited("max too large, truncated to %u\n", cfg->max);
++	}
+ 	if (par->family == NFPROTO_IPV4) {
+ 		if (cfg->srcmask > 32 || cfg->dstmask > 32)
+ 			return -EINVAL;
 
 
