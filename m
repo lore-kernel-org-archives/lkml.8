@@ -2,127 +2,185 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CEC3C35DF9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D7CC11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCF252469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63C7C24692
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:43:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="h0ccKzey"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TSB4IyoU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730266AbgB0RnN (ORCPT
+        id S1730434AbgB0RnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 12:43:13 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:45735 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729858AbgB0RnN (ORCPT
+        Thu, 27 Feb 2020 12:43:14 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33920 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729548AbgB0RnO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 12:43:13 -0500
-Received: by mail-qk1-f193.google.com with SMTP id z12so117482qkg.12
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 09:43:12 -0800 (PST)
+        Thu, 27 Feb 2020 12:43:14 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z15so4539625wrl.1;
+        Thu, 27 Feb 2020 09:43:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=oCjJQPxZpDAddCTP2fyq9zy2cQ1xSVL89kL40WfyDFw=;
-        b=h0ccKzeyP3flPLgjKffvX6NEZ8a/uwNV100LizRKN14n3zedm2cahPgJEhxnAi/Eux
-         SoJyZIMb4T7nlpMiSIVzl4rMs2X4TuO582QZ1v3uBlvSIJKL/2eHq1X0Q3RguRMqGiyD
-         jIHlP2hMNaMnlwbC+BJKvF6YRP2s83wQLQnu6HWuvl9gBkHIXEKgRfF2bx2kqxfLtaoi
-         NHPp/iB678wthxbg1SayDlPMTRa2+OyRd0c8slMZFoj0NWbnumSUHITUyCw6JAjfKy0s
-         /ZPnh7hQIi+kffDRK1XYwUv4XEf8RRXfY3Aofqotene7stHVy6OiSQWIReq879CDmrtM
-         2sgQ==
+        bh=BMqi7wNVy74Epfw3/CXCjxssZh8rP45fbaF8FqplbtM=;
+        b=TSB4IyoUJM+7SNxWfQHNWp8SqiXLs/3NwcS1pRcGPyEE+D7ZuwgScsLS7CtdvbMVdO
+         VIxaPM83TNRCvMEMOXMAQ+BlQ6eapIXMfBKGpy7VEZyGYbykb6iVJfF0Z2DIUqMSTyFK
+         HKOxhaOABj9VHS1ug6APUjjZuE8ZUWftGDf/WNk9nMEIEVInQBJgQ2RRCoarqsoZbHrs
+         +caPNlVvfTCXQTeRuxQUVmZEVmCH6ISoqqH3h5Bcp5oVWwzZzAbn4RM49ylcI5hKHC2e
+         NZ9gsxnem8Q6PWNKTPVqxB3AdJDeYmj6CQujbXfVlRMncQ0LKHG8tyM1DjoUCRuQp5+Y
+         t8cQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oCjJQPxZpDAddCTP2fyq9zy2cQ1xSVL89kL40WfyDFw=;
-        b=uVjEl5p9FDs9tIIVzJoebQsTQywCV8VDIDBF2DdhnryAl62bk4RGs6MCoHUdZ0hxNQ
-         sFWLVGZ/j/8FrSyU8SbwLCVM2jcAlMZAtF7QbUQ4FJJC5d4oIZWPCS9lifbLytMNcZzc
-         AbLzhKgnOY5DfdOhYYLt3g5/2ytwiWxLJqeUsuMPCRpai79LakbLzXZXRodifM2JWn0i
-         5IrygNmw1jPBv/Gj0TKRmwdbcr1zpVKC9+Y5jpAGnWs7wf7Kw2dwlVZngPkGttcMHWfw
-         6EXXCo9tZDjIXKLi0O93FTHzw1H1eucNRG58WwMCScPtmSRjf255M1bAFHtW5vCn77wY
-         oH3Q==
-X-Gm-Message-State: APjAAAWy1i2gjztEpD0gNio1IAv4xbJHbZc7xfwriohF77f1L0o6lsAd
-        OZkZ/vSHxXs6LK/UPI9GzVD3pA==
-X-Google-Smtp-Source: APXvYqz1bAJmZgA8/8aWp40ku++Grc84lutv6gcjfJ4VE4iLl6cxS/fnpq6F9eLVrs8dckDJaWVR0g==
-X-Received: by 2002:a05:620a:2185:: with SMTP id g5mr445502qka.4.1582825391979;
+        bh=BMqi7wNVy74Epfw3/CXCjxssZh8rP45fbaF8FqplbtM=;
+        b=JDwPgJMACTlh9kVll0OvtymAlK1AmXk9zn+uslEdH6TcbsAoZgDII7chqyCqBQuBPy
+         LodSS3PD1NCsQAdAXKNbRHuiO1cXUWenjXnEF//Uc/wh3j/fBafe8ek3/3yDwXrsuqJ4
+         Ee8qwbmq8KNcEF5JLPqqyPUGyC8MGCwvxFP1sJfsmboYr+x6htKpWTl1wRaoGbeU4Pqf
+         QaUwLropsf/voOjRGPNuSokX7ZJhmEQUeDXlLsQlbQD4++HgDT23Zg6DAvMTSEDBHtw/
+         bHWUm4IAaAF+/C2q7DUTY3bEZ7RJfAjOADWKxzvrOOdGGP3T+YKCHUsMrFLWbPhLuRGl
+         F34Q==
+X-Gm-Message-State: APjAAAW3vZlJ3ylPauKyEc+QgkYcoL9xVI/jN+O5jCTuFsarw13JU1PK
+        mi/cQVIqeUe20oHMigBYj8E=
+X-Google-Smtp-Source: APXvYqxn4Muee4YpYbF0JI/llZZZN3gjxROfWrgHUwhT9fQ/79cP1fhPKjJ0y9iFYP2aqzwY+Mcn5Q==
+X-Received: by 2002:a5d:56ca:: with SMTP id m10mr6155698wrw.313.1582825391327;
         Thu, 27 Feb 2020 09:43:11 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id k23sm3317124qtq.89.2020.02.27.09.43.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 27 Feb 2020 09:43:11 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1j7NBn-0003iZ-2v; Thu, 27 Feb 2020 13:43:11 -0400
-Date:   Thu, 27 Feb 2020 13:43:11 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+Received: from andrea (ip-213-220-200-127.net.upcbroadband.cz. [213.220.200.127])
+        by smtp.gmail.com with ESMTPSA id d13sm9014648wrc.64.2020.02.27.09.43.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 09:43:09 -0800 (PST)
+Date:   Thu, 27 Feb 2020 18:43:04 +0100
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
         Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Eric Badger <ebadger@gigaio.com>
-Subject: Re: [PATCH v3 0/7] Allow setting caching mode in arch_add_memory()
- for P2PDMA
-Message-ID: <20200227174311.GL31668@ziepe.ca>
-References: <20200221182503.28317-1-logang@deltatee.com>
- <20200227171704.GK31668@ziepe.ca>
- <e8781f85-3fc7-b9ce-c751-606803cbdc77@deltatee.com>
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 4/5] Documentation/locking/atomic: Add a litmus test
+ for atomic_set()
+Message-ID: <20200227174304.GA11666@andrea>
+References: <20200227004049.6853-1-boqun.feng@gmail.com>
+ <20200227004049.6853-5-boqun.feng@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e8781f85-3fc7-b9ce-c751-606803cbdc77@deltatee.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200227004049.6853-5-boqun.feng@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 10:21:50AM -0700, Logan Gunthorpe wrote:
+On Thu, Feb 27, 2020 at 08:40:48AM +0800, Boqun Feng wrote:
+> We already use a litmus test in atomic_t.txt to describe the behavior of
+> an atomic_set() with the an atomic RMW, so add it into atomic-tests
+> directory to make it easily accessible for anyone who cares about the
+> semantics of our atomic APIs.
 > 
+> Additionally, change the sentences describing the test in atomic_t.txt
+> with better wording.
 > 
-> On 2020-02-27 10:17 a.m., Jason Gunthorpe wrote:
-> >> Instead of this, this series proposes a change to arch_add_memory()
-> >> to take the pgprot required by the mapping which allows us to
-> >> explicitly set pagetable entries for P2PDMA memory to WC.
-> > 
-> > Is there a particular reason why WC was selected here? I thought for
-> > the p2pdma cases there was no kernel user that touched the memory?
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> ---
+>  ...c-RMW-ops-are-atomic-WRT-atomic_set.litmus | 24 +++++++++++++++++++
+>  Documentation/atomic-tests/README             |  7 ++++++
+>  Documentation/atomic_t.txt                    |  6 ++---
+>  3 files changed, 34 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/atomic-tests/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
 > 
-> Yes, that's correct. I choose WC here because the existing users are
-> registering memory blocks without side effects which fit the WC
-> semantics well.
+> diff --git a/Documentation/atomic-tests/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus b/Documentation/atomic-tests/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+> new file mode 100644
+> index 000000000000..5dd7f04e504a
+> --- /dev/null
+> +++ b/Documentation/atomic-tests/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+> @@ -0,0 +1,24 @@
+> +C Atomic-set-observable-to-RMW
 
-Hm, AFAIK WC memory is not compatible with the spinlocks/mutexs/etc in
-Linux, so while it is true the memory has no side effects, there would
-be surprising concurrency risks if anything in the kernel tried to
-write to it.
+Nit: s/Atomic-set-observable-to-RMW/Atomic-RMW-ops-are-atomic-WRT-atomic_set
 
-Not compatible means the locks don't contain stores to WC memory the
-way you would expect. AFAIK on many CPUs extra barriers are required
-to keep WC stores ordered, the same way ARM already has extra barriers
-to keep UC stores ordered with locking..
 
-The spinlocks are defined to contain UC stores though.
+> +
+> +(*
+> + * Result: Never
+> + *
+> + * Test that atomic_set() cannot break the atomicity of atomic RMWs.
+> + *)
+> +
+> +{
+> +	atomic_t v = ATOMIC_INIT(1);
+> +}
+> +
+> +P0(atomic_t *v)
+> +{
+> +	(void)atomic_add_unless(v,1,0);
 
-If there is no actual need today for WC I would suggest using UC as
-the default.
+Nit: spaces after commas
 
-Jason
+
+> +}
+> +
+> +P1(atomic_t *v)
+> +{
+> +	atomic_set(v, 0);
+> +}
+> +
+> +exists
+> +(v=2)
+> diff --git a/Documentation/atomic-tests/README b/Documentation/atomic-tests/README
+> index ae61201a4271..a1b72410b539 100644
+> --- a/Documentation/atomic-tests/README
+> +++ b/Documentation/atomic-tests/README
+> @@ -2,3 +2,10 @@ This directory contains litmus tests that are typical to describe the semantics
+>  of our atomic APIs. For more information about how to "run" a litmus test or
+>  how to generate a kernel test module based on a litmus test, please see
+>  tools/memory-model/README.
+> +
+> +============
+> +LITMUS TESTS
+> +============
+> +
+> +Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+> +	Test that atomic_set() cannot break the atomicity of atomic RMWs.
+> diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
+> index ceb85ada378e..67d1d99f8589 100644
+> --- a/Documentation/atomic_t.txt
+> +++ b/Documentation/atomic_t.txt
+> @@ -85,10 +85,10 @@ smp_store_release() respectively. Therefore, if you find yourself only using
+>  the Non-RMW operations of atomic_t, you do not in fact need atomic_t at all
+>  and are doing it wrong.
+>  
+> -A subtle detail of atomic_set{}() is that it should be observable to the RMW
+> -ops. That is:
+> +A note for the implementation of atomic_set{}() is that it must not break the
+> +atomicity of the RMW ops. That is:
+>  
+> -  C atomic-set
+> +  C Atomic-RMW-ops-are-atomic-WRT-atomic_set
+>  
+>    {
+>      atomic_t v = ATOMIC_INIT(1);
+> -- 
+> 2.25.0
+> 
