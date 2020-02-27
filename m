@@ -2,143 +2,130 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8877CC4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 03:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A99C4BA06
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 03:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B53C24670
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 03:36:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="J2LhFOSa"
+	by mail.kernel.org (Postfix) with ESMTP id A8F7324680
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 03:39:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582774786;
+	bh=9Cffmdd0qW73kmajGjKfvODv6L7Gr3tpz2QX3jQxlFs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=J/0iw/XBIaNRrF8yVgx5eTfiUB6yCXGl9JHTSo6VNcE6/jz3TGcq3dQwDY+xYEbDU
+	 9n3znRrEbeF6/G2NhebNBPxcUzY1vNjOkYUpl2ywcaUO2tjkY0U6cu2Y6DeWXdcjI3
+	 KZimHafC8zgER52Do0BKZ637kKYVv4lVwfkWO9FY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728305AbgB0Dgi (ORCPT
+        id S1728306AbgB0Djp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 22:36:38 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:63604 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728253AbgB0Dgh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 22:36:37 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582774597; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=jwMlsAus4argjYMwypaw/3x3lbhGt3TcpI3om3s5BIQ=; b=J2LhFOSaKxOYvmy2nPjO+mlnAPluW659AUhWRkoYXeh8RIAIBO+6nh8tAMu6E5NhuRl70osT
- Lwhk6TmmRBRuDyev9GRxH4xAF2Srk3cMqSjnG7Otg6Y4D873kjE6rG/gtcbHSy4vJa6rdmR/
- Vr2evBwzKUiBy0lTXKuXkXtih+g=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e573931.7fb4868c3d50-smtp-out-n03;
- Thu, 27 Feb 2020 03:36:17 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5645BC447A3; Thu, 27 Feb 2020 03:36:15 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 26 Feb 2020 22:39:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51562 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728255AbgB0Djp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 22:39:45 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: pkondeti)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 85AE2C43383;
-        Thu, 27 Feb 2020 03:36:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 85AE2C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
-Date:   Thu, 27 Feb 2020 09:06:08 +0530
-From:   Pavan Kondeti <pkondeti@codeaurora.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 5/6] sched/rt: Better manage pushing unfit tasks on
- wakeup
-Message-ID: <20200227033608.GN28029@codeaurora.org>
-References: <20200223184001.14248-1-qais.yousef@arm.com>
- <20200223184001.14248-6-qais.yousef@arm.com>
- <20200224061004.GH28029@codeaurora.org>
- <20200224121139.cbz2dt5heiouknif@e107158-lin.cambridge.arm.com>
- <CAEU1=PncyV=-vqjkDHSJ4hUhhTfYUgVN-HAe4zXMHtFx1oc5XA@mail.gmail.com>
- <20200224174138.n6pmoeffqg7eqiy2@e107158-lin.cambridge.arm.com>
- <20200225035505.GI28029@codeaurora.org>
- <20200226160247.iqvdakiqbakk2llz@e107158-lin.cambridge.arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200226160247.iqvdakiqbakk2llz@e107158-lin.cambridge.arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA2532467A;
+        Thu, 27 Feb 2020 03:39:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582774784;
+        bh=9Cffmdd0qW73kmajGjKfvODv6L7Gr3tpz2QX3jQxlFs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=XMatfAjFIhOlMtWJ/mHdt/ligz0Nban01KEtDur859vkq2xBkAVBxgCqyxRgurghc
+         qWN2kXNPGUGVbqF4SBHpkPnkRN8ekg8/vcVgXlc/MdtfDwrbGSY9661RsbOCF32fee
+         4yuJmjNrIfmxWSaggM2O2YPHlsfAZKOc4ihVFE6E=
+Date:   Wed, 26 Feb 2020 19:39:42 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     js1304@gmail.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Subject: Re: [PATCH v2 0/9] workingset protection/detection on the anonymous
+ LRU list
+Message-Id: <20200226193942.30049da9c090b466bdc5ec23@linux-foundation.org>
+In-Reply-To: <1582175513-22601-1-git-send-email-iamjoonsoo.kim@lge.com>
+References: <1582175513-22601-1-git-send-email-iamjoonsoo.kim@lge.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 04:02:48PM +0000, Qais Yousef wrote:
-> On 02/25/20 09:25, Pavan Kondeti wrote:
-> > > I haven't been staring at this code for as long as you, but since we have
-> > > logic at wakeup to do a push, I think we need something here anyway for unfit
-> > > tasks.
-> > > 
-> > > Fixing select_task_rq_rt() to better balance tasks will help a lot in general,
-> > > but if that was enough already then why do we need to consider a push at the
-> > > wakeup at all then?
-> > > 
-> > > AFAIU, in SMP the whole push-pull mechanism is racy and we introduce redundancy
-> > > at taking the decision on various points to ensure we minimize this racy nature
-> > > of SMP systems. Anything could have happened between the time we called
-> > > select_task_rq_rt() and the wakeup, so we double check again before we finally
-> > > go and run. That's how I interpret it.
-> > > 
-> > > I am open to hear about other alternatives first anyway. Your help has been
-> > > much appreciated so far.
-> > > 
-> > 
-> > The search inside find_lowest_rq() happens without any locks so I believe it
-> > is expected to have races like this. In fact there is a comment in the code
-> > saying "This test is optimistic, if we get it wrong the load-balancer
-> > will have to sort it out" in select_task_rq_rt(). However, the push logic
-> > as of today works only for overloaded case. In that sense, your patch fixes
-> > this race for b.L systems. At the same time, I feel like tracking nonfit tasks
-> > just to fix this race seems to be too much. I will leave this to Steve and
-> > others to take a decision.
-> 
-> I do think without this tasks can end up on the wrong CPU longer than they
-> should. Keep in mind that if a task is boosted to run on a big core, it still
-> have to compete with non-boosted tasks who can run on a any cpu. So this
-> opportunistic push might be necessary.
-> 
-> For 5.6 though, I'll send an updated series that removes the fitness check from
-> task_woken_rt() && switched_to_rt() and carry on with this discussion for 5.7.
-> 
-> > 
-> > I thought of suggesting to remove the below check from select_task_rq_rt()
-> > 
-> > p->prio < cpu_rq(target)->rt.highest_prio.curr
-> > 
-> > which would then make the target CPU overloaded and the push logic would
-> > spread the tasks. That works for a b.L system too. However there seems to
-> > be a very good reason for doing this. see
-> > https://lore.kernel.org/patchwork/patch/539137/
-> > 
-> > The fact that a CPU is part of lowest_mask but running a higher prio RT
-> > task means there is a race. Should we retry one more time to see if we find
-> > another CPU?
-> 
-> Isn't this what I did in v1?
-> 
-> https://lore.kernel.org/lkml/20200214163949.27850-4-qais.yousef@arm.com/
-> 
+On Thu, 20 Feb 2020 14:11:44 +0900 js1304@gmail.com wrote:
 
-Yes, that patch allows overloading the CPU When the priorities are same.
-I think, We should also consider when a low prio task and high prio task
-are waking at the same time and high prio task winning the race.
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> 
+> Hello,
+> 
+> This patchset implements workingset protection and detection on
+> the anonymous LRU list.
 
-Thanks,
-Pavan
+The test robot measurement got my attention!
 
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+http://lkml.kernel.org/r/20200227022905.GH6548@shao2-debian
+
+> * Changes on v2
+> - fix a critical bug that uses out of index lru list in
+> workingset_refault()
+> - fix a bug that reuses the rotate value for previous page
+> 
+> * SUBJECT
+> workingset protection
+> 
+> * PROBLEM
+> In current implementation, newly created or swap-in anonymous page is
+> started on the active list. Growing the active list results in rebalancing
+> active/inactive list so old pages on the active list are demoted to the
+> inactive list. Hence, hot page on the active list isn't protected at all.
+> 
+> Following is an example of this situation.
+> 
+> Assume that 50 hot pages on active list and system can contain total
+> 100 pages. Numbers denote the number of pages on active/inactive
+> list (active | inactive). (h) stands for hot pages and (uo) stands for
+> used-once pages.
+> 
+> 1. 50 hot pages on active list
+> 50(h) | 0
+> 
+> 2. workload: 50 newly created (used-once) pages
+> 50(uo) | 50(h)
+> 
+> 3. workload: another 50 newly created (used-once) pages
+> 50(uo) | 50(uo), swap-out 50(h)
+> 
+> As we can see, hot pages are swapped-out and it would cause swap-in later.
+> 
+> * SOLUTION
+> Since this is what we want to avoid, this patchset implements workingset
+> protection. Like as the file LRU list, newly created or swap-in anonymous
+> page is started on the inactive list. Also, like as the file LRU list,
+> if enough reference happens, the page will be promoted. This simple
+> modification changes the above example as following.
+
+One wonders why on earth we weren't doing these things in the first
+place?
+
+> * SUBJECT
+> workingset detection
+
+It sounds like the above simple aging changes provide most of the
+improvement, and that the workingset changes are less beneficial and a
+bit more risky/speculative?
+
+If so, would it be best for us to concentrate on the aging changes
+first, let that settle in and spread out and then turn attention to the
+workingset changes?
+
