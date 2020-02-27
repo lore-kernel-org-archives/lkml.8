@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF13BC3F35D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4329C34022
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A778924697
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BC0C24691
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:13:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812799;
-	bh=brj/SN8Nv5cyMyCMHkqbOVzue6B+jN0Rrn+n6DFRH50=;
+	s=default; t=1582812824;
+	bh=CbyDrFMn32uvZfgP3IBgZLYcyX5tbyJPqq33qrjGK+I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qQ1CVKMppO10rd+xUqXQFQm2FXmiVYhFPsP+/e8at2QFbNTFatDgCsD5mDKxCvxDk
-	 eazseiZ1f8gYlYm+z9HC0a1DkQQwImDH9gBhQKVBOzR1UD37BAT6LQ5kVO8CkHvX5I
-	 TCR4G+7fi0s9UeG4a0SFZdwCAR4IqhweM0B/X7Jw=
+	b=UkeA1IrMeZEo87uBq3Pcye/J6DyWB9x2AWOGEoJKn9ugzl4UCuBwhn/0x95anIjrw
+	 uSp3yHshmfpZI1bUEjPm3pD02mRH0A3JMnMJzr9VWFW3NBhVgs2TG66Ffyk6zoZ2FD
+	 n81usZm54UNWkM9BrY5F0TvhALgk8LJSQpCeIuOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730449AbgB0ONS (ORCPT
+        id S2389000AbgB0ONn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:13:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52096 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:13:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388567AbgB0ONL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:13:11 -0500
+        id S2388980AbgB0ONh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:13:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68458246A0;
-        Thu, 27 Feb 2020 14:13:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE89024690;
+        Thu, 27 Feb 2020 14:13:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812790;
-        bh=brj/SN8Nv5cyMyCMHkqbOVzue6B+jN0Rrn+n6DFRH50=;
+        s=default; t=1582812817;
+        bh=CbyDrFMn32uvZfgP3IBgZLYcyX5tbyJPqq33qrjGK+I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BClGrV7MMfc22cQpX80ZRe8/4QMG8vgW/+44jex1nJ5UhC7QmDXObHhRM9fiCs78r
-         qp4gu8UB45SA+FwV/eLg72FfgSEYqZeddKXEVtlSiV+CRv7FBXKPdXogpaDxo2Mmv8
-         lsP2pCetBwgc9B2A/lJE/ieB/80eOjovVAwjtiGM=
+        b=p/l+derm9Oj69KjzFAQ+HAjZSlLkVUnkxP5O2anCvmT68wFxH7ArkKQaBmR9xageO
+         zH5rd3TcjBbpFfZmo7T9qCQdI0GGvO+tsik4Uct16+PtrGKyZ0+hlnWvj17Y2QdKy+
+         ck2ics2r2xbk8L9zb+9vFuh2R3VHFR71TH6GgB5Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Nikolay Borisov <nborisov@suse.com>, Qu Wenruo <wqu@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.5 018/150] btrfs: handle logged extent failure properly
-Date:   Thu, 27 Feb 2020 14:35:55 +0100
-Message-Id: <20200227132235.357370622@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.5 009/150] ALSA: hda/realtek - Apply quirk for yet another MSI laptop
+Date:   Thu, 27 Feb 2020 14:35:46 +0100
+Message-Id: <20200227132234.080064140@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -62,43 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit bd727173e4432fe6cb70ba108dc1f3602c5409d7 upstream.
+commit cc5049ae4d457194796f854eb2e38b9727ad8c2d upstream.
 
-If we're allocating a logged extent we attempt to insert an extent
-record for the file extent directly.  We increase
-space_info->bytes_reserved, because the extent entry addition will call
-btrfs_update_block_group(), which will convert the ->bytes_reserved to
-->bytes_used.  However if we fail at any point while inserting the
-extent entry we will bail and leave space on ->bytes_reserved, which
-will trigger a WARN_ON() on umount.  Fix this by pinning the space if we
-fail to insert, which is what happens in every other failure case that
-involves adding the extent entry.
+MSI GP65 laptop with SSID 1462:1293 requires the same quirk as other
+MSI models.
 
-CC: stable@vger.kernel.org # 5.4+
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204159
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200218080915.3433-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/extent-tree.c |    2 ++
- 1 file changed, 2 insertions(+)
+ sound/pci/hda/patch_realtek.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -4430,6 +4430,8 @@ int btrfs_alloc_logged_file_extent(struc
- 
- 	ret = alloc_reserved_file_extent(trans, 0, root_objectid, 0, owner,
- 					 offset, ins, 1);
-+	if (ret)
-+		btrfs_pin_extent(fs_info, ins->objectid, ins->offset, 1);
- 	btrfs_put_block_group(block_group);
- 	return ret;
- }
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -2449,6 +2449,7 @@ static const struct snd_pci_quirk alc882
+ 	SND_PCI_QUIRK(0x1458, 0xa0b8, "Gigabyte AZ370-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
+ 	SND_PCI_QUIRK(0x1462, 0x1228, "MSI-GP63", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
++	SND_PCI_QUIRK(0x1462, 0x1293, "MSI-GP65", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x7350, "MSI-7350", ALC889_FIXUP_CD),
+ 	SND_PCI_QUIRK(0x1462, 0xda57, "MSI Z270-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
+ 	SND_PCI_QUIRK_VENDOR(0x1462, "MSI", ALC882_FIXUP_GPIO3),
 
 
