@@ -2,99 +2,141 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B26C3F34F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6558CC3F360
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CB90246A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:50:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811413;
-	bh=2Q4c/sIWhZgo3m9iu4W8f4+/LGZhyEmn/WSfWt0XLVY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SXccsajeR6nVZQ6Yh2Kt557WzxxTSnjflmfcyFl5BEgabmvkitkxWsxbmSuAY2TGV
-	 XUhAp7yZcB1PrGylY+WyT/rlOWDqbYi09zN/SjZii7bncUZeeAhNiWa3AqNPBYT5rZ
-	 R0a90V2PWQbvt3XTmnb6AxuhPgefJWkifYa/ixdI=
+	by mail.kernel.org (Postfix) with ESMTP id 3C88A21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:49:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731171AbgB0NuL (ORCPT
+        id S1731105AbgB0Ntt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:50:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47644 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731073AbgB0Nt4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:49:56 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B16E20801;
-        Thu, 27 Feb 2020 13:49:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811396;
-        bh=2Q4c/sIWhZgo3m9iu4W8f4+/LGZhyEmn/WSfWt0XLVY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hDthhUVL02rE8cgDyIZ4XB02HMMNo0ll6h/zx4Ra405OFFgFF+xi2seFQLlFLZK8j
-         2dmxuYxK1Dv+/muLNLBJnNpmMKg26bsr7AEkFyuVms/YNjZvk2oAvpuyDLdfyQnSKD
-         qCyG22K41LovwV7EZEhbNu72Oym9UuAOubN8Bl/Q=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jaihind Yadav <jaihindyadav@codeaurora.org>,
-        Ravi Kumar Siddojigari <rsiddoji@codeaurora.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 115/165] selinux: ensure we cleanup the internal AVC counters on error in avc_update()
-Date:   Thu, 27 Feb 2020 14:36:29 +0100
-Message-Id: <20200227132247.860676364@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
-References: <20200227132230.840899170@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 27 Feb 2020 08:49:49 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:11858 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731058AbgB0Nti (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:49:38 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01RDlNvm009712;
+        Thu, 27 Feb 2020 08:49:36 -0500
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ydtrwka5m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Feb 2020 08:49:36 -0500
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 01RDnYPK017467
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Thu, 27 Feb 2020 08:49:34 -0500
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 27 Feb
+ 2020 05:49:33 -0800
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Thu, 27 Feb 2020 05:49:33 -0800
+Received: from saturn.ad.analog.com ([10.48.65.109])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01RDnVoi027892;
+        Thu, 27 Feb 2020 08:49:31 -0500
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH 1/8] iio: core: drop devm_iio_device_unregister() API call
+Date:   Thu, 27 Feb 2020 15:52:20 +0200
+Message-ID: <20200227135227.12433-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-27_04:2020-02-26,2020-02-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ phishscore=0 adultscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ suspectscore=2 clxscore=1015 lowpriorityscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002270109
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jaihind Yadav <jaihindyadav@codeaurora.org>
+It's unused so far, so it can't be removed. Also makes sense to remove it
+to discourage weird uses of this call during review.
 
-[ Upstream commit 030b995ad9ece9fa2d218af4429c1c78c2342096 ]
-
-In AVC update we don't call avc_node_kill() when avc_xperms_populate()
-fails, resulting in the avc->avc_cache.active_nodes counter having a
-false value.  In last patch this changes was missed , so correcting it.
-
-Fixes: fa1aa143ac4a ("selinux: extended permissions for ioctls")
-Signed-off-by: Jaihind Yadav <jaihindyadav@codeaurora.org>
-Signed-off-by: Ravi Kumar Siddojigari <rsiddoji@codeaurora.org>
-[PM: merge fuzz, minor description cleanup]
-Signed-off-by: Paul Moore <paul@paul-moore.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- security/selinux/avc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../driver-api/driver-model/devres.rst          |  1 -
+ drivers/iio/industrialio-core.c                 | 17 -----------------
+ include/linux/iio/iio.h                         |  4 ----
+ 3 files changed, 22 deletions(-)
 
-diff --git a/security/selinux/avc.c b/security/selinux/avc.c
-index 52f3c550abcc4..f3c473791b698 100644
---- a/security/selinux/avc.c
-+++ b/security/selinux/avc.c
-@@ -865,7 +865,7 @@ static int avc_update_node(u32 event, u32 perms, u8 driver, u8 xperm, u32 ssid,
- 	if (orig->ae.xp_node) {
- 		rc = avc_xperms_populate(node, orig->ae.xp_node);
- 		if (rc) {
--			kmem_cache_free(avc_node_cachep, node);
-+			avc_node_kill(node);
- 			goto out_unlock;
- 		}
- 	}
+diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
+index 46c13780994c..0580c64ebdfd 100644
+--- a/Documentation/driver-api/driver-model/devres.rst
++++ b/Documentation/driver-api/driver-model/devres.rst
+@@ -286,7 +286,6 @@ IIO
+   devm_iio_device_alloc()
+   devm_iio_device_free()
+   devm_iio_device_register()
+-  devm_iio_device_unregister()
+   devm_iio_kfifo_allocate()
+   devm_iio_kfifo_free()
+   devm_iio_triggered_buffer_setup()
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index 0b14666dff09..e4011f8431f9 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -1823,23 +1823,6 @@ int __devm_iio_device_register(struct device *dev, struct iio_dev *indio_dev,
+ }
+ EXPORT_SYMBOL_GPL(__devm_iio_device_register);
+ 
+-/**
+- * devm_iio_device_unregister - Resource-managed iio_device_unregister()
+- * @dev:	Device this iio_dev belongs to
+- * @indio_dev:	the iio_dev associated with the device
+- *
+- * Unregister iio_dev registered with devm_iio_device_register().
+- */
+-void devm_iio_device_unregister(struct device *dev, struct iio_dev *indio_dev)
+-{
+-	int rc;
+-
+-	rc = devres_release(dev, devm_iio_device_unreg,
+-			    devm_iio_device_match, indio_dev);
+-	WARN_ON(rc);
+-}
+-EXPORT_SYMBOL_GPL(devm_iio_device_unregister);
+-
+ /**
+  * iio_device_claim_direct_mode - Keep device in direct mode
+  * @indio_dev:	the iio_dev associated with the device
+diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+index 862ce0019eba..0eb9e8d7ec68 100644
+--- a/include/linux/iio/iio.h
++++ b/include/linux/iio/iio.h
+@@ -591,9 +591,6 @@ void iio_device_unregister(struct iio_dev *indio_dev);
+  * calls iio_device_register() internally. Refer to that function for more
+  * information.
+  *
+- * If an iio_dev registered with this function needs to be unregistered
+- * separately, devm_iio_device_unregister() must be used.
+- *
+  * RETURNS:
+  * 0 on success, negative error number on failure.
+  */
+@@ -601,7 +598,6 @@ void iio_device_unregister(struct iio_dev *indio_dev);
+ 	__devm_iio_device_register((dev), (indio_dev), THIS_MODULE);
+ int __devm_iio_device_register(struct device *dev, struct iio_dev *indio_dev,
+ 			       struct module *this_mod);
+-void devm_iio_device_unregister(struct device *dev, struct iio_dev *indio_dev);
+ int iio_push_event(struct iio_dev *indio_dev, u64 ev_code, s64 timestamp);
+ int iio_device_claim_direct_mode(struct iio_dev *indio_dev);
+ void iio_device_release_direct_mode(struct iio_dev *indio_dev);
 -- 
 2.20.1
-
-
 
