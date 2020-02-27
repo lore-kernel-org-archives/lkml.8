@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CDFC35677
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CE0C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 564B22469B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6942F24691
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:48:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814915;
-	bh=gMClIlblDuDMDa41XGdXIqf69zD4NFMrcwN7v3vreNo=;
+	s=default; t=1582814924;
+	bh=T1ZKD43Hoi0VlEAm4qsLbLuTAyNG1fwLV0FTSp5WMTQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xjlfyL2VYdRK9VuzntdxlMfnlh0V/iqU8Re8+yjfAANJBRKY178EFrr/xJ2V/z8M3
-	 RRHFf8QTUT5vEBLiA8svn8hveQv/Vv/rWgKbbYOJjM0bwLm5d2d6ZCPa/IJ+k3Z/XZ
-	 4xznkGnFr6DQf7m+lERdbxWROfFseu0GhRDvel6Q=
+	b=CbwNjJCS1WOWWupWZApG8L/MGH9fTiHHup49Qi7aBY8V7C6EVnsCFMb/jBxs6zIBp
+	 vA7Oc6Xx4MbSffmO/uWJjHJSLItApF7ZU94Z5gyzQrZ6A01YvpvUsF+YTnsO4TawJt
+	 QPDmrMQhv7xyVi3J09KGvi9165ZiXqolPyeGx/ww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729590AbgB0Nm7 (ORCPT
+        id S1732313AbgB0Osm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:42:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38040 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:48:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729866AbgB0Nm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:42:57 -0500
+        id S1729413AbgB0Nmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:42:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 862F420726;
-        Thu, 27 Feb 2020 13:42:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0B0D20578;
+        Thu, 27 Feb 2020 13:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582810977;
-        bh=gMClIlblDuDMDa41XGdXIqf69zD4NFMrcwN7v3vreNo=;
+        s=default; t=1582810958;
+        bh=T1ZKD43Hoi0VlEAm4qsLbLuTAyNG1fwLV0FTSp5WMTQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n6P6Iq17SOqh+0XTXPbhFr49cnZrQxvdaOmKrTj5D152/yhbrhbYKEu4nSYTmWaYP
-         1LZTCZveQxqxRqmLHQIGeVhfUJF8GxIc1KQQlCoELMmD3upnIPAfyLW6oK5vFd/iBZ
-         SBeKzP3J9QwhbVDk6paZwRqY4n9tGp/UC1BPVSls=
+        b=lWlvm7bK6+joRGuTwyG651Dlh5bEaoqMC5xgm509cDfkBjgJeQLcwLEwYKOSduIg4
+         SoMYuczvXYVDf1wNW8Qc4tjo21WqkQHkLHccffgkBP6v2YFufMoH4L3bKRmedpcxeL
+         KRHcPTgCyew6HULquNqzObjAJEHTWfXWGPVa8I54=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 070/113] ARM: 8951/1: Fix Kexec compilation issue.
-Date:   Thu, 27 Feb 2020 14:36:26 +0100
-Message-Id: <20200227132222.970973487@linuxfoundation.org>
+Subject: [PATCH 4.4 055/113] Input: edt-ft5x06 - work around first register access error
+Date:   Thu, 27 Feb 2020 14:36:11 +0100
+Message-Id: <20200227132220.559320477@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
 References: <20200227132211.791484803@linuxfoundation.org>
@@ -61,48 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
 
-[ Upstream commit 76950f7162cad51d2200ebd22c620c14af38f718 ]
+[ Upstream commit e112324cc0422c046f1cf54c56f333d34fa20885 ]
 
-To perform the reserve_crashkernel() operation kexec uses SECTION_SIZE to
-find a memblock in a range.
-SECTION_SIZE is not defined for nommu systems. Trying to compile kexec in
-these conditions results in a build error:
+The EP0700MLP1 returns bogus data on the first register read access
+(reading the threshold parameter from register 0x00):
 
-  linux/arch/arm/kernel/setup.c: In function ‘reserve_crashkernel’:
-  linux/arch/arm/kernel/setup.c:1016:25: error: ‘SECTION_SIZE’ undeclared
-     (first use in this function); did you mean ‘SECTIONS_WIDTH’?
-             crash_size, SECTION_SIZE);
-                         ^~~~~~~~~~~~
-                         SECTIONS_WIDTH
-  linux/arch/arm/kernel/setup.c:1016:25: note: each undeclared identifier
-     is reported only once for each function it appears in
-  linux/scripts/Makefile.build:265: recipe for target 'arch/arm/kernel/setup.o'
-     failed
+    edt_ft5x06 2-0038: crc error: 0xfc expected, got 0x40
 
-Make KEXEC depend on MMU to fix the compilation issue.
+It ignores writes until then. This patch adds a dummy read after which
+the number of sensors and parameter read/writes work correctly.
 
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/touchscreen/edt-ft5x06.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 2ba69df49cf86..45f2a5930379a 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -2000,7 +2000,7 @@ config XIP_PHYS_ADDR
- config KEXEC
- 	bool "Kexec system call (EXPERIMENTAL)"
- 	depends on (!SMP || PM_SLEEP_SMP)
--	depends on !CPU_V7M
-+	depends on MMU
- 	select KEXEC_CORE
- 	help
- 	  kexec is a system call that implements the ability to shutdown your
+diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+index 0b0f8c17f3f7e..a9d97d577a7e9 100644
+--- a/drivers/input/touchscreen/edt-ft5x06.c
++++ b/drivers/input/touchscreen/edt-ft5x06.c
+@@ -880,6 +880,7 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
+ {
+ 	const struct edt_i2c_chip_data *chip_data;
+ 	struct edt_ft5x06_ts_data *tsdata;
++	u8 buf[2] = { 0xfc, 0x00 };
+ 	struct input_dev *input;
+ 	unsigned long irq_flags;
+ 	int error;
+@@ -949,6 +950,12 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
+ 		return error;
+ 	}
+ 
++	/*
++	 * Dummy read access. EP0700MLP1 returns bogus data on the first
++	 * register read access and ignores writes.
++	 */
++	edt_ft5x06_ts_readwrite(tsdata->client, 2, buf, 2, buf);
++
+ 	edt_ft5x06_ts_set_regs(tsdata);
+ 	edt_ft5x06_ts_get_defaults(&client->dev, tsdata);
+ 	edt_ft5x06_ts_get_parameters(tsdata);
 -- 
 2.20.1
 
