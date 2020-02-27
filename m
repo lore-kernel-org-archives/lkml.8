@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3A5C54FCA
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34261C54FCC
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8008C2469D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9FB8246AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812661;
-	bh=RxtQpwXVCZ8kuPzuL7XmZtmGwiwVZKSh7yis6FrdueQ=;
+	s=default; t=1582812665;
+	bh=ngy0aopofd0xPgZDWEqnIE3beTwgyfYyrCAEaubUypc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bTkCrva3EJziH8aIbTP4v9gKcMlHvMw7elUD3Z8x/CY/XHg3gdbYjoJ7gnluXgz80
-	 wVahOxs07ITMv+YO+pB1rowp+pCIq5ExQh5lpY409gqgDpzN2GKeK8C8swqzb5jP7s
-	 +qdgWLS1nlW+jmghaZLBgPexq85IzlChPy6NvEek=
+	b=zat4jQWKNZHNei+SvaeM3gOtLTfIHz2zrczsSb0g+50yo1Ko0s33Z8sD+Z3xvCurj
+	 hSxexUgeKXS9pSJIB/hW6rX6KfSGABnqeTH0b66UNFNcCJ0fHXWVAolYFqARXMd0fs
+	 jhwvpRv7J5rm3Otno3T83eplNx9HzFI27IaDQWuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388625AbgB0OLA (ORCPT
+        id S2388635AbgB0OLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:11:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49224 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:11:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388278AbgB0OK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:10:56 -0500
+        id S2388620AbgB0OK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:10:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AEEA20714;
-        Thu, 27 Feb 2020 14:10:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EC1620578;
+        Thu, 27 Feb 2020 14:10:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812655;
-        bh=RxtQpwXVCZ8kuPzuL7XmZtmGwiwVZKSh7yis6FrdueQ=;
+        s=default; t=1582812658;
+        bh=ngy0aopofd0xPgZDWEqnIE3beTwgyfYyrCAEaubUypc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D+gZfRGBdEjcD5VhGQqgcEs+uFh6yycdWOcG0HzBQIIPGJheh+47Y1TtmlhQHvuTu
-         XGo/W97CWRTT5wU1rntGBh5RrJ9SIkiVqOPeNcsd1ht3AFg1lzavLyxO+DkV3OQZ8K
-         HUCkvmY8W/K/yg4I190Tmm+PKVPgIYm4Ptl3wr64=
+        b=YLXLHxl3JbiIke+Bjh1cm71W5lq7ta7xVSbiBPGMKMxvXlFdG2BXC5rySNTfr6n0s
+         mncAEnm3sOYBROmOJRnK8TQVI1+RflLjT3DyOvLqnDwDaIq8/GLxuyKWv0iHmwgDe+
+         ub2Drhzm3QQPpQhT1VaVy3I/PfUSmkAKiUE48WGc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Tobler <andreas.tobler@onway.ch>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 100/135] Revert "dmaengine: imx-sdma: Fix memory leak"
-Date:   Thu, 27 Feb 2020 14:37:20 +0100
-Message-Id: <20200227132244.250294381@linuxfoundation.org>
+        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 5.4 065/135] genirq/irqdomain: Make sure all irq domain flags are distinct
+Date:   Thu, 27 Feb 2020 14:36:45 +0100
+Message-Id: <20200227132238.954402709@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -61,70 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Zenghui Yu <yuzenghui@huawei.com>
 
-This reverts commit 8a7aa4feeaeabc12181e1997a298eb73d2ed2d65 which is
-commit 02939cd167095f16328a1bd5cab5a90b550606df upstream.
+commit 2546287c5fb363a0165933ae2181c92f03e701d0 upstream.
 
-Andreas writes:
-	This patch breaks our imx6 board with the attached trace.
-	Reverting the patch makes it boot again.
+This was noticed when printing debugfs for MSIs on my ARM64 server.  The
+new dstate IRQD_MSI_NOMASK_QUIRK came out surprisingly while it should only
+be the x86 stuff for the time being...
 
-Reported-by: Andreas Tobler <andreas.tobler@onway.ch>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Robin Gong <yibin.gong@nxp.com>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: Sasha Levin <sashal@kernel.org>
+The new MSI quirk flag uses the same bit as IRQ_DOMAIN_NAME_ALLOCATED which
+is oddly defined as bit 6 for no good reason.
+
+Switch it to the non used bit 1.
+
+Fixes: 6f1a4891a592 ("x86/apic/msi: Plug non-maskable MSI affinity race")
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20200221020725.2038-1-yuzenghui@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/dma/imx-sdma.c |   19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
 
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -760,8 +760,12 @@ static void sdma_start_desc(struct sdma_
- 		return;
- 	}
- 	sdmac->desc = desc = to_sdma_desc(&vd->tx);
--
--	list_del(&vd->node);
-+	/*
-+	 * Do not delete the node in desc_issued list in cyclic mode, otherwise
-+	 * the desc allocated will never be freed in vchan_dma_desc_free_list
-+	 */
-+	if (!(sdmac->flags & IMX_DMA_SG_LOOP))
-+		list_del(&vd->node);
+---
+ include/linux/irqdomain.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -191,7 +191,7 @@ enum {
+ 	IRQ_DOMAIN_FLAG_HIERARCHY	= (1 << 0),
  
- 	sdma->channel_control[channel].base_bd_ptr = desc->bd_phys;
- 	sdma->channel_control[channel].current_bd_ptr = desc->bd_phys;
-@@ -1067,6 +1071,7 @@ static void sdma_channel_terminate_work(
+ 	/* Irq domain name was allocated in __irq_domain_add() */
+-	IRQ_DOMAIN_NAME_ALLOCATED	= (1 << 6),
++	IRQ_DOMAIN_NAME_ALLOCATED	= (1 << 1),
  
- 	spin_lock_irqsave(&sdmac->vc.lock, flags);
- 	vchan_get_all_descriptors(&sdmac->vc, &head);
-+	sdmac->desc = NULL;
- 	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
- 	vchan_dma_desc_free_list(&sdmac->vc, &head);
- 	sdmac->context_loaded = false;
-@@ -1075,19 +1080,11 @@ static void sdma_channel_terminate_work(
- static int sdma_disable_channel_async(struct dma_chan *chan)
- {
- 	struct sdma_channel *sdmac = to_sdma_chan(chan);
--	unsigned long flags;
--
--	spin_lock_irqsave(&sdmac->vc.lock, flags);
- 
- 	sdma_disable_channel(chan);
- 
--	if (sdmac->desc) {
--		vchan_terminate_vdesc(&sdmac->desc->vd);
--		sdmac->desc = NULL;
-+	if (sdmac->desc)
- 		schedule_work(&sdmac->terminate_worker);
--	}
--
--	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
- 
- 	return 0;
- }
+ 	/* Irq domain is an IPI domain with virq per cpu */
+ 	IRQ_DOMAIN_FLAG_IPI_PER_CPU	= (1 << 2),
 
 
