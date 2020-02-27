@@ -2,55 +2,56 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6A4C52D31
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C263C52D34
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCBCD20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2369A20578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812321;
-	bh=mABAXKpoGeiMojiRINknGF4bDYTJblHbCObSYDzQYyY=;
+	s=default; t=1582812105;
+	bh=+fF5vxh02ltK3ValIuglPLTNYmGZE0zXdwY9RF3Ur7E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A33sfIGJB5wOPFE49I4nVuUHZ7mCLbBCcj8SCJMA+BKRs8oOMLAhsTmzfuK3Pgklv
-	 flmcsIx8uRMaHEolid3pMCiOSCo3l5O1JkWC/4d6aASlduTu3luno/YCI+q8KfT9fS
-	 vpGlolESnTmMKpwLy7Yi9OPxszWkeBdBd5LO4nrM=
+	b=CxBlN751rNrzgZcvJ69IcRLvIthusB/7sgEVoQFIdf1njDcDoQFlbzlf+DdeggFd+
+	 EQTu9A97yHJThxdx2Q6sn009XzF6vSNbcpPxnCozCJK25TSOVCu0cqcNAYHqI9yNu6
+	 GTvriKamDR+HWmPkxqsxiGMz+jcdObFcPbTYD+Bw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387754AbgB0OFT (ORCPT
+        id S1732983AbgB0OBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:05:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41878 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:01:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387721AbgB0OFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:05:14 -0500
+        id S1732975AbgB0OBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:01:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F0FD21D7E;
-        Thu, 27 Feb 2020 14:05:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2438920801;
+        Thu, 27 Feb 2020 14:01:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812314;
-        bh=mABAXKpoGeiMojiRINknGF4bDYTJblHbCObSYDzQYyY=;
+        s=default; t=1582812100;
+        bh=+fF5vxh02ltK3ValIuglPLTNYmGZE0zXdwY9RF3Ur7E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qlzWoWjFHflb65ZOjA3NV8Pw+LP9KNmzVhBgYL3J8YPi+Fe/dXI3p0Dh1J3BmDd5W
-         G4HKj4MJJXXScTv7Bw7va4tZ/ZYr5/noZ6+bXp1pphSkH9+eKqxOG0HBez8ORl7VN3
-         oRI8fs4msK9rRvADkh5mGLf2jHruWPlulS2if898=
+        b=VRq+l4h6afJmyinv3Wuh06yIIPT9bZs5K7gAh2RwJGy0KPo0TcskkuqqAMoQuCvhZ
+         lRAQJVWRMkvaAdq+luQfjI6v19w2t95RB6F8/MXaTNceW4NO34ME6s2cIvA+ElfPsj
+         SN0eTQh9ma1nf4ZowO4VFdL7XyVCtdbAOlFIeJLg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miles Chen <miles.chen@mediatek.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 60/97] lib/stackdepot: Fix outdated comments
-Date:   Thu, 27 Feb 2020 14:37:08 +0100
-Message-Id: <20200227132224.337663006@linuxfoundation.org>
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.14 222/237] Btrfs: fix btrfs_wait_ordered_range() so that it waits for all ordered extents
+Date:   Thu, 27 Feb 2020 14:37:16 +0100
+Message-Id: <20200227132312.480674167@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
-References: <20200227132214.553656188@linuxfoundation.org>
+In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
+References: <20200227132255.285644406@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,47 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miles Chen <miles.chen@mediatek.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit ee050dc83bc326ad5ef8ee93bca344819371e7a5 ]
+commit e75fd33b3f744f644061a4f9662bd63f5434f806 upstream.
 
-Replace "depot_save_stack" with "stack_depot_save" in code comments because
-depot_save_stack() was replaced in commit c0cfc337264c ("lib/stackdepot:
-Provide functions which operate on plain storage arrays") and removed in
-commit 56d8f079c51a ("lib/stackdepot: Remove obsolete functions")
+In btrfs_wait_ordered_range() once we find an ordered extent that has
+finished with an error we exit the loop and don't wait for any other
+ordered extents that might be still in progress.
 
-Signed-off-by: Miles Chen <miles.chen@mediatek.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190815113246.18478-1-miles.chen@mediatek.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+All the users of btrfs_wait_ordered_range() expect that there are no more
+ordered extents in progress after that function returns. So past fixes
+such like the ones from the two following commits:
+
+  ff612ba7849964 ("btrfs: fix panic during relocation after ENOSPC before
+                   writeback happens")
+
+  28aeeac1dd3080 ("Btrfs: fix panic when starting bg cache writeout after
+                   IO error")
+
+don't work when there are multiple ordered extents in the range.
+
+Fix that by making btrfs_wait_ordered_range() wait for all ordered extents
+even after it finds one that had an error.
+
+Link: https://github.com/kdave/btrfs-progs/issues/228#issuecomment-569777554
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- lib/stackdepot.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/btrfs/ordered-data.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/lib/stackdepot.c b/lib/stackdepot.c
-index e513459a5601a..c5e06c43228f9 100644
---- a/lib/stackdepot.c
-+++ b/lib/stackdepot.c
-@@ -96,7 +96,7 @@ static bool init_stack_slab(void **prealloc)
- 		stack_slabs[depot_index + 1] = *prealloc;
- 		/*
- 		 * This smp_store_release pairs with smp_load_acquire() from
--		 * |next_slab_inited| above and in depot_save_stack().
-+		 * |next_slab_inited| above and in stack_depot_save().
- 		 */
- 		smp_store_release(&next_slab_inited, 1);
+--- a/fs/btrfs/ordered-data.c
++++ b/fs/btrfs/ordered-data.c
+@@ -838,10 +838,15 @@ int btrfs_wait_ordered_range(struct inod
+ 		}
+ 		btrfs_start_ordered_extent(inode, ordered, 1);
+ 		end = ordered->file_offset;
++		/*
++		 * If the ordered extent had an error save the error but don't
++		 * exit without waiting first for all other ordered extents in
++		 * the range to complete.
++		 */
+ 		if (test_bit(BTRFS_ORDERED_IOERR, &ordered->flags))
+ 			ret = -EIO;
+ 		btrfs_put_ordered_extent(ordered);
+-		if (ret || end == 0 || end == start)
++		if (end == 0 || end == start)
+ 			break;
+ 		end--;
  	}
-@@ -123,7 +123,7 @@ static struct stack_record *depot_alloc_stack(unsigned long *entries, int size,
- 		depot_offset = 0;
- 		/*
- 		 * smp_store_release() here pairs with smp_load_acquire() from
--		 * |next_slab_inited| in depot_save_stack() and
-+		 * |next_slab_inited| in stack_depot_save() and
- 		 * init_stack_slab().
- 		 */
- 		if (depot_index + 1 < STACK_ALLOC_MAX_SLABS)
--- 
-2.20.1
-
 
 
