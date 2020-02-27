@@ -2,105 +2,107 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D9CC4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD00C4BA3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:58:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77C8A24699
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:57:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="v3/xtEfp"
+	by mail.kernel.org (Postfix) with ESMTP id 7149924696
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:58:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729000AbgB0K5g (ORCPT
+        id S1728885AbgB0K6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 05:57:36 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:52864 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728854AbgB0K5f (ORCPT
+        Thu, 27 Feb 2020 05:58:11 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:35872 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728744AbgB0K6K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 05:57:35 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582801055; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=sM+W2Nc7DPEL6NoqIWgydj9LZlnUkC9GPD/SJlw3K2k=; b=v3/xtEfpypudOdC+9boxbhKfp4E6EsWxIWQkTHpHmlARyZqtsgsUXfN1hiTc0t+9BMMdVvLL
- gn0CiPC/lzJi+VPIgxQkQ85bv4PSWwHq/ZdpXLEDvaAPVo98zlePBCSsU08KmUOHo57QkE1g
- V4aBqaljdS1/aAPTbTjJ2Z1K1vs=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e57a091.7f8e7c2eea40-smtp-out-n02;
- Thu, 27 Feb 2020 10:57:21 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id F1259C447AB; Thu, 27 Feb 2020 10:57:19 +0000 (UTC)
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4D0B5C447A6;
-        Thu, 27 Feb 2020 10:57:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4D0B5C447A6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     robh+dt@kernel.org, georgi.djakov@linaro.org, evgreen@chromium.org
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mark.rutland@arm.com,
-        saravanak@google.com, viresh.kumar@linaro.org,
-        okukatla@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v5 7/7] arm64: dts: qcom: sc7180: Add OSM L3 interconnect provider
-Date:   Thu, 27 Feb 2020 16:26:31 +0530
-Message-Id: <20200227105632.15041-8-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200227105632.15041-1-sibis@codeaurora.org>
-References: <20200227105632.15041-1-sibis@codeaurora.org>
+        Thu, 27 Feb 2020 05:58:10 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 1F1B71C013C; Thu, 27 Feb 2020 11:58:09 +0100 (CET)
+Date:   Thu, 27 Feb 2020 11:58:08 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, Dan Murphy <dmurphy@ti.com>,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH v17 00/17] Multi Color LED Framework
+Message-ID: <20200227105808.GA27003@duo.ucw.cz>
+References: <20200127150032.31350-1-dmurphy@ti.com>
+ <42d9687b-b488-22cf-0e9a-ff635b2094e3@ti.com>
+ <20200225101940.GB16252@amd>
+ <be76fdac-9d32-b9b2-c01d-3aa315b14463@gmail.com>
+ <20200226125903.GA2800@duo.ucw.cz>
+ <20f6bdd5-e899-aead-8c35-1c3a3d09145f@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="gBBFr7Ir9EOA20Yy"
+Content-Disposition: inline
+In-Reply-To: <20f6bdd5-e899-aead-8c35-1c3a3d09145f@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Operation State Manager (OSM) L3 interconnect provider on SC7180 SoCs.
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+--gBBFr7Ir9EOA20Yy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 3e28f340fa3e6..6997467608107 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -7,6 +7,7 @@
- 
- #include <dt-bindings/clock/qcom,gcc-sc7180.h>
- #include <dt-bindings/clock/qcom,rpmh.h>
-+#include <dt-bindings/interconnect/qcom,osm-l3.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/phy/phy-qcom-qusb2.h>
- #include <dt-bindings/power/qcom-aoss-qmp.h>
-@@ -1578,6 +1579,16 @@ apps_bcm_voter: bcm_voter {
- 			};
- 		};
- 
-+		osm_l3: interconnect@18321000 {
-+			compatible = "qcom,sc7180-osm-l3";
-+			reg = <0 0x18321000 0 0x1400>;
-+
-+			clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
-+			clock-names = "xo", "alternate";
-+
-+			#interconnect-cells = <1>;
-+		};
-+
- 		cpufreq_hw: cpufreq@18323000 {
- 			compatible = "qcom,cpufreq-hw";
- 			reg = <0 0x18323000 0 0x1400>, <0 0x18325800 0 0x1400>;
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Hi, Jacek!
+
+(and thanks for doing this).
+
+> We have here long lasting discussion related to LED multicolor class
+> sysfs interface design. We went through several iterations and worked
+> out the solution with individual file per each color sub-LED in the
+> color directory as shown below:
+>=20
+> /sys/class/leds/<led>/colors/<color>_intensity
+>=20
+> This is in line with one-value-per-file sysfs rule, that is being
+> frequently highlighted, and we even had not so long ago a patch
+> for led cpu trigger solving the problem caused by this rule not
+> being adhered to.
+
+Yep. One of the problems is that it is nice to change all the hardware
+channels at once to produce color (it is often on i2c -- and slow), so
+current proposals use "interesting" kind of latching.
+
+> Now we have the voice below bringing to attention another caveat
+> from sysfs documentation:
+>=20
+> "it is socially acceptable to express an array of values of the same
+> type"
+>=20
+> and proposing the interface in the form of two files:
+>=20
+> channel_intensity (file containing array of u32's)
+> channel_names (usually containing "red green blue")
+
+And thus I want to have it in one file, so it is naturaly atomic. RGB
+leds with 3 channels are common; I have not user yet, but there are
+RGBW with 4 channels (and some more exotic stuff). I don't expect to
+have more than 5 channels.
+
+Best regards,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--gBBFr7Ir9EOA20Yy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXlegwAAKCRAw5/Bqldv6
+8mskAKCOR+FzZhQ+xON7Lm1SAo0O69112ACeKN7hUuClPLCjgJWr/mFOK3vWzdc=
+=Q6Vn
+-----END PGP SIGNATURE-----
+
+--gBBFr7Ir9EOA20Yy--
