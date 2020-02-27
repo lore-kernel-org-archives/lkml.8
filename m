@@ -2,145 +2,179 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C404C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C03BAC4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A7012469A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75E1921556
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:51:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="LwZJ5hvM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="vmFgRO8B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729093AbgB0MuP (ORCPT
+        id S1729097AbgB0MvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 07:50:15 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:45388 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729032AbgB0MuO (ORCPT
+        Thu, 27 Feb 2020 07:51:06 -0500
+Received: from gateway34.websitewelcome.com ([192.185.149.72]:17388 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728977AbgB0MvF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 07:50:14 -0500
-Received: by mail-qt1-f195.google.com with SMTP id d9so2105232qte.12
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 04:50:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+/pCx60f/1X+9oiLWtdCr7slRVvciDKJGzX506kGhKA=;
-        b=LwZJ5hvMkch1yo5ly172o7GJ3mfainNjJJKqHYsyqJ2MSPmvQnLSjknp31jnre3Ema
-         1FUB9Tef3NCtRijJuv9eFIoeetxVNKLwMWAJBDQVp46vYR2nLb8T/5gzw6xZc3TWEzzo
-         aDoDQV65wdYVhTygc0oRW+ctO9RbCHUwfFlxd8mbUxnldyd90iPPcsHHN9LEXURzD+Bd
-         4A58qRoJNQrHoYHUxFysgDEityuGQQVtrnQt/dAaNpSvwaM6omm5Oyk7vd9jXJhW23jD
-         2BKJgPA7rfl6RdxiivWiiA6tQiPXyQIoXHWk919tGT2rNBcQLL89YyEXXEhwilHkkHU0
-         /U5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+/pCx60f/1X+9oiLWtdCr7slRVvciDKJGzX506kGhKA=;
-        b=KkvWVBIB1r7JL6moHBrtIHC3zrnkM9boefTYMiSGAvoH4gcW1ivNXfnt5ux1omDXAz
-         ooGiGpBWIburUMq/8DjnGxx+ecbgqqWaaDD7UulwDAJC9H1YlWnR711yz7mN2zhDKATZ
-         XpOp5HIE99y6Wi7KFosEyTWAA2Hikdi4xyqybSVYgbaqi/ZT53sPzQ5Z5CkDMKPbg0Gx
-         eHYLYKiT2JYbL7aFC6iTGj4ahDug4rKIpHNd6VOxOAOz78BKRGfZQLo2MgecY7vu04bg
-         pRn++9IoAScXJitrQnGNnyX29pPXOcqGvh0sJXcG/4lOhmGfTynJDNtwg4lJf+aWiefb
-         oSew==
-X-Gm-Message-State: APjAAAWd8nq2XhLwopjnZhl6/opZG91ojrB8sk9WVyLflrt8DqGW7FSM
-        g02GdHKX7nxzmUYflK3mvGIM5A==
-X-Google-Smtp-Source: APXvYqx0U3vFZWg/sKNGxZUUnusjqiG2GsAOVxX0+YLX9k71Ov4hCfuLa99A8LZxIzOfIXy6PmyhWA==
-X-Received: by 2002:ac8:7103:: with SMTP id z3mr4958280qto.172.1582807813193;
-        Thu, 27 Feb 2020 04:50:13 -0800 (PST)
-Received: from localhost (pool-108-27-252-85.nycmny.fios.verizon.net. [108.27.252.85])
-        by smtp.gmail.com with ESMTPSA id v82sm3040358qka.51.2020.02.27.04.50.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 04:50:12 -0800 (PST)
-Date:   Thu, 27 Feb 2020 07:50:11 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     Shakeel Butt <shakeelb@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, Tejun Heo <tj@kernel.org>,
-        Roman Gushchin <guro@fb.com>, Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>
-Subject: Re: [PATCH] mm: memcontrol: asynchronous reclaim for memory.high
-Message-ID: <20200227125011.GB39625@cmpxchg.org>
-References: <20200219181219.54356-1-hannes@cmpxchg.org>
- <CALvZod7fya+o8mO+qo=FXjk3WgNje=2P=sxM5StgdBoGNeXRMg@mail.gmail.com>
- <20200226222642.GB30206@cmpxchg.org>
- <2be6ac8d-e290-0a85-5cfa-084968a7fe36@linux.alibaba.com>
+        Thu, 27 Feb 2020 07:51:05 -0500
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id 193F115D88D
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 06:51:04 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 7Id6jLduJEfyq7Id6jRF5C; Thu, 27 Feb 2020 06:51:04 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=1f92XC34FHn3ZjYdpwfdtBDEt7FiLvN/exTOBVNLQ0E=; b=vmFgRO8B5BleEJTspNeQz5ixWq
+        J2AAIfJtKnHrPPgUOtlXhMbQoaqnbqejvjt/F5J1gp5hW7hbs6vN6Lw7xdLbJZCqMS0pc28Q5DT9F
+        26p4DcVgzcGoYHqwUJ21HqCC1QDNw2MaDYOmkAKnxA9UzhcMVbxYhCtjY1KtAbEi4rrpyxqdiGeov
+        fi2rKYlBZjak4pP5SA+SjAhk8rgT9ZPxBqojRUSYJ2PN/g35mQVJFqM0sGIImYQY0yQO4F4tNOUPT
+        GqQEG+inpEyFITmjZ6pHWOkEWrSC4oWCGU4gsUBGSsBe3TBEknnb+DwLZYtAAj5cOW23NUXIyMVvN
+        75uCJy2g==;
+Received: from [200.76.83.19] (port=55990 helo=[192.168.43.132])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j7Id1-000czK-Vl; Thu, 27 Feb 2020 06:51:02 -0600
+Subject: Re: [PATCH] apparmor: Replace zero-length array with flexible-array
+ member
+To:     John Johansen <john.johansen@canonical.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+Cc:     linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200211210427.GA28952@embeddedor>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <4c8bf961-1d0d-9a63-3b1b-3aa6acb55179@embeddedor.com>
+Date:   Thu, 27 Feb 2020 06:53:44 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2be6ac8d-e290-0a85-5cfa-084968a7fe36@linux.alibaba.com>
+In-Reply-To: <20200211210427.GA28952@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.76.83.19
+X-Source-L: No
+X-Exim-ID: 1j7Id1-000czK-Vl
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.132]) [200.76.83.19]:55990
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 04:12:23PM -0800, Yang Shi wrote:
-> On 2/26/20 2:26 PM, Johannes Weiner wrote:
-> > So we should be able to fully resolve this problem inside the kernel,
-> > without going through userspace, by accounting CPU cycles used by the
-> > background reclaim worker to the cgroup that is being reclaimed.
+Hi all,
+
+Friendly ping: Who can take this?
+
+Thanks
+--
+Gustavo
+
+On 2/11/20 15:04, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
 > 
-> Actually I'm wondering if we really need account CPU cycles used by
-> background reclaimer or not. For our usecase (this may be not general), the
-> purpose of background reclaimer is to avoid latency sensitive workloads get
-> into direct relcaim (avoid the stall from direct relcaim). In fact it just
-> "steal" CPU cycles from lower priority or best-effort workloads to guarantee
-> latency sensitive workloads behave well. If the "stolen" CPU cycles are
-> accounted, it means the latency sensitive workloads would get throttled from
-> somewhere else later, i.e. by CPU share.
-
-That doesn't sound right.
-
-"Not accounting" isn't an option. If we don't annotate the reclaim
-work, the cycles will go to the root cgroup. That means that the
-latency-sensitive workload can steal cycles from the low-pri job, yes,
-but also that the low-pri job can steal from the high-pri one.
-
-Say your two workloads on the system are a web server and a compile
-job and the CPU shares are allocated 80:20. The compile job will cause
-most of the reclaim. If the reclaim cycles can escape to the root
-cgroup, the compile job will effectively consume more than 20 shares
-and the low-pri job will get less than 80.
-
-But let's say we executed all background reclaim in the low-pri group,
-to allow the high-pri group to steal cycles from the low-pri group,
-but not the other way round. Again an 80:20 CPU distribution. Now the
-reclaim work competes with the compile job over a very small share of
-CPU. The reclaim work that the high priority job is relying on is
-running at low priority. That means that the compile job can cause the
-web server to go into direct reclaim. That's a priority inversion.
-
-> We definitely don't want to the background reclaimer eat all CPU cycles. So,
-> the whole background reclaimer is opt in stuff. The higher level cluster
-> management and administration components make sure the cgroups are setup
-> correctly, i.e. enable for specific cgroups, setup watermark properly, etc.
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
 > 
-> Of course, this may be not universal and may be just fine for some specific
-> configurations or usecases.
-
-Yes, I suspect it works for you because you set up watermarks on the
-high-pri job but not on the background jobs, thus making sure only
-high-pri jobs can steal cycles from the rest of the system.
-
-However, we do want low-pri jobs to have background reclaim as well. A
-compile job may not be latency-sensitive, but it still benefits from a
-throughput POV when the reclaim work runs concurrently. And if there
-are idle CPU cycles available that the high-pri work isn't using right
-now, it would be wasteful not to make use of them.
-
-So yes, I can see how such an accounting loophole can be handy. By
-letting reclaim CPU cycles sneak out of containment, you can kind of
-use it for high-pri jobs. Or rather *one* high-pri job, because more
-than one becomes unsafe again, where one can steal a large number of
-cycles from others at the same priority.
-
-But it's more universally useful to properly account CPU cycles that
-are actually consumed by a cgroup, to that cgroup, and then reflect
-the additional CPU explicitly in the CPU weight configuration. That
-way you can safely have background reclaim on jobs of all priorities.
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertenly introduced[3] to the codebase from now on.
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  security/apparmor/apparmorfs.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/security/apparmor/apparmorfs.c b/security/apparmor/apparmorfs.c
+> index fefee040bf79..cc81080efb63 100644
+> --- a/security/apparmor/apparmorfs.c
+> +++ b/security/apparmor/apparmorfs.c
+> @@ -804,7 +804,7 @@ static ssize_t query_label(char *buf, size_t buf_len,
+>  struct multi_transaction {
+>  	struct kref count;
+>  	ssize_t size;
+> -	char data[0];
+> +	char data[];
+>  };
+>  
+>  #define MULTI_TRANSACTION_LIMIT (PAGE_SIZE - sizeof(struct multi_transaction))
+> 
