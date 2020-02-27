@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C238DC3F367
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C62BC3F340
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9811F21D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 441E324656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811303;
-	bh=8T3vqaaSmx9hj90CiV7mq+7OZq8LbOFVfXwRqZ8ERpk=;
+	s=default; t=1582811334;
+	bh=XiaQdHenxGYUj1Xl1On946SBIYhXQ9a+VSiUdXWqUws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=18cKWef7n0K4jU8SeB1TBOBTT4dUloN6a/K8Rhfp7Dx4B6LIBvayOL2d75CiXbd/p
-	 PUAsEPditg+hITLr9ETh8yXkmPJigl1AF/R7/8lri5e4Xc76JyIQ0O6PdNhlXJkekh
-	 vpjWXP42T2Pjw0smH1/K6PDV5q4nGKMziC98rGJU=
+	b=jKrOahmMlQrVDjQ8eC01GepceOjCRu88AewYSXc2qVT6Ev4iMXBVZZntDsQZTCk5h
+	 ZDCQjkWxfkHtwlH2xu/Ph1jRsxxQ7fxqhPPCLZQUjXd1epa/05vREUHAGfQvuHHg6y
+	 vkO2xfToK6DbvHOAgL01wqGzbvKcdpSYu1+vD9pY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730861AbgB0NsW (ORCPT
+        id S1730961AbgB0Nsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:48:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44976 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:48:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729237AbgB0NsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:48:18 -0500
+        id S1730951AbgB0Nsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:48:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19CEC20578;
-        Thu, 27 Feb 2020 13:48:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9353724688;
+        Thu, 27 Feb 2020 13:48:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811297;
-        bh=8T3vqaaSmx9hj90CiV7mq+7OZq8LbOFVfXwRqZ8ERpk=;
+        s=default; t=1582811331;
+        bh=XiaQdHenxGYUj1Xl1On946SBIYhXQ9a+VSiUdXWqUws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M5eOFG8lBj8+/QkDwnbMBQRlH7R9oTs3JNRprhS7uBkuCqY3rf7QpZz84LXBKAhR2
-         zFWotzOufku0OvSJtfazH73RwYAS7DUJB0YdIQ1oruyJaBdUvVDBQoQCTmVC3lQDLx
-         ysYTBwkCt9beVsjhBjtLHogZBg+xrqUwgLDcdbEk=
+        b=pNMHcthOnoNOQYrz/bYoAkhVi76UnggQFgxWba9o791XjlxVxwKFCUHYbmTUI0oJZ
+         g0P3mwmravWGG9FwAkPQNeXlmNCUSClCYjZgniLRMCH7McjewAm8j/JM1VomFBUU6q
+         eWnKDqObYGMksXGF1awcYTKuniJTPFXLdkd7NsGQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Simon Schwartz <kern.simon@theschwartz.xyz>,
+        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 077/165] driver core: platform: Prevent resouce overflow from causing infinite loops
-Date:   Thu, 27 Feb 2020 14:35:51 +0100
-Message-Id: <20200227132242.649653921@linuxfoundation.org>
+Subject: [PATCH 4.9 042/165] ext4, jbd2: ensure panic when aborting with zero errno
+Date:   Thu, 27 Feb 2020 14:35:16 +0100
+Message-Id: <20200227132237.370250697@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -60,72 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Simon Schwartz <kern.simon@theschwartz.xyz>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-[ Upstream commit 39cc539f90d035a293240c9443af50be55ee81b8 ]
+[ Upstream commit 51f57b01e4a3c7d7bdceffd84de35144e8c538e7 ]
 
-num_resources in the platform_device struct is declared as a u32.  The
-for loops that iterate over num_resources use an int as the counter,
-which can cause infinite loops on architectures with smaller ints.
-Change the loop counters to u32.
+JBD2_REC_ERR flag used to indicate the errno has been updated when jbd2
+aborted, and then __ext4_abort() and ext4_handle_error() can invoke
+panic if ERRORS_PANIC is specified. But if the journal has been aborted
+with zero errno, jbd2_journal_abort() didn't set this flag so we can
+no longer panic. Fix this by always record the proper errno in the
+journal superblock.
 
-Signed-off-by: Simon Schwartz <kern.simon@theschwartz.xyz>
-Link: https://lore.kernel.org/r/2201ce63a2a171ffd2ed14e867875316efcf71db.camel@theschwartz.xyz
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 4327ba52afd03 ("ext4, jbd2: ensure entering into panic after recording an error in superblock")
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20191204124614.45424-3-yi.zhang@huawei.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/platform.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ fs/jbd2/checkpoint.c |  2 +-
+ fs/jbd2/journal.c    | 15 ++++-----------
+ 2 files changed, 5 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index f90b1b9bbad0d..6cdc198965f5a 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -28,6 +28,7 @@
- #include <linux/limits.h>
- #include <linux/property.h>
- #include <linux/kmemleak.h>
-+#include <linux/types.h>
+diff --git a/fs/jbd2/checkpoint.c b/fs/jbd2/checkpoint.c
+index 4d5a5a4cc017c..addb0784dd1c4 100644
+--- a/fs/jbd2/checkpoint.c
++++ b/fs/jbd2/checkpoint.c
+@@ -168,7 +168,7 @@ void __jbd2_log_wait_for_space(journal_t *journal)
+ 				       "journal space in %s\n", __func__,
+ 				       journal->j_devname);
+ 				WARN_ON(1);
+-				jbd2_journal_abort(journal, 0);
++				jbd2_journal_abort(journal, -EIO);
+ 			}
+ 			write_lock(&journal->j_state_lock);
+ 		} else {
+diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+index 40c754854b29e..efc8cfd060730 100644
+--- a/fs/jbd2/journal.c
++++ b/fs/jbd2/journal.c
+@@ -2100,12 +2100,10 @@ static void __journal_abort_soft (journal_t *journal, int errno)
  
- #include "base.h"
- #include "power/power.h"
-@@ -68,7 +69,7 @@ void __weak arch_setup_pdev_archdata(struct platform_device *pdev)
- struct resource *platform_get_resource(struct platform_device *dev,
- 				       unsigned int type, unsigned int num)
- {
--	int i;
-+	u32 i;
+ 	__jbd2_journal_abort_hard(journal);
  
- 	for (i = 0; i < dev->num_resources; i++) {
- 		struct resource *r = &dev->resource[i];
-@@ -153,7 +154,7 @@ struct resource *platform_get_resource_byname(struct platform_device *dev,
- 					      unsigned int type,
- 					      const char *name)
- {
--	int i;
-+	u32 i;
+-	if (errno) {
+-		jbd2_journal_update_sb_errno(journal);
+-		write_lock(&journal->j_state_lock);
+-		journal->j_flags |= JBD2_REC_ERR;
+-		write_unlock(&journal->j_state_lock);
+-	}
++	jbd2_journal_update_sb_errno(journal);
++	write_lock(&journal->j_state_lock);
++	journal->j_flags |= JBD2_REC_ERR;
++	write_unlock(&journal->j_state_lock);
+ }
  
- 	for (i = 0; i < dev->num_resources; i++) {
- 		struct resource *r = &dev->resource[i];
-@@ -350,7 +351,8 @@ EXPORT_SYMBOL_GPL(platform_device_add_properties);
+ /**
+@@ -2147,11 +2145,6 @@ static void __journal_abort_soft (journal_t *journal, int errno)
+  * failure to disk.  ext3_error, for example, now uses this
+  * functionality.
+  *
+- * Errors which originate from within the journaling layer will NOT
+- * supply an errno; a null errno implies that absolutely no further
+- * writes are done to the journal (unless there are any already in
+- * progress).
+- *
   */
- int platform_device_add(struct platform_device *pdev)
- {
--	int i, ret;
-+	u32 i;
-+	int ret;
  
- 	if (!pdev)
- 		return -EINVAL;
-@@ -437,7 +439,7 @@ EXPORT_SYMBOL_GPL(platform_device_add);
-  */
- void platform_device_del(struct platform_device *pdev)
- {
--	int i;
-+	u32 i;
- 
- 	if (pdev) {
- 		device_remove_properties(&pdev->dev);
+ void jbd2_journal_abort(journal_t *journal, int errno)
 -- 
 2.20.1
 
