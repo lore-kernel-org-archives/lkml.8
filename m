@@ -2,54 +2,52 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B8BC76560
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECC6C35E15
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D640A2468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22E2424656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:36:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814209;
-	bh=cOC9Nsj09tLFpckuFZxqt7bE5XPufJsAsVuPtG2dnfc=;
+	s=default; t=1582814184;
+	bh=QvxfOGCLgdsLGPzOiRJcc1LAqqGhABSP+R7a3xTSzao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uEWfpYdVV8+cYWQnepiYfXX1zzNUSTHm0IKHlPTfLXy0o5BEon2qqaEDHWam3L3cj
-	 aUxpqe8GJN13McaGISt1rBIJpFmHcDXmy7VfjR0yMULXJVIn3sSSDPK0/eW9qbFkkY
-	 Z3bAoR8fAhZ8rWgPmwM3lapN2qd2jurXxCfiDTJk=
+	b=QVavvnwLqPKqgaJYXWvMq9jfjnCxGQz+PPMRJy3GnGvILXK3jRJbBps2W/voJ8YgH
+	 hmtMoQlYTjKGIhGcjOtClyOGv4VS4k2TPB9ADOXjkfVXd+jnIqIi3SeTKYmdx1gQEt
+	 IS0JvxFmfB4opVi881ONt7IY0RhLnpP+wZ/3rv7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733059AbgB0Ogs (ORCPT
+        id S1730119AbgB0N7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:36:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59654 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:59:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732455AbgB0N62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:58:28 -0500
+        id S1732556AbgB0N7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:59:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6A1D2469D;
-        Thu, 27 Feb 2020 13:58:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BD8B20578;
+        Thu, 27 Feb 2020 13:59:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811907;
-        bh=cOC9Nsj09tLFpckuFZxqt7bE5XPufJsAsVuPtG2dnfc=;
+        s=default; t=1582811940;
+        bh=QvxfOGCLgdsLGPzOiRJcc1LAqqGhABSP+R7a3xTSzao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=umjxiwyFpARipbMcqBOrfzKTk6xZSLHLJchqzS5QiLbscMIAInZlswb9BgzGKcI5Z
-         An0go/UyQm6SikJ2RvNSFyepOV5BEzlbdYvyQxUiFDI/44RU/tIM5B7jzEKX8cEQgs
-         1U6IoENzLaaprTefJIhiDukcu7yfrKxppuNAK4kE=
+        b=efRwjP6Es4SZPRDMtBMJlXA+b701xzptCSaerBsZVJxWo8o1X53E7/lF1ra7BJp2m
+         GyfSKcSVis3kgJn0D7IfYDjmqqNshUajuD6MV+/vdj3CqEurCfQpu68CkwaWWzV2sS
+         3wZz3gSJ+Ed6erBF5/ibyDPSqgYxXxSRvVuhp0hE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 146/237] hostap: Adjust indentation in prism2_hostapd_add_sta
-Date:   Thu, 27 Feb 2020 14:36:00 +0100
-Message-Id: <20200227132307.362209460@linuxfoundation.org>
+Subject: [PATCH 4.14 153/237] trigger_next should increase position index
+Date:   Thu, 27 Feb 2020 14:36:07 +0100
+Message-Id: <20200227132307.822217789@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -62,50 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit b61156fba74f659d0bc2de8f2dbf5bad9f4b8faf ]
+[ Upstream commit 6722b23e7a2ace078344064a9735fb73e554e9ef ]
 
-Clang warns:
+if seq_file .next fuction does not change position index,
+read after some lseek can generate unexpected output.
 
-../drivers/net/wireless/intersil/hostap/hostap_ap.c:2511:3: warning:
-misleading indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-        if (sta->tx_supp_rates & WLAN_RATE_5M5)
-        ^
-../drivers/net/wireless/intersil/hostap/hostap_ap.c:2509:2: note:
-previous statement is here
-        if (sta->tx_supp_rates & WLAN_RATE_2M)
-        ^
-1 warning generated.
+Without patch:
+ # dd bs=30 skip=1 if=/sys/kernel/tracing/events/sched/sched_switch/trigger
+ dd: /sys/kernel/tracing/events/sched/sched_switch/trigger: cannot skip to specified offset
+ n traceoff snapshot stacktrace enable_event disable_event enable_hist disable_hist hist
+ # Available triggers:
+ # traceon traceoff snapshot stacktrace enable_event disable_event enable_hist disable_hist hist
+ 6+1 records in
+ 6+1 records out
+ 206 bytes copied, 0.00027916 s, 738 kB/s
 
-This warning occurs because there is a space before the tab on this
-line. Remove it so that the indentation is consistent with the Linux
-kernel coding style and clang no longer warns.
+Notice the printing of "# Available triggers:..." after the line.
 
-Fixes: ff1d2767d5a4 ("Add HostAP wireless driver.")
-Link: https://github.com/ClangBuiltLinux/linux/issues/813
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+With the patch:
+ # dd bs=30 skip=1 if=/sys/kernel/tracing/events/sched/sched_switch/trigger
+ dd: /sys/kernel/tracing/events/sched/sched_switch/trigger: cannot skip to specified offset
+ n traceoff snapshot stacktrace enable_event disable_event enable_hist disable_hist hist
+ 2+1 records in
+ 2+1 records out
+ 88 bytes copied, 0.000526867 s, 167 kB/s
+
+It only prints the end of the file, and does not restart.
+
+Link: http://lkml.kernel.org/r/3c35ee24-dd3a-8119-9c19-552ed253388a@virtuozzo.com
+
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intersil/hostap/hostap_ap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace_events_trigger.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/intersil/hostap/hostap_ap.c b/drivers/net/wireless/intersil/hostap/hostap_ap.c
-index 1a8d8db80b054..486ca1ee306ed 100644
---- a/drivers/net/wireless/intersil/hostap/hostap_ap.c
-+++ b/drivers/net/wireless/intersil/hostap/hostap_ap.c
-@@ -2568,7 +2568,7 @@ static int prism2_hostapd_add_sta(struct ap_data *ap,
- 		sta->supported_rates[0] = 2;
- 	if (sta->tx_supp_rates & WLAN_RATE_2M)
- 		sta->supported_rates[1] = 4;
-- 	if (sta->tx_supp_rates & WLAN_RATE_5M5)
-+	if (sta->tx_supp_rates & WLAN_RATE_5M5)
- 		sta->supported_rates[2] = 11;
- 	if (sta->tx_supp_rates & WLAN_RATE_11M)
- 		sta->supported_rates[3] = 22;
+diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+index e2da180ca172a..31e91efe243e5 100644
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -127,9 +127,10 @@ static void *trigger_next(struct seq_file *m, void *t, loff_t *pos)
+ {
+ 	struct trace_event_file *event_file = event_file_data(m->private);
+ 
+-	if (t == SHOW_AVAILABLE_TRIGGERS)
++	if (t == SHOW_AVAILABLE_TRIGGERS) {
++		(*pos)++;
+ 		return NULL;
+-
++	}
+ 	return seq_list_next(t, &event_file->triggers, pos);
+ }
+ 
 -- 
 2.20.1
 
