@@ -2,83 +2,135 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C473C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D39C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06CF720801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:01:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30BC2246A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:01:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="pbwifbyn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CacxHc1s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730222AbgB0SBJ (ORCPT
+        id S1730406AbgB0SBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 13:01:09 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:41542 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729162AbgB0SBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 13:01:09 -0500
-Received: from zn.tnic (p200300EC2F0E0F005C616343C404DD6B.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:f00:5c61:6343:c404:dd6b])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1B7B81EC0CDD;
-        Thu, 27 Feb 2020 19:01:08 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1582826468;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=C0ocNCl0BvV6Iv70Wd4elUhmzpKLGyoPGx9MZ3ic7rg=;
-        b=pbwifbynEjeq04eVHBEaQ4ua8gvBNpa63SFtiJ/8A3bnWuAHapUaa7ybToyYZpCyj/PfVV
-        V922BdHVBoL7turZyP2MYEsidOwC6HsgsX/VHR7cjQgTMDGgbbIOYmiqRMV+4MX6ncj4Ge
-        hsGCGATkLHBl76oj69SLwmpEgogzoTw=
-Date:   Thu, 27 Feb 2020 19:01:00 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jacob Keller <jacob.e.keller@intel.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thu, 27 Feb 2020 13:01:24 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36505 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729162AbgB0SBX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 13:01:23 -0500
+Received: by mail-wr1-f65.google.com with SMTP id j16so3028709wrt.3;
+        Thu, 27 Feb 2020 10:01:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=E8ZWbS7tq2JVdfpTRDo8i0zrwTusfBz0dP/4sGTaYhE=;
+        b=CacxHc1sX0lFECQt6xnPa7ab2DoBIXez7pUXgytY0T13W9k/YHrXteFuXYxvWcEtUL
+         baWCq6Qjq1ofXIkAixN4zKjzxO6kA2z+bqxFXH8Qw+yoLwofFIeaEp+/Jhj0lWX//7nP
+         sh8h/bX6nea9yMt/EZENdgjMMRbGV5qEuFHjj+kvap62I/5xBlT6LYb1aTH80jUYy1HR
+         VDdb5vmtm8ksc5UEndBJRQAMSg24SVWx7f/g8HHE8is4YiwD/z7UU0sR1DXLe+pYvVqt
+         Mvzcodidc1E5Fy+gWW11vodldtQoIjasP1oQkbE5JcCrt6u5hH+rlyviWCD2rJ0XH7tQ
+         BzFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=E8ZWbS7tq2JVdfpTRDo8i0zrwTusfBz0dP/4sGTaYhE=;
+        b=WheFHmimv/nuAhsWh7A2xLg4Lm8U/Nwwj1CoHiR2v1oUXJlaT+eH50OstMp1jtx82D
+         XCzI2+IUkerkqYYl6/IAVLLIRZIQNZC+Pf6P0+8NXnyX6UZgL0TO+ZrYJyakKld9x1y7
+         +br0PT+vWEaLTmbhSdRy8jq2OuJKe2/qPOH2/RfedOCOjAvbNkAmvsfjVKQs0v9Q6zL/
+         ResmSbEdjYhWZpPw5iVMFGlRI/LdcCy2bikjfeS88REyUKvjbxx9eNgGwB3XUABU64uY
+         rgzaAVn39D4zsQPlgL5ZGJ4nW4KgvY6LMvlG+Bn8S36mQSHDjHz7bL3PVWbUSZ+2dvGV
+         OzLQ==
+X-Gm-Message-State: APjAAAXpCmbvqok6pnV6T3UjzIelgMsxf9uAX1zdr/z6/Ihpz9LBDuAf
+        qm76eupUyhXxVK8BvgjRdss=
+X-Google-Smtp-Source: APXvYqzd3Adej9lxNHdKHQ4vxXxVbjCB5TS6CY9IBBvPvHdwJ/a5fmSIuHpqkTy37ODZrIE+SJGI8g==
+X-Received: by 2002:adf:ef4e:: with SMTP id c14mr35395wrp.335.1582826480343;
+        Thu, 27 Feb 2020 10:01:20 -0800 (PST)
+Received: from laptop.criteo.prod ([2a01:e34:eecb:7400:6cb4:8756:33ca:8626])
+        by smtp.gmail.com with ESMTPSA id b186sm8582287wmb.40.2020.02.27.10.01.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 10:01:19 -0800 (PST)
+From:   Erwan Velu <erwanaliasr1@gmail.com>
+X-Google-Original-From: Erwan Velu <e.velu@criteo.com>
+Cc:     Erwan Velu <e.velu@criteo.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [PATCH] x86/pkeys: Manually set X86_FEATURE_OSPKE to preserve
- existing changes
-Message-ID: <20200227180100.GB18629@zn.tnic>
-References: <20200226231615.13664-1-sean.j.christopherson@intel.com>
- <a492b4f4-4a54-5e5a-b79f-e21f9038f259@intel.com>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+        kvm@vger.kernel.org (open list:KERNEL VIRTUAL MACHINE FOR X86 (KVM/x86)),
+        linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND
+        64-BIT))
+Subject: [PATCH v2] kvm: x86: Limit the number of "kvm: disabled by bios" messages
+Date:   Thu, 27 Feb 2020 19:00:46 +0100
+Message-Id: <20200227180047.53888-1-e.velu@criteo.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200214143035.607115-1-e.velu@criteo.com>
+References: <20200214143035.607115-1-e.velu@criteo.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <a492b4f4-4a54-5e5a-b79f-e21f9038f259@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 04:16:13PM -0800, Jacob Keller wrote:
-> I tested this and it resolves my report! Thanks for a timely fix.
+In older version of systemd(219), at boot time, udevadm is called with :
+	/usr/bin/udevadm trigger --type=devices --action=add"
 
-Adding your Tested-by.
+This program generates an echo "add" in /sys/devices/system/cpu/cpu<x>/uevent,
+leading to the "kvm: disabled by bios" message in case of your Bios disabled
+the virtualization extensions.
 
-> I agree with the analysis. Perhaps it would make sense in the long term
-> to find a solution where get_cpu_cap can remember what was cleared for
-> each CPU and restore those? It already does this using the global
-> variables...
+On a modern system running up to 256 CPU threads, this pollutes the Kernel logs.
 
-get_cpu_cap() remembers if you use setup_force_cpu_cap() but I agree
-that that whole feature bit handling is a bit, hm, "strange". It had its
-raisins.
+This patch offers to ratelimit this message to avoid any userspace program triggering
+this uevent printing this message too often.
 
-FWIW, we had started cleaning those up but then the security nightmares
-happened so on the backburner it went...
+This patch is only a workaround but greatly reduce the pollution without
+breaking the current behavior of printing a message if some try to instantiate
+KVM on a system that doesn't support it.
 
-Thx.
+Note that recent versions of systemd (>239) do not have trigger this behavior.
 
+This patch will be useful at least for some using older systemd with recent Kernels.
+
+Signed-off-by: Erwan Velu <e.velu@criteo.com>
+---
+ arch/x86/kvm/x86.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 359fcd395132..c8a90231befe 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -7308,12 +7308,12 @@ int kvm_arch_init(void *opaque)
+ 	}
+ 
+ 	if (!ops->cpu_has_kvm_support()) {
+-		printk(KERN_ERR "kvm: no hardware support\n");
++		pr_err_ratelimited("kvm: no hardware support\n");
+ 		r = -EOPNOTSUPP;
+ 		goto out;
+ 	}
+ 	if (ops->disabled_by_bios()) {
+-		printk(KERN_ERR "kvm: disabled by bios\n");
++		pr_err_ratelimited("kvm: disabled by bios\n");
+ 		r = -EOPNOTSUPP;
+ 		goto out;
+ 	}
 -- 
-Regards/Gruss,
-    Boris.
+2.24.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
