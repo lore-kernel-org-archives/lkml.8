@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A29C3F36E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2422DC3F36B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6913821D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F00ED21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:50:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811357;
-	bh=wdqrxYPyjy0I0lxc+ygjYYNq7crfOp6Bd9hVxhogQZU=;
+	s=default; t=1582811453;
+	bh=3QRkBVlPdGR8HqGdlUxEZss6jayDNoOvuJHHZPVFyi4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SnjzIqbu8++zwc4Dxfj1V1/CR/iieGpFoq1wsCCB6Hv5mNPJpLjhlqoDzl5e4VfYG
-	 TBHSLTIsztWdiDP+s7PVIRqpNNEk2dojGw6sZsWxZYBZKw915+SzThLpVgIOvIcJs4
-	 0pmwCPnhH7+149iYLpu8uP5nb8Ie1DRFNFddymsI=
+	b=Z3nLR1DEPa0MLjSDqDW72gQqUzCpSeK8Ty+6G/Hb7oiqvQjzkskkA2fpprSC9KiPI
+	 tPnNBm5J1EHFD9LxZnBNtYlcLX2/LYr8swVwxsIyqa5eAf7+ochl8PzVYf6mfavdbh
+	 6BEQz96xDEMoaF8c15hAzxZhzpotHVplEXd+J+yg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731019AbgB0NtQ (ORCPT
+        id S1731297AbgB0Nuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:49:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46416 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:50:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730311AbgB0NtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:49:12 -0500
+        id S1731284AbgB0Nuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:50:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBE9C20578;
-        Thu, 27 Feb 2020 13:49:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FEDB21D7E;
+        Thu, 27 Feb 2020 13:50:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811352;
-        bh=wdqrxYPyjy0I0lxc+ygjYYNq7crfOp6Bd9hVxhogQZU=;
+        s=default; t=1582811445;
+        bh=3QRkBVlPdGR8HqGdlUxEZss6jayDNoOvuJHHZPVFyi4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NPE9FEFkSLoQ+YhBa7ramIQm9Cuhe9fqwmAE234Fq0hbpXW+AyBc2vm7zz07YtxKb
-         6ELqu3JN97g8VYxpp6abndKEw3Zs2poOMxhkxfPBRbWmaFw48FU6CgIhY9ce5WFrjA
-         cIBmAPITz32M8hWkoXCnqc9MuRop9QjJVhZO4kbE=
+        b=xLUwCuVHR7Am+cLyp8oUW10AnHwxLJQ0QvvK2ldlaZofjd5jcFFkAuhRpyfxyyCIZ
+         NS1rlxkDEapCwy7x2aJuLhE2Uzdg0GcDJH7wBly4B6hwJvWHzk7A+4aCwhoQfCx52P
+         J/4zYwU/MAm0f82MhGpJAwCpDn8gDXz3iRCOWEos=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <stfrench@microsoft.com>,
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 100/165] cifs: fix NULL dereference in match_prepath
-Date:   Thu, 27 Feb 2020 14:36:14 +0100
-Message-Id: <20200227132245.804081837@linuxfoundation.org>
+Subject: [PATCH 4.9 136/165] VT_RESIZEX: get rid of field-by-field copyin
+Date:   Thu, 27 Feb 2020 14:36:50 +0100
+Message-Id: <20200227132250.930625537@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -60,41 +59,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit fe1292686333d1dadaf84091f585ee903b9ddb84 ]
+[ Upstream commit 1b3bce4d6bf839304a90951b4b25a5863533bf2a ]
 
-RHBZ: 1760879
-
-Fix an oops in match_prepath() by making sure that the prepath string is not
-NULL before we pass it into strcmp().
-
-This is similar to other checks we make for example in cifs_root_iget()
-
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/tty/vt/vt_ioctl.c | 68 ++++++++++++++++-----------------------
+ 1 file changed, 27 insertions(+), 41 deletions(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 751bdde6515d5..961fcb40183a4 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -2927,8 +2927,10 @@ match_prepath(struct super_block *sb, struct cifs_mnt_data *mnt_data)
- {
- 	struct cifs_sb_info *old = CIFS_SB(sb);
- 	struct cifs_sb_info *new = mnt_data->cifs_sb;
--	bool old_set = old->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH;
--	bool new_set = new->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH;
-+	bool old_set = (old->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH) &&
-+		old->prepath;
-+	bool new_set = (new->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH) &&
-+		new->prepath;
+diff --git a/drivers/tty/vt/vt_ioctl.c b/drivers/tty/vt/vt_ioctl.c
+index 638eb9bbd59fa..d4c1b100f3b6d 100644
+--- a/drivers/tty/vt/vt_ioctl.c
++++ b/drivers/tty/vt/vt_ioctl.c
+@@ -850,58 +850,44 @@ int vt_ioctl(struct tty_struct *tty,
  
- 	if (old_set && new_set && !strcmp(new->prepath, old->prepath))
- 		return 1;
+ 	case VT_RESIZEX:
+ 	{
+-		struct vt_consize __user *vtconsize = up;
+-		ushort ll,cc,vlin,clin,vcol,ccol;
++		struct vt_consize v;
+ 		if (!perm)
+ 			return -EPERM;
+-		if (!access_ok(VERIFY_READ, vtconsize,
+-				sizeof(struct vt_consize))) {
+-			ret = -EFAULT;
+-			break;
+-		}
++		if (copy_from_user(&v, up, sizeof(struct vt_consize)))
++			return -EFAULT;
+ 		/* FIXME: Should check the copies properly */
+-		__get_user(ll, &vtconsize->v_rows);
+-		__get_user(cc, &vtconsize->v_cols);
+-		__get_user(vlin, &vtconsize->v_vlin);
+-		__get_user(clin, &vtconsize->v_clin);
+-		__get_user(vcol, &vtconsize->v_vcol);
+-		__get_user(ccol, &vtconsize->v_ccol);
+-		vlin = vlin ? vlin : vc->vc_scan_lines;
+-		if (clin) {
+-			if (ll) {
+-				if (ll != vlin/clin) {
+-					/* Parameters don't add up */
+-					ret = -EINVAL;
+-					break;
+-				}
+-			} else 
+-				ll = vlin/clin;
++		if (!v.v_vlin)
++			v.v_vlin = vc->vc_scan_lines;
++		if (v.v_clin) {
++			int rows = v.v_vlin/v.v_clin;
++			if (v.v_rows != rows) {
++				if (v.v_rows) /* Parameters don't add up */
++					return -EINVAL;
++				v.v_rows = rows;
++			}
+ 		}
+-		if (vcol && ccol) {
+-			if (cc) {
+-				if (cc != vcol/ccol) {
+-					ret = -EINVAL;
+-					break;
+-				}
+-			} else
+-				cc = vcol/ccol;
++		if (v.v_vcol && v.v_ccol) {
++			int cols = v.v_vcol/v.v_ccol;
++			if (v.v_cols != cols) {
++				if (v.v_cols)
++					return -EINVAL;
++				v.v_cols = cols;
++			}
+ 		}
+ 
+-		if (clin > 32) {
+-			ret =  -EINVAL;
+-			break;
+-		}
+-		    
++		if (v.v_clin > 32)
++			return -EINVAL;
++
+ 		for (i = 0; i < MAX_NR_CONSOLES; i++) {
+ 			if (!vc_cons[i].d)
+ 				continue;
+ 			console_lock();
+-			if (vlin)
+-				vc_cons[i].d->vc_scan_lines = vlin;
+-			if (clin)
+-				vc_cons[i].d->vc_font.height = clin;
++			if (v.v_vlin)
++				vc_cons[i].d->vc_scan_lines = v.v_vlin;
++			if (v.v_clin)
++				vc_cons[i].d->vc_font.height = v.v_clin;
+ 			vc_cons[i].d->vc_resize_user = 1;
+-			vc_resize(vc_cons[i].d, cc, ll);
++			vc_resize(vc_cons[i].d, v.v_cols, v.v_rows);
+ 			console_unlock();
+ 		}
+ 		break;
 -- 
 2.20.1
 
