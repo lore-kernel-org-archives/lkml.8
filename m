@@ -7,55 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE9FC54FE8
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A27C3567B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90AA524656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BE5020801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813918;
-	bh=KHFU5IGLRHzaH0gh1T6pQ60s3N1CUwn0EGvktTIdu9s=;
+	s=default; t=1582813849;
+	bh=kK7tM/QqgcC+v4N+ijRzV5CC218hvODOXjIg38K2DPM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0qyqhO3yDxXGMlBwwj3z9n+Fye0Ah+vNyG+++50uTpOJnmIRHuTM0EZY68TaGFGbo
-	 MpzVHZ+8jhIioS9pWj3MXZUAp3s4VL6vip7qPeC2EvZFQ+bQaYsgW8H+DaDpWbFWzw
-	 2JG4qR+X72HjU6MSRiXnjzXUpPTW3sR1bN/osMWE=
+	b=MwNl7Its8P2if+IQGvEoeWOmCoZSLpImTQ/eD4c3OCbxWCbAdbBPVI5w8EkW5sv6j
+	 9NeNc1BWqhBPEQ4OOOlrHcnvKrNq9nIbHvM+2KuglKYNRXE2zIGWRCZWQ/n2DWM3Ma
+	 bnrUxBCTCP4PPTLplOCS7+NEEetoBBZ8VlZNBYBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733193AbgB0OCq (ORCPT
+        id S2387622AbgB0OEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:02:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37450 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:04:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733181AbgB0OCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:02:42 -0500
+        id S2387584AbgB0OE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:04:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98D3E20578;
-        Thu, 27 Feb 2020 14:02:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77C8321556;
+        Thu, 27 Feb 2020 14:04:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812162;
-        bh=KHFU5IGLRHzaH0gh1T6pQ60s3N1CUwn0EGvktTIdu9s=;
+        s=default; t=1582812265;
+        bh=kK7tM/QqgcC+v4N+ijRzV5CC218hvODOXjIg38K2DPM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IP1TFmKhyMZa2+xy7W/vz7HpJvHNX8y0PF82kOncDZD/b94wgv3iowYCq71VZ7xUm
-         t2fwn+Lh8spN5kHbw5G49NmXMK+9xveEpTZqCwSJZdxhgPT1uhzDKHZyORP7QNrvkV
-         UjTq7Mttizri9K1JsEXsMlMl5OUWcl1D3cOsbkj0=
+        b=b7M90tUIgjR3ZD3mBZV+BMVgaBaUxqV3ARFpmM5H9bv2aTYEVyxpXNZimkqnGEOZG
+         WGhbH5nmxJDhYXEdaGfQhixguj+HC38OzkBNx7U4Ra23nRz5z+La45wov/58OH6FnD
+         5NS5weobpiqfVPxpNQjLA3TLyAC5mnIibw8aHyxI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Masney <masneyb@onstation.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 4.19 01/97] iommu/qcom: Fix bogus detach logic
-Date:   Thu, 27 Feb 2020 14:36:09 +0100
-Message-Id: <20200227132214.797276235@linuxfoundation.org>
+        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.19 48/97] genirq/irqdomain: Make sure all irq domain flags are distinct
+Date:   Thu, 27 Feb 2020 14:36:56 +0100
+Message-Id: <20200227132222.454692653@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
 References: <20200227132214.553656188@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,83 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Murphy <robin.murphy@arm.com>
+From: Zenghui Yu <yuzenghui@huawei.com>
 
-commit faf305c51aeabd1ea2d7131e798ef5f55f4a7750 upstream.
+commit 2546287c5fb363a0165933ae2181c92f03e701d0 upstream.
 
-Currently, the implementation of qcom_iommu_domain_free() is guaranteed
-to do one of two things: WARN() and leak everything, or dereference NULL
-and crash. That alone is terrible, but in fact the whole idea of trying
-to track the liveness of a domain via the qcom_domain->iommu pointer as
-a sanity check is full of fundamentally flawed assumptions. Make things
-robust and actually functional by not trying to be quite so clever.
+This was noticed when printing debugfs for MSIs on my ARM64 server.  The
+new dstate IRQD_MSI_NOMASK_QUIRK came out surprisingly while it should only
+be the x86 stuff for the time being...
 
-Reported-by: Brian Masney <masneyb@onstation.org>
-Tested-by: Brian Masney <masneyb@onstation.org>
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Fixes: 0ae349a0f33f ("iommu/qcom: Add qcom_iommu")
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Tested-by: Stephan Gerhold <stephan@gerhold.net>
-Cc: stable@vger.kernel.org # v4.14+
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+The new MSI quirk flag uses the same bit as IRQ_DOMAIN_NAME_ALLOCATED which
+is oddly defined as bit 6 for no good reason.
+
+Switch it to the non used bit 1.
+
+Fixes: 6f1a4891a592 ("x86/apic/msi: Plug non-maskable MSI affinity race")
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20200221020725.2038-1-yuzenghui@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/qcom_iommu.c |   28 ++++++++++++----------------
- 1 file changed, 12 insertions(+), 16 deletions(-)
+ include/linux/irqdomain.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/iommu/qcom_iommu.c
-+++ b/drivers/iommu/qcom_iommu.c
-@@ -333,21 +333,19 @@ static void qcom_iommu_domain_free(struc
- {
- 	struct qcom_iommu_domain *qcom_domain = to_qcom_iommu_domain(domain);
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -188,7 +188,7 @@ enum {
+ 	IRQ_DOMAIN_FLAG_HIERARCHY	= (1 << 0),
  
--	if (WARN_ON(qcom_domain->iommu))    /* forgot to detach? */
--		return;
--
- 	iommu_put_dma_cookie(domain);
+ 	/* Irq domain name was allocated in __irq_domain_add() */
+-	IRQ_DOMAIN_NAME_ALLOCATED	= (1 << 6),
++	IRQ_DOMAIN_NAME_ALLOCATED	= (1 << 1),
  
--	/* NOTE: unmap can be called after client device is powered off,
--	 * for example, with GPUs or anything involving dma-buf.  So we
--	 * cannot rely on the device_link.  Make sure the IOMMU is on to
--	 * avoid unclocked accesses in the TLB inv path:
--	 */
--	pm_runtime_get_sync(qcom_domain->iommu->dev);
--
--	free_io_pgtable_ops(qcom_domain->pgtbl_ops);
--
--	pm_runtime_put_sync(qcom_domain->iommu->dev);
-+	if (qcom_domain->iommu) {
-+		/*
-+		 * NOTE: unmap can be called after client device is powered
-+		 * off, for example, with GPUs or anything involving dma-buf.
-+		 * So we cannot rely on the device_link.  Make sure the IOMMU
-+		 * is on to avoid unclocked accesses in the TLB inv path:
-+		 */
-+		pm_runtime_get_sync(qcom_domain->iommu->dev);
-+		free_io_pgtable_ops(qcom_domain->pgtbl_ops);
-+		pm_runtime_put_sync(qcom_domain->iommu->dev);
-+	}
- 
- 	kfree(qcom_domain);
- }
-@@ -392,7 +390,7 @@ static void qcom_iommu_detach_dev(struct
- 	struct qcom_iommu_domain *qcom_domain = to_qcom_iommu_domain(domain);
- 	unsigned i;
- 
--	if (!qcom_domain->iommu)
-+	if (WARN_ON(!qcom_domain->iommu))
- 		return;
- 
- 	pm_runtime_get_sync(qcom_iommu->dev);
-@@ -405,8 +403,6 @@ static void qcom_iommu_detach_dev(struct
- 		ctx->domain = NULL;
- 	}
- 	pm_runtime_put_sync(qcom_iommu->dev);
--
--	qcom_domain->iommu = NULL;
- }
- 
- static int qcom_iommu_map(struct iommu_domain *domain, unsigned long iova,
+ 	/* Irq domain is an IPI domain with virq per cpu */
+ 	IRQ_DOMAIN_FLAG_IPI_PER_CPU	= (1 << 2),
 
 
