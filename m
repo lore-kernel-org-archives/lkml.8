@@ -2,131 +2,259 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B620C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6920C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12A4D24672
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9778624672
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:02:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="oCYtqQxY"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="QSgP8qus"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728678AbgB0JB4 (ORCPT
+        id S1728688AbgB0JCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 04:01:56 -0500
-Received: from mail-eopbgr150085.outbound.protection.outlook.com ([40.107.15.85]:28098
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728624AbgB0JBz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 04:01:55 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Rcp0hZjZmfVmYkJtl9EkL9PCyraoayKTxvhVeX6NipsqKHIvm5cvsEIOH1Q9VjuikvE7xZi4G2JSO4MHjYG6HoyGhKjL+2dgc8a9muicX9/VcxUBwrR3w7WAq6SI9bXS9PBcp8mGLtsGYt/BYEdWLiW/zPIaOv99XU2ahZu3SxVL6fERbtn6yBe+zg4OwCC9ykW1TZ/u1dTS2UrgARrOeQl2zEC3bn0INLDvR3y1Eehy9iTq6IK5lc6QqHDh8nacORABQB+V8Uz8jRBSgIdCfagofdxSPDYgNE6FbvtyXGPqnzFYLt4vk5O7LKEr299jv4ZoBspphr5wahm1TVVSeg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1OaLz3ieDm0BvzuyfM8KTLuA3T8Phenjw/l7xvhlNxs=;
- b=nG7eB0hUnHKgVsSm+bLUjZruwog2xFSM56KY2Wo9tZqq6GzUWTOGm7tlqIUqSjsK7pGi98B+goSvGbZhNcLqxici0uYA/KJ4SUNtDJ9JMFQw+bN13R9NjLxlS4Hv+CGmzOeFuiotCKqOYYGGPkfLVx+jAibqGZ0wjhPDjtIXVQd3r2vIZ1yLCdbIf4lct/4IGzPBittrwNsag9yxA3sIzNG32S88xKwYpyBcIDLdCnEYLH767Yo2SNDOsdu3ZPbS3sX4HL0YX/cpuhMyq8RPX6aiXlj8W5cNXUJqCvu2Ua9PO5WpAz/SGtzBHeLpo1UTAYA3Ns9ukRqggv1XAljnow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1OaLz3ieDm0BvzuyfM8KTLuA3T8Phenjw/l7xvhlNxs=;
- b=oCYtqQxYUfSSRPt163MDOqgKgF2sJFKNYZRLook5xetuPKgRZULcAtWzarDjqRnVwMpT1fnM49xR0PUtlFr2yrZtGE+Y3lzgDTOif0lFsYtp/icm0/KSmvZChB0LULMQyr+tmds2drrSNytQGa7rpJkmDsPEvmYIGxEvyN1iVyc=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=maximmi@mellanox.com; 
-Received: from HE1PR0501MB2570.eurprd05.prod.outlook.com (10.168.126.17) by
- HE1PR0501MB2825.eurprd05.prod.outlook.com (10.172.125.8) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.21; Thu, 27 Feb 2020 09:01:52 +0000
-Received: from HE1PR0501MB2570.eurprd05.prod.outlook.com
- ([fe80::60c4:f0b4:dc7b:c7fc]) by HE1PR0501MB2570.eurprd05.prod.outlook.com
- ([fe80::60c4:f0b4:dc7b:c7fc%10]) with mapi id 15.20.2750.024; Thu, 27 Feb
- 2020 09:01:52 +0000
-Subject: Re: linux-next: Fixes tag needs some work in the net-next tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        David Miller <davem@davemloft.net>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Cc:     Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Moshe Shemesh <moshe@mellanox.com>
-References: <20200227154251.5d9567a5@canb.auug.org.au>
-From:   Maxim Mikityanskiy <maximmi@mellanox.com>
-Message-ID: <5144804b-0a96-8cf3-4490-2d0f6c4134d1@mellanox.com>
-Date:   Thu, 27 Feb 2020 11:01:48 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-In-Reply-To: <20200227154251.5d9567a5@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR2P281CA0033.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:14::20) To HE1PR0501MB2570.eurprd05.prod.outlook.com
- (2603:10a6:3:6c::17)
+        Thu, 27 Feb 2020 04:02:12 -0500
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:43526 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728620AbgB0JCM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 04:02:12 -0500
+Received: by mail-vs1-f66.google.com with SMTP id 7so1324278vsr.10
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 01:02:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9Ym3+LivfToOu0cDcirhGLkZLPrt03CVZkRGzcx6ji4=;
+        b=QSgP8qusfjMI3a22VeuMrNYxGrB7iZszxeGRLFN01+GT4/KVIiLhpwqCA4LWi9Acq5
+         4tBCYVC5uBGsx++PEUgYwcKI2tgaPZhNl5Vmf0cX6PPOxA9C58QG0Zf+lq4c+XBOzJv9
+         i9HLHMD8UtrLTh2brlhZZ63ooaH26MVH4Z+5mfsdpD4IyVizonZ5fAeVZdlf5CT0jCDp
+         Q5MfGgZPi79G+e2QCYRJfLDEIsILhar1cAOgv9YTVszJskHz9tART1ZsEO+s5U3/50w4
+         xh3+8cz2Ehht1f3BcXQIrYXemESiBUQZpbeEYLTZky7kd0ClecC6yJd1YrBkFaTeHma/
+         Ccmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9Ym3+LivfToOu0cDcirhGLkZLPrt03CVZkRGzcx6ji4=;
+        b=jJm05dnBa3k15cDjcgQf2+C9WBYFpefDLXvj5pbig04fKHG2F6z0GVM9jMmlhOIZh9
+         10HoJuQdcOp03oA+LWqPtOqaYXG1a+6DqAvZzqfn/rcKjAaNzWpqBIgtSoLd4cTw7zAa
+         i7aIKRjUpCAzpoOdoq3RQhZ90SMMB/zVhkL2YYsgFlGfdcTpWAnh6znt1y+QUhiWfwBE
+         wysuCrO4W3r8PRFok3HJSNsss3TfV2tz+YJc5G12zsdKDeE1YkBm/OtUEjG6aY54vZjT
+         R87+x0Z4jfjS8FATDgHb4XGjaw2iXG9D6oiUzAlq1WoA3LlHtjuJP02Ds6L1txuuGmD3
+         DRbQ==
+X-Gm-Message-State: APjAAAXXDOTv4dcJu7fSOZlvJriKAu74ejij3qC7a7xKZu+8qA6ZH/+p
+        9S7EjXvIC5iW1/TlZeY/YT0aFaGJmlwUITTfQIIMJg==
+X-Google-Smtp-Source: APXvYqyWu0sOicHf/6nwHVDw2Ddyjj+MRbHaljxjYXSjpPESisbMPZcsmNChAnXVnTNFUSQtYkLFlq8DPRs9StUS7ro=
+X-Received: by 2002:a67:de85:: with SMTP id r5mr2031791vsk.9.1582794129961;
+ Thu, 27 Feb 2020 01:02:09 -0800 (PST)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.57.0.150] (159.224.90.213) by FR2P281CA0033.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:14::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15 via Frontend Transport; Thu, 27 Feb 2020 09:01:51 +0000
-X-Originating-IP: [159.224.90.213]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: a2c67d9a-3502-4c44-fc29-08d7bb63af8d
-X-MS-TrafficTypeDiagnostic: HE1PR0501MB2825:|HE1PR0501MB2825:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <HE1PR0501MB282539C5F3B3D39D92183882D1EB0@HE1PR0501MB2825.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2276;
-X-Forefront-PRVS: 03264AEA72
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(396003)(376002)(366004)(39850400004)(189003)(199004)(8936002)(8676002)(81166006)(2906002)(81156014)(36756003)(5660300002)(54906003)(16576012)(478600001)(2616005)(316002)(110136005)(956004)(4744005)(31696002)(16526019)(55236004)(186003)(52116002)(53546011)(31686004)(6636002)(4326008)(86362001)(107886003)(6486002)(66476007)(66946007)(26005)(66556008)(6666004);DIR:OUT;SFP:1101;SCL:1;SRVR:HE1PR0501MB2825;H:HE1PR0501MB2570.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: mZyHxcb3kBOabJNdZr23WIJRePQ1tP39dEQI9o8sWeeLaA8oEvXXaRFTrwdG3uOr5knXcRh+nIG7FgWlR2ecQtZfXCDQjH2uTYcpKuG5wn0PoNhWYlvPjdne/4Mdu+ZkujasPFSiyCFjtSHq6BfHCjLQfwbo3jxt40hL4p1go3TLUVu3GKijZMBcRhzzimJvvUreCeLjEI0wMQxDTwEKaC/nQv9l47IXZJFjhwsWWV4lB8dNKSLKix1NTjc4IRJscj7z4yrRPZEkQHW78DMgRqzr1WwL8pU7LwjN2sNWrxNzercvoAPhMxqSQlnWQLvDPOObvWaCmHZQeYqOlBsYd4WVn1EvnFlupf6gWdbzdavu5T1gzy3d8v/DUKAMGu18zS3Ewx9ipK7CPhs1o7yLKZFZe8G6gFAZnw1MSsh/7E1k1Tf/A2Gk4eFxjxaC29xS
-X-MS-Exchange-AntiSpam-MessageData: gC9IqZjb1w3jZsfU2qTkczemqS2rG9mULUe9kWc+MM33DGx6Ewpt0PPAOU2eBlVJkLHTmB1oVi6OPHSKhwbCc2qhC23FB8WVV13WBcLqqxKPu0+csXyYjWhIaCWUoCMyODfwqO5iYJ/n3mvTeJOVQA==
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a2c67d9a-3502-4c44-fc29-08d7bb63af8d
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2020 09:01:51.9638
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9X9eNCln7ivwRpH0FrtYg78QiBTQSLYLVkjjLTSSizmm3bhCcQCOXFAbvmZiOaDt5jOjhdhGapILqQemrJ5XIw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0501MB2825
+References: <20200222005213.3873-1-thara.gopinath@linaro.org>
+In-Reply-To: <20200222005213.3873-1-thara.gopinath@linaro.org>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Thu, 27 Feb 2020 14:31:58 +0530
+Message-ID: <CAHLCerO9WS_a_5qO-19y4-9Bs1XmEeDR+X_-Pfn0imeqF-yEPg@mail.gmail.com>
+Subject: Re: [Patch v10 0/9] Introduce Thermal Pressure
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, ionela.voinescu@arm.com,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Zhang Rui <rui.zhang@intel.com>, qperret@google.com,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Javi Merino <javi.merino@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-27 06:42, Stephen Rothwell wrote:
-> Hi all,
-> 
-> In commit
-> 
->    fe867cac9e19 ("net/mlx5e: Use preactivate hook to set the indirection table")
-> 
-> Fixes tag
-> 
->    Fixes: 85082dba0a ("net/mlx5e: Correctly handle RSS indirection table when changing number of channels")
-> 
-> has these problem(s):
-> 
->    - SHA1 should be at least 12 digits long
->      Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
->      or later) just making sure it is not set (or set to "auto").
-> 
+On Sat, Feb 22, 2020 at 6:22 AM Thara Gopinath
+<thara.gopinath@linaro.org> wrote:
+>
+> Thermal governors can respond to an overheat event of a cpu by
+> capping the cpu's maximum possible frequency. This in turn
+> means that the maximum available compute capacity of the
+> cpu is restricted. But today in the kernel, task scheduler is
+> not notified of capping of maximum frequency of a cpu.
+> In other words, scheduler is unaware of maximum capacity
+> restrictions placed on a cpu due to thermal activity.
+> This patch series attempts to address this issue.
+> The benefits identified are better task placement among available
+> cpus in event of overheating which in turn leads to better
+> performance numbers.
+>
+> The reduction in the maximum possible capacity of a cpu due to a
+> thermal event can be considered as thermal pressure. Instantaneous
+> thermal pressure is hard to record and can sometime be erroneous
+> as there can be mismatch between the actual capping of capacity
+> and scheduler recording it. Thus solution is to have a weighted
+> average per cpu value for thermal pressure over time.
+> The weight reflects the amount of time the cpu has spent at a
+> capped maximum frequency. Since thermal pressure is recorded as
+> an average, it must be decayed periodically. Exisiting algorithm
+> in the kernel scheduler pelt framework is re-used to calculate
+> the weighted average. This patch series also defines a sysctl
+> inerface to allow for a configurable decay period.
+>
+> Regarding testing, basic build, boot and sanity testing have been
+> performed on db845c platform with debian file system.
+> Further, dhrystone and hackbench tests have been
+> run with the thermal pressure algorithm. During testing, due to
+> constraints of step wise governor in dealing with big little systems,
+> trip point 0 temperature was made assymetric between cpus in little
+> cluster and big cluster; the idea being that
+> big core will heat up and cpu cooling device will throttle the
+> frequency of the big cores faster, there by limiting the maximum available
+> capacity and the scheduler will spread out tasks to little cores as well.
+>
+> Test Results
+>
+> Hackbench: 1 group , 30000 loops, 10 runs
+>                                                Result         SD
+>                                                (Secs)     (% of mean)
+>  No Thermal Pressure                            14.03       2.69%
+>  Thermal Pressure PELT Algo. Decay : 32 ms      13.29       0.56%
+>  Thermal Pressure PELT Algo. Decay : 64 ms      12.57       1.56%
+>  Thermal Pressure PELT Algo. Decay : 128 ms     12.71       1.04%
+>  Thermal Pressure PELT Algo. Decay : 256 ms     12.29       1.42%
+>  Thermal Pressure PELT Algo. Decay : 512 ms     12.42       1.15%
+>
+> Dhrystone Run Time  : 20 threads, 3000 MLOOPS
+>                                                  Result      SD
+>                                                  (Secs)    (% of mean)
+>  No Thermal Pressure                              9.452      4.49%
+>  Thermal Pressure PELT Algo. Decay : 32 ms        8.793      5.30%
+>  Thermal Pressure PELT Algo. Decay : 64 ms        8.981      5.29%
+>  Thermal Pressure PELT Algo. Decay : 128 ms       8.647      6.62%
+>  Thermal Pressure PELT Algo. Decay : 256 ms       8.774      6.45%
+>  Thermal Pressure PELT Algo. Decay : 512 ms       8.603      5.41%
+>
 
-Oops, so sorry about that =/
+I've tested this series with a patch to artificially reducing the
+capacity of big cores on the QCOM sdm845 by reducing the temperature
+at which it starts throttling (thereby introducing thermal pressure
+earlier) and can see the tasks being migrated to the LITTLE cores.
 
-I relied on our CI that has to check the Fixes tag, but apparently 
-failed this time. We'll address the issue with CI.
+FWIW,
+Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-The correct tag is:
-
-Fixes: 85082dba0a50 ("net/mlx5e: Correctly handle RSS indirection table 
-when changing number of channels")
+> A Brief History
+>
+> The first version of this patch-series was posted with resuing
+> PELT algorithm to decay thermal pressure signal. The discussions
+> that followed were around whether intanteneous thermal pressure
+> solution is better and whether a stand-alone algortihm to accumulate
+> and decay thermal pressure is more appropriate than re-using the
+> PELT framework.
+> Tests on Hikey960 showed the stand-alone algorithm performing slightly
+> better than resuing PELT algorithm and V2 was posted with the stand
+> alone algorithm. Test results were shared as part of this series.
+> Discussions were around re-using PELT algorithm and running
+> further tests with more granular decay period.
+>
+> For some time after this development was impeded due to hardware
+> unavailability, some other unforseen and possibly unfortunate events.
+> For this version, h/w was switched from hikey960 to db845c.
+> Also Instantaneous thermal pressure was never tested as part of this
+> cycle as it is clear that weighted average is a better implementation.
+> The non-PELT algorithm never gave any conclusive results to prove that it
+> is better than reusing PELT algorithm, in this round of testing.
+> Also reusing PELT algorithm means thermal pressure tracks the
+> other utilization signals in the scheduler.
+>
+> v3->v4:
+>         - "Patch 3/7:sched: Initialize per cpu thermal pressure structure"
+>            is dropped as it is no longer needed following changes in other
+>            other patches.
+>         - rest of the change log mentioned in specific patches.
+>
+> v5->v6:
+>         - "Added arch_ interface APIs to access and update thermal pressure.
+>            Moved declaration of per cpu thermal_pressure valriable and
+>            infrastructure to update the variable to topology files.
+>
+> v6->v7:
+>         - Added CONFIG_HAVE_SCHED_THERMAL_PRESSURE to stub out
+>           update_thermal_load_avg in unsupported architectures as per
+>           review comments from Peter, Dietmar and Quentin.
+>         - Renamed arch_scale_thermal_capacity to arch_cpu_thermal_pressure
+>           as per review comments from Peter, Dietmar and Ionela.
+>         - Changed the input argument in arch_set_thermal_pressure from
+>           capped capacity to delta capacity(thermal pressure) as per
+>           Ionela's review comments. Hence the calculation for delta
+>           capacity(thermal pressure) is moved to cpufreq_cooling.c.
+>         - Fixed a bunch of spelling typos.
+>
+> v7->v8:
+>         - Fixed typo in defining update_thermal_load_avg which was
+>           causing build errors (reported by kbuild test report)
+>
+> v8->v9:
+>         - Defined thermal_load_avg to read rq->avg_thermal.load_avg and
+>           avoid cacheline miss in unsupported cases as per Peter's
+>           suggestion.
+>         - Moved periodic triggering of thermal pressure averaging from CFS
+>           tick function to generic scheduler core tick function.
+>         - Moved rq_clock_thermal from fair.c to sched.h to enable using
+>           the function from multiple files.
+>         - Initialized the __shift to 0 in setup_sched_thermal_decay_shift
+>           as per Quentin's suggestion
+>         - Added an extra patch enabling CONFIG_HAVE_SCHED_THERMAL_PRESSURE
+>           as per Dietmar's request.
+>
+> v9->v10:
+>         - Renamed arch_cpu_thermal_pressure to arch_scale_thermal_pressure
+>           as per review comments from Dietmar.
+>         - Split "[Patch v9 3/8] arm,arm64,drivers:Add infrastructure to
+>           store and update instantaneous thermal pressure" into 3 thus
+>           separating out arch/arm and arch/arm64 specific code into
+>           individual patches as suggested by Amit Kucheria.
+>         - Added description for sched_thermal_decay_shift in
+>           kernel-parameters.txt following Randy's review comments.
+>         - Fixed typos in comments as per Amit Kucheria's review comments.
+>
+> Thara Gopinath (9):
+>   sched/pelt: Add support to track thermal pressure
+>   sched/topology: Add hook to read per cpu thermal pressure.
+>   drivers/base/arch_topology: Add infrastructure to store and update
+>     instantaneous thermal pressure
+>   arm64/topology: Populate arch_cpu_thermal_pressure for arm64 platforms
+>   arm/topology: Populate arch_cpu_thermal_pressure for arm platforms
+>   sched/fair: Enable periodic update of average thermal pressure
+>   sched/fair: update cpu_capacity to reflect thermal pressure
+>   thermal/cpu-cooling: Update thermal pressure in case of a maximum
+>     frequency capping
+>   sched/fair: Enable tuning of decay period
+>
+>  .../admin-guide/kernel-parameters.txt         | 16 ++++++++++
+>  arch/arm/include/asm/topology.h               |  3 ++
+>  arch/arm64/include/asm/topology.h             |  3 ++
+>  drivers/base/arch_topology.c                  | 11 +++++++
+>  drivers/thermal/cpufreq_cooling.c             | 19 ++++++++++--
+>  include/linux/arch_topology.h                 | 10 ++++++
+>  include/linux/sched/topology.h                |  8 +++++
+>  include/trace/events/sched.h                  |  4 +++
+>  init/Kconfig                                  |  4 +++
+>  kernel/sched/core.c                           |  3 ++
+>  kernel/sched/fair.c                           | 27 ++++++++++++++++
+>  kernel/sched/pelt.c                           | 31 +++++++++++++++++++
+>  kernel/sched/pelt.h                           | 31 +++++++++++++++++++
+>  kernel/sched/sched.h                          | 21 +++++++++++++
+>  14 files changed, 189 insertions(+), 2 deletions(-)
+>
+> --
+> 2.20.1
+>
