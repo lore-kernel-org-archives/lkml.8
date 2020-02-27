@@ -7,45 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A249AC3F34C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF13BC3F35D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7414624691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A778924697
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:13:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812819;
-	bh=cr/QaPGzEv/bFObTRPXLDeYjRdHw3DF50hnytibyPNM=;
+	s=default; t=1582812799;
+	bh=brj/SN8Nv5cyMyCMHkqbOVzue6B+jN0Rrn+n6DFRH50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hl9Hf3+t/VOT7DFWU2be/dW+kovLBG0TpyBZjBXZnCZCKqpoZy/h28UwJ2njWjqf8
-	 /wtDPhpfoXhwcnf0teMHqZRR9rGPGMCfECOwjnaEsjeVMEfuFzVmgRzJx+7qhg7OkR
-	 HSU6Qh/HVG+9Ls3Z1x/dWtmWBisLW+vK8clH2IrE=
+	b=qQ1CVKMppO10rd+xUqXQFQm2FXmiVYhFPsP+/e8at2QFbNTFatDgCsD5mDKxCvxDk
+	 eazseiZ1f8gYlYm+z9HC0a1DkQQwImDH9gBhQKVBOzR1UD37BAT6LQ5kVO8CkHvX5I
+	 TCR4G+7fi0s9UeG4a0SFZdwCAR4IqhweM0B/X7Jw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388984AbgB0ONh (ORCPT
+        id S1730449AbgB0ONS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:13:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52518 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:13:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388748AbgB0ONd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:13:33 -0500
+        id S2388567AbgB0ONL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:13:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A48AC20801;
-        Thu, 27 Feb 2020 14:13:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68458246A0;
+        Thu, 27 Feb 2020 14:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812812;
-        bh=cr/QaPGzEv/bFObTRPXLDeYjRdHw3DF50hnytibyPNM=;
+        s=default; t=1582812790;
+        bh=brj/SN8Nv5cyMyCMHkqbOVzue6B+jN0Rrn+n6DFRH50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iI9Ovxp5IHh7wTQS+3ZG9VMKjdnLFsHnL9eXUvHG1kRa4b6rUBY6sLMjFN1JE6KuL
-         8+aGK+PasZuvca6wefnfjbe3YTHbmL/vIddEgV5FMEqRG6OAbIaCPjA3QMySce73ek
-         WlyMqpAB3zMQ75koziVoYfeldIg03nXF1XLlB2IM=
+        b=BClGrV7MMfc22cQpX80ZRe8/4QMG8vgW/+44jex1nJ5UhC7QmDXObHhRM9fiCs78r
+         qp4gu8UB45SA+FwV/eLg72FfgSEYqZeddKXEVtlSiV+CRv7FBXKPdXogpaDxo2Mmv8
+         lsP2pCetBwgc9B2A/lJE/ieB/80eOjovVAwjtiGM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.5 007/150] ALSA: hda: Use scnprintf() for printing texts for sysfs/procfs
-Date:   Thu, 27 Feb 2020 14:35:44 +0100
-Message-Id: <20200227132233.822367871@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        Nikolay Borisov <nborisov@suse.com>, Qu Wenruo <wqu@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.5 018/150] btrfs: handle logged extent failure properly
+Date:   Thu, 27 Feb 2020 14:35:55 +0100
+Message-Id: <20200227132235.357370622@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -58,82 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 44eeb081b8630bb3ad3cd381d1ae1831463e48bb upstream.
+commit bd727173e4432fe6cb70ba108dc1f3602c5409d7 upstream.
 
-Some code in HD-audio driver calls snprintf() in a loop and still
-expects that the return value were actually written size, while
-snprintf() returns the expected would-be length instead.  When the
-given buffer limit were small, this leads to a buffer overflow.
+If we're allocating a logged extent we attempt to insert an extent
+record for the file extent directly.  We increase
+space_info->bytes_reserved, because the extent entry addition will call
+btrfs_update_block_group(), which will convert the ->bytes_reserved to
+->bytes_used.  However if we fail at any point while inserting the
+extent entry we will bail and leave space on ->bytes_reserved, which
+will trigger a WARN_ON() on umount.  Fix this by pinning the space if we
+fail to insert, which is what happens in every other failure case that
+involves adding the extent entry.
 
-Use scnprintf() for addressing those issues.  It returns the actually
-written size unlike snprintf().
-
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200218091409.27162-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+CC: stable@vger.kernel.org # 5.4+
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/hda/hdmi_chmap.c    |    2 +-
- sound/pci/hda/hda_codec.c |    2 +-
- sound/pci/hda/hda_eld.c   |    2 +-
- sound/pci/hda/hda_sysfs.c |    4 ++--
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ fs/btrfs/extent-tree.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/sound/hda/hdmi_chmap.c
-+++ b/sound/hda/hdmi_chmap.c
-@@ -250,7 +250,7 @@ void snd_hdac_print_channel_allocation(i
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -4430,6 +4430,8 @@ int btrfs_alloc_logged_file_extent(struc
  
- 	for (i = 0, j = 0; i < ARRAY_SIZE(cea_speaker_allocation_names); i++) {
- 		if (spk_alloc & (1 << i))
--			j += snprintf(buf + j, buflen - j,  " %s",
-+			j += scnprintf(buf + j, buflen - j,  " %s",
- 					cea_speaker_allocation_names[i]);
- 	}
- 	buf[j] = '\0';	/* necessary when j == 0 */
---- a/sound/pci/hda/hda_codec.c
-+++ b/sound/pci/hda/hda_codec.c
-@@ -4019,7 +4019,7 @@ void snd_print_pcm_bits(int pcm, char *b
- 
- 	for (i = 0, j = 0; i < ARRAY_SIZE(bits); i++)
- 		if (pcm & (AC_SUPPCM_BITS_8 << i))
--			j += snprintf(buf + j, buflen - j,  " %d", bits[i]);
-+			j += scnprintf(buf + j, buflen - j,  " %d", bits[i]);
- 
- 	buf[j] = '\0'; /* necessary when j == 0 */
+ 	ret = alloc_reserved_file_extent(trans, 0, root_objectid, 0, owner,
+ 					 offset, ins, 1);
++	if (ret)
++		btrfs_pin_extent(fs_info, ins->objectid, ins->offset, 1);
+ 	btrfs_put_block_group(block_group);
+ 	return ret;
  }
---- a/sound/pci/hda/hda_eld.c
-+++ b/sound/pci/hda/hda_eld.c
-@@ -360,7 +360,7 @@ static void hdmi_print_pcm_rates(int pcm
- 
- 	for (i = 0, j = 0; i < ARRAY_SIZE(alsa_rates); i++)
- 		if (pcm & (1 << i))
--			j += snprintf(buf + j, buflen - j,  " %d",
-+			j += scnprintf(buf + j, buflen - j,  " %d",
- 				alsa_rates[i]);
- 
- 	buf[j] = '\0'; /* necessary when j == 0 */
---- a/sound/pci/hda/hda_sysfs.c
-+++ b/sound/pci/hda/hda_sysfs.c
-@@ -222,7 +222,7 @@ static ssize_t init_verbs_show(struct de
- 	int i, len = 0;
- 	mutex_lock(&codec->user_mutex);
- 	snd_array_for_each(&codec->init_verbs, i, v) {
--		len += snprintf(buf + len, PAGE_SIZE - len,
-+		len += scnprintf(buf + len, PAGE_SIZE - len,
- 				"0x%02x 0x%03x 0x%04x\n",
- 				v->nid, v->verb, v->param);
- 	}
-@@ -272,7 +272,7 @@ static ssize_t hints_show(struct device
- 	int i, len = 0;
- 	mutex_lock(&codec->user_mutex);
- 	snd_array_for_each(&codec->hints, i, hint) {
--		len += snprintf(buf + len, PAGE_SIZE - len,
-+		len += scnprintf(buf + len, PAGE_SIZE - len,
- 				"%s = %s\n", hint->key, hint->val);
- 	}
- 	mutex_unlock(&codec->user_mutex);
 
 
