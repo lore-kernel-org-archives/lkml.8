@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C0BC3F360
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DEDC52D52
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6006120801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:06:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DF2E24697
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812385;
-	bh=Te41+tNcup87PSvefJ0qm3+DY+RRnetH1azne1ZP7LE=;
+	s=default; t=1582812148;
+	bh=tOmoxyHH7aI3s0hZrRZfclMTF0zSrdSwaBsKgAUc8u8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YfJILYDDyUiGerc/k0/iohlMKA9m1fb4rFgyqW6TunS5C78U5V/+bdPQvs6VYKOzw
-	 Jipw4FZRZAgrmD4ob3LVf+p3R4giNwwHMbuNIPnWm7D+Z04N8Dhs32VPBedxM5IaXQ
-	 EeyynkBt8pt/QBoemELRPllfV8Rq78QT4xTZAlIQ=
+	b=R7pvooPVn1stZctL4rk1Ck11wgHPerAY45pGXY9HWLEE+f6Z0uR+IR92Dkk2004oM
+	 wn+htqgl22333IPSUkB5l6jBZTtujBbqxKcY9uPl0H92rzfnM4BQyB8JUisNY6LuSo
+	 UtkGqEOu3DZwDBCrfPeI0iBGzJP5GS2S0H1s752I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387924AbgB0OGY (ORCPT
+        id S1733124AbgB0OC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:06:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43434 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:02:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387494AbgB0OGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:06:19 -0500
+        id S1733111AbgB0OCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:02:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 432CF20801;
-        Thu, 27 Feb 2020 14:06:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C49A21D7E;
+        Thu, 27 Feb 2020 14:02:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812378;
-        bh=Te41+tNcup87PSvefJ0qm3+DY+RRnetH1azne1ZP7LE=;
+        s=default; t=1582812143;
+        bh=tOmoxyHH7aI3s0hZrRZfclMTF0zSrdSwaBsKgAUc8u8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jxqj7RQzEqhLNZpTiQyyycq5hzxtqUiNTKs7aMqya3IdrWFbeejx4/mpMPVMvnYNB
-         6mT7ctxvxjto0lkWp6kisluq7piI7A5nb6i40L7fhKXE4GKziMZF/MbOGB7Vhsmptf
-         bywJHycP5c+HBgrvSw7+5eY2dxE2dmEtD+3nBlv4=
+        b=ZBSXXHaCmlGhVIVpyYhpnfPVOUfSzTGtW24w8XeOPxSTB5qDcZOXJv/Xzk8k/OIiO
+         OR55dtaZ3WfDvIeQS29g+6LC51tU5i8ktXMtiUThQWxvNQKGmflK5eRSDWUwpwveq1
+         G0J94fs26RPGFMbF639atFUS2LsDpan8nMeetn0g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+65c6c92d04304d0a8efc@syzkaller.appspotmail.com,
-        syzbot+e60ddfa48717579799dd@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 91/97] ALSA: seq: Avoid concurrent access to queue flags
-Date:   Thu, 27 Feb 2020 14:37:39 +0100
-Message-Id: <20200227132229.500706144@linuxfoundation.org>
+        stable@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.14 200/237] KVM: x86: dont notify userspace IOAPIC on edge-triggered interrupt EOI
+Date:   Thu, 27 Feb 2020 14:36:54 +0100
+Message-Id: <20200227132310.995652885@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
-References: <20200227132214.553656188@linuxfoundation.org>
+In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
+References: <20200227132255.285644406@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,96 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-commit bb51e669fa49feb5904f452b2991b240ef31bc97 upstream.
+commit 7455a8327674e1a7c9a1f5dd1b0743ab6713f6d1 upstream.
 
-The queue flags are represented in bit fields and the concurrent
-access may result in unexpected results.  Although the current code
-should be mostly OK as it's only reading a field while writing other
-fields as KCSAN reported, it's safer to cover both with a proper
-spinlock protection.
+Commit 13db77347db1 ("KVM: x86: don't notify userspace IOAPIC on edge
+EOI") said, edge-triggered interrupts don't set a bit in TMR, which means
+that IOAPIC isn't notified on EOI. And var level indicates level-triggered
+interrupt.
+But commit 3159d36ad799 ("KVM: x86: use generic function for MSI parsing")
+replace var level with irq.level by mistake. Fix it by changing irq.level
+to irq.trig_mode.
 
-This patch fixes the possible concurrent read by protecting with
-q->owner_lock.  Also the queue owner field is protected as well since
-it's the field to be protected by the lock itself.
-
-Reported-by: syzbot+65c6c92d04304d0a8efc@syzkaller.appspotmail.com
-Reported-by: syzbot+e60ddfa48717579799dd@syzkaller.appspotmail.com
-Link: https://lore.kernel.org/r/20200214111316.26939-2-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Cc: stable@vger.kernel.org
+Fixes: 3159d36ad799 ("KVM: x86: use generic function for MSI parsing")
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/seq/seq_queue.c |   20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ arch/x86/kvm/irq_comm.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/core/seq/seq_queue.c
-+++ b/sound/core/seq/seq_queue.c
-@@ -405,6 +405,7 @@ int snd_seq_queue_check_access(int queue
- int snd_seq_queue_set_owner(int queueid, int client, int locked)
- {
- 	struct snd_seq_queue *q = queueptr(queueid);
-+	unsigned long flags;
+--- a/arch/x86/kvm/irq_comm.c
++++ b/arch/x86/kvm/irq_comm.c
+@@ -427,7 +427,7 @@ void kvm_scan_ioapic_routes(struct kvm_v
  
- 	if (q == NULL)
- 		return -EINVAL;
-@@ -414,8 +415,10 @@ int snd_seq_queue_set_owner(int queueid,
- 		return -EPERM;
- 	}
+ 			kvm_set_msi_irq(vcpu->kvm, entry, &irq);
  
-+	spin_lock_irqsave(&q->owner_lock, flags);
- 	q->locked = locked ? 1 : 0;
- 	q->owner = client;
-+	spin_unlock_irqrestore(&q->owner_lock, flags);
- 	queue_access_unlock(q);
- 	queuefree(q);
- 
-@@ -552,15 +555,17 @@ void snd_seq_queue_client_termination(in
- 	unsigned long flags;
- 	int i;
- 	struct snd_seq_queue *q;
-+	bool matched;
- 
- 	for (i = 0; i < SNDRV_SEQ_MAX_QUEUES; i++) {
- 		if ((q = queueptr(i)) == NULL)
- 			continue;
- 		spin_lock_irqsave(&q->owner_lock, flags);
--		if (q->owner == client)
-+		matched = (q->owner == client);
-+		if (matched)
- 			q->klocked = 1;
- 		spin_unlock_irqrestore(&q->owner_lock, flags);
--		if (q->owner == client) {
-+		if (matched) {
- 			if (q->timer->running)
- 				snd_seq_timer_stop(q->timer);
- 			snd_seq_timer_reset(q->timer);
-@@ -752,6 +757,8 @@ void snd_seq_info_queues_read(struct snd
- 	int i, bpm;
- 	struct snd_seq_queue *q;
- 	struct snd_seq_timer *tmr;
-+	bool locked;
-+	int owner;
- 
- 	for (i = 0; i < SNDRV_SEQ_MAX_QUEUES; i++) {
- 		if ((q = queueptr(i)) == NULL)
-@@ -763,9 +770,14 @@ void snd_seq_info_queues_read(struct snd
- 		else
- 			bpm = 0;
- 
-+		spin_lock_irq(&q->owner_lock);
-+		locked = q->locked;
-+		owner = q->owner;
-+		spin_unlock_irq(&q->owner_lock);
-+
- 		snd_iprintf(buffer, "queue %d: [%s]\n", q->queue, q->name);
--		snd_iprintf(buffer, "owned by client    : %d\n", q->owner);
--		snd_iprintf(buffer, "lock status        : %s\n", q->locked ? "Locked" : "Free");
-+		snd_iprintf(buffer, "owned by client    : %d\n", owner);
-+		snd_iprintf(buffer, "lock status        : %s\n", locked ? "Locked" : "Free");
- 		snd_iprintf(buffer, "queued time events : %d\n", snd_seq_prioq_avail(q->timeq));
- 		snd_iprintf(buffer, "queued tick events : %d\n", snd_seq_prioq_avail(q->tickq));
- 		snd_iprintf(buffer, "timer state        : %s\n", tmr->running ? "Running" : "Stopped");
+-			if (irq.level && kvm_apic_match_dest(vcpu, NULL, 0,
++			if (irq.trig_mode && kvm_apic_match_dest(vcpu, NULL, 0,
+ 						irq.dest_id, irq.dest_mode))
+ 				__set_bit(irq.vector, ioapic_handled_vectors);
+ 		}
 
 
