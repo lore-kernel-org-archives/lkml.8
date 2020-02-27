@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBCCC3F35E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 239C4C52D43
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5C0424656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB78720801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:08:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812477;
-	bh=f5rBkqkNWi6BIQe2IkGoxQpUJn/nc8qgvEEfVpZOEZI=;
+	s=default; t=1582812485;
+	bh=RypRGmCPXhCJfp6qrYOlZPi7TCGuoDNfunyBhUdEIxc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dof9kxeUouYHWbpC/2Wm2/K9hcVwjQpJRPis7EQDyhu7XmaaJQ7kPQkeEHmUqI67k
-	 Q0/IV8miD/ErirliA1Z/yCq3EfkUDFILxuTbO4k7+ChBVysEsPXDqqrB2ecGl6BcgR
-	 MZauef/xhW2cgGs/brmDb+tWNObmsJpPiwTwqnRg=
+	b=mdP1TFtR8EMj+MhG3F96n5Iqje2L5dNYn7E7NGGariwIJzpWnK8g2ZP2YP14z+tz/
+	 ut00cBi975fUM09CVfS761JRkzDtlu64CtNHtclfC9D+hXEPEPD53jflVojajM4DoC
+	 lFTRxDvFfmtthzRGEQUmuttXaVYOdSXbJvK1lwxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388176AbgB0OH4 (ORCPT
+        id S2387444AbgB0OID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:07:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45548 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:08:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388163AbgB0OHz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:07:55 -0500
+        id S2387787AbgB0OIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:08:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3787246B1;
-        Thu, 27 Feb 2020 14:07:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60E7521D7E;
+        Thu, 27 Feb 2020 14:07:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812474;
-        bh=f5rBkqkNWi6BIQe2IkGoxQpUJn/nc8qgvEEfVpZOEZI=;
+        s=default; t=1582812479;
+        bh=RypRGmCPXhCJfp6qrYOlZPi7TCGuoDNfunyBhUdEIxc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lmz7b4raJKCLw7GeEm7DTl+uPzjQjBn6RwYy7ToXpNBnXJCOfNsUB7jBSL4Hg3Wcv
-         l1ZLFVMC3OAbnd6SaCe+yneXvkfi3HtNS6kAwdpir+JJpoZi5xcQogFhO2yMQjM+xX
-         BiMrFMgwuIYjCYRS2T/vdPOhrBdNKsnjCX8MSz14=
+        b=WhCltI3bqpiJljPo+eKiFjGHh8bpiKcIXZ+FxVjmNlDHVVhAIHqptm3mfY38qYRrY
+         PSiKmoJRT4ohmTZn296a576J3de8qI3cYzsdJSSZvPL0cTiw1wXcCzQp2AK2lweQXG
+         +IrGfqpBcaRa3E7vZXbJDpgjrNcT0Q8grM8I2+2g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        David Heinzelmann <heinzelmann.david@gmail.com>,
-        Paul Zimmerman <pauldzim@gmail.com>
-Subject: [PATCH 5.4 032/135] USB: hub: Dont record a connect-change event during reset-resume
-Date:   Thu, 27 Feb 2020 14:36:12 +0100
-Message-Id: <20200227132233.881152764@linuxfoundation.org>
+        stable@vger.kernel.org, Minas Harutyunyan <hminas@synopsys.com>,
+        Jack Mitchell <ml@embed.me.uk>, Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 5.4 034/135] usb: dwc2: Fix SET/CLEAR_FEATURE and GET_STATUS flows
+Date:   Thu, 27 Feb 2020 14:36:14 +0100
+Message-Id: <20200227132234.138725629@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -60,84 +59,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>
 
-commit 8099f58f1ecddf4f374f4828a3dff8397c7cbd74 upstream.
+commit 9a0d6f7c0a83844baae1d6d85482863d2bf3b7a7 upstream.
 
-Paul Zimmerman reports that his USB Bluetooth adapter sometimes
-crashes following system resume, when it receives a
-Get-Device-Descriptor request while it is busy doing something else.
+SET/CLEAR_FEATURE for Remote Wakeup allowance not handled correctly.
+GET_STATUS handling provided not correct data on DATA Stage.
+Issue seen when gadget's dr_mode set to "otg" mode and connected
+to MacOS.
+Both are fixed and tested using USBCV Ch.9 tests.
 
-Such a request was added by commit a4f55d8b8c14 ("usb: hub: Check
-device descriptor before resusciation").  It gets sent when the hub
-driver's work thread checks whether a connect-change event on an
-enabled port really indicates a new device has been connected, as
-opposed to an old device momentarily disconnecting and then
-reconnecting (which can happen with xHCI host controllers, since they
-automatically enable connected ports).
-
-The same kind of thing occurs when a port's power session is lost
-during system suspend.  When the system wakes up it sees a
-connect-change event on the port, and if the child device's
-persist_enabled flag was set then hub_activate() sets the device's
-reset_resume flag as well as the port's bit in hub->change_bits.  The
-reset-resume code then takes responsibility for checking that the same
-device is still attached to the port, and it does this as part of the
-device's resume pathway.  By the time the hub driver's work thread
-starts up again, the device has already been fully reinitialized and
-is busy doing its own thing.  There's no need for the work thread to
-do the same check a second time, and in fact this unnecessary check is
-what caused the problem that Paul observed.
-
-Note that performing the unnecessary check is not actually a bug.
-Devices are supposed to be able to send descriptors back to the host
-even when they are busy doing something else.  The underlying cause of
-Paul's problem lies in his Bluetooth adapter.  Nevertheless, we
-shouldn't perform the same check twice in a row -- and as a nice side
-benefit, removing the extra check allows the Bluetooth adapter to work
-more reliably.
-
-The work thread performs its check when it sees that the port's bit is
-set in hub->change_bits.  In this situation that bit is interpreted as
-though a connect-change event had occurred on the port _after_ the
-reset-resume, which is not what actually happened.
-
-One possible fix would be to make the reset-resume code clear the
-port's bit in hub->change_bits.  But it seems simpler to just avoid
-setting the bit during hub_activate() in the first place.  That's what
-this patch does.
-
-(Proving that the patch is correct when CONFIG_PM is disabled requires
-a little thought.  In that setting hub_activate() will be called only
-for initialization and resets, since there won't be any resumes or
-reset-resumes.  During initialization and hub resets the hub doesn't
-have any child devices, and so this code path never gets executed.)
-
-Reported-and-tested-by: Paul Zimmerman <pauldzim@gmail.com>
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Link: https://marc.info/?t=157949360700001&r=1&w=2
-CC: David Heinzelmann <heinzelmann.david@gmail.com>
-CC: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2001311037460.1577-100000@iolanthe.rowland.org
+Signed-off-by: Minas Harutyunyan <hminas@synopsys.com>
+Fixes: fa389a6d7726 ("usb: dwc2: gadget: Add remote_wakeup_allowed flag")
+Tested-by: Jack Mitchell <ml@embed.me.uk>
+Cc: stable@vger.kernel.org
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/hub.c |    5 -----
- 1 file changed, 5 deletions(-)
+ drivers/usb/dwc2/gadget.c |   28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -1216,11 +1216,6 @@ static void hub_activate(struct usb_hub
- #ifdef CONFIG_PM
- 			udev->reset_resume = 1;
- #endif
--			/* Don't set the change_bits when the device
--			 * was powered off.
--			 */
--			if (test_bit(port1, hub->power_bits))
--				set_bit(port1, hub->change_bits);
+--- a/drivers/usb/dwc2/gadget.c
++++ b/drivers/usb/dwc2/gadget.c
+@@ -1632,6 +1632,7 @@ static int dwc2_hsotg_process_req_status
+ 	struct dwc2_hsotg_ep *ep0 = hsotg->eps_out[0];
+ 	struct dwc2_hsotg_ep *ep;
+ 	__le16 reply;
++	u16 status;
+ 	int ret;
  
- 		} else {
- 			/* The power session is gone; tell hub_wq */
+ 	dev_dbg(hsotg->dev, "%s: USB_REQ_GET_STATUS\n", __func__);
+@@ -1643,11 +1644,10 @@ static int dwc2_hsotg_process_req_status
+ 
+ 	switch (ctrl->bRequestType & USB_RECIP_MASK) {
+ 	case USB_RECIP_DEVICE:
+-		/*
+-		 * bit 0 => self powered
+-		 * bit 1 => remote wakeup
+-		 */
+-		reply = cpu_to_le16(0);
++		status = 1 << USB_DEVICE_SELF_POWERED;
++		status |= hsotg->remote_wakeup_allowed <<
++			  USB_DEVICE_REMOTE_WAKEUP;
++		reply = cpu_to_le16(status);
+ 		break;
+ 
+ 	case USB_RECIP_INTERFACE:
+@@ -1758,7 +1758,10 @@ static int dwc2_hsotg_process_req_featur
+ 	case USB_RECIP_DEVICE:
+ 		switch (wValue) {
+ 		case USB_DEVICE_REMOTE_WAKEUP:
+-			hsotg->remote_wakeup_allowed = 1;
++			if (set)
++				hsotg->remote_wakeup_allowed = 1;
++			else
++				hsotg->remote_wakeup_allowed = 0;
+ 			break;
+ 
+ 		case USB_DEVICE_TEST_MODE:
+@@ -1768,16 +1771,17 @@ static int dwc2_hsotg_process_req_featur
+ 				return -EINVAL;
+ 
+ 			hsotg->test_mode = wIndex >> 8;
+-			ret = dwc2_hsotg_send_reply(hsotg, ep0, NULL, 0);
+-			if (ret) {
+-				dev_err(hsotg->dev,
+-					"%s: failed to send reply\n", __func__);
+-				return ret;
+-			}
+ 			break;
+ 		default:
+ 			return -ENOENT;
+ 		}
++
++		ret = dwc2_hsotg_send_reply(hsotg, ep0, NULL, 0);
++		if (ret) {
++			dev_err(hsotg->dev,
++				"%s: failed to send reply\n", __func__);
++			return ret;
++		}
+ 		break;
+ 
+ 	case USB_RECIP_ENDPOINT:
 
 
