@@ -2,101 +2,94 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3838C3F2C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF423C3F2CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9B0224650
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:31:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="unt1eg+w"
+	by mail.kernel.org (Postfix) with ESMTP id B8D2E24650
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:32:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730437AbgB0Wbb (ORCPT
+        id S1730339AbgB0WcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 17:31:31 -0500
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:61228 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729718AbgB0Wbb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 17:31:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1582842691; x=1614378691;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=uObpfsJDmihVgZnzlDTj5o7Ywc3QNpzXPVckbbWnw74=;
-  b=unt1eg+wtc0sCRUCkdl16CWjH1yF7/y8ThQyBLuIssPG1eg2AG7E6052
-   bZ3yzIO6xemldupFDWEnVRqXsbE58tbgxpGxkccE6CiczAmYRahxNxAeH
-   Es5FqgvzIyTItKuIDoyQG+G99YiHNu3k0F4eYMqXBokYC/D2a0UKmGB/P
-   Q=;
-IronPort-SDR: 5/rXP3wl4rOgsS34VYNAVuM5/ZludsOJikxutjMaTDc4GLRYE+pwdC2N/WRzkPzOtDqMJia7vV
- TeVdZvDejueg==
-X-IronPort-AV: E=Sophos;i="5.70,493,1574121600"; 
-   d="scan'208";a="19601107"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 27 Feb 2020 22:31:27 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com (Postfix) with ESMTPS id 883CF2880B2;
-        Thu, 27 Feb 2020 22:31:23 +0000 (UTC)
-Received: from EX13D01UWB004.ant.amazon.com (10.43.161.157) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 27 Feb 2020 22:31:22 +0000
-Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
- EX13d01UWB004.ant.amazon.com (10.43.161.157) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 27 Feb 2020 22:31:22 +0000
-Received: from EX13D01UWB002.ant.amazon.com ([10.43.161.136]) by
- EX13d01UWB002.ant.amazon.com ([10.43.161.136]) with mapi id 15.00.1497.006;
- Thu, 27 Feb 2020 22:31:22 +0000
-From:   "Singh, Balbir" <sblbir@amazon.com>
-To:     "kbusch@kernel.org" <kbusch@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "hch@lst.de" <hch@lst.de>, "axboe@kernel.dk" <axboe@kernel.dk>,
-        "mst@redhat.com" <mst@redhat.com>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "Chaitanya.Kulkarni@wdc.com" <Chaitanya.Kulkarni@wdc.com>
-Subject: Re: [PATCH v2 4/5] drivers/nvme/host/core.c: Convert to use
- set_capacity_revalidate_and_notify
-Thread-Topic: [PATCH v2 4/5] drivers/nvme/host/core.c: Convert to use
- set_capacity_revalidate_and_notify
-Thread-Index: AQHV7BZmVG7GS2zvD0eE2vmktqMGT6gtx0WAgAHb04A=
-Date:   Thu, 27 Feb 2020 22:31:22 +0000
-Message-ID: <1ed561abb467362b8ddf7949882b42e00d583a20.camel@amazon.com>
-References: <20200225200129.6687-1-sblbir@amazon.com>
-         <20200225200129.6687-5-sblbir@amazon.com>
-         <20200226180819.GA23813@redsun51.ssa.fujisawa.hgst.com>
-In-Reply-To: <20200226180819.GA23813@redsun51.ssa.fujisawa.hgst.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.161.45]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <CBCA5387B812CE4B8DC82CCF484CAAFC@amazon.com>
-Content-Transfer-Encoding: base64
+        Thu, 27 Feb 2020 17:32:21 -0500
+Received: from mga05.intel.com ([192.55.52.43]:48642 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729913AbgB0WcU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 17:32:20 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 14:32:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
+   d="scan'208";a="411194785"
+Received: from azeira-mobl.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.251.147.250])
+  by orsmga005.jf.intel.com with ESMTP; 27 Feb 2020 14:32:18 -0800
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH 0/8] soundwire: remove platform devices, add SOF interfaces
+Date:   Thu, 27 Feb 2020 16:31:58 -0600
+Message-Id: <20200227223206.5020-1-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTAyLTI3IGF0IDAzOjA4ICswOTAwLCBLZWl0aCBCdXNjaCB3cm90ZToNCj4g
-T24gVHVlLCBGZWIgMjUsIDIwMjAgYXQgMDg6MDE6MjhQTSArMDAwMCwgQmFsYmlyIFNpbmdoIHdy
-b3RlOg0KPiA+IGJsb2NrL2dlbmhkIHByb3ZpZGVzIHNldF9jYXBhY2l0eV9yZXZhbGlkYXRlX2Fu
-ZF9ub3RpZnkoKSBmb3INCj4gPiBzZW5kaW5nIFJFU0laRSBub3RpZmljYXRpb25zIHZpYSB1ZXZl
-bnRzLiBUaGlzIG5vdGlmaWNhdGlvbiBpcw0KPiA+IG5ld2x5IGFkZGVkIHRvIE5WTUUgZGV2aWNl
-cw0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEJhbGJpciBTaW5naCA8c2JsYmlyQGFtYXpvbi5j
-b20+DQo+IA0KPiBQYXRjaCBsb29rcyBmaW5lLiBQbGVhc2UgY2hhbmdlIHRoZSBjb21taXQgc3Vi
-amVjdCBwcmVmaXggdG8ganVzdCAibnZtZToiDQo+IHRvIG1hdGNoIHRoZSBsb2NhbCBzdHlsZSBh
-bmQgZm9yIGxlbmd0aCBjb25zdHJhaW50cyAodGhlIGNvbW1pdHRlciBtYXkNCj4gZG8gdGhpcyBp
-ZiB0aGV5IHdhbnQpLg0KPiANCj4gQWNrZWQtYnk6IEtlaXRoIEJ1c2NoIDxrYnVzY2hAa2VybmVs
-Lm9yZz4NCg0KU3VyZSB0aGFua3MhIFllcywgdGhhdCBtYWtlcyBzZW5zZS4NCg0KQmFsYmlyIFNp
-bmdoLg0K
+The first two patches were already reviewed by Greg KH in an earlier
+RFC. Since I only cleaned-up the error handling flow and removed an
+unnecessary wrapper, I took the liberty of adding Greg's Reviewed-by
+tag for these two patches.
+
+The rest of the patches implement the interfaces required for the SOF
+driver (interrupts handled with a single handler, PCI wakes and
+sharing of _ADR information to select a machine driver).
+
+When this patchset is merged, a tag will need to be shared with Mark
+Brown so that we can provide the SOF patches to the ASoC tree and
+enable SoundWire in builds for Intel platforms.
+
+Bard Liao (2):
+  soundwire: intel/cadence: merge Soundwire interrupt handlers/threads
+  soundwire: intel_init: save Slave(s) _ADR info in sdw_intel_ctx
+
+Pierre-Louis Bossart (5):
+  soundwire: bus_type: add master_device/driver support
+  soundwire: intel: transition to sdw_master_device/driver support
+  soundwire: intel_init: add implementation of sdw_intel_enable_irq()
+  soundwire: intel_init: use EXPORT_SYMBOL_NS
+  soundwire: intel: add helpers for link power down and shim wake
+
+Rander Wang (1):
+  soundwire: intel: add wake interrupt support
+
+ drivers/soundwire/Makefile         |   2 +-
+ drivers/soundwire/bus_type.c       | 141 ++++++++++-
+ drivers/soundwire/cadence_master.c |  18 +-
+ drivers/soundwire/cadence_master.h |   4 +
+ drivers/soundwire/intel.c          | 182 +++++++++++---
+ drivers/soundwire/intel.h          |  12 +-
+ drivers/soundwire/intel_init.c     | 365 +++++++++++++++++++++++------
+ drivers/soundwire/master.c         | 100 ++++++++
+ drivers/soundwire/slave.c          |   7 +-
+ include/linux/soundwire/sdw.h      |  76 ++++++
+ include/linux/soundwire/sdw_type.h |  36 ++-
+ 11 files changed, 819 insertions(+), 124 deletions(-)
+ create mode 100644 drivers/soundwire/master.c
+
+-- 
+2.20.1
+
