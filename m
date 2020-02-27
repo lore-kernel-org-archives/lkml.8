@@ -2,131 +2,177 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 499FCC3F2C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F65C3F2C1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B837246A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:28:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BIhxXBGX"
+	by mail.kernel.org (Postfix) with ESMTP id 12291246A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:29:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729958AbgB0V2y (ORCPT
+        id S1729966AbgB0V3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 16:28:54 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:52888 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbgB0V2x (ORCPT
+        Thu, 27 Feb 2020 16:29:42 -0500
+Received: from smtp10.smtpout.orange.fr ([80.12.242.132]:36136 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729534AbgB0V3l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 16:28:53 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01RLSoFZ065308;
-        Thu, 27 Feb 2020 15:28:50 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582838930;
-        bh=nPQq3L7Fs1cwFTI6ZvMes6py+WF+yLyk55XfqWxBlNU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=BIhxXBGXxkMK5H7F2jvvEPSEsKZZSnkEkR2pUneTpp0c9wK86zpreFRwfASIoETDQ
-         f4eR+4MhttrDRO/Z+TgpFjMLK5iDSOnGgQUhGsjyGdIayNRclyjQ1W+1DwUJXV6blq
-         GQ6dYqSQui07LQ/XOB720vpIkNbq2K9CKp9QUB7o=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01RLSo9a126498
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 27 Feb 2020 15:28:50 -0600
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 27
- Feb 2020 15:28:50 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 27 Feb 2020 15:28:50 -0600
-Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01RLSoqD011631;
-        Thu, 27 Feb 2020 15:28:50 -0600
-Subject: Re: [PATCH 06/12] ARM: dts: am335x-bone-common: Enable PRU-ICSS
- interconnect node
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20200225204649.28220-1-s-anna@ti.com>
- <20200225204649.28220-7-s-anna@ti.com> <20200226182924.GU37466@atomide.com>
- <af3965db-54b2-3e4f-414f-d27ca4b5ced1@ti.com>
- <20200226223745.GA37466@atomide.com> <20200226223921.GB37466@atomide.com>
- <b1fe18b5-f779-aea5-8c66-41c0de66c39f@ti.com>
- <20200227020713.GE37466@atomide.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <28724629-2872-545a-309f-5a3208221b33@ti.com>
-Date:   Thu, 27 Feb 2020 15:28:50 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 27 Feb 2020 16:29:41 -0500
+Received: from [192.168.1.41] ([92.140.213.100])
+        by mwinf5d87 with ME
+        id 7xVW220022AY1JL03xVdgM; Thu, 27 Feb 2020 22:29:38 +0100
+X-ME-Helo: [192.168.1.41]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 27 Feb 2020 22:29:38 +0100
+X-ME-IP: 92.140.213.100
+Subject: Re: [PATCH] dmaengine: Simplify error handling path in
+ '__dma_async_device_channel_register()'
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     dan.j.williams@intel.com, vkoul@kernel.org, dave.jiang@intel.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20200226090707.12285-1-christophe.jaillet@wanadoo.fr>
+ <20200226100112.GD3286@kadam>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Message-ID: <3483bb10-a7f7-2bc0-b1e8-e79e84db54ab@wanadoo.fr>
+Date:   Thu, 27 Feb 2020 22:29:28 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200227020713.GE37466@atomide.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200226100112.GD3286@kadam>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/26/20 8:07 PM, Tony Lindgren wrote:
-> * Suman Anna <s-anna@ti.com> [200227 00:59]:
->> Hi Tony,
->>
->> On 2/26/20 4:39 PM, Tony Lindgren wrote:
->>> * Tony Lindgren <tony@atomide.com> [200226 22:38]:
->>>> * Suman Anna <s-anna@ti.com> [200226 20:35]:
->>>>> On 2/26/20 12:29 PM, Tony Lindgren wrote:
->>>>>> * Suman Anna <s-anna@ti.com> [200225 20:47]:
->>>>>>> The PRU-ICSS target module node was left in disabled state in the base
->>>>>>> am33xx-l4.dtsi file. Enable this node on all the AM335x beaglebone
->>>>>>> boards as they mostly use a AM3358 or a AM3359 SoC which do contain
->>>>>>> the PRU-ICSS IP.
->>>>>>
->>>>>> Just get rid of the top level status = "disabled". The default
->>>>>> is enabled, and the device is there for sure inside the SoC.
->>>>>> And then there's no need for pointless status = "okay" tinkering
->>>>>> in the board specific dts files so no need for this patch.
->>>>>
->>>>> The IP is not available on all SoCs, and there are about 40 different
->>>>> board files atm across AM33xx and AM437x, and am not sure what SoCs they
->>>>> are actually using.
->>>>
->>>> Oh that issue again.. Maybe take a look at patch "[PATCH 2/3] bus: ti-sysc:
->>>> Detect display subsystem related devices" if you can add runtime
->>>> detection for the accelerators there similar to what I hadded for omap3.
->>>> acclerators.
->>>
->>> Sorry I meant instead patch "[PATCH 6/7] bus: ti-sysc: Implement SoC
->>> revision handling".
->>
->> OK, looked down that path a bit more and looking through mach-omap2/id.c
->>  and soc.h, I see some of the part number infrastructure build on top of
->> DEV_FEATURE bits for some SoCs. The DEVICE_ID registers only have the
->> generic family and the Silicon Revision number for AM33xx and AM437x and
->> we currently do not have any infrastructure around exact SoC
->> identification for AM33xx and AM437x atleast.
->>
->> Do you have the bit-field split for the DEV_FEATURE bits somewhere,
->> because I couldn't find any in either the DM or the TRM. On AM437x,
->> there is no difference between AM4372 and AM4376 DEV_FEATURE value even
->> though the former doesn't have the PRUSS. On AM335x, may be bit 0
->> signifies the presence of PRUSS??
-> 
-> OK not sure how that could be detected. Maybe check the efuses on
-> the newer SoCs?
+Hi,
 
-OK, latest datasheeet has fixed these values up, and they are no longer
-identical. In anycase, none of the current AM437x board dts files in the
-kernel use AM4372, so atleast for AM4372, I can drop the status=disabled
-even without adding any SoC name support.
+Thanks Dan for the additional comments.
+However, their are to much things that I won't be able to test my self.
 
-regards
-Suman
+So unfortunately, I won't feel comfortable enough for a V2 with all your 
+suggestions.
+Please, you, or anybody else, go ahead and propose the corresponding fixes.
+
+CJ
+
+
+Le 26/02/2020 à 11:01, Dan Carpenter a écrit :
+> On Wed, Feb 26, 2020 at 10:07:07AM +0100, Christophe JAILLET wrote:
+>> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+>> index c3b1283b6d31..6bb6e88c6019 100644
+>> --- a/drivers/dma/dmaengine.c
+>> +++ b/drivers/dma/dmaengine.c
+>> @@ -978,11 +978,8 @@ static int __dma_async_device_channel_register(struct dma_device *device,
+>>   	if (!chan->local)
+>>   		goto err_out;
+>>   	chan->dev = kzalloc(sizeof(*chan->dev), GFP_KERNEL);
+>> -	if (!chan->dev) {
+>> -		free_percpu(chan->local);
+>> -		chan->local = NULL;
+>> +	if (!chan->dev)
+>>   		goto err_out;
+>> -	}
+>>   
+>>   	/*
+>>   	 * When the chan_id is a negative value, we are dynamically adding
+>> @@ -1008,6 +1005,7 @@ static int __dma_async_device_channel_register(struct dma_device *device,
+>>   
+>>    err_out:
+> Rule of thumb:  If the error label is "err" or "out" it's probably
+> going to be buggy.  This code is free everything style error handling.
+> We hit an error so something were allocated and some were not.  It's
+> always complicated to undo things which we didn't do.
+>
+>>   	free_percpu(chan->local);
+>> +	chan->local = NULL;
+>>   	kfree(chan->dev);
+>>   	if (atomic_dec_return(idr_ref) == 0)
+>>   		kfree(idr_ref);
+> The ref counting on "idr_ref" is also wrong.
+>
+>     967
+>     968          if (tchan->dev) {
+>     969                  idr_ref = tchan->dev->idr_ref;
+>                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> This is 1+ references.  We don't increment it.
+>
+>     970          } else {
+>     971                  idr_ref = kmalloc(sizeof(*idr_ref), GFP_KERNEL);
+>     972                  if (!idr_ref)
+>     973                          return -ENOMEM;
+>     974                  atomic_set(idr_ref, 0);
+>                          ^^^^^^^^^^^^^^^^^^^^^^
+> This is 0 references (Wrong.  Everything starts with 1 reference).
+>
+>     975          }
+>     976
+>     977          chan->local = alloc_percpu(typeof(*chan->local));
+>     978          if (!chan->local)
+>     979                  goto err_out;
+>     980          chan->dev = kzalloc(sizeof(*chan->dev), GFP_KERNEL);
+>     981          if (!chan->dev) {
+>     982                  free_percpu(chan->local);
+>     983                  chan->local = NULL;
+>     984                  goto err_out;
+>     985          }
+>     986
+>     987          /*
+>     988           * When the chan_id is a negative value, we are dynamically adding
+>     989           * the channel. Otherwise we are static enumerating.
+>     990           */
+>     991          chan->chan_id = chan_id < 0 ? chancnt : chan_id;
+>     992          chan->dev->device.class = &dma_devclass;
+>     993          chan->dev->device.parent = device->dev;
+>     994          chan->dev->chan = chan;
+>     995          chan->dev->idr_ref = idr_ref;
+>     996          chan->dev->dev_id = device->dev_id;
+>     997          atomic_inc(idr_ref);
+>                  ^^^^^^^^^^^^^^^^^^^
+> Probably if device_register() fails we don't want to free idr_ref, it
+> should instead be handled by device_put().
+>
+>     998          dev_set_name(&chan->dev->device, "dma%dchan%d",
+>     999                       device->dev_id, chan->chan_id);
+>    1000
+>    1001          rc = device_register(&chan->dev->device);
+>    1002          if (rc)
+>    1003                  goto err_out;
+>    1004          chan->client_count = 0;
+>    1005          device->chancnt = chan->chan_id + 1;
+>    1006
+>    1007          return 0;
+>    1008
+>    1009   err_out:
+>    1010          free_percpu(chan->local);
+>    1011          kfree(chan->dev);
+>    1012          if (atomic_dec_return(idr_ref) == 0)
+>    1013                  kfree(idr_ref);
+>
+> If alloc_percpu() fails this is decrementing something which was never
+> incremented.  That's the classic error of trying to undo things which we
+> didnt do.
+>
+> Presumably here we only want to free if we allocated the "idr_ref"
+> ourselves.  atomic_dec_return() returns the new reference count after
+> the decrement so on most paths it's going to be -1 which is a leak and
+> on the other paths there is a chance that it's going to lead to a use
+> after free.  There is no situation where this will do the correct thing.
+>
+> Probably the cleanest fix it to just move the idr_ref allocation after
+> the other allocations so that we always rely on device_register() to
+> handle the clean ups.
+>
+>    1014          return rc;
+>    1015  }
+>
+> regards,
+> dan carpenter
+>
+>
+
