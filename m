@@ -2,189 +2,117 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7777C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F44FC11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B8362469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:09:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="Co6bzQ6F"
+	by mail.kernel.org (Postfix) with ESMTP id 6F9942469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:09:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729989AbgB0QJR (ORCPT
+        id S1730025AbgB0QJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 11:09:17 -0500
-Received: from hermes.aosc.io ([199.195.250.187]:54889 "EHLO hermes.aosc.io"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729134AbgB0QJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 11:09:17 -0500
-Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
-        by hermes.aosc.io (Postfix) with ESMTPSA id AFE494B2ED;
-        Thu, 27 Feb 2020 16:09:10 +0000 (UTC)
-From:   Icenowy Zheng <icenowy@aosc.io>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bastien Nocera <hadess@hadess.net>,
-        Ondrej Jirman <megous@megous.com>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH v2 2/3] Input: goodix - use string-based chip ID
-Date:   Fri, 28 Feb 2020 00:08:01 +0800
-Message-Id: <20200227160802.7043-3-icenowy@aosc.io>
-In-Reply-To: <20200227160802.7043-1-icenowy@aosc.io>
-References: <20200227160802.7043-1-icenowy@aosc.io>
+        Thu, 27 Feb 2020 11:09:29 -0500
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:39317 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729134AbgB0QJ3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 11:09:29 -0500
+Received: from webmail.gandi.net (webmail18.sd4.0x35.net [10.200.201.18])
+        (Authenticated sender: foss@0leil.net)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPA id 0774160003;
+        Thu, 27 Feb 2020 16:09:25 +0000 (UTC)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aosc.io; s=dkim;
-        t=1582819756;
-        h=from:subject:date:message-id:to:cc:mime-version:content-transfer-encoding:in-reply-to:references;
-        bh=0iDpNGq6IRp8gcDFfkwBhK68bKjQJBn92umR+xGbvCg=;
-        b=Co6bzQ6FiD5JH6Gd/UbVp/L8hASBcHWNrb5syERRx6Hf/ssVEyGUmM/KA5CR1QdvdQC/we
-        CbCWsxfC3Cz0NgfW+G5jlezSM3Zkk94MzFk7ZAQyXRMW/ZVT+3tbTHeXdNOqVB/PKDLYBi
-        hXHP2+oE2sei26oD67VLUnOP6WD9uTo=
+Date:   Thu, 27 Feb 2020 17:09:25 +0100
+From:   Quentin Schulz <foss@0leil.net>
+To:     Antoine Tenart <antoine.tenart@bootlin.com>
+Cc:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 1/3] net: phy: mscc: add support for RGMII MAC
+ mode
+In-Reply-To: <20200227152859.1687119-2-antoine.tenart@bootlin.com>
+References: <20200227152859.1687119-1-antoine.tenart@bootlin.com>
+ <20200227152859.1687119-2-antoine.tenart@bootlin.com>
+Message-ID: <55c4a6d121868a083b1d8ca78c65cd37@0leil.net>
+X-Sender: foss@0leil.net
+User-Agent: Roundcube Webmail/1.3.8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For Goodix GT917S chip, the chip ID string is "917S", which contains not
-only numbers now.
+Hi Antoine,
 
-Use string-based chip ID in the driver to support this chip and further
-chips with alphanumber ID.
+I guess I slipped through in your Cc list but now that it's too late to 
+undo it, I'll give my 2¢ :)
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
----
-Changes in v2:
-- Used a table to save ID and chip data info.
-- Use strscpy().
+On 2020-02-27 16:28, Antoine Tenart wrote:
+> This patch adds support for connecting VSC8584 PHYs to the MAC using
+> RGMII.
+> 
+> Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+> ---
+>  drivers/net/phy/mscc.c | 33 +++++++++++++++++++++------------
+>  1 file changed, 21 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
+> index d24577de0775..ecb45c43e5ed 100644
+> --- a/drivers/net/phy/mscc.c
+> +++ b/drivers/net/phy/mscc.c
+> @@ -272,6 +272,7 @@ enum macsec_bank {
+>  #define MAC_CFG_MASK			  0xc000
+>  #define MAC_CFG_SGMII			  0x0000
+>  #define MAC_CFG_QSGMII			  0x4000
+> +#define MAC_CFG_RGMII			  0x8000
+> 
+>  /* Test page Registers */
+>  #define MSCC_PHY_TEST_PAGE_5		  5
+> @@ -2751,27 +2752,35 @@ static int vsc8584_config_init(struct
+> phy_device *phydev)
+> 
+>  	val = phy_base_read(phydev, MSCC_PHY_MAC_CFG_FASTLINK);
+>  	val &= ~MAC_CFG_MASK;
+> -	if (phydev->interface == PHY_INTERFACE_MODE_QSGMII)
+> +	if (phydev->interface == PHY_INTERFACE_MODE_QSGMII) {
+>  		val |= MAC_CFG_QSGMII;
+> -	else
+> +	} else if (phydev->interface == PHY_INTERFACE_MODE_SGMII) {
+>  		val |= MAC_CFG_SGMII;
+> +	} else if (phy_interface_mode_is_rgmii(phydev->interface)) {
 
- drivers/input/touchscreen/goodix.c | 61 +++++++++++++++++-------------
- 1 file changed, 35 insertions(+), 26 deletions(-)
+Nitpick:
+I don't know much the difference between that one and 
+phy_interface_is_rgmii wrt when one should be used and not the other, 
+but seeing the implementation 
+(https://elixir.bootlin.com/linux/latest/source/include/linux/phy.h#L999)... 
+we should be safe :) Since you already have a phydev in hands at that 
+time, maybe using phy_interface_is_rgmii would be cleaner? (shorter).
 
-diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-index 0403102e807e..dde85b894ca4 100644
---- a/drivers/input/touchscreen/goodix.c
-+++ b/drivers/input/touchscreen/goodix.c
-@@ -37,6 +37,11 @@ struct goodix_chip_data {
- 	int (*check_config)(struct goodix_ts_data *, const struct firmware *);
- };
- 
-+struct goodix_chip_id {
-+	const char *id;
-+	const struct goodix_chip_data *data;
-+};
-+
- struct goodix_ts_data {
- 	struct i2c_client *client;
- 	struct input_dev *input_dev;
-@@ -48,7 +53,7 @@ struct goodix_ts_data {
- 	struct regulator *vddio;
- 	struct gpio_desc *gpiod_int;
- 	struct gpio_desc *gpiod_rst;
--	u16 id;
-+	char id[5];
- 	u16 version;
- 	const char *cfg_name;
- 	struct completion firmware_loading_complete;
-@@ -115,6 +120,22 @@ static const struct goodix_chip_data gt9x_chip_data = {
- 	.check_config		= goodix_check_cfg_8,
- };
- 
-+static const struct goodix_chip_id goodix_chip_ids[] = {
-+	{ .id = "1151", .data = &gt1x_chip_data },
-+	{ .id = "5663", .data = &gt1x_chip_data },
-+	{ .id = "5688", .data = &gt1x_chip_data },
-+
-+	{ .id = "911", .data = &gt911_chip_data },
-+	{ .id = "9271", .data = &gt911_chip_data },
-+	{ .id = "9110", .data = &gt911_chip_data },
-+	{ .id = "927", .data = &gt911_chip_data },
-+	{ .id = "928", .data = &gt911_chip_data },
-+
-+	{ .id = "912", .data = &gt967_chip_data },
-+	{ .id = "967", .data = &gt967_chip_data },
-+	{ }
-+};
-+
- static const unsigned long goodix_irq_flags[] = {
- 	IRQ_TYPE_EDGE_RISING,
- 	IRQ_TYPE_EDGE_FALLING,
-@@ -235,28 +256,16 @@ static int goodix_i2c_write_u8(struct i2c_client *client, u16 reg, u8 value)
- 	return goodix_i2c_write(client, reg, &value, sizeof(value));
- }
- 
--static const struct goodix_chip_data *goodix_get_chip_data(u16 id)
-+static const struct goodix_chip_data *goodix_get_chip_data(const char *id)
- {
--	switch (id) {
--	case 1151:
--	case 5663:
--	case 5688:
--		return &gt1x_chip_data;
--
--	case 911:
--	case 9271:
--	case 9110:
--	case 927:
--	case 928:
--		return &gt911_chip_data;
--
--	case 912:
--	case 967:
--		return &gt967_chip_data;
--
--	default:
--		return &gt9x_chip_data;
-+	unsigned int i;
-+
-+	for (i = 0; goodix_chip_ids[i].id; i++) {
-+		if (!strcmp(goodix_chip_ids[i].id, id))
-+			return goodix_chip_ids[i].data;
- 	}
-+
-+	return &gt9x_chip_data;
- }
- 
- static int goodix_ts_read_input_report(struct goodix_ts_data *ts, u8 *data)
-@@ -673,12 +682,11 @@ static int goodix_read_version(struct goodix_ts_data *ts)
- 
- 	memcpy(id_str, buf, 4);
- 	id_str[4] = 0;
--	if (kstrtou16(id_str, 10, &ts->id))
--		ts->id = 0x1001;
-+	strscpy(ts->id, id_str, 5);
- 
- 	ts->version = get_unaligned_le16(&buf[4]);
- 
--	dev_info(&ts->client->dev, "ID %d, version: %04x\n", ts->id,
-+	dev_info(&ts->client->dev, "ID %s, version: %04x\n", ts->id,
- 		 ts->version);
- 
- 	return 0;
-@@ -736,7 +744,8 @@ static int goodix_configure_dev(struct goodix_ts_data *ts)
- 	ts->input_dev->phys = "input/ts";
- 	ts->input_dev->id.bustype = BUS_I2C;
- 	ts->input_dev->id.vendor = 0x0416;
--	ts->input_dev->id.product = ts->id;
-+	if (kstrtou16(ts->id, 10, &ts->input_dev->id.product))
-+		ts->input_dev->id.product = 0x1001;
- 	ts->input_dev->id.version = ts->version;
- 
- 	/* Capacitive Windows/Home button on some devices */
-@@ -915,7 +924,7 @@ static int goodix_ts_probe(struct i2c_client *client,
- 	if (ts->gpiod_int && ts->gpiod_rst) {
- 		/* update device config */
- 		ts->cfg_name = devm_kasprintf(&client->dev, GFP_KERNEL,
--					      "goodix_%d_cfg.bin", ts->id);
-+					      "goodix_%s_cfg.bin", ts->id);
- 		if (!ts->cfg_name)
- 			return -ENOMEM;
- 
--- 
-2.24.1
+> +		val |= MAC_CFG_RGMII;
+> +	} else {
+> +		ret = -EINVAL;
+> +		goto err;
+> +	}
+> 
+>  	ret = phy_base_write(phydev, MSCC_PHY_MAC_CFG_FASTLINK, val);
+>  	if (ret)
+>  		goto err;
+> 
+> -	val = PROC_CMD_MCB_ACCESS_MAC_CONF | PROC_CMD_RST_CONF_PORT |
+> -		PROC_CMD_READ_MOD_WRITE_PORT;
+> -	if (phydev->interface == PHY_INTERFACE_MODE_QSGMII)
+> -		val |= PROC_CMD_QSGMII_MAC;
+> -	else
+> -		val |= PROC_CMD_SGMII_MAC;
+> +	if (!phy_interface_mode_is_rgmii(phydev->interface)) {
 
+Ditto.
+
+Thanks,
+Quentin
