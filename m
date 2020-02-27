@@ -2,189 +2,114 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C17DC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE6DC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69DE72469B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 035EC2469B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:47:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="C03lseVM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Heq4GnYY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730088AbgB0XmG (ORCPT
+        id S1729987AbgB0Xrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 18:42:06 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:35728 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729882AbgB0XmG (ORCPT
+        Thu, 27 Feb 2020 18:47:45 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:55856 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729796AbgB0Xrp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 18:42:06 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01RNY5kR190957;
-        Thu, 27 Feb 2020 23:41:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=DYHZUukh22WLTtqSbPAO9mVsplLj82QEhpMV3Fq0/EQ=;
- b=C03lseVMkSagEfmcGJy4rG9Z91a056ig0txWkcMRmzptAUEgDg2LKqF6V8baKMVqxYCA
- Tl76H1BF69xMirvr0bfea/L2a44lrhXKkwHlwtUJf643DS/FTx7zxN6pAO9oTTlg2TvB
- 59HtMdziqJ5zOGTTJKdWBMa/A0yWvdfmh7DJ/lePVvBMAGOEeNhvdoBc6LlkbLy564r1
- zoJs+91tursCjPgIBKV5yqtNdYEOj/rMuZ5qWRnFp60y90an1FxFXEt3ZXmZ9zLZ/GiG
- aqSjRHeKrtN41E3aoExjURJFgJ1VMcmMSd+wkr6+ZswhYGahGkSj0baaM3lryNErLlx5 Dg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2ydcsnp9j6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Feb 2020 23:41:44 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01RNWJ9v064789;
-        Thu, 27 Feb 2020 23:41:43 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2ydcs6n28x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Feb 2020 23:41:43 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01RNff2G030013;
-        Thu, 27 Feb 2020 23:41:41 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 27 Feb 2020 15:41:41 -0800
-Subject: Re: [PATCH v2 2/2] mm,thp,compaction,cma: allow THP migration for CMA
- allocations
-To:     Rik van Riel <riel@surriel.com>, linux-kernel@vger.kernel.org
-Cc:     kernel-team@fb.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        mhocko@kernel.org, vbabka@suse.cz, mgorman@techsingularity.net,
-        rientjes@google.com, aarcange@redhat.com, ziy@nvidia.com
-References: <cover.1582321646.git.riel@surriel.com>
- <20200227213238.1298752-2-riel@surriel.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <df83c62f-209f-b1fd-3a5c-c81c82cb2606@oracle.com>
-Date:   Thu, 27 Feb 2020 15:41:39 -0800
+        Thu, 27 Feb 2020 18:47:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=28jcykxKbJYL83IzLpxZlMJpogx12W0uOAOwjpNqnaI=; b=Heq4GnYY+Oj+WGi9WwRBC2i0+a
+        VDiEiN5ZK58MZelkOzLVC0Lo9BM/xYuYGNVXP9K/p+iYWu5eb46I3FZyzyBkk8Hdu4kN2zk38OXLp
+        fvQmkAQ3Y4XwKGHnzDQN3O1dAnOd/DwzCVdjTkt5mmPyVOqhNwLsJsEMdWZuj9riqSmoqc1aC442E
+        H3gxgwSY8w49zA/hp8CiVplCDKXUDvVhGFRh5E/z/8khTOS/dEUHq/QsNQGVmFW5r3rM7q5ARE0w1
+        8ItcDm1gnyhcSAEg6Je9qtj/S+jDmNJvyotvv5BmQ9SRca38X+95XLIIA3A2Ph04JtFW58ZOaSpV+
+        6k2hiJdw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j7Ssa-0005zI-WE; Thu, 27 Feb 2020 23:47:45 +0000
+Subject: Re: linux-next: Tree for Feb 27 (drivers/of/unittest.c)
+To:     Frank Rowand <frowand.list@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+References: <20200227152223.3d8442f0@canb.auug.org.au>
+ <ed57c797-1d40-0786-2cdc-adae7047a86f@infradead.org>
+ <0bd9179f-c448-c40d-f520-d568547bc810@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <63b12f5e-e5e5-a3ca-70a3-0c65075f657a@infradead.org>
+Date:   Thu, 27 Feb 2020 15:47:42 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200227213238.1298752-2-riel@surriel.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <0bd9179f-c448-c40d-f520-d568547bc810@gmail.com>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9544 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 malwarescore=0
- mlxlogscore=999 mlxscore=0 phishscore=0 suspectscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002270160
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9544 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 bulkscore=0
- lowpriorityscore=0 mlxlogscore=999 phishscore=0 spamscore=0 adultscore=0
- suspectscore=0 impostorscore=0 clxscore=1011 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002270160
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/27/20 1:32 PM, Rik van Riel wrote:
-> The code to implement THP migrations already exists, and the code
-> for CMA to clear out a region of memory already exists.
+On 2/27/20 1:12 PM, Frank Rowand wrote:
+> Hi Randy,
 > 
-> Only a few small tweaks are needed to allow CMA to move THP memory
-> when attempting an allocation from alloc_contig_range.
+> On 2/27/20 10:23 AM, Randy Dunlap wrote:
+>> On 2/26/20 8:22 PM, Stephen Rothwell wrote:
+>>> Hi all,
+>>>
+>>> Changes since 20200226:
+>>>
+>>
+>> on x86_64:
+>>
+>> # CONFIG_GPIOLIB is not set
+>>
+>> ../drivers/of/unittest.c: In function ‘unittest_gpio_probe’:
+>> ../drivers/of/unittest.c:94:14: error: ‘struct gpio_chip’ has no member named ‘of_node’
+>>   devptr->chip.of_node = pdev->dev.of_node;
+>>               ^
+>> In file included from ../include/linux/kernel.h:15:0,
+>>                  from ../include/asm-generic/bug.h:19,
+>>                  from ../arch/x86/include/asm/bug.h:83,
+>>                  from ../include/linux/bug.h:5,
+>>                  from ../include/linux/mmdebug.h:5,
+>>                  from ../include/linux/mm.h:9,
+>>                  from ../include/linux/memblock.h:13,
+>>                  from ../drivers/of/unittest.c:8:
+>> ../drivers/of/unittest.c:103:73: error: ‘struct gpio_chip’ has no member named ‘of_node’
+>>     "gpiochip_add_data() for node @%pOF failed, ret = %d\n", devptr->chip.of_node, ret);
+>>                                                                          ^
+>>
+>> Full randconfig file is attached.
+>>
 > 
-> With these changes, migrating THPs from a CMA area works when
-> allocating a 1GB hugepage from CMA memory.
+> I am trying to build a kernel with the randconfig you provided.
 > 
-> Signed-off-by: Rik van Riel <riel@surriel.com>
-> Reviewed-by: Zi Yan <ziy@nvidia.com>
-> ---
->  mm/compaction.c | 22 +++++++++++++---------
->  mm/page_alloc.c |  9 +++++++--
->  2 files changed, 20 insertions(+), 11 deletions(-)
+> I am trying to figure out how to build with the exact configuration,
+> but every way I've tried to build modifies the .config file.
 > 
-> diff --git a/mm/compaction.c b/mm/compaction.c
-> index 672d3c78c6ab..000ade085b89 100644
-> --- a/mm/compaction.c
-> +++ b/mm/compaction.c
-> @@ -894,12 +894,13 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
->  
->  		/*
->  		 * Regardless of being on LRU, compound pages such as THP and
-> -		 * hugetlbfs are not to be compacted. We can potentially save
-> -		 * a lot of iterations if we skip them at once. The check is
-> -		 * racy, but we can consider only valid values and the only
-> -		 * danger is skipping too much.
-> +		 * hugetlbfs are not to be compacted unless we are attempting
-> +		 * an allocation much larger than the huge page size (eg CMA).
-> +		 * We can potentially save a lot of iterations if we skip them
-> +		 * at once. The check is racy, but we can consider only valid
-> +		 * values and the only danger is skipping too much.
->  		 */
-> -		if (PageCompound(page)) {
-> +		if (PageCompound(page) && !cc->alloc_contig) {
->  			const unsigned int order = compound_order(page);
->  
->  			if (likely(order < MAX_ORDER))
-> @@ -969,7 +970,7 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
->  			 * and it's on LRU. It can only be a THP so the order
->  			 * is safe to read and it's 0 for tail pages.
->  			 */
-> -			if (unlikely(PageCompound(page))) {
-> +			if (unlikely(PageCompound(page) && !cc->alloc_contig)) {
->  				low_pfn += compound_nr(page) - 1;
->  				goto isolate_fail;
->  			}
-> @@ -981,12 +982,15 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
->  		if (__isolate_lru_page(page, isolate_mode) != 0)
->  			goto isolate_fail;
->  
-> -		VM_BUG_ON_PAGE(PageCompound(page), page);
-> +		/* The whole page is taken off the LRU; skip the tail pages. */
-> +		if (PageCompound(page))
-> +			low_pfn += compound_nr(page) - 1;
->  
->  		/* Successfully isolated */
->  		del_page_from_lru_list(page, lruvec, page_lru(page));
-> -		inc_node_page_state(page,
-> -				NR_ISOLATED_ANON + page_is_file_cache(page));
-> +		mod_node_page_state(page_pgdat(page),
-> +				NR_ISOLATED_ANON + page_is_file_cache(page),
-> +				hpage_nr_pages(page));
->  
->  isolate_success:
->  		list_add(&page->lru, &cc->migratepages);
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index a36736812596..6257c849cc00 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -8253,14 +8253,19 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
->  
->  		/*
->  		 * Hugepages are not in LRU lists, but they're movable.
-> +		 * THPs are on the LRU, but need to be counted as #small pages.
->  		 * We need not scan over tail pages because we don't
->  		 * handle each tail page individually in migration.
->  		 */
-> -		if (PageHuge(page)) {
-> +		if (PageHuge(page) || PageTransCompound(page)) {
->  			struct page *head = compound_head(page);
->  			unsigned int skip_pages;
->  
-> -			if (!hugepage_migration_supported(page_hstate(head)))
-> +			if (PageHuge(page) &&
-> +			    !hugepage_migration_supported(page_hstate(head)))
-> +				return page;
-> +
-> +			if (!PageLRU(head) && !__PageMovable(head))
+> Do you have any pointers to info on how to get the build system
+> to use exactly the .config without modification?
+> 
+> (Just in case it is pertinent, I am using Linux 5.6-rc1 instead
+> of -next.)
 
-Pretty sure this is going to be true for hugetlb pages.  So, this will change
-behavior and make all hugetlb pages look unmovable.  Perhaps, only check this
-condition for THP pages?
+Hi Frank,
+
+Yeah, I can't get 5.6-rc1 to use that same .config file either.
+There are too many differences from rc1 to rc3+next and any
+'make' command will automatically run oldconfig (or silentoldconfig)
+to update the .config file.
+
 -- 
-Mike Kravetz
+~Randy
 
->  				return page;
->  
->  			skip_pages = compound_nr(head) - (page - head);
-> 
