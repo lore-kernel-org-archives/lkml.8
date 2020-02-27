@@ -2,108 +2,130 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B77DC76564
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD984C76560
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D414B2468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:33:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814035;
-	bh=k8+6jZgtHrB1l9uG8FhMc7iIb5mLOWTquHRjGWQk6g4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QMnt+/jEKP+LwptaS3MFRDwDxwvS/Ugm3aDmtkI5+1Hr7c2g+NPpRLwLF2p+M10hw
-	 Wj6InQAS5qypAyn4fIQaHGcfj64KdFmjfNZzPZCAptneZxFCcM0ARWDY9N3zq6CARA
-	 UHOBvage2OyzRmhoPFp9mEKqhzSLgm+qFVszj9kY=
+	by mail.kernel.org (Postfix) with ESMTP id A7D18246B5
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:34:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733128AbgB0Ody (ORCPT
+        id S2387460AbgB0Od7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:33:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33184 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732342AbgB0N7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:59:53 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2CB32073D;
-        Thu, 27 Feb 2020 13:59:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811993;
-        bh=k8+6jZgtHrB1l9uG8FhMc7iIb5mLOWTquHRjGWQk6g4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EJ5lF1EZuXT8plQ1o2r2c8dIKcSE5LaKTUg2ZB33gTLbjDnkLsINOGq0KFBnEUrta
-         f4RoV8L2nOPETF2glfz++E8NIf4Z0HP7Q2tM+Ot2MZv/XyJ5T8TDBUfDkXn7pJmIbQ
-         rfIbs7CkXmWEfWRorl5TmlpAJikIxLXRsf8kREuY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rene D Obermueller <cmdrrdo@gmail.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.14 180/237] xhci: Force Maximum Packet size for Full-speed bulk devices to valid range.
-Date:   Thu, 27 Feb 2020 14:36:34 +0100
-Message-Id: <20200227132309.614166600@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
-References: <20200227132255.285644406@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 27 Feb 2020 09:33:59 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39022 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733150AbgB0Od4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:33:56 -0500
+Received: by mail-oi1-f193.google.com with SMTP id r16so1821169oie.6;
+        Thu, 27 Feb 2020 06:33:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iazGFV0/AdGMbS8cIoxIj45xiJT6uT7qxe6QWrKdivk=;
+        b=m8C5X+/LiWiC9LavLEDvnnkvcph+a6hDEMC6ZvzHIKt9/nVkSfFX6NR+fEkDS673ur
+         +REMX4arHza/sAVlygHoUnsGjWWNmss9vLUScWAkY0LcAZbgqE85nakp5q8DJcUrU+P8
+         QLC0JiCB7644WqR49JzwH4SZkPVT6gSaXaQFEBiHcrq6a+qlYG5vREDeSrRytZ6CQVYU
+         HRgp1TQ0AZ9G6elL9cVnulq9QSQ8Rz4g/B13hPKKYZxS6GHxipUkTXhYYu/Dz62sLkdl
+         zsL8TfIRZai59M37gC7JSyKAheXy4lC3vqG8seQO6oIt3HGIOhVDPeTZWduvgx1L1TEx
+         rDpg==
+X-Gm-Message-State: APjAAAXLWQq3RUIvOy6Hqd3h1Tw3gjekV/5mI4xhskEVXisU57KfHoFF
+        ekSjji2XHAfc1CrmYMGtvch+hkccmqP2XrykpUg=
+X-Google-Smtp-Source: APXvYqy5IFVSWV6b6wQFhhGt1TR8aI1RVsmZ9SM+888Y8GkOYCeG4Jn33omesaC3db4cUJaAC9F6faMRciwO4h/uRI8=
+X-Received: by 2002:aca:cdd1:: with SMTP id d200mr2932212oig.153.1582814035925;
+ Thu, 27 Feb 2020 06:33:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200225220551.d9a409bc04b77cdf48eae3ea@kernel.org>
+ <158264140162.23842.11237423518607465535.stgit@devnote2> <CAMuHMdW+JECxNPX8yDswARq+fLXig7VAo0oosCPAkZhtc_XR0g@mail.gmail.com>
+ <20200227092518.2096344e@gandalf.local.home>
+In-Reply-To: <20200227092518.2096344e@gandalf.local.home>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 27 Feb 2020 15:33:44 +0100
+Message-ID: <CAMuHMdUXqH6yE17Us+k7T4VnhyiWdRuEexWXMyc9x5yuT_41vg@mail.gmail.com>
+Subject: Re: [PATCH] bootconfig: Fix CONFIG_BOOTTIME_TRACING dependency issue
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+Hi Steven,
 
-commit f148b9f402ef002b57bcff3964d45abc8ffb6c3f upstream.
+On Thu, Feb 27, 2020 at 3:25 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+> On Thu, 27 Feb 2020 10:18:08 +0100
+> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Tue, Feb 25, 2020 at 4:47 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > > Since commit d8a953ddde5e ("bootconfig: Set CONFIG_BOOT_CONFIG=n by
+> > > default") also changed the CONFIG_BOOTTIME_TRACING to select
+> > > CONFIG_BOOT_CONFIG to show the boot-time tracing on the menu,
+> > > it introduced wrong dependencies with BLK_DEV_INITRD as below.
+> > >
+> > > WARNING: unmet direct dependencies detected for BOOT_CONFIG
+> > >   Depends on [n]: BLK_DEV_INITRD [=n]
+> > >   Selected by [y]:
+> > >   - BOOTTIME_TRACING [=y] && TRACING_SUPPORT [=y] && FTRACE [=y] && TRACING [=y]
+> > >
+> > > This makes the CONFIG_BOOT_CONFIG selects CONFIG_BLK_DEV_INITRD to
+> > > fix this error and make CONFIG_BOOTTIME_TRACING=n by default, so
+> > > that both boot-time tracing and boot configuration off but those
+> > > appear on the menu list.
+> > >
+> > > Fixes: d8a953ddde5e ("bootconfig: Set CONFIG_BOOT_CONFIG=n by default")
+> > > Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> > > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > > ---
+> > >  init/Kconfig         |    2 +-
+> > >  kernel/trace/Kconfig |    1 -
+> > >  2 files changed, 1 insertion(+), 2 deletions(-)
+> > >
+> > > diff --git a/init/Kconfig b/init/Kconfig
+> > > index a84e7aa89a29..8b4c3e8c05ea 100644
+> > > --- a/init/Kconfig
+> > > +++ b/init/Kconfig
+> > > @@ -1217,7 +1217,7 @@ endif
+> > >
+> > >  config BOOT_CONFIG
+> > >         bool "Boot config support"
+> > > -       depends on BLK_DEV_INITRD
+> > > +       select BLK_DEV_INITRD
+> > >         help
+> > >           Extra boot config allows system admin to pass a config file as
+> > >           complemental extension of kernel cmdline when booting.
+> > > diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+> > > index 795c3e02d3f1..402eef84c859 100644
+> > > --- a/kernel/trace/Kconfig
+> > > +++ b/kernel/trace/Kconfig
+> > > @@ -145,7 +145,6 @@ config BOOTTIME_TRACING
+> > >         bool "Boot-time Tracing support"
+> > >         depends on TRACING
+> >
+> > Why not "depends on BLK_DEV_INITRD?" here?
+> >
+> > /me tries to contain the bloat introduced by the bootconfig stuff.
+>
+> Because people like me will be scratching my head trying to figure out why
+> I don't see Boot-time Tracing support ;-)
 
-A Full-speed bulk USB audio device (DJ-Tech CTRL) with a invalid Maximum
-Packet Size of 4 causes a xHC "Parameter Error" at enumeration.
+AFAIUI, without using an initrd, your fancy bootconfig cannot be appended
+anywhere anyway?
 
-This is because valid Maximum packet sizes for Full-speed bulk endpoints
-are 8, 16, 32 and 64 bytes. Hosts are not required to support other values
-than these. See usb 2 specs section 5.8.3 for details.
+Gr{oetje,eeting}s,
 
-The device starts working after forcing the maximum packet size to 8.
-This is most likely the case with other devices as well, so force the
-maximum packet size to a valid range.
+                        Geert
 
-Cc: stable@vger.kernel.org
-Reported-by: Rene D Obermueller <cmdrrdo@gmail.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200210134553.9144-2-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
----
- drivers/usb/host/xhci-mem.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
-
---- a/drivers/usb/host/xhci-mem.c
-+++ b/drivers/usb/host/xhci-mem.c
-@@ -1479,9 +1479,15 @@ int xhci_endpoint_init(struct xhci_hcd *
- 	/* Allow 3 retries for everything but isoc, set CErr = 3 */
- 	if (!usb_endpoint_xfer_isoc(&ep->desc))
- 		err_count = 3;
--	/* Some devices get this wrong */
--	if (usb_endpoint_xfer_bulk(&ep->desc) && udev->speed == USB_SPEED_HIGH)
--		max_packet = 512;
-+	/* HS bulk max packet should be 512, FS bulk supports 8, 16, 32 or 64 */
-+	if (usb_endpoint_xfer_bulk(&ep->desc)) {
-+		if (udev->speed == USB_SPEED_HIGH)
-+			max_packet = 512;
-+		if (udev->speed == USB_SPEED_FULL) {
-+			max_packet = rounddown_pow_of_two(max_packet);
-+			max_packet = clamp_val(max_packet, 8, 64);
-+		}
-+	}
- 	/* xHCI 1.0 and 1.1 indicates that ctrl ep avg TRB Length should be 8 */
- 	if (usb_endpoint_xfer_control(&ep->desc) && xhci->hci_version >= 0x100)
- 		avg_trb_len = 8;
-
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
