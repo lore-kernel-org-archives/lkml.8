@@ -2,146 +2,99 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF274C35677
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4CDC3567B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C737C2469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:11:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D5/70dFj"
+	by mail.kernel.org (Postfix) with ESMTP id D8AD52469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:11:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729966AbgB0QLO (ORCPT
+        id S1730000AbgB0QLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 11:11:14 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:20440 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729443AbgB0QLN (ORCPT
+        Thu, 27 Feb 2020 11:11:55 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39126 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729845AbgB0QLy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 11:11:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582819873;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=baOVStFi/SNG29sbg/ucY09+VCW+eczt7xzz7SmVLS4=;
-        b=D5/70dFjBGR1x6K5TCDK/j+zZ1AHpRfnyzfwVsjw4koT2Za7Z2dlwBeyu5IYwYL6u3eMhE
-        mGXNts2lo5+M9Dfggmhgwa9Cq1r0/LNhrftIcbLugkbF38AdcKqE6zl+va2KiYD3nPB552
-        mx49TdHmEfqKhRUPRoZl4E59Z39Xh5k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-225-5nDBex09N9-vClpZCVygwA-1; Thu, 27 Feb 2020 11:11:08 -0500
-X-MC-Unique: 5nDBex09N9-vClpZCVygwA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 27 Feb 2020 11:11:54 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D43FDB68;
-        Thu, 27 Feb 2020 16:11:05 +0000 (UTC)
-Received: from localhost (ovpn-117-38.ams2.redhat.com [10.36.117.38])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2EE2760C63;
-        Thu, 27 Feb 2020 16:11:03 +0000 (UTC)
-Date:   Thu, 27 Feb 2020 16:11:02 +0000
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     davem@davemloft.net, Dexuan Cui <decui@microsoft.com>,
-        Hillf Danton <hdanton@sina.com>,
-        virtualization@lists.linux-foundation.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>, kvm@vger.kernel.org,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        syzbot+731710996d79d0d58fbc@syzkaller.appspotmail.com,
-        netdev@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jorgen Hansen <jhansen@vmware.com>
-Subject: Re: [PATCH net] vsock: fix potential deadlock in transport->release()
-Message-ID: <20200227161102.GC315098@stefanha-x1.localdomain>
-References: <20200226105818.36055-1-sgarzare@redhat.com>
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id CEE0C2963C8;
+        Thu, 27 Feb 2020 16:11:51 +0000 (GMT)
+Date:   Thu, 27 Feb 2020 17:11:47 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Pratyush Yadav <p.yadav@ti.com>
+Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v2 01/11] dt-bindings: spi: allow expressing DTR
+ capability
+Message-ID: <20200227171147.32cc6fcf@collabora.com>
+In-Reply-To: <20200226093703.19765-2-p.yadav@ti.com>
+References: <20200226093703.19765-1-p.yadav@ti.com>
+        <20200226093703.19765-2-p.yadav@ti.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200226105818.36055-1-sgarzare@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="DIOMP1UsTsWJauNi"
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---DIOMP1UsTsWJauNi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, 26 Feb 2020 15:06:53 +0530
+Pratyush Yadav <p.yadav@ti.com> wrote:
 
-On Wed, Feb 26, 2020 at 11:58:18AM +0100, Stefano Garzarella wrote:
-> Some transports (hyperv, virtio) acquire the sock lock during the
-> .release() callback.
->=20
-> In the vsock_stream_connect() we call vsock_assign_transport(); if
-> the socket was previously assigned to another transport, the
-> vsk->transport->release() is called, but the sock lock is already
-> held in the vsock_stream_connect(), causing a deadlock reported by
-> syzbot:
->=20
->     INFO: task syz-executor280:9768 blocked for more than 143 seconds.
->       Not tainted 5.6.0-rc1-syzkaller #0
->     "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this mess=
-age.
->     syz-executor280 D27912  9768   9766 0x00000000
->     Call Trace:
->      context_switch kernel/sched/core.c:3386 [inline]
->      __schedule+0x934/0x1f90 kernel/sched/core.c:4082
->      schedule+0xdc/0x2b0 kernel/sched/core.c:4156
->      __lock_sock+0x165/0x290 net/core/sock.c:2413
->      lock_sock_nested+0xfe/0x120 net/core/sock.c:2938
->      virtio_transport_release+0xc4/0xd60 net/vmw_vsock/virtio_transport_c=
-ommon.c:832
->      vsock_assign_transport+0xf3/0x3b0 net/vmw_vsock/af_vsock.c:454
->      vsock_stream_connect+0x2b3/0xc70 net/vmw_vsock/af_vsock.c:1288
->      __sys_connect_file+0x161/0x1c0 net/socket.c:1857
->      __sys_connect+0x174/0x1b0 net/socket.c:1874
->      __do_sys_connect net/socket.c:1885 [inline]
->      __se_sys_connect net/socket.c:1882 [inline]
->      __x64_sys_connect+0x73/0xb0 net/socket.c:1882
->      do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
->      entry_SYSCALL_64_after_hwframe+0x49/0xbe
->=20
-> To avoid this issue, this patch remove the lock acquiring in the
-> .release() callback of hyperv and virtio transports, and it holds
-> the lock when we call vsk->transport->release() in the vsock core.
->=20
-> Reported-by: syzbot+731710996d79d0d58fbc@syzkaller.appspotmail.com
-> Fixes: 408624af4c89 ("vsock: use local transport when it is loaded")
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> Allow spi devices to express DTR receive and transmit capabilities via
+> the properties "spi-rx-dtr" and "spi-tx-dtr".
+
+Is the RX/TX granularity really useful?
+
+> 
+> Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
 > ---
->  net/vmw_vsock/af_vsock.c                | 20 ++++++++++++--------
->  net/vmw_vsock/hyperv_transport.c        |  3 ---
->  net/vmw_vsock/virtio_transport_common.c |  2 --
->  3 files changed, 12 insertions(+), 13 deletions(-)
-
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-
---DIOMP1UsTsWJauNi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl5X6hYACgkQnKSrs4Gr
-c8hIwwf/VpB7q37vIv4l2+NFuq3CWGZbLfSSG7A9u4sXSo+VhcEltqh8jdz8xEfS
-k9JaAaCosM43HAtz+LPmfHG6eL761HjpUQ9KnLgU53aWhJwFuIv000o2w+OA3X4O
-cr1aWzcWJzFpkU1xQb41J1FR8FUymgWSqQPitEF3ElEnmbfFGSrEgrVOc9Ou2Qhb
-57r4rlPuiZNNshiWMjCalPewQeJETnrEnB9cxsjc0gMu/xn1KRE7g6i4yG1smtjm
-YSgZmV1NgDWrAKr//amiOCqTvKH2DUYYgvUwnx27G0iRrWO47TQYbE+/jDd+FUol
-u2jPzVcR0q/qq1CJsyPqKx+7pdCqUg==
-=t+mC
------END PGP SIGNATURE-----
-
---DIOMP1UsTsWJauNi--
+>  .../devicetree/bindings/spi/spi-controller.yaml        | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/spi-controller.yaml b/Documentation/devicetree/bindings/spi/spi-controller.yaml
+> index 1e0ca6ccf64b..7a84debed213 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-controller.yaml
+> +++ b/Documentation/devicetree/bindings/spi/spi-controller.yaml
+> @@ -120,6 +120,11 @@ patternProperties:
+>          description:
+>            Delay, in microseconds, after a read transfer.
+>  
+> +      spi-rx-dtr:
+> +        $ref: /schemas/types.yaml#/definitions/flag
+> +        description:
+> +          Device supports receiving in DTR mode.
+> +
+>        spi-tx-bus-width:
+>          allOf:
+>            - $ref: /schemas/types.yaml#/definitions/uint32
+> @@ -132,6 +137,11 @@ patternProperties:
+>          description:
+>            Delay, in microseconds, after a write transfer.
+>  
+> +      spi-tx-dtr:
+> +        $ref: /schemas/types.yaml#/definitions/flag
+> +        description:
+> +          Device supports transmitting in DTR mode.
+> +
+>      required:
+>        - compatible
+>        - reg
 
