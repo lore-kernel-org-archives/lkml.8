@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1A1C3F355
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8080BC3F354
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F200E20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:09:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F4CE24690
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812589;
-	bh=dWhSqp2sSGA0j+GHD0x8+OvJzlBkzswpfjc/63BfTu4=;
+	s=default; t=1582812616;
+	bh=KvyFcunvIK2ed5D0HfmFrBgxqD77/wdTd/5McIYCLnQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cdC0j/8ZHXlWPPiClpH09E2MfakqevuTacwDk1LQZ0vhtWNnh/qcwN+9TwgaaOYvB
-	 txjpPcmn7Fo/JDm4HoaJuH8g8Zj9ikQroXwZ2nHpux6FzYP4LCBSj6MX8e0MZCFADg
-	 XJJVingbSzO5PAZBgt98ZTkj5T8AFt1qkK1EjuiE=
+	b=cVZy1kRhrlbxDDDy51BLZ/vn/JLN2uGIyLmxYvRIIc6Iu8aI7ULsqj9J/2a1nhehu
+	 2oi8nubO6FnzAqS7iXjgvJvsyrk86RZBZA82klPwH6Wdbm0r36pj8u7mvGuOmy5eTl
+	 bvTysQRGHka/C2/p2OV7d+jtHiybtTFX53lP091c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388412AbgB0OJr (ORCPT
+        id S2388502AbgB0OKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:09:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47728 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:10:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733262AbgB0OJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:09:44 -0500
+        id S2387775AbgB0OKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:10:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AAB220578;
-        Thu, 27 Feb 2020 14:09:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3915424690;
+        Thu, 27 Feb 2020 14:10:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812583;
-        bh=dWhSqp2sSGA0j+GHD0x8+OvJzlBkzswpfjc/63BfTu4=;
+        s=default; t=1582812608;
+        bh=KvyFcunvIK2ed5D0HfmFrBgxqD77/wdTd/5McIYCLnQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oBDGDDjMj687ANgfIieooO1/OwnDoNlbGcgEBJYrkKmePtHQIN30fFzlygj3HfOE7
-         90D6xbY3TAqOzabg+zSoeRyaVzvJyLjVpd7b+Er4lf0dhKZz7kvjpjF2KR4RY2wXZI
-         t+f9LtBMNTCSDmTnZ9/lZWAvjvDNPrJvM33s2C3o=
+        b=rbjhhcGMIN7fR/SQHPid8BCw41I5JXeeVU+zI99SfRsT8qPRknm97lg8E2mozVAKu
+         AqrDMvcZb2BUytH0ENXgu01wAwWPmrElq9iNScLgXVLEyp+jsXEnOAQraowXFYzzPg
+         hcNk5/9zlR43y3GlKWLQu/wMrJ1qjOlBy0PQGJr0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@intel.com>
-Subject: [PATCH 5.4 074/135] drm/i915: Wean off drm_pci_alloc/drm_pci_free
-Date:   Thu, 27 Feb 2020 14:36:54 +0100
-Message-Id: <20200227132240.508720004@linuxfoundation.org>
+        stable@vger.kernel.org, Suraj Jitindar Singh <surajjs@amazon.com>,
+        Theodore Tso <tytso@mit.edu>, stable@kernel.org
+Subject: [PATCH 5.4 083/135] ext4: fix potential race between s_flex_groups online resizing and access
+Date:   Thu, 27 Feb 2020 14:37:03 +0100
+Message-Id: <20200227132241.847274369@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -60,257 +59,291 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Suraj Jitindar Singh <surajjs@amazon.com>
 
-commit aa3146193ae25d0fe4b96d815169a135db2e8f01 upstream.
+commit 7c990728b99ed6fbe9c75fc202fce1172d9916da upstream.
 
-drm_pci_alloc and drm_pci_free are just very thin wrappers around
-dma_alloc_coherent, with a note that we should be removing them.
-Furthermore since
+During an online resize an array of s_flex_groups structures gets replaced
+so it can get enlarged. If there is a concurrent access to the array and
+this memory has been reused then this can lead to an invalid memory access.
 
-commit de09d31dd38a50fdce106c15abd68432eebbd014
-Author: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Date:   Fri Jan 15 16:51:42 2016 -0800
+The s_flex_group array has been converted into an array of pointers rather
+than an array of structures. This is to ensure that the information
+contained in the structures cannot get out of sync during a resize due to
+an accessor updating the value in the old structure after it has been
+copied but before the array pointer is updated. Since the structures them-
+selves are no longer copied but only the pointers to them this case is
+mitigated.
 
-    page-flags: define PG_reserved behavior on compound pages
-
-    As far as I can see there's no users of PG_reserved on compound pages.
-    Let's use PF_NO_COMPOUND here.
-
-drm_pci_alloc has been declared broken since it mixes GFP_COMP and
-SetPageReserved. Avoid this conflict by weaning ourselves off using the
-abstraction and using the dma functions directly.
-
-Reported-by: Taketo Kabe
-Closes: https://gitlab.freedesktop.org/drm/intel/issues/1027
-Fixes: de09d31dd38a ("page-flags: define PG_reserved behavior on compound pages")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: <stable@vger.kernel.org> # v4.5+
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200202153934.3899472-1-chris@chris-wilson.co.uk
-(cherry picked from commit c6790dc22312f592c1434577258b31c48c72d52a)
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206443
+Link: https://lore.kernel.org/r/20200221053458.730016-4-tytso@mit.edu
+Signed-off-by: Suraj Jitindar Singh <surajjs@amazon.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/display/intel_display.c     |    2 
- drivers/gpu/drm/i915/gem/i915_gem_object_types.h |    3 
- drivers/gpu/drm/i915/gem/i915_gem_phys.c         |   98 +++++++++++------------
- drivers/gpu/drm/i915/i915_gem.c                  |    8 -
- 4 files changed, 55 insertions(+), 56 deletions(-)
+ fs/ext4/ext4.h    |    2 -
+ fs/ext4/ialloc.c  |   23 ++++++++++-------
+ fs/ext4/mballoc.c |    9 ++++--
+ fs/ext4/resize.c  |    7 +++--
+ fs/ext4/super.c   |   72 +++++++++++++++++++++++++++++++++++++-----------------
+ 5 files changed, 76 insertions(+), 37 deletions(-)
 
---- a/drivers/gpu/drm/i915/display/intel_display.c
-+++ b/drivers/gpu/drm/i915/display/intel_display.c
-@@ -10510,7 +10510,7 @@ static u32 intel_cursor_base(const struc
- 	u32 base;
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -1508,7 +1508,7 @@ struct ext4_sb_info {
+ 	unsigned int s_extent_max_zeroout_kb;
  
- 	if (INTEL_INFO(dev_priv)->display.cursor_needs_physical)
--		base = obj->phys_handle->busaddr;
-+		base = sg_dma_address(obj->mm.pages->sgl);
- 	else
- 		base = intel_plane_ggtt_offset(plane_state);
+ 	unsigned int s_log_groups_per_flex;
+-	struct flex_groups *s_flex_groups;
++	struct flex_groups * __rcu *s_flex_groups;
+ 	ext4_group_t s_flex_groups_allocated;
  
---- a/drivers/gpu/drm/i915/gem/i915_gem_object_types.h
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_object_types.h
-@@ -240,9 +240,6 @@ struct drm_i915_gem_object {
+ 	/* workqueue for reserved extent conversions (buffered io) */
+--- a/fs/ext4/ialloc.c
++++ b/fs/ext4/ialloc.c
+@@ -325,11 +325,13 @@ void ext4_free_inode(handle_t *handle, s
  
- 		void *gvt_info;
- 	};
--
--	/** for phys allocated objects */
--	struct drm_dma_handle *phys_handle;
- };
+ 	percpu_counter_inc(&sbi->s_freeinodes_counter);
+ 	if (sbi->s_log_groups_per_flex) {
+-		ext4_group_t f = ext4_flex_group(sbi, block_group);
++		struct flex_groups *fg;
  
- static inline struct drm_i915_gem_object *
---- a/drivers/gpu/drm/i915/gem/i915_gem_phys.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_phys.c
-@@ -21,88 +21,87 @@
- static int i915_gem_object_get_pages_phys(struct drm_i915_gem_object *obj)
+-		atomic_inc(&sbi->s_flex_groups[f].free_inodes);
++		fg = sbi_array_rcu_deref(sbi, s_flex_groups,
++					 ext4_flex_group(sbi, block_group));
++		atomic_inc(&fg->free_inodes);
+ 		if (is_directory)
+-			atomic_dec(&sbi->s_flex_groups[f].used_dirs);
++			atomic_dec(&fg->used_dirs);
+ 	}
+ 	BUFFER_TRACE(bh2, "call ext4_handle_dirty_metadata");
+ 	fatal = ext4_handle_dirty_metadata(handle, NULL, bh2);
+@@ -365,12 +367,13 @@ static void get_orlov_stats(struct super
+ 			    int flex_size, struct orlov_stats *stats)
  {
- 	struct address_space *mapping = obj->base.filp->f_mapping;
--	struct drm_dma_handle *phys;
--	struct sg_table *st;
- 	struct scatterlist *sg;
--	char *vaddr;
-+	struct sg_table *st;
-+	dma_addr_t dma;
-+	void *vaddr;
-+	void *dst;
- 	int i;
--	int err;
+ 	struct ext4_group_desc *desc;
+-	struct flex_groups *flex_group = EXT4_SB(sb)->s_flex_groups;
  
- 	if (WARN_ON(i915_gem_object_needs_bit17_swizzle(obj)))
- 		return -EINVAL;
- 
--	/* Always aligning to the object size, allows a single allocation
-+	/*
-+	 * Always aligning to the object size, allows a single allocation
- 	 * to handle all possible callers, and given typical object sizes,
- 	 * the alignment of the buddy allocation will naturally match.
- 	 */
--	phys = drm_pci_alloc(obj->base.dev,
--			     roundup_pow_of_two(obj->base.size),
--			     roundup_pow_of_two(obj->base.size));
--	if (!phys)
-+	vaddr = dma_alloc_coherent(&obj->base.dev->pdev->dev,
-+				   roundup_pow_of_two(obj->base.size),
-+				   &dma, GFP_KERNEL);
-+	if (!vaddr)
- 		return -ENOMEM;
- 
--	vaddr = phys->vaddr;
-+	st = kmalloc(sizeof(*st), GFP_KERNEL);
-+	if (!st)
-+		goto err_pci;
-+
-+	if (sg_alloc_table(st, 1, GFP_KERNEL))
-+		goto err_st;
-+
-+	sg = st->sgl;
-+	sg->offset = 0;
-+	sg->length = obj->base.size;
-+
-+	sg_assign_page(sg, (struct page *)vaddr);
-+	sg_dma_address(sg) = dma;
-+	sg_dma_len(sg) = obj->base.size;
-+
-+	dst = vaddr;
- 	for (i = 0; i < obj->base.size / PAGE_SIZE; i++) {
- 		struct page *page;
--		char *src;
-+		void *src;
- 
- 		page = shmem_read_mapping_page(mapping, i);
--		if (IS_ERR(page)) {
--			err = PTR_ERR(page);
--			goto err_phys;
--		}
-+		if (IS_ERR(page))
-+			goto err_st;
- 
- 		src = kmap_atomic(page);
--		memcpy(vaddr, src, PAGE_SIZE);
--		drm_clflush_virt_range(vaddr, PAGE_SIZE);
-+		memcpy(dst, src, PAGE_SIZE);
-+		drm_clflush_virt_range(dst, PAGE_SIZE);
- 		kunmap_atomic(src);
- 
- 		put_page(page);
--		vaddr += PAGE_SIZE;
-+		dst += PAGE_SIZE;
+ 	if (flex_size > 1) {
+-		stats->free_inodes = atomic_read(&flex_group[g].free_inodes);
+-		stats->free_clusters = atomic64_read(&flex_group[g].free_clusters);
+-		stats->used_dirs = atomic_read(&flex_group[g].used_dirs);
++		struct flex_groups *fg = sbi_array_rcu_deref(EXT4_SB(sb),
++							     s_flex_groups, g);
++		stats->free_inodes = atomic_read(&fg->free_inodes);
++		stats->free_clusters = atomic64_read(&fg->free_clusters);
++		stats->used_dirs = atomic_read(&fg->used_dirs);
+ 		return;
  	}
  
- 	intel_gt_chipset_flush(&to_i915(obj->base.dev)->gt);
+@@ -1051,7 +1054,8 @@ got:
+ 		if (sbi->s_log_groups_per_flex) {
+ 			ext4_group_t f = ext4_flex_group(sbi, group);
  
--	st = kmalloc(sizeof(*st), GFP_KERNEL);
--	if (!st) {
--		err = -ENOMEM;
--		goto err_phys;
--	}
--
--	if (sg_alloc_table(st, 1, GFP_KERNEL)) {
--		kfree(st);
--		err = -ENOMEM;
--		goto err_phys;
--	}
--
--	sg = st->sgl;
--	sg->offset = 0;
--	sg->length = obj->base.size;
--
--	sg_dma_address(sg) = phys->busaddr;
--	sg_dma_len(sg) = obj->base.size;
--
--	obj->phys_handle = phys;
--
- 	__i915_gem_object_set_pages(obj, st, sg->length);
- 
- 	return 0;
- 
--err_phys:
--	drm_pci_free(obj->base.dev, phys);
--
--	return err;
-+err_st:
-+	kfree(st);
-+err_pci:
-+	dma_free_coherent(&obj->base.dev->pdev->dev,
-+			  roundup_pow_of_two(obj->base.size),
-+			  vaddr, dma);
-+	return -ENOMEM;
- }
- 
- static void
- i915_gem_object_put_pages_phys(struct drm_i915_gem_object *obj,
- 			       struct sg_table *pages)
- {
-+	dma_addr_t dma = sg_dma_address(pages->sgl);
-+	void *vaddr = sg_page(pages->sgl);
-+
- 	__i915_gem_object_release_shmem(obj, pages, false);
- 
- 	if (obj->mm.dirty) {
- 		struct address_space *mapping = obj->base.filp->f_mapping;
--		char *vaddr = obj->phys_handle->vaddr;
-+		void *src = vaddr;
- 		int i;
- 
- 		for (i = 0; i < obj->base.size / PAGE_SIZE; i++) {
-@@ -114,15 +113,16 @@ i915_gem_object_put_pages_phys(struct dr
- 				continue;
- 
- 			dst = kmap_atomic(page);
--			drm_clflush_virt_range(vaddr, PAGE_SIZE);
--			memcpy(dst, vaddr, PAGE_SIZE);
-+			drm_clflush_virt_range(src, PAGE_SIZE);
-+			memcpy(dst, src, PAGE_SIZE);
- 			kunmap_atomic(dst);
- 
- 			set_page_dirty(page);
- 			if (obj->mm.madv == I915_MADV_WILLNEED)
- 				mark_page_accessed(page);
- 			put_page(page);
--			vaddr += PAGE_SIZE;
-+
-+			src += PAGE_SIZE;
+-			atomic_inc(&sbi->s_flex_groups[f].used_dirs);
++			atomic_inc(&sbi_array_rcu_deref(sbi, s_flex_groups,
++							f)->used_dirs);
  		}
- 		obj->mm.dirty = false;
  	}
-@@ -130,7 +130,9 @@ i915_gem_object_put_pages_phys(struct dr
- 	sg_free_table(pages);
- 	kfree(pages);
+ 	if (ext4_has_group_desc_csum(sb)) {
+@@ -1074,7 +1078,8 @@ got:
  
--	drm_pci_free(obj->base.dev, obj->phys_handle);
-+	dma_free_coherent(&obj->base.dev->pdev->dev,
-+			  roundup_pow_of_two(obj->base.size),
-+			  vaddr, dma);
- }
+ 	if (sbi->s_log_groups_per_flex) {
+ 		flex_group = ext4_flex_group(sbi, group);
+-		atomic_dec(&sbi->s_flex_groups[flex_group].free_inodes);
++		atomic_dec(&sbi_array_rcu_deref(sbi, s_flex_groups,
++						flex_group)->free_inodes);
+ 	}
  
- static void phys_release(struct drm_i915_gem_object *obj)
---- a/drivers/gpu/drm/i915/i915_gem.c
-+++ b/drivers/gpu/drm/i915/i915_gem.c
-@@ -136,7 +136,7 @@ i915_gem_phys_pwrite(struct drm_i915_gem
- 		     struct drm_i915_gem_pwrite *args,
- 		     struct drm_file *file)
- {
--	void *vaddr = obj->phys_handle->vaddr + args->offset;
-+	void *vaddr = sg_page(obj->mm.pages->sgl) + args->offset;
- 	char __user *user_data = u64_to_user_ptr(args->data_ptr);
+ 	inode->i_ino = ino + group * EXT4_INODES_PER_GROUP(sb);
+--- a/fs/ext4/mballoc.c
++++ b/fs/ext4/mballoc.c
+@@ -3038,7 +3038,8 @@ ext4_mb_mark_diskspace_used(struct ext4_
+ 		ext4_group_t flex_group = ext4_flex_group(sbi,
+ 							  ac->ac_b_ex.fe_group);
+ 		atomic64_sub(ac->ac_b_ex.fe_len,
+-			     &sbi->s_flex_groups[flex_group].free_clusters);
++			     &sbi_array_rcu_deref(sbi, s_flex_groups,
++						  flex_group)->free_clusters);
+ 	}
+ 
+ 	err = ext4_handle_dirty_metadata(handle, NULL, bitmap_bh);
+@@ -4932,7 +4933,8 @@ do_more:
+ 	if (sbi->s_log_groups_per_flex) {
+ 		ext4_group_t flex_group = ext4_flex_group(sbi, block_group);
+ 		atomic64_add(count_clusters,
+-			     &sbi->s_flex_groups[flex_group].free_clusters);
++			     &sbi_array_rcu_deref(sbi, s_flex_groups,
++						  flex_group)->free_clusters);
+ 	}
  
  	/*
-@@ -802,10 +802,10 @@ i915_gem_pwrite_ioctl(struct drm_device
- 		ret = i915_gem_gtt_pwrite_fast(obj, args);
- 
- 	if (ret == -EFAULT || ret == -ENOSPC) {
--		if (obj->phys_handle)
--			ret = i915_gem_phys_pwrite(obj, args, file);
--		else
-+		if (i915_gem_object_has_struct_page(obj))
- 			ret = i915_gem_shmem_pwrite(obj, args);
-+		else
-+			ret = i915_gem_phys_pwrite(obj, args, file);
+@@ -5089,7 +5091,8 @@ int ext4_group_add_blocks(handle_t *hand
+ 	if (sbi->s_log_groups_per_flex) {
+ 		ext4_group_t flex_group = ext4_flex_group(sbi, block_group);
+ 		atomic64_add(clusters_freed,
+-			     &sbi->s_flex_groups[flex_group].free_clusters);
++			     &sbi_array_rcu_deref(sbi, s_flex_groups,
++						  flex_group)->free_clusters);
  	}
  
- 	i915_gem_object_unpin_pages(obj);
+ 	ext4_mb_unload_buddy(&e4b);
+--- a/fs/ext4/resize.c
++++ b/fs/ext4/resize.c
+@@ -1452,11 +1452,14 @@ static void ext4_update_super(struct sup
+ 		   percpu_counter_read(&sbi->s_freeclusters_counter));
+ 	if (ext4_has_feature_flex_bg(sb) && sbi->s_log_groups_per_flex) {
+ 		ext4_group_t flex_group;
++		struct flex_groups *fg;
++
+ 		flex_group = ext4_flex_group(sbi, group_data[0].group);
++		fg = sbi_array_rcu_deref(sbi, s_flex_groups, flex_group);
+ 		atomic64_add(EXT4_NUM_B2C(sbi, free_blocks),
+-			     &sbi->s_flex_groups[flex_group].free_clusters);
++			     &fg->free_clusters);
+ 		atomic_add(EXT4_INODES_PER_GROUP(sb) * flex_gd->count,
+-			   &sbi->s_flex_groups[flex_group].free_inodes);
++			   &fg->free_inodes);
+ 	}
+ 
+ 	/*
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -971,6 +971,7 @@ static void ext4_put_super(struct super_
+ 	struct ext4_sb_info *sbi = EXT4_SB(sb);
+ 	struct ext4_super_block *es = sbi->s_es;
+ 	struct buffer_head **group_desc;
++	struct flex_groups **flex_groups;
+ 	int aborted = 0;
+ 	int i, err;
+ 
+@@ -1006,8 +1007,13 @@ static void ext4_put_super(struct super_
+ 	for (i = 0; i < sbi->s_gdb_count; i++)
+ 		brelse(group_desc[i]);
+ 	kvfree(group_desc);
++	flex_groups = rcu_dereference(sbi->s_flex_groups);
++	if (flex_groups) {
++		for (i = 0; i < sbi->s_flex_groups_allocated; i++)
++			kvfree(flex_groups[i]);
++		kvfree(flex_groups);
++	}
+ 	rcu_read_unlock();
+-	kvfree(sbi->s_flex_groups);
+ 	percpu_counter_destroy(&sbi->s_freeclusters_counter);
+ 	percpu_counter_destroy(&sbi->s_freeinodes_counter);
+ 	percpu_counter_destroy(&sbi->s_dirs_counter);
+@@ -2336,8 +2342,8 @@ done:
+ int ext4_alloc_flex_bg_array(struct super_block *sb, ext4_group_t ngroup)
+ {
+ 	struct ext4_sb_info *sbi = EXT4_SB(sb);
+-	struct flex_groups *new_groups;
+-	int size;
++	struct flex_groups **old_groups, **new_groups;
++	int size, i;
+ 
+ 	if (!sbi->s_log_groups_per_flex)
+ 		return 0;
+@@ -2346,22 +2352,37 @@ int ext4_alloc_flex_bg_array(struct supe
+ 	if (size <= sbi->s_flex_groups_allocated)
+ 		return 0;
+ 
+-	size = roundup_pow_of_two(size * sizeof(struct flex_groups));
+-	new_groups = kvzalloc(size, GFP_KERNEL);
++	new_groups = kvzalloc(roundup_pow_of_two(size *
++			      sizeof(*sbi->s_flex_groups)), GFP_KERNEL);
+ 	if (!new_groups) {
+-		ext4_msg(sb, KERN_ERR, "not enough memory for %d flex groups",
+-			 size / (int) sizeof(struct flex_groups));
++		ext4_msg(sb, KERN_ERR,
++			 "not enough memory for %d flex group pointers", size);
+ 		return -ENOMEM;
+ 	}
+-
+-	if (sbi->s_flex_groups) {
+-		memcpy(new_groups, sbi->s_flex_groups,
+-		       (sbi->s_flex_groups_allocated *
+-			sizeof(struct flex_groups)));
+-		kvfree(sbi->s_flex_groups);
++	for (i = sbi->s_flex_groups_allocated; i < size; i++) {
++		new_groups[i] = kvzalloc(roundup_pow_of_two(
++					 sizeof(struct flex_groups)),
++					 GFP_KERNEL);
++		if (!new_groups[i]) {
++			for (i--; i >= sbi->s_flex_groups_allocated; i--)
++				kvfree(new_groups[i]);
++			kvfree(new_groups);
++			ext4_msg(sb, KERN_ERR,
++				 "not enough memory for %d flex groups", size);
++			return -ENOMEM;
++		}
+ 	}
+-	sbi->s_flex_groups = new_groups;
+-	sbi->s_flex_groups_allocated = size / sizeof(struct flex_groups);
++	rcu_read_lock();
++	old_groups = rcu_dereference(sbi->s_flex_groups);
++	if (old_groups)
++		memcpy(new_groups, old_groups,
++		       (sbi->s_flex_groups_allocated *
++			sizeof(struct flex_groups *)));
++	rcu_read_unlock();
++	rcu_assign_pointer(sbi->s_flex_groups, new_groups);
++	sbi->s_flex_groups_allocated = size;
++	if (old_groups)
++		ext4_kvfree_array_rcu(old_groups);
+ 	return 0;
+ }
+ 
+@@ -2369,6 +2390,7 @@ static int ext4_fill_flex_info(struct su
+ {
+ 	struct ext4_sb_info *sbi = EXT4_SB(sb);
+ 	struct ext4_group_desc *gdp = NULL;
++	struct flex_groups *fg;
+ 	ext4_group_t flex_group;
+ 	int i, err;
+ 
+@@ -2386,12 +2408,11 @@ static int ext4_fill_flex_info(struct su
+ 		gdp = ext4_get_group_desc(sb, i, NULL);
+ 
+ 		flex_group = ext4_flex_group(sbi, i);
+-		atomic_add(ext4_free_inodes_count(sb, gdp),
+-			   &sbi->s_flex_groups[flex_group].free_inodes);
++		fg = sbi_array_rcu_deref(sbi, s_flex_groups, flex_group);
++		atomic_add(ext4_free_inodes_count(sb, gdp), &fg->free_inodes);
+ 		atomic64_add(ext4_free_group_clusters(sb, gdp),
+-			     &sbi->s_flex_groups[flex_group].free_clusters);
+-		atomic_add(ext4_used_dirs_count(sb, gdp),
+-			   &sbi->s_flex_groups[flex_group].used_dirs);
++			     &fg->free_clusters);
++		atomic_add(ext4_used_dirs_count(sb, gdp), &fg->used_dirs);
+ 	}
+ 
+ 	return 1;
+@@ -3593,6 +3614,7 @@ static int ext4_fill_super(struct super_
+ 	struct buffer_head *bh, **group_desc;
+ 	struct ext4_super_block *es = NULL;
+ 	struct ext4_sb_info *sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
++	struct flex_groups **flex_groups;
+ 	ext4_fsblk_t block;
+ 	ext4_fsblk_t sb_block = get_sb_block(&data);
+ 	ext4_fsblk_t logical_sb_block;
+@@ -4651,8 +4673,14 @@ failed_mount7:
+ 	ext4_unregister_li_request(sb);
+ failed_mount6:
+ 	ext4_mb_release(sb);
+-	if (sbi->s_flex_groups)
+-		kvfree(sbi->s_flex_groups);
++	rcu_read_lock();
++	flex_groups = rcu_dereference(sbi->s_flex_groups);
++	if (flex_groups) {
++		for (i = 0; i < sbi->s_flex_groups_allocated; i++)
++			kvfree(flex_groups[i]);
++		kvfree(flex_groups);
++	}
++	rcu_read_unlock();
+ 	percpu_counter_destroy(&sbi->s_freeclusters_counter);
+ 	percpu_counter_destroy(&sbi->s_freeinodes_counter);
+ 	percpu_counter_destroy(&sbi->s_dirs_counter);
 
 
