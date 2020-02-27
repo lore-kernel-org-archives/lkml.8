@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A9FC728E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 172E9C35DEE
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4983D24656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E02E324656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:22:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813380;
-	bh=kRzhdOxsRy44jcxMVeScwz2Dy3J/se8dLhkDqIglJLI=;
+	s=default; t=1582813366;
+	bh=BnFFlCjxFODBuIwr4bKs002NfcGhLol1Mq0p8Agwisk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f3O6aDcYewCxYjcuhjpPhL4jBzevqgMd5WaOaUaXstLNAUHGoRo7FJcNgLDDITHaq
-	 HTMIV1ZB14/Xyw6G8NvPzQtPz+/gQyYe/ub/dtkU9dF7uLwNwjP0ePMKiDmZnR7+Ay
-	 a/fRhOrubY3+ffQrYKuUZ2f0jQXF02kWLz1WtWRo=
+	b=hJ/2MT8qRIU5XBdGlucEEzJWSndCqkcYrOCxxgozziqDHDhEqsrizXQ43MxafuZeA
+	 zi/IShIXLX4y96h0HlOSjsZCdiioDeT5I50zm7B9F2Bc5DGIp91xzmw8Rp1W5/9tlt
+	 2iGpIVWSim8CJbW6Py/WxZ0lv3rzE66hgci04eLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389283AbgB0OPW (ORCPT
+        id S2389577AbgB0OWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:15:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54872 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:22:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388908AbgB0OPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:15:17 -0500
+        id S1730850AbgB0OPn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:15:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BC4524690;
-        Thu, 27 Feb 2020 14:15:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECCF324690;
+        Thu, 27 Feb 2020 14:15:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812917;
-        bh=kRzhdOxsRy44jcxMVeScwz2Dy3J/se8dLhkDqIglJLI=;
+        s=default; t=1582812942;
+        bh=BnFFlCjxFODBuIwr4bKs002NfcGhLol1Mq0p8Agwisk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NLIu2XYLnMVfzJoAQ+2DQOZ7d+10Cgo4dRK+n6EgWxlxt3iD5vBJ3NyTp2E4UXtLG
-         GExFquPJcQVO07JL8cKwebqs9wh/2jjzYt20HSbc+9Xn63UK1Oml9xvFkNfLAVxsZT
-         yNEiX+7czd42i/1+B+sjvCtiisTIj9KhpS7rFnws=
+        b=fIRtQbkge3Apwm1hlRVw7rmPqQbgQm6caHVR2c9dhdX5e2X2nn0lbKz75AfB4XyXR
+         AwjlBejC3S32yrEEA9AYHu5Oew1ANRppG5fbIp5Tew1/jwzgi6i8n4BTU84jqkPHYJ
+         /hA8K26dEd3SiAXBtS94F4Y+nFlKy2WmgjPLZXkA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: [PATCH 5.5 029/150] staging: android: ashmem: Disallow ashmem memory from being remapped
-Date:   Thu, 27 Feb 2020 14:36:06 +0100
-Message-Id: <20200227132237.133813623@linuxfoundation.org>
+        stable@vger.kernel.org, Gavin Shan <gshan@redhat.com>,
+        Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.5 076/150] mm/vmscan.c: dont round up scan size for online memory cgroup
+Date:   Thu, 27 Feb 2020 14:36:53 +0100
+Message-Id: <20200227132244.069877038@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -61,73 +61,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suren Baghdasaryan <surenb@google.com>
+From: Gavin Shan <gshan@redhat.com>
 
-commit 6d67b0290b4b84c477e6a2fc6e005e174d3c7786 upstream.
+commit 76073c646f5f4999d763f471df9e38a5a912d70d upstream.
 
-When ashmem file is mmapped, the resulting vma->vm_file points to the
-backing shmem file with the generic fops that do not check ashmem
-permissions like fops of ashmem do. If an mremap is done on the ashmem
-region, then the permission checks will be skipped. Fix that by disallowing
-mapping operation on the backing shmem file.
+Commit 68600f623d69 ("mm: don't miss the last page because of round-off
+error") makes the scan size round up to @denominator regardless of the
+memory cgroup's state, online or offline.  This affects the overall
+reclaiming behavior: the corresponding LRU list is eligible for
+reclaiming only when its size logically right shifted by @sc->priority
+is bigger than zero in the former formula.
 
-Reported-by: Jann Horn <jannh@google.com>
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-Cc: stable <stable@vger.kernel.org> # 4.4,4.9,4.14,4.18,5.4
-Signed-off-by: Todd Kjos <tkjos@google.com>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Link: https://lore.kernel.org/r/20200127235616.48920-1-tkjos@google.com
+For example, the inactive anonymous LRU list should have at least 0x4000
+pages to be eligible for reclaiming when we have 60/12 for
+swappiness/priority and without taking scan/rotation ratio into account.
+
+After the roundup is applied, the inactive anonymous LRU list becomes
+eligible for reclaiming when its size is bigger than or equal to 0x1000
+in the same condition.
+
+    (0x4000 >> 12) * 60 / (60 + 140 + 1) = 1
+    ((0x1000 >> 12) * 60) + 200) / (60 + 140 + 1) = 1
+
+aarch64 has 512MB huge page size when the base page size is 64KB.  The
+memory cgroup that has a huge page is always eligible for reclaiming in
+that case.
+
+The reclaiming is likely to stop after the huge page is reclaimed,
+meaing the further iteration on @sc->priority and the silbing and child
+memory cgroups will be skipped.  The overall behaviour has been changed.
+This fixes the issue by applying the roundup to offlined memory cgroups
+only, to give more preference to reclaim memory from offlined memory
+cgroup.  It sounds reasonable as those memory is unlikedly to be used by
+anyone.
+
+The issue was found by starting up 8 VMs on a Ampere Mustang machine,
+which has 8 CPUs and 16 GB memory.  Each VM is given with 2 vCPUs and
+2GB memory.  It took 264 seconds for all VMs to be completely up and
+784MB swap is consumed after that.  With this patch applied, it took 236
+seconds and 60MB swap to do same thing.  So there is 10% performance
+improvement for my case.  Note that KSM is disable while THP is enabled
+in the testing.
+
+         total     used    free   shared  buff/cache   available
+   Mem:  16196    10065    2049       16        4081        3749
+   Swap:  8175      784    7391
+         total     used    free   shared  buff/cache   available
+   Mem:  16196    11324    3656       24        1215        2936
+   Swap:  8175       60    8115
+
+Link: http://lkml.kernel.org/r/20200211024514.8730-1-gshan@redhat.com
+Fixes: 68600f623d69 ("mm: don't miss the last page because of round-off error")
+Signed-off-by: Gavin Shan <gshan@redhat.com>
+Acked-by: Roman Gushchin <guro@fb.com>
+Cc: <stable@vger.kernel.org>	[4.20+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/android/ashmem.c |   28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ mm/vmscan.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/drivers/staging/android/ashmem.c
-+++ b/drivers/staging/android/ashmem.c
-@@ -351,8 +351,23 @@ static inline vm_flags_t calc_vm_may_fla
- 	       _calc_vm_trans(prot, PROT_EXEC,  VM_MAYEXEC);
- }
- 
-+static int ashmem_vmfile_mmap(struct file *file, struct vm_area_struct *vma)
-+{
-+	/* do not allow to mmap ashmem backing shmem file directly */
-+	return -EPERM;
-+}
-+
-+static unsigned long
-+ashmem_vmfile_get_unmapped_area(struct file *file, unsigned long addr,
-+				unsigned long len, unsigned long pgoff,
-+				unsigned long flags)
-+{
-+	return current->mm->get_unmapped_area(file, addr, len, pgoff, flags);
-+}
-+
- static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
- {
-+	static struct file_operations vmfile_fops;
- 	struct ashmem_area *asma = file->private_data;
- 	int ret = 0;
- 
-@@ -393,6 +408,19 @@ static int ashmem_mmap(struct file *file
- 		}
- 		vmfile->f_mode |= FMODE_LSEEK;
- 		asma->file = vmfile;
-+		/*
-+		 * override mmap operation of the vmfile so that it can't be
-+		 * remapped which would lead to creation of a new vma with no
-+		 * asma permission checks. Have to override get_unmapped_area
-+		 * as well to prevent VM_BUG_ON check for f_ops modification.
-+		 */
-+		if (!vmfile_fops.mmap) {
-+			vmfile_fops = *vmfile->f_op;
-+			vmfile_fops.mmap = ashmem_vmfile_mmap;
-+			vmfile_fops.get_unmapped_area =
-+					ashmem_vmfile_get_unmapped_area;
-+		}
-+		vmfile->f_op = &vmfile_fops;
- 	}
- 	get_file(asma->file);
- 
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -2429,10 +2429,13 @@ out:
+ 			/*
+ 			 * Scan types proportional to swappiness and
+ 			 * their relative recent reclaim efficiency.
+-			 * Make sure we don't miss the last page
+-			 * because of a round-off error.
++			 * Make sure we don't miss the last page on
++			 * the offlined memory cgroups because of a
++			 * round-off error.
+ 			 */
+-			scan = DIV64_U64_ROUND_UP(scan * fraction[file],
++			scan = mem_cgroup_online(memcg) ?
++			       div64_u64(scan * fraction[file], denominator) :
++			       DIV64_U64_ROUND_UP(scan * fraction[file],
+ 						  denominator);
+ 			break;
+ 		case SCAN_FILE:
 
 
