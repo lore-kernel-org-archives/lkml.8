@@ -2,124 +2,120 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A25D2C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E82C4BA3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 760A92467B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:47:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="CjbJo2R2"
+	by mail.kernel.org (Postfix) with ESMTP id 6E2AD2467F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:47:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728847AbgB0IrK (ORCPT
+        id S1728865AbgB0Ir3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 03:47:10 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:40273 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728621AbgB0Iqy (ORCPT
+        Thu, 27 Feb 2020 03:47:29 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:48967 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728856AbgB0Ir3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 03:46:54 -0500
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 2D16A891AD;
-        Thu, 27 Feb 2020 21:46:52 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1582793212;
-        bh=EVlEwiS/TFFN1q66aMSFRrpHv5REOLeczvMuwQi/uGU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=CjbJo2R2MQonW8SHlpPrWcGrqNEX21yj5DWeIK1/xIJPI4Ya6juJoMDc+VzGgj4fn
-         8H/pN32ifgz69atfxNnkxKcu3NkikGMsEV6aEf7wkaYdLUdQPkPLYIPYod6iLYfVJF
-         50ElomjbzXUYZpOQ2b3l82yrSTwOxKwUu5R9Qb5F8OSIa0FjTtXPpB8+SKymPSdv8d
-         TVEOzUdmemh9pEfU42HsUJDqZdcAChfNgQw1lIIKDIHGFN4ZCupwFIJsaZtGCB1ypz
-         m9NXc34Wj+dLi0wouBZaRppFTNOPh9pHnj5LdiGr0qkmLyie5JACws8L1+DPS62OVk
-         Xw6Vduc+4v8lQ==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e5781fb0003>; Thu, 27 Feb 2020 21:46:51 +1300
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id 3F63313EECD;
-        Thu, 27 Feb 2020 21:46:51 +1300 (NZDT)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 0581F280072; Thu, 27 Feb 2020 21:46:52 +1300 (NZDT)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     logan.shaw@alliedtelesis.co.nz, linux-hwmon@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v5 3/5] dt-bindings: hwmon: Document adt7475 pwm-active-state property
-Date:   Thu, 27 Feb 2020 21:46:40 +1300
-Message-Id: <20200227084642.7057-4-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227084642.7057-1-chris.packham@alliedtelesis.co.nz>
-References: <20200227084642.7057-1-chris.packham@alliedtelesis.co.nz>
+        Thu, 27 Feb 2020 03:47:29 -0500
+Received: from [109.168.11.45] (port=43056 helo=[192.168.101.73])
+        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1j7EGN-009anX-4W; Thu, 27 Feb 2020 09:11:20 +0100
+Subject: Re: [PATCH v2] of: overlay: log the error cause on resolver failure
+To:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+References: <20200225164540.4520-1-luca@lucaceresoli.net>
+ <f9565679-5892-bcf0-f751-bfcac87670a8@gmail.com>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <40fdf0f2-85a4-9f84-6994-a59b7b56cec4@lucaceresoli.net>
+Date:   Thu, 27 Feb 2020 09:11:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+In-Reply-To: <f9565679-5892-bcf0-f751-bfcac87670a8@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add binding information for the adi,pwm-active-state property.
+Hi Frank,
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
+On 26/02/20 04:53, Frank Rowand wrote:
+> On 2/25/20 10:45 AM, Luca Ceresoli wrote:
+>> For some of its error paths, of_resolve_phandles() only logs a very generic
+>> error which does not help much in finding the origin of the problem:
+>>
+>>   OF: resolver: overlay phandle fixup failed: -22
+>>
+>> Add error messages for all the error paths that don't have one. Now a
+>> specific message is always emitted, thus also remove the generic catch-all
+>> message emitted before returning.
+>>
+>> For example, in case a DT overlay has a fixup node that is not present in
+>> the base DT __symbols__, this error is now logged:
+>>
+>>   OF: resolver: node gpio9 not found in base DT, fixup failed
+>>
+>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+>> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+>> ---
+>>
+>> I don't know in detail the meaning of the adjust_local_phandle_references()
+>> and update_usages_of_a_phandle_reference() error paths, thus I have put
+>> pretty generic messages. Any suggestion on better wording would be welcome.
+> 
+> If you have not read the code to understand what the meaning of
+> the errors are, you should not be suggesting changes to the error
+> messages.
+> 
+> Only one of the issues detected as errors can possibly be something
+> other than an error either in the resolver.c code or the dtc
+> compiler -- a missing symbol in the live devicetree.  This may
+> be because of failing to compile the base devicetree without
+> symbols, depending on a symbol from another overlay where the
+> other overlay has not been applied, or depending on a symbol
+> from another overlay where the other overlay is applied but
+> the overlay was not compiled with symbols.  (Not meant to be
+> an exhaustive list, but it might be.)  Thus the missing
+> symbol problem might be fixable without a fix to kernel
+> code.  The error message philosophy for overlay related
+> errors is to minimize error messages that help diagnose
+> the precise cause of a kernel code bug, with the intent
+> of keeping the code more compact and readable.  When a
+> bug occurs, debugging messages can be added for the
+> debug session.
 
-Notes:
-    Changes in v5:
-    - change to adi,pwm-active-state
-    - uint32 array
-   =20
-    Changes in v4:
-    - use $ref uint32 and enum
-    - add adi vendor prefix
-   =20
-    Cahnges in v3:
-    - new
+Got it, sorry about that.
 
- .../devicetree/bindings/hwmon/adt7475.yaml         | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+> Following this philosophy, only the message in the second
+> patch chunk is ok.
 
-diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.yaml b/Docum=
-entation/devicetree/bindings/hwmon/adt7475.yaml
-index e40612ee075f..76985034ea73 100644
---- a/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-+++ b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-@@ -50,6 +50,19 @@ patternProperties:
-      - $ref: /schemas/types.yaml#/definitions/uint32
-      - enum: [0, 1]
-=20
-+  "^adi,pwm-active-state$":
-+    description: |
-+      Integer array, represents the active state of the pwm outputs If s=
-et to 0
-+      the pwm uses a logic low output for 100% duty cycle. If set to 1 t=
-he pwm
-+      uses a logic high output for 100% duty cycle.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32-array
-+      - minItems: 3
-+        maxItems: 3
-+        items:
-+          enum: [0, 1]
-+          default: 1
-+
- required:
-   - compatible
-   - reg
-@@ -65,6 +78,7 @@ examples:
-         reg =3D <0x2e>;
-         adi,bypass-attenuator-in0 =3D <1>;
-         adi,bypass-attenuator-in1 =3D <0>;
-+        adi,pwm-active-state =3D <1 0 1>;
-       };
-     };
-=20
---=20
-2.25.1
+Then I think you can apply the v1 patch which only contains the message
+about the problem I experienced, and which was caused by an incorrect DTO:
 
+https://patchwork.ozlabs.org/patch/1243987/
+
+Just ignore the note saying the patch is not for mainline, it's wrong.
+
+-- 
+Luca
