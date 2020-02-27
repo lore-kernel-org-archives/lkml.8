@@ -2,57 +2,48 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A053C4BA35
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 02:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4570C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 02:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E4CE24670
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 02:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7C0C24670
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 02:02:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728279AbgB0CB4 (ORCPT
+        id S1728294AbgB0CCx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 21:01:56 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11114 "EHLO huawei.com"
+        Wed, 26 Feb 2020 21:02:53 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:47786 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728178AbgB0CB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 21:01:56 -0500
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4C6C35D3E36C6F4005D4;
-        Thu, 27 Feb 2020 10:01:54 +0800 (CST)
+        id S1728178AbgB0CCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 21:02:53 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 825E5F6BE13977F818C5;
+        Thu, 27 Feb 2020 10:02:47 +0800 (CST)
 Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 27 Feb
- 2020 10:01:51 +0800
-Subject: Re: [f2fs-dev] Writes stoped working on f2fs after the compression
- support was added
-To:     =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megi@xff.cz>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <bec3798b-f861-b132-9138-221027bb5195@huawei.com>
- <b1eb9b22-b570-41ab-5177-2c89105428a2@huawei.com>
- <20200224135837.k54ke4ppca26ibec@core.my.home>
- <20200224140349.74yagjdwewmclx4v@core.my.home>
- <20200224143149.au6hvmmfw4ajsq2g@core.my.home>
- <39712bf4-210b-d7b6-cbb1-eb57585d991a@huawei.com>
- <20200225120814.gjm4dby24cs22lux@core.my.home>
- <20200225122706.d6pngz62iwyowhym@core.my.home>
- <72d28eba-53b9-b6f4-01a5-45b2352f4285@huawei.com>
- <20200226121143.uag224cqzqossvlv@core.my.home>
- <20200226180557.le2fr66fyuvrqker@core.my.home>
+ (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 27 Feb
+ 2020 10:02:45 +0800
+Subject: Re: [RFC PATCH 2/2] f2fs: introduce F2FS_IOC_RELEASE_COMPRESS_BLOCKS
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
+References: <20200221100922.16781-1-yuchao0@huawei.com>
+ <20200221100922.16781-2-yuchao0@huawei.com>
+ <20200224214605.GA77839@google.com>
+ <db505852-345d-05d0-4555-437093d2af14@huawei.com>
+ <20200226221608.GA224608@google.com>
 From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <7b62f506-f737-9fb2-6e8e-4b1c454f03b2@huawei.com>
-Date:   Thu, 27 Feb 2020 10:01:50 +0800
+Message-ID: <4c877b2c-177c-a76a-ced4-1d3e087d8530@huawei.com>
+Date:   Thu, 27 Feb 2020 10:02:45 +0800
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
  Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20200226180557.le2fr66fyuvrqker@core.my.home>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200226221608.GA224608@google.com>
+Content-Type: text/plain; charset="windows-1252"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.134.22.195]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,227 +51,238 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/2/27 2:05, Ondřej Jirman wrote:
-> On Wed, Feb 26, 2020 at 01:11:43PM +0100, megi xff wrote:
->> On Wed, Feb 26, 2020 at 09:58:03AM +0800, Chao Yu wrote:
->>> On 2020/2/25 20:27, Ondřej Jirman wrote:
->>>> So this time it just took several times longer to appear (8-20mins to the hang):
->>>>
->>>> https://megous.com/dl/tmp/dmesg1
->>>> https://megous.com/dl/tmp/dmesg2
+On 2020/2/27 6:16, Jaegeuk Kim wrote:
+> On 02/25, Chao Yu wrote:
+>> On 2020/2/25 5:46, Jaegeuk Kim wrote:
+>>> On 02/21, Chao Yu wrote:
+>>>> There are still reserved blocks on compressed inode, this patch
+>>>> introduce a new ioctl to help release reserved blocks back to
+>>>> filesystem, so that userspace can reuse those freed space.
 >>>
->>> Alright, I still didn't see any possible deadlock in f2fs.
->>>
->>> Can you try below patch? I'd like to see whether spinlock can cause the same issue.
+>>> I thought we can add compressed_blocks into free space, after converting
+>>> the file to immutable one. Otherwise, this patch is able to corrupt the
 >>
->> Uptime 60 minutes and it didn't hang so far. I applied it on top of the previous
->> patch:
->>   
->>   https://megous.com/git/linux/log/?h=f2fs-debug-5.6
-
-We don't need to move spinlock out of page lock coverage, since the new spinlock's
-coverage is limited and it doesn't depend on other locks, so it's safe to call in
-original place in where we update last_disk_size.
-
+>> Yes, I remember that.
+>>
+>> So any suggestion on this patch? we can:
+>> - check immutable flag before releasing space, or
+>> - we can add immutable flag on compressed inode in this ioctl interface?
 > 
-> No issue after 7h uptime either. So I guess this patch solved it for some
-> reason.
+> Can we add a flag in ioctl for both?
+> Default is checking immutable, but add a flag to force enabling it.
 
-I hope so as well, I will send a formal patch for this.
+Okay, let me update the patch.
 
 Thanks,
 
 > 
-> regards,
-> 	o.
-> 
->> regards,
->> 	o.
 >>
->>> From 3e9e8daf922eaa2c5db195ce278e89e10191c516 Mon Sep 17 00:00:00 2001
->>> From: Chao Yu <yuchao0@huawei.com>
->>> Date: Wed, 26 Feb 2020 09:53:03 +0800
->>> Subject: [PATCH] fix
->>>
->>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->>> ---
->>>  fs/f2fs/compress.c | 4 ++--
->>>  fs/f2fs/data.c     | 4 ++--
->>>  fs/f2fs/f2fs.h     | 5 +++--
->>>  fs/f2fs/file.c     | 4 ++--
->>>  fs/f2fs/super.c    | 1 +
->>>  5 files changed, 10 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
->>> index b4ff25dc55a9..6de0872ad881 100644
->>> --- a/fs/f2fs/compress.c
->>> +++ b/fs/f2fs/compress.c
->>> @@ -906,10 +906,10 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
->>>  	f2fs_put_dnode(&dn);
->>>  	f2fs_unlock_op(sbi);
->>>
->>> -	down_write(&fi->i_sem);
->>> +	spin_lock(&fi->i_size_lock);
->>>  	if (fi->last_disk_size < psize)
->>>  		fi->last_disk_size = psize;
->>> -	up_write(&fi->i_sem);
->>> +	spin_unlock(&fi->i_size_lock);
->>>
->>>  	f2fs_put_rpages(cc);
->>>  	f2fs_destroy_compress_ctx(cc);
->>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
->>> index cb41260ca941..5c9b072cf0de 100644
->>> --- a/fs/f2fs/data.c
->>> +++ b/fs/f2fs/data.c
->>> @@ -2651,10 +2651,10 @@ int f2fs_write_single_data_page(struct page *page, int *submitted,
->>>  	if (err) {
->>>  		file_set_keep_isize(inode);
->>>  	} else {
->>> -		down_write(&F2FS_I(inode)->i_sem);
->>> +		spin_lock(&F2FS_I(inode)->i_size_lock);
->>>  		if (F2FS_I(inode)->last_disk_size < psize)
->>>  			F2FS_I(inode)->last_disk_size = psize;
->>> -		up_write(&F2FS_I(inode)->i_sem);
->>> +		spin_unlock(&F2FS_I(inode)->i_size_lock);
->>>  	}
->>>
->>>  done:
->>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
->>> index 4a02edc2454b..1a8af2020e72 100644
->>> --- a/fs/f2fs/f2fs.h
->>> +++ b/fs/f2fs/f2fs.h
->>> @@ -701,6 +701,7 @@ struct f2fs_inode_info {
->>>  	struct task_struct *cp_task;	/* separate cp/wb IO stats*/
->>>  	nid_t i_xattr_nid;		/* node id that contains xattrs */
->>>  	loff_t	last_disk_size;		/* lastly written file size */
->>> +	spinlock_t i_size_lock;		/* protect last_disk_size */
->>>
->>>  #ifdef CONFIG_QUOTA
->>>  	struct dquot *i_dquot[MAXQUOTAS];
->>> @@ -2882,9 +2883,9 @@ static inline bool f2fs_skip_inode_update(struct inode *inode, int dsync)
->>>  	if (!f2fs_is_time_consistent(inode))
->>>  		return false;
->>>
->>> -	down_read(&F2FS_I(inode)->i_sem);
->>> +	spin_lock(&F2FS_I(inode)->i_size_lock);
->>>  	ret = F2FS_I(inode)->last_disk_size == i_size_read(inode);
->>> -	up_read(&F2FS_I(inode)->i_sem);
->>> +	spin_unlock(&F2FS_I(inode)->i_size_lock);
->>>
->>>  	return ret;
->>>  }
->>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
->>> index fdb492c2f248..56fe18fbb2ef 100644
->>> --- a/fs/f2fs/file.c
->>> +++ b/fs/f2fs/file.c
->>> @@ -938,10 +938,10 @@ int f2fs_setattr(struct dentry *dentry, struct iattr *attr)
->>>  		if (err)
->>>  			return err;
->>>
->>> -		down_write(&F2FS_I(inode)->i_sem);
->>> +		spin_lock(&F2FS_I(inode)->i_size_lock);
->>>  		inode->i_mtime = inode->i_ctime = current_time(inode);
->>>  		F2FS_I(inode)->last_disk_size = i_size_read(inode);
->>> -		up_write(&F2FS_I(inode)->i_sem);
->>> +		spin_unlock(&F2FS_I(inode)->i_size_lock);
->>>  	}
->>>
->>>  	__setattr_copy(inode, attr);
->>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
->>> index 0b16204d3b7d..2d0e5d1269f5 100644
->>> --- a/fs/f2fs/super.c
->>> +++ b/fs/f2fs/super.c
->>> @@ -957,6 +957,7 @@ static struct inode *f2fs_alloc_inode(struct super_block *sb)
->>>  	/* Initialize f2fs-specific inode info */
->>>  	atomic_set(&fi->dirty_pages, 0);
->>>  	init_rwsem(&fi->i_sem);
->>> +	spin_lock_init(&fi->i_size_lock);
->>>  	INIT_LIST_HEAD(&fi->dirty_list);
->>>  	INIT_LIST_HEAD(&fi->gdirty_list);
->>>  	INIT_LIST_HEAD(&fi->inmem_ilist);
->>> -- 
->>> 2.18.0.rc1
->>>
->>>
->>>
+>> Thanks,
+>>
+>>> filesystem very easily.
 >>>
 >>>>
->>>> thank you and regards,
->>>> 	o.
+>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>>>> ---
+>>>>  fs/f2fs/f2fs.h |   6 +++
+>>>>  fs/f2fs/file.c | 129 ++++++++++++++++++++++++++++++++++++++++++++++++-
+>>>>  2 files changed, 134 insertions(+), 1 deletion(-)
 >>>>
->>>>> thank you and regards,
->>>>> 	o.
->>>>>
->>>>>> Thanks,
->>>>>>
->>>>>>>
->>>>>>> So it's probably not inode locking.
->>>>>>>
->>>>>>>> root@tbs2[/proc/sys/kernel] # dmesg | grep down_read | wc -l
->>>>>>>> 16
->>>>>>>> root@tbs2[/proc/sys/kernel] # dmesg | grep up_read | wc -l
->>>>>>>> 16
->>>>>>>>
->>>>>>>> regards,
->>>>>>>> 	o.
->>>>>>>>
->>>>>>>>> thank you,
->>>>>>>>> 	o.
->>>>>>>>>
->>>>>>>>>>> Thanks,
->>>>>>>>>>>
->>>>>>>>>>>> [  246.758190]  r5:eff213b0 r4:da283c60
->>>>>>>>>>>> [  246.758198] [<c0435578>] (f2fs_write_single_data_page) from [<c0435fd8>] (f2fs_write_cache_pages+0x2b4/0x7c4)
->>>>>>>>>>>> [  246.758204]  r10:da645c28 r9:da283d60 r8:da283c60 r7:0000000f r6:da645d80 r5:00000001
->>>>>>>>>>>> [  246.758206]  r4:eff213b0
->>>>>>>>>>>> [  246.758214] [<c0435d24>] (f2fs_write_cache_pages) from [<c043682c>] (f2fs_write_data_pages+0x344/0x35c)
->>>>>>>>>>>> [  246.758220]  r10:00000000 r9:d9ed002c r8:d9ed0000 r7:00000004 r6:da283d60 r5:da283c60
->>>>>>>>>>>> [  246.758223]  r4:da645d80
->>>>>>>>>>>> [  246.758238] [<c04364e8>] (f2fs_write_data_pages) from [<c0267ee8>] (do_writepages+0x3c/0xd4)
->>>>>>>>>>>> [  246.758244]  r10:0000000a r9:c0e03d00 r8:00000c00 r7:c0264ddc r6:da645d80 r5:da283d60
->>>>>>>>>>>> [  246.758246]  r4:da283c60
->>>>>>>>>>>> [  246.758254] [<c0267eac>] (do_writepages) from [<c0310cbc>] (__writeback_single_inode+0x44/0x454)
->>>>>>>>>>>> [  246.758259]  r7:da283d60 r6:da645eac r5:da645d80 r4:da283c60
->>>>>>>>>>>> [  246.758266] [<c0310c78>] (__writeback_single_inode) from [<c03112d0>] (writeback_sb_inodes+0x204/0x4b0)
->>>>>>>>>>>> [  246.758272]  r10:0000000a r9:c0e03d00 r8:da283cc8 r7:da283c60 r6:da645eac r5:da283d08
->>>>>>>>>>>> [  246.758274]  r4:d9dc9848
->>>>>>>>>>>> [  246.758281] [<c03110cc>] (writeback_sb_inodes) from [<c03115cc>] (__writeback_inodes_wb+0x50/0xe4)
->>>>>>>>>>>> [  246.758287]  r10:da3797a8 r9:c0e03d00 r8:d9dc985c r7:da645eac r6:00000000 r5:d9dc9848
->>>>>>>>>>>> [  246.758289]  r4:da5a8800
->>>>>>>>>>>> [  246.758296] [<c031157c>] (__writeback_inodes_wb) from [<c03118f4>] (wb_writeback+0x294/0x338)
->>>>>>>>>>>> [  246.758302]  r10:fffbf200 r9:da644000 r8:c0e04e64 r7:d9dc9848 r6:d9dc9874 r5:da645eac
->>>>>>>>>>>> [  246.758305]  r4:d9dc9848
->>>>>>>>>>>> [  246.758312] [<c0311660>] (wb_writeback) from [<c0312dac>] (wb_workfn+0x35c/0x54c)
->>>>>>>>>>>> [  246.758318]  r10:da5f2005 r9:d9dc984c r8:d9dc9948 r7:d9dc9848 r6:00000000 r5:d9dc9954
->>>>>>>>>>>> [  246.758321]  r4:000031e6
->>>>>>>>>>>> [  246.758334] [<c0312a50>] (wb_workfn) from [<c014f2b8>] (process_one_work+0x214/0x544)
->>>>>>>>>>>> [  246.758340]  r10:da5f2005 r9:00000200 r8:00000000 r7:da5f2000 r6:ef044400 r5:da5eb000
->>>>>>>>>>>> [  246.758343]  r4:d9dc9954
->>>>>>>>>>>> [  246.758350] [<c014f0a4>] (process_one_work) from [<c014f634>] (worker_thread+0x4c/0x574)
->>>>>>>>>>>> [  246.758357]  r10:ef044400 r9:c0e03d00 r8:ef044418 r7:00000088 r6:ef044400 r5:da5eb014
->>>>>>>>>>>> [  246.758359]  r4:da5eb000
->>>>>>>>>>>> [  246.758368] [<c014f5e8>] (worker_thread) from [<c01564fc>] (kthread+0x144/0x170)
->>>>>>>>>>>> [  246.758374]  r10:ec9e5e90 r9:dabf325c r8:da5eb000 r7:da644000 r6:00000000 r5:da5fe000
->>>>>>>>>>>> [  246.758377]  r4:dabf3240
->>>>>>>>>>>> [  246.758386] [<c01563b8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
->>>>>>>>>>>> [  246.758391] Exception stack(0xda645fb0 to 0xda645ff8)
->>>>>>>>>>>> [  246.758397] 5fa0:                                     00000000 00000000 00000000 00000000
->>>>>>>>>>>> [  246.758402] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
->>>>>>>>>>>> [  246.758407] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
->>>>>>>>>>>> [  246.758413]  r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:00000000 r5:c01563b8
->>>>>>>>>>>> [  246.758416]  r4:da5fe000
->>>>>>>>>>>> .
->>>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>> _______________________________________________
->>>>>>>>>>> Linux-f2fs-devel mailing list
->>>>>>>>>>> Linux-f2fs-devel@lists.sourceforge.net
->>>>>>>>>>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
->>>>>>>>>>>
->>>>>>> .
->>>>>>>
->>>> .
->>>>
+>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>>>> index 15199df5d40a..468f807fd917 100644
+>>>> --- a/fs/f2fs/f2fs.h
+>>>> +++ b/fs/f2fs/f2fs.h
+>>>> @@ -427,6 +427,8 @@ static inline bool __has_cursum_space(struct f2fs_journal *journal,
+>>>>  #define F2FS_IOC_PRECACHE_EXTENTS	_IO(F2FS_IOCTL_MAGIC, 15)
+>>>>  #define F2FS_IOC_RESIZE_FS		_IOW(F2FS_IOCTL_MAGIC, 16, __u64)
+>>>>  #define F2FS_IOC_GET_COMPRESS_BLOCKS	_IOR(F2FS_IOCTL_MAGIC, 17, __u64)
+>>>> +#define F2FS_IOC_RELEASE_COMPRESS_BLOCKS				\
+>>>> +					_IOR(F2FS_IOCTL_MAGIC, 18, __u64)
+>>>>  
+>>>>  #define F2FS_IOC_GET_VOLUME_NAME	FS_IOC_GETFSLABEL
+>>>>  #define F2FS_IOC_SET_VOLUME_NAME	FS_IOC_SETFSLABEL
+>>>> @@ -3957,6 +3959,10 @@ static inline void f2fs_i_compr_blocks_update(struct inode *inode,
+>>>>  {
+>>>>  	int diff = F2FS_I(inode)->i_cluster_size - blocks;
+>>>>  
+>>>> +	/* don't update i_compr_blocks if saved blocks were released */
+>>>> +	if (!add && !F2FS_I(inode)->i_compr_blocks)
+>>>> +		return;
+>>>> +
+>>>>  	if (add) {
+>>>>  		F2FS_I(inode)->i_compr_blocks += diff;
+>>>>  		stat_add_compr_blocks(inode, diff);
+>>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>>>> index 235708c892af..613f87151d90 100644
+>>>> --- a/fs/f2fs/file.c
+>>>> +++ b/fs/f2fs/file.c
+>>>> @@ -557,6 +557,7 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
+>>>>  	bool compressed_cluster = false;
+>>>>  	int cluster_index = 0, valid_blocks = 0;
+>>>>  	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
+>>>> +	bool released = !F2FS_I(dn->inode)->i_compr_blocks;
+>>>>  
+>>>>  	if (IS_INODE(dn->node_page) && f2fs_has_extra_attr(dn->inode))
+>>>>  		base = get_extra_isize(dn->inode);
+>>>> @@ -595,7 +596,9 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
+>>>>  			clear_inode_flag(dn->inode, FI_FIRST_BLOCK_WRITTEN);
+>>>>  
+>>>>  		f2fs_invalidate_blocks(sbi, blkaddr);
+>>>> -		nr_free++;
+>>>> +
+>>>> +		if (released && blkaddr != COMPRESS_ADDR)
+>>>> +			nr_free++;
+>>>>  	}
+>>>>  
+>>>>  	if (compressed_cluster)
+>>>> @@ -3416,6 +3419,127 @@ static int f2fs_get_compress_blocks(struct file *filp, unsigned long arg)
+>>>>  	return put_user(blocks, (u64 __user *)arg);
+>>>>  }
+>>>>  
+>>>> +static int release_compress_blocks(struct dnode_of_data *dn, pgoff_t count)
+>>>> +{
+>>>> +	struct f2fs_sb_info *sbi = F2FS_I_SB(dn->inode);
+>>>> +	unsigned int released_blocks = 0;
+>>>> +	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
+>>>> +
+>>>> +	while (count) {
+>>>> +		int compr_blocks = 0;
+>>>> +		block_t blkaddr = f2fs_data_blkaddr(dn);
+>>>> +		int i;
+>>>> +
+>>>> +		if (blkaddr != COMPRESS_ADDR) {
+>>>> +			dn->ofs_in_node += cluster_size;
+>>>> +			goto next;
+>>>> +		}
+>>>> +
+>>>> +		for (i = 0; i < cluster_size; i++, dn->ofs_in_node++) {
+>>>> +			blkaddr = f2fs_data_blkaddr(dn);
+>>>> +
+>>>> +			if (__is_valid_data_blkaddr(blkaddr)) {
+>>>> +				compr_blocks++;
+>>>> +				if (unlikely(!f2fs_is_valid_blkaddr(sbi, blkaddr,
+>>>> +							DATA_GENERIC_ENHANCE)))
+>>>> +					return -EFSCORRUPTED;
+>>>> +			}
+>>>> +
+>>>> +			if (blkaddr != NEW_ADDR)
+>>>> +				continue;
+>>>> +
+>>>> +			dn->data_blkaddr = NULL_ADDR;
+>>>> +			f2fs_set_data_blkaddr(dn);
+>>>> +		}
+>>>> +
+>>>> +		f2fs_i_compr_blocks_update(dn->inode, compr_blocks, false);
+>>>> +		dec_valid_block_count(sbi, dn->inode,
+>>>> +					cluster_size - compr_blocks);
+>>>> +
+>>>> +		released_blocks += cluster_size - compr_blocks;
+>>>> +next:
+>>>> +		count -= cluster_size;
+>>>> +	}
+>>>> +
+>>>> +	return released_blocks;
+>>>> +}
+>>>> +
+>>>> +static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
+>>>> +{
+>>>> +	struct inode *inode = file_inode(filp);
+>>>> +	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+>>>> +	pgoff_t page_idx = 0, last_idx;
+>>>> +	unsigned int released_blocks = 0;
+>>>> +	int ret;
+>>>> +
+>>>> +	if (!f2fs_sb_has_compression(F2FS_I_SB(inode)))
+>>>> +		return -EOPNOTSUPP;
+>>>> +
+>>>> +	if (!f2fs_compressed_file(inode))
+>>>> +		return -EINVAL;
+>>>> +
+>>>> +	if (f2fs_readonly(sbi->sb))
+>>>> +		return -EROFS;
+>>>> +
+>>>> +	ret = mnt_want_write_file(filp);
+>>>> +	if (ret)
+>>>> +		return ret;
+>>>> +
+>>>> +	if (!F2FS_I(inode)->i_compr_blocks)
+>>>> +		goto out;
+>>>> +
+>>>> +	f2fs_balance_fs(F2FS_I_SB(inode), true);
+>>>> +
+>>>> +	inode_lock(inode);
+>>>> +
+>>>> +	down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+>>>> +	down_write(&F2FS_I(inode)->i_mmap_sem);
+>>>> +
+>>>> +	last_idx = DIV_ROUND_UP(i_size_read(inode), PAGE_SIZE);
+>>>> +
+>>>> +	while (page_idx < last_idx) {
+>>>> +		struct dnode_of_data dn;
+>>>> +		pgoff_t end_offset, count;
+>>>> +
+>>>> +		set_new_dnode(&dn, inode, NULL, NULL, 0);
+>>>> +		ret = f2fs_get_dnode_of_data(&dn, page_idx, LOOKUP_NODE);
+>>>> +		if (ret) {
+>>>> +			if (ret == -ENOENT) {
+>>>> +				page_idx = f2fs_get_next_page_offset(&dn,
+>>>> +								page_idx);
+>>>> +				ret = 0;
+>>>> +				continue;
+>>>> +			}
+>>>> +			break;
+>>>> +		}
+>>>> +
+>>>> +		end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
+>>>> +		count = min(end_offset - dn.ofs_in_node, last_idx - page_idx);
+>>>> +
+>>>> +		ret = release_compress_blocks(&dn, count);
+>>>> +
+>>>> +		f2fs_put_dnode(&dn);
+>>>> +
+>>>> +		if (ret < 0)
+>>>> +			break;
+>>>> +
+>>>> +		page_idx += count;
+>>>> +		released_blocks += ret;
+>>>> +	}
+>>>> +
+>>>> +	up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+>>>> +	up_write(&F2FS_I(inode)->i_mmap_sem);
+>>>> +
+>>>> +	inode_unlock(inode);
+>>>> +out:
+>>>> +	mnt_drop_write_file(filp);
+>>>> +
+>>>> +	if (!ret)
+>>>> +		ret = put_user(released_blocks, (u64 __user *)arg);
+>>>> +
+>>>> +	return ret;
+>>>> +}
+>>>> +
+>>>>  long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>>>>  {
+>>>>  	if (unlikely(f2fs_cp_error(F2FS_I_SB(file_inode(filp)))))
+>>>> @@ -3496,6 +3620,8 @@ long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>>>>  		return f2fs_set_volume_name(filp, arg);
+>>>>  	case F2FS_IOC_GET_COMPRESS_BLOCKS:
+>>>>  		return f2fs_get_compress_blocks(filp, arg);
+>>>> +	case F2FS_IOC_RELEASE_COMPRESS_BLOCKS:
+>>>> +		return f2fs_release_compress_blocks(filp, arg);
+>>>>  	default:
+>>>>  		return -ENOTTY;
+>>>>  	}
+>>>> @@ -3654,6 +3780,7 @@ long f2fs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+>>>>  	case F2FS_IOC_GET_VOLUME_NAME:
+>>>>  	case F2FS_IOC_SET_VOLUME_NAME:
+>>>>  	case F2FS_IOC_GET_COMPRESS_BLOCKS:
+>>>> +	case F2FS_IOC_RELEASE_COMPRESS_BLOCKS:
+>>>>  		break;
+>>>>  	default:
+>>>>  		return -ENOIOCTLCMD;
+>>>> -- 
+>>>> 2.18.0.rc1
+>>> .
+>>>
 > .
 > 
