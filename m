@@ -2,124 +2,151 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B92B0C4BA06
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 03:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD4B0C4BA06
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 03:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AEDC24650
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 03:57:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="CvFkH5dz"
+	by mail.kernel.org (Postfix) with ESMTP id 94D9D24650
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 03:58:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbgB0D5G (ORCPT
+        id S1728326AbgB0D6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 22:57:06 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46374 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728284AbgB0D5G (ORCPT
+        Wed, 26 Feb 2020 22:58:22 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61132 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728273AbgB0D6V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 22:57:06 -0500
-Received: by mail-pf1-f193.google.com with SMTP id o24so599142pfp.13
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 19:57:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=CnaaQj5OkZlinyuOBz/+nnOP++fx4EwIlpltdiovgCE=;
-        b=CvFkH5dzd6cq24Yi56VcybisKknibFmU/ow2ZqelBQazvt8BufBh2ODr6THyJye6BK
-         pWi9IQSyRt+DW4H7LH3Aw5WOB0wmY2ss62VcGrpUEDa8LKWEhtep7DgNKCIbBL1AWb6E
-         Tq57vgFbkcc608Dp5NIyKYhwGlsVs0fuPZ3UMk/nQOtDlUMasKcyMX8I/qiEzMoaNKIQ
-         y6n/KjR0q+J0RQiLg4/94jYEXnIlUggAEkQ/dDJpkqkojBDmZJ0kwbgYurQI4Y7i8MIi
-         0yIhFypbvEihEA0ivMQ6+HmGvD0QQVI3e6COI7tobO8x7xKc8jppGDUrtCV8AD2tGzdl
-         S8/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=CnaaQj5OkZlinyuOBz/+nnOP++fx4EwIlpltdiovgCE=;
-        b=EGIGK5/EV0TvCHrgZV2s07tFsggB4z3C1R5/mMKdYEf9jRvXu878z/D8C46x//32TS
-         Eggq17h87EnyRPELN1HxeaO6JhdB2AMc57qxO8f+wL6ReHEhUISR6D5UFjllONXMuXUG
-         TWMY0PaaiDp96AbPWPwUitF3pvwjZ0aHBiqOec+mJrhFPGNsepOrrFr3wBtExebwSjIy
-         uP5g6IdXLl3ZgexaGBv92AwDjgyFDP5QcYM+x2TXm6d3rpIhl2sXzHMbzAkhIxTMNxim
-         RthMoK9q3a+vWQDqZoxvvIP8HKI52b8q+z3r+i73MDDMYQlNuTlxmZouc/MtdyOe9UxW
-         C21w==
-X-Gm-Message-State: APjAAAWqGLcK/89w5SRHTE7fWSuKri30zt2lwwsmNSvrMbjY0Chw3Mcl
-        hpZZTbB2rBcZXfI7UV5Zbqe2X5JSGK4=
-X-Google-Smtp-Source: APXvYqy28xXxMFJjJ7wZKlE7xuddyqQc8I1BmGULeVfYLEzR3Y+/xN7FT1RQFMCIBqkzWHgsDEn21A==
-X-Received: by 2002:a62:17c3:: with SMTP id 186mr2085313pfx.158.1582775824816;
-        Wed, 26 Feb 2020 19:57:04 -0800 (PST)
-Received: from ?IPv6:2600:1010:b069:8a27:ddd9:92ea:d62b:8a52? ([2600:1010:b069:8a27:ddd9:92ea:d62b:8a52])
-        by smtp.gmail.com with ESMTPSA id j21sm4165728pji.13.2020.02.26.19.57.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2020 19:57:03 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC PATCH v9 05/27] x86/cet/shstk: Add Kconfig option for user-mode Shadow Stack protection
-Date:   Wed, 26 Feb 2020 19:57:01 -0800
-Message-Id: <FF42D299-D7A4-4884-9E45-DBEB5853FE56@amacapital.net>
-References: <CAMe9rOqhf4y+e6h8i7P8+70pwLSg8n=ise6LEqABNPKarECdeA@mail.gmail.com>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
+        Wed, 26 Feb 2020 22:58:21 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01R3nmvp005369
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 22:58:20 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ydqf84te3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 22:58:20 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Thu, 27 Feb 2020 03:58:18 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 27 Feb 2020 03:58:11 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01R3wALj52625594
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Feb 2020 03:58:10 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 077E311C04C;
+        Thu, 27 Feb 2020 03:58:10 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9FA8611C04A;
+        Thu, 27 Feb 2020 03:58:09 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 27 Feb 2020 03:58:09 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id E04FFA01C0;
+        Thu, 27 Feb 2020 14:58:04 +1100 (AEDT)
+Subject: Re: [PATCH v3 13/27] powerpc/powernv/pmem: Read the capability
+ registers & wait for device ready
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     Andrew Donnellan <ajd@linux.ibm.com>
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
         Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
-In-Reply-To: <CAMe9rOqhf4y+e6h8i7P8+70pwLSg8n=ise6LEqABNPKarECdeA@mail.gmail.com>
-To:     "H.J. Lu" <hjl.tools@gmail.com>
-X-Mailer: iPhone Mail (17D50)
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Date:   Thu, 27 Feb 2020 14:58:08 +1100
+In-Reply-To: <c6ce554a-62b4-2675-9ec3-1ded8eaacfc4@linux.ibm.com>
+References: <20200221032720.33893-1-alastair@au1.ibm.com>
+         <20200221032720.33893-14-alastair@au1.ibm.com>
+         <c6ce554a-62b4-2675-9ec3-1ded8eaacfc4@linux.ibm.com>
+Organization: IBM Australia
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022703-0008-0000-0000-00000356CCA2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022703-0009-0000-0000-00004A77ED75
+Message-Id: <e411d83af90e776a817f7638871f2257cacffcd0.camel@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-26_09:2020-02-26,2020-02-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
+ mlxlogscore=999 bulkscore=0 priorityscore=1501 impostorscore=0
+ phishscore=0 malwarescore=0 adultscore=0 clxscore=1015 lowpriorityscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002270025
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 2020-02-27 at 14:54 +1100, Andrew Donnellan wrote:
+> On 21/2/20 2:27 pm, Alastair D'Silva wrote:
+> > +/**
+> > + * read_device_metadata() - Retrieve config information from the
+> > AFU and save it for future use
+> > + * @ocxlpmem: the device metadata
+> > + * Return: 0 on success, negative on failure
+> > + */
+> > +static int read_device_metadata(struct ocxlpmem *ocxlpmem)
+> > +{
+> > +	u64 val;
+> > +	int rc;
+> > +
+> > +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> > GLOBAL_MMIO_CCAP0,
+> > +				     OCXL_LITTLE_ENDIAN, &val);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	ocxlpmem->scm_revision = val & 0xFFFF;
+> > +	ocxlpmem->read_latency = (val >> 32) & 0xFF;
+> 
+> This field is 16 bits in the spec, so the mask should be 0xFFFF I
+> think?
+> 
 
-> On Feb 26, 2020, at 6:11 PM, H.J. Lu <hjl.tools@gmail.com> wrote:
->=20
-> =EF=BB=BFOn Wed, Feb 26, 2020 at 5:16 PM Dave Hansen <dave.hansen@intel.co=
-m> wrote:
->>=20
->> On 2/26/20 5:02 PM, H.J. Lu wrote:
->>>> That way everybody with old toolchains can still build the kernel (and
->>>> run/test code with your config option on, btw...).
->>> CET requires a complete new OS image from kernel, toolchain, run-time.
->>> CET enabled kernel without the rest of updated OS won't give you CET
->>> at all.
->>=20
->> If you require a new toolchain, nobody even builds your fancy feature.
->> Probably including 0day and all of the lazy maintainers with crufty old
->> distros.
->=20
-> GCC 8 or above is needed since vDSO must be compiled with
-> --fcf-protection=3Dbranch.
+You're right, I'll fix it.
 
-Fair enough. I don=E2=80=99t particularly want to carry a gross hack to add t=
-he ENDBRANCHes without compiler support.
-
+> Maybe we should generalise the EXTRACT_BITS macro we use in ocxl :)
+> 
+-- 
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
 
