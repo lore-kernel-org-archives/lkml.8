@@ -2,143 +2,169 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A68C4BA3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C18C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80EDA2468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:51:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GuE3phDr"
+	by mail.kernel.org (Postfix) with ESMTP id 325872468F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:53:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbgB0Lvy (ORCPT
+        id S1728940AbgB0LxN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 06:51:54 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:53252 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728914AbgB0Lvy (ORCPT
+        Thu, 27 Feb 2020 06:53:13 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:44609 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728908AbgB0LxM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 06:51:54 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200227115152euoutp0144c2e6b4f6e770f0191ebd84c07c9f5c~3QCLb2DtB1699016990euoutp01I
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 11:51:52 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200227115152euoutp0144c2e6b4f6e770f0191ebd84c07c9f5c~3QCLb2DtB1699016990euoutp01I
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1582804312;
-        bh=3EmbG3tIsUVU+euXxv8svqYHWtp3RefmURy/Bm4oE2Y=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=GuE3phDriPKdmRz+yVJ/SCJxzj1AtyPVs8q1NhVM60dbEEl3GMEULMDzlo9MyMUiV
-         CtLg6N2MuEguOulxnb7LiUEljLpe8tFeKwqTORXGwOXeMxUrUXMwcBAS9t4kymTVc2
-         YCj4hvAuAMAiWDP54XKQxk/lvPJlo7kJgB1OMBD8=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200227115152eucas1p164f7e8fe212a8527b05c5a8f3f8523d6~3QCLKDD9t2247222472eucas1p1-;
-        Thu, 27 Feb 2020 11:51:52 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 3B.0A.60679.85DA75E5; Thu, 27
-        Feb 2020 11:51:52 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200227115151eucas1p22ff7409009d917addcc7e20f523c9051~3QCKzogZl1499214992eucas1p2M;
-        Thu, 27 Feb 2020 11:51:51 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200227115151eusmtrp2f12427f90b3c6d046b265c4788884a5c~3QCKzCQaa3190131901eusmtrp2x;
-        Thu, 27 Feb 2020 11:51:51 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-f3-5e57ad585a4a
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 57.52.08375.75DA75E5; Thu, 27
-        Feb 2020 11:51:51 +0000 (GMT)
-Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200227115151eusmtip1321c3ea5662c027f51c54f12309a59ca~3QCKU13Jm2289622896eusmtip1H;
-        Thu, 27 Feb 2020 11:51:51 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] pci: brcmstb: Fix build on 32bit ARM platforms with older
- compilers
-Date:   Thu, 27 Feb 2020 12:51:46 +0100
-Message-Id: <20200227115146.24515-1-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA0VSfSyUcRzfz/Pcc4/Ttadj85tMdaphQ1fanpWEaXtaVq1Q01xOnh26O3aP
-        l1Qb0UpHDbXoNGReyltCV4c/Yuq0GypNL3cI1XQOGbZI6h6P6r/v522f77774oiokOeCx6uS
-        abVKphBjAlT3YrHf+2TDCekO4yWc/PjgNp9suP4cJSuz4sil6W4+2Tw+yCMH2u5iZG+pASML
-        TE180vpzwmbrHuKTOm0NFuhA1ZfWA0o70otReu0QnypvTqFaKjOoG621gGoxXqBMP1TUXLPb
-        UftIgX8srYhPpdW+AdGCOMPkMEjqEJwrHtNjmWAM1wAch4QfrLBKNECAi4j7AN6bq0U0wN4G
-        5gG0LsRwwhyAZYszfFZgAzetH1BOqAFQl1PC44AtUfg9H2VdGCGBmikNxgpORC6ARW9nAQsQ
-        os0Ojn4tWHU5EhFwpqQPYxdBiW2wZ9CLpYXEPjgzrEe4uk2wrukZwmYhkcuHlzsmUU4IgXe0
-        jRg3O0KLoXVtP1f4W19mxwWyARzta+BzIA/AgaxiwLn2QnPf0mozQnjCh22+HB0Eh6pWAHeZ
-        9fD91AaWRmxjoa4I4WghzLki4tzbodbQ+K+289WbtZ0p2Gtu5HF3jIKVAyYkH7hp/3eVA1AL
-        nOkURimnmZ0qOs2HkSmZFJXc50yishnYPsW4Yph/CtqWY7oAgQPxOiGMjpCKeLJUJl3ZBSCO
-        iJ2EjxbCpSJhrCz9PK1OPK1OUdBMF9iIo2Jn4a6Kb1EiQi5Lps/SdBKt/qva4fYumeDJ8Yz2
-        rTPv9qiGAz91VB873Gldzg2yYn7eCqEl67HFFOOoufi5+ou73ONI2ATjKi2zU46/DDgYWpW9
-        2XRV7O/3eiThVsu1SjdzaX5wyLCRVKAuFofiSHNe2CmP3gP9qGd1UyivA0vWJfbMloe7/7pT
-        uGV3muP0obpgPbo/oV0iRpk4mcQLUTOyP6qm8sslAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrOLMWRmVeSWpSXmKPExsVy+t/xu7rha8PjDKa+M7C4tXIau8Xa3qMs
-        FkuaMix+vTvCbrHp8TVWi8u75rBZnJ13nM1i4u0N7BZvfr8AKjtyl91i26zlbA7cHmvmrWH0
-        mHX/LJvHzll32T0WbCr12Lyk3qNvyypGj82nqz1u/8jz+LxJLoAzSs+mKL+0JFUhI7+4xFYp
-        2tDCSM/Q0kLPyMRSz9DYPNbKyFRJ384mJTUnsyy1SN8uQS/j+Ot7jAV7uCpmPNrJ1sD4iKOL
-        kZNDQsBEYvKbmyxdjFwcQgJLGSUO79nKApGQkTg5rYEVwhaW+HOtiw2i6BOjxNObe8CK2AQM
-        JbregiQ4OUQEehkljnzIBCliFtjHJNF4eBlzFyMHh7BAiMTvMwkgJouAqsSJa1og5bwCthLv
-        7+1khpgvL7F6wwHmCYw8CxgZVjGKpJYW56bnFhvqFSfmFpfmpesl5+duYgQG8rZjPzfvYLy0
-        MfgQowAHoxIPr0RCWJwQa2JZcWXuIUYJDmYlEd6NX0PjhHhTEiurUovy44tKc1KLDzGaAu2e
-        yCwlmpwPjLK8knhDU0NzC0tDc2NzYzMLJXHeDoGDMUIC6YklqdmpqQWpRTB9TBycUg2Ms1w+
-        +4VfLP1wffXzPt0d705XV0i0OEze9N1a6saMLBXtuEKOVYvZs99UCB9Q5WNwzFcqs/m64bmp
-        7+31RtLznEO1fcpTfNUd1lm5+lYnd8z1MnrP/kutwmdLrH9I9bq5j29t5udkWsrQaV4Uqvxz
-        y4Zo28S0qbm/eLqTFH6Lz5i1Qemu7X0lluKMREMt5qLiRADdBbMJegIAAA==
-X-CMS-MailID: 20200227115151eucas1p22ff7409009d917addcc7e20f523c9051
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200227115151eucas1p22ff7409009d917addcc7e20f523c9051
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200227115151eucas1p22ff7409009d917addcc7e20f523c9051
-References: <CGME20200227115151eucas1p22ff7409009d917addcc7e20f523c9051@eucas1p2.samsung.com>
+        Thu, 27 Feb 2020 06:53:12 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1j7Hj0-0003fl-HA; Thu, 27 Feb 2020 12:53:06 +0100
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1j7His-00068v-Qd; Thu, 27 Feb 2020 12:52:58 +0100
+Message-ID: <d91b38bca62006cdf0a2433d088e2744c867064d.camel@pengutronix.de>
+Subject: Re: [PATCH v3 3/4] dt-bindings: display: imx: add bindings for DCSS
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     devicetree@vger.kernel.org, agx@sigxcpu.org, lukas@mntmn.com,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, l.stach@pengutronix.de
+Date:   Thu, 27 Feb 2020 12:52:58 +0100
+In-Reply-To: <1575625964-27102-4-git-send-email-laurentiu.palcu@nxp.com>
+References: <1575625964-27102-1-git-send-email-laurentiu.palcu@nxp.com>
+         <1575625964-27102-4-git-send-email-laurentiu.palcu@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some older compilers have no implementation for the helper for 64-bit
-unsigned division/modulo, so linking pcie-brcmstb driver causes the
-"undefined reference to `__aeabi_uldivmod'" error.
+Hi Laurentiu,
 
-*rc_bar2_size is always a power of two, because it is calculated as:
-"1ULL << fls64(entry->res->end - entry->res->start)", so the modulo
-operation in the subsequent check can be replaced by a simple logical
-AND with a proper mask.
+On Fri, 2019-12-06 at 11:52 +0200, Laurentiu Palcu wrote:
+> Add bindings for iMX8MQ Display Controller Subsystem.
+> 
+> Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../bindings/display/imx/nxp,imx8mq-dcss.yaml      | 86 ++++++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml b/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> new file mode 100644
+> index 00000000..efd2494
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> @@ -0,0 +1,86 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 NXP
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/display/imx/nxp,imx8mq-dcss.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: iMX8MQ Display Controller Subsystem (DCSS)
+> +
+> +maintainers:
+> +  - Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> +
+> +description:
+> +
+> +  The DCSS (display controller sub system) is used to source up to three
+> +  display buffers, compose them, and drive a display using HDMI 2.0a(with HDCP
+> +  2.2) or MIPI-DSI. The DCSS is intended to support up to 4kp60 displays. HDR10
+> +  image processing capabilities are included to provide a solution capable of
+> +  driving next generation high dynamic range displays.
+> +
+> +properties:
+> +  compatible:
+> +    const: nxp,imx8mq-dcss
+> +
+> +  reg:
+> +    maxItems: 2
+> +
+> +  interrupts:
+> +    maxItems: 3
+> +    items:
+> +      - description: Context loader completion and error interrupt
+> +      - description: DTG interrupt used to signal context loader trigger time
+> +      - description: DTG interrupt for Vblank
+> +
+> +  interrupt-names:
+> +    maxItems: 3
+> +    items:
+> +      - const: ctx_ld
+> +      - const: ctxld_kick
+> +      - const: vblank
+> +
+> +  clocks:
+> +    maxItems: 5
+> +    items:
+> +      - description: Display APB clock for all peripheral PIO access interfaces
+> +      - description: Display AXI clock needed by DPR, Scaler, RTRAM_CTRL
+> +      - description: RTRAM clock
+> +      - description: Pixel clock, can be driver either by HDMI phy clock or MIPI
+> +      - description: DTRC clock, needed by video decompressor
+> +
+> +  clock-names:
+> +    items:
+> +      - const: apb
+> +      - const: axi
+> +      - const: rtrm
+> +      - const: pix
+> +      - const: dtrc
+> +
+> +  port@0:
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
- drivers/pci/controller/pcie-brcmstb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+If there is just a single output port, I think the @0 unit address
+should be dropped. Otherwise the port node needs to contain a "reg =
+<0>;" property in the example below:
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index d20aabc26273..3a10e678c7f4 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -670,7 +670,7 @@ static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
- 	 *   outbound memory @ 3GB). So instead it will  start at the 1x
- 	 *   multiple of its size
- 	 */
--	if (!*rc_bar2_size || *rc_bar2_offset % *rc_bar2_size ||
-+	if (!*rc_bar2_size || (*rc_bar2_offset & (*rc_bar2_size - 1)) ||
- 	    (*rc_bar2_offset < SZ_4G && *rc_bar2_offset > SZ_2G)) {
- 		dev_err(dev, "Invalid rc_bar2_offset/size: size 0x%llx, off 0x%llx\n",
- 			*rc_bar2_size, *rc_bar2_offset);
--- 
-2.17.1
+> +    type: object
+> +    description: A port node pointing to a hdmi_in or mipi_in port node.
+> +
+> +examples:
+> +  - |
+> +    dcss: display-controller@32e00000 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
 
+/soc@0/bus@32c00000/display-controller@32e00000: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
+
+> +        compatible = "nxp,imx8mq-dcss";
+> +        reg = <0x32e00000 0x2d000>, <0x32e2f000 0x1000>;
+> +        interrupts = <6>, <8>, <9>;
+> +        interrupt-names = "ctx_ld", "ctxld_kick", "vblank";
+> +        interrupt-parent = <&irqsteer>;
+> +        clocks = <&clk 248>, <&clk 247>, <&clk 249>,
+> +                 <&clk 254>,<&clk 122>;
+> +        clock-names = "apb", "axi", "rtrm", "pix", "dtrc";
+> +        assigned-clocks = <&clk 107>, <&clk 109>, <&clk 266>;
+> +        assigned-clock-parents = <&clk 78>, <&clk 78>, <&clk 3>;
+> +        assigned-clock-rates = <800000000>,
+> +                               <400000000>;
+> +        port@0 {
+
+/soc@0/bus@32c00000/display-controller@32e00000/port@0: node has a unit name, but no reg property
+
+regards
+Philipp
