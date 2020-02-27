@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A5AC76573
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A089BC7657D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B424724656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:34:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6761424697
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:35:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814088;
-	bh=7GtESXN04drRYoCCmcFRzXL9BHZcnKELFXz/0PkE3wE=;
+	s=default; t=1582814110;
+	bh=LE1s5yPMNdQaEEEPZUrcN3OXyRfWgi9hGXZ7nKPERmA=;
 	h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=x53nesYNcql6NdIgD1o0URwlUvazJPm1SzPztrj4GJcTA8bYh/MZXQ7vhkIAbMFZm
-	 7zbfJD8FMoPfv9QmXrDO2ov076fbp81FqU0BvWfguzLAhP464QKjqCHO8d26ddDqp5
-	 f+FlJvwa2uQu+rFgOqej3ydRajKIeb4FmXPJT9TI=
+	b=zXelIDOYM3eWa1kVyHa0vYrXKFs5BKB6ivb0V/JYvZOj/H8LFb2ERAUf7EVef7vAc
+	 kjCYo3poDkBQDf1Kd1N6Fx0pxKbhMB2T1jWuD0q7TvHeWVnqQG4t/K5cd9CtVB6qfo
+	 NhBJjjGHkW+INbMueOD5UM6ATieyyso2Mc8tPcgM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388803AbgB0Oer (ORCPT
+        id S1733090AbgB0OeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:34:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45264 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:34:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733228AbgB0OeS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:34:18 -0500
+        id S1732777AbgB0OeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:34:02 -0500
 Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F3E0246A0;
-        Thu, 27 Feb 2020 14:34:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08E5F246A9;
+        Thu, 27 Feb 2020 14:34:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582814057;
-        bh=7GtESXN04drRYoCCmcFRzXL9BHZcnKELFXz/0PkE3wE=;
+        s=default; t=1582814041;
+        bh=LE1s5yPMNdQaEEEPZUrcN3OXyRfWgi9hGXZ7nKPERmA=;
         h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=XGR2UVt0ADfUsa0M0dSPU/V9+ZZvFxLA5NAQGJU3OGo8fZuvXpgRTg5GfZSRcNigP
-         hFSg2tYGNr6S3PshnkBPto0zC2AC1gN18f+Jbsp8N6qVHmLuDoDAs7DrtSRXy6TsVb
-         TXvtCY+1KIZipJdd/8dte1fCI9BSqNN71q1M/vHE=
+        b=r8Wo7Zqto310oe21FtqiQUmtmZBhOE1s0PyTk3kttu0FHgDyGU6YvXjO9ZcW+7meo
+         M3yjgC6m0dBenkxPdcZP1Pv63dpRv7VaqMDbhdEup+FS3ULDzIoS27OkavE5jtQ9XL
+         0DWikifUMhTfDLhmak4uWTNiakx65o549makb844=
 From:   zanussi@kernel.org
 To:     LKML <linux-kernel@vger.kernel.org>,
         linux-rt-users <linux-rt-users@vger.kernel.org>,
@@ -51,9 +51,9 @@ To:     LKML <linux-kernel@vger.kernel.org>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         Daniel Wagner <wagi@monom.org>,
         Tom Zanussi <zanussi@kernel.org>
-Subject: [PATCH RT 18/23] sched: migrate_enable: Use stop_one_cpu_nowait()
-Date:   Thu, 27 Feb 2020 08:33:29 -0600
-Message-Id: <65505472099d581142aadd054b4e71b2b2e50cac.1582814004.git.zanussi@kernel.org>
+Subject: [PATCH RT 06/23] sched: __set_cpus_allowed_ptr: Check cpus_mask, not cpus_ptr
+Date:   Thu, 27 Feb 2020 08:33:17 -0600
+Message-Id: <414ce6cf9d1dbe18cc4e9897cb958e9f1a2cb816.1582814004.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1582814004.git.zanussi@kernel.org>
 References: <cover.1582814004.git.zanussi@kernel.org>
@@ -72,121 +72,35 @@ If anyone has any objections, please let me know.
 -----------
 
 
-[ Upstream commit 6b39a1fa8c53cae08dc03afdae193b7d3a78a173 ]
+[ Upstream commit e5606fb7b042db634ed62b4dd733d62e050e468f ]
 
-migrate_enable() can be called with current->state != TASK_RUNNING.
-Avoid clobbering the existing state by using stop_one_cpu_nowait().
-Since we're stopping the current cpu, we know that we won't get
-past __schedule() until migration_cpu_stop() has run (at least up to
-the point of migrating us to another cpu).
+This function is concerned with the long-term cpu mask, not the
+transitory mask the task might have while migrate disabled.  Before
+this patch, if a task was migrate disabled at the time
+__set_cpus_allowed_ptr() was called, and the new mask happened to be
+equal to the cpu that the task was running on, then the mask update
+would be lost.
 
 Signed-off-by: Scott Wood <swood@redhat.com>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Tom Zanussi <zanussi@kernel.org>
-
- Conflicts:
-	kernel/sched/core.c
 ---
- include/linux/stop_machine.h |  2 ++
- kernel/sched/core.c          | 23 +++++++++++++----------
- kernel/stop_machine.c        |  7 +++++--
- 3 files changed, 20 insertions(+), 12 deletions(-)
+ kernel/sched/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/stop_machine.h b/include/linux/stop_machine.h
-index 6d3635c86dbe..82fc686ddd9e 100644
---- a/include/linux/stop_machine.h
-+++ b/include/linux/stop_machine.h
-@@ -26,6 +26,8 @@ struct cpu_stop_work {
- 	cpu_stop_fn_t		fn;
- 	void			*arg;
- 	struct cpu_stop_done	*done;
-+	/* Did not run due to disabled stopper; for nowait debug checks */
-+	bool			disabled;
- };
- 
- int stop_one_cpu(unsigned int cpu, cpu_stop_fn_t fn, void *arg);
 diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 6066dc7bd7b2..ceddb1e27caf 100644
+index fcff75934bdc..8d6badac9225 100644
 --- a/kernel/sched/core.c
 +++ b/kernel/sched/core.c
-@@ -1025,6 +1025,7 @@ static struct rq *move_queued_task(struct rq *rq, struct rq_flags *rf,
- struct migration_arg {
- 	struct task_struct *task;
- 	int dest_cpu;
-+	bool done;
- };
- 
- /*
-@@ -1060,6 +1061,11 @@ static int migration_cpu_stop(void *data)
- 	struct task_struct *p = arg->task;
- 	struct rq *rq = this_rq();
- 	struct rq_flags rf;
-+	int dest_cpu = arg->dest_cpu;
-+
-+	/* We don't look at arg after this point. */
-+	smp_mb();
-+	arg->done = true;
- 
- 	/*
- 	 * The original target CPU might have gone down and we might
-@@ -1082,9 +1088,9 @@ static int migration_cpu_stop(void *data)
- 	 */
- 	if (task_rq(p) == rq) {
- 		if (task_on_rq_queued(p))
--			rq = __migrate_task(rq, &rf, p, arg->dest_cpu);
-+			rq = __migrate_task(rq, &rf, p, dest_cpu);
- 		else
--			p->wake_cpu = arg->dest_cpu;
-+			p->wake_cpu = dest_cpu;
- 	}
- 	rq_unlock(rq, &rf);
- 	raw_spin_unlock(&p->pi_lock);
-@@ -6995,6 +7001,7 @@ void migrate_enable(void)
- 	WARN_ON(smp_processor_id() != cpu);
- 	if (!is_cpu_allowed(p, cpu)) {
- 		struct migration_arg arg = { p };
-+		struct cpu_stop_work work;
- 		struct rq_flags rf;
- 
- 		rq = task_rq_lock(p, &rf);
-@@ -7002,15 +7009,11 @@ void migrate_enable(void)
- 		arg.dest_cpu = select_fallback_rq(cpu, p);
- 		task_rq_unlock(rq, p, &rf);
- 
--		preempt_lazy_enable();
--		preempt_enable();
--
--		sleeping_lock_inc();
--		stop_one_cpu(task_cpu(p), migration_cpu_stop, &arg);
--		sleeping_lock_dec();
-+		stop_one_cpu_nowait(task_cpu(p), migration_cpu_stop,
-+				    &arg, &work);
- 		tlb_migrate_finish(p->mm);
--
--		return;
-+		__schedule(true);
-+		WARN_ON_ONCE(!arg.done && !work.disabled);
+@@ -1192,7 +1192,7 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
+ 		goto out;
  	}
  
- out:
-diff --git a/kernel/stop_machine.c b/kernel/stop_machine.c
-index 56f2f2e01229..0e2fc590ba88 100644
---- a/kernel/stop_machine.c
-+++ b/kernel/stop_machine.c
-@@ -86,8 +86,11 @@ static bool cpu_stop_queue_work(unsigned int cpu, struct cpu_stop_work *work)
- 	enabled = stopper->enabled;
- 	if (enabled)
- 		__cpu_stop_queue_work(stopper, work, &wakeq);
--	else if (work->done)
--		cpu_stop_signal_done(work->done);
-+	else {
-+		work->disabled = true;
-+		if (work->done)
-+			cpu_stop_signal_done(work->done);
-+	}
- 	raw_spin_unlock_irqrestore(&stopper->lock, flags);
+-	if (cpumask_equal(p->cpus_ptr, new_mask))
++	if (cpumask_equal(&p->cpus_mask, new_mask))
+ 		goto out;
  
- 	wake_up_q(&wakeq);
+ 	dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
 -- 
 2.14.1
 
