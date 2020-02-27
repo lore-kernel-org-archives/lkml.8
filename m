@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C42BC54FCD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E851C54FD2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FEA020801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D964A24697
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813033;
-	bh=jyVEhKbOvfiFnc9zwlVMqvuOOZFN6caQIquxtfzfJEk=;
+	s=default; t=1582813055;
+	bh=Tjc+VNTIwPmQo8lQytQmKQARh+VJKu0de2ydV+Hpy3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tTHy4+Et4yC8LVxafLghuNJKHW3sJKhjhpSpunb8bdG8rAyvpsb3wTEHJC1tvZ+GV
-	 yUt0ox9d604NefpmTy5mQQV3BDMJ2wtaHKDELI8OW9DSfSZxFavgxA6zhj6vmWHU7/
-	 egt3+HUBHmumU1VOHeVn7GwwRehvCK7qEKGbt2jQ=
+	b=PxtOnDRPva55HNx9MW4ImQxcHTlLkpmjzOcmfNj+81eIKVwCqAbe7qgowgXGNEv9c
+	 hxKi8ZCoT+TC66ZX07lSDhEd4qioPtzPv7/b/Ga4QDCaxQnPZD6R2ysVKjD4UkbtCW
+	 4AaJjPRM/k+Hc517jycQHlk0v9EAmpG6Z2Mx/oXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389672AbgB0ORL (ORCPT
+        id S2389731AbgB0ORe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:17:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57498 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:17:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388665AbgB0ORK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:17:10 -0500
+        id S2389720AbgB0ORa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:17:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EE302468F;
-        Thu, 27 Feb 2020 14:17:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41A3924697;
+        Thu, 27 Feb 2020 14:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813029;
-        bh=jyVEhKbOvfiFnc9zwlVMqvuOOZFN6caQIquxtfzfJEk=;
+        s=default; t=1582813049;
+        bh=Tjc+VNTIwPmQo8lQytQmKQARh+VJKu0de2ydV+Hpy3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2T6q5eAaf1Of3OXb6uZKDy+cCFNYVghB5CRXaBWT1aRiYmi0wm0D1NYLb/6Yp8IlD
-         6LusR4t3Q2ln2bL/ELkB4q9mNH+pv/9Pt/fTlefxQQs9vM+SuqC5aVzrLUiKSsXk0w
-         xbIWXpC8j3F1TnnZvT4DvBJop5KDvAJQXzhQK6Ik=
+        b=P5IKflsF75RizXLOAqT39+KyLQz+AZrTLtyTTNIBu+O9a0a/ykDspUBgbcQMZmJTq
+         POA0oQMontGchISCwgk+cTSbHCDcTfCwc+OWLFnTLeh2lbnuhQCBd8Iroz8ME+/l6t
+         CVcEzOCOu6NCUgwMDsxPlU7MXCrbDGYkVz5YIQxY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Saar Amar <Saar.Amar@microsoft.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Borislav Petkov <bp@suse.de>
-Subject: [PATCH 5.5 060/150] x86/mce/amd: Publish the bank pointer only after setup has succeeded
-Date:   Thu, 27 Feb 2020 14:36:37 +0100
-Message-Id: <20200227132241.914672261@linuxfoundation.org>
+        stable@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>
+Subject: [PATCH 5.5 118/150] drm/msm/dpu: fix BGR565 vs RGB565 confusion
+Date:   Thu, 27 Feb 2020 14:37:35 +0100
+Message-Id: <20200227132250.075558585@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -60,104 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+From: Rob Clark <robdclark@chromium.org>
 
-commit 6e5cf31fbe651bed7ba1df768f2e123531132417 upstream.
+commit 8fc7036ee652207ca992fbb9abb64090c355a9e0 upstream.
 
-threshold_create_bank() creates a bank descriptor per MCA error
-thresholding counter which can be controlled over sysfs. It publishes
-the pointer to that bank in a per-CPU variable and then goes on to
-create additional thresholding blocks if the bank has such.
+The component order between the two was swapped, resulting in incorrect
+color when games with 565 visual hit the overlay path instead of GPU
+composition.
 
-However, that creation of additional blocks in
-allocate_threshold_blocks() can fail, leading to a use-after-free
-through the per-CPU pointer.
-
-Therefore, publish that pointer only after all blocks have been setup
-successfully.
-
-Fixes: 019f34fccfd5 ("x86, MCE, AMD: Move shared bank to node descriptor")
-Reported-by: Saar Amar <Saar.Amar@microsoft.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200128140846.phctkvx5btiexvbx@kili.mountain
+Fixes: 25fdd5933e4c ("drm/msm: Add SDM845 DPU support")
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Reviewed-by: Sean Paul <seanpaul@chromium.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/cpu/mce/amd.c |   33 ++++++++++++++++-----------------
- 1 file changed, 16 insertions(+), 17 deletions(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kernel/cpu/mce/amd.c
-+++ b/arch/x86/kernel/cpu/mce/amd.c
-@@ -1196,8 +1196,9 @@ static const char *get_name(unsigned int
- 	return buf_mcatype;
- }
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c
+@@ -255,13 +255,13 @@ static const struct dpu_format dpu_forma
  
--static int allocate_threshold_blocks(unsigned int cpu, unsigned int bank,
--				     unsigned int block, u32 address)
-+static int allocate_threshold_blocks(unsigned int cpu, struct threshold_bank *tb,
-+				     unsigned int bank, unsigned int block,
-+				     u32 address)
- {
- 	struct threshold_block *b = NULL;
- 	u32 low, high;
-@@ -1241,16 +1242,12 @@ static int allocate_threshold_blocks(uns
+ 	INTERLEAVED_RGB_FMT(RGB565,
+ 		0, COLOR_5BIT, COLOR_6BIT, COLOR_5BIT,
+-		C2_R_Cr, C0_G_Y, C1_B_Cb, 0, 3,
++		C1_B_Cb, C0_G_Y, C2_R_Cr, 0, 3,
+ 		false, 2, 0,
+ 		DPU_FETCH_LINEAR, 1),
  
- 	INIT_LIST_HEAD(&b->miscj);
+ 	INTERLEAVED_RGB_FMT(BGR565,
+ 		0, COLOR_5BIT, COLOR_6BIT, COLOR_5BIT,
+-		C1_B_Cb, C0_G_Y, C2_R_Cr, 0, 3,
++		C2_R_Cr, C0_G_Y, C1_B_Cb, 0, 3,
+ 		false, 2, 0,
+ 		DPU_FETCH_LINEAR, 1),
  
--	if (per_cpu(threshold_banks, cpu)[bank]->blocks) {
--		list_add(&b->miscj,
--			 &per_cpu(threshold_banks, cpu)[bank]->blocks->miscj);
--	} else {
--		per_cpu(threshold_banks, cpu)[bank]->blocks = b;
--	}
-+	if (tb->blocks)
-+		list_add(&b->miscj, &tb->blocks->miscj);
-+	else
-+		tb->blocks = b;
- 
--	err = kobject_init_and_add(&b->kobj, &threshold_ktype,
--				   per_cpu(threshold_banks, cpu)[bank]->kobj,
--				   get_name(bank, b));
-+	err = kobject_init_and_add(&b->kobj, &threshold_ktype, tb->kobj, get_name(bank, b));
- 	if (err)
- 		goto out_free;
- recurse:
-@@ -1258,7 +1255,7 @@ recurse:
- 	if (!address)
- 		return 0;
- 
--	err = allocate_threshold_blocks(cpu, bank, block, address);
-+	err = allocate_threshold_blocks(cpu, tb, bank, block, address);
- 	if (err)
- 		goto out_free;
- 
-@@ -1343,8 +1340,6 @@ static int threshold_create_bank(unsigne
- 		goto out_free;
- 	}
- 
--	per_cpu(threshold_banks, cpu)[bank] = b;
--
- 	if (is_shared_bank(bank)) {
- 		refcount_set(&b->cpus, 1);
- 
-@@ -1355,9 +1350,13 @@ static int threshold_create_bank(unsigne
- 		}
- 	}
- 
--	err = allocate_threshold_blocks(cpu, bank, 0, msr_ops.misc(bank));
--	if (!err)
--		goto out;
-+	err = allocate_threshold_blocks(cpu, b, bank, 0, msr_ops.misc(bank));
-+	if (err)
-+		goto out_free;
-+
-+	per_cpu(threshold_banks, cpu)[bank] = b;
-+
-+	return 0;
- 
-  out_free:
- 	kfree(b);
 
 
