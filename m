@@ -2,199 +2,108 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A79C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A00EC35677
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1F382469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FDCE246A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:18:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qnesj0f4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729984AbgB0QSm (ORCPT
+        id S1730031AbgB0QSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 11:18:42 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:38682 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1729670AbgB0QSm (ORCPT
+        Thu, 27 Feb 2020 11:18:49 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:60472 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729566AbgB0QSt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 11:18:42 -0500
-Received: (qmail 2704 invoked by uid 2102); 27 Feb 2020 11:18:41 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 27 Feb 2020 11:18:41 -0500
-Date:   Thu, 27 Feb 2020 11:18:41 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Marco Felsch <m.felsch@pengutronix.de>
-cc:     gregkh@linuxfoundation.org, <Thinh.Nguyen@synopsys.com>,
-        <harry.pan@intel.com>, <nobuta.keiya@fujitsu.com>,
-        <malat@debian.org>, <kai.heng.feng@canonical.com>,
-        <chiasheng.lee@intel.com>, <andreyknvl@google.com>,
-        <heinzelmann.david@gmail.com>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel@pengutronix.de>,
-        kbuild test robot <lkp@intel.com>
-Subject: Re: [RFC PATCH v2] USB: hub: fix port suspend/resume
-In-Reply-To: <20200227135631.13983-1-m.felsch@pengutronix.de>
-Message-ID: <Pine.LNX.4.44L0.2002271100000.1730-100000@iolanthe.rowland.org>
+        Thu, 27 Feb 2020 11:18:49 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01RG4D1i109811;
+        Thu, 27 Feb 2020 16:18:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=Txf8TnQig3tuLr/6i8GVUZRZw5RyXpqdmFYnU7NIYz0=;
+ b=qnesj0f4TIvukY29pluvHXchUjE4UlzKvEpN52NFKEcRAKQ9IXKkGaqwAcJ6s1w3kcD3
+ aTya/OKLWTUHW7PGWIKLaAF67l3yUXCjmcyDC13xoFUIKILeTYD6/y4h13mktyjXq3kh
+ OG5SmxT1IwPco8rqIiKNa+jT7pgfnva8wYt2R6m5n8bWEUt3VmoE+GhHDCICC5f+ZKGO
+ UerPvySbpOyIzJIkDez9CTcvm3TlreQv3+fMBOd66Aw7/NZZCwXAG39fTIij2Rc6SIiJ
+ ZdOofsJRQk5PD8ReD5tRx2qhwpypZqkIqgad6F9k0Kigtj5r56pn0C59jjPhs7PQ28ti eA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2ydybcp0kj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Feb 2020 16:18:42 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01RGEJqv118358;
+        Thu, 27 Feb 2020 16:18:41 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2ydj4mxve6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Feb 2020 16:18:41 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01RGIcKX013836;
+        Thu, 27 Feb 2020 16:18:38 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 27 Feb 2020 08:18:38 -0800
+Date:   Thu, 27 Feb 2020 19:18:29 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 5.5 133/150] scripts/get_maintainer.pl: deprioritize old
+ Fixes: addresses
+Message-ID: <20200227161829.GE3308@kadam>
+References: <20200227132232.815448360@linuxfoundation.org>
+ <20200227132252.076691216@linuxfoundation.org>
+ <dd96f64a5fd44278e48a1f7ee9269c485278d183.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dd96f64a5fd44278e48a1f7ee9269c485278d183.camel@perches.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9543 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 suspectscore=0
+ spamscore=0 adultscore=0 malwarescore=0 mlxlogscore=913 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002270124
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9543 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 adultscore=0
+ priorityscore=1501 suspectscore=0 mlxlogscore=962 lowpriorityscore=0
+ phishscore=0 spamscore=0 clxscore=1011 malwarescore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002270124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Feb 2020, Marco Felsch wrote:
-
-> At the momemnt the usb-port driver has only runime_pm hooks.
-> Suspending the port and turn off the VBUS supply should be triggered by
-> the hub device suspend callback usb_port_suspend() which calls the
-
-Strictly speaking it's just a routine, not a callback.  That is, it 
-doesn't get invoked through a function pointer.
-
-> pm_runtime_put_sync() if all pre-conditions are meet. This mechanism
-> don't work correctly due to the global PM behaviour, for more information
-> see [1]. According [1] I added the suspend/resume callbacks for the port
-> device to fix this.
+On Thu, Feb 27, 2020 at 07:20:32AM -0800, Joe Perches wrote:
+> On Thu, 2020-02-27 at 14:37 +0100, Greg Kroah-Hartman wrote:
+> > From: Douglas Anderson <dianders@chromium.org>
+> > 
+> > commit 0ef82fcefb99300ede6f4d38a8100845b2dc8e30 upstream.
 > 
-> [1] https://www.spinics.net/lists/linux-usb/msg190537.html
-
-Please put at least a short description of the problem here; don't 
-force people to go look up some random web page just to find out what's 
-really going on.
-
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> ---
-> Hi,
-> 
-> this v2 contains the fixes
-> 
-> Reported-by: kbuild test robot <lkp@intel.com>
-
-Everything below the "---" line, except the patch itself, gets ignored.  
-You need to move this Reported-by: up higher.
-
-> Regards,
->   Marco
-> 
-> Changes:
-> - init retval to zero
-> - keep CONFIG_PM due to do_remote_wakeup availability
-> - adapt commit message
-> 
->  drivers/usb/core/hub.c  | 13 -------------
->  drivers/usb/core/port.c | 35 ++++++++++++++++++++++++++++++-----
->  2 files changed, 30 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-> index 3405b146edc9..c294484e478d 100644
-> --- a/drivers/usb/core/hub.c
-> +++ b/drivers/usb/core/hub.c
-> @@ -3323,10 +3323,6 @@ int usb_port_suspend(struct usb_device *udev, pm_message_t msg)
->  		usb_set_device_state(udev, USB_STATE_SUSPENDED);
->  	}
->  
-> -	if (status == 0 && !udev->do_remote_wakeup && udev->persist_enabled
-> -			&& test_and_clear_bit(port1, hub->child_usage_bits))
-> -		pm_runtime_put_sync(&port_dev->dev);
-> -
->  	usb_mark_last_busy(hub->hdev);
->  
->  	usb_unlock_port(port_dev);
-> @@ -3514,15 +3510,6 @@ int usb_port_resume(struct usb_device *udev, pm_message_t msg)
->  	int		status;
->  	u16		portchange, portstatus;
->  
-> -	if (!test_and_set_bit(port1, hub->child_usage_bits)) {
-> -		status = pm_runtime_get_sync(&port_dev->dev);
-> -		if (status < 0) {
-> -			dev_dbg(&udev->dev, "can't resume usb port, status %d\n",
-> -					status);
-> -			return status;
-> -		}
-> -	}
-> -
-
-Why do you get rid of these two sections of code?  Won't that cause
-runtime PM to stop working properly?
-
->  	usb_lock_port(port_dev);
->  
->  	/* Skip the initial Clear-Suspend step for a remote wakeup */
-> diff --git a/drivers/usb/core/port.c b/drivers/usb/core/port.c
-> index bbbb35fa639f..13f130b67efe 100644
-> --- a/drivers/usb/core/port.c
-> +++ b/drivers/usb/core/port.c
-> @@ -283,7 +283,34 @@ static int usb_port_runtime_suspend(struct device *dev)
->  
->  	return retval;
->  }
-> -#endif
-> +
-> +static int __maybe_unused _usb_port_suspend(struct device *dev)
-
-Don't say _maybe_unused.  Instead, protect these two routines with 
-#ifdef CONFIG_PM_SLEEP.  That way they won't be compiled on systems 
-that can't use them.
-
-Also, try to find better names.  Maybe usb_port_sleep and 
-usb_port_wake, or usb_port_system_suspend and usb_port_system_resume.
-
-> +{
-> +	struct usb_port *port_dev = to_usb_port(dev);
-> +	struct usb_device *udev = port_dev->child;
-> +	int retval = 0;
-> +
-> +	if (!udev->do_remote_wakeup && udev->persist_enabled)
-> +		retval = usb_port_runtime_suspend(dev);
-> +
-> +	/* Do not force the user to enable the power-off feature */
-> +	if (retval && retval != -EAGAIN)
-> +		return retval;
-> +
-> +	return 0;
-
-IMO it would be a lot more understandable if you wrote
-
-	if (retval == -EAGAIN)
-		retval = 0;
-
-Also, the relation between this code and the preceding comment is not
-obvious.  The comment should say something more like: If the
-PM_QOS_FLAG setting prevents us from powering off the port, it's not an
-error.
-
-Alan Stern
-
-> +}
-> +
-> +static int __maybe_unused _usb_port_resume(struct device *dev)
-> +{
-> +	struct usb_port *port_dev = to_usb_port(dev);
-> +	struct usb_device *udev = port_dev->child;
-> +
-> +	if (!udev->do_remote_wakeup && udev->persist_enabled)
-> +		return usb_port_runtime_resume(dev);
-> +
-> +	return 0;
-> +}
-> +#endif /* CONFIG_PM */
->  
->  static void usb_port_shutdown(struct device *dev)
->  {
-> @@ -294,10 +321,8 @@ static void usb_port_shutdown(struct device *dev)
->  }
->  
->  static const struct dev_pm_ops usb_port_pm_ops = {
-> -#ifdef CONFIG_PM
-> -	.runtime_suspend =	usb_port_runtime_suspend,
-> -	.runtime_resume =	usb_port_runtime_resume,
-> -#endif
-> +	SET_SYSTEM_SLEEP_PM_OPS(_usb_port_suspend, _usb_port_resume)
-> +	SET_RUNTIME_PM_OPS(usb_port_runtime_suspend, usb_port_runtime_resume, NULL)
->  };
->  
->  struct device_type usb_port_device_type = {
+> I think adding just about any checkpatch patch to stable a bit silly.
+> Including patches to checkpatch.
 > 
 
+On the other hand, Greg is one of the worst affected by the old behavior
+since he has so many old email addresses and he's also the stable
+maintainer.
+
+regards,
+dan carpenter
