@@ -2,230 +2,157 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 565EAC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F11BAC11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B2862469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:12:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582819937;
-	bh=bJO6WdQDYlAD6N2KW/emClK5Cr61eJebaKNHgXGCCdY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=GAo2GJOoSkfYaovOBYpBKnw59thHK1CvFleFEXdE1a5QwK/6PP1OKQZjH/wJ7mSBL
-	 ZbkP9Cs25sXbuRkMtELv6eQFM1Sv4K2KzR/7WySABb7q0UKw1jTOxKCzUON8Q7c0HG
-	 tDsW0V7sJgCc++mlhfRgsBdmoUT3GNV1ZkMn8HdM=
+	by mail.kernel.org (Postfix) with ESMTP id C281B2469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:13:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TlK8Ew1h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730071AbgB0QMQ (ORCPT
+        id S1729893AbgB0QNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 11:12:16 -0500
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:27262 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729703AbgB0QMP (ORCPT
+        Thu, 27 Feb 2020 11:13:06 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:47362 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728059AbgB0QNG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 11:12:15 -0500
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 01RGCADP000978;
-        Fri, 28 Feb 2020 01:12:11 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 01RGCADP000978
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582819932;
-        bh=dCIdExQy8zrf9NhMRaOGJJL9zPcIodXfI3s7oSAI5p4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=wxYIJFReNxomo24FiCsLd7MDQNSnegeTFXAKLRpKXGC5R+vv2aK/gnANaXgiqyzIZ
-         9V0SLRbj99uCt6mtS38dAqm495QbctDI4FsAtyRjNaEql7f7q53pCkTv0BdUEiJ4sW
-         ZRDf/Jd0Dh5ZTde+NFym86EoIAGG6axZM1HxtC9fHDRTtrkMavKGVN/24g3ApdAy3x
-         hWTPHaQ//w0xD0AkxhLvHuLOSLBBIu3i2inwdRRhxW8hLntCblzURnnKDHtcV6BH4a
-         /p6Q/t6pnikPEvNKurgEar1l3kg/ny2j/NUOOPkLLbVP9SClGoZg7NvOlutEYoMxCG
-         VYOABtvMQvwXg==
-X-Nifty-SrcIP: [209.85.217.43]
-Received: by mail-vs1-f43.google.com with SMTP id m4so2168337vsa.12;
-        Thu, 27 Feb 2020 08:12:11 -0800 (PST)
-X-Gm-Message-State: APjAAAWjuKwuCK1sxNJXxZk60s12kjS37KBr2Azwdu3MIjyr6JOjM1JQ
-        9zNVn2jI146wuT2dA1k12nlWZ9ULi6TcykiGJYk=
-X-Google-Smtp-Source: APXvYqzHtClR5DvEw/exWEpLpyKt9uSNp2+MkFTTUmkcTIr4mHc+49cy/+C4LfpTHnqPQl1ib4adA7gBbtNt83b8m+w=
-X-Received: by 2002:a05:6102:48b:: with SMTP id n11mr3071450vsa.181.1582819930147;
- Thu, 27 Feb 2020 08:12:10 -0800 (PST)
+        Thu, 27 Feb 2020 11:13:06 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01RG3763156137;
+        Thu, 27 Feb 2020 16:12:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=45wiAcSNUuECCbJIdY1aSyZ/D+NV2Uo34TsQEImaUlM=;
+ b=TlK8Ew1hZL2/K76FwU+3sZU+wU/M5tM4oD1rmsbYuEZPW8VEwd5ff/YBUqjlaNh1oBHE
+ ftLZT6wBskO61l2Es43SNSgHvKs2M/EAYgkPShE0eaDYgPRSQCYgSRVgq1ryb0vOE4jb
+ h+JKM0aJetoDxL5AroZXXcToEmB/y7X6BaR/wj4SaLRnmc+4X1nOg6w/GSN9uwePAiRP
+ INvERBRSlrZskt64IVlJ77W6GCJK8/ovBj4h+Dn5SbHIAmDHUmbABi4iTmuPuGRs7gB2
+ CSlyxyK3rHOGodwbj7KVVZVoLX4XOYE66WXPx+oij1vyfPZypdacd+cNCRfrDtOwTErV lw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2ydct3bypf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Feb 2020 16:12:20 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01RG2opX137720;
+        Thu, 27 Feb 2020 16:12:19 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2ydcs9nk3w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Feb 2020 16:12:19 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01RGCIGn009870;
+        Thu, 27 Feb 2020 16:12:18 GMT
+Received: from [192.168.8.5] (/213.41.92.70)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 27 Feb 2020 08:12:18 -0800
+Subject: Re: [patch 6/8] x86/entry: Move irq tracing to syscall_slow_exit_work
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>
+References: <20200225220801.571835584@linutronix.de>
+ <20200225221305.813084267@linutronix.de>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <721a30c9-4a28-6a2c-cbb2-4291e600d6e9@oracle.com>
+Date:   Thu, 27 Feb 2020 17:12:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-References: <20200225210250.64366-1-ndesaulniers@google.com> <20200226232336.252872-1-ndesaulniers@google.com>
-In-Reply-To: <20200226232336.252872-1-ndesaulniers@google.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 28 Feb 2020 01:11:32 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT=O9+VMEy1j9Un9rznnb_qaxtC-C_xO1DLwiZAhCxZ0g@mail.gmail.com>
-Message-ID: <CAK7LNAT=O9+VMEy1j9Un9rznnb_qaxtC-C_xO1DLwiZAhCxZ0g@mail.gmail.com>
-Subject: Re: [PATCH v3] Documentation/llvm: add documentation on building w/ Clang/LLVM
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200225221305.813084267@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9543 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 phishscore=0
+ mlxlogscore=999 spamscore=0 suspectscore=0 mlxscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002270124
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9543 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 bulkscore=0
+ impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0 adultscore=0
+ phishscore=0 mlxlogscore=999 mlxscore=0 suspectscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002270124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 8:23 AM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> Added to kbuild documentation. Provides more official info on building
-> kernels with Clang and LLVM than our wiki.
->
-> Suggested-by: Kees Cook <keescook@chromium.org>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-> Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+
+On 2/25/20 11:08 PM, Thomas Gleixner wrote:
+> which removes the ASM IRQ tracepoints.
+
+This moves irq tracing to syscall_return_slowpath, not syscall_slow_exit_work,
+right?
+
+alex.
+
+  
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 > ---
-
-Applied to linux-kbuild.
-
-Thanks.
-
-
-> Changes V2 -> V3:
-> * Drop Randy's Suggested-by tag. Sorry Randy, I do appreciate the review
->   though.
-> * Add F: line to MAINTAINERS.
->
-> Changes V1 -> V2:
-> * s/On going/ongoing/
-> * add Randy's Suggested-by
-> * add Nathan and Sedat's Reviewed-by
-> * Upgrade Kees' Sugguested-by to Reviewed-by
-> * s/suffix/prefix/
->
->  Documentation/kbuild/index.rst |  1 +
->  Documentation/kbuild/llvm.rst  | 80 ++++++++++++++++++++++++++++++++++
->  MAINTAINERS                    |  1 +
->  3 files changed, 82 insertions(+)
->  create mode 100644 Documentation/kbuild/llvm.rst
->
-> diff --git a/Documentation/kbuild/index.rst b/Documentation/kbuild/index.rst
-> index 0f144fad99a6..3882bd5f7728 100644
-> --- a/Documentation/kbuild/index.rst
-> +++ b/Documentation/kbuild/index.rst
-> @@ -19,6 +19,7 @@ Kernel Build System
->
->      issues
->      reproducible-builds
-> +    llvm
->
->  .. only::  subproject and html
->
-> diff --git a/Documentation/kbuild/llvm.rst b/Documentation/kbuild/llvm.rst
-> new file mode 100644
-> index 000000000000..d6c79eb4e23e
-> --- /dev/null
-> +++ b/Documentation/kbuild/llvm.rst
-> @@ -0,0 +1,80 @@
-> +==============================
-> +Building Linux with Clang/LLVM
-> +==============================
-> +
-> +This document covers how to build the Linux kernel with Clang and LLVM
-> +utilities.
-> +
-> +About
-> +-----
-> +
-> +The Linux kernel has always traditionally been compiled with GNU toolchains
-> +such as GCC and binutils. Ongoing work has allowed for `Clang
-> +<https://clang.llvm.org/>`_ and `LLVM <https://llvm.org/>`_ utilities to be
-> +used as viable substitutes. Distributions such as `Android
-> +<https://www.android.com/>`_, `ChromeOS
-> +<https://www.chromium.org/chromium-os>`_, and `OpenMandriva
-> +<https://www.openmandriva.org/>`_ use Clang built kernels.  `LLVM is a
-> +collection of toolchain components implemented in terms of C++ objects
-> +<https://www.aosabook.org/en/llvm.html>`_. Clang is a front-end to LLVM that
-> +supports C and the GNU C extensions required by the kernel, and is pronounced
-> +"klang," not "see-lang."
-> +
-> +Clang
-> +-----
-> +
-> +The compiler used can be swapped out via `CC=` command line argument to `make`.
-> +`CC=` should be set when selecting a config and during a build.
-> +
-> +       make CC=clang defconfig
-> +
-> +       make CC=clang
-> +
-> +Cross Compiling
-> +---------------
-> +
-> +A single Clang compiler binary will typically contain all supported backends,
-> +which can help simplify cross compiling.
-> +
-> +       ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make CC=clang
-> +
-> +`CROSS_COMPILE` is not used to prefix the Clang compiler binary, instead
-> +`CROSS_COMPILE` is used to set a command line flag: `--target <triple>`. For
-> +example:
-> +
-> +       clang --target aarch64-linux-gnu foo.c
-> +
-> +LLVM Utilities
-> +--------------
-> +
-> +LLVM has substitutes for GNU binutils utilities. These can be invoked as
-> +additional parameters to `make`.
-> +
-> +       make CC=clang AS=clang LD=ld.lld AR=llvm-ar NM=llvm-nm STRIP=llvm-strip \\
-> +         OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump OBJSIZE=llvm-objsize \\
-> +         READELF=llvm-readelf HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar \\
-> +         HOSTLD=ld.lld
-> +
-> +Getting Help
-> +------------
-> +
-> +- `Website <https://clangbuiltlinux.github.io/>`_
-> +- `Mailing List <https://groups.google.com/forum/#!forum/clang-built-linux>`_: <clang-built-linux@googlegroups.com>
-> +- `Issue Tracker <https://github.com/ClangBuiltLinux/linux/issues>`_
-> +- IRC: #clangbuiltlinux on chat.freenode.net
-> +- `Telegram <https://t.me/ClangBuiltLinux>`_: @ClangBuiltLinux
-> +- `Wiki <https://github.com/ClangBuiltLinux/linux/wiki>`_
-> +- `Beginner Bugs <https://github.com/ClangBuiltLinux/linux/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22>`_
-> +
-> +Getting LLVM
-> +-------------
-> +
-> +- http://releases.llvm.org/download.html
-> +- https://github.com/llvm/llvm-project
-> +- https://llvm.org/docs/GettingStarted.html
-> +- https://llvm.org/docs/CMake.html
-> +- https://apt.llvm.org/
-> +- https://www.archlinux.org/packages/extra/x86_64/llvm/
-> +- https://github.com/ClangBuiltLinux/tc-build
-> +- https://github.com/ClangBuiltLinux/linux/wiki/Building-Clang-from-source
-> +- https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 8b85f22b9b69..79e1f9bfb2b6 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4124,6 +4124,7 @@ B:        https://github.com/ClangBuiltLinux/linux/issues
->  C:     irc://chat.freenode.net/clangbuiltlinux
->  S:     Supported
->  K:     \b(?i:clang|llvm)\b
-> +F:     Documentation/kbuild/llvm.rst
->
->  CLEANCACHE API
->  M:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-> --
-> 2.25.0.265.gbab2e86ba0-goog
->
-
-
--- 
-Best Regards
-Masahiro Yamada
+>   arch/x86/entry/common.c   |    2 ++
+>   arch/x86/entry/entry_32.S |    3 ++-
+>   arch/x86/entry/entry_64.S |    3 ---
+>   3 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> --- a/arch/x86/entry/common.c
+> +++ b/arch/x86/entry/common.c
+> @@ -299,6 +299,8 @@ static void syscall_slow_exit_work(struc
+>   
+>   	local_irq_disable();
+>   	__prepare_exit_to_usermode(regs);
+> +	/* Return to user space enables interrupts */
+> +	trace_hardirqs_on();
+>   }
+>   NOKPROBE_SYMBOL(syscall_return_slowpath);
+>   
+> --- a/arch/x86/entry/entry_32.S
+> +++ b/arch/x86/entry/entry_32.S
+> @@ -812,7 +812,7 @@ SYM_CODE_START(ret_from_fork)
+>   	movl    %esp, %eax
+>   	call    syscall_return_slowpath
+>   	STACKLEAK_ERASE
+> -	jmp     restore_all
+> +	jmp     restore_all_switch_stack
+>   
+>   	/* kernel thread */
+>   1:	movl	%edi, %eax
+> @@ -1077,6 +1077,7 @@ SYM_FUNC_START(entry_INT80_32)
+>   
+>   restore_all:
+>   	TRACE_IRQS_IRET
+> +restore_all_switch_stack:
+>   	SWITCH_TO_ENTRY_STACK
+>   	CHECK_AND_APPLY_ESPFIX
+>   .Lrestore_nocheck:
+> --- a/arch/x86/entry/entry_64.S
+> +++ b/arch/x86/entry/entry_64.S
+> @@ -172,8 +172,6 @@ SYM_INNER_LABEL(entry_SYSCALL_64_after_h
+>   	movq	%rsp, %rsi
+>   	call	do_syscall_64		/* returns with IRQs disabled */
+>   
+> -	TRACE_IRQS_ON			/* return enables interrupts */
+> -
+>   	/*
+>   	 * Try to use SYSRET instead of IRET if we're returning to
+>   	 * a completely clean 64-bit userspace context.  If we're not,
+> @@ -340,7 +338,6 @@ SYM_CODE_START(ret_from_fork)
+>   	UNWIND_HINT_REGS
+>   	movq	%rsp, %rdi
+>   	call	syscall_return_slowpath	/* returns with IRQs disabled */
+> -	TRACE_IRQS_ON			/* user mode is traced as IRQS on */
+>   	jmp	swapgs_restore_regs_and_return_to_usermode
+>   
+>   1:
+> 
