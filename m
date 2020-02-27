@@ -4,43 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2971DC7658D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7605C76592
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8E7324688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BE9524688
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814137;
-	bh=LptIzUxwKjl42YG8Ni/qcMG8j5lOeHqwdiwER+neHwg=;
+	s=default; t=1582814145;
+	bh=9tmztxlrgQIfxHbXoBZ9cfqiScovqcNw5U1I25ytDuw=;
 	h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=xz+J2BJGh59gxdq97pHi9Lx+1B15wKSfYNnAgs2h50OALZnAdCNZCA4KbqbeSIy2b
-	 1urLgTZWznAKrjnGctOWvPVJdUIxBg7RXoTTJGRMiWnu6kOSrrWjMzlTQd+G+k1fwE
-	 GZoARr/gJd3cvfiAtKtkzwVnUeYb8nPZ23FrWP5o=
+	b=w6Dp9+8tzWeyq+zYA0L9p+8XuGiCVj8pUfGgjldKLLNru2PN8YCI2bY0+0wXpbURF
+	 O1m403M5gD29VjtHTIY2R78/HukE842RQfXMNRf3+WdAmzNaH0c1RBxkckNe61GAvu
+	 MJRXjIUaBTZ7q8zGnsidj4dAccwCmIi8+xY63thM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732547AbgB0Ofg (ORCPT
+        id S2389055AbgB0Ofo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:35:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44980 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:35:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387481AbgB0OeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:34:00 -0500
+        id S1732978AbgB0Od6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:33:58 -0500
 Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C747246AE;
-        Thu, 27 Feb 2020 14:33:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1642E2468F;
+        Thu, 27 Feb 2020 14:33:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582814039;
-        bh=LptIzUxwKjl42YG8Ni/qcMG8j5lOeHqwdiwER+neHwg=;
+        s=default; t=1582814037;
+        bh=9tmztxlrgQIfxHbXoBZ9cfqiScovqcNw5U1I25ytDuw=;
         h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=gKXVK5tsLaynaC4LSDA0PTu+6Nv76v34XRXpd9lX5QC8t2/uKms0CXxCfIDaNjXDY
-         faWucMNZSnVJ7nZ5nJHK6KAUSRLrQpgYR6fqT4G5E4YE3qmzUIPpZ0KJ0p2sEFkkEM
-         tGp4XGCO2ql2KN6QEGQm954UDmR35SisehS5BXFI=
+        b=x3ijgsxm7HMbMtYWNes3HjC6qEu5bkU5ssMmW3lglr6QWig3kZ2/D0EDKU0bReKmy
+         MWEYmjQxcj1A4S9GTw7bshzm5/WtXk0knmzv0EPR231bPmtpAiM8UXgB0zudFrt9u8
+         ICxvhvAwzsHg3yXNiXmqIiHjq5zRGwJHy0WagPK4=
 From:   zanussi@kernel.org
 To:     LKML <linux-kernel@vger.kernel.org>,
         linux-rt-users <linux-rt-users@vger.kernel.org>,
@@ -51,9 +51,9 @@ To:     LKML <linux-kernel@vger.kernel.org>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         Daniel Wagner <wagi@monom.org>,
         Tom Zanussi <zanussi@kernel.org>
-Subject: [PATCH RT 04/23] x86: preempt: Check preemption level before looking at lazy-preempt
-Date:   Thu, 27 Feb 2020 08:33:15 -0600
-Message-Id: <ced8d6e46fd112cad04bdf4cc6ebf299dfc2d465.1582814004.git.zanussi@kernel.org>
+Subject: [PATCH RT 02/23] i2c: exynos5: Remove IRQF_ONESHOT
+Date:   Thu, 27 Feb 2020 08:33:13 -0600
+Message-Id: <eb72b82573a64e021080831ec93c17364baaf57e.1582814004.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1582814004.git.zanussi@kernel.org>
 References: <cover.1582814004.git.zanussi@kernel.org>
@@ -72,30 +72,45 @@ If anyone has any objections, please let me know.
 -----------
 
 
-[ Upstream commit 19fc8557f2323c52b26561651ed4d51fc688a740 ]
+[ Upstream commit 4b217df0ab3f7910c96e42091cc7d9f221d05f01 ]
 
-Before evaluating the lazy-preempt state it must be ensure that the
-preempt-count is zero.
+The drivers sets IRQF_ONESHOT and passes only a primary handler. The IRQ
+is masked while the primary is handler is invoked independently of
+IRQF_ONESHOT.
+With IRQF_ONESHOT the core code will not force-thread the interrupt and
+this is probably not intended. I *assume* that the original author copied
+the IRQ registration from another driver which passed a primary and
+secondary handler and removed the secondary handler but keeping the
+ONESHOT flag.
 
+Remove IRQF_ONESHOT.
+
+Reported-by: Benjamin Rouxel <benjamin.rouxel@uva.nl>
+Tested-by: Benjamin Rouxel <benjamin.rouxel@uva.nl>
+Cc: Kukjin Kim <kgene@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-samsung-soc@vger.kernel.org
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Tom Zanussi <zanussi@kernel.org>
 ---
- arch/x86/include/asm/preempt.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/i2c/busses/i2c-exynos5.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/arch/x86/include/asm/preempt.h b/arch/x86/include/asm/preempt.h
-index f66708779274..afa0e42ccdd1 100644
---- a/arch/x86/include/asm/preempt.h
-+++ b/arch/x86/include/asm/preempt.h
-@@ -96,6 +96,8 @@ static __always_inline bool __preempt_count_dec_and_test(void)
- 	if (____preempt_count_dec_and_test())
- 		return true;
- #ifdef CONFIG_PREEMPT_LAZY
-+	if (preempt_count())
-+		return false;
- 	if (current_thread_info()->preempt_lazy_count)
- 		return false;
- 	return test_thread_flag(TIF_NEED_RESCHED_LAZY);
+diff --git a/drivers/i2c/busses/i2c-exynos5.c b/drivers/i2c/busses/i2c-exynos5.c
+index 3855e0b11877..ec490eaac6f7 100644
+--- a/drivers/i2c/busses/i2c-exynos5.c
++++ b/drivers/i2c/busses/i2c-exynos5.c
+@@ -758,9 +758,7 @@ static int exynos5_i2c_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	ret = devm_request_irq(&pdev->dev, i2c->irq, exynos5_i2c_irq,
+-				IRQF_NO_SUSPEND | IRQF_ONESHOT,
+-				dev_name(&pdev->dev), i2c);
+-
++			       IRQF_NO_SUSPEND, dev_name(&pdev->dev), i2c);
+ 	if (ret != 0) {
+ 		dev_err(&pdev->dev, "cannot request HS-I2C IRQ %d\n", i2c->irq);
+ 		goto err_clk;
 -- 
 2.14.1
 
