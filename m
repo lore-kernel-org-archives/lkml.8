@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59415C52D5B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 273DFC54FEE
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:21:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D7C524697
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8B4824656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:21:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813107;
-	bh=7qee3ryyBsg2w8NaS28NeqKTdZCO40SLNkTzU7zodVs=;
+	s=default; t=1582813317;
+	bh=8dJc3VjqGnWWFG3e8ysCnj4VZcKV3ZJX84/9oq8ZYP8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TD79/ZlBAx/3/BbX0FVj3IRRlmAFO418zskQrHihBAVwh6YvreslUxYmhBmtDi5lV
-	 tvbKYfpzy0eW8uyY2FKwi8P8hhvzG5su8Up8iRPrNutl/ju8TmXZDiXslyIpMi6Wma
-	 DO2IL2tgYWL84EMGBYteedBKyDimJNPQCTMiM5Ms=
+	b=kPKekY1AEwVPISjQzBUjZIsEpo6FlVy7k97ZMmwypHrWO6oZNQO6xLsWpRsCRprdf
+	 0gSs1wJBrlWioxnVMm1g83bEu/9S9mJnMyERGtvjjddQnB6oBL/wnt7bSF8QerZpwo
+	 lxZTHR43u6d+NztteGOovsTQ6rLgGvISopAJK9Eg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389879AbgB0OS0 (ORCPT
+        id S2389484AbgB0OQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:18:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58876 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:16:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389854AbgB0OSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:18:18 -0500
+        id S2389446AbgB0OQL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:16:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BEFA20801;
-        Thu, 27 Feb 2020 14:18:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DF802468F;
+        Thu, 27 Feb 2020 14:16:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813098;
-        bh=7qee3ryyBsg2w8NaS28NeqKTdZCO40SLNkTzU7zodVs=;
+        s=default; t=1582812971;
+        bh=8dJc3VjqGnWWFG3e8ysCnj4VZcKV3ZJX84/9oq8ZYP8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V8w9tij+9UOwv5pf/eRXxj1cy6z9EOT/4Tr44Pj+cud2sXD2snDGR+kLevDUyyn4p
-         ffE+wVSJH90aFDlHRj0IPjIdN/BqIRI5SlZB7g3V7oBdYNBY46TfQK94G09/ZsjO6a
-         jog0ya6IQCfTO03kLvGnoPede44TI5eZyeUN9UHs=
+        b=jLuz1sE3haEaIvcnw+y+V1safsUnRWq8HGVjjlpptr/snF6IKcmHlYc98FRENsP1L
+         MKlQK4IMEXZxZmOeJKwLtKLQVZv9M6VI7Zl4Ni2NC8wNFkvhbyUZUJ0E2ZOIIldbVT
+         CxJshZJv1FeW4sKtTguP4sURl6o3XWRhoOPqcbV4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.5 135/150] io_uring: fix __io_iopoll_check deadlock in io_sq_thread
-Date:   Thu, 27 Feb 2020 14:37:52 +0100
-Message-Id: <20200227132252.298299837@linuxfoundation.org>
+        stable@vger.kernel.org, Suren Baghdasaryan <surenb@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Subject: [PATCH 5.5 086/150] sched/psi: Fix OOB write when writing 0 bytes to PSI files
+Date:   Thu, 27 Feb 2020 14:37:03 +0100
+Message-Id: <20200227132245.564108676@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -60,83 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>
+From: Suren Baghdasaryan <surenb@google.com>
 
-commit c7849be9cc2dd2754c48ddbaca27c2de6d80a95d upstream.
+commit 6fcca0fa48118e6d63733eb4644c6cd880c15b8f upstream.
 
-Since commit a3a0e43fd770 ("io_uring: don't enter poll loop if we have
-CQEs pending"), if we already events pending, we won't enter poll loop.
-In case SETUP_IOPOLL and SETUP_SQPOLL are both enabled, if app has
-been terminated and don't reap pending events which are already in cq
-ring, and there are some reqs in poll_list, io_sq_thread will enter
-__io_iopoll_check(), and find pending events, then return, this loop
-will never have a chance to exit.
+Issuing write() with count parameter set to 0 on any file under
+/proc/pressure/ will cause an OOB write because of the access to
+buf[buf_size-1] when NUL-termination is performed. Fix this by checking
+for buf_size to be non-zero.
 
-I have seen this issue in fio stress tests, to fix this issue, let
-io_sq_thread call io_iopoll_getevents() with argument 'min' being zero,
-and remove __io_iopoll_check().
-
-Fixes: a3a0e43fd770 ("io_uring: don't enter poll loop if we have CQEs pending")
-Signed-off-by: Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Link: https://lkml.kernel.org/r/20200203212216.7076-1-surenb@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/io_uring.c |   27 +++++++++------------------
- 1 file changed, 9 insertions(+), 18 deletions(-)
+ kernel/sched/psi.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -1286,11 +1286,17 @@ static void io_iopoll_reap_events(struct
- 	mutex_unlock(&ctx->uring_lock);
- }
+--- a/kernel/sched/psi.c
++++ b/kernel/sched/psi.c
+@@ -1199,6 +1199,9 @@ static ssize_t psi_write(struct file *fi
+ 	if (static_branch_likely(&psi_disabled))
+ 		return -EOPNOTSUPP;
  
--static int __io_iopoll_check(struct io_ring_ctx *ctx, unsigned *nr_events,
--			    long min)
-+static int io_iopoll_check(struct io_ring_ctx *ctx, unsigned *nr_events,
-+			   long min)
- {
- 	int iters = 0, ret = 0;
- 
-+	/*
-+	 * We disallow the app entering submit/complete with polling, but we
-+	 * still need to lock the ring to prevent racing with polled issue
-+	 * that got punted to a workqueue.
-+	 */
-+	mutex_lock(&ctx->uring_lock);
- 	do {
- 		int tmin = 0;
- 
-@@ -1326,21 +1332,6 @@ static int __io_iopoll_check(struct io_r
- 		ret = 0;
- 	} while (min && !*nr_events && !need_resched());
- 
--	return ret;
--}
--
--static int io_iopoll_check(struct io_ring_ctx *ctx, unsigned *nr_events,
--			   long min)
--{
--	int ret;
--
--	/*
--	 * We disallow the app entering submit/complete with polling, but we
--	 * still need to lock the ring to prevent racing with polled issue
--	 * that got punted to a workqueue.
--	 */
--	mutex_lock(&ctx->uring_lock);
--	ret = __io_iopoll_check(ctx, nr_events, min);
- 	mutex_unlock(&ctx->uring_lock);
- 	return ret;
- }
-@@ -3884,7 +3875,7 @@ static int io_sq_thread(void *data)
- 				 */
- 				mutex_lock(&ctx->uring_lock);
- 				if (!list_empty(&ctx->poll_list))
--					__io_iopoll_check(ctx, &nr_events, 0);
-+					io_iopoll_getevents(ctx, &nr_events, 0);
- 				else
- 					inflight = 0;
- 				mutex_unlock(&ctx->uring_lock);
++	if (!nbytes)
++		return -EINVAL;
++
+ 	buf_size = min(nbytes, sizeof(buf));
+ 	if (copy_from_user(buf, user_buf, buf_size))
+ 		return -EFAULT;
 
 
