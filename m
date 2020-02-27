@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C14C3F375
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF52C35E1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A90292468D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1413520578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:07:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812440;
-	bh=ZznlblGTBFbuds+Sph5WVVJsc6irhIrrzO9HTsUYnug=;
+	s=default; t=1582812432;
+	bh=R9SqpIgeU1zDbhHTVMDsR1tJseZFGh73G+JBMuf0/8g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ht+4ExF2cR2gcSx/23OShlPOz0IJfPwHJuFGONnfuSJQOdAKPJK716slMER8ARaoH
-	 fJ738VXJiZZXvbjysTQ3C5xPN08F22WUxp7rBc0oSx+/jFT2viu3p1f/oyc88af+Z7
-	 zZl3f5X/Q8n5kTbcIhZ16ss3LDzZVndIgSGnjViI=
+	b=bvX2n+/PFT6I0MQ3FCV9QIsRQNs+iaY7CuprlwRA8lbM0AkEXdI1Fi89n/WXp3Wb7
+	 32XlLtmUCwPvH01hsCANB2U1XNeTVGySnvMK1yUvEkS21c3GqF6jZolbDdQEDgk2GN
+	 vnf5pHPrrYn7bHn2coe55P5RRjGMbSoCKhRs01nM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388074AbgB0OHS (ORCPT
+        id S2388036AbgB0OHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:07:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44682 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:07:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388040AbgB0OHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:07:15 -0500
+        id S2387512AbgB0OHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:07:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06DD020578;
-        Thu, 27 Feb 2020 14:07:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98B9120578;
+        Thu, 27 Feb 2020 14:07:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812435;
-        bh=ZznlblGTBFbuds+Sph5WVVJsc6irhIrrzO9HTsUYnug=;
+        s=default; t=1582812428;
+        bh=R9SqpIgeU1zDbhHTVMDsR1tJseZFGh73G+JBMuf0/8g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PtpYsproE1cueskiamM+XEJf/UGuQP2fBduP3yfQdwMfyvd2EKA3YJyg8ysdIYoa5
-         2pU4ftjh6qucHtn3UE6aNZda7QxFkFjZWL0sZLjRzfgxrvlWwn9CbJ4oKf9+YjEmMA
-         h9DNVzo0rSV28XQazRrpY+Qf3G4jvH9GxnEmHZH0=
+        b=IXwKkoVrFPcUG0ck8wPJD/ENykSJ+i1ABy90BzVxRWQaizRliwN2VgWZd4RE04vAs
+         QuR5+W96D9xr/7i6EQyUfBdTbaO7gLqqWXFA82rDyv/Toad5fV3CvUvfWH+wscm394
+         z+1J6wEPUUrSNcKkwk3yzN/FNqjPiw5oU7optUIY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Pitre <nico@fluxnic.net>,
-        Lukas Wunner <lukas@wunner.de>
-Subject: [PATCH 5.4 017/135] vt: fix scrollback flushing on background consoles
-Date:   Thu, 27 Feb 2020 14:35:57 +0100
-Message-Id: <20200227132231.842760423@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Jung <jung@codemercs.com>
+Subject: [PATCH 5.4 014/135] USB: misc: iowarrior: add support for the 100 device
+Date:   Thu, 27 Feb 2020 14:35:54 +0100
+Message-Id: <20200227132231.270836077@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -59,61 +58,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Pitre <nico@fluxnic.net>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit 3f4ef485be9d54040b695f32ec76d0f1ea50bbf3 upstream.
+commit bab5417f5f0118ce914bc5b2f8381e959e891155 upstream.
 
-Commit a6dbe4427559 ("vt: perform safe console erase in the right
-order") provided fixes to an earlier commit by gathering all console
-scrollback flushing operations in a function of its own. This includes
-the invocation of vc_sw->con_switch() as previously done through a
-update_screen() call. That commit failed to carry over the
-con_is_visible() conditional though, as well as cursor handling, which
-caused problems when "\e[3J" was written to a background console.
+Add a new device id for the 100 devie.  It has 4 interfaces like the 28
+and 28L devices but a larger endpoint so more I/O pins.
 
-One could argue for preserving the call to update_screen(). However
-this does far more than we need, and it is best to remove scrollback
-assumptions from it. Instead let's gather the minimum needed to actually
-perform scrollback flushing properly in that one place.
-
-While at it, let's document the vc_sw->con_switch() side effect being
-relied upon.
-
-Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
-Reported-and-tested-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/nycvar.YSQ.7.76.2001281205560.1655@knanqh.ubzr
+Cc: Christoph Jung <jung@codemercs.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200214161148.GA3963518@kroah.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/vt/vt.c |   15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ drivers/usb/misc/iowarrior.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -936,10 +936,21 @@ static void flush_scrollback(struct vc_d
- 	WARN_CONSOLE_UNLOCKED();
+--- a/drivers/usb/misc/iowarrior.c
++++ b/drivers/usb/misc/iowarrior.c
+@@ -36,6 +36,7 @@
+ /* fuller speed iowarrior */
+ #define USB_DEVICE_ID_CODEMERCS_IOW28	0x1504
+ #define USB_DEVICE_ID_CODEMERCS_IOW28L	0x1505
++#define USB_DEVICE_ID_CODEMERCS_IOW100	0x1506
  
- 	set_origin(vc);
--	if (vc->vc_sw->con_flush_scrollback)
-+	if (vc->vc_sw->con_flush_scrollback) {
- 		vc->vc_sw->con_flush_scrollback(vc);
--	else
-+	} else if (con_is_visible(vc)) {
-+		/*
-+		 * When no con_flush_scrollback method is provided then the
-+		 * legacy way for flushing the scrollback buffer is to use
-+		 * a side effect of the con_switch method. We do it only on
-+		 * the foreground console as background consoles have no
-+		 * scrollback buffers in that case and we obviously don't
-+		 * want to switch to them.
-+		 */
-+		hide_cursor(vc);
- 		vc->vc_sw->con_switch(vc);
-+		set_cursor(vc);
-+	}
- }
+ /* OEMed devices */
+ #define USB_DEVICE_ID_CODEMERCS_IOW24SAG	0x158a
+@@ -144,6 +145,7 @@ static const struct usb_device_id iowarr
+ 	{USB_DEVICE(USB_VENDOR_ID_CODEMERCS, USB_DEVICE_ID_CODEMERCS_IOW56AM)},
+ 	{USB_DEVICE(USB_VENDOR_ID_CODEMERCS, USB_DEVICE_ID_CODEMERCS_IOW28)},
+ 	{USB_DEVICE(USB_VENDOR_ID_CODEMERCS, USB_DEVICE_ID_CODEMERCS_IOW28L)},
++	{USB_DEVICE(USB_VENDOR_ID_CODEMERCS, USB_DEVICE_ID_CODEMERCS_IOW100)},
+ 	{}			/* Terminating entry */
+ };
+ MODULE_DEVICE_TABLE(usb, iowarrior_ids);
+@@ -386,6 +388,7 @@ static ssize_t iowarrior_write(struct fi
+ 	case USB_DEVICE_ID_CODEMERCS_IOW56AM:
+ 	case USB_DEVICE_ID_CODEMERCS_IOW28:
+ 	case USB_DEVICE_ID_CODEMERCS_IOW28L:
++	case USB_DEVICE_ID_CODEMERCS_IOW100:
+ 		/* The IOW56 uses asynchronous IO and more urbs */
+ 		if (atomic_read(&dev->write_busy) == MAX_WRITES_IN_FLIGHT) {
+ 			/* Wait until we are below the limit for submitted urbs */
+@@ -786,7 +789,8 @@ static int iowarrior_probe(struct usb_in
+ 	if ((dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56) ||
+ 	    (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56AM) ||
+ 	    (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28) ||
+-	    (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28L)) {
++	    (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28L) ||
++	    (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW100)) {
+ 		res = usb_find_last_int_out_endpoint(iface_desc,
+ 				&dev->int_out_endpoint);
+ 		if (res) {
+@@ -802,7 +806,8 @@ static int iowarrior_probe(struct usb_in
+ 	    ((dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56) ||
+ 	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56AM) ||
+ 	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28) ||
+-	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28L)))
++	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28L) ||
++	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW100)))
+ 		/* IOWarrior56 has wMaxPacketSize different from report size */
+ 		dev->report_size = 7;
  
- /*
 
 
