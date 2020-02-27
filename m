@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E14C54FF3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76957C54FF1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2BF224688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 436F321D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813835;
-	bh=WeAnVRuT+eJ3/I9Ri+fo4SZBU5CHsbAcXpVA/xFFqgI=;
+	s=default; t=1582813838;
+	bh=eNP2wRueIYsQ0UuZX2jQ1NACVIbo0uRrJkyDM2F6qGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sg7pYNBIARdgQgbPa/6gF/8HUJCC6w3cQUSI50K+O96I8TZPLVg50qRQYg2scbuVL
-	 j/kdLclFKp8w2n7E9LIqgbI0vUj11M+YaTnRiMmTYIiaKDj97BqGGmRZR0biWlTHlv
-	 WaUn05pzPxeRlIsyC5cUx6MqWcUEvZizZgtYrHtw=
+	b=heS6izD+XT4rC9OrNP6sMxCUfT1Y0JAUhjqMQmfWdr+IfxEX1V2AQhlfcdyT6tdxl
+	 +5ihiNey3vsEfhOeT3cnLIEqOrbywOR01luwKEFeBUDbMKDCzl5Ic1CKURLNbnEGI5
+	 IHrRL4K8X6+NYClS3v9oaypFZGhBcPsp1q7M+Ra4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387679AbgB0OFB (ORCPT
+        id S1733298AbgB0OE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:05:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41220 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:04:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733179AbgB0OEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:04:46 -0500
+        id S2387626AbgB0OEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:04:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABAAE20578;
-        Thu, 27 Feb 2020 14:04:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45DAC20578;
+        Thu, 27 Feb 2020 14:04:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812286;
-        bh=WeAnVRuT+eJ3/I9Ri+fo4SZBU5CHsbAcXpVA/xFFqgI=;
+        s=default; t=1582812283;
+        bh=eNP2wRueIYsQ0UuZX2jQ1NACVIbo0uRrJkyDM2F6qGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0huLFyY3fyGwoKjOF4N5yGUpKVp1FfCTQczdWoUiJZl5O9j++fn4uC450A54wurEE
-         UbbHho6RcZAsmP3negYi5wb6A1MYNDoIlpZeqI3IP7cYc58Z0BXlukLUwLnoknvFyq
-         FOw6VzUkhXXuRz2inNH68DqxKVYZA9cBTovYK4+Q=
+        b=YXsm6SybD1lZsswtbLk88m8p2ssq9/FQdxfKBJcXvVYZk3Jd+XRCH8fbfvxBXRbdc
+         JSffJ/UTmxu4o6+nvwwu5OIODKTkA7llbbBBD+FsxvWnmfOOJvu7RXKoezbKS1Lz4c
+         cW54XX2q5DQicvPXE7zIrE+v93AfYanH12SuqHak=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Ryan Case <ryandcase@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 55/97] tty: serial: qcom_geni_serial: Remove interrupt storm
-Date:   Thu, 27 Feb 2020 14:37:03 +0100
-Message-Id: <20200227132223.560905310@linuxfoundation.org>
+Subject: [PATCH 4.19 54/97] tty: serial: qcom_geni_serial: Fix UART hang
+Date:   Thu, 27 Feb 2020 14:37:02 +0100
+Message-Id: <20200227132223.401435581@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
 References: <20200227132214.553656188@linuxfoundation.org>
@@ -62,83 +62,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ryan Case <ryandcase@chromium.org>
 
-[ Upstream commit 64a428077758383518c258641e81d57fcd454792 ]
+[ Upstream commit 663abb1a7a7ff8fea9ab0145463de7fcff823755 ]
 
-Disable M_TX_FIFO_WATERMARK_EN after we've sent all data for a given
-transaction so we don't continue to receive a flurry of free space
-interrupts while waiting for the M_CMD_DONE notification. Re-enable the
-watermark when establishing the next transaction.
-
-Also clear the watermark interrupt after filling the FIFO so we do not
-receive notification again prior to actually having free space.
+If a serial console write occured while a UART transmit command was
+waiting for a done signal then no further data would be sent until
+something new kicked the system into gear. If there is already data
+waiting in the circular buffer we must re-enable the tx watermark so we
+receive the expected interrupts.
 
 Signed-off-by: Ryan Case <ryandcase@chromium.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Tested-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Evan Green <evgreen@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/qcom_geni_serial.c | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+ drivers/tty/serial/qcom_geni_serial.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-index 2003dfcace5d8..743d877e7ff94 100644
+index b3f7d1a1e97f8..2003dfcace5d8 100644
 --- a/drivers/tty/serial/qcom_geni_serial.c
 +++ b/drivers/tty/serial/qcom_geni_serial.c
-@@ -727,6 +727,7 @@ static void qcom_geni_serial_handle_tx(struct uart_port *uport, bool done,
- 	size_t pending;
- 	int i;
- 	u32 status;
+@@ -438,6 +438,7 @@ static void qcom_geni_serial_console_write(struct console *co, const char *s,
+ 	bool locked = true;
+ 	unsigned long flags;
+ 	u32 geni_status;
 +	u32 irq_en;
- 	unsigned int chunk;
- 	int tail;
  
-@@ -755,6 +756,11 @@ static void qcom_geni_serial_handle_tx(struct uart_port *uport, bool done,
- 	if (!port->tx_remaining) {
- 		qcom_geni_serial_setup_tx(uport, pending);
- 		port->tx_remaining = pending;
+ 	WARN_ON(co->index < 0 || co->index >= GENI_UART_CONS_PORTS);
+ 
+@@ -472,6 +473,13 @@ static void qcom_geni_serial_console_write(struct console *co, const char *s,
+ 		 * has been sent, in which case we need to look for done first.
+ 		 */
+ 		qcom_geni_serial_poll_tx_done(uport);
 +
-+		irq_en = readl_relaxed(uport->membase + SE_GENI_M_IRQ_EN);
-+		if (!(irq_en & M_TX_FIFO_WATERMARK_EN))
++		if (uart_circ_chars_pending(&uport->state->xmit)) {
++			irq_en = readl_relaxed(uport->membase +
++					SE_GENI_M_IRQ_EN);
 +			writel_relaxed(irq_en | M_TX_FIFO_WATERMARK_EN,
 +					uport->membase + SE_GENI_M_IRQ_EN);
++		}
  	}
  
- 	remaining = chunk;
-@@ -778,7 +784,23 @@ static void qcom_geni_serial_handle_tx(struct uart_port *uport, bool done,
- 	}
- 
- 	xmit->tail = tail & (UART_XMIT_SIZE - 1);
-+
-+	/*
-+	 * The tx fifo watermark is level triggered and latched. Though we had
-+	 * cleared it in qcom_geni_serial_isr it will have already reasserted
-+	 * so we must clear it again here after our writes.
-+	 */
-+	writel_relaxed(M_TX_FIFO_WATERMARK_EN,
-+			uport->membase + SE_GENI_M_IRQ_CLEAR);
-+
- out_write_wakeup:
-+	if (!port->tx_remaining) {
-+		irq_en = readl_relaxed(uport->membase + SE_GENI_M_IRQ_EN);
-+		if (irq_en & M_TX_FIFO_WATERMARK_EN)
-+			writel_relaxed(irq_en & ~M_TX_FIFO_WATERMARK_EN,
-+					uport->membase + SE_GENI_M_IRQ_EN);
-+	}
-+
- 	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
- 		uart_write_wakeup(uport);
- }
-@@ -814,8 +836,7 @@ static irqreturn_t qcom_geni_serial_isr(int isr, void *dev)
- 		tty_insert_flip_char(tport, 0, TTY_OVERRUN);
- 	}
- 
--	if (m_irq_status & (M_TX_FIFO_WATERMARK_EN | M_CMD_DONE_EN) &&
--	    m_irq_en & (M_TX_FIFO_WATERMARK_EN | M_CMD_DONE_EN))
-+	if (m_irq_status & m_irq_en & (M_TX_FIFO_WATERMARK_EN | M_CMD_DONE_EN))
- 		qcom_geni_serial_handle_tx(uport, m_irq_status & M_CMD_DONE_EN,
- 					geni_status & M_GENI_CMD_ACTIVE);
- 
+ 	__qcom_geni_serial_console_write(uport, s, count);
 -- 
 2.20.1
 
