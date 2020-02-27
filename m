@@ -2,166 +2,209 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA17C35E15
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01698C35DF9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 929162469C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:58:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582833517;
-	bh=x3vROII1fesL5Z7wihX+F7A34FxrSIHnIzf7GM+zPQU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Th5WwpnO9NZ7SNFt+sOeAEq/OHYcjcxr5nZ0L/P2RXgjuyKU7r2XtSzpiochX3YpR
-	 m0q4FJG+Ngo8eVBnMJ9XiME1FKKl+3OY+86hnUkDsR7DjZKsNtqH1f07ZlCabXviWi
-	 eJHumbAGpWW99RXBVOD5c+8O22rquOy3W0VX1x3Y=
+	by mail.kernel.org (Postfix) with ESMTP id CE05424699
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:59:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730729AbgB0T6g (ORCPT
+        id S1730750AbgB0T7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 14:58:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55496 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729594AbgB0T6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 14:58:36 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA48924699;
-        Thu, 27 Feb 2020 19:58:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582833514;
-        bh=x3vROII1fesL5Z7wihX+F7A34FxrSIHnIzf7GM+zPQU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=aiIz6iBHZl7rsJ4UGi3Jb2Bj0iBPC75Qn40xSaLvnPfRdMa3Kej+NqJOv+/Ixc8m7
-         3YwqMoPS0wfx/OmuIOEtqhX5zTtxyqHcEG5I7S9BchKPuXJOoE4G1dSZrv6IP4cJJY
-         8rEJav84fNde49QXjhO85ssR9qaEM2FN3mq/yk9E=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1j7PIm-008YY2-QX; Thu, 27 Feb 2020 19:58:32 +0000
+        Thu, 27 Feb 2020 14:59:15 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:35203 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729594AbgB0T7P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 14:59:15 -0500
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j7PJJ-0004HJ-3F; Thu, 27 Feb 2020 20:59:05 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id E24DD1040A9; Thu, 27 Feb 2020 20:59:03 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Keith Busch <keith.busch@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] x86/apic/vector: Fix NULL pointer exception in irq_complete_move()
+In-Reply-To: <f54208d62407901b5de15ce8c3d078c70fc7a1d0.1582313239.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <f54208d62407901b5de15ce8c3d078c70fc7a1d0.1582313239.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Date:   Thu, 27 Feb 2020 20:59:03 +0100
+Message-ID: <87tv3bls3c.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 27 Feb 2020 19:58:32 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-        suzuki.poulose@arm.com, sudeep.holla@arm.com, lukasz.luba@arm.com,
-        valentin.schneider@arm.com, dietmar.eggemann@arm.com,
-        rjw@rjwysocki.net, pkondeti@codeaurora.org, peterz@infradead.org,
-        mingo@redhat.com, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>
-Subject: Re: [PATCH v5 3/7] arm64/kvm: disable access to AMU registers from
- kvm guests
-In-Reply-To: <20200226132947.29738-4-ionela.voinescu@arm.com>
-References: <20200226132947.29738-1-ionela.voinescu@arm.com>
- <20200226132947.29738-4-ionela.voinescu@arm.com>
-Message-ID: <46b89d0c9704e0a0fb7a4ac2a1fb5b7a@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: ionela.voinescu@arm.com, catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, suzuki.poulose@arm.com, sudeep.holla@arm.com, lukasz.luba@arm.com, valentin.schneider@arm.com, dietmar.eggemann@arm.com, rjw@rjwysocki.net, pkondeti@codeaurora.org, peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org, viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, james.morse@arm.com, julien.thierry.kdev@gmail.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ionela,
+sathyanarayanan.kuppuswamy@linux.intel.com writes:
+> If an IRQ is scheduled using generic_handle_irq() function in a non IRQ
+> path, the irq_regs per CPU variable will not be set. Hence calling
+> irq_complete_move() function in this scenario leads to NULL pointer
+> de-reference exception. One example for this issue is, triggering fake
+> AER errors using PCIe aer_inject framework. So add addition check for
 
-On 2020-02-26 13:29, Ionela Voinescu wrote:
-> Access to the AMU counters should be disabled by default in kvm guests,
-> as information from the counters might reveal activity in other guests
-> or activity on the host.
-> 
-> Therefore, disable access to AMU registers from EL0 and EL1 in kvm
-> guests by:
->  - Hiding the presence of the extension in the feature register
->    (SYS_ID_AA64PFR0_EL1) on the VCPU.
->  - Disabling access to the AMU registers before switching to the guest.
->  - Trapping accesses and injecting an undefined instruction into the
->    guest.
-> 
-> Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-> Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: James Morse <james.morse@arm.com>
-> Cc: Julien Thierry <julien.thierry.kdev@gmail.com>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
+What?
 
-Acked-by: Marc Zyngier <maz@kernel.org>
+This is completely broken to begin with. You are fixing the wrong
+end. The broken commit is:
 
-A small comment below:
+390e2db82480 ("PCI/AER: Abstract AER interrupt handling")
 
-[...]
+I have to admit that it was already broken before that commit because
+calling just the interrupt handler w/o serialization is as wrong as it
+gets, but then calling a random function just because it's accessible
+and does not explode in the face is not much better.
 
-> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> index 3e909b117f0c..44354c812783 100644
-> --- a/arch/arm64/kvm/sys_regs.c
-> +++ b/arch/arm64/kvm/sys_regs.c
-> @@ -1003,6 +1003,20 @@ static bool access_pmuserenr(struct kvm_vcpu
-> *vcpu, struct sys_reg_params *p,
->  	{ SYS_DESC(SYS_PMEVTYPERn_EL0(n)),					\
->  	  access_pmu_evtyper, reset_unknown, (PMEVTYPER0_EL0 + n), }
-> 
-> +static bool access_amu(struct kvm_vcpu *vcpu, struct sys_reg_params 
-> *p,
-> +			     const struct sys_reg_desc *r)
-> +{
-> +	kvm_inject_undefined(vcpu);
-> +
-> +	return false;
-> +}
-> +
-> +/* Macro to expand the AMU counter and type registers*/
-> +#define AMU_AMEVCNTR0_EL0(n) { SYS_DESC(SYS_AMEVCNTR0_EL0(n)), 
-> access_amu }
-> +#define AMU_AMEVTYPE0_EL0(n) { SYS_DESC(SYS_AMEVTYPE0_EL0(n)), 
-> access_amu }
-> +#define AMU_AMEVCNTR1_EL0(n) { SYS_DESC(SYS_AMEVCNTR1_EL0(n)), 
-> access_amu }
-> +#define AMU_AMEVTYPE1_EL0(n) { SYS_DESC(SYS_AMEVTYPE1_EL0(n)), 
-> access_amu }
-> +
->  static bool trap_ptrauth(struct kvm_vcpu *vcpu,
->  			 struct sys_reg_params *p,
->  			 const struct sys_reg_desc *rd)
-> @@ -1078,8 +1092,10 @@ static u64 read_id_reg(const struct kvm_vcpu 
-> *vcpu,
->  			 (u32)r->CRn, (u32)r->CRm, (u32)r->Op2);
->  	u64 val = raz ? 0 : read_sanitised_ftr_reg(id);
-> 
-> -	if (id == SYS_ID_AA64PFR0_EL1 && !vcpu_has_sve(vcpu)) {
-> -		val &= ~(0xfUL << ID_AA64PFR0_SVE_SHIFT);
-> +	if (id == SYS_ID_AA64PFR0_EL1) {
-> +		if (!vcpu_has_sve(vcpu))
-> +			val &= ~(0xfUL << ID_AA64PFR0_SVE_SHIFT);
-> +		val &= ~(0xfUL << ID_AA64PFR0_AMU_SHIFT);
+> [   58.368269]  handle_edge_irq+0x7d/0x1e0
+> [   58.368272]  generic_handle_irq+0x27/0x30
+> [   58.368278]  aer_inject_write+0x53a/0x720
+> [   58.368283]  __vfs_write+0x36/0x1b0
+> [   58.368289]  ? common_file_perm+0x47/0x130
+> [   58.368293]  ? security_file_permission+0x2e/0xf0
+> [   58.368295]  vfs_write+0xa5/0x180
+> [   58.368296]  ksys_write+0x52/0xc0
+> [   58.368300]  do_syscall_64+0x48/0x120
+> [   58.368307]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-This will definitely conflict with some of the ongoing rework I have[1].
-I'm happy to provide this as a stable branch for you to rebase on top,
-or use an arm64 provided branch to rebase my stoff on top.
+Calling generic_handle_irq() through a sysfs write is in the worst case
+going to corrupt state and that NULL pointer dereference is just one
+particular effect which made this bogosity visible.
 
-Just let me know how you want to proceed.
+Even if you "fixed" this particular case, invoking this when an
+interrupt affinity change is scheduled will also wreckage state. In the
+best case it will only trigger the already existing WARN_ON() in the MSI
+code when the interrupt in question is MSI and the invocation happens on
+the wrong CPU. But there are worse things which can happen.
+
+We are neither going to paper over it by just silently preventing this
+particular NULL pointer dereference nor are we going to sprinkle more
+checks all over the place just to deal with this. The interrupt delivery
+hardware trainwreck of x86 CPUs is fragile as hell and we have enough
+horrible code already to deal with that. No need for self inflicted
+horrors.
+
+The proper fix for this is below as it prevents the abuse of this
+interface.
+
+This will not break the AER error injection as it has been broken
+forever. It just makes sure that the brokeness is not propagating
+through the core code.
+
+The right thing to make AER injection work is to inject the interrupt
+via the retrigger mechanism, which will send an IPI. There is no core
+interface for this, but that's a solvable problem.
 
 Thanks,
 
-         M.
+        tglx
 
-[1] 
-https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/commit/?h=kvm-arm64/debug-fixes-5.6&id=454fb7398d3626328f7f771c07d21e894e4e1a3b
--- 
-Jazz is not dead. It just smells funny...
+8<-----------------
+diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
+index 2c5676b0a6e7..d7c4a3b815a6 100644
+--- a/arch/x86/kernel/apic/vector.c
++++ b/arch/x86/kernel/apic/vector.c
+@@ -556,6 +556,7 @@ static int x86_vector_alloc_irqs(struct irq_domain *domain, unsigned int virq,
+ 		irqd->chip_data = apicd;
+ 		irqd->hwirq = virq + i;
+ 		irqd_set_single_target(irqd);
++		irqd_set_handle_enforce_irqctx(irqd);
+ 		/*
+ 		 * Legacy vectors are already assigned when the IOAPIC
+ 		 * takes them over. They stay on the same vector. This is
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index 3ed5a055b5f4..9315fbb87db3 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -211,6 +211,8 @@ struct irq_data {
+  * IRQD_CAN_RESERVE		- Can use reservation mode
+  * IRQD_MSI_NOMASK_QUIRK	- Non-maskable MSI quirk for affinity change
+  *				  required
++ * IRQD_HANDLE_ENFORCE_IRQCTX	- Enforce that handle_irq_*() is only invoked
++ *				  from actual interrupt context.
+  */
+ enum {
+ 	IRQD_TRIGGER_MASK		= 0xf,
+@@ -234,6 +236,7 @@ enum {
+ 	IRQD_DEFAULT_TRIGGER_SET	= (1 << 25),
+ 	IRQD_CAN_RESERVE		= (1 << 26),
+ 	IRQD_MSI_NOMASK_QUIRK		= (1 << 27),
++	IRQD_HANDLE_ENFORCE_IRQCTX	= (1 << 28),
+ };
+ 
+ #define __irqd_to_state(d) ACCESS_PRIVATE((d)->common, state_use_accessors)
+@@ -303,6 +306,16 @@ static inline bool irqd_is_single_target(struct irq_data *d)
+ 	return __irqd_to_state(d) & IRQD_SINGLE_TARGET;
+ }
+ 
++static inline void irqd_set_handle_enforce_irqctx(struct irq_data *d)
++{
++	__irqd_to_state(d) |= IRQD_HANDLE_ENFORCE_IRQCTX;
++}
++
++static inline bool irqd_is_handle_enforce_irqctx(struct irq_data *d)
++{
++	return __irqd_to_state(d) & IRQD_HANDLE_ENFORCE_IRQCTX;
++}
++
+ static inline bool irqd_is_wakeup_set(struct irq_data *d)
+ {
+ 	return __irqd_to_state(d) & IRQD_WAKEUP_STATE;
+diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
+index 3924fbe829d4..4561f971bc74 100644
+--- a/kernel/irq/internals.h
++++ b/kernel/irq/internals.h
+@@ -427,6 +427,10 @@ static inline struct cpumask *irq_desc_get_pending_mask(struct irq_desc *desc)
+ {
+ 	return desc->pending_mask;
+ }
++static inline bool handle_enforce_irqctx(struct irq_data *data)
++{
++	return irqd_is_handle_enforce_irqctx(data);
++}
+ bool irq_fixup_move_pending(struct irq_desc *desc, bool force_clear);
+ #else /* CONFIG_GENERIC_PENDING_IRQ */
+ static inline bool irq_can_move_pcntxt(struct irq_data *data)
+@@ -453,6 +457,10 @@ static inline bool irq_fixup_move_pending(struct irq_desc *desc, bool fclear)
+ {
+ 	return false;
+ }
++static inline bool handle_enforce_irqctx(struct irq_data *data)
++{
++	return false;
++}
+ #endif /* !CONFIG_GENERIC_PENDING_IRQ */
+ 
+ #if !defined(CONFIG_IRQ_DOMAIN) || !defined(CONFIG_IRQ_DOMAIN_HIERARCHY)
+diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
+index 98a5f10d1900..b3e9a66dd079 100644
+--- a/kernel/irq/irqdesc.c
++++ b/kernel/irq/irqdesc.c
+@@ -638,9 +638,15 @@ void irq_init_desc(unsigned int irq)
+ int generic_handle_irq(unsigned int irq)
+ {
+ 	struct irq_desc *desc = irq_to_desc(irq);
++	struct irq_data *data;
+ 
+ 	if (!desc)
+ 		return -EINVAL;
++
++	data = irq_desc_get_irq_data(desc);
++	if (WARN_ON_ONCE(!in_irq() && handle_enforce_irqctx(data)))
++		return -EPERM;
++
+ 	generic_handle_irq_desc(desc);
+ 	return 0;
+ }
+
+
