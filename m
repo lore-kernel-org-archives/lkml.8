@@ -2,145 +2,170 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 265FEC3F36D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 274C7C3F35D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F201A20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813856;
-	bh=OmW1x3TDx7SRqWix4cRvW6BJJPkzHPdugs65EbCnfKY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nNiDOHCI8qBS5n33qDYmpiPfLmoE3J76EvX3Akbre8HDF+2YuYNcg9OGiMiTKJad/
-	 XBNjMYV38WUAPCxZ4brX5vLk4Se3A1s+XGGu5WbgMxREB3zAGFvE+hGf8QNgaWpGBa
-	 UvPg7hTTb6nsXtX/WMVlc1AwFAkzW/xdPWda3pDY=
+	by mail.kernel.org (Postfix) with ESMTP id F001D20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="h80anpqj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388024AbgB0Oaz (ORCPT
+        id S2388073AbgB0Oa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 27 Feb 2020 09:30:57 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:53058 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387493AbgB0Oaz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Feb 2020 09:30:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40820 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732719AbgB0OEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:04:31 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582813854; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=31Jyd0ydGwDjWftSsYoT2QGP7wSU/YQyP0VpNOmwFCQ=; b=h80anpqjnboxOhJdpNtCCU1xClXOBQAbTaHHypw9GXKfAQA3cfyPTLVD6G9iB6wrutr9rRnW
+ ceAvP/yA5pLN0Tn4UL/iRb+1OX4nFLUuo+ro4bgrMx60GhCmvmt3Kp5aEGpEp+VtWhu8WnRb
+ ZEk100oD251aVrp30IYTXWPSPX4=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e57d292.7fb093b93e30-smtp-out-n03;
+ Thu, 27 Feb 2020 14:30:42 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3CA76C4479D; Thu, 27 Feb 2020 14:30:41 +0000 (UTC)
+Received: from [10.206.25.140] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9545E20578;
-        Thu, 27 Feb 2020 14:04:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812271;
-        bh=OmW1x3TDx7SRqWix4cRvW6BJJPkzHPdugs65EbCnfKY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aciU92JCsePrA67OiTsIub5HWW9dfkVh5eQCY+zKGJpGGt2qTLQCYbN8yfAPiAr33
-         nNIf6zHg7E2v8fUoYkB5NxDL70e6K7jHke8rpkpzS+JUDarvMPs1xoRbuaAuDOBr40
-         XkaxZ96gnrlGcWiTTMovHLuv4S/r4aM0Ah+PP4j0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gavin Shan <gshan@redhat.com>,
-        Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 49/97] mm/vmscan.c: dont round up scan size for online memory cgroup
-Date:   Thu, 27 Feb 2020 14:36:57 +0100
-Message-Id: <20200227132222.614442921@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
-References: <20200227132214.553656188@linuxfoundation.org>
-User-Agent: quilt/0.66
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 35321C433A2;
+        Thu, 27 Feb 2020 14:30:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 35321C433A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+Subject: Re: [PATCH V4] mmc: sdhci-msm: Update system suspend/resume callbacks
+ of sdhci-msm platform driver
+To:     Shaik Sajida Bhanu <sbhanu@codeaurora.org>,
+        adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        robh+dt@kernel.org, mka@chromium.org
+Cc:     asutoshd@codeaurora.org, swboyd@chromium.org,
+        stummala@codeaurora.org, sayalil@codeaurora.org,
+        cang@codeaurora.org, rampraka@codeaurora.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org
+References: <1582181100-29914-1-git-send-email-sbhanu@codeaurora.org>
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Message-ID: <d6c10b49-a12c-d17e-1ff9-90f12e98f624@codeaurora.org>
+Date:   Thu, 27 Feb 2020 20:00:32 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1582181100-29914-1-git-send-email-sbhanu@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gavin Shan <gshan@redhat.com>
+Hi Sajida,
 
-commit 76073c646f5f4999d763f471df9e38a5a912d70d upstream.
+On 2/20/2020 12:15 PM, Shaik Sajida Bhanu wrote:
 
-Commit 68600f623d69 ("mm: don't miss the last page because of round-off
-error") makes the scan size round up to @denominator regardless of the
-memory cgroup's state, online or offline.  This affects the overall
-reclaiming behavior: the corresponding LRU list is eligible for
-reclaiming only when its size logically right shifted by @sc->priority
-is bigger than zero in the former formula.
+> The existing suspend/resume callbacks of sdhci-msm driver are just
+> gating/un-gating the clocks. During suspend cycle more can be done
+> like disabling controller, disabling card detection, enabling wake-up events.
+>
+> So updating the system pm callbacks for performing these extra
+> actions besides controlling the clocks.
+>
+> Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+> Changes since V3:
+>      Invoking sdhci & cqhci resume if sdhci_host_suspend fails.
+>      Removed condition check before invoking cqhci_resume since its a dummy function.
+>
+> Changes since V2:
+>      Removed disabling/enabling pwr-irq from system pm ops.
+>
+> Changes since V1:
+>      Invoking pm_runtime_force_suspend/resume instead of
+>      sdhci_msm_runtime_suepend/resume.
+> ---
+>   drivers/mmc/host/sdhci-msm.c | 47 ++++++++++++++++++++++++++++++++++++++++++--
+>   1 file changed, 45 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index 3955fa5d..3559b50 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -2159,9 +2159,52 @@ static __maybe_unused int sdhci_msm_runtime_resume(struct device *dev)
+>   	return 0;
+>   }
+>   
+> +static int sdhci_msm_suspend(struct device *dev)
+> +{
+> +	struct sdhci_host *host = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	if (host->mmc->caps2 & MMC_CAP2_CQE) {
+> +		ret = cqhci_suspend(host->mmc);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	ret = sdhci_suspend_host(host);
+> +	if (ret)
+> +		goto resume_cqhci;
+> +
+> +	ret = pm_runtime_force_suspend(dev);
+> +	if (!ret)
+> +		return ret;
+> +
+> +	sdhci_resume_host(host);
+> +
+> +resume_cqhci:
+> +	cqhci_resume(host->mmc);
+> +	return ret;
+> +}
+> +
+> +static int sdhci_msm_resume(struct device *dev)
+> +{
+> +	struct sdhci_host *host = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	ret = pm_runtime_force_resume(dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = sdhci_resume_host(host);
 
-For example, the inactive anonymous LRU list should have at least 0x4000
-pages to be eligible for reclaiming when we have 60/12 for
-swappiness/priority and without taking scan/rotation ratio into account.
+I'm observing an issue with this change.
 
-After the roundup is applied, the inactive anonymous LRU list becomes
-eligible for reclaiming when its size is bigger than or equal to 0x1000
-in the same condition.
+After this step, i find interrupt enable register is zero (even though 
+it's getting set in sdhci_resume_host()) and
 
-    (0x4000 >> 12) * 60 / (60 + 140 + 1) = 1
-    ((0x1000 >> 12) * 60) + 200) / (60 + 140 + 1) = 1
+resulting in request timeout for very first command in resume path.
 
-aarch64 has 512MB huge page size when the base page size is 64KB.  The
-memory cgroup that has a huge page is always eligible for reclaiming in
-that case.
+Until its root caused, please hold back this change.
 
-The reclaiming is likely to stop after the huge page is reclaimed,
-meaing the further iteration on @sc->priority and the silbing and child
-memory cgroups will be skipped.  The overall behaviour has been changed.
-This fixes the issue by applying the roundup to offlined memory cgroups
-only, to give more preference to reclaim memory from offlined memory
-cgroup.  It sounds reasonable as those memory is unlikedly to be used by
-anyone.
-
-The issue was found by starting up 8 VMs on a Ampere Mustang machine,
-which has 8 CPUs and 16 GB memory.  Each VM is given with 2 vCPUs and
-2GB memory.  It took 264 seconds for all VMs to be completely up and
-784MB swap is consumed after that.  With this patch applied, it took 236
-seconds and 60MB swap to do same thing.  So there is 10% performance
-improvement for my case.  Note that KSM is disable while THP is enabled
-in the testing.
-
-         total     used    free   shared  buff/cache   available
-   Mem:  16196    10065    2049       16        4081        3749
-   Swap:  8175      784    7391
-         total     used    free   shared  buff/cache   available
-   Mem:  16196    11324    3656       24        1215        2936
-   Swap:  8175       60    8115
-
-Link: http://lkml.kernel.org/r/20200211024514.8730-1-gshan@redhat.com
-Fixes: 68600f623d69 ("mm: don't miss the last page because of round-off error")
-Signed-off-by: Gavin Shan <gshan@redhat.com>
-Acked-by: Roman Gushchin <guro@fb.com>
-Cc: <stable@vger.kernel.org>	[4.20+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- mm/vmscan.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -2446,10 +2446,13 @@ out:
- 			/*
- 			 * Scan types proportional to swappiness and
- 			 * their relative recent reclaim efficiency.
--			 * Make sure we don't miss the last page
--			 * because of a round-off error.
-+			 * Make sure we don't miss the last page on
-+			 * the offlined memory cgroups because of a
-+			 * round-off error.
- 			 */
--			scan = DIV64_U64_ROUND_UP(scan * fraction[file],
-+			scan = mem_cgroup_online(memcg) ?
-+			       div64_u64(scan * fraction[file], denominator) :
-+			       DIV64_U64_ROUND_UP(scan * fraction[file],
- 						  denominator);
- 			break;
- 		case SCAN_FILE:
-
-
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = cqhci_resume(host->mmc);
+> +	return ret;
+> +}
+> +
+>   static const struct dev_pm_ops sdhci_msm_pm_ops = {
+> -	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+> -				pm_runtime_force_resume)
+> +	SET_SYSTEM_SLEEP_PM_OPS(sdhci_msm_suspend,
+> +				sdhci_msm_resume)
+>   	SET_RUNTIME_PM_OPS(sdhci_msm_runtime_suspend,
+>   			   sdhci_msm_runtime_resume,
+>   			   NULL)
