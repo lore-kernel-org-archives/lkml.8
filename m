@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F5FC5ED37
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C56C5ED2A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16E6C20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32DB720801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813213;
-	bh=/mCFG9XO4hu6TS2zQyZ1++jfPLwvNRIBluqoYAVDOUM=;
+	s=default; t=1582813197;
+	bh=wrQyzlkTVJsIuG6RhczZKrYJFH7Mb49YCuVssq9BS0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zwESg3s1NZrvCN+pN6Qto64iOS0D17P1LsRvE72m70jokUVSqTzhE6Lt+yvKayjWZ
-	 BvxHUWgsPd0afZ2QlYS5EcVh4RgG8Q1sUgVJ2rzNJ/oCK7AVdZeNlrMmwyEG1rcyj9
-	 3W5gUK9fVSL+hJFFyabfeGoUDZNm6631jxaN8Cz0=
+	b=vYiKhwrNKvbk2eNnkPHm5VQs/2Eg/yOXOkXdef65GlSS4SOJLmilAMDxrM4FP2aHQ
+	 DquDXzUFXNtBH/1CLeZeXrwDM6ZjqEO6i0dCzjgp+iTW3sXmJaBhsm9G4AX+XzeeOv
+	 C1sAUYQu+QwjJ8g8pIpAatrekgh/f8cOntuN9eik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389769AbgB0OUL (ORCPT
+        id S2390029AbgB0OT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:20:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58700 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:19:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389828AbgB0OSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:18:10 -0500
+        id S2389902AbgB0OSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:18:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 621732469D;
-        Thu, 27 Feb 2020 14:18:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A32624690;
+        Thu, 27 Feb 2020 14:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813089;
-        bh=/mCFG9XO4hu6TS2zQyZ1++jfPLwvNRIBluqoYAVDOUM=;
+        s=default; t=1582813115;
+        bh=wrQyzlkTVJsIuG6RhczZKrYJFH7Mb49YCuVssq9BS0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uJDn9Spvv6G4H5IZ2ILuJsm0cQkQKqxn18rCgEy1SK+OTrlxRpBS4fvMI9Nss3izY
-         tsmj8uM17JfCWU+0EbAnCpWiiCqNjfWuat/SO2avK4a2BwQC2GBZx+KpXN9ls0glae
-         kY9BdPbeMPE6VPa0LNxUPM8H6Jp8sW9AjgOldKQ4=
+        b=fe707PaRnl3v++ukWOq3Sgesdhh2JG72cTpk6IjFglXBeHspG1SANx8mz3fmTzigQ
+         HRwQ65snBPc0wLOUQ0zZfm+/RVykIXbEhptg9HhfFSUyYlt1HBxshgR1Fn6DSfVTXh
+         E9K5e4n4HEhrzzdn2WMxptnTDNYkc7ZpnZrDJJZc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Amit Kachhap <Amit.Kachhap@arm.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>
-Subject: [PATCH 5.5 132/150] arm64: lse: Fix LSE atomics with LLVM
-Date:   Thu, 27 Feb 2020 14:37:49 +0100
-Message-Id: <20200227132251.962200508@linuxfoundation.org>
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        Qu Wenruo <wqu@suse.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.5 106/150] btrfs: reset fs_root to NULL on error in open_ctree
+Date:   Thu, 27 Feb 2020 14:37:23 +0100
+Message-Id: <20200227132248.442137596@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -62,60 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit dd1f6308b28edf0452dd5dc7877992903ec61e69 upstream.
+commit 315bf8ef914f31d51d084af950703aa1e09a728c upstream.
 
-Commit e0d5896bd356 ("arm64: lse: fix LSE atomics with LLVM's integrated
-assembler") broke the build when clang is used in connjunction with the
-binutils assembler ("-no-integrated-as"). This happens because
-__LSE_PREAMBLE is defined as ".arch armv8-a+lse", which overrides the
-version of the CPU architecture passed via the "-march" paramter to gas:
+While running my error injection script I hit a panic when we tried to
+clean up the fs_root when freeing the fs_root.  This is because
+fs_info->fs_root == PTR_ERR(-EIO), which isn't great.  Fix this by
+setting fs_info->fs_root = NULL; if we fail to read the root.
 
-$ aarch64-none-linux-gnu-as -EL -I ./arch/arm64/include
-                                -I ./arch/arm64/include/generated
-                                -I ./include -I ./include
-                                -I ./arch/arm64/include/uapi
-                                -I ./arch/arm64/include/generated/uapi
-                                -I ./include/uapi -I ./include/generated/uapi
-                                -I ./init -I ./init
-                                -march=armv8.3-a -o init/do_mounts.o
-                                /tmp/do_mounts-d7992a.s
-/tmp/do_mounts-d7992a.s: Assembler messages:
-/tmp/do_mounts-d7992a.s:1959: Error: selected processor does not support `autiasp'
-/tmp/do_mounts-d7992a.s:2021: Error: selected processor does not support `paciasp'
-/tmp/do_mounts-d7992a.s:2157: Error: selected processor does not support `autiasp'
-/tmp/do_mounts-d7992a.s:2175: Error: selected processor does not support `paciasp'
-/tmp/do_mounts-d7992a.s:2494: Error: selected processor does not support `autiasp'
-
-Fix the issue by replacing ".arch armv8-a+lse" with ".arch_extension lse".
-Sami confirms that the clang integrated assembler does now support the
-'.arch_extension' directive, so this change will be fine even for LTO
-builds in future.
-
-Fixes: e0d5896bd356cd ("arm64: lse: fix LSE atomics with LLVM's integrated assembler")
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Reported-by: Amit Kachhap <Amit.Kachhap@arm.com>
-Tested-by: Sami Tolvanen <samitolvanen@google.com>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/include/asm/lse.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/disk-io.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/arm64/include/asm/lse.h
-+++ b/arch/arm64/include/asm/lse.h
-@@ -6,7 +6,7 @@
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -3200,6 +3200,7 @@ int __cold open_ctree(struct super_block
+ 	if (IS_ERR(fs_info->fs_root)) {
+ 		err = PTR_ERR(fs_info->fs_root);
+ 		btrfs_warn(fs_info, "failed to read fs tree: %d", err);
++		fs_info->fs_root = NULL;
+ 		goto fail_qgroup;
+ 	}
  
- #if defined(CONFIG_AS_LSE) && defined(CONFIG_ARM64_LSE_ATOMICS)
- 
--#define __LSE_PREAMBLE	".arch armv8-a+lse\n"
-+#define __LSE_PREAMBLE	".arch_extension lse\n"
- 
- #include <linux/compiler_types.h>
- #include <linux/export.h>
 
 
