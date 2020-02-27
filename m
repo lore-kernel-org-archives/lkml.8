@@ -2,90 +2,142 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B678C3F35B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA67C52D2F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DB8D20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 528EE2073D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:00:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582812012;
+	bh=XGoDIGWKV3g+MuqWR0xi7Go/+R25RDbVban6Uixd27M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=s4JSuMefZoNsuglSfktZhiyOHwdO0H5G8sjWkJfzL7G/w4uM6Sje30iVIFwK0+IPv
+	 Jl5TbHKUspgspfXpEiFSqsyJ+E5Kpd0VeLxZXtGdeH0i71f1nn1RFKS7lw47wrLF0I
+	 BtR1nFVf2farof8GoZK21Svs1DmX4g4Cr6vVvt/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732861AbgB0OBG (ORCPT
+        id S1732406AbgB0OAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:01:06 -0500
-Received: from outbound-smtp14.blacknight.com ([46.22.139.231]:53101 "EHLO
-        outbound-smtp14.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732636AbgB0OBD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:01:03 -0500
-Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
-        by outbound-smtp14.blacknight.com (Postfix) with ESMTPS id 264941C3594
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 14:01:00 +0000 (GMT)
-Received: (qmail 13599 invoked from network); 27 Feb 2020 14:00:59 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 27 Feb 2020 14:00:59 -0000
-Date:   Thu, 27 Feb 2020 14:00:57 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com
-Subject: Re: [PATCH] sched/fair: Fix kernel build warning in
- test_idle_cores() for !SMT NUMA
-Message-ID: <20200227140057.GG3818@techsingularity.net>
-References: <20200227110053.2514-1-lukasz.luba@arm.com>
- <d2e0fe2d-5891-a2bf-a4c5-2a1f14754c1d@arm.com>
- <74d75844-e710-6df8-30a9-acd440394c2e@arm.com>
+        Thu, 27 Feb 2020 09:00:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33484 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732692AbgB0OAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:00:09 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0704D20578;
+        Thu, 27 Feb 2020 14:00:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582812008;
+        bh=XGoDIGWKV3g+MuqWR0xi7Go/+R25RDbVban6Uixd27M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gQa9tFRDcD31b9ISd9A4qqk8NUqMmu3PKImgA75QZAJM4hInvHG60mUxRff1DrgyU
+         RvuQ8tpKXZ5Lo373emD73IpG8aVTsQEZy5G7ssCbr9Kqakak+jFfeDD5dwdbsaEm01
+         UD/ct/gVoIwQFHY0J+m//Itt2+ZsPjm+ntSczwAI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        David Heinzelmann <heinzelmann.david@gmail.com>,
+        Paul Zimmerman <pauldzim@gmail.com>
+Subject: [PATCH 4.14 185/237] USB: hub: Dont record a connect-change event during reset-resume
+Date:   Thu, 27 Feb 2020 14:36:39 +0100
+Message-Id: <20200227132309.961146203@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
+References: <20200227132255.285644406@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <74d75844-e710-6df8-30a9-acd440394c2e@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 12:08:46PM +0000, Lukasz Luba wrote:
-> Hi Valentin,
-> 
-> On 2/27/20 11:04 AM, Valentin Schneider wrote:
-> > Hi Lukasz,
-> > 
-> > On 2/27/20 11:00 AM, Lukasz Luba wrote:
-> > > Fix kernel build warning in kernel/sched/fair.c when CONFIG_SCHED_SMT is
-> > > not set and CONFIG_NUMA_BALANCING is set.
-> > > 
-> > > kernel/sched/fair.c:1524:20: warning: ???test_idle_cores??? declared ???static??? but never defined [-Wunused-function]
-> > > 
-> > 
-> > I've sent a similar fix yesterday at:
-> > 
-> > https://lore.kernel.org/lkml/20200226121244.7524-1-valentin.schneider@arm.com/
-> > 
-> 
-> I've missed it. You are referring in the commit message to wrong change
-> (probably HEAD of that branch), while when you try to bisect, it
-> will point you to
-> ff7db0bf24db sched/numa: Prefer using an idle CPU as a migration target
-> instead of comparing tasks
-> 
-> I think Mel can simply resend the patches with correct build if Ingo
-> is OK.
-> 
-> If Mel would decide to go with extended approach of ifdefs, then maybe
-> it's also good to put in there  numa_idle_core(), which actually uses
-> these test_idle_cores() and is_core_idle()
-> 
+From: Alan Stern <stern@rowland.harvard.edu>
 
-I preferred the first fix. I'll send just it on with an editted changelog
-to identify the exact patch that caused the problem. Ingo will hopefully
-let me know if he prefers to pick up the fix on top or a resend of the
-series with the fix folded in.
+commit 8099f58f1ecddf4f374f4828a3dff8397c7cbd74 upstream.
 
--- 
-Mel Gorman
-SUSE Labs
+Paul Zimmerman reports that his USB Bluetooth adapter sometimes
+crashes following system resume, when it receives a
+Get-Device-Descriptor request while it is busy doing something else.
+
+Such a request was added by commit a4f55d8b8c14 ("usb: hub: Check
+device descriptor before resusciation").  It gets sent when the hub
+driver's work thread checks whether a connect-change event on an
+enabled port really indicates a new device has been connected, as
+opposed to an old device momentarily disconnecting and then
+reconnecting (which can happen with xHCI host controllers, since they
+automatically enable connected ports).
+
+The same kind of thing occurs when a port's power session is lost
+during system suspend.  When the system wakes up it sees a
+connect-change event on the port, and if the child device's
+persist_enabled flag was set then hub_activate() sets the device's
+reset_resume flag as well as the port's bit in hub->change_bits.  The
+reset-resume code then takes responsibility for checking that the same
+device is still attached to the port, and it does this as part of the
+device's resume pathway.  By the time the hub driver's work thread
+starts up again, the device has already been fully reinitialized and
+is busy doing its own thing.  There's no need for the work thread to
+do the same check a second time, and in fact this unnecessary check is
+what caused the problem that Paul observed.
+
+Note that performing the unnecessary check is not actually a bug.
+Devices are supposed to be able to send descriptors back to the host
+even when they are busy doing something else.  The underlying cause of
+Paul's problem lies in his Bluetooth adapter.  Nevertheless, we
+shouldn't perform the same check twice in a row -- and as a nice side
+benefit, removing the extra check allows the Bluetooth adapter to work
+more reliably.
+
+The work thread performs its check when it sees that the port's bit is
+set in hub->change_bits.  In this situation that bit is interpreted as
+though a connect-change event had occurred on the port _after_ the
+reset-resume, which is not what actually happened.
+
+One possible fix would be to make the reset-resume code clear the
+port's bit in hub->change_bits.  But it seems simpler to just avoid
+setting the bit during hub_activate() in the first place.  That's what
+this patch does.
+
+(Proving that the patch is correct when CONFIG_PM is disabled requires
+a little thought.  In that setting hub_activate() will be called only
+for initialization and resets, since there won't be any resumes or
+reset-resumes.  During initialization and hub resets the hub doesn't
+have any child devices, and so this code path never gets executed.)
+
+Reported-and-tested-by: Paul Zimmerman <pauldzim@gmail.com>
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Link: https://marc.info/?t=157949360700001&r=1&w=2
+CC: David Heinzelmann <heinzelmann.david@gmail.com>
+CC: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2001311037460.1577-100000@iolanthe.rowland.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/usb/core/hub.c |    5 -----
+ 1 file changed, 5 deletions(-)
+
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -1189,11 +1189,6 @@ static void hub_activate(struct usb_hub
+ #ifdef CONFIG_PM
+ 			udev->reset_resume = 1;
+ #endif
+-			/* Don't set the change_bits when the device
+-			 * was powered off.
+-			 */
+-			if (test_bit(port1, hub->power_bits))
+-				set_bit(port1, hub->change_bits);
+ 
+ 		} else {
+ 			/* The power session is gone; tell hub_wq */
+
+
