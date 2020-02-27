@@ -2,143 +2,246 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CFD6C3F2C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F355C3F2C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69E562469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59D57246A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:05:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582841112;
+	bh=0ihjnXhr5rAzfNmh4KEWjS21hSY9s9S2m9nhLlMYXeU=;
+	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=ZdSr5Nwi87XgG6lQdy5iEGB4ft5hspdCIqZPVrnwMjVwA2Wiq71LyO5lHj+MVcIt4
+	 Y78xTqzo/4XEJOOAeQ/13ED2SQ9WIrkEbJfsHH/4oyLlYAdqqLUM7dB3kkz7FpTKA0
+	 zbZLYN+dD1VjKKicuRXZ2X2zxSJuA914W+wkfhF4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730156AbgB0WFD (ORCPT
+        id S1730176AbgB0WFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 17:05:03 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8936 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729501AbgB0WFA (ORCPT
+        Thu, 27 Feb 2020 17:05:11 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46516 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729501AbgB0WFL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 17:05:00 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01RM0R5L019760;
-        Thu, 27 Feb 2020 17:03:54 -0500
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ydqfwgr7s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Feb 2020 17:03:54 -0500
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01RM2gs7019168;
-        Thu, 27 Feb 2020 22:03:53 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma02wdc.us.ibm.com with ESMTP id 2ydcmm0htc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Feb 2020 22:03:53 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01RM3qmt52298088
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Feb 2020 22:03:52 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 69BB56A09A;
-        Thu, 27 Feb 2020 22:03:52 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9B1B86A099;
-        Thu, 27 Feb 2020 22:03:51 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 27 Feb 2020 22:03:51 +0000 (GMT)
-From:   Stefan Berger <stefanb@linux.vnet.ibm.com>
-To:     jarkko.sakkinen@linux.intel.com, linux-integrity@vger.kernel.org
-Cc:     aik@ozlabs.ru, david@gibson.dropbear.id.au,
-        linux-kernel@vger.kernel.org, nayna@linux.vnet.ibm.com,
-        gcwilson@linux.ibm.com, jgg@ziepe.ca,
-        Stefan Berger <stefanb@linux.ibm.com>
-Subject: [PATCH v4 3/3] tpm: ibmvtpm: Add support for TPM 2
-Date:   Thu, 27 Feb 2020 17:03:46 -0500
-Message-Id: <20200227220346.15976-4-stefanb@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200227220346.15976-1-stefanb@linux.vnet.ibm.com>
-References: <20200227220346.15976-1-stefanb@linux.vnet.ibm.com>
+        Thu, 27 Feb 2020 17:05:11 -0500
+Received: by mail-ot1-f68.google.com with SMTP id g96so672730otb.13;
+        Thu, 27 Feb 2020 14:05:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5LDNhNs7r6soPU3FC796GU50umB+K7uQ7Dt/MTOuohM=;
+        b=cDmp48yucSO/eKm3wLSXPyHpa9hv7ZCs0xp76Oc4wm8d6MnTbi/yyr+l4NNVXDRTjN
+         4OtZ1x0lMPSBgebTlc6BVCodDQowAXGPzoQoECzUQqee40omoNWy/dYe+64gz1xekH9c
+         j5eOsX+IjfDjRfYLDJbS+OKzceiVTw98s3zZdLKOfQjdv+T3f1qT7qOADBvR+nuyfRqU
+         qngUCaQzudvSXsxxB8bmZxjwPmpmQh+TxZ+YjxfqSdGLQHN10/cYuEvyXsFu/tX8H8rL
+         uihlnxRAdJzIv7xwIStNQKXal8yXJ5I9DYahBzN3GbK4DRwKdzysfelox8t0IEqWt2HI
+         DOgQ==
+X-Gm-Message-State: APjAAAXCzig/Rkx6e3DseIkKMUJnsO8xnF55UES/iJACTQbTjCJfXe9d
+        WnwJI72IsfOxcBmGl9c+ig==
+X-Google-Smtp-Source: APXvYqz483UTkmhXETzVPut22diHPjpIUjyvi6kkf0SgJXjG53JFOHWMPBWFSUslFGRMSY5ZATtrVQ==
+X-Received: by 2002:a9d:6e02:: with SMTP id e2mr876041otr.194.1582841109953;
+        Thu, 27 Feb 2020 14:05:09 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id x17sm1291122oia.0.2020.02.27.14.05.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 14:05:09 -0800 (PST)
+Received: (nullmailer pid 1161 invoked by uid 1000);
+        Thu, 27 Feb 2020 22:05:08 -0000
+Date:   Thu, 27 Feb 2020 16:05:08 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Andre Przywara <andre.przywara@arm.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
+        Robert Richter <rric@kernel.org>, soc@kernel.org,
+        Jon Loeliger <jdl@jdl.com>,
+        Mark Langsdorf <mlangsdo@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH v2 06/13] dt-bindings: sata: Convert Calxeda SATA
+ controller to json-schema
+Message-ID: <20200227220508.GE26010@bogus>
+References: <20200227182210.89512-1-andre.przywara@arm.com>
+ <20200227182210.89512-7-andre.przywara@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-27_07:2020-02-26,2020-02-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- malwarescore=0 suspectscore=0 priorityscore=1501 phishscore=0 adultscore=0
- bulkscore=0 impostorscore=0 lowpriorityscore=0 mlxlogscore=999 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002270146
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227182210.89512-7-andre.przywara@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Berger <stefanb@linux.ibm.com>
+On Thu, Feb 27, 2020 at 06:22:03PM +0000, Andre Przywara wrote:
+> Convert the Calxeda Highbank SATA controller binding to DT schema format
+> using json-schema.
+> 
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> Cc: Jens Axboe <axboe@kernel.dk>
+> ---
+>  .../devicetree/bindings/ata/sata_highbank.txt | 44 ---------
+>  .../bindings/ata/sata_highbank.yaml           | 95 +++++++++++++++++++
+>  2 files changed, 95 insertions(+), 44 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/ata/sata_highbank.txt
+>  create mode 100644 Documentation/devicetree/bindings/ata/sata_highbank.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/ata/sata_highbank.txt b/Documentation/devicetree/bindings/ata/sata_highbank.txt
+> deleted file mode 100644
+> index aa83407cb7a4..000000000000
+> --- a/Documentation/devicetree/bindings/ata/sata_highbank.txt
+> +++ /dev/null
+> @@ -1,44 +0,0 @@
+> -* Calxeda AHCI SATA Controller
+> -
+> -SATA nodes are defined to describe on-chip Serial ATA controllers.
+> -The Calxeda SATA controller mostly conforms to the AHCI interface
+> -with some special extensions to add functionality.
+> -Each SATA controller should have its own node.
+> -
+> -Required properties:
+> -- compatible        : compatible list, contains "calxeda,hb-ahci"
+> -- interrupts        : <interrupt mapping for SATA IRQ>
+> -- reg               : <registers mapping>
+> -
+> -Optional properties:
+> -- dma-coherent      : Present if dma operations are coherent
+> -- calxeda,port-phys : phandle-combophy and lane assignment, which maps each
+> -			SATA port to a combophy and a lane within that
+> -			combophy
+> -- calxeda,sgpio-gpio: phandle-gpio bank, bit offset, and default on or off,
+> -			which indicates that the driver supports SGPIO
+> -			indicator lights using the indicated GPIOs
+> -- calxeda,led-order : a u32 array that map port numbers to offsets within the
+> -			SGPIO bitstream.
+> -- calxeda,tx-atten  : a u32 array that contains TX attenuation override
+> -			codes, one per port. The upper 3 bytes are always
+> -			0 and thus ignored.
+> -- calxeda,pre-clocks : a u32 that indicates the number of additional clock
+> -			cycles to transmit before sending an SGPIO pattern
+> -- calxeda,post-clocks: a u32 that indicates the number of additional clock
+> -			cycles to transmit after sending an SGPIO pattern
+> -
+> -Example:
+> -        sata@ffe08000 {
+> -		compatible = "calxeda,hb-ahci";
+> -		reg = <0xffe08000 0x1000>;
+> -		interrupts = <115>;
+> -		dma-coherent;
+> -		calxeda,port-phys = <&combophy5 0 &combophy0 0 &combophy0 1
+> -					&combophy0 2 &combophy0 3>;
+> -		calxeda,sgpio-gpio =<&gpioh 5 1 &gpioh 6 1 &gpioh 7 1>;
+> -		calxeda,led-order = <4 0 1 2 3>;
+> -		calxeda,tx-atten = <0xff 22 0xff 0xff 23>;
+> -		calxeda,pre-clocks = <10>;
+> -		calxeda,post-clocks = <0>;
+> -        };
+> diff --git a/Documentation/devicetree/bindings/ata/sata_highbank.yaml b/Documentation/devicetree/bindings/ata/sata_highbank.yaml
+> new file mode 100644
+> index 000000000000..6dcf91e1bac0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/ata/sata_highbank.yaml
+> @@ -0,0 +1,95 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/ata/sata_highbank.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Calxeda AHCI SATA Controller
+> +
+> +description: |
+> +  The Calxeda SATA controller mostly conforms to the AHCI interface
+> +  with some special extensions to add functionality, to map GPIOs for
+> +  activity LEDs and for mapping the ComboPHYs.
+> +
+> +maintainers:
+> +  - Andre Przywara <andre.przywara@arm.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: calxeda,hb-ahci
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  dma-coherent: true
+> +
+> +  calxeda,pre-clocks:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Indicates the number of additional clock cycles to transmit before
+> +      sending an SGPIO pattern.
+> +
+> +  calxeda,post-clocks:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Indicates the number of additional clock cycles to transmit after
+> +      sending an SGPIO pattern.
+> +
+> +  calxeda,led-order:
+> +    description: Maps port numbers to offsets within the SGPIO bitstream.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +      - minItems: 1
+> +        maxItems: 8
+> +
+> +  calxeda,port-phys:
+> +    description: |
+> +      phandle-combophy and lane assignment, which maps each SATA port to a
+> +      combophy and a lane within that combophy
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/phandle-array
+> +      - minItems: 1
+> +        maxItems: 8
+> +
+> +  calxeda,tx-atten:
+> +    description: |
+> +      Contains TX attenuation override codes, one per port.
+> +      The upper 24 bits of each entry are always 0 and thus ignored.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +      - minItems: 1
+> +        maxItems: 8
+> +
+> +  calxeda,sgpio-gpio:
+> +    description: |
+> +      phandle-gpio bank, bit offset, and default on or off, which indicates
+> +      that the driver supports SGPIO indicator lights using the indicated
+> +      GPIOs.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    sata@ffe08000 {
+> +        compatible = "calxeda,hb-ahci";
+> +        reg = <0xffe08000 0x1000>;
+> +        interrupts = <115>;
+> +        dma-coherent;
+> +        calxeda,port-phys = <&combophy5 0 &combophy0 0 &combophy0 1
+> +                             &combophy0 2 &combophy0 3>;
+> +        calxeda,sgpio-gpio =<&gpioh 5 1 &gpioh 6 1 &gpioh 7 1>;
 
-Support TPM 2 in the IBM vTPM driver. The hypervisor tells us what
-version of TPM is connected through the vio_device_id.
+Need to fix the bracketing here too.
 
-In case a TPM 2 is found, we set the TPM_CHIP_FLAG_TPM2 flag
-and get the command codes attributes table. The driver does
-not need the timeouts and durations, though.
+BTW, no system ever shipped with SGPIO support, so all this could just 
+be removed.
 
-Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
----
- drivers/char/tpm/tpm.h         | 1 +
- drivers/char/tpm/tpm2-cmd.c    | 2 +-
- drivers/char/tpm/tpm_ibmvtpm.c | 6 ++++++
- 3 files changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
-index 5620747da0cf..ad55c9824338 100644
---- a/drivers/char/tpm/tpm.h
-+++ b/drivers/char/tpm/tpm.h
-@@ -226,6 +226,7 @@ int tpm2_auto_startup(struct tpm_chip *chip);
- void tpm2_shutdown(struct tpm_chip *chip, u16 shutdown_type);
- unsigned long tpm2_calc_ordinal_duration(struct tpm_chip *chip, u32 ordinal);
- int tpm2_probe(struct tpm_chip *chip);
-+int tpm2_get_cc_attrs_tbl(struct tpm_chip *chip);
- int tpm2_find_cc(struct tpm_chip *chip, u32 cc);
- int tpm2_init_space(struct tpm_space *space);
- void tpm2_del_space(struct tpm_chip *chip, struct tpm_space *space);
-diff --git a/drivers/char/tpm/tpm2-cmd.c b/drivers/char/tpm/tpm2-cmd.c
-index 13696deceae8..b6a0ee6bb03a 100644
---- a/drivers/char/tpm/tpm2-cmd.c
-+++ b/drivers/char/tpm/tpm2-cmd.c
-@@ -613,7 +613,7 @@ ssize_t tpm2_get_pcr_allocation(struct tpm_chip *chip)
- 	return rc;
- }
- 
--static int tpm2_get_cc_attrs_tbl(struct tpm_chip *chip)
-+int tpm2_get_cc_attrs_tbl(struct tpm_chip *chip)
- {
- 	struct tpm_buf buf;
- 	u32 nr_commands;
-diff --git a/drivers/char/tpm/tpm_ibmvtpm.c b/drivers/char/tpm/tpm_ibmvtpm.c
-index eee566eddb35..b6e61691a943 100644
---- a/drivers/char/tpm/tpm_ibmvtpm.c
-+++ b/drivers/char/tpm/tpm_ibmvtpm.c
-@@ -29,6 +29,7 @@ static const char tpm_ibmvtpm_driver_name[] = "tpm_ibmvtpm";
- 
- static const struct vio_device_id tpm_ibmvtpm_device_table[] = {
- 	{ "IBM,vtpm", "IBM,vtpm"},
-+	{ "IBM,vtpm", "IBM,vtpm20"},
- 	{ "", "" }
- };
- MODULE_DEVICE_TABLE(vio, tpm_ibmvtpm_device_table);
-@@ -672,6 +673,11 @@ static int tpm_ibmvtpm_probe(struct vio_dev *vio_dev,
- 	if (rc)
- 		goto init_irq_cleanup;
- 
-+	if (!strcmp(id->compat, "IBM,vtpm20")) {
-+		chip->flags |= TPM_CHIP_FLAG_TPM2;
-+		tpm2_get_cc_attrs_tbl(chip);
-+	}
-+
- 	if (!wait_event_timeout(ibmvtpm->crq_queue.wq,
- 				ibmvtpm->rtce_buf != NULL,
- 				HZ)) {
--- 
-2.23.0
-
+Rob
