@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0CDC761A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A84C72909
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6B724656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECF7C2468F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:24:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813378;
-	bh=M+3C6Vfw8tIQOCDP4th63PzilReHvAapp2Moe3ZV2mg=;
+	s=default; t=1582813450;
+	bh=FhDWb/RYnGRiiU8odP5whwWF/muNFYva5uLwSwHCnZg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DQC38YZpbLw2MCX+TS0j2fz2I3+OOXbZqRRaQk2iHre8SYxMg/LIQ8PnkDsh8kCqO
-	 vcmxBV6+qrZDXa+mXGR0C7GLnBV36MCTZyWPKJtvhXDiHEE3gjSIzc3KLtTxnG8m6M
-	 mfNyNHbkqflAPKiIqA2CY/XEA01E7ndM/d8VXo8o=
+	b=0CvoBCy6QZ0iKITR6hR5vkI+3+ghnPudQFa6RLfBbOW8fCSMsgNA6WUf9mLl+5U9W
+	 mtL4zruiRAt/oWw6f8I9YHmwPvQgvR5l7/LF16vBSjIa/Sx3KRjeSZp1ccXxdm7gbN
+	 xJbr2aeZDP5I1ZyLe7hL/TsfKRSx0fnRKq4iLPGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388970AbgB0OPY (ORCPT
+        id S2389135AbgB0OYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:15:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54920 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:24:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389055AbgB0OPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:15:20 -0500
+        id S2388973AbgB0ON1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:13:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 280BB20801;
-        Thu, 27 Feb 2020 14:15:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9340320801;
+        Thu, 27 Feb 2020 14:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812919;
-        bh=M+3C6Vfw8tIQOCDP4th63PzilReHvAapp2Moe3ZV2mg=;
+        s=default; t=1582812807;
+        bh=FhDWb/RYnGRiiU8odP5whwWF/muNFYva5uLwSwHCnZg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q+uXaDNjjW5KQS1s1v0dWyLaUJPBqgi2Eliha/uMgMdgA/9urLSCeKK/PWiTaOXC7
-         VK9hgTKB8+Xuzfb6hh+tuZUUGMfWGcONJRtvZCyaRCKqZwTX6QdgSv4mdVhAaafIvm
-         zSBMZnOSXePbhGLMxgNVBpX+jSNh32w3opACPggE=
+        b=kB0vgMprnzJMw8oUjuIAY8tf49be6iFKjWBPJwthcnSEFxiJ6chCWvkGvG4s+dgdq
+         dB2gZfK7WLvBTKtXrvkVR5ZeBRPtS4JX0vEwoB6d+65aVXZE/3nRYWD5rWYu82KzHc
+         hh5k82kdzryD4jNttvkKRPgO3Q9fFzA5ZNT84q6A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
-Subject: [PATCH 5.5 030/150] staging: vt6656: fix sign of rx_dbm to bb_pre_ed_rssi.
-Date:   Thu, 27 Feb 2020 14:36:07 +0100
-Message-Id: <20200227132237.280889676@linuxfoundation.org>
+        stable@vger.kernel.org, Jerry Snitselaar <jsnitsel@redhat.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 5.5 005/150] iommu/vt-d: Remove deferred_attach_domain()
+Date:   Thu, 27 Feb 2020 14:35:42 +0100
+Message-Id: <20200227132233.517585617@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -58,36 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Malcolm Priestley <tvboxspy@gmail.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-commit 93134df520f23f4e9998c425b8987edca7016817 upstream.
+commit 96d170f3b1a607612caf3618c534d5c64fc2d61b upstream.
 
-bb_pre_ed_rssi is an u8 rx_dm always returns negative signed
-values add minus operator to always yield positive.
+The function is now only a wrapper around find_domain(). Remove the
+function and call find_domain() directly at the call-sites.
 
-fixes issue where rx sensitivity is always set to maximum because
-the unsigned numbers were always greater then 100.
-
-Fixes: 63b9907f58f1 ("staging: vt6656: mac80211 conversion: create rx function.")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
-Link: https://lore.kernel.org/r/aceac98c-6e69-3ce1-dfec-2bf27b980221@gmail.com
+Fixes: 1ee0186b9a12 ("iommu/vt-d: Refactor find_domain() helper")
+Cc: stable@vger.kernel.org # v5.5
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/vt6656/dpc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/intel-iommu.c |   11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
---- a/drivers/staging/vt6656/dpc.c
-+++ b/drivers/staging/vt6656/dpc.c
-@@ -130,7 +130,7 @@ int vnt_rx_data(struct vnt_private *priv
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -2450,11 +2450,6 @@ static void do_deferred_attach(struct de
+ 		intel_iommu_attach_device(domain, dev);
+ }
  
- 	vnt_rf_rssi_to_dbm(priv, *rssi, &rx_dbm);
+-static struct dmar_domain *deferred_attach_domain(struct device *dev)
+-{
+-	return find_domain(dev);
+-}
+-
+ static inline struct device_domain_info *
+ dmar_search_domain_by_dev_info(int segment, int bus, int devfn)
+ {
+@@ -3526,7 +3521,7 @@ static dma_addr_t __intel_map_single(str
  
--	priv->bb_pre_ed_rssi = (u8)rx_dbm + 1;
-+	priv->bb_pre_ed_rssi = (u8)-rx_dbm + 1;
- 	priv->current_rssi = priv->bb_pre_ed_rssi;
+ 	BUG_ON(dir == DMA_NONE);
  
- 	skb_pull(skb, 8);
+-	domain = deferred_attach_domain(dev);
++	domain = find_domain(dev);
+ 	if (!domain)
+ 		return DMA_MAPPING_ERROR;
+ 
+@@ -3746,7 +3741,7 @@ static int intel_map_sg(struct device *d
+ 	if (!iommu_need_mapping(dev))
+ 		return dma_direct_map_sg(dev, sglist, nelems, dir, attrs);
+ 
+-	domain = deferred_attach_domain(dev);
++	domain = find_domain(dev);
+ 	if (!domain)
+ 		return 0;
+ 
+@@ -3844,7 +3839,7 @@ bounce_map_single(struct device *dev, ph
+ 	if (unlikely(attach_deferred(dev)))
+ 		do_deferred_attach(dev);
+ 
+-	domain = deferred_attach_domain(dev);
++	domain = find_domain(dev);
+ 
+ 	if (WARN_ON(dir == DMA_NONE || !domain))
+ 		return DMA_MAPPING_ERROR;
 
 
