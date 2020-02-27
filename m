@@ -2,78 +2,123 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC91C35677
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D75E0C35677
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6B5C2469C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B87192469C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:03:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729828AbgB0QDE (ORCPT
+        id S1729907AbgB0QDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 11:03:04 -0500
-Received: from relay11.mail.gandi.net ([217.70.178.231]:36777 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729153AbgB0QDE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 11:03:04 -0500
-Received: from localhost (lfbn-tou-1-1473-158.w90-89.abo.wanadoo.fr [90.89.41.158])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id BE9BF100002;
-        Thu, 27 Feb 2020 16:01:49 +0000 (UTC)
-Date:   Thu, 27 Feb 2020 17:01:49 +0100
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>, davem@davemloft.net,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, foss@0leil.net
-Subject: Re: [PATCH net-next 3/3] net: phy: mscc: implement RGMII skew delay
- configuration
-Message-ID: <20200227160149.GB1686232@kwain>
-References: <20200227152859.1687119-1-antoine.tenart@bootlin.com>
- <20200227152859.1687119-4-antoine.tenart@bootlin.com>
- <20200227155128.GB5245@lunn.ch>
+        Thu, 27 Feb 2020 11:03:24 -0500
+Received: from mga07.intel.com ([134.134.136.100]:61415 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729153AbgB0QDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 11:03:24 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 08:02:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,492,1574150400"; 
+   d="scan'208";a="385198407"
+Received: from asliwa-mobl.ger.corp.intel.com (HELO localhost) ([10.252.26.84])
+  by orsmga004.jf.intel.com with ESMTP; 27 Feb 2020 08:02:51 -0800
+Date:   Thu, 27 Feb 2020 18:02:50 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Stefan Berger <stefanb@linux.vnet.ibm.com>
+Cc:     linux-integrity@vger.kernel.org, aik@ozlabs.ru,
+        david@gibson.dropbear.id.au, linux-kernel@vger.kernel.org,
+        nayna@linux.vnet.ibm.com, gcwilson@linux.ibm.com, jgg@ziepe.ca,
+        Stefan Berger <stefanb@linux.ibm.com>
+Subject: Re: [PATCH v3 3/4] tpm: Implement tpm2_init_commands to use in
+ non-auto startup case
+Message-ID: <20200227160250.GB5140@linux.intel.com>
+References: <20200227002654.7536-1-stefanb@linux.vnet.ibm.com>
+ <20200227002654.7536-4-stefanb@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200227155128.GB5245@lunn.ch>
+In-Reply-To: <20200227002654.7536-4-stefanb@linux.vnet.ibm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Andrew,
-
-On Thu, Feb 27, 2020 at 04:51:28PM +0100, Andrew Lunn wrote:
-> On Thu, Feb 27, 2020 at 04:28:59PM +0100, Antoine Tenart wrote:
-> > This patch adds support for configuring the RGMII skews in Rx and Tx
-> > thanks to properties defined in the device tree.
+On Wed, Feb 26, 2020 at 07:26:53PM -0500, Stefan Berger wrote:
+> From: Stefan Berger <stefanb@linux.ibm.com>
 > 
-> Hi Antoine
+> The IBM vTPM device driver will not use TPM_OPS_AUTO_STARTUP since we
+> assume the firmware has initialized the TPM 2 and TPM2_Startup() need
+> not be sent. Therefore, tpm2_auto_startup() will not be called. To cover
+> the tpm_chip's initialization of timeouts, command durations, and
+> command attributes we implement tpm2_init_commands() function that will
+> be called instead of tpm2_auto_startup().
 > 
-> What you are not handling here in this patchset is the four RGMII
-> modes, and what they mean in terms of delay:
+> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> ---
+>  drivers/char/tpm/tpm-interface.c |  5 ++++-
+>  drivers/char/tpm/tpm.h           |  1 +
+>  drivers/char/tpm/tpm2-cmd.c      | 14 ++++++++++++++
+>  3 files changed, 19 insertions(+), 1 deletion(-)
 > 
->         PHY_INTERFACE_MODE_RGMII,
->         PHY_INTERFACE_MODE_RGMII_ID,
->         PHY_INTERFACE_MODE_RGMII_RXID,
->         PHY_INTERFACE_MODE_RGMII_TXID,
-> 
-> The PHY driver should be adding delays based on these
-> values. Generally, that is enough to make the link work. You only need
-> additional skew in DT when you need finer grain control than what
-> these provide.
+> diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
+> index a438b1206fcb..30d80b94db33 100644
+> --- a/drivers/char/tpm/tpm-interface.c
+> +++ b/drivers/char/tpm/tpm-interface.c
+> @@ -371,8 +371,11 @@ int tpm_auto_startup(struct tpm_chip *chip)
+>  {
+>  	int rc;
+>  
+> -	if (!(chip->ops->flags & TPM_OPS_AUTO_STARTUP))
+> +	if (!(chip->ops->flags & TPM_OPS_AUTO_STARTUP)) {
+> +		if (chip->flags & TPM_CHIP_FLAG_TPM2)
+> +			return tpm2_init_commands(chip);
+>  		return 0;
+> +	}
+>  
+>  	if (chip->flags & TPM_CHIP_FLAG_TPM2)
+>  		rc = tpm2_auto_startup(chip);
+> diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
+> index 5620747da0cf..30da942d714a 100644
+> --- a/drivers/char/tpm/tpm.h
+> +++ b/drivers/char/tpm/tpm.h
+> @@ -222,6 +222,7 @@ ssize_t tpm2_get_tpm_pt(struct tpm_chip *chip, u32 property_id,
+>  			u32 *value, const char *desc);
+>  
+>  ssize_t tpm2_get_pcr_allocation(struct tpm_chip *chip);
+> +int tpm2_init_commands(struct tpm_chip *chip);
+>  int tpm2_auto_startup(struct tpm_chip *chip);
+>  void tpm2_shutdown(struct tpm_chip *chip, u16 shutdown_type);
+>  unsigned long tpm2_calc_ordinal_duration(struct tpm_chip *chip, u32 ordinal);
+> diff --git a/drivers/char/tpm/tpm2-cmd.c b/drivers/char/tpm/tpm2-cmd.c
+> index 13696deceae8..2d0c5a3b65c0 100644
+> --- a/drivers/char/tpm/tpm2-cmd.c
+> +++ b/drivers/char/tpm/tpm2-cmd.c
+> @@ -709,6 +709,20 @@ static int tpm2_startup(struct tpm_chip *chip)
+>  	return rc;
+>  }
+>  
+> +/**
+> + * tpm2_init_commands - Get timeouts, durations and command code attributes
+> + *                      in case tpm2_auto_startup is not used.
+> + * @chip: TPM chip to use
+> + *
+> + * Return 0 on success, < 0 in case of fatal error.
+> + */
+> +int tpm2_init_commands(struct tpm_chip *chip)
+> +{
+> +	tpm2_get_timeouts(chip);
+> +
+> +	return tpm2_get_cc_attrs_tbl(chip);
 
-Oh, that's right. I'll fix the series and resubmit.
+Call * locally in vtpm instead of adding quirks to the TPM driver.
 
-Thanks!
-Antoine
-
--- 
-Antoine Ténart, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+/Jarkko
