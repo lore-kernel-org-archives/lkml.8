@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF207C4BA2D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3028EC52D35
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A28FA20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03F1B24697
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812629;
-	bh=99iTE+moXDOBvVocvUMuf92PR+/jrXuVSLoXxuCMsds=;
+	s=default; t=1582812510;
+	bh=+aqyWWYn7K1Jqt2esBmrsHiElG8yI/T2Tl7qzGvNYJU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sTxHGncZBwd0rGrSdzNY7M0dOQoUpJafLaWoMPWvQTPoWk7An5yJK2zRFdpH+jhE9
-	 VsilcEmv7vWFSN6cpvRtH4W2tdCOEmU9zB3PXSYz7RVQ7HlaXeiW4IpUy5N6qvVYQy
-	 U5e4aiZNgM4Yu/7GG3ySvf9Ibs4dtSfAuRkvrclQ=
+	b=G6rtUP28HarfjWfLHljoCm+q5Ed20n1IMAhoyMheNUcn3yT18ap48ErrUfwxhveGc
+	 +qdf51NJuO8Tx6oZovPL+Dn5sM4cB6/hEuFzIRtJTDwRZOPGrcOkSwtXJxryQTyimH
+	 sQ05qmHp9wMGQLyhrpLTMTDbHrbzAnCwYPvtNb48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388536AbgB0OK2 (ORCPT
+        id S1730583AbgB0OI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:10:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48610 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:08:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388531AbgB0OKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:10:25 -0500
+        id S2387773AbgB0OIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:08:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FEF720801;
-        Thu, 27 Feb 2020 14:10:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DD8120578;
+        Thu, 27 Feb 2020 14:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812624;
-        bh=99iTE+moXDOBvVocvUMuf92PR+/jrXuVSLoXxuCMsds=;
+        s=default; t=1582812502;
+        bh=+aqyWWYn7K1Jqt2esBmrsHiElG8yI/T2Tl7qzGvNYJU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VoZGxCoQlOoSRvS82zgFHtMdulM8Pe9lq/7kQmHnt0781QDtE6C799PKWXKCa63ld
-         xmCV17q4975eJGQefr5eXr3bSckNM+7AHOcGpOTf5w1BVY0qT2T212AVnc89BwbOB5
-         9w+fSaOpO5+r9xmGUdPSpfuGmd7zWZm4PqMNW0Vc=
+        b=mamFFWmeiPuPkU7t3cBlL0SbjHbZoJykcfvgxStt2qzk2xjImgkgXRXW0mDVCOi/h
+         ZZj7HEya/FLYb4RnSEGtZMyIInrRzCSwkme0wzKDXYVpD4u6NvrjwqpN7kBbKowvRs
+         ACQlQtfrfR+7fK5m7hmePlCv81CHwkkXIB24iClA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.4 089/135] KVM: nVMX: clear PIN_BASED_POSTED_INTR from nested pinbased_ctls only when apicv is globally disabled
-Date:   Thu, 27 Feb 2020 14:37:09 +0100
-Message-Id: <20200227132242.680993411@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Antonio Caggiano <antonio.caggiano@collabora.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH 5.4 042/135] drm/panfrost: perfcnt: Reserve/use the AS attached to the perfcnt MMU context
+Date:   Thu, 27 Feb 2020 14:36:22 +0100
+Message-Id: <20200227132235.242964214@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -59,122 +62,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
+From: Boris Brezillon <boris.brezillon@collabora.com>
 
-commit a4443267800af240072280c44521caab61924e55 upstream.
+commit dde2bb2da01e96c17f0a44b4a3cf72a30e66e3ef upstream.
 
-When apicv is disabled on a vCPU (e.g. by enabling KVM_CAP_HYPERV_SYNIC*),
-nothing happens to VMX MSRs on the already existing vCPUs, however, all new
-ones are created with PIN_BASED_POSTED_INTR filtered out. This is very
-confusing and results in the following picture inside the guest:
+We need to use the AS attached to the opened FD when dumping counters.
 
-$ rdmsr -ax 0x48d
-ff00000016
-7f00000016
-7f00000016
-7f00000016
-
-This is observed with QEMU and 4-vCPU guest: QEMU creates vCPU0, does
-KVM_CAP_HYPERV_SYNIC2 and then creates the remaining three.
-
-L1 hypervisor may only check CPU0's controls to find out what features
-are available and it will be very confused later. Switch to setting
-PIN_BASED_POSTED_INTR control based on global 'enable_apicv' setting.
-
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Reported-by: Antonio Caggiano <antonio.caggiano@collabora.com>
+Fixes: 7282f7645d06 ("drm/panfrost: Implement per FD address spaces")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+Reviewed-by: Steven Price <steven.price@arm.com>
+Tested-by: Antonio Caggiano <antonio.caggiano@collabora.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200206141327.446127-1-boris.brezillon@collabora.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx/capabilities.h |    1 +
- arch/x86/kvm/vmx/nested.c       |    5 ++---
- arch/x86/kvm/vmx/nested.h       |    3 +--
- arch/x86/kvm/vmx/vmx.c          |   10 ++++------
- 4 files changed, 8 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/panfrost/panfrost_mmu.c     |    7 ++++++-
+ drivers/gpu/drm/panfrost/panfrost_perfcnt.c |   11 ++++-------
+ 2 files changed, 10 insertions(+), 8 deletions(-)
 
---- a/arch/x86/kvm/vmx/capabilities.h
-+++ b/arch/x86/kvm/vmx/capabilities.h
-@@ -12,6 +12,7 @@ extern bool __read_mostly enable_ept;
- extern bool __read_mostly enable_unrestricted_guest;
- extern bool __read_mostly enable_ept_ad_bits;
- extern bool __read_mostly enable_pml;
-+extern bool __read_mostly enable_apicv;
- extern int __read_mostly pt_mode;
+--- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
++++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+@@ -151,7 +151,12 @@ u32 panfrost_mmu_as_get(struct panfrost_
+ 	as = mmu->as;
+ 	if (as >= 0) {
+ 		int en = atomic_inc_return(&mmu->as_count);
+-		WARN_ON(en >= NUM_JOB_SLOTS);
++
++		/*
++		 * AS can be retained by active jobs or a perfcnt context,
++		 * hence the '+ 1' here.
++		 */
++		WARN_ON(en >= (NUM_JOB_SLOTS + 1));
  
- #define PT_MODE_SYSTEM		0
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -5807,8 +5807,7 @@ void nested_vmx_vcpu_setup(void)
-  * bit in the high half is on if the corresponding bit in the control field
-  * may be on. See also vmx_control_verify().
-  */
--void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps,
--				bool apicv)
-+void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps)
- {
+ 		list_move(&mmu->list, &pfdev->as_lru_list);
+ 		goto out;
+--- a/drivers/gpu/drm/panfrost/panfrost_perfcnt.c
++++ b/drivers/gpu/drm/panfrost/panfrost_perfcnt.c
+@@ -73,7 +73,7 @@ static int panfrost_perfcnt_enable_locke
+ 	struct panfrost_file_priv *user = file_priv->driver_priv;
+ 	struct panfrost_perfcnt *perfcnt = pfdev->perfcnt;
+ 	struct drm_gem_shmem_object *bo;
+-	u32 cfg;
++	u32 cfg, as;
+ 	int ret;
+ 
+ 	if (user == perfcnt->user)
+@@ -126,12 +126,8 @@ static int panfrost_perfcnt_enable_locke
+ 
+ 	perfcnt->user = user;
+ 
+-	/*
+-	 * Always use address space 0 for now.
+-	 * FIXME: this needs to be updated when we start using different
+-	 * address space.
+-	 */
+-	cfg = GPU_PERFCNT_CFG_AS(0) |
++	as = panfrost_mmu_as_get(pfdev, perfcnt->mapping->mmu);
++	cfg = GPU_PERFCNT_CFG_AS(as) |
+ 	      GPU_PERFCNT_CFG_MODE(GPU_PERFCNT_CFG_MODE_MANUAL);
+ 
  	/*
- 	 * Note that as a general rule, the high half of the MSRs (bits in
-@@ -5835,7 +5834,7 @@ void nested_vmx_setup_ctls_msrs(struct n
- 		PIN_BASED_EXT_INTR_MASK |
- 		PIN_BASED_NMI_EXITING |
- 		PIN_BASED_VIRTUAL_NMIS |
--		(apicv ? PIN_BASED_POSTED_INTR : 0);
-+		(enable_apicv ? PIN_BASED_POSTED_INTR : 0);
- 	msrs->pinbased_ctls_high |=
- 		PIN_BASED_ALWAYSON_WITHOUT_TRUE_MSR |
- 		PIN_BASED_VMX_PREEMPTION_TIMER;
---- a/arch/x86/kvm/vmx/nested.h
-+++ b/arch/x86/kvm/vmx/nested.h
-@@ -17,8 +17,7 @@ enum nvmx_vmentry_status {
- };
- 
- void vmx_leave_nested(struct kvm_vcpu *vcpu);
--void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps,
--				bool apicv);
-+void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps);
- void nested_vmx_hardware_unsetup(void);
- __init int nested_vmx_hardware_setup(int (*exit_handlers[])(struct kvm_vcpu *));
- void nested_vmx_vcpu_setup(void);
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -95,7 +95,7 @@ module_param(emulate_invalid_guest_state
- static bool __read_mostly fasteoi = 1;
- module_param(fasteoi, bool, S_IRUGO);
- 
--static bool __read_mostly enable_apicv = 1;
-+bool __read_mostly enable_apicv = 1;
- module_param(enable_apicv, bool, S_IRUGO);
- 
- /*
-@@ -6802,8 +6802,7 @@ static struct kvm_vcpu *vmx_create_vcpu(
- 
- 	if (nested)
- 		nested_vmx_setup_ctls_msrs(&vmx->nested.msrs,
--					   vmx_capability.ept,
--					   kvm_vcpu_apicv_active(&vmx->vcpu));
-+					   vmx_capability.ept);
- 	else
- 		memset(&vmx->nested.msrs, 0, sizeof(vmx->nested.msrs));
- 
-@@ -6885,8 +6884,7 @@ static int __init vmx_check_processor_co
- 	if (setup_vmcs_config(&vmcs_conf, &vmx_cap) < 0)
- 		return -EIO;
- 	if (nested)
--		nested_vmx_setup_ctls_msrs(&vmcs_conf.nested, vmx_cap.ept,
--					   enable_apicv);
-+		nested_vmx_setup_ctls_msrs(&vmcs_conf.nested, vmx_cap.ept);
- 	if (memcmp(&vmcs_config, &vmcs_conf, sizeof(struct vmcs_config)) != 0) {
- 		printk(KERN_ERR "kvm: CPU %d feature inconsistency!\n",
- 				smp_processor_id());
-@@ -7781,7 +7779,7 @@ static __init int hardware_setup(void)
- 
- 	if (nested) {
- 		nested_vmx_setup_ctls_msrs(&vmcs_config.nested,
--					   vmx_capability.ept, enable_apicv);
-+					   vmx_capability.ept);
- 
- 		r = nested_vmx_hardware_setup(kvm_vmx_exit_handlers);
- 		if (r)
+@@ -195,6 +191,7 @@ static int panfrost_perfcnt_disable_lock
+ 	drm_gem_shmem_vunmap(&perfcnt->mapping->obj->base.base, perfcnt->buf);
+ 	perfcnt->buf = NULL;
+ 	panfrost_gem_close(&perfcnt->mapping->obj->base.base, file_priv);
++	panfrost_mmu_as_put(pfdev, perfcnt->mapping->mmu);
+ 	panfrost_gem_mapping_put(perfcnt->mapping);
+ 	perfcnt->mapping = NULL;
+ 	pm_runtime_mark_last_busy(pfdev->dev);
 
 
