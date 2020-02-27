@@ -4,50 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B662DC3F368
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86007C3F35B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89B3B2469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B79A24688
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811372;
-	bh=/5tkRGL7RFRgg+Lxu3NtXFouIi6LPnsmZ5Gf5BgDzf8=;
+	s=default; t=1582811272;
+	bh=Ba+QKGRskXBXvu0aL2I2KaAkS6/2ikohdEhv5jDvwgE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BKTIofYCDMQxGxiD0wlMm8bwedUy5JU3ORubrGjhWyhpTaGK6OezWBnTLVD0s1q2Y
-	 /c5zsKTSNhgk1uSu/50a1B/t0SCTE3/s+8aGz4Ye9zC4RurhCEStAkbdPeM+zfcAYo
-	 aIXPIlFghBRsothE2AUVVK1TfhUn///JpF9AXLuw=
+	b=kFD3QR+LKp4x9wFWrJMkKoa3qZqDPj47zLSA/GUHcQPllziXMt83Vuwkgr2r1ZsJe
+	 3e3h3wRL1d56FrD4TqMO/wEF09e2X3PRlxpG0nMhm5rK9E11W961jxUIyJ7qmFDPPH
+	 wwUGvQQmgj9AtT+Ie95DeRY6VXKZ6VJ3p7brrb+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731046AbgB0Ntb (ORCPT
+        id S1730759AbgB0Nru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:49:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46798 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:47:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730553AbgB0NtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:49:25 -0500
+        id S1730461AbgB0Nrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:47:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0234F20801;
-        Thu, 27 Feb 2020 13:49:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F3BD20801;
+        Thu, 27 Feb 2020 13:47:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811365;
-        bh=/5tkRGL7RFRgg+Lxu3NtXFouIi6LPnsmZ5Gf5BgDzf8=;
+        s=default; t=1582811268;
+        bh=Ba+QKGRskXBXvu0aL2I2KaAkS6/2ikohdEhv5jDvwgE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OpCdutMxG3/XUrWgHrS+4pcCGvxpPfTAawzIbEMdh5PpCOpa1Mz5cjx/1SQseZwyV
-         9RXM5LwuHc/9X9n2D2xtfhn8otExPX3KbHlxKoC8hIqcQgwrXyhOIdOrpFL6mpuH46
-         cIRVcV3PBzdixiMwC5T+NH0JJH+u2kMfmR0ntA9E=
+        b=WLq1ORICLn1HIzGbGPUGcKGqi58Uzubl5gUzI0eFK8hq5gYoDWUuKgRs32g6FIeVa
+         MO3O39vVJh8vPXpqOHKFIazY9rSkEZ+lmQYuwjGfz33X9iPGazX4L+7XI4Gi3w4PJd
+         a21/yMV7JYneR5wXzRVdS2xTRiZ7s1ugYt3wIScc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        stable@vger.kernel.org,
+        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>,
+        Petr Mladek <pmladek@suse.com>, Jiri Olsa <jolsa@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        bpf@vger.kernel.org, netdev@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 104/165] trigger_next should increase position index
-Date:   Thu, 27 Feb 2020 14:36:18 +0100
-Message-Id: <20200227132246.346323372@linuxfoundation.org>
+Subject: [PATCH 4.9 067/165] tools lib api fs: Fix gcc9 stringop-truncation compilation error
+Date:   Thu, 27 Feb 2020 14:35:41 +0100
+Message-Id: <20200227132241.254377714@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -60,60 +70,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Andrey Zhizhikin <andrey.z@gmail.com>
 
-[ Upstream commit 6722b23e7a2ace078344064a9735fb73e554e9ef ]
+[ Upstream commit 6794200fa3c9c3e6759dae099145f23e4310f4f7 ]
 
-if seq_file .next fuction does not change position index,
-read after some lseek can generate unexpected output.
+GCC9 introduced string hardening mechanisms, which exhibits the error
+during fs api compilation:
 
-Without patch:
- # dd bs=30 skip=1 if=/sys/kernel/tracing/events/sched/sched_switch/trigger
- dd: /sys/kernel/tracing/events/sched/sched_switch/trigger: cannot skip to specified offset
- n traceoff snapshot stacktrace enable_event disable_event enable_hist disable_hist hist
- # Available triggers:
- # traceon traceoff snapshot stacktrace enable_event disable_event enable_hist disable_hist hist
- 6+1 records in
- 6+1 records out
- 206 bytes copied, 0.00027916 s, 738 kB/s
+error: '__builtin_strncpy' specified bound 4096 equals destination size
+[-Werror=stringop-truncation]
 
-Notice the printing of "# Available triggers:..." after the line.
+This comes when the length of copy passed to strncpy is is equal to
+destination size, which could potentially lead to buffer overflow.
 
-With the patch:
- # dd bs=30 skip=1 if=/sys/kernel/tracing/events/sched/sched_switch/trigger
- dd: /sys/kernel/tracing/events/sched/sched_switch/trigger: cannot skip to specified offset
- n traceoff snapshot stacktrace enable_event disable_event enable_hist disable_hist hist
- 2+1 records in
- 2+1 records out
- 88 bytes copied, 0.000526867 s, 167 kB/s
+There is a need to mitigate this potential issue by limiting the size of
+destination by 1 and explicitly terminate the destination with NULL.
 
-It only prints the end of the file, and does not restart.
-
-Link: http://lkml.kernel.org/r/3c35ee24-dd3a-8119-9c19-552ed253388a@virtuozzo.com
-
-https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andrii Nakryiko <andriin@fb.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: bpf@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Link: http://lore.kernel.org/lkml/20191211080109.18765-1-andrey.zhizhikin@leica-geosystems.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_events_trigger.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/lib/api/fs/fs.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index 7e6971ba95417..8a88e85c8c615 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -126,9 +126,10 @@ static void *trigger_next(struct seq_file *m, void *t, loff_t *pos)
- {
- 	struct trace_event_file *event_file = event_file_data(m->private);
+diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
+index f99f49e4a31e6..21e714cf0126c 100644
+--- a/tools/lib/api/fs/fs.c
++++ b/tools/lib/api/fs/fs.c
+@@ -194,6 +194,7 @@ static bool fs__env_override(struct fs *fs)
+ 	size_t name_len = strlen(fs->name);
+ 	/* name + "_PATH" + '\0' */
+ 	char upper_name[name_len + 5 + 1];
++
+ 	memcpy(upper_name, fs->name, name_len);
+ 	mem_toupper(upper_name, name_len);
+ 	strcpy(&upper_name[name_len], "_PATH");
+@@ -203,7 +204,8 @@ static bool fs__env_override(struct fs *fs)
+ 		return false;
  
--	if (t == SHOW_AVAILABLE_TRIGGERS)
-+	if (t == SHOW_AVAILABLE_TRIGGERS) {
-+		(*pos)++;
- 		return NULL;
--
-+	}
- 	return seq_list_next(t, &event_file->triggers, pos);
+ 	fs->found = true;
+-	strncpy(fs->path, override_path, sizeof(fs->path));
++	strncpy(fs->path, override_path, sizeof(fs->path) - 1);
++	fs->path[sizeof(fs->path) - 1] = '\0';
+ 	return true;
  }
  
 -- 
