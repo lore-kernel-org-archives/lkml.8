@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6F9C35E0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A718C3F340
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91F3620726
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7F1920578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:42:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582810941;
-	bh=ofwbgNjBWpSvnTCV96oBhMiWdtYCquSy3RtoQ52qE2E=;
+	s=default; t=1582810951;
+	bh=kqobUzNIK0zbxE3SOKiTCuJq60wEzhM2JkGtXbIxiek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h/VgL6La4B6+/XDhMADA8IUvw2wUCIpN+BM+yGqFAG+Y2eux4fO3ZSDvjHXykLpyZ
-	 PgU0bz6eOIiEa2DggmUJo/K+w8EPf0y44uaMv+oEWH9eHzfRfXGhewsUkMimdlSR+j
-	 5yChALVQdJtCmkJMZFUkh+89BC3oIam5RaXqNLVo=
+	b=kuWFsSBAUEjwxTrzq6TwClHFKJaMiS0Hy3DFDUHCeMs224gAcn8Km9kcZOQ9UutSe
+	 RwMW6wGPoWI+lBc+PmYsyo+XYSPZt3zfOfPe0wZTyNXuULr0Opu9v+beJpGpFDrTyW
+	 9JlVxm1omoYFshNLmCR53TThCwD51nuK30ZpqOLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729772AbgB0NmT (ORCPT
+        id S1729789AbgB0Nma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:42:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37268 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:42:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729745AbgB0NmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:42:18 -0500
+        id S1729405AbgB0Nm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:42:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C690321D7E;
-        Thu, 27 Feb 2020 13:42:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B06420726;
+        Thu, 27 Feb 2020 13:42:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582810938;
-        bh=ofwbgNjBWpSvnTCV96oBhMiWdtYCquSy3RtoQ52qE2E=;
+        s=default; t=1582810947;
+        bh=kqobUzNIK0zbxE3SOKiTCuJq60wEzhM2JkGtXbIxiek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m2qkdu2uiyDGKccXD8nKq9bfBeEkYjKShYFZ+9riq4CbL+IcG8nqWk5duaJDMsrct
-         BzLxfPu4bdxpANuid7Jf5LAulsjZ0BIuoo37cvw2IO/gr83Ebg1jayc9yKuaOrTRwl
-         ZgFflTPH6YdtuBJQH3jDiDatveDba/HAXbT1goCo=
+        b=VELWjLah64bOEGfb93o7s5kT2GOWSIDX6QP7XBpdNu6JYZgsYPKUzS81UGoajXprZ
+         gMaiwGMV5ah+JuyPmF17meeOg+j/UPXgW8wakY8w/Q/kZlZ7A2EJGApSzLRpfUeZru
+         yx5Ua0Sm09785nYah9cDpujNQJPhmrkuMhIRrFLM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 053/113] soc/tegra: fuse: Correct straps address for older Tegra124 device trees
-Date:   Thu, 27 Feb 2020 14:36:09 +0100
-Message-Id: <20200227132220.245377514@linuxfoundation.org>
+Subject: [PATCH 4.4 020/113] brcmfmac: Fix use after free in brcmf_sdio_readframes()
+Date:   Thu, 27 Feb 2020 14:35:36 +0100
+Message-Id: <20200227132214.894649720@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
 References: <20200227132211.791484803@linuxfoundation.org>
@@ -60,35 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 2d9ea1934f8ef0dfb862d103389562cc28b4fc03 ]
+[ Upstream commit 216b44000ada87a63891a8214c347e05a4aea8fe ]
 
-Trying to read out Chip ID before APBMISC registers are mapped won't
-succeed, in a result Tegra124 gets a wrong address for the HW straps
-register if machine uses an old outdated device tree.
+The brcmu_pkt_buf_free_skb() function frees "pkt" so it leads to a
+static checker warning:
 
-Fixes: 297c4f3dcbff ("soc/tegra: fuse: Restrict legacy code to 32-bit ARM")
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+    drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c:1974 brcmf_sdio_readframes()
+    error: dereferencing freed memory 'pkt'
+
+It looks like there was supposed to be a continue after we free "pkt".
+
+Fixes: 4754fceeb9a6 ("brcmfmac: streamline SDIO read frame routine")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Franky Lin <franky.lin@broadcom.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/tegra/fuse/tegra-apbmisc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/brcm80211/brcmfmac/sdio.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/soc/tegra/fuse/tegra-apbmisc.c b/drivers/soc/tegra/fuse/tegra-apbmisc.c
-index 5b18f6ffa45c7..cd61c883c19f5 100644
---- a/drivers/soc/tegra/fuse/tegra-apbmisc.c
-+++ b/drivers/soc/tegra/fuse/tegra-apbmisc.c
-@@ -134,7 +134,7 @@ void __init tegra_init_apbmisc(void)
- 			apbmisc.flags = IORESOURCE_MEM;
- 
- 			/* strapping options */
--			if (tegra_get_chip_id() == TEGRA124) {
-+			if (of_machine_is_compatible("nvidia,tegra124")) {
- 				straps.start = 0x7000e864;
- 				straps.end = 0x7000e867;
- 			} else {
+diff --git a/drivers/net/wireless/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/brcm80211/brcmfmac/sdio.c
+index 9954e641c943d..8bb028f740fd8 100644
+--- a/drivers/net/wireless/brcm80211/brcmfmac/sdio.c
++++ b/drivers/net/wireless/brcm80211/brcmfmac/sdio.c
+@@ -2027,6 +2027,7 @@ static uint brcmf_sdio_readframes(struct brcmf_sdio *bus, uint maxframes)
+ 					       BRCMF_SDIO_FT_NORMAL)) {
+ 				rd->len = 0;
+ 				brcmu_pkt_buf_free_skb(pkt);
++				continue;
+ 			}
+ 			bus->sdcnt.rx_readahead_cnt++;
+ 			if (rd->len != roundup(rd_new.len, 16)) {
 -- 
 2.20.1
 
