@@ -2,56 +2,56 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE44C3F34C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A25C5C3F347
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DFF62469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A90A20726
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:43:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811128;
-	bh=myyWVHxMkMorN0tW1/lyVEPf40ZNGixf2jQdXeJdxJ4=;
+	s=default; t=1582811022;
+	bh=IxJhJMPN/OwtHe3aahbDjabfp0JXfPEO+U/lhktaBeA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l/on8IbEDJheosVy/rnbQJEaiPmrGMmJ5s3MfHWZLXYgv9UDdE3zyZCLIFU5efvqo
-	 s1XIAy7pwKhto8Nu53mcjyjT7uUx4YMLDnS15F0K4VNTjFX2op8UZxtqGfr4Fvnnq4
-	 xpyAfenQJSWtM1XDEznQozMM9S688e6Kw+HvYbRI=
+	b=xv88LdAIrZ2LOhxHOzcrJIJGAae1aV4pIiKkfrr1Zes7QtBfzT/cUV86A/C3JerbZ
+	 Xon2O8HvveBIBtpnnuNUbi+CyZr5TSUZbwNW2dYw4fyd6Mu8GSUDD+GxPTGYksAGyS
+	 GFWmnUqruYlgcdamNPlwfIQ2rrUvzOSq+aVH/0ek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730028AbgB0Np1 (ORCPT
+        id S1730009AbgB0Nnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:45:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41280 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:43:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729995AbgB0NpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:45:23 -0500
+        id S1729696AbgB0Nnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:43:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BA1B2469F;
-        Thu, 27 Feb 2020 13:45:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2472A20578;
+        Thu, 27 Feb 2020 13:43:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811122;
-        bh=myyWVHxMkMorN0tW1/lyVEPf40ZNGixf2jQdXeJdxJ4=;
+        s=default; t=1582811016;
+        bh=IxJhJMPN/OwtHe3aahbDjabfp0JXfPEO+U/lhktaBeA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZYy9Wxg67GRkT0nB0JwWboXZ+KXXyZiMT890VL0K5mUshaE9r3UmO9zA9/nHaE3GY
-         teo8NFc7FyteLbwPMy52ZBY4MpXgdTGy84SJ4pRYWD1HaBmmA5LbknR9TQ1gDGqHnl
-         MixqBmlq7tOuz44v39Ppqq3dxlsg2iaweobH3izE=
+        b=0z/gqj+EFMl48p6EZ5LzdvMT59f3W8AatTh8A5a3388dUpFf2iQ/2LcCaci0nsnfU
+         5+1kO9s+tFX2iZ43QdqYbwJZgJ8/8TBljyAyhGGOJP6G8CORU/Ylnnaz7Do3Grj0DP
+         v/LNtsnxmLMJGlKNe5IDAKQGa+aE8b07UIriBWVk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Babu Moger <babu.moger@amd.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.9 012/165] perf/x86/amd: Add missing L2 misses event spec to AMD Family 17hs event map
-Date:   Thu, 27 Feb 2020 14:34:46 +0100
-Message-Id: <20200227132232.858351485@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Chen Zhou <chenzhou10@huawei.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 057/113] ASoC: atmel: fix build error with CONFIG_SND_ATMEL_SOC_DMA=m
+Date:   Thu, 27 Feb 2020 14:36:13 +0100
+Message-Id: <20200227132220.857766155@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
-References: <20200227132230.840899170@linuxfoundation.org>
+In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
+References: <20200227132211.791484803@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,74 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+From: Chen Zhou <chenzhou10@huawei.com>
 
-commit 25d387287cf0330abf2aad761ce6eee67326a355 upstream.
+[ Upstream commit 8fea78029f5e6ed734ae1957bef23cfda1af4354 ]
 
-Commit 3fe3331bb285 ("perf/x86/amd: Add event map for AMD Family 17h"),
-claimed L2 misses were unsupported, due to them not being found in its
-referenced documentation, whose link has now moved [1].
+If CONFIG_SND_ATMEL_SOC_DMA=m, build error:
 
-That old documentation listed PMCx064 unit mask bit 3 as:
+sound/soc/atmel/atmel_ssc_dai.o: In function `atmel_ssc_set_audio':
+(.text+0x7cd): undefined reference to `atmel_pcm_dma_platform_register'
 
-    "LsRdBlkC: LS Read Block C S L X Change to X Miss."
+Function atmel_pcm_dma_platform_register is defined under
+CONFIG SND_ATMEL_SOC_DMA, so select SND_ATMEL_SOC_DMA in
+CONFIG SND_ATMEL_SOC_SSC, same to CONFIG_SND_ATMEL_SOC_PDC.
 
-and bit 0 as:
-
-    "IcFillMiss: IC Fill Miss"
-
-We now have new public documentation [2] with improved descriptions, that
-clearly indicate what events those unit mask bits represent:
-
-Bit 3 now clearly states:
-
-    "LsRdBlkC: Data Cache Req Miss in L2 (all types)"
-
-and bit 0 is:
-
-    "IcFillMiss: Instruction Cache Req Miss in L2."
-
-So we can now add support for L2 misses in perf's genericised events as
-PMCx064 with both the above unit masks.
-
-[1] The commit's original documentation reference, "Processor Programming
-    Reference (PPR) for AMD Family 17h Model 01h, Revision B1 Processors",
-    originally available here:
-
-        https://www.amd.com/system/files/TechDocs/54945_PPR_Family_17h_Models_00h-0Fh.pdf
-
-    is now available here:
-
-        https://developer.amd.com/wordpress/media/2017/11/54945_PPR_Family_17h_Models_00h-0Fh.pdf
-
-[2] "Processor Programming Reference (PPR) for Family 17h Model 31h,
-    Revision B0 Processors", available here:
-
-	https://developer.amd.com/wp-content/resources/55803_0.54-PUB.pdf
-
-Fixes: 3fe3331bb285 ("perf/x86/amd: Add event map for AMD Family 17h")
-Reported-by: Babu Moger <babu.moger@amd.com>
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Tested-by: Babu Moger <babu.moger@amd.com>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200121171232.28839-1-kim.phillips@amd.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Link: https://lore.kernel.org/r/20200113133242.144550-1-chenzhou10@huawei.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/amd/core.c |    1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/atmel/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -239,6 +239,7 @@ static const u64 amd_f17h_perfmon_event_
- 	[PERF_COUNT_HW_CPU_CYCLES]		= 0x0076,
- 	[PERF_COUNT_HW_INSTRUCTIONS]		= 0x00c0,
- 	[PERF_COUNT_HW_CACHE_REFERENCES]	= 0xff60,
-+	[PERF_COUNT_HW_CACHE_MISSES]		= 0x0964,
- 	[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]	= 0x00c2,
- 	[PERF_COUNT_HW_BRANCH_MISSES]		= 0x00c3,
- 	[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND]	= 0x0287,
+diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
+index 2d30464b81cef..d7b471c69f4fb 100644
+--- a/sound/soc/atmel/Kconfig
++++ b/sound/soc/atmel/Kconfig
+@@ -24,6 +24,8 @@ config SND_ATMEL_SOC_DMA
+ 
+ config SND_ATMEL_SOC_SSC_DMA
+ 	tristate
++	select SND_ATMEL_SOC_DMA
++	select SND_ATMEL_SOC_PDC
+ 
+ config SND_ATMEL_SOC_SSC
+ 	tristate
+-- 
+2.20.1
+
 
 
