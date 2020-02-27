@@ -6,131 +6,106 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E48B9C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE54C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAA3524693
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47AC724692
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:55:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="uG/klM/B";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rgxzXkga"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="nLEb1dEC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VLX6OF3r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729070AbgB0MxW (ORCPT
+        id S1729076AbgB0Mzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 07:53:22 -0500
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:37111 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728977AbgB0MxW (ORCPT
+        Thu, 27 Feb 2020 07:55:49 -0500
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:46403 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729036AbgB0Mzt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 07:53:22 -0500
+        Thu, 27 Feb 2020 07:55:49 -0500
 Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id C87BA7B64;
-        Thu, 27 Feb 2020 07:53:20 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Thu, 27 Feb 2020 07:53:20 -0500
+        by mailout.nyi.internal (Postfix) with ESMTP id 60636220C7;
+        Thu, 27 Feb 2020 07:55:48 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Thu, 27 Feb 2020 07:55:48 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=dg1VFIcvLaP5nEziGd8HsDrRTUd
-        L8mTlPmPl1XUFXJE=; b=uG/klM/BtKxPTmdRNYbM/h0HAUCJyd6uIETqfqLgc0h
-        TjAvIbSzalBF5heUpNpFRY7LAOV9HNkBg3OF1nQtSBJ7Vely0EfRvxhrdMtR4bH8
-        5LU6GPiyVr5hEywDLSYcy9Vfj4Fn30239rXRhcI0ICFiN3/le+GNe1sQVgSz4V1q
-        RI6uFABUdqDV2K+ZzFK7T90M2JOrZFBhDY90qckU6HsgAYTVZTLdsk011FgJRE4z
-        YTQu3O/cnjcZC9pxTAWhrqvTCKZq1za6LATLV2GMngczFkXKmsi2BgxarR/KY0uV
-        dB77vZ/e3ieYcfOUTc3EgjqG1llXe51VQaEVpQ71LfQ==
+        :content-type:in-reply-to; s=fm2; bh=EsLh1ElVWcPMN6QEUKEjRZC4EEK
+        YwHmgnVppcHj4F4c=; b=nLEb1dECBO6hZMBDokjWOh2E3TgBmY1oxWqwFTdNXq+
+        d/NWy/0BXqO/W/rfadUWUBVpmdAr4K4Z0PN0z31KtrMAvs1HVa9sacge1dh11o4y
+        dLLIDNCDGNXaNzsGl1Cxnkykk1aXsEfuXQY+2p2gnA0BNbalrQTxfviLREQddWRF
+        +oBJCmKYVIhGp1/rPvd6uxdZ6NdfFvHwTnbXYz6/cnh73Xs4WD17u2UHU4EsxVAj
+        N5kSymrK0qDd8yDPOPBHnDuJDxXA1rBzX/gFLAjRYKDcvD1GaTnosqPQ2OWDhYbo
+        n1B/r5RiZQXJtpaDqnjWf9EHl94NMKk28kLPiorOsjQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=dg1VFI
-        cvLaP5nEziGd8HsDrRTUdL8mTlPmPl1XUFXJE=; b=rgxzXkga6Vz/q8ibvePdKE
-        Q1LaW0dAHbPN75tiF5KgNerBw+BQ7k2Nfituc90tSyPhT41a0MT7dqCgST/I2xFG
-        yRJk3dgI4UngaI+fz6lmrQ9AtmM6N6pKydzrQ9gwmwKJAtI5iNB++FoYlh3k6AOC
-        SoJ70Wm28m57V8nnonWCsBMP5YNL2tJIWgKYqQ2Qzx6cz7xNNQIwyCnOXGOh0gHR
-        qTEB++5skRk8GVWg+qFArs49ztDOPr7C1kNEo+Ky/dGyxiUcOfiPDaeXYbi56eSE
-        Lr/6ULMfdoZP2lbLl8AgwvVhbMLRNOZaUfqMfby2S4DwU3VbY2JnjqOLMnZ5bsOQ
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=EsLh1E
+        lVWcPMN6QEUKEjRZC4EEKYwHmgnVppcHj4F4c=; b=VLX6OF3r+dVjSenAdqsozN
+        efj26IFFopT/I/Uv+dPH1+trEebkWT44ed32Lz35dh8P1DEr5P8YOpp5c/Q4u27X
+        08jZ+FVtXBCvPcyeukNO6CHA4DHoGEjZ+gxGtuvdmYHEBkL3ZEqWimnUZmJMyeRT
+        7kXC0uawYbYEzGiWItsMLaok2/H+UA1xM6B3xuuNKrSbloFsjyXdotwuCxwDopUx
+        zXYMr9unYTdFx2cEZHU1VMyuEXPMeQhyT8VVh3Kcm+5d7tEA2DhQtkJ9C0CPsCab
+        HNtnA6QWFq/JPhtc53DynzW3MRXOLxXtLpqyeg4ny3H461dYHNUc4rwo/FWoRIyg
         ==
-X-ME-Sender: <xms:u7tXXhPmXN-3uOFEGLxT6i8bviXJjba7XPp3Mqomr2-86hzBb-AUtg>
+X-ME-Sender: <xms:UrxXXvS-QYkKD4c-XkJKc8O-fBZ5wbBV2-2kiV2HV-XD87sQ97dWQA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrleeigdegiecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
     ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepmhgrihhl
     fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:u7tXXtR3tAhbApasVu6ORLm8rRDds7FKoh144uLnSOYnDxc5SOvyng>
-    <xmx:u7tXXnhMZY6frqiLbiRBaCfP18PdiQcpyTen05GZux-_yHq6iPBEeA>
-    <xmx:u7tXXu99pcF2nr3Ck4I57eEN8zxtgjvOYl-JVYm9mq7QJhHU59iPGQ>
-    <xmx:wLtXXutVnkivB2V07VUGn2mpjvFovmqwJdRDEr8gpuWWZVSbI_UXMg>
+X-ME-Proxy: <xmx:UrxXXqV9S4DI_kFbZFkDKHzoZU9sTkM1-rjWpSmJPWznUSypm1p1AQ>
+    <xmx:UrxXXgSgrzqsbgRMjYjjhJqIPLy0PaL9BRaTahhDiIriBMNOlfR6Kw>
+    <xmx:UrxXXtv6m8GJrPrBqxFBQMz5kJ-eAkLqjORwfFCXl44kriaspXHbLQ>
+    <xmx:VLxXXvmzBMa2NVri2yVvR2_19kBX13niJkMQCzPeS5JFUmoY4mC3JQ>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 880793280059;
-        Thu, 27 Feb 2020 07:53:15 -0500 (EST)
-Date:   Thu, 27 Feb 2020 13:53:13 +0100
+        by mail.messagingengine.com (Postfix) with ESMTPA id AB4EF3060FD3;
+        Thu, 27 Feb 2020 07:55:46 -0500 (EST)
+Date:   Thu, 27 Feb 2020 13:55:45 +0100
 From:   Maxime Ripard <maxime@cerno.tech>
-To:     Vasily Khoruzhick <anarsoul@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
+To:     Mans Rullgard <mans@mansr.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Torsten Duwe <duwe@suse.de>, Icenowy Zheng <icenowy@aosc.io>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Mark Brown <broonie@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Samuel Holland <samuel@sholland.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 6/6] arm64: allwinner: a64: enable LCD-related
- hardware for Pinebook
-Message-ID: <20200227125313.lvgflcik4ra26m2r@gilmour.lan>
-References: <20200226081011.1347245-1-anarsoul@gmail.com>
- <20200226081011.1347245-7-anarsoul@gmail.com>
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ARM: dts: sunxi: h3/h5: add r_pwm node
+Message-ID: <20200227125545.ynzmwcbs6gqqm4ys@gilmour.lan>
+References: <20200227115526.28075-1-mans@mansr.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3bq54ytukgsvs3eu"
+        protocol="application/pgp-signature"; boundary="7rb5t2q5bd2tfoz6"
 Content-Disposition: inline
-In-Reply-To: <20200226081011.1347245-7-anarsoul@gmail.com>
+In-Reply-To: <20200227115526.28075-1-mans@mansr.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---3bq54ytukgsvs3eu
+--7rb5t2q5bd2tfoz6
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Feb 26, 2020 at 12:10:11AM -0800, Vasily Khoruzhick wrote:
-> From: Icenowy Zheng <icenowy@aosc.io>
+On Thu, Feb 27, 2020 at 11:55:26AM +0000, Mans Rullgard wrote:
+> There is a second PWM unit available in the PL I/O block.
+> Add a node and pinmux definition for it.
 >
-> Pinebook has an ANX6345 bridge connected to the RGB666 LCD output and
-> eDP panel input. The bridge is controlled via I2C that's connected to
-> R_I2C bus.
->
-> Enable all this hardware in device tree.
->
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> Signed-off-by: Mans Rullgard <mans@mansr.com>
 
-Applied the 6 patches, thanks!
+Applied, thanks!
 Maxime
 
---3bq54ytukgsvs3eu
+--7rb5t2q5bd2tfoz6
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXle7uQAKCRDj7w1vZxhR
-xaczAPoC3ALs6FJiOTdBAkkgLMLeU5xSuyL54sh1Q4tkALRViwEA+VH+kLki+xAR
-3WxVIhBlXQvrAtrSbtL5C0Md5xmCsQo=
-=WsJg
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXle8UAAKCRDj7w1vZxhR
+xcTXAQDy5uVx/AsVCJdyv0LVkS82AGvP61hYpI7z6iB/82Ar4gD+PmcwHsBHmKWW
+INLYhHsvJkK7fO13YhEWs9ZcqYlRdg8=
+=01S8
 -----END PGP SIGNATURE-----
 
---3bq54ytukgsvs3eu--
+--7rb5t2q5bd2tfoz6--
