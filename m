@@ -2,147 +2,125 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2ECC4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CE8C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE2B124679
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA9FE21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:23:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pXyc8L3H"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DcZrrui0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbgB0FVY (ORCPT
+        id S1726418AbgB0FXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 00:21:24 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:61636 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725805AbgB0FVY (ORCPT
+        Thu, 27 Feb 2020 00:23:34 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:51936 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbgB0FXe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 00:21:24 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582780883; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=t8Ea0LADZk1wnK/+O/yGmvW5QkFUuGDPbqlcT4bc3ss=; b=pXyc8L3HcdPfma/F6SMPHgfeQpaG8j6rc9YKytkldf2pyrbXoGzc3Mfgm3MLOmMXWNTw/i+7
- WD782EtHY33PvTn/oCjTqwtCHwLHaWh9Rw2iPwo6Dtr7MXWpPkmDmsKHs4EyuBAHGlrz+sgY
- 2TlualR25FfFEhZczPczXJaiHEQ=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e5751d0.7f0e230ef880-smtp-out-n03;
- Thu, 27 Feb 2020 05:21:20 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 55F9EC4479C; Thu, 27 Feb 2020 05:21:19 +0000 (UTC)
-Received: from [10.206.13.37] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 94DE9C43383;
-        Thu, 27 Feb 2020 05:21:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 94DE9C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v7 3/3] soc: qcom: rpmh: Invoke rpmh_flush for dirty
- caches
-To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org
-References: <1582694833-9407-1-git-send-email-mkshah@codeaurora.org>
- <1582694833-9407-4-git-send-email-mkshah@codeaurora.org>
- <158275738312.177367.16582562675135073777@swboyd.mtv.corp.google.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <337a55cd-639f-ace5-47fd-ef837be94ac1@codeaurora.org>
-Date:   Thu, 27 Feb 2020 10:51:13 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 27 Feb 2020 00:23:34 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01R5NOYs051937;
+        Wed, 26 Feb 2020 23:23:24 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582781004;
+        bh=aueWvRhnsk1j4ISudSz1dpXEuMjP+6yX/doVizEUsGg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=DcZrrui05UVXJhq5ttuBOdcJZ9V4MUo4NNbW1abN3yUPkazQZ2qn1vJllgNJzaext
+         PyvSw+z5faVoajMlOAyg7iVQTTBb2z2nc8VjEVyS6iwzdCyMc+ZzPRvKfEc0KMc95P
+         KRFnHL0DsNMWYgfNgl8FY9XQNTuTURnfzFAeOojI=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01R5NOXH043480;
+        Wed, 26 Feb 2020 23:23:24 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 26
+ Feb 2020 23:23:24 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 26 Feb 2020 23:23:24 -0600
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01R5NJV0001472;
+        Wed, 26 Feb 2020 23:23:21 -0600
+Subject: Re: [PATCH v10 1/2] dt-bindings: spi: Add schema for Cadence QSPI
+ Controller driver
+To:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        <simon.k.r.goldschmidt@gmail.com>,
+        Dinh Nguyen <dinguyen@kernel.org>, <tien.fong.chee@intel.com>,
+        =?UTF-8?Q?Marek_Va=c5=a1ut?= <marex@denx.de>,
+        <cheol.yong.kim@intel.com>, <qi-ming.wu@intel.com>
+References: <20200219022852.28065-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200219022852.28065-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <CAL_JsqKJky=y4nhECUFVzTYvEpjFoOH_6UY9uZG5bvBVWq=SYQ@mail.gmail.com>
+ <64b7ab12-0c11-df25-95e7-ee62227ec7ec@linux.intel.com>
+ <85178128-4906-8b1a-e3f1-ab7a36ff8c23@ti.com>
+ <c119a70d-b7ef-ab1b-4590-7ac77395297f@linux.intel.com>
+ <8c329860-84fd-463b-782f-83a788998878@ti.com>
+ <98c90f35-297b-a13c-61ad-ce7a7f1d650f@linux.intel.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <22bb0c6c-db03-dee5-eccf-84b00216308f@ti.com>
+Date:   Thu, 27 Feb 2020 10:53:58 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <158275738312.177367.16582562675135073777@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+In-Reply-To: <98c90f35-297b-a13c-61ad-ce7a7f1d650f@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2/27/2020 4:19 AM, Stephen Boyd wrote:
-> Quoting Maulik Shah (2020-02-25 21:27:13)
->> Add changes to invoke rpmh flush when the data in cache is dirty.
+
+On 26/02/20 7:02 am, Ramuthevar, Vadivel MuruganX wrote:
+> Hi,
+> 
+> On 25/2/2020 7:00 PM, Vignesh Raghavendra wrote:
 >>
->> This is done only if OSI is not supported in PSCI. If OSI is supported
->> rpmh_flush can get invoked when the last cpu going to power collapse
-> Please write rpmh_flush() so we know it's a function and not a variable.
-Done. Will update in v8.
->> deepest low power mode.
->>
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
->> Reviewed-by: Srinivas Rao L <lsrao@codeaurora.org>
->> ---
->>   drivers/soc/qcom/rpmh.c | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
->> index 83ba4e0..839af8d 100644
->> --- a/drivers/soc/qcom/rpmh.c
->> +++ b/drivers/soc/qcom/rpmh.c
->> @@ -12,6 +12,7 @@
->>   #include <linux/module.h>
->>   #include <linux/of.h>
->>   #include <linux/platform_device.h>
->> +#include <linux/psci.h>
->>   #include <linux/slab.h>
->>   #include <linux/spinlock.h>
->>   #include <linux/types.h>
->> @@ -163,6 +164,9 @@ static struct cache_req *cache_rpm_request(struct rpmh_ctrlr *ctrlr,
->>   unlock:
->>          spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
->>   
->> +       if (ctrlr->dirty && !psci_has_osi_support())
-> Can we introduce a stub function for psci_has_osi_support() when
-> CONFIG_ARM_PSCI_FW=n? This driver currently has:
->
->    config QCOM_RPMH
->          bool "Qualcomm RPM-Hardened (RPMH) Communication"
-> 	depends on ARCH_QCOM && ARM64 || COMPILE_TEST
->
->
-> which implies that this will break build testing once built on something
-> that isn't arm64.
->
-Thanks for pointing this, i think its better to remove COMPILE_TEST so 
-driver only
+>> On 25/02/20 1:08 pm, Ramuthevar, Vadivel MuruganX wrote:
+>>>>>>> +
+>>>>>>> +  cdns,fifo-depth:
+>>>>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>>>>>> +    description:
+>>>>>>> +      Size of the data FIFO in words.
+>>>>>> A 4GB fifo is valid? Add some constraints.
+>>>>> 128 is valid, will update.
+>>>> Nope, the width of this field is 8bits -> 256 bytes
+>>> correct me if I am wrong, the width of this field is 4bits -> 128 bytes
+>>> (based on QUAD mode) .
+>> This has nothing to do with quad-mode. Its about how much SRAM amount of
+>> SRAM is present to buffer INDAC mode data. For TI platforms this is 256
+>> bytes.
+>> See CQSPI_REG_SRAMPARTITION definition in your datasheet.
+> Agreed, Thanks!
+> Yes , I have gone through it , Intel and Altera SoC's SRAM(act as
+> FIFO)size is 128 bytes and TI has 256 .
+> BTW old legacy DT binding mentioned size is 128, as per your earlier
+> suggestion you have mention that
+> keep the contents from old dt bindings as it is, so shall I keep 128/256?
 
-gets build for arm64.
+Old bindings does not impose a restriction that this needs to be 128
+bytes always (Its just the example that shows this property to be set to
+128)
 
->> +               return rpmh_flush(ctrlr) ? ERR_PTR(-EINVAL) : req;
->> +
->>          return req;
->>   }
->>   
->> @@ -391,6 +395,8 @@ int rpmh_write_batch(const struct device *dev, enum rpmh_state state,
->>   
->>          if (state != RPMH_ACTIVE_ONLY_STATE) {
->>                  cache_batch(ctrlr, req);
->> +               if (!psci_has_osi_support())
->> +                       return rpmh_flush(ctrlr);
-> While the diff is small it is also sad that we turn around after adding
-> it to a list and immediately take it off the list and send it. Can't we
-> do this without having to do the list add/remove dance?
+What Rob is asking for is to add range of values that is valid for this
+field and not single value. So, both 128 and 256 bytes should be allowed
+as valid values for this property.
 
-No, we need to keep it in list, the target supporting OSI will get it 
-off list only when last cpu
 
-enters deepest idle mode.
-
->
->>                  return 0;
->>          }
->>
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Regards
+Vignesh
