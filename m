@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DA4C3F360
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E1AC3F345
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7C4F21556
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E06624656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812101;
-	bh=84P7LOnb432KwSHWPvfHLK1I2ZqwuRIAfRl+Rq2As2s=;
+	s=default; t=1582812100;
+	bh=Io3aWZEz1UDH7fTg9uqpgdeXUzXUiI6+7VhBZmy2uDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P+nuOhHDWStqxMiZYht+zuDV+scz89D8PaJH0dXD0Q/K/1tiJiYaA1+BPhFLswKwK
-	 bPVkkgYZRhLA55AArWP1Ht7svciSXD/bHEVKtQTr2eRB1pFyyWForiVRlRszf4rG1f
-	 nkuL3AsbHkr+l6Bm7b1nFOzAqCD6lIh8WZ1F3uf0=
+	b=vgYWTZ/2AtuaMfsS/83Aa1fC3F1lOEitWuN+QvAgmB3yV/SkmuhqgxHzAofOd1BNo
+	 jVTIw3IivkLLQxsnPyAltaI5VE80gGmonY+UPqTIz7BOZw0BWAKxx/Ry1mXEwFl7AG
+	 KZGBTvVAld/bXvqj0ZZ9a2Qu85tx4hsFB1A90klA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732594AbgB0OBk (ORCPT
+        id S1732725AbgB0OBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:01:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35796 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732650AbgB0OBi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Feb 2020 09:01:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35712 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732948AbgB0OBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:01:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD3A120578;
-        Thu, 27 Feb 2020 14:01:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE8BC246AC;
+        Thu, 27 Feb 2020 14:01:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812098;
-        bh=84P7LOnb432KwSHWPvfHLK1I2ZqwuRIAfRl+Rq2As2s=;
+        s=default; t=1582812095;
+        bh=Io3aWZEz1UDH7fTg9uqpgdeXUzXUiI6+7VhBZmy2uDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zh9oU3eBpQfDKeIrWOjYwWx3YIdjkfnMP/hWLSPrhmefB0043P6gYW/mCqwOoZfTp
-         NJysi2SfPQSXgP4rGilE8aanKlOq4cyFAbJDF0k5vFSjtg4ZEEkBPaCiofV4qN+nQI
-         hqar1LkMFlw8MDHfcoGaQLdyDz4McEHHTM2Lr85M=
+        b=H6pOZM3CRQpEWau2IsAfEaMG0UkEtsV9jNVGbycmyxYkybMQ0CDvVTbjVLx9vYXYW
+         BcxMjMeh2UVcYYmVQnm9+oWRM8kE98N7Jt2/00gVIK9peRq8NE7Ep7PXuyOB12PiWj
+         gQ6wXS9iF3DwaMWYpUm5zg+ME2Vtkob2M3MF4xxc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Nikolay Borisov <nborisov@suse.com>, Qu Wenruo <wqu@suse.com>,
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
         Josef Bacik <josef@toxicpanda.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 221/237] btrfs: do not check delayed items are empty for single transaction cleanup
-Date:   Thu, 27 Feb 2020 14:37:15 +0100
-Message-Id: <20200227132312.407218187@linuxfoundation.org>
+Subject: [PATCH 4.14 220/237] btrfs: fix bytes_may_use underflow in prealloc error condtition
+Date:   Thu, 27 Feb 2020 14:37:14 +0100
+Message-Id: <20200227132312.338856956@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -64,20 +62,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Josef Bacik <josef@toxicpanda.com>
 
-commit 1e90315149f3fe148e114a5de86f0196d1c21fa5 upstream.
+commit b778cf962d71a0e737923d55d0432f3bd287258e upstream.
 
-btrfs_assert_delayed_root_empty() will check if the delayed root is
-completely empty, but this is a filesystem-wide check.  On cleanup we
-may have allowed other transactions to begin, for whatever reason, and
-thus the delayed root is not empty.
+I hit the following warning while running my error injection stress
+testing:
 
-So remove this check from cleanup_one_transation().  This however can
-stay in btrfs_cleanup_transaction(), because it checks only after all of
-the transactions have been properly cleaned up, and thus is valid.
+  WARNING: CPU: 3 PID: 1453 at fs/btrfs/space-info.h:108 btrfs_free_reserved_data_space_noquota+0xfd/0x160 [btrfs]
+  RIP: 0010:btrfs_free_reserved_data_space_noquota+0xfd/0x160 [btrfs]
+  Call Trace:
+  btrfs_free_reserved_data_space+0x4f/0x70 [btrfs]
+  __btrfs_prealloc_file_range+0x378/0x470 [btrfs]
+  elfcorehdr_read+0x40/0x40
+  ? elfcorehdr_read+0x40/0x40
+  ? btrfs_commit_transaction+0xca/0xa50 [btrfs]
+  ? dput+0xb4/0x2a0
+  ? btrfs_log_dentry_safe+0x55/0x70 [btrfs]
+  ? btrfs_sync_file+0x30e/0x420 [btrfs]
+  ? do_fsync+0x38/0x70
+  ? __x64_sys_fdatasync+0x13/0x20
+  ? do_syscall_64+0x5b/0x1b0
+  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+This happens if we fail to insert our reserved file extent.  At this
+point we've already converted our reservation from ->bytes_may_use to
+->bytes_reserved.  However once we break we will attempt to free
+everything from [cur_offset, end] from ->bytes_may_use, but our extent
+reservation will overlap part of this.
+
+Fix this problem by adding ins.offset (our extent allocation size) to
+cur_offset so we remove the actual remaining part from ->bytes_may_use.
+
+I validated this fix using my inject-error.py script
+
+python inject-error.py -o should_fail_bio -t cache_save_setup -t \
+	__btrfs_prealloc_file_range \
+	-t insert_reserved_file_extent.constprop.0 \
+	-r "-5" ./run-fsstress.sh
+
+where run-fsstress.sh simply mounts and runs fsstress on a disk.
 
 CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
 Reviewed-by: Qu Wenruo <wqu@suse.com>
 Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 Reviewed-by: David Sterba <dsterba@suse.com>
@@ -85,18 +109,47 @@ Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/disk-io.c |    1 -
- 1 file changed, 1 deletion(-)
+ fs/btrfs/inode.c |   16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -4394,7 +4394,6 @@ void btrfs_cleanup_one_transaction(struc
- 	wake_up(&fs_info->transaction_wait);
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -10639,6 +10639,7 @@ static int __btrfs_prealloc_file_range(s
+ 	struct btrfs_root *root = BTRFS_I(inode)->root;
+ 	struct btrfs_key ins;
+ 	u64 cur_offset = start;
++	u64 clear_offset = start;
+ 	u64 i_size;
+ 	u64 cur_bytes;
+ 	u64 last_alloc = (u64)-1;
+@@ -10673,6 +10674,15 @@ static int __btrfs_prealloc_file_range(s
+ 				btrfs_end_transaction(trans);
+ 			break;
+ 		}
++
++		/*
++		 * We've reserved this space, and thus converted it from
++		 * ->bytes_may_use to ->bytes_reserved.  Any error that happens
++		 * from here on out we will only need to clear our reservation
++		 * for the remaining unreserved area, so advance our
++		 * clear_offset by our extent size.
++		 */
++		clear_offset += ins.offset;
+ 		btrfs_dec_block_group_reservations(fs_info, ins.objectid);
  
- 	btrfs_destroy_delayed_inodes(fs_info);
--	btrfs_assert_delayed_root_empty(fs_info);
+ 		last_alloc = ins.offset;
+@@ -10753,9 +10763,9 @@ next:
+ 		if (own_trans)
+ 			btrfs_end_transaction(trans);
+ 	}
+-	if (cur_offset < end)
+-		btrfs_free_reserved_data_space(inode, NULL, cur_offset,
+-			end - cur_offset + 1);
++	if (clear_offset < end)
++		btrfs_free_reserved_data_space(inode, NULL, clear_offset,
++			end - clear_offset + 1);
+ 	return ret;
+ }
  
- 	btrfs_destroy_marked_extents(fs_info, &cur_trans->dirty_pages,
- 				     EXTENT_DIRTY);
 
 
