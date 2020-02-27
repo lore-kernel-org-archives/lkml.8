@@ -2,124 +2,153 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEBFDC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C14C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96BF524656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:45:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 381852468F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:45:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VQBU8iu2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="maOSf5TO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731468AbgB0OpZ (ORCPT
+        id S1730538AbgB0Nqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:45:25 -0500
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:46003 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731148AbgB0OpX (ORCPT
+        Thu, 27 Feb 2020 08:46:35 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:40814 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730514AbgB0Nq3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:45:23 -0500
-Received: by mail-vs1-f65.google.com with SMTP id m4so1953174vsa.12
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 06:45:22 -0800 (PST)
+        Thu, 27 Feb 2020 08:46:29 -0500
+Received: by mail-qk1-f196.google.com with SMTP id m2so3114348qka.7
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 05:46:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=uIt9DyZ9nPgtt+YVHDl4cWP+F6uXmWHM0NievYA3/mQ=;
-        b=VQBU8iu2uCPmMFA6ZKYuIFOaqxlIebNshhGY19HbX6TJSpWpKgmpqa+OiCriOvOtfU
-         SURggXzLsOrJPCaj2ZcunCf16QRKxHwV+Tln/q+jGedzB6sCrBuhKpDYKEMg60GJWWMK
-         lMR1htPczf5Po2JHrIdWjlWPXyunGfIE0XuEU0NbogWA9f50GQK7Q6rxJWyoq6XXTFpR
-         rtG323NNbZowjcYgEr8VNhaRP1Ml4MBs1jk546H6xPLSyU4wF883j7mE9+h51e1Hjl7h
-         6ZdSg6VS9SDba70F7hxyUJZGRa0WA/PbzdcftGgzs0iJkWdF5j8GuiPhpb8sAjPaK7yM
-         zATA==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=MNKG4+F+LTFwpzpyT4+p3VzII4Y7Yin7L8vMm6TuNbw=;
+        b=maOSf5TOiNL1jUWavOPbZlor+ttx5R8cCBG00EGM+fvyjeh/hhhD+/1DSlj/eYNsWK
+         WVpUc8Gnhyw9KLH0S4KS9NQTS574W5iLNgyBfk5UeMQxVUntv8VpJIljeIKxrhDC69K6
+         VMzj+fJiWy4OPLtTIEBUqxTp18PMMgiceIjIIh1PBdlsse8e6tipJqBeFpt6064bFygX
+         C5GeFgq+8rTsbexcZHFXb8O/OBND9+di5yo/8NQukf2628xEuipl5eI/ARRBBAYZbc7p
+         tG0deKD8A594XAYjujjDIqN3ULVWJkvsEt+jsJxuoiXtYDQAgZHE0nPUTFJbvtGn9h9I
+         KE1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=uIt9DyZ9nPgtt+YVHDl4cWP+F6uXmWHM0NievYA3/mQ=;
-        b=fr2tIdIjwHv2HOHS/h40U5V1ERENk2Aw8jTrEAtS14hXtipHgTo0pxKvQEVY4FF+RI
-         1C0CkvUPMHQbkm4ug1cPug2Zbf7zz8+pmRXMZ2tj5LTn4xRwLQvL26My8YuIv1Ua+edL
-         +lnAc9HEki9rOVDsiY11tgH9cLRTh26+MOTm6t6smz3aO7tPv6nRqkDYRtYhd8P3od2W
-         SSE3uiO4fsqT9f07UnBGptkUycQjvCXSyPZgiOWBSkT/spLyfLk8x+ZZxrFWwOdkaNeg
-         cWYITXirZL3h1Q1fzDjrdjB0h91q/WUfGjIVIE4fdrDd3CPhDaGRTY80L9jPQ42/OQtI
-         zruA==
-X-Gm-Message-State: APjAAAXxx+OYKhaSb28IwF4FXiqKdtkVyb8lWJaAM6Jd6OgPAsqN2t8s
-        GoE4otr4jXsteaLF1/CnWTgp5gV6hlJLnPLudN0OVw==
-X-Google-Smtp-Source: APXvYqx24Fufs8kygldW8udN7qzYKu0xpi9B+mGtQ5uymR1YOJw2PzRkveUvacDSqSxOOr5eo6UFeHhjaqb2/JA/bRg=
-X-Received: by 2002:a67:f318:: with SMTP id p24mr2792811vsf.240.1582814722123;
- Thu, 27 Feb 2020 06:45:22 -0800 (PST)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MNKG4+F+LTFwpzpyT4+p3VzII4Y7Yin7L8vMm6TuNbw=;
+        b=I/WFSYVTQiGuiar5LEMI0g5CW3qCS1fxY6cUM2jLsei5M/rhdhUEdvyv2ASadkrLl3
+         IzXFfsdTG1tdE/wd2LN+pRIrN/lp8DA3qcRA5TdT6PAPbJ1glRpIm0zzk0JVKH5sMY8C
+         L3N9UUq6j0QFbFNlwlRttjHsBstP5eNO1sCKMG0gTaxf1C1ptODwnlssJm4mKp9zblux
+         XWy/QcHJFc4P7YCVgFXvwwpMQrJgXtJaoJo7k1X4kBWfAWpowMdjf+BUo1bAxdhHwyUd
+         7DAklAeL1/0VNA6+rUcCylRvs3/iq/BmcG1QsmUyFLU+x6FDswVJEG1ZILlUalzqN5/3
+         FayA==
+X-Gm-Message-State: APjAAAVl5K+jjy1jqMZexOvcmb6g0M2oaJAo8wULCUSGEOyOCTA7h9Uu
+        fP3Ba5FjMujAuMnstSkiLKz6wMrI0vg=
+X-Google-Smtp-Source: APXvYqwTXYO/dGTkYStT+f8k8DCyX8/tZWe8TV+b8BPI+P1ZHK+GNkivO4qRMgToUEjiu63WEqhEXg==
+X-Received: by 2002:a37:6c9:: with SMTP id 192mr5356300qkg.25.1582811188307;
+        Thu, 27 Feb 2020 05:46:28 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id v82sm3129067qka.51.2020.02.27.05.46.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 05:46:27 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id B8485403AD; Thu, 27 Feb 2020 10:46:25 -0300 (-03)
+Date:   Thu, 27 Feb 2020 10:46:25 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>
+Subject: Re: [PATCHv2 0/5] perf expr: Add flex scanner
+Message-ID: <20200227134625.GC10761@kernel.org>
+References: <20200224082918.58489-1-jolsa@kernel.org>
+ <20200227121000.GE34774@krava>
 MIME-Version: 1.0
-References: <20200227024301.217042-1-trishalfonso@google.com> <20200227024301.217042-2-trishalfonso@google.com>
-In-Reply-To: <20200227024301.217042-2-trishalfonso@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 27 Feb 2020 15:45:10 +0100
-Message-ID: <CACT4Y+b0LHp15GNchK_TPxaqX8zscqgBw-Jm2Y3yq8Bn=dRbeQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/2] KUnit: KASAN Integration
-To:     Patricia Alfonso <trishalfonso@google.com>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        David Gow <davidgow@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>, vincent.guittot@linaro.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227121000.GE34774@krava>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 3:44 AM 'Patricia Alfonso' via kasan-dev
-<kasan-dev@googlegroups.com> wrote:
->
-> Integrate KASAN into KUnit testing framework.
->  - Fail tests when KASAN reports an error that is not expected
->  - Use KUNIT_EXPECT_KASAN_FAIL to expect a KASAN error in KASAN tests
->  - KUnit struct added to current task to keep track of the current test
-> from KASAN code
->  - Booleans representing if a KASAN report is expected and if a KASAN
->  report is found added to kunit struct
->  - This prints "line# has passed" or "line# has failed"
->
-> Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
+Em Thu, Feb 27, 2020 at 01:10:00PM +0100, Jiri Olsa escreveu:
+> On Mon, Feb 24, 2020 at 09:29:13AM +0100, Jiri Olsa wrote:
+> > hi,
+> > while preparing changes for user defined metric expressions
+> > I also moved the expression manual parser to flex.
+> > 
+> > The reason is to have an easy and reasonable way to support
+> > and parse multiple user-defined metric expressions from
+> > command line or file.
+> > 
+> > I was posponing the change, but I just saw another update to
+> > the expr manual scanner (from Kajol Jain), so cherry picked
+> > just the expr flex code changes to get it out.
+> > 
+> > Kajol Jain,
+> > I think it should ease up your change for unknown values marked
+> > by '?'. Would you consider rebasing your changes on top of this?
+> > 
+> > 
+> 
+> kajoljain found and issue in this one, I'll send v3 as
+> soon as he confirms the fix
 
-This does not build for me:
+Ok, I'll hold off processing those patches then, thanks!
 
-$ make
-scripts/kconfig/conf  --syncconfig Kconfig
-  CC      arch/x86/kernel/asm-offsets.s
-  UPD     include/generated/asm-offsets.h
-  CALL    scripts/checksyscalls.sh
-  CALL    scripts/atomic/check-atomics.sh
-  DESCEND  objtool
-  CC      init/main.o
-In file included from ./include/linux/uaccess.h:11,
-                 from ./arch/x86/include/asm/fpu/xstate.h:5,
-                 from ./arch/x86/include/asm/pgtable.h:26,
-                 from ./include/linux/kasan.h:15,
-                 from ./include/linux/slab.h:136,
-                 from ./include/kunit/test.h:16,
-                 from ./include/linux/sched.h:35,
-                 from ./include/linux/ioprio.h:5,
-                 from ./include/linux/fs.h:39,
-                 from ./include/linux/proc_fs.h:9,
-                 from init/main.c:18:
-./arch/x86/include/asm/uaccess.h: In function =E2=80=98set_fs=E2=80=99:
-./arch/x86/include/asm/uaccess.h:31:9: error: dereferencing pointer to
-incomplete type =E2=80=98struct task_struct=E2=80=99
-   31 |  current->thread.addr_limit =3D fs;
-      |         ^~
-make[1]: *** [scripts/Makefile.build:268: init/main.o] Error 1
-make: *** [Makefile:1681: init] Error 2
+- Arnaldo
+ 
+> jirka
+> 
+> 
+> > v2 changes:
+> >   - handle special chars properly
+> >   - fix return value for expr__parse
+> > 
+> > Available also in:
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+> >   perf/metric_flex
+> > 
+> > thanks,
+> > jirka
+> > 
+> > 
+> > ---
+> > Jiri Olsa (5):
+> >       perf expr: Add expr.c object
+> >       perf expr: Move expr lexer to flex
+> >       perf expr: Increase EXPR_MAX_OTHER
+> >       perf expr: Straighten expr__parse/expr__find_other interface
+> >       perf expr: Make expr__parse return -1 on error
+> > 
+> >  tools/perf/tests/expr.c       |  10 +++---
+> >  tools/perf/util/Build         |  11 ++++++-
+> >  tools/perf/util/expr.c        | 112 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+> >  tools/perf/util/expr.h        |   8 ++---
+> >  tools/perf/util/expr.l        |  87 +++++++++++++++++++++++++++++++++++++++++++++++++++
+> >  tools/perf/util/expr.y        | 208 ++++++++++++++++++++++++++++++++-----------------------------------------------------------------------------------------
+> >  tools/perf/util/stat-shadow.c |   4 +--
+> >  7 files changed, 272 insertions(+), 168 deletions(-)
+> >  create mode 100644 tools/perf/util/expr.c
+> >  create mode 100644 tools/perf/util/expr.l
+> > 
+> 
 
+-- 
 
-On bfdc6d91a25f4545bcd1b12e3219af4838142ef1 config:
-https://pastebin.com/raw/nwnL2N9w
+- Arnaldo
