@@ -2,162 +2,166 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B10EC3F34E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C991C3F341
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D715A24656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:44:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XuBVxWyk"
+	by mail.kernel.org (Postfix) with ESMTP id 1109D20726
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:44:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582811052;
+	bh=NG2CI7B/0dBISTfrzKSHkfKcc9wqPNU+xtGN6LMC+qI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VuDJunpIJytZ7Y/jBYg4+iLENKEyQu83ggFhk/3LlbVI3iK0EYtn6JsHLR1BqqEx1
+	 ih8VjviirDuLgT7GjPKGxbdco8oOmN5wRxxfWr4I/meZStUrTNjNRGUIuTleaa1cCm
+	 T4KDoLe59DQtUjCdB5NDF8OqB9v8s0sopBw4bE8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730133AbgB0NoF (ORCPT
+        id S1730157AbgB0NoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:44:05 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:46598 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730082AbgB0Nn5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:43:57 -0500
-Received: by mail-qt1-f196.google.com with SMTP id i14so2231034qtv.13
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 05:43:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Jys7Gbail/zgLiwqIBiO/p0dxCFqFpihM2t+GeeAp1g=;
-        b=XuBVxWyk5pATRPOLJKW8C0BAZtupQu6Cp5Uu375u1kh7JcL9ubmJQqIKWsPK+VcFzI
-         OCZfMLf5c3Ca76chbIE7+t2TbqIPRpWD+tAH6dhM+4Z91uFHWA1tTCi1CfEJ/1fELDCL
-         98gBOsoAGQUUKd1GCdp3nrzf3GQRdy5HLVN4X5Ll6XVAVrCRDrkQfXu/KuJcMzjeWgdq
-         66hu6pPajMpxDEUiyIXXaplTFkaOecUJpVtOz86fhOtclANh4ESeY3mZKBCSz+lQTT3M
-         ItJ/ZyMCS/xp4i/hwRjWJ7V7kJq5ZtGCMZ4pNvEt0YLNJSj/2gI1/5SYivQVGTtmbpBZ
-         WtWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Jys7Gbail/zgLiwqIBiO/p0dxCFqFpihM2t+GeeAp1g=;
-        b=q7kxUfSY72OFIpnLggfmH/+59ERHnJ/32qMcWX3nN5uwoyKf8n/V+KcsIKFr4iQJcw
-         WxFp9kTupEIelAKwzukHuk3pF1rXPnxxEmJMy1AqFp7AbJrcomdUn6qxK9JNfecjZ8al
-         elJcwH2Ps39ZOlyYrY0M+NE2q5csUVrpGbwk7YJ6nOWoVwXchvVeGWk3NQIed0q1INQH
-         a01CRucJ0PXHGo4H3kWilFs70vy4bu+AHIlk47odt1v0LqwtZd5dzXr5tEZotGjfsVJl
-         jrTnw3+KiT/U6OZesZRNXnOg2EzgJnVAEGJ0m6WeMj8q8v5u1o0MdY+TXj9ELdCbqyQ7
-         UvTQ==
-X-Gm-Message-State: APjAAAWaazpp0RxC+H6bYVMHzAsfM/teLPxOMWjD0CcJOzFUIRsD7UrI
-        dTKXos2uVJtK3BLToKqmtSY=
-X-Google-Smtp-Source: APXvYqzjeJpCG3nDwSfUL+wIfkaFeqy1WGsg3GMCO1vZKso83jGAejz9yEOnG+WNLMLINPOdF3Oy2w==
-X-Received: by 2002:aed:29a4:: with SMTP id o33mr4749739qtd.316.1582811036068;
-        Thu, 27 Feb 2020 05:43:56 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id 17sm464665qkc.81.2020.02.27.05.43.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 05:43:55 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 9E9CA403AD; Thu, 27 Feb 2020 10:43:53 -0300 (-03)
-Date:   Thu, 27 Feb 2020 10:43:53 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        xieyisheng1@huawei.com, alexey.budankov@linux.intel.com,
-        treeze.taeung@gmail.com, adrian.hunter@intel.com,
-        tmricht@linux.ibm.com, namhyung@kernel.org, irogers@google.com,
-        songliubraving@fb.com, yao.jin@linux.intel.com,
-        changbin.du@intel.com, leo.yan@linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/8] perf annotate/config: More fixes
-Message-ID: <20200227134353.GB10761@kernel.org>
-References: <20200213064306.160480-1-ravi.bangoria@linux.ibm.com>
- <20200216211549.GA157041@krava>
- <20200227130846.GA9899@kernel.org>
- <20200227131648.GF34774@krava>
+        Thu, 27 Feb 2020 08:44:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39576 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730146AbgB0NoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:44:08 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C42F24656;
+        Thu, 27 Feb 2020 13:44:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582811047;
+        bh=NG2CI7B/0dBISTfrzKSHkfKcc9wqPNU+xtGN6LMC+qI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=d/Y+aPy3lDKpJD+HGeONhRbDeMoRAMb24E2iTRtAvAuPPCu8mnKBrPz1MjrIXdkGh
+         tFVVssIA3TqFr7tADDtC28yddrA6eSdnzMbzSb0IfOmJapxZwLIKKaIzOuFruK5xXS
+         h08aFJwESA8MehAUIZKLO/sNZUfcFGqlXTWVSPgo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eagle Zhou <eagle.zhou@nxp.com>,
+        Fugang Duan <fugang.duan@nxp.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Subject: [PATCH 4.4 094/113] tty: serial: imx: setup the correct sg entry for tx dma
+Date:   Thu, 27 Feb 2020 14:36:50 +0100
+Message-Id: <20200227132226.766027585@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
+References: <20200227132211.791484803@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200227131648.GF34774@krava>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Feb 27, 2020 at 02:16:48PM +0100, Jiri Olsa escreveu:
-> On Thu, Feb 27, 2020 at 10:08:46AM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Sun, Feb 16, 2020 at 10:15:49PM +0100, Jiri Olsa escreveu:
-> > > On Thu, Feb 13, 2020 at 12:12:58PM +0530, Ravi Bangoria wrote:
-> > > > These are the additional set of fixes on top of previous series:
-> > > > http://lore.kernel.org/r/20200204045233.474937-1-ravi.bangoria@linux.ibm.com
-> > > > 
-> > > > Note for the last patch:
-> > > > I couldn't understand what intel-pt.cache-divisor is really used for.
-> > > > Adrian, can you please help.
-> > > > 
-> > > > Ravi Bangoria (8):
-> > > >   perf annotate/tui: Re-render title bar after switching back from
-> > > >     script browser
-> > > >   perf annotate: Fix --show-total-period for tui/stdio2
-> > > >   perf annotate: Fix --show-nr-samples for tui/stdio2
-> > > >   perf config: Introduce perf_config_u8()
-> > > >   perf annotate: Make perf config effective
-> > > >   perf annotate: Prefer cmdline option over default config
-> > > >   perf annotate: Fix perf config option description
-> > > >   perf config: Document missing config options
-> > > 
-> > > nice, I guess this all worked in the past but got broken because
-> > > we don't have any tests for annotation code.. any chance you could
-> > 
-> > I'm going thru them, can I take that "nice" as an Acked-by? Have you
-> > gone thru those patches?
-> 
-> nope, I just real fast checked on them.. I expected more discussion on tests ;-)
+From: Fugang Duan <fugang.duan@nxp.com>
 
-Ok, I tested all of the patches, and merged them, thanks,
+commit f76707831829530ffdd3888bebc108aecefccaa0 upstream.
 
-- Arnaldo
+There has oops as below happen on i.MX8MP EVK platform that has
+6G bytes DDR memory.
+
+when (xmit->tail < xmit->head) && (xmit->head == 0),
+it setups one sg entry with sg->length is zero:
+	sg_set_buf(sgl + 1, xmit->buf, xmit->head);
+
+if xmit->buf is allocated from >4G address space, and SDMA only
+support <4G address space, then dma_map_sg() will call swiotlb_map()
+to do bounce buffer copying and mapping.
+
+But swiotlb_map() don't allow sg entry's length is zero, otherwise
+report BUG_ON().
+
+So the patch is to correct the tx DMA scatter list.
+
+Oops:
+[  287.675715] kernel BUG at kernel/dma/swiotlb.c:497!
+[  287.680592] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+[  287.686075] Modules linked in:
+[  287.689133] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.3-00016-g3fdc4e0-dirty #10
+[  287.696872] Hardware name: FSL i.MX8MP EVK (DT)
+[  287.701402] pstate: 80000085 (Nzcv daIf -PAN -UAO)
+[  287.706199] pc : swiotlb_tbl_map_single+0x1fc/0x310
+[  287.711076] lr : swiotlb_map+0x60/0x148
+[  287.714909] sp : ffff800010003c00
+[  287.718221] x29: ffff800010003c00 x28: 0000000000000000
+[  287.723533] x27: 0000000000000040 x26: ffff800011ae0000
+[  287.728844] x25: ffff800011ae09f8 x24: 0000000000000000
+[  287.734155] x23: 00000001b7af9000 x22: 0000000000000000
+[  287.739465] x21: ffff000176409c10 x20: 00000000001f7ffe
+[  287.744776] x19: ffff000176409c10 x18: 000000000000002e
+[  287.750087] x17: 0000000000000000 x16: 0000000000000000
+[  287.755397] x15: 0000000000000000 x14: 0000000000000000
+[  287.760707] x13: ffff00017f334000 x12: 0000000000000001
+[  287.766018] x11: 00000000001fffff x10: 0000000000000000
+[  287.771328] x9 : 0000000000000003 x8 : 0000000000000000
+[  287.776638] x7 : 0000000000000000 x6 : 0000000000000000
+[  287.781949] x5 : 0000000000200000 x4 : 0000000000000000
+[  287.787259] x3 : 0000000000000001 x2 : 00000001b7af9000
+[  287.792570] x1 : 00000000fbfff000 x0 : 0000000000000000
+[  287.797881] Call trace:
+[  287.800328]  swiotlb_tbl_map_single+0x1fc/0x310
+[  287.804859]  swiotlb_map+0x60/0x148
+[  287.808347]  dma_direct_map_page+0xf0/0x130
+[  287.812530]  dma_direct_map_sg+0x78/0xe0
+[  287.816453]  imx_uart_dma_tx+0x134/0x2f8
+[  287.820374]  imx_uart_dma_tx_callback+0xd8/0x168
+[  287.824992]  vchan_complete+0x194/0x200
+[  287.828828]  tasklet_action_common.isra.0+0x154/0x1a0
+[  287.833879]  tasklet_action+0x24/0x30
+[  287.837540]  __do_softirq+0x120/0x23c
+[  287.841202]  irq_exit+0xb8/0xd8
+[  287.844343]  __handle_domain_irq+0x64/0xb8
+[  287.848438]  gic_handle_irq+0x5c/0x148
+[  287.852185]  el1_irq+0xb8/0x180
+[  287.855327]  cpuidle_enter_state+0x84/0x360
+[  287.859508]  cpuidle_enter+0x34/0x48
+[  287.863083]  call_cpuidle+0x18/0x38
+[  287.866571]  do_idle+0x1e0/0x280
+[  287.869798]  cpu_startup_entry+0x20/0x40
+[  287.873721]  rest_init+0xd4/0xe0
+[  287.876949]  arch_call_rest_init+0xc/0x14
+[  287.880958]  start_kernel+0x420/0x44c
+[  287.884622] Code: 9124c021 9417aff8 a94363f7 17ffffd5 (d4210000)
+[  287.890718] ---[ end trace 5bc44c4ab6b009ce ]---
+[  287.895334] Kernel panic - not syncing: Fatal exception in interrupt
+[  287.901686] SMP: stopping secondary CPUs
+[  288.905607] SMP: failed to stop secondary CPUs 0-1
+[  288.910395] Kernel Offset: disabled
+[  288.913882] CPU features: 0x0002,2000200c
+[  288.917888] Memory Limit: none
+[  288.920944] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
+
+Reported-by: Eagle Zhou <eagle.zhou@nxp.com>
+Tested-by: Eagle Zhou <eagle.zhou@nxp.com>
+Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
+Cc: stable <stable@vger.kernel.org>
+Fixes: 7942f8577f2a ("serial: imx: TX DMA: clean up sg initialization")
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Link: https://lore.kernel.org/r/1581401761-6378-1-git-send-email-fugang.duan@nxp.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/tty/serial/imx.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/tty/serial/imx.c
++++ b/drivers/tty/serial/imx.c
+@@ -529,7 +529,7 @@ static void imx_dma_tx(struct imx_port *
  
-> but as Ravi wrote, it could take some time
-> 
-> jirka
-> 
-> > 
-> > - Arnaldo
-> > 
-> > > think of some way to test annotations?
-> >  
-> > > perhaps some shell script, or prepare all the needed data for annotation
-> > > manualy.. sort of like we did in tests/hists_*.c
-> > > 
-> > > thanks,
-> > > jirka
-> > > 
-> > > > 
-> > > >  tools/perf/Documentation/perf-config.txt | 74 +++++++++++++++++++-
-> > > >  tools/perf/builtin-annotate.c            |  4 +-
-> > > >  tools/perf/builtin-report.c              |  2 +-
-> > > >  tools/perf/builtin-top.c                 |  2 +-
-> > > >  tools/perf/ui/browsers/annotate.c        | 19 +++--
-> > > >  tools/perf/util/annotate.c               | 89 +++++++++---------------
-> > > >  tools/perf/util/annotate.h               |  6 +-
-> > > >  tools/perf/util/config.c                 | 12 ++++
-> > > >  tools/perf/util/config.h                 |  1 +
-> > > >  9 files changed, 134 insertions(+), 75 deletions(-)
-> > > > 
-> > > > -- 
-> > > > 2.24.1
-> > > > 
-> > > 
-> > 
-> > -- 
-> > 
-> > - Arnaldo
-> > 
-> 
+ 	sport->tx_bytes = uart_circ_chars_pending(xmit);
+ 
+-	if (xmit->tail < xmit->head) {
++	if (xmit->tail < xmit->head || xmit->head == 0) {
+ 		sport->dma_tx_nents = 1;
+ 		sg_init_one(sgl, xmit->buf + xmit->tail, sport->tx_bytes);
+ 	} else {
 
--- 
 
-- Arnaldo
