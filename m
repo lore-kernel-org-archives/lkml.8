@@ -2,102 +2,169 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F66C76560
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66622C7656A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4733324656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:38:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="dR3lnFyh"
+	by mail.kernel.org (Postfix) with ESMTP id 4537424656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:37:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732629AbgB0Oh7 (ORCPT
+        id S1732216AbgB0N4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:37:59 -0500
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:11808 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732209AbgB0N4u (ORCPT
+        Thu, 27 Feb 2020 08:56:51 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42765 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732191AbgB0N4q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:56:50 -0500
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01RDuC7d029248;
-        Thu, 27 Feb 2020 07:56:42 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=amPxsDfm7SqjfykuCL5pbWIfRVa+H79NoUbKNKQcYwo=;
- b=dR3lnFyhMbd0Qb1zP/ziQMoQOlw4VTMPRg5csSA5OMHH/lGbcAo8Bfzxgoc7VSXhId08
- J0uqRFweXWSmZ5PvpXZ9NjaG+fSRENUZmKKocRd8FRpoxObE+Xbs8WiMDmkBWmrtaY7m
- jrMGoDuVajPXLPU7bFwBJK//Ip53b7/AFi+Hqm0NjfKxrHK1ktF63vCHOR2a13liDilt
- 2n59FAzSSiwN5esy/1zFaxkAZXETnDKONOu0mdTEX9g0x7UfI4ScPHszBCBvGI2/5Npl
- fu9+/AxD0eYYOSgpnq7UXamQ7SPPV3ZSfhS55nFzcHMcKjafzn35f1Anq/sCXPMJjk2P Jg== 
-Authentication-Results: ppops.net;
-        spf=pass smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex01.ad.cirrus.com ([5.172.152.52])
-        by mx0b-001ae601.pphosted.com with ESMTP id 2ydcmbbkp2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 27 Feb 2020 07:56:42 -0600
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 27 Feb
- 2020 13:56:41 +0000
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Thu, 27 Feb 2020 13:56:41 +0000
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 0F33445D;
-        Thu, 27 Feb 2020 13:56:41 +0000 (UTC)
-Date:   Thu, 27 Feb 2020 13:56:41 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH v2 2/2] mfd: wm8994: Fix unbalanced calls to
- regulator_bulk_disable()
-Message-ID: <20200227135641.GJ108283@ediswmail.ad.cirrus.com>
-References: <20200226100802.16384-1-m.szyprowski@samsung.com>
- <CGME20200226100815eucas1p2f4448e3dea078bfc58a8acdc70340c11@eucas1p2.samsung.com>
- <20200226100802.16384-2-m.szyprowski@samsung.com>
+        Thu, 27 Feb 2020 08:56:46 -0500
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1j7JeX-0001bH-7W; Thu, 27 Feb 2020 14:56:37 +0100
+Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1j7JeT-0004VH-8w; Thu, 27 Feb 2020 14:56:33 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     stern@rowland.harvard.edu, gregkh@linuxfoundation.org,
+        Thinh.Nguyen@synopsys.com, harry.pan@intel.com,
+        nobuta.keiya@fujitsu.com, malat@debian.org,
+        kai.heng.feng@canonical.com, chiasheng.lee@intel.com,
+        andreyknvl@google.com, heinzelmann.david@gmail.com
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de, kbuild test robot <lkp@intel.com>
+Subject: [RFC PATCH v2] USB: hub: fix port suspend/resume
+Date:   Thu, 27 Feb 2020 14:56:31 +0100
+Message-Id: <20200227135631.13983-1-m.felsch@pengutronix.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200226100802.16384-2-m.szyprowski@samsung.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-SPF-Result: pass
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- ip4:5.172.152.52 -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 adultscore=0
- bulkscore=0 malwarescore=0 clxscore=1015 priorityscore=1501 mlxscore=0
- lowpriorityscore=0 mlxlogscore=556 suspectscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002270111
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 11:08:02AM +0100, Marek Szyprowski wrote:
-> When runtime PM is enabled, regulators are being controlled by the
-> driver's suspend and resume callbacks. They are also unconditionally
-> enabled at driver's probe(), and disabled in remove() functions. Add
-> more calls to runtime PM framework to ensure that the device's runtime
-> PM state matches the regulators state:
-> 1. at the end of probe() function: set runtime PM state to active, so
-> there will be no spurious call to resume();
-> 2. in remove(), ensure that resume() is called before disabling runtime PM
-> management and unconditionally disabling the regulators.
-> 
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
+At the momemnt the usb-port driver has only runime_pm hooks.
+Suspending the port and turn off the VBUS supply should be triggered by
+the hub device suspend callback usb_port_suspend() which calls the
+pm_runtime_put_sync() if all pre-conditions are meet. This mechanism
+don't work correctly due to the global PM behaviour, for more information
+see [1]. According [1] I added the suspend/resume callbacks for the port
+device to fix this.
 
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+[1] https://www.spinics.net/lists/linux-usb/msg190537.html
 
-Thanks,
-Charles
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+---
+Hi,
+
+this v2 contains the fixes
+
+Reported-by: kbuild test robot <lkp@intel.com>
+
+Regards,
+  Marco
+
+Changes:
+- init retval to zero
+- keep CONFIG_PM due to do_remote_wakeup availability
+- adapt commit message
+
+ drivers/usb/core/hub.c  | 13 -------------
+ drivers/usb/core/port.c | 35 ++++++++++++++++++++++++++++++-----
+ 2 files changed, 30 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+index 3405b146edc9..c294484e478d 100644
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -3323,10 +3323,6 @@ int usb_port_suspend(struct usb_device *udev, pm_message_t msg)
+ 		usb_set_device_state(udev, USB_STATE_SUSPENDED);
+ 	}
+ 
+-	if (status == 0 && !udev->do_remote_wakeup && udev->persist_enabled
+-			&& test_and_clear_bit(port1, hub->child_usage_bits))
+-		pm_runtime_put_sync(&port_dev->dev);
+-
+ 	usb_mark_last_busy(hub->hdev);
+ 
+ 	usb_unlock_port(port_dev);
+@@ -3514,15 +3510,6 @@ int usb_port_resume(struct usb_device *udev, pm_message_t msg)
+ 	int		status;
+ 	u16		portchange, portstatus;
+ 
+-	if (!test_and_set_bit(port1, hub->child_usage_bits)) {
+-		status = pm_runtime_get_sync(&port_dev->dev);
+-		if (status < 0) {
+-			dev_dbg(&udev->dev, "can't resume usb port, status %d\n",
+-					status);
+-			return status;
+-		}
+-	}
+-
+ 	usb_lock_port(port_dev);
+ 
+ 	/* Skip the initial Clear-Suspend step for a remote wakeup */
+diff --git a/drivers/usb/core/port.c b/drivers/usb/core/port.c
+index bbbb35fa639f..13f130b67efe 100644
+--- a/drivers/usb/core/port.c
++++ b/drivers/usb/core/port.c
+@@ -283,7 +283,34 @@ static int usb_port_runtime_suspend(struct device *dev)
+ 
+ 	return retval;
+ }
+-#endif
++
++static int __maybe_unused _usb_port_suspend(struct device *dev)
++{
++	struct usb_port *port_dev = to_usb_port(dev);
++	struct usb_device *udev = port_dev->child;
++	int retval = 0;
++
++	if (!udev->do_remote_wakeup && udev->persist_enabled)
++		retval = usb_port_runtime_suspend(dev);
++
++	/* Do not force the user to enable the power-off feature */
++	if (retval && retval != -EAGAIN)
++		return retval;
++
++	return 0;
++}
++
++static int __maybe_unused _usb_port_resume(struct device *dev)
++{
++	struct usb_port *port_dev = to_usb_port(dev);
++	struct usb_device *udev = port_dev->child;
++
++	if (!udev->do_remote_wakeup && udev->persist_enabled)
++		return usb_port_runtime_resume(dev);
++
++	return 0;
++}
++#endif /* CONFIG_PM */
+ 
+ static void usb_port_shutdown(struct device *dev)
+ {
+@@ -294,10 +321,8 @@ static void usb_port_shutdown(struct device *dev)
+ }
+ 
+ static const struct dev_pm_ops usb_port_pm_ops = {
+-#ifdef CONFIG_PM
+-	.runtime_suspend =	usb_port_runtime_suspend,
+-	.runtime_resume =	usb_port_runtime_resume,
+-#endif
++	SET_SYSTEM_SLEEP_PM_OPS(_usb_port_suspend, _usb_port_resume)
++	SET_RUNTIME_PM_OPS(usb_port_runtime_suspend, usb_port_runtime_resume, NULL)
+ };
+ 
+ struct device_type usb_port_device_type = {
+-- 
+2.20.1
+
