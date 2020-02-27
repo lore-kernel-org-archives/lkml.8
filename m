@@ -2,222 +2,105 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 767BFC4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD04C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D5E724670
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:35:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5FA72467F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:36:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pnm/dt9o"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="nMST/l5y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728736AbgB0JfB (ORCPT
+        id S1728722AbgB0Jgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 04:35:01 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37695 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728666AbgB0JfA (ORCPT
+        Thu, 27 Feb 2020 04:36:50 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41227 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728624AbgB0Jgt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 04:35:00 -0500
-Received: by mail-wm1-f65.google.com with SMTP id a141so2552348wme.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 01:34:58 -0800 (PST)
+        Thu, 27 Feb 2020 04:36:49 -0500
+Received: by mail-io1-f66.google.com with SMTP id m25so2439967ioo.8
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 01:36:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=z/+7H3+acEhMvhJMpuhkWxQh6HRDrwFcpIXhWjeSO+4=;
-        b=Pnm/dt9ojjNIqzkFOndD0o4EYdusWVksbPf2ZbhIEMYsmNaLNGjkLwrl2ZWx5cKBtz
-         i/+k4uYXWcFg+6Cs37K3Uje3NGrICWUx7hxDwbKMlIhE91kk7Ys8/zOqhokykeH/UMFT
-         m30c8FbJhKFDHFdwumbAqSvqiNV7BPe2arWfxT5jUY8/dkeRpU1/AoGyGKHkdCP7e1ze
-         CmZwBz9WiGfXDup/qnaE46UmKEkosuzGpWRiZuyj55N+qSklpnxhISwYaiJ3oYlLubJG
-         RaBuoctpaHv/GhMGA3+xkzDCuIGp/wRrgvGFUNTyUJ6yXS8joJm4brcx3/D2k1L71t1k
-         ufQQ==
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TSFAYumXnIb4mNx6pb9jSCJtikoAu1fiU5AFDR41HiM=;
+        b=nMST/l5yp4EsOlkQkjz+oyXVo6tR4nbd5GbUbI5x84hWOMcXm3M7y8DV6kt66nn7b7
+         GIlsjbkbx3vQijL/6+LHbt8H5ZHfFqOOXohYBjwIMdjJnBLoeC35oZ4Yl225QYdACe5/
+         kVd9f5v/M5gtnQTRoS4CTQDPAYtlf8yBp6HVk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=z/+7H3+acEhMvhJMpuhkWxQh6HRDrwFcpIXhWjeSO+4=;
-        b=pngVsnjXwX/AS7wMzxe/aEhL7OvWv7IsMPgaib2qxYboruyQxQOcjNOP2GIuzIHB6G
-         KgitCbVpiJx3M3Pv//4hFpDsgJqeWB0C5+1vJ0FLv8J0hrKmxk0g/Js1jBTtzGRhUrZd
-         TD0IKdMp0zSPQchfZUD34y3P2HvvXKMhnGgCGXIIZ13a19sqMxqNzEy+fM3skzzfF88H
-         9p2lvnG0C0P3LQ+ZLrtOoY+YOUAOHlmVWjqAOjlBoa9Z3gk0zThu9+3H3JkWjpbeParv
-         fFUEP8+MWg3/abm07KioXH8qrIZJOaCTIxePt0UYiFa3nLSkyy35jq4hDmJ4Kj+IGE9F
-         C0fw==
-X-Gm-Message-State: APjAAAVZdQ0ZQR54npJ1pq14AyP4fpHamhAi5VtuQ6jUKXkr9qkz3JqR
-        Pa+Y3cqqi9Wo0HEYktRU5Glz2g==
-X-Google-Smtp-Source: APXvYqwqkiL1IM2kGGiEUoAMVFsmE1V88QrICuOdPfN78IZ0muQ/Tz5Z7egTRQwANt4TgahjVHnhGg==
-X-Received: by 2002:a05:600c:22c8:: with SMTP id 8mr4151965wmg.178.1582796097872;
-        Thu, 27 Feb 2020 01:34:57 -0800 (PST)
-Received: from dell ([2.31.163.122])
-        by smtp.gmail.com with ESMTPSA id n8sm6668488wrx.42.2020.02.27.01.34.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 01:34:57 -0800 (PST)
-Date:   Thu, 27 Feb 2020 09:35:30 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RESEND PATCH] mfd: sc27xx: Add USB charger type detection
- support
-Message-ID: <20200227093530.GU3494@dell>
-References: <049eb16cf995d3a2dd0de01f4c0ed09965e36f92.1581906151.git.baolin.wang7@gmail.com>
- <20200224113926.GU3494@dell>
- <CADBw62ry=+2Rm-Xnar-oeGe_JipvZ9zw=stT7vMHd+QR_m-JEw@mail.gmail.com>
- <20200225085012.GW3494@dell>
- <CADBw62q3wF_h83x3SwcX059N5EvMzm0mjVue+8vxn4Nbq0_Xng@mail.gmail.com>
- <CADBw62o=nw_S9Q4x8S-NK+8Xa6jhzXxRgy0PxEJvcPKrs6WbOg@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TSFAYumXnIb4mNx6pb9jSCJtikoAu1fiU5AFDR41HiM=;
+        b=tZX76oCxLJ0hyo4fB8W3XT7n/6yKAhfkPeByl6QAxHJw2XEczrLsss7nPJOfKu8SC+
+         UAklbX0AIw22WV5DHGbfsYqlGNDDq/UnON0axU0IzQuvR8nC41STdT17XBqZu+YPwaSX
+         VcGSA26sbyVReiPnwOtLEbifj+zBixzATb0QByv6rRwc9xZSpZfIy+Zirh1VeK9YCOcP
+         T0HGcAn4Mp6S8uXmKfr5cGHMfko25in+wa4/TnsQn875axlarAHwuvyXRekO6trBgDxQ
+         hSj2ULkgN9d2e577ZjPFGznBrBG6a2v5mSaQkYknDn4Nh6+klerkMbfu3xHgtxfcDJGc
+         ek/g==
+X-Gm-Message-State: APjAAAXy5D5NqQ61xOkTB5N1ozNbFkrRJMhgimYtiYNEISsccMrBGTff
+        767EpWSovio+EbE3MbXaSsIZhbmYLZDLwzUcjo7bag==
+X-Google-Smtp-Source: APXvYqw5v6WxqDR1yb3LDbMMK6C7QWK8wr5eU3zXIVtb+M97KWiW/29yrC6ghVKgpIwZqN9mr5PMGU2nHAVDTWUTGO8=
+X-Received: by 2002:a05:6602:382:: with SMTP id f2mr3597157iov.174.1582796209051;
+ Thu, 27 Feb 2020 01:36:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADBw62o=nw_S9Q4x8S-NK+8Xa6jhzXxRgy0PxEJvcPKrs6WbOg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk>
+ <1582316494.3376.45.camel@HansenPartnership.com> <CAOssrKehjnTwbc6A1VagM5hG_32hy3mXZenx_PdGgcUGxYOaLQ@mail.gmail.com>
+ <1582556135.3384.4.camel@HansenPartnership.com> <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com>
+ <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com> <1582644535.3361.8.camel@HansenPartnership.com>
+ <CAOssrKfaxnHswrKejedFzmYTbYivJ++cPes4c91+BJDfgH4xJA@mail.gmail.com> <1c8db4e2b707f958316941d8edd2073ee7e7b22c.camel@themaw.net>
+In-Reply-To: <1c8db4e2b707f958316941d8edd2073ee7e7b22c.camel@themaw.net>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Thu, 27 Feb 2020 10:36:38 +0100
+Message-ID: <CAJfpegtRoXnPm5_sMYPL2L6FCZU52Tn8wk7NcW-dm4_2x=dD3Q@mail.gmail.com>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
+To:     Ian Kent <raven@themaw.net>
+Cc:     Miklos Szeredi <mszeredi@redhat.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Feb 2020, Baolin Wang wrote:
+On Thu, Feb 27, 2020 at 6:06 AM Ian Kent <raven@themaw.net> wrote:
 
-> Hi Lee,
-> 
-> On Tue, Feb 25, 2020 at 5:27 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
-> >
-> > On Tue, Feb 25, 2020 at 4:49 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > >
-> > > On Tue, 25 Feb 2020, Baolin Wang wrote:
-> > >
-> > > > Hi Lee,
-> > > >
-> > > > On Mon, Feb 24, 2020 at 7:38 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > > > >
-> > > > > On Mon, 17 Feb 2020, Baolin Wang wrote:
-> > > > >
-> > > > > > The Spreadtrum SC27XX series PMICs supply the USB charger type detection
-> > > > > > function, and related registers are located on the PMIC global registers
-> > > > > > region, thus we implement and export this function in the MFD driver for
-> > > > > > users to get the USB charger type.
-> > > > > >
-> > > > > > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-> > > > > > ---
-> > > > > >  drivers/mfd/sprd-sc27xx-spi.c   |   52 +++++++++++++++++++++++++++++++++++++++
-> > > > > >  include/linux/mfd/sc27xx-pmic.h |    7 ++++++
-> > > > > >  2 files changed, 59 insertions(+)
-> > > > > >  create mode 100644 include/linux/mfd/sc27xx-pmic.h
-> > > > >
-> > > > > [...]
-> > > > >
-> > > > > > +enum usb_charger_type sprd_pmic_detect_charger_type(struct device *dev)
-> > > > > > +{
-> > > > > > +     struct spi_device *spi = to_spi_device(dev);
-> > > > > > +     struct sprd_pmic *ddata = spi_get_drvdata(spi);
-> > > > > > +     const struct sprd_pmic_data *pdata = ddata->pdata;
-> > > > > > +     enum usb_charger_type type;
-> > > > > > +     u32 val;
-> > > > > > +     int ret;
-> > > > > > +
-> > > > > > +     ret = regmap_read_poll_timeout(ddata->regmap, pdata->charger_det, val,
-> > > > > > +                                    (val & SPRD_PMIC_CHG_DET_DONE),
-> > > > > > +                                    SPRD_PMIC_CHG_DET_DELAY_US,
-> > > > > > +                                    SPRD_PMIC_CHG_DET_TIMEOUT);
-> > > > > > +     if (ret) {
-> > > > > > +             dev_err(&spi->dev, "failed to detect charger type\n");
-> > > > > > +             return UNKNOWN_TYPE;
-> > > > > > +     }
-> > > > > > +
-> > > > > > +     switch (val & SPRD_PMIC_CHG_TYPE_MASK) {
-> > > > > > +     case SPRD_PMIC_CDP_TYPE:
-> > > > > > +             type = CDP_TYPE;
-> > > > > > +             break;
-> > > > > > +     case SPRD_PMIC_DCP_TYPE:
-> > > > > > +             type = DCP_TYPE;
-> > > > > > +             break;
-> > > > > > +     case SPRD_PMIC_SDP_TYPE:
-> > > > > > +             type = SDP_TYPE;
-> > > > > > +             break;
-> > > > > > +     default:
-> > > > > > +             type = UNKNOWN_TYPE;
-> > > > > > +             break;
-> > > > > > +     }
-> > > > > > +
-> > > > > > +     return type;
-> > > > > > +}
-> > > > > > +EXPORT_SYMBOL_GPL(sprd_pmic_detect_charger_type);
-> > > > >
-> > > > > Where is this called from?
-> > > >
-> > > > Our USB phy driver will call this API to get the charger type, which
-> > > > is used to notify the corresponding current can be drawn to charger
-> > > > drivers. And we will introduce users after this patch getting applied.
-> > > >
-> > > > > Why isn't the charger type detected in the charger driver?
-> > > >
-> > > > The charger type detection operation is not a part of charger, and its
-> > > > related registers are located on the PMIC global registers area. So I
-> > > > think the PMIC driver is the right place to implement. Moreover Arnd
-> > > > also suggested us to implement these APIs in the PMIC driver if I
-> > > > remember correctly.
-> > >
-> > > You shouldn't think of this as a PMIC driver.  This is a device's
-> > > parent were functional drivers are allocated and registered.  Any
-> >
-> > Right.
-> >
-> > > useful functionality should be farmed out to the child devices which
-> > > are to be appropriately dispersed and located into the subsystems.
-> > >
-> > > It looks like the charger has access to the same register map as this
-> > > parent driver.  I do not see any compelling reason to provide charger
-> > > specific functionality in the parent driver at this point.
-> >
-> > Actually the charger detection is not belonging to the charger
-> > subsystem, at least in the hardware design level. The charger
-> > detection's theory is detetcing the USB phy D+/D- line to get the
-> > charger type, then the hardware will save the charger type into the
-> > PMIC global reigsters automatically for users to get. So this is not
-> > related with the charger driver, which only supplies charging
-> > services, and this is also not belonging to the USB phy, since the
-> > related registers are located on the PMIC gloabl registers area. So
-> > you still think we should not provide this funcion here?
-> 
-> After more investigation, I found I can not move the charger detection
-> into the charger driver.
-> 
-> Cause the USB phy will implement the USB charger support by
-> implementing phy->charger_detect() ops (which will call
-> sprd_pmic_detect_charger_type() to get the charger type), which means
-> the USB phy driver need to get a power supply object by a
-> 'power-supply' phandle firstly, if we move the charger detection part
-> into the charger driver.
-> 
-> But our charger driver also need to register a USB phy notifier to be
-> notified how much current can be drawn from the USB charger framework,
-> which means the charger driver need to get a usb_phy object by a
-> 'phys' phandle[1]. So this two drivers are interdependent and
-> dead-lock.
-> 
-> If we implement the charger type detection in the MFD, the USB phy
-> driver can get the PMIC device by a phandle easily to get the charger
-> type. Moreover from my previous description of the hardware design, I
-> still think implementing the charger type detection in the MFD driver
-> is a good way now.
-> 
-> What do you think? Thanks.
+> At the least the question of "do we need a highly efficient way
+> to query the superblock parameters all at once" needs to be
+> extended to include mount table enumeration as well as getting
+> the info.
+>
+> But this is just me thinking about mount table handling and the
+> quite significant problem we now have with user space scanning
+> the proc mount tables to get this information.
 
-Thanks for the explanation.  Patch applied.
+Right.
 
-> [1] https://elixir.bootlin.com/linux/v5.6-rc3/source/drivers/power/supply/sc2731_charger.c#L496
+So the problem is that currently autofs needs to rescan the proc mount
+table on every change.   The solution to that is to
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+ - add a notification mechanism
+ - and a way to selectively query mount/superblock information
+
+right?
+
+For the notification we have uevents in sysfs, which also supplies the
+changed parameters.  Taking aside namespace issues and addressing
+mounts would this work for autofs?
+
+Thanks,
+Miklos
