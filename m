@@ -2,54 +2,54 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,TVD_SPACE_RATIO,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A7BC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A63DC35677
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E911024691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 567AB24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814952;
-	bh=9tIYBVS/aBTE245KcMrgQ3burHBIEyEISkV8uvZ8saQ=;
+	s=default; t=1582814955;
+	bh=KFLe8morr5OPldRMUX/1jy02yKlvv/xH9S69/+pCTcQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zg1J1E5N7zZNiqNf5wlzRqln+MNOm2FbsHQBAlChYduMb3SNEtURqJOveKPEHSrFh
-	 F+/Um+iH3f4iOxIlIs8hcWRsmEEcMHN6PafJb8fP7aB1IlzEKRxX0eP+Ei67rtUfzT
-	 fm5Cn2E4UagM5Wffy7y1+fmj4WZ43ZC2g0abV9rk=
+	b=teeoh/xqh5yvAegaMKWyCzETmko3iT+Z6+2VobPXjnft/WIqiVEsIFUOE450MWooU
+	 vuKgBDy6MYmwuCTCPZxkWdgJm1tF4bcnkJikPy58ZCHO/HuGQ1iXKMMy90kqAiU1vJ
+	 LX4sg5hAAGmacNhZh1iVeL0dg4TofFWUSRFkcjUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729669AbgB0Nlv (ORCPT
+        id S1729642AbgB0Nln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:41:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36512 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:41:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729288AbgB0Nlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:41:50 -0500
+        id S1729241AbgB0Nlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:41:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A872C222C2;
-        Thu, 27 Feb 2020 13:41:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E8132468D;
+        Thu, 27 Feb 2020 13:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582810907;
-        bh=9tIYBVS/aBTE245KcMrgQ3burHBIEyEISkV8uvZ8saQ=;
+        s=default; t=1582810899;
+        bh=KFLe8morr5OPldRMUX/1jy02yKlvv/xH9S69/+pCTcQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z3vjDb3vDrNi2/GkfaqfxCwv1jLl7ZsZI/zl2Hf7RjRKvnVj88XMGUS1MzLhft4R7
-         SFSYPEaXcWpWGEZIcMly1TCfp/nwp0OKqKTsSL8wBJwCyV8n/tgKbjZzvhs8T0Ei2d
-         0yCFuXzyfoBoHPLE//eCfUFtLe8E2NCzMgZfO+bM=
+        b=EWuy00kxe7ppakGiRqV/QUGvYKL8RF3PVsJqD9UCNcSeayO305FVwhcR1XH36LWEH
+         cM7tGwYlEKGNR2GACTuDgn+swCdopGN1uS4tOdzFQUR5tVVMHmJfH0wsyp+u+TuHtt
+         YaTxGNNRVF4Psg27aRXNtGaEd18RJA+obADvpbuE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Murphy <lists@colorremedies.com>,
-        Anand Jain <anand.jain@oracle.com>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
+        Phong Tran <tranmanphong@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 016/113] btrfs: print message when tree-log replay starts
-Date:   Thu, 27 Feb 2020 14:35:32 +0100
-Message-Id: <20200227132214.311504481@linuxfoundation.org>
+Subject: [PATCH 4.4 040/113] b43legacy: Fix -Wcast-function-type
+Date:   Thu, 27 Feb 2020 14:35:56 +0100
+Message-Id: <20200227132218.137911169@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
 References: <20200227132211.791484803@linuxfoundation.org>
@@ -62,36 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Sterba <dsterba@suse.com>
+From: Phong Tran <tranmanphong@gmail.com>
 
-[ Upstream commit e8294f2f6aa6208ed0923aa6d70cea3be178309a ]
+[ Upstream commit 475eec112e4267232d10f4afe2f939a241692b6c ]
 
-There's no logged information about tree-log replay although this is
-something that points to previous unclean unmount. Other filesystems
-report that as well.
+correct usage prototype of callback in tasklet_init().
+Report by https://github.com/KSPP/linux/issues/20
 
-Suggested-by: Chris Murphy <lists@colorremedies.com>
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Anand Jain <anand.jain@oracle.com>
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Tested-by: Larry Finger <Larry.Finger@lwfinger.net>
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/disk-io.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/b43legacy/main.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
-index 2fb533233e8e3..656f0b7681855 100644
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -2972,6 +2972,7 @@ int open_ctree(struct super_block *sb,
+diff --git a/drivers/net/wireless/b43legacy/main.c b/drivers/net/wireless/b43legacy/main.c
+index afc1fb3e38dfe..bd35a702382fb 100644
+--- a/drivers/net/wireless/b43legacy/main.c
++++ b/drivers/net/wireless/b43legacy/main.c
+@@ -1304,8 +1304,9 @@ static void handle_irq_ucode_debug(struct b43legacy_wldev *dev)
+ }
  
- 	/* do not make disk changes in broken FS */
- 	if (btrfs_super_log_root(disk_super) != 0) {
-+		btrfs_info(fs_info, "start tree-log replay");
- 		ret = btrfs_replay_log(fs_info, fs_devices);
- 		if (ret) {
- 			err = ret;
+ /* Interrupt handler bottom-half */
+-static void b43legacy_interrupt_tasklet(struct b43legacy_wldev *dev)
++static void b43legacy_interrupt_tasklet(unsigned long data)
+ {
++	struct b43legacy_wldev *dev = (struct b43legacy_wldev *)data;
+ 	u32 reason;
+ 	u32 dma_reason[ARRAY_SIZE(dev->dma_reason)];
+ 	u32 merged_dma_reason = 0;
+@@ -3775,7 +3776,7 @@ static int b43legacy_one_core_attach(struct ssb_device *dev,
+ 	b43legacy_set_status(wldev, B43legacy_STAT_UNINIT);
+ 	wldev->bad_frames_preempt = modparam_bad_frames_preempt;
+ 	tasklet_init(&wldev->isr_tasklet,
+-		     (void (*)(unsigned long))b43legacy_interrupt_tasklet,
++		     b43legacy_interrupt_tasklet,
+ 		     (unsigned long)wldev);
+ 	if (modparam_pio)
+ 		wldev->__using_pio = true;
 -- 
 2.20.1
 
