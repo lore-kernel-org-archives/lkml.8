@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DEDC52D52
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E42C52D50
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DF2E24697
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BDBF2468D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:06:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812148;
-	bh=tOmoxyHH7aI3s0hZrRZfclMTF0zSrdSwaBsKgAUc8u8=;
+	s=default; t=1582812392;
+	bh=W4/xiG4eiTXSVrIJ6XH12CjYjNUG6YQO84OF6694ykI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R7pvooPVn1stZctL4rk1Ck11wgHPerAY45pGXY9HWLEE+f6Z0uR+IR92Dkk2004oM
-	 wn+htqgl22333IPSUkB5l6jBZTtujBbqxKcY9uPl0H92rzfnM4BQyB8JUisNY6LuSo
-	 UtkGqEOu3DZwDBCrfPeI0iBGzJP5GS2S0H1s752I=
+	b=eCrpv6pmagRWRG0sV30z9ZlIGhl0Y+17AVjwRuY+wwUNq3+OUgueop12sWKqfjGEb
+	 921HmviAMKhbIiQxwnt0+WpfLR1O/2/TDKg3UiVLcFbVSRW38nVNy4qMlDnWf1Tax7
+	 1SuGCJk+Jz+EiXnvkqI3DPXNrwdza5TV4hUHNwsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733124AbgB0OC1 (ORCPT
+        id S2387943AbgB0OGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:02:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37056 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:06:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733111AbgB0OCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:02:24 -0500
+        id S2387925AbgB0OGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:06:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C49A21D7E;
-        Thu, 27 Feb 2020 14:02:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB1B420578;
+        Thu, 27 Feb 2020 14:06:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812143;
-        bh=tOmoxyHH7aI3s0hZrRZfclMTF0zSrdSwaBsKgAUc8u8=;
+        s=default; t=1582812384;
+        bh=W4/xiG4eiTXSVrIJ6XH12CjYjNUG6YQO84OF6694ykI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZBSXXHaCmlGhVIVpyYhpnfPVOUfSzTGtW24w8XeOPxSTB5qDcZOXJv/Xzk8k/OIiO
-         OR55dtaZ3WfDvIeQS29g+6LC51tU5i8ktXMtiUThQWxvNQKGmflK5eRSDWUwpwveq1
-         G0J94fs26RPGFMbF639atFUS2LsDpan8nMeetn0g=
+        b=ya9EyIV5W6ihSA5Il3cQa9LrD3gaX1qXzq3CTjz9PZqudt07YMHiF7EQQHpL/ZtgD
+         YHFSG4WKQDg4sf5JFDVMngZ+mE+5xygKVua2RMAdc+k4/iTcg38jADtmJd210iOuym
+         XxEDm3nRay1ND3DMWYHKZ/m/VBRKCQ5CZKwe3Pes=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 200/237] KVM: x86: dont notify userspace IOAPIC on edge-triggered interrupt EOI
-Date:   Thu, 27 Feb 2020 14:36:54 +0100
-Message-Id: <20200227132310.995652885@linuxfoundation.org>
+        stable@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        syzbot+adf6c6c2be1c3a718121@syzkaller.appspotmail.com
+Subject: [PATCH 4.19 93/97] netfilter: xt_hashlimit: limit the max size of hashtable
+Date:   Thu, 27 Feb 2020 14:37:41 +0100
+Message-Id: <20200227132229.871748531@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
-References: <20200227132255.285644406@linuxfoundation.org>
+In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
+References: <20200227132214.553656188@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,38 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-commit 7455a8327674e1a7c9a1f5dd1b0743ab6713f6d1 upstream.
+commit 8d0015a7ab76b8b1e89a3e5f5710a6e5103f2dd5 upstream.
 
-Commit 13db77347db1 ("KVM: x86: don't notify userspace IOAPIC on edge
-EOI") said, edge-triggered interrupts don't set a bit in TMR, which means
-that IOAPIC isn't notified on EOI. And var level indicates level-triggered
-interrupt.
-But commit 3159d36ad799 ("KVM: x86: use generic function for MSI parsing")
-replace var level with irq.level by mistake. Fix it by changing irq.level
-to irq.trig_mode.
+The user-specified hashtable size is unbound, this could
+easily lead to an OOM or a hung task as we hold the global
+mutex while allocating and initializing the new hashtable.
 
-Cc: stable@vger.kernel.org
-Fixes: 3159d36ad799 ("KVM: x86: use generic function for MSI parsing")
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Add a max value to cap both cfg->size and cfg->max, as
+suggested by Florian.
+
+Reported-and-tested-by: syzbot+adf6c6c2be1c3a718121@syzkaller.appspotmail.com
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Reviewed-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/irq_comm.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/netfilter/xt_hashlimit.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/arch/x86/kvm/irq_comm.c
-+++ b/arch/x86/kvm/irq_comm.c
-@@ -427,7 +427,7 @@ void kvm_scan_ioapic_routes(struct kvm_v
+--- a/net/netfilter/xt_hashlimit.c
++++ b/net/netfilter/xt_hashlimit.c
+@@ -845,6 +845,8 @@ hashlimit_mt(const struct sk_buff *skb,
+ 	return hashlimit_mt_common(skb, par, hinfo, &info->cfg, 3);
+ }
  
- 			kvm_set_msi_irq(vcpu->kvm, entry, &irq);
++#define HASHLIMIT_MAX_SIZE 1048576
++
+ static int hashlimit_mt_check_common(const struct xt_mtchk_param *par,
+ 				     struct xt_hashlimit_htable **hinfo,
+ 				     struct hashlimit_cfg3 *cfg,
+@@ -855,6 +857,14 @@ static int hashlimit_mt_check_common(con
  
--			if (irq.level && kvm_apic_match_dest(vcpu, NULL, 0,
-+			if (irq.trig_mode && kvm_apic_match_dest(vcpu, NULL, 0,
- 						irq.dest_id, irq.dest_mode))
- 				__set_bit(irq.vector, ioapic_handled_vectors);
- 		}
+ 	if (cfg->gc_interval == 0 || cfg->expire == 0)
+ 		return -EINVAL;
++	if (cfg->size > HASHLIMIT_MAX_SIZE) {
++		cfg->size = HASHLIMIT_MAX_SIZE;
++		pr_info_ratelimited("size too large, truncated to %u\n", cfg->size);
++	}
++	if (cfg->max > HASHLIMIT_MAX_SIZE) {
++		cfg->max = HASHLIMIT_MAX_SIZE;
++		pr_info_ratelimited("max too large, truncated to %u\n", cfg->max);
++	}
+ 	if (par->family == NFPROTO_IPV4) {
+ 		if (cfg->srcmask > 32 || cfg->dstmask > 32)
+ 			return -EINVAL;
 
 
