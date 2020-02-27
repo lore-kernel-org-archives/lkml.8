@@ -2,106 +2,104 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD85C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EAABC35677
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8F09246A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:53:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582815182;
-	bh=KGvsumz72+3o9oMZeKII0/m6zTL3KEnZcyan0b2EWEA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=DLuzE9lFjx1pv8urs9UMTy+DfBRn5LGwST8/fcMMr0HuABsFqV5vhfTrJ5iADCTum
-	 iNP2ej7tgXS0BJU5yW/jnEC83WaPXa7n6iY7mn5XWMZDv0mM9CT3xOWmgxWzkEvGeY
-	 7sLAFzL5pvkW3VDo0cyqyjKn1A8mgsdW2tbqJSQY=
+	by mail.kernel.org (Postfix) with ESMTP id 73FB6246A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:53:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730191AbgB0OxB (ORCPT
+        id S1730592AbgB0OxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:53:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58400 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:53:23 -0500
+Received: from foss.arm.com ([217.140.110.172]:53140 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729137AbgB0OxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:53:01 -0500
-Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A929A24650;
-        Thu, 27 Feb 2020 14:53:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582815180;
-        bh=KGvsumz72+3o9oMZeKII0/m6zTL3KEnZcyan0b2EWEA=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=g29LOw6eQp6K2rEwAwfa1Vki6NM1TCN5KRAEshq9sZiR3yIpk55rUUMLOHfUbWR+d
-         g9kOI5YprpWAkNk2NRYbIe2LuZx7s4LKze3rF3p8c+A9lzzHI9Wy6TDXEty9A5C+2A
-         VQn3bvN1aO7fvVRrPee0idDx1Jfoq/tEgvT24o7o=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 2F1DA3521A4D; Thu, 27 Feb 2020 06:53:00 -0800 (PST)
-Date:   Thu, 27 Feb 2020 06:53:00 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>
-Subject: Re: [PATCH] locktorture.c: fix if-statement empty body warnings
-Message-ID: <20200227145300.GG2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <06d89556-777e-ba59-1d55-12f11cba9668@infradead.org>
+        id S1729417AbgB0OxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:53:22 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF34230E;
+        Thu, 27 Feb 2020 06:53:21 -0800 (PST)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF87D3F7B4;
+        Thu, 27 Feb 2020 06:53:21 -0800 (PST)
+Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
+        id 8E879682F2C; Thu, 27 Feb 2020 14:53:20 +0000 (GMT)
+Date:   Thu, 27 Feb 2020 14:53:20 +0000
+From:   Liviu Dudau <liviu.dudau@arm.com>
+To:     Wambui Karuga <wambui.karugax@gmail.com>
+Cc:     daniel@ffwll.ch, airlied@linux.ie,
+        Brian Starkey <brian.starkey@arm.com>,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 07/21] drm/arm: make hdlcd_debugfs_init() return void
+Message-ID: <20200227145320.GY364558@e110455-lin.cambridge.arm.com>
+References: <20200227120232.19413-1-wambui.karugax@gmail.com>
+ <20200227120232.19413-8-wambui.karugax@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <06d89556-777e-ba59-1d55-12f11cba9668@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200227120232.19413-8-wambui.karugax@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 09:09:19PM -0800, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
+On Thu, Feb 27, 2020 at 03:02:18PM +0300, Wambui Karuga wrote:
+> Since commit 987d65d01356 (drm: debugfs: make
+> drm_debugfs_create_files() never fail), drm_debugfs_create_files()
+> never fails, and should return void. Therefore, remove its use as a
+> return value in hdlcd_debugfs_init and have the latter function
+> return void.
 > 
-> When using -Wextra, gcc complains about torture_preempt_schedule()
-> when its definition is empty (i.e., when CONFIG_PREEMPTION is not
-> set/enabled).  Fix these warnings by adding an empty do-while block
-> for that macro when CONFIG_PREEMPTION is not set.
-> Fixes these build warnings:
-> 
-> ../kernel/locking/locktorture.c:119:29: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-> ../kernel/locking/locktorture.c:166:29: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-> ../kernel/locking/locktorture.c:337:29: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-> ../kernel/locking/locktorture.c:490:29: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-> ../kernel/locking/locktorture.c:528:29: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-> ../kernel/locking/locktorture.c:553:29: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-> 
-> I have verified that there is no object code change (with gcc 7.5.0).
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
 
-Queued for v5.8, thank you very much!
+Acked-by: Liviu Dudau <liviu.dudau@arm.com>
 
-							Thanx, Paul
+Not sure how you're going to address Greg KH's comment (maybe one single patch that
+converts debugfs_init to void *and* changes the signature to all hooks?) but I'm
+going to assume that you will get the whole series merged in one go so I don't have
+to push this individual patch into HDLCD tree.
 
-> Cc: Davidlohr Bueso <dave@stgolabs.net>
-> Cc: "Paul E. McKenney" <paulmck@kernel.org>
-> Cc: Josh Triplett <josh@joshtriplett.org>
+Best regards,
+Liviu
+
 > ---
->  include/linux/torture.h |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/gpu/drm/arm/hdlcd_drv.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 > 
-> --- linux-next-20200225.orig/include/linux/torture.h
-> +++ linux-next-20200225/include/linux/torture.h
-> @@ -89,7 +89,7 @@ void _torture_stop_kthread(char *m, stru
->  #ifdef CONFIG_PREEMPTION
->  #define torture_preempt_schedule() preempt_schedule()
->  #else
-> -#define torture_preempt_schedule()
-> +#define torture_preempt_schedule()	do { } while (0)
+> diff --git a/drivers/gpu/drm/arm/hdlcd_drv.c b/drivers/gpu/drm/arm/hdlcd_drv.c
+> index 2e053815b54a..194419f47c5e 100644
+> --- a/drivers/gpu/drm/arm/hdlcd_drv.c
+> +++ b/drivers/gpu/drm/arm/hdlcd_drv.c
+> @@ -224,10 +224,11 @@ static struct drm_info_list hdlcd_debugfs_list[] = {
+>  	{ "clocks", hdlcd_show_pxlclock, 0 },
+>  };
+>  
+> -static int hdlcd_debugfs_init(struct drm_minor *minor)
+> +static void hdlcd_debugfs_init(struct drm_minor *minor)
+>  {
+> -	return drm_debugfs_create_files(hdlcd_debugfs_list,
+> -		ARRAY_SIZE(hdlcd_debugfs_list),	minor->debugfs_root, minor);
+> +	drm_debugfs_create_files(hdlcd_debugfs_list,
+> +				 ARRAY_SIZE(hdlcd_debugfs_list),
+> +				 minor->debugfs_root, minor);
+>  }
 >  #endif
 >  
->  #endif /* __LINUX_TORTURE_H */
+> -- 
+> 2.25.0
 > 
+
+-- 
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
