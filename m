@@ -2,100 +2,115 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4F9C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA537C4BA2D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52A68246B4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:29:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lrt9AvuL"
+	by mail.kernel.org (Postfix) with ESMTP id 8335A21556
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:30:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729344AbgB0N3M (ORCPT
+        id S1729198AbgB0NaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:29:12 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34041 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729153AbgB0N3M (ORCPT
+        Thu, 27 Feb 2020 08:30:06 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:34289 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729110AbgB0NaG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:29:12 -0500
-Received: by mail-pg1-f196.google.com with SMTP id t3so1496862pgn.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 05:29:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=J6qXS1wSxw6vDTcttyVtlLNJ03skjYv/jVjoYtks20E=;
-        b=Lrt9AvuLeb9jeVeqLm8sfmFsu+KF47C0RipoVstxmDSMD+LYcUnkQ9WYUql+DWq0MV
-         lLAVA/qmKK87xKLgsV5unf8vquJltLNFOH9tIXLZdhiC0/X5Kyspr5LgP9XyOSmL2tNr
-         ctUvgjNimS8EAc2ayJ3GlFlWzXEICybNOI03niRlE76FSlsK2SLONOa2kwEfQN6fpmk1
-         VAcjd+zBE+I8Y4zoeWWcpUAwi3CXlPZAuCogKfv0ETD6ggHBst34Sw0WUJi0BkKK+Gox
-         eqk0nXsLlfv22RCqse+bzyO3XlVAo9QTzEgn0sSTjvyt6aio/6WEgduQGDQu5GSF/+eO
-         j+lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=J6qXS1wSxw6vDTcttyVtlLNJ03skjYv/jVjoYtks20E=;
-        b=n0i8liF26zPsKbEDgTxIZpuMk3MdDG1p3dlItqRoykDuGT4JGBpYPKAZAIbOJ2bxbN
-         edBfBVfFsCBtDYdH2jR2oOervTD3Ht6Y8+bbZNg+h9x+fHSZ/fI2BVzBU+RY6Z/vkvGQ
-         LYbaxgTM8TrlKcN3s46oDmqXaSeJCudeZCrzBwYekA08ylCA3V/60jPcx0l2mK5P+Krp
-         QIUSIsvf38ND52R+J61VewJWm+H1Q+UoQy8vQ4z2Cp6TeETP83xnIGrX1+fBRySiaef/
-         0X1B+eEc90DI6YQuzzSH+SlukXKZpwEs9+7/Q18yEsd4eVt3z6w6aJKCY4nkyC/b+7Cl
-         TYlg==
-X-Gm-Message-State: APjAAAUrD0M9X9qRCt2yux3KUybsASHowWc34bNcSgAeIrXwd5x04mgb
-        DHyIA5Fw2/ttiloRDiNmbGq42Ab2GU8=
-X-Google-Smtp-Source: APXvYqz+Y5xmU0t4GXQu1hmoMQ0gDOlSlB1DKLqEr4yP3nPm0JTRyMcnK1DuzL7jcjd9v6+CTEqXnA==
-X-Received: by 2002:aa7:946b:: with SMTP id t11mr3998714pfq.57.1582810151046;
-        Thu, 27 Feb 2020 05:29:11 -0800 (PST)
-Received: from localhost (g183.222-224-185.ppp.wakwak.ne.jp. [222.224.185.183])
-        by smtp.gmail.com with ESMTPSA id r145sm7553229pfr.5.2020.02.27.05.29.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 05:29:10 -0800 (PST)
-Date:   Thu, 27 Feb 2020 22:29:08 +0900
-From:   Stafford Horne <shorne@gmail.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Openrisc <openrisc@lists.librecores.org>,
-        Jonas Bonn <jonas@southpole.se>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Christian Brauner <christian@brauner.io>
-Subject: Re: [PATCH 2/3] openrisc: Enable the clone3 syscall
-Message-ID: <20200227132908.GI7926@lianli.shorne-pla.net>
-References: <20200226225625.28935-1-shorne@gmail.com>
- <20200226225625.28935-3-shorne@gmail.com>
- <20200227122147.rnpzcy7rjexgy6yx@wittgenstein>
+        Thu, 27 Feb 2020 08:30:06 -0500
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j7JEh-0001eE-KQ; Thu, 27 Feb 2020 14:29:55 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id C0FEE1040A9; Thu, 27 Feb 2020 14:29:54 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     afzal mohammed <afzal.mohd.ma@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH 14/18] x86: Replace setup_irq() by request_irq()
+In-Reply-To: <20200227113648.GA5760@afzalpc>
+References: <cover.1581478323.git.afzal.mohd.ma@gmail.com> <a3116b3b1a03a943cd89efd57d2db32284c3a574.1581478324.git.afzal.mohd.ma@gmail.com> <87v9nsmhjj.fsf@nanos.tec.linutronix.de> <20200227113648.GA5760@afzalpc>
+Date:   Thu, 27 Feb 2020 14:29:54 +0100
+Message-ID: <87sgiwma3x.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200227122147.rnpzcy7rjexgy6yx@wittgenstein>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 01:21:47PM +0100, Christian Brauner wrote:
-> On Thu, Feb 27, 2020 at 07:56:24AM +0900, Stafford Horne wrote:
-> > Enable the clone3 syscall for OpenRISC.  We use the generic version.
-> > 
-> > This was tested with the clone3 test from selftests.  Note, for all
-> > tests to pass it required enabling CONFIG_NAMESPACES which is not
-> > enabled in the default kernel config.
-> 
-> For OpenRISC, I assume. Hm, maybe we should fix the tests to skip when
-> CONFIG_NAMESPACES is not enabled.
+Afzal,
 
-Yes, not the default for openrisc defconfig.  It might make sense to either skip
-the tests of have them as expected fails when CONFIG_NAMESPACES is off.
+afzal mohammed <afzal.mohd.ma@gmail.com> writes:
+> On Thu, Feb 27, 2020 at 11:49:20AM +0100, Thomas Gleixner wrote:
+>> afzal mohammed <afzal.mohd.ma@gmail.com> writes:
+>
+>> > Seldom remove_irq() usage has been observed coupled with setup_irq(),
+>> > wherever that has been found, it too has been replaced by free_irq().
+>> 
+>> Please do not copy the irrelevant parts of your boilerplate text into
+>> individual changelogs. Changelogs should have the information which is
+>> relevant to the patch they describe.
+>
+> Sure, i will change.
+>
+>> > +		if (request_irq(2, no_action, IRQF_NO_THREAD, "cascade", NULL))
+>> > +			pr_err("request_irq() on %s failed\n", "cascade");
+>> 
+>> What's the purpose of the %s indirection here?
+>
+> Putting that indirection helped me automate making these kind of changes w/
+> cocci. As there were >150 instances of setup_irq and since "failed",
+> "request_irq()" were common, putting a %s indirection with the timer
+> name that changes in each instance, it was easy to take help of cocci
+> to automatically create it (though not fully).
+>
+> Would you be okay to keep that indirection ?, if not , i will make the
+> changes manually.
+>
+>> Also that error message is not really helpful:
+>> 
+>>      request_irq() on cascade failed
+>> 
+>> Something like:
+>> 
+>>      Failed to request irq 2 (cascade).
+>
+> Yes, as i mentioned in m86k patch (6/18) [1], i was uncomfortable w/ that
+> string, based on Finn's feedback, in v2, it was modified to,
+>
+>         cascade: request_irq() failed
+>
+> though still using %s indirection.
 
-On the otherhand, I am not sure if the self tests know about the CONFIG_*
-available.  I notice many test directories have a 'config' file and a readme
-saying, for these test to run ensure use have at least 'these' config values
-set.
+Using scripting to find the spots and automatically convert them to
+something which is functionally and semantically correct is perfectly
+fine. But scripts neither have taste nor common sense.
 
--Stafford
+So going over a scripted conversion and fixing non-sensical stuff up
+manually is a good thing.
+
+> Yeah, i had felt it, the reason i went ahead that way was cocci could
+> automate that way for me for three-fourth of >150 instances making
+> things easy for me. Another reason was to reduce manual changes so as
+> to make it less error prone.
+>
+> Seems you are against taking the easy route of taking cocci's help, in
+> that case, i will change as you suggest.
+
+The easy route is fine for the initial step. See above.
+
+Thanks,
+
+        tglx
