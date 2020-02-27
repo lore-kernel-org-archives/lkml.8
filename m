@@ -2,156 +2,91 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E18C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E91CC35DF9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB8C324691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC48D24692
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:29:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I0bRD9FL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730155AbgB0T3f (ORCPT
+        id S1730283AbgB0T3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 14:29:35 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:37258 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1729687AbgB0T3f (ORCPT
+        Thu, 27 Feb 2020 14:29:52 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44865 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727159AbgB0T3w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 14:29:35 -0500
-Received: (qmail 1906 invoked by uid 2102); 27 Feb 2020 14:29:34 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 27 Feb 2020 14:29:34 -0500
-Date:   Thu, 27 Feb 2020 14:29:34 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Marco Felsch <m.felsch@pengutronix.de>
-cc:     gregkh@linuxfoundation.org, <Thinh.Nguyen@synopsys.com>,
-        <harry.pan@intel.com>, <nobuta.keiya@fujitsu.com>,
-        <malat@debian.org>, <kai.heng.feng@canonical.com>,
-        <chiasheng.lee@intel.com>, <andreyknvl@google.com>,
-        <heinzelmann.david@gmail.com>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel@pengutronix.de>,
-        kbuild test robot <lkp@intel.com>
-Subject: Re: [RFC PATCH v2] USB: hub: fix port suspend/resume
-In-Reply-To: <20200227164142.dsnbrxtk747tnvma@pengutronix.de>
-Message-ID: <Pine.LNX.4.44L0.2002271353300.1307-100000@iolanthe.rowland.org>
-MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+        Thu, 27 Feb 2020 14:29:52 -0500
+Received: by mail-wr1-f67.google.com with SMTP id m16so157982wrx.11;
+        Thu, 27 Feb 2020 11:29:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Ts+uSIKuoMAT4GVlY0xYp++rOG/WfuZn269REQF9/WI=;
+        b=I0bRD9FLZLEifaJVygPjHYFoM6s4ZauKp9Ur7rpMtb+um53Ml9hWW6QBx0T9PyWyOG
+         IrmX+XF0avqqEzPJV+/uk+sCByBtJup1kJeD4lGT+mlD7d2Ve66sOUjYX6OiuAX323u6
+         MaMM5Yu2RjvjZJ7DvCyZGgVVCxiZs2RMYzvu/lb80503mtE+kvzZ+gKbkG4xswTaFkec
+         LMhRlbaIEU2R7dX2Pw1AYM7pNwyPO7JFSW0whRCY1SVJUye5UYz2hvfQOdUpWnxH9xGO
+         Ip/l2oFQW0BIa3tySzEzBnmWwugGaU8NSv4nVaFJT0l/FOHF42xwRXajRxHuA5Pv2FN6
+         A3Lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Ts+uSIKuoMAT4GVlY0xYp++rOG/WfuZn269REQF9/WI=;
+        b=HOdNVdXIyKOQ3odiObU64S9xuezkU8Svi81NinCpGA/Z9ptNo+kq3ibPvMcNgi135w
+         8U9lzWRoY+mMawyLDQRLzt4dcJ3MYfD6sMhH0fKqG+ZsSLMvZwXv3jCIzPAJROaeKP/R
+         Bk/CBkZx+mrI2Zh7T2LUZ5tTfWvpK00nHUoQxOWDhtcxzLiS+VZOi4j1n6qCbK2SaX9p
+         /Z7F7PAhfDxQ97xgUFvPpZLOCzhrzTzctaihiEaDPnsNLFNEpqQYee4HypbOs5H/SypM
+         3aLi+fsbb0BgbptpG29N02vE6Znbd+6856saiMcWNaqk4N/26kE8p7k8YF7+vpzrDYKl
+         OBWw==
+X-Gm-Message-State: APjAAAXJ9WqNIsSZAc089YBoLgoees+0NbIGsSmU7X/Zm9HsC6/1M6YB
+        ss0xqc0iMzsS20w98Ij68iI=
+X-Google-Smtp-Source: APXvYqy1BlYk+WSVAjCb5Zo9RSyLM0W4u08H4uBOcKJqmwQRQm5P/RkPigt4t2fNyrvLi+/GS/Toxg==
+X-Received: by 2002:a05:6000:1246:: with SMTP id j6mr357729wrx.233.1582831790230;
+        Thu, 27 Feb 2020 11:29:50 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id w1sm8878013wmc.11.2020.02.27.11.29.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 11:29:49 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     bcm-kernel-feedback-list@broadcom.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     phil@raspberrypi.org, devicetree@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: bcm2711: Add pcie0 alias
+Date:   Thu, 27 Feb 2020 11:29:46 -0800
+Message-Id: <20200227192946.17328-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200226164601.20150-1-nsaenzjulienne@suse.de>
+References: <20200226164601.20150-1-nsaenzjulienne@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Feb 2020, Marco Felsch wrote:
-
-> On 20-02-27 11:18, Alan Stern wrote:
-
-> > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > > ---
-> > > Hi,
-> > > 
-> > > this v2 contains the fixes
-> > > 
-> > > Reported-by: kbuild test robot <lkp@intel.com>
-> > 
-> > Everything below the "---" line, except the patch itself, gets ignored.  
-> > You need to move this Reported-by: up higher.
+On Wed, 26 Feb 2020 17:46:00 +0100, Nicolas Saenz Julienne <nsaenzjulienne@suse.de> wrote:
+> Some bcm2711 revisions have different DMA constraints on the their PCIE
+> bus. The lower common denominator, being able to access the lower 3GB of
+> memory, is the default setting for now. Newer SoC revisions are able to
+> access the whole memory space.
 > 
-> I know, I put it here because the patch isn't part of the kernel. IMHO a
+> Raspberry Pi 4's firmware is aware of this limitation and will correct
+> the PCIE's dma-ranges property if a pcie0 alias is available. So add
+> it.
 > 
-> Signed-off-by:
-> Reported-by: 
-> 
-> looks a bit strange.
+> Fixes: d5c8dc0d4c88 ("ARM: dts: bcm2711: Enable PCIe controller")
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
 
-Not at all.  That sort of thing occurs all the time; just look at a few 
-commits in the kernel or patches on the mailing lists.  Especially ones 
-that are bug fixes.
-
-> > > diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-> > > index 3405b146edc9..c294484e478d 100644
-> > > --- a/drivers/usb/core/hub.c
-> > > +++ b/drivers/usb/core/hub.c
-> > > @@ -3323,10 +3323,6 @@ int usb_port_suspend(struct usb_device *udev, pm_message_t msg)
-> > >  		usb_set_device_state(udev, USB_STATE_SUSPENDED);
-> > >  	}
-> > >  
-> > > -	if (status == 0 && !udev->do_remote_wakeup && udev->persist_enabled
-> > > -			&& test_and_clear_bit(port1, hub->child_usage_bits))
-> > > -		pm_runtime_put_sync(&port_dev->dev);
-> > > -
-> > >  	usb_mark_last_busy(hub->hdev);
-> > >  
-> > >  	usb_unlock_port(port_dev);
-> > > @@ -3514,15 +3510,6 @@ int usb_port_resume(struct usb_device *udev, pm_message_t msg)
-> > >  	int		status;
-> > >  	u16		portchange, portstatus;
-> > >  
-> > > -	if (!test_and_set_bit(port1, hub->child_usage_bits)) {
-> > > -		status = pm_runtime_get_sync(&port_dev->dev);
-> > > -		if (status < 0) {
-> > > -			dev_dbg(&udev->dev, "can't resume usb port, status %d\n",
-> > > -					status);
-> > > -			return status;
-> > > -		}
-> > > -	}
-> > > -
-> > 
-> > Why do you get rid of these two sections of code?  Won't that cause
-> > runtime PM to stop working properly?
-> 
-> Both runtime_pm calls are part of the suspend/resume logic so this code
-> isn't called during runtime PM.
-
-I'm not quite sure what you mean by that.  In any case, it would be 
-completely wrong to think that usb_port_suspend isn't involved in 
-runtime PM.
-
-In fact, usb_port_suspend is _more_ important for runtime suspend than
-for system sleep.  The reason is simple: If you want to put a USB
-device into runtime suspend, you have to tell its upstream hub's port
-to enable the suspend feature (i.e., call usb_port_suspend).  But if
-you want to put an entire bus of USB devices to sleep for a system
-suspend, all you have to do is tell the host controller to stop sending
-packets; the ports don't need any notification.
-
-(Actually the situation is more complicated for USB 3.  But you get the 
-idea.)
-
-> As far as I understood it correctly the
-> purpose of those section was to trigger port poweroff if the device
-> supports it upon a system-suspend.
-
-No, the purpose of the sections you removed is to trigger port poweroff
-when the device goes into any type of suspend, either system or
-runtime.  Of course, as you discovered, during system sleep the code
-doesn't actually turn off the port power -- that's a bug.  But during
-runtime PM it does.
-
-> Therefore I came up with my question:
-> https://www.spinics.net/lists/linux-usb/msg190537.html.
-
-> > Also, try to find better names.  Maybe usb_port_sleep and 
-> > usb_port_wake, or usb_port_system_suspend and usb_port_system_resume.
-> 
-> IMHO usb_port_suspend/resume should be the best ;)
-
-Okay, so long as they are static and won't conflict with the functions 
-in hub.c.
-
-Alan Stern
-
-PS: There's one more thing you need to know -- I completely forgot 
-about it until just now.  During system sleep, we have to make sure 
-that the child device gets suspended _before_ and resumed _after_ the 
-port.  If it happened the other way, we'd be in trouble.
-
-(The proper ordering would be automatic if the child USB device was
-registered under the port device, but for historical reasons it isn't;
-it gets registered directly under the parent hub.)
-
-This means you'll have to call device_pm_wait_for_dev() at the 
-appropriate places in the suspend and resume pathways.
-
+Applied to devicetree/fixes, thanks!
+--
+Florian
