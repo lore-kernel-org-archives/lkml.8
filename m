@@ -2,51 +2,55 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E253C52D52
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19ED2C52D2D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB0D82084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E36B721D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811930;
-	bh=A5JhqAJW0/T19P0pXEctJKdutmGn5EGnPtPBSXQsXo4=;
+	s=default; t=1582811837;
+	bh=Y5SnXWp1oU7iqTSLhVAfbzVeZIBa+qAGHzZ8XluSOMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nU7FlqxIAwDaQS7u15GaAOiIBx4t/npxvMkn1kihWdt4WfM06obvtl7sy30lkiBQ/
-	 cIteE4ThXlE1WCDdkLuaFjtI7T7PMUnP7du19GN2o4iP0UJ281RjxdZApH8pLf0gfe
-	 sGXzTQ5MFgiTwbvTGM6AquSybJkm4gD/SohbPMZk=
+	b=MWq5YvV2FYll+hASA7K30JebC0GYFLFiaoFwSruSiyoSzgG0oKhU40aIRd9hbFdz7
+	 U47DHDeYwrmeXeVJkutylqpXTgnVa2wIbgIL/GRy3M9Cynlkx1nDRXfNNJ4ROywDCA
+	 JLpsVGZiWl0S5WuiVttGx/dIID2z6ii+6765CiLQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732530AbgB0N6t (ORCPT
+        id S1732095AbgB0N5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:58:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60000 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:57:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732516AbgB0N6q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:58:46 -0500
+        id S1731943AbgB0N5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:57:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3EB6246A9;
-        Thu, 27 Feb 2020 13:58:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFAAC20801;
+        Thu, 27 Feb 2020 13:57:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811925;
-        bh=A5JhqAJW0/T19P0pXEctJKdutmGn5EGnPtPBSXQsXo4=;
+        s=default; t=1582811827;
+        bh=Y5SnXWp1oU7iqTSLhVAfbzVeZIBa+qAGHzZ8XluSOMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DwKU3fYWQ5Ke69zsuqrDkTLwttPW30r247HO0WqlGoLzOoynZEJtIW969LhVw1uf9
-         N8VC9QikBbKO8TmL9AvKkIPqFe2SObLtVVGd3KTZSlAgJqhJUk3+n52TnLkDNO3mK/
-         MyaRYRNR+BfUQw6TawRPKhtlzO3I1IIvUsMgkDGA=
+        b=2bxpmNC46cJfg30kDsZjXOGAJwfncBrjW1k4g3nxTEboVfxtROwG2hmoy/c9S4tyP
+         33mfDLYeV4OnqEzw/yq6DZ2MhAHkHins+2G/GFAmHGH+OWb4Pv2Y6SlGoLeyShfSog
+         bOF8rKmHI5BHWzAraN0nPmwE/YH18TrPDNl+oB6E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 117/237] drm/nouveau/gr/gk20a,gm200-: add terminators to method lists read from fw
-Date:   Thu, 27 Feb 2020 14:35:31 +0100
-Message-Id: <20200227132305.446583590@linuxfoundation.org>
+Subject: [PATCH 4.14 078/237] media: v4l2-device.h: Explicitly compare grp{id,mask} to zero in v4l2_device macros
+Date:   Thu, 27 Feb 2020 14:34:52 +0100
+Message-Id: <20200227132302.857774937@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -59,73 +63,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Skeggs <bskeggs@redhat.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 7adc77aa0e11f25b0e762859219c70852cd8d56f ]
+[ Upstream commit afb34781620274236bd9fc9246e22f6963ef5262 ]
 
-Method init is typically ordered by class in the FW image as ThreeD,
-TwoD, Compute.
+When building with Clang + -Wtautological-constant-compare, several of
+the ivtv and cx18 drivers warn along the lines of:
 
-Due to a bug in parsing the FW into our internal format, we've been
-accidentally sending Twod + Compute methods to the ThreeD class, as
-well as Compute methods to the TwoD class - oops.
+ drivers/media/pci/cx18/cx18-driver.c:1005:21: warning: converting the
+ result of '<<' to a boolean always evaluates to true
+ [-Wtautological-constant-compare]
+                         cx18_call_hw(cx, CX18_HW_GPIO_RESET_CTRL,
+                                         ^
+ drivers/media/pci/cx18/cx18-cards.h:18:37: note: expanded from macro
+ 'CX18_HW_GPIO_RESET_CTRL'
+ #define CX18_HW_GPIO_RESET_CTRL         (1 << 6)
+                                           ^
+ 1 warning generated.
 
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+This warning happens because the shift operation is implicitly converted
+to a boolean in v4l2_device_mask_call_all before being negated. This can
+be solved by just comparing the mask result to 0 explicitly so that
+there is no boolean conversion. The ultimate goal is to enable
+-Wtautological-compare globally because there are several subwarnings
+that would be helpful to have.
+
+For visual consistency and avoidance of these warnings in the future,
+all of the implicitly boolean conversions in the v4l2_device macros
+are converted to explicit ones as well.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/752
+
+Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/nouveau/nvkm/engine/gr/gk20a.c    | 21 ++++++++++---------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ include/media/v4l2-device.h | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c b/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c
-index de8b806b88fd9..7618b2eb4fdfd 100644
---- a/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c
-@@ -143,23 +143,24 @@ gk20a_gr_av_to_method(struct gf100_gr *gr, const char *fw_name,
+diff --git a/include/media/v4l2-device.h b/include/media/v4l2-device.h
+index 8ffa94009d1a9..76002416cead9 100644
+--- a/include/media/v4l2-device.h
++++ b/include/media/v4l2-device.h
+@@ -268,7 +268,7 @@ static inline void v4l2_subdev_notify(struct v4l2_subdev *sd,
+ 		struct v4l2_subdev *__sd;				\
+ 									\
+ 		__v4l2_device_call_subdevs_p(v4l2_dev, __sd,		\
+-			!(grpid) || __sd->grp_id == (grpid), o, f ,	\
++			(grpid) == 0 || __sd->grp_id == (grpid), o, f ,	\
+ 			##args);					\
+ 	} while (0)
  
- 	nent = (fuc.size / sizeof(struct gk20a_fw_av));
+@@ -280,7 +280,7 @@ static inline void v4l2_subdev_notify(struct v4l2_subdev *sd,
+ ({									\
+ 	struct v4l2_subdev *__sd;					\
+ 	__v4l2_device_call_subdevs_until_err_p(v4l2_dev, __sd,		\
+-			!(grpid) || __sd->grp_id == (grpid), o, f ,	\
++			(grpid) == 0 || __sd->grp_id == (grpid), o, f ,	\
+ 			##args);					\
+ })
  
--	pack = vzalloc((sizeof(*pack) * max_classes) +
--		       (sizeof(*init) * (nent + 1)));
-+	pack = vzalloc((sizeof(*pack) * (max_classes + 1)) +
-+		       (sizeof(*init) * (nent + max_classes + 1)));
- 	if (!pack) {
- 		ret = -ENOMEM;
- 		goto end;
- 	}
+@@ -294,8 +294,8 @@ static inline void v4l2_subdev_notify(struct v4l2_subdev *sd,
+ 		struct v4l2_subdev *__sd;				\
+ 									\
+ 		__v4l2_device_call_subdevs_p(v4l2_dev, __sd,		\
+-			!(grpmsk) || (__sd->grp_id & (grpmsk)), o, f ,	\
+-			##args);					\
++			(grpmsk) == 0 || (__sd->grp_id & (grpmsk)), o,	\
++			f , ##args);					\
+ 	} while (0)
  
--	init = (void *)(pack + max_classes);
-+	init = (void *)(pack + max_classes + 1);
+ /*
+@@ -308,8 +308,8 @@ static inline void v4l2_subdev_notify(struct v4l2_subdev *sd,
+ ({									\
+ 	struct v4l2_subdev *__sd;					\
+ 	__v4l2_device_call_subdevs_until_err_p(v4l2_dev, __sd,		\
+-			!(grpmsk) || (__sd->grp_id & (grpmsk)), o, f ,	\
+-			##args);					\
++			(grpmsk) == 0 || (__sd->grp_id & (grpmsk)), o,	\
++			f , ##args);					\
+ })
  
--	for (i = 0; i < nent; i++) {
--		struct gf100_gr_init *ent = &init[i];
-+	for (i = 0; i < nent; i++, init++) {
- 		struct gk20a_fw_av *av = &((struct gk20a_fw_av *)fuc.data)[i];
- 		u32 class = av->addr & 0xffff;
- 		u32 addr = (av->addr & 0xffff0000) >> 14;
- 
- 		if (prevclass != class) {
--			pack[classidx].init = ent;
-+			if (prevclass) /* Add terminator to the method list. */
-+				init++;
-+			pack[classidx].init = init;
- 			pack[classidx].type = class;
- 			prevclass = class;
- 			if (++classidx >= max_classes) {
-@@ -169,10 +170,10 @@ gk20a_gr_av_to_method(struct gf100_gr *gr, const char *fw_name,
- 			}
- 		}
- 
--		ent->addr = addr;
--		ent->data = av->data;
--		ent->count = 1;
--		ent->pitch = 1;
-+		init->addr = addr;
-+		init->data = av->data;
-+		init->count = 1;
-+		init->pitch = 1;
- 	}
- 
- 	*ppack = pack;
+ /*
 -- 
 2.20.1
 
