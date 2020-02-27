@@ -2,351 +2,180 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CE1C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D17C35E15
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DFFA2469D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 139442469D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:13:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="AAE2+wUx"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="EHTtVoKs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729722AbgB0TM7 (ORCPT
+        id S1729881AbgB0TNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 14:12:59 -0500
-Received: from mail.z3ntu.xyz ([128.199.32.197]:49908 "EHLO mail.z3ntu.xyz"
+        Thu, 27 Feb 2020 14:13:10 -0500
+Received: from mout.web.de ([212.227.17.12]:53073 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729120AbgB0TM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 14:12:59 -0500
-Received: from localhost.localdomain (80-110-126-226.cgn.dynamic.surfer.at [80.110.126.226])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 4C186C2E6A;
-        Thu, 27 Feb 2020 19:12:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1582830775; bh=Y/pmKEy6mbtQ9MTu4C5WRO85Y36YOBMP53cw8i6LEMw=;
-        h=From:To:Cc:Subject:Date;
-        b=AAE2+wUxPm7bqokJXZtsH3ivLMlJvxVtUMR3pTaMn/472pkS24BDjnuINAJsbo5fx
-         5mE/yaMC9dtIfBOfTD6a5HZdDRQZCR01qK26UQgzQNKh/olOTJWOwtksJPN98qOflD
-         UddF9PdCWrJjaDBx65wuOLy846W1QBTz2trqtqlE=
-From:   Luca Weiss <luca@z3ntu.xyz>
-To:     linux-leds@vger.kernel.org
-Cc:     ~postmarketos/upstreaming@lists.sr.ht, Luca Weiss <luca@z3ntu.xyz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] leds: add sgm3140 driver
-Date:   Thu, 27 Feb 2020 19:50:15 +0100
-Message-Id: <20200227185015.212479-1-luca@z3ntu.xyz>
-X-Mailer: git-send-email 2.25.1
+        id S1729327AbgB0TNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 14:13:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1582830745;
+        bh=3VhfE2m/HmFqn1/f3sCi994dDBd0QMvEqD10y48dthY=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=EHTtVoKsVd5Bsfix7zO+KbH33BaS3Ss+2+0Yg1p/0Tke4AuuBNFrVKcuMlpLfzfKu
+         JM6SUfHwkUaHjWcb7wy8ISgZIn1MG7eTEXWDqilkCEg7H0wC5bNr9E2n1GBb+Hbrsq
+         kc7Z13fuwQKJeMiJn8FFeWFpbLKOyeAM7Jr6MNgg=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.243.69.92]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MFL6u-1jCuMf1npU-00ER3m; Thu, 27
+ Feb 2020 20:12:25 +0100
+Subject: Re: [PATCH 1/2] Documentation: bootconfig: Update boot configuration
+ documentation
+To:     Masami Hiramatsu <mhiramat@kernel.org>, linux-doc@vger.kernel.org
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <158278834245.14966.6179457011671073018.stgit@devnote2>
+ <158278835238.14966.16157216423901327777.stgit@devnote2>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <8514c830-319b-33e9-025a-79d399674fb3@web.de>
+Date:   Thu, 27 Feb 2020 20:12:17 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <158278835238.14966.16157216423901327777.stgit@devnote2>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Lj0zQWZSdVycjZgIT4JsaCfNVof0yXYLVv0g+ZfuoVke48Ud2j0
+ dgkLLVQUgt0MDsK0xIC9q/076QqbQdY0K6IZCczTDTEx+tjwJg3jHd4oR/8Am46iHGfHMCH
+ L4/W8K9Ev7czsqB+BT0gZ6Jvaes8W31Et1TpENa1fPLQMwV8mvWqlf+mabFU++41IkN8XdL
+ UHIgojhiwf4cB+TWSO/hw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:/vrFqpjliZc=:T5W0gLco26Q6PKXndeY3rE
+ Ma2bYyR66PZG0okFuOyQ4QPHUg2ncmsRoZCpuPJ1ebKHitDFsM9Wye/81nO8DvO1IOj43QEAQ
+ fcEWRRTOV812gcQIYkVYw7TdoyWI2qMCSHpZcBZjPQoKdbXRs0iwWK6n6mcD5fksBBwT4Ajjo
+ lYYdORbKQla1G2ZywP3nHCI+a9Y/fYvJX8ujYozZVE6gcsJKeuQfyiZd2ByOaLTBNmlsrJ6QM
+ W5Z0L17KoBppj4f/+mGZ79eeH+WRgpZkWfV4+d0w9iiQXgUnXji3RQPCvpURvql/JQfsfmi34
+ A+bWX28v1Yumx4Vaa1GoZia/y5UIN+HGbs/MnQ6hJugfTfa+UxRnV6/UHoRcxVE4tvaUlsvDa
+ ueHnt+7SFxg8UTEGQbMiIcJgVGTDyqzDQsU/27HZCO9nlsujxsqHNbM3r31KSwnbCzhUqroCe
+ fGY66a7yog7BuOzTO1EBs9OYuwmGbjgw7BW4DO1y1+nxHn6bzeLceIFM1Gbwjl13LxH3dZIJT
+ 5euF9G/edwpERSrgX1It5dpKCDffKqK6qBdpisaOPyyNZ474ZICLcpiNvqzgVbs+RjVXLe9aS
+ dG6i7W2R7LVPqi5ijGWMuIr32L63S4VWVBYchNJH6EsVi9ugoReVih6yBj0ZOtgI5M+Ce/sTO
+ 28FniKwXbIM1dQlMYoxh5SIBaeEbot4h55rdsbwFNNpdVLWaGSA6d7SI58JqmjnzqAr6V4kat
+ hneoIV2UQj0JxPiIoD+Jue1JBBsAaQ1hpBcTuG2VpUrv93gU1ut7Wz9SghkzzjhXyAhyhoh46
+ Ase5Scuy/km6VjBIjclS3NZgIpqNmUBiVHZy8+dPDN7wNvpipoOifJzn1PGxB1LPc2H3cOADK
+ Aeq8MnL7jKPpJjnpm0ZkdonR098jDRWGI9/AJAMW56KWwlImjkncODKCPRHjdATL6O3ZSdeQi
+ 0LUac6CG1mX+bk7p4ZbONXxCu3LLex0WezxkyQvYTmAlrgGbmbJNC5x2NTNRhCXDdATOBariV
+ BiOusSBM7yoE5MIl+BXDvogRPdT9q7PnnkNpgD3lxWAxeu2DZJB2r2NR1Z3knv2gcJLrVcrR8
+ ZWOwP7aqDhEpwv3hioglh65UIf/2l5YfFNZX6ngMr0o/kFTbFYFX7oFYaslSI5H1xwgcLWK1m
+ QR3fGa5DOFejvnqUU7bWe2zw5hDHYS7PboQVgff2xedpxg3poTueko0l9MrdL0/gIoFES6YqP
+ uFHiwAMOE/OSv7q0r
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a driver for the SGMICRO SGM3140 Buck/Boost Charge Pump LED driver.
+> +This allows administrators to pass a structured-Key configuration file
 
-This device is controller by two GPIO lines, one for enabling the LED
-and the second one for switching between torch and flash mode.
+Does capitalisation matter here for the word =E2=80=9CKey=E2=80=9D?
 
-The device will automatically switch to torch mode after being in flash
-mode for about 250-300ms, so after that time the driver will turn the
-LED off again automatically.
 
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
----
-Hi, this driver is controllable via sysfs and v4l2 APIs (as documented
-in Documentation/leds/leds-class-flash.rst).
+> +If you think that kernel/init options becomes too long to write in boot=
+-loader
+> +configuration file or want to comment on each options, you can use this
 
-The following is possible:
+Can the following wording variant be a bit nicer?
 
-# Torch on
-echo 1 > /sys/class/leds/white\:flash/brightness
-# Torch off
-echo 0 > /sys/class/leds/white\:flash/brightness
-# Activate flash
-echo 1 > /sys/class/leds/white\:flash/flash_strobe
++=E2=80=A6 or you want to comment on each option, =E2=80=A6
 
-# Torch on
-v4l2-ctl -d /dev/video1 -c led_mode=2
-# Torch off
-v4l2-ctl -d /dev/video1 -c led_mode=0
-# Activate flash
-v4l2-ctl -d /dev/video1 -c strobe=1
 
-Unfortunately the last command (enabling the 'flash' via v4l2 results in
-the following being printed and nothing happening:
+> +Also, some subsystem may depend on the boot configuration, and it has o=
+wn
+> +root key.
 
-  VIDIOC_S_EXT_CTRLS: failed: Resource busy
-  strobe: Resource busy
+Would you like to explain the influence of a key hierarchy any further?
 
-Unfortunately I couldn't figure out the reason so I'm hoping to get some
-guidance for this. iirc it worked at some point but then stopped.
 
-I will also write dt bindings for the driver once I have "strobe"
-working.
+> +The boot configuration syntax allows user to merge partially same word =
+keys
+>  by brace. For example::
+
+=E2=80=9Cby braces.
+For example::=E2=80=9D?
+
+
+> +The file /proc/bootconfig is a user-space interface to the configuratio=
+n
+
+=E2=80=9C=E2=80=A6 is an user-=E2=80=A6=E2=80=9D?
+
+
+> +Currently the maximum configuration size is 32 KiB and the total number
+> +of key-words and values must be under 1024 nodes.
+
+* How were these constraints chosen?
+
+* Can such system limits become more configurable?
+
+
+> +(Note: Each key consists of words separated by dot, and value also cons=
+ists
+> +of values separated by comma. Here, each word and each value is general=
+ly
+> +called a "node".)
+
+I would prefer the interpretation that nodes contain corresponding attribu=
+tes.
+
+How do you think about to add a link to a formal file format description?
 
 Regards,
-Luca
-
- drivers/leds/Kconfig        |   9 ++
- drivers/leds/Makefile       |   1 +
- drivers/leds/leds-sgm3140.c | 210 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 220 insertions(+)
- create mode 100644 drivers/leds/leds-sgm3140.c
-
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index 4b68520ac251..7c391af8b380 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -836,6 +836,15 @@ config LEDS_LM36274
- 	  Say Y to enable the LM36274 LED driver for TI LMU devices.
- 	  This supports the LED device LM36274.
- 
-+config LEDS_SGM3140
-+	tristate "LED support for the SGM3140"
-+	depends on LEDS_CLASS_FLASH
-+	depends on V4L2_FLASH_LED_CLASS || !V4L2_FLASH_LED_CLASS
-+	depends on OF
-+	help
-+	  This option enables support for the SGM3140 500mA Buck/Boost Charge
-+	  Pump LED Driver. It has supports flash and torch mode.
-+
- comment "LED Triggers"
- source "drivers/leds/trigger/Kconfig"
- 
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index 2da39e896ce8..38d57dd53e4b 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -85,6 +85,7 @@ obj-$(CONFIG_LEDS_LM3601X)		+= leds-lm3601x.o
- obj-$(CONFIG_LEDS_TI_LMU_COMMON)	+= leds-ti-lmu-common.o
- obj-$(CONFIG_LEDS_LM3697)		+= leds-lm3697.o
- obj-$(CONFIG_LEDS_LM36274)		+= leds-lm36274.o
-+obj-$(CONFIG_LEDS_SGM3140)		+= leds-sgm3140.o
- 
- # LED SPI Drivers
- obj-$(CONFIG_LEDS_CR0014114)		+= leds-cr0014114.o
-diff --git a/drivers/leds/leds-sgm3140.c b/drivers/leds/leds-sgm3140.c
-new file mode 100644
-index 000000000000..9e91392f0343
---- /dev/null
-+++ b/drivers/leds/leds-sgm3140.c
-@@ -0,0 +1,210 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2020 Luca Weiss <luca@z3ntu.xyz>
-+
-+#include <linux/gpio/consumer.h>
-+#include <linux/led-class-flash.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+
-+#include <media/v4l2-flash-led-class.h>
-+
-+#define SGM3140_NAME "sgm3140"
-+
-+struct sgm3140 {
-+	struct gpio_desc *flash_gpio;
-+	struct gpio_desc *enable_gpio;
-+
-+	struct led_classdev_flash fled_cdev;
-+	struct v4l2_flash *v4l2_flash;
-+
-+	struct timer_list powerdown_timer;
-+};
-+
-+static struct sgm3140 *flcdev_to_sgm3140(struct led_classdev_flash *flcdev)
-+{
-+	return container_of(flcdev, struct sgm3140, fled_cdev);
-+}
-+
-+int sgm3140_strobe_set(struct led_classdev_flash *fled_cdev, bool state)
-+{
-+	struct sgm3140 *priv = flcdev_to_sgm3140(fled_cdev);
-+
-+	if (state) {
-+		gpiod_set_value_cansleep(priv->flash_gpio, 1);
-+		gpiod_set_value_cansleep(priv->enable_gpio, 1);
-+		mod_timer(&priv->powerdown_timer,
-+			  jiffies + msecs_to_jiffies(250));
-+	} else {
-+		gpiod_set_value_cansleep(priv->enable_gpio, 0);
-+		gpiod_set_value_cansleep(priv->flash_gpio, 0);
-+		del_timer_sync(&priv->powerdown_timer);
-+	}
-+
-+	return 0;
-+}
-+
-+struct led_flash_ops sgm3140_flash_ops = {
-+	.strobe_set = sgm3140_strobe_set,
-+};
-+
-+int sgm3140_brightness_set(struct led_classdev *led_cdev,
-+			   enum led_brightness brightness)
-+{
-+	struct led_classdev_flash *fled_cdev = lcdev_to_flcdev(led_cdev);
-+	struct sgm3140 *priv = flcdev_to_sgm3140(fled_cdev);
-+
-+	if (brightness == LED_OFF)
-+		gpiod_set_value_cansleep(priv->enable_gpio, 0);
-+	else
-+		gpiod_set_value_cansleep(priv->enable_gpio, 1);
-+
-+	return 0;
-+}
-+
-+static void sgm3140_powerdown_timer(struct timer_list *t)
-+{
-+	struct sgm3140 *priv = from_timer(priv, t, powerdown_timer);
-+
-+	gpiod_set_value_cansleep(priv->enable_gpio, 0);
-+	gpiod_set_value_cansleep(priv->flash_gpio, 0);
-+}
-+
-+#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
-+static void sgm3140_init_v4l2_flash_config(struct sgm3140 *priv,
-+					   struct v4l2_flash_config *v4l2_sd_cfg)
-+{
-+	struct led_classdev *led_cdev = &priv->fled_cdev.led_cdev;
-+	struct led_flash_setting *s;
-+
-+	strlcpy(v4l2_sd_cfg->dev_name, led_cdev->dev->kobj.name,
-+		sizeof(v4l2_sd_cfg->dev_name));
-+
-+	s = &v4l2_sd_cfg->intensity;
-+	s->min = 0;
-+	s->max = 1;
-+	s->step = 1;
-+	s->val = 1;
-+}
-+
-+#else
-+static void sgm3140_init_v4l2_flash_config(struct sgm3140 *priv,
-+					   struct v4l2_flash_config *v4l2_sd_cfg)
-+{
-+}
-+#endif
-+
-+static int sgm3140_probe(struct platform_device *pdev)
-+{
-+	struct sgm3140 *priv;
-+	struct led_classdev *led_cdev;
-+	struct led_classdev_flash *fled_cdev;
-+	struct led_init_data init_data = {};
-+	struct device_node *child_node;
-+	struct v4l2_flash_config v4l2_sd_cfg;
-+	int ret;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->flash_gpio = devm_gpiod_get(&pdev->dev, "flash", GPIOD_OUT_LOW);
-+	ret = PTR_ERR_OR_ZERO(priv->flash_gpio);
-+	if (ret) {
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Failed to request flash gpio: %d\n",
-+				ret);
-+		return ret;
-+	}
-+
-+	priv->enable_gpio = devm_gpiod_get(&pdev->dev, "enable", GPIOD_OUT_LOW);
-+	ret = PTR_ERR_OR_ZERO(priv->enable_gpio);
-+	if (ret) {
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Failed to request enable gpio: %d\n",
-+				ret);
-+		return ret;
-+	}
-+
-+	child_node = of_get_next_available_child(pdev->dev.of_node, NULL);
-+	if (!child_node) {
-+		dev_err(&pdev->dev, "No DT child node found for connected LED.\n");
-+		return -EINVAL;
-+	}
-+
-+	timer_setup(&priv->powerdown_timer, sgm3140_powerdown_timer, 0);
-+
-+	fled_cdev = &priv->fled_cdev;
-+	led_cdev = &fled_cdev->led_cdev;
-+
-+	fled_cdev->ops = &sgm3140_flash_ops;
-+
-+	led_cdev->brightness_set_blocking = sgm3140_brightness_set;
-+	led_cdev->max_brightness = LED_ON;
-+	led_cdev->flags |= LED_DEV_CAP_FLASH;
-+
-+	init_data.fwnode = of_fwnode_handle(child_node);
-+	init_data.devicename = SGM3140_NAME;
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	/* Register in the LED subsystem */
-+	ret = led_classdev_flash_register_ext(&pdev->dev, fled_cdev, &init_data);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "Failed to register flash device: %d\n",
-+			ret);
-+		goto err_flash_register;
-+	}
-+
-+	sgm3140_init_v4l2_flash_config(priv, &v4l2_sd_cfg);
-+
-+	/* Create V4L2 Flash subdev */
-+	priv->v4l2_flash = v4l2_flash_init(&pdev->dev, of_fwnode_handle(child_node),
-+					   fled_cdev, NULL,
-+					   &v4l2_sd_cfg);
-+	if (IS_ERR(priv->v4l2_flash)) {
-+		ret = PTR_ERR(priv->v4l2_flash);
-+		goto err_v4l2_flash_init;
-+	}
-+
-+	return 0;
-+
-+err_v4l2_flash_init:
-+	led_classdev_flash_unregister(fled_cdev);
-+err_flash_register:
-+	of_node_put(child_node);
-+	return ret;
-+}
-+
-+static int sgm3140_remove(struct platform_device *pdev)
-+{
-+	struct sgm3140 *priv = platform_get_drvdata(pdev);
-+
-+	del_timer_sync(&priv->powerdown_timer);
-+
-+	v4l2_flash_release(priv->v4l2_flash);
-+	led_classdev_flash_unregister(&priv->fled_cdev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id sgm3140_dt_match[] = {
-+	{ .compatible = "sgmicro,sgm3140" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, sgm3140_dt_match);
-+
-+static struct platform_driver sgm3140_driver = {
-+	.probe	= sgm3140_probe,
-+	.remove	= sgm3140_remove,
-+	.driver	= {
-+		.name	= "sgm3140",
-+		.of_match_table = sgm3140_dt_match,
-+	},
-+};
-+
-+module_platform_driver(sgm3140_driver);
-+
-+MODULE_AUTHOR("Luca Weiss <luca@z3ntu.xyz>");
-+MODULE_DESCRIPTION("SG Micro SGM3140 charge pump led driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.25.1
-
+Markus
