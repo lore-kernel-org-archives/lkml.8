@@ -2,104 +2,128 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BC9C3F2C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CEEC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0433246BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:03:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582844637;
-	bh=ujUq05vTwgp4zfCZVaURWqd3tAcJ6/JW0KDXhNHLdnM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qWpMQ7oawHUZOhnTUFkWV0DblcplVtgALAZJo18v1RQywJ0Au4NT3BdKAPP5iZP/9
-	 qyeJrug7DXjAEQzO3uMrxmZBTR54bV2vOfPW/eZaNY1iMFZweXPFGnodLyJcn7hf5K
-	 MEEA6OxEQZxS1WWwLsxk3W9XTr3hHMX+1XL9o88U=
+	by mail.kernel.org (Postfix) with ESMTP id 6CCF224699
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:05:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D3uxW57B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729854AbgB0XDz (ORCPT
+        id S1729912AbgB0XFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 18:03:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55674 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729738AbgB0XDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 18:03:55 -0500
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E5212469F;
-        Thu, 27 Feb 2020 23:03:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582844634;
-        bh=ujUq05vTwgp4zfCZVaURWqd3tAcJ6/JW0KDXhNHLdnM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=oEH/uiuZrTAbwGQzcL4TRZqtyLXCPzURXZ7AHmOcxlmfYjQxq8rjuEdMVllcYhdBA
-         r7vHN9Gx+mjeyXpcJvnCi/j/XpUPPTDYDDhBIhlPMPTNLSwWLfJpKrxBmJMnUuslRN
-         E9StyYr4S9lGrNRtvAcH59YGWPIVrmUjaPMsrTaM=
-Received: by mail-qk1-f176.google.com with SMTP id e16so1232157qkl.6;
-        Thu, 27 Feb 2020 15:03:54 -0800 (PST)
-X-Gm-Message-State: APjAAAXCRJrWYKKXHXKqmcqE0vZ6ANB+mUlRpcinZqSAvLp879oV+p5q
-        ArJEtsOC1WWAEwr9m94WSnVeLbslAeHF2PKsaQ==
-X-Google-Smtp-Source: APXvYqw/laX46RozAEZMxyINIQG8FYK9/JT0+//1/HbN8AUu5jHbA+IM4E9RvA5ctlGhNnas4Rvy8UDtCHXj2DZ9xA4=
-X-Received: by 2002:a05:620a:12a3:: with SMTP id x3mr1989416qki.254.1582844633702;
- Thu, 27 Feb 2020 15:03:53 -0800 (PST)
-MIME-Version: 1.0
-References: <20200221174754.5295-1-michael@walle.cc> <20200221174754.5295-4-michael@walle.cc>
- <CAL_JsqL8QGKARtRAfjCMyk4Pp7EWhFMV8JQpveHoJ2OyH5kBPA@mail.gmail.com> <CADRPPNR1n1sviJnhq_zuUFJcMYqsVKy0O7NOF1pxF_4VH+dasg@mail.gmail.com>
-In-Reply-To: <CADRPPNR1n1sviJnhq_zuUFJcMYqsVKy0O7NOF1pxF_4VH+dasg@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 27 Feb 2020 17:03:42 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKMNFFG5H4gPQwRdcTpfHynqZWo2A2db-oL7EmvTNqNkQ@mail.gmail.com>
-Message-ID: <CAL_JsqKMNFFG5H4gPQwRdcTpfHynqZWo2A2db-oL7EmvTNqNkQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/9] tty: serial: fsl_lpuart: handle EPROBE_DEFER for DMA
-To:     Li Yang <leoyang.li@nxp.com>
-Cc:     Michael Walle <michael@walle.cc>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
+        Thu, 27 Feb 2020 18:05:17 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43838 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729656AbgB0XFR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 18:05:17 -0500
+Received: by mail-pg1-f194.google.com with SMTP id u12so442841pgb.10;
+        Thu, 27 Feb 2020 15:05:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Bk/8S/Z3TX6gpAJL/01qav03pWjPrUS9+WLbM4tWfRA=;
+        b=D3uxW57B0O2ZCS13ox+7bG3kfYJ5dm/5SQnmvP4FvWhMrFCseDKD7aHRX77YVxLIeK
+         QmXQXLgi+BnIuBKkThmncjPPcuDErTVpgwIJInw2WrOKFBUl74O14clRUCo0uKUasRG2
+         jHFO9WNnbVQI5EgXyYuRbBazh7hxKpeywV9Pewb4YiMMN3rsNkp3XDAXHVyhCAFV0b/J
+         HkE3e7EbQif7P6K7MEumvanCMAPKGqR7osu4IrHNXTFkYZUgtnm6eDQA9i0SF0BaiHuF
+         umwDNdSfJi8ud1Yac4Hu2BOp6j2iWu8BmIrGqz9CXAgOBxaG3LPsdKXZWCRQRhJMU7aj
+         kBfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Bk/8S/Z3TX6gpAJL/01qav03pWjPrUS9+WLbM4tWfRA=;
+        b=DEhascdTjvS1ytbfMw8zRWZL3NhIxMyrFF7yB/KZRBxd+ShlGNPwRK1ZBL2/okI+Jv
+         b1NUMBYoyyQV+us53wx+of3++gLaNQqKJbhDhocrmjZUcLG0BrSfkodmAiNviNyMmPHy
+         EEIe8BPV2MRv3kxIdwqvK27wry4nKxK+JwasABdCCrTkyPRf40taAVPhWpcYytCDolCq
+         KpeFSrzVg4AYvC7jxisXJqIrMYavr6OqqOddIwXSKXd+ObNNtGF97jjVGl+H/zDlxzGV
+         qkw4X2BLRXn59MG7tEHlYGFAWS4qB8zRbZZrg0/vCZQ2/cMtzdeMLmc+fsxC2J22ngzG
+         wwfQ==
+X-Gm-Message-State: APjAAAVnKUECtFSn6s9rbhXYYigIsIG4WB8hJOG2MoIPBQR/WiR2Ii2I
+        BelNOBC8cWrrC0KawPY48IgXJDKlv1w=
+X-Google-Smtp-Source: APXvYqyDK8WIIeHKpc/60SN35zdliyQ2V/wsC3lesIYegLPHI6ky6j9GatyILA/aeOM6XAgy1Jjrng==
+X-Received: by 2002:a63:5fd5:: with SMTP id t204mr1541214pgb.265.1582844715754;
+        Thu, 27 Feb 2020 15:05:15 -0800 (PST)
+Received: from taoren-ubuntu-R90MNF91.thefacebook.com ([2620:10d:c090:500::4:d8f5])
+        by smtp.gmail.com with ESMTPSA id w2sm8275975pfw.43.2020.02.27.15.05.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 15:05:15 -0800 (PST)
+From:   rentao.bupt@gmail.com
+To:     Felipe Balbi <balbi@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Vabhav Sharma <vabhav.sharma@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
+        taoren@fb.com
+Cc:     Tao Ren <rentao.bupt@gmail.com>
+Subject: [PATCH v5 0/7] aspeed-g6: enable usb support
+Date:   Thu, 27 Feb 2020 15:05:00 -0800
+Message-Id: <20200227230507.8682-1-rentao.bupt@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 4:49 PM Li Yang <leoyang.li@nxp.com> wrote:
->
-> On Thu, Feb 27, 2020 at 4:35 PM Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Fri, Feb 21, 2020 at 11:48 AM Michael Walle <michael@walle.cc> wrote:
-> > >
-> > > The DMA channel might not be available at the first probe time. This is
-> > > esp. the case if the DMA controller has an IOMMU mapping.
-> > >
-> > > Use the new dma_request_chan() API and handle EPROBE_DEFER errors. Also
-> > > reorder the code a bit, so that we don't prepare the whole UART just to
-> > > determine that the DMA channel is not ready yet and we have to undo all
-> > > the stuff. Try to map the DMA channels earlier.
-> >
-> > Changing this means you never probe successfully if you boot a kernel
-> > with the DMA driver disabled (or it's IOMMU disabled). Some other
-> > drivers request DMA in open() and can work either way.
->
-> We got this exact issue previously with another driver.  When the
-> required DMA driver is disabled, the DMA framework cannot figure out
-> this situation and keeps returning EPROBE_DEFER.  I'm wondering if we
-> should update the DMA framework to use your deferred probe timeout
-> mechanism.  Is it still only used for debug purpose?
+From: Tao Ren <rentao.bupt@gmail.com>
 
-It's undergoing some rework ATM to not just be for debug. However,
-it's not really going to help you if you care about the console
-because waiting for the timeout will be too late to register the
-console.
+The patch series aims at enabling USB Host and Gadget support on AST2600
+platforms.
 
-Rob
+Patch #1 includes vhub's usb descriptors in struct "ast_vhub": all usb
+descriptor changes will go to the per-vhub instance instead of touching
+the global default descriptors.
+
+Patch #2 replaces hardcoded vhub port/endpoint number with device tree
+properties, so that it's more convenient to add support for ast2600-vhub
+which provides more downstream ports and endpoints.
+
+Patch #3 enables ast2600 support in aspeed-vhub usb gadget driver.
+
+Patch #4 adds USB devices and according pin groups in aspeed-g6 dtsi.
+
+Patch #5 and #6 add vhub port/endpoint properties into aspeed-g4 and
+aspeed-g5 dtsi.
+
+Patch #7 adds device tree binding document for aspeed usb-vhub driver.
+
+Tao Ren (7):
+  usb: gadget: aspeed: support per-vhub usb descriptors
+  usb: gadget: aspeed: read vhub properties from device tree
+  usb: gadget: aspeed: add ast2600 vhub support
+  ARM: dts: aspeed-g6: add usb functions
+  ARM: dts: aspeed-g5: add vhub port and endpoint properties
+  ARM: dts: aspeed-g4: add vhub port and endpoint properties
+  dt-bindings: usb: add documentation for aspeed usb-vhub
+
+ .../bindings/usb/aspeed,usb-vhub.yaml         | 71 +++++++++++++++++++
+ arch/arm/boot/dts/aspeed-g4.dtsi              |  2 +
+ arch/arm/boot/dts/aspeed-g5.dtsi              |  2 +
+ arch/arm/boot/dts/aspeed-g6-pinctrl.dtsi      | 25 +++++++
+ arch/arm/boot/dts/aspeed-g6.dtsi              | 45 ++++++++++++
+ drivers/usb/gadget/udc/aspeed-vhub/Kconfig    |  4 +-
+ drivers/usb/gadget/udc/aspeed-vhub/core.c     | 71 ++++++++++++-------
+ drivers/usb/gadget/udc/aspeed-vhub/dev.c      | 30 +++++---
+ drivers/usb/gadget/udc/aspeed-vhub/epn.c      |  4 +-
+ drivers/usb/gadget/udc/aspeed-vhub/hub.c      | 58 ++++++++++-----
+ drivers/usb/gadget/udc/aspeed-vhub/vhub.h     | 43 +++++++----
+ 11 files changed, 284 insertions(+), 71 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
+
+-- 
+2.17.1
+
