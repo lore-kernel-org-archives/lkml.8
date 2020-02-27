@@ -2,119 +2,137 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E13C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF71C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48B0424697
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:29:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50261246A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:29:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="umvKp+2r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a0nmU5d8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730268AbgB0W2x (ORCPT
+        id S1730373AbgB0W3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 17:28:53 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:58822 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729868AbgB0W2w (ORCPT
+        Thu, 27 Feb 2020 17:29:42 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45802 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729850AbgB0W3l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 17:28:52 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01RMSnH9079926;
-        Thu, 27 Feb 2020 16:28:49 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582842529;
-        bh=63cC4NHrfMOkwW/2vuaaWneznyESfcGCTMYxXiBAAk8=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=umvKp+2rE+iQ2F53phvPwXv5Ul1BF6xl3jPBqddHystCaJnfriPMfWZzk1Yaa5Em0
-         ecx6NPXmbG3o8W/LxxAcSxhv7EEpC8Tv4N0DkQFv1XE5UujFg48R/7zIIuFLGVnWg0
-         3wPwUvmwGyVM7uFni35ZxOmA1hfCQooVwvR38clM=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01RMSnjN056953;
-        Thu, 27 Feb 2020 16:28:49 -0600
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 27
- Feb 2020 16:28:48 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 27 Feb 2020 16:28:48 -0600
-Received: from fllv0103.dal.design.ti.com (fllv0103.dal.design.ti.com [10.247.120.73])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01RMSmIg116902;
-        Thu, 27 Feb 2020 16:28:48 -0600
-Received: from localhost (irmo.dhcp.ti.com [128.247.58.153])
-        by fllv0103.dal.design.ti.com (8.14.7/8.14.7) with ESMTP id 01RMSmvs087005;
-        Thu, 27 Feb 2020 16:28:48 -0600
-From:   Suman Anna <s-anna@ti.com>
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Suman Anna <s-anna@ti.com>
-Subject: [PATCH v2 1/5] dt-bindings: bus: ti-sysc: Add support for PRUSS SYSC type
-Date:   Thu, 27 Feb 2020 16:28:33 -0600
-Message-ID: <20200227222837.7329-2-s-anna@ti.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200227222837.7329-1-s-anna@ti.com>
-References: <20200227222837.7329-1-s-anna@ti.com>
+        Thu, 27 Feb 2020 17:29:41 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 2so569879pfg.12;
+        Thu, 27 Feb 2020 14:29:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dAKQtQFMwvA4in1IKX12aA2LxpzkOZ3DeV5aYoLW1Dk=;
+        b=a0nmU5d8Fqui67x7EDMrxyRLgET/G0iEKZQ3fHRK/3Dou0wE6XBiu9qf3bM08cfP6D
+         /qzbSszn/RqpuBqcbVC38AaKcMIxx2t+aRQ9BuilhnT+bm4NDiyniMAVGrW5xNkH2lQ3
+         v376HxpgeUt0aQI5qpIQU80drCyrzsf4PKMVY7JtmLHX2PfuOOkuzUbT0ODcIbO4ACFK
+         r1D65ggKF/4q/Y77n5lN02m+1wW3RwkBkcjmYy7sSKjgDTWZMOQh41RY7Qt+eRoa1MPv
+         f2ZBhfq6NThumXvbKk2/QKyT/YlxdBpgGA5Ms52RO1xNhHrbwdBMFxEuYjO6ZAkHkV/k
+         35jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dAKQtQFMwvA4in1IKX12aA2LxpzkOZ3DeV5aYoLW1Dk=;
+        b=oi6xq7QJGkOf2zU8pwdvRRfONMhLVf34T1z5U5eIeiuKHK2w8NVHLa1Z5YC6BG7ERF
+         00NfS2O5N3Sf/H9eX61UiTseD/AabG3BILmJVrJqHKpcVjKgG24st0rk9yLUFQCqxWJL
+         k1I3Y3oeD3fF6TSZo/Ih1FCQtr6ItXpJWd5+bGnHhE2sfdgBvW2cyw7P43WTtu7Fe4wH
+         Md4LhRlSKMqNYzxEwT2rW34mjpHz7XsAzxEKCm9s3KjzJieF0wgC9H4tdpoMSO7C5vSy
+         hVcXswnBd9WFlZrGvqxit0400jIQXgx/LUREBZ9Gcg0Yy+wV2JGk17bkZLjjwev7/mSf
+         EQOA==
+X-Gm-Message-State: APjAAAXGo29KcjjNlq3ZLYuSDjcz8vUw1jbkvf3D2k6Z3GsHbIbtuGaZ
+        exW1bDTdJyp6vROnVG/EboY=
+X-Google-Smtp-Source: APXvYqwCjo4NWg/n1zmJDAcIKJ2UE6VbP7KCZK4B2tzXfKC/iHPldab23u/RzAE40bqfKpBKWNJKFQ==
+X-Received: by 2002:a63:2c85:: with SMTP id s127mr1480287pgs.138.1582842580284;
+        Thu, 27 Feb 2020 14:29:40 -0800 (PST)
+Received: from taoren-ubuntu-R90MNF91 ([2620:10d:c090:500::4:d8f5])
+        by smtp.gmail.com with ESMTPSA id 136sm7794224pgh.26.2020.02.27.14.29.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 27 Feb 2020 14:29:39 -0800 (PST)
+Date:   Thu, 27 Feb 2020 14:29:32 -0800
+From:   Tao Ren <rentao.bupt@gmail.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
+        taoren@fb.com
+Subject: Re: [PATCH v4 2/7] usb: gadget: aspeed: read vhub properties from
+ device tree
+Message-ID: <20200227222931.GA29420@taoren-ubuntu-R90MNF91>
+References: <20200226230346.672-1-rentao.bupt@gmail.com>
+ <20200226230346.672-3-rentao.bupt@gmail.com>
+ <b9b8977ae185ca944e703721d93b8d8464d1475f.camel@kernel.crashing.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b9b8977ae185ca944e703721d93b8d8464d1475f.camel@kernel.crashing.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roger Quadros <rogerq@ti.com>
+Hi Ben,
 
-The PRUSS module has a SYSCFG which is unique. The SYSCFG
-has two additional unique fields called STANDBY_INIT and
-SUB_MWAIT in addition to regular IDLE_MODE and STANDBY_MODE
-fields. Add the bindings for this new sysc type.
+On Thu, Feb 27, 2020 at 03:09:01PM +1100, Benjamin Herrenschmidt wrote:
+> On Wed, 2020-02-26 at 15:03 -0800, rentao.bupt@gmail.com wrote:
+> > From: Tao Ren <rentao.bupt@gmail.com>
+> > 
+> > The patch introduces 2 DT properties ("aspeed,vhub-downstream-ports" and
+> > "aspeed,vhub-generic-endpoints") which replaces hardcoded port/endpoint
+> > number. It is to make it more convenient to add support for newer vhub
+> > revisions with different number of ports and endpoints.
+> > 
+> > Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+> > Reviewed-by: Joel Stanley <joel@jms.id.au>
+> 
+> With one minor nit that can be addressed in a subsequent patch (see
+> below)
+> 
+> Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Suman Anna <s-anna@ti.com>
----
-v2: No changes
+Thanks for the help on the patch series.
 
- Documentation/devicetree/bindings/bus/ti-sysc.txt | 1 +
- include/dt-bindings/bus/ti-sysc.h                 | 4 ++++
- 2 files changed, 5 insertions(+)
+> > -		if (istat & VHUB_IRQ_DEVICE3)
+> > -			ast_vhub_dev_irq(&vhub->ports[2].dev);
+> > -		if (istat & VHUB_IRQ_DEVICE4)
+> > -			ast_vhub_dev_irq(&vhub->ports[3].dev);
+> > -		if (istat & VHUB_IRQ_DEVICE5)
+> > -			ast_vhub_dev_irq(&vhub->ports[4].dev);
+> > +	for (i = 0; i < vhub->max_ports; i++) {
+> > +		u32 dev_mask = VHUB_IRQ_DEVICE1 << i;
+> > +
+> > +		if (istat & dev_mask)
+> > +			ast_vhub_dev_irq(&vhub->ports[i].dev);
+> >  	}
+> 
+> The 2400 and 2500 have very slow cores and every cycle counts in that
+> interrupt handler from my experience. I would sugggest you generate a
+> "mask" of all the device interrupts for enabled ports in struct vhub
+> and AND istat with that mask before going through the loop. Either that
+> or use find_next_zero_bit...
+> 
+> I wouldn't gate merging this patch on this, it can be a subsequent
+> refinement.
 
-diff --git a/Documentation/devicetree/bindings/bus/ti-sysc.txt b/Documentation/devicetree/bindings/bus/ti-sysc.txt
-index 233eb8294204..c984143d08d2 100644
---- a/Documentation/devicetree/bindings/bus/ti-sysc.txt
-+++ b/Documentation/devicetree/bindings/bus/ti-sysc.txt
-@@ -38,6 +38,7 @@ Required standard properties:
- 		"ti,sysc-dra7-mcasp"
- 		"ti,sysc-usb-host-fs"
- 		"ti,sysc-dra7-mcan"
-+		"ti,sysc-pruss"
- 
- - reg		shall have register areas implemented for the interconnect
- 		target module in question such as revision, sysc and syss
-diff --git a/include/dt-bindings/bus/ti-sysc.h b/include/dt-bindings/bus/ti-sysc.h
-index babd08a1d226..76b07826ed05 100644
---- a/include/dt-bindings/bus/ti-sysc.h
-+++ b/include/dt-bindings/bus/ti-sysc.h
-@@ -18,6 +18,10 @@
- 
- #define SYSC_DRA7_MCAN_ENAWAKEUP	(1 << 4)
- 
-+/* PRUSS sysc found on AM33xx/AM43xx/AM57xx */
-+#define SYSC_PRUSS_SUB_MWAIT		(1 << 5)
-+#define SYSC_PRUSS_STANDBY_INIT		(1 << 4)
-+
- /* SYSCONFIG STANDBYMODE/MIDLEMODE/SIDLEMODE supported by hardware */
- #define SYSC_IDLE_FORCE			0
- #define SYSC_IDLE_NO			1
--- 
-2.23.0
+Got it. I will take care of the improvement in a follow-up patch.
 
+Cheers,
+
+Tao
