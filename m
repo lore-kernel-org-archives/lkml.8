@@ -2,52 +2,53 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7610DC3F356
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C55C3F347
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E8E520801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C47B2468D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:49:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811297;
-	bh=0ghdP1grCzdwHSd1n2a9mI5We/QHyGeZGfESMMJlXHI=;
+	s=default; t=1582811343;
+	bh=V+Ce6ZOwPdQjcoMItnjmu+Ljkq7PcR3PpGh153vbJNo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X+VHlfqoDeIq+Z4FreOxCPGXk05GGf5ttwweQ3UIpQbXwHo+iR+HkGTXxjawRQR+A
-	 EbL5F93DlFrx3vs67wvl12959Le32+Ud0l3/kS7GhrddDOIciL2v/ruR6VZqs3C0of
-	 ICxfbEeHLK9UJfMheU2wWut2qfXoIVqQGuP8dAvE=
+	b=OcxqlSDZEpHhFGBg85R9QNO6hBDJS2NJFeh0EoY0gZdZa51tYsjH80RwqSlPwhae3
+	 eO1To3fmoEjr8CyfpmygWJ9U0Ar0MSuoj/LkZ9bRieB9gQEVr52O1rWFgL+srSLyk9
+	 NaOPJMd/AWztdIrliGMDXjuxdWaUkxfDl1aaB1fo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730842AbgB0NsQ (ORCPT
+        id S1730981AbgB0NtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:48:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44878 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:49:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730837AbgB0NsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:48:13 -0500
+        id S1730973AbgB0Ns6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:48:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 303E820578;
-        Thu, 27 Feb 2020 13:48:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AE6C2468D;
+        Thu, 27 Feb 2020 13:48:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811292;
-        bh=0ghdP1grCzdwHSd1n2a9mI5We/QHyGeZGfESMMJlXHI=;
+        s=default; t=1582811338;
+        bh=V+Ce6ZOwPdQjcoMItnjmu+Ljkq7PcR3PpGh153vbJNo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gWDcitglPOAKtZRoSW5e8Kdt98UGu1h5o6qA8ycOL30RvlCh2kF8WWQVsz5mVv3dO
-         zEUJHFLk4UmVu1Cq2YIurrfXxC0umXAvFuAjTX0royuh3cygSoG4V7u1z08zO72egO
-         NGgjI1J/8YJb2o6mWv+ZePM3QZZDXgEUAUs9O1yE=
+        b=SRCEhLjqQEV7vb2BxJlHc7rtMRLB+u1IDx+tSLniL4GBWifc5Sy7KzZ74HegShzxC
+         cbw3uuxU/3zCeqLbhn4/ERx9ASm1DroUGryn68+LhOyS7DytKsfOgPPINdTrw6juoh
+         dAPbWv9kTUWWi8k89DhaDSL0CIoKih9VfBo6Oktc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
+        stable@vger.kernel.org, Oliver OHalloran <oohall@gmail.com>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 075/165] tty: synclinkmp: Adjust indentation in several functions
-Date:   Thu, 27 Feb 2020 14:35:49 +0100
-Message-Id: <20200227132242.376250187@linuxfoundation.org>
+Subject: [PATCH 4.9 095/165] powerpc/sriov: Remove VF eeh_dev state when disabling SR-IOV
+Date:   Thu, 27 Feb 2020 14:36:09 +0100
+Message-Id: <20200227132245.170467502@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -60,157 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Oliver O'Halloran <oohall@gmail.com>
 
-[ Upstream commit 1feedf61e7265128244f6993f23421f33dd93dbc ]
+[ Upstream commit 1fb4124ca9d456656a324f1ee29b7bf942f59ac8 ]
 
-Clang warns:
+When disabling virtual functions on an SR-IOV adapter we currently do not
+correctly remove the EEH state for the now-dead virtual functions. When
+removing the pci_dn that was created for the VF when SR-IOV was enabled
+we free the corresponding eeh_dev without removing it from the child device
+list of the eeh_pe that contained it. This can result in crashes due to the
+use-after-free.
 
-../drivers/tty/synclinkmp.c:1456:3: warning: misleading indentation;
-statement is not part of the previous 'if' [-Wmisleading-indentation]
-        if (C_CRTSCTS(tty)) {
-        ^
-../drivers/tty/synclinkmp.c:1453:2: note: previous statement is here
-        if (I_IXOFF(tty))
-        ^
-../drivers/tty/synclinkmp.c:2473:8: warning: misleading indentation;
-statement is not part of the previous 'if' [-Wmisleading-indentation]
-                                                info->port.tty->hw_stopped = 0;
-                                                ^
-../drivers/tty/synclinkmp.c:2471:7: note: previous statement is here
-                                                if ( debug_level >= DEBUG_LEVEL_ISR )
-                                                ^
-../drivers/tty/synclinkmp.c:2482:8: warning: misleading indentation;
-statement is not part of the previous 'if' [-Wmisleading-indentation]
-                                                info->port.tty->hw_stopped = 1;
-                                                ^
-../drivers/tty/synclinkmp.c:2480:7: note: previous statement is here
-                                                if ( debug_level >= DEBUG_LEVEL_ISR )
-                                                ^
-../drivers/tty/synclinkmp.c:2809:3: warning: misleading indentation;
-statement is not part of the previous 'if' [-Wmisleading-indentation]
-        if (I_BRKINT(info->port.tty) || I_PARMRK(info->port.tty))
-        ^
-../drivers/tty/synclinkmp.c:2807:2: note: previous statement is here
-        if (I_INPCK(info->port.tty))
-        ^
-../drivers/tty/synclinkmp.c:3246:3: warning: misleading indentation;
-statement is not part of the previous 'else' [-Wmisleading-indentation]
-        set_signals(info);
-        ^
-../drivers/tty/synclinkmp.c:3244:2: note: previous statement is here
-        else
-        ^
-5 warnings generated.
-
-The indentation on these lines is not at all consistent, tabs and spaces
-are mixed together. Convert to just using tabs to be consistent with the
-Linux kernel coding style and eliminate these warnings from clang.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/823
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Link: https://lore.kernel.org/r/20191218024720.3528-1-natechancellor@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
+Reviewed-by: Sam Bobroff <sbobroff@linux.ibm.com>
+Tested-by: Sam Bobroff <sbobroff@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190821062655.19735-1-oohall@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/synclinkmp.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ arch/powerpc/kernel/pci_dn.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/tty/synclinkmp.c b/drivers/tty/synclinkmp.c
-index dec156586de1b..2f6df8d74b4aa 100644
---- a/drivers/tty/synclinkmp.c
-+++ b/drivers/tty/synclinkmp.c
-@@ -1467,10 +1467,10 @@ static void throttle(struct tty_struct * tty)
- 	if (I_IXOFF(tty))
- 		send_xchar(tty, STOP_CHAR(tty));
+diff --git a/arch/powerpc/kernel/pci_dn.c b/arch/powerpc/kernel/pci_dn.c
+index 5926934370702..c8f1b78fbd0e2 100644
+--- a/arch/powerpc/kernel/pci_dn.c
++++ b/arch/powerpc/kernel/pci_dn.c
+@@ -271,9 +271,22 @@ void remove_dev_pci_data(struct pci_dev *pdev)
+ 				continue;
  
-- 	if (C_CRTSCTS(tty)) {
-+	if (C_CRTSCTS(tty)) {
- 		spin_lock_irqsave(&info->lock,flags);
- 		info->serial_signals &= ~SerialSignal_RTS;
--	 	set_signals(info);
-+		set_signals(info);
- 		spin_unlock_irqrestore(&info->lock,flags);
- 	}
- }
-@@ -1496,10 +1496,10 @@ static void unthrottle(struct tty_struct * tty)
- 			send_xchar(tty, START_CHAR(tty));
- 	}
- 
-- 	if (C_CRTSCTS(tty)) {
-+	if (C_CRTSCTS(tty)) {
- 		spin_lock_irqsave(&info->lock,flags);
- 		info->serial_signals |= SerialSignal_RTS;
--	 	set_signals(info);
-+		set_signals(info);
- 		spin_unlock_irqrestore(&info->lock,flags);
- 	}
- }
-@@ -2485,7 +2485,7 @@ static void isr_io_pin( SLMP_INFO *info, u16 status )
- 					if (status & SerialSignal_CTS) {
- 						if ( debug_level >= DEBUG_LEVEL_ISR )
- 							printk("CTS tx start...");
--			 			info->port.tty->hw_stopped = 0;
-+						info->port.tty->hw_stopped = 0;
- 						tx_start(info);
- 						info->pending_bh |= BH_TRANSMIT;
- 						return;
-@@ -2494,7 +2494,7 @@ static void isr_io_pin( SLMP_INFO *info, u16 status )
- 					if (!(status & SerialSignal_CTS)) {
- 						if ( debug_level >= DEBUG_LEVEL_ISR )
- 							printk("CTS tx stop...");
--			 			info->port.tty->hw_stopped = 1;
-+						info->port.tty->hw_stopped = 1;
- 						tx_stop(info);
- 					}
- 				}
-@@ -2821,8 +2821,8 @@ static void change_params(SLMP_INFO *info)
- 	info->read_status_mask2 = OVRN;
- 	if (I_INPCK(info->port.tty))
- 		info->read_status_mask2 |= PE | FRME;
-- 	if (I_BRKINT(info->port.tty) || I_PARMRK(info->port.tty))
-- 		info->read_status_mask1 |= BRKD;
-+	if (I_BRKINT(info->port.tty) || I_PARMRK(info->port.tty))
-+		info->read_status_mask1 |= BRKD;
- 	if (I_IGNPAR(info->port.tty))
- 		info->ignore_status_mask2 |= PE | FRME;
- 	if (I_IGNBRK(info->port.tty)) {
-@@ -3192,7 +3192,7 @@ static int tiocmget(struct tty_struct *tty)
-  	unsigned long flags;
- 
- 	spin_lock_irqsave(&info->lock,flags);
-- 	get_signals(info);
-+	get_signals(info);
- 	spin_unlock_irqrestore(&info->lock,flags);
- 
- 	result = ((info->serial_signals & SerialSignal_RTS) ? TIOCM_RTS : 0) |
-@@ -3230,7 +3230,7 @@ static int tiocmset(struct tty_struct *tty,
- 		info->serial_signals &= ~SerialSignal_DTR;
- 
- 	spin_lock_irqsave(&info->lock,flags);
-- 	set_signals(info);
-+	set_signals(info);
- 	spin_unlock_irqrestore(&info->lock,flags);
- 
- 	return 0;
-@@ -3242,7 +3242,7 @@ static int carrier_raised(struct tty_port *port)
- 	unsigned long flags;
- 
- 	spin_lock_irqsave(&info->lock,flags);
-- 	get_signals(info);
-+	get_signals(info);
- 	spin_unlock_irqrestore(&info->lock,flags);
- 
- 	return (info->serial_signals & SerialSignal_DCD) ? 1 : 0;
-@@ -3258,7 +3258,7 @@ static void dtr_rts(struct tty_port *port, int on)
- 		info->serial_signals |= SerialSignal_RTS | SerialSignal_DTR;
- 	else
- 		info->serial_signals &= ~(SerialSignal_RTS | SerialSignal_DTR);
-- 	set_signals(info);
-+	set_signals(info);
- 	spin_unlock_irqrestore(&info->lock,flags);
- }
- 
+ #ifdef CONFIG_EEH
+-			/* Release EEH device for the VF */
++			/*
++			 * Release EEH state for this VF. The PCI core
++			 * has already torn down the pci_dev for this VF, but
++			 * we're responsible to removing the eeh_dev since it
++			 * has the same lifetime as the pci_dn that spawned it.
++			 */
+ 			edev = pdn_to_eeh_dev(pdn);
+ 			if (edev) {
++				/*
++				 * We allocate pci_dn's for the totalvfs count,
++				 * but only only the vfs that were activated
++				 * have a configured PE.
++				 */
++				if (edev->pe)
++					eeh_rmv_from_parent_pe(edev);
++
+ 				pdn->edev = NULL;
+ 				kfree(edev);
+ 			}
 -- 
 2.20.1
 
