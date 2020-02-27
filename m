@@ -2,174 +2,110 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5022CC4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0835C4BA06
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2650F24672
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:58:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ZLXsRjyR"
+	by mail.kernel.org (Postfix) with ESMTP id 7D86224672
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:59:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727131AbgB0F61 (ORCPT
+        id S1727427AbgB0F7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 00:58:27 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:10264 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbgB0F60 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 00:58:26 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e575a5d0000>; Wed, 26 Feb 2020 21:57:49 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 26 Feb 2020 21:58:26 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 26 Feb 2020 21:58:26 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 27 Feb
- 2020 05:58:25 +0000
-Subject: Re: linux-next: manual merge of the akpm-current tree with the
- kvms390 tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>
-CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>
-References: <20200227141148.05d7d502@canb.auug.org.au>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <1217420e-42e4-9179-883f-125cf278caec@nvidia.com>
-Date:   Wed, 26 Feb 2020 21:58:25 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 27 Feb 2020 00:59:22 -0500
+Received: from mga05.intel.com ([192.55.52.43]:39205 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725943AbgB0F7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 00:59:21 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 21:59:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,490,1574150400"; 
+   d="scan'208";a="272046074"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 26 Feb 2020 21:59:20 -0800
+Received: from [10.226.38.18] (unknown [10.226.38.18])
+        by linux.intel.com (Postfix) with ESMTP id D9D79580107;
+        Wed, 26 Feb 2020 21:59:17 -0800 (PST)
+Subject: Re: [PATCH v10 1/2] dt-bindings: spi: Add schema for Cadence QSPI
+ Controller driver
+To:     Vignesh Raghavendra <vigneshr@ti.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        simon.k.r.goldschmidt@gmail.com, Dinh Nguyen <dinguyen@kernel.org>,
+        tien.fong.chee@intel.com,
+        =?UTF-8?Q?Marek_Va=c5=a1ut?= <marex@denx.de>,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+References: <20200219022852.28065-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200219022852.28065-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <CAL_JsqKJky=y4nhECUFVzTYvEpjFoOH_6UY9uZG5bvBVWq=SYQ@mail.gmail.com>
+ <64b7ab12-0c11-df25-95e7-ee62227ec7ec@linux.intel.com>
+ <85178128-4906-8b1a-e3f1-ab7a36ff8c23@ti.com>
+ <c119a70d-b7ef-ab1b-4590-7ac77395297f@linux.intel.com>
+ <8c329860-84fd-463b-782f-83a788998878@ti.com>
+ <98c90f35-297b-a13c-61ad-ce7a7f1d650f@linux.intel.com>
+ <22bb0c6c-db03-dee5-eccf-84b00216308f@ti.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <d00e82c8-a8b2-6cb3-520b-7e78f81d0c41@linux.intel.com>
+Date:   Thu, 27 Feb 2020 13:59:16 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <20200227141148.05d7d502@canb.auug.org.au>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <22bb0c6c-db03-dee5-eccf-84b00216308f@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582783069; bh=f8HSLSy3S+SiQxggpzNoT67i9P+jtOS+iEOP4MaCstc=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ZLXsRjyR4n98y6ADzoTOanUYjBJP1wzbTp5MNIGom+WAr74KrIHIc+frkatNphKmo
-         axdqMBJWNt6NDEytVPOXSveeBCp7a9uyKGsXVn37VUr3B5OotQhs7Ng+W9R3t1mnc+
-         7bu2/madj53UDMHI//w25Im7n5NeuSi52UXgUsQZ5ysL51MSFmrd77sYOy4sfaYg+S
-         LqOt/+oYh2VEKI1A8k/a+5LKPSMC30CpVkB466ju7xue3fx+VV2PU74Xn5W7TmFabL
-         d95RsQ6Dk1k70ytqwJaArAbM0zlUdNOY7ntpkLxx9mhf+l7TDmbb3MGQmsyjMoS2RF
-         zn/iq02Ys3kqw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/26/20 7:11 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the akpm-current tree got a conflict in:
-> 
->   mm/gup.c
-> 
-> between commit:
-> 
->   732b80e677b8 ("mm/gup/writeback: add callbacks for inaccessible pages")
-> 
-> from the kvms390 tree and commit:
-> 
->   9947ea2c1e60 ("mm/gup: track FOLL_PIN pages")
-> 
-> from the akpm-current tree.
-> 
-> I fixed it up (see below - maybe not optimally) and can carry the fix as
-> necessary. This is now fixed as far as linux-next is concerned, but any
-> non trivial conflicts should be mentioned to your upstream maintainer
-> when your tree is submitted for merging.  You may also want to consider
-> cooperating with the maintainer of the conflicting tree to minimise any
-> particularly complex conflicts.
-> 
+Hi,
 
-Yes. Changes to mm/gup.c really should normally go through linux-mm and 
-Andrew's tree, if at all possible. This would have been caught, and figured out
-on linux-mm, had that been done--instead of leaving the linux-next maintainer
-trying to guess at how to resolve the conflict.
+On 27/2/2020 1:23 PM, Vignesh Raghavendra wrote:
+>
+> On 26/02/20 7:02 am, Ramuthevar, Vadivel MuruganX wrote:
+>> Hi,
+>>
+>> On 25/2/2020 7:00 PM, Vignesh Raghavendra wrote:
+>>> On 25/02/20 1:08 pm, Ramuthevar, Vadivel MuruganX wrote:
+>>>>>>>> +
+>>>>>>>> +  cdns,fifo-depth:
+>>>>>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>>>>>>> +    description:
+>>>>>>>> +      Size of the data FIFO in words.
+>>>>>>> A 4GB fifo is valid? Add some constraints.
+>>>>>> 128 is valid, will update.
+>>>>> Nope, the width of this field is 8bits -> 256 bytes
+>>>> correct me if I am wrong, the width of this field is 4bits -> 128 bytes
+>>>> (based on QUAD mode) .
+>>> This has nothing to do with quad-mode. Its about how much SRAM amount of
+>>> SRAM is present to buffer INDAC mode data. For TI platforms this is 256
+>>> bytes.
+>>> See CQSPI_REG_SRAMPARTITION definition in your datasheet.
+>> Agreed, Thanks!
+>> Yes , I have gone through it , Intel and Altera SoC's SRAM(act as
+>> FIFO)size is 128 bytes and TI has 256 .
+>> BTW old legacy DT binding mentioned size is 128, as per your earlier
+>> suggestion you have mention that
+>> keep the contents from old dt bindings as it is, so shall I keep 128/256?
+> Old bindings does not impose a restriction that this needs to be 128
+> bytes always (Its just the example that shows this property to be set to
+> 128)
+>
+> What Rob is asking for is to add range of values that is valid for this
+> field and not single value. So, both 128 and 256 bytes should be allowed
+> as valid values for this property.
 
-+Cc David Hildenbrand, who I see looked at the kvms390 proposed patch a bit.
-Maybe he has some opinions, especially about my questions below.
+Thank you Vignesh, will add both.
 
-The fix-up below may (or may not) need some changes:
-
-
-diff --cc mm/gup.c
-index 354bcfbd844b,f589299b0d4a..000000000000
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@@ -269,18 -470,11 +468,19 @@@ retry
-  		goto retry;
-  	}
-  
-+ 	/* try_grab_page() does nothing unless FOLL_GET or FOLL_PIN is set. */
-+ 	if (unlikely(!try_grab_page(page, flags))) {
-+ 		page = ERR_PTR(-ENOMEM);
-+ 		goto out;
-+ 	}
- +	if (flags & FOLL_GET) {
-
-
-If I'm reading the diff correctly, I believe that line should *maybe* be changed to:
-
-	if (flags & (FOLL_GET | FOLL_PIN)) {
-
-...because each of those flags has a similar effect: pinned pages for DMA or RDMA
-use. So either flag will require a call to arch_make_page_accessible()...except that
-I'm not sure that's what you want. Would the absence of a call to 
-arch_make_page_accessible() cause things like pin_user_pages() to not work correctly?
-Seems like it would, to me.
-
-(I'm pretty unhappy that we have to ask this at the linux-next level.)
-
-Also below...
-
-
-- 		if (unlikely(!try_get_page(page))) {
-- 			page = ERR_PTR(-ENOMEM);
-- 			goto out;
-- 		}
- +		ret = arch_make_page_accessible(page);
- +		if (ret) {
- +			put_page(page);
-
-
-put_page() only works with FOLL_GET. So if we do allow to get here via either FOLL_GET or
-FOLL_PIN, the we need to do an unpin_user_page(), like this:
-
-		if (flags & FOLL_PIN)
-			unpin_user_page(page);
-		else
-			put_page(page);
-
-
-
- +			page = ERR_PTR(ret);
- +			goto out;
- +		}
- +	}
-  	if (flags & FOLL_TOUCH) {
-  		if ((flags & FOLL_WRITE) &&
-  		    !pte_dirty(pte) && !PageDirty(page))
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+Regards
+Vadivel
+>
