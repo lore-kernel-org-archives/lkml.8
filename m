@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1E8C5ED2D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FF6C5ED56
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C218520801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:20:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C2DC24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:21:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813201;
-	bh=zF8WyHHyNDWJs5RpuKJQzBGkfwEfo+xK6Oui84XK6xE=;
+	s=default; t=1582813260;
+	bh=ln5vNJ8702G5y+kboTxDX9gHlg13jOehF5JpDNsJDxE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z2WssiEAk9wxOSp4jhAl5AyKJsCMZRl7Guz6r70QWMZk7ho4Kl/ZWHlxDzufFea3w
-	 /Ku5XQiULWNdUaaCdtZ5tnhVPs70X5nqUT/z5ACij2YrnmIfz3Kc79kUNFzU9gxWzS
-	 olQpbjWnrPkJ8gjPhNCm611PbhGonvMkqOnlfitM=
+	b=Jw6JJhm65fe1iQpkq2XbLxidAalBHtjwNcE3Ur9ZoNxIrMOB5O1+hNngVqT6ovR43
+	 t0R2VkboA3KWwMVcKHz2dJMbp/Hld+53jGTN8HPmVrg29PhbA7x6DBUdkxEWYGEIfg
+	 0pokJ3XtGEx68HXQm7XM4AqJjX4dgPVbz2SVTxgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389889AbgB0OSd (ORCPT
+        id S2389708AbgB0OU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:18:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58994 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:20:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389861AbgB0OSY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:18:24 -0500
+        id S2389046AbgB0ORf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:17:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F21F20801;
-        Thu, 27 Feb 2020 14:18:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A44624690;
+        Thu, 27 Feb 2020 14:17:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813103;
-        bh=zF8WyHHyNDWJs5RpuKJQzBGkfwEfo+xK6Oui84XK6xE=;
+        s=default; t=1582813054;
+        bh=ln5vNJ8702G5y+kboTxDX9gHlg13jOehF5JpDNsJDxE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GiF3QRhnUvYZaYV+Wqb8p/KO2gfVtbwRCEW3rb092KZRzNM/3AkK1uHUx70sBqBUi
-         UAISOJvRgJaL1wu9UckQmTV9xpMrNQ0/TIcefjIU6mFS/7TfuUoknnQSPEdxzKVoCR
-         gk6A3qPQwWzA2olmLrrTnfywWZSm30ch8RzOFwYk=
+        b=mGo3PptxNQa/e44jyoLliLra0Wl8CZwvWuKXqr7d77Q+EkAMIHeE6sSWYWPkqXU6R
+         pGQR2iQE+qbWEgQ3Fy/SnqsLKGUZRdHTNpHFZKIESJP8xbZOzgAPhzAVtEj4KtP4QE
+         iIuQXxxq7WBV5yp2BB//E/FW0pLNjKvJk8zlRJ4Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+576cc007eb9f2c968200@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.5 137/150] ALSA: rawmidi: Avoid bit fields for state flags
-Date:   Thu, 27 Feb 2020 14:37:54 +0100
-Message-Id: <20200227132252.547255332@linuxfoundation.org>
+        stable@vger.kernel.org, Rahul Kundu <rahul.kundu@chelsio.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Dakshaja Uppalapati <dakshaja@chelsio.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.5 120/150] scsi: Revert "target: iscsi: Wait for all commands to finish before freeing a session"
+Date:   Thu, 27 Feb 2020 14:37:37 +0100
+Message-Id: <20200227132250.364542001@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -60,43 +63,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Bart Van Assche <bvanassche@acm.org>
 
-commit dfa9a5efe8b932a84b3b319250aa3ac60c20f876 upstream.
+commit 807b9515b7d044cf77df31f1af9d842a76ecd5cb upstream.
 
-The rawmidi state flags (opened, append, active_sensing) are stored in
-bit fields that can be potentially racy when concurrently accessed
-without any locks.  Although the current code should be fine, there is
-also no any real benefit by keeping the bitfields for this kind of
-short number of members.
+Since commit e9d3009cb936 introduced a regression and since the fix for
+that regression was not perfect, revert this commit.
 
-This patch changes those bit fields flags to the simple bool fields.
-There should be no size increase of the snd_rawmidi_substream by this
-change.
-
-Reported-by: syzbot+576cc007eb9f2c968200@syzkaller.appspotmail.com
-Link: https://lore.kernel.org/r/20200214111316.26939-4-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Link: https://marc.info/?l=target-devel&m=158157054906195
+Cc: Rahul Kundu <rahul.kundu@chelsio.com>
+Cc: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Cc: Sagi Grimberg <sagi@grimberg.me>
+Reported-by: Dakshaja Uppalapati <dakshaja@chelsio.com>
+Fixes: e9d3009cb936 ("scsi: target: iscsi: Wait for all commands to finish before freeing a session")
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/sound/rawmidi.h |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/target/iscsi/iscsi_target.c |   10 ++--------
+ include/scsi/iscsi_proto.h          |    1 -
+ 2 files changed, 2 insertions(+), 9 deletions(-)
 
---- a/include/sound/rawmidi.h
-+++ b/include/sound/rawmidi.h
-@@ -77,9 +77,9 @@ struct snd_rawmidi_substream {
- 	struct list_head list;		/* list of all substream for given stream */
- 	int stream;			/* direction */
- 	int number;			/* substream number */
--	unsigned int opened: 1,		/* open flag */
--		     append: 1,		/* append flag (merge more streams) */
--		     active_sensing: 1; /* send active sensing when close */
-+	bool opened;			/* open flag */
-+	bool append;			/* append flag (merge more streams) */
-+	bool active_sensing;		/* send active sensing when close */
- 	int use_count;			/* use counter (for output) */
- 	size_t bytes;
- 	struct snd_rawmidi *rmidi;
+--- a/drivers/target/iscsi/iscsi_target.c
++++ b/drivers/target/iscsi/iscsi_target.c
+@@ -1165,9 +1165,7 @@ int iscsit_setup_scsi_cmd(struct iscsi_c
+ 		hdr->cmdsn, be32_to_cpu(hdr->data_length), payload_length,
+ 		conn->cid);
+ 
+-	if (target_get_sess_cmd(&cmd->se_cmd, true) < 0)
+-		return iscsit_add_reject_cmd(cmd,
+-				ISCSI_REASON_WAITING_FOR_LOGOUT, buf);
++	target_get_sess_cmd(&cmd->se_cmd, true);
+ 
+ 	cmd->sense_reason = transport_lookup_cmd_lun(&cmd->se_cmd,
+ 						     scsilun_to_int(&hdr->lun));
+@@ -2004,9 +2002,7 @@ iscsit_handle_task_mgt_cmd(struct iscsi_
+ 			      conn->sess->se_sess, 0, DMA_NONE,
+ 			      TCM_SIMPLE_TAG, cmd->sense_buffer + 2);
+ 
+-	if (target_get_sess_cmd(&cmd->se_cmd, true) < 0)
+-		return iscsit_add_reject_cmd(cmd,
+-				ISCSI_REASON_WAITING_FOR_LOGOUT, buf);
++	target_get_sess_cmd(&cmd->se_cmd, true);
+ 
+ 	/*
+ 	 * TASK_REASSIGN for ERL=2 / connection stays inside of
+@@ -4234,8 +4230,6 @@ int iscsit_close_connection(
+ 	 * must wait until they have completed.
+ 	 */
+ 	iscsit_check_conn_usage_count(conn);
+-	target_sess_cmd_list_set_waiting(sess->se_sess);
+-	target_wait_for_sess_cmds(sess->se_sess);
+ 
+ 	ahash_request_free(conn->conn_tx_hash);
+ 	if (conn->conn_rx_hash) {
+--- a/include/scsi/iscsi_proto.h
++++ b/include/scsi/iscsi_proto.h
+@@ -627,7 +627,6 @@ struct iscsi_reject {
+ #define ISCSI_REASON_BOOKMARK_INVALID	9
+ #define ISCSI_REASON_BOOKMARK_NO_RESOURCES	10
+ #define ISCSI_REASON_NEGOTIATION_RESET	11
+-#define ISCSI_REASON_WAITING_FOR_LOGOUT	12
+ 
+ /* Max. number of Key=Value pairs in a text message */
+ #define MAX_KEY_VALUE_PAIRS	8192
 
 
