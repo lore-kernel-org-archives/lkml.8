@@ -2,121 +2,110 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 129B7C54FCA
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90624C35E17
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB7B024690
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813048;
-	bh=MGK1Qur0NJz7SAyjMCCjz28nH5j++Jd4iAwKVDhsT+g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CPjHB8D3mia1ifCCsIhZgkXSuXZBj/7hAAbviswO1KTj13DZBATVWt4eug2K8gGA+
-	 rZKs/ttYLHfQ+2KPSLqDmIaJgEE8hVF2udW/HfCVh9eLrVlHZLrqDB7jMFqnufWrwi
-	 4nWJyOEWp3zHt44WSfc1IySx4HGnJBLWptnxc704=
+	by mail.kernel.org (Postfix) with ESMTP id 724C620578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389710AbgB0OR1 (ORCPT
+        id S2388179AbgB0OQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:17:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57764 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389688AbgB0ORX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:17:23 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E559B246AD;
-        Thu, 27 Feb 2020 14:17:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813042;
-        bh=MGK1Qur0NJz7SAyjMCCjz28nH5j++Jd4iAwKVDhsT+g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=put39t7SukgZ5l4XLbhYtOrdGiWVZ53aPIRvJdf1YYCmKgHCSiQ0NTmRAS9PMtEk6
-         DG3CZeynuU1Jh/zbFKCLfMsCG5M8vO3SePwccIXRCfMZf1hR71Yizj2xEbL5oPezBq
-         Oi1Zn949WIinMc4u5CTJAP/x3CguXqkmlTk3jDEw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Jon Bloomfield <jon.bloomfield@intel.com>,
-        Jani Nikula <jani.nikula@intel.com>
-Subject: [PATCH 5.5 115/150] drm/i915/gem: Require per-engine reset support for non-persistent contexts
-Date:   Thu, 27 Feb 2020 14:37:32 +0100
-Message-Id: <20200227132249.678010614@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
-References: <20200227132232.815448360@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 27 Feb 2020 09:16:08 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:34438 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389402AbgB0OQC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:16:02 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1j7JxF-0005B5-Vk; Thu, 27 Feb 2020 15:15:58 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9D3DA1C216C;
+        Thu, 27 Feb 2020 15:15:57 +0100 (CET)
+Date:   Thu, 27 Feb 2020 14:15:57 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/entry] x86/traps: Remove redundant declaration of do_double_fault()
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200225220216.720335354@linutronix.de>
+References: <20200225220216.720335354@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-ID: <158281295739.28353.15003553494431699964.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+The following commit has been merged into the x86/entry branch of tip:
 
-commit dea8d5ce46d7e7f7270b9804df7d1174f88bfd99 upstream.
+Commit-ID:     3ba4f0a633ca4bfeadb24eba19cb53ebe246eabf
+Gitweb:        https://git.kernel.org/tip/3ba4f0a633ca4bfeadb24eba19cb53ebe246eabf
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Tue, 25 Feb 2020 22:36:42 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 27 Feb 2020 14:48:40 +01:00
 
-To enable non-persistent contexts, we require a means of cancelling any
-inflight work from that context. This is first done "gracefully" by
-using preemption to kick the active context off the engine, and then
-forcefully by resetting the engine if it is active. If we are unable to
-reset the engine to remove hostile userspace, we should not allow
-userspace to opt into using non-persistent contexts.
+x86/traps: Remove redundant declaration of do_double_fault()
 
-If the per-engine reset fails, we still do a full GPU reset, but that is
-rare and usually indicative of much deeper issues. The damage is already
-done. However, the goal of the interface to allow long running compute
-jobs without causing collateral damage elsewhere, and if we are unable
-to support that we should make that known by not providing the
-interface (and falsely pretending we can).
 
-Fixes: a0e047156cde ("drm/i915/gem: Make context persistence optional")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Cc: Jon Bloomfield <jon.bloomfield@intel.com>
-Reviewed-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200130164553.1937718-1-chris@chris-wilson.co.uk
-(cherry picked from commit d1b9b5f127bc3797fc274cfa4f363e039f045c3a)
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+Reviewed-by: Andy Lutomirski <luto@kernel.org>
+Link: https://lkml.kernel.org/r/20200225220216.720335354@linutronix.de
 
 ---
- drivers/gpu/drm/i915/gem/i915_gem_context.c |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/x86/include/asm/traps.h | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
---- a/drivers/gpu/drm/i915/gem/i915_gem_context.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_context.c
-@@ -484,6 +484,22 @@ static int __context_set_persistence(str
- 		if (!(ctx->i915->caps.scheduler & I915_SCHEDULER_CAP_PREEMPTION))
- 			return -ENODEV;
+diff --git a/arch/x86/include/asm/traps.h b/arch/x86/include/asm/traps.h
+index e1c660b..c26a7e1 100644
+--- a/arch/x86/include/asm/traps.h
++++ b/arch/x86/include/asm/traps.h
+@@ -76,13 +76,6 @@ dotraplinkage void do_coprocessor_segment_overrun(struct pt_regs *regs, long err
+ dotraplinkage void do_invalid_TSS(struct pt_regs *regs, long error_code);
+ dotraplinkage void do_segment_not_present(struct pt_regs *regs, long error_code);
+ dotraplinkage void do_stack_segment(struct pt_regs *regs, long error_code);
+-#ifdef CONFIG_X86_64
+-dotraplinkage void do_double_fault(struct pt_regs *regs, long error_code, unsigned long address);
+-asmlinkage __visible notrace struct pt_regs *sync_regs(struct pt_regs *eregs);
+-asmlinkage __visible notrace
+-struct bad_iret_stack *fixup_bad_iret(struct bad_iret_stack *s);
+-void __init trap_init(void);
+-#endif
+ dotraplinkage void do_general_protection(struct pt_regs *regs, long error_code);
+ dotraplinkage void do_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address);
+ dotraplinkage void do_spurious_interrupt_bug(struct pt_regs *regs, long error_code);
+@@ -94,6 +87,13 @@ dotraplinkage void do_iret_error(struct pt_regs *regs, long error_code);
+ #endif
+ dotraplinkage void do_mce(struct pt_regs *regs, long error_code);
  
-+		/*
-+		 * If the cancel fails, we then need to reset, cleanly!
-+		 *
-+		 * If the per-engine reset fails, all hope is lost! We resort
-+		 * to a full GPU reset in that unlikely case, but realistically
-+		 * if the engine could not reset, the full reset does not fare
-+		 * much better. The damage has been done.
-+		 *
-+		 * However, if we cannot reset an engine by itself, we cannot
-+		 * cleanup a hanging persistent context without causing
-+		 * colateral damage, and we should not pretend we can by
-+		 * exposing the interface.
-+		 */
-+		if (!intel_has_reset_engine(&ctx->i915->gt))
-+			return -ENODEV;
++#ifdef CONFIG_X86_64
++asmlinkage __visible notrace struct pt_regs *sync_regs(struct pt_regs *eregs);
++asmlinkage __visible notrace
++struct bad_iret_stack *fixup_bad_iret(struct bad_iret_stack *s);
++void __init trap_init(void);
++#endif
 +
- 		i915_gem_context_clear_persistence(ctx);
- 	}
- 
-
-
+ static inline int get_si_code(unsigned long condition)
+ {
+ 	if (condition & DR_STEP)
