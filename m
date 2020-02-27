@@ -2,114 +2,104 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE6DC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B95F8C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 035EC2469B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87AAB246A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:49:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Heq4GnYY"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FGNJJ8TI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729987AbgB0Xrp (ORCPT
+        id S1729978AbgB0Xta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 18:47:45 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:55856 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729796AbgB0Xrp (ORCPT
+        Thu, 27 Feb 2020 18:49:30 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:40622 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729812AbgB0Xta (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 18:47:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=28jcykxKbJYL83IzLpxZlMJpogx12W0uOAOwjpNqnaI=; b=Heq4GnYY+Oj+WGi9WwRBC2i0+a
-        VDiEiN5ZK58MZelkOzLVC0Lo9BM/xYuYGNVXP9K/p+iYWu5eb46I3FZyzyBkk8Hdu4kN2zk38OXLp
-        fvQmkAQ3Y4XwKGHnzDQN3O1dAnOd/DwzCVdjTkt5mmPyVOqhNwLsJsEMdWZuj9riqSmoqc1aC442E
-        H3gxgwSY8w49zA/hp8CiVplCDKXUDvVhGFRh5E/z/8khTOS/dEUHq/QsNQGVmFW5r3rM7q5ARE0w1
-        8ItcDm1gnyhcSAEg6Je9qtj/S+jDmNJvyotvv5BmQ9SRca38X+95XLIIA3A2Ph04JtFW58ZOaSpV+
-        6k2hiJdw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j7Ssa-0005zI-WE; Thu, 27 Feb 2020 23:47:45 +0000
-Subject: Re: linux-next: Tree for Feb 27 (drivers/of/unittest.c)
-To:     Frank Rowand <frowand.list@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-References: <20200227152223.3d8442f0@canb.auug.org.au>
- <ed57c797-1d40-0786-2cdc-adae7047a86f@infradead.org>
- <0bd9179f-c448-c40d-f520-d568547bc810@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <63b12f5e-e5e5-a3ca-70a3-0c65075f657a@infradead.org>
-Date:   Thu, 27 Feb 2020 15:47:42 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 27 Feb 2020 18:49:30 -0500
+Received: by mail-pj1-f65.google.com with SMTP id 12so467444pjb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 15:49:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0ZF5PxVG84+TcO4AGDk4hTXuR0g3a2lAghAPZZezWAQ=;
+        b=FGNJJ8TIZbEQeDUTHLzthiH7gYzaIpI1ZJA3XXho7n4IcK4vq2ltzAcqbjsmvYzX36
+         zD7ixqbETkWw2eDR1zKFmbrGVME7/TxjiJ0ZdP1+cA6LI4TSIDmovCW1qDEUHfRwqOiE
+         3iTQ81jQ5pn4CkXS5zbAphSmUx4QVkdWj1krgdBnAPuUm+/gujo32b14iqFpETsrDuv4
+         Fbafx5Sq6NfItx31yjOO/mkBiQ8vkSiGQs+dHET8yMBirlarM/xa73kVEcbN39cFa9I4
+         Vu3UDVIghVT5PWwEcnxXhBM+UPjN3nkVWg96faRN9plrIZg77Yyl4UfYIAmRMQ/hGQWD
+         YzYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0ZF5PxVG84+TcO4AGDk4hTXuR0g3a2lAghAPZZezWAQ=;
+        b=lgU8EoBu/zL7yJ4E8fZLOXMidS9ecSfhe91LLXx3XJudfBVXXim3UsZpp3+kk8SU23
+         tIpouBEqxlDYhAHf0UI/yR0surMQlrqMFaD1t/Hr8WBZ3HUswXnGgAx8ABFs0xTiYdVE
+         wx2EKMDSQuiJQN5LBOFB+/NMXgRrClnm1cStvB+Yvm/sBvmMSVeU3DmR1gAaJ8QFXzTz
+         WU6iLiY3dF4O0BI7zrEGTZQuQ90e0oe5o9PE/OY06Cj/FAFnBTuBCyFKPqwW8tcN6/Td
+         d3G0/p+wS0sH1+fqEIBYhXPjjHJFCeS47yC55sodXf3m3xIp6VnsBkOiogiw7mLZUbuP
+         JHow==
+X-Gm-Message-State: APjAAAXTPdXP4+n8yn27o2vaSai2pSvJefvCzWAC4XEOqi5O48woQtBU
+        3Vu8xXb4wiA8vAqDfDRf8xrSzg7tqvaTLXJG/l3OIw==
+X-Google-Smtp-Source: APXvYqw0egRKbJSIQcP/k3vUTH6RVXMgfH+NgFS+3a2pz81BzPEZzxWwvZzJpQRmMCe+9YjvwY5iOzKNBRHn/yxwaAo=
+X-Received: by 2002:a17:902:760e:: with SMTP id k14mr1194526pll.119.1582847368858;
+ Thu, 27 Feb 2020 15:49:28 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <0bd9179f-c448-c40d-f520-d568547bc810@gmail.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1581988104-16628-1-git-send-email-wanpengli@tencent.com>
+ <1581988104-16628-2-git-send-email-wanpengli@tencent.com> <CANRm+CyHmdbsw572x=8=GYEOw-YQCXhz89i9+VEmROBVAu+rvg@mail.gmail.com>
+ <CAKwvOd=bDW6K3PC7S5fiG5n_kwgqhbnVsBHUSGgYaPQY-L_YmA@mail.gmail.com>
+ <87mu95jxy7.fsf@vitty.brq.redhat.com> <9506da2d-53fb-c4a3-55b4-fb78e185e9c2@redhat.com>
+In-Reply-To: <9506da2d-53fb-c4a3-55b4-fb78e185e9c2@redhat.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 27 Feb 2020 15:49:17 -0800
+Message-ID: <CAKwvOd=tOURgAFUNQPX3DDqd-eAbZ9kMmyksXEUK-a2N_Gky1g@mail.gmail.com>
+Subject: Re: [PATCH RESEND v2 2/2] KVM: Pre-allocate 1 cpumask variable per
+ cpu for both pv tlb and pv ipis
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Wanpeng Li <kernellwp@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/27/20 1:12 PM, Frank Rowand wrote:
-> Hi Randy,
-> 
-> On 2/27/20 10:23 AM, Randy Dunlap wrote:
->> On 2/26/20 8:22 PM, Stephen Rothwell wrote:
->>> Hi all,
->>>
->>> Changes since 20200226:
->>>
->>
->> on x86_64:
->>
->> # CONFIG_GPIOLIB is not set
->>
->> ../drivers/of/unittest.c: In function ‘unittest_gpio_probe’:
->> ../drivers/of/unittest.c:94:14: error: ‘struct gpio_chip’ has no member named ‘of_node’
->>   devptr->chip.of_node = pdev->dev.of_node;
->>               ^
->> In file included from ../include/linux/kernel.h:15:0,
->>                  from ../include/asm-generic/bug.h:19,
->>                  from ../arch/x86/include/asm/bug.h:83,
->>                  from ../include/linux/bug.h:5,
->>                  from ../include/linux/mmdebug.h:5,
->>                  from ../include/linux/mm.h:9,
->>                  from ../include/linux/memblock.h:13,
->>                  from ../drivers/of/unittest.c:8:
->> ../drivers/of/unittest.c:103:73: error: ‘struct gpio_chip’ has no member named ‘of_node’
->>     "gpiochip_add_data() for node @%pOF failed, ret = %d\n", devptr->chip.of_node, ret);
->>                                                                          ^
->>
->> Full randconfig file is attached.
->>
-> 
-> I am trying to build a kernel with the randconfig you provided.
-> 
-> I am trying to figure out how to build with the exact configuration,
-> but every way I've tried to build modifies the .config file.
-> 
-> Do you have any pointers to info on how to get the build system
-> to use exactly the .config without modification?
-> 
-> (Just in case it is pertinent, I am using Linux 5.6-rc1 instead
-> of -next.)
+On Wed, Feb 26, 2020 at 5:27 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 26/02/20 14:10, Vitaly Kuznetsov wrote:
+> > Nick Desaulniers <ndesaulniers@google.com> writes:
+> >
+> >> (putting Paolo in To: field, in case email filters are to blame.
+> >> Vitaly, maybe you could ping Paolo internally?)
+> >>
+> >
+> > I could, but the only difference from what I'm doing right now would
+> > proabbly be the absence of non-@redaht.com emails in To/Cc: fields of
+> > this email :-)
+> >
+> > Do we want this fix for one of the last 5.6 RCs or 5.7 would be fine?
+> > Personally, I'd say we're not in a great hurry and 5.7 is OK.
+>
+> I think we can do it for 5.6, but we're not in a great hurry. :)  The
+> rc4 pull request was already going to be relatively large and I had just
+> been scolded by Linus so I postponed this, but I am going to include it
+> this week.
 
-Hi Frank,
-
-Yeah, I can't get 5.6-rc1 to use that same .config file either.
-There are too many differences from rc1 to rc3+next and any
-'make' command will automatically run oldconfig (or silentoldconfig)
-to update the .config file.
-
+No rush; soak time is good.
 -- 
-~Randy
-
+Thanks,
+~Nick Desaulniers
