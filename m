@@ -2,99 +2,110 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE70FC4BA3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE29C4BA3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEB4C2468E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 551462468E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:34:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582806849;
+	bh=ZSvdgyyAZrTI4ZZgTa8cz5o9//42i2OuAT24QC89tfY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gKWPFoyvsXhdf2yMzYKWNCZuA35s1AX5FR0Ua1ZE4vvcq8F5SqWScik20cu6P1/JC
+	 aayARs/PIlZeXRMvU4jyx53lS12vEAKCUFIrtAYpHkpyc+MoFCg0BRgyJIMuvodcNu
+	 b64UHKNtUw/OecFwBUReAxzEOToh1fn3R6TuxfqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729042AbgB0MdR (ORCPT
+        id S1729008AbgB0MeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 07:33:17 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:55181 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728964AbgB0MdR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 07:33:17 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j7ILr-00083D-5Z; Thu, 27 Feb 2020 13:33:15 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j7ILq-0005l7-Ir; Thu, 27 Feb 2020 13:33:14 +0100
-Date:   Thu, 27 Feb 2020 13:33:14 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Sam Shih <sam.shih@mediatek.com>
-Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-mediatek@lists.infradead.org,
-        John Crispin <john@phrozen.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/1] pwm: mediatek: add longer period support
-Message-ID: <20200227123314.mkg6jqai64b3paxw@pengutronix.de>
-References: <1582789610-23133-1-git-send-email-sam.shih@mediatek.com>
- <1582789610-23133-2-git-send-email-sam.shih@mediatek.com>
- <20200227080450.rkvwfjx6vikn5ls3@pengutronix.de>
- <1582797590.25607.10.camel@mtksdccf07>
- <20200227105244.orwitjst3wzoqcsq@pengutronix.de>
- <1582806427.27775.1.camel@mtksdccf07>
+        Thu, 27 Feb 2020 07:34:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35124 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728964AbgB0MeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 07:34:07 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 963092468E;
+        Thu, 27 Feb 2020 12:34:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582806847;
+        bh=ZSvdgyyAZrTI4ZZgTa8cz5o9//42i2OuAT24QC89tfY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sM4MR5or/iXdoFVY6P4lmM/QpukHyP262a8O90zsYSk55A2+QD2DPcraudRPA9NN+
+         q8KsZl14+IdQThlu64zHCTHMKok4w7OA91HuP187j04ChdB09ogg0r9oVYdgB+OAOT
+         nVKsLNfD9zp8NP1+xix8fqOrgaNvTyMBKEZR2cns=
+Date:   Thu, 27 Feb 2020 13:34:04 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Wambui Karuga <wambui.karugax@gmail.com>
+Cc:     daniel@ffwll.ch, airlied@linux.ie, mripard@kernel.org,
+        maarten.lankhorst@linux.intel.com, tzimmermann@suse.de,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 02/21] drm: convert the drm_driver.debugfs_init() hook to
+ return void.
+Message-ID: <20200227123404.GA962932@kroah.com>
+References: <20200227120232.19413-1-wambui.karugax@gmail.com>
+ <20200227120232.19413-3-wambui.karugax@gmail.com>
+ <20200227122313.GB896418@kroah.com>
+ <alpine.LNX.2.21.99999.375.2002271528310.19554@wambui>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1582806427.27775.1.camel@mtksdccf07>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <alpine.LNX.2.21.99999.375.2002271528310.19554@wambui>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Sam,
-
-On Thu, Feb 27, 2020 at 08:27:07PM +0800, Sam Shih wrote:
-> > > 
-> > > + /* The pwm source clock can be divided by 2^clkdiv. When the clksel  +
-> > > * bit is set to 1, The final clock output needs to be divided by an +  *
-> > > extra 1625.
-> > > +  */
-> > 
-> > I'd write:
-> > 
-> > The source clock is divided by 2^clkdiv or iff the clksel bit is set by
-> > 2^clkdiv + 1625.
-> > 
+On Thu, Feb 27, 2020 at 03:29:46PM +0300, Wambui Karuga wrote:
 > 
-> Great, the comment is short and clear. 
-> But maybe change “2^clkdiv + 1625” to “the product of 2^clkdiv and 1625”
-> is clearer ?
+> 
+> On Thu, 27 Feb 2020, Greg KH wrote:
+> 
+> > On Thu, Feb 27, 2020 at 03:02:13PM +0300, Wambui Karuga wrote:
+> > > As a result of commit 987d65d01356 (drm: debugfs: make
+> > > drm_debugfs_create_files() never fail) and changes to various debugfs
+> > > functions in drm/core and across various drivers, there is no need for
+> > > the drm_driver.debugfs_init() hook to have a return value. Therefore,
+> > > declare it as void.
+> > > 
+> > > Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+> > > ---
+> > >  include/drm/drm_drv.h | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/include/drm/drm_drv.h b/include/drm/drm_drv.h
+> > > index 97109df5beac..c6ae888c672b 100644
+> > > --- a/include/drm/drm_drv.h
+> > > +++ b/include/drm/drm_drv.h
+> > > @@ -323,7 +323,7 @@ struct drm_driver {
+> > >  	 *
+> > >  	 * Allows drivers to create driver-specific debugfs files.
+> > >  	 */
+> > > -	int (*debugfs_init)(struct drm_minor *minor);
+> > > +	void (*debugfs_init)(struct drm_minor *minor);
+> > 
+> > 
+> > Doesn't this patch break the build, or at least, cause lots of build
+> > warnings to happen?
+> > 
+> > Fixing it all up later is good, but I don't think you want to break
+> > things at this point in the series.
+> > 
+> So, should it come last in the series? All functions that use this hook have
+> been converted to void in the patchset.
 
-Writing a formula in words isn't helpful. If my formula was wrong use
-the right one. I wrote
+I recommend fixing up the functions to just always return 0 first, and
+then in one last patch, change the function itself to return void along
+with this.
 
-	2^clkdiv + 1625
+That would make it easiest to review, and allow no build warnings at any
+point in the series, right?
 
-(which implicitly means (2^clkdiv) + 1625), if this is wrong write
+thanks,
 
-	2^clkdiv * 1625
-
-or whatever is the right one then. And use parenthesis if you doubt
-clearness.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+greg k-h
