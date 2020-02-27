@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DA8C35DF1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C15F5C3F356
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8D272469B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9726420801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:54:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811696;
-	bh=y20f20EyVym5ZJBttPilPcZuoK1w1Z50nYChb4w15uA=;
+	s=default; t=1582811642;
+	bh=8aHHGS6tkGBLeGkwk9FMJYUq4EvcCZ+0UidKSNcAdGs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y1/w2vi8+WKKvPoeKszxbxR+5CAebNFgNrAIu8gaOevGGumylaT/W2ph2KGXytfIv
-	 3cY+Dfp3dFrZvU9FFjxwBSbtAHq0q1uaOrCT5sE/VISMCs0LAPhvcynSEO3lsMo0Zd
-	 jkwCOv8zHqkzQIRPlr9FlNajwlZd6iA5rDezYH0E=
+	b=CcpPLy1V2SuNHeFna/ku1acBgewJeIvjc2wqX+KJE9tDKWYDVsH3U7ArDyW8agqeg
+	 l1kbbOLGVWlCBHOL5md2MD+jBoqpchOKcVOYtcvZUY+a1G+iRYDq7dL4cYqTHghbbR
+	 EbEm5/g5rkgNzoCFAWKmQIaRBlbXbq2wEKrA+T7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731638AbgB0Nyz (ORCPT
+        id S1731287AbgB0NyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:54:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54986 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:54:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731904AbgB0Nyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:54:50 -0500
+        id S1731323AbgB0Nx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:53:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEFD32084E;
-        Thu, 27 Feb 2020 13:54:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6804720578;
+        Thu, 27 Feb 2020 13:53:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811689;
-        bh=y20f20EyVym5ZJBttPilPcZuoK1w1Z50nYChb4w15uA=;
+        s=default; t=1582811636;
+        bh=8aHHGS6tkGBLeGkwk9FMJYUq4EvcCZ+0UidKSNcAdGs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oDunBWMGMn9u11ILnT2HxNDhVpBfpn9Zs63x8vwKC7c3HY1ygDsIjYJnHqffVEA82
-         8aMSUDd642t+B24/emhXl+4PkEZkfew9CziiL3m/B40Jv963ozlsKk22Om/IFwZKgf
-         6L4O0IefPYrKXDwM3B8NlqOACC3hLEDNzM7gWakg=
+        b=y3nqtDXCCJEmbYz9XQ1cwINVfqKg1Ra/6gdf3N1QPp9x7z6Wfu9GYdT60s6+xjCJG
+         b5t2y9EjOAXcoja576Rb7IxM95z1k7Pgg2MLtjf/WMC99cwbbD4SB5Y+EROjJytPLj
+         bcfKQd4ikY88lUyF/9hb0DLIvHafbrjTEyfO7udY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kai Li <li.kai4@h3c.com>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 062/237] jbd2: clear JBD2_ABORT flag before journal_reset to update log tail info when load journal
-Date:   Thu, 27 Feb 2020 14:34:36 +0100
-Message-Id: <20200227132301.556194589@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 044/237] ALSA: ctl: allow TLV read operation for callback type of element in locked case
+Date:   Thu, 27 Feb 2020 14:34:18 +0100
+Message-Id: <20200227132259.949334732@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -59,53 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Li <li.kai4@h3c.com>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-[ Upstream commit a09decff5c32060639a685581c380f51b14e1fc2 ]
+[ Upstream commit d61fe22c2ae42d9fd76c34ef4224064cca4b04b0 ]
 
-If the journal is dirty when the filesystem is mounted, jbd2 will replay
-the journal but the journal superblock will not be updated by
-journal_reset() because JBD2_ABORT flag is still set (it was set in
-journal_init_common()). This is problematic because when a new transaction
-is then committed, it will be recorded in block 1 (journal->j_tail was set
-to 1 in journal_reset()). If unclean shutdown happens again before the
-journal superblock is updated, the new recorded transaction will not be
-replayed during the next mount (because of stale sb->s_start and
-sb->s_sequence values) which can lead to filesystem corruption.
+A design of ALSA control core allows applications to execute three
+operations for TLV feature; read, write and command. Furthermore, it
+allows driver developers to process the operations by two ways; allocated
+array or callback function. In the former, read operation is just allowed,
+thus developers uses the latter when device driver supports variety of
+models or the target model is expected to dynamically change information
+stored in TLV container.
 
-Fixes: 85e0c4e89c1b ("jbd2: if the journal is aborted then don't allow update of the log tail")
-Signed-off-by: Kai Li <li.kai4@h3c.com>
-Link: https://lore.kernel.org/r/20200111022542.5008-1-li.kai4@h3c.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+The core also allows applications to lock any element so that the other
+applications can't perform write operation to the element for element
+value and TLV information. When the element is locked, write and command
+operation for TLV information are prohibited as well as element value.
+Any read operation should be allowed in the case.
+
+At present, when an element has callback function for TLV information,
+TLV read operation returns EPERM if the element is locked. On the
+other hand, the read operation is success when an element has allocated
+array for TLV information. In both cases, read operation is success for
+element value expectedly.
+
+This commit fixes the bug. This change can be backported to v4.14
+kernel or later.
+
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Reviewed-by: Jaroslav Kysela <perex@perex.cz>
+Link: https://lore.kernel.org/r/20191223093347.15279-1-o-takashi@sakamocchi.jp
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/journal.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ sound/core/control.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index d3cce5c86fd90..b72be822f04f2 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -1687,6 +1687,11 @@ int jbd2_journal_load(journal_t *journal)
- 		       journal->j_devname);
- 		return -EFSCORRUPTED;
- 	}
-+	/*
-+	 * clear JBD2_ABORT flag initialized in journal_init_common
-+	 * here to update log tail information with the newest seq.
-+	 */
-+	journal->j_flags &= ~JBD2_ABORT;
+diff --git a/sound/core/control.c b/sound/core/control.c
+index 36571cd49be33..a0ce22164957c 100644
+--- a/sound/core/control.c
++++ b/sound/core/control.c
+@@ -1467,8 +1467,9 @@ static int call_tlv_handler(struct snd_ctl_file *file, int op_flag,
+ 	if (kctl->tlv.c == NULL)
+ 		return -ENXIO;
  
- 	/* OK, we've finished with the dynamic journal bits:
- 	 * reinitialise the dynamic contents of the superblock in memory
-@@ -1694,7 +1699,6 @@ int jbd2_journal_load(journal_t *journal)
- 	if (journal_reset(journal))
- 		goto recovery_error;
+-	/* When locked, this is unavailable. */
+-	if (vd->owner != NULL && vd->owner != file)
++	/* Write and command operations are not allowed for locked element. */
++	if (op_flag != SNDRV_CTL_TLV_OP_READ &&
++	    vd->owner != NULL && vd->owner != file)
+ 		return -EPERM;
  
--	journal->j_flags &= ~JBD2_ABORT;
- 	journal->j_flags |= JBD2_LOADED;
- 	return 0;
- 
+ 	return kctl->tlv.c(kctl, op_flag, size, buf);
 -- 
 2.20.1
 
