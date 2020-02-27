@@ -2,53 +2,52 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B03C3F341
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA34C3F35C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78D5D246A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C87F120801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811438;
-	bh=dFBHdpTmb1pYHeFIPv7bP54uozuvvZ1+7N/kxCsJCKQ=;
+	s=default; t=1582811490;
+	bh=qKFy04UVA0hQ8RqCiIV53fUBqu0Lw5p+r2CcnRmTglg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m7oSh8IzjjqxQ4X/qbbaUvWGBjgWX5WGv0DHSUBip5a9L7xw9AXAtAjM55p+2q+la
-	 OPLx3KMjiWnYa2SG1enEZPAC3eXZ1knaIHxq8OzEeT8Qu0WDrH1tzFHK0AGREcrAW5
-	 hFoP/Llr1uPhNfcl95I8h1gPDiCfY5sbIpx6C2u4=
+	b=olzgqtFE7aq8Y1je9e7i6TjA1qoA6JxwGopZpHv7Pxk0apXjuKu1JjNmkV0ExqLJF
+	 bjSMND362yJ8Q7P5Lmo3Ns139QEj0WGDdanjljaROPh99+CuBdWCUx1K/Kxz4facr3
+	 uQivq3OPY7l3uc16ahp+qKpHe2tWffmRPziWzMws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731259AbgB0Nuh (ORCPT
+        id S1731010AbgB0Nv2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:50:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48436 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:51:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731237AbgB0Nu3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:50:29 -0500
+        id S1731388AbgB0NvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:51:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6478621D7E;
-        Thu, 27 Feb 2020 13:50:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6774320578;
+        Thu, 27 Feb 2020 13:51:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811427;
-        bh=dFBHdpTmb1pYHeFIPv7bP54uozuvvZ1+7N/kxCsJCKQ=;
+        s=default; t=1582811484;
+        bh=qKFy04UVA0hQ8RqCiIV53fUBqu0Lw5p+r2CcnRmTglg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C/9d2ndL2/BReFLLUiJVAUjghJWn1H2gJAO/JSiyY5/inBsP6qi9bCfG5zH5A+hcI
-         AGtca4xE9Ki24oQ8gogcpwDm2fpr6eqHbvhIiRnG0DBPTLL8PsxZvwp2MVoIkdsW5v
-         C0rah3Rf23Q+n4fqGU6tClmhH7LcD0HboMWK8Usk=
+        b=FiiMPYNH8QlyKqXpp5cnC2VFZ+KDwRAscARHo0N6lVnZfOeuv4ACfesbvQD7ppm/3
+         bHxR8IuUN5U0vXVCarZZ9/cLT91ro1lFvm5G8nknpzxj6zYwgDJUTaoRMYEyFPQ3Tm
+         4OA4l/Q59rA+5xBqgwPO7cpYCz4ib9P1d2FoTGeE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Brandon Maier <brandon.maier@rockwellcollins.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 090/165] remoteproc: Initialize rproc_class before use
-Date:   Thu, 27 Feb 2020 14:36:04 +0100
-Message-Id: <20200227132244.450160696@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Upton <oupton@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.9 150/165] KVM: nVMX: Refactor IO bitmap checks into helper function
+Date:   Thu, 27 Feb 2020 14:37:04 +0100
+Message-Id: <20200227132252.652394439@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -61,73 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brandon Maier <brandon.maier@rockwellcollins.com>
+From: Oliver Upton <oupton@google.com>
 
-[ Upstream commit a8f40111d184098cd2b3dc0c7170c42250a5fa09 ]
+commit e71237d3ff1abf9f3388337cfebf53b96df2020d upstream.
 
-The remoteproc_core and remoteproc drivers all initialize with module_init().
-However remoteproc drivers need the rproc_class during their probe. If one of
-the remoteproc drivers runs init and gets through probe before
-remoteproc_init() runs, a NULL pointer access of rproc_class's `glue_dirs`
-spinlock occurs.
+Checks against the IO bitmap are useful for both instruction emulation
+and VM-exit reflection. Refactor the IO bitmap checks into a helper
+function.
 
-> Unable to handle kernel NULL pointer dereference at virtual address 000000dc
-> pgd = c0004000
-> [000000dc] *pgd=00000000
-> Internal error: Oops: 5 [#1] PREEMPT ARM
-> Modules linked in:
-> CPU: 0 PID: 1 Comm: swapper Tainted: G        W       4.14.106-rt56 #1
-> Hardware name: Generic OMAP36xx (Flattened Device Tree)
-> task: c6050000 task.stack: c604a000
-> PC is at rt_spin_lock+0x40/0x6c
-> LR is at rt_spin_lock+0x28/0x6c
-> pc : [<c0523c90>]    lr : [<c0523c78>]    psr: 60000013
-> sp : c604bdc0  ip : 00000000  fp : 00000000
-> r10: 00000000  r9 : c61c7c10  r8 : c6269c20
-> r7 : c0905888  r6 : c6269c20  r5 : 00000000  r4 : 000000d4
-> r3 : 000000dc  r2 : c6050000  r1 : 00000002  r0 : 000000d4
-> Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-...
-> [<c0523c90>] (rt_spin_lock) from [<c03b65a4>] (get_device_parent+0x54/0x17c)
-> [<c03b65a4>] (get_device_parent) from [<c03b6bec>] (device_add+0xe0/0x5b4)
-> [<c03b6bec>] (device_add) from [<c042adf4>] (rproc_add+0x18/0xd8)
-> [<c042adf4>] (rproc_add) from [<c01110e4>] (my_rproc_probe+0x158/0x204)
-> [<c01110e4>] (my_rproc_probe) from [<c03bb6b8>] (platform_drv_probe+0x34/0x70)
-> [<c03bb6b8>] (platform_drv_probe) from [<c03b9dd4>] (driver_probe_device+0x2c8/0x420)
-> [<c03b9dd4>] (driver_probe_device) from [<c03ba02c>] (__driver_attach+0x100/0x11c)
-> [<c03ba02c>] (__driver_attach) from [<c03b7d08>] (bus_for_each_dev+0x7c/0xc0)
-> [<c03b7d08>] (bus_for_each_dev) from [<c03b910c>] (bus_add_driver+0x1cc/0x264)
-> [<c03b910c>] (bus_add_driver) from [<c03ba714>] (driver_register+0x78/0xf8)
-> [<c03ba714>] (driver_register) from [<c010181c>] (do_one_initcall+0x100/0x190)
-> [<c010181c>] (do_one_initcall) from [<c0800de8>] (kernel_init_freeable+0x130/0x1d0)
-> [<c0800de8>] (kernel_init_freeable) from [<c051eee8>] (kernel_init+0x8/0x114)
-> [<c051eee8>] (kernel_init) from [<c01175b0>] (ret_from_fork+0x14/0x24)
-> Code: e2843008 e3c2203f f5d3f000 e5922010 (e193cf9f)
-> ---[ end trace 0000000000000002 ]---
+Signed-off-by: Oliver Upton <oupton@google.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Brandon Maier <brandon.maier@rockwellcollins.com>
-Link: https://lore.kernel.org/r/20190530225223.136420-1-brandon.maier@rockwellcollins.com
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/remoteproc/remoteproc_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/vmx.c |   40 +++++++++++++++++++++++++++-------------
+ 1 file changed, 27 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index c6bfb3496684e..b99780574044a 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -1488,7 +1488,7 @@ static int __init remoteproc_init(void)
- 
- 	return 0;
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -4641,6 +4641,26 @@ static bool cs_ss_rpl_check(struct kvm_v
+ 		 (ss.selector & SEGMENT_RPL_MASK));
  }
--module_init(remoteproc_init);
-+subsys_initcall(remoteproc_init);
  
- static void __exit remoteproc_exit(void)
++static bool nested_vmx_check_io_bitmaps(struct kvm_vcpu *vcpu,
++					unsigned int port, int size);
++static bool nested_vmx_exit_handled_io(struct kvm_vcpu *vcpu,
++				       struct vmcs12 *vmcs12)
++{
++	unsigned long exit_qualification;
++	unsigned int port;
++	int size;
++
++	if (!nested_cpu_has(vmcs12, CPU_BASED_USE_IO_BITMAPS))
++		return nested_cpu_has(vmcs12, CPU_BASED_UNCOND_IO_EXITING);
++
++	exit_qualification = vmcs_readl(EXIT_QUALIFICATION);
++
++	port = exit_qualification >> 16;
++	size = (exit_qualification & 7) + 1;
++
++	return nested_vmx_check_io_bitmaps(vcpu, port, size);
++}
++
+ /*
+  * Check if guest state is valid. Returns true if valid, false if
+  * not.
+@@ -8026,23 +8046,17 @@ static int (*const kvm_vmx_exit_handlers
+ static const int kvm_vmx_max_exit_handlers =
+ 	ARRAY_SIZE(kvm_vmx_exit_handlers);
+ 
+-static bool nested_vmx_exit_handled_io(struct kvm_vcpu *vcpu,
+-				       struct vmcs12 *vmcs12)
++/*
++ * Return true if an IO instruction with the specified port and size should cause
++ * a VM-exit into L1.
++ */
++bool nested_vmx_check_io_bitmaps(struct kvm_vcpu *vcpu, unsigned int port,
++				 int size)
  {
--- 
-2.20.1
-
+-	unsigned long exit_qualification;
++	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
+ 	gpa_t bitmap, last_bitmap;
+-	unsigned int port;
+-	int size;
+ 	u8 b;
+ 
+-	if (!nested_cpu_has(vmcs12, CPU_BASED_USE_IO_BITMAPS))
+-		return nested_cpu_has(vmcs12, CPU_BASED_UNCOND_IO_EXITING);
+-
+-	exit_qualification = vmcs_readl(EXIT_QUALIFICATION);
+-
+-	port = exit_qualification >> 16;
+-	size = (exit_qualification & 7) + 1;
+-
+ 	last_bitmap = (gpa_t)-1;
+ 	b = -1;
+ 
 
 
