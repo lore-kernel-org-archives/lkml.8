@@ -2,203 +2,103 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD84C4BA34
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE44C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12F3C24672
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2FBE24670
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:05:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C4wxSclB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WXLjFVGn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgB0ADD (ORCPT
+        id S1728028AbgB0AFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 19:03:03 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36182 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727966AbgB0ADC (ORCPT
+        Wed, 26 Feb 2020 19:05:01 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:36820 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726413AbgB0AFB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 19:03:02 -0500
-Received: by mail-io1-f65.google.com with SMTP id d15so1206739iog.3;
-        Wed, 26 Feb 2020 16:03:02 -0800 (PST)
+        Wed, 26 Feb 2020 19:05:01 -0500
+Received: by mail-il1-f196.google.com with SMTP id b15so797779iln.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 16:04:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=tZtnM0e+xr4AH9861svl/LlAtVjcSg0W4wskznM5ZKY=;
-        b=C4wxSclBqOr2LuIMMwxD7oLZMwwjbp4vTUF3ZiBhz/VGtOdBYagVxf6pObpH9POUo+
-         m9ci0oJvKahUD2zyeWp3IAIxTbFjQVVcZx/n8jU28HdofOZvk9KMGrHvBMt3p+IgFb8g
-         bj35iSwW6vw6J43AhaGoR0aU6MEDc7I2lbQ6A3Qm4jf4W+ZNeWmnGUgxPRp7bHlpNsQx
-         ombBRcrwfqlXWMwnY26xViHnqggxOEAnHlyjACJtW1+TSAnvTAmNA51IGzRc3VYslq0C
-         NzNrdK2FGKqfrVRJMVt0lGSVy4UK+M2L5RuGU3jHRTg4uuI/4kUYmLAAXDVE8dwpL5T9
-         YY1g==
+         :cc;
+        bh=h/9GGAuYdG+lV6Mcnmy3R/59iu7Yn//RJyM4cVFMhfE=;
+        b=WXLjFVGn6mEbArPzDEPAutgUThJrPgjQPhpOjNZ+1lQfgjFPgbfhqjRs7G4SlHcoC4
+         NwH0qbK+yfwfBAMFmNxfadEQh16USbJm7ash5LXFZVpBiiGiRI8tI+nUFEMcWwTLXnkW
+         qv0DWkhxG0n+Fpypp1A+6eVuNQw+DU4N6O31MWRh/5L7MX6J2ucDC9a56GhHMZcqbIxl
+         f6CV9nk5Op2aEizd3WOOGvpCdMPoUm5zmzvgobwtiJk/2PsEcgqX8cMDJ4kCLq1TZ6mF
+         XhiHPBc4Zpsz0myaqwZlD2vZ3+MxI687GE5osc5PjAEA+ZZ4ox0RE2BuiYkRpPRWBqIk
+         zW2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=tZtnM0e+xr4AH9861svl/LlAtVjcSg0W4wskznM5ZKY=;
-        b=RoWJjvRBV6TB4q1fDwsJqZ1ruq4O2hNd93PfG6lGxnCdxmVmIqZ/kdt/EdEkPDOMl/
-         /pDrIHk6EynqRk2aGReijYMQplRj1RhJ0v5tJWYhPXYzKfVdZqB7T4Mdy81CJyfiqsLZ
-         e6scZq0ozte3b0OT6g15hSEf1Vvef5lqPkgtWta7UpoPleduc9Rea626/X3xo5C3rS51
-         LeIxU4kVE3DkaJiu1EMhZn+onWzhJxcLNoPj8BsZe6fEDMJlvhTH5Go1sUsH3hx91AaC
-         33OLvCf9XUwupaUrOyewe8IwSUENaMfhr+ScVdxk95uzP69rCIg6rh7Pq4a3EKzqr6rG
-         pJtw==
-X-Gm-Message-State: APjAAAWpMIxsEYKBcvFOd7ZOBa/c0su/V7SQne8Hg9m6fHsDOAEWzc5Q
-        f0HE+R8HA7u2g+oW7WC/w5JSzNZD2LShAlVE3ck=
-X-Google-Smtp-Source: APXvYqxIn6NGD5ZRlTLPjMi1xq0GHuB1mJN4ffE/xw86VQ9rk0Y9Jvv0lkfcwSmGVSmMhb01pzQedOOsmhGlIxm0Cis=
-X-Received: by 2002:a02:c815:: with SMTP id p21mr65171jao.20.1582761781497;
- Wed, 26 Feb 2020 16:03:01 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=h/9GGAuYdG+lV6Mcnmy3R/59iu7Yn//RJyM4cVFMhfE=;
+        b=rYEA4khmx1uOWpGW8zumF73HWGec+EeeCmlVWTvbtZazzUS3Qujow7iOVdOyY5wTFh
+         Bx5gCEh6rTO+i0MdtvjLG4TdO9PDOrCBHuhw1kR4HIfZgRUmoXcLG0FEMLGVsGQm+Ixm
+         ANZ4PVY+5jgjDYV8si7xJQJZlmj17uAd4876/PRscFQh8jlKtfhB4tTQjieg2WXYyROT
+         FNwAK97JSKBW9/W90V1ZvGWIS/WLpvEM+AuZB5FmmkrcmVbLFA+XNFWsJkvBvs5tkyD/
+         hxLavr9ETlSVnvAtdXvAEnghiztUpzyPTPKqjuEoti/fzuya3dFRnyccLTWsQAPJfnED
+         hbGg==
+X-Gm-Message-State: APjAAAVsmVn39qkJ2p5ZoO6tluVp7B+jnXkU6H2K7m7WcAO+UYxHPaJJ
+        29G5J5ippwnyC8ETdWtzwcv1b9/kEdAIjptvD49V
+X-Google-Smtp-Source: APXvYqwaqyhYf77l+HaJlYF5jLuD5Q0z0rbDGVFDtf2eY+cWu+kCSrCQ83S210VUEWMIa0qo0R5nTmF9FR0ZjglTsqo=
+X-Received: by 2002:a92:1d5a:: with SMTP id d87mr1499236ild.27.1582761899306;
+ Wed, 26 Feb 2020 16:04:59 -0800 (PST)
 MIME-Version: 1.0
-References: <20200226154752.24328-1-kraxel@redhat.com> <20200226154752.24328-2-kraxel@redhat.com>
- <f1afba4b-9c06-48a3-42c7-046695947e91@shipmail.org>
-In-Reply-To: <f1afba4b-9c06-48a3-42c7-046695947e91@shipmail.org>
-From:   Chia-I Wu <olvaffe@gmail.com>
-Date:   Wed, 26 Feb 2020 16:02:50 -0800
-Message-ID: <CAPaKu7R4VFYnk9UdpguZnkWeKk2ELVnoQ60=i72RN2GkME1ukw@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] drm/shmem: add support for per object caching flags.
-To:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     Gerd Hoffmann <kraxel@redhat.com>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        Guillaume Gardet <Guillaume.Gardet@arm.com>,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org,
-        Gurchetan Singh <gurchetansingh@chromium.org>,
-        tzimmermann@suse.de
+References: <20200225224719.950376311@linutronix.de> <20200225231609.000955823@linutronix.de>
+ <CAMzpN2ij8ReOXZH00puhzraCGRdKY8qt+TMipd_14_XWTu8xtg@mail.gmail.com>
+ <87k149p0na.fsf@nanos.tec.linutronix.de> <CAMzpN2j7EHZ2bKg9SZ2Ri-qsmEoknAAJO6O5yoLn-fY8_h1B2A@mail.gmail.com>
+ <87eeugoqx2.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87eeugoqx2.fsf@nanos.tec.linutronix.de>
+From:   Brian Gerst <brgerst@gmail.com>
+Date:   Wed, 26 Feb 2020 19:04:47 -0500
+Message-ID: <CAMzpN2i2DUD5i0ui7HE_F7+U80hXs2Fa+RgZa_DOCsJ+Eae52Q@mail.gmail.com>
+Subject: Re: [patch 01/15] x86/irq: Convey vector as argument and not in ptregs
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Juergen Gross <jgross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 10:25 AM Thomas Hellstr=C3=B6m (VMware)
-<thomas_os@shipmail.org> wrote:
+On Wed, Feb 26, 2020 at 6:43 PM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
-> Hi, Gerd,
->
-> While looking at this patchset I came across some stuff that seems
-> strange but that was merged in a previous patchset.
->
-> (please refer to
-> https://lists.freedesktop.org/archives/dri-devel/2018-September/190001.ht=
-ml.
-> Forgive me if I've missed any discussion leading up to this).
->
->
-> On 2/26/20 4:47 PM, Gerd Hoffmann wrote:
-> > Add map_cached bool to drm_gem_shmem_object, to request cached mappings
-> > on a per-object base.  Check the flag before adding writecombine to
-> > pgprot bits.
+> Brian Gerst <brgerst@gmail.com> writes:
+> > On Wed, Feb 26, 2020 at 3:13 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >> Brian Gerst <brgerst@gmail.com> writes:
+> >> Now the question is whether we care about the packed stubs or just make
+> >> them larger by using alignment to get rid of this silly +0x80 and
+> >> ~vector fixup later on. The straight forward thing clearly has its charm
+> >> and I doubt it matters in measurable ways.
 > >
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> > ---
-> >   include/drm/drm_gem_shmem_helper.h     |  5 +++++
-> >   drivers/gpu/drm/drm_gem_shmem_helper.c | 15 +++++++++++----
-> >   2 files changed, 16 insertions(+), 4 deletions(-)
+> > I think we can get rid of the inversion.  That was done so orig_ax had
+> > a negative number (signifying it's not a syscall), but if you replace
+> > it with -1 that isn't necessary.  A simple -0x80 offset should be
+> > sufficient.
 > >
-> > diff --git a/include/drm/drm_gem_shmem_helper.h b/include/drm/drm_gem_s=
-hmem_helper.h
-> > index e34a7b7f848a..294b2931c4cc 100644
-> > --- a/include/drm/drm_gem_shmem_helper.h
-> > +++ b/include/drm/drm_gem_shmem_helper.h
-> > @@ -96,6 +96,11 @@ struct drm_gem_shmem_object {
-> >        * The address are un-mapped when the count reaches zero.
-> >        */
-> >       unsigned int vmap_use_count;
-> > +
-> > +     /**
-> > +      * @map_cached: map object cached (instead of using writecombine)=
-.
-> > +      */
-> > +     bool map_cached;
-> >   };
-> >
-> >   #define to_drm_gem_shmem_obj(obj) \
-> > diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/d=
-rm_gem_shmem_helper.c
-> > index a421a2eed48a..aad9324dcf4f 100644
-> > --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
-> > +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
-> > @@ -254,11 +254,16 @@ static void *drm_gem_shmem_vmap_locked(struct drm=
-_gem_shmem_object *shmem)
-> >       if (ret)
-> >               goto err_zero_use;
-> >
-> > -     if (obj->import_attach)
-> > +     if (obj->import_attach) {
-> >               shmem->vaddr =3D dma_buf_vmap(obj->import_attach->dmabuf)=
-;
-> > -     else
-> > +     } else {
-> > +             pgprot_t prot =3D PAGE_KERNEL;
-> > +
-> > +             if (!shmem->map_cached)
-> > +                     prot =3D pgprot_writecombine(prot);
-> >               shmem->vaddr =3D vmap(shmem->pages, obj->size >> PAGE_SHI=
-FT,
-> > -                                 VM_MAP, pgprot_writecombine(PAGE_KERN=
-EL));
-> > +                                 VM_MAP, prot)
+> > I think it's a worthy optimization to keep.  There are 240 of these
+> > stubs, so increasing the allocation to 16 bytes would add 1920 bytes
+> > to the kernel text.
 >
->
-> Wouldn't a vmap with pgprot_writecombine() create conflicting mappings
-> with the linear kernel map which is not write-combined? Or do you change
-> the linear kernel map of the shmem pages somewhere? vmap bypassess at
-> least the x86 PAT core mapping consistency check and this could
-> potentially cause spuriously overwritten memory.
+> I rather pay the 2k text size for readable and straight forward
+> code. Can you remind me why we are actually worrying at that level about
+> 32bit x86 instead of making it depend on CONFIG_OBSCURE?
 
-Yeah, I think this creates a conflicting alias.  It seems a call to
-set_pages_array_wc here or changes elsewhere is needed..
+Because this also applies to the 64-bit kernel?
 
-But this is a pre-existing issue in the shmem helper.  There is also
-no universal fix (e.g., set_pages_array_wc is x86 only)?  I would hope
-this series can be merged sooner to fix the regression first.
-
->
->
-> > +     }
-> >
-> >       if (!shmem->vaddr) {
-> >               DRM_DEBUG_KMS("Failed to vmap pages\n");
-> > @@ -540,7 +545,9 @@ int drm_gem_shmem_mmap(struct drm_gem_object *obj, =
-struct vm_area_struct *vma)
-> >       }
-> >
-> >       vma->vm_flags |=3D VM_MIXEDMAP | VM_DONTEXPAND;
-> > -     vma->vm_page_prot =3D pgprot_writecombine(vm_get_page_prot(vma->v=
-m_flags));
-> > +     vma->vm_page_prot =3D vm_get_page_prot(vma->vm_flags);
-> > +     if (!shmem->map_cached)
-> > +             vma->vm_page_prot =3D pgprot_writecombine(vma->vm_page_pr=
-ot);
->
-> Same thing here. Note that vmf_insert_page() which is used by the fault
-> handler also bypasses the x86 PAT  consistency check, whereas
-> vmf_insert_mixed() doesn't.
->
-> >       vma->vm_page_prot =3D pgprot_decrypted(vma->vm_page_prot);
->
-> At least with SME or SEV encryption, where shmem memory has its kernel
-> map set to encrypted, creating conflicting mappings is explicitly
-> disallowed.
-> BTW, why is mmap mapping decrypted while vmap isn't?
->
-> >       vma->vm_ops =3D &drm_gem_shmem_vm_ops;
-> >
->
-> Thanks,
-> Thomas
->
->
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+--
+Brian Gerst
