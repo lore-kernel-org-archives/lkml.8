@@ -2,165 +2,116 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD6AC54FF0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB31FC54FF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA8A224656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:32:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813928;
-	bh=vf+BHOk1D3Q/VYSnXXbrInsyNf9aOGqq0TC375Y6d74=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VQR7vYcER0XrZUMsk0kwPWO6RHZnzVBnRGsfrfJFEVDqfLIRND4kP9J89Nu8gwpHa
-	 jGBx0GO5g7u+bzkLwcO1ThtAo5ld8xy/jjUJAfkfhL2cIRZ4vVrM0O9VTfe1JzArW5
-	 +8/geEgWOfPlk9YMqXqPmolubFMZzsxITT4iCKW4=
+	by mail.kernel.org (Postfix) with ESMTP id 9D66E24688
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:32:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733153AbgB0OCf (ORCPT
+        id S1733144AbgB0OCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:02:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37144 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733130AbgB0OC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:02:29 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E020524656;
-        Thu, 27 Feb 2020 14:02:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812148;
-        bh=vf+BHOk1D3Q/VYSnXXbrInsyNf9aOGqq0TC375Y6d74=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CaXRZhesZNEUpP7jUpvG9oskxo/938hG8IZA9DdMtnofk2BPeBZL+HaMmYOotgYgI
-         SrbQzRQUfCJEqtllAgGyWbkhlA5qrW/VxIOXtTaAAh9cLHFZFbcsHlG7IU42VJMNHo
-         I14kIBqFXt4JOPnDGy1IDch1UpElBHzc/EcOEONQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 202/237] VT_RESIZEX: get rid of field-by-field copyin
-Date:   Thu, 27 Feb 2020 14:36:56 +0100
-Message-Id: <20200227132311.129561837@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
-References: <20200227132255.285644406@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 27 Feb 2020 09:02:33 -0500
+Received: from outbound-smtp47.blacknight.com ([46.22.136.64]:37069 "EHLO
+        outbound-smtp47.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733117AbgB0OC1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:02:27 -0500
+Received: from mail.blacknight.com (pemlinmail05.blacknight.ie [81.17.254.26])
+        by outbound-smtp47.blacknight.com (Postfix) with ESMTPS id C9D13FA874
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 14:02:25 +0000 (GMT)
+Received: (qmail 3656 invoked from network); 27 Feb 2020 14:02:25 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 27 Feb 2020 14:02:25 -0000
+Date:   Thu, 27 Feb 2020 14:02:23 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lukasz Luba <lukasz.luba@arm.com>
+Subject: [PATCH] sched/fair: Fix kernel build warning in test_idle_cores()
+ for !SMT NUMA
+Message-ID: <20200227140222.GH3818@techsingularity.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+Building against tip/sched/core as of as ff7db0bf24db ("sched/numa: Prefer
+using an idle CPU as a migration target instead of comparing tasks") with
+the arm64 defconfig (which doesn't have CONFIG_SCHED_SMT set) leads to:
 
-[ Upstream commit 1b3bce4d6bf839304a90951b4b25a5863533bf2a ]
+  kernel/sched/fair.c:1525:20: warning: ‘test_idle_cores’ declared ‘static’ but never defined [-Wunused-function]
+   static inline bool test_idle_cores(int cpu, bool def);
+		      ^~~~~~~~~~~~~~~
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Rather than define it in its own CONFIG_SCHED_SMT #define island, bunch it
+up with test_idle_cores().
+
+Fixes: ff7db0bf24db ("sched/numa: Prefer using an idle CPU as a migration target instead of comparing tasks")
+[mgorman@techsingularity.net: Edit changelog, minor style change]
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
 ---
- drivers/tty/vt/vt_ioctl.c | 68 ++++++++++++++++-----------------------
- 1 file changed, 27 insertions(+), 41 deletions(-)
+ kernel/sched/fair.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/tty/vt/vt_ioctl.c b/drivers/tty/vt/vt_ioctl.c
-index 7b34b0ddbf0e0..be7990548afef 100644
---- a/drivers/tty/vt/vt_ioctl.c
-+++ b/drivers/tty/vt/vt_ioctl.c
-@@ -847,58 +847,44 @@ int vt_ioctl(struct tty_struct *tty,
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index fcc968669aea..10f9e6729fcf 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -1520,9 +1520,6 @@ static inline bool is_core_idle(int cpu)
+ 	return true;
+ }
  
- 	case VT_RESIZEX:
- 	{
--		struct vt_consize __user *vtconsize = up;
--		ushort ll,cc,vlin,clin,vcol,ccol;
-+		struct vt_consize v;
- 		if (!perm)
- 			return -EPERM;
--		if (!access_ok(VERIFY_READ, vtconsize,
--				sizeof(struct vt_consize))) {
--			ret = -EFAULT;
--			break;
--		}
-+		if (copy_from_user(&v, up, sizeof(struct vt_consize)))
-+			return -EFAULT;
- 		/* FIXME: Should check the copies properly */
--		__get_user(ll, &vtconsize->v_rows);
--		__get_user(cc, &vtconsize->v_cols);
--		__get_user(vlin, &vtconsize->v_vlin);
--		__get_user(clin, &vtconsize->v_clin);
--		__get_user(vcol, &vtconsize->v_vcol);
--		__get_user(ccol, &vtconsize->v_ccol);
--		vlin = vlin ? vlin : vc->vc_scan_lines;
--		if (clin) {
--			if (ll) {
--				if (ll != vlin/clin) {
--					/* Parameters don't add up */
--					ret = -EINVAL;
--					break;
--				}
--			} else 
--				ll = vlin/clin;
-+		if (!v.v_vlin)
-+			v.v_vlin = vc->vc_scan_lines;
-+		if (v.v_clin) {
-+			int rows = v.v_vlin/v.v_clin;
-+			if (v.v_rows != rows) {
-+				if (v.v_rows) /* Parameters don't add up */
-+					return -EINVAL;
-+				v.v_rows = rows;
-+			}
- 		}
--		if (vcol && ccol) {
--			if (cc) {
--				if (cc != vcol/ccol) {
--					ret = -EINVAL;
--					break;
--				}
--			} else
--				cc = vcol/ccol;
-+		if (v.v_vcol && v.v_ccol) {
-+			int cols = v.v_vcol/v.v_ccol;
-+			if (v.v_cols != cols) {
-+				if (v.v_cols)
-+					return -EINVAL;
-+				v.v_cols = cols;
-+			}
- 		}
+-/* Forward declarations of select_idle_sibling helpers */
+-static inline bool test_idle_cores(int cpu, bool def);
+-
+ struct task_numa_env {
+ 	struct task_struct *p;
  
--		if (clin > 32) {
--			ret =  -EINVAL;
--			break;
--		}
--		    
-+		if (v.v_clin > 32)
-+			return -EINVAL;
-+
- 		for (i = 0; i < MAX_NR_CONSOLES; i++) {
- 			if (!vc_cons[i].d)
- 				continue;
- 			console_lock();
--			if (vlin)
--				vc_cons[i].d->vc_scan_lines = vlin;
--			if (clin)
--				vc_cons[i].d->vc_font.height = clin;
-+			if (v.v_vlin)
-+				vc_cons[i].d->vc_scan_lines = v.v_vlin;
-+			if (v.v_clin)
-+				vc_cons[i].d->vc_font.height = v.v_clin;
- 			vc_cons[i].d->vc_resize_user = 1;
--			vc_resize(vc_cons[i].d, cc, ll);
-+			vc_resize(vc_cons[i].d, v.v_cols, v.v_rows);
- 			console_unlock();
- 		}
- 		break;
--- 
-2.20.1
-
-
-
+@@ -1558,9 +1555,11 @@ numa_type numa_classify(unsigned int imbalance_pct,
+ 	return node_fully_busy;
+ }
+ 
++#ifdef CONFIG_SCHED_SMT
++/* Forward declarations of select_idle_sibling helpers */
++static inline bool test_idle_cores(int cpu, bool def);
+ static inline int numa_idle_core(int idle_core, int cpu)
+ {
+-#ifdef CONFIG_SCHED_SMT
+ 	if (!static_branch_likely(&sched_smt_present) ||
+ 	    idle_core >= 0 || !test_idle_cores(cpu, false))
+ 		return idle_core;
+@@ -1571,10 +1570,15 @@ static inline int numa_idle_core(int idle_core, int cpu)
+ 	 */
+ 	if (is_core_idle(cpu))
+ 		idle_core = cpu;
+-#endif
+ 
+ 	return idle_core;
+ }
++#else
++static inline int numa_idle_core(int idle_core, int cpu)
++{
++	return idle_core;
++}
++#endif
+ 
+ /*
+  * Gather all necessary information to make NUMA balancing placement
