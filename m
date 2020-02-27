@@ -6,41 +6,41 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E787C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23EFAC4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D51924656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2E902467B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:33:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728607AbgB0Fd1 (ORCPT
+        id S1725970AbgB0Fdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 00:33:27 -0500
-Received: from mga05.intel.com ([192.55.52.43]:37515 "EHLO mga05.intel.com"
+        Thu, 27 Feb 2020 00:33:40 -0500
+Received: from mga09.intel.com ([134.134.136.24]:35462 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728416AbgB0Fcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 00:32:45 -0500
+        id S1726460AbgB0Fck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 00:32:40 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 21:32:45 -0800
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 21:32:39 -0800
 X-IronPort-AV: E=Sophos;i="5.70,490,1574150400"; 
-   d="scan'208";a="232052990"
+   d="scan'208";a="241932087"
 Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 21:32:44 -0800
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 21:32:38 -0800
 From:   ira.weiny@intel.com
 To:     linux-kernel@vger.kernel.org
 Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Dave Chinner <dchinner@redhat.com>, Jan Kara <jack@suse.cz>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
         "Darrick J. Wong" <darrick.wong@oracle.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Dave Chinner <david@fromorbit.com>,
         Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH V5 08/12] fs/xfs: Hold off aops users while changing DAX state
-Date:   Wed, 26 Feb 2020 21:24:38 -0800
-Message-Id: <20200227052442.22524-9-ira.weiny@intel.com>
+        "Theodore Y. Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH V5 02/12] fs: Remove unneeded IS_DAX() check
+Date:   Wed, 26 Feb 2020 21:24:32 -0800
+Message-Id: <20200227052442.22524-3-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200227052442.22524-1-ira.weiny@intel.com>
 References: <20200227052442.22524-1-ira.weiny@intel.com>
@@ -53,94 +53,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-XFS requires the use of the aops of an inode to be quiesced prior to
-changing the aops vector to/from the DAX vector.
+Remove the check because DAX now has it's own read/write methods and
+file systems which support DAX check IS_DAX() prior to IOCB_DIRECT on
+their own.  Therefore, it does not matter if the file state is DAX when
+the iocb flags are created.
 
-Take the aops write lock while changing DAX state.
-
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
 ---
-Changes from v4:
-	Open code the aops write lock
-	Obsolete: Clean up lock name in comments
-	Obsolete: Change #define: XFS_DAX_EXCL => XFS_AOPSLOCK_EXCL
-
 Changes from v3:
-	Change locking function names to reflect changes in previous
-	patches.
-
-Changes from V2:
-	Change name of patch (WAS: fs/xfs: Add lock/unlock state to xfs)
-	Remove the xfs specific lock and move to the vfs layer.
-		We still use XFS_LOCK_DAX_EXCL to be able to pass this
-		flag through to the transaction code.  But we no longer
-		have a lock specific to xfs.  This removes a lot of code
-		from the XFS layer, preps us for using this in ext4, and
-		is actually more straight forward now that all the
-		locking requirements are better known.
-
-	Fix locking order comment
-	Rework for new 'state' names
-	(Other comments on the previous patch are not applicable with
-	new patch as much of the code was removed in favor of the vfs
-	level lock)
+	Reword commit message.
+	Reordered to be a 'pre-cleanup' patch
 ---
- fs/xfs/xfs_ioctl.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ include/linux/fs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index 498fae2ef9f6..6c4d4ea3b6b6 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -1444,7 +1444,11 @@ xfs_ioctl_setattr(
- 	 * or cancel time, so need to be passed through to
- 	 * xfs_ioctl_setattr_get_trans() so it can apply them to the join call
- 	 * appropriately.
-+	 *
-+	 * Further we hold off aops users until we have completed any potential
-+	 * changing of aops due to attribute changes.
- 	 */
-+	inode_aops_down_write(VFS_I(ip));
- 	code = xfs_ioctl_setattr_dax_invalidate(ip, fa, &join_flags);
- 	if (code)
- 		goto error_free_dquots;
-@@ -1527,6 +1531,7 @@ xfs_ioctl_setattr(
- 	xfs_qm_dqrele(udqp);
- 	xfs_qm_dqrele(pdqp);
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 3cd4fe6b845e..63d1e533a07d 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3388,7 +3388,7 @@ extern int file_update_time(struct file *file);
  
-+	inode_aops_up_write(VFS_I(ip));
- 	return code;
- 
- error_trans_cancel:
-@@ -1534,6 +1539,7 @@ xfs_ioctl_setattr(
- error_free_dquots:
- 	xfs_qm_dqrele(udqp);
- 	xfs_qm_dqrele(pdqp);
-+	inode_aops_up_write(VFS_I(ip));
- 	return code;
+ static inline bool io_is_direct(struct file *filp)
+ {
+-	return (filp->f_flags & O_DIRECT) || IS_DAX(filp->f_mapping->host);
++	return (filp->f_flags & O_DIRECT);
  }
  
-@@ -1603,7 +1609,11 @@ xfs_ioc_setxflags(
- 	 * or cancel time, so need to be passed through to
- 	 * xfs_ioctl_setattr_get_trans() so it can apply them to the join call
- 	 * appropriately.
-+	 *
-+	 * Further we hold off aops users until we have completed any potential
-+	 * changing of aops due to attribute changes.
- 	 */
-+	inode_aops_down_write(VFS_I(ip));
- 	error = xfs_ioctl_setattr_dax_invalidate(ip, &fa, &join_flags);
- 	if (error)
- 		goto out_drop_write;
-@@ -1630,6 +1640,7 @@ xfs_ioc_setxflags(
- 	error = xfs_trans_commit(tp);
- out_drop_write:
- 	mnt_drop_write_file(filp);
-+	inode_aops_up_write(VFS_I(ip));
- 	return error;
- }
- 
+ static inline bool vma_is_dax(struct vm_area_struct *vma)
 -- 
 2.21.0
 
