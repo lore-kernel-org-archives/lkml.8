@@ -2,118 +2,178 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB05DC4BA06
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 06:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 797A5C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 06:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E87B24656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 06:09:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="IdRx2Km3"
+	by mail.kernel.org (Postfix) with ESMTP id 3CA7224656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 06:16:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727360AbgB0GJo (ORCPT
+        id S1726860AbgB0GQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 01:09:44 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:59856 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725790AbgB0GJn (ORCPT
+        Thu, 27 Feb 2020 01:16:43 -0500
+Received: from mx04.melco.co.jp ([192.218.140.144]:34329 "EHLO
+        mx04.melco.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbgB0GQn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 01:09:43 -0500
-X-UUID: 090e36d2203c48729c8b76f2daca3830-20200227
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=8hObMDkCZhI/DRnWGjAJpxpuzXkK7SPUl3OhA8dm39o=;
-        b=IdRx2Km31sN0fY3wFTEotJ/PWfrQ+GfiQdnfHck4R92x/7fk5b3SmddFlVXYUnJh5uUkCTTqNxgMTiXyMsfkKmPDPDD4/ZCGudXlhUpvOFVttzeccpdVabIs1ESzVgfnSwHHuuk/j5TXRAZv4jbu1RF3lFPCCFcXKjJz938M+3o=;
-X-UUID: 090e36d2203c48729c8b76f2daca3830-20200227
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 180435795; Thu, 27 Feb 2020 14:09:37 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 27 Feb 2020 14:08:39 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by mtkcas08.mediatek.inc
- (172.21.101.126) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 27 Feb
- 2020 14:09:40 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 27 Feb 2020 14:09:25 +0800
-Message-ID: <1582783776.30808.1.camel@mtksdaap41>
-Subject: Re: [PATCH] drm/mediatek: Remove debug messages for function calls
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        "Philipp Zabel" <p.zabel@pengutronix.de>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-mediatek@lists.infradead.org>,
-        David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Date:   Thu, 27 Feb 2020 14:09:36 +0800
-In-Reply-To: <20200226112723.649954-1-enric.balletbo@collabora.com>
-References: <20200226112723.649954-1-enric.balletbo@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 27 Feb 2020 01:16:43 -0500
+Received: from mr04.melco.co.jp (mr04 [133.141.98.166])
+        by mx04.melco.co.jp (Postfix) with ESMTP id 057FA3A40BE;
+        Thu, 27 Feb 2020 15:16:41 +0900 (JST)
+Received: from mr04.melco.co.jp (unknown [127.0.0.1])
+        by mr04.imss (Postfix) with ESMTP id 48Sj9h6sM1zRk6K;
+        Thu, 27 Feb 2020 15:16:40 +0900 (JST)
+Received: from mf03_second.melco.co.jp (unknown [192.168.20.183])
+        by mr04.melco.co.jp (Postfix) with ESMTP id 48Sj9h6Y40zRk65;
+        Thu, 27 Feb 2020 15:16:40 +0900 (JST)
+Received: from mf03.melco.co.jp (unknown [133.141.98.183])
+        by mf03_second.melco.co.jp (Postfix) with ESMTP id 48Sj9h61TgzRkGM;
+        Thu, 27 Feb 2020 15:16:40 +0900 (JST)
+Received: from tux532.tad.melco.co.jp (unknown [133.141.243.226])
+        by mf03.melco.co.jp (Postfix) with ESMTP id 48Sj9h5XcfzRkBN;
+        Thu, 27 Feb 2020 15:16:40 +0900 (JST)
+Received:  from tux532.tad.melco.co.jp
+        by tux532.tad.melco.co.jp (unknown) with ESMTP id 01R6GetJ029538;
+        Thu, 27 Feb 2020 15:16:40 +0900
+Received: from tux390.tad.melco.co.jp (tux390.tad.melco.co.jp [127.0.0.1])
+        by postfix.imss70 (Postfix) with ESMTP id 7FFAB17E075;
+        Thu, 27 Feb 2020 15:16:40 +0900 (JST)
+Received: from tux554.tad.melco.co.jp (tadpost1.tad.melco.co.jp [10.168.7.223])
+        by tux390.tad.melco.co.jp (Postfix) with ESMTP id 6A44017E073;
+        Thu, 27 Feb 2020 15:16:40 +0900 (JST)
+Received: from tux554.tad.melco.co.jp
+        by tux554.tad.melco.co.jp (unknown) with ESMTP id 01R6GeLj020248;
+        Thu, 27 Feb 2020 15:16:40 +0900
+From:   Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+To:     Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp
+Cc:     Mori.Takahiro@ab.MitsubishiElectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] staging: exfat: remove symlink feature
+Date:   Thu, 27 Feb 2020 15:15:59 +0900
+Message-Id: <20200227061559.4481-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEVucmljOg0KDQpPbiBXZWQsIDIwMjAtMDItMjYgYXQgMTI6MjcgKzAxMDAsIEVucmljIEJh
-bGxldGJvIGkgU2VycmEgd3JvdGU6DQo+IEVxdWl2YWxlbnQgaW5mb3JtYXRpb24gY2FuIGJlIG5v
-d2FkYXlzIG9idGFpbmVkIHVzaW5nIGZ1bmN0aW9uIHRyYWNlci4NCj4gDQoNClJldmlld2VkLWJ5
-OiBDSyBIdSA8Y2suaHVAbWVkaWF0ZWsuY29tPg0KDQo+IFNpZ25lZC1vZmYtYnk6IEVucmljIEJh
-bGxldGJvIGkgU2VycmEgPGVucmljLmJhbGxldGJvQGNvbGxhYm9yYS5jb20+DQo+IC0tLQ0KPiAN
-Cj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYyB8IDUgLS0tLS0NCj4g
-IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jICB8IDIgLS0NCj4gIDIgZmls
-ZXMgY2hhbmdlZCwgNyBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
-dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
-bXRrX2RybV9jcnRjLmMNCj4gaW5kZXggYTIzNjQ5OTEyM2FhLi44ODJjNjkwZDNmMTMgMTAwNjQ0
-DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYw0KPiArKysg
-Yi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMNCj4gQEAgLTE5Miw3ICsx
-OTIsNiBAQCBzdGF0aWMgaW50IG10a19jcnRjX2RkcF9jbGtfZW5hYmxlKHN0cnVjdCBtdGtfZHJt
-X2NydGMgKm10a19jcnRjKQ0KPiAgCWludCByZXQ7DQo+ICAJaW50IGk7DQo+ICANCj4gLQlEUk1f
-REVCVUdfRFJJVkVSKCIlc1xuIiwgX19mdW5jX18pOw0KPiAgCWZvciAoaSA9IDA7IGkgPCBtdGtf
-Y3J0Yy0+ZGRwX2NvbXBfbnI7IGkrKykgew0KPiAgCQlyZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUo
-bXRrX2NydGMtPmRkcF9jb21wW2ldLT5jbGspOw0KPiAgCQlpZiAocmV0KSB7DQo+IEBAIC0yMTIs
-NyArMjExLDYgQEAgc3RhdGljIHZvaWQgbXRrX2NydGNfZGRwX2Nsa19kaXNhYmxlKHN0cnVjdCBt
-dGtfZHJtX2NydGMgKm10a19jcnRjKQ0KPiAgew0KPiAgCWludCBpOw0KPiAgDQo+IC0JRFJNX0RF
-QlVHX0RSSVZFUigiJXNcbiIsIF9fZnVuY19fKTsNCj4gIAlmb3IgKGkgPSAwOyBpIDwgbXRrX2Ny
-dGMtPmRkcF9jb21wX25yOyBpKyspDQo+ICAJCWNsa19kaXNhYmxlX3VucHJlcGFyZShtdGtfY3J0
-Yy0+ZGRwX2NvbXBbaV0tPmNsayk7DQo+ICB9DQo+IEBAIC0yNTcsNyArMjU1LDYgQEAgc3RhdGlj
-IGludCBtdGtfY3J0Y19kZHBfaHdfaW5pdChzdHJ1Y3QgbXRrX2RybV9jcnRjICptdGtfY3J0YykN
-Cj4gIAlpbnQgcmV0Ow0KPiAgCWludCBpOw0KPiAgDQo+IC0JRFJNX0RFQlVHX0RSSVZFUigiJXNc
-biIsIF9fZnVuY19fKTsNCj4gIAlpZiAoV0FSTl9PTighY3J0Yy0+c3RhdGUpKQ0KPiAgCQlyZXR1
-cm4gLUVJTlZBTDsNCj4gIA0KPiBAQCAtMjk4LDcgKzI5NSw2IEBAIHN0YXRpYyBpbnQgbXRrX2Ny
-dGNfZGRwX2h3X2luaXQoc3RydWN0IG10a19kcm1fY3J0YyAqbXRrX2NydGMpDQo+ICAJCWdvdG8g
-ZXJyX211dGV4X3VucHJlcGFyZTsNCj4gIAl9DQo+ICANCj4gLQlEUk1fREVCVUdfRFJJVkVSKCJt
-ZWRpYXRla19kZHBfZGRwX3BhdGhfc2V0dXBcbiIpOw0KPiAgCWZvciAoaSA9IDA7IGkgPCBtdGtf
-Y3J0Yy0+ZGRwX2NvbXBfbnIgLSAxOyBpKyspIHsNCj4gIAkJbXRrX2RkcF9hZGRfY29tcF90b19w
-YXRoKG10a19jcnRjLT5jb25maWdfcmVncywNCj4gIAkJCQkJIG10a19jcnRjLT5kZHBfY29tcFtp
-XS0+aWQsDQo+IEBAIC0zNDgsNyArMzQ0LDYgQEAgc3RhdGljIHZvaWQgbXRrX2NydGNfZGRwX2h3
-X2Zpbmkoc3RydWN0IG10a19kcm1fY3J0YyAqbXRrX2NydGMpDQo+ICAJc3RydWN0IGRybV9jcnRj
-ICpjcnRjID0gJm10a19jcnRjLT5iYXNlOw0KPiAgCWludCBpOw0KPiAgDQo+IC0JRFJNX0RFQlVH
-X0RSSVZFUigiJXNcbiIsIF9fZnVuY19fKTsNCj4gIAlmb3IgKGkgPSAwOyBpIDwgbXRrX2NydGMt
-PmRkcF9jb21wX25yOyBpKyspIHsNCj4gIAkJbXRrX2RkcF9jb21wX3N0b3AobXRrX2NydGMtPmRk
-cF9jb21wW2ldKTsNCj4gIAkJaWYgKGkgPT0gMSkNCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1
-L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
-a19kcm1fZHJ2LmMNCj4gaW5kZXggMTdmMTE4ZWUwZTU3Li40OTM0ODM0OTc3YjMgMTAwNjQ0DQo+
-IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jDQo+ICsrKyBiL2Ry
-aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jDQo+IEBAIC01NzAsNyArNTcwLDYg
-QEAgc3RhdGljIGludCBtdGtfZHJtX3N5c19zdXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldikNCj4g
-IAlpbnQgcmV0Ow0KPiAgDQo+ICAJcmV0ID0gZHJtX21vZGVfY29uZmlnX2hlbHBlcl9zdXNwZW5k
-KGRybSk7DQo+IC0JRFJNX0RFQlVHX0RSSVZFUigibXRrX2RybV9zeXNfc3VzcGVuZFxuIik7DQo+
-ICANCj4gIAlyZXR1cm4gcmV0Ow0KPiAgfQ0KPiBAQCAtNTgyLDcgKzU4MSw2IEBAIHN0YXRpYyBp
-bnQgbXRrX2RybV9zeXNfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikNCj4gIAlpbnQgcmV0Ow0K
-PiAgDQo+ICAJcmV0ID0gZHJtX21vZGVfY29uZmlnX2hlbHBlcl9yZXN1bWUoZHJtKTsNCj4gLQlE
-Uk1fREVCVUdfRFJJVkVSKCJtdGtfZHJtX3N5c19yZXN1bWVcbiIpOw0KPiAgDQo+ICAJcmV0dXJu
-IHJldDsNCj4gIH0NCg0K
+Completely remove symlink codes and definitions.
+In the previous patch, it was not completely removed.
+
+Reviewed-by: Takahiro Mori <Mori.Takahiro@ab.MitsubishiElectric.co.jp>
+Signed-off-by: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+---
+Changes in v3:
+- fixed subject line
+Changes in v2:
+- previous patch didn't completely remove it
+
+ drivers/staging/exfat/exfat.h       |  3 ---
+ drivers/staging/exfat/exfat_core.c  |  3 ---
+ drivers/staging/exfat/exfat_super.c | 27 ---------------------------
+ 3 files changed, 33 deletions(-)
+
+diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
+index 4a0a481fe010..cd3479fc78ba 100644
+--- a/drivers/staging/exfat/exfat.h
++++ b/drivers/staging/exfat/exfat.h
+@@ -63,7 +63,6 @@
+ #define TYPE_VOLUME		0x0103
+ #define TYPE_DIR		0x0104
+ #define TYPE_FILE		0x011F
+-#define TYPE_SYMLINK		0x015F
+ #define TYPE_CRITICAL_SEC	0x0200
+ #define TYPE_STREAM		0x0201
+ #define TYPE_EXTEND		0x0202
+@@ -198,13 +197,11 @@ static inline u16 get_row_index(u16 i)
+ #define ATTR_VOLUME		0x0008
+ #define ATTR_SUBDIR		0x0010
+ #define ATTR_ARCHIVE		0x0020
+-#define ATTR_SYMLINK		0x0040
+ #define ATTR_EXTEND		0x000F
+ #define ATTR_RWMASK		0x007E
+ 
+ /* file creation modes */
+ #define FM_REGULAR              0x00
+-#define FM_SYMLINK              0x40
+ 
+ #define NUM_UPCASE              2918
+ 
+diff --git a/drivers/staging/exfat/exfat_core.c b/drivers/staging/exfat/exfat_core.c
+index d30dc050411e..941094b08dd9 100644
+--- a/drivers/staging/exfat/exfat_core.c
++++ b/drivers/staging/exfat/exfat_core.c
+@@ -844,9 +844,6 @@ static void exfat_set_entry_type(struct dentry_t *p_entry, u32 type)
+ 	} else if (type == TYPE_FILE) {
+ 		ep->type = 0x85;
+ 		SET16_A(ep->attr, ATTR_ARCHIVE);
+-	} else if (type == TYPE_SYMLINK) {
+-		ep->type = 0x85;
+-		SET16_A(ep->attr, ATTR_ARCHIVE | ATTR_SYMLINK);
+ 	}
+ }
+ 
+diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
+index c7bc07e91c45..6f3b72eb999d 100644
+--- a/drivers/staging/exfat/exfat_super.c
++++ b/drivers/staging/exfat/exfat_super.c
+@@ -320,8 +320,6 @@ static inline mode_t exfat_make_mode(struct exfat_sb_info *sbi, u32 attr,
+ 
+ 	if (attr & ATTR_SUBDIR)
+ 		return (mode & ~sbi->options.fs_dmask) | S_IFDIR;
+-	else if (attr & ATTR_SYMLINK)
+-		return (mode & ~sbi->options.fs_dmask) | S_IFLNK;
+ 	else
+ 		return (mode & ~sbi->options.fs_fmask) | S_IFREG;
+ }
+@@ -2399,24 +2397,6 @@ static const struct inode_operations exfat_dir_inode_operations = {
+ /*======================================================================*/
+ /*  File Operations                                                     */
+ /*======================================================================*/
+-static const char *exfat_get_link(struct dentry *dentry, struct inode *inode,
+-				  struct delayed_call *done)
+-{
+-	struct exfat_inode_info *ei = EXFAT_I(inode);
+-
+-	if (ei->target) {
+-		char *cookie = ei->target;
+-
+-		if (cookie)
+-			return (char *)(ei->target);
+-	}
+-	return NULL;
+-}
+-
+-static const struct inode_operations exfat_symlink_inode_operations = {
+-		.get_link = exfat_get_link,
+-};
+-
+ static int exfat_file_release(struct inode *inode, struct file *filp)
+ {
+ 	struct super_block *sb = inode->i_sb;
+@@ -2688,13 +2668,6 @@ static int exfat_fill_inode(struct inode *inode, struct file_id_t *fid)
+ 		i_size_write(inode, info.Size);
+ 		EXFAT_I(inode)->mmu_private = i_size_read(inode);
+ 		set_nlink(inode, info.num_subdirs);
+-	} else if (info.attr & ATTR_SYMLINK) { /* symbolic link */
+-		inode->i_generation |= 1;
+-		inode->i_mode = exfat_make_mode(sbi, info.attr, 0777);
+-		inode->i_op = &exfat_symlink_inode_operations;
+-
+-		i_size_write(inode, info.Size);
+-		EXFAT_I(inode)->mmu_private = i_size_read(inode);
+ 	} else { /* regular file */
+ 		inode->i_generation |= 1;
+ 		inode->i_mode = exfat_make_mode(sbi, info.attr, 0777);
+-- 
+2.25.1
 
