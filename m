@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B310C76568
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B17C76562
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31E9524656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:34:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79CE424699
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:34:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814069;
-	bh=e5MYqZtODO7WjLL1XEqEIwDpwLcnPUwJiLmjVxiQX4M=;
+	s=default; t=1582814062;
+	bh=Zkc7OTubL7ZofJcFmaZdqja1Ms10TSr7KzZjfj/2mig=;
 	h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=JvfH4U3+ktxYAEN8MMp7e9WnAmpWw7MXIMEaKNT3oHKJ+NRDFoug8e8gKBEl+mvFt
-	 frFjSMNI17X6tWSgahchVjNoWTtxgxDe14ruioCRysgHwnyTZATO3SKkkdjXiApftO
-	 5aJyyJy+7FGxe/eIeJqnLyEHkajRvM8BJaILpuYo=
+	b=FmSkX3cajKSsbxKszTR5dNskjtXdmlCy3BKBLqgb8Q+Roexqk7QV/u2LiaTYbQChm
+	 cSzO4F+ZoznJt92KNg47M1mzpENHUjjpyPtTuZM/zsicacdGqVRdYigex5zoHwnfdH
+	 Dp7AZVIDqMeCCPs3B72vFqPHN8f5f1sHZUSx0k3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388603AbgB0OeX (ORCPT
+        id S2388514AbgB0OeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:34:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45286 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:34:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387712AbgB0OeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:34:19 -0500
+        id S2387774AbgB0OeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:34:12 -0500
 Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7ABA9246BD;
-        Thu, 27 Feb 2020 14:34:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE913246BA;
+        Thu, 27 Feb 2020 14:34:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582814059;
-        bh=e5MYqZtODO7WjLL1XEqEIwDpwLcnPUwJiLmjVxiQX4M=;
+        s=default; t=1582814051;
+        bh=Zkc7OTubL7ZofJcFmaZdqja1Ms10TSr7KzZjfj/2mig=;
         h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=yXu3ovRpe+iaynrcEZWSGrTnCs3lZolybS6rp3WxgLwPJWgYgVZvSvBQelxNpUrrN
-         X3oxH6WUVyFJ0WXNX4U3YIYrNT2e7XiM0/yY9s/Nk8CI5HuhxcB9nJhusHaw1n7t+W
-         +3sU5GWvNkyIT2bCywaAiUlKhMQ4VMWBKUJDircY=
+        b=ml6+dh+ISU5bWvPtfK+oMIXuMfTuk1i40PQqZt9RySS9tb2PfdKZ4XAOjKRtNZgL0
+         h2hcbykENjr0rMzvZj+SPOv0xD4cArKAbBl5igvhstB9nUK2cBu/61OTAyXqz6yQYf
+         Ow2adBLv1pXHxv+1az2kAKr/wAePz53mnaAeppuM=
 From:   zanussi@kernel.org
 To:     LKML <linux-kernel@vger.kernel.org>,
         linux-rt-users <linux-rt-users@vger.kernel.org>,
@@ -51,9 +51,9 @@ To:     LKML <linux-kernel@vger.kernel.org>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         Daniel Wagner <wagi@monom.org>,
         Tom Zanussi <zanussi@kernel.org>
-Subject: [PATCH RT 20/23] lib/smp_processor_id: Adjust check_preemption_disabled()
-Date:   Thu, 27 Feb 2020 08:33:31 -0600
-Message-Id: <b0063a9a073a73c28d15a91336262922bac0dd9e.1582814004.git.zanussi@kernel.org>
+Subject: [PATCH RT 15/23] locking: Make spinlock_t and rwlock_t a RCU section on RT
+Date:   Thu, 27 Feb 2020 08:33:26 -0600
+Message-Id: <186fec3947a0cc8b99cbf8211a91c52140813302.1582814004.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1582814004.git.zanussi@kernel.org>
 References: <cover.1582814004.git.zanussi@kernel.org>
@@ -64,7 +64,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Wagner <dwagner@suse.de>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
 v4.14.170-rt75-rc2 stable review patch.
 If anyone has any objections, please let me know.
@@ -72,37 +72,125 @@ If anyone has any objections, please let me know.
 -----------
 
 
-[ Upstream commit af3c1c5fdf177870fb5e6e16b24e374696ab28f5 ]
+[ Upstream commit 84440022a0e1c8c936d61f8f97593674a295d409 ]
 
-The current->migrate_disable counter is not always defined leading to
-build failures with DEBUG_PREEMPT && !PREEMPT_RT_BASE.
+On !RT a locked spinlock_t and rwlock_t disables preemption which
+implies a RCU read section. There is code that relies on that behaviour.
 
-Restrict the access to ->migrate_disable to same set where
-->migrate_disable is modified.
+Add an explicit RCU read section on RT while a sleeping lock (a lock
+which would disables preemption on !RT) acquired.
 
-Signed-off-by: Daniel Wagner <dwagner@suse.de>
-[bigeasy: adjust condition + description]
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Tom Zanussi <zanussi@kernel.org>
 ---
- lib/smp_processor_id.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/locking/rtmutex.c   | 6 ++++++
+ kernel/locking/rwlock-rt.c | 6 ++++++
+ 2 files changed, 12 insertions(+)
 
-diff --git a/lib/smp_processor_id.c b/lib/smp_processor_id.c
-index 7a0c19c282cc..3ceb2cc1516b 100644
---- a/lib/smp_processor_id.c
-+++ b/lib/smp_processor_id.c
-@@ -23,8 +23,10 @@ notrace static unsigned int check_preemption_disabled(const char *what1,
- 	 * Kernel threads bound to a single CPU can safely use
- 	 * smp_processor_id():
- 	 */
-+#if defined(CONFIG_PREEMPT_RT_BASE) && (defined(CONFIG_SMP) || defined(CONFIG_SCHED_DEBUG))
- 	if (current->migrate_disable)
- 		goto out;
-+#endif
- 
- 	if (current->nr_cpus_allowed == 1)
- 		goto out;
+diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
+index 4bc01a2a9a88..848d9ed6f053 100644
+--- a/kernel/locking/rtmutex.c
++++ b/kernel/locking/rtmutex.c
+@@ -1142,6 +1142,7 @@ void __sched rt_spin_lock_slowunlock(struct rt_mutex *lock)
+ void __lockfunc rt_spin_lock(spinlock_t *lock)
+ {
+ 	sleeping_lock_inc();
++	rcu_read_lock();
+ 	migrate_disable();
+ 	spin_acquire(&lock->dep_map, 0, 0, _RET_IP_);
+ 	rt_spin_lock_fastlock(&lock->lock, rt_spin_lock_slowlock);
+@@ -1157,6 +1158,7 @@ void __lockfunc __rt_spin_lock(struct rt_mutex *lock)
+ void __lockfunc rt_spin_lock_nested(spinlock_t *lock, int subclass)
+ {
+ 	sleeping_lock_inc();
++	rcu_read_lock();
+ 	migrate_disable();
+ 	spin_acquire(&lock->dep_map, subclass, 0, _RET_IP_);
+ 	rt_spin_lock_fastlock(&lock->lock, rt_spin_lock_slowlock);
+@@ -1170,6 +1172,7 @@ void __lockfunc rt_spin_unlock(spinlock_t *lock)
+ 	spin_release(&lock->dep_map, 1, _RET_IP_);
+ 	rt_spin_lock_fastunlock(&lock->lock, rt_spin_lock_slowunlock);
+ 	migrate_enable();
++	rcu_read_unlock();
+ 	sleeping_lock_dec();
+ }
+ EXPORT_SYMBOL(rt_spin_unlock);
+@@ -1201,6 +1204,7 @@ int __lockfunc rt_spin_trylock(spinlock_t *lock)
+ 	ret = __rt_mutex_trylock(&lock->lock);
+ 	if (ret) {
+ 		spin_acquire(&lock->dep_map, 0, 1, _RET_IP_);
++		rcu_read_lock();
+ 	} else {
+ 		migrate_enable();
+ 		sleeping_lock_dec();
+@@ -1217,6 +1221,7 @@ int __lockfunc rt_spin_trylock_bh(spinlock_t *lock)
+ 	ret = __rt_mutex_trylock(&lock->lock);
+ 	if (ret) {
+ 		sleeping_lock_inc();
++		rcu_read_lock();
+ 		migrate_disable();
+ 		spin_acquire(&lock->dep_map, 0, 1, _RET_IP_);
+ 	} else
+@@ -1233,6 +1238,7 @@ int __lockfunc rt_spin_trylock_irqsave(spinlock_t *lock, unsigned long *flags)
+ 	ret = __rt_mutex_trylock(&lock->lock);
+ 	if (ret) {
+ 		sleeping_lock_inc();
++		rcu_read_lock();
+ 		migrate_disable();
+ 		spin_acquire(&lock->dep_map, 0, 1, _RET_IP_);
+ 	}
+diff --git a/kernel/locking/rwlock-rt.c b/kernel/locking/rwlock-rt.c
+index c3b91205161c..0ae8c62ea832 100644
+--- a/kernel/locking/rwlock-rt.c
++++ b/kernel/locking/rwlock-rt.c
+@@ -310,6 +310,7 @@ int __lockfunc rt_read_trylock(rwlock_t *rwlock)
+ 	ret = do_read_rt_trylock(rwlock);
+ 	if (ret) {
+ 		rwlock_acquire_read(&rwlock->dep_map, 0, 1, _RET_IP_);
++		rcu_read_lock();
+ 	} else {
+ 		migrate_enable();
+ 		sleeping_lock_dec();
+@@ -327,6 +328,7 @@ int __lockfunc rt_write_trylock(rwlock_t *rwlock)
+ 	ret = do_write_rt_trylock(rwlock);
+ 	if (ret) {
+ 		rwlock_acquire(&rwlock->dep_map, 0, 1, _RET_IP_);
++		rcu_read_lock();
+ 	} else {
+ 		migrate_enable();
+ 		sleeping_lock_dec();
+@@ -338,6 +340,7 @@ EXPORT_SYMBOL(rt_write_trylock);
+ void __lockfunc rt_read_lock(rwlock_t *rwlock)
+ {
+ 	sleeping_lock_inc();
++	rcu_read_lock();
+ 	migrate_disable();
+ 	rwlock_acquire_read(&rwlock->dep_map, 0, 0, _RET_IP_);
+ 	do_read_rt_lock(rwlock);
+@@ -347,6 +350,7 @@ EXPORT_SYMBOL(rt_read_lock);
+ void __lockfunc rt_write_lock(rwlock_t *rwlock)
+ {
+ 	sleeping_lock_inc();
++	rcu_read_lock();
+ 	migrate_disable();
+ 	rwlock_acquire(&rwlock->dep_map, 0, 0, _RET_IP_);
+ 	do_write_rt_lock(rwlock);
+@@ -358,6 +362,7 @@ void __lockfunc rt_read_unlock(rwlock_t *rwlock)
+ 	rwlock_release(&rwlock->dep_map, 1, _RET_IP_);
+ 	do_read_rt_unlock(rwlock);
+ 	migrate_enable();
++	rcu_read_unlock();
+ 	sleeping_lock_dec();
+ }
+ EXPORT_SYMBOL(rt_read_unlock);
+@@ -367,6 +372,7 @@ void __lockfunc rt_write_unlock(rwlock_t *rwlock)
+ 	rwlock_release(&rwlock->dep_map, 1, _RET_IP_);
+ 	do_write_rt_unlock(rwlock);
+ 	migrate_enable();
++	rcu_read_unlock();
+ 	sleeping_lock_dec();
+ }
+ EXPORT_SYMBOL(rt_write_unlock);
 -- 
 2.14.1
 
