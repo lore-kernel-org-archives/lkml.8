@@ -8,63 +8,65 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 196DFC4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84417C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E42892469A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C3FF24695
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:04:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DJ12is7n"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TMJX/X0S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729249AbgB0MD4 (ORCPT
+        id S1729263AbgB0MD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 07:03:56 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:32827 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728882AbgB0MDy (ORCPT
+        Thu, 27 Feb 2020 07:03:59 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36252 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728882AbgB0MD5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 07:03:54 -0500
-Received: by mail-wr1-f67.google.com with SMTP id x7so515977wrr.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 04:03:53 -0800 (PST)
+        Thu, 27 Feb 2020 07:03:57 -0500
+Received: by mail-wm1-f65.google.com with SMTP id f19so940875wmh.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 04:03:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=iLpawHdR33Cmeb66Wb9RCeN8N4vHyeCAeNVuUL7fY+w=;
-        b=DJ12is7nziFZhaEhNTzxh/MUtVrKyT+uhRK9FCcvg2bnIVoJcKfzbrMCdEn9aHNBcq
-         u2KS5dKnWgsxrVfOGWGY5ZvIpbCudLv4oRJwxrEki/4tWiQ+uZg+nThhboU4H6xdAvLd
-         CwNJdO5U146vIGQDxcA3tD10qU9jh9ZzLNyLwL/9AulITTuhlJcd3yENVQ3vJ+gVxvLj
-         gytvwF0Ts00fnjsyI+eM+GiKJA/WNsZgrjZjwJEoKYSDf35eic7PZ7NMmkO3k/wwdaKI
-         FtlbBtVlFApEilsDT66MFNNnDwF1w1xGp97xgSnjqii+3gOXuZpEvC+O2GokIbIlWOTg
-         NR0g==
+        bh=qtHezE3UGL1RPYJOwBTjyDIi0Fh4N6k97/ik2JLlTsM=;
+        b=TMJX/X0S8sBJVi0Yp1uUUHmgnXpAO/i1XPye+sdM84ZXBcJFwfGuRbf0QmdaNi5v6+
+         WWs3HrfR+0tNL6/ctrvxd/vP556Ce6RZvgrl1hkmaKA1c9dxIsZ2Y7lOS24IeQwXHXv9
+         e31xzGLy7AaM9+eoo5mFcNSF33Z6WfCXZX7uZCSCQ9EvNL4U6YWUQiGNectCr3YpFa+X
+         gmpWJRW6j0+OrhUChyYwCCP0MV7mCK4tjF3qBjxVwDjROE2oRJeo5W0zZRh4aWZtoFMd
+         59+b4OgpXT6Dg63JnxaVfhNV3y4w9ChKczgBJd3tMh+yk/ZIvdmtLkYTM7pmxxn7N+kZ
+         qSJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=iLpawHdR33Cmeb66Wb9RCeN8N4vHyeCAeNVuUL7fY+w=;
-        b=ffhd2H1LpeTvKXJSsLniZ4q9Cwl/xe0TmK2DEV+p2xonqAOsZm2wR32RJkjZrQrOAf
-         mTM6olmJbYUIbORgEqsoqI5kirRA65crfhZYs58/0PadfBWKkyyVM04iKssqWWkLetk6
-         XyJrIA8n4BPYKwQNnra7j5XrAEhgje+vhycOMqaZpLfgr5KGFqfF4+ndJBT6TBZFCL2F
-         fDEnS5fobYSXLcstM9NWrNywMKK/09JSIS6Xc/xlvtEZ7x7iQGcgEPYHYktFvlqWN31i
-         mpgvnkG5seb2ehDve+/fO+sAYrUppZ3yUVgepy7RBKA2BpMRHbelz4PwQDlb9PkoJuf4
-         hLIg==
-X-Gm-Message-State: APjAAAVfNGCRXjLdkfu/0a6yjcWVcILXApvEKpf++0RTalWYiTxiEkUD
-        f3xDW2cylxfsGbVGB/7w6g0=
-X-Google-Smtp-Source: APXvYqzZP5GszXytVURkcYCrRKKgmojQxMcrPMh4iNIt7d3+P7L7mWVIFbuGKTnL73Xktkg6h6hCuQ==
-X-Received: by 2002:adf:f3d1:: with SMTP id g17mr4402170wrp.378.1582805032699;
-        Thu, 27 Feb 2020 04:03:52 -0800 (PST)
+        bh=qtHezE3UGL1RPYJOwBTjyDIi0Fh4N6k97/ik2JLlTsM=;
+        b=CHSlJDkc/Yd/1QbUkvkZ/WyzWKzRJwZadKmd25biXYObfWs5e4qyEo7HEgf3PThg8t
+         4kQJCdSKr4z3xlkQ025zJQzS9FnsYUzEvTZzfpmDZNCZU7USR1XcSrQsXvggUIJI07X4
+         jwNA9vadStf7agb8vYzPoh8LgItbNmOIcE3QKaYHuctZYsE0jY3s7bjkbWvHC3LY99kv
+         DogDOedrV8h16W1YPtPM+SMj93vU6Z0uS2nZVwcKTImOhFoyDNyOb1cgRI697FulJXar
+         y1vpPE0gkGY9qOMDP+Po4d0n7Wp1twtzrkX418GiYZ7tpOC8dIbhPD/9GTyHPYqh5ikz
+         NYhw==
+X-Gm-Message-State: APjAAAUOtA74qJ/I2Fk5wMbtwUMppCT2ONwMtuQ7eamXfaVUAbPj427d
+        74g+Vrt42RbmqXihvn1J1C6kikCuN1Bdfg==
+X-Google-Smtp-Source: APXvYqws1uPMjBRoMVkeVqz7GBquunp9ZSqYKqUnCjXmOFLkbEp4mvdi77iUzZXlZKIR+Os1fu9FAQ==
+X-Received: by 2002:a05:600c:2255:: with SMTP id a21mr2127251wmm.79.1582805036202;
+        Thu, 27 Feb 2020 04:03:56 -0800 (PST)
 Received: from wambui.zuku.co.ke ([197.237.61.225])
-        by smtp.googlemail.com with ESMTPSA id t10sm7655017wru.59.2020.02.27.04.03.49
+        by smtp.googlemail.com with ESMTPSA id t10sm7655017wru.59.2020.02.27.04.03.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 04:03:52 -0800 (PST)
+        Thu, 27 Feb 2020 04:03:55 -0800 (PST)
 From:   Wambui Karuga <wambui.karugax@gmail.com>
 To:     daniel@ffwll.ch, airlied@linux.ie,
-        Gerd Hoffmann <kraxel@redhat.com>
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>
 Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH 18/21] drm/virtio: make virtio_gpu_debugfs() return void.
-Date:   Thu, 27 Feb 2020 15:02:29 +0300
-Message-Id: <20200227120232.19413-19-wambui.karugax@gmail.com>
+Subject: [PATCH 19/21] drm/mipi_dbi: make midi_dbi_debugfs_init() return void.
+Date:   Thu, 27 Feb 2020 15:02:30 +0300
+Message-Id: <20200227120232.19413-20-wambui.karugax@gmail.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200227120232.19413-1-wambui.karugax@gmail.com>
 References: <20200227120232.19413-1-wambui.karugax@gmail.com>
@@ -75,46 +77,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since 987d65d01356 (drm: debugfs: make
-drm_debugfs_create_files() never fail), drm_debugfs_create_files()
-never fails and should return void. Therefore, remove its use as the
-return value of virtio_gpu_debugfs() and have the latter function return
-void.
+As midi_dbi_debugfs_init() never fails and does not return anything
+other than zero, declare its return value as void.
 
 Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
 ---
- drivers/gpu/drm/virtio/virtgpu_debugfs.c | 3 +--
- drivers/gpu/drm/virtio/virtgpu_drv.h     | 2 +-
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/drm_mipi_dbi.c | 6 +-----
+ include/drm/drm_mipi_dbi.h     | 2 +-
+ 2 files changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_debugfs.c b/drivers/gpu/drm/virtio/virtgpu_debugfs.c
-index e27120d512b0..3221520f61f0 100644
---- a/drivers/gpu/drm/virtio/virtgpu_debugfs.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_debugfs.c
-@@ -72,11 +72,10 @@ static struct drm_info_list virtio_gpu_debugfs_list[] = {
- 
- #define VIRTIO_GPU_DEBUGFS_ENTRIES ARRAY_SIZE(virtio_gpu_debugfs_list)
- 
--int
-+void
- virtio_gpu_debugfs_init(struct drm_minor *minor)
+diff --git a/drivers/gpu/drm/drm_mipi_dbi.c b/drivers/gpu/drm/drm_mipi_dbi.c
+index 558baf989f5a..113a767442d3 100644
+--- a/drivers/gpu/drm/drm_mipi_dbi.c
++++ b/drivers/gpu/drm/drm_mipi_dbi.c
+@@ -1308,10 +1308,8 @@ static const struct file_operations mipi_dbi_debugfs_command_fops = {
+  * controller or getting the read command values.
+  * Drivers can use this as their &drm_driver->debugfs_init callback.
+  *
+- * Returns:
+- * Zero on success, negative error code on failure.
+  */
+-int mipi_dbi_debugfs_init(struct drm_minor *minor)
++void mipi_dbi_debugfs_init(struct drm_minor *minor)
  {
- 	drm_debugfs_create_files(virtio_gpu_debugfs_list,
- 				 VIRTIO_GPU_DEBUGFS_ENTRIES,
- 				 minor->debugfs_root, minor);
+ 	struct mipi_dbi_dev *dbidev = drm_to_mipi_dbi_dev(minor->dev);
+ 	umode_t mode = S_IFREG | S_IWUSR;
+@@ -1320,8 +1318,6 @@ int mipi_dbi_debugfs_init(struct drm_minor *minor)
+ 		mode |= S_IRUGO;
+ 	debugfs_create_file("command", mode, minor->debugfs_root, dbidev,
+ 			    &mipi_dbi_debugfs_command_fops);
+-
 -	return 0;
  }
-diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
-index 95a7443baaba..3b843bb72cd1 100644
---- a/drivers/gpu/drm/virtio/virtgpu_drv.h
-+++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
-@@ -371,6 +371,6 @@ struct drm_gem_object *virtgpu_gem_prime_import_sg_table(
- 	struct sg_table *sgt);
+ EXPORT_SYMBOL(mipi_dbi_debugfs_init);
  
- /* virgl debugfs */
--int virtio_gpu_debugfs_init(struct drm_minor *minor);
-+void virtio_gpu_debugfs_init(struct drm_minor *minor);
+diff --git a/include/drm/drm_mipi_dbi.h b/include/drm/drm_mipi_dbi.h
+index 33f325f5af2b..30ebdfd8a51f 100644
+--- a/include/drm/drm_mipi_dbi.h
++++ b/include/drm/drm_mipi_dbi.h
+@@ -192,7 +192,7 @@ int mipi_dbi_buf_copy(void *dst, struct drm_framebuffer *fb,
+ })
  
+ #ifdef CONFIG_DEBUG_FS
+-int mipi_dbi_debugfs_init(struct drm_minor *minor);
++void mipi_dbi_debugfs_init(struct drm_minor *minor);
+ #else
+ #define mipi_dbi_debugfs_init		NULL
  #endif
 -- 
 2.25.0
