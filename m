@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECC6C35E15
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CD7C76574
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22E2424656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE15F24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:37:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814184;
-	bh=QvxfOGCLgdsLGPzOiRJcc1LAqqGhABSP+R7a3xTSzao=;
+	s=default; t=1582814241;
+	bh=2+cmvOTfjefLg7z9K6NEbzvp0YsZpeIAhXSEBWBCpx8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QVavvnwLqPKqgaJYXWvMq9jfjnCxGQz+PPMRJy3GnGvILXK3jRJbBps2W/voJ8YgH
-	 hmtMoQlYTjKGIhGcjOtClyOGv4VS4k2TPB9ADOXjkfVXd+jnIqIi3SeTKYmdx1gQEt
-	 IS0JvxFmfB4opVi881ONt7IY0RhLnpP+wZ/3rv7Q=
+	b=MI/zuoGg3UdFpjL2WnvMH9uvRdrH13NOjsVKSO4izDvelrk60tzhopAaUYBAqvtRy
+	 GP8j8HtVPOpmQKPhmv4Wm46igc9xDWGjWQFXrMFvTyvcXn/YUttmtkQ+oiqELmsFED
+	 YHV3lq7Il4gxGckcH+5Bp17yw233pIv2I0HVy+dw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730119AbgB0N7F (ORCPT
+        id S1731942AbgB0N5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:59:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60324 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:57:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732556AbgB0N7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:59:01 -0500
+        id S1732312AbgB0N5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:57:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BD8B20578;
-        Thu, 27 Feb 2020 13:59:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74F4E2073D;
+        Thu, 27 Feb 2020 13:57:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811940;
-        bh=QvxfOGCLgdsLGPzOiRJcc1LAqqGhABSP+R7a3xTSzao=;
+        s=default; t=1582811857;
+        bh=2+cmvOTfjefLg7z9K6NEbzvp0YsZpeIAhXSEBWBCpx8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=efRwjP6Es4SZPRDMtBMJlXA+b701xzptCSaerBsZVJxWo8o1X53E7/lF1ra7BJp2m
-         GyfSKcSVis3kgJn0D7IfYDjmqqNshUajuD6MV+/vdj3CqEurCfQpu68CkwaWWzV2sS
-         3wZz3gSJ+Ed6erBF5/ibyDPSqgYxXxSRvVuhp0hE=
+        b=NbQjEvgIkSqr/7UuLfcfW7mH7uMy+KOZeeVZ7KtUq2GlyJo51lD6RkQlGRwcKCrCF
+         TWn1WZeV/eAhtPmySEoz34AZgRIJUuJDt7Y3NHlNGto1H2FvcO9ErpeegG11B1uz32
+         P/E3zx6NqLwuiIIpHVnSUj0tijWWhaL60RuKuyKg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 153/237] trigger_next should increase position index
-Date:   Thu, 27 Feb 2020 14:36:07 +0100
-Message-Id: <20200227132307.822217789@linuxfoundation.org>
+Subject: [PATCH 4.14 129/237] cmd64x: potential buffer overflow in cmd64x_program_timings()
+Date:   Thu, 27 Feb 2020 14:35:43 +0100
+Message-Id: <20200227132306.236241168@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -60,62 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 6722b23e7a2ace078344064a9735fb73e554e9ef ]
+[ Upstream commit 117fcc3053606d8db5cef8821dca15022ae578bb ]
 
-if seq_file .next fuction does not change position index,
-read after some lseek can generate unexpected output.
+The "drive->dn" value is a u8 and it is controlled by root only, but
+it could be out of bounds here so let's check.
 
-Without patch:
- # dd bs=30 skip=1 if=/sys/kernel/tracing/events/sched/sched_switch/trigger
- dd: /sys/kernel/tracing/events/sched/sched_switch/trigger: cannot skip to specified offset
- n traceoff snapshot stacktrace enable_event disable_event enable_hist disable_hist hist
- # Available triggers:
- # traceon traceoff snapshot stacktrace enable_event disable_event enable_hist disable_hist hist
- 6+1 records in
- 6+1 records out
- 206 bytes copied, 0.00027916 s, 738 kB/s
-
-Notice the printing of "# Available triggers:..." after the line.
-
-With the patch:
- # dd bs=30 skip=1 if=/sys/kernel/tracing/events/sched/sched_switch/trigger
- dd: /sys/kernel/tracing/events/sched/sched_switch/trigger: cannot skip to specified offset
- n traceoff snapshot stacktrace enable_event disable_event enable_hist disable_hist hist
- 2+1 records in
- 2+1 records out
- 88 bytes copied, 0.000526867 s, 167 kB/s
-
-It only prints the end of the file, and does not restart.
-
-Link: http://lkml.kernel.org/r/3c35ee24-dd3a-8119-9c19-552ed253388a@virtuozzo.com
-
-https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_events_trigger.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/ide/cmd64x.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index e2da180ca172a..31e91efe243e5 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -127,9 +127,10 @@ static void *trigger_next(struct seq_file *m, void *t, loff_t *pos)
- {
- 	struct trace_event_file *event_file = event_file_data(m->private);
+diff --git a/drivers/ide/cmd64x.c b/drivers/ide/cmd64x.c
+index b127ed60c7336..9dde8390da09b 100644
+--- a/drivers/ide/cmd64x.c
++++ b/drivers/ide/cmd64x.c
+@@ -65,6 +65,9 @@ static void cmd64x_program_timings(ide_drive_t *drive, u8 mode)
+ 	struct ide_timing t;
+ 	u8 arttim = 0;
  
--	if (t == SHOW_AVAILABLE_TRIGGERS)
-+	if (t == SHOW_AVAILABLE_TRIGGERS) {
-+		(*pos)++;
- 		return NULL;
--
-+	}
- 	return seq_list_next(t, &event_file->triggers, pos);
- }
++	if (drive->dn >= ARRAY_SIZE(drwtim_regs))
++		return;
++
+ 	ide_timing_compute(drive, mode, &t, T, 0);
  
+ 	/*
 -- 
 2.20.1
 
