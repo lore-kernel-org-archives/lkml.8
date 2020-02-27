@@ -2,52 +2,51 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C95FC3F35A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20906C3F349
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20260246A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED05C246A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811162;
-	bh=CxAfZQ85yHal5k9+teaGTcPCjoDGV3TJHRuPbXslCXk=;
+	s=default; t=1582811227;
+	bh=SijR0ap5VoY1ReucFVQbmejp9vdmf//LQ0PpeMhKZgQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x76506+v4uObxx4OPvleZh8VVa29s8PBo185XCNEhZKWXZo0BVXWM0ndhSX6Co/K9
-	 L36B48cOqLlDRD27XnVRDVlzgBhGgrImXzDp3Zz1sVr3/xQbQOjyMrnXzRFtz8e1oO
-	 6TJd+wH673hXQpLvSBF2+JKCTetxayiDz5oDw2ac=
+	b=g78BMBElW1hUIecrVuCWVw7nv47q8mxCtrTL3p8/1AGG1VnjONOVXs1+zKmn/cYCh
+	 YhybwgAiDUt5NknP74M2ZbTeECO3xYBez27WLQxmWd0FSBGNBo/Feha9BYgz8SncY4
+	 Dw59Fxf2oVjdl0fR5Vqth7BCMEoor+EEo4NacAJQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730450AbgB0NqA (ORCPT
+        id S1730638AbgB0NrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:46:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41992 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:47:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729528AbgB0Np4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:45:56 -0500
+        id S1730272AbgB0NrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:47:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A464220578;
-        Thu, 27 Feb 2020 13:45:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FFC32469F;
+        Thu, 27 Feb 2020 13:47:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811156;
-        bh=CxAfZQ85yHal5k9+teaGTcPCjoDGV3TJHRuPbXslCXk=;
+        s=default; t=1582811222;
+        bh=SijR0ap5VoY1ReucFVQbmejp9vdmf//LQ0PpeMhKZgQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MOa6wPjoM4afNdvT2EdfrDPLQY5jOMD0fE5aKaA63CAjSEdfs2rhKqyayNwbyfse8
-         eifxawk3FcuUPFam4II9RTeuud/Mm27WYT6lzhCKJqyavIrran+kuc7Ad/Psklc0ol
-         DtsBaxpsOl8QBaKDMmjrZ6LFeRZFBeoP7SnDro3U=
+        b=sYdu0zHA21naTgb+sjAgWLW8kUYK+v/9S6RszxQWBRniyIivJYpvGZpdVFLL1Ug2B
+         yTICHcRgnBpmMZmsSaNTbU0nVbqO92uw7wEXqZzPkW8MMD06xfK0TDc10p1G3TVp0j
+         lrHIGJdDDIlorb9zixI0UVF3Ji34ytNoh2PwSies=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>, Tejun Heo <tj@kernel.org>
-Subject: [PATCH 4.9 023/165] cpu/hotplug, stop_machine: Fix stop_machine vs hotplug order
-Date:   Thu, 27 Feb 2020 14:34:57 +0100
-Message-Id: <20200227132234.353061220@linuxfoundation.org>
+        stable@vger.kernel.org, Wanpeng Li <wanpeng.li@hotmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.9 002/165] KVM: x86: emulate RDPID
+Date:   Thu, 27 Feb 2020 14:34:36 +0100
+Message-Id: <20200227132231.300837680@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -60,91 +59,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-[ Upstream commit 45178ac0cea853fe0e405bf11e101bdebea57b15 ]
+commit fb6d4d340e0532032c808a9933eaaa7b8de435ab upstream.
 
-Paul reported a very sporadic, rcutorture induced, workqueue failure.
-When the planets align, the workqueue rescuer's self-migrate fails and
-then triggers a WARN for running a work on the wrong CPU.
+This is encoded as F3 0F C7 /7 with a register argument.  The register
+argument is the second array in the group9 GroupDual, while F3 is the
+fourth element of a Prefix.
 
-Tejun then figured that set_cpus_allowed_ptr()'s stop_one_cpu() call
-could be ignored! When stopper->enabled is false, stop_machine will
-insta complete the work, without actually doing the work. Worse, it
-will not WARN about this (we really should fix this).
+Reviewed-by: Wanpeng Li <wanpeng.li@hotmail.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-It turns out there is a small window where a freshly online'ed CPU is
-marked 'online' but doesn't yet have the stopper task running:
-
-	BP				AP
-
-	bringup_cpu()
-	  __cpu_up(cpu, idle)	 -->	start_secondary()
-					...
-					cpu_startup_entry()
-	  bringup_wait_for_ap()
-	    wait_for_ap_thread() <--	  cpuhp_online_idle()
-					  while (1)
-					    do_idle()
-
-					... available to run kthreads ...
-
-	    stop_machine_unpark()
-	      stopper->enable = true;
-
-Close this by moving the stop_machine_unpark() into
-cpuhp_online_idle(), such that the stopper thread is ready before we
-start the idle loop and schedule.
-
-Reported-by: "Paul E. McKenney" <paulmck@kernel.org>
-Debugged-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Tested-by: "Paul E. McKenney" <paulmck@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/cpu.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ arch/x86/kvm/cpuid.c   |    7 ++++++-
+ arch/x86/kvm/emulate.c |   22 +++++++++++++++++++++-
+ arch/x86/kvm/vmx.c     |   15 +++++++++++++++
+ 3 files changed, 42 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index c2573e858009b..1fbe93fefc1fa 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -515,8 +515,7 @@ static int bringup_wait_for_ap(unsigned int cpu)
- 	if (WARN_ON_ONCE((!cpu_online(cpu))))
- 		return -ECANCELED;
- 
--	/* Unpark the stopper thread and the hotplug thread of the target cpu */
--	stop_machine_unpark(cpu);
-+	/* Unpark the hotplug thread of the target cpu */
- 	kthread_unpark(st->thread);
- 
- 	/*
-@@ -1115,8 +1114,8 @@ void notify_cpu_starting(unsigned int cpu)
- 
- /*
-  * Called from the idle task. Wake up the controlling task which brings the
-- * stopper and the hotplug thread of the upcoming CPU up and then delegates
-- * the rest of the online bringup to the hotplug thread.
-+ * hotplug thread of the upcoming CPU up and then delegates the rest of the
-+ * online bringup to the hotplug thread.
-  */
- void cpuhp_online_idle(enum cpuhp_state state)
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -279,13 +279,18 @@ static int __do_cpuid_ent_emulated(struc
  {
-@@ -1126,6 +1125,12 @@ void cpuhp_online_idle(enum cpuhp_state state)
- 	if (state != CPUHP_AP_ONLINE_IDLE)
- 		return;
- 
-+	/*
-+	 * Unpart the stopper thread before we start the idle loop (and start
-+	 * scheduling); this ensures the stopper task is always available.
-+	 */
-+	stop_machine_unpark(smp_processor_id());
-+
- 	st->state = CPUHP_AP_ONLINE_IDLE;
- 	complete(&st->done);
+ 	switch (func) {
+ 	case 0:
+-		entry->eax = 1;		/* only one leaf currently */
++		entry->eax = 7;
+ 		++*nent;
+ 		break;
+ 	case 1:
+ 		entry->ecx = F(MOVBE);
+ 		++*nent;
+ 		break;
++	case 7:
++		entry->flags |= KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
++		if (index == 0)
++			entry->ecx = F(RDPID);
++		++*nent;
+ 	default:
+ 		break;
+ 	}
+--- a/arch/x86/kvm/emulate.c
++++ b/arch/x86/kvm/emulate.c
+@@ -3531,6 +3531,16 @@ static int em_cwd(struct x86_emulate_ctx
+ 	return X86EMUL_CONTINUE;
  }
--- 
-2.20.1
-
+ 
++static int em_rdpid(struct x86_emulate_ctxt *ctxt)
++{
++	u64 tsc_aux = 0;
++
++	if (ctxt->ops->get_msr(ctxt, MSR_TSC_AUX, &tsc_aux))
++		return emulate_gp(ctxt, 0);
++	ctxt->dst.val = tsc_aux;
++	return X86EMUL_CONTINUE;
++}
++
+ static int em_rdtsc(struct x86_emulate_ctxt *ctxt)
+ {
+ 	u64 tsc = 0;
+@@ -4391,10 +4401,20 @@ static const struct opcode group8[] = {
+ 	F(DstMem | SrcImmByte | Lock | PageTable,	em_btc),
+ };
+ 
++/*
++ * The "memory" destination is actually always a register, since we come
++ * from the register case of group9.
++ */
++static const struct gprefix pfx_0f_c7_7 = {
++	N, N, N, II(DstMem | ModRM | Op3264 | EmulateOnUD, em_rdpid, rdtscp),
++};
++
++
+ static const struct group_dual group9 = { {
+ 	N, I(DstMem64 | Lock | PageTable, em_cmpxchg8b), N, N, N, N, N, N,
+ }, {
+-	N, N, N, N, N, N, N, N,
++	N, N, N, N, N, N, N,
++	GP(0, &pfx_0f_c7_7),
+ } };
+ 
+ static const struct opcode group11[] = {
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -11339,6 +11339,21 @@ static int vmx_check_intercept(struct kv
+ 			       struct x86_instruction_info *info,
+ 			       enum x86_intercept_stage stage)
+ {
++	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
++	struct x86_emulate_ctxt *ctxt = &vcpu->arch.emulate_ctxt;
++
++	/*
++	 * RDPID causes #UD if disabled through secondary execution controls.
++	 * Because it is marked as EmulateOnUD, we need to intercept it here.
++	 */
++	if (info->intercept == x86_intercept_rdtscp &&
++	    !nested_cpu_has2(vmcs12, SECONDARY_EXEC_RDTSCP)) {
++		ctxt->exception.vector = UD_VECTOR;
++		ctxt->exception.error_code_valid = false;
++		return X86EMUL_PROPAGATE_FAULT;
++	}
++
++	/* TODO: check more intercepts... */
+ 	return X86EMUL_CONTINUE;
+ }
+ 
 
 
