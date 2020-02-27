@@ -2,79 +2,76 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E16C35E1C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFE3C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 506AA2469C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 650982469C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:25:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730740AbgB0SW3 (ORCPT
+        id S1731161AbgB0SZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 13:22:29 -0500
-Received: from foss.arm.com ([217.140.110.172]:56658 "EHLO foss.arm.com"
+        Thu, 27 Feb 2020 13:25:10 -0500
+Received: from mail.manjaro.org ([176.9.38.148]:48220 "EHLO mail.manjaro.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729142AbgB0SW2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 13:22:28 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 900A930E;
-        Thu, 27 Feb 2020 10:22:27 -0800 (PST)
-Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E69423F73B;
-        Thu, 27 Feb 2020 10:22:25 -0800 (PST)
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Rob Herring <robh@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Robert Richter <rric@kernel.org>, soc@kernel.org,
-        Jon Loeliger <jdl@jdl.com>,
-        Mark Langsdorf <mlangsdo@redhat.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH v2 04/13] arm: dts: calxeda: Group port-phys and sgpio-gpio items
-Date:   Thu, 27 Feb 2020 18:22:01 +0000
-Message-Id: <20200227182210.89512-5-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200227182210.89512-1-andre.przywara@arm.com>
-References: <20200227182210.89512-1-andre.przywara@arm.com>
+        id S1729393AbgB0SZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 13:25:08 -0500
+X-Greylist: delayed 1096 seconds by postgrey-1.27 at vger.kernel.org; Thu, 27 Feb 2020 13:25:07 EST
+Received: from localhost (localhost [127.0.0.1])
+        by mail.manjaro.org (Postfix) with ESMTP id 3747838C698C;
+        Thu, 27 Feb 2020 19:06:50 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at manjaro.org
+Received: from mail.manjaro.org ([127.0.0.1])
+        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id TMxKtG3EY9dS; Thu, 27 Feb 2020 19:06:47 +0100 (CET)
+From:   Tobias Schramm <t.schramm@manjaro.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Andy Yan <andy.yan@rock-chips.com>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        Alexis Ballier <aballier@gentoo.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Nick Xie <nick@khadas.com>,
+        Kever Yang <kever.yang@rock-chips.com>,
+        Vivek Unune <npcomplete13@gmail.com>,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Tobias Schramm <t.schramm@manjaro.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        anarsoul@gmail.com
+Subject: [PATCH 0/2] Add support for the pine64 Pinebook Pro
+Date:   Thu, 27 Feb 2020 19:06:28 +0100
+Message-Id: <20200227180630.166982-1-t.schramm@manjaro.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For proper bindings checks we need to properly group the port-phys and
-sgpio-gpio items, so that they match the expected number of items.
+This patchset adds an initial dts and compatible string for the rk3399
+based Pinebook Pro 14" laptop.
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
----
- arch/arm/boot/dts/ecx-common.dtsi | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Contrary to the Rockchip BSP dts proposed mid January this dts has a
+power tree reflecting the actual schematic of the device and features
+full display, audio and WiFi/Bluetooth support.
 
-diff --git a/arch/arm/boot/dts/ecx-common.dtsi b/arch/arm/boot/dts/ecx-common.dtsi
-index b7e74a357471..57a028a69373 100644
---- a/arch/arm/boot/dts/ecx-common.dtsi
-+++ b/arch/arm/boot/dts/ecx-common.dtsi
-@@ -27,10 +27,11 @@
- 			reg = <0xffe08000 0x10000>;
- 			interrupts = <0 83 4>;
- 			dma-coherent;
--			calxeda,port-phys = <&combophy5 0 &combophy0 0
--					     &combophy0 1 &combophy0 2
--					     &combophy0 3>;
--			calxeda,sgpio-gpio =<&gpioh 5 1 &gpioh 6 1 &gpioh 7 1>;
-+			calxeda,port-phys = < &combophy5 0>, <&combophy0 0>,
-+					     <&combophy0 1>, <&combophy0 2>,
-+					     <&combophy0 3>;
-+			calxeda,sgpio-gpio =<&gpioh 5 1>, <&gpioh 6 1>,
-+					    <&gpioh 7 1>;
- 			calxeda,led-order = <4 0 1 2 3>;
- 		};
- 
+Tobias Schramm (2):
+  dt-bindings: Add doc for pine64 Pinebook Pro
+  arm64: dts: rockchip: Add initial support for Pinebook Pro
+
+ .../devicetree/bindings/arm/rockchip.yaml     |    5 +
+ arch/arm64/boot/dts/rockchip/Makefile         |    1 +
+ .../boot/dts/rockchip/rk3399-pinebook-pro.dts | 1191 +++++++++++++++++
+ 3 files changed, 1197 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
+
 -- 
-2.17.1
+2.24.1
 
