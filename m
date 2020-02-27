@@ -2,102 +2,130 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A44C35677
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 571E3C3567B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D8222469B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:12:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 244C6246AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:13:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PjgAbV5i"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GFeWkNfA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729481AbgB0RMc (ORCPT
+        id S1726460AbgB0RNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 12:12:32 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37795 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728389AbgB0RMb (ORCPT
+        Thu, 27 Feb 2020 12:13:54 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52663 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728389AbgB0RNx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 12:12:31 -0500
-Received: by mail-pl1-f195.google.com with SMTP id q4so48624pls.4
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 09:12:29 -0800 (PST)
+        Thu, 27 Feb 2020 12:13:53 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p9so176465wmc.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 09:13:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LOyT5HvsVh4qMzW2jHlKrfdY1wfzL0iwi9fyqr1yxSg=;
-        b=PjgAbV5itjXELWeRURFWOnDxWWgcVNwTRbKN2F+s+aCnI9XkbVuKaH4FNVfqdZu4G5
-         yaJvoev4JVjgNE6vi+yAEwMkJYjpq08qN3rOQ2jp1J56AjF5IG+vP5TnBmhH4OwFiWh7
-         qq+AMuXQdOVTlquHBCsVZzjJP9BHQdHP1sa1s=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kRFodb2ms+/Ze84f7ezZLQgjnfHyEqMYKFplavQU274=;
+        b=GFeWkNfAeFE1PGxbru1Sszjp4401EcQ+VWatx1HlhLSe4ix2kBEeJ41isVFUKdvpXf
+         Qc5kYZCEp5CrqbH2wU0Qhzq6BBm0MsrxtA1EhRqOY10IY+N0Ssefg+CyCKkeVgOxbVtJ
+         VqrKS2fJ06pY/5Sv/021+h54fqqCO7WwOsbDXrzZM6ejGQFYRK9CB/0onzt0KnP0Xyfg
+         aUljwm5ng9jv7V1otJqoMYEdb76PfawPqdgV1TdgZBlgEaSieGAjel1n29ALB1XcT4Pt
+         BpUBteZTDViUBBZD7Kua27z1UaRzJmAA2J1aKm3e0dVywvpTUP0Eqbex73loF8rZA4x2
+         wDMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LOyT5HvsVh4qMzW2jHlKrfdY1wfzL0iwi9fyqr1yxSg=;
-        b=b1gG68/UZWa0L449VsulPwFaphpe5YZbEsZcdCioQ456+pa7Hwo7egyjlzxgKwSyrM
-         2NJk4Ty1omGcyTN+RAgTRsizpZw/+1vdH+yA9p014kLPTfHGcXRGv78zW5r0iD0DL1GQ
-         KMrkdjDdLB4RcR8P2vL/GuV9AKp5rJJexliHUp+D+1H8NW7g1Y4asj0eScjVI3s/LlZX
-         IAfnoAjPQ8GMhssM2zS6yhzYYonWa6nELHmbIOYgK0RWFDRBG4Us6bjCvukgSAVn+sOD
-         5HOe1CP7L6i8BSYfFvy25q8ufDYBZaSxY6hIo4gAEhdZdNvxML9LcxCcrK3JCVvoQUVa
-         2vIg==
-X-Gm-Message-State: APjAAAVMJN2LPP+l8iqvicrrQb6nuV9en8p0L3HUhhfdU8I+R8ylzzn2
-        CFBeLNPIC0WxQ6Dvnvh6vLpTAQ==
-X-Google-Smtp-Source: APXvYqx6fZfhqq+ecXx0OzqoQNR179JoYOMacTaNfi38ToDP70lt0Yh233FkLgWk5lXrSVbcwJbSvA==
-X-Received: by 2002:a17:902:8f94:: with SMTP id z20mr741978plo.62.1582823549030;
-        Thu, 27 Feb 2020 09:12:29 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id k1sm5789477pgt.70.2020.02.27.09.12.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Feb 2020 09:12:28 -0800 (PST)
-Date:   Thu, 27 Feb 2020 09:12:26 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Odelu Kukatla <okukatla@codeaurora.org>
-Cc:     georgi.djakov@linaro.org, daidavid1@codeaurora.org,
-        bjorn.andersson@linaro.org, evgreen@google.com,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sboyd@kernel.org,
-        ilina@codeaurora.org, seansw@qti.qualcomm.com, elder@linaro.org,
-        linux-pm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org,
-        Amit Kucheria <amit.kucheria@verdurent.com>
-Subject: Re: [V4, 3/3] arm64: dts: sc7180: Add interconnect provider DT nodes
-Message-ID: <20200227171226.GJ24720@google.com>
-References: <1582646384-1458-1-git-send-email-okukatla@codeaurora.org>
- <1582646384-1458-4-git-send-email-okukatla@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kRFodb2ms+/Ze84f7ezZLQgjnfHyEqMYKFplavQU274=;
+        b=NLUdKGH9Y7Q0iP95dCTsxUY2i0C1i8G9pSnm399XWaxgA1Q17f4yx33MAgKwQ3o3UY
+         jxsXFj07fAaQMEcQmsKwAd0wLHrsF6qt3HoSm7bPWfcX6EiSAooOeNbBCs7pvmBefBks
+         C4YDthEUzSu4qwKr/9upsHHjrXotjt2tSNHt6YUWg0RLSc2fDejTpdty1FBW8bb5BCKl
+         I3wOJhK8UZk5XodWO54pQPcMJQ78DYVg3CwHy6IeS1PO7v5+dWIRNhTaBmC0HlpcHGup
+         qIVhBBUlS1sI9PH5ZkQ9s/TQfL+tWoItUM7PXXyPAjZFhF3aua62n43LeKqlp5AViBBJ
+         pOLA==
+X-Gm-Message-State: APjAAAX5zXu1av5AiPORjh2bAkdGbcrndiKezNqiXowP9jlKa2MxFSij
+        CuDP9uXd4l09stqxMor1KOTrttSwRVVv0ZRlH6bHIL4M
+X-Google-Smtp-Source: APXvYqzFW1PtGlKB8R/X9OvHP+SCq22XUNfUC5pbpz3qORBFSTYYYtRqiPKMJqj1H+J2yo2wzf6sS/WyUUnY2nIBPpI=
+X-Received: by 2002:a1c:2358:: with SMTP id j85mr510453wmj.137.1582823629861;
+ Thu, 27 Feb 2020 09:13:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1582646384-1458-4-git-send-email-okukatla@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200227151143.6a6edaf9@canb.auug.org.au> <CAMuHMdVc-vyQfuLUgbF6ei9Qrr+fryA-j1PHsrsjTNiOYvUk+w@mail.gmail.com>
+In-Reply-To: <CAMuHMdVc-vyQfuLUgbF6ei9Qrr+fryA-j1PHsrsjTNiOYvUk+w@mail.gmail.com>
+From:   Arjun Roy <arjunroy@google.com>
+Date:   Thu, 27 Feb 2020 09:13:38 -0800
+Message-ID: <CAOFY-A0=AYDSdGq5tf7s6_kRjnDGLfLjCV9p+LdKbLwyw0J9nA@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the akpm tree
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 09:29:44PM +0530, Odelu Kukatla wrote:
-> Add the DT nodes for the network-on-chip interconnect buses found
-> on sc7180-based platforms.
-> 
-> Signed-off-by: Odelu Kukatla <okukatla@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 95 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 95 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index cc5a94f..3e28f34 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+On Thu, Feb 27, 2020 at 1:03 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Stephen et al,
+>
+> On Thu, Feb 27, 2020 at 5:12 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> > After merging the akpm tree, today's linux-next build (sparc defconfig)
+> > failed like this:
+> >
+> > In file included from include/linux/list.h:9:0,
+> >                  from include/linux/smp.h:12,
+> >                  from include/linux/kernel_stat.h:5,
+> >                  from mm/memory.c:42:
+> > mm/memory.c: In function 'insert_pages':
+> > mm/memory.c:1523:41: error: implicit declaration of function 'pte_index'; did you mean 'page_index'? [-Werror=implicit-function-declaration]
+> >    remaining_pages_total, PTRS_PER_PTE - pte_index(addr));
+> >                                          ^
+> > include/linux/kernel.h:842:40: note: in definition of macro '__typecheck'
+> >    (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+> >                                         ^
+> > include/linux/kernel.h:866:24: note: in expansion of macro '__safe_cmp'
+> >   __builtin_choose_expr(__safe_cmp(x, y), \
+> >                         ^~~~~~~~~~
+> > include/linux/kernel.h:934:27: note: in expansion of macro '__careful_cmp'
+> >  #define min_t(type, x, y) __careful_cmp((type)(x), (type)(y), <)
+> >                            ^~~~~~~~~~~~~
+> > mm/memory.c:1522:26: note: in expansion of macro 'min_t'
+> >   pages_to_write_in_pmd = min_t(unsigned long,
+> >                           ^~~~~
+>
+> Same issue on m68k, as per a report from kisskb.
+>
+> > Caused by patch
+> >
+> >   "mm/memory.c: add vm_insert_pages()"
+> >
+> > sparc32 does not implement pte_index at all :-(
+>
+> Seems like about only half of the architectures do.
+>
 
-v2 had:
+:/ I begin to suspect the only sane way to make this work is to have a
+per-arch header defined method, returning a bool saying whether
+pte_index() is meaningful or not on that arch, and early on in
+vm_insert_pages() if that bool returns true, to just call
+vm_insert_page() in a loop.
 
-+#include <dt-bindings/interconnect/qcom,sc7180.h>
+-Arjun
 
-I think we still want that, otherwise some patch that adds an
-interconnect configuration for SC7180 needs to add it (see also
-https://patchwork.kernel.org/patch/11386485/#23187545)
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
