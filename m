@@ -2,140 +2,75 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAFDC4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 01:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1BCC4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 01:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7E722072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 01:16:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 893772467F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 01:17:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AHnBLjn3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgB0BQa (ORCPT
+        id S1728185AbgB0BRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 20:16:30 -0500
-Received: from mga11.intel.com ([192.55.52.93]:43614 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727964AbgB0BQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 20:16:29 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 17:16:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,490,1574150400"; 
-   d="scan'208";a="241869963"
-Received: from pkabrax-mobl.amr.corp.intel.com (HELO [10.251.2.6]) ([10.251.2.6])
-  by orsmga006.jf.intel.com with ESMTP; 26 Feb 2020 17:16:27 -0800
-Subject: Re: [RFC PATCH v9 05/27] x86/cet/shstk: Add Kconfig option for
- user-mode Shadow Stack protection
-To:     "H.J. Lu" <hjl.tools@gmail.com>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
-References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
- <20200205181935.3712-6-yu-cheng.yu@intel.com>
- <d4dabb84-5636-2657-c45e-795f3f2dcbbc@intel.com>
- <CAMe9rOouOwNC873v=LOv5rJWcbe9Zvg+od8229J33V=ZfrB1rg@mail.gmail.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <71791bbf-7ee3-fa70-b569-ae643151646e@intel.com>
-Date:   Wed, 26 Feb 2020 17:16:27 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 26 Feb 2020 20:17:02 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:59846 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727964AbgB0BRC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 20:17:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=xzybkCZjTyLb0VqFQbFVRWtDGZw2aWyH8QFRYq4X5ek=; b=AHnBLjn3kbXNGq+iIcAM/IqPeG
+        JZYPRLDzH7mPdDTuloPqFSuLzcF3h5TA8TZ4QYrkW8bWechx/eIpBwyF1LJay4svFJHUuFA648xqX
+        wXZAFNIqO7iCCPjs+rOzUQb6vxKMzXp1PoZO2AhjwRwn1XeYj0Z6L3t8I4z3UNu9F+P6Nfl85cGmN
+        y18ZvmzNBv3xFkEHZADGZ80vlsuzY3W2PuItl54mWN2ZiRqTGmO1a6b3jxPNt+8//WDbPzLS7TWW/
+        lKx6yfrVHEpEa0aQKFGmANPhjbIdFBkBprRE9MrPO7uiMyYmJ/L4q26nIRVBhIHudGH8+KBXfyZ/u
+        BDF+0EVQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j77nK-0003bv-44; Thu, 27 Feb 2020 01:16:54 +0000
+Date:   Wed, 26 Feb 2020 17:16:54 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     Hugh Dickins <hughd@google.com>, kirill.shutemov@linux.intel.com,
+        aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [v2 PATCH] mm: shmem: allow split THP when truncating THP
+ partially
+Message-ID: <20200227011654.GF24185@bombadil.infradead.org>
+References: <1575420174-19171-1-git-send-email-yang.shi@linux.alibaba.com>
+ <alpine.LSU.2.11.1912041601270.12930@eggly.anvils>
+ <00f0bb7d-3c25-a65f-ea94-3e2de8e9bcdd@linux.alibaba.com>
+ <alpine.LSU.2.11.2002241831060.3084@eggly.anvils>
+ <cba16817-8555-f84f-134a-1ff9f168247b@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <CAMe9rOouOwNC873v=LOv5rJWcbe9Zvg+od8229J33V=ZfrB1rg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cba16817-8555-f84f-134a-1ff9f168247b@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/26/20 5:02 PM, H.J. Lu wrote:
->> That way everybody with old toolchains can still build the kernel (and
->> run/test code with your config option on, btw...).
-> CET requires a complete new OS image from kernel, toolchain, run-time.
-> CET enabled kernel without the rest of updated OS won't give you CET
-> at all.
+On Wed, Feb 26, 2020 at 09:43:53AM -0800, Yang Shi wrote:
+> > No.  The pagevec_lookup_entries() calls from mm/truncate.c prefer the
+> > new behavior - evicting the head from page cache removes all the tails
+> > along with it, so getting the tails a waste of time there too, just as
+> > it was in shmem_undo_range().
+> 
+> TBH I'm not a fun of this hack. This would bring in other confusion or
+> complexity. Pagevec is supposed to count in the number of base page, now it
+> would treat THP as one page, and there might be mixed base page and THP in
+> one pagevec. But, I tend to agree avoiding getting those 14 extra pins at
+> the first place might be a better approach. All the complexity are used to
+> release those extra pins.
 
-If you require a new toolchain, nobody even builds your fancy feature.
-Probably including 0day and all of the lazy maintainers with crufty old
-distros.
-
-The point isn't to actually run CET at all.  The point is to get as many
-people as possible testing as much of it as possible.  Testing includes
-compile testing, static analysis and bloat watching.  It also includes
-functional and performance testing when you've got the feature compiled
-in but unavailable at runtime.  Did this hurt anything even when I'm not
-using it?
-
+My long-term goal is to eradicate tail pages entirely, so a pagevec will
+end up containing pages of different sizes.  If you want to help move
+in this direction, I'd be awfully grateful.  But I wouldn't say that's
+in any way a prerequisite for fixing this current problem.
