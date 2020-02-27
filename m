@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE20C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19AC4C34022
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B3EA24656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D919B2469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:45:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814713;
-	bh=wUIufC8Wzip5suA+4iOfai1q2QIz8TaqzWm4SZxl3ZE=;
+	s=default; t=1582814720;
+	bh=aK/+aFJ9B9J3nmmat7es9bxcZ0UzUzf+c9vF/+cqZ+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nX6Uv7RP5Tt41G73IOystshcCODdhjYbb7wg+5Y/iXR8HhNjC2/w1ERgOj8wGQfDI
-	 OJwaSEEREof6fR1iV/a9KTSBlSMkv/UrAeEzsKHHOfixlbcpfJAu+kYua32QRZPKf8
-	 whPuIHdCiVo8maHKOYbhCjrA6L0B94YZZAGDqN+g=
+	b=YMeM+A64qw6a24M6wloaFwVImpYxeRkaAfYN2fXV/Sr60nFul2aL4IizAvErUizyg
+	 RkVjfaN5FoxLGQsS2Iw9y6cua24Kiruy8yfW0YO8H2IMlntU4u7/N1X5pqupkggKRd
+	 I7YWa3QXziZY15jmXM1UUklOf50/2ZSbYYvYsDx8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731422AbgB0OpM (ORCPT
+        id S1731424AbgB0OpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:45:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43314 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:45:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730112AbgB0Nq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:46:58 -0500
+        id S1730573AbgB0Nqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:46:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B2DE2469F;
-        Thu, 27 Feb 2020 13:46:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D7E62469F;
+        Thu, 27 Feb 2020 13:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811217;
-        bh=wUIufC8Wzip5suA+4iOfai1q2QIz8TaqzWm4SZxl3ZE=;
+        s=default; t=1582811206;
+        bh=aK/+aFJ9B9J3nmmat7es9bxcZ0UzUzf+c9vF/+cqZ+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WCh5wHaeRdDZU4h+F53QNkWdTPyJN8WdCCt5UtAa/AdhxGEUyYNAwWoEBgC9Weh+B
-         qy3ilmi+jcx5SSEp+Xokb9cZMoFqiIhz5zLaiX2hu1Lx0HxokDh4pS+yvTuMhykEEK
-         dKtLu/RNvyDiruZFsivZlXNbWSg3KzWM9+k2ODoU=
+        b=Gh4MhBmROwQeXQBcZ0x1qNZLnVHGhsAWtbhhtwfy4JAT8mTYEGYFwov+LhPXfp3qd
+         wrObf4eIB/0nuiPLUP6BlRBVBZsgKkbBFz30TD+JJbB7jclgI9VHQFjdKsgtZxeBJX
+         kzRxBI5chjhHvx6I0xuhVzw/diKBnwZ1ssMPkw38=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, ryusuke1925 <st13s20@gm.ibaraki-ct.ac.jp>,
-        Koki Mitani <koki.mitani.xg@hco.ntt.co.jp>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.9 010/165] Btrfs: fix race between using extent maps and merging them
-Date:   Thu, 27 Feb 2020 14:34:44 +0100
-Message-Id: <20200227132232.605448213@linuxfoundation.org>
+        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 006/165] ALSA: usb-audio: Apply sample rate quirk for Audioengine D1
+Date:   Thu, 27 Feb 2020 14:34:40 +0100
+Message-Id: <20200227132232.048294039@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -62,128 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
-commit ac05ca913e9f3871126d61da275bfe8516ff01ca upstream.
+commit 93f9d1a4ac5930654c17412e3911b46ece73755a upstream.
 
-We have a few cases where we allow an extent map that is in an extent map
-tree to be merged with other extents in the tree. Such cases include the
-unpinning of an extent after the respective ordered extent completed or
-after logging an extent during a fast fsync. This can lead to subtle and
-dangerous problems because when doing the merge some other task might be
-using the same extent map and as consequence see an inconsistent state of
-the extent map - for example sees the new length but has seen the old start
-offset.
+The Audioengine D1 (0x2912:0x30c8) does support reading the sample rate,
+but it returns the rate in byte-reversed order.
 
-With luck this triggers a BUG_ON(), and not some silent bug, such as the
-following one in __do_readpage():
+When setting sampling rate, the driver produces these warning messages:
+[168840.944226] usb 3-2.2: current rate 4500480 is different from the runtime rate 44100
+[168854.930414] usb 3-2.2: current rate 8436480 is different from the runtime rate 48000
+[168905.185825] usb 3-2.1.2: current rate 30465 is different from the runtime rate 96000
 
-  $ cat -n fs/btrfs/extent_io.c
-  3061  static int __do_readpage(struct extent_io_tree *tree,
-  3062                           struct page *page,
-  (...)
-  3127                  em = __get_extent_map(inode, page, pg_offset, cur,
-  3128                                        end - cur + 1, get_extent, em_cached);
-  3129                  if (IS_ERR_OR_NULL(em)) {
-  3130                          SetPageError(page);
-  3131                          unlock_extent(tree, cur, end);
-  3132                          break;
-  3133                  }
-  3134                  extent_offset = cur - em->start;
-  3135                  BUG_ON(extent_map_end(em) <= cur);
-  (...)
+As can be seen from the hexadecimal conversion, the current rate read
+back is byte-reversed from the rate that was set.
 
-Consider the following example scenario, where we end up hitting the
-BUG_ON() in __do_readpage().
+44100 == 0x00ac44, 4500480 == 0x44ac00
+48000 == 0x00bb80, 8436480 == 0x80bb00
+96000 == 0x017700,   30465 == 0x007701
 
-We have an inode with a size of 8KiB and 2 extent maps:
+Rather than implementing a new quirk to reverse the order, just skip
+checking the rate to avoid spamming the log.
 
-  extent A: file offset 0, length 4KiB, disk_bytenr = X, persisted on disk by
-            a previous transaction
-
-  extent B: file offset 4KiB, length 4KiB, disk_bytenr = X + 4KiB, not yet
-            persisted but writeback started for it already. The extent map
-	    is pinned since there's writeback and an ordered extent in
-	    progress, so it can not be merged with extent map A yet
-
-The following sequence of steps leads to the BUG_ON():
-
-1) The ordered extent for extent B completes, the respective page gets its
-   writeback bit cleared and the extent map is unpinned, at that point it
-   is not yet merged with extent map A because it's in the list of modified
-   extents;
-
-2) Due to memory pressure, or some other reason, the MM subsystem releases
-   the page corresponding to extent B - btrfs_releasepage() is called and
-   returns 1, meaning the page can be released as it's not dirty, not under
-   writeback anymore and the extent range is not locked in the inode's
-   iotree. However the extent map is not released, either because we are
-   not in a context that allows memory allocations to block or because the
-   inode's size is smaller than 16MiB - in this case our inode has a size
-   of 8KiB;
-
-3) Task B needs to read extent B and ends up __do_readpage() through the
-   btrfs_readpage() callback. At __do_readpage() it gets a reference to
-   extent map B;
-
-4) Task A, doing a fast fsync, calls clear_em_loggin() against extent map B
-   while holding the write lock on the inode's extent map tree - this
-   results in try_merge_map() being called and since it's possible to merge
-   extent map B with extent map A now (the extent map B was removed from
-   the list of modified extents), the merging begins - it sets extent map
-   B's start offset to 0 (was 4KiB), but before it increments the map's
-   length to 8KiB (4kb + 4KiB), task A is at:
-
-   BUG_ON(extent_map_end(em) <= cur);
-
-   The call to extent_map_end() sees the extent map has a start of 0
-   and a length still at 4KiB, so it returns 4KiB and 'cur' is 4KiB, so
-   the BUG_ON() is triggered.
-
-So it's dangerous to modify an extent map that is in the tree, because some
-other task might have got a reference to it before and still using it, and
-needs to see a consistent map while using it. Generally this is very rare
-since most paths that lookup and use extent maps also have the file range
-locked in the inode's iotree. The fsync path is pretty much the only
-exception where we don't do it to avoid serialization with concurrent
-reads.
-
-Fix this by not allowing an extent map do be merged if if it's being used
-by tasks other then the one attempting to merge the extent map (when the
-reference count of the extent map is greater than 2).
-
-Reported-by: ryusuke1925 <st13s20@gm.ibaraki-ct.ac.jp>
-Reported-by: Koki Mitani <koki.mitani.xg@hco.ntt.co.jp>
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=206211
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200211162235.1639889-1-nivedita@alum.mit.edu
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/extent_map.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ sound/usb/quirks.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/btrfs/extent_map.c
-+++ b/fs/btrfs/extent_map.c
-@@ -227,6 +227,17 @@ static void try_merge_map(struct extent_
- 	struct extent_map *merge = NULL;
- 	struct rb_node *rb;
- 
-+	/*
-+	 * We can't modify an extent map that is in the tree and that is being
-+	 * used by another task, as it can cause that other task to see it in
-+	 * inconsistent state during the merging. We always have 1 reference for
-+	 * the tree and 1 for this task (which is unpinning the extent map or
-+	 * clearing the logging flag), so anything > 2 means it's being used by
-+	 * other tasks too.
-+	 */
-+	if (atomic_read(&em->refs) > 2)
-+		return;
-+
- 	if (em->start != 0) {
- 		rb = rb_prev(&em->rb_node);
- 		if (rb)
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1149,6 +1149,7 @@ bool snd_usb_get_sample_rate_quirk(struc
+ 	case USB_ID(0x1de7, 0x0014): /* Phoenix Audio TMX320 */
+ 	case USB_ID(0x1de7, 0x0114): /* Phoenix Audio MT202pcs */
+ 	case USB_ID(0x21B4, 0x0081): /* AudioQuest DragonFly */
++	case USB_ID(0x2912, 0x30c8): /* Audioengine D1 */
+ 		return true;
+ 	}
+ 	return false;
 
 
