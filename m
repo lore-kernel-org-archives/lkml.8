@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDFBC3F357
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA24C728FE
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C27F924688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DE3024656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:23:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813545;
-	bh=A9uAKK7YkzX0ba2QET25Yc8HWZTPTDPR+mNkf7f6ehc=;
+	s=default; t=1582813433;
+	bh=ZY1iDZKCiMk23xFTVQl9UMqSJynqVb1zbUgUTPGQCV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eK0HRtGLnlPmrn1h6c9IwUjOIMXnF7fUBPwwzVS5cAtS9ipOhrq0Oflstq2fCoXaT
-	 3Km2VwPcWXQaHuFwpcLSmmFUMz63sA/ifROehNDIe15Q8iuLe5ZcUnmicqU78zAFr3
-	 4Hkik1g/NCeFrVfXYY5E+05KrxeZ5ZRlSFzMVBFA=
+	b=NyChYaXVKUPVpFyNcLxjuaor7axu9JWwezslF79enNurV7SZsWVdHa5fLOGnxmv0/
+	 UiBTRB/Jkjd1MFMRCeMoXXajyKV68zieuoowgL3vakd4xoX2k9tKXivtVsCfYWdbfj
+	 G50WJeuigUoyrIT9dS/qeYkCe1LNVqPldUgujDbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389019AbgB0OZo (ORCPT
+        id S2388879AbgB0ONw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:25:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49338 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:13:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388211AbgB0OLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:11:01 -0500
+        id S2389011AbgB0ONs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:13:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE3A520714;
-        Thu, 27 Feb 2020 14:11:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EB3024690;
+        Thu, 27 Feb 2020 14:13:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812661;
-        bh=A9uAKK7YkzX0ba2QET25Yc8HWZTPTDPR+mNkf7f6ehc=;
+        s=default; t=1582812828;
+        bh=ZY1iDZKCiMk23xFTVQl9UMqSJynqVb1zbUgUTPGQCV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TCjs7OqwdpAeBQ/DFQugQwFn72oGGmljeDmEvBTIMkOjwevmXEhZrj5sCNobLbF4t
-         Xnu79nqP5b3JmvcQzwSevidXGovmN2G5n8hSfYLjUHSMmdgiYAxuEbyV5HoFb2ngsP
-         rpQmz5UVVjSbhIa8pkJbwF9/wcSc1GR7iAt9KhR0=
+        b=za3oqd0+jMDDzE1ZVHByfwoxhcx+VjPlfr+mlt2cj5oEbLDpGU8vOeqF27UtImwAw
+         t3/oXItjeDSz1G2bU/uynlD+4BVAZ5iJwAyRe/gkwVPQfJQTuOfb6WXUUug1Flarnt
+         xQ6brsd4g6rn9YLO4pLAcDrfNQn1sQ7PmAblnBkg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        stable@kernel.vger.org
-Subject: [PATCH 5.4 101/135] drm/i915/gt: Detect if we miss WaIdleLiteRestore
-Date:   Thu, 27 Feb 2020 14:37:21 +0100
-Message-Id: <20200227132244.400898378@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 5.5 032/150] xhci: fix runtime pm enabling for quirky Intel hosts
+Date:   Thu, 27 Feb 2020 14:36:09 +0100
+Message-Id: <20200227132237.554940059@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
-References: <20200227132228.710492098@linuxfoundation.org>
+In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
+References: <20200227132232.815448360@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,130 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-commit 82c69bf58650e644c61aa2bf5100b63a1070fd2f upstream.
+commit 024d411e9c5d49eb96c825af52a3ce2682895676 upstream.
 
-In order to avoid confusing the HW, we must never submit an empty ring
-during lite-restore, that is we should always advance the RING_TAIL
-before submitting to stay ahead of the RING_HEAD.
+Intel hosts that need the XHCI_PME_STUCK_QUIRK flag should enable
+runtime pm by calling xhci_pme_acpi_rtd3_enable() before
+usb_hcd_pci_probe() calls pci_dev_run_wake().
+Otherwise usage count for the device won't be decreased, and runtime
+suspend is prevented.
 
-Normally this is prevented by keeping a couple of spare NOPs in the
-request->wa_tail so that on resubmission we can advance the tail. This
-relies on the request only being resubmitted once, which is the normal
-condition as it is seen once for ELSP[1] and then later in ELSP[0]. On
-preemption, the requests are unwound and the tail reset back to the
-normal end point (as we know the request is incomplete and therefore its
-RING_HEAD is even earlier).
+usb_hcd_pci_probe() only decreases the usage count if device can
+generate run-time wake-up events, i.e. when pci_dev_run_wake()
+returns true.
 
-However, if this w/a should fail we would try and resubmit the request
-with the RING_TAIL already set to the location of this request's wa_tail
-potentially causing a GPU hang. We can spot when we do try and
-incorrectly resubmit without advancing the RING_TAIL and spare any
-embarrassment by forcing the context restore.
+This issue was exposed by pci_dev_run_wake() change in
+commit 8feaec33b986 ("PCI / PM: Always check PME wakeup capability for
+runtime wakeup support")
+and should be backported to kernels with that change
 
-In the case of preempt-to-busy, we leave the requests running on the HW
-while we unwind. As the ring is still live, we cannot rewind our
-rq->tail without forcing a reload so leave it set to rq->wa_tail and
-only force a reload if we resubmit after a lite-restore. (Normally, the
-forced reload will be a part of the preemption event.)
-
-Fixes: 22b7a426bbe1 ("drm/i915/execlists: Preempt-to-busy")
-Closes: https://gitlab.freedesktop.org/drm/intel/issues/673
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Mika Kuoppala <mika.kuoppala@linux.intel.com>
-Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Cc: stable@kernel.vger.org
-Link: https://patchwork.freedesktop.org/patch/msgid/20191209023215.3519970-1-chris@chris-wilson.co.uk
+Cc: <stable@vger.kernel.org> # 4.13+
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200210134553.9144-4-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- drivers/gpu/drm/i915/gt/intel_lrc.c |   42 +++++++++++++++++-------------------
- 1 file changed, 20 insertions(+), 22 deletions(-)
+ drivers/usb/host/xhci-pci.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/gpu/drm/i915/gt/intel_lrc.c
-+++ b/drivers/gpu/drm/i915/gt/intel_lrc.c
-@@ -471,12 +471,6 @@ lrc_descriptor(struct intel_context *ce,
- 	return desc;
- }
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -302,6 +302,9 @@ static int xhci_pci_setup(struct usb_hcd
+ 	if (!usb_hcd_is_primary_hcd(hcd))
+ 		return 0;
  
--static void unwind_wa_tail(struct i915_request *rq)
--{
--	rq->tail = intel_ring_wrap(rq->ring, rq->wa_tail - WA_TAIL_BYTES);
--	assert_ring_tail_valid(rq->ring, rq->tail);
--}
++	if (xhci->quirks & XHCI_PME_STUCK_QUIRK)
++		xhci_pme_acpi_rtd3_enable(pdev);
++
+ 	xhci_dbg(xhci, "Got SBRN %u\n", (unsigned int) xhci->sbrn);
+ 
+ 	/* Find any debug ports */
+@@ -359,9 +362,6 @@ static int xhci_pci_probe(struct pci_dev
+ 			HCC_MAX_PSA(xhci->hcc_params) >= 4)
+ 		xhci->shared_hcd->can_do_streams = 1;
+ 
+-	if (xhci->quirks & XHCI_PME_STUCK_QUIRK)
+-		xhci_pme_acpi_rtd3_enable(dev);
 -
- static struct i915_request *
- __unwind_incomplete_requests(struct intel_engine_cs *engine)
- {
-@@ -495,7 +489,6 @@ __unwind_incomplete_requests(struct inte
- 			continue; /* XXX */
- 
- 		__i915_request_unsubmit(rq);
--		unwind_wa_tail(rq);
- 
- 		/*
- 		 * Push the request back into the queue for later resubmission.
-@@ -650,13 +643,29 @@ execlists_schedule_out(struct i915_reque
- 	i915_request_put(rq);
- }
- 
--static u64 execlists_update_context(const struct i915_request *rq)
-+static u64 execlists_update_context(struct i915_request *rq)
- {
- 	struct intel_context *ce = rq->hw_context;
--	u64 desc;
-+	u64 desc = ce->lrc_desc;
-+	u32 tail;
- 
--	ce->lrc_reg_state[CTX_RING_TAIL + 1] =
--		intel_ring_set_tail(rq->ring, rq->tail);
-+	/*
-+	 * WaIdleLiteRestore:bdw,skl
-+	 *
-+	 * We should never submit the context with the same RING_TAIL twice
-+	 * just in case we submit an empty ring, which confuses the HW.
-+	 *
-+	 * We append a couple of NOOPs (gen8_emit_wa_tail) after the end of
-+	 * the normal request to be able to always advance the RING_TAIL on
-+	 * subsequent resubmissions (for lite restore). Should that fail us,
-+	 * and we try and submit the same tail again, force the context
-+	 * reload.
-+	 */
-+	tail = intel_ring_set_tail(rq->ring, rq->tail);
-+	if (unlikely(ce->lrc_reg_state[CTX_RING_TAIL + 1] == tail))
-+		desc |= CTX_DESC_FORCE_RESTORE;
-+	ce->lrc_reg_state[CTX_RING_TAIL + 1] = tail;
-+	rq->tail = rq->wa_tail;
- 
- 	/*
- 	 * Make sure the context image is complete before we submit it to HW.
-@@ -675,7 +684,6 @@ static u64 execlists_update_context(cons
- 	 */
- 	mb();
- 
--	desc = ce->lrc_desc;
- 	ce->lrc_desc &= ~CTX_DESC_FORCE_RESTORE;
- 
- 	return desc;
-@@ -1150,16 +1158,6 @@ static void execlists_dequeue(struct int
- 			if (!list_is_last(&last->sched.link,
- 					  &engine->active.requests))
- 				return;
--
--			/*
--			 * WaIdleLiteRestore:bdw,skl
--			 * Apply the wa NOOPs to prevent
--			 * ring:HEAD == rq:TAIL as we resubmit the
--			 * request. See gen8_emit_fini_breadcrumb() for
--			 * where we prepare the padding after the
--			 * end of the request.
--			 */
--			last->tail = last->wa_tail;
- 		}
- 	}
+ 	/* USB-2 and USB-3 roothubs initialized, allow runtime pm suspend */
+ 	pm_runtime_put_noidle(&dev->dev);
  
 
 
