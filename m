@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01874C52D36
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7E3C3F366
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8C162469D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EC2920578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:06:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812567;
-	bh=V2vmIVQW23cwJ256lyyV+7OzHvT8i5zVqa0p7BUUTok=;
+	s=default; t=1582812410;
+	bh=xPvRjPJDp1nnOvlu6ZytP2FbGavNbtuOmmE3glSws8Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K6Mp9rnlNbEVhPs+QQ+x/PgDV8Xbi0tpLgQzCAO6o8xl+PMVvVlHIBquAKiW/8rfI
-	 8ysUP7RbuTI2IWR75QDeoqrrdp8H3UDIPbhetHkzotiCr9N6alVcyhzIE1InYZHlQD
-	 mFYwsJNXY01MYgFWuFI67SBPZYMaDXvPAW8yF3og=
+	b=rRs1O6mvc81zB+xPZ+LLEYDTulf6NZd1lIh7c2W4ZY8haPcRXtxJJSf3xVfO5uCng
+	 RpG1Z8r92X7suO7vfGTDkuOnL8OpXzu1ynEtfKcDnFwrajkjmT69JgNUj8XUgr8SuY
+	 rjsHRH9Sc1dcllZ6sO6t9a9UjcjRozZ+nDuoKeQ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387823AbgB0OJZ (ORCPT
+        id S2387984AbgB0OGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:09:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47266 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:06:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732995AbgB0OJV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:09:21 -0500
+        id S1733178AbgB0OGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:06:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7224720714;
-        Thu, 27 Feb 2020 14:09:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C764920801;
+        Thu, 27 Feb 2020 14:06:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812559;
-        bh=V2vmIVQW23cwJ256lyyV+7OzHvT8i5zVqa0p7BUUTok=;
+        s=default; t=1582812402;
+        bh=xPvRjPJDp1nnOvlu6ZytP2FbGavNbtuOmmE3glSws8Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NUYjDlKXYV30XPF4jrgL5VPHMMLfFm/uLydOuYCJ3HRf3cSEVHyuiIbu5R4s8O/Ff
-         ut6FDZe2cdifZaQFEQ9ouFIvfOxjCyUoU45lGnO92n+wPMBslnGLWoeVya7B8vGW/r
-         w+lcaXc3aQZnZraQU/0YXn4ChQE4fTIWZgm8zLjE=
+        b=ZA9NsJ9S2DtdDqBtb9uIo/H49aXVD3de8cPtyEwEAeE1p6ifp6zz2RCulQfd6wiEl
+         VfpAgaDLHtBM04qnorjwxHh8sLNogfuiM/ncQbekyFLOyax85orkx22rCaC8O/YFGz
+         xuQ4EwKYJNQmo6TKcM3e/84WHBn7yMkhGSU61gqo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>,
-        Sajja Venkateswara Rao <VenkateswaraRao.Sajja@amd.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH 5.4 026/135] xhci: Fix memory leak when caching protocol extended capability PSI tables - take 2
-Date:   Thu, 27 Feb 2020 14:36:06 +0100
-Message-Id: <20200227132233.089533091@linuxfoundation.org>
+        stable@vger.kernel.org, Suraj Jitindar Singh <surajjs@amazon.com>,
+        Theodore Tso <tytso@mit.edu>, stable@kernel.org
+Subject: [PATCH 4.19 65/97] ext4: fix potential race between online resizing and write operations
+Date:   Thu, 27 Feb 2020 14:37:13 +0100
+Message-Id: <20200227132225.120415734@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
-References: <20200227132228.710492098@linuxfoundation.org>
+In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
+References: <20200227132214.553656188@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,265 +59,316 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Theodore Ts'o <tytso@mit.edu>
 
-commit cf0ee7c60c89641f6e4d1d3c7867fe32b9e30300 upstream.
+commit 1d0c3924a92e69bfa91163bda83c12a994b4d106 upstream.
 
-xhci driver assumed that xHC controllers have at most one custom
-supported speed table (PSI) for all usb 3.x ports.
-Memory was allocated for one PSI table under the xhci hub structure.
+During an online resize an array of pointers to buffer heads gets
+replaced so it can get enlarged.  If there is a racing block
+allocation or deallocation which uses the old array, and the old array
+has gotten reused this can lead to a GPF or some other random kernel
+memory getting modified.
 
-Turns out this is not the case, some controllers have a separate
-"supported protocol capability" entry with a PSI table for each port.
-This means each usb3 roothub port can in theory support different custom
-speeds.
-
-To solve this, cache all supported protocol capabilities with their PSI
-tables in an array, and add pointers to the xhci port structure so that
-every port points to its capability entry in the array.
-
-When creating the SuperSpeedPlus USB Device Capability BOS descriptor
-for the xhci USB 3.1 roothub we for now will use only data from the
-first USB 3.1 capable protocol capability entry in the array.
-This could be improved later, this patch focuses resolving
-the memory leak.
-
-Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
-Reported-by: Sajja Venkateswara Rao <VenkateswaraRao.Sajja@amd.com>
-Fixes: 47189098f8be ("xhci: parse xhci protocol speed ID list for usb 3.1 usage")
-Cc: stable <stable@vger.kernel.org> # v4.4+
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Link: https://lore.kernel.org/r/20200211150158.14475-1-mathias.nyman@linux.intel.com
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206443
+Link: https://lore.kernel.org/r/20200221053458.730016-2-tytso@mit.edu
+Reported-by: Suraj Jitindar Singh <surajjs@amazon.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-hub.c |   25 ++++++++++++------
- drivers/usb/host/xhci-mem.c |   61 +++++++++++++++++++++++++++-----------------
- drivers/usb/host/xhci.h     |   14 +++++++---
- 3 files changed, 66 insertions(+), 34 deletions(-)
+ fs/ext4/balloc.c |   14 +++++++++++---
+ fs/ext4/ext4.h   |   20 +++++++++++++++++++-
+ fs/ext4/resize.c |   55 ++++++++++++++++++++++++++++++++++++++++++++-----------
+ fs/ext4/super.c  |   33 +++++++++++++++++++++++----------
+ 4 files changed, 97 insertions(+), 25 deletions(-)
 
---- a/drivers/usb/host/xhci-hub.c
-+++ b/drivers/usb/host/xhci-hub.c
-@@ -55,6 +55,7 @@ static u8 usb_bos_descriptor [] = {
- static int xhci_create_usb3_bos_desc(struct xhci_hcd *xhci, char *buf,
- 				     u16 wLength)
- {
-+	struct xhci_port_cap *port_cap = NULL;
- 	int i, ssa_count;
- 	u32 temp;
- 	u16 desc_size, ssp_cap_size, ssa_size = 0;
-@@ -64,16 +65,24 @@ static int xhci_create_usb3_bos_desc(str
- 	ssp_cap_size = sizeof(usb_bos_descriptor) - desc_size;
+--- a/fs/ext4/balloc.c
++++ b/fs/ext4/balloc.c
+@@ -270,6 +270,7 @@ struct ext4_group_desc * ext4_get_group_
+ 	ext4_group_t ngroups = ext4_get_groups_count(sb);
+ 	struct ext4_group_desc *desc;
+ 	struct ext4_sb_info *sbi = EXT4_SB(sb);
++	struct buffer_head *bh_p;
  
- 	/* does xhci support USB 3.1 Enhanced SuperSpeed */
--	if (xhci->usb3_rhub.min_rev >= 0x01) {
-+	for (i = 0; i < xhci->num_port_caps; i++) {
-+		if (xhci->port_caps[i].maj_rev == 0x03 &&
-+		    xhci->port_caps[i].min_rev >= 0x01) {
-+			usb3_1 = true;
-+			port_cap = &xhci->port_caps[i];
-+			break;
-+		}
-+	}
-+
-+	if (usb3_1) {
- 		/* does xhci provide a PSI table for SSA speed attributes? */
--		if (xhci->usb3_rhub.psi_count) {
-+		if (port_cap->psi_count) {
- 			/* two SSA entries for each unique PSI ID, RX and TX */
--			ssa_count = xhci->usb3_rhub.psi_uid_count * 2;
-+			ssa_count = port_cap->psi_uid_count * 2;
- 			ssa_size = ssa_count * sizeof(u32);
- 			ssp_cap_size -= 16; /* skip copying the default SSA */
- 		}
- 		desc_size += ssp_cap_size;
--		usb3_1 = true;
- 	}
- 	memcpy(buf, &usb_bos_descriptor, min(desc_size, wLength));
+ 	if (block_group >= ngroups) {
+ 		ext4_error(sb, "block_group >= groups_count - block_group = %u,"
+@@ -280,7 +281,14 @@ struct ext4_group_desc * ext4_get_group_
  
-@@ -99,7 +108,7 @@ static int xhci_create_usb3_bos_desc(str
+ 	group_desc = block_group >> EXT4_DESC_PER_BLOCK_BITS(sb);
+ 	offset = block_group & (EXT4_DESC_PER_BLOCK(sb) - 1);
+-	if (!sbi->s_group_desc[group_desc]) {
++	bh_p = sbi_array_rcu_deref(sbi, s_group_desc, group_desc);
++	/*
++	 * sbi_array_rcu_deref returns with rcu unlocked, this is ok since
++	 * the pointer being dereferenced won't be dereferenced again. By
++	 * looking at the usage in add_new_gdb() the value isn't modified,
++	 * just the pointer, and so it remains valid.
++	 */
++	if (!bh_p) {
+ 		ext4_error(sb, "Group descriptor not loaded - "
+ 			   "block_group = %u, group_desc = %u, desc = %u",
+ 			   block_group, group_desc, offset);
+@@ -288,10 +296,10 @@ struct ext4_group_desc * ext4_get_group_
  	}
  
- 	/* If PSI table exists, add the custom speed attributes from it */
--	if (usb3_1 && xhci->usb3_rhub.psi_count) {
-+	if (usb3_1 && port_cap->psi_count) {
- 		u32 ssp_cap_base, bm_attrib, psi, psi_mant, psi_exp;
- 		int offset;
+ 	desc = (struct ext4_group_desc *)(
+-		(__u8 *)sbi->s_group_desc[group_desc]->b_data +
++		(__u8 *)bh_p->b_data +
+ 		offset * EXT4_DESC_SIZE(sb));
+ 	if (bh)
+-		*bh = sbi->s_group_desc[group_desc];
++		*bh = bh_p;
+ 	return desc;
+ }
  
-@@ -111,7 +120,7 @@ static int xhci_create_usb3_bos_desc(str
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -1372,7 +1372,7 @@ struct ext4_sb_info {
+ 	loff_t s_bitmap_maxbytes;	/* max bytes for bitmap files */
+ 	struct buffer_head * s_sbh;	/* Buffer containing the super block */
+ 	struct ext4_super_block *s_es;	/* Pointer to the super block in the buffer */
+-	struct buffer_head **s_group_desc;
++	struct buffer_head * __rcu *s_group_desc;
+ 	unsigned int s_mount_opt;
+ 	unsigned int s_mount_opt2;
+ 	unsigned int s_mount_flags;
+@@ -1542,6 +1542,23 @@ static inline int ext4_valid_inum(struct
+ }
  
- 		/* attribute count SSAC bits 4:0 and ID count SSIC bits 8:5 */
- 		bm_attrib = (ssa_count - 1) & 0x1f;
--		bm_attrib |= (xhci->usb3_rhub.psi_uid_count - 1) << 5;
-+		bm_attrib |= (port_cap->psi_uid_count - 1) << 5;
- 		put_unaligned_le32(bm_attrib, &buf[ssp_cap_base + 4]);
- 
- 		if (wLength < desc_size + ssa_size)
-@@ -124,8 +133,8 @@ static int xhci_create_usb3_bos_desc(str
- 		 * USB 3.1 requires two SSA entries (RX and TX) for every link
- 		 */
- 		offset = desc_size;
--		for (i = 0; i < xhci->usb3_rhub.psi_count; i++) {
--			psi = xhci->usb3_rhub.psi[i];
-+		for (i = 0; i < port_cap->psi_count; i++) {
-+			psi = port_cap->psi[i];
- 			psi &= ~USB_SSP_SUBLINK_SPEED_RSVD;
- 			psi_exp = XHCI_EXT_PORT_PSIE(psi);
- 			psi_mant = XHCI_EXT_PORT_PSIM(psi);
---- a/drivers/usb/host/xhci-mem.c
-+++ b/drivers/usb/host/xhci-mem.c
-@@ -1915,17 +1915,17 @@ no_bw:
- 	xhci->usb3_rhub.num_ports = 0;
- 	xhci->num_active_eps = 0;
- 	kfree(xhci->usb2_rhub.ports);
--	kfree(xhci->usb2_rhub.psi);
- 	kfree(xhci->usb3_rhub.ports);
--	kfree(xhci->usb3_rhub.psi);
- 	kfree(xhci->hw_ports);
- 	kfree(xhci->rh_bw);
- 	kfree(xhci->ext_caps);
-+	for (i = 0; i < xhci->num_port_caps; i++)
-+		kfree(xhci->port_caps[i].psi);
-+	kfree(xhci->port_caps);
-+	xhci->num_port_caps = 0;
- 
- 	xhci->usb2_rhub.ports = NULL;
--	xhci->usb2_rhub.psi = NULL;
- 	xhci->usb3_rhub.ports = NULL;
--	xhci->usb3_rhub.psi = NULL;
- 	xhci->hw_ports = NULL;
- 	xhci->rh_bw = NULL;
- 	xhci->ext_caps = NULL;
-@@ -2126,6 +2126,7 @@ static void xhci_add_in_port(struct xhci
- 	u8 major_revision, minor_revision;
- 	struct xhci_hub *rhub;
- 	struct device *dev = xhci_to_hcd(xhci)->self.sysdev;
-+	struct xhci_port_cap *port_cap;
- 
- 	temp = readl(addr);
- 	major_revision = XHCI_EXT_PORT_MAJOR(temp);
-@@ -2160,31 +2161,39 @@ static void xhci_add_in_port(struct xhci
- 		/* WTF? "Valid values are ‘1’ to MaxPorts" */
- 		return;
- 
--	rhub->psi_count = XHCI_EXT_PORT_PSIC(temp);
--	if (rhub->psi_count) {
--		rhub->psi = kcalloc_node(rhub->psi_count, sizeof(*rhub->psi),
--				    GFP_KERNEL, dev_to_node(dev));
--		if (!rhub->psi)
--			rhub->psi_count = 0;
--
--		rhub->psi_uid_count++;
--		for (i = 0; i < rhub->psi_count; i++) {
--			rhub->psi[i] = readl(addr + 4 + i);
-+	port_cap = &xhci->port_caps[xhci->num_port_caps++];
-+	if (xhci->num_port_caps > max_caps)
-+		return;
+ /*
++ * Returns: sbi->field[index]
++ * Used to access an array element from the following sbi fields which require
++ * rcu protection to avoid dereferencing an invalid pointer due to reassignment
++ * - s_group_desc
++ * - s_group_info
++ * - s_flex_group
++ */
++#define sbi_array_rcu_deref(sbi, field, index)				   \
++({									   \
++	typeof(*((sbi)->field)) _v;					   \
++	rcu_read_lock();						   \
++	_v = ((typeof(_v)*)rcu_dereference((sbi)->field))[index];	   \
++	rcu_read_unlock();						   \
++	_v;								   \
++})
 +
-+	port_cap->maj_rev = major_revision;
-+	port_cap->min_rev = minor_revision;
-+	port_cap->psi_count = XHCI_EXT_PORT_PSIC(temp);
-+
-+	if (port_cap->psi_count) {
-+		port_cap->psi = kcalloc_node(port_cap->psi_count,
-+					     sizeof(*port_cap->psi),
-+					     GFP_KERNEL, dev_to_node(dev));
-+		if (!port_cap->psi)
-+			port_cap->psi_count = 0;
-+
-+		port_cap->psi_uid_count++;
-+		for (i = 0; i < port_cap->psi_count; i++) {
-+			port_cap->psi[i] = readl(addr + 4 + i);
- 
- 			/* count unique ID values, two consecutive entries can
- 			 * have the same ID if link is assymetric
- 			 */
--			if (i && (XHCI_EXT_PORT_PSIV(rhub->psi[i]) !=
--				  XHCI_EXT_PORT_PSIV(rhub->psi[i - 1])))
--				rhub->psi_uid_count++;
-+			if (i && (XHCI_EXT_PORT_PSIV(port_cap->psi[i]) !=
-+				  XHCI_EXT_PORT_PSIV(port_cap->psi[i - 1])))
-+				port_cap->psi_uid_count++;
- 
- 			xhci_dbg(xhci, "PSIV:%d PSIE:%d PLT:%d PFD:%d LP:%d PSIM:%d\n",
--				  XHCI_EXT_PORT_PSIV(rhub->psi[i]),
--				  XHCI_EXT_PORT_PSIE(rhub->psi[i]),
--				  XHCI_EXT_PORT_PLT(rhub->psi[i]),
--				  XHCI_EXT_PORT_PFD(rhub->psi[i]),
--				  XHCI_EXT_PORT_LP(rhub->psi[i]),
--				  XHCI_EXT_PORT_PSIM(rhub->psi[i]));
-+				  XHCI_EXT_PORT_PSIV(port_cap->psi[i]),
-+				  XHCI_EXT_PORT_PSIE(port_cap->psi[i]),
-+				  XHCI_EXT_PORT_PLT(port_cap->psi[i]),
-+				  XHCI_EXT_PORT_PFD(port_cap->psi[i]),
-+				  XHCI_EXT_PORT_LP(port_cap->psi[i]),
-+				  XHCI_EXT_PORT_PSIM(port_cap->psi[i]));
- 		}
- 	}
- 	/* cache usb2 port capabilities */
-@@ -2219,6 +2228,7 @@ static void xhci_add_in_port(struct xhci
- 			continue;
- 		}
- 		hw_port->rhub = rhub;
-+		hw_port->port_cap = port_cap;
- 		rhub->num_ports++;
- 	}
- 	/* FIXME: Should we disable ports not in the Extended Capabilities? */
-@@ -2309,6 +2319,11 @@ static int xhci_setup_port_arrays(struct
- 	if (!xhci->ext_caps)
- 		return -ENOMEM;
- 
-+	xhci->port_caps = kcalloc_node(cap_count, sizeof(*xhci->port_caps),
-+				flags, dev_to_node(dev));
-+	if (!xhci->port_caps)
-+		return -ENOMEM;
-+
- 	offset = cap_start;
- 
- 	while (offset) {
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -1702,12 +1702,20 @@ struct xhci_bus_state {
-  * Intel Lynx Point LP xHCI host.
++/*
+  * Inode dynamic state flags
   */
- #define	XHCI_MAX_REXIT_TIMEOUT_MS	20
-+struct xhci_port_cap {
-+	u32			*psi;	/* array of protocol speed ID entries */
-+	u8			psi_count;
-+	u8			psi_uid_count;
-+	u8			maj_rev;
-+	u8			min_rev;
+ enum {
+@@ -2564,6 +2581,7 @@ extern int ext4_generic_delete_entry(han
+ extern bool ext4_empty_dir(struct inode *inode);
+ 
+ /* resize.c */
++extern void ext4_kvfree_array_rcu(void *to_free);
+ extern int ext4_group_add(struct super_block *sb,
+ 				struct ext4_new_group_data *input);
+ extern int ext4_group_extend(struct super_block *sb,
+--- a/fs/ext4/resize.c
++++ b/fs/ext4/resize.c
+@@ -17,6 +17,33 @@
+ 
+ #include "ext4_jbd2.h"
+ 
++struct ext4_rcu_ptr {
++	struct rcu_head rcu;
++	void *ptr;
 +};
++
++static void ext4_rcu_ptr_callback(struct rcu_head *head)
++{
++	struct ext4_rcu_ptr *ptr;
++
++	ptr = container_of(head, struct ext4_rcu_ptr, rcu);
++	kvfree(ptr->ptr);
++	kfree(ptr);
++}
++
++void ext4_kvfree_array_rcu(void *to_free)
++{
++	struct ext4_rcu_ptr *ptr = kzalloc(sizeof(*ptr), GFP_KERNEL);
++
++	if (ptr) {
++		ptr->ptr = to_free;
++		call_rcu(&ptr->rcu, ext4_rcu_ptr_callback);
++		return;
++	}
++	synchronize_rcu();
++	kvfree(to_free);
++}
++
+ int ext4_resize_begin(struct super_block *sb)
+ {
+ 	struct ext4_sb_info *sbi = EXT4_SB(sb);
+@@ -560,8 +587,8 @@ static int setup_new_flex_group_blocks(s
+ 				brelse(gdb);
+ 				goto out;
+ 			}
+-			memcpy(gdb->b_data, sbi->s_group_desc[j]->b_data,
+-			       gdb->b_size);
++			memcpy(gdb->b_data, sbi_array_rcu_deref(sbi,
++				s_group_desc, j)->b_data, gdb->b_size);
+ 			set_buffer_uptodate(gdb);
  
- struct xhci_port {
- 	__le32 __iomem		*addr;
- 	int			hw_portnum;
- 	int			hcd_portnum;
- 	struct xhci_hub		*rhub;
-+	struct xhci_port_cap	*port_cap;
- };
+ 			err = ext4_handle_dirty_metadata(handle, NULL, gdb);
+@@ -879,13 +906,15 @@ static int add_new_gdb(handle_t *handle,
+ 	}
+ 	brelse(dind);
  
- struct xhci_hub {
-@@ -1719,9 +1727,6 @@ struct xhci_hub {
- 	/* supported prococol extended capabiliy values */
- 	u8			maj_rev;
- 	u8			min_rev;
--	u32			*psi;	/* array of protocol speed ID entries */
--	u8			psi_count;
--	u8			psi_uid_count;
- };
+-	o_group_desc = EXT4_SB(sb)->s_group_desc;
++	rcu_read_lock();
++	o_group_desc = rcu_dereference(EXT4_SB(sb)->s_group_desc);
+ 	memcpy(n_group_desc, o_group_desc,
+ 	       EXT4_SB(sb)->s_gdb_count * sizeof(struct buffer_head *));
++	rcu_read_unlock();
+ 	n_group_desc[gdb_num] = gdb_bh;
+-	EXT4_SB(sb)->s_group_desc = n_group_desc;
++	rcu_assign_pointer(EXT4_SB(sb)->s_group_desc, n_group_desc);
+ 	EXT4_SB(sb)->s_gdb_count++;
+-	kvfree(o_group_desc);
++	ext4_kvfree_array_rcu(o_group_desc);
  
- /* There is one xhci_hcd structure per controller */
-@@ -1880,6 +1885,9 @@ struct xhci_hcd {
- 	/* cached usb2 extened protocol capabilites */
- 	u32                     *ext_caps;
- 	unsigned int            num_ext_caps;
-+	/* cached extended protocol port capabilities */
-+	struct xhci_port_cap	*port_caps;
-+	unsigned int		num_port_caps;
- 	/* Compliance Mode Recovery Data */
- 	struct timer_list	comp_mode_recovery_timer;
- 	u32			port_status_u0;
+ 	le16_add_cpu(&es->s_reserved_gdt_blocks, -1);
+ 	err = ext4_handle_dirty_super(handle, sb);
+@@ -929,9 +958,11 @@ static int add_new_gdb_meta_bg(struct su
+ 		return err;
+ 	}
+ 
+-	o_group_desc = EXT4_SB(sb)->s_group_desc;
++	rcu_read_lock();
++	o_group_desc = rcu_dereference(EXT4_SB(sb)->s_group_desc);
+ 	memcpy(n_group_desc, o_group_desc,
+ 	       EXT4_SB(sb)->s_gdb_count * sizeof(struct buffer_head *));
++	rcu_read_unlock();
+ 	n_group_desc[gdb_num] = gdb_bh;
+ 
+ 	BUFFER_TRACE(gdb_bh, "get_write_access");
+@@ -942,9 +973,9 @@ static int add_new_gdb_meta_bg(struct su
+ 		return err;
+ 	}
+ 
+-	EXT4_SB(sb)->s_group_desc = n_group_desc;
++	rcu_assign_pointer(EXT4_SB(sb)->s_group_desc, n_group_desc);
+ 	EXT4_SB(sb)->s_gdb_count++;
+-	kvfree(o_group_desc);
++	ext4_kvfree_array_rcu(o_group_desc);
+ 	return err;
+ }
+ 
+@@ -1210,7 +1241,8 @@ static int ext4_add_new_descs(handle_t *
+ 		 * use non-sparse filesystems anymore.  This is already checked above.
+ 		 */
+ 		if (gdb_off) {
+-			gdb_bh = sbi->s_group_desc[gdb_num];
++			gdb_bh = sbi_array_rcu_deref(sbi, s_group_desc,
++						     gdb_num);
+ 			BUFFER_TRACE(gdb_bh, "get_write_access");
+ 			err = ext4_journal_get_write_access(handle, gdb_bh);
+ 
+@@ -1292,7 +1324,7 @@ static int ext4_setup_new_descs(handle_t
+ 		/*
+ 		 * get_write_access() has been called on gdb_bh by ext4_add_new_desc().
+ 		 */
+-		gdb_bh = sbi->s_group_desc[gdb_num];
++		gdb_bh = sbi_array_rcu_deref(sbi, s_group_desc, gdb_num);
+ 		/* Update group descriptor block for new group */
+ 		gdp = (struct ext4_group_desc *)(gdb_bh->b_data +
+ 						 gdb_off * EXT4_DESC_SIZE(sb));
+@@ -1519,7 +1551,8 @@ exit_journal:
+ 		for (; gdb_num <= gdb_num_end; gdb_num++) {
+ 			struct buffer_head *gdb_bh;
+ 
+-			gdb_bh = sbi->s_group_desc[gdb_num];
++			gdb_bh = sbi_array_rcu_deref(sbi, s_group_desc,
++						     gdb_num);
+ 			if (old_gdb == gdb_bh->b_blocknr)
+ 				continue;
+ 			update_backups(sb, gdb_bh->b_blocknr, gdb_bh->b_data,
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -969,6 +969,7 @@ static void ext4_put_super(struct super_
+ {
+ 	struct ext4_sb_info *sbi = EXT4_SB(sb);
+ 	struct ext4_super_block *es = sbi->s_es;
++	struct buffer_head **group_desc;
+ 	int aborted = 0;
+ 	int i, err;
+ 
+@@ -999,9 +1000,12 @@ static void ext4_put_super(struct super_
+ 	if (!sb_rdonly(sb))
+ 		ext4_commit_super(sb, 1);
+ 
++	rcu_read_lock();
++	group_desc = rcu_dereference(sbi->s_group_desc);
+ 	for (i = 0; i < sbi->s_gdb_count; i++)
+-		brelse(sbi->s_group_desc[i]);
+-	kvfree(sbi->s_group_desc);
++		brelse(group_desc[i]);
++	kvfree(group_desc);
++	rcu_read_unlock();
+ 	kvfree(sbi->s_flex_groups);
+ 	percpu_counter_destroy(&sbi->s_freeclusters_counter);
+ 	percpu_counter_destroy(&sbi->s_freeinodes_counter);
+@@ -3548,7 +3552,7 @@ static int ext4_fill_super(struct super_
+ {
+ 	struct dax_device *dax_dev = fs_dax_get_by_bdev(sb->s_bdev);
+ 	char *orig_data = kstrdup(data, GFP_KERNEL);
+-	struct buffer_head *bh;
++	struct buffer_head *bh, **group_desc;
+ 	struct ext4_super_block *es = NULL;
+ 	struct ext4_sb_info *sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
+ 	ext4_fsblk_t block;
+@@ -4166,9 +4170,10 @@ static int ext4_fill_super(struct super_
+ 			goto failed_mount;
+ 		}
+ 	}
+-	sbi->s_group_desc = kvmalloc_array(db_count,
+-					   sizeof(struct buffer_head *),
+-					   GFP_KERNEL);
++	rcu_assign_pointer(sbi->s_group_desc,
++			   kvmalloc_array(db_count,
++					  sizeof(struct buffer_head *),
++					  GFP_KERNEL));
+ 	if (sbi->s_group_desc == NULL) {
+ 		ext4_msg(sb, KERN_ERR, "not enough memory");
+ 		ret = -ENOMEM;
+@@ -4184,14 +4189,19 @@ static int ext4_fill_super(struct super_
+ 	}
+ 
+ 	for (i = 0; i < db_count; i++) {
++		struct buffer_head *bh;
++
+ 		block = descriptor_loc(sb, logical_sb_block, i);
+-		sbi->s_group_desc[i] = sb_bread_unmovable(sb, block);
+-		if (!sbi->s_group_desc[i]) {
++		bh = sb_bread_unmovable(sb, block);
++		if (!bh) {
+ 			ext4_msg(sb, KERN_ERR,
+ 			       "can't read group descriptor %d", i);
+ 			db_count = i;
+ 			goto failed_mount2;
+ 		}
++		rcu_read_lock();
++		rcu_dereference(sbi->s_group_desc)[i] = bh;
++		rcu_read_unlock();
+ 	}
+ 	sbi->s_gdb_count = db_count;
+ 	if (!ext4_check_descriptors(sb, logical_sb_block, &first_not_zeroed)) {
+@@ -4588,9 +4598,12 @@ failed_mount3:
+ 	if (sbi->s_mmp_tsk)
+ 		kthread_stop(sbi->s_mmp_tsk);
+ failed_mount2:
++	rcu_read_lock();
++	group_desc = rcu_dereference(sbi->s_group_desc);
+ 	for (i = 0; i < db_count; i++)
+-		brelse(sbi->s_group_desc[i]);
+-	kvfree(sbi->s_group_desc);
++		brelse(group_desc[i]);
++	kvfree(group_desc);
++	rcu_read_unlock();
+ failed_mount:
+ 	if (sbi->s_chksum_driver)
+ 		crypto_free_shash(sbi->s_chksum_driver);
 
 
