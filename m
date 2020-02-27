@@ -2,51 +2,54 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4BFC3F362
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C79BDC3F358
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F670246A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:50:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9546B20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811432;
-	bh=G5VPVzGmHIUVhj9m7B4QywZ6P6fWuOGfq879D4Ri7Ug=;
+	s=default; t=1582811407;
+	bh=OjlB9AVcPer6GvN/IsZeDID4gRoeRc0i8+HUSWT00wc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Oev+97YhFQz+X3y2FJ6rMNJ6YyOWd62r+O27a7TmM0UDQgngvkmyDA9TEFeW4WzZe
-	 r7b+ffzQlPnbSiRoAvtmhqMeapjAcHNzSBN1oadgWj5PcLZh5Wdu3/waSzt7IvR+dG
-	 P5bVBFm6JVOxCKJXcPgR1wZlt4HXVal5W+adIlWI=
+	b=OuoS5uvwLFWPGmWlTwfPnO6tyYA4ZLLgbvSuPfTErp+Qr2TRAgv09hk6GQ1VUFyCa
+	 d3aZjsA9Y4QgNJ41nV42hDn6OeG1pFeH+Ed2a3lPdKIHWPYNK2Gc3dFSqazR1LnIW+
+	 4KWwVE30grYws8TTfXto+sfsjdlnpRMU5KFO8HOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731229AbgB0Nu1 (ORCPT
+        id S1731158AbgB0NuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:50:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48212 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:50:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731210AbgB0NuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:50:22 -0500
+        id S1731109AbgB0Ntv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:49:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E1B121D7E;
-        Thu, 27 Feb 2020 13:50:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAC5C20801;
+        Thu, 27 Feb 2020 13:49:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811422;
-        bh=G5VPVzGmHIUVhj9m7B4QywZ6P6fWuOGfq879D4Ri7Ug=;
+        s=default; t=1582811391;
+        bh=OjlB9AVcPer6GvN/IsZeDID4gRoeRc0i8+HUSWT00wc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NzYdFhzk3O5rG6QQOBAbwsaTEwGzm6Dp0PWCHC/L2iLgWx0EQCEmwp/E4WT+mPB/d
-         dCSgQyffJ0WyFHppb+mcQ7Rqthn/R+OETqEbqx4RjQWKlbHG0YGrtB/4OcMtK35gEF
-         hbtHU+PohEM81BeVCTJ23I03r+fWbU+kSqp9eaLk=
+        b=2LSAht2pCjuLgNxk4U6vBrNPu2ZBwxvZLf0o94zZFFEeAOKlcJvLPaWq4JUv4UO1F
+         ic+i2XuoTRV5apZcLlO1doAWiTpDTp1W1Uoaax20/8Gb2ryPQsi4Fuf/dHo+T5ziGX
+         QkFAvqeAmuUorXCBdtbAL8A+wahx3nTkmgkcwLIc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, EJ Hsu <ejh@nvidia.com>,
-        Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH 4.9 124/165] usb: uas: fix a plug & unplug racing
-Date:   Thu, 27 Feb 2020 14:36:38 +0100
-Message-Id: <20200227132249.223949906@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 087/165] pwm: omap-dmtimer: Remove PWM chip in .remove before making it unfunctional
+Date:   Thu, 27 Feb 2020 14:36:01 +0100
+Message-Id: <20200227132244.012933520@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -59,100 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: EJ Hsu <ejh@nvidia.com>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-commit 3e99862c05a9caa5a27969f41566b428696f5a9a upstream.
+[ Upstream commit 43efdc8f0e6d7088ec61bd55a73bf853f002d043 ]
 
-When a uas disk is plugged into an external hub, uas_probe()
-will be called by the hub thread to do the probe. It will
-first create a SCSI host and then do the scan for this host.
-During the scan, it will probe the LUN using SCSI INQUERY command
-which will be packed in the URB and submitted to uas disk.
+In the old code (e.g.) mutex_destroy() was called before
+pwmchip_remove(). Between these two calls it is possible that a PWM
+callback is used which tries to grab the mutex.
 
-There might be a chance that this external hub with uas disk
-attached is unplugged during the scan. In this case, uas driver
-will fail to submit the URB (due to the NOTATTACHED state of uas
-device) and try to put this SCSI command back to request queue
-waiting for next chance to run.
-
-In normal case, this cycle will terminate when hub thread gets
-disconnection event and calls into uas_disconnect() accordingly.
-But in this case, uas_disconnect() will not be called because
-hub thread of external hub gets stuck waiting for the completion
-of this SCSI command. A deadlock happened.
-
-In this fix, uas will call scsi_scan_host() asynchronously to
-avoid the blocking of hub thread.
-
-Signed-off-by: EJ Hsu <ejh@nvidia.com>
-Acked-by: Oliver Neukum <oneukum@suse.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200130092506.102760-1-ejh@nvidia.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 6604c6556db9 ("pwm: Add PWM driver for OMAP using dual-mode timers")
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/storage/uas.c |   23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ drivers/pwm/pwm-omap-dmtimer.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/storage/uas.c
-+++ b/drivers/usb/storage/uas.c
-@@ -46,6 +46,7 @@ struct uas_dev_info {
- 	struct scsi_cmnd *cmnd[MAX_CMNDS];
- 	spinlock_t lock;
- 	struct work_struct work;
-+	struct work_struct scan_work;      /* for async scanning */
- };
+diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
+index 5ad42f33e70c1..2e15acf13893d 100644
+--- a/drivers/pwm/pwm-omap-dmtimer.c
++++ b/drivers/pwm/pwm-omap-dmtimer.c
+@@ -337,6 +337,11 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
+ static int pwm_omap_dmtimer_remove(struct platform_device *pdev)
+ {
+ 	struct pwm_omap_dmtimer_chip *omap = platform_get_drvdata(pdev);
++	int ret;
++
++	ret = pwmchip_remove(&omap->chip);
++	if (ret)
++		return ret;
  
- enum {
-@@ -115,6 +116,17 @@ out:
- 	spin_unlock_irqrestore(&devinfo->lock, flags);
+ 	if (pm_runtime_active(&omap->dm_timer_pdev->dev))
+ 		omap->pdata->stop(omap->dm_timer);
+@@ -345,7 +350,7 @@ static int pwm_omap_dmtimer_remove(struct platform_device *pdev)
+ 
+ 	mutex_destroy(&omap->mutex);
+ 
+-	return pwmchip_remove(&omap->chip);
++	return 0;
  }
  
-+static void uas_scan_work(struct work_struct *work)
-+{
-+	struct uas_dev_info *devinfo =
-+		container_of(work, struct uas_dev_info, scan_work);
-+	struct Scsi_Host *shost = usb_get_intfdata(devinfo->intf);
-+
-+	dev_dbg(&devinfo->intf->dev, "starting scan\n");
-+	scsi_scan_host(shost);
-+	dev_dbg(&devinfo->intf->dev, "scan complete\n");
-+}
-+
- static void uas_add_work(struct uas_cmd_info *cmdinfo)
- {
- 	struct scsi_pointer *scp = (void *)cmdinfo;
-@@ -989,6 +1001,7 @@ static int uas_probe(struct usb_interfac
- 	init_usb_anchor(&devinfo->data_urbs);
- 	spin_lock_init(&devinfo->lock);
- 	INIT_WORK(&devinfo->work, uas_do_work);
-+	INIT_WORK(&devinfo->scan_work, uas_scan_work);
- 
- 	result = uas_configure_endpoints(devinfo);
- 	if (result)
-@@ -1005,7 +1018,9 @@ static int uas_probe(struct usb_interfac
- 	if (result)
- 		goto free_streams;
- 
--	scsi_scan_host(shost);
-+	/* Submit the delayed_work for SCSI-device scanning */
-+	schedule_work(&devinfo->scan_work);
-+
- 	return result;
- 
- free_streams:
-@@ -1173,6 +1188,12 @@ static void uas_disconnect(struct usb_in
- 	usb_kill_anchored_urbs(&devinfo->data_urbs);
- 	uas_zap_pending(devinfo, DID_NO_CONNECT);
- 
-+	/*
-+	 * Prevent SCSI scanning (if it hasn't started yet)
-+	 * or wait for the SCSI-scanning routine to stop.
-+	 */
-+	cancel_work_sync(&devinfo->scan_work);
-+
- 	scsi_remove_host(shost);
- 	uas_free_streams(devinfo);
- 	scsi_host_put(shost);
+ static const struct of_device_id pwm_omap_dmtimer_of_match[] = {
+-- 
+2.20.1
+
 
 
