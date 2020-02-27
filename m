@@ -2,170 +2,209 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 274C7C3F35D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E81DC54FFC
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F001D20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="h80anpqj"
+	by mail.kernel.org (Postfix) with ESMTP id 45C1E24688
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582813844;
+	bh=+Ageaz9hjQCs8xoZUS3femTFGabZap9P1XDvmO90B2w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=v2QG7Nkcp2KsDDo7TKq5AkEk65Igr4QzcFxaOcdMbzJmhdvSN6vnDbB1ZArvbWDLf
+	 hbfpXnAISr/w30tiPEt4oWk92SQT8EkR8cubq6xXU0uJU6EXje7AvrDw8LobC6tmus
+	 MnPQ0R9nSMELLqxF4deQhAgTvnTDRl5CkiV2h7Ns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388073AbgB0Oa5 (ORCPT
+        id S2387514AbgB0Oam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:30:57 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:53058 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387493AbgB0Oaz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:30:55 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582813854; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=31Jyd0ydGwDjWftSsYoT2QGP7wSU/YQyP0VpNOmwFCQ=; b=h80anpqjnboxOhJdpNtCCU1xClXOBQAbTaHHypw9GXKfAQA3cfyPTLVD6G9iB6wrutr9rRnW
- ceAvP/yA5pLN0Tn4UL/iRb+1OX4nFLUuo+ro4bgrMx60GhCmvmt3Kp5aEGpEp+VtWhu8WnRb
- ZEk100oD251aVrp30IYTXWPSPX4=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e57d292.7fb093b93e30-smtp-out-n03;
- Thu, 27 Feb 2020 14:30:42 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3CA76C4479D; Thu, 27 Feb 2020 14:30:41 +0000 (UTC)
-Received: from [10.206.25.140] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 27 Feb 2020 09:30:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41356 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387649AbgB0OEy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:04:54 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 35321C433A2;
-        Thu, 27 Feb 2020 14:30:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 35321C433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-Subject: Re: [PATCH V4] mmc: sdhci-msm: Update system suspend/resume callbacks
- of sdhci-msm platform driver
-To:     Shaik Sajida Bhanu <sbhanu@codeaurora.org>,
-        adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, mka@chromium.org
-Cc:     asutoshd@codeaurora.org, swboyd@chromium.org,
-        stummala@codeaurora.org, sayalil@codeaurora.org,
-        cang@codeaurora.org, rampraka@codeaurora.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org
-References: <1582181100-29914-1-git-send-email-sbhanu@codeaurora.org>
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Message-ID: <d6c10b49-a12c-d17e-1ff9-90f12e98f624@codeaurora.org>
-Date:   Thu, 27 Feb 2020 20:00:32 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 0146020578;
+        Thu, 27 Feb 2020 14:04:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582812293;
+        bh=+Ageaz9hjQCs8xoZUS3femTFGabZap9P1XDvmO90B2w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cEUMAlaGBZvqUTjxpeP/8JddSlKLUzgwhsaoBeM2iwLk4xT72ZvO9Vbvx3QIRq5AB
+         lwEpvchiN6tqYoesjvFwIcN+NJlkhKUm11EG1Z42NSjFSFG7p67+TeH2pdkrIYcdVr
+         yOwHQNp8iU3j04hz9dFxHA/tCByMITxwzvazgIRY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ryan Case <ryandcase@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 58/97] tty: serial: qcom_geni_serial: Remove xfer_mode variable
+Date:   Thu, 27 Feb 2020 14:37:06 +0100
+Message-Id: <20200227132224.027856915@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
+References: <20200227132214.553656188@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <1582181100-29914-1-git-send-email-sbhanu@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sajida,
+From: Ryan Case <ryandcase@chromium.org>
 
-On 2/20/2020 12:15 PM, Shaik Sajida Bhanu wrote:
+[ Upstream commit bdc05a8a3f822ca0662464055f902faf760da6be ]
 
-> The existing suspend/resume callbacks of sdhci-msm driver are just
-> gating/un-gating the clocks. During suspend cycle more can be done
-> like disabling controller, disabling card detection, enabling wake-up events.
->
-> So updating the system pm callbacks for performing these extra
-> actions besides controlling the clocks.
->
-> Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> ---
-> Changes since V3:
->      Invoking sdhci & cqhci resume if sdhci_host_suspend fails.
->      Removed condition check before invoking cqhci_resume since its a dummy function.
->
-> Changes since V2:
->      Removed disabling/enabling pwr-irq from system pm ops.
->
-> Changes since V1:
->      Invoking pm_runtime_force_suspend/resume instead of
->      sdhci_msm_runtime_suepend/resume.
-> ---
->   drivers/mmc/host/sdhci-msm.c | 47 ++++++++++++++++++++++++++++++++++++++++++--
->   1 file changed, 45 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> index 3955fa5d..3559b50 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
-> @@ -2159,9 +2159,52 @@ static __maybe_unused int sdhci_msm_runtime_resume(struct device *dev)
->   	return 0;
->   }
->   
-> +static int sdhci_msm_suspend(struct device *dev)
-> +{
-> +	struct sdhci_host *host = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	if (host->mmc->caps2 & MMC_CAP2_CQE) {
-> +		ret = cqhci_suspend(host->mmc);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	ret = sdhci_suspend_host(host);
-> +	if (ret)
-> +		goto resume_cqhci;
-> +
-> +	ret = pm_runtime_force_suspend(dev);
-> +	if (!ret)
-> +		return ret;
-> +
-> +	sdhci_resume_host(host);
-> +
-> +resume_cqhci:
-> +	cqhci_resume(host->mmc);
-> +	return ret;
-> +}
-> +
-> +static int sdhci_msm_resume(struct device *dev)
-> +{
-> +	struct sdhci_host *host = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	ret = pm_runtime_force_resume(dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = sdhci_resume_host(host);
+The driver only supports FIFO mode so setting and checking this variable
+is unnecessary. If DMA support is ever added then such checks can be
+introduced.
 
-I'm observing an issue with this change.
+Signed-off-by: Ryan Case <ryandcase@chromium.org>
+Reviewed-by: Evan Green <evgreen@chromium.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/tty/serial/qcom_geni_serial.c | 67 ++++++++++-----------------
+ 1 file changed, 24 insertions(+), 43 deletions(-)
 
-After this step, i find interrupt enable register is zero (even though 
-it's getting set in sdhci_resume_host()) and
+diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+index 080fa1d1ecbfd..4182129925dec 100644
+--- a/drivers/tty/serial/qcom_geni_serial.c
++++ b/drivers/tty/serial/qcom_geni_serial.c
+@@ -101,7 +101,6 @@ struct qcom_geni_serial_port {
+ 	u32 tx_fifo_depth;
+ 	u32 tx_fifo_width;
+ 	u32 rx_fifo_depth;
+-	enum geni_se_xfer_mode xfer_mode;
+ 	bool setup;
+ 	int (*handle_rx)(struct uart_port *uport, u32 bytes, bool drop);
+ 	unsigned int baud;
+@@ -547,29 +546,20 @@ static int handle_rx_uart(struct uart_port *uport, u32 bytes, bool drop)
+ static void qcom_geni_serial_start_tx(struct uart_port *uport)
+ {
+ 	u32 irq_en;
+-	struct qcom_geni_serial_port *port = to_dev_port(uport, uport);
+ 	u32 status;
+ 
+-	if (port->xfer_mode == GENI_SE_FIFO) {
+-		/*
+-		 * readl ensures reading & writing of IRQ_EN register
+-		 * is not re-ordered before checking the status of the
+-		 * Serial Engine.
+-		 */
+-		status = readl(uport->membase + SE_GENI_STATUS);
+-		if (status & M_GENI_CMD_ACTIVE)
+-			return;
++	status = readl(uport->membase + SE_GENI_STATUS);
++	if (status & M_GENI_CMD_ACTIVE)
++		return;
+ 
+-		if (!qcom_geni_serial_tx_empty(uport))
+-			return;
++	if (!qcom_geni_serial_tx_empty(uport))
++		return;
+ 
+-		irq_en = readl(uport->membase +	SE_GENI_M_IRQ_EN);
+-		irq_en |= M_TX_FIFO_WATERMARK_EN | M_CMD_DONE_EN;
++	irq_en = readl(uport->membase +	SE_GENI_M_IRQ_EN);
++	irq_en |= M_TX_FIFO_WATERMARK_EN | M_CMD_DONE_EN;
+ 
+-		writel(DEF_TX_WM, uport->membase +
+-						SE_GENI_TX_WATERMARK_REG);
+-		writel(irq_en, uport->membase +	SE_GENI_M_IRQ_EN);
+-	}
++	writel(DEF_TX_WM, uport->membase + SE_GENI_TX_WATERMARK_REG);
++	writel(irq_en, uport->membase +	SE_GENI_M_IRQ_EN);
+ }
+ 
+ static void qcom_geni_serial_stop_tx(struct uart_port *uport)
+@@ -579,12 +569,8 @@ static void qcom_geni_serial_stop_tx(struct uart_port *uport)
+ 	struct qcom_geni_serial_port *port = to_dev_port(uport, uport);
+ 
+ 	irq_en = readl(uport->membase + SE_GENI_M_IRQ_EN);
+-	irq_en &= ~M_CMD_DONE_EN;
+-	if (port->xfer_mode == GENI_SE_FIFO) {
+-		irq_en &= ~M_TX_FIFO_WATERMARK_EN;
+-		writel(0, uport->membase +
+-				     SE_GENI_TX_WATERMARK_REG);
+-	}
++	irq_en &= ~(M_CMD_DONE_EN | M_TX_FIFO_WATERMARK_EN);
++	writel(0, uport->membase + SE_GENI_TX_WATERMARK_REG);
+ 	writel(irq_en, uport->membase + SE_GENI_M_IRQ_EN);
+ 	status = readl(uport->membase + SE_GENI_STATUS);
+ 	/* Possible stop tx is called multiple times. */
+@@ -614,15 +600,13 @@ static void qcom_geni_serial_start_rx(struct uart_port *uport)
+ 
+ 	geni_se_setup_s_cmd(&port->se, UART_START_READ, 0);
+ 
+-	if (port->xfer_mode == GENI_SE_FIFO) {
+-		irq_en = readl(uport->membase + SE_GENI_S_IRQ_EN);
+-		irq_en |= S_RX_FIFO_WATERMARK_EN | S_RX_FIFO_LAST_EN;
+-		writel(irq_en, uport->membase + SE_GENI_S_IRQ_EN);
++	irq_en = readl(uport->membase + SE_GENI_S_IRQ_EN);
++	irq_en |= S_RX_FIFO_WATERMARK_EN | S_RX_FIFO_LAST_EN;
++	writel(irq_en, uport->membase + SE_GENI_S_IRQ_EN);
+ 
+-		irq_en = readl(uport->membase + SE_GENI_M_IRQ_EN);
+-		irq_en |= M_RX_FIFO_WATERMARK_EN | M_RX_FIFO_LAST_EN;
+-		writel(irq_en, uport->membase + SE_GENI_M_IRQ_EN);
+-	}
++	irq_en = readl(uport->membase + SE_GENI_M_IRQ_EN);
++	irq_en |= M_RX_FIFO_WATERMARK_EN | M_RX_FIFO_LAST_EN;
++	writel(irq_en, uport->membase + SE_GENI_M_IRQ_EN);
+ }
+ 
+ static void qcom_geni_serial_stop_rx(struct uart_port *uport)
+@@ -632,15 +616,13 @@ static void qcom_geni_serial_stop_rx(struct uart_port *uport)
+ 	struct qcom_geni_serial_port *port = to_dev_port(uport, uport);
+ 	u32 irq_clear = S_CMD_DONE_EN;
+ 
+-	if (port->xfer_mode == GENI_SE_FIFO) {
+-		irq_en = readl(uport->membase + SE_GENI_S_IRQ_EN);
+-		irq_en &= ~(S_RX_FIFO_WATERMARK_EN | S_RX_FIFO_LAST_EN);
+-		writel(irq_en, uport->membase + SE_GENI_S_IRQ_EN);
++	irq_en = readl(uport->membase + SE_GENI_S_IRQ_EN);
++	irq_en &= ~(S_RX_FIFO_WATERMARK_EN | S_RX_FIFO_LAST_EN);
++	writel(irq_en, uport->membase + SE_GENI_S_IRQ_EN);
+ 
+-		irq_en = readl(uport->membase + SE_GENI_M_IRQ_EN);
+-		irq_en &= ~(M_RX_FIFO_WATERMARK_EN | M_RX_FIFO_LAST_EN);
+-		writel(irq_en, uport->membase + SE_GENI_M_IRQ_EN);
+-	}
++	irq_en = readl(uport->membase + SE_GENI_M_IRQ_EN);
++	irq_en &= ~(M_RX_FIFO_WATERMARK_EN | M_RX_FIFO_LAST_EN);
++	writel(irq_en, uport->membase + SE_GENI_M_IRQ_EN);
+ 
+ 	status = readl(uport->membase + SE_GENI_STATUS);
+ 	/* Possible stop rx is called multiple times. */
+@@ -878,7 +860,6 @@ static int qcom_geni_serial_port_setup(struct uart_port *uport)
+ 	 * Make an unconditional cancel on the main sequencer to reset
+ 	 * it else we could end up in data loss scenarios.
+ 	 */
+-	port->xfer_mode = GENI_SE_FIFO;
+ 	if (uart_console(uport))
+ 		qcom_geni_serial_poll_tx_done(uport);
+ 	geni_se_config_packing(&port->se, BITS_PER_BYTE, port->tx_bytes_pw,
+@@ -886,7 +867,7 @@ static int qcom_geni_serial_port_setup(struct uart_port *uport)
+ 	geni_se_config_packing(&port->se, BITS_PER_BYTE, port->rx_bytes_pw,
+ 						false, false, true);
+ 	geni_se_init(&port->se, UART_RX_WM, port->rx_fifo_depth - 2);
+-	geni_se_select_mode(&port->se, port->xfer_mode);
++	geni_se_select_mode(&port->se, GENI_SE_FIFO);
+ 	if (!uart_console(uport)) {
+ 		port->rx_fifo = devm_kcalloc(uport->dev,
+ 			port->rx_fifo_depth, sizeof(u32), GFP_KERNEL);
+-- 
+2.20.1
 
-resulting in request timeout for very first command in resume path.
 
-Until its root caused, please hold back this change.
 
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = cqhci_resume(host->mmc);
-> +	return ret;
-> +}
-> +
->   static const struct dev_pm_ops sdhci_msm_pm_ops = {
-> -	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> -				pm_runtime_force_resume)
-> +	SET_SYSTEM_SLEEP_PM_OPS(sdhci_msm_suspend,
-> +				sdhci_msm_resume)
->   	SET_RUNTIME_PM_OPS(sdhci_msm_runtime_suspend,
->   			   sdhci_msm_runtime_resume,
->   			   NULL)
