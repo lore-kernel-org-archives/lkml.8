@@ -2,55 +2,51 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 688BAC3F356
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D05B0C3F353
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BEC420578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8A08246A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811173;
-	bh=rHPaUk6u286XrQ+yGXZ96uDdkynwYvW284M6ai2NP80=;
+	s=default; t=1582811222;
+	bh=MXXrokOjUI6fldjQTvPfgDimBBeXh8U36Bp/rLg6hYk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zJrTECGpeMex8OinKuuNIgL/IUVbaqucIcyQUoDrvH9lxTiTI1greiEmH+5HTxbcm
-	 Q/hicCiZrgVjaTZuslYren3F6tjG5atgTYkqJnVSehSyFI4c7oBL2UjfwUmKMN4sQf
-	 MU6rYLmLVjkGiKhbohvEJGszjFvYPdOhv9F8R7a0=
+	b=WUlixo2vv79mNSVc7dHhJOeioR5BYf2MDl9sZVuhvO02TIhKr5BXnbKsGFet1ROCj
+	 stsNWJAcEiiZ2IhTEGrnpe4LZcXn5G9lBC1zdEiA5V3koAEV4c7PkCCKDjaE5imL2u
+	 j1cIOGlTMMIQcaP8FClP5E9qLtJu+XP5V15bVrTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730481AbgB0NqL (ORCPT
+        id S1730618AbgB0NrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:46:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42338 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:47:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730477AbgB0NqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:46:09 -0500
+        id S1730244AbgB0Nq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:46:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 101A324688;
-        Thu, 27 Feb 2020 13:46:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E88062469F;
+        Thu, 27 Feb 2020 13:46:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811168;
-        bh=rHPaUk6u286XrQ+yGXZ96uDdkynwYvW284M6ai2NP80=;
+        s=default; t=1582811215;
+        bh=MXXrokOjUI6fldjQTvPfgDimBBeXh8U36Bp/rLg6hYk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q2YJuoZx6GbyIqLMAH/LKdEfe2ZfJ4iA6keubAXkxINTIvBtEQaROXAGb3f5/YY3T
-         oMHIGVZCEJ6TmW4zead7fcBWdarFx4Fkrd317LKgOdLphkTKFrzYUMGWUyCxy2MWLj
-         ZPS+5I09se296YuDkdxVxbsy1k/VWmPekwDDTWBk=
+        b=BGreC+lKZ/HM4Es1ANw/qbedH1saGIsKfQbmy9cbQEiGoVwQRLIUOmvBqbFgvrgGz
+         s3lQI92t94tLdLXFcHNI8is05xJVGPAgOmqS66RH0jkSX2AFGXiXZP5jvixATACELy
+         rY9jfjNh0CuAnGjj7X7nyUH1u+BHX5z+7CjIFbys=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenyou Yang <wenyou.yang@microchip.com>,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 028/165] media: i2c: mt9v032: fix enum mbus codes and frame sizes
-Date:   Thu, 27 Feb 2020 14:35:02 +0100
-Message-Id: <20200227132235.028851774@linuxfoundation.org>
+        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
+        stable@kernel.org
+Subject: [PATCH 4.9 009/165] ext4: improve explanation of a mount failure caused by a misconfigured kernel
+Date:   Thu, 27 Feb 2020 14:34:43 +0100
+Message-Id: <20200227132232.476517249@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -63,63 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+From: Theodore Ts'o <tytso@mit.edu>
 
-[ Upstream commit 1451d5ae351d938a0ab1677498c893f17b9ee21d ]
+commit d65d87a07476aa17df2dcb3ad18c22c154315bec upstream.
 
-This driver supports both the mt9v032 (color) and the mt9v022 (mono)
-sensors. Depending on which sensor is used, the format from the sensor is
-different. The format.code inside the dev struct holds this information.
-The enum mbus and enum frame sizes need to take into account both type of
-sensors, not just the color one. To solve this, use the format.code in
-these functions instead of the hardcoded bayer color format (which is only
-used for mt9v032).
+If CONFIG_QFMT_V2 is not enabled, but CONFIG_QUOTA is enabled, when a
+user tries to mount a file system with the quota or project quota
+enabled, the kernel will emit a very confusing messsage:
 
-[Sakari Ailus: rewrapped commit message]
+    EXT4-fs warning (device vdc): ext4_enable_quotas:5914: Failed to enable quota tracking (type=0, err=-3). Please run e2fsck to fix.
+    EXT4-fs (vdc): mount failed
 
-Suggested-by: Wenyou Yang <wenyou.yang@microchip.com>
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+We will now report an explanatory message indicating which kernel
+configuration options have to be enabled, to avoid customer/sysadmin
+confusion.
+
+Link: https://lore.kernel.org/r/20200215012738.565735-1-tytso@mit.edu
+Google-Bug-Id: 149093531
+Fixes: 7c319d328505b778 ("ext4: make quota as first class supported feature")
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/media/i2c/mt9v032.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ fs/ext4/super.c |   14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v032.c
-index 58eb62f1ba214..a018a76662df7 100644
---- a/drivers/media/i2c/mt9v032.c
-+++ b/drivers/media/i2c/mt9v032.c
-@@ -423,10 +423,12 @@ static int mt9v032_enum_mbus_code(struct v4l2_subdev *subdev,
- 				  struct v4l2_subdev_pad_config *cfg,
- 				  struct v4l2_subdev_mbus_code_enum *code)
- {
-+	struct mt9v032 *mt9v032 = to_mt9v032(subdev);
-+
- 	if (code->index > 0)
- 		return -EINVAL;
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -2743,17 +2743,11 @@ static int ext4_feature_set_ok(struct su
+ 		return 0;
+ 	}
  
--	code->code = MEDIA_BUS_FMT_SGRBG10_1X10;
-+	code->code = mt9v032->format.code;
- 	return 0;
- }
- 
-@@ -434,7 +436,11 @@ static int mt9v032_enum_frame_size(struct v4l2_subdev *subdev,
- 				   struct v4l2_subdev_pad_config *cfg,
- 				   struct v4l2_subdev_frame_size_enum *fse)
- {
--	if (fse->index >= 3 || fse->code != MEDIA_BUS_FMT_SGRBG10_1X10)
-+	struct mt9v032 *mt9v032 = to_mt9v032(subdev);
-+
-+	if (fse->index >= 3)
-+		return -EINVAL;
-+	if (mt9v032->format.code != fse->code)
- 		return -EINVAL;
- 
- 	fse->min_width = MT9V032_WINDOW_WIDTH_DEF / (1 << fse->index);
--- 
-2.20.1
-
+-#ifndef CONFIG_QUOTA
+-	if (ext4_has_feature_quota(sb) && !readonly) {
++#if !defined(CONFIG_QUOTA) || !defined(CONFIG_QFMT_V2)
++	if (!readonly && (ext4_has_feature_quota(sb) ||
++			  ext4_has_feature_project(sb))) {
+ 		ext4_msg(sb, KERN_ERR,
+-			 "Filesystem with quota feature cannot be mounted RDWR "
+-			 "without CONFIG_QUOTA");
+-		return 0;
+-	}
+-	if (ext4_has_feature_project(sb) && !readonly) {
+-		ext4_msg(sb, KERN_ERR,
+-			 "Filesystem with project quota feature cannot be mounted RDWR "
+-			 "without CONFIG_QUOTA");
++			 "The kernel was not built with CONFIG_QUOTA and CONFIG_QFMT_V2");
+ 		return 0;
+ 	}
+ #endif  /* CONFIG_QUOTA */
 
 
