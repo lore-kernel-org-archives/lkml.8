@@ -7,48 +7,57 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E1ACC52D26
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 873EAC3F35A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22CC72073D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59C052469B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:56:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811818;
-	bh=7d2HlSTu28tCyC8lFDF6nFQvL3dmP8YskVis4QaibWI=;
+	s=default; t=1582811790;
+	bh=z24xMhAOAsv3RMvG0Q89BdGt7Cz+HJ5sGckhBahJMxk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A9GbwJ0a3Eu0a+3z4W+XqKCN3qJWRSfFYflvMFSSW+nMZZlcxAeyU9WwiEsos7m+S
-	 ltueq4kc9JkKX5wcyDqv2D/us/q//EYq3rcgRQRUIEysFD+PjayB1kTpgMQ5u+QEsK
-	 URs9S/W0AELWAzSWq8yZBHWjuy7hj318SHlwTAqU=
+	b=AWTxN9HZXNeFsDshdr/lEKlW6Utpn6MGI5L84aXdThUVAQyiQ4nxmzB2Oa/5/eNve
+	 7uPgDX19xa0deB++aBa/RsFyZUJoHfCID7g/8BcvK7aufnmdsOclKy0JwjoEpbaxyX
+	 A5peXQqSIS52/lxZlcbjPTxQ94MeuJJGQCjBu4tk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729758AbgB0N44 (ORCPT
+        id S1731678AbgB0N43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:56:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57564 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:56:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732218AbgB0N4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:56:52 -0500
+        id S1729484AbgB0N40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:56:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47D9D20578;
-        Thu, 27 Feb 2020 13:56:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E1032073D;
+        Thu, 27 Feb 2020 13:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811811;
-        bh=7d2HlSTu28tCyC8lFDF6nFQvL3dmP8YskVis4QaibWI=;
+        s=default; t=1582811785;
+        bh=z24xMhAOAsv3RMvG0Q89BdGt7Cz+HJ5sGckhBahJMxk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0DIrH97U+rybmCsdgrax1ZrgIMX2/7/q1YdEt2c6kdtF+N37BpU7vO9GeiR6oqkET
-         C/Bl74SdSEz8J90Qwv1BrtWGbGcBCPgD2eqClTd+Zq+aIS0RAfR8k3es0tmKrUDjee
-         k3XJP4yFE6qLoDiFXXUzvys2U6Ol37lcNE8QI+kQ=
+        b=QCX+byewPuPA7ebUTpZK7pwoZVU2nCwLW7/Kd4KmAsRZxAmypcsWALH9LiN0UKj37
+         kJOyPmCKbB5+UE43vkls8PEVNUrm36rFzGgqa5MwMR6S4b40E5a2alK08PZRLm8YwQ
+         Nhgh9GrKuDiRl1h+8itdQt8nsefbs0GWoQdV6+mo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jakub Kicinski <kuba@kernel.org>,
+        stable@vger.kernel.org,
+        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>,
+        Petr Mladek <pmladek@suse.com>, Jiri Olsa <jolsa@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        bpf@vger.kernel.org, netdev@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 109/237] wan: ixp4xx_hss: fix compile-testing on 64-bit
-Date:   Thu, 27 Feb 2020 14:35:23 +0100
-Message-Id: <20200227132304.923049592@linuxfoundation.org>
+Subject: [PATCH 4.14 100/237] tools lib api fs: Fix gcc9 stringop-truncation compilation error
+Date:   Thu, 27 Feb 2020 14:35:14 +0100
+Message-Id: <20200227132304.313971786@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -61,52 +70,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Andrey Zhizhikin <andrey.z@gmail.com>
 
-[ Upstream commit 504c28c853ec5c626900b914b5833daf0581a344 ]
+[ Upstream commit 6794200fa3c9c3e6759dae099145f23e4310f4f7 ]
 
-Change the driver to use portable integer types to avoid
-warnings during compile testing:
+GCC9 introduced string hardening mechanisms, which exhibits the error
+during fs api compilation:
 
-drivers/net/wan/ixp4xx_hss.c:863:21: error: cast to 'u32 *' (aka 'unsigned int *') from smaller integer type 'int' [-Werror,-Wint-to-pointer-cast]
-        memcpy_swab32(mem, (u32 *)((int)skb->data & ~3), bytes / 4);
-                           ^
-drivers/net/wan/ixp4xx_hss.c:979:12: error: incompatible pointer types passing 'u32 *' (aka 'unsigned int *') to parameter of type 'dma_addr_t *' (aka 'unsigned long long *') [-Werror,-Wincompatible-pointer-types]
-                                              &port->desc_tab_phys)))
-                                              ^~~~~~~~~~~~~~~~~~~~
-include/linux/dmapool.h:27:20: note: passing argument to parameter 'handle' here
-                     dma_addr_t *handle);
-                                 ^
+error: '__builtin_strncpy' specified bound 4096 equals destination size
+[-Werror=stringop-truncation]
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+This comes when the length of copy passed to strncpy is is equal to
+destination size, which could potentially lead to buffer overflow.
+
+There is a need to mitigate this potential issue by limiting the size of
+destination by 1 and explicitly terminate the destination with NULL.
+
+Signed-off-by: Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andrii Nakryiko <andriin@fb.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: bpf@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Link: http://lore.kernel.org/lkml/20191211080109.18765-1-andrey.zhizhikin@leica-geosystems.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wan/ixp4xx_hss.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/lib/api/fs/fs.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wan/ixp4xx_hss.c b/drivers/net/wan/ixp4xx_hss.c
-index 6a505c26a3e74..a269ed63d90f7 100644
---- a/drivers/net/wan/ixp4xx_hss.c
-+++ b/drivers/net/wan/ixp4xx_hss.c
-@@ -261,7 +261,7 @@ struct port {
- 	struct hss_plat_info *plat;
- 	buffer_t *rx_buff_tab[RX_DESCS], *tx_buff_tab[TX_DESCS];
- 	struct desc *desc_tab;	/* coherent */
--	u32 desc_tab_phys;
-+	dma_addr_t desc_tab_phys;
- 	unsigned int id;
- 	unsigned int clock_type, clock_rate, loopback;
- 	unsigned int initialized, carrier;
-@@ -861,7 +861,7 @@ static int hss_hdlc_xmit(struct sk_buff *skb, struct net_device *dev)
- 		dev->stats.tx_dropped++;
- 		return NETDEV_TX_OK;
- 	}
--	memcpy_swab32(mem, (u32 *)((int)skb->data & ~3), bytes / 4);
-+	memcpy_swab32(mem, (u32 *)((uintptr_t)skb->data & ~3), bytes / 4);
- 	dev_kfree_skb(skb);
- #endif
+diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
+index b24afc0e6e81c..45b50b89009aa 100644
+--- a/tools/lib/api/fs/fs.c
++++ b/tools/lib/api/fs/fs.c
+@@ -210,6 +210,7 @@ static bool fs__env_override(struct fs *fs)
+ 	size_t name_len = strlen(fs->name);
+ 	/* name + "_PATH" + '\0' */
+ 	char upper_name[name_len + 5 + 1];
++
+ 	memcpy(upper_name, fs->name, name_len);
+ 	mem_toupper(upper_name, name_len);
+ 	strcpy(&upper_name[name_len], "_PATH");
+@@ -219,7 +220,8 @@ static bool fs__env_override(struct fs *fs)
+ 		return false;
+ 
+ 	fs->found = true;
+-	strncpy(fs->path, override_path, sizeof(fs->path));
++	strncpy(fs->path, override_path, sizeof(fs->path) - 1);
++	fs->path[sizeof(fs->path) - 1] = '\0';
+ 	return true;
+ }
  
 -- 
 2.20.1
