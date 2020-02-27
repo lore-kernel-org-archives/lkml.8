@@ -2,155 +2,174 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAF7C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A253C35677
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 665FE246A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:18:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="JZkJPJ8G"
+	by mail.kernel.org (Postfix) with ESMTP id 2B17724688
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:19:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730851AbgB0PSX (ORCPT
+        id S1730905AbgB0PTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 10:18:23 -0500
-Received: from mail-mw2nam10on2119.outbound.protection.outlook.com ([40.107.94.119]:48865
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729652AbgB0PSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 10:18:22 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CdM2Ji5hbZIK3uzZA6XlJXTjXRoyrFEIjGjtmTJDjCqZGCNPPqFjCiBZRcwTX6UxzzyFdlKgBF2QangeYkWhak9ddLscGtqWQRxzqrlEG3/R1G6LCZOoY6O9Ytn9xs/PSYHhUV6MpZUxs9Ksj/xp2bCVV73H49FDvyXWpxEPdDnTb9lnlYwNseRB48A+u384UDfmuIrFFrDaIn1wpaUAiR+fls4ojy2aivO/7+WQVMs93wdAi14Z/Q/jE02AnBnr5uHONXR23QJaR31K4EVLtMGWiZIOvxE3fFRvLiFxKvJx0oXcqBPlfVLokMTdGvZjD80IMs4Tm68GN2l2nNxOIg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wFadKPQ0Mv0pEgFhF4GfryHlyUw25cB6Ob8ensJugaQ=;
- b=Tg9rySQjduaPvxSdBLgFT1K/8ZRDNWCUhNXDvgKzULnE40KfJK1njH+idpWeB63fZVulI4MmMBOXq7lA6h3HNNTP7RMuxUgw5t/uhG5Nwf8wXQ98UQWAi2Gw0HDmqQeSvYwtinkewh6w3fIQpRD+/IGmWo8+TSQj5jCIRzDTFOK8WLJZVW6x76hD12Sc8IovshRhTjDNanW1kaDE8ckWff5IM/+tXXe9HXNgvc8wdP+dpQJOR7dhtLilzjumJ/7LPkHtBOwHJ8OAzLYitBcrJefJtrFeuoGl8qAiwoR2z/7I3CgqPdNLImxDRHwH9zkLO4QH93eS3YrwIcUDRlbIfw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wFadKPQ0Mv0pEgFhF4GfryHlyUw25cB6Ob8ensJugaQ=;
- b=JZkJPJ8Gt1ZbfToCzplY62ZMsCzoUSGud4QSD4WeZsnhBXQ25Grihvqhl9ccNogfhYVaiWIPWOXC7YZVwVaRrtIzBpQXTzxKw8RD7fgS+pYH7RwLy/XMAsrAbwi9fM+lH1tBPBR06J3TJd7R/0pQcF4e04BufxW7noA8p1RqTk8=
-Received: from BYAPR21MB1286.namprd21.prod.outlook.com (2603:10b6:a03:10a::23)
- by BYAPR21MB1160.namprd21.prod.outlook.com (2603:10b6:a03:103::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.4; Thu, 27 Feb
- 2020 15:18:19 +0000
-Received: from BYAPR21MB1286.namprd21.prod.outlook.com
- ([fe80::8870:5e3e:13db:9217]) by BYAPR21MB1286.namprd21.prod.outlook.com
- ([fe80::8870:5e3e:13db:9217%3]) with mapi id 15.20.2793.003; Thu, 27 Feb 2020
- 15:18:19 +0000
-From:   KY Srinivasan <kys@microsoft.com>
-To:     Wei Liu <wei.liu@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: RE: [EXTERNAL] [PATCH] Hyper-V: add myself as a maintainer
-Thread-Topic: [EXTERNAL] [PATCH] Hyper-V: add myself as a maintainer
-Thread-Index: AQHV7M650LATOa+EFkKM7oKHTQUqU6gvJ2bA
-Date:   Thu, 27 Feb 2020 15:18:19 +0000
-Message-ID: <BYAPR21MB128618BFB38F2145D5AF88CFA0EB0@BYAPR21MB1286.namprd21.prod.outlook.com>
-References: <20200226180102.16976-1-wei.liu@kernel.org>
-In-Reply-To: <20200226180102.16976-1-wei.liu@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=kys@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-02-27T15:18:16.9837829Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=56fa3b6c-8c4a-419a-ac0f-17cbc98ff3e2;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=kys@microsoft.com; 
-x-originating-ip: [98.232.2.78]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 73024463-c2ea-4c49-9bb1-08d7bb9846ef
-x-ms-traffictypediagnostic: BYAPR21MB1160:|BYAPR21MB1160:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR21MB11603A66B23FAECC32A0A687A0EB0@BYAPR21MB1160.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:669;
-x-forefront-prvs: 03264AEA72
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(366004)(136003)(346002)(376002)(39860400002)(199004)(189003)(64756008)(66446008)(53546011)(66476007)(6506007)(107886003)(66556008)(7696005)(8990500004)(66946007)(186003)(4326008)(76116006)(26005)(33656002)(478600001)(54906003)(110136005)(71200400001)(316002)(86362001)(8676002)(81166006)(81156014)(2906002)(52536014)(55016002)(10290500003)(5660300002)(8936002)(9686003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR21MB1160;H:BYAPR21MB1286.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /6Qz2tEuugOMGiJ7Ivh8JyWJak+sXJ9VJZ1D1SL2qFTsrZ54XzAA5T4hIcqbwRpSt2TUY0tx1/17wg9X6M8g9xs1iftw1KhXrgICPVHubFfVWCQCiNR/Ydhr+eBug1xTvahjq7indZHAosbg6wiNcnyySSQMqgBz4oW8uLPA7lx9kzdwTS69sD8dI8w/YNTS3L6ABSz0mclnlLXzTV+eR0/P8p9AjlGaul+iHxQs+MhXsOymb1CrLK9ovz48rV380RXFIpo1VHnaG2AKZ3STnGkUJ3+hzLqyG4LSX1hfEtsqtPFFCbA2+oyFIZ1tURo5QngOUpRbQ00mta02+fo0+/zqaYxvDSaB3TJltOU9fyXz+ZUBICjJhG2+lS3TbUCiShYpfn33lJGA7lAWSgfvL6gQzik2Ppi9tZSwxiVibrRTx2R+xirSDKJRcm97S977
-x-ms-exchange-antispam-messagedata: 154oqHVb+wLrI7h11D+cxdixFOjRtk450YUb+fjPNJQbEj0DU370myE3rXITMuXFEBvzv0vS4T7jBLff5saD8y7WrgXh37AwxUDtr9t3QREOvubuzHVR2a/B80Ki2uFSTn1Vix5H5JziKOs8VmftdQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 27 Feb 2020 10:19:18 -0500
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:33007 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729439AbgB0PTR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 10:19:17 -0500
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Eugen.Hristev@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="Eugen.Hristev@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: IsuR96Cb9xvLmy2wbVUHg6Eb0y08j7S6svkniz+pMtYiaNsaxqkTJJcDL3ALFi1P61F9uohEdr
+ 0pWekaEntO1lrZUAksk9O+KcQ6lM6iopr2uN49yJTgOVmkaOqpDqCordmlsT9RwQrz0yv33/On
+ 7KHMTXeFygZZJ0EJPEMFylPxSOURNQDJCXwcBqFKNMy0gXawYRFzGVHBLXqb+VRWFJiEfTEjsT
+ lsNHUFKzreqz0pXDMg6dbsKOXl5BgO1O/ptc7YieoJKrAvSu7Tt1ezgeEQPMjGoBbjwwSQdfet
+ j+M=
+X-IronPort-AV: E=Sophos;i="5.70,492,1574146800"; 
+   d="scan'208";a="68206434"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Feb 2020 08:19:16 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 27 Feb 2020 08:19:16 -0700
+Received: from ROB-ULT-M18282.microchip.com (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Thu, 27 Feb 2020 08:19:14 -0700
+From:   Eugen Hristev <eugen.hristev@microchip.com>
+To:     <dave.stevenson@raspberrypi.com>, <andrey.konovalov@linaro.org>,
+        <sakari.ailus@iki.fi>, <linux-media@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Eugen Hristev <eugen.hristev@microchip.com>
+Subject: [PATCH] media: i2c: imx219: add support for enum frame interval
+Date:   Thu, 27 Feb 2020 17:17:52 +0200
+Message-ID: <20200227151752.21985-1-eugen.hristev@microchip.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 73024463-c2ea-4c49-9bb1-08d7bb9846ef
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Feb 2020 15:18:19.3517
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kp6tu5WPSOvncsDqb7MjAurGD9MwbYHLDS1YmV6yV4LZqjHmfKlohhDju4w8359PIOS6H7mv0O8L2uPBTfJp5g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1160
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add support for enum frame intervals IOCTL.
+The current supported framerates are only available as comments inside
+the code.
+Add support for VIDIOC_ENUM_FRAMEINTERVALS as the enum_frame_interval
+callback as pad ops.
 
+ # v4l2-ctl --list-frameintervals width=1920,height=1080,pixelformat=RG10
+ ioctl: VIDIOC_ENUM_FRAMEINTERVALS
+        Interval: Discrete 0.067s (15.000 fps)
+        Interval: Discrete 0.033s (30.000 fps)
+        Interval: Discrete 0.033s (30.000 fps)
 
-> -----Original Message-----
-> From: Wei Liu <wei.liu@kernel.org>
-> Sent: Wednesday, February 26, 2020 10:01 AM
-> To: linux-hyperv@vger.kernel.org
-> Cc: Wei Liu <wei.liu@kernel.org>; linux-kernel@vger.kernel.org; KY Sriniv=
-asan
-> <kys@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>; Stephen
-> Hemminger <sthemmin@microsoft.com>; Michael Kelley
-> <mikelley@microsoft.com>
-> Subject: [EXTERNAL] [PATCH] Hyper-V: add myself as a maintainer
->=20
-> Signed-off-by: Wei Liu <wei.liu@kernel.org>
-Acked-by: K. Y. Srinivasan <kys@microsoft.com>
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+---
 
-> ---
-> Cc: linux-kernel@vger.kernel.org
-> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-> Cc: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: Stephen Hemminger <sthemmin@microsoft.com>
-> Cc: Michael Kelley <mikelley@microsoft.com>
->=20
-> Sasha's entry hasn't been dropped from the Hyper-V tree yet, but that's e=
-asy to
-> resolve.
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 8f27f40d22bb..ed943f205215 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -7739,6 +7739,7 @@ M:	"K. Y. Srinivasan" <kys@microsoft.com>
->  M:	Haiyang Zhang <haiyangz@microsoft.com>
->  M:	Stephen Hemminger <sthemmin@microsoft.com>
->  M:	Sasha Levin <sashal@kernel.org>
-> +M:	Wei Liu <wei.liu@kernel.org>
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git
->  L:	linux-hyperv@vger.kernel.org
->  S:	Supported
-> --
-> 2.20.1
+Hello,
+
+This is on top of Sakari's tree in linuxtv.org
+
+Thanks
+Eugen
+
+ drivers/media/i2c/imx219.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
+index f1effb5a5f66..17fcedd4edb6 100644
+--- a/drivers/media/i2c/imx219.c
++++ b/drivers/media/i2c/imx219.c
+@@ -127,6 +127,8 @@ struct imx219_mode {
+ 	unsigned int width;
+ 	/* Frame height */
+ 	unsigned int height;
++	/* Frame rate */
++	u8 fps;
+ 
+ 	/* V-timing */
+ 	unsigned int vts_def;
+@@ -381,6 +383,7 @@ static const struct imx219_mode supported_modes[] = {
+ 		/* 8MPix 15fps mode */
+ 		.width = 3280,
+ 		.height = 2464,
++		.fps = 15,
+ 		.vts_def = IMX219_VTS_15FPS,
+ 		.reg_list = {
+ 			.num_of_regs = ARRAY_SIZE(mode_3280x2464_regs),
+@@ -391,6 +394,7 @@ static const struct imx219_mode supported_modes[] = {
+ 		/* 1080P 30fps cropped */
+ 		.width = 1920,
+ 		.height = 1080,
++		.fps = 30,
+ 		.vts_def = IMX219_VTS_30FPS_1080P,
+ 		.reg_list = {
+ 			.num_of_regs = ARRAY_SIZE(mode_1920_1080_regs),
+@@ -401,6 +405,7 @@ static const struct imx219_mode supported_modes[] = {
+ 		/* 2x2 binned 30fps mode */
+ 		.width = 1640,
+ 		.height = 1232,
++		.fps = 30,
+ 		.vts_def = IMX219_VTS_30FPS_BINNED,
+ 		.reg_list = {
+ 			.num_of_regs = ARRAY_SIZE(mode_1640_1232_regs),
+@@ -680,6 +685,27 @@ static int imx219_enum_frame_size(struct v4l2_subdev *sd,
+ 	return 0;
+ }
+ 
++static int imx219_enum_frame_interval(struct v4l2_subdev *sd,
++				      struct v4l2_subdev_pad_config *cfg,
++				      struct v4l2_subdev_frame_interval_enum *fie)
++{
++	struct imx219 *imx219 = to_imx219(sd);
++
++	if (fie->index >= ARRAY_SIZE(supported_modes))
++		return -EINVAL;
++
++	if (fie->code != imx219_get_format_code(imx219))
++		return -EINVAL;
++
++	if (fie->pad)
++		return -EINVAL;
++
++	fie->interval.numerator = 1;
++	fie->interval.denominator = supported_modes[fie->index].fps;
++
++	return 0;
++}
++
+ static void imx219_reset_colorspace(struct v4l2_mbus_framefmt *fmt)
+ {
+ 	fmt->colorspace = V4L2_COLORSPACE_SRGB;
+@@ -1004,6 +1030,7 @@ static const struct v4l2_subdev_pad_ops imx219_pad_ops = {
+ 	.get_fmt = imx219_get_pad_format,
+ 	.set_fmt = imx219_set_pad_format,
+ 	.enum_frame_size = imx219_enum_frame_size,
++	.enum_frame_interval = imx219_enum_frame_interval,
+ };
+ 
+ static const struct v4l2_subdev_ops imx219_subdev_ops = {
+-- 
+2.20.1
 
