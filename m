@@ -2,51 +2,52 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D05B0C3F353
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0437FC3F352
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8A08246A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1115246A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811222;
-	bh=MXXrokOjUI6fldjQTvPfgDimBBeXh8U36Bp/rLg6hYk=;
+	s=default; t=1582811205;
+	bh=gAkfpv4ncOrLT6/j6G/W8e8xXZzuNMbpqDoVeHHi7gw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WUlixo2vv79mNSVc7dHhJOeioR5BYf2MDl9sZVuhvO02TIhKr5BXnbKsGFet1ROCj
-	 stsNWJAcEiiZ2IhTEGrnpe4LZcXn5G9lBC1zdEiA5V3koAEV4c7PkCCKDjaE5imL2u
-	 j1cIOGlTMMIQcaP8FClP5E9qLtJu+XP5V15bVrTU=
+	b=HEl6rFxszR5w8CrDSBqNI9Hni47NFodL8woIWUBMwMNSF7cP0PubEOQtiBp8z2uxq
+	 GHnhAJoFTdw3FYg3TQe7de2ooHYHgNZNTM4Yh1WVACjADK3/gsvIOwRTDzZlcnncKz
+	 IQUIpDl4eI8TlA7lSxaN9Cp+VbleJPECELfoadzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730618AbgB0NrB (ORCPT
+        id S1730570AbgB0Nqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:47:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43260 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:46:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730244AbgB0Nq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:46:56 -0500
+        id S1730321AbgB0Nqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:46:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E88062469F;
-        Thu, 27 Feb 2020 13:46:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C614F20578;
+        Thu, 27 Feb 2020 13:46:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811215;
-        bh=MXXrokOjUI6fldjQTvPfgDimBBeXh8U36Bp/rLg6hYk=;
+        s=default; t=1582811199;
+        bh=gAkfpv4ncOrLT6/j6G/W8e8xXZzuNMbpqDoVeHHi7gw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BGreC+lKZ/HM4Es1ANw/qbedH1saGIsKfQbmy9cbQEiGoVwQRLIUOmvBqbFgvrgGz
-         s3lQI92t94tLdLXFcHNI8is05xJVGPAgOmqS66RH0jkSX2AFGXiXZP5jvixATACELy
-         rY9jfjNh0CuAnGjj7X7nyUH1u+BHX5z+7CjIFbys=
+        b=GVgaSg7XC7IvIDLNBaJnSPkuc6uJwhW4kMi7zoH2zFeNnZ3GmmA1hD/86HopqyksI
+         geXrW8EwWRbNJ33+91B1IlKj8+9331DK0FGQuzr9NGSJUgDm4QVApyFgEqhGm5Avjp
+         85pY1IyzrS5zcyXFI2CCocaCZc55xVuJjP3LM95k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
-        stable@kernel.org
-Subject: [PATCH 4.9 009/165] ext4: improve explanation of a mount failure caused by a misconfigured kernel
-Date:   Thu, 27 Feb 2020 14:34:43 +0100
-Message-Id: <20200227132232.476517249@linuxfoundation.org>
+        stable@vger.kernel.org, Christopher Head <chead@chead.ca>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 039/165] x86/sysfb: Fix check for bad VRAM size
+Date:   Thu, 27 Feb 2020 14:35:13 +0100
+Message-Id: <20200227132236.904370274@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -59,55 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Theodore Ts'o <tytso@mit.edu>
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
-commit d65d87a07476aa17df2dcb3ad18c22c154315bec upstream.
+[ Upstream commit dacc9092336be20b01642afe1a51720b31f60369 ]
 
-If CONFIG_QFMT_V2 is not enabled, but CONFIG_QUOTA is enabled, when a
-user tries to mount a file system with the quota or project quota
-enabled, the kernel will emit a very confusing messsage:
+When checking whether the reported lfb_size makes sense, the height
+* stride result is page-aligned before seeing whether it exceeds the
+reported size.
 
-    EXT4-fs warning (device vdc): ext4_enable_quotas:5914: Failed to enable quota tracking (type=0, err=-3). Please run e2fsck to fix.
-    EXT4-fs (vdc): mount failed
+This doesn't work if height * stride is not an exact number of pages.
+For example, as reported in the kernel bugzilla below, an 800x600x32 EFI
+framebuffer gets skipped because of this.
 
-We will now report an explanatory message indicating which kernel
-configuration options have to be enabled, to avoid customer/sysadmin
-confusion.
+Move the PAGE_ALIGN to after the check vs size.
 
-Link: https://lore.kernel.org/r/20200215012738.565735-1-tytso@mit.edu
-Google-Bug-Id: 149093531
-Fixes: 7c319d328505b778 ("ext4: make quota as first class supported feature")
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: Christopher Head <chead@chead.ca>
+Tested-by: Christopher Head <chead@chead.ca>
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206051
+Link: https://lkml.kernel.org/r/20200107230410.2291947-1-nivedita@alum.mit.edu
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/super.c |   14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
+ arch/x86/kernel/sysfb_simplefb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -2743,17 +2743,11 @@ static int ext4_feature_set_ok(struct su
- 		return 0;
+diff --git a/arch/x86/kernel/sysfb_simplefb.c b/arch/x86/kernel/sysfb_simplefb.c
+index 85195d447a922..f3215346e47fd 100644
+--- a/arch/x86/kernel/sysfb_simplefb.c
++++ b/arch/x86/kernel/sysfb_simplefb.c
+@@ -94,11 +94,11 @@ __init int create_simplefb(const struct screen_info *si,
+ 	if (si->orig_video_isVGA == VIDEO_TYPE_VLFB)
+ 		size <<= 16;
+ 	length = mode->height * mode->stride;
+-	length = PAGE_ALIGN(length);
+ 	if (length > size) {
+ 		printk(KERN_WARNING "sysfb: VRAM smaller than advertised\n");
+ 		return -EINVAL;
  	}
++	length = PAGE_ALIGN(length);
  
--#ifndef CONFIG_QUOTA
--	if (ext4_has_feature_quota(sb) && !readonly) {
-+#if !defined(CONFIG_QUOTA) || !defined(CONFIG_QFMT_V2)
-+	if (!readonly && (ext4_has_feature_quota(sb) ||
-+			  ext4_has_feature_project(sb))) {
- 		ext4_msg(sb, KERN_ERR,
--			 "Filesystem with quota feature cannot be mounted RDWR "
--			 "without CONFIG_QUOTA");
--		return 0;
--	}
--	if (ext4_has_feature_project(sb) && !readonly) {
--		ext4_msg(sb, KERN_ERR,
--			 "Filesystem with project quota feature cannot be mounted RDWR "
--			 "without CONFIG_QUOTA");
-+			 "The kernel was not built with CONFIG_QUOTA and CONFIG_QFMT_V2");
- 		return 0;
- 	}
- #endif  /* CONFIG_QUOTA */
+ 	/* setup IORESOURCE_MEM as framebuffer memory */
+ 	memset(&res, 0, sizeof(res));
+-- 
+2.20.1
+
 
 
