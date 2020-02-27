@@ -2,108 +2,114 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DE0C35677
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A0FC3567B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09DEF24697
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:07:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="QR4MXkAe"
+	by mail.kernel.org (Postfix) with ESMTP id 78564246A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:07:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582823272;
+	bh=nOdea9GO6SIDF5+xCwDsvD54W+6RhOyEdWNETfPHHvE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dFM7E764/Y0qZtbhbgl94tc5v5hLaNIVjphpWguzA0BHbPbP46s2epKI+GtObPkH6
+	 3iJVstFwIWEe/+/03GwfLpKUipBEn3+gl2n1H4cGxArnWnURxvtTEC0KmgB6EwCBLe
+	 loKYc/dRZCBpqXATwrcctt7nSY7WPf5wO1MHneoU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729567AbgB0RHj (ORCPT
+        id S1729649AbgB0RHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 12:07:39 -0500
-Received: from mout.gmx.net ([212.227.15.19]:50063 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729382AbgB0RHi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 12:07:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1582823252;
-        bh=Zb0cpGY5979XVir3SW4/XvgaLWpiRVc0awjhmaXpE38=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=QR4MXkAemQqcaKG57/JmvWW5uqe8rp2HgSaaPb1MpKx9CDf0IljrCRVkK0ZfA5ud2
-         ocoMXyDYrHyMUw6dAP/ETnhEe3xEkTFSAfl2em05LmGceS3CAiagcqOv8+kFCxzye7
-         UEuJ1Ltvgddl5QVADZG51WpdTjs6kpil6RTjr90U=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.195.162]) by mail.gmx.com (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Md6Qr-1jfb3X2zAp-00aGpS; Thu, 27
- Feb 2020 18:07:32 +0100
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     devicetree@vger.kernel.org
-Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: mfd: Fix typo in file name of twl-familly.txt
-Date:   Thu, 27 Feb 2020 18:07:01 +0100
-Message-Id: <20200227170702.4582-1-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.20.1
+        Thu, 27 Feb 2020 12:07:51 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39886 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbgB0RHv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 12:07:51 -0500
+Received: by mail-ot1-f65.google.com with SMTP id x97so1000806ota.6;
+        Thu, 27 Feb 2020 09:07:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=InsmB7K49IbGFoAcpPNcKRxbX33Sq72EBl8TIXI+Jks=;
+        b=ubVIOsxZhVGwaC5aCh2Y8zbS5ACaP7Lk4hrWZl73B54DotVYkiyKhGsZQJlAGFYMIS
+         hLrfJsIDlRLe7+NmhSqvBcjSH5agDCfcbWskqd/hVSWRDuHOPhdFueNn82x1665ljkQh
+         T+YcUEfGWe24ZxAwMwjrUhb2UWtCPyyZxjoXuajmSl99kUsFxyQi4RdKrYOJqWjbISpm
+         ZLHA6pCxJOfyDBb5RQ0lQO9maKgCh1AR6xKNDBHgk9qxV2N+X539+u5x6Y6V+qfXuL2w
+         +gtERQKXrVhoMVVOfw3zhOiT5BM/KS2Ukqcq+OQfIZJAmKL1hwo/yr+OuNWN2uoRg5/Q
+         t/Xw==
+X-Gm-Message-State: APjAAAVi0m+XxyRAbA3wkZe6WKb5uYZiaZLRSC7Lz4asvRzihM3/U5EP
+        1lPgqb6gLGz/kPErcanlUA==
+X-Google-Smtp-Source: APXvYqwReYFW5+9iTptEhtgAEVTUlxTpOhTN5cLvCWwPo3QD9G6weLLuawjcTBQoP7gwUOwpcHjbxw==
+X-Received: by 2002:a9d:6544:: with SMTP id q4mr535139otl.269.1582823270477;
+        Thu, 27 Feb 2020 09:07:50 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n8sm2113708otl.11.2020.02.27.09.07.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 09:07:49 -0800 (PST)
+Received: (nullmailer pid 2184 invoked by uid 1000);
+        Thu, 27 Feb 2020 17:07:48 -0000
+Date:   Thu, 27 Feb 2020 11:07:48 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        broonie@kernel.org, vigneshr@ti.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, simon.k.r.goldschmidt@gmail.com,
+        dinguyen@kernel.org, tien.fong.chee@intel.com, marex@denx.de,
+        mark.rutland@arm.com, linux-mtd@lists.infradead.org,
+        dwmw2@infradead.org, richard@nod.at, computersforpeace@gmail.com,
+        boris.brezillon@free-electrons.com, cyrille.pitchen@atmel.com,
+        david.oberhollenzer@sigma-star.at, miquel.raynal@bootlin.com,
+        tudor.ambarus@gmail.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com,
+        Ramuthevar Vadivel Murugan 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: Re: [PATCH v11 1/2] dt-bindings: spi: Add schema for Cadence QSPI
+ Controller driver
+Message-ID: <20200227170748.GA19661@bogus>
+References: <20200227062708.21544-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200227062708.21544-2-vadivel.muruganx.ramuthevar@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:tIcRwH00gj+4vKzcC1Ct9adpzROq1V35GkFIucElVSbqgod5Mqe
- 0+1GjTfQQR8VG+YH8a79ByQEsstpHDdrkPQv++D4SqKlb8LgGyRl0gBbXuq4C0gKyzUo88C
- et/M8/5TGvgqb1W6tTCThLNRguFIJiwuQMvoj+lL9rigd6QGvklsPqk9Vbdz6MUI5bXm933
- /wVx7EwSe/8WMCho5GvbA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:7i6SF/cOIBk=:yTQ2KJ8n+TE2ntZtfO97t1
- JN3eSKl8ljhj8iKnheTkUY5iMHxLl952hEQnU139MxPFMBNktOyOa5Pl/caDffmBBM4upmSWd
- waZRalC9phCIVu704YtdYuQaWlbt9/kbiTmbvp+g3tnWfeXUZMgaibZH79vhVtQDbbnrxLHDh
- thBoiWqOl2+WQeEvmFu1QcAXdo+Dw4PqDLs3CjWEtBlhed+uPb641YEZ23qY5K//6XzMdhgQR
- dbKdLfaZ7kZen0TBJwNe4tizu72wKQWkBsEkpwxU87VkKIjL49M3FMUqC+qh728QiHDM9xSD+
- F8ZCfnUY8RnWG+Se4XzalejWbacFums1OA5hMyrjyXx32HdGW+gDBwjcB982hpIkZo+7QmbVz
- EUP0cKpipaX5po7aibWhtvTKXOAJdqpinK6leO5OH/poxide73ezZOfFaQa1eTJxyMa8HBK9E
- Wnm3sNBIym9GKVdeW6DszMSnsWHUGGGJmj5F/ZTBseYORg7PvriWvr1JdymrnP120fM5dGzf5
- sDRucq6ywKWZC0gRO4q4ppP5nbwKiqrC4Ky9DRMdayLJ7k8Qu+iuizGtDTr19I5ThXg4coBFZ
- uQB5Vi50Uol5Av0wvmju7IyZVUByTRhinmkE6ZXmyRh40rIJGggsWhkB6lcTR84jqV9UPNLdQ
- fdH4+Iy9KmA+G5shyAVYV9RGIHP2iSnFhJYfbUmstd5NhbO0Z5atyHne2ga6uXtiF1nhgMWba
- DUG1Kg3OxikyZLserKaCVAz6EmDZqXgEd1ckmuy/07hxaI5xiCBkKh9lDzqlgnDUqDZFFA2HU
- Qc1kDaXuUWXtwsjpQyRc1ZTg/mm6POqyDnX7enXzVJAHrbhQ+8eMADFBKcddUmcsgpw0HWLcW
- Y6QlthymNSHgUYj/gDa50nc4dCKLbn0f66/6XAtsJMOeVsyxg+nh4ILMPjxe2zszX1iNYx2ju
- vDBY3RxCA44uGONloGdY9mAZISVn8m3HyTkkDpFoUGxI0jJ3DkKpahHyH4snW/A6DJqti4Quc
- nDdraBUzgpXFjhH9RQCv1j1jmUFIJwOYddHtm18pQZScmOoROzT496KSVgmTKZYG0+UuFTpT2
- 7nGgTEoCA4TwRExZWDFPQ9f4M7HWDAvE2JdEyoYaQkwRn20MFnqZrRYzUypAXtfTaMBK+pOiq
- 1gkkDeMJ9GJJrAD3aae4FlaoiVCJz4Fjhs107C1YUXypWbEZ76dZiNHcS6oYEsxvnmnqSmKHx
- 8E+air0/Z/PjdfHf0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227062708.21544-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- Documentation/devicetree/bindings/input/twl4030-pwrbutton.txt   | 2 +-
- .../devicetree/bindings/mfd/{twl-familly.txt =3D> twl-family.txt} | 0
- 2 files changed, 1 insertion(+), 1 deletion(-)
- rename Documentation/devicetree/bindings/mfd/{twl-familly.txt =3D> twl-fa=
-mily.txt} (100%)
+On Thu, 27 Feb 2020 14:27:07 +0800, "Ramuthevar,Vadivel MuruganX" wrote:
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> 
+> Add dt-bindings documentation for Cadence-QSPI controller to support
+> spi based flash memories.
+> 
+> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> ---
+>  .../devicetree/bindings/mtd/cadence-quadspi.txt    |  67 ----------
+>  .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 142 +++++++++++++++++++++
+>  2 files changed, 142 insertions(+), 67 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+>  create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+> 
 
-diff --git a/Documentation/devicetree/bindings/input/twl4030-pwrbutton.txt=
- b/Documentation/devicetree/bindings/input/twl4030-pwrbutton.txt
-index c864a46cddcf..f5021214edec 100644
-=2D-- a/Documentation/devicetree/bindings/input/twl4030-pwrbutton.txt
-+++ b/Documentation/devicetree/bindings/input/twl4030-pwrbutton.txt
-@@ -1,7 +1,7 @@
- Texas Instruments TWL family (twl4030) pwrbutton module
+My bot found errors running 'make dt_binding_check' on your patch:
 
- This module is part of the TWL4030. For more details about the whole
--chip see Documentation/devicetree/bindings/mfd/twl-familly.txt.
-+chip see Documentation/devicetree/bindings/mfd/twl-family.txt.
+warning: no schema found in file: Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml: ignoring, error in schema: patternProperties: cdns,read-delay
+Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml: patternProperties:cdns,read-delay: {'description': 'Delay in 4 microseconds, read capture logic, in clock cycles.'} is not valid under any of the given schemas (Possible causes of the failure):
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml: patternProperties:cdns,read-delay: 'not' is a required property
 
- This module provides a simple power button event via an Interrupt.
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/spi/cdns,qspi-nor.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/spi/cdns,qspi-nor.example.dts] Error 1
+Makefile:1263: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-diff --git a/Documentation/devicetree/bindings/mfd/twl-familly.txt b/Docum=
-entation/devicetree/bindings/mfd/twl-family.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/mfd/twl-familly.txt
-rename to Documentation/devicetree/bindings/mfd/twl-family.txt
-=2D-
-2.20.1
-
+See https://patchwork.ozlabs.org/patch/1245559
+Please check and re-submit.
