@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E252EC54FD9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCABC54FE1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9664246A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EDF424691
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:11:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812690;
-	bh=wLfKhXxpa14kf4mWcdqPTEGTf+Z9dEcu+jrqE4IYkmY=;
+	s=default; t=1582812704;
+	bh=z19uYR+QfCZ8E4oYV9c3VMN4H6XEwgmRfaD1iFIPAIg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uke98TRVpsv/MUNmW4VvRUxgq2BbPjLBbOuptEMYg6cw9wZRNOdMlbgbb+0Shyf8G
-	 VvvLkefDsOvG+5ea6MZml3HBx7GlUEVaP+LhT9pXjRAkERZJmGCL3V3J/FwMSD7GNL
-	 CwTRYbKG/zjwvMd+v4EjwzNbBaVf8577bXyNJi4w=
+	b=nqxT1ogUv7P0PcMzxfrbWt1fhU9K8UkHwIEr16sY+pICn4iyhmYnzW71ih0DWWb/x
+	 C62Fpy6h8kGeUfemfgVx2CGJxFJR6jK2yjvSxoDJrPzjXm+kpJ9Rd36H4W6eBNvSay
+	 NOER9l4PTZ8eTpHveA/RHZqhTvepy2bnvSpgKgxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388496AbgB0OL3 (ORCPT
+        id S2388744AbgB0OLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:11:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49910 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:11:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388690AbgB0OLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:11:25 -0500
+        id S2388731AbgB0OLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:11:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8859520801;
-        Thu, 27 Feb 2020 14:11:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0446C20801;
+        Thu, 27 Feb 2020 14:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812685;
-        bh=wLfKhXxpa14kf4mWcdqPTEGTf+Z9dEcu+jrqE4IYkmY=;
+        s=default; t=1582812700;
+        bh=z19uYR+QfCZ8E4oYV9c3VMN4H6XEwgmRfaD1iFIPAIg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cOs4xUXQBp5PD0/DvxwLWgJ7944tv3WAKN9X/tZE5bjg5dSb9cpp6Qx3ZXkM078/N
-         sHGxcOEL6nSd9LHCVl4fOxs7wHLITHCksst6dxAVtdiR6Qux7/3lYnGofkrHJR6Rc9
-         aoQ39Jclca3yUqP+O0WTS99QUXvxlZTfkwaXOa/0=
+        b=HimRU7LrGDFC6SFpUC3yfv9HYW9mZCe+NyUVRqIQRuf/II2fTK9OqqYL0PwZpdDLy
+         n8nYBqIb2+ELzSbUVIX4A3VauVK/8A40s9JTj7oef5LdrzMv9WTkVdlkVtTH+HaHYX
+         XwvDnWntpylMcX/zomAyqyfqSWgSZquC7LXkVAdI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 113/135] ASoC: atmel: fix atmel_ssc_set_audio link failure
-Date:   Thu, 27 Feb 2020 14:37:33 +0100
-Message-Id: <20200227132246.161577149@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Krude <johannes@krude.de>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 5.4 119/135] bpf, offload: Replace bitwise AND by logical AND in bpf_prog_offload_info_fill
+Date:   Thu, 27 Feb 2020 14:37:39 +0100
+Message-Id: <20200227132247.007929056@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -61,68 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Johannes Krude <johannes@krude.de>
 
-commit 9437bfda00f3b26eb5f475737ddaaf4dc07fee4f upstream.
+commit e20d3a055a457a10a4c748ce5b7c2ed3173a1324 upstream.
 
-The ssc audio driver can call into both pdc and dma backends.  With the
-latest rework, the logic to do this in a safe way avoiding link errors
-was removed, bringing back link errors that were fixed long ago in commit
-061981ff8cc8 ("ASoC: atmel: properly select dma driver state") such as
+This if guards whether user-space wants a copy of the offload-jited
+bytecode and whether this bytecode exists. By erroneously doing a bitwise
+AND instead of a logical AND on user- and kernel-space buffer-size can lead
+to no data being copied to user-space especially when user-space size is a
+power of two and bigger then the kernel-space buffer.
 
-sound/soc/atmel/atmel_ssc_dai.o: In function `atmel_ssc_set_audio':
-atmel_ssc_dai.c:(.text+0xac): undefined reference to `atmel_pcm_pdc_platform_register'
-
-Fix it this time using Makefile hacks and a comment to prevent this
-from accidentally getting removed again rather than Kconfig hacks.
-
-Fixes: 18291410557f ("ASoC: atmel: enable SOC_SSC_PDC and SOC_SSC_DMA in Kconfig")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Link: https://lore.kernel.org/r/20200130130545.31148-1-codrin.ciubotariu@microchip.com
-Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: fcfb126defda ("bpf: add new jited info fields in bpf_dev_offload and bpf_prog_info")
+Signed-off-by: Johannes Krude <johannes@krude.de>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Jakub Kicinski <kuba@kernel.org>
+Link: https://lore.kernel.org/bpf/20200212193227.GA3769@phlox.h.transitiv.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/atmel/Kconfig  |    4 ++--
- sound/soc/atmel/Makefile |   10 ++++++++--
- 2 files changed, 10 insertions(+), 4 deletions(-)
+ kernel/bpf/offload.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/soc/atmel/Kconfig
-+++ b/sound/soc/atmel/Kconfig
-@@ -10,11 +10,11 @@ config SND_ATMEL_SOC
- if SND_ATMEL_SOC
+--- a/kernel/bpf/offload.c
++++ b/kernel/bpf/offload.c
+@@ -321,7 +321,7 @@ int bpf_prog_offload_info_fill(struct bp
  
- config SND_ATMEL_SOC_PDC
--	tristate
-+	bool
- 	depends on HAS_DMA
- 
- config SND_ATMEL_SOC_DMA
--	tristate
-+	bool
- 	select SND_SOC_GENERIC_DMAENGINE_PCM
- 
- config SND_ATMEL_SOC_SSC
---- a/sound/soc/atmel/Makefile
-+++ b/sound/soc/atmel/Makefile
-@@ -6,8 +6,14 @@ snd-soc-atmel_ssc_dai-objs := atmel_ssc_
- snd-soc-atmel-i2s-objs := atmel-i2s.o
- snd-soc-mchp-i2s-mcc-objs := mchp-i2s-mcc.o
- 
--obj-$(CONFIG_SND_ATMEL_SOC_PDC) += snd-soc-atmel-pcm-pdc.o
--obj-$(CONFIG_SND_ATMEL_SOC_DMA) += snd-soc-atmel-pcm-dma.o
-+# pdc and dma need to both be built-in if any user of
-+# ssc is built-in.
-+ifdef CONFIG_SND_ATMEL_SOC_PDC
-+obj-$(CONFIG_SND_ATMEL_SOC_SSC) += snd-soc-atmel-pcm-pdc.o
-+endif
-+ifdef CONFIG_SND_ATMEL_SOC_DMA
-+obj-$(CONFIG_SND_ATMEL_SOC_SSC) += snd-soc-atmel-pcm-dma.o
-+endif
- obj-$(CONFIG_SND_ATMEL_SOC_SSC) += snd-soc-atmel_ssc_dai.o
- obj-$(CONFIG_SND_ATMEL_SOC_I2S) += snd-soc-atmel-i2s.o
- obj-$(CONFIG_SND_MCHP_SOC_I2S_MCC) += snd-soc-mchp-i2s-mcc.o
+ 	ulen = info->jited_prog_len;
+ 	info->jited_prog_len = aux->offload->jited_len;
+-	if (info->jited_prog_len & ulen) {
++	if (info->jited_prog_len && ulen) {
+ 		uinsns = u64_to_user_ptr(info->jited_prog_insns);
+ 		ulen = min_t(u32, info->jited_prog_len, ulen);
+ 		if (copy_to_user(uinsns, aux->offload->jited_image, ulen)) {
 
 
