@@ -2,162 +2,298 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46798C35677
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 491A3C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C7142469B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E65572469B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:58:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZSNtWzg6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730011AbgB0R5j (ORCPT
+        id S1730270AbgB0R6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 12:57:39 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41033 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbgB0R5i (ORCPT
+        Thu, 27 Feb 2020 12:58:19 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:53886 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbgB0R6T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 12:57:38 -0500
-Received: by mail-ot1-f65.google.com with SMTP id v19so3746960ote.8;
-        Thu, 27 Feb 2020 09:57:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AE8wb0HG+3vuy1qodVFMwqdvcyEFEcaDAhlJidYfCs0=;
-        b=sXvgBWBybj8Pin0WtXpzccj6sQB8c80C6mV06prDPwqlvT5xdkfH2i1zUngz+KZIVe
-         HMwInSeuQH+aySGAFQkI5BYWMTF5XGkQcawDMGrYlRi+VlarJwIlSPT5UUXdAjBCNk+U
-         dmH7vaobepfo8lJpl/748+IsVr4KETSIjZTnN+EB/kj8SA4cmgD3zs4P/basbDWiFl18
-         gPfLaxc2ClcCzbwHhRVtmIyBxrjn4V+gA+/+dcRKf/2YeipoySnsS6CxgYSDCmmwB4WO
-         oolZBmNS5ManzMgu1E51xXoJaEgbzaMZVMJHZwGkeQ6Pt8sHc7xhrQNtQdeSH/BZJNtJ
-         bm+w==
-X-Gm-Message-State: APjAAAVrsXOE0TRtUWxr1X8PSuZSzJ2vY3LIqiI4PgbprJWSdo/0zky0
-        lCZq5VZhSPguP33R/p1Pq7wrlWeSHIKNthywOXA=
-X-Google-Smtp-Source: APXvYqy3ggWLS/5mUneApKM2x+tXn239hPyRVnHqSbQHT+/fvBYj77PEXaw0d7lsEwKOkN6sn5MDEP7+B/X6E22cwvE=
-X-Received: by 2002:a9d:5c0c:: with SMTP id o12mr67639otk.145.1582826257924;
- Thu, 27 Feb 2020 09:57:37 -0800 (PST)
+        Thu, 27 Feb 2020 12:58:19 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01RHrWAR154105;
+        Thu, 27 Feb 2020 17:57:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
+ bh=hkoYA9sZ3xZiQrJDY9TW2iIfqHDj+HbXHnqg8LVRD34=;
+ b=ZSNtWzg6mYI1OQKwCFeV6Br7wBMQQMcpMhKEU1rSoVoLv1EbPQUz8M+2iVyLO+KLlWeb
+ L1D4Az1SGQlvbJoQu6oSSLjB3LongLFYQeGHrZjaQZsXlxwbXSEhPYfMrQwjPRygzMYF
+ swnsI7tuleIAveaRoFCbNrsqJLzimaGTHYWnA9OVPHWt/Ugt+rfX5MZdhzdHz1y5CBKo
+ zh5DfkZc7h39JpEUPaySpj5ti+Kh5IRpTviH07Q7Fo59Rv1u69/8k03adD6PE3K5N7Mw
+ DpgyxJFJCqc3HGmLKscOu/1n/NUKDX21ldl7KZgmlR7Py0zYf31Lra8+WW+ngwgMD1di tg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2ydcsnmr55-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Feb 2020 17:57:57 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01RHiRD2058593;
+        Thu, 27 Feb 2020 17:57:56 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2ydcsa1fq6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Feb 2020 17:57:56 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01RHvnFR004582;
+        Thu, 27 Feb 2020 17:57:50 GMT
+Received: from vbusired-dt (/10.154.159.233)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 27 Feb 2020 09:57:49 -0800
+Date:   Thu, 27 Feb 2020 11:57:48 -0600
+From:   Venu Busireddy <venu.busireddy@oracle.com>
+To:     Ashish Kalra <Ashish.Kalra@amd.com>
+Cc:     pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, rkrcmar@redhat.com, joro@8bytes.org, bp@suse.de,
+        thomas.lendacky@amd.com, rientjes@google.com, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 09/12] KVM: x86: Introduce KVM_GET_PAGE_ENC_BITMAP ioctl
+Message-ID: <20200227175748.GA268253@vbusired-dt>
+References: <cover.1581555616.git.ashish.kalra@amd.com>
+ <efe6a4d829af0b2ed9fe1b58fd2dfb343f5b8de0.1581555616.git.ashish.kalra@amd.com>
 MIME-Version: 1.0
-References: <20200227151143.6a6edaf9@canb.auug.org.au> <CAMuHMdVc-vyQfuLUgbF6ei9Qrr+fryA-j1PHsrsjTNiOYvUk+w@mail.gmail.com>
- <CAOFY-A0=AYDSdGq5tf7s6_kRjnDGLfLjCV9p+LdKbLwyw0J9nA@mail.gmail.com> <CAOFY-A2CFi0pX1BBsuruntk0AM9doseCMnFCJi192BYojaBUUw@mail.gmail.com>
-In-Reply-To: <CAOFY-A2CFi0pX1BBsuruntk0AM9doseCMnFCJi192BYojaBUUw@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 27 Feb 2020 18:57:26 +0100
-Message-ID: <CAMuHMdW-0xuxK_Cd2t3=BZwwOUhrYf-Ctn+frW_1tTsO5eQxOw@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the akpm tree
-To:     Arjun Roy <arjunroy@google.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Soheil Hassas Yeganeh <soheil@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <efe6a4d829af0b2ed9fe1b58fd2dfb343f5b8de0.1581555616.git.ashish.kalra@amd.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9543 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 phishscore=0
+ mlxlogscore=999 spamscore=0 suspectscore=1 mlxscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002270128
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9543 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 bulkscore=0
+ lowpriorityscore=0 mlxlogscore=999 phishscore=0 spamscore=0 adultscore=0
+ suspectscore=1 impostorscore=0 clxscore=1011 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002270129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arjun,
+On 2020-02-13 01:17:45 +0000, Ashish Kalra wrote:
+> From: Brijesh Singh <brijesh.singh@amd.com>
+> 
+> The ioctl can be used to retrieve page encryption bitmap for a given
+> gfn range.
+> 
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Borislav Petkov <bp@suse.de>
+> Cc: Tom Lendacky <thomas.lendacky@amd.com>
+> Cc: x86@kernel.org
+> Cc: kvm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
 
-On Thu, Feb 27, 2020 at 6:45 PM Arjun Roy <arjunroy@google.com> wrote:
-> On Thu, Feb 27, 2020 at 9:13 AM Arjun Roy <arjunroy@google.com> wrote:
-> > On Thu, Feb 27, 2020 at 1:03 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > On Thu, Feb 27, 2020 at 5:12 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > > > After merging the akpm tree, today's linux-next build (sparc defconfig)
-> > > > failed like this:
-> > > >
-> > > > In file included from include/linux/list.h:9:0,
-> > > >                  from include/linux/smp.h:12,
-> > > >                  from include/linux/kernel_stat.h:5,
-> > > >                  from mm/memory.c:42:
-> > > > mm/memory.c: In function 'insert_pages':
-> > > > mm/memory.c:1523:41: error: implicit declaration of function 'pte_index'; did you mean 'page_index'? [-Werror=implicit-function-declaration]
-> > > >    remaining_pages_total, PTRS_PER_PTE - pte_index(addr));
-> > > >                                          ^
-> > > > include/linux/kernel.h:842:40: note: in definition of macro '__typecheck'
-> > > >    (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
-> > > >                                         ^
-> > > > include/linux/kernel.h:866:24: note: in expansion of macro '__safe_cmp'
-> > > >   __builtin_choose_expr(__safe_cmp(x, y), \
-> > > >                         ^~~~~~~~~~
-> > > > include/linux/kernel.h:934:27: note: in expansion of macro '__careful_cmp'
-> > > >  #define min_t(type, x, y) __careful_cmp((type)(x), (type)(y), <)
-> > > >                            ^~~~~~~~~~~~~
-> > > > mm/memory.c:1522:26: note: in expansion of macro 'min_t'
-> > > >   pages_to_write_in_pmd = min_t(unsigned long,
-> > > >                           ^~~~~
-> > >
-> > > Same issue on m68k, as per a report from kisskb.
-> > >
-> > > > Caused by patch
-> > > >
-> > > >   "mm/memory.c: add vm_insert_pages()"
-> > > >
-> > > > sparc32 does not implement pte_index at all :-(
-> > >
-> > > Seems like about only half of the architectures do.
-> > >
-> >
-> > :/ I begin to suspect the only sane way to make this work is to have a
-> > per-arch header defined method, returning a bool saying whether
-> > pte_index() is meaningful or not on that arch, and early on in
-> > vm_insert_pages() if that bool returns true, to just call
-> > vm_insert_page() in a loop.
-> >
->
-> So, here is what I propose: something like the following macro in a
-> per-arch header:
->
-> #define PTE_INDEX_DEFINED 1 // or 0 if it is not
+This patch does not apply to upstream Linux version 5.5.6.
 
-pte_index is already a #define on architectures where it exists, so
-you can just use that.
+  <snip>
+  Applying: KVM: x86: Introduce KVM_GET_PAGE_ENC_BITMAP ioctl
+  error: patch failed: Documentation/virt/kvm/api.txt:4213
+  error: Documentation/virt/kvm/api.txt: patch does not apply
+  error: patch failed: include/uapi/linux/kvm.h:1478
+  error: include/uapi/linux/kvm.h: patch does not apply
+  Patch failed at 0009 KVM: x86: Introduce KVM_GET_PAGE_ENC_BITMAP ioctl
+  <snip>
 
-> In mm/memory.c, another macro:
->
-> #ifndef PTE_INDEX_DEFINED
-> #define PTE_INDEX_DEFINED 0
-> #endifndef
+Which kernel version does this patch series apply to, cleanly?
 
-No need for the above...
+Thanks,
 
-> And inside vm_insert_pages:
->
-> int vm_insert_pages() {
->
-> #if PTE_INDEX_DEFINED
+Venu
 
-... if you use "#ifdef" here.
-
->
-> // The existing method
->
-> #else
->
-> for (i=0; i<n; ++i)
->         vm_insert_page(i)
->
-> #endif
-> }
->
-> That way:
-> 1. No playing whack-a-mole with different architectures
-> 2. Architecture that knows pte_index is meaningful works can define
-> this explicitly
-> 3. Can remove the sparc patches modifying pte_index that Stephen and I
-> contributed.
->
-> If that sounds acceptable I can cook a patch.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> ---
+>  Documentation/virt/kvm/api.txt  | 27 +++++++++++++++++++++
+>  arch/x86/include/asm/kvm_host.h |  2 ++
+>  arch/x86/kvm/svm.c              | 43 +++++++++++++++++++++++++++++++++
+>  arch/x86/kvm/x86.c              | 12 +++++++++
+>  include/uapi/linux/kvm.h        | 12 +++++++++
+>  5 files changed, 96 insertions(+)
+> 
+> diff --git a/Documentation/virt/kvm/api.txt b/Documentation/virt/kvm/api.txt
+> index c6e1ce5d40de..053aecfabe74 100644
+> --- a/Documentation/virt/kvm/api.txt
+> +++ b/Documentation/virt/kvm/api.txt
+> @@ -4213,6 +4213,33 @@ the clear cpu reset definition in the POP. However, the cpu is not put
+>  into ESA mode. This reset is a superset of the initial reset.
+>  
+>  
+> +4.120 KVM_GET_PAGE_ENC_BITMAP (vm ioctl)
+> +
+> +Capability: basic
+> +Architectures: x86
+> +Type: vm ioctl
+> +Parameters: struct kvm_page_enc_bitmap (in/out)
+> +Returns: 0 on success, -1 on error
+> +
+> +/* for KVM_GET_PAGE_ENC_BITMAP */
+> +struct kvm_page_enc_bitmap {
+> +	__u64 start_gfn;
+> +	__u64 num_pages;
+> +	union {
+> +		void __user *enc_bitmap; /* one bit per page */
+> +		__u64 padding2;
+> +	};
+> +};
+> +
+> +The encrypted VMs have concept of private and shared pages. The private
+> +page is encrypted with the guest-specific key, while shared page may
+> +be encrypted with the hypervisor key. The KVM_GET_PAGE_ENC_BITMAP can
+> +be used to get the bitmap indicating whether the guest page is private
+> +or shared. The bitmap can be used during the guest migration, if the page
+> +is private then userspace need to use SEV migration commands to transmit
+> +the page.
+> +
+> +
+>  5. The kvm_run structure
+>  ------------------------
+>  
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 4ae7293033b2..a6882c5214b4 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1258,6 +1258,8 @@ struct kvm_x86_ops {
+>  	int (*enable_direct_tlbflush)(struct kvm_vcpu *vcpu);
+>  	int (*page_enc_status_hc)(struct kvm *kvm, unsigned long gpa,
+>  				  unsigned long sz, unsigned long mode);
+> +	int (*get_page_enc_bitmap)(struct kvm *kvm,
+> +				struct kvm_page_enc_bitmap *bmap);
+>  };
+>  
+>  struct kvm_arch_async_pf {
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index f09791109075..f1c8806a97c6 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -7673,6 +7673,48 @@ static int svm_page_enc_status_hc(struct kvm *kvm, unsigned long gpa,
+>  	return ret;
+>  }
+>  
+> +static int svm_get_page_enc_bitmap(struct kvm *kvm,
+> +				   struct kvm_page_enc_bitmap *bmap)
+> +{
+> +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+> +	unsigned long gfn_start, gfn_end;
+> +	unsigned long *bitmap;
+> +	unsigned long sz, i;
+> +	int ret;
+> +
+> +	if (!sev_guest(kvm))
+> +		return -ENOTTY;
+> +
+> +	gfn_start = bmap->start_gfn;
+> +	gfn_end = gfn_start + bmap->num_pages;
+> +
+> +	sz = ALIGN(bmap->num_pages, BITS_PER_LONG) / 8;
+> +	bitmap = kmalloc(sz, GFP_KERNEL);
+> +	if (!bitmap)
+> +		return -ENOMEM;
+> +
+> +	/* by default all pages are marked encrypted */
+> +	memset(bitmap, 0xff, sz);
+> +
+> +	mutex_lock(&kvm->lock);
+> +	if (sev->page_enc_bmap) {
+> +		i = gfn_start;
+> +		for_each_clear_bit_from(i, sev->page_enc_bmap,
+> +				      min(sev->page_enc_bmap_size, gfn_end))
+> +			clear_bit(i - gfn_start, bitmap);
+> +	}
+> +	mutex_unlock(&kvm->lock);
+> +
+> +	ret = -EFAULT;
+> +	if (copy_to_user(bmap->enc_bitmap, bitmap, sz))
+> +		goto out;
+> +
+> +	ret = 0;
+> +out:
+> +	kfree(bitmap);
+> +	return ret;
+> +}
+> +
+>  static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+>  {
+>  	struct kvm_sev_cmd sev_cmd;
+> @@ -8066,6 +8108,7 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+>  	.apic_init_signal_blocked = svm_apic_init_signal_blocked,
+>  
+>  	.page_enc_status_hc = svm_page_enc_status_hc,
+> +	.get_page_enc_bitmap = svm_get_page_enc_bitmap,
+>  };
+>  
+>  static int __init svm_init(void)
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 298627fa3d39..e955f886ee17 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -5213,6 +5213,18 @@ long kvm_arch_vm_ioctl(struct file *filp,
+>  	case KVM_SET_PMU_EVENT_FILTER:
+>  		r = kvm_vm_ioctl_set_pmu_event_filter(kvm, argp);
+>  		break;
+> +	case KVM_GET_PAGE_ENC_BITMAP: {
+> +		struct kvm_page_enc_bitmap bitmap;
+> +
+> +		r = -EFAULT;
+> +		if (copy_from_user(&bitmap, argp, sizeof(bitmap)))
+> +			goto out;
+> +
+> +		r = -ENOTTY;
+> +		if (kvm_x86_ops->get_page_enc_bitmap)
+> +			r = kvm_x86_ops->get_page_enc_bitmap(kvm, &bitmap);
+> +		break;
+> +	}
+>  	default:
+>  		r = -ENOTTY;
+>  	}
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index 4e80c57a3182..9377b26c5f4e 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -500,6 +500,16 @@ struct kvm_dirty_log {
+>  	};
+>  };
+>  
+> +/* for KVM_GET_PAGE_ENC_BITMAP */
+> +struct kvm_page_enc_bitmap {
+> +	__u64 start_gfn;
+> +	__u64 num_pages;
+> +	union {
+> +		void __user *enc_bitmap; /* one bit per page */
+> +		__u64 padding2;
+> +	};
+> +};
+> +
+>  /* for KVM_CLEAR_DIRTY_LOG */
+>  struct kvm_clear_dirty_log {
+>  	__u32 slot;
+> @@ -1478,6 +1488,8 @@ struct kvm_enc_region {
+>  #define KVM_S390_NORMAL_RESET	_IO(KVMIO,   0xc3)
+>  #define KVM_S390_CLEAR_RESET	_IO(KVMIO,   0xc4)
+>  
+> +#define KVM_GET_PAGE_ENC_BITMAP	_IOW(KVMIO, 0xc2, struct kvm_page_enc_bitmap)
+> +
+>  /* Secure Encrypted Virtualization command */
+>  enum sev_cmd_id {
+>  	/* Guest initialization commands */
+> -- 
+> 2.17.1
+> 
