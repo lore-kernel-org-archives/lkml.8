@@ -2,53 +2,53 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3675EC52D38
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 068F1C52D28
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E4B72073D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:00:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D059224691
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:59:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812058;
-	bh=A5eJRkIxHXYZYGfzRKlgumnOYOGJoFzREid9BwALZVU=;
+	s=default; t=1582811992;
+	bh=00kPkQo5+SpTsNZSdVwpSBf7venKRqfAdLZWy608xyY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pn8wRZzycHhZsuo+gf67rmfptAUZQ9SwUmKDtcml+YlAVysHfNjyckwUx7dBfZL+2
-	 ZereqWrWlTWijOIFcQWgjHlhKxVyC7gHDL/3CrnFioGcJs8EPoZdd2DW21h7CAWQBl
-	 mMasPLlHDz4wvrfWGFG39JVeuobdzJennv1TNsSQ=
+	b=xAI1n/ASPoD/cSUlt3EjIaCMjzwF58IAqFFMFfYNhtGC8tX2C6UsPZQDGbh7QQnMm
+	 lGHgL3fuKEaUGuitG/t1ZPUUeZln38GrJPYLgv6AsgXGB/kX61GrWHE06NLhSeKDcs
+	 phKfPJUCYGWUno4UB1nkL2hU0Iq+TzibG753/oBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732537AbgB0OA5 (ORCPT
+        id S1732008AbgB0N7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:00:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34566 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:59:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732820AbgB0OAy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:00:54 -0500
+        id S1732646AbgB0N7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:59:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 096C221556;
-        Thu, 27 Feb 2020 14:00:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 272FF2073D;
+        Thu, 27 Feb 2020 13:59:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812054;
-        bh=A5eJRkIxHXYZYGfzRKlgumnOYOGJoFzREid9BwALZVU=;
+        s=default; t=1582811987;
+        bh=00kPkQo5+SpTsNZSdVwpSBf7venKRqfAdLZWy608xyY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JF2EZYyx0nBHA6VP5GJmxuCaH5T8i6zN2lDaNXYnYrysbfK8fO83qfDvT1zojbyYy
-         TSzJGWG+COlsKyzJrH3jyTwxchZc7iLaOgtEBCQUFJBJZct5X9Eu2sCjc9PfGrOlmH
-         Vvg9AzkHQwgFX0G1sWQN5DL8Nuue+Er/X66QJRG8=
+        b=eadsVzuiL+VIUgnj0srxNChkIejlrbhH61Og9qolllJSjKb41AZNE0vrFMSW0RGDX
+         FKAdBk4xc5yO/FlYWFpOwlVkfVLgrB3pSmvkyh416d7KDUedpcyotrGZI6ilMb4C+R
+         J3lES0KTpXDXLlieMS39PCpd9L+2aRrY0UdhKnsY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Gustavo Romero <gromero@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 205/237] powerpc/tm: Fix endianness flip on trap
-Date:   Thu, 27 Feb 2020 14:36:59 +0100
-Message-Id: <20200227132311.326575336@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: [PATCH 4.14 178/237] staging: android: ashmem: Disallow ashmem memory from being remapped
+Date:   Thu, 27 Feb 2020 14:36:32 +0100
+Message-Id: <20200227132309.479948108@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -61,85 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo Romero <gromero@linux.vnet.ibm.com>
+From: Suren Baghdasaryan <surenb@google.com>
 
-[ Upstream commit 1c200e63d055ec0125e44a5e386b9b78aada7eb3 ]
+commit 6d67b0290b4b84c477e6a2fc6e005e174d3c7786 upstream.
 
-Currently it's possible that a thread on PPC64 LE has its endianness
-flipped inadvertently to Big-Endian resulting in a crash once the process
-is back from the signal handler.
+When ashmem file is mmapped, the resulting vma->vm_file points to the
+backing shmem file with the generic fops that do not check ashmem
+permissions like fops of ashmem do. If an mremap is done on the ashmem
+region, then the permission checks will be skipped. Fix that by disallowing
+mapping operation on the backing shmem file.
 
-If giveup_all() is called when regs->msr has the bits MSR.FP and MSR.VEC
-disabled (and hence MSR.VSX disabled too) it returns without calling
-check_if_tm_restore_required() which copies regs->msr to ckpt_regs->msr if
-the process caught a signal whilst in transactional mode. Then once in
-setup_tm_sigcontexts() MSR from ckpt_regs.msr is used, but since
-check_if_tm_restore_required() was not called previuosly, gp_regs[PT_MSR]
-gets a copy of invalid MSR bits as MSR in ckpt_regs was not updated from
-regs->msr and so is zeroed. Later when leaving the signal handler once in
-sys_rt_sigreturn() the TS bits of gp_regs[PT_MSR] are checked to determine
-if restore_tm_sigcontexts() must be called to pull in the correct MSR state
-into the user context. Because TS bits are zeroed
-restore_tm_sigcontexts() is never called and MSR restored from the user
-context on returning from the signal handler has the MSR.LE (the endianness
-bit) forced to zero (Big-Endian). That leads, for instance, to 'nop' being
-treated as an illegal instruction in the following sequence:
+Reported-by: Jann Horn <jannh@google.com>
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+Cc: stable <stable@vger.kernel.org> # 4.4,4.9,4.14,4.18,5.4
+Signed-off-by: Todd Kjos <tkjos@google.com>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Link: https://lore.kernel.org/r/20200127235616.48920-1-tkjos@google.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-	tbegin.
-	beq	1f
-	trap
-	tend.
-1:	nop
-
-on PPC64 LE machines and the process dies just after returning from the
-signal handler.
-
-PPC64 BE is also affected but in a subtle way since forcing Big-Endian on
-a BE machine does not change the endianness.
-
-This commit fixes the issue described above by ensuring that once in
-setup_tm_sigcontexts() the MSR used is from regs->msr instead of from
-ckpt_regs->msr and by ensuring that we pull in only the MSR.FP, MSR.VEC,
-and MSR.VSX bits from ckpt_regs->msr.
-
-The fix was tested both on LE and BE machines and no regression regarding
-the powerpc/tm selftests was observed.
-
-Signed-off-by: Gustavo Romero <gromero@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/signal_64.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/staging/android/ashmem.c |   28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/arch/powerpc/kernel/signal_64.c b/arch/powerpc/kernel/signal_64.c
-index 2d52fed72e216..b203c16d46d4e 100644
---- a/arch/powerpc/kernel/signal_64.c
-+++ b/arch/powerpc/kernel/signal_64.c
-@@ -207,7 +207,7 @@ static long setup_tm_sigcontexts(struct sigcontext __user *sc,
- 	elf_vrreg_t __user *tm_v_regs = sigcontext_vmx_regs(tm_sc);
- #endif
- 	struct pt_regs *regs = tsk->thread.regs;
--	unsigned long msr = tsk->thread.ckpt_regs.msr;
-+	unsigned long msr = tsk->thread.regs->msr;
- 	long err = 0;
+--- a/drivers/staging/android/ashmem.c
++++ b/drivers/staging/android/ashmem.c
+@@ -361,8 +361,23 @@ static inline vm_flags_t calc_vm_may_fla
+ 	       _calc_vm_trans(prot, PROT_EXEC,  VM_MAYEXEC);
+ }
  
- 	BUG_ON(tsk != current);
-@@ -216,6 +216,12 @@ static long setup_tm_sigcontexts(struct sigcontext __user *sc,
- 
- 	WARN_ON(tm_suspend_disabled);
- 
-+	/* Restore checkpointed FP, VEC, and VSX bits from ckpt_regs as
-+	 * it contains the correct FP, VEC, VSX state after we treclaimed
-+	 * the transaction and giveup_all() was called on reclaiming.
-+	 */
-+	msr |= tsk->thread.ckpt_regs.msr & (MSR_FP | MSR_VEC | MSR_VSX);
++static int ashmem_vmfile_mmap(struct file *file, struct vm_area_struct *vma)
++{
++	/* do not allow to mmap ashmem backing shmem file directly */
++	return -EPERM;
++}
 +
- 	/* Remove TM bits from thread's MSR.  The MSR in the sigcontext
- 	 * just indicates to userland that we were doing a transaction, but we
- 	 * don't want to return in transactional state.  This also ensures
--- 
-2.20.1
-
++static unsigned long
++ashmem_vmfile_get_unmapped_area(struct file *file, unsigned long addr,
++				unsigned long len, unsigned long pgoff,
++				unsigned long flags)
++{
++	return current->mm->get_unmapped_area(file, addr, len, pgoff, flags);
++}
++
+ static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
+ {
++	static struct file_operations vmfile_fops;
+ 	struct ashmem_area *asma = file->private_data;
+ 	int ret = 0;
+ 
+@@ -403,6 +418,19 @@ static int ashmem_mmap(struct file *file
+ 		}
+ 		vmfile->f_mode |= FMODE_LSEEK;
+ 		asma->file = vmfile;
++		/*
++		 * override mmap operation of the vmfile so that it can't be
++		 * remapped which would lead to creation of a new vma with no
++		 * asma permission checks. Have to override get_unmapped_area
++		 * as well to prevent VM_BUG_ON check for f_ops modification.
++		 */
++		if (!vmfile_fops.mmap) {
++			vmfile_fops = *vmfile->f_op;
++			vmfile_fops.mmap = ashmem_vmfile_mmap;
++			vmfile_fops.get_unmapped_area =
++					ashmem_vmfile_get_unmapped_area;
++		}
++		vmfile->f_op = &vmfile_fops;
+ 	}
+ 	get_file(asma->file);
+ 
 
 
