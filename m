@@ -2,51 +2,53 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F67C52D5A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA4EC54FF8
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A66E12468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFCFD20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813104;
-	bh=xesT2UlzCbBoPZ3jCcAKGHwDsacdBqRyufulwajcqKE=;
+	s=default; t=1582813159;
+	bh=4Q9zxIWr3nzH1lCkmXbXCZriRxQ09zVPUbdUTtpjbjc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SqfA6ucd1huKNr9rnK1t9GuAtyKtJkhUEADjM0pkNFyXG9eJAWLfAhgmfcCAXXsKD
-	 cmYYL5xjiJ3VlWbJU2W/RAR6unW7dWWfjFdaRQgVNhRFBfrCsAMV5HLdX/XEzkxLGV
-	 ebW/y452gERlS9mGXQTE968oY1WqHlwWZr/4bz+o=
+	b=qFcpsmxYHsPPGpvcIBm0pzRs63bVZcXiyFuy8tT3Nu33ErYjVE2WDwLXG+U8j2e0V
+	 oG4cGRCYL/z3AnotRW+ouSNUO9LyBGHbkq9FcEBhSFiQAB+QKOY3aOeYe/zqFVmpvY
+	 M7V3asSB7DVnMj5A5aQV0FCMw9TfDgk6p9vx/YPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389871AbgB0OSX (ORCPT
+        id S2390007AbgB0OTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:18:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58836 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:19:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389848AbgB0OSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:18:16 -0500
+        id S2389976AbgB0OTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:19:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 390B42468F;
-        Thu, 27 Feb 2020 14:18:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A99492468F;
+        Thu, 27 Feb 2020 14:19:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813095;
-        bh=xesT2UlzCbBoPZ3jCcAKGHwDsacdBqRyufulwajcqKE=;
+        s=default; t=1582813149;
+        bh=4Q9zxIWr3nzH1lCkmXbXCZriRxQ09zVPUbdUTtpjbjc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y+XKHBY+XcNSllwW7z9AzSeKt7uavNjJ5rattRqD1PCDKxnAOEyodEgMMFyG5LQx5
-         hrLD1Yn2QvitVChcOON0jNm2TWGdh6qj+uUPmyUmZKg8mzVXDPPV07Mahe4oepee/P
-         JMbUhwGIQ6jTX/4NGw9iC4kPyq0GREUSuN3qv3sA=
+        b=i4ztx6R2skXXZZtMr4YRWSPZm7Dwq8ek7WvWt3DDvlUzCqtCk9YvZyZCDLcj7TWq3
+         zcjDrByn+83cgU7XUUD9WLhnPs5Uqq7nngid5LVEBbPk23Hg423ePEUkrOUF+r5Shy
+         3u1+zcUkLMH/+RNZaWqzxvWqhJASpt3V/12t/K5Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.5 134/150] io_uring: prevent sq_thread from spinning when it should stop
-Date:   Thu, 27 Feb 2020 14:37:51 +0100
-Message-Id: <20200227132252.180011700@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 5.5 149/150] s390/mm: Explicitly compare PAGE_DEFAULT_KEY against zero in storage_key_init_range
+Date:   Thu, 27 Feb 2020 14:38:06 +0100
+Message-Id: <20200227132254.260920081@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -59,68 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Garzarella <sgarzare@redhat.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit 7143b5ac5750f404ff3a594b34fdf3fc2f99f828 upstream.
+commit 380324734956c64cd060e1db4304f3117ac15809 upstream.
 
-This patch drops 'cur_mm' before calling cond_resched(), to prevent
-the sq_thread from spinning even when the user process is finished.
+Clang warns:
 
-Before this patch, if the user process ended without closing the
-io_uring fd, the sq_thread continues to spin until the
-'sq_thread_idle' timeout ends.
+ In file included from ../arch/s390/purgatory/purgatory.c:10:
+ In file included from ../include/linux/kexec.h:18:
+ In file included from ../include/linux/crash_core.h:6:
+ In file included from ../include/linux/elfcore.h:5:
+ In file included from ../include/linux/user.h:1:
+ In file included from ../arch/s390/include/asm/user.h:11:
+ ../arch/s390/include/asm/page.h:45:6: warning: converting the result of
+ '<<' to a boolean always evaluates to false
+ [-Wtautological-constant-compare]
+         if (PAGE_DEFAULT_KEY)
+            ^
+ ../arch/s390/include/asm/page.h:23:44: note: expanded from macro
+ 'PAGE_DEFAULT_KEY'
+ #define PAGE_DEFAULT_KEY        (PAGE_DEFAULT_ACC << 4)
+                                                  ^
+ 1 warning generated.
 
-In the worst case where the 'sq_thread_idle' parameter is bigger than
-INT_MAX, the sq_thread will spin forever.
+Explicitly compare this against zero to silence the warning as it is
+intended to be used in a boolean context.
 
-Fixes: 6c271ce2f1d5 ("io_uring: add submission polling")
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: de3fa841e429 ("s390/mm: fix compile for PAGE_DEFAULT_KEY != 0")
+Link: https://github.com/ClangBuiltLinux/linux/issues/860
+Link: https://lkml.kernel.org/r/20200214064207.10381-1-natechancellor@gmail.com
+Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/io_uring.c |   24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ arch/s390/include/asm/page.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -3909,6 +3909,18 @@ static int io_sq_thread(void *data)
- 		 */
- 		if (!to_submit || ret == -EBUSY) {
- 			/*
-+			 * Drop cur_mm before scheduling, we can't hold it for
-+			 * long periods (or over schedule()). Do this before
-+			 * adding ourselves to the waitqueue, as the unuse/drop
-+			 * may sleep.
-+			 */
-+			if (cur_mm) {
-+				unuse_mm(cur_mm);
-+				mmput(cur_mm);
-+				cur_mm = NULL;
-+			}
-+
-+			/*
- 			 * We're polling. If we're within the defined idle
- 			 * period, then let us spin without work before going
- 			 * to sleep. The exception is if we got EBUSY doing
-@@ -3922,18 +3934,6 @@ static int io_sq_thread(void *data)
- 				continue;
- 			}
+--- a/arch/s390/include/asm/page.h
++++ b/arch/s390/include/asm/page.h
+@@ -42,7 +42,7 @@ void __storage_key_init_range(unsigned l
  
--			/*
--			 * Drop cur_mm before scheduling, we can't hold it for
--			 * long periods (or over schedule()). Do this before
--			 * adding ourselves to the waitqueue, as the unuse/drop
--			 * may sleep.
--			 */
--			if (cur_mm) {
--				unuse_mm(cur_mm);
--				mmput(cur_mm);
--				cur_mm = NULL;
--			}
--
- 			prepare_to_wait(&ctx->sqo_wait, &wait,
- 						TASK_INTERRUPTIBLE);
+ static inline void storage_key_init_range(unsigned long start, unsigned long end)
+ {
+-	if (PAGE_DEFAULT_KEY)
++	if (PAGE_DEFAULT_KEY != 0)
+ 		__storage_key_init_range(start, end);
+ }
  
 
 
