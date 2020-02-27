@@ -2,53 +2,51 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 629FAC34022
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30116C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 399B024697
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3FAA24697
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:39:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814375;
-	bh=08Lj0q5MBAug7J7RApZE4cdTfd5AwhADXQ6MMkcy2rA=;
+	s=default; t=1582814382;
+	bh=TIjHdADiwkFjXfbpjDNPlSxovxMRHrZrzwi8QVZ2//w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iccogv2oLtzMw8xFDIElUArU1L4iN7A22bjJytUm1hEMrECdb3PJsZ45LBvzEGJXW
-	 kDu3ktakM55eFyEY+iUeMD5E/nAsfXO9PNmJhWm7ZnhYqpFmHkXhnJPNBwNt8SdOxn
-	 fC+uY7jaAoHKTfMfqyjeKNSr+SEWJotGOxpNrjLA=
+	b=zPgJw6F1kGY31f5j8VB7IRg//17uGhcpEuJd1tRvjMNbrPWLBTprWB0bqR11iV68c
+	 yKYBZz9tmFFF2naXy/CN5/+ishysMa5JGSHR1zqmtJkz5ZBhjF90w1ijg66Yvk73aR
+	 5rJ7SetZGRUEm8Id40PEQq0ms8Tal5469rZLGTCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387432AbgB0Oje (ORCPT
+        id S1732229AbgB0Ojl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:39:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54838 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:39:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731726AbgB0Nym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:54:42 -0500
+        id S1731544AbgB0Nyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:54:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C84FF20578;
-        Thu, 27 Feb 2020 13:54:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91E1A246A5;
+        Thu, 27 Feb 2020 13:54:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811681;
-        bh=08Lj0q5MBAug7J7RApZE4cdTfd5AwhADXQ6MMkcy2rA=;
+        s=default; t=1582811678;
+        bh=TIjHdADiwkFjXfbpjDNPlSxovxMRHrZrzwi8QVZ2//w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u4RoafLZQCUPFet67DqJCqoVuafRcL84NYwdCEgLXsB1bzm3H9ElTbsTlzh9XeOco
-         Ine7Dq0wIsL5ieT6cR6y5VEyxYIfGJc/L0xkMHBIv8p2gT1jVq6MdAqmsxDx34Yf6u
-         Cu5q5FyBfR8RNikOow2kAniRZ2kp9/E9cgFHiE20=
+        b=jjkJgbqdsm8kk3dbkoLfK0ms/gxjReI+NG1ESi6ZeH6k49yrglp7nwXAt4uWGfCxw
+         reamEVN6Hkvig87MG0HGA2/p2M6u27pR74I2FM1znM2ZDd+KGM/kyORCpzmlY3dsdY
+         TxrsqGAw7kAAFBTKHnHDwn+sXcoIMV0lvUv9z7Mg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Minas Harutyunyan <hminas@synopsys.com>,
-        John Keeping <john@metanate.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 059/237] usb: dwc2: Fix IN FIFO allocation
-Date:   Thu, 27 Feb 2020 14:34:33 +0100
-Message-Id: <20200227132301.272981071@linuxfoundation.org>
+        stable@vger.kernel.org, Mike Jones <michael-a1.jones@analog.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.14 032/237] hwmon: (pmbus/ltc2978) Fix PMBus polling of MFR_COMMON definitions.
+Date:   Thu, 27 Feb 2020 14:34:06 +0100
+Message-Id: <20200227132259.094040066@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -61,84 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Keeping <john@metanate.com>
+From: Mike Jones <michael-a1.jones@analog.com>
 
-[ Upstream commit 644139f8b64d818f6345351455f14471510879a5 ]
+commit cf2b012c90e74e85d8aea7d67e48868069cfee0c upstream.
 
-On chips with fewer FIFOs than endpoints (for example RK3288 which has 9
-endpoints, but only 6 which are cabable of input), the DPTXFSIZN
-registers above the FIFO count may return invalid values.
+Change 21537dc driver PMBus polling of MFR_COMMON from bits 5/4 to
+bits 6/5. This fixs a LTC297X family bug where polling always returns
+not busy even when the part is busy. This fixes a LTC388X and
+LTM467X bug where polling used PEND and NOT_IN_TRANS, and BUSY was
+not polled, which can lead to NACKing of commands. LTC388X and
+LTM467X modules now poll BUSY and PEND, increasing reliability by
+eliminating NACKing of commands.
 
-With logging added on startup, I see:
-
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=1 sz=256
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=2 sz=128
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=3 sz=128
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=4 sz=64
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=5 sz=64
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=6 sz=32
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=7 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=8 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=9 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=10 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=11 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=12 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=13 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=14 sz=0
-	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=15 sz=0
-
-but:
-
-	# cat /sys/kernel/debug/ff580000.usb/fifo
-	Non-periodic FIFOs:
-	RXFIFO: Size 275
-	NPTXFIFO: Size 16, Start 0x00000113
-
-	Periodic TXFIFOs:
-		DPTXFIFO 1: Size 256, Start 0x00000123
-		DPTXFIFO 2: Size 128, Start 0x00000223
-		DPTXFIFO 3: Size 128, Start 0x000002a3
-		DPTXFIFO 4: Size 64, Start 0x00000323
-		DPTXFIFO 5: Size 64, Start 0x00000363
-		DPTXFIFO 6: Size 32, Start 0x000003a3
-		DPTXFIFO 7: Size 0, Start 0x000003e3
-		DPTXFIFO 8: Size 0, Start 0x000003a3
-		DPTXFIFO 9: Size 256, Start 0x00000123
-
-so it seems that FIFO 9 is mirroring FIFO 1.
-
-Fix the allocation by using the FIFO count instead of the endpoint count
-when selecting a FIFO for an endpoint.
-
-Acked-by: Minas Harutyunyan <hminas@synopsys.com>
-Signed-off-by: John Keeping <john@metanate.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Mike Jones <michael-a1.jones@analog.com>
+Link: https://lore.kernel.org/r/1580234400-2829-2-git-send-email-michael-a1.jones@analog.com
+Fixes: e04d1ce9bbb49 ("hwmon: (ltc2978) Add polling for chips requiring it")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+
 ---
- drivers/usb/dwc2/gadget.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/hwmon/pmbus/ltc2978.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
-index 4af9a1c652edb..aeb6f7c84ea0a 100644
---- a/drivers/usb/dwc2/gadget.c
-+++ b/drivers/usb/dwc2/gadget.c
-@@ -3933,11 +3933,12 @@ static int dwc2_hsotg_ep_enable(struct usb_ep *ep,
- 	 * a unique tx-fifo even if it is non-periodic.
- 	 */
- 	if (dir_in && hsotg->dedicated_fifos) {
-+		unsigned fifo_count = dwc2_hsotg_tx_fifo_count(hsotg);
- 		u32 fifo_index = 0;
- 		u32 fifo_size = UINT_MAX;
+--- a/drivers/hwmon/pmbus/ltc2978.c
++++ b/drivers/hwmon/pmbus/ltc2978.c
+@@ -89,8 +89,8 @@ enum chips { ltc2974, ltc2975, ltc2977,
  
- 		size = hs_ep->ep.maxpacket * hs_ep->mc;
--		for (i = 1; i < hsotg->num_of_eps; ++i) {
-+		for (i = 1; i <= fifo_count; ++i) {
- 			if (hsotg->fifo_map & (1 << i))
- 				continue;
- 			val = dwc2_readl(hsotg->regs + DPTXFSIZN(i));
--- 
-2.20.1
-
+ #define LTC_POLL_TIMEOUT		100	/* in milli-seconds */
+ 
+-#define LTC_NOT_BUSY			BIT(5)
+-#define LTC_NOT_PENDING			BIT(4)
++#define LTC_NOT_BUSY			BIT(6)
++#define LTC_NOT_PENDING			BIT(5)
+ 
+ /*
+  * LTC2978 clears peak data whenever the CLEAR_FAULTS command is executed, which
 
 
