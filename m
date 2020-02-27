@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6F9C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A7BC11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3B6424691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E911024691
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:49:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814949;
-	bh=U1hQYGmbYZuTgXI+foOvWiI4DWlD9KQ+H4SpRNWnz5A=;
+	s=default; t=1582814952;
+	bh=9tIYBVS/aBTE245KcMrgQ3burHBIEyEISkV8uvZ8saQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xkIJN1BFS62fYqCdWLrFQtVLwu2jXIDwIkme0aWNqns3S19Kp+obqOrsSh3BYFvDU
-	 cDNYxhdoSvAnQr1ZW+LKJ7nb202gO+dzcExc3+11IDsQRkkIwgRJ4t0rszgKrilkYB
-	 Ib2ebZZjVWLxOXjnCAjt4FePuZt4AWOVxmInruDs=
+	b=Zg1J1E5N7zZNiqNf5wlzRqln+MNOm2FbsHQBAlChYduMb3SNEtURqJOveKPEHSrFh
+	 F+/Um+iH3f4iOxIlIs8hcWRsmEEcMHN6PafJb8fP7aB1IlzEKRxX0eP+Ei67rtUfzT
+	 fm5Cn2E4UagM5Wffy7y1+fmj4WZ43ZC2g0abV9rk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732596AbgB0OtG (ORCPT
+        id S1729669AbgB0Nlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:49:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36788 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:41:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729272AbgB0NmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:42:01 -0500
+        id S1729288AbgB0Nlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:41:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0BD320726;
-        Thu, 27 Feb 2020 13:41:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A872C222C2;
+        Thu, 27 Feb 2020 13:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582810920;
-        bh=U1hQYGmbYZuTgXI+foOvWiI4DWlD9KQ+H4SpRNWnz5A=;
+        s=default; t=1582810907;
+        bh=9tIYBVS/aBTE245KcMrgQ3burHBIEyEISkV8uvZ8saQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MJOPpoq4/iGgRrFMRQsQyPGuWnWzKw76rwG/8M+YU3adekbd0+9ZY+tDNLyG+WeAf
-         xIMUyDdmLQc8EP9bkjfTdzZBlMlWjfGlVDUxF33ypC44jIhXiHOp4yEoVUh1wPUlcL
-         RjHbzfhgeIpi4ERpBTRHU23VYRBaWqxUeyCQOJho=
+        b=Z3vjDb3vDrNi2/GkfaqfxCwv1jLl7ZsZI/zl2Hf7RjRKvnVj88XMGUS1MzLhft4R7
+         SFSYPEaXcWpWGEZIcMly1TCfp/nwp0OKqKTsSL8wBJwCyV8n/tgKbjZzvhs8T0Ei2d
+         0yCFuXzyfoBoHPLE//eCfUFtLe8E2NCzMgZfO+bM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+        stable@vger.kernel.org, Chris Murphy <lists@colorremedies.com>,
+        Anand Jain <anand.jain@oracle.com>,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 047/113] ARM: dts: r8a7779: Add device node for ARM global timer
-Date:   Thu, 27 Feb 2020 14:36:03 +0100
-Message-Id: <20200227132219.272417587@linuxfoundation.org>
+Subject: [PATCH 4.4 016/113] btrfs: print message when tree-log replay starts
+Date:   Thu, 27 Feb 2020 14:35:32 +0100
+Message-Id: <20200227132214.311504481@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
 References: <20200227132211.791484803@linuxfoundation.org>
@@ -60,42 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: David Sterba <dsterba@suse.com>
 
-[ Upstream commit 8443ffd1bbd5be74e9b12db234746d12e8ea93e2 ]
+[ Upstream commit e8294f2f6aa6208ed0923aa6d70cea3be178309a ]
 
-Add a device node for the global timer, which is part of the Cortex-A9
-MPCore.
+There's no logged information about tree-log replay although this is
+something that points to previous unclean unmount. Other filesystems
+report that as well.
 
-The global timer can serve as an accurate (4 ns) clock source for
-scheduling and delay loops.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191211135222.26770-4-geert+renesas@glider.be
+Suggested-by: Chris Murphy <lists@colorremedies.com>
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Anand Jain <anand.jain@oracle.com>
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/r8a7779.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ fs/btrfs/disk-io.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
-index 6afa909865b52..8636e2321ab71 100644
---- a/arch/arm/boot/dts/r8a7779.dtsi
-+++ b/arch/arm/boot/dts/r8a7779.dtsi
-@@ -63,6 +63,14 @@
- 		      <0xf0000100 0x100>;
- 	};
+diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+index 2fb533233e8e3..656f0b7681855 100644
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -2972,6 +2972,7 @@ int open_ctree(struct super_block *sb,
  
-+	timer@f0000200 {
-+		compatible = "arm,cortex-a9-global-timer";
-+		reg = <0xf0000200 0x100>;
-+		interrupts = <GIC_PPI 11
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_EDGE_RISING)>;
-+		clocks = <&cpg_clocks R8A7779_CLK_ZS>;
-+	};
-+
- 	timer@f0000600 {
- 		compatible = "arm,cortex-a9-twd-timer";
- 		reg = <0xf0000600 0x20>;
+ 	/* do not make disk changes in broken FS */
+ 	if (btrfs_super_log_root(disk_super) != 0) {
++		btrfs_info(fs_info, "start tree-log replay");
+ 		ret = btrfs_replay_log(fs_info, fs_devices);
+ 		if (ret) {
+ 			err = ret;
 -- 
 2.20.1
 
