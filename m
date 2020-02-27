@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A16F6C54FCF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E79C54FCE
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7029F21D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:26:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DECE121D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:26:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813619;
-	bh=eXF2rV6X3gjuGXC82hTXXdpx13WqeW4mL0pDL5T2YyQ=;
+	s=default; t=1582813616;
+	bh=40/YJTNEfQFz961lGWDIvzjZtpTxZbNNhGx8Y5tN/3c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=azl0+wOxRkNaR9fMJAd75rZAdBOoB7SYTx4H9o5GkD/QeDPNuQmGz7CesZtS2FOlz
-	 6Ct5HgU4HPaGSVcQqsAKz127YdvKzaz7ccvrscjjJf1GlNlS7s94WUep+EfwD3NyIJ
-	 +Z7xQStK15dbyp5w1bL4Ir0qLbqMNLTNA1OFlOKI=
+	b=Rl0ezQBmgouyKXy6bnEWXPPB07wSq/7cUD3H1iKQtB/vHDBUJt4L7iZZb6iOhXSYy
+	 9FtWBIxbigRwH/0b0gjNUMUhEQlSejaoUOM2O3c1AXhdpgpzJ86Yf3W8zzMcuTGkEc
+	 ts4n2cFzKfss9UbG9TfTjRrMy2v4zHSqY0v3hRhw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388729AbgB0O06 (ORCPT
+        id S2388087AbgB0OJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:26:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47420 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:09:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387776AbgB0OJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:09:28 -0500
+        id S2388384AbgB0OJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:09:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE59A21D7E;
-        Thu, 27 Feb 2020 14:09:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4BB321D7E;
+        Thu, 27 Feb 2020 14:09:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812567;
-        bh=eXF2rV6X3gjuGXC82hTXXdpx13WqeW4mL0pDL5T2YyQ=;
+        s=default; t=1582812562;
+        bh=40/YJTNEfQFz961lGWDIvzjZtpTxZbNNhGx8Y5tN/3c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E3CjCDANr9gIPdBA4u9zNzYetOZF6Bd25m+f1N2jdd+x4f6ZoviPyQlsTxpoqEhsH
-         3DKqqBiNwFJIgNpeQl2b1/yIV8QOmGLjlQsxKNbXRAtWQQ1Vx+iYRVLODH++zpHUeB
-         oX91i22IAKWZ1mMJSvk/W/PSemOuJIlhIvlwls+M=
+        b=edWTdBzrrPekgdUWg3Of7sZwEMXnTHTgWtfCmcICKMPkIaNSNAwbTmNyclG9+wxmm
+         W6IESbpvr6PwU+N/BfHHABqxbaRVjHIJtA1MTNvrLhaopMuRj214VPKnkxUKRACUd/
+         KwyjhlzVAyRl4+EtFLZ9AAvZu40550HFxYC3NQ8Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, edes <edes@gmx.net>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.4 029/135] USB: quirks: blacklist duplicate ep on Sound Devices USBPre2
-Date:   Thu, 27 Feb 2020 14:36:09 +0100
-Message-Id: <20200227132233.502602893@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Chen <peter.chen@nxp.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH 5.4 027/135] usb: host: xhci: update event ring dequeue pointer on purpose
+Date:   Thu, 27 Feb 2020 14:36:07 +0100
+Message-Id: <20200227132233.228653421@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -59,146 +60,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Peter Chen <peter.chen@nxp.com>
 
-commit bdd1b147b8026df0e4260b387026b251d888ed01 upstream.
+commit dc0ffbea5729a3abafa577ebfce87f18b79e294b upstream.
 
-This device has a broken vendor-specific altsetting for interface 1,
-where endpoint 0x85 is declared as an isochronous endpoint despite being
-used by interface 2 for audio capture.
+On some situations, the software handles TRB events slower
+than adding TRBs, then xhci_handle_event can't return zero
+long time, the xHC will consider the event ring is full,
+and trigger "Event Ring Full" error, but in fact, the software
+has already finished lots of events, just no chance to
+update ERDP (event ring dequeue pointer).
 
-Device Descriptor:
-  bLength                18
-  bDescriptorType         1
-  bcdUSB               2.00
-  bDeviceClass          239 Miscellaneous Device
-  bDeviceSubClass         2
-  bDeviceProtocol         1 Interface Association
-  bMaxPacketSize0        64
-  idVendor           0x0926
-  idProduct          0x0202
-  bcdDevice            1.00
-  iManufacturer           1 Sound Devices
-  iProduct                2 USBPre2
-  iSerial                 3 [...]
-  bNumConfigurations      1
+In this commit, we force update ERDP if half of TRBS_PER_SEGMENT
+events have handled to avoid "Event Ring Full" error.
 
-[...]
-
-    Interface Descriptor:
-      bLength                 9
-      bDescriptorType         4
-      bInterfaceNumber        1
-      bAlternateSetting       3
-      bNumEndpoints           2
-      bInterfaceClass       255 Vendor Specific Class
-      bInterfaceSubClass      0
-      bInterfaceProtocol      0
-      iInterface              0
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x85  EP 5 IN
-        bmAttributes            5
-          Transfer Type            Isochronous
-          Synch Type               Asynchronous
-          Usage Type               Data
-        wMaxPacketSize     0x0126  1x 294 bytes
-        bInterval               1
-
-[...]
-
-    Interface Descriptor:
-      bLength                 9
-      bDescriptorType         4
-      bInterfaceNumber        2
-      bAlternateSetting       1
-      bNumEndpoints           1
-      bInterfaceClass         1 Audio
-      bInterfaceSubClass      2 Streaming
-      bInterfaceProtocol      0
-      iInterface              0
-      AudioStreaming Interface Descriptor:
-        bLength                 7
-        bDescriptorType        36
-        bDescriptorSubtype      1 (AS_GENERAL)
-        bTerminalLink           4
-        bDelay                  1 frames
-        wFormatTag         0x0001 PCM
-      AudioStreaming Interface Descriptor:
-        bLength                26
-        bDescriptorType        36
-        bDescriptorSubtype      2 (FORMAT_TYPE)
-        bFormatType             1 (FORMAT_TYPE_I)
-        bNrChannels             2
-        bSubframeSize           2
-        bBitResolution         16
-        bSamFreqType            6 Discrete
-        tSamFreq[ 0]         8000
-        tSamFreq[ 1]        16000
-        tSamFreq[ 2]        24000
-        tSamFreq[ 3]        32000
-        tSamFreq[ 4]        44100
-        tSamFreq[ 5]        48000
-      Endpoint Descriptor:
-        bLength                 9
-        bDescriptorType         5
-        bEndpointAddress     0x85  EP 5 IN
-        bmAttributes            5
-          Transfer Type            Isochronous
-          Synch Type               Asynchronous
-          Usage Type               Data
-        wMaxPacketSize     0x0126  1x 294 bytes
-        bInterval               4
-        bRefresh                0
-        bSynchAddress           0
-        AudioStreaming Endpoint Descriptor:
-          bLength                 7
-          bDescriptorType        37
-          bDescriptorSubtype      1 (EP_GENERAL)
-          bmAttributes         0x01
-            Sampling Frequency
-          bLockDelayUnits         2 Decoded PCM samples
-          wLockDelay         0x0000
-
-Since commit 3e4f8e21c4f2 ("USB: core: fix check for duplicate
-endpoints") USB core ignores any duplicate endpoints found during
-descriptor parsing, but in this case we need to ignore the first
-instance in order to avoid breaking the audio capture interface.
-
-Fixes: 3e4f8e21c4f2 ("USB: core: fix check for duplicate endpoints")
-Cc: stable <stable@vger.kernel.org>
-Reported-by: edes <edes@gmx.net>
-Tested-by: edes <edes@gmx.net>
-Link: https://lore.kernel.org/r/20200201105829.5682c887@acme7.acmenet
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20200203153830.26394-3-johan@kernel.org
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/1573836603-10871-2-git-send-email-mathias.nyman@linux.intel.com
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/quirks.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/usb/host/xhci-ring.c |   60 ++++++++++++++++++++++++++++++-------------
+ 1 file changed, 43 insertions(+), 17 deletions(-)
 
---- a/drivers/usb/core/quirks.c
-+++ b/drivers/usb/core/quirks.c
-@@ -354,6 +354,10 @@ static const struct usb_device_id usb_qu
- 	{ USB_DEVICE(0x0904, 0x6103), .driver_info =
- 			USB_QUIRK_LINEAR_FRAME_INTR_BINTERVAL },
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -2741,6 +2741,42 @@ static int xhci_handle_event(struct xhci
+ }
  
-+	/* Sound Devices USBPre2 */
-+	{ USB_DEVICE(0x0926, 0x0202), .driver_info =
-+			USB_QUIRK_ENDPOINT_BLACKLIST },
+ /*
++ * Update Event Ring Dequeue Pointer:
++ * - When all events have finished
++ * - To avoid "Event Ring Full Error" condition
++ */
++static void xhci_update_erst_dequeue(struct xhci_hcd *xhci,
++		union xhci_trb *event_ring_deq)
++{
++	u64 temp_64;
++	dma_addr_t deq;
 +
- 	/* Keytouch QWERTY Panel keyboard */
- 	{ USB_DEVICE(0x0926, 0x3333), .driver_info =
- 			USB_QUIRK_CONFIG_INTF_STRINGS },
-@@ -479,6 +483,7 @@ static const struct usb_device_id usb_am
-  * Matched for devices with USB_QUIRK_ENDPOINT_BLACKLIST.
-  */
- static const struct usb_device_id usb_endpoint_blacklist[] = {
-+	{ USB_DEVICE_INTERFACE_NUMBER(0x0926, 0x0202, 1), .driver_info = 0x85 },
- 	{ }
- };
++	temp_64 = xhci_read_64(xhci, &xhci->ir_set->erst_dequeue);
++	/* If necessary, update the HW's version of the event ring deq ptr. */
++	if (event_ring_deq != xhci->event_ring->dequeue) {
++		deq = xhci_trb_virt_to_dma(xhci->event_ring->deq_seg,
++				xhci->event_ring->dequeue);
++		if (deq == 0)
++			xhci_warn(xhci, "WARN something wrong with SW event ring dequeue ptr\n");
++		/*
++		 * Per 4.9.4, Software writes to the ERDP register shall
++		 * always advance the Event Ring Dequeue Pointer value.
++		 */
++		if ((temp_64 & (u64) ~ERST_PTR_MASK) ==
++				((u64) deq & (u64) ~ERST_PTR_MASK))
++			return;
++
++		/* Update HC event ring dequeue pointer */
++		temp_64 &= ERST_PTR_MASK;
++		temp_64 |= ((u64) deq & (u64) ~ERST_PTR_MASK);
++	}
++
++	/* Clear the event handler busy flag (RW1C) */
++	temp_64 |= ERST_EHB;
++	xhci_write_64(xhci, temp_64, &xhci->ir_set->erst_dequeue);
++}
++
++/*
+  * xHCI spec says we can get an interrupt, and if the HC has an error condition,
+  * we might get bad data out of the event ring.  Section 4.10.2.7 has a list of
+  * indicators of an event TRB error, but we check the status *first* to be safe.
+@@ -2751,9 +2787,9 @@ irqreturn_t xhci_irq(struct usb_hcd *hcd
+ 	union xhci_trb *event_ring_deq;
+ 	irqreturn_t ret = IRQ_NONE;
+ 	unsigned long flags;
+-	dma_addr_t deq;
+ 	u64 temp_64;
+ 	u32 status;
++	int event_loop = 0;
  
+ 	spin_lock_irqsave(&xhci->lock, flags);
+ 	/* Check if the xHC generated the interrupt, or the irq is shared */
+@@ -2807,24 +2843,14 @@ irqreturn_t xhci_irq(struct usb_hcd *hcd
+ 	/* FIXME this should be a delayed service routine
+ 	 * that clears the EHB.
+ 	 */
+-	while (xhci_handle_event(xhci) > 0) {}
+-
+-	temp_64 = xhci_read_64(xhci, &xhci->ir_set->erst_dequeue);
+-	/* If necessary, update the HW's version of the event ring deq ptr. */
+-	if (event_ring_deq != xhci->event_ring->dequeue) {
+-		deq = xhci_trb_virt_to_dma(xhci->event_ring->deq_seg,
+-				xhci->event_ring->dequeue);
+-		if (deq == 0)
+-			xhci_warn(xhci, "WARN something wrong with SW event "
+-					"ring dequeue ptr.\n");
+-		/* Update HC event ring dequeue pointer */
+-		temp_64 &= ERST_PTR_MASK;
+-		temp_64 |= ((u64) deq & (u64) ~ERST_PTR_MASK);
++	while (xhci_handle_event(xhci) > 0) {
++		if (event_loop++ < TRBS_PER_SEGMENT / 2)
++			continue;
++		xhci_update_erst_dequeue(xhci, event_ring_deq);
++		event_loop = 0;
+ 	}
+ 
+-	/* Clear the event handler busy flag (RW1C); event ring is empty. */
+-	temp_64 |= ERST_EHB;
+-	xhci_write_64(xhci, temp_64, &xhci->ir_set->erst_dequeue);
++	xhci_update_erst_dequeue(xhci, event_ring_deq);
+ 	ret = IRQ_HANDLED;
+ 
+ out:
 
 
