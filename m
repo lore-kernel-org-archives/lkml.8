@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B66C52D3A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3589DC3F34C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CED82469B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0806524656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:58:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811868;
-	bh=Wt3NAeACM4K4qNvn/QVuLHb67CRV4buzK2nKtMV9C+Q=;
+	s=default; t=1582811887;
+	bh=gSIXnvYSzb1E5aXmOOPxu2e/NXExAykLWXKDEtJ6b8o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zrjpDOIXtPG52h15Dvoe8B4znoedqGtfgihEivmggIrBFhSu4tBG6uze22+4nrtnf
-	 omtv9J/nRhYq+Y4EoP5gnaNW2nG/P87zMjHEDCoXRBYYSipTxJlk1c0ZqCRhQpPQk/
-	 Agy1gnrWKGtleVvz5W0orY1LYQHYeJsPGsf0izR4=
+	b=m7209b2uQsFZ5bMgWHIqJwUncKaVZe9EIYwp+cnrHo7gF2U+UvhooHGt+Ly0EZjH+
+	 3KwQDU/VBaixlflsIF4j5HFDJ5vo9GWF6NLsXSfYf3QXdzIozuyVy4QESo0P7mH5c+
+	 iEzs7E6nsMFIct8yRgLeLy5BaJwpubBSCrPly2dY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732346AbgB0N5r (ORCPT
+        id S1732231AbgB0N6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:57:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58742 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:58:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732329AbgB0N5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:57:43 -0500
+        id S1731910AbgB0N57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:57:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DABE24691;
-        Thu, 27 Feb 2020 13:57:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D5CB21D7E;
+        Thu, 27 Feb 2020 13:57:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811862;
-        bh=Wt3NAeACM4K4qNvn/QVuLHb67CRV4buzK2nKtMV9C+Q=;
+        s=default; t=1582811878;
+        bh=gSIXnvYSzb1E5aXmOOPxu2e/NXExAykLWXKDEtJ6b8o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K26fIWBNGS1vaLIHeWkjKSaHSpUkkSYAyq7nYBZLYkV/U6GvDPdsVtie31TKQ1tji
-         mhBGXks++R/ty+PxZjGHAypYiQdIpZy2r0p5uV+r3IWPT8fDQ4D7hrYu3FNml0sIZL
-         4g0C+6ye/Wto+XhHVu5/jYu5QiFim5DySZaINGEM=
+        b=K9OsDVMeIy5IMqilWDjhrABE1CVeBfX+vtNZnfRh0Nq492KrSVZAEbSfdll7o9opT
+         gwKF97LiE9gIT7mb4eVnQg63zzRLXmokutXOUwsq269d/hGQUn8EhazCcvC4SWklTf
+         PvswVBJ6l2hsNYosd9XtFknKrPmHFRhNbWJXTjzQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yu kuai <yukuai3@huawei.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 131/237] pwm: Remove set but not set variable pwm
-Date:   Thu, 27 Feb 2020 14:35:45 +0100
-Message-Id: <20200227132306.369036217@linuxfoundation.org>
+Subject: [PATCH 4.14 136/237] irqchip/mbigen: Set driver .suppress_bind_attrs to avoid remove problems
+Date:   Thu, 27 Feb 2020 14:35:50 +0100
+Message-Id: <20200227132306.702688221@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -62,46 +61,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: John Garry <john.garry@huawei.com>
 
-[ Upstream commit 9871abffc81048e20f02e15d6aa4558a44ad53ea ]
+[ Upstream commit d6152e6ec9e2171280436f7b31a571509b9287e1 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+The following crash can be seen for setting
+CONFIG_DEBUG_TEST_DRIVER_REMOVE=y for DT FW (which some people still use):
 
-	drivers/pwm/pwm-pca9685.c: In function ‘pca9685_pwm_gpio_free’:
-	drivers/pwm/pwm-pca9685.c:162:21: warning: variable ‘pwm’ set but not used [-Wunused-but-set-variable]
+Hisilicon MBIGEN-V2 60080000.interrupt-controller: Failed to create mbi-gen irqdomain
+Hisilicon MBIGEN-V2: probe of 60080000.interrupt-controller failed with error -12
 
-It is never used, and so can be removed. In that case, hold and release
-the lock 'pca->lock' can be removed since nothing will be done between
-them.
+[...]
 
-Fixes: e926b12c611c ("pwm: Clear chip_data in pwm_put()")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Unable to handle kernel paging request at virtual address 0000000000005008
+ Mem abort info:
+   ESR = 0x96000004
+   EC = 0x25: DABT (current EL), IL = 32 bits
+   SET = 0, FnV = 0
+   EA = 0, S1PTW = 0
+ Data abort info:
+   ISV = 0, ISS = 0x00000004
+   CM = 0, WnR = 0
+ user pgtable: 4k pages, 48-bit VAs, pgdp=0000041fb9990000
+ [0000000000005008] pgd=0000000000000000
+ Internal error: Oops: 96000004 [#1] PREEMPT SMP
+ Modules linked in:
+ CPU: 7 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc6-00002-g3fc42638a506-dirty #1622
+ Hardware name: Huawei Taishan 2280 /D05, BIOS Hisilicon D05 IT21 Nemo 2.0 RC0 04/18/2018
+ pstate: 40000085 (nZcv daIf -PAN -UAO)
+ pc : mbigen_set_type+0x38/0x60
+ lr : __irq_set_trigger+0x6c/0x188
+ sp : ffff800014b4b400
+ x29: ffff800014b4b400 x28: 0000000000000007
+ x27: 0000000000000000 x26: 0000000000000000
+ x25: ffff041fd83bd0d4 x24: ffff041fd83bd188
+ x23: 0000000000000000 x22: ffff80001193ce00
+ x21: 0000000000000004 x20: 0000000000000000
+ x19: ffff041fd83bd000 x18: ffffffffffffffff
+ x17: 0000000000000000 x16: 0000000000000000
+ x15: ffff8000119098c8 x14: ffff041fb94ec91c
+ x13: ffff041fb94ec1a1 x12: 0000000000000030
+ x11: 0101010101010101 x10: 0000000000000040
+ x9 : 0000000000000000 x8 : ffff041fb98c6680
+ x7 : ffff800014b4b380 x6 : ffff041fd81636c8
+ x5 : 0000000000000000 x4 : 000000000000025f
+ x3 : 0000000000005000 x2 : 0000000000005008
+ x1 : 0000000000000004 x0 : 0000000080000000
+ Call trace:
+  mbigen_set_type+0x38/0x60
+  __setup_irq+0x744/0x900
+  request_threaded_irq+0xe0/0x198
+  pcie_pme_probe+0x98/0x118
+  pcie_port_probe_service+0x38/0x78
+  really_probe+0xa0/0x3e0
+  driver_probe_device+0x58/0x100
+  __device_attach_driver+0x90/0xb0
+  bus_for_each_drv+0x64/0xc8
+  __device_attach+0xd8/0x138
+  device_initial_probe+0x10/0x18
+  bus_probe_device+0x90/0x98
+  device_add+0x4c4/0x770
+  device_register+0x1c/0x28
+  pcie_port_device_register+0x1e4/0x4f0
+  pcie_portdrv_probe+0x34/0xd8
+  local_pci_probe+0x3c/0xa0
+  pci_device_probe+0x128/0x1c0
+  really_probe+0xa0/0x3e0
+  driver_probe_device+0x58/0x100
+  __device_attach_driver+0x90/0xb0
+  bus_for_each_drv+0x64/0xc8
+  __device_attach+0xd8/0x138
+  device_attach+0x10/0x18
+  pci_bus_add_device+0x4c/0xb8
+  pci_bus_add_devices+0x38/0x88
+  pci_host_probe+0x3c/0xc0
+  pci_host_common_probe+0xf0/0x208
+  hisi_pcie_almost_ecam_probe+0x24/0x30
+  platform_drv_probe+0x50/0xa0
+  really_probe+0xa0/0x3e0
+  driver_probe_device+0x58/0x100
+  device_driver_attach+0x6c/0x90
+  __driver_attach+0x84/0xc8
+  bus_for_each_dev+0x74/0xc8
+  driver_attach+0x20/0x28
+  bus_add_driver+0x148/0x1f0
+  driver_register+0x60/0x110
+  __platform_driver_register+0x40/0x48
+  hisi_pcie_almost_ecam_driver_init+0x1c/0x24
+
+The specific problem here is that the mbigen driver real probe has failed
+as the mbigen_of_create_domain()->of_platform_device_create() call fails,
+the reason for that being that we never destroyed the platform device
+created during the remove test dry run and there is some conflict.
+
+Since we generally would never want to unbind this driver, and to save
+adding a driver tear down path for that, just set the driver
+.suppress_bind_attrs member to avoid this possibility.
+
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
+Link: https://lore.kernel.org/r/1579196323-180137-1-git-send-email-john.garry@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-pca9685.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/irqchip/irq-mbigen.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
-index 567f5e2771c47..e1e5dfcb16f36 100644
---- a/drivers/pwm/pwm-pca9685.c
-+++ b/drivers/pwm/pwm-pca9685.c
-@@ -170,13 +170,9 @@ static void pca9685_pwm_gpio_set(struct gpio_chip *gpio, unsigned int offset,
- static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
- {
- 	struct pca9685 *pca = gpiochip_get_data(gpio);
--	struct pwm_device *pwm;
- 
- 	pca9685_pwm_gpio_set(gpio, offset, 0);
- 	pm_runtime_put(pca->chip.dev);
--	mutex_lock(&pca->lock);
--	pwm = &pca->chip.pwms[offset];
--	mutex_unlock(&pca->lock);
- }
- 
- static int pca9685_pwm_gpio_get_direction(struct gpio_chip *chip,
+diff --git a/drivers/irqchip/irq-mbigen.c b/drivers/irqchip/irq-mbigen.c
+index 98b6e1d4b1a68..f7fdbf5d183b9 100644
+--- a/drivers/irqchip/irq-mbigen.c
++++ b/drivers/irqchip/irq-mbigen.c
+@@ -381,6 +381,7 @@ static struct platform_driver mbigen_platform_driver = {
+ 		.name		= "Hisilicon MBIGEN-V2",
+ 		.of_match_table	= mbigen_of_match,
+ 		.acpi_match_table = ACPI_PTR(mbigen_acpi_match),
++		.suppress_bind_attrs = true,
+ 	},
+ 	.probe			= mbigen_device_probe,
+ };
 -- 
 2.20.1
 
