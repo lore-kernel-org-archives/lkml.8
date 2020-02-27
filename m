@@ -2,152 +2,145 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1538BC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C44C34022
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E909824691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D8F424656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:43:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="EPN81Roz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731923AbgB0OnC (ORCPT
+        id S1731076AbgB0Ntk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:43:02 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:20122 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731091AbgB0Ntp (ORCPT
+        Thu, 27 Feb 2020 08:49:40 -0500
+Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:11735 "EHLO
+        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729837AbgB0Nta (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:49:45 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01RDlLkY008336;
-        Thu, 27 Feb 2020 08:49:43 -0500
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ydtrwka60-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Feb 2020 08:49:42 -0500
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 01RDnfB3017488
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Thu, 27 Feb 2020 08:49:41 -0500
-Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
- SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 27 Feb 2020 05:49:40 -0800
-Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
- SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 27 Feb 2020 05:49:40 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Thu, 27 Feb 2020 05:49:39 -0800
-Received: from saturn.ad.analog.com ([10.48.65.109])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01RDnVoo027892;
-        Thu, 27 Feb 2020 08:49:38 -0500
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 7/8] iio: buffer: drop devm_iio_hw_consumer_free() API call
-Date:   Thu, 27 Feb 2020 15:52:26 +0200
-Message-ID: <20200227135227.12433-7-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200227135227.12433-1-alexandru.ardelean@analog.com>
-References: <20200227135227.12433-1-alexandru.ardelean@analog.com>
+        Thu, 27 Feb 2020 08:49:30 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 6B47C3FFFF;
+        Thu, 27 Feb 2020 14:49:29 +0100 (CET)
+Authentication-Results: ste-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=EPN81Roz;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
+        dkim=pass (1024-bit key) header.d=shipmail.org
+Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id zZpp5hhf_Jwg; Thu, 27 Feb 2020 14:49:28 +0100 (CET)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id F34FB3FFFE;
+        Thu, 27 Feb 2020 14:49:26 +0100 (CET)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 27F77360058;
+        Thu, 27 Feb 2020 14:49:26 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1582811366; bh=dmA9EfEpLrguT6/Rljc0wE4Ag8/EI49OnW2QETp6mtc=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=EPN81Roz7tXs9Cw/4be9SSLQmZWi4wtXZXK8p54udnai4pfbkoaZUMngr+TBklMRJ
+         itDjoZliExsMqXjg1lPzPokhPUoX02CsCemuGE5kxLWAwYn5e9IHj3DWoTfO3uAA6o
+         PytqXJA4og9dpjaDtHGYEMZOhE/OuUlVCv0WQhvE=
+Subject: Re: [PATCH v5 1/3] drm/shmem: add support for per object caching
+ flags.
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org, Guillaume.Gardet@arm.com,
+        David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        gurchetansingh@chromium.org, tzimmermann@suse.de, yuq825@gmail.com,
+        noralf@tronnes.org, robh@kernel.org
+References: <20200226154752.24328-1-kraxel@redhat.com>
+ <20200226154752.24328-2-kraxel@redhat.com>
+ <f1afba4b-9c06-48a3-42c7-046695947e91@shipmail.org>
+ <20200227075321.ki74hfjpnsqv2yx2@sirius.home.kraxel.org>
+ <41ca197c-136a-75d8-b269-801db44d4cba@shipmail.org>
+ <20200227105643.h4klc3ybhpwv2l3x@sirius.home.kraxel.org>
+ <68a05ace-40bc-76d6-5464-2c96328874b9@shipmail.org>
+ <20200227132137.irruicvlkxpdo3so@sirius.home.kraxel.org>
+ <78eb099e-020f-91d1-672e-15176bf12cd4@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <b6f21041-d114-96c5-8f86-13eafd102c5d@shipmail.org>
+Date:   Thu, 27 Feb 2020 14:49:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-27_04:2020-02-26,2020-02-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- phishscore=0 adultscore=0 spamscore=0 mlxscore=0 mlxlogscore=991
- suspectscore=2 clxscore=1015 lowpriorityscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002270109
+In-Reply-To: <78eb099e-020f-91d1-672e-15176bf12cd4@shipmail.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's unused so far, so it can't be removed. Also makes sense to remove it
-to discourage weird uses of this call during review.
+On 2/27/20 2:44 PM, Thomas Hellström (VMware) wrote:
+> Hi,
+>
+> On 2/27/20 2:21 PM, Gerd Hoffmann wrote:
+>>    Hi,
+>>
+>>>> So I'd like to push patches 1+2 to -fixes and sort everything else 
+>>>> later
+>>>> in -next.  OK?
+>>> OK with me.
+>> Done.
+>>
+>>>> [ context: why shmem helpers use pgprot_writecombine + 
+>>>> pgprot_decrypted?
+>>>>             we get conflicting mappings because of that, linear kernel
+>>>>             map vs. gem object vmap/mmap ]
+>>> Do we have any idea what drivers are actually using
+>>> write-combine and decrypted?
+>> drivers/gpu/drm# find -name Kconfig* -print | xargs grep -l 
+>> DRM_GEM_SHMEM_HELPER
+>> ./lima/Kconfig
+>> ./tiny/Kconfig
+>> ./cirrus/Kconfig
+>> ./Kconfig
+>> ./panfrost/Kconfig
+>> ./udl/Kconfig
+>> ./v3d/Kconfig
+>> ./virtio/Kconfig
+>>
+>> virtio needs cached.
+>> cirrus+udl should be ok with cached too.
+>>
+>> Not clue about the others (lima, tiny, panfrost, v3d).  Maybe they use
+>> write-combine just because this is what they got by default from
+>> drm_gem_mmap_obj().  Maybe they actually need that.  Trying to Cc:
+>> maintainters (and drop stable@).
+>>
+>> On decrypted: I guess that is only relevant for virtual machines, i.e.
+>> virtio-gpu and cirrus?
+>>
+>> virtio-gpu needs it, otherwise the host can't show the virtual display.
+>> cirrus bounces everything via blits to vram, so it should be ok without
+>> decrypted.  I guess that implies we should make decrypted configurable.
+>
+> Decrypted here is clearly incorrect and violates the SEV spec, 
+> regardless of a config option.
+> The only correct way is currently to use dma_alloc_coherent() and 
+> mmap_coherent() to allocate decrypted memory and then use the 
+> pgprot_decrypted flag.
+>
+> Since the same page is aliased with two physical addresses (one 
+> encrypted and one decrypted) switching memory from one to the other 
+> needs extensive handling even to flush stale vmaps...
+>
+> So if virtio-gpu needs it for some bos, it should move away from shmem 
+> for those bos.
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/iio/buffer/industrialio-hw-consumer.c | 31 -------------------
- include/linux/iio/hw-consumer.h               |  1 -
- 2 files changed, 32 deletions(-)
+(But this is of course up to the virtio-gpu and drm maintainers), but 
+IMO, again, pgprot_decrypted() shouldn't be part of generic helpers.
 
-diff --git a/drivers/iio/buffer/industrialio-hw-consumer.c b/drivers/iio/buffer/industrialio-hw-consumer.c
-index 95165697d8ae..f2d27788f666 100644
---- a/drivers/iio/buffer/industrialio-hw-consumer.c
-+++ b/drivers/iio/buffer/industrialio-hw-consumer.c
-@@ -142,17 +142,6 @@ static void devm_iio_hw_consumer_release(struct device *dev, void *res)
- 	iio_hw_consumer_free(*(struct iio_hw_consumer **)res);
- }
- 
--static int devm_iio_hw_consumer_match(struct device *dev, void *res, void *data)
--{
--	struct iio_hw_consumer **r = res;
--
--	if (!r || !*r) {
--		WARN_ON(!r || !*r);
--		return 0;
--	}
--	return *r == data;
--}
--
- /**
-  * devm_iio_hw_consumer_alloc - Resource-managed iio_hw_consumer_alloc()
-  * @dev: Pointer to consumer device.
-@@ -160,9 +149,6 @@ static int devm_iio_hw_consumer_match(struct device *dev, void *res, void *data)
-  * Managed iio_hw_consumer_alloc. iio_hw_consumer allocated with this function
-  * is automatically freed on driver detach.
-  *
-- * If an iio_hw_consumer allocated with this function needs to be freed
-- * separately, devm_iio_hw_consumer_free() must be used.
-- *
-  * returns pointer to allocated iio_hw_consumer on success, NULL on failure.
-  */
- struct iio_hw_consumer *devm_iio_hw_consumer_alloc(struct device *dev)
-@@ -186,23 +172,6 @@ struct iio_hw_consumer *devm_iio_hw_consumer_alloc(struct device *dev)
- }
- EXPORT_SYMBOL_GPL(devm_iio_hw_consumer_alloc);
- 
--/**
-- * devm_iio_hw_consumer_free - Resource-managed iio_hw_consumer_free()
-- * @dev: Pointer to consumer device.
-- * @hwc: iio_hw_consumer to free.
-- *
-- * Free iio_hw_consumer allocated with devm_iio_hw_consumer_alloc().
-- */
--void devm_iio_hw_consumer_free(struct device *dev, struct iio_hw_consumer *hwc)
--{
--	int rc;
--
--	rc = devres_release(dev, devm_iio_hw_consumer_release,
--			    devm_iio_hw_consumer_match, hwc);
--	WARN_ON(rc);
--}
--EXPORT_SYMBOL_GPL(devm_iio_hw_consumer_free);
--
- /**
-  * iio_hw_consumer_enable() - Enable IIO hardware consumer
-  * @hwc: iio_hw_consumer to enable.
-diff --git a/include/linux/iio/hw-consumer.h b/include/linux/iio/hw-consumer.h
-index 44d48bb1d39f..e8255c2e33bc 100644
---- a/include/linux/iio/hw-consumer.h
-+++ b/include/linux/iio/hw-consumer.h
-@@ -14,7 +14,6 @@ struct iio_hw_consumer;
- struct iio_hw_consumer *iio_hw_consumer_alloc(struct device *dev);
- void iio_hw_consumer_free(struct iio_hw_consumer *hwc);
- struct iio_hw_consumer *devm_iio_hw_consumer_alloc(struct device *dev);
--void devm_iio_hw_consumer_free(struct device *dev, struct iio_hw_consumer *hwc);
- int iio_hw_consumer_enable(struct iio_hw_consumer *hwc);
- void iio_hw_consumer_disable(struct iio_hw_consumer *hwc);
- 
--- 
-2.20.1
+/Thomas
+
 
