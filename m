@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9195FC3F353
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1231C3F378
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C4E520801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C94D320714
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812609;
-	bh=XOvhWRgJnQAEKdt5II4Cu+xEPtvcVor2+V8/X1t/yts=;
+	s=default; t=1582812592;
+	bh=baZE+gclkLql6tEsjelvIynBIWZQ0jvWWVn0n8q8Rxw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=naUR5XB9VJfcNWPBfABIVQkIRLQXxV276zSCEghxhv82O0M6yN/Zjb3WHIMS0RkmG
-	 riaYlGgS1Ga/5mKdVplQYKm58V64c5xaREkR+KKfVvEQfbLetD0z6c72xFFIE7D6vz
-	 GketX4KfpkGQsA64WodE9iKRhlfoK/V9DFNxcais=
+	b=ozlZGEPTW3c5aArKv2Yg47pMv60lH+5r1J/jG9qUIZGAUwpO+ww9kDj6UPx58sDpB
+	 9y464HBTb7Z970LUldeEA4lY+SoNJ/tEpu7V9qJgDmaGTqtSRy2LhhzKhmeEi3JZve
+	 OPo1zElLDosSgSbJMjGr1xAdWrs/htIJ6s5L53TE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388492AbgB0OKI (ORCPT
+        id S2388414AbgB0OJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:10:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48242 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:09:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387775AbgB0OKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:10:07 -0500
+        id S2388200AbgB0OJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:09:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC5E920578;
-        Thu, 27 Feb 2020 14:10:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EEBA20714;
+        Thu, 27 Feb 2020 14:09:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812606;
-        bh=XOvhWRgJnQAEKdt5II4Cu+xEPtvcVor2+V8/X1t/yts=;
+        s=default; t=1582812585;
+        bh=baZE+gclkLql6tEsjelvIynBIWZQ0jvWWVn0n8q8Rxw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LkGQJvm/tKFaxlhY7FI4WwTsG9h2BNBIKd3BWUnJAqE16tHwxTsfR1Ysb2xipsL01
-         IyU3RFhzSUUcgvwc5ePFd1SyTjFHg2x3afBKKyMX0BskJ22f1CQ+7rvTIkB1B0KCTS
-         VxLcRsuZDepsaGQPGVTn8a6q62rYok77X9h9mSKs=
+        b=Tuq7FgaKf87PdmxnB74w9pvTaoAtViYndBghxtDwLQ4wkyJWsLn2QAwyFaZ8R/1eZ
+         hXIrcKnZOrF17WHE+0GC38iLIvUI4k6CfWRkRAwcjxJxOgR13YUUxTPe/RvXPrGKL/
+         xY/fVEhF2s0VKOuSiD5BKW9N2PG7AeVEVvcbkFFo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Suraj Jitindar Singh <surajjs@amazon.com>,
-        Theodore Tso <tytso@mit.edu>, Balbir Singh <sblbir@amazon.com>,
-        stable@kernel.org
-Subject: [PATCH 5.4 082/135] ext4: fix potential race between s_group_info online resizing and access
-Date:   Thu, 27 Feb 2020 14:37:02 +0100
-Message-Id: <20200227132241.697597251@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH 5.4 075/135] drm/i915: Update drm/i915 bug filing URL
+Date:   Thu, 27 Feb 2020 14:36:55 +0100
+Message-Id: <20200227132240.661052202@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -60,180 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suraj Jitindar Singh <surajjs@amazon.com>
+From: Jani Nikula <jani.nikula@intel.com>
 
-commit df3da4ea5a0fc5d115c90d5aa6caa4dd433750a7 upstream.
+commit 7ddc7005a0aa2f43a826b71f5d6bd7d4b90f8f2a upstream.
 
-During an online resize an array of pointers to s_group_info gets replaced
-so it can get enlarged. If there is a concurrent access to the array in
-ext4_get_group_info() and this memory has been reused then this can lead to
-an invalid memory access.
+We've moved from bugzilla to gitlab.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206443
-Link: https://lore.kernel.org/r/20200221053458.730016-3-tytso@mit.edu
-Signed-off-by: Suraj Jitindar Singh <surajjs@amazon.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Balbir Singh <sblbir@amazon.com>
-Cc: stable@kernel.org
+Cc: stable@vger.kernel.org
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200212160434.6437-2-jani.nikula@intel.com
+(cherry picked from commit ddae4d7af0bbe3b2051f1603459a8b24e9a19324)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/ext4.h    |    8 ++++----
- fs/ext4/mballoc.c |   52 +++++++++++++++++++++++++++++++++++-----------------
- 2 files changed, 39 insertions(+), 21 deletions(-)
+ drivers/gpu/drm/i915/Kconfig          |    5 ++---
+ drivers/gpu/drm/i915/i915_gpu_error.c |    3 ++-
+ drivers/gpu/drm/i915/i915_utils.c     |    5 ++---
+ 3 files changed, 6 insertions(+), 7 deletions(-)
 
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -1458,7 +1458,7 @@ struct ext4_sb_info {
- #endif
+--- a/drivers/gpu/drm/i915/Kconfig
++++ b/drivers/gpu/drm/i915/Kconfig
+@@ -75,9 +75,8 @@ config DRM_I915_CAPTURE_ERROR
+ 	help
+ 	  This option enables capturing the GPU state when a hang is detected.
+ 	  This information is vital for triaging hangs and assists in debugging.
+-	  Please report any hang to
+-            https://bugs.freedesktop.org/enter_bug.cgi?product=DRI
+-	  for triaging.
++	  Please report any hang for triaging according to:
++	    https://gitlab.freedesktop.org/drm/intel/-/wikis/How-to-file-i915-bugs
  
- 	/* for buddy allocator */
--	struct ext4_group_info ***s_group_info;
-+	struct ext4_group_info ** __rcu *s_group_info;
- 	struct inode *s_buddy_cache;
- 	spinlock_t s_md_lock;
- 	unsigned short *s_mb_offsets;
-@@ -2931,13 +2931,13 @@ static inline
- struct ext4_group_info *ext4_get_group_info(struct super_block *sb,
- 					    ext4_group_t group)
- {
--	 struct ext4_group_info ***grp_info;
-+	 struct ext4_group_info **grp_info;
- 	 long indexv, indexh;
- 	 BUG_ON(group >= EXT4_SB(sb)->s_groups_count);
--	 grp_info = EXT4_SB(sb)->s_group_info;
- 	 indexv = group >> (EXT4_DESC_PER_BLOCK_BITS(sb));
- 	 indexh = group & ((EXT4_DESC_PER_BLOCK(sb)) - 1);
--	 return grp_info[indexv][indexh];
-+	 grp_info = sbi_array_rcu_deref(EXT4_SB(sb), s_group_info, indexv);
-+	 return grp_info[indexh];
- }
+ 	  If in doubt, say "Y".
  
- /*
---- a/fs/ext4/mballoc.c
-+++ b/fs/ext4/mballoc.c
-@@ -2356,7 +2356,7 @@ int ext4_mb_alloc_groupinfo(struct super
- {
- 	struct ext4_sb_info *sbi = EXT4_SB(sb);
- 	unsigned size;
--	struct ext4_group_info ***new_groupinfo;
-+	struct ext4_group_info ***old_groupinfo, ***new_groupinfo;
+--- a/drivers/gpu/drm/i915/i915_gpu_error.c
++++ b/drivers/gpu/drm/i915/i915_gpu_error.c
+@@ -1768,7 +1768,8 @@ void i915_capture_error_state(struct drm
+ 	if (!xchg(&warned, true) &&
+ 	    ktime_get_real_seconds() - DRIVER_TIMESTAMP < DAY_AS_SECONDS(180)) {
+ 		pr_info("GPU hangs can indicate a bug anywhere in the entire gfx stack, including userspace.\n");
+-		pr_info("Please file a _new_ bug report on bugs.freedesktop.org against DRI -> DRM/Intel\n");
++		pr_info("Please file a _new_ bug report at https://gitlab.freedesktop.org/drm/intel/issues/new.\n");
++		pr_info("Please see https://gitlab.freedesktop.org/drm/intel/-/wikis/How-to-file-i915-bugs for details.\n");
+ 		pr_info("drm/i915 developers can then reassign to the right component if it's not a kernel issue.\n");
+ 		pr_info("The GPU crash dump is required to analyze GPU hangs, so please always attach it.\n");
+ 		pr_info("GPU crash dump saved to /sys/class/drm/card%d/error\n",
+--- a/drivers/gpu/drm/i915/i915_utils.c
++++ b/drivers/gpu/drm/i915/i915_utils.c
+@@ -8,9 +8,8 @@
+ #include "i915_drv.h"
+ #include "i915_utils.h"
  
- 	size = (ngroups + EXT4_DESC_PER_BLOCK(sb) - 1) >>
- 		EXT4_DESC_PER_BLOCK_BITS(sb);
-@@ -2369,13 +2369,16 @@ int ext4_mb_alloc_groupinfo(struct super
- 		ext4_msg(sb, KERN_ERR, "can't allocate buddy meta group");
- 		return -ENOMEM;
- 	}
--	if (sbi->s_group_info) {
--		memcpy(new_groupinfo, sbi->s_group_info,
-+	rcu_read_lock();
-+	old_groupinfo = rcu_dereference(sbi->s_group_info);
-+	if (old_groupinfo)
-+		memcpy(new_groupinfo, old_groupinfo,
- 		       sbi->s_group_info_size * sizeof(*sbi->s_group_info));
--		kvfree(sbi->s_group_info);
--	}
--	sbi->s_group_info = new_groupinfo;
-+	rcu_read_unlock();
-+	rcu_assign_pointer(sbi->s_group_info, new_groupinfo);
- 	sbi->s_group_info_size = size / sizeof(*sbi->s_group_info);
-+	if (old_groupinfo)
-+		ext4_kvfree_array_rcu(old_groupinfo);
- 	ext4_debug("allocated s_groupinfo array for %d meta_bg's\n", 
- 		   sbi->s_group_info_size);
- 	return 0;
-@@ -2387,6 +2390,7 @@ int ext4_mb_add_groupinfo(struct super_b
- {
- 	int i;
- 	int metalen = 0;
-+	int idx = group >> EXT4_DESC_PER_BLOCK_BITS(sb);
- 	struct ext4_sb_info *sbi = EXT4_SB(sb);
- 	struct ext4_group_info **meta_group_info;
- 	struct kmem_cache *cachep = get_groupinfo_cache(sb->s_blocksize_bits);
-@@ -2405,12 +2409,12 @@ int ext4_mb_add_groupinfo(struct super_b
- 				 "for a buddy group");
- 			goto exit_meta_group_info;
- 		}
--		sbi->s_group_info[group >> EXT4_DESC_PER_BLOCK_BITS(sb)] =
--			meta_group_info;
-+		rcu_read_lock();
-+		rcu_dereference(sbi->s_group_info)[idx] = meta_group_info;
-+		rcu_read_unlock();
- 	}
+-#define FDO_BUG_URL "https://bugs.freedesktop.org/enter_bug.cgi?product=DRI"
+-#define FDO_BUG_MSG "Please file a bug at " FDO_BUG_URL " against DRM/Intel " \
+-		    "providing the dmesg log by booting with drm.debug=0xf"
++#define FDO_BUG_URL "https://gitlab.freedesktop.org/drm/intel/-/wikis/How-to-file-i915-bugs"
++#define FDO_BUG_MSG "Please file a bug on drm/i915; see " FDO_BUG_URL " for details."
  
--	meta_group_info =
--		sbi->s_group_info[group >> EXT4_DESC_PER_BLOCK_BITS(sb)];
-+	meta_group_info = sbi_array_rcu_deref(sbi, s_group_info, idx);
- 	i = group & (EXT4_DESC_PER_BLOCK(sb) - 1);
- 
- 	meta_group_info[i] = kmem_cache_zalloc(cachep, GFP_NOFS);
-@@ -2458,8 +2462,13 @@ int ext4_mb_add_groupinfo(struct super_b
- exit_group_info:
- 	/* If a meta_group_info table has been allocated, release it now */
- 	if (group % EXT4_DESC_PER_BLOCK(sb) == 0) {
--		kfree(sbi->s_group_info[group >> EXT4_DESC_PER_BLOCK_BITS(sb)]);
--		sbi->s_group_info[group >> EXT4_DESC_PER_BLOCK_BITS(sb)] = NULL;
-+		struct ext4_group_info ***group_info;
-+
-+		rcu_read_lock();
-+		group_info = rcu_dereference(sbi->s_group_info);
-+		kfree(group_info[idx]);
-+		group_info[idx] = NULL;
-+		rcu_read_unlock();
- 	}
- exit_meta_group_info:
- 	return -ENOMEM;
-@@ -2472,6 +2481,7 @@ static int ext4_mb_init_backend(struct s
- 	struct ext4_sb_info *sbi = EXT4_SB(sb);
- 	int err;
- 	struct ext4_group_desc *desc;
-+	struct ext4_group_info ***group_info;
- 	struct kmem_cache *cachep;
- 
- 	err = ext4_mb_alloc_groupinfo(sb, ngroups);
-@@ -2507,11 +2517,16 @@ err_freebuddy:
- 	while (i-- > 0)
- 		kmem_cache_free(cachep, ext4_get_group_info(sb, i));
- 	i = sbi->s_group_info_size;
-+	rcu_read_lock();
-+	group_info = rcu_dereference(sbi->s_group_info);
- 	while (i-- > 0)
--		kfree(sbi->s_group_info[i]);
-+		kfree(group_info[i]);
-+	rcu_read_unlock();
- 	iput(sbi->s_buddy_cache);
- err_freesgi:
--	kvfree(sbi->s_group_info);
-+	rcu_read_lock();
-+	kvfree(rcu_dereference(sbi->s_group_info));
-+	rcu_read_unlock();
- 	return -ENOMEM;
- }
- 
-@@ -2700,7 +2715,7 @@ int ext4_mb_release(struct super_block *
- 	ext4_group_t ngroups = ext4_get_groups_count(sb);
- 	ext4_group_t i;
- 	int num_meta_group_infos;
--	struct ext4_group_info *grinfo;
-+	struct ext4_group_info *grinfo, ***group_info;
- 	struct ext4_sb_info *sbi = EXT4_SB(sb);
- 	struct kmem_cache *cachep = get_groupinfo_cache(sb->s_blocksize_bits);
- 
-@@ -2719,9 +2734,12 @@ int ext4_mb_release(struct super_block *
- 		num_meta_group_infos = (ngroups +
- 				EXT4_DESC_PER_BLOCK(sb) - 1) >>
- 			EXT4_DESC_PER_BLOCK_BITS(sb);
-+		rcu_read_lock();
-+		group_info = rcu_dereference(sbi->s_group_info);
- 		for (i = 0; i < num_meta_group_infos; i++)
--			kfree(sbi->s_group_info[i]);
--		kvfree(sbi->s_group_info);
-+			kfree(group_info[i]);
-+		kvfree(group_info);
-+		rcu_read_unlock();
- 	}
- 	kfree(sbi->s_mb_offsets);
- 	kfree(sbi->s_mb_maxs);
+ void
+ __i915_printk(struct drm_i915_private *dev_priv, const char *level,
 
 
