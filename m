@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBBAC3F359
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 688BAC3F356
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 773072468D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BEC420578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811201;
-	bh=ocdjRBdF3SWbCeWgrak9y4X6hDQvhe0i5iBNvmefeNU=;
+	s=default; t=1582811173;
+	bh=rHPaUk6u286XrQ+yGXZ96uDdkynwYvW284M6ai2NP80=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H/ZCE2Tv/y9g8T0WpNva3bkti44BZ62c5uBGKdPWH4ldt5+ZgmOrce6f1mUmhrUZ/
-	 D3faheVjZ69CvrdONJtPr4EVNmjzjfL+o8u5LuMDl60splpG1+9uVBdJ362avCKeLC
-	 aGs1QYYZjVl9BFBuby+fpywlazppJseUkMlAGII4=
+	b=zJrTECGpeMex8OinKuuNIgL/IUVbaqucIcyQUoDrvH9lxTiTI1greiEmH+5HTxbcm
+	 Q/hicCiZrgVjaTZuslYren3F6tjG5atgTYkqJnVSehSyFI4c7oBL2UjfwUmKMN4sQf
+	 MU6rYLmLVjkGiKhbohvEJGszjFvYPdOhv9F8R7a0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730326AbgB0Nqk (ORCPT
+        id S1730481AbgB0NqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:46:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42870 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:46:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730556AbgB0Nqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:46:37 -0500
+        id S1730477AbgB0NqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:46:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6297320801;
-        Thu, 27 Feb 2020 13:46:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 101A324688;
+        Thu, 27 Feb 2020 13:46:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811196;
-        bh=ocdjRBdF3SWbCeWgrak9y4X6hDQvhe0i5iBNvmefeNU=;
+        s=default; t=1582811168;
+        bh=rHPaUk6u286XrQ+yGXZ96uDdkynwYvW284M6ai2NP80=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VA3uKXtwgd2LHldoqZODlPnP6awQk0CY2ASxhp/T59VX7aR/M++oNtnYO2m7WkpyD
-         WFj8yMGPhyRo8W4WVmr9w9Hpgk1q8KCS9eMTIE654PBAGH618LYo+fRqrdD8WJ7lwv
-         g3vlSBJvFeR9PXs/IZun3y+uwlGKMuTkTLc0iNXw=
+        b=Q2YJuoZx6GbyIqLMAH/LKdEfe2ZfJ4iA6keubAXkxINTIvBtEQaROXAGb3f5/YY3T
+         oMHIGVZCEJ6TmW4zead7fcBWdarFx4Fkrd317LKgOdLphkTKFrzYUMGWUyCxy2MWLj
+         ZPS+5I09se296YuDkdxVxbsy1k/VWmPekwDDTWBk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kai Li <li.kai4@h3c.com>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 038/165] jbd2: clear JBD2_ABORT flag before journal_reset to update log tail info when load journal
-Date:   Thu, 27 Feb 2020 14:35:12 +0100
-Message-Id: <20200227132236.747263793@linuxfoundation.org>
+        stable@vger.kernel.org, Wenyou Yang <wenyou.yang@microchip.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 028/165] media: i2c: mt9v032: fix enum mbus codes and frame sizes
+Date:   Thu, 27 Feb 2020 14:35:02 +0100
+Message-Id: <20200227132235.028851774@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -59,53 +63,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Li <li.kai4@h3c.com>
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-[ Upstream commit a09decff5c32060639a685581c380f51b14e1fc2 ]
+[ Upstream commit 1451d5ae351d938a0ab1677498c893f17b9ee21d ]
 
-If the journal is dirty when the filesystem is mounted, jbd2 will replay
-the journal but the journal superblock will not be updated by
-journal_reset() because JBD2_ABORT flag is still set (it was set in
-journal_init_common()). This is problematic because when a new transaction
-is then committed, it will be recorded in block 1 (journal->j_tail was set
-to 1 in journal_reset()). If unclean shutdown happens again before the
-journal superblock is updated, the new recorded transaction will not be
-replayed during the next mount (because of stale sb->s_start and
-sb->s_sequence values) which can lead to filesystem corruption.
+This driver supports both the mt9v032 (color) and the mt9v022 (mono)
+sensors. Depending on which sensor is used, the format from the sensor is
+different. The format.code inside the dev struct holds this information.
+The enum mbus and enum frame sizes need to take into account both type of
+sensors, not just the color one. To solve this, use the format.code in
+these functions instead of the hardcoded bayer color format (which is only
+used for mt9v032).
 
-Fixes: 85e0c4e89c1b ("jbd2: if the journal is aborted then don't allow update of the log tail")
-Signed-off-by: Kai Li <li.kai4@h3c.com>
-Link: https://lore.kernel.org/r/20200111022542.5008-1-li.kai4@h3c.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+[Sakari Ailus: rewrapped commit message]
+
+Suggested-by: Wenyou Yang <wenyou.yang@microchip.com>
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/journal.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/media/i2c/mt9v032.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index 3cbcf649ac660..40c754854b29e 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -1670,6 +1670,11 @@ int jbd2_journal_load(journal_t *journal)
- 		       journal->j_devname);
- 		return -EFSCORRUPTED;
- 	}
-+	/*
-+	 * clear JBD2_ABORT flag initialized in journal_init_common
-+	 * here to update log tail information with the newest seq.
-+	 */
-+	journal->j_flags &= ~JBD2_ABORT;
+diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v032.c
+index 58eb62f1ba214..a018a76662df7 100644
+--- a/drivers/media/i2c/mt9v032.c
++++ b/drivers/media/i2c/mt9v032.c
+@@ -423,10 +423,12 @@ static int mt9v032_enum_mbus_code(struct v4l2_subdev *subdev,
+ 				  struct v4l2_subdev_pad_config *cfg,
+ 				  struct v4l2_subdev_mbus_code_enum *code)
+ {
++	struct mt9v032 *mt9v032 = to_mt9v032(subdev);
++
+ 	if (code->index > 0)
+ 		return -EINVAL;
  
- 	/* OK, we've finished with the dynamic journal bits:
- 	 * reinitialise the dynamic contents of the superblock in memory
-@@ -1677,7 +1682,6 @@ int jbd2_journal_load(journal_t *journal)
- 	if (journal_reset(journal))
- 		goto recovery_error;
- 
--	journal->j_flags &= ~JBD2_ABORT;
- 	journal->j_flags |= JBD2_LOADED;
+-	code->code = MEDIA_BUS_FMT_SGRBG10_1X10;
++	code->code = mt9v032->format.code;
  	return 0;
+ }
  
+@@ -434,7 +436,11 @@ static int mt9v032_enum_frame_size(struct v4l2_subdev *subdev,
+ 				   struct v4l2_subdev_pad_config *cfg,
+ 				   struct v4l2_subdev_frame_size_enum *fse)
+ {
+-	if (fse->index >= 3 || fse->code != MEDIA_BUS_FMT_SGRBG10_1X10)
++	struct mt9v032 *mt9v032 = to_mt9v032(subdev);
++
++	if (fse->index >= 3)
++		return -EINVAL;
++	if (mt9v032->format.code != fse->code)
+ 		return -EINVAL;
+ 
+ 	fse->min_width = MT9V032_WINDOW_WIDTH_DEF / (1 << fse->index);
 -- 
 2.20.1
 
