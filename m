@@ -2,50 +2,53 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A80C3F35B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E05ECC3F36E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0214246B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8B3C20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:54:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811606;
-	bh=7uaQ+xB7wlH3uFDsLYIQcjhaLBnRLr4J8dzDV5/9yM0=;
+	s=default; t=1582811669;
+	bh=XBUkZfzU2Iyjt7RRfCtpP/5WtoHJ/dr/xZEWSEIXxyw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZtQRDZNI8obkg00VuVqYvkYMLtKwtxtTx+5zVx//lF3ppLcAV6AKLT6AdZ+mSqYE8
-	 PfSFF+KZgtqsHpOAT5mDINKh96sjU4EgEOEvawoUSNNGZ0KyKWMUuxLDkrdqxnOKXs
-	 p3gOTBr63gmHexWAjn8DDzGgI7+A4XDxSDtxyrR0=
+	b=c2WrwDQgZGYDD1CeLLWBnmOERQdi1/C00xrDELMGnUZE2W8FWeE7NXCFnt3wfcY7k
+	 EYCYWwahivKLv3K3JQYfGu+PcTeUkdeEwRSvZ+82Y1ahRgBS3Wv9ssonUOSeRNfS4R
+	 IvV8vY2gM/JOtr0uxFHsSI1cWnRH9u1weT3J/ymQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731686AbgB0NxY (ORCPT
+        id S1731875AbgB0Ny1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:53:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53130 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:54:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731674AbgB0NxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:53:21 -0500
+        id S1731851AbgB0NyS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:54:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2504924656;
-        Thu, 27 Feb 2020 13:53:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 655D520801;
+        Thu, 27 Feb 2020 13:54:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811600;
-        bh=7uaQ+xB7wlH3uFDsLYIQcjhaLBnRLr4J8dzDV5/9yM0=;
+        s=default; t=1582811657;
+        bh=XBUkZfzU2Iyjt7RRfCtpP/5WtoHJ/dr/xZEWSEIXxyw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kf6qIQUXtPzuNddZj+jhwHSVNe3b89C3jTXmL3SulmkXMx6iC61aYDk1n1THU/PKW
-         AX6rQ/uqmrRD7HFKYB2ZWhyvF/knACYn7E9gkbx6bZ5pGJpdAH3d8zUjjPhoDOQgZz
-         D9/LG1dbXtG/VUhXlG5uqUh4w3uODOoEJ/HDFoeA=
+        b=nTgrqnyoHNk1PwnGFloZmyIGk+pBXxNtiX+ySL30vuVqs9z++hKL/5uy1qRRpIRQe
+         4Fj78aKgUb24W3Q35V9ord6iGpQHzhTSqRJ5/xwCut4NIFAxXRkSdmeaqGL6Hnk/iD
+         SJwv0Ejj3MW5Lni0a4U420XzGND94Uq/ihLtVagg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 003/237] ALSA: hda: Use scnprintf() for printing texts for sysfs/procfs
-Date:   Thu, 27 Feb 2020 14:33:37 +0100
-Message-Id: <20200227132255.778177428@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Qian Cai <cai@lca.pw>, Theodore Tso <tytso@mit.edu>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 051/237] char/random: silence a lockdep splat with printk()
+Date:   Thu, 27 Feb 2020 14:34:25 +0100
+Message-Id: <20200227132300.525644421@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -58,82 +61,278 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
 
-commit 44eeb081b8630bb3ad3cd381d1ae1831463e48bb upstream.
+[ Upstream commit 1b710b1b10eff9d46666064ea25f079f70bc67a8 ]
 
-Some code in HD-audio driver calls snprintf() in a loop and still
-expects that the return value were actually written size, while
-snprintf() returns the expected would-be length instead.  When the
-given buffer limit were small, this leads to a buffer overflow.
+Sergey didn't like the locking order,
 
-Use scnprintf() for addressing those issues.  It returns the actually
-written size unlike snprintf().
+uart_port->lock  ->  tty_port->lock
 
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200218091409.27162-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+uart_write (uart_port->lock)
+  __uart_start
+    pl011_start_tx
+      pl011_tx_chars
+        uart_write_wakeup
+          tty_port_tty_wakeup
+            tty_port_default
+              tty_port_tty_get (tty_port->lock)
 
+but those code is so old, and I have no clue how to de-couple it after
+checking other locks in the splat. There is an onging effort to make all
+printk() as deferred, so until that happens, workaround it for now as a
+short-term fix.
+
+LTP: starting iogen01 (export LTPROOT; rwtest -N iogen01 -i 120s -s
+read,write -Da -Dv -n 2 500b:$TMPDIR/doio.f1.$$
+1000b:$TMPDIR/doio.f2.$$)
+WARNING: possible circular locking dependency detected
+------------------------------------------------------
+doio/49441 is trying to acquire lock:
+ffff008b7cff7290 (&(&zone->lock)->rlock){..-.}, at: rmqueue+0x138/0x2050
+
+but task is already holding lock:
+60ff000822352818 (&pool->lock/1){-.-.}, at: start_flush_work+0xd8/0x3f0
+
+  which lock already depends on the new lock.
+
+  the existing dependency chain (in reverse order) is:
+
+  -> #4 (&pool->lock/1){-.-.}:
+       lock_acquire+0x320/0x360
+       _raw_spin_lock+0x64/0x80
+       __queue_work+0x4b4/0xa10
+       queue_work_on+0xac/0x11c
+       tty_schedule_flip+0x84/0xbc
+       tty_flip_buffer_push+0x1c/0x28
+       pty_write+0x98/0xd0
+       n_tty_write+0x450/0x60c
+       tty_write+0x338/0x474
+       __vfs_write+0x88/0x214
+       vfs_write+0x12c/0x1a4
+       redirected_tty_write+0x90/0xdc
+       do_loop_readv_writev+0x140/0x180
+       do_iter_write+0xe0/0x10c
+       vfs_writev+0x134/0x1cc
+       do_writev+0xbc/0x130
+       __arm64_sys_writev+0x58/0x8c
+       el0_svc_handler+0x170/0x240
+       el0_sync_handler+0x150/0x250
+       el0_sync+0x164/0x180
+
+  -> #3 (&(&port->lock)->rlock){-.-.}:
+       lock_acquire+0x320/0x360
+       _raw_spin_lock_irqsave+0x7c/0x9c
+       tty_port_tty_get+0x24/0x60
+       tty_port_default_wakeup+0x1c/0x3c
+       tty_port_tty_wakeup+0x34/0x40
+       uart_write_wakeup+0x28/0x44
+       pl011_tx_chars+0x1b8/0x270
+       pl011_start_tx+0x24/0x70
+       __uart_start+0x5c/0x68
+       uart_write+0x164/0x1c8
+       do_output_char+0x33c/0x348
+       n_tty_write+0x4bc/0x60c
+       tty_write+0x338/0x474
+       redirected_tty_write+0xc0/0xdc
+       do_loop_readv_writev+0x140/0x180
+       do_iter_write+0xe0/0x10c
+       vfs_writev+0x134/0x1cc
+       do_writev+0xbc/0x130
+       __arm64_sys_writev+0x58/0x8c
+       el0_svc_handler+0x170/0x240
+       el0_sync_handler+0x150/0x250
+       el0_sync+0x164/0x180
+
+  -> #2 (&port_lock_key){-.-.}:
+       lock_acquire+0x320/0x360
+       _raw_spin_lock+0x64/0x80
+       pl011_console_write+0xec/0x2cc
+       console_unlock+0x794/0x96c
+       vprintk_emit+0x260/0x31c
+       vprintk_default+0x54/0x7c
+       vprintk_func+0x218/0x254
+       printk+0x7c/0xa4
+       register_console+0x734/0x7b0
+       uart_add_one_port+0x734/0x834
+       pl011_register_port+0x6c/0xac
+       sbsa_uart_probe+0x234/0x2ec
+       platform_drv_probe+0xd4/0x124
+       really_probe+0x250/0x71c
+       driver_probe_device+0xb4/0x200
+       __device_attach_driver+0xd8/0x188
+       bus_for_each_drv+0xbc/0x110
+       __device_attach+0x120/0x220
+       device_initial_probe+0x20/0x2c
+       bus_probe_device+0x54/0x100
+       device_add+0xae8/0xc2c
+       platform_device_add+0x278/0x3b8
+       platform_device_register_full+0x238/0x2ac
+       acpi_create_platform_device+0x2dc/0x3a8
+       acpi_bus_attach+0x390/0x3cc
+       acpi_bus_attach+0x108/0x3cc
+       acpi_bus_attach+0x108/0x3cc
+       acpi_bus_attach+0x108/0x3cc
+       acpi_bus_scan+0x7c/0xb0
+       acpi_scan_init+0xe4/0x304
+       acpi_init+0x100/0x114
+       do_one_initcall+0x348/0x6a0
+       do_initcall_level+0x190/0x1fc
+       do_basic_setup+0x34/0x4c
+       kernel_init_freeable+0x19c/0x260
+       kernel_init+0x18/0x338
+       ret_from_fork+0x10/0x18
+
+  -> #1 (console_owner){-...}:
+       lock_acquire+0x320/0x360
+       console_lock_spinning_enable+0x6c/0x7c
+       console_unlock+0x4f8/0x96c
+       vprintk_emit+0x260/0x31c
+       vprintk_default+0x54/0x7c
+       vprintk_func+0x218/0x254
+       printk+0x7c/0xa4
+       get_random_u64+0x1c4/0x1dc
+       shuffle_pick_tail+0x40/0xac
+       __free_one_page+0x424/0x710
+       free_one_page+0x70/0x120
+       __free_pages_ok+0x61c/0xa94
+       __free_pages_core+0x1bc/0x294
+       memblock_free_pages+0x38/0x48
+       __free_pages_memory+0xcc/0xfc
+       __free_memory_core+0x70/0x78
+       free_low_memory_core_early+0x148/0x18c
+       memblock_free_all+0x18/0x54
+       mem_init+0xb4/0x17c
+       mm_init+0x14/0x38
+       start_kernel+0x19c/0x530
+
+  -> #0 (&(&zone->lock)->rlock){..-.}:
+       validate_chain+0xf6c/0x2e2c
+       __lock_acquire+0x868/0xc2c
+       lock_acquire+0x320/0x360
+       _raw_spin_lock+0x64/0x80
+       rmqueue+0x138/0x2050
+       get_page_from_freelist+0x474/0x688
+       __alloc_pages_nodemask+0x3b4/0x18dc
+       alloc_pages_current+0xd0/0xe0
+       alloc_slab_page+0x2b4/0x5e0
+       new_slab+0xc8/0x6bc
+       ___slab_alloc+0x3b8/0x640
+       kmem_cache_alloc+0x4b4/0x588
+       __debug_object_init+0x778/0x8b4
+       debug_object_init_on_stack+0x40/0x50
+       start_flush_work+0x16c/0x3f0
+       __flush_work+0xb8/0x124
+       flush_work+0x20/0x30
+       xlog_cil_force_lsn+0x88/0x204 [xfs]
+       xfs_log_force_lsn+0x128/0x1b8 [xfs]
+       xfs_file_fsync+0x3c4/0x488 [xfs]
+       vfs_fsync_range+0xb0/0xd0
+       generic_write_sync+0x80/0xa0 [xfs]
+       xfs_file_buffered_aio_write+0x66c/0x6e4 [xfs]
+       xfs_file_write_iter+0x1a0/0x218 [xfs]
+       __vfs_write+0x1cc/0x214
+       vfs_write+0x12c/0x1a4
+       ksys_write+0xb0/0x120
+       __arm64_sys_write+0x54/0x88
+       el0_svc_handler+0x170/0x240
+       el0_sync_handler+0x150/0x250
+       el0_sync+0x164/0x180
+
+       other info that might help us debug this:
+
+ Chain exists of:
+   &(&zone->lock)->rlock --> &(&port->lock)->rlock --> &pool->lock/1
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&pool->lock/1);
+                               lock(&(&port->lock)->rlock);
+                               lock(&pool->lock/1);
+  lock(&(&zone->lock)->rlock);
+
+                *** DEADLOCK ***
+
+4 locks held by doio/49441:
+ #0: a0ff00886fc27408 (sb_writers#8){.+.+}, at: vfs_write+0x118/0x1a4
+ #1: 8fff00080810dfe0 (&xfs_nondir_ilock_class){++++}, at:
+xfs_ilock+0x2a8/0x300 [xfs]
+ #2: ffff9000129f2390 (rcu_read_lock){....}, at:
+rcu_lock_acquire+0x8/0x38
+ #3: 60ff000822352818 (&pool->lock/1){-.-.}, at:
+start_flush_work+0xd8/0x3f0
+
+               stack backtrace:
+CPU: 48 PID: 49441 Comm: doio Tainted: G        W
+Hardware name: HPE Apollo 70             /C01_APACHE_MB         , BIOS
+L50_5.13_1.11 06/18/2019
+Call trace:
+ dump_backtrace+0x0/0x248
+ show_stack+0x20/0x2c
+ dump_stack+0xe8/0x150
+ print_circular_bug+0x368/0x380
+ check_noncircular+0x28c/0x294
+ validate_chain+0xf6c/0x2e2c
+ __lock_acquire+0x868/0xc2c
+ lock_acquire+0x320/0x360
+ _raw_spin_lock+0x64/0x80
+ rmqueue+0x138/0x2050
+ get_page_from_freelist+0x474/0x688
+ __alloc_pages_nodemask+0x3b4/0x18dc
+ alloc_pages_current+0xd0/0xe0
+ alloc_slab_page+0x2b4/0x5e0
+ new_slab+0xc8/0x6bc
+ ___slab_alloc+0x3b8/0x640
+ kmem_cache_alloc+0x4b4/0x588
+ __debug_object_init+0x778/0x8b4
+ debug_object_init_on_stack+0x40/0x50
+ start_flush_work+0x16c/0x3f0
+ __flush_work+0xb8/0x124
+ flush_work+0x20/0x30
+ xlog_cil_force_lsn+0x88/0x204 [xfs]
+ xfs_log_force_lsn+0x128/0x1b8 [xfs]
+ xfs_file_fsync+0x3c4/0x488 [xfs]
+ vfs_fsync_range+0xb0/0xd0
+ generic_write_sync+0x80/0xa0 [xfs]
+ xfs_file_buffered_aio_write+0x66c/0x6e4 [xfs]
+ xfs_file_write_iter+0x1a0/0x218 [xfs]
+ __vfs_write+0x1cc/0x214
+ vfs_write+0x12c/0x1a4
+ ksys_write+0xb0/0x120
+ __arm64_sys_write+0x54/0x88
+ el0_svc_handler+0x170/0x240
+ el0_sync_handler+0x150/0x250
+ el0_sync+0x164/0x180
+
+Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Signed-off-by: Qian Cai <cai@lca.pw>
+Link: https://lore.kernel.org/r/1573679785-21068-1-git-send-email-cai@lca.pw
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/hda/hdmi_chmap.c    |    2 +-
- sound/pci/hda/hda_codec.c |    2 +-
- sound/pci/hda/hda_eld.c   |    2 +-
- sound/pci/hda/hda_sysfs.c |    4 ++--
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/char/random.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/sound/hda/hdmi_chmap.c
-+++ b/sound/hda/hdmi_chmap.c
-@@ -249,7 +249,7 @@ void snd_hdac_print_channel_allocation(i
- 
- 	for (i = 0, j = 0; i < ARRAY_SIZE(cea_speaker_allocation_names); i++) {
- 		if (spk_alloc & (1 << i))
--			j += snprintf(buf + j, buflen - j,  " %s",
-+			j += scnprintf(buf + j, buflen - j,  " %s",
- 					cea_speaker_allocation_names[i]);
- 	}
- 	buf[j] = '\0';	/* necessary when j == 0 */
---- a/sound/pci/hda/hda_codec.c
-+++ b/sound/pci/hda/hda_codec.c
-@@ -4002,7 +4002,7 @@ void snd_print_pcm_bits(int pcm, char *b
- 
- 	for (i = 0, j = 0; i < ARRAY_SIZE(bits); i++)
- 		if (pcm & (AC_SUPPCM_BITS_8 << i))
--			j += snprintf(buf + j, buflen - j,  " %d", bits[i]);
-+			j += scnprintf(buf + j, buflen - j,  " %d", bits[i]);
- 
- 	buf[j] = '\0'; /* necessary when j == 0 */
+diff --git a/drivers/char/random.c b/drivers/char/random.c
+index e6efa07e9f9ea..50d5846acf48a 100644
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -1598,8 +1598,9 @@ static void _warn_unseeded_randomness(const char *func_name, void *caller,
+ 	print_once = true;
+ #endif
+ 	if (__ratelimit(&unseeded_warning))
+-		pr_notice("random: %s called from %pS with crng_init=%d\n",
+-			  func_name, caller, crng_init);
++		printk_deferred(KERN_NOTICE "random: %s called from %pS "
++				"with crng_init=%d\n", func_name, caller,
++				crng_init);
  }
---- a/sound/pci/hda/hda_eld.c
-+++ b/sound/pci/hda/hda_eld.c
-@@ -373,7 +373,7 @@ static void hdmi_print_pcm_rates(int pcm
  
- 	for (i = 0, j = 0; i < ARRAY_SIZE(alsa_rates); i++)
- 		if (pcm & (1 << i))
--			j += snprintf(buf + j, buflen - j,  " %d",
-+			j += scnprintf(buf + j, buflen - j,  " %d",
- 				alsa_rates[i]);
- 
- 	buf[j] = '\0'; /* necessary when j == 0 */
---- a/sound/pci/hda/hda_sysfs.c
-+++ b/sound/pci/hda/hda_sysfs.c
-@@ -221,7 +221,7 @@ static ssize_t init_verbs_show(struct de
- 	mutex_lock(&codec->user_mutex);
- 	for (i = 0; i < codec->init_verbs.used; i++) {
- 		struct hda_verb *v = snd_array_elem(&codec->init_verbs, i);
--		len += snprintf(buf + len, PAGE_SIZE - len,
-+		len += scnprintf(buf + len, PAGE_SIZE - len,
- 				"0x%02x 0x%03x 0x%04x\n",
- 				v->nid, v->verb, v->param);
- 	}
-@@ -271,7 +271,7 @@ static ssize_t hints_show(struct device
- 	mutex_lock(&codec->user_mutex);
- 	for (i = 0; i < codec->hints.used; i++) {
- 		struct hda_hint *hint = snd_array_elem(&codec->hints, i);
--		len += snprintf(buf + len, PAGE_SIZE - len,
-+		len += scnprintf(buf + len, PAGE_SIZE - len,
- 				"%s = %s\n", hint->key, hint->val);
- 	}
- 	mutex_unlock(&codec->user_mutex);
+ /*
+-- 
+2.20.1
+
 
 
