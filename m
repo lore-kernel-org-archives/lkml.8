@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6684C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD6FC11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2B74246B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EACD2246BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:15:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H74j+Lew"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z4ihWZHK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730169AbgB0SO5 (ORCPT
+        id S1730427AbgB0SO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 13:14:57 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46045 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbgB0SO4 (ORCPT
+        Thu, 27 Feb 2020 13:14:59 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:39431 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729951AbgB0SO6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 13:14:56 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 59so25047otp.12
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 10:14:56 -0800 (PST)
+        Thu, 27 Feb 2020 13:14:58 -0500
+Received: by mail-ot1-f68.google.com with SMTP id x97so61091ota.6
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 10:14:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=iGljD+kg3lGUw+qrriqk7js900WesZXIV0yY3y9iUng=;
-        b=H74j+LewwCUFS7Zm04eQx7CQ625ZpH6rmqBMr8vlOGbO6n+Kbi3jvk1CtInh6YiGZn
-         gZGMN6/6PkiUGjONQLLbn+bdhIlgbAa4h6Ar86MySHjFiwWi1IHiO2n/TNkQzWxaK3fo
-         gCNDJ1l/dJp+Ib3sj70EtZs6Qwq3hGyddYxMuJqaDYwIY1HIhgHWq4G1acPO6TdH4+u3
-         1G5F6dpdW9SXOgJp01Yfnx+CYZaiR3DHflJ+3xu7DGJy4E88w5VzbHdlWSpD3a5ZROYn
-         xG0Q7caXMCMZCtFW9L4gheqOzzq2rATMONxhxbk6sAO+i0JZHT6s+gwWcJnSb9/l3tLj
-         nuiQ==
+        bh=TAE4tbLOHr7PfWPVPg1IGfxuALloJp02P/TPV4CS1Go=;
+        b=Z4ihWZHKv1Y5pFcZLZ4XJQTAABE5r8wzWtCj6Ft1pliDbn3z0QHM2JgMpcK1iUPoLV
+         UTCzc77AfrfxzUFoAHFzxAZ3ZRKrp76X/PanPsUbX2+NBxCRgcaGSQmhwF2I/WwTkwAB
+         aCZ3nE6sV3lvl5r5g6hmKNoUBA8HX3ja/tXPegXdyb0Pnv3SigB7fbk+DFJxCwc96Otj
+         hLPB1UduFs447OdM5LQKCKyPSvcyjh5r343kUBKTiebcbuyS2e97AGnQr9fHxAbeQoA4
+         0L3FE7H7+jteuNIgKYuY1+w50BXP7hSDOqbo95RF/RQsvY2fuVGrWxrnz/VYRVcSIugc
+         xYVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=iGljD+kg3lGUw+qrriqk7js900WesZXIV0yY3y9iUng=;
-        b=uIM7YCESMKVJ3F0TC0oL/NSgA938NZnjmohFILUgscgjK4fWUm9tBNo7ScM8IbQpji
-         WwjQ7uAKLo7V/nihx5RVsKp6DCXvCpunxUwy5wzUyUFNzNQXZmEXj3ILRevCB0kelLel
-         BOWzCz+ZiTIRcS0x8uqyIOpY1LDtE9kivjgz+zcTvUfbuFy5FHT8BBskYkPCovX4GLI9
-         s0gxHp041JVNyeAWGuePbck47PHxTCodE2rMXi7+rq7rNECDtDU6dFIzcXTx7B/aEACf
-         8067s6DfiUev3YQwgHuh6KEAeQLjWMR1dHeNpa0ZjjUHApIK3Dk7+h3Jt5oylOb78kgJ
-         /WNw==
-X-Gm-Message-State: APjAAAWr5HLz53e6HTLqio1f4fdoucEioM7jRKEulVBk1GzdDpSPjD8L
-        wYnVm45MNTo1LvdJWKdttXI=
-X-Google-Smtp-Source: APXvYqwqvB2lpmkY6lLE1EwDpWECH7nx3+KkcGcBdXe2lef2n38Ptsyf4cgjxk3ZuS5a1oSShJeZ8w==
-X-Received: by 2002:a05:6830:10da:: with SMTP id z26mr137796oto.27.1582827295998;
-        Thu, 27 Feb 2020 10:14:55 -0800 (PST)
+        bh=TAE4tbLOHr7PfWPVPg1IGfxuALloJp02P/TPV4CS1Go=;
+        b=eiolHIB8ukglkAVbFunzQ/bJcZe94aT/GlMcnH1h9araab7f/mnl1LTfj6u+FhLJY6
+         O/msRbtdxnUSV3VK5bNrA32Uj34gF65GLX429zLNNbEJFJgM3BzyDo2m6MN5+X/50pF6
+         fr7ymROjDESXqbxZlhSndxHvNrwigEXtc1GFp81VFp0v2UF6Tk+x3Tw3adbGBAFVruyW
+         MDt1nrPa/eNgXrdNQgwq1LukdGS/C3BYJ0nctzs68tCDUM5WIS4jUyA/y2yeJZBGJvHM
+         P+/xWR2TaNoKCpRgR133258rKd9Qbrt9+cbsAag0+DIety+9knIVNwNVWnVl5GfL1tyC
+         JzGA==
+X-Gm-Message-State: APjAAAV7VM77qmAAqK8PeLPYKJ5mSU7uQHPdHPFO28o/d0NYLdB6zy4H
+        0mCqkFNOk214moQub5FsCeU=
+X-Google-Smtp-Source: APXvYqwzFLqDr5jzWuvDV3j3CXdxyYYhAlWlTZrGUDDvb86Qf4WuW4y8kvwOM7tDhQvsK3goBo2/QA==
+X-Received: by 2002:a9d:7309:: with SMTP id e9mr165540otk.260.1582827297343;
+        Thu, 27 Feb 2020 10:14:57 -0800 (PST)
 Received: from farregard-ubuntu.kopismobile.org (c-73-177-17-21.hsd1.ms.comcast.net. [73.177.17.21])
-        by smtp.gmail.com with ESMTPSA id t203sm2205534oig.39.2020.02.27.10.14.54
+        by smtp.gmail.com with ESMTPSA id t203sm2205534oig.39.2020.02.27.10.14.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 10:14:55 -0800 (PST)
+        Thu, 27 Feb 2020 10:14:56 -0800 (PST)
 From:   George Hilliard <thirtythreeforty@gmail.com>
 To:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
 Cc:     George Hilliard <thirtythreeforty@gmail.com>,
         Icenowy Zheng <icenowy@aosc.io>, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/5] dt-bindings: Add new F1C100s compatible strings for USB
-Date:   Thu, 27 Feb 2020 12:14:48 -0600
-Message-Id: <20200227181452.31558-2-thirtythreeforty@gmail.com>
+Subject: [PATCH 2/5] phy: sun4i-usb: add support for the USB PHY on suniv SoC
+Date:   Thu, 27 Feb 2020 12:14:49 -0600
+Message-Id: <20200227181452.31558-3-thirtythreeforty@gmail.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200227181452.31558-1-thirtythreeforty@gmail.com>
 References: <20200227181452.31558-1-thirtythreeforty@gmail.com>
@@ -75,39 +75,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This chip contains variants of the already-supported peripherals present
-on other Allwinner parts.  Add a new compatible line for them.
+The suniv SoC has one USB OTG port connected to a MUSB controller.
 
+Add support for its USB PHY.
+
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 Signed-off-by: George Hilliard <thirtythreeforty@gmail.com>
 ---
- .../devicetree/bindings/phy/allwinner,sun4i-a10-usb-phy.yaml     | 1 +
- .../devicetree/bindings/usb/allwinner,sun4i-a10-musb.yaml        | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/phy/allwinner/phy-sun4i-usb.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun4i-a10-usb-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun4i-a10-usb-phy.yaml
-index 020ef9e4c411..1762a302c594 100644
---- a/Documentation/devicetree/bindings/phy/allwinner,sun4i-a10-usb-phy.yaml
-+++ b/Documentation/devicetree/bindings/phy/allwinner,sun4i-a10-usb-phy.yaml
-@@ -18,6 +18,7 @@ properties:
-     enum:
-       - allwinner,sun4i-a10-usb-phy
-       - allwinner,sun7i-a20-usb-phy
-+      - allwinner,suniv-f1c100s-usb-phy
+diff --git a/drivers/phy/allwinner/phy-sun4i-usb.c b/drivers/phy/allwinner/phy-sun4i-usb.c
+index 856927382248..5fb0c42fe8fd 100644
+--- a/drivers/phy/allwinner/phy-sun4i-usb.c
++++ b/drivers/phy/allwinner/phy-sun4i-usb.c
+@@ -98,6 +98,7 @@
+ #define POLL_TIME			msecs_to_jiffies(250)
  
-   reg:
-     items:
-diff --git a/Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.yaml b/Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.yaml
-index d9207bf9d894..d2eea0003b99 100644
---- a/Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.yaml
-+++ b/Documentation/devicetree/bindings/usb/allwinner,sun4i-a10-musb.yaml
-@@ -17,6 +17,7 @@ properties:
-       - const: allwinner,sun6i-a31-musb
-       - const: allwinner,sun8i-a33-musb
-       - const: allwinner,sun8i-h3-musb
-+      - const: allwinner,suniv-f1c100s-musb
-       - items:
-           - enum:
-               - allwinner,sun8i-a83t-musb
+ enum sun4i_usb_phy_type {
++	suniv_f1c100s_phy,
+ 	sun4i_a10_phy,
+ 	sun6i_a31_phy,
+ 	sun8i_a33_phy,
+@@ -859,6 +860,14 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct sun4i_usb_phy_cfg suniv_f1c100s_cfg = {
++	.num_phys = 1,
++	.type = suniv_f1c100s_phy,
++	.disc_thresh = 3,
++	.phyctl_offset = REG_PHYCTL_A10,
++	.dedicated_clocks = true,
++};
++
+ static const struct sun4i_usb_phy_cfg sun4i_a10_cfg = {
+ 	.num_phys = 3,
+ 	.type = sun4i_a10_phy,
+@@ -973,6 +982,8 @@ static const struct sun4i_usb_phy_cfg sun50i_h6_cfg = {
+ };
+ 
+ static const struct of_device_id sun4i_usb_phy_of_match[] = {
++	{ .compatible = "allwinner,suniv-f1c100s-usb-phy",
++	  .data = &suniv_f1c100s_cfg },
+ 	{ .compatible = "allwinner,sun4i-a10-usb-phy", .data = &sun4i_a10_cfg },
+ 	{ .compatible = "allwinner,sun5i-a13-usb-phy", .data = &sun5i_a13_cfg },
+ 	{ .compatible = "allwinner,sun6i-a31-usb-phy", .data = &sun6i_a31_cfg },
 -- 
 2.25.0
 
