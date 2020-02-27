@@ -4,33 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C719AC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB93DC3F2C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6CAD246A8
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB0EF24697
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:25:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730151AbgB0WZU (ORCPT
+        id S1730240AbgB0WZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 17:25:20 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:43956 "EHLO
+        Thu, 27 Feb 2020 17:25:23 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:48801 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729735AbgB0WZU (ORCPT
+        with ESMTP id S1730149AbgB0WZV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 17:25:20 -0500
+        Thu, 27 Feb 2020 17:25:21 -0500
 Received: from 79.184.237.30.ipv4.supernova.orange.pl (79.184.237.30) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id fcd830566f8affb9; Thu, 27 Feb 2020 23:25:17 +0100
+ id 9b9385bd0b22e106; Thu, 27 Feb 2020 23:25:19 +0100
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux ACPI <linux-acpi@vger.kernel.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Daniel Drake <drake@endlessm.com>
-Subject: [PATCH 5/6] ACPI: EC: Simplify acpi_ec_add()
-Date:   Thu, 27 Feb 2020 23:23:40 +0100
-Message-ID: <2410193.UcW0be6u46@kreacher>
+Subject: [PATCH 2/6] ACPI: EC: Avoid passing redundant argument to functions
+Date:   Thu, 27 Feb 2020 23:21:54 +0100
+Message-ID: <5654004.QtEQyb3NJZ@kreacher>
 In-Reply-To: <2094703.CetWLLyMuz@kreacher>
 References: <2094703.CetWLLyMuz@kreacher>
 MIME-Version: 1.0
@@ -43,83 +43,101 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-First, notice that if the device ID in acpi_ec_add() is equal to
-ACPI_ECDT_HID, boot_ec_is_ecdt must be set, because this means
-that the device object passed to acpi_ec_add() comes from
-acpi_ec_ecdt_start() which fails if boot_ec_is_ecdt is unset.
-Accordingly, boot_ec_is_ecdt need not be set again in that case,
-so drop that redundant update of it from the code.
+After commit 406857f773b0 ("ACPI: EC: add support for hardware-reduced
+systems") the handle_events argument passed to ec_install_handlers()
+and acpi_ec_setup() is redundant, because it is always 'false' when
+the device argument passed to them in NULL and it is always 'true'
+otherwise, so the device argument can be tested against NULL instead
+of testing the handle_events one.
 
-Next, ec->handle must be a valid ACPI handle right before
-returning 0 from acpi_ec_add(), because it either is the handle
-of the device object passed to that function, or it is the boot EC
-handle coming from acpi_ec_ecdt_start() which fails if it cannot
-find a valid handle for the boot EC.  Moreover, the object with
-that handle is regarded as a valid representation of the EC in all
-cases, so there is no reason to avoid the _DEP list update walk if
-that handle is the boot EC handle.  Accordingly, drop the dep_update
-local variable from acpi_ec_add() and call acpi_walk_dep_device_list()
-for ec->handle unconditionally before returning 0 from it.
-
-Finally, the ec local variable in acpi_ec_add() need not be
-initialized to NULL and the status local variable declaration
-can be moved to the block in which it is used, so change the code
-in accordance with these observations.
+Accordingly, modify ec_install_handlers() and acpi_ec_setup() to take
+two arguments and reduce the number of checks in the former.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/acpi/ec.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ drivers/acpi/ec.c | 21 ++++++++-------------
+ 1 file changed, 8 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/acpi/ec.c b/drivers/acpi/ec.c
-index 3f6127e919ab..4ed0c6155d3f 100644
+index 2dc7cf2aeb21..3153e7684053 100644
 --- a/drivers/acpi/ec.c
 +++ b/drivers/acpi/ec.c
-@@ -1608,19 +1608,18 @@ static bool acpi_ec_ecdt_get_handle(acpi_handle *phandle)
- 
- static int acpi_ec_add(struct acpi_device *device)
+@@ -1476,8 +1476,7 @@ static int install_gpio_irq_event_handler(struct acpi_ec *ec,
+  *       handler is not installed, which means "not able to handle
+  *       transactions".
+  */
+-static int ec_install_handlers(struct acpi_ec *ec, struct acpi_device *device,
+-			       bool handle_events)
++static int ec_install_handlers(struct acpi_ec *ec, struct acpi_device *device)
  {
--	struct acpi_ec *ec = NULL;
--	bool dep_update = true;
--	acpi_status status;
-+	struct acpi_ec *ec;
- 	int ret;
+ 	acpi_status status;
  
- 	strcpy(acpi_device_name(device), ACPI_EC_DEVICE_NAME);
- 	strcpy(acpi_device_class(device), ACPI_EC_CLASS);
+@@ -1507,7 +1506,7 @@ static int ec_install_handlers(struct acpi_ec *ec, struct acpi_device *device,
+ 		set_bit(EC_FLAGS_EC_HANDLER_INSTALLED, &ec->flags);
+ 	}
  
- 	if (!strcmp(acpi_device_hid(device), ACPI_ECDT_HID)) {
--		boot_ec_is_ecdt = true;
-+		/* Fast path: this device corresponds to the boot EC. */
- 		ec = boot_ec;
--		dep_update = false;
- 	} else {
-+		acpi_status status;
-+
- 		ec = acpi_ec_alloc();
- 		if (!ec)
- 			return -ENOMEM;
-@@ -1663,16 +1662,16 @@ static int acpi_ec_add(struct acpi_device *device)
- 	ret = !!request_region(ec->command_addr, 1, "EC cmd");
- 	WARN(!ret, "Could not request EC cmd io port 0x%lx", ec->command_addr);
+-	if (!handle_events)
++	if (!device)
+ 		return 0;
  
--	if (dep_update) {
--		/* Reprobe devices depending on the EC */
--		acpi_walk_dep_device_list(ec->handle);
--	}
-+	/* Reprobe devices depending on the EC */
-+	acpi_walk_dep_device_list(ec->handle);
-+
- 	acpi_handle_debug(ec->handle, "enumerated.\n");
- 	return 0;
- 
- err:
- 	if (ec != boot_ec)
- 		acpi_ec_free(ec);
-+
- 	return ret;
+ 	if (!test_bit(EC_FLAGS_QUERY_METHODS_INSTALLED, &ec->flags)) {
+@@ -1520,13 +1519,10 @@ static int ec_install_handlers(struct acpi_ec *ec, struct acpi_device *device,
+ 	if (!test_bit(EC_FLAGS_EVENT_HANDLER_INSTALLED, &ec->flags)) {
+ 		if (ec->gpe >= 0) {
+ 			install_gpe_event_handler(ec);
+-		} else if (device) {
++		} else {
+ 			int ret = install_gpio_irq_event_handler(ec, device);
+-
+ 			if (ret)
+ 				return ret;
+-		} else { /* No GPE and no GpioInt? */
+-			return -ENODEV;
+ 		}
+ 	}
+ 	/* EC is fully operational, allow queries */
+@@ -1574,12 +1570,11 @@ static void ec_remove_handlers(struct acpi_ec *ec)
+ 	}
  }
  
+-static int acpi_ec_setup(struct acpi_ec *ec, struct acpi_device *device,
+-			 bool handle_events)
++static int acpi_ec_setup(struct acpi_ec *ec, struct acpi_device *device)
+ {
+ 	int ret;
+ 
+-	ret = ec_install_handlers(ec, device, handle_events);
++	ret = ec_install_handlers(ec, device);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -1660,7 +1655,7 @@ static int acpi_ec_add(struct acpi_device *device)
+ 		}
+ 	}
+ 
+-	ret = acpi_ec_setup(ec, device, true);
++	ret = acpi_ec_setup(ec, device);
+ 	if (ret)
+ 		goto err_query;
+ 
+@@ -1780,7 +1775,7 @@ void __init acpi_ec_dsdt_probe(void)
+ 	 * At this point, the GPE is not fully initialized, so do not to
+ 	 * handle the events.
+ 	 */
+-	ret = acpi_ec_setup(ec, NULL, false);
++	ret = acpi_ec_setup(ec, NULL);
+ 	if (ret) {
+ 		acpi_ec_free(ec);
+ 		return;
+@@ -1967,7 +1962,7 @@ void __init acpi_ec_ecdt_probe(void)
+ 	 * At this point, the namespace is not initialized, so do not find
+ 	 * the namespace objects, or handle the events.
+ 	 */
+-	ret = acpi_ec_setup(ec, NULL, false);
++	ret = acpi_ec_setup(ec, NULL);
+ 	if (ret) {
+ 		acpi_ec_free(ec);
+ 		return;
 -- 
 2.16.4
 
