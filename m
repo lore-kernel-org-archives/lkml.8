@@ -2,195 +2,387 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E92DC35DEE
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4D7C34022
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45E0724656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:46:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814819;
-	bh=YgNxD3YZR9L463gaWxBgrn2HnKTlo74U8zOuHzV+Fm0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KMgpLE8M2vxicbLKqbG4vdjAEVauaE7/t61HLb9dbi4Mor/5Bts4TrVrZks7dIBYE
-	 cPA26b12r+r3nEuRL2nimDndGqM0okhp4FNz50yQDHVEg98RhvOZeRMDq9ouIzLt0d
-	 4EyBZkyDz/jkF2F4BGruuXSC5H4PTnYYVFVgAPls=
+	by mail.kernel.org (Postfix) with ESMTP id A8BAC24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:47:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oxD1yVks"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729737AbgB0No4 (ORCPT
+        id S1731966AbgB0OrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:44:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40446 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729734AbgB0Nos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:44:48 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C6C920578;
-        Thu, 27 Feb 2020 13:44:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811086;
-        bh=YgNxD3YZR9L463gaWxBgrn2HnKTlo74U8zOuHzV+Fm0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IPumNfixb8leI7uZ1LqG8LMinkSweqGW6h8vAM+cAwdMQWz8RoDSouTGgBngNPk+6
-         OiY35vhwRMaurYSoBQHGb98J9DP7ya7LupTavWi7VqXNy8mujgBvJUmr2dxTHwNEHu
-         u053Y3HLX7nC1h5N2a6Dg6FJ40OQGybKu1Mivlm8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+fd5e0eaa1a32999173b2@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 112/113] ALSA: seq: Fix concurrent access to queue current tick/time
-Date:   Thu, 27 Feb 2020 14:37:08 +0100
-Message-Id: <20200227132229.801318229@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
-References: <20200227132211.791484803@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 27 Feb 2020 09:47:02 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43515 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730283AbgB0Noy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:44:54 -0500
+Received: by mail-wr1-f65.google.com with SMTP id c13so3376328wrq.10
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 05:44:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bRBVzm7LmsESKTnCqWwBanH8FICpCOc4WhuYig3TGrY=;
+        b=oxD1yVksx5FhGgGokg268at9nOg2OPkGr/R7GsuVaEgPOdQOBg5Etzvs9PSLYtqM2l
+         CZGF67SEWhZEDL7J8ahBDe6xf0Zz0fToAxU3DijpB69N6Io50emD9vKcB+fCigK8okDs
+         5qskwoAVQc+fiFX2LjtN7K71G4d/XoMCgviAF0NPTP5xZHlQVgmtuoacXZaMNkfWEXru
+         P3UOaMNT16J1yp6A3qPMXK5a3oWuRxLqSOsROTD62C3YKhQXHcUOv8BHZ2mDpWfrtFVX
+         HOzA3R7dcvNaaj+30Odd5gc4Xm+lPqMDwh9TXMJADs76USaKS5N8gcDh/KySSwfsynVU
+         EeYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bRBVzm7LmsESKTnCqWwBanH8FICpCOc4WhuYig3TGrY=;
+        b=GIaYAGgNirsGnUndMRyHTORm9rZviKWtSE392JOwHhTJrt9lWjSs18zukJlAKDkBHd
+         OfJ+k1UN2folM7PU/mX9WfT8jMVacQZe5zcgKnINkDX10SFMtj9lpa5sW3Dqhl6KJV65
+         Cz/D53MpVNKxxwNAQxyJCOplukGvO22Z1YUtoyg7IJ7sIrTxhphxqnFnGZtASFE5Vk83
+         j47+7RnmvUmi2p+QQQ0X3jQVTcf8bK2YPXFjoEGDw1S40CN4LWfKjLIW8fj8zipk+Dl1
+         3nqSlZSa530g9X5/8shHlsHZFS2K6iLfpMLRlUTU2qdXC/aQ/A8BK3s1XKJhTc7YYKvT
+         0muw==
+X-Gm-Message-State: APjAAAVhqOp2XsGQDiYwT7fhxmQ22evpcAh24smVZjF4n9BCp4QOWO0t
+        Z/+jgt2F4qXt+tcADnhJgob9kg==
+X-Google-Smtp-Source: APXvYqxr0HRJGL3LzxWA8tAPZNioP7XMTNL6XoAFSAUC/2LCPDBe4z5XcS2wQOU0GLia2herDKWI8w==
+X-Received: by 2002:adf:e38d:: with SMTP id e13mr4787598wrm.133.1582811091737;
+        Thu, 27 Feb 2020 05:44:51 -0800 (PST)
+Received: from [10.44.66.8] ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id c74sm8187080wmd.26.2020.02.27.05.44.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Feb 2020 05:44:50 -0800 (PST)
+Subject: Re: [PATCH v3 4/6] interconnect: qcom: Consolidate interconnect RPMh
+ support
+To:     Sibi Sankar <sibis@codeaurora.org>, robh+dt@kernel.org,
+        evgreen@chromium.org
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, mark.rutland@arm.com,
+        daidavid1@codeaurora.org, saravanak@google.com, mka@chromium.org,
+        linux-pm@vger.kernel.org, Odelu Kukatla <okukatla@codeaurora.org>
+References: <20200209183411.17195-1-sibis@codeaurora.org>
+ <20200209183411.17195-5-sibis@codeaurora.org>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <921917e6-45d3-f9c5-6519-5f3b8116d9ec@linaro.org>
+Date:   Thu, 27 Feb 2020 15:44:48 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200209183411.17195-5-sibis@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+Hi Sibi,
 
-commit dc7497795e014d84699c3b8809ed6df35352dd74 upstream.
+Thank you for refreshing this patchset!
 
-snd_seq_check_queue() passes the current tick and time of the given
-queue as a pointer to snd_seq_prioq_cell_out(), but those might be
-updated concurrently by the seq timer update.
+On 2/9/20 20:34, Sibi Sankar wrote:
+> From: David Dai <daidavid1@codeaurora.org>
+> 
+> Add bcm voter driver and add support for RPMh specific interconnect
+> providers which implements the set and aggregate functionalities that
+> translates bandwidth requests into RPMh messages. These modules provide
+> a common set of functionalities for all Qualcomm RPMh based interconnect
+> providers and should help reduce code duplication when adding new
+> providers.
+> 
+> Signed-off-by: David Dai <daidavid1@codeaurora.org>
+> Signed-off-by: Odelu Kukatla <okukatla@codeaurora.org>
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+>  drivers/interconnect/qcom/Kconfig     |  13 +-
+>  drivers/interconnect/qcom/Makefile    |   4 +
+>  drivers/interconnect/qcom/bcm-voter.c | 366 ++++++++++++++++++++++++++
+>  drivers/interconnect/qcom/bcm-voter.h |  27 ++
+>  drivers/interconnect/qcom/icc-rpmh.c  | 147 +++++++++++
+>  drivers/interconnect/qcom/icc-rpmh.h  | 149 +++++++++++
+>  6 files changed, 705 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/interconnect/qcom/bcm-voter.c
+>  create mode 100644 drivers/interconnect/qcom/bcm-voter.h
+>  create mode 100644 drivers/interconnect/qcom/icc-rpmh.c
+>  create mode 100644 drivers/interconnect/qcom/icc-rpmh.h
+> 
+> diff --git a/drivers/interconnect/qcom/Kconfig b/drivers/interconnect/qcom/Kconfig
+> index 76938ece1658e..08cfd676b4299 100644
+> --- a/drivers/interconnect/qcom/Kconfig
+> +++ b/drivers/interconnect/qcom/Kconfig
+> @@ -5,6 +5,11 @@ config INTERCONNECT_QCOM
+>  	help
+>  	  Support for Qualcomm's Network-on-Chip interconnect hardware.
+>  
+> +config INTERCONNECT_QCOM_BCM_VOTER
+> +	tristate
+> +	depends on INTERCONNECT_QCOM || COMPILE_TEST
+> +	depends on QCOM_RPMH && OF
 
-Fix it by retrieving the current tick and time via the proper helper
-functions at first, and pass those values to snd_seq_prioq_cell_out()
-later in the loops.
+This is not user-selectable, but has a "depends on" lines...
 
-snd_seq_timer_get_cur_time() takes a new argument and adjusts with the
-current system time only when it's requested so; this update isn't
-needed for snd_seq_check_queue(), as it's called either from the
-interrupt handler or right after queuing.
+> +
+>  config INTERCONNECT_QCOM_MSM8916
+>  	tristate "Qualcomm MSM8916 interconnect driver"
+>  	depends on INTERCONNECT_QCOM
+> @@ -32,10 +37,16 @@ config INTERCONNECT_QCOM_QCS404
+>  	  This is a driver for the Qualcomm Network-on-Chip on qcs404-based
+>  	  platforms.
+>  
+> +config INTERCONNECT_QCOM_RPMH
+> +	tristate
+> +	depends on INTERCONNECT_QCOM || COMPILE_TEST
+> +	depends on QCOM_COMMAND_DB
+> +
+>  config INTERCONNECT_QCOM_SDM845
+>  	tristate "Qualcomm SDM845 interconnect driver"
+>  	depends on INTERCONNECT_QCOM
+> -	depends on (QCOM_RPMH && QCOM_COMMAND_DB && OF) || COMPILE_TEST
+> +	select INTERCONNECT_QCOM_RPMH
+> +	select INTERCONNECT_QCOM_BCM_VOTER
 
-Also, snd_seq_timer_get_cur_tick() is changed to read the value in the
-spinlock for the concurrency, too.
+...and these selects will force a symbol to a value without checking its
+dependencies. So i was wondering whether this will cause any problems.
 
-Reported-by: syzbot+fd5e0eaa1a32999173b2@syzkaller.appspotmail.com
-Link: https://lore.kernel.org/r/20200214111316.26939-3-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>  	help
+>  	  This is a driver for the Qualcomm Network-on-Chip on sdm845-based
+>  	  platforms.
+> diff --git a/drivers/interconnect/qcom/Makefile b/drivers/interconnect/qcom/Makefile
+> index e8271575e3d8a..d591bb56273b1 100644
+[..]
+> +static const struct of_device_id bcm_voter_of_match[] = {
+> +	{ .compatible = "qcom,bcm-voter" },
+> +	{ }
+> +};
+> +
+> +static struct platform_driver qcom_icc_bcm_voter_driver = {
+> +	.probe = qcom_icc_bcm_voter_probe,
+> +	.driver = {
+> +		.name		= "sdm845_bcm_voter",
 
----
- sound/core/seq/seq_clientmgr.c |    4 ++--
- sound/core/seq/seq_queue.c     |    9 ++++++---
- sound/core/seq/seq_timer.c     |   13 ++++++++++---
- sound/core/seq/seq_timer.h     |    3 ++-
- 4 files changed, 20 insertions(+), 9 deletions(-)
+Nit: This is not just about sdm845 anymore, so maybe qcom_bcm_voter.
 
---- a/sound/core/seq/seq_clientmgr.c
-+++ b/sound/core/seq/seq_clientmgr.c
-@@ -577,7 +577,7 @@ static int update_timestamp_of_queue(str
- 	event->queue = queue;
- 	event->flags &= ~SNDRV_SEQ_TIME_STAMP_MASK;
- 	if (real_time) {
--		event->time.time = snd_seq_timer_get_cur_time(q->timer);
-+		event->time.time = snd_seq_timer_get_cur_time(q->timer, true);
- 		event->flags |= SNDRV_SEQ_TIME_STAMP_REAL;
- 	} else {
- 		event->time.tick = snd_seq_timer_get_cur_tick(q->timer);
-@@ -1694,7 +1694,7 @@ static int snd_seq_ioctl_get_queue_statu
- 	tmr = queue->timer;
- 	status.events = queue->tickq->cells + queue->timeq->cells;
- 
--	status.time = snd_seq_timer_get_cur_time(tmr);
-+	status.time = snd_seq_timer_get_cur_time(tmr, true);
- 	status.tick = snd_seq_timer_get_cur_tick(tmr);
- 
- 	status.running = tmr->running;
---- a/sound/core/seq/seq_queue.c
-+++ b/sound/core/seq/seq_queue.c
-@@ -261,6 +261,8 @@ void snd_seq_check_queue(struct snd_seq_
- {
- 	unsigned long flags;
- 	struct snd_seq_event_cell *cell;
-+	snd_seq_tick_time_t cur_tick;
-+	snd_seq_real_time_t cur_time;
- 
- 	if (q == NULL)
- 		return;
-@@ -277,17 +279,18 @@ void snd_seq_check_queue(struct snd_seq_
- 
-       __again:
- 	/* Process tick queue... */
-+	cur_tick = snd_seq_timer_get_cur_tick(q->timer);
- 	for (;;) {
--		cell = snd_seq_prioq_cell_out(q->tickq,
--					      &q->timer->tick.cur_tick);
-+		cell = snd_seq_prioq_cell_out(q->tickq, &cur_tick);
- 		if (!cell)
- 			break;
- 		snd_seq_dispatch_event(cell, atomic, hop);
- 	}
- 
- 	/* Process time queue... */
-+	cur_time = snd_seq_timer_get_cur_time(q->timer, false);
- 	for (;;) {
--		cell = snd_seq_prioq_cell_out(q->timeq, &q->timer->cur_time);
-+		cell = snd_seq_prioq_cell_out(q->timeq, &cur_time);
- 		if (!cell)
- 			break;
- 		snd_seq_dispatch_event(cell, atomic, hop);
---- a/sound/core/seq/seq_timer.c
-+++ b/sound/core/seq/seq_timer.c
-@@ -436,14 +436,15 @@ int snd_seq_timer_continue(struct snd_se
- }
- 
- /* return current 'real' time. use timeofday() to get better granularity. */
--snd_seq_real_time_t snd_seq_timer_get_cur_time(struct snd_seq_timer *tmr)
-+snd_seq_real_time_t snd_seq_timer_get_cur_time(struct snd_seq_timer *tmr,
-+					       bool adjust_ktime)
- {
- 	snd_seq_real_time_t cur_time;
- 	unsigned long flags;
- 
- 	spin_lock_irqsave(&tmr->lock, flags);
- 	cur_time = tmr->cur_time;
--	if (tmr->running) { 
-+	if (adjust_ktime && tmr->running) {
- 		struct timeval tm;
- 		int usec;
- 		do_gettimeofday(&tm);
-@@ -465,7 +466,13 @@ snd_seq_real_time_t snd_seq_timer_get_cu
-  high PPQ values) */
- snd_seq_tick_time_t snd_seq_timer_get_cur_tick(struct snd_seq_timer *tmr)
- {
--	return tmr->tick.cur_tick;
-+	snd_seq_tick_time_t cur_tick;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&tmr->lock, flags);
-+	cur_tick = tmr->tick.cur_tick;
-+	spin_unlock_irqrestore(&tmr->lock, flags);
-+	return cur_tick;
- }
- 
- 
---- a/sound/core/seq/seq_timer.h
-+++ b/sound/core/seq/seq_timer.h
-@@ -135,7 +135,8 @@ int snd_seq_timer_set_ppq(struct snd_seq
- int snd_seq_timer_set_position_tick(struct snd_seq_timer *tmr, snd_seq_tick_time_t position);
- int snd_seq_timer_set_position_time(struct snd_seq_timer *tmr, snd_seq_real_time_t position);
- int snd_seq_timer_set_skew(struct snd_seq_timer *tmr, unsigned int skew, unsigned int base);
--snd_seq_real_time_t snd_seq_timer_get_cur_time(struct snd_seq_timer *tmr);
-+snd_seq_real_time_t snd_seq_timer_get_cur_time(struct snd_seq_timer *tmr,
-+					       bool adjust_ktime);
- snd_seq_tick_time_t snd_seq_timer_get_cur_tick(struct snd_seq_timer *tmr);
- 
- extern int seq_default_timer_class;
+> +		.of_match_table = bcm_voter_of_match,
+> +	},
+> +};
+> +module_platform_driver(qcom_icc_bcm_voter_driver);
+> +
+> +MODULE_AUTHOR("David Dai <daidavid1@codeaurora.org>");
+> +MODULE_DESCRIPTION("Qualcomm BCM Voter interconnect driver");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/interconnect/qcom/bcm-voter.h b/drivers/interconnect/qcom/bcm-voter.h
+> new file mode 100644
+> index 0000000000000..3436673e9f104
+> --- /dev/null
+[.]
+> diff --git a/drivers/interconnect/qcom/icc-rpmh.c b/drivers/interconnect/qcom/icc-rpmh.c
+> new file mode 100644
+> index 0000000000000..e9443b50e0b48
+> --- /dev/null
+> +++ b/drivers/interconnect/qcom/icc-rpmh.c
+> @@ -0,0 +1,147 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/interconnect.h>
+> +#include <linux/interconnect-provider.h>
+> +
+> +#include "bcm-voter.h"
+> +#include "icc-rpmh.h"
+> +
+> +/**
+> + * qcom_icc_pre_aggregate - cleans up stale values from prior icc_set
+> + * @node: icc node to operate on
+> + */
+> +void qcom_icc_pre_aggregate(struct icc_node *node)
+> +{
+> +	size_t i;
+> +	struct qcom_icc_node *qn;
+> +
+> +	qn = node->data;
+> +
+> +	for (i = 0; i < QCOM_ICC_NUM_BUCKETS; i++) {
+> +		qn->sum_avg[i] = 0;
+> +		qn->max_peak[i] = 0;
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_icc_pre_aggregate);
+> +
+> +/**
+> + * qcom_icc_aggregate - aggregate bw for buckets indicated by tag
+> + * @node: node to aggregate
+> + * @tag: tag to indicate which buckets to aggregate
+> + * @avg_bw: new bw to sum aggregate
+> + * @peak_bw: new bw to max aggregate
+> + * @agg_avg: existing aggregate avg bw val
+> + * @agg_peak: existing aggregate peak bw val
+> + */
+> +int qcom_icc_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
+> +		       u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
+> +{
+> +	size_t i;
+> +	struct qcom_icc_node *qn;
+> +	struct qcom_icc_provider *qp;
+> +
+> +	qn = node->data;
+> +	qp = to_qcom_provider(node->provider);
+> +
+> +	if (!tag)
+> +		tag = QCOM_ICC_TAG_ALWAYS;
+> +
+> +	for (i = 0; i < QCOM_ICC_NUM_BUCKETS; i++) {
+> +		if (tag & BIT(i)) {
+> +			qn->sum_avg[i] += avg_bw;
+> +			qn->max_peak[i] = max_t(u32, qn->max_peak[i], peak_bw);
+> +		}
+> +	}
+> +
+> +	*agg_avg += avg_bw;
+> +	*agg_peak = max_t(u32, *agg_peak, peak_bw);
+> +
+> +	for (i = 0; i < qn->num_bcms; i++)
+> +		qcom_icc_bcm_voter_add(qp->voter, qn->bcms[i]);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_icc_aggregate);
+> +
+> +/**
+> + * qcom_icc_set - set the constraints based on path
+> + * @src: source node for the path to set constraints on
+> + * @dst: destination node for the path to set constraints on
+> + *
+> + * Return: 0 on success, or an error code otherwise
+> + */
+> +int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
+> +{
+> +	struct qcom_icc_provider *qp;
+> +	struct icc_node *node;
+> +
+> +	if (!src)
+> +		node = dst;
+> +	else
+> +		node = src;
+> +
+> +	qp = to_qcom_provider(node->provider);
+> +
+> +	qcom_icc_bcm_voter_commit(qp->voter);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_icc_set);
+> +
+> +/**
+> + * qcom_icc_bcm_init - populates bcm aux data and connect qnodes
+> + * @bcm: bcm to be initialized
+> + * @dev: associated provider device
+> + *
+> + * Return: 0 on success, or an error code otherwise
+> + */
+> +int qcom_icc_bcm_init(struct qcom_icc_bcm *bcm, struct device *dev)
+> +{
+> +	struct qcom_icc_node *qn;
+> +	const struct bcm_db *data;
+> +	size_t data_count;
+> +	int i;
+> +
+> +	/* BCM is already initialised*/
+> +	if (bcm->addr)
+> +		return 0;
+> +
+> +	bcm->addr = cmd_db_read_addr(bcm->name);
+> +	if (!bcm->addr) {
+> +		dev_err(dev, "%s could not find RPMh address\n",
+> +			bcm->name);
+> +		return -EINVAL;
+> +	}
+> +
+> +	data = cmd_db_read_aux_data(bcm->name, &data_count);
+> +	if (IS_ERR(data)) {
+> +		dev_err(dev, "%s command db read error (%ld)\n",
+> +			bcm->name, PTR_ERR(data));
+> +		return PTR_ERR(data);
+> +	}
+> +	if (!data_count) {
+> +		dev_err(dev, "%s command db missing or partial aux data\n",
+> +			bcm->name);
+> +		return -EINVAL;
+> +	}
+> +
+> +	bcm->aux_data.unit = le32_to_cpu(data->unit);
+> +	bcm->aux_data.width = le16_to_cpu(data->width);
+> +	bcm->aux_data.vcd = data->vcd;
+> +	bcm->aux_data.reserved = data->reserved;
+> +	INIT_LIST_HEAD(&bcm->list);
+> +	INIT_LIST_HEAD(&bcm->ws_list);
+> +
+> +	/* Link Qnodes to their respective BCMs */
+> +	for (i = 0; i < bcm->num_nodes; i++) {
+> +		qn = bcm->nodes[i];
+> +		qn->bcms[qn->num_bcms] = bcm;
+> +		qn->num_bcms++;
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_icc_bcm_init);
 
+When i tried building this as a module i see the following warning:
+WARNING: modpost: missing MODULE_LICENSE() in drivers/interconnect/qcom/icc-rpmh.o
 
+So we may want to include module.h and add MODULE_LICENSE("GPL v2") as specified
+in the SPDX tag.
+
+Thanks,
+Georgi
