@@ -2,105 +2,165 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F901C35DF9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B23E7C35E15
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF41E246A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:13:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C164246C5
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:14:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sj6V0kKL"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="0IG8plhA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729503AbgB0SNI (ORCPT
+        id S1729679AbgB0SOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 13:13:08 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:38637 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbgB0SNH (ORCPT
+        Thu, 27 Feb 2020 13:14:35 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:39603 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729317AbgB0SOe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 13:13:07 -0500
-Received: by mail-lf1-f68.google.com with SMTP id r14so117445lfm.5;
-        Thu, 27 Feb 2020 10:13:06 -0800 (PST)
+        Thu, 27 Feb 2020 13:14:34 -0500
+Received: by mail-qk1-f193.google.com with SMTP id e16so283070qkl.6
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 10:14:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IULXqhszyqMcQoMwWa2PsJp6mRVAsQrFJGxJ4oTw6uE=;
-        b=Sj6V0kKLLBXQ2JRFY4cLp78TYxdyFDwzGgbbciprtwXmE1mQJfsv6vyZd5wDTZUDMU
-         63B0rF9MxqH38mMu+VFN28uBjcmUVJVPGNv1R+pS+9AmRQxnIDspP01znTUUtpZ3f00W
-         L8a9rmYmKwxF6H1zNnxse33OlhorUC+k6EAbxTND4KJKIvRx64Dh3ajcLr9edlKKkxec
-         5EQdBbX3xLcUJEv6djgRFK7f11USPcr5SKQEc9PKW4wpbyTKodxm69LZB67rhKGCJtga
-         G/gUFEDqEqxOkz+pP/8cV86IHj8r5ozrVmt0d3NEYN8/XcvyALM8PBLEYcHUwTn2tBxO
-         X5Ug==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=19sQdZH67v9yOy/BduEXSg0i7G3USqaAUKmseX8opy0=;
+        b=0IG8plhA6YTGx0j6rHUrt9WyouEz5FGMjybnDuDbUR7axVZhu+rgZlDa76gtdh8YwP
+         /BhvP4PrfAUfKbf4wWhSFJOqBrI7JQ+9WpS63f7uxvjPet4NPXoB3dmwuNdmFwjnk4FX
+         1jVKXf8c2T1gFBZuOnwIqt51u2dUPq1cgjvR7zFm0WU9lL6ANWW6XIFJIHX6vK0OhLS1
+         J7DzHM0N4FEAk+lKkdDVdPBUOvPR0KzwO8QnjgEOy/J9Ojgvd04vxXAf02MIPcEGOpxb
+         EivvMkXIRJkPfKGgDKl8kcG3bTQe25P1HIgY1nQs6rbBZBfIFa/9YWSNslzmqZbSVSLN
+         u4lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IULXqhszyqMcQoMwWa2PsJp6mRVAsQrFJGxJ4oTw6uE=;
-        b=D936QbwEErlRZttL6t3qFjHJUMWbnXmIVNMOPlnBiX1KcGLI7lbe7cPOeE+x1Fqjmj
-         jSQGLzlnvKC26emsm447jZ1mNkBsRrlQF/A6r9MklpBsy2SapEoKOMhVQEg6StsHMLFA
-         7RJk0ANWLV2n8p9CmBvuQLSz2brSK2wH6tMobocVg3T6kc2G/vxXIuIIUq6efG4ZNKDH
-         s9WTwAmV0c4o4udPUgmQkASJsqHRHI186GeXDjiKONbqxcS40+yy/7Zr4A40FXSnIUEa
-         u7bwrNgd1k5ZDsS+Fp//kn0Pu/gbiYUt8liuTHhs3etbz6780GSIZ8CoAFXFi/2er5BX
-         95DQ==
-X-Gm-Message-State: ANhLgQ3AfOwoRe+abwne/uiGLPySTQLwP5H4WMic7xN9nIkUuxnAbzzW
-        qC7m1hLviNbhUIM50ou2eQM=
-X-Google-Smtp-Source: ADFU+vsC+ibuHd9fGINaxqkor4ZPzJbV9sKaelWlT3qvBtWEnDmNjmMwcJD566hVwaJ4G4qcT30O/A==
-X-Received: by 2002:a19:c20b:: with SMTP id l11mr330559lfc.135.1582827185929;
-        Thu, 27 Feb 2020 10:13:05 -0800 (PST)
-Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id q4sm1478727ljm.51.2020.02.27.10.13.05
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=19sQdZH67v9yOy/BduEXSg0i7G3USqaAUKmseX8opy0=;
+        b=AH7kbz/q7PTyGYMOXaeBTL9qGcVi25426kC7hvNjOU6PWZm08RE9ysCiYPaytIJrb+
+         /iU4gGiq1d0R5risGGaLWqtfuTRAJ3j5IwVKimHaHklcLCglWA83aKGkREdpM5sakcSR
+         HrR3OVXe3S5Zknx64onTSTyYayWb5hIAVtIccGxiwjsrYRlwvjeRwRoETmdkPFbZMdiz
+         9fw41MSGEBm6OIF3LqB4XZqoNjPT2CGdo83MJnMtNIIz5QQAbUPDbTY8ZsrnIHXtfZh5
+         inuilWum60QKfMgQg1YxPSHmzxGC6HRrgih+J4RAwTIYJZ0Qcue9qQQLJ9SGrhgkD9cc
+         TRIw==
+X-Gm-Message-State: APjAAAVkKVNs3uZ9CiceTSBmarEVxr58ahCVf0VW/03goCT7Wj7tySVy
+        ZJCoIiQDCHF1wOQgTWNfsQezPQ==
+X-Google-Smtp-Source: APXvYqxPB39ZR+bN2cQMJ9T9w19fRsXPKASGuDOQPUNqv4PuzrnPanLLIWa7wqqTeAv5s2x/5ZezIQ==
+X-Received: by 2002:a05:620a:10ac:: with SMTP id h12mr512814qkk.487.1582827272500;
+        Thu, 27 Feb 2020 10:14:32 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::3:2450])
+        by smtp.gmail.com with ESMTPSA id t29sm3712868qtt.20.2020.02.27.10.14.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 10:13:05 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Nick Dyer <nick@shmanahar.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH RE-SEND v1] Input: atmel_mxt_ts - correct local variable type
-Date:   Thu, 27 Feb 2020 21:12:49 +0300
-Message-Id: <20200227181249.10037-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Thu, 27 Feb 2020 10:14:31 -0800 (PST)
+Date:   Thu, 27 Feb 2020 13:14:30 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Dan Schatzberg <schatzberg.dan@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Chris Down <chris@chrisdown.name>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
+        <linux-mm@kvack.org>
+Subject: Re: [PATCH v3 1/3] loop: Use worker per cgroup instead of kworker
+Message-ID: <20200227181430.GA44024@cmpxchg.org>
+References: <cover.1582581887.git.schatzberg.dan@gmail.com>
+ <eab018412a0c9feb573d757b1bbd5f58b33e2a8d.1582581887.git.schatzberg.dan@gmail.com>
+ <1582736558.7365.131.camel@lca.pw>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1582736558.7365.131.camel@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GCC produces this warning when kernel compiled using `make W=1`:
+On Wed, Feb 26, 2020 at 12:02:38PM -0500, Qian Cai wrote:
+> On Mon, 2020-02-24 at 17:17 -0500, Dan Schatzberg wrote:
+> > Existing uses of loop device may have multiple cgroups reading/writing
+> > to the same device. Simply charging resources for I/O to the backing
+> > file could result in priority inversion where one cgroup gets
+> > synchronously blocked, holding up all other I/O to the loop device.
+> > 
+> > In order to avoid this priority inversion, we use a single workqueue
+> > where each work item is a "struct loop_worker" which contains a queue of
+> > struct loop_cmds to issue. The loop device maintains a tree mapping blk
+> > css_id -> loop_worker. This allows each cgroup to independently make
+> > forward progress issuing I/O to the backing file.
+> > 
+> > There is also a single queue for I/O associated with the rootcg which
+> > can be used in cases of extreme memory shortage where we cannot allocate
+> > a loop_worker.
+> > 
+> > The locking for the tree and queues is fairly heavy handed - we acquire
+> > the per-loop-device spinlock any time either is accessed. The existing
+> > implementation serializes all I/O through a single thread anyways, so I
+> > don't believe this is any worse.
+> > 
+> > Signed-off-by: Dan Schatzberg <schatzberg.dan@gmail.com>
+> > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> 
+> The locking in loop_free_idle_workers() will trigger this with sysfs reading,
+> 
+> [ 7080.047167] LTP: starting read_all_sys (read_all -d /sys -q -r 10)
+> [ 7239.842276] cpufreq transition table exceeds PAGE_SIZE. Disabling
+> 
+> [ 7247.054961] =====================================================
+> [ 7247.054971] WARNING: SOFTIRQ-safe -> SOFTIRQ-unsafe lock order detected
+> [ 7247.054983] 5.6.0-rc3-next-20200226 #2 Tainted: G           O     
+> [ 7247.054992] -----------------------------------------------------
+> [ 7247.055002] read_all/8513 [HC0[0]:SC0[0]:HE0:SE1] is trying to acquire:
+> [ 7247.055014] c0000006844864c8 (&fs->seq){+.+.}, at: file_path+0x24/0x40
+> [ 7247.055041] 
+>                and this task is already holding:
+> [ 7247.055061] c0002006bab8b928 (&(&lo->lo_lock)->rlock){..-.}, at:
+> loop_attr_do_show_backing_file+0x3c/0x120 [loop]
+> [ 7247.055078] which would create a new lock dependency:
+> [ 7247.055105]  (&(&lo->lo_lock)->rlock){..-.} -> (&fs->seq){+.+.}
+> [ 7247.055125] 
+>                but this new dependency connects a SOFTIRQ-irq-safe lock:
+> [ 7247.055155]  (&(&lo->lo_lock)->rlock){..-.}
+> [ 7247.055156] 
+>                ... which became SOFTIRQ-irq-safe at:
+> [ 7247.055196]   lock_acquire+0x130/0x360
+> [ 7247.055221]   _raw_spin_lock_irq+0x68/0x90
+> [ 7247.055230]   loop_free_idle_workers+0x44/0x3f0 [loop]
+> [ 7247.055242]   call_timer_fn+0x110/0x5f0
+> [ 7247.055260]   run_timer_softirq+0x8f8/0x9f0
+> [ 7247.055278]   __do_softirq+0x34c/0x8c8
+> [ 7247.055288]   irq_exit+0x16c/0x1d0
+> [ 7247.055298]   timer_interrupt+0x1f0/0x680
+> [ 7247.055308]   decrementer_common+0x124/0x130
+> [ 7247.055328]   arch_local_irq_restore.part.8+0x34/0x90
+> [ 7247.055352]   cpuidle_enter_state+0x11c/0x8f0
+> [ 7247.055361]   cpuidle_enter+0x50/0x70
+> [ 7247.055389]   call_cpuidle+0x4c/0x90
+> [ 7247.055398]   do_idle+0x378/0x470
+> [ 7247.055414]   cpu_startup_entry+0x3c/0x40
+> [ 7247.055442]   start_secondary+0x7a8/0xa80
+> [ 7247.055461]   start_secondary_prolog+0x10/0x14
 
-  warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
-  if (byte_offset >= 0 && byte_offset < cfg->mem_size) {
+That's kind of hilarious.
 
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
+So even though it's a spin_lock_irq(), suggesting it's used from both
+process and irq context, Dan appears to be adding the first user that
+actually runs from irq context. It looks like it should have been a
+regular spinlock all along. Until now, anyway.
 
-Added my own tested-by, since I actually use this driver.
-
- drivers/input/touchscreen/atmel_mxt_ts.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index ae60442efda0..bd0fc4b08608 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -1287,8 +1287,8 @@ static int mxt_prepare_cfg_mem(struct mxt_data *data, struct mxt_cfg *cfg)
- {
- 	struct device *dev = &data->client->dev;
- 	struct mxt_object *object;
--	unsigned int type, instance, size, byte_offset;
--	int offset;
-+	unsigned int type, instance, size;
-+	int offset, byte_offset;
- 	int ret;
- 	int i;
- 	u16 reg;
--- 
-2.24.0
-
+Fixing it should be straight-forward. Use get_file() under lock to pin
+the file, drop the lock to do file_path(), release file with fput().
