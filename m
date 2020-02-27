@@ -2,91 +2,100 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A836C7659E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2971DC7658D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 595D524688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8E7324688
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:35:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814169;
-	bh=AZscq8XeHW3FWrGVDBy12fTxu1hh2A8Mmnm4Zl5o8jE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j+zLn3Pqo9UJlfuU2yvznAw6PLc4IxaFO8wcy7R0ypwB/4PB+yaCKPWH6DTuQjsRW
-	 CJWCQTzdfmNR5NXvqvUeZJYg4pZ1JELiKtTZW6VkGfAffHC5TO3faWW7wrh8u/g+Wb
-	 RZbT2PFj3Vkxwjok61kfJERMY7hlp0GjU1ijxQ0I=
+	s=default; t=1582814137;
+	bh=LptIzUxwKjl42YG8Ni/qcMG8j5lOeHqwdiwER+neHwg=;
+	h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
+	 References:List-ID:From;
+	b=xz+J2BJGh59gxdq97pHi9Lx+1B15wKSfYNnAgs2h50OALZnAdCNZCA4KbqbeSIy2b
+	 1urLgTZWznAKrjnGctOWvPVJdUIxBg7RXoTTJGRMiWnu6kOSrrWjMzlTQd+G+k1fwE
+	 GZoARr/gJd3cvfiAtKtkzwVnUeYb8nPZ23FrWP5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732270AbgB0N7a (ORCPT
+        id S1732547AbgB0Ofg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:59:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60682 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:35:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732422AbgB0N7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:59:19 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2387481AbgB0OeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:34:00 -0500
+Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CD3E24656;
-        Thu, 27 Feb 2020 13:59:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C747246AE;
+        Thu, 27 Feb 2020 14:33:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811958;
-        bh=AZscq8XeHW3FWrGVDBy12fTxu1hh2A8Mmnm4Zl5o8jE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yv9su0/oIviQuHDT+626+oCuKZ73M3H3jFhJCwkL2ft95wvjgSsXdAHdFjry6+q/4
-         Hon/1PhblavzHb00eItj1EGctOCaKc9B8u7r42/H+cHwXcCPKzaUOibLgzvsXfsPyR
-         3x20BM/Abz+c4vKon7fUR+NTA5qcVDPs3dtlhJWU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Per Forlin <perfn@axis.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 168/237] net: dsa: tag_qca: Make sure there is headroom for tag
-Date:   Thu, 27 Feb 2020 14:36:22 +0100
-Message-Id: <20200227132308.817526332@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
-References: <20200227132255.285644406@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        s=default; t=1582814039;
+        bh=LptIzUxwKjl42YG8Ni/qcMG8j5lOeHqwdiwER+neHwg=;
+        h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=gKXVK5tsLaynaC4LSDA0PTu+6Nv76v34XRXpd9lX5QC8t2/uKms0CXxCfIDaNjXDY
+         faWucMNZSnVJ7nZ5nJHK6KAUSRLrQpgYR6fqT4G5E4YE3qmzUIPpZ0KJ0p2sEFkkEM
+         tGp4XGCO2ql2KN6QEGQm954UDmR35SisehS5BXFI=
+From:   zanussi@kernel.org
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Daniel Wagner <wagi@monom.org>,
+        Tom Zanussi <zanussi@kernel.org>
+Subject: [PATCH RT 04/23] x86: preempt: Check preemption level before looking at lazy-preempt
+Date:   Thu, 27 Feb 2020 08:33:15 -0600
+Message-Id: <ced8d6e46fd112cad04bdf4cc6ebf299dfc2d465.1582814004.git.zanussi@kernel.org>
+X-Mailer: git-send-email 2.14.1
+In-Reply-To: <cover.1582814004.git.zanussi@kernel.org>
+References: <cover.1582814004.git.zanussi@kernel.org>
+In-Reply-To: <cover.1582814004.git.zanussi@kernel.org>
+References: <cover.1582814004.git.zanussi@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Per Forlin <per.forlin@axis.com>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-[ Upstream commit 04fb91243a853dbde216d829c79d9632e52aa8d9 ]
+v4.14.170-rt75-rc2 stable review patch.
+If anyone has any objections, please let me know.
 
-Passing tag size to skb_cow_head will make sure
-there is enough headroom for the tag data.
-This change does not introduce any overhead in case there
-is already available headroom for tag.
+-----------
 
-Signed-off-by: Per Forlin <perfn@axis.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+[ Upstream commit 19fc8557f2323c52b26561651ed4d51fc688a740 ]
+
+Before evaluating the lazy-preempt state it must be ensure that the
+preempt-count is zero.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Tom Zanussi <zanussi@kernel.org>
 ---
- net/dsa/tag_qca.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/preempt.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/dsa/tag_qca.c
-+++ b/net/dsa/tag_qca.c
-@@ -41,7 +41,7 @@ static struct sk_buff *qca_tag_xmit(stru
- 	struct dsa_slave_priv *p = netdev_priv(dev);
- 	u16 *phdr, hdr;
- 
--	if (skb_cow_head(skb, 0) < 0)
-+	if (skb_cow_head(skb, QCA_HDR_LEN) < 0)
- 		return NULL;
- 
- 	skb_push(skb, QCA_HDR_LEN);
-
+diff --git a/arch/x86/include/asm/preempt.h b/arch/x86/include/asm/preempt.h
+index f66708779274..afa0e42ccdd1 100644
+--- a/arch/x86/include/asm/preempt.h
++++ b/arch/x86/include/asm/preempt.h
+@@ -96,6 +96,8 @@ static __always_inline bool __preempt_count_dec_and_test(void)
+ 	if (____preempt_count_dec_and_test())
+ 		return true;
+ #ifdef CONFIG_PREEMPT_LAZY
++	if (preempt_count())
++		return false;
+ 	if (current_thread_info()->preempt_lazy_count)
+ 		return false;
+ 	return test_thread_flag(TIF_NEED_RESCHED_LAZY);
+-- 
+2.14.1
 
