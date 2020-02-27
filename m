@@ -2,525 +2,153 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C9CC4BA3A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 01:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54977C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 01:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B8042467F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 01:27:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="c/zhcI4Q"
+	by mail.kernel.org (Postfix) with ESMTP id 2CF8124650
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 01:29:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728222AbgB0B1O (ORCPT
+        id S1728178AbgB0B3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 20:27:14 -0500
-Received: from vps.xff.cz ([195.181.215.36]:44774 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728139AbgB0B1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 20:27:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1582766829; bh=J8bbHHFFiVXk+KIFVHMP6rWhvXgGYVqe5dnI2yTVy0Q=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=c/zhcI4Q/hdOGv9GHHR47HZQoInq/X9dC0Cwasi0pcTY0qwTLXZUvRgwBtHz6g77H
-         iWSHH/NiE/9GF6avrQFB0rafyU6Ey5OF7QvGRrkJQ1rCY3OI3j4LwwhUb5+zP+JSaQ
-         1feHzGoE6btBm+Z2QlFWu+IbuH3X0+AFpAVWwcCc=
-From:   Ondrej Jirman <megous@megous.com>
-To:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     Ondrej Jirman <megous@megous.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Corentin Labbe <clabbe@baylibre.com>,
-        Georgii Staroselskii <georgii.staroselskii@emlid.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>, Icenowy Zheng <icenowy@aosc.io>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] arm64: dts: allwinner: Add initial support for Pine64 PinePhone
-Date:   Thu, 27 Feb 2020 02:26:50 +0100
-Message-Id: <20200227012650.1179151-4-megous@megous.com>
-In-Reply-To: <20200227012650.1179151-1-megous@megous.com>
-References: <20200227012650.1179151-1-megous@megous.com>
+        Wed, 26 Feb 2020 20:29:11 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10698 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727964AbgB0B3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 20:29:11 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 470CE14D073C94A15B54;
+        Thu, 27 Feb 2020 09:29:09 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 27 Feb
+ 2020 09:29:06 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: show mounted time
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20200226164615.170424-1-jaegeuk@kernel.org>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <ace413a8-639d-24c9-f36f-5da949be76e3@huawei.com>
+Date:   Thu, 27 Feb 2020 09:29:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200226164615.170424-1-jaegeuk@kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At the moment PinePhone comes in two slightly incompatible variants:
+On 2020/2/27 0:46, Jaegeuk Kim wrote:
+> Let's show mounted time.
+> 
+> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> ---
+>  Documentation/ABI/testing/sysfs-fs-f2fs | 5 +++++
+>  fs/f2fs/debug.c                         | 3 +++
+>  fs/f2fs/segment.c                       | 2 +-
+>  fs/f2fs/segment.h                       | 2 +-
+>  fs/f2fs/sysfs.c                         | 8 ++++++++
+>  5 files changed, 18 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-fs-f2fs b/Documentation/ABI/testing/sysfs-fs-f2fs
+> index 1a6cd5397129..ddee45e88270 100644
+> --- a/Documentation/ABI/testing/sysfs-fs-f2fs
+> +++ b/Documentation/ABI/testing/sysfs-fs-f2fs
+> @@ -318,3 +318,8 @@ Date:		September 2019
+>  Contact:	"Hridya Valsaraju" <hridya@google.com>
+>  Description:	Average number of valid blocks.
+>  		Available when CONFIG_F2FS_STAT_FS=y.
+> +
+> +What:		/sys/fs/f2fs/<disk>/mounted_time
+> +Date:		February 2020
+> +Contact:	"Jaegeuk Kim" <jaegeuk@kernel.org>
+> +Description:	Show the mounted time of this partition.
 
-- 1.0: Early Developer Batch
-- 1.1: Braveheart Batch
+It's better to describe its unit: second, otherwise, it looks good to me.
 
-There will be at least one more incompatible variant in the very near
-future, so let's start by sharing the dtsi among multiple variants,
-right away, even though the HW description doesn't yet include the
-different bits.
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
-The differences between 1.0 and 1.1 are: change in pins that control
-the flash LED, differences in modem power status signal routing, and
-maybe some other subtler things, that have not been determined yet.
+Thanks,
 
-This is a basic DT that includes only features that are already
-supported by mainline drivers.
-
-Co-developed-by: Samuel Holland <samuel@sholland.org>
-Signed-off-by: Samuel Holland <samuel@sholland.org>
-Co-developed-by: Martijn Braam <martijn@brixit.nl>
-Signed-off-by: Martijn Braam <martijn@brixit.nl>
-Co-developed-by: Luca Weiss <luca@z3ntu.xyz>
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-Signed-off-by: Bhushan Shah <bshah@kde.org>
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Ondrej Jirman <megous@megous.com>
----
- arch/arm64/boot/dts/allwinner/Makefile        |   2 +
- .../allwinner/sun50i-a64-pinephone-1.0.dts    |  11 +
- .../allwinner/sun50i-a64-pinephone-1.1.dts    |  11 +
- .../dts/allwinner/sun50i-a64-pinephone.dtsi   | 379 ++++++++++++++++++
- 4 files changed, 403 insertions(+)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.0.dts
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-
-diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-index 6dad63881cd3a..e4d3cd0ac5bb7 100644
---- a/arch/arm64/boot/dts/allwinner/Makefile
-+++ b/arch/arm64/boot/dts/allwinner/Makefile
-@@ -9,6 +9,8 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-orangepi-win.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-lts.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-plus.dtb sun50i-a64-pine64.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinebook.dtb
-+dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinephone-1.0.dtb
-+dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinephone-1.1.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinetab.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-sopine-baseboard.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-teres-i.dtb
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.0.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.0.dts
-new file mode 100644
-index 0000000000000..0c42272106afa
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.0.dts
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+// Copyright (C) 2020 Ondrej Jirman <megous@megous.com>
-+
-+/dts-v1/;
-+
-+#include "sun50i-a64-pinephone.dtsi"
-+
-+/ {
-+	model = "Pine64 PinePhone Developer Batch (1.0)";
-+	compatible = "pine64,pinephone-1.0", "allwinner,sun50i-a64";
-+};
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
-new file mode 100644
-index 0000000000000..06a775c41664b
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+// Copyright (C) 2020 Ondrej Jirman <megous@megous.com>
-+
-+/dts-v1/;
-+
-+#include "sun50i-a64-pinephone.dtsi"
-+
-+/ {
-+	model = "Pine64 PinePhone Braveheart (1.1)";
-+	compatible = "pine64,pinephone-1.1", "allwinner,sun50i-a64";
-+};
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-new file mode 100644
-index 0000000000000..cefda145c3c9d
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-@@ -0,0 +1,379 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+// Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.xyz>
-+// Copyright (C) 2020 Martijn Braam <martijn@brixit.nl>
-+// Copyright (C) 2020 Ondrej Jirman <megous@megous.com>
-+
-+#include "sun50i-a64.dtsi"
-+#include "sun50i-a64-cpu-opp.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/leds/common.h>
-+#include <dt-bindings/pwm/pwm.h>
-+
-+/ {
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		blue {
-+			function = LED_FUNCTION_INDICATOR;
-+			color = <LED_COLOR_ID_BLUE>;
-+			gpios = <&pio 3 20 GPIO_ACTIVE_HIGH>; /* PD20 */
-+		};
-+
-+		green {
-+			function = LED_FUNCTION_INDICATOR;
-+			color = <LED_COLOR_ID_GREEN>;
-+			gpios = <&pio 3 18 GPIO_ACTIVE_HIGH>; /* PD18 */
-+		};
-+
-+		red {
-+			function = LED_FUNCTION_INDICATOR;
-+			color = <LED_COLOR_ID_RED>;
-+			gpios = <&pio 3 19 GPIO_ACTIVE_HIGH>; /* PD19 */
-+		};
-+	};
-+
-+	speaker_amp: audio-amplifier {
-+		compatible = "simple-audio-amplifier";
-+		enable-gpios = <&pio 2 7 GPIO_ACTIVE_HIGH>; /* PC7 */
-+		sound-name-prefix = "Speaker Amp";
-+	};
-+
-+	vibrator {
-+		compatible = "gpio-vibrator";
-+		enable-gpios = <&pio 3 2 GPIO_ACTIVE_HIGH>; /* PD2 */
-+		vcc-supply = <&reg_dcdc1>;
-+	};
-+};
-+
-+&codec {
-+	status = "okay";
-+};
-+
-+&codec_analog {
-+	cpvdd-supply = <&reg_eldo1>;
-+	status = "okay";
-+};
-+
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu1 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu2 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu3 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&dai {
-+	status = "okay";
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+
-+	/* Magnetometer */
-+	lis3mdl@1e {
-+		compatible = "st,lis3mdl-magn";
-+		reg = <0x1e>;
-+		vdd-supply = <&reg_dldo1>;
-+		vddio-supply = <&reg_dldo1>;
-+	};
-+
-+	/* Accelerometer/gyroscope */
-+	mpu6050@68 {
-+		compatible = "invensense,mpu6050";
-+		reg = <0x68>;
-+		interrupt-parent = <&pio>;
-+		interrupts = <7 5 IRQ_TYPE_EDGE_RISING>; /* PH5 */
-+		vdd-supply = <&reg_dldo1>;
-+		vddio-supply = <&reg_dldo1>;
-+	};
-+};
-+
-+/* Connected to pogo pins (external spring based pinheader for user addons) */
-+&i2c2 {
-+	status = "okay";
-+};
-+
-+&lradc {
-+	vref-supply = <&reg_aldo3>;
-+	status = "okay";
-+
-+	button-200 {
-+		label = "Volume Up";
-+		linux,code = <KEY_VOLUMEUP>;
-+		channel = <0>;
-+		voltage = <200000>;
-+	};
-+
-+	button-400 {
-+		label = "Volume Down";
-+		linux,code = <KEY_VOLUMEDOWN>;
-+		channel = <0>;
-+		voltage = <400000>;
-+	};
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins>;
-+	vmmc-supply = <&reg_dcdc1>;
-+	vqmmc-supply = <&reg_dcdc1>;
-+	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
-+	disable-wp;
-+	bus-width = <4>;
-+	status = "okay";
-+};
-+
-+&mmc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc2_pins>;
-+	vmmc-supply = <&reg_dcdc1>;
-+	vqmmc-supply = <&reg_dcdc1>;
-+	bus-width = <8>;
-+	non-removable;
-+	cap-mmc-hw-reset;
-+	status = "okay";
-+};
-+
-+&ohci0 {
-+	status = "okay";
-+};
-+
-+&ohci1 {
-+	status = "okay";
-+};
-+
-+&pio {
-+	vcc-pb-supply = <&reg_dcdc1>;
-+	vcc-pc-supply = <&reg_dcdc1>;
-+	vcc-pd-supply = <&reg_dcdc1>;
-+	vcc-pe-supply = <&reg_aldo1>;
-+	vcc-pf-supply = <&reg_dcdc1>;
-+	vcc-pg-supply = <&reg_dldo4>;
-+	vcc-ph-supply = <&reg_dcdc1>;
-+};
-+
-+&r_pio {
-+	/*
-+	 * FIXME: We can't add that supply for now since it would
-+	 * create a circular dependency between pinctrl, the regulator
-+	 * and the RSB Bus.
-+	 *
-+	 * vcc-pl-supply = <&reg_aldo2>;
-+	 */
-+};
-+
-+&r_rsb {
-+	status = "okay";
-+
-+	axp803: pmic@3a3 {
-+		compatible = "x-powers,axp803";
-+		reg = <0x3a3>;
-+		interrupt-parent = <&r_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+};
-+
-+#include "axp803.dtsi"
-+
-+&ac_power_supply {
-+	status = "okay";
-+};
-+
-+&battery_power_supply {
-+	status = "okay";
-+};
-+
-+&reg_aldo1 {
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-name = "dovdd-csi";
-+};
-+
-+&reg_aldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-name = "vcc-pl";
-+};
-+
-+&reg_aldo3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <2700000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-pll-avcc";
-+};
-+
-+&reg_dcdc1 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-3v3";
-+};
-+
-+&reg_dcdc2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1300000>;
-+	regulator-name = "vdd-cpux";
-+};
-+
-+/* DCDC3 is polyphased with DCDC2 */
-+
-+&reg_dcdc5 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1200000>;
-+	regulator-max-microvolt = <1200000>;
-+	regulator-name = "vcc-dram";
-+};
-+
-+&reg_dcdc6 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1100000>;
-+	regulator-max-microvolt = <1100000>;
-+	regulator-name = "vdd-sys";
-+};
-+
-+&reg_dldo1 {
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-dsi-sensor";
-+};
-+
-+&reg_dldo2 {
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-name = "vcc-mipi-io";
-+};
-+
-+&reg_dldo3 {
-+	regulator-min-microvolt = <2800000>;
-+	regulator-max-microvolt = <2800000>;
-+	regulator-name = "avdd-csi";
-+};
-+
-+&reg_dldo4 {
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-wifi-io";
-+};
-+
-+&reg_eldo1 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-name = "vcc-lpddr";
-+};
-+
-+&reg_eldo3 {
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-name = "dvdd-1v8-csi";
-+};
-+
-+&reg_fldo1 {
-+	regulator-min-microvolt = <1200000>;
-+	regulator-max-microvolt = <1200000>;
-+	regulator-name = "vcc-1v2-hsic";
-+};
-+
-+&reg_fldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1100000>;
-+	regulator-max-microvolt = <1100000>;
-+	regulator-name = "vdd-cpus";
-+};
-+
-+&reg_ldo_io0 {
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-lcd-ctp-stk";
-+	status = "okay";
-+};
-+
-+&reg_ldo_io1 {
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-name = "vcc-1v8-typec";
-+	status = "okay";
-+};
-+
-+&reg_rtc_ldo {
-+	regulator-name = "vcc-rtc";
-+};
-+
-+&sound {
-+	status = "okay";
-+	simple-audio-card,aux-devs = <&codec_analog>, <&speaker_amp>;
-+	simple-audio-card,widgets = "Microphone", "Headset Microphone",
-+				    "Microphone", "Internal Microphone",
-+				    "Headphone", "Headphone Jack",
-+				    "Speaker", "Internal Earpiece",
-+				    "Speaker", "Internal Speaker";
-+	simple-audio-card,routing =
-+			"Headphone Jack", "HP",
-+			"Internal Earpiece", "EARPIECE",
-+			"Internal Speaker", "Speaker Amp OUTL",
-+			"Internal Speaker", "Speaker Amp OUTR",
-+			"Speaker Amp INL", "LINEOUT",
-+			"Speaker Amp INR", "LINEOUT",
-+			"Left DAC", "AIF1 Slot 0 Left",
-+			"Right DAC", "AIF1 Slot 0 Right",
-+			"AIF1 Slot 0 Left ADC", "Left ADC",
-+			"AIF1 Slot 0 Right ADC", "Right ADC",
-+			"Internal Microphone", "MBIAS",
-+			"MIC1", "Internal Microphone",
-+			"Headset Microphone", "HBIAS",
-+			"MIC2", "Headset Microphone";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pb_pins>;
-+	status = "okay";
-+};
-+
-+/* Connected to the modem (hardware flow control can't be used) */
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart3_pins>;
-+	status = "okay";
-+};
-+
-+&usb_otg {
-+	dr_mode = "peripheral";
-+	status = "okay";
-+};
-+
-+&usb_power_supply {
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	status = "okay";
-+};
--- 
-2.25.1
-
+> diff --git a/fs/f2fs/debug.c b/fs/f2fs/debug.c
+> index 6b89eae5e4ca..a8cf9626f71f 100644
+> --- a/fs/f2fs/debug.c
+> +++ b/fs/f2fs/debug.c
+> @@ -301,6 +301,9 @@ static int stat_show(struct seq_file *s, void *v)
+>  			   si->ssa_area_segs, si->main_area_segs);
+>  		seq_printf(s, "(OverProv:%d Resv:%d)]\n\n",
+>  			   si->overp_segs, si->rsvd_segs);
+> +		seq_printf(s, "Current Time: %llu s / Mounted Time: %llu s\n\n",
+> +					ktime_get_boottime_seconds(),
+> +					SIT_I(si->sbi)->mounted_time);
+>  		if (test_opt(si->sbi, DISCARD))
+>  			seq_printf(s, "Utilization: %u%% (%u valid blocks, %u discard blocks)\n",
+>  				si->utilization, si->valid_count, si->discard_blks);
+> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> index fb3e531a36d2..601d67e72c50 100644
+> --- a/fs/f2fs/segment.c
+> +++ b/fs/f2fs/segment.c
+> @@ -4073,7 +4073,7 @@ static int build_sit_info(struct f2fs_sb_info *sbi)
+>  	sit_i->dirty_sentries = 0;
+>  	sit_i->sents_per_block = SIT_ENTRY_PER_BLOCK;
+>  	sit_i->elapsed_time = le64_to_cpu(sbi->ckpt->elapsed_time);
+> -	sit_i->mounted_time = ktime_get_real_seconds();
+> +	sit_i->mounted_time = ktime_get_boottime_seconds();
+>  	init_rwsem(&sit_i->sentry_lock);
+>  	return 0;
+>  }
+> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+> index 459dc3901a57..7a83bd530812 100644
+> --- a/fs/f2fs/segment.h
+> +++ b/fs/f2fs/segment.h
+> @@ -756,7 +756,7 @@ static inline unsigned long long get_mtime(struct f2fs_sb_info *sbi,
+>  						bool base_time)
+>  {
+>  	struct sit_info *sit_i = SIT_I(sbi);
+> -	time64_t diff, now = ktime_get_real_seconds();
+> +	time64_t diff, now = ktime_get_boottime_seconds();
+>  
+>  	if (now >= sit_i->mounted_time)
+>  		return sit_i->elapsed_time + now - sit_i->mounted_time;
+> diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+> index 4e8aae03f26c..7bfbead98c04 100644
+> --- a/fs/f2fs/sysfs.c
+> +++ b/fs/f2fs/sysfs.c
+> @@ -187,6 +187,12 @@ static ssize_t encoding_show(struct f2fs_attr *a,
+>  	return sprintf(buf, "(none)");
+>  }
+>  
+> +static ssize_t mounted_time_show(struct f2fs_attr *a,
+> +		struct f2fs_sb_info *sbi, char *buf)
+> +{
+> +	return sprintf(buf, "%llu", SIT_I(sbi)->mounted_time);
+> +}
+> +
+>  #ifdef CONFIG_F2FS_STAT_FS
+>  static ssize_t moved_blocks_foreground_show(struct f2fs_attr *a,
+>  				struct f2fs_sb_info *sbi, char *buf)
+> @@ -546,6 +552,7 @@ F2FS_GENERAL_RO_ATTR(features);
+>  F2FS_GENERAL_RO_ATTR(current_reserved_blocks);
+>  F2FS_GENERAL_RO_ATTR(unusable);
+>  F2FS_GENERAL_RO_ATTR(encoding);
+> +F2FS_GENERAL_RO_ATTR(mounted_time);
+>  #ifdef CONFIG_F2FS_STAT_FS
+>  F2FS_STAT_ATTR(STAT_INFO, f2fs_stat_info, cp_foreground_calls, cp_count);
+>  F2FS_STAT_ATTR(STAT_INFO, f2fs_stat_info, cp_background_calls, bg_cp_count);
+> @@ -623,6 +630,7 @@ static struct attribute *f2fs_attrs[] = {
+>  	ATTR_LIST(reserved_blocks),
+>  	ATTR_LIST(current_reserved_blocks),
+>  	ATTR_LIST(encoding),
+> +	ATTR_LIST(mounted_time),
+>  #ifdef CONFIG_F2FS_STAT_FS
+>  	ATTR_LIST(cp_foreground_calls),
+>  	ATTR_LIST(cp_background_calls),
+> 
