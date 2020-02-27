@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A117C54FE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C487C54FE1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65F9E246A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E432B2468F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813119;
-	bh=4dENMYRa5fW+uv3GkMwMtFZ4XzNLh4JsNpso44jAXF8=;
+	s=default; t=1582813128;
+	bh=TlzoMjyNG2u4Ib2N/3F6iUTNBTdeDCjPpAz3vkK992E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=puqmXVjwszA20ND1q9uOEtBDj0+hhuiAoChKyuw7P1cPUIqCIX6WmrX4R/lRcA3RX
-	 UKpYFIMm+rKpiP78G2b6UVq0d4nj3RA/GJMq1sDyMGNUm9ZcvETH2blNBslVKq3KPa
-	 i8lJatqeZQbVDpNeD+UKjHn6f2AccwPJb0NoOkN4=
+	b=W5lcODba//y8gnvAAd+QzIKmDv1BqjZFbvpsEHFaz/UdNm+ncFzscEl4i8aQDEk6N
+	 qia9DaBCu14stkOyl33Po1kFyuZgljLr182GdsXLvUQluHpfDjNJZ42DxMziu47ch+
+	 pdLAViYkARhc00tjaY+UBSGcXce6SA2qWMYySaFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389912AbgB0OSi (ORCPT
+        id S2389524AbgB0OSp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:18:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59128 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:18:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389884AbgB0OSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:18:31 -0500
+        id S1730171AbgB0OSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:18:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F34452468F;
-        Thu, 27 Feb 2020 14:18:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F50E24697;
+        Thu, 27 Feb 2020 14:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813108;
-        bh=4dENMYRa5fW+uv3GkMwMtFZ4XzNLh4JsNpso44jAXF8=;
+        s=default; t=1582813118;
+        bh=TlzoMjyNG2u4Ib2N/3F6iUTNBTdeDCjPpAz3vkK992E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bXUDiRt2QCRwduRYXhODnJhfhegAaCTbVZ1zrqdATLlHHDmtriJ4K7s3ALpdUiKKv
-         Y6xnzrzN0S6JMlsuwcUsEoimVpGJ60AgUeRd7Z/3dMbe1HSpzpgrfnOL9KBEPfMGAQ
-         Qcyuk2n7YAksOPi52NS4hQd8IPezTxvW580wiyWs=
+        b=NC7MVIrQ7cC9MaWbXRjbdhxzczxEshZ4YyIQStDfzzY+2UwntpXhD98coMi5iQa9M
+         j6KXABQ2bBRC83DaJ4MAgEFzlD1CR0TDJOtMRFr2tdZFeeeYiJAnO9aP4sdmQmR3+2
+         SSYziKqX4hDiOSUFNwpN1WAulJ6ZgHuhhJ8sPw3E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+fd5e0eaa1a32999173b2@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.5 139/150] ALSA: seq: Fix concurrent access to queue current tick/time
-Date:   Thu, 27 Feb 2020 14:37:56 +0100
-Message-Id: <20200227132252.791879793@linuxfoundation.org>
+        stable@vger.kernel.org, Prabhakar Kushwaha <pkushwaha@marvell.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.5 142/150] ata: ahci: Add shutdown to freeze hardware resources of ahci
+Date:   Thu, 27 Feb 2020 14:37:59 +0100
+Message-Id: <20200227132253.229816038@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -60,137 +59,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Prabhakar Kushwaha <pkushwaha@marvell.com>
 
-commit dc7497795e014d84699c3b8809ed6df35352dd74 upstream.
+commit 10a663a1b15134a5a714aa515e11425a44d4fdf7 upstream.
 
-snd_seq_check_queue() passes the current tick and time of the given
-queue as a pointer to snd_seq_prioq_cell_out(), but those might be
-updated concurrently by the seq timer update.
+device_shutdown() called from reboot or power_shutdown expect
+all devices to be shutdown. Same is true for even ahci pci driver.
+As no ahci shutdown function is implemented, the ata subsystem
+always remains alive with DMA & interrupt support. File system
+related calls should not be honored after device_shutdown().
 
-Fix it by retrieving the current tick and time via the proper helper
-functions at first, and pass those values to snd_seq_prioq_cell_out()
-later in the loops.
+So defining ahci pci driver shutdown to freeze hardware (mask
+interrupt, stop DMA engine and free DMA resources).
 
-snd_seq_timer_get_cur_time() takes a new argument and adjusts with the
-current system time only when it's requested so; this update isn't
-needed for snd_seq_check_queue(), as it's called either from the
-interrupt handler or right after queuing.
-
-Also, snd_seq_timer_get_cur_tick() is changed to read the value in the
-spinlock for the concurrency, too.
-
-Reported-by: syzbot+fd5e0eaa1a32999173b2@syzkaller.appspotmail.com
-Link: https://lore.kernel.org/r/20200214111316.26939-3-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/seq/seq_clientmgr.c |    4 ++--
- sound/core/seq/seq_queue.c     |    9 ++++++---
- sound/core/seq/seq_timer.c     |   13 ++++++++++---
- sound/core/seq/seq_timer.h     |    3 ++-
- 4 files changed, 20 insertions(+), 9 deletions(-)
+ drivers/ata/ahci.c        |    7 +++++++
+ drivers/ata/libata-core.c |   21 +++++++++++++++++++++
+ include/linux/libata.h    |    1 +
+ 3 files changed, 29 insertions(+)
 
---- a/sound/core/seq/seq_clientmgr.c
-+++ b/sound/core/seq/seq_clientmgr.c
-@@ -580,7 +580,7 @@ static int update_timestamp_of_queue(str
- 	event->queue = queue;
- 	event->flags &= ~SNDRV_SEQ_TIME_STAMP_MASK;
- 	if (real_time) {
--		event->time.time = snd_seq_timer_get_cur_time(q->timer);
-+		event->time.time = snd_seq_timer_get_cur_time(q->timer, true);
- 		event->flags |= SNDRV_SEQ_TIME_STAMP_REAL;
- 	} else {
- 		event->time.tick = snd_seq_timer_get_cur_tick(q->timer);
-@@ -1659,7 +1659,7 @@ static int snd_seq_ioctl_get_queue_statu
- 	tmr = queue->timer;
- 	status->events = queue->tickq->cells + queue->timeq->cells;
+--- a/drivers/ata/ahci.c
++++ b/drivers/ata/ahci.c
+@@ -81,6 +81,7 @@ enum board_ids {
  
--	status->time = snd_seq_timer_get_cur_time(tmr);
-+	status->time = snd_seq_timer_get_cur_time(tmr, true);
- 	status->tick = snd_seq_timer_get_cur_tick(tmr);
- 
- 	status->running = tmr->running;
---- a/sound/core/seq/seq_queue.c
-+++ b/sound/core/seq/seq_queue.c
-@@ -238,6 +238,8 @@ void snd_seq_check_queue(struct snd_seq_
- {
- 	unsigned long flags;
- 	struct snd_seq_event_cell *cell;
-+	snd_seq_tick_time_t cur_tick;
-+	snd_seq_real_time_t cur_time;
- 
- 	if (q == NULL)
- 		return;
-@@ -254,17 +256,18 @@ void snd_seq_check_queue(struct snd_seq_
- 
-       __again:
- 	/* Process tick queue... */
-+	cur_tick = snd_seq_timer_get_cur_tick(q->timer);
- 	for (;;) {
--		cell = snd_seq_prioq_cell_out(q->tickq,
--					      &q->timer->tick.cur_tick);
-+		cell = snd_seq_prioq_cell_out(q->tickq, &cur_tick);
- 		if (!cell)
- 			break;
- 		snd_seq_dispatch_event(cell, atomic, hop);
- 	}
- 
- 	/* Process time queue... */
-+	cur_time = snd_seq_timer_get_cur_time(q->timer, false);
- 	for (;;) {
--		cell = snd_seq_prioq_cell_out(q->timeq, &q->timer->cur_time);
-+		cell = snd_seq_prioq_cell_out(q->timeq, &cur_time);
- 		if (!cell)
- 			break;
- 		snd_seq_dispatch_event(cell, atomic, hop);
---- a/sound/core/seq/seq_timer.c
-+++ b/sound/core/seq/seq_timer.c
-@@ -428,14 +428,15 @@ int snd_seq_timer_continue(struct snd_se
+ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent);
+ static void ahci_remove_one(struct pci_dev *dev);
++static void ahci_shutdown_one(struct pci_dev *dev);
+ static int ahci_vt8251_hardreset(struct ata_link *link, unsigned int *class,
+ 				 unsigned long deadline);
+ static int ahci_avn_hardreset(struct ata_link *link, unsigned int *class,
+@@ -606,6 +607,7 @@ static struct pci_driver ahci_pci_driver
+ 	.id_table		= ahci_pci_tbl,
+ 	.probe			= ahci_init_one,
+ 	.remove			= ahci_remove_one,
++	.shutdown		= ahci_shutdown_one,
+ 	.driver = {
+ 		.pm		= &ahci_pci_pm_ops,
+ 	},
+@@ -1877,6 +1879,11 @@ static int ahci_init_one(struct pci_dev
+ 	return 0;
  }
  
- /* return current 'real' time. use timeofday() to get better granularity. */
--snd_seq_real_time_t snd_seq_timer_get_cur_time(struct snd_seq_timer *tmr)
-+snd_seq_real_time_t snd_seq_timer_get_cur_time(struct snd_seq_timer *tmr,
-+					       bool adjust_ktime)
- {
- 	snd_seq_real_time_t cur_time;
- 	unsigned long flags;
- 
- 	spin_lock_irqsave(&tmr->lock, flags);
- 	cur_time = tmr->cur_time;
--	if (tmr->running) { 
-+	if (adjust_ktime && tmr->running) {
- 		struct timespec64 tm;
- 
- 		ktime_get_ts64(&tm);
-@@ -452,7 +453,13 @@ snd_seq_real_time_t snd_seq_timer_get_cu
-  high PPQ values) */
- snd_seq_tick_time_t snd_seq_timer_get_cur_tick(struct snd_seq_timer *tmr)
- {
--	return tmr->tick.cur_tick;
-+	snd_seq_tick_time_t cur_tick;
-+	unsigned long flags;
++static void ahci_shutdown_one(struct pci_dev *pdev)
++{
++	ata_pci_shutdown_one(pdev);
++}
 +
-+	spin_lock_irqsave(&tmr->lock, flags);
-+	cur_tick = tmr->tick.cur_tick;
-+	spin_unlock_irqrestore(&tmr->lock, flags);
-+	return cur_tick;
+ static void ahci_remove_one(struct pci_dev *pdev)
+ {
+ 	pm_runtime_get_noresume(&pdev->dev);
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -6767,6 +6767,26 @@ void ata_pci_remove_one(struct pci_dev *
+ 	ata_host_detach(host);
  }
  
++void ata_pci_shutdown_one(struct pci_dev *pdev)
++{
++	struct ata_host *host = pci_get_drvdata(pdev);
++	int i;
++
++	for (i = 0; i < host->n_ports; i++) {
++		struct ata_port *ap = host->ports[i];
++
++		ap->pflags |= ATA_PFLAG_FROZEN;
++
++		/* Disable port interrupts */
++		if (ap->ops->freeze)
++			ap->ops->freeze(ap);
++
++		/* Stop the port DMA engines */
++		if (ap->ops->port_stop)
++			ap->ops->port_stop(ap);
++	}
++}
++
+ /* move to PCI subsystem */
+ int pci_test_config_bits(struct pci_dev *pdev, const struct pci_bits *bits)
+ {
+@@ -7387,6 +7407,7 @@ EXPORT_SYMBOL_GPL(ata_timing_cycle2mode)
  
---- a/sound/core/seq/seq_timer.h
-+++ b/sound/core/seq/seq_timer.h
-@@ -120,7 +120,8 @@ int snd_seq_timer_set_tempo_ppq(struct s
- int snd_seq_timer_set_position_tick(struct snd_seq_timer *tmr, snd_seq_tick_time_t position);
- int snd_seq_timer_set_position_time(struct snd_seq_timer *tmr, snd_seq_real_time_t position);
- int snd_seq_timer_set_skew(struct snd_seq_timer *tmr, unsigned int skew, unsigned int base);
--snd_seq_real_time_t snd_seq_timer_get_cur_time(struct snd_seq_timer *tmr);
-+snd_seq_real_time_t snd_seq_timer_get_cur_time(struct snd_seq_timer *tmr,
-+					       bool adjust_ktime);
- snd_seq_tick_time_t snd_seq_timer_get_cur_tick(struct snd_seq_timer *tmr);
+ #ifdef CONFIG_PCI
+ EXPORT_SYMBOL_GPL(pci_test_config_bits);
++EXPORT_SYMBOL_GPL(ata_pci_shutdown_one);
+ EXPORT_SYMBOL_GPL(ata_pci_remove_one);
+ #ifdef CONFIG_PM
+ EXPORT_SYMBOL_GPL(ata_pci_device_do_suspend);
+--- a/include/linux/libata.h
++++ b/include/linux/libata.h
+@@ -1221,6 +1221,7 @@ struct pci_bits {
+ };
  
- extern int seq_default_timer_class;
+ extern int pci_test_config_bits(struct pci_dev *pdev, const struct pci_bits *bits);
++extern void ata_pci_shutdown_one(struct pci_dev *pdev);
+ extern void ata_pci_remove_one(struct pci_dev *pdev);
+ 
+ #ifdef CONFIG_PM
 
 
