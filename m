@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BAC0C52D39
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B89E8C52D5C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8A0820801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CDE32073D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:59:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812070;
-	bh=cTtAzCUPbWALIG3BgIYSOQIv5rypzVCDWUfep5QZfj8=;
+	s=default; t=1582811950;
+	bh=sXKr07LhSMJaxeyVmTeEL6LuRaf6FLMgJOtCXcSEip8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RRDLLCeYjZXbcdyoX3L6ew8T5ywQ74e5pHz0fNzDzSmn26TN8clGWJICdAvBVGw/+
-	 EqclRSBwDd70Lhttmz3d5k2uh04EpdZ2Z5EIBUYOVM/SzETx//taEJRzIlgs7k93Wy
-	 zkpqqpi5MvC4Zn/d8FnihPAf17mYqJ+RDxxVgAvE=
+	b=NUPfjpdUJhsJrcfK59FSCT31xhm8v2jIxNU7wolKW02KSV2Bt1gmL1Gbh4R54KB+o
+	 5+TbAEdciFvkaNYgdDhFWhBI3L01tPTntvXaH/FLkdV9kxFlQS3vmbo2E++gbV7AnJ
+	 3j878dFHmtlSxo1hFpnFFVxYu07QPiwawV2JC6pw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732654AbgB0OBI (ORCPT
+        id S1732579AbgB0N7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:01:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34772 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:59:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732843AbgB0OBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:01:03 -0500
+        id S1732557AbgB0N7D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:59:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B94224697;
-        Thu, 27 Feb 2020 14:01:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A47E124691;
+        Thu, 27 Feb 2020 13:59:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812062;
-        bh=cTtAzCUPbWALIG3BgIYSOQIv5rypzVCDWUfep5QZfj8=;
+        s=default; t=1582811943;
+        bh=sXKr07LhSMJaxeyVmTeEL6LuRaf6FLMgJOtCXcSEip8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p1zQq3ZT2XzHxqPW7sNJXWw5LN9gadIqAkZy+D8YzGjIN7LEX3Dx+DOBZSKnsSXl5
-         BlQIGhS9iKmmp35zldBErfpBHgj3xNqq6nEOowzJh80lRatJVfoBBZYgS59cKDqeJQ
-         MYHqzjE1sLx5QIA8s6Ud+Y9Umq6LOiePnMyWJ7DY=
+        b=mPJtU7II1kCVgDB5iO787NeU2lz0nXiZrXEWIxNTU5JNSLaz81yROV4esKVq5laxe
+         Rqthil7E6VVDeVcB+6+Z1BIXc59akrywuw2k4X/7L7J8iEUVJ7OGTVOGyHp+28+R1w
+         uH4SQa7MoiypGmFUDWH793BZPkavkvMIgx+J07FY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miles Chen <miles.chen@mediatek.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 208/237] lib/stackdepot: Fix outdated comments
-Date:   Thu, 27 Feb 2020 14:37:02 +0100
-Message-Id: <20200227132311.534503146@linuxfoundation.org>
+        stable@vger.kernel.org, Zhiqiang Liu <liuzhiqiang26@huawei.com>,
+        Bob Liu <bob.liu@oracle.com>, Ming Lei <ming.lei@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 162/237] brd: check and limit max_part par
+Date:   Thu, 27 Feb 2020 14:36:16 +0100
+Message-Id: <20200227132308.417513087@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -60,45 +60,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miles Chen <miles.chen@mediatek.com>
+From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
 
-[ Upstream commit ee050dc83bc326ad5ef8ee93bca344819371e7a5 ]
+[ Upstream commit c8ab422553c81a0eb070329c63725df1cd1425bc ]
 
-Replace "depot_save_stack" with "stack_depot_save" in code comments because
-depot_save_stack() was replaced in commit c0cfc337264c ("lib/stackdepot:
-Provide functions which operate on plain storage arrays") and removed in
-commit 56d8f079c51a ("lib/stackdepot: Remove obsolete functions")
+In brd_init func, rd_nr num of brd_device are firstly allocated
+and add in brd_devices, then brd_devices are traversed to add each
+brd_device by calling add_disk func. When allocating brd_device,
+the disk->first_minor is set to i * max_part, if rd_nr * max_part
+is larger than MINORMASK, two different brd_device may have the same
+devt, then only one of them can be successfully added.
+when rmmod brd.ko, it will cause oops when calling brd_exit.
 
-Signed-off-by: Miles Chen <miles.chen@mediatek.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190815113246.18478-1-miles.chen@mediatek.com
+Follow those steps:
+  # modprobe brd rd_nr=3 rd_size=102400 max_part=1048576
+  # rmmod brd
+then, the oops will appear.
+
+Oops log:
+[  726.613722] Call trace:
+[  726.614175]  kernfs_find_ns+0x24/0x130
+[  726.614852]  kernfs_find_and_get_ns+0x44/0x68
+[  726.615749]  sysfs_remove_group+0x38/0xb0
+[  726.616520]  blk_trace_remove_sysfs+0x1c/0x28
+[  726.617320]  blk_unregister_queue+0x98/0x100
+[  726.618105]  del_gendisk+0x144/0x2b8
+[  726.618759]  brd_exit+0x68/0x560 [brd]
+[  726.619501]  __arm64_sys_delete_module+0x19c/0x2a0
+[  726.620384]  el0_svc_common+0x78/0x130
+[  726.621057]  el0_svc_handler+0x38/0x78
+[  726.621738]  el0_svc+0x8/0xc
+[  726.622259] Code: aa0203f6 aa0103f7 aa1e03e0 d503201f (7940e260)
+
+Here, we add brd_check_and_reset_par func to check and limit max_part par.
+
+--
+V5->V6:
+ - remove useless code
+
+V4->V5:(suggested by Ming Lei)
+ - make sure max_part is not larger than DISK_MAX_PARTS
+
+V3->V4:(suggested by Ming Lei)
+ - remove useless change
+ - add one limit of max_part
+
+V2->V3: (suggested by Ming Lei)
+ - clear .minors when running out of consecutive minor space in brd_alloc
+ - remove limit of rd_nr
+
+V1->V2:
+ - add more checks in brd_check_par_valid as suggested by Ming Lei.
+
+Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/stackdepot.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/block/brd.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/lib/stackdepot.c b/lib/stackdepot.c
-index f87d138e96724..1724cb0d6283f 100644
---- a/lib/stackdepot.c
-+++ b/lib/stackdepot.c
-@@ -96,7 +96,7 @@ static bool init_stack_slab(void **prealloc)
- 		stack_slabs[depot_index + 1] = *prealloc;
- 		/*
- 		 * This smp_store_release pairs with smp_load_acquire() from
--		 * |next_slab_inited| above and in depot_save_stack().
-+		 * |next_slab_inited| above and in stack_depot_save().
- 		 */
- 		smp_store_release(&next_slab_inited, 1);
- 	}
-@@ -123,7 +123,7 @@ static struct stack_record *depot_alloc_stack(unsigned long *entries, int size,
- 		depot_offset = 0;
- 		/*
- 		 * smp_store_release() here pairs with smp_load_acquire() from
--		 * |next_slab_inited| in depot_save_stack() and
-+		 * |next_slab_inited| in stack_depot_save() and
- 		 * init_stack_slab().
- 		 */
- 		if (depot_index + 1 < STACK_ALLOC_MAX_SLABS)
+diff --git a/drivers/block/brd.c b/drivers/block/brd.c
+index 2d7178f7754ed..0129b1921cb36 100644
+--- a/drivers/block/brd.c
++++ b/drivers/block/brd.c
+@@ -529,6 +529,25 @@ static struct kobject *brd_probe(dev_t dev, int *part, void *data)
+ 	return kobj;
+ }
+ 
++static inline void brd_check_and_reset_par(void)
++{
++	if (unlikely(!max_part))
++		max_part = 1;
++
++	/*
++	 * make sure 'max_part' can be divided exactly by (1U << MINORBITS),
++	 * otherwise, it is possiable to get same dev_t when adding partitions.
++	 */
++	if ((1U << MINORBITS) % max_part != 0)
++		max_part = 1UL << fls(max_part);
++
++	if (max_part > DISK_MAX_PARTS) {
++		pr_info("brd: max_part can't be larger than %d, reset max_part = %d.\n",
++			DISK_MAX_PARTS, DISK_MAX_PARTS);
++		max_part = DISK_MAX_PARTS;
++	}
++}
++
+ static int __init brd_init(void)
+ {
+ 	struct brd_device *brd, *next;
+@@ -552,8 +571,7 @@ static int __init brd_init(void)
+ 	if (register_blkdev(RAMDISK_MAJOR, "ramdisk"))
+ 		return -EIO;
+ 
+-	if (unlikely(!max_part))
+-		max_part = 1;
++	brd_check_and_reset_par();
+ 
+ 	for (i = 0; i < rd_nr; i++) {
+ 		brd = brd_alloc(i);
 -- 
 2.20.1
 
