@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 634CFC35E1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD018C52D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B9F621D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79D6A20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812152;
-	bh=b0I/F1hHri+BUOIuCvlBEDr2TqA3GxI8B+o2roqph7c=;
+	s=default; t=1582812145;
+	bh=Z3pvmBN7mNjqmSDn5pdU0b5YHXmvF7MhrUa1o1JzbtA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K16UbaO7MfmjIrU+y4ABQ8AoWRnnL7iG1gMZj4/oN/Ib8Cnm9cx4a+fm3gcFmSHl8
-	 Z8BNfoitx3yxUt5YlJes0sBJLZ4fwnku7zIQS9Vofom6SeBN0iUCQGttuUfNNuYsKO
-	 YNw4dhlc+akH/8Sz+7TXTzPKK7aL/U+xnVyrNTD4=
+	b=WQD2oFpdy0AzW6bjjJPEeC8GC0U53JXwkXt9C9GYlBrB5JE8etJHeTp3hfG1HnU8M
+	 hoLRdF/W1by2M+o13LuYXnzUfE8h8Zg6rPRW9sPVGLSDc9sJRobKg4eK2DuOyz/oCJ
+	 lDy/N+l9nHL5bDvSejx/UsfcK45YrbmUthgoKbYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733135AbgB0OCa (ORCPT
+        id S1732863AbgB0OCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:02:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37108 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:02:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730081AbgB0OC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:02:26 -0500
+        id S1733021AbgB0OCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:02:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7564B20578;
-        Thu, 27 Feb 2020 14:02:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C01A20801;
+        Thu, 27 Feb 2020 14:02:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812145;
-        bh=b0I/F1hHri+BUOIuCvlBEDr2TqA3GxI8B+o2roqph7c=;
+        s=default; t=1582812141;
+        bh=Z3pvmBN7mNjqmSDn5pdU0b5YHXmvF7MhrUa1o1JzbtA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z2eCsOEQkHxNfJpTKKEEFCAmhtzgp1mt2yof894xm1vUxunHBSqghvtdgQ3v/8Fz6
-         12tnjV80v270ecWx3+LoMxCNrxFNjnmoU6qyqtxR9nud5/AcFZ5gBlG2RjAjmUUk2y
-         Ky+thBCs5d9kpsWUe3a2jDxteT2yusI8Te9yMzrI=
+        b=SPvDLbkZKyj0Z/t0yHd7pvbI+lSdR8mATbhbXgOZcRWaZfel/+V7PfpPV098lFhj9
+         4meIBqjKngYdA1l2DXVTXpuMwdNeB/KLTB0y8NULjDPRhkQbSDAROIPhPagtsfCYI+
+         XYUucC9Ai05HldaS1cDZY3lOiVY+9AJztaXZ0u/o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.14 201/237] xhci: apply XHCI_PME_STUCK_QUIRK to Intel Comet Lake platforms
-Date:   Thu, 27 Feb 2020 14:36:55 +0100
-Message-Id: <20200227132311.063777382@linuxfoundation.org>
+        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 4.14 199/237] drm/amdgpu/soc15: fix xclk for raven
+Date:   Thu, 27 Feb 2020 14:36:53 +0100
+Message-Id: <20200227132310.929274709@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -59,41 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-commit a3ae87dce3a5abe0b57c811bab02b2564b574106 upstream.
+commit c657b936ea98630ef5ba4f130ab1ad5c534d0165 upstream.
 
-Intel Comet Lake based platform require the XHCI_PME_STUCK_QUIRK
-quirk as well. Without this xHC can not enter D3 in runtime suspend.
+It's 25 Mhz (refclk / 4).  This fixes the interpretation
+of the rlc clock counter.
 
+Acked-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200210134553.9144-5-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-pci.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/soc15.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -53,6 +53,7 @@
- #define PCI_DEVICE_ID_INTEL_BROXTON_B_XHCI		0x1aa8
- #define PCI_DEVICE_ID_INTEL_APL_XHCI			0x5aa8
- #define PCI_DEVICE_ID_INTEL_DNV_XHCI			0x19d0
-+#define PCI_DEVICE_ID_INTEL_CML_XHCI			0xa3af
+--- a/drivers/gpu/drm/amd/amdgpu/soc15.c
++++ b/drivers/gpu/drm/amd/amdgpu/soc15.c
+@@ -279,7 +279,12 @@ static void soc15_init_golden_registers(
+ }
+ static u32 soc15_get_xclk(struct amdgpu_device *adev)
+ {
+-	return adev->clock.spll.reference_freq;
++	u32 reference_clock = adev->clock.spll.reference_freq;
++
++	if (adev->asic_type == CHIP_RAVEN)
++		return reference_clock / 4;
++
++	return reference_clock;
+ }
  
- #define PCI_DEVICE_ID_AMD_PROMONTORYA_4			0x43b9
- #define PCI_DEVICE_ID_AMD_PROMONTORYA_3			0x43ba
-@@ -191,7 +192,8 @@ static void xhci_pci_quirks(struct devic
- 		 pdev->device == PCI_DEVICE_ID_INTEL_BROXTON_M_XHCI ||
- 		 pdev->device == PCI_DEVICE_ID_INTEL_BROXTON_B_XHCI ||
- 		 pdev->device == PCI_DEVICE_ID_INTEL_APL_XHCI ||
--		 pdev->device == PCI_DEVICE_ID_INTEL_DNV_XHCI)) {
-+		 pdev->device == PCI_DEVICE_ID_INTEL_DNV_XHCI ||
-+		 pdev->device == PCI_DEVICE_ID_INTEL_CML_XHCI)) {
- 		xhci->quirks |= XHCI_PME_STUCK_QUIRK;
- 	}
- 	if (pdev->vendor == PCI_VENDOR_ID_INTEL &&
+ 
 
 
