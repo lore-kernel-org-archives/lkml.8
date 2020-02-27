@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6FAC54FC1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 146FFC54FDC
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 341C620578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0CB724691
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:11:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812641;
-	bh=lbUfavA0QXazEebXGTTB+QGvnOCey5tftvN7Gy7aC70=;
+	s=default; t=1582812692;
+	bh=ykYgPFe5bZKcA7cDSYmSIwHSPxKFoHDgvX8LHFOhp/4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pOIuKog67GcEoQft4F12NQHFE9Ky3fd2shC2Iz/bi8lYEudKMVXQZK3xzwikUhUWB
-	 8c6kG/ypdaK+p/8Fh+yxFTjHYbIuQCbux6vfEJpu4uYQzNwp8NQ2v/NafdZhQKelo6
-	 CZDXW9zyK90anAWpOsALZDdzomiBJHKJZkhiXhM0=
+	b=y9Nhkp3ZTrRXi6XJtuUmyqCkJDf5BD5/LwIFIlUO6zzEYET4t9rTs2BL/Xi4dQSoK
+	 XDejKL4uFsKExmirN2XbawteM1hMnxb/mkwbpdNMOnIWW4trA0nMIMRH+FNxLcrpjX
+	 zDWnhSuWJpJLJKxYAKoZf7YGUR2Z/llYrogYS7mw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387650AbgB0OKj (ORCPT
+        id S2388705AbgB0OLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:10:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48762 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:11:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388140AbgB0OKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:10:36 -0500
+        id S2388028AbgB0OL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:11:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9843520714;
-        Thu, 27 Feb 2020 14:10:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88EA62469F;
+        Thu, 27 Feb 2020 14:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812635;
-        bh=lbUfavA0QXazEebXGTTB+QGvnOCey5tftvN7Gy7aC70=;
+        s=default; t=1582812688;
+        bh=ykYgPFe5bZKcA7cDSYmSIwHSPxKFoHDgvX8LHFOhp/4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v7bYFVqKBlnWHg5tp2p1634VZo3trGcp5EaPBVeLjVObmac5EjbRb679JYWyqxPTe
-         YBFKR70OKf+5YCYLb1cV/Gg86CKBcw/Q7Smy2on86qrW3NO+9c9Vy5JeRjo5XhbuCK
-         gGix2ESaUk9BKL9//+bB6OTgH7tVkMKh8h5DhrrQ=
+        b=WeMwsZ0d3OP3Wiio7qCauRgY7JDLPKVtgaBOxwDsW4lsnT6IEwzKBpue/p5QNjevA
+         xv3qL0Xs6HyIDYV0Mi/zoOL5dASGbtHg8neaq+a0iST93K24XFXP/ScP36BrY6XzQy
+         7NkDQbj3k9sntnPpzmpSEWeWzJJ95gy4vIZrS63c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Jeff Mahoney <jeffm@suse.com>, Qu Wenruo <wqu@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 092/135] btrfs: destroy qgroup extent records on transaction abort
-Date:   Thu, 27 Feb 2020 14:37:12 +0100
-Message-Id: <20200227132243.109812252@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.4 114/135] ASoC: fsl_sai: Fix exiting path on probing failure
+Date:   Thu, 27 Feb 2020 14:37:34 +0100
+Message-Id: <20200227132246.290154799@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -60,82 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Mahoney <jeffm@suse.com>
+From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 
-commit 81f7eb00ff5bb8326e82503a32809421d14abb8a upstream.
+commit d1520889782dff58610c0b6b54d4cf3211ceb690 upstream.
 
-We clean up the delayed references when we abort a transaction but we
-leave the pending qgroup extent records behind, leaking memory.
+If the imx-sdma driver is built as a module, the fsl-sai device doesn't
+disable on probing failure, which causes the warning in the next probing:
 
-This patch destroys the extent records when we destroy the delayed refs
-and makes sure ensure they're gone before releasing the transaction.
+==================================================================
+fsl-sai 308a0000.sai: Unbalanced pm_runtime_enable!
+fsl-sai 308a0000.sai: Unbalanced pm_runtime_enable!
+fsl-sai 308a0000.sai: Unbalanced pm_runtime_enable!
+fsl-sai 308a0000.sai: Unbalanced pm_runtime_enable!
+fsl-sai 308a0000.sai: Unbalanced pm_runtime_enable!
+fsl-sai 308a0000.sai: Unbalanced pm_runtime_enable!
+==================================================================
 
-Fixes: 3368d001ba5d ("btrfs: qgroup: Record possible quota-related extent for qgroup.")
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Jeff Mahoney <jeffm@suse.com>
-[ Rebased to latest upstream, remove to_qgroup() helper, use
-  rbtree_postorder_for_each_entry_safe() wrapper ]
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Disabling the device properly fixes the issue.
+
+Fixes: 812ad463e089 ("ASoC: fsl_sai: Add support for runtime pm")
+Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Link: https://lore.kernel.org/r/20200205160436.3813642-1-oleksandr.suvorov@toradex.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/disk-io.c     |    1 +
- fs/btrfs/qgroup.c      |   13 +++++++++++++
- fs/btrfs/qgroup.h      |    1 +
- fs/btrfs/transaction.c |    2 ++
- 4 files changed, 17 insertions(+)
+ sound/soc/fsl/fsl_sai.c |   22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -4293,6 +4293,7 @@ static int btrfs_destroy_delayed_refs(st
- 		cond_resched();
- 		spin_lock(&delayed_refs->lock);
- 	}
-+	btrfs_qgroup_destroy_extent_records(trans);
+--- a/sound/soc/fsl/fsl_sai.c
++++ b/sound/soc/fsl/fsl_sai.c
+@@ -1019,12 +1019,24 @@ static int fsl_sai_probe(struct platform
+ 	ret = devm_snd_soc_register_component(&pdev->dev, &fsl_component,
+ 			&fsl_sai_dai, 1);
+ 	if (ret)
+-		return ret;
++		goto err_pm_disable;
  
- 	spin_unlock(&delayed_refs->lock);
- 
---- a/fs/btrfs/qgroup.c
-+++ b/fs/btrfs/qgroup.c
-@@ -4018,3 +4018,16 @@ out:
- 	}
- 	return ret;
- }
-+
-+void btrfs_qgroup_destroy_extent_records(struct btrfs_transaction *trans)
-+{
-+	struct btrfs_qgroup_extent_record *entry;
-+	struct btrfs_qgroup_extent_record *next;
-+	struct rb_root *root;
-+
-+	root = &trans->delayed_refs.dirty_extent_root;
-+	rbtree_postorder_for_each_entry_safe(entry, next, root, node) {
-+		ulist_free(entry->old_roots);
-+		kfree(entry);
+-	if (sai->soc_data->use_imx_pcm)
+-		return imx_pcm_dma_init(pdev, IMX_SAI_DMABUF_SIZE);
+-	else
+-		return devm_snd_dmaengine_pcm_register(&pdev->dev, NULL, 0);
++	if (sai->soc_data->use_imx_pcm) {
++		ret = imx_pcm_dma_init(pdev, IMX_SAI_DMABUF_SIZE);
++		if (ret)
++			goto err_pm_disable;
++	} else {
++		ret = devm_snd_dmaengine_pcm_register(&pdev->dev, NULL, 0);
++		if (ret)
++			goto err_pm_disable;
 +	}
-+}
---- a/fs/btrfs/qgroup.h
-+++ b/fs/btrfs/qgroup.h
-@@ -414,5 +414,6 @@ int btrfs_qgroup_add_swapped_blocks(stru
- 		u64 last_snapshot);
- int btrfs_qgroup_trace_subtree_after_cow(struct btrfs_trans_handle *trans,
- 		struct btrfs_root *root, struct extent_buffer *eb);
-+void btrfs_qgroup_destroy_extent_records(struct btrfs_transaction *trans);
++
++	return ret;
++
++err_pm_disable:
++	pm_runtime_disable(&pdev->dev);
++
++	return ret;
+ }
  
- #endif
---- a/fs/btrfs/transaction.c
-+++ b/fs/btrfs/transaction.c
-@@ -51,6 +51,8 @@ void btrfs_put_transaction(struct btrfs_
- 		BUG_ON(!list_empty(&transaction->list));
- 		WARN_ON(!RB_EMPTY_ROOT(
- 				&transaction->delayed_refs.href_root.rb_root));
-+		WARN_ON(!RB_EMPTY_ROOT(
-+				&transaction->delayed_refs.dirty_extent_root));
- 		if (transaction->delayed_refs.pending_csums)
- 			btrfs_err(transaction->fs_info,
- 				  "pending csums is %llu",
+ static int fsl_sai_remove(struct platform_device *pdev)
 
 
