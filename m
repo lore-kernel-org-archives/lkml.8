@@ -2,93 +2,100 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6719C4BA37
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 02:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44646C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 02:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A28F24679
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 02:43:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BgLqNPkv"
+	by mail.kernel.org (Postfix) with ESMTP id 21CA224679
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 02:44:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbgB0CnH (ORCPT
+        id S1728273AbgB0Cn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 21:43:07 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:60985 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728094AbgB0CnH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 21:43:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582771385;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=jIzd+MZl1AvxRGDWe7UFrELxx/1RAKgj7dqtWoVC2q8=;
-        b=BgLqNPkvYkA1ftIBextYCzPG+5Gx6Rh9f1+uMANZW6+exqZaf1E+PkwDgpPStyxLvekA69
-        DgqJBYALfEpNcnan0JIOXrPbrHdhDEMJKzb0zGviUN3b2kWViS2MrjjSbqYwmEP5vpP/JZ
-        Zf5KaNjIvCpT6i0RJGkULqMoRXO9/c8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-48-OiqDfqPvP-WvbDkjQd8jmA-1; Wed, 26 Feb 2020 21:43:01 -0500
-X-MC-Unique: OiqDfqPvP-WvbDkjQd8jmA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3A6751005512;
-        Thu, 27 Feb 2020 02:43:00 +0000 (UTC)
-Received: from localhost (ovpn-12-63.pek2.redhat.com [10.72.12.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 665A660BE1;
-        Thu, 27 Feb 2020 02:42:56 +0000 (UTC)
-Date:   Thu, 27 Feb 2020 10:42:53 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        dyoung@redhat.com
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        arjan@linux.intel.com, rick.p.edgecombe@intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
-        kexec@lists.infradead.org
-Subject: Re: [RFC PATCH 09/11] kallsyms: hide layout and expose seed
-Message-ID: <20200227024253.GA5707@MiWiFi-R3L-srv>
-References: <20200205223950.1212394-1-kristen@linux.intel.com>
- <20200205223950.1212394-10-kristen@linux.intel.com>
- <202002060428.08B14F1@keescook>
- <a915e1eb131551aa766fde4c14de5a3e825af667.camel@linux.intel.com>
+        Wed, 26 Feb 2020 21:43:59 -0500
+Received: from mga03.intel.com ([134.134.136.65]:57388 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728094AbgB0Cn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 21:43:58 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 18:43:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,490,1574150400"; 
+   d="scan'208";a="436874427"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga005.fm.intel.com with ESMTP; 26 Feb 2020 18:43:56 -0800
+Date:   Wed, 26 Feb 2020 18:43:56 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jeff Moyer <jmoyer@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V4 00/13] Enable per-file/per-directory DAX operations V4
+Message-ID: <20200227024356.GB28721@iweiny-DESK2.sc.intel.com>
+References: <20200221004134.30599-1-ira.weiny@intel.com>
+ <x49pne13qyh.fsf@segfault.boston.devel.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a915e1eb131551aa766fde4c14de5a3e825af667.camel@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <x49pne13qyh.fsf@segfault.boston.devel.redhat.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/06/20 at 09:51am, Kristen Carlson Accardi wrote:
-> On Thu, 2020-02-06 at 04:32 -0800, Kees Cook wrote:
-
-> > In the past, making kallsyms entirely unreadable seemed to break
-> > weird
-> > stuff in userspace. How about having an alternative view that just
-> > contains a alphanumeric sort of the symbol names (and they will
-> > continue
-> > to have zeroed addresses for unprivileged users)?
-> > 
-> > Or perhaps we wait to hear about this causing a problem, and deal
-> > with
-> > it then? :)
-> > 
+On Wed, Feb 26, 2020 at 05:48:38PM -0500, Jeff Moyer wrote:
+> Hi, Ira,
 > 
-> Yeah - I don't know what people want here. Clearly, we can't leave
-> kallsyms the way it is. Removing it entirely is a pretty fast way to
-> figure out how people use it though :).
+> ira.weiny@intel.com writes:
+> 
+> > From: Ira Weiny <ira.weiny@intel.com>
+> >
+> > https://github.com/weiny2/linux-kernel/pull/new/dax-file-state-change-v4
+> >
+> > Changes from V3: 
+> > https://lore.kernel.org/lkml/20200208193445.27421-1-ira.weiny@intel.com/
+> >
+> > 	* Remove global locking...  :-D
+> > 	* put back per inode locking and remove pre-mature optimizations
+> > 	* Fix issues with Directories having IS_DAX() set
+> > 	* Fix kernel crash issues reported by Jeff
+> > 	* Add some clean up patches
+> > 	* Consolidate diflags to iflags functions
+> > 	* Update/add documentation
+> > 	* Reorder/rename patches quite a bit
+> 
+> I left out patches 1 and 2, but applied the rest and tested.  This
+> passes xfs tests in the following configurations:
+> 1) MKFS_OPTIONS="-m reflink=0" MOUNT_OPTIONS="-o dax"
+> 2) MKFS_OPTIONS="-m reflink=0"
+>    but with the added configuration step of setting the dax attribute on
+>    the mounted test directory.
+> 
+> I also tested to ensure that reflink fails when a file has the dax
+> attribute set.  I've got more testing to do, but figured I'd at least
+> let you know I've been looking at it.
 
-Kexec-tools and makedumpfile are the users of /proc/kallsyms currently. 
-We use kallsyms to get page_offset_base and _stext.
+Thank you!
 
+I need to update my xfstest which is specific to this as well...  I'll get to
+that tomorrow and send an updated patch...
+
+Thanks!
+Ira
+
+> 
+> Thanks!
+> Jeff
+> 
