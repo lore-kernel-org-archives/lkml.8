@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8351C52D46
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C26B5C52D3A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ACA52469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A7702468F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812978;
-	bh=6y5KrxfUKEv/w2oxwFK/YGZXrgs/ycCukwlLs+oW2lU=;
+	s=default; t=1582812984;
+	bh=BM7zitM8Xs6eDc1Sq2p4hyIZGSlsBceV8xTvgE7E6w8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Io875cperg89KALoBq4+2IDsuVomdSOAqZqj6tZlZ9RHHi2uQTXLz306MI01TrV5k
-	 zV5TdYsnunLGZkJzkK3upAkKeTOxkWb/9xcQV/VIqXc/JD3t+uuEmrStu/dj4zbrYx
-	 eRvs2Mu5Ga9WQs1tlHFephACm8dy+4DDIkrTKc3A=
+	b=TRFF4iLRTSGiTE1btrvvPgnIDBZOhau+1B1rVfOe/8CXd6NmrwMUS8Ltrgat9QNcC
+	 KZx1qkZbuG14LRpeftufe510f9QH24BbT0RJf4sgIMJ4JRWXLXU+Cd6T5c/3gg9ynJ
+	 AaCvAB4Q2JeV7nTNzrWi8/VSuGi/C1MQPL/URi5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389102AbgB0OQR (ORCPT
+        id S2389503AbgB0OQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:16:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56132 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:16:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389197AbgB0OQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:16:09 -0500
+        id S2389478AbgB0OQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:16:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16FD524691;
-        Thu, 27 Feb 2020 14:16:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5C3624691;
+        Thu, 27 Feb 2020 14:16:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812968;
-        bh=6y5KrxfUKEv/w2oxwFK/YGZXrgs/ycCukwlLs+oW2lU=;
+        s=default; t=1582812978;
+        bh=BM7zitM8Xs6eDc1Sq2p4hyIZGSlsBceV8xTvgE7E6w8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TzmyEn+vO7ClG7PJ8X6XnDUWRm87DhcoNL5fhArqV5c0+fV6oLAEHYqnX5nLqbc6a
-         K+pRuqd5BTcHvmS7v9RpJ4Fw4/+uPUitnyhaij0/tbmZm9F+aLsXi5Y4ljnBlrEkLa
-         D/xRm9nlYwHzDgDmqwkWT9aCItzMB5pmRIQGIDx4=
+        b=Z6jcAFHHofz9sTHnU+oABWGmMD5LhBXKFRSHAhLj7prayq+ucjsdA1bSFPh0gEk/N
+         bWFudOYrXRI2+G4Tai5CzDl1WjLo3qdaPyfPyLQ2qLAS18KxaUP1p5r3+Bup/HNpYf
+         ILbgpRRFrqqf7yblOSGHKuEmznQTBy+GtOiwBAqg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Jani Nikula <jani.nikula@intel.com>
-Subject: [PATCH 5.5 085/150] drm/i915: Update drm/i915 bug filing URL
-Date:   Thu, 27 Feb 2020 14:37:02 +0100
-Message-Id: <20200227132245.404162490@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Theodore Tso <tytso@mit.edu>, stable@kernel.org
+Subject: [PATCH 5.5 089/150] ext4: fix a data race in EXT4_I(inode)->i_disksize
+Date:   Thu, 27 Feb 2020 14:37:06 +0100
+Message-Id: <20200227132245.939316844@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -59,65 +59,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jani Nikula <jani.nikula@intel.com>
+From: Qian Cai <cai@lca.pw>
 
-commit 7ddc7005a0aa2f43a826b71f5d6bd7d4b90f8f2a upstream.
+commit 35df4299a6487f323b0aca120ea3f485dfee2ae3 upstream.
 
-We've moved from bugzilla to gitlab.
+EXT4_I(inode)->i_disksize could be accessed concurrently as noticed by
+KCSAN,
 
-Cc: stable@vger.kernel.org
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200212160434.6437-2-jani.nikula@intel.com
-(cherry picked from commit ddae4d7af0bbe3b2051f1603459a8b24e9a19324)
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+ BUG: KCSAN: data-race in ext4_write_end [ext4] / ext4_writepages [ext4]
+
+ write to 0xffff91c6713b00f8 of 8 bytes by task 49268 on cpu 127:
+  ext4_write_end+0x4e3/0x750 [ext4]
+  ext4_update_i_disksize at fs/ext4/ext4.h:3032
+  (inlined by) ext4_update_inode_size at fs/ext4/ext4.h:3046
+  (inlined by) ext4_write_end at fs/ext4/inode.c:1287
+  generic_perform_write+0x208/0x2a0
+  ext4_buffered_write_iter+0x11f/0x210 [ext4]
+  ext4_file_write_iter+0xce/0x9e0 [ext4]
+  new_sync_write+0x29c/0x3b0
+  __vfs_write+0x92/0xa0
+  vfs_write+0x103/0x260
+  ksys_write+0x9d/0x130
+  __x64_sys_write+0x4c/0x60
+  do_syscall_64+0x91/0xb47
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+ read to 0xffff91c6713b00f8 of 8 bytes by task 24872 on cpu 37:
+  ext4_writepages+0x10ac/0x1d00 [ext4]
+  mpage_map_and_submit_extent at fs/ext4/inode.c:2468
+  (inlined by) ext4_writepages at fs/ext4/inode.c:2772
+  do_writepages+0x5e/0x130
+  __writeback_single_inode+0xeb/0xb20
+  writeback_sb_inodes+0x429/0x900
+  __writeback_inodes_wb+0xc4/0x150
+  wb_writeback+0x4bd/0x870
+  wb_workfn+0x6b4/0x960
+  process_one_work+0x54c/0xbe0
+  worker_thread+0x80/0x650
+  kthread+0x1e0/0x200
+  ret_from_fork+0x27/0x50
+
+ Reported by Kernel Concurrency Sanitizer on:
+ CPU: 37 PID: 24872 Comm: kworker/u261:2 Tainted: G        W  O L 5.5.0-next-20200204+ #5
+ Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+ Workqueue: writeback wb_workfn (flush-7:0)
+
+Since only the read is operating as lockless (outside of the
+"i_data_sem"), load tearing could introduce a logic bug. Fix it by
+adding READ_ONCE() for the read and WRITE_ONCE() for the write.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Link: https://lore.kernel.org/r/1581085751-31793-1-git-send-email-cai@lca.pw
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/Kconfig          |    5 ++---
- drivers/gpu/drm/i915/i915_gpu_error.c |    3 ++-
- drivers/gpu/drm/i915/i915_utils.c     |    5 ++---
- 3 files changed, 6 insertions(+), 7 deletions(-)
+ fs/ext4/ext4.h  |    2 +-
+ fs/ext4/inode.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/i915/Kconfig
-+++ b/drivers/gpu/drm/i915/Kconfig
-@@ -75,9 +75,8 @@ config DRM_I915_CAPTURE_ERROR
- 	help
- 	  This option enables capturing the GPU state when a hang is detected.
- 	  This information is vital for triaging hangs and assists in debugging.
--	  Please report any hang to
--	    https://bugs.freedesktop.org/enter_bug.cgi?product=DRI
--	  for triaging.
-+	  Please report any hang for triaging according to:
-+	    https://gitlab.freedesktop.org/drm/intel/-/wikis/How-to-file-i915-bugs
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -2972,7 +2972,7 @@ static inline void ext4_update_i_disksiz
+ 		     !inode_is_locked(inode));
+ 	down_write(&EXT4_I(inode)->i_data_sem);
+ 	if (newsize > EXT4_I(inode)->i_disksize)
+-		EXT4_I(inode)->i_disksize = newsize;
++		WRITE_ONCE(EXT4_I(inode)->i_disksize, newsize);
+ 	up_write(&EXT4_I(inode)->i_data_sem);
+ }
  
- 	  If in doubt, say "Y".
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -2466,7 +2466,7 @@ update_disksize:
+ 	 * truncate are avoided by checking i_size under i_data_sem.
+ 	 */
+ 	disksize = ((loff_t)mpd->first_page) << PAGE_SHIFT;
+-	if (disksize > EXT4_I(inode)->i_disksize) {
++	if (disksize > READ_ONCE(EXT4_I(inode)->i_disksize)) {
+ 		int err2;
+ 		loff_t i_size;
  
---- a/drivers/gpu/drm/i915/i915_gpu_error.c
-+++ b/drivers/gpu/drm/i915/i915_gpu_error.c
-@@ -1820,7 +1820,8 @@ void i915_capture_error_state(struct drm
- 	if (!xchg(&warned, true) &&
- 	    ktime_get_real_seconds() - DRIVER_TIMESTAMP < DAY_AS_SECONDS(180)) {
- 		pr_info("GPU hangs can indicate a bug anywhere in the entire gfx stack, including userspace.\n");
--		pr_info("Please file a _new_ bug report on bugs.freedesktop.org against DRI -> DRM/Intel\n");
-+		pr_info("Please file a _new_ bug report at https://gitlab.freedesktop.org/drm/intel/issues/new.\n");
-+		pr_info("Please see https://gitlab.freedesktop.org/drm/intel/-/wikis/How-to-file-i915-bugs for details.\n");
- 		pr_info("drm/i915 developers can then reassign to the right component if it's not a kernel issue.\n");
- 		pr_info("The GPU crash dump is required to analyze GPU hangs, so please always attach it.\n");
- 		pr_info("GPU crash dump saved to /sys/class/drm/card%d/error\n",
---- a/drivers/gpu/drm/i915/i915_utils.c
-+++ b/drivers/gpu/drm/i915/i915_utils.c
-@@ -8,9 +8,8 @@
- #include "i915_drv.h"
- #include "i915_utils.h"
- 
--#define FDO_BUG_URL "https://bugs.freedesktop.org/enter_bug.cgi?product=DRI"
--#define FDO_BUG_MSG "Please file a bug at " FDO_BUG_URL " against DRM/Intel " \
--		    "providing the dmesg log by booting with drm.debug=0xf"
-+#define FDO_BUG_URL "https://gitlab.freedesktop.org/drm/intel/-/wikis/How-to-file-i915-bugs"
-+#define FDO_BUG_MSG "Please file a bug on drm/i915; see " FDO_BUG_URL " for details."
- 
- void
- __i915_printk(struct drm_i915_private *dev_priv, const char *level,
 
 
