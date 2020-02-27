@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0482C76581
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F1CC7658C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9441524688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3C0124656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:28:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813717;
-	bh=NjFPG8xSrKgimw87UF2CW1b5ud1z43xOcu4dU/Mnkqc=;
+	s=default; t=1582813732;
+	bh=/iuYmGxKkhEQ8WmsH4Hhfvfu+Oar/Tmm+cjOuYZFPVA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zh+IQ67mmr56wYDRhljhVrO+rtTA4Y2IDfZ1s0tmzuseqKNythnk3VIGeXuz3QtFp
-	 YzJ+zt4xomoO69BvgMn4/fWDCd62/59WnFs3RN1Q7rPt7EOIRtJ2zR5DR3dCuriRPL
-	 mbrY+n4iwkDBEF7MyNq8ODjFSNpPArnDgO2xmJ2E=
+	b=hKQgdlVqb3vTRL99AGknTvUC6Mz4Bex12gfDkY+iblTxwdSPFfHiLZxTzwsLFvNiZ
+	 X5BiITzKGg08n7L0W0neFCCSxSrgxZ8GypC2vlkfqrnNJrTGvdxY7+wYm9dOOOfsgQ
+	 w0eoH20b13JCcIHKnQK2z4oCWv0JycaUnJgljOjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388420AbgB0O2g (ORCPT
+        id S2388021AbgB0OHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:28:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44762 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:07:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388073AbgB0OHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:07:19 -0500
+        id S2388001AbgB0OG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:06:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E452521D7E;
-        Thu, 27 Feb 2020 14:07:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7CC820578;
+        Thu, 27 Feb 2020 14:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812438;
-        bh=NjFPG8xSrKgimw87UF2CW1b5ud1z43xOcu4dU/Mnkqc=;
+        s=default; t=1582812417;
+        bh=/iuYmGxKkhEQ8WmsH4Hhfvfu+Oar/Tmm+cjOuYZFPVA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ydF+M/dOA10Ppxp5xgb2VlP3a/024ypJA89FT5INSdfkDOABaYb6eNNh7qdenpf7h
-         T8XqYtFYEZJ4cni3+AfLBxYxXMNU6QX/hz4NxjiYt+P2z9JSQoIz+6wWSrRRkqRLfa
-         Nuqoec+EyhUqmyP8sMbLR+OkH7cNsL7JvC/9VubA=
+        b=c0ccpi+NGETd9Am6rUzVxgBsgwf3QGeon+eRL+y5iB3G07N3YmsvlVHjOJ7qcS7GG
+         0jWmuiAeAODFrbc+4VgOX7cFfqR4FUOebuEVI9PpAkF4SEy8okW72mqq2sEYWwfhjE
+         UUEsA+6BDQB9NirmnvEUUhrN9Dt+sYjGRp48HJxc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 5.4 018/135] vt: selection, handle pending signals in paste_selection
-Date:   Thu, 27 Feb 2020 14:35:58 +0100
-Message-Id: <20200227132232.006860598@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        Nikolay Borisov <nborisov@suse.com>, Qu Wenruo <wqu@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 010/135] btrfs: handle logged extent failure properly
+Date:   Thu, 27 Feb 2020 14:35:50 +0100
+Message-Id: <20200227132230.586544434@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -58,73 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Slaby <jslaby@suse.cz>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 687bff0cd08f790d540cfb7b2349f0d876cdddec upstream.
+commit bd727173e4432fe6cb70ba108dc1f3602c5409d7 upstream.
 
-When pasting a selection to a vt, the task is set as INTERRUPTIBLE while
-waiting for a tty to unthrottle. But signals are not handled at all.
-Normally, this is not a problem as tty_ldisc_receive_buf receives all
-the goods and a user has no reason to interrupt the task.
+If we're allocating a logged extent we attempt to insert an extent
+record for the file extent directly.  We increase
+space_info->bytes_reserved, because the extent entry addition will call
+btrfs_update_block_group(), which will convert the ->bytes_reserved to
+->bytes_used.  However if we fail at any point while inserting the
+extent entry we will bail and leave space on ->bytes_reserved, which
+will trigger a WARN_ON() on umount.  Fix this by pinning the space if we
+fail to insert, which is what happens in every other failure case that
+involves adding the extent entry.
 
-There are two scenarios where this matters:
-1) when the tty is throttled and a signal is sent to the process, it
-   spins on a CPU until the tty is unthrottled. schedule() does not
-   really echedule, but returns immediately, of course.
-2) when the sel_buffer becomes invalid, KASAN prevents any reads from it
-   and the loop simply does not proceed and spins forever (causing the
-   tty to throttle, but the code never sleeps, the same as above). This
-   sometimes happens as there is a race in the sel_buffer handling code.
-
-So add signal handling to this ioctl (TIOCL_PASTESEL) and return -EINTR
-in case a signal is pending.
-
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200210081131.23572-1-jslaby@suse.cz
+CC: stable@vger.kernel.org # 5.4+
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/vt/selection.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ fs/btrfs/extent-tree.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/tty/vt/selection.c
-+++ b/drivers/tty/vt/selection.c
-@@ -29,6 +29,8 @@
- #include <linux/console.h>
- #include <linux/tty_flip.h>
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -4411,6 +4411,8 @@ int btrfs_alloc_logged_file_extent(struc
  
-+#include <linux/sched/signal.h>
-+
- /* Don't take this from <ctype.h>: 011-015 on the screen aren't spaces */
- #define isspace(c)	((c) == ' ')
- 
-@@ -350,6 +352,7 @@ int paste_selection(struct tty_struct *t
- 	unsigned int count;
- 	struct  tty_ldisc *ld;
- 	DECLARE_WAITQUEUE(wait, current);
-+	int ret = 0;
- 
- 	console_lock();
- 	poke_blanked_console();
-@@ -363,6 +366,10 @@ int paste_selection(struct tty_struct *t
- 	add_wait_queue(&vc->paste_wait, &wait);
- 	while (sel_buffer && sel_buffer_lth > pasted) {
- 		set_current_state(TASK_INTERRUPTIBLE);
-+		if (signal_pending(current)) {
-+			ret = -EINTR;
-+			break;
-+		}
- 		if (tty_throttled(tty)) {
- 			schedule();
- 			continue;
-@@ -378,6 +385,6 @@ int paste_selection(struct tty_struct *t
- 
- 	tty_buffer_unlock_exclusive(&vc->port);
- 	tty_ldisc_deref(ld);
--	return 0;
-+	return ret;
+ 	ret = alloc_reserved_file_extent(trans, 0, root_objectid, 0, owner,
+ 					 offset, ins, 1);
++	if (ret)
++		btrfs_pin_extent(fs_info, ins->objectid, ins->offset, 1);
+ 	btrfs_put_block_group(block_group);
+ 	return ret;
  }
- EXPORT_SYMBOL_GPL(paste_selection);
 
 
