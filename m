@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECEFEC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A25C34022
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C63D024656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:46:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B76624656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:46:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814806;
-	bh=+QAgU77dISxHZDAmFaB3ZLaxVbIj8objSRqIb1lXI70=;
+	s=default; t=1582814814;
+	bh=t6UyTLukEOtnELE49KIh3rg/HIg9jTN0oPPumzzcZEU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t2RM1Rr35KlVsI11CWwPGVv32GUIQQnI6PFmFDeGua3vSHKb8x8GO6Q9YBjF7TqE2
-	 3K3IHDLP8kEnQ37mAPSp4amociUN2n2+0tjAy1njirkCQyXd1sCdnZW2mPiW0NVBIb
-	 5CmBMstAigKb59NJ2U8dryHTs3zTseBM8+6Yl62k=
+	b=skMCoo4c4XkgfhS12vHRShDgWpGI8ngK8dBbMSSUoJ3PrTThzLXkQIMSQqwZl+oBS
+	 y5GEsJNQsfx428m3KEely0cy9vvbiGPaZgKuxyw4IACrGcMq+Cg161e6MRK/XXaWb6
+	 i6iFmUEAwZKRZaGdxNHopSC/lxIFyWhnzz2//2ls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731828AbgB0Oqp (ORCPT
+        id S1731944AbgB0Oqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:46:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40926 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:46:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730327AbgB0NpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:45:05 -0500
+        id S1730306AbgB0NpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:45:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A484246A4;
-        Thu, 27 Feb 2020 13:45:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 526BC20726;
+        Thu, 27 Feb 2020 13:44:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811104;
-        bh=+QAgU77dISxHZDAmFaB3ZLaxVbIj8objSRqIb1lXI70=;
+        s=default; t=1582811099;
+        bh=t6UyTLukEOtnELE49KIh3rg/HIg9jTN0oPPumzzcZEU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m0kj2AsjD5nH/Tz8l0txoUAg6V71XSiqOEEONwir8T7Hj4upjA5APb8bJVx5Fy0JV
-         vO6qvFeAnTLeLdi4SXGJjMndQCMXOtUQ1ou212OXLHUc+VjdChrFiSDu0TFNajtCwT
-         0OTFvqaoWz2k9+tZ62MWZbQo1UkLwLXITz7vbeH4=
+        b=ZAr77dvlpdVql2MT5Agps5brt1ISdBq65v5NjF65FSoMDYrZapEREZ9KHHK5QcTWs
+         eIxGwxAZZuMlndgwP2w4ODvgnEhjx4cDSuS0uV6NqTOMi4QFtkCCUcu3Zn55WfvqDK
+         w3zfn4gSMWdlfqD4jfqr8h2JveqY0jICukRNvUzQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Upton <oupton@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.4 103/113] KVM: nVMX: Refactor IO bitmap checks into helper function
-Date:   Thu, 27 Feb 2020 14:36:59 +0100
-Message-Id: <20200227132228.249434084@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Theodore Tso <tytso@mit.edu>, stable@kernel.org
+Subject: [PATCH 4.4 101/113] ext4: fix a data race in EXT4_I(inode)->i_disksize
+Date:   Thu, 27 Feb 2020 14:36:57 +0100
+Message-Id: <20200227132227.934472019@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
 References: <20200227132211.791484803@linuxfoundation.org>
@@ -60,82 +59,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Upton <oupton@google.com>
+From: Qian Cai <cai@lca.pw>
 
-commit e71237d3ff1abf9f3388337cfebf53b96df2020d upstream.
+commit 35df4299a6487f323b0aca120ea3f485dfee2ae3 upstream.
 
-Checks against the IO bitmap are useful for both instruction emulation
-and VM-exit reflection. Refactor the IO bitmap checks into a helper
-function.
+EXT4_I(inode)->i_disksize could be accessed concurrently as noticed by
+KCSAN,
 
-Signed-off-by: Oliver Upton <oupton@google.com>
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+ BUG: KCSAN: data-race in ext4_write_end [ext4] / ext4_writepages [ext4]
+
+ write to 0xffff91c6713b00f8 of 8 bytes by task 49268 on cpu 127:
+  ext4_write_end+0x4e3/0x750 [ext4]
+  ext4_update_i_disksize at fs/ext4/ext4.h:3032
+  (inlined by) ext4_update_inode_size at fs/ext4/ext4.h:3046
+  (inlined by) ext4_write_end at fs/ext4/inode.c:1287
+  generic_perform_write+0x208/0x2a0
+  ext4_buffered_write_iter+0x11f/0x210 [ext4]
+  ext4_file_write_iter+0xce/0x9e0 [ext4]
+  new_sync_write+0x29c/0x3b0
+  __vfs_write+0x92/0xa0
+  vfs_write+0x103/0x260
+  ksys_write+0x9d/0x130
+  __x64_sys_write+0x4c/0x60
+  do_syscall_64+0x91/0xb47
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+ read to 0xffff91c6713b00f8 of 8 bytes by task 24872 on cpu 37:
+  ext4_writepages+0x10ac/0x1d00 [ext4]
+  mpage_map_and_submit_extent at fs/ext4/inode.c:2468
+  (inlined by) ext4_writepages at fs/ext4/inode.c:2772
+  do_writepages+0x5e/0x130
+  __writeback_single_inode+0xeb/0xb20
+  writeback_sb_inodes+0x429/0x900
+  __writeback_inodes_wb+0xc4/0x150
+  wb_writeback+0x4bd/0x870
+  wb_workfn+0x6b4/0x960
+  process_one_work+0x54c/0xbe0
+  worker_thread+0x80/0x650
+  kthread+0x1e0/0x200
+  ret_from_fork+0x27/0x50
+
+ Reported by Kernel Concurrency Sanitizer on:
+ CPU: 37 PID: 24872 Comm: kworker/u261:2 Tainted: G        W  O L 5.5.0-next-20200204+ #5
+ Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+ Workqueue: writeback wb_workfn (flush-7:0)
+
+Since only the read is operating as lockless (outside of the
+"i_data_sem"), load tearing could introduce a logic bug. Fix it by
+adding READ_ONCE() for the read and WRITE_ONCE() for the write.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Link: https://lore.kernel.org/r/1581085751-31793-1-git-send-email-cai@lca.pw
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx.c |   40 +++++++++++++++++++++++++++-------------
- 1 file changed, 27 insertions(+), 13 deletions(-)
+ fs/ext4/ext4.h  |    2 +-
+ fs/ext4/inode.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -4275,6 +4275,26 @@ static bool cs_ss_rpl_check(struct kvm_v
- 		 (ss.selector & SEGMENT_RPL_MASK));
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -2851,7 +2851,7 @@ static inline void ext4_update_i_disksiz
+ 		     !mutex_is_locked(&inode->i_mutex));
+ 	down_write(&EXT4_I(inode)->i_data_sem);
+ 	if (newsize > EXT4_I(inode)->i_disksize)
+-		EXT4_I(inode)->i_disksize = newsize;
++		WRITE_ONCE(EXT4_I(inode)->i_disksize, newsize);
+ 	up_write(&EXT4_I(inode)->i_data_sem);
  }
  
-+static bool nested_vmx_check_io_bitmaps(struct kvm_vcpu *vcpu,
-+					unsigned int port, int size);
-+static bool nested_vmx_exit_handled_io(struct kvm_vcpu *vcpu,
-+				       struct vmcs12 *vmcs12)
-+{
-+	unsigned long exit_qualification;
-+	unsigned int port;
-+	int size;
-+
-+	if (!nested_cpu_has(vmcs12, CPU_BASED_USE_IO_BITMAPS))
-+		return nested_cpu_has(vmcs12, CPU_BASED_UNCOND_IO_EXITING);
-+
-+	exit_qualification = vmcs_readl(EXIT_QUALIFICATION);
-+
-+	port = exit_qualification >> 16;
-+	size = (exit_qualification & 7) + 1;
-+
-+	return nested_vmx_check_io_bitmaps(vcpu, port, size);
-+}
-+
- /*
-  * Check if guest state is valid. Returns true if valid, false if
-  * not.
-@@ -7624,23 +7644,17 @@ static int (*const kvm_vmx_exit_handlers
- static const int kvm_vmx_max_exit_handlers =
- 	ARRAY_SIZE(kvm_vmx_exit_handlers);
- 
--static bool nested_vmx_exit_handled_io(struct kvm_vcpu *vcpu,
--				       struct vmcs12 *vmcs12)
-+/*
-+ * Return true if an IO instruction with the specified port and size should cause
-+ * a VM-exit into L1.
-+ */
-+bool nested_vmx_check_io_bitmaps(struct kvm_vcpu *vcpu, unsigned int port,
-+				 int size)
- {
--	unsigned long exit_qualification;
-+	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
- 	gpa_t bitmap, last_bitmap;
--	unsigned int port;
--	int size;
- 	u8 b;
- 
--	if (!nested_cpu_has(vmcs12, CPU_BASED_USE_IO_BITMAPS))
--		return nested_cpu_has(vmcs12, CPU_BASED_UNCOND_IO_EXITING);
--
--	exit_qualification = vmcs_readl(EXIT_QUALIFICATION);
--
--	port = exit_qualification >> 16;
--	size = (exit_qualification & 7) + 1;
--
- 	last_bitmap = (gpa_t)-1;
- 	b = -1;
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -2320,7 +2320,7 @@ update_disksize:
+ 	 * truncate are avoided by checking i_size under i_data_sem.
+ 	 */
+ 	disksize = ((loff_t)mpd->first_page) << PAGE_CACHE_SHIFT;
+-	if (disksize > EXT4_I(inode)->i_disksize) {
++	if (disksize > READ_ONCE(EXT4_I(inode)->i_disksize)) {
+ 		int err2;
+ 		loff_t i_size;
  
 
 
