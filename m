@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAE7C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86674C35677
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A133224656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DAEB24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:49:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814960;
-	bh=rkuvV1vDKr1HQorDLFRpd239XFUJLaUI6HjBIYZknYQ=;
+	s=default; t=1582814968;
+	bh=dlGLd9GTpAn/oJ13+6HiwaEdL0sLF13N/akgSQsX7/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=be/mU5c/m26nptxSBX2Yhwfyf8oocqX0pEf9VuPxe9SEMSgIX9dKbI63XxMS0vaNp
-	 eY7PUIKqPzGRlI3hkdfBzkyDftNXK0OsnOuZUkqcSQKeaToNnnR1xuFRS6mEvqmwGt
-	 7Vf41+TCYqXlXOOBouso9EscSnX1W1F9M4CHLpo4=
+	b=Fbx+uTPIbHB0B3hbHBCtBkfPmdl1ErEEQqoXwZ22TYi0N0rFOWuFrPL6SNwqlJvn0
+	 lVFBxq3KCXK24b2NusKAGRkOtBCSJhpD+llQc7QPDrDgKQ+W1NeEfyKzLbK1VXTu+I
+	 +YyEHkoOfij8FQvApN++i3v5h2CkDFuWOkVnTgMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730160AbgB0OtT (ORCPT
+        id S1732827AbgB0Ot1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:49:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36252 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:49:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729613AbgB0Nle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:41:34 -0500
+        id S1729517AbgB0NlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:41:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D48C4222C2;
-        Thu, 27 Feb 2020 13:41:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFCE620726;
+        Thu, 27 Feb 2020 13:41:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582810894;
-        bh=rkuvV1vDKr1HQorDLFRpd239XFUJLaUI6HjBIYZknYQ=;
+        s=default; t=1582810876;
+        bh=dlGLd9GTpAn/oJ13+6HiwaEdL0sLF13N/akgSQsX7/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Swoh8yGYuIyN8/AnCQZTsLnFoFlZNEtCzarD0XoYIaFHFsvMt9+lCcVkwsaeTGAKO
-         vOZKT9RjYuxM19dt9vgM+r78XkNi35pUAv1Vb2VxBX2r/2MgFplS7FSywI87uypecN
-         4kPn+0K4kNNzT2H5uWKcHh6Ci312PevaF3zgwjlU=
+        b=Sjvgt/1GqyjJ+tRa7COUqdpekQA7W60dIgpXmlkizHYKKH3FX3ceQ73bitAxXaj36
+         456pzizmIOwcDR756/yYf6o3nr875/4QWH6Dp5b6YMMZAj+x4qDkdishaTJqXCLKhI
+         lZnO+lWHWFVXTN0ODzD5E1kv8bkqLGxndKNyJyks=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 038/113] reiserfs: Fix spurious unlock in reiserfs_fill_super() error handling
-Date:   Thu, 27 Feb 2020 14:35:54 +0100
-Message-Id: <20200227132217.813853689@linuxfoundation.org>
+Subject: [PATCH 4.4 032/113] ext4, jbd2: ensure panic when aborting with zero errno
+Date:   Thu, 27 Feb 2020 14:35:48 +0100
+Message-Id: <20200227132216.847235248@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
 References: <20200227132211.791484803@linuxfoundation.org>
@@ -59,34 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-[ Upstream commit 4d5c1adaf893b8aa52525d2b81995e949bcb3239 ]
+[ Upstream commit 51f57b01e4a3c7d7bdceffd84de35144e8c538e7 ]
 
-When we fail to allocate string for journal device name we jump to
-'error' label which tries to unlock reiserfs write lock which is not
-held. Jump to 'error_unlocked' instead.
+JBD2_REC_ERR flag used to indicate the errno has been updated when jbd2
+aborted, and then __ext4_abort() and ext4_handle_error() can invoke
+panic if ERRORS_PANIC is specified. But if the journal has been aborted
+with zero errno, jbd2_journal_abort() didn't set this flag so we can
+no longer panic. Fix this by always record the proper errno in the
+journal superblock.
 
-Fixes: f32485be8397 ("reiserfs: delay reiserfs lock until journal initialization")
-Signed-off-by: Jan Kara <jack@suse.cz>
+Fixes: 4327ba52afd03 ("ext4, jbd2: ensure entering into panic after recording an error in superblock")
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20191204124614.45424-3-yi.zhang@huawei.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/reiserfs/super.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/jbd2/checkpoint.c |  2 +-
+ fs/jbd2/journal.c    | 15 ++++-----------
+ 2 files changed, 5 insertions(+), 12 deletions(-)
 
-diff --git a/fs/reiserfs/super.c b/fs/reiserfs/super.c
-index 519bf410e65b2..f9796fd515315 100644
---- a/fs/reiserfs/super.c
-+++ b/fs/reiserfs/super.c
-@@ -1921,7 +1921,7 @@ static int reiserfs_fill_super(struct super_block *s, void *data, int silent)
- 		if (!sbi->s_jdev) {
- 			SWARN(silent, s, "", "Cannot allocate memory for "
- 				"journal device name");
--			goto error;
-+			goto error_unlocked;
- 		}
- 	}
- #ifdef CONFIG_QUOTA
+diff --git a/fs/jbd2/checkpoint.c b/fs/jbd2/checkpoint.c
+index 4d5a5a4cc017c..addb0784dd1c4 100644
+--- a/fs/jbd2/checkpoint.c
++++ b/fs/jbd2/checkpoint.c
+@@ -168,7 +168,7 @@ void __jbd2_log_wait_for_space(journal_t *journal)
+ 				       "journal space in %s\n", __func__,
+ 				       journal->j_devname);
+ 				WARN_ON(1);
+-				jbd2_journal_abort(journal, 0);
++				jbd2_journal_abort(journal, -EIO);
+ 			}
+ 			write_lock(&journal->j_state_lock);
+ 		} else {
+diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+index deb3300299709..d62435897d0d0 100644
+--- a/fs/jbd2/journal.c
++++ b/fs/jbd2/journal.c
+@@ -2086,12 +2086,10 @@ static void __journal_abort_soft (journal_t *journal, int errno)
+ 
+ 	__jbd2_journal_abort_hard(journal);
+ 
+-	if (errno) {
+-		jbd2_journal_update_sb_errno(journal);
+-		write_lock(&journal->j_state_lock);
+-		journal->j_flags |= JBD2_REC_ERR;
+-		write_unlock(&journal->j_state_lock);
+-	}
++	jbd2_journal_update_sb_errno(journal);
++	write_lock(&journal->j_state_lock);
++	journal->j_flags |= JBD2_REC_ERR;
++	write_unlock(&journal->j_state_lock);
+ }
+ 
+ /**
+@@ -2133,11 +2131,6 @@ static void __journal_abort_soft (journal_t *journal, int errno)
+  * failure to disk.  ext3_error, for example, now uses this
+  * functionality.
+  *
+- * Errors which originate from within the journaling layer will NOT
+- * supply an errno; a null errno implies that absolutely no further
+- * writes are done to the journal (unless there are any already in
+- * progress).
+- *
+  */
+ 
+ void jbd2_journal_abort(journal_t *journal, int errno)
 -- 
 2.20.1
 
