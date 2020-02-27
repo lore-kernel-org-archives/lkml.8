@@ -7,57 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86007C3F35B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD4FBC3F35C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B79A24688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 875EB2469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:49:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811272;
-	bh=Ba+QKGRskXBXvu0aL2I2KaAkS6/2ikohdEhv5jDvwgE=;
+	s=default; t=1582811349;
+	bh=gH2BIg6EpDo663xGfq3hBDFg5Bu3WvFw9PnUKPXMqgo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kFD3QR+LKp4x9wFWrJMkKoa3qZqDPj47zLSA/GUHcQPllziXMt83Vuwkgr2r1ZsJe
-	 3e3h3wRL1d56FrD4TqMO/wEF09e2X3PRlxpG0nMhm5rK9E11W961jxUIyJ7qmFDPPH
-	 wwUGvQQmgj9AtT+Ie95DeRY6VXKZ6VJ3p7brrb+g=
+	b=WuQG3BF00NPGD+2FqpfVUGC0e6BjKoQomtQFA60t3xpfsdNhCZPiBqRsQrRmTqyiN
+	 Eo6EVKbaomeChG9OvGKOi6B2BU5o711Z37EVn31nd8xK0Px5NVcvmJwHvhUtFjX7dG
+	 6WjOr0WfXwiVEH9NRNX9J7SzRU8ZkpvJgucLqvmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730759AbgB0Nru (ORCPT
+        id S1731000AbgB0NtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:47:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44336 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:49:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730461AbgB0Nrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:47:48 -0500
+        id S1730518AbgB0NtE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:49:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F3BD20801;
-        Thu, 27 Feb 2020 13:47:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD923246B4;
+        Thu, 27 Feb 2020 13:49:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811268;
-        bh=Ba+QKGRskXBXvu0aL2I2KaAkS6/2ikohdEhv5jDvwgE=;
+        s=default; t=1582811344;
+        bh=gH2BIg6EpDo663xGfq3hBDFg5Bu3WvFw9PnUKPXMqgo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WLq1ORICLn1HIzGbGPUGcKGqi58Uzubl5gUzI0eFK8hq5gYoDWUuKgRs32g6FIeVa
-         MO3O39vVJh8vPXpqOHKFIazY9rSkEZ+lmQYuwjGfz33X9iPGazX4L+7XI4Gi3w4PJd
-         a21/yMV7JYneR5wXzRVdS2xTRiZ7s1ugYt3wIScc=
+        b=lKz79luQd0aACfzUDdFqn+4UwFj2WkJ1azCnX6VxB79UKeWjA4qCQJXEa/tFx+NjV
+         R4zJj61Qltud5JDUw8SI6zn71PPF5nX6VcSAGZfFCaoH4sqmgmvSOLh0oGbIPKMFPf
+         E0DddcKjSDA9judWBuoOJsaHbdJxQcED40ZU9TRY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>,
-        Petr Mladek <pmladek@suse.com>, Jiri Olsa <jolsa@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        bpf@vger.kernel.org, netdev@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 067/165] tools lib api fs: Fix gcc9 stringop-truncation compilation error
-Date:   Thu, 27 Feb 2020 14:35:41 +0100
-Message-Id: <20200227132241.254377714@linuxfoundation.org>
+Subject: [PATCH 4.9 097/165] ARM: 8951/1: Fix Kexec compilation issue.
+Date:   Thu, 27 Feb 2020 14:36:11 +0100
+Message-Id: <20200227132245.426272030@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -70,65 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Zhizhikin <andrey.z@gmail.com>
+From: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-[ Upstream commit 6794200fa3c9c3e6759dae099145f23e4310f4f7 ]
+[ Upstream commit 76950f7162cad51d2200ebd22c620c14af38f718 ]
 
-GCC9 introduced string hardening mechanisms, which exhibits the error
-during fs api compilation:
+To perform the reserve_crashkernel() operation kexec uses SECTION_SIZE to
+find a memblock in a range.
+SECTION_SIZE is not defined for nommu systems. Trying to compile kexec in
+these conditions results in a build error:
 
-error: '__builtin_strncpy' specified bound 4096 equals destination size
-[-Werror=stringop-truncation]
+  linux/arch/arm/kernel/setup.c: In function ‘reserve_crashkernel’:
+  linux/arch/arm/kernel/setup.c:1016:25: error: ‘SECTION_SIZE’ undeclared
+     (first use in this function); did you mean ‘SECTIONS_WIDTH’?
+             crash_size, SECTION_SIZE);
+                         ^~~~~~~~~~~~
+                         SECTIONS_WIDTH
+  linux/arch/arm/kernel/setup.c:1016:25: note: each undeclared identifier
+     is reported only once for each function it appears in
+  linux/scripts/Makefile.build:265: recipe for target 'arch/arm/kernel/setup.o'
+     failed
 
-This comes when the length of copy passed to strncpy is is equal to
-destination size, which could potentially lead to buffer overflow.
+Make KEXEC depend on MMU to fix the compilation issue.
 
-There is a need to mitigate this potential issue by limiting the size of
-destination by 1 and explicitly terminate the destination with NULL.
-
-Signed-off-by: Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andrii Nakryiko <andriin@fb.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: bpf@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20191211080109.18765-1-andrey.zhizhikin@leica-geosystems.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/api/fs/fs.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
-index f99f49e4a31e6..21e714cf0126c 100644
---- a/tools/lib/api/fs/fs.c
-+++ b/tools/lib/api/fs/fs.c
-@@ -194,6 +194,7 @@ static bool fs__env_override(struct fs *fs)
- 	size_t name_len = strlen(fs->name);
- 	/* name + "_PATH" + '\0' */
- 	char upper_name[name_len + 5 + 1];
-+
- 	memcpy(upper_name, fs->name, name_len);
- 	mem_toupper(upper_name, name_len);
- 	strcpy(&upper_name[name_len], "_PATH");
-@@ -203,7 +204,8 @@ static bool fs__env_override(struct fs *fs)
- 		return false;
- 
- 	fs->found = true;
--	strncpy(fs->path, override_path, sizeof(fs->path));
-+	strncpy(fs->path, override_path, sizeof(fs->path) - 1);
-+	fs->path[sizeof(fs->path) - 1] = '\0';
- 	return true;
- }
- 
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 74a70f91b01a4..56bd9beb6a35c 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -2020,7 +2020,7 @@ config XIP_PHYS_ADDR
+ config KEXEC
+ 	bool "Kexec system call (EXPERIMENTAL)"
+ 	depends on (!SMP || PM_SLEEP_SMP)
+-	depends on !CPU_V7M
++	depends on MMU
+ 	select KEXEC_CORE
+ 	help
+ 	  kexec is a system call that implements the ability to shutdown your
 -- 
 2.20.1
 
