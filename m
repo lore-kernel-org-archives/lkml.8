@@ -2,120 +2,171 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0F1C34022
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 876DDC35DEE
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1FC324691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:45:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814758;
-	bh=Txxg0CwDxgoAcCHfdSwCfVEMIB5RTNNnMROmmxv2NIQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0lKfFeaP+SeQwkjXFub1XSidt4g0nHxih+94CM6RMxX9JSWir23lEQ8iNNWg4K+Tc
-	 KdO1qoYStAj5FOncDGPVXQFKt1iSmQD7ACoQUp0inXzaFJXvN+bHh4T8lmjLpRbHYC
-	 zUYvw9Oks8nc9uXOFGTvrXbHlGw9FRaR+EPPlXyc=
+	by mail.kernel.org (Postfix) with ESMTP id 554A124656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:46:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="csZxDWdp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731083AbgB0Op4 (ORCPT
+        id S1731556AbgB0OqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:45:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41962 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729470AbgB0Npx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:45:53 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8777D2468D;
-        Thu, 27 Feb 2020 13:45:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811153;
-        bh=Txxg0CwDxgoAcCHfdSwCfVEMIB5RTNNnMROmmxv2NIQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gQRVerH9Awsrbpez4hroDbCS1rwBIKWm6rwj73U2rCd81FUcr5GUpROHpXxhKuzll
-         WGxdTZIx2LRj1IAWGgk8VR4Wae6UbGjlkblwRxYw3ypMEnjrnMWI/ktDf+77AtGfta
-         rNU2rNU2gVVgeT6wrsU018IZ8peX2MU2Toi7PG9A=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 022/165] drm/gma500: Fixup fbdev stolen size usage evaluation
-Date:   Thu, 27 Feb 2020 14:34:56 +0100
-Message-Id: <20200227132234.231640464@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
-References: <20200227132230.840899170@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 27 Feb 2020 09:46:01 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:42251 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730401AbgB0Npj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:45:39 -0500
+Received: by mail-il1-f193.google.com with SMTP id x2so2438240ila.9
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 05:45:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o8OnTzg5LRFjVMbn8DLKRBIEARILm6ghNdG6yQfmP38=;
+        b=csZxDWdp9Kg2a9YfxdWiQA3V9+CoKoVZc0EZnmskUOShlrcXcpWMgE9o4u6YRiHDII
+         3lY1aufSeabIIc6erb1oS/km4U0n3lTdwzbGWKhOCS7bpEQ8U3Zh6X5Ldpb/jYnFuL/e
+         x43KESU3syYK2PxnF02uwj9pUFlwx7F4kS80Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o8OnTzg5LRFjVMbn8DLKRBIEARILm6ghNdG6yQfmP38=;
+        b=XGZWN0atfVoAVeX+tW2Ctb8s+V6Kf1bFjnkjt6RWRu73FcfMKCDV2JCXOBfzJjaOcH
+         ShAk+xBhXzuoZzCDGFn0SYd4EnWyB6xdstl7EOMUDO+FWqXL490J2RAkAl/ZVwph+UTV
+         UVcqq9kc3G63EkbeDiJ2seHgtR57OlXvcwVeCoKI8rD3RMA/PXZIlsdVwdjlbV86wk7E
+         pCHTVkwZX3hN+TUTAS/BnzRRI+nJ0mBDsxzZ7EZtF/LovuADickflBiytBxAW7cn0ZgU
+         FLps8snmuqO/sBgTbKFL7Xv5QKZvrchJjvA5zbiXmrRr7D2l9if0Mp8BFxfd4jy2e1w/
+         CsZQ==
+X-Gm-Message-State: APjAAAVrQxfH1wniIxU3B1WbdKtz9foKoJFrtu2sLFHrhL7ChtoKROb3
+        PhJbp39vO59YXla4No4Nh9kyPuOOMyaRiNAXfDGtWA==
+X-Google-Smtp-Source: APXvYqzQ6BzhXtXlhNTUi8rTkHy3riEAJKrSKAZv8W+W43+NLOCgkCwSk3m7m7xDRMSgpYjkil26fYRlpnCcNnc0xlc=
+X-Received: by 2002:a92:89c2:: with SMTP id w63mr5483209ilk.252.1582811138833;
+ Thu, 27 Feb 2020 05:45:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk>
+ <1582316494.3376.45.camel@HansenPartnership.com> <CAOssrKehjnTwbc6A1VagM5hG_32hy3mXZenx_PdGgcUGxYOaLQ@mail.gmail.com>
+ <1582556135.3384.4.camel@HansenPartnership.com> <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com>
+ <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com> <1582644535.3361.8.camel@HansenPartnership.com>
+ <CAOssrKfaxnHswrKejedFzmYTbYivJ++cPes4c91+BJDfgH4xJA@mail.gmail.com>
+ <1c8db4e2b707f958316941d8edd2073ee7e7b22c.camel@themaw.net>
+ <CAJfpegtRoXnPm5_sMYPL2L6FCZU52Tn8wk7NcW-dm4_2x=dD3Q@mail.gmail.com> <3e656465c427487e4ea14151b77d391d52cd6bad.camel@themaw.net>
+In-Reply-To: <3e656465c427487e4ea14151b77d391d52cd6bad.camel@themaw.net>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Thu, 27 Feb 2020 14:45:27 +0100
+Message-ID: <CAJfpegu5xLcR=QbAOnUrL49QTem6X6ok7nPU+kLFnNHdPXSh1A@mail.gmail.com>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
+To:     Ian Kent <raven@themaw.net>
+Cc:     Miklos Szeredi <mszeredi@redhat.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, Karel Zak <kzak@redhat.com>,
+        Lennart Poettering <lennart@poettering.net>,
+        =?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>,
+        util-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+On Thu, Feb 27, 2020 at 12:34 PM Ian Kent <raven@themaw.net> wrote:
+>
+> On Thu, 2020-02-27 at 10:36 +0100, Miklos Szeredi wrote:
+> > On Thu, Feb 27, 2020 at 6:06 AM Ian Kent <raven@themaw.net> wrote:
+> >
+> > > At the least the question of "do we need a highly efficient way
+> > > to query the superblock parameters all at once" needs to be
+> > > extended to include mount table enumeration as well as getting
+> > > the info.
+> > >
+> > > But this is just me thinking about mount table handling and the
+> > > quite significant problem we now have with user space scanning
+> > > the proc mount tables to get this information.
+> >
+> > Right.
+> >
+> > So the problem is that currently autofs needs to rescan the proc
+> > mount
+> > table on every change.   The solution to that is to
+>
+> Actually no, that's not quite the problem I see.
+>
+> autofs handles large mount tables fairly well (necessarily) and
+> in time I plan to remove the need to read the proc tables at all
+> (that's proven very difficult but I'll get back to that).
+>
+> This has to be done to resolve the age old problem of autofs not
+> being able to handle large direct mount maps. But, because of
+> the large number of mounts associated with large direct mount
+> maps, other system processes are badly affected too.
+>
+> So the problem I want to see fixed is the effect of very large
+> mount tables on other user space applications, particularly the
+> effect when a large number of mounts or umounts are performed.
+>
+> Clearly large mount tables not only result from autofs and the
+> problems caused by them are slightly different to the mount and
+> umount problem I describe. But they are a problem nevertheless
+> in the sense that frequent notifications that lead to reading
+> a large proc mount table has significant overhead that can't be
+> avoided because the table may have changed since the last time
+> it was read.
+>
+> It's easy to cause several system processes to peg a fair number
+> of CPU's when a large number of mounts/umounts are being performed,
+> namely systemd, udisks2 and a some others. Also I've seen couple
+> of application processes badly affected purely by the presence of
+> a large number of mounts in the proc tables, that's not quite so
+> bad though.
+>
+> >
+> >  - add a notification mechanism   - lookup a mount based on path
+> >  - and a way to selectively query mount/superblock information
+> based on path ...
+> >
+> > right?
+> >
+> > For the notification we have uevents in sysfs, which also supplies
+> > the
+> > changed parameters.  Taking aside namespace issues and addressing
+> > mounts would this work for autofs?
+>
+> The parameters supplied by the notification mechanism are important.
+>
+> The place this is needed will be libmount since it catches a broad
+> number of user space applications, including those I mentioned above
+> (well at least systemd, I think also udisks2, very probably others).
+>
+> So that means mount table info. needs to be maintained, whether that
+> can be achieved using sysfs I don't know. Creating and maintaining
+> the sysfs tree would be a big challenge I think.
+>
+> But before trying to work out how to use a notification mechanism
+> just having a way to get the info provided by the proc tables using
+> a path alone should give initial immediate improvement in libmount.
 
-[ Upstream commit fd1a5e521c3c083bb43ea731aae0f8b95f12b9bd ]
+Adding Karel, Lennart, Zbigniew and util-linux@vger...
 
-psbfb_probe performs an evaluation of the required size from the stolen
-GTT memory, but gets it wrong in two distinct ways:
-- The resulting size must be page-size-aligned;
-- The size to allocate is derived from the surface dimensions, not the fb
-  dimensions.
+At a quick glance at libmount and systemd code, it appears that just
+switching out the implementation in libmount will not be enough:
+systemd is calling functions like mnt_table_parse_*() when it receives
+a notification that the mount table changed.
 
-When two connectors are connected with different modes, the smallest will
-be stored in the fb dimensions, but the size that needs to be allocated must
-match the largest (surface) dimensions. This is what is used in the actual
-allocation code.
+What is the end purpose of parsing the mount tables?  Can systemd guys
+comment on that?
 
-Fix this by correcting the evaluation to conform to the two points above.
-It allows correctly switching to 16bpp when one connector is e.g. 1920x1080
-and the other is 1024x768.
-
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Signed-off-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191107153048.843881-1-paul.kocialkowski@bootlin.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/gma500/framebuffer.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/gma500/framebuffer.c b/drivers/gpu/drm/gma500/framebuffer.c
-index 3a44e705db538..d224fc12b7571 100644
---- a/drivers/gpu/drm/gma500/framebuffer.c
-+++ b/drivers/gpu/drm/gma500/framebuffer.c
-@@ -516,6 +516,7 @@ static int psbfb_probe(struct drm_fb_helper *helper,
- 		container_of(helper, struct psb_fbdev, psb_fb_helper);
- 	struct drm_device *dev = psb_fbdev->psb_fb_helper.dev;
- 	struct drm_psb_private *dev_priv = dev->dev_private;
-+	unsigned int fb_size;
- 	int bytespp;
- 
- 	bytespp = sizes->surface_bpp / 8;
-@@ -525,8 +526,11 @@ static int psbfb_probe(struct drm_fb_helper *helper,
- 	/* If the mode will not fit in 32bit then switch to 16bit to get
- 	   a console on full resolution. The X mode setting server will
- 	   allocate its own 32bit GEM framebuffer */
--	if (ALIGN(sizes->fb_width * bytespp, 64) * sizes->fb_height >
--	                dev_priv->vram_stolen_size) {
-+	fb_size = ALIGN(sizes->surface_width * bytespp, 64) *
-+		  sizes->surface_height;
-+	fb_size = ALIGN(fb_size, PAGE_SIZE);
-+
-+	if (fb_size > dev_priv->vram_stolen_size) {
-                 sizes->surface_bpp = 16;
-                 sizes->surface_depth = 16;
-         }
--- 
-2.20.1
-
-
-
+Thanks,
+Miklos
