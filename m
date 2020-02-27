@@ -2,105 +2,83 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB5DC35E15
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B73AEC11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F75C24691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:43:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C98A24699
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:49:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="TVyj2rNl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730559AbgB0TnP (ORCPT
+        id S1730308AbgB0Ttf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 14:43:15 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:47542 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730433AbgB0TnP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 14:43:15 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j7P3w-0021LD-Ku; Thu, 27 Feb 2020 19:43:12 +0000
-Date:   Thu, 27 Feb 2020 19:43:12 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC][PATCH v2 02/34] fix automount/automount race properly
-Message-ID: <20200227194312.GD23230@ZenIV.linux.org.uk>
-References: <20200223011154.GY23230@ZenIV.linux.org.uk>
- <20200223011626.4103706-1-viro@ZenIV.linux.org.uk>
- <20200223011626.4103706-2-viro@ZenIV.linux.org.uk>
- <CAHk-=wjE0ey=qg2-5+OHg4kVub4x3XLnatcZj5KfU03dd8kZ0A@mail.gmail.com>
+        Thu, 27 Feb 2020 14:49:35 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:56692 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727159AbgB0Ttf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 14:49:35 -0500
+Received: from zn.tnic (p200300EC2F0E0F0080237097B4C234BF.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:f00:8023:7097:b4c2:34bf])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C6B661EC0A0E;
+        Thu, 27 Feb 2020 20:49:33 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1582832974;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=hFlsLDjrGILzRZvLWpLegtB6KF7JNimSyKmgEdxC3mU=;
+        b=TVyj2rNlnvuz+5LcyrpITIwQPUe8mpZLKOidxe+rMQLquuHqpYLWmRYH3WuLF+OnBFFXnv
+        PfxRw86VdeQkkp+3YVWX/hkXtp+UJQ0tRsq3km133+gGLhR8uy/8Ax5pl66+XZAMRIzcVn
+        Cw/hFfeysf5vqthIc+1pDAyE9CSbh2U=
+Date:   Thu, 27 Feb 2020 20:49:28 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [patch 1/8] x86/entry/64: Trace irqflags unconditionally on when
+ returing to user space
+Message-ID: <20200227194928.GC18629@zn.tnic>
+References: <20200225220801.571835584@linutronix.de>
+ <20200225221305.295289073@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wjE0ey=qg2-5+OHg4kVub4x3XLnatcZj5KfU03dd8kZ0A@mail.gmail.com>
+In-Reply-To: <20200225221305.295289073@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 06:07:39PM -0800, Linus Torvalds wrote:
-> On Sat, Feb 22, 2020 at 5:16 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> >
-> > +
-> > +discard2:
-> > +       namespace_unlock();
-> > +discard1:
-> > +       inode_unlock(dentry->d_inode);
-> > +discard:
-> >         /* remove m from any expiration list it may be on */
-> 
-> Would you mind re-naming those labels?
-> 
-> I realize that the numbering may help show that the error handling is
-> done in the reverse order, but I bet that a nice name could so that
-> too.
+Just formulations improvements:
 
-Umm...  A bit of reordering in the beginning eliminates discard1, suggesting
-s/discard2/discard_locked/...  Incremental would be
+> Subject: [patch 1/8] x86/entry/64: Trace irqflags unconditionally on when returing to user space
 
-diff --git a/fs/namespace.c b/fs/namespace.c
-index 6228fd1ef94f..777c3116e62e 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -2844,22 +2844,22 @@ int finish_automount(struct vfsmount *m, struct path *path)
- 	 * got", not "try to mount it on top".
- 	 */
- 	inode_lock(dentry->d_inode);
-+	namespace_lock();
- 	if (unlikely(cant_mount(dentry))) {
- 		err = -ENOENT;
--		goto discard1;
-+		goto discard_locked;
- 	}
--	namespace_lock();
- 	rcu_read_lock();
- 	if (unlikely(__lookup_mnt(path->mnt, dentry))) {
- 		rcu_read_unlock();
- 		err = 0;
--		goto discard2;
-+		goto discard_locked;
- 	}
- 	rcu_read_unlock();
- 	mp = get_mountpoint(dentry);
- 	if (IS_ERR(mp)) {
- 		err = PTR_ERR(mp);
--		goto discard2;
-+		goto discard_locked;
- 	}
- 
- 	err = do_add_mount(mnt, mp, path, path->mnt->mnt_flags | MNT_SHRINKABLE);
-@@ -2869,9 +2869,8 @@ int finish_automount(struct vfsmount *m, struct path *path)
- 	mntput(m);
- 	return 0;
- 
--discard2:
-+discard_locked:
- 	namespace_unlock();
--discard1:
- 	inode_unlock(dentry->d_inode);
- discard:
- 	/* remove m from any expiration list it may be on */
+s/on //
+
+On Tue, Feb 25, 2020 at 11:08:02PM +0100, Thomas Gleixner wrote:
+> User space cannot longer disable interrupts so trace return to user space
+
+"Userspace cannot disable interrupts any longer... "
+
+> unconditionally as IRQS_ON.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+
+...
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
