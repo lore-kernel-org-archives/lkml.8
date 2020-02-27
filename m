@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C6FC3F35E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FAFDC35DF9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0E1B20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A56D24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:03:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812085;
-	bh=F7HI2yBfKbtM5rC/N2fY391ZUSDKhrZ+HvCn8X7jv9U=;
+	s=default; t=1582812183;
+	bh=HnHBsupfmC2HjE7tBAwdjVnpc/KCha0vmnjyMlZrWGs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xaxYJBQbReVG5GM/r3zgiqxLbSQ4fqqCQ5hlNcEiIUS8HvWkkhz6yFHBDBSxs949o
-	 zz09R0FMjQv+WYtl2r7taMif3BgixE69Um/WaUJGzIQy4aMgAf9VUZKfwMqEnMGJsu
-	 FX2ouJepH72oCdR/Z98Eifb4HiguRtyrmPRHqgbc=
+	b=Yfy7WaEybGaXHy3BI0qHr+agtS9B0F+DfAWrtUGYo851ZzElwRHpjDrOgWETC0QVD
+	 YBNHPlFfxxCdJafhuksIXPICATBrvDeF+V9jQbUkjusPMpYKbXfVYpG188WL27plaI
+	 NwIG8IDxO/DXUnDnQU1TM8cM0SKJ8Su5HqxR/kD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732911AbgB0OBX (ORCPT
+        id S1733248AbgB0ODB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:01:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35268 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:03:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732399AbgB0OBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:01:21 -0500
+        id S1733239AbgB0OC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:02:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E00A620801;
-        Thu, 27 Feb 2020 14:01:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CF7021556;
+        Thu, 27 Feb 2020 14:02:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812080;
-        bh=F7HI2yBfKbtM5rC/N2fY391ZUSDKhrZ+HvCn8X7jv9U=;
+        s=default; t=1582812177;
+        bh=HnHBsupfmC2HjE7tBAwdjVnpc/KCha0vmnjyMlZrWGs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WrlbIC4ZkDdo26LF5hSB423tXizL2drcPs84ZokHXEnLXl9BOb8xce91vo8oIooIZ
-         XmDcDCW94Z4rTgQrDoD+pr91aA1qzfm6/53KX3pX+qS1CHm/vtjUCRK8LEBzNI04FU
-         v4Yg1Wt/8WQ2KdXjOpkctLOeaYyegcyfXe+fovO8=
+        b=X+rGMASAOlBmBSMaRnZeXIMEJQgnq3NSoa28k4MuITBBhQvEx81vHqPfrsxbpPd+u
+         Mmhpx6KfWNEGTICQSsXowC5GIo5dPOj1PzeV461wyhO7E/ZMVRFd+YJ5vHgAEy0Y8q
+         zh5WcoYz6KOKlBR9cvulS9TOVSgBrOx8MiJ3NteI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        stable@kernel.org
-Subject: [PATCH 4.14 214/237] ext4: rename s_journal_flag_rwsem to s_writepages_rwsem
-Date:   Thu, 27 Feb 2020 14:37:08 +0100
-Message-Id: <20200227132311.931746823@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
+        syzbot+59997e8d5cbdc486e6f6@syzkaller.appspotmail.com
+Subject: [PATCH 4.19 15/97] vt: selection, close sel_buffer race
+Date:   Thu, 27 Feb 2020 14:36:23 +0100
+Message-Id: <20200227132217.117431951@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
-References: <20200227132255.285644406@linuxfoundation.org>
+In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
+References: <20200227132214.553656188@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,114 +59,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Jiri Slaby <jslaby@suse.cz>
 
-commit bbd55937de8f2754adc5792b0f8e5ff7d9c0420e upstream.
+commit 07e6124a1a46b4b5a9b3cacc0c306b50da87abf5 upstream.
 
-In preparation for making s_journal_flag_rwsem synchronize
-ext4_writepages() with changes to both the EXTENTS and JOURNAL_DATA
-flags (rather than just JOURNAL_DATA as it does currently), rename it to
-s_writepages_rwsem.
+syzkaller reported this UAF:
+BUG: KASAN: use-after-free in n_tty_receive_buf_common+0x2481/0x2940 drivers/tty/n_tty.c:1741
+Read of size 1 at addr ffff8880089e40e9 by task syz-executor.1/13184
 
-Link: https://lore.kernel.org/r/20200219183047.47417-2-ebiggers@kernel.org
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: stable@kernel.org
+CPU: 0 PID: 13184 Comm: syz-executor.1 Not tainted 5.4.7 #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+Call Trace:
+...
+ kasan_report+0xe/0x20 mm/kasan/common.c:634
+ n_tty_receive_buf_common+0x2481/0x2940 drivers/tty/n_tty.c:1741
+ tty_ldisc_receive_buf+0xac/0x190 drivers/tty/tty_buffer.c:461
+ paste_selection+0x297/0x400 drivers/tty/vt/selection.c:372
+ tioclinux+0x20d/0x4e0 drivers/tty/vt/vt.c:3044
+ vt_ioctl+0x1bcf/0x28d0 drivers/tty/vt/vt_ioctl.c:364
+ tty_ioctl+0x525/0x15a0 drivers/tty/tty_io.c:2657
+ vfs_ioctl fs/ioctl.c:47 [inline]
+
+It is due to a race between parallel paste_selection (TIOCL_PASTESEL)
+and set_selection_user (TIOCL_SETSEL) invocations. One uses sel_buffer,
+while the other frees it and reallocates a new one for another
+selection. Add a mutex to close this race.
+
+The mutex takes care properly of sel_buffer and sel_buffer_lth only. The
+other selection global variables (like sel_start, sel_end, and sel_cons)
+are protected only in set_selection_user. The other functions need quite
+some more work to close the races of the variables there. This is going
+to happen later.
+
+This likely fixes (I am unsure as there is no reproducer provided) bug
+206361 too. It was marked as CVE-2020-8648.
+
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Reported-by: syzbot+59997e8d5cbdc486e6f6@syzkaller.appspotmail.com
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200210081131.23572-2-jslaby@suse.cz
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/ext4.h  |    2 +-
- fs/ext4/inode.c |   10 +++++-----
- fs/ext4/super.c |    6 +++---
- 3 files changed, 9 insertions(+), 9 deletions(-)
+ drivers/tty/vt/selection.c |   23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -1533,7 +1533,7 @@ struct ext4_sb_info {
- 	struct ratelimit_state s_msg_ratelimit_state;
+--- a/drivers/tty/vt/selection.c
++++ b/drivers/tty/vt/selection.c
+@@ -14,6 +14,7 @@
+ #include <linux/tty.h>
+ #include <linux/sched.h>
+ #include <linux/mm.h>
++#include <linux/mutex.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
  
- 	/* Barrier between changing inodes' journal flags and writepages ops. */
--	struct percpu_rw_semaphore s_journal_flag_rwsem;
-+	struct percpu_rw_semaphore s_writepages_rwsem;
- 	struct dax_device *s_daxdev;
- };
+@@ -43,6 +44,7 @@ static volatile int sel_start = -1; 	/*
+ static int sel_end;
+ static int sel_buffer_lth;
+ static char *sel_buffer;
++static DEFINE_MUTEX(sel_lock);
  
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -2744,7 +2744,7 @@ static int ext4_writepages(struct addres
- 	if (unlikely(ext4_forced_shutdown(EXT4_SB(inode->i_sb))))
- 		return -EIO;
+ /* clear_selection, highlight and highlight_pointer can be called
+    from interrupt (via scrollback/front) */
+@@ -173,7 +175,7 @@ int set_selection(const struct tiocl_sel
+ 	char *bp, *obp;
+ 	int i, ps, pe, multiplier;
+ 	u32 c;
+-	int mode;
++	int mode, ret = 0;
  
--	percpu_down_read(&sbi->s_journal_flag_rwsem);
-+	percpu_down_read(&sbi->s_writepages_rwsem);
- 	trace_ext4_writepages(inode, wbc);
+ 	poke_blanked_console();
+ 	if (copy_from_user(&v, sel, sizeof(*sel)))
+@@ -200,6 +202,7 @@ int set_selection(const struct tiocl_sel
+ 	if (ps > pe)	/* make sel_start <= sel_end */
+ 		swap(ps, pe);
  
- 	if (dax_mapping(mapping)) {
-@@ -2974,7 +2974,7 @@ unplug:
- out_writepages:
- 	trace_ext4_writepages_result(inode, wbc, ret,
- 				     nr_to_write - wbc->nr_to_write);
--	percpu_up_read(&sbi->s_journal_flag_rwsem);
-+	percpu_up_read(&sbi->s_writepages_rwsem);
- 	return ret;
- }
- 
-@@ -6050,7 +6050,7 @@ int ext4_change_inode_journal_flag(struc
- 		}
++	mutex_lock(&sel_lock);
+ 	if (sel_cons != vc_cons[fg_console].d) {
+ 		clear_selection();
+ 		sel_cons = vc_cons[fg_console].d;
+@@ -245,9 +248,10 @@ int set_selection(const struct tiocl_sel
+ 			break;
+ 		case TIOCL_SELPOINTER:
+ 			highlight_pointer(pe);
+-			return 0;
++			goto unlock;
+ 		default:
+-			return -EINVAL;
++			ret = -EINVAL;
++			goto unlock;
  	}
  
--	percpu_down_write(&sbi->s_journal_flag_rwsem);
-+	percpu_down_write(&sbi->s_writepages_rwsem);
- 	jbd2_journal_lock_updates(journal);
- 
- 	/*
-@@ -6067,7 +6067,7 @@ int ext4_change_inode_journal_flag(struc
- 		err = jbd2_journal_flush(journal);
- 		if (err < 0) {
- 			jbd2_journal_unlock_updates(journal);
--			percpu_up_write(&sbi->s_journal_flag_rwsem);
-+			percpu_up_write(&sbi->s_writepages_rwsem);
- 			ext4_inode_resume_unlocked_dio(inode);
- 			return err;
+ 	/* remove the pointer */
+@@ -269,7 +273,7 @@ int set_selection(const struct tiocl_sel
+ 	else if (new_sel_start == sel_start)
+ 	{
+ 		if (new_sel_end == sel_end)	/* no action required */
+-			return 0;
++			goto unlock;
+ 		else if (new_sel_end > sel_end)	/* extend to right */
+ 			highlight(sel_end + 2, new_sel_end);
+ 		else				/* contract from right */
+@@ -297,7 +301,8 @@ int set_selection(const struct tiocl_sel
+ 	if (!bp) {
+ 		printk(KERN_WARNING "selection: kmalloc() failed\n");
+ 		clear_selection();
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto unlock;
+ 	}
+ 	kfree(sel_buffer);
+ 	sel_buffer = bp;
+@@ -322,7 +327,9 @@ int set_selection(const struct tiocl_sel
  		}
-@@ -6076,7 +6076,7 @@ int ext4_change_inode_journal_flag(struc
- 	ext4_set_aops(inode);
+ 	}
+ 	sel_buffer_lth = bp - sel_buffer;
+-	return 0;
++unlock:
++	mutex_unlock(&sel_lock);
++	return ret;
+ }
  
- 	jbd2_journal_unlock_updates(journal);
--	percpu_up_write(&sbi->s_journal_flag_rwsem);
-+	percpu_up_write(&sbi->s_writepages_rwsem);
+ /* Insert the contents of the selection buffer into the
+@@ -351,6 +358,7 @@ int paste_selection(struct tty_struct *t
+ 	tty_buffer_lock_exclusive(&vc->port);
  
- 	if (val)
- 		up_write(&EXT4_I(inode)->i_mmap_sem);
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -939,7 +939,7 @@ static void ext4_put_super(struct super_
- 	percpu_counter_destroy(&sbi->s_freeinodes_counter);
- 	percpu_counter_destroy(&sbi->s_dirs_counter);
- 	percpu_counter_destroy(&sbi->s_dirtyclusters_counter);
--	percpu_free_rwsem(&sbi->s_journal_flag_rwsem);
-+	percpu_free_rwsem(&sbi->s_writepages_rwsem);
- #ifdef CONFIG_QUOTA
- 	for (i = 0; i < EXT4_MAXQUOTAS; i++)
- 		kfree(get_qf_name(sb, sbi, i));
-@@ -4396,7 +4396,7 @@ no_journal:
- 		err = percpu_counter_init(&sbi->s_dirtyclusters_counter, 0,
- 					  GFP_KERNEL);
- 	if (!err)
--		err = percpu_init_rwsem(&sbi->s_journal_flag_rwsem);
-+		err = percpu_init_rwsem(&sbi->s_writepages_rwsem);
+ 	add_wait_queue(&vc->paste_wait, &wait);
++	mutex_lock(&sel_lock);
+ 	while (sel_buffer && sel_buffer_lth > pasted) {
+ 		set_current_state(TASK_INTERRUPTIBLE);
+ 		if (signal_pending(current)) {
+@@ -358,7 +366,9 @@ int paste_selection(struct tty_struct *t
+ 			break;
+ 		}
+ 		if (tty_throttled(tty)) {
++			mutex_unlock(&sel_lock);
+ 			schedule();
++			mutex_lock(&sel_lock);
+ 			continue;
+ 		}
+ 		__set_current_state(TASK_RUNNING);
+@@ -367,6 +377,7 @@ int paste_selection(struct tty_struct *t
+ 					      count);
+ 		pasted += count;
+ 	}
++	mutex_unlock(&sel_lock);
+ 	remove_wait_queue(&vc->paste_wait, &wait);
+ 	__set_current_state(TASK_RUNNING);
  
- 	if (err) {
- 		ext4_msg(sb, KERN_ERR, "insufficient memory");
-@@ -4490,7 +4490,7 @@ failed_mount6:
- 	percpu_counter_destroy(&sbi->s_freeinodes_counter);
- 	percpu_counter_destroy(&sbi->s_dirs_counter);
- 	percpu_counter_destroy(&sbi->s_dirtyclusters_counter);
--	percpu_free_rwsem(&sbi->s_journal_flag_rwsem);
-+	percpu_free_rwsem(&sbi->s_writepages_rwsem);
- failed_mount5:
- 	ext4_ext_release(sb);
- 	ext4_release_system_zone(sb);
 
 
