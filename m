@@ -2,179 +2,98 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA86C3F36F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C17BC54FD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E8D724688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:21:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813289;
-	bh=6rtZdF1SeULZYxwj2H9J0XwCav1OQG+4YKAjNUCzEa0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GxJV/G0kJIsQrs7+r9NLYKZS8B7dMM2X30qwlvgKbBU1rxT8I0mYcnBx/dC+5/1gv
-	 Sy18OYJKGdAbj5dHW1omGPVJDZ8qqphqHbHocCfD7Qn7mf8AMzvkQ2W3150g+uidgq
-	 hBWmAPBk7j1N+DCbgLGZ4dsRDBm13h+3lp3wKvJM=
+	by mail.kernel.org (Postfix) with ESMTP id 64FE524688
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:21:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389615AbgB0OQ7 (ORCPT
+        id S2389634AbgB0OVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:16:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57094 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730613AbgB0OQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:16:52 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B149924690;
-        Thu, 27 Feb 2020 14:16:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813011;
-        bh=6rtZdF1SeULZYxwj2H9J0XwCav1OQG+4YKAjNUCzEa0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cs/Z//yse3gHnhR2KGGJLB+hqeaKA9LZx3FrWRgjbN5jr0BU0zK37VqykjsSSj75P
-         CbQCQ5qbteJXh3jdLySwUWMycHWQMaK7Dl2Kn2QhGSr0qDD7vpUsce7+R532YCwPkA
-         K4jwo6arUMdDEtYJ4RTjucpIAur8r24tTcPDD+cc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.5 100/150] KVM: nVMX: clear PIN_BASED_POSTED_INTR from nested pinbased_ctls only when apicv is globally disabled
-Date:   Thu, 27 Feb 2020 14:37:17 +0100
-Message-Id: <20200227132247.569065230@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
-References: <20200227132232.815448360@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 27 Feb 2020 09:21:44 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:13086 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389376AbgB0OVl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:21:41 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01REFGbD028614;
+        Thu, 27 Feb 2020 09:21:40 -0500
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ydtrx3dg2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Feb 2020 09:21:40 -0500
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 01RELc4X002227
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Thu, 27 Feb 2020 09:21:39 -0500
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 27 Feb
+ 2020 06:21:37 -0800
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Thu, 27 Feb 2020 06:21:37 -0800
+Received: from analog.ad.analog.com ([10.48.65.180])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01RELZhp030157;
+        Thu, 27 Feb 2020 09:21:35 -0500
+From:   Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+To:     <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <broonie@kernel.org>
+CC:     Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+Subject: [PATCH] spi: spi-mpc52xx: Use new structure for SPI transfer delays
+Date:   Thu, 27 Feb 2020 16:21:31 +0200
+Message-ID: <20200227142131.14940-1-sergiu.cuciurean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-27_04:2020-02-26,2020-02-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ malwarescore=0 impostorscore=0 clxscore=1015 priorityscore=1501
+ lowpriorityscore=0 phishscore=0 spamscore=0 adultscore=0 mlxlogscore=999
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002270113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
+In a recent change to the SPI subsystem [1], a new `delay` struct was added
+to replace the `delay_usecs`. This change replaces the current
+`delay_usecs` with `delay` for this driver.
 
-commit a4443267800af240072280c44521caab61924e55 upstream.
+The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
+that both `delay_usecs` & `delay` are used (in this order to preserve
+backwards compatibility).
 
-When apicv is disabled on a vCPU (e.g. by enabling KVM_CAP_HYPERV_SYNIC*),
-nothing happens to VMX MSRs on the already existing vCPUs, however, all new
-ones are created with PIN_BASED_POSTED_INTR filtered out. This is very
-confusing and results in the following picture inside the guest:
-
-$ rdmsr -ax 0x48d
-ff00000016
-7f00000016
-7f00000016
-7f00000016
-
-This is observed with QEMU and 4-vCPU guest: QEMU creates vCPU0, does
-KVM_CAP_HYPERV_SYNIC2 and then creates the remaining three.
-
-L1 hypervisor may only check CPU0's controls to find out what features
-are available and it will be very confused later. Switch to setting
-PIN_BASED_POSTED_INTR control based on global 'enable_apicv' setting.
-
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+[1] commit bebcfd272df6 ("spi: introduce `delay` field for
+`spi_transfer` + spi_transfer_delay_exec()")
+Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
 ---
- arch/x86/kvm/vmx/capabilities.h |    1 +
- arch/x86/kvm/vmx/nested.c       |    5 ++---
- arch/x86/kvm/vmx/nested.h       |    3 +--
- arch/x86/kvm/vmx/vmx.c          |   10 ++++------
- 4 files changed, 8 insertions(+), 11 deletions(-)
+ drivers/spi/spi-mpc52xx.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kvm/vmx/capabilities.h
-+++ b/arch/x86/kvm/vmx/capabilities.h
-@@ -12,6 +12,7 @@ extern bool __read_mostly enable_ept;
- extern bool __read_mostly enable_unrestricted_guest;
- extern bool __read_mostly enable_ept_ad_bits;
- extern bool __read_mostly enable_pml;
-+extern bool __read_mostly enable_apicv;
- extern int __read_mostly pt_mode;
- 
- #define PT_MODE_SYSTEM		0
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -5979,8 +5979,7 @@ void nested_vmx_set_vmcs_shadowing_bitma
-  * bit in the high half is on if the corresponding bit in the control field
-  * may be on. See also vmx_control_verify().
-  */
--void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps,
--				bool apicv)
-+void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps)
- {
- 	/*
- 	 * Note that as a general rule, the high half of the MSRs (bits in
-@@ -6007,7 +6006,7 @@ void nested_vmx_setup_ctls_msrs(struct n
- 		PIN_BASED_EXT_INTR_MASK |
- 		PIN_BASED_NMI_EXITING |
- 		PIN_BASED_VIRTUAL_NMIS |
--		(apicv ? PIN_BASED_POSTED_INTR : 0);
-+		(enable_apicv ? PIN_BASED_POSTED_INTR : 0);
- 	msrs->pinbased_ctls_high |=
- 		PIN_BASED_ALWAYSON_WITHOUT_TRUE_MSR |
- 		PIN_BASED_VMX_PREEMPTION_TIMER;
---- a/arch/x86/kvm/vmx/nested.h
-+++ b/arch/x86/kvm/vmx/nested.h
-@@ -17,8 +17,7 @@ enum nvmx_vmentry_status {
- };
- 
- void vmx_leave_nested(struct kvm_vcpu *vcpu);
--void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps,
--				bool apicv);
-+void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps);
- void nested_vmx_hardware_unsetup(void);
- __init int nested_vmx_hardware_setup(int (*exit_handlers[])(struct kvm_vcpu *));
- void nested_vmx_set_vmcs_shadowing_bitmap(void);
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -95,7 +95,7 @@ module_param(emulate_invalid_guest_state
- static bool __read_mostly fasteoi = 1;
- module_param(fasteoi, bool, S_IRUGO);
- 
--static bool __read_mostly enable_apicv = 1;
-+bool __read_mostly enable_apicv = 1;
- module_param(enable_apicv, bool, S_IRUGO);
- 
- /*
-@@ -6803,8 +6803,7 @@ static struct kvm_vcpu *vmx_create_vcpu(
- 
- 	if (nested)
- 		nested_vmx_setup_ctls_msrs(&vmx->nested.msrs,
--					   vmx_capability.ept,
--					   kvm_vcpu_apicv_active(&vmx->vcpu));
-+					   vmx_capability.ept);
- 	else
- 		memset(&vmx->nested.msrs, 0, sizeof(vmx->nested.msrs));
- 
-@@ -6884,8 +6883,7 @@ static int __init vmx_check_processor_co
- 	if (setup_vmcs_config(&vmcs_conf, &vmx_cap) < 0)
- 		return -EIO;
- 	if (nested)
--		nested_vmx_setup_ctls_msrs(&vmcs_conf.nested, vmx_cap.ept,
--					   enable_apicv);
-+		nested_vmx_setup_ctls_msrs(&vmcs_conf.nested, vmx_cap.ept);
- 	if (memcmp(&vmcs_config, &vmcs_conf, sizeof(struct vmcs_config)) != 0) {
- 		printk(KERN_ERR "kvm: CPU %d feature inconsistency!\n",
- 				smp_processor_id());
-@@ -7792,7 +7790,7 @@ static __init int hardware_setup(void)
- 
- 	if (nested) {
- 		nested_vmx_setup_ctls_msrs(&vmcs_config.nested,
--					   vmx_capability.ept, enable_apicv);
-+					   vmx_capability.ept);
- 
- 		r = nested_vmx_hardware_setup(kvm_vmx_exit_handlers);
- 		if (r)
-
+diff --git a/drivers/spi/spi-mpc52xx.c b/drivers/spi/spi-mpc52xx.c
+index ef2f24420460..d1ea402555ca 100644
+--- a/drivers/spi/spi-mpc52xx.c
++++ b/drivers/spi/spi-mpc52xx.c
+@@ -248,7 +248,9 @@ static int mpc52xx_spi_fsmstate_transfer(int irq, struct mpc52xx_spi *ms,
+ 	ms->len--;
+ 	if (ms->len == 0) {
+ 		ms->timestamp = get_tbl();
+-		ms->timestamp += ms->transfer->delay_usecs * tb_ticks_per_usec;
++		ms->timestamp += spi_delay_to_ns(&ms->transfer->delay,
++						 ms->transfer) *
++				 tb_ticks_per_usec;
+ 		ms->state = mpc52xx_spi_fsmstate_wait;
+ 		return FSM_CONTINUE;
+ 	}
+-- 
+2.17.1
 
