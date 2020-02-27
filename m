@@ -2,52 +2,52 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B16AEC3F353
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CFDBC52D2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA4921D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:00:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41A2520578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:00:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812039;
-	bh=8FIpGAv38N3JOcE3mn8yy2om0YdEiQlkwbQpw79bDhg=;
+	s=default; t=1582812006;
+	bh=FKtU32cyw/UdGrE2fGzl7hamaEFms3FrtdtOUA6DtKo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U4PQDm8LEjhfotwxW14d8L1H2A7HlVn/L1AwqeVyWlvqQcTAeDOrIUlHZ9qejD+hZ
-	 yQDDId8LzJOqH7nuWBfphlYUJ7eZ0M41orJqYPAITwtwiPsoKWC95FmCqQoagrc2zY
-	 eYTcpY9zVjk8qYwGOmkEoMN1Hc1oOA8oC3MFzsyQ=
+	b=H9SBMoHfJOe20Q6f4Y/aQXcDujlpiLjLwQnlF8dr7/8lT5F/utmp/0Ofoly/+klz1
+	 56qKOT6fPLsVKUY/l+YxBFBkL5/K9QGQznfTXap1kG4ur3gf8y972LkItPrJaJPbup
+	 sQclQvSUntF2dP5XFY/ww8J/uwWlLh3NhiAG3PBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732782AbgB0OAi (ORCPT
+        id S1732681AbgB0OAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:00:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34028 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:00:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732597AbgB0OAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:00:34 -0500
+        id S1732676AbgB0OAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:00:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A6AD2084E;
-        Thu, 27 Feb 2020 14:00:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E454C2073D;
+        Thu, 27 Feb 2020 13:59:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812033;
-        bh=8FIpGAv38N3JOcE3mn8yy2om0YdEiQlkwbQpw79bDhg=;
+        s=default; t=1582812000;
+        bh=FKtU32cyw/UdGrE2fGzl7hamaEFms3FrtdtOUA6DtKo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ED9/qWF6i6kq5JdWIxRUhtenCgiwa2SMHlefBf6rdt8NxFi4MOwc5b2Fjd2f6cnG4
-         la35A2fFylehPqajGsYet0td+U79OyZ0D2+gPACciM2Vd6qdthzpeVdISrfN1vgDDY
-         Wjg8OSdQoQhlso8uHIRS4R0LUZOo+5oK46h2j0rk=
+        b=xdP4J7dKd2HjF1Lix3ukNpl25IH20L96nFh3W/LXuaI2IQNImQQdhcLFJkIn4vKF9
+         203pBoC9bdiL4QajLJKAwVdbgqaC9UBG1d6SrD8FWlrUKF+og6e6Kr6UlTJpgIn87P
+         M0wATH469YSZCF3J9Mpledmk+aztHAXRev3lPGi8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 158/237] bcache: explicity type cast in bset_bkey_last()
-Date:   Thu, 27 Feb 2020 14:36:12 +0100
-Message-Id: <20200227132308.154857170@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Chen <peter.chen@nxp.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH 4.14 182/237] usb: host: xhci: update event ring dequeue pointer on purpose
+Date:   Thu, 27 Feb 2020 14:36:36 +0100
+Message-Id: <20200227132309.751311272@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -60,52 +60,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Peter Chen <peter.chen@nxp.com>
 
-[ Upstream commit 7c02b0055f774ed9afb6e1c7724f33bf148ffdc0 ]
+commit dc0ffbea5729a3abafa577ebfce87f18b79e294b upstream.
 
-In bset.h, macro bset_bkey_last() is defined as,
-    bkey_idx((struct bkey *) (i)->d, (i)->keys)
+On some situations, the software handles TRB events slower
+than adding TRBs, then xhci_handle_event can't return zero
+long time, the xHC will consider the event ring is full,
+and trigger "Event Ring Full" error, but in fact, the software
+has already finished lots of events, just no chance to
+update ERDP (event ring dequeue pointer).
 
-Parameter i can be variable type of data structure, the macro always
-works once the type of struct i has member 'd' and 'keys'.
+In this commit, we force update ERDP if half of TRBS_PER_SEGMENT
+events have handled to avoid "Event Ring Full" error.
 
-bset_bkey_last() is also used in macro csum_set() to calculate the
-checksum of a on-disk data structure. When csum_set() is used to
-calculate checksum of on-disk bcache super block, the parameter 'i'
-data type is struct cache_sb_disk. Inside struct cache_sb_disk (also in
-struct cache_sb) the member keys is __u16 type. But bkey_idx() expects
-unsigned int (a 32bit width), so there is problem when sending
-parameters via stack to call bkey_idx().
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/1573836603-10871-2-git-send-email-mathias.nyman@linux.intel.com
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Sparse tool from Intel 0day kbuild system reports this incompatible
-problem. bkey_idx() is part of user space API, so the simplest fix is
-to cast the (i)->keys to unsigned int type in macro bset_bkey_last().
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/bset.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/usb/host/xhci-ring.c |   60 ++++++++++++++++++++++++++++++-------------
+ 1 file changed, 43 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/md/bcache/bset.h b/drivers/md/bcache/bset.h
-index 8d1964b472e7e..0bfde500af196 100644
---- a/drivers/md/bcache/bset.h
-+++ b/drivers/md/bcache/bset.h
-@@ -381,7 +381,8 @@ void bch_btree_keys_stats(struct btree_keys *, struct bset_stats *);
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -2759,6 +2759,42 @@ static int xhci_handle_event(struct xhci
+ }
  
- /* Bkey utility code */
+ /*
++ * Update Event Ring Dequeue Pointer:
++ * - When all events have finished
++ * - To avoid "Event Ring Full Error" condition
++ */
++static void xhci_update_erst_dequeue(struct xhci_hcd *xhci,
++		union xhci_trb *event_ring_deq)
++{
++	u64 temp_64;
++	dma_addr_t deq;
++
++	temp_64 = xhci_read_64(xhci, &xhci->ir_set->erst_dequeue);
++	/* If necessary, update the HW's version of the event ring deq ptr. */
++	if (event_ring_deq != xhci->event_ring->dequeue) {
++		deq = xhci_trb_virt_to_dma(xhci->event_ring->deq_seg,
++				xhci->event_ring->dequeue);
++		if (deq == 0)
++			xhci_warn(xhci, "WARN something wrong with SW event ring dequeue ptr\n");
++		/*
++		 * Per 4.9.4, Software writes to the ERDP register shall
++		 * always advance the Event Ring Dequeue Pointer value.
++		 */
++		if ((temp_64 & (u64) ~ERST_PTR_MASK) ==
++				((u64) deq & (u64) ~ERST_PTR_MASK))
++			return;
++
++		/* Update HC event ring dequeue pointer */
++		temp_64 &= ERST_PTR_MASK;
++		temp_64 |= ((u64) deq & (u64) ~ERST_PTR_MASK);
++	}
++
++	/* Clear the event handler busy flag (RW1C) */
++	temp_64 |= ERST_EHB;
++	xhci_write_64(xhci, temp_64, &xhci->ir_set->erst_dequeue);
++}
++
++/*
+  * xHCI spec says we can get an interrupt, and if the HC has an error condition,
+  * we might get bad data out of the event ring.  Section 4.10.2.7 has a list of
+  * indicators of an event TRB error, but we check the status *first* to be safe.
+@@ -2769,9 +2805,9 @@ irqreturn_t xhci_irq(struct usb_hcd *hcd
+ 	union xhci_trb *event_ring_deq;
+ 	irqreturn_t ret = IRQ_NONE;
+ 	unsigned long flags;
+-	dma_addr_t deq;
+ 	u64 temp_64;
+ 	u32 status;
++	int event_loop = 0;
  
--#define bset_bkey_last(i)	bkey_idx((struct bkey *) (i)->d, (i)->keys)
-+#define bset_bkey_last(i)	bkey_idx((struct bkey *) (i)->d, \
-+					 (unsigned int)(i)->keys)
+ 	spin_lock_irqsave(&xhci->lock, flags);
+ 	/* Check if the xHC generated the interrupt, or the irq is shared */
+@@ -2825,24 +2861,14 @@ irqreturn_t xhci_irq(struct usb_hcd *hcd
+ 	/* FIXME this should be a delayed service routine
+ 	 * that clears the EHB.
+ 	 */
+-	while (xhci_handle_event(xhci) > 0) {}
+-
+-	temp_64 = xhci_read_64(xhci, &xhci->ir_set->erst_dequeue);
+-	/* If necessary, update the HW's version of the event ring deq ptr. */
+-	if (event_ring_deq != xhci->event_ring->dequeue) {
+-		deq = xhci_trb_virt_to_dma(xhci->event_ring->deq_seg,
+-				xhci->event_ring->dequeue);
+-		if (deq == 0)
+-			xhci_warn(xhci, "WARN something wrong with SW event "
+-					"ring dequeue ptr.\n");
+-		/* Update HC event ring dequeue pointer */
+-		temp_64 &= ERST_PTR_MASK;
+-		temp_64 |= ((u64) deq & (u64) ~ERST_PTR_MASK);
++	while (xhci_handle_event(xhci) > 0) {
++		if (event_loop++ < TRBS_PER_SEGMENT / 2)
++			continue;
++		xhci_update_erst_dequeue(xhci, event_ring_deq);
++		event_loop = 0;
+ 	}
  
- static inline struct bkey *bset_bkey_idx(struct bset *i, unsigned idx)
- {
--- 
-2.20.1
-
+-	/* Clear the event handler busy flag (RW1C); event ring is empty. */
+-	temp_64 |= ERST_EHB;
+-	xhci_write_64(xhci, temp_64, &xhci->ir_set->erst_dequeue);
++	xhci_update_erst_dequeue(xhci, event_ring_deq);
+ 	ret = IRQ_HANDLED;
+ 
+ out:
 
 
