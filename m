@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34261C54FCC
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF207C4BA2D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9FB8246AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A28FA20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812665;
-	bh=ngy0aopofd0xPgZDWEqnIE3beTwgyfYyrCAEaubUypc=;
+	s=default; t=1582812629;
+	bh=99iTE+moXDOBvVocvUMuf92PR+/jrXuVSLoXxuCMsds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zat4jQWKNZHNei+SvaeM3gOtLTfIHz2zrczsSb0g+50yo1Ko0s33Z8sD+Z3xvCurj
-	 hSxexUgeKXS9pSJIB/hW6rX6KfSGABnqeTH0b66UNFNcCJ0fHXWVAolYFqARXMd0fs
-	 jhwvpRv7J5rm3Otno3T83eplNx9HzFI27IaDQWuY=
+	b=sTxHGncZBwd0rGrSdzNY7M0dOQoUpJafLaWoMPWvQTPoWk7An5yJK2zRFdpH+jhE9
+	 VsilcEmv7vWFSN6cpvRtH4W2tdCOEmU9zB3PXSYz7RVQ7HlaXeiW4IpUy5N6qvVYQy
+	 U5e4aiZNgM4Yu/7GG3ySvf9Ibs4dtSfAuRkvrclQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388635AbgB0OLD (ORCPT
+        id S2388536AbgB0OK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:11:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49276 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:10:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388620AbgB0OK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:10:59 -0500
+        id S2388531AbgB0OKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:10:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EC1620578;
-        Thu, 27 Feb 2020 14:10:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FEF720801;
+        Thu, 27 Feb 2020 14:10:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812658;
-        bh=ngy0aopofd0xPgZDWEqnIE3beTwgyfYyrCAEaubUypc=;
+        s=default; t=1582812624;
+        bh=99iTE+moXDOBvVocvUMuf92PR+/jrXuVSLoXxuCMsds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YLXLHxl3JbiIke+Bjh1cm71W5lq7ta7xVSbiBPGMKMxvXlFdG2BXC5rySNTfr6n0s
-         mncAEnm3sOYBROmOJRnK8TQVI1+RflLjT3DyOvLqnDwDaIq8/GLxuyKWv0iHmwgDe+
-         ub2Drhzm3QQPpQhT1VaVy3I/PfUSmkAKiUE48WGc=
+        b=VoZGxCoQlOoSRvS82zgFHtMdulM8Pe9lq/7kQmHnt0781QDtE6C799PKWXKCa63ld
+         xmCV17q4975eJGQefr5eXr3bSckNM+7AHOcGpOTf5w1BVY0qT2T212AVnc89BwbOB5
+         9w+fSaOpO5+r9xmGUdPSpfuGmd7zWZm4PqMNW0Vc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.4 065/135] genirq/irqdomain: Make sure all irq domain flags are distinct
-Date:   Thu, 27 Feb 2020 14:36:45 +0100
-Message-Id: <20200227132238.954402709@linuxfoundation.org>
+        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.4 089/135] KVM: nVMX: clear PIN_BASED_POSTED_INTR from nested pinbased_ctls only when apicv is globally disabled
+Date:   Thu, 27 Feb 2020 14:37:09 +0100
+Message-Id: <20200227132242.680993411@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -59,40 +59,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zenghui Yu <yuzenghui@huawei.com>
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-commit 2546287c5fb363a0165933ae2181c92f03e701d0 upstream.
+commit a4443267800af240072280c44521caab61924e55 upstream.
 
-This was noticed when printing debugfs for MSIs on my ARM64 server.  The
-new dstate IRQD_MSI_NOMASK_QUIRK came out surprisingly while it should only
-be the x86 stuff for the time being...
+When apicv is disabled on a vCPU (e.g. by enabling KVM_CAP_HYPERV_SYNIC*),
+nothing happens to VMX MSRs on the already existing vCPUs, however, all new
+ones are created with PIN_BASED_POSTED_INTR filtered out. This is very
+confusing and results in the following picture inside the guest:
 
-The new MSI quirk flag uses the same bit as IRQ_DOMAIN_NAME_ALLOCATED which
-is oddly defined as bit 6 for no good reason.
+$ rdmsr -ax 0x48d
+ff00000016
+7f00000016
+7f00000016
+7f00000016
 
-Switch it to the non used bit 1.
+This is observed with QEMU and 4-vCPU guest: QEMU creates vCPU0, does
+KVM_CAP_HYPERV_SYNIC2 and then creates the remaining three.
 
-Fixes: 6f1a4891a592 ("x86/apic/msi: Plug non-maskable MSI affinity race")
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+L1 hypervisor may only check CPU0's controls to find out what features
+are available and it will be very confused later. Switch to setting
+PIN_BASED_POSTED_INTR control based on global 'enable_apicv' setting.
+
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200221020725.2038-1-yuzenghui@huawei.com
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/irqdomain.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/vmx/capabilities.h |    1 +
+ arch/x86/kvm/vmx/nested.c       |    5 ++---
+ arch/x86/kvm/vmx/nested.h       |    3 +--
+ arch/x86/kvm/vmx/vmx.c          |   10 ++++------
+ 4 files changed, 8 insertions(+), 11 deletions(-)
 
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -191,7 +191,7 @@ enum {
- 	IRQ_DOMAIN_FLAG_HIERARCHY	= (1 << 0),
+--- a/arch/x86/kvm/vmx/capabilities.h
++++ b/arch/x86/kvm/vmx/capabilities.h
+@@ -12,6 +12,7 @@ extern bool __read_mostly enable_ept;
+ extern bool __read_mostly enable_unrestricted_guest;
+ extern bool __read_mostly enable_ept_ad_bits;
+ extern bool __read_mostly enable_pml;
++extern bool __read_mostly enable_apicv;
+ extern int __read_mostly pt_mode;
  
- 	/* Irq domain name was allocated in __irq_domain_add() */
--	IRQ_DOMAIN_NAME_ALLOCATED	= (1 << 6),
-+	IRQ_DOMAIN_NAME_ALLOCATED	= (1 << 1),
+ #define PT_MODE_SYSTEM		0
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -5807,8 +5807,7 @@ void nested_vmx_vcpu_setup(void)
+  * bit in the high half is on if the corresponding bit in the control field
+  * may be on. See also vmx_control_verify().
+  */
+-void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps,
+-				bool apicv)
++void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps)
+ {
+ 	/*
+ 	 * Note that as a general rule, the high half of the MSRs (bits in
+@@ -5835,7 +5834,7 @@ void nested_vmx_setup_ctls_msrs(struct n
+ 		PIN_BASED_EXT_INTR_MASK |
+ 		PIN_BASED_NMI_EXITING |
+ 		PIN_BASED_VIRTUAL_NMIS |
+-		(apicv ? PIN_BASED_POSTED_INTR : 0);
++		(enable_apicv ? PIN_BASED_POSTED_INTR : 0);
+ 	msrs->pinbased_ctls_high |=
+ 		PIN_BASED_ALWAYSON_WITHOUT_TRUE_MSR |
+ 		PIN_BASED_VMX_PREEMPTION_TIMER;
+--- a/arch/x86/kvm/vmx/nested.h
++++ b/arch/x86/kvm/vmx/nested.h
+@@ -17,8 +17,7 @@ enum nvmx_vmentry_status {
+ };
  
- 	/* Irq domain is an IPI domain with virq per cpu */
- 	IRQ_DOMAIN_FLAG_IPI_PER_CPU	= (1 << 2),
+ void vmx_leave_nested(struct kvm_vcpu *vcpu);
+-void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps,
+-				bool apicv);
++void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps);
+ void nested_vmx_hardware_unsetup(void);
+ __init int nested_vmx_hardware_setup(int (*exit_handlers[])(struct kvm_vcpu *));
+ void nested_vmx_vcpu_setup(void);
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -95,7 +95,7 @@ module_param(emulate_invalid_guest_state
+ static bool __read_mostly fasteoi = 1;
+ module_param(fasteoi, bool, S_IRUGO);
+ 
+-static bool __read_mostly enable_apicv = 1;
++bool __read_mostly enable_apicv = 1;
+ module_param(enable_apicv, bool, S_IRUGO);
+ 
+ /*
+@@ -6802,8 +6802,7 @@ static struct kvm_vcpu *vmx_create_vcpu(
+ 
+ 	if (nested)
+ 		nested_vmx_setup_ctls_msrs(&vmx->nested.msrs,
+-					   vmx_capability.ept,
+-					   kvm_vcpu_apicv_active(&vmx->vcpu));
++					   vmx_capability.ept);
+ 	else
+ 		memset(&vmx->nested.msrs, 0, sizeof(vmx->nested.msrs));
+ 
+@@ -6885,8 +6884,7 @@ static int __init vmx_check_processor_co
+ 	if (setup_vmcs_config(&vmcs_conf, &vmx_cap) < 0)
+ 		return -EIO;
+ 	if (nested)
+-		nested_vmx_setup_ctls_msrs(&vmcs_conf.nested, vmx_cap.ept,
+-					   enable_apicv);
++		nested_vmx_setup_ctls_msrs(&vmcs_conf.nested, vmx_cap.ept);
+ 	if (memcmp(&vmcs_config, &vmcs_conf, sizeof(struct vmcs_config)) != 0) {
+ 		printk(KERN_ERR "kvm: CPU %d feature inconsistency!\n",
+ 				smp_processor_id());
+@@ -7781,7 +7779,7 @@ static __init int hardware_setup(void)
+ 
+ 	if (nested) {
+ 		nested_vmx_setup_ctls_msrs(&vmcs_config.nested,
+-					   vmx_capability.ept, enable_apicv);
++					   vmx_capability.ept);
+ 
+ 		r = nested_vmx_hardware_setup(kvm_vmx_exit_handlers);
+ 		if (r)
 
 
