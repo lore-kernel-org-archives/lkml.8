@@ -2,105 +2,285 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D912FC4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CABC4BA3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9D262468E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBC252468A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:36:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="Iycy28kH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729088AbgB0MfC (ORCPT
+        id S1729072AbgB0MgL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 07:35:02 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:53044 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728999AbgB0MfC (ORCPT
+        Thu, 27 Feb 2020 07:36:11 -0500
+Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:59897 "EHLO
+        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728977AbgB0MgL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 07:35:02 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01RCXQcO028667;
-        Thu, 27 Feb 2020 07:34:37 -0500
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ydtrwk3jy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Feb 2020 07:34:37 -0500
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 01RCYawT046758
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Thu, 27 Feb 2020 07:34:36 -0500
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 27 Feb 2020 07:34:35 -0500
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 27 Feb 2020 07:34:35 -0500
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Thu, 27 Feb 2020 07:34:35 -0500
-Received: from analog.ad.analog.com ([10.48.65.180])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01RCYV5t031346;
-        Thu, 27 Feb 2020 07:34:32 -0500
-From:   Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <jic23@kernel.org>, <kstewart@linuxfoundation.org>,
-        <gregkh@linuxfoundation.org>
-CC:     <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
-        <info@metux.net>, <allison@lohutok.net>, <tglx@linutronix.de>,
-        "Sergiu Cuciurean" <sergiu.cuciurean@analog.com>
-Subject: [PATCH] iio: adc: ti-tlc4541: Use new structure for SPI transfer delays
-Date:   Thu, 27 Feb 2020 14:34:27 +0200
-Message-ID: <20200227123427.20249-1-sergiu.cuciurean@analog.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 27 Feb 2020 07:36:11 -0500
+Received: from [IPv6:2001:420:44c1:2577:70b8:9d46:3264:f0c0]
+ ([IPv6:2001:420:44c1:2577:70b8:9d46:3264:f0c0])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id 7IObjDz4cjmHT7IOejidVO; Thu, 27 Feb 2020 13:36:09 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1582806969; bh=QsSTk5VnrASGJ1hRLrPV1YXd++8apxl4wl7VTk3VUZc=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=Iycy28kHnAai7TZTJgi2BZfdR9K8/cIpBBFd9Q2bh8l0nW9ucyOTYxpKFX9w+muFc
+         s+m7GYFfDDMALa32ka06zjyMqpsma2dlId6gIRvVn5fF2SAMOfv1ZKSC6F91sfM8cl
+         wPLqHkqTEVBRvmeaC8/feKP/6aA+dKT4aQ6wYrBZOyyafVJksjNokSHrsUGhFk9FL8
+         RxDnS4vv58jwLOKj9l5l7tZI6VokdCQJf3E+Gut5PQy5o5OELFsnYNHpgORj1NkKBa
+         L1gUQd9T5NExZAoSJV3ATpAVhmjUQjPzrPmHy4EkXa0amqBIgCuSgzS9zDLgiKVyq4
+         McUQkUu6qBqCA==
+Subject: Re: [PATCHv3 05/11] videobuf2: handle V4L2_FLAG_MEMORY_NON_CONSISTENT
+ flag
+To:     Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200226111529.180197-1-senozhatsky@chromium.org>
+ <20200226111529.180197-6-senozhatsky@chromium.org>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <8ea79a02-8346-2b1d-c2d8-3a3b36480320@xs4all.nl>
+Date:   Thu, 27 Feb 2020 13:36:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-27_03:2020-02-26,2020-02-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- phishscore=0 adultscore=0 spamscore=0 mlxscore=0 mlxlogscore=952
- suspectscore=0 clxscore=1015 lowpriorityscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002270101
+In-Reply-To: <20200226111529.180197-6-senozhatsky@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfKjDIE1xe4nagzQa7cWlBGm8oDKuSqCtYjNoiXcJcJLwBtiLopxxMKEc80K3bNQHOzsVRwnu/groln0nEnemnJpOyHl3N1W1XSX0F4f9tRCQpVGKdCIU
+ omlcu0f2DXGmMPxNtxHNP2BanMazLbxvaab9cPAQLtE9F21mMBwF/QMFwh2xE16B04TnWV+RCZsKrO4VMKjSTaKUmHSRLt+CEQkzsTtN47BMNycKO8USjwMU
+ jbxRFf72BMYlmdysni24DgnPQOjD64oT9c3uPmRYFmXidLzPslwAwqIMTRS/xiXhcw8jUbbgRWli8tiYpI0Sz6LHCHw7UO3WxUiiLve858TNamS6V9xCVORD
+ zkZmTxdJa4iVskRW//8Koy6gMmqSjUT+wpr/q9FsRn0bOCvSRwBRcIaCyW2fcvnV8fxKnkY45ZRj+uGCX2Ovjrxs4k8lttaRF9gqSS/FT/zjECn8BayHIAuA
+ Ret7dE1W0/SBSFb2bYfVVcAazw2zV2YxzgmSIi+96lDzJws/KoBaWy/56xFZ/SpO+Y+hfxVvLKaZXkCfUHs7+HEGpD0D9k+0dI0aIuQVWQ/JcjdHBXTqzOH6
+ t1qdRFAX2D2Agt6az5SnzGfLuioUD4rt9+j/jHhb4bxZvEZfcJDsqEel8AQd4I7Zhxg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In a recent change to the SPI subsystem [1], a new `delay` struct was added
-to replace the `delay_usecs`. This change replaces the current
-`delay_usecs` with `delay` for this driver.
+On 2/26/20 12:15 PM, Sergey Senozhatsky wrote:
+> This patch lets user-space to request a non-consistent memory
+> allocation during CREATE_BUFS and REQBUFS ioctl calls.
+> 
+> = CREATE_BUFS
+> 
+>   struct v4l2_create_buffers has seven 4-byte reserved areas,
+>   so reserved[0] is renamed to ->flags. The struct, thus, now
+>   has six reserved 4-byte regions.
+> 
+> = REQBUFS
+> 
+>  We use one bit of a ->reserved[1] member of struct v4l2_requestbuffers,
+>  which is now renamed to ->flags. Unlike v4l2_create_buffers, struct
+>  v4l2_requestbuffers does not have enough reserved room. Therefore for
+>  backward compatibility  ->reserved and ->flags were put into anonymous
+>  union.
+> 
+> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> ---
+>  .../media/uapi/v4l/vidioc-create-bufs.rst     |  8 ++++-
+>  .../media/uapi/v4l/vidioc-reqbufs.rst         | 15 +++++++--
+>  .../media/common/videobuf2/videobuf2-v4l2.c   | 31 +++++++++++++++++--
+>  drivers/media/v4l2-core/v4l2-ioctl.c          |  5 +--
+>  include/uapi/linux/videodev2.h                |  8 +++--
+>  5 files changed, 54 insertions(+), 13 deletions(-)
+> 
+> diff --git a/Documentation/media/uapi/v4l/vidioc-create-bufs.rst b/Documentation/media/uapi/v4l/vidioc-create-bufs.rst
+> index bd08e4f77ae4..6a8a4d5de2f1 100644
+> --- a/Documentation/media/uapi/v4l/vidioc-create-bufs.rst
+> +++ b/Documentation/media/uapi/v4l/vidioc-create-bufs.rst
+> @@ -121,7 +121,13 @@ than the number requested.
+>  	other changes, then set ``count`` to 0, ``memory`` to
+>  	``V4L2_MEMORY_MMAP`` and ``format.type`` to the buffer type.
+>      * - __u32
+> -      - ``reserved``\ [7]
+> +      - ``flags``
+> +      - Specifies additional buffer management attributes.
+> +	See :ref:`memory-flags`. Old drivers and applications must set it to
+> +	zero.
 
-The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
-that both `delay_usecs` & `delay` are used (in this order to preserve
-backwards compatibility).
+Drop the last sentence, it's not relevant.
 
-[1] commit bebcfd272df6 ("spi: introduce `delay` field for
-`spi_transfer` + spi_transfer_delay_exec()")
+> +
+> +    * - __u32
+> +      - ``reserved``\ [6]
+>        - A place holder for future extensions. Drivers and applications
+>  	must set the array to zero.
 
-Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
----
- drivers/iio/adc/ti-tlc4541.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Old drivers and applications still think reserved is [7] and will zero this.
 
-diff --git a/drivers/iio/adc/ti-tlc4541.c b/drivers/iio/adc/ti-tlc4541.c
-index 4965246808bd..77620359b54c 100644
---- a/drivers/iio/adc/ti-tlc4541.c
-+++ b/drivers/iio/adc/ti-tlc4541.c
-@@ -189,7 +189,8 @@ static int tlc4541_probe(struct spi_device *spi)
- 	/* Setup default message */
- 	st->scan_single_xfer[0].rx_buf = &st->rx_buf[0];
- 	st->scan_single_xfer[0].len = 3;
--	st->scan_single_xfer[1].delay_usecs = 3;
-+	st->scan_single_xfer[1].delay.value = 3;
-+	st->scan_single_xfer[1].delay.unit = SPI_DELAY_UNIT_NSECS;
- 	st->scan_single_xfer[2].rx_buf = &st->rx_buf[0];
- 	st->scan_single_xfer[2].len = 2;
- 
--- 
-2.17.1
+>  
+> diff --git a/Documentation/media/uapi/v4l/vidioc-reqbufs.rst b/Documentation/media/uapi/v4l/vidioc-reqbufs.rst
+> index 917df6fb6486..e52cc4401fba 100644
+> --- a/Documentation/media/uapi/v4l/vidioc-reqbufs.rst
+> +++ b/Documentation/media/uapi/v4l/vidioc-reqbufs.rst
+> @@ -112,10 +112,19 @@ aborting or finishing any DMA in progress, an implicit
+>  	``V4L2_MEMORY_MMAP`` and ``type`` set to the buffer type. This will
+>  	free any previously allocated buffers, so this is typically something
+>  	that will be done at the start of the application.
+> -    * - __u32
+> +    * - union
+> +      - (anonymous)
 
+Anonymous unions are formatted a bit differently (I made a very recent patch
+that unified the union formatting in the v4l docs). See e.g.
+Documentation/media/uapi/v4l/vidioc-g-ext-ctrls.rst.
+
+> +    * -
+> +      - __u32
+> +      - ``flags``\ [1]
+> +      - Specifies additional buffer management attributes.
+> +	See :ref:`memory-flags`. Old drivers and applications must set it to
+> +	zero.
+
+Ditto.
+
+> +
+> +    * -
+> +      - __u32
+>        - ``reserved``\ [1]
+> -      - A place holder for future extensions. Drivers and applications
+> -	must set the array to zero.
+> +      - Kept for backwards compatibility. Use ``flags`` instead.
+>  
+>  .. tabularcolumns:: |p{6.1cm}|p{2.2cm}|p{8.7cm}|
+>  
+> diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+> index cc31629c06dc..4954c9fc678d 100644
+> --- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
+> +++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+> @@ -722,9 +722,18 @@ static void fill_buf_caps(struct vb2_queue *q, u32 *caps)
+>  int vb2_reqbufs(struct vb2_queue *q, struct v4l2_requestbuffers *req)
+>  {
+>  	int ret = vb2_verify_memory_type(q, req->memory, req->type);
+> +	bool consistent = true;
+> +
+> +	if (!vb2_queue_allows_cache_hints(q))
+> +		req->flags &= ~V4L2_FLAG_MEMORY_NON_CONSISTENT;
+> +
+> +	if (req->flags & V4L2_FLAG_MEMORY_NON_CONSISTENT)
+> +		consistent = false;
+>  
+>  	fill_buf_caps(q, &req->capabilities);
+> -	return ret ? ret : vb2_core_reqbufs(q, req->memory, true, &req->count);
+> +	if (ret)
+> +		return ret;
+> +	return vb2_core_reqbufs(q, req->memory, consistent, &req->count);
+>  }
+>  EXPORT_SYMBOL_GPL(vb2_reqbufs);
+>  
+> @@ -753,6 +762,7 @@ int vb2_create_bufs(struct vb2_queue *q, struct v4l2_create_buffers *create)
+>  	unsigned requested_sizes[VIDEO_MAX_PLANES];
+>  	struct v4l2_format *f = &create->format;
+>  	int ret = vb2_verify_memory_type(q, create->memory, f->type);
+> +	bool consistent = true;
+>  	unsigned i;
+>  
+>  	fill_buf_caps(q, &create->capabilities);
+> @@ -798,7 +808,14 @@ int vb2_create_bufs(struct vb2_queue *q, struct v4l2_create_buffers *create)
+>  	for (i = 0; i < requested_planes; i++)
+>  		if (requested_sizes[i] == 0)
+>  			return -EINVAL;
+> -	return ret ? ret : vb2_core_create_bufs(q, create->memory, true,
+> +
+> +	if (!vb2_queue_allows_cache_hints(q))
+> +		create->flags &= ~V4L2_FLAG_MEMORY_NON_CONSISTENT;
+> +
+> +	if (create->flags & V4L2_FLAG_MEMORY_NON_CONSISTENT)
+> +		consistent = false;
+> +
+> +	return ret ? ret : vb2_core_create_bufs(q, create->memory, consistent,
+>  		&create->count, requested_planes, requested_sizes);
+>  }
+>  EXPORT_SYMBOL_GPL(vb2_create_bufs);
+> @@ -968,13 +985,21 @@ int vb2_ioctl_reqbufs(struct file *file, void *priv,
+>  {
+>  	struct video_device *vdev = video_devdata(file);
+>  	int res = vb2_verify_memory_type(vdev->queue, p->memory, p->type);
+> +	bool consistent = true;
+>  
+>  	fill_buf_caps(vdev->queue, &p->capabilities);
+>  	if (res)
+>  		return res;
+>  	if (vb2_queue_is_busy(vdev, file))
+>  		return -EBUSY;
+> -	res = vb2_core_reqbufs(vdev->queue, p->memory, true, &p->count);
+> +
+> +	if (!vb2_queue_allows_cache_hints(vdev->queue))
+> +		p->flags &= ~V4L2_FLAG_MEMORY_NON_CONSISTENT;
+> +
+> +	if (p->flags & V4L2_FLAG_MEMORY_NON_CONSISTENT)
+> +		consistent = false;
+> +
+> +	res = vb2_core_reqbufs(vdev->queue, p->memory, consistent, &p->count);
+>  	/* If count == 0, then the owner has released all buffers and he
+>  	   is no longer owner of the queue. Otherwise we have a new owner. */
+>  	if (res == 0)
+> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+> index fbcc7a20eedf..53b87bfd50d7 100644
+> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+> @@ -1973,9 +1973,6 @@ static int v4l_reqbufs(const struct v4l2_ioctl_ops *ops,
+>  
+>  	if (ret)
+>  		return ret;
+> -
+> -	CLEAR_AFTER_FIELD(p, capabilities);
+> -
+>  	return ops->vidioc_reqbufs(file, fh, p);
+>  }
+>  
+> @@ -2015,7 +2012,7 @@ static int v4l_create_bufs(const struct v4l2_ioctl_ops *ops,
+>  	if (ret)
+>  		return ret;
+>  
+> -	CLEAR_AFTER_FIELD(create, capabilities);
+> +	CLEAR_AFTER_FIELD(create, flags);
+>  
+>  	v4l_sanitize_format(&create->format);
+>  
+> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+> index e92c29864730..12b1bd220347 100644
+> --- a/include/uapi/linux/videodev2.h
+> +++ b/include/uapi/linux/videodev2.h
+> @@ -938,7 +938,10 @@ struct v4l2_requestbuffers {
+>  	__u32			type;		/* enum v4l2_buf_type */
+>  	__u32			memory;		/* enum v4l2_memory */
+>  	__u32			capabilities;
+> -	__u32			reserved[1];
+> +	union {
+> +		__u32		flags;
+> +		__u32		reserved[1];
+> +	};
+>  };
+>  
+>  /* capabilities for struct v4l2_requestbuffers and v4l2_create_buffers */
+> @@ -2446,7 +2449,8 @@ struct v4l2_create_buffers {
+>  	__u32			memory;
+>  	struct v4l2_format	format;
+>  	__u32			capabilities;
+> -	__u32			reserved[7];
+> +	__u32			flags;
+> +	__u32			reserved[6];
+>  };
+>  
+>  /*
+> 
+
+Regards,
+
+	Hans
