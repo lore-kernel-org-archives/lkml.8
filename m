@@ -2,68 +2,112 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DBEC3F351
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 341A2C3F368
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E818F24688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B9E824656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:33:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582814031;
+	bh=r/WO0FWrJOIHowHvre3XJ/A+4DkPoib0/MhKznOeLk0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=eW/8nRggS4zW3+zNtCpBQ5YwWQbcFcL1yIhJ4L3yoBMFHMkaqO4b5BR+r9EilYuv2
+	 CXxmEuTilGGA7KIuiZFVnUKFr44Ap25sPqYHGXysAd6LkR+GnRRjdJvKwt06LpY+mS
+	 ZJGj9VmF2DBjNUqRXJNe9pNMtKglEqBgG6ttXV5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730132AbgB0Ods convert rfc822-to-8bit (ORCPT
+        id S1732371AbgB0N77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:33:48 -0500
-Received: from mx2.suse.de ([195.135.220.15]:54244 "EHLO mx2.suse.de"
+        Thu, 27 Feb 2020 08:59:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732522AbgB0OAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:00:06 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 0F330AD21;
-        Thu, 27 Feb 2020 14:00:05 +0000 (UTC)
-Date:   Thu, 27 Feb 2020 15:00:04 +0100
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org
-Subject: Re: [PATCH v5] leds: add SGI IP30 led support
-Message-Id: <20200227150004.97154811ecbd2f5ccc22fa64@suse.de>
-In-Reply-To: <20200226140058.GH4080@duo.ucw.cz>
-References: <20200224111733.10320-1-tbogendoerfer@suse.de>
-        <20200226140058.GH4080@duo.ucw.cz>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8BIT
+        id S1732649AbgB0N74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:59:56 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D3DB2073D;
+        Thu, 27 Feb 2020 13:59:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582811995;
+        bh=r/WO0FWrJOIHowHvre3XJ/A+4DkPoib0/MhKznOeLk0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tSHdibh1kUHhuDhOyyJokZc+BWnGo4kEvUE76ShJOo+07nVITMUp3A2wcre4KEwR6
+         3ImfLiT58yqqR9MYO5ZDyGtDtZA8ejDg1VhBoiRFN69FE7Nuj2mL5gi+4a1/UFxdiX
+         01YD7g1jdUfbH7fFPFZW4AvnrGoICUQ1Qhn72Vd8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 4.14 181/237] xhci: fix runtime pm enabling for quirky Intel hosts
+Date:   Thu, 27 Feb 2020 14:36:35 +0100
+Message-Id: <20200227132309.682521132@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
+References: <20200227132255.285644406@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Feb 2020 15:00:58 +0100
-Pavel Machek <pavel@ucw.cz> wrote:
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-> > +	switch (num) {
-> > +	case IP30_LED_SYSTEM:
-> > +		data->cdev.name = "white:system";
-> > +		break;
-> > +	case IP30_LED_FAULT:
-> > +		data->cdev.name = "red:fault";
-> > +		break;
-> 
-> If the white LED normally serves as power indicator for the system, we
-> might want to specify that. Does it?
+commit 024d411e9c5d49eb96c825af52a3ce2682895676 upstream.
 
-it could be seen as such, but it will be turned on only after POST has finished
-successfull. So it's off if POST failed, which doesn't make it a real power led
-IMHO.
+Intel hosts that need the XHCI_PME_STUCK_QUIRK flag should enable
+runtime pm by calling xhci_pme_acpi_rtd3_enable() before
+usb_hcd_pci_probe() calls pci_dev_run_wake().
+Otherwise usage count for the device won't be decreased, and runtime
+suspend is prevented.
 
-Thomas.
+usb_hcd_pci_probe() only decreases the usage count if device can
+generate run-time wake-up events, i.e. when pci_dev_run_wake()
+returns true.
 
--- 
-SUSE Software Solutions Germany GmbH
-HRB 36809 (AG Nürnberg)
-Geschäftsführer: Felix Imendörffer
+This issue was exposed by pci_dev_run_wake() change in
+commit 8feaec33b986 ("PCI / PM: Always check PME wakeup capability for
+runtime wakeup support")
+and should be backported to kernels with that change
+
+Cc: <stable@vger.kernel.org> # 4.13+
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200210134553.9144-4-mathias.nyman@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/usb/host/xhci-pci.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -284,6 +284,9 @@ static int xhci_pci_setup(struct usb_hcd
+ 	if (!usb_hcd_is_primary_hcd(hcd))
+ 		return 0;
+ 
++	if (xhci->quirks & XHCI_PME_STUCK_QUIRK)
++		xhci_pme_acpi_rtd3_enable(pdev);
++
+ 	xhci_dbg(xhci, "Got SBRN %u\n", (unsigned int) xhci->sbrn);
+ 
+ 	/* Find any debug ports */
+@@ -344,9 +347,6 @@ static int xhci_pci_probe(struct pci_dev
+ 			HCC_MAX_PSA(xhci->hcc_params) >= 4)
+ 		xhci->shared_hcd->can_do_streams = 1;
+ 
+-	if (xhci->quirks & XHCI_PME_STUCK_QUIRK)
+-		xhci_pme_acpi_rtd3_enable(dev);
+-
+ 	/* USB-2 and USB-3 roothubs initialized, allow runtime pm suspend */
+ 	pm_runtime_put_noidle(&dev->dev);
+ 
+
+
