@@ -2,214 +2,124 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A73C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 06:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD6DC4BA06
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 06:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EEDB24683
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 06:31:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hLQLTp30"
+	by mail.kernel.org (Postfix) with ESMTP id 774A724683
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 06:31:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbgB0Gbk (ORCPT
+        id S1727654AbgB0Gbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 01:31:40 -0500
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:36800 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726575AbgB0Gbj (ORCPT
+        Thu, 27 Feb 2020 01:31:43 -0500
+Received: from segapp02.wistron.com ([103.200.3.19]:49879 "EHLO
+        segapp03.wistron.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726575AbgB0Gbl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 01:31:39 -0500
-Received: by mail-pf1-f202.google.com with SMTP id y8so1270832pfn.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 22:31:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=2XUDk4no3p+9z2Ml5E7VHydPfxYI6SLTr8vWXCSaN+Q=;
-        b=hLQLTp30uB7qRRaTV3Qoxiy0ZM28IvvyDy6A/mJtLFSJ9cTU+otmILqRaFwyqO1Sfa
-         F41zNoX97AReMIsW40DwwhHfGBdVdw7oHP8WTWMl3KBlQpL/tgc49qJ8GyDavSIM88Q/
-         tILuTSvbMGYS+4lXyqlrxoOKpRFG+6vka/2qEbwOCstWRBHw2owbWGorggB3Auys+RAh
-         PwQZLOceN7KpMZGjyQD7Smr4LnPbP/+qyzDqT774fU1RrL4Y8FNR6wJo5ogs9QWWzIKC
-         q64qBGzA1gKZSFs33VbocfATrY0qikmPxOiW0xIRsAP1YoGs0rFDbRgHkjIGsQ+MYV7d
-         kbhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=2XUDk4no3p+9z2Ml5E7VHydPfxYI6SLTr8vWXCSaN+Q=;
-        b=l9a1M9rEl6+ixSAJGR8MRampjE+EQG16HEqbclM8n8DxbGpMuak5PJ2DYOXqQuqOtX
-         V4wZln3kQlAjnjW2rZMyIrYZZWMbga45GK8AZ9QlbEKWwn37aI9t13pua8swvv0Ad6TL
-         nIa9GJBb4B5H60Q+rknW9mEEAsq6rbsnToNpxLsoRcvX92cBPfRBpxvN99zNHPWdUtPa
-         3YwbRfhh3qWXaptszBB7P7z8tpWZP1C0l4hleM7/YKcn6a1TnyW0FeJdbFm1Qrg/gNQ3
-         cxYPGlYmtNA/HnZyWLBAf1TClWIgwAst0Z1j72iwrdZsxIQiWRewnixl/Wt7Kd8XdYFt
-         AV2A==
-X-Gm-Message-State: APjAAAX6QjlnU75zpXJU0Zp5BjaZPXiB+z3/GU+iAyTgYgvfNq8EY8q7
-        5yQLfD2QRaZoxzL1kwOqvdKvVV8rlgyG
-X-Google-Smtp-Source: APXvYqyl0RW6hMTNXIe5Rp5nx3gL/2ub/AREq3c9SPFgA2UYd8WTzS/IyxSn/0lm0mTaaq6EuGNZKkAYNj1E
-X-Received: by 2002:a63:fc56:: with SMTP id r22mr2532491pgk.147.1582785097892;
- Wed, 26 Feb 2020 22:31:37 -0800 (PST)
-Date:   Wed, 26 Feb 2020 22:31:34 -0800
-Message-Id: <20200227063134.261636-1-gthelen@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH] kunit: add --make_options
-From:   Greg Thelen <gthelen@google.com>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Greg Thelen <gthelen@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 27 Feb 2020 01:31:41 -0500
+Received: from EXCHAPP03.whq.wistron (unverified [10.37.38.26]) by TWNHUMSW4.wistron.com
+ (Clearswift SMTPRS 5.6.0) with ESMTP id <Tdd93781158c0a816721818@TWNHUMSW4.wistron.com>;
+ Thu, 27 Feb 2020 14:31:31 +0800
+Received: from EXCHAPP02.whq.wistron (10.37.38.25) by EXCHAPP03.whq.wistron
+ (10.37.38.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 27 Feb
+ 2020 14:31:30 +0800
+Received: from EXCHAPP02.whq.wistron ([fe80::ecf3:5097:933e:61e6]) by
+ EXCHAPP02.whq.wistron ([fe80::ecf3:5097:933e:61e6%5]) with mapi id
+ 15.01.1713.004; Thu, 27 Feb 2020 14:31:30 +0800
+From:   <Ben_Pai@wistron.com>
+To:     <joel@jms.id.au>
+CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <andrew@aj.id.au>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+        <wangat@tw.ibm.com>, <Claire_Ku@wistron.com>, <Ben_Pai@wistron.com>
+Subject: RE: [PATCH v1] ARM: dts: mihawk: Change the name of mihawk led
+Thread-Topic: [PATCH v1] ARM: dts: mihawk: Change the name of mihawk led
+Thread-Index: AQHV57IDUDu59Q0XzUS/X7KToe/Y4qgs0SeAgAG53kA=
+Date:   Thu, 27 Feb 2020 06:31:30 +0000
+Message-ID: <3633e9f58ab14118bf4c8df3f25ea0d2@wistron.com>
+References: <20200220055255.22809-1-Ben_Pai@wistron.com>
+ <CACPK8Xf=t+PY42qxF9jProYGGZZJONb=H1D4xZJc7teFWJ2FrA@mail.gmail.com>
+In-Reply-To: <CACPK8Xf=t+PY42qxF9jProYGGZZJONb=H1D4xZJc7teFWJ2FrA@mail.gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.37.38.230]
+x-tm-snts-smtp: 07E6559BC863661D5C7F457DA7AC36875EA80F0F8E96A4F5E8765A88B6AB6E272000:8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kunit.py utility builds an ARCH=um kernel and then runs it.  Add
-optional --make_options flag to kunit.py allowing for the operator to
-specify extra build options.
-
-This allows use of the clang compiler for kunit:
-  tools/testing/kunit/kunit.py run --defconfig \
-    --make_options CC=clang --make_options HOSTCC=clang
-
-Signed-off-by: Greg Thelen <gthelen@google.com>
----
- tools/testing/kunit/kunit.py        | 15 +++++++++++----
- tools/testing/kunit/kunit_kernel.py | 24 ++++++++++++++----------
- 2 files changed, 25 insertions(+), 14 deletions(-)
-
-diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
-index e59eb9e7f923..34a7ec8d9594 100755
---- a/tools/testing/kunit/kunit.py
-+++ b/tools/testing/kunit/kunit.py
-@@ -22,7 +22,9 @@ import kunit_parser
- 
- KunitResult = namedtuple('KunitResult', ['status','result'])
- 
--KunitRequest = namedtuple('KunitRequest', ['raw_output','timeout', 'jobs', 'build_dir', 'defconfig'])
-+KunitRequest = namedtuple('KunitRequest', ['raw_output', 'timeout', 'jobs',
-+                                           'build_dir', 'defconfig',
-+                                           'make_options'])
- 
- class KunitStatus(Enum):
- 	SUCCESS = auto()
-@@ -38,7 +40,7 @@ def create_default_kunitconfig():
- def run_tests(linux: kunit_kernel.LinuxSourceTree,
- 	      request: KunitRequest) -> KunitResult:
- 	config_start = time.time()
--	success = linux.build_reconfig(request.build_dir)
-+	success = linux.build_reconfig(request.build_dir, request.make_options)
- 	config_end = time.time()
- 	if not success:
- 		return KunitResult(KunitStatus.CONFIG_FAILURE, 'could not configure kernel')
-@@ -46,7 +48,7 @@ def run_tests(linux: kunit_kernel.LinuxSourceTree,
- 	kunit_parser.print_with_timestamp('Building KUnit Kernel ...')
- 
- 	build_start = time.time()
--	success = linux.build_um_kernel(request.jobs, request.build_dir)
-+	success = linux.build_um_kernel(request.jobs, request.build_dir, request.make_options)
- 	build_end = time.time()
- 	if not success:
- 		return KunitResult(KunitStatus.BUILD_FAILURE, 'could not build kernel')
-@@ -111,6 +113,10 @@ def main(argv, linux=None):
- 				help='Uses a default .kunitconfig.',
- 				action='store_true')
- 
-+	run_parser.add_argument('--make_options',
-+				help='X=Y make option, can be repeated.',
-+				action='append')
-+
- 	cli_args = parser.parse_args(argv)
- 
- 	if cli_args.subcommand == 'run':
-@@ -131,7 +137,8 @@ def main(argv, linux=None):
- 				       cli_args.timeout,
- 				       cli_args.jobs,
- 				       cli_args.build_dir,
--				       cli_args.defconfig)
-+				       cli_args.defconfig,
-+				       cli_args.make_options)
- 		result = run_tests(linux, request)
- 		if result.status != KunitStatus.SUCCESS:
- 			sys.exit(1)
-diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
-index cc5d844ecca1..2b9b3fdbc13f 100644
---- a/tools/testing/kunit/kunit_kernel.py
-+++ b/tools/testing/kunit/kunit_kernel.py
-@@ -35,8 +35,10 @@ class LinuxSourceTreeOperations(object):
- 		except subprocess.CalledProcessError as e:
- 			raise ConfigError(e.output)
- 
--	def make_olddefconfig(self, build_dir):
-+	def make_olddefconfig(self, build_dir, make_options):
- 		command = ['make', 'ARCH=um', 'olddefconfig']
-+		if make_options:
-+			command.extend(make_options)
- 		if build_dir:
- 			command += ['O=' + build_dir]
- 		try:
-@@ -46,8 +48,10 @@ class LinuxSourceTreeOperations(object):
- 		except subprocess.CalledProcessError as e:
- 			raise ConfigError(e.output)
- 
--	def make(self, jobs, build_dir):
-+	def make(self, jobs, build_dir, make_options):
- 		command = ['make', 'ARCH=um', '--jobs=' + str(jobs)]
-+		if make_options:
-+			command.extend(make_options)
- 		if build_dir:
- 			command += ['O=' + build_dir]
- 		try:
-@@ -93,13 +97,13 @@ class LinuxSourceTree(object):
- 			return False
- 		return True
- 
--	def build_config(self, build_dir):
-+	def build_config(self, build_dir, make_options):
- 		kconfig_path = get_kconfig_path(build_dir)
- 		if build_dir and not os.path.exists(build_dir):
- 			os.mkdir(build_dir)
- 		self._kconfig.write_to_file(kconfig_path)
- 		try:
--			self._ops.make_olddefconfig(build_dir)
-+			self._ops.make_olddefconfig(build_dir, make_options)
- 		except ConfigError as e:
- 			logging.error(e)
- 			return False
-@@ -110,7 +114,7 @@ class LinuxSourceTree(object):
- 			return False
- 		return True
- 
--	def build_reconfig(self, build_dir):
-+	def build_reconfig(self, build_dir, make_options):
- 		"""Creates a new .config if it is not a subset of the .kunitconfig."""
- 		kconfig_path = get_kconfig_path(build_dir)
- 		if os.path.exists(kconfig_path):
-@@ -119,17 +123,17 @@ class LinuxSourceTree(object):
- 			if not self._kconfig.is_subset_of(existing_kconfig):
- 				print('Regenerating .config ...')
- 				os.remove(kconfig_path)
--				return self.build_config(build_dir)
-+				return self.build_config(build_dir, make_options)
- 			else:
- 				return True
- 		else:
- 			print('Generating .config ...')
--			return self.build_config(build_dir)
-+			return self.build_config(build_dir, make_options)
- 
--	def build_um_kernel(self, jobs, build_dir):
-+	def build_um_kernel(self, jobs, build_dir, make_options):
- 		try:
--			self._ops.make_olddefconfig(build_dir)
--			self._ops.make(jobs, build_dir)
-+			self._ops.make_olddefconfig(build_dir, make_options)
-+			self._ops.make(jobs, build_dir, make_options)
- 		except (ConfigError, BuildError) as e:
- 			logging.error(e)
- 			return False
--- 
-2.25.0.265.gbab2e86ba0-goog
-
+TWloYXdrIHBsYXRmb3JtIG5vIGxvbmdlciBzdXBwb3J0cyB0aGVzZSB0d28gTEVEcywgc28gSSB0
+aGluayB0aGVzZSB0d28gTEVEcyBzaG91bGQgYmUgcmVtb3ZlZCBmcm9tIGR0cy4NCg0KU2lnbmVk
+LW9mZi1ieTogQmVuIFBhaSA8QmVuX1BhaUB3aXN0cm9uLmNvbT4NCg0KLS0tLS1PcmlnaW5hbCBN
+ZXNzYWdlLS0tLS0NCkZyb206IEpvZWwgU3RhbmxleSA8am9lbEBqbXMuaWQuYXU+IA0KU2VudDog
+V2VkbmVzZGF5LCBGZWJydWFyeSAyNiwgMjAyMCA2OjU2IFBNDQpUbzogQmVuIFBhaS9XSFEvV2lz
+dHJvbiA8QmVuX1BhaUB3aXN0cm9uLmNvbT4NCkNjOiBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJu
+ZWwub3JnPjsgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IEFuZHJldyBKZWZm
+ZXJ5IDxhbmRyZXdAYWouaWQuYXU+OyBkZXZpY2V0cmVlIDxkZXZpY2V0cmVlQHZnZXIua2VybmVs
+Lm9yZz47IExpbnV4IEFSTSA8bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnPjsg
+bGludXgtYXNwZWVkIDxsaW51eC1hc3BlZWRAbGlzdHMub3psYWJzLm9yZz47IExpbnV4IEtlcm5l
+bCBNYWlsaW5nIExpc3QgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyB3YW5nYXRAdHcu
+aWJtLmNvbTsgQ2xhaXJlIEt1L1dIUS9XaXN0cm9uIDxDbGFpcmVfS3VAd2lzdHJvbi5jb20+DQpT
+dWJqZWN0OiBSZTogW1BBVENIIHYxXSBBUk06IGR0czogbWloYXdrOiBDaGFuZ2UgdGhlIG5hbWUg
+b2YgbWloYXdrIGxlZA0KDQpPbiBUaHUsIDIwIEZlYiAyMDIwIGF0IDA1OjUzLCBCZW4gUGFpIDxC
+ZW5fUGFpQHdpc3Ryb24uY29tPiB3cm90ZToNCj4NCj4gMS5DaGFuZ2UgdGhlIG5hbWUgb2YgcG93
+ZXIsIGZhdWx0IGFuZCByZWFyLWlkLg0KPiAyLlJlbW92ZSB0aGUgdHdvIGxlZHMuDQoNClRoZSBw
+YXRjaCBsb29rcyBva2F5LiBXaHkgZG8geW91IHJlbW92ZSB0aGUgb3RoZXIgdHdvIGxlZHM/DQoN
+ClJldmlld2VkLWJ5OiBKb2VsIFN0YW5sZXkgPGpvZWxAam1zLmlkLmF1Pg0KDQo+DQo+IFNpZ25l
+ZC1vZmYtYnk6IEJlbiBQYWkgPEJlbl9QYWlAd2lzdHJvbi5jb20+DQo+IC0tLQ0KPiAgYXJjaC9h
+cm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1vcHAtbWloYXdrLmR0cyB8IDE3ICsrKy0tLS0tLS0tLS0t
+LS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAxNCBkZWxldGlvbnMoLSkN
+Cj4NCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtb3BwLW1paGF3
+ay5kdHMgDQo+IGIvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1vcHAtbWloYXdrLmR0cw0K
+PiBpbmRleCBlNTVjYzQ1NGIxN2YuLjZjMTE4NTRiOTAwNiAxMDA2NDQNCj4gLS0tIGEvYXJjaC9h
+cm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1vcHAtbWloYXdrLmR0cw0KPiArKysgYi9hcmNoL2FybS9i
+b290L2R0cy9hc3BlZWQtYm1jLW9wcC1taWhhd2suZHRzDQo+IEBAIC0xMjAsMzUgKzEyMCwyNCBA
+QA0KPiAgICAgICAgIGxlZHMgew0KPiAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJncGlv
+LWxlZHMiOw0KPg0KPiAtICAgICAgICAgICAgICAgZmF1bHQgew0KPiArICAgICAgICAgICAgICAg
+ZnJvbnQtZmF1bHQgew0KPiAgICAgICAgICAgICAgICAgICAgICAgICByZXRhaW4tc3RhdGUtc2h1
+dGRvd247DQo+ICAgICAgICAgICAgICAgICAgICAgICAgIGRlZmF1bHQtc3RhdGUgPSAia2VlcCI7
+DQo+ICAgICAgICAgICAgICAgICAgICAgICAgIGdwaW9zID0gPCZncGlvIEFTUEVFRF9HUElPKEFB
+LCAwKSBHUElPX0FDVElWRV9MT1c+Ow0KPiAgICAgICAgICAgICAgICAgfTsNCj4NCj4gLSAgICAg
+ICAgICAgICAgIHBvd2VyIHsNCj4gKyAgICAgICAgICAgICAgIHBvd2VyLWJ1dHRvbiB7DQo+ICAg
+ICAgICAgICAgICAgICAgICAgICAgIHJldGFpbi1zdGF0ZS1zaHV0ZG93bjsNCj4gICAgICAgICAg
+ICAgICAgICAgICAgICAgZGVmYXVsdC1zdGF0ZSA9ICJrZWVwIjsNCj4gICAgICAgICAgICAgICAg
+ICAgICAgICAgZ3Bpb3MgPSA8JmdwaW8gQVNQRUVEX0dQSU8oQUEsIDEpIEdQSU9fQUNUSVZFX0xP
+Vz47DQo+ICAgICAgICAgICAgICAgICB9Ow0KPg0KPiAtICAgICAgICAgICAgICAgcmVhci1pZCB7
+DQo+ICsgICAgICAgICAgICAgICBmcm9udC1pZCB7DQo+ICAgICAgICAgICAgICAgICAgICAgICAg
+IHJldGFpbi1zdGF0ZS1zaHV0ZG93bjsNCj4gICAgICAgICAgICAgICAgICAgICAgICAgZGVmYXVs
+dC1zdGF0ZSA9ICJrZWVwIjsNCj4gICAgICAgICAgICAgICAgICAgICAgICAgZ3Bpb3MgPSA8Jmdw
+aW8gQVNQRUVEX0dQSU8oQUEsIDIpIEdQSU9fQUNUSVZFX0xPVz47DQo+ICAgICAgICAgICAgICAg
+ICB9Ow0KPg0KPiAtICAgICAgICAgICAgICAgcmVhci1nIHsNCj4gLSAgICAgICAgICAgICAgICAg
+ICAgICAgcmV0YWluLXN0YXRlLXNodXRkb3duOw0KPiAtICAgICAgICAgICAgICAgICAgICAgICBk
+ZWZhdWx0LXN0YXRlID0gImtlZXAiOw0KPiAtICAgICAgICAgICAgICAgICAgICAgICBncGlvcyA9
+IDwmZ3BpbyBBU1BFRURfR1BJTyhBQSwgNCkgR1BJT19BQ1RJVkVfTE9XPjsNCj4gLSAgICAgICAg
+ICAgICAgIH07DQo+IC0NCj4gLSAgICAgICAgICAgICAgIHJlYXItb2sgew0KPiAtICAgICAgICAg
+ICAgICAgICAgICAgICByZXRhaW4tc3RhdGUtc2h1dGRvd247DQo+IC0gICAgICAgICAgICAgICAg
+ICAgICAgIGRlZmF1bHQtc3RhdGUgPSAia2VlcCI7DQo+IC0gICAgICAgICAgICAgICAgICAgICAg
+IGdwaW9zID0gPCZncGlvIEFTUEVFRF9HUElPKFksIDApIEdQSU9fQUNUSVZFX0xPVz47DQo+IC0g
+ICAgICAgICAgICAgICB9Ow0KPg0KPiAgICAgICAgICAgICAgICAgZmFuMCB7DQo+ICAgICAgICAg
+ICAgICAgICAgICAgICAgIHJldGFpbi1zdGF0ZS1zaHV0ZG93bjsNCj4gLS0NCj4gMi4xNy4xDQo+
+DQo+DQo+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAtLS0tLS0tLS0tLS0tLS0t
+LS0tIFRoaXMgZW1haWwgY29udGFpbnMgY29uZmlkZW50aWFsIG9yIGxlZ2FsbHkgDQo+IHByaXZp
+bGVnZWQgaW5mb3JtYXRpb24gYW5kIGlzIGZvciB0aGUgc29sZSB1c2Ugb2YgaXRzIGludGVuZGVk
+IHJlY2lwaWVudC4NCj4gQW55IHVuYXV0aG9yaXplZCByZXZpZXcsIHVzZSwgY29weWluZyBvciBk
+aXN0cmlidXRpb24gb2YgdGhpcyBlbWFpbCBvciB0aGUgY29udGVudCBvZiB0aGlzIGVtYWlsIGlz
+IHN0cmljdGx5IHByb2hpYml0ZWQuDQo+IElmIHlvdSBhcmUgbm90IHRoZSBpbnRlbmRlZCByZWNp
+cGllbnQsIHlvdSBtYXkgcmVwbHkgdG8gdGhlIHNlbmRlciBhbmQgc2hvdWxkIGRlbGV0ZSB0aGlz
+IGUtbWFpbCBpbW1lZGlhdGVseS4NCj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAtLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+
+IC0tLS0tLS0tLS0tLS0tLS0tLS0NCg==
