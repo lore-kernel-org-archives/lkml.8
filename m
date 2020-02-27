@@ -2,134 +2,117 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3FDC35677
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB011C35677
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0C9F246A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:50:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582822223;
-	bh=FyWAvV9W4uLcTtFZzaV8oagBiwmxzHMrlZt2Nl+L7BY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=g4+ZBslfkdT9YDB2Jjj4FP6Lk++plyAmqnXGzyJBzBM6EHRsJi0yGQCLe7q72agHa
-	 auUApupTFtNbOhd+xRvS8VM0pLu0T3OghWdNfunP1h0BAZqgv9Sc0xzv9VLhDWCC/H
-	 zRXCl11cdgx+Ws/kO2Sjb5cHy5yTR1OMwjTlpyzc=
+	by mail.kernel.org (Postfix) with ESMTP id 8D37220801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:51:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730385AbgB0QuW (ORCPT
+        id S1730530AbgB0QvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 11:50:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36358 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729165AbgB0QuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 11:50:22 -0500
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2FC4246A3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 16:50:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582822220;
-        bh=FyWAvV9W4uLcTtFZzaV8oagBiwmxzHMrlZt2Nl+L7BY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fBa0giuWcebLxY6glY2aWH6VZ3VxxBO9cYQwUAJW9/BS97BIiN+5ISHAPlSVyBlMT
-         NYtbtOUbPUv2uAP1m/KfyR2gT8T+sw5rJc91B6JBvTZcnW7ECsY6PW0Ctua3vFiH88
-         alOqc9YW0g6HF5mYsmlSBEzCQgM1jJ3qmdBV2qWg=
-Received: by mail-qk1-f178.google.com with SMTP id m9so3794536qke.4
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 08:50:20 -0800 (PST)
-X-Gm-Message-State: APjAAAXJhqxwn4+OnOArMMHE+usAa0boaZyYDWuvGH96Y7XUwjOGA6YF
-        jAr2C/sQI5czy0CDyzgoz5aaGWkOPXGGKByuGg==
-X-Google-Smtp-Source: APXvYqyWrls57v0p+99llkshAFrLOH8Ax4ge+p84ASrUSG0BZ+VtTRV6ts66XH20u13O6L6wKhBS+1IxasPsZX079IY=
-X-Received: by 2002:a37:a750:: with SMTP id q77mr88866qke.119.1582822219778;
- Thu, 27 Feb 2020 08:50:19 -0800 (PST)
+        Thu, 27 Feb 2020 11:51:14 -0500
+Received: from smtp-sh2.infomaniak.ch ([128.65.195.6]:54545 "EHLO
+        smtp-sh2.infomaniak.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729165AbgB0QvO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 11:51:14 -0500
+Received: from smtp-2-0000.mail.infomaniak.ch (smtp-2-0000.mail.infomaniak.ch [10.5.36.107])
+        by smtp-sh2.infomaniak.ch (8.14.4/8.14.4/Debian-8+deb8u2) with ESMTP id 01RGoZLm055757
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Thu, 27 Feb 2020 17:50:35 +0100
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-2-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 48SzF33Z82zlj7qp;
+        Thu, 27 Feb 2020 17:50:31 +0100 (CET)
+Subject: Re: [RFC PATCH v14 05/10] fs,landlock: Support filesystem
+ access-control
+To:     Jann Horn <jannh@google.com>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-doc@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+References: <20200224160215.4136-1-mic@digikod.net>
+ <20200224160215.4136-6-mic@digikod.net>
+ <CAG48ez36SMrPPgsj0omcVukRLwOzBzqWOQjuGCmmmrmsGiNukw@mail.gmail.com>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <34319b76-44bd-8915-fd7c-5147f901615e@digikod.net>
+Date:   Thu, 27 Feb 2020 17:50:31 +0100
+User-Agent: 
 MIME-Version: 1.0
-References: <1582710377-15489-1-git-send-email-kevin3.tang@gmail.com> <1582710377-15489-2-git-send-email-kevin3.tang@gmail.com>
-In-Reply-To: <1582710377-15489-2-git-send-email-kevin3.tang@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 27 Feb 2020 10:50:08 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL08g0TaNob7gcKgTx5OXgwBEfKy6f5AK73xuYhMRMNkw@mail.gmail.com>
-Message-ID: <CAL_JsqL08g0TaNob7gcKgTx5OXgwBEfKy6f5AK73xuYhMRMNkw@mail.gmail.com>
-Subject: Re: [PATCH RFC v4 1/6] dt-bindings: display: add Unisoc's drm master bindings
-To:     Kevin Tang <kevin3.tang@gmail.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Lyra Zhang <zhang.lyra@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAG48ez36SMrPPgsj0omcVukRLwOzBzqWOQjuGCmmmrmsGiNukw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 3:46 AM Kevin Tang <kevin3.tang@gmail.com> wrote:
->
-> From: Kevin Tang <kevin.tang@unisoc.com>
->
-> The Unisoc DRM master device is a virtual device needed to list all
-> DPU devices or other display interface nodes that comprise the
-> graphics subsystem
->
-> Cc: Orson Zhai <orsonzhai@gmail.com>
-> Cc: Baolin Wang <baolin.wang@linaro.org>
-> Cc: Chunyan Zhang <zhang.lyra@gmail.com>
-> Signed-off-by: Kevin Tang <kevin.tang@unisoc.com>
-> ---
->  .../devicetree/bindings/display/sprd/drm.yaml      | 36 ++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/sprd/drm.yaml
->
-> diff --git a/Documentation/devicetree/bindings/display/sprd/drm.yaml b/Documentation/devicetree/bindings/display/sprd/drm.yaml
-> new file mode 100644
-> index 0000000..b5792c0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/sprd/drm.yaml
-> @@ -0,0 +1,36 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/sprd/drm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Unisoc DRM master device
-> +
-> +maintainers:
-> +  - Mark Rutland <mark.rutland@arm.com>
-> +
-> +description: |
-> +  The Unisoc DRM master device is a virtual device needed to list all
-> +  DPU devices or other display interface nodes that comprise the
-> +  graphics subsystem.
-> +
-> +properties:
-> +  compatible:
-> +    const: sprd,display-subsystem
-> +
-> +  ports:
-> +    description:
-> +      Should contain a list of phandles pointing to display interface port
-> +      of DPU devices.
-> +
-> +required:
-> +  - compatible
-> +  - ports
-> +
-> +examples:
-> +  - |
-> +    display-subsystem {
-> +        compatible = "sprd,display-subsystem";
-> +        ports = <&dpu_out>;
 
-We try to avoid these virtual nodes and bind with actual h/w nodes.
-Can you have more than one DPU and if so does it need to be a single
-DRM driver instance?
 
-Rob
+On 26/02/2020 21:29, Jann Horn wrote:
+> On Mon, Feb 24, 2020 at 5:03 PM Mickaël Salaün <mic@digikod.net> wrote:
+>> +static inline u32 get_mem_access(unsigned long prot, bool private)
+>> +{
+>> +       u32 access = LANDLOCK_ACCESS_FS_MAP;
+>> +
+>> +       /* Private mapping do not write to files. */
+>> +       if (!private && (prot & PROT_WRITE))
+>> +               access |= LANDLOCK_ACCESS_FS_WRITE;
+>> +       if (prot & PROT_READ)
+>> +               access |= LANDLOCK_ACCESS_FS_READ;
+>> +       if (prot & PROT_EXEC)
+>> +               access |= LANDLOCK_ACCESS_FS_EXECUTE;
+>> +       return access;
+>> +}
+> 
+> When I do the following, is landlock going to detect that the mmap()
+> is a read access, or is it incorrectly going to think that it's
+> neither read nor write?
+> 
+> $ cat write-only.c
+> #include <fcntl.h>
+> #include <sys/mman.h>
+> #include <stdio.h>
+> int main(void) {
+>   int fd = open("/etc/passwd", O_RDONLY);
+>   char *ptr = mmap(NULL, 0x1000, PROT_WRITE, MAP_PRIVATE, fd, 0);
+>   printf("'%.*s'\n", 4, ptr);
+> }
+> $ gcc -o write-only write-only.c -Wall
+> $ ./write-only
+> 'root'
+> $
+> 
+
+Thanks to the "if (!private && (prot & PROT_WRITE))", Landlock allows
+this private mmap (as intended) even if there is no write access to this
+file, but not with a shared mmap (and a file opened with O_RDWR). I just
+added a test for this to be sure.
+
+However, I'm not sure this hook is useful for now. Indeed, the process
+still need to have a file descriptor open with the right accesses.
