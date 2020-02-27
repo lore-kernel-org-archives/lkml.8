@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC9DC52D4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E16BC52D29
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A62F021556
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36FD520801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812130;
-	bh=O0GJgcJWu92u4YYPi5EwWb37LHLfxa4LhHB3LFC3roY=;
+	s=default; t=1582812112;
+	bh=0C0pTTKbZx4Ck1f1jcDyhaaeDVBADdCEi8tIy34GJh4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j5e4Irxaooql3PRczq9ZerLpk62tHkhoQIp0xNERuSmW11W6SbXM7zJYftS9+D2lx
-	 RVG/AXzPy3dF0ZSXaGQnhn/EryEvRfohdfYsuvpTWykSo+TKYgwcOtdfdS2j4kFPZD
-	 P09P8n+vV5+Y25YtyyddtPz86Sle2GbO+v1x0cDg=
+	b=fjz8dBk5THAk1bM+5zCA7eTtI6OXW3DAmWQTJWnGGg727LNDUfnX1CbhcIxbh8/Rq
+	 P1c/uU7Zt7wJo5MzW8kvX2BAtuaUJPZPdux0pwnd0wJolYBudtKgiTsUnvA4Kxf4Sd
+	 Y2bTb3sw9yQBvNNu02y+1NM9DfLyLxSM7czQuU3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733066AbgB0OCI (ORCPT
+        id S1732786AbgB0OBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:02:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36492 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:01:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733021AbgB0OCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:02:04 -0500
+        id S1732994AbgB0OBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:01:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5FFC2469D;
-        Thu, 27 Feb 2020 14:02:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8D6F20801;
+        Thu, 27 Feb 2020 14:01:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812123;
-        bh=O0GJgcJWu92u4YYPi5EwWb37LHLfxa4LhHB3LFC3roY=;
+        s=default; t=1582812108;
+        bh=0C0pTTKbZx4Ck1f1jcDyhaaeDVBADdCEi8tIy34GJh4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=URqmty1VlfQAvc9p7IGKw12CVxzVnSncvYFFbVBpmd03+tk+XBcZ76t1BCNZt0aQt
-         okMygAUPj09n1kYbwQTn2HKBF0S5DRQ2+ReeuSC6ajjJ614O28nqPUsJ7n21MW6+B5
-         SN9IymSwdXmY7eTN7QVT7HsQlBQveyYjv1/Iklvk=
+        b=D0T+iTL1Bi4FqQr4O5icytLsweFq6GfOd4p1YpFDjsCC3hTsMJNGwLa+4reYp/x7E
+         ocNpYOk6rf8vANnXlsIGYLQWAjp0mj4g41KQF9qe7cgqfCsKXoS/mRAVvlQywp5V4x
+         d+MFklPLMSFWI8XRUOMjiNu4nR4dzB50AmrmLFm4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.14 230/237] genirq/proc: Reject invalid affinity masks (again)
-Date:   Thu, 27 Feb 2020 14:37:24 +0100
-Message-Id: <20200227132313.025857606@linuxfoundation.org>
+        stable@vger.kernel.org, Rahul Kundu <rahul.kundu@chelsio.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Dakshaja Uppalapati <dakshaja@chelsio.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.14 224/237] scsi: Revert "target: iscsi: Wait for all commands to finish before freeing a session"
+Date:   Thu, 27 Feb 2020 14:37:18 +0100
+Message-Id: <20200227132312.620607932@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -59,128 +63,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Bart Van Assche <bvanassche@acm.org>
 
-commit cba6437a1854fde5934098ec3bd0ee83af3129f5 upstream.
+commit 807b9515b7d044cf77df31f1af9d842a76ecd5cb upstream.
 
-Qian Cai reported that the WARN_ON() in the x86/msi affinity setting code,
-which catches cases where the affinity setting is not done on the CPU which
-is the current target of the interrupt, triggers during CPU hotplug stress
-testing.
+Since commit e9d3009cb936 introduced a regression and since the fix for
+that regression was not perfect, revert this commit.
 
-It turns out that the warning which was added with the commit addressing
-the MSI affinity race unearthed yet another long standing bug.
-
-If user space writes a bogus affinity mask, i.e. it contains no online CPUs,
-then it calls irq_select_affinity_usr(). This was introduced for ALPHA in
-
-  eee45269b0f5 ("[PATCH] Alpha: convert to generic irq framework (generic part)")
-
-and subsequently made available for all architectures in
-
-  18404756765c ("genirq: Expose default irq affinity mask (take 3)")
-
-which introduced the circumvention of the affinity setting restrictions for
-interrupt which cannot be moved in process context.
-
-The whole exercise is bogus in various aspects:
-
-  1) If the interrupt is already started up then there is absolutely
-     no point to honour a bogus interrupt affinity setting from user
-     space. The interrupt is already assigned to an online CPU and it
-     does not make any sense to reassign it to some other randomly
-     chosen online CPU.
-
-  2) If the interupt is not yet started up then there is no point
-     either. A subsequent startup of the interrupt will invoke
-     irq_setup_affinity() anyway which will chose a valid target CPU.
-
-So the only correct solution is to just return -EINVAL in case user space
-wrote an affinity mask which does not contain any online CPUs, except for
-ALPHA which has it's own magic sauce for this.
-
-Fixes: 18404756765c ("genirq: Expose default irq affinity mask (take 3)")
-Reported-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Qian Cai <cai@lca.pw>
-Link: https://lkml.kernel.org/r/878sl8xdbm.fsf@nanos.tec.linutronix.de
+Link: https://marc.info/?l=target-devel&m=158157054906195
+Cc: Rahul Kundu <rahul.kundu@chelsio.com>
+Cc: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Cc: Sagi Grimberg <sagi@grimberg.me>
+Reported-by: Dakshaja Uppalapati <dakshaja@chelsio.com>
+Fixes: e9d3009cb936 ("scsi: target: iscsi: Wait for all commands to finish before freeing a session")
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/irq/internals.h |    2 --
- kernel/irq/manage.c    |   18 ++----------------
- kernel/irq/proc.c      |   22 ++++++++++++++++++++++
- 3 files changed, 24 insertions(+), 18 deletions(-)
+ drivers/target/iscsi/iscsi_target.c |   10 ++--------
+ include/scsi/iscsi_proto.h          |    1 -
+ 2 files changed, 2 insertions(+), 9 deletions(-)
 
---- a/kernel/irq/internals.h
-+++ b/kernel/irq/internals.h
-@@ -119,8 +119,6 @@ static inline void unregister_handler_pr
+--- a/drivers/target/iscsi/iscsi_target.c
++++ b/drivers/target/iscsi/iscsi_target.c
+@@ -1158,9 +1158,7 @@ int iscsit_setup_scsi_cmd(struct iscsi_c
+ 		hdr->cmdsn, be32_to_cpu(hdr->data_length), payload_length,
+ 		conn->cid);
  
- extern bool irq_can_set_affinity_usr(unsigned int irq);
+-	if (target_get_sess_cmd(&cmd->se_cmd, true) < 0)
+-		return iscsit_add_reject_cmd(cmd,
+-				ISCSI_REASON_WAITING_FOR_LOGOUT, buf);
++	target_get_sess_cmd(&cmd->se_cmd, true);
  
--extern int irq_select_affinity_usr(unsigned int irq);
--
- extern void irq_set_thread_affinity(struct irq_desc *desc);
+ 	cmd->sense_reason = transport_lookup_cmd_lun(&cmd->se_cmd,
+ 						     scsilun_to_int(&hdr->lun));
+@@ -2006,9 +2004,7 @@ iscsit_handle_task_mgt_cmd(struct iscsi_
+ 			      conn->sess->se_sess, 0, DMA_NONE,
+ 			      TCM_SIMPLE_TAG, cmd->sense_buffer + 2);
  
- extern int irq_do_set_affinity(struct irq_data *data,
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -382,23 +382,9 @@ int irq_setup_affinity(struct irq_desc *
- {
- 	return irq_select_affinity(irq_desc_get_irq(desc));
- }
--#endif
-+#endif /* CONFIG_AUTO_IRQ_AFFINITY */
-+#endif /* CONFIG_SMP */
+-	if (target_get_sess_cmd(&cmd->se_cmd, true) < 0)
+-		return iscsit_add_reject_cmd(cmd,
+-				ISCSI_REASON_WAITING_FOR_LOGOUT, buf);
++	target_get_sess_cmd(&cmd->se_cmd, true);
  
--/*
-- * Called when a bogus affinity is set via /proc/irq
-- */
--int irq_select_affinity_usr(unsigned int irq)
--{
--	struct irq_desc *desc = irq_to_desc(irq);
--	unsigned long flags;
--	int ret;
--
--	raw_spin_lock_irqsave(&desc->lock, flags);
--	ret = irq_setup_affinity(desc);
--	raw_spin_unlock_irqrestore(&desc->lock, flags);
--	return ret;
--}
--#endif
+ 	/*
+ 	 * TASK_REASSIGN for ERL=2 / connection stays inside of
+@@ -4240,8 +4236,6 @@ int iscsit_close_connection(
+ 	 * must wait until they have completed.
+ 	 */
+ 	iscsit_check_conn_usage_count(conn);
+-	target_sess_cmd_list_set_waiting(sess->se_sess);
+-	target_wait_for_sess_cmds(sess->se_sess);
  
- /**
-  *	irq_set_vcpu_affinity - Set vcpu affinity for the interrupt
---- a/kernel/irq/proc.c
-+++ b/kernel/irq/proc.c
-@@ -117,6 +117,28 @@ static int irq_affinity_list_proc_show(s
- 	return show_irq_affinity(AFFINITY_LIST, m);
- }
+ 	ahash_request_free(conn->conn_tx_hash);
+ 	if (conn->conn_rx_hash) {
+--- a/include/scsi/iscsi_proto.h
++++ b/include/scsi/iscsi_proto.h
+@@ -638,7 +638,6 @@ struct iscsi_reject {
+ #define ISCSI_REASON_BOOKMARK_INVALID	9
+ #define ISCSI_REASON_BOOKMARK_NO_RESOURCES	10
+ #define ISCSI_REASON_NEGOTIATION_RESET	11
+-#define ISCSI_REASON_WAITING_FOR_LOGOUT	12
  
-+#ifndef CONFIG_AUTO_IRQ_AFFINITY
-+static inline int irq_select_affinity_usr(unsigned int irq)
-+{
-+	/*
-+	 * If the interrupt is started up already then this fails. The
-+	 * interrupt is assigned to an online CPU already. There is no
-+	 * point to move it around randomly. Tell user space that the
-+	 * selected mask is bogus.
-+	 *
-+	 * If not then any change to the affinity is pointless because the
-+	 * startup code invokes irq_setup_affinity() which will select
-+	 * a online CPU anyway.
-+	 */
-+	return -EINVAL;
-+}
-+#else
-+/* ALPHA magic affinity auto selector. Keep it for historical reasons. */
-+static inline int irq_select_affinity_usr(unsigned int irq)
-+{
-+	return irq_select_affinity(irq);
-+}
-+#endif
- 
- static ssize_t write_irq_affinity(int type, struct file *file,
- 		const char __user *buffer, size_t count, loff_t *pos)
+ /* Max. number of Key=Value pairs in a text message */
+ #define MAX_KEY_VALUE_PAIRS	8192
 
 
