@@ -2,54 +2,53 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E29BC52D39
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94010C3F378
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09BB720801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CE1821D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:55:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811863;
-	bh=OjlB9AVcPer6GvN/IsZeDID4gRoeRc0i8+HUSWT00wc=;
+	s=default; t=1582811746;
+	bh=aWR6Zu59hi5VElOSxItFdgqNPM+v1/JlONAk1/B1yCk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mYA5eMRZB5SDJcQSVXw/jMYtm7mb7X1sEVt+SPp9ydlcJSInblk4H9+lG1H/WzdM0
-	 OK8mbDgvfhFfVi8ZpBuKAeViljH+kAKQfZHayXkpA2CXkXM2z4JiSDwfs/nOPHbTu/
-	 L0ECYBa7U6jJxL+YlRWvRlfsHFol15vAI+Nk2eRw=
+	b=MRhLuKnfv0iSV4PfuanW2qGGuskVmyFZ+CKEbW4kMSyY1sjnWrbr33D1B4zOj4uy+
+	 sysyDAgyW1rd94hjvNTQXCQuznQVZ2Jt4caazmZh+xCaFE05/1/cmprUtXYHhlnF4n
+	 8FHLP/h7RdN9ZQvEDwMeKMSUnGoLC8wZO8ue+OmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732325AbgB0N5m (ORCPT
+        id S1732017AbgB0Nzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:57:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58570 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:55:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732309AbgB0N5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:57:36 -0500
+        id S1732005AbgB0Nzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:55:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 048DD24691;
-        Thu, 27 Feb 2020 13:57:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 823F624656;
+        Thu, 27 Feb 2020 13:55:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811855;
-        bh=OjlB9AVcPer6GvN/IsZeDID4gRoeRc0i8+HUSWT00wc=;
+        s=default; t=1582811741;
+        bh=aWR6Zu59hi5VElOSxItFdgqNPM+v1/JlONAk1/B1yCk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IBF8JpZFmZezeG8+axgaVGDQaNbjCgULBM9sa+/h5CqQXXwSUvwKKyBjwqWc+TV6O
-         KOuXNZVvFEdxD6+mAPAXvtQtQFtVNftGJ6sCd47tYmi3aV60V5N6jd+1n9yzPDgbEK
-         YA7BqSn+KPHcaebLHQzG2SIJAtU3kTiDa3YTfcMs=
+        b=zGvh0OVSwVtk1jW20P4F5ytRT05wqmTSq8UO47n66pBSrtcn46gi/UlKTpWc5nfDo
+         7GSwTvdj3W6O4v5Ncevj/5d8MPVR1KtV+MDyxAVoFqM91B8OwWbOV8aawpTo410LLo
+         MVwgSsmkdJVjOS2ZEtwYZKJvPVd2zm6EkWxv7/0s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        stable@vger.kernel.org, Phong Tran <tranmanphong@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 128/237] pwm: omap-dmtimer: Remove PWM chip in .remove before making it unfunctional
-Date:   Thu, 27 Feb 2020 14:35:42 +0100
-Message-Id: <20200227132306.170895552@linuxfoundation.org>
+Subject: [PATCH 4.14 084/237] iwlegacy: Fix -Wcast-function-type
+Date:   Thu, 27 Feb 2020 14:34:58 +0100
+Message-Id: <20200227132303.254491343@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -62,47 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Phong Tran <tranmanphong@gmail.com>
 
-[ Upstream commit 43efdc8f0e6d7088ec61bd55a73bf853f002d043 ]
+[ Upstream commit da5e57e8a6a3e69dac2937ba63fa86355628fbb2 ]
 
-In the old code (e.g.) mutex_destroy() was called before
-pwmchip_remove(). Between these two calls it is possible that a PWM
-callback is used which tries to grab the mutex.
+correct usage prototype of callback in tasklet_init().
+Report by https://github.com/KSPP/linux/issues/20
 
-Fixes: 6604c6556db9 ("pwm: Add PWM driver for OMAP using dual-mode timers")
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-omap-dmtimer.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlegacy/3945-mac.c | 5 +++--
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c | 5 +++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
-index 5ad42f33e70c1..2e15acf13893d 100644
---- a/drivers/pwm/pwm-omap-dmtimer.c
-+++ b/drivers/pwm/pwm-omap-dmtimer.c
-@@ -337,6 +337,11 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
- static int pwm_omap_dmtimer_remove(struct platform_device *pdev)
- {
- 	struct pwm_omap_dmtimer_chip *omap = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = pwmchip_remove(&omap->chip);
-+	if (ret)
-+		return ret;
- 
- 	if (pm_runtime_active(&omap->dm_timer_pdev->dev))
- 		omap->pdata->stop(omap->dm_timer);
-@@ -345,7 +350,7 @@ static int pwm_omap_dmtimer_remove(struct platform_device *pdev)
- 
- 	mutex_destroy(&omap->mutex);
- 
--	return pwmchip_remove(&omap->chip);
-+	return 0;
+diff --git a/drivers/net/wireless/intel/iwlegacy/3945-mac.c b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
+index 329f3a63dadd6..0fb81151a1327 100644
+--- a/drivers/net/wireless/intel/iwlegacy/3945-mac.c
++++ b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
+@@ -1399,8 +1399,9 @@ il3945_dump_nic_error_log(struct il_priv *il)
  }
  
- static const struct of_device_id pwm_omap_dmtimer_of_match[] = {
+ static void
+-il3945_irq_tasklet(struct il_priv *il)
++il3945_irq_tasklet(unsigned long data)
+ {
++	struct il_priv *il = (struct il_priv *)data;
+ 	u32 inta, handled = 0;
+ 	u32 inta_fh;
+ 	unsigned long flags;
+@@ -3432,7 +3433,7 @@ il3945_setup_deferred_work(struct il_priv *il)
+ 	setup_timer(&il->watchdog, il_bg_watchdog, (unsigned long)il);
+ 
+ 	tasklet_init(&il->irq_tasklet,
+-		     (void (*)(unsigned long))il3945_irq_tasklet,
++		     il3945_irq_tasklet,
+ 		     (unsigned long)il);
+ }
+ 
+diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+index de9b6522c43f5..665e82effb03d 100644
+--- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
++++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+@@ -4363,8 +4363,9 @@ il4965_synchronize_irq(struct il_priv *il)
+ }
+ 
+ static void
+-il4965_irq_tasklet(struct il_priv *il)
++il4965_irq_tasklet(unsigned long data)
+ {
++	struct il_priv *il = (struct il_priv *)data;
+ 	u32 inta, handled = 0;
+ 	u32 inta_fh;
+ 	unsigned long flags;
+@@ -6264,7 +6265,7 @@ il4965_setup_deferred_work(struct il_priv *il)
+ 	setup_timer(&il->watchdog, il_bg_watchdog, (unsigned long)il);
+ 
+ 	tasklet_init(&il->irq_tasklet,
+-		     (void (*)(unsigned long))il4965_irq_tasklet,
++		     il4965_irq_tasklet,
+ 		     (unsigned long)il);
+ }
+ 
 -- 
 2.20.1
 
