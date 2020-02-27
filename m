@@ -4,57 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A1BC3F374
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A851FC3F37A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A9FF24656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A85F20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811505;
-	bh=tlqMKDrP/fE09dXg47QoERlIiy1VqqALdS7rgKIW6CM=;
+	s=default; t=1582811550;
+	bh=3QgU0zVYU/DB0NZNSNdbXIMHpD8QXRb9p3oe8blVHA0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tm2hdsH7xkDqF90PY9mMFaGNTQzYQyKvIGzwbgGpETgI7rJKLzuyVWV2Z9yMjHZMX
-	 wRYNJuF+gaCpqxcZV5aWW5z9ECmakVbYq+pYRIpH8ssP7TKS2qhvI6MKZmqenwsb27
-	 j9ZhIXyozbKn9mA4/Fx5oGqFFZwmzsv1/TmZzM2Q=
+	b=Slt1Q9OwO/YVBSpn+PEHKRY3/Mje1YjeeIDdGt14T5CnIYGJddrUgZEruXhRDgIfH
+	 xDd+5Qyw434oiQnLxgvjKHasc5TSVXQ4f4DT23pEo2od9KAVya3f5c/PM3QXMbY5z+
+	 JsYMBx/nXHh9m00F+kPJL92CTIV9DpzVV8EfUISw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729711AbgB0Nvo (ORCPT
+        id S1731530AbgB0Nw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:51:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50888 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:52:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731425AbgB0Nvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:51:40 -0500
+        id S1731528AbgB0Nw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:52:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AC7620801;
-        Thu, 27 Feb 2020 13:51:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EB8420801;
+        Thu, 27 Feb 2020 13:52:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811499;
-        bh=tlqMKDrP/fE09dXg47QoERlIiy1VqqALdS7rgKIW6CM=;
+        s=default; t=1582811545;
+        bh=3QgU0zVYU/DB0NZNSNdbXIMHpD8QXRb9p3oe8blVHA0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rojd2w/FLR8OXOwHLsJFGoSL1UmP4sQCmtxdrcr0mD8DzeB32KnXhK4nqliL/XS36
-         6F5VZllpmR46aALvHTqL8k25UR1O4MtCmzmfSVFnmZb/6pJzhxF/bEENAyZPAYL29l
-         0RyCbu0GYEjY/MrDWuGYlDgDFTFUGjJB69a5T4g4=
+        b=qjusFdXG0yxy9Bq+HhRIeQ1DZ5AxYiIt/vfbxD8Jx4s+cc+TpW/lkH8A+v5QTdicC
+         ffyVO9H2ToPnroSFrXyW2zlUB02Ya2Ds7H1xmXO+oOMlKsAXrmuSo6K/GTijEwjDpO
+         GDZBxJVsF+pNCZi9qE5JmTYOyctJLBKnij2HrDXo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rahul Kundu <rahul.kundu@chelsio.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Dakshaja Uppalapati <dakshaja@chelsio.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.9 155/165] scsi: Revert "target: iscsi: Wait for all commands to finish before freeing a session"
-Date:   Thu, 27 Feb 2020 14:37:09 +0100
-Message-Id: <20200227132253.328715191@linuxfoundation.org>
+        stable@vger.kernel.org, Wanpeng Li <wanpeng.li@hotmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.14 001/237] KVM: x86: emulate RDPID
+Date:   Thu, 27 Feb 2020 14:33:35 +0100
+Message-Id: <20200227132255.491283768@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
-References: <20200227132230.840899170@linuxfoundation.org>
+In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
+References: <20200227132255.285644406@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,70 +61,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit 807b9515b7d044cf77df31f1af9d842a76ecd5cb upstream.
+commit fb6d4d340e0532032c808a9933eaaa7b8de435ab upstream.
 
-Since commit e9d3009cb936 introduced a regression and since the fix for
-that regression was not perfect, revert this commit.
+This is encoded as F3 0F C7 /7 with a register argument.  The register
+argument is the second array in the group9 GroupDual, while F3 is the
+fourth element of a Prefix.
 
-Link: https://marc.info/?l=target-devel&m=158157054906195
-Cc: Rahul Kundu <rahul.kundu@chelsio.com>
-Cc: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Cc: Sagi Grimberg <sagi@grimberg.me>
-Reported-by: Dakshaja Uppalapati <dakshaja@chelsio.com>
-Fixes: e9d3009cb936 ("scsi: target: iscsi: Wait for all commands to finish before freeing a session")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reviewed-by: Wanpeng Li <wanpeng.li@hotmail.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/target/iscsi/iscsi_target.c |   10 ++--------
- include/scsi/iscsi_proto.h          |    1 -
- 2 files changed, 2 insertions(+), 9 deletions(-)
+ arch/x86/kvm/cpuid.c   |    7 ++++++-
+ arch/x86/kvm/emulate.c |   22 +++++++++++++++++++++-
+ arch/x86/kvm/vmx.c     |   15 +++++++++++++++
+ 3 files changed, 42 insertions(+), 2 deletions(-)
 
---- a/drivers/target/iscsi/iscsi_target.c
-+++ b/drivers/target/iscsi/iscsi_target.c
-@@ -1168,9 +1168,7 @@ int iscsit_setup_scsi_cmd(struct iscsi_c
- 		hdr->cmdsn, be32_to_cpu(hdr->data_length), payload_length,
- 		conn->cid);
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -291,13 +291,18 @@ static int __do_cpuid_ent_emulated(struc
+ {
+ 	switch (func) {
+ 	case 0:
+-		entry->eax = 1;		/* only one leaf currently */
++		entry->eax = 7;
+ 		++*nent;
+ 		break;
+ 	case 1:
+ 		entry->ecx = F(MOVBE);
+ 		++*nent;
+ 		break;
++	case 7:
++		entry->flags |= KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
++		if (index == 0)
++			entry->ecx = F(RDPID);
++		++*nent;
+ 	default:
+ 		break;
+ 	}
+--- a/arch/x86/kvm/emulate.c
++++ b/arch/x86/kvm/emulate.c
+@@ -3539,6 +3539,16 @@ static int em_cwd(struct x86_emulate_ctx
+ 	return X86EMUL_CONTINUE;
+ }
  
--	if (target_get_sess_cmd(&cmd->se_cmd, true) < 0)
--		return iscsit_add_reject_cmd(cmd,
--				ISCSI_REASON_WAITING_FOR_LOGOUT, buf);
-+	target_get_sess_cmd(&cmd->se_cmd, true);
++static int em_rdpid(struct x86_emulate_ctxt *ctxt)
++{
++	u64 tsc_aux = 0;
++
++	if (ctxt->ops->get_msr(ctxt, MSR_TSC_AUX, &tsc_aux))
++		return emulate_gp(ctxt, 0);
++	ctxt->dst.val = tsc_aux;
++	return X86EMUL_CONTINUE;
++}
++
+ static int em_rdtsc(struct x86_emulate_ctxt *ctxt)
+ {
+ 	u64 tsc = 0;
+@@ -4431,10 +4441,20 @@ static const struct opcode group8[] = {
+ 	F(DstMem | SrcImmByte | Lock | PageTable,	em_btc),
+ };
  
- 	cmd->sense_reason = transport_lookup_cmd_lun(&cmd->se_cmd,
- 						     scsilun_to_int(&hdr->lun));
-@@ -1988,9 +1986,7 @@ iscsit_handle_task_mgt_cmd(struct iscsi_
- 			      conn->sess->se_sess, 0, DMA_NONE,
- 			      TCM_SIMPLE_TAG, cmd->sense_buffer + 2);
++/*
++ * The "memory" destination is actually always a register, since we come
++ * from the register case of group9.
++ */
++static const struct gprefix pfx_0f_c7_7 = {
++	N, N, N, II(DstMem | ModRM | Op3264 | EmulateOnUD, em_rdpid, rdtscp),
++};
++
++
+ static const struct group_dual group9 = { {
+ 	N, I(DstMem64 | Lock | PageTable, em_cmpxchg8b), N, N, N, N, N, N,
+ }, {
+-	N, N, N, N, N, N, N, N,
++	N, N, N, N, N, N, N,
++	GP(0, &pfx_0f_c7_7),
+ } };
  
--	if (target_get_sess_cmd(&cmd->se_cmd, true) < 0)
--		return iscsit_add_reject_cmd(cmd,
--				ISCSI_REASON_WAITING_FOR_LOGOUT, buf);
-+	target_get_sess_cmd(&cmd->se_cmd, true);
+ static const struct opcode group11[] = {
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -12322,6 +12322,21 @@ static int vmx_check_intercept(struct kv
+ 			       struct x86_instruction_info *info,
+ 			       enum x86_intercept_stage stage)
+ {
++	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
++	struct x86_emulate_ctxt *ctxt = &vcpu->arch.emulate_ctxt;
++
++	/*
++	 * RDPID causes #UD if disabled through secondary execution controls.
++	 * Because it is marked as EmulateOnUD, we need to intercept it here.
++	 */
++	if (info->intercept == x86_intercept_rdtscp &&
++	    !nested_cpu_has2(vmcs12, SECONDARY_EXEC_RDTSCP)) {
++		ctxt->exception.vector = UD_VECTOR;
++		ctxt->exception.error_code_valid = false;
++		return X86EMUL_PROPAGATE_FAULT;
++	}
++
++	/* TODO: check more intercepts... */
+ 	return X86EMUL_CONTINUE;
+ }
  
- 	/*
- 	 * TASK_REASSIGN for ERL=2 / connection stays inside of
-@@ -4247,8 +4243,6 @@ int iscsit_close_connection(
- 	 * must wait until they have completed.
- 	 */
- 	iscsit_check_conn_usage_count(conn);
--	target_sess_cmd_list_set_waiting(sess->se_sess);
--	target_wait_for_sess_cmds(sess->se_sess);
- 
- 	ahash_request_free(conn->conn_tx_hash);
- 	if (conn->conn_rx_hash) {
---- a/include/scsi/iscsi_proto.h
-+++ b/include/scsi/iscsi_proto.h
-@@ -638,7 +638,6 @@ struct iscsi_reject {
- #define ISCSI_REASON_BOOKMARK_INVALID	9
- #define ISCSI_REASON_BOOKMARK_NO_RESOURCES	10
- #define ISCSI_REASON_NEGOTIATION_RESET	11
--#define ISCSI_REASON_WAITING_FOR_LOGOUT	12
- 
- /* Max. number of Key=Value pairs in a text message */
- #define MAX_KEY_VALUE_PAIRS	8192
 
 
