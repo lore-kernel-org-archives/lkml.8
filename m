@@ -2,54 +2,56 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D5AC3F345
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE64C54FF2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D115D20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2FBB20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:12:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812776;
-	bh=DSFBM7BNuOdb259OtWqXqz7MxqSG3Bzku8QvVO0rB9s=;
+	s=default; t=1582812750;
+	bh=4Q9zxIWr3nzH1lCkmXbXCZriRxQ09zVPUbdUTtpjbjc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jyju5kZQdpfTPgLRtwlOOKktTAUv9qcENiLSz5KtzNVdlxsJgH+ReTweziv6PTagO
-	 eomYZTNZwXcIBxz77fD4rRUtpNUHpjGE4LOAFb+BXv2jS0B+666Q+fsomMCn//HKMM
-	 iTx/JEXwQOCJbPDKDVWfAK9Sug6uwO9EPlBT+APg=
+	b=RDj1ivn7W+N0ExUs57Oequ4ao7AxJdTUC0J1iZUsUTZHIhJ7U4dc+v0RxafsO4pOI
+	 16eX5hx/vCugqxw5T+6j588+IMXZv/NCWoESsCg0fa+5aHK8jK/TABdiSyqLTmg2Is
+	 KKOOrwN45rG4Azm1Gd/DIa3Tt0y8M9mvLDttK+xY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388923AbgB0OMz (ORCPT
+        id S2388844AbgB0OM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:12:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51606 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:12:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388904AbgB0OMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:12:51 -0500
+        id S2388841AbgB0OMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:12:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D357524691;
-        Thu, 27 Feb 2020 14:12:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAB4120578;
+        Thu, 27 Feb 2020 14:12:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812770;
-        bh=DSFBM7BNuOdb259OtWqXqz7MxqSG3Bzku8QvVO0rB9s=;
+        s=default; t=1582812744;
+        bh=4Q9zxIWr3nzH1lCkmXbXCZriRxQ09zVPUbdUTtpjbjc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1BnQeGsi5htjETFa1XC3Hwnd+fb7R0HbLvy8K8j/AnKyRkw6NEoM6d3YTLp8o+FWq
-         9WVHaFn0sbOCoe6vfcTxxi6U+0a3japMtXBEb68rxsNQtiFsLCxY8oaU+U4RQ/s/l7
-         K46ke6wqw/3bcXxcKEGXyu+K4Ty5eZF6wqf4h7qU=
+        b=UPgr5yIrbWe1RpqRxCrqX18MIS/QQYpaY3pTTzZxC9mLNyxMAUzFKxsgGUM7aQwOn
+         jr4ar2Mwf9tfYdXFfid0Um4Yevkcj6AjWfHacOtemjfeQWxbgsiF7GvQvvfRcSbhXP
+         xTpxNOKhEd1c6gZR35UZRx+L3NvjuaC0ISpR6XAM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Samuel Holland <samuel@sholland.org>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.5 010/150] ASoC: codec2codec: avoid invalid/double-free of pcm runtime
-Date:   Thu, 27 Feb 2020 14:35:47 +0100
-Message-Id: <20200227132234.226756912@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 5.4 134/135] s390/mm: Explicitly compare PAGE_DEFAULT_KEY against zero in storage_key_init_range
+Date:   Thu, 27 Feb 2020 14:37:54 +0100
+Message-Id: <20200227132249.162136009@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
-References: <20200227132232.815448360@linuxfoundation.org>
+In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
+References: <20200227132228.710492098@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,36 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Samuel Holland <samuel@sholland.org>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit b6570fdb96edf45bcf71884bd2644bd73d348d1a upstream.
+commit 380324734956c64cd060e1db4304f3117ac15809 upstream.
 
-The PCM runtime was freed during PMU in the case that the event hook
-encountered an error. However, it is also unconditionally freed during
-PMD. Avoid a double-free by dropping the call to kfree in the PMU hook.
+Clang warns:
 
-Fixes: a72706ed8208 ("ASoC: codec2codec: remove ephemeral variables")
-Cc: stable@vger.kernel.org
-Signed-off-by: Samuel Holland <samuel@sholland.org>
-Link: https://lore.kernel.org/r/20200213061147.29386-2-samuel@sholland.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+ In file included from ../arch/s390/purgatory/purgatory.c:10:
+ In file included from ../include/linux/kexec.h:18:
+ In file included from ../include/linux/crash_core.h:6:
+ In file included from ../include/linux/elfcore.h:5:
+ In file included from ../include/linux/user.h:1:
+ In file included from ../arch/s390/include/asm/user.h:11:
+ ../arch/s390/include/asm/page.h:45:6: warning: converting the result of
+ '<<' to a boolean always evaluates to false
+ [-Wtautological-constant-compare]
+         if (PAGE_DEFAULT_KEY)
+            ^
+ ../arch/s390/include/asm/page.h:23:44: note: expanded from macro
+ 'PAGE_DEFAULT_KEY'
+ #define PAGE_DEFAULT_KEY        (PAGE_DEFAULT_ACC << 4)
+                                                  ^
+ 1 warning generated.
+
+Explicitly compare this against zero to silence the warning as it is
+intended to be used in a boolean context.
+
+Fixes: de3fa841e429 ("s390/mm: fix compile for PAGE_DEFAULT_KEY != 0")
+Link: https://github.com/ClangBuiltLinux/linux/issues/860
+Link: https://lkml.kernel.org/r/20200214064207.10381-1-natechancellor@gmail.com
+Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-dapm.c |    3 ---
- 1 file changed, 3 deletions(-)
+ arch/s390/include/asm/page.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -3888,9 +3888,6 @@ snd_soc_dai_link_event_pre_pmu(struct sn
- 	runtime->rate = params_rate(params);
+--- a/arch/s390/include/asm/page.h
++++ b/arch/s390/include/asm/page.h
+@@ -42,7 +42,7 @@ void __storage_key_init_range(unsigned l
  
- out:
--	if (ret < 0)
--		kfree(runtime);
--
- 	kfree(params);
- 	return ret;
+ static inline void storage_key_init_range(unsigned long start, unsigned long end)
+ {
+-	if (PAGE_DEFAULT_KEY)
++	if (PAGE_DEFAULT_KEY != 0)
+ 		__storage_key_init_range(start, end);
  }
+ 
 
 
