@@ -2,86 +2,140 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 060C5C3F2C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B75C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0A7724650
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:34:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582842887;
-	bh=YaGh6D1HzZ7fNKCmGcqwfIeREmWsHw1fRwfnKYtFmzE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kXGZFLkBXwO4gTPJWrTJgug0zPDIyDRdAO4XB2wlQXyu9FE+Wkg8JgpCNcIz8byNI
-	 TZfCMWc/jSPD3GYhY2t+dj1ikMPx8JmkI83MxKDgMSLSNohQLcSKnoo/vSTHTm1p4e
-	 IoIeXUDjOuYzs4CTkzKxyrUqZR8Lwq1cA7QWER2w=
+	by mail.kernel.org (Postfix) with ESMTP id 9B9FA24650
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:34:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MFg3uvRZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730273AbgB0Weq (ORCPT
+        id S1730340AbgB0Wet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 17:34:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38252 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729926AbgB0Weq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 17:34:46 -0500
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CD4F246AC;
-        Thu, 27 Feb 2020 22:34:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582842885;
-        bh=YaGh6D1HzZ7fNKCmGcqwfIeREmWsHw1fRwfnKYtFmzE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Vtupj6DZECBmVkSIhKs//W0XwsQmOxTt4UepDYJwQEuOg4vEvKHMYW6U5MI3XG6rF
-         ECX0OqVBvXgDCczjDg9okCAU/kyqNMdfNI7pwFpFCaT7/sxNNRbX5mhW9rSHId5kS8
-         HrdfBSFLZoIotsMniP2g4di6KEv10U2Gl95hVKVo=
-Received: by mail-qk1-f181.google.com with SMTP id 145so1189173qkl.2;
+        Thu, 27 Feb 2020 17:34:49 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33005 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729926AbgB0Wer (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 17:34:47 -0500
+Received: by mail-pg1-f194.google.com with SMTP id 6so433825pgk.0;
+        Thu, 27 Feb 2020 14:34:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MzL/Dwaz9NNNLilfQqcbiVLfMJdaJJq3kGV//kp0VuY=;
+        b=MFg3uvRZP6fftxY4+7C9y9gF92fZA29uB1dcZOLbHfx67rYJ0hdlr0be2qeE1iaskq
+         0qYCYfWJLsjXdIi+fPaRO6j2GXsoSJUxynidx+HAIvBFx6sxYOi+4MOH8bVwNMSVm4NK
+         rsX5RAkD6Bdw1rwm6si8q5LHADQGO3DpR00az4y1raXouuTk9MeOcuZgEoZxPTOHKH1L
+         kyP3ZBohJueexpL+aKfzsSxoEoM9m1O2uzZ57XXI6MzDT0/MTJ3FrD/NPmys4vIr1LWH
+         UKEG/Xx+jLSIjmzMpxr+epUeSCxIcwSdBOqXvIE4wex959Q+Wde4ID+VXSf6dgVGzJva
+         HR4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=MzL/Dwaz9NNNLilfQqcbiVLfMJdaJJq3kGV//kp0VuY=;
+        b=CamSz3sbZaGNKS9bgAExnq1pBLMTwZJkKAekM6WKRjYx0Y4YJaOZN2mzqLwr7+WaFQ
+         +AZys+I+TjJ+dJK19ds4qnDhZilgTHoBa9JWByL9z1FaMFpmOZ/GFtIiRTsKJBcO15A2
+         Z7OeOIdneR+y1rkoDm6c18hS2C9jdIjifknD2u0V10DYdbNbgIMwn50AEW7J4ULDU0E6
+         cEBmP7nP/D49kP1sCSGToR5U1ov3oUVNQDNkooQwIahBRStAw2jHInc45MMoZ9zLrgVx
+         cN/FiVMpWtxH1L3lgu575TYpi4CJV6I91UIajAW8mc81vDOHyjwwCoPk4nBO3Cg9DoXi
+         Beng==
+X-Gm-Message-State: APjAAAXgEBp6Es4o2GcBNmKtSeivOhMoQBYlBsvPX12JRry3ve3IlQSv
+        07pLkBkSFk9IWlg4QrG49plM01p3
+X-Google-Smtp-Source: APXvYqyREPrpC+aHCZ0ABj56M0Cjyf3XmIyyydJFuMVRivvcdunrS/0rXgfv2nFCJvJXpqoK9hh/EQ==
+X-Received: by 2002:a63:c304:: with SMTP id c4mr1536485pgd.85.1582842886588;
+        Thu, 27 Feb 2020 14:34:46 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id x7sm4458652pgp.0.2020.02.27.14.34.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
         Thu, 27 Feb 2020 14:34:45 -0800 (PST)
-X-Gm-Message-State: APjAAAW3FMK72SVt5oKr0aY8cGkl1ZXbrDb70sFgWJT6Gk9kJCisMSi1
-        ydGGePFVxtIy1LtKgcTlVo0K8NJkSLUFZZSfqA==
-X-Google-Smtp-Source: APXvYqyeC5qhzNELpJaQTWJ0dR3EvH/Ikp7mcj1v76BER8UPpw9OHDgX/94cm+5BGXHVmQc+0agiMxuvdmrlGH8RZmI=
-X-Received: by 2002:ae9:f205:: with SMTP id m5mr1905154qkg.152.1582842884742;
- Thu, 27 Feb 2020 14:34:44 -0800 (PST)
+Subject: Re: [PATCH 5.4 000/135] 5.4.23-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200227132228.710492098@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <ff6a11af-8358-f654-370a-587f2d1a1235@roeck-us.net>
+Date:   Thu, 27 Feb 2020 14:34:44 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200221174754.5295-1-michael@walle.cc> <20200221174754.5295-4-michael@walle.cc>
-In-Reply-To: <20200221174754.5295-4-michael@walle.cc>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 27 Feb 2020 16:34:33 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL8QGKARtRAfjCMyk4Pp7EWhFMV8JQpveHoJ2OyH5kBPA@mail.gmail.com>
-Message-ID: <CAL_JsqL8QGKARtRAfjCMyk4Pp7EWhFMV8JQpveHoJ2OyH5kBPA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/9] tty: serial: fsl_lpuart: handle EPROBE_DEFER for DMA
-To:     Michael Walle <michael@walle.cc>
-Cc:     "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Jiri Slaby <jslaby@suse.com>, Peng Fan <peng.fan@nxp.com>,
-        Vabhav Sharma <vabhav.sharma@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 11:48 AM Michael Walle <michael@walle.cc> wrote:
->
-> The DMA channel might not be available at the first probe time. This is
-> esp. the case if the DMA controller has an IOMMU mapping.
->
-> Use the new dma_request_chan() API and handle EPROBE_DEFER errors. Also
-> reorder the code a bit, so that we don't prepare the whole UART just to
-> determine that the DMA channel is not ready yet and we have to undo all
-> the stuff. Try to map the DMA channels earlier.
+On 2/27/20 5:35 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.23 release.
+> There are 135 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 29 Feb 2020 13:21:24 +0000.
+> Anything received after that time might be too late.
+> 
 
-Changing this means you never probe successfully if you boot a kernel
-with the DMA driver disabled (or it's IOMMU disabled). Some other
-drivers request DMA in open() and can work either way.
+Build results:
+	total: 158 pass: 158 fail: 0
+Qemu test results:
+	total: 415 pass: 415 fail: 0
 
-Rob
+Guenter
