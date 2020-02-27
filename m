@@ -2,112 +2,106 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7AB5C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB29C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93A872468E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB4652468E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:52:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729753AbgB0Uvy (ORCPT
+        id S1729798AbgB0UwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 15:51:54 -0500
-Received: from mga05.intel.com ([192.55.52.43]:41482 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726758AbgB0Uvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 15:51:54 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 12:51:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
-   d="scan'208";a="272366192"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga002.fm.intel.com with ESMTP; 27 Feb 2020 12:51:53 -0800
-Date:   Thu, 27 Feb 2020 12:51:53 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: Re: [PATCH] KVM: nVMX: Consult only the "basic" exit reason when
- routing nested exit
-Message-ID: <20200227205153.GC17014@linux.intel.com>
-References: <20200227174430.26371-1-sean.j.christopherson@intel.com>
- <ee8c5eb6-9e3d-620b-d51f-bf0534a05d43@oracle.com>
+        Thu, 27 Feb 2020 15:52:17 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42596 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726758AbgB0UwR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 15:52:17 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 07DD42964E6;
+        Thu, 27 Feb 2020 20:52:16 +0000 (GMT)
+Date:   Thu, 27 Feb 2020 21:52:13 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     "Shivamurthy Shastri (sshivamurthy)" <sshivamurthy@micron.com>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "shiva.linuxworks@gmail.com" <shiva.linuxworks@gmail.com>
+Subject: Re: [EXT] Re: [PATCH v4 2/5] mtd: spinand: micron: Add new Micron
+ SPI NAND devices
+Message-ID: <20200227215213.01fd760b@collabora.com>
+In-Reply-To: <MN2PR08MB639762D89F85C2556F51D48EB8EB0@MN2PR08MB6397.namprd08.prod.outlook.com>
+References: <20200206202206.14770-1-sshivamurthy@micron.com>
+        <20200206202206.14770-3-sshivamurthy@micron.com>
+        <20200227192247.52f84723@collabora.com>
+        <MN2PR08MB6397477172BAC14986175E6DB8EB0@MN2PR08MB6397.namprd08.prod.outlook.com>
+        <20200227211759.7ba02273@collabora.com>
+        <MN2PR08MB639762D89F85C2556F51D48EB8EB0@MN2PR08MB6397.namprd08.prod.outlook.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ee8c5eb6-9e3d-620b-d51f-bf0534a05d43@oracle.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 12:08:55PM -0800, Krish Sadhukhan wrote:
+On Thu, 27 Feb 2020 20:24:22 +0000
+"Shivamurthy Shastri (sshivamurthy)" <sshivamurthy@micron.com> wrote:
+
+> Hi Boris,
 > 
-> On 2/27/20 9:44 AM, Sean Christopherson wrote:
-> >Consult only the basic exit reason, i.e. bits 15:0 of vmcs.EXIT_REASON,
-> >when determining whether a nested VM-Exit should be reflected into L1 or
-> >handled by KVM in L0.
-> >
-> >For better or worse, the switch statement in nested_vmx_exit_reflected()
-> >currently defaults to "true", i.e. reflects any nested VM-Exit without
-> >dedicated logic.  Because the case statements only contain the basic
-> >exit reason, any VM-Exit with modifier bits set will be reflected to L1,
-> >even if KVM intended to handle it in L0.
-> >
-> >Practically speaking, this only affects EXIT_REASON_MCE_DURING_VMENTRY,
-> >i.e. a #MC that occurs on nested VM-Enter would be incorrectly routed to
-> >L1, as "failed VM-Entry" is the only modifier that KVM can currently
-> >encounter.  The SMM modifiers will never be generated as KVM doesn't
-> >support/employ a SMI Transfer Monitor.  Ditto for "exit from enclave",
-> >as KVM doesn't yet support virtualizing SGX, i.e. it's impossible to
-> >enter an enclave in a KVM guest (L1 or L2).
+> > 
+> > On Thu, 27 Feb 2020 20:16:46 +0000
+> > "Shivamurthy Shastri (sshivamurthy)" <sshivamurthy@micron.com> wrote:
+> >   
+> > > Hi Boris,
+> > >
+> > > Thanks for the review.
+> > >  
+> > > >
+> > > > On Thu,  6 Feb 2020 21:22:03 +0100
+> > > > shiva.linuxworks@gmail.com wrote:
+> > > >  
+> > > > > From: Shivamurthy Shastri <sshivamurthy@micron.com>
+> > > > >
+> > > > > Add device table for M79A and M78A series Micron SPI NAND devices.
+> > > > >
+> > > > > Signed-off-by: Shivamurthy Shastri <sshivamurthy@micron.com>
+> > > > > ---
+> > > > >  drivers/mtd/nand/spi/micron.c | 31  
+> > > > +++++++++++++++++++++++++++++++  
+> > > > >  1 file changed, 31 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/mtd/nand/spi/micron.c  
+> > > > b/drivers/mtd/nand/spi/micron.c  
+> > > > > index c028d0d7e236..5fd1f921ef12 100644
+> > > > > --- a/drivers/mtd/nand/spi/micron.c
+> > > > > +++ b/drivers/mtd/nand/spi/micron.c
+> > > > > @@ -91,6 +91,7 @@ static int micron_8_ecc_get_status(struct  
+> > > > spinand_device *spinand,  
+> > > > >  }
+> > > > >
+> > > > >  static const struct spinand_info micron_spinand_table[] = {
+> > > > > +	/* M79A 2Gb 3.3V */  
+> > > >
+> > > > Should be added in a separate patch.  
+> > >
+> > > Okay, I will create separate patch for each device.  
+> > 
+> > No, I meant just for this line.  
 > 
-> 
-> It seems nested_vmx_exit_reflected() deals only with the basic exit reason.
-> If it doesn't need anything beyond bits 15:0, may be vmx_handle_exit() can
-> pass just the base exit reason ?
+> How about including this line with 1st Patch?
 
-Argh.  I was going to simply respond with "It traces exit_reason via
-trace_kvm_nested_vmexit().", but then I looked at the tracing code :-(
-
-The tracepoints that print the names of the VM-Exit are flawed in the sense
-that they'll always print the raw value for VM-Exits with modifiers.  E.g.
-a consistency check VM-Exit on invalid guest state will print 0x80000021
-instead of INVALID_STATE.
-
-Stripping bits 31:16 when invoking the tracepoint would fix the immediate
-issue, but I'm not sure I like that approach because doing so drops
-information that could potentially be quite helpful, e.g. if nested VM-Exit
-injection injected EXIT_REASON_MSR_LOAD_FAIL without also setting
-VMX_EXIT_REASONS_FAILED_VMENTRY, which could break/confuse the L1 VMM.
-I'm also not remotely confident that we won't screw this up again in the
-future :-)
-
-So part of me thinks the best way to resolve the printing would be to
-modify VMX_EXIT_REASONS to do "| VMX_EXIT_REASONS_FAILED_VMENTRY" where
-appropriate, i.e. on INVALID_STATE, MSR_LOAD_FAIL and MCE_DURING_VMENTRY.
-The downside of that approach is it breaks again when new modifiers come
-along, e.g. SGX's ENCLAVE_EXIT.  But again, the modifier is likely useful
-information.
-
-I think the most foolproof and informative way to handle this would be to
-add a macro and/or helper function, e.g. kvm_print_vmx_exit_reason(), to
-wrap __print_symbolic(__entry->exit_code, VMX_EXIT_REASONS) so that it
-prints both the name of the basic exit reason as well as the names for
-any modifiers.
-
-TL;DR: I still like this patch as is, especially since it'll be easy to
-backport.  I'll send a separate patch for the tracepoint issue.
-
+It's even worse if you move it to patch 1. Let's keep it like that.
