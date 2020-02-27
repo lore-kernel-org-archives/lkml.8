@@ -2,100 +2,102 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21964C4BA3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D78C4BA3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 034122468E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A95772468E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:30:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729058AbgB0MaV (ORCPT
+        id S1729076AbgB0Mab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 07:30:21 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:20076 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728856AbgB0MaU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 07:30:20 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01RCHdHW031294;
-        Thu, 27 Feb 2020 07:29:57 -0500
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ydtrwk33m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Feb 2020 07:29:57 -0500
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 01RCTtgC004578
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Thu, 27 Feb 2020 07:29:55 -0500
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 27 Feb
- 2020 04:29:54 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Thu, 27 Feb 2020 04:29:53 -0800
-Received: from analog.ad.analog.com ([10.48.65.180])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01RCToKg031017;
-        Thu, 27 Feb 2020 07:29:51 -0500
-From:   Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <jic23@kernel.org>, <gregkh@linuxfoundation.org>
-CC:     <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
-        <info@metux.net>, <lukas@wunner.de>, <tglx@linutronix.de>,
-        Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-Subject: [PATCH] iio: adc: mcp320x: Use new structure for SPI transfer delays
-Date:   Thu, 27 Feb 2020 14:29:40 +0200
-Message-ID: <20200227122940.18243-1-sergiu.cuciurean@analog.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 27 Feb 2020 07:30:31 -0500
+Received: from foss.arm.com ([217.140.110.172]:49606 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728856AbgB0Mab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 07:30:31 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0AD951FB;
+        Thu, 27 Feb 2020 04:30:31 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7FF473F73B;
+        Thu, 27 Feb 2020 04:30:29 -0800 (PST)
+Date:   Thu, 27 Feb 2020 12:30:24 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>
+Subject: Re: [PATCH] pci: brcmstb: Fix build on 32bit ARM platforms with
+ older compilers
+Message-ID: <20200227123024.GA12798@e121166-lin.cambridge.arm.com>
+References: <CGME20200227115151eucas1p22ff7409009d917addcc7e20f523c9051@eucas1p2.samsung.com>
+ <20200227115146.24515-1-m.szyprowski@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-27_03:2020-02-26,2020-02-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- phishscore=0 adultscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- suspectscore=0 clxscore=1011 lowpriorityscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002270100
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227115146.24515-1-m.szyprowski@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In a recent change to the SPI subsystem [1], a new `delay` struct was added
-to replace the `delay_usecs`. This change replaces the current
-`delay_usecs` with `delay` for this driver.
+Subject should be:
 
-The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
-that both `delay_usecs` & `delay` are used (in this order to preserve
-backwards compatibility).
+PCI: brcmstb: Fix build on 32bit ARM platforms with older compilers
 
-[1] commit bebcfd272df6 ("spi: introduce `delay` field for
-`spi_transfer` + spi_transfer_delay_exec()")
+On Thu, Feb 27, 2020 at 12:51:46PM +0100, Marek Szyprowski wrote:
+> Some older compilers have no implementation for the helper for 64-bit
+> unsigned division/modulo, so linking pcie-brcmstb driver causes the
+> "undefined reference to `__aeabi_uldivmod'" error.
+> 
+> *rc_bar2_size is always a power of two, because it is calculated as:
+> "1ULL << fls64(entry->res->end - entry->res->start)", so the modulo
+> operation in the subsequent check can be replaced by a simple logical
+> AND with a proper mask.
+> 
 
-Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
----
- drivers/iio/adc/mcp320x.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Add a Fixes: tag please.
 
-diff --git a/drivers/iio/adc/mcp320x.c b/drivers/iio/adc/mcp320x.c
-index 465c7625a55a..2c0eb5de110c 100644
---- a/drivers/iio/adc/mcp320x.c
-+++ b/drivers/iio/adc/mcp320x.c
-@@ -421,7 +421,8 @@ static int mcp320x_probe(struct spi_device *spi)
- 			adc->transfer[1].len++;
- 
- 		/* conversions are started by asserting CS pin for 8 usec */
--		adc->start_conv_transfer.delay_usecs = 8;
-+		adc->start_conv_transfer.delay.value = 8;
-+		adc->start_conv_transfer.delay.unit = SPI_DELAY_UNIT_USECS;
- 		spi_message_init_with_transfers(&adc->start_conv_msg,
- 						&adc->start_conv_transfer, 1);
- 
--- 
-2.17.1
+Fixes: c0452137034b ("PCI: brcmstb: Add Broadcom STB PCIe host controller driver")
 
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  drivers/pci/controller/pcie-brcmstb.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+
+Hi Bjorn,
+
+I think this should be merged in one of the upcoming -rc, given that
+it fixes v5.6 material.
+
+Here is my ACK to that end, if you prefer postponing it to v5.7
+please let me know.
+
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> index d20aabc26273..3a10e678c7f4 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -670,7 +670,7 @@ static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
+>  	 *   outbound memory @ 3GB). So instead it will  start at the 1x
+>  	 *   multiple of its size
+>  	 */
+> -	if (!*rc_bar2_size || *rc_bar2_offset % *rc_bar2_size ||
+> +	if (!*rc_bar2_size || (*rc_bar2_offset & (*rc_bar2_size - 1)) ||
+>  	    (*rc_bar2_offset < SZ_4G && *rc_bar2_offset > SZ_2G)) {
+>  		dev_err(dev, "Invalid rc_bar2_offset/size: size 0x%llx, off 0x%llx\n",
+>  			*rc_bar2_size, *rc_bar2_offset);
+> -- 
+> 2.17.1
+> 
