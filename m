@@ -2,134 +2,146 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F3EC3567B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E69C3567B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6204C2469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE12E2469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:03:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="qQ2TAJnS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729758AbgB0RDM (ORCPT
+        id S1729861AbgB0RDm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 12:03:12 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:38882 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729172AbgB0RDM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 12:03:12 -0500
-Received: by mail-oi1-f195.google.com with SMTP id 2so2863553oiz.5;
-        Thu, 27 Feb 2020 09:03:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3SLSeusjyF7xuR70ZDE6DWBdGicv7IAt+yuIdcwz2t8=;
-        b=NJEaogyn7Bj1o2mGanFo/0Rc3K6M/2Ce+zsOOxLPv/ALAvgUCUNcFxl3c73V41uK2R
-         7UCTp6U8bNDrLbRL8Zs8AsEsJeAvOscBl83hlatuKmxgzFtKio5KnKERZijeEpHxngJL
-         GMkNKMuL9+hDJBd8wnZjh31jQeMDasoveFzhUGItgLLRKjZeJkCPIlFVYO3OvnxF3Rna
-         sEIyVLSeSk6f7wJ/r3z/PZZqchMDVuqUyaXfDjDwzecZL94rqdmIQostDw9PDvqdKEmL
-         bRNLN7zLVlLwm3RulfiD2TqJtu/ftpRJrEJalF7+vqJ3gOH8dX4EolnC9hjnEwkFOL9P
-         w7Ow==
-X-Gm-Message-State: APjAAAULQI3wpkT5jWDuWv4TA968XeI2624LR3BT1HVZuWsjvc8dAAdS
-        1AtPRI/XeYZV+Pw6DZemTwm6FenlzkaLgqHkFik=
-X-Google-Smtp-Source: APXvYqzRjEtzoIaCCugVuFD4BsmBmzfqIzgRC0i4fNsaXIhsSXoYehtum4tWBRTUqYj7/Lp5oUYRtCM/IezBtVMEXfY=
-X-Received: by 2002:aca:48cd:: with SMTP id v196mr11129oia.102.1582822991282;
- Thu, 27 Feb 2020 09:03:11 -0800 (PST)
+        Thu, 27 Feb 2020 12:03:42 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:62174 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729481AbgB0RDm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 12:03:42 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48SzXB3jH9z9tyX0;
+        Thu, 27 Feb 2020 18:03:38 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=qQ2TAJnS; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id lT4opiy4Qpqi; Thu, 27 Feb 2020 18:03:38 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48SzXB28lmz9tyWv;
+        Thu, 27 Feb 2020 18:03:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1582823018; bh=ivG0NenvQkR8PkrDU2mBpZ9HGooYM3SCFz7DbVUGfzY=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=qQ2TAJnSG5rWsee88j6nad+tuJ9WtixEjEin3eXlX7opv2cv4hq6hZXkvm5CACMiz
+         LVQrY7R8aSu+JuZ1LAiykc8H95XuwDKbOiBPLQrTBRTecf2/Mzv2lkuzxnkm96QnDW
+         q5FMafTk76Ro//h6tgtJQwVa+No5DSBj82q9iu40=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DCF7C8B880;
+        Thu, 27 Feb 2020 18:03:39 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id fKAvznOpv8mR; Thu, 27 Feb 2020 18:03:39 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 82BF18B799;
+        Thu, 27 Feb 2020 18:03:38 +0100 (CET)
+Subject: Re: [PATCH] selftests/vm: Fix map_hugetlb length used for testing
+ read and write
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+To:     Shuah Khan <shuah@kernel.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+References: <9a404a13c871c4bd0ba9ede68f69a1225180dd7e.1580978385.git.christophe.leroy@c-s.fr>
+Message-ID: <797ec84e-7257-d97a-5c13-9a9d9f1f650a@c-s.fr>
+Date:   Thu, 27 Feb 2020 18:03:20 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200226093703.19765-1-p.yadav@ti.com> <20200226093703.19765-2-p.yadav@ti.com>
- <20200227171147.32cc6fcf@collabora.com> <20200227162842.GE4062@sirena.org.uk>
- <CAMuHMdWMCDzQm0tjpybJZyHy4imbC9NqRXP5d4C0xgxQx-Pf8g@mail.gmail.com> <20200227164425.GF4062@sirena.org.uk>
-In-Reply-To: <20200227164425.GF4062@sirena.org.uk>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 27 Feb 2020 18:03:00 +0100
-Message-ID: <CAMuHMdV_1RfGFgDjJYzAnGd_x57zSwjZd8si=UTPp8ksgdwYGA@mail.gmail.com>
-Subject: Re: [PATCH v2 01/11] dt-bindings: spi: allow expressing DTR capability
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Richard Weinberger <richard@nod.at>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Pratyush Yadav <p.yadav@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <9a404a13c871c4bd0ba9ede68f69a1225180dd7e.1580978385.git.christophe.leroy@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+Shuah,
 
-On Thu, Feb 27, 2020 at 5:44 PM Mark Brown <broonie@kernel.org> wrote:
-> On Thu, Feb 27, 2020 at 05:40:31PM +0100, Geert Uytterhoeven wrote:
-> > On Thu, Feb 27, 2020 at 5:28 PM Mark Brown <broonie@kernel.org> wrote:
-> > > It's what we do for other properties, and if this is anything like the
-> > > other things adding extra wiring you can't assume that the ability to
-> > > use the feature for TX implies RX.
->
-> > Double Transfer Rate uses the same wire.
->
-> But is it still on either the TX or RX signals?
+Le 06/02/2020 à 09:42, Christophe Leroy a écrit :
+> Commit fa7b9a805c79 ("tools/selftest/vm: allow choosing mem size and
+> page size in map_hugetlb") added the possibility to change the size
+> of memory mapped for the test, but left the read and write test using
+> the default value. This is unnoticed when mapping a length greater
+> than the default one, but segfaults otherwise.
+> 
+> Fix read_bytes() and write_bytes() by giving them the real length.
+> 
+> Also fix the call to munmap().
+> 
+> Fixes: fa7b9a805c79 ("tools/selftest/vm: allow choosing mem size and page size in map_hugetlb")
+> Cc: stable@vger.kernel.org
 
-E.g. good old Spansion S25FL512S supports single/dual/quad DDR, but
-apparently only for read, not write.
-Other FLASHes may support both directions. I guess.
+Can you also consider this one for next rc ?
 
-> > But as you sample at both the rising and the falling edges of the clock, this
-> > makes the cpha setting meaningless for such transfers, I think ;-)
->
-> Might affect what the first bit is possibly?
+Thanks
+Christophe
 
-Quoting the manual for the above part:
-
-4.1.2
-Double Data Rate (DDR)
-Mode 0 and Mode 3 are also supported for DDR commands. In DDR
-commands, the instruction bits are
-always latched on the rising edge of clock, the same as in SDR
-commands. However, the address and input
-data that follow the instruction are latched on both the rising and
-falling edges of SCK. The first address bit is
-latched on the first rising edge of SCK following the falling edge at
-the end of the last instruction bit. The first
-bit of output data is driven on the falling edge at the end of the
-last access latency (dummy) cycle.
-SCK cycles are measured (counted) in the same way as in SDR commands,
-from one falling edge of SCK to
-the next falling edge of SCK. In mode 0 the beginning of the first SCK
-cycle in a command is measured from
-the falling edge of CS# to the first falling edge of SCK because SCK
-is already low at the beginning of a
-command.
-
-> > However, as the future may bring us QDR, perhaps this should not be a
-> > boolean flag, but an integer value?
-> > Cfr. spi-tx-bus-width vs. the original spi-tx-dual/spi-tx-quad proposal.
->
-> > What would be a good name (as we only need one)? spi-data-phases?
->
-> Sounds reasonable, apart from the increasingly vague connection with
-> something that's recognizably SPI :P
-
-Yeah, especially Octal and Hyper modes are far from serial ;-)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> ---
+>   tools/testing/selftests/vm/map_hugetlb.c | 14 +++++++-------
+>   1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/vm/map_hugetlb.c b/tools/testing/selftests/vm/map_hugetlb.c
+> index 5a2d7b8efc40..6af951900aa3 100644
+> --- a/tools/testing/selftests/vm/map_hugetlb.c
+> +++ b/tools/testing/selftests/vm/map_hugetlb.c
+> @@ -45,20 +45,20 @@ static void check_bytes(char *addr)
+>   	printf("First hex is %x\n", *((unsigned int *)addr));
+>   }
+>   
+> -static void write_bytes(char *addr)
+> +static void write_bytes(char *addr, size_t length)
+>   {
+>   	unsigned long i;
+>   
+> -	for (i = 0; i < LENGTH; i++)
+> +	for (i = 0; i < length; i++)
+>   		*(addr + i) = (char)i;
+>   }
+>   
+> -static int read_bytes(char *addr)
+> +static int read_bytes(char *addr, size_t length)
+>   {
+>   	unsigned long i;
+>   
+>   	check_bytes(addr);
+> -	for (i = 0; i < LENGTH; i++)
+> +	for (i = 0; i < length; i++)
+>   		if (*(addr + i) != (char)i) {
+>   			printf("Mismatch at %lu\n", i);
+>   			return 1;
+> @@ -96,11 +96,11 @@ int main(int argc, char **argv)
+>   
+>   	printf("Returned address is %p\n", addr);
+>   	check_bytes(addr);
+> -	write_bytes(addr);
+> -	ret = read_bytes(addr);
+> +	write_bytes(addr, length);
+> +	ret = read_bytes(addr, length);
+>   
+>   	/* munmap() length of MAP_HUGETLB memory must be hugepage aligned */
+> -	if (munmap(addr, LENGTH)) {
+> +	if (munmap(addr, length)) {
+>   		perror("munmap");
+>   		exit(1);
+>   	}
+> 
