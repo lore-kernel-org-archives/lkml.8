@@ -2,52 +2,53 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A20C3F358
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2FAC54FC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68A7D24688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9751A24688
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:29:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813773;
-	bh=ebcdWWoidKGN2vbQWUqb4ne5B3dw2J5I8wTEd6ulNAs=;
+	s=default; t=1582813788;
+	bh=3lsCYe5eZukO4kkga26YEneuD1FV+1eAiiakqaHiOdM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UR6+quOK4QUUp7uX7DAgH5NH7o6CKq0QFy4niV2A/u8vuIMBDKKGM2zAKEcNTh3Qa
-	 a/itdRWQ4HFAV5Qpj7FO5XzO86WHfcxeLtILa5k3a0VnJmmyz1aLbMNsFEDJC0ZWO+
-	 /GGWCWVX3Ilxp7IZqZ972c1h4vB8aOcvvnjbRL54=
+	b=NNZRem+VfsqTDMf/Q21F/VSU9CJ1VWUyreNPw4IVaHrw+1RSG2nFmyHYUrcORcqfQ
+	 yGyPmcG3KmXlSNQT7oB2Y2Zj9q7cKemhs6SaMcSPTYSP+Dvgm+kuPtcYYrNHzH6sX8
+	 1qZhqbaN7nkYT2mbOAoCulGL3B8O83W6lCb2SRuE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388162AbgB0O3b (ORCPT
+        id S2387829AbgB0OFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:29:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43232 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:05:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732812AbgB0OGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:06:11 -0500
+        id S2387817AbgB0OFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:05:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2BAE246A0;
-        Thu, 27 Feb 2020 14:06:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2F3420578;
+        Thu, 27 Feb 2020 14:05:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812370;
-        bh=ebcdWWoidKGN2vbQWUqb4ne5B3dw2J5I8wTEd6ulNAs=;
+        s=default; t=1582812345;
+        bh=3lsCYe5eZukO4kkga26YEneuD1FV+1eAiiakqaHiOdM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1VCLArRUiX1a0G5IT16hLlCogAJd9vIAvIfmgwNjxibif89ncA3/fH2AFAJvvXGuZ
-         UaTOe2+nr1NiMJzTEJJ47hbT5DeLPnrRBq44tiDPunU4QY5y9fX7mp7h+4TTkF3For
-         8amibqHDf6gLXda8GwKH+OuJha21En2JtkoNtSxI=
+        b=i2N6QZfEcQ/cX+xFV8WOZJX8SvUO+dobsgXP98AnTxkAdKIIillTq5C2s3uccF/FS
+         ju06XMCaXrHMReRXCwHXft1i3sPKsUkL9n/r/tqcmAoMWsWceK8bBaEq/835w7VMdd
+         uOODxbMpFiAijb8YbP7dlJyLNHfRiz+TIliwyALw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org, Andreas Tobler <andreas.tobler@onway.ch>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 62/97] drm/nouveau/kms/gv100-: Re-set LUT after clearing for modesets
-Date:   Thu, 27 Feb 2020 14:37:10 +0100
-Message-Id: <20200227132224.657296061@linuxfoundation.org>
+Subject: [PATCH 4.19 79/97] Revert "dmaengine: imx-sdma: Fix memory leak"
+Date:   Thu, 27 Feb 2020 14:37:27 +0100
+Message-Id: <20200227132227.355367687@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
 References: <20200227132214.553656188@linuxfoundation.org>
@@ -60,47 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lyude Paul <lyude@redhat.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[ Upstream commit f287d3d19769b1d22cba4e51fa0487f2697713c9 ]
+This reverts commit af8eca600b408a0e59d2848dfcfad60413f626a9 which is
+commit 02939cd167095f16328a1bd5cab5a90b550606df upstream.
 
-While certain modeset operations on gv100+ need us to temporarily
-disable the LUT, we make the mistake of sometimes neglecting to
-reprogram the LUT after such modesets. In particular, moving a head from
-one encoder to another seems to trigger this quite often. GV100+ is very
-picky about having a LUT in most scenarios, so this causes the display
-engine to hang with the following error code:
+Andreas writes:
+	This patch breaks our imx6 board with the attached trace.
+	Reverting the patch makes it boot again.
 
-disp: chid 1 stat 00005080 reason 5 [INVALID_STATE] mthd 0200 data
-00000001 code 0000002d)
-
-So, fix this by always re-programming the LUT if we're clearing it in a
-state where the wndw is still visible, and has a XLUT handle programmed.
-
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Fixes: facaed62b4cb ("drm/nouveau/kms/gv100: initial support")
-Cc: <stable@vger.kernel.org> # v4.18+
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: Andreas Tobler <andreas.tobler@onway.ch>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Robin Gong <yibin.gong@nxp.com>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/gpu/drm/nouveau/dispnv50/wndw.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/dma/imx-sdma.c |   19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/wndw.c b/drivers/gpu/drm/nouveau/dispnv50/wndw.c
-index b3db4553098d5..d343ae66c64fe 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/wndw.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/wndw.c
-@@ -405,6 +405,8 @@ nv50_wndw_atomic_check(struct drm_plane *plane, struct drm_plane_state *state)
- 		asyw->clr.ntfy = armw->ntfy.handle != 0;
- 		asyw->clr.sema = armw->sema.handle != 0;
- 		asyw->clr.xlut = armw->xlut.handle != 0;
-+		if (asyw->clr.xlut && asyw->visible)
-+			asyw->set.xlut = asyw->xlut.handle != 0;
- 		if (wndw->func->image_clr)
- 			asyw->clr.image = armw->image.handle[0] != 0;
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -738,8 +738,12 @@ static void sdma_start_desc(struct sdma_
+ 		return;
  	}
--- 
-2.20.1
-
+ 	sdmac->desc = desc = to_sdma_desc(&vd->tx);
+-
+-	list_del(&vd->node);
++	/*
++	 * Do not delete the node in desc_issued list in cyclic mode, otherwise
++	 * the desc allocated will never be freed in vchan_dma_desc_free_list
++	 */
++	if (!(sdmac->flags & IMX_DMA_SG_LOOP))
++		list_del(&vd->node);
+ 
+ 	sdma->channel_control[channel].base_bd_ptr = desc->bd_phys;
+ 	sdma->channel_control[channel].current_bd_ptr = desc->bd_phys;
+@@ -1040,6 +1044,7 @@ static void sdma_channel_terminate_work(
+ 
+ 	spin_lock_irqsave(&sdmac->vc.lock, flags);
+ 	vchan_get_all_descriptors(&sdmac->vc, &head);
++	sdmac->desc = NULL;
+ 	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
+ 	vchan_dma_desc_free_list(&sdmac->vc, &head);
+ }
+@@ -1047,19 +1052,11 @@ static void sdma_channel_terminate_work(
+ static int sdma_disable_channel_async(struct dma_chan *chan)
+ {
+ 	struct sdma_channel *sdmac = to_sdma_chan(chan);
+-	unsigned long flags;
+-
+-	spin_lock_irqsave(&sdmac->vc.lock, flags);
+ 
+ 	sdma_disable_channel(chan);
+ 
+-	if (sdmac->desc) {
+-		vchan_terminate_vdesc(&sdmac->desc->vd);
+-		sdmac->desc = NULL;
++	if (sdmac->desc)
+ 		schedule_work(&sdmac->terminate_worker);
+-	}
+-
+-	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
+ 
+ 	return 0;
+ }
 
 
