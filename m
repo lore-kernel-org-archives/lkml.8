@@ -2,107 +2,239 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE64C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E19C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27D4E24697
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFC6B24688
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:06:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="ft/OwHMQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730937AbgB0PFm (ORCPT
+        id S1731332AbgB0PGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 10:05:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60336 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729235AbgB0PFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 10:05:41 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8078724691;
-        Thu, 27 Feb 2020 15:05:40 +0000 (UTC)
-Date:   Thu, 27 Feb 2020 10:05:38 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v2 1/8] bootconfig: Set CONFIG_BOOT_CONFIG=n by default
-Message-ID: <20200227100538.58127eeb@gandalf.local.home>
-In-Reply-To: <CAMuHMdX6RpEDpkKcmLeNh4T2o+_HpV3XpYCAWYk0uWYt_bkztw@mail.gmail.com>
-References: <158220110257.26565.4812934676257459744.stgit@devnote2>
-        <158220111291.26565.9036889083940367969.stgit@devnote2>
-        <CAMuHMdWEoBrFRhmLEByhDCasuMrbGS4PreRivYRApdsME7x2AA@mail.gmail.com>
-        <20200227092732.6a22a71a@gandalf.local.home>
-        <CAMuHMdX6RpEDpkKcmLeNh4T2o+_HpV3XpYCAWYk0uWYt_bkztw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 27 Feb 2020 10:06:25 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:43372 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729235AbgB0PGY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 10:06:24 -0500
+Received: by mail-qt1-f195.google.com with SMTP id g21so2469051qtq.10
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 07:06:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=WksUni8+9tZQpyBBuW8X+gQa0Tzb8KbHzuJ7Pnkh/HQ=;
+        b=ft/OwHMQDXoySzRqQhM3Euo4A8IQtSI4XRc6MrV9HF/5UZVkMmhLm3EdhFy/hV2Hpc
+         klL0cyKlgdB6phi95cveN+byBtSBglXzhMEGp1eiB7TRhsTx8n1KXNLSRPpMyjbfHIBy
+         Tmqw9y6EzckW1TmrvhJrxR/pKLrHTLwF/1YoEdAfxhHQh75FxQKtVeOvMX+8l9EvL0Ds
+         htDpu+IKmiWP9dlRUBMPtkxDF79ciUtFrcIMoN+RVVsmz4xShEm5FaKzgfw2ihNc9iOB
+         n3trkJsrqwxJqjgh3aokOJ1N5DxKbNiAHOH0kP2mwLqIW7Ge410QDJDU/mCSdvt4SaXa
+         qJXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=WksUni8+9tZQpyBBuW8X+gQa0Tzb8KbHzuJ7Pnkh/HQ=;
+        b=cFFUF61GFi8SdDO2MWBjB21TZmVgqW3Ijysb95SQnFOZtswwEeNj+b6HTmvoKV43i2
+         67Qd3moFN3avo2Rc1fH7/qJQq8Mqfzyx0iZQUojMsASNaZPBpa4UW1CFwWPh+ZOCCwrn
+         D8pWWp1nUrxOT2gtSJq5BrOZrhJCUKT1CjmCrLslAhjM538xNsp+UVOhJ3w8uOqtgq/E
+         Ap5fJ3/AIrtiUmRD3/GRGmt1pgtZ8Dmbo0Coc+t3FCUTw+n08Q0PB3xQGdBBMW7SB3ge
+         FSr9Y6nNETOQFNVaQGkxjl57jnGrIybjD9LQkkH9KxBKm4o8V4pkkYAuu7xNLAJ4yqf9
+         nS5w==
+X-Gm-Message-State: APjAAAXVqegw/RhdoIu42HO7Lfmv/nUXM0mt2P88TISyMpNxwtOWX5/n
+        ytq4BVmAIZ46x8vR6ori8Iew9w==
+X-Google-Smtp-Source: APXvYqyw/9+IbI2opjLXCL80zTYZaIwOGiIFh+tFuQSbxgbntYC5/fqEEZpoNclcnju+cM2hlsWxEw==
+X-Received: by 2002:ac8:488b:: with SMTP id i11mr5414794qtq.209.1582815981241;
+        Thu, 27 Feb 2020 07:06:21 -0800 (PST)
+Received: from localhost (pool-108-27-252-85.nycmny.fios.verizon.net. [108.27.252.85])
+        by smtp.gmail.com with ESMTPSA id o4sm3202703qki.26.2020.02.27.07.06.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 07:06:20 -0800 (PST)
+Date:   Thu, 27 Feb 2020 10:06:19 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
+Message-ID: <20200227150619.GD39625@cmpxchg.org>
+References: <20191219200718.15696-1-hannes@cmpxchg.org>
+ <20191219200718.15696-4-hannes@cmpxchg.org>
+ <20200221171256.GB23476@blackbody.suse.cz>
+ <20200221185839.GB70967@cmpxchg.org>
+ <20200225133720.GA6709@blackbody.suse.cz>
+ <20200225150304.GA10257@cmpxchg.org>
+ <20200226132237.GA16746@blackbody.suse.cz>
+ <20200226150548.GD10257@cmpxchg.org>
+ <20200227133544.GA20690@blackbody.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200227133544.GA20690@blackbody.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Feb 2020 15:47:45 +0100
-Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+On Thu, Feb 27, 2020 at 02:35:44PM +0100, Michal Koutný wrote:
+> On Wed, Feb 26, 2020 at 10:05:48AM -0500, Johannes Weiner <hannes@cmpxchg.org> wrote:
+> > I don't see a fundamental difference between them. And that in turn
+> > makes it hard for me to accept that hierarchical inheritance rules
+> > should be different.
+> I'll try coming up with some better examples for the difference that I
+> perceive.
+> 
+> > "Wrong" isn't the right term. Is it what you wanted to express in your
+> > configuration?
+> I want to express absolute amount of memory (ideally representing
+> workingset size) under protection.
+> 
+> IIUC, you want to express general relative priorities of B vs C when
+> some outer metric has to be maintained given you reach both limits of
+> memory and IO.
 
-> Hi Steven,
-> 
-> On Thu, Feb 27, 2020 at 3:27 PM Steven Rostedt <rostedt@goodmis.org> wrote:
-> > On Thu, 27 Feb 2020 10:22:00 +0100
-> > Geert Uytterhoeven <geert@linux-m68k.org> wrote:  
-> > > > +static int __init warn_bootconfig(char *str)
-> > > > +{
-> > > > +       pr_warn("WARNING: 'bootconfig' found on the kernel command line but CONFIG_BOOTCONFIG is not set.\n");
-> > > > +       return 0;
-> > > > +}
-> > > > +early_param("bootconfig", warn_bootconfig);  
-> > >
-> > > Yeah, let's increases kernel size for the people who don't want to jump
-> > > on the bootconfig wagon :-(
-> > >
-> > > Is this really needed?  
-> >
-> > Yes, because if someone adds bootconfig to the command line they would be
-> > expecting their bootconfig to be read. If not, we should not fail silently.  
-> 
-> If someone adds "ip=on" to the command line, they expect DHCP to work.
-> Woops, you need CONFIG_IP_PNP for that.
-> If someone adds "nfsroot=..." to the command line, they expect the NFS
-> root fielsystem to be mounted.
-> Guess how many options need to be enabled for that?
+It's been our experience that it's basically impossible to control for
+memory without having it result in IO contention.
 
-This isn't the same. It's more like having "ip=on" and ip configured, but
-nothing happening because the command line isn't being read.
+You acknowledge below that this effect may be noticable in some
+situations. It's been our experience, however, that this effect is so
+pronounced over a wide variety of workloads and host configurations
+that exclusive memory control is not a practical application for
+anything but niche cases - if they exist at all.
 
-> 
-> Perhaps we need CONFIG_COMMAND_NOT_FOUND?
-> 
->     Kernel panic - not syncing: option "inspecial" not found.
->     Did you mean:
-> 
->         option "imspecial" from section "mine"
->         option "urspecial" from section "yours"
-> 
->     Try enabling it with "make xconfig".
-> 
-> > Are you really concerned about a tiny __init function that gets freed after
-> > boot up?  
-> 
-> It's still part of the initial kernel image, and thus subject to boot loader and
-> platform limitations.
+> > You are talking about a mathematical truth on a per-controller
+> > basis. What I'm saying is that I don't see how this is useful for real
+> > workloads, their relative priorities, and the performance expectations
+> > users have from these priorities.
+>  
+> > With a priority inversion like this, there is no actual performance
+> > isolation or containerization going on here - which is the whole point
+> > of cgroups and resource control.
+> I acknowledge that by pressing too much along one dimension (memory) you
+> induce expansion in other dimension (IO) and that may become noticable in
+> siblings (expansion over saturation [1]). But that's expected when only
+> weights are in use. If you wanted to hide the effect of workload B to C,
+> B would need real limit.
+>
+> [I beg to disagree that containerization is whole point of cgroups, it's
+> large part of it, hence the isolation needn't be necessarily
+> bi-directional.]
 
-And still in the noise of other aspects of the kernel. For little instances
-like this, there should be a CONFIG_TINY (I thought we had that?),
-otherwise it's going to be annoying. (Remember, I was fighting for not
-having a config option at all to disable CONFIG_BOOTCONFIG).
+I said "isolation or containerization", and it really isn't a stretch
+to see how the the intended isolation can break down in this example.
 
--- Steve
+You could set an IO limit on the scape goat to keep it from inheriting
+the higher IO priority from its parent.
 
+But you could also just set a memory limit on the scape goat to keep
+it from inheriting the higher memory allowance from the parent.
+
+Between all this, I really don't see an argument here to make the
+memory hierarchy semantics different from the other controllers.
+
+> > My objection is to opting out of protection against cousins (thus
+> > overriding parental resource assignment), not against siblings.
+> Just to sync up the terminology - I'm calling this protection against
+> uncles (the composition/structure under them is irrelevant).
+> And the limitation comes from grandparent or higher (or global).
+
+Yes, either way works.
+
+> ...and the overriden parental resource assignment is the expansion on
+> non-memory dimension (IO/CPU).
+> 
+> > Correct, but you can change the tree to this:
+> > 
+> >      A.low=10G
+> >      `- A1.low=10G
+> >         `- B.low=0G
+> >         `- C.low=0G
+> >      `- D.low=0G
+> > 
+> > to express
+> > 
+> > A1 > D
+> >  B = C
+> That sort of works (if I give up the scapegoat). Although I have trouble
+> that I have to copy the value from A to A1, I could have done that with
+> previous hierarchy and simply set B.low=C.low=10G.
+
+D is still the scape goat for B and C..?
+
+> > That is, I would like to see an argument for this setup:
+> > 
+> >      A				
+> >      `- B		io.weight=200          memory.low=10G
+> >         `- D		io.weight=100 (e.g.)   memory.low=10G
+> >         `- E		io.weight=100 (e.g.)   memory.low=0
+> >      `- C		io.weight=50           memory.low=5G
+> > 
+> > Where E has no memory protection against C, but E has IO priority over
+> > C. That's the configuration that cannot be expressed with a recursive
+> > memory.low, but since it involves priority inversions it's not useful
+> > to actually isolate and containerize workloads.
+> But there can be no cousin (uncle) or more precisely it's the global
+> rest that we don't mind to affect.
+
+Okay, hold on.
+
+You wouldn't care about starving the rest of the system of IO and
+CPU. But the objection to my patch is that you want to give memory
+back to avoid undue burden on the rest of the system?
+
+Can we please stop talking about such contrived hypotheticals and
+discuss real computer systems that real people actually care about?
+
+> > > I'd say that protected memory is a disposable resource in contrast with
+> > > CPU/IO. If you don't have latter, you don't progress; if you lack the
+> > > former, you are refaulting but can make progress. Even more, you should
+> > > be able to give up memory.min.
+> > 
+> > Eh, I'm not buying that. You cannot run without memory either. If
+> > somebody reclaims a page between you faulting it in and you resuming
+> > to userspace, there is no forward progress.
+> I made a hasty argument (misinterpretting the constant outer reclaim
+> pressure). So that wasn't the fundamental difference.
+> 
+> The second part -- memory.min is subject to equal calculation as
+> memory.low. Do you find the scape goat preventing OOM in grand-parent
+> (or higher) subtree also a misfeature/artifact?
+
+What about CPU and IO?
+
+If you knew exactly that the scape goat doesn't need the memory, you
+could set a memory limit on it - just like you could set a limit on
+CPU and IO cycles to "give back" resources from inside a tree.
+
+If you don't know exactly how much of the scape goat's memory is and
+isn't needed, the additional paging risk from getting it wrong would
+be to the detriment of both your workload and the rest of the system -
+your attempt to be good to the rest of the system suddenly turns into
+a negative-sum game.
+
+I fundamentally do not understand the practical application of the
+configuration you are arguing tooth and nail needs to be supported.
+
+If this is a dealbreaker, surely in a month of discussion and 30+
+emails, it should have been possible to come up with *one* example of
+a real workload and host configuration for which the ability to
+dissent from the hierarchical memory allocation (but oddly, not other
+resources) is the *only* way to express working resource isolation.
+
+As it stands, I have provided examples of real workloads and host
+configs that can't be expressed with the current semantics. As such, I
+would like to move ahead with my changes. They are gated behind a
+mount option, so pose no risk to the elusive setups you envision. We
+can always implement the inheritance scheme you propose once we have
+concrete examples of real life scenarios that aren't otherwise doable,
+but there is certainly not enough evidence to make me implement it now
+as a condition for merging my patches.
