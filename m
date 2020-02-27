@@ -2,112 +2,121 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C274C35677
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14297C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D15F2073D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:20:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E35D2246B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:21:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730117AbgB0QUr (ORCPT
+        id S1730120AbgB0QVc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 11:20:47 -0500
-Received: from relay10.mail.gandi.net ([217.70.178.230]:43437 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728963AbgB0QUr (ORCPT
+        Thu, 27 Feb 2020 11:21:32 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5768 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728963AbgB0QVc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 11:20:47 -0500
-Received: from [10.30.1.20] (lneuilly-657-1-5-103.w81-250.abo.wanadoo.fr [81.250.144.103])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id E9614240011;
-        Thu, 27 Feb 2020 16:20:39 +0000 (UTC)
-Subject: Re: [BUGFIX PATCH] perf probe: Do not depend on dwfl_module_addrsym()
-To:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20200228002553.31b82876b705aaabbd717131@kernel.org>
- <158281812176.476.14164573830975116234.stgit@devnote2>
-From:   Alexandre Ghiti <alex@ghiti.fr>
-Message-ID: <787c2915-c868-358a-481d-1ffd355d92db@ghiti.fr>
-Date:   Thu, 27 Feb 2020 17:20:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 27 Feb 2020 11:21:32 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01RGKAup026069
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 11:21:31 -0500
+Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [158.85.210.111])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ydcp673g7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 11:21:30 -0500
+Received: from localhost
+        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
+        for <linux-kernel@vger.kernel.org> from <BMT@zurich.ibm.com>;
+        Thu, 27 Feb 2020 16:21:30 -0000
+Received: from us1b3-smtp06.a3dr.sjc01.isc4sb.com (10.122.203.184)
+        by smtp.notes.na.collabserv.com (10.122.47.52) with smtp.notes.na.collabserv.com ESMTP;
+        Thu, 27 Feb 2020 16:21:22 -0000
+Received: from us1b3-mail162.a3dr.sjc03.isc4sb.com ([10.160.174.187])
+          by us1b3-smtp06.a3dr.sjc01.isc4sb.com
+          with ESMTP id 2020022716212224-572447 ;
+          Thu, 27 Feb 2020 16:21:22 +0000 
+In-Reply-To: <20200227155335.GI31668@ziepe.ca>
+From:   "Bernard Metzler" <BMT@zurich.ibm.com>
+To:     "Jason Gunthorpe" <jgg@ziepe.ca>
+Cc:     "syzbot" <syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com>,
+        chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        netdev@vger.kernel.org, parav@mellanox.com,
+        syzkaller-bugs@googlegroups.com, willy@infradead.org
+Date:   Thu, 27 Feb 2020 16:21:21 +0000
 MIME-Version: 1.0
-In-Reply-To: <158281812176.476.14164573830975116234.stgit@devnote2>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Sensitivity: 
+Importance: Normal
+X-Priority: 3 (Normal)
+References: <20200227155335.GI31668@ziepe.ca>,<20200226204238.GC31668@ziepe.ca>
+ <000000000000153fac059f740693@google.com>
+ <OF0B62EDE7.E13D40E8-ON0025851B.0037F560-0025851B.0037F56C@notes.na.collabserv.com>
+X-Mailer: IBM iNotes ($HaikuForm 1054.1) | IBM Domino Build
+ SCN1812108_20180501T0841_FP62 November 04, 2019 at 09:47
+X-KeepSent: 0C6D63D8:F1817050-0025851B:0059D878;
+ type=4; name=$KeepSent
+X-LLNOutbound: False
+X-Disclaimed: 18363
+X-TNEFEvaluated: 1
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
+x-cbid: 20022716-3633-0000-0000-000001C8796B
+X-IBM-SpamModules-Scores: BY=0.021699; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
+ SC=0.399202; ST=0; TS=0; UL=0; ISC=; MB=0.012841
+X-IBM-SpamModules-Versions: BY=3.00012651; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000293; SDB=6.01340059; UDB=6.00714142; IPR=6.01122420;
+ MB=3.00030996; MTD=3.00000008; XFM=3.00000015; UTC=2020-02-27 16:21:29
+X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
+X-IBM-AV-VERSION: SAVI=2020-02-27 12:31:36 - 6.00011055
+x-cbparentid: 20022716-3634-0000-0000-0000AD5397FE
+Message-Id: <OF0C6D63D8.F1817050-ON0025851B.0059D878-0025851B.0059D887@notes.na.collabserv.com>
+Subject: RE: possible deadlock in cma_netdev_callback
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-27_05:2020-02-26,2020-02-27 signatures=0
+X-Proofpoint-Spam-Reason: safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/27/20 4:42 PM, Masami Hiramatsu wrote:
-> Do not depend on dwfl_module_addrsym() because it can fail
-> on user-space shared libraries.
-> 
-> Actually, same bug was fixed by commit 664fee3dc379 ("perf
-> probe: Do not use dwfl_module_addrsym if dwarf_diename finds
-> symbol name"), but commit 07d369857808 ("perf probe: Fix
-> wrong address verification) reverted to get actual symbol
-> address from symtab.
-> 
-> This fixes it again by getting symbol address from DIE,
-> and only if the DIE has only address range, it uses
-> dwfl_module_addrsym().
-> 
-> Fixes: 07d369857808 ("perf probe: Fix wrong address verification)
-> Reported-by: Alexandre Ghiti <alex@ghiti.fr>
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> ---
->   tools/perf/util/probe-finder.c |   11 ++++++++---
->   1 file changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-> index 1c817add6ca4..e4cff49384f4 100644
-> --- a/tools/perf/util/probe-finder.c
-> +++ b/tools/perf/util/probe-finder.c
-> @@ -637,14 +637,19 @@ static int convert_to_trace_point(Dwarf_Die *sp_die, Dwfl_Module *mod,
->   		return -EINVAL;
->   	}
->   
-> -	/* Try to get actual symbol name from symtab */
-> -	symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
-> +	if (dwarf_entrypc(sp_die, &eaddr) == 0) {
-> +		/* If the DIE has entrypc, use it. */
-> +		symbol = dwarf_diename(sp_die);
-> +	} else {
-> +		/* Try to get actual symbol name and address from symtab */
-> +		symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
-> +		eaddr = sym.st_value;
-> +	}
->   	if (!symbol) {
->   		pr_warning("Failed to find symbol at 0x%lx\n",
->   			   (unsigned long)paddr);
->   		return -ENOENT;
->   	}
-> -	eaddr = sym.st_value;
->   
->   	tp->offset = (unsigned long)(paddr - eaddr);
->   	tp->address = (unsigned long)paddr;
-> 
+-----"Jason Gunthorpe" <jgg@ziepe.ca> wrote: -----
 
-I have just tested your patch, that fixes the issue, so you can add:
+>To: "Bernard Metzler" <BMT@zurich.ibm.com>
+>From: "Jason Gunthorpe" <jgg@ziepe.ca>
+>Date: 02/27/2020 04:53PM
+>Cc: "syzbot" <syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com>,
+>chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
+>linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+>netdev@vger.kernel.org, parav@mellanox.com,
+>syzkaller-bugs@googlegroups.com, willy@infradead.org
+>Subject: [EXTERNAL] Re: possible deadlock in cma_netdev_callback
+>
+>On Thu, Feb 27, 2020 at 10:11:13AM +0000, Bernard Metzler wrote:
+>
+>> Thanks for letting me know! Hmm, we cannot use RCU locks since
+>> we potentially sleep. One solution would be to create a list
+>> of matching interfaces while under lock, unlock and use that
+>> list for calling siw_listen_address() (which may sleep),
+>> right...?
+>
+>Why do you need to iterate over addresses anyhow? Shouldn't the
+>listen
+>just be done with the address the user gave and a BIND DEVICE to the
+>device siw is connected to?
 
-Tested-by: Alexandre Ghiti <alex@ghiti.fr>
+The user may give a wildcard local address, so we'd have
+to bind to all addresses of that device...
 
-I added stable in cc.
+Best,
+Bernard.
 
-Thanks,
+>
+>Also that loop in siw_create looks wrong to me
+>
+>Jason
+>
+>
 
-Alex
