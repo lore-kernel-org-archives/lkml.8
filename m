@@ -7,53 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A49C4C3F357
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB284C54FC5
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7741D24690
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B76F524697
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812865;
-	bh=Dqe8peYwQwuHYE4wE7HzqKcEV4TelEPWey30f3hiVvk=;
+	s=default; t=1582813005;
+	bh=7XIUv84UbB7VH9ebwHuIaexfvi5HnxtjcT0srAFmVeA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EHw8K+a6g2kXKau9fPKf6zD28M4OwSeuMjJMVyoICpUphkny+4O9e8biFkKV9rGCB
-	 UJtcVBrGyNaR+ZBV/7H74btCJL9zOpVjT1cdbOSdsHFz4fsF2S+P8Jfkj4/9yjFPL8
-	 dg6VpHe+DCNAKUlFybWjw9HbRIh5fge43miNYa1k=
+	b=qkJnBzeqPVMp22cxrDd6xHN2mD/1dufZDDk5Xu5pG4dWh6DG6V9DkBnPeqcTe8gmR
+	 P1m8zacCxezdEqUjRfeClfknfA3BqyEep8rBHSmN8qRZVvzY4OWtxlhsS8aHUOywgA
+	 bG9QEHxJLWsXsRAlKJqT+21a6iQb8bGqBvN8hM0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388932AbgB0OOY (ORCPT
+        id S2389574AbgB0OQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:14:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53462 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:16:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389105AbgB0OOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:14:19 -0500
+        id S2388234AbgB0OQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:16:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D740B24697;
-        Thu, 27 Feb 2020 14:14:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9A2D20801;
+        Thu, 27 Feb 2020 14:16:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812857;
-        bh=Dqe8peYwQwuHYE4wE7HzqKcEV4TelEPWey30f3hiVvk=;
+        s=default; t=1582813001;
+        bh=7XIUv84UbB7VH9ebwHuIaexfvi5HnxtjcT0srAFmVeA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VaYxrrnUVztyfLYJ/Dhq4e7af7CMcAnaCqrHofBQmf5YokhRNO1SHDERZ9kQgwzyK
-         o8YYHlt0x+ztB4jTQQ3R+ZwCE/jdJxSqSGABOKb6SXjBz7egLUVzM/BbAiPNcrR8vx
-         9bc+7D0JlMDJIQMlYSQiSunSVkxeyBjk9eWoeteQ=
+        b=dEdLq2rbXCOMWgX1fWh/JtjtS2GctCOKj8hViQZtsPKTX1An5kQR3e5MB2Fk4YY6y
+         p+d2Vt/juaFWtg4Kb2JMOZoRogap9f85Me8wmgGdfkNQbJejUHET8TLCJZgVb46xJ+
+         piPrIFf0nYPhWjBc5M2hm1aNjNv45w9F2iO2HMB4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
-        Yang Fei <fei.yang@intel.com>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Tejas Joglekar <tejas.joglekar@synopsys.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Jack Pham <jackp@codeaurora.org>, Todd Kjos <tkjos@google.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        John Stultz <john.stultz@linaro.org>
-Subject: [PATCH 5.5 042/150] usb: dwc3: gadget: Check for IOC/LST bit in TRB->ctrl fields
-Date:   Thu, 27 Feb 2020 14:36:19 +0100
-Message-Id: <20200227132239.087998024@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH 5.5 097/150] drm/i915/execlists: Always force a context reload when rewinding RING_TAIL
+Date:   Thu, 27 Feb 2020 14:37:14 +0100
+Message-Id: <20200227132247.180032170@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -66,70 +60,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit 5ee858975b13a9b40db00f456989a689fdbb296c upstream.
+commit b1339ecac661e1cf3e1dc78ac56bff3aeeaeb92c upstream.
 
-The current code in dwc3_gadget_ep_reclaim_completed_trb() will
-check for IOC/LST bit in the event->status and returns if
-IOC/LST bit is set. This logic doesn't work if multiple TRBs
-are queued per request and the IOC/LST bit is set on the last
-TRB of that request.
+If we rewind the RING_TAIL on a context, due to a preemption event, we
+must force the context restore for the RING_TAIL update to be properly
+handled. Rather than note which preemption events may cause us to rewind
+the tail, compare the new request's tail with the previously submitted
+RING_TAIL, as it turns out that timeslicing was causing unexpected
+rewinds.
 
-Consider an example where a queued request has multiple queued
-TRBs and IOC/LST bit is set only for the last TRB. In this case,
-the core generates XferComplete/XferInProgress events only for
-the last TRB (since IOC/LST are set only for the last TRB). As
-per the logic in dwc3_gadget_ep_reclaim_completed_trb()
-event->status is checked for IOC/LST bit and returns on the
-first TRB. This leaves the remaining TRBs left unhandled.
+   <idle>-0       0d.s2 1280851190us : __execlists_submission_tasklet: 0000:00:02.0 rcs0: expired last=130:4698, prio=3, hint=3
+   <idle>-0       0d.s2 1280851192us : __i915_request_unsubmit: 0000:00:02.0 rcs0: fence 66:119966, current 119964
+   <idle>-0       0d.s2 1280851195us : __i915_request_unsubmit: 0000:00:02.0 rcs0: fence 130:4698, current 4695
+   <idle>-0       0d.s2 1280851198us : __i915_request_unsubmit: 0000:00:02.0 rcs0: fence 130:4696, current 4695
+^----  Note we unwind 2 requests from the same context
 
-Similarly, if the gadget function enqueues an unaligned request
-with sglist already in it, it should fail the same way, since we
-will append another TRB to something that already uses more than
-one TRB.
+   <idle>-0       0d.s2 1280851208us : __i915_request_submit: 0000:00:02.0 rcs0: fence 130:4696, current 4695
+   <idle>-0       0d.s2 1280851213us : __i915_request_submit: 0000:00:02.0 rcs0: fence 134:1508, current 1506
+^---- But to apply the new timeslice, we have to replay the first request
+      before the new client can start -- the unexpected RING_TAIL rewind
 
-To aviod this, this patch changes the code to check for IOC/LST
-bits in TRB->ctrl instead.
+   <idle>-0       0d.s2 1280851219us : trace_ports: 0000:00:02.0 rcs0: submit { 130:4696*, 134:1508 }
+ synmark2-5425    2..s. 1280851239us : process_csb: 0000:00:02.0 rcs0: cs-irq head=5, tail=0
+ synmark2-5425    2..s. 1280851240us : process_csb: 0000:00:02.0 rcs0: csb[0]: status=0x00008002:0x00000000
+^---- Preemption event for the ELSP update; note the lite-restore
 
-At a practical level, this patch resolves USB transfer stalls seen
-with adb on dwc3 based HiKey960 after functionfs gadget added
-scatter-gather support around v4.20.
+ synmark2-5425    2..s. 1280851243us : trace_ports: 0000:00:02.0 rcs0: preempted { 130:4698, 66:119966 }
+ synmark2-5425    2..s. 1280851246us : trace_ports: 0000:00:02.0 rcs0: promote { 130:4696*, 134:1508 }
+ synmark2-5425    2.... 1280851462us : __i915_request_commit: 0000:00:02.0 rcs0: fence 130:4700, current 4695
+ synmark2-5425    2.... 1280852111us : __i915_request_commit: 0000:00:02.0 rcs0: fence 130:4702, current 4695
+ synmark2-5425    2.Ns1 1280852296us : process_csb: 0000:00:02.0 rcs0: cs-irq head=0, tail=2
+ synmark2-5425    2.Ns1 1280852297us : process_csb: 0000:00:02.0 rcs0: csb[1]: status=0x00000814:0x00000000
+ synmark2-5425    2.Ns1 1280852299us : trace_ports: 0000:00:02.0 rcs0: completed { 130:4696!, 134:1508 }
+ synmark2-5425    2.Ns1 1280852301us : process_csb: 0000:00:02.0 rcs0: csb[2]: status=0x00000818:0x00000040
+ synmark2-5425    2.Ns1 1280852302us : trace_ports: 0000:00:02.0 rcs0: completed { 134:1508, 0:0 }
+ synmark2-5425    2.Ns1 1280852313us : process_csb: process_csb:2336 GEM_BUG_ON(!i915_request_completed(*execlists->active) && !reset_in_progress(execlists))
 
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Yang Fei <fei.yang@intel.com>
-Cc: Thinh Nguyen <thinhn@synopsys.com>
-Cc: Tejas Joglekar <tejas.joglekar@synopsys.com>
-Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Cc: Jack Pham <jackp@codeaurora.org>
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Cc: Linux USB List <linux-usb@vger.kernel.org>
-Cc: stable <stable@vger.kernel.org>
-Tested-by: Tejas Joglekar <tejas.joglekar@synopsys.com>
-Reviewed-by: Thinh Nguyen <thinhn@synopsys.com>
-Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-[jstultz: forward ported to mainline, reworded commit log, reworked
- to only check trb->ctrl as suggested by Felipe]
-Signed-off-by: John Stultz <john.stultz@linaro.org>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Fixes: 8ee36e048c98 ("drm/i915/execlists: Minimalistic timeslicing")
+Referenecs: 82c69bf58650 ("drm/i915/gt: Detect if we miss WaIdleLiteRestore")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Mika Kuoppala <mika.kuoppala@linux.intel.com>
+Reviewed-by: Mika Kuoppala <mika.kuoppala@linux.intel.com>
+Cc: <stable@vger.kernel.org> # v5.4+
+Link: https://patchwork.freedesktop.org/patch/msgid/20200207211452.2860634-1-chris@chris-wilson.co.uk
+(cherry picked from commit 5ba32c7be81e53ea8a27190b0f6be98e6c6779af)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/dwc3/gadget.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/i915/gt/intel_lrc.c        |   18 ++++++++----------
+ drivers/gpu/drm/i915/gt/intel_ring.c       |    1 +
+ drivers/gpu/drm/i915/gt/intel_ring.h       |    8 ++++++++
+ drivers/gpu/drm/i915/gt/intel_ring_types.h |    1 +
+ 4 files changed, 18 insertions(+), 10 deletions(-)
 
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -2426,7 +2426,8 @@ static int dwc3_gadget_ep_reclaim_comple
- 	if (event->status & DEPEVT_STATUS_SHORT && !chain)
- 		return 1;
+--- a/drivers/gpu/drm/i915/gt/intel_lrc.c
++++ b/drivers/gpu/drm/i915/gt/intel_lrc.c
+@@ -1157,7 +1157,7 @@ static u64 execlists_update_context(stru
+ {
+ 	struct intel_context *ce = rq->hw_context;
+ 	u64 desc = ce->lrc_desc;
+-	u32 tail;
++	u32 tail, prev;
  
--	if (event->status & DEPEVT_STATUS_IOC)
-+	if ((trb->ctrl & DWC3_TRB_CTRL_IOC) ||
-+	    (trb->ctrl & DWC3_TRB_CTRL_LST))
- 		return 1;
+ 	/*
+ 	 * WaIdleLiteRestore:bdw,skl
+@@ -1170,9 +1170,15 @@ static u64 execlists_update_context(stru
+ 	 * subsequent resubmissions (for lite restore). Should that fail us,
+ 	 * and we try and submit the same tail again, force the context
+ 	 * reload.
++	 *
++	 * If we need to return to a preempted context, we need to skip the
++	 * lite-restore and force it to reload the RING_TAIL. Otherwise, the
++	 * HW has a tendency to ignore us rewinding the TAIL to the end of
++	 * an earlier request.
+ 	 */
+ 	tail = intel_ring_set_tail(rq->ring, rq->tail);
+-	if (unlikely(ce->lrc_reg_state[CTX_RING_TAIL] == tail))
++	prev = ce->lrc_reg_state[CTX_RING_TAIL];
++	if (unlikely(intel_ring_direction(rq->ring, tail, prev) <= 0))
+ 		desc |= CTX_DESC_FORCE_RESTORE;
+ 	ce->lrc_reg_state[CTX_RING_TAIL] = tail;
+ 	rq->tail = rq->wa_tail;
+@@ -1651,14 +1657,6 @@ static void execlists_dequeue(struct int
+ 			 */
+ 			__unwind_incomplete_requests(engine);
  
- 	return 0;
+-			/*
+-			 * If we need to return to the preempted context, we
+-			 * need to skip the lite-restore and force it to
+-			 * reload the RING_TAIL. Otherwise, the HW has a
+-			 * tendency to ignore us rewinding the TAIL to the
+-			 * end of an earlier request.
+-			 */
+-			last->hw_context->lrc_desc |= CTX_DESC_FORCE_RESTORE;
+ 			last = NULL;
+ 		} else if (need_timeslice(engine, last) &&
+ 			   timer_expired(&engine->execlists.timer)) {
+--- a/drivers/gpu/drm/i915/gt/intel_ring.c
++++ b/drivers/gpu/drm/i915/gt/intel_ring.c
+@@ -145,6 +145,7 @@ intel_engine_create_ring(struct intel_en
+ 
+ 	kref_init(&ring->ref);
+ 	ring->size = size;
++	ring->wrap = BITS_PER_TYPE(ring->size) - ilog2(size);
+ 
+ 	/*
+ 	 * Workaround an erratum on the i830 which causes a hang if
+--- a/drivers/gpu/drm/i915/gt/intel_ring.h
++++ b/drivers/gpu/drm/i915/gt/intel_ring.h
+@@ -56,6 +56,14 @@ static inline u32 intel_ring_wrap(const
+ 	return pos & (ring->size - 1);
+ }
+ 
++static inline int intel_ring_direction(const struct intel_ring *ring,
++				       u32 next, u32 prev)
++{
++	typecheck(typeof(ring->size), next);
++	typecheck(typeof(ring->size), prev);
++	return (next - prev) << ring->wrap;
++}
++
+ static inline bool
+ intel_ring_offset_valid(const struct intel_ring *ring,
+ 			unsigned int pos)
+--- a/drivers/gpu/drm/i915/gt/intel_ring_types.h
++++ b/drivers/gpu/drm/i915/gt/intel_ring_types.h
+@@ -45,6 +45,7 @@ struct intel_ring {
+ 
+ 	u32 space;
+ 	u32 size;
++	u32 wrap;
+ 	u32 effective_size;
+ };
+ 
 
 
