@@ -2,51 +2,53 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46690C3F355
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7F3C3F343
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0906B20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEBD42084E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811547;
-	bh=Ikn2XS6i6nQclqf221B0zLdNpZ8y1O1ErpJ0j8u7WLc=;
+	s=default; t=1582811472;
+	bh=NhUQGsnafUe+C5Bx0IIl7hrgX87gytrWYkGTQoNos+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f3DQlVv61bpTif9nxVGooW3zBu6IS2XUdQzhgzz79oe/4UEqzQm2QNuA+Nx9y16Ih
-	 prwMmiw0MWwSKB+wD9L8l7dKRpitypnndXP4FRLgBG6RFvL7prclgxongQDByKsqIk
-	 XpisIe7Fgn0sxFh3gX4ghaRuKApobp/e6iCKIobM=
+	b=DIa0rba7dP/PnHUgJ9O4sDVR6qVOl6HDDneh9XlRqwk7VXUTRMag78NdSTGrwcUUY
+	 sEQcusmfDbJ2OMGjK4p6+TcSjP+SMvo/zJcdpSNwoSBRGfh0x1qBREHG1kpwDb0deg
+	 SIBvlDehv3sItCodQZRkBBVI45O/164hbZx4NKsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731154AbgB0Nw0 (ORCPT
+        id S1731345AbgB0NvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:52:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51858 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:51:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731518AbgB0NwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:52:21 -0500
+        id S1731341AbgB0NvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:51:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 790B320578;
-        Thu, 27 Feb 2020 13:52:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3206120578;
+        Thu, 27 Feb 2020 13:51:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811540;
-        bh=Ikn2XS6i6nQclqf221B0zLdNpZ8y1O1ErpJ0j8u7WLc=;
+        s=default; t=1582811466;
+        bh=NhUQGsnafUe+C5Bx0IIl7hrgX87gytrWYkGTQoNos+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TOx2PoKj1U3M+SkfwPqtZu/dOcuEioa5mwfe0BgKsqV+oPy1F+uyYAGGaIqAvNlRL
-         07CYFZPhxRkHxanYpRiPjrc3U0V6aeogFuCJNtYxAubs0KjoHBN+WdrTajErcpTNzE
-         xqZ0w5mTqil7Pjsb8tM/UB1cBGN3IPqiOz0Cz/HQ=
+        b=r0RQYjKtuu00TunCAeT3YW/rPtIs13QYZqmLjpY1NboHFMsSmUTCsyeaCExdfjSib
+         XPU7j5CE1yoIaqfSKJSWEbiVKa1U3Gtly9N+gv0tf7sHFbUrONaXeTfht3mg7AdQs8
+         xOIT6KBVNxKXf4ts7p78MZ738imHPcmQwGz0lZJk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.9 134/165] xhci: apply XHCI_PME_STUCK_QUIRK to Intel Comet Lake platforms
-Date:   Thu, 27 Feb 2020 14:36:48 +0100
-Message-Id: <20200227132250.595061503@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Zubin Mithra <zsm@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 144/165] netfilter: xt_bpf: add overflow checks
+Date:   Thu, 27 Feb 2020 14:36:58 +0100
+Message-Id: <20200227132251.928547530@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -59,41 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Jann Horn <jannh@google.com>
 
-commit a3ae87dce3a5abe0b57c811bab02b2564b574106 upstream.
+[ Upstream commit 6ab405114b0b229151ef06f4e31c7834dd09d0c0 ]
 
-Intel Comet Lake based platform require the XHCI_PME_STUCK_QUIRK
-quirk as well. Without this xHC can not enter D3 in runtime suspend.
+Check whether inputs from userspace are too long (explicit length field too
+big or string not null-terminated) to avoid out-of-bounds reads.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200210134553.9144-5-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+As far as I can tell, this can at worst lead to very limited kernel heap
+memory disclosure or oopses.
 
+This bug can be triggered by an unprivileged user even if the xt_bpf module
+is not loaded: iptables is available in network namespaces, and the xt_bpf
+module can be autoloaded.
+
+Triggering the bug with a classic BPF filter with fake length 0x1000 causes
+the following KASAN report:
+
+==================================================================
+BUG: KASAN: slab-out-of-bounds in bpf_prog_create+0x84/0xf0
+Read of size 32768 at addr ffff8801eff2c494 by task test/4627
+
+CPU: 0 PID: 4627 Comm: test Not tainted 4.15.0-rc1+ #1
+[...]
+Call Trace:
+ dump_stack+0x5c/0x85
+ print_address_description+0x6a/0x260
+ kasan_report+0x254/0x370
+ ? bpf_prog_create+0x84/0xf0
+ memcpy+0x1f/0x50
+ bpf_prog_create+0x84/0xf0
+ bpf_mt_check+0x90/0xd6 [xt_bpf]
+[...]
+Allocated by task 4627:
+ kasan_kmalloc+0xa0/0xd0
+ __kmalloc_node+0x47/0x60
+ xt_alloc_table_info+0x41/0x70 [x_tables]
+[...]
+The buggy address belongs to the object at ffff8801eff2c3c0
+                which belongs to the cache kmalloc-2048 of size 2048
+The buggy address is located 212 bytes inside of
+                2048-byte region [ffff8801eff2c3c0, ffff8801eff2cbc0)
+[...]
+==================================================================
+
+Fixes: e6f30c731718 ("netfilter: x_tables: add xt_bpf match")
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Zubin Mithra <zsm@chromium.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci-pci.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/netfilter/xt_bpf.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -53,6 +53,7 @@
- #define PCI_DEVICE_ID_INTEL_BROXTON_B_XHCI		0x1aa8
- #define PCI_DEVICE_ID_INTEL_APL_XHCI			0x5aa8
- #define PCI_DEVICE_ID_INTEL_DNV_XHCI			0x19d0
-+#define PCI_DEVICE_ID_INTEL_CML_XHCI			0xa3af
+diff --git a/net/netfilter/xt_bpf.c b/net/netfilter/xt_bpf.c
+index dffee9d47ec4b..7b993f25aab92 100644
+--- a/net/netfilter/xt_bpf.c
++++ b/net/netfilter/xt_bpf.c
+@@ -25,6 +25,9 @@ static int bpf_mt_check(const struct xt_mtchk_param *par)
+ 	struct xt_bpf_info *info = par->matchinfo;
+ 	struct sock_fprog_kern program;
  
- #define PCI_DEVICE_ID_ASMEDIA_1042A_XHCI		0x1142
++	if (info->bpf_program_num_elem > XT_BPF_MAX_NUM_INSTR)
++		return -EINVAL;
++
+ 	program.len = info->bpf_program_num_elem;
+ 	program.filter = info->bpf_program;
  
-@@ -170,7 +171,8 @@ static void xhci_pci_quirks(struct devic
- 		 pdev->device == PCI_DEVICE_ID_INTEL_BROXTON_M_XHCI ||
- 		 pdev->device == PCI_DEVICE_ID_INTEL_BROXTON_B_XHCI ||
- 		 pdev->device == PCI_DEVICE_ID_INTEL_APL_XHCI ||
--		 pdev->device == PCI_DEVICE_ID_INTEL_DNV_XHCI)) {
-+		 pdev->device == PCI_DEVICE_ID_INTEL_DNV_XHCI ||
-+		 pdev->device == PCI_DEVICE_ID_INTEL_CML_XHCI)) {
- 		xhci->quirks |= XHCI_PME_STUCK_QUIRK;
- 	}
- 	if (pdev->vendor == PCI_VENDOR_ID_INTEL &&
+-- 
+2.20.1
+
 
 
