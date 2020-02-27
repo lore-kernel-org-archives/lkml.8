@@ -2,120 +2,121 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12484C3F2C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F3BC3F2C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E39A924650
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEB3A24650
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:34:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qBGk3y53"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730572AbgB0Wcr (ORCPT
+        id S1730173AbgB0Web (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 17:32:47 -0500
-Received: from mga05.intel.com ([192.55.52.43]:48662 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730530AbgB0Wci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 17:32:38 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 14:32:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
-   d="scan'208";a="411194895"
-Received: from azeira-mobl.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.251.147.250])
-  by orsmga005.jf.intel.com with ESMTP; 27 Feb 2020 14:32:36 -0800
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
-        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Hui Wang <hui.wang@canonical.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [PATCH 8/8] soundwire: intel_init: save Slave(s) _ADR info in sdw_intel_ctx
-Date:   Thu, 27 Feb 2020 16:32:06 -0600
-Message-Id: <20200227223206.5020-9-pierre-louis.bossart@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200227223206.5020-1-pierre-louis.bossart@linux.intel.com>
-References: <20200227223206.5020-1-pierre-louis.bossart@linux.intel.com>
+        Thu, 27 Feb 2020 17:34:31 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42958 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729926AbgB0Web (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 17:34:31 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 15so582783pfo.9;
+        Thu, 27 Feb 2020 14:34:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=uEgm7G3Oorn2p+U3SUvjAXjrUbk1a/Mg7TANrk2b//4=;
+        b=qBGk3y53fGrIoD9YVbCtRjk94Q6RcxNk2DSm3mh434SY+OeNEv+jBkV8dglcusUA+R
+         L9mwI4MHxQNulbX/2XretJJFtukcDGzr2zLCBNAkiws90+uuoSKtuF1EROggBJffSdKA
+         qgggk49UicheeH2QMRaXodHbyDiRh7P6/kHwp03Qgo9PQ24UR4jbyoqss3gfllwvQvVL
+         xwPDxSBopjmtHJX5f74rVo97JgjI8Yitea1jHRJYWPIvIVzfbC6PC9a5X0IHms8IgMCK
+         4WlJkdiWKYejSZSyCp9T8rIybyOSefTm2XK4DXMzvuRuMra5mVvzOdAJGX853Tdp2LWM
+         Rx2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uEgm7G3Oorn2p+U3SUvjAXjrUbk1a/Mg7TANrk2b//4=;
+        b=P9neHsm/pTYgzDJAlQhPG4Dr2h6mvd4N61kZXRYCWIVHNhzFdqoU/L0GBJGKmAqd8s
+         CQoj1a/gy+CKJKi2sCoovyTtoUBw7SXZnJE4IhLV2+YOJ/sUB5ElSknqIHejbb71HtQ0
+         atZXxffpaPAycUz9Be0jHm8yJjHYGDTZQ2USdZiF8rquQkUDYehYB8S13fNF+dXavMs7
+         omwWtzW6hYRSB8cy72zP+2JEWfdivAXNC/OiUJ6fbXJQhLbtjSy8z6PcbuwLK+TCX6jj
+         lfKKcgds25k2PV59HSO9bpLg7W3P97bkw95cRuTUhPF7EgPowfbK6CIpz9354XIgVq5x
+         dOzg==
+X-Gm-Message-State: APjAAAVUjPitvyZWC4iCzNsClZRipdQ+1dqayRGCfQgLPHXs/eTJjSOY
+        d786fuaxhtdVDMRtN27l6JA=
+X-Google-Smtp-Source: APXvYqw5t5F5Y64xPWlPBKQeB1b3ZAolobkAyq2a30keMZ7QjMV3RtaaKUEDeVezZZN7BeyPxNi9EQ==
+X-Received: by 2002:a62:6d01:: with SMTP id i1mr1237798pfc.94.1582842869095;
+        Thu, 27 Feb 2020 14:34:29 -0800 (PST)
+Received: from taoren-ubuntu-R90MNF91 ([2620:10d:c090:500::4:d8f5])
+        by smtp.gmail.com with ESMTPSA id y193sm5500583pgd.87.2020.02.27.14.34.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 27 Feb 2020 14:34:28 -0800 (PST)
+Date:   Thu, 27 Feb 2020 14:34:25 -0800
+From:   Tao Ren <rentao.bupt@gmail.com>
+To:     Joel Stanley <joel@jms.id.au>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Tao Ren <taoren@fb.com>
+Subject: Re: [PATCH v4 6/7] ARM: dts: aspeed-g4: add vhub port and endpoint
+ properties
+Message-ID: <20200227223425.GB29420@taoren-ubuntu-R90MNF91>
+References: <20200226230346.672-1-rentao.bupt@gmail.com>
+ <20200226230346.672-7-rentao.bupt@gmail.com>
+ <83d7b817234f99c92272f7950129c56a58f4de54.camel@kernel.crashing.org>
+ <CACPK8XdkPLZVJTpAc2u3Q0W0KoRrC4hfHjy27VKpGDRF45JByg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACPK8XdkPLZVJTpAc2u3Q0W0KoRrC4hfHjy27VKpGDRF45JByg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bard Liao <yung-chuan.liao@linux.intel.com>
+On Thu, Feb 27, 2020 at 05:54:34AM +0000, Joel Stanley wrote:
+> On Thu, 27 Feb 2020 at 04:11, Benjamin Herrenschmidt
+> <benh@kernel.crashing.org> wrote:
+> >
+> > On Wed, 2020-02-26 at 15:03 -0800, rentao.bupt@gmail.com wrote:
+> > > From: Tao Ren <rentao.bupt@gmail.com>
+> > >
+> > > Add "aspeed,vhub-downstream-ports" and "aspeed,vhub-generic-
+> > > endpoints"
+> > > properties to describe supported number of vhub ports and endpoints.
+> > >
+> > > Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+> >
+> > Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> 
+> Reviewed-by: Joel Stanley <joel@jms.id.au>
+> 
+> I will take this patch through the aspeed tree for 5.7.
+> 
+> Cheers,
+> 
+> Joel
 
-Save ACPI information in context so that we can match machine driver
-with sdw _ADR matching tables.
+Thanks Joel for the continued support!
 
-Signed-off-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
----
- drivers/soundwire/intel_init.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+Cheers,
 
-diff --git a/drivers/soundwire/intel_init.c b/drivers/soundwire/intel_init.c
-index 91ec91127f2a..60d6d844ee4a 100644
---- a/drivers/soundwire/intel_init.c
-+++ b/drivers/soundwire/intel_init.c
-@@ -74,6 +74,8 @@ static int sdw_intel_cleanup(struct sdw_intel_ctx *ctx)
- 
- 	kfree(ctx->links);
- 	ctx->links = NULL;
-+	kfree(ctx->ids);
-+	ctx->ids = NULL;
- 
- 	return 0;
- }
-@@ -188,7 +190,11 @@ static struct sdw_intel_ctx
- 	struct acpi_device *adev;
- 	struct sdw_master_device *md;
- 	unsigned long time;
-+	struct sdw_slave *slave;
-+	struct list_head *node;
-+	struct sdw_bus *bus;
- 	u32 link_mask;
-+	int num_slaves = 0;
- 	int count;
- 	int i;
- 
-@@ -261,6 +267,25 @@ static struct sdw_intel_ctx
- 		link->md = md;
- 
- 		list_add_tail(&link->list, &ctx->link_list);
-+		bus = &link->cdns->bus;
-+		/* Calculate number of slaves */
-+		list_for_each(node, &bus->slaves)
-+			num_slaves++;
-+	}
-+
-+	ctx->ids = kcalloc(num_slaves, sizeof(*ctx->ids), GFP_KERNEL);
-+	if (!ctx->ids)
-+		goto err;
-+
-+	ctx->num_slaves = num_slaves;
-+	i = 0;
-+	list_for_each_entry(link, &ctx->link_list, list) {
-+		bus = &link->cdns->bus;
-+		list_for_each_entry(slave, &bus->slaves, node) {
-+			ctx->ids[i].id = slave->id;
-+			ctx->ids[i].link_id = bus->link_id;
-+			i++;
-+		}
- 	}
- 
- 	return ctx;
--- 
-2.20.1
-
+Tao
