@@ -2,125 +2,125 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A18C3C4BA37
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 02:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F93C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 02:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72DDE24670
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 02:10:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582769427;
-	bh=4TGbWFlb9eTmYavHQrRR7TlW2bK12n9BSdFbsu7RxTM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ySg1By0ieiZCmgM/4pHmzJ81miCDv01rfQRwyX9rIabncaBsyogq65gEMoxgAPNVz
-	 2Kqip9KU3P1l2mSpHjtit89B6hr0Qez4Q62caZZpnuHX6a8ltMWUzIDAeQFFZQjS7H
-	 Nt5ZPt+dCPhnG7tIXQqUjTpeL/D05FxcEyGC3aew=
+	by mail.kernel.org (Postfix) with ESMTP id F0CB624680
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 02:11:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ayBMgFwV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728318AbgB0CK0 (ORCPT
+        id S1728323AbgB0CL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 21:10:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36048 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728178AbgB0CK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 21:10:26 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C95DB24650;
-        Thu, 27 Feb 2020 02:10:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582769425;
-        bh=4TGbWFlb9eTmYavHQrRR7TlW2bK12n9BSdFbsu7RxTM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=AUDGnGUk3IasFzMYsELzN30dhiYuwHtsgzarpY0O+UJ4tDitHWo8NunYJzrXmepHy
-         MNwew2+cFM7VI6WJ0BK+HZiVPNmPp6iwoUtWLGSdVElSB4Q1cKnnBojIKnhLou/mCI
-         1CdFLN/gHddBO1T/ACjCA8VOzyJn62YDlMZ7+3zA=
-Date:   Thu, 27 Feb 2020 11:10:19 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Luigi Rizzo <lrizzo@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        naveen.n.rao@linux.ibm.com, ardb@kernel.org,
-        Luigi Rizzo <rizzo@iet.unipi.it>,
-        Paolo Abeni <pabeni@redhat.com>, giuseppe.lettieri@unipi.it,
-        Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>, mingo@redhat.com,
-        acme@kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v2 1/2] kstats: kernel metric collector
-Message-Id: <20200227111019.8fd6f57819282a08ced3ce35@kernel.org>
-In-Reply-To: <CAMOZA0LU_mGPre9gsJSZeG19fUjLWb+6xuG8-2yv5gJRHwWzqQ@mail.gmail.com>
-References: <20200226134637.31670-1-lrizzo@google.com>
-        <20200226134637.31670-2-lrizzo@google.com>
-        <20200226161941.GZ18400@hirez.programming.kicks-ass.net>
-        <CAMOZA0LU_mGPre9gsJSZeG19fUjLWb+6xuG8-2yv5gJRHwWzqQ@mail.gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 26 Feb 2020 21:11:56 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36100 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728178AbgB0CL4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 21:11:56 -0500
+Received: by mail-oi1-f195.google.com with SMTP id c16so1748713oic.3;
+        Wed, 26 Feb 2020 18:11:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=he1uRJhimWdmXlH4KMyv7rZ5+f5TpR3yYZ1SBC2Q6M4=;
+        b=ayBMgFwVIB4RZSA8nsIkYYFeLoUweLRhh+hyZe9/kfucORdETI97Ul78g9Qph+9BgM
+         qu5gKbVjpy1/EPdroqPimYar+XVDAmoGWOnWfSArE33rqk2BF+cCY4OcIKbVq+0Bjtob
+         7YqFBywBuOdSgMu9muQgiFrzTobGdJVHbMuxpxbKh0c0Cnqqli/Jquqtb6kBMIcDOxAO
+         SiO97iJEgur8kaTx3rnGaHspC7w9UHps2kEIU809vgqlclK2xf62C8yXHgxZEU5fKc7R
+         sT+s9Azj0270BniGkp8FXfaJrXGu6msYhhJIqYdY0fWF50HHlaFeBymqkSVyNYvx1CVh
+         SZ7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=he1uRJhimWdmXlH4KMyv7rZ5+f5TpR3yYZ1SBC2Q6M4=;
+        b=aNggrHctv4FhbdlsuzzhQZBUMZ4KYbsFKljkG9Pw5o1LWZFNG/8RfkAwu0b0H9t9SH
+         8ipJ5n+3DDB++UvpcN2/EiVM+AnNNXJOWrRP+JpCBwv4LcZ9zEJmVVnj8Hz1EgrVworN
+         fHD4yqZh/UrJflO4PF23gRRMtEFfUvvn8YvtkKx4mYJWAuh2wwPztTUONcg/XSEnb7wm
+         pKQ4CZfn3yguoGmoLmRO1bBo3b5WCODolZ4qJPx7L2nUhPWtkOxT5T95PGfXbEKlYCwl
+         sRnVCKtqbjeEENOGdHBv1m3RvY/yAVWc9fsSGAUSWpdT2UaJtrakGJAB5Wxl+nwzsmgR
+         F5WA==
+X-Gm-Message-State: APjAAAXi1hvHHoYdD5YhEZC7bAX1sslk6WWt0mjKxkEnzi0Nr3g/Nre5
+        mTHi3mdeFj9GInZ6Gi8dsse4Hmd1FIFxtoJCouk=
+X-Google-Smtp-Source: APXvYqxsFL01V4pX4VvSoQr/+nsogbthwMlTWrKppZURcCyyczEcgFcrencOXJXVDfPnbtJSq4aFT1/nkXVy7GOU+7w=
+X-Received: by 2002:aca:43c1:: with SMTP id q184mr1584492oia.116.1582769513861;
+ Wed, 26 Feb 2020 18:11:53 -0800 (PST)
+MIME-Version: 1.0
+References: <20200205181935.3712-1-yu-cheng.yu@intel.com> <20200205181935.3712-6-yu-cheng.yu@intel.com>
+ <d4dabb84-5636-2657-c45e-795f3f2dcbbc@intel.com> <CAMe9rOouOwNC873v=LOv5rJWcbe9Zvg+od8229J33V=ZfrB1rg@mail.gmail.com>
+ <71791bbf-7ee3-fa70-b569-ae643151646e@intel.com>
+In-Reply-To: <71791bbf-7ee3-fa70-b569-ae643151646e@intel.com>
+From:   "H.J. Lu" <hjl.tools@gmail.com>
+Date:   Wed, 26 Feb 2020 18:11:17 -0800
+Message-ID: <CAMe9rOqhf4y+e6h8i7P8+70pwLSg8n=ise6LEqABNPKarECdeA@mail.gmail.com>
+Subject: Re: [RFC PATCH v9 05/27] x86/cet/shstk: Add Kconfig option for
+ user-mode Shadow Stack protection
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luigi,
+On Wed, Feb 26, 2020 at 5:16 PM Dave Hansen <dave.hansen@intel.com> wrote:
+>
+> On 2/26/20 5:02 PM, H.J. Lu wrote:
+> >> That way everybody with old toolchains can still build the kernel (and
+> >> run/test code with your config option on, btw...).
+> > CET requires a complete new OS image from kernel, toolchain, run-time.
+> > CET enabled kernel without the rest of updated OS won't give you CET
+> > at all.
+>
+> If you require a new toolchain, nobody even builds your fancy feature.
+> Probably including 0day and all of the lazy maintainers with crufty old
+> distros.
 
-On Wed, 26 Feb 2020 11:31:01 -0800
-Luigi Rizzo <lrizzo@google.com> wrote:
+GCC 8 or above is needed since vDSO must be compiled with
+--fcf-protection=branch.
 
-> On Wed, Feb 26, 2020 at 8:19 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Wed, Feb 26, 2020 at 05:46:36AM -0800, Luigi Rizzo wrote:
-> > > kstats is a helper to accumulate in-kernel metrics (timestamps, sizes,
-> > > etc.) and show distributions through debugfs.
-> > > Set CONFIG_KSTATS=m or y to enable it.
-> > >
-> > > Creating a metric takes one line of code (and one to destroy it):
-> > >
-> > >   struct kstats *key = kstats_new("foo", 3 /* frac_bits */);
-> > >   ...
-> > >   kstats_delete(key);
-> > >
-> > > The following line records a u64 sample:
-> > >
-> > >   kstats_record(key, value);
-> > >
-> > > kstats_record() is cheap (5ns hot cache, 250ns cold cache). Samples are
-> > > accumulated in a per-cpu array with 2^frac_bits slots for each power
-> > > of 2. Using frac_bits = 3 gives about 30 slots per decade.
-> >
-> > So I think everybody + dog has written code like this, although I never
-> > bothered with the log2 based buckets myself. Nor have I ever bothered
-> > with doing a debugfs interface.
-> 
-> the above is perhaps one excellent argument to why it may deserve to be in:
-> so that people don't need to write the measurement code time and again,
-> or, as I have done myself multiple times, use some inferior hack (racy
-> counter, coarse buckets) or give up measuring things and rely on guessing.
-> 
-> > I find it very hard to convince myself something like this deserves to
-> > live upstream, vs. remaining in the local debug/hack toolbox.
-> >
-> > Tracing has an aggregator (histogram), you can dump the raw deltas, or
-> > you can hack up a custom aggregator in a few lines, or you do BPF if
-> > you're so inclined.
-> 
-> And this is possibly another good argument: sometimes the systems where it
-> would be interesting to collect data are not accessible to the developers with
-> skills to write the monitoring code and run a modified kernel.
+> The point isn't to actually run CET at all.  The point is to get as many
+> people as possible testing as much of it as possible.  Testing includes
+> compile testing, static analysis and bloat watching.  It also includes
+> functional and performance testing when you've got the feature compiled
+> in but unavailable at runtime.  Did this hurt anything even when I'm not
+> using it?
+>
 
-Would you mean the histogram requires more skills to use it?
-I think Peter's point is that there is already an "ability" and "interface"
-to do that in kenrel. If you think that is not easy to use, can you modify
-existing features or add a user tool to use it easier?
-
-Thank you,
-
+I will leave the CET toolchain issue to Yu-cheng.
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+H.J.
