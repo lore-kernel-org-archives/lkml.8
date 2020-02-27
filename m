@@ -2,331 +2,238 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5A1C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 01:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12FB8C4BA35
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 01:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7D9E20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 01:11:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C728420656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 01:11:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MwH59bbG"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ul3vZYUF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbgB0BLJ (ORCPT
+        id S1728172AbgB0BLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 20:11:09 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35929 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727973AbgB0BLJ (ORCPT
+        Wed, 26 Feb 2020 20:11:11 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:58973 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727964AbgB0BLK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 20:11:09 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p17so1517341wma.1;
-        Wed, 26 Feb 2020 17:11:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4bInzMmSe0SQFhuJPffFbwCkWE3FgBh8teIvX/3Nphg=;
-        b=MwH59bbGsZwowI5YrIA9G0QAR8miEE7Gf9TqE0ugY1HPV2TuNK16bIbrl7Ft00En4F
-         lPy+30gX4uWSIEeAJxoccMt1Tf7w9iVVYfBXDNAEaIhqsGYNilu//ScyyzomqD/oBHEY
-         K3bywwzp5CB7BwgIJ0Fb3bEHnnHRoY+VH2I+xyfI5ZGGF3CmerWjG8iH/3WkZ23AYqr8
-         AbyDgdS9I4ewtu4Z9fuL9nmAJ4Q4yvb2QcK2p5rrf1hgsvLFzHuD3RjHSxjDOWxkh5xi
-         295J6D4fnkmK3O22jJCMXLc7ceGJBFaK5U/P5+wUXSyipVXB5QvJi6MOz+sM6lca+ERj
-         jvxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4bInzMmSe0SQFhuJPffFbwCkWE3FgBh8teIvX/3Nphg=;
-        b=QBOcEuvkRyjLkbifaND1Z6BdOuU6aB6RdbNA97elLr/b7fujIX2YzdgP8UX01w6665
-         hWWWFdBTzo8N6Zf9c1JlfkarxToAILOhdaPNpOWT8V4ZZhUoNq92+YdArfEe9aqEcIhF
-         s9H/FOG6jiFxZ/jmp/aWsNm563s4ruQEUzlveD62IrdcXZKM4J7zeNWXwkkG9E1dWMfl
-         G2DR1vCXFqeKTRkvaXDej/VrXABKagDqpr6J9c1VGvGBNsmWotg5RlnlOlmeeCyJE2mv
-         ngG3Fsz4nBhquftYMuqI0U480s0Rx/iYDbPZOYlQfQUJCCil5zap55D1kVgbpxCxu+7X
-         lZJQ==
-X-Gm-Message-State: APjAAAU6YvjzVem03U9nb5wYopPXegAxuxCNG7Rgv6/yQDsaAxqaMSzI
-        5OSidn9H0MrWm36+3EkYCLI=
-X-Google-Smtp-Source: APXvYqxwpS2Z+OI2QhcZ+ksAMqTah3unWBCz1xawb8SBMc3mMLpPXtHL2AwYawfFpJyP9asXntBAOw==
-X-Received: by 2002:a05:600c:24b:: with SMTP id 11mr1713398wmj.1.1582765865992;
-        Wed, 26 Feb 2020 17:11:05 -0800 (PST)
-Received: from Ansuel-XPS.localdomain (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
-        by smtp.googlemail.com with ESMTPSA id s5sm3509507wru.39.2020.02.26.17.11.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 17:11:05 -0800 (PST)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v8 1/2] net: mdio: add ipq8064 mdio driver
-Date:   Thu, 27 Feb 2020 02:10:45 +0100
-Message-Id: <20200227011050.11106-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <andrew@lunn.ch>
-References: <andrew@lunn.ch>
+        Wed, 26 Feb 2020 20:11:10 -0500
+X-UUID: 72d4123620a5411cb0392343bcf528b4-20200227
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=g7uCumPTcKLDEaH//G3AL+2SvkEBkLiF4hfq4malq4M=;
+        b=ul3vZYUFyn5UbPg6XAcaJReam8NeZiS5JM+vuu46k+I+dtrsEUZWKGIrFUXuYS2xDF3qwsi2Wdgt9dxCtI5Sbdj1iK2+vA4mt0b4PLiZzAKZ+WPJtJF9ex3a0f9dkQYRCJ6hvTwM7GSVqVQgUudPD+TYowxzt2g0s/ZAmFFzjeI=;
+X-UUID: 72d4123620a5411cb0392343bcf528b4-20200227
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1807888717; Thu, 27 Feb 2020 09:11:00 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 27 Feb 2020 09:10:04 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 27 Feb 2020 09:10:48 +0800
+Message-ID: <1582765858.20746.2.camel@mtksdaap41>
+Subject: Re: [PATCH v9 1/4] drm/mediatek: Use regmap for register access
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <p.zabel@pengutronix.de>, <airlied@linux.ie>,
+        <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <ulrich.hecht+renesas@gmail.com>,
+        <laurent.pinchart@ideasonboard.com>,
+        "Kate Stewart" <kstewart@linuxfoundation.org>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+        <dri-devel@lists.freedesktop.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        <linux-clk@vger.kernel.org>, Weiyi Lu <weiyi.lu@mediatek.com>,
+        <wens@csie.org>, <linux-arm-kernel@lists.infradead.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <frank-w@public-files.de>, Seiya Wang <seiya.wang@mediatek.com>,
+        <sean.wang@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>, <hsinyi@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <rdunlap@infradead.org>, <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>, <matthias.bgg@kernel.org>
+Date:   Thu, 27 Feb 2020 09:10:58 +0800
+In-Reply-To: <20200226105419.632771-2-enric.balletbo@collabora.com>
+References: <20200226105419.632771-1-enric.balletbo@collabora.com>
+         <20200226105419.632771-2-enric.balletbo@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+X-TM-SNTS-SMTP: D30F497065135211C6216342C86114129F1F30BEA135DFA590346BD2746D5C1F2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently ipq806x soc use generic bitbang driver to
-comunicate with the gmac ethernet interface.
-Add a dedicated driver created by chunkeey to fix this.
-
-Co-developed-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
-Changes in v8:
-- Drop syscon_regmap_lookup_by_phandle and make
-  clock definition in dts mandatory
-
-Changes in v7:
-- Add myself as module author and copyright
-- Reduced usleep_range to 8-10 as suggested by chunkeey
-
-Changes in v6:
-- Fix error in commit description
-- Add co-developed tag
-
-Changes in v5:
-- Rename define to more rappresentative name
-
-Changes in v4:
-- Fix wrong print value in dev_err
-
-Changes in v3:
-- Fix wrong return logic on error
-
-Changes in v2:
-- Use regmap_read_poll_timeout
-- Reject clause 45
-
- drivers/net/phy/Kconfig        |   8 ++
- drivers/net/phy/Makefile       |   1 +
- drivers/net/phy/mdio-ipq8064.c | 166 +++++++++++++++++++++++++++++++++
- 3 files changed, 175 insertions(+)
- create mode 100644 drivers/net/phy/mdio-ipq8064.c
-
-diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-index 9dabe03a668c..ec2a5493a7e8 100644
---- a/drivers/net/phy/Kconfig
-+++ b/drivers/net/phy/Kconfig
-@@ -157,6 +157,14 @@ config MDIO_I2C
- 
- 	  This is library mode.
- 
-+config MDIO_IPQ8064
-+	tristate "Qualcomm IPQ8064 MDIO interface support"
-+	depends on HAS_IOMEM && OF_MDIO
-+	depends on MFD_SYSCON
-+	help
-+	  This driver supports the MDIO interface found in the network
-+	  interface units of the IPQ8064 SoC
-+
- config MDIO_MOXART
- 	tristate "MOXA ART MDIO interface support"
- 	depends on ARCH_MOXART || COMPILE_TEST
-diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-index fe5badf13b65..8f02bd2089f3 100644
---- a/drivers/net/phy/Makefile
-+++ b/drivers/net/phy/Makefile
-@@ -36,6 +36,7 @@ obj-$(CONFIG_MDIO_CAVIUM)	+= mdio-cavium.o
- obj-$(CONFIG_MDIO_GPIO)		+= mdio-gpio.o
- obj-$(CONFIG_MDIO_HISI_FEMAC)	+= mdio-hisi-femac.o
- obj-$(CONFIG_MDIO_I2C)		+= mdio-i2c.o
-+obj-$(CONFIG_MDIO_IPQ8064)	+= mdio-ipq8064.o
- obj-$(CONFIG_MDIO_MOXART)	+= mdio-moxart.o
- obj-$(CONFIG_MDIO_MSCC_MIIM)	+= mdio-mscc-miim.o
- obj-$(CONFIG_MDIO_OCTEON)	+= mdio-octeon.o
-diff --git a/drivers/net/phy/mdio-ipq8064.c b/drivers/net/phy/mdio-ipq8064.c
-new file mode 100644
-index 000000000000..575db9068283
---- /dev/null
-+++ b/drivers/net/phy/mdio-ipq8064.c
-@@ -0,0 +1,166 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Qualcomm IPQ8064 MDIO interface driver
-+ *
-+ * Copyright (C) 2019 Christian Lamparter <chunkeey@gmail.com>
-+ * Copyright (C) 2020 Ansuel Smith <ansuelsmth@gmail.com>
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+#include <linux/of_mdio.h>
-+#include <linux/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/mfd/syscon.h>
-+
-+/* MII address register definitions */
-+#define MII_ADDR_REG_ADDR                       0x10
-+#define MII_BUSY                                BIT(0)
-+#define MII_WRITE                               BIT(1)
-+#define MII_CLKRANGE_60_100M                    (0 << 2)
-+#define MII_CLKRANGE_100_150M                   (1 << 2)
-+#define MII_CLKRANGE_20_35M                     (2 << 2)
-+#define MII_CLKRANGE_35_60M                     (3 << 2)
-+#define MII_CLKRANGE_150_250M                   (4 << 2)
-+#define MII_CLKRANGE_250_300M                   (5 << 2)
-+#define MII_CLKRANGE_MASK			GENMASK(4, 2)
-+#define MII_REG_SHIFT				6
-+#define MII_REG_MASK				GENMASK(10, 6)
-+#define MII_ADDR_SHIFT				11
-+#define MII_ADDR_MASK				GENMASK(15, 11)
-+
-+#define MII_DATA_REG_ADDR                       0x14
-+
-+#define MII_MDIO_DELAY_USEC                     (1000)
-+#define MII_MDIO_RETRY_MSEC                     (10)
-+
-+struct ipq8064_mdio {
-+	struct regmap *base; /* NSS_GMAC0_BASE */
-+};
-+
-+static int
-+ipq8064_mdio_wait_busy(struct ipq8064_mdio *priv)
-+{
-+	u32 busy;
-+
-+	return regmap_read_poll_timeout(priv->base, MII_ADDR_REG_ADDR, busy,
-+					!(busy & MII_BUSY), MII_MDIO_DELAY_USEC,
-+					MII_MDIO_RETRY_MSEC * USEC_PER_MSEC);
-+}
-+
-+static int
-+ipq8064_mdio_read(struct mii_bus *bus, int phy_addr, int reg_offset)
-+{
-+	u32 miiaddr = MII_BUSY | MII_CLKRANGE_250_300M;
-+	struct ipq8064_mdio *priv = bus->priv;
-+	u32 ret_val;
-+	int err;
-+
-+	/* Reject clause 45 */
-+	if (reg_offset & MII_ADDR_C45)
-+		return -EOPNOTSUPP;
-+
-+	miiaddr |= ((phy_addr << MII_ADDR_SHIFT) & MII_ADDR_MASK) |
-+		   ((reg_offset << MII_REG_SHIFT) & MII_REG_MASK);
-+
-+	regmap_write(priv->base, MII_ADDR_REG_ADDR, miiaddr);
-+	usleep_range(8, 10);
-+
-+	err = ipq8064_mdio_wait_busy(priv);
-+	if (err)
-+		return err;
-+
-+	regmap_read(priv->base, MII_DATA_REG_ADDR, &ret_val);
-+	return (int)ret_val;
-+}
-+
-+static int
-+ipq8064_mdio_write(struct mii_bus *bus, int phy_addr, int reg_offset, u16 data)
-+{
-+	u32 miiaddr = MII_WRITE | MII_BUSY | MII_CLKRANGE_250_300M;
-+	struct ipq8064_mdio *priv = bus->priv;
-+
-+	/* Reject clause 45 */
-+	if (reg_offset & MII_ADDR_C45)
-+		return -EOPNOTSUPP;
-+
-+	regmap_write(priv->base, MII_DATA_REG_ADDR, data);
-+
-+	miiaddr |= ((phy_addr << MII_ADDR_SHIFT) & MII_ADDR_MASK) |
-+		   ((reg_offset << MII_REG_SHIFT) & MII_REG_MASK);
-+
-+	regmap_write(priv->base, MII_ADDR_REG_ADDR, miiaddr);
-+	usleep_range(8, 10);
-+
-+	return ipq8064_mdio_wait_busy(priv);
-+}
-+
-+static int
-+ipq8064_mdio_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct ipq8064_mdio *priv;
-+	struct mii_bus *bus;
-+	int ret;
-+
-+	bus = devm_mdiobus_alloc_size(&pdev->dev, sizeof(*priv));
-+	if (!bus)
-+		return -ENOMEM;
-+
-+	bus->name = "ipq8064_mdio_bus";
-+	bus->read = ipq8064_mdio_read;
-+	bus->write = ipq8064_mdio_write;
-+	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-mii", dev_name(&pdev->dev));
-+	bus->parent = &pdev->dev;
-+
-+	priv = bus->priv;
-+	priv->base = syscon_node_to_regmap(np);
-+	if (IS_ERR(priv->base)) {
-+		if (priv->base == ERR_PTR(-EPROBE_DEFER))
-+			return -EPROBE_DEFER;
-+
-+		dev_err(&pdev->dev, "error getting syscon regmap, error=%pe\n",
-+			priv->base);
-+		return PTR_ERR(priv->base);
-+	}
-+
-+	ret = of_mdiobus_register(bus, np);
-+	if (ret)
-+		return ret;
-+
-+	platform_set_drvdata(pdev, bus);
-+	return 0;
-+}
-+
-+static int
-+ipq8064_mdio_remove(struct platform_device *pdev)
-+{
-+	struct mii_bus *bus = platform_get_drvdata(pdev);
-+
-+	mdiobus_unregister(bus);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id ipq8064_mdio_dt_ids[] = {
-+	{ .compatible = "qcom,ipq8064-mdio" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ipq8064_mdio_dt_ids);
-+
-+static struct platform_driver ipq8064_mdio_driver = {
-+	.probe = ipq8064_mdio_probe,
-+	.remove = ipq8064_mdio_remove,
-+	.driver = {
-+		.name = "ipq8064-mdio",
-+		.of_match_table = ipq8064_mdio_dt_ids,
-+	},
-+};
-+
-+module_platform_driver(ipq8064_mdio_driver);
-+
-+MODULE_DESCRIPTION("Qualcomm IPQ8064 MDIO interface driver");
-+MODULE_AUTHOR("Christian Lamparter <chunkeey@gmail.com>");
-+MODULE_AUTHOR("Ansuel Smith <ansuelsmth@gmail.com>");
-+MODULE_LICENSE("GPL");
--- 
-2.25.0
+SGksIEVucmljOg0KDQpPbiBXZWQsIDIwMjAtMDItMjYgYXQgMTE6NTQgKzAxMDAsIEVucmljIEJh
+bGxldGJvIGkgU2VycmEgd3JvdGU6DQo+IEZyb206IE1hdHRoaWFzIEJydWdnZXIgPG1icnVnZ2Vy
+QHN1c2UuY29tPg0KPiANCj4gVGhlIG1tc3lzIG1lbW9yeSBzcGFjZSBpcyBzaGFyZWQgYmV0d2Vl
+biB0aGUgZHJtIGFuZCB0aGUNCj4gY2xrIGRyaXZlci4gVXNlIHJlZ21hcCB0byBhY2Nlc3MgaXQu
+DQoNCk9uY2UgdGhlcmUgaXMgYSBtbXN5cyBkcml2ZXIgYW5kIGNsb2NrIGNvbnRyb2wgaXMgbW92
+ZWQgaW50byBtbXN5cw0KZHJpdmVyLCBJIHRoaW5rIHdlIHNob3VsZCBhbHNvIG1vdmUgcm91dGlu
+ZyBjb250cm9sIGludG8gbW1zeXMgZHJpdmVyDQphbmQgd2UgY291bGQgZHJvcCB0aGlzIHBhdGNo
+Lg0KDQpSZWdhcmRzLA0KQ0sNCg0KPiANCj4gU2lnbmVkLW9mZi1ieTogTWF0dGhpYXMgQnJ1Z2dl
+ciA8bWJydWdnZXJAc3VzZS5jb20+DQo+IFJldmlld2VkLWJ5OiBQaGlsaXBwIFphYmVsIDxwLnph
+YmVsQHBlbmd1dHJvbml4LmRlPg0KPiBSZXZpZXdlZC1ieTogQ0sgSHUgPGNrLmh1QG1lZGlhdGVr
+LmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogRW5yaWMgQmFsbGV0Ym8gaSBTZXJyYSA8ZW5yaWMuYmFs
+bGV0Ym9AY29sbGFib3JhLmNvbT4NCj4gLS0tDQo+IA0KPiBDaGFuZ2VzIGluIHY5OiBOb25lDQo+
+IENoYW5nZXMgaW4gdjg6DQo+IC0gU2VsZWN0IFJFR01BUCBhbmQgTUZEX1NZU0NPTiAoUmFuZHkg
+RHVubGFwKQ0KPiANCj4gQ2hhbmdlcyBpbiB2NzoNCj4gLSBBZGQgUi1ieSBmcm9tIENLDQo+IA0K
+PiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL0tjb25maWcgICAgICAgIHwgIDIgKw0KPiAgZHJp
+dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jIHwgIDQgKy0NCj4gIGRyaXZlcnMv
+Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jICB8IDUwICsrKysrKysrKysrLS0tLS0tLS0t
+LS0tLS0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5oICB8ICA0ICst
+DQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYyAgfCAxMyArKy0tLS0t
+DQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuaCAgfCAgMiArLQ0KPiAg
+NiBmaWxlcyBjaGFuZ2VkLCAzMiBpbnNlcnRpb25zKCspLCA0MyBkZWxldGlvbnMoLSkNCj4gDQo+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvS2NvbmZpZyBiL2RyaXZlcnMv
+Z3B1L2RybS9tZWRpYXRlay9LY29uZmlnDQo+IGluZGV4IGZhNWZmYzRmZTgyMy4uODllMThhNDcz
+Y2I1IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvS2NvbmZpZw0KPiAr
+KysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvS2NvbmZpZw0KPiBAQCAtMTAsOCArMTAsMTAg
+QEAgY29uZmlnIERSTV9NRURJQVRFSw0KPiAgCXNlbGVjdCBEUk1fS01TX0hFTFBFUg0KPiAgCXNl
+bGVjdCBEUk1fTUlQSV9EU0kNCj4gIAlzZWxlY3QgRFJNX1BBTkVMDQo+ICsJc2VsZWN0IE1GRF9T
+WVNDT04NCj4gIAlzZWxlY3QgTUVNT1JZDQo+ICAJc2VsZWN0IE1US19TTUkNCj4gKwlzZWxlY3Qg
+UkVHTUFQDQo+ICAJc2VsZWN0IFZJREVPTU9ERV9IRUxQRVJTDQo+ICAJaGVscA0KPiAgCSAgQ2hv
+b3NlIHRoaXMgb3B0aW9uIGlmIHlvdSBoYXZlIGEgTWVkaWF0ZWsgU29Dcy4NCj4gZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYyBiL2RyaXZlcnMvZ3B1
+L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYw0KPiBpbmRleCA1ZWU3NGQ3Y2UzNWMuLmEyMzY0
+OTkxMjNhYSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1f
+Y3J0Yy5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYw0K
+PiBAQCAtMjgsNyArMjgsNyBAQA0KPiAgICogQGVuYWJsZWQ6IHJlY29yZHMgd2hldGhlciBjcnRj
+X2VuYWJsZSBzdWNjZWVkZWQNCj4gICAqIEBwbGFuZXM6IGFycmF5IG9mIDQgZHJtX3BsYW5lIHN0
+cnVjdHVyZXMsIG9uZSBmb3IgZWFjaCBvdmVybGF5IHBsYW5lDQo+ICAgKiBAcGVuZGluZ19wbGFu
+ZXM6IHdoZXRoZXIgYW55IHBsYW5lIGhhcyBwZW5kaW5nIGNoYW5nZXMgdG8gYmUgYXBwbGllZA0K
+PiAtICogQGNvbmZpZ19yZWdzOiBtZW1vcnkgbWFwcGVkIG1tc3lzIGNvbmZpZ3VyYXRpb24gcmVn
+aXN0ZXIgc3BhY2UNCj4gKyAqIEBjb25maWdfcmVnczogcmVnbWFwIG1hcHBlZCBtbXN5cyBjb25m
+aWd1cmF0aW9uIHJlZ2lzdGVyIHNwYWNlDQo+ICAgKiBAbXV0ZXg6IGhhbmRsZSB0byBvbmUgb2Yg
+dGhlIHRlbiBkaXNwX211dGV4IHN0cmVhbXMNCj4gICAqIEBkZHBfY29tcF9ucjogbnVtYmVyIG9m
+IGNvbXBvbmVudHMgaW4gZGRwX2NvbXANCj4gICAqIEBkZHBfY29tcDogYXJyYXkgb2YgcG9pbnRl
+cnMgdGhlIG10a19kZHBfY29tcCBzdHJ1Y3R1cmVzIHVzZWQgYnkgdGhpcyBjcnRjDQo+IEBAIC01
+MCw3ICs1MCw3IEBAIHN0cnVjdCBtdGtfZHJtX2NydGMgew0KPiAgCXUzMgkJCQljbWRxX2V2ZW50
+Ow0KPiAgI2VuZGlmDQo+ICANCj4gLQl2b2lkIF9faW9tZW0JCQkqY29uZmlnX3JlZ3M7DQo+ICsJ
+c3RydWN0IHJlZ21hcAkJCSpjb25maWdfcmVnczsNCj4gIAlzdHJ1Y3QgbXRrX2Rpc3BfbXV0ZXgJ
+CSptdXRleDsNCj4gIAl1bnNpZ25lZCBpbnQJCQlkZHBfY29tcF9ucjsNCj4gIAlzdHJ1Y3QgbXRr
+X2RkcF9jb21wCQkqKmRkcF9jb21wOw0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21l
+ZGlhdGVrL210a19kcm1fZGRwLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9k
+ZHAuYw0KPiBpbmRleCAxMzAzNWM5MDYwMzUuLjMwMjc1Mzc0NGNjNiAxMDA2NDQNCj4gLS0tIGEv
+ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMNCj4gKysrIGIvZHJpdmVycy9n
+cHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMNCj4gQEAgLTM4Myw2MSArMzgzLDUzIEBAIHN0
+YXRpYyB1bnNpZ25lZCBpbnQgbXRrX2RkcF9zZWxfaW4oZW51bSBtdGtfZGRwX2NvbXBfaWQgY3Vy
+LA0KPiAgCXJldHVybiB2YWx1ZTsNCj4gIH0NCj4gIA0KPiAtc3RhdGljIHZvaWQgbXRrX2RkcF9z
+b3V0X3NlbCh2b2lkIF9faW9tZW0gKmNvbmZpZ19yZWdzLA0KPiArc3RhdGljIHZvaWQgbXRrX2Rk
+cF9zb3V0X3NlbChzdHJ1Y3QgcmVnbWFwICpjb25maWdfcmVncywNCj4gIAkJCSAgICAgZW51bSBt
+dGtfZGRwX2NvbXBfaWQgY3VyLA0KPiAgCQkJICAgICBlbnVtIG10a19kZHBfY29tcF9pZCBuZXh0
+KQ0KPiAgew0KPiAgCWlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9CTFMgJiYgbmV4dCA9PSBERFBf
+Q09NUE9ORU5UX0RTSTApIHsNCj4gLQkJd3JpdGVsX3JlbGF4ZWQoQkxTX1RPX0RTSV9SRE1BMV9U
+T19EUEkxLA0KPiAtCQkJICAgICAgIGNvbmZpZ19yZWdzICsgRElTUF9SRUdfQ09ORklHX09VVF9T
+RUwpOw0KPiArCQlyZWdtYXBfd3JpdGUoY29uZmlnX3JlZ3MsIERJU1BfUkVHX0NPTkZJR19PVVRf
+U0VMLA0KPiArCQkJCUJMU19UT19EU0lfUkRNQTFfVE9fRFBJMSk7DQo+ICAJfSBlbHNlIGlmIChj
+dXIgPT0gRERQX0NPTVBPTkVOVF9CTFMgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RQSTApIHsN
+Cj4gLQkJd3JpdGVsX3JlbGF4ZWQoQkxTX1RPX0RQSV9SRE1BMV9UT19EU0ksDQo+IC0JCQkgICAg
+ICAgY29uZmlnX3JlZ3MgKyBESVNQX1JFR19DT05GSUdfT1VUX1NFTCk7DQo+IC0JCXdyaXRlbF9y
+ZWxheGVkKERTSV9TRUxfSU5fUkRNQSwNCj4gLQkJCSAgICAgICBjb25maWdfcmVncyArIERJU1Bf
+UkVHX0NPTkZJR19EU0lfU0VMKTsNCj4gLQkJd3JpdGVsX3JlbGF4ZWQoRFBJX1NFTF9JTl9CTFMs
+DQo+IC0JCQkgICAgICAgY29uZmlnX3JlZ3MgKyBESVNQX1JFR19DT05GSUdfRFBJX1NFTCk7DQo+
+ICsJCXJlZ21hcF93cml0ZShjb25maWdfcmVncywgRElTUF9SRUdfQ09ORklHX09VVF9TRUwsDQo+
+ICsJCQkJQkxTX1RPX0RQSV9SRE1BMV9UT19EU0kpOw0KPiArCQlyZWdtYXBfd3JpdGUoY29uZmln
+X3JlZ3MsIERJU1BfUkVHX0NPTkZJR19EU0lfU0VMLA0KPiArCQkJCURTSV9TRUxfSU5fUkRNQSk7
+DQo+ICsJCXJlZ21hcF93cml0ZShjb25maWdfcmVncywgRElTUF9SRUdfQ09ORklHX0RQSV9TRUws
+DQo+ICsJCQkJRFBJX1NFTF9JTl9CTFMpOw0KPiAgCX0NCj4gIH0NCj4gIA0KPiAtdm9pZCBtdGtf
+ZGRwX2FkZF9jb21wX3RvX3BhdGgodm9pZCBfX2lvbWVtICpjb25maWdfcmVncywNCj4gK3ZvaWQg
+bXRrX2RkcF9hZGRfY29tcF90b19wYXRoKHN0cnVjdCByZWdtYXAgKmNvbmZpZ19yZWdzLA0KPiAg
+CQkJICAgICAgZW51bSBtdGtfZGRwX2NvbXBfaWQgY3VyLA0KPiAgCQkJICAgICAgZW51bSBtdGtf
+ZGRwX2NvbXBfaWQgbmV4dCkNCj4gIHsNCj4gLQl1bnNpZ25lZCBpbnQgYWRkciwgdmFsdWUsIHJl
+ZzsNCj4gKwl1bnNpZ25lZCBpbnQgYWRkciwgdmFsdWU7DQo+ICANCj4gIAl2YWx1ZSA9IG10a19k
+ZHBfbW91dF9lbihjdXIsIG5leHQsICZhZGRyKTsNCj4gLQlpZiAodmFsdWUpIHsNCj4gLQkJcmVn
+ID0gcmVhZGxfcmVsYXhlZChjb25maWdfcmVncyArIGFkZHIpIHwgdmFsdWU7DQo+IC0JCXdyaXRl
+bF9yZWxheGVkKHJlZywgY29uZmlnX3JlZ3MgKyBhZGRyKTsNCj4gLQl9DQo+ICsJaWYgKHZhbHVl
+KQ0KPiArCQlyZWdtYXBfdXBkYXRlX2JpdHMoY29uZmlnX3JlZ3MsIGFkZHIsIHZhbHVlLCB2YWx1
+ZSk7DQo+ICANCj4gIAltdGtfZGRwX3NvdXRfc2VsKGNvbmZpZ19yZWdzLCBjdXIsIG5leHQpOw0K
+PiAgDQo+ICAJdmFsdWUgPSBtdGtfZGRwX3NlbF9pbihjdXIsIG5leHQsICZhZGRyKTsNCj4gLQlp
+ZiAodmFsdWUpIHsNCj4gLQkJcmVnID0gcmVhZGxfcmVsYXhlZChjb25maWdfcmVncyArIGFkZHIp
+IHwgdmFsdWU7DQo+IC0JCXdyaXRlbF9yZWxheGVkKHJlZywgY29uZmlnX3JlZ3MgKyBhZGRyKTsN
+Cj4gLQl9DQo+ICsJaWYgKHZhbHVlKQ0KPiArCQlyZWdtYXBfdXBkYXRlX2JpdHMoY29uZmlnX3Jl
+Z3MsIGFkZHIsIHZhbHVlLCB2YWx1ZSk7DQo+ICB9DQo+ICANCj4gLXZvaWQgbXRrX2RkcF9yZW1v
+dmVfY29tcF9mcm9tX3BhdGgodm9pZCBfX2lvbWVtICpjb25maWdfcmVncywNCj4gK3ZvaWQgbXRr
+X2RkcF9yZW1vdmVfY29tcF9mcm9tX3BhdGgoc3RydWN0IHJlZ21hcCAqY29uZmlnX3JlZ3MsDQo+
+ICAJCQkJICAgZW51bSBtdGtfZGRwX2NvbXBfaWQgY3VyLA0KPiAgCQkJCSAgIGVudW0gbXRrX2Rk
+cF9jb21wX2lkIG5leHQpDQo+ICB7DQo+IC0JdW5zaWduZWQgaW50IGFkZHIsIHZhbHVlLCByZWc7
+DQo+ICsJdW5zaWduZWQgaW50IGFkZHIsIHZhbHVlOw0KPiAgDQo+ICAJdmFsdWUgPSBtdGtfZGRw
+X21vdXRfZW4oY3VyLCBuZXh0LCAmYWRkcik7DQo+IC0JaWYgKHZhbHVlKSB7DQo+IC0JCXJlZyA9
+IHJlYWRsX3JlbGF4ZWQoY29uZmlnX3JlZ3MgKyBhZGRyKSAmIH52YWx1ZTsNCj4gLQkJd3JpdGVs
+X3JlbGF4ZWQocmVnLCBjb25maWdfcmVncyArIGFkZHIpOw0KPiAtCX0NCj4gKwlpZiAodmFsdWUp
+DQo+ICsJCXJlZ21hcF91cGRhdGVfYml0cyhjb25maWdfcmVncywgYWRkciwgdmFsdWUsIDApOw0K
+PiAgDQo+ICAJdmFsdWUgPSBtdGtfZGRwX3NlbF9pbihjdXIsIG5leHQsICZhZGRyKTsNCj4gLQlp
+ZiAodmFsdWUpIHsNCj4gLQkJcmVnID0gcmVhZGxfcmVsYXhlZChjb25maWdfcmVncyArIGFkZHIp
+ICYgfnZhbHVlOw0KPiAtCQl3cml0ZWxfcmVsYXhlZChyZWcsIGNvbmZpZ19yZWdzICsgYWRkcik7
+DQo+IC0JfQ0KPiArCWlmICh2YWx1ZSkNCj4gKwkJcmVnbWFwX3VwZGF0ZV9iaXRzKGNvbmZpZ19y
+ZWdzLCBhZGRyLCB2YWx1ZSwgMCk7DQo+ICB9DQo+ICANCj4gIHN0cnVjdCBtdGtfZGlzcF9tdXRl
+eCAqbXRrX2Rpc3BfbXV0ZXhfZ2V0KHN0cnVjdCBkZXZpY2UgKmRldiwgdW5zaWduZWQgaW50IGlk
+KQ0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmgg
+Yi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuaA0KPiBpbmRleCA4MjdiZTQy
+NGExNDguLjAxZmY4YjY4ODgxZiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlh
+dGVrL210a19kcm1fZGRwLmgNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
+cm1fZGRwLmgNCj4gQEAgLTEyLDEwICsxMiwxMCBAQCBzdHJ1Y3QgcmVnbWFwOw0KPiAgc3RydWN0
+IGRldmljZTsNCj4gIHN0cnVjdCBtdGtfZGlzcF9tdXRleDsNCj4gIA0KPiAtdm9pZCBtdGtfZGRw
+X2FkZF9jb21wX3RvX3BhdGgodm9pZCBfX2lvbWVtICpjb25maWdfcmVncywNCj4gK3ZvaWQgbXRr
+X2RkcF9hZGRfY29tcF90b19wYXRoKHN0cnVjdCByZWdtYXAgKmNvbmZpZ19yZWdzLA0KPiAgCQkJ
+ICAgICAgZW51bSBtdGtfZGRwX2NvbXBfaWQgY3VyLA0KPiAgCQkJICAgICAgZW51bSBtdGtfZGRw
+X2NvbXBfaWQgbmV4dCk7DQo+IC12b2lkIG10a19kZHBfcmVtb3ZlX2NvbXBfZnJvbV9wYXRoKHZv
+aWQgX19pb21lbSAqY29uZmlnX3JlZ3MsDQo+ICt2b2lkIG10a19kZHBfcmVtb3ZlX2NvbXBfZnJv
+bV9wYXRoKHN0cnVjdCByZWdtYXAgKmNvbmZpZ19yZWdzLA0KPiAgCQkJCSAgIGVudW0gbXRrX2Rk
+cF9jb21wX2lkIGN1ciwNCj4gIAkJCQkgICBlbnVtIG10a19kZHBfY29tcF9pZCBuZXh0KTsNCj4g
+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmMg
+Yi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYw0KPiBpbmRleCAwNTYzYzY4
+MTMzMzMuLmI2ODgzN2VhMDJiMyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlh
+dGVrL210a19kcm1fZHJ2LmMNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
+cm1fZHJ2LmMNCj4gQEAgLTYsNiArNiw3IEBADQo+ICANCj4gICNpbmNsdWRlIDxsaW51eC9jb21w
+b25lbnQuaD4NCj4gICNpbmNsdWRlIDxsaW51eC9pb21tdS5oPg0KPiArI2luY2x1ZGUgPGxpbnV4
+L21mZC9zeXNjb24uaD4NCj4gICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4gICNpbmNsdWRl
+IDxsaW51eC9vZl9hZGRyZXNzLmg+DQo+ICAjaW5jbHVkZSA8bGludXgvb2ZfcGxhdGZvcm0uaD4N
+Cj4gQEAgLTQyNSw3ICs0MjYsNiBAQCBzdGF0aWMgaW50IG10a19kcm1fcHJvYmUoc3RydWN0IHBs
+YXRmb3JtX2RldmljZSAqcGRldikNCj4gIHsNCj4gIAlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRl
+di0+ZGV2Ow0KPiAgCXN0cnVjdCBtdGtfZHJtX3ByaXZhdGUgKnByaXZhdGU7DQo+IC0Jc3RydWN0
+IHJlc291cmNlICptZW07DQo+ICAJc3RydWN0IGRldmljZV9ub2RlICpub2RlOw0KPiAgCXN0cnVj
+dCBjb21wb25lbnRfbWF0Y2ggKm1hdGNoID0gTlVMTDsNCj4gIAlpbnQgcmV0Ow0KPiBAQCAtNDM3
+LDE0ICs0MzcsOSBAQCBzdGF0aWMgaW50IG10a19kcm1fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rl
+dmljZSAqcGRldikNCj4gIA0KPiAgCXByaXZhdGUtPmRhdGEgPSBvZl9kZXZpY2VfZ2V0X21hdGNo
+X2RhdGEoZGV2KTsNCj4gIA0KPiAtCW1lbSA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2LCBJ
+T1JFU09VUkNFX01FTSwgMCk7DQo+IC0JcHJpdmF0ZS0+Y29uZmlnX3JlZ3MgPSBkZXZtX2lvcmVt
+YXBfcmVzb3VyY2UoZGV2LCBtZW0pOw0KPiAtCWlmIChJU19FUlIocHJpdmF0ZS0+Y29uZmlnX3Jl
+Z3MpKSB7DQo+IC0JCXJldCA9IFBUUl9FUlIocHJpdmF0ZS0+Y29uZmlnX3JlZ3MpOw0KPiAtCQlk
+ZXZfZXJyKGRldiwgIkZhaWxlZCB0byBpb3JlbWFwIG1tc3lzLWNvbmZpZyByZXNvdXJjZTogJWRc
+biIsDQo+IC0JCQlyZXQpOw0KPiAtCQlyZXR1cm4gcmV0Ow0KPiAtCX0NCj4gKwlwcml2YXRlLT5j
+b25maWdfcmVncyA9IHN5c2Nvbl9ub2RlX3RvX3JlZ21hcChkZXYtPm9mX25vZGUpOw0KPiArCWlm
+IChJU19FUlIocHJpdmF0ZS0+Y29uZmlnX3JlZ3MpKQ0KPiArCQlyZXR1cm4gUFRSX0VSUihwcml2
+YXRlLT5jb25maWdfcmVncyk7DQo+ICANCj4gIAkvKiBJdGVyYXRlIG92ZXIgc2libGluZyBESVNQ
+IGZ1bmN0aW9uIGJsb2NrcyAqLw0KPiAgCWZvcl9lYWNoX2NoaWxkX29mX25vZGUoZGV2LT5vZl9u
+b2RlLT5wYXJlbnQsIG5vZGUpIHsNCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRp
+YXRlay9tdGtfZHJtX2Rydi5oIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2
+LmgNCj4gaW5kZXggMTdiYzk5YjlmNWQ0Li4wMzIwMTA4MDY4OGQgMTAwNjQ0DQo+IC0tLSBhL2Ry
+aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5oDQo+ICsrKyBiL2RyaXZlcnMvZ3B1
+L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5oDQo+IEBAIC0zOSw3ICszOSw3IEBAIHN0cnVjdCBt
+dGtfZHJtX3ByaXZhdGUgew0KPiAgDQo+ICAJc3RydWN0IGRldmljZV9ub2RlICptdXRleF9ub2Rl
+Ow0KPiAgCXN0cnVjdCBkZXZpY2UgKm11dGV4X2RldjsNCj4gLQl2b2lkIF9faW9tZW0gKmNvbmZp
+Z19yZWdzOw0KPiArCXN0cnVjdCByZWdtYXAgKmNvbmZpZ19yZWdzOw0KPiAgCXN0cnVjdCBkZXZp
+Y2Vfbm9kZSAqY29tcF9ub2RlW0REUF9DT01QT05FTlRfSURfTUFYXTsNCj4gIAlzdHJ1Y3QgbXRr
+X2RkcF9jb21wICpkZHBfY29tcFtERFBfQ09NUE9ORU5UX0lEX01BWF07DQo+ICAJY29uc3Qgc3Ry
+dWN0IG10a19tbXN5c19kcml2ZXJfZGF0YSAqZGF0YTsNCg0K
 
