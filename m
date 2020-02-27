@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D32C3C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 667EAC35DF9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A767A246AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:41:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FF4920726
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:41:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582810876;
-	bh=dO8xwNUMWfiDMM1KGW8bWZI+laE6+d2er+ZLiyojtyY=;
+	s=default; t=1582810886;
+	bh=kcfgrw3PNdU/twejlFjSLK43cf95MDmdZpYWgDPZszM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K9ByR3ELw/jhfC3AnHfxG+WMlE4f1eTh+ZTT5w6536XknG3FZgz4tdc4C0qbGUxcV
-	 PefTWz7zid019m0lNBAjXcmAxv14IYXyzM/7CIuohaemIEY5qtqPx+g5GBGiGgUwFn
-	 rUtcRZ9pm6/kuh+OBiIZjwhjWgyKGiH85JvR4uzA=
+	b=1Z5pb3bM5xxE+SJso8edDCGu9VDU1U4bpmp/410fH6Ic7jRE71vDHv8s5EYIu3NmR
+	 kfdTlyt2eRwjPrACBApXJIqqhFlkX/F2AfhBT4c2LPdDziHE3tts7WbePZJrO/H/n6
+	 ieg0yrcb/IdpuzfVqk1Fpyv2UWfbd1hCHXk4Sq4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729541AbgB0NlP (ORCPT
+        id S1729585AbgB0NlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:41:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35730 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:41:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729517AbgB0NlK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:41:10 -0500
+        id S1729570AbgB0NlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:41:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4FC321D7E;
-        Thu, 27 Feb 2020 13:41:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EEB320726;
+        Thu, 27 Feb 2020 13:41:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582810870;
-        bh=dO8xwNUMWfiDMM1KGW8bWZI+laE6+d2er+ZLiyojtyY=;
+        s=default; t=1582810881;
+        bh=kcfgrw3PNdU/twejlFjSLK43cf95MDmdZpYWgDPZszM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t3TxlvoeanN1JZOIRWfK4RyqNEakmohyrEP9jFwkD/rbFgnoCr47FAPEWIILPY036
-         4z4BfIXwT641VDllQGmXrkHQWeJtC2DPqxGCPTxmPLbcCGXF/dmG8uXYt/P95ygbL9
-         ZwoBQ9o5lUEUlD2D8KumVeCSPb1T0Kj26+zy5ltw=
+        b=c/hUQfDpkwC8uFtJu6cV0rQdsLGjCVMwilz+MSCo5BbSYM8i0sLnRbgPFnsk532rg
+         Kb+176aKvrCzpxLJr0QLENpyIs8O+660SeR4viz7G6D09C86IL+mtVtBf1Q0Ai2sI6
+         G9d0ky+XBKcs8B4An6s2iPatgs/LfWPNjOIULaw8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kai Li <li.kai4@h3c.com>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 030/113] jbd2: clear JBD2_ABORT flag before journal_reset to update log tail info when load journal
-Date:   Thu, 27 Feb 2020 14:35:46 +0100
-Message-Id: <20200227132216.540635114@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 033/113] kconfig: fix broken dependency in randconfig-generated .config
+Date:   Thu, 27 Feb 2020 14:35:49 +0100
+Message-Id: <20200227132217.013886866@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
 References: <20200227132211.791484803@linuxfoundation.org>
@@ -59,53 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Li <li.kai4@h3c.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit a09decff5c32060639a685581c380f51b14e1fc2 ]
+[ Upstream commit c8fb7d7e48d11520ad24808cfce7afb7b9c9f798 ]
 
-If the journal is dirty when the filesystem is mounted, jbd2 will replay
-the journal but the journal superblock will not be updated by
-journal_reset() because JBD2_ABORT flag is still set (it was set in
-journal_init_common()). This is problematic because when a new transaction
-is then committed, it will be recorded in block 1 (journal->j_tail was set
-to 1 in journal_reset()). If unclean shutdown happens again before the
-journal superblock is updated, the new recorded transaction will not be
-replayed during the next mount (because of stale sb->s_start and
-sb->s_sequence values) which can lead to filesystem corruption.
+Running randconfig on arm64 using KCONFIG_SEED=0x40C5E904 (e.g. on v5.5)
+produces the .config with CONFIG_EFI=y and CONFIG_CPU_BIG_ENDIAN=y,
+which does not meet the !CONFIG_CPU_BIG_ENDIAN dependency.
 
-Fixes: 85e0c4e89c1b ("jbd2: if the journal is aborted then don't allow update of the log tail")
-Signed-off-by: Kai Li <li.kai4@h3c.com>
-Link: https://lore.kernel.org/r/20200111022542.5008-1-li.kai4@h3c.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+This is because the user choice for CONFIG_CPU_LITTLE_ENDIAN vs
+CONFIG_CPU_BIG_ENDIAN is set by randomize_choice_values() after the
+value of CONFIG_EFI is calculated.
+
+When this happens, the has_changed flag should be set.
+
+Currently, it takes the result from the last iteration. It should
+accumulate all the results of the loop.
+
+Fixes: 3b9a19e08960 ("kconfig: loop as long as we changed some symbols in randconfig")
+Reported-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/journal.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ scripts/kconfig/confdata.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index 9398d1b70545c..deb3300299709 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -1656,6 +1656,11 @@ int jbd2_journal_load(journal_t *journal)
- 		       journal->j_devname);
- 		return -EFSCORRUPTED;
- 	}
-+	/*
-+	 * clear JBD2_ABORT flag initialized in journal_init_common
-+	 * here to update log tail information with the newest seq.
-+	 */
-+	journal->j_flags &= ~JBD2_ABORT;
+diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
+index 138d7f100f7e8..4216940e875df 100644
+--- a/scripts/kconfig/confdata.c
++++ b/scripts/kconfig/confdata.c
+@@ -1236,7 +1236,7 @@ bool conf_set_all_new_symbols(enum conf_def_mode mode)
  
- 	/* OK, we've finished with the dynamic journal bits:
- 	 * reinitialise the dynamic contents of the superblock in memory
-@@ -1663,7 +1668,6 @@ int jbd2_journal_load(journal_t *journal)
- 	if (journal_reset(journal))
- 		goto recovery_error;
- 
--	journal->j_flags &= ~JBD2_ABORT;
- 	journal->j_flags |= JBD2_LOADED;
- 	return 0;
- 
+ 		sym_calc_value(csym);
+ 		if (mode == def_random)
+-			has_changed = randomize_choice_values(csym);
++			has_changed |= randomize_choice_values(csym);
+ 		else {
+ 			set_all_choice_values(csym);
+ 			has_changed = true;
 -- 
 2.20.1
 
