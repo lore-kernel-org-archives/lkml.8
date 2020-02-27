@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EDCC52D48
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA61C52D4F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A820824656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B647921D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:07:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812341;
-	bh=yDzqG4pPlZs9Zk75bJtsnY+OkC14/CaUT/c2CRXU15M=;
+	s=default; t=1582812446;
+	bh=evF/NFjY1s7IY6EJgZeQWXpsFLeu01Fl+Ck86HHRJlk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g8RCygi5TFwefOaWdXVBGeIRTlqHLouuvcbxv3uRfVyppTfodAFnx/QAgWOrhrX+0
-	 pWELTSwR5vBiGm+D8qssVJpi2ZmBRBtL7+54VdtzRQWbUYjWsjYFbW8HaDHY398tPF
-	 wLLQ8Ce7ly3QbV40xJbeCufJWKSjEIV4fUBnK0JY=
+	b=xp1jxxGb7A/OXLqoCRsf8plHsUdjc09rqW6WumYGI+hMzCzQ2ER2w4/Tb866LLp+R
+	 Iq9l3RntuK3jmY3t6Deh2TMEzcAl/++DRe/Pf35NlvKeMJWmskL2lpjgeID1BP60uS
+	 UEAjMvkgETBOK3Kj6Sv6pS+W8qbEQ4iY4N4C7hLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733205AbgB0OFk (ORCPT
+        id S2388085AbgB0OHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:05:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42384 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:07:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730251AbgB0OFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:05:38 -0500
+        id S2387690AbgB0OHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:07:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E689721D7E;
-        Thu, 27 Feb 2020 14:05:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61BAF20578;
+        Thu, 27 Feb 2020 14:07:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812337;
-        bh=yDzqG4pPlZs9Zk75bJtsnY+OkC14/CaUT/c2CRXU15M=;
+        s=default; t=1582812440;
+        bh=evF/NFjY1s7IY6EJgZeQWXpsFLeu01Fl+Ck86HHRJlk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hdArgIktWWFA6Frw62InJB2SPV5xKBYKHYduNMVlw94P3h3bJSarOUKqCkiFlN1Uu
-         VVl0mRElORR7ffFzycouR8a+6128osSroKPdKSUsgH8uGPluJoSeTwaRuzD8Y/Ec/N
-         V8PS7bNhiNWOdE/DslZbYNEblEb6fL2Nu/2u7L2w=
+        b=pA5mDj5lvig6ueVHy3qlWpEHdYtrr2idXQ4C23oSjsfl5kUB7UFAoTmkKeEqOGt4T
+         /WLCQGB/TY+rxkKG6yix65BXfABsu9pUoRWQXkvbRGdF9t24YGXlzoiTgkHhpVCeq+
+         WjMTtbu4vJYmNaSomkiROvIlpbjLJCwLqt9Vtlg0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Nikolay Borisov <nborisov@suse.com>, Qu Wenruo <wqu@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 77/97] btrfs: do not check delayed items are empty for single transaction cleanup
-Date:   Thu, 27 Feb 2020 14:37:25 +0100
-Message-Id: <20200227132227.055421594@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
+        syzbot+59997e8d5cbdc486e6f6@syzkaller.appspotmail.com
+Subject: [PATCH 5.4 019/135] vt: selection, close sel_buffer race
+Date:   Thu, 27 Feb 2020 14:35:59 +0100
+Message-Id: <20200227132232.138335341@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
-References: <20200227132214.553656188@linuxfoundation.org>
+In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
+References: <20200227132228.710492098@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,41 +59,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Jiri Slaby <jslaby@suse.cz>
 
-commit 1e90315149f3fe148e114a5de86f0196d1c21fa5 upstream.
+commit 07e6124a1a46b4b5a9b3cacc0c306b50da87abf5 upstream.
 
-btrfs_assert_delayed_root_empty() will check if the delayed root is
-completely empty, but this is a filesystem-wide check.  On cleanup we
-may have allowed other transactions to begin, for whatever reason, and
-thus the delayed root is not empty.
+syzkaller reported this UAF:
+BUG: KASAN: use-after-free in n_tty_receive_buf_common+0x2481/0x2940 drivers/tty/n_tty.c:1741
+Read of size 1 at addr ffff8880089e40e9 by task syz-executor.1/13184
 
-So remove this check from cleanup_one_transation().  This however can
-stay in btrfs_cleanup_transaction(), because it checks only after all of
-the transactions have been properly cleaned up, and thus is valid.
+CPU: 0 PID: 13184 Comm: syz-executor.1 Not tainted 5.4.7 #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+Call Trace:
+...
+ kasan_report+0xe/0x20 mm/kasan/common.c:634
+ n_tty_receive_buf_common+0x2481/0x2940 drivers/tty/n_tty.c:1741
+ tty_ldisc_receive_buf+0xac/0x190 drivers/tty/tty_buffer.c:461
+ paste_selection+0x297/0x400 drivers/tty/vt/selection.c:372
+ tioclinux+0x20d/0x4e0 drivers/tty/vt/vt.c:3044
+ vt_ioctl+0x1bcf/0x28d0 drivers/tty/vt/vt_ioctl.c:364
+ tty_ioctl+0x525/0x15a0 drivers/tty/tty_io.c:2657
+ vfs_ioctl fs/ioctl.c:47 [inline]
 
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+It is due to a race between parallel paste_selection (TIOCL_PASTESEL)
+and set_selection_user (TIOCL_SETSEL) invocations. One uses sel_buffer,
+while the other frees it and reallocates a new one for another
+selection. Add a mutex to close this race.
+
+The mutex takes care properly of sel_buffer and sel_buffer_lth only. The
+other selection global variables (like sel_start, sel_end, and sel_cons)
+are protected only in set_selection_user. The other functions need quite
+some more work to close the races of the variables there. This is going
+to happen later.
+
+This likely fixes (I am unsure as there is no reproducer provided) bug
+206361 too. It was marked as CVE-2020-8648.
+
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Reported-by: syzbot+59997e8d5cbdc486e6f6@syzkaller.appspotmail.com
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200210081131.23572-2-jslaby@suse.cz
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/disk-io.c |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/tty/vt/selection.c |   23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -4469,7 +4469,6 @@ void btrfs_cleanup_one_transaction(struc
- 	wake_up(&fs_info->transaction_wait);
+--- a/drivers/tty/vt/selection.c
++++ b/drivers/tty/vt/selection.c
+@@ -16,6 +16,7 @@
+ #include <linux/tty.h>
+ #include <linux/sched.h>
+ #include <linux/mm.h>
++#include <linux/mutex.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
  
- 	btrfs_destroy_delayed_inodes(fs_info);
--	btrfs_assert_delayed_root_empty(fs_info);
+@@ -45,6 +46,7 @@ static volatile int sel_start = -1; 	/*
+ static int sel_end;
+ static int sel_buffer_lth;
+ static char *sel_buffer;
++static DEFINE_MUTEX(sel_lock);
  
- 	btrfs_destroy_marked_extents(fs_info, &cur_trans->dirty_pages,
- 				     EXTENT_DIRTY);
+ /* clear_selection, highlight and highlight_pointer can be called
+    from interrupt (via scrollback/front) */
+@@ -186,7 +188,7 @@ int set_selection_kernel(struct tiocl_se
+ 	char *bp, *obp;
+ 	int i, ps, pe, multiplier;
+ 	u32 c;
+-	int mode;
++	int mode, ret = 0;
+ 
+ 	poke_blanked_console();
+ 
+@@ -212,6 +214,7 @@ int set_selection_kernel(struct tiocl_se
+ 	if (ps > pe)	/* make sel_start <= sel_end */
+ 		swap(ps, pe);
+ 
++	mutex_lock(&sel_lock);
+ 	if (sel_cons != vc_cons[fg_console].d) {
+ 		clear_selection();
+ 		sel_cons = vc_cons[fg_console].d;
+@@ -257,9 +260,10 @@ int set_selection_kernel(struct tiocl_se
+ 			break;
+ 		case TIOCL_SELPOINTER:
+ 			highlight_pointer(pe);
+-			return 0;
++			goto unlock;
+ 		default:
+-			return -EINVAL;
++			ret = -EINVAL;
++			goto unlock;
+ 	}
+ 
+ 	/* remove the pointer */
+@@ -281,7 +285,7 @@ int set_selection_kernel(struct tiocl_se
+ 	else if (new_sel_start == sel_start)
+ 	{
+ 		if (new_sel_end == sel_end)	/* no action required */
+-			return 0;
++			goto unlock;
+ 		else if (new_sel_end > sel_end)	/* extend to right */
+ 			highlight(sel_end + 2, new_sel_end);
+ 		else				/* contract from right */
+@@ -309,7 +313,8 @@ int set_selection_kernel(struct tiocl_se
+ 	if (!bp) {
+ 		printk(KERN_WARNING "selection: kmalloc() failed\n");
+ 		clear_selection();
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto unlock;
+ 	}
+ 	kfree(sel_buffer);
+ 	sel_buffer = bp;
+@@ -334,7 +339,9 @@ int set_selection_kernel(struct tiocl_se
+ 		}
+ 	}
+ 	sel_buffer_lth = bp - sel_buffer;
+-	return 0;
++unlock:
++	mutex_unlock(&sel_lock);
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(set_selection_kernel);
+ 
+@@ -364,6 +371,7 @@ int paste_selection(struct tty_struct *t
+ 	tty_buffer_lock_exclusive(&vc->port);
+ 
+ 	add_wait_queue(&vc->paste_wait, &wait);
++	mutex_lock(&sel_lock);
+ 	while (sel_buffer && sel_buffer_lth > pasted) {
+ 		set_current_state(TASK_INTERRUPTIBLE);
+ 		if (signal_pending(current)) {
+@@ -371,7 +379,9 @@ int paste_selection(struct tty_struct *t
+ 			break;
+ 		}
+ 		if (tty_throttled(tty)) {
++			mutex_unlock(&sel_lock);
+ 			schedule();
++			mutex_lock(&sel_lock);
+ 			continue;
+ 		}
+ 		__set_current_state(TASK_RUNNING);
+@@ -380,6 +390,7 @@ int paste_selection(struct tty_struct *t
+ 					      count);
+ 		pasted += count;
+ 	}
++	mutex_unlock(&sel_lock);
+ 	remove_wait_queue(&vc->paste_wait, &wait);
+ 	__set_current_state(TASK_RUNNING);
+ 
 
 
