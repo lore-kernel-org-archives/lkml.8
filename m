@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8236BC3F34B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E89C3F355
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5079524688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B139821D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811276;
-	bh=AHEsC+E3W2xJQbzUvuMY92P8qdh5Jea/uQfL/fYkVJo=;
+	s=default; t=1582811319;
+	bh=85Fpwrg1s5nFfiNRz/VMyBUDJukDM49smNb0L1R9tok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ofsj0XXPcOcHgvMv+sVLxoQ9geItoOFeCD/re15xHHhQV2P4ZxK6U8JGuze0or222
-	 WRwUgo7w4OJdOgRDEDYo1nci0oEMnmDdBlQJyvi383YPy/56ZWmXpjwvZoJKWINBIJ
-	 +aYiHqX0rpSn1NSHer58eSjWijKiDpTkaLEALyEU=
+	b=V9XyM/iQBE6LdbmZ/oxwvv1nn7eAcu2/DBu96vsUnzaf3LX2mzRKoK44SyQvBM6AP
+	 8xoWpSamj76n4vFPhQvloxRbhjyUSuGJSkSTHLApGlI1FX6qeXGZVPvX7IdpKs01rW
+	 TgI7MU6JBUdc8a+VY3DCj/avbHwAx2lDIqJbCPmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730782AbgB0Nry (ORCPT
+        id S1730905AbgB0Nsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:47:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44410 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:48:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730461AbgB0Nrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:47:51 -0500
+        id S1730865AbgB0Nsb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:48:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3237D24656;
-        Thu, 27 Feb 2020 13:47:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5834C20578;
+        Thu, 27 Feb 2020 13:48:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811270;
-        bh=AHEsC+E3W2xJQbzUvuMY92P8qdh5Jea/uQfL/fYkVJo=;
+        s=default; t=1582811310;
+        bh=85Fpwrg1s5nFfiNRz/VMyBUDJukDM49smNb0L1R9tok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jKMAVZsIDHJS7xNEUgvPwAyby4ahzVfl3fuPt1NQ/+e6jrIPXDY73zAlTAj+qEBKc
-         X6HKpC10b0vVUlxDDQPDunddD2Lg3Q+1PvxRyn7VwodvbweTTIMS3FHud61sWaCoo7
-         i0+rP5TasWMMsK1fkoP8x9EsMh7WutmCiMOXRWds=
+        b=1zUll2GDLdNkvWcx4mwc3CnbubYrm2lXGqHJcjp4tdSVA39S4zWHmct9iQ17YNzXF
+         HWi8Xw3WlUEzirBHKnB2839A9TiNLB/ZMqZZTYkLLw+GcLlLZvfEI9C/+x0n2/c3WM
+         tGqN/vLzflYdkCORfnUxFELv/PZJNHh/phE+c3sc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>,
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 068/165] usbip: Fix unsafe unaligned pointer usage
-Date:   Thu, 27 Feb 2020 14:35:42 +0100
-Message-Id: <20200227132241.372922373@linuxfoundation.org>
+Subject: [PATCH 4.9 046/165] regulator: rk808: Lower log level on optional GPIOs being not available
+Date:   Thu, 27 Feb 2020 14:35:20 +0100
+Message-Id: <20200227132237.916258831@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -59,150 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shuah Khan <skhan@linuxfoundation.org>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-[ Upstream commit 585c91f40d201bc564d4e76b83c05b3b5363fe7e ]
+[ Upstream commit b8a039d37792067c1a380dc710361905724b9b2f ]
 
-Fix unsafe unaligned pointer usage in usbip network interfaces. usbip tool
-build fails with new gcc -Werror=address-of-packed-member checks.
+RK808 can leverage a couple of GPIOs to tweak the ramp rate during DVS
+(Dynamic Voltage Scaling). These GPIOs are entirely optional but a
+dev_warn() appeared when cleaning this driver to use a more up-to-date
+gpiod API. At least reduce the log level to 'info' as it is totally
+fine to not populate these GPIO on a hardware design.
 
-usbip_network.c: In function ‘usbip_net_pack_usb_device’:
-usbip_network.c:79:32: error: taking address of packed member of ‘struct usbip_usb_device’ may result in an unaligned pointer value [-Werror=address-of-packed-member]
-   79 |  usbip_net_pack_uint32_t(pack, &udev->busnum);
+This change is trivial but it is worth not polluting the logs during
+bringup phase by having real warnings and errors sorted out
+correctly.
 
-Fix with minor changes to pass by value instead of by address.
-
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-Link: https://lore.kernel.org/r/20200109012416.2875-1-skhan@linuxfoundation.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: a13eaf02e2d6 ("regulator: rk808: make better use of the gpiod API")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Link: https://lore.kernel.org/r/20191203164709.11127-1-miquel.raynal@bootlin.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/usb/usbip/src/usbip_network.c | 40 +++++++++++++++++------------
- tools/usb/usbip/src/usbip_network.h | 12 +++------
- 2 files changed, 27 insertions(+), 25 deletions(-)
+ drivers/regulator/rk808-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/usb/usbip/src/usbip_network.c b/tools/usb/usbip/src/usbip_network.c
-index b4c37e76a6e08..187dfaa67d0a2 100644
---- a/tools/usb/usbip/src/usbip_network.c
-+++ b/tools/usb/usbip/src/usbip_network.c
-@@ -62,39 +62,39 @@ void usbip_setup_port_number(char *arg)
- 	info("using port %d (\"%s\")", usbip_port, usbip_port_string);
- }
+diff --git a/drivers/regulator/rk808-regulator.c b/drivers/regulator/rk808-regulator.c
+index dfa8d50a5d741..28646e4cf3bae 100644
+--- a/drivers/regulator/rk808-regulator.c
++++ b/drivers/regulator/rk808-regulator.c
+@@ -589,7 +589,7 @@ static int rk808_regulator_dt_parse_pdata(struct device *dev,
+ 		}
  
--void usbip_net_pack_uint32_t(int pack, uint32_t *num)
-+uint32_t usbip_net_pack_uint32_t(int pack, uint32_t num)
- {
- 	uint32_t i;
- 
- 	if (pack)
--		i = htonl(*num);
-+		i = htonl(num);
- 	else
--		i = ntohl(*num);
-+		i = ntohl(num);
- 
--	*num = i;
-+	return i;
- }
- 
--void usbip_net_pack_uint16_t(int pack, uint16_t *num)
-+uint16_t usbip_net_pack_uint16_t(int pack, uint16_t num)
- {
- 	uint16_t i;
- 
- 	if (pack)
--		i = htons(*num);
-+		i = htons(num);
- 	else
--		i = ntohs(*num);
-+		i = ntohs(num);
- 
--	*num = i;
-+	return i;
- }
- 
- void usbip_net_pack_usb_device(int pack, struct usbip_usb_device *udev)
- {
--	usbip_net_pack_uint32_t(pack, &udev->busnum);
--	usbip_net_pack_uint32_t(pack, &udev->devnum);
--	usbip_net_pack_uint32_t(pack, &udev->speed);
-+	udev->busnum = usbip_net_pack_uint32_t(pack, udev->busnum);
-+	udev->devnum = usbip_net_pack_uint32_t(pack, udev->devnum);
-+	udev->speed = usbip_net_pack_uint32_t(pack, udev->speed);
- 
--	usbip_net_pack_uint16_t(pack, &udev->idVendor);
--	usbip_net_pack_uint16_t(pack, &udev->idProduct);
--	usbip_net_pack_uint16_t(pack, &udev->bcdDevice);
-+	udev->idVendor = usbip_net_pack_uint16_t(pack, udev->idVendor);
-+	udev->idProduct = usbip_net_pack_uint16_t(pack, udev->idProduct);
-+	udev->bcdDevice = usbip_net_pack_uint16_t(pack, udev->bcdDevice);
- }
- 
- void usbip_net_pack_usb_interface(int pack __attribute__((unused)),
-@@ -141,6 +141,14 @@ ssize_t usbip_net_send(int sockfd, void *buff, size_t bufflen)
- 	return usbip_net_xmit(sockfd, buff, bufflen, 1);
- }
- 
-+static inline void usbip_net_pack_op_common(int pack,
-+					    struct op_common *op_common)
-+{
-+	op_common->version = usbip_net_pack_uint16_t(pack, op_common->version);
-+	op_common->code = usbip_net_pack_uint16_t(pack, op_common->code);
-+	op_common->status = usbip_net_pack_uint32_t(pack, op_common->status);
-+}
-+
- int usbip_net_send_op_common(int sockfd, uint32_t code, uint32_t status)
- {
- 	struct op_common op_common;
-@@ -152,7 +160,7 @@ int usbip_net_send_op_common(int sockfd, uint32_t code, uint32_t status)
- 	op_common.code    = code;
- 	op_common.status  = status;
- 
--	PACK_OP_COMMON(1, &op_common);
-+	usbip_net_pack_op_common(1, &op_common);
- 
- 	rc = usbip_net_send(sockfd, &op_common, sizeof(op_common));
- 	if (rc < 0) {
-@@ -176,7 +184,7 @@ int usbip_net_recv_op_common(int sockfd, uint16_t *code)
- 		goto err;
- 	}
- 
--	PACK_OP_COMMON(0, &op_common);
-+	usbip_net_pack_op_common(0, &op_common);
- 
- 	if (op_common.version != USBIP_VERSION) {
- 		dbg("version mismatch: %d %d", op_common.version,
-diff --git a/tools/usb/usbip/src/usbip_network.h b/tools/usb/usbip/src/usbip_network.h
-index c1e875cf1078c..573fa839b66b7 100644
---- a/tools/usb/usbip/src/usbip_network.h
-+++ b/tools/usb/usbip/src/usbip_network.h
-@@ -33,12 +33,6 @@ struct op_common {
- 
- } __attribute__((packed));
- 
--#define PACK_OP_COMMON(pack, op_common)  do {\
--	usbip_net_pack_uint16_t(pack, &(op_common)->version);\
--	usbip_net_pack_uint16_t(pack, &(op_common)->code);\
--	usbip_net_pack_uint32_t(pack, &(op_common)->status);\
--} while (0)
--
- /* ---------------------------------------------------------------------- */
- /* Dummy Code */
- #define OP_UNSPEC	0x00
-@@ -164,11 +158,11 @@ struct op_devlist_reply_extra {
- } while (0)
- 
- #define PACK_OP_DEVLIST_REPLY(pack, reply)  do {\
--	usbip_net_pack_uint32_t(pack, &(reply)->ndev);\
-+	(reply)->ndev = usbip_net_pack_uint32_t(pack, (reply)->ndev);\
- } while (0)
- 
--void usbip_net_pack_uint32_t(int pack, uint32_t *num);
--void usbip_net_pack_uint16_t(int pack, uint16_t *num);
-+uint32_t usbip_net_pack_uint32_t(int pack, uint32_t num);
-+uint16_t usbip_net_pack_uint16_t(int pack, uint16_t num);
- void usbip_net_pack_usb_device(int pack, struct usbip_usb_device *udev);
- void usbip_net_pack_usb_interface(int pack, struct usbip_usb_interface *uinf);
+ 		if (!pdata->dvs_gpio[i]) {
+-			dev_warn(dev, "there is no dvs%d gpio\n", i);
++			dev_info(dev, "there is no dvs%d gpio\n", i);
+ 			continue;
+ 		}
  
 -- 
 2.20.1
