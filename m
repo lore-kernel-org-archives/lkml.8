@@ -2,189 +2,205 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA30C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E235C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5465124695
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB41C24695
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:56:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vG2PYhFG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728777AbgB0Kwz (ORCPT
+        id S1728846AbgB0Kz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 05:52:55 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:57451 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728680AbgB0Kwz (ORCPT
+        Thu, 27 Feb 2020 05:55:59 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:17149 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728759AbgB0Kz7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 05:52:55 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j7Gmg-0004u9-0P; Thu, 27 Feb 2020 11:52:50 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j7Gma-0002Lt-3N; Thu, 27 Feb 2020 11:52:44 +0100
-Date:   Thu, 27 Feb 2020 11:52:44 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Sam Shih <sam.shih@mediatek.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH 1/1] pwm: mediatek: add longer period support
-Message-ID: <20200227105244.orwitjst3wzoqcsq@pengutronix.de>
-References: <1582789610-23133-1-git-send-email-sam.shih@mediatek.com>
- <1582789610-23133-2-git-send-email-sam.shih@mediatek.com>
- <20200227080450.rkvwfjx6vikn5ls3@pengutronix.de>
- <1582797590.25607.10.camel@mtksdccf07>
+        Thu, 27 Feb 2020 05:55:59 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582800958; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=3cZIt2T45FhuR9MsW/GWNiPSGv9vPQ9J3TLcsSxKz20=; b=vG2PYhFGCDkZdxrM5bdhmAqR/nfDHSQ/tZ2SFWpaYlnwkHV+ncBGdSR1g0qh3i5z+bLrwWjc
+ n9sX6RIpSViqCRp68sv1jmeYf1Swe5CMRH+MsgLqzVeB8UOCfxQCk0viJHtc6UZ4x1O3aHui
+ yE9JGODDRL1dZrFmnINc3zZFx2g=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e57a033.7fb5ee1ab110-smtp-out-n01;
+ Thu, 27 Feb 2020 10:55:47 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 75737C433A2; Thu, 27 Feb 2020 10:55:47 +0000 (UTC)
+Received: from [10.242.242.60] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sivaprak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B4C3BC43383;
+        Thu, 27 Feb 2020 10:55:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B4C3BC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
+Subject: Re: [PATCH 1/2] clk: qcom: Add DT bindings for ipq6018 apss clock
+ controller
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm-owner@vger.kernel.org
+References: <1582797318-26288-1-git-send-email-sivaprak@codeaurora.org>
+ <1582797318-26288-2-git-send-email-sivaprak@codeaurora.org>
+ <e94805e32d1264ca9a162891db26730e@codeaurora.org>
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Message-ID: <28fb9f7c-2b62-93e3-4d22-ea428d36d94f@codeaurora.org>
+Date:   Thu, 27 Feb 2020 16:25:41 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <e94805e32d1264ca9a162891db26730e@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1582797590.25607.10.camel@mtksdccf07>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Sibi,
 
-On Thu, Feb 27, 2020 at 05:59:50PM +0800, Sam Shih wrote:
-> On Thu, 2020-02-27 at 09:04 +0100, Uwe Kleine-K�nig wrote:
-> On Thu, Feb 27, 2020 at 03:46:50PM +0800, Sam Shih wrote:
-> > > The pwm clock source could be divided by 1625 with PWM_CON
-> > > BIT(3) setting in mediatek hardware.
-> > > 
-> > > This patch add support for longer pwm period configuration,
-> > > which allowing blinking LEDs via pwm interface.
-> > > 
-> > > Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-> > > ---
-> > >  drivers/pwm/pwm-mediatek.c | 21 +++++++++++++++++----
-> > >  1 file changed, 17 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-> > > index b94e0d09c300..9af309bea01a 100644
-> > > --- a/drivers/pwm/pwm-mediatek.c
-> > > +++ b/drivers/pwm/pwm-mediatek.c
-> > > @@ -121,8 +121,8 @@ static int pwm_mediatek_config(struct pwm_chip
-> *chip, struct pwm_device *pwm,
-> > >  			       int duty_ns, int period_ns)
-> > >  {
-> > >  	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
-> > > -	u32 clkdiv = 0, cnt_period, cnt_duty, reg_width = PWMDWIDTH,
-> > > -	    reg_thres = PWMTHRES;
-> > > +	u32 clkdiv = 0, clksel = 0, cnt_period, cnt_duty,
-> > > +	    reg_width = PWMDWIDTH, reg_thres = PWMTHRES;
-> > >  	u64 resolution;
-> > >  	int ret;
-> > >  
-> > Adding some more context:
-> > 
-> 
-> + /* The pwm source clock can be divided by 2^clkdiv. When the clksel  +
-> * bit is set to 1, The final clock output needs to be divided by an +  *
-> extra 1625.
-> +  */
+Thanks for the review.
 
-I'd write:
+On 2/27/2020 4:08 PM, Sibi Sankar wrote:
+> Hey Sivaprakash,
+>
+> On 2020-02-27 15:25, Sivaprakash Murugesan wrote:
+>> add dt-binding for ipq6018 apss clock controller
+>>
+>> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>> ---
+>>  .../devicetree/bindings/clock/qcom,apsscc.yaml     | 58 
+>> ++++++++++++++++++++++
+>>  include/dt-bindings/clock/qcom,apss-ipq6018.h      | 26 ++++++++++
+>>  2 files changed, 84 insertions(+)
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
+>>  create mode 100644 include/dt-bindings/clock/qcom,apss-ipq6018.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
+>> b/Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
+>> new file mode 100644
+>> index 0000000..7433721
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
+>> @@ -0,0 +1,58 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only
+>
+> Dual license
+missed it. will add in next series.
+>
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/bindings/clock/qcom,apsscc.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Qualcomm IPQ6018 APSS Clock Controller Binding
+>> +
+>> +maintainers:
+>> +  - Stephen Boyd <sboyd@kernel.org>
+>> +
+>> +description: |
+>> +  Qualcomm IPQ6018 APSS clock control module which supports the 
+>> clocks with
+>> +  frequencies above 800Mhz.
+>> +
+>> +properties:
+>> +  compatible :
+>> +    const: qcom,apss-ipq6018
+>
+> Please use qcom,<chip>-<device>
+> instead.
+ok.
+>
+>> +
+>> +  clocks:
+>> +    description: clocks required for this controller.
+>> +    maxItems: 4
+>> +
+>> +  clock-names:
+>> +    description: clock output names of required clocks.
+>> +    maxItems: 4
+>> +
+>> +  '#clock-cells':
+>> +    const: 1
+>> +
+>> +  '#reset-cells':
+>> +    const: 1
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - '#clock-cells'
+>> +  - '#reset-cells'
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +      #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
+>> +      apss_clk: qcom,apss_clk@b111000 {
+>> +            compatible = "qcom,apss-ipq6018";
+>> +            clocks = <&xo>, <&gcc GPLL0>,
+>> +                        <&gcc GPLL2>, <&gcc GPLL4>;
+>> +            clock-names = "xo", "gpll0",
+>> +                         "gpll2", "gpll4";
+>> +            reg = <0xb11100c 0x5ff4>;
+>> +            #clock-cells = <1>;
+>> +            #reset-cells = <1>;
+>> +      };
+>> +...
+>> diff --git a/include/dt-bindings/clock/qcom,apss-ipq6018.h
+>> b/include/dt-bindings/clock/qcom,apss-ipq6018.h
+>> new file mode 100644
+>> index 0000000..ed9d7d8
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/qcom,apss-ipq6018.h
+>> @@ -0,0 +1,26 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/*
+>> + * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
+>> + *
+>> + * Permission to use, copy, modify, and/or distribute this software 
+>> for any
+>> + * purpose with or without fee is hereby granted, provided that the 
+>> above
+>> + * copyright notice and this permission notice appear in all copies.
+>> + *
+>> + * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL 
+>> WARRANTIES
+>> + * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+>> + * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE 
+>> LIABLE FOR
+>> + * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY 
+>> DAMAGES
+>> + * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER 
+>> IN AN
+>> + * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING 
+>> OUT OF
+>> + * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+>
+> ^^ is not needed just the SPDX
+> license identifier is enough.
+>
+ok.
 
-The source clock is divided by 2^clkdiv or iff the clksel bit is set by
-2^clkdiv + 1625.
+Thanks,
 
-> 
-> Is this ok ?
-> 
-> 
-> > > @@ -139,11 +139,20 @@ static int pwm_mediatek_config(struct pwm_chip
-> *chip, struct pwm_device *pwm,
-> > > 	while (cnt_period > 8191) {
-> > >  		resolution *= 2;
-> > >  		clkdiv++;
-> > >  		cnt_period = DIV_ROUND_CLOSEST_ULL((u64)period_ns * 1000,
-> > >  						   resolution);
-> > > +		if (clkdiv > PWM_CLK_DIV_MAX && !clksel) {
-> > > +			clksel = 1;
-> > > +			clkdiv = 0;
-> > > +			resolution = (u64)NSEC_PER_SEC * 1000 * 1625;
-> > > +			do_div(resolution,
-> > > +				clk_get_rate(pc->clk_pwms[pwm->hwpwm]));
-> > > +			cnt_period = DIV_ROUND_CLOSEST_ULL(
-> > > +					(u64)period_ns * 1000, resolution);
-> > 
-> > The assignment is a repetition from just above the if. Maybe just put
-> it
-> > once after this if block?
-> 
-> The cnt_period represents the effective range of the PWM period counter,
-> when we need changing the pwm output period to a longer value at the
-> same clock frequency, we can setting a larger cnt_period, but the width
-> of the cnt_peroid register is 12 bits,
-> When the request period is too long, we need to divide the clock source
-> and then recalculate cnt_period outputs the correct waveform.
-> As mentioned above, when changing clkdiv, we need to recalculate
-> cnt_period immediately.
-> 
-> If the request period is very long (for example, LED blinking), clkdiv
-> may be insufficient. 
-> In this case, we will use clksel to divide the pwm source clock by an
-> additional 1625, and recalculate clkdiv and cnt_period.
-> 
-> I don't think we can just place assignments after the if block.
-
-I didn't care enough to read your reasoning and retry to convince you
-with mine:
-
-With your patch you have:
-
-	cnt_period = someexpression;
-
-	if (somecondition) {
-		...
-		cnt_period = someexpression;
-	}
-
-As somecondition doesn't make use of cnt_period this is equivalent to:
-
-	if (somecondition) {
-		...
-	}
-	cnt_period = someexpression;
-
-isn't it?
-
-> > The code is hard to follow, I wonder if this could be cleaned up with
-> > some comments added that explain the hardware details enough to be able
-> > to actually understand the code without having the hardware reference
-> > manual handy.
-> 
-> Is it sufficient to add some context into comment like the response of
-> the second question?
-
-I didn't check but I wouldn't be surprised if the code is more
-complicated than necessary. If you don't see something to simplify, go
-for adding an explanation as suggested and I will take a look in a quiet
-moment.
-
-Not sure I already pointed out that having a link to a publicly
-available reference manual in the driver's header is useful. If there is
-such a manual, please add a link there. Your benefit is that you
-simplify others to improve your driver.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-K�nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Siva
