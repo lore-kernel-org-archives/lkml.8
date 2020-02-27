@@ -2,51 +2,53 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F033C3F35D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFD0C3F34B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB05E246A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 734AE2468D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811215;
-	bh=Swyng6d+9CposMWyIsWX6EsBuZZ282uigPpLCyS1LsI=;
+	s=default; t=1582811176;
+	bh=bIf95kZnLc3+y5zExJSXS8q9b3BILGJr9WtD4CXywB8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BZ18Dk1P7mcnrVQ6Jqgu6ETjMDOT9r5Y8uaril7FDY5StJBVIySnw7SrpqzplYMgZ
-	 kSCjDQo73s8bG16lD6fcVOgB3X1JJaaFijngQOckHAlqC+RuQg5pNieuPnGUI07Jcv
-	 FCodAnLRG3L5y0SCtZbeqD5MGWEjVBKt19eqk+/E=
+	b=TxDhRsUWa6L1mldDBeTWpYkl3dogPBF+3ykesLk1oQ9FLdsb8HLcdbGA0ALcaz5Px
+	 Yaa/EGY9/shU2dVc7hk+/Pto27kGtMYaOWJ1/x+mtLRN0Hriww+/lgEHVgcN4tFi2O
+	 MMWGsX/bjkm57OTKxF8H0JVsiGY6NmZWDHv/3J8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730603AbgB0Nqy (ORCPT
+        id S1730484AbgB0NqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:46:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43176 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:46:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730589AbgB0Nqu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:46:50 -0500
+        id S1730479AbgB0NqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:46:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E1762469F;
-        Thu, 27 Feb 2020 13:46:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C96F24688;
+        Thu, 27 Feb 2020 13:46:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811209;
-        bh=Swyng6d+9CposMWyIsWX6EsBuZZ282uigPpLCyS1LsI=;
+        s=default; t=1582811170;
+        bh=bIf95kZnLc3+y5zExJSXS8q9b3BILGJr9WtD4CXywB8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EnAZutLKfXmC9mYyYZkgIxCMr8ElELic3EC77d+0NZFdb1BH7d7Bepn2NwmMztM9F
-         fZ8ZGhILGkYC0yIbyAD6QIrCI2EIW0NBxkEC9+FU4wc6iu0NZaT2i+7apclmfDX4hB
-         wtJU6HI3/36gxHnjlKqLJB6SEgfKtGH/1Lru7Tl4=
+        b=bpzdiX47vP8FRlExeKIS9zffatJMLitWRUskDG1MfuOt1ynZdXxoMrIOvrpW1ZpAC
+         bJPIrI85vaAWv2E0er2MPAPx1Vv0yYDwamAe1hCdQWHGNfNq2w+JV7w6D/Fc2vixKH
+         kTkDNHnMEPnHEsY/wR5nTe/wCmuyjYgF3clJXf+A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Dilger <adilger@dilger.ca>,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org
-Subject: [PATCH 4.9 007/165] ext4: dont assume that mmp_nodename/bdevname have NUL
-Date:   Thu, 27 Feb 2020 14:34:41 +0100
-Message-Id: <20200227132232.204573341@linuxfoundation.org>
+        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Oliver OHalloran <oohall@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 029/165] powerpc/powernv/iov: Ensure the pdn for VFs always contains a valid PE number
+Date:   Thu, 27 Feb 2020 14:35:03 +0100
+Message-Id: <20200227132235.176134459@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -59,58 +61,166 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Dilger <adilger@dilger.ca>
+From: Oliver O'Halloran <oohall@gmail.com>
 
-commit 14c9ca0583eee8df285d68a0e6ec71053efd2228 upstream.
+[ Upstream commit 3b5b9997b331e77ce967eba2c4bc80dc3134a7fe ]
 
-Don't assume that the mmp_nodename and mmp_bdevname strings are NUL
-terminated, since they are filled in by snprintf(), which is not
-guaranteed to do so.
+On pseries there is a bug with adding hotplugged devices to an IOMMU
+group. For a number of dumb reasons fixing that bug first requires
+re-working how VFs are configured on PowerNV. For background, on
+PowerNV we use the pcibios_sriov_enable() hook to do two things:
 
-Link: https://lore.kernel.org/r/1580076215-1048-1-git-send-email-adilger@dilger.ca
-Signed-off-by: Andreas Dilger <adilger@dilger.ca>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  1. Create a pci_dn structure for each of the VFs, and
+  2. Configure the PHB's internal BARs so the MMIO range for each VF
+     maps to a unique PE.
 
+Roughly speaking a PE is the hardware counterpart to a Linux IOMMU
+group since all the devices in a PE share the same IOMMU table. A PE
+also defines the set of devices that should be isolated in response to
+a PCI error (i.e. bad DMA, UR/CA, AER events, etc). When isolated all
+MMIO and DMA traffic to and from devicein the PE is blocked by the
+root complex until the PE is recovered by the OS.
+
+The requirement to block MMIO causes a giant headache because the P8
+PHB generally uses a fixed mapping between MMIO addresses and PEs. As
+a result we need to delay configuring the IOMMU groups for device
+until after MMIO resources are assigned. For physical devices (i.e.
+non-VFs) the PE assignment is done in pcibios_setup_bridge() which is
+called immediately after the MMIO resources for downstream
+devices (and the bridge's windows) are assigned. For VFs the setup is
+more complicated because:
+
+  a) pcibios_setup_bridge() is not called again when VFs are activated, and
+  b) The pci_dev for VFs are created by generic code which runs after
+     pcibios_sriov_enable() is called.
+
+The work around for this is a two step process:
+
+  1. A fixup in pcibios_add_device() is used to initialised the cached
+     pe_number in pci_dn, then
+  2. A bus notifier then adds the device to the IOMMU group for the PE
+     specified in pci_dn->pe_number.
+
+A side effect fixing the pseries bug mentioned in the first paragraph
+is moving the fixup out of pcibios_add_device() and into
+pcibios_bus_add_device(), which is called much later. This results in
+step 2. failing because pci_dn->pe_number won't be initialised when
+the bus notifier is run.
+
+We can fix this by removing the need for the fixup. The PE for a VF is
+known before the VF is even scanned so we can initialise
+pci_dn->pe_number pcibios_sriov_enable() instead. Unfortunately,
+moving the initialisation causes two problems:
+
+  1. We trip the WARN_ON() in the current fixup code, and
+  2. The EEH core clears pdn->pe_number when recovering a VF and
+     relies on the fixup to correctly re-set it.
+
+The only justification for either of these is a comment in
+eeh_rmv_device() suggesting that pdn->pe_number *must* be set to
+IODA_INVALID_PE in order for the VF to be scanned. However, this
+comment appears to have no basis in reality. Both bugs can be fixed by
+just deleting the code.
+
+Tested-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191028085424.12006-1-oohall@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/mmp.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ arch/powerpc/kernel/eeh_driver.c          |  6 ------
+ arch/powerpc/platforms/powernv/pci-ioda.c | 19 +++++++++++++++----
+ arch/powerpc/platforms/powernv/pci.c      |  4 ----
+ 3 files changed, 15 insertions(+), 14 deletions(-)
 
---- a/fs/ext4/mmp.c
-+++ b/fs/ext4/mmp.c
-@@ -119,10 +119,10 @@ void __dump_mmp_msg(struct super_block *
- {
- 	__ext4_warning(sb, function, line, "%s", msg);
- 	__ext4_warning(sb, function, line,
--		       "MMP failure info: last update time: %llu, last update "
--		       "node: %s, last update device: %s",
--		       (long long unsigned int) le64_to_cpu(mmp->mmp_time),
--		       mmp->mmp_nodename, mmp->mmp_bdevname);
-+		       "MMP failure info: last update time: %llu, last update node: %.*s, last update device: %.*s",
-+		       (unsigned long long)le64_to_cpu(mmp->mmp_time),
-+		       (int)sizeof(mmp->mmp_nodename), mmp->mmp_nodename,
-+		       (int)sizeof(mmp->mmp_bdevname), mmp->mmp_bdevname);
+diff --git a/arch/powerpc/kernel/eeh_driver.c b/arch/powerpc/kernel/eeh_driver.c
+index 620e08d4eb6e2..adac3dee4c57e 100644
+--- a/arch/powerpc/kernel/eeh_driver.c
++++ b/arch/powerpc/kernel/eeh_driver.c
+@@ -520,12 +520,6 @@ static void *eeh_rmv_device(void *data, void *userdata)
+ 
+ 		pci_iov_remove_virtfn(edev->physfn, pdn->vf_index, 0);
+ 		edev->pdev = NULL;
+-
+-		/*
+-		 * We have to set the VF PE number to invalid one, which is
+-		 * required to plug the VF successfully.
+-		 */
+-		pdn->pe_number = IODA_INVALID_PE;
+ #endif
+ 		if (rmv_data)
+ 			list_add(&edev->rmv_list, &rmv_data->edev_list);
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index 3ec673b4ca6ce..b787a669a1e27 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -1524,6 +1524,10 @@ static void pnv_ioda_setup_vf_PE(struct pci_dev *pdev, u16 num_vfs)
+ 
+ 	/* Reserve PE for each VF */
+ 	for (vf_index = 0; vf_index < num_vfs; vf_index++) {
++		int vf_devfn = pci_iov_virtfn_devfn(pdev, vf_index);
++		int vf_bus = pci_iov_virtfn_bus(pdev, vf_index);
++		struct pci_dn *vf_pdn;
++
+ 		if (pdn->m64_single_mode)
+ 			pe_num = pdn->pe_num_map[vf_index];
+ 		else
+@@ -1536,13 +1540,11 @@ static void pnv_ioda_setup_vf_PE(struct pci_dev *pdev, u16 num_vfs)
+ 		pe->pbus = NULL;
+ 		pe->parent_dev = pdev;
+ 		pe->mve_number = -1;
+-		pe->rid = (pci_iov_virtfn_bus(pdev, vf_index) << 8) |
+-			   pci_iov_virtfn_devfn(pdev, vf_index);
++		pe->rid = (vf_bus << 8) | vf_devfn;
+ 
+ 		pe_info(pe, "VF %04d:%02d:%02d.%d associated with PE#%d\n",
+ 			hose->global_number, pdev->bus->number,
+-			PCI_SLOT(pci_iov_virtfn_devfn(pdev, vf_index)),
+-			PCI_FUNC(pci_iov_virtfn_devfn(pdev, vf_index)), pe_num);
++			PCI_SLOT(vf_devfn), PCI_FUNC(vf_devfn), pe_num);
+ 
+ 		if (pnv_ioda_configure_pe(phb, pe)) {
+ 			/* XXX What do we do here ? */
+@@ -1556,6 +1558,15 @@ static void pnv_ioda_setup_vf_PE(struct pci_dev *pdev, u16 num_vfs)
+ 		list_add_tail(&pe->list, &phb->ioda.pe_list);
+ 		mutex_unlock(&phb->ioda.pe_list_mutex);
+ 
++		/* associate this pe to it's pdn */
++		list_for_each_entry(vf_pdn, &pdn->parent->child_list, list) {
++			if (vf_pdn->busno == vf_bus &&
++			    vf_pdn->devfn == vf_devfn) {
++				vf_pdn->pe_number = pe_num;
++				break;
++			}
++		}
++
+ 		pnv_pci_ioda2_setup_dma_pe(phb, pe);
+ 	}
  }
+diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
+index 00dbf1e895a9d..2ed7627e991e0 100644
+--- a/arch/powerpc/platforms/powernv/pci.c
++++ b/arch/powerpc/platforms/powernv/pci.c
+@@ -856,16 +856,12 @@ void pnv_pci_dma_dev_setup(struct pci_dev *pdev)
+ 	struct pnv_phb *phb = hose->private_data;
+ #ifdef CONFIG_PCI_IOV
+ 	struct pnv_ioda_pe *pe;
+-	struct pci_dn *pdn;
  
- /*
-@@ -153,6 +153,7 @@ static int kmmpd(void *data)
- 	mmp_check_interval = max(EXT4_MMP_CHECK_MULT * mmp_update_interval,
- 				 EXT4_MMP_MIN_CHECK_INTERVAL);
- 	mmp->mmp_check_interval = cpu_to_le16(mmp_check_interval);
-+	BUILD_BUG_ON(sizeof(mmp->mmp_bdevname) < BDEVNAME_SIZE);
- 	bdevname(bh->b_bdev, mmp->mmp_bdevname);
- 
- 	memcpy(mmp->mmp_nodename, init_utsname()->nodename,
-@@ -377,7 +378,8 @@ skip:
- 	/*
- 	 * Start a kernel thread to update the MMP block periodically.
- 	 */
--	EXT4_SB(sb)->s_mmp_tsk = kthread_run(kmmpd, mmpd_data, "kmmpd-%s",
-+	EXT4_SB(sb)->s_mmp_tsk = kthread_run(kmmpd, mmpd_data, "kmmpd-%.*s",
-+					     (int)sizeof(mmp->mmp_bdevname),
- 					     bdevname(bh->b_bdev,
- 						      mmp->mmp_bdevname));
- 	if (IS_ERR(EXT4_SB(sb)->s_mmp_tsk)) {
+ 	/* Fix the VF pdn PE number */
+ 	if (pdev->is_virtfn) {
+-		pdn = pci_get_pdn(pdev);
+-		WARN_ON(pdn->pe_number != IODA_INVALID_PE);
+ 		list_for_each_entry(pe, &phb->ioda.pe_list, list) {
+ 			if (pe->rid == ((pdev->bus->number << 8) |
+ 			    (pdev->devfn & 0xff))) {
+-				pdn->pe_number = pe->pe_number;
+ 				pe->pdev = pdev;
+ 				break;
+ 			}
+-- 
+2.20.1
+
 
 
