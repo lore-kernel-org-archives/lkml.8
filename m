@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C1AAC3F37B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 615BFC3F364
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5631C246A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DAF021D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:53:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811563;
-	bh=Z1DU4+Um6gFHn8qnTTuXqBgAJpwCBlWICAXSJKZeCko=;
+	s=default; t=1582811584;
+	bh=irBOlCATyadb56mwYwGAJouMGPdmjSyPwFVQ/95DRbc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P+C/mE0c3BUyk/RsPUBFhv2rG86CIh10dJeBnEoIAtDBeKg0oIs2dw+VG+zzEAZJw
-	 VsilIrcUz1V2gOxwgsbUnYQc07+9d8SNU2yqCMzIVHVuD9l2mQOWH0bEnlSlSnsFZu
-	 CkIBwrq/0URA0n6LT1soPKq3brpH6G3T3bjlSsmM=
+	b=xSwfElcTCQDZdKtZ0OskniGAq5y8Fppnt/Aqww1uldDyumfobQoJkMr0FL4xW1RMU
+	 dAiWHxTV3VcMVsnVlYPSqLjuX7xXoHBlk/D41JjVPlpgbDBETEQGAn2uAednH66ZZk
+	 Cv5nvvsGw0gyAwiI2Jltj4CiDTDWWbA2OJvN8vXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731563AbgB0Nwm (ORCPT
+        id S1731623AbgB0NxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:52:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51892 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:53:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731523AbgB0NwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:52:23 -0500
+        id S1731292AbgB0NxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:53:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D948420578;
-        Thu, 27 Feb 2020 13:52:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B24CC21D7E;
+        Thu, 27 Feb 2020 13:52:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811543;
-        bh=Z1DU4+Um6gFHn8qnTTuXqBgAJpwCBlWICAXSJKZeCko=;
+        s=default; t=1582811580;
+        bh=irBOlCATyadb56mwYwGAJouMGPdmjSyPwFVQ/95DRbc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MVpH7CwEePLslPPxRTBNXRfsV1yV0RfiHRAhoNjSUCldaAxy6bkcSMyxFwx16x28K
-         L0GZ9PMr8Y/nSMIR4GT2ku8McJGJRXzvKK4v7h+9iSsZ1Brdqx690/eYPNPqdGhLLf
-         isRtZqy5a/P3niUxA/EvV2NqkkCe7eyC2UEBJGrE=
+        b=xLQSQ6RJM84qtVPHNW+HMNjIYKb1bu82S97Hs4X8Q2VkCiNCnJQO0cFpan2R2XbU8
+         FUDDqeOoPbI4jr81ngm+nXoFL1ce5AAZVEyemHDzKpXz4WGxiUe3t+dGzzt4n/yzKt
+         mAhWSZXVIzl4149jV7ZgjM0rhTcIsvoIXHov+s3c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Richard Dodd <richard.o.dodd@gmail.com>
-Subject: [PATCH 4.9 125/165] USB: Fix novation SourceControl XL after suspend
-Date:   Thu, 27 Feb 2020 14:36:39 +0100
-Message-Id: <20200227132249.368667224@linuxfoundation.org>
+        stable@vger.kernel.org, Anand Jain <anand.jain@oracle.com>,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.14 021/237] btrfs: log message when rw remount is attempted with unclean tree-log
+Date:   Thu, 27 Feb 2020 14:33:55 +0100
+Message-Id: <20200227132257.741822817@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
-References: <20200227132230.840899170@linuxfoundation.org>
+In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
+References: <20200227132255.285644406@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,33 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Dodd <richard.o.dodd@gmail.com>
+From: David Sterba <dsterba@suse.com>
 
-commit b692056db8ecc7f452b934f016c17348282b7699 upstream.
+commit 10a3a3edc5b89a8cd095bc63495fb1e0f42047d9 upstream.
 
-Currently, the SourceControl will stay in power-down mode after resuming
-from suspend. This patch resets the device after suspend to power it up.
+A remount to a read-write filesystem is not safe when there's tree-log
+to be replayed. Files that could be opened until now might be affected
+by the changes in the tree-log.
 
-Signed-off-by: Richard Dodd <richard.o.dodd@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200212142220.36892-1-richard.o.dodd@gmail.com
+A regular mount is needed to replay the log so the filesystem presents
+the consistent view with the pending changes included.
+
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Anand Jain <anand.jain@oracle.com>
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/quirks.c |    3 +++
- 1 file changed, 3 insertions(+)
+ fs/btrfs/super.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/usb/core/quirks.c
-+++ b/drivers/usb/core/quirks.c
-@@ -291,6 +291,9 @@ static const struct usb_device_id usb_qu
- 	/* INTEL VALUE SSD */
- 	{ USB_DEVICE(0x8086, 0xf1a5), .driver_info = USB_QUIRK_RESET_RESUME },
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -1801,6 +1801,8 @@ static int btrfs_remount(struct super_bl
+ 		}
  
-+	/* novation SoundControl XL */
-+	{ USB_DEVICE(0x1235, 0x0061), .driver_info = USB_QUIRK_RESET_RESUME },
-+
- 	{ }  /* terminating entry must be last */
- };
- 
+ 		if (btrfs_super_log_root(fs_info->super_copy) != 0) {
++			btrfs_warn(fs_info,
++		"mount required to replay tree-log, cannot remount read-write");
+ 			ret = -EINVAL;
+ 			goto restore;
+ 		}
 
 
