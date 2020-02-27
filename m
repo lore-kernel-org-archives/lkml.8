@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33357C3F346
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1DEC3F363
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07CAE20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7213624656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811241;
-	bh=w61Y2oCtqAzKFgj+H/+9L2qLOJTi5QsYYyj1weMQ/0I=;
+	s=default; t=1582811330;
+	bh=Y5SnXWp1oU7iqTSLhVAfbzVeZIBa+qAGHzZ8XluSOMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S629IpWkYc9ndrK2CDOrOmcTY+MgOkU2x15inHe4sayd1gdiyqSfUptAJkeZWXXtd
-	 eBIo75tbwCQ2trZ1Qq6c/ah7nRrk1Q5nYv/3lKhDwYWsDtqt36c9e58bZxvpJmpzJT
-	 /hXTVtbs8puOExI7q+O1p3BYz38PPnzgRuSs7rqw=
+	b=rJGg4Ed1QF1lbyNpKpGndEEoxnidkIP4GJS1eh5MpFNt83R6N2WCvUTjPkmS+FP8y
+	 bxgbGGafAddvyuyw6CoDrNDziWRbWvnHMlzhyDJwlFEEE9crKyhtQWEScJ9MCabo9H
+	 wfVjCuVAEGjKLtXWPPvj86lhsDkAj5W3Qp2OIwXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730675AbgB0NrU (ORCPT
+        id S1730941AbgB0Nst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:47:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43614 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:48:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729643AbgB0NrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:47:13 -0500
+        id S1730933AbgB0Nsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:48:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10DA620578;
-        Thu, 27 Feb 2020 13:47:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAAC120578;
+        Thu, 27 Feb 2020 13:48:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811232;
-        bh=w61Y2oCtqAzKFgj+H/+9L2qLOJTi5QsYYyj1weMQ/0I=;
+        s=default; t=1582811326;
+        bh=Y5SnXWp1oU7iqTSLhVAfbzVeZIBa+qAGHzZ8XluSOMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1KBq3IlDVqkdd3D6s3OOI8s285Y4t9SYl73fNMqlFRvRTVxy8Pn1gwXoc/7pPgMhP
-         mAU6rPsKApGgkz35FvcsEkk86nYWSfa63AVEwbhqh7eEBt8HxqBoGmtsSBwvLQO3mE
-         5nFw5Vl4pWgoC9qKxVGaEZjfKj3m0ddmdGqT4i6c=
+        b=diA8bjapMy7utrptWzF+hMxAeeR126Ml3ChwBq9pSogK9AHhQSc/C8wDCjwqRSYGh
+         v+FdeECiIwd5ERT70+0mvtPqgHboa2dY2X4u3jc2ZWSk4TQhwO6zKx/ucscEC5W9zX
+         ePw6E8H98DheOLLdO6/6Uc0BHCp6Tk/+JAtC0Z+Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phong Tran <tranmanphong@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 054/165] ipw2x00: Fix -Wcast-function-type
-Date:   Thu, 27 Feb 2020 14:35:28 +0100
-Message-Id: <20200227132239.245351425@linuxfoundation.org>
+Subject: [PATCH 4.9 050/165] media: v4l2-device.h: Explicitly compare grp{id,mask} to zero in v4l2_device macros
+Date:   Thu, 27 Feb 2020 14:35:24 +0100
+Message-Id: <20200227132238.552707541@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -61,79 +63,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phong Tran <tranmanphong@gmail.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit ebd77feb27e91bb5fe35a7818b7c13ea7435fb98 ]
+[ Upstream commit afb34781620274236bd9fc9246e22f6963ef5262 ]
 
-correct usage prototype of callback in tasklet_init().
-Report by https://github.com/KSPP/linux/issues/20
+When building with Clang + -Wtautological-constant-compare, several of
+the ivtv and cx18 drivers warn along the lines of:
 
-Signed-off-by: Phong Tran <tranmanphong@gmail.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+ drivers/media/pci/cx18/cx18-driver.c:1005:21: warning: converting the
+ result of '<<' to a boolean always evaluates to true
+ [-Wtautological-constant-compare]
+                         cx18_call_hw(cx, CX18_HW_GPIO_RESET_CTRL,
+                                         ^
+ drivers/media/pci/cx18/cx18-cards.h:18:37: note: expanded from macro
+ 'CX18_HW_GPIO_RESET_CTRL'
+ #define CX18_HW_GPIO_RESET_CTRL         (1 << 6)
+                                           ^
+ 1 warning generated.
+
+This warning happens because the shift operation is implicitly converted
+to a boolean in v4l2_device_mask_call_all before being negated. This can
+be solved by just comparing the mask result to 0 explicitly so that
+there is no boolean conversion. The ultimate goal is to enable
+-Wtautological-compare globally because there are several subwarnings
+that would be helpful to have.
+
+For visual consistency and avoidance of these warnings in the future,
+all of the implicitly boolean conversions in the v4l2_device macros
+are converted to explicit ones as well.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/752
+
+Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/ipw2x00/ipw2100.c | 7 ++++---
- drivers/net/wireless/intel/ipw2x00/ipw2200.c | 5 +++--
- 2 files changed, 7 insertions(+), 5 deletions(-)
+ include/media/v4l2-device.h | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2100.c b/drivers/net/wireless/intel/ipw2x00/ipw2100.c
-index bfa542c8d6f1a..86c84b11218db 100644
---- a/drivers/net/wireless/intel/ipw2x00/ipw2100.c
-+++ b/drivers/net/wireless/intel/ipw2x00/ipw2100.c
-@@ -3220,8 +3220,9 @@ static void ipw2100_tx_send_data(struct ipw2100_priv *priv)
- 	}
- }
+diff --git a/include/media/v4l2-device.h b/include/media/v4l2-device.h
+index 8ffa94009d1a9..76002416cead9 100644
+--- a/include/media/v4l2-device.h
++++ b/include/media/v4l2-device.h
+@@ -268,7 +268,7 @@ static inline void v4l2_subdev_notify(struct v4l2_subdev *sd,
+ 		struct v4l2_subdev *__sd;				\
+ 									\
+ 		__v4l2_device_call_subdevs_p(v4l2_dev, __sd,		\
+-			!(grpid) || __sd->grp_id == (grpid), o, f ,	\
++			(grpid) == 0 || __sd->grp_id == (grpid), o, f ,	\
+ 			##args);					\
+ 	} while (0)
  
--static void ipw2100_irq_tasklet(struct ipw2100_priv *priv)
-+static void ipw2100_irq_tasklet(unsigned long data)
- {
-+	struct ipw2100_priv *priv = (struct ipw2100_priv *)data;
- 	struct net_device *dev = priv->net_dev;
- 	unsigned long flags;
- 	u32 inta, tmp;
-@@ -6029,7 +6030,7 @@ static void ipw2100_rf_kill(struct work_struct *work)
- 	spin_unlock_irqrestore(&priv->low_lock, flags);
- }
+@@ -280,7 +280,7 @@ static inline void v4l2_subdev_notify(struct v4l2_subdev *sd,
+ ({									\
+ 	struct v4l2_subdev *__sd;					\
+ 	__v4l2_device_call_subdevs_until_err_p(v4l2_dev, __sd,		\
+-			!(grpid) || __sd->grp_id == (grpid), o, f ,	\
++			(grpid) == 0 || __sd->grp_id == (grpid), o, f ,	\
+ 			##args);					\
+ })
  
--static void ipw2100_irq_tasklet(struct ipw2100_priv *priv);
-+static void ipw2100_irq_tasklet(unsigned long data);
+@@ -294,8 +294,8 @@ static inline void v4l2_subdev_notify(struct v4l2_subdev *sd,
+ 		struct v4l2_subdev *__sd;				\
+ 									\
+ 		__v4l2_device_call_subdevs_p(v4l2_dev, __sd,		\
+-			!(grpmsk) || (__sd->grp_id & (grpmsk)), o, f ,	\
+-			##args);					\
++			(grpmsk) == 0 || (__sd->grp_id & (grpmsk)), o,	\
++			f , ##args);					\
+ 	} while (0)
  
- static const struct net_device_ops ipw2100_netdev_ops = {
- 	.ndo_open		= ipw2100_open,
-@@ -6158,7 +6159,7 @@ static struct net_device *ipw2100_alloc_device(struct pci_dev *pci_dev,
- 	INIT_DELAYED_WORK(&priv->rf_kill, ipw2100_rf_kill);
- 	INIT_DELAYED_WORK(&priv->scan_event, ipw2100_scan_event);
+ /*
+@@ -308,8 +308,8 @@ static inline void v4l2_subdev_notify(struct v4l2_subdev *sd,
+ ({									\
+ 	struct v4l2_subdev *__sd;					\
+ 	__v4l2_device_call_subdevs_until_err_p(v4l2_dev, __sd,		\
+-			!(grpmsk) || (__sd->grp_id & (grpmsk)), o, f ,	\
+-			##args);					\
++			(grpmsk) == 0 || (__sd->grp_id & (grpmsk)), o,	\
++			f , ##args);					\
+ })
  
--	tasklet_init(&priv->irq_tasklet, (void (*)(unsigned long))
-+	tasklet_init(&priv->irq_tasklet,
- 		     ipw2100_irq_tasklet, (unsigned long)priv);
- 
- 	/* NOTE:  We do not start the deferred work for status checks yet */
-diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2200.c b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-index bfd68612a535d..48edb2b6eb7d5 100644
---- a/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-+++ b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-@@ -1968,8 +1968,9 @@ static void notify_wx_assoc_event(struct ipw_priv *priv)
- 	wireless_send_event(priv->net_dev, SIOCGIWAP, &wrqu, NULL);
- }
- 
--static void ipw_irq_tasklet(struct ipw_priv *priv)
-+static void ipw_irq_tasklet(unsigned long data)
- {
-+	struct ipw_priv *priv = (struct ipw_priv *)data;
- 	u32 inta, inta_mask, handled = 0;
- 	unsigned long flags;
- 	int rc = 0;
-@@ -10705,7 +10706,7 @@ static int ipw_setup_deferred_work(struct ipw_priv *priv)
- 	INIT_WORK(&priv->qos_activate, ipw_bg_qos_activate);
- #endif				/* CONFIG_IPW2200_QOS */
- 
--	tasklet_init(&priv->irq_tasklet, (void (*)(unsigned long))
-+	tasklet_init(&priv->irq_tasklet,
- 		     ipw_irq_tasklet, (unsigned long)priv);
- 
- 	return ret;
+ /*
 -- 
 2.20.1
 
