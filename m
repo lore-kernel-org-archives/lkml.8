@@ -2,174 +2,131 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA0DC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A1EFC35677
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DA7B24692
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 111B92469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:45:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KDUCet3q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WrLlidHp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730807AbgB0RpK (ORCPT
+        id S1730532AbgB0Rpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 12:45:10 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34133 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729710AbgB0RpJ (ORCPT
+        Thu, 27 Feb 2020 12:45:45 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36393 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729710AbgB0Rpo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 12:45:09 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z15so4545974wrl.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 09:45:06 -0800 (PST)
+        Thu, 27 Feb 2020 12:45:44 -0500
+Received: by mail-pg1-f196.google.com with SMTP id d9so70479pgu.3;
+        Thu, 27 Feb 2020 09:45:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WixaM9tNI8jnTh9C4+zTeTZp1lxDIM/c/EPF+3v0ZBE=;
-        b=KDUCet3qoAEaSacVzuXwe3JXolr9HmgHhC00ZjEyN12KdAZzPjkwxMYSF3VaIUHJoM
-         bpu5F79pIc91/TImFBOK34U/6TrFa0dvkKANTi4aZL8uJpMsvb1t/ywuXH8nUdEIvLmO
-         XlGtPRbZi9RWArB5f43EpVdrrn3vhnykxhPXDhT/jLvH/+smjUGkohWMJfAoZFO31hcM
-         tKc7ABcXYFEC2ysVSQRGKuCZyrBbMnW/Joy9VqtMH5/FFljEqQaxq7FioaRIcR/HcbWc
-         86CYOefkozOo91gDg/8hiBPn4UeCJSH/ZxIDDxJH7FxuFAaRUGBY037M5wjHACD545C0
-         TQJA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aavjJ+Z/Os0zHnsfY4LhrQa/kjKKVPycfJnfRrQ9Zao=;
+        b=WrLlidHpJQHENIo9YAPAEQekykxM5HD2YXi3IVdH2pDlg6yOsqQeAnBHuInus8IGYC
+         T+Llicheka6t83Av1G7fnGQK8N8t/+ARqHcr7lEyinMjtYM47yBrjkl2uEcRsEZ4vjUz
+         pAjZPbsFEKwx29NM8eVxoOKBbOhAa5Ss0rhJpdsluzAbqfyGiQnGG/Zp0NAiBrgbAbt0
+         jfF0riqJcV8+RHgdQPpeLHStGSeazOIOy4Dlp0oY3js8i23wr6q2uHDBiIWHOaJsg9t8
+         1ZOC6VPeEyYaQraK7qW+s5OLWdodWJnu6yrWH8xyJEc1DQGF4Yy9unxmzfeJW8N2YDjq
+         /lIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WixaM9tNI8jnTh9C4+zTeTZp1lxDIM/c/EPF+3v0ZBE=;
-        b=p9q1YN2pfwllTqw5J6cnoshKN1tPIpOprZv3a9QbE1dJwRNNa8butffxljOmq1S/1q
-         /4N+8HBWhi1rgUTPxMcLjpqQYae7ZSopdA0XVDUxUWqPU6RHtNt7LFYiIqtPeduX7mKM
-         9L20HX/hRb0rqnjL6mTMI3+TLL/Eee1Qrt7yVuohCOhhXLT0DngzrmUMjdJfksUXlS1b
-         6OZV5BuplM2I5AjqTAGJkY3AtrP8RJs7CqZccFT56xNv9BCbDlTkX4ta+krEYr/TI5v4
-         78DoXqQcOatxZtNeYzt0dY38Dcs9M29l3C+xF3ZrX1NbiXlLbGpVupCNi5VQOoRMrCOM
-         7zHw==
-X-Gm-Message-State: APjAAAWHOB/9F+BaNA1o/bAnGNK5VXKqkavusV508PpUBaR43ifGT4zv
-        lAKW37GGX6Io4rDEsyCgH4iZuC19ZgiN0Witlcmv3g==
-X-Google-Smtp-Source: APXvYqz21p2um6MK62mRZ+SLuFxx5C/Fc3SSLuIrFollTsWhEO4W2YdbT0+eur1+lWAujIwnB6aoW5WY0MRu3tAN8TA=
-X-Received: by 2002:a5d:674d:: with SMTP id l13mr8276wrw.11.1582825505785;
- Thu, 27 Feb 2020 09:45:05 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aavjJ+Z/Os0zHnsfY4LhrQa/kjKKVPycfJnfRrQ9Zao=;
+        b=d5KvKt7BrH7gcLYsDCg9of86TNN4g2JAf/HnyiTMXCB8uswLlUqBLq1E4wSDptQKQ1
+         sspnlkxy3KdzSpsm4dVwhLDlLo16atWdXP74R9SCzzkXW4591SVk890vcaAUC5bQjOJo
+         I2fHE/3ogFDDZ2jiSqu4K95yV8wDfZ32QYkH2y3oo3ig4fVxEBbTZ1TyF3HspInmEDCJ
+         ew+heDh1tSNyCBMjljV9X57gTIlNLIr8NzgiXO67TmTSzsa0HA96FTNVok/j/HoQl3nD
+         mnEeBBLNBEN6y8ELhXBBHozaf6ze/6GwZSaNRWjiyP1o4C///YHBtv6M8fWqFSstPiC+
+         aNLg==
+X-Gm-Message-State: APjAAAUH55cWVuSj9QbIGieqDRLpl/y9T7BDiyM+1XsyEigmKv7ewC7M
+        ERw76zBLAwH5IfwZ+luslN0=
+X-Google-Smtp-Source: APXvYqxLesXxb5FW6sTnMiGiGe5CN/UVKj1bBr36Rl2QBzPtHaPhoQYlUWdpilUa7ohjuvvcuvc2jw==
+X-Received: by 2002:a62:7c96:: with SMTP id x144mr114879pfc.7.1582825543344;
+        Thu, 27 Feb 2020 09:45:43 -0800 (PST)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id m16sm7712623pfh.60.2020.02.27.09.45.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 27 Feb 2020 09:45:43 -0800 (PST)
+Date:   Thu, 27 Feb 2020 09:45:41 -0800
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@gmail.com>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/4] ASoC: fsl_asrc: Change asrc_width to asrc_format
+Message-ID: <20200227174540.GA17040@Asurada-Nvidia.nvidia.com>
+References: <cover.1582770784.git.shengjiu.wang@nxp.com>
+ <ffd5ff2fd0e8ad03a97f6a640630cff767d73fa7.1582770784.git.shengjiu.wang@nxp.com>
+ <20200227034121.GA20540@Asurada-Nvidia.nvidia.com>
+ <CAA+D8AMzqpC35_CR2dCG6a_h4FzvZ6orXkPSYh_1o1d8hv+BMg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200227151143.6a6edaf9@canb.auug.org.au> <CAMuHMdVc-vyQfuLUgbF6ei9Qrr+fryA-j1PHsrsjTNiOYvUk+w@mail.gmail.com>
- <CAOFY-A0=AYDSdGq5tf7s6_kRjnDGLfLjCV9p+LdKbLwyw0J9nA@mail.gmail.com>
-In-Reply-To: <CAOFY-A0=AYDSdGq5tf7s6_kRjnDGLfLjCV9p+LdKbLwyw0J9nA@mail.gmail.com>
-From:   Arjun Roy <arjunroy@google.com>
-Date:   Thu, 27 Feb 2020 09:44:54 -0800
-Message-ID: <CAOFY-A2CFi0pX1BBsuruntk0AM9doseCMnFCJi192BYojaBUUw@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the akpm tree
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Soheil Hassas Yeganeh <soheil@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAA+D8AMzqpC35_CR2dCG6a_h4FzvZ6orXkPSYh_1o1d8hv+BMg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 9:13 AM Arjun Roy <arjunroy@google.com> wrote:
->
-> On Thu, Feb 27, 2020 at 1:03 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+On Thu, Feb 27, 2020 at 01:10:19PM +0800, Shengjiu Wang wrote:
+> On Thu, Feb 27, 2020 at 11:43 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
 > >
-> > Hi Stephen et al,
-> >
-> > On Thu, Feb 27, 2020 at 5:12 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > > After merging the akpm tree, today's linux-next build (sparc defconfig)
-> > > failed like this:
+> > On Thu, Feb 27, 2020 at 10:41:55AM +0800, Shengjiu Wang wrote:
+> > > asrc_format is more inteligent variable, which is align
+> > > with the alsa definition snd_pcm_format_t.
 > > >
-> > > In file included from include/linux/list.h:9:0,
-> > >                  from include/linux/smp.h:12,
-> > >                  from include/linux/kernel_stat.h:5,
-> > >                  from mm/memory.c:42:
-> > > mm/memory.c: In function 'insert_pages':
-> > > mm/memory.c:1523:41: error: implicit declaration of function 'pte_index'; did you mean 'page_index'? [-Werror=implicit-function-declaration]
-> > >    remaining_pages_total, PTRS_PER_PTE - pte_index(addr));
-> > >                                          ^
-> > > include/linux/kernel.h:842:40: note: in definition of macro '__typecheck'
-> > >    (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
-> > >                                         ^
-> > > include/linux/kernel.h:866:24: note: in expansion of macro '__safe_cmp'
-> > >   __builtin_choose_expr(__safe_cmp(x, y), \
-> > >                         ^~~~~~~~~~
-> > > include/linux/kernel.h:934:27: note: in expansion of macro '__careful_cmp'
-> > >  #define min_t(type, x, y) __careful_cmp((type)(x), (type)(y), <)
-> > >                            ^~~~~~~~~~~~~
-> > > mm/memory.c:1522:26: note: in expansion of macro 'min_t'
-> > >   pages_to_write_in_pmd = min_t(unsigned long,
-> > >                           ^~~~~
-> >
-> > Same issue on m68k, as per a report from kisskb.
-> >
-> > > Caused by patch
+> > > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > > ---
+> > >  sound/soc/fsl/fsl_asrc.c     | 23 +++++++++++------------
+> > >  sound/soc/fsl/fsl_asrc.h     |  4 ++--
+> > >  sound/soc/fsl/fsl_asrc_dma.c |  2 +-
+> > >  3 files changed, 14 insertions(+), 15 deletions(-)
 > > >
-> > >   "mm/memory.c: add vm_insert_pages()"
+> > > diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
+> > > index 0dcebc24c312..2b6a1643573c 100644
+> > > --- a/sound/soc/fsl/fsl_asrc.c
+> > > +++ b/sound/soc/fsl/fsl_asrc.c
+> >
+> > > @@ -600,11 +599,6 @@ static int fsl_asrc_dai_hw_params(struct snd_pcm_substream *substream,
 > > >
-> > > sparc32 does not implement pte_index at all :-(
+> > >       pair->config = &config;
+> > >
+> > > -     if (asrc_priv->asrc_width == 16)
+> > > -             format = SNDRV_PCM_FORMAT_S16_LE;
+> > > -     else
+> > > -             format = SNDRV_PCM_FORMAT_S24_LE;
 > >
-> > Seems like about only half of the architectures do.
+> > It feels better to me that we have format settings in hw_params().
 > >
->
-> :/ I begin to suspect the only sane way to make this work is to have a
-> per-arch header defined method, returning a bool saying whether
-> pte_index() is meaningful or not on that arch, and early on in
-> vm_insert_pages() if that bool returns true, to just call
-> vm_insert_page() in a loop.
->
+> > Why not let fsl_easrc align with this? Any reason that I'm missing?
+> 
+> because the asrc_width is not formal,  in the future we can direct
 
-So, here is what I propose: something like the following macro in a
-per-arch header:
+Hmm..that's our DT binding. And I don't feel it is a problem
+to be ASoC irrelative.
 
-#define PTE_INDEX_DEFINED 1 // or 0 if it is not
+> input the format from the dts. format involve the info about width.
 
-In mm/memory.c, another macro:
-
-#ifndef PTE_INDEX_DEFINED
-#define PTE_INDEX_DEFINED 0
-#endifndef
-
-And inside vm_insert_pages:
-
-int vm_insert_pages() {
-
-#if PTE_INDEX_DEFINED
-
-// The existing method
-
-#else
-
-for (i=0; i<n; ++i)
-        vm_insert_page(i)
-
-#endif
-}
-
-That way:
-1. No playing whack-a-mole with different architectures
-2. Architecture that knows pte_index is meaningful works can define
-this explicitly
-3. Can remove the sparc patches modifying pte_index that Stephen and I
-contributed.
-
-If that sounds acceptable I can cook a patch.
-
-Thanks,
--Arjun
-
-> -Arjun
->
-> > Gr{oetje,eeting}s,
-> >
-> >                         Geert
-> >
-> > --
-> > Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> >
-> > In personal conversations with technical people, I call myself a hacker. But
-> > when I'm talking to journalists I just say "programmer" or something like that.
-> >                                 -- Linus Torvalds
+Is there such any formal ASoC binding? I don't see those PCM
+formats under include/dt-bindings/ folder. How are we going
+to involve those formats in DT?
