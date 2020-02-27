@@ -2,51 +2,52 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 745BCC3F357
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BD2C3F34C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40D6621D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DBCB21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812045;
-	bh=GdSWoQomrdKNr8DZ+H6Ho15kRD6+s3YVagtmPJN4Xkk=;
+	s=default; t=1582812137;
+	bh=lot9hp8M9ZmQ4SErYioRkTfv2/FgtyO+wcAr43RWXLg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XVv+pSnHNsWAc/NI9tnbmwdS1ZQVFFFXUgPFE8soiIth3JuG+MBP8DgMsFIWHfOXr
-	 i1y4Qzik24pDevTO2ohbQe5/q/ivlWxThdr1FVAxhmnkTQK6BzFRYQj3ZH+pONbJnC
-	 wrvH0Gm+ddd9mdY20KlBmXZRucdVvv0k3bk8u6mY=
+	b=ZhBej67SHKJFUes/WHkipzGmPoZP5nlivu/WtiEqiaaARe0wBv34o4NoiK9Kn5lxu
+	 jI5NM23pZ9/J9JA5aDiXf9ID52Nl0nZGRvtVuplxTJvBBPH9WuMHeUTPwvFPsct4Dd
+	 sF3jNH18UG6XoayP7NQ8xMh2BjnX84r0mS/MIX90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732796AbgB0OAo (ORCPT
+        id S1733077AbgB0OCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:00:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34098 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:02:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732598AbgB0OAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:00:37 -0500
+        id S1732644AbgB0OCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:02:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA9F72084E;
-        Thu, 27 Feb 2020 14:00:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F30324697;
+        Thu, 27 Feb 2020 14:02:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812036;
-        bh=GdSWoQomrdKNr8DZ+H6Ho15kRD6+s3YVagtmPJN4Xkk=;
+        s=default; t=1582812133;
+        bh=lot9hp8M9ZmQ4SErYioRkTfv2/FgtyO+wcAr43RWXLg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QpCmp83er3AMZb0JW1gIrQYm8C0pa6ulF+h0GXr0Mh4JaMTSnLh76Iop9X12rIn19
-         e9ScJaW3q9lSNXFWVw7iH5s5tZyr9lmhxnAGcflAKIaoyrvEMTUAfQ/2ftB9A8hIdW
-         OOCJeuW9cf6izWp2L/ZhCWY+REp8h7O0vsvmgkHk=
+        b=nm3L0AUkvS4Pz2gaWoEbgRMn0Ds4VBrkDb5dB7lsEEPePchNqt/TbybYPg/4Wc/1y
+         Qo53W1NoWIGcw92T19MDb8m2zCfeJ32jj8Za3TZb03+NQpif6i2mPxM8bIurMUHxyO
+         Wt+dI6XYflOBwLLAzML9mPWAt6q3D1DbDOkId98Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 159/237] irqchip/gic-v3-its: Reference to its_invall_cmd descriptor when building INVALL
-Date:   Thu, 27 Feb 2020 14:36:13 +0100
-Message-Id: <20200227132308.220023750@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+fd5e0eaa1a32999173b2@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 233/237] ALSA: seq: Fix concurrent access to queue current tick/time
+Date:   Thu, 27 Feb 2020 14:37:27 +0100
+Message-Id: <20200227132313.225759903@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -59,39 +60,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zenghui Yu <yuzenghui@huawei.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 107945227ac5d4c37911c7841b27c64b489ce9a9 ]
+commit dc7497795e014d84699c3b8809ed6df35352dd74 upstream.
 
-It looks like an obvious mistake to use its_mapc_cmd descriptor when
-building the INVALL command block. It so far worked by luck because
-both its_mapc_cmd.col and its_invall_cmd.col sit at the same offset of
-the ITS command descriptor, but we should not rely on it.
+snd_seq_check_queue() passes the current tick and time of the given
+queue as a pointer to snd_seq_prioq_cell_out(), but those might be
+updated concurrently by the seq timer update.
 
-Fixes: cc2d3216f53c ("irqchip: GICv3: ITS command queue")
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20191202071021.1251-1-yuzenghui@huawei.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fix it by retrieving the current tick and time via the proper helper
+functions at first, and pass those values to snd_seq_prioq_cell_out()
+later in the loops.
+
+snd_seq_timer_get_cur_time() takes a new argument and adjusts with the
+current system time only when it's requested so; this update isn't
+needed for snd_seq_check_queue(), as it's called either from the
+interrupt handler or right after queuing.
+
+Also, snd_seq_timer_get_cur_tick() is changed to read the value in the
+spinlock for the concurrency, too.
+
+Reported-by: syzbot+fd5e0eaa1a32999173b2@syzkaller.appspotmail.com
+Link: https://lore.kernel.org/r/20200214111316.26939-3-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/irqchip/irq-gic-v3-its.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/core/seq/seq_clientmgr.c |    4 ++--
+ sound/core/seq/seq_queue.c     |    9 ++++++---
+ sound/core/seq/seq_timer.c     |   13 ++++++++++---
+ sound/core/seq/seq_timer.h     |    3 ++-
+ 4 files changed, 20 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 52238e6bed392..799df1e598db3 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -527,7 +527,7 @@ static struct its_collection *its_build_invall_cmd(struct its_cmd_block *cmd,
- 						   struct its_cmd_desc *desc)
+--- a/sound/core/seq/seq_clientmgr.c
++++ b/sound/core/seq/seq_clientmgr.c
+@@ -564,7 +564,7 @@ static int update_timestamp_of_queue(str
+ 	event->queue = queue;
+ 	event->flags &= ~SNDRV_SEQ_TIME_STAMP_MASK;
+ 	if (real_time) {
+-		event->time.time = snd_seq_timer_get_cur_time(q->timer);
++		event->time.time = snd_seq_timer_get_cur_time(q->timer, true);
+ 		event->flags |= SNDRV_SEQ_TIME_STAMP_REAL;
+ 	} else {
+ 		event->time.tick = snd_seq_timer_get_cur_tick(q->timer);
+@@ -1639,7 +1639,7 @@ static int snd_seq_ioctl_get_queue_statu
+ 	tmr = queue->timer;
+ 	status->events = queue->tickq->cells + queue->timeq->cells;
+ 
+-	status->time = snd_seq_timer_get_cur_time(tmr);
++	status->time = snd_seq_timer_get_cur_time(tmr, true);
+ 	status->tick = snd_seq_timer_get_cur_tick(tmr);
+ 
+ 	status->running = tmr->running;
+--- a/sound/core/seq/seq_queue.c
++++ b/sound/core/seq/seq_queue.c
+@@ -261,6 +261,8 @@ void snd_seq_check_queue(struct snd_seq_
  {
- 	its_encode_cmd(cmd, GITS_CMD_INVALL);
--	its_encode_collection(cmd, desc->its_mapc_cmd.col->col_id);
-+	its_encode_collection(cmd, desc->its_invall_cmd.col->col_id);
+ 	unsigned long flags;
+ 	struct snd_seq_event_cell *cell;
++	snd_seq_tick_time_t cur_tick;
++	snd_seq_real_time_t cur_time;
  
- 	its_fixup_cmd(cmd);
+ 	if (q == NULL)
+ 		return;
+@@ -277,17 +279,18 @@ void snd_seq_check_queue(struct snd_seq_
  
--- 
-2.20.1
-
+       __again:
+ 	/* Process tick queue... */
++	cur_tick = snd_seq_timer_get_cur_tick(q->timer);
+ 	for (;;) {
+-		cell = snd_seq_prioq_cell_out(q->tickq,
+-					      &q->timer->tick.cur_tick);
++		cell = snd_seq_prioq_cell_out(q->tickq, &cur_tick);
+ 		if (!cell)
+ 			break;
+ 		snd_seq_dispatch_event(cell, atomic, hop);
+ 	}
+ 
+ 	/* Process time queue... */
++	cur_time = snd_seq_timer_get_cur_time(q->timer, false);
+ 	for (;;) {
+-		cell = snd_seq_prioq_cell_out(q->timeq, &q->timer->cur_time);
++		cell = snd_seq_prioq_cell_out(q->timeq, &cur_time);
+ 		if (!cell)
+ 			break;
+ 		snd_seq_dispatch_event(cell, atomic, hop);
+--- a/sound/core/seq/seq_timer.c
++++ b/sound/core/seq/seq_timer.c
+@@ -436,14 +436,15 @@ int snd_seq_timer_continue(struct snd_se
+ }
+ 
+ /* return current 'real' time. use timeofday() to get better granularity. */
+-snd_seq_real_time_t snd_seq_timer_get_cur_time(struct snd_seq_timer *tmr)
++snd_seq_real_time_t snd_seq_timer_get_cur_time(struct snd_seq_timer *tmr,
++					       bool adjust_ktime)
+ {
+ 	snd_seq_real_time_t cur_time;
+ 	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&tmr->lock, flags);
+ 	cur_time = tmr->cur_time;
+-	if (tmr->running) { 
++	if (adjust_ktime && tmr->running) {
+ 		struct timespec64 tm;
+ 
+ 		ktime_get_ts64(&tm);
+@@ -460,7 +461,13 @@ snd_seq_real_time_t snd_seq_timer_get_cu
+  high PPQ values) */
+ snd_seq_tick_time_t snd_seq_timer_get_cur_tick(struct snd_seq_timer *tmr)
+ {
+-	return tmr->tick.cur_tick;
++	snd_seq_tick_time_t cur_tick;
++	unsigned long flags;
++
++	spin_lock_irqsave(&tmr->lock, flags);
++	cur_tick = tmr->tick.cur_tick;
++	spin_unlock_irqrestore(&tmr->lock, flags);
++	return cur_tick;
+ }
+ 
+ 
+--- a/sound/core/seq/seq_timer.h
++++ b/sound/core/seq/seq_timer.h
+@@ -135,7 +135,8 @@ int snd_seq_timer_set_ppq(struct snd_seq
+ int snd_seq_timer_set_position_tick(struct snd_seq_timer *tmr, snd_seq_tick_time_t position);
+ int snd_seq_timer_set_position_time(struct snd_seq_timer *tmr, snd_seq_real_time_t position);
+ int snd_seq_timer_set_skew(struct snd_seq_timer *tmr, unsigned int skew, unsigned int base);
+-snd_seq_real_time_t snd_seq_timer_get_cur_time(struct snd_seq_timer *tmr);
++snd_seq_real_time_t snd_seq_timer_get_cur_time(struct snd_seq_timer *tmr,
++					       bool adjust_ktime);
+ snd_seq_tick_time_t snd_seq_timer_get_cur_tick(struct snd_seq_timer *tmr);
+ 
+ extern int seq_default_timer_class;
 
 
