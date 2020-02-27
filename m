@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 863DFC3F34B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A8B6C35E1C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 518C920578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D17220801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:03:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812218;
-	bh=EPDAFOVc1LpxfvD1XJfeSxsCxC6P3t1+ahkagxs91kI=;
+	s=default; t=1582812208;
+	bh=wYM9V+zsA6wV02SA+dp3+ev3gngYIW00NpH86KDIBTg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lg0KlQXqEDH6C3TFNegf1kL4PipALHG2OnA9WcSDTHGBYrVCZVVCCfFjvKLdpxVJR
-	 q8oMTbHGC8B64jawiXzl0tSMXkXhjbkrd3KoRIccod0v9jHPVmHsbimeYOEgLiJEz8
-	 qkZr9iC0u0lt5dvdl6KeaD/RaL0xnFsBwncGAeag=
+	b=qLU+8VOsX37rZjglfeUfLzhZac0OASy6dxAlyqcb+KRpZj+ohhIZ76rcxI6fC783+
+	 PtV9CL9QR4z8L8SnyMdaKTPAbZu1G1+nF+PMZivsk7yvABdMPCo0TV7H2vRlcQcwOk
+	 foGJJCjOSJjtktxRd/8Y/pTzmvOhomlnr5EyMI6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387451AbgB0ODh (ORCPT
+        id S2387431AbgB0OD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:03:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38828 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:03:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387442AbgB0ODc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:03:32 -0500
+        id S2387414AbgB0ODY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:03:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4C6B20578;
-        Thu, 27 Feb 2020 14:03:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41950246B7;
+        Thu, 27 Feb 2020 14:03:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812211;
-        bh=EPDAFOVc1LpxfvD1XJfeSxsCxC6P3t1+ahkagxs91kI=;
+        s=default; t=1582812203;
+        bh=wYM9V+zsA6wV02SA+dp3+ev3gngYIW00NpH86KDIBTg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zN38amwVoyO5mgmuN/S7foCUtmlsUi1VjQ2ySQ6rprz02tx8CgoruBjHZcyf6CLoq
-         bmJaGl4WIa8lSQNMnSjT4SC0Yz0KkidyvGTmYVjBx4N48udp0FxG79IFlezBkqWg0A
-         S375/ey64xfd5pbUThGgMJqdV/DjxVZgYV/cTguY=
+        b=nA5dLnJMvmv/TiZZnhbNgbDUoo7HfpRz2ts+lHRiJD1BSV1LH+PxDcqYdtRmT4Vo8
+         9zlTdasy27xN7p7U8/IUSAtauSYt2bzyTStGHHU1mf54cnJqAlOI0dBphVO4Gytl8/
+         QbWLDR5K4tnzxvG2vKKCQANJBMQ9SRLLVDU2bXO0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.19 20/97] xhci: fix runtime pm enabling for quirky Intel hosts
-Date:   Thu, 27 Feb 2020 14:36:28 +0100
-Message-Id: <20200227132217.920667762@linuxfoundation.org>
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH 4.19 08/97] thunderbolt: Prevent crash if non-active NVMem file is read
+Date:   Thu, 27 Feb 2020 14:36:16 +0100
+Message-Id: <20200227132215.936905449@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
 References: <20200227132214.553656188@linuxfoundation.org>
@@ -59,55 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-commit 024d411e9c5d49eb96c825af52a3ce2682895676 upstream.
+commit 03cd45d2e219301880cabc357e3cf478a500080f upstream.
 
-Intel hosts that need the XHCI_PME_STUCK_QUIRK flag should enable
-runtime pm by calling xhci_pme_acpi_rtd3_enable() before
-usb_hcd_pci_probe() calls pci_dev_run_wake().
-Otherwise usage count for the device won't be decreased, and runtime
-suspend is prevented.
+The driver does not populate .reg_read callback for the non-active NVMem
+because the file is supposed to be write-only. However, it turns out
+NVMem subsystem does not yet support this and expects that the .reg_read
+callback is provided. If user reads the binary attribute it triggers
+NULL pointer dereference like this one:
 
-usb_hcd_pci_probe() only decreases the usage count if device can
-generate run-time wake-up events, i.e. when pci_dev_run_wake()
-returns true.
+  BUG: kernel NULL pointer dereference, address: 0000000000000000
+  ...
+  Call Trace:
+   bin_attr_nvmem_read+0x64/0x80
+   kernfs_fop_read+0xa7/0x180
+   vfs_read+0xbd/0x170
+   ksys_read+0x5a/0xd0
+   do_syscall_64+0x43/0x150
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-This issue was exposed by pci_dev_run_wake() change in
-commit 8feaec33b986 ("PCI / PM: Always check PME wakeup capability for
-runtime wakeup support")
-and should be backported to kernels with that change
+Fix this in the driver by providing .reg_read callback that always
+returns an error.
 
-Cc: <stable@vger.kernel.org> # 4.13+
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200210134553.9144-4-mathias.nyman@linux.intel.com
+Reported-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Fixes: e6b245ccd524 ("thunderbolt: Add support for host and device NVM firmware upgrade")
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200213095604.1074-1-mika.westerberg@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-pci.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/thunderbolt/switch.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -283,6 +283,9 @@ static int xhci_pci_setup(struct usb_hcd
- 	if (!usb_hcd_is_primary_hcd(hcd))
- 		return 0;
+--- a/drivers/thunderbolt/switch.c
++++ b/drivers/thunderbolt/switch.c
+@@ -264,6 +264,12 @@ static int tb_switch_nvm_read(void *priv
+ 	return ret;
+ }
  
-+	if (xhci->quirks & XHCI_PME_STUCK_QUIRK)
-+		xhci_pme_acpi_rtd3_enable(pdev);
++static int tb_switch_nvm_no_read(void *priv, unsigned int offset, void *val,
++				 size_t bytes)
++{
++	return -EPERM;
++}
 +
- 	xhci_dbg(xhci, "Got SBRN %u\n", (unsigned int) xhci->sbrn);
- 
- 	/* Find any debug ports */
-@@ -340,9 +343,6 @@ static int xhci_pci_probe(struct pci_dev
- 			HCC_MAX_PSA(xhci->hcc_params) >= 4)
- 		xhci->shared_hcd->can_do_streams = 1;
- 
--	if (xhci->quirks & XHCI_PME_STUCK_QUIRK)
--		xhci_pme_acpi_rtd3_enable(dev);
--
- 	/* USB-2 and USB-3 roothubs initialized, allow runtime pm suspend */
- 	pm_runtime_put_noidle(&dev->dev);
- 
+ static int tb_switch_nvm_write(void *priv, unsigned int offset, void *val,
+ 			       size_t bytes)
+ {
+@@ -309,6 +315,7 @@ static struct nvmem_device *register_nvm
+ 		config.read_only = true;
+ 	} else {
+ 		config.name = "nvm_non_active";
++		config.reg_read = tb_switch_nvm_no_read;
+ 		config.reg_write = tb_switch_nvm_write;
+ 		config.root_only = true;
+ 	}
 
 
