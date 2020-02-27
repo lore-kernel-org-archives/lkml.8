@@ -2,53 +2,51 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D692C34022
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C12DAC11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7295B2468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 981B42468F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:41:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814466;
-	bh=xL6vpHanPR9WF2G8IamfkSo+D56oyGLYA9gy8mmL3WQ=;
+	s=default; t=1582814470;
+	bh=gMLkhhm2ORc1+pkyo2hcKD6ekkOPWTcfiK1a0rBGddA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Dh+W+vh/di5mUBwuxRifq7IE03JRy5jWwgtsW/kOeRRl3+x7jHUzB1H8o3H39ZJZ
-	 gqlqxrexMXfyPLgdnqICS3GyqksgAPAAruo8F74DhDgd1SCntO+gYpnPHmIs2WKCSt
-	 e5EebuAQYJ+akP8FIVLL8HoyliK9Su6Iv89aVhpQ=
+	b=EH6j5/4+bYFM/lI1wfeDUrFGRU0ygXrp6BYb8XblMXN43Y4OzjZ6VJDjj64kEJtcD
+	 2jQBqzPThgrKaJuGBii0ejlyjRjExoxU7GaevKknq8aMMczccAe62kTUjuYdZXXKhF
+	 5+BP6oB+Wyc++uGKM61Quzza/A/MSUK8abTkhA2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732019AbgB0OlF (ORCPT
+        id S1732067AbgB0OlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:41:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51568 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:41:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731057AbgB0NwI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:52:08 -0500
+        id S1731167AbgB0NwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:52:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B92DA20578;
-        Thu, 27 Feb 2020 13:52:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 775D321D7E;
+        Thu, 27 Feb 2020 13:52:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811528;
-        bh=xL6vpHanPR9WF2G8IamfkSo+D56oyGLYA9gy8mmL3WQ=;
+        s=default; t=1582811520;
+        bh=gMLkhhm2ORc1+pkyo2hcKD6ekkOPWTcfiK1a0rBGddA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gm1PMsXJ8t7/Yx4ig81rOHWRvfDj13zD7XCbLa8t8UNpAEdYWQj10yLYrTO+wH6lf
-         /rEhzHXzRdKJ5KKz4Q6QgrnB/R9pF6Wsm8yQe1bjEDDdEpPSD1jaUEAYLcgZdj1SGH
-         ZsYTJ3UZhfPQ49/9cCOPU/pM8APdmPbfhgyifkUc=
+        b=jwl53AukjGD9/E8OMIXF/CfGErB9iDDhH5FovuG/BuccKCyfz38tlaDPyz1V4Nyuv
+         eqvYGA0K92Qg15UNwa4nwY6rcW7pTsnVDoME72LG4Lpo0kIJN+iZWdOT7z2nhGCMkB
+         kjkdBgFCXFHonPBIi8UGuHUsMasHrRHkVTHtzx9k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 4.9 165/165] s390/mm: Explicitly compare PAGE_DEFAULT_KEY against zero in storage_key_init_range
-Date:   Thu, 27 Feb 2020 14:37:19 +0100
-Message-Id: <20200227132254.770820864@linuxfoundation.org>
+        stable@vger.kernel.org, Prabhakar Kushwaha <pkushwaha@marvell.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.9 163/165] ata: ahci: Add shutdown to freeze hardware resources of ahci
+Date:   Thu, 27 Feb 2020 14:37:17 +0100
+Message-Id: <20200227132254.521283774@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -61,54 +59,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Prabhakar Kushwaha <pkushwaha@marvell.com>
 
-commit 380324734956c64cd060e1db4304f3117ac15809 upstream.
+commit 10a663a1b15134a5a714aa515e11425a44d4fdf7 upstream.
 
-Clang warns:
+device_shutdown() called from reboot or power_shutdown expect
+all devices to be shutdown. Same is true for even ahci pci driver.
+As no ahci shutdown function is implemented, the ata subsystem
+always remains alive with DMA & interrupt support. File system
+related calls should not be honored after device_shutdown().
 
- In file included from ../arch/s390/purgatory/purgatory.c:10:
- In file included from ../include/linux/kexec.h:18:
- In file included from ../include/linux/crash_core.h:6:
- In file included from ../include/linux/elfcore.h:5:
- In file included from ../include/linux/user.h:1:
- In file included from ../arch/s390/include/asm/user.h:11:
- ../arch/s390/include/asm/page.h:45:6: warning: converting the result of
- '<<' to a boolean always evaluates to false
- [-Wtautological-constant-compare]
-         if (PAGE_DEFAULT_KEY)
-            ^
- ../arch/s390/include/asm/page.h:23:44: note: expanded from macro
- 'PAGE_DEFAULT_KEY'
- #define PAGE_DEFAULT_KEY        (PAGE_DEFAULT_ACC << 4)
-                                                  ^
- 1 warning generated.
+So defining ahci pci driver shutdown to freeze hardware (mask
+interrupt, stop DMA engine and free DMA resources).
 
-Explicitly compare this against zero to silence the warning as it is
-intended to be used in a boolean context.
-
-Fixes: de3fa841e429 ("s390/mm: fix compile for PAGE_DEFAULT_KEY != 0")
-Link: https://github.com/ClangBuiltLinux/linux/issues/860
-Link: https://lkml.kernel.org/r/20200214064207.10381-1-natechancellor@gmail.com
-Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/include/asm/page.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/ata/ahci.c        |    7 +++++++
+ drivers/ata/libata-core.c |   21 +++++++++++++++++++++
+ include/linux/libata.h    |    1 +
+ 3 files changed, 29 insertions(+)
 
---- a/arch/s390/include/asm/page.h
-+++ b/arch/s390/include/asm/page.h
-@@ -35,7 +35,7 @@ void __storage_key_init_range(unsigned l
+--- a/drivers/ata/ahci.c
++++ b/drivers/ata/ahci.c
+@@ -86,6 +86,7 @@ enum board_ids {
  
- static inline void storage_key_init_range(unsigned long start, unsigned long end)
- {
--	if (PAGE_DEFAULT_KEY)
-+	if (PAGE_DEFAULT_KEY != 0)
- 		__storage_key_init_range(start, end);
+ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent);
+ static void ahci_remove_one(struct pci_dev *dev);
++static void ahci_shutdown_one(struct pci_dev *dev);
+ static int ahci_vt8251_hardreset(struct ata_link *link, unsigned int *class,
+ 				 unsigned long deadline);
+ static int ahci_avn_hardreset(struct ata_link *link, unsigned int *class,
+@@ -582,6 +583,7 @@ static struct pci_driver ahci_pci_driver
+ 	.id_table		= ahci_pci_tbl,
+ 	.probe			= ahci_init_one,
+ 	.remove			= ahci_remove_one,
++	.shutdown		= ahci_shutdown_one,
+ 	.driver = {
+ 		.pm		= &ahci_pci_pm_ops,
+ 	},
+@@ -1775,6 +1777,11 @@ static int ahci_init_one(struct pci_dev
+ 	return 0;
  }
  
++static void ahci_shutdown_one(struct pci_dev *pdev)
++{
++	ata_pci_shutdown_one(pdev);
++}
++
+ static void ahci_remove_one(struct pci_dev *pdev)
+ {
+ 	pm_runtime_get_noresume(&pdev->dev);
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -6580,6 +6580,26 @@ void ata_pci_remove_one(struct pci_dev *
+ 	ata_host_detach(host);
+ }
+ 
++void ata_pci_shutdown_one(struct pci_dev *pdev)
++{
++	struct ata_host *host = pci_get_drvdata(pdev);
++	int i;
++
++	for (i = 0; i < host->n_ports; i++) {
++		struct ata_port *ap = host->ports[i];
++
++		ap->pflags |= ATA_PFLAG_FROZEN;
++
++		/* Disable port interrupts */
++		if (ap->ops->freeze)
++			ap->ops->freeze(ap);
++
++		/* Stop the port DMA engines */
++		if (ap->ops->port_stop)
++			ap->ops->port_stop(ap);
++	}
++}
++
+ /* move to PCI subsystem */
+ int pci_test_config_bits(struct pci_dev *pdev, const struct pci_bits *bits)
+ {
+@@ -7200,6 +7220,7 @@ EXPORT_SYMBOL_GPL(ata_timing_cycle2mode)
+ 
+ #ifdef CONFIG_PCI
+ EXPORT_SYMBOL_GPL(pci_test_config_bits);
++EXPORT_SYMBOL_GPL(ata_pci_shutdown_one);
+ EXPORT_SYMBOL_GPL(ata_pci_remove_one);
+ #ifdef CONFIG_PM
+ EXPORT_SYMBOL_GPL(ata_pci_device_do_suspend);
+--- a/include/linux/libata.h
++++ b/include/linux/libata.h
+@@ -1222,6 +1222,7 @@ struct pci_bits {
+ };
+ 
+ extern int pci_test_config_bits(struct pci_dev *pdev, const struct pci_bits *bits);
++extern void ata_pci_shutdown_one(struct pci_dev *pdev);
+ extern void ata_pci_remove_one(struct pci_dev *pdev);
+ 
+ #ifdef CONFIG_PM
 
 
