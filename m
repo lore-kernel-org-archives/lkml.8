@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78610C3F36B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 861ACC52D50
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E012468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E3A821D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:26:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813513;
-	bh=xvG7Q9c1TnSbn9EvpuDSAZA0zsykoYXqY9kglk0SCtU=;
+	s=default; t=1582813589;
+	bh=mcWs5hysCJ0vA6NTA/QZOnkdCPZ7v6LU7HoQobOuHYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oCjlOWmokK4cLcIk9jaSUsSZxNZp6J9MF6s21eH3HdUITY2MxgsgA+RfS+rdbxBVW
-	 xdBbpOrf+FIOI06RihK7W7SStEqBxdGlDax0zKq3DH53bmZJRdiotzOG2MeDXexGLr
-	 JRRtRbVfAle9sedxw77VZ/82pKsdgtWW4iglQG4Y=
+	b=vbQKizTeadcapkz/rs/3hK2ijqqjad229D4TxI2sbvWj8DmdjBsCnocHO774d45tN
+	 r/ydSX/ZHUIlAsQopI+Rne7idJiwxqi8ZxOe8bm1QeS+5+Xd4ArHPNo4w0V/8sX4vA
+	 vLFPzDfWCysfJ2iQHqGEQkuvJltxpi80neQSqNuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388715AbgB0OLg (ORCPT
+        id S2388452AbgB0OKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:11:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50066 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:10:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388028AbgB0OLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:11:33 -0500
+        id S1730257AbgB0OJ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:09:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FC6120801;
-        Thu, 27 Feb 2020 14:11:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B5E720578;
+        Thu, 27 Feb 2020 14:09:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812692;
-        bh=xvG7Q9c1TnSbn9EvpuDSAZA0zsykoYXqY9kglk0SCtU=;
+        s=default; t=1582812598;
+        bh=mcWs5hysCJ0vA6NTA/QZOnkdCPZ7v6LU7HoQobOuHYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kyfv8Y95kQ1YyEcMw4RJ2g2PlN9/+GCvJAjFpqoFnHKGpnnW+hA8OtxWQ+bhwyCZ4
-         vMkn8sWw6yoD74yG6kA8TMPLcWPrcD+8UPWrKDSoZ9ayRutz23m9ahf6rIHnmroOvs
-         KbjSa/iIEYf672jSYqBmWOTClQHZaWTMQgQyAIS8=
+        b=OdeK/dTW5YZFcn4oA+tnT8G+MoDDOOwJaQV5zNUbvtfuJ+AnKMpi3syliHIAeF81y
+         +CGPJK7agK28rBJXik8DBvsqoMNuQcK0dg4YKg4W6oJfJ1ZY94QkIfTqnBtS49XP8c
+         MDZhv5wisFEXt7PUOEKoM8tnpnCc3WoCjN+dI4KI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 5.4 116/135] iommu/vt-d: Fix compile warning from intel-svm.h
-Date:   Thu, 27 Feb 2020 14:37:36 +0100
-Message-Id: <20200227132246.594078093@linuxfoundation.org>
+        stable@vger.kernel.org, Shijie Luo <luoshijie1@huawei.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        stable@kernel.org
+Subject: [PATCH 5.4 080/135] ext4: add cond_resched() to __ext4_find_entry()
+Date:   Thu, 27 Feb 2020 14:37:00 +0100
+Message-Id: <20200227132241.411971542@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -59,38 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Shijie Luo <luoshijie1@huawei.com>
 
-commit e7598fac323aad0e502415edeffd567315994dd6 upstream.
+commit 9424ef56e13a1f14c57ea161eed3ecfdc7b2770e upstream.
 
-The intel_svm_is_pasid_valid() needs to be marked inline, otherwise it
-causes the compile warning below:
+We tested a soft lockup problem in linux 4.19 which could also
+be found in linux 5.x.
 
-  CC [M]  drivers/dma/idxd/cdev.o
-In file included from drivers/dma/idxd/cdev.c:9:0:
-./include/linux/intel-svm.h:125:12: warning: ‘intel_svm_is_pasid_valid’ defined but not used [-Wunused-function]
- static int intel_svm_is_pasid_valid(struct device *dev, int pasid)
-            ^~~~~~~~~~~~~~~~~~~~~~~~
+When dir inode takes up a large number of blocks, and if the
+directory is growing when we are searching, it's possible the
+restart branch could be called many times, and the do while loop
+could hold cpu a long time.
 
-Reported-by: Borislav Petkov <bp@alien8.de>
-Fixes: 15060aba71711 ('iommu/vt-d: Helper function to query if a pasid has any active users')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Here is the call trace in linux 4.19.
+
+[  473.756186] Call trace:
+[  473.756196]  dump_backtrace+0x0/0x198
+[  473.756199]  show_stack+0x24/0x30
+[  473.756205]  dump_stack+0xa4/0xcc
+[  473.756210]  watchdog_timer_fn+0x300/0x3e8
+[  473.756215]  __hrtimer_run_queues+0x114/0x358
+[  473.756217]  hrtimer_interrupt+0x104/0x2d8
+[  473.756222]  arch_timer_handler_virt+0x38/0x58
+[  473.756226]  handle_percpu_devid_irq+0x90/0x248
+[  473.756231]  generic_handle_irq+0x34/0x50
+[  473.756234]  __handle_domain_irq+0x68/0xc0
+[  473.756236]  gic_handle_irq+0x6c/0x150
+[  473.756238]  el1_irq+0xb8/0x140
+[  473.756286]  ext4_es_lookup_extent+0xdc/0x258 [ext4]
+[  473.756310]  ext4_map_blocks+0x64/0x5c0 [ext4]
+[  473.756333]  ext4_getblk+0x6c/0x1d0 [ext4]
+[  473.756356]  ext4_bread_batch+0x7c/0x1f8 [ext4]
+[  473.756379]  ext4_find_entry+0x124/0x3f8 [ext4]
+[  473.756402]  ext4_lookup+0x8c/0x258 [ext4]
+[  473.756407]  __lookup_hash+0x8c/0xe8
+[  473.756411]  filename_create+0xa0/0x170
+[  473.756413]  do_mkdirat+0x6c/0x140
+[  473.756415]  __arm64_sys_mkdirat+0x28/0x38
+[  473.756419]  el0_svc_common+0x78/0x130
+[  473.756421]  el0_svc_handler+0x38/0x78
+[  473.756423]  el0_svc+0x8/0xc
+[  485.755156] watchdog: BUG: soft lockup - CPU#2 stuck for 22s! [tmp:5149]
+
+Add cond_resched() to avoid soft lockup and to provide a better
+system responding.
+
+Link: https://lore.kernel.org/r/20200215080206.13293-1-luoshijie1@huawei.com
+Signed-off-by: Shijie Luo <luoshijie1@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/intel-svm.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext4/namei.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/include/linux/intel-svm.h
-+++ b/include/linux/intel-svm.h
-@@ -122,7 +122,7 @@ static inline int intel_svm_unbind_mm(st
- 	BUG();
- }
- 
--static int intel_svm_is_pasid_valid(struct device *dev, int pasid)
-+static inline int intel_svm_is_pasid_valid(struct device *dev, int pasid)
- {
- 	return -EINVAL;
- }
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -1507,6 +1507,7 @@ restart:
+ 		/*
+ 		 * We deal with the read-ahead logic here.
+ 		 */
++		cond_resched();
+ 		if (ra_ptr >= ra_max) {
+ 			/* Refill the readahead buffer */
+ 			ra_ptr = 0;
 
 
