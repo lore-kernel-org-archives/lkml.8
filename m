@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 114A5C3F358
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEC7C3F347
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D299620801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAB0321D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811256;
-	bh=XYGSiGMpjLNrL6iof9ltMi4uaPxiKfUKwYzBWza8r7w=;
+	s=default; t=1582811196;
+	bh=k+XzV/W9UPSf5JZG4LsaLccqrAu0LZ7Ag9WTLrAZBPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YS3WzPPD0RN3Op6hgb0v5wAElmNniC7dspOnu5r+fa5GLe2prVbfXWtZYcJsolstD
-	 Jt9VTSStq/bpiXk/7i8882AHeYmVVczNkn2nhZDaB/A4uCz5ceId9SHpxfAiyg08JN
-	 ATC+GF29eOCd76I0K5KiJBrnd/zSv7m4piyVFuo0=
+	b=b9asI5h8r27jPV2CI29X0rT+v/D78GCI/+ZhP8LS5fPx3cTOWpzfcI8KDGk+MPlTN
+	 MU+JvtTg3LmCwaWC1V6vryPwFxn+WGU+KwlTSmbDXCAIHzAvotehTfcVkFm8LX9l6D
+	 4ZKMrRMcfD9XlSk5QOiYdfJKaFi1OK6xuOjM/4qQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730718AbgB0Nrg (ORCPT
+        id S1730548AbgB0Nqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:47:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43986 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:46:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730314AbgB0Nra (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:47:30 -0500
+        id S1730531AbgB0Nqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:46:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04D2E2469F;
-        Thu, 27 Feb 2020 13:47:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77D0720801;
+        Thu, 27 Feb 2020 13:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811250;
-        bh=XYGSiGMpjLNrL6iof9ltMi4uaPxiKfUKwYzBWza8r7w=;
+        s=default; t=1582811191;
+        bh=k+XzV/W9UPSf5JZG4LsaLccqrAu0LZ7Ag9WTLrAZBPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wVyxKUgbwcvWnngF1mR7qaexJSUSLViJehBF8Ws2iZm4wchKH77hKAlZDMsEVhNU8
-         Cc8+cf5OenGwUp/GnjKAuCo4o5NdQzjZUaanIE/gSBpKgodppQVG9gUNRu8I+pmF3H
-         JqU9XE9IKF32Wd7sbJlqsd+GBZoyFlR8qdkyqIfw=
+        b=PAFkkB1O8xcyoKeh3R7P1w5Oi4B1IpeazuUOi0+VPARlCZ33wrvp3SPTb3n+ozoiM
+         w/wGXwGddnptImW62kRENtQw9j+yL/hSSfx+xtkxGCUzoeh1M9YWAhy6RxirW2c0lQ
+         QKswiL1mtDYHBfLYQ7SzRe4LPdWj04MzPecmn6XU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 061/165] ARM: dts: r8a7779: Add device node for ARM global timer
-Date:   Thu, 27 Feb 2020 14:35:35 +0100
-Message-Id: <20200227132240.407677843@linuxfoundation.org>
+Subject: [PATCH 4.9 036/165] uio: fix a sleep-in-atomic-context bug in uio_dmem_genirq_irqcontrol()
+Date:   Thu, 27 Feb 2020 14:35:10 +0100
+Message-Id: <20200227132236.490185076@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -60,42 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 8443ffd1bbd5be74e9b12db234746d12e8ea93e2 ]
+[ Upstream commit b74351287d4bd90636c3f48bc188c2f53824c2d4 ]
 
-Add a device node for the global timer, which is part of the Cortex-A9
-MPCore.
+The driver may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-The global timer can serve as an accurate (4 ns) clock source for
-scheduling and delay loops.
+kernel/irq/manage.c, 523:
+	synchronize_irq in disable_irq
+drivers/uio/uio_dmem_genirq.c, 140:
+	disable_irq in uio_dmem_genirq_irqcontrol
+drivers/uio/uio_dmem_genirq.c, 134:
+	_raw_spin_lock_irqsave in uio_dmem_genirq_irqcontrol
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191211135222.26770-4-geert+renesas@glider.be
+synchronize_irq() can sleep at runtime.
+
+To fix this bug, disable_irq() is called without holding the spinlock.
+
+This bug is found by a static analysis tool STCheck written by myself.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Link: https://lore.kernel.org/r/20191218094405.6009-1-baijiaju1990@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/r8a7779.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/uio/uio_dmem_genirq.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
-index b9bbcce69dfbd..6c6d4893e92d4 100644
---- a/arch/arm/boot/dts/r8a7779.dtsi
-+++ b/arch/arm/boot/dts/r8a7779.dtsi
-@@ -67,6 +67,14 @@
- 		      <0xf0000100 0x100>;
- 	};
+diff --git a/drivers/uio/uio_dmem_genirq.c b/drivers/uio/uio_dmem_genirq.c
+index e1134a4d97f3f..a00b4aee6c799 100644
+--- a/drivers/uio/uio_dmem_genirq.c
++++ b/drivers/uio/uio_dmem_genirq.c
+@@ -135,11 +135,13 @@ static int uio_dmem_genirq_irqcontrol(struct uio_info *dev_info, s32 irq_on)
+ 	if (irq_on) {
+ 		if (test_and_clear_bit(0, &priv->flags))
+ 			enable_irq(dev_info->irq);
++		spin_unlock_irqrestore(&priv->lock, flags);
+ 	} else {
+-		if (!test_and_set_bit(0, &priv->flags))
++		if (!test_and_set_bit(0, &priv->flags)) {
++			spin_unlock_irqrestore(&priv->lock, flags);
+ 			disable_irq(dev_info->irq);
++		}
+ 	}
+-	spin_unlock_irqrestore(&priv->lock, flags);
  
-+	timer@f0000200 {
-+		compatible = "arm,cortex-a9-global-timer";
-+		reg = <0xf0000200 0x100>;
-+		interrupts = <GIC_PPI 11
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_EDGE_RISING)>;
-+		clocks = <&cpg_clocks R8A7779_CLK_ZS>;
-+	};
-+
- 	timer@f0000600 {
- 		compatible = "arm,cortex-a9-twd-timer";
- 		reg = <0xf0000600 0x20>;
+ 	return 0;
+ }
 -- 
 2.20.1
 
