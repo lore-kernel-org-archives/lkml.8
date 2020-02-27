@@ -2,115 +2,142 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E63C35677
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B45C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9898E2469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45BE92469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:47:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Bgg8JAo4"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="WDmJP96E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730546AbgB0QqY (ORCPT
+        id S1730411AbgB0QrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 11:46:24 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:39714 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730033AbgB0QqX (ORCPT
+        Thu, 27 Feb 2020 11:47:08 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:34411 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729186AbgB0QrH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 11:46:23 -0500
-Received: by mail-qv1-f67.google.com with SMTP id y8so1843247qvk.6
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 08:46:23 -0800 (PST)
+        Thu, 27 Feb 2020 11:47:07 -0500
+Received: by mail-qk1-f194.google.com with SMTP id 11so3810301qkd.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 08:47:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+39Zg09IW1UqskBXG22m/r+7Tun0l/AA6e5ypJPRWkM=;
-        b=Bgg8JAo4Hi+CWH2DBZAX8yCbFJALWRDS9rPmNvtmTs4L+yM0hUNzQjmgpMV3DWGG5P
-         JnZAVmWOefAbrhDhL0Z0TJL8eI6A0xyDqdPZ/eJ/jsRrRHujKy7PGCnmY5nfaHbUbT7f
-         vR4UhSRyPyJTRlJNt3Sf+31FZie2TP1iKA2B2YFWTug5IrJtgcio/n91jcH5pgdfNcty
-         V5reYAhoWxrlxv6cq82ulFH2d44sMeJvwo7unCZezGjA+Jw0pfvwo7aVCFBLa73GIYJZ
-         hObIMgxqKUqruPR6xJEobp4kCtRSOtRvzp0i/4B2QRh3td2pUbj0T9Y0tw8Ep/aX6yCu
-         fxEQ==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=PFn2dzdS2FONUrtgtAocmy3qKEh+mb3t1Wul9aBP/fI=;
+        b=WDmJP96EQVcL8LJyJE/a41VStf4qspaoE7H9+nZSkzGvEdwLYyWqSFvURaHwIr4Z8u
+         kDTi5ACa/pcbMhYy81M/9X16jSHKvj6fQXoZYGAv8owgSfKB3mlKkxsYhaQfdyhwBRZV
+         CuVcWB6aINNTCnPWOjO9R/MPqfeXsMNPKh+y4FnUKTsF5zl6+DNYY59sd2nBwlMCWBg/
+         5Alua+1+6UMRenkyzIlTSEhAp4heYuSfgqsmrdbiPLuSuJkrYlKVwSG1S9U5nNgl5+pV
+         0EUPlw/Vkjt2CqApD7Ri391p5px1467YRubBcNzpQrnF6CSnHVvbRbKw62x87zxCuXyy
+         PLzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+39Zg09IW1UqskBXG22m/r+7Tun0l/AA6e5ypJPRWkM=;
-        b=lts6b1HjzKhC2+/kBQTHLmkuMaPmdD/E6Ateh0J4+x/Ty1cjhwq3r0F7XZyYZ8w7Lp
-         tuIxj7+PuRR0WCynNrYAj0Uw8bcCJE3k+eJs0mzyuhndUhnWBOpc8v7Tiy8QCggJSzuE
-         EuBwQQcWg/8jjcdYwddQXedXyPgSxuiWM0DeQiW4pNLt6o/GXP86HqlgDJLz6/llk61N
-         qmg8CZoxrGtVeu9/U65PA3R1Sc8tefDhPmDxSjjEiLrV3vd5TP05/NFcSxFroRb9CUAL
-         OSUUh/Gy43FgmpOAZj/yOaREEMIxfItpt2+cLhJoJT5n5xzqS2oJxgEGpCg78j0+m5WI
-         mDYA==
-X-Gm-Message-State: APjAAAVViN/h+btqmNXGBiqEBz5ZeRIh1Tax0gEqEQfFzYmSCNgieYBK
-        5GdwWg+4c+ROT2M5IrAphrbMUg==
-X-Google-Smtp-Source: APXvYqwrHZYEIEuESwvmFkEWQhgGRxwXw41iGxF56msahSCCRfVrEFUbqncWow7/3rMzl4WgyhO+GQ==
-X-Received: by 2002:a0c:fa92:: with SMTP id o18mr615449qvn.125.1582821982930;
-        Thu, 27 Feb 2020 08:46:22 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id p92sm3344990qtd.14.2020.02.27.08.46.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 27 Feb 2020 08:46:22 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1j7MIo-0001k5-2a; Thu, 27 Feb 2020 12:46:22 -0400
-Date:   Thu, 27 Feb 2020 12:46:22 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Bernard Metzler <BMT@zurich.ibm.com>
-Cc:     syzbot <syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com>,
-        chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        netdev@vger.kernel.org, parav@mellanox.com,
-        syzkaller-bugs@googlegroups.com, willy@infradead.org
-Subject: Re: possible deadlock in cma_netdev_callback
-Message-ID: <20200227164622.GJ31668@ziepe.ca>
-References: <20200227155335.GI31668@ziepe.ca>
- <20200226204238.GC31668@ziepe.ca>
- <000000000000153fac059f740693@google.com>
- <OF0B62EDE7.E13D40E8-ON0025851B.0037F560-0025851B.0037F56C@notes.na.collabserv.com>
- <OF0C6D63D8.F1817050-ON0025851B.0059D878-0025851B.0059D887@notes.na.collabserv.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <OF0C6D63D8.F1817050-ON0025851B.0059D878-0025851B.0059D887@notes.na.collabserv.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=PFn2dzdS2FONUrtgtAocmy3qKEh+mb3t1Wul9aBP/fI=;
+        b=XjWN6qLvaxT+6aDuuw6RsBTyt8bQEyA8MwNqArEvB190pRnsN+zfj9H3ZvHehZjuWu
+         YlyxZNJh0zVGlL/RqS1MwDAJHKsKmdt/Os0/0Sy8DHx9kWbYN2wiau/cvgraNe+0ehz9
+         4ijXh275Nqa/wy9+3mveqIsTGT/w/9zHpZv6CyqbRThiMp6PTAIKWDF+XxxXKwjDUwDB
+         sVry3XmvC25F/T/DXRmGR7QVhJ1/Ubg9PncKMWv17iwTR8Hh2QmAXxmZHhqfeXg+EIVb
+         FWLtlrDm+eYN9Z/pjmoZjUQgO8nQsmDyXsprhlOrRTYwJ3uZZE8bJRgfxNXW7gj7tE8b
+         6ldw==
+X-Gm-Message-State: APjAAAURc1MV8uaR1vfgEVwrrg6h40+2bNDcBl4wqLWzBBsc2i3SI/Ch
+        nShp7PNzZa32Vi1scYmKuMFdSQ==
+X-Google-Smtp-Source: APXvYqz74THGToU1Rx7EshKvZFEUw5h9FBVUg06LD9Pjv8JkbrqoOplHjRQgxrVLeL9YYUMKKO6MBw==
+X-Received: by 2002:a05:620a:2282:: with SMTP id o2mr116001qkh.304.1582822026494;
+        Thu, 27 Feb 2020 08:47:06 -0800 (PST)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id h9sm3380125qtq.61.2020.02.27.08.47.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Feb 2020 08:47:05 -0800 (PST)
+Message-ID: <1582822024.7365.139.camel@lca.pw>
+Subject: Re: suspicious RCU due to "Prefer using an idle CPU as a migration
+ target instead of comparing tasks"
+From:   Qian Cai <cai@lca.pw>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Mel Gorman <mgorman@techsingularity.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>, paulmck@kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 27 Feb 2020 11:47:04 -0500
+In-Reply-To: <1582821327.7365.137.camel@lca.pw>
+References: <1582812549.7365.134.camel@lca.pw>
+         <1582814862.7365.135.camel@lca.pw> <jhjimjsvyoe.mognet@arm.com>
+         <1582821327.7365.137.camel@lca.pw>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 04:21:21PM +0000, Bernard Metzler wrote:
+On Thu, 2020-02-27 at 11:35 -0500, Qian Cai wrote:
+> On Thu, 2020-02-27 at 15:26 +0000, Valentin Schneider wrote:
+> > On Thu, Feb 27 2020, Qian Cai wrote:
+> > 
+> > > On Thu, 2020-02-27 at 09:09 -0500, Qian Cai wrote:
+> > > > The linux-next commit ff7db0bf24db ("sched/numa: Prefer using an idle CPU as a
+> > > > migration target instead of comparing tasks") introduced a boot warning,
+> > > 
+> > > This?
+> > > 
+> > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > > index a61d83ea2930..ca780cd1eae2 100644
+> > > --- a/kernel/sched/fair.c
+> > > +++ b/kernel/sched/fair.c
+> > > @@ -1607,7 +1607,9 @@ static void update_numa_stats(struct task_numa_env *env,
+> > > if (ns->idle_cpu == -1)
+> > > ns->idle_cpu = cpu;
+> > > 
+> > > +rcu_read_lock();
+> > > idle_core = numa_idle_core(idle_core, cpu);
+> > > +rcu_read_unlock();
+> > > }
+> > > }
+> > > 
+> > 
+> > 
+> > Hmph right, we have
+> > numa_idle_core()->test_idle_cores()->rcu_dereference().
+> > 
+> > Dunno if it's preferable to wrap the entirety of update_numa_stats() or
+> > if that fine-grained read-side section is ok.
 > 
-> >To: "Bernard Metzler" <BMT@zurich.ibm.com>
-> >From: "Jason Gunthorpe" <jgg@ziepe.ca>
-> >Date: 02/27/2020 04:53PM
-> >Cc: "syzbot" <syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com>,
-> >chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
-> >linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-> >netdev@vger.kernel.org, parav@mellanox.com,
-> >syzkaller-bugs@googlegroups.com, willy@infradead.org
-> >Subject: [EXTERNAL] Re: possible deadlock in cma_netdev_callback
-> >
-> >On Thu, Feb 27, 2020 at 10:11:13AM +0000, Bernard Metzler wrote:
-> >
-> >> Thanks for letting me know! Hmm, we cannot use RCU locks since
-> >> we potentially sleep. One solution would be to create a list
-> >> of matching interfaces while under lock, unlock and use that
-> >> list for calling siw_listen_address() (which may sleep),
-> >> right...?
-> >
-> >Why do you need to iterate over addresses anyhow? Shouldn't the
-> >listen
-> >just be done with the address the user gave and a BIND DEVICE to the
-> >device siw is connected to?
-> 
-> The user may give a wildcard local address, so we'd have
-> to bind to all addresses of that device...
+> I could not come up with a better fine-grained one than this.
 
-AFAIK a wild card bind using BIND DEVICE works just fine?
+Correction -- this one,
 
-Jason
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index a61d83ea2930..580d56f9c10b 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -1561,10 +1561,18 @@ numa_type numa_classify(unsigned int imbalance_pct,
+ static inline int numa_idle_core(int idle_core, int cpu)
+ {
+ #ifdef CONFIG_SCHED_SMT
++	bool idle;
++
+ 	if (!static_branch_likely(&sched_smt_present) ||
+-	    idle_core >= 0 || !test_idle_cores(cpu, false))
++	    idle_core >= 0)
+ 		return idle_core;
+ 
++	rcu_read_lock();
++	idle = test_idle_cores(cpu, false);
++	rcu_read_unlock();
++
++	if (!idle)
++		return idle_core;
+ 	/*
+ 	 * Prefer cores instead of packing HT siblings
+ 	 * and triggering future load balancing.
