@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D97C52D5F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4D2C52D47
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 891C324691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D39742073D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:58:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811958;
-	bh=tvqRbARabEljwMx+tvX53l3BrPBm/SN7FH5rgOVY3dw=;
+	s=default; t=1582811911;
+	bh=drBJqvVXhGgm+j/1747y+LCDb/VVWIamCFsugPT2Xrw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HApLrVZrhD0TxCLw1zz+gVh6P5Tns6u9GQtoL/tpYp3qVejJGl1Xfh1SZvOCK5PZL
-	 EJ2TGWBZ4rY4uu4RE4auI4VcdWM4TrE/obIlJlJK+GVkW3I4ewv4xjNNlVMLd51wKI
-	 vkmSgqMw6ZWfp7DY7JVADN+5ijgngCynrytZh8fU=
+	b=iLM1VWUZheu4wlDxP9UfZxfRcWTPj4x46VL3Yy6Vndlbb4RHwa1UqFTVgW1IwrEXK
+	 Q0SnkKYFTvzzAN9kSwjs25S2ViSAMaTSX+827PqXoFYZUauu86meL8/vSE4Zr7rHss
+	 pwDURrHII6m9hBpDOoYET/tJBjAsWKtHmFjzlFrA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729854AbgB0N7R (ORCPT
+        id S1732468AbgB0N6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:59:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60536 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:58:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732404AbgB0N7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:59:11 -0500
+        id S1732452AbgB0N6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:58:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB7AB246A0;
-        Thu, 27 Feb 2020 13:59:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 824AB20801;
+        Thu, 27 Feb 2020 13:58:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811951;
-        bh=tvqRbARabEljwMx+tvX53l3BrPBm/SN7FH5rgOVY3dw=;
+        s=default; t=1582811904;
+        bh=drBJqvVXhGgm+j/1747y+LCDb/VVWIamCFsugPT2Xrw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XB3oIbgFEBK4dqAoBIPplDfRTMiBLDjk5s9I+svNvTNe9LQgbelaz5x14aIxh4Nlh
-         2xTARo8raC1fW/POv6E0zAsDhlEfpbQoJ405a2emRWalHPkyXscNeRzXvYVrlywG69
-         WdaVGI44z8VKsLI38qg1GBd0rz8RJLpJ67rIfd60=
+        b=K8qfubBFZJL2NYH63ReNTKjb2zmVpZoE+d4pMSeNybVznKfHK5d74F8RwcwZ/H4jo
+         Ur4MsODuK9hNzeC3/YzCM1mq+C9ChA9SNVSIgm5zC+KIB5jQwe4dUjepPn/3oCUPzC
+         HtI4A4o1lcFDu0fiV76IRK0I5hOl9G3uvnPmU+2Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 165/237] mlxsw: spectrum_dpipe: Add missing error path
-Date:   Thu, 27 Feb 2020 14:36:19 +0100
-Message-Id: <20200227132308.620694724@linuxfoundation.org>
+Subject: [PATCH 4.14 145/237] ARM: 8951/1: Fix Kexec compilation issue.
+Date:   Thu, 27 Feb 2020 14:35:59 +0100
+Message-Id: <20200227132307.295999828@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -60,43 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-[ Upstream commit 3a99cbb6fa7bca1995586ec2dc21b0368aad4937 ]
+[ Upstream commit 76950f7162cad51d2200ebd22c620c14af38f718 ]
 
-In case devlink_dpipe_entry_ctx_prepare() failed, release RTNL that was
-previously taken and free the memory allocated by
-mlxsw_sp_erif_entry_prepare().
+To perform the reserve_crashkernel() operation kexec uses SECTION_SIZE to
+find a memblock in a range.
+SECTION_SIZE is not defined for nommu systems. Trying to compile kexec in
+these conditions results in a build error:
 
-Fixes: 2ba5999f009d ("mlxsw: spectrum: Add Support for erif table entries access")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  linux/arch/arm/kernel/setup.c: In function ‘reserve_crashkernel’:
+  linux/arch/arm/kernel/setup.c:1016:25: error: ‘SECTION_SIZE’ undeclared
+     (first use in this function); did you mean ‘SECTIONS_WIDTH’?
+             crash_size, SECTION_SIZE);
+                         ^~~~~~~~~~~~
+                         SECTIONS_WIDTH
+  linux/arch/arm/kernel/setup.c:1016:25: note: each undeclared identifier
+     is reported only once for each function it appears in
+  linux/scripts/Makefile.build:265: recipe for target 'arch/arm/kernel/setup.o'
+     failed
+
+Make KEXEC depend on MMU to fix the compilation issue.
+
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c
-index 51e6846da72bc..3c04f3d5de2dc 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c
-@@ -225,7 +225,7 @@ mlxsw_sp_dpipe_table_erif_entries_dump(void *priv, bool counters_enabled,
- start_again:
- 	err = devlink_dpipe_entry_ctx_prepare(dump_ctx);
- 	if (err)
--		return err;
-+		goto err_ctx_prepare;
- 	j = 0;
- 	for (; i < rif_count; i++) {
- 		struct mlxsw_sp_rif *rif = mlxsw_sp_rif_by_index(mlxsw_sp, i);
-@@ -257,6 +257,7 @@ start_again:
- 	return 0;
- err_entry_append:
- err_entry_get:
-+err_ctx_prepare:
- 	rtnl_unlock();
- 	devlink_dpipe_entry_clear(&entry);
- 	return err;
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index ba9325fc75b85..7a8fbe9a077bb 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -2005,7 +2005,7 @@ config XIP_PHYS_ADDR
+ config KEXEC
+ 	bool "Kexec system call (EXPERIMENTAL)"
+ 	depends on (!SMP || PM_SLEEP_SMP)
+-	depends on !CPU_V7M
++	depends on MMU
+ 	select KEXEC_CORE
+ 	help
+ 	  kexec is a system call that implements the ability to shutdown your
 -- 
 2.20.1
 
