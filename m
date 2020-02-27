@@ -2,54 +2,50 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B635CC3F375
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A80C3F35B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F74E2469D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:54:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0214246B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:53:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811665;
-	bh=i4rCMs/KdszCUrhFYZjd38y7vAH2KN/V466RTKcmpKo=;
+	s=default; t=1582811606;
+	bh=7uaQ+xB7wlH3uFDsLYIQcjhaLBnRLr4J8dzDV5/9yM0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rUrBeTcLL6LLsJEzDq3WVGPnkmOms11L2Xdf3YQlaHy4M0b9+QElnSEq9Rnbc8Yq/
-	 03jkY5SVrFWh9z6/dPJ3Skm72niifbPo+T9cGblek+wDcj4Kcx0Im2J6/aw5QJkeP4
-	 t7LD/iiUJntS2iHpuWgpfizyKS5+UrQysA0do9i0=
+	b=ZtQRDZNI8obkg00VuVqYvkYMLtKwtxtTx+5zVx//lF3ppLcAV6AKLT6AdZ+mSqYE8
+	 PfSFF+KZgtqsHpOAT5mDINKh96sjU4EgEOEvawoUSNNGZ0KyKWMUuxLDkrdqxnOKXs
+	 p3gOTBr63gmHexWAjn8DDzGgI7+A4XDxSDtxyrR0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731866AbgB0NyY (ORCPT
+        id S1731686AbgB0NxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:54:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54404 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:53:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731857AbgB0NyU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:54:20 -0500
+        id S1731674AbgB0NxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:53:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF3E020801;
-        Thu, 27 Feb 2020 13:54:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2504924656;
+        Thu, 27 Feb 2020 13:53:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811660;
-        bh=i4rCMs/KdszCUrhFYZjd38y7vAH2KN/V466RTKcmpKo=;
+        s=default; t=1582811600;
+        bh=7uaQ+xB7wlH3uFDsLYIQcjhaLBnRLr4J8dzDV5/9yM0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MMfLXDag2iwQqDYP++rZDV0hrjFfAZTggpJsvj0xVA1dC6prVTy8DF3UsfPhc6XNw
-         wIhxBQbiagpfMmu5TMazD9Wl+m2HhetwD1HkT4EFgkIe8f1FvhOeeD1MFBQ7KK5BY0
-         fjRxi39Zddv1usHHDl4yQhfabV61d5H8JSJLUpdQ=
+        b=Kf6qIQUXtPzuNddZj+jhwHSVNe3b89C3jTXmL3SulmkXMx6iC61aYDk1n1THU/PKW
+         AX6rQ/uqmrRD7HFKYB2ZWhyvF/knACYn7E9gkbx6bZ5pGJpdAH3d8zUjjPhoDOQgZz
+         D9/LG1dbXtG/VUhXlG5uqUh4w3uODOoEJ/HDFoeA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 052/237] media: sti: bdisp: fix a possible sleep-in-atomic-context bug in bdisp_device_run()
-Date:   Thu, 27 Feb 2020 14:34:26 +0100
-Message-Id: <20200227132300.611923225@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 003/237] ALSA: hda: Use scnprintf() for printing texts for sysfs/procfs
+Date:   Thu, 27 Feb 2020 14:33:37 +0100
+Message-Id: <20200227132255.778177428@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -62,59 +58,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit bb6d42061a05d71dd73f620582d9e09c8fbf7f5b ]
+commit 44eeb081b8630bb3ad3cd381d1ae1831463e48bb upstream.
 
-The driver may sleep while holding a spinlock.
-The function call path (from bottom to top) in Linux 4.19 is:
+Some code in HD-audio driver calls snprintf() in a loop and still
+expects that the return value were actually written size, while
+snprintf() returns the expected would-be length instead.  When the
+given buffer limit were small, this leads to a buffer overflow.
 
-drivers/media/platform/sti/bdisp/bdisp-hw.c, 385:
-    msleep in bdisp_hw_reset
-drivers/media/platform/sti/bdisp/bdisp-v4l2.c, 341:
-    bdisp_hw_reset in bdisp_device_run
-drivers/media/platform/sti/bdisp/bdisp-v4l2.c, 317:
-    _raw_spin_lock_irqsave in bdisp_device_run
+Use scnprintf() for addressing those issues.  It returns the actually
+written size unlike snprintf().
 
-To fix this bug, msleep() is replaced with udelay().
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200218091409.27162-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-This bug is found by a static analysis tool STCheck written by myself.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Reviewed-by: Fabien Dessenne <fabien.dessenne@st.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/sti/bdisp/bdisp-hw.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ sound/hda/hdmi_chmap.c    |    2 +-
+ sound/pci/hda/hda_codec.c |    2 +-
+ sound/pci/hda/hda_eld.c   |    2 +-
+ sound/pci/hda/hda_sysfs.c |    4 ++--
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/media/platform/sti/bdisp/bdisp-hw.c b/drivers/media/platform/sti/bdisp/bdisp-hw.c
-index b7892f3efd988..5c4c3f0c57be1 100644
---- a/drivers/media/platform/sti/bdisp/bdisp-hw.c
-+++ b/drivers/media/platform/sti/bdisp/bdisp-hw.c
-@@ -14,8 +14,8 @@
- #define MAX_SRC_WIDTH           2048
+--- a/sound/hda/hdmi_chmap.c
++++ b/sound/hda/hdmi_chmap.c
+@@ -249,7 +249,7 @@ void snd_hdac_print_channel_allocation(i
  
- /* Reset & boot poll config */
--#define POLL_RST_MAX            50
--#define POLL_RST_DELAY_MS       20
-+#define POLL_RST_MAX            500
-+#define POLL_RST_DELAY_MS       2
- 
- enum bdisp_target_plan {
- 	BDISP_RGB,
-@@ -382,7 +382,7 @@ int bdisp_hw_reset(struct bdisp_dev *bdisp)
- 	for (i = 0; i < POLL_RST_MAX; i++) {
- 		if (readl(bdisp->regs + BLT_STA1) & BLT_STA1_IDLE)
- 			break;
--		msleep(POLL_RST_DELAY_MS);
-+		udelay(POLL_RST_DELAY_MS * 1000);
+ 	for (i = 0, j = 0; i < ARRAY_SIZE(cea_speaker_allocation_names); i++) {
+ 		if (spk_alloc & (1 << i))
+-			j += snprintf(buf + j, buflen - j,  " %s",
++			j += scnprintf(buf + j, buflen - j,  " %s",
+ 					cea_speaker_allocation_names[i]);
  	}
- 	if (i == POLL_RST_MAX)
- 		dev_err(bdisp->dev, "Reset timeout\n");
--- 
-2.20.1
-
+ 	buf[j] = '\0';	/* necessary when j == 0 */
+--- a/sound/pci/hda/hda_codec.c
++++ b/sound/pci/hda/hda_codec.c
+@@ -4002,7 +4002,7 @@ void snd_print_pcm_bits(int pcm, char *b
+ 
+ 	for (i = 0, j = 0; i < ARRAY_SIZE(bits); i++)
+ 		if (pcm & (AC_SUPPCM_BITS_8 << i))
+-			j += snprintf(buf + j, buflen - j,  " %d", bits[i]);
++			j += scnprintf(buf + j, buflen - j,  " %d", bits[i]);
+ 
+ 	buf[j] = '\0'; /* necessary when j == 0 */
+ }
+--- a/sound/pci/hda/hda_eld.c
++++ b/sound/pci/hda/hda_eld.c
+@@ -373,7 +373,7 @@ static void hdmi_print_pcm_rates(int pcm
+ 
+ 	for (i = 0, j = 0; i < ARRAY_SIZE(alsa_rates); i++)
+ 		if (pcm & (1 << i))
+-			j += snprintf(buf + j, buflen - j,  " %d",
++			j += scnprintf(buf + j, buflen - j,  " %d",
+ 				alsa_rates[i]);
+ 
+ 	buf[j] = '\0'; /* necessary when j == 0 */
+--- a/sound/pci/hda/hda_sysfs.c
++++ b/sound/pci/hda/hda_sysfs.c
+@@ -221,7 +221,7 @@ static ssize_t init_verbs_show(struct de
+ 	mutex_lock(&codec->user_mutex);
+ 	for (i = 0; i < codec->init_verbs.used; i++) {
+ 		struct hda_verb *v = snd_array_elem(&codec->init_verbs, i);
+-		len += snprintf(buf + len, PAGE_SIZE - len,
++		len += scnprintf(buf + len, PAGE_SIZE - len,
+ 				"0x%02x 0x%03x 0x%04x\n",
+ 				v->nid, v->verb, v->param);
+ 	}
+@@ -271,7 +271,7 @@ static ssize_t hints_show(struct device
+ 	mutex_lock(&codec->user_mutex);
+ 	for (i = 0; i < codec->hints.used; i++) {
+ 		struct hda_hint *hint = snd_array_elem(&codec->hints, i);
+-		len += snprintf(buf + len, PAGE_SIZE - len,
++		len += scnprintf(buf + len, PAGE_SIZE - len,
+ 				"%s = %s\n", hint->key, hint->val);
+ 	}
+ 	mutex_unlock(&codec->user_mutex);
 
 
