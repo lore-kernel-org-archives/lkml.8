@@ -2,255 +2,638 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 536A5C3F2CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A18C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2830F246A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:30:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 242BB246A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:30:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730343AbgB0Waw (ORCPT
+        id S1730399AbgB0Wax (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 27 Feb 2020 17:30:53 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:42141 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729745AbgB0Waw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Feb 2020 17:30:52 -0500
-Received: from mga04.intel.com ([192.55.52.120]:35152 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729850AbgB0Wav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 17:30:51 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 14:30:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
-   d="scan'208";a="385312250"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga004.jf.intel.com with ESMTP; 27 Feb 2020 14:30:49 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] KVM: VMX: Always VMCLEAR in-use VMCSes during crash with kexec support
-Date:   Thu, 27 Feb 2020 14:30:45 -0800
-Message-Id: <20200227223047.13125-2-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200227223047.13125-1-sean.j.christopherson@intel.com>
-References: <20200227223047.13125-1-sean.j.christopherson@intel.com>
+Received: from 79.184.237.30.ipv4.supernova.orange.pl (79.184.237.30) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
+ id 030098619b2178ec; Thu, 27 Feb 2020 23:30:48 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Documentation <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH] Documentation: cpufreq: Move legacy driver documentation
+Date:   Thu, 27 Feb 2020 23:30:48 +0100
+Message-ID: <2064677.NQqUkctcim@kreacher>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VMCLEAR all in-use VMCSes during a crash, even if kdump's NMI shootdown
-interrupted a KVM update of the percpu in-use VMCS list.
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Because NMIs are not blocked by disabling IRQs, it's possible that
-crash_vmclear_local_loaded_vmcss() could be called while the percpu list
-of VMCSes is being modified, e.g. in the middle of list_add() in
-vmx_vcpu_load_vmcs().  This potential corner case was called out in the
-original commit[*], but the analysis of its impact was wrong.
+There are three legacy driver documents in Documentation/cpu-freq/
+that were added years ago and converting them each to the .rst
+format is rather pointless, even though there is some value in
+preserving them.  However, if they are preserved, they need to go
+into the admin-guide part of cpufreq documentation where they belong
+(at least to a certain extent).
 
-Skipping the VMCLEARs is wrong because it all but guarantees that a
-loaded, and therefore cached, VMCS will live across kexec and corrupt
-memory in the new kernel.  Corruption will occur because the CPU's VMCS
-cache is non-coherent, i.e. not snooped, and so the writeback of VMCS
-memory on its eviction will overwrite random memory in the new kernel.
-The VMCS will live because the NMI shootdown also disables VMX, i.e. the
-in-progress VMCLEAR will #UD, and existing Intel CPUs do not flush the
-VMCS cache on VMXOFF.
+To preserve them with minimum amount of changes and put them into the
+right place, and make it possible to process them into HTML (and other
+formats) along with the rest of the documentation, move them each
+as a "literal text" block into a separate section of a single .rst
+"wrapper" file under Documentation/admin-guide/pm/.
 
-Furthermore, interrupting list_add() and list_del() is safe due to
-crash_vmclear_local_loaded_vmcss() using forward iteration.  list_add()
-ensures the new entry is not visible to forward iteration unless the
-entire add completes, via WRITE_ONCE(prev->next, new).  A bad "prev"
-pointer could be observed if the NMI shootdown interrupted list_del() or
-list_add(), but list_for_each_entry() does not consume ->prev.
+While at it, repair the PCC specification URL in one of them.
 
-In addition to removing the temporary disabling of VMCLEAR, move the
-list_del() from __loaded_vmcs_clear() to loaded_vmcs_init() so that the
-VMCS is deleted from the list only after it's been VMCLEAR'd.  Deleting
-the VMCS before VMCLEAR would allow a race where the NMI shootdown could
-arrive between list_del() and vmcs_clear() and thus neither flow would
-execute a successful VMCLEAR.
-
-Update the smp_*() comments related to the list manipulation, and
-opportunistically reword them to improve clarity.
-
-[*] https://patchwork.kernel.org/patch/1675731/#3720461
-
-Fixes: 8f536b7697a0 ("KVM: VMX: provide the vmclear function and a bitmap to support VMCLEAR in kdump")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 79 +++++++++++-------------------------------
- arch/x86/kvm/vmx/vmx.h |  2 +-
- 2 files changed, 22 insertions(+), 59 deletions(-)
+ Documentation/admin-guide/pm/cpufreq_drivers.rst |  274 +++++++++++++++++++++++
+ Documentation/admin-guide/pm/working-state.rst   |    1 
+ Documentation/cpu-freq/amd-powernow.txt          |   38 ---
+ Documentation/cpu-freq/cpufreq-nforce2.txt       |   19 -
+ Documentation/cpu-freq/pcc-cpufreq.txt           |  207 -----------------
+ 5 files changed, 275 insertions(+), 264 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index a04017bdae05..2648b2214407 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -654,53 +654,39 @@ static int vmx_set_guest_msr(struct vcpu_vmx *vmx, struct shared_msr_entry *msr,
- 	return ret;
- }
- 
--void loaded_vmcs_init(struct loaded_vmcs *loaded_vmcs)
-+void loaded_vmcs_init(struct loaded_vmcs *loaded_vmcs, bool in_use)
- {
- 	vmcs_clear(loaded_vmcs->vmcs);
- 	if (loaded_vmcs->shadow_vmcs && loaded_vmcs->launched)
- 		vmcs_clear(loaded_vmcs->shadow_vmcs);
+Index: linux-pm/Documentation/admin-guide/pm/cpufreq_drivers.rst
+===================================================================
+--- /dev/null
++++ linux-pm/Documentation/admin-guide/pm/cpufreq_drivers.rst
+@@ -0,0 +1,274 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+	if (in_use) {
-+		list_del(&loaded_vmcs->loaded_vmcss_on_cpu_link);
++=======================================================
++Legacy Documentation of CPU Performance Scaling Drivers
++=======================================================
 +
-+		/*
-+		 * Ensure deleting loaded_vmcs from its current percpu list
-+		 * completes before setting loaded_vmcs->vcpu to -1, otherwise
-+		 * a different cpu can see vcpu == -1 first and add loaded_vmcs
-+		 * to its percpu list before it's deleted from this cpu's list.
-+		 * Pairs with the smp_rmb() in vmx_vcpu_load_vmcs().
-+		 */
-+		smp_wmb();
-+	}
++Included below are historic documents describing assorted
++:doc:`CPU performance scaling <cpufreq>` drivers.  They are reproduced verbatim,
++with the original white space formatting and indentation preserved, except for
++the added leading space character in every line of text.
 +
- 	loaded_vmcs->cpu = -1;
- 	loaded_vmcs->launched = 0;
- }
- 
- #ifdef CONFIG_KEXEC_CORE
++
++AMD PowerNow! Drivers
++=====================
++
++::
++
++ PowerNow! and Cool'n'Quiet are AMD names for frequency
++ management capabilities in AMD processors. As the hardware
++ implementation changes in new generations of the processors,
++ there is a different cpu-freq driver for each generation.
++
++ Note that the driver's will not load on the "wrong" hardware,
++ so it is safe to try each driver in turn when in doubt as to
++ which is the correct driver.
++
++ Note that the functionality to change frequency (and voltage)
++ is not available in all processors. The drivers will refuse
++ to load on processors without this capability. The capability
++ is detected with the cpuid instruction.
++
++ The drivers use BIOS supplied tables to obtain frequency and
++ voltage information appropriate for a particular platform.
++ Frequency transitions will be unavailable if the BIOS does
++ not supply these tables.
++
++ 6th Generation: powernow-k6
++
++ 7th Generation: powernow-k7: Athlon, Duron, Geode.
++
++ 8th Generation: powernow-k8: Athlon, Athlon 64, Opteron, Sempron.
++ Documentation on this functionality in 8th generation processors
++ is available in the "BIOS and Kernel Developer's Guide", publication
++ 26094, in chapter 9, available for download from www.amd.com.
++
++ BIOS supplied data, for powernow-k7 and for powernow-k8, may be
++ from either the PSB table or from ACPI objects. The ACPI support
++ is only available if the kernel config sets CONFIG_ACPI_PROCESSOR.
++ The powernow-k8 driver will attempt to use ACPI if so configured,
++ and fall back to PST if that fails.
++ The powernow-k7 driver will try to use the PSB support first, and
++ fall back to ACPI if the PSB support fails. A module parameter,
++ acpi_force, is provided to force ACPI support to be used instead
++ of PSB support.
++
++
++``cpufreq-nforce2``
++===================
++
++::
++
++ The cpufreq-nforce2 driver changes the FSB on nVidia nForce2 platforms.
++
++ This works better than on other platforms, because the FSB of the CPU
++ can be controlled independently from the PCI/AGP clock.
++
++ The module has two options:
++
++ 	fid: 	 multiplier * 10 (for example 8.5 = 85)
++ 	min_fsb: minimum FSB
++
++ If not set, fid is calculated from the current CPU speed and the FSB.
++ min_fsb defaults to FSB at boot time - 50 MHz.
++
++ IMPORTANT: The available range is limited downwards!
++            Also the minimum available FSB can differ, for systems
++            booting with 200 MHz, 150 should always work.
++
++
++``pcc-cpufreq``
++===============
++
++::
++
++ /*
++  *  pcc-cpufreq.txt - PCC interface documentation
++  *
++  *  Copyright (C) 2009 Red Hat, Matthew Garrett <mjg@redhat.com>
++  *  Copyright (C) 2009 Hewlett-Packard Development Company, L.P.
++  *      Nagananda Chumbalkar <nagananda.chumbalkar@hp.com>
++  */
++
++
++ 			Processor Clocking Control Driver
++ 			---------------------------------
++
++ Contents:
++ ---------
++ 1.	Introduction
++ 1.1	PCC interface
++ 1.1.1	Get Average Frequency
++ 1.1.2	Set Desired Frequency
++ 1.2	Platforms affected
++ 2.	Driver and /sys details
++ 2.1	scaling_available_frequencies
++ 2.2	cpuinfo_transition_latency
++ 2.3	cpuinfo_cur_freq
++ 2.4	related_cpus
++ 3.	Caveats
++
++ 1. Introduction:
++ ----------------
++ Processor Clocking Control (PCC) is an interface between the platform
++ firmware and OSPM. It is a mechanism for coordinating processor
++ performance (ie: frequency) between the platform firmware and the OS.
++
++ The PCC driver (pcc-cpufreq) allows OSPM to take advantage of the PCC
++ interface.
++
++ OS utilizes the PCC interface to inform platform firmware what frequency the
++ OS wants for a logical processor. The platform firmware attempts to achieve
++ the requested frequency. If the request for the target frequency could not be
++ satisfied by platform firmware, then it usually means that power budget
++ conditions are in place, and "power capping" is taking place.
++
++ 1.1 PCC interface:
++ ------------------
++ The complete PCC specification is available here:
++ https://acpica.org/sites/acpica/files/Processor-Clocking-Control-v1p0.pdf
++
++ PCC relies on a shared memory region that provides a channel for communication
++ between the OS and platform firmware. PCC also implements a "doorbell" that
++ is used by the OS to inform the platform firmware that a command has been
++ sent.
++
++ The ACPI PCCH() method is used to discover the location of the PCC shared
++ memory region. The shared memory region header contains the "command" and
++ "status" interface. PCCH() also contains details on how to access the platform
++ doorbell.
++
++ The following commands are supported by the PCC interface:
++ * Get Average Frequency
++ * Set Desired Frequency
++
++ The ACPI PCCP() method is implemented for each logical processor and is
++ used to discover the offsets for the input and output buffers in the shared
++ memory region.
++
++ When PCC mode is enabled, the platform will not expose processor performance
++ or throttle states (_PSS, _TSS and related ACPI objects) to OSPM. Therefore,
++ the native P-state driver (such as acpi-cpufreq for Intel, powernow-k8 for
++ AMD) will not load.
++
++ However, OSPM remains in control of policy. The governor (eg: "ondemand")
++ computes the required performance for each processor based on server workload.
++ The PCC driver fills in the command interface, and the input buffer and
++ communicates the request to the platform firmware. The platform firmware is
++ responsible for delivering the requested performance.
++
++ Each PCC command is "global" in scope and can affect all the logical CPUs in
++ the system. Therefore, PCC is capable of performing "group" updates. With PCC
++ the OS is capable of getting/setting the frequency of all the logical CPUs in
++ the system with a single call to the BIOS.
++
++ 1.1.1 Get Average Frequency:
++ ----------------------------
++ This command is used by the OSPM to query the running frequency of the
++ processor since the last time this command was completed. The output buffer
++ indicates the average unhalted frequency of the logical processor expressed as
++ a percentage of the nominal (ie: maximum) CPU frequency. The output buffer
++ also signifies if the CPU frequency is limited by a power budget condition.
++
++ 1.1.2 Set Desired Frequency:
++ ----------------------------
++ This command is used by the OSPM to communicate to the platform firmware the
++ desired frequency for a logical processor. The output buffer is currently
++ ignored by OSPM. The next invocation of "Get Average Frequency" will inform
++ OSPM if the desired frequency was achieved or not.
++
++ 1.2 Platforms affected:
++ -----------------------
++ The PCC driver will load on any system where the platform firmware:
++ * supports the PCC interface, and the associated PCCH() and PCCP() methods
++ * assumes responsibility for managing the hardware clocking controls in order
++ to deliver the requested processor performance
++
++ Currently, certain HP ProLiant platforms implement the PCC interface. On those
++ platforms PCC is the "default" choice.
++
++ However, it is possible to disable this interface via a BIOS setting. In
++ such an instance, as is also the case on platforms where the PCC interface
++ is not implemented, the PCC driver will fail to load silently.
++
++ 2. Driver and /sys details:
++ ---------------------------
++ When the driver loads, it merely prints the lowest and the highest CPU
++ frequencies supported by the platform firmware.
++
++ The PCC driver loads with a message such as:
++ pcc-cpufreq: (v1.00.00) driver loaded with frequency limits: 1600 MHz, 2933
++ MHz
++
++ This means that the OPSM can request the CPU to run at any frequency in
++ between the limits (1600 MHz, and 2933 MHz) specified in the message.
++
++ Internally, there is no need for the driver to convert the "target" frequency
++ to a corresponding P-state.
++
++ The VERSION number for the driver will be of the format v.xy.ab.
++ eg: 1.00.02
++    ----- --
++     |    |
++     |    -- this will increase with bug fixes/enhancements to the driver
++     |-- this is the version of the PCC specification the driver adheres to
++
++
++ The following is a brief discussion on some of the fields exported via the
++ /sys filesystem and how their values are affected by the PCC driver:
++
++ 2.1 scaling_available_frequencies:
++ ----------------------------------
++ scaling_available_frequencies is not created in /sys. No intermediate
++ frequencies need to be listed because the BIOS will try to achieve any
++ frequency, within limits, requested by the governor. A frequency does not have
++ to be strictly associated with a P-state.
++
++ 2.2 cpuinfo_transition_latency:
++ -------------------------------
++ The cpuinfo_transition_latency field is 0. The PCC specification does
++ not include a field to expose this value currently.
++
++ 2.3 cpuinfo_cur_freq:
++ ---------------------
++ A) Often cpuinfo_cur_freq will show a value different than what is declared
++ in the scaling_available_frequencies or scaling_cur_freq, or scaling_max_freq.
++ This is due to "turbo boost" available on recent Intel processors. If certain
++ conditions are met the BIOS can achieve a slightly higher speed than requested
++ by OSPM. An example:
++
++ scaling_cur_freq	: 2933000
++ cpuinfo_cur_freq	: 3196000
++
++ B) There is a round-off error associated with the cpuinfo_cur_freq value.
++ Since the driver obtains the current frequency as a "percentage" (%) of the
++ nominal frequency from the BIOS, sometimes, the values displayed by
++ scaling_cur_freq and cpuinfo_cur_freq may not match. An example:
++
++ scaling_cur_freq	: 1600000
++ cpuinfo_cur_freq	: 1583000
++
++ In this example, the nominal frequency is 2933 MHz. The driver obtains the
++ current frequency, cpuinfo_cur_freq, as 54% of the nominal frequency:
++
++ 	54% of 2933 MHz = 1583 MHz
++
++ Nominal frequency is the maximum frequency of the processor, and it usually
++ corresponds to the frequency of the P0 P-state.
++
++ 2.4 related_cpus:
++ -----------------
++ The related_cpus field is identical to affected_cpus.
++
++ affected_cpus	: 4
++ related_cpus	: 4
++
++ Currently, the PCC driver does not evaluate _PSD. The platforms that support
++ PCC do not implement SW_ALL. So OSPM doesn't need to perform any coordination
++ to ensure that the same frequency is requested of all dependent CPUs.
++
++ 3. Caveats:
++ -----------
++ The "cpufreq_stats" module in its present form cannot be loaded and
++ expected to work with the PCC driver. Since the "cpufreq_stats" module
++ provides information wrt each P-state, it is not applicable to the PCC driver.
+Index: linux-pm/Documentation/admin-guide/pm/working-state.rst
+===================================================================
+--- linux-pm.orig/Documentation/admin-guide/pm/working-state.rst
++++ linux-pm/Documentation/admin-guide/pm/working-state.rst
+@@ -11,4 +11,5 @@ Working-State Power Management
+    intel_idle
+    cpufreq
+    intel_pstate
++   cpufreq_drivers
+    intel_epb
+Index: linux-pm/Documentation/cpu-freq/amd-powernow.txt
+===================================================================
+--- linux-pm.orig/Documentation/cpu-freq/amd-powernow.txt
++++ /dev/null
+@@ -1,38 +0,0 @@
+-
+-PowerNow! and Cool'n'Quiet are AMD names for frequency
+-management capabilities in AMD processors. As the hardware
+-implementation changes in new generations of the processors,
+-there is a different cpu-freq driver for each generation.
+-
+-Note that the driver's will not load on the "wrong" hardware,
+-so it is safe to try each driver in turn when in doubt as to
+-which is the correct driver.
+-
+-Note that the functionality to change frequency (and voltage)
+-is not available in all processors. The drivers will refuse
+-to load on processors without this capability. The capability
+-is detected with the cpuid instruction.
+-
+-The drivers use BIOS supplied tables to obtain frequency and
+-voltage information appropriate for a particular platform.
+-Frequency transitions will be unavailable if the BIOS does
+-not supply these tables.
+-
+-6th Generation: powernow-k6
+-
+-7th Generation: powernow-k7: Athlon, Duron, Geode.
+-
+-8th Generation: powernow-k8: Athlon, Athlon 64, Opteron, Sempron.
+-Documentation on this functionality in 8th generation processors
+-is available in the "BIOS and Kernel Developer's Guide", publication
+-26094, in chapter 9, available for download from www.amd.com. 
+-
+-BIOS supplied data, for powernow-k7 and for powernow-k8, may be
+-from either the PSB table or from ACPI objects. The ACPI support
+-is only available if the kernel config sets CONFIG_ACPI_PROCESSOR.
+-The powernow-k8 driver will attempt to use ACPI if so configured,
+-and fall back to PST if that fails.
+-The powernow-k7 driver will try to use the PSB support first, and
+-fall back to ACPI if the PSB support fails. A module parameter,
+-acpi_force, is provided to force ACPI support to be used instead 
+-of PSB support.
+Index: linux-pm/Documentation/cpu-freq/cpufreq-nforce2.txt
+===================================================================
+--- linux-pm.orig/Documentation/cpu-freq/cpufreq-nforce2.txt
++++ /dev/null
+@@ -1,19 +0,0 @@
+-
+-The cpufreq-nforce2 driver changes the FSB on nVidia nForce2 platforms.
+-
+-This works better than on other platforms, because the FSB of the CPU
+-can be controlled independently from the PCI/AGP clock.
+-
+-The module has two options:
+-
+-	fid: 	 multiplier * 10 (for example 8.5 = 85)
+-	min_fsb: minimum FSB
+-
+-If not set, fid is calculated from the current CPU speed and the FSB.
+-min_fsb defaults to FSB at boot time - 50 MHz.
+-
+-IMPORTANT: The available range is limited downwards!
+-           Also the minimum available FSB can differ, for systems 
+-           booting with 200 MHz, 150 should always work.
+-
+-
+Index: linux-pm/Documentation/cpu-freq/pcc-cpufreq.txt
+===================================================================
+--- linux-pm.orig/Documentation/cpu-freq/pcc-cpufreq.txt
++++ /dev/null
+@@ -1,207 +0,0 @@
 -/*
-- * This bitmap is used to indicate whether the vmclear
-- * operation is enabled on all cpus. All disabled by
-- * default.
+- *  pcc-cpufreq.txt - PCC interface documentation
+- *
+- *  Copyright (C) 2009 Red Hat, Matthew Garrett <mjg@redhat.com>
+- *  Copyright (C) 2009 Hewlett-Packard Development Company, L.P.
+- *      Nagananda Chumbalkar <nagananda.chumbalkar@hp.com>
+- *
+- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- *
+- *  This program is free software; you can redistribute it and/or modify
+- *  it under the terms of the GNU General Public License as published by
+- *  the Free Software Foundation; version 2 of the License.
+- *
+- *  This program is distributed in the hope that it will be useful, but
+- *  WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, GOOD TITLE or NON
+- *  INFRINGEMENT. See the GNU General Public License for more details.
+- *
+- *  You should have received a copy of the GNU General Public License along
+- *  with this program; if not, write to the Free Software Foundation, Inc.,
+- *  675 Mass Ave, Cambridge, MA 02139, USA.
+- *
+- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - */
--static cpumask_t crash_vmclear_enabled_bitmap = CPU_MASK_NONE;
 -
--static inline void crash_enable_local_vmclear(int cpu)
--{
--	cpumask_set_cpu(cpu, &crash_vmclear_enabled_bitmap);
--}
 -
--static inline void crash_disable_local_vmclear(int cpu)
--{
--	cpumask_clear_cpu(cpu, &crash_vmclear_enabled_bitmap);
--}
+-			Processor Clocking Control Driver
+-			---------------------------------
 -
--static inline int crash_local_vmclear_enabled(int cpu)
--{
--	return cpumask_test_cpu(cpu, &crash_vmclear_enabled_bitmap);
--}
+-Contents:
+----------
+-1.	Introduction
+-1.1	PCC interface
+-1.1.1   Get Average Frequency
+-1.1.2	Set Desired Frequency
+-1.2	Platforms affected
+-2.	Driver and /sys details
+-2.1	scaling_available_frequencies
+-2.2	cpuinfo_transition_latency
+-2.3	cpuinfo_cur_freq
+-2.4	related_cpus
+-3.	Caveats
 -
- static void crash_vmclear_local_loaded_vmcss(void)
- {
- 	int cpu = raw_smp_processor_id();
- 	struct loaded_vmcs *v;
- 
--	if (!crash_local_vmclear_enabled(cpu))
--		return;
+-1. Introduction:
+-----------------
+-Processor Clocking Control (PCC) is an interface between the platform
+-firmware and OSPM. It is a mechanism for coordinating processor
+-performance (ie: frequency) between the platform firmware and the OS.
 -
- 	list_for_each_entry(v, &per_cpu(loaded_vmcss_on_cpu, cpu),
- 			    loaded_vmcss_on_cpu_link)
- 		vmcs_clear(v->vmcs);
- }
--#else
--static inline void crash_enable_local_vmclear(int cpu) { }
--static inline void crash_disable_local_vmclear(int cpu) { }
- #endif /* CONFIG_KEXEC_CORE */
- 
- static void __loaded_vmcs_clear(void *arg)
-@@ -712,19 +698,8 @@ static void __loaded_vmcs_clear(void *arg)
- 		return; /* vcpu migration can race with cpu offline */
- 	if (per_cpu(current_vmcs, cpu) == loaded_vmcs->vmcs)
- 		per_cpu(current_vmcs, cpu) = NULL;
--	crash_disable_local_vmclear(cpu);
--	list_del(&loaded_vmcs->loaded_vmcss_on_cpu_link);
- 
--	/*
--	 * we should ensure updating loaded_vmcs->loaded_vmcss_on_cpu_link
--	 * is before setting loaded_vmcs->vcpu to -1 which is done in
--	 * loaded_vmcs_init. Otherwise, other cpu can see vcpu = -1 fist
--	 * then adds the vmcs into percpu list before it is deleted.
--	 */
--	smp_wmb();
+-The PCC driver (pcc-cpufreq) allows OSPM to take advantage of the PCC
+-interface.
 -
--	loaded_vmcs_init(loaded_vmcs);
--	crash_enable_local_vmclear(cpu);
-+	loaded_vmcs_init(loaded_vmcs, true);
- }
- 
- void loaded_vmcs_clear(struct loaded_vmcs *loaded_vmcs)
-@@ -1343,18 +1318,17 @@ void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu)
- 	if (!already_loaded) {
- 		loaded_vmcs_clear(vmx->loaded_vmcs);
- 		local_irq_disable();
--		crash_disable_local_vmclear(cpu);
- 
- 		/*
--		 * Read loaded_vmcs->cpu should be before fetching
--		 * loaded_vmcs->loaded_vmcss_on_cpu_link.
--		 * See the comments in __loaded_vmcs_clear().
-+		 * Ensure loaded_vmcs->cpu is read before adding loaded_vmcs to
-+		 * this cpu's percpu list, otherwise it may not yet be deleted
-+		 * from its previous cpu's percpu list.  Pairs with the
-+		 * smb_wmb() in loaded_vmcs_init().
- 		 */
- 		smp_rmb();
- 
- 		list_add(&vmx->loaded_vmcs->loaded_vmcss_on_cpu_link,
- 			 &per_cpu(loaded_vmcss_on_cpu, cpu));
--		crash_enable_local_vmclear(cpu);
- 		local_irq_enable();
- 	}
- 
-@@ -2290,17 +2264,6 @@ static int hardware_enable(void)
- 	INIT_LIST_HEAD(&per_cpu(blocked_vcpu_on_cpu, cpu));
- 	spin_lock_init(&per_cpu(blocked_vcpu_on_cpu_lock, cpu));
- 
--	/*
--	 * Now we can enable the vmclear operation in kdump
--	 * since the loaded_vmcss_on_cpu list on this cpu
--	 * has been initialized.
--	 *
--	 * Though the cpu is not in VMX operation now, there
--	 * is no problem to enable the vmclear operation
--	 * for the loaded_vmcss_on_cpu list is empty!
--	 */
--	crash_enable_local_vmclear(cpu);
+-OS utilizes the PCC interface to inform platform firmware what frequency the
+-OS wants for a logical processor. The platform firmware attempts to achieve
+-the requested frequency. If the request for the target frequency could not be
+-satisfied by platform firmware, then it usually means that power budget
+-conditions are in place, and "power capping" is taking place.
 -
- 	kvm_cpu_vmxon(phys_addr);
- 	if (enable_ept)
- 		ept_sync_global();
-@@ -2603,7 +2566,7 @@ int alloc_loaded_vmcs(struct loaded_vmcs *loaded_vmcs)
- 
- 	loaded_vmcs->shadow_vmcs = NULL;
- 	loaded_vmcs->hv_timer_soft_disabled = false;
--	loaded_vmcs_init(loaded_vmcs);
-+	loaded_vmcs_init(loaded_vmcs, false);
- 
- 	if (cpu_has_vmx_msr_bitmap()) {
- 		loaded_vmcs->msr_bitmap = (unsigned long *)
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index e64da06c7009..a0a93b2a238e 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -493,7 +493,7 @@ struct vmcs *alloc_vmcs_cpu(bool shadow, int cpu, gfp_t flags);
- void free_vmcs(struct vmcs *vmcs);
- int alloc_loaded_vmcs(struct loaded_vmcs *loaded_vmcs);
- void free_loaded_vmcs(struct loaded_vmcs *loaded_vmcs);
--void loaded_vmcs_init(struct loaded_vmcs *loaded_vmcs);
-+void loaded_vmcs_init(struct loaded_vmcs *loaded_vmcs, bool in_use);
- void loaded_vmcs_clear(struct loaded_vmcs *loaded_vmcs);
- 
- static inline struct vmcs *alloc_vmcs(bool shadow)
--- 
-2.24.1
+-1.1 PCC interface:
+-------------------
+-The complete PCC specification is available here:
+-http://www.acpica.org/download/Processor-Clocking-Control-v1p0.pdf
+-
+-PCC relies on a shared memory region that provides a channel for communication
+-between the OS and platform firmware. PCC also implements a "doorbell" that
+-is used by the OS to inform the platform firmware that a command has been
+-sent.
+-
+-The ACPI PCCH() method is used to discover the location of the PCC shared
+-memory region. The shared memory region header contains the "command" and
+-"status" interface. PCCH() also contains details on how to access the platform
+-doorbell.
+-
+-The following commands are supported by the PCC interface:
+-* Get Average Frequency
+-* Set Desired Frequency
+-
+-The ACPI PCCP() method is implemented for each logical processor and is
+-used to discover the offsets for the input and output buffers in the shared
+-memory region.
+-
+-When PCC mode is enabled, the platform will not expose processor performance
+-or throttle states (_PSS, _TSS and related ACPI objects) to OSPM. Therefore,
+-the native P-state driver (such as acpi-cpufreq for Intel, powernow-k8 for
+-AMD) will not load.
+-
+-However, OSPM remains in control of policy. The governor (eg: "ondemand")
+-computes the required performance for each processor based on server workload.
+-The PCC driver fills in the command interface, and the input buffer and
+-communicates the request to the platform firmware. The platform firmware is
+-responsible for delivering the requested performance.
+-
+-Each PCC command is "global" in scope and can affect all the logical CPUs in
+-the system. Therefore, PCC is capable of performing "group" updates. With PCC
+-the OS is capable of getting/setting the frequency of all the logical CPUs in
+-the system with a single call to the BIOS.
+-
+-1.1.1 Get Average Frequency:
+-----------------------------
+-This command is used by the OSPM to query the running frequency of the
+-processor since the last time this command was completed. The output buffer
+-indicates the average unhalted frequency of the logical processor expressed as
+-a percentage of the nominal (ie: maximum) CPU frequency. The output buffer
+-also signifies if the CPU frequency is limited by a power budget condition.
+-
+-1.1.2 Set Desired Frequency:
+-----------------------------
+-This command is used by the OSPM to communicate to the platform firmware the
+-desired frequency for a logical processor. The output buffer is currently
+-ignored by OSPM. The next invocation of "Get Average Frequency" will inform
+-OSPM if the desired frequency was achieved or not.
+-
+-1.2 Platforms affected:
+------------------------
+-The PCC driver will load on any system where the platform firmware:
+-* supports the PCC interface, and the associated PCCH() and PCCP() methods
+-* assumes responsibility for managing the hardware clocking controls in order
+-to deliver the requested processor performance
+-
+-Currently, certain HP ProLiant platforms implement the PCC interface. On those
+-platforms PCC is the "default" choice.
+-
+-However, it is possible to disable this interface via a BIOS setting. In
+-such an instance, as is also the case on platforms where the PCC interface
+-is not implemented, the PCC driver will fail to load silently.
+-
+-2. Driver and /sys details:
+----------------------------
+-When the driver loads, it merely prints the lowest and the highest CPU
+-frequencies supported by the platform firmware.
+-
+-The PCC driver loads with a message such as:
+-pcc-cpufreq: (v1.00.00) driver loaded with frequency limits: 1600 MHz, 2933
+-MHz
+-
+-This means that the OPSM can request the CPU to run at any frequency in
+-between the limits (1600 MHz, and 2933 MHz) specified in the message.
+-
+-Internally, there is no need for the driver to convert the "target" frequency
+-to a corresponding P-state.
+-
+-The VERSION number for the driver will be of the format v.xy.ab.
+-eg: 1.00.02
+-   ----- --
+-    |    |
+-    |    -- this will increase with bug fixes/enhancements to the driver
+-    |-- this is the version of the PCC specification the driver adheres to
+-
+-
+-The following is a brief discussion on some of the fields exported via the
+-/sys filesystem and how their values are affected by the PCC driver:
+-
+-2.1 scaling_available_frequencies:
+-----------------------------------
+-scaling_available_frequencies is not created in /sys. No intermediate
+-frequencies need to be listed because the BIOS will try to achieve any
+-frequency, within limits, requested by the governor. A frequency does not have
+-to be strictly associated with a P-state.
+-
+-2.2 cpuinfo_transition_latency:
+--------------------------------
+-The cpuinfo_transition_latency field is 0. The PCC specification does
+-not include a field to expose this value currently.
+-
+-2.3 cpuinfo_cur_freq:
+----------------------
+-A) Often cpuinfo_cur_freq will show a value different than what is declared
+-in the scaling_available_frequencies or scaling_cur_freq, or scaling_max_freq.
+-This is due to "turbo boost" available on recent Intel processors. If certain
+-conditions are met the BIOS can achieve a slightly higher speed than requested
+-by OSPM. An example:
+-
+-scaling_cur_freq	: 2933000
+-cpuinfo_cur_freq	: 3196000
+-
+-B) There is a round-off error associated with the cpuinfo_cur_freq value.
+-Since the driver obtains the current frequency as a "percentage" (%) of the
+-nominal frequency from the BIOS, sometimes, the values displayed by
+-scaling_cur_freq and cpuinfo_cur_freq may not match. An example:
+-
+-scaling_cur_freq	: 1600000
+-cpuinfo_cur_freq	: 1583000
+-
+-In this example, the nominal frequency is 2933 MHz. The driver obtains the
+-current frequency, cpuinfo_cur_freq, as 54% of the nominal frequency:
+-
+-	54% of 2933 MHz = 1583 MHz
+-
+-Nominal frequency is the maximum frequency of the processor, and it usually
+-corresponds to the frequency of the P0 P-state.
+-
+-2.4 related_cpus:
+------------------
+-The related_cpus field is identical to affected_cpus.
+-
+-affected_cpus	: 4
+-related_cpus	: 4
+-
+-Currently, the PCC driver does not evaluate _PSD. The platforms that support
+-PCC do not implement SW_ALL. So OSPM doesn't need to perform any coordination
+-to ensure that the same frequency is requested of all dependent CPUs.
+-
+-3. Caveats:
+------------
+-The "cpufreq_stats" module in its present form cannot be loaded and
+-expected to work with the PCC driver. Since the "cpufreq_stats" module
+-provides information wrt each P-state, it is not applicable to the PCC driver.
+
+
 
