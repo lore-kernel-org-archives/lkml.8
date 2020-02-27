@@ -2,51 +2,53 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD87C3F363
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A65ABC52D5A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB75820801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E8F124656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812122;
-	bh=fgE+TdDt7YBkekHm++IJhKrdcd8VIaBr7KT4k0f+Da4=;
+	s=default; t=1582812162;
+	bh=4Q9zxIWr3nzH1lCkmXbXCZriRxQ09zVPUbdUTtpjbjc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YGbHik/Ed5lClHaWj5Nxq4iGXztWqD8tsgTU7KPTiXyR5OD5qZEgge2VwP5z9e2dB
-	 kBYqFi1U0Z1Q/28K1FCYWC3q314/flfdX3goj3encsW7u3NUbBpwJ1smk+pO3J5v+/
-	 7iHSECZ3vPxRvohWudy1MKQ7p+L7z0MRk6I+4t5Y=
+	b=SbuIabOlEwE8IA+qdEy/gsb3ROaHs5M8wgI4laXP0yFRe0OCUY5BVrPQ2q+FvardA
+	 Jwejm+LuNcE1SgxOUdsrid3yZXaDxU1r5yeTSr3z8MgLGnqwF0bEVoO2volsW+odOk
+	 B2FKCnM/vN5r1ttjaIil3Sff/DDVIuQLrKlvgMyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733036AbgB0OCA (ORCPT
+        id S1733174AbgB0OCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:02:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36346 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:02:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732802AbgB0OB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:01:58 -0500
+        id S1733170AbgB0OCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:02:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2499246A0;
-        Thu, 27 Feb 2020 14:01:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4543A20578;
+        Thu, 27 Feb 2020 14:02:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812118;
-        bh=fgE+TdDt7YBkekHm++IJhKrdcd8VIaBr7KT4k0f+Da4=;
+        s=default; t=1582812156;
+        bh=4Q9zxIWr3nzH1lCkmXbXCZriRxQ09zVPUbdUTtpjbjc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R9Ky4NGfK5zqOx326oAwR3+lK5OsmrTFKS9A7HKAWQwOgd/aqyN4GZWGYKY2VPP8h
-         G89o0gmPJUkYGRHzP+kTqE5aXiPNijxhiv+DHDtz/a4A+wk90fYSV2bW/hvqrYfSsr
-         OQI6hdXfsGk8yIU5I3Q+yYP1z5h1zps8wFiHEF30=
+        b=GCswms/94mMBOlbwFEGK7opSydTkzR1SfUiglRZ8CDCdKY+aNVLxnR+cj14HRmAMk
+         rUXyRjon0ZkRe7Xle+cD9SSmRhZSLVd+nmvRsxwlfvHN67yxB84dcmTXDlmMCIan/O
+         gEEDiSq8oGu1Ny3NQjvtZ4mEIKcCJoOOiO1//WQo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Tyler Hicks <code@tyhicks.com>
-Subject: [PATCH 4.14 228/237] ecryptfs: replace BUG_ON with error handling code
-Date:   Thu, 27 Feb 2020 14:37:22 +0100
-Message-Id: <20200227132312.890707488@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 4.14 237/237] s390/mm: Explicitly compare PAGE_DEFAULT_KEY against zero in storage_key_init_range
+Date:   Thu, 27 Feb 2020 14:37:31 +0100
+Message-Id: <20200227132313.499491929@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -59,39 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit 2c2a7552dd6465e8fde6bc9cccf8d66ed1c1eb72 upstream.
+commit 380324734956c64cd060e1db4304f3117ac15809 upstream.
 
-In crypt_scatterlist, if the crypt_stat argument is not set up
-correctly, the kernel crashes. Instead, by returning an error code
-upstream, the error is handled safely.
+Clang warns:
 
-The issue is detected via a static analysis tool written by us.
+ In file included from ../arch/s390/purgatory/purgatory.c:10:
+ In file included from ../include/linux/kexec.h:18:
+ In file included from ../include/linux/crash_core.h:6:
+ In file included from ../include/linux/elfcore.h:5:
+ In file included from ../include/linux/user.h:1:
+ In file included from ../arch/s390/include/asm/user.h:11:
+ ../arch/s390/include/asm/page.h:45:6: warning: converting the result of
+ '<<' to a boolean always evaluates to false
+ [-Wtautological-constant-compare]
+         if (PAGE_DEFAULT_KEY)
+            ^
+ ../arch/s390/include/asm/page.h:23:44: note: expanded from macro
+ 'PAGE_DEFAULT_KEY'
+ #define PAGE_DEFAULT_KEY        (PAGE_DEFAULT_ACC << 4)
+                                                  ^
+ 1 warning generated.
 
-Fixes: 237fead619984 (ecryptfs: fs/Makefile and fs/Kconfig)
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Tyler Hicks <code@tyhicks.com>
+Explicitly compare this against zero to silence the warning as it is
+intended to be used in a boolean context.
+
+Fixes: de3fa841e429 ("s390/mm: fix compile for PAGE_DEFAULT_KEY != 0")
+Link: https://github.com/ClangBuiltLinux/linux/issues/860
+Link: https://lkml.kernel.org/r/20200214064207.10381-1-natechancellor@gmail.com
+Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ecryptfs/crypto.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/s390/include/asm/page.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/ecryptfs/crypto.c
-+++ b/fs/ecryptfs/crypto.c
-@@ -339,8 +339,10 @@ static int crypt_scatterlist(struct ecry
- 	struct extent_crypt_result ecr;
- 	int rc = 0;
+--- a/arch/s390/include/asm/page.h
++++ b/arch/s390/include/asm/page.h
+@@ -42,7 +42,7 @@ void __storage_key_init_range(unsigned l
  
--	BUG_ON(!crypt_stat || !crypt_stat->tfm
--	       || !(crypt_stat->flags & ECRYPTFS_STRUCT_INITIALIZED));
-+	if (!crypt_stat || !crypt_stat->tfm
-+	       || !(crypt_stat->flags & ECRYPTFS_STRUCT_INITIALIZED))
-+		return -EINVAL;
-+
- 	if (unlikely(ecryptfs_verbosity > 0)) {
- 		ecryptfs_printk(KERN_DEBUG, "Key size [%zd]; key:\n",
- 				crypt_stat->key_size);
+ static inline void storage_key_init_range(unsigned long start, unsigned long end)
+ {
+-	if (PAGE_DEFAULT_KEY)
++	if (PAGE_DEFAULT_KEY != 0)
+ 		__storage_key_init_range(start, end);
+ }
+ 
 
 
