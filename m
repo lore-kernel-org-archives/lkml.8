@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1457C3F379
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B02EC35E1C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D70424656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3675320801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812582;
-	bh=j7Esz9MRrziFaKvbegGmJ2sP8Zk9oZqygIPzkHsLPYc=;
+	s=default; t=1582812502;
+	bh=wgwUsXD3MhMy864LF60dbSO9NBJsQUwXPuA+0vferc0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sE6edXv9F8RylsLSlaoqG2xbWkCYN1pRDCAM2GtYUnOyF5CBPSHl1JoummQqROx/C
-	 a2BQHc+RpolitgmQunjh4uh92c8QU5G7w9gYvWqa8pMcGe6fPlgDk+YEYzXiX2zEEh
-	 B2YtTE7b1fkmAbJmIUGhNIyFRUqPYG3b3iEXl8y4=
+	b=GWaHdTzgaVj1qBf7HRgf0GipNPbf/S+SGdsbaMj4VJid4UspMoDhZbI4K55vUEVHg
+	 v1renDBGndZ/y9bH2N1967vHGcvluAaWMNmP9Z9IK0G0mFEHLTnCfVRiGfL9okwdET
+	 7htTjLbR7jJnca3s83ZE4gwhXmchuQKjwFac+erE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388415AbgB0OJl (ORCPT
+        id S2388239AbgB0OIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:09:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47626 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:08:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387491AbgB0OJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:09:38 -0500
+        id S2388227AbgB0OIS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:08:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53A3D20578;
-        Thu, 27 Feb 2020 14:09:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6ED1B20801;
+        Thu, 27 Feb 2020 14:08:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812577;
-        bh=j7Esz9MRrziFaKvbegGmJ2sP8Zk9oZqygIPzkHsLPYc=;
+        s=default; t=1582812497;
+        bh=wgwUsXD3MhMy864LF60dbSO9NBJsQUwXPuA+0vferc0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fYN6v2kJNnI9GnLiEtMGDzFPDqChER8Vh5EdSJmqvrF9kKw6KCDMcQIAMNCdhnVaN
-         TNJkzuopPukeoJf7kJmvaUoMDWQP3HaO9YqY9SVAJfGssuhdye/saWJg5lCI9yzqML
-         kX6PabOPcq7aIDtAfndZ6i8IYTgkaZneqy9uGcrA=
+        b=pQ9Yqxm8Q0RX9q29+/hIYkIHCw5//DiRbJBLqypogg34pvsdkSsEsq9WtZPfmIN5i
+         xKy5g7TmIJRl0atEF/x+xXej1lYROwBqfx1T5sjRZXlu6Q3wew1SiFd++IpO+ZPRn/
+         yAu1vpxDXSVmOB6cVJ+IRdeaplXPlLF02vJxBFNY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiaojie Yuan <xiaojie.yuan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.4 072/135] drm/amdgpu/gfx10: disable gfxoff when reading rlc clock
-Date:   Thu, 27 Feb 2020 14:36:52 +0100
-Message-Id: <20200227132240.183783419@linuxfoundation.org>
+        stable@vger.kernel.org, Pietro Oliva <pietroliva@gmail.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>
+Subject: [PATCH 5.4 040/135] staging: rtl8723bs: Fix potential security hole
+Date:   Thu, 27 Feb 2020 14:36:20 +0100
+Message-Id: <20200227132234.923912732@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -59,37 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Larry Finger <Larry.Finger@lwfinger.net>
 
-commit b08c3ed609aabc4e76e74edc4404f0c26279d7ed upstream.
+commit ac33597c0c0d1d819dccfe001bcd0acef7107e7c upstream.
 
-Otherwise we readback all ones.  Fixes rlc counter
-readback while gfxoff is active.
+In routine rtw_hostapd_ioctl(), the user-controlled p->length is assumed
+to be at least the size of struct ieee_param size, but this assumption is
+never checked. This could result in out-of-bounds read/write on kernel
+heap in case a p->length less than the size of struct ieee_param is
+specified by the user. If p->length is allowed to be greater than the size
+of the struct, then a malicious user could be wasting kernel memory.
+Fixes commit 554c0a3abf216 ("0taging: Add rtl8723bs sdio wifi driver").
 
-Reviewed-by: Xiaojie Yuan <xiaojie.yuan@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+Reported by: Pietro Oliva <pietroliva@gmail.com>
+Cc: Pietro Oliva <pietroliva@gmail.com>
+Cc: Stable <stable@vger.kernel.org>
+Fixes 554c0a3abf216 ("0taging: Add rtl8723bs sdio wifi driver").
+Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
+Link: https://lore.kernel.org/r/20200210180235.21691-3-Larry.Finger@lwfinger.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/staging/rtl8723bs/os_dep/ioctl_linux.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-@@ -3977,11 +3977,13 @@ static uint64_t gfx_v10_0_get_gpu_clock_
- {
- 	uint64_t clock;
+--- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
++++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+@@ -4213,7 +4213,7 @@ static int rtw_hostapd_ioctl(struct net_
  
-+	amdgpu_gfx_off_ctrl(adev, false);
- 	mutex_lock(&adev->gfx.gpu_clock_mutex);
- 	WREG32_SOC15(GC, 0, mmRLC_CAPTURE_GPU_CLOCK_COUNT, 1);
- 	clock = (uint64_t)RREG32_SOC15(GC, 0, mmRLC_GPU_CLOCK_COUNT_LSB) |
- 		((uint64_t)RREG32_SOC15(GC, 0, mmRLC_GPU_CLOCK_COUNT_MSB) << 32ULL);
- 	mutex_unlock(&adev->gfx.gpu_clock_mutex);
-+	amdgpu_gfx_off_ctrl(adev, true);
- 	return clock;
- }
  
+ 	/* if (p->length < sizeof(struct ieee_param) || !p->pointer) { */
+-	if (!p->pointer) {
++	if (!p->pointer || p->length != sizeof(*param)) {
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
 
 
