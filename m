@@ -2,104 +2,92 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B95F8C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFFA6C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87AAB246A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:49:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FFE52469B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:49:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FGNJJ8TI"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="BzdLtYFZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729978AbgB0Xta (ORCPT
+        id S1730050AbgB0Xtm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 18:49:30 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:40622 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729812AbgB0Xta (ORCPT
+        Thu, 27 Feb 2020 18:49:42 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40075 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729982AbgB0Xtm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 18:49:30 -0500
-Received: by mail-pj1-f65.google.com with SMTP id 12so467444pjb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 15:49:29 -0800 (PST)
+        Thu, 27 Feb 2020 18:49:42 -0500
+Received: by mail-pf1-f194.google.com with SMTP id b185so686511pfb.7
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 15:49:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0ZF5PxVG84+TcO4AGDk4hTXuR0g3a2lAghAPZZezWAQ=;
-        b=FGNJJ8TIZbEQeDUTHLzthiH7gYzaIpI1ZJA3XXho7n4IcK4vq2ltzAcqbjsmvYzX36
-         zD7ixqbETkWw2eDR1zKFmbrGVME7/TxjiJ0ZdP1+cA6LI4TSIDmovCW1qDEUHfRwqOiE
-         3iTQ81jQ5pn4CkXS5zbAphSmUx4QVkdWj1krgdBnAPuUm+/gujo32b14iqFpETsrDuv4
-         Fbafx5Sq6NfItx31yjOO/mkBiQ8vkSiGQs+dHET8yMBirlarM/xa73kVEcbN39cFa9I4
-         Vu3UDVIghVT5PWwEcnxXhBM+UPjN3nkVWg96faRN9plrIZg77Yyl4UfYIAmRMQ/hGQWD
-         YzYQ==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=voq4AFbGLoJaLwILK78n9USNIr2B9fMN776ggMuIHko=;
+        b=BzdLtYFZmrbXcvLmMVD95jbyfyAzEY2NDoGBqjx7UWbhXwZfjoPtFIPx7oeWZspHu7
+         mYEBjwLCg1jkXqIoOjobTJfzaocFvkLmPU3tu68hswiSJwtu3sIQBfw+mNwdeqXC0WfP
+         1dc0d6QTEA08H3F0ZfHJERF/S1V9ZRyDtOc2w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0ZF5PxVG84+TcO4AGDk4hTXuR0g3a2lAghAPZZezWAQ=;
-        b=lgU8EoBu/zL7yJ4E8fZLOXMidS9ecSfhe91LLXx3XJudfBVXXim3UsZpp3+kk8SU23
-         tIpouBEqxlDYhAHf0UI/yR0surMQlrqMFaD1t/Hr8WBZ3HUswXnGgAx8ABFs0xTiYdVE
-         wx2EKMDSQuiJQN5LBOFB+/NMXgRrClnm1cStvB+Yvm/sBvmMSVeU3DmR1gAaJ8QFXzTz
-         WU6iLiY3dF4O0BI7zrEGTZQuQ90e0oe5o9PE/OY06Cj/FAFnBTuBCyFKPqwW8tcN6/Td
-         d3G0/p+wS0sH1+fqEIBYhXPjjHJFCeS47yC55sodXf3m3xIp6VnsBkOiogiw7mLZUbuP
-         JHow==
-X-Gm-Message-State: APjAAAXTPdXP4+n8yn27o2vaSai2pSvJefvCzWAC4XEOqi5O48woQtBU
-        3Vu8xXb4wiA8vAqDfDRf8xrSzg7tqvaTLXJG/l3OIw==
-X-Google-Smtp-Source: APXvYqw0egRKbJSIQcP/k3vUTH6RVXMgfH+NgFS+3a2pz81BzPEZzxWwvZzJpQRmMCe+9YjvwY5iOzKNBRHn/yxwaAo=
-X-Received: by 2002:a17:902:760e:: with SMTP id k14mr1194526pll.119.1582847368858;
- Thu, 27 Feb 2020 15:49:28 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=voq4AFbGLoJaLwILK78n9USNIr2B9fMN776ggMuIHko=;
+        b=XjPWH0C6muk0qMmvw3cOzZNR3EQk2E763E1MTy18qdflkd7BEMxCuQi5TPG8aQ1IMB
+         J5prP8cJLVGLDTe7NLcKI9IAsHViccNU0BvPmlbed98C5t8wjy9prIob+uOzJJ4BetGI
+         loVNNQHt7USU6vO+wtizjAnSXikweovkSuAz/KOMDPlSnUuNVr1pereaOJa3mrd8Icc3
+         EKglGjJ+PseLv3Rp2Jsqet4jzQwvCiCaCD1LTukfyMJgcC6mqsiLOUXmITQV8X/98SoO
+         N23RW3wofehjx3fPLudh5y1yjsTG9uWVu3KO/ekqWkfalw8WnWkjRB1pwvS9w8b0F/0a
+         g/PQ==
+X-Gm-Message-State: APjAAAX3Izf8UayuvNVSkHQfkpAimCv4bY0pVUXO3tQEokUejS0o3KBu
+        ZLixpxHaEzKgUlkXQpOK6OQivVzHAVWojdm0
+X-Google-Smtp-Source: APXvYqyOBtvgI5OkeymySdZKA1Mb7B0bYOanuRrwvcdmZeaG5Nea8oS2U7Hne4aCta6YoGOs31zJ8g==
+X-Received: by 2002:a63:ed16:: with SMTP id d22mr1867585pgi.314.1582847381191;
+        Thu, 27 Feb 2020 15:49:41 -0800 (PST)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id x190sm8640465pfb.96.2020.02.27.15.49.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Feb 2020 15:49:40 -0800 (PST)
+Subject: Re: [PATCH] exec: remove comparision of variable i_size of type
+ loff_t against SIZE_MAX
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com
+References: <20200227233133.10383-1-scott.branden@broadcom.com>
+ <20200227234055.GF23230@ZenIV.linux.org.uk>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <588cad53-0099-b95a-d228-f2523774956a@broadcom.com>
+Date:   Thu, 27 Feb 2020 15:49:38 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <1581988104-16628-1-git-send-email-wanpengli@tencent.com>
- <1581988104-16628-2-git-send-email-wanpengli@tencent.com> <CANRm+CyHmdbsw572x=8=GYEOw-YQCXhz89i9+VEmROBVAu+rvg@mail.gmail.com>
- <CAKwvOd=bDW6K3PC7S5fiG5n_kwgqhbnVsBHUSGgYaPQY-L_YmA@mail.gmail.com>
- <87mu95jxy7.fsf@vitty.brq.redhat.com> <9506da2d-53fb-c4a3-55b4-fb78e185e9c2@redhat.com>
-In-Reply-To: <9506da2d-53fb-c4a3-55b4-fb78e185e9c2@redhat.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 27 Feb 2020 15:49:17 -0800
-Message-ID: <CAKwvOd=tOURgAFUNQPX3DDqd-eAbZ9kMmyksXEUK-a2N_Gky1g@mail.gmail.com>
-Subject: Re: [PATCH RESEND v2 2/2] KVM: Pre-allocate 1 cpumask variable per
- cpu for both pv tlb and pv ipis
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Wanpeng Li <kernellwp@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200227234055.GF23230@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 5:27 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 26/02/20 14:10, Vitaly Kuznetsov wrote:
-> > Nick Desaulniers <ndesaulniers@google.com> writes:
-> >
-> >> (putting Paolo in To: field, in case email filters are to blame.
-> >> Vitaly, maybe you could ping Paolo internally?)
-> >>
-> >
-> > I could, but the only difference from what I'm doing right now would
-> > proabbly be the absence of non-@redaht.com emails in To/Cc: fields of
-> > this email :-)
-> >
-> > Do we want this fix for one of the last 5.6 RCs or 5.7 would be fine?
-> > Personally, I'd say we're not in a great hurry and 5.7 is OK.
->
-> I think we can do it for 5.6, but we're not in a great hurry. :)  The
-> rc4 pull request was already going to be relatively large and I had just
-> been scolded by Linus so I postponed this, but I am going to include it
-> this week.
 
-No rush; soak time is good.
--- 
-Thanks,
-~Nick Desaulniers
+
+On 2020-02-27 3:40 p.m., Al Viro wrote:
+> On Thu, Feb 27, 2020 at 03:31:33PM -0800, Scott Branden wrote:
+>> Remove comparision of (i_size > SIZE_MAX).
+>> i_size is of type loff_t and can not be great than SIZE_MAX (~(size_t)0).
+> include/linux/types.h:46:typedef __kernel_loff_t                loff_t;
+> include/uapi/asm-generic/posix_types.h:88:typedef long long     __kernel_loff_t;
+>
+> And boxen with size_t smaller than long long do exist.  Anything
+> 32bit will qualify.  Pick any such and check that yourself...
+Thanks for the immediate responses.  I'm glad I sent this patch out to 
+understand the check is as such.
+Is there some attribute we can add so such issues are not reported 
+against static analysis tools such as coverity?
