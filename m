@@ -2,50 +2,51 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D82CC54FEE
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD6AC54FF0
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BF9224656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA8A224656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:32:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813924;
-	bh=snVZpr8Tc1ya9pgap+qDI7pE4d1cCVzZv7mgLWud5jc=;
+	s=default; t=1582813928;
+	bh=vf+BHOk1D3Q/VYSnXXbrInsyNf9aOGqq0TC375Y6d74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q7MIRRNV7uIA4jpEckdIfDng8nyElpGuuhQBLEc80fVguzZHdXE8fVg8H/Vhapw5x
-	 ugEGRBcEHBL4Y/vExpGTnmIUiAKdcr3bi0skibJOCVGfn33ZAEJQV2+vMRi2DOb73W
-	 8bauxuOzhUPp9CP6jG9pUkkbpCYKQxLX5+zzDk/g=
+	b=VQR7vYcER0XrZUMsk0kwPWO6RHZnzVBnRGsfrfJFEVDqfLIRND4kP9J89Nu8gwpHa
+	 jGBx0GO5g7u+bzkLwcO1ThtAo5ld8xy/jjUJAfkfhL2cIRZ4vVrM0O9VTfe1JzArW5
+	 +8/geEgWOfPlk9YMqXqPmolubFMZzsxITT4iCKW4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733163AbgB0OCg (ORCPT
+        id S1733153AbgB0OCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:02:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37228 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:02:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733137AbgB0OCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:02:32 -0500
+        id S1733130AbgB0OC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:02:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25C4F20578;
-        Thu, 27 Feb 2020 14:02:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E020524656;
+        Thu, 27 Feb 2020 14:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812151;
-        bh=snVZpr8Tc1ya9pgap+qDI7pE4d1cCVzZv7mgLWud5jc=;
+        s=default; t=1582812148;
+        bh=vf+BHOk1D3Q/VYSnXXbrInsyNf9aOGqq0TC375Y6d74=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BhKy47Wphif89SbAPNxa3gMlpX4cH35siByvnJ6aFzb5mC3gc09eOeA3jgCb7WLpz
-         Pzj9UPK+wSQPXab9efg1zaz1k1/mAC+AR5r9juTxu0JkLir22TZXeLH8fl/X+PEkcw
-         noQapM5GkvvTDIRTnO7HkVCKv9g0sxoAXFFgRIYI=
+        b=CaXRZhesZNEUpP7jUpvG9oskxo/938hG8IZA9DdMtnofk2BPeBZL+HaMmYOotgYgI
+         SrbQzRQUfCJEqtllAgGyWbkhlA5qrW/VxIOXtTaAAh9cLHFZFbcsHlG7IU42VJMNHo
+         I14kIBqFXt4JOPnDGy1IDch1UpElBHzc/EcOEONQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: [PATCH 4.14 193/237] tty/serial: atmel: manage shutdown in case of RS485 or ISO7816 mode
-Date:   Thu, 27 Feb 2020 14:36:47 +0100
-Message-Id: <20200227132310.526193773@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 202/237] VT_RESIZEX: get rid of field-by-field copyin
+Date:   Thu, 27 Feb 2020 14:36:56 +0100
+Message-Id: <20200227132311.129561837@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -58,36 +59,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Ferre <nicolas.ferre@microchip.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-commit 04b5bfe3dc94e64d0590c54045815cb5183fb095 upstream.
+[ Upstream commit 1b3bce4d6bf839304a90951b4b25a5863533bf2a ]
 
-In atmel_shutdown() we call atmel_stop_rx() and atmel_stop_tx() functions.
-Prevent the rx restart that is implemented in RS485 or ISO7816 modes when
-calling atmel_stop_tx() by using the atomic information tasklet_shutdown
-that is already in place for this purpose.
-
-Fixes: 98f2082c3ac4 ("tty/serial: atmel: enforce tasklet init and termination sequences")
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200210152053.8289-1-nicolas.ferre@microchip.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/atmel_serial.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/tty/vt/vt_ioctl.c | 68 ++++++++++++++++-----------------------
+ 1 file changed, 27 insertions(+), 41 deletions(-)
 
---- a/drivers/tty/serial/atmel_serial.c
-+++ b/drivers/tty/serial/atmel_serial.c
-@@ -498,7 +498,8 @@ static void atmel_stop_tx(struct uart_po
- 	atmel_uart_writel(port, ATMEL_US_IDR, atmel_port->tx_done_mask);
+diff --git a/drivers/tty/vt/vt_ioctl.c b/drivers/tty/vt/vt_ioctl.c
+index 7b34b0ddbf0e0..be7990548afef 100644
+--- a/drivers/tty/vt/vt_ioctl.c
++++ b/drivers/tty/vt/vt_ioctl.c
+@@ -847,58 +847,44 @@ int vt_ioctl(struct tty_struct *tty,
  
- 	if (atmel_uart_is_half_duplex(port))
--		atmel_start_rx(port);
-+		if (!atomic_read(&atmel_port->tasklet_shutdown))
-+			atmel_start_rx(port);
+ 	case VT_RESIZEX:
+ 	{
+-		struct vt_consize __user *vtconsize = up;
+-		ushort ll,cc,vlin,clin,vcol,ccol;
++		struct vt_consize v;
+ 		if (!perm)
+ 			return -EPERM;
+-		if (!access_ok(VERIFY_READ, vtconsize,
+-				sizeof(struct vt_consize))) {
+-			ret = -EFAULT;
+-			break;
+-		}
++		if (copy_from_user(&v, up, sizeof(struct vt_consize)))
++			return -EFAULT;
+ 		/* FIXME: Should check the copies properly */
+-		__get_user(ll, &vtconsize->v_rows);
+-		__get_user(cc, &vtconsize->v_cols);
+-		__get_user(vlin, &vtconsize->v_vlin);
+-		__get_user(clin, &vtconsize->v_clin);
+-		__get_user(vcol, &vtconsize->v_vcol);
+-		__get_user(ccol, &vtconsize->v_ccol);
+-		vlin = vlin ? vlin : vc->vc_scan_lines;
+-		if (clin) {
+-			if (ll) {
+-				if (ll != vlin/clin) {
+-					/* Parameters don't add up */
+-					ret = -EINVAL;
+-					break;
+-				}
+-			} else 
+-				ll = vlin/clin;
++		if (!v.v_vlin)
++			v.v_vlin = vc->vc_scan_lines;
++		if (v.v_clin) {
++			int rows = v.v_vlin/v.v_clin;
++			if (v.v_rows != rows) {
++				if (v.v_rows) /* Parameters don't add up */
++					return -EINVAL;
++				v.v_rows = rows;
++			}
+ 		}
+-		if (vcol && ccol) {
+-			if (cc) {
+-				if (cc != vcol/ccol) {
+-					ret = -EINVAL;
+-					break;
+-				}
+-			} else
+-				cc = vcol/ccol;
++		if (v.v_vcol && v.v_ccol) {
++			int cols = v.v_vcol/v.v_ccol;
++			if (v.v_cols != cols) {
++				if (v.v_cols)
++					return -EINVAL;
++				v.v_cols = cols;
++			}
+ 		}
  
- }
- 
+-		if (clin > 32) {
+-			ret =  -EINVAL;
+-			break;
+-		}
+-		    
++		if (v.v_clin > 32)
++			return -EINVAL;
++
+ 		for (i = 0; i < MAX_NR_CONSOLES; i++) {
+ 			if (!vc_cons[i].d)
+ 				continue;
+ 			console_lock();
+-			if (vlin)
+-				vc_cons[i].d->vc_scan_lines = vlin;
+-			if (clin)
+-				vc_cons[i].d->vc_font.height = clin;
++			if (v.v_vlin)
++				vc_cons[i].d->vc_scan_lines = v.v_vlin;
++			if (v.v_clin)
++				vc_cons[i].d->vc_font.height = v.v_clin;
+ 			vc_cons[i].d->vc_resize_user = 1;
+-			vc_resize(vc_cons[i].d, cc, ll);
++			vc_resize(vc_cons[i].d, v.v_cols, v.v_rows);
+ 			console_unlock();
+ 		}
+ 		break;
+-- 
+2.20.1
+
 
 
