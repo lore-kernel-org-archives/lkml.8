@@ -2,158 +2,141 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D6DC4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED7DC4BA3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 732962072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 274B72072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:53:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Li4JLTNf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728467AbgB0HwS (ORCPT
+        id S1728497AbgB0Hx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 02:52:18 -0500
-Received: from mga06.intel.com ([134.134.136.31]:44578 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728389AbgB0HwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 02:52:17 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 23:52:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,491,1574150400"; 
-   d="scan'208";a="241965935"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 26 Feb 2020 23:52:17 -0800
-Received: from [10.226.39.43] (unknown [10.226.39.43])
-        by linux.intel.com (Postfix) with ESMTP id B8CFA580544;
-        Wed, 26 Feb 2020 23:52:14 -0800 (PST)
-Subject: Re: [PATCH v3 3/3] phy: intel: Add driver support for Combophy
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kishon@ti.com, robh@kernel.org, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@intel.com
-References: <cover.1582709320.git.eswara.kota@linux.intel.com>
- <48dbbe705a1f22fb9e088827ca0be149e8fbcd85.1582709320.git.eswara.kota@linux.intel.com>
- <20200226144147.GQ10400@smile.fi.intel.com>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <371e50f1-cab6-56f4-d12d-371d1b1f9c67@linux.intel.com>
-Date:   Thu, 27 Feb 2020 15:52:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Thu, 27 Feb 2020 02:53:29 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33023 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727702AbgB0Hx2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 02:53:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582790007;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QdZSZmeTi2IR4EjFeqNNXbBpQhhR9pgfAjrS+j97XLk=;
+        b=Li4JLTNf/qFaP6bjyZYJ8lNWvdtzd/mK/bhswLIT6pzlT9h/IixeoubKxdHd1yZVW5QKWy
+        F6UqjEklHWam+By/PNRvTiY9PzxjDUKYrtTQw+5muTwEm47wPyw9GGibbWyG9EEvzAKvpj
+        gal12sMYOjTJrIuvqj0WouRSgAG5OYo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-452-bVGe7fi4PHm8nrUFOfsItw-1; Thu, 27 Feb 2020 02:53:24 -0500
+X-MC-Unique: bVGe7fi4PHm8nrUFOfsItw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 69614802561;
+        Thu, 27 Feb 2020 07:53:23 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-150.ams2.redhat.com [10.36.116.150])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0B10F19C58;
+        Thu, 27 Feb 2020 07:53:22 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id B2A621744A; Thu, 27 Feb 2020 08:53:21 +0100 (CET)
+Date:   Thu, 27 Feb 2020 08:53:21 +0100
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Thomas =?utf-8?Q?Hellstr=C3=B6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     dri-devel@lists.freedesktop.org, Guillaume.Gardet@arm.com,
+        David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org, gurchetansingh@chromium.org,
+        tzimmermann@suse.de
+Subject: Re: [PATCH v5 1/3] drm/shmem: add support for per object caching
+ flags.
+Message-ID: <20200227075321.ki74hfjpnsqv2yx2@sirius.home.kraxel.org>
+References: <20200226154752.24328-1-kraxel@redhat.com>
+ <20200226154752.24328-2-kraxel@redhat.com>
+ <f1afba4b-9c06-48a3-42c7-046695947e91@shipmail.org>
 MIME-Version: 1.0
-In-Reply-To: <20200226144147.GQ10400@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <f1afba4b-9c06-48a3-42c7-046695947e91@shipmail.org>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+  Hi,
 
-Thanks Andy for reviewing and giving the inputs.
-I will update them as per your comments, but for couple of cases of i 
-have a different opinion. Please check and give your inputs.
+> > +		if (!shmem->map_cached)
+> > +			prot =3D pgprot_writecombine(prot);
+> >   		shmem->vaddr =3D vmap(shmem->pages, obj->size >> PAGE_SHIFT,
+> > -				    VM_MAP, pgprot_writecombine(PAGE_KERNEL));
+> > +				    VM_MAP, prot)
+>=20
+>=20
+> Wouldn't a vmap with pgprot_writecombine() create conflicting mappings =
+with
+> the linear kernel map which is not write-combined?
 
-On 2/26/2020 10:41 PM, Andy Shevchenko wrote:
-> On Wed, Feb 26, 2020 at 06:09:53PM +0800, Dilip Kota wrote:
->> Combophy subsystem provides PHYs for various
->> controllers like PCIe, SATA and EMAC.
-> Thanks for an update, my comments below.
->
-> ...
->
->> +config PHY_INTEL_COMBO
->> +	bool "Intel Combo PHY driver"
->> +	depends on OF && HAS_IOMEM && (X86 || COMPILE_TEST)
-> I guess it would be better to have like this:
->
-> 	depends on X86 || COMPILE_TEST
-> 	depends on OF && HAS_IOMEM
->
-> But do you still have a dependency to OF?
-Yes, OF is not required. I will remove it.
->
->> +	select MFD_SYSCON
->> +	select GENERIC_PHY
->> +	select REGMAP
-> ...
->
->> + * Copyright (C) 2019 Intel Corporation.
-> 2019-2020
-My bad. I will update it.
->
-> ...
->
-...
->> +};
->> +
->> +enum {
->> +	PHY_0,
->> +	PHY_1,
->> +	PHY_MAX_NUM,
-> But here we don't need it since it's a terminator line.
-> Ditto for the rest of enumerators with a terminator / max entry.
+I think so, yes.
 
-Sure i will remove them.
+> Or do you change the linear kernel map of the shmem pages somewhere?
 
-To be meaningful, i will remove the max entry for the enums representing 
-the value of register bitfields.
+Havn't seen anything doing so while browsing the code.
 
-...
-> ...
->
->> +static int intel_cbphy_iphy_dt_parse(struct intel_combo_phy *cbphy,
-> dt -> fwnode
-> Ditto for other similar function names.
-Sure, it looks appropriate for intel_cbphy_iphy_dt_parse() -> 
-intel_cbphy_iphy_fwnode_parse().
-Whereas for intel_cbphy_dt_parse() i will keep it unchanged, because it 
-is calling devm_*, devm_platform_*, fwnode_* APIs to traverse dt node.
->
->> +				     struct fwnode_handle *fwnode, int idx)
->> +{
->> +	dev = get_dev_from_fwnode(fwnode);
-> I don't see where you drop reference count to the struct device object.
+> vmap bypassess at least the
+> x86 PAT core mapping consistency check and this could potentially cause
+> spuriously overwritten memory.
 
-I will add it. Thanks for pointing it.
+Well, I don't think the linear kernel map is ever used to access the
+shmem gem objects.  So while this isn't exactly clean it shouldn't
+cause problems in practice.
 
-...
+Suggestions how to fix that?
 
-> ...
->
->> +	struct fwnode_reference_args ref;
->> +	struct device *dev = cbphy->dev;
->> +	struct fwnode_handle *fwnode;
->> +	struct platform_device *pdev;
->> +	int i, ret;
->> +	u32 prop;
-> I guess the following would be better:
-In the v2 patch, for int i = 0 you mentioned to do initialization at the 
-user, instead of doing at declaration.
-So i followed the same for "pdev" and "fwnode" which are being used 
-after few lines of the code . It looked good in the perspective of code 
-readability.
->
-> 	struct device *dev = cbphy->dev;
-> 	struct platform_device *pdev = to_platform_device(dev);
-> 	struct fwnode_handle *fwnode = dev_fwnode(dev);
-> 	struct fwnode_reference_args ref;
-> 	int i, ret;
-> 	u32 prop;
->
->> +	pdev = to_platform_device(dev);
-> See above.
->
->> +	fwnode = dev_fwnode(dev);
-> See above.
->
->
-Regards,
-Dilip
+The reason I need cachable gem object mappings for virtio-gpu is because
+we have a inconsistency between host (cached) and guest (wc) otherwise.
+
+> > +	}
+> >   	if (!shmem->vaddr) {
+> >   		DRM_DEBUG_KMS("Failed to vmap pages\n");
+> > @@ -540,7 +545,9 @@ int drm_gem_shmem_mmap(struct drm_gem_object *obj=
+, struct vm_area_struct *vma)
+> >   	}
+> >   	vma->vm_flags |=3D VM_MIXEDMAP | VM_DONTEXPAND;
+> > -	vma->vm_page_prot =3D pgprot_writecombine(vm_get_page_prot(vma->vm_=
+flags));
+> > +	vma->vm_page_prot =3D vm_get_page_prot(vma->vm_flags);
+> > +	if (!shmem->map_cached)
+> > +		vma->vm_page_prot =3D pgprot_writecombine(vma->vm_page_prot);
+>=20
+> Same thing here. Note that vmf_insert_page() which is used by the fault
+> handler also bypasses the x86 PAT=A0 consistency check, whereas
+> vmf_insert_mixed() doesn't.
+
+vmap + mmap are consistent though, so this likewise shouldn't cause
+issues in practice.
+
+> >   	vma->vm_page_prot =3D pgprot_decrypted(vma->vm_page_prot);
+>=20
+> At least with SME or SEV encryption, where shmem memory has its kernel =
+map
+> set to encrypted, creating conflicting mappings is explicitly disallowe=
+d.
+> BTW, why is mmap mapping decrypted while vmap isn't?
+
+Ok, that sounds like a real problem.  Have to check.
+
+cheers,
+  Gerd
+
+PS: Given we are discussing pre-existing issues in the code I think the
+    series can be merged nevertheless.
 
