@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D284C54FE1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCF7C54FE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E571124656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84E1B24688
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813815;
-	bh=eXF2rV6X3gjuGXC82hTXXdpx13WqeW4mL0pDL5T2YyQ=;
+	s=default; t=1582813823;
+	bh=IAbXsdKThfWp5kflFnf+H5CpkjsYJ220+iv2NJURT2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MhSKKqJKg2GelPNsFpBY+X3WBPG7HW2a5/yWtNBhaeed3SQqzpDjZ5Vl9ftqN7r0d
-	 IahhtspYFoOY5EX51r4lZ3eZQGsSycYvhviTnrD04xmHoCMd+7Fm98XqKCQsJItOIa
-	 Yfw1GesLkJsuJTGWIH7rU1jsGqB06XeNxBXRob+U=
+	b=CLVGu+8I3zRB4O8hxjsPgtEQeyQ19xESXlA7N/QQGE3FuuL9R93USK1FmV9ALfZsp
+	 h/I4ReVcAmD0rx9nRStuO4MRdrhUfAVsPg6p1izcbm5P50c13bijW11l+cCFFuZAgi
+	 oVJTH7eHOoTvP/xVGn9NYDFQYaYkxe0pwgeSoY9E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387718AbgB0OFP (ORCPT
+        id S2388314AbgB0OaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:05:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41476 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:30:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387671AbgB0OE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:04:59 -0500
+        id S2387713AbgB0OFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:05:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9DAF24697;
-        Thu, 27 Feb 2020 14:04:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25EFD20801;
+        Thu, 27 Feb 2020 14:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812298;
-        bh=eXF2rV6X3gjuGXC82hTXXdpx13WqeW4mL0pDL5T2YyQ=;
+        s=default; t=1582812311;
+        bh=IAbXsdKThfWp5kflFnf+H5CpkjsYJ220+iv2NJURT2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R+Ih1VpPAI7oY9OkH3++lpQbZdwxcgiQLOhUwllNvs2P7ZAiZFNcSxHQcV4Acgjox
-         MZHwROIiOJvbiFQJBExNr/KatmRGbuavPhhrC2/RRW3R8Z46oadMA+38/aTZGvT4dj
-         v6CE/4p7oZ1F02podzPn8V/HC96G0mkJUbVMzyPE=
+        b=N4lr0BJE9XiJlvkta5RjsVc3KQLKxa9uCM3AR8euAavaAYt5LGONU5Q8toyRODWw1
+         5q+P03hHX+1yOm/FLhBpHfdtU271PO90M+BLsIIssPHCtRK/88lrk1mR0dOsafMEit
+         33DnhhgcI48Q8Z7VgJ2K1D1hdx98cHTEJrK6srUI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, edes <edes@gmx.net>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 24/97] USB: quirks: blacklist duplicate ep on Sound Devices USBPre2
-Date:   Thu, 27 Feb 2020 14:36:32 +0100
-Message-Id: <20200227132218.539987473@linuxfoundation.org>
+        stable@vger.kernel.org, Rene D Obermueller <cmdrrdo@gmail.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 4.19 19/97] xhci: Force Maximum Packet size for Full-speed bulk devices to valid range.
+Date:   Thu, 27 Feb 2020 14:36:27 +0100
+Message-Id: <20200227132217.754364763@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
 References: <20200227132214.553656188@linuxfoundation.org>
@@ -59,146 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-commit bdd1b147b8026df0e4260b387026b251d888ed01 upstream.
+commit f148b9f402ef002b57bcff3964d45abc8ffb6c3f upstream.
 
-This device has a broken vendor-specific altsetting for interface 1,
-where endpoint 0x85 is declared as an isochronous endpoint despite being
-used by interface 2 for audio capture.
+A Full-speed bulk USB audio device (DJ-Tech CTRL) with a invalid Maximum
+Packet Size of 4 causes a xHC "Parameter Error" at enumeration.
 
-Device Descriptor:
-  bLength                18
-  bDescriptorType         1
-  bcdUSB               2.00
-  bDeviceClass          239 Miscellaneous Device
-  bDeviceSubClass         2
-  bDeviceProtocol         1 Interface Association
-  bMaxPacketSize0        64
-  idVendor           0x0926
-  idProduct          0x0202
-  bcdDevice            1.00
-  iManufacturer           1 Sound Devices
-  iProduct                2 USBPre2
-  iSerial                 3 [...]
-  bNumConfigurations      1
+This is because valid Maximum packet sizes for Full-speed bulk endpoints
+are 8, 16, 32 and 64 bytes. Hosts are not required to support other values
+than these. See usb 2 specs section 5.8.3 for details.
 
-[...]
+The device starts working after forcing the maximum packet size to 8.
+This is most likely the case with other devices as well, so force the
+maximum packet size to a valid range.
 
-    Interface Descriptor:
-      bLength                 9
-      bDescriptorType         4
-      bInterfaceNumber        1
-      bAlternateSetting       3
-      bNumEndpoints           2
-      bInterfaceClass       255 Vendor Specific Class
-      bInterfaceSubClass      0
-      bInterfaceProtocol      0
-      iInterface              0
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x85  EP 5 IN
-        bmAttributes            5
-          Transfer Type            Isochronous
-          Synch Type               Asynchronous
-          Usage Type               Data
-        wMaxPacketSize     0x0126  1x 294 bytes
-        bInterval               1
-
-[...]
-
-    Interface Descriptor:
-      bLength                 9
-      bDescriptorType         4
-      bInterfaceNumber        2
-      bAlternateSetting       1
-      bNumEndpoints           1
-      bInterfaceClass         1 Audio
-      bInterfaceSubClass      2 Streaming
-      bInterfaceProtocol      0
-      iInterface              0
-      AudioStreaming Interface Descriptor:
-        bLength                 7
-        bDescriptorType        36
-        bDescriptorSubtype      1 (AS_GENERAL)
-        bTerminalLink           4
-        bDelay                  1 frames
-        wFormatTag         0x0001 PCM
-      AudioStreaming Interface Descriptor:
-        bLength                26
-        bDescriptorType        36
-        bDescriptorSubtype      2 (FORMAT_TYPE)
-        bFormatType             1 (FORMAT_TYPE_I)
-        bNrChannels             2
-        bSubframeSize           2
-        bBitResolution         16
-        bSamFreqType            6 Discrete
-        tSamFreq[ 0]         8000
-        tSamFreq[ 1]        16000
-        tSamFreq[ 2]        24000
-        tSamFreq[ 3]        32000
-        tSamFreq[ 4]        44100
-        tSamFreq[ 5]        48000
-      Endpoint Descriptor:
-        bLength                 9
-        bDescriptorType         5
-        bEndpointAddress     0x85  EP 5 IN
-        bmAttributes            5
-          Transfer Type            Isochronous
-          Synch Type               Asynchronous
-          Usage Type               Data
-        wMaxPacketSize     0x0126  1x 294 bytes
-        bInterval               4
-        bRefresh                0
-        bSynchAddress           0
-        AudioStreaming Endpoint Descriptor:
-          bLength                 7
-          bDescriptorType        37
-          bDescriptorSubtype      1 (EP_GENERAL)
-          bmAttributes         0x01
-            Sampling Frequency
-          bLockDelayUnits         2 Decoded PCM samples
-          wLockDelay         0x0000
-
-Since commit 3e4f8e21c4f2 ("USB: core: fix check for duplicate
-endpoints") USB core ignores any duplicate endpoints found during
-descriptor parsing, but in this case we need to ignore the first
-instance in order to avoid breaking the audio capture interface.
-
-Fixes: 3e4f8e21c4f2 ("USB: core: fix check for duplicate endpoints")
-Cc: stable <stable@vger.kernel.org>
-Reported-by: edes <edes@gmx.net>
-Tested-by: edes <edes@gmx.net>
-Link: https://lore.kernel.org/r/20200201105829.5682c887@acme7.acmenet
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20200203153830.26394-3-johan@kernel.org
+Cc: stable@vger.kernel.org
+Reported-by: Rene D Obermueller <cmdrrdo@gmail.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200210134553.9144-2-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/quirks.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/usb/host/xhci-mem.c |   12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/core/quirks.c
-+++ b/drivers/usb/core/quirks.c
-@@ -354,6 +354,10 @@ static const struct usb_device_id usb_qu
- 	{ USB_DEVICE(0x0904, 0x6103), .driver_info =
- 			USB_QUIRK_LINEAR_FRAME_INTR_BINTERVAL },
- 
-+	/* Sound Devices USBPre2 */
-+	{ USB_DEVICE(0x0926, 0x0202), .driver_info =
-+			USB_QUIRK_ENDPOINT_BLACKLIST },
-+
- 	/* Keytouch QWERTY Panel keyboard */
- 	{ USB_DEVICE(0x0926, 0x3333), .driver_info =
- 			USB_QUIRK_CONFIG_INTF_STRINGS },
-@@ -479,6 +483,7 @@ static const struct usb_device_id usb_am
-  * Matched for devices with USB_QUIRK_ENDPOINT_BLACKLIST.
-  */
- static const struct usb_device_id usb_endpoint_blacklist[] = {
-+	{ USB_DEVICE_INTERFACE_NUMBER(0x0926, 0x0202, 1), .driver_info = 0x85 },
- 	{ }
- };
- 
+--- a/drivers/usb/host/xhci-mem.c
++++ b/drivers/usb/host/xhci-mem.c
+@@ -1475,9 +1475,15 @@ int xhci_endpoint_init(struct xhci_hcd *
+ 	/* Allow 3 retries for everything but isoc, set CErr = 3 */
+ 	if (!usb_endpoint_xfer_isoc(&ep->desc))
+ 		err_count = 3;
+-	/* Some devices get this wrong */
+-	if (usb_endpoint_xfer_bulk(&ep->desc) && udev->speed == USB_SPEED_HIGH)
+-		max_packet = 512;
++	/* HS bulk max packet should be 512, FS bulk supports 8, 16, 32 or 64 */
++	if (usb_endpoint_xfer_bulk(&ep->desc)) {
++		if (udev->speed == USB_SPEED_HIGH)
++			max_packet = 512;
++		if (udev->speed == USB_SPEED_FULL) {
++			max_packet = rounddown_pow_of_two(max_packet);
++			max_packet = clamp_val(max_packet, 8, 64);
++		}
++	}
+ 	/* xHCI 1.0 and 1.1 indicates that ctrl ep avg TRB Length should be 8 */
+ 	if (usb_endpoint_xfer_control(&ep->desc) && xhci->hci_version >= 0x100)
+ 		avg_trb_len = 8;
 
 
