@@ -2,134 +2,189 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F5EDC4BA3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA30C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:52:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB39524695
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5465124695
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:52:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728761AbgB0Ktb (ORCPT
+        id S1728777AbgB0Kwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 05:49:31 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:33953 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728680AbgB0Ktb (ORCPT
+        Thu, 27 Feb 2020 05:52:55 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:57451 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728680AbgB0Kwz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 05:49:31 -0500
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j7GjJ-0007f9-7N; Thu, 27 Feb 2020 11:49:21 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 8DC7C10409C; Thu, 27 Feb 2020 11:49:20 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     afzal mohammed <afzal.mohd.ma@gmail.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 14/18] x86: Replace setup_irq() by request_irq()
-In-Reply-To: <a3116b3b1a03a943cd89efd57d2db32284c3a574.1581478324.git.afzal.mohd.ma@gmail.com>
-References: <cover.1581478323.git.afzal.mohd.ma@gmail.com> <a3116b3b1a03a943cd89efd57d2db32284c3a574.1581478324.git.afzal.mohd.ma@gmail.com>
-Date:   Thu, 27 Feb 2020 11:49:20 +0100
-Message-ID: <87v9nsmhjj.fsf@nanos.tec.linutronix.de>
+        Thu, 27 Feb 2020 05:52:55 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j7Gmg-0004u9-0P; Thu, 27 Feb 2020 11:52:50 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j7Gma-0002Lt-3N; Thu, 27 Feb 2020 11:52:44 +0100
+Date:   Thu, 27 Feb 2020 11:52:44 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Sam Shih <sam.shih@mediatek.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH 1/1] pwm: mediatek: add longer period support
+Message-ID: <20200227105244.orwitjst3wzoqcsq@pengutronix.de>
+References: <1582789610-23133-1-git-send-email-sam.shih@mediatek.com>
+ <1582789610-23133-2-git-send-email-sam.shih@mediatek.com>
+ <20200227080450.rkvwfjx6vikn5ls3@pengutronix.de>
+ <1582797590.25607.10.camel@mtksdccf07>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1582797590.25607.10.camel@mtksdccf07>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-afzal mohammed <afzal.mohd.ma@gmail.com> writes:
+Hello,
 
-> request_irq() is preferred over setup_irq(). Existing callers of
-> setup_irq() reached mostly via 'init_IRQ()' & 'time_init()', while
-> memory allocators are ready by 'mm_init()'.
->
-> Per tglx[1], setup_irq() existed in olden days when allocators were not
-> ready by the time early interrupts were initialized.
->
-> Hence replace setup_irq() by request_irq().
->
-> Seldom remove_irq() usage has been observed coupled with setup_irq(),
-> wherever that has been found, it too has been replaced by free_irq().
+On Thu, Feb 27, 2020 at 05:59:50PM +0800, Sam Shih wrote:
+> On Thu, 2020-02-27 at 09:04 +0100, Uwe Kleine-König wrote:
+> On Thu, Feb 27, 2020 at 03:46:50PM +0800, Sam Shih wrote:
+> > > The pwm clock source could be divided by 1625 with PWM_CON
+> > > BIT(3) setting in mediatek hardware.
+> > > 
+> > > This patch add support for longer pwm period configuration,
+> > > which allowing blinking LEDs via pwm interface.
+> > > 
+> > > Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> > > ---
+> > >  drivers/pwm/pwm-mediatek.c | 21 +++++++++++++++++----
+> > >  1 file changed, 17 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+> > > index b94e0d09c300..9af309bea01a 100644
+> > > --- a/drivers/pwm/pwm-mediatek.c
+> > > +++ b/drivers/pwm/pwm-mediatek.c
+> > > @@ -121,8 +121,8 @@ static int pwm_mediatek_config(struct pwm_chip
+> *chip, struct pwm_device *pwm,
+> > >  			       int duty_ns, int period_ns)
+> > >  {
+> > >  	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
+> > > -	u32 clkdiv = 0, cnt_period, cnt_duty, reg_width = PWMDWIDTH,
+> > > -	    reg_thres = PWMTHRES;
+> > > +	u32 clkdiv = 0, clksel = 0, cnt_period, cnt_duty,
+> > > +	    reg_width = PWMDWIDTH, reg_thres = PWMTHRES;
+> > >  	u64 resolution;
+> > >  	int ret;
+> > >  
+> > Adding some more context:
+> > 
+> 
+> + /* The pwm source clock can be divided by 2^clkdiv. When the clksel  +
+> * bit is set to 1, The final clock output needs to be divided by an +  *
+> extra 1625.
+> +  */
 
-Please do not copy the irrelevant parts of your boilerplate text into
-individual changelogs. Changelogs should have the information which is
-relevant to the patch they describe.
+I'd write:
 
-> @@ -104,6 +95,11 @@ void __init native_init_IRQ(void)
->  	idt_setup_apic_and_irq_gates();
->  	lapic_assign_system_vectors();
->  
-> -	if (!acpi_ioapic && !of_ioapic && nr_legacy_irqs())
-> -		setup_irq(2, &irq2);
-> +	if (!acpi_ioapic && !of_ioapic && nr_legacy_irqs()) {
-> +		/*
-> +		 * IRQ2 is cascade interrupt to second interrupt controller
-> +		 */
-> +		if (request_irq(2, no_action, IRQF_NO_THREAD, "cascade", NULL))
-> +			pr_err("request_irq() on %s failed\n", "cascade");
+The source clock is divided by 2^clkdiv or iff the clksel bit is set by
+2^clkdiv + 1625.
 
-What's the purpose of the %s indirection here?
+> 
+> Is this ok ?
+> 
+> 
+> > > @@ -139,11 +139,20 @@ static int pwm_mediatek_config(struct pwm_chip
+> *chip, struct pwm_device *pwm,
+> > > 	while (cnt_period > 8191) {
+> > >  		resolution *= 2;
+> > >  		clkdiv++;
+> > >  		cnt_period = DIV_ROUND_CLOSEST_ULL((u64)period_ns * 1000,
+> > >  						   resolution);
+> > > +		if (clkdiv > PWM_CLK_DIV_MAX && !clksel) {
+> > > +			clksel = 1;
+> > > +			clkdiv = 0;
+> > > +			resolution = (u64)NSEC_PER_SEC * 1000 * 1625;
+> > > +			do_div(resolution,
+> > > +				clk_get_rate(pc->clk_pwms[pwm->hwpwm]));
+> > > +			cnt_period = DIV_ROUND_CLOSEST_ULL(
+> > > +					(u64)period_ns * 1000, resolution);
+> > 
+> > The assignment is a repetition from just above the if. Maybe just put
+> it
+> > once after this if block?
+> 
+> The cnt_period represents the effective range of the PWM period counter,
+> when we need changing the pwm output period to a longer value at the
+> same clock frequency, we can setting a larger cnt_period, but the width
+> of the cnt_peroid register is 12 bits,
+> When the request period is too long, we need to divide the clock source
+> and then recalculate cnt_period outputs the correct waveform.
+> As mentioned above, when changing clkdiv, we need to recalculate
+> cnt_period immediately.
+> 
+> If the request period is very long (for example, LED blinking), clkdiv
+> may be insufficient. 
+> In this case, we will use clksel to divide the pwm source clock by an
+> additional 1625, and recalculate clkdiv and cnt_period.
+> 
+> I don't think we can just place assignments after the if block.
 
-Also that error message is not really helpful:
+I didn't care enough to read your reasoning and retry to convince you
+with mine:
 
-     request_irq() on cascade failed
+With your patch you have:
 
-Something like:
+	cnt_period = someexpression;
 
-     Failed to request irq 2 (cascade).
+	if (somecondition) {
+		...
+		cnt_period = someexpression;
+	}
 
-Hmm?
+As somecondition doesn't make use of cnt_period this is equivalent to:
 
-> +	}
->  }
-> diff --git a/arch/x86/kernel/time.c b/arch/x86/kernel/time.c
-> index d8673d8a779b..0f9cb386d71f 100644
-> --- a/arch/x86/kernel/time.c
-> +++ b/arch/x86/kernel/time.c
-> @@ -62,19 +62,15 @@ static irqreturn_t timer_interrupt(int irq, void *dev_id)
->  	return IRQ_HANDLED;
->  }
->  
-> -static struct irqaction irq0  = {
-> -	.handler = timer_interrupt,
-> -	.flags = IRQF_NOBALANCING | IRQF_IRQPOLL | IRQF_TIMER,
-> -	.name = "timer"
-> -};
-> -
->  static void __init setup_default_timer_irq(void)
->  {
->  	/*
->  	 * Unconditionally register the legacy timer; even without legacy
->  	 * PIC/PIT we need this for the HPET0 in legacy replacement mode.
->  	 */
-> -	if (setup_irq(0, &irq0))
-> +	if (request_irq(0, timer_interrupt,
-> +			IRQF_NOBALANCING | IRQF_IRQPOLL | IRQF_TIMER, "timer",
-> +			NULL))
+	if (somecondition) {
+		...
+	}
+	cnt_period = someexpression;
 
-This is realy ugly.
+isn't it?
 
-	unsigned long flags = IRQF_NOBALANCING | IRQF_IRQPOLL | IRQF_TIMER;
+> > The code is hard to follow, I wonder if this could be cleaned up with
+> > some comments added that explain the hardware details enough to be able
+> > to actually understand the code without having the hardware reference
+> > manual handy.
+> 
+> Is it sufficient to add some context into comment like the response of
+> the second question?
 
-	....
-     	if (request_irq(0, timer_interrupt, flags, "timer", NULL))
-        	....
+I didn't check but I wouldn't be surprised if the code is more
+complicated than necessary. If you don't see something to simplify, go
+for adding an explanation as suggested and I will take a look in a quiet
+moment.
 
-takes the same amount of lines, but is readable.
+Not sure I already pointed out that having a link to a publicly
+available reference manual in the driver's header is useful. If there is
+such a manual, please add a link there. Your benefit is that you
+simplify others to improve your driver.
 
-Thanks,
+Best regards
+Uwe
 
-        tglx
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
