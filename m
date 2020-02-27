@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CA7C54FC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D60EC54FE2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51D4A24697
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 266A620801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813152;
-	bh=Jh+a2lBOCKXDBmG/hoPXRf10wziWKNYL5b/JHbzBHys=;
+	s=default; t=1582813146;
+	bh=pl9p7NpwxVwE86wSMxeGVRBF3jUMxTbbyU0SDmJweOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SntukoLPlJ3WfVxDB6uwRZbSZBoIazhByBRUhSjHavPVd910f+8T8nkDFiiR6o18S
-	 n3WCT/ih8MiFUXN9ioMwBs5sFF7iMpm5HS6HI385efj1QrJ35TNCbGx1DWSzXCCQL9
-	 3p4CtqrXZrb48oBWTK95TxRcGKZSUAbyZ4u9qY+Q=
+	b=OxcTbWyIj99E9buVNMT88nQzla6tGJ26uzINjvkU/6gZ3nKzgjKABs31/hLn/8JhR
+	 82pyhc2blem1668fWZVosDSt6XmrRU8+XgKSj2Ws92NnSm6Q6eToJRUPiHGYz2BRab
+	 s2v2qC+sKYXGSYL++lxjTLdXave3WHyBEWp7xyS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389980AbgB0OTK (ORCPT
+        id S2389962AbgB0OTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:19:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59658 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:19:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388960AbgB0OTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:19:02 -0500
+        id S1731124AbgB0OS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:18:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51ADB2469D;
-        Thu, 27 Feb 2020 14:19:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 692662468F;
+        Thu, 27 Feb 2020 14:18:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813141;
-        bh=Jh+a2lBOCKXDBmG/hoPXRf10wziWKNYL5b/JHbzBHys=;
+        s=default; t=1582813136;
+        bh=pl9p7NpwxVwE86wSMxeGVRBF3jUMxTbbyU0SDmJweOo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xhjSM/ppDvkXqUA+edvC5Cn/FRpAav3A9lS7K8TmDFOsrqp1wIsnWCR90srffsJkw
-         2FJVSg5otDNdcz0fMXX6y7AX1fiw9Nma+rnbKWrvrHYKvD2UrRlMYRkikZ85+UlkW2
-         sUgq2X94Hq06wSZ7hrlixdzsf0ZLQGCobczUo4k8=
+        b=LFkbYh5TBU5Rs7xh1/lsWTHfbthjWSqWykaXZJrsZYbPCd43Nj5XKYrvHWNEvk+ca
+         OdLU12dALyCnfEsrKwClLlNCfLol8pSOfYPobYXSguV0RNA+wTAhZSmdk4m3L7EX+W
+         19vwcK+RxPwEIhLWBwHr70c0WjTUzEOec6hk7AgQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.5 102/150] KVM: apic: avoid calculating pending eoi from an uninitialized val
-Date:   Thu, 27 Feb 2020 14:37:19 +0100
-Message-Id: <20200227132247.843728421@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Tobler <andreas.tobler@onway.ch>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 110/150] Revert "dmaengine: imx-sdma: Fix memory leak"
+Date:   Thu, 27 Feb 2020 14:37:27 +0100
+Message-Id: <20200227132249.006359879@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -60,38 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit 23520b2def95205f132e167cf5b25c609975e959 upstream.
+This reverts commit 7ac78dd1e0992fd6d2ae375cc0dd6456c632f605 which is
+commit 02939cd167095f16328a1bd5cab5a90b550606df upstream.
 
-When pv_eoi_get_user() fails, 'val' may remain uninitialized and the return
-value of pv_eoi_get_pending() becomes random. Fix the issue by initializing
-the variable.
+Andreas writes:
+	This patch breaks our imx6 board with the attached trace.
+	Reverting the patch makes it boot again.
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Reported-by: Andreas Tobler <andreas.tobler@onway.ch>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Robin Gong <yibin.gong@nxp.com>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/x86/kvm/lapic.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/dma/imx-sdma.c |   19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
 
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -630,9 +630,11 @@ static inline bool pv_eoi_enabled(struct
- static bool pv_eoi_get_pending(struct kvm_vcpu *vcpu)
- {
- 	u8 val;
--	if (pv_eoi_get_user(vcpu, &val) < 0)
-+	if (pv_eoi_get_user(vcpu, &val) < 0) {
- 		printk(KERN_WARNING "Can't read EOI MSR value: 0x%llx\n",
- 			   (unsigned long long)vcpu->arch.pv_eoi.msr_val);
-+		return false;
-+	}
- 	return val & 0x1;
- }
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -760,8 +760,12 @@ static void sdma_start_desc(struct sdma_
+ 		return;
+ 	}
+ 	sdmac->desc = desc = to_sdma_desc(&vd->tx);
+-
+-	list_del(&vd->node);
++	/*
++	 * Do not delete the node in desc_issued list in cyclic mode, otherwise
++	 * the desc allocated will never be freed in vchan_dma_desc_free_list
++	 */
++	if (!(sdmac->flags & IMX_DMA_SG_LOOP))
++		list_del(&vd->node);
  
+ 	sdma->channel_control[channel].base_bd_ptr = desc->bd_phys;
+ 	sdma->channel_control[channel].current_bd_ptr = desc->bd_phys;
+@@ -1067,6 +1071,7 @@ static void sdma_channel_terminate_work(
+ 
+ 	spin_lock_irqsave(&sdmac->vc.lock, flags);
+ 	vchan_get_all_descriptors(&sdmac->vc, &head);
++	sdmac->desc = NULL;
+ 	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
+ 	vchan_dma_desc_free_list(&sdmac->vc, &head);
+ 	sdmac->context_loaded = false;
+@@ -1075,19 +1080,11 @@ static void sdma_channel_terminate_work(
+ static int sdma_disable_channel_async(struct dma_chan *chan)
+ {
+ 	struct sdma_channel *sdmac = to_sdma_chan(chan);
+-	unsigned long flags;
+-
+-	spin_lock_irqsave(&sdmac->vc.lock, flags);
+ 
+ 	sdma_disable_channel(chan);
+ 
+-	if (sdmac->desc) {
+-		vchan_terminate_vdesc(&sdmac->desc->vd);
+-		sdmac->desc = NULL;
++	if (sdmac->desc)
+ 		schedule_work(&sdmac->terminate_worker);
+-	}
+-
+-	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
+ 
+ 	return 0;
+ }
 
 
