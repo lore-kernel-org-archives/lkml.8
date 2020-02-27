@@ -2,240 +2,170 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA94C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 919A9C35DF9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77D9A2469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:39:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="vuPuo/ff"
+	by mail.kernel.org (Postfix) with ESMTP id 6E30F24695
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:42:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729728AbgB0Sj5 (ORCPT
+        id S1729761AbgB0SmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 13:39:57 -0500
-Received: from mail-eopbgr750049.outbound.protection.outlook.com ([40.107.75.49]:23660
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729172AbgB0Sj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 13:39:57 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RxaLZAsdRw8u3TpEAdhNrRgDFyfTVW+cu1nuo/IQew7t9rRAGqFngKKlkBwTiGaDS95IGbOcD4969/+lKbfUJ+pJ8AL2HxQrL9/JWmeQz7G1PsgbSFgVGdAdoLlpWF2wWk3IodYFQBEnal6q/4EGcQX+ROn9gaRd78jZiwDjt1STHNL+nspQSlprQvtPxgKUF2a29O/nxlc8Bgko7rDrdhp7xB79wp6gNdY7ZsmOmTksPnjJJDbE62lKEWOw6qFnCdGTaFVqPTdSKcPCi6m6hKqh0lRT7vaJaFgtZpk3FxFBm8c4OLerTCZY7xC443Twvbfo6GxJHkaLzr/VLgvZTw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yWY4Qn/AncWMBA5E6UFXYOALsk9E+ny1HtSj0yxsxYo=;
- b=CObGpb4FfMct0lWrY8sDe7fv9PAit1ecqvUPQHrTZUQmqdBrCuB+m0ONurat/4HqUhSQeNH/CnAgvYUWyuqcRl//f2DJWAvgTEeGvCyO61rZoBIhzBQJBogUfjUBLU0zFcO/MsofvE0zH8499ylRv/BnwUICvTjO4DTmfxhwvAbytay24eDytViCUZpMDIuxVMn426NuTlCHVvkn7GeSbK6cimZ/U4uj84w5SVHBHsL+VgkcKly6MNVJpuYlhuroQ9V1u9XTRquMTGXqZk4HXCV1FYPYOSP9X0TrE29CshA12H90FxJfvc/MlYDL5aUqavRy/Qbd42HoWKFp+LVQTg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yWY4Qn/AncWMBA5E6UFXYOALsk9E+ny1HtSj0yxsxYo=;
- b=vuPuo/ffMmpyTF6P470o3Rz+yR9lfnDDkL9Xi1Qz6DGad+qKAMHl8JIQ72w6asRLXwLJoiLnCr/pRYKRWmEByShyhUEmUs10i0s2p659np1kgLCK+cfYiqYahRXqHLnSZXBIle04ir+qrja6PWg//MPK0dWynTevCI83u+V9I4E=
-Received: from DM5PR1201MB2554.namprd12.prod.outlook.com (2603:10b6:3:ec::14)
- by DM5PR1201MB0090.namprd12.prod.outlook.com (2603:10b6:4:53::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Thu, 27 Feb
- 2020 18:39:52 +0000
-Received: from DM5PR1201MB2554.namprd12.prod.outlook.com
- ([fe80::c4c:bafd:5833:2b51]) by DM5PR1201MB2554.namprd12.prod.outlook.com
- ([fe80::c4c:bafd:5833:2b51%5]) with mapi id 15.20.2750.024; Thu, 27 Feb 2020
- 18:39:52 +0000
-From:   "Liu, Zhan" <Zhan.Liu@amd.com>
-To:     Melissa Wen <melissa.srw@gmail.com>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>,
-        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 2/2] drm/amd/display: dc_link: code clean up on detect_dp
- function
-Thread-Topic: [PATCH 2/2] drm/amd/display: dc_link: code clean up on detect_dp
- function
-Thread-Index: AQHV7PFJrzsxO38xA0qqdJAhaAZqgqgvYCNQ
-Date:   Thu, 27 Feb 2020 18:39:51 +0000
-Message-ID: <DM5PR1201MB25540271F42D8034FB2611829EEB0@DM5PR1201MB2554.namprd12.prod.outlook.com>
-References: <cover.1582752490.git.melissa.srw@gmail.com>
- <9961afca2cf831ac688025a63b7cd35dd0908fac.1582752490.git.melissa.srw@gmail.com>
-In-Reply-To: <9961afca2cf831ac688025a63b7cd35dd0908fac.1582752490.git.melissa.srw@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Zhan.Liu@amd.com; 
-x-originating-ip: [165.204.55.250]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 1bb0ce8f-e298-4c0f-1df5-08d7bbb46e9f
-x-ms-traffictypediagnostic: DM5PR1201MB0090:|DM5PR1201MB0090:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR1201MB0090B1A254FCE59E377D1B2B9EEB0@DM5PR1201MB0090.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2958;
-x-forefront-prvs: 03264AEA72
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(396003)(39860400002)(376002)(136003)(189003)(199004)(33656002)(8676002)(7696005)(6506007)(53546011)(8936002)(26005)(71200400001)(186003)(81166006)(81156014)(86362001)(5660300002)(66476007)(66946007)(64756008)(478600001)(55016002)(54906003)(66446008)(9686003)(2906002)(76116006)(52536014)(316002)(4326008)(66556008)(110136005)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR1201MB0090;H:DM5PR1201MB2554.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KueMbd/X8Fe42GD1GbuaHc2roumK0mGhXeroDmhabiA8Yf3frUn36qHCxUtW8BAFfnBm8LU834JFYlf+SQ60p/r2xvu/1C3adNc9m8BV/mmvkHvo+rRJQuCppBP29RnWkZyDRT/8m9v59OqPeCh5SLl678NN+UwTkfPrxEHn3bDLipxfERVu0xLSrPrHar0wEi6wzr2PenmOem/dAYAxjhtE4AvuYPtPHiFdLd0knLdf7J5J3dgi5HfCzGI6XzSUfwWkZMSVOmIHS5PK4G6XrAhgxeP6r8ZeTus4o+ZWJJ3WrzEWWoyMx+5YNZUdjCBdLAJVz7K/0OBrNUNjCIjD9fn2XfxqBKTecdGAInh8pR5tYR2YocQ8eQGS/ptUB0qKhHa4UaMfhFcnUIh9qKWiAzH8yoZ0Agp8KJJXfgg3WeluDuj36y8NuGgCNYzHNY21n9LOD6zqu+BkZc6QhKcv40oC/GcAxiGRztotcV/VjzF/SKpxV0dsgR4yquRw92qC
-x-ms-exchange-antispam-messagedata: t0KnXG6PtfvPkTJrAaBEd82HRqI5qUoIOqXRSpYy7T1sGH7+KFNnJGtOWefipgpswaeLm8mdWd3q16koBsVxffgtnTt03uHkx6WzTfI75I4HVxX5YrQE2yW35Nt1Jha4tg7nAzRXKt1QvXU2DpWjbg==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1bb0ce8f-e298-4c0f-1df5-08d7bbb46e9f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Feb 2020 18:39:51.8954
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vbvX29cIn9n3J+/a/Xx2pFFtw1vzd/D2U/sBx7dThZ6YaiuE+ZyN4UKrFBCqiu+h
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1201MB0090
+        Thu, 27 Feb 2020 13:42:22 -0500
+Received: from wind.enjellic.com ([76.10.64.91]:58478 "EHLO wind.enjellic.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726805AbgB0SmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 13:42:22 -0500
+Received: from wind.enjellic.com (localhost [127.0.0.1])
+        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 01RIf1sj026858;
+        Thu, 27 Feb 2020 12:41:01 -0600
+Received: (from greg@localhost)
+        by wind.enjellic.com (8.15.2/8.15.2/Submit) id 01RIewJG026857;
+        Thu, 27 Feb 2020 12:40:58 -0600
+Date:   Thu, 27 Feb 2020 12:40:58 -0600
+From:   "Dr. Greg" <greg@enjellic.com>
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+Subject: Re: [PATCH bpf-next v4 0/8] MAC and Audit policy using eBPF (KRSI)
+Message-ID: <20200227184058.GA25392@wind.enjellic.com>
+Reply-To: "Dr. Greg" <greg@enjellic.com>
+References: <20200220175250.10795-1-kpsingh@chromium.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200220175250.10795-1-kpsingh@chromium.org>
+User-Agent: Mutt/1.4i
+X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Thu, 27 Feb 2020 12:41:01 -0600 (CST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Feb 20, 2020 at 06:52:42PM +0100, KP Singh wrote:
 
-> -----Original Message-----
-> From: amd-gfx <amd-gfx-bounces@lists.freedesktop.org> On Behalf Of
-> Melissa Wen
-> Sent: 2020/February/26, Wednesday 5:08 PM
-> To: Wentland, Harry <Harry.Wentland@amd.com>; Li, Sun peng (Leo)
-> <Sunpeng.Li@amd.com>; Deucher, Alexander
-> <Alexander.Deucher@amd.com>; Koenig, Christian
-> <Christian.Koenig@amd.com>; Zhou, David(ChunMing)
-> <David1.Zhou@amd.com>; David Airlie <airlied@linux.ie>; Daniel Vetter
-> <daniel@ffwll.ch>; Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-> Cc: dri-devel@lists.freedesktop.org; amd-gfx@lists.freedesktop.org; linux=
--
-> kernel@vger.kernel.org
-> Subject: [PATCH 2/2] drm/amd/display: dc_link: code clean up on detect_dp
-> function
->=20
-> Removes codestyle issues on detect_dp function as suggested by
-> checkpatch.pl.
->=20
-> CHECK: Lines should not end with a '('
-> WARNING: Missing a blank line after declarations
-> WARNING: line over 80 characters
-> CHECK: Alignment should match open parenthesis
->=20
-> Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
+Good morning, I hope the week is going well for everyone.
 
-Thank you Melissa for your contribution! Will apply it.
+Apologies for being somewhat late with these comments, I've been
+recovering from travel.
 
-This patch is:
-Reviewed-by: Zhan Liu <zhan.liu@amd.com>
+> # Motivation
+> 
+> Google does analysis of rich runtime security data to detect and thwart
+> threats in real-time. Currently, this is done in custom kernel modules
+> but we would like to replace this with something that's upstream and
+> useful to others.
+> 
+> The current kernel infrastructure for providing telemetry (Audit, Perf
+> etc.) is disjoint from access enforcement (i.e. LSMs).  Augmenting the
+> information provided by audit requires kernel changes to audit, its
+> policy language and user-space components. Furthermore, building a MAC
+> policy based on the newly added telemetry data requires changes to
+> various LSMs and their respective policy languages.
+> 
+> This patchset allows BPF programs to be attached to LSM hooks This
+> facilitates a unified and dynamic (not requiring re-compilation of the
+> kernel) audit and MAC policy.
+> 
+> # Why an LSM?
+> 
+> Linux Security Modules target security behaviours rather than the
+> kernel's API. For example, it's easy to miss out a newly added system
+> call for executing processes (eg. execve, execveat etc.) but the LSM
+> framework ensures that all process executions trigger the relevant hooks
+> irrespective of how the process was executed.
+> 
+> Allowing users to implement LSM hooks at runtime also benefits the LSM
+> eco-system by enabling a quick feedback loop from the security community
+> about the kind of behaviours that the LSM Framework should be targeting.
 
-> ---
->  drivers/gpu/drm/amd/display/dc/core/dc_link.c | 35 +++++++++----------
->  1 file changed, 16 insertions(+), 19 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-> b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-> index 0f28b5694144..adb717f02c9c 100644
-> --- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-> +++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-> @@ -585,14 +585,14 @@ static void
-> read_current_link_settings_on_detect(struct dc_link *link)
->  		LINK_SPREAD_05_DOWNSPREAD_30KHZ :
-> LINK_SPREAD_DISABLED;  }
->=20
-> -static bool detect_dp(
-> -	struct dc_link *link,
-> -	struct display_sink_capability *sink_caps,
-> -	bool *converter_disable_audio,
-> -	struct audio_support *audio_support,
-> -	enum dc_detect_reason reason)
-> +static bool detect_dp(struct dc_link *link,
-> +		      struct display_sink_capability *sink_caps,
-> +		      bool *converter_disable_audio,
-> +		      struct audio_support *audio_support,
-> +		      enum dc_detect_reason reason)
->  {
->  	bool boot =3D false;
-> +
->  	sink_caps->signal =3D link_detect_sink(link, reason);
->  	sink_caps->transaction_type =3D
->  		get_ddc_transaction_type(sink_caps->signal);
-> @@ -606,9 +606,8 @@ static bool detect_dp(
->  			sink_caps->signal =3D
-> SIGNAL_TYPE_DISPLAY_PORT_MST;
->  			link->type =3D dc_connection_mst_branch;
->=20
-> -			dal_ddc_service_set_transaction_type(
-> -							link->ddc,
-> -							sink_caps-
-> >transaction_type);
-> +			dal_ddc_service_set_transaction_type(link->ddc,
-> +							     sink_caps-
-> >transaction_type);
->=20
->  			/*
->  			 * This call will initiate MST topology discovery.
-> Which @@ -637,13 +636,10 @@ static bool detect_dp(
->  			if (reason =3D=3D DETECT_REASON_BOOT)
->  				boot =3D true;
->=20
-> -			dm_helpers_dp_update_branch_info(
-> -				link->ctx,
-> -				link);
-> +			dm_helpers_dp_update_branch_info(link->ctx, link);
->=20
-> -			if (!dm_helpers_dp_mst_start_top_mgr(
-> -				link->ctx,
-> -				link, boot)) {
-> +			if (!dm_helpers_dp_mst_start_top_mgr(link->ctx,
-> +							     link, boot)) {
->  				/* MST not supported */
->  				link->type =3D dc_connection_single;
->  				sink_caps->signal =3D
-> SIGNAL_TYPE_DISPLAY_PORT; @@ -651,7 +647,7 @@ static bool detect_dp(
->  		}
->=20
->  		if (link->type !=3D dc_connection_mst_branch &&
-> -			is_dp_active_dongle(link)) {
-> +		    is_dp_active_dongle(link)) {
->  			/* DP active dongles */
->  			link->type =3D dc_connection_active_dongle;
->  			if (!link->dpcd_caps.sink_count.bits.SINK_COUNT)
-> { @@ -662,14 +658,15 @@ static bool detect_dp(
->  				return true;
->  			}
->=20
-> -			if (link->dpcd_caps.dongle_type !=3D
-> DISPLAY_DONGLE_DP_HDMI_CONVERTER)
-> +			if (link->dpcd_caps.dongle_type !=3D
-> +			    DISPLAY_DONGLE_DP_HDMI_CONVERTER)
->  				*converter_disable_audio =3D true;
->  		}
->  	} else {
->  		/* DP passive dongles */
->  		sink_caps->signal =3D dp_passive_dongle_detection(link->ddc,
-> -				sink_caps,
-> -				audio_support);
-> +								sink_caps,
-> +
-> 	audio_support);
->  	}
->=20
->  	return true;
-> --
-> 2.25.0
->=20
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
+On the remote possibility that our practical experiences are relevant
+to this, I thought I would pitch these comments in, since I see that
+LWN is covering the issues and sensitivities surrounding BPF based
+'intelligent' LSM hooks, if I can take the liberty of referring to
+them as that.
+
+We namespaced a modified version of the Linux IMA implementation in
+order to provide a mechanism for deterministic system modeling, in
+order to support autonomously self defensive platforms for
+IOT/INED/SCADA type applications.  Big picture, the objective was to
+provide 'dynamic intelligence' for LSM decisions, presumably an
+objective similar to the KRSI initiative.
+
+Our IMA implementation, if you can still call it that, pushes
+actor/subject interaction identities up into an SGX enclave that runs
+a modeling engine that makes decisions on whether or not a process is
+engaging in activity inconsistent with a behavioral map defined by the
+platform or container developer.  If the behavior is extra-dimensional
+(untrusted), the enclave, via an OCALL, sets the value of a 'bad
+actor' variable in the task control structure that is used to indicate
+that the context of execution has questionable trust status.
+
+We paired this with a very simple LSM that has each hook check a bit
+position in the bad actor variable/bitfield to determine whether or
+not the hook should operate on the requested action.  Separate LSM
+infrastructure is provided that specifies whether or not the behavior
+should be EPERM'ed or logged.  An LSM using this infrastructure also
+has the ability, if triggered by the trust status of the context of
+execution, to make further assessments based on what information is
+supplied via the hook itself.
+
+Our field experience and testing has suggested that this architecture
+has considerable utility.
+
+In this model, numerous and disparate sections of the kernel can have
+input into the trust status of a context of execution.  This
+methodology would seem to be consistent with having multiple eBPF tap
+points in the kernel that can make decisions on what they perceive to
+be security relevant issues and if and how the behavior should be
+acted upon by the LSM.
+
+At the LSM level the costs are minimal, essentially a conditional
+check for non-zero status.  Performance costs will be with the eBPF
+code installed at introspection points.  At the end of the
+day. security costs money, if no one is willing to pay the bill we
+simply won't have secure systems, the fundamental tenant of the
+inherent economic barrier to security.
+
+Food for thought if anyone is interested.
+
+Best wishes for a productive remainder of the week.
+
+Dr. Greg
+
+As always,
+Dr. Greg Wettstein, Ph.D, Worker
+IDfusion, LLC               SGX secured infrastructure and
+4206 N. 19th Ave.           autonomously self-defensive platforms.
+Fargo, ND  58102
+PH: 701-281-1686            EMAIL: greg@idfusion.net
+------------------------------------------------------------------------------
+"We have to grow some roots before we can even think about having
+ any blossoms."
+                                -- Terrance George Wieland
+                                   Resurrection.
