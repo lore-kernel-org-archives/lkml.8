@@ -2,174 +2,147 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C315C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EED8C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BD1724670
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2273420658
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:51:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mFNgTWxS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="uHQcXKIq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgB0AsM (ORCPT
+        id S1728133AbgB0AvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 19:48:12 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:32884 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728066AbgB0AsL (ORCPT
+        Wed, 26 Feb 2020 19:51:05 -0500
+Received: from gateway24.websitewelcome.com ([192.185.51.202]:41105 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727987AbgB0AvE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 19:48:11 -0500
-Received: by mail-qk1-f194.google.com with SMTP id h4so1577926qkm.0;
-        Wed, 26 Feb 2020 16:48:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gr+D98EMRaRIJKN/JWg/ytMLQclg5vcpIgvUjBahKFw=;
-        b=mFNgTWxSG0BZzVRNZWK+XeIyD5Be19QfNA+007QbPsQj85rI73YDpTHFH7AxBtcFE9
-         CjWO7tfJOWPJphs43zGynDj9ejms0wCl1HKsiWJ2MtJ2m4GPTZsKoazVPuE+81TabdyK
-         WLzpA+9n7nhcgp++K6avHmtvS+eYmeVH3XcasEndKFPdSca59EI1kRs+xgIJfODxlTPU
-         1DvbXp2nZYI9WOZeePLPMPCNq79SrYXmhwGTYRIJ8VY6Uj6g/pHtzz99kdPtTfzMS7vq
-         fo4N1f7Xngb0LfwCMpPaWR9+Y4sC3mCYlcDF5lP6xQEZ3+DzyVHjBWz8Kr05R/0jeH9n
-         WqIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gr+D98EMRaRIJKN/JWg/ytMLQclg5vcpIgvUjBahKFw=;
-        b=Jr9Hyvi3hhziEA2dHGNaJ+oMNXgEnau4yQgeKQW/WD3Q04HpNjNMb6OQFHI3yMxnir
-         OG1pBfRHA5IPlCfzUUWCTn1kx4P5P8JsVIXS1K9u/RvilvGUTclV2Y3lAZIN0Btp+qiJ
-         oBCLTHRA1i3DLLPOH2NqRQ4hpOGX7IPibv7ohRiBQ+uhSAIyVS3+ewbaTZrbSU3Cio2S
-         CkLnYR5poHrNCS6NbHrRUCF2h+RF33YXvqZoytGkZK1321U4VipfFuq7JuWJxFG1488e
-         BtwCcfSX7lBb/QUcaedhYyrNIzxlXPbX0lZ4Ve5oczXRQPdHBAx6dL+Lpq+yJ5Jp3s1M
-         ifZg==
-X-Gm-Message-State: APjAAAUX4t94GFraRGDDNB2Goru5pgYqMh/cat+f0Eg0Xuf9uU2xY9g9
-        kuOonQzsg2WoaDtJIlwQ/uHKz+8l4E8=
-X-Google-Smtp-Source: APXvYqyhdCN1wifCOHvDfb4k//7u4CpgetuW3MDqY7fF8a9PUzxLymX7b8kaKkNV3mYT7HWieyPQ5Q==
-X-Received: by 2002:ac8:4659:: with SMTP id f25mr1726677qto.273.1582764062492;
-        Wed, 26 Feb 2020 16:41:02 -0800 (PST)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id l184sm2077416qkc.107.2020.02.26.16.41.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Feb 2020 16:41:01 -0800 (PST)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailauth.nyi.internal (Postfix) with ESMTP id EA18021F82;
-        Wed, 26 Feb 2020 19:41:00 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 26 Feb 2020 19:41:00 -0500
-X-ME-Sender: <xms:HBBXXvbCTTK_UjhpVYH7mVeGHkLR0bRyKTbWWpaM__TyyN7EtZ7SYw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrleehgddvjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepuehoqhhunhcuhfgv
-    nhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucffohhmrghinhepkh
-    gvrhhnvghlrdhorhhgpdhinhhrihgrrdhfrhenucfkphephedvrdduheehrdduuddurdej
-    udenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsoh
-    hquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedq
-    udejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmh
-    gvrdhnrghmvg
-X-ME-Proxy: <xmx:HBBXXvobr3L1vCf8vIPiu-0nb_oyR_IZp2b_EE8jppvGLEKn-oUZZg>
-    <xmx:HBBXXgqHDVyuFsibrsdb9PvLmP6GvQ0ddeIuQ90OKjd7yeUHTehicw>
-    <xmx:HBBXXnucsHPA3_Nj4vmhtRxq5YJl6inTho9WPKGIqX-pMnSCD53i3w>
-    <xmx:HBBXXoq3adymewn2X4V08gmnHAU3bENxuKoqE9khMCZ3cN4QcHbdNKl9ukI>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 9D30D328005A;
-        Wed, 26 Feb 2020 19:40:59 -0500 (EST)
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: [PATCH v3 0/5] Documentation/locking/atomic: Add litmus tests for atomic APIs
-Date:   Thu, 27 Feb 2020 08:40:44 +0800
-Message-Id: <20200227004049.6853-1-boqun.feng@gmail.com>
-X-Mailer: git-send-email 2.25.0
+        Wed, 26 Feb 2020 19:51:04 -0500
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id B1D946372E
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 18:51:03 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 77OHjESB5Sl8q77OHjssum; Wed, 26 Feb 2020 18:51:03 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=CxvRwi9ERvjqza3ONz0t3g7iTuq5cMATTfcSYBFnsBo=; b=uHQcXKIq7CcMbICKYg4TJX2gjD
+        3hjamqfDiEmxsZYgqGDUzonP1gnJWS7PJV09AjdP+XUn3NK908uPjci9ftXkEaJOhDKeTO2D8y92x
+        3UefhjyU2s9udMIYKNnVVhG9cd0mo00ho+Ru80N/kPZ6/0e/U07yJQJZe2rv8jBLUahdOzx7DSdyf
+        g4HXAa/ZxtLmrQkOIYPwDmm4r1pe5WZaG8buI0YWSPLBhC77Rm+IDhQDT9PQyGXc9CIA5zFHvNMU5
+        oplL6z+Cgx7qxnZ6Np6PSg1Qr8s8gayqkETnijTJLY1GHn+S+LSQbl/AYAUip8H7x/YIvwj4Ojax/
+        0XWpbinA==;
+Received: from [201.162.161.221] (port=49846 helo=[192.168.43.132])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j77OH-002Vj3-71; Wed, 26 Feb 2020 18:51:01 -0600
+Subject: Re: [PATCH][next] net: cisco: Replace zero-length array with
+ flexible-array member
+To:     David Miller <davem@davemloft.net>
+Cc:     benve@cisco.com, _govind@gmx.com, pkaustub@cisco.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200225001826.GA22765@embeddedor>
+ <20200226.164642.670797289411682529.davem@davemloft.net>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <7067653c-bcfd-ffce-115e-0e42411c7056@embeddedor.com>
+Date:   Wed, 26 Feb 2020 18:53:52 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200226.164642.670797289411682529.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.161.221
+X-Source-L: No
+X-Exim-ID: 1j77OH-002Vj3-71
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.132]) [201.162.161.221]:49846
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 15
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A recent discussion raises up the requirement for having test cases for
-atomic APIs:
 
-	https://lore.kernel.org/lkml/20200213085849.GL14897@hirez.programming.kicks-ass.net/
 
-, and since we already have a way to generate a test module from a
-litmus test with klitmus[1]. It makes sense that we add more litmus
-tests for atomic APIs. And based on the previous discussion, I create a
-new directory Documentation/atomic-tests and put these litmus tests
-here.
+On 2/26/20 18:46, David Miller wrote:
 
-This patchset starts the work by adding the litmus tests which are
-already used in atomic_t.txt, and also improve the atomic_t.txt to make
-it consistent with the litmus tests.
+>>
+>> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+>> [2] https://github.com/KSPP/linux/issues/21
+>> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> 
+> Applied.
+> 
 
-Previous version:
-v1: https://lore.kernel.org/linux-doc/20200214040132.91934-1-boqun.feng@gmail.com/
-v2: https://lore.kernel.org/lkml/20200219062627.104736-1-boqun.feng@gmail.com/
-
-Changes since v2:
-
-*	Change from "RFC" to "PATCH".
-
-*	Wording improvement in atomic_t.txt as per Alan's suggestion.
-
-*	Add a new patch describing the usage of atomic_add_unless() is
-	not limited anymore for LKMM litmus tests.
-
-My PR on supporting "(void) expr;" statement has been merged by Luc
-(Thank you, Luc). So all the litmus tests in this patchset can be
-handled by the herdtools compiled from latest master branch of the
-source code.
-
-Comments and suggestions are welcome!
-
-Regards,
-Boqun
-
-[1]: http://diy.inria.fr/doc/litmus.html#klitmus
-
-Boqun Feng (5):
-  tools/memory-model: Add an exception for limitations on _unless()
-    family
-  Documentation/locking/atomic: Fix atomic-set litmus test
-  Documentation/locking/atomic: Introduce atomic-tests directory
-  Documentation/locking/atomic: Add a litmus test for atomic_set()
-  Documentation/locking/atomic: Add a litmus test smp_mb__after_atomic()
-
- ...ter_atomic-is-stronger-than-acquire.litmus | 32 +++++++++++++++++++
- ...c-RMW-ops-are-atomic-WRT-atomic_set.litmus | 24 ++++++++++++++
- Documentation/atomic-tests/README             | 16 ++++++++++
- Documentation/atomic_t.txt                    | 24 +++++++-------
- MAINTAINERS                                   |  1 +
- tools/memory-model/README                     | 10 ++++--
- 6 files changed, 92 insertions(+), 15 deletions(-)
- create mode 100644 Documentation/atomic-tests/Atomic-RMW+mb__after_atomic-is-stronger-than-acquire.litmus
- create mode 100644 Documentation/atomic-tests/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
- create mode 100644 Documentation/atomic-tests/README
-
--- 
-2.25.0
-
+Thanks, Dave.
+--
+Gustavo
