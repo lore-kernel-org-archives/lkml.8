@@ -2,142 +2,258 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E9CC4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 03:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A15EC4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 03:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07CED24650
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 03:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A17624650
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 03:55:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jTEqC3T8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbgB0Dyg (ORCPT
+        id S1728325AbgB0DzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 22:54:36 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:62780 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728252AbgB0Dyg (ORCPT
+        Wed, 26 Feb 2020 22:55:16 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:34244 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728252AbgB0DzQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 22:54:36 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01R3nQAg033905
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 22:54:35 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ydqbtcsmp-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 22:54:35 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
-        Thu, 27 Feb 2020 03:54:32 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 27 Feb 2020 03:54:25 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01R3sO8034144468
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Feb 2020 03:54:24 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B61F9A4053;
-        Thu, 27 Feb 2020 03:54:24 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5E07DA4051;
-        Thu, 27 Feb 2020 03:54:24 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 27 Feb 2020 03:54:24 +0000 (GMT)
-Received: from [9.81.219.21] (unknown [9.81.219.21])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 776C1A01C0;
-        Thu, 27 Feb 2020 14:54:18 +1100 (AEDT)
-Subject: Re: [PATCH v3 13/27] powerpc/powernv/pmem: Read the capability
- registers & wait for device ready
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
- <20200221032720.33893-14-alastair@au1.ibm.com>
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-Date:   Thu, 27 Feb 2020 14:54:21 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 26 Feb 2020 22:55:16 -0500
+Received: by mail-qk1-f193.google.com with SMTP id 11so1905373qkd.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 19:55:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=e3jEhRMyMSDPIgF2MXY+K+s017u3bzyL9y4ZxjVIXsc=;
+        b=jTEqC3T8CcQJPeSiwHCc/YZwirx3XPnoflpFRSjQZBUnVCcesZxb6Gwb67LaRk8RcS
+         WyAXXTXseAYgek5tbQRPqpQFhcHSrp0NFfYlZm7O4c8Xa+VtKCgZrT6xhoOIxmMjDZFR
+         1XOX6y1G35XkkzUulYH7lfDHrO9FN3TQhEm3o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e3jEhRMyMSDPIgF2MXY+K+s017u3bzyL9y4ZxjVIXsc=;
+        b=evflMC4p0QVuZ8sEVJewoKhqikRCRLMgDua+M6DFHbHo/8gwd/R0BwY12+rtEOysiy
+         aTTkb94rL82b3ju6eXhrioApyD77FdllHEE1+JfgfYJKnpf2u16upQmSO6KXiMd0LUeu
+         PwOfvcOSqo5nz+XDZTZ/qQZ6ozN1wphWSNH6pzu8r5McV7Z2EJJS/Z30UbFNtHD463fc
+         S8rVwdHFoHf41m1f0NjDnC4muA8FqFlIm+bJwWxKaE2YPvgTfjFHyyrnfeiOFLLfetge
+         tOOrusecHelONk70OXYo0OVqY4SkBxIJwk5K4K+o8Xm1Bi0b+27d//jZkTML6Vj0hPC4
+         hHDQ==
+X-Gm-Message-State: APjAAAU53SQTLZJ+fLVbGQhbHjra4hMDBRSsz6EYr2LvATqrPMK5GB13
+        gEc2nXJOaM2y/02hEgRkJdLr5MFkfU6igh106Q2Mzg==
+X-Google-Smtp-Source: APXvYqzq8jjaKKWzzTwUgKRVwAcuPnPzaoB4MtCOHKcEOOOAccafOg+X3EgaiSchf6kPph/ll1rJMnKFKvKFXXgpvME=
+X-Received: by 2002:a05:620a:1435:: with SMTP id k21mr2787955qkj.299.1582775713747;
+ Wed, 26 Feb 2020 19:55:13 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200221032720.33893-14-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022703-0012-0000-0000-0000038AA543
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022703-0013-0000-0000-000021C74D18
-Message-Id: <c6ce554a-62b4-2675-9ec3-1ded8eaacfc4@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-26_09:2020-02-26,2020-02-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 lowpriorityscore=0 bulkscore=0 phishscore=0
- impostorscore=0 suspectscore=0 adultscore=0 mlxscore=0 mlxlogscore=999
- clxscore=1015 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2001150001 definitions=main-2002270025
+References: <20200107070154.1574-1-roger.lu@mediatek.com> <20200107070154.1574-2-roger.lu@mediatek.com>
+ <20200108203829.GA18987@bogus> <CANMq1KBu-gFy701BgFcjEwyhV9GgCCU2mkT9c8LviOJKBF30UA@mail.gmail.com>
+ <CAL_JsqLnVEhvAh_8DfGWRZa+MdPRpXc9sWEQ6-3HQAeUfvkOSg@mail.gmail.com> <1581406566.14120.46.camel@mtksdaap41>
+In-Reply-To: <1581406566.14120.46.camel@mtksdaap41>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Thu, 27 Feb 2020 11:55:02 +0800
+Message-ID: <CANMq1KBVs7ZucNu9pTxXGZ0__E6tyxd1+mm2Zui81G=xQNtShA@mail.gmail.com>
+Subject: Re: [PATCH v6 1/3] dt-bindings: soc: add mtk svs dt-bindings
+To:     Roger Lu <roger.lu@mediatek.com>
+Cc:     Rob Herring <robh@kernel.org>, Kevin Hilman <khilman@kernel.org>,
+        Nicolas Boichat <drinkcat@google.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?B?RmFuIENoZW4gKOmZs+WHoSk=?= <fan.chen@mediatek.com>,
+        =?UTF-8?B?SGVucnlDIENoZW4gKOmZs+W7uuixqik=?= 
+        <HenryC.Chen@mediatek.com>,
+        =?UTF-8?B?WVQgTGVlICjmnY7ku7Dlk7Ip?= <yt.lee@mediatek.com>,
+        =?UTF-8?B?WGlhb3FpbmcgTGl1ICjliJjmmZPluoYp?= 
+        <Xiaoqing.Liu@mediatek.com>,
+        =?UTF-8?B?Q2hhcmxlcyBZYW5nICjmpYrkuo7pgLIp?= 
+        <Charles.Yang@mediatek.com>,
+        =?UTF-8?B?QW5ndXMgTGluICjmnpfnkZvosaop?= <Angus.Lin@mediatek.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nishanth Menon <nm@ti.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        James Liao <jamesjj.liao@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/2/20 2:27 pm, Alastair D'Silva wrote:
-> +/**
-> + * read_device_metadata() - Retrieve config information from the AFU and save it for future use
-> + * @ocxlpmem: the device metadata
-> + * Return: 0 on success, negative on failure
-> + */
-> +static int read_device_metadata(struct ocxlpmem *ocxlpmem)
-> +{
-> +	u64 val;
-> +	int rc;
-> +
-> +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_CCAP0,
-> +				     OCXL_LITTLE_ENDIAN, &val);
-> +	if (rc)
-> +		return rc;
-> +
-> +	ocxlpmem->scm_revision = val & 0xFFFF;
-> +	ocxlpmem->read_latency = (val >> 32) & 0xFF;
+Hi Rob,
 
-This field is 16 bits in the spec, so the mask should be 0xFFFF I think?
+On Tue, Feb 11, 2020 at 3:36 PM Roger Lu <roger.lu@mediatek.com> wrote:
+>
+> Hi Rob & Nicolas,
+>
+> Sorry for the late reply.
+>
+> On Mon, 2020-01-13 at 23:50 +0800, Rob Herring wrote:
+> > On Mon, Jan 13, 2020 at 12:44 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
+> > >
+> > > On Thu, Jan 9, 2020 at 4:38 AM Rob Herring <robh@kernel.org> wrote:
+> > > >
+> > > > On Tue, Jan 07, 2020 at 03:01:52PM +0800, Roger Lu wrote:
+> > > > > Document the binding for enabling mtk svs on MediaTek SoC.
+> > > > >
+> > > > > Signed-off-by: Roger Lu <roger.lu@mediatek.com>
+> > > > > ---
+> > > > >  .../devicetree/bindings/power/mtk-svs.txt     | 76 +++++++++++++++++++
+> > > > >  1 file changed, 76 insertions(+)
+> > > > >  create mode 100644 Documentation/devicetree/bindings/power/mtk-svs.txt
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/power/mtk-svs.txt b/Documentation/devicetree/bindings/power/mtk-svs.txt
+> > > > > new file mode 100644
+> > > > > index 000000000000..9a3e81b9e1d2
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/devicetree/bindings/power/mtk-svs.txt
+> > > > > @@ -0,0 +1,76 @@
+> > > > > +* Mediatek Smart Voltage Scaling (MTK SVS)
+> > > > > +
+> > > > > +This describes the device tree binding for the MTK SVS controller (bank)
+> > > > > +which helps provide the optimized CPU/GPU/CCI voltages. This device also
+> > > > > +needs thermal data to calculate thermal slope for accurately compensate
+> > > > > +the voltages when temperature change.
+> > > > > +
+> > > > > +Required properties:
+> > > > > +- compatible:
+> > > > > +  - "mediatek,mt8183-svs" : For MT8183 family of SoCs
+> > > > > +- reg: Address range of the MTK SVS controller.
+> > > > > +- interrupts: IRQ for the MTK SVS controller.
+> > > > > +- clocks, clock-names: Clocks needed for the svs hardware. required
+> > > > > +                       clocks are:
+> > > > > +                    "main": Main clock for svs controller to work.
+> > > > > +- nvmem-cells: Phandle to the calibration data provided by a nvmem device.
+> > > > > +- nvmem-cell-names: Should be "svs-calibration-data" and "calibration-data"
+> > > > > +
+> > > > > +Subnodes:
+> > > > > +- svs-cpu-little: SVS bank device node of little CPU
+> > > > > +  compatible: "mediatek,mt8183-svs-cpu-little"
+> > > > > +  operating-points-v2: OPP table hooked by SVS little CPU bank.
+> > > > > +                    SVS will optimze this OPP table voltage part.
+> > > > > +  vcpu-little-supply: PMIC buck of little CPU
+> > > > > +- svs-cpu-big: SVS bank device node of big CPU
+> > > > > +  compatible: "mediatek,mt8183-svs-cpu-big"
+> > > > > +  operating-points-v2: OPP table hooked by SVS big CPU bank.
+> > > > > +                    SVS will optimze this OPP table voltage part.
+> > > > > +  vcpu-big-supply: PMIC buck of big CPU
+> > > > > +- svs-cci: SVS bank device node of CCI
+> > > > > +  compatible: "mediatek,mt8183-svs-cci"
+> > > > > +  operating-points-v2: OPP table hooked by SVS CCI bank.
+> > > > > +                    SVS will optimze this OPP table voltage part.
+> > > > > +  vcci-supply: PMIC buck of CCI
+> > > > > +- svs-gpu: SVS bank device node of GPU
+> > > > > +  compatible: "mediatek,mt8183-svs-gpu"
+> > > > > +  operating-points-v2: OPP table hooked by SVS GPU bank.
+> > > > > +                    SVS will optimze this OPP table voltage part.
+> > > > > +  vgpu-supply: PMIC buck of GPU
+> > > > > +
+> > > > > +Example:
+> > > > > +
+> > > > > +     svs: svs@1100b000 {
+> > > > > +             compatible = "mediatek,mt8183-svs";
+> > > > > +             reg = <0 0x1100b000 0 0x1000>;
+> > > > > +             interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_LOW>;
+> > > > > +             clocks = <&infracfg CLK_INFRA_THERM>;
+> > > > > +             clock-names = "main_clk";
+> > > > > +             nvmem-cells = <&svs_calibration>, <&thermal_calibration>;
+> > > > > +             nvmem-cell-names = "svs-calibration-data", "calibration-data";
+> > > > > +
+> > > > > +             svs_cpu_little: svs-cpu-little {
+> > > > > +                     compatible = "mediatek,mt8183-svs-cpu-little";
+> > > > > +                     operating-points-v2 = <&cluster0_opp>;
+> > > > > +                     vcpu-little-supply = <&mt6358_vproc12_reg>;
+> > > > > +             };
+> > > >
+> > > > I don't think this is a good binding. This information already exists
+> > > > elsewhere in the DT, so your driver should just look in those nodes.
+> > > > For example the regulator can be in the cpu nodes or the OPP table
+> > > > itself.
+> > >
+> > > Roger, if that helps, without changing any other binding, on 8183,
+> > > basically you could have:
+> > >  - svs-cpu-little: Add a handle to &cpu0 and get the regulator/opp
+> > > table from it.
+> > >  - svs-cpu-big: Handle to &cpu4
+> >
+> > Why do you need those? Use the compatible of the cpus to determine big
+> > and little cores. Or there's the cpu capacity property that could be
+> > used instead.
+> >
+> > >  - svs-cci: Handle to &cci
+> >
+> > Is there more than 1 CCI? Just retrieve the node by the compatible.
+> > There's no need to have nodes that simply serve as a collection of
+> > data for some driver.
+> >
+> > >  - svs-gpu: Handle to &gpu (BTW, it is expected that SVS would only
+> > > apply to vgpu/mali regulator, and not vsram regulator?)
+>
+> svs-gpu depends on vgpu power on for init (don't care vgpu_sram). After
+> svs-gpu init is done, it doesn't need vgpu power on anymore. (vgpu can
+> be turned off)
+>
+> Please allows me to introduce more about what svs-gpu device needs.
+> 1. It needs gpu opp table from "gpu node" and gpu_core2 power-domains
+> from "gpu_core2 node". When svs-gpu has those resources, it turns on
+> gpu_core2 power-domain for svs-gpu-hw to have power (for calculating)
+> and svs-gpu-sw will update gpu opp table voltages' part.
+> 2. Therefore, if I retrieve gpu-related node from phandle or compatible,
+> it means svs-gpu device in driver needs to attach two different gpu
+> nodes for attaining gpu opp table and gpu_core2 power-domains. I think
+> this architecture of svs-gpu confuses maintainer why it attaches two
+> different nodes instead of having a device to describe what it needs.
 
-Maybe we should generalise the EXTRACT_BITS macro we use in ocxl :)
+> 3. Is it acceptable to have a Linux device attaching two different
+> nodes? If yes, could you guide us some APIs for one device to attach two
+> nodes? I don't know how to implement it. Thanks.
 
--- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
+I'm also trying to understand how that would work. The way the code
+works now (https://chromium.googlesource.com/chromiumos/third_party/kernel/+/refs/heads/chromeos-4.19/drivers/power/avs/mtk_svs.c#1388):
 
+The SVS driver creates a platform device for each sub-node, find the
+sub-node that matches the compatible (pdev->dev.of_node):
+for_each_child_of_node(svs->dev->of_node, np) {
+  if (of_device_is_compatible(np, svsb->of_compatible)) {
+    pdev->dev.of_node = np;
+    break;
+  }
+}
+
+Then, thanks to that, the 2 functions dev_pm_opp_of_add_table and
+devm_regulator_get_optional "just work", as the get the opp table and
+regulator from the device tree node.
+
+So what you suggest is basically something like this:
+pdev->dev.of_node = of_find_compatible_node(NULL, NULL, "mediatek,mt8183-cci");
+
+I came up with a (very dirty) prototype here:
+https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/2076718
+... and it doesn't really work
+(https://gist.github.com/drinkcat/61e50eedbdc301d418c9cee3ee5b6b06, I
+think the kernel is probing more than it should, like the DMA mask
+errors should not happen...)
+
+Before I dig further... I have the same concern as Roger, is it ok to
+have 2 devices bound to the same device tree node/compatible? My
+understanding was also that it's not.
+
+> > >
+> > > I'm not too sure how we'd fetch the right regulator name, however (for
+> > > the first 3 the name is "proc", for the last one it's "mali"), maybe
+> > > add a regulator-name list in the DT?
+> >
+> > To put this another way, write an SoC specific driver that understands
+> > to some extent what exists in the SoC (and DT). I doubt something like
+> > this is going to be generic across more than a few SoCs at most.
+>
+> >
+> > Rob
+>
