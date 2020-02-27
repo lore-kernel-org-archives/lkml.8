@@ -2,239 +2,100 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D77C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4F9C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88B16246A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:29:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52A68246B4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:29:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HCnq6ZqQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lrt9AvuL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729330AbgB0N3G (ORCPT
+        id S1729344AbgB0N3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:29:06 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:45253 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729158AbgB0N2j (ORCPT
+        Thu, 27 Feb 2020 08:29:12 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34041 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729153AbgB0N3M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:28:39 -0500
-Received: by mail-yw1-f66.google.com with SMTP id a125so2926788ywe.12
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 05:28:38 -0800 (PST)
+        Thu, 27 Feb 2020 08:29:12 -0500
+Received: by mail-pg1-f196.google.com with SMTP id t3so1496862pgn.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 05:29:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ISW4IJiYVZlUtS/571LODHPsOH1NVoiUPrzOcqK7P/E=;
-        b=HCnq6ZqQsA9ekb7RCuLPqsKVFlPtqUBK1ynIiDrnSEp5AHkFvlEB+65YA8jRg8MpBc
-         UPWFF98p+n9291NiFstEFlRhbI1CiXwKX6mtxqvyiDl1oVBfxFbSTYnyKpku9T0/3wSQ
-         7Yo/v2NFlzwljHF4N4IRrXuB8y7Qs2zW7y8X/92eC3oZpMHmBo6MoA8cj6lOxrGmR16w
-         1TM7mBbXwTmWO1IEfVI7LnCwpFvBvuMc3rSXy7v1JvCU3Q5LiW4vfIfuwCH/dYmdNi+W
-         bF6UhP27MWszVRhRcSm51CHOD5N3wst/jUObS5BFf2eGrTC4CGSwT8aRJXWA+9IuNnVi
-         Ljjw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=J6qXS1wSxw6vDTcttyVtlLNJ03skjYv/jVjoYtks20E=;
+        b=Lrt9AvuLeb9jeVeqLm8sfmFsu+KF47C0RipoVstxmDSMD+LYcUnkQ9WYUql+DWq0MV
+         lLAVA/qmKK87xKLgsV5unf8vquJltLNFOH9tIXLZdhiC0/X5Kyspr5LgP9XyOSmL2tNr
+         ctUvgjNimS8EAc2ayJ3GlFlWzXEICybNOI03niRlE76FSlsK2SLONOa2kwEfQN6fpmk1
+         VAcjd+zBE+I8Y4zoeWWcpUAwi3CXlPZAuCogKfv0ETD6ggHBst34Sw0WUJi0BkKK+Gox
+         eqk0nXsLlfv22RCqse+bzyO3XlVAo9QTzEgn0sSTjvyt6aio/6WEgduQGDQu5GSF/+eO
+         j+lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ISW4IJiYVZlUtS/571LODHPsOH1NVoiUPrzOcqK7P/E=;
-        b=HCZw84o2wSgCvYe/hYtSh9fkZgr95wZlIacaT9K0Si4+PwM754ZmEORQoSZeMT5z6t
-         0rXUA90cQ8AfgsC5T1dGXBa9X9Nfe5BWsm2DR+tl1lNQFOzfrBVItXL5+cdXoX/Lu7qm
-         /nlJ1771WKucvRi2aOe0cQ53EM5UxfkYc2+i3ZL7eQw0myvDfMNbJrsIGC5z1E7IKhRw
-         szZZ9CGlfuRI0u+wP6O3c1bvsLzg3unpht3qHKA6kem3OP4J1iIOV5WFBu4e0MTS+X+Z
-         YGjhYGyLyeq58p0yUwalFaIMyiLx/JYreQ4oMFbQce6vtl11Pwopwt8w7eUP4W95lMfJ
-         tXqg==
-X-Gm-Message-State: APjAAAXnB6XekMdQt+SBZtkXsXyb2g9ZmDP5qu2lN4RiTQt2ImdHIQ3R
-        /Foqr4adxk0i1PrT/0XLlM4Folk=
-X-Google-Smtp-Source: APXvYqytRGKko8tJgk6mIfEJoO946C8AINt/5Hpltuea048Y0oX44enrDMnZxi5ln1KLLmoeiMKymQ==
-X-Received: by 2002:a81:a985:: with SMTP id g127mr3966117ywh.470.1582810117700;
-        Thu, 27 Feb 2020 05:28:37 -0800 (PST)
-Received: from localhost.localdomain (174-084-153-250.res.spectrum.com. [174.84.153.250])
-        by smtp.gmail.com with ESMTPSA id j23sm2442759ywb.93.2020.02.27.05.28.36
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=J6qXS1wSxw6vDTcttyVtlLNJ03skjYv/jVjoYtks20E=;
+        b=n0i8liF26zPsKbEDgTxIZpuMk3MdDG1p3dlItqRoykDuGT4JGBpYPKAZAIbOJ2bxbN
+         edBfBVfFsCBtDYdH2jR2oOervTD3Ht6Y8+bbZNg+h9x+fHSZ/fI2BVzBU+RY6Z/vkvGQ
+         LYbaxgTM8TrlKcN3s46oDmqXaSeJCudeZCrzBwYekA08ylCA3V/60jPcx0l2mK5P+Krp
+         QIUSIsvf38ND52R+J61VewJWm+H1Q+UoQy8vQ4z2Cp6TeETP83xnIGrX1+fBRySiaef/
+         0X1B+eEc90DI6YQuzzSH+SlukXKZpwEs9+7/Q18yEsd4eVt3z6w6aJKCY4nkyC/b+7Cl
+         TYlg==
+X-Gm-Message-State: APjAAAUrD0M9X9qRCt2yux3KUybsASHowWc34bNcSgAeIrXwd5x04mgb
+        DHyIA5Fw2/ttiloRDiNmbGq42Ab2GU8=
+X-Google-Smtp-Source: APXvYqz+Y5xmU0t4GXQu1hmoMQ0gDOlSlB1DKLqEr4yP3nPm0JTRyMcnK1DuzL7jcjd9v6+CTEqXnA==
+X-Received: by 2002:aa7:946b:: with SMTP id t11mr3998714pfq.57.1582810151046;
+        Thu, 27 Feb 2020 05:29:11 -0800 (PST)
+Received: from localhost (g183.222-224-185.ppp.wakwak.ne.jp. [222.224.185.183])
+        by smtp.gmail.com with ESMTPSA id r145sm7553229pfr.5.2020.02.27.05.29.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 05:28:37 -0800 (PST)
-From:   Brian Gerst <brgerst@gmail.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Brian Gerst <brgerst@gmail.com>
-Subject: [PATCH v3 2/8] x86, syscalls: Refactor SYSCALL_DEFINE0 macros
-Date:   Thu, 27 Feb 2020 08:28:20 -0500
-Message-Id: <20200227132826.195669-3-brgerst@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200227132826.195669-1-brgerst@gmail.com>
-References: <20200227132826.195669-1-brgerst@gmail.com>
+        Thu, 27 Feb 2020 05:29:10 -0800 (PST)
+Date:   Thu, 27 Feb 2020 22:29:08 +0900
+From:   Stafford Horne <shorne@gmail.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Openrisc <openrisc@lists.librecores.org>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Christian Brauner <christian@brauner.io>
+Subject: Re: [PATCH 2/3] openrisc: Enable the clone3 syscall
+Message-ID: <20200227132908.GI7926@lianli.shorne-pla.net>
+References: <20200226225625.28935-1-shorne@gmail.com>
+ <20200226225625.28935-3-shorne@gmail.com>
+ <20200227122147.rnpzcy7rjexgy6yx@wittgenstein>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227122147.rnpzcy7rjexgy6yx@wittgenstein>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pull the common code out from the SYSCALL_DEFINE0 macros into a new
-__SYS_STUB0 macro.  Also conditionalize the X64 version in preparation for
-enabling syscall wrappers on 32-bit native kernels.
+On Thu, Feb 27, 2020 at 01:21:47PM +0100, Christian Brauner wrote:
+> On Thu, Feb 27, 2020 at 07:56:24AM +0900, Stafford Horne wrote:
+> > Enable the clone3 syscall for OpenRISC.  We use the generic version.
+> > 
+> > This was tested with the clone3 test from selftests.  Note, for all
+> > tests to pass it required enabling CONFIG_NAMESPACES which is not
+> > enabled in the default kernel config.
+> 
+> For OpenRISC, I assume. Hm, maybe we should fix the tests to skip when
+> CONFIG_NAMESPACES is not enabled.
 
-Signed-off-by: Brian Gerst <brgerst@gmail.com>
----
- arch/x86/include/asm/syscall_wrapper.h | 73 +++++++++++---------------
- 1 file changed, 32 insertions(+), 41 deletions(-)
+Yes, not the default for openrisc defconfig.  It might make sense to either skip
+the tests of have them as expected fails when CONFIG_NAMESPACES is off.
 
-diff --git a/arch/x86/include/asm/syscall_wrapper.h b/arch/x86/include/asm/syscall_wrapper.h
-index 7a4c2aff52c6..2b1ae55c52ee 100644
---- a/arch/x86/include/asm/syscall_wrapper.h
-+++ b/arch/x86/include/asm/syscall_wrapper.h
-@@ -21,6 +21,12 @@ struct pt_regs;
- 	      ,,(unsigned int)regs->dx,,(unsigned int)regs->si		\
- 	      ,,(unsigned int)regs->di,,(unsigned int)regs->bp)
- 
-+#define __SYS_STUB0(abi, name)						\
-+	asmlinkage long __##abi##_##name(const struct pt_regs *regs);	\
-+	ALLOW_ERROR_INJECTION(__##abi##_##name, ERRNO);			\
-+	asmlinkage long __##abi##_##name(const struct pt_regs *regs)	\
-+		__alias(__do_##name);
-+
- #define __SYS_STUBx(abi, name, ...)					\
- 	asmlinkage long __##abi##_##name(const struct pt_regs *regs);	\
- 	ALLOW_ERROR_INJECTION(__##abi##_##name, ERRNO);			\
-@@ -30,10 +36,14 @@ struct pt_regs;
- 	}
- 
- #ifdef CONFIG_X86_64
-+#define __X64_SYS_STUB0(name)						\
-+	__SYS_STUB0(x64, sys_##name)
-+
- #define __X64_SYS_STUBx(x, name, ...)					\
- 	__SYS_STUBx(x64, sys##name,					\
- 		    SC_X86_64_REGS_TO_ARGS(x, __VA_ARGS__))
- #else /* CONFIG_X86_64 */
-+#define __X64_SYS_STUB0(name)
- #define __X64_SYS_STUBx(x, name, ...)
- #endif /* CONFIG_X86_64 */
- 
-@@ -46,34 +56,20 @@ struct pt_regs;
-  * kernel/sys_ni.c and SYS_NI in kernel/time/posix-stubs.c to cover this
-  * case as well.
-  */
--#define __IA32_COMPAT_SYS_STUB0(x, name)				\
--	asmlinkage long __ia32_compat_sys_##name(const struct pt_regs *regs);\
--	ALLOW_ERROR_INJECTION(__ia32_compat_sys_##name, ERRNO);		\
--	asmlinkage long __ia32_compat_sys_##name(const struct pt_regs *regs)\
--	{								\
--		return __se_compat_sys_##name();			\
--	}
-+#define __IA32_COMPAT_SYS_STUB0(name)					\
-+	__SYS_STUB0(ia32, compat_sys_##name)
- 
- #define __IA32_COMPAT_SYS_STUBx(x, name, ...)				\
- 	__SYS_STUBx(ia32, compat_sys##name,				\
- 		    SC_IA32_REGS_TO_ARGS(x, __VA_ARGS__))
- 
-+#define __IA32_SYS_STUB0(name)						\
-+	__SYS_STUB0(ia32, sys_##name)
-+
- #define __IA32_SYS_STUBx(x, name, ...)					\
- 	__SYS_STUBx(ia32, sys##name,					\
- 		    SC_IA32_REGS_TO_ARGS(x, __VA_ARGS__))
- 
--/*
-- * To keep the naming coherent, re-define SYSCALL_DEFINE0 to create an alias
-- * named __ia32_sys_*()
-- */
--
--#define SYSCALL_DEFINE0(sname)						\
--	SYSCALL_METADATA(_##sname, 0);					\
--	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused);\
--	ALLOW_ERROR_INJECTION(__x64_sys_##sname, ERRNO);		\
--	SYSCALL_ALIAS(__ia32_sys_##sname, __x64_sys_##sname);		\
--	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused)
--
- #define COND_SYSCALL(name)							\
- 	asmlinkage __weak long __x64_sys_##name(const struct pt_regs *__unused)	\
- 	{									\
-@@ -89,7 +85,9 @@ struct pt_regs;
- 	SYSCALL_ALIAS(__ia32_sys_##name, sys_ni_posix_timers)
- 
- #else /* CONFIG_IA32_EMULATION */
-+#define __IA32_COMPAT_SYS_STUB0(name)
- #define __IA32_COMPAT_SYS_STUBx(x, name, ...)
-+#define __IA32_SYS_STUB0(name)
- #define __IA32_SYS_STUBx(x, name, ...)
- #endif /* CONFIG_IA32_EMULATION */
- 
-@@ -100,20 +98,15 @@ struct pt_regs;
-  * of the x86-64-style parameter ordering of x32 syscalls. The syscalls common
-  * with x86_64 obviously do not need such care.
-  */
--#define __X32_COMPAT_SYS_STUB0(x, name, ...)				\
--	asmlinkage long __x32_compat_sys_##name(const struct pt_regs *regs);\
--	ALLOW_ERROR_INJECTION(__x32_compat_sys_##name, ERRNO);		\
--	asmlinkage long __x32_compat_sys_##name(const struct pt_regs *regs)\
--	{								\
--		return __se_compat_sys_##name();\
--	}
-+#define __X32_COMPAT_SYS_STUB0(name)					\
-+	__SYS_STUB0(x32, compat_sys_##name)
- 
- #define __X32_COMPAT_SYS_STUBx(x, name, ...)				\
- 	__SYS_STUBx(x32, compat_sys##name,				\
- 		    SC_X86_64_REGS_TO_ARGS(x, __VA_ARGS__))
- 
- #else /* CONFIG_X86_X32 */
--#define __X32_COMPAT_SYS_STUB0(x, name)
-+#define __X32_COMPAT_SYS_STUB0(name)
- #define __X32_COMPAT_SYS_STUBx(x, name, ...)
- #endif /* CONFIG_X86_X32 */
- 
-@@ -125,15 +118,12 @@ struct pt_regs;
-  * of them.
-  */
- #define COMPAT_SYSCALL_DEFINE0(name)					\
--	static long __se_compat_sys_##name(void);			\
--	static inline long __do_compat_sys_##name(void);		\
--	__IA32_COMPAT_SYS_STUB0(x, name)				\
--	__X32_COMPAT_SYS_STUB0(x, name)					\
--	static long __se_compat_sys_##name(void)			\
--	{								\
--		return __do_compat_sys_##name();			\
--	}								\
--	static inline long __do_compat_sys_##name(void)
-+	static asmlinkage long						\
-+	__do_compat_sys_##name(const struct pt_regs *__unused);		\
-+	__IA32_COMPAT_SYS_STUB0(name)					\
-+	__X32_COMPAT_SYS_STUB0(name)					\
-+	static asmlinkage long						\
-+	__do_compat_sys_##name(const struct pt_regs *__unused)
- 
- #define COMPAT_SYSCALL_DEFINEx(x, name, ...)				\
- 	static long							\
-@@ -221,13 +211,14 @@ struct pt_regs;
-  * SYSCALL_DEFINEx() -- which is essential for the COND_SYSCALL() and SYS_NI()
-  * macros to work correctly.
-  */
--#ifndef SYSCALL_DEFINE0
- #define SYSCALL_DEFINE0(sname)						\
- 	SYSCALL_METADATA(_##sname, 0);					\
--	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused);\
--	ALLOW_ERROR_INJECTION(__x64_sys_##sname, ERRNO);		\
--	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused)
--#endif
-+	static asmlinkage long						\
-+	__do_sys_##sname(const struct pt_regs *__unused);		\
-+	__X64_SYS_STUB0(sname)						\
-+	__IA32_SYS_STUB0(sname)						\
-+	static asmlinkage long						\
-+	__do_sys_##sname(const struct pt_regs *__unused)
- 
- #ifndef COND_SYSCALL
- #define COND_SYSCALL(name) 							\
--- 
-2.24.1
+On the otherhand, I am not sure if the self tests know about the CONFIG_*
+available.  I notice many test directories have a 'config' file and a readme
+saying, for these test to run ensure use have at least 'these' config values
+set.
 
+-Stafford
