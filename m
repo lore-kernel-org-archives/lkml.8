@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C4EC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93537C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E6DE24656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66CC42468F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:44:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814650;
-	bh=cmKVbbgAr5m81ZEiOmdFPQRU8WvKgIECNgEV/u5oFNQ=;
+	s=default; t=1582814657;
+	bh=xTfDbkr37bVX7WPtntC0qxawFpQYpjYWedgmtw+jqao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=whCq4CUg2UeFDrH39smweiT+yLpvJMtT7pd3bYerBpRYxb7pbAl/usGuNrFQ51hrA
-	 DOEWZ4Z0kxoNKr0b1zcN2le3x3E4PS47jX6Ig2OVXW/yyuIgUDASabkImyoiDopqrY
-	 GTqBr+NwAoIWfmxEhvFoRFb+mTG2EILlw054ViQk=
+	b=Af9K0fi1iMJKi8FZlOP3hdZOIIwDiW3qkUo69Nkc34KE5l/GJPpFokWDbj7aFCU32
+	 ikX27S/Q4+CkjJlTsuS4GFcCziWWUJ6RnXn3So0Mot1g3EjNWxu6QiLqJZhi3PL1VS
+	 GHdDOUVH4UeEUVkLA9wnGJywWu2XdkWt55Hemvak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730877AbgB0Nsb (ORCPT
+        id S1730411AbgB0NsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:48:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45232 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:48:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729620AbgB0Ns2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:48:28 -0500
+        id S1730805AbgB0NsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:48:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7DC020801;
-        Thu, 27 Feb 2020 13:48:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C0D724656;
+        Thu, 27 Feb 2020 13:48:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811308;
-        bh=cmKVbbgAr5m81ZEiOmdFPQRU8WvKgIECNgEV/u5oFNQ=;
+        s=default; t=1582811284;
+        bh=xTfDbkr37bVX7WPtntC0qxawFpQYpjYWedgmtw+jqao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bJUR2GJEIGX56Zvx3SxdArkNyT+QBo9hdgn5HFIdTHKBmS9XBPbdkmkqaqWV/e4RK
-         /oQU1a/CwBatVn7n7l8KQzwy9vPfBR97D0IGyPn7YBFHRbi8M0fv0ysOrWQ7mcXExS
-         soj7aE6yHF/I5+RbRrQgcO5ga/v+7nmcSgrdfSWA=
+        b=vGtQ5ymD63hpCyAjY+d5nG21g26U7XDjcUMVMqbV5bQUwXNNXJrqK2wbM18501k+P
+         8roIFuKoMSgNpeHsvn8oCp6hIHnRxAT3gtORQabOqAWaPN/oGX1m4D/hTA2IB5plIO
+         l/E+WS5yDHEKqUJ88ZlfoN0C9ymgqVM4X6kdAkzQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 081/165] drm/nouveau: Fix copy-paste error in nouveau_fence_wait_uevent_handler
-Date:   Thu, 27 Feb 2020 14:35:55 +0100
-Message-Id: <20200227132243.170046293@linuxfoundation.org>
+Subject: [PATCH 4.9 072/165] Input: edt-ft5x06 - work around first register access error
+Date:   Thu, 27 Feb 2020 14:35:46 +0100
+Message-Id: <20200227132241.932215524@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -60,34 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
 
-[ Upstream commit 1eb013473bff5f95b6fe1ca4dd7deda47257b9c2 ]
+[ Upstream commit e112324cc0422c046f1cf54c56f333d34fa20885 ]
 
-Like other cases, it should use rcu protected 'chan' rather
-than 'fence->channel' in nouveau_fence_wait_uevent_handler.
+The EP0700MLP1 returns bogus data on the first register read access
+(reading the threshold parameter from register 0x00):
 
-Fixes: 0ec5f02f0e2c ("drm/nouveau: prevent stale fence->channel pointers, and protect with rcu")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+    edt_ft5x06 2-0038: crc error: 0xfc expected, got 0x40
+
+It ignores writes until then. This patch adds a dummy read after which
+the number of sensors and parameter read/writes work correctly.
+
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_fence.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/touchscreen/edt-ft5x06.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_fence.c b/drivers/gpu/drm/nouveau/nouveau_fence.c
-index 4bb9ab892ae19..78e521d00251c 100644
---- a/drivers/gpu/drm/nouveau/nouveau_fence.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_fence.c
-@@ -158,7 +158,7 @@ nouveau_fence_wait_uevent_handler(struct nvif_notify *notify)
- 
- 		fence = list_entry(fctx->pending.next, typeof(*fence), head);
- 		chan = rcu_dereference_protected(fence->channel, lockdep_is_held(&fctx->lock));
--		if (nouveau_fence_update(fence->channel, fctx))
-+		if (nouveau_fence_update(chan, fctx))
- 			ret = NVIF_NOTIFY_DROP;
+diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+index 28466e358fee1..22c8d2070faac 100644
+--- a/drivers/input/touchscreen/edt-ft5x06.c
++++ b/drivers/input/touchscreen/edt-ft5x06.c
+@@ -887,6 +887,7 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
+ {
+ 	const struct edt_i2c_chip_data *chip_data;
+ 	struct edt_ft5x06_ts_data *tsdata;
++	u8 buf[2] = { 0xfc, 0x00 };
+ 	struct input_dev *input;
+ 	unsigned long irq_flags;
+ 	int error;
+@@ -956,6 +957,12 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
+ 		return error;
  	}
- 	spin_unlock_irqrestore(&fctx->lock, flags);
+ 
++	/*
++	 * Dummy read access. EP0700MLP1 returns bogus data on the first
++	 * register read access and ignores writes.
++	 */
++	edt_ft5x06_ts_readwrite(tsdata->client, 2, buf, 2, buf);
++
+ 	edt_ft5x06_ts_set_regs(tsdata);
+ 	edt_ft5x06_ts_get_defaults(&client->dev, tsdata);
+ 	edt_ft5x06_ts_get_parameters(tsdata);
 -- 
 2.20.1
 
