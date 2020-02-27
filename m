@@ -2,131 +2,150 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 309CDC3F2CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 056B5C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0638824650
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFB5F246A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:38:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=who-t.net header.i=@who-t.net header.b="u1GqpQiG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eY5qbMHb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vCBMHMF2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730239AbgB0WgS (ORCPT
+        id S1730247AbgB0WiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 17:36:18 -0500
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:58859 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729808AbgB0WgR (ORCPT
+        Thu, 27 Feb 2020 17:38:18 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38690 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730023AbgB0WiS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 17:36:17 -0500
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id B4476220BD;
-        Thu, 27 Feb 2020 17:36:16 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute7.internal (MEProxy); Thu, 27 Feb 2020 17:36:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=who-t.net; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=ov41UkSl41BMVyDa9tdCim+4xN3
-        JMQqoafhLm9TNTqM=; b=u1GqpQiG9pgJ7V9jG/2MoW41kjRlgSIBAyqSUhwiB8W
-        mDxTcYpOy9e/lklTy5qFKlcK2ahs6O3pW67hkFB98SdxTuFUh8sZGfS+zcQDVfEW
-        04oGRFcWlcQJyphU9iiWDNgJb43AwFm6EDm6KF4cJTC/DApYplVx8ye1CtDpxYND
-        7IW9nSDx9qBpKac8UOOh+jYllmjT75zmrJpTmDEoK4HF+QefpafuG9W924rwFkIc
-        MPcmK2Eyr4/aX46G3M/S3Vu0QbnxV97UDe4VnZqKWukWeer1o5TB1OJ6jRWZ06eW
-        oTTZfoYhhZhqbXFPJu0O6MMuxRECEZDxcPIPsSjXJKw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=ov41Uk
-        Sl41BMVyDa9tdCim+4xN3JMQqoafhLm9TNTqM=; b=eY5qbMHbuj4CLg60BKVvCA
-        dDsgP7NNqg4h5hPyaqE0T0sidKfmYV3DpTZvJDrMFPH/Ch6FyuQA4NwyKzoBgu+v
-        TwDw+sJCY68Ed46GEVsH7i/astJahl6gglQJlYVTlI8blDabdtHWMsdgjJnkzQMS
-        HPQWVrO/4Dl10qtSKSr7qnLAIQ+QjkAaRCT7yIZBGIM0reOGkuCWXohAHmT048PH
-        rm5EkRlztTSwj3MUEpKvcuAwPOhs7raz+m0fBbHO6VRPiofN38FNIp59KNQKvozU
-        DQIrIglMJNsU8wq6Ladd0qRDHl2BrxwlhNIQS44ZCPrNHwBJ3ZC3JbxEXxHfp3Ew
-        ==
-X-ME-Sender: <xms:X0RYXkBz_9d8Wxy7yzCP3VVaNLj6WAnSXDqQ0KhzD78bRSYCJltUyQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrleejucetufdoteggodetrfdotffvucfrrh
-    hofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefrvghtvghrucfjuhht
-    thgvrhgvrhcuoehpvghtvghrrdhhuhhtthgvrhgvrhesfihhohdqthdrnhgvtheqnecukf
-    hppeduudejrddvtddrjedurddutdelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghr
-    rghmpehmrghilhhfrhhomhepphgvthgvrhdrhhhuthhtvghrvghrseifhhhoqdhtrdhnvg
-    ht
-X-ME-Proxy: <xmx:X0RYXraFoDptMoV63fehTYhJtb6im-20GszuZNZfWeaHyFr66o5zIw>
-    <xmx:X0RYXlKDbp5pqh601_W5UzYu3Pz8yaEjfZz_RwPxHK1bdDJ08AMRZA>
-    <xmx:X0RYXs1lRPd7-6QTZabtXxduz6EjaDWw8KtGPGxsSOJxTp08eZFWZA>
-    <xmx:YERYXgYjdmqekgXLlvrfzDe3C2Yoih4na2-TMO7yVZ4X9_16sd0_TA>
-Received: from jelly (117-20-71-109.751447.bne.nbn.aussiebb.net [117.20.71.109])
-        by mail.messagingengine.com (Postfix) with ESMTPA id C4D173280064;
-        Thu, 27 Feb 2020 17:36:12 -0500 (EST)
-Date:   Fri, 28 Feb 2020 08:36:08 +1000
-From:   Peter Hutterer <peter.hutterer@who-t.net>
-To:     Johnny Chuang <johnny.chuang.emc@gmail.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        Johnny Chuang <johnny.chuang@emc.com.tw>,
-        Jennifer Tsai <jennifer.tsai@emc.com.tw>,
-        James Chen <james.chen@emc.com.tw>,
-        Paul Liang <paul.liang@emc.com.tw>,
-        Jeff Chuang <jeff.chuang@emc.com.tw>
-Subject: Re: [PATCH] Input: elants_i2c - Report resolution information for
- touch major
-Message-ID: <20200227223608.GB1087116@jelly>
-References: <1582766000-23023-1-git-send-email-johnny.chuang.emc@gmail.com>
+        Thu, 27 Feb 2020 17:38:18 -0500
+Received: by mail-ed1-f66.google.com with SMTP id e25so1003328edq.5
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 14:38:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5ldqtdzQg0IDkeY1Xbv0KzAGe+suBcmk9fLvcp/p3NQ=;
+        b=vCBMHMF2V3rD3aEGpqLE6IGPiunwvNx4n++lWFnfdUbfrdni6eNWVPcqzZri2/Raeg
+         wTj06zoRmfzelvt6glWNRK9rWNdSS8S2XuoWzJ9nui7EkRcVZiFItixEhlmUXRH/O/c3
+         mszevfyxXbq4Pm+lq4vZ+EIddisuYNQTHeI6SrjsaZS+zg5gHtsJVW3PiNdM6nxYmW7S
+         LW99kUP00dpHDtXWXqa4i9FG5dAK4yc/RiYJY/ZK+F3G9U7+VCIh1COun9kK6QJr0J79
+         t02y1ebCORNCNWM11ZBOl5ufZF7+Tzyd3pYA05WJv88cbAfUPYuLTXX0DA9uVLSD/Hgm
+         +Dpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5ldqtdzQg0IDkeY1Xbv0KzAGe+suBcmk9fLvcp/p3NQ=;
+        b=C4MFge2qOUveIlZxCLp95FsrPgnXdK9/L8I099Ra94itAjlhZAfEPC5nG4Cb05XS/M
+         BX1EXVhiQKRUle3hSK/wE9wBKLPpSkoHzipQqSHEcyerts3uSrF2Abph4DUZk1zIFV5k
+         SX1qnEdnF8hAYYJ/8ynOtjWlZWUWHQPDmAVraX4/A6ARhpRfhPH2GH2TIOEfvWMRP7Ib
+         rRKnMG1zQkEJxeKvLLVk2drfVP48yo9H0+PfkDWuBABlqO+BnT16DLnTHsFszZnwVFFJ
+         L69SYjmwYZOMppkXkewWqMmOjw2n1zCQ9LyVY7dpZgyiKXdggKWRNRpXAt17/4gSZY4g
+         FVow==
+X-Gm-Message-State: APjAAAWZKFJY6Xi8Kf4C4cnyL9HvVHDGcGRGdfZ4FPpNNkV4lOk+qEQ4
+        iOkeULsDJZf9AJn86RbtHnR7Ew==
+X-Google-Smtp-Source: APXvYqxxloI5041lk1b15OcyCz5cCF9wex2YQPothjIN2SiN+YwNMxhIRod4razDzQIdZ4bi3X7m4Q==
+X-Received: by 2002:a17:906:4bc8:: with SMTP id x8mr1060538ejv.339.1582843095559;
+        Thu, 27 Feb 2020 14:38:15 -0800 (PST)
+Received: from [192.168.1.9] (hst-221-24.medicom.bg. [84.238.221.24])
+        by smtp.googlemail.com with ESMTPSA id j24sm441940edr.57.2020.02.27.14.38.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Feb 2020 14:38:14 -0800 (PST)
+Subject: Re: [PATCH v4 11/12] arm64: dts: sdm845: follow venus-sdm845v2 DT
+ binding
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Vikash Garodia <vgarodia@codeaurora.org>, dikshita@codeaurora.org
+References: <20200106154929.4331-1-stanimir.varbanov@linaro.org>
+ <20200106154929.4331-12-stanimir.varbanov@linaro.org>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <13ea7221-5253-37fc-595d-e650b2d474c6@linaro.org>
+Date:   Fri, 28 Feb 2020 00:38:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582766000-23023-1-git-send-email-johnny.chuang.emc@gmail.com>
+In-Reply-To: <20200106154929.4331-12-stanimir.varbanov@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 09:13:20AM +0800, Johnny Chuang wrote:
-> From: Johnny Chuang <johnny.chuang@emc.com.tw>
+Hi Bjorn,
+
+Could you take this for v5.7.
+
+On 1/6/20 5:49 PM, Stanimir Varbanov wrote:
+> Move all pmdomain and clock resources to Venus DT node. And make
+> possible to support dynamic core assignment on v4.
 > 
-> This patch supports reporting resolution for ABS_MT_TOUCH_MAJOR event.
-> This information is needed in showing pressure/width radius.
-> 
-> Signed-off-by: Johnny Chuang <johnny.chuang@emc.com.tw>
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 > ---
->  drivers/input/touchscreen/elants_i2c.c | 1 +
->  1 file changed, 1 insertion(+)
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 25 +++++++++++++------------
+>  1 file changed, 13 insertions(+), 12 deletions(-)
 > 
-> diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
-> index 4911799..14c577c 100644
-> --- a/drivers/input/touchscreen/elants_i2c.c
-> +++ b/drivers/input/touchscreen/elants_i2c.c
-> @@ -1309,6 +1309,7 @@ static int elants_i2c_probe(struct i2c_client *client,
->  	input_set_abs_params(ts->input, ABS_MT_PRESSURE, 0, 255, 0, 0);
->  	input_abs_set_res(ts->input, ABS_MT_POSITION_X, ts->x_res);
->  	input_abs_set_res(ts->input, ABS_MT_POSITION_Y, ts->y_res);
-> +	input_abs_set_res(ts->input, ABS_MT_TOUCH_MAJOR, 1);
-
-official resolution for absinfo is "units per mm", so a value of 3 would
-mean 3mm, is that correct?
-
-Not that it matters too much, since touch major is already all over the
-place and needs userspace overrides for every device but it'd be nice to at
-least make this useful out of the box on one device class.
-
-Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
-
-otherwise
-
-Cheers,
-   Peter
-
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index ddb1f23c936f..c5784951d408 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -2568,32 +2568,33 @@
+>  		};
 >  
->  	error = input_register_device(ts->input);
->  	if (error) {
-> -- 
-> 2.7.4
+>  		video-codec@aa00000 {
+> -			compatible = "qcom,sdm845-venus";
+> +			compatible = "qcom,sdm845-venus-v2";
+>  			reg = <0 0x0aa00000 0 0xff000>;
+>  			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> -			power-domains = <&videocc VENUS_GDSC>;
+> +			power-domains = <&videocc VENUS_GDSC>,
+> +					<&videocc VCODEC0_GDSC>,
+> +					<&videocc VCODEC1_GDSC>;
+> +			power-domain-names = "venus", "vcodec0", "vcodec1";
+>  			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
+>  				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
+> -				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>;
+> -			clock-names = "core", "iface", "bus";
+> +				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
+> +				 <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
+> +				 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>,
+> +				 <&videocc VIDEO_CC_VCODEC1_CORE_CLK>,
+> +				 <&videocc VIDEO_CC_VCODEC1_AXI_CLK>;
+> +			clock-names = "core", "iface", "bus",
+> +				      "vcodec0_core", "vcodec0_bus",
+> +				      "vcodec1_core", "vcodec1_bus";
+>  			iommus = <&apps_smmu 0x10a0 0x8>,
+>  				 <&apps_smmu 0x10b0 0x0>;
+>  			memory-region = <&venus_mem>;
+>  
+>  			video-core0 {
+>  				compatible = "venus-decoder";
+> -				clocks = <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
+> -					 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
+> -				clock-names = "core", "bus";
+> -				power-domains = <&videocc VCODEC0_GDSC>;
+>  			};
+>  
+>  			video-core1 {
+>  				compatible = "venus-encoder";
+> -				clocks = <&videocc VIDEO_CC_VCODEC1_CORE_CLK>,
+> -					 <&videocc VIDEO_CC_VCODEC1_AXI_CLK>;
+> -				clock-names = "core", "bus";
+> -				power-domains = <&videocc VCODEC1_GDSC>;
+>  			};
+>  		};
+>  
 > 
+
+-- 
+regards,
+Stan
