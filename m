@@ -2,158 +2,89 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F14C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F147FC4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6DCA24692
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0D8524699
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:56:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="odm+PZjB"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KPTA2s8S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729101AbgB0Mzz (ORCPT
+        id S1729113AbgB0M4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 07:55:55 -0500
-Received: from gateway24.websitewelcome.com ([192.185.51.202]:39003 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729036AbgB0Mzz (ORCPT
+        Thu, 27 Feb 2020 07:56:51 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:32378 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729019AbgB0M4v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 07:55:55 -0500
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 2FB7E1E35C
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 06:55:53 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 7IhljQuWaSl8q7Ihlj5COg; Thu, 27 Feb 2020 06:55:53 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=4zTfqHtNR+JOFw1AL/0V9Tg2bWk099xhAe7F5IWAr+A=; b=odm+PZjBgpSmbCka5oSybjWmj2
-        TDatQyzhvlKp3qcc8uuPHnf2AD33gqeg49yXELgZeBhZ2x1es6HcFQrsef7lCeVKA3J+7neryuzhS
-        SqkY26fKqf36icZ8VgkCxFnUPTkhPXqC7Fh9FleYq9pZTqXoWlDGvUZAdq60rr+CWSUu1fK27gkwT
-        pL0ewQDQmbhgqxQrhrt8e4MAzozEeyig2V7xgCvAa+bu+VB5VzJiHjiayhXVngkup4zBe0pNPyCTt
-        CPjgMXIOkloq3w7pI4GjG7odckJ2B0DnZhS7Q4FjYPgKxJp9VKyAJKDcHz6M38ilzvkuTbyl+Ne00
-        kEFCS15Q==;
-Received: from [201.166.157.75] (port=39906 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j7Ihh-000gWF-C4; Thu, 27 Feb 2020 06:55:50 -0600
-Date:   Thu, 27 Feb 2020 06:58:41 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] security: integrity: Replace zero-length array with
- flexible-array member
-Message-ID: <20200227125841.GA23703@embeddedor>
+        Thu, 27 Feb 2020 07:56:51 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582808211; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=GEdNSRK9h+EoZXhdOOmnO3FyQ+zkPPEQKa6CLrSCl9o=; b=KPTA2s8SAnsAnTRzWzqp4pgzHd+6pI6SGZLy2+22vvLvpytK8b2uh6qTqnhMXzI5aUE5UR56
+ fYhWnKxlW4WY2ZKvAIfjY7ERjpvxccR89iMHpUMcxaquMJnZv1vvyIKZKkW2OIIbHuRme1zb
+ achjGH/cx5tjoBq2PBvq2ygj9J8=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e57bc80.7fca9b9da570-smtp-out-n02;
+ Thu, 27 Feb 2020 12:56:32 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BB580C4479D; Thu, 27 Feb 2020 12:56:32 +0000 (UTC)
+Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A7E13C43383;
+        Thu, 27 Feb 2020 12:56:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A7E13C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     bjorn.andersson@linaro.org, agross@kernel.org, arnd@arndb.de
+Cc:     georgi.djakov@linaro.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        sboyd@kernel.org, Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH] soc: qcom: cmd-db: Fix compilation error when CMD_DB is disabled
+Date:   Thu, 27 Feb 2020 18:26:15 +0530
+Message-Id: <20200227125615.4727-1-sibis@codeaurora.org>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.166.157.75
-X-Source-L: No
-X-Exim-ID: 1j7Ihh-000gWF-C4
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.166.157.75]:39906
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 12
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+If CONFIG_QCOM_COMMAND_DB=n the following compilation errors will be
+seen. Fix this by including the appropriate linux headers.
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+./include/soc/qcom/cmd-db.h: In function ‘cmd_db_read_aux_data’:
+./include/soc/qcom/cmd-db.h: error: implicit declaration of function ‘ERR_PTR’;
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
-
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
- security/integrity/ima/ima.h   | 2 +-
- security/integrity/integrity.h | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ include/soc/qcom/cmd-db.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index 64317d95363e..da4246ee7e35 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -95,7 +95,7 @@ struct ima_template_entry {
- 	u8 digest[TPM_DIGEST_SIZE];	/* sha1 or md5 measurement hash */
- 	struct ima_template_desc *template_desc; /* template descriptor */
- 	u32 template_data_len;
--	struct ima_field_data template_data[0];	/* template related data */
-+	struct ima_field_data template_data[];	/* template related data */
- };
+diff --git a/include/soc/qcom/cmd-db.h b/include/soc/qcom/cmd-db.h
+index af97222239251..c8bb56e6852a8 100644
+--- a/include/soc/qcom/cmd-db.h
++++ b/include/soc/qcom/cmd-db.h
+@@ -4,6 +4,7 @@
+ #ifndef __QCOM_COMMAND_DB_H__
+ #define __QCOM_COMMAND_DB_H__
  
- struct ima_queue_entry {
-diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
-index 543d277c7e48..3c7e8b902256 100644
---- a/security/integrity/integrity.h
-+++ b/security/integrity/integrity.h
-@@ -103,7 +103,7 @@ struct ima_digest_data {
- 		} ng;
- 		u8 data[2];
- 	} xattr;
--	u8 digest[0];
-+	u8 digest[];
- } __packed;
++#include <linux/err.h>
  
- /*
-@@ -115,7 +115,7 @@ struct signature_v2_hdr {
- 	uint8_t	hash_algo;	/* Digest algorithm [enum hash_algo] */
- 	__be32 keyid;		/* IMA key identifier - not X509/PGP specific */
- 	__be16 sig_size;	/* signature size */
--	uint8_t sig[0];		/* signature payload */
-+	uint8_t sig[];		/* signature payload */
- } __packed;
- 
- /* integrity data associated with an inode */
+ enum cmd_db_hw_type {
+ 	CMD_DB_HW_INVALID = 0,
 -- 
-2.25.0
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
