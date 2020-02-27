@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF96C52D24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 395ABC3F359
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C57AB2468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE07D2468F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813533;
-	bh=mvXX6h+kds8LV+p+JhJq3T4Jlw4AlEPL8NKmekeMBgg=;
+	s=default; t=1582813502;
+	bh=63t+dcbRQP2Tl3GMNI+Ooh16wCL0rbWIF1ffSXgbeIA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZDJfpOftuJnQe5fuB/wIQuSMc1iJ+mvd7H5j9wq9L93Z1NBgidbsOYadVATAclY9I
-	 rPyqcrM6H+dNkOFiqbEiwjvLY3/VkE4I2meb7ovUl1iEISQw8N7AGDr2VMC1Ew0vhC
-	 fdf6zaogSN6IgbmtQFIpESxs7qC7FOYAFlp8t5kw=
+	b=fLlY2HNIMrQzpBqdqtuMChlm3mlVo3EMszYJQ31MweCDjbjCEjaVAGRY5ekQInX3G
+	 ot4cAuCmlK00WQ+h2rUqTRE3lDGrLeoCksavRMq6Tvlnv89DA9+jTmN457IusnCRJq
+	 Y4ShuxgIjuYp2jmNbPc58SK9YHATJPATMLUCEcfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731017AbgB0OZc (ORCPT
+        id S2388531AbgB0OMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:25:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49608 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:12:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387461AbgB0OLM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:11:12 -0500
+        id S2388052AbgB0OMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:12:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0174B20578;
-        Thu, 27 Feb 2020 14:11:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3C3824697;
+        Thu, 27 Feb 2020 14:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812671;
-        bh=mvXX6h+kds8LV+p+JhJq3T4Jlw4AlEPL8NKmekeMBgg=;
+        s=default; t=1582812726;
+        bh=63t+dcbRQP2Tl3GMNI+Ooh16wCL0rbWIF1ffSXgbeIA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pBXIE3RjpqrFufJJmqJFLzVE+wV9bm6zo9KoZl3wL4M6ZHjYrnSCik4IKi80SjC/f
-         4NVN9nx/R3iLVkuvy4jWIpHOAxKQRuzPk+UZ+ZVddokZk3+73lSK7y0v51hjq6bmOe
-         S58dHRQKHSKukeODnKSifsdt8Yviy7edEVPvRMs0=
+        b=rjocaSb/0yQirVVCHFGln3VQzdgMm2yavZIjq1k1qGkwhICVBn6QwUF4kDTACqTgf
+         pPCVbPqckVvsbNojnIMaHAJcgGwvXGlIx6BMqpL+kLneb8Ove2+yaH1auJDWBQmxTj
+         CI5kGkBmO9eRUsjJ+17cUUmVFFVYOcDYekjlO424=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Weimer <fweimer@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Victor Stinner <vstinner@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 5.4 069/135] mm: Avoid creating virtual address aliases in brk()/mmap()/mremap()
-Date:   Thu, 27 Feb 2020 14:36:49 +0100
-Message-Id: <20200227132239.672430340@linuxfoundation.org>
+        stable@vger.kernel.org, Prabhakar Kushwaha <pkushwaha@marvell.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.4 128/135] ata: ahci: Add shutdown to freeze hardware resources of ahci
+Date:   Thu, 27 Feb 2020 14:37:48 +0100
+Message-Id: <20200227132248.298321023@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -63,92 +59,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Catalin Marinas <catalin.marinas@arm.com>
+From: Prabhakar Kushwaha <pkushwaha@marvell.com>
 
-commit dcde237319e626d1ec3c9d8b7613032f0fd4663a upstream.
+commit 10a663a1b15134a5a714aa515e11425a44d4fdf7 upstream.
 
-Currently the arm64 kernel ignores the top address byte passed to brk(),
-mmap() and mremap(). When the user is not aware of the 56-bit address
-limit or relies on the kernel to return an error, untagging such
-pointers has the potential to create address aliases in user-space.
-Passing a tagged address to munmap(), madvise() is permitted since the
-tagged pointer is expected to be inside an existing mapping.
+device_shutdown() called from reboot or power_shutdown expect
+all devices to be shutdown. Same is true for even ahci pci driver.
+As no ahci shutdown function is implemented, the ata subsystem
+always remains alive with DMA & interrupt support. File system
+related calls should not be honored after device_shutdown().
 
-The current behaviour breaks the existing glibc malloc() implementation
-which relies on brk() with an address beyond 56-bit to be rejected by
-the kernel.
+So defining ahci pci driver shutdown to freeze hardware (mask
+interrupt, stop DMA engine and free DMA resources).
 
-Remove untagging in the above functions by partially reverting commit
-ce18d171cb73 ("mm: untag user pointers in mmap/munmap/mremap/brk"). In
-addition, update the arm64 tagged-address-abi.rst document accordingly.
-
-Link: https://bugzilla.redhat.com/1797052
-Fixes: ce18d171cb73 ("mm: untag user pointers in mmap/munmap/mremap/brk")
-Cc: <stable@vger.kernel.org> # 5.4.x-
-Cc: Florian Weimer <fweimer@redhat.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Reported-by: Victor Stinner <vstinner@redhat.com>
-Acked-by: Will Deacon <will@kernel.org>
-Acked-by: Andrey Konovalov <andreyknvl@google.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Documentation/arm64/tagged-address-abi.rst |   11 +++++++++--
- mm/mmap.c                                  |    4 ----
- mm/mremap.c                                |    1 -
- 3 files changed, 9 insertions(+), 7 deletions(-)
+ drivers/ata/ahci.c        |    7 +++++++
+ drivers/ata/libata-core.c |   21 +++++++++++++++++++++
+ include/linux/libata.h    |    1 +
+ 3 files changed, 29 insertions(+)
 
---- a/Documentation/arm64/tagged-address-abi.rst
-+++ b/Documentation/arm64/tagged-address-abi.rst
-@@ -44,8 +44,15 @@ The AArch64 Tagged Address ABI has two s
- how the user addresses are used by the kernel:
+--- a/drivers/ata/ahci.c
++++ b/drivers/ata/ahci.c
+@@ -80,6 +80,7 @@ enum board_ids {
  
- 1. User addresses not accessed by the kernel but used for address space
--   management (e.g. ``mmap()``, ``mprotect()``, ``madvise()``). The use
--   of valid tagged pointers in this context is always allowed.
-+   management (e.g. ``mprotect()``, ``madvise()``). The use of valid
-+   tagged pointers in this context is allowed with the exception of
-+   ``brk()``, ``mmap()`` and the ``new_address`` argument to
-+   ``mremap()`` as these have the potential to alias with existing
-+   user addresses.
+ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent);
+ static void ahci_remove_one(struct pci_dev *dev);
++static void ahci_shutdown_one(struct pci_dev *dev);
+ static int ahci_vt8251_hardreset(struct ata_link *link, unsigned int *class,
+ 				 unsigned long deadline);
+ static int ahci_avn_hardreset(struct ata_link *link, unsigned int *class,
+@@ -593,6 +594,7 @@ static struct pci_driver ahci_pci_driver
+ 	.id_table		= ahci_pci_tbl,
+ 	.probe			= ahci_init_one,
+ 	.remove			= ahci_remove_one,
++	.shutdown		= ahci_shutdown_one,
+ 	.driver = {
+ 		.pm		= &ahci_pci_pm_ops,
+ 	},
+@@ -1864,6 +1866,11 @@ static int ahci_init_one(struct pci_dev
+ 	return 0;
+ }
+ 
++static void ahci_shutdown_one(struct pci_dev *pdev)
++{
++	ata_pci_shutdown_one(pdev);
++}
 +
-+   NOTE: This behaviour changed in v5.6 and so some earlier kernels may
-+   incorrectly accept valid tagged pointers for the ``brk()``,
-+   ``mmap()`` and ``mremap()`` system calls.
+ static void ahci_remove_one(struct pci_dev *pdev)
+ {
+ 	pm_runtime_get_noresume(&pdev->dev);
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -6762,6 +6762,26 @@ void ata_pci_remove_one(struct pci_dev *
+ 	ata_host_detach(host);
+ }
  
- 2. User addresses accessed by the kernel (e.g. ``write()``). This ABI
-    relaxation is disabled by default and the application thread needs to
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -195,8 +195,6 @@ SYSCALL_DEFINE1(brk, unsigned long, brk)
- 	bool downgraded = false;
- 	LIST_HEAD(uf);
++void ata_pci_shutdown_one(struct pci_dev *pdev)
++{
++	struct ata_host *host = pci_get_drvdata(pdev);
++	int i;
++
++	for (i = 0; i < host->n_ports; i++) {
++		struct ata_port *ap = host->ports[i];
++
++		ap->pflags |= ATA_PFLAG_FROZEN;
++
++		/* Disable port interrupts */
++		if (ap->ops->freeze)
++			ap->ops->freeze(ap);
++
++		/* Stop the port DMA engines */
++		if (ap->ops->port_stop)
++			ap->ops->port_stop(ap);
++	}
++}
++
+ /* move to PCI subsystem */
+ int pci_test_config_bits(struct pci_dev *pdev, const struct pci_bits *bits)
+ {
+@@ -7382,6 +7402,7 @@ EXPORT_SYMBOL_GPL(ata_timing_cycle2mode)
  
--	brk = untagged_addr(brk);
--
- 	if (down_write_killable(&mm->mmap_sem))
- 		return -EINTR;
+ #ifdef CONFIG_PCI
+ EXPORT_SYMBOL_GPL(pci_test_config_bits);
++EXPORT_SYMBOL_GPL(ata_pci_shutdown_one);
+ EXPORT_SYMBOL_GPL(ata_pci_remove_one);
+ #ifdef CONFIG_PM
+ EXPORT_SYMBOL_GPL(ata_pci_device_do_suspend);
+--- a/include/linux/libata.h
++++ b/include/linux/libata.h
+@@ -1220,6 +1220,7 @@ struct pci_bits {
+ };
  
-@@ -1583,8 +1581,6 @@ unsigned long ksys_mmap_pgoff(unsigned l
- 	struct file *file = NULL;
- 	unsigned long retval;
+ extern int pci_test_config_bits(struct pci_dev *pdev, const struct pci_bits *bits);
++extern void ata_pci_shutdown_one(struct pci_dev *pdev);
+ extern void ata_pci_remove_one(struct pci_dev *pdev);
  
--	addr = untagged_addr(addr);
--
- 	if (!(flags & MAP_ANONYMOUS)) {
- 		audit_mmap_fd(fd, flags);
- 		file = fget(fd);
---- a/mm/mremap.c
-+++ b/mm/mremap.c
-@@ -607,7 +607,6 @@ SYSCALL_DEFINE5(mremap, unsigned long, a
- 	LIST_HEAD(uf_unmap);
- 
- 	addr = untagged_addr(addr);
--	new_addr = untagged_addr(new_addr);
- 
- 	if (flags & ~(MREMAP_FIXED | MREMAP_MAYMOVE))
- 		return ret;
+ #ifdef CONFIG_PM
 
 
