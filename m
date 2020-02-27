@@ -2,126 +2,194 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C38C4BA3C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DFCC4BA06
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E95BA24688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:50:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=displaylink.com header.i=@displaylink.com header.b="okkoAKSq"
+	by mail.kernel.org (Postfix) with ESMTP id DC8482467B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:50:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582793431;
+	bh=3TUHpXUbQiWINEYvkWLHV5i4L4XeTvzA8f61zC86hUs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Q0XJImQGANM4jstKTrI3lQ5XhbZm6ayownSa4gvd6sV7zuOY8iK5Kkk9TV8mdqmsc
+	 fwa5TSyM4mJapHwW7Y72edn9VYFI4eQqgq2XIz9xe+7E4y0sqcu/03E+vQcnxF2XlK
+	 naMeG2HC2/eiu7c9XpJZduckU1GUAG9GOXaHEB2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728933AbgB0Iu0 (ORCPT
+        id S1728946AbgB0Iua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 27 Feb 2020 03:50:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35062 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728759AbgB0Iu0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Feb 2020 03:50:26 -0500
-Received: from eu-smtp-delivery-167.mimecast.com ([207.82.80.167]:30470 "EHLO
-        eu-smtp-delivery-167.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728741AbgB0IuZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 03:50:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=displaylink.com;
-        s=mimecast20151025; t=1582793422;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=06YWNsTMoau3wb3JOJ5G4nFJSZUaD3KCKOvRYzVk6LE=;
-        b=okkoAKSqAH/pq925NJhNB8qCaMAqwq5KxNcFgYv1QGU2GDaNj0LLQZoj0Uhus/0AEwTOu3
-        +lv9UvE4LCkn6Nu3Itc3Hp2zB2ISyCduoOciTVmqcqnKAzdXpi/Kn2MsY1uptRjiW+4fej
-        9J9rPb39G1jkD4J5KniW2uxSfEThvyI=
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com
- (mail-db8eur05lp2107.outbound.protection.outlook.com [104.47.17.107])
- (Using TLS) by relay.mimecast.com with ESMTP id
- uk-mta-256-4Jkb65eAPCWrAR7HqZ-4Ow-1; Thu, 27 Feb 2020 08:50:21 +0000
-X-MC-Unique: 4Jkb65eAPCWrAR7HqZ-4Ow-1
-Received: from VI1PR10MB1965.EURPRD10.PROD.OUTLOOK.COM (52.134.27.157) by
- VI1PR10MB2510.EURPRD10.PROD.OUTLOOK.COM (20.177.59.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.21; Thu, 27 Feb 2020 08:50:19 +0000
-Received: from VI1PR10MB1965.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::7cc2:599e:25ce:49b2]) by VI1PR10MB1965.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::7cc2:599e:25ce:49b2%6]) with mapi id 15.20.2750.024; Thu, 27 Feb 2020
- 08:50:19 +0000
-Received: from [172.17.183.132] (80.93.235.40) by LO2P123CA0039.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Thu, 27 Feb 2020 08:50:17 +0000
-From:   Vladimir Stankovic <vladimir.stankovic@displaylink.com>
-To:     Oliver Neukum <oneukum@suse.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-CC:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        mausb-host-devel <mausb-host-devel@displaylink.com>
-Subject: Re: [External] Re: [PATCH v2 5/8] usb: mausb_host: Introduce PAL
- processing
-Thread-Topic: [External] Re: [PATCH v2 5/8] usb: mausb_host: Introduce PAL
- processing
-Thread-Index: AQHV7ItbzvqingZIeEeVfzReVaM/AagtaWKAgAFTXwA=
-Date:   Thu, 27 Feb 2020 08:50:18 +0000
-Message-ID: <55d0673a-fd13-4afe-6dca-a98f058656c3@displaylink.com>
-References: <659eab4d-a995-d372-2c46-8b3d72ba13bc@displaylink.com>
- <1582720533.17520.26.camel@suse.com>
-In-Reply-To: <1582720533.17520.26.camel@suse.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P123CA0039.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600::27)
- To VI1PR10MB1965.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:803:37::29)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [80.93.235.40]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7945bf5d-a2cb-4ab4-bb6a-08d7bb62125f
-x-ms-traffictypediagnostic: VI1PR10MB2510:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR10MB251025B1AE4FAF0284657E0C91EB0@VI1PR10MB2510.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:1002;
-x-forefront-prvs: 03264AEA72
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39830400003)(346002)(376002)(366004)(136003)(396003)(189003)(199004)(44832011)(956004)(6486002)(52116002)(2906002)(316002)(5660300002)(2616005)(107886003)(54906003)(16576012)(110136005)(36756003)(4326008)(66476007)(16526019)(31686004)(64756008)(66556008)(66446008)(8936002)(8676002)(81166006)(26005)(81156014)(66946007)(71200400001)(31696002)(86362001)(186003)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR10MB2510;H:VI1PR10MB1965.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: zZGBJ773/TvCwDCbNXsqibDohcWjUmLYVmqXypdz6F5ZxDZt1Iaos0Q3fYTOsUdxooV+jWHEC8FNWJHXaJXlAedmJ6L1MdbehLeElNKZb+ZOG7jLOkomNMTVHcZXpuTcDNyPwBG0o4DnzzQKh0Mw+4fJShivHiSFrHOn+3pr97dtNS7HpSpkhjdGgkWgvnSVqN23WURsYxsEMqqFH8iJIepF1RBXJd4bOh6OAdv8T7wiPxzmnBydY50EjhMkBQL+O94KkkAgfgeHEWRCtyicEmJujI21HJjbEO1FRIXdLVE/9zFSkNfWcQfaNT/awVutyAlhv7ctKwWpe4sqA0aQXWxBaXFhqYoN2z6wxQCT6eG8gRT/u7f9CueeEm7Rvu0HrBGSOZ2I38d5Iw0tiubS1LlbgH56+/VrBSv13t04MRibHzXySL82JYVqfvXScFei
-x-ms-exchange-antispam-messagedata: kxmXHBIBxGxLzr97Q73NWlctx+Mbviqm5uSAhjubAkDuiW5v4ogGgxUtLisqXtdMfkoBQyN4ssnw466c8r01mSiDmZfwzkrSCVHEhCXCDZ7e+sOw3PeH7gl36tC1JZGHVi3nkDjReiA/VMhh3LtdwA==
-Content-ID: <3318E076C76DE74CB8F76332E6676FF6@EURPRD10.PROD.OUTLOOK.COM>
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66C3C2467B;
+        Thu, 27 Feb 2020 08:50:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582793424;
+        bh=3TUHpXUbQiWINEYvkWLHV5i4L4XeTvzA8f61zC86hUs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LqZ40BV3UtfEghlnUPWXWBsJFDSAO7LkQqjE4MyBCGfIko4QuZCxn23PStuQNx1cq
+         tvT2jv5qJjkdWlq9d7ue7n4+FqXK4iHQUHRv2LG0NwyjK0dGeVNasttpjd5fI9PHcT
+         er1rbsLlplzYI9Bv+wbujgi0e7G4RYfo2Y2xJgaE=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Brian Cain <bcain@codeaurora.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        James Morse <james.morse@arm.com>,
+        Jonas Bonn <jonas@southpole.se>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Rich Felker <dalias@libc.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Stafford Horne <shorne@gmail.com>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        kvmarm@lists.cs.columbia.edu, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        linux-sh@vger.kernel.org, nios2-dev@lists.rocketboards.org,
+        openrisc@lists.librecores.org,
+        uclinux-h8-devel@lists.sourceforge.jp,
+        Mike Rapoport <rppt@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH v3 13/14] asm-generic: remove pgtable-nop4d-hack.h
+Date:   Thu, 27 Feb 2020 10:46:07 +0200
+Message-Id: <20200227084608.18223-14-rppt@kernel.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20200227084608.18223-1-rppt@kernel.org>
+References: <20200227084608.18223-1-rppt@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: displaylink.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7945bf5d-a2cb-4ab4-bb6a-08d7bb62125f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Feb 2020 08:50:18.9595
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a4bda75a-b444-4312-9c90-44a7c4b2c91a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: W5dHA4XTfV1mjd+njKbyATzB/mZ5t2+KaBswSGuFNvabueo12C6GCCUQEVi1gTJO3Gpb7qws1avPFereXunUttTTmcZQZsm1H1aBkiz7WS0NKr3SLLC0uU2GU2UElj3D
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB2510
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: displaylink.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjYuMi4yMC4gMTM6MzUsIE9saXZlciBOZXVrdW0gd3JvdGU6DQo+IEFtIE1pdHR3b2NoLCBk
-ZW4gMjYuMDIuMjAyMCwgMDk6NTggKzAwMDAgc2NocmllYiBWbGFkaW1pciBTdGFua292aWMNCj4g
-DQo+ICtpbnQgbWF1c2JfZW5xdWV1ZV9ldmVudF9mcm9tX3VzZXIodTggbWFkZXZfYWRkciwgdTE2
-IG51bV9vZl9ldmVudHMsDQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB1MTYg
-bnVtX29mX2NvbXBsZXRlZCkNCj4gK3sNCj4gKyAgICAgICB1bnNpZ25lZCBsb25nIGZsYWdzOw0K
-PiArICAgICAgIHN0cnVjdCBtYXVzYl9kZXZpY2UgKmRldjsNCj4gKw0KPiArICAgICAgIHNwaW5f
-bG9ja19pcnFzYXZlKCZtc3MubG9jaywgZmxhZ3MpOw0KPiANCj4gWW91IHNhdmUgdGhlIGZsYWdz
-Lg0KPiANCj4gKyAgICAgICBkZXYgPSBtYXVzYl9nZXRfZGV2X2Zyb21fYWRkcl91bnNhZmUobWFk
-ZXZfYWRkcik7DQo+ICsNCj4gKyAgICAgICBpZiAoIWRldikgew0KPiArICAgICAgICAgICAgICAg
-c3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmbXNzLmxvY2ssIGZsYWdzKTsNCj4gKyAgICAgICAgICAg
-ICAgIHJldHVybiAtRUlOVkFMOw0KPiArICAgICAgIH0NCj4gKw0KPiArICAgICAgIHNwaW5fbG9j
-a19pcnFzYXZlKCZkZXYtPm51bV9vZl91c2VyX2V2ZW50c19sb2NrLCBmbGFncyk7DQo+IA0KPiBZ
-b3Ugb3ZlcndyaXRlIHRoZSBmbGFncy4NCj4gDQo+ICsgICAgICAgZGV2LT5udW1fb2ZfdXNlcl9l
-dmVudHMgKz0gbnVtX29mX2V2ZW50czsNCj4gKyAgICAgICBkZXYtPm51bV9vZl9jb21wbGV0ZWRf
-ZXZlbnRzICs9IG51bV9vZl9jb21wbGV0ZWQ7DQo+ICsgICAgICAgc3Bpbl91bmxvY2tfaXJxcmVz
-dG9yZSgmZGV2LT5udW1fb2ZfdXNlcl9ldmVudHNfbG9jaywgZmxhZ3MpOw0KPiANCj4gWW91ciBy
-ZXN0b3JlIHRoZSBmbGFncy4NCj4gDQo+ICsgICAgICAgcXVldWVfd29yayhkZXYtPndvcmtxLCAm
-ZGV2LT53b3JrKTsNCj4gKyAgICAgICBzcGluX3VubG9ja19pcnFyZXN0b3JlKCZtc3MubG9jaywg
-ZmxhZ3MpOw0KPiANCj4gWW91IHJlc3RvcmUgdGhlIG92ZXJ3cml0dGVuIGZsYWdzLg0KPiANCj4g
-VGhpcyBjYW5ub3QgYmUgcmlnaHQuDQo+IA0KPiAJUmVnYXJkcw0KPiAJCU9saXZlcg0KPiANCllv
-dSdyZSByaWdodC4gV2UnbGwgYWRkcmVzcyB0aGlzIGlzc3VlLg0KDQotLSANClJlZ2FyZHMsDQpW
-bGFkaW1pci4NCg==
+From: Mike Rapoport <rppt@linux.ibm.com>
+
+No architecture defines __ARCH_USE_5LEVEL_HACK and therefore
+pgtable-nop4d-hack.h will be never actually included.
+
+Remove it.
+
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+---
+ include/asm-generic/pgtable-nop4d-hack.h | 64 ------------------------
+ include/asm-generic/pgtable-nopud.h      |  4 --
+ 2 files changed, 68 deletions(-)
+ delete mode 100644 include/asm-generic/pgtable-nop4d-hack.h
+
+diff --git a/include/asm-generic/pgtable-nop4d-hack.h b/include/asm-generic/pgtable-nop4d-hack.h
+deleted file mode 100644
+index 829bdb0d6327..000000000000
+--- a/include/asm-generic/pgtable-nop4d-hack.h
++++ /dev/null
+@@ -1,64 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef _PGTABLE_NOP4D_HACK_H
+-#define _PGTABLE_NOP4D_HACK_H
+-
+-#ifndef __ASSEMBLY__
+-#include <asm-generic/5level-fixup.h>
+-
+-#define __PAGETABLE_PUD_FOLDED 1
+-
+-/*
+- * Having the pud type consist of a pgd gets the size right, and allows
+- * us to conceptually access the pgd entry that this pud is folded into
+- * without casting.
+- */
+-typedef struct { pgd_t pgd; } pud_t;
+-
+-#define PUD_SHIFT	PGDIR_SHIFT
+-#define PTRS_PER_PUD	1
+-#define PUD_SIZE	(1UL << PUD_SHIFT)
+-#define PUD_MASK	(~(PUD_SIZE-1))
+-
+-/*
+- * The "pgd_xxx()" functions here are trivial for a folded two-level
+- * setup: the pud is never bad, and a pud always exists (as it's folded
+- * into the pgd entry)
+- */
+-static inline int pgd_none(pgd_t pgd)		{ return 0; }
+-static inline int pgd_bad(pgd_t pgd)		{ return 0; }
+-static inline int pgd_present(pgd_t pgd)	{ return 1; }
+-static inline void pgd_clear(pgd_t *pgd)	{ }
+-#define pud_ERROR(pud)				(pgd_ERROR((pud).pgd))
+-
+-#define pgd_populate(mm, pgd, pud)		do { } while (0)
+-#define pgd_populate_safe(mm, pgd, pud)		do { } while (0)
+-/*
+- * (puds are folded into pgds so this doesn't get actually called,
+- * but the define is needed for a generic inline function.)
+- */
+-#define set_pgd(pgdptr, pgdval)	set_pud((pud_t *)(pgdptr), (pud_t) { pgdval })
+-
+-static inline pud_t *pud_offset(pgd_t *pgd, unsigned long address)
+-{
+-	return (pud_t *)pgd;
+-}
+-
+-#define pud_val(x)				(pgd_val((x).pgd))
+-#define __pud(x)				((pud_t) { __pgd(x) })
+-
+-#define pgd_page(pgd)				(pud_page((pud_t){ pgd }))
+-#define pgd_page_vaddr(pgd)			(pud_page_vaddr((pud_t){ pgd }))
+-
+-/*
+- * allocating and freeing a pud is trivial: the 1-entry pud is
+- * inside the pgd, so has no extra memory associated with it.
+- */
+-#define pud_alloc_one(mm, address)		NULL
+-#define pud_free(mm, x)				do { } while (0)
+-#define __pud_free_tlb(tlb, x, a)		do { } while (0)
+-
+-#undef  pud_addr_end
+-#define pud_addr_end(addr, end)			(end)
+-
+-#endif /* __ASSEMBLY__ */
+-#endif /* _PGTABLE_NOP4D_HACK_H */
+diff --git a/include/asm-generic/pgtable-nopud.h b/include/asm-generic/pgtable-nopud.h
+index d3776cb494c0..ad05c1684bfc 100644
+--- a/include/asm-generic/pgtable-nopud.h
++++ b/include/asm-generic/pgtable-nopud.h
+@@ -4,9 +4,6 @@
+ 
+ #ifndef __ASSEMBLY__
+ 
+-#ifdef __ARCH_USE_5LEVEL_HACK
+-#include <asm-generic/pgtable-nop4d-hack.h>
+-#else
+ #include <asm-generic/pgtable-nop4d.h>
+ 
+ #define __PAGETABLE_PUD_FOLDED 1
+@@ -65,5 +62,4 @@ static inline pud_t *pud_offset(p4d_t *p4d, unsigned long address)
+ #define pud_addr_end(addr, end)			(end)
+ 
+ #endif /* __ASSEMBLY__ */
+-#endif /* !__ARCH_USE_5LEVEL_HACK */
+ #endif /* _PGTABLE_NOPUD_H */
+-- 
+2.24.0
 
