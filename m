@@ -2,478 +2,203 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67617C4BA2D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAB7C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27F472469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:28:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88D82246AA
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:28:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="QQgxfMHm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aD1MNW5z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729208AbgB0N2l (ORCPT
+        id S1729225AbgB0N2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:28:41 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:43592 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729139AbgB0N2j (ORCPT
+        Thu, 27 Feb 2020 08:28:43 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:42941 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729188AbgB0N2l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:28:39 -0500
-Received: by mail-qv1-f68.google.com with SMTP id p2so1494962qvo.10
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 05:28:38 -0800 (PST)
+        Thu, 27 Feb 2020 08:28:41 -0500
+Received: by mail-yw1-f65.google.com with SMTP id n127so2953363ywd.9
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 05:28:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=iGBwlRPOz0RFCrlO5EPuWAgJWFzfpEoFMahebMifJ5o=;
-        b=QQgxfMHmsxqGnYaUMtIeeRwYnSCEYuE25sLHZ//sKgE57AEzj0NzxYE0zgGvUwUxZo
-         W4lqe04uKi0TkwrCASE+i4dnfMWXThYFRLm+DwjoP/Bw2oUXOiIcurNdI4YZN0xLu5u4
-         S6CIgHarbdg6MHidTwrOFK4xWBUYJgT5VDinc=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=+9VQxCyM2hvTyJaZ1S03xRmBtMDIN1aB0IF58zWd9TY=;
+        b=aD1MNW5zBnBrfiJEbSTee9zYXDYCetD4QRjiCgECC/2dsaQj/R2Po2r6ZDqI8dtYgf
+         EN9HM5c37LVZBFZO8xpbJTs0CpL2lbdfWN8tiWXpftewXVe/FH79OTHnexXR83+DwylZ
+         U1DLDAoyxtzs+Bd6zX2lM6wMpaYkk/5XuluS55VkW8FdTpPUi3hMz+tKQg4KiRJnypRQ
+         yuIScgYhzB01iUOcB03ajAZQ74l8CZO7ZA1RmW8hK5Yz36ZYaXlnNNeKFuiUw6Dgo2uB
+         496zFt/3sHLkhbwAFc8Q6zOKHCI+DqwBdbDBGl1dtCzK1t8R0fds3w1fbEpiQs022pTz
+         n1dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iGBwlRPOz0RFCrlO5EPuWAgJWFzfpEoFMahebMifJ5o=;
-        b=P/FdbHnwBT05OcK0EGxVVYI4K2QdJMqizyHrnSeQBwZS1h/tLgPIuzLBvVbf0/Wh3E
-         r0zTXiZN1edJl5FDX3S5LBmQMmJ+yr1vPtSWzsV/K5sauMSD45IqTFRjw6Lq8TsY+Qhy
-         7LrpAmE2bcK/tZHTYVlXG3XlFz8+atYvyR/zQNovH21fPUIzKjqArkA662C4QeqAdRzt
-         2pV6yTNykafDCLC2tSFGeuSCNbJgiU3F55f+xnGz9RrAI90SrvZAjHrwrJ4jiSV0/ydu
-         65C6+MEEQuAe3Zvs2jXtALRR0jzLuID49dpTyj/+/YSaPQCZR6b5IXtrH/wr8QurPRQb
-         sr6A==
-X-Gm-Message-State: APjAAAUDYU31Po5DOM0jcV2JkKOuRqaQHQw/RvVRqb4bfk+1GesNzJc0
-        S6ix3gpRGaKVo/qI+ZCFQ8qvBA==
-X-Google-Smtp-Source: APXvYqyYFbj9++y6OBfemDdW3+kGbXme9jJAPfOYIdIKHQGblyUKP0b9fU/TrwEAONG2Q3LOmQqf7g==
-X-Received: by 2002:a0c:eed2:: with SMTP id h18mr5111311qvs.184.1582810117485;
-        Thu, 27 Feb 2020 05:28:37 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id v10sm3141066qtj.26.2020.02.27.05.28.36
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=+9VQxCyM2hvTyJaZ1S03xRmBtMDIN1aB0IF58zWd9TY=;
+        b=S7UyxStkOF1PsVEBCcQI1BzTdZGPbMSUdexPsqcEtj7SO8XqnjA9yNr3XM3ozll6zg
+         L/yYeBk7kEBnuhj25ILOf/VhdKdho1DTu7KQcaLKn62fJX+O5Brz1eKyp5zFH/L0zwxf
+         mwSfrXHM5DQgx5h5WuqXZBwuqfdBKTP3fW3yGTAfQ8naj+34lBXEmQzh26IQh6B8zEA2
+         x0uS6qZL+hkkumU1O3FMZpSUhoN150fUpIFjrtJgI1CDron7K2a92hY8IDJgfPUs+HdD
+         obboNaUhYiysJzBfHiHeJK7ZG34O/NBorD3V7aVPK5YNzGtjAUZzQG7jLjpsm91kx+Z9
+         1cvg==
+X-Gm-Message-State: APjAAAU9lDKvv5snh7DWURoQjCzKjswHCVP6gBbwUMDgbLTa6lO3Jidr
+        suN/P11RJ8OBG0DXj+bC7hELe84=
+X-Google-Smtp-Source: APXvYqwe2foaLn3D391WyRDFr3UDb+Y5aKXNdTrXLAya5Z1qfoGxVmH9SKpw1NHg74KnjC7aHo9mGg==
+X-Received: by 2002:a25:8810:: with SMTP id c16mr3807298ybl.270.1582810119269;
+        Thu, 27 Feb 2020 05:28:39 -0800 (PST)
+Received: from localhost.localdomain (174-084-153-250.res.spectrum.com. [174.84.153.250])
+        by smtp.gmail.com with ESMTPSA id j23sm2442759ywb.93.2020.02.27.05.28.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 05:28:36 -0800 (PST)
-Date:   Thu, 27 Feb 2020 08:28:36 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Aman Sharma <amanharitsh123@gmail.com>
-Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, rcu@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH] doc: Convert rculist_nulls.txt to
- rculist_nulls.rst
-Message-ID: <20200227132836.GB161459@google.com>
-References: <20200227104448.10154-1-amanharitsh123@gmail.com>
+        Thu, 27 Feb 2020 05:28:38 -0800 (PST)
+From:   Brian Gerst <brgerst@gmail.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Brian Gerst <brgerst@gmail.com>
+Subject: [PATCH v3 3/8] x86, syscalls: Refactor COND_SYSCALL macros
+Date:   Thu, 27 Feb 2020 08:28:21 -0500
+Message-Id: <20200227132826.195669-4-brgerst@gmail.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200227132826.195669-1-brgerst@gmail.com>
+References: <20200227132826.195669-1-brgerst@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200227104448.10154-1-amanharitsh123@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 04:14:46PM +0530, Aman Sharma wrote:
-> This patch converts rculist_nulls from .txt to .rst format, and also adds
-> it to the index.rst file.
+Pull the common code out from the COND_SYSCALL macros into a new
+__COND_SYSCALL macro.  Also conditionalize the X64 version in preparation
+for enabling syscall wrappers on 32-bit native kernels.
 
-When posting such patches, could you clarify what has changed during the
-conversion when you write the commit message?
+Signed-off-by: Brian Gerst <brgerst@gmail.com>
+---
+ arch/x86/include/asm/syscall_wrapper.h | 44 +++++++++++++++-----------
+ 1 file changed, 26 insertions(+), 18 deletions(-)
 
-thanks,
+diff --git a/arch/x86/include/asm/syscall_wrapper.h b/arch/x86/include/asm/syscall_wrapper.h
+index 2b1ae55c52ee..aaafc8421a2d 100644
+--- a/arch/x86/include/asm/syscall_wrapper.h
++++ b/arch/x86/include/asm/syscall_wrapper.h
+@@ -35,6 +35,13 @@ struct pt_regs;
+ 		return __se_##name(__VA_ARGS__);			\
+ 	}
+ 
++#define __COND_SYSCALL(abi, name)					\
++	asmlinkage __weak long						\
++	__##abi##_##name(const struct pt_regs *__unused)		\
++	{								\
++		return sys_ni_syscall();				\
++	}
++
+ #ifdef CONFIG_X86_64
+ #define __X64_SYS_STUB0(name)						\
+ 	__SYS_STUB0(x64, sys_##name)
+@@ -42,9 +49,13 @@ struct pt_regs;
+ #define __X64_SYS_STUBx(x, name, ...)					\
+ 	__SYS_STUBx(x64, sys##name,					\
+ 		    SC_X86_64_REGS_TO_ARGS(x, __VA_ARGS__))
++
++#define __X64_COND_SYSCALL(name)					\
++	__COND_SYSCALL(x64, sys_##name)
+ #else /* CONFIG_X86_64 */
+ #define __X64_SYS_STUB0(name)
+ #define __X64_SYS_STUBx(x, name, ...)
++#define __X64_COND_SYSCALL(name)
+ #endif /* CONFIG_X86_64 */
+ 
+ #ifdef CONFIG_IA32_EMULATION
+@@ -63,6 +74,9 @@ struct pt_regs;
+ 	__SYS_STUBx(ia32, compat_sys##name,				\
+ 		    SC_IA32_REGS_TO_ARGS(x, __VA_ARGS__))
+ 
++#define __IA32_COMPAT_COND_SYSCALL(name)				\
++	__COND_SYSCALL(ia32, compat_sys_##name)
++
+ #define __IA32_SYS_STUB0(name)						\
+ 	__SYS_STUB0(ia32, sys_##name)
+ 
+@@ -70,15 +84,8 @@ struct pt_regs;
+ 	__SYS_STUBx(ia32, sys##name,					\
+ 		    SC_IA32_REGS_TO_ARGS(x, __VA_ARGS__))
+ 
+-#define COND_SYSCALL(name)							\
+-	asmlinkage __weak long __x64_sys_##name(const struct pt_regs *__unused)	\
+-	{									\
+-		return sys_ni_syscall();					\
+-	}									\
+-	asmlinkage __weak long __ia32_sys_##name(const struct pt_regs *__unused)\
+-	{									\
+-		return sys_ni_syscall();					\
+-	}
++#define __IA32_COND_SYSCALL(name)					\
++	__COND_SYSCALL(ia32, sys_##name)
+ 
+ #define SYS_NI(name)							\
+ 	SYSCALL_ALIAS(__x64_sys_##name, sys_ni_posix_timers);		\
+@@ -87,8 +94,10 @@ struct pt_regs;
+ #else /* CONFIG_IA32_EMULATION */
+ #define __IA32_COMPAT_SYS_STUB0(name)
+ #define __IA32_COMPAT_SYS_STUBx(x, name, ...)
++#define __IA32_COMPAT_COND_SYSCALL(name)
+ #define __IA32_SYS_STUB0(name)
+ #define __IA32_SYS_STUBx(x, name, ...)
++#define __IA32_COND_SYSCALL(name)
+ #endif /* CONFIG_IA32_EMULATION */
+ 
+ 
+@@ -105,9 +114,12 @@ struct pt_regs;
+ 	__SYS_STUBx(x32, compat_sys##name,				\
+ 		    SC_X86_64_REGS_TO_ARGS(x, __VA_ARGS__))
+ 
++#define __X32_COMPAT_COND_SYSCALL(name)					\
++	__COND_SYSCALL(x32, compat_sys_##name)
+ #else /* CONFIG_X86_X32 */
+ #define __X32_COMPAT_SYS_STUB0(name)
+ #define __X32_COMPAT_SYS_STUBx(x, name, ...)
++#define __X32_COMPAT_COND_SYSCALL(name)
+ #endif /* CONFIG_X86_X32 */
+ 
+ 
+@@ -147,8 +159,8 @@ struct pt_regs;
+  * kernel/time/posix-stubs.c to cover this case as well.
+  */
+ #define COND_SYSCALL_COMPAT(name) 					\
+-	cond_syscall(__ia32_compat_sys_##name);				\
+-	cond_syscall(__x32_compat_sys_##name)
++	__IA32_COMPAT_COND_SYSCALL(name)				\
++	__X32_COMPAT_COND_SYSCALL(name)
+ 
+ #define COMPAT_SYS_NI(name)						\
+ 	SYSCALL_ALIAS(__ia32_compat_sys_##name, sys_ni_posix_timers);	\
+@@ -220,13 +232,9 @@ struct pt_regs;
+ 	static asmlinkage long						\
+ 	__do_sys_##sname(const struct pt_regs *__unused)
+ 
+-#ifndef COND_SYSCALL
+-#define COND_SYSCALL(name) 							\
+-	asmlinkage __weak long __x64_sys_##name(const struct pt_regs *__unused)	\
+-	{									\
+-		return sys_ni_syscall();					\
+-	}
+-#endif
++#define COND_SYSCALL(name)						\
++	__X64_COND_SYSCALL(name)					\
++	__IA32_COND_SYSCALL(name)
+ 
+ #ifndef SYS_NI
+ #define SYS_NI(name) SYSCALL_ALIAS(__x64_sys_##name, sys_ni_posix_timers);
+-- 
+2.24.1
 
- - Joel
-
-
-> Signed-off-by: Aman Sharma <amanharitsh123@gmail.com>
-> ---
->  Documentation/RCU/index.rst         |   1 +
->  Documentation/RCU/rculist_nulls.rst | 179 ++++++++++++++++++++++++++++
->  Documentation/RCU/rculist_nulls.txt | 172 --------------------------
->  3 files changed, 180 insertions(+), 172 deletions(-)
->  create mode 100644 Documentation/RCU/rculist_nulls.rst
->  delete mode 100644 Documentation/RCU/rculist_nulls.txt
-> 
-> diff --git a/Documentation/RCU/index.rst b/Documentation/RCU/index.rst
-> index d60eb4ba2cd0..2cf55bd141b3 100644
-> --- a/Documentation/RCU/index.rst
-> +++ b/Documentation/RCU/index.rst
-> @@ -10,6 +10,7 @@ RCU concepts
->     arrayRCU
->     rcubarrier
->     rcu_dereference
-> +   rculist_nulls
->     checklist
->     whatisRCU
->     rcu
-> diff --git a/Documentation/RCU/rculist_nulls.rst b/Documentation/RCU/rculist_nulls.rst
-> new file mode 100644
-> index 000000000000..8e04de44fe3d
-> --- /dev/null
-> +++ b/Documentation/RCU/rculist_nulls.rst
-> @@ -0,0 +1,179 @@
-> +.. _rculist_nulls_doc:
-> +
-> +Using hlist_nulls to protect read-mostly linked lists and objects using SLAB_TYPESAFE_BY_RCU allocations.
-> +=========================================================================================================
-> +
-> +Please read the basics in Documentation/RCU/listRCU.rst
-> +
-> +Using special makers (called 'nulls') is a convenient way
-> +to solve following problem :
-> +
-> +A typical RCU linked list managing objects which are
-> +allocated with SLAB_TYPESAFE_BY_RCU kmem_cache can
-> +use following algos :
-> +
-> +1. Lookup algo
-> +--------------
-> +::
-> +
-> +   rcu_read_lock()
-> +   begin:
-> +   obj = lockless_lookup(key);
-> +   if (obj) {
-> +   if (!try_get_ref(obj)) // might fail for free objects
-> +      goto begin;
-> +   /*
-> +      * Because a writer could delete object, and a writer could
-> +      * reuse these object before the RCU grace period, we
-> +      * must check key after getting the reference on object
-> +      */
-> +   if (obj->key != key) { // not the object we expected
-> +      put_ref(obj);
-> +      goto begin;
-> +      }
-> +   }
-> +   rcu_read_unlock();
-> +
-> +Beware that lockless_lookup(key) cannot use traditional hlist_for_each_entry_rcu()
-> +but a version with an additional memory barrier (smp_rmb()) ::
-> +
-> +   lockless_lookup(key)
-> +   {
-> +      struct hlist_node *node, *next;
-> +      for (pos = rcu_dereference((head)->first);
-> +            pos && ({ next = pos->next; smp_rmb(); prefetch(next); 1; }) &&
-> +            ({ tpos = hlist_entry(pos, typeof(*tpos), member); 1; });
-> +            pos = rcu_dereference(next))
-> +         if (obj->key == key)
-> +            return obj;
-> +      return NULL;
-> +
-> +And note the traditional hlist_for_each_entry_rcu() misses this smp_rmb() ::
-> +
-> +   struct hlist_node *node;
-> +   for (pos = rcu_dereference((head)->first);
-> +		pos && ({ prefetch(pos->next); 1; }) &&
-> +		({ tpos = hlist_entry(pos, typeof(*tpos), member); 1; });
-> +		pos = rcu_dereference(pos->next))
-> +      if (obj->key == key)
-> +         return obj;
-> +   return NULL;
-> +}
-> +
-> +Quoting Corey Minyard :
-> +
-> +"If the object is moved from one list to another list in-between the
-> + time the hash is calculated and the next field is accessed, and the
-> + object has moved to the end of a new list, the traversal will not
-> + complete properly on the list it should have, since the object will
-> + be on the end of the new list and there's not a way to tell it's on a
-> + new list and restart the list traversal.  I think that this can be
-> + solved by pre-fetching the "next" field (with proper barriers) before
-> + checking the key."
-> +
-> +2. Insert algo
-> +----------------
-> +
-> +We need to make sure a reader cannot read the new 'obj->obj_next' value
-> +and previous value of 'obj->key'. Or else, an item could be deleted
-> +from a chain, and inserted into another chain. If new chain was empty
-> +before the move, 'next' pointer is NULL, and lockless reader can
-> +not detect it missed following items in original chain ::
-> +
-> +   /*
-> +   * Please note that new inserts are done at the head of list,
-> +   * not in the middle or end.
-> +   */
-> +   obj = kmem_cache_alloc(...);
-> +   lock_chain(); // typically a spin_lock()
-> +   obj->key = key;
-> +   /*
-> +   * we need to make sure obj->key is updated before obj->next
-> +   * or obj->refcnt
-> +   */
-> +   smp_wmb();
-> +   atomic_set(&obj->refcnt, 1);
-> +   hlist_add_head_rcu(&obj->obj_node, list);
-> +   unlock_chain(); // typically a spin_unlock()
-> +
-> +
-> +3. Remove algo
-> +--------------
-> +Nothing special here, we can use a standard RCU hlist deletion.
-> +But thanks to SLAB_TYPESAFE_BY_RCU, beware a deleted object can be reused
-> +very very fast (before the end of RCU grace period) ::
-> +
-> +   if (put_last_reference_on(obj) {
-> +      lock_chain(); // typically a spin_lock()
-> +      hlist_del_init_rcu(&obj->obj_node);
-> +      unlock_chain(); // typically a spin_unlock()
-> +      kmem_cache_free(cachep, obj);
-> +   }
-> +
-> +
-> +
-> +With hlist_nulls we can avoid extra smp_rmb() in lockless_lookup()
-> +and extra smp_wmb() in insert function.
-> +
-> +For example, if we choose to store the slot number as the 'nulls'
-> +end-of-list marker for each slot of the hash table, we can detect
-> +a race (some writer did a delete and/or a move of an object
-> +to another chain) checking the final 'nulls' value if
-> +the lookup met the end of chain. If final 'nulls' value
-> +is not the slot number, then we must restart the lookup at
-> +the beginning. If the object was moved to the same chain,
-> +then the reader doesn't care : It might eventually
-> +scan the list again without harm.
-> +
-> +
-> +1. lookup algo
-> +--------------
-> +::
-> +
-> +   head = &table[slot];
-> +   rcu_read_lock();
-> +   begin:
-> +   hlist_nulls_for_each_entry_rcu(obj, node, head, member) {
-> +      if (obj->key == key) {
-> +         if (!try_get_ref(obj)) // might fail for free objects
-> +            goto begin;
-> +         if (obj->key != key) { // not the object we expected
-> +            put_ref(obj);
-> +            goto begin;
-> +         }
-> +   goto out;
-> +   }
-> +   /*
-> +   * if the nulls value we got at the end of this lookup is
-> +   * not the expected one, we must restart lookup.
-> +   * We probably met an item that was moved to another chain.
-> +   */
-> +   if (get_nulls_value(node) != slot)
-> +      goto begin;
-> +   obj = NULL;
-> +
-> +   out:
-> +   rcu_read_unlock();
-> +
-> +2. Insert function
-> +------------------
-> +
-> +::
-> +
-> +   /*
-> +   * Please note that new inserts are done at the head of list,
-> +   * not in the middle or end.
-> +   */
-> +   obj = kmem_cache_alloc(cachep);
-> +   lock_chain(); // typically a spin_lock()
-> +   obj->key = key;
-> +   /*
-> +   * changes to obj->key must be visible before refcnt one
-> +   */
-> +   smp_wmb();
-> +   atomic_set(&obj->refcnt, 1);
-> +   /*
-> +   * insert obj in RCU way (readers might be traversing chain)
-> +   */
-> +   hlist_nulls_add_head_rcu(&obj->obj_node, list);
-> +   unlock_chain(); // typically a spin_unlock()
-> diff --git a/Documentation/RCU/rculist_nulls.txt b/Documentation/RCU/rculist_nulls.txt
-> deleted file mode 100644
-> index 23f115dc87cf..000000000000
-> --- a/Documentation/RCU/rculist_nulls.txt
-> +++ /dev/null
-> @@ -1,172 +0,0 @@
-> -Using hlist_nulls to protect read-mostly linked lists and
-> -objects using SLAB_TYPESAFE_BY_RCU allocations.
-> -
-> -Please read the basics in Documentation/RCU/listRCU.rst
-> -
-> -Using special makers (called 'nulls') is a convenient way
-> -to solve following problem :
-> -
-> -A typical RCU linked list managing objects which are
-> -allocated with SLAB_TYPESAFE_BY_RCU kmem_cache can
-> -use following algos :
-> -
-> -1) Lookup algo
-> ---------------
-> -rcu_read_lock()
-> -begin:
-> -obj = lockless_lookup(key);
-> -if (obj) {
-> -  if (!try_get_ref(obj)) // might fail for free objects
-> -    goto begin;
-> -  /*
-> -   * Because a writer could delete object, and a writer could
-> -   * reuse these object before the RCU grace period, we
-> -   * must check key after getting the reference on object
-> -   */
-> -  if (obj->key != key) { // not the object we expected
-> -     put_ref(obj);
-> -     goto begin;
-> -   }
-> -}
-> -rcu_read_unlock();
-> -
-> -Beware that lockless_lookup(key) cannot use traditional hlist_for_each_entry_rcu()
-> -but a version with an additional memory barrier (smp_rmb())
-> -
-> -lockless_lookup(key)
-> -{
-> -   struct hlist_node *node, *next;
-> -   for (pos = rcu_dereference((head)->first);
-> -          pos && ({ next = pos->next; smp_rmb(); prefetch(next); 1; }) &&
-> -          ({ tpos = hlist_entry(pos, typeof(*tpos), member); 1; });
-> -          pos = rcu_dereference(next))
-> -      if (obj->key == key)
-> -         return obj;
-> -   return NULL;
-> -
-> -And note the traditional hlist_for_each_entry_rcu() misses this smp_rmb() :
-> -
-> -   struct hlist_node *node;
-> -   for (pos = rcu_dereference((head)->first);
-> -		pos && ({ prefetch(pos->next); 1; }) &&
-> -		({ tpos = hlist_entry(pos, typeof(*tpos), member); 1; });
-> -		pos = rcu_dereference(pos->next))
-> -      if (obj->key == key)
-> -         return obj;
-> -   return NULL;
-> -}
-> -
-> -Quoting Corey Minyard :
-> -
-> -"If the object is moved from one list to another list in-between the
-> - time the hash is calculated and the next field is accessed, and the
-> - object has moved to the end of a new list, the traversal will not
-> - complete properly on the list it should have, since the object will
-> - be on the end of the new list and there's not a way to tell it's on a
-> - new list and restart the list traversal.  I think that this can be
-> - solved by pre-fetching the "next" field (with proper barriers) before
-> - checking the key."
-> -
-> -2) Insert algo :
-> -----------------
-> -
-> -We need to make sure a reader cannot read the new 'obj->obj_next' value
-> -and previous value of 'obj->key'. Or else, an item could be deleted
-> -from a chain, and inserted into another chain. If new chain was empty
-> -before the move, 'next' pointer is NULL, and lockless reader can
-> -not detect it missed following items in original chain.
-> -
-> -/*
-> - * Please note that new inserts are done at the head of list,
-> - * not in the middle or end.
-> - */
-> -obj = kmem_cache_alloc(...);
-> -lock_chain(); // typically a spin_lock()
-> -obj->key = key;
-> -/*
-> - * we need to make sure obj->key is updated before obj->next
-> - * or obj->refcnt
-> - */
-> -smp_wmb();
-> -atomic_set(&obj->refcnt, 1);
-> -hlist_add_head_rcu(&obj->obj_node, list);
-> -unlock_chain(); // typically a spin_unlock()
-> -
-> -
-> -3) Remove algo
-> ---------------
-> -Nothing special here, we can use a standard RCU hlist deletion.
-> -But thanks to SLAB_TYPESAFE_BY_RCU, beware a deleted object can be reused
-> -very very fast (before the end of RCU grace period)
-> -
-> -if (put_last_reference_on(obj) {
-> -   lock_chain(); // typically a spin_lock()
-> -   hlist_del_init_rcu(&obj->obj_node);
-> -   unlock_chain(); // typically a spin_unlock()
-> -   kmem_cache_free(cachep, obj);
-> -}
-> -
-> -
-> -
-> ---------------------------------------------------------------------------
-> -With hlist_nulls we can avoid extra smp_rmb() in lockless_lookup()
-> -and extra smp_wmb() in insert function.
-> -
-> -For example, if we choose to store the slot number as the 'nulls'
-> -end-of-list marker for each slot of the hash table, we can detect
-> -a race (some writer did a delete and/or a move of an object
-> -to another chain) checking the final 'nulls' value if
-> -the lookup met the end of chain. If final 'nulls' value
-> -is not the slot number, then we must restart the lookup at
-> -the beginning. If the object was moved to the same chain,
-> -then the reader doesn't care : It might eventually
-> -scan the list again without harm.
-> -
-> -
-> -1) lookup algo
-> -
-> - head = &table[slot];
-> - rcu_read_lock();
-> -begin:
-> - hlist_nulls_for_each_entry_rcu(obj, node, head, member) {
-> -   if (obj->key == key) {
-> -      if (!try_get_ref(obj)) // might fail for free objects
-> -         goto begin;
-> -      if (obj->key != key) { // not the object we expected
-> -         put_ref(obj);
-> -         goto begin;
-> -      }
-> -  goto out;
-> - }
-> -/*
-> - * if the nulls value we got at the end of this lookup is
-> - * not the expected one, we must restart lookup.
-> - * We probably met an item that was moved to another chain.
-> - */
-> - if (get_nulls_value(node) != slot)
-> -   goto begin;
-> - obj = NULL;
-> -
-> -out:
-> - rcu_read_unlock();
-> -
-> -2) Insert function :
-> ---------------------
-> -
-> -/*
-> - * Please note that new inserts are done at the head of list,
-> - * not in the middle or end.
-> - */
-> -obj = kmem_cache_alloc(cachep);
-> -lock_chain(); // typically a spin_lock()
-> -obj->key = key;
-> -/*
-> - * changes to obj->key must be visible before refcnt one
-> - */
-> -smp_wmb();
-> -atomic_set(&obj->refcnt, 1);
-> -/*
-> - * insert obj in RCU way (readers might be traversing chain)
-> - */
-> -hlist_nulls_add_head_rcu(&obj->obj_node, list);
-> -unlock_chain(); // typically a spin_unlock()
-> -- 
-> 2.20.1
-> 
