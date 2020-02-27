@@ -2,78 +2,97 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BA0C4BA06
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A0FC4BA06
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C708424683
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:11:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CPQPsUrm"
+	by mail.kernel.org (Postfix) with ESMTP id B8639222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:12:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728727AbgB0JLS (ORCPT
+        id S1728654AbgB0JM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 04:11:18 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:56870 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728629AbgB0JLS (ORCPT
+        Thu, 27 Feb 2020 04:12:56 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:33726 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728555AbgB0JM4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 04:11:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=N/eG6R5gRkfiRMhJTTXhdsldDieY9WVtiDoVkj36lRQ=; b=CPQPsUrmvVbg2ZfEz0zCKoLGLr
-        xCxhaUDi6/YSXfrsBteTXdeqGvM6lccotwD/nYdGIrWfVS6lmmOdatfm17h65xq98+E0Rhqb1Ff8t
-        Fnj0594C7tsE5JldKGPjex/V+kpgjW+30JhRo7t9fvLcbWE3rL0dQHKxOoN9we8/UQIVxI+fYz0Yk
-        H8Eu38oG0oNT1pcKpo5NKY0GJSsYqIGQ2lt2iLNKb5wJ1UBhzC7ZbF0Bmgw5kOFlt4gf2kwE3B9hp
-        IsM5/yzSAcPiKhCkbXm2Lrd6aVqbMXlxdrlVvjHMa5Zao5US8PhWd2PS6c//Tb217Ijy9lZqfYCj1
-        CwuBClXw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j7FBt-0000jA-PE; Thu, 27 Feb 2020 09:10:45 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2935430018B;
-        Thu, 27 Feb 2020 10:08:46 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BDF1F2B9AF8CC; Thu, 27 Feb 2020 10:10:42 +0100 (CET)
-Date:   Thu, 27 Feb 2020 10:10:42 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org, joel@joelfernandes.org,
-        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
-        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        luto@kernel.org, tony.luck@intel.com, dan.carpenter@oracle.com,
-        mhiramat@kernel.org, Will Deacon <will@kernel.org>,
-        Petr Mladek <pmladek@suse.com>, Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v4 02/27] hardirq/nmi: Allow nested nmi_enter()
-Message-ID: <20200227091042.GG18400@hirez.programming.kicks-ass.net>
-References: <20200221133416.777099322@infradead.org>
- <20200221134215.149193474@infradead.org>
- <20200221222129.GB28251@lenoir>
- <20200224161318.GG14897@hirez.programming.kicks-ass.net>
- <20200225030905.GB28329@lenoir>
- <20200225154111.GM18400@hirez.programming.kicks-ass.net>
- <20200225221031.GB9599@lenoir>
+        Thu, 27 Feb 2020 04:12:56 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1j7FDv-0006Fu-7U; Thu, 27 Feb 2020 10:12:51 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C4B941C0244;
+        Thu, 27 Feb 2020 10:12:50 +0100 (CET)
+Date:   Thu, 27 Feb 2020 09:12:50 -0000
+From:   "tip-bot2 for Vincent Guittot" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/urgent] sched/fair: Fix statistics for find_idlest_group()
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Mel Gorman <mgorman@techsingularity.net>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200218144534.4564-1-vincent.guittot@linaro.org>
+References: <20200218144534.4564-1-vincent.guittot@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200225221031.GB9599@lenoir>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <158279477043.28353.9447896028790075438.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 11:10:32PM +0100, Frederic Weisbecker wrote:
-> So here is my previous proposal, based on a simple counter, this time
-> with comments and a few fixes:
+The following commit has been merged into the sched/urgent branch of tip:
 
-I've presumed your SoB and made this your patch.
+Commit-ID:     289de35984815576793f579ec27248609e75976e
+Gitweb:        https://git.kernel.org/tip/289de35984815576793f579ec27248609e75976e
+Author:        Vincent Guittot <vincent.guittot@linaro.org>
+AuthorDate:    Tue, 18 Feb 2020 15:45:34 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 27 Feb 2020 10:08:27 +01:00
+
+sched/fair: Fix statistics for find_idlest_group()
+
+sgs->group_weight is not set while gathering statistics in
+update_sg_wakeup_stats(). This means that a group can be classified as
+fully busy with 0 running tasks if utilization is high enough.
+
+This path is mainly used for fork and exec.
+
+Fixes: 57abff067a08 ("sched/fair: Rework find_idlest_group()")
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Acked-by: Mel Gorman <mgorman@techsingularity.net>
+Link: https://lore.kernel.org/r/20200218144534.4564-1-vincent.guittot@linaro.org
+---
+ kernel/sched/fair.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 3c8a379..c1217bf 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -8337,6 +8337,8 @@ static inline void update_sg_wakeup_stats(struct sched_domain *sd,
+ 
+ 	sgs->group_capacity = group->sgc->capacity;
+ 
++	sgs->group_weight = group->group_weight;
++
+ 	sgs->group_type = group_classify(sd->imbalance_pct, group, sgs);
+ 
+ 	/*
