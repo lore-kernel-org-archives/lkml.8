@@ -2,78 +2,136 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E54D9C4BA06
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BEFC4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C15342072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAA2D2072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:16:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="iJco5cwq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727663AbgB0HOy (ORCPT
+        id S1728402AbgB0HQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 02:14:54 -0500
-Received: from mga14.intel.com ([192.55.52.115]:26557 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727336AbgB0HOy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 02:14:54 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 23:14:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,491,1574150400"; 
-   d="scan'208";a="272074904"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
-  by fmsmga002.fm.intel.com with ESMTP; 26 Feb 2020 23:14:51 -0800
-Subject: Re: [PATCH V2 03/13] kprobes: Add symbols for kprobe insn pages
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20200212124949.3589-1-adrian.hunter@intel.com>
- <20200212124949.3589-4-adrian.hunter@intel.com>
- <20200226152200.GB217283@krava>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <435d04f9-15c7-e153-ac19-d9d7bebc170a@intel.com>
-Date:   Thu, 27 Feb 2020 09:13:51 +0200
+        Thu, 27 Feb 2020 02:16:55 -0500
+Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:55442 "EHLO
+        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727336AbgB0HQz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 02:16:55 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id 0DBF53F619;
+        Thu, 27 Feb 2020 08:16:53 +0100 (CET)
+Authentication-Results: pio-pvt-msa3.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=iJco5cwq;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 9s2FL3lWlzPa; Thu, 27 Feb 2020 08:16:52 +0100 (CET)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id ED2B23F56A;
+        Thu, 27 Feb 2020 08:16:49 +0100 (CET)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 54FBC360161;
+        Thu, 27 Feb 2020 08:16:49 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1582787809; bh=czSVFr3N8XD20OuzmIfwTeJukmx6qXdkbu8G6D4uGW4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=iJco5cwq3tifyUhkXULafE2E2SK5e+v+J9B7XYh2qG+7F11JINzsBKZmLzRA9B/2w
+         y2kbglX6cpm9cvR95UVbBEo93uBouanPt0rjIpjhuPqoTbLAvcCHybEOPYpbD0Irog
+         n46IYsNNHpyrXpXirNOiX5dCn1yFly6CK5V20pqU=
+Subject: Re: [PATCH v5 1/3] drm/shmem: add support for per object caching
+ flags.
+To:     Chia-I Wu <olvaffe@gmail.com>
+Cc:     Gerd Hoffmann <kraxel@redhat.com>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        Guillaume Gardet <Guillaume.Gardet@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org,
+        Gurchetan Singh <gurchetansingh@chromium.org>,
+        tzimmermann@suse.de
+References: <20200226154752.24328-1-kraxel@redhat.com>
+ <20200226154752.24328-2-kraxel@redhat.com>
+ <f1afba4b-9c06-48a3-42c7-046695947e91@shipmail.org>
+ <CAPaKu7R4VFYnk9UdpguZnkWeKk2ELVnoQ60=i72RN2GkME1ukw@mail.gmail.com>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <614ed528-8d6d-0179-6149-218566d4af06@shipmail.org>
+Date:   Thu, 27 Feb 2020 08:16:49 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200226152200.GB217283@krava>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAPaKu7R4VFYnk9UdpguZnkWeKk2ELVnoQ60=i72RN2GkME1ukw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/02/20 5:22 pm, Jiri Olsa wrote:
-> On Wed, Feb 12, 2020 at 02:49:39PM +0200, Adrian Hunter wrote:
->> Symbols are needed for tools to describe instruction addresses. Pages
->> allocated for kprobe's purposes need symbols to be created for them.
->> Add such symbols to be visible via /proc/kallsyms.
-> 
-> I can't see kprobes in /proc/kallsyms, I tried making some with
-> perf probe and some of bcc-tools.. I'm greping for [kprobe]
-> 
-> could you put to changelog soem example /proc/kallsyms output?
+On 2/27/20 1:02 AM, Chia-I Wu wrote:
+> On Wed, Feb 26, 2020 at 10:25 AM Thomas Hellström (VMware)
+> <thomas_os@shipmail.org> wrote:
+>> Hi, Gerd,
+>>
+>>
+>>
+>>    #define to_drm_gem_shmem_obj(obj) \
+>> diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
+>> index a421a2eed48a..aad9324dcf4f 100644
+>> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
+>> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
+>> @@ -254,11 +254,16 @@ static void *drm_gem_shmem_vmap_locked(struct drm_gem_shmem_object *shmem)
+>>        if (ret)
+>>                goto err_zero_use;
+>>
+>> -     if (obj->import_attach)
+>> +     if (obj->import_attach) {
+>>                shmem->vaddr = dma_buf_vmap(obj->import_attach->dmabuf);
+>> -     else
+>> +     } else {
+>> +             pgprot_t prot = PAGE_KERNEL;
+>> +
+>> +             if (!shmem->map_cached)
+>> +                     prot = pgprot_writecombine(prot);
+>>                shmem->vaddr = vmap(shmem->pages, obj->size >> PAGE_SHIFT,
+>> -                                 VM_MAP, pgprot_writecombine(PAGE_KERNEL));
+>> +                                 VM_MAP, prot)
+>>
+>> Wouldn't a vmap with pgprot_writecombine() create conflicting mappings
+>> with the linear kernel map which is not write-combined? Or do you change
+>> the linear kernel map of the shmem pages somewhere? vmap bypassess at
+>> least the x86 PAT core mapping consistency check and this could
+>> potentially cause spuriously overwritten memory.
+> Yeah, I think this creates a conflicting alias.  It seems a call to
+> set_pages_array_wc here or changes elsewhere is needed..
+>
+> But this is a pre-existing issue in the shmem helper.  There is also
+> no universal fix (e.g., set_pages_array_wc is x86 only)?  I would hope
+> this series can be merged sooner to fix the regression first.
 
-Will do.  See also the examples in patch 13.
+The problem is this isn't doable with shmem, since that would create 
+interesting problems when pages are swapped out.
 
-For kprobes you need:
+So I would argue that the correct fix is to revert commit 0be895893607f 
+("drm/shmem: switch shmem helper to &drm_gem_object_funcs.mmap")
 
-	# CONFIG_FUNCTION_TRACER is not set
+If some drivers can argue that in their particular environment it's safe 
+to use writecombine in this way, then modifying the page protection 
+should be moved out to those drivers documenting that assumption. Using 
+pgprot_decrypted() in this way could never be safe.
 
-otherwise the kprobes are done by ftrace.
+But IMO this should never be part of generic helpers.
+
+/Thomas
+
+
