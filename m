@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A12CC3F34D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E55C4C3F36F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2028820801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEE7E2469B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811479;
-	bh=Z0QB+7rbGiC2m9djwmXluZUo1zPDh54RPm/F68tzhII=;
+	s=default; t=1582811499;
+	bh=6M4aIEWU6U6B/YmKFklZqlHWhah71sTfS9qFha5y9HY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c4/AIIsVEjlCdChEODFgjeRx666Wx2umuHCgJSeJn2fWkJ/nrnoeWP281KVnX9ilz
-	 2HCAktaKtfYU5o4OFLSprTEWWLaOZkS3sMpBuZpAoFI6lQYlSBZIodWEDvZKzwrTmU
-	 /lugcf9J26V0dj/iQBVDy5eh99IvnODCTynQ5mOM=
+	b=AqZ4x7KHJBl7AJWZmGRZLuZRGoofQV/xGA5tt6e8dPvDCykwL5yDNXCB2xk39hcW4
+	 ZJ52iWorvP239j1aj9byFEU8YdeoP7XsJshaLPvRzzxiOcNbvOaxq3T2S3+dypcN+B
+	 i86kHdeuapUZxjqPL/4U9hliDimrz7Pv89v9zrDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731372AbgB0NvR (ORCPT
+        id S1731421AbgB0Nvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:51:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50246 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:51:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731353AbgB0NvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:51:14 -0500
+        id S1731409AbgB0Nvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:51:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 857E420578;
-        Thu, 27 Feb 2020 13:51:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A16A24656;
+        Thu, 27 Feb 2020 13:51:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811474;
-        bh=Z0QB+7rbGiC2m9djwmXluZUo1zPDh54RPm/F68tzhII=;
+        s=default; t=1582811494;
+        bh=6M4aIEWU6U6B/YmKFklZqlHWhah71sTfS9qFha5y9HY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CQVhge7BRA6RhDEPR5NSOfezOGl8HNKSVr/TFTTVKVkIV+hFsiuZDpN/Lx7KUsLoq
-         0xHm2VbGqJSr6fzoWmQjXBPbsYZOV4fV28BeVQKFTe5vQczesFfYZTn0mxvHr+9I3v
-         4QtWK5XO63hQoFJjY1Xmp2q08tI0jdUhK0FH6iQM=
+        b=U/+79RZQVOeqV4xWh9Ap5qF+dTRmW0jJ2v4/B5VTY+pyhu9qPLa3IV07/kLVp7pCl
+         lKtCeMLRHd5sgNU+h2EA5BjLIpSOp0c3L2niAngJRO8y+Pknb1QAaGh6TiTVasnD7N
+         lQNyvqN9CveyM8YocaQBQjlu08yb0JfvqRIjP2QM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shijie Luo <luoshijie1@huawei.com>,
-        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        stable@kernel.org
-Subject: [PATCH 4.9 146/165] ext4: add cond_resched() to __ext4_find_entry()
-Date:   Thu, 27 Feb 2020 14:37:00 +0100
-Message-Id: <20200227132252.150786910@linuxfoundation.org>
+        stable@vger.kernel.org, Rahul Kundu <rahul.kundu@chelsio.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Dakshaja Uppalapati <dakshaja@chelsio.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.9 154/165] scsi: Revert "RDMA/isert: Fix a recently introduced regression related to logout"
+Date:   Thu, 27 Feb 2020 14:37:08 +0100
+Message-Id: <20200227132253.184446972@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -60,71 +63,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shijie Luo <luoshijie1@huawei.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-commit 9424ef56e13a1f14c57ea161eed3ecfdc7b2770e upstream.
+commit 76261ada16dcc3be610396a46d35acc3efbda682 upstream.
 
-We tested a soft lockup problem in linux 4.19 which could also
-be found in linux 5.x.
+Since commit 04060db41178 introduces soft lockups when toggling network
+interfaces, revert it.
 
-When dir inode takes up a large number of blocks, and if the
-directory is growing when we are searching, it's possible the
-restart branch could be called many times, and the do while loop
-could hold cpu a long time.
-
-Here is the call trace in linux 4.19.
-
-[  473.756186] Call trace:
-[  473.756196]  dump_backtrace+0x0/0x198
-[  473.756199]  show_stack+0x24/0x30
-[  473.756205]  dump_stack+0xa4/0xcc
-[  473.756210]  watchdog_timer_fn+0x300/0x3e8
-[  473.756215]  __hrtimer_run_queues+0x114/0x358
-[  473.756217]  hrtimer_interrupt+0x104/0x2d8
-[  473.756222]  arch_timer_handler_virt+0x38/0x58
-[  473.756226]  handle_percpu_devid_irq+0x90/0x248
-[  473.756231]  generic_handle_irq+0x34/0x50
-[  473.756234]  __handle_domain_irq+0x68/0xc0
-[  473.756236]  gic_handle_irq+0x6c/0x150
-[  473.756238]  el1_irq+0xb8/0x140
-[  473.756286]  ext4_es_lookup_extent+0xdc/0x258 [ext4]
-[  473.756310]  ext4_map_blocks+0x64/0x5c0 [ext4]
-[  473.756333]  ext4_getblk+0x6c/0x1d0 [ext4]
-[  473.756356]  ext4_bread_batch+0x7c/0x1f8 [ext4]
-[  473.756379]  ext4_find_entry+0x124/0x3f8 [ext4]
-[  473.756402]  ext4_lookup+0x8c/0x258 [ext4]
-[  473.756407]  __lookup_hash+0x8c/0xe8
-[  473.756411]  filename_create+0xa0/0x170
-[  473.756413]  do_mkdirat+0x6c/0x140
-[  473.756415]  __arm64_sys_mkdirat+0x28/0x38
-[  473.756419]  el0_svc_common+0x78/0x130
-[  473.756421]  el0_svc_handler+0x38/0x78
-[  473.756423]  el0_svc+0x8/0xc
-[  485.755156] watchdog: BUG: soft lockup - CPU#2 stuck for 22s! [tmp:5149]
-
-Add cond_resched() to avoid soft lockup and to provide a better
-system responding.
-
-Link: https://lore.kernel.org/r/20200215080206.13293-1-luoshijie1@huawei.com
-Signed-off-by: Shijie Luo <luoshijie1@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: stable@kernel.org
+Link: https://marc.info/?l=target-devel&m=158157054906196
+Cc: Rahul Kundu <rahul.kundu@chelsio.com>
+Cc: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Cc: Sagi Grimberg <sagi@grimberg.me>
+Reported-by: Dakshaja Uppalapati <dakshaja@chelsio.com>
+Fixes: 04060db41178 ("scsi: RDMA/isert: Fix a recently introduced regression related to logout")
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/namei.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/infiniband/ulp/isert/ib_isert.c |   12 ++++++++++++
+ drivers/target/iscsi/iscsi_target.c     |    6 +++---
+ 2 files changed, 15 insertions(+), 3 deletions(-)
 
---- a/fs/ext4/namei.c
-+++ b/fs/ext4/namei.c
-@@ -1445,6 +1445,7 @@ restart:
- 		/*
- 		 * We deal with the read-ahead logic here.
- 		 */
-+		cond_resched();
- 		if (ra_ptr >= ra_max) {
- 			/* Refill the readahead buffer */
- 			ra_ptr = 0;
+--- a/drivers/infiniband/ulp/isert/ib_isert.c
++++ b/drivers/infiniband/ulp/isert/ib_isert.c
+@@ -2555,6 +2555,17 @@ isert_wait4logout(struct isert_conn *ise
+ 	}
+ }
+ 
++static void
++isert_wait4cmds(struct iscsi_conn *conn)
++{
++	isert_info("iscsi_conn %p\n", conn);
++
++	if (conn->sess) {
++		target_sess_cmd_list_set_waiting(conn->sess->se_sess);
++		target_wait_for_sess_cmds(conn->sess->se_sess);
++	}
++}
++
+ /**
+  * isert_put_unsol_pending_cmds() - Drop commands waiting for
+  *     unsolicitate dataout
+@@ -2602,6 +2613,7 @@ static void isert_wait_conn(struct iscsi
+ 
+ 	ib_drain_qp(isert_conn->qp);
+ 	isert_put_unsol_pending_cmds(conn);
++	isert_wait4cmds(conn);
+ 	isert_wait4logout(isert_conn);
+ 
+ 	queue_work(isert_release_wq, &isert_conn->release_work);
+--- a/drivers/target/iscsi/iscsi_target.c
++++ b/drivers/target/iscsi/iscsi_target.c
+@@ -4162,6 +4162,9 @@ int iscsit_close_connection(
+ 	iscsit_stop_nopin_response_timer(conn);
+ 	iscsit_stop_nopin_timer(conn);
+ 
++	if (conn->conn_transport->iscsit_wait_conn)
++		conn->conn_transport->iscsit_wait_conn(conn);
++
+ 	/*
+ 	 * During Connection recovery drop unacknowledged out of order
+ 	 * commands for this connection, and prepare the other commands
+@@ -4247,9 +4250,6 @@ int iscsit_close_connection(
+ 	target_sess_cmd_list_set_waiting(sess->se_sess);
+ 	target_wait_for_sess_cmds(sess->se_sess);
+ 
+-	if (conn->conn_transport->iscsit_wait_conn)
+-		conn->conn_transport->iscsit_wait_conn(conn);
+-
+ 	ahash_request_free(conn->conn_tx_hash);
+ 	if (conn->conn_rx_hash) {
+ 		struct crypto_ahash *tfm;
 
 
