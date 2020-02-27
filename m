@@ -2,123 +2,138 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2772C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EC4C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C67B524691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79E3B246BD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:47:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814833;
-	bh=UFk4DKDT/RavUVjsZH/Q78QOV9roAST50YZBqSmnO2Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=h+NOEkg26rEmGaKD1mwLgMKpdY7lqPym9KbkF0Or5MDueO5hhpKp3drfiRK0rS/EF
-	 mVmL44+7Lsdy5dhG4gRyFbimSXa91+JRLP7OFeDH5dJ6zSGTwVpLnqEiXWjsQAMwvl
-	 4/JFhJF1er6rS9bUbZvMDJSyLSKWFAKoB23i8m54=
+	s=default; t=1582814837;
+	bh=xAni1UWMXYE4zuIVjCcTlK87vyWdYkYH97cNEZFhvig=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=XZncW/pA2RAKUykdpIemSlFnzgJ5QxZUidGjj5SemlRGNQoReh1XP0LKtn2YZC291
+	 JxaAnaI6MOxAcoD8qPh9nRn0Ci5TOGjEs3DWdzJpvLELr8jD9LpEYjFqczKxU+O2z0
+	 0pedjH/ouGRzlgfeXR/mf5oeY3kxPgm3emrBbnVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732114AbgB0OrM (ORCPT
+        id S1730240AbgB0Noi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:47:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40320 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:44:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729193AbgB0Non (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:44:43 -0500
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730235AbgB0Noe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:44:34 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44C46246AF;
-        Thu, 27 Feb 2020 13:44:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F1B7222C2;
+        Thu, 27 Feb 2020 13:44:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811082;
-        bh=UFk4DKDT/RavUVjsZH/Q78QOV9roAST50YZBqSmnO2Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=n4oGvOmwC99Lmi5J+GMCuRBByRgoeP0UELiYzDqyAxyrgXLKSlmUYurL8CUziHp/g
-         7oaLvWk/URj2xARQ6zQr+kZDgtfUmsR6JI5EdXIHj8BGK8DP7xIFiJSs4q8Y1xjmtp
-         Bqpeh4X7pTULE1qoDzvp+wnP0IKWvL/BlppoM/dc=
-Received: by mail-qk1-f170.google.com with SMTP id h4so3157497qkm.0;
-        Thu, 27 Feb 2020 05:44:42 -0800 (PST)
-X-Gm-Message-State: APjAAAXyJP5ruvMaxmAhwdOrXAGRrCHo/0NxFy/yO3GQgm5xRnkOCYx/
-        MH7O8f7Tm/wwQIdIYpqoIrMPkpSb7EipTRfk4g==
-X-Google-Smtp-Source: APXvYqxJt8vQFSvhhMBaDRNc9+rWFwZOnJGWrPvzbGPu2EaTUhy2OiKjS2GBDVr9kzPAE6HvyHbvr3auJoAsonMv+HE=
-X-Received: by 2002:a05:620a:1237:: with SMTP id v23mr5784092qkj.223.1582811081310;
- Thu, 27 Feb 2020 05:44:41 -0800 (PST)
+        s=default; t=1582811073;
+        bh=xAni1UWMXYE4zuIVjCcTlK87vyWdYkYH97cNEZFhvig=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=UITcKQdR5Bwq4DaqiFlF3Tq3OIwByo5I218lq8Af7bUH7DSUyGvkA2gtyA4qdVGmv
+         +wYKLWrLvvWKCFgBMuhyeeq9zaDC/ofCmMz15pGuAbyg8QULWKGTn2sc2Astn7XaoV
+         RvdDRzS5SJBVoYl4OaaIElDm4/ewtsEcztKWNe8k=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Rahul Kundu <rahul.kundu@chelsio.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Dakshaja Uppalapati <dakshaja@chelsio.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.4 107/113] scsi: Revert "RDMA/isert: Fix a recently introduced regression related to logout"
+Date:   Thu, 27 Feb 2020 14:37:03 +0100
+Message-Id: <20200227132228.892845198@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
+References: <20200227132211.791484803@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200222141927.3868-1-yamada.masahiro@socionext.com> <CAK7LNAQmzYzK_A4iF6b-LxTT-o5Ut2=TyBeRQPSfCdj7FHhgBQ@mail.gmail.com>
-In-Reply-To: <CAK7LNAQmzYzK_A4iF6b-LxTT-o5Ut2=TyBeRQPSfCdj7FHhgBQ@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 27 Feb 2020 07:44:29 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ1Je+Tmwrb2vX=0c+FKSk19qKFWg1Au=k35AZKL=R1Pg@mail.gmail.com>
-Message-ID: <CAL_JsqJ1Je+Tmwrb2vX=0c+FKSk19qKFWg1Au=k35AZKL=R1Pg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: mtd: Convert Denali NAND controller to json-schema
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     DTML <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Richard Weinberger <richard@nod.at>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 7:59 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> Hi Rob,
->
->
-> This was applied, but I just noticed one stupid mistake.
->
->
->
-> On Sat, Feb 22, 2020 at 11:20 PM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > Convert the Denali NAND controller binding to DT schema format.
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
-> >
-> >  .../devicetree/bindings/mtd/denali,nand.yaml  | 149 ++++++++++++++++++
-> >  .../devicetree/bindings/mtd/denali-nand.txt   |  61 -------
-> >  2 files changed, 149 insertions(+), 61 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/mtd/denali,nand.yaml
-> >  delete mode 100644 Documentation/devicetree/bindings/mtd/denali-nand.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/mtd/denali,nand.yaml b/Documentation/devicetree/bindings/mtd/denali,nand.yaml
-> > new file mode 100644
-> > index 000000000000..b41b7e4bfe78
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mtd/denali,nand.yaml
-> > @@ -0,0 +1,149 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/mtd/denali,nand.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Denali NAND controller
-> > +
-> > +maintainers:
-> > +  - Masahiro Yamada <yamada.masahiro@socionext.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    description: version 2.91, 3.1, 3.1.1, respectively
->
->
-> Please delete this description.
->
-> This is a copy-paste mistake, which
-> came from my other patch
-> "dt-bindings: mmc: Convert UniPhier SD controller to json-schema"
+From: Bart Van Assche <bvanassche@acm.org>
 
-Done.
+commit 76261ada16dcc3be610396a46d35acc3efbda682 upstream.
 
-Rob
+Since commit 04060db41178 introduces soft lockups when toggling network
+interfaces, revert it.
+
+Link: https://marc.info/?l=target-devel&m=158157054906196
+Cc: Rahul Kundu <rahul.kundu@chelsio.com>
+Cc: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Cc: Sagi Grimberg <sagi@grimberg.me>
+Reported-by: Dakshaja Uppalapati <dakshaja@chelsio.com>
+Fixes: 04060db41178 ("scsi: RDMA/isert: Fix a recently introduced regression related to logout")
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/infiniband/ulp/isert/ib_isert.c |   12 ++++++++++++
+ drivers/target/iscsi/iscsi_target.c     |    6 +++---
+ 2 files changed, 15 insertions(+), 3 deletions(-)
+
+--- a/drivers/infiniband/ulp/isert/ib_isert.c
++++ b/drivers/infiniband/ulp/isert/ib_isert.c
+@@ -3295,6 +3295,17 @@ isert_wait4flush(struct isert_conn *iser
+ 	wait_for_completion(&isert_conn->wait_comp_err);
+ }
+ 
++static void
++isert_wait4cmds(struct iscsi_conn *conn)
++{
++	isert_info("iscsi_conn %p\n", conn);
++
++	if (conn->sess) {
++		target_sess_cmd_list_set_waiting(conn->sess->se_sess);
++		target_wait_for_sess_cmds(conn->sess->se_sess);
++	}
++}
++
+ /**
+  * isert_put_unsol_pending_cmds() - Drop commands waiting for
+  *     unsolicitate dataout
+@@ -3350,6 +3361,7 @@ static void isert_wait_conn(struct iscsi
+ 
+ 	isert_wait4flush(isert_conn);
+ 	isert_put_unsol_pending_cmds(conn);
++	isert_wait4cmds(conn);
+ 	isert_wait4logout(isert_conn);
+ 
+ 	queue_work(isert_release_wq, &isert_conn->release_work);
+--- a/drivers/target/iscsi/iscsi_target.c
++++ b/drivers/target/iscsi/iscsi_target.c
+@@ -4309,6 +4309,9 @@ int iscsit_close_connection(
+ 	iscsit_stop_nopin_response_timer(conn);
+ 	iscsit_stop_nopin_timer(conn);
+ 
++	if (conn->conn_transport->iscsit_wait_conn)
++		conn->conn_transport->iscsit_wait_conn(conn);
++
+ 	/*
+ 	 * During Connection recovery drop unacknowledged out of order
+ 	 * commands for this connection, and prepare the other commands
+@@ -4394,9 +4397,6 @@ int iscsit_close_connection(
+ 	target_sess_cmd_list_set_waiting(sess->se_sess);
+ 	target_wait_for_sess_cmds(sess->se_sess);
+ 
+-	if (conn->conn_transport->iscsit_wait_conn)
+-		conn->conn_transport->iscsit_wait_conn(conn);
+-
+ 	if (conn->conn_rx_hash.tfm)
+ 		crypto_free_hash(conn->conn_rx_hash.tfm);
+ 	if (conn->conn_tx_hash.tfm)
+
+
