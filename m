@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE6DC3F351
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1495C3F37D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78A562468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FFFF24690
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813064;
-	bh=NpPQdfyc5L+GRHg5wPDXDM8+oXQBfP++pwzaH75mJkA=;
+	s=default; t=1582812964;
+	bh=VmyJoJtm/AzdS0db36pkNph7dHXRyE9znS2N+yd5QIw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XP//TwZ2FzdQmdkCeUqrlzb+UQUB6FVXOyyrMCt4TLV8eLVCpVpKc5h/g+izWzcJn
-	 DqE6RpbmBFN4iktKsy5UOhLDgSlNytiVVdq5aRxtPDpkKNoP3rlAcGqbBTDQ4lsfgY
-	 8I5LuVk6fqnXLrPm43xaSFjXe0/aUbCP8XMNo0Qg=
+	b=TnovHaw1t9vUecF5u9/wCx3LUVlHFPYhGjTo1qwgs9jRMK3rGR/0JJVdXiiKX8ppQ
+	 HwWMooBzeJKyhHx5l6hP9AfW71Akv2udteKQ+8eVPnlyAAQ+alVOt5ktWQ0B6+iA6w
+	 TfkK/1Riz4WwKZJlvfu6Jg63JSTpdgclXQ4rVfGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389756AbgB0ORm (ORCPT
+        id S2389410AbgB0OQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:17:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58130 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:16:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389748AbgB0ORl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:17:41 -0500
+        id S2389389AbgB0OP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:15:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28C2A2468F;
-        Thu, 27 Feb 2020 14:17:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 402072468F;
+        Thu, 27 Feb 2020 14:15:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813059;
-        bh=NpPQdfyc5L+GRHg5wPDXDM8+oXQBfP++pwzaH75mJkA=;
+        s=default; t=1582812957;
+        bh=VmyJoJtm/AzdS0db36pkNph7dHXRyE9znS2N+yd5QIw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J1/H601MRsHDvf+1PFMd6ojsqcwD1vLYqwC8gxYHcMxX3V+BWtrK6wqygtulsYIRm
-         MbAHmf6rgJE/TFOJa4kIyaV5Tl3qknsAnEO5cDeuphCZX424m40V3934K0VD/q3DsL
-         tQzyQKBmGTfENT1H4lV4hRryWfC8BvKOe9zd2Z88=
+        b=h4vSVQGTrqo4VqCo5ZTJNCF3bHhxzDl3b8C9g+4EPl66NIuB7K25By5TrIzoiMQce
+         QIpqe3elJ+xJG+JA0ugijHoDgq3LcGQCJxrGVSr7LvxorFlQyptkpotsY9V5iDT/9w
+         8xeLBHHx9gaWmFtlMibDXOCfHg/jO9y7LkkXp3Qg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Jeff Mahoney <jeffm@suse.com>, Qu Wenruo <wqu@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.5 104/150] btrfs: destroy qgroup extent records on transaction abort
-Date:   Thu, 27 Feb 2020 14:37:21 +0100
-Message-Id: <20200227132248.117693088@linuxfoundation.org>
+        stable@vger.kernel.org, Xiaojie Yuan <xiaojie.yuan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.5 081/150] drm/amdgpu/gfx9: disable gfxoff when reading rlc clock
+Date:   Thu, 27 Feb 2020 14:36:58 +0100
+Message-Id: <20200227132244.804644646@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -60,82 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Mahoney <jeffm@suse.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-commit 81f7eb00ff5bb8326e82503a32809421d14abb8a upstream.
+commit 120cf959308e1bda984e40a9edd25ee2d6262efd upstream.
 
-We clean up the delayed references when we abort a transaction but we
-leave the pending qgroup extent records behind, leaking memory.
+Otherwise we readback all ones.  Fixes rlc counter
+readback while gfxoff is active.
 
-This patch destroys the extent records when we destroy the delayed refs
-and makes sure ensure they're gone before releasing the transaction.
-
-Fixes: 3368d001ba5d ("btrfs: qgroup: Record possible quota-related extent for qgroup.")
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Jeff Mahoney <jeffm@suse.com>
-[ Rebased to latest upstream, remove to_qgroup() helper, use
-  rbtree_postorder_for_each_entry_safe() wrapper ]
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Reviewed-by: Xiaojie Yuan <xiaojie.yuan@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/disk-io.c     |    1 +
- fs/btrfs/qgroup.c      |   13 +++++++++++++
- fs/btrfs/qgroup.h      |    1 +
- fs/btrfs/transaction.c |    2 ++
- 4 files changed, 17 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -4272,6 +4272,7 @@ static int btrfs_destroy_delayed_refs(st
- 		cond_resched();
- 		spin_lock(&delayed_refs->lock);
- 	}
-+	btrfs_qgroup_destroy_extent_records(trans);
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+@@ -3852,6 +3852,7 @@ static uint64_t gfx_v9_0_get_gpu_clock_c
+ {
+ 	uint64_t clock;
  
- 	spin_unlock(&delayed_refs->lock);
- 
---- a/fs/btrfs/qgroup.c
-+++ b/fs/btrfs/qgroup.c
-@@ -4016,3 +4016,16 @@ out:
++	amdgpu_gfx_off_ctrl(adev, false);
+ 	mutex_lock(&adev->gfx.gpu_clock_mutex);
+ 	if (adev->asic_type == CHIP_VEGA10 && amdgpu_sriov_runtime(adev)) {
+ 		uint32_t tmp, lsb, msb, i = 0;
+@@ -3870,6 +3871,7 @@ static uint64_t gfx_v9_0_get_gpu_clock_c
+ 			((uint64_t)RREG32_SOC15(GC, 0, mmRLC_GPU_CLOCK_COUNT_MSB) << 32ULL);
  	}
- 	return ret;
+ 	mutex_unlock(&adev->gfx.gpu_clock_mutex);
++	amdgpu_gfx_off_ctrl(adev, true);
+ 	return clock;
  }
-+
-+void btrfs_qgroup_destroy_extent_records(struct btrfs_transaction *trans)
-+{
-+	struct btrfs_qgroup_extent_record *entry;
-+	struct btrfs_qgroup_extent_record *next;
-+	struct rb_root *root;
-+
-+	root = &trans->delayed_refs.dirty_extent_root;
-+	rbtree_postorder_for_each_entry_safe(entry, next, root, node) {
-+		ulist_free(entry->old_roots);
-+		kfree(entry);
-+	}
-+}
---- a/fs/btrfs/qgroup.h
-+++ b/fs/btrfs/qgroup.h
-@@ -414,5 +414,6 @@ int btrfs_qgroup_add_swapped_blocks(stru
- 		u64 last_snapshot);
- int btrfs_qgroup_trace_subtree_after_cow(struct btrfs_trans_handle *trans,
- 		struct btrfs_root *root, struct extent_buffer *eb);
-+void btrfs_qgroup_destroy_extent_records(struct btrfs_transaction *trans);
  
- #endif
---- a/fs/btrfs/transaction.c
-+++ b/fs/btrfs/transaction.c
-@@ -121,6 +121,8 @@ void btrfs_put_transaction(struct btrfs_
- 		BUG_ON(!list_empty(&transaction->list));
- 		WARN_ON(!RB_EMPTY_ROOT(
- 				&transaction->delayed_refs.href_root.rb_root));
-+		WARN_ON(!RB_EMPTY_ROOT(
-+				&transaction->delayed_refs.dirty_extent_root));
- 		if (transaction->delayed_refs.pending_csums)
- 			btrfs_err(transaction->fs_info,
- 				  "pending csums is %llu",
 
 
