@@ -7,50 +7,55 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91782C54FF9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CB6C54FFD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55F5E24691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:12:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9DF12469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:12:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812767;
-	bh=7QqwOjNJtbd9xkAn4TsVI4GpOYlFQLC1fz7u+pjqbpg=;
+	s=default; t=1582812773;
+	bh=uPZNUo6hZRw9EESZm12SGL2n6SkjBacg92Va+/AxakM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mt7b5fAh2OeWADrD8R7l9Zv4KrZchwH6dYGnx7HtqWjIODqVX9vvEwXMQXl51Z72z
-	 NuXE4Iib3P6+98bVnkqO4moc4rUeIzkJbz8Rcrvw2+INgHBkbk2eIx1oiTtE6ntX2R
-	 0RYJKv53OLqpoQiMum6prOLFyH9aSG70SEigZU1E=
+	b=XV8OdDNAY3Q1KTxD+MnE5CSmHvuECFmdOMlL4gXiORSnd7gOxzA0+7kTrLKHLIb/5
+	 rqfTqPWnyuY+mW9yfaoengKcPIfXlDunwIbGyttPTmD7FSQPuH5yA5HLjiceKozaqw
+	 ke5qT6w8oKfE+BjXWG1InJKAHzZGodwRRJHLTf4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388898AbgB0OMp (ORCPT
+        id S2388912AbgB0OMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:12:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51442 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:12:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388892AbgB0OMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:12:43 -0500
+        id S2388903AbgB0OMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:12:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7EF620578;
-        Thu, 27 Feb 2020 14:12:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64CB92469D;
+        Thu, 27 Feb 2020 14:12:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812762;
-        bh=7QqwOjNJtbd9xkAn4TsVI4GpOYlFQLC1fz7u+pjqbpg=;
+        s=default; t=1582812767;
+        bh=uPZNUo6hZRw9EESZm12SGL2n6SkjBacg92Va+/AxakM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZnOSBXZP0foTSTDbbFFFM/a0wxiGucrbO/CdvOXL+N+b+cUEuvg1esYfnGT1Ijmxg
-         C7NVfJsIcn1q6XmNKisGnaCR4EI6CgF13E5IicgOOYuF0IEa8sfNRh6tsR7osMHQeC
-         7+VgEqilSwGF8aNorMSd95/JzdNoNy5WR/7K6szs=
+        b=TPmHUy09yhGvm+cX0syuRxqgCOegRYRANMJ+Sbsq9y2cGBg+z/pnHpygM0mQjhGTc
+         LxcKQIfDmG+HXMhOyB/4Ka65YpDLcYR6klhX0Fj1F6+v2tWkj7emOIpT3Q8qS2rmNP
+         yg+laLKcOecjMz/BamwbdHsyCFNObLgF3GSjgjOM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 5.4 111/135] staging: rtl8723bs: fix copy of overlapping memory
-Date:   Thu, 27 Feb 2020 14:37:31 +0100
-Message-Id: <20200227132245.885884356@linuxfoundation.org>
+        stable@vger.kernel.org, Brian Masney <masneyb@onstation.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 5.5 001/150] iommu/qcom: Fix bogus detach logic
+Date:   Thu, 27 Feb 2020 14:35:38 +0100
+Message-Id: <20200227132233.031980326@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
-References: <20200227132228.710492098@linuxfoundation.org>
+In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
+References: <20200227132232.815448360@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -59,45 +64,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Robin Murphy <robin.murphy@arm.com>
 
-commit 8ae9a588ca35eb9c32dc03299c5e1f4a1e9a9617 upstream.
+commit faf305c51aeabd1ea2d7131e798ef5f55f4a7750 upstream.
 
-Currently the rtw_sprintf prints the contents of thread_name
-onto thread_name and this can lead to a potential copy of a
-string over itself. Avoid this by printing the literal string RTWHALXT
-instread of the contents of thread_name.
+Currently, the implementation of qcom_iommu_domain_free() is guaranteed
+to do one of two things: WARN() and leak everything, or dereference NULL
+and crash. That alone is terrible, but in fact the whole idea of trying
+to track the liveness of a domain via the qcom_domain->iommu pointer as
+a sanity check is full of fundamentally flawed assumptions. Make things
+robust and actually functional by not trying to be quite so clever.
 
-Addresses-Coverity: ("copy of overlapping memory")
-Fixes: 554c0a3abf21 ("staging: Add rtl8723bs sdio wifi driver")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20200126220549.9849-1-colin.king@canonical.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Brian Masney <masneyb@onstation.org>
+Tested-by: Brian Masney <masneyb@onstation.org>
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Fixes: 0ae349a0f33f ("iommu/qcom: Add qcom_iommu")
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Tested-by: Stephan Gerhold <stephan@gerhold.net>
+Cc: stable@vger.kernel.org # v4.14+
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/iommu/qcom_iommu.c |   28 ++++++++++++----------------
+ 1 file changed, 12 insertions(+), 16 deletions(-)
 
---- a/drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c
-+++ b/drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c
-@@ -476,14 +476,13 @@ int rtl8723bs_xmit_thread(void *context)
- 	s32 ret;
- 	struct adapter *padapter;
- 	struct xmit_priv *pxmitpriv;
--	u8 thread_name[20] = "RTWHALXT";
+--- a/drivers/iommu/qcom_iommu.c
++++ b/drivers/iommu/qcom_iommu.c
+@@ -345,21 +345,19 @@ static void qcom_iommu_domain_free(struc
+ {
+ 	struct qcom_iommu_domain *qcom_domain = to_qcom_iommu_domain(domain);
+ 
+-	if (WARN_ON(qcom_domain->iommu))    /* forgot to detach? */
+-		return;
 -
-+	u8 thread_name[20];
+ 	iommu_put_dma_cookie(domain);
  
- 	ret = _SUCCESS;
- 	padapter = context;
- 	pxmitpriv = &padapter->xmitpriv;
+-	/* NOTE: unmap can be called after client device is powered off,
+-	 * for example, with GPUs or anything involving dma-buf.  So we
+-	 * cannot rely on the device_link.  Make sure the IOMMU is on to
+-	 * avoid unclocked accesses in the TLB inv path:
+-	 */
+-	pm_runtime_get_sync(qcom_domain->iommu->dev);
+-
+-	free_io_pgtable_ops(qcom_domain->pgtbl_ops);
+-
+-	pm_runtime_put_sync(qcom_domain->iommu->dev);
++	if (qcom_domain->iommu) {
++		/*
++		 * NOTE: unmap can be called after client device is powered
++		 * off, for example, with GPUs or anything involving dma-buf.
++		 * So we cannot rely on the device_link.  Make sure the IOMMU
++		 * is on to avoid unclocked accesses in the TLB inv path:
++		 */
++		pm_runtime_get_sync(qcom_domain->iommu->dev);
++		free_io_pgtable_ops(qcom_domain->pgtbl_ops);
++		pm_runtime_put_sync(qcom_domain->iommu->dev);
++	}
  
--	rtw_sprintf(thread_name, 20, "%s-"ADPT_FMT, thread_name, ADPT_ARG(padapter));
-+	rtw_sprintf(thread_name, 20, "RTWHALXT-" ADPT_FMT, ADPT_ARG(padapter));
- 	thread_enter(thread_name);
+ 	kfree(qcom_domain);
+ }
+@@ -405,7 +403,7 @@ static void qcom_iommu_detach_dev(struct
+ 	struct qcom_iommu_domain *qcom_domain = to_qcom_iommu_domain(domain);
+ 	unsigned i;
  
- 	DBG_871X("start "FUNC_ADPT_FMT"\n", FUNC_ADPT_ARG(padapter));
+-	if (!qcom_domain->iommu)
++	if (WARN_ON(!qcom_domain->iommu))
+ 		return;
+ 
+ 	pm_runtime_get_sync(qcom_iommu->dev);
+@@ -418,8 +416,6 @@ static void qcom_iommu_detach_dev(struct
+ 		ctx->domain = NULL;
+ 	}
+ 	pm_runtime_put_sync(qcom_iommu->dev);
+-
+-	qcom_domain->iommu = NULL;
+ }
+ 
+ static int qcom_iommu_map(struct iommu_domain *domain, unsigned long iova,
 
 
