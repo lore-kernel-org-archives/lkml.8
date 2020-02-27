@@ -2,52 +2,53 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80090C52D29
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B569C52D49
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4380420801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:06:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51D4024697
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:05:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812413;
-	bh=6DdBLGtKOwwGfslVSVMtP9bAJ10zft2OD/aVT3p6qvk=;
+	s=default; t=1582812345;
+	bh=qpo+XMyyKLIxMT/BdGw0TqsKggEost62VlexUf7Rc0o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iqcAcyNorj0DHHsOyHfSucV1kNuJ6AA3UMMb5BcKF6psAZ4DRepMLnZn1vwYMBZMg
-	 8RaXvYTCWw9BUlNZNerH3FA19PuUY9me6sO9uSMCa5v9rQYnKPyFL6asPabfXUJt3+
-	 XBTWZBOR1TvMEIRpSpM8P1TfS1piATnD4S2sj1Kw=
+	b=fsNVgqQG92m8aJBFdQgdpxRyDVMp51lFL5zgllMpZaRuD0WFN1NZVYCXiNs0mkJlM
+	 4P/VMJhJ2H+Z5wDwWX+70+ecx4IOaF0GynZHFq1e3Bi96CG4mBIrKZDAl0EOr1KRnO
+	 R86yBBxrQ0US7ItgWv0dlxwG/tSxq7P/NbWmUOUc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733180AbgB0OGv (ORCPT
+        id S2387810AbgB0OFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:06:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44030 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:05:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387977AbgB0OGp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:06:45 -0500
+        id S2387798AbgB0OFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:05:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 464C821D7E;
-        Thu, 27 Feb 2020 14:06:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B02720578;
+        Thu, 27 Feb 2020 14:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812404;
-        bh=6DdBLGtKOwwGfslVSVMtP9bAJ10zft2OD/aVT3p6qvk=;
+        s=default; t=1582812339;
+        bh=qpo+XMyyKLIxMT/BdGw0TqsKggEost62VlexUf7Rc0o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=noWP+WS2rHRRvfNDBrDGrrNPtTqyiY1swnQNWy0fBKkQ6b3lyIw7Jp2tQ/NGfEKGA
-         E1ZIbEsUsg3RyEWnmCEenz/JZR54cgH+6Y8daYV4WcQY8oVHY7cCBYJqRu7A9DTGpV
-         iacjFYyAX2UzUmOCAeQkqAcVEgunJ6vuXRHgIUBU=
+        b=is+E26KGS639ffM51QOXe238W/R7++lwi2G2r7zdsc9YLUM12LW3oANjBhF1RwEcR
+         xWI8ammLYjGx9a9yigkpaFrWu315Qgu4sGtTYqbqfE5pdd+oxbWaeL6zHaghhIxX+x
+         SgsSrIO2EeYifMuWH+zuXijxUTLBWeOGX0USET38=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Suraj Jitindar Singh <surajjs@amazon.com>,
-        Theodore Tso <tytso@mit.edu>, Balbir Singh <sblbir@amazon.com>,
-        stable@kernel.org
-Subject: [PATCH 4.19 66/97] ext4: fix potential race between s_group_info online resizing and access
-Date:   Thu, 27 Feb 2020 14:37:14 +0100
-Message-Id: <20200227132225.276970319@linuxfoundation.org>
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 78/97] Btrfs: fix btrfs_wait_ordered_range() so that it waits for all ordered extents
+Date:   Thu, 27 Feb 2020 14:37:26 +0100
+Message-Id: <20200227132227.200104132@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
 References: <20200227132214.553656188@linuxfoundation.org>
@@ -60,180 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suraj Jitindar Singh <surajjs@amazon.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit df3da4ea5a0fc5d115c90d5aa6caa4dd433750a7 upstream.
+commit e75fd33b3f744f644061a4f9662bd63f5434f806 upstream.
 
-During an online resize an array of pointers to s_group_info gets replaced
-so it can get enlarged. If there is a concurrent access to the array in
-ext4_get_group_info() and this memory has been reused then this can lead to
-an invalid memory access.
+In btrfs_wait_ordered_range() once we find an ordered extent that has
+finished with an error we exit the loop and don't wait for any other
+ordered extents that might be still in progress.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206443
-Link: https://lore.kernel.org/r/20200221053458.730016-3-tytso@mit.edu
-Signed-off-by: Suraj Jitindar Singh <surajjs@amazon.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Balbir Singh <sblbir@amazon.com>
-Cc: stable@kernel.org
+All the users of btrfs_wait_ordered_range() expect that there are no more
+ordered extents in progress after that function returns. So past fixes
+such like the ones from the two following commits:
+
+  ff612ba7849964 ("btrfs: fix panic during relocation after ENOSPC before
+                   writeback happens")
+
+  28aeeac1dd3080 ("Btrfs: fix panic when starting bg cache writeout after
+                   IO error")
+
+don't work when there are multiple ordered extents in the range.
+
+Fix that by making btrfs_wait_ordered_range() wait for all ordered extents
+even after it finds one that had an error.
+
+Link: https://github.com/kdave/btrfs-progs/issues/228#issuecomment-569777554
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/ext4.h    |    8 ++++----
- fs/ext4/mballoc.c |   52 +++++++++++++++++++++++++++++++++++-----------------
- 2 files changed, 39 insertions(+), 21 deletions(-)
+ fs/btrfs/ordered-data.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -1430,7 +1430,7 @@ struct ext4_sb_info {
- #endif
- 
- 	/* for buddy allocator */
--	struct ext4_group_info ***s_group_info;
-+	struct ext4_group_info ** __rcu *s_group_info;
- 	struct inode *s_buddy_cache;
- 	spinlock_t s_md_lock;
- 	unsigned short *s_mb_offsets;
-@@ -2829,13 +2829,13 @@ static inline
- struct ext4_group_info *ext4_get_group_info(struct super_block *sb,
- 					    ext4_group_t group)
- {
--	 struct ext4_group_info ***grp_info;
-+	 struct ext4_group_info **grp_info;
- 	 long indexv, indexh;
- 	 BUG_ON(group >= EXT4_SB(sb)->s_groups_count);
--	 grp_info = EXT4_SB(sb)->s_group_info;
- 	 indexv = group >> (EXT4_DESC_PER_BLOCK_BITS(sb));
- 	 indexh = group & ((EXT4_DESC_PER_BLOCK(sb)) - 1);
--	 return grp_info[indexv][indexh];
-+	 grp_info = sbi_array_rcu_deref(EXT4_SB(sb), s_group_info, indexv);
-+	 return grp_info[indexh];
- }
- 
- /*
---- a/fs/ext4/mballoc.c
-+++ b/fs/ext4/mballoc.c
-@@ -2356,7 +2356,7 @@ int ext4_mb_alloc_groupinfo(struct super
- {
- 	struct ext4_sb_info *sbi = EXT4_SB(sb);
- 	unsigned size;
--	struct ext4_group_info ***new_groupinfo;
-+	struct ext4_group_info ***old_groupinfo, ***new_groupinfo;
- 
- 	size = (ngroups + EXT4_DESC_PER_BLOCK(sb) - 1) >>
- 		EXT4_DESC_PER_BLOCK_BITS(sb);
-@@ -2369,13 +2369,16 @@ int ext4_mb_alloc_groupinfo(struct super
- 		ext4_msg(sb, KERN_ERR, "can't allocate buddy meta group");
- 		return -ENOMEM;
- 	}
--	if (sbi->s_group_info) {
--		memcpy(new_groupinfo, sbi->s_group_info,
-+	rcu_read_lock();
-+	old_groupinfo = rcu_dereference(sbi->s_group_info);
-+	if (old_groupinfo)
-+		memcpy(new_groupinfo, old_groupinfo,
- 		       sbi->s_group_info_size * sizeof(*sbi->s_group_info));
--		kvfree(sbi->s_group_info);
--	}
--	sbi->s_group_info = new_groupinfo;
-+	rcu_read_unlock();
-+	rcu_assign_pointer(sbi->s_group_info, new_groupinfo);
- 	sbi->s_group_info_size = size / sizeof(*sbi->s_group_info);
-+	if (old_groupinfo)
-+		ext4_kvfree_array_rcu(old_groupinfo);
- 	ext4_debug("allocated s_groupinfo array for %d meta_bg's\n", 
- 		   sbi->s_group_info_size);
- 	return 0;
-@@ -2387,6 +2390,7 @@ int ext4_mb_add_groupinfo(struct super_b
- {
- 	int i;
- 	int metalen = 0;
-+	int idx = group >> EXT4_DESC_PER_BLOCK_BITS(sb);
- 	struct ext4_sb_info *sbi = EXT4_SB(sb);
- 	struct ext4_group_info **meta_group_info;
- 	struct kmem_cache *cachep = get_groupinfo_cache(sb->s_blocksize_bits);
-@@ -2405,12 +2409,12 @@ int ext4_mb_add_groupinfo(struct super_b
- 				 "for a buddy group");
- 			goto exit_meta_group_info;
+--- a/fs/btrfs/ordered-data.c
++++ b/fs/btrfs/ordered-data.c
+@@ -712,10 +712,15 @@ int btrfs_wait_ordered_range(struct inod
  		}
--		sbi->s_group_info[group >> EXT4_DESC_PER_BLOCK_BITS(sb)] =
--			meta_group_info;
-+		rcu_read_lock();
-+		rcu_dereference(sbi->s_group_info)[idx] = meta_group_info;
-+		rcu_read_unlock();
+ 		btrfs_start_ordered_extent(inode, ordered, 1);
+ 		end = ordered->file_offset;
++		/*
++		 * If the ordered extent had an error save the error but don't
++		 * exit without waiting first for all other ordered extents in
++		 * the range to complete.
++		 */
+ 		if (test_bit(BTRFS_ORDERED_IOERR, &ordered->flags))
+ 			ret = -EIO;
+ 		btrfs_put_ordered_extent(ordered);
+-		if (ret || end == 0 || end == start)
++		if (end == 0 || end == start)
+ 			break;
+ 		end--;
  	}
- 
--	meta_group_info =
--		sbi->s_group_info[group >> EXT4_DESC_PER_BLOCK_BITS(sb)];
-+	meta_group_info = sbi_array_rcu_deref(sbi, s_group_info, idx);
- 	i = group & (EXT4_DESC_PER_BLOCK(sb) - 1);
- 
- 	meta_group_info[i] = kmem_cache_zalloc(cachep, GFP_NOFS);
-@@ -2458,8 +2462,13 @@ int ext4_mb_add_groupinfo(struct super_b
- exit_group_info:
- 	/* If a meta_group_info table has been allocated, release it now */
- 	if (group % EXT4_DESC_PER_BLOCK(sb) == 0) {
--		kfree(sbi->s_group_info[group >> EXT4_DESC_PER_BLOCK_BITS(sb)]);
--		sbi->s_group_info[group >> EXT4_DESC_PER_BLOCK_BITS(sb)] = NULL;
-+		struct ext4_group_info ***group_info;
-+
-+		rcu_read_lock();
-+		group_info = rcu_dereference(sbi->s_group_info);
-+		kfree(group_info[idx]);
-+		group_info[idx] = NULL;
-+		rcu_read_unlock();
- 	}
- exit_meta_group_info:
- 	return -ENOMEM;
-@@ -2472,6 +2481,7 @@ static int ext4_mb_init_backend(struct s
- 	struct ext4_sb_info *sbi = EXT4_SB(sb);
- 	int err;
- 	struct ext4_group_desc *desc;
-+	struct ext4_group_info ***group_info;
- 	struct kmem_cache *cachep;
- 
- 	err = ext4_mb_alloc_groupinfo(sb, ngroups);
-@@ -2506,11 +2516,16 @@ err_freebuddy:
- 	while (i-- > 0)
- 		kmem_cache_free(cachep, ext4_get_group_info(sb, i));
- 	i = sbi->s_group_info_size;
-+	rcu_read_lock();
-+	group_info = rcu_dereference(sbi->s_group_info);
- 	while (i-- > 0)
--		kfree(sbi->s_group_info[i]);
-+		kfree(group_info[i]);
-+	rcu_read_unlock();
- 	iput(sbi->s_buddy_cache);
- err_freesgi:
--	kvfree(sbi->s_group_info);
-+	rcu_read_lock();
-+	kvfree(rcu_dereference(sbi->s_group_info));
-+	rcu_read_unlock();
- 	return -ENOMEM;
- }
- 
-@@ -2699,7 +2714,7 @@ int ext4_mb_release(struct super_block *
- 	ext4_group_t ngroups = ext4_get_groups_count(sb);
- 	ext4_group_t i;
- 	int num_meta_group_infos;
--	struct ext4_group_info *grinfo;
-+	struct ext4_group_info *grinfo, ***group_info;
- 	struct ext4_sb_info *sbi = EXT4_SB(sb);
- 	struct kmem_cache *cachep = get_groupinfo_cache(sb->s_blocksize_bits);
- 
-@@ -2717,9 +2732,12 @@ int ext4_mb_release(struct super_block *
- 		num_meta_group_infos = (ngroups +
- 				EXT4_DESC_PER_BLOCK(sb) - 1) >>
- 			EXT4_DESC_PER_BLOCK_BITS(sb);
-+		rcu_read_lock();
-+		group_info = rcu_dereference(sbi->s_group_info);
- 		for (i = 0; i < num_meta_group_infos; i++)
--			kfree(sbi->s_group_info[i]);
--		kvfree(sbi->s_group_info);
-+			kfree(group_info[i]);
-+		kvfree(group_info);
-+		rcu_read_unlock();
- 	}
- 	kfree(sbi->s_mb_offsets);
- 	kfree(sbi->s_mb_maxs);
 
 
