@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4FDC34022
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC69C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23D7124697
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:40:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A790D24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:40:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814422;
-	bh=/W4QXVI7lhjcPnuwxBd5r5z6cTMz3e7o7C/rJYsgZFI=;
+	s=default; t=1582814424;
+	bh=vEDuLO3Y0Rhe/XqzeHei+PCfpvdklmiIxcYEZrMbZro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UJneMp1lJZ0dYRT55cGiKED88amp8l9W2axbXbxO5Ohrh1JzM5OcnJY5dniQ6pP59
-	 3XB+QlaYKrA3OpJ6hpr6xcE/ALxQV+wMH5XeQ/mRQ/9mZGps1NYw4iXlloRuz73Umq
-	 HnmSXvThBlnQCNtMkyPu3XbrHUxi1QC98s4SHjRo=
+	b=hpsOEGaD2BLJ48a2Ce6SZVbGmGcoQihJ6bbxYxMaqXD/0F6KEHf4Q/oWQtuW9z/Vi
+	 dSCDiUyIzPcP48n10Db534XJMQXveYM2MZSbpnqcxtffE9spQyUCLdBbIDxe03JYjW
+	 b70qErTDw7fAQcAolpuWXizfnksIDJ7MLP82fwmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731728AbgB0Nxe (ORCPT
+        id S1731698AbgB0Nx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:53:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53364 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:53:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731518AbgB0Nxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:53:31 -0500
+        id S1731685AbgB0NxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:53:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D6A821D7E;
-        Thu, 27 Feb 2020 13:53:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 302AC24656;
+        Thu, 27 Feb 2020 13:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811610;
-        bh=/W4QXVI7lhjcPnuwxBd5r5z6cTMz3e7o7C/rJYsgZFI=;
+        s=default; t=1582811603;
+        bh=vEDuLO3Y0Rhe/XqzeHei+PCfpvdklmiIxcYEZrMbZro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mh4jv6a6UhSt2kvrftuiMLh4aB0yIxf1xBYaXRGh56CP8mYfWwy73+5/kBYCylCYl
-         FEXWF2p0YH0V7vHdr/tXprkyOOeaCypThzrBLGQ6iydwmvyGICx1rCmCj42KMNmR7B
-         FCuCFm5n9wTnoinLY0Et/uzW0YBetz923Geyablw=
+        b=bchc+xQt8PW7Uns1zU2aNVOre7VbBNc05OY7OSDtEfGuVdsalQOG6lirBTcd/PqiR
+         8cESyOcFRLexRe8fqzMH64JvVXocSyeiz+0d3ltE4Bs7kBba1JkZpkXScDJF3yGukT
+         zGb8PW2p47ZHHxXdGI9t95zs270djoetc8sh8Goo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.14 007/237] Input: synaptics - switch T470s to RMI4 by default
-Date:   Thu, 27 Feb 2020 14:33:41 +0100
-Message-Id: <20200227132256.304870130@linuxfoundation.org>
+        stable@vger.kernel.org, Samuel Holland <samuel@sholland.org>,
+        Chen-Yu Tsai <wens@csie.org>, stable@kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.14 004/237] ASoC: sun8i-codec: Fix setting DAI data format
+Date:   Thu, 27 Feb 2020 14:33:38 +0100
+Message-Id: <20200227132255.921831720@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -59,32 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lyude Paul <lyude@redhat.com>
+From: Samuel Holland <samuel@sholland.org>
 
-commit bf502391353b928e63096127e5fd8482080203f5 upstream.
+commit 96781fd941b39e1f78098009344ebcd7af861c67 upstream.
 
-This supports RMI4 and everything seems to work, including the touchpad
-buttons. So, let's enable this by default.
+Use the correct mask for this two-bit field. This fixes setting the DAI
+data format to RIGHT_J or DSP_A.
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200204194322.112638-1-lyude@redhat.com
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fixes: 36c684936fae ("ASoC: Add sun8i digital audio codec")
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
+Cc: stable@kernel.org
+Link: https://lore.kernel.org/r/20200217064250.15516-7-samuel@sholland.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/mouse/synaptics.c |    1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/sunxi/sun8i-codec.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/input/mouse/synaptics.c
-+++ b/drivers/input/mouse/synaptics.c
-@@ -172,6 +172,7 @@ static const char * const smbus_pnp_ids[
- 	"LEN004a", /* W541 */
- 	"LEN005b", /* P50 */
- 	"LEN005e", /* T560 */
-+	"LEN006c", /* T470s */
- 	"LEN0071", /* T480 */
- 	"LEN0072", /* X1 Carbon Gen 5 (2017) - Elan/ALPS trackpoint */
- 	"LEN0073", /* X1 Carbon G5 (Elantech) */
+--- a/sound/soc/sunxi/sun8i-codec.c
++++ b/sound/soc/sunxi/sun8i-codec.c
+@@ -71,6 +71,7 @@
+ 
+ #define SUN8I_SYS_SR_CTRL_AIF1_FS_MASK		GENMASK(15, 12)
+ #define SUN8I_SYS_SR_CTRL_AIF2_FS_MASK		GENMASK(11, 8)
++#define SUN8I_AIF1CLK_CTRL_AIF1_DATA_FMT_MASK	GENMASK(3, 2)
+ #define SUN8I_AIF1CLK_CTRL_AIF1_WORD_SIZ_MASK	GENMASK(5, 4)
+ #define SUN8I_AIF1CLK_CTRL_AIF1_LRCK_DIV_MASK	GENMASK(8, 6)
+ #define SUN8I_AIF1CLK_CTRL_AIF1_BCLK_DIV_MASK	GENMASK(12, 9)
+@@ -221,7 +222,7 @@ static int sun8i_set_fmt(struct snd_soc_
+ 		return -EINVAL;
+ 	}
+ 	regmap_update_bits(scodec->regmap, SUN8I_AIF1CLK_CTRL,
+-			   BIT(SUN8I_AIF1CLK_CTRL_AIF1_DATA_FMT),
++			   SUN8I_AIF1CLK_CTRL_AIF1_DATA_FMT_MASK,
+ 			   value << SUN8I_AIF1CLK_CTRL_AIF1_DATA_FMT);
+ 
+ 	return 0;
 
 
