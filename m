@@ -2,147 +2,89 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EEE4C4BA3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 04:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB184C4BA3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 04:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76D5924672
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 04:11:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rgmkXNnn"
+	by mail.kernel.org (Postfix) with ESMTP id 9D24724672
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 04:12:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728406AbgB0ELs (ORCPT
+        id S1728426AbgB0EMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 23:11:48 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:53865 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727735AbgB0ELs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 23:11:48 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48SfPX08QVz9sR4;
-        Thu, 27 Feb 2020 15:11:44 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1582776704;
-        bh=yNFUcnpml+FsBU7BWuCEdg2x8J9IX3byuw9ehhhzzKk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=rgmkXNnn3sV+/jGwzLayvEQcwtkpfBP8CJuVwNRjFaN5WYOT1l+/ohras3Ucbkiwj
-         97kS1OHMA6rQ92Xnz+hIwXIzADm4o5Lmu8UAYPYmFX2yhOQX7q8+qXnBNl4o47s+v8
-         yw5K5NL4LPaALxRZnk/NCMMxzpTzJ2p0MDSrxE4ev6OejcUedc8gyzyUWRXsdhPXR0
-         MsojWQO3VZr6Lshh9AmUMlTpetFRPz12b5/3VcVrDtXB+QtRxRDFpsq8iGftTxc1OF
-         rAqPWLts4pCd0bg+vEkP6XjeHLYUt5KKlYGdtB1viGKEYBY2n+Pp6wgY8uMO1dDoy+
-         8FFj5I14lQ3IQ==
-Date:   Thu, 27 Feb 2020 15:11:43 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arjun Roy <arjunroy@google.com>,
-        David Miller <davem@davemloft.net>
-Subject: linux-next: build failure after merge of the akpm tree
-Message-ID: <20200227151143.6a6edaf9@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/SiKcDAG0YNuCNkgg/Codyh9";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Wed, 26 Feb 2020 23:12:00 -0500
+Received: from kernel.crashing.org ([76.164.61.194]:36664 "EHLO
+        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728355AbgB0EMA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 23:12:00 -0500
+Received: from localhost (gate.crashing.org [63.228.1.57])
+        (authenticated bits=0)
+        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 01R4AhSr022499
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Wed, 26 Feb 2020 22:10:46 -0600
+Message-ID: <c1f990ad2fd35deeba9e4e937cb19ee5080ea2a8.camel@kernel.crashing.org>
+Subject: Re: [PATCH v4 5/7] ARM: dts: aspeed-g5: add vhub port and endpoint
+ properties
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     rentao.bupt@gmail.com, Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
+        taoren@fb.com
+Date:   Thu, 27 Feb 2020 15:10:42 +1100
+In-Reply-To: <20200226230346.672-6-rentao.bupt@gmail.com>
+References: <20200226230346.672-1-rentao.bupt@gmail.com>
+         <20200226230346.672-6-rentao.bupt@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/SiKcDAG0YNuCNkgg/Codyh9
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, 2020-02-26 at 15:03 -0800, rentao.bupt@gmail.com wrote:
+> From: Tao Ren <rentao.bupt@gmail.com>
+> 
+> Add "aspeed,vhub-downstream-ports" and "aspeed,vhub-generic-
+> endpoints"
+> properties to describe supported number of vhub ports and endpoints.
+> 
+> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
 
-Hi all,
+Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 
-After merging the akpm tree, today's linux-next build (sparc defconfig)
-failed like this:
+> ---
+>  No change in v2/v3/v4.
+>    - It's given v4 to align with the version of the patch series.
+> 
+>  arch/arm/boot/dts/aspeed-g5.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi
+> b/arch/arm/boot/dts/aspeed-g5.dtsi
+> index ebec0fa8baa7..f12ec04d3cbc 100644
+> --- a/arch/arm/boot/dts/aspeed-g5.dtsi
+> +++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+> @@ -195,6 +195,8 @@
+>  			reg = <0x1e6a0000 0x300>;
+>  			interrupts = <5>;
+>  			clocks = <&syscon ASPEED_CLK_GATE_USBPORT1CLK>;
+> +			aspeed,vhub-downstream-ports = <5>;
+> +			aspeed,vhub-generic-endpoints = <15>;
+>  			pinctrl-names = "default";
+>  			pinctrl-0 = <&pinctrl_usb2ad_default>;
+>  			status = "disabled";
 
-In file included from include/linux/list.h:9:0,
-                 from include/linux/smp.h:12,
-                 from include/linux/kernel_stat.h:5,
-                 from mm/memory.c:42:
-mm/memory.c: In function 'insert_pages':
-mm/memory.c:1523:41: error: implicit declaration of function 'pte_index'; d=
-id you mean 'page_index'? [-Werror=3Dimplicit-function-declaration]
-   remaining_pages_total, PTRS_PER_PTE - pte_index(addr));
-                                         ^
-include/linux/kernel.h:842:40: note: in definition of macro '__typecheck'
-   (!!(sizeof((typeof(x) *)1 =3D=3D (typeof(y) *)1)))
-                                        ^
-include/linux/kernel.h:866:24: note: in expansion of macro '__safe_cmp'
-  __builtin_choose_expr(__safe_cmp(x, y), \
-                        ^~~~~~~~~~
-include/linux/kernel.h:934:27: note: in expansion of macro '__careful_cmp'
- #define min_t(type, x, y) __careful_cmp((type)(x), (type)(y), <)
-                           ^~~~~~~~~~~~~
-mm/memory.c:1522:26: note: in expansion of macro 'min_t'
-  pages_to_write_in_pmd =3D min_t(unsigned long,
-                          ^~~~~
-
-Caused by patch
-
-  "mm/memory.c: add vm_insert_pages()"
-
-sparc32 does not implement pte_index at all :-(
-
-I have added the following patch for today.  This may not be correct
-or enough.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Thu, 27 Feb 2020 14:57:49 +1100
-Subject: [PATCH] arch/sparc: add a definition of pte_index for the 32 bit k=
-ernel
-
-This is now needed for vm_insert_pages()
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- arch/sparc/include/asm/pgtable_32.h | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/sparc/include/asm/pgtable_32.h b/arch/sparc/include/asm/p=
-gtable_32.h
-index 6d6f44c0cad9..dc7a4d69cb18 100644
---- a/arch/sparc/include/asm/pgtable_32.h
-+++ b/arch/sparc/include/asm/pgtable_32.h
-@@ -326,6 +326,8 @@ static inline pmd_t *pmd_offset(pud_t * dir, unsigned l=
-ong address)
- }
-=20
- /* Find an entry in the third-level page table.. */
-+#define pte_index(address)	\
-+	 ((address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1))
- pte_t *pte_offset_kernel(pmd_t * dir, unsigned long address);
-=20
- /*
---=20
-2.25.0
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/SiKcDAG0YNuCNkgg/Codyh9
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5XQX8ACgkQAVBC80lX
-0Gy3wwf/dUZXIqsCAD8/Sr+rQDJKDu2ASb1knvFT3sDI1KypMvnlbJfpzS546vBM
-FhdaK6Ikvb29PM4WKX/my+UmiYPjabIUc3fC8tDK+FswbT1m1zsRRIExaxQSlPoD
-npvsUQehKGG2FOoKTqk3g/y9sXEKWfdT3hU9i13CzdTxWKQGyFItc5VtbIjVlUfw
-zgBnsRDPecT7TB2e3quhZ+CSa4FNLIBqon+KGHdCx8pzl+6V5zK5Rq8RZqHKfbwU
-+SfM+XGlj5XGx+u1aS0zQmAwnsf6Z2j25iRG/HhaeFDfVzanIfM7iqvVBx/39SZg
-PWAeuBbwNniFzbMSx4/V4+ZI8e8RnQ==
-=iWcA
------END PGP SIGNATURE-----
-
---Sig_/SiKcDAG0YNuCNkgg/Codyh9--
