@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C705C3F341
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 344D5C3F36B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7D2F20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CE952469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:49:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811244;
-	bh=NIrM7BfuNSEny7YRm6JIMrDLMQQVbW6fopKZ/JMJ/88=;
+	s=default; t=1582811352;
+	bh=8uQNylXb2cMPa/IAvoG1yr4KCjozPlMUbaqb0vdw3D8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yAxxTauVNmZZvs6IN6evVe+4KJLV6lRYqUIqXiOGPJxLohRp7GpzdNdBE3nWFtsfo
-	 iNzUSm+kNNmM/kdWGVJyOyrXSiVUeX6P0IQtLL8WniEc3cnAd8NxpXrYBUc3719Q0H
-	 lYHAKd1+Co0uqFYXbdHQuxh9+wNuZswX1evG4dXg=
+	b=1TN6bUsnmWLsdKlzuZNi3H05Aqip0EKasoaiqMlBd/xX0IrMJIBnpunKsCf8loVBN
+	 rPgVWdqGO1azZZx+3WsGq9E3oDGQ6bosk7ndAXcgMB8H3mfcc32PenP54oK6OdhA3j
+	 7c1aD5mZXf2Q5KTO4IcS/AafFJw/HOq+3sNfQb7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730683AbgB0NrW (ORCPT
+        id S1730511AbgB0NtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:47:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43732 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:49:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730348AbgB0NrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:47:18 -0500
+        id S1730992AbgB0NtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:49:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B3A920578;
-        Thu, 27 Feb 2020 13:47:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD91220578;
+        Thu, 27 Feb 2020 13:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811237;
-        bh=NIrM7BfuNSEny7YRm6JIMrDLMQQVbW6fopKZ/JMJ/88=;
+        s=default; t=1582811347;
+        bh=8uQNylXb2cMPa/IAvoG1yr4KCjozPlMUbaqb0vdw3D8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BOg9oAY/C9AsFET3gZGSLOc0MfYCSspI62FD1FdQ8zsjG2szdDPHGs5bHZo7bFjaU
-         uVNKAY2tmxeN6Y+SIiWYV1jhK8e103z/FxTlsFZmfjKl6+Vu1knaoON3UbfWdqWJLF
-         UGODkYIJBczW6SpHe3iBaeZ3oEbFM8K0B6fTPnsg=
+        b=fVj3KeM8S+BXrO5uYx+oad2s0v2qzxQ23gJ8xw4JpOQvXZu/RnLyPZLDM3AgQTXmH
+         qUtGOzUSTLCk3AWp18v5w5wEJ3/Jat32Hf3VjdscbNENWFeU9hWKAEPG5l1PoMHhVF
+         fHOvupGYy4nvC1UtwZrIhf7SqtSpwDQ8EIyqh0GE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phong Tran <tranmanphong@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 056/165] rtlwifi: rtl_pci: Fix -Wcast-function-type
-Date:   Thu, 27 Feb 2020 14:35:30 +0100
-Message-Id: <20200227132239.574306684@linuxfoundation.org>
+Subject: [PATCH 4.9 098/165] hostap: Adjust indentation in prism2_hostapd_add_sta
+Date:   Thu, 27 Feb 2020 14:36:12 +0100
+Message-Id: <20200227132245.550952189@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -61,56 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phong Tran <tranmanphong@gmail.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit cb775c88da5d48a85d99d95219f637b6fad2e0e9 ]
+[ Upstream commit b61156fba74f659d0bc2de8f2dbf5bad9f4b8faf ]
 
-correct usage prototype of callback in tasklet_init().
-Report by https://github.com/KSPP/linux/issues/20
+Clang warns:
 
-Signed-off-by: Phong Tran <tranmanphong@gmail.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
+../drivers/net/wireless/intersil/hostap/hostap_ap.c:2511:3: warning:
+misleading indentation; statement is not part of the previous 'if'
+[-Wmisleading-indentation]
+        if (sta->tx_supp_rates & WLAN_RATE_5M5)
+        ^
+../drivers/net/wireless/intersil/hostap/hostap_ap.c:2509:2: note:
+previous statement is here
+        if (sta->tx_supp_rates & WLAN_RATE_2M)
+        ^
+1 warning generated.
+
+This warning occurs because there is a space before the tab on this
+line. Remove it so that the indentation is consistent with the Linux
+kernel coding style and clang no longer warns.
+
+Fixes: ff1d2767d5a4 ("Add HostAP wireless driver.")
+Link: https://github.com/ClangBuiltLinux/linux/issues/813
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtlwifi/pci.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/net/wireless/intersil/hostap/hostap_ap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/pci.c b/drivers/net/wireless/realtek/rtlwifi/pci.c
-index e15b462d096bf..21b7cb845bf40 100644
---- a/drivers/net/wireless/realtek/rtlwifi/pci.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/pci.c
-@@ -1095,13 +1095,15 @@ done:
- 	return ret;
- }
- 
--static void _rtl_pci_irq_tasklet(struct ieee80211_hw *hw)
-+static void _rtl_pci_irq_tasklet(unsigned long data)
- {
-+	struct ieee80211_hw *hw = (struct ieee80211_hw *)data;
- 	_rtl_pci_tx_chk_waitq(hw);
- }
- 
--static void _rtl_pci_prepare_bcn_tasklet(struct ieee80211_hw *hw)
-+static void _rtl_pci_prepare_bcn_tasklet(unsigned long data)
- {
-+	struct ieee80211_hw *hw = (struct ieee80211_hw *)data;
- 	struct rtl_priv *rtlpriv = rtl_priv(hw);
- 	struct rtl_pci *rtlpci = rtl_pcidev(rtl_pcipriv(hw));
- 	struct rtl_mac *mac = rtl_mac(rtl_priv(hw));
-@@ -1223,10 +1225,10 @@ static void _rtl_pci_init_struct(struct ieee80211_hw *hw,
- 
- 	/*task */
- 	tasklet_init(&rtlpriv->works.irq_tasklet,
--		     (void (*)(unsigned long))_rtl_pci_irq_tasklet,
-+		     _rtl_pci_irq_tasklet,
- 		     (unsigned long)hw);
- 	tasklet_init(&rtlpriv->works.irq_prepare_bcn_tasklet,
--		     (void (*)(unsigned long))_rtl_pci_prepare_bcn_tasklet,
-+		     _rtl_pci_prepare_bcn_tasklet,
- 		     (unsigned long)hw);
- 	INIT_WORK(&rtlpriv->works.lps_change_work,
- 		  rtl_lps_change_work_callback);
+diff --git a/drivers/net/wireless/intersil/hostap/hostap_ap.c b/drivers/net/wireless/intersil/hostap/hostap_ap.c
+index c995ace153ee6..30171d4c47187 100644
+--- a/drivers/net/wireless/intersil/hostap/hostap_ap.c
++++ b/drivers/net/wireless/intersil/hostap/hostap_ap.c
+@@ -2570,7 +2570,7 @@ static int prism2_hostapd_add_sta(struct ap_data *ap,
+ 		sta->supported_rates[0] = 2;
+ 	if (sta->tx_supp_rates & WLAN_RATE_2M)
+ 		sta->supported_rates[1] = 4;
+- 	if (sta->tx_supp_rates & WLAN_RATE_5M5)
++	if (sta->tx_supp_rates & WLAN_RATE_5M5)
+ 		sta->supported_rates[2] = 11;
+ 	if (sta->tx_supp_rates & WLAN_RATE_11M)
+ 		sta->supported_rates[3] = 22;
 -- 
 2.20.1
 
