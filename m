@@ -7,53 +7,56 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A1BC52D3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 199E8C52D55
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E4812469B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4A5B2469B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:03:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812110;
-	bh=M83zeuXPIyGAsJRQmuwMwjHxCkaP2k8wUuH3bxW+5Ew=;
+	s=default; t=1582812227;
+	bh=VOdujmpR/Y7+yCEJKg2C2pz0Nbpaw3BSbaFvsqkw/VU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aMeeneZ9iOfV9e60+lYmvfy1X4/Q97dSfaS3wi16tYKyy7ao1VVTiAzPgSRDasIjo
-	 RMxsjwbLOkykJdAQFn4UlP7vn8vr5qPlBgr2JgwvOQcoTP0k6k2Odvkebk7D9BJXLR
-	 xnBeOvSJUKzbXnOXOu2WzKLPfMDak0hVF+ceoWBE=
+	b=u06nBzOjAZyqceeehredQReKWwmGF+w6zf7tYTB2HR1zcxOshQ7U5MIN9a+I5ICM1
+	 kL6/A4cP/zwa4CMlr591oW9LE5+hF6iIEFV0sPvEZIfc2PjeoGcjBs8Ps+2ye/pEpl
+	 eFH2mhG6WXMv3U/z/cH4QP/CGRrAMhHAl6gP5dxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732998AbgB0OBt (ORCPT
+        id S2387468AbgB0ODp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:01:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36016 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:03:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732975AbgB0OBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:01:46 -0500
+        id S1732995AbgB0ODh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:03:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C3D8246B6;
-        Thu, 27 Feb 2020 14:01:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3383B2469B;
+        Thu, 27 Feb 2020 14:03:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812105;
-        bh=M83zeuXPIyGAsJRQmuwMwjHxCkaP2k8wUuH3bxW+5Ew=;
+        s=default; t=1582812216;
+        bh=VOdujmpR/Y7+yCEJKg2C2pz0Nbpaw3BSbaFvsqkw/VU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wIRndZCTgZX5GMXB4QNERK8fYltNYgFq3bEB8qh6zw7IuV36cJiNIOBx4uoIvBoGr
-         Ot6lFV8rkaSWsVXD3K4qDjs+BcMCH7NCwRewGjRQslaipaxGv2fafi5VKvXzZKAz8K
-         Z5r9aqkpqiYX8LBaA/bR4ONiBbyxNx0lzJ692/v0=
+        b=HxPBtVpkTJTF/UYwfdNvmAOQtE5D8Pd1baFVuc9LXtp9PSMn+eFg8m8y2+WCZbu+6
+         pHPMnuzo5iORAUGke0Mlre30zKKzSshKQZEvJycn9+VMZkI6igGJDSIgM3aHpfML8a
+         LBBmo7kJQRFZIYj38e8tyl7OqBqG4x5RqhYV+Ytc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rahul Kundu <rahul.kundu@chelsio.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Dakshaja Uppalapati <dakshaja@chelsio.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.14 223/237] scsi: Revert "RDMA/isert: Fix a recently introduced regression related to logout"
-Date:   Thu, 27 Feb 2020 14:37:17 +0100
-Message-Id: <20200227132312.550900088@linuxfoundation.org>
+        stable@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
+        Yang Fei <fei.yang@intel.com>,
+        Thinh Nguyen <thinhn@synopsys.com>,
+        Tejas Joglekar <tejas.joglekar@synopsys.com>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Jack Pham <jackp@codeaurora.org>, Todd Kjos <tkjos@google.com>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        John Stultz <john.stultz@linaro.org>
+Subject: [PATCH 4.19 30/97] usb: dwc3: gadget: Check for IOC/LST bit in TRB->ctrl fields
+Date:   Thu, 27 Feb 2020 14:36:38 +0100
+Message-Id: <20200227132219.513967393@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
-References: <20200227132255.285644406@linuxfoundation.org>
+In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
+References: <20200227132214.553656188@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,77 +66,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
 
-commit 76261ada16dcc3be610396a46d35acc3efbda682 upstream.
+commit 5ee858975b13a9b40db00f456989a689fdbb296c upstream.
 
-Since commit 04060db41178 introduces soft lockups when toggling network
-interfaces, revert it.
+The current code in dwc3_gadget_ep_reclaim_completed_trb() will
+check for IOC/LST bit in the event->status and returns if
+IOC/LST bit is set. This logic doesn't work if multiple TRBs
+are queued per request and the IOC/LST bit is set on the last
+TRB of that request.
 
-Link: https://marc.info/?l=target-devel&m=158157054906196
-Cc: Rahul Kundu <rahul.kundu@chelsio.com>
-Cc: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Cc: Sagi Grimberg <sagi@grimberg.me>
-Reported-by: Dakshaja Uppalapati <dakshaja@chelsio.com>
-Fixes: 04060db41178 ("scsi: RDMA/isert: Fix a recently introduced regression related to logout")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Consider an example where a queued request has multiple queued
+TRBs and IOC/LST bit is set only for the last TRB. In this case,
+the core generates XferComplete/XferInProgress events only for
+the last TRB (since IOC/LST are set only for the last TRB). As
+per the logic in dwc3_gadget_ep_reclaim_completed_trb()
+event->status is checked for IOC/LST bit and returns on the
+first TRB. This leaves the remaining TRBs left unhandled.
+
+Similarly, if the gadget function enqueues an unaligned request
+with sglist already in it, it should fail the same way, since we
+will append another TRB to something that already uses more than
+one TRB.
+
+To aviod this, this patch changes the code to check for IOC/LST
+bits in TRB->ctrl instead.
+
+At a practical level, this patch resolves USB transfer stalls seen
+with adb on dwc3 based HiKey960 after functionfs gadget added
+scatter-gather support around v4.20.
+
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Yang Fei <fei.yang@intel.com>
+Cc: Thinh Nguyen <thinhn@synopsys.com>
+Cc: Tejas Joglekar <tejas.joglekar@synopsys.com>
+Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Cc: Jack Pham <jackp@codeaurora.org>
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Linux USB List <linux-usb@vger.kernel.org>
+Cc: stable <stable@vger.kernel.org>
+Tested-by: Tejas Joglekar <tejas.joglekar@synopsys.com>
+Reviewed-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+[jstultz: forward ported to mainline, reworded commit log, reworked
+ to only check trb->ctrl as suggested by Felipe]
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/ulp/isert/ib_isert.c |   12 ++++++++++++
- drivers/target/iscsi/iscsi_target.c     |    6 +++---
- 2 files changed, 15 insertions(+), 3 deletions(-)
+ drivers/usb/dwc3/gadget.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/infiniband/ulp/isert/ib_isert.c
-+++ b/drivers/infiniband/ulp/isert/ib_isert.c
-@@ -2582,6 +2582,17 @@ isert_wait4logout(struct isert_conn *ise
- 	}
- }
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -2224,7 +2224,8 @@ static int dwc3_gadget_ep_reclaim_comple
+ 	if (event->status & DEPEVT_STATUS_SHORT && !chain)
+ 		return 1;
  
-+static void
-+isert_wait4cmds(struct iscsi_conn *conn)
-+{
-+	isert_info("iscsi_conn %p\n", conn);
-+
-+	if (conn->sess) {
-+		target_sess_cmd_list_set_waiting(conn->sess->se_sess);
-+		target_wait_for_sess_cmds(conn->sess->se_sess);
-+	}
-+}
-+
- /**
-  * isert_put_unsol_pending_cmds() - Drop commands waiting for
-  *     unsolicitate dataout
-@@ -2629,6 +2640,7 @@ static void isert_wait_conn(struct iscsi
+-	if (event->status & DEPEVT_STATUS_IOC)
++	if ((trb->ctrl & DWC3_TRB_CTRL_IOC) ||
++	    (trb->ctrl & DWC3_TRB_CTRL_LST))
+ 		return 1;
  
- 	ib_drain_qp(isert_conn->qp);
- 	isert_put_unsol_pending_cmds(conn);
-+	isert_wait4cmds(conn);
- 	isert_wait4logout(isert_conn);
- 
- 	queue_work(isert_release_wq, &isert_conn->release_work);
---- a/drivers/target/iscsi/iscsi_target.c
-+++ b/drivers/target/iscsi/iscsi_target.c
-@@ -4155,6 +4155,9 @@ int iscsit_close_connection(
- 	iscsit_stop_nopin_response_timer(conn);
- 	iscsit_stop_nopin_timer(conn);
- 
-+	if (conn->conn_transport->iscsit_wait_conn)
-+		conn->conn_transport->iscsit_wait_conn(conn);
-+
- 	/*
- 	 * During Connection recovery drop unacknowledged out of order
- 	 * commands for this connection, and prepare the other commands
-@@ -4240,9 +4243,6 @@ int iscsit_close_connection(
- 	target_sess_cmd_list_set_waiting(sess->se_sess);
- 	target_wait_for_sess_cmds(sess->se_sess);
- 
--	if (conn->conn_transport->iscsit_wait_conn)
--		conn->conn_transport->iscsit_wait_conn(conn);
--
- 	ahash_request_free(conn->conn_tx_hash);
- 	if (conn->conn_rx_hash) {
- 		struct crypto_ahash *tfm;
+ 	return 0;
 
 
