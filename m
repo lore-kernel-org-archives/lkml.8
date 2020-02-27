@@ -2,209 +2,185 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E81DC54FFC
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D49C3F350
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45C1E24688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813844;
-	bh=+Ageaz9hjQCs8xoZUS3femTFGabZap9P1XDvmO90B2w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v2QG7Nkcp2KsDDo7TKq5AkEk65Igr4QzcFxaOcdMbzJmhdvSN6vnDbB1ZArvbWDLf
-	 hbfpXnAISr/w30tiPEt4oWk92SQT8EkR8cubq6xXU0uJU6EXje7AvrDw8LobC6tmus
-	 MnPQ0R9nSMELLqxF4deQhAgTvnTDRl5CkiV2h7Ns=
+	by mail.kernel.org (Postfix) with ESMTP id ED2FC24688
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:31:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387514AbgB0Oam (ORCPT
+        id S2388256AbgB0ObX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:30:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41356 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387649AbgB0OEy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:04:54 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0146020578;
-        Thu, 27 Feb 2020 14:04:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812293;
-        bh=+Ageaz9hjQCs8xoZUS3femTFGabZap9P1XDvmO90B2w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cEUMAlaGBZvqUTjxpeP/8JddSlKLUzgwhsaoBeM2iwLk4xT72ZvO9Vbvx3QIRq5AB
-         lwEpvchiN6tqYoesjvFwIcN+NJlkhKUm11EG1Z42NSjFSFG7p67+TeH2pdkrIYcdVr
-         yOwHQNp8iU3j04hz9dFxHA/tCByMITxwzvazgIRY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ryan Case <ryandcase@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 58/97] tty: serial: qcom_geni_serial: Remove xfer_mode variable
-Date:   Thu, 27 Feb 2020 14:37:06 +0100
-Message-Id: <20200227132224.027856915@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
-References: <20200227132214.553656188@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 27 Feb 2020 09:31:23 -0500
+Received: from antares.kleine-koenig.org ([94.130.110.236]:41044 "EHLO
+        antares.kleine-koenig.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387668AbgB0ObU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:31:20 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by antares.kleine-koenig.org (Postfix) with ESMTP id EBBB991CA1A;
+        Thu, 27 Feb 2020 15:31:17 +0100 (CET)
+Received: from antares.kleine-koenig.org ([127.0.0.1])
+        by localhost (antares.kleine-koenig.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id LcGdnC_537OI; Thu, 27 Feb 2020 15:31:16 +0100 (CET)
+Received: from taurus.defre.kleine-koenig.org (unknown [IPv6:2a02:8071:b5ad:20fc:dcaf:fc88:2737:d4ae])
+        by antares.kleine-koenig.org (Postfix) with ESMTPSA;
+        Thu, 27 Feb 2020 15:31:16 +0100 (CET)
+Subject: Re: [PATCH 1/3] lib/test_printf: Clean up test of hashed pointers
+To:     Petr Mladek <pmladek@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-kernel@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Tobin C . Harding" <me@tobin.cc>
+References: <20200227130123.32442-1-pmladek@suse.com>
+ <20200227130123.32442-2-pmladek@suse.com>
+From:   =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
+Autocrypt: addr=uwe@kleine-koenig.org; prefer-encrypt=mutual; keydata=
+ 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
+ 6uMoO1VgFtcQHWHTtbSYLQ8YHVFZMQ==
+Message-ID: <bdb7d995-f16f-335c-c06a-b6732dcbbfa2@kleine-koenig.org>
+Date:   Thu, 27 Feb 2020 15:30:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200227130123.32442-2-pmladek@suse.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="hqSDMiKsd8o5YzHaXusAbuclKGGNjTjfM"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ryan Case <ryandcase@chromium.org>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--hqSDMiKsd8o5YzHaXusAbuclKGGNjTjfM
+Content-Type: multipart/mixed; boundary="I0VyUx4H1cFryB8nUb4I59EwMx3eAsZbz";
+ protected-headers="v1"
+From: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
+To: Petr Mladek <pmladek@suse.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+ Steven Rostedt <rostedt@goodmis.org>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+ linux-kernel@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
+ Kees Cook <keescook@chromium.org>, "Tobin C . Harding" <me@tobin.cc>
+Message-ID: <bdb7d995-f16f-335c-c06a-b6732dcbbfa2@kleine-koenig.org>
+Subject: Re: [PATCH 1/3] lib/test_printf: Clean up test of hashed pointers
+References: <20200227130123.32442-1-pmladek@suse.com>
+ <20200227130123.32442-2-pmladek@suse.com>
+In-Reply-To: <20200227130123.32442-2-pmladek@suse.com>
 
-[ Upstream commit bdc05a8a3f822ca0662464055f902faf760da6be ]
+--I0VyUx4H1cFryB8nUb4I59EwMx3eAsZbz
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-The driver only supports FIFO mode so setting and checking this variable
-is unnecessary. If DMA support is ever added then such checks can be
-introduced.
+Hello Petr,
 
-Signed-off-by: Ryan Case <ryandcase@chromium.org>
-Reviewed-by: Evan Green <evgreen@chromium.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/tty/serial/qcom_geni_serial.c | 67 ++++++++++-----------------
- 1 file changed, 24 insertions(+), 43 deletions(-)
+On 2/27/20 2:01 PM, Petr Mladek wrote:
+> The commit ad67b74d2469d9b82a ("printk: hash addresses printed with %p"=
+)
+> helps to prevent leaking kernel addresses.
+>=20
+> The testing of this functionality is a bit problematic because the outp=
+ut
+> depends on a random key that is generated during boot. Though, it is
+> still possible to check some aspects:
+>=20
+>   + output string length
+>   + hash differs from the original pointer value
+>   + top half bits are zeroed on 64-bit systems
 
-diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-index 080fa1d1ecbfd..4182129925dec 100644
---- a/drivers/tty/serial/qcom_geni_serial.c
-+++ b/drivers/tty/serial/qcom_geni_serial.c
-@@ -101,7 +101,6 @@ struct qcom_geni_serial_port {
- 	u32 tx_fifo_depth;
- 	u32 tx_fifo_width;
- 	u32 rx_fifo_depth;
--	enum geni_se_xfer_mode xfer_mode;
- 	bool setup;
- 	int (*handle_rx)(struct uart_port *uport, u32 bytes, bool drop);
- 	unsigned int baud;
-@@ -547,29 +546,20 @@ static int handle_rx_uart(struct uart_port *uport, u32 bytes, bool drop)
- static void qcom_geni_serial_start_tx(struct uart_port *uport)
- {
- 	u32 irq_en;
--	struct qcom_geni_serial_port *port = to_dev_port(uport, uport);
- 	u32 status;
- 
--	if (port->xfer_mode == GENI_SE_FIFO) {
--		/*
--		 * readl ensures reading & writing of IRQ_EN register
--		 * is not re-ordered before checking the status of the
--		 * Serial Engine.
--		 */
--		status = readl(uport->membase + SE_GENI_STATUS);
--		if (status & M_GENI_CMD_ACTIVE)
--			return;
-+	status = readl(uport->membase + SE_GENI_STATUS);
-+	if (status & M_GENI_CMD_ACTIVE)
-+		return;
- 
--		if (!qcom_geni_serial_tx_empty(uport))
--			return;
-+	if (!qcom_geni_serial_tx_empty(uport))
-+		return;
- 
--		irq_en = readl(uport->membase +	SE_GENI_M_IRQ_EN);
--		irq_en |= M_TX_FIFO_WATERMARK_EN | M_CMD_DONE_EN;
-+	irq_en = readl(uport->membase +	SE_GENI_M_IRQ_EN);
-+	irq_en |= M_TX_FIFO_WATERMARK_EN | M_CMD_DONE_EN;
- 
--		writel(DEF_TX_WM, uport->membase +
--						SE_GENI_TX_WATERMARK_REG);
--		writel(irq_en, uport->membase +	SE_GENI_M_IRQ_EN);
--	}
-+	writel(DEF_TX_WM, uport->membase + SE_GENI_TX_WATERMARK_REG);
-+	writel(irq_en, uport->membase +	SE_GENI_M_IRQ_EN);
- }
- 
- static void qcom_geni_serial_stop_tx(struct uart_port *uport)
-@@ -579,12 +569,8 @@ static void qcom_geni_serial_stop_tx(struct uart_port *uport)
- 	struct qcom_geni_serial_port *port = to_dev_port(uport, uport);
- 
- 	irq_en = readl(uport->membase + SE_GENI_M_IRQ_EN);
--	irq_en &= ~M_CMD_DONE_EN;
--	if (port->xfer_mode == GENI_SE_FIFO) {
--		irq_en &= ~M_TX_FIFO_WATERMARK_EN;
--		writel(0, uport->membase +
--				     SE_GENI_TX_WATERMARK_REG);
--	}
-+	irq_en &= ~(M_CMD_DONE_EN | M_TX_FIFO_WATERMARK_EN);
-+	writel(0, uport->membase + SE_GENI_TX_WATERMARK_REG);
- 	writel(irq_en, uport->membase + SE_GENI_M_IRQ_EN);
- 	status = readl(uport->membase + SE_GENI_STATUS);
- 	/* Possible stop tx is called multiple times. */
-@@ -614,15 +600,13 @@ static void qcom_geni_serial_start_rx(struct uart_port *uport)
- 
- 	geni_se_setup_s_cmd(&port->se, UART_START_READ, 0);
- 
--	if (port->xfer_mode == GENI_SE_FIFO) {
--		irq_en = readl(uport->membase + SE_GENI_S_IRQ_EN);
--		irq_en |= S_RX_FIFO_WATERMARK_EN | S_RX_FIFO_LAST_EN;
--		writel(irq_en, uport->membase + SE_GENI_S_IRQ_EN);
-+	irq_en = readl(uport->membase + SE_GENI_S_IRQ_EN);
-+	irq_en |= S_RX_FIFO_WATERMARK_EN | S_RX_FIFO_LAST_EN;
-+	writel(irq_en, uport->membase + SE_GENI_S_IRQ_EN);
- 
--		irq_en = readl(uport->membase + SE_GENI_M_IRQ_EN);
--		irq_en |= M_RX_FIFO_WATERMARK_EN | M_RX_FIFO_LAST_EN;
--		writel(irq_en, uport->membase + SE_GENI_M_IRQ_EN);
--	}
-+	irq_en = readl(uport->membase + SE_GENI_M_IRQ_EN);
-+	irq_en |= M_RX_FIFO_WATERMARK_EN | M_RX_FIFO_LAST_EN;
-+	writel(irq_en, uport->membase + SE_GENI_M_IRQ_EN);
- }
- 
- static void qcom_geni_serial_stop_rx(struct uart_port *uport)
-@@ -632,15 +616,13 @@ static void qcom_geni_serial_stop_rx(struct uart_port *uport)
- 	struct qcom_geni_serial_port *port = to_dev_port(uport, uport);
- 	u32 irq_clear = S_CMD_DONE_EN;
- 
--	if (port->xfer_mode == GENI_SE_FIFO) {
--		irq_en = readl(uport->membase + SE_GENI_S_IRQ_EN);
--		irq_en &= ~(S_RX_FIFO_WATERMARK_EN | S_RX_FIFO_LAST_EN);
--		writel(irq_en, uport->membase + SE_GENI_S_IRQ_EN);
-+	irq_en = readl(uport->membase + SE_GENI_S_IRQ_EN);
-+	irq_en &= ~(S_RX_FIFO_WATERMARK_EN | S_RX_FIFO_LAST_EN);
-+	writel(irq_en, uport->membase + SE_GENI_S_IRQ_EN);
- 
--		irq_en = readl(uport->membase + SE_GENI_M_IRQ_EN);
--		irq_en &= ~(M_RX_FIFO_WATERMARK_EN | M_RX_FIFO_LAST_EN);
--		writel(irq_en, uport->membase + SE_GENI_M_IRQ_EN);
--	}
-+	irq_en = readl(uport->membase + SE_GENI_M_IRQ_EN);
-+	irq_en &= ~(M_RX_FIFO_WATERMARK_EN | M_RX_FIFO_LAST_EN);
-+	writel(irq_en, uport->membase + SE_GENI_M_IRQ_EN);
- 
- 	status = readl(uport->membase + SE_GENI_STATUS);
- 	/* Possible stop rx is called multiple times. */
-@@ -878,7 +860,6 @@ static int qcom_geni_serial_port_setup(struct uart_port *uport)
- 	 * Make an unconditional cancel on the main sequencer to reset
- 	 * it else we could end up in data loss scenarios.
- 	 */
--	port->xfer_mode = GENI_SE_FIFO;
- 	if (uart_console(uport))
- 		qcom_geni_serial_poll_tx_done(uport);
- 	geni_se_config_packing(&port->se, BITS_PER_BYTE, port->tx_bytes_pw,
-@@ -886,7 +867,7 @@ static int qcom_geni_serial_port_setup(struct uart_port *uport)
- 	geni_se_config_packing(&port->se, BITS_PER_BYTE, port->rx_bytes_pw,
- 						false, false, true);
- 	geni_se_init(&port->se, UART_RX_WM, port->rx_fifo_depth - 2);
--	geni_se_select_mode(&port->se, port->xfer_mode);
-+	geni_se_select_mode(&port->se, GENI_SE_FIFO);
- 	if (!uart_console(uport)) {
- 		port->rx_fifo = devm_kcalloc(uport->dev,
- 			port->rx_fifo_depth, sizeof(u32), GFP_KERNEL);
--- 
-2.20.1
+Is "hash differs from the original pointer value" a valid check?
+Depending on the random value and the actual pointer I can imagine a
+valid match. Such a match is unlikely but not necessarily bogus, is it?
+
+Best regards
+Uwe
 
 
+--I0VyUx4H1cFryB8nUb4I59EwMx3eAsZbz--
 
+--hqSDMiKsd8o5YzHaXusAbuclKGGNjTjfM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl5X0qgACgkQwfwUeK3K
+7Am7Zwf/QFJPockuSqgbcRyQUGHjcZY28uGxdP3pAqN/YBVAm3baFOgnjy4GeTWm
+3xGi7C3/VQKM+MyJq312hQYVHqIOfm5bGJMH2GffFV0OJQc8HdAZUequpMbYLmVE
+jDd5wQJko8g5ELWX+nywC9pobceqxTFa1fgiDCO8zQMx8fV994SSc/kkt3TL88k7
+1IJZj9BI6Hy3sAp/4S+jPU0zG7/95en6vEwpDAgfxguCtqGv7Os65CVj46itYht6
+QSK4p6qUv1t9nA7yiuwN6RQph8gpoZGRtXmya+4UF2L2W4qzA8gDTRUZ8MgDBw6t
+P5xEk/N3jcwu1J27DfYPmFu7ryPEhA==
+=GhfM
+-----END PGP SIGNATURE-----
+
+--hqSDMiKsd8o5YzHaXusAbuclKGGNjTjfM--
