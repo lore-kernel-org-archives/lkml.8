@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1221C52D4F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD87C3F363
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C962221D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB75820801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812132;
-	bh=Zqa2Lb07ENrV+14mEoLnG9RRpmguim7blZ99C4OTWqM=;
+	s=default; t=1582812122;
+	bh=fgE+TdDt7YBkekHm++IJhKrdcd8VIaBr7KT4k0f+Da4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WeFD2OQWGyrtCYRKJ7+7sQzq4JVoOvGF7NgBagyqGZF2w2Iu8LmRFtHAIlnMhclWk
-	 EiwUvfbflKWmqwUIO+ukDWT1S6KqJ+XyCX9W3mGke3oprUgSZxTI2Qfqbxo+uYdVXk
-	 Rl59ovwo4wKxANrmwmVIoVrI7vh5fQiXattDV7kM=
+	b=YGbHik/Ed5lClHaWj5Nxq4iGXztWqD8tsgTU7KPTiXyR5OD5qZEgge2VwP5z9e2dB
+	 kBYqFi1U0Z1Q/28K1FCYWC3q314/flfdX3goj3encsW7u3NUbBpwJ1smk+pO3J5v+/
+	 7iHSECZ3vPxRvohWudy1MKQ7p+L7z0MRk6I+4t5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733072AbgB0OCL (ORCPT
+        id S1733036AbgB0OCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:02:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36604 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:02:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732656AbgB0OCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:02:09 -0500
+        id S1732802AbgB0OB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:01:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B708320801;
-        Thu, 27 Feb 2020 14:02:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2499246A0;
+        Thu, 27 Feb 2020 14:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812128;
-        bh=Zqa2Lb07ENrV+14mEoLnG9RRpmguim7blZ99C4OTWqM=;
+        s=default; t=1582812118;
+        bh=fgE+TdDt7YBkekHm++IJhKrdcd8VIaBr7KT4k0f+Da4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H8XhkzNECVGaH0zJCuM+ePjwz/TsCb7ad6CwcVHpYh99rCTxyc1PIkEcPzzqS/v+9
-         kiw9qYdLXr/ARMQKSr2epLHqs8Tnv8M8cUZb2CaB3lx19tTEYFYUDviDT/SRMvHAAj
-         3EKqV9+uSp+awkR5APwpdTix4pLZosgMLDsLfY7E=
+        b=R9Ky4NGfK5zqOx326oAwR3+lK5OsmrTFKS9A7HKAWQwOgd/aqyN4GZWGYKY2VPP8h
+         G89o0gmPJUkYGRHzP+kTqE5aXiPNijxhiv+DHDtz/a4A+wk90fYSV2bW/hvqrYfSsr
+         OQI6hdXfsGk8yIU5I3Q+yYP1z5h1zps8wFiHEF30=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+65c6c92d04304d0a8efc@syzkaller.appspotmail.com,
-        syzbot+e60ddfa48717579799dd@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 232/237] ALSA: seq: Avoid concurrent access to queue flags
-Date:   Thu, 27 Feb 2020 14:37:26 +0100
-Message-Id: <20200227132313.159526563@linuxfoundation.org>
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Tyler Hicks <code@tyhicks.com>
+Subject: [PATCH 4.14 228/237] ecryptfs: replace BUG_ON with error handling code
+Date:   Thu, 27 Feb 2020 14:37:22 +0100
+Message-Id: <20200227132312.890707488@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -61,96 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Aditya Pakki <pakki001@umn.edu>
 
-commit bb51e669fa49feb5904f452b2991b240ef31bc97 upstream.
+commit 2c2a7552dd6465e8fde6bc9cccf8d66ed1c1eb72 upstream.
 
-The queue flags are represented in bit fields and the concurrent
-access may result in unexpected results.  Although the current code
-should be mostly OK as it's only reading a field while writing other
-fields as KCSAN reported, it's safer to cover both with a proper
-spinlock protection.
+In crypt_scatterlist, if the crypt_stat argument is not set up
+correctly, the kernel crashes. Instead, by returning an error code
+upstream, the error is handled safely.
 
-This patch fixes the possible concurrent read by protecting with
-q->owner_lock.  Also the queue owner field is protected as well since
-it's the field to be protected by the lock itself.
+The issue is detected via a static analysis tool written by us.
 
-Reported-by: syzbot+65c6c92d04304d0a8efc@syzkaller.appspotmail.com
-Reported-by: syzbot+e60ddfa48717579799dd@syzkaller.appspotmail.com
-Link: https://lore.kernel.org/r/20200214111316.26939-2-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 237fead619984 (ecryptfs: fs/Makefile and fs/Kconfig)
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Tyler Hicks <code@tyhicks.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/seq/seq_queue.c |   20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ fs/ecryptfs/crypto.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/sound/core/seq/seq_queue.c
-+++ b/sound/core/seq/seq_queue.c
-@@ -415,6 +415,7 @@ int snd_seq_queue_check_access(int queue
- int snd_seq_queue_set_owner(int queueid, int client, int locked)
- {
- 	struct snd_seq_queue *q = queueptr(queueid);
-+	unsigned long flags;
+--- a/fs/ecryptfs/crypto.c
++++ b/fs/ecryptfs/crypto.c
+@@ -339,8 +339,10 @@ static int crypt_scatterlist(struct ecry
+ 	struct extent_crypt_result ecr;
+ 	int rc = 0;
  
- 	if (q == NULL)
- 		return -EINVAL;
-@@ -424,8 +425,10 @@ int snd_seq_queue_set_owner(int queueid,
- 		return -EPERM;
- 	}
- 
-+	spin_lock_irqsave(&q->owner_lock, flags);
- 	q->locked = locked ? 1 : 0;
- 	q->owner = client;
-+	spin_unlock_irqrestore(&q->owner_lock, flags);
- 	queue_access_unlock(q);
- 	queuefree(q);
- 
-@@ -564,15 +567,17 @@ void snd_seq_queue_client_termination(in
- 	unsigned long flags;
- 	int i;
- 	struct snd_seq_queue *q;
-+	bool matched;
- 
- 	for (i = 0; i < SNDRV_SEQ_MAX_QUEUES; i++) {
- 		if ((q = queueptr(i)) == NULL)
- 			continue;
- 		spin_lock_irqsave(&q->owner_lock, flags);
--		if (q->owner == client)
-+		matched = (q->owner == client);
-+		if (matched)
- 			q->klocked = 1;
- 		spin_unlock_irqrestore(&q->owner_lock, flags);
--		if (q->owner == client) {
-+		if (matched) {
- 			if (q->timer->running)
- 				snd_seq_timer_stop(q->timer);
- 			snd_seq_timer_reset(q->timer);
-@@ -764,6 +769,8 @@ void snd_seq_info_queues_read(struct snd
- 	int i, bpm;
- 	struct snd_seq_queue *q;
- 	struct snd_seq_timer *tmr;
-+	bool locked;
-+	int owner;
- 
- 	for (i = 0; i < SNDRV_SEQ_MAX_QUEUES; i++) {
- 		if ((q = queueptr(i)) == NULL)
-@@ -775,9 +782,14 @@ void snd_seq_info_queues_read(struct snd
- 		else
- 			bpm = 0;
- 
-+		spin_lock_irq(&q->owner_lock);
-+		locked = q->locked;
-+		owner = q->owner;
-+		spin_unlock_irq(&q->owner_lock);
+-	BUG_ON(!crypt_stat || !crypt_stat->tfm
+-	       || !(crypt_stat->flags & ECRYPTFS_STRUCT_INITIALIZED));
++	if (!crypt_stat || !crypt_stat->tfm
++	       || !(crypt_stat->flags & ECRYPTFS_STRUCT_INITIALIZED))
++		return -EINVAL;
 +
- 		snd_iprintf(buffer, "queue %d: [%s]\n", q->queue, q->name);
--		snd_iprintf(buffer, "owned by client    : %d\n", q->owner);
--		snd_iprintf(buffer, "lock status        : %s\n", q->locked ? "Locked" : "Free");
-+		snd_iprintf(buffer, "owned by client    : %d\n", owner);
-+		snd_iprintf(buffer, "lock status        : %s\n", locked ? "Locked" : "Free");
- 		snd_iprintf(buffer, "queued time events : %d\n", snd_seq_prioq_avail(q->timeq));
- 		snd_iprintf(buffer, "queued tick events : %d\n", snd_seq_prioq_avail(q->tickq));
- 		snd_iprintf(buffer, "timer state        : %s\n", tmr->running ? "Running" : "Stopped");
+ 	if (unlikely(ecryptfs_verbosity > 0)) {
+ 		ecryptfs_printk(KERN_DEBUG, "Key size [%zd]; key:\n",
+ 				crypt_stat->key_size);
 
 
