@@ -2,52 +2,53 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76957C54FF1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 265FEC3F36D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 436F321D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F201A20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813838;
-	bh=eNP2wRueIYsQ0UuZX2jQ1NACVIbo0uRrJkyDM2F6qGc=;
+	s=default; t=1582813856;
+	bh=OmW1x3TDx7SRqWix4cRvW6BJJPkzHPdugs65EbCnfKY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=heS6izD+XT4rC9OrNP6sMxCUfT1Y0JAUhjqMQmfWdr+IfxEX1V2AQhlfcdyT6tdxl
-	 +5ihiNey3vsEfhOeT3cnLIEqOrbywOR01luwKEFeBUDbMKDCzl5Ic1CKURLNbnEGI5
-	 IHrRL4K8X6+NYClS3v9oaypFZGhBcPsp1q7M+Ra4=
+	b=nNiDOHCI8qBS5n33qDYmpiPfLmoE3J76EvX3Akbre8HDF+2YuYNcg9OGiMiTKJad/
+	 XBNjMYV38WUAPCxZ4brX5vLk4Se3A1s+XGGu5WbgMxREB3zAGFvE+hGf8QNgaWpGBa
+	 UvPg7hTTb6nsXtX/WMVlc1AwFAkzW/xdPWda3pDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733298AbgB0OE7 (ORCPT
+        id S2388024AbgB0Oaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:04:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41150 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:30:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387626AbgB0OEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:04:44 -0500
+        id S1732719AbgB0OEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:04:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45DAC20578;
-        Thu, 27 Feb 2020 14:04:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9545E20578;
+        Thu, 27 Feb 2020 14:04:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812283;
-        bh=eNP2wRueIYsQ0UuZX2jQ1NACVIbo0uRrJkyDM2F6qGc=;
+        s=default; t=1582812271;
+        bh=OmW1x3TDx7SRqWix4cRvW6BJJPkzHPdugs65EbCnfKY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YXsm6SybD1lZsswtbLk88m8p2ssq9/FQdxfKBJcXvVYZk3Jd+XRCH8fbfvxBXRbdc
-         JSffJ/UTmxu4o6+nvwwu5OIODKTkA7llbbBBD+FsxvWnmfOOJvu7RXKoezbKS1Lz4c
-         cW54XX2q5DQicvPXE7zIrE+v93AfYanH12SuqHak=
+        b=aciU92JCsePrA67OiTsIub5HWW9dfkVh5eQCY+zKGJpGGt2qTLQCYbN8yfAPiAr33
+         nNIf6zHg7E2v8fUoYkB5NxDL70e6K7jHke8rpkpzS+JUDarvMPs1xoRbuaAuDOBr40
+         XkaxZ96gnrlGcWiTTMovHLuv4S/r4aM0Ah+PP4j0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ryan Case <ryandcase@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 54/97] tty: serial: qcom_geni_serial: Fix UART hang
-Date:   Thu, 27 Feb 2020 14:37:02 +0100
-Message-Id: <20200227132223.401435581@linuxfoundation.org>
+        stable@vger.kernel.org, Gavin Shan <gshan@redhat.com>,
+        Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 49/97] mm/vmscan.c: dont round up scan size for online memory cgroup
+Date:   Thu, 27 Feb 2020 14:36:57 +0100
+Message-Id: <20200227132222.614442921@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
 References: <20200227132214.553656188@linuxfoundation.org>
@@ -60,52 +61,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ryan Case <ryandcase@chromium.org>
+From: Gavin Shan <gshan@redhat.com>
 
-[ Upstream commit 663abb1a7a7ff8fea9ab0145463de7fcff823755 ]
+commit 76073c646f5f4999d763f471df9e38a5a912d70d upstream.
 
-If a serial console write occured while a UART transmit command was
-waiting for a done signal then no further data would be sent until
-something new kicked the system into gear. If there is already data
-waiting in the circular buffer we must re-enable the tx watermark so we
-receive the expected interrupts.
+Commit 68600f623d69 ("mm: don't miss the last page because of round-off
+error") makes the scan size round up to @denominator regardless of the
+memory cgroup's state, online or offline.  This affects the overall
+reclaiming behavior: the corresponding LRU list is eligible for
+reclaiming only when its size logically right shifted by @sc->priority
+is bigger than zero in the former formula.
 
-Signed-off-by: Ryan Case <ryandcase@chromium.org>
-Reviewed-by: Evan Green <evgreen@chromium.org>
+For example, the inactive anonymous LRU list should have at least 0x4000
+pages to be eligible for reclaiming when we have 60/12 for
+swappiness/priority and without taking scan/rotation ratio into account.
+
+After the roundup is applied, the inactive anonymous LRU list becomes
+eligible for reclaiming when its size is bigger than or equal to 0x1000
+in the same condition.
+
+    (0x4000 >> 12) * 60 / (60 + 140 + 1) = 1
+    ((0x1000 >> 12) * 60) + 200) / (60 + 140 + 1) = 1
+
+aarch64 has 512MB huge page size when the base page size is 64KB.  The
+memory cgroup that has a huge page is always eligible for reclaiming in
+that case.
+
+The reclaiming is likely to stop after the huge page is reclaimed,
+meaing the further iteration on @sc->priority and the silbing and child
+memory cgroups will be skipped.  The overall behaviour has been changed.
+This fixes the issue by applying the roundup to offlined memory cgroups
+only, to give more preference to reclaim memory from offlined memory
+cgroup.  It sounds reasonable as those memory is unlikedly to be used by
+anyone.
+
+The issue was found by starting up 8 VMs on a Ampere Mustang machine,
+which has 8 CPUs and 16 GB memory.  Each VM is given with 2 vCPUs and
+2GB memory.  It took 264 seconds for all VMs to be completely up and
+784MB swap is consumed after that.  With this patch applied, it took 236
+seconds and 60MB swap to do same thing.  So there is 10% performance
+improvement for my case.  Note that KSM is disable while THP is enabled
+in the testing.
+
+         total     used    free   shared  buff/cache   available
+   Mem:  16196    10065    2049       16        4081        3749
+   Swap:  8175      784    7391
+         total     used    free   shared  buff/cache   available
+   Mem:  16196    11324    3656       24        1215        2936
+   Swap:  8175       60    8115
+
+Link: http://lkml.kernel.org/r/20200211024514.8730-1-gshan@redhat.com
+Fixes: 68600f623d69 ("mm: don't miss the last page because of round-off error")
+Signed-off-by: Gavin Shan <gshan@redhat.com>
+Acked-by: Roman Gushchin <guro@fb.com>
+Cc: <stable@vger.kernel.org>	[4.20+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+
 ---
- drivers/tty/serial/qcom_geni_serial.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ mm/vmscan.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-index b3f7d1a1e97f8..2003dfcace5d8 100644
---- a/drivers/tty/serial/qcom_geni_serial.c
-+++ b/drivers/tty/serial/qcom_geni_serial.c
-@@ -438,6 +438,7 @@ static void qcom_geni_serial_console_write(struct console *co, const char *s,
- 	bool locked = true;
- 	unsigned long flags;
- 	u32 geni_status;
-+	u32 irq_en;
- 
- 	WARN_ON(co->index < 0 || co->index >= GENI_UART_CONS_PORTS);
- 
-@@ -472,6 +473,13 @@ static void qcom_geni_serial_console_write(struct console *co, const char *s,
- 		 * has been sent, in which case we need to look for done first.
- 		 */
- 		qcom_geni_serial_poll_tx_done(uport);
-+
-+		if (uart_circ_chars_pending(&uport->state->xmit)) {
-+			irq_en = readl_relaxed(uport->membase +
-+					SE_GENI_M_IRQ_EN);
-+			writel_relaxed(irq_en | M_TX_FIFO_WATERMARK_EN,
-+					uport->membase + SE_GENI_M_IRQ_EN);
-+		}
- 	}
- 
- 	__qcom_geni_serial_console_write(uport, s, count);
--- 
-2.20.1
-
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -2446,10 +2446,13 @@ out:
+ 			/*
+ 			 * Scan types proportional to swappiness and
+ 			 * their relative recent reclaim efficiency.
+-			 * Make sure we don't miss the last page
+-			 * because of a round-off error.
++			 * Make sure we don't miss the last page on
++			 * the offlined memory cgroups because of a
++			 * round-off error.
+ 			 */
+-			scan = DIV64_U64_ROUND_UP(scan * fraction[file],
++			scan = mem_cgroup_online(memcg) ?
++			       div64_u64(scan * fraction[file], denominator) :
++			       DIV64_U64_ROUND_UP(scan * fraction[file],
+ 						  denominator);
+ 			break;
+ 		case SCAN_FILE:
 
 
