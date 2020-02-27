@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A49FC52D2E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD61C52D30
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD2DD20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E558621D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811840;
-	bh=fXnsoQjwnpZgRXM5im4681pzskBGblpLjTDxl2J7dKw=;
+	s=default; t=1582811844;
+	bh=C/wdEos4wA2xfQpgeNBE4p1Xv5QaOA7GnM1ypr2cjgE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TA3s/on/NeFlHNxtFJJ4glWKhjdryh5ghhVOnvR0q7j5WeEXp3WzCmiYLZBRmWaMF
-	 TaBn1gfJbGZ0zgOTgOTzF3GLfmIPM/ytz8mp6s2BnwUWrsGtNY+OmtBPzEIGRlaU8k
-	 I/O9v+6OIZ60yJtpN/ko+5x0ENbBUnxiVtxpN36Q=
+	b=GcFlDg8uS6sg3TFlDzWj98T/+lJ+AnWQFUOU8WhGf/mC505TEntCHmJa61wcVmz04
+	 GAP7ndCEAHUdYmbrI0x9klYgD/5MvPc2eZkbihR0l/eZ0oxaikLmcHphxOhWzJddww
+	 t9+/qFfgEjXDcTXhXhpsqdLrWCVD3Ox5L5i9PfGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731940AbgB0N5S (ORCPT
+        id S1732265AbgB0N5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:57:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57930 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:57:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732072AbgB0N5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:57:10 -0500
+        id S1732251AbgB0N5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:57:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5615120578;
-        Thu, 27 Feb 2020 13:57:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDABC20578;
+        Thu, 27 Feb 2020 13:57:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811829;
-        bh=fXnsoQjwnpZgRXM5im4681pzskBGblpLjTDxl2J7dKw=;
+        s=default; t=1582811832;
+        bh=C/wdEos4wA2xfQpgeNBE4p1Xv5QaOA7GnM1ypr2cjgE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kRKv4NJRmyxcm490qUIRffLYQ3LKGTXeOLIGoDDgjecIQjJKyVoTRxLk8W9wy8oLk
-         pToZMf4FBxlbaCvNqrGoNW1moYUb591y/RLTvacFxWk2oMJOe9k6zOnsss1HzQPmPg
-         oByUoK1qqPsZgqqRph8mXQ/jLA0hXpDdY99djuig=
+        b=ZmeMW1o8LRQUKZTVPiON0Qt1sdrXLTxeRUWoXYHKCfMMJC5/lReQXliBWbzjjDEFP
+         Uic4za9E2QP14t5opmErB2ibuOgujfWi8zqKJHZehgT7I7Lkvi7j3R6aQsGZtPqsN8
+         nMrC4KqBAVgg7hZyP059N1cjODkkyf/93oh9wHfY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 079/237] reiserfs: Fix spurious unlock in reiserfs_fill_super() error handling
-Date:   Thu, 27 Feb 2020 14:34:53 +0100
-Message-Id: <20200227132302.923836145@linuxfoundation.org>
+Subject: [PATCH 4.14 080/237] fore200e: Fix incorrect checks of NULL pointer dereference
+Date:   Thu, 27 Feb 2020 14:34:54 +0100
+Message-Id: <20200227132302.988629389@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -59,34 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit 4d5c1adaf893b8aa52525d2b81995e949bcb3239 ]
+[ Upstream commit bbd20c939c8aa3f27fa30e86691af250bf92973a ]
 
-When we fail to allocate string for journal device name we jump to
-'error' label which tries to unlock reiserfs write lock which is not
-held. Jump to 'error_unlocked' instead.
+In fore200e_send and fore200e_close, the pointers from the arguments
+are dereferenced in the variable declaration block and then checked
+for NULL. The patch fixes these issues by avoiding NULL pointer
+dereferences.
 
-Fixes: f32485be8397 ("reiserfs: delay reiserfs lock until journal initialization")
-Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/reiserfs/super.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/atm/fore200e.c | 25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/fs/reiserfs/super.c b/fs/reiserfs/super.c
-index 5208d85dd30c5..9caf3948417c0 100644
---- a/fs/reiserfs/super.c
-+++ b/fs/reiserfs/super.c
-@@ -1954,7 +1954,7 @@ static int reiserfs_fill_super(struct super_block *s, void *data, int silent)
- 		if (!sbi->s_jdev) {
- 			SWARN(silent, s, "", "Cannot allocate memory for "
- 				"journal device name");
--			goto error;
-+			goto error_unlocked;
- 		}
- 	}
- #ifdef CONFIG_QUOTA
+diff --git a/drivers/atm/fore200e.c b/drivers/atm/fore200e.c
+index f8b7e86907cc2..0a1ad1a1d34fb 100644
+--- a/drivers/atm/fore200e.c
++++ b/drivers/atm/fore200e.c
+@@ -1496,12 +1496,14 @@ fore200e_open(struct atm_vcc *vcc)
+ static void
+ fore200e_close(struct atm_vcc* vcc)
+ {
+-    struct fore200e*        fore200e = FORE200E_DEV(vcc->dev);
+     struct fore200e_vcc*    fore200e_vcc;
++    struct fore200e*        fore200e;
+     struct fore200e_vc_map* vc_map;
+     unsigned long           flags;
+ 
+     ASSERT(vcc);
++    fore200e = FORE200E_DEV(vcc->dev);
++
+     ASSERT((vcc->vpi >= 0) && (vcc->vpi < 1<<FORE200E_VPI_BITS));
+     ASSERT((vcc->vci >= 0) && (vcc->vci < 1<<FORE200E_VCI_BITS));
+ 
+@@ -1546,10 +1548,10 @@ fore200e_close(struct atm_vcc* vcc)
+ static int
+ fore200e_send(struct atm_vcc *vcc, struct sk_buff *skb)
+ {
+-    struct fore200e*        fore200e     = FORE200E_DEV(vcc->dev);
+-    struct fore200e_vcc*    fore200e_vcc = FORE200E_VCC(vcc);
++    struct fore200e*        fore200e;
++    struct fore200e_vcc*    fore200e_vcc;
+     struct fore200e_vc_map* vc_map;
+-    struct host_txq*        txq          = &fore200e->host_txq;
++    struct host_txq*        txq;
+     struct host_txq_entry*  entry;
+     struct tpd*             tpd;
+     struct tpd_haddr        tpd_haddr;
+@@ -1562,9 +1564,18 @@ fore200e_send(struct atm_vcc *vcc, struct sk_buff *skb)
+     unsigned char*          data;
+     unsigned long           flags;
+ 
+-    ASSERT(vcc);
+-    ASSERT(fore200e);
+-    ASSERT(fore200e_vcc);
++    if (!vcc)
++        return -EINVAL;
++
++    fore200e = FORE200E_DEV(vcc->dev);
++    fore200e_vcc = FORE200E_VCC(vcc);
++
++    if (!fore200e)
++        return -EINVAL;
++
++    txq = &fore200e->host_txq;
++    if (!fore200e_vcc)
++        return -EINVAL;
+ 
+     if (!test_bit(ATM_VF_READY, &vcc->flags)) {
+ 	DPRINTK(1, "VC %d.%d.%d not ready for tx\n", vcc->itf, vcc->vpi, vcc->vpi);
 -- 
 2.20.1
 
