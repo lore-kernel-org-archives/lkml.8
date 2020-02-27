@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E8FC54FF3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66507C52D4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 150C420801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C4AE20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813166;
-	bh=arbXllttc7sXYByydEClyO69CaPDVAGy+H48oV7qm04=;
+	s=default; t=1582812987;
+	bh=mcWs5hysCJ0vA6NTA/QZOnkdCPZ7v6LU7HoQobOuHYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eYLGf4Jh3LsiYsEPqvfBbtl+w4A+UvELaYgfCPWCJFPEOa+mU7ekjEFSL+199TkPL
-	 72cMK/lR8xKDRqbra5eLM72Ud01N4WeHN2zBDlNRZs2SeH8JtM/yXHYiaHSGktNWKa
-	 AuMKLr2uBTcYYUtweBlBGQXoNbKiqPwKkYnz1b5c=
+	b=ZQXyXWhSlmCzhLbEitVfcIAmz0DVGlUngh85u16TpQ/3+hav9WGZ5o/Tzqlc9nGDN
+	 JX6iqTmD3l3i5ppvr1qdnI40pGmR8C0Clkabib3KBjJAvPczSJ1BbDFGtCPlPJDBex
+	 y/AcAALySsJtSe9eNACcS8GmCluQ77V5En76t9EE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390015AbgB0OTY (ORCPT
+        id S2389255AbgB0OQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:19:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59910 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:16:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389993AbgB0OTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:19:15 -0500
+        id S2389504AbgB0OQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:16:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86EDB2468F;
-        Thu, 27 Feb 2020 14:19:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C20DF20801;
+        Thu, 27 Feb 2020 14:16:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813155;
-        bh=arbXllttc7sXYByydEClyO69CaPDVAGy+H48oV7qm04=;
+        s=default; t=1582812983;
+        bh=mcWs5hysCJ0vA6NTA/QZOnkdCPZ7v6LU7HoQobOuHYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xs1QEeTPRO3nJfp7eKrW65Dsa6JPcb3agwwG0NkAK90X1RldgZrwjfHaOqGZqKeaz
-         XJw+5p0/I9Ke0wrxBxxt++bugd3KOGvpqkCKuo9X4YP8vuCEeEdAM6/FGvhj9L6AUC
-         4keWC0Zs94WccgoFAsGhohHEux/GXq2bRYGO//RA=
+        b=Karne1HVuAi+FlPcRCJGfcfr1Qq4qXHm0XKVAv7UzsQJgATluqVUhU40hbW3qC0TG
+         9Ankk3s9VamtwrXMzhpy8cfv8MvDOOSFsW+ARKXPqAHVwF3ctsiQpQ98WF6Iqtl7gI
+         yjsjBLDmmD07f8pKGNLiG2ZI1FgntpI8iZUY1tC0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmytro Linkin <dmitrolin@mellanox.com>,
-        Roi Dayan <roid@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.5 146/150] net/mlx5e: Dont clear the whole vf config when switching modes
-Date:   Thu, 27 Feb 2020 14:38:03 +0100
-Message-Id: <20200227132253.848331877@linuxfoundation.org>
+        stable@vger.kernel.org, Shijie Luo <luoshijie1@huawei.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        stable@kernel.org
+Subject: [PATCH 5.5 090/150] ext4: add cond_resched() to __ext4_find_entry()
+Date:   Thu, 27 Feb 2020 14:37:07 +0100
+Message-Id: <20200227132246.089058664@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -60,64 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmytro Linkin <dmitrolin@mellanox.com>
+From: Shijie Luo <luoshijie1@huawei.com>
 
-commit 383de108157c881074f32914b61125e299820bd2 upstream.
+commit 9424ef56e13a1f14c57ea161eed3ecfdc7b2770e upstream.
 
-There is no need to reset all vf config (except link state) between
-legacy and switchdev modes changes.
-Also, set link state to AUTO, when legacy enabled.
+We tested a soft lockup problem in linux 4.19 which could also
+be found in linux 5.x.
 
-Fixes: 3b83b6c2e024 ("net/mlx5e: Clear VF config when switching modes")
-Signed-off-by: Dmytro Linkin <dmitrolin@mellanox.com>
-Reviewed-by: Roi Dayan <roid@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+When dir inode takes up a large number of blocks, and if the
+directory is growing when we are searching, it's possible the
+restart branch could be called many times, and the do while loop
+could hold cpu a long time.
+
+Here is the call trace in linux 4.19.
+
+[  473.756186] Call trace:
+[  473.756196]  dump_backtrace+0x0/0x198
+[  473.756199]  show_stack+0x24/0x30
+[  473.756205]  dump_stack+0xa4/0xcc
+[  473.756210]  watchdog_timer_fn+0x300/0x3e8
+[  473.756215]  __hrtimer_run_queues+0x114/0x358
+[  473.756217]  hrtimer_interrupt+0x104/0x2d8
+[  473.756222]  arch_timer_handler_virt+0x38/0x58
+[  473.756226]  handle_percpu_devid_irq+0x90/0x248
+[  473.756231]  generic_handle_irq+0x34/0x50
+[  473.756234]  __handle_domain_irq+0x68/0xc0
+[  473.756236]  gic_handle_irq+0x6c/0x150
+[  473.756238]  el1_irq+0xb8/0x140
+[  473.756286]  ext4_es_lookup_extent+0xdc/0x258 [ext4]
+[  473.756310]  ext4_map_blocks+0x64/0x5c0 [ext4]
+[  473.756333]  ext4_getblk+0x6c/0x1d0 [ext4]
+[  473.756356]  ext4_bread_batch+0x7c/0x1f8 [ext4]
+[  473.756379]  ext4_find_entry+0x124/0x3f8 [ext4]
+[  473.756402]  ext4_lookup+0x8c/0x258 [ext4]
+[  473.756407]  __lookup_hash+0x8c/0xe8
+[  473.756411]  filename_create+0xa0/0x170
+[  473.756413]  do_mkdirat+0x6c/0x140
+[  473.756415]  __arm64_sys_mkdirat+0x28/0x38
+[  473.756419]  el0_svc_common+0x78/0x130
+[  473.756421]  el0_svc_handler+0x38/0x78
+[  473.756423]  el0_svc+0x8/0xc
+[  485.755156] watchdog: BUG: soft lockup - CPU#2 stuck for 22s! [tmp:5149]
+
+Add cond_resched() to avoid soft lockup and to provide a better
+system responding.
+
+Link: https://lore.kernel.org/r/20200215080206.13293-1-luoshijie1@huawei.com
+Signed-off-by: Shijie Luo <luoshijie1@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/mellanox/mlx5/core/eswitch.c          |    6 +++++-
- drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c |    4 ++--
- 2 files changed, 7 insertions(+), 3 deletions(-)
+ fs/ext4/namei.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-@@ -456,12 +456,16 @@ static void esw_destroy_legacy_table(str
- 
- static int esw_legacy_enable(struct mlx5_eswitch *esw)
- {
--	int ret;
-+	struct mlx5_vport *vport;
-+	int ret, i;
- 
- 	ret = esw_create_legacy_table(esw);
- 	if (ret)
- 		return ret;
- 
-+	mlx5_esw_for_each_vf_vport(esw, i, vport, esw->esw_funcs.num_vfs)
-+		vport->info.link_state = MLX5_VPORT_ADMIN_STATE_AUTO;
-+
- 	ret = mlx5_eswitch_enable_pf_vf_vports(esw, MLX5_LEGACY_SRIOV_VPORT_EVENTS);
- 	if (ret)
- 		esw_destroy_legacy_table(esw);
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
-@@ -1377,7 +1377,7 @@ static int esw_offloads_start(struct mlx
- 		return -EINVAL;
- 	}
- 
--	mlx5_eswitch_disable(esw, true);
-+	mlx5_eswitch_disable(esw, false);
- 	mlx5_eswitch_update_num_of_vfs(esw, esw->dev->priv.sriov.num_vfs);
- 	err = mlx5_eswitch_enable(esw, MLX5_ESWITCH_OFFLOADS);
- 	if (err) {
-@@ -2271,7 +2271,7 @@ static int esw_offloads_stop(struct mlx5
- {
- 	int err, err1;
- 
--	mlx5_eswitch_disable(esw, true);
-+	mlx5_eswitch_disable(esw, false);
- 	err = mlx5_eswitch_enable(esw, MLX5_ESWITCH_LEGACY);
- 	if (err) {
- 		NL_SET_ERR_MSG_MOD(extack, "Failed setting eswitch to legacy");
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -1507,6 +1507,7 @@ restart:
+ 		/*
+ 		 * We deal with the read-ahead logic here.
+ 		 */
++		cond_resched();
+ 		if (ra_ptr >= ra_max) {
+ 			/* Refill the readahead buffer */
+ 			ra_ptr = 0;
 
 
