@@ -2,185 +2,146 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23719C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BADDC35DF9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3CE42469D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C916E2468E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:33:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="OxZrtlxW"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="J72fW5mP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730456AbgB0TbT (ORCPT
+        id S1730154AbgB0TdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 14:31:19 -0500
-Received: from gateway20.websitewelcome.com ([192.185.68.24]:32456 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729790AbgB0TbT (ORCPT
+        Thu, 27 Feb 2020 14:33:09 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:32946 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727159AbgB0TdJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 14:31:19 -0500
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 83D07400D4328
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 11:53:11 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 7OVSjz6eNvBMd7OVSjugUD; Thu, 27 Feb 2020 13:07:34 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=uGxi4PbE3pDVOAAWxcjk27P48lGF3WiRPeIGGQXPXWA=; b=OxZrtlxWjd5hXwFXEhlhCDWKS8
-        TYvqnTR7pJwiPjoi5ZwUQqkFg9RmPU40TL2M4/dNMZEjt/puN9zI/6xash9MFbCvfe8L0TLNYCFI/
-        PoQiILT4bmwCgg3Qjm7n8m8GPaoBBVImjYr5Ezaz/mdw1JAUVWLNIgDQXoIUOy5C3Ug2a/0Cd3677
-        Xj+C5f0bl6Kbabik3kbI+yVBkCTEQvOfazAgOwsdAvsgD8qvsw1GMEqFf6P/w9d7wIQxTKx2UqH0Z
-        roaCi+p8wEE1XYoESN0lmaIthGyLi6bzngt1d2VciqRGwGRx16ua6szqt/Ic+gg9dssYGfOzcaXDw
-        fKmjYCZw==;
-Received: from [201.162.168.186] (port=14950 helo=[192.168.43.132])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j7OVR-004EOD-BX; Thu, 27 Feb 2020 13:07:34 -0600
-Subject: Re: [PATCH] rpmsg: virtio_rpmsg_bus: Replace zero-length array with
- flexible-array member
-To:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200213002239.GA30190@embeddedor.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <6d7bd66d-ebea-dc4a-03ff-5da9d313a75d@embeddedor.com>
-Date:   Thu, 27 Feb 2020 13:10:24 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 27 Feb 2020 14:33:09 -0500
+Received: by mail-qv1-f65.google.com with SMTP id ek2so175769qvb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 11:33:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=SHUqZMiqxXrugyTiyJw+5kNiudFRuI7VyrA9wECW0ig=;
+        b=J72fW5mPWHpUAeGa8GWszUuNSkb0QFONZmhovIbvGL9xlofynOtEKg65dV3i2/9vHp
+         NX8jTCbg8aS+DG5SOAUoIPdJiyrWvuQZd82R8x6g6hbO0/py7DLb5MJQ0/XYreQaU11c
+         2/Dkcskm09qrpwQR+4WF/rXKNDZcNTwzVrVkgp32Mmrfji9nhoWrvWf1dIMboI2CVaTR
+         b0lZN2/s2R+ebKkAt2yfWfe45euRfmjbcSMrVunUxx93XVFO5Jc0nRlafpSbd7iZ0pOK
+         00CnKGLYBmkeRkqyqE71ie81uIwq2JSuKSE8qv2wgAhv7lRfcUrpKtEWOOElSYDvGAcm
+         rWUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SHUqZMiqxXrugyTiyJw+5kNiudFRuI7VyrA9wECW0ig=;
+        b=o/lFbMJDocQjBO5KqSZjrN9t1Wvbw4CUAQf1KBCW2aAB277Yh6shNDAoyKD249Pwyd
+         E278uVFyHKgpu++5MzXkaA/M080s7KT0OIvtMNGF2h893MSz1+lCWiewqNcWug1APRHM
+         MXeV/YYxMmAgkpz1Ua6y9jNYunby36ccdnLnHbTM93299m7O5oXUqXXuhAAejeq8hwrT
+         mcQdOCAPNvFoqOk0U6iwKYaA8eITSuZ7UwULgU5+NwwDeUz0juMmeHTkwCvNQzsxp3eP
+         LIAmYWkJxZwbPzrFIBQWyy4onD2Yec/0zTJVptOUNpR4/kXc0C/yIvbbg24SI9XqV4cP
+         y3xg==
+X-Gm-Message-State: APjAAAUJwuMXrQrW1ee9M0heeYTZzARyh3UauHAkDJmqFZaDwOPeyMaa
+        X2Re6ac8mVaXJJW+LYEOXVo+JQ==
+X-Google-Smtp-Source: APXvYqx7jA/aL2KD5I2k9qdaMge+hyhUwSDtAYGVFKgeefzL8C4Cjur66Z0uHKiPhoj4lA7OoDlcsQ==
+X-Received: by 2002:a0c:e2d2:: with SMTP id t18mr512811qvl.130.1582831986313;
+        Thu, 27 Feb 2020 11:33:06 -0800 (PST)
+Received: from [192.168.1.106] ([107.15.81.208])
+        by smtp.gmail.com with ESMTPSA id t4sm3670940qkm.82.2020.02.27.11.33.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Feb 2020 11:33:05 -0800 (PST)
+Subject: Re: [PATCH v3 00/25] user_namespace: introduce fsid mappings
+To:     Christian Brauner <christian.brauner@ubuntu.com>,
+        =?UTF-8?Q?St=c3=a9phane_Graber?= <stgraber@ubuntu.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>
+Cc:     smbarber@chromium.org, Seth Forshee <seth.forshee@canonical.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Phil Estes <estesp@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
+        mpawlowski@fb.com
+References: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
+From:   Josef Bacik <josef@toxicpanda.com>
+Message-ID: <2b0fe94b-036a-919e-219b-cc1ba0641781@toxicpanda.com>
+Date:   Thu, 27 Feb 2020 14:33:04 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200213002239.GA30190@embeddedor.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.168.186
-X-Source-L: No
-X-Exim-ID: 1j7OVR-004EOD-BX
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.132]) [201.162.168.186]:14950
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 12
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On 2/18/20 9:33 AM, Christian Brauner wrote:
+> Hey everyone,
+> 
+> This is v3 after (off- and online) discussions with Jann the following
+> changes were made:
+> - To handle nested user namespaces cleanly, efficiently, and with full
+>    backwards compatibility for non fsid-mapping aware workloads we only
+>    allow writing fsid mappings as long as the corresponding id mapping
+>    type has not been written.
+> - Split the patch which adds the internal ability in
+>    kernel/user_namespace to verify and write fsid mappings into tree
+>    patches:
+>    1. [PATCH v3 04/25] fsuidgid: add fsid mapping helpers
+>       patch to implement core helpers for fsid translations (i.e.
+>       make_kfs*id(), from_kfs*id{_munged}(), kfs*id_to_k*id(),
+>       k*id_to_kfs*id()
+>    2. [PATCH v3 05/25] user_namespace: refactor map_write()
+>       patch to refactor map_write() in order to prepare for actual fsid
+>       mappings changes in the following patch. (This should make it
+>       easier to review.)
+>    3. [PATCH v3 06/25] user_namespace: make map_write() support fsid mappings
+>       patch to implement actual fsid mappings support in mape_write()
+> - Let the keyctl infrastructure only operate on kfsid which are always
+>    mapped/looked up in the id mappings similar to what we do for
+>    filesystems that have the same superblock visible in multiple user
+>    namespaces.
+> 
+> This version also comes with minimal tests which I intend to expand in
+> the future.
+> 
+>  From pings and off-list questions and discussions at Google Container
+> Security Summit there seems to be quite a lot of interest in this
+> patchset with use-cases ranging from layer sharing for app containers
+> and k8s, as well as data sharing between containers with different id
+> mappings. I haven't Cced all people because I don't have all the email
+> adresses at hand but I've at least added Phil now. :)
+> 
+I put this into a kernel for our container guys to mess with in order to 
+validate it would actually be useful for real world uses.  I've cc'ed the guy 
+who did all of the work in case you have specific questions.
 
-Friendly ping: Who can take this?
+Good news is the interface is acceptable, albeit apparently the whole user ns 
+interface sucks in general.  But you haven't made it worse, so success!
 
-Thanks
---
-Gustavo
+But in testing it there appears to be a problem with tmpfs?  Our applications 
+will use shared memory segments for certain things and it apparently breaks this 
+in interesting ways, it appears to not shift the UID appropriately on tmpfs. 
+This seems to be relatively straightforward to reproduce, but if you have 
+trouble let me know and I'll come up with a shell script that reproduces the 
+problem.
 
-On 2/12/20 18:22, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  drivers/rpmsg/virtio_rpmsg_bus.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
-> index 376ebbf880d6..07d4f3374098 100644
-> --- a/drivers/rpmsg/virtio_rpmsg_bus.c
-> +++ b/drivers/rpmsg/virtio_rpmsg_bus.c
-> @@ -89,7 +89,7 @@ struct rpmsg_hdr {
->  	u32 reserved;
->  	u16 len;
->  	u16 flags;
-> -	u8 data[0];
-> +	u8 data[];
->  } __packed;
->  
->  /**
-> 
+We are happy to continue testing these patches to make sure they're working in 
+our container setup, if you want to CC me on future submissions I can build them 
+for our internal testing and validate them as well.  Thanks,
+
+Josef
