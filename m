@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55458C35E0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DEDC35677
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 294B22469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99F2A21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:41:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582810870;
-	bh=pAkzvU+2L+mPiXbKAIUVGE+uuI8Fi1iZfHgJiIQJq38=;
+	s=default; t=1582810860;
+	bh=aV11lpXo5xIPYW2Gp4H1tyD3pzT6B1NINXQhPqaus7Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=slh3iZONjcsuAUNMiSYytya7/Jssa52vc/lj3o0w7vd/2Sm1LmCYxRfr8BAGvcPp3
-	 I0nWCDoILVqIyWLD1IoyiC4201rg4SK0sAjDRwsPtuyaF9I2Cgd2I3MdCgZ2bxV9P1
-	 5QHmi8S+jzPykxdIyv2IVLYaA7eJcLkVoCeLpEWo=
+	b=jCqI0JoAwo25R6LVS6upUquMbeYA+nM0pAdQjguxnv0lgcgIWA69XVvXmo1u1nwgM
+	 13WheNigFVkwkX5apdGJPl0kMbpt/TjM2J1roVJw/dcpXFj93lpQRkH+FC5i7NC3Fh
+	 aCncdYJQmcl94YGsMa+u7sbUKzqQaMQXLwocvUZw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729512AbgB0NlJ (ORCPT
+        id S1729451AbgB0Nk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:41:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35644 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:40:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729488AbgB0NlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:41:06 -0500
+        id S1729442AbgB0Nkz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:40:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00CB421D7E;
-        Thu, 27 Feb 2020 13:41:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8264B21D7E;
+        Thu, 27 Feb 2020 13:40:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582810865;
-        bh=pAkzvU+2L+mPiXbKAIUVGE+uuI8Fi1iZfHgJiIQJq38=;
+        s=default; t=1582810855;
+        bh=aV11lpXo5xIPYW2Gp4H1tyD3pzT6B1NINXQhPqaus7Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Sp1TyAsh2rLbBFasxcFvVeB6IJGWPGS4k5WH1mnZWWRcFyCE5UebSHyP4ZLD/Cey
-         BzUTmJwKXA+ryQ6sRG6+CkzfbkHhzZqc9rWlttDBbaLiPQjcWdssXdTpYfpZXWS1NU
-         W3WUN2ain7MPOKiaJizctLkksg+NSEzBf5nOx7hY=
+        b=SSU/UJGevW1+gbDv6OHDeE5W9JzK/SjLGWeWyy0uCvSACktTHTcU0CEEEicyor6QJ
+         6O6YlzTSvFOKM1tY8Ll4StEdYW5V87ZQGi7BwrYysw+w1G5aEkEvQf8IiAjQZqoHOE
+         GbkM9hkynJoPb997CvT1R+u1ysSLvVCmH8T1sBGI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 028/113] usb: gadget: udc: fix possible sleep-in-atomic-context bugs in gr_probe()
-Date:   Thu, 27 Feb 2020 14:35:44 +0100
-Message-Id: <20200227132216.185638990@linuxfoundation.org>
+Subject: [PATCH 4.4 024/113] media: sti: bdisp: fix a possible sleep-in-atomic-context bug in bdisp_device_run()
+Date:   Thu, 27 Feb 2020 14:35:40 +0100
+Message-Id: <20200227132215.550154867@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
 References: <20200227132211.791484803@linuxfoundation.org>
@@ -62,106 +64,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 9c1ed62ae0690dfe5d5e31d8f70e70a95cb48e52 ]
+[ Upstream commit bb6d42061a05d71dd73f620582d9e09c8fbf7f5b ]
 
 The driver may sleep while holding a spinlock.
 The function call path (from bottom to top) in Linux 4.19 is:
 
-drivers/usb/gadget/udc/core.c, 1175:
-	kzalloc(GFP_KERNEL) in usb_add_gadget_udc_release
-drivers/usb/gadget/udc/core.c, 1272:
-	usb_add_gadget_udc_release in usb_add_gadget_udc
-drivers/usb/gadget/udc/gr_udc.c, 2186:
-	usb_add_gadget_udc in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2183:
-	spin_lock in gr_probe
+drivers/media/platform/sti/bdisp/bdisp-hw.c, 385:
+    msleep in bdisp_hw_reset
+drivers/media/platform/sti/bdisp/bdisp-v4l2.c, 341:
+    bdisp_hw_reset in bdisp_device_run
+drivers/media/platform/sti/bdisp/bdisp-v4l2.c, 317:
+    _raw_spin_lock_irqsave in bdisp_device_run
 
-drivers/usb/gadget/udc/core.c, 1195:
-	mutex_lock in usb_add_gadget_udc_release
-drivers/usb/gadget/udc/core.c, 1272:
-	usb_add_gadget_udc_release in usb_add_gadget_udc
-drivers/usb/gadget/udc/gr_udc.c, 2186:
-	usb_add_gadget_udc in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2183:
-	spin_lock in gr_probe
+To fix this bug, msleep() is replaced with udelay().
 
-drivers/usb/gadget/udc/gr_udc.c, 212:
-	debugfs_create_file in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2197:
-	gr_dfs_create in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2183:
-    spin_lock in gr_probe
-
-drivers/usb/gadget/udc/gr_udc.c, 2114:
-	devm_request_threaded_irq in gr_request_irq
-drivers/usb/gadget/udc/gr_udc.c, 2202:
-	gr_request_irq in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2183:
-    spin_lock in gr_probe
-
-kzalloc(GFP_KERNEL), mutex_lock(), debugfs_create_file() and
-devm_request_threaded_irq() can sleep at runtime.
-
-To fix these possible bugs, usb_add_gadget_udc(), gr_dfs_create() and
-gr_request_irq() are called without handling the spinlock.
-
-These bugs are found by a static analysis tool STCheck written by myself.
+This bug is found by a static analysis tool STCheck written by myself.
 
 Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Fabien Dessenne <fabien.dessenne@st.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/gr_udc.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ drivers/media/platform/sti/bdisp/bdisp-hw.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/gr_udc.c b/drivers/usb/gadget/udc/gr_udc.c
-index b9429bc425116..594639e5cbf82 100644
---- a/drivers/usb/gadget/udc/gr_udc.c
-+++ b/drivers/usb/gadget/udc/gr_udc.c
-@@ -2201,8 +2201,6 @@ static int gr_probe(struct platform_device *pdev)
- 		return -ENOMEM;
+diff --git a/drivers/media/platform/sti/bdisp/bdisp-hw.c b/drivers/media/platform/sti/bdisp/bdisp-hw.c
+index 052c932ac9426..0792db43ce9db 100644
+--- a/drivers/media/platform/sti/bdisp/bdisp-hw.c
++++ b/drivers/media/platform/sti/bdisp/bdisp-hw.c
+@@ -14,8 +14,8 @@
+ #define MAX_SRC_WIDTH           2048
+ 
+ /* Reset & boot poll config */
+-#define POLL_RST_MAX            50
+-#define POLL_RST_DELAY_MS       20
++#define POLL_RST_MAX            500
++#define POLL_RST_DELAY_MS       2
+ 
+ enum bdisp_target_plan {
+ 	BDISP_RGB,
+@@ -77,7 +77,7 @@ int bdisp_hw_reset(struct bdisp_dev *bdisp)
+ 	for (i = 0; i < POLL_RST_MAX; i++) {
+ 		if (readl(bdisp->regs + BLT_STA1) & BLT_STA1_IDLE)
+ 			break;
+-		msleep(POLL_RST_DELAY_MS);
++		udelay(POLL_RST_DELAY_MS * 1000);
  	}
- 
--	spin_lock(&dev->lock);
--
- 	/* Inside lock so that no gadget can use this udc until probe is done */
- 	retval = usb_add_gadget_udc(dev->dev, &dev->gadget);
- 	if (retval) {
-@@ -2211,15 +2209,21 @@ static int gr_probe(struct platform_device *pdev)
- 	}
- 	dev->added = 1;
- 
-+	spin_lock(&dev->lock);
-+
- 	retval = gr_udc_init(dev);
--	if (retval)
-+	if (retval) {
-+		spin_unlock(&dev->lock);
- 		goto out;
--
--	gr_dfs_create(dev);
-+	}
- 
- 	/* Clear all interrupt enables that might be left on since last boot */
- 	gr_disable_interrupts_and_pullup(dev);
- 
-+	spin_unlock(&dev->lock);
-+
-+	gr_dfs_create(dev);
-+
- 	retval = gr_request_irq(dev, dev->irq);
- 	if (retval) {
- 		dev_err(dev->dev, "Failed to request irq %d\n", dev->irq);
-@@ -2248,8 +2252,6 @@ static int gr_probe(struct platform_device *pdev)
- 		dev_info(dev->dev, "regs: %p, irq %d\n", dev->regs, dev->irq);
- 
- out:
--	spin_unlock(&dev->lock);
--
- 	if (retval)
- 		gr_remove(pdev);
- 
+ 	if (i == POLL_RST_MAX)
+ 		dev_err(bdisp->dev, "Reset timeout\n");
 -- 
 2.20.1
 
