@@ -2,173 +2,100 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B82AC4BA36
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 01:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B387C4BA36
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 01:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0259924672
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 01:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69F5920656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 01:13:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OwB6BiAV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CxH5jm1i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbgB0BL0 (ORCPT
+        id S1728143AbgB0BN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 20:11:26 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45619 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727964AbgB0BLZ (ORCPT
+        Wed, 26 Feb 2020 20:13:28 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41196 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727964AbgB0BN1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 20:11:25 -0500
-Received: by mail-wr1-f67.google.com with SMTP id v2so1192001wrp.12;
-        Wed, 26 Feb 2020 17:11:24 -0800 (PST)
+        Wed, 26 Feb 2020 20:13:27 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b1so529065pgm.8;
+        Wed, 26 Feb 2020 17:13:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=FzgdFgLuQOadevD6Aw1QpIMN0fIJzcJjXFyaCoLmJcc=;
-        b=OwB6BiAV2GdBT/WXCl4520WnbcAdznT14AVzOwbft5bVXiD7WWetXJUAEWEpSzse6y
-         X6ns9VsNgSnZQuuA1ac1GzDERwbHs9FN2us/wWS1OJimCPj3uASNczRzvgdsvCBZXy0l
-         1M3BNyNP4SHe877nC17i8RY2sIiaAzvZvTN8jS92hGkAf55y6Z5DXxnnmLbdwhM0ABj3
-         AJyWJEcc3i9rZ/0Zpj3FnfDQuEHZ/wtJUK8ob1/kv9Tad2FCkYsuf87q3AGvns8FnMmO
-         G+ZUTYpFAtRX+EKdQkj7LpzvIZtxnh1k52Q+XCkwDXqMcr7CfVmDdFV5Lw/g0PPd2hIL
-         hGAA==
+        h=from:to:cc:subject:date:message-id;
+        bh=u2M++l49HgIMiqJVF8NUayCcC+Sf9SQePoMMems1GMY=;
+        b=CxH5jm1il+eeCUkqjYwYIz2yiYisGSErXnIp2ysM1FUw/ejlghO+4dkknTPLEL9WkB
+         BQmZ/uZok14YK08M+Z17Z8DEkACkreZQBWFXHjisINOXsbT9lU92vob2VeJy3491VBrR
+         vzp4R+i5makwrC8tpgX9bj+Oj0NkT7q862W3jUumg4ZK5RIpQmZenN2u6IpV23BtbEYr
+         Mx9G+b1l0OnrJdU/4v0eC+g6a8oe2mZiGTRIzQrEGzhZgIiBP3lU46D4RG2GkWia6Ahl
+         XFVX1tLyfMHpNkZaPIa7KgXb5gk3di3ueQmzHFxfKG4bpU1fcbaPPBYjRKp0pufJngyA
+         AhEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FzgdFgLuQOadevD6Aw1QpIMN0fIJzcJjXFyaCoLmJcc=;
-        b=toUAuxvQ+9WUSPqkgjDd0uVaFLQN2ogi6+brfzHKnLkHlaHgC0soy94tB4lMZwJvVO
-         +eJVid182++4QJEXXDd+16F4BLf6yXyo5fBJB3R2ywZpru1ViVPC03YbS6SZBje7gzgJ
-         5pILmvZRxsKZcO+Y0DPCmu9X/3fF+D4/dE+4vK0FySe/sLgJLWRSax8x/jbB4zuBBPm1
-         TuOmwX3HttS1HYeqR60XCLIoRU1EKlrioLedGevGsUy8hWs7r0+faduKjSNTKJT2RbIF
-         61Vzhlf9lfl+1y17JS0izquKBD9tNDRBfmBAbD/mnHkLbyNiiRZP8aQZyUKoVqPdmnMx
-         gyCg==
-X-Gm-Message-State: APjAAAWo+rhubucLpWvBgOlOcCmxvmx9//+PktFmcIEljw0d4DaKCEVv
-        yWS5hGN6nRm85DxS4EvD+WQ=
-X-Google-Smtp-Source: APXvYqyeQIE+iTbx5WBdhTGlmrBrs5dtfiRn1XLOI3uo8Lm7ZyvsDRugxbZelBkngIvvIuA16qQS8w==
-X-Received: by 2002:a5d:504e:: with SMTP id h14mr1459288wrt.82.1582765883170;
-        Wed, 26 Feb 2020 17:11:23 -0800 (PST)
-Received: from Ansuel-XPS.localdomain (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
-        by smtp.googlemail.com with ESMTPSA id s5sm3509507wru.39.2020.02.26.17.11.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 17:11:22 -0800 (PST)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v8 2/2] dt-bindings: net: Add ipq806x mdio bindings
-Date:   Thu, 27 Feb 2020 02:10:46 +0100
-Message-Id: <20200227011050.11106-2-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200227011050.11106-1-ansuelsmth@gmail.com>
-References: <andrew@lunn.ch>
- <20200227011050.11106-1-ansuelsmth@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=u2M++l49HgIMiqJVF8NUayCcC+Sf9SQePoMMems1GMY=;
+        b=aMPJalcRxSjAXnh0pDX3cCYUWxtwNNZvFKXLC9HlK+v9NOufLeh8F2yceUlTKIW4aD
+         Y4HKFb9klkFcQHi2BJDfNY3vyZp9/RLZuXzbOwDCNMlZXsVFLiIRfl2hoZarKOGJIopw
+         IafLIZGYsxvR4Rmf64MwLenmc/vScssDDNDlGuNXWw6CF2lpGlJVY14kohjRjsOTetU/
+         /w8eEkrgxNOctM7Z+KRQisx5b1arHcMxhltZsJqA/oFIW2JXdT7O2HqBItkQw13ms96B
+         vvPFTbjdqykrJyPYHXy4PdD+CZDm752aun6Fc8JB4tyBZUMV5rFcGUiYQGku/lsR055u
+         mQsA==
+X-Gm-Message-State: APjAAAUMKVqH6p/EmDYqcntCbjJTKiI2M4W/HjTLx9xiDV59SoLei9AD
+        BjptGMoGVDNdqkAdK9ptM+aih8XN
+X-Google-Smtp-Source: APXvYqzVqtX+nrjsXxh4yeEc4O+gxGyKzO183tzA01QYe/NlK0K74jXt+xT9AAEQm0bzDT3inDeyFw==
+X-Received: by 2002:a63:4e22:: with SMTP id c34mr1577315pgb.263.1582766006753;
+        Wed, 26 Feb 2020 17:13:26 -0800 (PST)
+Received: from localhost.localdomain (39-11-132-38.adsl.fetnet.net. [39.11.132.38])
+        by smtp.gmail.com with ESMTPSA id w25sm4297136pfi.106.2020.02.26.17.13.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 26 Feb 2020 17:13:26 -0800 (PST)
+From:   Johnny Chuang <johnny.chuang.emc@gmail.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Peter Hutterer <peter.hutterer@who-t.net>,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Jennifer Tsai <jennifer.tsai@emc.com.tw>
+Cc:     James Chen <james.chen@emc.com.tw>,
+        Paul Liang <paul.liang@emc.com.tw>,
+        Jeff Chuang <jeff.chuang@emc.com.tw>
+Subject: [PATCH] Input: elants_i2c - Report resolution information for touch major
+Date:   Thu, 27 Feb 2020 09:13:20 +0800
+Message-Id: <1582766000-23023-1-git-send-email-johnny.chuang.emc@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentations for ipq806x mdio driver.
+From: Johnny Chuang <johnny.chuang@emc.com.tw>
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+This patch supports reporting resolution for ABS_MT_TOUCH_MAJOR event.
+This information is needed in showing pressure/width radius.
+
+Signed-off-by: Johnny Chuang <johnny.chuang@emc.com.tw>
 ---
-Changes in v8:
-- Fix error in dtb check
-- Remove not needed reset definition from example
-- Add include header for ipq806x clocks
-- Fix wrong License type
+ drivers/input/touchscreen/elants_i2c.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Changes in v7:
-- Fix dt_binding_check problem
-
- .../bindings/net/qcom,ipq8064-mdio.yaml       | 61 +++++++++++++++++++
- 1 file changed, 61 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
-
-diff --git a/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml b/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
-new file mode 100644
-index 000000000000..4334a415f23c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
-@@ -0,0 +1,61 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/qcom,ipq8064-mdio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm ipq806x MDIO bus controller
-+
-+maintainers:
-+  - Ansuel Smith <ansuelsmth@gmail.com>
-+
-+description:
-+  The ipq806x soc have a MDIO dedicated controller that is
-+  used to comunicate with the gmac phy conntected.
-+  Child nodes of this MDIO bus controller node are standard
-+  Ethernet PHY device nodes as described in
-+  Documentation/devicetree/bindings/net/phy.txt
-+
-+allOf:
-+  - $ref: "mdio.yaml#"
-+
-+properties:
-+  compatible:
-+    items:
-+        - const: qcom,ipq8064-mdio
-+        - const: syscon
-+
-+  reg:
-+    description: address and length of the register set for the device
-+
-+  clocks:
-+    description: A reference to the clock supplying the MDIO bus controller
-+
-+  clock-names:
-+    const: master
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - "#address-cells"
-+  - "#size-cells"
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
-+
-+    mdio0: mdio@37000000 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        compatible = "qcom,ipq8064-mdio", "syscon";
-+        reg = <0x37000000 0x200000>;
-+
-+        clocks = <&gcc GMAC_CORE1_CLK>;
-+
-+        switch@10 {
-+            compatible = "qca,qca8337";
-+            /* ... */
-+        };
-+    };
+diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
+index 4911799..14c577c 100644
+--- a/drivers/input/touchscreen/elants_i2c.c
++++ b/drivers/input/touchscreen/elants_i2c.c
+@@ -1309,6 +1309,7 @@ static int elants_i2c_probe(struct i2c_client *client,
+ 	input_set_abs_params(ts->input, ABS_MT_PRESSURE, 0, 255, 0, 0);
+ 	input_abs_set_res(ts->input, ABS_MT_POSITION_X, ts->x_res);
+ 	input_abs_set_res(ts->input, ABS_MT_POSITION_Y, ts->y_res);
++	input_abs_set_res(ts->input, ABS_MT_TOUCH_MAJOR, 1);
+ 
+ 	error = input_register_device(ts->input);
+ 	if (error) {
 -- 
-2.25.0
+2.7.4
 
