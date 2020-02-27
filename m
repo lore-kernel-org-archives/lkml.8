@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 305BCC3F36D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91782C54FF9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05EDF24691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55F5E24691
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:12:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812809;
-	bh=vWzft6iXMgkRnXYQuvyI6///l4U8QipwJKJjcyBU2gg=;
+	s=default; t=1582812767;
+	bh=7QqwOjNJtbd9xkAn4TsVI4GpOYlFQLC1fz7u+pjqbpg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eaUC5/7wpnp08RfawbGOUcy6OPGHcDyQgQxxsxy/0SMmILqIUGudjp9FQtXK/Zi9r
-	 Ebh6KwR7Pn6CH00UA2P3P1CJ5TQHHZHPZlDSHY3oHYSXlKe00GdiXHjGrLrm/dT8OV
-	 LighISt7sQGBvw+kBLuBw2M9PEb1UtjzngxQkFJc=
+	b=Mt7b5fAh2OeWADrD8R7l9Zv4KrZchwH6dYGnx7HtqWjIODqVX9vvEwXMQXl51Z72z
+	 NuXE4Iib3P6+98bVnkqO4moc4rUeIzkJbz8Rcrvw2+INgHBkbk2eIx1oiTtE6ntX2R
+	 0RYJKv53OLqpoQiMum6prOLFyH9aSG70SEigZU1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388966AbgB0ON1 (ORCPT
+        id S2388898AbgB0OMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:13:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52250 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:12:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388963AbgB0ONW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:13:22 -0500
+        id S2388892AbgB0OMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:12:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E680620801;
-        Thu, 27 Feb 2020 14:13:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7EF620578;
+        Thu, 27 Feb 2020 14:12:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812801;
-        bh=vWzft6iXMgkRnXYQuvyI6///l4U8QipwJKJjcyBU2gg=;
+        s=default; t=1582812762;
+        bh=7QqwOjNJtbd9xkAn4TsVI4GpOYlFQLC1fz7u+pjqbpg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R+dDjgK7EirOdW3EM7uPXUQ/MKX9w4yj9SnNl8dGNVv2DIxLCMGhVT1CDngBC6bew
-         GuKQkzrAeDs8qdCGRmuFuCdDA95Na8jR3LB5GU6WLknsShDKa80lNJzKUS8X3DAI46
-         YfBimYbWVJohSphvjPJ7OLdQ/8zj7QJW7NsxBK18=
+        b=ZnOSBXZP0foTSTDbbFFFM/a0wxiGucrbO/CdvOXL+N+b+cUEuvg1esYfnGT1Ijmxg
+         C7NVfJsIcn1q6XmNKisGnaCR4EI6CgF13E5IicgOOYuF0IEa8sfNRh6tsR7osMHQeC
+         7+VgEqilSwGF8aNorMSd95/JzdNoNy5WR/7K6szs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerry Snitselaar <jsnitsel@redhat.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 5.5 003/150] iommu/vt-d: Move deferred device attachment into helper function
-Date:   Thu, 27 Feb 2020 14:35:40 +0100
-Message-Id: <20200227132233.267931001@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH 5.4 111/135] staging: rtl8723bs: fix copy of overlapping memory
+Date:   Thu, 27 Feb 2020 14:37:31 +0100
+Message-Id: <20200227132245.885884356@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
-References: <20200227132232.815448360@linuxfoundation.org>
+In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
+References: <20200227132228.710492098@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,54 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit 034d98cc0cdcde2415c6f598fa9125e3eaa02569 upstream.
+commit 8ae9a588ca35eb9c32dc03299c5e1f4a1e9a9617 upstream.
 
-Move the code that does the deferred device attachment into a separate
-helper function.
+Currently the rtw_sprintf prints the contents of thread_name
+onto thread_name and this can lead to a potential copy of a
+string over itself. Avoid this by printing the literal string RTWHALXT
+instread of the contents of thread_name.
 
-Fixes: 1ee0186b9a12 ("iommu/vt-d: Refactor find_domain() helper")
-Cc: stable@vger.kernel.org # v5.5
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Addresses-Coverity: ("copy of overlapping memory")
+Fixes: 554c0a3abf21 ("staging: Add rtl8723bs sdio wifi driver")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20200126220549.9849-1-colin.king@canonical.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/intel-iommu.c |   20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -2440,16 +2440,20 @@ static struct dmar_domain *find_domain(s
- 	return NULL;
- }
+--- a/drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c
++++ b/drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c
+@@ -476,14 +476,13 @@ int rtl8723bs_xmit_thread(void *context)
+ 	s32 ret;
+ 	struct adapter *padapter;
+ 	struct xmit_priv *pxmitpriv;
+-	u8 thread_name[20] = "RTWHALXT";
+-
++	u8 thread_name[20];
  
--static struct dmar_domain *deferred_attach_domain(struct device *dev)
-+static void do_deferred_attach(struct device *dev)
- {
--	if (unlikely(attach_deferred(dev))) {
--		struct iommu_domain *domain;
-+	struct iommu_domain *domain;
-+
-+	dev->archdata.iommu = NULL;
-+	domain = iommu_get_domain_for_dev(dev);
-+	if (domain)
-+		intel_iommu_attach_device(domain, dev);
-+}
+ 	ret = _SUCCESS;
+ 	padapter = context;
+ 	pxmitpriv = &padapter->xmitpriv;
  
--		dev->archdata.iommu = NULL;
--		domain = iommu_get_domain_for_dev(dev);
--		if (domain)
--			intel_iommu_attach_device(domain, dev);
--	}
-+static struct dmar_domain *deferred_attach_domain(struct device *dev)
-+{
-+	if (unlikely(attach_deferred(dev)))
-+		do_deferred_attach(dev);
+-	rtw_sprintf(thread_name, 20, "%s-"ADPT_FMT, thread_name, ADPT_ARG(padapter));
++	rtw_sprintf(thread_name, 20, "RTWHALXT-" ADPT_FMT, ADPT_ARG(padapter));
+ 	thread_enter(thread_name);
  
- 	return find_domain(dev);
- }
+ 	DBG_871X("start "FUNC_ADPT_FMT"\n", FUNC_ADPT_ARG(padapter));
 
 
