@@ -2,52 +2,52 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CFDBC52D2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50477C52D36
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41A2520578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:00:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D0EC2084E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:00:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812006;
-	bh=FKtU32cyw/UdGrE2fGzl7hamaEFms3FrtdtOUA6DtKo=;
+	s=default; t=1582812053;
+	bh=NtWsg5WK7mx+W8fFPsrVUDYPhd4aBxrwTVv3Tc1Vd/Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H9SBMoHfJOe20Q6f4Y/aQXcDujlpiLjLwQnlF8dr7/8lT5F/utmp/0Ofoly/+klz1
-	 56qKOT6fPLsVKUY/l+YxBFBkL5/K9QGQznfTXap1kG4ur3gf8y972LkItPrJaJPbup
-	 sQclQvSUntF2dP5XFY/ww8J/uwWlLh3NhiAG3PBM=
+	b=d55Ml6MCQpvRp8U77yIuXhs8ChNJv9MoovbtYSiEK0ByXh59xBrdk4UhPdK6OT44P
+	 yt9GvbN/2oGU3bk8Xt8QdGHgjgLpbTp8qlxpeEXXFHrnWNAPWXHs+44vfPLek/dmkY
+	 iSACoF5F0LWuI/p7qnJxfz/QwIq0PdYLY8D3PE/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732681AbgB0OAE (ORCPT
+        id S1732645AbgB0OAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:00:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33318 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:00:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732676AbgB0OAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:00:01 -0500
+        id S1732498AbgB0OAp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:00:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E454C2073D;
-        Thu, 27 Feb 2020 13:59:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22A8220578;
+        Thu, 27 Feb 2020 14:00:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812000;
-        bh=FKtU32cyw/UdGrE2fGzl7hamaEFms3FrtdtOUA6DtKo=;
+        s=default; t=1582812044;
+        bh=NtWsg5WK7mx+W8fFPsrVUDYPhd4aBxrwTVv3Tc1Vd/Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xdP4J7dKd2HjF1Lix3ukNpl25IH20L96nFh3W/LXuaI2IQNImQQdhcLFJkIn4vKF9
-         203pBoC9bdiL4QajLJKAwVdbgqaC9UBG1d6SrD8FWlrUKF+og6e6Kr6UlTJpgIn87P
-         M0wATH469YSZCF3J9Mpledmk+aztHAXRev3lPGi8=
+        b=pMoqF7Hah205DLXpWx35ORb3jDbwhF4lVIBVEu7gpjgcaw1/JbVmh5w9tfJlkppWi
+         Q7jZTA7NhlPTyBGwy0oTI15GQ32HRtAGHo/vuIW6CNKXzXFcJwNwEbOQNFPE1kDVLa
+         vcaueJ8DRqLFdBqaqTz3Dk+v4BsK0AYQ5tkEpWzE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Chen <peter.chen@nxp.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH 4.14 182/237] usb: host: xhci: update event ring dequeue pointer on purpose
-Date:   Thu, 27 Feb 2020 14:36:36 +0100
-Message-Id: <20200227132309.751311272@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 152/237] ftrace: fpid_next() should increase position index
+Date:   Thu, 27 Feb 2020 14:36:06 +0100
+Message-Id: <20200227132307.757197690@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -60,116 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Chen <peter.chen@nxp.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-commit dc0ffbea5729a3abafa577ebfce87f18b79e294b upstream.
+[ Upstream commit e4075e8bdffd93a9b6d6e1d52fabedceeca5a91b ]
 
-On some situations, the software handles TRB events slower
-than adding TRBs, then xhci_handle_event can't return zero
-long time, the xHC will consider the event ring is full,
-and trigger "Event Ring Full" error, but in fact, the software
-has already finished lots of events, just no chance to
-update ERDP (event ring dequeue pointer).
+if seq_file .next fuction does not change position index,
+read after some lseek can generate unexpected output.
 
-In this commit, we force update ERDP if half of TRBS_PER_SEGMENT
-events have handled to avoid "Event Ring Full" error.
+Without patch:
+ # dd bs=4 skip=1 if=/sys/kernel/tracing/set_ftrace_pid
+ dd: /sys/kernel/tracing/set_ftrace_pid: cannot skip to specified offset
+ id
+ no pid
+ 2+1 records in
+ 2+1 records out
+ 10 bytes copied, 0.000213285 s, 46.9 kB/s
 
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/1573836603-10871-2-git-send-email-mathias.nyman@linux.intel.com
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Notice the "id" followed by "no pid".
 
+With the patch:
+ # dd bs=4 skip=1 if=/sys/kernel/tracing/set_ftrace_pid
+ dd: /sys/kernel/tracing/set_ftrace_pid: cannot skip to specified offset
+ id
+ 0+1 records in
+ 0+1 records out
+ 3 bytes copied, 0.000202112 s, 14.8 kB/s
+
+Notice that it only prints "id" and not the "no pid" afterward.
+
+Link: http://lkml.kernel.org/r/4f87c6ad-f114-30bb-8506-c32274ce2992@virtuozzo.com
+
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci-ring.c |   60 ++++++++++++++++++++++++++++++-------------
- 1 file changed, 43 insertions(+), 17 deletions(-)
+ kernel/trace/ftrace.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -2759,6 +2759,42 @@ static int xhci_handle_event(struct xhci
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 8974ecbcca3cb..8a8d92a8045b1 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -6317,9 +6317,10 @@ static void *fpid_next(struct seq_file *m, void *v, loff_t *pos)
+ 	struct trace_array *tr = m->private;
+ 	struct trace_pid_list *pid_list = rcu_dereference_sched(tr->function_pids);
+ 
+-	if (v == FTRACE_NO_PIDS)
++	if (v == FTRACE_NO_PIDS) {
++		(*pos)++;
+ 		return NULL;
+-
++	}
+ 	return trace_pid_next(pid_list, v, pos);
  }
  
- /*
-+ * Update Event Ring Dequeue Pointer:
-+ * - When all events have finished
-+ * - To avoid "Event Ring Full Error" condition
-+ */
-+static void xhci_update_erst_dequeue(struct xhci_hcd *xhci,
-+		union xhci_trb *event_ring_deq)
-+{
-+	u64 temp_64;
-+	dma_addr_t deq;
-+
-+	temp_64 = xhci_read_64(xhci, &xhci->ir_set->erst_dequeue);
-+	/* If necessary, update the HW's version of the event ring deq ptr. */
-+	if (event_ring_deq != xhci->event_ring->dequeue) {
-+		deq = xhci_trb_virt_to_dma(xhci->event_ring->deq_seg,
-+				xhci->event_ring->dequeue);
-+		if (deq == 0)
-+			xhci_warn(xhci, "WARN something wrong with SW event ring dequeue ptr\n");
-+		/*
-+		 * Per 4.9.4, Software writes to the ERDP register shall
-+		 * always advance the Event Ring Dequeue Pointer value.
-+		 */
-+		if ((temp_64 & (u64) ~ERST_PTR_MASK) ==
-+				((u64) deq & (u64) ~ERST_PTR_MASK))
-+			return;
-+
-+		/* Update HC event ring dequeue pointer */
-+		temp_64 &= ERST_PTR_MASK;
-+		temp_64 |= ((u64) deq & (u64) ~ERST_PTR_MASK);
-+	}
-+
-+	/* Clear the event handler busy flag (RW1C) */
-+	temp_64 |= ERST_EHB;
-+	xhci_write_64(xhci, temp_64, &xhci->ir_set->erst_dequeue);
-+}
-+
-+/*
-  * xHCI spec says we can get an interrupt, and if the HC has an error condition,
-  * we might get bad data out of the event ring.  Section 4.10.2.7 has a list of
-  * indicators of an event TRB error, but we check the status *first* to be safe.
-@@ -2769,9 +2805,9 @@ irqreturn_t xhci_irq(struct usb_hcd *hcd
- 	union xhci_trb *event_ring_deq;
- 	irqreturn_t ret = IRQ_NONE;
- 	unsigned long flags;
--	dma_addr_t deq;
- 	u64 temp_64;
- 	u32 status;
-+	int event_loop = 0;
- 
- 	spin_lock_irqsave(&xhci->lock, flags);
- 	/* Check if the xHC generated the interrupt, or the irq is shared */
-@@ -2825,24 +2861,14 @@ irqreturn_t xhci_irq(struct usb_hcd *hcd
- 	/* FIXME this should be a delayed service routine
- 	 * that clears the EHB.
- 	 */
--	while (xhci_handle_event(xhci) > 0) {}
--
--	temp_64 = xhci_read_64(xhci, &xhci->ir_set->erst_dequeue);
--	/* If necessary, update the HW's version of the event ring deq ptr. */
--	if (event_ring_deq != xhci->event_ring->dequeue) {
--		deq = xhci_trb_virt_to_dma(xhci->event_ring->deq_seg,
--				xhci->event_ring->dequeue);
--		if (deq == 0)
--			xhci_warn(xhci, "WARN something wrong with SW event "
--					"ring dequeue ptr.\n");
--		/* Update HC event ring dequeue pointer */
--		temp_64 &= ERST_PTR_MASK;
--		temp_64 |= ((u64) deq & (u64) ~ERST_PTR_MASK);
-+	while (xhci_handle_event(xhci) > 0) {
-+		if (event_loop++ < TRBS_PER_SEGMENT / 2)
-+			continue;
-+		xhci_update_erst_dequeue(xhci, event_ring_deq);
-+		event_loop = 0;
- 	}
- 
--	/* Clear the event handler busy flag (RW1C); event ring is empty. */
--	temp_64 |= ERST_EHB;
--	xhci_write_64(xhci, temp_64, &xhci->ir_set->erst_dequeue);
-+	xhci_update_erst_dequeue(xhci, event_ring_deq);
- 	ret = IRQ_HANDLED;
- 
- out:
+-- 
+2.20.1
+
 
 
