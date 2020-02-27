@@ -2,157 +2,146 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D36C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60704C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2213B24699
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 317E724699
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:10:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="RyWYqttg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729124AbgB0NJH (ORCPT
+        id S1729136AbgB0NKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:09:07 -0500
-Received: from mga02.intel.com ([134.134.136.20]:45400 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729037AbgB0NJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:09:06 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 05:09:05 -0800
-X-IronPort-AV: E=Sophos;i="5.70,492,1574150400"; 
-   d="scan'208";a="227136570"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 05:09:01 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Wambui Karuga <wambui.karugax@gmail.com>, daniel@ffwll.ch,
-        airlied@linux.ie,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
-Subject: Re: [PATCH 16/21] drm/i915: make *_debugfs_register() functions return void.
-In-Reply-To: <20200227120232.19413-17-wambui.karugax@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20200227120232.19413-1-wambui.karugax@gmail.com> <20200227120232.19413-17-wambui.karugax@gmail.com>
-Date:   Thu, 27 Feb 2020 15:08:58 +0200
-Message-ID: <87zhd4qis5.fsf@intel.com>
+        Thu, 27 Feb 2020 08:10:18 -0500
+Received: from gateway23.websitewelcome.com ([192.185.50.108]:33515 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729088AbgB0NKR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:10:17 -0500
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id 68AF78D65
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 07:10:16 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 7IvgjMAKbEfyq7IvgjRlGU; Thu, 27 Feb 2020 07:10:16 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=qzDnfPXQnwdKlHtoPz0jeIpy5o9H6yWTrMabKluFuZg=; b=RyWYqttgdcI7GrTHQ98ocNUFIL
+        G8sByhHkV+6Bx16Q8Q+Mnnnkkfy4gC0h4yS8vMWLrhHfpZ5QfyradEaQlQvF7NG5orD2PcbTlDefY
+        QjPyzb8zIFv0h3GKVYOq94Ru6eGzgpFGLyMDICkiWvXOm/6fz2ZZkfhrsYrnWaVMAQpR3dw+EfcoK
+        7QVD2EFoyNrY6dJvqgz6AiU6lCTWPbxqnjUumVicoGykBCuSKlpO07zvpWbFo6iXP92ojV2XilHBu
+        6PA9dK0CD/5QpQ5XT8QGpsdU1UiUAKkxsgfYVejIbdSl+bvJwwAsaOHCL80aqz8L0KLFVyXkv3byu
+        nMw565cA==;
+Received: from [201.162.161.188] (port=40506 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j7Ive-000s4k-OE; Thu, 27 Feb 2020 07:10:15 -0600
+Date:   Thu, 27 Feb 2020 07:13:07 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Vitor Soares <vitor.soares@synopsys.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        =?utf-8?Q?Przemys=C5=82aw?= Gaj <pgaj@cadence.com>
+Cc:     linux-i3c@lists.infradead.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] i3c: master: Replace zero-length array with flexible-array
+ member
+Message-ID: <20200227131307.GA24935@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.161.188
+X-Source-L: No
+X-Exim-ID: 1j7Ive-000s4k-OE
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.162.161.188]:40506
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Feb 2020, Wambui Karuga <wambui.karugax@gmail.com> wrote:
-> Since 987d65d01356 (drm: debugfs: make
-> drm_debugfs_create_files() never fail), drm_debugfs_create_files() never
-> fails and should return void. Therefore, remove its use as the
-> return value of i915_debugfs_register() and
-> intel_display_debugfs_register() and have both functions return void.
->
-> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
-> ---
->  drivers/gpu/drm/i915/display/intel_display_debugfs.c | 8 ++++----
->  drivers/gpu/drm/i915/display/intel_display_debugfs.h | 4 ++--
->  drivers/gpu/drm/i915/i915_debugfs.c                  | 8 ++++----
->  drivers/gpu/drm/i915/i915_debugfs.h                  | 4 ++--
->  4 files changed, 12 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/gpu/drm/i915/display/intel_display_debugfs.c b/drivers/gpu/drm/i915/display/intel_display_debugfs.c
-> index 46954cc7b6c0..3b877c34c420 100644
-> --- a/drivers/gpu/drm/i915/display/intel_display_debugfs.c
-> +++ b/drivers/gpu/drm/i915/display/intel_display_debugfs.c
-> @@ -1922,7 +1922,7 @@ static const struct {
->  	{"i915_edp_psr_debug", &i915_edp_psr_debug_fops},
->  };
->  
-> -int intel_display_debugfs_register(struct drm_i915_private *i915)
-> +void intel_display_debugfs_register(struct drm_i915_private *i915)
->  {
->  	struct drm_minor *minor = i915->drm.primary;
->  	int i;
-> @@ -1935,9 +1935,9 @@ int intel_display_debugfs_register(struct drm_i915_private *i915)
->  				    intel_display_debugfs_files[i].fops);
->  	}
->  
-> -	return drm_debugfs_create_files(intel_display_debugfs_list,
-> -					ARRAY_SIZE(intel_display_debugfs_list),
-> -					minor->debugfs_root, minor);
-> +	drm_debugfs_create_files(intel_display_debugfs_list,
-> +				 ARRAY_SIZE(intel_display_debugfs_list),
-> +				 minor->debugfs_root, minor);
->  }
->  
->  static int i915_panel_show(struct seq_file *m, void *data)
-> diff --git a/drivers/gpu/drm/i915/display/intel_display_debugfs.h b/drivers/gpu/drm/i915/display/intel_display_debugfs.h
-> index a3bea1ce04c2..a5cf7a6d3d34 100644
-> --- a/drivers/gpu/drm/i915/display/intel_display_debugfs.h
-> +++ b/drivers/gpu/drm/i915/display/intel_display_debugfs.h
-> @@ -10,10 +10,10 @@ struct drm_connector;
->  struct drm_i915_private;
->  
->  #ifdef CONFIG_DEBUG_FS
-> -int intel_display_debugfs_register(struct drm_i915_private *i915);
-> +void intel_display_debugfs_register(struct drm_i915_private *i915);
->  int intel_connector_debugfs_add(struct drm_connector *connector);
->  #else
-> -static inline int intel_display_debugfs_register(struct drm_i915_private *i915) { return 0; }
-> +static inline int intel_display_debugfs_register(struct drm_i915_private *i915) {}
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-You don't actually change the return type.
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-Otherwise, LGTM.
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-BR,
-Jani.
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
->  static inline int intel_connector_debugfs_add(struct drm_connector *connector) { return 0; }
->  #endif
->  
-> diff --git a/drivers/gpu/drm/i915/i915_debugfs.c b/drivers/gpu/drm/i915/i915_debugfs.c
-> index 8f2525e4ce0f..de313199c714 100644
-> --- a/drivers/gpu/drm/i915/i915_debugfs.c
-> +++ b/drivers/gpu/drm/i915/i915_debugfs.c
-> @@ -2392,7 +2392,7 @@ static const struct i915_debugfs_files {
->  	{"i915_guc_log_relay", &i915_guc_log_relay_fops},
->  };
->  
-> -int i915_debugfs_register(struct drm_i915_private *dev_priv)
-> +void i915_debugfs_register(struct drm_i915_private *dev_priv)
->  {
->  	struct drm_minor *minor = dev_priv->drm.primary;
->  	int i;
-> @@ -2409,7 +2409,7 @@ int i915_debugfs_register(struct drm_i915_private *dev_priv)
->  				    i915_debugfs_files[i].fops);
->  	}
->  
-> -	return drm_debugfs_create_files(i915_debugfs_list,
-> -					I915_DEBUGFS_ENTRIES,
-> -					minor->debugfs_root, minor);
-> +	drm_debugfs_create_files(i915_debugfs_list,
-> +				 I915_DEBUGFS_ENTRIES,
-> +				 minor->debugfs_root, minor);
->  }
-> diff --git a/drivers/gpu/drm/i915/i915_debugfs.h b/drivers/gpu/drm/i915/i915_debugfs.h
-> index 6da39c76ab5e..1de2736f1248 100644
-> --- a/drivers/gpu/drm/i915/i915_debugfs.h
-> +++ b/drivers/gpu/drm/i915/i915_debugfs.h
-> @@ -12,10 +12,10 @@ struct drm_i915_private;
->  struct seq_file;
->  
->  #ifdef CONFIG_DEBUG_FS
-> -int i915_debugfs_register(struct drm_i915_private *dev_priv);
-> +void i915_debugfs_register(struct drm_i915_private *dev_priv);
->  void i915_debugfs_describe_obj(struct seq_file *m, struct drm_i915_gem_object *obj);
->  #else
-> -static inline int i915_debugfs_register(struct drm_i915_private *dev_priv) { return 0; }
-> +static inline void i915_debugfs_register(struct drm_i915_private *dev_priv) {}
->  static inline void i915_debugfs_describe_obj(struct seq_file *m, struct drm_i915_gem_object *obj) {}
->  #endif
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/i3c/master/dw-i3c-master.c   | 2 +-
+ drivers/i3c/master/i3c-master-cdns.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/i3c/master/dw-i3c-master.c b/drivers/i3c/master/dw-i3c-master.c
+index bd26c3b9634e..5c5306cd50ec 100644
+--- a/drivers/i3c/master/dw-i3c-master.c
++++ b/drivers/i3c/master/dw-i3c-master.c
+@@ -221,7 +221,7 @@ struct dw_i3c_xfer {
+ 	struct completion comp;
+ 	int ret;
+ 	unsigned int ncmds;
+-	struct dw_i3c_cmd cmds[0];
++	struct dw_i3c_cmd cmds[];
+ };
+ 
+ struct dw_i3c_master {
+diff --git a/drivers/i3c/master/i3c-master-cdns.c b/drivers/i3c/master/i3c-master-cdns.c
+index 54712793709e..3fee8bd7fe20 100644
+--- a/drivers/i3c/master/i3c-master-cdns.c
++++ b/drivers/i3c/master/i3c-master-cdns.c
+@@ -388,7 +388,7 @@ struct cdns_i3c_xfer {
+ 	struct completion comp;
+ 	int ret;
+ 	unsigned int ncmds;
+-	struct cdns_i3c_cmd cmds[0];
++	struct cdns_i3c_cmd cmds[];
+ };
+ 
+ struct cdns_i3c_data {
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+2.25.0
+
