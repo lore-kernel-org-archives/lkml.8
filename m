@@ -2,512 +2,138 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E346AC4BA06
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 909F4C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B78D724656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7389A24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:24:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728555AbgB0IWz (ORCPT
+        id S1728567AbgB0IYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 03:22:55 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47274 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728482AbgB0IWz (ORCPT
+        Thu, 27 Feb 2020 03:24:32 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:49968 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728484AbgB0IYc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 03:22:55 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01R8M0tv128475
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 03:22:53 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ydh922bs4-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 03:22:51 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
-        Thu, 27 Feb 2020 08:22:40 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 27 Feb 2020 08:22:33 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01R8MW6059244768
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Feb 2020 08:22:32 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2C1EF4C052;
-        Thu, 27 Feb 2020 08:22:32 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7EB914C044;
-        Thu, 27 Feb 2020 08:22:31 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 27 Feb 2020 08:22:31 +0000 (GMT)
-Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 86F63A01C0;
-        Thu, 27 Feb 2020 19:22:26 +1100 (AEDT)
-Subject: Re: [PATCH v3 14/27] powerpc/powernv/pmem: Add support for Admin
- commands
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
- <20200221032720.33893-15-alastair@au1.ibm.com>
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-Date:   Thu, 27 Feb 2020 19:22:26 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 27 Feb 2020 03:24:32 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01R8NCYG009106;
+        Thu, 27 Feb 2020 03:24:30 -0500
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ydtrwje25-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Feb 2020 03:24:30 -0500
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 01R8OSIT011626
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Thu, 27 Feb 2020 03:24:29 -0500
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 27 Feb 2020 00:24:27 -0800
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Thu, 27 Feb 2020 00:24:27 -0800
+Received: from saturn.ad.analog.com ([10.48.65.109])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01R8OPtn013107;
+        Thu, 27 Feb 2020 03:24:25 -0500
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v3 0/8] ] iio: adi-axi-adc,ad9647: Add support for AD9467 ADC
+Date:   Thu, 27 Feb 2020 10:27:11 +0200
+Message-ID: <20200227082719.6343-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200221032720.33893-15-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022708-4275-0000-0000-000003A5E75C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022708-4276-0000-0000-000038BA2265
-Message-Id: <c88a3808-3ce9-ff6c-b963-ca9317092145@linux.ibm.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-27_02:2020-02-26,2020-02-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
- malwarescore=0 priorityscore=1501 lowpriorityscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 bulkscore=0 mlxscore=0 suspectscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ phishscore=0 adultscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ suspectscore=2 clxscore=1015 lowpriorityscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2001150001 definitions=main-2002270067
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/2/20 2:27 pm, Alastair D'Silva wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
-> 
-> This patch requests the metadata required to issue admin commands, as well
-> as some helper functions to construct and check the completion of the
-> commands.
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> ---
->   arch/powerpc/platforms/powernv/pmem/ocxl.c    |  65 ++++++++
->   .../platforms/powernv/pmem/ocxl_internal.c    | 153 ++++++++++++++++++
->   .../platforms/powernv/pmem/ocxl_internal.h    |  61 +++++++
->   3 files changed, 279 insertions(+)
-> 
-> diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl.c b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> index 431212c9f0cc..4e782d22605b 100644
-> --- a/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> +++ b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> @@ -216,6 +216,58 @@ static int register_lpc_mem(struct ocxlpmem *ocxlpmem)
->   	return 0;
->   }
->   
-> +/**
-> + * extract_command_metadata() - Extract command data from MMIO & save it for further use
-> + * @ocxlpmem: the device metadata
-> + * @offset: The base address of the command data structures (address of CREQO)
-> + * @command_metadata: A pointer to the command metadata to populate
-> + * Return: 0 on success, negative on failure
-> + */
-> +static int extract_command_metadata(struct ocxlpmem *ocxlpmem, u32 offset,
-> +					struct command_metadata *command_metadata)
-> +{
-> +	int rc;
-> +	u64 tmp;
-> +
-> +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu, offset, OCXL_LITTLE_ENDIAN,
-> +				     &tmp);
-> +	if (rc)
-> +		return rc;
-> +
-> +	command_metadata->request_offset = tmp >> 32;
-> +	command_metadata->response_offset = tmp & 0xFFFFFFFF;
-> +
-> +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu, offset + 8, OCXL_LITTLE_ENDIAN,
-> +				     &tmp);
-> +	if (rc)
-> +		return rc;
-> +
-> +	command_metadata->data_offset = tmp >> 32;
-> +	command_metadata->data_size = tmp & 0xFFFFFFFF;
-> +
-> +	command_metadata->id = 0;
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * setup_command_metadata() - Set up the command metadata
-> + * @ocxlpmem: the device metadata
-> + */
-> +static int setup_command_metadata(struct ocxlpmem *ocxlpmem)
-> +{
-> +	int rc;
-> +
-> +	mutex_init(&ocxlpmem->admin_command.lock);
-> +
-> +	rc = extract_command_metadata(ocxlpmem, GLOBAL_MMIO_ACMA_CREQO,
-> +				      &ocxlpmem->admin_command);
-> +	if (rc)
-> +		return rc;
-> +
-> +	return 0;
-> +}
-> +
->   /**
->    * is_usable() - Is a controller usable?
->    * @ocxlpmem: the device metadata
-> @@ -456,6 +508,14 @@ static int probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->   	}
->   	ocxlpmem->pdev = pdev;
->   
-> +	ocxlpmem->timeouts[ADMIN_COMMAND_ERRLOG] = 2000; // ms
-> +	ocxlpmem->timeouts[ADMIN_COMMAND_HEARTBEAT] = 100; // ms
-> +	ocxlpmem->timeouts[ADMIN_COMMAND_SMART] = 100; // ms
-> +	ocxlpmem->timeouts[ADMIN_COMMAND_CONTROLLER_DUMP] = 1000; // ms
-> +	ocxlpmem->timeouts[ADMIN_COMMAND_CONTROLLER_STATS] = 100; // ms
-> +	ocxlpmem->timeouts[ADMIN_COMMAND_SHUTDOWN] = 1000; // ms
-> +	ocxlpmem->timeouts[ADMIN_COMMAND_FW_UPDATE] = 16000; // ms
+This changeset adds support for the AD9467 LVDS High-Speed ADC.
+In order to support it, support for an FPGA ADI AXI ADC is added in this
+set.
+This uses the current support for IIO buffer DMAEngine.
 
-Why are we keeping these timeouts in a per device struct? I can't see 
-anywhere where we change these values.
+Changelog v2 -> v3:
+* addressed compiler warning caught by lkp test bot
+* renamed file Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
+               Documentation/devicetree/bindings/iio/adc/adi-axi-adc.yaml
+  better reflects the filename, since both have vendor prefix
 
-> +
->   	pci_set_drvdata(pdev, ocxlpmem);
->   
->   	ocxlpmem->ocxl_fn = ocxl_function_open(pdev);
-> @@ -501,6 +561,11 @@ static int probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->   		goto err;
->   	}
->   
-> +	if (setup_command_metadata(ocxlpmem)) {
-> +		dev_err(&pdev->dev, "Could not read OCXL command matada\n");
+Changelog v1 -> v2:
+* first series was added a bit hastily
+* addressed  'make dt_binding_check' complaints; seems I missed a few when running the check; 
+* added missing patches to include/linux/fpga/adi-axi-common.h
+   - 'include: fpga: adi-axi-common.h: fixup whitespace tab -> space'
+   - 'include: fpga: adi-axi-common.h: add version helper macros'
+* patch 'iio: buffer-dmaengine: add dev-managed calls for buffer alloc/free'
+   - remove copy+pasted comment for 'devm_iio_dmaengine_buffer_alloc()'
+   - removed devm_iio_dmaengine_buffer_free() ; hopefully it might never be needed
+   - fix-up alignment for devm_iio_dmaengine_buffer_alloc() in header
+* patch 'iio: adc: adi-axi-adc: add support for AXI ADC IP core'
+   - renamed axi-adc.c -> adi-axi-adc.c & Kconfig symbol
+   - prefix all axi_adc -> adi_axi_adc
+   - removed switch statement in axi_adc_read_raw() & axi_adc_write_raw()
+   - remove axi_adc_chan_spec ; replaced with iio_chan_spec directly ; will think of a simpler solution for extra chan params
+   - removed left-over 'struct axi_adc_cleanup_data'
+   - moved 'devm_add_action_or_reset()' call right after 'adi_axi_adc_attach_client()'
+   - switched to using 'devm_platform_ioremap_resource()'
+* patch 'iio: adc: ad9467: add support AD9467 ADC'
+  - renamed ADI_ADC reg prefixes to AN877_ADC
+  - dropped 'info_mask_separate' field in AD9467_CHAN - will be re-added later when driver gets more features; was left-over from the initial ref driver
+  - remove .shift = 0,  in AD9467_CHAN
+  - renamed 'sample-clock' -> 'adc-clock'
+  - direct returns in ad9467_read_raw() & ad9467_write_raw() & ad9467_setup() switch statements
+  - removed blank line after devm_axi_adc_conv_register()
+  - removed ad9467_id & reworked to use ad9467_of_match
 
-metadata
 
-Also, "OCXL command metadata" is misleading, this is a pmem specific 
-thing, not an OpenCAPI thing, I would prefer just "command metadata".
+Alexandru Ardelean (6):
+  include: fpga: adi-axi-common.h: fixup whitespace tab -> space
+  include: fpga: adi-axi-common.h: add version helper macros
+  iio: buffer-dmaengine: use %zu specifier for sprintf(align)
+  iio: buffer-dmaengine: add dev-managed calls for buffer alloc
+  dt-bindings: iio: adc: add bindings doc for AXI ADC driver
+  dt-bindings: iio: adc: add bindings doc for AD9467 ADC
 
-> +		goto err;
-> +	}
-> +
->   	elapsed = 0;
->   	timeout = ocxlpmem->readiness_timeout + ocxlpmem->memory_available_timeout;
->   	while (!is_usable(ocxlpmem, false)) {
-> diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.c b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.c
-> index 617ca943b1b8..583f48023025 100644
-> --- a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.c
-> +++ b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.c
-> @@ -17,3 +17,156 @@ int ocxlpmem_chi(const struct ocxlpmem *ocxlpmem, u64 *chi)
->   
->   	return 0;
->   }
-> +
-> +#define COMMAND_REQUEST_SIZE (8 * sizeof(u64))
-> +static int scm_command_request(const struct ocxlpmem *ocxlpmem,
-> +			       struct command_metadata *cmd, u8 op_code)
-> +{
-> +	u64 val = op_code;
-> +	int rc;
-> +	u8 i;
-> +
-> +	cmd->op_code = op_code;
-> +	cmd->id++;
-> +
-> +	val |= ((u64)cmd->id) << 16;
-> +
-> +	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu, cmd->request_offset,
-> +				      OCXL_LITTLE_ENDIAN, val);
-> +	if (rc)
-> +		return rc;
-> +
-> +	for (i = sizeof(u64); i < COMMAND_REQUEST_SIZE; i += sizeof(u64)) {
-> +		rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu,
-> +					      cmd->request_offset + i,
-> +					      OCXL_LITTLE_ENDIAN, 0);
-> +		if (rc)
-> +			return rc;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +int admin_command_request(struct ocxlpmem *ocxlpmem, u8 op_code)
-> +{
-> +	u64 val;
-> +	int rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_CHI,
-> +					 OCXL_LITTLE_ENDIAN, &val);
-> +	if (rc)
-> +		return rc;
+Michael Hennerich (2):
+  iio: adc: adi-axi-adc: add support for AXI ADC IP core
+  iio: adc: ad9467: add support AD9467 ADC
 
-Ignoring the value here expected, you're just trying to verify that you 
-don't see an error on the read?
-
-> +
-> +	return scm_command_request(ocxlpmem, &ocxlpmem->admin_command, op_code);
-> +}
-> +
-> +static int command_response(const struct ocxlpmem *ocxlpmem,
-> +			    const struct command_metadata *cmd)
-> +{
-> +	u64 val;
-> +	u16 id;
-> +	u8 status;
-> +	int rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
-> +					 cmd->response_offset,
-> +					 OCXL_LITTLE_ENDIAN, &val);
-> +	if (rc)
-> +		return rc;
-> +
-> +	status = val & 0xff;
-> +	id = (val >> 16) & 0xffff;
-> +
-> +	if (id != cmd->id) {
-> +		dev_warn(&ocxlpmem->dev,
-> +			 "Expected response for command %d, but received response for command %d instead.\n",
-> +			 cmd->id, id);
-
-If this happens I imagine something's gone pretty wrong - this should 
-probably be a dev_err()? And perhaps we want to make sure we return an 
-error code rather than whatever status code we get from the MMIO?
-
-> +	}
-> +
-> +	return status;
-> +}
-> +
-> +int admin_response(const struct ocxlpmem *ocxlpmem)
-> +{
-> +	return command_response(ocxlpmem, &ocxlpmem->admin_command);
-> +}
-> +
-> +
-> +int admin_command_execute(const struct ocxlpmem *ocxlpmem)
-> +{
-> +	return ocxl_global_mmio_set64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_HCI,
-> +				      OCXL_LITTLE_ENDIAN, GLOBAL_MMIO_HCI_ACRW);
-> +}
-> +
-> +static bool admin_command_complete(const struct ocxlpmem *ocxlpmem)
-> +{
-> +	u64 val = 0;
-> +
-> +	int rc = ocxlpmem_chi(ocxlpmem, &val);
-> +
-> +	WARN_ON(rc);
-> +
-> +	return (val & GLOBAL_MMIO_CHI_ACRA) != 0;
-> +}
-> +
-> +int admin_command_complete_timeout(const struct ocxlpmem *ocxlpmem,
-> +				   int command)
-> +{
-> +	u32 timeout = ocxlpmem->timeouts[command];
-> +	// 32 is the next power of 2 greater than the 20ms minimum for msleep
-> +#define TIMEOUT_SLEEP_MILLIS 32
-> +	timeout /= TIMEOUT_SLEEP_MILLIS;
-> +	if (!timeout)
-> +		timeout = DEFAULT_TIMEOUT / TIMEOUT_SLEEP_MILLIS;
-> +
-> +	while (timeout-- > 0) {
-> +		if (admin_command_complete(ocxlpmem))
-> +			return 0;
-> +		msleep(TIMEOUT_SLEEP_MILLIS);
-> +	}
-
-I think the more traditional way to implement timeouts is something more 
-like:
-
-   unsigned long timeout = jiffies + msecs_to_jiffies(<timeout period>);
-   do {
-     <check>
-     <sleep>
-   } while (time_before(jiffies, timeout));
-
-> +
-> +	if (admin_command_complete(ocxlpmem))
-> +		return 0;
-> +
-> +	return -EBUSY;
-> +}
-> +
-> +int admin_response_handled(const struct ocxlpmem *ocxlpmem)
-> +{
-> +	return ocxl_global_mmio_set64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_CHIC,
-> +				      OCXL_LITTLE_ENDIAN, GLOBAL_MMIO_CHI_ACRA);
-> +}
-
-This looks wrong? My reading of the spec is that you're meant to *clear* 
-ACRA upon completion of handing, this looks like it's setting ACRA to 1.
-
-> +
-> +void warn_status(const struct ocxlpmem *ocxlpmem, const char *message,
-> +		     u8 status)
-> +{
-> +	const char *text = "Unknown";
-> +
-> +	switch (status) {
-> +	case STATUS_SUCCESS:
-> +		text = "Success";
-> +		break;
-> +
-> +	case STATUS_MEM_UNAVAILABLE:
-> +		text = "Persistent memory unavailable";
-> +		break;
-> +
-> +	case STATUS_BAD_OPCODE:
-> +		text = "Bad opcode";
-> +		break;
-> +
-> +	case STATUS_BAD_REQUEST_PARM:
-> +		text = "Bad request parameter";
-> +		break;
-> +
-> +	case STATUS_BAD_DATA_PARM:
-> +		text = "Bad data parameter";
-> +		break;
-> +
-> +	case STATUS_DEBUG_BLOCKED:
-> +		text = "Debug action blocked";
-> +		break;
-> +
-> +	case STATUS_FAIL:
-> +		text = "Failed";
-> +		break;
-> +	}
-> +
-> +	dev_warn(&ocxlpmem->dev, "%s: %s (%x)\n", message, text, status);
-> +}
-> diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
-> index ba0301533d00..2fef68c71271 100644
-> --- a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
-> +++ b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
-> @@ -7,6 +7,7 @@
->   #include <linux/mm.h>
->   
->   #define LABEL_AREA_SIZE	(1UL << PA_SECTION_SHIFT)
-> +#define DEFAULT_TIMEOUT 100
->   
->   #define GLOBAL_MMIO_CHI		0x000
->   #define GLOBAL_MMIO_CHIC	0x008
-> @@ -80,6 +81,16 @@
->   #define STATUS_FW_ARG_INVALID	0x51
->   #define STATUS_FW_INVALID	0x52
->   
-> +struct command_metadata {
-> +	u32 request_offset;
-> +	u32 response_offset;
-> +	u32 data_offset;
-> +	u32 data_size;
-> +	struct mutex lock;
-> +	u16 id;
-> +	u8 op_code;
-> +};
-> +
->   struct ocxlpmem_function0 {
->   	struct pci_dev *pdev;
->   	struct ocxl_fn *ocxl_fn;
-> @@ -95,9 +106,11 @@ struct ocxlpmem {
->   	struct ocxl_afu *ocxl_afu;
->   	struct ocxl_context *ocxl_context;
->   	void *metadata_addr;
-> +	struct command_metadata admin_command;
->   	struct resource pmem_res;
->   	struct nd_region *nd_region;
->   	char fw_version[8+1];
-> +	u32 timeouts[ADMIN_COMMAND_MAX+1];
->   
->   	u32 max_controller_dump_size;
->   	u16 scm_revision; // major/minor
-> @@ -122,3 +135,51 @@ struct ocxlpmem {
->    * Returns 0 on success, negative on error
->    */
->   int ocxlpmem_chi(const struct ocxlpmem *ocxlpmem, u64 *chi);
-> +
-> +/**
-> + * admin_command_request() - Issue an admin command request
-> + * @ocxlpmem: the device metadata
-> + * @op_code: The op-code for the command
-> + *
-> + * Returns an identifier for the command, or negative on error
-> + */
-> +int admin_command_request(struct ocxlpmem *ocxlpmem, u8 op_code);
-> +
-> +/**
-> + * admin_response() - Validate an admin response
-> + * @ocxlpmem: the device metadata
-> + * Returns the status code of the command, or negative on error
-> + */
-> +int admin_response(const struct ocxlpmem *ocxlpmem);
-> +
-> +/**
-> + * admin_command_execute() - Notify the controller to start processing a pending admin command
-> + * @ocxlpmem: the device metadata
-> + * Returns 0 on success, negative on error
-> + */
-> +int admin_command_execute(const struct ocxlpmem *ocxlpmem);
-> +
-> +/**
-> + * admin_command_complete_timeout() - Wait for an admin command to finish executing
-> + * @ocxlpmem: the device metadata
-> + * @command: the admin command to wait for completion (determines the timeout)
-> + * Returns 0 on success, -EBUSY on timeout
-> + */
-> +int admin_command_complete_timeout(const struct ocxlpmem *ocxlpmem,
-> +				   int command);
-> +
-> +/**
-> + * admin_response_handled() - Notify the controller that the admin response has been handled
-> + * @ocxlpmem: the device metadata
-> + * Returns 0 on success, negative on failure
-> + */
-> +int admin_response_handled(const struct ocxlpmem *ocxlpmem);
-> +
-> +/**
-> + * warn_status() - Emit a kernel warning showing a command status.
-> + * @ocxlpmem: the device metadata
-> + * @message: A message to accompany the warning
-> + * @status: The command status
-> + */
-> +void warn_status(const struct ocxlpmem *ocxlpmem, const char *message,
-> +		 u8 status);
-> 
+ .../bindings/iio/adc/adi,ad9467.yaml          |  65 ++
+ .../bindings/iio/adc/adi-axi-adc.yaml         |  69 +++
+ drivers/iio/adc/Kconfig                       |  35 ++
+ drivers/iio/adc/Makefile                      |   2 +
+ drivers/iio/adc/ad9467.c                      | 432 +++++++++++++
+ drivers/iio/adc/adi-axi-adc.c                 | 566 ++++++++++++++++++
+ .../buffer/industrialio-buffer-dmaengine.c    |  41 +-
+ include/linux/fpga/adi-axi-common.h           |   6 +-
+ include/linux/iio/adc/adi-axi-adc.h           |  63 ++
+ include/linux/iio/buffer-dmaengine.h          |   3 +
+ 10 files changed, 1280 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad9467.yaml
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi-axi-adc.yaml
+ create mode 100644 drivers/iio/adc/ad9467.c
+ create mode 100644 drivers/iio/adc/adi-axi-adc.c
+ create mode 100644 include/linux/iio/adc/adi-axi-adc.h
 
 -- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
+2.20.1
 
