@@ -2,173 +2,113 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB450C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC88FC4BA06
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 933682468D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:49:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582793367;
-	bh=d6JASArDTC2YfUmrU9XUpiTM3xImoHt6h/h+S4gwbKw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LAhsrgz/b2o4WCR2J0Rh5v0KzqTLBnAb/+mep9EmHmJaBzM6Em4rkRNAh39aBJ/wP
-	 s9H0WiaUvtezROyDr/LaVjjPSKdbRaBT+VYpJJj10hoZWg8khP1IATZXb4QBhb4mjQ
-	 MCWVSmOtUMxiG14TJOYsw858OGQ0VXDDJw4XBpwE=
+	by mail.kernel.org (Postfix) with ESMTP id 9BA6C2468D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:49:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728876AbgB0It0 (ORCPT
+        id S1728567AbgB0Itg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 03:49:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60278 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728467AbgB0ItZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 03:49:25 -0500
-Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E0F324683;
-        Thu, 27 Feb 2020 08:49:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582793364;
-        bh=d6JASArDTC2YfUmrU9XUpiTM3xImoHt6h/h+S4gwbKw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0x1SYOFRdLAqiutbk8dXzSYLqNK4ETW4iJYOWrtI8+trt2hNpAQQSkNNThvHytoHK
-         sbrR13MAdpcaucxR0egMp+nacxwn7Jj7scMmKl0+W2M2EN14rTs9zMxDRW8QM5580x
-         98Tecr/imFBp2kLO33ktoryGWwg8fo5MsC/0AYHc=
-From:   Mike Rapoport <rppt@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Brian Cain <bcain@codeaurora.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        James Morse <james.morse@arm.com>,
-        Jonas Bonn <jonas@southpole.se>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Rich Felker <dalias@libc.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Stafford Horne <shorne@gmail.com>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        kvmarm@lists.cs.columbia.edu, kvm-ppc@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-sh@vger.kernel.org, nios2-dev@lists.rocketboards.org,
-        openrisc@lists.librecores.org,
-        uclinux-h8-devel@lists.sourceforge.jp,
-        Mike Rapoport <rppt@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH v3 07/14] powerpc/32: drop get_pteptr()
-Date:   Thu, 27 Feb 2020 10:46:01 +0200
-Message-Id: <20200227084608.18223-8-rppt@kernel.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200227084608.18223-1-rppt@kernel.org>
-References: <20200227084608.18223-1-rppt@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 27 Feb 2020 03:49:36 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:51115 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728467AbgB0Itg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 03:49:36 -0500
+Received: from mail-pf1-f197.google.com ([209.85.210.197])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1j7ErO-0006X2-2A
+        for linux-kernel@vger.kernel.org; Thu, 27 Feb 2020 08:49:34 +0000
+Received: by mail-pf1-f197.google.com with SMTP id d127so1597075pfa.7
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 00:49:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=yuo2Bfz0FnDnLaB5WH/eEhmv3YLgZdUk0gQwtfu9d3g=;
+        b=VpwZob0uGfvw+AtFaLmW9OszyFDvAwPlSpxlzkAM0nFfrLdZtkNVCm2Sx+prR8wCa5
+         c2odTxYPlFloZcDxzNVHAlviL6Xh2ZpVhjzZnewNTNX0UX4eYql06Xav09nlXs7Z5Alj
+         7ux+5vczVNeaSx8tjj3PVjdd5rXsu5T9h0c0Ks4wwMmAiUKo0mdhbWf5HPGdmba2t0ln
+         Hi9ezsqZEHs2BU9h8oVfBdnVUIxi+Vm9WXLdxEVLHdbHpFyDFn7+532ka5KbThnrrw/X
+         gU5doz2QHGUtg9Hqr4jWwZjKqzJAi2r98L4vI/9vyZ0IB8HhBdyk5gRRixZTAbqYOof8
+         Y4Gg==
+X-Gm-Message-State: APjAAAWkzDjv4YgqwpjcigbrFWD3MZmhawyLtaeCuqJqYP6lOpaEjBTo
+        nfHV3IhKyPbprQArD3yITYVsWC9ifY+G6v33AOPPIyDrL+aycKoHGnZ5DcAUxKOZ/e3LqgVL4yq
+        6MbSzCCS7GLY1WqBsPDnGT5JBwLzIwggoRSTbZO64jA==
+X-Received: by 2002:a17:90b:14a:: with SMTP id em10mr3765902pjb.4.1582793372751;
+        Thu, 27 Feb 2020 00:49:32 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwPxvvV8ywaszpVzifTAV8XbWtdxoYItNFUu7k/B5/ayjIFnd4TKFAsokDu1IEjAQLGJ/q09A==
+X-Received: by 2002:a17:90b:14a:: with SMTP id em10mr3765879pjb.4.1582793372445;
+        Thu, 27 Feb 2020 00:49:32 -0800 (PST)
+Received: from 2001-b011-380f-3214-6497-1af0-2c80-300f.dynamic-ip6.hinet.net (2001-b011-380f-3214-6497-1af0-2c80-300f.dynamic-ip6.hinet.net. [2001:b011:380f:3214:6497:1af0:2c80:300f])
+        by smtp.gmail.com with ESMTPSA id t63sm6176198pfb.70.2020.02.27.00.49.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Feb 2020 00:49:31 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: SFP+ support for 8168fp/8117
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <9AAC75D4-B04F-49CD-BBB9-11AE3382E4D8@canonical.com>
+Date:   Thu, 27 Feb 2020 16:49:29 +0800
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Linux Netdev List <netdev@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        Anthony Wong <anthony.wong@canonical.com>,
+        Jason Yen <jason.yen@canonical.com>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <5A21808E-C9DA-44BF-952B-4A5077B52E9B@canonical.com>
+References: <2D8F5FFE-3EC3-480B-9D15-23CACE5556DF@canonical.com>
+ <20200102152143.GB1397@lunn.ch>
+ <DC28A43E-4F1A-40B6-84B0-3E79215527C9@canonical.com>
+ <c148fefc-fd56-26a8-9f9b-fbefbaf25050@gmail.com>
+ <02F7CBDE-B877-481C-A5AF-2F4CBF830A2C@canonical.com>
+ <80E9C881-91C8-4F29-B9CE-652F9EE0B018@canonical.com>
+ <995bddbc4f9d48cbb3a289a7e9799f15@realtek.com>
+ <12EA7285-06D7-44D3-B033-4F52A06123CC@canonical.com>
+ <cae39cfbb5174c8884328887cdfb5a89@realtek.com>
+ <9AAC75D4-B04F-49CD-BBB9-11AE3382E4D8@canonical.com>
+To:     Hau <hau@realtek.com>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+Hi Hau,
 
-Commit 8d30c14cab30 ("powerpc/mm: Rework I$/D$ coherency (v3)") and
-commit 90ac19a8b21b ("[POWERPC] Abolish iopa(), mm_ptov(),
-io_block_mapping() from arch/powerpc") removed the use of get_pteptr()
-outside of mm/pgtable_32.c
+> On Feb 19, 2020, at 22:48, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+> 
+> Hi Hau,
+> 
+>> On Feb 19, 2020, at 22:22, Hau <hau@realtek.com> wrote:
+> 
+> [snipped]
+> 
+>> 
+>> Hi Kai-Heng,
+>> 
+>> Attached file is r8168 that I have add SFP+ support for rtl8168fp. If possible, please give it a try.
+> 
+> I've already tested r8168 and it does support SFP+.
+> 
+> What we are discussing here is to support this chip properly in mainline kernel.
+> 
+> This is what we've discussed so far:
+> https://lore.kernel.org/lkml/2D8F5FFE-3EC3-480B-9D15-23CACE5556DF@canonical.com/
 
-In mm/pgtable_32.c, the only user of get_pteptr() is __change_page_attr()
-which operates on kernel context and on lowmem pages only.
+Is there anything you can share so we can support this chip properly in upstream?
 
-Move page table traversal to __change_page_attr() and drop get_pteptr().
+Kai-Heng
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- arch/powerpc/mm/pgtable_32.c | 43 ++++++------------------------------
- 1 file changed, 7 insertions(+), 36 deletions(-)
-
-diff --git a/arch/powerpc/mm/pgtable_32.c b/arch/powerpc/mm/pgtable_32.c
-index 5fb90edd865e..4894555622d7 100644
---- a/arch/powerpc/mm/pgtable_32.c
-+++ b/arch/powerpc/mm/pgtable_32.c
-@@ -121,53 +121,24 @@ void __init mapin_ram(void)
- 	}
- }
- 
--/* Scan the real Linux page tables and return a PTE pointer for
-- * a virtual address in a context.
-- * Returns true (1) if PTE was found, zero otherwise.  The pointer to
-- * the PTE pointer is unmodified if PTE is not found.
-- */
--static int
--get_pteptr(struct mm_struct *mm, unsigned long addr, pte_t **ptep, pmd_t **pmdp)
--{
--        pgd_t	*pgd;
--	pud_t	*pud;
--        pmd_t	*pmd;
--        pte_t	*pte;
--        int     retval = 0;
--
--        pgd = pgd_offset(mm, addr & PAGE_MASK);
--        if (pgd) {
--		pud = pud_offset(pgd, addr & PAGE_MASK);
--		if (pud && pud_present(*pud)) {
--			pmd = pmd_offset(pud, addr & PAGE_MASK);
--			if (pmd_present(*pmd)) {
--				pte = pte_offset_map(pmd, addr & PAGE_MASK);
--				if (pte) {
--					retval = 1;
--					*ptep = pte;
--					if (pmdp)
--						*pmdp = pmd;
--					/* XXX caller needs to do pte_unmap, yuck */
--				}
--			}
--		}
--        }
--        return(retval);
--}
--
- static int __change_page_attr_noflush(struct page *page, pgprot_t prot)
- {
- 	pte_t *kpte;
- 	pmd_t *kpmd;
--	unsigned long address;
-+	unsigned long address, va;
- 
- 	BUG_ON(PageHighMem(page));
- 	address = (unsigned long)page_address(page);
-+	va = address & PAGE_MASK;
- 
- 	if (v_block_mapped(address))
- 		return 0;
--	if (!get_pteptr(&init_mm, address, &kpte, &kpmd))
-+
-+	kpmd = pmd_offset(pud_offset(pgd_offset_k(va), va), va);
-+	if (!pmd_present(*kpmd))
- 		return -EINVAL;
-+
-+	kpte = pte_offset_map(kpmd, va);
- 	__set_pte_at(&init_mm, address, kpte, mk_pte(page, prot), 0);
- 	pte_unmap(kpte);
- 
--- 
-2.24.0
+> 
+> Kai-Heng
 
