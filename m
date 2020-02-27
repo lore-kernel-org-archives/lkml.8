@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA3DC7659A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF1ADC7658B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:28:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0166C24656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:29:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8762C24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:28:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813757;
-	bh=1+PH6IMGsNVCZMF5qZrfTQPg6A7KXplQfrrGAEMyieg=;
+	s=default; t=1582813728;
+	bh=DPmLCLL0ahSP7fn+LS7OG75V/K+ecstt+63o9yJmvHY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e58ZwWlGtHJm/BW1R71n8EVYHkteb01s7pXtfQ27gDSeBHWnbl7/P7w2fcQHXICol
-	 PymzK4SzpoiOuWt6XiJunJSa0wQ4omCOjh3HKCqZDp07U5+POT2Eqy10scitFTvqmB
-	 eBqKm/m+CxjIsvsl6Ufbq55esZjMpasECxor3bnI=
+	b=ijzJf9LzckJASmItbJRuxrDbuRyvAH9wmDd3Gu96E7VhQXYE4CMSyTnmMD8DzVmJx
+	 UGqiJQDWQa83FFJo4Quet4SCWqi8u8lZkaRybv7ihqywG0D5gwsvTqC5q63ig1f6pT
+	 Fbd1gZ53pxGy4+v/blbEOVWTFMxGaO0e2R8TNFyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387963AbgB0OGi (ORCPT
+        id S2388356AbgB0O2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:06:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43734 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:28:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387940AbgB0OGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:06:30 -0500
+        id S2387746AbgB0OHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:07:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1E7520578;
-        Thu, 27 Feb 2020 14:06:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F6EF20801;
+        Thu, 27 Feb 2020 14:07:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812389;
-        bh=1+PH6IMGsNVCZMF5qZrfTQPg6A7KXplQfrrGAEMyieg=;
+        s=default; t=1582812433;
+        bh=DPmLCLL0ahSP7fn+LS7OG75V/K+ecstt+63o9yJmvHY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zGZ0auMCDaXhLtNehFOeKwNrvfbUL+zzL3jORa0oWHPta+17q8c/YzMYF07M4qL3j
-         UQ4iqXaffp4g9M2Ye7hy0Lmq1thTd6i/tPLafDZIF7OrYW7NtVLc6HbIomRvBI5YSg
-         JuLd0HySczx9PpSN8qN92PKnxrxCFUm5US+dI/2Y=
+        b=0OUrEI9C11me7qXvSORqUHLC6FiRidn7jK/8NM3FfFU2UtE9J0jGyMKAoh343z2Cs
+         Tgd0AaIqRsbfH96WJdLrkOdLLniOq6hLRtRy/8rHr6cqXFNy+xGnNnLrD5MqgfRnAx
+         TcP5Y9A1eD0H+VZEMJPH7vT7fRcqvYPW9FloTkbI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Prabhakar Kushwaha <pkushwaha@marvell.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.19 95/97] ata: ahci: Add shutdown to freeze hardware resources of ahci
-Date:   Thu, 27 Feb 2020 14:37:43 +0100
-Message-Id: <20200227132230.195272711@linuxfoundation.org>
+        stable@vger.kernel.org, Jordy Zomer <jordy@simplyhacker.com>,
+        Willy Tarreau <w@1wt.eu>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 016/135] floppy: check FDC index for errors before assigning it
+Date:   Thu, 27 Feb 2020 14:35:56 +0100
+Message-Id: <20200227132231.685788364@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
-References: <20200227132214.553656188@linuxfoundation.org>
+In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
+References: <20200227132228.710492098@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,105 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prabhakar Kushwaha <pkushwaha@marvell.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit 10a663a1b15134a5a714aa515e11425a44d4fdf7 upstream.
+commit 2e90ca68b0d2f5548804f22f0dd61145516171e3 upstream.
 
-device_shutdown() called from reboot or power_shutdown expect
-all devices to be shutdown. Same is true for even ahci pci driver.
-As no ahci shutdown function is implemented, the ata subsystem
-always remains alive with DMA & interrupt support. File system
-related calls should not be honored after device_shutdown().
+Jordy Zomer reported a KASAN out-of-bounds read in the floppy driver in
+wait_til_ready().
 
-So defining ahci pci driver shutdown to freeze hardware (mask
-interrupt, stop DMA engine and free DMA resources).
+Which on the face of it can't happen, since as Willy Tarreau points out,
+the function does no particular memory access.  Except through the FDCS
+macro, which just indexes a static allocation through teh current fdc,
+which is always checked against N_FDC.
 
-Signed-off-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Except the checking happens after we've already assigned the value.
+
+The floppy driver is a disgrace (a lot of it going back to my original
+horrd "design"), and has no real maintainer.  Nobody has the hardware,
+and nobody really cares.  But it still gets used in virtual environment
+because it's one of those things that everybody supports.
+
+The whole thing should be re-written, or at least parts of it should be
+seriously cleaned up.  The 'current fdc' index, which is used by the
+FDCS macro, and which is often shadowed by a local 'fdc' variable, is a
+prime example of how not to write code.
+
+But because nobody has the hardware or the motivation, let's just fix up
+the immediate problem with a nasty band-aid: test the fdc index before
+actually assigning it to the static 'fdc' variable.
+
+Reported-by: Jordy Zomer <jordy@simplyhacker.com>
+Cc: Willy Tarreau <w@1wt.eu>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/ata/ahci.c        |    7 +++++++
- drivers/ata/libata-core.c |   21 +++++++++++++++++++++
- include/linux/libata.h    |    1 +
- 3 files changed, 29 insertions(+)
+ drivers/block/floppy.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/drivers/ata/ahci.c
-+++ b/drivers/ata/ahci.c
-@@ -96,6 +96,7 @@ enum board_ids {
- 
- static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent);
- static void ahci_remove_one(struct pci_dev *dev);
-+static void ahci_shutdown_one(struct pci_dev *dev);
- static int ahci_vt8251_hardreset(struct ata_link *link, unsigned int *class,
- 				 unsigned long deadline);
- static int ahci_avn_hardreset(struct ata_link *link, unsigned int *class,
-@@ -609,6 +610,7 @@ static struct pci_driver ahci_pci_driver
- 	.id_table		= ahci_pci_tbl,
- 	.probe			= ahci_init_one,
- 	.remove			= ahci_remove_one,
-+	.shutdown		= ahci_shutdown_one,
- 	.driver = {
- 		.pm		= &ahci_pci_pm_ops,
- 	},
-@@ -1897,6 +1899,11 @@ static int ahci_init_one(struct pci_dev
- 	return 0;
- }
- 
-+static void ahci_shutdown_one(struct pci_dev *pdev)
-+{
-+	ata_pci_shutdown_one(pdev);
-+}
-+
- static void ahci_remove_one(struct pci_dev *pdev)
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -853,14 +853,17 @@ static void reset_fdc_info(int mode)
+ /* selects the fdc and drive, and enables the fdc's input/dma. */
+ static void set_fdc(int drive)
  {
- 	pm_runtime_get_noresume(&pdev->dev);
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -6780,6 +6780,26 @@ void ata_pci_remove_one(struct pci_dev *
- 	ata_host_detach(host);
- }
- 
-+void ata_pci_shutdown_one(struct pci_dev *pdev)
-+{
-+	struct ata_host *host = pci_get_drvdata(pdev);
-+	int i;
++	unsigned int new_fdc = fdc;
 +
-+	for (i = 0; i < host->n_ports; i++) {
-+		struct ata_port *ap = host->ports[i];
-+
-+		ap->pflags |= ATA_PFLAG_FROZEN;
-+
-+		/* Disable port interrupts */
-+		if (ap->ops->freeze)
-+			ap->ops->freeze(ap);
-+
-+		/* Stop the port DMA engines */
-+		if (ap->ops->port_stop)
-+			ap->ops->port_stop(ap);
-+	}
-+}
-+
- /* move to PCI subsystem */
- int pci_test_config_bits(struct pci_dev *pdev, const struct pci_bits *bits)
- {
-@@ -7400,6 +7420,7 @@ EXPORT_SYMBOL_GPL(ata_timing_cycle2mode)
- 
- #ifdef CONFIG_PCI
- EXPORT_SYMBOL_GPL(pci_test_config_bits);
-+EXPORT_SYMBOL_GPL(ata_pci_shutdown_one);
- EXPORT_SYMBOL_GPL(ata_pci_remove_one);
- #ifdef CONFIG_PM
- EXPORT_SYMBOL_GPL(ata_pci_device_do_suspend);
---- a/include/linux/libata.h
-+++ b/include/linux/libata.h
-@@ -1236,6 +1236,7 @@ struct pci_bits {
- };
- 
- extern int pci_test_config_bits(struct pci_dev *pdev, const struct pci_bits *bits);
-+extern void ata_pci_shutdown_one(struct pci_dev *pdev);
- extern void ata_pci_remove_one(struct pci_dev *pdev);
- 
- #ifdef CONFIG_PM
+ 	if (drive >= 0 && drive < N_DRIVE) {
+-		fdc = FDC(drive);
++		new_fdc = FDC(drive);
+ 		current_drive = drive;
+ 	}
+-	if (fdc != 1 && fdc != 0) {
++	if (new_fdc >= N_FDC) {
+ 		pr_info("bad fdc value\n");
+ 		return;
+ 	}
++	fdc = new_fdc;
+ 	set_dor(fdc, ~0, 8);
+ #if N_FDC > 1
+ 	set_dor(1 - fdc, ~8, 0);
 
 
