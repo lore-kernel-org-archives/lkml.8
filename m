@@ -2,170 +2,99 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 919A9C35DF9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0890C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E30F24695
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA8BB24695
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:43:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cptdtmKN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729761AbgB0SmW (ORCPT
+        id S1729862AbgB0Snv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 13:42:22 -0500
-Received: from wind.enjellic.com ([76.10.64.91]:58478 "EHLO wind.enjellic.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726805AbgB0SmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 13:42:22 -0500
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 01RIf1sj026858;
-        Thu, 27 Feb 2020 12:41:01 -0600
-Received: (from greg@localhost)
-        by wind.enjellic.com (8.15.2/8.15.2/Submit) id 01RIewJG026857;
-        Thu, 27 Feb 2020 12:40:58 -0600
-Date:   Thu, 27 Feb 2020 12:40:58 -0600
-From:   "Dr. Greg" <greg@enjellic.com>
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
-Subject: Re: [PATCH bpf-next v4 0/8] MAC and Audit policy using eBPF (KRSI)
-Message-ID: <20200227184058.GA25392@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <20200220175250.10795-1-kpsingh@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200220175250.10795-1-kpsingh@chromium.org>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Thu, 27 Feb 2020 12:41:01 -0600 (CST)
+        Thu, 27 Feb 2020 13:43:51 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:35872 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbgB0Snv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 13:43:51 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01RIhinI024769;
+        Thu, 27 Feb 2020 12:43:44 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582829024;
+        bh=yQMhnAs6/2i4Vbzp9EeB7/iL+FC+fpQaF/PdQma5zCc=;
+        h=From:To:CC:Subject:Date;
+        b=cptdtmKNqL2P3tjADAMcVPvuRBdXnEY+VkexzgJPvN7srZgpuCaOmEh55kiyOTIZ0
+         dMvDYJvXo/OdqwDy06zwyhuG2VE2HBiN2InBGKeS/RbJpcw9pLeG7nNviyInrGZrNg
+         rBRpa0zG6BclDPvLycK+BJC1fAsD9/zF2KaAJqV4=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01RIhiE3011352
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 27 Feb 2020 12:43:44 -0600
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 27
+ Feb 2020 12:43:44 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 27 Feb 2020 12:43:43 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01RIhh0Q113174;
+        Thu, 27 Feb 2020 12:43:43 -0600
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <mkl@pengutronix.de>, <wg@grandegger.com>
+CC:     <linux-can@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [RESEND PATCH can-next 1/2] can: tcan4x5x: Rename parse_config function
+Date:   Thu, 27 Feb 2020 12:38:28 -0600
+Message-ID: <20200227183829.21854-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.25.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 06:52:42PM +0100, KP Singh wrote:
+Rename the tcan4x5x_parse_config function to tcan4x5x_get_gpios since
+the function retrieves the gpio configurations from the firmware.
 
-Good morning, I hope the week is going well for everyone.
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/net/can/m_can/tcan4x5x.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Apologies for being somewhat late with these comments, I've been
-recovering from travel.
+diff --git a/drivers/net/can/m_can/tcan4x5x.c b/drivers/net/can/m_can/tcan4x5x.c
+index 9821babef55e..37d53ecc560b 100644
+--- a/drivers/net/can/m_can/tcan4x5x.c
++++ b/drivers/net/can/m_can/tcan4x5x.c
+@@ -381,7 +381,7 @@ static int tcan4x5x_disable_state(struct m_can_classdev *cdev)
+ 				  TCAN4X5X_DISABLE_INH_MSK, 0x01);
+ }
+ 
+-static int tcan4x5x_parse_config(struct m_can_classdev *cdev)
++static int tcan4x5x_get_gpios(struct m_can_classdev *cdev)
+ {
+ 	struct tcan4x5x_priv *tcan4x5x = cdev->device_data;
+ 	int ret;
+@@ -507,7 +507,7 @@ static int tcan4x5x_can_probe(struct spi_device *spi)
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = tcan4x5x_parse_config(mcan_class);
++	ret = tcan4x5x_get_gpios(mcan_class);
+ 	if (ret)
+ 		goto out_power;
+ 
+-- 
+2.25.0
 
-> # Motivation
-> 
-> Google does analysis of rich runtime security data to detect and thwart
-> threats in real-time. Currently, this is done in custom kernel modules
-> but we would like to replace this with something that's upstream and
-> useful to others.
-> 
-> The current kernel infrastructure for providing telemetry (Audit, Perf
-> etc.) is disjoint from access enforcement (i.e. LSMs).  Augmenting the
-> information provided by audit requires kernel changes to audit, its
-> policy language and user-space components. Furthermore, building a MAC
-> policy based on the newly added telemetry data requires changes to
-> various LSMs and their respective policy languages.
-> 
-> This patchset allows BPF programs to be attached to LSM hooks This
-> facilitates a unified and dynamic (not requiring re-compilation of the
-> kernel) audit and MAC policy.
-> 
-> # Why an LSM?
-> 
-> Linux Security Modules target security behaviours rather than the
-> kernel's API. For example, it's easy to miss out a newly added system
-> call for executing processes (eg. execve, execveat etc.) but the LSM
-> framework ensures that all process executions trigger the relevant hooks
-> irrespective of how the process was executed.
-> 
-> Allowing users to implement LSM hooks at runtime also benefits the LSM
-> eco-system by enabling a quick feedback loop from the security community
-> about the kind of behaviours that the LSM Framework should be targeting.
-
-On the remote possibility that our practical experiences are relevant
-to this, I thought I would pitch these comments in, since I see that
-LWN is covering the issues and sensitivities surrounding BPF based
-'intelligent' LSM hooks, if I can take the liberty of referring to
-them as that.
-
-We namespaced a modified version of the Linux IMA implementation in
-order to provide a mechanism for deterministic system modeling, in
-order to support autonomously self defensive platforms for
-IOT/INED/SCADA type applications.  Big picture, the objective was to
-provide 'dynamic intelligence' for LSM decisions, presumably an
-objective similar to the KRSI initiative.
-
-Our IMA implementation, if you can still call it that, pushes
-actor/subject interaction identities up into an SGX enclave that runs
-a modeling engine that makes decisions on whether or not a process is
-engaging in activity inconsistent with a behavioral map defined by the
-platform or container developer.  If the behavior is extra-dimensional
-(untrusted), the enclave, via an OCALL, sets the value of a 'bad
-actor' variable in the task control structure that is used to indicate
-that the context of execution has questionable trust status.
-
-We paired this with a very simple LSM that has each hook check a bit
-position in the bad actor variable/bitfield to determine whether or
-not the hook should operate on the requested action.  Separate LSM
-infrastructure is provided that specifies whether or not the behavior
-should be EPERM'ed or logged.  An LSM using this infrastructure also
-has the ability, if triggered by the trust status of the context of
-execution, to make further assessments based on what information is
-supplied via the hook itself.
-
-Our field experience and testing has suggested that this architecture
-has considerable utility.
-
-In this model, numerous and disparate sections of the kernel can have
-input into the trust status of a context of execution.  This
-methodology would seem to be consistent with having multiple eBPF tap
-points in the kernel that can make decisions on what they perceive to
-be security relevant issues and if and how the behavior should be
-acted upon by the LSM.
-
-At the LSM level the costs are minimal, essentially a conditional
-check for non-zero status.  Performance costs will be with the eBPF
-code installed at introspection points.  At the end of the
-day. security costs money, if no one is willing to pay the bill we
-simply won't have secure systems, the fundamental tenant of the
-inherent economic barrier to security.
-
-Food for thought if anyone is interested.
-
-Best wishes for a productive remainder of the week.
-
-Dr. Greg
-
-As always,
-Dr. Greg Wettstein, Ph.D, Worker
-IDfusion, LLC               SGX secured infrastructure and
-4206 N. 19th Ave.           autonomously self-defensive platforms.
-Fargo, ND  58102
-PH: 701-281-1686            EMAIL: greg@idfusion.net
-------------------------------------------------------------------------------
-"We have to grow some roots before we can even think about having
- any blossoms."
-                                -- Terrance George Wieland
-                                   Resurrection.
