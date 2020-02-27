@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1185EC3F353
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD05C3F37A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3C562468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88C532468F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813497;
-	bh=dByLz4wxVQiW4fPXs9eq0rPvhSQmGiayskHLEij1fk8=;
+	s=default; t=1582813518;
+	bh=bDVVnOPiBJFbAwok1eeBcXQx8jGyj50nZqeS8zCYhbU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y3Tn4AfriD8EEmAPSVkqSGKf16e38tnqX7xx2W9eKstjZBYJukgb1owegUjwq0xY3
-	 UPZp1TiFZ7D0dJoJnHEbfXCQdqgyeeJShQR4klI3PLDk0O7+7EUPkAA9Zx5joyrZQ/
-	 +Wj54MHOX6iasMSk1ZgUXsJscmpZvE8uAkXZS0bQ=
+	b=geLCyaZjHn4O0EY6MSBWk80Gx+d2nhMuz94wLK7OoGxnajSI7AVZU3Xf0qM+rY6AB
+	 v0W9EETQzvsEAMfn8AauUwAGvJDuJSeI7BuPg4MGg5qje/Ov6kwBYtpoJAzkbY7w5/
+	 3h3UFbj1iVVMQVv38CN4qoG63tZ2docyTodfEC5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388807AbgB0OMN (ORCPT
+        id S2389126AbgB0OZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:12:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50830 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:25:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388118AbgB0OMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:12:09 -0500
+        id S2388707AbgB0OLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:11:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFA4820578;
-        Thu, 27 Feb 2020 14:12:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D504421D7E;
+        Thu, 27 Feb 2020 14:11:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812729;
-        bh=dByLz4wxVQiW4fPXs9eq0rPvhSQmGiayskHLEij1fk8=;
+        s=default; t=1582812695;
+        bh=bDVVnOPiBJFbAwok1eeBcXQx8jGyj50nZqeS8zCYhbU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KmBAzgG75Cno9AzNBQns2vJuCq54Ft3HvGvM62d5g2g88VXnMAW5Antn46RTkLcFN
-         aImaqz8B9yf7SdaRS6gu2VSGFYyadCG4HGmDOUR1DAeSlgp/htwvzpRvrGo/q6vSpL
-         uLCk9BRkr0qVIh5CmsjzJ+sCgqxm2s2jVG/aAYF4=
+        b=qwuM4j7QeuZeMS58/anQnEUqbchWL3Gj06m4cxjwnlcbTAPFHCRxCdLRTHfRE5Wvx
+         SCDLe8XAJtUr44Nj/YWkFJu/OhUtYDxkm+5FtC98zaEZWl9gkTzgfE8rHZ53a04iZd
+         IWfsTE1pL2Dt7oLQZLqWNJlRg7Bj2gSsxYfNxhfc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Subject: [PATCH 5.4 129/135] xen: Enable interrupts when calling _cond_resched()
-Date:   Thu, 27 Feb 2020 14:37:49 +0100
-Message-Id: <20200227132248.454437126@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
+        Pascal van Leeuwen <pvanleeuwen@rambus.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Subject: [PATCH 5.4 117/135] crypto: rename sm3-256 to sm3 in hash_algo_name
+Date:   Thu, 27 Feb 2020 14:37:37 +0100
+Message-Id: <20200227132246.727382171@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -60,43 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
 
-commit 8645e56a4ad6dcbf504872db7f14a2f67db88ef2 upstream.
+commit 6a30e1b1dcad0ba94fae757f797812d7d8dcb72c upstream.
 
-xen_maybe_preempt_hcall() is called from the exception entry point
-xen_do_hypervisor_callback with interrupts disabled.
+The name sm3-256 is defined in hash_algo_name in hash_info, but the
+algorithm name implemented in sm3_generic.c is sm3, which will cause
+the sm3-256 algorithm to be not found in some application scenarios of
+the hash algorithm, and an ENOENT error will occur. For example,
+IMA, keys, and other subsystems that reference hash_algo_name all use
+the hash algorithm of sm3.
 
-_cond_resched() evades the might_sleep() check in cond_resched() which
-would have caught that and schedule_debug() unfortunately lacks a check
-for irqs_disabled().
-
-Enable interrupts around the call and use cond_resched() to catch future
-issues.
-
-Fixes: fdfd811ddde3 ("x86/xen: allow privcmd hypercalls to be preempted")
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/878skypjrh.fsf@nanos.tec.linutronix.de
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Fixes: 5ca4c20cfd37 ("keys, trusted: select hash algorithm for TPM2 chips")
+Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Reviewed-by: Pascal van Leeuwen <pvanleeuwen@rambus.com>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/xen/preempt.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ crypto/hash_info.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/xen/preempt.c
-+++ b/drivers/xen/preempt.c
-@@ -33,7 +33,9 @@ asmlinkage __visible void xen_maybe_pree
- 		 * cpu.
- 		 */
- 		__this_cpu_write(xen_in_preemptible_hcall, false);
--		_cond_resched();
-+		local_irq_enable();
-+		cond_resched();
-+		local_irq_disable();
- 		__this_cpu_write(xen_in_preemptible_hcall, true);
- 	}
- }
+--- a/crypto/hash_info.c
++++ b/crypto/hash_info.c
+@@ -26,7 +26,7 @@ const char *const hash_algo_name[HASH_AL
+ 	[HASH_ALGO_TGR_128]	= "tgr128",
+ 	[HASH_ALGO_TGR_160]	= "tgr160",
+ 	[HASH_ALGO_TGR_192]	= "tgr192",
+-	[HASH_ALGO_SM3_256]	= "sm3-256",
++	[HASH_ALGO_SM3_256]	= "sm3",
+ 	[HASH_ALGO_STREEBOG_256] = "streebog256",
+ 	[HASH_ALGO_STREEBOG_512] = "streebog512",
+ };
 
 
