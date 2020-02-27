@@ -2,55 +2,54 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC3D9C3F34C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96714C52D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF95D20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CD3920578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812457;
-	bh=5QnRTmfd6KtE19+R4Twv3aJf/UotOhBde0DRMcUgRyA=;
+	s=default; t=1582812422;
+	bh=8xjQQ0YhFjU5P9RymGIDkr/KwUaQQ8iwiQv/6zyt+FM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=guZOokIFhEQWqXNhL4kEESVHhSPvTrMz9tNUKd5HFQ9YvWHVJ2SC8DCEzsg3CPsq+
-	 P4gfMsumjry4BcdSCANGCZ/sVvkBJp6phz+VrSjRFuGWhjwyLdYILzCDu3sDgw0j3K
-	 Cgni+k1RvgztYcNGNbxFLIOUIrZDO04025jv3koA=
+	b=j7bFLpfkLrmDa8dXNWjZRQBg9RGb5eECHqD9zFNGP7MDvLJu8aEPbBjXWj0i0P7k5
+	 BZcFQXMcG/jSqmFQAQoVQ8NFTe+iVodOeEX7btZIHXkQad6g+gRjW3TbR9N6Vx91nY
+	 so0TwIz1xbvkJW54tR0xti6AtPF+ySeovQVL9G2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388114AbgB0OHg (ORCPT
+        id S2388003AbgB0OHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:07:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45074 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:07:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388087AbgB0OHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:07:34 -0500
+        id S2387598AbgB0OGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:06:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C593424690;
-        Thu, 27 Feb 2020 14:07:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FC5F20578;
+        Thu, 27 Feb 2020 14:06:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812453;
-        bh=5QnRTmfd6KtE19+R4Twv3aJf/UotOhBde0DRMcUgRyA=;
+        s=default; t=1582812412;
+        bh=8xjQQ0YhFjU5P9RymGIDkr/KwUaQQ8iwiQv/6zyt+FM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ws4pxWOorrtrO3D0cB1elXhLIFw7fABNxYeBv1bNIuJdNCm9w2HSGjWIxpPb8REv0
-         xkOnS6bhOKEUlDnPr5RZ5u5F9c4+A+JLUARFfEHHCW/a6ZPeTEuqmPaQxPww0ub9uw
-         Yft9r0iynyqXwpp7BFxKxpZ+76L5O+zEQU/SGVUc=
+        b=PBI1t4CQZEjJeh+zi7GQMg27FIY1X4Ix4hXfuVD5FYRhsfPKYxssrRjqs/qXs7XjY
+         T7+npKeiZsYHpuKbtc+FJ6qhH85HjIn3mCBQrC/bL7rJ/K6ExANyyPFgvw0myAlj+Z
+         6nz/68gc5A1tQlPrjSwgjvPlHHF6rX9PDKek5GUk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Samuel Holland <samuel@sholland.org>,
-        Chen-Yu Tsai <wens@csie.org>, stable@kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 006/135] ASoC: sun8i-codec: Fix setting DAI data format
-Date:   Thu, 27 Feb 2020 14:35:46 +0100
-Message-Id: <20200227132229.927753901@linuxfoundation.org>
+        stable@vger.kernel.org, satya priya <skakit@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 59/97] tty: serial: qcom_geni_serial: Fix RX cancel command failure
+Date:   Thu, 27 Feb 2020 14:37:07 +0100
+Message-Id: <20200227132224.186889698@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
-References: <20200227132228.710492098@linuxfoundation.org>
+In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
+References: <20200227132214.553656188@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,43 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Samuel Holland <samuel@sholland.org>
+From: satya priya <skakit@codeaurora.org>
 
-commit 96781fd941b39e1f78098009344ebcd7af861c67 upstream.
+[ Upstream commit 679aac5ead2f18d223554a52b543e1195e181811 ]
 
-Use the correct mask for this two-bit field. This fixes setting the DAI
-data format to RIGHT_J or DSP_A.
+RX cancel command fails when BT is switched on and off multiple times.
 
-Fixes: 36c684936fae ("ASoC: Add sun8i digital audio codec")
-Signed-off-by: Samuel Holland <samuel@sholland.org>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Cc: stable@kernel.org
-Link: https://lore.kernel.org/r/20200217064250.15516-7-samuel@sholland.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+To handle this, poll for the cancel bit in SE_GENI_S_IRQ_STATUS register
+instead of SE_GENI_S_CMD_CTRL_REG.
+
+As per the HPG update, handle the RX last bit after cancel command
+and flush out the RX FIFO buffer.
+
+Signed-off-by: satya priya <skakit@codeaurora.org>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1581415982-8793-1-git-send-email-skakit@codeaurora.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sunxi/sun8i-codec.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/tty/serial/qcom_geni_serial.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
---- a/sound/soc/sunxi/sun8i-codec.c
-+++ b/sound/soc/sunxi/sun8i-codec.c
-@@ -80,6 +80,7 @@
+diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+index 4182129925dec..4458419f053b6 100644
+--- a/drivers/tty/serial/qcom_geni_serial.c
++++ b/drivers/tty/serial/qcom_geni_serial.c
+@@ -121,6 +121,7 @@ static int handle_rx_console(struct uart_port *uport, u32 bytes, bool drop);
+ static int handle_rx_uart(struct uart_port *uport, u32 bytes, bool drop);
+ static unsigned int qcom_geni_serial_tx_empty(struct uart_port *port);
+ static void qcom_geni_serial_stop_rx(struct uart_port *uport);
++static void qcom_geni_serial_handle_rx(struct uart_port *uport, bool drop);
  
- #define SUN8I_SYS_SR_CTRL_AIF1_FS_MASK		GENMASK(15, 12)
- #define SUN8I_SYS_SR_CTRL_AIF2_FS_MASK		GENMASK(11, 8)
-+#define SUN8I_AIF1CLK_CTRL_AIF1_DATA_FMT_MASK	GENMASK(3, 2)
- #define SUN8I_AIF1CLK_CTRL_AIF1_WORD_SIZ_MASK	GENMASK(5, 4)
- #define SUN8I_AIF1CLK_CTRL_AIF1_LRCK_DIV_MASK	GENMASK(8, 6)
- #define SUN8I_AIF1CLK_CTRL_AIF1_BCLK_DIV_MASK	GENMASK(12, 9)
-@@ -241,7 +242,7 @@ static int sun8i_set_fmt(struct snd_soc_
- 		return -EINVAL;
- 	}
- 	regmap_update_bits(scodec->regmap, SUN8I_AIF1CLK_CTRL,
--			   BIT(SUN8I_AIF1CLK_CTRL_AIF1_DATA_FMT),
-+			   SUN8I_AIF1CLK_CTRL_AIF1_DATA_FMT_MASK,
- 			   value << SUN8I_AIF1CLK_CTRL_AIF1_DATA_FMT);
+ static const unsigned long root_freq[] = {7372800, 14745600, 19200000, 29491200,
+ 					32000000, 48000000, 64000000, 80000000,
+@@ -614,7 +615,7 @@ static void qcom_geni_serial_stop_rx(struct uart_port *uport)
+ 	u32 irq_en;
+ 	u32 status;
+ 	struct qcom_geni_serial_port *port = to_dev_port(uport, uport);
+-	u32 irq_clear = S_CMD_DONE_EN;
++	u32 s_irq_status;
  
- 	return 0;
+ 	irq_en = readl(uport->membase + SE_GENI_S_IRQ_EN);
+ 	irq_en &= ~(S_RX_FIFO_WATERMARK_EN | S_RX_FIFO_LAST_EN);
+@@ -630,10 +631,19 @@ static void qcom_geni_serial_stop_rx(struct uart_port *uport)
+ 		return;
+ 
+ 	geni_se_cancel_s_cmd(&port->se);
+-	qcom_geni_serial_poll_bit(uport, SE_GENI_S_CMD_CTRL_REG,
+-					S_GENI_CMD_CANCEL, false);
++	qcom_geni_serial_poll_bit(uport, SE_GENI_S_IRQ_STATUS,
++					S_CMD_CANCEL_EN, true);
++	/*
++	 * If timeout occurs secondary engine remains active
++	 * and Abort sequence is executed.
++	 */
++	s_irq_status = readl(uport->membase + SE_GENI_S_IRQ_STATUS);
++	/* Flush the Rx buffer */
++	if (s_irq_status & S_RX_FIFO_LAST_EN)
++		qcom_geni_serial_handle_rx(uport, true);
++	writel(s_irq_status, uport->membase + SE_GENI_S_IRQ_CLEAR);
++
+ 	status = readl(uport->membase + SE_GENI_STATUS);
+-	writel(irq_clear, uport->membase + SE_GENI_S_IRQ_CLEAR);
+ 	if (status & S_GENI_CMD_ACTIVE)
+ 		qcom_geni_serial_abort_rx(uport);
+ }
+-- 
+2.20.1
+
 
 
