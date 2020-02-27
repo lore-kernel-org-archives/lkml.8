@@ -2,100 +2,81 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A0EC35677
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBE0C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A26E24691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:30:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E80A24691
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:30:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730069AbgB0Raj (ORCPT
+        id S1730258AbgB0Rax (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 12:30:39 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40292 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729635AbgB0Rai (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 12:30:38 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 09A3E296482;
-        Thu, 27 Feb 2020 17:30:36 +0000 (GMT)
-Date:   Thu, 27 Feb 2020 18:30:32 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        broonie@kernel.org, vigneshr@ti.com, robh+dt@kernel.org,
-        marex@denx.de, devicetree@vger.kernel.org,
-        tien.fong.chee@intel.com, tudor.ambarus@gmail.com,
-        boris.brezillon@free-electrons.com, richard@nod.at,
-        qi-ming.wu@intel.com, simon.k.r.goldschmidt@gmail.com,
-        david.oberhollenzer@sigma-star.at, dinguyen@kernel.org,
-        linux-mtd@lists.infradead.org, miquel.raynal@bootlin.com,
-        cheol.yong.kim@intel.com, mark.rutland@arm.com,
-        computersforpeace@gmail.com, dwmw2@infradead.org,
-        cyrille.pitchen@atmel.com
-Subject: Re: [PATCH v11 2/2] spi: cadence-quadspi: Add support for the
- Cadence QSPI controller
-Message-ID: <20200227183032.77ef0795@collabora.com>
-In-Reply-To: <20200227062708.21544-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20200227062708.21544-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200227062708.21544-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 27 Feb 2020 12:30:53 -0500
+Received: from foss.arm.com ([217.140.110.172]:55242 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729948AbgB0Raw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 12:30:52 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C50C1FB;
+        Thu, 27 Feb 2020 09:30:52 -0800 (PST)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1E41E3F73B;
+        Thu, 27 Feb 2020 09:30:51 -0800 (PST)
+References: <1582812549.7365.134.camel@lca.pw> <1582814862.7365.135.camel@lca.pw> <jhjimjsvyoe.mognet@arm.com> <1582821327.7365.137.camel@lca.pw> <1582822024.7365.139.camel@lca.pw> <20200227171934.GI3818@techsingularity.net>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Qian Cai <cai@lca.pw>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>, paulmck@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: suspicious RCU due to "Prefer using an idle CPU as a migration target instead of comparing tasks"
+In-reply-to: <20200227171934.GI3818@techsingularity.net>
+Date:   Thu, 27 Feb 2020 17:30:40 +0000
+Message-ID: <jhjeeugvsxr.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Feb 2020 14:27:08 +0800
-"Ramuthevar, Vadivel MuruganX"
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+On Thu, Feb 27 2020, Mel Gorman wrote:
+> Thanks for reporting this!
+>
+> The proposed fix would be a lot of rcu locks and unlocks. While they are
+> cheap, they're not free and it's a fairly standard pattern to acquire
+> the rcu lock when scanning CPUs during a domain search (load balancing,
+> nohz balance, idle balance etc). While in this context the lock is only
+> needed for SMT, I do not think it's worthwhile fine-graining this or
+> conditionally acquiring the rcu lock so will we keep it simple?
+>
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 11cdba201425..d34ac4ea5cee 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -1592,6 +1592,7 @@ static void update_numa_stats(struct task_numa_env *env,
+>       memset(ns, 0, sizeof(*ns));
+>       ns->idle_cpu = -1;
+>
+> +	rcu_read_lock();
+>       for_each_cpu(cpu, cpumask_of_node(nid)) {
+>               struct rq *rq = cpu_rq(cpu);
+>
+> @@ -1611,6 +1612,7 @@ static void update_numa_stats(struct task_numa_env *env,
+>                       idle_core = numa_idle_core(idle_core, cpu);
+>               }
+>       }
+> +	rcu_read_unlock();
+>
+>       ns->weight = cpumask_weight(cpumask_of_node(nid));
+>
 
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> 
-> Add support for the Cadence QSPI controller. This controller is
-> present in the Intel Lightning Mountain(LGM) SoCs, Altera and TI SoCs.
-> This driver has been tested on the Intel LGM SoCs.
-> 
-> This driver does not support generic SPI and also the implementation
-> only supports spi-mem interface to replace the existing driver in
-> mtd/spi-nor/cadence-quadspi.c, the existing driver only support SPI-NOR
-> flash memory.
 
-Is it really supporting SPI NORs only, or is it just that you only
-tested it with a spi-nor?
-
-> 
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-
-Reported-by? What has been reported?
-
-> ---
->  drivers/mtd/spi-nor/Kconfig                        |  11 -
->  drivers/mtd/spi-nor/Makefile                       |   1 -
->  drivers/spi/Kconfig                                |  10 +
->  drivers/spi/Makefile                               |   1 +
->  .../spi-cadence-quadspi.c}                         | 641 ++++++++++-----------
-
-Looks like this could be split in several patches to ease the review:
-
-1/ convert to spi-mem
-2/ move the driver to drivers/spi
-3/ add support for intel,lgm-qspi
-
-other than that, that's good to see one more spi-nor controller driver
-converted to spi-mem.
-
+That's closer to what I was trying to suggest (i.e. broaden the section
+rather than reduce it).
