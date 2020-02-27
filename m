@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B6CC3F35D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20960C3F347
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 406C6246AD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E87CA20578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:53:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811661;
-	bh=7RRHpMykAdOs5O0+EcuC9a2h+AH/pE0k9fVN9Vx7LXk=;
+	s=default; t=1582811635;
+	bh=60GmdPh2XpeV0iJcUXIp/N+gnXAsjfWyw7DREWS2aig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KesE4koQ3TVmwZlMo17rKb5HDdPhZRRH+8ox21P4xAgGy944SS9ORjROFZsgKgXu6
-	 tTVXXHTHw+JP3rv/eNj5kE6BNLKY7id5LJH6QjWWhBGxdDvjbder5FijjyxChcMGrn
-	 YUEtj37oRtb28NN1VyA0GzQvF66nhXkYXgAS4shw=
+	b=IAcl2spdUBTO2vIFuy9IuXPge/32zxeonJzoX4UcbLkEvf07XLc4XxOSYxqIt74EF
+	 dq3L02Z0u7n/biB1cloYmC9HSSWrJj/liA4bVwlcVJmglLZVZnUPCins8geANcu0mh
+	 4rC4EWin6V2q7mr8452Urhj2oLhseUS71v2U9QzU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731577AbgB0NyU (ORCPT
+        id S1731792AbgB0Nxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:54:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54314 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:53:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731846AbgB0NyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:54:17 -0500
+        id S1731767AbgB0Nxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:53:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEE682469D;
-        Thu, 27 Feb 2020 13:54:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F1A920578;
+        Thu, 27 Feb 2020 13:53:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811655;
-        bh=7RRHpMykAdOs5O0+EcuC9a2h+AH/pE0k9fVN9Vx7LXk=;
+        s=default; t=1582811632;
+        bh=60GmdPh2XpeV0iJcUXIp/N+gnXAsjfWyw7DREWS2aig=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b713NFkPx2YbN6n4w7VsMGSRKyhlp61wqpt2++YMppE7CHKIfd6/rQY/UoYR/fSBc
-         PAJOOG+L1WSUYhUKohCzTv8m9TLzPUNgXNbtEElN/W/Q+4iPdvfp3M+wnVQ4CYHdYh
-         /IztS/pLJZP7N3UyTdiiyByPU7MHu+3KFDTYz1Xc=
+        b=YUgdpytVbSdSGQjrB8EMZHxdL3cnrrwu2TYkHr/yO26Ujmo0JcpMEEAtX3xSPndiw
+         WDSsCWucs9TrrKH9IJ9ad6Y4PjjkU/fuLHCJRjnjxnAhN6O+30s8W8twmBhbO+xbWB
+         Z1p+HAaPxqsL1Tik2kdCQclei/BQbbVts1bUdNAI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 050/237] gpio: gpio-grgpio: fix possible sleep-in-atomic-context bugs in grgpio_irq_map/unmap()
-Date:   Thu, 27 Feb 2020 14:34:24 +0100
-Message-Id: <20200227132300.420182645@linuxfoundation.org>
+        stable@vger.kernel.org, Zahari Petkov <zahari@balena.io>,
+        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 042/237] leds: pca963x: Fix open-drain initialization
+Date:   Thu, 27 Feb 2020 14:34:16 +0100
+Message-Id: <20200227132259.811370412@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -60,75 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Zahari Petkov <zahari@balena.io>
 
-[ Upstream commit e36eaf94be8f7bc4e686246eed3cf92d845e2ef8 ]
+[ Upstream commit 697529091ac7a0a90ca349b914bb30641c13c753 ]
 
-The driver may sleep while holding a spinlock.
-The function call path (from bottom to top) in Linux 4.19 is:
+Before commit bb29b9cccd95 ("leds: pca963x: Add bindings to invert
+polarity") Mode register 2 was initialized directly with either 0x01
+or 0x05 for open-drain or totem pole (push-pull) configuration.
 
-drivers/gpio/gpio-grgpio.c, 261:
-	request_irq in grgpio_irq_map
-drivers/gpio/gpio-grgpio.c, 255:
-	_raw_spin_lock_irqsave in grgpio_irq_map
+Afterwards, MODE2 initialization started using bitwise operations on
+top of the default MODE2 register value (0x05). Using bitwise OR for
+setting OUTDRV with 0x01 and 0x05 does not produce correct results.
+When open-drain is used, instead of setting OUTDRV to 0, the driver
+keeps it as 1:
 
-drivers/gpio/gpio-grgpio.c, 318:
-	free_irq in grgpio_irq_unmap
-drivers/gpio/gpio-grgpio.c, 299:
-	_raw_spin_lock_irqsave in grgpio_irq_unmap
+Open-drain: 0x05 | 0x01 -> 0x05 (0b101 - incorrect)
+Totem pole: 0x05 | 0x05 -> 0x05 (0b101 - correct but still wrong)
 
-request_irq() and free_irq() can sleep at runtime.
+Now OUTDRV setting uses correct bitwise operations for initialization:
 
-To fix these bugs, request_irq() and free_irq() are called without
-holding the spinlock.
+Open-drain: 0x05 & ~0x04 -> 0x01 (0b001 - correct)
+Totem pole: 0x05 | 0x04 -> 0x05 (0b101 - correct)
 
-These bugs are found by a static analysis tool STCheck written by myself.
+Additional MODE2 register definitions are introduced now as well.
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Link: https://lore.kernel.org/r/20191218132605.10594-1-baijiaju1990@gmail.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: bb29b9cccd95 ("leds: pca963x: Add bindings to invert polarity")
+Signed-off-by: Zahari Petkov <zahari@balena.io>
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-grgpio.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/leds/leds-pca963x.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpio/gpio-grgpio.c b/drivers/gpio/gpio-grgpio.c
-index 6544a16ab02e9..7541bd327e6c5 100644
---- a/drivers/gpio/gpio-grgpio.c
-+++ b/drivers/gpio/gpio-grgpio.c
-@@ -259,17 +259,16 @@ static int grgpio_irq_map(struct irq_domain *d, unsigned int irq,
- 	lirq->irq = irq;
- 	uirq = &priv->uirqs[lirq->index];
- 	if (uirq->refcnt == 0) {
-+		spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
- 		ret = request_irq(uirq->uirq, grgpio_irq_handler, 0,
- 				  dev_name(priv->dev), priv);
- 		if (ret) {
- 			dev_err(priv->dev,
- 				"Could not request underlying irq %d\n",
- 				uirq->uirq);
--
--			spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
--
- 			return ret;
- 		}
-+		spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
- 	}
- 	uirq->refcnt++;
+diff --git a/drivers/leds/leds-pca963x.c b/drivers/leds/leds-pca963x.c
+index 3bf9a12718192..88c7313cf8693 100644
+--- a/drivers/leds/leds-pca963x.c
++++ b/drivers/leds/leds-pca963x.c
+@@ -43,6 +43,8 @@
+ #define PCA963X_LED_PWM		0x2	/* Controlled through PWM */
+ #define PCA963X_LED_GRP_PWM	0x3	/* Controlled through PWM/GRPPWM */
  
-@@ -315,8 +314,11 @@ static void grgpio_irq_unmap(struct irq_domain *d, unsigned int irq)
- 	if (index >= 0) {
- 		uirq = &priv->uirqs[lirq->index];
- 		uirq->refcnt--;
--		if (uirq->refcnt == 0)
-+		if (uirq->refcnt == 0) {
-+			spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
- 			free_irq(uirq->uirq, priv);
-+			return;
-+		}
- 	}
++#define PCA963X_MODE2_OUTDRV	0x04	/* Open-drain or totem pole */
++#define PCA963X_MODE2_INVRT	0x10	/* Normal or inverted direction */
+ #define PCA963X_MODE2_DMBLNK	0x20	/* Enable blinking */
  
- 	spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
+ #define PCA963X_MODE1		0x00
+@@ -462,12 +464,12 @@ static int pca963x_probe(struct i2c_client *client,
+ 						    PCA963X_MODE2);
+ 		/* Configure output: open-drain or totem pole (push-pull) */
+ 		if (pdata->outdrv == PCA963X_OPEN_DRAIN)
+-			mode2 |= 0x01;
++			mode2 &= ~PCA963X_MODE2_OUTDRV;
+ 		else
+-			mode2 |= 0x05;
++			mode2 |= PCA963X_MODE2_OUTDRV;
+ 		/* Configure direction: normal or inverted */
+ 		if (pdata->dir == PCA963X_INVERTED)
+-			mode2 |= 0x10;
++			mode2 |= PCA963X_MODE2_INVRT;
+ 		i2c_smbus_write_byte_data(pca963x->chip->client, PCA963X_MODE2,
+ 					  mode2);
+ 	}
 -- 
 2.20.1
 
