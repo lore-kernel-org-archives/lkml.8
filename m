@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29395C52D5B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5429C3F345
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0116F24688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:31:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D95220801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:31:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813908;
-	bh=KXtC7QIz7VdVKvGcBpEOfewAjLosERO3C/DVcjoig1o=;
+	s=default; t=1582813865;
+	bh=kUKSzHdRRHXlQaZVmuHIoD/S65nhOWHRv5mf2gtz24U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NlCtS3X9068Au5n2tWCViqFPaK5dEr30H4EsI0q/XiBrr06vuKJ32rwfzgWG2MVef
-	 FJ1dHy8gJtJLfoAJU5vaarMAG28zxSbEQz+CdGwRQgUwMp4uO0oifwBiezSTRKUpte
-	 2XikdVi5MFZvmlJE0oP/a1z2Z5uX+qPKrIxH9rLU=
+	b=XYZ7WLOKpasXbOyhYA/RWCH8uCessTXfSnRG5P35C5NiT3LnCD/bL3GMJEXGWIWUA
+	 uwXoy77lbNz9fmpcp+8pzCm1bgEIUUAASvMAdAdw6QMRrTVNEPh9ixi+T3rIKZe3I5
+	 ptEYECSefufD1N+czUR/POwY5WmwlS3tCYh5OS9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733284AbgB0ODM (ORCPT
+        id S2387571AbgB0OEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:03:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38222 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:04:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733267AbgB0ODI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:03:08 -0500
+        id S2387552AbgB0OEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:04:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AB2721556;
-        Thu, 27 Feb 2020 14:03:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EB4E24656;
+        Thu, 27 Feb 2020 14:04:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812187;
-        bh=KXtC7QIz7VdVKvGcBpEOfewAjLosERO3C/DVcjoig1o=;
+        s=default; t=1582812253;
+        bh=kUKSzHdRRHXlQaZVmuHIoD/S65nhOWHRv5mf2gtz24U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TbzQvTQuBbYLbG/qSmh96/r+NLXy+1SnXEEGHiX+WFav3PP0LAzh76JkTcVGjLIsQ
-         RuaoL1D4Z3MdwQUQlBG1FV++fJ7Pi4/6Jm/581W2HiRrkxnf53USGHsLQkPFm3+dSv
-         pgifOosBTjfNN7WAg1ezRDs9aQ+CXHNHtP2v2qsE=
+        b=BXl8w7bzD12JcxXX6eODjeebRkZg268I4VLhqTgpH6Nk3nTC+BRudyPZycjtRmdnN
+         aqT2WSGBsOnMKCVymMplk0Umq4gB+9YBoIUUWZvtFljLwDsNt1NyzSm3tW1wSA3lHl
+         1rCy4vBK7tYEvMJ4XQa6vGRO3UucTcP1z7FVMbSg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 02/97] ALSA: hda: Use scnprintf() for printing texts for sysfs/procfs
-Date:   Thu, 27 Feb 2020 14:36:10 +0100
-Message-Id: <20200227132214.961074193@linuxfoundation.org>
+        stable@vger.kernel.org, Loic Poulain <loic.poulain@linaro.org>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.19 43/97] serdev: ttyport: restore client ops on deregistration
+Date:   Thu, 27 Feb 2020 14:36:51 +0100
+Message-Id: <20200227132221.585786585@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
 References: <20200227132214.553656188@linuxfoundation.org>
@@ -58,82 +59,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Johan Hovold <johan@kernel.org>
 
-commit 44eeb081b8630bb3ad3cd381d1ae1831463e48bb upstream.
+commit 0c5aae59270fb1f827acce182786094c9ccf598e upstream.
 
-Some code in HD-audio driver calls snprintf() in a loop and still
-expects that the return value were actually written size, while
-snprintf() returns the expected would-be length instead.  When the
-given buffer limit were small, this leads to a buffer overflow.
+The serdev tty-port controller driver should reset the tty-port client
+operations also on deregistration to avoid a NULL-pointer dereference in
+case the port is later re-registered as a normal tty device.
 
-Use scnprintf() for addressing those issues.  It returns the actually
-written size unlike snprintf().
+Note that this can only happen with tty drivers such as 8250 which have
+statically allocated port structures that can end up being reused and
+where a later registration would not register a serdev controller (e.g.
+due to registration errors or if the devicetree has been changed in
+between).
 
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200218091409.27162-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Specifically, this can be an issue for any statically defined ports that
+would be registered by 8250 core when an 8250 driver is being unbound.
+
+Fixes: bed35c6dfa6a ("serdev: add a tty port controller driver")
+Cc: stable <stable@vger.kernel.org>     # 4.11
+Reported-by: Loic Poulain <loic.poulain@linaro.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20200210145730.22762-1-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/hda/hdmi_chmap.c    |    2 +-
- sound/pci/hda/hda_codec.c |    2 +-
- sound/pci/hda/hda_eld.c   |    2 +-
- sound/pci/hda/hda_sysfs.c |    4 ++--
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/tty/serdev/serdev-ttyport.c |    6 ++----
+ drivers/tty/tty_port.c              |    5 +++--
+ include/linux/tty.h                 |    2 ++
+ 3 files changed, 7 insertions(+), 6 deletions(-)
 
---- a/sound/hda/hdmi_chmap.c
-+++ b/sound/hda/hdmi_chmap.c
-@@ -249,7 +249,7 @@ void snd_hdac_print_channel_allocation(i
+--- a/drivers/tty/serdev/serdev-ttyport.c
++++ b/drivers/tty/serdev/serdev-ttyport.c
+@@ -265,7 +265,6 @@ struct device *serdev_tty_port_register(
+ 					struct device *parent,
+ 					struct tty_driver *drv, int idx)
+ {
+-	const struct tty_port_client_operations *old_ops;
+ 	struct serdev_controller *ctrl;
+ 	struct serport *serport;
+ 	int ret;
+@@ -284,7 +283,6 @@ struct device *serdev_tty_port_register(
  
- 	for (i = 0, j = 0; i < ARRAY_SIZE(cea_speaker_allocation_names); i++) {
- 		if (spk_alloc & (1 << i))
--			j += snprintf(buf + j, buflen - j,  " %s",
-+			j += scnprintf(buf + j, buflen - j,  " %s",
- 					cea_speaker_allocation_names[i]);
+ 	ctrl->ops = &ctrl_ops;
+ 
+-	old_ops = port->client_ops;
+ 	port->client_ops = &client_ops;
+ 	port->client_data = ctrl;
+ 
+@@ -297,7 +295,7 @@ struct device *serdev_tty_port_register(
+ 
+ err_reset_data:
+ 	port->client_data = NULL;
+-	port->client_ops = old_ops;
++	port->client_ops = &tty_port_default_client_ops;
+ 	serdev_controller_put(ctrl);
+ 
+ 	return ERR_PTR(ret);
+@@ -312,8 +310,8 @@ int serdev_tty_port_unregister(struct tt
+ 		return -ENODEV;
+ 
+ 	serdev_controller_remove(ctrl);
+-	port->client_ops = NULL;
+ 	port->client_data = NULL;
++	port->client_ops = &tty_port_default_client_ops;
+ 	serdev_controller_put(ctrl);
+ 
+ 	return 0;
+--- a/drivers/tty/tty_port.c
++++ b/drivers/tty/tty_port.c
+@@ -52,10 +52,11 @@ static void tty_port_default_wakeup(stru
  	}
- 	buf[j] = '\0';	/* necessary when j == 0 */
---- a/sound/pci/hda/hda_codec.c
-+++ b/sound/pci/hda/hda_codec.c
-@@ -4019,7 +4019,7 @@ void snd_print_pcm_bits(int pcm, char *b
- 
- 	for (i = 0, j = 0; i < ARRAY_SIZE(bits); i++)
- 		if (pcm & (AC_SUPPCM_BITS_8 << i))
--			j += snprintf(buf + j, buflen - j,  " %d", bits[i]);
-+			j += scnprintf(buf + j, buflen - j,  " %d", bits[i]);
- 
- 	buf[j] = '\0'; /* necessary when j == 0 */
  }
---- a/sound/pci/hda/hda_eld.c
-+++ b/sound/pci/hda/hda_eld.c
-@@ -373,7 +373,7 @@ static void hdmi_print_pcm_rates(int pcm
  
- 	for (i = 0, j = 0; i < ARRAY_SIZE(alsa_rates); i++)
- 		if (pcm & (1 << i))
--			j += snprintf(buf + j, buflen - j,  " %d",
-+			j += scnprintf(buf + j, buflen - j,  " %d",
- 				alsa_rates[i]);
+-static const struct tty_port_client_operations default_client_ops = {
++const struct tty_port_client_operations tty_port_default_client_ops = {
+ 	.receive_buf = tty_port_default_receive_buf,
+ 	.write_wakeup = tty_port_default_wakeup,
+ };
++EXPORT_SYMBOL_GPL(tty_port_default_client_ops);
  
- 	buf[j] = '\0'; /* necessary when j == 0 */
---- a/sound/pci/hda/hda_sysfs.c
-+++ b/sound/pci/hda/hda_sysfs.c
-@@ -221,7 +221,7 @@ static ssize_t init_verbs_show(struct de
- 	int i, len = 0;
- 	mutex_lock(&codec->user_mutex);
- 	snd_array_for_each(&codec->init_verbs, i, v) {
--		len += snprintf(buf + len, PAGE_SIZE - len,
-+		len += scnprintf(buf + len, PAGE_SIZE - len,
- 				"0x%02x 0x%03x 0x%04x\n",
- 				v->nid, v->verb, v->param);
- 	}
-@@ -271,7 +271,7 @@ static ssize_t hints_show(struct device
- 	int i, len = 0;
- 	mutex_lock(&codec->user_mutex);
- 	snd_array_for_each(&codec->hints, i, hint) {
--		len += snprintf(buf + len, PAGE_SIZE - len,
-+		len += scnprintf(buf + len, PAGE_SIZE - len,
- 				"%s = %s\n", hint->key, hint->val);
- 	}
- 	mutex_unlock(&codec->user_mutex);
+ void tty_port_init(struct tty_port *port)
+ {
+@@ -68,7 +69,7 @@ void tty_port_init(struct tty_port *port
+ 	spin_lock_init(&port->lock);
+ 	port->close_delay = (50 * HZ) / 100;
+ 	port->closing_wait = (3000 * HZ) / 100;
+-	port->client_ops = &default_client_ops;
++	port->client_ops = &tty_port_default_client_ops;
+ 	kref_init(&port->kref);
+ }
+ EXPORT_SYMBOL(tty_port_init);
+--- a/include/linux/tty.h
++++ b/include/linux/tty.h
+@@ -225,6 +225,8 @@ struct tty_port_client_operations {
+ 	void (*write_wakeup)(struct tty_port *port);
+ };
+ 
++extern const struct tty_port_client_operations tty_port_default_client_ops;
++
+ struct tty_port {
+ 	struct tty_bufhead	buf;		/* Locked internally */
+ 	struct tty_struct	*tty;		/* Back pointer */
 
 
