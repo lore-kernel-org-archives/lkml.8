@@ -2,109 +2,189 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA6BC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E87C4C35DEE
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56C6621D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:23:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FSJlJfFm"
+	by mail.kernel.org (Postfix) with ESMTP id C20B2246B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:23:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582824225;
+	bh=cdHW6tjJ764YaHY3iAyqV8/R6TI6ivK3tqQeS+dnQGc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UMId1bL/ExsE7mi3MdcFcYn7kMBO14FbTCnOLYLG6SVlOcydni35bA5mOgtlISUmI
+	 wu8juipPho/Blu2ULmTGe0zyPavXwMlx9SJpaVFCSRTovOK+pEBMN1mJGs1vQ3Yxl6
+	 s1p2HeVlVzVgzZvCm/QMv1Xg1n6sD+QlUNuUUwPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730214AbgB0RXn (ORCPT
+        id S1730279AbgB0RXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 12:23:43 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60858 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730150AbgB0RXm (ORCPT
+        Thu, 27 Feb 2020 12:23:44 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35344 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730208AbgB0RXn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 12:23:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582824220;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=a0y/j4KW7R+c8IZgk86JY7zUwSLsnh5fFNeVauypTJo=;
-        b=FSJlJfFmYW3XCqTp1ACaMO5LIx14IRKFrvfwvgvJiMfBpwLnJaYPUqTArXQrWsqkBW2W4k
-        GnNELN/i3OAAiPCiCzpx41M6M+7HdDKpy4Mac9okJEeIfIFdFRVg14r6cfXi2vDDt8nUSB
-        5+DX+5ccuuhg7wvY5UbZ3cr/W2AtpqY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-267-fv0YXZNdMtuo_5rIlChthw-1; Thu, 27 Feb 2020 12:23:39 -0500
-X-MC-Unique: fv0YXZNdMtuo_5rIlChthw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 65951477;
-        Thu, 27 Feb 2020 17:23:37 +0000 (UTC)
-Received: from millenium-falcon.redhat.com (unknown [10.36.118.42])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 58CEE1001B2C;
-        Thu, 27 Feb 2020 17:23:34 +0000 (UTC)
-From:   Mohammed Gamal <mgamal@redhat.com>
-To:     kvm@vger.kernel.org, pbonzini@redhat.com
-Cc:     sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        linux-kernel@vger.kernel.org, Mohammed Gamal <mgamal@redhat.com>
-Subject: [PATCH 2/5] KVM: VMX: Add guest physical address check in EPT violation and misconfig
-Date:   Thu, 27 Feb 2020 19:23:03 +0200
-Message-Id: <20200227172306.21426-3-mgamal@redhat.com>
-In-Reply-To: <20200227172306.21426-1-mgamal@redhat.com>
-References: <20200227172306.21426-1-mgamal@redhat.com>
+        Thu, 27 Feb 2020 12:23:43 -0500
+Received: by mail-ot1-f68.google.com with SMTP id r16so3693773otd.2;
+        Thu, 27 Feb 2020 09:23:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3SQrHH3RldHlDSPXSXXFbHJRaEJs4Lzh1Ap0ZS/UfRI=;
+        b=aRjxPVhp94sh8Wceqco7uWbuHpFWvMGd+OKcY/bJXk1Ap3Sto1SduoJQSBIKx1yd71
+         sn9asVH+JylFCDolbKJxOcK4hM0uNpNNxUxCyD4+6jx2h83LquL1Z6SmvERaWD7I6s66
+         F1i2cKQtnzWoMQwJeSKHMPF+olfE+h+AfNZ5jOnlyUh0AlPdggRrND1UXqb2ZrOEPGAr
+         g+LAcAEAOCSjo6lRe9Z1vEjv04aWRtJSjTRhTXIadv1LmhTTe3h8jS2OBVY/V0RJB+kS
+         x3kO5DsyoyZCxqiELCiyRbI4qgfm3v3JJU8xtIlYGpEKnjSxmwo6Fb08gQxTKixmTyUm
+         NT6w==
+X-Gm-Message-State: APjAAAUGCICABXruWAfXxcrO9vn7Ul/Cb95uT30KrIeUc3lE2/Fx0nKG
+        2OST3umDIi8pVit8gFQ9gA==
+X-Google-Smtp-Source: APXvYqzW64cJcps6+Kk6SHemjadYsuL6hjnqtoSPNHPfFBrAfn+8QW46IsbbWEnrIhKEW1l666/RPw==
+X-Received: by 2002:a9d:6212:: with SMTP id g18mr659180otj.187.1582824222587;
+        Thu, 27 Feb 2020 09:23:42 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id y13sm2122714otk.40.2020.02.27.09.23.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 09:23:41 -0800 (PST)
+Received: (nullmailer pid 24337 invoked by uid 1000);
+        Thu, 27 Feb 2020 17:23:40 -0000
+Date:   Thu, 27 Feb 2020 11:23:40 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 2/2] dt-bindings: net: Add ipq806x mdio bindings
+Message-ID: <20200227172340.GA19136@bogus>
+References: <andrew@lunn.ch>
+ <20200227011050.11106-1-ansuelsmth@gmail.com>
+ <20200227011050.11106-2-ansuelsmth@gmail.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227011050.11106-2-ansuelsmth@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check guest physical address against it's maximum physical memory. If
-the guest's physical address exceeds the maximum (i.e. has reserved bits
-set), inject a guest page fault with PFERR_RSVD_MASK.
+On Thu, Feb 27, 2020 at 02:10:46AM +0100, Ansuel Smith wrote:
+> Add documentations for ipq806x mdio driver.
+> 
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+> Changes in v8:
+> - Fix error in dtb check
+> - Remove not needed reset definition from example
+> - Add include header for ipq806x clocks
+> - Fix wrong License type
+> 
+> Changes in v7:
+> - Fix dt_binding_check problem
+> 
+>  .../bindings/net/qcom,ipq8064-mdio.yaml       | 61 +++++++++++++++++++
+>  1 file changed, 61 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml b/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+> new file mode 100644
+> index 000000000000..4334a415f23c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+> @@ -0,0 +1,61 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
 
-Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
----
- arch/x86/kvm/vmx/vmx.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Dual license new bindings please:
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 63aaf44edd1f..477d196aa235 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -5162,6 +5162,12 @@ static int handle_ept_violation(struct kvm_vcpu *v=
-cpu)
- 	gpa =3D vmcs_read64(GUEST_PHYSICAL_ADDRESS);
- 	trace_kvm_page_fault(gpa, exit_qualification);
-=20
-+	/* Check if guest gpa doesn't exceed physical memory limits */
-+	if (gpa >=3D (1ull << cpuid_maxphyaddr(vcpu))) {
-+		kvm_inject_rsvd_bits_pf(vcpu, gpa);
-+		return 1;
-+	}
-+
- 	/* Is it a read fault? */
- 	error_code =3D (exit_qualification & EPT_VIOLATION_ACC_READ)
- 		     ? PFERR_USER_MASK : 0;
-@@ -5193,6 +5199,13 @@ static int handle_ept_misconfig(struct kvm_vcpu *v=
-cpu)
- 	 * nGPA here instead of the required GPA.
- 	 */
- 	gpa =3D vmcs_read64(GUEST_PHYSICAL_ADDRESS);
-+
-+	/* Check if guest gpa doesn't exceed physical memory limits */
-+	if (gpa >=3D (1ull << cpuid_maxphyaddr(vcpu))) {
-+		kvm_inject_rsvd_bits_pf(vcpu, gpa);
-+		return 1;
-+	}
-+
- 	if (!is_guest_mode(vcpu) &&
- 	    !kvm_io_bus_write(vcpu, KVM_FAST_MMIO_BUS, gpa, 0, NULL)) {
- 		trace_kvm_fast_mmio(gpa);
---=20
-2.21.1
+(GPL-2.0-only OR BSD-2-Clause)
 
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/qcom,ipq8064-mdio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm ipq806x MDIO bus controller
+> +
+> +maintainers:
+> +  - Ansuel Smith <ansuelsmth@gmail.com>
+> +
+> +description:
+> +  The ipq806x soc have a MDIO dedicated controller that is
+> +  used to comunicate with the gmac phy conntected.
+
+2 typos
+
+> +  Child nodes of this MDIO bus controller node are standard
+> +  Ethernet PHY device nodes as described in
+> +  Documentation/devicetree/bindings/net/phy.txt
+
+You might want to read what that file says now.
+
+> +
+> +allOf:
+> +  - $ref: "mdio.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +        - const: qcom,ipq8064-mdio
+> +        - const: syscon
+
+Why is this a 'syscon'? Does it have more than 1 function?
+
+> +
+> +  reg:
+> +    description: address and length of the register set for the device
+
+Drop this and you need to state how many (maxItems).
+
+> +
+> +  clocks:
+> +    description: A reference to the clock supplying the MDIO bus controller
+
+Same here.
+
+> +
+> +  clock-names:
+> +    const: master
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
+> +
+> +    mdio0: mdio@37000000 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        compatible = "qcom,ipq8064-mdio", "syscon";
+> +        reg = <0x37000000 0x200000>;
+> +
+> +        clocks = <&gcc GMAC_CORE1_CLK>;
+> +
+> +        switch@10 {
+> +            compatible = "qca,qca8337";
+> +            /* ... */
+> +        };
+> +    };
+> -- 
+> 2.25.0
+> 
