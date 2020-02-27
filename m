@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1B3C3F342
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B26C3F34F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8162469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CB90246A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:50:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811359;
-	bh=HbAn6k20+yu3zZgzeEFmtlXzxSAT9wm5pIPskitcQIo=;
+	s=default; t=1582811413;
+	bh=2Q4c/sIWhZgo3m9iu4W8f4+/LGZhyEmn/WSfWt0XLVY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BHO/2amBgmmfmFepxOvD3CAgpyYkUZyQsjvwxTFE3afK/L1BQoUahF63tPkGcdFp5
-	 rRI87tKKxGEvbE2aBO4gGzvXc4O9gZ9cryvLRJVZeJ0YuUyA/YusYo9LKdxot3Qpfh
-	 MyeMaOb4OsAYFgfQnN6YE3OwtXCASJjQz2pfuhYE=
+	b=SXccsajeR6nVZQ6Yh2Kt557WzxxTSnjflmfcyFl5BEgabmvkitkxWsxbmSuAY2TGV
+	 XUhAp7yZcB1PrGylY+WyT/rlOWDqbYi09zN/SjZii7bncUZeeAhNiWa3AqNPBYT5rZ
+	 R0a90V2PWQbvt3XTmnb6AxuhPgefJWkifYa/ixdI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731024AbgB0NtS (ORCPT
+        id S1731171AbgB0NuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:49:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46514 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:50:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730349AbgB0NtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:49:15 -0500
+        id S1731073AbgB0Nt4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:49:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CD3820578;
-        Thu, 27 Feb 2020 13:49:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B16E20801;
+        Thu, 27 Feb 2020 13:49:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811354;
-        bh=HbAn6k20+yu3zZgzeEFmtlXzxSAT9wm5pIPskitcQIo=;
+        s=default; t=1582811396;
+        bh=2Q4c/sIWhZgo3m9iu4W8f4+/LGZhyEmn/WSfWt0XLVY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MGAdDtUfQRbymQ9Gl1RIRm9aFpeqWSpM+jL+mmx3jcurPY940a+FJGq1uymWOn9IU
-         Pywwe+NftfFmzyJF8hCduBWPwdObAuXfeI81hNDfw0arkKz36XdNwtk/yX7Pw+HZPv
-         opw1Rhd4weSJO5LCkemxKTPUH9X+rKOzUFcdqYpc=
+        b=hDthhUVL02rE8cgDyIZ4XB02HMMNo0ll6h/zx4Ra405OFFgFF+xi2seFQLlFLZK8j
+         2dmxuYxK1Dv+/muLNLBJnNpmMKg26bsr7AEkFyuVms/YNjZvk2oAvpuyDLdfyQnSKD
+         qCyG22K41LovwV7EZEhbNu72Oym9UuAOubN8Bl/Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Heyi Guo <guoheyi@huawei.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 101/165] irqchip/gic-v3: Only provision redistributors that are enabled in ACPI
-Date:   Thu, 27 Feb 2020 14:36:15 +0100
-Message-Id: <20200227132245.929101689@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jaihind Yadav <jaihindyadav@codeaurora.org>,
+        Ravi Kumar Siddojigari <rsiddoji@codeaurora.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 115/165] selinux: ensure we cleanup the internal AVC counters on error in avc_update()
+Date:   Thu, 27 Feb 2020 14:36:29 +0100
+Message-Id: <20200227132247.860676364@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -59,68 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Jaihind Yadav <jaihindyadav@codeaurora.org>
 
-[ Upstream commit 926b5dfa6b8dc666ff398044af6906b156e1d949 ]
+[ Upstream commit 030b995ad9ece9fa2d218af4429c1c78c2342096 ]
 
-We currently allocate redistributor region structures for
-individual redistributors when ACPI doesn't present us with
-compact MMIO regions covering multiple redistributors.
+In AVC update we don't call avc_node_kill() when avc_xperms_populate()
+fails, resulting in the avc->avc_cache.active_nodes counter having a
+false value.  In last patch this changes was missed , so correcting it.
 
-It turns out that we allocate these structures even when
-the redistributor is flagged as disabled by ACPI. It works
-fine until someone actually tries to tarse one of these
-structures, and access the corresponding MMIO region.
-
-Instead, track the number of enabled redistributors, and
-only allocate what is required. This makes sure that there
-is no invalid data to misuse.
-
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reported-by: Heyi Guo <guoheyi@huawei.com>
-Tested-by: Heyi Guo <guoheyi@huawei.com>
-Link: https://lore.kernel.org/r/20191216062745.63397-1-guoheyi@huawei.com
+Fixes: fa1aa143ac4a ("selinux: extended permissions for ioctls")
+Signed-off-by: Jaihind Yadav <jaihindyadav@codeaurora.org>
+Signed-off-by: Ravi Kumar Siddojigari <rsiddoji@codeaurora.org>
+[PM: merge fuzz, minor description cleanup]
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ security/selinux/avc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index f7b8681aed3f4..2ab6060031a43 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -1195,6 +1195,7 @@ static struct
- 	struct redist_region *redist_regs;
- 	u32 nr_redist_regions;
- 	bool single_redist;
-+	int enabled_rdists;
- 	u32 maint_irq;
- 	int maint_irq_mode;
- 	phys_addr_t vcpu_base;
-@@ -1289,8 +1290,10 @@ static int __init gic_acpi_match_gicc(struct acpi_subtable_header *header,
- 	 * If GICC is enabled and has valid gicr base address, then it means
- 	 * GICR base is presented via GICC
- 	 */
--	if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address)
-+	if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address) {
-+		acpi_data.enabled_rdists++;
- 		return 0;
-+	}
- 
- 	/*
- 	 * It's perfectly valid firmware can pass disabled GICC entry, driver
-@@ -1320,8 +1323,10 @@ static int __init gic_acpi_count_gicr_regions(void)
- 
- 	count = acpi_table_parse_madt(ACPI_MADT_TYPE_GENERIC_INTERRUPT,
- 				      gic_acpi_match_gicc, 0);
--	if (count > 0)
-+	if (count > 0) {
- 		acpi_data.single_redist = true;
-+		count = acpi_data.enabled_rdists;
-+	}
- 
- 	return count;
- }
+diff --git a/security/selinux/avc.c b/security/selinux/avc.c
+index 52f3c550abcc4..f3c473791b698 100644
+--- a/security/selinux/avc.c
++++ b/security/selinux/avc.c
+@@ -865,7 +865,7 @@ static int avc_update_node(u32 event, u32 perms, u8 driver, u8 xperm, u32 ssid,
+ 	if (orig->ae.xp_node) {
+ 		rc = avc_xperms_populate(node, orig->ae.xp_node);
+ 		if (rc) {
+-			kmem_cache_free(avc_node_cachep, node);
++			avc_node_kill(node);
+ 			goto out_unlock;
+ 		}
+ 	}
 -- 
 2.20.1
 
