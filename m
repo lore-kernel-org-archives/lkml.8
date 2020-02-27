@@ -2,177 +2,178 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0561CC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B45CC35677
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C146D2469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62AFB24697
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:39:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LOGSoHuD"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="TGKvqL+3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbgB0Pe5 (ORCPT
+        id S1729351AbgB0Pjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 10:34:57 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58665 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727592AbgB0Pe5 (ORCPT
+        Thu, 27 Feb 2020 10:39:41 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:50486 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729089AbgB0Pjl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 10:34:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582817695;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+        Thu, 27 Feb 2020 10:39:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1582817978; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Ph6zNvRlMjBgEifT68quDtBVSaXm9rcB1KivMTIcqD0=;
-        b=LOGSoHuDUjG9nlx8wQgtGFh9ZhZE/sWaGYeYT8IktyIS1oLoq/FtiNS/4s1p/x0Jxn/PgA
-        +9fe2ujQ2Cyp3tL4a+Gd8mm5HnrA/QeIyJszobOXYslugWkNpI99x5q7X7jg+Ubxf8Inhs
-        GZbXKgN2JCd+wgRrb8+OiMQZIQGdPg0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-288-gczZdh52PeySscz9vobOOw-1; Thu, 27 Feb 2020 10:34:52 -0500
-X-MC-Unique: gczZdh52PeySscz9vobOOw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2171E1005514;
-        Thu, 27 Feb 2020 15:34:51 +0000 (UTC)
-Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 622C787B08;
-        Thu, 27 Feb 2020 15:34:46 +0000 (UTC)
-Date:   Thu, 27 Feb 2020 10:34:44 -0500
-From:   Phil Auld <pauld@redhat.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Parth Shah <parth@linux.ibm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Hillf Danton <hdanton@sina.com>, zhout@vivaldi.net
-Subject: Re: [PATCH] sched/fair: fix runnable_avg for throttled cfs
-Message-ID: <20200227153444.GB30178@pauld.bos.csb>
-References: <20200226181640.21664-1-vincent.guittot@linaro.org>
- <xm26r1yhtbjr.fsf@bsegall-linux.svl.corp.google.com>
- <CAKfTPtBm9Gt16gqQgxoErOOmpbUHit6bNf4CVLvDzf04SjWtEg@mail.gmail.com>
- <8f72ea72-f36d-2611-e026-62ddff5c3422@arm.com>
- <CAKfTPtC9bkMQJsWw6Z2QD0RrV=qN7yMFviVnSeTpDp=-vLBL0g@mail.gmail.com>
- <CAKfTPtD4iVQmxWgNDDVhKPbu+rYEf=_1xKoPVOy343qo51pD_A@mail.gmail.com>
+        bh=3eSJUdHUOebLRYmbf4KgJLlfHEkgSJDeAo7KzMcKMN0=;
+        b=TGKvqL+3KLRGn2YYCLBOUiPc2R6eNx4XAagPUwJ7ukLTCUDLBjuh1L3mLfljBk0IT5XjtE
+        EKHapTe+v/XgnwKQ2lIxeIjjnLCQnWnp00yUjSs18GUA4ITcKp9ojUSXlVdV2/RNT2kMFV
+        OwIw7HUCZsyMTtXTnEqaJR9w3Cmkor8=
+Date:   Thu, 27 Feb 2020 12:39:14 -0300
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v6 5/6] MIPS: DTS: JZ4780: define node for JZ4780 efuse
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Mathieu Malaterre <malat@debian.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Message-Id: <1582817954.3.5@crapouillou.net>
+In-Reply-To: <8CEAF117-8667-4616-B08D-211E2705B67B@goldelico.com>
+References: <cover.1582715761.git.hns@goldelico.com>
+        <c6177ff663b6f8e16dc41169a76ba5dac091e7bd.1582715761.git.hns@goldelico.com>
+        <1582815472.3.4@crapouillou.net>
+        <8CEAF117-8667-4616-B08D-211E2705B67B@goldelico.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtD4iVQmxWgNDDVhKPbu+rYEf=_1xKoPVOy343qo51pD_A@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 03:58:02PM +0100 Vincent Guittot wrote:
-> On Thu, 27 Feb 2020 at 14:10, Vincent Guittot
-> <vincent.guittot@linaro.org> wrote:
-> >
-> > On Thu, 27 Feb 2020 at 12:20, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
-> > >
-> > > On 26.02.20 21:01, Vincent Guittot wrote:
-> > > > On Wed, 26 Feb 2020 at 20:04, <bsegall@google.com> wrote:
-> > > >>
-> > > >> Vincent Guittot <vincent.guittot@linaro.org> writes:
-> > > >>
-> > > >>> When a cfs_rq is throttled, its group entity is dequeued and its running
-> > > >>> tasks are removed. We must update runnable_avg with current h_nr_running
-> > > >>> and update group_se->runnable_weight with new h_nr_running at each level
-> > >
-> > >                                               ^^^
-> > >
-> > > Shouldn't this be 'current' rather 'new' h_nr_running for
-> > > group_se->runnable_weight? IMHO, you want to cache the current value
-> > > before you add/subtract task_delta.
-> >
-> > hmm... it can't be current in both places. In my explanation,
-> > "current" means the current situation when we started to throttle cfs
-> > and "new" means the new situation after we finished to throttle the
-> > cfs. I should probably use old and new to prevent any
-> > misunderstanding.
-> 
-> I'm about to send a new version to fix some minor changes: The if
-> statement should have some  { }   as there are some on the else part
-> 
-> Would it be better for you if i use old and new instead of current and
-> new in the commit message ?
-> 
 
-Seems better to me. You could also consider "the old" and "the new".
+
+Le jeu., f=E9vr. 27, 2020 at 16:26, H. Nikolaus Schaller=20
+<hns@goldelico.com> a =E9crit :
+> Hi Paul,
+>=20
+>>  Am 27.02.2020 um 15:57 schrieb Paul Cercueil <paul@crapouillou.net>:
+>>=20
+>>  Hi Nikolaus,
+>>=20
+>>=20
+>>  Le mer., f=E9vr. 26, 2020 at 12:16, H. Nikolaus Schaller=20
+>> <hns@goldelico.com> a =E9crit :
+>>>  From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+>>>  This patch brings support for the JZ4780 efuse. Currently it only=20
+>>> exposes
+>>>  a read only access to the entire 8K bits efuse memory and the
+>>>  ethernet mac address for the davicom dm9000 chip on the CI20 board.
+>>>  It also changes the nemc reg range to avoid overlap.
+>>>  Tested-by: Mathieu Malaterre <malat@debian.org>
+>>>  Signed-off-by: PrasannaKumar Muralidharan=20
+>>> <prasannatsmkumar@gmail.com>
+>>>  Signed-off-by: Mathieu Malaterre <malat@debian.org>
+>>>  Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>>>  ---
+>>>  arch/mips/boot/dts/ingenic/jz4780.dtsi | 17 ++++++++++++++++-
+>>>  1 file changed, 16 insertions(+), 1 deletion(-)
+>>>  diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi=20
+>>> b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+>>>  index f928329b034b..1e266be28096 100644
+>>>  --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
+>>>  +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+>>>  @@ -358,7 +358,7 @@
+>>>  	nemc: nemc@13410000 {
+>>>  		compatible =3D "ingenic,jz4780-nemc";
+>>>  -		reg =3D <0x13410000 0x10000>;
+>>>  +		reg =3D <0x13410000 0x4c>;
+>>=20
+>>  This is wrong, the real size of the register area is 1x15c.
+>=20
+> It should not overlap with the efuse reg range which is:
+>=20
+> <0x134100d0 0x2c>
+>=20
+> If I look at JZ4780 Mobile Application Processor Programming Manual
+> section 16.4.1 Register Description Table 16-4 Static Memory=20
+> Interface Registers,
+> I see
+>=20
+> SMCR1 at 0x13410014 and
+> SACR6 at 0x13410048 and all 32 bits wide. I.e. a total size of 0x4c.
+>=20
+> Ah, now I see. There is also Table 16-5 NAND Flash Interface Registers
+> starting with NFCSR at 0x13410050 and ending with TGHH register at=20
+> 0x13410154.
+>=20
+> Hm. With this we are probably at "go back and start over"...
+>=20
+> Either nemc must be separated into two drivers for Static Memory and=20
+> one
+> for NAND Flash. Or must become able to handle two register ranges.
+>=20
+> Or the e-fuse driver must become a part of the nemc driver.
+
+Nothing that bad. I'll make the NEMC driver request only the area it=20
+needs, out of the 0x10000 register space.
+
+Then, you can move the efuse node *inside* the nemc node (with proper=20
+#address-cells/#size-cells/ranges and "simple-mfd" compatible string)=20
+and everything will work.
+
+> Well, another assumption is that there is no NAND driver. AFAIR it
+> was even removed from the kernel because the maintainer did say
+> it is not fixable (if I really remember correctly).
+
+It's still there:
+drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c
+
+What was dropped from the kernel is MLC NAND support in UBI.
 
 Cheers,
-Phil
+-Paul
 
-> >
-> > That being said, we need to update runnable_avg with the old
-> > h_nr_running: the one before we started to throttle the cfs which is
-> > the value saved in group_se->runnable_weight. Once we have updated
-> > runnable_avg, we save the new h_nr_running in
-> > group_se->runnable_weight that will be used for next updates.
-> >
-> > >
-> > > >>> of the hierarchy.
-> > > >>
-> > > >> You'll also need to do this for task enqueue/dequeue inside of a
-> > > >> throttled hierarchy, I'm pretty sure.
-> > > >
-> > > > AFAICT, this is already done with patch "sched/pelt: Add a new
-> > > > runnable average signal" when task is enqueued/dequeued inside a
-> > > > throttled hierarchy
-> > > >
-> > > >>
-> > > >>>
-> > > >>> Fixes: 9f68395333ad ("sched/pelt: Add a new runnable average signal")
-> > > >>> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> > > >>> ---
-> > > >>> This patch applies on top of tip/sched/core
-> > > >>>
-> > > >>>  kernel/sched/fair.c | 10 ++++++++++
-> > > >>>  1 file changed, 10 insertions(+)
-> > > >>>
-> > > >>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > > >>> index fcc968669aea..6d46974e9be7 100644
-> > > >>> --- a/kernel/sched/fair.c
-> > > >>> +++ b/kernel/sched/fair.c
-> > > >>> @@ -4703,6 +4703,11 @@ static void throttle_cfs_rq(struct cfs_rq *cfs_rq)
-> > > >>>
-> > > >>>               if (dequeue)
-> > > >>>                       dequeue_entity(qcfs_rq, se, DEQUEUE_SLEEP);
-> > > >>> +             else {
-> > > >>> +                     update_load_avg(qcfs_rq, se, 0);
-> > > >>> +                     se_update_runnable(se);
-> > > >>> +             }
-> > > >>> +
-> > > >>>               qcfs_rq->h_nr_running -= task_delta;
-> > > >>>               qcfs_rq->idle_h_nr_running -= idle_task_delta;
-> > > >>>
-> > > >>> @@ -4772,6 +4777,11 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
-> > > >>>               cfs_rq = cfs_rq_of(se);
-> > > >>>               if (enqueue)
-> > > >>>                       enqueue_entity(cfs_rq, se, ENQUEUE_WAKEUP);
-> > > >>> +             else {
-> > > >>> +                     update_load_avg(cfs_rq, se, 0);
-> > > >>
-> > > >>
-> > > >>> +                     se_update_runnable(se);
-> > > >>> +             }
-> > > >>> +
-> > > >>>               cfs_rq->h_nr_running += task_delta;
-> > > >>>               cfs_rq->idle_h_nr_running += idle_task_delta;
-> 
+>>=20
+>>>  		#address-cells =3D <2>;
+>>>  		#size-cells =3D <1>;
+>>>  		ranges =3D <1 0 0x1b000000 0x1000000
+>>>  @@ -373,6 +373,21 @@
+>>>  		status =3D "disabled";
+>>>  	};
+>>>  +	efuse: efuse@134100d0 {
+>>>  +		compatible =3D "ingenic,jz4780-efuse";
+>>>  +		reg =3D <0x134100d0 0x2c>;
+>>>  +
+>>>  +		clocks =3D <&cgu JZ4780_CLK_AHB2>;
+>>>  +		clock-names =3D "ahb2";
+>>=20
+>>  As explained in my response to the other patch, 'clock-names' can=20
+>> go away.
+>=20
+> Yes.
+>=20
+> BR,
+> Nikolaus
+>=20
 
--- 
+=
 
