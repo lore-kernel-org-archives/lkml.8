@@ -2,52 +2,51 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B98C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4FDC34022
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 508762469B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:40:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23D7124697
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:40:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814413;
-	bh=MvpGkisapQEKme4+oBrcbt711n6ogbdsBeQcexmeudc=;
+	s=default; t=1582814422;
+	bh=/W4QXVI7lhjcPnuwxBd5r5z6cTMz3e7o7C/rJYsgZFI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iJp7F2j2/pq64HYKDy9SDpnlihTBEHDTTaqj46I2MzB3v13V53k6Rz/ZfJl4svS4M
-	 W+E1avAJww5rroq9hRZa3xU5BJrof6u2Th9+6QweBigYGDb0a7xdmHQx2LKsoEhFQd
-	 +FQekKCoa2X3vw+t/txyiQnfAhLe3NkxR0+WLLx0=
+	b=UJneMp1lJZ0dYRT55cGiKED88amp8l9W2axbXbxO5Ohrh1JzM5OcnJY5dniQ6pP59
+	 3XB+QlaYKrA3OpJ6hpr6xcE/ALxQV+wMH5XeQ/mRQ/9mZGps1NYw4iXlloRuz73Umq
+	 HnmSXvThBlnQCNtMkyPu3XbrHUxi1QC98s4SHjRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731772AbgB0Nxv (ORCPT
+        id S1731728AbgB0Nxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:53:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53726 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:53:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730205AbgB0Nxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:53:47 -0500
+        id S1731518AbgB0Nxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:53:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 947D92084E;
-        Thu, 27 Feb 2020 13:53:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D6A821D7E;
+        Thu, 27 Feb 2020 13:53:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811627;
-        bh=MvpGkisapQEKme4+oBrcbt711n6ogbdsBeQcexmeudc=;
+        s=default; t=1582811610;
+        bh=/W4QXVI7lhjcPnuwxBd5r5z6cTMz3e7o7C/rJYsgZFI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oc5j2FbpOLRTkcp5L7/uCzjHoPqc7CU0e02ROzFGp3ePK4TC0S8bUbLHMMGUsKuWD
-         IzaPGkeYjHcH+kucqch1mOwbo7U+k8n+mU8IrJ9UTFKT+LW4x5WIkZi2639YGiHL4Q
-         XWmP80gXbbOp4uZZZrS/cB3Vl4BbecuVWdaI7u3s=
+        b=mh4jv6a6UhSt2kvrftuiMLh4aB0yIxf1xBYaXRGh56CP8mYfWwy73+5/kBYCylCYl
+         FEXWF2p0YH0V7vHdr/tXprkyOOeaCypThzrBLGQ6iydwmvyGICx1rCmCj42KMNmR7B
+         FCuCFm5n9wTnoinLY0Et/uzW0YBetz923Geyablw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>, Tejun Heo <tj@kernel.org>
-Subject: [PATCH 4.14 040/237] cpu/hotplug, stop_machine: Fix stop_machine vs hotplug order
-Date:   Thu, 27 Feb 2020 14:34:14 +0100
-Message-Id: <20200227132259.673515224@linuxfoundation.org>
+        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.14 007/237] Input: synaptics - switch T470s to RMI4 by default
+Date:   Thu, 27 Feb 2020 14:33:41 +0100
+Message-Id: <20200227132256.304870130@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -60,91 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Lyude Paul <lyude@redhat.com>
 
-[ Upstream commit 45178ac0cea853fe0e405bf11e101bdebea57b15 ]
+commit bf502391353b928e63096127e5fd8482080203f5 upstream.
 
-Paul reported a very sporadic, rcutorture induced, workqueue failure.
-When the planets align, the workqueue rescuer's self-migrate fails and
-then triggers a WARN for running a work on the wrong CPU.
+This supports RMI4 and everything seems to work, including the touchpad
+buttons. So, let's enable this by default.
 
-Tejun then figured that set_cpus_allowed_ptr()'s stop_one_cpu() call
-could be ignored! When stopper->enabled is false, stop_machine will
-insta complete the work, without actually doing the work. Worse, it
-will not WARN about this (we really should fix this).
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200204194322.112638-1-lyude@redhat.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-It turns out there is a small window where a freshly online'ed CPU is
-marked 'online' but doesn't yet have the stopper task running:
-
-	BP				AP
-
-	bringup_cpu()
-	  __cpu_up(cpu, idle)	 -->	start_secondary()
-					...
-					cpu_startup_entry()
-	  bringup_wait_for_ap()
-	    wait_for_ap_thread() <--	  cpuhp_online_idle()
-					  while (1)
-					    do_idle()
-
-					... available to run kthreads ...
-
-	    stop_machine_unpark()
-	      stopper->enable = true;
-
-Close this by moving the stop_machine_unpark() into
-cpuhp_online_idle(), such that the stopper thread is ready before we
-start the idle loop and schedule.
-
-Reported-by: "Paul E. McKenney" <paulmck@kernel.org>
-Debugged-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Tested-by: "Paul E. McKenney" <paulmck@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/cpu.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/input/mouse/synaptics.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 49273130e4f1e..96c0a868232ef 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -494,8 +494,7 @@ static int bringup_wait_for_ap(unsigned int cpu)
- 	if (WARN_ON_ONCE((!cpu_online(cpu))))
- 		return -ECANCELED;
- 
--	/* Unpark the stopper thread and the hotplug thread of the target cpu */
--	stop_machine_unpark(cpu);
-+	/* Unpark the hotplug thread of the target cpu */
- 	kthread_unpark(st->thread);
- 
- 	/*
-@@ -1064,8 +1063,8 @@ void notify_cpu_starting(unsigned int cpu)
- 
- /*
-  * Called from the idle task. Wake up the controlling task which brings the
-- * stopper and the hotplug thread of the upcoming CPU up and then delegates
-- * the rest of the online bringup to the hotplug thread.
-+ * hotplug thread of the upcoming CPU up and then delegates the rest of the
-+ * online bringup to the hotplug thread.
-  */
- void cpuhp_online_idle(enum cpuhp_state state)
- {
-@@ -1075,6 +1074,12 @@ void cpuhp_online_idle(enum cpuhp_state state)
- 	if (state != CPUHP_AP_ONLINE_IDLE)
- 		return;
- 
-+	/*
-+	 * Unpart the stopper thread before we start the idle loop (and start
-+	 * scheduling); this ensures the stopper task is always available.
-+	 */
-+	stop_machine_unpark(smp_processor_id());
-+
- 	st->state = CPUHP_AP_ONLINE_IDLE;
- 	complete_ap_thread(st, true);
- }
--- 
-2.20.1
-
+--- a/drivers/input/mouse/synaptics.c
++++ b/drivers/input/mouse/synaptics.c
+@@ -172,6 +172,7 @@ static const char * const smbus_pnp_ids[
+ 	"LEN004a", /* W541 */
+ 	"LEN005b", /* P50 */
+ 	"LEN005e", /* T560 */
++	"LEN006c", /* T470s */
+ 	"LEN0071", /* T480 */
+ 	"LEN0072", /* X1 Carbon Gen 5 (2017) - Elan/ALPS trackpoint */
+ 	"LEN0073", /* X1 Carbon G5 (Elantech) */
 
 
