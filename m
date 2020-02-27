@@ -2,54 +2,55 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96714C52D56
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA134C52D30
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CD3920578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ED0621D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:07:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812422;
-	bh=8xjQQ0YhFjU5P9RymGIDkr/KwUaQQ8iwiQv/6zyt+FM=;
+	s=default; t=1582812429;
+	bh=jTvwhF4KjEeGmTKvwo1HGhYhl0LBnNBc2sIqXvNxEEY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j7bFLpfkLrmDa8dXNWjZRQBg9RGb5eECHqD9zFNGP7MDvLJu8aEPbBjXWj0i0P7k5
-	 BZcFQXMcG/jSqmFQAQoVQ8NFTe+iVodOeEX7btZIHXkQad6g+gRjW3TbR9N6Vx91nY
-	 so0TwIz1xbvkJW54tR0xti6AtPF+ySeovQVL9G2o=
+	b=uJVHX8iSGw9LtY1TtAQKM1A0G7uZ6+YYru4WHlP6SLuUPQcfc1UOYYBtuwGEOrSrY
+	 uSha54TCb+724JRzhifVIvSDjRPyW1i8ezzqr2iFbeVd/kFAYa7EBsIqws+sTc6SF7
+	 tUc55dnUzJXqtzCtzd0V+oeabKxsaQ/tF8tOw0jQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388003AbgB0OHA (ORCPT
+        id S2388030AbgB0OHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:07:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44192 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:07:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387598AbgB0OGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:06:52 -0500
+        id S2388010AbgB0OHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:07:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FC5F20578;
-        Thu, 27 Feb 2020 14:06:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EBE621D7E;
+        Thu, 27 Feb 2020 14:06:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812412;
-        bh=8xjQQ0YhFjU5P9RymGIDkr/KwUaQQ8iwiQv/6zyt+FM=;
+        s=default; t=1582812420;
+        bh=jTvwhF4KjEeGmTKvwo1HGhYhl0LBnNBc2sIqXvNxEEY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PBI1t4CQZEjJeh+zi7GQMg27FIY1X4Ix4hXfuVD5FYRhsfPKYxssrRjqs/qXs7XjY
-         T7+npKeiZsYHpuKbtc+FJ6qhH85HjIn3mCBQrC/bL7rJ/K6ExANyyPFgvw0myAlj+Z
-         6nz/68gc5A1tQlPrjSwgjvPlHHF6rX9PDKek5GUk=
+        b=PNqkjCHOb8pGvVSaAA1qdz1wQ3FXKX71mfgix0HnTUHW6SZ3QrZf1kz1GJt2/U/FQ
+         zhOveru1ETpzmVeGugYkomH0aYDvBKYX9PnYZQMv8mn1iQL3egRgav/SGbu1obcq6e
+         Mju7QbvWZJskooLltXj8DtjRuNMTXqZJVfqr68l8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, satya priya <skakit@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 59/97] tty: serial: qcom_geni_serial: Fix RX cancel command failure
-Date:   Thu, 27 Feb 2020 14:37:07 +0100
-Message-Id: <20200227132224.186889698@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH 5.4 011/135] thunderbolt: Prevent crash if non-active NVMem file is read
+Date:   Thu, 27 Feb 2020 14:35:51 +0100
+Message-Id: <20200227132230.736007053@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
-References: <20200227132214.553656188@linuxfoundation.org>
+In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
+References: <20200227132228.710492098@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,73 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: satya priya <skakit@codeaurora.org>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-[ Upstream commit 679aac5ead2f18d223554a52b543e1195e181811 ]
+commit 03cd45d2e219301880cabc357e3cf478a500080f upstream.
 
-RX cancel command fails when BT is switched on and off multiple times.
+The driver does not populate .reg_read callback for the non-active NVMem
+because the file is supposed to be write-only. However, it turns out
+NVMem subsystem does not yet support this and expects that the .reg_read
+callback is provided. If user reads the binary attribute it triggers
+NULL pointer dereference like this one:
 
-To handle this, poll for the cancel bit in SE_GENI_S_IRQ_STATUS register
-instead of SE_GENI_S_CMD_CTRL_REG.
+  BUG: kernel NULL pointer dereference, address: 0000000000000000
+  ...
+  Call Trace:
+   bin_attr_nvmem_read+0x64/0x80
+   kernfs_fop_read+0xa7/0x180
+   vfs_read+0xbd/0x170
+   ksys_read+0x5a/0xd0
+   do_syscall_64+0x43/0x150
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-As per the HPG update, handle the RX last bit after cancel command
-and flush out the RX FIFO buffer.
+Fix this in the driver by providing .reg_read callback that always
+returns an error.
 
-Signed-off-by: satya priya <skakit@codeaurora.org>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1581415982-8793-1-git-send-email-skakit@codeaurora.org
+Reported-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Fixes: e6b245ccd524 ("thunderbolt: Add support for host and device NVM firmware upgrade")
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200213095604.1074-1-mika.westerberg@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/tty/serial/qcom_geni_serial.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ drivers/thunderbolt/switch.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-index 4182129925dec..4458419f053b6 100644
---- a/drivers/tty/serial/qcom_geni_serial.c
-+++ b/drivers/tty/serial/qcom_geni_serial.c
-@@ -121,6 +121,7 @@ static int handle_rx_console(struct uart_port *uport, u32 bytes, bool drop);
- static int handle_rx_uart(struct uart_port *uport, u32 bytes, bool drop);
- static unsigned int qcom_geni_serial_tx_empty(struct uart_port *port);
- static void qcom_geni_serial_stop_rx(struct uart_port *uport);
-+static void qcom_geni_serial_handle_rx(struct uart_port *uport, bool drop);
- 
- static const unsigned long root_freq[] = {7372800, 14745600, 19200000, 29491200,
- 					32000000, 48000000, 64000000, 80000000,
-@@ -614,7 +615,7 @@ static void qcom_geni_serial_stop_rx(struct uart_port *uport)
- 	u32 irq_en;
- 	u32 status;
- 	struct qcom_geni_serial_port *port = to_dev_port(uport, uport);
--	u32 irq_clear = S_CMD_DONE_EN;
-+	u32 s_irq_status;
- 
- 	irq_en = readl(uport->membase + SE_GENI_S_IRQ_EN);
- 	irq_en &= ~(S_RX_FIFO_WATERMARK_EN | S_RX_FIFO_LAST_EN);
-@@ -630,10 +631,19 @@ static void qcom_geni_serial_stop_rx(struct uart_port *uport)
- 		return;
- 
- 	geni_se_cancel_s_cmd(&port->se);
--	qcom_geni_serial_poll_bit(uport, SE_GENI_S_CMD_CTRL_REG,
--					S_GENI_CMD_CANCEL, false);
-+	qcom_geni_serial_poll_bit(uport, SE_GENI_S_IRQ_STATUS,
-+					S_CMD_CANCEL_EN, true);
-+	/*
-+	 * If timeout occurs secondary engine remains active
-+	 * and Abort sequence is executed.
-+	 */
-+	s_irq_status = readl(uport->membase + SE_GENI_S_IRQ_STATUS);
-+	/* Flush the Rx buffer */
-+	if (s_irq_status & S_RX_FIFO_LAST_EN)
-+		qcom_geni_serial_handle_rx(uport, true);
-+	writel(s_irq_status, uport->membase + SE_GENI_S_IRQ_CLEAR);
-+
- 	status = readl(uport->membase + SE_GENI_STATUS);
--	writel(irq_clear, uport->membase + SE_GENI_S_IRQ_CLEAR);
- 	if (status & S_GENI_CMD_ACTIVE)
- 		qcom_geni_serial_abort_rx(uport);
+--- a/drivers/thunderbolt/switch.c
++++ b/drivers/thunderbolt/switch.c
+@@ -274,6 +274,12 @@ out:
+ 	return ret;
  }
--- 
-2.20.1
-
+ 
++static int tb_switch_nvm_no_read(void *priv, unsigned int offset, void *val,
++				 size_t bytes)
++{
++	return -EPERM;
++}
++
+ static int tb_switch_nvm_write(void *priv, unsigned int offset, void *val,
+ 			       size_t bytes)
+ {
+@@ -319,6 +325,7 @@ static struct nvmem_device *register_nvm
+ 		config.read_only = true;
+ 	} else {
+ 		config.name = "nvm_non_active";
++		config.reg_read = tb_switch_nvm_no_read;
+ 		config.reg_write = tb_switch_nvm_write;
+ 		config.root_only = true;
+ 	}
 
 
