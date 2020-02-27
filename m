@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15671C76563
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B394C76568
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8CA624688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0326824656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813661;
-	bh=IAbXsdKThfWp5kflFnf+H5CpkjsYJ220+iv2NJURT2I=;
+	s=default; t=1582813672;
+	bh=dG1J/I8WKVAUK14Lul6+PWveA9+GuP9eZlvwnpNFn9k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ewk2By69ImMW1QPV4lANTkyzTiOiXcp4QhY02Ir1LgR9NHrJ6+JFYcg2HGuLs2gTH
-	 9FBlKyOamHXeUKbpyLkgiskuiW++nfkXlgy3rnFsVWhd+OtK2Yx2T9ovMr1oJ0AGfw
-	 ST+XRGmy3nwGDtUNrtniT1kakBHq/XUfrXx8gz5s=
+	b=L1XRTHrT/bnuNr+u1p8PsuOxJx22FWMIMqzqjTjyl5j2Fc0z9Gc8d0AE7BjVjdLdj
+	 Gu+sNQCHYYYTXYvmBtK7xPmQE2ji1x3hKpQtZqPZf2ydw7GeGRiL5NLWy6dURsNKN7
+	 vQUI6Ww4REzY3oUa73REwhx6wO65jbegdRU9UeAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388892AbgB0O1j (ORCPT
+        id S1733236AbgB0OIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:27:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46592 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:08:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387557AbgB0OIo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:08:44 -0500
+        id S2388249AbgB0OI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:08:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4316021D7E;
-        Thu, 27 Feb 2020 14:08:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A32821D7E;
+        Thu, 27 Feb 2020 14:08:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812523;
-        bh=IAbXsdKThfWp5kflFnf+H5CpkjsYJ220+iv2NJURT2I=;
+        s=default; t=1582812507;
+        bh=dG1J/I8WKVAUK14Lul6+PWveA9+GuP9eZlvwnpNFn9k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n/466QPAey9PRYYFGeB/APO/njvw9wMjGM8ylAmhvcJlkFaDxVJa6gOtPF6AjRDKL
-         rFPDNgjTnuFPBQ1x1JH4BZg+V1pADmeD+Zkhc7p0bp+7bkrMJpFk5ImessUJLNsrhI
-         RCv1+J97QLKcqqyOoHWf2LMDyctvXyYl3lNc9reY=
+        b=RYFeipOa7loet1hNKl21Aucqw8LMSZ/UBIQ1VfxnvRLGKI4lZjrOGhIjOy1eJb+bg
+         GDmNVQnwzmZ/ydMbYmsamFsi+Ai+PaO5x9qXMuGmMOMPNycAd8V0MH5Hm+9Lfe1sQw
+         NDnOB93/qZExvm8Cx8659CLH2dOODHNrkpn9mMXw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rene D Obermueller <cmdrrdo@gmail.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 5.4 023/135] xhci: Force Maximum Packet size for Full-speed bulk devices to valid range.
-Date:   Thu, 27 Feb 2020 14:36:03 +0100
-Message-Id: <20200227132232.702723589@linuxfoundation.org>
+        stable@vger.kernel.org, Sam Bobroff <sbobroff@linux.ibm.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.4 044/135] powerpc/eeh: Fix deadlock handling dead PHB
+Date:   Thu, 27 Feb 2020 14:36:24 +0100
+Message-Id: <20200227132235.604446318@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -59,51 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Sam Bobroff <sbobroff@linux.ibm.com>
 
-commit f148b9f402ef002b57bcff3964d45abc8ffb6c3f upstream.
+commit d4f194ed9eb9841a8f978710e4d24296f791a85b upstream.
 
-A Full-speed bulk USB audio device (DJ-Tech CTRL) with a invalid Maximum
-Packet Size of 4 causes a xHC "Parameter Error" at enumeration.
+Recovering a dead PHB can currently cause a deadlock as the PCI
+rescan/remove lock is taken twice.
 
-This is because valid Maximum packet sizes for Full-speed bulk endpoints
-are 8, 16, 32 and 64 bytes. Hosts are not required to support other values
-than these. See usb 2 specs section 5.8.3 for details.
+This is caused as part of an existing bug in
+eeh_handle_special_event(). The pe is processed while traversing the
+PHBs even though the pe is unrelated to the loop. This causes the pe
+to be, incorrectly, processed more than once.
 
-The device starts working after forcing the maximum packet size to 8.
-This is most likely the case with other devices as well, so force the
-maximum packet size to a valid range.
+Untangling this section can move the pe processing out of the loop and
+also outside the locked section, correcting both problems.
 
-Cc: stable@vger.kernel.org
-Reported-by: Rene D Obermueller <cmdrrdo@gmail.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200210134553.9144-2-mathias.nyman@linux.intel.com
+Fixes: 2e25505147b8 ("powerpc/eeh: Fix crash when edev->pdev changes")
+Cc: stable@vger.kernel.org # 5.4+
+Signed-off-by: Sam Bobroff <sbobroff@linux.ibm.com>
+Reviewed-by: Frederic Barrat <fbarrat@linux.ibm.com>
+Tested-by: Frederic Barrat <fbarrat@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/0547e82dbf90ee0729a2979a8cac5c91665c621f.1581051445.git.sbobroff@linux.ibm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-mem.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ arch/powerpc/kernel/eeh_driver.c |   21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
---- a/drivers/usb/host/xhci-mem.c
-+++ b/drivers/usb/host/xhci-mem.c
-@@ -1475,9 +1475,15 @@ int xhci_endpoint_init(struct xhci_hcd *
- 	/* Allow 3 retries for everything but isoc, set CErr = 3 */
- 	if (!usb_endpoint_xfer_isoc(&ep->desc))
- 		err_count = 3;
--	/* Some devices get this wrong */
--	if (usb_endpoint_xfer_bulk(&ep->desc) && udev->speed == USB_SPEED_HIGH)
--		max_packet = 512;
-+	/* HS bulk max packet should be 512, FS bulk supports 8, 16, 32 or 64 */
-+	if (usb_endpoint_xfer_bulk(&ep->desc)) {
-+		if (udev->speed == USB_SPEED_HIGH)
-+			max_packet = 512;
-+		if (udev->speed == USB_SPEED_FULL) {
-+			max_packet = rounddown_pow_of_two(max_packet);
-+			max_packet = clamp_val(max_packet, 8, 64);
-+		}
-+	}
- 	/* xHCI 1.0 and 1.1 indicates that ctrl ep avg TRB Length should be 8 */
- 	if (usb_endpoint_xfer_control(&ep->desc) && xhci->hci_version >= 0x100)
- 		avg_trb_len = 8;
+--- a/arch/powerpc/kernel/eeh_driver.c
++++ b/arch/powerpc/kernel/eeh_driver.c
+@@ -1200,6 +1200,17 @@ void eeh_handle_special_event(void)
+ 			eeh_pe_state_mark(pe, EEH_PE_RECOVERING);
+ 			eeh_handle_normal_event(pe);
+ 		} else {
++			eeh_for_each_pe(pe, tmp_pe)
++				eeh_pe_for_each_dev(tmp_pe, edev, tmp_edev)
++					edev->mode &= ~EEH_DEV_NO_HANDLER;
++
++			/* Notify all devices to be down */
++			eeh_pe_state_clear(pe, EEH_PE_PRI_BUS, true);
++			eeh_set_channel_state(pe, pci_channel_io_perm_failure);
++			eeh_pe_report(
++				"error_detected(permanent failure)", pe,
++				eeh_report_failure, NULL);
++
+ 			pci_lock_rescan_remove();
+ 			list_for_each_entry(hose, &hose_list, list_node) {
+ 				phb_pe = eeh_phb_pe_get(hose);
+@@ -1208,16 +1219,6 @@ void eeh_handle_special_event(void)
+ 				    (phb_pe->state & EEH_PE_RECOVERING))
+ 					continue;
+ 
+-				eeh_for_each_pe(pe, tmp_pe)
+-					eeh_pe_for_each_dev(tmp_pe, edev, tmp_edev)
+-						edev->mode &= ~EEH_DEV_NO_HANDLER;
+-
+-				/* Notify all devices to be down */
+-				eeh_pe_state_clear(pe, EEH_PE_PRI_BUS, true);
+-				eeh_set_channel_state(pe, pci_channel_io_perm_failure);
+-				eeh_pe_report(
+-					"error_detected(permanent failure)", pe,
+-					eeh_report_failure, NULL);
+ 				bus = eeh_pe_bus_get(phb_pe);
+ 				if (!bus) {
+ 					pr_err("%s: Cannot find PCI bus for "
 
 
