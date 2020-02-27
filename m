@@ -4,57 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2946FC3F372
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4D4C3F354
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F421D2468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1729C24688
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:33:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813980;
-	bh=FOoqKnrn4qOTHfbpPkiMYn5/tbWYlDqVW6aM+YvjngA=;
+	s=default; t=1582813992;
+	bh=PnMCH+0f2t4eN2i3oCOv8zSc7Lk9u0FVkJC+L6D8WwU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gVEoUNBeCxJCmanD2V+zrIrg0FkBpPuy8XDzAYa7xKHc2mmNAc+2HbECxUt3oXEaf
-	 DSxGJo+OSeYIba9iqXFs34UV1zwyW6s502hdSNeMsCyx74NEbDmrlDHIqK6T5mAXdH
-	 ClCPkHsrXww9hanCmUqy7mRTPTtAEuQRw0tVs/bA=
+	b=izBOlLeA+WUkUYademhxO554osUS+a7j5TJaQ59GY1WqXLtdCFuVnazcHx6/nFm8B
+	 qTTuH+RONIE9x8aZJPh36E33HUnalrjL/7oT29D6AyIpo5LfYbq1SvYwgObvguZN2p
+	 T1g/pKsDaTzW2o0yQTPJhgRZwK2h2kymVEZJeG2w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732875AbgB0OBL (ORCPT
+        id S1732825AbgB0OA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:01:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34820 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:00:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732854AbgB0OBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:01:05 -0500
+        id S1732515AbgB0OAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:00:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F06424691;
-        Thu, 27 Feb 2020 14:01:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AC0E2084E;
+        Thu, 27 Feb 2020 14:00:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812064;
-        bh=FOoqKnrn4qOTHfbpPkiMYn5/tbWYlDqVW6aM+YvjngA=;
+        s=default; t=1582812049;
+        bh=PnMCH+0f2t4eN2i3oCOv8zSc7Lk9u0FVkJC+L6D8WwU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=euyrMoB1q6b6BD4VFjdBfcb/18nwCpxlSPWCVJDckNjYGzve0drG9KUgQop7UU2YS
-         kkGb14IR7Q2lGYyb0hZmDCiCyWfosscLHcbj/HhBrQ4NvBKpQ54byHGytakDQ6zQE1
-         pghnc/jUIWFFUSUa7YFd2/c27X8qbPTRQnzC7y5g=
+        b=HPmrKW6RWa4A4Kv50TriYXAoiNDMueab+HrYcpvVLdkUfWFrLLHWN0zL1tVRpwgjy
+         TFyAqwcXNDCZctNnJpbjj/sQOeNNpSKpAThMsGvK4Hi+P054KKpxucMQ+HqsJoB8by
+         xVKRG+xtIaEswKNe6A7memWFIaE/azJ8aOt2zUrM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Potapenko <glider@google.com>,
-        Walter Wu <walter-zh.wu@mediatek.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 209/237] lib/stackdepot.c: fix global out-of-bounds in stack_slabs
-Date:   Thu, 27 Feb 2020 14:37:03 +0100
-Message-Id: <20200227132311.601513023@linuxfoundation.org>
+Subject: [PATCH 4.14 203/237] vt: vt_ioctl: fix race in VT_RESIZEX
+Date:   Thu, 27 Feb 2020 14:36:57 +0100
+Message-Id: <20200227132311.194625081@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -67,60 +60,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Potapenko <glider@google.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 305e519ce48e935702c32241f07d393c3c8fed3e ]
+[ Upstream commit 6cd1ed50efd88261298577cd92a14f2768eddeeb ]
 
-Walter Wu has reported a potential case in which init_stack_slab() is
-called after stack_slabs[STACK_ALLOC_MAX_SLABS - 1] has already been
-initialized.  In that case init_stack_slab() will overwrite
-stack_slabs[STACK_ALLOC_MAX_SLABS], which may result in a memory
-corruption.
+We need to make sure vc_cons[i].d is not NULL after grabbing
+console_lock(), or risk a crash.
 
-Link: http://lkml.kernel.org/r/20200218102950.260263-1-glider@google.com
-Fixes: cd11016e5f521 ("mm, kasan: stackdepot implementation. Enable stackdepot for SLAB")
-Signed-off-by: Alexander Potapenko <glider@google.com>
-Reported-by: Walter Wu <walter-zh.wu@mediatek.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+general protection fault, probably for non-canonical address 0xdffffc0000000068: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000340-0x0000000000000347]
+CPU: 1 PID: 19462 Comm: syz-executor.5 Not tainted 5.5.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:vt_ioctl+0x1f96/0x26d0 drivers/tty/vt/vt_ioctl.c:883
+Code: 74 41 e8 bd a6 84 fd 48 89 d8 48 c1 e8 03 42 80 3c 28 00 0f 85 e4 04 00 00 48 8b 03 48 8d b8 40 03 00 00 48 89 fa 48 c1 ea 03 <42> 0f b6 14 2a 84 d2 74 09 80 fa 03 0f 8e b1 05 00 00 44 89 b8 40
+RSP: 0018:ffffc900086d7bb0 EFLAGS: 00010202
+RAX: 0000000000000000 RBX: ffffffff8c34ee88 RCX: ffffc9001415c000
+RDX: 0000000000000068 RSI: ffffffff83f0e6e3 RDI: 0000000000000340
+RBP: ffffc900086d7cd0 R08: ffff888054ce0100 R09: fffffbfff16a2f6d
+R10: ffff888054ce0998 R11: ffff888054ce0100 R12: 000000000000001d
+R13: dffffc0000000000 R14: 1ffff920010daf79 R15: 000000000000ff7f
+FS:  00007f7d13c12700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffd477e3c38 CR3: 0000000095d0a000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ tty_ioctl+0xa37/0x14f0 drivers/tty/tty_io.c:2660
+ vfs_ioctl fs/ioctl.c:47 [inline]
+ ksys_ioctl+0x123/0x180 fs/ioctl.c:763
+ __do_sys_ioctl fs/ioctl.c:772 [inline]
+ __se_sys_ioctl fs/ioctl.c:770 [inline]
+ __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:770
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45b399
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f7d13c11c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007f7d13c126d4 RCX: 000000000045b399
+RDX: 0000000020000080 RSI: 000000000000560a RDI: 0000000000000003
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000666 R14: 00000000004c7f04 R15: 000000000075bf2c
+Modules linked in:
+---[ end trace 80970faf7a67eb77 ]---
+RIP: 0010:vt_ioctl+0x1f96/0x26d0 drivers/tty/vt/vt_ioctl.c:883
+Code: 74 41 e8 bd a6 84 fd 48 89 d8 48 c1 e8 03 42 80 3c 28 00 0f 85 e4 04 00 00 48 8b 03 48 8d b8 40 03 00 00 48 89 fa 48 c1 ea 03 <42> 0f b6 14 2a 84 d2 74 09 80 fa 03 0f 8e b1 05 00 00 44 89 b8 40
+RSP: 0018:ffffc900086d7bb0 EFLAGS: 00010202
+RAX: 0000000000000000 RBX: ffffffff8c34ee88 RCX: ffffc9001415c000
+RDX: 0000000000000068 RSI: ffffffff83f0e6e3 RDI: 0000000000000340
+RBP: ffffc900086d7cd0 R08: ffff888054ce0100 R09: fffffbfff16a2f6d
+R10: ffff888054ce0998 R11: ffff888054ce0100 R12: 000000000000001d
+R13: dffffc0000000000 R14: 1ffff920010daf79 R15: 000000000000ff7f
+FS:  00007f7d13c12700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffd477e3c38 CR3: 0000000095d0a000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: stable <stable@vger.kernel.org>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Link: https://lore.kernel.org/r/20200210190721.200418-1-edumazet@google.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/stackdepot.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/tty/vt/vt_ioctl.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/lib/stackdepot.c b/lib/stackdepot.c
-index 1724cb0d6283f..54fe55b6bbc0a 100644
---- a/lib/stackdepot.c
-+++ b/lib/stackdepot.c
-@@ -92,15 +92,19 @@ static bool init_stack_slab(void **prealloc)
- 		return true;
- 	if (stack_slabs[depot_index] == NULL) {
- 		stack_slabs[depot_index] = *prealloc;
-+		*prealloc = NULL;
- 	} else {
--		stack_slabs[depot_index + 1] = *prealloc;
-+		/* If this is the last depot slab, do not touch the next one. */
-+		if (depot_index + 1 < STACK_ALLOC_MAX_SLABS) {
-+			stack_slabs[depot_index + 1] = *prealloc;
-+			*prealloc = NULL;
-+		}
- 		/*
- 		 * This smp_store_release pairs with smp_load_acquire() from
- 		 * |next_slab_inited| above and in stack_depot_save().
- 		 */
- 		smp_store_release(&next_slab_inited, 1);
- 	}
--	*prealloc = NULL;
- 	return true;
- }
+diff --git a/drivers/tty/vt/vt_ioctl.c b/drivers/tty/vt/vt_ioctl.c
+index be7990548afef..c320fefab3602 100644
+--- a/drivers/tty/vt/vt_ioctl.c
++++ b/drivers/tty/vt/vt_ioctl.c
+@@ -876,15 +876,20 @@ int vt_ioctl(struct tty_struct *tty,
+ 			return -EINVAL;
  
+ 		for (i = 0; i < MAX_NR_CONSOLES; i++) {
++			struct vc_data *vcp;
++
+ 			if (!vc_cons[i].d)
+ 				continue;
+ 			console_lock();
+-			if (v.v_vlin)
+-				vc_cons[i].d->vc_scan_lines = v.v_vlin;
+-			if (v.v_clin)
+-				vc_cons[i].d->vc_font.height = v.v_clin;
+-			vc_cons[i].d->vc_resize_user = 1;
+-			vc_resize(vc_cons[i].d, v.v_cols, v.v_rows);
++			vcp = vc_cons[i].d;
++			if (vcp) {
++				if (v.v_vlin)
++					vcp->vc_scan_lines = v.v_vlin;
++				if (v.v_clin)
++					vcp->vc_font.height = v.v_clin;
++				vcp->vc_resize_user = 1;
++				vc_resize(vcp, v.v_cols, v.v_rows);
++			}
+ 			console_unlock();
+ 		}
+ 		break;
 -- 
 2.20.1
 
