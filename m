@@ -8,64 +8,65 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48997C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A30D4C4BA3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2001324698
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77E8124699
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:03:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hv+UeTqh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BZv8TNID"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729101AbgB0MDN (ORCPT
+        id S1729120AbgB0MDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 07:03:13 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39358 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728882AbgB0MDM (ORCPT
+        Thu, 27 Feb 2020 07:03:17 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38128 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728882AbgB0MDQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 07:03:12 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y17so2996277wrn.6
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 04:03:11 -0800 (PST)
+        Thu, 27 Feb 2020 07:03:16 -0500
+Received: by mail-wm1-f67.google.com with SMTP id a9so3100322wmj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 04:03:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vBk1mOoIZkyy9kqJiXLBO3UKN8y6Y0f/CztnD4P9tt4=;
-        b=hv+UeTqhEqBHGOJ71CcKZK7jNNFHkqb8OREk/ICLS/IBO0ochCWX+7fYTynoHXyfrV
-         XOkxQ06JhpmEmD4pze6CpmWcSmLyvWkmJvDaOYM0zAz3crWlm0NZvoS3pxLw1ClY8rTy
-         Hj7vrv98j/kmDnErCzwPbHSbRMebWWANg5yV/7BHW/Ipc22cU+5pVJid6m9bG8gIRmNj
-         A9fmYw1Rqejt/Dus6KooWECm4Re5iNeqJSy2EyI+YkEqemsP8htTpAxXenssNKJiqmD2
-         s+TcvN8vNYANeMzyKNvdVpxVw4Rox1bcFNC6Qqq9xqmWnZXGw3+SkJPQnC2Lz7UfMxMV
-         ksXw==
+        bh=mlvu3hS2FOo3jvYAFvg3HmupOT4tMbHUqUGMTdB0I0E=;
+        b=BZv8TNIDUFwIG3XR5jTpC43/0HS4ISDRzsQP4QhE3dlcUIz/WeFLHmAXHaeIvwSsUq
+         R7SxGRHjkL0zokvs3HwE2JaguZE7dCCSigW1UQSHM9lYsy4YaVzC7uJWR9YoDmutR03x
+         rDkXLppqNkYUyr6cMX8MVshvl31rWo7RVgktxVt6SbKEj01xt2iQSuf6cY4rxAzdaSa+
+         yyIxaYMV17Z8s68a5LXeKaKJpYZ3EitjrqNn85Vsp2s4h3NmP3WfGn0efg86p0CBe3s3
+         P4zTMd9ufsIk4i2z03Exow5d+8y8vG29XoBfOoDj6fqkgMckKEEdc1+jeVPdvSyFCvak
+         vHXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vBk1mOoIZkyy9kqJiXLBO3UKN8y6Y0f/CztnD4P9tt4=;
-        b=n/CzwTW8/b5FT/Vq2d72TpstgbpEmoi+eP8LP877hbmT194cQsdSAQIvUCEvKb2bTA
-         F/LPISptk8+ZQ5zKHNb0KHDPLQMMyGpWCzdl3PO0hPQTQM9mnS5O6mgXV2eiPRWttchl
-         qKYgiqwKGzlqpv9+ywV7XmdZaZlDmsQId4LaxEkIzn6WtNfHnDXhKeuKg/PE387UkjSQ
-         cwwl7q+2TsB6xMsKQalMfXoGjThnUQhzXowpXIm3767gWezySUa4R8RpuFqbdfow+E5t
-         4jmrD/QxnR8i4TnSXB8l0kwB2N2uuVseocVnU+Vq15uIf1uyqjeWB4AX1F8U0884JpXz
-         6Wvw==
-X-Gm-Message-State: APjAAAVM85ucuZoo9t9kaOv861tTjmVTU0j9KufYywXlp6K/DaN74Msf
-        pDTVOHvo3g6ZJUDnMNUL+/E=
-X-Google-Smtp-Source: APXvYqwHljKkgGdkShlOylDLJXesMCIatBDxUYDaXf8JUNo/KPQvR2rE6Fv76uPz2LtaEEmXpQ0exA==
-X-Received: by 2002:a5d:4902:: with SMTP id x2mr2687634wrq.301.1582804989529;
-        Thu, 27 Feb 2020 04:03:09 -0800 (PST)
+        bh=mlvu3hS2FOo3jvYAFvg3HmupOT4tMbHUqUGMTdB0I0E=;
+        b=Z1/DAC0aLZQqnS6KDq9o/bR9yJ2s5pNlbmTkXObOT71jpFyOnieHZE3qsSRAHrRYLG
+         RuFRP+3C6ureg5u+Qwto8HgO6DIinX5eLoxZnirH3R5Mcxi3zyWBwU3XHDYP1V1MHBNU
+         nZOibfr5/aNDLGRa/cy+nF91HDUvM0lU2UnelPoVex2CogmUPliTiXHTN3YSiyWklt+x
+         q8UymJEtuPiBGc0rJnkkydlOGzGZlk544M2ZGUUaV7CMYGDlMzyGky1vkYIk9n8ZP9gJ
+         aUm08sNytQiCZCMGXidny4nsurntTjxlBQT8giL1KAWQrvf2zdkfDXE3ymTc5nxv20DL
+         hMuw==
+X-Gm-Message-State: APjAAAUuXBQ5BNcy4DlJs5tiqpUZJssRin8EcD/pUA8CuCcUCJIb/lLz
+        4ftN4NJyUTAw2F/UzbIKc0w=
+X-Google-Smtp-Source: APXvYqwLTKlxTSe9jq6sfhmtWPDKx6ENvxFA/rCWw8/Sac/kMbjC4rIqOFLUs/Tb4QLjqA2V3FeKrw==
+X-Received: by 2002:a7b:c119:: with SMTP id w25mr5079981wmi.116.1582804994162;
+        Thu, 27 Feb 2020 04:03:14 -0800 (PST)
 Received: from wambui.zuku.co.ke ([197.237.61.225])
-        by smtp.googlemail.com with ESMTPSA id t10sm7655017wru.59.2020.02.27.04.03.05
+        by smtp.googlemail.com with ESMTPSA id t10sm7655017wru.59.2020.02.27.04.03.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 04:03:09 -0800 (PST)
+        Thu, 27 Feb 2020 04:03:13 -0800 (PST)
 From:   Wambui Karuga <wambui.karugax@gmail.com>
 To:     daniel@ffwll.ch, airlied@linux.ie,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Brian Starkey <brian.starkey@arm.com>
+        Lucas Stach <l.stach@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>
 Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH 07/21] drm/arm: make hdlcd_debugfs_init() return void
-Date:   Thu, 27 Feb 2020 15:02:18 +0300
-Message-Id: <20200227120232.19413-8-wambui.karugax@gmail.com>
+        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: [PATCH 08/21] drm/etnaviv: remove check for return value of drm_debugfs function
+Date:   Thu, 27 Feb 2020 15:02:19 +0300
+Message-Id: <20200227120232.19413-9-wambui.karugax@gmail.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200227120232.19413-1-wambui.karugax@gmail.com>
 References: <20200227120232.19413-1-wambui.karugax@gmail.com>
@@ -77,31 +78,42 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Since commit 987d65d01356 (drm: debugfs: make
-drm_debugfs_create_files() never fail), drm_debugfs_create_files()
-never fails, and should return void. Therefore, remove its use as a
-return value in hdlcd_debugfs_init and have the latter function
-return void.
+drm_debugfs_create_files() never fail), drm_debugfs_create_file only
+returns 0, and there is no need to check the return value.
+This change therefore removes the check and error handling in
+etnaviv_debugfs_init() and also makes the function return void.
 
 Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
 ---
- drivers/gpu/drm/arm/hdlcd_drv.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/etnaviv/etnaviv_drv.c | 18 ++++--------------
+ 1 file changed, 4 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/gpu/drm/arm/hdlcd_drv.c b/drivers/gpu/drm/arm/hdlcd_drv.c
-index 2e053815b54a..194419f47c5e 100644
---- a/drivers/gpu/drm/arm/hdlcd_drv.c
-+++ b/drivers/gpu/drm/arm/hdlcd_drv.c
-@@ -224,10 +224,11 @@ static struct drm_info_list hdlcd_debugfs_list[] = {
- 	{ "clocks", hdlcd_show_pxlclock, 0 },
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.c b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
+index 6b43c1c94e8f..a39735316ca5 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_drv.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
+@@ -231,21 +231,11 @@ static struct drm_info_list etnaviv_debugfs_list[] = {
+ 		{"ring", show_each_gpu, 0, etnaviv_ring_show},
  };
  
--static int hdlcd_debugfs_init(struct drm_minor *minor)
-+static void hdlcd_debugfs_init(struct drm_minor *minor)
+-static int etnaviv_debugfs_init(struct drm_minor *minor)
++static void etnaviv_debugfs_init(struct drm_minor *minor)
  {
--	return drm_debugfs_create_files(hdlcd_debugfs_list,
--		ARRAY_SIZE(hdlcd_debugfs_list),	minor->debugfs_root, minor);
-+	drm_debugfs_create_files(hdlcd_debugfs_list,
-+				 ARRAY_SIZE(hdlcd_debugfs_list),
+-	struct drm_device *dev = minor->dev;
+-	int ret;
+-
+-	ret = drm_debugfs_create_files(etnaviv_debugfs_list,
+-			ARRAY_SIZE(etnaviv_debugfs_list),
+-			minor->debugfs_root, minor);
+-
+-	if (ret) {
+-		dev_err(dev->dev, "could not install etnaviv_debugfs_list\n");
+-		return ret;
+-	}
+-
+-	return ret;
++	drm_debugfs_create_files(etnaviv_debugfs_list,
++				 ARRAY_SIZE(etnaviv_debugfs_list),
 +				 minor->debugfs_root, minor);
  }
  #endif
