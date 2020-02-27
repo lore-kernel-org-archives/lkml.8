@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF7EC3F37C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E252EC54FD9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 379CC20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9664246A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:11:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812604;
-	bh=BOzoi9lkMAY+Td1+7TDcoWC0IM5Mo+0Ns0xY4jmUkA0=;
+	s=default; t=1582812690;
+	bh=wLfKhXxpa14kf4mWcdqPTEGTf+Z9dEcu+jrqE4IYkmY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pa5MhsOGRAFzDLP3CLQSpUuK7c0s56ZtLTgeSah5mEfV36g61MDasR0J1G1Qu75I1
-	 mryp8Umckt8Y3JgmenDUjJdFNsjTA8Ix7dp9f2pdOo5NzTkKo5+Xogki8w4sXuu3fL
-	 R6U1mbAJ5IE3wGZ1UQeu9GvCvhXXv7eL+NoneZ9k=
+	b=Uke98TRVpsv/MUNmW4VvRUxgq2BbPjLBbOuptEMYg6cw9wZRNOdMlbgbb+0Shyf8G
+	 VvvLkefDsOvG+5ea6MZml3HBx7GlUEVaP+LhT9pXjRAkERZJmGCL3V3J/FwMSD7GNL
+	 CwTRYbKG/zjwvMd+v4EjwzNbBaVf8577bXyNJi4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388461AbgB0OKC (ORCPT
+        id S2388496AbgB0OL3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:10:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48018 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:11:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388437AbgB0OJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:09:56 -0500
+        id S2388690AbgB0OLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:11:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6460821D7E;
-        Thu, 27 Feb 2020 14:09:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8859520801;
+        Thu, 27 Feb 2020 14:11:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812595;
-        bh=BOzoi9lkMAY+Td1+7TDcoWC0IM5Mo+0Ns0xY4jmUkA0=;
+        s=default; t=1582812685;
+        bh=wLfKhXxpa14kf4mWcdqPTEGTf+Z9dEcu+jrqE4IYkmY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s2DQ9VBVhUSftW0FX4Z6KPzMAc72BplWqQq3AX0DodAATeMVns80wxFkRbLbYOnb+
-         Eouf8Xif8WzyIa7C6dn7U0APwdxg2XWqlosZChh+UTmE4ku3Zk9mwIaCR9/OA6BHE0
-         YPTAzEYIxn4RV2eFGKGML5tM39nisjoVpUpjFGp4=
+        b=cOs4xUXQBp5PD0/DvxwLWgJ7944tv3WAKN9X/tZE5bjg5dSb9cpp6Qx3ZXkM078/N
+         sHGxcOEL6nSd9LHCVl4fOxs7wHLITHCksst6dxAVtdiR6Qux7/3lYnGofkrHJR6Rc9
+         aoQ39Jclca3yUqP+O0WTS99QUXvxlZTfkwaXOa/0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org
-Subject: [PATCH 5.4 079/135] ext4: fix a data race in EXT4_I(inode)->i_disksize
-Date:   Thu, 27 Feb 2020 14:36:59 +0100
-Message-Id: <20200227132241.272894137@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.4 113/135] ASoC: atmel: fix atmel_ssc_set_audio link failure
+Date:   Thu, 27 Feb 2020 14:37:33 +0100
+Message-Id: <20200227132246.161577149@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -59,87 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 35df4299a6487f323b0aca120ea3f485dfee2ae3 upstream.
+commit 9437bfda00f3b26eb5f475737ddaaf4dc07fee4f upstream.
 
-EXT4_I(inode)->i_disksize could be accessed concurrently as noticed by
-KCSAN,
+The ssc audio driver can call into both pdc and dma backends.  With the
+latest rework, the logic to do this in a safe way avoiding link errors
+was removed, bringing back link errors that were fixed long ago in commit
+061981ff8cc8 ("ASoC: atmel: properly select dma driver state") such as
 
- BUG: KCSAN: data-race in ext4_write_end [ext4] / ext4_writepages [ext4]
+sound/soc/atmel/atmel_ssc_dai.o: In function `atmel_ssc_set_audio':
+atmel_ssc_dai.c:(.text+0xac): undefined reference to `atmel_pcm_pdc_platform_register'
 
- write to 0xffff91c6713b00f8 of 8 bytes by task 49268 on cpu 127:
-  ext4_write_end+0x4e3/0x750 [ext4]
-  ext4_update_i_disksize at fs/ext4/ext4.h:3032
-  (inlined by) ext4_update_inode_size at fs/ext4/ext4.h:3046
-  (inlined by) ext4_write_end at fs/ext4/inode.c:1287
-  generic_perform_write+0x208/0x2a0
-  ext4_buffered_write_iter+0x11f/0x210 [ext4]
-  ext4_file_write_iter+0xce/0x9e0 [ext4]
-  new_sync_write+0x29c/0x3b0
-  __vfs_write+0x92/0xa0
-  vfs_write+0x103/0x260
-  ksys_write+0x9d/0x130
-  __x64_sys_write+0x4c/0x60
-  do_syscall_64+0x91/0xb47
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Fix it this time using Makefile hacks and a comment to prevent this
+from accidentally getting removed again rather than Kconfig hacks.
 
- read to 0xffff91c6713b00f8 of 8 bytes by task 24872 on cpu 37:
-  ext4_writepages+0x10ac/0x1d00 [ext4]
-  mpage_map_and_submit_extent at fs/ext4/inode.c:2468
-  (inlined by) ext4_writepages at fs/ext4/inode.c:2772
-  do_writepages+0x5e/0x130
-  __writeback_single_inode+0xeb/0xb20
-  writeback_sb_inodes+0x429/0x900
-  __writeback_inodes_wb+0xc4/0x150
-  wb_writeback+0x4bd/0x870
-  wb_workfn+0x6b4/0x960
-  process_one_work+0x54c/0xbe0
-  worker_thread+0x80/0x650
-  kthread+0x1e0/0x200
-  ret_from_fork+0x27/0x50
-
- Reported by Kernel Concurrency Sanitizer on:
- CPU: 37 PID: 24872 Comm: kworker/u261:2 Tainted: G        W  O L 5.5.0-next-20200204+ #5
- Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
- Workqueue: writeback wb_workfn (flush-7:0)
-
-Since only the read is operating as lockless (outside of the
-"i_data_sem"), load tearing could introduce a logic bug. Fix it by
-adding READ_ONCE() for the read and WRITE_ONCE() for the write.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Link: https://lore.kernel.org/r/1581085751-31793-1-git-send-email-cai@lca.pw
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
+Fixes: 18291410557f ("ASoC: atmel: enable SOC_SSC_PDC and SOC_SSC_DMA in Kconfig")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Link: https://lore.kernel.org/r/20200130130545.31148-1-codrin.ciubotariu@microchip.com
+Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/ext4.h  |    2 +-
- fs/ext4/inode.c |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/atmel/Kconfig  |    4 ++--
+ sound/soc/atmel/Makefile |   10 ++++++++--
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -2969,7 +2969,7 @@ static inline void ext4_update_i_disksiz
- 		     !inode_is_locked(inode));
- 	down_write(&EXT4_I(inode)->i_data_sem);
- 	if (newsize > EXT4_I(inode)->i_disksize)
--		EXT4_I(inode)->i_disksize = newsize;
-+		WRITE_ONCE(EXT4_I(inode)->i_disksize, newsize);
- 	up_write(&EXT4_I(inode)->i_data_sem);
- }
+--- a/sound/soc/atmel/Kconfig
++++ b/sound/soc/atmel/Kconfig
+@@ -10,11 +10,11 @@ config SND_ATMEL_SOC
+ if SND_ATMEL_SOC
  
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -2573,7 +2573,7 @@ update_disksize:
- 	 * truncate are avoided by checking i_size under i_data_sem.
- 	 */
- 	disksize = ((loff_t)mpd->first_page) << PAGE_SHIFT;
--	if (disksize > EXT4_I(inode)->i_disksize) {
-+	if (disksize > READ_ONCE(EXT4_I(inode)->i_disksize)) {
- 		int err2;
- 		loff_t i_size;
+ config SND_ATMEL_SOC_PDC
+-	tristate
++	bool
+ 	depends on HAS_DMA
  
+ config SND_ATMEL_SOC_DMA
+-	tristate
++	bool
+ 	select SND_SOC_GENERIC_DMAENGINE_PCM
+ 
+ config SND_ATMEL_SOC_SSC
+--- a/sound/soc/atmel/Makefile
++++ b/sound/soc/atmel/Makefile
+@@ -6,8 +6,14 @@ snd-soc-atmel_ssc_dai-objs := atmel_ssc_
+ snd-soc-atmel-i2s-objs := atmel-i2s.o
+ snd-soc-mchp-i2s-mcc-objs := mchp-i2s-mcc.o
+ 
+-obj-$(CONFIG_SND_ATMEL_SOC_PDC) += snd-soc-atmel-pcm-pdc.o
+-obj-$(CONFIG_SND_ATMEL_SOC_DMA) += snd-soc-atmel-pcm-dma.o
++# pdc and dma need to both be built-in if any user of
++# ssc is built-in.
++ifdef CONFIG_SND_ATMEL_SOC_PDC
++obj-$(CONFIG_SND_ATMEL_SOC_SSC) += snd-soc-atmel-pcm-pdc.o
++endif
++ifdef CONFIG_SND_ATMEL_SOC_DMA
++obj-$(CONFIG_SND_ATMEL_SOC_SSC) += snd-soc-atmel-pcm-dma.o
++endif
+ obj-$(CONFIG_SND_ATMEL_SOC_SSC) += snd-soc-atmel_ssc_dai.o
+ obj-$(CONFIG_SND_ATMEL_SOC_I2S) += snd-soc-atmel-i2s.o
+ obj-$(CONFIG_SND_MCHP_SOC_I2S_MCC) += snd-soc-mchp-i2s-mcc.o
 
 
