@@ -6,54 +6,54 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C01A9C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 04:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FB3C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 04:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 828282084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 04:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 455682084E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 04:53:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728410AbgB0EwA (ORCPT
+        id S1728425AbgB0Exz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 23:52:00 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:37122 "EHLO
+        Wed, 26 Feb 2020 23:53:55 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:37152 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728284AbgB0EwA (ORCPT
+        with ESMTP id S1728273AbgB0Exy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 23:52:00 -0500
+        Wed, 26 Feb 2020 23:53:54 -0500
 Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 51C8915B47CA6;
-        Wed, 26 Feb 2020 20:51:59 -0800 (PST)
-Date:   Wed, 26 Feb 2020 20:51:58 -0800 (PST)
-Message-Id: <20200226.205158.18451706389192569.davem@davemloft.net>
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3FF0215B47CAF;
+        Wed, 26 Feb 2020 20:53:54 -0800 (PST)
+Date:   Wed, 26 Feb 2020 20:53:53 -0800 (PST)
+Message-Id: <20200226.205353.1682191645507452325.davem@davemloft.net>
 To:     antoine.tenart@bootlin.com
 Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux@armlinux.org.uk
-Subject: Re: [PATCH net-next] net: phy: mscc: add missing shift for media
- operation mode selection
+        foss@0leil.net
+Subject: Re: [PATCH net] net: phy: mscc: fix firmware paths
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200226144034.1519658-1-antoine.tenart@bootlin.com>
-References: <20200226144034.1519658-1-antoine.tenart@bootlin.com>
+In-Reply-To: <20200226152650.1525515-1-antoine.tenart@bootlin.com>
+References: <20200226152650.1525515-1-antoine.tenart@bootlin.com>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 26 Feb 2020 20:51:59 -0800 (PST)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 26 Feb 2020 20:53:54 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Antoine Tenart <antoine.tenart@bootlin.com>
-Date: Wed, 26 Feb 2020 15:40:34 +0100
+Date: Wed, 26 Feb 2020 16:26:50 +0100
 
-> This patch adds a missing shift for the media operation mode selection.
-> This does not fix the driver as the current operation mode (copper) has
-> a value of 0, but this wouldn't work for other modes.
+> The firmware paths for the VSC8584 PHYs not not contain the leading
+> 'microchip/' directory, as used in linux-firmware, resulting in an
+> error when probing the driver. This patch fixes it.
 > 
+> Fixes: a5afc1678044 ("net: phy: mscc: add support for VSC8584 PHY")
 > Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
 
-Applied.
+Applied, thanks Antoine.
