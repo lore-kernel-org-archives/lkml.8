@@ -2,213 +2,222 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C65F7C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC59CC4BA3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E3DE24693
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A95A2468E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:25:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="P/miqiEp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729087AbgB0MZd (ORCPT
+        id S1729113AbgB0MZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 07:25:33 -0500
-Received: from relay.sw.ru ([185.231.240.75]:60820 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729062AbgB0MZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 07:25:33 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1j7IDs-0005hu-OA; Thu, 27 Feb 2020 15:25:00 +0300
-Subject: Re: [PATCH RFC 5/5] ext4: Add fallocate2() support
-To:     Andreas Dilger <adilger@dilger.ca>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Mike Snitzer <snitzer@redhat.com>, Jan Kara <jack@suse.cz>,
-        Eric Biggers <ebiggers@google.com>, riteshh@linux.ibm.com,
-        krisman@collabora.com, surajjs@amazon.com, dmonakhov@gmail.com,
-        mbobrowski@mbobrowski.org, Eric Whitney <enwlinux@gmail.com>,
-        sblbir@amazon.com, Khazhismel Kumykov <khazhy@google.com>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-References: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
- <158272447616.281342.14858371265376818660.stgit@localhost.localdomain>
- <20200226155521.GA24724@infradead.org>
- <06f9b82c-a519-7053-ec68-a549e02c6f6c@virtuozzo.com>
- <A57E33D1-3D54-405A-8300-13F117DC4633@dilger.ca>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <eda406cc-8ce3-e67a-37be-3e525b58d5a1@virtuozzo.com>
-Date:   Thu, 27 Feb 2020 15:24:59 +0300
+        Thu, 27 Feb 2020 07:25:47 -0500
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:42439 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728986AbgB0MZq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 07:25:46 -0500
+Received: from [IPv6:2001:420:44c1:2577:70b8:9d46:3264:f0c0]
+ ([IPv6:2001:420:44c1:2577:70b8:9d46:3264:f0c0])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id 7IEWjDumtjmHT7IEZjiZoo; Thu, 27 Feb 2020 13:25:44 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1582806344; bh=ndiP9Z2eVHjGWO0UT4EN64zPnMFCnTreS5Hb6wkPG7M=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=P/miqiEp1E1suE5aS9fC+L65nmeY/kEwAHshUyKUSsRuT5ZwUGw/4v0YSUIS7Jad4
+         O2xPPckCsNYt/hMkqUykv4u5qAPAuccPgoN9EyoNLlfEpUgmA1gv+Lqu5UXWatMprE
+         F5dOKLW3xSqhjQmh31J88B0B4Q5JGXiokWtWXi0sFguDUr99DiOgrtU9rRGwemOpC9
+         oSOMF0dMQeujeJ2Iz6s1hd3aFvajl44w23dbcqkqq3QkUlpZ35ylXaVfUQY4i5QGMD
+         5TLB7k6hu60d3s9TyCOyssRSsMz/kg6UGevMyl2agwrDvPb2yMNKJD0jZUmh1OxWbG
+         KKDMVjKmKph4g==
+Subject: Re: [PATCHv3 03/11] videobuf2: add V4L2_FLAG_MEMORY_NON_CONSISTENT
+ flag
+To:     Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200226111529.180197-1-senozhatsky@chromium.org>
+ <20200226111529.180197-4-senozhatsky@chromium.org>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <19422259-f9ca-8715-508a-0f650d2fa0e3@xs4all.nl>
+Date:   Thu, 27 Feb 2020 13:25:40 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <A57E33D1-3D54-405A-8300-13F117DC4633@dilger.ca>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <20200226111529.180197-4-senozhatsky@chromium.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfA4w6XfT1cWL/oRXBwbfa/cML5aWojMPQKuOtcfuUFzs4QkpHWYtufHeF/94fwoXXKBV3gjjOVynQWPS8jQ+DhW2UVABhtwfWnAkAVN8V4Sc8TsnLZuC
+ cTO40VHew0IFfYhOqcaKrXL78aw7dN5PKPs8wM3/3Iswg6hHZShJKPxNmV/XLdGETqa1ChUPC99uOxNxG9DdNfFhWiBtg4gSKWOngfIF1f+vVJbfZOKN7BMw
+ E2CEQUUot/TYftOJ0lsvR4hY3pGsjedc2zfOMT8dsE87WaaisuX8qBa0gy+0fLfJ50QYuOmTgsOIxmCYY2+xsvQ4QwQafQXko6B2caLqID8WDI3DzC0UyONE
+ Iq8r2rnw2B3+TG7KJUBTaJ4XSyaZlye/lm2bqC9iRTMcsEHjfZZpKhxN6D8P0lw1UmYyhCSNwwdVhK2GkQTFrLieqD+0BP9kDGgZXo9Buk7gNAU9TTMJjj6e
+ eQXAi/1Z64ECL2zB+BuxMeld73dI+XEa0V2GXtXkxwjWCLgGOoq14BTGixa6r44LRDDJzAYN+vUsVGYxWlt0YDferhtp/Jd4KCsAJcvPc3BBICbO/ExMfGV0
+ FsfwfCkfrQgFWXSx5p0RiLlp80/7p8fnGP+ksb7x8sBiUvPPJmYIdBgb71R4EFEoL2A=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27.02.2020 00:51, Andreas Dilger wrote:
-> On Feb 26, 2020, at 1:05 PM, Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
->>
->> On 26.02.2020 18:55, Christoph Hellwig wrote:
->>> On Wed, Feb 26, 2020 at 04:41:16PM +0300, Kirill Tkhai wrote:
->>>> This adds a support of physical hint for fallocate2() syscall.
->>>> In case of @physical argument is set for ext4_fallocate(),
->>>> we try to allocate blocks only from [@phisical, @physical + len]
->>>> range, while other blocks are not used.
->>>
->>> Sorry, but this is a complete bullshit interface.  Userspace has
->>> absolutely no business even thinking of physical placement.  If you
->>> want to align allocations to physical block granularity boundaries
->>> that is the file systems job, not the applications job.
->>
->> Why? There are two contradictory actions that filesystem can't do at the same time:
->>
->> 1)place files on a distance from each other to minimize number of extents
->>  on possible future growth;
->> 2)place small files in the same big block of block device.
->>
->> At initial allocation time you never know, which file will stop grow in some
->> future, i.e. which file is suitable for compaction. This knowledge becomes
->> available some time later.  Say, if a file has not been changed for a month,
->> it is suitable for compaction with another files like it.
->>
->> If at allocation time you can determine a file, which won't grow in the future,
->> don't be afraid, and just share your algorithm here.
+On 2/26/20 12:15 PM, Sergey Senozhatsky wrote:
+> By setting or clearing V4L2_FLAG_MEMORY_NON_CONSISTENT flag
+> user-space should be able to set or clear queue's NON_CONSISTENT
+> ->dma_attrs. Queue's ->dma_attrs are passed to the underlying
+> allocator in __vb2_buf_mem_alloc(), so thus user-space is able
+> to request vb2 buffer's memory to be either consistent (coherent)
+> or non-consistent.
 > 
-> Very few files grow after they are initially written/closed.  Those that
-> do are almost always opened with O_APPEND (e.g. log files).  It would be
-> reasonable to have O_APPEND cause the filesystem to reserve blocks (in
-> memory at least, maybe some small amount on disk like 1/4 of the current
-> file size) for the file to grow after it is closed.  We might use the
-> same heuristic for directories that grow long after initial creation.
-
-1)Lets see on a real example. I created a new ext4 and started the test below:
-https://gist.github.com/tkhai/afd8458c0a3cc082a1230370c7d89c99
-
-Here are two files written. One file is 4Kb. One file is 1Mb-4Kb.
-
-$filefrag -e test1.tmp test2.tmp 
-Filesystem type is: ef53
-File size of test1.tmp is 4096 (1 block of 4096 bytes)
- ext:     logical_offset:        physical_offset: length:   expected: flags:
-   0:        0..       0:      33793..     33793:      1:             last,eof
-test1.tmp: 1 extent found
-File size of test2.tmp is 1044480 (255 blocks of 4096 bytes)
- ext:     logical_offset:        physical_offset: length:   expected: flags:
-   0:        0..     254:      33536..     33790:    255:             last,eof
-test2.tmp: 1 extent found
-
-$debugfs:  testb 33791
-Block 33791 not in use
-
-test2.tmp started from 131Mb. In case of discard granuality is 1Mb, test1.tmp
-placement prevents us from discarding next 1Mb block.
-
-2)Another example. Let write two files: 1Mb-4Kb and 1Mb+4Kb:
-
-# filefrag -e test3.tmp test4.tmp 
-Filesystem type is: ef53
-File size of test3.tmp is 1052672 (257 blocks of 4096 bytes)
- ext:     logical_offset:        physical_offset: length:   expected: flags:
-   0:        0..     256:      35840..     36096:    257:             last,eof
-test3.tmp: 1 extent found
-File size of test4.tmp is 1044480 (255 blocks of 4096 bytes)
- ext:     logical_offset:        physical_offset: length:   expected: flags:
-   0:        0..     254:      35072..     35326:    255:             last,eof
-test4.tmp: 1 extent found
-
-They don't go sequentially, and here is fragmentation starts.
-
-After both the tests:
-$df -h
-/dev/loop0      2.0G   11M  1.8G   1% /root/mnt
-
-Filesystem is free, all last block groups are free. E.g.,
-
-Group 15: (Blocks 491520-524287) csum 0x3ef5 [INODE_UNINIT, ITABLE_ZEROED]
-  Block bitmap at 272 (bg #0 + 272), csum 0xd52c1f66
-  Inode bitmap at 288 (bg #0 + 288), csum 0x00000000
-  Inode table at 7969-8480 (bg #0 + 7969)
-  32768 free blocks, 8192 free inodes, 0 directories, 8192 unused inodes
-  Free blocks: 491520-524287
-  Free inodes: 122881-131072
-
-but two files are not packed together.
-
-So, ext4 block allocator does not work good for my workload. It even does not
-know anything about discard granuality of underlining block device. Does it?
-I assume no fs knows. Should I tell it?
-
-> The main exception there is VM images, because they are not really "files"
-> in the normal sense, but containers aggregating a lot of different files,
-> each created with patterns that are not visible to the VM host.  In that
-> case, it would be better to have the VM host tell the filesystem that the
-> IO pattern is "random" and not try to optimize until the VM is cold.
+> The patch set also adds a corresponding capability flag:
+> fill_buf_caps() reports V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS when
+> queue supports user-space cache management hints.
 > 
->> In Virtuozzo we tried to compact ext4 with existing kernel interface:
->>
->> https://github.com/dmonakhov/e2fsprogs/blob/e4defrag2/misc/e4defrag2.c
->>
->> But it does not work well in many situations, and the main problem is blocks allocation in desired place is not possible. Block allocator can't behave
->> excellent for everything.
->>
->> If this interface bad, can you suggest another interface to make block
->> allocator to know the behavior expected from him in this specific case?
+> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> ---
+>  Documentation/media/uapi/v4l/buffer.rst       | 29 +++++++++++++++++++
+>  .../media/uapi/v4l/vidioc-reqbufs.rst         |  7 +++++
+>  .../media/common/videobuf2/videobuf2-v4l2.c   |  2 ++
+>  include/uapi/linux/videodev2.h                |  3 ++
+>  4 files changed, 41 insertions(+)
 > 
-> In ext4 there is already the "group" allocator, which combines multiple
-> small files together into a single preallocation group, so that the IO
-> to disk is large/contiguous.  The theory is that files written at the
-> same time will have similar lifespans, but that isn't always true.
+> diff --git a/Documentation/media/uapi/v4l/buffer.rst b/Documentation/media/uapi/v4l/buffer.rst
+> index 3112300c2fa0..6b629ac59bf2 100644
+> --- a/Documentation/media/uapi/v4l/buffer.rst
+> +++ b/Documentation/media/uapi/v4l/buffer.rst
+> @@ -681,6 +681,35 @@ Buffer Flags
+>  
+>      \normalsize
+>  
+> +.. _memory-flags:
+> +
+> +Memory Consistency Flags
+> +========================
+> +
+> +.. tabularcolumns:: |p{7.0cm}|p{2.2cm}|p{8.3cm}|
+> +
+> +.. cssclass:: longtable
+> +
+> +.. flat-table::
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       3 1 4
+> +
+> +    * .. _`V4L2_FLAG_MEMORY_NON_CONSISTENT`:
+> +
+> +      - ``V4L2_FLAG_MEMORY_NON_CONSISTENT``
+> +      - 0x00000001
+> +      - vb2 buffer is allocated either in consistent (it will be automatically
+
+vb2 -> A
+
+(vb2 is a kAPI term, and shouldn't be used in uAPI documentation)
+
+> +	coherent between CPU and bus) or non-consistent memory. The latter
+
+CPU and bus -> the CPU and the bus
+
+> +	can provide performance gains, for instance CPU cache sync/flush
+
+CPU -> the CPU
+
+> +	operations can be avoided if the buffer is accessed by the corresponding
+> +	device only and CPU does not read/write to/from that buffer. However,
+
+CPU -> the CPU
+
+> +	this requires extra care from the driver -- it must guarantee memory
+> +	consistency by issuing cache flush/sync when consistency is needed.
+
+cache -> a cache
+
+> +	If this flag is set V4L2 will attempt to allocate vb2 buffer in
+
+vb2 -> the
+
+> +	non-consistent memory. The flag takes effect only if the buffer is
+> +	used for :ref:`memory mapping <mmap>` I/O and the queue reports
+
+reports -> reports the
+
+> +	:ref:`V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS` capability.
+>  
+>  .. c:type:: v4l2_memory
+>  
+> diff --git a/Documentation/media/uapi/v4l/vidioc-reqbufs.rst b/Documentation/media/uapi/v4l/vidioc-reqbufs.rst
+> index d0c643db477a..917df6fb6486 100644
+> --- a/Documentation/media/uapi/v4l/vidioc-reqbufs.rst
+> +++ b/Documentation/media/uapi/v4l/vidioc-reqbufs.rst
+> @@ -156,6 +156,13 @@ aborting or finishing any DMA in progress, an implicit
+>        - Only valid for stateless decoders. If set, then userspace can set the
+>          ``V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF`` flag to hold off on returning the
+>  	capture buffer until the OUTPUT timestamp changes.
+> +    * - ``V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS``
+> +      - 0x00000040
+> +      - Set when the queue/buffer support memory consistency and cache
+
+support -> supports
+
+> +        management hints. See :ref:`V4L2_FLAG_MEMORY_NON_CONSISTENT`,
+> +        :ref:`V4L2_BUF_FLAG_NO_CACHE_INVALIDATE` and
+> +        :ref:`V4L2_BUF_FLAG_NO_CACHE_CLEAN`.
+> +
+>  
+>  Return Value
+>  ============
+> diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+> index 2a604bd7793a..f91cba37e223 100644
+> --- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
+> +++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+> @@ -711,6 +711,8 @@ static void fill_buf_caps(struct vb2_queue *q, u32 *caps)
+>  		*caps |= V4L2_BUF_CAP_SUPPORTS_DMABUF;
+>  	if (q->subsystem_flags & VB2_V4L2_FL_SUPPORTS_M2M_HOLD_CAPTURE_BUF)
+>  		*caps |= V4L2_BUF_CAP_SUPPORTS_M2M_HOLD_CAPTURE_BUF;
+> +	if ((q->allow_cache_hints != 0) && (q->io_modes & VB2_MMAP))
+
+Just say:
+
+	if (q->allow_cache_hints && (q->io_modes & VB2_MMAP))
+
+Regards,
+
+	Hans
+
+> +		*caps |= V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS;
+>  #ifdef CONFIG_MEDIA_CONTROLLER_REQUEST_API
+>  	if (q->supports_requests)
+>  		*caps |= V4L2_BUF_CAP_SUPPORTS_REQUESTS;
+> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+> index 5f9357dcb060..e92c29864730 100644
+> --- a/include/uapi/linux/videodev2.h
+> +++ b/include/uapi/linux/videodev2.h
+> @@ -189,6 +189,8 @@ enum v4l2_memory {
+>  	V4L2_MEMORY_DMABUF           = 4,
+>  };
+>  
+> +#define V4L2_FLAG_MEMORY_NON_CONSISTENT		(1 << 0)
+> +
+>  /* see also http://vektor.theorem.ca/graphics/ycbcr/ */
+>  enum v4l2_colorspace {
+>  	/*
+> @@ -946,6 +948,7 @@ struct v4l2_requestbuffers {
+>  #define V4L2_BUF_CAP_SUPPORTS_REQUESTS			(1 << 3)
+>  #define V4L2_BUF_CAP_SUPPORTS_ORPHANED_BUFS		(1 << 4)
+>  #define V4L2_BUF_CAP_SUPPORTS_M2M_HOLD_CAPTURE_BUF	(1 << 5)
+> +#define V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS		(1 << 6)
+>  
+>  /**
+>   * struct v4l2_plane - plane info for multi-planar buffers
 > 
-> If the files are large and still being written, the allocator will reserve
-> additional blocks (default 8MB I think) on the expectation that it will
-> continue to write until it is closed.
-> 
-> I think (correct me if I'm wrong) that your issue is with defragmenting
-> small files to free up contiguous space in the filesystem?  I think once
-> the free space is freed of small files that defragmenting large files is
-> easily done.  Anything with more than 8-16MB extents will max out most
-> storage anyway (seek rate * IO size).
 
-My issue is mostly with files < 1Mb, because underlining device discard
-granuality is 1Mb. The result of fragmentation is that size of occupied
-1Mb blocks of device is 1.5 times bigger, than size of really written
-data (say, df -h). And this is the problem.
-
-> In that case, an interesting userspace interface would be an array of
-> inode numbers (64-bit please) that should be packed together densely in
-> the order they are provided (maybe a flag for that).  That allows the
-> filesystem the freedom to find the physical blocks for the allocation,
-> while userspace can tell which files are related to each other.
-
-So, this interface is 3-in-1:
-
-1)finds a placement for inodes extents;
-2)assigns this space to some temporary donor inode;
-3)calls ext4_move_extents() for each of them.
-
-Do I understand you right?
-
-If so, then IMO it's good to start from two inodes, because here may code
-a very difficult algorithm of placement of many inodes, which may require
-much memory. Is this OK?
-
-Can we introduce a flag, that some of inode is unmovable?
-
-Can this interface use a knowledge about underlining device discard granuality?
-
-In the answer to Dave, I wrote a proposition to make fallocate() care about
-i_write_hint. Could you please comment what you think about that too?
-
-Thanks,
-Kirill
