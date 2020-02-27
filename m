@@ -2,89 +2,147 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F147FC4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2327C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0D8524699
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:56:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B94F424698
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:57:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KPTA2s8S"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="c2wVMIZT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729113AbgB0M4v (ORCPT
+        id S1729126AbgB0M5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 07:56:51 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:32378 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729019AbgB0M4v (ORCPT
+        Thu, 27 Feb 2020 07:57:12 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:16197 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729052AbgB0M5M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 07:56:51 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582808211; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=GEdNSRK9h+EoZXhdOOmnO3FyQ+zkPPEQKa6CLrSCl9o=; b=KPTA2s8SAnsAnTRzWzqp4pgzHd+6pI6SGZLy2+22vvLvpytK8b2uh6qTqnhMXzI5aUE5UR56
- fYhWnKxlW4WY2ZKvAIfjY7ERjpvxccR89iMHpUMcxaquMJnZv1vvyIKZKkW2OIIbHuRme1zb
- achjGH/cx5tjoBq2PBvq2ygj9J8=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e57bc80.7fca9b9da570-smtp-out-n02;
- Thu, 27 Feb 2020 12:56:32 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BB580C4479D; Thu, 27 Feb 2020 12:56:32 +0000 (UTC)
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A7E13C43383;
-        Thu, 27 Feb 2020 12:56:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A7E13C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org, agross@kernel.org, arnd@arndb.de
-Cc:     georgi.djakov@linaro.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        sboyd@kernel.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH] soc: qcom: cmd-db: Fix compilation error when CMD_DB is disabled
-Date:   Thu, 27 Feb 2020 18:26:15 +0530
-Message-Id: <20200227125615.4727-1-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.25.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thu, 27 Feb 2020 07:57:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582808229;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=EHgVmvZBm7FfOuRidNTu7QhYG4ewtZHDd8hCpQzwN2Q=;
+        b=c2wVMIZTfqD2nSvBfByPStDh8GB9l6h/fSUPzIguOqBArUUUg6DJNI0MK378VPNOrb
+        vKxq1AMza6s3e96demUW0X8AAZuJElKKWwcRa+JIWIjOGRx6QuLpIKEzzcKfz3oNQ9nD
+        A0OR5rMfqAq3IZ2IoEUOoNzcthusMRUg1XYZy24yRtgsVjxMTKTMo3NLpP5rUDRqJ5xD
+        MopDATaaEO4UdIaJx2ljDd3hrAlAVVfSESc9VQEL0M2ATZivvgiO5emV4LnDnizSmkkD
+        NrkDDPzBor3odLbO/cfV7D/SR+WZWgst9CERkMmU4eN4Joy4b344C6Eq7W4ELUVBYsDG
+        cElA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBp5hRw/qOxWRk4dCygV4+2OGxpoAr2x7EvFYqujh1U+3K41Uc/x8xM"
+X-RZG-CLASS-ID: mo00
+Received: from [IPv6:2001:16b8:2655:a800:8035:ee61:8f08:2eb7]
+        by smtp.strato.de (RZmta 46.1.12 AUTH)
+        with ESMTPSA id U06217w1RCuoAsJ
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Thu, 27 Feb 2020 13:56:50 +0100 (CET)
+Subject: Re: [RFC 0/8] MIPS: CI20: add HDMI out support
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200227122325.GA7587@ravnborg.org>
+Date:   Thu, 27 Feb 2020 13:56:56 +0100
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, kernel@pyra-handheld.com,
+        letux-kernel@openphoenux.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <8EE60F87-415A-44EA-AA49-632E232095FF@goldelico.com>
+References: <cover.1582744379.git.hns@goldelico.com> <20200227122325.GA7587@ravnborg.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_QCOM_COMMAND_DB=n the following compilation errors will be
-seen. Fix this by including the appropriate linux headers.
+Hi Sam,
 
-./include/soc/qcom/cmd-db.h: In function ‘cmd_db_read_aux_data’:
-./include/soc/qcom/cmd-db.h: error: implicit declaration of function ‘ERR_PTR’;
+> Am 27.02.2020 um 13:23 schrieb Sam Ravnborg <sam@ravnborg.org>:
+> 
+> Hi Nikolaus.
+> 
+> On Wed, Feb 26, 2020 at 08:12:52PM +0100, H. Nikolaus Schaller wrote:
+>> This patch series adds HDMI output to the jz4780/CI20 board.
+>> 
+>> It is based on taking the old 3.18 vendor kernel and trying
+>> to achieve the same with modern DTS setup and new/modified
+>> drivers.
+>> 
+>> Unfortunately, in this first RFC, only EDID and creation of
+>> /dev/fb0 are working. Also, HDMI hot plugging is detected.
+>> 
+>> But there is no HDMI output signal. So some tiny piece seems
+>> to be missing to enable/configure the Synposys HDMI controller.
+>> 
+>> We need help from the community to fix this.
+>> 
+>> Note: device tree bindings are from 2015 and still seem to
+>> fit - except they are not in yaml format.
+>> 
+>> Original authors of most patches are
+>> * Paul Boddie <paul@boddie.org.uk>
+>> * Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+>> 
+>> 
+>> H. Nikolaus Schaller (2):
+>>  drm: ingenic-drm: add MODULE_DEVICE_TABLE
+>>  MIPS: CI20: defconfig: configure for DRM_DW_HDMI_JZ4780
+>> 
+>> Paul Boddie (4):
+>>  drm: ingenic: add jz4780 Synopsys HDMI driver.
+>>  pinctrl: ingenic: add hdmi-ddc pin control group
+>>  MIPS: DTS: jz4780: account for Synopsys HDMI driver and LCD controller
+>>  MIPS: DTS: CI20: add HDMI setup
+>> 
+>> Zubair Lutfullah Kakakhel (2):
+>>  dt-bindings: video: Add jz4780-lcd binding
+>>  dt-bindings: video: Add jz4780-hdmi binding
+>> 
+>> .../bindings/display/ingenic-jz4780-hdmi.txt  |  41 ++++++
+>> .../bindings/display/ingenic-jz4780-lcd.txt   |  39 ++++++
+> New bindings in DT Schema format please...
+> We want to have then in a formal launguage so we can use these
+> to verify the DT files.
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- include/soc/qcom/cmd-db.h | 1 +
- 1 file changed, 1 insertion(+)
+Yes, I know. And I fully support the goal.
 
-diff --git a/include/soc/qcom/cmd-db.h b/include/soc/qcom/cmd-db.h
-index af97222239251..c8bb56e6852a8 100644
---- a/include/soc/qcom/cmd-db.h
-+++ b/include/soc/qcom/cmd-db.h
-@@ -4,6 +4,7 @@
- #ifndef __QCOM_COMMAND_DB_H__
- #define __QCOM_COMMAND_DB_H__
- 
-+#include <linux/err.h>
- 
- enum cmd_db_hw_type {
- 	CMD_DB_HW_INVALID = 0,
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+But I personally do not have the time to learn the (IMHO brain-twisting)
+way the Schema format is working. Especially, I am not interested
+in becoming volunteer translator for .txt based schemas developed
+by someone else.
+
+So I hope that someone from the community can and is willing to do
+that.
+
+Or that there will appear good tools soon. E.g. some GUI
+based editor tool would be very helpful so that you don't have
+to fight with the yaml indentation rules. Like there are XML
+and DTD editors. And even HTML is rarely written manually any more.
+
+IMHO such tools should have been developed and in place *before*
+the rule to provide DT schemata is enforced.
+
+Anyways, I have requested for comments (and did expect this one).
+
+BR and thanks,
+Nikolaus
+
