@@ -2,67 +2,44 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F616C35677
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F503C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48E5D246A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:44:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582825491;
-	bh=nk6wwF8pUt1K1x95HCkgB+QHeseB0pbsdmvD8seAupQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CVPq2ARrecOj74p1mW7vIoMYkX1mM8zYmPq+HEqgjrYxcRmJCifzkcm4VtFsJQ2Uh
-	 w72NWaNvnvdFTMlchdkK1VkmDyO8Mx6GvS5hydzHB89DSvYyuM2CGa38sX0EoKF6qJ
-	 qqT94ZDLXk4GoDC0CMB9k7v9Sn9Sgb7R2IBVgTSI=
+	by mail.kernel.org (Postfix) with ESMTP id C946524692
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:45:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730784AbgB0Rot (ORCPT
+        id S1730796AbgB0RpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 12:44:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:55724 "EHLO foss.arm.com"
+        Thu, 27 Feb 2020 12:45:00 -0500
+Received: from mga06.intel.com ([134.134.136.31]:18526 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730705AbgB0Ros (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 12:44:48 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D837F4B2;
-        Thu, 27 Feb 2020 09:44:47 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2682B3F73B;
-        Thu, 27 Feb 2020 09:44:47 -0800 (PST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        "H . J . Lu " <hjl.tools@gmail.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        =?UTF-8?q?Kristina=20Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Florian Weimer <fweimer@redhat.com>,
-        Sudakshina Das <sudi.das@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH v8 11/11] arm64: mm: Display guarded pages in ptdump
-Date:   Thu, 27 Feb 2020 17:44:17 +0000
-Message-Id: <20200227174417.23722-12-broonie@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200227174417.23722-1-broonie@kernel.org>
-References: <20200227174417.23722-1-broonie@kernel.org>
+        id S1730669AbgB0Rok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 12:44:40 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 09:44:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,492,1574150400"; 
+   d="scan'208";a="317859094"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
+  by orsmga001.jf.intel.com with ESMTP; 27 Feb 2020 09:44:38 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: [PATCH] KVM: nVMX: Consult only the "basic" exit reason when routing nested exit
+Date:   Thu, 27 Feb 2020 09:44:30 -0800
+Message-Id: <20200227174430.26371-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,33 +47,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v8.5-BTI introduces the GP field in stage 1 translation tables which
-indicates that blocks and pages with it set are guarded pages for which
-branch target identification checks should be performed. Decode this
-when dumping the page tables to aid debugging.
+Consult only the basic exit reason, i.e. bits 15:0 of vmcs.EXIT_REASON,
+when determining whether a nested VM-Exit should be reflected into L1 or
+handled by KVM in L0.
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
+For better or worse, the switch statement in nested_vmx_exit_reflected()
+currently defaults to "true", i.e. reflects any nested VM-Exit without
+dedicated logic.  Because the case statements only contain the basic
+exit reason, any VM-Exit with modifier bits set will be reflected to L1,
+even if KVM intended to handle it in L0.
+
+Practically speaking, this only affects EXIT_REASON_MCE_DURING_VMENTRY,
+i.e. a #MC that occurs on nested VM-Enter would be incorrectly routed to
+L1, as "failed VM-Entry" is the only modifier that KVM can currently
+encounter.  The SMM modifiers will never be generated as KVM doesn't
+support/employ a SMI Transfer Monitor.  Ditto for "exit from enclave",
+as KVM doesn't yet support virtualizing SGX, i.e. it's impossible to
+enter an enclave in a KVM guest (L1 or L2).
+
+Fixes: 644d711aa0e1 ("KVM: nVMX: Deciding if L0 or L1 should handle an L2 exit")
+Cc: Jim Mattson <jmattson@google.com>
+Cc: Xiaoyao Li <xiaoyao.li@intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/arm64/mm/dump.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/x86/kvm/vmx/nested.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/mm/dump.c b/arch/arm64/mm/dump.c
-index 860c00ec8bd3..78163b7a7dde 100644
---- a/arch/arm64/mm/dump.c
-+++ b/arch/arm64/mm/dump.c
-@@ -145,6 +145,11 @@ static const struct prot_bits pte_bits[] = {
- 		.val	= PTE_UXN,
- 		.set	= "UXN",
- 		.clear	= "   ",
-+	}, {
-+		.mask	= PTE_GP,
-+		.val	= PTE_GP,
-+		.set	= "GP",
-+		.clear	= "  ",
- 	}, {
- 		.mask	= PTE_ATTRINDX_MASK,
- 		.val	= PTE_ATTRINDX(MT_DEVICE_nGnRnE),
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 0946122a8d3b..127065bbde2c 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -5554,7 +5554,7 @@ bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason)
+ 				vmcs_read32(VM_EXIT_INTR_ERROR_CODE),
+ 				KVM_ISA_VMX);
+ 
+-	switch (exit_reason) {
++	switch ((u16)exit_reason) {
+ 	case EXIT_REASON_EXCEPTION_NMI:
+ 		if (is_nmi(intr_info))
+ 			return false;
 -- 
-2.20.1
+2.24.1
 
