@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D74AC54FFF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B1DC54FEF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04977246A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E338D24697
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:12:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812781;
-	bh=HIBC9/z4TDaMP+xAoK01LRbkoGYMbgOaZAODZrY6QcE=;
+	s=default; t=1582812736;
+	bh=nJeZuZcKAtnsHvbePQOrHa+KH6ul+TtayZmIdNWPwYk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x4yPSI23lmMgxEl9zFL0INinS02cJW9r2roQwKa0i8aq0qH+6xYOeP74huV/qov+Q
-	 hlL8na6qFD5wvV5ai7/jlePtzzsF98DpWw2EWkpz9avgBBDtOIH6KeiyikgI13nulD
-	 bowlGxLi4wQ04gca7sTqjX8cjioic8N+JOu4VNOQ=
+	b=DCM2VaXXCF8hwyR/ryxAkXR35lSC2NQFl9o3vVGsED4Di+EFQpYn/5M+Fkc7M1IXR
+	 aBdsqYTyWGb14TzGkPBPtk18vhItK0fOyxsG96feHTVHjkhVxmj67bYq1BYR1lr0sN
+	 qdUanjbjNGTFZ8ABwBbyMvHZIWq/OMlSRoGYQpKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388931AbgB0OM7 (ORCPT
+        id S2387621AbgB0OMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:12:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51748 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:12:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729950AbgB0OM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:12:56 -0500
+        id S2388802AbgB0OMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:12:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C877E2469F;
-        Thu, 27 Feb 2020 14:12:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B7AC20801;
+        Thu, 27 Feb 2020 14:12:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812775;
-        bh=HIBC9/z4TDaMP+xAoK01LRbkoGYMbgOaZAODZrY6QcE=;
+        s=default; t=1582812731;
+        bh=nJeZuZcKAtnsHvbePQOrHa+KH6ul+TtayZmIdNWPwYk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dSwE0VUcTgOy9QVniePq5Vi0XxcxpHZyp6JJg4m+zh3TVK6WIvrGAcbL4EkTZKKqo
-         /DwpDhe0AYo273Hp7S7uYhUMQsoW4anUaa+9JKfYf8fYie6uP0hhJignAz2gCOW5BX
-         Y1zwvlsxKePE4wgAvkYtO0v9Hn2Rlma1RTechP0s=
+        b=R6TmXeun5S80npBTG5srdfb9f0Mi597BYjBsnQUqp6cS9Com7+4egVd0Eg15St2dn
+         Ou1Rp7UqJUKHzT6zR+RbyukH3kIIN0l5bYnFbhRrdLZu27JoA458+80bVLoQskQuUe
+         nAibVOFpALPntMG2qvOwWGSbUQ7rUcEcx9gHSUu8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Pronin <apronin@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Alexander Steffen <Alexander.Steffen@infineon.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH 5.5 012/150] tpm: Revert tpm_tis_spi_mod.ko to tpm_tis_spi.ko.
-Date:   Thu, 27 Feb 2020 14:35:49 +0100
-Message-Id: <20200227132234.496495570@linuxfoundation.org>
+        stable@vger.kernel.org, Aya Levin <ayal@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.4 130/135] net/mlx5e: Reset RQ doorbell counter before moving RQ state from RST to RDY
+Date:   Thu, 27 Feb 2020 14:37:50 +0100
+Message-Id: <20200227132248.585999852@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
-References: <20200227132232.815448360@linuxfoundation.org>
+In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
+References: <20200227132228.710492098@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,649 +60,148 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+From: Aya Levin <ayal@mellanox.com>
 
-commit faaca0a0d48e7b122f6e7e2521f4f6fc487d0451 upstream.
+commit 5ee090ed0da649b1febae2b7c285ac77d1e55a0c upstream.
 
-Revert tpm_tis_spi_mod.ko back to tpm_tis_spi.ko as the rename could
-break user space scripts. This can be achieved by renaming tpm_tis_spi.c
-as tpm_tis_spi_main.c. Then tpm_tis_spi-y can be used inside the
-makefile.
+Initialize RQ doorbell counters to zero prior to moving an RQ from RST
+to RDY state. Per HW spec, when RQ is back to RDY state, the descriptor
+ID on the completion is reset. The doorbell record must comply.
 
-Cc: Andrey Pronin <apronin@chromium.org>
-Cc: Stephen Boyd <swboyd@chromium.org>
-Cc: stable@vger.kernel.org # 5.5.x
-Fixes: 797c0113c9a4 ("tpm: tpm_tis_spi: Support cr50 devices")
-Reported-by: Alexander Steffen <Alexander.Steffen@infineon.com>
-Tested-by: Alexander Steffen <Alexander.Steffen@infineon.com>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Fixes: 8276ea1353a4 ("net/mlx5e: Report and recover from CQE with error on RQ")
+Signed-off-by: Aya Levin <ayal@mellanox.com>
+Reported-by: Tariq Toukan <tariqt@mellanox.com>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/tpm/Makefile           |    8 
- drivers/char/tpm/tpm_tis_spi.c      |  298 ------------------------------------
- drivers/char/tpm/tpm_tis_spi_main.c |  298 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 303 insertions(+), 301 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en/txrx.h |    8 ++++
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c |    3 +
+ drivers/net/ethernet/mellanox/mlx5/core/wq.c      |   39 ++++++++++++++++------
+ drivers/net/ethernet/mellanox/mlx5/core/wq.h      |    2 +
+ 4 files changed, 43 insertions(+), 9 deletions(-)
 
---- a/drivers/char/tpm/Makefile
-+++ b/drivers/char/tpm/Makefile
-@@ -21,9 +21,11 @@ tpm-$(CONFIG_EFI) += eventlog/efi.o
- tpm-$(CONFIG_OF) += eventlog/of.o
- obj-$(CONFIG_TCG_TIS_CORE) += tpm_tis_core.o
- obj-$(CONFIG_TCG_TIS) += tpm_tis.o
--obj-$(CONFIG_TCG_TIS_SPI) += tpm_tis_spi_mod.o
--tpm_tis_spi_mod-y := tpm_tis_spi.o
--tpm_tis_spi_mod-$(CONFIG_TCG_TIS_SPI_CR50) += tpm_tis_spi_cr50.o
-+
-+obj-$(CONFIG_TCG_TIS_SPI) += tpm_tis_spi.o
-+tpm_tis_spi-y := tpm_tis_spi_main.o
-+tpm_tis_spi-$(CONFIG_TCG_TIS_SPI_CR50) += tpm_tis_spi_cr50.o
-+
- obj-$(CONFIG_TCG_TIS_I2C_ATMEL) += tpm_i2c_atmel.o
- obj-$(CONFIG_TCG_TIS_I2C_INFINEON) += tpm_i2c_infineon.o
- obj-$(CONFIG_TCG_TIS_I2C_NUVOTON) += tpm_i2c_nuvoton.o
---- a/drivers/char/tpm/tpm_tis_spi.c
-+++ /dev/null
-@@ -1,298 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * Copyright (C) 2015 Infineon Technologies AG
-- * Copyright (C) 2016 STMicroelectronics SAS
-- *
-- * Authors:
-- * Peter Huewe <peter.huewe@infineon.com>
-- * Christophe Ricard <christophe-h.ricard@st.com>
-- *
-- * Maintained by: <tpmdd-devel@lists.sourceforge.net>
-- *
-- * Device driver for TCG/TCPA TPM (trusted platform module).
-- * Specifications at www.trustedcomputinggroup.org
-- *
-- * This device driver implements the TPM interface as defined in
-- * the TCG TPM Interface Spec version 1.3, revision 27 via _raw/native
-- * SPI access_.
-- *
-- * It is based on the original tpm_tis device driver from Leendert van
-- * Dorn and Kyleen Hall and Jarko Sakkinnen.
-- */
--
--#include <linux/acpi.h>
--#include <linux/completion.h>
--#include <linux/init.h>
--#include <linux/interrupt.h>
--#include <linux/kernel.h>
--#include <linux/module.h>
--#include <linux/slab.h>
--
--#include <linux/of_device.h>
--#include <linux/spi/spi.h>
--#include <linux/tpm.h>
--
--#include "tpm.h"
--#include "tpm_tis_core.h"
--#include "tpm_tis_spi.h"
--
--#define MAX_SPI_FRAMESIZE 64
--
--/*
-- * TCG SPI flow control is documented in section 6.4 of the spec[1]. In short,
-- * keep trying to read from the device until MISO goes high indicating the
-- * wait state has ended.
-- *
-- * [1] https://trustedcomputinggroup.org/resource/pc-client-platform-tpm-profile-ptp-specification/
-- */
--static int tpm_tis_spi_flow_control(struct tpm_tis_spi_phy *phy,
--				    struct spi_transfer *spi_xfer)
--{
--	struct spi_message m;
--	int ret, i;
--
--	if ((phy->iobuf[3] & 0x01) == 0) {
--		// handle SPI wait states
--		phy->iobuf[0] = 0;
--
--		for (i = 0; i < TPM_RETRY; i++) {
--			spi_xfer->len = 1;
--			spi_message_init(&m);
--			spi_message_add_tail(spi_xfer, &m);
--			ret = spi_sync_locked(phy->spi_device, &m);
--			if (ret < 0)
--				return ret;
--			if (phy->iobuf[0] & 0x01)
--				break;
--		}
--
--		if (i == TPM_RETRY)
--			return -ETIMEDOUT;
--	}
--
--	return 0;
--}
--
--int tpm_tis_spi_transfer(struct tpm_tis_data *data, u32 addr, u16 len,
--			 u8 *in, const u8 *out)
--{
--	struct tpm_tis_spi_phy *phy = to_tpm_tis_spi_phy(data);
--	int ret = 0;
--	struct spi_message m;
--	struct spi_transfer spi_xfer;
--	u8 transfer_len;
--
--	spi_bus_lock(phy->spi_device->master);
--
--	while (len) {
--		transfer_len = min_t(u16, len, MAX_SPI_FRAMESIZE);
--
--		phy->iobuf[0] = (in ? 0x80 : 0) | (transfer_len - 1);
--		phy->iobuf[1] = 0xd4;
--		phy->iobuf[2] = addr >> 8;
--		phy->iobuf[3] = addr;
--
--		memset(&spi_xfer, 0, sizeof(spi_xfer));
--		spi_xfer.tx_buf = phy->iobuf;
--		spi_xfer.rx_buf = phy->iobuf;
--		spi_xfer.len = 4;
--		spi_xfer.cs_change = 1;
--
--		spi_message_init(&m);
--		spi_message_add_tail(&spi_xfer, &m);
--		ret = spi_sync_locked(phy->spi_device, &m);
--		if (ret < 0)
--			goto exit;
--
--		ret = phy->flow_control(phy, &spi_xfer);
--		if (ret < 0)
--			goto exit;
--
--		spi_xfer.cs_change = 0;
--		spi_xfer.len = transfer_len;
--		spi_xfer.delay_usecs = 5;
--
--		if (in) {
--			spi_xfer.tx_buf = NULL;
--		} else if (out) {
--			spi_xfer.rx_buf = NULL;
--			memcpy(phy->iobuf, out, transfer_len);
--			out += transfer_len;
--		}
--
--		spi_message_init(&m);
--		spi_message_add_tail(&spi_xfer, &m);
--		reinit_completion(&phy->ready);
--		ret = spi_sync_locked(phy->spi_device, &m);
--		if (ret < 0)
--			goto exit;
--
--		if (in) {
--			memcpy(in, phy->iobuf, transfer_len);
--			in += transfer_len;
--		}
--
--		len -= transfer_len;
--	}
--
--exit:
--	spi_bus_unlock(phy->spi_device->master);
--	return ret;
--}
--
--static int tpm_tis_spi_read_bytes(struct tpm_tis_data *data, u32 addr,
--				  u16 len, u8 *result)
--{
--	return tpm_tis_spi_transfer(data, addr, len, result, NULL);
--}
--
--static int tpm_tis_spi_write_bytes(struct tpm_tis_data *data, u32 addr,
--				   u16 len, const u8 *value)
--{
--	return tpm_tis_spi_transfer(data, addr, len, NULL, value);
--}
--
--int tpm_tis_spi_read16(struct tpm_tis_data *data, u32 addr, u16 *result)
--{
--	__le16 result_le;
--	int rc;
--
--	rc = data->phy_ops->read_bytes(data, addr, sizeof(u16),
--				       (u8 *)&result_le);
--	if (!rc)
--		*result = le16_to_cpu(result_le);
--
--	return rc;
--}
--
--int tpm_tis_spi_read32(struct tpm_tis_data *data, u32 addr, u32 *result)
--{
--	__le32 result_le;
--	int rc;
--
--	rc = data->phy_ops->read_bytes(data, addr, sizeof(u32),
--				       (u8 *)&result_le);
--	if (!rc)
--		*result = le32_to_cpu(result_le);
--
--	return rc;
--}
--
--int tpm_tis_spi_write32(struct tpm_tis_data *data, u32 addr, u32 value)
--{
--	__le32 value_le;
--	int rc;
--
--	value_le = cpu_to_le32(value);
--	rc = data->phy_ops->write_bytes(data, addr, sizeof(u32),
--					(u8 *)&value_le);
--
--	return rc;
--}
--
--int tpm_tis_spi_init(struct spi_device *spi, struct tpm_tis_spi_phy *phy,
--		     int irq, const struct tpm_tis_phy_ops *phy_ops)
--{
--	phy->iobuf = devm_kmalloc(&spi->dev, MAX_SPI_FRAMESIZE, GFP_KERNEL);
--	if (!phy->iobuf)
--		return -ENOMEM;
--
--	phy->spi_device = spi;
--
--	return tpm_tis_core_init(&spi->dev, &phy->priv, irq, phy_ops, NULL);
--}
--
--static const struct tpm_tis_phy_ops tpm_spi_phy_ops = {
--	.read_bytes = tpm_tis_spi_read_bytes,
--	.write_bytes = tpm_tis_spi_write_bytes,
--	.read16 = tpm_tis_spi_read16,
--	.read32 = tpm_tis_spi_read32,
--	.write32 = tpm_tis_spi_write32,
--};
--
--static int tpm_tis_spi_probe(struct spi_device *dev)
--{
--	struct tpm_tis_spi_phy *phy;
--	int irq;
--
--	phy = devm_kzalloc(&dev->dev, sizeof(struct tpm_tis_spi_phy),
--			   GFP_KERNEL);
--	if (!phy)
--		return -ENOMEM;
--
--	phy->flow_control = tpm_tis_spi_flow_control;
--
--	/* If the SPI device has an IRQ then use that */
--	if (dev->irq > 0)
--		irq = dev->irq;
--	else
--		irq = -1;
--
--	init_completion(&phy->ready);
--	return tpm_tis_spi_init(dev, phy, irq, &tpm_spi_phy_ops);
--}
--
--typedef int (*tpm_tis_spi_probe_func)(struct spi_device *);
--
--static int tpm_tis_spi_driver_probe(struct spi_device *spi)
--{
--	const struct spi_device_id *spi_dev_id = spi_get_device_id(spi);
--	tpm_tis_spi_probe_func probe_func;
--
--	probe_func = of_device_get_match_data(&spi->dev);
--	if (!probe_func && spi_dev_id)
--		probe_func = (tpm_tis_spi_probe_func)spi_dev_id->driver_data;
--	if (!probe_func)
--		return -ENODEV;
--
--	return probe_func(spi);
--}
--
--static SIMPLE_DEV_PM_OPS(tpm_tis_pm, tpm_pm_suspend, tpm_tis_spi_resume);
--
--static int tpm_tis_spi_remove(struct spi_device *dev)
--{
--	struct tpm_chip *chip = spi_get_drvdata(dev);
--
--	tpm_chip_unregister(chip);
--	tpm_tis_remove(chip);
--	return 0;
--}
--
--static const struct spi_device_id tpm_tis_spi_id[] = {
--	{ "tpm_tis_spi", (unsigned long)tpm_tis_spi_probe },
--	{ "cr50", (unsigned long)cr50_spi_probe },
--	{}
--};
--MODULE_DEVICE_TABLE(spi, tpm_tis_spi_id);
--
--static const struct of_device_id of_tis_spi_match[] = {
--	{ .compatible = "st,st33htpm-spi", .data = tpm_tis_spi_probe },
--	{ .compatible = "infineon,slb9670", .data = tpm_tis_spi_probe },
--	{ .compatible = "tcg,tpm_tis-spi", .data = tpm_tis_spi_probe },
--	{ .compatible = "google,cr50", .data = cr50_spi_probe },
--	{}
--};
--MODULE_DEVICE_TABLE(of, of_tis_spi_match);
--
--static const struct acpi_device_id acpi_tis_spi_match[] = {
--	{"SMO0768", 0},
--	{}
--};
--MODULE_DEVICE_TABLE(acpi, acpi_tis_spi_match);
--
--static struct spi_driver tpm_tis_spi_driver = {
--	.driver = {
--		.name = "tpm_tis_spi",
--		.pm = &tpm_tis_pm,
--		.of_match_table = of_match_ptr(of_tis_spi_match),
--		.acpi_match_table = ACPI_PTR(acpi_tis_spi_match),
--	},
--	.probe = tpm_tis_spi_driver_probe,
--	.remove = tpm_tis_spi_remove,
--	.id_table = tpm_tis_spi_id,
--};
--module_spi_driver(tpm_tis_spi_driver);
--
--MODULE_DESCRIPTION("TPM Driver for native SPI access");
--MODULE_LICENSE("GPL");
---- /dev/null
-+++ b/drivers/char/tpm/tpm_tis_spi_main.c
-@@ -0,0 +1,298 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2015 Infineon Technologies AG
-+ * Copyright (C) 2016 STMicroelectronics SAS
-+ *
-+ * Authors:
-+ * Peter Huewe <peter.huewe@infineon.com>
-+ * Christophe Ricard <christophe-h.ricard@st.com>
-+ *
-+ * Maintained by: <tpmdd-devel@lists.sourceforge.net>
-+ *
-+ * Device driver for TCG/TCPA TPM (trusted platform module).
-+ * Specifications at www.trustedcomputinggroup.org
-+ *
-+ * This device driver implements the TPM interface as defined in
-+ * the TCG TPM Interface Spec version 1.3, revision 27 via _raw/native
-+ * SPI access_.
-+ *
-+ * It is based on the original tpm_tis device driver from Leendert van
-+ * Dorn and Kyleen Hall and Jarko Sakkinnen.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/completion.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+
-+#include <linux/of_device.h>
-+#include <linux/spi/spi.h>
-+#include <linux/tpm.h>
-+
-+#include "tpm.h"
-+#include "tpm_tis_core.h"
-+#include "tpm_tis_spi.h"
-+
-+#define MAX_SPI_FRAMESIZE 64
-+
-+/*
-+ * TCG SPI flow control is documented in section 6.4 of the spec[1]. In short,
-+ * keep trying to read from the device until MISO goes high indicating the
-+ * wait state has ended.
-+ *
-+ * [1] https://trustedcomputinggroup.org/resource/pc-client-platform-tpm-profile-ptp-specification/
-+ */
-+static int tpm_tis_spi_flow_control(struct tpm_tis_spi_phy *phy,
-+				    struct spi_transfer *spi_xfer)
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/txrx.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/txrx.h
+@@ -179,6 +179,14 @@ mlx5e_tx_dma_unmap(struct device *pdev,
+ 	}
+ }
+ 
++static inline void mlx5e_rqwq_reset(struct mlx5e_rq *rq)
 +{
-+	struct spi_message m;
-+	int ret, i;
-+
-+	if ((phy->iobuf[3] & 0x01) == 0) {
-+		// handle SPI wait states
-+		phy->iobuf[0] = 0;
-+
-+		for (i = 0; i < TPM_RETRY; i++) {
-+			spi_xfer->len = 1;
-+			spi_message_init(&m);
-+			spi_message_add_tail(spi_xfer, &m);
-+			ret = spi_sync_locked(phy->spi_device, &m);
-+			if (ret < 0)
-+				return ret;
-+			if (phy->iobuf[0] & 0x01)
-+				break;
-+		}
-+
-+		if (i == TPM_RETRY)
-+			return -ETIMEDOUT;
-+	}
-+
-+	return 0;
-+}
-+
-+int tpm_tis_spi_transfer(struct tpm_tis_data *data, u32 addr, u16 len,
-+			 u8 *in, const u8 *out)
-+{
-+	struct tpm_tis_spi_phy *phy = to_tpm_tis_spi_phy(data);
-+	int ret = 0;
-+	struct spi_message m;
-+	struct spi_transfer spi_xfer;
-+	u8 transfer_len;
-+
-+	spi_bus_lock(phy->spi_device->master);
-+
-+	while (len) {
-+		transfer_len = min_t(u16, len, MAX_SPI_FRAMESIZE);
-+
-+		phy->iobuf[0] = (in ? 0x80 : 0) | (transfer_len - 1);
-+		phy->iobuf[1] = 0xd4;
-+		phy->iobuf[2] = addr >> 8;
-+		phy->iobuf[3] = addr;
-+
-+		memset(&spi_xfer, 0, sizeof(spi_xfer));
-+		spi_xfer.tx_buf = phy->iobuf;
-+		spi_xfer.rx_buf = phy->iobuf;
-+		spi_xfer.len = 4;
-+		spi_xfer.cs_change = 1;
-+
-+		spi_message_init(&m);
-+		spi_message_add_tail(&spi_xfer, &m);
-+		ret = spi_sync_locked(phy->spi_device, &m);
-+		if (ret < 0)
-+			goto exit;
-+
-+		ret = phy->flow_control(phy, &spi_xfer);
-+		if (ret < 0)
-+			goto exit;
-+
-+		spi_xfer.cs_change = 0;
-+		spi_xfer.len = transfer_len;
-+		spi_xfer.delay_usecs = 5;
-+
-+		if (in) {
-+			spi_xfer.tx_buf = NULL;
-+		} else if (out) {
-+			spi_xfer.rx_buf = NULL;
-+			memcpy(phy->iobuf, out, transfer_len);
-+			out += transfer_len;
-+		}
-+
-+		spi_message_init(&m);
-+		spi_message_add_tail(&spi_xfer, &m);
-+		reinit_completion(&phy->ready);
-+		ret = spi_sync_locked(phy->spi_device, &m);
-+		if (ret < 0)
-+			goto exit;
-+
-+		if (in) {
-+			memcpy(in, phy->iobuf, transfer_len);
-+			in += transfer_len;
-+		}
-+
-+		len -= transfer_len;
-+	}
-+
-+exit:
-+	spi_bus_unlock(phy->spi_device->master);
-+	return ret;
-+}
-+
-+static int tpm_tis_spi_read_bytes(struct tpm_tis_data *data, u32 addr,
-+				  u16 len, u8 *result)
-+{
-+	return tpm_tis_spi_transfer(data, addr, len, result, NULL);
-+}
-+
-+static int tpm_tis_spi_write_bytes(struct tpm_tis_data *data, u32 addr,
-+				   u16 len, const u8 *value)
-+{
-+	return tpm_tis_spi_transfer(data, addr, len, NULL, value);
-+}
-+
-+int tpm_tis_spi_read16(struct tpm_tis_data *data, u32 addr, u16 *result)
-+{
-+	__le16 result_le;
-+	int rc;
-+
-+	rc = data->phy_ops->read_bytes(data, addr, sizeof(u16),
-+				       (u8 *)&result_le);
-+	if (!rc)
-+		*result = le16_to_cpu(result_le);
-+
-+	return rc;
-+}
-+
-+int tpm_tis_spi_read32(struct tpm_tis_data *data, u32 addr, u32 *result)
-+{
-+	__le32 result_le;
-+	int rc;
-+
-+	rc = data->phy_ops->read_bytes(data, addr, sizeof(u32),
-+				       (u8 *)&result_le);
-+	if (!rc)
-+		*result = le32_to_cpu(result_le);
-+
-+	return rc;
-+}
-+
-+int tpm_tis_spi_write32(struct tpm_tis_data *data, u32 addr, u32 value)
-+{
-+	__le32 value_le;
-+	int rc;
-+
-+	value_le = cpu_to_le32(value);
-+	rc = data->phy_ops->write_bytes(data, addr, sizeof(u32),
-+					(u8 *)&value_le);
-+
-+	return rc;
-+}
-+
-+int tpm_tis_spi_init(struct spi_device *spi, struct tpm_tis_spi_phy *phy,
-+		     int irq, const struct tpm_tis_phy_ops *phy_ops)
-+{
-+	phy->iobuf = devm_kmalloc(&spi->dev, MAX_SPI_FRAMESIZE, GFP_KERNEL);
-+	if (!phy->iobuf)
-+		return -ENOMEM;
-+
-+	phy->spi_device = spi;
-+
-+	return tpm_tis_core_init(&spi->dev, &phy->priv, irq, phy_ops, NULL);
-+}
-+
-+static const struct tpm_tis_phy_ops tpm_spi_phy_ops = {
-+	.read_bytes = tpm_tis_spi_read_bytes,
-+	.write_bytes = tpm_tis_spi_write_bytes,
-+	.read16 = tpm_tis_spi_read16,
-+	.read32 = tpm_tis_spi_read32,
-+	.write32 = tpm_tis_spi_write32,
-+};
-+
-+static int tpm_tis_spi_probe(struct spi_device *dev)
-+{
-+	struct tpm_tis_spi_phy *phy;
-+	int irq;
-+
-+	phy = devm_kzalloc(&dev->dev, sizeof(struct tpm_tis_spi_phy),
-+			   GFP_KERNEL);
-+	if (!phy)
-+		return -ENOMEM;
-+
-+	phy->flow_control = tpm_tis_spi_flow_control;
-+
-+	/* If the SPI device has an IRQ then use that */
-+	if (dev->irq > 0)
-+		irq = dev->irq;
++	if (rq->wq_type == MLX5_WQ_TYPE_LINKED_LIST_STRIDING_RQ)
++		mlx5_wq_ll_reset(&rq->mpwqe.wq);
 +	else
-+		irq = -1;
-+
-+	init_completion(&phy->ready);
-+	return tpm_tis_spi_init(dev, phy, irq, &tpm_spi_phy_ops);
++		mlx5_wq_cyc_reset(&rq->wqe.wq);
 +}
 +
-+typedef int (*tpm_tis_spi_probe_func)(struct spi_device *);
+ /* SW parser related functions */
+ 
+ struct mlx5e_swp_spec {
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -723,6 +723,9 @@ int mlx5e_modify_rq_state(struct mlx5e_r
+ 	if (!in)
+ 		return -ENOMEM;
+ 
++	if (curr_state == MLX5_RQC_STATE_RST && next_state == MLX5_RQC_STATE_RDY)
++		mlx5e_rqwq_reset(rq);
 +
-+static int tpm_tis_spi_driver_probe(struct spi_device *spi)
+ 	rqc = MLX5_ADDR_OF(modify_rq_in, in, ctx);
+ 
+ 	MLX5_SET(modify_rq_in, in, rq_state, curr_state);
+--- a/drivers/net/ethernet/mellanox/mlx5/core/wq.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/wq.c
+@@ -96,6 +96,13 @@ err_db_free:
+ 	return err;
+ }
+ 
++void mlx5_wq_cyc_reset(struct mlx5_wq_cyc *wq)
 +{
-+	const struct spi_device_id *spi_dev_id = spi_get_device_id(spi);
-+	tpm_tis_spi_probe_func probe_func;
-+
-+	probe_func = of_device_get_match_data(&spi->dev);
-+	if (!probe_func && spi_dev_id)
-+		probe_func = (tpm_tis_spi_probe_func)spi_dev_id->driver_data;
-+	if (!probe_func)
-+		return -ENODEV;
-+
-+	return probe_func(spi);
++	wq->wqe_ctr = 0;
++	wq->cur_sz = 0;
++	mlx5_wq_cyc_update_db_record(wq);
 +}
 +
-+static SIMPLE_DEV_PM_OPS(tpm_tis_pm, tpm_pm_suspend, tpm_tis_spi_resume);
-+
-+static int tpm_tis_spi_remove(struct spi_device *dev)
+ int mlx5_wq_qp_create(struct mlx5_core_dev *mdev, struct mlx5_wq_param *param,
+ 		      void *qpc, struct mlx5_wq_qp *wq,
+ 		      struct mlx5_wq_ctrl *wq_ctrl)
+@@ -194,6 +201,19 @@ err_db_free:
+ 	return err;
+ }
+ 
++static void mlx5_wq_ll_init_list(struct mlx5_wq_ll *wq)
 +{
-+	struct tpm_chip *chip = spi_get_drvdata(dev);
++	struct mlx5_wqe_srq_next_seg *next_seg;
++	int i;
 +
-+	tpm_chip_unregister(chip);
-+	tpm_tis_remove(chip);
-+	return 0;
++	for (i = 0; i < wq->fbc.sz_m1; i++) {
++		next_seg = mlx5_wq_ll_get_wqe(wq, i);
++		next_seg->next_wqe_index = cpu_to_be16(i + 1);
++	}
++	next_seg = mlx5_wq_ll_get_wqe(wq, i);
++	wq->tail_next = &next_seg->next_wqe_index;
 +}
 +
-+static const struct spi_device_id tpm_tis_spi_id[] = {
-+	{ "tpm_tis_spi", (unsigned long)tpm_tis_spi_probe },
-+	{ "cr50", (unsigned long)cr50_spi_probe },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(spi, tpm_tis_spi_id);
+ int mlx5_wq_ll_create(struct mlx5_core_dev *mdev, struct mlx5_wq_param *param,
+ 		      void *wqc, struct mlx5_wq_ll *wq,
+ 		      struct mlx5_wq_ctrl *wq_ctrl)
+@@ -201,9 +221,7 @@ int mlx5_wq_ll_create(struct mlx5_core_d
+ 	u8 log_wq_stride = MLX5_GET(wq, wqc, log_wq_stride);
+ 	u8 log_wq_sz     = MLX5_GET(wq, wqc, log_wq_sz);
+ 	struct mlx5_frag_buf_ctrl *fbc = &wq->fbc;
+-	struct mlx5_wqe_srq_next_seg *next_seg;
+ 	int err;
+-	int i;
+ 
+ 	err = mlx5_db_alloc_node(mdev, &wq_ctrl->db, param->db_numa_node);
+ 	if (err) {
+@@ -222,13 +240,7 @@ int mlx5_wq_ll_create(struct mlx5_core_d
+ 
+ 	mlx5_init_fbc(wq_ctrl->buf.frags, log_wq_stride, log_wq_sz, fbc);
+ 
+-	for (i = 0; i < fbc->sz_m1; i++) {
+-		next_seg = mlx5_wq_ll_get_wqe(wq, i);
+-		next_seg->next_wqe_index = cpu_to_be16(i + 1);
+-	}
+-	next_seg = mlx5_wq_ll_get_wqe(wq, i);
+-	wq->tail_next = &next_seg->next_wqe_index;
+-
++	mlx5_wq_ll_init_list(wq);
+ 	wq_ctrl->mdev = mdev;
+ 
+ 	return 0;
+@@ -239,6 +251,15 @@ err_db_free:
+ 	return err;
+ }
+ 
++void mlx5_wq_ll_reset(struct mlx5_wq_ll *wq)
++{
++	wq->head = 0;
++	wq->wqe_ctr = 0;
++	wq->cur_sz = 0;
++	mlx5_wq_ll_init_list(wq);
++	mlx5_wq_ll_update_db_record(wq);
++}
 +
-+static const struct of_device_id of_tis_spi_match[] = {
-+	{ .compatible = "st,st33htpm-spi", .data = tpm_tis_spi_probe },
-+	{ .compatible = "infineon,slb9670", .data = tpm_tis_spi_probe },
-+	{ .compatible = "tcg,tpm_tis-spi", .data = tpm_tis_spi_probe },
-+	{ .compatible = "google,cr50", .data = cr50_spi_probe },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, of_tis_spi_match);
-+
-+static const struct acpi_device_id acpi_tis_spi_match[] = {
-+	{"SMO0768", 0},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(acpi, acpi_tis_spi_match);
-+
-+static struct spi_driver tpm_tis_spi_driver = {
-+	.driver = {
-+		.name = "tpm_tis_spi",
-+		.pm = &tpm_tis_pm,
-+		.of_match_table = of_match_ptr(of_tis_spi_match),
-+		.acpi_match_table = ACPI_PTR(acpi_tis_spi_match),
-+	},
-+	.probe = tpm_tis_spi_driver_probe,
-+	.remove = tpm_tis_spi_remove,
-+	.id_table = tpm_tis_spi_id,
-+};
-+module_spi_driver(tpm_tis_spi_driver);
-+
-+MODULE_DESCRIPTION("TPM Driver for native SPI access");
-+MODULE_LICENSE("GPL");
+ void mlx5_wq_destroy(struct mlx5_wq_ctrl *wq_ctrl)
+ {
+ 	mlx5_frag_buf_free(wq_ctrl->mdev, &wq_ctrl->buf);
+--- a/drivers/net/ethernet/mellanox/mlx5/core/wq.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/wq.h
+@@ -80,10 +80,12 @@ int mlx5_wq_cyc_create(struct mlx5_core_
+ 		       void *wqc, struct mlx5_wq_cyc *wq,
+ 		       struct mlx5_wq_ctrl *wq_ctrl);
+ u32 mlx5_wq_cyc_get_size(struct mlx5_wq_cyc *wq);
++void mlx5_wq_cyc_reset(struct mlx5_wq_cyc *wq);
+ 
+ int mlx5_wq_qp_create(struct mlx5_core_dev *mdev, struct mlx5_wq_param *param,
+ 		      void *qpc, struct mlx5_wq_qp *wq,
+ 		      struct mlx5_wq_ctrl *wq_ctrl);
++void mlx5_wq_ll_reset(struct mlx5_wq_ll *wq);
+ 
+ int mlx5_cqwq_create(struct mlx5_core_dev *mdev, struct mlx5_wq_param *param,
+ 		     void *cqc, struct mlx5_cqwq *wq,
 
 
