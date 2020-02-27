@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4ECAC3F346
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E29BC52D39
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD15324691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09BB720801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811849;
-	bh=7iVY6+scZQa7qgfWx8jucqRJF7HbCBK/cNtlVJnOttc=;
+	s=default; t=1582811863;
+	bh=OjlB9AVcPer6GvN/IsZeDID4gRoeRc0i8+HUSWT00wc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r7D1pxrHdxPxTD5HjpkvUT4r+jlLwzct+hWUeBvu+TRQPEule+F3wC4ZfVWetR7nS
-	 J/34DnOE33s6N8rO7MXQU4D9eemAkqCGsWTko+EFpCDcNR7pjUaHbqEjaiUYCsYMOM
-	 VIH/5yyes/ft7aUv4u6ljMFtA7tdFZE2hyiOE864=
+	b=mYA5eMRZB5SDJcQSVXw/jMYtm7mb7X1sEVt+SPp9ydlcJSInblk4H9+lG1H/WzdM0
+	 OK8mbDgvfhFfVi8ZpBuKAeViljH+kAKQfZHayXkpA2CXkXM2z4JiSDwfs/nOPHbTu/
+	 L0ECYBa7U6jJxL+YlRWvRlfsHFol15vAI+Nk2eRw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732278AbgB0N52 (ORCPT
+        id S1732325AbgB0N5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:57:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58214 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:57:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732262AbgB0N5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:57:20 -0500
+        id S1732309AbgB0N5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:57:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB9342084E;
-        Thu, 27 Feb 2020 13:57:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 048DD24691;
+        Thu, 27 Feb 2020 13:57:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811840;
-        bh=7iVY6+scZQa7qgfWx8jucqRJF7HbCBK/cNtlVJnOttc=;
+        s=default; t=1582811855;
+        bh=OjlB9AVcPer6GvN/IsZeDID4gRoeRc0i8+HUSWT00wc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DxE50fA5WsO0i19ZSenhqqyXRM969TIDbD1VHqrZ31KHfxPohF8ZvAtmzSHHasGN0
-         s7zphlzcNyz6hKrU09AsC34cSuzXu16VGAOnps1RHeJm/KXyHA6IMX+q0iclYd6/2J
-         bdXpzWNuIqr7UrRHtAqeaEkOk5U1dSoeW3C7j8jY=
+        b=IBF8JpZFmZezeG8+axgaVGDQaNbjCgULBM9sa+/h5CqQXXwSUvwKKyBjwqWc+TV6O
+         KOuXNZVvFEdxD6+mAPAXvtQtQFtVNftGJ6sCd47tYmi3aV60V5N6jd+1n9yzPDgbEK
+         YA7BqSn+KPHcaebLHQzG2SIJAtU3kTiDa3YTfcMs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 122/237] f2fs: free sysfs kobject
-Date:   Thu, 27 Feb 2020 14:35:36 +0100
-Message-Id: <20200227132305.774339693@linuxfoundation.org>
+Subject: [PATCH 4.14 128/237] pwm: omap-dmtimer: Remove PWM chip in .remove before making it unfunctional
+Date:   Thu, 27 Feb 2020 14:35:42 +0100
+Message-Id: <20200227132306.170895552@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -60,29 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jaegeuk Kim <jaegeuk@kernel.org>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit 820d366736c949ffe698d3b3fe1266a91da1766d ]
+[ Upstream commit 43efdc8f0e6d7088ec61bd55a73bf853f002d043 ]
 
-Detected kmemleak.
+In the old code (e.g.) mutex_destroy() was called before
+pwmchip_remove(). Between these two calls it is possible that a PWM
+callback is used which tries to grab the mutex.
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: 6604c6556db9 ("pwm: Add PWM driver for OMAP using dual-mode timers")
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/sysfs.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pwm/pwm-omap-dmtimer.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-index 93af9d7dfcdca..79e45e760c20b 100644
---- a/fs/f2fs/sysfs.c
-+++ b/fs/f2fs/sysfs.c
-@@ -557,4 +557,5 @@ void f2fs_unregister_sysfs(struct f2fs_sb_info *sbi)
- 		remove_proc_entry(sbi->sb->s_id, f2fs_proc_root);
- 	}
- 	kobject_del(&sbi->s_kobj);
-+	kobject_put(&sbi->s_kobj);
+diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
+index 5ad42f33e70c1..2e15acf13893d 100644
+--- a/drivers/pwm/pwm-omap-dmtimer.c
++++ b/drivers/pwm/pwm-omap-dmtimer.c
+@@ -337,6 +337,11 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
+ static int pwm_omap_dmtimer_remove(struct platform_device *pdev)
+ {
+ 	struct pwm_omap_dmtimer_chip *omap = platform_get_drvdata(pdev);
++	int ret;
++
++	ret = pwmchip_remove(&omap->chip);
++	if (ret)
++		return ret;
+ 
+ 	if (pm_runtime_active(&omap->dm_timer_pdev->dev))
+ 		omap->pdata->stop(omap->dm_timer);
+@@ -345,7 +350,7 @@ static int pwm_omap_dmtimer_remove(struct platform_device *pdev)
+ 
+ 	mutex_destroy(&omap->mutex);
+ 
+-	return pwmchip_remove(&omap->chip);
++	return 0;
  }
+ 
+ static const struct of_device_id pwm_omap_dmtimer_of_match[] = {
 -- 
 2.20.1
 
