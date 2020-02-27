@@ -2,103 +2,129 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB8BC34022
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D359C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D24AA24656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:40:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="M/B+wVKT"
+	by mail.kernel.org (Postfix) with ESMTP id E4A6F2468F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:40:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582814448;
+	bh=5286eevWITp8+y0vqIAGvvwa9C0bYt6V5V9tA5tp6fQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=FuON+DaC+nDYZ3j+5rzXJeYaYfYpar9A6NghYGr5y3CyhhAQBuP8GJO1/NUfHRLNK
+	 zXEZAYPg8F1w0Vv6/UVlvX3tRZDwSHzIutfAmsW1hxsgP+xoJ4BjLslDloMj6ycrC4
+	 tB3/OWuP93o6usJiv8pGK/TtHuj8WPTA8NCLO8jM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731868AbgB0Okk (ORCPT
+        id S1731953AbgB0Okr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:40:40 -0500
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:38854 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731448AbgB0Nwx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:52:53 -0500
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01RDqCX8026476;
-        Thu, 27 Feb 2020 07:52:44 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=cslc29hczETAlQa0X23hPQTj91TBsgGjB1S2qq30ylY=;
- b=M/B+wVKT5KIY+EntGHNNSZmwep7JogzZUSHR9y5Lu1mtdz+qaXHl6WUBeazJOMmcPMZn
- V2ADsuQHEMe0IwJtbsDkeyvi7RfXBX4LGQBtDllcAp47SjURfr3/ygBwfxwgRELGeHM7
- BHbxihSv89oKLzzc8RkbfKVrcJiA4YSY8Iidxia9rgTvnPDIIp2n5j9i1SlrmE4LrI/0
- agCe7zQUga4ocNJiHd6oCmdcuyq8mEQrzcZDsrcAHnSBjBb4kGknLwUUPU8OHZ8Rdqwd
- mAm6TRMjIeKcI6ipuEC5/bD+iUrsfA3hI6B3ZXELjrxl9d+1g/SX/M8uZY8QSyfUStnP RQ== 
-Authentication-Results: ppops.net;
-        spf=pass smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex01.ad.cirrus.com ([5.172.152.52])
-        by mx0b-001ae601.pphosted.com with ESMTP id 2ydcmbbkgp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 27 Feb 2020 07:52:44 -0600
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 27 Feb
- 2020 13:52:43 +0000
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Thu, 27 Feb 2020 13:52:43 +0000
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 0E48645D;
+        Thu, 27 Feb 2020 09:40:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52376 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731573AbgB0Nwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:52:45 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF17620578;
         Thu, 27 Feb 2020 13:52:43 +0000 (UTC)
-Date:   Thu, 27 Feb 2020 13:52:43 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH v2 1/2] mfd: wm8994: Fix driver operation if loaded as
- modules
-Message-ID: <20200227135243.GI108283@ediswmail.ad.cirrus.com>
-References: <CGME20200226100814eucas1p1ef5e4d5eb763f37bcd4eceffc798792d@eucas1p1.samsung.com>
- <20200226100802.16384-1-m.szyprowski@samsung.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582811564;
+        bh=5286eevWITp8+y0vqIAGvvwa9C0bYt6V5V9tA5tp6fQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=MD1ij3PXhDE1vkNBdXhgPfLWEKsamsugFNA0rwvSlFh0tEIlkvy6NiC76jg8Jea+p
+         4tHdoF9CXz8pb+PLVNAGBLPDyH5FZ0S9+6osbNOiEmBREn2M4a//gd/uAkaHSbqqdf
+         x1Pn8nsp7bo1bbd6pzjuP+hsdhhIZQfiSp6Fl4l8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Herbert Poetzl <herbert@13thfloor.at>,
+        Theodore Tso <tytso@mit.edu>, stable@kernel.org
+Subject: [PATCH 4.14 016/237] ext4: fix support for inode sizes > 1024 bytes
+Date:   Thu, 27 Feb 2020 14:33:50 +0100
+Message-Id: <20200227132257.253001986@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
+References: <20200227132255.285644406@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200226100802.16384-1-m.szyprowski@samsung.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-SPF-Result: pass
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- ip4:5.172.152.52 -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 adultscore=0
- bulkscore=0 malwarescore=0 clxscore=1011 priorityscore=1501 mlxscore=0
- lowpriorityscore=0 mlxlogscore=999 suspectscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002270110
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 11:08:01AM +0100, Marek Szyprowski wrote:
-> WM8994 chip has built-in regulators, which might be used for chip
-> operation. They are controlled by a separate wm8994-regulator driver,
-> which should be loaded before this driver calls regulator_get(), because
-> that driver also provides consumer-supply mapping for the them. If that
-> driver is not yet loaded, regulator core substitute them with dummy
-> regulator, what breaks chip operation, because the built-in regulators are
-> never enabled. Fix this by annotating this driver with MODULE_SOFTDEP()
-> "pre" dependency to "wm8994_regulator" module.
-> 
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
+From: Theodore Ts'o <tytso@mit.edu>
 
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+commit 4f97a68192bd33b9963b400759cef0ca5963af00 upstream.
 
-Be good to ensure patches@opensource.cirrus.com is CCed on
-patches for the old Wolfson CODECs.
+A recent commit, 9803387c55f7 ("ext4: validate the
+debug_want_extra_isize mount option at parse time"), moved mount-time
+checks around.  One of those changes moved the inode size check before
+the blocksize variable was set to the blocksize of the file system.
+After 9803387c55f7 was set to the minimum allowable blocksize, which
+in practice on most systems would be 1024 bytes.  This cuased file
+systems with inode sizes larger than 1024 bytes to be rejected with a
+message:
 
-Thanks,
-Charles
+EXT4-fs (sdXX): unsupported inode size: 4096
+
+Fixes: 9803387c55f7 ("ext4: validate the debug_want_extra_isize mount option at parse time")
+Link: https://lore.kernel.org/r/20200206225252.GA3673@mit.edu
+Reported-by: Herbert Poetzl <herbert@13thfloor.at>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/ext4/super.c |   18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
+
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -3668,6 +3668,15 @@ static int ext4_fill_super(struct super_
+ 	 */
+ 	sbi->s_li_wait_mult = EXT4_DEF_LI_WAIT_MULT;
+ 
++	blocksize = BLOCK_SIZE << le32_to_cpu(es->s_log_block_size);
++	if (blocksize < EXT4_MIN_BLOCK_SIZE ||
++	    blocksize > EXT4_MAX_BLOCK_SIZE) {
++		ext4_msg(sb, KERN_ERR,
++		       "Unsupported filesystem blocksize %d (%d log_block_size)",
++			 blocksize, le32_to_cpu(es->s_log_block_size));
++		goto failed_mount;
++	}
++
+ 	if (le32_to_cpu(es->s_rev_level) == EXT4_GOOD_OLD_REV) {
+ 		sbi->s_inode_size = EXT4_GOOD_OLD_INODE_SIZE;
+ 		sbi->s_first_ino = EXT4_GOOD_OLD_FIRST_INO;
+@@ -3685,6 +3694,7 @@ static int ext4_fill_super(struct super_
+ 			ext4_msg(sb, KERN_ERR,
+ 			       "unsupported inode size: %d",
+ 			       sbi->s_inode_size);
++			ext4_msg(sb, KERN_ERR, "blocksize: %d", blocksize);
+ 			goto failed_mount;
+ 		}
+ 		/*
+@@ -3848,14 +3858,6 @@ static int ext4_fill_super(struct super_
+ 	if (!ext4_feature_set_ok(sb, (sb_rdonly(sb))))
+ 		goto failed_mount;
+ 
+-	blocksize = BLOCK_SIZE << le32_to_cpu(es->s_log_block_size);
+-	if (blocksize < EXT4_MIN_BLOCK_SIZE ||
+-	    blocksize > EXT4_MAX_BLOCK_SIZE) {
+-		ext4_msg(sb, KERN_ERR,
+-		       "Unsupported filesystem blocksize %d (%d log_block_size)",
+-			 blocksize, le32_to_cpu(es->s_log_block_size));
+-		goto failed_mount;
+-	}
+ 	if (le32_to_cpu(es->s_log_block_size) >
+ 	    (EXT4_MAX_BLOCK_LOG_SIZE - EXT4_MIN_BLOCK_LOG_SIZE)) {
+ 		ext4_msg(sb, KERN_ERR,
+
+
