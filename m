@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2EE3C3F372
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA519C52D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C848124691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:13:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 962C020578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812827;
-	bh=R9SqpIgeU1zDbhHTVMDsR1tJseZFGh73G+JBMuf0/8g=;
+	s=default; t=1582812931;
+	bh=Sm8ml+Kds/HeCqMJ+bZa9a7cgf/7snaizLoOTD4idX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HCXdCM4Hqu9eTUNtHFIJVB22Xi2S7Fdf12d37uMvbpAeop2H54ZczAk4VotIxQHMk
-	 Jafy9SjX6LO6FkXXjNLrUKq0gX+Kj00JUgSti/HPO/yXUokAfJfJFu2IrGjTxGJLLn
-	 We9pnMfw5B1Mm+8tzyQB3FjVD1ZXkEdCjhzZREiQ=
+	b=fVSUK0J0fRpZBBOZjcE+LKkisRoEXvS7Q3AKZSYCaLgMnDMyWE4pz/N0kjCtl3vzq
+	 nXZGcz1w0wpBzAtZpH1ezTjG6czxjSrJgcp/uvr0QuAuXwUmL5rVPwrtIjFey5Y/9N
+	 O/R9TJXTcowkAVOWH4Mko2qAjOZZZCAlax5iroLc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389009AbgB0ONq (ORCPT
+        id S2388917AbgB0OPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:13:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52720 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:15:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388998AbgB0ONm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:13:42 -0500
+        id S2389303AbgB0OP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:15:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E25B224690;
-        Thu, 27 Feb 2020 14:13:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAB5220578;
+        Thu, 27 Feb 2020 14:15:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812822;
-        bh=R9SqpIgeU1zDbhHTVMDsR1tJseZFGh73G+JBMuf0/8g=;
+        s=default; t=1582812927;
+        bh=Sm8ml+Kds/HeCqMJ+bZa9a7cgf/7snaizLoOTD4idX4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sd4KdYN+VwGJiBKT3nA0lBeR0PMJjphvot9ZbKgR6y/QIzTSqxn/MeycejJRfKQQy
-         a3UBY24Siz38K9pS/DBzTEz1Cmre4D2afQ6emH+hhlD+aB/D4lr45ZnFXCT2n2YNgO
-         N3F6co9CiX7QjiCiOXFfOB0t5OVxSSsfObrWgtOE=
+        b=jCLlq52o3p1FCUj+SUEsxv8JKw0xsW3LRtdgG1oV9bC0chWmOYXu54TSHDMGSQ1dt
+         59D8IZFVIsNqxwLtFuCdUvtnkQenti4d1AwA+MK/ZeHD+scdcLLbYR73n1Qr2sLVyn
+         8dT9rz70tJ3fmXuEKPraInc+iY+MmGfaYUO/scGI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Jung <jung@codemercs.com>
-Subject: [PATCH 5.5 022/150] USB: misc: iowarrior: add support for the 100 device
-Date:   Thu, 27 Feb 2020 14:35:59 +0100
-Message-Id: <20200227132236.028215031@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Joel Stanley <joel@jms.id.au>
+Subject: [PATCH 5.5 070/150] fsi: aspeed: add unspecified HAS_IOMEM dependency
+Date:   Thu, 27 Feb 2020 14:36:47 +0100
+Message-Id: <20200227132243.270735590@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -58,67 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Brendan Higgins <brendanhiggins@google.com>
 
-commit bab5417f5f0118ce914bc5b2f8381e959e891155 upstream.
+commit ea3d147a474cb522bfdfe68f1f2557750dcf41dd upstream.
 
-Add a new device id for the 100 devie.  It has 4 interfaces like the 28
-and 28L devices but a larger endpoint so more I/O pins.
+Currently CONFIG_FSI_MASTER_ASPEED=y implicitly depends on
+CONFIG_HAS_IOMEM=y; consequently, on architectures without IOMEM we get
+the following build error:
 
-Cc: Christoph Jung <jung@codemercs.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200214161148.GA3963518@kroah.com
+ld: drivers/fsi/fsi-master-aspeed.o: in function `fsi_master_aspeed_probe':
+drivers/fsi/fsi-master-aspeed.c:436: undefined reference to `devm_ioremap_resource'
+
+Fix the build error by adding the unspecified dependency.
+
+Fixes: 606397d67f41 ("fsi: Add ast2600 master driver")
+Cc: stable@vger.kernel.org
+Reported-by: Brendan Higgins <brendanhiggins@google.com>
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+Reviewed-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+Link: https://lore.kernel.org/r/20200131034832.294268-1-joel@jms.id.au
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/iowarrior.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/fsi/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/usb/misc/iowarrior.c
-+++ b/drivers/usb/misc/iowarrior.c
-@@ -36,6 +36,7 @@
- /* fuller speed iowarrior */
- #define USB_DEVICE_ID_CODEMERCS_IOW28	0x1504
- #define USB_DEVICE_ID_CODEMERCS_IOW28L	0x1505
-+#define USB_DEVICE_ID_CODEMERCS_IOW100	0x1506
+--- a/drivers/fsi/Kconfig
++++ b/drivers/fsi/Kconfig
+@@ -55,6 +55,7 @@ config FSI_MASTER_AST_CF
  
- /* OEMed devices */
- #define USB_DEVICE_ID_CODEMERCS_IOW24SAG	0x158a
-@@ -144,6 +145,7 @@ static const struct usb_device_id iowarr
- 	{USB_DEVICE(USB_VENDOR_ID_CODEMERCS, USB_DEVICE_ID_CODEMERCS_IOW56AM)},
- 	{USB_DEVICE(USB_VENDOR_ID_CODEMERCS, USB_DEVICE_ID_CODEMERCS_IOW28)},
- 	{USB_DEVICE(USB_VENDOR_ID_CODEMERCS, USB_DEVICE_ID_CODEMERCS_IOW28L)},
-+	{USB_DEVICE(USB_VENDOR_ID_CODEMERCS, USB_DEVICE_ID_CODEMERCS_IOW100)},
- 	{}			/* Terminating entry */
- };
- MODULE_DEVICE_TABLE(usb, iowarrior_ids);
-@@ -386,6 +388,7 @@ static ssize_t iowarrior_write(struct fi
- 	case USB_DEVICE_ID_CODEMERCS_IOW56AM:
- 	case USB_DEVICE_ID_CODEMERCS_IOW28:
- 	case USB_DEVICE_ID_CODEMERCS_IOW28L:
-+	case USB_DEVICE_ID_CODEMERCS_IOW100:
- 		/* The IOW56 uses asynchronous IO and more urbs */
- 		if (atomic_read(&dev->write_busy) == MAX_WRITES_IN_FLIGHT) {
- 			/* Wait until we are below the limit for submitted urbs */
-@@ -786,7 +789,8 @@ static int iowarrior_probe(struct usb_in
- 	if ((dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56) ||
- 	    (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56AM) ||
- 	    (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28) ||
--	    (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28L)) {
-+	    (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28L) ||
-+	    (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW100)) {
- 		res = usb_find_last_int_out_endpoint(iface_desc,
- 				&dev->int_out_endpoint);
- 		if (res) {
-@@ -802,7 +806,8 @@ static int iowarrior_probe(struct usb_in
- 	    ((dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56) ||
- 	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56AM) ||
- 	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28) ||
--	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28L)))
-+	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28L) ||
-+	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW100)))
- 		/* IOWarrior56 has wMaxPacketSize different from report size */
- 		dev->report_size = 7;
- 
+ config FSI_MASTER_ASPEED
+ 	tristate "FSI ASPEED master"
++	depends on HAS_IOMEM
+ 	help
+ 	 This option enables a FSI master that is present behind an OPB bridge
+ 	 in the AST2600.
 
 
