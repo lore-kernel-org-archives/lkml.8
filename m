@@ -4,56 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3661C54FD4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F8AC54FEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7FB824690
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 260FE20578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:12:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812675;
-	bh=rSno5SUfmCP36VHtQNRPA3Is3Vioa+Kv64tv2eG8qRM=;
+	s=default; t=1582812723;
+	bh=qG7L3omsE9Soo2/tazuOT2I0Z+DQxknam2ce7i8Y+LY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w7mr+bs6PpQv7FeYlUMq9dxP/zvcUYjwa1kXv+gayl0khd7rlBMys6GzWBphkT7DT
-	 Ncl5HRd8v1D4TAyg+l7DRJ8r6diE+l/HRt0IBmE+Cs+0AAX3aln12cG/LxfmOYvrxk
-	 uSd0btWnjG67c87ABH4TpBkyuob95Nd5VsWZHWn8=
+	b=iTfeHHhTu+MUiba82EWLdCHFOxb+ovuW302todSTKUeALkTyFCIte/6N9ktS8u4Xa
+	 avYjdZ6fqZvxio6AdWK3IHE+0AVBt3uKhbdc3wONr9ygd9aczHIDlOP9+5x1c35xY6
+	 nzgQhWMmtmL6Kn+fusTrh1DRuqUJMcHLimoxR4vo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388089AbgB0OLN (ORCPT
+        id S2387913AbgB0OMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:11:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49538 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:12:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388039AbgB0OLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:11:09 -0500
+        id S2388779AbgB0OL6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:11:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89F3920801;
-        Thu, 27 Feb 2020 14:11:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEDD024697;
+        Thu, 27 Feb 2020 14:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812669;
-        bh=rSno5SUfmCP36VHtQNRPA3Is3Vioa+Kv64tv2eG8qRM=;
+        s=default; t=1582812718;
+        bh=qG7L3omsE9Soo2/tazuOT2I0Z+DQxknam2ce7i8Y+LY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0MZsJgpW77t2vQ8U2j6j/EVzHe36hbgc1xzJOSRraFIWLudACKdFo2iGCbY44znrR
-         gjUbuHICRUq3BvyFN1Oh8J2JtzwLLN7gMDi8RSXnV6yjQPgDE9rZZ5tNgdC+8Xsqb5
-         SyDqQGiID4fNADCYMKJE8d2fABymVz4LLXV2Lves=
+        b=MrRysBP7D3/UYHujCPIdFMoaTPnav7XlOu+OyZAHNtuOeYKvlfkZt1AmV+Auw1C/N
+         cbtNFynC817Ltmj6KW0ZMedtqTaJDz8TyYsYHm6c4MtwMKHoyT7+SPZavJgJxkURkG
+         fEb/Hk10mz3tiysQn8O2PMglRUNq+RaNfaaW8nKA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Potapenko <glider@google.com>,
-        Walter Wu <walter-zh.wu@mediatek.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 068/135] lib/stackdepot.c: fix global out-of-bounds in stack_slabs
-Date:   Thu, 27 Feb 2020 14:36:48 +0100
-Message-Id: <20200227132239.505540272@linuxfoundation.org>
+        stable@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        syzbot+adf6c6c2be1c3a718121@syzkaller.appspotmail.com
+Subject: [PATCH 5.4 125/135] netfilter: xt_hashlimit: limit the max size of hashtable
+Date:   Thu, 27 Feb 2020 14:37:45 +0100
+Message-Id: <20200227132247.854451211@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -66,58 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Potapenko <glider@google.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-commit 305e519ce48e935702c32241f07d393c3c8fed3e upstream.
+commit 8d0015a7ab76b8b1e89a3e5f5710a6e5103f2dd5 upstream.
 
-Walter Wu has reported a potential case in which init_stack_slab() is
-called after stack_slabs[STACK_ALLOC_MAX_SLABS - 1] has already been
-initialized.  In that case init_stack_slab() will overwrite
-stack_slabs[STACK_ALLOC_MAX_SLABS], which may result in a memory
-corruption.
+The user-specified hashtable size is unbound, this could
+easily lead to an OOM or a hung task as we hold the global
+mutex while allocating and initializing the new hashtable.
 
-Link: http://lkml.kernel.org/r/20200218102950.260263-1-glider@google.com
-Fixes: cd11016e5f521 ("mm, kasan: stackdepot implementation. Enable stackdepot for SLAB")
-Signed-off-by: Alexander Potapenko <glider@google.com>
-Reported-by: Walter Wu <walter-zh.wu@mediatek.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Add a max value to cap both cfg->size and cfg->max, as
+suggested by Florian.
+
+Reported-and-tested-by: syzbot+adf6c6c2be1c3a718121@syzkaller.appspotmail.com
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Reviewed-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- lib/stackdepot.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ net/netfilter/xt_hashlimit.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/lib/stackdepot.c
-+++ b/lib/stackdepot.c
-@@ -83,15 +83,19 @@ static bool init_stack_slab(void **preal
- 		return true;
- 	if (stack_slabs[depot_index] == NULL) {
- 		stack_slabs[depot_index] = *prealloc;
-+		*prealloc = NULL;
- 	} else {
--		stack_slabs[depot_index + 1] = *prealloc;
-+		/* If this is the last depot slab, do not touch the next one. */
-+		if (depot_index + 1 < STACK_ALLOC_MAX_SLABS) {
-+			stack_slabs[depot_index + 1] = *prealloc;
-+			*prealloc = NULL;
-+		}
- 		/*
- 		 * This smp_store_release pairs with smp_load_acquire() from
- 		 * |next_slab_inited| above and in stack_depot_save().
- 		 */
- 		smp_store_release(&next_slab_inited, 1);
- 	}
--	*prealloc = NULL;
- 	return true;
+--- a/net/netfilter/xt_hashlimit.c
++++ b/net/netfilter/xt_hashlimit.c
+@@ -851,6 +851,8 @@ hashlimit_mt(const struct sk_buff *skb,
+ 	return hashlimit_mt_common(skb, par, hinfo, &info->cfg, 3);
  }
  
++#define HASHLIMIT_MAX_SIZE 1048576
++
+ static int hashlimit_mt_check_common(const struct xt_mtchk_param *par,
+ 				     struct xt_hashlimit_htable **hinfo,
+ 				     struct hashlimit_cfg3 *cfg,
+@@ -861,6 +863,14 @@ static int hashlimit_mt_check_common(con
+ 
+ 	if (cfg->gc_interval == 0 || cfg->expire == 0)
+ 		return -EINVAL;
++	if (cfg->size > HASHLIMIT_MAX_SIZE) {
++		cfg->size = HASHLIMIT_MAX_SIZE;
++		pr_info_ratelimited("size too large, truncated to %u\n", cfg->size);
++	}
++	if (cfg->max > HASHLIMIT_MAX_SIZE) {
++		cfg->max = HASHLIMIT_MAX_SIZE;
++		pr_info_ratelimited("max too large, truncated to %u\n", cfg->max);
++	}
+ 	if (par->family == NFPROTO_IPV4) {
+ 		if (cfg->srcmask > 32 || cfg->dstmask > 32)
+ 			return -EINVAL;
 
 
