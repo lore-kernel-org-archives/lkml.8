@@ -2,294 +2,396 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E0AC4BA3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93358C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 032E724656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:35:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="k4zFf8OT"
+	by mail.kernel.org (Postfix) with ESMTP id 5B3482084E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:38:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbgB0FfW (ORCPT
+        id S1726602AbgB0Fiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 00:35:22 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:45152 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgB0FfV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 00:35:21 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01R5ZFKI114498;
-        Wed, 26 Feb 2020 23:35:16 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582781716;
-        bh=R1V1m9GrbruUza5i7esnpYgtknu49007IOG/hcZMdY0=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=k4zFf8OTMkwyfRZjm3crZOtifVU38ZnnuXqx2U4EsPACj5PGPJvm+WbRzs/b3xzCR
-         sdsAi7oyufJHwh/kfjslKuEYMbch2EbyGjjk/nJFmQdos0pmWnVF4u4/h4ZJlt7bqd
-         2yqJV/PP8B64nAAyvKSiAVZ6gY3KnvgYOpuh/NCw=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01R5ZFmT059165;
-        Wed, 26 Feb 2020 23:35:15 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 26
- Feb 2020 23:35:15 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 26 Feb 2020 23:35:15 -0600
-Received: from a0132425.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01R5Z6eg022834;
-        Wed, 26 Feb 2020 23:35:13 -0600
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>
-CC:     <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero Kristo <t-kristo@ti.com>
-Subject: [PATCH v4 2/2] clk: keystone: Add new driver to handle syscon based clocks
-Date:   Thu, 27 Feb 2020 11:05:29 +0530
-Message-ID: <20200227053529.16479-3-vigneshr@ti.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227053529.16479-1-vigneshr@ti.com>
-References: <20200227053529.16479-1-vigneshr@ti.com>
+        Thu, 27 Feb 2020 00:38:54 -0500
+Received: from mga07.intel.com ([134.134.136.100]:22722 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbgB0Fix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 00:38:53 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 21:38:52 -0800
+X-IronPort-AV: E=Sophos;i="5.70,490,1574150400"; 
+   d="scan'208";a="241933233"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 21:38:52 -0800
+From:   ira.weiny@intel.com
+To:     fstests@vger.kernel.org
+Cc:     Ira Weiny <ira.weiny@intel.com>, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH] xfs/XXX: Add xfs/XXX
+Date:   Wed, 26 Feb 2020 21:38:47 -0800
+Message-Id: <20200227053847.1888-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On TI's AM654/J721e SoCs, certain clocks can be gatemld/ungated by setting a
-single bit in SoC's System Control Module registers. Sometime more than
-one clock control can be in the same register.
-Add a driver to support such clocks using syscon framework.
-Driver currently supports controlling EHRPWM's TimeBase clock(TBCLK) for
-AM654 SoC.
+From: Ira Weiny <ira.weiny@intel.com>
 
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+Add XXX to test the various setting of dax flags on files.
+
+The final fsx test was derived from Christophs test here but I wanted
+more direct function tests as well so I bundled this together.
+
+https://www.spinics.net/lists/linux-xfs/msg10124.html
+
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+
 ---
- drivers/clk/keystone/Kconfig      |   8 ++
- drivers/clk/keystone/Makefile     |   1 +
- drivers/clk/keystone/syscon-clk.c | 172 ++++++++++++++++++++++++++++++
- 3 files changed, 181 insertions(+)
- create mode 100644 drivers/clk/keystone/syscon-clk.c
+This tests against V4 and V5:
+https://lore.kernel.org/lkml/20200227052442.22524-1-ira.weiny@intel.com/
+---
+ tests/xfs/999     | 279 ++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/999.out |  21 ++++
+ tests/xfs/group   |   1 +
+ 3 files changed, 301 insertions(+)
+ create mode 100755 tests/xfs/999
+ create mode 100644 tests/xfs/999.out
 
-diff --git a/drivers/clk/keystone/Kconfig b/drivers/clk/keystone/Kconfig
-index 38aeefb1e808..ab613f28b502 100644
---- a/drivers/clk/keystone/Kconfig
-+++ b/drivers/clk/keystone/Kconfig
-@@ -26,3 +26,11 @@ config TI_SCI_CLK_PROBE_FROM_FW
- 	  This is mostly only useful for debugging purposes, and will
- 	  increase the boot time of the device. If you want the clocks probed
- 	  from firmware, say Y. Otherwise, say N.
-+
-+config TI_SYSCON_CLK
-+	tristate "Syscon based clock driver for K2/K3 SoCs"
-+	depends on ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
-+	default ARCH_KEYSTONE || ARCH_K3
-+	help
-+	  This adds clock driver support for syscon based gate
-+	  clocks on TI's K2 and K3 SoCs.
-diff --git a/drivers/clk/keystone/Makefile b/drivers/clk/keystone/Makefile
-index d044de6f965c..0e426e648f7c 100644
---- a/drivers/clk/keystone/Makefile
-+++ b/drivers/clk/keystone/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-$(CONFIG_COMMON_CLK_KEYSTONE)	+= pll.o gate.o
- obj-$(CONFIG_TI_SCI_CLK)		+= sci-clk.o
-+obj-$(CONFIG_TI_SYSCON_CLK)		+= syscon-clk.o
-diff --git a/drivers/clk/keystone/syscon-clk.c b/drivers/clk/keystone/syscon-clk.c
-new file mode 100644
-index 000000000000..8d7dbea3bd30
+diff --git a/tests/xfs/999 b/tests/xfs/999
+new file mode 100755
+index 000000000000..b123f1f39894
 --- /dev/null
-+++ b/drivers/clk/keystone/syscon-clk.c
-@@ -0,0 +1,172 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
-+ */
++++ b/tests/xfs/999
+@@ -0,0 +1,279 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2019 Intel, Corp.  All Rights Reserved.
++#
++# FSQA Test No. 999 (temporary)
++#
++# Test setting of DAX flag
++#
++seq=`basename $0`
++seqres=$RESULT_DIR/$seq
++echo "QA output created by $seq"
 +
-+#include <linux/clk-provider.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
++here=`pwd`
++status=1	# failure is the default!
 +
-+struct ti_syscon_gate_clk_priv {
-+	struct clk_hw hw;
-+	struct regmap *regmap;
-+	u32 reg;
-+	u32 idx;
-+};
++dax_dir=$TEST_DIR/dax-dir
++dax_sub_dir=$TEST_DIR/dax-dir/dax-sub-dir
++dax_inh_file=$dax_dir/dax-inh-file
++dax_non_inh_file=$dax_dir/dax-non-inh-file
++non_dax=$TEST_DIR/non-dax
++dax_file=$TEST_DIR/dax-file
++dax_file_copy=$TEST_DIR/dax-file-copy
++dax_file_move=$TEST_DIR/dax-file-move
++data_file=$TEST_DIR/data-file
 +
-+struct ti_syscon_gate_clk_data {
-+	char *name;
-+	u32 offset;
-+	u32 bit_idx;
-+};
-+
-+static struct
-+ti_syscon_gate_clk_priv *to_ti_syscon_gate_clk_priv(struct clk_hw *hw)
-+{
-+	return container_of(hw, struct ti_syscon_gate_clk_priv, hw);
++_cleanup() {
++	rm -rf $TEST_DIR/*
 +}
 +
-+static int ti_syscon_gate_clk_enable(struct clk_hw *hw)
-+{
-+	struct ti_syscon_gate_clk_priv *priv = to_ti_syscon_gate_clk_priv(hw);
++trap "_cleanup ; exit \$status" 0 1 2 3 15
 +
-+	return regmap_write_bits(priv->regmap, priv->reg, priv->idx,
-+				 priv->idx);
++# get standard environment, filters and checks
++. ./common/rc
++
++# real QA test starts here
++_supported_os Linux
++_require_xfs_io_command "lsattr"
++_require_xfs_io_command "chattr" "x"
++_require_xfs_io_command "statx"
++_require_test
++
++function mount_no_dax {
++	# mount SCRATCH_DEV with dax option, TEST_DEV not
++	export MOUNT_OPTIONS=""
++	export TEST_FS_MOUNT_OPTS=""
++	_test_unmount
++	_test_mount
++	_fs_options $TEST_DEV | grep -qw "dax"
++	if [ "$?" == "0" ]; then
++		_notrun "we need $TEST_DEV mount without dax"
++	fi
 +}
 +
-+static void ti_syscon_gate_clk_disable(struct clk_hw *hw)
-+{
-+	struct ti_syscon_gate_clk_priv *priv = to_ti_syscon_gate_clk_priv(hw);
-+
-+	regmap_write_bits(priv->regmap, priv->reg, priv->idx, 0);
++function mount_dax {
++	# mount SCRATCH_DEV with dax option, TEST_DEV not
++	export MOUNT_OPTIONS=""
++	export TEST_FS_MOUNT_OPTS=""
++	_test_unmount
++	_test_mount "-o dax"
++	_fs_options $TEST_DEV | grep -qw "dax"
++	if [ "$?" != "0" ]; then
++		_notrun "we need $TEST_DEV mount with dax"
++	fi
 +}
 +
-+static int ti_syscon_gate_clk_is_enabled(struct clk_hw *hw)
-+{
-+	unsigned int val;
-+	struct ti_syscon_gate_clk_priv *priv = to_ti_syscon_gate_clk_priv(hw);
-+
-+	regmap_read(priv->regmap, priv->reg, &val);
-+
-+	return !!(val & priv->idx);
++function check_phys_dax {
++	xfs_io -c 'lsattr' $1 | awk -e '{ print $1 }' | grep 'x' &> /dev/null
++	if [ "$?" != "0" ]; then
++		echo "FAILED: Did NOT find DAX flag on $1"
++		status=1; exit
++	fi
 +}
 +
-+static const struct clk_ops ti_syscon_gate_clk_ops = {
-+	.enable		= ti_syscon_gate_clk_enable,
-+	.disable	= ti_syscon_gate_clk_disable,
-+	.is_enabled	= ti_syscon_gate_clk_is_enabled,
-+};
-+
-+static struct clk_hw
-+*ti_syscon_gate_clk_register(struct device *dev, struct regmap *regmap,
-+			     const struct ti_syscon_gate_clk_data *data)
-+{
-+	struct ti_syscon_gate_clk_priv *priv;
-+	struct clk_init_data init;
-+	int ret;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return ERR_PTR(-ENOMEM);
-+
-+	init.name = data->name;
-+	init.ops = &ti_syscon_gate_clk_ops;
-+	init.parent_names = NULL;
-+	init.num_parents = 0;
-+	init.flags = 0;
-+
-+	priv->regmap = regmap;
-+	priv->reg = data->offset;
-+	priv->idx = BIT(data->bit_idx);
-+	priv->hw.init = &init;
-+
-+	ret = devm_clk_hw_register(dev, &priv->hw);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	return &priv->hw;
++function check_effective_dax {
++	attr=`xfs_io -c 'statx -r' $1 | grep 'stat.attributes' | awk -e '{ print $3 }'`
++	masked=$(( $attr & 0x2000 ))
++	if [ "$masked" != "8192" ]; then
++		echo "FAILED: Did NOT find VFS DAX flag on $1"
++		status=1; exit
++	fi
 +}
 +
-+static int ti_syscon_gate_clk_probe(struct platform_device *pdev)
-+{
-+	const struct ti_syscon_gate_clk_data *data, *p;
-+	struct clk_hw_onecell_data *hw_data;
-+	struct device *dev = &pdev->dev;
-+	struct regmap *regmap;
-+	int num_clks, i;
-+
-+	data = device_get_match_data(dev);
-+	if (!data)
-+		return -EINVAL;
-+
-+	regmap = syscon_node_to_regmap(dev->of_node);
-+	if (IS_ERR(regmap)) {
-+		if (PTR_ERR(regmap) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+		dev_err(dev, "failed to find parent regmap\n");
-+		return PTR_ERR(regmap);
-+	}
-+
-+	num_clks = 0;
-+	for (p = data; p->name; p++)
-+		num_clks++;
-+
-+	hw_data = devm_kzalloc(dev, struct_size(hw_data, hws, num_clks),
-+			       GFP_KERNEL);
-+	if (!hw_data)
-+		return -ENOMEM;
-+
-+	hw_data->num = num_clks;
-+
-+	for (i = 0; i < num_clks; i++) {
-+		hw_data->hws[i] = ti_syscon_gate_clk_register(dev, regmap,
-+							      &data[i]);
-+		if (IS_ERR(hw_data->hws[i]))
-+			dev_warn(dev, "failed to register %s\n",
-+				 data[i].name);
-+	}
-+
-+	return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
-+					   hw_data);
++function check_phys_no_dax {
++	xfs_io -c 'lsattr' $1 | awk -e '{ print $1 }' | grep 'x' &> /dev/null
++	if [ "$?" == "0" ]; then
++		echo "FAILED: Found DAX flag on $1"
++		status=1; exit
++	fi
 +}
 +
-+#define TI_SYSCON_CLK_GATE(_name, _offset, _bit_idx)	\
-+	{						\
-+		.name = _name,				\
-+		.offset = (_offset),			\
-+		.bit_idx = (_bit_idx),			\
-+	}
++function check_effective_no_dax {
++	attr=`xfs_io -c 'statx -r' $1 | grep 'stat.attributes' | awk -e '{ print $3 }'`
++	masked=$(( $attr & 0x2000 ))
++	if [ "$masked" == "8192" ]; then
++		echo "FAILED: Found VFS DAX flag on $1"
++		status=1; exit
++	fi
++}
 +
-+static const struct ti_syscon_gate_clk_data am654_clk_data[] = {
-+	TI_SYSCON_CLK_GATE("ehrpwm_tbclk0", 0x0, 0),
-+	TI_SYSCON_CLK_GATE("ehrpwm_tbclk1", 0x4, 0),
-+	TI_SYSCON_CLK_GATE("ehrpwm_tbclk2", 0x8, 0),
-+	TI_SYSCON_CLK_GATE("ehrpwm_tbclk3", 0xc, 0),
-+	TI_SYSCON_CLK_GATE("ehrpwm_tbclk4", 0x10, 0),
-+	TI_SYSCON_CLK_GATE("ehrpwm_tbclk5", 0x14, 0),
-+	{ /* Sentinel */ },
-+};
++echo "running tests..."
 +
-+static const struct of_device_id ti_syscon_gate_clk_ids[] = {
-+	{
-+		.compatible = "ti,am654-ehrpwm-tbclk",
-+		.data = &am654_clk_data,
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ti_syscon_gate_clk_ids);
++echo "   *** mount w/o dax flag."
++mount_no_dax
 +
-+static struct platform_driver ti_syscon_gate_clk_driver = {
-+	.probe = ti_syscon_gate_clk_probe,
-+	.driver = {
-+		.name = "ti-syscon-gate-clk",
-+		.of_match_table = ti_syscon_gate_clk_ids,
-+	},
-+};
-+module_platform_driver(ti_syscon_gate_clk_driver);
++echo "   *** mark dax-dir as dax enabled"
++mkdir $dax_dir
++xfs_io -c 'chattr +x' $dax_dir
++check_phys_dax $dax_dir
 +
-+MODULE_AUTHOR("Vignesh Raghavendra <vigneshr@ti.com>");
-+MODULE_DESCRIPTION("Syscon backed gate-clock driver");
-+MODULE_LICENSE("GPL");
++echo "   *** check file inheritance"
++touch $dax_inh_file
++check_phys_dax $dax_inh_file
++check_effective_dax $dax_inh_file
++
++echo "   *** check directory inheritance"
++mkdir $dax_sub_dir
++check_phys_dax $dax_sub_dir
++
++echo "   *** check changing directory"
++xfs_io -c 'chattr -x' $dax_dir
++check_phys_no_dax $dax_dir
++check_effective_no_dax $dax_dir
++
++echo "   *** check non file inheritance"
++touch $dax_non_inh_file
++check_phys_no_dax $dax_non_inh_file
++check_effective_no_dax $dax_non_inh_file
++
++echo "   *** check that previous file stays enabled"
++check_phys_dax $dax_inh_file
++check_effective_dax $dax_inh_file
++
++echo "   *** Reset the directory"
++xfs_io -c 'chattr +x' $dax_dir
++check_phys_dax $dax_dir
++
++
++# check mount override
++# ====================
++
++echo "   *** Remount fs with mount flag"
++mount_dax
++touch $non_dax
++check_phys_no_dax $non_dax
++check_effective_dax $non_dax
++
++echo "   *** Check for non-dax files to be dax with mount option"
++check_effective_dax $dax_non_inh_file
++
++echo "   *** check for file dax flag 'sticky-ness' after remount"
++touch $dax_file
++xfs_io -c 'chattr +x' $dax_file
++check_phys_dax $dax_file
++check_effective_dax $dax_file
++
++echo "   *** remount w/o mount flag"
++mount_no_dax
++check_phys_dax $dax_file
++check_effective_dax $dax_file
++
++check_phys_no_dax $non_dax
++check_effective_no_dax $non_dax
++
++
++# Check non-zero file operations
++# ==============================
++
++echo "   *** file should change effective but page cache should be empty"
++$XFS_IO_PROG -f -c "pwrite 0 10000" $data_file > /dev/null
++xfs_io -c 'chattr +x' $data_file
++check_phys_dax $data_file
++check_effective_dax $data_file
++
++
++# Check inheritance on cp, mv
++# ===========================
++
++echo "   *** check inheritance on cp, mv"
++cp $non_dax $dax_dir/conv-dax
++check_phys_dax $dax_dir/conv-dax
++check_effective_dax $dax_dir/conv-dax
++
++echo "   *** Moved files 'don't inherit'"
++mv $non_dax $dax_dir/move-dax
++check_phys_no_dax $dax_dir/move-dax
++check_effective_no_dax $dax_dir/move-dax
++
++# Check preservation of phys on cp, mv
++# ====================================
++
++mv $dax_file $dax_file_move
++check_phys_dax $dax_file_move
++check_effective_dax $dax_file_move
++
++cp $dax_file_move $dax_file_copy
++check_phys_no_dax $dax_file_copy
++check_effective_no_dax $dax_file_copy
++
++
++# Verify no mode changes on mmap
++# ==============================
++
++echo "   *** check no mode change when mmaped"
++
++dd if=/dev/zero of=$dax_file bs=4096 count=10 > $tmp.log 2>&1
++
++# set known state.
++xfs_io -c 'chattr -x' $dax_file
++check_phys_no_dax $dax_file
++check_effective_no_dax $dax_file
++
++python3 - << EOF > $tmp.log 2>&1 &
++import mmap
++import time
++print ('mmaping "$dax_file"')
++f=open("$dax_file", "r+b")
++mm = mmap.mmap(f.fileno(), 0)
++print ('mmaped "$dax_file"')
++while True:
++	time.sleep(1)
++EOF
++pid=$!
++
++sleep 1
++
++# attempt to should fail
++xfs_io -c 'chattr +x' $dax_file > /dev/null 2>&1
++check_phys_no_dax $dax_file
++check_effective_no_dax $dax_file
++
++kill -TERM $pid > /dev/null 2>&1
++wait $pid > /dev/null 2>&1
++
++# after mmap released should work
++xfs_io -c 'chattr +x' $dax_file
++check_phys_dax $dax_file
++check_effective_dax $dax_file
++
++
++# Finally run the test stolen from Christoph Hellwig to test changing the mode
++# while performing a series of operations
++# =============================================================================
++
++function run_fsx {
++	options=$1
++
++	echo "   *** run 'fsx $options' racing with setting/clearing the DAX flag"
++	$here/ltp/fsx $options -N 20000 $dax_file > $tmp.log 2>&1 &
++	pid=$!
++
++	if [ ! -n "$pid" ]; then
++		echo "FAILED to start fsx"
++		exit 255
++	fi
++
++	# NOTE: fsx runs much faster than these mode changes.
++	for i in `seq 1 500`; do
++		xfs_io -c 'chattr +x' $dax_file > /dev/null 2>&1
++		xfs_io -c 'chattr -x' $dax_file > /dev/null 2>&1
++	done
++
++	wait $pid
++	status=$?
++	if [ "$status" != "0" ]; then
++		cat /sys/kernel/debug/tracing/trace > trace_output
++		echo "FAILED: fsx exited with status : $status"
++		echo "        see trace_output"
++		head $dax_file.fsxlog
++		exit $status
++	fi
++	pid=""
++}
++
++run_fsx ""
++run_fsx "-A"
++run_fsx "-Z -r 4096 -w 4096"
++
++
++status=0 ; exit
+diff --git a/tests/xfs/999.out b/tests/xfs/999.out
+new file mode 100644
+index 000000000000..ccb13770ca4d
+--- /dev/null
++++ b/tests/xfs/999.out
+@@ -0,0 +1,21 @@
++QA output created by 999
++running tests...
++   *** mount w/o dax flag.
++   *** mark dax-dir as dax enabled
++   *** check file inheritance
++   *** check directory inheritance
++   *** check changing directory
++   *** check non file inheritance
++   *** check that previous file stays enabled
++   *** Reset the directory
++   *** Remount fs with mount flag
++   *** Check for non-dax files to be dax with mount option
++   *** check for file dax flag 'sticky-ness' after remount
++   *** remount w/o mount flag
++   *** file should change effective but page cache should be empty
++   *** check inheritance on cp, mv
++   *** Moved files 'don't inherit'
++   *** check no mode change when mmaped
++   *** run 'fsx ' racing with setting/clearing the DAX flag
++   *** run 'fsx -A' racing with setting/clearing the DAX flag
++   *** run 'fsx -Z -r 4096 -w 4096' racing with setting/clearing the DAX flag
+diff --git a/tests/xfs/group b/tests/xfs/group
+index 522d4bc44d1f..816883a268bf 100644
+--- a/tests/xfs/group
++++ b/tests/xfs/group
+@@ -511,3 +511,4 @@
+ 511 auto quick quota
+ 512 auto quick acl attr
+ 513 auto mount
++999 auto
 -- 
-2.25.1
+2.21.0
 
