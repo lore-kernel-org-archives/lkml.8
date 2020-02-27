@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40AF8C52D4D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0175C52D46
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1288124691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:58:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EB8F2469D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:58:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811922;
-	bh=D0avc4Yd53LZK96+VQKGS83FQE9xisWU7V0EPWCN+ms=;
+	s=default; t=1582811905;
+	bh=fr/AzPJ7WzILtDNnLGfSNO8GillGlRDCJ81bnBEoYJg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DZRn7pTIYYEmHdKebMgS9QHRrhRJYbL8/CsOpCarft1bhycKML9gqxjwheHbFYNcY
-	 Gpbhyxs32xQQKQawl1SfU5MFb3xJBs5ZOKLN9c+f/kJjgmsbREOltCX3jH7dKdUfg4
-	 5eaTgXB5bZl9HfPjemVWYUj/rmiLnmuiTsIfMPs4=
+	b=LbT/zWJkOuFy25rrJ2r1BnrCTXcYQDmRHxrCFdMJCX/L5uLZwWJNhCPg93QtT6IXK
+	 MdoF2Q79dJnXe0BMofjPkuCgf9Z57N63bOUGNxMUHQkclja2tWTpTst/lA13kziVBK
+	 /7UJGpWoPzA5BRCAfLkhsSqJpwb0mW7RZzwMMUBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732280AbgB0N6k (ORCPT
+        id S1732256AbgB0N6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:58:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59816 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:58:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732493AbgB0N6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:58:38 -0500
+        id S1732407AbgB0N6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:58:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43B3120578;
-        Thu, 27 Feb 2020 13:58:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 828DB24656;
+        Thu, 27 Feb 2020 13:58:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811917;
-        bh=D0avc4Yd53LZK96+VQKGS83FQE9xisWU7V0EPWCN+ms=;
+        s=default; t=1582811894;
+        bh=fr/AzPJ7WzILtDNnLGfSNO8GillGlRDCJ81bnBEoYJg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z1WPziYwJ8GfJn5ZdLBgRZci94ksZXvhExgu7PynkpiZSx7snmLvCJk2ZdFIQTMXy
-         kwF92tWJXN/wtbMKWwAs9YU4B/zleo8zJAnn4mS/In8cRp9EtdKw/zqdUrc8aSWPvm
-         3CI1p5Td87SidPA7GKMHw5tDVtlHN4kPj5SI0EXk=
+        b=rqrNHj+80gn+wL4mVD02l4JXJTi0RXgIKG+wvpo19VRoMSKQyS+oTNJGdIsgt0maF
+         aB8fkqYujLx5VtGjnc64VsYKGpP/RrtsV1ODvE5VeOyUwMtVZD814mp6WdXiWsPH/J
+         Drec4NTUn/iANXx7B1E5bVy1Jo7K2/0FB/JgzNzQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Heyi Guo <guoheyi@huawei.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 150/237] irqchip/gic-v3: Only provision redistributors that are enabled in ACPI
-Date:   Thu, 27 Feb 2020 14:36:04 +0100
-Message-Id: <20200227132307.627173360@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 115/237] vme: bridges: reduce stack usage
+Date:   Thu, 27 Feb 2020 14:35:29 +0100
+Message-Id: <20200227132305.315977567@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -59,68 +59,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 926b5dfa6b8dc666ff398044af6906b156e1d949 ]
+[ Upstream commit 7483e7a939c074d887450ef1c4d9ccc5909405f8 ]
 
-We currently allocate redistributor region structures for
-individual redistributors when ACPI doesn't present us with
-compact MMIO regions covering multiple redistributors.
+With CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3, the stack usage in vme_fake
+grows above the warning limit:
 
-It turns out that we allocate these structures even when
-the redistributor is flagged as disabled by ACPI. It works
-fine until someone actually tries to tarse one of these
-structures, and access the corresponding MMIO region.
+drivers/vme/bridges/vme_fake.c: In function 'fake_master_read':
+drivers/vme/bridges/vme_fake.c:610:1: error: the frame size of 1160 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
+drivers/vme/bridges/vme_fake.c: In function 'fake_master_write':
+drivers/vme/bridges/vme_fake.c:797:1: error: the frame size of 1160 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
 
-Instead, track the number of enabled redistributors, and
-only allocate what is required. This makes sure that there
-is no invalid data to misuse.
+The problem is that in some configurations, each call to
+fake_vmereadX() puts another variable on the stack.
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reported-by: Heyi Guo <guoheyi@huawei.com>
-Tested-by: Heyi Guo <guoheyi@huawei.com>
-Link: https://lore.kernel.org/r/20191216062745.63397-1-guoheyi@huawei.com
+Reduce the amount of inlining to get back to the previous state,
+with no function using more than 200 bytes each.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20200107200610.3482901-1-arnd@arndb.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/vme/bridges/vme_fake.c | 30 ++++++++++++++++++------------
+ 1 file changed, 18 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 3d73746555876..730b3c1cf7f61 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -1253,6 +1253,7 @@ static struct
- 	struct redist_region *redist_regs;
- 	u32 nr_redist_regions;
- 	bool single_redist;
-+	int enabled_rdists;
- 	u32 maint_irq;
- 	int maint_irq_mode;
- 	phys_addr_t vcpu_base;
-@@ -1347,8 +1348,10 @@ static int __init gic_acpi_match_gicc(struct acpi_subtable_header *header,
- 	 * If GICC is enabled and has valid gicr base address, then it means
- 	 * GICR base is presented via GICC
- 	 */
--	if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address)
-+	if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address) {
-+		acpi_data.enabled_rdists++;
- 		return 0;
-+	}
- 
- 	/*
- 	 * It's perfectly valid firmware can pass disabled GICC entry, driver
-@@ -1378,8 +1381,10 @@ static int __init gic_acpi_count_gicr_regions(void)
- 
- 	count = acpi_table_parse_madt(ACPI_MADT_TYPE_GENERIC_INTERRUPT,
- 				      gic_acpi_match_gicc, 0);
--	if (count > 0)
-+	if (count > 0) {
- 		acpi_data.single_redist = true;
-+		count = acpi_data.enabled_rdists;
-+	}
- 
- 	return count;
+diff --git a/drivers/vme/bridges/vme_fake.c b/drivers/vme/bridges/vme_fake.c
+index 30b3acc938330..e81ec763b5555 100644
+--- a/drivers/vme/bridges/vme_fake.c
++++ b/drivers/vme/bridges/vme_fake.c
+@@ -418,8 +418,9 @@ static void fake_lm_check(struct fake_driver *bridge, unsigned long long addr,
+ 	}
  }
+ 
+-static u8 fake_vmeread8(struct fake_driver *bridge, unsigned long long addr,
+-		u32 aspace, u32 cycle)
++static noinline_for_stack u8 fake_vmeread8(struct fake_driver *bridge,
++					   unsigned long long addr,
++					   u32 aspace, u32 cycle)
+ {
+ 	u8 retval = 0xff;
+ 	int i;
+@@ -450,8 +451,9 @@ static u8 fake_vmeread8(struct fake_driver *bridge, unsigned long long addr,
+ 	return retval;
+ }
+ 
+-static u16 fake_vmeread16(struct fake_driver *bridge, unsigned long long addr,
+-		u32 aspace, u32 cycle)
++static noinline_for_stack u16 fake_vmeread16(struct fake_driver *bridge,
++					     unsigned long long addr,
++					     u32 aspace, u32 cycle)
+ {
+ 	u16 retval = 0xffff;
+ 	int i;
+@@ -482,8 +484,9 @@ static u16 fake_vmeread16(struct fake_driver *bridge, unsigned long long addr,
+ 	return retval;
+ }
+ 
+-static u32 fake_vmeread32(struct fake_driver *bridge, unsigned long long addr,
+-		u32 aspace, u32 cycle)
++static noinline_for_stack u32 fake_vmeread32(struct fake_driver *bridge,
++					     unsigned long long addr,
++					     u32 aspace, u32 cycle)
+ {
+ 	u32 retval = 0xffffffff;
+ 	int i;
+@@ -613,8 +616,9 @@ out:
+ 	return retval;
+ }
+ 
+-static void fake_vmewrite8(struct fake_driver *bridge, u8 *buf,
+-			   unsigned long long addr, u32 aspace, u32 cycle)
++static noinline_for_stack void fake_vmewrite8(struct fake_driver *bridge,
++					      u8 *buf, unsigned long long addr,
++					      u32 aspace, u32 cycle)
+ {
+ 	int i;
+ 	unsigned long long start, end, offset;
+@@ -643,8 +647,9 @@ static void fake_vmewrite8(struct fake_driver *bridge, u8 *buf,
+ 
+ }
+ 
+-static void fake_vmewrite16(struct fake_driver *bridge, u16 *buf,
+-			    unsigned long long addr, u32 aspace, u32 cycle)
++static noinline_for_stack void fake_vmewrite16(struct fake_driver *bridge,
++					       u16 *buf, unsigned long long addr,
++					       u32 aspace, u32 cycle)
+ {
+ 	int i;
+ 	unsigned long long start, end, offset;
+@@ -673,8 +678,9 @@ static void fake_vmewrite16(struct fake_driver *bridge, u16 *buf,
+ 
+ }
+ 
+-static void fake_vmewrite32(struct fake_driver *bridge, u32 *buf,
+-			    unsigned long long addr, u32 aspace, u32 cycle)
++static noinline_for_stack void fake_vmewrite32(struct fake_driver *bridge,
++					       u32 *buf, unsigned long long addr,
++					       u32 aspace, u32 cycle)
+ {
+ 	int i;
+ 	unsigned long long start, end, offset;
 -- 
 2.20.1
 
