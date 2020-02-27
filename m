@@ -2,69 +2,114 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8081DC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36328C35DF9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54E68246A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:40:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582832417;
-	bh=fu+IklrsWVvJ32XFn+HVwCRbpTWU3GvpVRiKA2f5pGo=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=UF8UCShefsy6/tc/1CzFD/JcV2oxAFsDTr26Lz22MFzJ3WPsh3hO6Gm0E4AMg70OQ
-	 eQZBSfTa7OkzQdu0Tu9tSpeqp7/MsCPCIhuLCBRDGlnPg+msWteD2V45EzffPftWrM
-	 S4fINkong4CGnkbU5+oGD/MGaVUsG3GNcPeUAwZs=
+	by mail.kernel.org (Postfix) with ESMTP id 0F28324690
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:40:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AHn6RrhK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730712AbgB0TkQ (ORCPT
+        id S1730757AbgB0TkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 14:40:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51284 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730623AbgB0TkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 14:40:11 -0500
-Subject: Re: [GIT PULL] Kbuild fixes for v5.6-rc4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582832411;
-        bh=fu+IklrsWVvJ32XFn+HVwCRbpTWU3GvpVRiKA2f5pGo=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=slA2gp02jix2vdCKyqllixkgiM93hVbJZxZhZRk1fYQiS2Ewla4J/OCZzqaPlfqdW
-         oT8wgCO24eS5Jj1JFmofq57gMW/3twcRRaxn4TtHbSmfkQTGuZkiO2eU6/nEKyMfBp
-         K14WI0AqkLEztiB2A0544StYIlIIhheZOuLv3zRg=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAK7LNASDV1hBV_4U6wHHMFfxsxctFhVpk4gUQ+pYMay1i4Memw@mail.gmail.com>
-References: <CAK7LNASDV1hBV_4U6wHHMFfxsxctFhVpk4gUQ+pYMay1i4Memw@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAK7LNASDV1hBV_4U6wHHMFfxsxctFhVpk4gUQ+pYMay1i4Memw@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
- tags/kbuild-fixes-v5.6-2
-X-PR-Tracked-Commit-Id: eabc8bcb292fb9a5757b0c8ab7751f41b0a104f8
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a2f0b878c3ca531a1706cb2a8b079cea3b17bafc
-Message-Id: <158283241095.25748.287321509786595911.pr-tracker-bot@kernel.org>
-Date:   Thu, 27 Feb 2020 19:40:10 +0000
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+        Thu, 27 Feb 2020 14:40:19 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36366 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730716AbgB0TkR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 14:40:17 -0500
+Received: by mail-pl1-f193.google.com with SMTP id a6so215725plm.3;
+        Thu, 27 Feb 2020 11:40:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2Kjoqysk6gSi3byP/Av9Kd5WTwb/bJB2OS6hFuH6MkI=;
+        b=AHn6RrhKAqJYZ7NfuNHz/2QFqIi7GnQKF1eAQ2KuFjmsuUaoS91+Hf5Klob/k9VXPM
+         /mQAnqGIS9xvMVdYJ64+IjSaAY2gH7OOOn6ZMQjtg92hdogrXGraLuISN+AnN1yQdBy9
+         vrAn6Jf1TAIt1Rf/gSDVEEd/zqOsvVSv3CkoRYtPt4k4zWqIsKpapOeLzhxhJvv4Gptw
+         woMQois3SjFau3VHHAx53nw8d/Xf+xCBRzeEA1HodrDmyofqjZ+1dZ65TbMQEgqgLQGi
+         gxZ/wbCrzgYTEQ+SZcLORGw/lCPU1ghXXTq3sfeWyyVjjMIMF8becLKCLD3F7+uGhTrJ
+         jHsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2Kjoqysk6gSi3byP/Av9Kd5WTwb/bJB2OS6hFuH6MkI=;
+        b=nBZqLplfeuUTQp069n/HeoMbFD+1Hg18HC09FRnterQbyGxOC35s0W70cyfUYvsylv
+         w18BBXAtybF2/O42HJB+A00i//kzoMic1IkTIYBUZvFDIe3S4fV+XVuSCDajUD4BUCS2
+         jx1NTVjapiDqyF/Tg2PBZB89T3mVV6K36J4F30LiDJgyfYzpxAmUvlqzHNYfKxs9iIx0
+         RAfQSodSjN/IKE4RQJ/9P+6VrM+yK8ojIVuKtUOCkxFdak/D9CA6845PXh1sivyKRieL
+         IXvlncMBznjIHI4Q1D5GyK+xsQQGcs/sNiG963uxr7CP1EX+CHLc6Pr6kPUllcW3Q8wn
+         5HJA==
+X-Gm-Message-State: APjAAAXUte54gVM7fJzmDQZL3zSY1hTplKBZYldJYn4+xrPYjrxQMoUL
+        3H4Z0MzdLlGuF4DUN+7rS/E=
+X-Google-Smtp-Source: APXvYqxec6/gJGSHxBEPxiCdeMeCc7px+e5aG306WxE8kn8otdwddqI9rPGs7xiImY1Hi1fopFfwqg==
+X-Received: by 2002:a17:902:9a86:: with SMTP id w6mr342958plp.37.1582832416678;
+        Thu, 27 Feb 2020 11:40:16 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id u23sm7927216pfm.29.2020.02.27.11.40.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 27 Feb 2020 11:40:16 -0800 (PST)
+Date:   Thu, 27 Feb 2020 11:40:15 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 000/237] 4.14.172-stable review
+Message-ID: <20200227194015.GC31847@roeck-us.net>
+References: <20200227132255.285644406@linuxfoundation.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 28 Feb 2020 02:16:57 +0900:
+On Thu, Feb 27, 2020 at 02:33:34PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.172 release.
+> There are 237 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 29 Feb 2020 13:21:24 +0000.
+> Anything received after that time might be too late.
+> 
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git tags/kbuild-fixes-v5.6-2
+Build results:
+	total: 172 pass: 170 fail: 2
+Failed builds:
+	powerpc:defconfig
+	powerpc:allmodconfig
+Qemu test results:
+	total: 394 pass: 378 fail: 16
+Failed tests:
+	ppc64:mac99:ppc64_book3s_defconfig:smp:nvme:rootfs
+	ppc64:pseries:pseries_defconfig:initrd
+	ppc64:pseries:pseries_defconfig:scsi:rootfs
+	ppc64:pseries:pseries_defconfig:usb:rootfs
+	ppc64:pseries:pseries_defconfig:sdhci:mmc:rootfs
+	ppc64:pseries:pseries_defconfig:nvme:rootfs
+	ppc64:pseries:pseries_defconfig:sata-sii3112:rootfs
+	ppc64:pseries:pseries_defconfig:little:initrd
+	ppc64:pseries:pseries_defconfig:little:scsi:rootfs
+	ppc64:pseries:pseries_defconfig:little:usb:rootfs
+	ppc64:pseries:pseries_defconfig:little:sata-sii3112:rootfs
+	ppc64:pseries:pseries_defconfig:little:scsi[MEGASAS]:rootfs
+	ppc64:pseries:pseries_defconfig:little:scsi[FUSION]:rootfs
+	ppc64:pseries:pseries_defconfig:little:sdhci:mmc:rootfs
+	ppc64:pseries:pseries_defconfig:little:nvme:rootfs
+	ppc64:powernv:powernv_defconfig:initrd
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a2f0b878c3ca531a1706cb2a8b079cea3b17bafc
+Failures as already reported.
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Guenter
