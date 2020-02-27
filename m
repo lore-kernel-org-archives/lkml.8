@@ -2,52 +2,54 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA34C3F35C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B442CC3F344
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C87F120801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89FE121D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:50:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811490;
-	bh=qKFy04UVA0hQ8RqCiIV53fUBqu0Lw5p+r2CcnRmTglg=;
+	s=default; t=1582811402;
+	bh=EvBleNZ5qR3F6cqPeTjbeYqOuB2YOs2UqbF/r7WHfj4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=olzgqtFE7aq8Y1je9e7i6TjA1qoA6JxwGopZpHv7Pxk0apXjuKu1JjNmkV0ExqLJF
-	 bjSMND362yJ8Q7P5Lmo3Ns139QEj0WGDdanjljaROPh99+CuBdWCUx1K/Kxz4facr3
-	 uQivq3OPY7l3uc16ahp+qKpHe2tWffmRPziWzMws=
+	b=nX6Uh65quldo11TXh+BeH0ZlhivLEIxhGz+GMM/hGzAtpv3vRpIXNsLRnMN57ZlKG
+	 eJ4A8ulB+ndqO3OQGJTqZzTZxMgMdFes0lx256+3xdFDFHEbofpwa2CCLXomcLENuZ
+	 cU9Et47jlxCaEK3YIGvIEeNlZHd07jGkyFRbaInk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731010AbgB0Nv2 (ORCPT
+        id S1731132AbgB0NuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:51:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50504 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:50:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731388AbgB0NvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:51:25 -0500
+        id S1731089AbgB0Nto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:49:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6774320578;
-        Thu, 27 Feb 2020 13:51:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D29BA20801;
+        Thu, 27 Feb 2020 13:49:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811484;
-        bh=qKFy04UVA0hQ8RqCiIV53fUBqu0Lw5p+r2CcnRmTglg=;
+        s=default; t=1582811383;
+        bh=EvBleNZ5qR3F6cqPeTjbeYqOuB2YOs2UqbF/r7WHfj4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FiiMPYNH8QlyKqXpp5cnC2VFZ+KDwRAscARHo0N6lVnZfOeuv4ACfesbvQD7ppm/3
-         bHxR8IuUN5U0vXVCarZZ9/cLT91ro1lFvm5G8nknpzxj6zYwgDJUTaoRMYEyFPQ3Tm
-         4OA4l/Q59rA+5xBqgwPO7cpYCz4ib9P1d2FoTGeE=
+        b=tZk6jnPnHTXF6k2DdIbxhF1CcJXzZL+fiERIe8REREIXxJFpZkG8FO4sptb8sjrWz
+         j15tFYG8QbJnsHKxKRGLnDfxVLeYWTbYqvsvR/GP76EpiTRguuPmo+IdVhqmbgTL62
+         vBHfHfTYqUoSHTeLBddmV9PnZtuACMnJnhJxEjVM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Upton <oupton@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.9 150/165] KVM: nVMX: Refactor IO bitmap checks into helper function
-Date:   Thu, 27 Feb 2020 14:37:04 +0100
-Message-Id: <20200227132252.652394439@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Andrei Otcheretianski <andrei.otcheretianski@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 111/165] iwlwifi: mvm: Fix thermal zone registration
+Date:   Thu, 27 Feb 2020 14:36:25 +0100
+Message-Id: <20200227132247.332521657@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -60,82 +62,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Upton <oupton@google.com>
+From: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
 
-commit e71237d3ff1abf9f3388337cfebf53b96df2020d upstream.
+[ Upstream commit baa6cf8450b72dcab11f37c47efce7c5b9b8ad0f ]
 
-Checks against the IO bitmap are useful for both instruction emulation
-and VM-exit reflection. Refactor the IO bitmap checks into a helper
-function.
+Use a unique name when registering a thermal zone. Otherwise, with
+multiple NICS, we hit the following warning during the unregistration.
 
-Signed-off-by: Oliver Upton <oupton@google.com>
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+WARNING: CPU: 2 PID: 3525 at fs/sysfs/group.c:255
+ RIP: 0010:sysfs_remove_group+0x80/0x90
+ Call Trace:
+  dpm_sysfs_remove+0x57/0x60
+  device_del+0x5a/0x350
+  ? sscanf+0x4e/0x70
+  device_unregister+0x1a/0x60
+  hwmon_device_unregister+0x4a/0xa0
+  thermal_remove_hwmon_sysfs+0x175/0x1d0
+  thermal_zone_device_unregister+0x188/0x1e0
+  iwl_mvm_thermal_exit+0xe7/0x100 [iwlmvm]
+  iwl_op_mode_mvm_stop+0x27/0x180 [iwlmvm]
+  _iwl_op_mode_stop.isra.3+0x2b/0x50 [iwlwifi]
+  iwl_opmode_deregister+0x90/0xa0 [iwlwifi]
+  __exit_compat+0x10/0x2c7 [iwlmvm]
+  __x64_sys_delete_module+0x13f/0x270
+  do_syscall_64+0x5a/0x110
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
+Signed-off-by: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/vmx.c |   40 +++++++++++++++++++++++++++-------------
- 1 file changed, 27 insertions(+), 13 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/tt.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -4641,6 +4641,26 @@ static bool cs_ss_rpl_check(struct kvm_v
- 		 (ss.selector & SEGMENT_RPL_MASK));
- }
- 
-+static bool nested_vmx_check_io_bitmaps(struct kvm_vcpu *vcpu,
-+					unsigned int port, int size);
-+static bool nested_vmx_exit_handled_io(struct kvm_vcpu *vcpu,
-+				       struct vmcs12 *vmcs12)
-+{
-+	unsigned long exit_qualification;
-+	unsigned int port;
-+	int size;
-+
-+	if (!nested_cpu_has(vmcs12, CPU_BASED_USE_IO_BITMAPS))
-+		return nested_cpu_has(vmcs12, CPU_BASED_UNCOND_IO_EXITING);
-+
-+	exit_qualification = vmcs_readl(EXIT_QUALIFICATION);
-+
-+	port = exit_qualification >> 16;
-+	size = (exit_qualification & 7) + 1;
-+
-+	return nested_vmx_check_io_bitmaps(vcpu, port, size);
-+}
-+
- /*
-  * Check if guest state is valid. Returns true if valid, false if
-  * not.
-@@ -8026,23 +8046,17 @@ static int (*const kvm_vmx_exit_handlers
- static const int kvm_vmx_max_exit_handlers =
- 	ARRAY_SIZE(kvm_vmx_exit_handlers);
- 
--static bool nested_vmx_exit_handled_io(struct kvm_vcpu *vcpu,
--				       struct vmcs12 *vmcs12)
-+/*
-+ * Return true if an IO instruction with the specified port and size should cause
-+ * a VM-exit into L1.
-+ */
-+bool nested_vmx_check_io_bitmaps(struct kvm_vcpu *vcpu, unsigned int port,
-+				 int size)
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
+index c5203568a47ac..f0f205c3aadb7 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
+@@ -736,7 +736,8 @@ static  struct thermal_zone_device_ops tzone_ops = {
+ static void iwl_mvm_thermal_zone_register(struct iwl_mvm *mvm)
  {
--	unsigned long exit_qualification;
-+	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
- 	gpa_t bitmap, last_bitmap;
--	unsigned int port;
--	int size;
- 	u8 b;
+ 	int i;
+-	char name[] = "iwlwifi";
++	char name[16];
++	static atomic_t counter = ATOMIC_INIT(0);
  
--	if (!nested_cpu_has(vmcs12, CPU_BASED_USE_IO_BITMAPS))
--		return nested_cpu_has(vmcs12, CPU_BASED_UNCOND_IO_EXITING);
--
--	exit_qualification = vmcs_readl(EXIT_QUALIFICATION);
--
--	port = exit_qualification >> 16;
--	size = (exit_qualification & 7) + 1;
--
- 	last_bitmap = (gpa_t)-1;
- 	b = -1;
+ 	if (!iwl_mvm_is_tt_in_fw(mvm)) {
+ 		mvm->tz_device.tzone = NULL;
+@@ -746,6 +747,7 @@ static void iwl_mvm_thermal_zone_register(struct iwl_mvm *mvm)
  
+ 	BUILD_BUG_ON(ARRAY_SIZE(name) >= THERMAL_NAME_LENGTH);
+ 
++	sprintf(name, "iwlwifi_%u", atomic_inc_return(&counter) & 0xFF);
+ 	mvm->tz_device.tzone = thermal_zone_device_register(name,
+ 							IWL_MAX_DTS_TRIPS,
+ 							IWL_WRITABLE_TRIPS_MSK,
+-- 
+2.20.1
+
 
 
