@@ -2,168 +2,77 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DCBC35677
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D28CCC11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB924246A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:26:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="jKe/Dg6Z"
+	by mail.kernel.org (Postfix) with ESMTP id ADBB02469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:26:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730840AbgB0P0h (ORCPT
+        id S1730961AbgB0P05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 10:26:37 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.170]:34410 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729451AbgB0P0h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 10:26:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582817194;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=UuGBOFWKuJoSfl7RZOJsB5BFu4+iFIJhovviL6N8jCk=;
-        b=jKe/Dg6ZJx2wqkYnxvbracWksw7VjH1zi5UkIANhkiCzcfGPP73s1kC0KowuMjcPI0
-        1zoWNEOqYYqyI5cMosH6KEHe+xKFizJFm/d88ODqUHzKlCsQBh15J//V/fH4CGpD0Qqg
-        DKF6yLyrBZyH5uluqT/SMKf0tHHKDm/474PRrklnnlkSuEIhPtW8NAA9L4K3nwLlZOEN
-        NyDynvjp6uA3Y6snbkm/tYFKZQXO1CYCeidrXd2LwVlHN3e4PBWHOktelMPvWsA0tYHz
-        nmHQZNzJJ/tUMpaByFv/fIAuWhkTW026j0XURl14/5MAN2o29TA/gipyUlruQTzyw6IE
-        G+6g==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmMhw47o15Y="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1RFQNBuB
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Thu, 27 Feb 2020 16:26:23 +0100 (CET)
-Subject: Re: [PATCH v6 1/6] nvmem: add driver for JZ4780 efuse
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=iso-8859-1
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <1582814861.3.2@crapouillou.net>
-Date:   Thu, 27 Feb 2020 16:26:23 +0100
-Cc:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Mathieu Malaterre <malat@debian.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <B30BD902-CF5D-421A-9BD5-5FA038895712@goldelico.com>
-References: <cover.1582715761.git.hns@goldelico.com> <2a675558c6c7ba6df86669176004fe4703645793.1582715761.git.hns@goldelico.com> <1582814861.3.2@crapouillou.net>
-To:     Paul Cercueil <paul@crapouillou.net>
-X-Mailer: Apple Mail (2.3124)
+        Thu, 27 Feb 2020 10:26:57 -0500
+Received: from foss.arm.com ([217.140.110.172]:53662 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729451AbgB0P05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 10:26:57 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DADC230E;
+        Thu, 27 Feb 2020 07:26:56 -0800 (PST)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BDA153F7B4;
+        Thu, 27 Feb 2020 07:26:55 -0800 (PST)
+References: <1582812549.7365.134.camel@lca.pw> <1582814862.7365.135.camel@lca.pw>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Mel Gorman <mgorman@techsingularity.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>, paulmck@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: suspicious RCU due to "Prefer using an idle CPU as a migration target instead of comparing tasks"
+In-reply-to: <1582814862.7365.135.camel@lca.pw>
+Date:   Thu, 27 Feb 2020 15:26:41 +0000
+Message-ID: <jhjimjsvyoe.mognet@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
 
-> Am 27.02.2020 um 15:47 schrieb Paul Cercueil <paul@crapouillou.net>:
->=20
-> Hi Nikolaus,
->=20
->=20
-> Le mer., f=E9vr. 26, 2020 at 12:15, H. Nikolaus Schaller =
-<hns@goldelico.com> a =E9crit :
->> From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
->> This patch brings support for the JZ4780 efuse. Currently it only =
-exposes
->> a read only access to the entire 8K bits efuse memory and nvmem =
-cells.
->> To fetch for example the MAC address:
->> dd if=3D/sys/devices/platform/134100d0.efuse/jz4780-efuse0/nvmem bs=3D1=
- skip=3D34 count=3D6 status=3Dnone | xxd
->> Tested-by: Mathieu Malaterre <malat@debian.org>
->> Signed-off-by: PrasannaKumar Muralidharan =
-<prasannatsmkumar@gmail.com>
->> Signed-off-by: Mathieu Malaterre <malat@debian.org>
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->> ---
->> drivers/nvmem/Kconfig        |  12 ++
->> drivers/nvmem/Makefile       |   2 +
->> drivers/nvmem/jz4780-efuse.c | 239 =
-+++++++++++++++++++++++++++++++++++
->> 3 files changed, 253 insertions(+)
->> create mode 100644 drivers/nvmem/jz4780-efuse.c
->> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
->> index 35efab1ba8d9..d7b7f6d688e7 100644
->> --- a/drivers/nvmem/Kconfig
->> +++ b/drivers/nvmem/Kconfig
->> @@ -55,6 +55,18 @@ config NVMEM_IMX_OCOTP_SCU
+On Thu, Feb 27 2020, Qian Cai wrote:
+
+> On Thu, 2020-02-27 at 09:09 -0500, Qian Cai wrote:
+>> The linux-next commit ff7db0bf24db ("sched/numa: Prefer using an idle CPU as a
+>> migration target instead of comparing tasks") introduced a boot warning,
+>
+> This?
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index a61d83ea2930..ca780cd1eae2 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -1607,7 +1607,9 @@ static void update_numa_stats(struct task_numa_env *env,
+> if (ns->idle_cpu == -1)
+> ns->idle_cpu = cpu;
+>
+> +rcu_read_lock();
+> idle_core = numa_idle_core(idle_core, cpu);
+> +rcu_read_unlock();
+> }
+> }
+>
 
 
->> +	clk_rate =3D clk_get_rate(efuse->clk);
->> +
->> +	efuse->dev =3D dev;
->> +
->> +	/*
->> +	 * rd_adj and rd_strobe are 4 bit values
->> +	 * conditions:
->> +	 *   bus clk_period * (rd_adj + 1) > 6.5ns
->> +	 *   bus clk_period * (rd_adj + 5 + rd_strobe) > 35ns
->> +	 *   i.e. rd_adj >=3D 6.5ns / clk_period
->> +	 *   i.e. rd_strobe >=3D 35 ns / clk_period - 5 - rd_adj + 1
->> +	 * constants:
->> +	 *   1 / 6.5ns =3D=3D 153846154 Hz
->> +	 *   1 / 35ns =3D=3D 28571429 Hz
->> +	 */
->> +
->> +	rd_adj =3D clk_rate / 153846154;
->> +	rd_strobe =3D clk_rate / 28571429 - 5 - rd_adj + 1;
->> +
->> +	if (rd_adj > BIT(4) - 1 || rd_strobe > BIT(4) - 1) {
->=20
-> Just use 0xF or GENMASK(3, 0) instead of BIT(4) - 1
+Hmph right, we have
+numa_idle_core()->test_idle_cores()->rcu_dereference().
 
-Or would rd_adj >=3D BIT(4) be better since this is not used as a mask?
-This would also correspond to that the register is 4 bits wide.
-
->=20
->> +		dev_err(&pdev->dev, "Cannot set clock configuration\n");
->> +		return -EINVAL;
->=20
-> You need to clk_disable_unprepare() before you return now, since the =
-clock has been enabled.
-
-Ah, ok! Forgot about that.
-
-> I'd suggest registering a cleanup function (with =
-devm_add_action_or_reset) after clk_prepare_enable() is called, then you =
-don't need extra handling in the rest of the probe, and the .remove =
-function (and platform_set_drvdata) can be dropped too.
-
-Ok, this will indeed be simpler that the remove function if we take the =
-error path into account.
-
-Noted for v7.
-
->=20
-> The rest looks pretty good.
->=20
-> Cheers,
-> -Paul
-
-BR,
-Nikolaus
-
+Dunno if it's preferable to wrap the entirety of update_numa_stats() or
+if that fine-grained read-side section is ok.
