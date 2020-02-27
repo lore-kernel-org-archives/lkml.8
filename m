@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24335C54FDA
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5398C54FD9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0FAD246A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD5B824697
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813085;
-	bh=sevjY8YSiEJ4WfRWOh772n1GYlFHoWmY89hx6uednB0=;
+	s=default; t=1582813121;
+	bh=2Irz/ai7lFL54EAKsN4JXT+pLexL5zki13sArYeysTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wPwdFQPnyJeYeU43Db0DijmZK6vJ/cFTcARvOy6EB2dAhau6/ak6BoR7JoHW05sac
-	 hglSFPVdC6gXy521HjzaZubvgMpFu09laYYuzcoC+CgWMLDY7CTGLZKcxLL+dCl8EZ
-	 0KnjTtWQZGpRxj7CWRAwA5gq1DIUOcDb/tjRRUKg=
+	b=x7LUTTA9wL/mJCdH3P8/YSB0KSw6a2gB/H9h/Gn8MI7wcHXk1NgRbNE0chFbP18wc
+	 GqjN8HAEs20m67B7/WwTn9BxVKYiu5NZYSEV6qRoZf3rBa8vGO6NuGdzGTnqptY7R0
+	 XYBNg3HgY1JmeUOux9qkk8Ze2s1GhqkWd9lvhmHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389806AbgB0OSE (ORCPT
+        id S2389921AbgB0OSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:18:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58454 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:18:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389254AbgB0ORz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:17:55 -0500
+        id S2389895AbgB0OSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:18:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4B75246A4;
-        Thu, 27 Feb 2020 14:17:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECEB62468F;
+        Thu, 27 Feb 2020 14:18:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813075;
-        bh=sevjY8YSiEJ4WfRWOh772n1GYlFHoWmY89hx6uednB0=;
+        s=default; t=1582813113;
+        bh=2Irz/ai7lFL54EAKsN4JXT+pLexL5zki13sArYeysTo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TuTTpcC5203f8pTHjWPK0gOTe+7Z2xMPgj+8BSWfOBvWJSBJKYZ0PmXYp9xq0gBCJ
-         p67+NbUHCGoiR9aJ3ZEuIgRqPjDXdOxhNFtRkv89MDGjbHzYM5+CXGrMNtcJnld32F
-         Ta2AOp7r8q0XdBLNP3gEtHlSYyZtTs+aS4kWra78=
+        b=bi4PpfVdafIfu5rVe1o+O3oDebNSrZaVIiiDdvrRd4Na998puUmvRWz+N6PhWTJGy
+         HNXMghzAVy1NG6/8PDyw9lK59bu7AjKLK4/j+uzhnEwQx5wwr7+aa4/1DYdUefCVCa
+         19hShwBD1VSlaRmpSSfcBruIonOe9OxD3dgc/rPY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Tyler Hicks <code@tyhicks.com>
-Subject: [PATCH 5.5 127/150] ecryptfs: replace BUG_ON with error handling code
-Date:   Thu, 27 Feb 2020 14:37:44 +0100
-Message-Id: <20200227132251.383291850@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+d82f3ac8d87e7ccbb2c9@syzkaller.appspotmail.com,
+        syzbot+3f1fd6b8cbf8702d134e@syzkaller.appspotmail.com,
+        David Howells <dhowells@redhat.com>,
+        Hillf Danton <hdanton@sina.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 141/150] rxrpc: Fix call RCU cleanup using non-bh-safe locks
+Date:   Thu, 27 Feb 2020 14:37:58 +0100
+Message-Id: <20200227132253.057860908@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -59,39 +63,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: David Howells <dhowells@redhat.com>
 
-commit 2c2a7552dd6465e8fde6bc9cccf8d66ed1c1eb72 upstream.
+commit 963485d436ccc2810177a7b08af22336ec2af67b upstream.
 
-In crypt_scatterlist, if the crypt_stat argument is not set up
-correctly, the kernel crashes. Instead, by returning an error code
-upstream, the error is handled safely.
+rxrpc_rcu_destroy_call(), which is called as an RCU callback to clean up a
+put call, calls rxrpc_put_connection() which, deep in its bowels, takes a
+number of spinlocks in a non-BH-safe way, including rxrpc_conn_id_lock and
+local->client_conns_lock.  RCU callbacks, however, are normally called from
+softirq context, which can cause lockdep to notice the locking
+inconsistency.
 
-The issue is detected via a static analysis tool written by us.
+To get lockdep to detect this, it's necessary to have the connection
+cleaned up on the put at the end of the last of its calls, though normally
+the clean up is deferred.  This can be induced, however, by starting a call
+on an AF_RXRPC socket and then closing the socket without reading the
+reply.
 
-Fixes: 237fead619984 (ecryptfs: fs/Makefile and fs/Kconfig)
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Tyler Hicks <code@tyhicks.com>
+Fix this by having rxrpc_rcu_destroy_call() punt the destruction to a
+workqueue if in softirq-mode and defer the destruction to process context.
+
+Note that another way to fix this could be to add a bunch of bh-disable
+annotations to the spinlocks concerned - and there might be more than just
+those two - but that means spending more time with BHs disabled.
+
+Note also that some of these places were covered by bh-disable spinlocks
+belonging to the rxrpc_transport object, but these got removed without the
+_bh annotation being retained on the next lock in.
+
+Fixes: 999b69f89241 ("rxrpc: Kill the client connection bundle concept")
+Reported-by: syzbot+d82f3ac8d87e7ccbb2c9@syzkaller.appspotmail.com
+Reported-by: syzbot+3f1fd6b8cbf8702d134e@syzkaller.appspotmail.com
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Hillf Danton <hdanton@sina.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ecryptfs/crypto.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ net/rxrpc/call_object.c |   22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
 
---- a/fs/ecryptfs/crypto.c
-+++ b/fs/ecryptfs/crypto.c
-@@ -311,8 +311,10 @@ static int crypt_scatterlist(struct ecry
- 	struct extent_crypt_result ecr;
- 	int rc = 0;
+--- a/net/rxrpc/call_object.c
++++ b/net/rxrpc/call_object.c
+@@ -562,11 +562,11 @@ void rxrpc_put_call(struct rxrpc_call *c
+ }
  
--	BUG_ON(!crypt_stat || !crypt_stat->tfm
--	       || !(crypt_stat->flags & ECRYPTFS_STRUCT_INITIALIZED));
-+	if (!crypt_stat || !crypt_stat->tfm
-+	       || !(crypt_stat->flags & ECRYPTFS_STRUCT_INITIALIZED))
-+		return -EINVAL;
+ /*
+- * Final call destruction under RCU.
++ * Final call destruction - but must be done in process context.
+  */
+-static void rxrpc_rcu_destroy_call(struct rcu_head *rcu)
++static void rxrpc_destroy_call(struct work_struct *work)
+ {
+-	struct rxrpc_call *call = container_of(rcu, struct rxrpc_call, rcu);
++	struct rxrpc_call *call = container_of(work, struct rxrpc_call, processor);
+ 	struct rxrpc_net *rxnet = call->rxnet;
+ 
+ 	rxrpc_put_connection(call->conn);
+@@ -579,6 +579,22 @@ static void rxrpc_rcu_destroy_call(struc
+ }
+ 
+ /*
++ * Final call destruction under RCU.
++ */
++static void rxrpc_rcu_destroy_call(struct rcu_head *rcu)
++{
++	struct rxrpc_call *call = container_of(rcu, struct rxrpc_call, rcu);
 +
- 	if (unlikely(ecryptfs_verbosity > 0)) {
- 		ecryptfs_printk(KERN_DEBUG, "Key size [%zd]; key:\n",
- 				crypt_stat->key_size);
++	if (in_softirq()) {
++		INIT_WORK(&call->processor, rxrpc_destroy_call);
++		if (!rxrpc_queue_work(&call->processor))
++			BUG();
++	} else {
++		rxrpc_destroy_call(&call->processor);
++	}
++}
++
++/*
+  * clean up a call
+  */
+ void rxrpc_cleanup_call(struct rxrpc_call *call)
 
 
