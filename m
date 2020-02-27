@@ -2,81 +2,139 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 292A5C3F2C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9985FC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06C36246A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78238246A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:39:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730353AbgB0Wic (ORCPT
+        id S1730222AbgB0Wjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 17:38:32 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:33546 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730086AbgB0Wib (ORCPT
+        Thu, 27 Feb 2020 17:39:54 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:50979 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729722AbgB0Wjy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 17:38:31 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 67C4E2A160;
-        Thu, 27 Feb 2020 17:38:28 -0500 (EST)
-Date:   Fri, 28 Feb 2020 09:38:20 +1100 (AEDT)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     afzal mohammed <afzal.mohd.ma@gmail.com>
-cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2 06/18] m68k: Replace setup_irq() by request_irq()
-In-Reply-To: <20200227120618.GA6312@afzalpc>
-Message-ID: <alpine.LNX.2.22.394.2002280927130.8@nippy.intranet>
-References: <alpine.LNX.2.22.394.2002270908380.8@nippy.intranet> <a682c89d-baf2-3d3c-647f-a07b2a146c9f@linux-m68k.org> <alpine.LNX.2.22.394.2002261637400.8@nippy.intranet> <caa5686a-5be3-5848-fdee-36f54237ccb6@linux-m68k.org> <alpine.LNX.2.22.394.2002261151220.9@nippy.intranet>
- <73c3ad08-963d-fea2-91d7-b06e4ef8d3ef@linux-m68k.org> <20200227081805.GA5746@afzalpc> <CAMuHMdWVVWaoHA1Tie5APYBq3Pa3s4BAoWN1jAACAZZS65UA7w@mail.gmail.com> <20200227120618.GA6312@afzalpc>
+        Thu, 27 Feb 2020 17:39:54 -0500
+Received: from dread.disaster.area (pa49-195-202-68.pa.nsw.optusnet.com.au [49.195.202.68])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 34B677EA9D0;
+        Fri, 28 Feb 2020 09:39:47 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j7Ron-0004eO-8O; Fri, 28 Feb 2020 09:39:45 +1100
+Date:   Fri, 28 Feb 2020 09:39:45 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Eric Sandeen <sandeen@redhat.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Waiman Long <longman@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Eric Biggers <ebiggers@google.com>
+Subject: Re: [PATCH 00/11] fs/dcache: Limit # of negative dentries
+Message-ID: <20200227223945.GN10737@dread.disaster.area>
+References: <20200226161404.14136-1-longman@redhat.com>
+ <20200226162954.GC24185@bombadil.infradead.org>
+ <0e5124a2-d730-5c41-38fd-2c78d9be4940@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0e5124a2-d730-5c41-38fd-2c78d9be4940@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=mqTaRPt+QsUAtUurwE173Q==:117 a=mqTaRPt+QsUAtUurwE173Q==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=5xOlfOR4AAAA:8 a=z2cq81k1AAAA:20 a=7-415B0cAAAA:8
+        a=mlMlIRDalk7ZbqZ7_3gA:9 a=bReWesNirA5XSw2M:21 a=cHR_8xpGokDfY6ir:21
+        a=CjuIK1q_8ugA:10 a=SGlsW6VomvECssOqsvzv:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Feb 2020, afzal mohammed wrote:
-
-> On Thu, Feb 27, 2020 at 09:32:46AM +0100, Geert Uytterhoeven wrote:
-> > On Thu, Feb 27, 2020 at 9:18 AM afzal mohammed <afzal.mohd.ma@gmail.com> wrote:
-
-> > > Since most of the existing setup_irq() didn't even check & handle 
-> > > error return, my first thought was just s/setup_irq/request_irq, it 
-> > > was easier from scripting pointing of view. i felt uncomfortable 
-> > > doing nothing in case of error. Also noted that request_irq() 
-> > > definition has a "__much_check", so decided to add it.
+On Thu, Feb 27, 2020 at 11:04:40AM -0800, Eric Sandeen wrote:
+> On 2/26/20 8:29 AM, Matthew Wilcox wrote:
+> > On Wed, Feb 26, 2020 at 11:13:53AM -0500, Waiman Long wrote:
+> >> A new sysctl parameter "dentry-dir-max" is introduced which accepts a
+> >> value of 0 (default) for no limit or a positive integer 256 and up. Small
+> >> dentry-dir-max numbers are forbidden to avoid excessive dentry count
+> >> checking which can impact system performance.
 > > 
-> > Most (all?) of the code calling setup_irq() is very old, and most of 
-> > the calls happen very early, so any such failures are hard failures 
-> > that prevent the system from booting at all.  Hence printing a message 
-> > may be futile, as it may happen before the console has been 
-> > initialized (modulo early-printk).
+> > This is always the wrong approach.  A sysctl is just a way of blaming
+> > the sysadmin for us not being very good at programming.
+> > 
+> > I agree that we need a way to limit the number of negative dentries.
+> > But that limit needs to be dynamic and depend on how the system is being
+> > used, not on how some overworked sysadmin has configured it.
+> > 
+> > So we need an initial estimate for the number of negative dentries that
+> > we need for good performance.  Maybe it's 1000.  It doesn't really matter;
+> > it's going to change dynamically.
+> > 
+> > Then we need a metric to let us know whether it needs to be increased.
+> > Perhaps that's "number of new negative dentries created in the last
+> > second".  And we need to decide how much to increase it; maybe it's by
+> > 50% or maybe by 10%.  Perhaps somewhere between 10-100% depending on
+> > how high the recent rate of negative dentry creation has been.
 > 
-> The main reason to at least acknowledge the return value was due to 
-> __much_check in request_irq() definition, though w/ the compiler that i 
-> used, there were no warnings, i feared that it might warn w/ some other 
-> compilers & in some cases (may be W=[1-3] ?).
+> There are pitfalls to this approach as well.  Consider what libnss
+> does every time it starts up (via curl in this case)
 > 
+> # cat /proc/sys/fs/dentry-state
+> 3154271	3131421	45	0	2863333	0
+> # for I in `seq 1 10`; do curl https://sandeen.net/ &>/dev/null; done
+> # cat /proc/sys/fs/dentry-state
+> 3170738	3147844	45	0	2879882	0
+> 
+> voila, 16k more negative dcache entries, thanks to:
+> 
+> https://github.com/nss-dev/nss/blob/317cb06697d5b953d825e050c1d8c1ee0d647010/lib/softoken/sdb.c#L390
+> 
+> i.e. each time it inits, it will intentionally create up to 10,000 negative
+> dentries which will never be looked up again.
 
-This isn't new code, so I'd assume it's been "checked" in the sense of 
-"reviewed and tested".
+Sandboxing via memcg restricted cgroups means users and/or
+applications cannot create unbound numbers of negative dentries, and
+that largely solves this problem.
 
-So the lack of an error message could be taken to mean that there's no 
-need for an error message.
+For a system daemons whose environment is controlled by a
+systemd unit file, this should be pretty trivial to do, and memcg
+directed memory reclaim will control negative dentry buildup.
 
-If you want to stop the compiler complaining about an unchecked return 
-value, assuming that it does so, please consider using
+For short-lived applications, teardown of the cgroup will free
+all the negative dentries it created - they don't hang around
+forever.
 
-	if (request_irq(...))
-		pr_debug(...);
+For long lived applications, negative dentries are bound by the
+application memcg limits, and buildup will only affect the
+applications own performance, not that of the whole system.
 
-That way there is no penalty paid for adding error messages that the 
-original author apparently did not want.
+IOWs, I'd expect this sort of resource control problem to be solved
+at the user, application and/or distro level, not with a huge kernel
+hammer.
+
+> I /think/ the original intent of this work was to limit such rogue
+> applications, so scaling with use probably isn't the way to go.
+
+The original intent was to prevent problems on old kernels that
+supported terabytes of memory but could not use cgroup/memcg
+infrastructure to isolate and contain negative dentry growth.
+That was a much simpler, targeted negative dentry limiting solution,
+not the ... craziness that can be found in this patchset.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
