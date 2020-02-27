@@ -2,172 +2,176 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DF5C4BA06
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 621CEC4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55AA124656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:06:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="W2OsanbM";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="s2D+WB69"
+	by mail.kernel.org (Postfix) with ESMTP id 3642A24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:09:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725886AbgB0FGu (ORCPT
+        id S1725884AbgB0FJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 00:06:50 -0500
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:59977 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725790AbgB0FGu (ORCPT
+        Thu, 27 Feb 2020 00:09:12 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64848 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725790AbgB0FJM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 00:06:50 -0500
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 27D5C737F;
-        Thu, 27 Feb 2020 00:06:47 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Thu, 27 Feb 2020 00:06:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
-        7VMetkVh205MzER1jhY7QfzeT/S8gk9URVRPcaR9UKY=; b=W2OsanbM4Y8N7In5
-        ulcg2cGkc762HChDxbpL7sdlY3FHEr5UtUaky3Id8B4Ez8PVwLkaF8cfEpICIdBy
-        Xt7n/6Dqk5eI0e9+rMeUws2jM5RFovMCugq/+PvYK5jEXpfQan0q58LWdchZ2bfR
-        WzeY10G1WL4d7N8leKIlgQqyysYWhjhW/BMmasr3oPfa1GOSd5ABB7A3H75gtt/x
-        bXclqh60MTUvIcM/qtScr0uW+euP6nWv4EyQkbvJLNdwZPabxC9Z/wBRlTlTwBmH
-        bfEeQEx3KWLaawlf5FdpkiqtUASSGU5lRdXJ5ZUK8KNvHa6k+A/chvB/Olwq2lLZ
-        Bd1cUA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=7VMetkVh205MzER1jhY7QfzeT/S8gk9URVRPcaR9U
-        KY=; b=s2D+WB69gZXt5NsTV7nJlj/+NG6CxkQ5cJWonajElYzKmdNc2fxAODUR5
-        vLjjyzrHRBo1uSgVb7VPVOPbQ4BJkBglTx+kkoUUfPvcKcF7bY+UghGP/dlZWL44
-        WJULFq6b2tHrB2rXxOi08xPrUyu2VxELzKsrZ93L8UfXLlmNFHOpIfiXNDoR7uQW
-        W9BWiBePb2kB6zeA1mtU+YZHeLXHnrCaQo3dIMoH0TgZCKDn7VIv3zP8QqxXQdtA
-        fvdC7SGbyGvO3E9j1HucB7UXo/KbPiLMU4Adiswzw7DTEln6Q8Mzvu8Ey54uHEDS
-        vPQXTN7R6HV1lKXYR7oTMRYpWHV/Q==
-X-ME-Sender: <xms:Zk5XXu8UUkZ2foIoXf2SguUEfEfUsPzeSYQW-32vD9v-SHSFfot_2w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrleehgdekvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
-    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecukfhppeduudekrddvtdekrd
-    dukeehrddugeeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
-    rhhomheprhgrvhgvnhesthhhvghmrgifrdhnvght
-X-ME-Proxy: <xmx:Zk5XXjq2kzjheij30NPfrlzINAHm9we_2SZugqbGzz8-L-1hyruffg>
-    <xmx:Zk5XXsLFGLC4IIMpEQT_lEIId5f-TSAaWcnoEPFyYNNEchYsX4B0aQ>
-    <xmx:Zk5XXm71yRDmPqsFHdKQOnobRhiSGeyg8pgFiBiVRJ3G8aXsVPV25Q>
-    <xmx:Z05XXsRQd3afcvSV6Fqqrd1CstsqPgyXFpAuNFt_ETou83LLB_gPXw>
-Received: from mickey.themaw.net (unknown [118.208.185.148])
-        by mail.messagingengine.com (Postfix) with ESMTPA id CE3CA3280059;
-        Thu, 27 Feb 2020 00:06:41 -0500 (EST)
-Message-ID: <1c8db4e2b707f958316941d8edd2073ee7e7b22c.camel@themaw.net>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications
- [ver #17]
-From:   Ian Kent <raven@themaw.net>
-To:     Miklos Szeredi <mszeredi@redhat.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc:     Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        David Howells <dhowells@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Date:   Thu, 27 Feb 2020 13:06:37 +0800
-In-Reply-To: <CAOssrKfaxnHswrKejedFzmYTbYivJ++cPes4c91+BJDfgH4xJA@mail.gmail.com>
-References: <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk>
-         <1582316494.3376.45.camel@HansenPartnership.com>
-         <CAOssrKehjnTwbc6A1VagM5hG_32hy3mXZenx_PdGgcUGxYOaLQ@mail.gmail.com>
-         <1582556135.3384.4.camel@HansenPartnership.com>
-         <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com>
-         <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com>
-         <1582644535.3361.8.camel@HansenPartnership.com>
-         <CAOssrKfaxnHswrKejedFzmYTbYivJ++cPes4c91+BJDfgH4xJA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Thu, 27 Feb 2020 00:09:12 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01R54Ite080318
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 00:09:11 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ydq60ers0-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 00:09:11 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
+        Thu, 27 Feb 2020 05:09:09 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 27 Feb 2020 05:09:01 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01R591Io53542972
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Feb 2020 05:09:01 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EAA95A404D;
+        Thu, 27 Feb 2020 05:09:00 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 417E3A4040;
+        Thu, 27 Feb 2020 05:09:00 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 27 Feb 2020 05:09:00 +0000 (GMT)
+Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 2E3BFA01C0;
+        Thu, 27 Feb 2020 16:08:55 +1100 (AEDT)
+Subject: Re: [PATCH v3 12/27] powerpc/powernv/pmem: Add register addresses &
+ status values to the header
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+References: <20200221032720.33893-1-alastair@au1.ibm.com>
+ <20200221032720.33893-13-alastair@au1.ibm.com>
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+Date:   Thu, 27 Feb 2020 16:08:58 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <20200221032720.33893-13-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022705-0028-0000-0000-000003DE5EF4
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022705-0029-0000-0000-000024A37CF0
+Message-Id: <e335ed2d-7381-e95c-a6b5-0efe60746cf4@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-26_09:2020-02-26,2020-02-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 adultscore=0 malwarescore=0 mlxlogscore=999
+ clxscore=1015 bulkscore=0 suspectscore=0 mlxscore=0 phishscore=0
+ priorityscore=1501 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2001150001 definitions=main-2002270037
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-02-26 at 10:11 +0100, Miklos Szeredi wrote:
-> On Tue, Feb 25, 2020 at 4:29 PM James Bottomley
-> <James.Bottomley@hansenpartnership.com> wrote:
+On 21/2/20 2:27 pm, Alastair D'Silva wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
 > 
-> > The other thing a file descriptor does that sysfs doesn't is that
-> > it
-> > solves the information leak: if I'm in a mount namespace that has
-> > no
-> > access to certain mounts, I can't fspick them and thus I can't see
-> > the
-> > information.  By default, with sysfs I can.
+> These values have been taken from the device specifications.
 > 
-> That's true, but procfs/sysfs has to deal with various namespacing
-> issues anyway.  If this is just about hiding a number of entries,
-> then
-> I don't think that's going to be a big deal.
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 
-I didn't see name space considerations in sysfs when I was looking at
-it recently. Obeying name space requirements is likely a lot of work
-in sysfs.
+I've compared these values against the internal version of the device 
+specifications that I have access to, and they appear to match.
 
-> 
-> The syscall API is efficient: single syscall per query instead of
-> several, no parsing necessary.
-> 
-> However, it is difficult to extend, because the ABI must be updated,
-> possibly libc and util-linux also, so that scripts can also consume
-> the new parameter.  With the sysfs approach only the kernel needs to
-> be updated, and possibly only the filesystem code, not even the VFS.
-> 
-> So I think the question comes down to:  do we need a highly efficient
-> way to query the superblock parameters all at once, or not?
+A few minor comments below, otherwise:
 
-Or a similar question could be, how could a sysfs interface work
-to provide mount information.
+Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
 
-Getting information about all mounts might not be too bad but the
-sysfs directory structure that would be needed to represent all
-system mounts (without considering name spaces) would likely
-result in somewhat busy user space code.
+> +#define GLOBAL_MMIO_HCI_ACRW				BIT_ULL(0)
+> +#define GLOBAL_MMIO_HCI_NSCRW				BIT_ULL(1)
+> +#define GLOBAL_MMIO_HCI_AFU_RESET			BIT_ULL(2)
+> +#define GLOBAL_MMIO_HCI_FW_DEBUG			BIT_ULL(3)
+> +#define GLOBAL_MMIO_HCI_CONTROLLER_DUMP			BIT_ULL(4)
+> +#define GLOBAL_MMIO_HCI_CONTROLLER_DUMP_COLLECTED	BIT_ULL(5)
+> +#define GLOBAL_MMIO_HCI_REQ_HEALTH_PERF			BIT_ULL(6)
 
-For example, given a path, and the path is all I know, how do I
-get mount information?
+The labelling of some of these bits deviates from the standard 
+abbreviations in the spec, which is fine I guess as these names are more 
+descriptive, but maybe add a brief comment with the original abbreviation?
 
-Ignoring possible multiple mounts on a mount point, call fsinfo()
-with the path and get the id (the path walk is low overhead) to
-use with fsinfo() to get the all the info I need ... done.
+> +
+> +#define ADMIN_COMMAND_HEARTBEAT		0x00u
+> +#define ADMIN_COMMAND_SHUTDOWN		0x01u
+> +#define ADMIN_COMMAND_FW_UPDATE		0x02u
+> +#define ADMIN_COMMAND_FW_DEBUG		0x03u
+> +#define ADMIN_COMMAND_ERRLOG		0x04u
+> +#define ADMIN_COMMAND_SMART		0x05u
+> +#define ADMIN_COMMAND_CONTROLLER_STATS	0x06u
+> +#define ADMIN_COMMAND_CONTROLLER_DUMP	0x07u
+> +#define ADMIN_COMMAND_CMD_CAPS		0x08u
+> +#define ADMIN_COMMAND_MAX		0x08u
+> +
+> +#define STATUS_SUCCESS		0x00
+> +#define STATUS_MEM_UNAVAILABLE	0x20
 
-Again, ignoring possible multiple mounts on a mount point, and
-assuming there is a sysfs tree enumerating all the system mounts.
-I could open <sysfs base> + mount point path followed buy opening
-and reading the individual attribute files ... a bit more busy
-that one ... particularly if I need to do it for several thousand
-mounts.
+There's also a "blocked on account of background task" code, 0x21.
 
-Then there's the code that would need to be added to maintain the
-various views in the sysfs tree, which can't be restricted only to
-the VFS because there's file system specific info needed too (the
-maintain a table idea), and that's before considering name space
-handling changes to sysfs.
+> +#define STATUS_BAD_OPCODE	0x50
+> +#define STATUS_BAD_REQUEST_PARM	0x51
+> +#define STATUS_BAD_DATA_PARM	0x52
+> +#define STATUS_DEBUG_BLOCKED	0x70
+> +#define STATUS_FAIL		0xFF
+> +
+> +#define STATUS_FW_UPDATE_BLOCKED 0x21
+> +#define STATUS_FW_ARG_INVALID	0x51
+> +#define STATUS_FW_INVALID	0x52
 
-At the least the question of "do we need a highly efficient way
-to query the superblock parameters all at once" needs to be
-extended to include mount table enumeration as well as getting
-the info.
+These status codes seem, from the specification, to correspond to the 
+generic error codes above, so perhaps they're not needed.
 
-But this is just me thinking about mount table handling and the
-quite significant problem we now have with user space scanning
-the proc mount tables to get this information.
 
-Ian
+-- 
+Andrew Donnellan              OzLabs, ADL Canberra
+ajd@linux.ibm.com             IBM Australia Limited
 
