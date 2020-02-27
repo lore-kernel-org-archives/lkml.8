@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DED2C52D51
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8351C52D46
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C15C20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ACA52469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813023;
-	bh=bYKAWCj7wZo3bsAIb6e0JlxfyLzbRVASan1lMyEV94I=;
+	s=default; t=1582812978;
+	bh=6y5KrxfUKEv/w2oxwFK/YGZXrgs/ycCukwlLs+oW2lU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dA+Ro2kiOOcEWmoXG/TSMipAJWUIZGzpdp+WjsINaXzg5AqlQNG7S2dxU6+0sEbpw
-	 4vLILF0+Kv89ONPfzh8hEOxqzqgXAlj7cvbdeOuuIGUC6c07MP3k6HVzQuOWTOf6Hp
-	 GrcFsfRn3zhLTR4nE5xqZgLGzT419W8q7jsjOpI4=
+	b=Io875cperg89KALoBq4+2IDsuVomdSOAqZqj6tZlZ9RHHi2uQTXLz306MI01TrV5k
+	 zV5TdYsnunLGZkJzkK3upAkKeTOxkWb/9xcQV/VIqXc/JD3t+uuEmrStu/dj4zbrYx
+	 eRvs2Mu5Ga9WQs1tlHFephACm8dy+4DDIkrTKc3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389156AbgB0ORC (ORCPT
+        id S2389102AbgB0OQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:17:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57266 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:16:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389601AbgB0OQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:16:57 -0500
+        id S2389197AbgB0OQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:16:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20FEE246A0;
-        Thu, 27 Feb 2020 14:16:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16FD524691;
+        Thu, 27 Feb 2020 14:16:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813016;
-        bh=bYKAWCj7wZo3bsAIb6e0JlxfyLzbRVASan1lMyEV94I=;
+        s=default; t=1582812968;
+        bh=6y5KrxfUKEv/w2oxwFK/YGZXrgs/ycCukwlLs+oW2lU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K6BHbgZnyoMrdCPy5CQQfz6BvJ3JQUWb+z7m9WtpTgcByyjBwSqxMqiQC2f3JUPcM
-         cQmbqd9cFccX1dA4fbg7EeqC11cQGGEu7tfqRWT8Ko7cOVLstabaD0smiRO7fuj3my
-         Wsrw11Yt2eTP854rNC5v5hGb/16FUNx/graP03Ls=
+        b=TzmyEn+vO7ClG7PJ8X6XnDUWRm87DhcoNL5fhArqV5c0+fV6oLAEHYqnX5nLqbc6a
+         K+pRuqd5BTcHvmS7v9RpJ4Fw4/+uPUitnyhaij0/tbmZm9F+aLsXi5Y4ljnBlrEkLa
+         D/xRm9nlYwHzDgDmqwkWT9aCItzMB5pmRIQGIDx4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: [PATCH 5.5 065/150] tty/serial: atmel: manage shutdown in case of RS485 or ISO7816 mode
-Date:   Thu, 27 Feb 2020 14:36:42 +0100
-Message-Id: <20200227132242.600717549@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH 5.5 085/150] drm/i915: Update drm/i915 bug filing URL
+Date:   Thu, 27 Feb 2020 14:37:02 +0100
+Message-Id: <20200227132245.404162490@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -58,36 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Ferre <nicolas.ferre@microchip.com>
+From: Jani Nikula <jani.nikula@intel.com>
 
-commit 04b5bfe3dc94e64d0590c54045815cb5183fb095 upstream.
+commit 7ddc7005a0aa2f43a826b71f5d6bd7d4b90f8f2a upstream.
 
-In atmel_shutdown() we call atmel_stop_rx() and atmel_stop_tx() functions.
-Prevent the rx restart that is implemented in RS485 or ISO7816 modes when
-calling atmel_stop_tx() by using the atomic information tasklet_shutdown
-that is already in place for this purpose.
+We've moved from bugzilla to gitlab.
 
-Fixes: 98f2082c3ac4 ("tty/serial: atmel: enforce tasklet init and termination sequences")
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200210152053.8289-1-nicolas.ferre@microchip.com
+Cc: stable@vger.kernel.org
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200212160434.6437-2-jani.nikula@intel.com
+(cherry picked from commit ddae4d7af0bbe3b2051f1603459a8b24e9a19324)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/atmel_serial.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/i915/Kconfig          |    5 ++---
+ drivers/gpu/drm/i915/i915_gpu_error.c |    3 ++-
+ drivers/gpu/drm/i915/i915_utils.c     |    5 ++---
+ 3 files changed, 6 insertions(+), 7 deletions(-)
 
---- a/drivers/tty/serial/atmel_serial.c
-+++ b/drivers/tty/serial/atmel_serial.c
-@@ -574,7 +574,8 @@ static void atmel_stop_tx(struct uart_po
- 	atmel_uart_writel(port, ATMEL_US_IDR, atmel_port->tx_done_mask);
+--- a/drivers/gpu/drm/i915/Kconfig
++++ b/drivers/gpu/drm/i915/Kconfig
+@@ -75,9 +75,8 @@ config DRM_I915_CAPTURE_ERROR
+ 	help
+ 	  This option enables capturing the GPU state when a hang is detected.
+ 	  This information is vital for triaging hangs and assists in debugging.
+-	  Please report any hang to
+-	    https://bugs.freedesktop.org/enter_bug.cgi?product=DRI
+-	  for triaging.
++	  Please report any hang for triaging according to:
++	    https://gitlab.freedesktop.org/drm/intel/-/wikis/How-to-file-i915-bugs
  
- 	if (atmel_uart_is_half_duplex(port))
--		atmel_start_rx(port);
-+		if (!atomic_read(&atmel_port->tasklet_shutdown))
-+			atmel_start_rx(port);
+ 	  If in doubt, say "Y".
  
- }
+--- a/drivers/gpu/drm/i915/i915_gpu_error.c
++++ b/drivers/gpu/drm/i915/i915_gpu_error.c
+@@ -1820,7 +1820,8 @@ void i915_capture_error_state(struct drm
+ 	if (!xchg(&warned, true) &&
+ 	    ktime_get_real_seconds() - DRIVER_TIMESTAMP < DAY_AS_SECONDS(180)) {
+ 		pr_info("GPU hangs can indicate a bug anywhere in the entire gfx stack, including userspace.\n");
+-		pr_info("Please file a _new_ bug report on bugs.freedesktop.org against DRI -> DRM/Intel\n");
++		pr_info("Please file a _new_ bug report at https://gitlab.freedesktop.org/drm/intel/issues/new.\n");
++		pr_info("Please see https://gitlab.freedesktop.org/drm/intel/-/wikis/How-to-file-i915-bugs for details.\n");
+ 		pr_info("drm/i915 developers can then reassign to the right component if it's not a kernel issue.\n");
+ 		pr_info("The GPU crash dump is required to analyze GPU hangs, so please always attach it.\n");
+ 		pr_info("GPU crash dump saved to /sys/class/drm/card%d/error\n",
+--- a/drivers/gpu/drm/i915/i915_utils.c
++++ b/drivers/gpu/drm/i915/i915_utils.c
+@@ -8,9 +8,8 @@
+ #include "i915_drv.h"
+ #include "i915_utils.h"
  
+-#define FDO_BUG_URL "https://bugs.freedesktop.org/enter_bug.cgi?product=DRI"
+-#define FDO_BUG_MSG "Please file a bug at " FDO_BUG_URL " against DRM/Intel " \
+-		    "providing the dmesg log by booting with drm.debug=0xf"
++#define FDO_BUG_URL "https://gitlab.freedesktop.org/drm/intel/-/wikis/How-to-file-i915-bugs"
++#define FDO_BUG_MSG "Please file a bug on drm/i915; see " FDO_BUG_URL " for details."
+ 
+ void
+ __i915_printk(struct drm_i915_private *dev_priv, const char *level,
 
 
