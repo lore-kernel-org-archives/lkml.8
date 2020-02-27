@@ -2,139 +2,129 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9985FC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 741A2C3F2CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78238246A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A220246A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:42:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qn+7NLia"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730222AbgB0Wjy (ORCPT
+        id S1730191AbgB0Wm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 17:39:54 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:50979 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729722AbgB0Wjy (ORCPT
+        Thu, 27 Feb 2020 17:42:56 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37999 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729722AbgB0Wm4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 17:39:54 -0500
-Received: from dread.disaster.area (pa49-195-202-68.pa.nsw.optusnet.com.au [49.195.202.68])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 34B677EA9D0;
-        Fri, 28 Feb 2020 09:39:47 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1j7Ron-0004eO-8O; Fri, 28 Feb 2020 09:39:45 +1100
-Date:   Fri, 28 Feb 2020 09:39:45 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Eric Sandeen <sandeen@redhat.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Waiman Long <longman@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Eric Biggers <ebiggers@google.com>
-Subject: Re: [PATCH 00/11] fs/dcache: Limit # of negative dentries
-Message-ID: <20200227223945.GN10737@dread.disaster.area>
-References: <20200226161404.14136-1-longman@redhat.com>
- <20200226162954.GC24185@bombadil.infradead.org>
- <0e5124a2-d730-5c41-38fd-2c78d9be4940@redhat.com>
+        Thu, 27 Feb 2020 17:42:56 -0500
+Received: by mail-pg1-f196.google.com with SMTP id d6so432595pgn.5;
+        Thu, 27 Feb 2020 14:42:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=eC6XULGo71DkkbKYMEVa3CebZbR3YIk7hU1LZdfvH4Y=;
+        b=qn+7NLiaVpezukxBzFBwfG+epP+sfl+YlsORRJxCCoojrQj/h+YkBxM3i6YDE0AQJs
+         P7T7DFMTB9R1RXIaeliDZ/dyWhM6CuLv2kO/sytHwO7bES5aZttcq2BrppClH47OLbih
+         8glkk1PmO0wSymairAZIAQPbdboYTf0jc9+6madbyvW0p84zWN/JxZ4udBJCDn6mRfqt
+         jd9n5MmIClzXAQ9CHp/v1tEiTBrPm4tZ7i/cyZuEmoDelTi8Iz9b5FAUMOXDPMbqEEX7
+         ODi3nQW4+kEH1AhkrhqS4TXIZWBBmPcmnkuQblEIuHdpsioRqGi/GZZCFJdDdpOtidJT
+         pm8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eC6XULGo71DkkbKYMEVa3CebZbR3YIk7hU1LZdfvH4Y=;
+        b=b7aYEwX4WDGDY/hP/9piEacxS6zPH951CkLkqdCdqtPjMLF8Z/sveErZQhDiyN4Pu0
+         GntDIpl8+knW/fE40Iy3xPMU/AIW+tCQoVmHhd25uEDmKU5OCsqSid7K4fGPKGkihjxq
+         3IYN98my5W8Lqx3x0/qbgDfHR8eLkN5mOXw1wJFHop7D2lAyTTxAyjlbsIJgjr/qTFw/
+         M3736BGPUiPs13Zf+Me7Rpe0WLRe+JLJl6N8ZDxOhVQ+EJdrEhHpe2ydHoMaBgdxw4Xy
+         kL/KwmX8xna482aQSXVtq9Ndl/eBeaelG+6XjSSxqZ9sYLDsKNy3zYRwkgDzbrR4XZ/j
+         wDpw==
+X-Gm-Message-State: APjAAAUpMUgUFs7Nd8vQej6EzztBlsZWpkMk4gm3FB7//9jSJhYCDA2Y
+        kY2c8FlYcsYmjMxQUTs9OCk=
+X-Google-Smtp-Source: APXvYqzGTM6O1kzlusq2+UBm7XJw4SAY63lpqMM/UumlDNsXPcBi96eO1OrkgnLHxCGovebuWsNzJg==
+X-Received: by 2002:a63:990a:: with SMTP id d10mr1562744pge.63.1582843374849;
+        Thu, 27 Feb 2020 14:42:54 -0800 (PST)
+Received: from taoren-ubuntu-R90MNF91 ([2620:10d:c090:500::4:d8f5])
+        by smtp.gmail.com with ESMTPSA id a22sm8278610pfk.108.2020.02.27.14.42.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 27 Feb 2020 14:42:54 -0800 (PST)
+Date:   Thu, 27 Feb 2020 14:42:51 -0800
+From:   Tao Ren <rentao.bupt@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
+        taoren@fb.com
+Subject: Re: [PATCH v4 7/7] dt-bindings: usb: add documentation for aspeed
+ usb-vhub
+Message-ID: <20200227224250.GC29420@taoren-ubuntu-R90MNF91>
+References: <20200226230346.672-1-rentao.bupt@gmail.com>
+ <20200226230346.672-8-rentao.bupt@gmail.com>
+ <20200227165504.GA26955@bogus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0e5124a2-d730-5c41-38fd-2c78d9be4940@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
-        a=mqTaRPt+QsUAtUurwE173Q==:117 a=mqTaRPt+QsUAtUurwE173Q==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
-        a=5xOlfOR4AAAA:8 a=z2cq81k1AAAA:20 a=7-415B0cAAAA:8
-        a=mlMlIRDalk7ZbqZ7_3gA:9 a=bReWesNirA5XSw2M:21 a=cHR_8xpGokDfY6ir:21
-        a=CjuIK1q_8ugA:10 a=SGlsW6VomvECssOqsvzv:22 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20200227165504.GA26955@bogus>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 11:04:40AM -0800, Eric Sandeen wrote:
-> On 2/26/20 8:29 AM, Matthew Wilcox wrote:
-> > On Wed, Feb 26, 2020 at 11:13:53AM -0500, Waiman Long wrote:
-> >> A new sysctl parameter "dentry-dir-max" is introduced which accepts a
-> >> value of 0 (default) for no limit or a positive integer 256 and up. Small
-> >> dentry-dir-max numbers are forbidden to avoid excessive dentry count
-> >> checking which can impact system performance.
+Hi Rob,
+
+On Thu, Feb 27, 2020 at 10:55:04AM -0600, Rob Herring wrote:
+> On Wed, 26 Feb 2020 15:03:46 -0800, rentao.bupt@gmail.com wrote:
+> > From: Tao Ren <rentao.bupt@gmail.com>
 > > 
-> > This is always the wrong approach.  A sysctl is just a way of blaming
-> > the sysadmin for us not being very good at programming.
+> > Add device tree binding documentation for aspeed usb-vhub driver.
 > > 
-> > I agree that we need a way to limit the number of negative dentries.
-> > But that limit needs to be dynamic and depend on how the system is being
-> > used, not on how some overworked sysadmin has configured it.
+> > Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+> > ---
+> >  No change in v2/v3/v4:
+> >    - the patch is added to the patch series since v4.
 > > 
-> > So we need an initial estimate for the number of negative dentries that
-> > we need for good performance.  Maybe it's 1000.  It doesn't really matter;
-> > it's going to change dynamically.
+> >  .../bindings/usb/aspeed,usb-vhub.yaml         | 71 +++++++++++++++++++
+> >  1 file changed, 71 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
 > > 
-> > Then we need a metric to let us know whether it needs to be increased.
-> > Perhaps that's "number of new negative dentries created in the last
-> > second".  And we need to decide how much to increase it; maybe it's by
-> > 50% or maybe by 10%.  Perhaps somewhere between 10-100% depending on
-> > how high the recent rate of negative dentry creation has been.
 > 
-> There are pitfalls to this approach as well.  Consider what libnss
-> does every time it starts up (via curl in this case)
+> My bot found errors running 'make dt_binding_check' on your patch:
 > 
-> # cat /proc/sys/fs/dentry-state
-> 3154271	3131421	45	0	2863333	0
-> # for I in `seq 1 10`; do curl https://sandeen.net/ &>/dev/null; done
-> # cat /proc/sys/fs/dentry-state
-> 3170738	3147844	45	0	2879882	0
+> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.example.dt.yaml: usb-vhub@1e6a0000: 'aspeed,vhub-downstream-ports' is a required property
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.example.dt.yaml: usb-vhub@1e6a0000: 'aspeed,vhub-generic-endpoints' is a required property
 > 
-> voila, 16k more negative dcache entries, thanks to:
-> 
-> https://github.com/nss-dev/nss/blob/317cb06697d5b953d825e050c1d8c1ee0d647010/lib/softoken/sdb.c#L390
-> 
-> i.e. each time it inits, it will intentionally create up to 10,000 negative
-> dentries which will never be looked up again.
+> See https://patchwork.ozlabs.org/patch/1245388
+> Please check and re-submit.
 
-Sandboxing via memcg restricted cgroups means users and/or
-applications cannot create unbound numbers of negative dentries, and
-that largely solves this problem.
+I ran "make dt_binding_check" in my local environment and don't see the
+failures. The 2 properties are introduced in this patch set and I add
+the properties in aspeed-g4/5/6 dtsi files (patch #4, #5 and #6): am I
+missing something?
 
-For a system daemons whose environment is controlled by a
-systemd unit file, this should be pretty trivial to do, and memcg
-directed memory reclaim will control negative dentry buildup.
+Sorry I forgot to add you when including the dt-binding document to the
+series v4: will add you and all dt binding maintainers in v5 soon.
 
-For short-lived applications, teardown of the cgroup will free
-all the negative dentries it created - they don't hang around
-forever.
-
-For long lived applications, negative dentries are bound by the
-application memcg limits, and buildup will only affect the
-applications own performance, not that of the whole system.
-
-IOWs, I'd expect this sort of resource control problem to be solved
-at the user, application and/or distro level, not with a huge kernel
-hammer.
-
-> I /think/ the original intent of this work was to limit such rogue
-> applications, so scaling with use probably isn't the way to go.
-
-The original intent was to prevent problems on old kernels that
-supported terabytes of memory but could not use cgroup/memcg
-infrastructure to isolate and contain negative dentry growth.
-That was a much simpler, targeted negative dentry limiting solution,
-not the ... craziness that can be found in this patchset.
 
 Cheers,
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Tao
