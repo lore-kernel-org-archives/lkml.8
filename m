@@ -2,110 +2,373 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B1ECC4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DD8C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4AD32468E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B79ED24695
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:07:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FY89/SsX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rn5hEcoh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728914AbgB0LHT (ORCPT
+        id S1728874AbgB0LHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 06:07:19 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36781 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728761AbgB0LHS (ORCPT
+        Thu, 27 Feb 2020 06:07:42 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44624 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728794AbgB0LHm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 06:07:18 -0500
-Received: by mail-pl1-f193.google.com with SMTP id a6so1000999plm.3;
-        Thu, 27 Feb 2020 03:07:17 -0800 (PST)
+        Thu, 27 Feb 2020 06:07:42 -0500
+Received: by mail-wr1-f68.google.com with SMTP id m16so2737768wrx.11
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 03:07:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lmJQ36No1Gca/vcFrG4Eq9htTy7KPRzUbksdwrxz8LI=;
-        b=FY89/SsX+eLNCZfl66UEb1ue7T2rDlxc39BUUNyQcUvYHLhQYmTZm8AV265dDcZriC
-         n+pnoFgE+Sf8zXMbshaCCS6PUdHyFAtJ6zdH/VH1FXYuwfzu7iVLsjLF6SXNOrrDux5S
-         VamD+96xP7YyeTt6xJaJYHlRfPSsbdooqEZo5JblB/xTNMzIpcuEBudbBh1o9hd+8Pp3
-         VCC1Cl49y6FD+xnV0DQbsVUKowy7XWxJSXmwRChAoXpyUp1BbPkGQQ1IWMsgmCulUb0i
-         idnYS7ecLxRWLTUTaFORqK3tstLgLRTwqSSk0D4o9TOL/U8ZbVv3Bk/xfDvuCNpgSmSI
-         BGEQ==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=I912AzBiNdcRXF6ljE1ucbGao0BRLHb9fyeKtWL0lk0=;
+        b=Rn5hEcohMHW3XxF1Xx5eBjIe6rPbPfl6GWYrfRj1L0+bZ4lJPq0CvZs0wAWZV8SjGm
+         MeAlazR9o5FgfvuJkrv+6rH02pBGTHNkFFwTRJNpxFJq7xhzLuYCWDwhz7SDVmT30emT
+         fzVZoWTHFsqLVxN8HmzyYWPB+raqVusghcfHE/mpwapaPq7m4OU12Mh+qcEzsSSgIWU7
+         z4ERisvkTrSxHoDGd8EsYUf+2dQXMcBEwS1OUpUE/8scNU3OWMU5I/mz5bb3X8/nRSTI
+         OPXjcjG5CqdUAxEq44zc9wEtX37WdvE1FUlBEPzBppliKwTCG5L4r7iMO1or2E3+cgSP
+         hycw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lmJQ36No1Gca/vcFrG4Eq9htTy7KPRzUbksdwrxz8LI=;
-        b=B7feNdwjh5TqNbMKHGaFRUmb0LEZVI3udn9LqR1WtmSU5BNehdbZhO/LCW4wWt2kY1
-         Hd1M62LNST72ZMH62bJjgFdhYY2HIp5yoDZYDU3e8p/6kKQ25gQJ4xLHHrS+P7TXNO5d
-         k/NHR+dO7Y5iBrR1ViLPHNwZmDmpBHIqY7jnMYNnQ8fXD3VLcqwy3gnlROLGnP8etXRo
-         RfqOrOcNltSWjfMAAb6BS60kh9eH3v7oZpoStYmlEYMYScYgusAjiSw/XGsnPsG62b7+
-         3zNVbGXiELxRCmpALBIb7VZzpUI0L6x4tlTrohpnKBGzqvA7nMoQzxQy+GsciFBx+FlC
-         zlkw==
-X-Gm-Message-State: APjAAAUOf6w8sbfVyKcn0SEoeoz1+JCCGXDTdudsgVdtGnZSJFgmIeZV
-        fY0MeI1uRkSmdKBE3G+S6QI=
-X-Google-Smtp-Source: APXvYqxWerA+MNtWPhmtZePrzWtN41f/X1PPHbm1Zy+BYl6m6MsiGmn5uHRszUhnUu+SXUCNhUoPbQ==
-X-Received: by 2002:a17:902:8b89:: with SMTP id ay9mr3891143plb.309.1582801636613;
-        Thu, 27 Feb 2020 03:07:16 -0800 (PST)
-Received: from localhost ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id c5sm6662799pfi.10.2020.02.27.03.07.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 27 Feb 2020 03:07:15 -0800 (PST)
-Date:   Thu, 27 Feb 2020 16:37:13 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, x86@kernel.org,
-        linux-sh@vger.kernel.org, linux-s390@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-parisc@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-ia64@vger.kernel.org, linux-hexagon@vger.kernel.org,
-        linux-c6x-dev@linux-c6x.org, linux-omap@vger.kernel.org,
-        linux-alpha@vger.kernel.org, Julia Lawall <Julia.Lawall@lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: Re: [PATCH 00/18] genirq: Remove setup_irq()
-Message-ID: <20200227110713.GA5708@afzalpc>
-References: <cover.1581478323.git.afzal.mohd.ma@gmail.com>
- <87y2somido.fsf@nanos.tec.linutronix.de>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=I912AzBiNdcRXF6ljE1ucbGao0BRLHb9fyeKtWL0lk0=;
+        b=LtYSSmeymqqy154+BZmBApUBOjn6KYy6xJKBCeAFs/T5a5M17fEs20/faqlp10IhZS
+         29CSxEMqcI/cUZstcmlsLcCumwAbhTXTGg+aWR4aLFOZ614oQfsPYRppRC+8vna6+2x8
+         c281jFIt4rBx+RVXr5HiaChByUp3R57ITo6EgcHe+3dnw8nmjPDdJ7L3vraLRLZMABH9
+         JJaaBE8nfuoXQEW9SxTK5xoRCj5NMjzGaPteU0BH48wV85G3UW/T2y7e2t4haWM4k4WR
+         OScc+tC3Mqc9LQWkLhkqRv/+1j4eOvFnJV/UyyYtvqQnYrN1p8jlAdYeQWbJK8nUMB32
+         qM8Q==
+X-Gm-Message-State: APjAAAVnTiIWBko2x6aeW+EvYk6xEZTvMaHhnz1xU8WfhWPeMcg/KMRp
+        naHJHdl36iUPOA4Ao78t3mn37g==
+X-Google-Smtp-Source: APXvYqwKB8qZ91kxn6OHpZrJULRLcR4/hMsvTmkT8gru20L0pspAsp59MbUR27smLN/AswZnE31IcQ==
+X-Received: by 2002:a5d:66c6:: with SMTP id k6mr4338833wrw.343.1582801659212;
+        Thu, 27 Feb 2020 03:07:39 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:d916:1723:c1c1:22d? ([2a01:e34:ed2f:f020:d916:1723:c1c1:22d])
+        by smtp.googlemail.com with ESMTPSA id j66sm7478129wmb.21.2020.02.27.03.07.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Feb 2020 03:07:38 -0800 (PST)
+Subject: Re: [PATCH RESEND 2/4] thermal: imx8mm: Add support for i.MX8MM
+ thermal monitoring unit
+To:     Anson Huang <Anson.Huang@nxp.com>, rui.zhang@intel.com,
+        amit.kucheria@verdurent.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com,
+        will@kernel.org, leonard.crestez@nxp.com, daniel.baluta@nxp.com,
+        shengjiu.wang@nxp.com, peng.fan@nxp.com, ping.bai@nxp.com,
+        jun.li@nxp.com, bjorn.andersson@linaro.org, olof@lixom.net,
+        vkoul@kernel.org, dinguyen@kernel.org,
+        marcin.juszkiewicz@linaro.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+References: <1582186646-22096-1-git-send-email-Anson.Huang@nxp.com>
+ <1582186646-22096-2-git-send-email-Anson.Huang@nxp.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <f8dfdb39-14e5-4ee2-927a-fecbcd66c71e@linaro.org>
+Date:   Thu, 27 Feb 2020 12:07:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87y2somido.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+In-Reply-To: <1582186646-22096-2-git-send-email-Anson.Huang@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
-
-On Thu, Feb 27, 2020 at 11:31:15AM +0100, Thomas Gleixner wrote:
-
-> Vs. merging this series, I suggest the following approach:
+On 20/02/2020 09:17, Anson Huang wrote:
+> i.MX8MM has a thermal monitoring unit(TMU) inside, it ONLY has one
+> sensor for CPU, add support for reading immediate temperature of
+> this sensor.
 > 
->    - Resubmit the individual changes as single patches or small series
->      to the relevant maintainers and subsystem mailing lists. They have
->      no dependency on a core change and can be applied where they belong
->      to.
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> This patch is base on patch series: https://lkml.org/lkml/2020/2/19/1258
+> ---
+>  drivers/thermal/Kconfig          |  10 +++
+>  drivers/thermal/Makefile         |   1 +
+>  drivers/thermal/imx8mm_thermal.c | 134 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 145 insertions(+)
+>  create mode 100644 drivers/thermal/imx8mm_thermal.c
 > 
->    - After 5.6-rc6, verify which parts have made their way into
->      linux-next and resubmit the ignored ones as a series to me along
->      with the removal of the core parts.
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index d1cb8dc..972b169 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -262,6 +262,16 @@ config IMX_SC_THERMAL
+>  	  sensor. It supports one critical trip point and one
+>  	  passive trip point for each thermal sensor.
+>  
+> +config IMX8MM_THERMAL
+> +	tristate "Temperature sensor driver for Freescale i.MX8MM SoC"
+> +	depends on ARCH_MXC
+> +	depends on OF
+> +	help
+> +	  Support for Thermal Monitoring Unit (TMU) found on Freescale i.MX8MM SoC.
+> +	  It supports one critical trip point and one passive trip point. The
+> +	  cpufreq is used as the cooling device to throttle CPUs when the passive
+> +	  trip is crossed.
+> +
+>  config MAX77620_THERMAL
+>  	tristate "Temperature sensor driver for Maxim MAX77620 PMIC"
+>  	depends on MFD_MAX77620
+> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+> index a11a6d8..120a05e 100644
+> --- a/drivers/thermal/Makefile
+> +++ b/drivers/thermal/Makefile
+> @@ -44,6 +44,7 @@ obj-$(CONFIG_ARMADA_THERMAL)	+= armada_thermal.o
+>  obj-$(CONFIG_TANGO_THERMAL)	+= tango_thermal.o
+>  obj-$(CONFIG_IMX_THERMAL)	+= imx_thermal.o
+>  obj-$(CONFIG_IMX_SC_THERMAL)	+= imx_sc_thermal.o
+> +obj-$(CONFIG_IMX8MM_THERMAL)	+= imx8mm_thermal.o
+>  obj-$(CONFIG_MAX77620_THERMAL)	+= max77620_thermal.o
+>  obj-$(CONFIG_QORIQ_THERMAL)	+= qoriq_thermal.o
+>  obj-$(CONFIG_DA9062_THERMAL)	+= da9062-thermal.o
+> diff --git a/drivers/thermal/imx8mm_thermal.c b/drivers/thermal/imx8mm_thermal.c
+> new file mode 100644
+> index 0000000..04f8a8f
+> --- /dev/null
+> +++ b/drivers/thermal/imx8mm_thermal.c
+> @@ -0,0 +1,134 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2019 NXP.
+
+Copyright (c) 2020, NXP Semiconductors
+
+Authors: Anson Huang <Anson.Huang@nxp.com>
+
+??
+
+> + *
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/thermal.h>
+> +
+> +#include "thermal_core.h"
+> +
+> +#define TER			0x0	/* TMU enable */
+> +#define TRITSR			0x20	/* TMU immediate temp */
+> +
+> +#define TER_EN			BIT(31)
+> +#define TRITSR_VAL_MASK		0xff
+> +
+> +#define TEMP_LOW_LIMIT		10
+> +
+> +struct imx8mm_tmu {
+> +	struct thermal_zone_device *tzd;
+> +	void __iomem *base;
+> +	struct clk *clk;
+> +};
+> +
+> +static int tmu_get_temp(void *data, int *temp)
+> +{
+> +	struct imx8mm_tmu *tmu = data;
+> +	u32 val;
+> +
+> +	/* the temp sensor need about 1ms to finish the measurement */
+> +	usleep_range(1000, 2000);
+
+Why do yo need to force a delay here? If the sensor can not be read more
+than one time every 1ms, then specify that in the DT switching the
+polling to the right value, no?
+
+> +	val = readl_relaxed(tmu->base + TRITSR) & TRITSR_VAL_MASK;
+> +	if (val < TEMP_LOW_LIMIT)
+> +		return -EAGAIN;>
+> +	*temp = val * 1000;
+> +	return 0;
+> +}
+> +
+> +static struct thermal_zone_of_device_ops tmu_tz_ops = {
+> +	.get_temp = tmu_get_temp,
+> +};
+> +
+> +static int imx8mm_tmu_probe(struct platform_device *pdev)
+> +{
+> +	struct imx8mm_tmu *tmu;
+> +	u32 val;
+> +	int ret;
+> +
+> +	tmu = devm_kzalloc(&pdev->dev, sizeof(struct imx8mm_tmu), GFP_KERNEL);
+> +	if (!tmu)
+> +		return -ENOMEM;
+> +
+> +	tmu->base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(tmu->base))
+> +		return PTR_ERR(tmu->base);
+> +
+> +	tmu->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(tmu->clk)) {
+> +		ret = PTR_ERR(tmu->clk);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(&pdev->dev,
+> +				"failed to get tmu clock: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = clk_prepare_enable(tmu->clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to enable tmu clock: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	tmu->tzd = devm_thermal_zone_of_sensor_register(&pdev->dev, 0,
+> +							tmu, &tmu_tz_ops);
+> +	if (IS_ERR(tmu->tzd)) {
+> +		dev_err(&pdev->dev,
+> +			"failed to register thermal zone sensor: %d\n", ret);
+> +		return PTR_ERR(tmu->tzd);
+> +	}
+> +
+> +	platform_set_drvdata(pdev, tmu);
+> +
+> +	/* enable the monitor */
+> +	val = readl_relaxed(tmu->base + TER);
+> +	val |= TER_EN;
+> +	writel_relaxed(val, tmu->base + TER);
+
+A side note perhaps you can wrap:
+
+static int imx8mm_start(struct imx8mm_tmu *tmu)
+{
+	clk_prepare_enable()
+	val = readl_relaxed(tmu->base + TER);
+	val |= TER_EN;
+	writel_relaxed(val, tmu->base + TER);
+}
+
+and
+
+static void imx8mm_stop(struct imx8mm_tmu *tmu)
+{
+	val = readl_relaxed(tmu->base + TER);
+	val &= ~TER_EN;
+	writel_relaxed(val, tmu->base + TER);
+	clk_disable_unprepare(tmu->clk);
+}
+
+So the suspend/resume callbacks can call them directly if you decide to
+add them.
+
+> +	return 0;
+> +}
+> +
+> +static int imx8mm_tmu_remove(struct platform_device *pdev)
+> +{
+> +	struct imx8mm_tmu *tmu = platform_get_drvdata(pdev);
+> +	u32 val;
+> +
+> +	/* disable TMU */
+> +	val = readl_relaxed(tmu->base + TER);
+> +	val &= ~TER_EN;
+> +	writel_relaxed(val, tmu->base + TER);
+> +
+> +	clk_disable_unprepare(tmu->clk);
+> +	platform_set_drvdata(pdev, NULL);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id imx8mm_tmu_table[] = {
+> +	{ .compatible = "fsl,imx8mm-tmu", },
+> +	{ },
+> +};
+> +
+> +static struct platform_driver imx8mm_tmu = {
+> +	.driver = {
+> +		.name	= "i.mx8mm_thermal",
+> +		.of_match_table = imx8mm_tmu_table,
+> +	},
+> +	.probe = imx8mm_tmu_probe,
+> +	.remove = imx8mm_tmu_remove,
+> +};
+> +module_platform_driver(imx8mm_tmu);
+> +
+> +MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
+> +MODULE_DESCRIPTION("i.MX8MM Thermal Monitor Unit driver");
+> +MODULE_LICENSE("GPL v2");
 > 
-> That way we can avoid conflicting changes between subsystems and the tip
-> irq/core branch as much as possible.
 
-Okay, i will do accordingly.
 
-[ your mail crossed my v3 (only one patch) posting ]
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-Regards
-afzal
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
