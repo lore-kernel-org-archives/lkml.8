@@ -2,120 +2,116 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E82C4BA3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA81C4BA06
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E2AD2467F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DEBE24683
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:48:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582793316;
+	bh=4sQuAppJ9V8uQLBiWjuxN6eOuFTm+NWRpi38gIPMGaA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NGNHWzSMFjYsW/j36DUlMXsvWnPEbMnGIcaCWf5FheuMGXsjImofMoUf1NS4XcsqE
+	 h9MjJzW6nT8PDYADHrVbiWq05DJuORv5vystzHsG+pzbvm8bZyUunb1xkS9AiLl4Iq
+	 spu5Cdd9fo9B2kL3HBAMCkPn+VQjIeOz503GLcY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728865AbgB0Ir3 (ORCPT
+        id S1728615AbgB0Isf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 03:47:29 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:48967 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728856AbgB0Ir3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 03:47:29 -0500
-Received: from [109.168.11.45] (port=43056 helo=[192.168.101.73])
-        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1j7EGN-009anX-4W; Thu, 27 Feb 2020 09:11:20 +0100
-Subject: Re: [PATCH v2] of: overlay: log the error cause on resolver failure
-To:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-References: <20200225164540.4520-1-luca@lucaceresoli.net>
- <f9565679-5892-bcf0-f751-bfcac87670a8@gmail.com>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <40fdf0f2-85a4-9f84-6994-a59b7b56cec4@lucaceresoli.net>
-Date:   Thu, 27 Feb 2020 09:11:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 27 Feb 2020 03:48:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58362 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728482AbgB0Isf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 03:48:35 -0500
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43F672468F;
+        Thu, 27 Feb 2020 08:46:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582793314;
+        bh=4sQuAppJ9V8uQLBiWjuxN6eOuFTm+NWRpi38gIPMGaA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=01by59pqAON8FeO9D/psn6j37NS33qcomrUCI6gyTr0QWIa5kllZkezTs00rESSHU
+         UV00GgurPHbJcPkn8QwKLG/5yTPlukucMIpLas29VEgyoZwjkB0BfAMfLOR/85P2yj
+         QAtb0atIS1P9oSw1iMB3282A5MdLa+u93wUXZW5A=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Brian Cain <bcain@codeaurora.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        James Morse <james.morse@arm.com>,
+        Jonas Bonn <jonas@southpole.se>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Rich Felker <dalias@libc.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Stafford Horne <shorne@gmail.com>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        kvmarm@lists.cs.columbia.edu, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        linux-sh@vger.kernel.org, nios2-dev@lists.rocketboards.org,
+        openrisc@lists.librecores.org,
+        uclinux-h8-devel@lists.sourceforge.jp,
+        Mike Rapoport <rppt@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH v3 02/14] h8300: remove usage of __ARCH_USE_5LEVEL_HACK
+Date:   Thu, 27 Feb 2020 10:45:56 +0200
+Message-Id: <20200227084608.18223-3-rppt@kernel.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20200227084608.18223-1-rppt@kernel.org>
+References: <20200227084608.18223-1-rppt@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <f9565679-5892-bcf0-f751-bfcac87670a8@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Frank,
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-On 26/02/20 04:53, Frank Rowand wrote:
-> On 2/25/20 10:45 AM, Luca Ceresoli wrote:
->> For some of its error paths, of_resolve_phandles() only logs a very generic
->> error which does not help much in finding the origin of the problem:
->>
->>   OF: resolver: overlay phandle fixup failed: -22
->>
->> Add error messages for all the error paths that don't have one. Now a
->> specific message is always emitted, thus also remove the generic catch-all
->> message emitted before returning.
->>
->> For example, in case a DT overlay has a fixup node that is not present in
->> the base DT __symbols__, this error is now logged:
->>
->>   OF: resolver: node gpio9 not found in base DT, fixup failed
->>
->> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
->> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
->> ---
->>
->> I don't know in detail the meaning of the adjust_local_phandle_references()
->> and update_usages_of_a_phandle_reference() error paths, thus I have put
->> pretty generic messages. Any suggestion on better wording would be welcome.
-> 
-> If you have not read the code to understand what the meaning of
-> the errors are, you should not be suggesting changes to the error
-> messages.
-> 
-> Only one of the issues detected as errors can possibly be something
-> other than an error either in the resolver.c code or the dtc
-> compiler -- a missing symbol in the live devicetree.  This may
-> be because of failing to compile the base devicetree without
-> symbols, depending on a symbol from another overlay where the
-> other overlay has not been applied, or depending on a symbol
-> from another overlay where the other overlay is applied but
-> the overlay was not compiled with symbols.  (Not meant to be
-> an exhaustive list, but it might be.)  Thus the missing
-> symbol problem might be fixable without a fix to kernel
-> code.  The error message philosophy for overlay related
-> errors is to minimize error messages that help diagnose
-> the precise cause of a kernel code bug, with the intent
-> of keeping the code more compact and readable.  When a
-> bug occurs, debugging messages can be added for the
-> debug session.
+h8300 is a nommu architecture and does not require fixup for upper layers
+of the page tables because it is already handled by the generic nommu
+implementation.
 
-Got it, sorry about that.
+Remove definition of __ARCH_USE_5LEVEL_HACK in
+arch/h8300/include/asm/pgtable.h
 
-> Following this philosophy, only the message in the second
-> patch chunk is ok.
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+---
+ arch/h8300/include/asm/pgtable.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-Then I think you can apply the v1 patch which only contains the message
-about the problem I experienced, and which was caused by an incorrect DTO:
-
-https://patchwork.ozlabs.org/patch/1243987/
-
-Just ignore the note saying the patch is not for mainline, it's wrong.
-
+diff --git a/arch/h8300/include/asm/pgtable.h b/arch/h8300/include/asm/pgtable.h
+index 4d00152fab58..f00828720dc4 100644
+--- a/arch/h8300/include/asm/pgtable.h
++++ b/arch/h8300/include/asm/pgtable.h
+@@ -1,7 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ #ifndef _H8300_PGTABLE_H
+ #define _H8300_PGTABLE_H
+-#define __ARCH_USE_5LEVEL_HACK
+ #include <asm-generic/pgtable-nopud.h>
+ #include <asm-generic/pgtable.h>
+ extern void paging_init(void);
 -- 
-Luca
+2.24.0
+
