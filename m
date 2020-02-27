@@ -2,60 +2,61 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17EB5C35E17
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B23E7C35E15
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E405024691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:35:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B78F246A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:35:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GqYMFX/u"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YBkqK4RC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730570AbgB0Tfd (ORCPT
+        id S1730544AbgB0Tfc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 14:35:33 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:50449 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727268AbgB0Tf1 (ORCPT
+        Thu, 27 Feb 2020 14:35:32 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46591 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730479AbgB0Tfb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 14:35:27 -0500
-Received: by mail-pj1-f68.google.com with SMTP id r67so223234pjb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 11:35:25 -0800 (PST)
+        Thu, 27 Feb 2020 14:35:31 -0500
+Received: by mail-pl1-f195.google.com with SMTP id y8so189228pll.13
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 11:35:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AoE4OLd/IvDA6cmd9pXDgHl19RWwO6y4VAoz5pE6b4E=;
-        b=GqYMFX/utzgItiW5PidQ11FE+lHI8vpi1sL09gpDitITyGvoCdgVofeyaea3HY9ipQ
-         kI+V9aywVW0+oZ0T24u4PDmPMEExxMztSr66kCLpV0ML6Fdn0mDsyT0Mh3zdLeUDarW0
-         cp8p5I5qVxBR8ULIBUY4ZLMoXbzGtmBCuNhWY=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=sVbVapbdvm9D9bZT8RLizJdch6+5SIEY/KYRYQVG8Tk=;
+        b=YBkqK4RCOblb4V5cg2JjztQtg3wh+brHnQ/Xnw/4IBUFJRhh4GeFiQP9nVouaSw+sY
+         Iq7R/urAShHZ7CPMQvKGeXyT+FOvmE0vy0gms+GZvnF1oUTIeAIqmZaTytVTOmRvhGYp
+         9u4+wigHHHW5WR6VelBYcFCmp7ofnwGN7wT7U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AoE4OLd/IvDA6cmd9pXDgHl19RWwO6y4VAoz5pE6b4E=;
-        b=Ky8xXnvDHjYFHDOlqGFeRTT2gU8ljJvj1ioKslFZSmNg4v7pJeIJXRQYUvlbzVygtD
-         FyPRalCShukfUNNxeB+ton9gUutg0gO054pSgeTwBX46f1Mwi9nckBlJwt+fsq1uXWzH
-         bUjHz/OW7JlrebHODCCW3Swhjfl3R/DvO/guS0Gie6I/KQSXkEzBJVh9F3igv6ShYd3S
-         zF7Q98k0xGnSp9CP4Ztnk/DpNkR1n+rIcFZTDGvzkT2pBW1i8chCfY+0Lmd4RxP4+7LR
-         c58YmA2OjprgC+023iSwanRtiS5xiOgTVaJrC5eYzjvbpTONySnWFeXd2V6vr8nkziBq
-         ODEw==
-X-Gm-Message-State: APjAAAVVZ300ZJyDvQt4uWTDZSU2x0dce6jCNkWbUmdXqNhaeKCtaqfb
-        yKEKGv9qVmG1xEo72gyfVLL+8w==
-X-Google-Smtp-Source: APXvYqyHH1OhEaAU0M9XGqSIh9GqdH9ygv+RYA1KOJ+P5VFzMpUGg9ipEsHxlmsPcfBpV6cJtwqGHg==
-X-Received: by 2002:a17:90b:8ce:: with SMTP id ds14mr584791pjb.70.1582832124805;
-        Thu, 27 Feb 2020 11:35:24 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=sVbVapbdvm9D9bZT8RLizJdch6+5SIEY/KYRYQVG8Tk=;
+        b=Y1b1JOs+84uh65699UGZmKrJBr6VQBQXg49RJd8yeSrdySan3AInoENZyiL+xsw0YC
+         KdI6ZFVPUHwjEIMDOM4RO/0g3fnfjPNwGSgjbfpLzRuDRPp0ZVsC3455wv4Zm0elIPGc
+         VMsA76B6WUWv0xeNEMHMDRdBXgpf3/V+0QPw8RxYoBS+w7t+rj31g8eXPBjJe+da4Bpc
+         eOv/5mShxOCgNKxZjefNrVoS2HywaRWBBB/EL6sAYGoTLyt+XhUq22qkS3uBGNYMVlMN
+         IdA5oN9jGHexzkYmeA6SGbQ2Ss642ZgclkrrtR3Fq2JfA8FDUEUtHnspnprlHGoAlwag
+         bD+A==
+X-Gm-Message-State: APjAAAXcwrXEITnaPPEj/DVdMt2VSUkYn8xV0BWIuXfmnpeB1U8Am1FV
+        PVFMR/BHF5YRLrumXOpk7bwzog==
+X-Google-Smtp-Source: APXvYqwJAU0YQCF3NBelWYbAkfjhxYyfXVhFnc+XRJm1wrTo2TVo3yr52ImKKRO716VR/awYEpFPlg==
+X-Received: by 2002:a17:90a:3266:: with SMTP id k93mr527984pjb.23.1582832128663;
+        Thu, 27 Feb 2020 11:35:28 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e17sm8348002pfm.12.2020.02.27.11.35.20
+        by smtp.gmail.com with ESMTPSA id c26sm7957064pfi.46.2020.02.27.11.35.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 11:35:20 -0800 (PST)
+        Thu, 27 Feb 2020 11:35:27 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Kees Cook <keescook@chromium.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
         Andrey Ryabinin <aryabinin@virtuozzo.com>,
         Elena Petrova <lenaptr@google.com>,
         Andrey Konovalov <andreyknvl@google.com>,
@@ -67,10 +68,12 @@ Cc:     Kees Cook <keescook@chromium.org>,
         kasan-dev@googlegroups.com, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
         syzkaller@googlegroups.com
-Subject: [PATCH v5 0/6] ubsan: Split out bounds checker
-Date:   Thu, 27 Feb 2020 11:35:10 -0800
-Message-Id: <20200227193516.32566-1-keescook@chromium.org>
+Subject: [PATCH v5 5/6] kasan: Unset panic_on_warn before calling panic()
+Date:   Thu, 27 Feb 2020 11:35:15 -0800
+Message-Id: <20200227193516.32566-6-keescook@chromium.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200227193516.32566-1-keescook@chromium.org>
+References: <20200227193516.32566-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,41 +81,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Argh, v4 missed uncommitted changes. v5 brown paper bag release! :)
+As done in the full WARN() handler, panic_on_warn needs to be cleared
+before calling panic() to avoid recursive panics.
 
-This splits out the bounds checker so it can be individually used. This
-is enabled in Android and hopefully for syzbot. Includes LKDTM tests for
-behavioral corner-cases (beyond just the bounds checker), and adjusts
-ubsan and kasan slightly for correct panic handling.
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Acked-by: Dmitry Vyukov <dvyukov@google.com>
+---
+ mm/kasan/report.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
--Kees
-
-v5:
- - _actually_ use hyphenated bug class names (andreyknvl)
-v4: https://lore.kernel.org/lkml/20200227184921.30215-1-keescook@chromium.org
-v3: https://lore.kernel.org/lkml/20200116012321.26254-1-keescook@chromium.org
-v2: https://lore.kernel.org/lkml/20191121181519.28637-1-keescook@chromium.org
-v1: https://lore.kernel.org/lkml/20191120010636.27368-1-keescook@chromium.org
-
-
-Kees Cook (6):
-  ubsan: Add trap instrumentation option
-  ubsan: Split "bounds" checker from other options
-  lkdtm/bugs: Add arithmetic overflow and array bounds checks
-  ubsan: Check panic_on_warn
-  kasan: Unset panic_on_warn before calling panic()
-  ubsan: Include bug type in report header
-
- drivers/misc/lkdtm/bugs.c  | 75 ++++++++++++++++++++++++++++++++++++++
- drivers/misc/lkdtm/core.c  |  3 ++
- drivers/misc/lkdtm/lkdtm.h |  3 ++
- lib/Kconfig.ubsan          | 49 +++++++++++++++++++++----
- lib/Makefile               |  2 +
- lib/ubsan.c                | 47 +++++++++++++-----------
- mm/kasan/report.c          | 10 ++++-
- scripts/Makefile.ubsan     | 16 ++++++--
- 8 files changed, 172 insertions(+), 33 deletions(-)
-
+diff --git a/mm/kasan/report.c b/mm/kasan/report.c
+index 5ef9f24f566b..54bd98a1fc7b 100644
+--- a/mm/kasan/report.c
++++ b/mm/kasan/report.c
+@@ -92,8 +92,16 @@ static void end_report(unsigned long *flags)
+ 	pr_err("==================================================================\n");
+ 	add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
+ 	spin_unlock_irqrestore(&report_lock, *flags);
+-	if (panic_on_warn)
++	if (panic_on_warn) {
++		/*
++		 * This thread may hit another WARN() in the panic path.
++		 * Resetting this prevents additional WARN() from panicking the
++		 * system on this thread.  Other threads are blocked by the
++		 * panic_mutex in panic().
++		 */
++		panic_on_warn = 0;
+ 		panic("panic_on_warn set ...\n");
++	}
+ 	kasan_enable_current();
+ }
+ 
 -- 
 2.20.1
 
