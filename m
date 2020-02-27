@@ -2,131 +2,147 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59788C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78352C3F2CF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3114F246A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:52:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582847565;
-	bh=Q1QtOwbC003YNSLbIfjhBZHYUDdAcC8iJBFmWd+xTmU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=cAFGWHSL6ACxqmXHvSj95Z2sxzWN3hzubkCS2S3Rj5CRzL2YSvH/MFybVN7Tb51Rw
-	 JaGzwvCSPO7pw0a6qZWPIi+imbHSDC9jDGzXf9j9ed1d6u4E1hi2CgwbZIZuRof19K
-	 DYnNssdy201hdDhNDStrLFCrwOilCeXL5CAAtHP0=
+	by mail.kernel.org (Postfix) with ESMTP id 4EF24246A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:54:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730135AbgB0Xwo (ORCPT
+        id S1730012AbgB0XyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 18:52:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50492 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728993AbgB0Xwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 18:52:43 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 27 Feb 2020 18:54:20 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60774 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729849AbgB0XyT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 18:54:19 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01RNou3X025692
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 18:54:18 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yepwhhm7w-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 18:54:18 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Thu, 27 Feb 2020 23:54:15 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 27 Feb 2020 23:54:09 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01RNs8gE58785962
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Feb 2020 23:54:08 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7AAE1AE053;
+        Thu, 27 Feb 2020 23:54:08 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 23141AE04D;
+        Thu, 27 Feb 2020 23:54:08 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 27 Feb 2020 23:54:08 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30DD3246A3;
-        Thu, 27 Feb 2020 23:52:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582847562;
-        bh=Q1QtOwbC003YNSLbIfjhBZHYUDdAcC8iJBFmWd+xTmU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MenvHWpBg8j7UtPwiKrnvksbuyTBGlKLV0EF0wjLe8JN+fiZiInOoQJ+6ilnEMwQS
-         hKibr9tkI6MmXXMhllBNBou5+zqIll2N5li4fbTZub/3eIluUHsyOUVkg+RoNvPwve
-         gFT4RgFui4khaC6BHFHtJW3xCeMVBnxffa7N/sQM=
-Date:   Fri, 28 Feb 2020 08:52:38 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Alexandre Ghiti <alex@ghiti.fr>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 1B0AAA01F5;
+        Fri, 28 Feb 2020 10:54:03 +1100 (AEDT)
+Subject: Re: [PATCH v3 14/27] powerpc/powernv/pmem: Add support for Admin
+ commands
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     Andrew Donnellan <ajd@linux.ibm.com>
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [BUGFIX PATCH] perf probe: Do not depend on
- dwfl_module_addrsym()
-Message-Id: <20200228085238.84d53d6b753efb4cc18d20cb@kernel.org>
-In-Reply-To: <787c2915-c868-358a-481d-1ffd355d92db@ghiti.fr>
-References: <20200228002553.31b82876b705aaabbd717131@kernel.org>
-        <158281812176.476.14164573830975116234.stgit@devnote2>
-        <787c2915-c868-358a-481d-1ffd355d92db@ghiti.fr>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Date:   Fri, 28 Feb 2020 10:54:06 +1100
+In-Reply-To: <cf2b3037-6436-1244-e125-c95542528823@linux.ibm.com>
+References: <20200221032720.33893-1-alastair@au1.ibm.com>
+         <20200221032720.33893-15-alastair@au1.ibm.com>
+         <c88a3808-3ce9-ff6c-b963-ca9317092145@linux.ibm.com>
+         <cf2b3037-6436-1244-e125-c95542528823@linux.ibm.com>
+Organization: IBM Australia
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022723-0012-0000-0000-0000038AF4A7
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022723-0013-0000-0000-000021C79F6E
+Message-Id: <6e30afc320853cd0780643049d17c60de89165fc.camel@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-27_08:2020-02-26,2020-02-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ adultscore=0 suspectscore=0 malwarescore=0 spamscore=0 impostorscore=0
+ lowpriorityscore=0 clxscore=1015 priorityscore=1501 mlxlogscore=744
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002270163
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Feb 2020 17:20:39 +0100
-Alexandre Ghiti <alex@ghiti.fr> wrote:
-
-> On 2/27/20 4:42 PM, Masami Hiramatsu wrote:
-> > Do not depend on dwfl_module_addrsym() because it can fail
-> > on user-space shared libraries.
+On Thu, 2020-02-27 at 19:27 +1100, Andrew Donnellan wrote:
+> On 27/2/20 7:22 pm, Andrew Donnellan wrote:
+> > > +int admin_command_request(struct ocxlpmem *ocxlpmem, u8 op_code)
+> > > +{
+> > > +    u64 val;
+> > > +    int rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu, 
+> > > GLOBAL_MMIO_CHI,
+> > > +                     OCXL_LITTLE_ENDIAN, &val);
+> > > +    if (rc)
+> > > +        return rc;
 > > 
-> > Actually, same bug was fixed by commit 664fee3dc379 ("perf
-> > probe: Do not use dwfl_module_addrsym if dwarf_diename finds
-> > symbol name"), but commit 07d369857808 ("perf probe: Fix
-> > wrong address verification) reverted to get actual symbol
-> > address from symtab.
-> > 
-> > This fixes it again by getting symbol address from DIE,
-> > and only if the DIE has only address range, it uses
-> > dwfl_module_addrsym().
-> > 
-> > Fixes: 07d369857808 ("perf probe: Fix wrong address verification)
-> > Reported-by: Alexandre Ghiti <alex@ghiti.fr>
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > ---
-> >   tools/perf/util/probe-finder.c |   11 ++++++++---
-> >   1 file changed, 8 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-> > index 1c817add6ca4..e4cff49384f4 100644
-> > --- a/tools/perf/util/probe-finder.c
-> > +++ b/tools/perf/util/probe-finder.c
-> > @@ -637,14 +637,19 @@ static int convert_to_trace_point(Dwarf_Die *sp_die, Dwfl_Module *mod,
-> >   		return -EINVAL;
-> >   	}
-> >   
-> > -	/* Try to get actual symbol name from symtab */
-> > -	symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
-> > +	if (dwarf_entrypc(sp_die, &eaddr) == 0) {
-> > +		/* If the DIE has entrypc, use it. */
-> > +		symbol = dwarf_diename(sp_die);
-> > +	} else {
-> > +		/* Try to get actual symbol name and address from symtab */
-> > +		symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
-> > +		eaddr = sym.st_value;
-> > +	}
-> >   	if (!symbol) {
-> >   		pr_warning("Failed to find symbol at 0x%lx\n",
-> >   			   (unsigned long)paddr);
-> >   		return -ENOENT;
-> >   	}
-> > -	eaddr = sym.st_value;
-> >   
-> >   	tp->offset = (unsigned long)(paddr - eaddr);
-> >   	tp->address = (unsigned long)paddr;
-> > 
+> > Ignoring the value here expected, you're just trying to verify that
+> > you 
+> > don't see an error on the read?
 > 
-> I have just tested your patch, that fixes the issue, so you can add:
+> I see that in the next patch, in ns_command_request() you check that 
+> NSCRA is 1 - did you mean to check that ACRA = 1 here?
 > 
-> Tested-by: Alexandre Ghiti <alex@ghiti.fr>
+> 
 
-Thanks Alexandre,
-Arnaldo, could you also pick this for fix?
+I was in one version, but that was causing problems in startup since
+there was successful prior command to assert ACRA.
 
-Thank you,
+I should remove the NSCRA check too.
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
+
