@@ -2,165 +2,101 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B23E7C35E15
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 561DCC11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C164246C5
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E59A246B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:14:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="0IG8plhA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BUEbqJKH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729679AbgB0SOf (ORCPT
+        id S1729805AbgB0SOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 13:14:35 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:39603 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729317AbgB0SOe (ORCPT
+        Thu, 27 Feb 2020 13:14:55 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:44508 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbgB0SOz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 13:14:34 -0500
-Received: by mail-qk1-f193.google.com with SMTP id e16so283070qkl.6
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 10:14:33 -0800 (PST)
+        Thu, 27 Feb 2020 13:14:55 -0500
+Received: by mail-oi1-f194.google.com with SMTP id d62so103719oia.11
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 10:14:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=19sQdZH67v9yOy/BduEXSg0i7G3USqaAUKmseX8opy0=;
-        b=0IG8plhA6YTGx0j6rHUrt9WyouEz5FGMjybnDuDbUR7axVZhu+rgZlDa76gtdh8YwP
-         /BhvP4PrfAUfKbf4wWhSFJOqBrI7JQ+9WpS63f7uxvjPet4NPXoB3dmwuNdmFwjnk4FX
-         1jVKXf8c2T1gFBZuOnwIqt51u2dUPq1cgjvR7zFm0WU9lL6ANWW6XIFJIHX6vK0OhLS1
-         J7DzHM0N4FEAk+lKkdDVdPBUOvPR0KzwO8QnjgEOy/J9Ojgvd04vxXAf02MIPcEGOpxb
-         EivvMkXIRJkPfKGgDKl8kcG3bTQe25P1HIgY1nQs6rbBZBfIFa/9YWSNslzmqZbSVSLN
-         u4lw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Oxqi8ZJKGSPP9IrJM7wDcDY9/uxnfGKdrKcOXfNKqVo=;
+        b=BUEbqJKHWNdILrVLHXtZ5xT5VWr7rOcmUEHhKYHyQO1vULqebtFGaJT1fntcqzkh1O
+         y9EHLY7mr0JdqOOnivAzlu5Olp4XOgClh3YjsN80VQvh2FyQW3nq6l02ayAJiAnHIL4r
+         0Tozt4PovH8Zod95jxhIWhjNHp+wnZ8+MbgtYZ6EWkgO4DveNSUKCYmFbKwU71vT4I3e
+         m3kgAxaMEwRnLqhBhSY9SkQ6cCwNuFqv/aAwxatRYWOsHKTGiobq4VXzE2wshfqUQ9cY
+         1vnadoWx4n+6gwm2Fpb7qC/KqFsc8/fJAtQo6bgKLNeGZVcN572AO2SLmz0ilyqEZMxs
+         bl2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=19sQdZH67v9yOy/BduEXSg0i7G3USqaAUKmseX8opy0=;
-        b=AH7kbz/q7PTyGYMOXaeBTL9qGcVi25426kC7hvNjOU6PWZm08RE9ysCiYPaytIJrb+
-         /iU4gGiq1d0R5risGGaLWqtfuTRAJ3j5IwVKimHaHklcLCglWA83aKGkREdpM5sakcSR
-         HrR3OVXe3S5Zknx64onTSTyYayWb5hIAVtIccGxiwjsrYRlwvjeRwRoETmdkPFbZMdiz
-         9fw41MSGEBm6OIF3LqB4XZqoNjPT2CGdo83MJnMtNIIz5QQAbUPDbTY8ZsrnIHXtfZh5
-         inuilWum60QKfMgQg1YxPSHmzxGC6HRrgih+J4RAwTIYJZ0Qcue9qQQLJ9SGrhgkD9cc
-         TRIw==
-X-Gm-Message-State: APjAAAVkKVNs3uZ9CiceTSBmarEVxr58ahCVf0VW/03goCT7Wj7tySVy
-        ZJCoIiQDCHF1wOQgTWNfsQezPQ==
-X-Google-Smtp-Source: APXvYqxPB39ZR+bN2cQMJ9T9w19fRsXPKASGuDOQPUNqv4PuzrnPanLLIWa7wqqTeAv5s2x/5ZezIQ==
-X-Received: by 2002:a05:620a:10ac:: with SMTP id h12mr512814qkk.487.1582827272500;
-        Thu, 27 Feb 2020 10:14:32 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::3:2450])
-        by smtp.gmail.com with ESMTPSA id t29sm3712868qtt.20.2020.02.27.10.14.31
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Oxqi8ZJKGSPP9IrJM7wDcDY9/uxnfGKdrKcOXfNKqVo=;
+        b=hylktB3pUmobr9xkXw0shVAgXIT34n5BxBjG5+7V5n6hw3XYz/P0qoL5VGneeiQXfw
+         PrFeNRxX936WOM2UMx6hvU/sUTASA3ZyqCjwFNVHEbzZPKKO+LJThnaMqMasB4IyHgE2
+         CtcaNf87fdTpcl/CS7bJgKIDFlAd2LVTanRG7m/GJYKS1SBECHcxUUQEO/IswbPXH4Y9
+         CAhpqotFCVIA4UMROvsdlEvmryyg+zSMhiGViowEeszED87igrmhu8Lcc19Z6eg/T1Ys
+         8GKC5A7tt2z2frn+aepfEKDonQc6XrFoJ/KsD/DOA8P4Jr8fEeb8iKOqX4i+li5yfaUD
+         l/AA==
+X-Gm-Message-State: APjAAAVpGD5LcQ2SQqKmPfay27TFNGrhXYCz8r53gTM5lHaewsiQrt/7
+        Aki/f/3Z0Pzr7VQsmdccDYw=
+X-Google-Smtp-Source: APXvYqwLh43Ljb2tbvcdPfcvTFALf59Q/EVN4nwLeA3Jda+ecRo6T5acO4Yz4AX9Wtdduy1gdugViA==
+X-Received: by 2002:aca:d03:: with SMTP id 3mr226545oin.69.1582827294709;
+        Thu, 27 Feb 2020 10:14:54 -0800 (PST)
+Received: from farregard-ubuntu.kopismobile.org (c-73-177-17-21.hsd1.ms.comcast.net. [73.177.17.21])
+        by smtp.gmail.com with ESMTPSA id t203sm2205534oig.39.2020.02.27.10.14.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 10:14:31 -0800 (PST)
-Date:   Thu, 27 Feb 2020 13:14:30 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Dan Schatzberg <schatzberg.dan@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Chris Down <chris@chrisdown.name>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
-        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
-        <linux-mm@kvack.org>
-Subject: Re: [PATCH v3 1/3] loop: Use worker per cgroup instead of kworker
-Message-ID: <20200227181430.GA44024@cmpxchg.org>
-References: <cover.1582581887.git.schatzberg.dan@gmail.com>
- <eab018412a0c9feb573d757b1bbd5f58b33e2a8d.1582581887.git.schatzberg.dan@gmail.com>
- <1582736558.7365.131.camel@lca.pw>
+        Thu, 27 Feb 2020 10:14:54 -0800 (PST)
+From:   George Hilliard <thirtythreeforty@gmail.com>
+To:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     George Hilliard <thirtythreeforty@gmail.com>,
+        Icenowy Zheng <icenowy@aosc.io>, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] Support the Allwinner F1C100s USB stack
+Date:   Thu, 27 Feb 2020 12:14:47 -0600
+Message-Id: <20200227181452.31558-1-thirtythreeforty@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1582736558.7365.131.camel@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 12:02:38PM -0500, Qian Cai wrote:
-> On Mon, 2020-02-24 at 17:17 -0500, Dan Schatzberg wrote:
-> > Existing uses of loop device may have multiple cgroups reading/writing
-> > to the same device. Simply charging resources for I/O to the backing
-> > file could result in priority inversion where one cgroup gets
-> > synchronously blocked, holding up all other I/O to the loop device.
-> > 
-> > In order to avoid this priority inversion, we use a single workqueue
-> > where each work item is a "struct loop_worker" which contains a queue of
-> > struct loop_cmds to issue. The loop device maintains a tree mapping blk
-> > css_id -> loop_worker. This allows each cgroup to independently make
-> > forward progress issuing I/O to the backing file.
-> > 
-> > There is also a single queue for I/O associated with the rootcg which
-> > can be used in cases of extreme memory shortage where we cannot allocate
-> > a loop_worker.
-> > 
-> > The locking for the tree and queues is fairly heavy handed - we acquire
-> > the per-loop-device spinlock any time either is accessed. The existing
-> > implementation serializes all I/O through a single thread anyways, so I
-> > don't believe this is any worse.
-> > 
-> > Signed-off-by: Dan Schatzberg <schatzberg.dan@gmail.com>
-> > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-> 
-> The locking in loop_free_idle_workers() will trigger this with sysfs reading,
-> 
-> [ 7080.047167] LTP: starting read_all_sys (read_all -d /sys -q -r 10)
-> [ 7239.842276] cpufreq transition table exceeds PAGE_SIZE. Disabling
-> 
-> [ 7247.054961] =====================================================
-> [ 7247.054971] WARNING: SOFTIRQ-safe -> SOFTIRQ-unsafe lock order detected
-> [ 7247.054983] 5.6.0-rc3-next-20200226 #2 Tainted: G           O     
-> [ 7247.054992] -----------------------------------------------------
-> [ 7247.055002] read_all/8513 [HC0[0]:SC0[0]:HE0:SE1] is trying to acquire:
-> [ 7247.055014] c0000006844864c8 (&fs->seq){+.+.}, at: file_path+0x24/0x40
-> [ 7247.055041] 
->                and this task is already holding:
-> [ 7247.055061] c0002006bab8b928 (&(&lo->lo_lock)->rlock){..-.}, at:
-> loop_attr_do_show_backing_file+0x3c/0x120 [loop]
-> [ 7247.055078] which would create a new lock dependency:
-> [ 7247.055105]  (&(&lo->lo_lock)->rlock){..-.} -> (&fs->seq){+.+.}
-> [ 7247.055125] 
->                but this new dependency connects a SOFTIRQ-irq-safe lock:
-> [ 7247.055155]  (&(&lo->lo_lock)->rlock){..-.}
-> [ 7247.055156] 
->                ... which became SOFTIRQ-irq-safe at:
-> [ 7247.055196]   lock_acquire+0x130/0x360
-> [ 7247.055221]   _raw_spin_lock_irq+0x68/0x90
-> [ 7247.055230]   loop_free_idle_workers+0x44/0x3f0 [loop]
-> [ 7247.055242]   call_timer_fn+0x110/0x5f0
-> [ 7247.055260]   run_timer_softirq+0x8f8/0x9f0
-> [ 7247.055278]   __do_softirq+0x34c/0x8c8
-> [ 7247.055288]   irq_exit+0x16c/0x1d0
-> [ 7247.055298]   timer_interrupt+0x1f0/0x680
-> [ 7247.055308]   decrementer_common+0x124/0x130
-> [ 7247.055328]   arch_local_irq_restore.part.8+0x34/0x90
-> [ 7247.055352]   cpuidle_enter_state+0x11c/0x8f0
-> [ 7247.055361]   cpuidle_enter+0x50/0x70
-> [ 7247.055389]   call_cpuidle+0x4c/0x90
-> [ 7247.055398]   do_idle+0x378/0x470
-> [ 7247.055414]   cpu_startup_entry+0x3c/0x40
-> [ 7247.055442]   start_secondary+0x7a8/0xa80
-> [ 7247.055461]   start_secondary_prolog+0x10/0x14
+The Allwinner F1C100s has an MUSB-based USB peripheral.  This patch
+series implements support for it alongside existing Allwinner support
+code.
 
-That's kind of hilarious.
+This series was originally written by Icenowy Zheng for Linux v4.14.
+I've rebased and bugfixed that work against mainline and tested it on
+both the Lichee Nano and my custom hardware.
 
-So even though it's a spin_lock_irq(), suggesting it's used from both
-process and irq context, Dan appears to be adding the first user that
-actually runs from irq context. It looks like it should have been a
-regular spinlock all along. Until now, anyway.
+George Hilliard (3):
+  dt-bindings: Add new F1C100s compatible strings for USB
+  phy: sun4i-usb: add support for the USB PHY on suniv SoC
+  musb: sunxi: add support for the suniv MUSB controller
 
-Fixing it should be straight-forward. Use get_file() under lock to pin
-the file, drop the lock to do file_path(), release file with fput().
+Icenowy Zheng (2):
+  ARM: suniv: add USB-related device nodes
+  ARM: suniv: f1c100s: enable USB on Lichee Pi Nano
+
+ .../phy/allwinner,sun4i-a10-usb-phy.yaml      |  1 +
+ .../usb/allwinner,sun4i-a10-musb.yaml         |  1 +
+ .../boot/dts/suniv-f1c100s-licheepi-nano.dts  | 16 ++++++++++
+ arch/arm/boot/dts/suniv-f1c100s.dtsi          | 29 +++++++++++++++++++
+ drivers/phy/allwinner/phy-sun4i-usb.c         | 11 +++++++
+ drivers/usb/musb/sunxi.c                      |  8 +++--
+ 6 files changed, 64 insertions(+), 2 deletions(-)
+
+-- 
+2.25.0
+
