@@ -2,115 +2,93 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E1CC35677
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 125AFC11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C899246A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD9EC2469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:52:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h2ckek+4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uwjv1Nwa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730569AbgB0QwT (ORCPT
+        id S1730580AbgB0Qw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 11:52:19 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33092 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730538AbgB0QwS (ORCPT
+        Thu, 27 Feb 2020 11:52:29 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43797 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730343AbgB0Qw2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 11:52:18 -0500
-Received: by mail-oi1-f193.google.com with SMTP id q81so4016853oig.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 08:52:17 -0800 (PST)
+        Thu, 27 Feb 2020 11:52:28 -0500
+Received: by mail-pf1-f195.google.com with SMTP id s1so92557pfh.10
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 08:52:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=gp52pRjsJhSA+Hsa491NiMGo7ZzN8vh48sP/xPZjY7A=;
-        b=h2ckek+46BKub8OVUhke3FC/nXyQRCv+YQ5y9CV5RbavgOyX2emB9a6/jb7odtCAKM
-         5ltcv6eQIF7Ic86LAqy26c5McXL14zfj7SHokiEMytQXVSGvnJlTtIuSNHkSOQkFWjRP
-         Mu7gYWpvSfwVaBUOsaWiRTp0YvOLWDionRgvz1JkZwXSBMY3V3b96qCMcMlj0mUxU56T
-         mo9uGvza0log5cdDTTy2ztxkZVwF2Oog57jDbqdSKdT3X6QIagU/KCEypSCKV9XaPvzj
-         wCtt3eoq7JH1jvdYAAnC4fMTn7+3EHxTnrbfi6sRJvcEaM84OCdYDwSLRgwprggtt3Y2
-         wEKQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=jKuXW28lW9AH6MJSzQGV9UYY4yuB4lYRJ5J1zMaBeWg=;
+        b=Uwjv1NwaKf76fG5FRij7JXauaQPfpbqstkQhD/y5gCIJM6+3Cw2YhM+OrFS3ynXgxr
+         WspiJo1JoinDIE6Au8mqyzdu8VXgUHtqtuTHNlwTCGljExacZRMykTw1nwOpw6R2XOHs
+         oKFHWKiAOovd3i38eULme3pkRf5JSULidWYjg3VoPXqKzAOsop2n68cuhH1WEdhjzGv/
+         s4/gFcdyiyzNBtKoZ3AgsB6300ZKv5+HfyMngVZvwbVyDES/1Ved72HBw7CZfls8mWWF
+         pXQMFjw/JnnOKYKVFt6wVF93c8P0aUyM+NsA0pAqJsbN4Pp0IosMvNDRvDHXXIulZ6/D
+         LV0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=gp52pRjsJhSA+Hsa491NiMGo7ZzN8vh48sP/xPZjY7A=;
-        b=s8kSlity/rSKsY+2JUM9W/XLU8spClStRjCOqEnm91bAeQ29sJVc0XLeXRPIsCGmJx
-         DWRXXzLFFOA1k6YQxuqUYcE8D5ZSKubob3zJbIn7X7DDZPeM5ZqLpqZrOEEuWbJ+BUqV
-         01j4ATbPbyhJOK2yQC+Z2RUcWR3KoV4PMFoXzVnCECrUl4/kLcDbtmjP8t+HVUgo1CpC
-         PKf8LZaDoOk//sfTOMvzbB6N7d/kJZTEXSsvnbsqSHwG+ncp4saUHXdrTBgucorXxJ2b
-         kl4kqEh8yBgwCOqVZXYm7i9euZAZGqlbL69uMCfO+pCu5venYOggpdI7IQmeP7+BHQ4U
-         Wojg==
-X-Gm-Message-State: APjAAAWFSFAtyOHt+bU2ufI5GBhdViESBBzpNiaMX5NKijIf3CsEAYYy
-        jI7czps5bkqann46hv/i0NE60p1WeBOowoAdzwHTCRfRi8M=
-X-Google-Smtp-Source: APXvYqwtYAjsjMZBmazOMBlU4tgSOoeRD3FzHInhjMiQQq9Hs9Q8FYDFJIJz944uJE8l8reZMl0eKMk+IJoxnZLWgp0=
-X-Received: by 2002:aca:d954:: with SMTP id q81mr4104431oig.157.1582822337290;
- Thu, 27 Feb 2020 08:52:17 -0800 (PST)
-MIME-Version: 1.0
-References: <20200224160215.4136-1-mic@digikod.net> <20200224160215.4136-6-mic@digikod.net>
- <CAG48ez36SMrPPgsj0omcVukRLwOzBzqWOQjuGCmmmrmsGiNukw@mail.gmail.com> <34319b76-44bd-8915-fd7c-5147f901615e@digikod.net>
-In-Reply-To: <34319b76-44bd-8915-fd7c-5147f901615e@digikod.net>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 27 Feb 2020 17:51:51 +0100
-Message-ID: <CAG48ez1ETFhAZE1A9x=zB=b+t=pFYp3Yc0j8psFQhGwFRdDu2A@mail.gmail.com>
-Subject: Re: [RFC PATCH v14 05/10] fs,landlock: Support filesystem access-control
-To:     =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mickael.salaun@ssi.gouv.fr>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-doc@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jKuXW28lW9AH6MJSzQGV9UYY4yuB4lYRJ5J1zMaBeWg=;
+        b=LNczg4d492pOb5enw25xJaCUzQDf/Snu9PCLUz4yZAEBVuNHG5WxXPNibYWSuUB78Y
+         VxmaykgFgGggp0MlVOWpqq7m/O6n9ym61twKr8pS8EAjS8MQFjy8KS9fFBU96J15Y9bJ
+         jGgvGVM98szdHCFPHamAmcKPgXAODsMT5BAUPmZEOIFkSsD1uEag/xsblEmjg7hdtTrj
+         BVF/h9RZ6LMwYGjN9IVzS7iDUDfVPEhxz6/YCkhs7E8xxBZ/WlhBJ8vzIRR83ubONF3+
+         yQU7vGqFADLhPeJO889YYQ1p6hpFHfFIQILFWtqW10H3UfCBwyLf9BhMAZnspbr7/rXH
+         qlgg==
+X-Gm-Message-State: APjAAAVDci7FTrVHCxMguXzqcQRWRcRA/SdAhmw7uiZCLDeYZ8RRPnr6
+        0wzUTzzMUcO9kBrbGLWgGi0=
+X-Google-Smtp-Source: APXvYqzp79FySyqRZxGCCbLGFXVfMt6BS37hDZ0bUxPVRWjZiXDe0YNQLFU6f3/Z9wL5KtrtDhihjw==
+X-Received: by 2002:a63:4a19:: with SMTP id x25mr273591pga.167.1582822347390;
+        Thu, 27 Feb 2020 08:52:27 -0800 (PST)
+Received: from VM_0_35_centos.localdomain ([150.109.62.251])
+        by smtp.gmail.com with ESMTPSA id 28sm7247498pgl.42.2020.02.27.08.52.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Feb 2020 08:52:26 -0800 (PST)
+From:   Qiujun Huang <hqjagain@gmail.com>
+To:     elver@google.com
+Cc:     dvyukov@google.com, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Qiujun Huang <hqjagain@gmail.com>
+Subject: [PATCH] kcsan: Fix a typo in a comment
+Date:   Fri, 28 Feb 2020 00:52:22 +0800
+Message-Id: <1582822342-26871-1-git-send-email-hqjagain@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 5:50 PM Micka=C3=ABl Sala=C3=BCn <mic@digikod.net> =
-wrote:
-> On 26/02/2020 21:29, Jann Horn wrote:
-> > On Mon, Feb 24, 2020 at 5:03 PM Micka=C3=ABl Sala=C3=BCn <mic@digikod.n=
-et> wrote:
-> >> +static inline u32 get_mem_access(unsigned long prot, bool private)
-> >> +{
-> >> +       u32 access =3D LANDLOCK_ACCESS_FS_MAP;
-> >> +
-> >> +       /* Private mapping do not write to files. */
-> >> +       if (!private && (prot & PROT_WRITE))
-> >> +               access |=3D LANDLOCK_ACCESS_FS_WRITE;
-> >> +       if (prot & PROT_READ)
-> >> +               access |=3D LANDLOCK_ACCESS_FS_READ;
-> >> +       if (prot & PROT_EXEC)
-> >> +               access |=3D LANDLOCK_ACCESS_FS_EXECUTE;
-> >> +       return access;
-> >> +}
-[...]
-> However, I'm not sure this hook is useful for now. Indeed, the process
-> still need to have a file descriptor open with the right accesses.
+Might clean it up.
 
-Yeah, agreed.
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+---
+ kernel/kcsan/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
+index 065615d..4b8b846 100644
+--- a/kernel/kcsan/core.c
++++ b/kernel/kcsan/core.c
+@@ -45,7 +45,7 @@ static DEFINE_PER_CPU(struct kcsan_ctx, kcsan_cpu_ctx) = {
+ };
+ 
+ /*
+- * Helper macros to index into adjacent slots slots, starting from address slot
++ * Helper macros to index into adjacent slots, starting from address slot
+  * itself, followed by the right and left slots.
+  *
+  * The purpose is 2-fold:
+-- 
+1.8.3.1
+
