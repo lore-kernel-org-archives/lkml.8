@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A3E8C3F36D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D083C35E1C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF592073D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE3292073D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:55:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811775;
-	bh=MoUzBAvRtBWq8Ndubur4hy59jRiTGFG7/mRJIg9KZ+E=;
+	s=default; t=1582811750;
+	bh=5ZhS83xKSd69Gd6diFUVn9rulU3syIPi3/tE+VyKn6o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mVwXO9rkkdlj4nJSJPEWRg6AZW9630Hn1/iN5aSgbFqvrQf3M5UdH8iKMBjUD7XXd
-	 wzYhDtZBYkzxorPwxGvvlZBmxla+bi+o42vXj2seGXgUBDsREB899eZhHT7g6cj3qt
-	 McAMkC+n3H8XJl4236Ga9kEA32FQavfxZFh7KSrA=
+	b=dZas64eaPE17VA0hnyQTHr9a98yzJgRKVWq6bKqiXu9pznYrqg975N4L6NcUsDtvq
+	 /7TfRlZLJzAgN5iwjza0bXAbo6mjEYF3mzwUjyA4gDEjr6VKuBgQ/8o2M2tz0KJbQ+
+	 KrrU5cbXXcRvmiqPMZtrNRuDZgeTu46ahxV9JRmc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732088AbgB0N4O (ORCPT
+        id S1732032AbgB0Nzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:56:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56622 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:55:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732077AbgB0N4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:56:10 -0500
+        id S1732024AbgB0Nzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:55:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B936F21D7E;
-        Thu, 27 Feb 2020 13:56:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B3B82073D;
+        Thu, 27 Feb 2020 13:55:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811770;
-        bh=MoUzBAvRtBWq8Ndubur4hy59jRiTGFG7/mRJIg9KZ+E=;
+        s=default; t=1582811746;
+        bh=5ZhS83xKSd69Gd6diFUVn9rulU3syIPi3/tE+VyKn6o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dskjyKmtHWekfkHdIWX6cDXWt9FvvvJcMnd2IUUZN7H+zjVQ4YoYBPqH02F5VGxAc
-         d4mrxEmBgAWb85cG7SQ+0z+hwK8zT02PlT/Lz11goANYUJTVn3x21CTC48KqB/P2GS
-         yOoWPkYSQeXOed/HOvvNwQV/uq6GKv1IZ07fMWSc=
+        b=ttkqiGyshh6oK4IvakGYUoI2ktavkwq05UZnZatXdsqOKCE6/hjAElW1HFs3ZeIC6
+         Q1H+oSt+e2JZTb7kWJ58m1KwWa4a06JGoV9RceyASouzdnLvFt7xaAlpRYuGd5tX9g
+         qHNwjQ+zQwTgC+XvSdwkZfozBRNXg2Y0S0CaiVCw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 094/237] PM / devfreq: rk3399_dmc: Add COMPILE_TEST and HAVE_ARM_SMCCC dependency
-Date:   Thu, 27 Feb 2020 14:35:08 +0100
-Message-Id: <20200227132303.919756737@linuxfoundation.org>
+Subject: [PATCH 4.14 086/237] orinoco: avoid assertion in case of NULL pointer
+Date:   Thu, 27 Feb 2020 14:35:00 +0100
+Message-Id: <20200227132303.386135791@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -60,50 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chanwoo Choi <cw00.choi@samsung.com>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit eff5d31f7407fa9d31fb840106f1593399457298 ]
+[ Upstream commit c705f9fc6a1736dcf6ec01f8206707c108dca824 ]
 
-To build test, add COMPILE_TEST depedency to both ARM_RK3399_DMC_DEVFREQ
-and DEVFREQ_EVENT_ROCKCHIP_DFI configuration. And ARM_RK3399_DMC_DEVFREQ
-used the SMCCC interface so that add HAVE_ARM_SMCCC dependency to prevent
-the build break.
+In ezusb_init, if upriv is NULL, the code crashes. However, the caller
+in ezusb_probe can handle the error and print the failure message.
+The patch replaces the BUG_ON call to error return.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/Kconfig       | 3 ++-
- drivers/devfreq/event/Kconfig | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/wireless/intersil/orinoco/orinoco_usb.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-index 6a172d338f6dc..4c4ec68b0566d 100644
---- a/drivers/devfreq/Kconfig
-+++ b/drivers/devfreq/Kconfig
-@@ -103,7 +103,8 @@ config ARM_TEGRA_DEVFREQ
+diff --git a/drivers/net/wireless/intersil/orinoco/orinoco_usb.c b/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
+index 95015d74b1c0e..5a64674a5c8da 100644
+--- a/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
++++ b/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
+@@ -1364,7 +1364,8 @@ static int ezusb_init(struct hermes *hw)
+ 	int retval;
  
- config ARM_RK3399_DMC_DEVFREQ
- 	tristate "ARM RK3399 DMC DEVFREQ Driver"
--	depends on ARCH_ROCKCHIP
-+	depends on (ARCH_ROCKCHIP && HAVE_ARM_SMCCC) || \
-+		(COMPILE_TEST && HAVE_ARM_SMCCC)
- 	select DEVFREQ_EVENT_ROCKCHIP_DFI
- 	select DEVFREQ_GOV_SIMPLE_ONDEMAND
- 	select PM_DEVFREQ_EVENT
-diff --git a/drivers/devfreq/event/Kconfig b/drivers/devfreq/event/Kconfig
-index cd949800eed96..8851bc4e8e3e1 100644
---- a/drivers/devfreq/event/Kconfig
-+++ b/drivers/devfreq/event/Kconfig
-@@ -33,7 +33,7 @@ config DEVFREQ_EVENT_EXYNOS_PPMU
+ 	BUG_ON(in_interrupt());
+-	BUG_ON(!upriv);
++	if (!upriv)
++		return -EINVAL;
  
- config DEVFREQ_EVENT_ROCKCHIP_DFI
- 	tristate "ROCKCHIP DFI DEVFREQ event Driver"
--	depends on ARCH_ROCKCHIP
-+	depends on ARCH_ROCKCHIP || COMPILE_TEST
- 	help
- 	  This add the devfreq-event driver for Rockchip SoC. It provides DFI
- 	  (DDR Monitor Module) driver to count ddr load.
+ 	upriv->reply_count = 0;
+ 	/* Write the MAGIC number on the simulated registers to keep
 -- 
 2.20.1
 
