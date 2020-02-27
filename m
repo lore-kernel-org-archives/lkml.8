@@ -2,93 +2,85 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E760C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94244C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45A6A24699
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:23:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582806198;
-	bh=2zPnlV0ZH+D2gKvuwb636d2VVVPT90Hpg9RA/haF8ww=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=blSG7PJ033F8vDePc5EwFmYpPHecvyEvxsX9qeDcK/jEirVkq6Ah9y+q5xhxgvVAF
-	 xLXUESPXZbyQ5LPKzWLcNUsQzTR9vAOWrZ/96h79MVK3fqtKuSEwFWAYC8h5pcKlhA
-	 Ynb9f2/MdGqxMfVeB5Gw10NiPwE9XJFii8KW43/o=
+	by mail.kernel.org (Postfix) with ESMTP id 7161724693
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:23:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728994AbgB0MXR (ORCPT
+        id S1729008AbgB0MX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 07:23:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60312 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728929AbgB0MXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 07:23:16 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E6212468E;
-        Thu, 27 Feb 2020 12:23:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582806196;
-        bh=2zPnlV0ZH+D2gKvuwb636d2VVVPT90Hpg9RA/haF8ww=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RhGbIY7R/Y/9wdj2JrTB0IWT+V6WY/fdbRIzuk2c74jsyICgj1YC/bl4NFDTanvoT
-         Sf62Zbx9p/M70y4IvsJ1I2E+EiIM2VzeKReKfieuL69ecKOGAmYFM3LsIALK5cKU2F
-         L5mwXjPTJeO8SQFYb3b4n9yAiyShX8kIbZNF/Xi4=
-Date:   Thu, 27 Feb 2020 13:23:13 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Wambui Karuga <wambui.karugax@gmail.com>
-Cc:     daniel@ffwll.ch, airlied@linux.ie, mripard@kernel.org,
-        maarten.lankhorst@linux.intel.com, tzimmermann@suse.de,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 02/21] drm: convert the drm_driver.debugfs_init() hook to
- return void.
-Message-ID: <20200227122313.GB896418@kroah.com>
-References: <20200227120232.19413-1-wambui.karugax@gmail.com>
- <20200227120232.19413-3-wambui.karugax@gmail.com>
+        Thu, 27 Feb 2020 07:23:26 -0500
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:48377 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728929AbgB0MXZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 07:23:25 -0500
+X-Originating-IP: 81.250.144.103
+Received: from [10.30.1.20] (lneuilly-657-1-5-103.w81-250.abo.wanadoo.fr [81.250.144.103])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 72A7E240003;
+        Thu, 27 Feb 2020 12:23:19 +0000 (UTC)
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+From:   Alexandre Ghiti <alex@ghiti.fr>
+Subject: Perf tool regression from 07d369857808
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Message-ID: <2bb02f9b-1413-97c3-684b-104a0fab9144@ghiti.fr>
+Date:   Thu, 27 Feb 2020 13:23:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200227120232.19413-3-wambui.karugax@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 03:02:13PM +0300, Wambui Karuga wrote:
-> As a result of commit 987d65d01356 (drm: debugfs: make
-> drm_debugfs_create_files() never fail) and changes to various debugfs
-> functions in drm/core and across various drivers, there is no need for
-> the drm_driver.debugfs_init() hook to have a return value. Therefore,
-> declare it as void.
-> 
-> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
-> ---
->  include/drm/drm_drv.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/drm/drm_drv.h b/include/drm/drm_drv.h
-> index 97109df5beac..c6ae888c672b 100644
-> --- a/include/drm/drm_drv.h
-> +++ b/include/drm/drm_drv.h
-> @@ -323,7 +323,7 @@ struct drm_driver {
->  	 *
->  	 * Allows drivers to create driver-specific debugfs files.
->  	 */
-> -	int (*debugfs_init)(struct drm_minor *minor);
-> +	void (*debugfs_init)(struct drm_minor *minor);
+Hi Masami,
 
+The commit 07d369857808 ("perf probe: Fix wrong address verification) 
+found its way in kernel 4.19.98 (and debian 10) and I observed some 
+regressions when I try to add probes in shared libraries.
+The symptoms are:
 
-Doesn't this patch break the build, or at least, cause lots of build
-warnings to happen?
+$ perf probe -f --exec=/home/aghiti/lib/libdpuhw.so --add 
+'log_rank_path=log_rank_path rank path:string'
+   Failed to find symbol at 0x3bf0
+     Error: Failed to add events.
 
-Fixing it all up later is good, but I don't think you want to break
-things at this point in the series.
+Whereas when I revert this patch, on the same shared library:
 
-thanks,
+$ perf probe -f --exec=/home/aghiti/lib/libdpuhw.so --add 
+'log_rank_path=log_rank_path rank path:string'
+Added new event:
+   probe_libdpuhw:log_rank_path_4 (on log_rank_path in 
+/home/aghiti/lib/libdpuhw.so.2020.1.0 with rank path:string)
 
-greg k-h
+You can now use it in all perf tools, such as:
+
+	perf record -e probe_libdpuhw:log_rank_path_4 -aR sleep 1
+
+Actually, I noted that this patch reverts a previous patch that stated 
+that dwfl_module_addrsym could fail on shared libraries 664fee3dc379 
+("perf probe: Do not use dwfl_module_addrsym if dwarf_diename finds 
+symbol name").
+
+Let me know if I can be of any help,
+
+Thanks,
+
+Alexandre Ghiti
