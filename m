@@ -2,55 +2,52 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D625BC3F36A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C38C3F34A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABE0D20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D918D2084E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:53:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811654;
-	bh=hLfZr2lTPwLVvls4QJKmwnrEt7LV1L6ytSfteOuLPOI=;
+	s=default; t=1582811620;
+	bh=9ywhAYA701m1EHwH2msV5Pz/2sBLkQudXHocBsn18Ew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JCWf92DtOqOc2c7zxvvJsLG6oEvrBiTJVUAsuRGMD4lBoQpMjKmZbBHe9kytjbItm
-	 BMtrx37mudRLfYXxd6l/JY43FAv4wkZAP5Nz1nrGGw6H+jfORz9ZbQxZjNPSO6lrBb
-	 v8tTY4HMiybC+5P6xoyy0ecQmc5QnzySlHPxMUdQ=
+	b=VhGNmFbgHb1sktDyrLDK2+oJGTT61eskoSV9tD+eElyxTrER4En3bplx08MkaV+uA
+	 yT/FlPLRcJYPJkTB7z50OzNMm1uq9dH8+wQ3V+V8zrzefpMU+nVgCSOjTneuZKFc+s
+	 K8yjhB+jJK99VvkXTfsTxgwLbZdhXXWMSyE2Qnt8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731840AbgB0NyN (ORCPT
+        id S1731742AbgB0Nxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:54:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54172 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:53:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731827AbgB0NyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:54:08 -0500
+        id S1730589AbgB0Nxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:53:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83C982084E;
-        Thu, 27 Feb 2020 13:54:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BBA52084E;
+        Thu, 27 Feb 2020 13:53:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811648;
-        bh=hLfZr2lTPwLVvls4QJKmwnrEt7LV1L6ytSfteOuLPOI=;
+        s=default; t=1582811616;
+        bh=9ywhAYA701m1EHwH2msV5Pz/2sBLkQudXHocBsn18Ew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IVImJ3ReazCtTve/zzObc4PB2qifGWmR8cVIvVkejavK5asEP/9Uiim80DcAKvfLS
-         yFq17kQVyyIwBwt4cQmqo1mtNm0Jak/Wztipzb3/V98dPX4tbW+Lr0MvfnpLv762lX
-         G+1FdPpq4+TiI98jKnYWCmC5KToPagCRvH6sYL5U=
+        b=S5NLEsSWhUjz9fmsOhuPqbkE7e1/STii5Qt6cwoWTQXXEA87UrBPZV+k41Mt752gP
+         yhLFsG35NOc87ixh26j26JJbpZ73LSHK0GNFU5sMCUe5V0kk+TCq03c05L1u3nzwxG
+         0MJmnyEQdMM5cHoCnBx7nZnGyHf9fyWztDUVx+cs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenyou Yang <wenyou.yang@microchip.com>,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 048/237] media: i2c: mt9v032: fix enum mbus codes and frame sizes
-Date:   Thu, 27 Feb 2020 14:34:22 +0100
-Message-Id: <20200227132300.247663202@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.14 009/237] Input: synaptics - remove the LEN0049 dmi id from topbuttonpad list
+Date:   Thu, 27 Feb 2020 14:33:43 +0100
+Message-Id: <20200227132256.566614184@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -63,63 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 
-[ Upstream commit 1451d5ae351d938a0ab1677498c893f17b9ee21d ]
+commit 5179a9dfa9440c1781816e2c9a183d1d2512dc61 upstream.
 
-This driver supports both the mt9v032 (color) and the mt9v022 (mono)
-sensors. Depending on which sensor is used, the format from the sensor is
-different. The format.code inside the dev struct holds this information.
-The enum mbus and enum frame sizes need to take into account both type of
-sensors, not just the color one. To solve this, use the format.code in
-these functions instead of the hardcoded bayer color format (which is only
-used for mt9v032).
+The Yoga 11e is using LEN0049, but it doesn't have a trackstick.
 
-[Sakari Ailus: rewrapped commit message]
+Thus, there is no need to create a software top buttons row.
 
-Suggested-by: Wenyou Yang <wenyou.yang@microchip.com>
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+However, it seems that the device works under SMBus, so keep it as part
+of the smbus_pnp_ids.
+
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200115013023.9710-1-benjamin.tissoires@redhat.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/media/i2c/mt9v032.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/input/mouse/synaptics.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v032.c
-index 8a430640c85d5..1a20d0d558d3e 100644
---- a/drivers/media/i2c/mt9v032.c
-+++ b/drivers/media/i2c/mt9v032.c
-@@ -423,10 +423,12 @@ static int mt9v032_enum_mbus_code(struct v4l2_subdev *subdev,
- 				  struct v4l2_subdev_pad_config *cfg,
- 				  struct v4l2_subdev_mbus_code_enum *code)
- {
-+	struct mt9v032 *mt9v032 = to_mt9v032(subdev);
-+
- 	if (code->index > 0)
- 		return -EINVAL;
- 
--	code->code = MEDIA_BUS_FMT_SGRBG10_1X10;
-+	code->code = mt9v032->format.code;
- 	return 0;
- }
- 
-@@ -434,7 +436,11 @@ static int mt9v032_enum_frame_size(struct v4l2_subdev *subdev,
- 				   struct v4l2_subdev_pad_config *cfg,
- 				   struct v4l2_subdev_frame_size_enum *fse)
- {
--	if (fse->index >= 3 || fse->code != MEDIA_BUS_FMT_SGRBG10_1X10)
-+	struct mt9v032 *mt9v032 = to_mt9v032(subdev);
-+
-+	if (fse->index >= 3)
-+		return -EINVAL;
-+	if (mt9v032->format.code != fse->code)
- 		return -EINVAL;
- 
- 	fse->min_width = MT9V032_WINDOW_WIDTH_DEF / (1 << fse->index);
--- 
-2.20.1
-
+--- a/drivers/input/mouse/synaptics.c
++++ b/drivers/input/mouse/synaptics.c
+@@ -149,7 +149,6 @@ static const char * const topbuttonpad_p
+ 	"LEN0042", /* Yoga */
+ 	"LEN0045",
+ 	"LEN0047",
+-	"LEN0049",
+ 	"LEN2000", /* S540 */
+ 	"LEN2001", /* Edge E431 */
+ 	"LEN2002", /* Edge E531 */
+@@ -169,6 +168,7 @@ static const char * const smbus_pnp_ids[
+ 	/* all of the topbuttonpad_pnp_ids are valid, we just add some extras */
+ 	"LEN0048", /* X1 Carbon 3 */
+ 	"LEN0046", /* X250 */
++	"LEN0049", /* Yoga 11e */
+ 	"LEN004a", /* W541 */
+ 	"LEN005b", /* P50 */
+ 	"LEN005e", /* T560 */
 
 
