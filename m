@@ -2,97 +2,125 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A0FC4BA06
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9187BC4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8639222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71AEF222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:18:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbgB0JM4 (ORCPT
+        id S1728659AbgB0JSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 04:12:56 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:33726 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728555AbgB0JM4 (ORCPT
+        Thu, 27 Feb 2020 04:18:20 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44780 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728555AbgB0JSU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 04:12:56 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1j7FDv-0006Fu-7U; Thu, 27 Feb 2020 10:12:51 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C4B941C0244;
-        Thu, 27 Feb 2020 10:12:50 +0100 (CET)
-Date:   Thu, 27 Feb 2020 09:12:50 -0000
-From:   "tip-bot2 for Vincent Guittot" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] sched/fair: Fix statistics for find_idlest_group()
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Mel Gorman <mgorman@techsingularity.net>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200218144534.4564-1-vincent.guittot@linaro.org>
-References: <20200218144534.4564-1-vincent.guittot@linaro.org>
+        Thu, 27 Feb 2020 04:18:20 -0500
+Received: by mail-ot1-f66.google.com with SMTP id h9so2224308otj.11;
+        Thu, 27 Feb 2020 01:18:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SWtutpT9WncKocAt4Tkrc09ZwQz2Jl6Eo/FfuCHBERQ=;
+        b=n+QfvUP3c7uyjhkR7mu54dZOSZihF/qcGZKDcDZ+XWLWe4zAmuLMcw8WK+7ofirTdD
+         hu+4Oz7r26eQtF8jUmenh2MWhl6kUBCjPsewpSVLFzsijqzd1d3qPC1f/MFjtzyLOtzJ
+         TAZc8kwFXlU0ovvGVz8L4kgNBie/1r0wiqDF7p1LKeiyn7nvt3EFm/5Mb7f6bEpVhgZD
+         KyF7hGHyCP2P0El75/8ZZ3XibWM7h381GZQH80kkhMripqCRPexgu8rkAbr6NhQJEs9w
+         3bPL6vqODKLILBEq5LgRZR+TsPcLR8aY/l1/v28GT53rQaP/e1y67X4ybUEYJSJt5tzx
+         mHXA==
+X-Gm-Message-State: APjAAAXsa2fzKchOQaOrl1ZXR6mMS4HratRNri5DieZlc4Zhpo4Cinti
+        w54JTqR3r8+E0AIvQswLx2nVuOjpo6wcZwA7teE=
+X-Google-Smtp-Source: APXvYqyOl8hu7316/joLgtG8PIpMm0lrFsra46ySBtFnX2nEJRn0nPinTRSjehUDrpzIkCv30Jx0pvyP5Ub5cntyBJQ=
+X-Received: by 2002:a9d:dc1:: with SMTP id 59mr2483256ots.250.1582795099339;
+ Thu, 27 Feb 2020 01:18:19 -0800 (PST)
 MIME-Version: 1.0
-Message-ID: <158279477043.28353.9447896028790075438.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200225220551.d9a409bc04b77cdf48eae3ea@kernel.org> <158264140162.23842.11237423518607465535.stgit@devnote2>
+In-Reply-To: <158264140162.23842.11237423518607465535.stgit@devnote2>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 27 Feb 2020 10:18:08 +0100
+Message-ID: <CAMuHMdW+JECxNPX8yDswARq+fLXig7VAo0oosCPAkZhtc_XR0g@mail.gmail.com>
+Subject: Re: [PATCH] bootconfig: Fix CONFIG_BOOTTIME_TRACING dependency issue
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/urgent branch of tip:
+Hi Hiramatsu-san,
 
-Commit-ID:     289de35984815576793f579ec27248609e75976e
-Gitweb:        https://git.kernel.org/tip/289de35984815576793f579ec27248609e75976e
-Author:        Vincent Guittot <vincent.guittot@linaro.org>
-AuthorDate:    Tue, 18 Feb 2020 15:45:34 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 27 Feb 2020 10:08:27 +01:00
+On Tue, Feb 25, 2020 at 4:47 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> Since commit d8a953ddde5e ("bootconfig: Set CONFIG_BOOT_CONFIG=n by
+> default") also changed the CONFIG_BOOTTIME_TRACING to select
+> CONFIG_BOOT_CONFIG to show the boot-time tracing on the menu,
+> it introduced wrong dependencies with BLK_DEV_INITRD as below.
+>
+> WARNING: unmet direct dependencies detected for BOOT_CONFIG
+>   Depends on [n]: BLK_DEV_INITRD [=n]
+>   Selected by [y]:
+>   - BOOTTIME_TRACING [=y] && TRACING_SUPPORT [=y] && FTRACE [=y] && TRACING [=y]
+>
+> This makes the CONFIG_BOOT_CONFIG selects CONFIG_BLK_DEV_INITRD to
+> fix this error and make CONFIG_BOOTTIME_TRACING=n by default, so
+> that both boot-time tracing and boot configuration off but those
+> appear on the menu list.
+>
+> Fixes: d8a953ddde5e ("bootconfig: Set CONFIG_BOOT_CONFIG=n by default")
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> ---
+>  init/Kconfig         |    2 +-
+>  kernel/trace/Kconfig |    1 -
+>  2 files changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/init/Kconfig b/init/Kconfig
+> index a84e7aa89a29..8b4c3e8c05ea 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -1217,7 +1217,7 @@ endif
+>
+>  config BOOT_CONFIG
+>         bool "Boot config support"
+> -       depends on BLK_DEV_INITRD
+> +       select BLK_DEV_INITRD
+>         help
+>           Extra boot config allows system admin to pass a config file as
+>           complemental extension of kernel cmdline when booting.
+> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+> index 795c3e02d3f1..402eef84c859 100644
+> --- a/kernel/trace/Kconfig
+> +++ b/kernel/trace/Kconfig
+> @@ -145,7 +145,6 @@ config BOOTTIME_TRACING
+>         bool "Boot-time Tracing support"
+>         depends on TRACING
 
-sched/fair: Fix statistics for find_idlest_group()
+Why not "depends on BLK_DEV_INITRD?" here?
 
-sgs->group_weight is not set while gathering statistics in
-update_sg_wakeup_stats(). This means that a group can be classified as
-fully busy with 0 running tasks if utilization is high enough.
+/me tries to contain the bloat introduced by the bootconfig stuff.
 
-This path is mainly used for fork and exec.
+>         select BOOT_CONFIG
+> -       default y
+>         help
+>           Enable developer to setup ftrace subsystem via supplemental
+>           kernel cmdline at boot time for debugging (tracing) driver
 
-Fixes: 57abff067a08 ("sched/fair: Rework find_idlest_group()")
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Acked-by: Mel Gorman <mgorman@techsingularity.net>
-Link: https://lore.kernel.org/r/20200218144534.4564-1-vincent.guittot@linaro.org
----
- kernel/sched/fair.c | 2 ++
- 1 file changed, 2 insertions(+)
+Gr{oetje,eeting}s,
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 3c8a379..c1217bf 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -8337,6 +8337,8 @@ static inline void update_sg_wakeup_stats(struct sched_domain *sd,
- 
- 	sgs->group_capacity = group->sgc->capacity;
- 
-+	sgs->group_weight = group->group_weight;
-+
- 	sgs->group_type = group_classify(sd->imbalance_pct, group, sgs);
- 
- 	/*
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
