@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C6EC3F376
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 469B5C35E15
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C89AE2469D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:54:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 167F52084E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811699;
-	bh=gAkfpv4ncOrLT6/j6G/W8e8xXZzuNMbpqDoVeHHi7gw=;
+	s=default; t=1582811738;
+	bh=2vMDVmLuOR6BkAhzKPJBoLjsBQUyJrJMaKfCRoB8+CI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QbZx4e41hrRocXB8GbgqsFgXm8+oZ0zs2LnVS/XEs2RI18mZeXhVEzcML7rR4ZBEX
-	 Dp6e6CRQeUEUHpkcF0FNxCwoWWXGgc4jAMkPWxnsIH4uH6g6PM1/WxYIZVODTJQdhi
-	 9o3dEUHqK5CBSdpeg6+mYOd8LbYiN3Vxt9Tj63oc=
+	b=Gfmukf+WC5SGVQO8VmYCEXgcDfr9PkG6yMuIHfD0NNF76u7zJR/2h7vwj+JzL2/PX
+	 BpjK+U5HUwr9EPCSHrfMS2BEBGA1eV7h04Rn7daJPpCs1Jwer8Y9GrGqCiC/ala2QK
+	 fYp/1WvzHZwyIppOfL/2fqN40p4BgsW93VQhyFOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729233AbgB0Ny5 (ORCPT
+        id S1731989AbgB0Nzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:54:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55028 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:55:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731919AbgB0Nyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:54:52 -0500
+        id S1731869AbgB0Nzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:55:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4330B20578;
-        Thu, 27 Feb 2020 13:54:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 804EB2469B;
+        Thu, 27 Feb 2020 13:55:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811691;
-        bh=gAkfpv4ncOrLT6/j6G/W8e8xXZzuNMbpqDoVeHHi7gw=;
+        s=default; t=1582811731;
+        bh=2vMDVmLuOR6BkAhzKPJBoLjsBQUyJrJMaKfCRoB8+CI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QttkLMyjbAYDh6QnwWD8Om3jrBg+wQfe6TCOmS55GlK0pxbjEplQ8oEWWVFXuCQmD
-         b96ic67PUnXftpoLW06XQTsmJBieTyRVNexA/NJAxdjTUSPMyo7dUIbP9m+0Wr0ObR
-         jCqXiY4FX7sIHgSooUXniozMYg9ddyi33iHns/P4=
+        b=ZWyS/VkP+xebdXOlC1W73vcKVpX8nxWoTPO/jcrzEnBfldL2LO3m+LE84M67vrLlc
+         je65TA6DlzvZugnkw451mUAXHsrEXVyf0J5WEFrTn0/4tR1lFwa59BVzIflOqIOqyW
+         tJ5zAZGj4zzp9FpFXJip3y2hqT+KmeX3dxVPeRGY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christopher Head <chead@chead.ca>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 063/237] x86/sysfb: Fix check for bad VRAM size
-Date:   Thu, 27 Feb 2020 14:34:37 +0100
-Message-Id: <20200227132301.643019415@linuxfoundation.org>
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 072/237] regulator: rk808: Lower log level on optional GPIOs being not available
+Date:   Thu, 27 Feb 2020 14:34:46 +0100
+Message-Id: <20200227132302.438013018@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -60,48 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Sankar <nivedita@alum.mit.edu>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-[ Upstream commit dacc9092336be20b01642afe1a51720b31f60369 ]
+[ Upstream commit b8a039d37792067c1a380dc710361905724b9b2f ]
 
-When checking whether the reported lfb_size makes sense, the height
-* stride result is page-aligned before seeing whether it exceeds the
-reported size.
+RK808 can leverage a couple of GPIOs to tweak the ramp rate during DVS
+(Dynamic Voltage Scaling). These GPIOs are entirely optional but a
+dev_warn() appeared when cleaning this driver to use a more up-to-date
+gpiod API. At least reduce the log level to 'info' as it is totally
+fine to not populate these GPIO on a hardware design.
 
-This doesn't work if height * stride is not an exact number of pages.
-For example, as reported in the kernel bugzilla below, an 800x600x32 EFI
-framebuffer gets skipped because of this.
+This change is trivial but it is worth not polluting the logs during
+bringup phase by having real warnings and errors sorted out
+correctly.
 
-Move the PAGE_ALIGN to after the check vs size.
-
-Reported-by: Christopher Head <chead@chead.ca>
-Tested-by: Christopher Head <chead@chead.ca>
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206051
-Link: https://lkml.kernel.org/r/20200107230410.2291947-1-nivedita@alum.mit.edu
+Fixes: a13eaf02e2d6 ("regulator: rk808: make better use of the gpiod API")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Link: https://lore.kernel.org/r/20191203164709.11127-1-miquel.raynal@bootlin.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/sysfb_simplefb.c | 2 +-
+ drivers/regulator/rk808-regulator.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/sysfb_simplefb.c b/arch/x86/kernel/sysfb_simplefb.c
-index 85195d447a922..f3215346e47fd 100644
---- a/arch/x86/kernel/sysfb_simplefb.c
-+++ b/arch/x86/kernel/sysfb_simplefb.c
-@@ -94,11 +94,11 @@ __init int create_simplefb(const struct screen_info *si,
- 	if (si->orig_video_isVGA == VIDEO_TYPE_VLFB)
- 		size <<= 16;
- 	length = mode->height * mode->stride;
--	length = PAGE_ALIGN(length);
- 	if (length > size) {
- 		printk(KERN_WARNING "sysfb: VRAM smaller than advertised\n");
- 		return -EINVAL;
- 	}
-+	length = PAGE_ALIGN(length);
+diff --git a/drivers/regulator/rk808-regulator.c b/drivers/regulator/rk808-regulator.c
+index 213b68743cc89..92498ac503035 100644
+--- a/drivers/regulator/rk808-regulator.c
++++ b/drivers/regulator/rk808-regulator.c
+@@ -714,7 +714,7 @@ static int rk808_regulator_dt_parse_pdata(struct device *dev,
+ 		}
  
- 	/* setup IORESOURCE_MEM as framebuffer memory */
- 	memset(&res, 0, sizeof(res));
+ 		if (!pdata->dvs_gpio[i]) {
+-			dev_warn(dev, "there is no dvs%d gpio\n", i);
++			dev_info(dev, "there is no dvs%d gpio\n", i);
+ 			continue;
+ 		}
+ 
 -- 
 2.20.1
 
