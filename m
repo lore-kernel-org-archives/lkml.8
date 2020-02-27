@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DAA5C3F2C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C6FC3F2C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B4C8246A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68CA32469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:54:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582840436;
-	bh=/5m83hqrXLbOV9ZphYEfsU4UnROjR8cXYZCUEOkJjhU=;
+	s=default; t=1582840467;
+	bh=s7q7yFV4bfgg69t6DbKqh424gg5IK8W5+fOiHatPHxE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CHkT3oOmKRAMqx39/uzwQQIer7lpG8agorB42OuNSlBvzOsKcwwVaR0isZXiq9R+G
-	 mUgdYmNboh700A+modmKbVpbhymA/DCTTlt9XTxeoFQ3ZwkjKXBBLsPWcug0Oh1F30
-	 kd75KIw9JcA+MOET+LPvyAdI+YfjPdpvfTG3akIw=
+	b=lzA12fi2np2DfI+hrMcysvuzbnEf/2GLjnIgSrABuQ1nEd2Ne/9b4uJSoluFaLdxV
+	 wHjQzopCbebA/F4YN/dbgEEzK27AqrKllA3FRRHrtjDQMWFbXqQ520j9fSL8sGCXkP
+	 gwFPxGfD/pzosR8ETTLIQ9SqVLIy5zHuUDKwIj2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730223AbgB0Vxz (ORCPT
+        id S1730059AbgB0Vy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 16:53:55 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40310 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729773AbgB0Vxy (ORCPT
+        Thu, 27 Feb 2020 16:54:26 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:52613 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729773AbgB0VyZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 16:53:54 -0500
-Received: by mail-pf1-f194.google.com with SMTP id b185so532119pfb.7
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 13:53:54 -0800 (PST)
+        Thu, 27 Feb 2020 16:54:25 -0500
+Received: by mail-pj1-f68.google.com with SMTP id ep11so361884pjb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 13:54:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=7dwQH34KOZabRYRAwZrdnJHMAH3aJ68bic4ZknrTLvQ=;
-        b=mjmOJ66owX0Df96b/m5GC1crg6u5wtB1ayeppKZj6Rh3bevN9Nj/By2G3ScTRQpKn7
-         l+QLMQJsMBwlF1Zv2iBkFTRR4zrlvvcKN2MrL/R6n5r9pc/SRafnlN/oxqFg3CCvhFkw
-         x3rKHRm5o1xq8zpLmYfzBSkrODdyNgBksE58gfKBjFofl3sAgeX9ZF9lhTfstRzvzgUO
-         vXWIH65KMcmLCNHHgxg6IbeiXN1IFExj7wyNO1eYaAQAjFUveBoFv0WbPqH0pukyHoAN
-         a6tDVZmzsPqplyKO/DIOOkWvoHUxTBq3BZ2DbwpFclx7qXI34rd0ey+jlA1W2Rylis/C
-         pNsw==
+        bh=aWQjRfD263PGFSWLYeye9fWJ9nZRg32z3KxjvyDZXrg=;
+        b=n2jzjZjwu07thEgJQI35ioymXtHOwXo8lvcLzl9cFm9gu60A2HTlJznoMvuFXNQ8CV
+         36QsZg7nba3Am6zK2Id4yKIbCTcENut1Hg88TbIoSAtcn3/KjhnCDfZBfclCx/0LfLqE
+         tnXsfFxhkwZ8yjF50zmXsoQUTD1pADesZWJLZsMBC6OCbgxlBpUnbwlY5ZJxOctBtYj0
+         L0W8ndd3c6JrSc8LvVIw/OHUHqqXAMuOkM9/qUKkb6RmfFtX3d5FvnVI/aeoA5wNj3sX
+         V8okCYs+RH0Jq45Hir6Vt8ysQ44eTJNoV2PUjATwkO6w38gdoqrKcGzxAx9WHTsJ8aKM
+         eODQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7dwQH34KOZabRYRAwZrdnJHMAH3aJ68bic4ZknrTLvQ=;
-        b=j5oQTpvaEw14apK6WSurOexJ3O0/lWyCu4BvePLrx/Hv/LeBcgR6w3UnB4wVx0sxY+
-         xhXuMiV/gPRzCb8W7ZcKbj2EUoaMHx+7yOSY92XO9H83cjERJ0QuZNljebw83v+VeVzW
-         tXmfBpK2R6CTXhA1MNFQ04Cy+aePQyP10YWFQMD7i9Q2dIMNuvX0qidMamk+CN6nmAuy
-         IIc0S954Kwa6xOussD/EX7tBZzAe5XK609hYuNkTr0DJkUed3Tw/0NYa5WR6fuch0vqU
-         1GsWh4qP61IhkVLOF/oVxTh/fBAFKyOZjzXPRfAPz5rbjPpk35dbvH0Dw57kBp37g73M
-         u5kQ==
-X-Gm-Message-State: APjAAAUnzl5RAo6xoJA2huMPM2pYWRbgsNgM03n+2x2W8Onht/68z9Ko
-        SM0dbCXZ755LG/ietsEr2Ks=
-X-Google-Smtp-Source: APXvYqz5QB5KbH7ouKCsYRcBx7vHfkREoBFOhQIyPNHIK9IoBYbDdNs3l1ALOgJ1mlD2tgMMN01Dog==
-X-Received: by 2002:a63:f13:: with SMTP id e19mr1283835pgl.135.1582840433706;
-        Thu, 27 Feb 2020 13:53:53 -0800 (PST)
+        bh=aWQjRfD263PGFSWLYeye9fWJ9nZRg32z3KxjvyDZXrg=;
+        b=m2GWIJxJIN8bVv/tvE4IKax4l2GJIgmY1pplr1HBXNfXW8/FW36RxJkLft7seRhOh0
+         y22PyozwRcFwWRnBzwIDmvAasGpvPNKLYvVEagvxxu/n+1hoHGHZOkxnv+d2raSsR3j1
+         dAMbXuMLz+n//a6l4pO4s0soqj4Cqjcjx+tP66le9sRQSLWT5zA7Hwpm7uYnjvFrWlpG
+         sOAD/Vpa5ade3DPKqtRyvRVO1eawreF1YidBgTBvk/lLSzQnuFJW+FGm8Myh8MkMISxf
+         cN/i4B4pOXNNT6RJOSNz3jkvb7HzVQnz7gmYHy5/cAxKB7GH2BAOSXHDTCionrvoFJxB
+         g1ew==
+X-Gm-Message-State: APjAAAXzb4tLu/a8oamkKzuYsQqSymZVjqE/f/yG+8Bly55v2EOENOIC
+        ++28XF6JrjxvMPXSwz4wtqs=
+X-Google-Smtp-Source: APXvYqy3UpbSi7+joaMTcmQ9dyBtZUaB+9jKUOQHTWEJ8rUv4VLKJ85g3UIczW/iruCNAotCfhXwOA==
+X-Received: by 2002:a17:902:444:: with SMTP id 62mr751742ple.209.1582840464193;
+        Thu, 27 Feb 2020 13:54:24 -0800 (PST)
 Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id q4sm8748395pfl.175.2020.02.27.13.53.52
+        by smtp.gmail.com with ESMTPSA id t189sm8248302pfd.168.2020.02.27.13.54.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 13:53:52 -0800 (PST)
-Date:   Thu, 27 Feb 2020 13:53:51 -0800
+        Thu, 27 Feb 2020 13:54:23 -0800 (PST)
+Date:   Thu, 27 Feb 2020 13:54:21 -0800
 From:   Minchan Kim <minchan@kernel.org>
 To:     Jules Irenge <jbi.octave@gmail.com>
 Cc:     linux-kernel@vger.kernel.org, boqun.feng@gmail.com,
@@ -70,28 +70,29 @@ Cc:     linux-kernel@vger.kernel.org, boqun.feng@gmail.com,
         Andrew Morton <akpm@linux-foundation.org>,
         "open list:ZSMALLOC COMPRESSED SLAB MEMORY ALLOCATOR" 
         <linux-mm@kvack.org>
-Subject: Re: [PATCH 13/30] mm/zsmalloc: Add missing annotation for unpin_tag()
-Message-ID: <20200227215351.GE215068@google.com>
+Subject: Re: [PATCH 11/30] mm/zsmalloc: Add missing annotation for
+ migrate_read_unlock()
+Message-ID: <20200227215421.GF215068@google.com>
 References: <0/30>
  <20200214204741.94112-1-jbi.octave@gmail.com>
- <20200214204741.94112-14-jbi.octave@gmail.com>
+ <20200214204741.94112-12-jbi.octave@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200214204741.94112-14-jbi.octave@gmail.com>
+In-Reply-To: <20200214204741.94112-12-jbi.octave@gmail.com>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 08:47:24PM +0000, Jules Irenge wrote:
-> Sparse reports a warning at unpin_tag()()
+On Fri, Feb 14, 2020 at 08:47:22PM +0000, Jules Irenge wrote:
+> Sparse reports a warning at migrate_read_unlock()()
 > 
-> warning: context imbalance in unpin_tag() - unexpected unlock
+>  warning: context imbalance in migrate_read_unlock() - unexpected unlock
 > 
-> The root cause is the missing annotation at unpin_tag()
-> Add the missing __releases(bitlock) annotation
+> The root cause is the missing annotation at migrate_read_unlock()
+> Add the missing __releases(&zspage->lock) annotation
 > 
 > Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 Acked-by: Minchan Kim <minchan@kernel.org>
