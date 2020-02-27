@@ -2,149 +2,175 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B63C4BA3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C47E6C4BA3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A61F224680
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:06:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XS/nQy7j"
+	by mail.kernel.org (Postfix) with ESMTP id 97EC320838
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:11:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728743AbgB0KGA (ORCPT
+        id S1728729AbgB0KLZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 05:06:00 -0500
-Received: from mail-db8eur05on2069.outbound.protection.outlook.com ([40.107.20.69]:48552
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728659AbgB0KF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 05:05:59 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R3gYgNwElYwAOAm2MNvO0LDwbWFyDDZYw53nzgEmEo2PLTIRyRffmuWr6ISU2tGW8WAkCTOYZ8VOcCUHpbyltM3Z5ZWXDw+K4upL0T8kuj091iTOU+2f7O7fzn0IwXLwXBHLf8fi6DHpyAH7BzjpClbR+3V1JeuHlwjdBkffJhc7tWksQbqqpGNAu2a6XqBVcFFWNbxRwuycnKuIUYRcGfcwaUmLu+RCll6UTWOC6NOZADhp/sDb1CNBJdc+x9o1hyv6zxdrJ5w9XHKeHv1+g4v0GJ/NhkkDXBiirKrDRDC3l1Svpd5ZoeyKKytlqDklzSvusiqUOAJdy7F2jGfKQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MrAsPuYmzomTw/I6ERXcbfE6GbcnkxdExla3dKaOzEA=;
- b=FlWVvzRfZaMIE0msNw+kZmPGf0j/UXZ3bK8DBj5djuUf8Yh6xOhANd1mwFxc884gZvmNqrk2nIQ7ZqGAkJmuwF7LQpFnVkv9UJbl0xkbAECfb7xGXUFT+lUl9jH6VJTesi0fSxLAm+JveLAWx0LtiMlV3VdkniTie9jKI7C4Xux8N6ZspvkfDIef6mVO9vKY+fGLM5LIky5ValkDvI9c6AvxuAOLFY8bBdXaUcCbeYee8qSJAW7eHPdYV0OxEEkh7zvSDD29ZFyfCkvaORkiHYm1hbcQkr2XrpScgi2u7e8RRSZUFAuQBHWIwOQqslwGbgL6YYbCaHjhV+pjJgzA/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MrAsPuYmzomTw/I6ERXcbfE6GbcnkxdExla3dKaOzEA=;
- b=XS/nQy7jGw4NKM9GWgcxBNlw3RoMQfT6DPFNIgTZpFiqLsyPqKy0fsFjPLjywXtdV4qalHl/LTpfDS9UsOFJFva3SOO1mEL+BA6R2roqhq3qFuxGA5qBKePi7kzx1V1rR7qfAxDuQ7tjLgGEjMT4S9GM3JeVhpyGq+6mTrY0C5c=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=laurentiu.tudor@nxp.com; 
-Received: from AM6PR04MB5878.eurprd04.prod.outlook.com (20.179.0.89) by
- AM6PR04MB4312.eurprd04.prod.outlook.com (52.135.165.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.21; Thu, 27 Feb 2020 10:05:54 +0000
-Received: from AM6PR04MB5878.eurprd04.prod.outlook.com
- ([fe80::bcef:1c59:7d27:d0e]) by AM6PR04MB5878.eurprd04.prod.outlook.com
- ([fe80::bcef:1c59:7d27:d0e%6]) with mapi id 15.20.2750.021; Thu, 27 Feb 2020
- 10:05:54 +0000
-From:   laurentiu.tudor@nxp.com
-To:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org
-Cc:     robin.murphy@arm.com, lorenzo.pieralisi@arm.com,
-        ard.biesheuvel@linaro.org, ioana.ciornei@nxp.com,
-        diana.craciun@oss.nxp.com, maz@kernel.org, jon@solid-run.com,
-        pankaj.bansal@nxp.com, makarand.pawagi@nxp.com,
-        calvin.johnson@nxp.com, V.Sethi@nxp.com, cristian.sovaiala@nxp.com,
-        Stuart.Yoder@arm.com, jeremy.linton@arm.com, joro@8bytes.org,
-        tglx@linutronix.de, jason@lakedaemon.net
-Subject: [RFC PATCH 2/4] irqchip/fsl-mc: Change the way the IRQ domain is set for MC devices
-Date:   Thu, 27 Feb 2020 12:05:40 +0200
-Message-Id: <20200227100542.13819-2-laurentiu.tudor@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200227100542.13819-1-laurentiu.tudor@nxp.com>
-References: <20200227100542.13819-1-laurentiu.tudor@nxp.com>
-Content-Type: text/plain; charset="us-ascii"
-X-ClientProxiedBy: AM6P192CA0056.EURP192.PROD.OUTLOOK.COM
- (2603:10a6:209:82::33) To AM6PR04MB5878.eurprd04.prod.outlook.com
- (2603:10a6:20b:a2::25)
+        Thu, 27 Feb 2020 05:11:25 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:28474 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728645AbgB0KLY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 05:11:24 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01RA3V1g106265
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 05:11:23 -0500
+Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [158.85.210.110])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ydkfa97qa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 05:11:23 -0500
+Received: from localhost
+        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
+        for <linux-kernel@vger.kernel.org> from <BMT@zurich.ibm.com>;
+        Thu, 27 Feb 2020 10:11:23 -0000
+Received: from us1b3-smtp06.a3dr.sjc01.isc4sb.com (10.122.203.184)
+        by smtp.notes.na.collabserv.com (10.122.47.50) with smtp.notes.na.collabserv.com ESMTP;
+        Thu, 27 Feb 2020 10:11:13 -0000
+Received: from us1b3-mail162.a3dr.sjc03.isc4sb.com ([10.160.174.187])
+          by us1b3-smtp06.a3dr.sjc01.isc4sb.com
+          with ESMTP id 2020022710111331-238493 ;
+          Thu, 27 Feb 2020 10:11:13 +0000 
+In-Reply-To: <20200226204238.GC31668@ziepe.ca>
+From:   "Bernard Metzler" <BMT@zurich.ibm.com>
+To:     "Jason Gunthorpe" <jgg@ziepe.ca>
+Cc:     "syzbot" <syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com>,
+        chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        netdev@vger.kernel.org, parav@mellanox.com,
+        syzkaller-bugs@googlegroups.com, willy@infradead.org
+Date:   Thu, 27 Feb 2020 10:11:13 +0000
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from fsr-ub1864-101.ea.freescale.net (89.37.124.34) by AM6P192CA0056.EURP192.PROD.OUTLOOK.COM (2603:10a6:209:82::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Thu, 27 Feb 2020 10:05:53 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [89.37.124.34]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 8d1a28c7-35ae-4b82-fe70-08d7bb6ca1b7
-X-MS-TrafficTypeDiagnostic: AM6PR04MB4312:|AM6PR04MB4312:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM6PR04MB4312027521DBF6F444394A8EECEB0@AM6PR04MB4312.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 03264AEA72
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(346002)(136003)(366004)(376002)(199004)(189003)(66476007)(1076003)(66946007)(478600001)(52116002)(6486002)(5660300002)(66556008)(4326008)(7416002)(6666004)(2906002)(8936002)(6506007)(16526019)(86362001)(26005)(9686003)(36756003)(8676002)(186003)(6512007)(316002)(2616005)(81156014)(81166006)(956004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4312;H:AM6PR04MB5878.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 94tD5Tz2mP1GwIWNFOYGmveoIeY1tDG0PjGE9L5Q4j/LFZSqLSzVI9yPdu8uwp2Iywo/zpwQpNeC2b8rfG+ZQ0XN5uo8NfOL317FuoWtLbIWugYEAxbz9FHNSX+LpOqovx61Yrls2kKPCiXjtTTSU7higU+QCXwJbQ6yELK6b6suQ8Fj4cFXDqhixSuJ7RV+UQsrHatpJo1BrItudElvWxmb9Jh1gepb4AVPfHKz3O1Boo/bNqY3YZBxVdPw/qj9bsVAkZ3qLLA/Yi2Ubld6J0Z4SQKmkevFlAOdgFx+gl7QKIjRksu5laka5i/5Qiqfw3Ze7wNBGY5Pq7EBbTtxeX+MuvXilSbtMqff/SDJ2gy1HSiAr/cj54x42Vp7S6u0+j41nOVmI0Gwc9aJHezGIU53cD5XULljYFB0aUtwo5hGqPAftbYJosDy3vqbkfd6
-X-MS-Exchange-AntiSpam-MessageData: YjOY6gmyIVrVtBwgHx7w5IEEAAQP5ep2vKoBWPc3yrAodetfvEycA4JuMJn7d9S+GCOnFr/LhaoSTR1MRLF58y/ofQq0nYO27oaM+1tdpX1WuQrk4jlMGtGn+weK5fMHFl7XgoJVpBPXEOvmakIJCg==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8d1a28c7-35ae-4b82-fe70-08d7bb6ca1b7
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2020 10:05:54.2715
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BLV64tTm6HjpFoXlXhtFVDwlVsu2b8TZ34TkpidSEKfjVKkeWwYosMMpGNFmrw/OcgfAEW3GMwDb1307UZQM5A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4312
+Sensitivity: 
+Importance: Normal
+X-Priority: 3 (Normal)
+References: <20200226204238.GC31668@ziepe.ca>,<000000000000153fac059f740693@google.com>
+X-Mailer: IBM iNotes ($HaikuForm 1054.1) | IBM Domino Build
+ SCN1812108_20180501T0841_FP62 November 04, 2019 at 09:47
+X-KeepSent: 0B62EDE7:E13D40E8-0025851B:0037F560;
+ type=4; name=$KeepSent
+X-LLNOutbound: False
+X-Disclaimed: 60603
+X-TNEFEvaluated: 1
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
+x-cbid: 20022710-1059-0000-0000-0000017D012E
+X-IBM-SpamModules-Scores: BY=0.209162; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
+ SC=0.378364; ST=0; TS=0; UL=0; ISC=; MB=0.076051
+X-IBM-SpamModules-Versions: BY=3.00012650; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000293; SDB=6.01339935; UDB=6.00714070; IPR=6.01122299;
+ MB=3.00030991; MTD=3.00000008; XFM=3.00000015; UTC=2020-02-27 10:11:20
+X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
+X-IBM-AV-VERSION: SAVI=2020-02-27 07:10:20 - 6.00011054
+x-cbparentid: 20022710-1060-0000-0000-00004A270103
+Message-Id: <OF0B62EDE7.E13D40E8-ON0025851B.0037F560-0025851B.0037F56C@notes.na.collabserv.com>
+Subject: RE: possible deadlock in cma_netdev_callback
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-27_02:2020-02-26,2020-02-27 signatures=0
+X-Proofpoint-Spam-Reason: safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Diana Craciun <diana.craciun@oss.nxp.com>
+-----"Jason Gunthorpe" <jgg@ziepe.ca> wrote: -----
 
-In ACPI the MC bus is represented as a platform device and a named
-component in the IORT table. The mc-bus devices are discovered
-dynamically at runtime but they share the same fwnode with the parent
-platfom device. This patch changes the way the IRQ domain is searched
-for the MC devices: it takes the fwnode reference from the parent and
-uses the fwnode reference to find the MC IRQ domain.
+>To: "syzbot" <syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com>
+>From: "Jason Gunthorpe" <jgg@ziepe.ca>
+>Date: 02/26/2020 09:42PM
+>Cc: chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
+>linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+>netdev@vger.kernel.org, parav@mellanox.com,
+>syzkaller-bugs@googlegroups.com, willy@infradead.org, "Bernard
+>Metzler" <bmt@zurich.ibm.com>
+>Subject: [EXTERNAL] Re: possible deadlock in cma_netdev_callback
+>
+>On Tue, Feb 25, 2020 at 09:39:10PM -0800, syzbot wrote:
+>> Hello,
+>> 
+>> syzbot found the following crash on:
+>> 
+>> HEAD commit:    6132c1d9 net: core: devlink.c: Hold devlink->lock
+>from the..
+>> git tree:       net
+>> console output:
+>https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspo
+>t.com_x_log.txt-3Fx-3D16978909e00000&d=DwIBAg&c=jf_iaSHvJObTbx-siA1ZO
+>g&r=2TaYXQ0T-r8ZO1PP1alNwU_QJcRRLfmYTAgd3QCvqSc&m=I4mBjC4dKAL61lpQH5f
+>iT4hLQEibtRif2HwliI2VpTA&s=Pd7_6w9kZzU3DupxBL6qo6piAhk8us2gO-BbCVTDj3
+>Q&e= 
+>> kernel config:
+>https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspo
+>t.com_x_.config-3Fx-3D3b8906eb6a7d6028&d=DwIBAg&c=jf_iaSHvJObTbx-siA1
+>ZOg&r=2TaYXQ0T-r8ZO1PP1alNwU_QJcRRLfmYTAgd3QCvqSc&m=I4mBjC4dKAL61lpQH
+>5fiT4hLQEibtRif2HwliI2VpTA&s=qI_ppGZR3Vy01oD9xwfU3or7fBrclf20NYgmTJ0N
+>v4k&e= 
+>> dashboard link:
+>https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspo
+>t.com_bug-3Fextid-3D55de90ab5f44172b0c90&d=DwIBAg&c=jf_iaSHvJObTbx-si
+>A1ZOg&r=2TaYXQ0T-r8ZO1PP1alNwU_QJcRRLfmYTAgd3QCvqSc&m=I4mBjC4dKAL61lp
+>QH5fiT4hLQEibtRif2HwliI2VpTA&s=OCNawVVe2X3ySwQUmRx_s2XM3p0r4d4cMFkYU_
+>IIAmM&e= 
+>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>> syz repro:
+>https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspo
+>t.com_x_repro.syz-3Fx-3D12808281e00000&d=DwIBAg&c=jf_iaSHvJObTbx-siA1
+>ZOg&r=2TaYXQ0T-r8ZO1PP1alNwU_QJcRRLfmYTAgd3QCvqSc&m=I4mBjC4dKAL61lpQH
+>5fiT4hLQEibtRif2HwliI2VpTA&s=_-Ba4z4VxFdS5ran1HOTqcCl5KtbdPUvvthP_yOT
+>bJw&e= 
+>> C reproducer:
+>https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspo
+>t.com_x_repro.c-3Fx-3D134ca6fde00000&d=DwIBAg&c=jf_iaSHvJObTbx-siA1ZO
+>g&r=2TaYXQ0T-r8ZO1PP1alNwU_QJcRRLfmYTAgd3QCvqSc&m=I4mBjC4dKAL61lpQH5f
+>iT4hLQEibtRif2HwliI2VpTA&s=tTrtxQFoWaR89fJY7q7Z2shNBhVzrshezgxE17uS34
+>o&e= 
+>> 
+>> IMPORTANT: if you fix the bug, please add the following tag to the
+>commit:
+>> Reported-by: syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com
+>> 
+>> iwpm_register_pid: Unable to send a nlmsg (client = 2)
+>> infiniband syz1: RDMA CMA: cma_listen_on_dev, error -98
+>> netlink: 'syz-executor639': attribute type 1 has an invalid length.
+>> 8021q: adding VLAN 0 to HW filter on device bond1
+>> bond1: (slave gretap1): making interface the new active one
+>> ======================================================
+>> WARNING: possible circular locking dependency detected
+>> 5.6.0-rc2-syzkaller #0 Not tainted
+>> syz-executor639/9689 is trying to acquire lock:
+>> ffffffff8a5d2a60 (lock#3){+.+.}, at: cma_netdev_callback+0xc6/0x380
+>drivers/infiniband/core/cma.c:4605
+>> 
+>> but task is already holding lock:
+>> ffffffff8a74da00 (rtnl_mutex){+.+.}, at: rtnl_lock
+>net/core/rtnetlink.c:72 [inline]
+>> ffffffff8a74da00 (rtnl_mutex){+.+.}, at:
+>rtnetlink_rcv_msg+0x405/0xaf0 net/core/rtnetlink.c:5433
+>>
+>
+>Bernard, this is a siw bug too, it is not allowed to get RTNL in
+>siw_create_listen() (though this is probably for silly reasons and
+>could be fixed)
+>
+>It is not easy to get this into the lockdep, I'll send a different
+>patch too
+>
+>Jason
+Hi Jason,
 
-Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
----
- drivers/bus/fsl-mc/fsl-mc-msi.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+Thanks for letting me know! Hmm, we cannot use RCU locks since
+we potentially sleep. One solution would be to create a list
+of matching interfaces while under lock, unlock and use that
+list for calling siw_listen_address() (which may sleep),
+right...?
 
-diff --git a/drivers/bus/fsl-mc/fsl-mc-msi.c b/drivers/bus/fsl-mc/fsl-mc-msi.c
-index 8b9c66d7c4ff..1e2e97329781 100644
---- a/drivers/bus/fsl-mc/fsl-mc-msi.c
-+++ b/drivers/bus/fsl-mc/fsl-mc-msi.c
-@@ -182,16 +182,23 @@ int fsl_mc_find_msi_domain(struct device *mc_platform_dev,
- {
- 	struct irq_domain *msi_domain;
- 	struct device_node *mc_of_node = mc_platform_dev->of_node;
-+	struct fwnode_handle *fwnode;
- 
--	msi_domain = of_msi_get_domain(mc_platform_dev, mc_of_node,
--				       DOMAIN_BUS_FSL_MC_MSI);
-+	msi_domain = dev_get_msi_domain(mc_platform_dev);
- 	if (!msi_domain) {
- 		pr_err("Unable to find fsl-mc MSI domain for %pOF\n",
- 		       mc_of_node);
- 
- 		return -ENOENT;
- 	}
-+	fwnode = msi_domain->fwnode;
-+	msi_domain = irq_find_matching_fwnode(fwnode, DOMAIN_BUS_FSL_MC_MSI);
-+	if (!msi_domain) {
-+		pr_err("Unable to find fsl-mc MSI domain for %pOF\n",
-+		       mc_of_node);
- 
-+		return -ENOENT;
-+	}
- 	*mc_msi_domain = msi_domain;
- 	return 0;
- }
--- 
-2.17.1
+Many thanks,
+Bernard.
 
