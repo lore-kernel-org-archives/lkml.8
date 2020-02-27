@@ -2,248 +2,145 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 325ACC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49477C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00FD42468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:46:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="jqpN3cjh"
+	by mail.kernel.org (Postfix) with ESMTP id 1B96524699
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:46:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582814774;
+	bh=kuJqm9lVHTgSkHtET51GQHu9pcWS6zXH9KVddYyPlhI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QUr68U34EapAhCNXDSsdyRp7oVb/xKljmgGumtg4tt/MiAwipoq1JkgZ7sxwR64CI
+	 YygV4/FRUz2tkxLUVFq7wwmQ+dxmr4jtor09ZztQILlgEj6Zf85jFFbVrKsLYK6ld1
+	 DyTydsSMF9PqJuGEySHeeZGdqjXy/90Zl7AKrO2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731458AbgB0OqH (ORCPT
+        id S1731582AbgB0OqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:46:07 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:33520 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730401AbgB0OqE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:46:04 -0500
-Received: by mail-wm1-f67.google.com with SMTP id m10so7163297wmc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 06:46:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=F2gjVLSODMHUZo+chy/rw+dNvmT9xzhamxH2f5vMKWE=;
-        b=jqpN3cjh8bM99imYmGKQ+LsS32Sq3BGys6BFB8o5Y5pOyENRq6tVroncKq6wQe1aI8
-         6jKlJHtdoSKWQSuHZQEr6oBtK74QoD8JX/6fIhvPSac+Ox/q97TjWlg0EkQMvra9jqHT
-         Bxeg0lWGca5nWSscjtLYJUFT3Y2MROlincY98=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=F2gjVLSODMHUZo+chy/rw+dNvmT9xzhamxH2f5vMKWE=;
-        b=UJxPnjSrKplSM9EXPQsEPVE0r3ga4hPfiz5W3hhJ+cA3iV9cS5u1JooCNcLMDXScEJ
-         Frdm7688663wXIwoM2MZ/yIPCFPeTKygtP9krVORZX+lZbqBpNfdeRxz4ZL7Rlz5odb+
-         voqO2zm1AQxUYh8iWQz1G5S95wsc6iSh69SbD79NGGp0f7b+Wl1TA6kf1zicEXgAnUZ9
-         y5Q801W/LnwLOSR00yzD80aSRUQZoFp3rn+4e+DmKOXOxWQJfVVl2eWsecGCWhpECuru
-         tFAMWcq0BRnBEBCSYg9TPYXLJ8rQkZdG5h7/ul+V8CBNWCeMyH+RtIoNLHgxbg4dnWBU
-         jU2w==
-X-Gm-Message-State: APjAAAXdMweTwIVH5hvKjN8qO7000vm7ALc8llrNZE6BXYxNyGn5am9F
-        jLvriPX7w2Ik8YHmIjF75bSYug==
-X-Google-Smtp-Source: APXvYqwxrKj4WniunzHatT5iQR5GkZCjpM1cDCopQReD4SqDThK+dYg+hWhCi064b9V73MhyjjAJoQ==
-X-Received: by 2002:a1c:9915:: with SMTP id b21mr5361405wme.24.1582814762530;
-        Thu, 27 Feb 2020 06:46:02 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id a9sm8150099wmm.15.2020.02.27.06.46.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 06:46:01 -0800 (PST)
-Date:   Thu, 27 Feb 2020 15:45:58 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Wambui Karuga <wambui.karugax@gmail.com>
-Cc:     daniel@ffwll.ch, airlied@linux.ie, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, dri-devel@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org
-Subject: Re: [PATCH 12/21] drm/msm: remove checks for return value of
- drm_debugfs functions.
-Message-ID: <20200227144558.GW2363188@phenom.ffwll.local>
-Mail-Followup-To: Wambui Karuga <wambui.karugax@gmail.com>,
-        airlied@linux.ie, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, dri-devel@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org
-References: <20200227120232.19413-1-wambui.karugax@gmail.com>
- <20200227120232.19413-13-wambui.karugax@gmail.com>
+        Thu, 27 Feb 2020 09:46:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41452 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730382AbgB0Npb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:45:31 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 276BA21D7E;
+        Thu, 27 Feb 2020 13:45:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582811130;
+        bh=kuJqm9lVHTgSkHtET51GQHu9pcWS6zXH9KVddYyPlhI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uFh0Z5ALQNnIO/IrXOEVfeka36NkuqW2KR1EJ1FMce1hFgGuqLc88LkwhN7Bi3+Gb
+         CTbQn6ZNBaIkssu2kY6XuSaDlqqW3BXqmW8468eZNjg0cYK1DjRVSyJMEFXo8asEyd
+         BXl2E0ifoSIpVDe2yz9iNzmhLec8N3L19gbV38Jk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.9 015/165] perf/x86/intel: Fix inaccurate period in context switch for auto-reload
+Date:   Thu, 27 Feb 2020 14:34:49 +0100
+Message-Id: <20200227132233.229300857@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
+References: <20200227132230.840899170@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200227120232.19413-13-wambui.karugax@gmail.com>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 03:02:23PM +0300, Wambui Karuga wrote:
-> Since commit 987d65d01356 (drm: debugfs: make
-> drm_debugfs_create_files() never fail), drm_debugfs_create_files() does
-> not fail, and should return void. This change therefore removes the
-> checks of its return value in drm/msm and subsequent error handling.
-> 
-> These changes also enable the changing of various debugfs_init()
-> functions to return void.
-> 
-> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-I think msm_kms_funcs->debugfs_init could also be made to return void. But
-that's quite a bit more involved so doesn't make much sense to do that as
-part of this patch series.
+commit f861854e1b435b27197417f6f90d87188003cb24 upstream.
 
-Also the debug/core_perf/ files look kinda funny, if I'd bet this is used
-by the qualcomm hwc somewhere to make it's decisions :-) That's at least
-what's been the case everywhere else I spotted something like that.
--Daniel
+Perf doesn't take the left period into account when auto-reload is
+enabled with fixed period sampling mode in context switch.
 
-> ---
->  drivers/gpu/drm/msm/adreno/a5xx_debugfs.c | 18 +++++-------------
->  drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c  | 14 +++-----------
->  drivers/gpu/drm/msm/msm_debugfs.c         | 21 ++++++---------------
->  drivers/gpu/drm/msm/msm_debugfs.h         |  2 +-
->  drivers/gpu/drm/msm/msm_gpu.h             |  2 +-
->  5 files changed, 16 insertions(+), 41 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/adreno/a5xx_debugfs.c b/drivers/gpu/drm/msm/adreno/a5xx_debugfs.c
-> index 075ecce4b5e0..8cae2ca4af6b 100644
-> --- a/drivers/gpu/drm/msm/adreno/a5xx_debugfs.c
-> +++ b/drivers/gpu/drm/msm/adreno/a5xx_debugfs.c
-> @@ -148,27 +148,19 @@ reset_set(void *data, u64 val)
->  DEFINE_SIMPLE_ATTRIBUTE(reset_fops, NULL, reset_set, "%llx\n");
->  
->  
-> -int a5xx_debugfs_init(struct msm_gpu *gpu, struct drm_minor *minor)
-> +void a5xx_debugfs_init(struct msm_gpu *gpu, struct drm_minor *minor)
->  {
->  	struct drm_device *dev;
-> -	int ret;
->  
->  	if (!minor)
-> -		return 0;
-> +		return;
->  
->  	dev = minor->dev;
->  
-> -	ret = drm_debugfs_create_files(a5xx_debugfs_list,
-> -			ARRAY_SIZE(a5xx_debugfs_list),
-> -			minor->debugfs_root, minor);
-> -
-> -	if (ret) {
-> -		DRM_DEV_ERROR(dev->dev, "could not install a5xx_debugfs_list\n");
-> -		return ret;
-> -	}
-> +	drm_debugfs_create_files(a5xx_debugfs_list,
-> +				 ARRAY_SIZE(a5xx_debugfs_list),
-> +				 minor->debugfs_root, minor);
->  
->  	debugfs_create_file("reset", S_IWUGO, minor->debugfs_root, dev,
->  			    &reset_fops);
-> -
-> -	return 0;
->  }
-> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> index 6650f478b226..41b461128bbc 100644
-> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> @@ -259,17 +259,9 @@ static struct drm_info_list mdp5_debugfs_list[] = {
->  
->  static int mdp5_kms_debugfs_init(struct msm_kms *kms, struct drm_minor *minor)
->  {
-> -	struct drm_device *dev = minor->dev;
-> -	int ret;
-> -
-> -	ret = drm_debugfs_create_files(mdp5_debugfs_list,
-> -			ARRAY_SIZE(mdp5_debugfs_list),
-> -			minor->debugfs_root, minor);
-> -
-> -	if (ret) {
-> -		DRM_DEV_ERROR(dev->dev, "could not install mdp5_debugfs_list\n");
-> -		return ret;
-> -	}
-> +	drm_debugfs_create_files(mdp5_debugfs_list,
-> +				 ARRAY_SIZE(mdp5_debugfs_list),
-> +				 minor->debugfs_root, minor);
->  
->  	return 0;
->  }
-> diff --git a/drivers/gpu/drm/msm/msm_debugfs.c b/drivers/gpu/drm/msm/msm_debugfs.c
-> index 1c74381a4fc9..3c958f311bbc 100644
-> --- a/drivers/gpu/drm/msm/msm_debugfs.c
-> +++ b/drivers/gpu/drm/msm/msm_debugfs.c
-> @@ -214,31 +214,22 @@ int msm_debugfs_late_init(struct drm_device *dev)
->  	return ret;
->  }
->  
-> -int msm_debugfs_init(struct drm_minor *minor)
-> +void msm_debugfs_init(struct drm_minor *minor)
->  {
->  	struct drm_device *dev = minor->dev;
->  	struct msm_drm_private *priv = dev->dev_private;
-> -	int ret;
-> +	int ret = 0;
->  
-> -	ret = drm_debugfs_create_files(msm_debugfs_list,
-> -			ARRAY_SIZE(msm_debugfs_list),
-> -			minor->debugfs_root, minor);
-> -
-> -	if (ret) {
-> -		DRM_DEV_ERROR(dev->dev, "could not install msm_debugfs_list\n");
-> -		return ret;
-> -	}
-> +	drm_debugfs_create_files(msm_debugfs_list,
-> +				 ARRAY_SIZE(msm_debugfs_list),
-> +				 minor->debugfs_root, minor);
->  
->  	debugfs_create_file("gpu", S_IRUSR, minor->debugfs_root,
->  		dev, &msm_gpu_fops);
->  
->  	if (priv->kms && priv->kms->funcs->debugfs_init) {
-> -		ret = priv->kms->funcs->debugfs_init(priv->kms, minor);
-> -		if (ret)
-> -			return ret;
-> +		priv->kms->funcs->debugfs_init(priv->kms, minor);
->  	}
-> -
-> -	return ret;
->  }
->  #endif
->  
-> diff --git a/drivers/gpu/drm/msm/msm_debugfs.h b/drivers/gpu/drm/msm/msm_debugfs.h
-> index 2b91f8c178ad..ef58f66abbb3 100644
-> --- a/drivers/gpu/drm/msm/msm_debugfs.h
-> +++ b/drivers/gpu/drm/msm/msm_debugfs.h
-> @@ -8,7 +8,7 @@
->  #define __MSM_DEBUGFS_H__
->  
->  #ifdef CONFIG_DEBUG_FS
-> -int msm_debugfs_init(struct drm_minor *minor);
-> +void msm_debugfs_init(struct drm_minor *minor);
->  #endif
->  
->  #endif /* __MSM_DEBUGFS_H__ */
-> diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
-> index be5bc2e8425c..6ccae4ba905c 100644
-> --- a/drivers/gpu/drm/msm/msm_gpu.h
-> +++ b/drivers/gpu/drm/msm/msm_gpu.h
-> @@ -57,7 +57,7 @@ struct msm_gpu_funcs {
->  	void (*show)(struct msm_gpu *gpu, struct msm_gpu_state *state,
->  			struct drm_printer *p);
->  	/* for generation specific debugfs: */
-> -	int (*debugfs_init)(struct msm_gpu *gpu, struct drm_minor *minor);
-> +	void (*debugfs_init)(struct msm_gpu *gpu, struct drm_minor *minor);
->  #endif
->  	unsigned long (*gpu_busy)(struct msm_gpu *gpu);
->  	struct msm_gpu_state *(*gpu_state_get)(struct msm_gpu *gpu);
-> -- 
-> 2.25.0
-> 
+Here is the MSR trace of the perf command as below.
+(The MSR trace is simplified from a ftrace log.)
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+    #perf record -e cycles:p -c 2000000 -- ./triad_loop
+
+      //The MSR trace of task schedule out
+      //perf disable all counters, disable PEBS, disable GP counter 0,
+      //read GP counter 0, and re-enable all counters.
+      //The counter 0 stops at 0xfffffff82840
+      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
+      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 0
+      write_msr: MSR_P6_EVNTSEL0(186), value 40003003c
+      rdpmc: 0, value fffffff82840
+      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
+
+      //The MSR trace of the same task schedule in again
+      //perf disable all counters, enable and set GP counter 0,
+      //enable PEBS, and re-enable all counters.
+      //0xffffffe17b80 (-2000000) is written to GP counter 0.
+      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
+      write_msr: MSR_IA32_PMC0(4c1), value ffffffe17b80
+      write_msr: MSR_P6_EVNTSEL0(186), value 40043003c
+      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 1
+      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
+
+When the same task schedule in again, the counter should starts from
+previous left. However, it starts from the fixed period -2000000 again.
+
+A special variant of intel_pmu_save_and_restart() is used for
+auto-reload, which doesn't update the hwc->period_left.
+When the monitored task schedules in again, perf doesn't know the left
+period. The fixed period is used, which is inaccurate.
+
+With auto-reload, the counter always has a negative counter value. So
+the left period is -value. Update the period_left in
+intel_pmu_save_and_restart_reload().
+
+With the patch:
+
+      //The MSR trace of task schedule out
+      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
+      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 0
+      write_msr: MSR_P6_EVNTSEL0(186), value 40003003c
+      rdpmc: 0, value ffffffe25cbc
+      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
+
+      //The MSR trace of the same task schedule in again
+      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
+      write_msr: MSR_IA32_PMC0(4c1), value ffffffe25cbc
+      write_msr: MSR_P6_EVNTSEL0(186), value 40043003c
+      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 1
+      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
+
+Fixes: d31fc13fdcb2 ("perf/x86/intel: Fix event update for auto-reload")
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/r/20200121190125.3389-1-kan.liang@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/x86/events/intel/ds.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -1326,6 +1326,8 @@ intel_pmu_save_and_restart_reload(struct
+ 	old = ((s64)(prev_raw_count << shift) >> shift);
+ 	local64_add(new - old + count * period, &event->count);
+ 
++	local64_set(&hwc->period_left, -new);
++
+ 	perf_event_update_userpage(event);
+ 
+ 	return 0;
+
+
