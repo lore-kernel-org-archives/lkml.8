@@ -2,139 +2,259 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FBFC4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 04:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA182C4BA06
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 04:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E56521D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 04:44:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nol59jAC"
+	by mail.kernel.org (Postfix) with ESMTP id BBAC821D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 04:45:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728436AbgB0EoF (ORCPT
+        id S1728419AbgB0EpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 23:44:05 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:39514 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728284AbgB0EoE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 23:44:04 -0500
-Received: by mail-oi1-f195.google.com with SMTP id r16so369997oie.6;
-        Wed, 26 Feb 2020 20:44:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4RNB8wxWEzVJtgJjqldIaCI4XGfYsamNd1UsJb6gSog=;
-        b=Nol59jAChbbtZLwod/sooHhsr+dlxfsYpBLbyj/vCLX1ol55wVGURk64QiHeOYxFRX
-         mHK1+UiyAXvreMg4ZIkS2I0WQZ1et64pUap3FNaL9eX0mxqfndy619KzLjmxjReTU7du
-         5c2tcwQZaL1arGl9L1/vb11eBxLVzxJcoxNTHpwUiG3FiyR/J3jJSakwXSC7IIBZaNb7
-         Zuok8/WPd6UJ1zAQqwahT4PDOBKVrYqwXr9KpUZbe50+gZPJZubDY+VkHWj/rqM1TiNA
-         UuruIMllXhC/IEpSuyEHDMVirOHPuugk1m9JelYk7aBx4b2NE5KHgH3/7xrntSzh69v2
-         RAyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4RNB8wxWEzVJtgJjqldIaCI4XGfYsamNd1UsJb6gSog=;
-        b=gnkJtJE5QU3csZjOW50MLP5kYPr7G4QdEdZn53x+U8639lBceCIfun7ep7TK2icUrO
-         WdCdxRL63aAfM2RdYU9yL/YN6ezKC4j+dZ3hrxw0M4owwTpbPc2Lsl9g4kyBCJT5gtPx
-         rfsF1+evtNcyiDYWx+T+4/ga5Qx59vPIJAh4sT3CTWb6zZ7zXw7FfUpd19Yhe3unw/15
-         xNnOp/6zg1YmKV2a/cKuN6aqvPJg3xWACYO5S+czrZ701RyTZSpfckMPiU1b3x36ckXv
-         bOyavPomqyFuMmkAaF81PxYVu5OWQvqcdpl2TdD9wqv+yY2FTgFOzUqMZ3316cHOLg1S
-         QfGA==
-X-Gm-Message-State: APjAAAWu63OaPXuOVxGMZbSG2WJTsY5GPzSs6qWObhjZjiBjdtPewc7/
-        3zefaqRQQTUx82w+anrz5dQ=
-X-Google-Smtp-Source: APXvYqzxek+4Hcli5Vv0AI34Ja9/izEaL50t0C1GUclI3TdvYYvnKtRy2i2vNYXrYdBllQG0UrR/rQ==
-X-Received: by 2002:a05:6808:289:: with SMTP id z9mr1908161oic.48.1582778643913;
-        Wed, 26 Feb 2020 20:44:03 -0800 (PST)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id a14sm1585830otr.54.2020.02.26.20.44.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 26 Feb 2020 20:44:03 -0800 (PST)
-Date:   Wed, 26 Feb 2020 21:44:02 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] Documentation/llvm: add documentation on building w/
- Clang/LLVM
-Message-ID: <20200227044402.GB55684@ubuntu-m2-xlarge-x86>
-References: <20200224174129.2664-1-ndesaulniers@google.com>
- <202002242003.870E5F80@keescook>
- <20200225041643.GA17425@ubuntu-m2-xlarge-x86>
- <CAKwvOdn0_EETGtBVhbRKMPqv2K04Z1N4PuOZDZ6++Ejbi9-B-w@mail.gmail.com>
+        Wed, 26 Feb 2020 23:45:12 -0500
+Received: from foss.arm.com ([217.140.110.172]:45610 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728284AbgB0EpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 23:45:12 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1595630E;
+        Wed, 26 Feb 2020 20:45:11 -0800 (PST)
+Received: from [10.162.16.120] (a075563-lin.blr.arm.com [10.162.16.120])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C5943F73B;
+        Wed, 26 Feb 2020 20:45:04 -0800 (PST)
+Subject: Re: [PATCH v7 05/11] arm64: elf: Enable BTI at exec based on ELF
+ program properties
+To:     Mark Brown <broonie@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H . J . Lu" <hjl.tools@gmail.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        =?UTF-8?Q?Kristina_Mart=c5=a1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Dave Martin <Dave.Martin@arm.com>
+References: <20200226155714.43937-1-broonie@kernel.org>
+ <20200226155714.43937-6-broonie@kernel.org>
+From:   Amit Kachhap <amit.kachhap@arm.com>
+Message-ID: <d79ee028-bb03-022a-12a5-37d2a5ab28ed@arm.com>
+Date:   Thu, 27 Feb 2020 10:15:06 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdn0_EETGtBVhbRKMPqv2K04Z1N4PuOZDZ6++Ejbi9-B-w@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200226155714.43937-6-broonie@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 12:59:25PM -0800, Nick Desaulniers wrote:
-> On Mon, Feb 24, 2020 at 8:16 PM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> > > Should this also include an update to Documentation/process/changes.rst
-> > > with the minimum version required? (I would expect this to be "9" for Clang,
-> > > and "11" for ld.lld.)
-> >
-> > I think the clang one should be added in a separate patch that
-> > solidifies that in include/linux/compiler-clang.h with a CLANG_VERSION
-> > macro and version check, like in include/linux/compiler-gcc.h.
-> >
-> > ld.lld's minimum version should also be 9, what is the blocking issue
-> > that makes it 11?
+Hi Mark,
+
+On 2/26/20 9:27 PM, Mark Brown wrote:
+> From: Dave Martin <Dave.Martin@arm.com>
 > 
-> I'm super hesitant to put a minimally required version of Clang, since
-> it really depends on the configs you're using.  Sure, clang-9 will
-> probably work better than clang-4 for some configs, but I would say
-> ToT clang built from source would be even better, as unrealistic as
-> that is for most people.  The question of "what's our support model"
-> hasn't realistically come up yet, so I don't really want to make a
-> decision on that right now and potentially pigeonhole us into some
-> support scheme that's theoretical or hypothetical.  We need to expand
-> out the CI more, and get more people to even care about Clang, before
-> we start to concern ourselves with providing an answer to the question
-> "what versions of clang are supported?"  But it's just a strong
-> opinion of mine, held loosely.
+> For BTI protection to be as comprehensive as possible, it is
+> desirable to have BTI enabled from process startup.  If this is not
+> done, the process must use mprotect() to enable BTI for each of its
+> executable mappings, but this is painful to do in the libc startup
+> code.  It's simpler and more sound to have the kernel do it
+> instead.
 > 
-> Either way, it can be done (or not) in a follow up patch.  I would
-> like to land some Documentation/ even if it's not perfect, we can go
-> from there.
-> -- 
-> Thanks,
-> ~Nick Desaulniers
+> To this end, detect BTI support in the executable (or ELF
+> interpreter, as appropriate), via the
+> NT_GNU_PROGRAM_PROPERTY_TYPE_0 note, and tweak the initial prot
+> flags for the process' executable pages to include PROT_BTI as
+> appropriate.
+> 
+> Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
+>   arch/arm64/Kconfig           |  3 +++
+>   arch/arm64/include/asm/elf.h | 51 ++++++++++++++++++++++++++++++++++++
+>   arch/arm64/kernel/process.c  | 19 ++++++++++++++
+>   include/uapi/linux/elf.h     |  6 +++++
+>   4 files changed, 79 insertions(+)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index e37f4f07b990..d65d226a77ec 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -9,6 +9,7 @@ config ARM64
+>   	select ACPI_MCFG if (ACPI && PCI)
+>   	select ACPI_SPCR_TABLE if ACPI
+>   	select ACPI_PPTT if ACPI
+> +	select ARCH_BINFMT_ELF_STATE
+>   	select ARCH_CLOCKSOURCE_DATA
+>   	select ARCH_HAS_DEBUG_VIRTUAL
+>   	select ARCH_HAS_DEVMEM_IS_ALLOWED
+> @@ -33,6 +34,7 @@ config ARM64
+>   	select ARCH_HAS_SYSCALL_WRAPPER
+>   	select ARCH_HAS_TEARDOWN_DMA_OPS if IOMMU_SUPPORT
+>   	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+> +	select ARCH_HAVE_ELF_PROT
+>   	select ARCH_HAVE_NMI_SAFE_CMPXCHG
+>   	select ARCH_INLINE_READ_LOCK if !PREEMPTION
+>   	select ARCH_INLINE_READ_LOCK_BH if !PREEMPTION
+> @@ -62,6 +64,7 @@ config ARM64
+>   	select ARCH_INLINE_SPIN_UNLOCK_IRQRESTORE if !PREEMPTION
+>   	select ARCH_KEEP_MEMBLOCK
+>   	select ARCH_USE_CMPXCHG_LOCKREF
+> +	select ARCH_USE_GNU_PROPERTY if BINFMT_ELF
+>   	select ARCH_USE_QUEUED_RWLOCKS
+>   	select ARCH_USE_QUEUED_SPINLOCKS
+>   	select ARCH_SUPPORTS_MEMORY_FAILURE
+> diff --git a/arch/arm64/include/asm/elf.h b/arch/arm64/include/asm/elf.h
+> index b618017205a3..c72e381fa86d 100644
+> --- a/arch/arm64/include/asm/elf.h
+> +++ b/arch/arm64/include/asm/elf.h
+> @@ -114,7 +114,11 @@
+>   
+>   #ifndef __ASSEMBLY__
+>   
+> +#include <uapi/linux/elf.h>
+>   #include <linux/bug.h>
+> +#include <linux/errno.h>
+> +#include <linux/fs.h>
+> +#include <linux/types.h>
+>   #include <asm/processor.h> /* for signal_minsigstksz, used by ARCH_DLINFO */
+>   
+>   typedef unsigned long elf_greg_t;
+> @@ -224,6 +228,53 @@ extern int aarch32_setup_additional_pages(struct linux_binprm *bprm,
+>   
+>   #endif /* CONFIG_COMPAT */
+>   
+> +struct arch_elf_state {
+> +	int flags;
+> +};
+> +
+> +#define ARM64_ELF_BTI		(1 << 0)
+> +
+> +#define INIT_ARCH_ELF_STATE {			\
+> +	.flags = 0,				\
+> +}
+> +
+> +static inline int arch_parse_elf_property(u32 type, const void *data,
+> +					  size_t datasz, bool compat,
+> +					  struct arch_elf_state *arch)
+> +{
+> +	/* No known properties for AArch32 yet */
+> +	if (IS_ENABLED(CONFIG_COMPAT) && compat)
+> +		return 0;
+> +
+> +	if (type == GNU_PROPERTY_AARCH64_FEATURE_1_AND) {
+> +		const u32 *p = data;
+> +
+> +		if (datasz != sizeof(*p))
+> +			return -ENOEXEC;
+> +
+> +		if (IS_ENABLED(CONFIG_ARM64_BTI) &&
+> +		    system_supports_bti() &&
 
-I think the question of support model is something that we are going to
-have to sit down and figure out sooner rather than later, especially if
-we are adding this file to the Documentation; we are saying that this IS
-supported in some fashion, we need to be able to answer how we are going
-to resolve issues and what versions can be adequately expect to work
-with the kernel.
+system_supports_bti() has inbuilt CONFIG_ARM64_BTI config check.
 
-I think that being able to tell people to update is not unreasonable,
-given how efficient we are getting fixing into clang. However, clang's
-release model is definitely different from gcc's and that can make
-getting fixes into the hands of regular users harder, aside from asking
-them to build their own version, which again, is not that difficult and
-hard to do with something like tc-build.
-
-I agree this should happen in a follow up patch. I think starting with
-clang-9 and saying if anything older works, cool, otherwise update is
-probably a decent initial model.
+For all the patch in the series.
+Reviewed-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
 
 Cheers,
-Nathan
+Amit
+
+> +		    (*p & GNU_PROPERTY_AARCH64_FEATURE_1_BTI))
+> +			arch->flags |= ARM64_ELF_BTI;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static inline int arch_elf_pt_proc(void *ehdr, void *phdr,
+> +				   struct file *f, bool is_interp,
+> +				   struct arch_elf_state *state)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline int arch_check_elf(void *ehdr, bool has_interp,
+> +				 void *interp_ehdr,
+> +				 struct arch_elf_state *state)
+> +{
+> +	return 0;
+> +}
+> +
+>   #endif /* !__ASSEMBLY__ */
+>   
+>   #endif
+> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+> index 00626057a384..b8e3faa8d406 100644
+> --- a/arch/arm64/kernel/process.c
+> +++ b/arch/arm64/kernel/process.c
+> @@ -11,6 +11,7 @@
+>   
+>   #include <linux/compat.h>
+>   #include <linux/efi.h>
+> +#include <linux/elf.h>
+>   #include <linux/export.h>
+>   #include <linux/sched.h>
+>   #include <linux/sched/debug.h>
+> @@ -18,6 +19,7 @@
+>   #include <linux/sched/task_stack.h>
+>   #include <linux/kernel.h>
+>   #include <linux/lockdep.h>
+> +#include <linux/mman.h>
+>   #include <linux/mm.h>
+>   #include <linux/stddef.h>
+>   #include <linux/sysctl.h>
+> @@ -654,3 +656,20 @@ asmlinkage void __sched arm64_preempt_schedule_irq(void)
+>   	if (system_capabilities_finalized())
+>   		preempt_schedule_irq();
+>   }
+> +
+> +#ifdef CONFIG_BINFMT_ELF
+> +int arch_elf_adjust_prot(int prot, const struct arch_elf_state *state,
+> +			 bool has_interp, bool is_interp)
+> +{
+> +	if (is_interp != has_interp)
+> +		return prot;
+> +
+> +	if (!(state->flags & ARM64_ELF_BTI))
+> +		return prot;
+> +
+> +	if (prot & PROT_EXEC)
+> +		prot |= PROT_BTI;
+> +
+> +	return prot;
+> +}
+> +#endif
+> diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
+> index 20900f4496b7..c6dd0215482e 100644
+> --- a/include/uapi/linux/elf.h
+> +++ b/include/uapi/linux/elf.h
+> @@ -448,4 +448,10 @@ typedef struct elf64_note {
+>     Elf64_Word n_type;	/* Content type */
+>   } Elf64_Nhdr;
+>   
+> +/* .note.gnu.property types for EM_AARCH64: */
+> +#define GNU_PROPERTY_AARCH64_FEATURE_1_AND	0xc0000000
+> +
+> +/* Bits for GNU_PROPERTY_AARCH64_FEATURE_1_BTI */
+> +#define GNU_PROPERTY_AARCH64_FEATURE_1_BTI	(1U << 0)
+> +
+>   #endif /* _UAPI_LINUX_ELF_H */
+> 
