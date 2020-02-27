@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E4C0C3F37C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 586B4C54FE6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3491220801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3080D20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813162;
-	bh=OWTPxU+/A5iHErJHBufe6ko4/tT/IkEB8jQDEA3c+Po=;
+	s=default; t=1582813174;
+	bh=LGF5TDDcjeJpG25rN3SHM7dpbh0Kw+9Jjbg6p0/ySe4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yvE4vxpvrZIWCKzum6kjz8lwtuSha96L6QHvo0ecIfxUo61SeQDcomJmGWYIsF+i/
-	 hLvGDkZEuETmxByePgnRQJ2FQVnfmylpeeZHK5ZtdS7wsdlqSRWAAOvXjDpFfpB3Il
-	 COoTzJkVPp4fPBI3bkQS53xirKVgeVTwgh2fyooA=
+	b=FidVynHcEpCgfjKTvIoo6jh6cpPb7YsM1dKTH/UX9w8p9T9RALRyh474j1GNQMDaE
+	 MFpFwUHV3+bw3m9Ar2QbJ7bO+X4uiD6Kx2NghZ8cgTplwrcylVrYdrcIAbJ1QkLIBf
+	 M/5KeDncD2vO4Guo3T07jqpGzpizA7EF96IEta3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389999AbgB0OTQ (ORCPT
+        id S2389970AbgB0OTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:19:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59726 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:19:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389676AbgB0OTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:19:04 -0500
+        id S2388967AbgB0OS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:18:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFB0F2468F;
-        Thu, 27 Feb 2020 14:19:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD52520801;
+        Thu, 27 Feb 2020 14:18:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813144;
-        bh=OWTPxU+/A5iHErJHBufe6ko4/tT/IkEB8jQDEA3c+Po=;
+        s=default; t=1582813139;
+        bh=LGF5TDDcjeJpG25rN3SHM7dpbh0Kw+9Jjbg6p0/ySe4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WnytzcGkOaEDGh3QUp29ByYHooYFq0ZhvbtAAhn6fvIygIOVaVM1zX53oQ7UyCYQq
-         ClvQyt37puiHICKGDlLUTYmreIu9A/S6Opkx32AsxrjDbgjfCGwa9y55a3O1dEKGMz
-         V9VbH0EZjgu+dwlBtZPj/O0nV5w8kK9AKQGCHsSU=
+        b=GjD1shWPU5Nm+N0CZf7IlHQn9vBtt2bXiIkviAZkzcwMfJGi3UlMs55SgXW30y6gL
+         VlV+FqUX9knrKdoMwJbpI4tif4l5rieKEJS4WIAYE7twEcWfW5QfnKeC9RMCZn+xXd
+         4VSvJKlrKyN2WyN67qjMQduFecrIWr4JfMseAPVk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aya Levin <ayal@mellanox.com>,
-        Parav Pandit <parav@mellanox.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.5 147/150] net/mlx5e: Fix crash in recovery flow without devlink reporter
-Date:   Thu, 27 Feb 2020 14:38:04 +0100
-Message-Id: <20200227132253.974805405@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH 5.5 111/150] drm/i915/selftests: Add a mock i915_vma to the mock_ring
+Date:   Thu, 27 Feb 2020 14:37:28 +0100
+Message-Id: <20200227132249.151357014@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -61,51 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aya Levin <ayal@mellanox.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit 1ad6c43c6a7b8627240c6cc19c69e31fedc596a7 upstream.
+commit 1fdea0cb0dba0d42ffcfb619b349c1a2afa2492e upstream.
 
-When health reporters are not supported, recovery function is invoked
-directly, not via devlink health reporters.
+Add a i915_vma to the mock_engine/mock_ring so that the core code can
+always assume the presence of ring->vma.
 
-In this direct flow, the recover function input parameter was passed
-incorrectly and is causing a kernel oops. This patch is fixing the input
-parameter.
-
-Following call trace is observed on rx error health reporting.
-
-Internal error: Oops: 96000007 [#1] PREEMPT SMP
-Process kworker/u16:4 (pid: 4584, stack limit = 0x00000000c9e45703)
-Call trace:
-mlx5e_rx_reporter_err_rq_cqe_recover+0x30/0x164 [mlx5_core]
-mlx5e_health_report+0x60/0x6c [mlx5_core]
-mlx5e_reporter_rq_cqe_err+0x6c/0x90 [mlx5_core]
-mlx5e_rq_err_cqe_work+0x20/0x2c [mlx5_core]
-process_one_work+0x168/0x3d0
-worker_thread+0x58/0x3d0
-kthread+0x108/0x134
-
-Fixes: c50de4af1d63 ("net/mlx5e: Generalize tx reporter's functionality")
-Signed-off-by: Aya Levin <ayal@mellanox.com>
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: 8ccfc20a7d56 ("drm/i915/gt: Mark ring->vma as active while pinned")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Reviewed-by: Mika Kuoppala <mika.kuoppala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200114160030.2468927-1-chris@chris-wilson.co.uk
+(cherry picked from commit b63b4feaef7363d2cf46dd76bb6e87e060b2b0de)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en/health.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/i915/gt/mock_engine.c |   17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/health.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/health.c
-@@ -200,7 +200,7 @@ int mlx5e_health_report(struct mlx5e_pri
- 	netdev_err(priv->netdev, err_str);
+--- a/drivers/gpu/drm/i915/gt/mock_engine.c
++++ b/drivers/gpu/drm/i915/gt/mock_engine.c
+@@ -59,11 +59,26 @@ static struct intel_ring *mock_ring(stru
+ 	ring->vaddr = (void *)(ring + 1);
+ 	atomic_set(&ring->pin_count, 1);
  
- 	if (!reporter)
--		return err_ctx->recover(&err_ctx->ctx);
-+		return err_ctx->recover(err_ctx->ctx);
++	ring->vma = i915_vma_alloc();
++	if (!ring->vma) {
++		kfree(ring);
++		return NULL;
++	}
++	i915_active_init(&ring->vma->active, NULL, NULL);
++
+ 	intel_ring_update_space(ring);
  
- 	return devlink_health_report(reporter, err_str, err_ctx);
+ 	return ring;
  }
+ 
++static void mock_ring_free(struct intel_ring *ring)
++{
++	i915_active_fini(&ring->vma->active);
++	i915_vma_free(ring->vma);
++
++	kfree(ring);
++}
++
+ static struct i915_request *first_request(struct mock_engine *engine)
+ {
+ 	return list_first_entry_or_null(&engine->hw_queue,
+@@ -121,7 +136,7 @@ static void mock_context_destroy(struct
+ 	GEM_BUG_ON(intel_context_is_pinned(ce));
+ 
+ 	if (test_bit(CONTEXT_ALLOC_BIT, &ce->flags)) {
+-		kfree(ce->ring);
++		mock_ring_free(ce->ring);
+ 		mock_timeline_unpin(ce->timeline);
+ 	}
+ 
 
 
