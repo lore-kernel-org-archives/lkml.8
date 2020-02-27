@@ -2,124 +2,90 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7A7C35677
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB56C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B408424688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:16:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VpCvudHL"
+	by mail.kernel.org (Postfix) with ESMTP id 4A00A24688
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:17:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729864AbgB0PQt (ORCPT
+        id S1729230AbgB0PRY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 10:16:49 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:43388 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729174AbgB0PQt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 10:16:49 -0500
-Received: by mail-qk1-f196.google.com with SMTP id q18so3425977qki.10;
-        Thu, 27 Feb 2020 07:16:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WlXFvdOo+6yWEzwT1XC3KPZhgv50NpBAuaNpJg/kpbM=;
-        b=VpCvudHLe5sWCh9mziPxV5NeC851zU5dJsWYAZEIhc3JENeYiezxfqhDKx094w2Wer
-         5V3gG3tQJ58w/mXV66o8VptoCjEG0hj0dH0fc8j+XhGsx2V86L24P2wttxmgmX+WBtXa
-         MUQ02A4MJM6IrmdsY9ME3yj/YNAOAj3PDMKXWTMEqpw8sy+KZszp+BoCokoKze/piumn
-         Cz3XAqs2/svBXcZyQmDrhv1LFvBpkvFU75j1JhtwFRQVfYIPPtLo3Q3J1gDhwI44Gdk+
-         DAgzv3soAm0+koay1uVZoyWn9fEwLHlWvmyE1VanYLACi5AJrvoHIEDnEQ6JkuhQQ4Yl
-         bGpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WlXFvdOo+6yWEzwT1XC3KPZhgv50NpBAuaNpJg/kpbM=;
-        b=YmDgcqvKfQ+aWCIsRdQ68CAcHtA45HnMasD9el7NVD4XsFXconPJPeKygozXBjEvEW
-         ZnvMMv8xwl0ctI/H7irsmtgX/ud4v38XqxUT3GKfz1rlDOoas2Abrw+Orxk6jJKABNay
-         JSQfynZCfqgCFQ6ojXRt2NPBwg6snQJQB5AVz9AJhSZMX+KKM3kx8RYJ1U0UEPmABcE1
-         R8Z398DqQ0rocf80ZzdVFsGFuk8Vl+WAgP/izMZAWNLmbVYq8ymkqpRNju1eFPy1hBB7
-         2nL16WjTi0Wj9nEtxlAsy3HF8UWFk8+CmAkUSGKubX9HYtddMzNaTplX4gHAeKjz/mMY
-         E29Q==
-X-Gm-Message-State: APjAAAUh/p7HcGUglicelL9VtwVCkv4k1vypPVQYsON/KxZARyMzPGL8
-        X0gTrU2EEOUigPUAHN8W3vo=
-X-Google-Smtp-Source: APXvYqydyeYbPfvW/fT2dGAODJsMyzYunJhM9o9M/BQXIedYNACpqv5xfiScE0YCcHIkUy0ONOV8UA==
-X-Received: by 2002:a37:f502:: with SMTP id l2mr5484725qkk.76.1582816606616;
-        Thu, 27 Feb 2020 07:16:46 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id m6sm3291361qki.24.2020.02.27.07.16.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 07:16:46 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Thu, 27 Feb 2020 10:16:44 -0500
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v2 1/1] x86/boot/compressed: Fix reloading of GDTR
- post-relocation
-Message-ID: <20200227151643.GA3498170@rani.riverdale.lan>
-References: <20200226204515.2752095-1-nivedita@alum.mit.edu>
- <20200226230031.3011645-2-nivedita@alum.mit.edu>
- <20200227081229.GA29411@gmail.com>
+        Thu, 27 Feb 2020 10:17:24 -0500
+Received: from foss.arm.com ([217.140.110.172]:53530 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729279AbgB0PRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 10:17:23 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1966B30E;
+        Thu, 27 Feb 2020 07:17:23 -0800 (PST)
+Received: from [10.0.8.126] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F7CB3F7B4;
+        Thu, 27 Feb 2020 07:17:21 -0800 (PST)
+Subject: Re: [PATCH] sched/fair: fix runnable_avg for throttled cfs
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ben Segall <bsegall@google.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Hillf Danton <hdanton@sina.com>, zhout@vivaldi.net
+References: <20200226181640.21664-1-vincent.guittot@linaro.org>
+ <xm26r1yhtbjr.fsf@bsegall-linux.svl.corp.google.com>
+ <CAKfTPtBm9Gt16gqQgxoErOOmpbUHit6bNf4CVLvDzf04SjWtEg@mail.gmail.com>
+ <8f72ea72-f36d-2611-e026-62ddff5c3422@arm.com>
+ <CAKfTPtC9bkMQJsWw6Z2QD0RrV=qN7yMFviVnSeTpDp=-vLBL0g@mail.gmail.com>
+ <CAKfTPtD4iVQmxWgNDDVhKPbu+rYEf=_1xKoPVOy343qo51pD_A@mail.gmail.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <cf26f6c8-0e09-4c8c-b7e8-f010f4a4488c@arm.com>
+Date:   Thu, 27 Feb 2020 15:17:20 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <CAKfTPtD4iVQmxWgNDDVhKPbu+rYEf=_1xKoPVOy343qo51pD_A@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200227081229.GA29411@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 09:12:29AM +0100, Ingo Molnar wrote:
-> 
-> * Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> 
-> > Commit ef5a7b5eb13e ("efi/x86: Remove GDT setup from efi_main")
-> > introduced GDT setup into the 32-bit kernel's startup_32, and reloads
-> > the GDTR after relocating the kernel for paranoia's sake.
-> > 
-> > Commit 32d009137a56 ("x86/boot: Reload GDTR after copying to the end of
-> > the buffer") introduced a similar GDTR reload in the 64-bit kernel.
-> > 
-> > The GDTR is adjusted by init_size - _end, however this may not be the
-> > correct offset to apply if the kernel was loaded at a misaligned address
-> > or below LOAD_PHYSICAL_ADDR, as in that case the decompression buffer
-> > has an additional offset from the original load address.
-> > 
-> > This should never happen for a conformant bootloader, but we're being
-> > paranoid anyway, so just store the new GDT address in there instead of
-> > adding any offsets, which is simpler as well.
-> > 
-> > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> > Fixes: ef5a7b5eb13e ("efi/x86: Remove GDT setup from efi_main")
-> > Fixes: 32d009137a56 ("x86/boot: Reload GDTR after copying to the end of the buffer")
-> 
-> Have you or anyone else observed this condition practice, or have a 
-> suspicion that this could happen - or is this a mostly theoretical 
-> concern?
-> 
-> Thanks,
-> 
-> 	Ingo
+On 27.02.20 14:58, Vincent Guittot wrote:
+> On Thu, 27 Feb 2020 at 14:10, Vincent Guittot
+> <vincent.guittot@linaro.org> wrote:
+>>
+>> On Thu, 27 Feb 2020 at 12:20, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>>
+>>> On 26.02.20 21:01, Vincent Guittot wrote:
+>>>> On Wed, 26 Feb 2020 at 20:04, <bsegall@google.com> wrote:
+>>>>>
+>>>>> Vincent Guittot <vincent.guittot@linaro.org> writes:
 
-Right now it's a theoretical concern.
+[...]
 
-I'm working on another patch, to tell the EFI firmware PE loader what
-the kernel's preferred address is, so that we can avoid having to
-relocate the kernel in the EFI stub in most cases (ie if the PE loader
-manages to load us at that address). With those changes, the required
-adjustment won't be init_size - _end any more, and while fixing it up
-there, I noticed that it could already be the case that the required
-adjustment is different.
+>>> Shouldn't this be 'current' rather 'new' h_nr_running for
+>>> group_se->runnable_weight? IMHO, you want to cache the current value
+>>> before you add/subtract task_delta.
+>>
+>> hmm... it can't be current in both places. In my explanation,
+>> "current" means the current situation when we started to throttle cfs
+>> and "new" means the new situation after we finished to throttle the
+>> cfs. I should probably use old and new to prevent any
+>> misunderstanding.
+> 
+> I'm about to send a new version to fix some minor changes: The if
+> statement should have some  { }   as there are some on the else part
+> 
+> Would it be better for you if i use old and new instead of current and
+> new in the commit message ?
 
-Thanks.
+Personally yes, but now I understand the other wording as well. Thanks.
+
+[...]
