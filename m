@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA55C3F34A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE38C3F359
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8C1E222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18F9E21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582810984;
-	bh=kPczogWiXOSiS49EYVauMu0X+s/wJe9Q8hPGsbMerHE=;
+	s=default; t=1582811294;
+	bh=dyJB4AbiRs8UTaYPM1R1ihsyd+1yCPfzHhcMjATqpkc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e5k73/4TB2/ws7qmLlcQQezgLOThDjAMVjhb1o2BdhkdP+OWDsrb4mRzW2psd0/Do
-	 OwyN58efqbP02sTXDC8n6/1mITd6MMiDZYHM5rHm1kWYQPo2XeHQe35FqmVq14Dybr
-	 l9GV1zSP5F5LMWTOo27RPs7jrQ2diRNm0Zuvq1Vs=
+	b=n1GZjNzkgFRx+rXEKmz3U6sXbKptoIYc71zSr5oI4A6R88aRmHU5yXDMzZQmNqbUg
+	 +R0O5I1NEGtaNWX4eO52vyf+lB+Vc3Rk42n6eYxjochKA1z/Ai9/AXZ2zqfH2hjxiv
+	 U7xdwCBbX2yDzHGr/2mJ1/Ra7sUUe/yQC9AV1El4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729608AbgB0NnD (ORCPT
+        id S1730839AbgB0NsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:43:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38164 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:48:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729580AbgB0NnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:43:02 -0500
+        id S1730831AbgB0NsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:48:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 757F320578;
-        Thu, 27 Feb 2020 13:43:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC44521D7E;
+        Thu, 27 Feb 2020 13:48:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582810981;
-        bh=kPczogWiXOSiS49EYVauMu0X+s/wJe9Q8hPGsbMerHE=;
+        s=default; t=1582811290;
+        bh=dyJB4AbiRs8UTaYPM1R1ihsyd+1yCPfzHhcMjATqpkc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=md4rov3naB0J861uvrcftcgWJWZaBwpVZYQlP82/A9GJ2ej8GgBSKKBZxZDwtHREh
-         NfsUOh7TDgAI9vPIaSZ8hXPtoZ8QseNfGrDyEFQTuq1mrTXFhA6frI3Pubv1wCKGJA
-         S+/6Ff5bnxfpprPYOAulHW+3/sIpt7xTrfBHb/tY=
+        b=cwhX5lOy+YFXDc7teLrRlRMnfRNVXrTsY9K9JAvpXToF5GnsghbmmE1OnYQqq+rzE
+         /QAoN15eOWnpGs0UWft5c8qjM5DPPisQabZfpGEMD5JonYmPOTU2PmhIg9Ce/u7g4H
+         311z7LDS0YU1qBSt/uvg7bOgD60hmv/PNBDDw9qA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Stanislaw Gruszka <stf_xl@wp.pl>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Chen Zhou <chenzhou10@huawei.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 072/113] iwlegacy: ensure loop counter addr does not wrap and cause an infinite loop
-Date:   Thu, 27 Feb 2020 14:36:28 +0100
-Message-Id: <20200227132223.297849844@linuxfoundation.org>
+Subject: [PATCH 4.9 074/165] ASoC: atmel: fix build error with CONFIG_SND_ATMEL_SOC_DMA=m
+Date:   Thu, 27 Feb 2020 14:35:48 +0100
+Message-Id: <20200227132242.227421509@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
-References: <20200227132211.791484803@linuxfoundation.org>
+In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
+References: <20200227132230.840899170@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,39 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Chen Zhou <chenzhou10@huawei.com>
 
-[ Upstream commit c2f9a4e4a5abfc84c01b738496b3fd2d471e0b18 ]
+[ Upstream commit 8fea78029f5e6ed734ae1957bef23cfda1af4354 ]
 
-The loop counter addr is a u16 where as the upper limit of the loop
-is an int. In the unlikely event that the il->cfg->eeprom_size is
-greater than 64K then we end up with an infinite loop since addr will
-wrap around an never reach upper loop limit. Fix this by making addr
-an int.
+If CONFIG_SND_ATMEL_SOC_DMA=m, build error:
 
-Addresses-Coverity: ("Infinite loop")
-Fixes: be663ab67077 ("iwlwifi: split the drivers for agn and legacy devices 3945/4965")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Acked-by: Stanislaw Gruszka <stf_xl@wp.pl>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+sound/soc/atmel/atmel_ssc_dai.o: In function `atmel_ssc_set_audio':
+(.text+0x7cd): undefined reference to `atmel_pcm_dma_platform_register'
+
+Function atmel_pcm_dma_platform_register is defined under
+CONFIG SND_ATMEL_SOC_DMA, so select SND_ATMEL_SOC_DMA in
+CONFIG SND_ATMEL_SOC_SSC, same to CONFIG_SND_ATMEL_SOC_PDC.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Link: https://lore.kernel.org/r/20200113133242.144550-1-chenzhou10@huawei.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/iwlegacy/common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/atmel/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/wireless/iwlegacy/common.c b/drivers/net/wireless/iwlegacy/common.c
-index 887114582583b..544ab3750ea6e 100644
---- a/drivers/net/wireless/iwlegacy/common.c
-+++ b/drivers/net/wireless/iwlegacy/common.c
-@@ -717,7 +717,7 @@ il_eeprom_init(struct il_priv *il)
- 	u32 gp = _il_rd(il, CSR_EEPROM_GP);
- 	int sz;
- 	int ret;
--	u16 addr;
-+	int addr;
+diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
+index 22aec9a1e9a49..838d03a138ca2 100644
+--- a/sound/soc/atmel/Kconfig
++++ b/sound/soc/atmel/Kconfig
+@@ -25,6 +25,8 @@ config SND_ATMEL_SOC_DMA
  
- 	/* allocate eeprom */
- 	sz = il->cfg->eeprom_size;
+ config SND_ATMEL_SOC_SSC_DMA
+ 	tristate
++	select SND_ATMEL_SOC_DMA
++	select SND_ATMEL_SOC_PDC
+ 
+ config SND_ATMEL_SOC_SSC
+ 	tristate
 -- 
 2.20.1
 
