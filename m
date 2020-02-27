@@ -4,56 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 407A2C52D4E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51853C52D24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15BED21D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D02E24697
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:08:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812490;
-	bh=Dqe8peYwQwuHYE4wE7HzqKcEV4TelEPWey30f3hiVvk=;
+	s=default; t=1582812527;
+	bh=lqpYNNcrPhcEJCoVEm5zSXwt3P8XbK0+uztpjf3ftmk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ewzUc3azvoNHq0KR4hyMgvAuWnwVk9gHzKVcW1biyin47pFTAESmD9wAHMJdHBZY0
-	 Xy7Jho2WlwF5gNw/h4mc6aZ9hcHVHcysjBp+CC9Hv/b3irUKi5NuEJPymPoZvSWGkS
-	 XbnafvECj00FtmhdmkH0fpKwaKfGqncP5u4s46HE=
+	b=y3bcSQuVEw08K/appzY/EjDWW/rQJEMxY/EH6EPS50I6sCqJo4UtNI5wEGoMNg5om
+	 FBTsUfkQClCbvDT8PxWC5XEptuZfKO3C/4yQZDV2I+da9mhmPKSYIsMCVc2JYYFAlV
+	 p+IwlynIEEnRcKDhsl5hCM25wCivw6Cqt4HKWvGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388202AbgB0OIH (ORCPT
+        id S2388287AbgB0OIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:08:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45716 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:08:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732780AbgB0OID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:08:03 -0500
+        id S2387925AbgB0OIi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:08:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B67F124656;
-        Thu, 27 Feb 2020 14:08:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEFDE20714;
+        Thu, 27 Feb 2020 14:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812482;
-        bh=Dqe8peYwQwuHYE4wE7HzqKcEV4TelEPWey30f3hiVvk=;
+        s=default; t=1582812518;
+        bh=lqpYNNcrPhcEJCoVEm5zSXwt3P8XbK0+uztpjf3ftmk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=piNiDJA5MISFO0L1gl3TMJ8mgk9F6BB2k1+TEVWFoGK4Atkv54dCEnST2MfiFJ4pE
-         fWcSQnkom840wGyCKxrtXaOzIRQ0qwSMgqHCcBoAw1RCJHRhTnmobyPMK4dT17cVKV
-         879c9fYr8DnrtDKxvgyehKbV70VW1MQloZWR+IB0=
+        b=gVOpT1+6cqofYMssT2C+t+YtR/rnxf+ZVWGm143EaeR8RSURTCqNB+N1ixQUVSa1H
+         JYTeovN/NBAUCtWLGYj00s0uLyoa9JlITqur27EmUVtFVoNt+zVncvXSoS9fed2n7p
+         FxDBZ5ZG7qZ4lVPRHumQsRxucn+oZ7DWamk6aW98=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
-        Yang Fei <fei.yang@intel.com>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Tejas Joglekar <tejas.joglekar@synopsys.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Jack Pham <jackp@codeaurora.org>, Todd Kjos <tkjos@google.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        John Stultz <john.stultz@linaro.org>
-Subject: [PATCH 5.4 035/135] usb: dwc3: gadget: Check for IOC/LST bit in TRB->ctrl fields
-Date:   Thu, 27 Feb 2020 14:36:15 +0100
-Message-Id: <20200227132234.268741998@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.4 048/135] powerpc/hugetlb: Fix 8M hugepages on 8xx
+Date:   Thu, 27 Feb 2020 14:36:28 +0100
+Message-Id: <20200227132236.315442234@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -66,70 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 5ee858975b13a9b40db00f456989a689fdbb296c upstream.
+commit 50a175dd18de7a647e72aca7daf4744e3a5a81e3 upstream.
 
-The current code in dwc3_gadget_ep_reclaim_completed_trb() will
-check for IOC/LST bit in the event->status and returns if
-IOC/LST bit is set. This logic doesn't work if multiple TRBs
-are queued per request and the IOC/LST bit is set on the last
-TRB of that request.
+With HW assistance all page tables must be 4k aligned, the 8xx drops
+the last 12 bits during the walk.
 
-Consider an example where a queued request has multiple queued
-TRBs and IOC/LST bit is set only for the last TRB. In this case,
-the core generates XferComplete/XferInProgress events only for
-the last TRB (since IOC/LST are set only for the last TRB). As
-per the logic in dwc3_gadget_ep_reclaim_completed_trb()
-event->status is checked for IOC/LST bit and returns on the
-first TRB. This leaves the remaining TRBs left unhandled.
+Redefine HUGEPD_SHIFT_MASK to mask last 12 bits out. HUGEPD_SHIFT_MASK
+is used to for alignment of page table cache.
 
-Similarly, if the gadget function enqueues an unaligned request
-with sglist already in it, it should fail the same way, since we
-will append another TRB to something that already uses more than
-one TRB.
-
-To aviod this, this patch changes the code to check for IOC/LST
-bits in TRB->ctrl instead.
-
-At a practical level, this patch resolves USB transfer stalls seen
-with adb on dwc3 based HiKey960 after functionfs gadget added
-scatter-gather support around v4.20.
-
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Yang Fei <fei.yang@intel.com>
-Cc: Thinh Nguyen <thinhn@synopsys.com>
-Cc: Tejas Joglekar <tejas.joglekar@synopsys.com>
-Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Cc: Jack Pham <jackp@codeaurora.org>
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Cc: Linux USB List <linux-usb@vger.kernel.org>
-Cc: stable <stable@vger.kernel.org>
-Tested-by: Tejas Joglekar <tejas.joglekar@synopsys.com>
-Reviewed-by: Thinh Nguyen <thinhn@synopsys.com>
-Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-[jstultz: forward ported to mainline, reworded commit log, reworked
- to only check trb->ctrl as suggested by Felipe]
-Signed-off-by: John Stultz <john.stultz@linaro.org>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Fixes: 22569b881d37 ("powerpc/8xx: Enable 8M hugepage support with HW assistance")
+Cc: stable@vger.kernel.org # v5.0+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/778b1a248c4c7ca79640eeff7740044da6a220a0.1581264115.git.christophe.leroy@c-s.fr
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/dwc3/gadget.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/powerpc/include/asm/page.h |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -2426,7 +2426,8 @@ static int dwc3_gadget_ep_reclaim_comple
- 	if (event->status & DEPEVT_STATUS_SHORT && !chain)
- 		return 1;
+--- a/arch/powerpc/include/asm/page.h
++++ b/arch/powerpc/include/asm/page.h
+@@ -295,8 +295,13 @@ static inline bool pfn_valid(unsigned lo
+ /*
+  * Some number of bits at the level of the page table that points to
+  * a hugepte are used to encode the size.  This masks those bits.
++ * On 8xx, HW assistance requires 4k alignment for the hugepte.
+  */
++#ifdef CONFIG_PPC_8xx
++#define HUGEPD_SHIFT_MASK     0xfff
++#else
+ #define HUGEPD_SHIFT_MASK     0x3f
++#endif
  
--	if (event->status & DEPEVT_STATUS_IOC)
-+	if ((trb->ctrl & DWC3_TRB_CTRL_IOC) ||
-+	    (trb->ctrl & DWC3_TRB_CTRL_LST))
- 		return 1;
+ #ifndef __ASSEMBLY__
  
- 	return 0;
 
 
