@@ -2,139 +2,587 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A919DC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D86A3C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 633B6246A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:51:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="asFs04S6"
+	by mail.kernel.org (Postfix) with ESMTP id 9D2D3246A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:51:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730144AbgB0XvD (ORCPT
+        id S1730060AbgB0Xvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 18:51:03 -0500
-Received: from mail-vi1eur05on2090.outbound.protection.outlook.com ([40.107.21.90]:17729
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729796AbgB0XvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 18:51:03 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F+cF5ucuvkwxrJ0joWb4WWDBqiWWMmpOaOpHTgDb2WWHlxVdisC6Om2DdXtzff4D9O3PqNapUkoeDix5WqqCawnlYfHVJlEBTEkd4a7+25MqpMRyEzm3CX+TzGgKaQ0F8ijivMjSHsr8wh2PQ57LHkFR7kIPUIhMbteVK9uZ/HOYaJKKlxyJ+8t7bG07R2j12shbm8aRtqD/KqyaO9bVUdh7A4mfj4BD7M+bm0qE9+HrK4F7QQAePdO2Cpc0MiGOPJN34kkauUEc8nNYmvLZfGRApHIdqiXL90SXoxeIAOq0i/vMF8cgKpE79IQlz2eT86ih0PjP8R3lc+o0n2SQnQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=x0I5a1/JVcQmsyWyTYhGIWdnwKoxjoDjJMprHOBxHVo=;
- b=D1YwMJGO3j11XGaVIEs5ZjW/lqwmi+BgdmygKWwlpVQjUuoa65ZdeCQZok8VrGA5lIIHInRLX9jMZIdr9uJlLMNAXPG+983+bCnP1meSoZy5pDnpu6rwdmvFbQz/EZZWhtBcfBNnyYMM9TnujyONRPNm9ZSX6rMGySNewI6P8VM+vI+5X92C+a12q9WSJmfU/Ytn6ctP3w1eDpSXPuogqHUSXz1b6zBjMxwWF7eUl2AKY8VgmmbWecl5J8Lm4xx3BbHIYL8TDLYzNxVaKpIVjFDD+zJOVQBwvXQwTaMNdFUP1r+gVzY5hCnmeVPr+Y/gZmsuvJlw1raSGCUNu/8rqw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
- dkim=pass header.d=plvision.eu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=x0I5a1/JVcQmsyWyTYhGIWdnwKoxjoDjJMprHOBxHVo=;
- b=asFs04S6rWEfAykxq25gArJ8IZOwZo/4U+yvOls5Zca0FHAKMsjXJo1QEd4aKxjunsorz36q7D0t1wsQBVFJjXl/rZiTrmQ2bdahNQDQhspw3bW9LoaoAC9qGG6XU4XvR8t0dc3EhCxFerBd9us0HAe4rVaTGRfzTX+uLmQl+08=
-Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM (10.165.195.138) by
- VI1P190MB0285.EURP190.PROD.OUTLOOK.COM (10.165.195.24) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.22; Thu, 27 Feb 2020 23:50:59 +0000
-Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
- ([fe80::a587:f64e:cbb8:af96]) by VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
- ([fe80::a587:f64e:cbb8:af96%4]) with mapi id 15.20.2772.012; Thu, 27 Feb 2020
- 23:50:59 +0000
-Received: from plvision.eu (217.20.186.93) by AM7PR03CA0011.eurprd03.prod.outlook.com (2603:10a6:20b:130::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21 via Frontend Transport; Thu, 27 Feb 2020 23:50:57 +0000
-From:   Vadym Kochan <vadym.kochan@plvision.eu>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     Jiri Pirko <jiri@resnulli.us>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
-        Serhiy Pshyk <serhiy.pshyk@plvision.eu>
-Subject: Re: [RFC net-next 1/3] net: marvell: prestera: Add Switchdev driver
- for Prestera family ASIC device 98DX325x (AC3x)
-Thread-Topic: [RFC net-next 1/3] net: marvell: prestera: Add Switchdev driver
- for Prestera family ASIC device 98DX325x (AC3x)
-Thread-Index: AQHV6/jzY7yqWky1LUqTk1e6REHYB6gtohWAgAHwnQCAAANjgIAAI3EA
-Date:   Thu, 27 Feb 2020 23:50:58 +0000
-Message-ID: <20200227235048.GA21304@plvision.eu>
-References: <20200225163025.9430-1-vadym.kochan@plvision.eu>
- <20200225163025.9430-2-vadym.kochan@plvision.eu>
- <20200226155423.GC26061@nanopsycho> <20200227213150.GA9372@plvision.eu>
- <20200227214357.GB29979@lunn.ch>
-In-Reply-To: <20200227214357.GB29979@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM7PR03CA0011.eurprd03.prod.outlook.com
- (2603:10a6:20b:130::21) To VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:802:35::10)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vadym.kochan@plvision.eu; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [217.20.186.93]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8c31fb22-e719-4eb8-8cb0-08d7bbdfe4ba
-x-ms-traffictypediagnostic: VI1P190MB0285:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1P190MB028510E45B86E0C81A95E15F95EB0@VI1P190MB0285.EURP190.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 03264AEA72
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(346002)(136003)(376002)(39830400003)(199004)(189003)(16526019)(5660300002)(186003)(66446008)(26005)(7696005)(1076003)(66946007)(64756008)(4326008)(52116002)(55016002)(66556008)(66476007)(508600001)(36756003)(8676002)(71200400001)(86362001)(316002)(8936002)(33656002)(4744005)(2906002)(107886003)(54906003)(956004)(6916009)(8886007)(2616005)(81156014)(81166006)(44832011);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1P190MB0285;H:VI1P190MB0399.EURP190.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: plvision.eu does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: GH4jXdYHPvKEnsJINzz8UyPk17KPcAM084bOqO17A2f3UND36Ex9DAFlQwy7ChXrljJ099EGrWX2B4J4BZ+S2gM4gVkWqZF4bix2np6O87konNP1lpLTDacNuUmBP8bJn37WMbe82YOTaFXKxXQtNTY3ykos1iyAlVv7EwnGl4EmIDnMAtDSuN8hpft4B1KPVzoojO5Zm7OxQf0TAKhKnoEf+j4GKBKgdRHL08JMG+rPc2j4+Sw5FsnZsbnE2VLnZoc8FjyGzKfgCecGqo+11ScH/uGUjDaBApycqozQ2VfDPzCMCgU1ll4u4hVaME9g5ENl9hzf9NwErV/BMvwfGpiQoC3pOdc7h0Ajkg0rBt36ySfnYluwlNhVyKRifmERS7N9dbgJXGVbP4BTcDD0Ico/7ig4RKwfLeEM5k1ewlbZ6wDrDyTMJgA3FpJhcmf+
-x-ms-exchange-antispam-messagedata: uVQJmN5m5uzsUGb8PXi2phd6bCV7hEo0Ae7/E8NsTcs9B+F3SFq5jZqUu7pamz6N5VhJX1s3PBnUQhNpI2uocIBYCxdAv8Ai6FfRCAixqjt9/aRStJCkhp+8+Ey5YiVMmRDda+Zas1qjJNnTonCTeA==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1E5A8E04E48F7D4A988E7C1F5FCD531A@EURP190.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 27 Feb 2020 18:51:54 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37180 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728993AbgB0Xvx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 18:51:53 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01RNoPU3045184
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 18:51:50 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yepxa1fjv-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 18:51:50 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Thu, 27 Feb 2020 23:51:48 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 27 Feb 2020 23:51:41 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01RNpe1K64880872
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Feb 2020 23:51:40 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B1E9142042;
+        Thu, 27 Feb 2020 23:51:40 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 03C8242045;
+        Thu, 27 Feb 2020 23:51:40 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 27 Feb 2020 23:51:39 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 41F7EA01F5;
+        Fri, 28 Feb 2020 10:51:35 +1100 (AEDT)
+Subject: Re: [PATCH v3 14/27] powerpc/powernv/pmem: Add support for Admin
+ commands
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     Andrew Donnellan <ajd@linux.ibm.com>
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Date:   Fri, 28 Feb 2020 10:51:38 +1100
+In-Reply-To: <c88a3808-3ce9-ff6c-b963-ca9317092145@linux.ibm.com>
+References: <20200221032720.33893-1-alastair@au1.ibm.com>
+         <20200221032720.33893-15-alastair@au1.ibm.com>
+         <c88a3808-3ce9-ff6c-b963-ca9317092145@linux.ibm.com>
+Organization: IBM Australia
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-X-OriginatorOrg: plvision.eu
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c31fb22-e719-4eb8-8cb0-08d7bbdfe4ba
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Feb 2020 23:50:58.9374
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /g/gg6rH89H1wblBYrIPZievNcAsQp+MSg8CwFIeKTyQJL9oIpox3qyr8vSltprBqHGroKzYcug+3UvytH6swCH7lIJnx33toa6KW1b5zqo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1P190MB0285
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022723-0016-0000-0000-000002EAF592
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022723-0017-0000-0000-0000334E2C25
+Message-Id: <395e5b279f324f11f601cf12c803d03741b6140c.camel@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-27_08:2020-02-26,2020-02-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
+ mlxlogscore=999 spamscore=0 clxscore=1015 impostorscore=0 malwarescore=0
+ suspectscore=0 phishscore=0 adultscore=0 bulkscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002270163
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 10:43:57PM +0100, Andrew Lunn wrote:
-> > > Please be consistent. Make your prefixes, name, filenames the same.
-> > > For example:
-> > > prestera_driver_kind[] =3D "prestera";
-> > >=20
-> > > Applied to the whole code.
-> > >=20
-> > So you suggested to use prestera_ as a prefix, I dont see a problem
-> > with that, but why not mvsw_pr_ ? So it has the vendor, device name par=
-ts
-> > together as a key. Also it is necessary to apply prefix for the static
-> > names ?
->=20
-> Although static names don't cause linker issues, you do still see them
-> in opps stack traces, etc. It just helps track down where the symbols
-> come from, if they all have a prefix.
->=20
->      Andrew
+On Thu, 2020-02-27 at 19:22 +1100, Andrew Donnellan wrote:
+> On 21/2/20 2:27 pm, Alastair D'Silva wrote:
+> > From: Alastair D'Silva <alastair@d-silva.org>
+> > 
+> > This patch requests the metadata required to issue admin commands,
+> > as well
+> > as some helper functions to construct and check the completion of
+> > the
+> > commands.
+> > 
+> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> > ---
+> >   arch/powerpc/platforms/powernv/pmem/ocxl.c    |  65 ++++++++
+> >   .../platforms/powernv/pmem/ocxl_internal.c    | 153
+> > ++++++++++++++++++
+> >   .../platforms/powernv/pmem/ocxl_internal.h    |  61 +++++++
+> >   3 files changed, 279 insertions(+)
+> > 
+> > diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl.c
+> > b/arch/powerpc/platforms/powernv/pmem/ocxl.c
+> > index 431212c9f0cc..4e782d22605b 100644
+> > --- a/arch/powerpc/platforms/powernv/pmem/ocxl.c
+> > +++ b/arch/powerpc/platforms/powernv/pmem/ocxl.c
+> > @@ -216,6 +216,58 @@ static int register_lpc_mem(struct ocxlpmem
+> > *ocxlpmem)
+> >   	return 0;
+> >   }
+> >   
+> > +/**
+> > + * extract_command_metadata() - Extract command data from MMIO &
+> > save it for further use
+> > + * @ocxlpmem: the device metadata
+> > + * @offset: The base address of the command data structures
+> > (address of CREQO)
+> > + * @command_metadata: A pointer to the command metadata to
+> > populate
+> > + * Return: 0 on success, negative on failure
+> > + */
+> > +static int extract_command_metadata(struct ocxlpmem *ocxlpmem, u32
+> > offset,
+> > +					struct command_metadata
+> > *command_metadata)
+> > +{
+> > +	int rc;
+> > +	u64 tmp;
+> > +
+> > +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu, offset,
+> > OCXL_LITTLE_ENDIAN,
+> > +				     &tmp);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	command_metadata->request_offset = tmp >> 32;
+> > +	command_metadata->response_offset = tmp & 0xFFFFFFFF;
+> > +
+> > +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu, offset + 8,
+> > OCXL_LITTLE_ENDIAN,
+> > +				     &tmp);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	command_metadata->data_offset = tmp >> 32;
+> > +	command_metadata->data_size = tmp & 0xFFFFFFFF;
+> > +
+> > +	command_metadata->id = 0;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +/**
+> > + * setup_command_metadata() - Set up the command metadata
+> > + * @ocxlpmem: the device metadata
+> > + */
+> > +static int setup_command_metadata(struct ocxlpmem *ocxlpmem)
+> > +{
+> > +	int rc;
+> > +
+> > +	mutex_init(&ocxlpmem->admin_command.lock);
+> > +
+> > +	rc = extract_command_metadata(ocxlpmem, GLOBAL_MMIO_ACMA_CREQO,
+> > +				      &ocxlpmem->admin_command);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >   /**
+> >    * is_usable() - Is a controller usable?
+> >    * @ocxlpmem: the device metadata
+> > @@ -456,6 +508,14 @@ static int probe(struct pci_dev *pdev, const
+> > struct pci_device_id *ent)
+> >   	}
+> >   	ocxlpmem->pdev = pdev;
+> >   
+> > +	ocxlpmem->timeouts[ADMIN_COMMAND_ERRLOG] = 2000; // ms
+> > +	ocxlpmem->timeouts[ADMIN_COMMAND_HEARTBEAT] = 100; // ms
+> > +	ocxlpmem->timeouts[ADMIN_COMMAND_SMART] = 100; // ms
+> > +	ocxlpmem->timeouts[ADMIN_COMMAND_CONTROLLER_DUMP] = 1000; // ms
+> > +	ocxlpmem->timeouts[ADMIN_COMMAND_CONTROLLER_STATS] = 100; // ms
+> > +	ocxlpmem->timeouts[ADMIN_COMMAND_SHUTDOWN] = 1000; // ms
+> > +	ocxlpmem->timeouts[ADMIN_COMMAND_FW_UPDATE] = 16000; // ms
+> 
+> Why are we keeping these timeouts in a per device struct? I can't
+> see 
+> anywhere where we change these values.
+> 
 
-Sure, thanks, makes sense. But is it necessary that prefix should match
-filenames too ? Would it be OK to use just 'mvpr_' instead of 'prestera_'
-for funcs & types in this particular case ?
+These are overwritten in a later patch, which I've missed! thanks for
+pointing this out.
 
-Regards,
-Vadym Kochan
+These initial values will be overwritten by card specific timeouts.
+
+> > +
+> >   	pci_set_drvdata(pdev, ocxlpmem);
+> >   
+> >   	ocxlpmem->ocxl_fn = ocxl_function_open(pdev);
+> > @@ -501,6 +561,11 @@ static int probe(struct pci_dev *pdev, const
+> > struct pci_device_id *ent)
+> >   		goto err;
+> >   	}
+> >   
+> > +	if (setup_command_metadata(ocxlpmem)) {
+> > +		dev_err(&pdev->dev, "Could not read OCXL command
+> > matada\n");
+> 
+> metadata
+
+Wow, not sure how that happened.
+
+> 
+> Also, "OCXL command metadata" is misleading, this is a pmem specific 
+> thing, not an OpenCAPI thing, I would prefer just "command metadata".
+> 
+
+Ok
+
+> > +		goto err;
+> > +	}
+> > +
+> >   	elapsed = 0;
+> >   	timeout = ocxlpmem->readiness_timeout + ocxlpmem-
+> > >memory_available_timeout;
+> >   	while (!is_usable(ocxlpmem, false)) {
+> > diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.c
+> > b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.c
+> > index 617ca943b1b8..583f48023025 100644
+> > --- a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.c
+> > +++ b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.c
+> > @@ -17,3 +17,156 @@ int ocxlpmem_chi(const struct ocxlpmem
+> > *ocxlpmem, u64 *chi)
+> >   
+> >   	return 0;
+> >   }
+> > +
+> > +#define COMMAND_REQUEST_SIZE (8 * sizeof(u64))
+> > +static int scm_command_request(const struct ocxlpmem *ocxlpmem,
+> > +			       struct command_metadata *cmd, u8
+> > op_code)
+> > +{
+> > +	u64 val = op_code;
+> > +	int rc;
+> > +	u8 i;
+> > +
+> > +	cmd->op_code = op_code;
+> > +	cmd->id++;
+> > +
+> > +	val |= ((u64)cmd->id) << 16;
+> > +
+> > +	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu, cmd-
+> > >request_offset,
+> > +				      OCXL_LITTLE_ENDIAN, val);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	for (i = sizeof(u64); i < COMMAND_REQUEST_SIZE; i +=
+> > sizeof(u64)) {
+> > +		rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu,
+> > +					      cmd->request_offset + i,
+> > +					      OCXL_LITTLE_ENDIAN, 0);
+> > +		if (rc)
+> > +			return rc;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +int admin_command_request(struct ocxlpmem *ocxlpmem, u8 op_code)
+> > +{
+> > +	u64 val;
+> > +	int rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> > GLOBAL_MMIO_CHI,
+> > +					 OCXL_LITTLE_ENDIAN, &val);
+> > +	if (rc)
+> > +		return rc;
+> 
+> Ignoring the value here expected, you're just trying to verify that
+> you 
+> don't see an error on the read?
+> 
+
+This was some vestigial code that should be removed.
+
+> > +
+> > +	return scm_command_request(ocxlpmem, &ocxlpmem->admin_command,
+> > op_code);
+> > +}
+> > +
+> > +static int command_response(const struct ocxlpmem *ocxlpmem,
+> > +			    const struct command_metadata *cmd)
+> > +{
+> > +	u64 val;
+> > +	u16 id;
+> > +	u8 status;
+> > +	int rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> > +					 cmd->response_offset,
+> > +					 OCXL_LITTLE_ENDIAN, &val);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	status = val & 0xff;
+> > +	id = (val >> 16) & 0xffff;
+> > +
+> > +	if (id != cmd->id) {
+> > +		dev_warn(&ocxlpmem->dev,
+> > +			 "Expected response for command %d, but
+> > received response for command %d instead.\n",
+> > +			 cmd->id, id);
+> 
+> If this happens I imagine something's gone pretty wrong - this
+> should 
+> probably be a dev_err()? And perhaps we want to make sure we return
+> an 
+> error code rather than whatever status code we get from the MMIO?
+> 
+
+Ok
+
+> > +	}
+> > +
+> > +	return status;
+> > +}
+> > +
+> > +int admin_response(const struct ocxlpmem *ocxlpmem)
+> > +{
+> > +	return command_response(ocxlpmem, &ocxlpmem->admin_command);
+> > +}
+> > +
+> > +
+> > +int admin_command_execute(const struct ocxlpmem *ocxlpmem)
+> > +{
+> > +	return ocxl_global_mmio_set64(ocxlpmem->ocxl_afu,
+> > GLOBAL_MMIO_HCI,
+> > +				      OCXL_LITTLE_ENDIAN,
+> > GLOBAL_MMIO_HCI_ACRW);
+> > +}
+> > +
+> > +static bool admin_command_complete(const struct ocxlpmem
+> > *ocxlpmem)
+> > +{
+> > +	u64 val = 0;
+> > +
+> > +	int rc = ocxlpmem_chi(ocxlpmem, &val);
+> > +
+> > +	WARN_ON(rc);
+> > +
+> > +	return (val & GLOBAL_MMIO_CHI_ACRA) != 0;
+> > +}
+> > +
+> > +int admin_command_complete_timeout(const struct ocxlpmem
+> > *ocxlpmem,
+> > +				   int command)
+> > +{
+> > +	u32 timeout = ocxlpmem->timeouts[command];
+> > +	// 32 is the next power of 2 greater than the 20ms minimum for
+> > msleep
+> > +#define TIMEOUT_SLEEP_MILLIS 32
+> > +	timeout /= TIMEOUT_SLEEP_MILLIS;
+> > +	if (!timeout)
+> > +		timeout = DEFAULT_TIMEOUT / TIMEOUT_SLEEP_MILLIS;
+> > +
+> > +	while (timeout-- > 0) {
+> > +		if (admin_command_complete(ocxlpmem))
+> > +			return 0;
+> > +		msleep(TIMEOUT_SLEEP_MILLIS);
+> > +	}
+> 
+> I think the more traditional way to implement timeouts is something
+> more 
+> like:
+> 
+>    unsigned long timeout = jiffies + msecs_to_jiffies(<timeout
+> period>);
+>    do {
+>      <check>
+>      <sleep>
+>    } while (time_before(jiffies, timeout));
+> 
+
+ok
+
+> > +
+> > +	if (admin_command_complete(ocxlpmem))
+> > +		return 0;
+> > +
+> > +	return -EBUSY;
+> > +}
+> > +
+> > +int admin_response_handled(const struct ocxlpmem *ocxlpmem)
+> > +{
+> > +	return ocxl_global_mmio_set64(ocxlpmem->ocxl_afu,
+> > GLOBAL_MMIO_CHIC,
+> > +				      OCXL_LITTLE_ENDIAN,
+> > GLOBAL_MMIO_CHI_ACRA);
+> > +}
+> 
+> This looks wrong? My reading of the spec is that you're meant to
+> *clear* 
+> ACRA upon completion of handing, this looks like it's setting ACRA to
+> 1.
+> 
+
+Writing a 1 to the CHIC register clears the respective bit in the CHI
+register. I'll add a comment.
+
+> > +
+> > +void warn_status(const struct ocxlpmem *ocxlpmem, const char
+> > *message,
+> > +		     u8 status)
+> > +{
+> > +	const char *text = "Unknown";
+> > +
+> > +	switch (status) {
+> > +	case STATUS_SUCCESS:
+> > +		text = "Success";
+> > +		break;
+> > +
+> > +	case STATUS_MEM_UNAVAILABLE:
+> > +		text = "Persistent memory unavailable";
+> > +		break;
+> > +
+> > +	case STATUS_BAD_OPCODE:
+> > +		text = "Bad opcode";
+> > +		break;
+> > +
+> > +	case STATUS_BAD_REQUEST_PARM:
+> > +		text = "Bad request parameter";
+> > +		break;
+> > +
+> > +	case STATUS_BAD_DATA_PARM:
+> > +		text = "Bad data parameter";
+> > +		break;
+> > +
+> > +	case STATUS_DEBUG_BLOCKED:
+> > +		text = "Debug action blocked";
+> > +		break;
+> > +
+> > +	case STATUS_FAIL:
+> > +		text = "Failed";
+> > +		break;
+> > +	}
+> > +
+> > +	dev_warn(&ocxlpmem->dev, "%s: %s (%x)\n", message, text,
+> > status);
+> > +}
+> > diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
+> > b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
+> > index ba0301533d00..2fef68c71271 100644
+> > --- a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
+> > +++ b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
+> > @@ -7,6 +7,7 @@
+> >   #include <linux/mm.h>
+> >   
+> >   #define LABEL_AREA_SIZE	(1UL << PA_SECTION_SHIFT)
+> > +#define DEFAULT_TIMEOUT 100
+> >   
+> >   #define GLOBAL_MMIO_CHI		0x000
+> >   #define GLOBAL_MMIO_CHIC	0x008
+> > @@ -80,6 +81,16 @@
+> >   #define STATUS_FW_ARG_INVALID	0x51
+> >   #define STATUS_FW_INVALID	0x52
+> >   
+> > +struct command_metadata {
+> > +	u32 request_offset;
+> > +	u32 response_offset;
+> > +	u32 data_offset;
+> > +	u32 data_size;
+> > +	struct mutex lock;
+> > +	u16 id;
+> > +	u8 op_code;
+> > +};
+> > +
+> >   struct ocxlpmem_function0 {
+> >   	struct pci_dev *pdev;
+> >   	struct ocxl_fn *ocxl_fn;
+> > @@ -95,9 +106,11 @@ struct ocxlpmem {
+> >   	struct ocxl_afu *ocxl_afu;
+> >   	struct ocxl_context *ocxl_context;
+> >   	void *metadata_addr;
+> > +	struct command_metadata admin_command;
+> >   	struct resource pmem_res;
+> >   	struct nd_region *nd_region;
+> >   	char fw_version[8+1];
+> > +	u32 timeouts[ADMIN_COMMAND_MAX+1];
+> >   
+> >   	u32 max_controller_dump_size;
+> >   	u16 scm_revision; // major/minor
+> > @@ -122,3 +135,51 @@ struct ocxlpmem {
+> >    * Returns 0 on success, negative on error
+> >    */
+> >   int ocxlpmem_chi(const struct ocxlpmem *ocxlpmem, u64 *chi);
+> > +
+> > +/**
+> > + * admin_command_request() - Issue an admin command request
+> > + * @ocxlpmem: the device metadata
+> > + * @op_code: The op-code for the command
+> > + *
+> > + * Returns an identifier for the command, or negative on error
+> > + */
+> > +int admin_command_request(struct ocxlpmem *ocxlpmem, u8 op_code);
+> > +
+> > +/**
+> > + * admin_response() - Validate an admin response
+> > + * @ocxlpmem: the device metadata
+> > + * Returns the status code of the command, or negative on error
+> > + */
+> > +int admin_response(const struct ocxlpmem *ocxlpmem);
+> > +
+> > +/**
+> > + * admin_command_execute() - Notify the controller to start
+> > processing a pending admin command
+> > + * @ocxlpmem: the device metadata
+> > + * Returns 0 on success, negative on error
+> > + */
+> > +int admin_command_execute(const struct ocxlpmem *ocxlpmem);
+> > +
+> > +/**
+> > + * admin_command_complete_timeout() - Wait for an admin command to
+> > finish executing
+> > + * @ocxlpmem: the device metadata
+> > + * @command: the admin command to wait for completion (determines
+> > the timeout)
+> > + * Returns 0 on success, -EBUSY on timeout
+> > + */
+> > +int admin_command_complete_timeout(const struct ocxlpmem
+> > *ocxlpmem,
+> > +				   int command);
+> > +
+> > +/**
+> > + * admin_response_handled() - Notify the controller that the admin
+> > response has been handled
+> > + * @ocxlpmem: the device metadata
+> > + * Returns 0 on success, negative on failure
+> > + */
+> > +int admin_response_handled(const struct ocxlpmem *ocxlpmem);
+> > +
+> > +/**
+> > + * warn_status() - Emit a kernel warning showing a command status.
+> > + * @ocxlpmem: the device metadata
+> > + * @message: A message to accompany the warning
+> > + * @status: The command status
+> > + */
+> > +void warn_status(const struct ocxlpmem *ocxlpmem, const char
+> > *message,
+> > +		 u8 status);
+> > 
+-- 
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
+
