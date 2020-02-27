@@ -2,51 +2,62 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C741FC34022
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C8EC35677
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E95224691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:48:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8493224656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814926;
-	bh=TIjHdADiwkFjXfbpjDNPlSxovxMRHrZrzwi8QVZ2//w=;
+	s=default; t=1582814938;
+	bh=WfLUugpGPKXn/iHU2isoZ0mKXtTg4eIb74duBSFyh0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ocgr+j7tbUzZ5TvWLsBA2zlM1UzT7nfgQdxBASqcQXdMHDCgiIuoTsezu3CmwtZyy
-	 xDewVprrisglq7OtyFHGM+JWKuqlFIjcj8W2AUNaVF9O6hYShQbBPwcyjQioyFPmjM
-	 DVb8JGhcwMknPAn+Bt9NsBRZ4U+hP6DUwO1BKIIY=
+	b=u1FBOxK7xdeYlB7PRnaQ9coIN47bN0x9V3eHM/eEQc0InVg+tTIRyXybpd90jmASZ
+	 mrdWP6vin33uQsJSjiKQsuFKinmWZ5kR1PfBV4SeprJIoRLxPZlRDqGztr+aW1Mo+D
+	 zBPW2qnRfK6VfiK2qLOtCN8C598I/KgWm/YZlssI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732340AbgB0Osp (ORCPT
+        id S1732462AbgB0Os4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:48:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37634 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:48:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729815AbgB0Nmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:42:36 -0500
+        id S1729254AbgB0NmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:42:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69C232468D;
-        Thu, 27 Feb 2020 13:42:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E3AC20726;
+        Thu, 27 Feb 2020 13:42:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582810955;
-        bh=TIjHdADiwkFjXfbpjDNPlSxovxMRHrZrzwi8QVZ2//w=;
+        s=default; t=1582810930;
+        bh=WfLUugpGPKXn/iHU2isoZ0mKXtTg4eIb74duBSFyh0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qg3uXXpfP2/yVBYxI42+/Bn0AHbs24il3v9nvoXtTvOUItQNuGIPz8qbM9/GepEAd
-         ld6Ype0Ftnx9nGQY2ic/r6YjkRB+ufvlPHG+hJznIkXYNiiHN3Kk4Nc4ntoid8NkG+
-         V9wzNTQek8/RwQk3Y6bWLxqeip9zyYX9eO+ua3xE=
+        b=KN47diZ6H4cvrVoF3kO1QlgyLpmDCYtRC/Z5xMlN/Onf48gHvxfKNQWQ0cC90K5mL
+         WZSJSuBUYJemmlw3Tg9FpkwAemdDloKhP6zIkNZy96o5Bs3rY6amyPe3msA11OY6QZ
+         wIhvgZcEn8feQeo//BPw3VJsghTaUrOiw7WGJwGI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Jones <michael-a1.jones@analog.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.4 013/113] hwmon: (pmbus/ltc2978) Fix PMBus polling of MFR_COMMON definitions.
-Date:   Thu, 27 Feb 2020 14:35:29 +0100
-Message-Id: <20200227132213.841275734@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>,
+        Petr Mladek <pmladek@suse.com>, Jiri Olsa <jolsa@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        bpf@vger.kernel.org, netdev@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 051/113] tools lib api fs: Fix gcc9 stringop-truncation compilation error
+Date:   Thu, 27 Feb 2020 14:36:07 +0100
+Message-Id: <20200227132219.917375247@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
 References: <20200227132211.791484803@linuxfoundation.org>
@@ -59,40 +70,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Jones <michael-a1.jones@analog.com>
+From: Andrey Zhizhikin <andrey.z@gmail.com>
 
-commit cf2b012c90e74e85d8aea7d67e48868069cfee0c upstream.
+[ Upstream commit 6794200fa3c9c3e6759dae099145f23e4310f4f7 ]
 
-Change 21537dc driver PMBus polling of MFR_COMMON from bits 5/4 to
-bits 6/5. This fixs a LTC297X family bug where polling always returns
-not busy even when the part is busy. This fixes a LTC388X and
-LTM467X bug where polling used PEND and NOT_IN_TRANS, and BUSY was
-not polled, which can lead to NACKing of commands. LTC388X and
-LTM467X modules now poll BUSY and PEND, increasing reliability by
-eliminating NACKing of commands.
+GCC9 introduced string hardening mechanisms, which exhibits the error
+during fs api compilation:
 
-Signed-off-by: Mike Jones <michael-a1.jones@analog.com>
-Link: https://lore.kernel.org/r/1580234400-2829-2-git-send-email-michael-a1.jones@analog.com
-Fixes: e04d1ce9bbb49 ("hwmon: (ltc2978) Add polling for chips requiring it")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+error: '__builtin_strncpy' specified bound 4096 equals destination size
+[-Werror=stringop-truncation]
 
+This comes when the length of copy passed to strncpy is is equal to
+destination size, which could potentially lead to buffer overflow.
+
+There is a need to mitigate this potential issue by limiting the size of
+destination by 1 and explicitly terminate the destination with NULL.
+
+Signed-off-by: Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andrii Nakryiko <andriin@fb.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: bpf@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Link: http://lore.kernel.org/lkml/20191211080109.18765-1-andrey.zhizhikin@leica-geosystems.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/pmbus/ltc2978.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/lib/api/fs/fs.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/hwmon/pmbus/ltc2978.c
-+++ b/drivers/hwmon/pmbus/ltc2978.c
-@@ -89,8 +89,8 @@ enum chips { ltc2974, ltc2975, ltc2977,
+diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
+index 459599d1b6c41..58f05748dd39e 100644
+--- a/tools/lib/api/fs/fs.c
++++ b/tools/lib/api/fs/fs.c
+@@ -179,6 +179,7 @@ static bool fs__env_override(struct fs *fs)
+ 	size_t name_len = strlen(fs->name);
+ 	/* name + "_PATH" + '\0' */
+ 	char upper_name[name_len + 5 + 1];
++
+ 	memcpy(upper_name, fs->name, name_len);
+ 	mem_toupper(upper_name, name_len);
+ 	strcpy(&upper_name[name_len], "_PATH");
+@@ -188,7 +189,8 @@ static bool fs__env_override(struct fs *fs)
+ 		return false;
  
- #define LTC_POLL_TIMEOUT		100	/* in milli-seconds */
+ 	fs->found = true;
+-	strncpy(fs->path, override_path, sizeof(fs->path));
++	strncpy(fs->path, override_path, sizeof(fs->path) - 1);
++	fs->path[sizeof(fs->path) - 1] = '\0';
+ 	return true;
+ }
  
--#define LTC_NOT_BUSY			BIT(5)
--#define LTC_NOT_PENDING			BIT(4)
-+#define LTC_NOT_BUSY			BIT(6)
-+#define LTC_NOT_PENDING			BIT(5)
- 
- /*
-  * LTC2978 clears peak data whenever the CLEAR_FAULTS command is executed, which
+-- 
+2.20.1
+
 
 
