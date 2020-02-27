@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 236A9C52D34
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C6CC35E1D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF0B224691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:14:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C49420578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:14:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812891;
-	bh=+clTufzxaLnf6Tcv9j0dW5el1QS2eA126VsdaJywk+k=;
+	s=default; t=1582812874;
+	bh=BSZfzcC3rom+TwcE0ATPv7pVKjZ/+GbA95PHOYnmggU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V//PMfGzILIpwN0jOip6f/ENkd1azhsTCHnDvHNIZeYLgd8D1eubPFQb3PoHmvg3s
-	 giT/PP5nwZm6VhMF36B6LU2+Uj4YiQ/j498BEpUSkl2GmYg01pwzRtk8UiTNdZnr1q
-	 xEBLx7Vvg21H7EdsvQClecEqh8fepNKg+k1aL06o=
+	b=oB69gLsaonYaBdVOUWBfv7nV9h70Ytjt4oD9alDBPgiLoFZr0g9GcuccZPC4wKqTK
+	 AuKlV2dLeDJjGHh5/kFMLPqnbHv9meK0xsqvb28E0GBJjvx8bBiozg4a5Hg/0lPanu
+	 TB+MNSxpcNjjYkXl7hdrUY6I2/TFa4DjrkO28V+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388794AbgB0OOt (ORCPT
+        id S2389147AbgB0OOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:14:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54142 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:14:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389177AbgB0OOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:14:45 -0500
+        id S2389127AbgB0OO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:14:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1B042469D;
-        Thu, 27 Feb 2020 14:14:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD0BF24690;
+        Thu, 27 Feb 2020 14:14:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812885;
-        bh=+clTufzxaLnf6Tcv9j0dW5el1QS2eA126VsdaJywk+k=;
+        s=default; t=1582812867;
+        bh=BSZfzcC3rom+TwcE0ATPv7pVKjZ/+GbA95PHOYnmggU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IXcO94W+Yboc5Ey9kNbG8a/wybnZREH0kVXy9paeT2F46PN5eU98/2/MDwDtJISpN
-         z7gJ3orWvmjtfz352NLWo8E+JrD+en7jHB5Gl5rULegdHlcAaJMHMh0OaOImJGQEPm
-         xMG5YGEONlh7Rl3BAmIvc9tahYJEK/LcoMxAR0B0=
+        b=DoBt9vuz6qsky1AKtsTmiXF1dysjxX59zckYg657rJNgjxIyeBDJfivMW+wrRy9Di
+         MuEdE6K6nmLojgk9Rptah5d+qRnzMISqeYFE1G7kvmTGEEhPl8scmkChceJecNzI9p
+         6xUKjV3RiDFCNSjR2iBZmFmpAy1rzibSV8bqTw9U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sam Bobroff <sbobroff@linux.ibm.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.5 052/150] powerpc/eeh: Fix deadlock handling dead PHB
-Date:   Thu, 27 Feb 2020 14:36:29 +0100
-Message-Id: <20200227132240.758004803@linuxfoundation.org>
+        stable@vger.kernel.org, Pietro Oliva <pietroliva@gmail.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>
+Subject: [PATCH 5.5 046/150] staging: rtl8188eu: Fix potential overuse of kernel memory
+Date:   Thu, 27 Feb 2020 14:36:23 +0100
+Message-Id: <20200227132239.805446322@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -60,70 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam Bobroff <sbobroff@linux.ibm.com>
+From: Larry Finger <Larry.Finger@lwfinger.net>
 
-commit d4f194ed9eb9841a8f978710e4d24296f791a85b upstream.
+commit 4ddf8ab8d15ddbc52eefb44eb64e38466ce1f70f upstream.
 
-Recovering a dead PHB can currently cause a deadlock as the PCI
-rescan/remove lock is taken twice.
+In routine wpa_supplicant_ioctl(), the user-controlled p->length is
+checked to be at least the size of struct ieee_param size, but the code
+does not detect the case where p->length is greater than the size
+of the struct, thus a malicious user could be wasting kernel memory.
+Fixes commit a2c60d42d97c ("Add files for new driver - part 16").
 
-This is caused as part of an existing bug in
-eeh_handle_special_event(). The pe is processed while traversing the
-PHBs even though the pe is unrelated to the loop. This causes the pe
-to be, incorrectly, processed more than once.
-
-Untangling this section can move the pe processing out of the loop and
-also outside the locked section, correcting both problems.
-
-Fixes: 2e25505147b8 ("powerpc/eeh: Fix crash when edev->pdev changes")
-Cc: stable@vger.kernel.org # 5.4+
-Signed-off-by: Sam Bobroff <sbobroff@linux.ibm.com>
-Reviewed-by: Frederic Barrat <fbarrat@linux.ibm.com>
-Tested-by: Frederic Barrat <fbarrat@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/0547e82dbf90ee0729a2979a8cac5c91665c621f.1581051445.git.sbobroff@linux.ibm.com
+Reported by: Pietro Oliva <pietroliva@gmail.com>
+Cc: Pietro Oliva <pietroliva@gmail.com>
+Cc: Stable <stable@vger.kernel.org>
+Fixes commit a2c60d42d97c ("Add files for new driver - part 16").
+Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
+Link: https://lore.kernel.org/r/20200210180235.21691-4-Larry.Finger@lwfinger.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/eeh_driver.c |   21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ drivers/staging/rtl8188eu/os_dep/ioctl_linux.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/powerpc/kernel/eeh_driver.c
-+++ b/arch/powerpc/kernel/eeh_driver.c
-@@ -1184,6 +1184,17 @@ void eeh_handle_special_event(void)
- 			eeh_pe_state_mark(pe, EEH_PE_RECOVERING);
- 			eeh_handle_normal_event(pe);
- 		} else {
-+			eeh_for_each_pe(pe, tmp_pe)
-+				eeh_pe_for_each_dev(tmp_pe, edev, tmp_edev)
-+					edev->mode &= ~EEH_DEV_NO_HANDLER;
-+
-+			/* Notify all devices to be down */
-+			eeh_pe_state_clear(pe, EEH_PE_PRI_BUS, true);
-+			eeh_set_channel_state(pe, pci_channel_io_perm_failure);
-+			eeh_pe_report(
-+				"error_detected(permanent failure)", pe,
-+				eeh_report_failure, NULL);
-+
- 			pci_lock_rescan_remove();
- 			list_for_each_entry(hose, &hose_list, list_node) {
- 				phb_pe = eeh_phb_pe_get(hose);
-@@ -1192,16 +1203,6 @@ void eeh_handle_special_event(void)
- 				    (phb_pe->state & EEH_PE_RECOVERING))
- 					continue;
+--- a/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
++++ b/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
+@@ -2011,7 +2011,7 @@ static int wpa_supplicant_ioctl(struct n
+ 	struct ieee_param *param;
+ 	uint ret = 0;
  
--				eeh_for_each_pe(pe, tmp_pe)
--					eeh_pe_for_each_dev(tmp_pe, edev, tmp_edev)
--						edev->mode &= ~EEH_DEV_NO_HANDLER;
--
--				/* Notify all devices to be down */
--				eeh_pe_state_clear(pe, EEH_PE_PRI_BUS, true);
--				eeh_set_channel_state(pe, pci_channel_io_perm_failure);
--				eeh_pe_report(
--					"error_detected(permanent failure)", pe,
--					eeh_report_failure, NULL);
- 				bus = eeh_pe_bus_get(phb_pe);
- 				if (!bus) {
- 					pr_err("%s: Cannot find PCI bus for "
+-	if (p->length < sizeof(struct ieee_param) || !p->pointer) {
++	if (!p->pointer || p->length != sizeof(struct ieee_param)) {
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
 
 
