@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07987C3F352
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF03C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D263924656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6E1520801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812626;
-	bh=rarZuacrQ87h+BDFpV3uxEL/GXdcoEaVM/G5A4T/eM4=;
+	s=default; t=1582812658;
+	bh=Y0IJhB8s4i8Z14yWH6Bjc2AmXNbSeeQ5F8GXkvYofXU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yVdyTuFHS59X05ZnzwTYWtrYRiMoi8rNh/i6CiryVnTnd4xzkJ4m/88MucbAHexy3
-	 np+oasGBOxRx5t3sP6p9FNDGfDIL0NHvYoXujGYYVHfagZTS3K8I46RzRa46aWhMlF
-	 HYqtTUTHV4WDu7TXttObN/MoApSz8fvdKt8s1djs=
+	b=K8+z2g0O4TTGTvZCxbKI1+8sqEN0KOw8iTjj8S1G4pYOfVF9tqjmN49JBIwkOxJ0t
+	 cEarsA08QAGez04BpqMORIvddmkdQ39q3LI56+sjxHRMXSpCz6YyrVbBC0LYFQfLgK
+	 7pzYUHtgWWm69SAqUV1F6Ow2+5ajrurTdAo1PRuw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388530AbgB0OKY (ORCPT
+        id S2388606AbgB0OK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:10:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48504 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:10:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388523AbgB0OKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:10:20 -0500
+        id S2388099AbgB0OKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:10:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B5FF21D7E;
-        Thu, 27 Feb 2020 14:10:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F58024697;
+        Thu, 27 Feb 2020 14:10:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812619;
-        bh=rarZuacrQ87h+BDFpV3uxEL/GXdcoEaVM/G5A4T/eM4=;
+        s=default; t=1582812653;
+        bh=Y0IJhB8s4i8Z14yWH6Bjc2AmXNbSeeQ5F8GXkvYofXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qMAPtyHR7Tuna1DCLUlu7RfZx0s94SOGCeQqY+0e5FvsE8o/j497YlqRvGpp9eSBB
-         zh9OXiu1/7LSXw02sWHjdIPQnykC3gfQSx+DBCGKOp/8mftbPzKQoDG0+lzeahhHpk
-         I6yPmi7QmcWWkc8fJRuIhfmyvPCyAxfYL3fWHXRA=
+        b=asKkTO+l9FvSCXwEkwcj/FM2FK+QbZPe8oPcgZZ/3c8EDDz1lUmzS0Qg3aVujWm1G
+         XeGbA17ZmBtCz2e0a6TVRY521PahPHgohwIj3DtAx85znitZ8x63wUMBq7DPegpoU3
+         rcslqqSIE4KHm64XvqWZhvW1W0Fw6beHr+Zaqxqw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Upton <oupton@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.4 087/135] KVM: nVMX: Refactor IO bitmap checks into helper function
-Date:   Thu, 27 Feb 2020 14:37:07 +0100
-Message-Id: <20200227132242.405969204@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 099/135] Btrfs: fix deadlock during fast fsync when logging prealloc extents beyond eof
+Date:   Thu, 27 Feb 2020 14:37:19 +0100
+Message-Id: <20200227132244.110598983@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -60,93 +60,214 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Upton <oupton@google.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit e71237d3ff1abf9f3388337cfebf53b96df2020d upstream.
+commit a5ae50dea9111db63d30d700766dd5509602f7ad upstream.
 
-Checks against the IO bitmap are useful for both instruction emulation
-and VM-exit reflection. Refactor the IO bitmap checks into a helper
-function.
+While logging the prealloc extents of an inode during a fast fsync we call
+btrfs_truncate_inode_items(), through btrfs_log_prealloc_extents(), while
+holding a read lock on a leaf of the inode's root (not the log root, the
+fs/subvol root), and then that function locks the file range in the inode's
+iotree. This can lead to a deadlock when:
 
-Signed-off-by: Oliver Upton <oupton@google.com>
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+* the fsync is ranged
+
+* the file has prealloc extents beyond eof
+
+* writeback for a range different from the fsync range starts
+  during the fsync
+
+* the size of the file is not sector size aligned
+
+Because when finishing an ordered extent we lock first a file range and
+then try to COW the fs/subvol tree to insert an extent item.
+
+The following diagram shows how the deadlock can happen.
+
+           CPU 1                                        CPU 2
+
+  btrfs_sync_file()
+    --> for range [0, 1MiB)
+
+    --> inode has a size of
+        1MiB and has 1 prealloc
+        extent beyond the
+        i_size, starting at offset
+        4MiB
+
+    flushes all delalloc for the
+    range [0MiB, 1MiB) and waits
+    for the respective ordered
+    extents to complete
+
+                                              --> before task at CPU 1 locks the
+                                                  inode, a write into file range
+                                                  [1MiB, 2MiB + 1KiB) is made
+
+                                              --> i_size is updated to 2MiB + 1KiB
+
+                                              --> writeback is started for that
+                                                  range, [1MiB, 2MiB + 4KiB)
+                                                  --> end offset rounded up to
+                                                      be sector size aligned
+
+    btrfs_log_dentry_safe()
+      btrfs_log_inode_parent()
+        btrfs_log_inode()
+
+          btrfs_log_changed_extents()
+            btrfs_log_prealloc_extents()
+              --> does a search on the
+                  inode's root
+              --> holds a read lock on
+                  leaf X
+
+                                              btrfs_finish_ordered_io()
+                                                --> locks range [1MiB, 2MiB + 4KiB)
+                                                    --> end offset rounded up
+                                                        to be sector size aligned
+
+                                                --> tries to cow leaf X, through
+                                                    insert_reserved_file_extent()
+                                                    --> already locked by the
+                                                        task at CPU 1
+
+              btrfs_truncate_inode_items()
+
+                --> gets an i_size of
+                    2MiB + 1KiB, which is
+                    not sector size
+                    aligned
+
+                --> tries to lock file
+                    range [2MiB, (u64)-1)
+                    --> the start range
+                        is rounded down
+                        from 2MiB + 1K
+                        to 2MiB to be sector
+                        size aligned
+
+                    --> but the subrange
+                        [2MiB, 2MiB + 4KiB) is
+                        already locked by
+                        task at CPU 2 which
+                        is waiting to get a
+                        write lock on leaf X
+                        for which we are
+                        holding a read lock
+
+                                *** deadlock ***
+
+This results in a stack trace like the following, triggered by test case
+generic/561 from fstests:
+
+  [ 2779.973608] INFO: task kworker/u8:6:247 blocked for more than 120 seconds.
+  [ 2779.979536]       Not tainted 5.6.0-rc2-btrfs-next-53 #1
+  [ 2779.984503] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+  [ 2779.990136] kworker/u8:6    D    0   247      2 0x80004000
+  [ 2779.990457] Workqueue: btrfs-endio-write btrfs_work_helper [btrfs]
+  [ 2779.990466] Call Trace:
+  [ 2779.990491]  ? __schedule+0x384/0xa30
+  [ 2779.990521]  schedule+0x33/0xe0
+  [ 2779.990616]  btrfs_tree_read_lock+0x19e/0x2e0 [btrfs]
+  [ 2779.990632]  ? remove_wait_queue+0x60/0x60
+  [ 2779.990730]  btrfs_read_lock_root_node+0x2f/0x40 [btrfs]
+  [ 2779.990782]  btrfs_search_slot+0x510/0x1000 [btrfs]
+  [ 2779.990869]  btrfs_lookup_file_extent+0x4a/0x70 [btrfs]
+  [ 2779.990944]  __btrfs_drop_extents+0x161/0x1060 [btrfs]
+  [ 2779.990987]  ? mark_held_locks+0x6d/0xc0
+  [ 2779.990994]  ? __slab_alloc.isra.49+0x99/0x100
+  [ 2779.991060]  ? insert_reserved_file_extent.constprop.19+0x64/0x300 [btrfs]
+  [ 2779.991145]  insert_reserved_file_extent.constprop.19+0x97/0x300 [btrfs]
+  [ 2779.991222]  ? start_transaction+0xdd/0x5c0 [btrfs]
+  [ 2779.991291]  btrfs_finish_ordered_io+0x4f4/0x840 [btrfs]
+  [ 2779.991405]  btrfs_work_helper+0xaa/0x720 [btrfs]
+  [ 2779.991432]  process_one_work+0x26d/0x6a0
+  [ 2779.991460]  worker_thread+0x4f/0x3e0
+  [ 2779.991481]  ? process_one_work+0x6a0/0x6a0
+  [ 2779.991489]  kthread+0x103/0x140
+  [ 2779.991499]  ? kthread_create_worker_on_cpu+0x70/0x70
+  [ 2779.991515]  ret_from_fork+0x3a/0x50
+  (...)
+  [ 2780.026211] INFO: task fsstress:17375 blocked for more than 120 seconds.
+  [ 2780.027480]       Not tainted 5.6.0-rc2-btrfs-next-53 #1
+  [ 2780.028482] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+  [ 2780.030035] fsstress        D    0 17375  17373 0x00004000
+  [ 2780.030038] Call Trace:
+  [ 2780.030044]  ? __schedule+0x384/0xa30
+  [ 2780.030052]  schedule+0x33/0xe0
+  [ 2780.030075]  lock_extent_bits+0x20c/0x320 [btrfs]
+  [ 2780.030094]  ? btrfs_truncate_inode_items+0xf4/0x1150 [btrfs]
+  [ 2780.030098]  ? rcu_read_lock_sched_held+0x59/0xa0
+  [ 2780.030102]  ? remove_wait_queue+0x60/0x60
+  [ 2780.030122]  btrfs_truncate_inode_items+0x133/0x1150 [btrfs]
+  [ 2780.030151]  ? btrfs_set_path_blocking+0xb2/0x160 [btrfs]
+  [ 2780.030165]  ? btrfs_search_slot+0x379/0x1000 [btrfs]
+  [ 2780.030195]  btrfs_log_changed_extents.isra.8+0x841/0x93e [btrfs]
+  [ 2780.030202]  ? do_raw_spin_unlock+0x49/0xc0
+  [ 2780.030215]  ? btrfs_get_num_csums+0x10/0x10 [btrfs]
+  [ 2780.030239]  btrfs_log_inode+0xf83/0x1124 [btrfs]
+  [ 2780.030251]  ? __mutex_unlock_slowpath+0x45/0x2a0
+  [ 2780.030275]  btrfs_log_inode_parent+0x2a0/0xe40 [btrfs]
+  [ 2780.030282]  ? dget_parent+0xa1/0x370
+  [ 2780.030309]  btrfs_log_dentry_safe+0x4a/0x70 [btrfs]
+  [ 2780.030329]  btrfs_sync_file+0x3f3/0x490 [btrfs]
+  [ 2780.030339]  do_fsync+0x38/0x60
+  [ 2780.030343]  __x64_sys_fdatasync+0x13/0x20
+  [ 2780.030345]  do_syscall_64+0x5c/0x280
+  [ 2780.030348]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  [ 2780.030356] RIP: 0033:0x7f2d80f6d5f0
+  [ 2780.030361] Code: Bad RIP value.
+  [ 2780.030362] RSP: 002b:00007ffdba3c8548 EFLAGS: 00000246 ORIG_RAX: 000000000000004b
+  [ 2780.030364] RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f2d80f6d5f0
+  [ 2780.030365] RDX: 00007ffdba3c84b0 RSI: 00007ffdba3c84b0 RDI: 0000000000000003
+  [ 2780.030367] RBP: 000000000000004a R08: 0000000000000001 R09: 00007ffdba3c855c
+  [ 2780.030368] R10: 0000000000000078 R11: 0000000000000246 R12: 00000000000001f4
+  [ 2780.030369] R13: 0000000051eb851f R14: 00007ffdba3c85f0 R15: 0000557a49220d90
+
+So fix this by making btrfs_truncate_inode_items() not lock the range in
+the inode's iotree when the target root is a log root, since it's not
+needed to lock the range for log roots as the protection from the inode's
+lock and log_mutex are all that's needed.
+
+Fixes: 28553fa992cb28 ("Btrfs: fix race between shrinking truncate and fiemap")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx/nested.c |   39 +++++++++++++++++++++++++--------------
- arch/x86/kvm/vmx/nested.h |    2 ++
- 2 files changed, 27 insertions(+), 14 deletions(-)
+ fs/btrfs/inode.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -5132,24 +5132,17 @@ fail:
- 	return 1;
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -4752,8 +4752,9 @@ int btrfs_truncate_inode_items(struct bt
+ 		return -ENOMEM;
+ 	path->reada = READA_BACK;
+ 
+-	lock_extent_bits(&BTRFS_I(inode)->io_tree, lock_start, (u64)-1,
+-			 &cached_state);
++	if (root->root_key.objectid != BTRFS_TREE_LOG_OBJECTID)
++		lock_extent_bits(&BTRFS_I(inode)->io_tree, lock_start, (u64)-1,
++				 &cached_state);
+ 
+ 	/*
+ 	 * We want to drop from the next block forward in case this new size is
+@@ -5017,11 +5018,10 @@ out:
+ 		if (!ret && last_size > new_size)
+ 			last_size = new_size;
+ 		btrfs_ordered_update_i_size(inode, last_size, NULL);
++		unlock_extent_cached(&BTRFS_I(inode)->io_tree, lock_start,
++				     (u64)-1, &cached_state);
+ 	}
+ 
+-	unlock_extent_cached(&BTRFS_I(inode)->io_tree, lock_start, (u64)-1,
+-			     &cached_state);
+-
+ 	btrfs_free_path(path);
+ 	return ret;
  }
- 
--
--static bool nested_vmx_exit_handled_io(struct kvm_vcpu *vcpu,
--				       struct vmcs12 *vmcs12)
-+/*
-+ * Return true if an IO instruction with the specified port and size should cause
-+ * a VM-exit into L1.
-+ */
-+bool nested_vmx_check_io_bitmaps(struct kvm_vcpu *vcpu, unsigned int port,
-+				 int size)
- {
--	unsigned long exit_qualification;
-+	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
- 	gpa_t bitmap, last_bitmap;
--	unsigned int port;
--	int size;
- 	u8 b;
- 
--	if (!nested_cpu_has(vmcs12, CPU_BASED_USE_IO_BITMAPS))
--		return nested_cpu_has(vmcs12, CPU_BASED_UNCOND_IO_EXITING);
--
--	exit_qualification = vmcs_readl(EXIT_QUALIFICATION);
--
--	port = exit_qualification >> 16;
--	size = (exit_qualification & 7) + 1;
--
- 	last_bitmap = (gpa_t)-1;
- 	b = -1;
- 
-@@ -5176,6 +5169,24 @@ static bool nested_vmx_exit_handled_io(s
- 	return false;
- }
- 
-+static bool nested_vmx_exit_handled_io(struct kvm_vcpu *vcpu,
-+				       struct vmcs12 *vmcs12)
-+{
-+	unsigned long exit_qualification;
-+	unsigned int port;
-+	int size;
-+
-+	if (!nested_cpu_has(vmcs12, CPU_BASED_USE_IO_BITMAPS))
-+		return nested_cpu_has(vmcs12, CPU_BASED_UNCOND_IO_EXITING);
-+
-+	exit_qualification = vmcs_readl(EXIT_QUALIFICATION);
-+
-+	port = exit_qualification >> 16;
-+	size = (exit_qualification & 7) + 1;
-+
-+	return nested_vmx_check_io_bitmaps(vcpu, port, size);
-+}
-+
- /*
-  * Return 1 if we should exit from L2 to L1 to handle an MSR access access,
-  * rather than handle it ourselves in L0. I.e., check whether L1 expressed
---- a/arch/x86/kvm/vmx/nested.h
-+++ b/arch/x86/kvm/vmx/nested.h
-@@ -33,6 +33,8 @@ int vmx_set_vmx_msr(struct kvm_vcpu *vcp
- int vmx_get_vmx_msr(struct nested_vmx_msrs *msrs, u32 msr_index, u64 *pdata);
- int get_vmx_mem_address(struct kvm_vcpu *vcpu, unsigned long exit_qualification,
- 			u32 vmx_instruction_info, bool wr, int len, gva_t *ret);
-+bool nested_vmx_check_io_bitmaps(struct kvm_vcpu *vcpu, unsigned int port,
-+				 int size);
- 
- static inline struct vmcs12 *get_vmcs12(struct kvm_vcpu *vcpu)
- {
 
 
