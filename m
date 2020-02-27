@@ -7,122 +7,161 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F97C34022
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B04DC11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BBFD24699
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AD3F2468A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:58:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="byT2rBha"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WgRm/FMp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732823AbgB0O5s (ORCPT
+        id S1732870AbgB0O6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:57:48 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45155 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730338AbgB0O5r (ORCPT
+        Thu, 27 Feb 2020 09:58:17 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40366 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729983AbgB0O6Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:57:47 -0500
-Received: by mail-wr1-f65.google.com with SMTP id v2so3683227wrp.12
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 06:57:44 -0800 (PST)
+        Thu, 27 Feb 2020 09:58:16 -0500
+Received: by mail-lf1-f68.google.com with SMTP id c23so2305523lfi.7
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 06:58:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=c8UJCHjiQkoyahVk3JVpGT7p90RFMuXW7y1DGNJVn3I=;
-        b=byT2rBhaJ3NpZXKQ3xNyKgwH/jTsZDf0x3JScBZse8RZ9ksFtO/1/rzbmUu0CFRSmu
-         UdjxqFPEVzG5/nlQN1mO3unL4TpB2ZWZqMmJ1QFXtg0gtHTDJmuH5Mr9BHs1Z27Lz8kL
-         uNlFPb6j5UW2b9rOFGC2vB0UPG4BqkPa/9nbKFUK4OLlUK/pY6kMcaGVXtUMgczw0Kp6
-         oAm41AQENKBtmKvcKzZCOGkW797Vm6p0Mh+Z9k7y+u3Fd4p0Ai6LFLrNKSdom9zxuj/A
-         QU7eFBjQf0U6mgt31hcNhrgdDBHWHjTyZwkPPZmLd1Qrq5BEShppzQjd8edcXAQXb6PS
-         SaYw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aTf53l+ERC5tzgGssL0BoGJrw05AN4ObqwUxsfjBbYg=;
+        b=WgRm/FMpgAMUYeUo5G+W95Ep9TyZ3+12iwn9yu2TbN0mbhqC8/C8NdAhKm9pc1LnfT
+         lBDciFBrXY7o2vRVi5f6Jz3/xNrPlJ8I8YoP+uI4i0T4ru3G4MCSBwmQ73muYHNmr3f8
+         RzExTPNy+JDdxh6TOv7NetqK2RWzCkl8QyT4Ehp9g1kikwZSFoZF5Qqo0mbgqYxsFuCh
+         rtBwTwDo8X6BvROUEYaWN9Hpm4vlXFYKewVhyMUycqer3QPIrXaVZNykXcsf2UKR7wc3
+         4+SuPu5j/zfgBL6eqWL0Em1u8HGUpjcNwbEcai8t58ThkjcoVM9OsOjAQVVy5tHJVFtE
+         3NAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=c8UJCHjiQkoyahVk3JVpGT7p90RFMuXW7y1DGNJVn3I=;
-        b=JGCqSL/r68umICggsKkOzmPIV1JyhYAd5LywlI9rj9gqAhLTBBvZZKPJEAPKtmyGWw
-         w3DjvhAOc4PQHLVGOCiubc7FhCTmSou+y+lfKQa8F7suokDrdCwQ/5KrRfjhkEPNSJ8U
-         8bxa0FzMGxZmeMl20v8NTYJLXxCLnjVVA4GzP4Hasr7lovPR4KiCXeYcq5OOnIGPJQgW
-         d0EPBj9Wo+pwbB31eR3Rp/5eYOJJxTQkL+lBAZO+HVVhn7pV9qFO6QBigZrQWSKMAPRV
-         KFz9n3evx2I7+Ksf892Mx31HR5cjYCx2Gx9Too5Bv3DR+nuP3FGHQW0gi5KDz+ao6FbV
-         0DFg==
-X-Gm-Message-State: APjAAAWgHiaSab+NwaK0jAsHlN+vcrzGItTBAYvT+KXO/jU4boGEHqkf
-        A8+T9NvOIVhcYAMAF1FiNHM0cA==
-X-Google-Smtp-Source: APXvYqyyrixRf/9E0uAEum8ogR5+reOoYYP6OuOAEbkyXb2Dh9c2XHojBOJxbwOJHAKTPtAucIdiBw==
-X-Received: by 2002:adf:f892:: with SMTP id u18mr5040913wrp.328.1582815463904;
-        Thu, 27 Feb 2020 06:57:43 -0800 (PST)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id h15sm1262654wrr.73.2020.02.27.06.57.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 06:57:43 -0800 (PST)
-Date:   Thu, 27 Feb 2020 14:57:41 +0000
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Gyungoh Yoo <jack.yoo@skyworksinc.com>,
-        Bryan Wu <cooloney@gmail.com>, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][V2] backlight: sky81452: insure while loop does not
- allow negative array indexing
-Message-ID: <20200227145741.v3r4qzkfsrwpy33h@holly.lan>
-References: <20200226195826.6567-1-colin.king@canonical.com>
- <20200227114623.vaevrdwiduxa2mqs@holly.lan>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aTf53l+ERC5tzgGssL0BoGJrw05AN4ObqwUxsfjBbYg=;
+        b=Vxvz2HOydu/RHargaiULmK1EN7N4aGLBOaF/7MsNN7Bywq3skEKORdMPlA4nqZX5ba
+         pLuxcmykBhW3cT9njDpTq70vQiCOgzdmbZ2xygDT+3FsG7XxHaDui0fOr4SLYSEqculo
+         Rumbbo0UmtEmvw1Y5gcGdi7Ft/RlKH71hSp7KNbwF1zhDqwGoGkbQcOvOVzFA5OsmZrX
+         z6TsjXY0GnfPsbu92mfwkrMfUP7ICpithGLTgg7W3qvytWT+GQndCQDaeZ4FP1E0vWku
+         iVagy4Q0RyztHVHPZdRuyhm08VbAO2tSiuwqwFJ31mKSveKqB5vJbarmI5U28ynAehQ0
+         hyew==
+X-Gm-Message-State: ANhLgQ2nBTHUvkBczIVZA0pyWrotHawdRETbY3Rbnu3DzznVZW0/WiBX
+        AkXrkfGrC8mGnhWBrLEjPYx2FyRVTruo5hm6wnrbsw==
+X-Google-Smtp-Source: ADFU+vuvFgIeyOpTemZqCZN3AmVSSSHqtxc3oIx/4jV9DCXe1IbFO14Gg3vhvScB5v4QZqGBZqJDCVoJxosiWBTbhe8=
+X-Received: by 2002:a19:6903:: with SMTP id e3mr6662lfc.25.1582815493879; Thu,
+ 27 Feb 2020 06:58:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200227114623.vaevrdwiduxa2mqs@holly.lan>
+References: <20200226181640.21664-1-vincent.guittot@linaro.org>
+ <xm26r1yhtbjr.fsf@bsegall-linux.svl.corp.google.com> <CAKfTPtBm9Gt16gqQgxoErOOmpbUHit6bNf4CVLvDzf04SjWtEg@mail.gmail.com>
+ <8f72ea72-f36d-2611-e026-62ddff5c3422@arm.com> <CAKfTPtC9bkMQJsWw6Z2QD0RrV=qN7yMFviVnSeTpDp=-vLBL0g@mail.gmail.com>
+In-Reply-To: <CAKfTPtC9bkMQJsWw6Z2QD0RrV=qN7yMFviVnSeTpDp=-vLBL0g@mail.gmail.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Thu, 27 Feb 2020 15:58:02 +0100
+Message-ID: <CAKfTPtD4iVQmxWgNDDVhKPbu+rYEf=_1xKoPVOy343qo51pD_A@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair: fix runnable_avg for throttled cfs
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Ben Segall <bsegall@google.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Hillf Danton <hdanton@sina.com>, zhout@vivaldi.net
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 11:46:23AM +0000, Daniel Thompson wrote:
-> On Wed, Feb 26, 2020 at 07:58:26PM +0000, Colin King wrote:
-> > From: Colin Ian King <colin.king@canonical.com>
-> > 
-> > In the unlikely event that num_entry is zero, the while loop
-> > pre-decrements num_entry to cause negative array indexing into the
-> > array sources. Fix this by iterating only if num_entry >= 0.
-> > 
-> > Addresses-Coverity: ("Out-of-bounds read")
-> > Fixes: f705806c9f35 ("backlight: Add support Skyworks SKY81452 backlight driver")
-> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> > ---
-> > 
-> > V2: fix typo in commit subject line
-> 
-> Isn't the correct spelling "ensure"?
-> 
-> 
-> > ---
-> >  drivers/video/backlight/sky81452-backlight.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/video/backlight/sky81452-backlight.c b/drivers/video/backlight/sky81452-backlight.c
-> > index 2355f00f5773..f456930ce78e 100644
-> > --- a/drivers/video/backlight/sky81452-backlight.c
-> > +++ b/drivers/video/backlight/sky81452-backlight.c
-> > @@ -200,7 +200,7 @@ static struct sky81452_bl_platform_data *sky81452_bl_parse_dt(
-> >  		}
-> >  
-> >  		pdata->enable = 0;
-> > -		while (--num_entry)
-> > +		while (--num_entry >= 0)
-> >  			pdata->enable |= (1 << sources[num_entry]);
-> 
-> This look still looks buggy to me (so I'd second Walter's request to
-> change it to a for loop). If the code genuinely does not contain a
-> bug then it probably needs a prominent comment explaining why it is
-> correct not to honour sources[0]!
+On Thu, 27 Feb 2020 at 14:10, Vincent Guittot
+<vincent.guittot@linaro.org> wrote:
+>
+> On Thu, 27 Feb 2020 at 12:20, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+> >
+> > On 26.02.20 21:01, Vincent Guittot wrote:
+> > > On Wed, 26 Feb 2020 at 20:04, <bsegall@google.com> wrote:
+> > >>
+> > >> Vincent Guittot <vincent.guittot@linaro.org> writes:
+> > >>
+> > >>> When a cfs_rq is throttled, its group entity is dequeued and its running
+> > >>> tasks are removed. We must update runnable_avg with current h_nr_running
+> > >>> and update group_se->runnable_weight with new h_nr_running at each level
+> >
+> >                                               ^^^
+> >
+> > Shouldn't this be 'current' rather 'new' h_nr_running for
+> > group_se->runnable_weight? IMHO, you want to cache the current value
+> > before you add/subtract task_delta.
+>
+> hmm... it can't be current in both places. In my explanation,
+> "current" means the current situation when we started to throttle cfs
+> and "new" means the new situation after we finished to throttle the
+> cfs. I should probably use old and new to prevent any
+> misunderstanding.
 
-Ignore the "still looks buggy". A mental mis-step when switching
-contexts...
+I'm about to send a new version to fix some minor changes: The if
+statement should have some  { }   as there are some on the else part
 
-I think my English is still correct though ;-)
+Would it be better for you if i use old and new instead of current and
+new in the commit message ?
 
-
-Daniel.
+>
+> That being said, we need to update runnable_avg with the old
+> h_nr_running: the one before we started to throttle the cfs which is
+> the value saved in group_se->runnable_weight. Once we have updated
+> runnable_avg, we save the new h_nr_running in
+> group_se->runnable_weight that will be used for next updates.
+>
+> >
+> > >>> of the hierarchy.
+> > >>
+> > >> You'll also need to do this for task enqueue/dequeue inside of a
+> > >> throttled hierarchy, I'm pretty sure.
+> > >
+> > > AFAICT, this is already done with patch "sched/pelt: Add a new
+> > > runnable average signal" when task is enqueued/dequeued inside a
+> > > throttled hierarchy
+> > >
+> > >>
+> > >>>
+> > >>> Fixes: 9f68395333ad ("sched/pelt: Add a new runnable average signal")
+> > >>> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> > >>> ---
+> > >>> This patch applies on top of tip/sched/core
+> > >>>
+> > >>>  kernel/sched/fair.c | 10 ++++++++++
+> > >>>  1 file changed, 10 insertions(+)
+> > >>>
+> > >>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > >>> index fcc968669aea..6d46974e9be7 100644
+> > >>> --- a/kernel/sched/fair.c
+> > >>> +++ b/kernel/sched/fair.c
+> > >>> @@ -4703,6 +4703,11 @@ static void throttle_cfs_rq(struct cfs_rq *cfs_rq)
+> > >>>
+> > >>>               if (dequeue)
+> > >>>                       dequeue_entity(qcfs_rq, se, DEQUEUE_SLEEP);
+> > >>> +             else {
+> > >>> +                     update_load_avg(qcfs_rq, se, 0);
+> > >>> +                     se_update_runnable(se);
+> > >>> +             }
+> > >>> +
+> > >>>               qcfs_rq->h_nr_running -= task_delta;
+> > >>>               qcfs_rq->idle_h_nr_running -= idle_task_delta;
+> > >>>
+> > >>> @@ -4772,6 +4777,11 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
+> > >>>               cfs_rq = cfs_rq_of(se);
+> > >>>               if (enqueue)
+> > >>>                       enqueue_entity(cfs_rq, se, ENQUEUE_WAKEUP);
+> > >>> +             else {
+> > >>> +                     update_load_avg(cfs_rq, se, 0);
+> > >>
+> > >>
+> > >>> +                     se_update_runnable(se);
+> > >>> +             }
+> > >>> +
+> > >>>               cfs_rq->h_nr_running += task_delta;
+> > >>>               cfs_rq->idle_h_nr_running += idle_task_delta;
