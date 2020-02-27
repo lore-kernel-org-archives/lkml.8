@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A560C5ED28
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BED2C54FD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1574B24690
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64FE024690
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813193;
-	bh=qG7L3omsE9Soo2/tazuOT2I0Z+DQxknam2ce7i8Y+LY=;
+	s=default; t=1582813052;
+	bh=yRLEektdeDkCtrr1P2ul+A4zBxpX5zc0GQg0vycFNg8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q3liRco/i2WxcU3QP0ljdHytmnqDVosgbzwaHCkIREoHD7dBeppxf8MuL2AVIdpDS
-	 YLm0KMme6EdpQnZsjCiiGGPV8B2wWAwDle21pSIrqWaO/S95g7MIuyyBxDGJXyq5DZ
-	 8C8RSAjE4BK4HVxFooOpqbzzZd4nAG5bskhszl1Q=
+	b=Eht7RKeru2Y5dbaaA35w3r18rwsFmwpSngWK4dRitYWhioQ/AkvOIs0nTX6Egk3hA
+	 Lb1Jb7klxqmqruzCpB6JBaJAyrvDRBp7LO6XUTD/LIDGlVI1Mk5AZ236PDc6ERyOxP
+	 f6euTMG5cnqAkzkb3ESh1zCPXIUqz7xJ0kZBdUl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389908AbgB0OSg (ORCPT
+        id S2389723AbgB0ORa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:18:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59148 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:17:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389382AbgB0OSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:18:31 -0500
+        id S2389705AbgB0OR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:17:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 638B424690;
-        Thu, 27 Feb 2020 14:18:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2FB02469D;
+        Thu, 27 Feb 2020 14:17:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813110;
-        bh=qG7L3omsE9Soo2/tazuOT2I0Z+DQxknam2ce7i8Y+LY=;
+        s=default; t=1582813047;
+        bh=yRLEektdeDkCtrr1P2ul+A4zBxpX5zc0GQg0vycFNg8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fwCdPvfzaIox+xDf8LjaIgO6NT8GQvYMII1plbTVi2Uvh13zW63sPsHmm/JrC/3ez
-         bbHn/oTBOoXS5NnJj7R3V/Ew7Y6bwqoRu/a5BiXVS3Z5EOKtRpS3WxV0DVF5Y8I86w
-         OvPsAerTe/DCo/KkgBNqXsFkfS23q3Z95LGr1mI4=
+        b=INjAmd+y6ZINIoGqUb3HO0nCPsb2sJdcoLiQHa11zPHxup0RX/BKObaSysoE2wura
+         sHCOTh9YXHwHJXkc8sID96fKRaVQfNTONSLjEPGi7I3FoXSWGi5kFiKQn4PaClay6F
+         9m6osBJllLWrqxBHjvVnAX/5MN439LC9Dmv//fEI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        syzbot+adf6c6c2be1c3a718121@syzkaller.appspotmail.com
-Subject: [PATCH 5.5 140/150] netfilter: xt_hashlimit: limit the max size of hashtable
-Date:   Thu, 27 Feb 2020 14:37:57 +0100
-Message-Id: <20200227132252.929522395@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
+        Matt Roper <matthew.d.roper@intel.com>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH 5.5 117/150] drm/i915/ehl: Update port clock voltage level requirements
+Date:   Thu, 27 Feb 2020 14:37:34 +0100
+Message-Id: <20200227132249.936963458@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -61,52 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Matt Roper <matthew.d.roper@intel.com>
 
-commit 8d0015a7ab76b8b1e89a3e5f5710a6e5103f2dd5 upstream.
+commit 58e9121c32a245fab47f29ab4ad29dd62470a7e8 upstream.
 
-The user-specified hashtable size is unbound, this could
-easily lead to an OOM or a hung task as we hold the global
-mutex while allocating and initializing the new hashtable.
+Voltage level depends not only on the cdclk, but also on the DDI clock.
+Last time the bspec voltage level table for EHL was updated, we only
+updated the cdclk requirements, but forgot to account for the new port
+clock criteria.
 
-Add a max value to cap both cfg->size and cfg->max, as
-suggested by Florian.
-
-Reported-and-tested-by: syzbot+adf6c6c2be1c3a718121@syzkaller.appspotmail.com
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Reviewed-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Bspec: 21809
+Fixes: d147483884ed ("drm/i915/ehl: Update voltage level checks")
+Cc: José Roberto de Souza <jose.souza@intel.com>
+Signed-off-by: Matt Roper <matthew.d.roper@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200207001417.1229251-1-matthew.d.roper@intel.com
+Reviewed-by: José Roberto de Souza <jose.souza@intel.com>
+(cherry picked from commit 9d5fd37ed7e26efdbe90f492d7eb8b53dcdb61d6)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/xt_hashlimit.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/gpu/drm/i915/display/intel_ddi.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/netfilter/xt_hashlimit.c
-+++ b/net/netfilter/xt_hashlimit.c
-@@ -851,6 +851,8 @@ hashlimit_mt(const struct sk_buff *skb,
- 	return hashlimit_mt_common(skb, par, hinfo, &info->cfg, 3);
- }
- 
-+#define HASHLIMIT_MAX_SIZE 1048576
-+
- static int hashlimit_mt_check_common(const struct xt_mtchk_param *par,
- 				     struct xt_hashlimit_htable **hinfo,
- 				     struct hashlimit_cfg3 *cfg,
-@@ -861,6 +863,14 @@ static int hashlimit_mt_check_common(con
- 
- 	if (cfg->gc_interval == 0 || cfg->expire == 0)
- 		return -EINVAL;
-+	if (cfg->size > HASHLIMIT_MAX_SIZE) {
-+		cfg->size = HASHLIMIT_MAX_SIZE;
-+		pr_info_ratelimited("size too large, truncated to %u\n", cfg->size);
-+	}
-+	if (cfg->max > HASHLIMIT_MAX_SIZE) {
-+		cfg->max = HASHLIMIT_MAX_SIZE;
-+		pr_info_ratelimited("max too large, truncated to %u\n", cfg->max);
-+	}
- 	if (par->family == NFPROTO_IPV4) {
- 		if (cfg->srcmask > 32 || cfg->dstmask > 32)
- 			return -EINVAL;
+--- a/drivers/gpu/drm/i915/display/intel_ddi.c
++++ b/drivers/gpu/drm/i915/display/intel_ddi.c
+@@ -4227,7 +4227,9 @@ static bool intel_ddi_is_audio_enabled(s
+ void intel_ddi_compute_min_voltage_level(struct drm_i915_private *dev_priv,
+ 					 struct intel_crtc_state *crtc_state)
+ {
+-	if (INTEL_GEN(dev_priv) >= 11 && crtc_state->port_clock > 594000)
++	if (IS_ELKHARTLAKE(dev_priv) && crtc_state->port_clock > 594000)
++		crtc_state->min_voltage_level = 3;
++	else if (INTEL_GEN(dev_priv) >= 11 && crtc_state->port_clock > 594000)
+ 		crtc_state->min_voltage_level = 1;
+ 	else if (IS_CANNONLAKE(dev_priv) && crtc_state->port_clock > 594000)
+ 		crtc_state->min_voltage_level = 2;
 
 
