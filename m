@@ -2,147 +2,174 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EED8C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D91AC4BA0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2273420658
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C491D24650
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:53:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="uHQcXKIq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Uat+WHGe";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="YxaNitAF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728133AbgB0AvF (ORCPT
+        id S1728153AbgB0AxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 19:51:05 -0500
-Received: from gateway24.websitewelcome.com ([192.185.51.202]:41105 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727987AbgB0AvE (ORCPT
+        Wed, 26 Feb 2020 19:53:06 -0500
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:17257 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728075AbgB0AxG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 19:51:04 -0500
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id B1D946372E
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 18:51:03 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 77OHjESB5Sl8q77OHjssum; Wed, 26 Feb 2020 18:51:03 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=CxvRwi9ERvjqza3ONz0t3g7iTuq5cMATTfcSYBFnsBo=; b=uHQcXKIq7CcMbICKYg4TJX2gjD
-        3hjamqfDiEmxsZYgqGDUzonP1gnJWS7PJV09AjdP+XUn3NK908uPjci9ftXkEaJOhDKeTO2D8y92x
-        3UefhjyU2s9udMIYKNnVVhG9cd0mo00ho+Ru80N/kPZ6/0e/U07yJQJZe2rv8jBLUahdOzx7DSdyf
-        g4HXAa/ZxtLmrQkOIYPwDmm4r1pe5WZaG8buI0YWSPLBhC77Rm+IDhQDT9PQyGXc9CIA5zFHvNMU5
-        oplL6z+Cgx7qxnZ6Np6PSg1Qr8s8gayqkETnijTJLY1GHn+S+LSQbl/AYAUip8H7x/YIvwj4Ojax/
-        0XWpbinA==;
-Received: from [201.162.161.221] (port=49846 helo=[192.168.43.132])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j77OH-002Vj3-71; Wed, 26 Feb 2020 18:51:01 -0600
-Subject: Re: [PATCH][next] net: cisco: Replace zero-length array with
- flexible-array member
-To:     David Miller <davem@davemloft.net>
-Cc:     benve@cisco.com, _govind@gmx.com, pkaustub@cisco.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200225001826.GA22765@embeddedor>
- <20200226.164642.670797289411682529.davem@davemloft.net>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- xsFNBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
- 2Pm4wnOyEgYUyJd5tRWcIbsURAgei918mck3tugT7AQiTUN3/5aAzqe/4ApDUC+uWNkpNnSV
- tjOx1hBpla0ifywy4bvFobwSh5/I3qohxDx+c1obd8Bp/B/iaOtnq0inli/8rlvKO9hp6Z4e
- DXL3PlD0QsLSc27AkwzLEc/D3ZaqBq7ItvT9Pyg0z3Q+2dtLF00f9+663HVC2EUgP25J3xDd
- 496SIeYDTkEgbJ7WYR0HYm9uirSET3lDqOVh1xPqoy+U9zTtuA9NQHVGk+hPcoazSqEtLGBk
- YE2mm2wzX5q2uoyptseSNceJ+HE9L+z1KlWW63HhddgtRGhbP8pj42bKaUSrrfDUsicfeJf6
- m1iJRu0SXYVlMruGUB1PvZQ3O7TsVfAGCv85pFipdgk8KQnlRFkYhUjLft0u7CL1rDGZWDDr
- NaNj54q2CX9zuSxBn9XDXvGKyzKEZ4NY1Jfw+TAMPCp4buawuOsjONi2X0DfivFY+ZsjAIcx
- qQMglPtKk/wBs7q2lvJ+pHpgvLhLZyGqzAvKM1sVtRJ5j+ARKA0w4pYs5a5ufqcfT7dN6TBk
- LXZeD9xlVic93Ju08JSUx2ozlcfxq+BVNyA+dtv7elXUZ2DrYwARAQABzSxHdXN0YXZvIEEu
- IFIuIFNpbHZhIDxndXN0YXZvQGVtYmVkZGVkb3IuY29tPsLBfQQTAQgAJwUCWywcDAIbIwUJ
- CWYBgAULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRBHBbTLRwbbMZ6tEACk0hmmZ2FWL1Xi
- l/bPqDGFhzzexrdkXSfTTZjBV3a+4hIOe+jl6Rci/CvRicNW4H9yJHKBrqwwWm9fvKqOBAg9
- obq753jydVmLwlXO7xjcfyfcMWyx9QdYLERTeQfDAfRqxir3xMeOiZwgQ6dzX3JjOXs6jHBP
- cgry90aWbaMpQRRhaAKeAS14EEe9TSIly5JepaHoVdASuxklvOC0VB0OwNblVSR2S5i5hSsh
- ewbOJtwSlonsYEj4EW1noQNSxnN/vKuvUNegMe+LTtnbbocFQ7dGMsT3kbYNIyIsp42B5eCu
- JXnyKLih7rSGBtPgJ540CjoPBkw2mCfhj2p5fElRJn1tcX2McsjzLFY5jK9RYFDavez5w3lx
- JFgFkla6sQHcrxH62gTkb9sUtNfXKucAfjjCMJ0iuQIHRbMYCa9v2YEymc0k0RvYr43GkA3N
- PJYd/vf9vU7VtZXaY4a/dz1d9dwIpyQARFQpSyvt++R74S78eY/+lX8wEznQdmRQ27kq7BJS
- R20KI/8knhUNUJR3epJu2YFT/JwHbRYC4BoIqWl+uNvDf+lUlI/D1wP+lCBSGr2LTkQRoU8U
- 64iK28BmjJh2K3WHmInC1hbUucWT7Swz/+6+FCuHzap/cjuzRN04Z3Fdj084oeUNpP6+b9yW
- e5YnLxF8ctRAp7K4yVlvA87BTQRbLBwMARAAsHCE31Ffrm6uig1BQplxMV8WnRBiZqbbsVJB
- H1AAh8tq2ULl7udfQo1bsPLGGQboJSVN9rckQQNahvHAIK8ZGfU4Qj8+CER+fYPp/MDZj+t0
- DbnWSOrG7z9HIZo6PR9z4JZza3Hn/35jFggaqBtuydHwwBANZ7A6DVY+W0COEU4of7CAahQo
- 5NwYiwS0lGisLTqks5R0Vh+QpvDVfuaF6I8LUgQR/cSgLkR//V1uCEQYzhsoiJ3zc1HSRyOP
- otJTApqGBq80X0aCVj1LOiOF4rrdvQnj6iIlXQssdb+WhSYHeuJj1wD0ZlC7ds5zovXh+FfF
- l5qH5RFY/qVn3mNIVxeO987WSF0jh+T5ZlvUNdhedGndRmwFTxq2Li6GNMaolgnpO/CPcFpD
- jKxY/HBUSmaE9rNdAa1fCd4RsKLlhXda+IWpJZMHlmIKY8dlUybP+2qDzP2lY7kdFgPZRU+e
- zS/pzC/YTzAvCWM3tDgwoSl17vnZCr8wn2/1rKkcLvTDgiJLPCevqpTb6KFtZosQ02EGMuHQ
- I6Zk91jbx96nrdsSdBLGH3hbvLvjZm3C+fNlVb9uvWbdznObqcJxSH3SGOZ7kCHuVmXUcqoz
- ol6ioMHMb+InrHPP16aVDTBTPEGwgxXI38f7SUEn+NpbizWdLNz2hc907DvoPm6HEGCanpcA
- EQEAAcLBZQQYAQgADwUCWywcDAIbDAUJCWYBgAAKCRBHBbTLRwbbMdsZEACUjmsJx2CAY+QS
- UMebQRFjKavwXB/xE7fTt2ahuhHT8qQ/lWuRQedg4baInw9nhoPE+VenOzhGeGlsJ0Ys52sd
- XvUjUocKgUQq6ekOHbcw919nO5L9J2ejMf/VC/quN3r3xijgRtmuuwZjmmi8ct24TpGeoBK4
- WrZGh/1hAYw4ieARvKvgjXRstcEqM5thUNkOOIheud/VpY+48QcccPKbngy//zNJWKbRbeVn
- imua0OpqRXhCrEVm/xomeOvl1WK1BVO7z8DjSdEBGzbV76sPDJb/fw+y+VWrkEiddD/9CSfg
- fBNOb1p1jVnT2mFgGneIWbU0zdDGhleI9UoQTr0e0b/7TU+Jo6TqwosP9nbk5hXw6uR5k5PF
- 8ieyHVq3qatJ9K1jPkBr8YWtI5uNwJJjTKIA1jHlj8McROroxMdI6qZ/wZ1ImuylpJuJwCDC
- ORYf5kW61fcrHEDlIvGc371OOvw6ejF8ksX5+L2zwh43l/pKkSVGFpxtMV6d6J3eqwTafL86
- YJWH93PN+ZUh6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9eh
- GZEO3+gCDFmKrjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrS
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <7067653c-bcfd-ffce-115e-0e42411c7056@embeddedor.com>
-Date:   Wed, 26 Feb 2020 18:53:52 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200226.164642.670797289411682529.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8
+        Wed, 26 Feb 2020 19:53:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1582764793; x=1614300793;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=ckps28SYkVweMJF2SY5LcXYLlRdGKB1lKG/0P8E/8Bc=;
+  b=Uat+WHGeA95lYAqYSzmd6fXMohHCgNRJIT9wRbwRAe/vbB8cfE6uCbjX
+   TxgcQJ5zqzgUn06NSQUZYafw4OzT1kIaIBZ9pZlWa2QrGVOViS/5eMcEg
+   DhEOHEBaYpjMVHEvjbSeNr8G1MbdL9N9bK5mGOM/fv+GbruUxbdMydl94
+   IHcGckkhq1nQx+QtIaoGb8VRD2fADYuTOsPnXShX68Imxbd9kwjw96IC9
+   M3v7ldpqrvsmzkMgGK5TK1LsZx/jcxg/ye0Q6KtW5e20W6oopMl6qJ57C
+   W5OLbL55omMU55p54pqQOc8z7b8egNMY18KDk+sXIaGtwQSYDEmAq+gwY
+   w==;
+IronPort-SDR: y1wpxpdg5xoeapUxSFqwqe4ZsLwU27M/xSgJ1J/qWHPRpyjZIPD0Xn6kRPg/Zt1zHcHHR4u9h7
+ E2Ew8gludEovA75FMB1quVQl+Wqu32hsTrujYpD7GbHtiMgGkTba7svwtxRyOUcykc1OWK5fyC
+ cVdc6E59pDI2MBsPEVkEEkEc0AkGhSmj9cE5utJuihl5zkUWrP8kIyh4+QxlKReeim85cPxCqq
+ NfBNCQKsgSphHeh6AfU6QEZ+MguE4TyefDI7IU5MICo+XMMrp7GhCtxLPiha4e6sZVKa8YX9on
+ 4fI=
+X-IronPort-AV: E=Sophos;i="5.70,490,1574092800"; 
+   d="scan'208";a="232758574"
+Received: from mail-mw2nam12lp2048.outbound.protection.outlook.com (HELO NAM12-MW2-obe.outbound.protection.outlook.com) ([104.47.66.48])
+  by ob1.hgst.iphmx.com with ESMTP; 27 Feb 2020 08:53:09 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZMK4JUiExIpK2yx7oZjYM1sKRT/nnrvUMqKBpr6MBcxIMbv9EkkHGZtRjpYUXrqoDp7P1ci8nI+ZqtZbeyDHIFFtYXIrPo3BjvniAA95bglIfSmalLk9V8VirUzbZ1DEOq8oRg2s1fqsnzYWj5ZmoTfXvDa3357XyUcOb8Db0V7mlKYGW9QeiL3enTVXvrCSr+7VfrCYcEGHwb2DbQi5n8+NwUU3WFUyJ+YXeCRRgxtrfaUY2R48aIc0xsHaZIXtXXjhJSwCDAOj8hiU7gGjgIyaJuaA+dQa0PNW8ihgG4GVmdpYGWrgNfIOsDjvhArJKpDaYtCt94++9KiVaznUGA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ckps28SYkVweMJF2SY5LcXYLlRdGKB1lKG/0P8E/8Bc=;
+ b=BrM4q7MsyO5hrTN2iXhryyNhDrc1bYzJWDRQwkErdcnZccsMxoKZzrDJfirZKozsgWvEKXe0L+D3ZYSOidi/gqI47334rpAeji5WizBdNfif+4ZJgXI54SG1i68gf0Fn5IfunwgWevebj8vqjLiCkxytI+8lYQmflsX05a4xN8FVe4YoMkxypDKdTPT5Y0tKSISqLTRWgYAIk8yxZxAofVQ+jmqeUlCOGIX1rR3978lcE7vbzeAEXDN6LxXKCZ43RIimpkBgopRo49fwrXYNB9NIeS7le9jdGRr/VNzbmD98x2PbYrz9GusrXWS3Ix8posa1qCCeS71dc5ifXenaNw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ckps28SYkVweMJF2SY5LcXYLlRdGKB1lKG/0P8E/8Bc=;
+ b=YxaNitAF3mvbDhT0I6fNs6ll8HwL5OMRzODCE9p1bgxtpapLLEBeNu4JqCieMaMK5j8XccbOXv9mIPSOTkHIWymogY8RAbPjwhbebwVg6JCFzIZ85IL4GLdTW+nj+uG1d8Dh3LIngiRyccNqHSb5CIBQRH1FNkCZHnAltGWkA7A=
+Received: from BYAPR04MB3990.namprd04.prod.outlook.com (2603:10b6:a02:ae::29)
+ by BYAPR04MB5864.namprd04.prod.outlook.com (2603:10b6:a03:10d::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Thu, 27 Feb
+ 2020 00:53:02 +0000
+Received: from BYAPR04MB3990.namprd04.prod.outlook.com
+ ([fe80::ecfa:6b6b:1612:c46e]) by BYAPR04MB3990.namprd04.prod.outlook.com
+ ([fe80::ecfa:6b6b:1612:c46e%6]) with mapi id 15.20.2772.012; Thu, 27 Feb 2020
+ 00:53:02 +0000
+From:   Atish Patra <Atish.Patra@wdc.com>
+To:     "ardb@kernel.org" <ardb@kernel.org>
+CC:     "alexios.zavras@intel.com" <alexios.zavras@intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "michal.simek@xilinx.com" <michal.simek@xilinx.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "abner.chang@hpe.com" <abner.chang@hpe.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "daniel.schaefer@hpe.com" <daniel.schaefer@hpe.com>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+        "bp@suse.de" <bp@suse.de>,
+        "greentime.hu@sifive.com" <greentime.hu@sifive.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "agraf@csgraf.de" <agraf@csgraf.de>,
+        "will@kernel.org" <will@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "han_mao@c-sky.com" <han_mao@c-sky.com>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "leif@nuviainc.com" <leif@nuviainc.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+Subject: Re: [RFC PATCH 2/5] include: pe.h: Add RISC-V related PE definition
+Thread-Topic: [RFC PATCH 2/5] include: pe.h: Add RISC-V related PE definition
+Thread-Index: AQHV7EGbQ/hJ0+85jUS9XgnqZeDXpagtDecAgAEqGoA=
+Date:   Thu, 27 Feb 2020 00:53:01 +0000
+Message-ID: <aec81e45ab5ee1104d2088513fe4ca668b83d04a.camel@wdc.com>
+References: <20200226011037.7179-1-atish.patra@wdc.com>
+         <20200226011037.7179-3-atish.patra@wdc.com>
+         <CAKv+Gu-LAfcH5mLZNLk7=A3E43a93FK+8DPYNrx1FANnbo3J7g@mail.gmail.com>
+In-Reply-To: <CAKv+Gu-LAfcH5mLZNLk7=A3E43a93FK+8DPYNrx1FANnbo3J7g@mail.gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.161.221
-X-Source-L: No
-X-Exim-ID: 1j77OH-002Vj3-71
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.132]) [201.162.161.221]:49846
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 15
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Atish.Patra@wdc.com; 
+x-originating-ip: [199.255.44.250]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: bde3bbc0-a1c0-480e-c0c7-08d7bb1f65dd
+x-ms-traffictypediagnostic: BYAPR04MB5864:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR04MB58643C25C01B2FD3E02561FEFAEB0@BYAPR04MB5864.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:883;
+x-forefront-prvs: 03264AEA72
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(346002)(396003)(39860400002)(376002)(366004)(189003)(199004)(64756008)(4326008)(66556008)(66446008)(6486002)(26005)(66946007)(7406005)(76116006)(6916009)(186003)(6506007)(7416002)(4744005)(86362001)(66476007)(6512007)(71200400001)(478600001)(8936002)(81156014)(81166006)(36756003)(8676002)(316002)(2906002)(54906003)(5660300002)(2616005);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB5864;H:BYAPR04MB3990.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: GBwmDI9oLkEviR24iCWDI8jF4o1dtMZS+bnsUixry2wDiYDhGs5EjZL/BA6GSshT7MKjfuXD8C3UTfA94PfkfdcuD/H8xrGnkdKAkSlNJrzKcmxuYRcOsGpy+62FDjLmdfV0lDWqs5Qi0ls8VCsubLRzkxNbW8ELBNZPbBOQ/fDFe5yBK9e1JNw5PYb0OO9WsVrclVJIT7LDTCExp7K0ieewoW8fNBAbdQ6tt8goWxTwM2CfjH6Ntqvz480NNGbXo8t+98BYQxz2MQSkvR3d3eLtVhXClM6d1BlUOSFzw5ug78ald46AfTn4jUjRRAKSvrLKMWsFaOm11t37wUmvVbjV5/fSlfPyxWbzme12DEqcNvY1fDkfhJwVnNKMee8OvlTO2gheBLgU18UcI7Cc8DNDMPx+a9m3o5+yk6DKfmqFz9O86r06r7mIpDsBXgox
+x-ms-exchange-antispam-messagedata: Tw1zDQpxzeGe4K0cjGdDrQMQUJ1MDCpSDwEWO38PeLYMJ2CTkjWOf7V3w4V3RvziuZw0BQDbuh1Zu9wcUpowkWKydEUZCg4ZTyp3i233FR8pBx/19972E4XIVQFYfG9IXVeSF6ipxNn95N9wxmpfnQ==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C7DBC50AADC2E642A6F479BB55C8A7B3@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bde3bbc0-a1c0-480e-c0c7-08d7bb1f65dd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Feb 2020 00:53:02.0068
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2Kb2O0lTk65YZhEOwK5JIp2Cm9OWsYSiaajMQyg/EU5ZHHGUt1rjOJ9WB9ITlBq9JAQ2ixzAzVIYS+1bemJMNw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5864
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2/26/20 18:46, David Miller wrote:
-
->>
->> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
->> [2] https://github.com/KSPP/linux/issues/21
->> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> 
-> Applied.
-> 
-
-Thanks, Dave.
---
-Gustavo
+T24gV2VkLCAyMDIwLTAyLTI2IGF0IDA4OjA2ICswMTAwLCBBcmQgQmllc2hldXZlbCB3cm90ZToN
+Cj4gT24gV2VkLCAyNiBGZWIgMjAyMCBhdCAwMjoxMCwgQXRpc2ggUGF0cmEgPGF0aXNoLnBhdHJh
+QHdkYy5jb20+DQo+IHdyb3RlOg0KPiA+IERlZmluZSBSSVNDLVYgcmVsYXRlZCBtYWNoaW5lIHR5
+cGVzLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEF0aXNoIFBhdHJhIDxhdGlzaC5wYXRyYUB3
+ZGMuY29tPg0KPiANCj4gSWYgeW91IHB1dCB0aGVtIGluIGFscGhhYmV0aWNhbCBvcmRlciB3cnQg
+U0gzOg0KPiANCg0KRG9uZS4NCg0KPiBSZXZpZXdlZC1ieTogQXJkIEJpZXNoZXV2ZWwgPGFyZGJA
+a2VybmVsLm9yZz4NCj4gDQoNCj4gDQo+ID4gLS0tDQo+ID4gIGluY2x1ZGUvbGludXgvcGUuaCB8
+IDMgKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKykNCj4gPiANCj4gPiBk
+aWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9wZS5oIGIvaW5jbHVkZS9saW51eC9wZS5oDQo+ID4g
+aW5kZXggOGFkNzFkNzYzYTc3Li42YTdjNDk3ZTRiMWYgMTAwNjQ0DQo+ID4gLS0tIGEvaW5jbHVk
+ZS9saW51eC9wZS5oDQo+ID4gKysrIGIvaW5jbHVkZS9saW51eC9wZS5oDQo+ID4gQEAgLTU2LDYg
+KzU2LDkgQEANCj4gPiAgI2RlZmluZSAgICAgICAgSU1BR0VfRklMRV9NQUNISU5FX1BPV0VSUENG
+UCAgICAweDAxZjENCj4gPiAgI2RlZmluZSAgICAgICAgSU1BR0VfRklMRV9NQUNISU5FX1I0MDAw
+ICAgICAgICAweDAxNjYNCj4gPiAgI2RlZmluZSAgICAgICAgSU1BR0VfRklMRV9NQUNISU5FX1NI
+MyAgICAgICAgICAweDAxYTINCj4gPiArI2RlZmluZSAgICAgICAgSU1BR0VfRklMRV9NQUNISU5F
+X1JJU0NWMzIgICAgICAweDUwMzINCj4gPiArI2RlZmluZSAgICAgICAgSU1BR0VfRklMRV9NQUNI
+SU5FX1JJU0NWNjQgICAgICAweDUwNjQNCj4gPiArI2RlZmluZSAgICAgICAgSU1BR0VfRklMRV9N
+QUNISU5FX1JJU0NWMTI4ICAgICAweDUxMjgNCj4gPiAgI2RlZmluZSAgICAgICAgSU1BR0VfRklM
+RV9NQUNISU5FX1NIM0RTUCAgICAgICAweDAxYTMNCj4gPiAgI2RlZmluZSAgICAgICAgSU1BR0Vf
+RklMRV9NQUNISU5FX1NIM0UgICAgICAgICAweDAxYTQNCj4gPiAgI2RlZmluZSAgICAgICAgSU1B
+R0VfRklMRV9NQUNISU5FX1NINCAgICAgICAgICAweDAxYTYNCj4gPiAtLQ0KPiA+IDIuMjQuMA0K
+PiA+IA0KDQotLSANClJlZ2FyZHMsDQpBdGlzaA0K
