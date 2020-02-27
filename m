@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF03C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D28C54FD5
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6E1520801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 007AB24690
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:11:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812658;
-	bh=Y0IJhB8s4i8Z14yWH6Bjc2AmXNbSeeQ5F8GXkvYofXU=;
+	s=default; t=1582812681;
+	bh=6m5yAkCc6qhKl2XMWMT+cmdhEAjqz01gM1imA/uQZcs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K8+z2g0O4TTGTvZCxbKI1+8sqEN0KOw8iTjj8S1G4pYOfVF9tqjmN49JBIwkOxJ0t
-	 cEarsA08QAGez04BpqMORIvddmkdQ39q3LI56+sjxHRMXSpCz6YyrVbBC0LYFQfLgK
-	 7pzYUHtgWWm69SAqUV1F6Ow2+5ajrurTdAo1PRuw=
+	b=ZnMrjNuFaJufHwZNPTvVX1Z+YobaED5uoDnJq5vJkfPNV8J4rRdHwJcscLEPXXP9G
+	 zmEWuFjpRX+03yGnQgmWd+y7yjtL5iI9ipZ0da3MIq1b7iOATezX0AmSYUE3PmKvk9
+	 5guSlNThtKTkBdUuUJli9gYF60Q6AJ4VrHGFvmIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388606AbgB0OK5 (ORCPT
+        id S1730405AbgB0OLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:10:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49178 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:11:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388099AbgB0OKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:10:54 -0500
+        id S2387700AbgB0OLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:11:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F58024697;
-        Thu, 27 Feb 2020 14:10:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 410E020578;
+        Thu, 27 Feb 2020 14:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812653;
-        bh=Y0IJhB8s4i8Z14yWH6Bjc2AmXNbSeeQ5F8GXkvYofXU=;
+        s=default; t=1582812676;
+        bh=6m5yAkCc6qhKl2XMWMT+cmdhEAjqz01gM1imA/uQZcs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=asKkTO+l9FvSCXwEkwcj/FM2FK+QbZPe8oPcgZZ/3c8EDDz1lUmzS0Qg3aVujWm1G
-         XeGbA17ZmBtCz2e0a6TVRY521PahPHgohwIj3DtAx85znitZ8x63wUMBq7DPegpoU3
-         rcslqqSIE4KHm64XvqWZhvW1W0Fw6beHr+Zaqxqw=
+        b=v6cyU+sVVeLCuP24T8LukehL4YlaMDkpF5UM9FiEmqXn8T4g4juiHaoMV/YT+GqKt
+         OC6MOXLGZO1SoYT+XOt+Ph57HpXiI4sGFsZaCLCJ9g8SuwZkKAAFVGawS7xygX+yt5
+         jid17ZREG4FiA1t70TmbG/PYw8Uy3IT0lseeVL0w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 099/135] Btrfs: fix deadlock during fast fsync when logging prealloc extents beyond eof
-Date:   Thu, 27 Feb 2020 14:37:19 +0100
-Message-Id: <20200227132244.110598983@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>
+Subject: [PATCH 5.4 061/135] ACPI: PM: s2idle: Check fixed wakeup events in acpi_s2idle_wake()
+Date:   Thu, 27 Feb 2020 14:36:41 +0100
+Message-Id: <20200227132238.234067828@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -60,214 +61,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-commit a5ae50dea9111db63d30d700766dd5509602f7ad upstream.
+commit 63fb9623427fbb44e3782233b6e4714057b76ff2 upstream.
 
-While logging the prealloc extents of an inode during a fast fsync we call
-btrfs_truncate_inode_items(), through btrfs_log_prealloc_extents(), while
-holding a read lock on a leaf of the inode's root (not the log root, the
-fs/subvol root), and then that function locks the file range in the inode's
-iotree. This can lead to a deadlock when:
+Commit fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from
+waking up the system") overlooked the fact that fixed events can wake
+up the system too and broke RTC wakeup from suspend-to-idle as a
+result.
 
-* the fsync is ranged
+Fix this issue by checking the fixed events in acpi_s2idle_wake() in
+addition to checking wakeup GPEs and break out of the suspend-to-idle
+loop if the status bits of any enabled fixed events are set then.
 
-* the file has prealloc extents beyond eof
-
-* writeback for a range different from the fsync range starts
-  during the fsync
-
-* the size of the file is not sector size aligned
-
-Because when finishing an ordered extent we lock first a file range and
-then try to COW the fs/subvol tree to insert an extent item.
-
-The following diagram shows how the deadlock can happen.
-
-           CPU 1                                        CPU 2
-
-  btrfs_sync_file()
-    --> for range [0, 1MiB)
-
-    --> inode has a size of
-        1MiB and has 1 prealloc
-        extent beyond the
-        i_size, starting at offset
-        4MiB
-
-    flushes all delalloc for the
-    range [0MiB, 1MiB) and waits
-    for the respective ordered
-    extents to complete
-
-                                              --> before task at CPU 1 locks the
-                                                  inode, a write into file range
-                                                  [1MiB, 2MiB + 1KiB) is made
-
-                                              --> i_size is updated to 2MiB + 1KiB
-
-                                              --> writeback is started for that
-                                                  range, [1MiB, 2MiB + 4KiB)
-                                                  --> end offset rounded up to
-                                                      be sector size aligned
-
-    btrfs_log_dentry_safe()
-      btrfs_log_inode_parent()
-        btrfs_log_inode()
-
-          btrfs_log_changed_extents()
-            btrfs_log_prealloc_extents()
-              --> does a search on the
-                  inode's root
-              --> holds a read lock on
-                  leaf X
-
-                                              btrfs_finish_ordered_io()
-                                                --> locks range [1MiB, 2MiB + 4KiB)
-                                                    --> end offset rounded up
-                                                        to be sector size aligned
-
-                                                --> tries to cow leaf X, through
-                                                    insert_reserved_file_extent()
-                                                    --> already locked by the
-                                                        task at CPU 1
-
-              btrfs_truncate_inode_items()
-
-                --> gets an i_size of
-                    2MiB + 1KiB, which is
-                    not sector size
-                    aligned
-
-                --> tries to lock file
-                    range [2MiB, (u64)-1)
-                    --> the start range
-                        is rounded down
-                        from 2MiB + 1K
-                        to 2MiB to be sector
-                        size aligned
-
-                    --> but the subrange
-                        [2MiB, 2MiB + 4KiB) is
-                        already locked by
-                        task at CPU 2 which
-                        is waiting to get a
-                        write lock on leaf X
-                        for which we are
-                        holding a read lock
-
-                                *** deadlock ***
-
-This results in a stack trace like the following, triggered by test case
-generic/561 from fstests:
-
-  [ 2779.973608] INFO: task kworker/u8:6:247 blocked for more than 120 seconds.
-  [ 2779.979536]       Not tainted 5.6.0-rc2-btrfs-next-53 #1
-  [ 2779.984503] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-  [ 2779.990136] kworker/u8:6    D    0   247      2 0x80004000
-  [ 2779.990457] Workqueue: btrfs-endio-write btrfs_work_helper [btrfs]
-  [ 2779.990466] Call Trace:
-  [ 2779.990491]  ? __schedule+0x384/0xa30
-  [ 2779.990521]  schedule+0x33/0xe0
-  [ 2779.990616]  btrfs_tree_read_lock+0x19e/0x2e0 [btrfs]
-  [ 2779.990632]  ? remove_wait_queue+0x60/0x60
-  [ 2779.990730]  btrfs_read_lock_root_node+0x2f/0x40 [btrfs]
-  [ 2779.990782]  btrfs_search_slot+0x510/0x1000 [btrfs]
-  [ 2779.990869]  btrfs_lookup_file_extent+0x4a/0x70 [btrfs]
-  [ 2779.990944]  __btrfs_drop_extents+0x161/0x1060 [btrfs]
-  [ 2779.990987]  ? mark_held_locks+0x6d/0xc0
-  [ 2779.990994]  ? __slab_alloc.isra.49+0x99/0x100
-  [ 2779.991060]  ? insert_reserved_file_extent.constprop.19+0x64/0x300 [btrfs]
-  [ 2779.991145]  insert_reserved_file_extent.constprop.19+0x97/0x300 [btrfs]
-  [ 2779.991222]  ? start_transaction+0xdd/0x5c0 [btrfs]
-  [ 2779.991291]  btrfs_finish_ordered_io+0x4f4/0x840 [btrfs]
-  [ 2779.991405]  btrfs_work_helper+0xaa/0x720 [btrfs]
-  [ 2779.991432]  process_one_work+0x26d/0x6a0
-  [ 2779.991460]  worker_thread+0x4f/0x3e0
-  [ 2779.991481]  ? process_one_work+0x6a0/0x6a0
-  [ 2779.991489]  kthread+0x103/0x140
-  [ 2779.991499]  ? kthread_create_worker_on_cpu+0x70/0x70
-  [ 2779.991515]  ret_from_fork+0x3a/0x50
-  (...)
-  [ 2780.026211] INFO: task fsstress:17375 blocked for more than 120 seconds.
-  [ 2780.027480]       Not tainted 5.6.0-rc2-btrfs-next-53 #1
-  [ 2780.028482] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-  [ 2780.030035] fsstress        D    0 17375  17373 0x00004000
-  [ 2780.030038] Call Trace:
-  [ 2780.030044]  ? __schedule+0x384/0xa30
-  [ 2780.030052]  schedule+0x33/0xe0
-  [ 2780.030075]  lock_extent_bits+0x20c/0x320 [btrfs]
-  [ 2780.030094]  ? btrfs_truncate_inode_items+0xf4/0x1150 [btrfs]
-  [ 2780.030098]  ? rcu_read_lock_sched_held+0x59/0xa0
-  [ 2780.030102]  ? remove_wait_queue+0x60/0x60
-  [ 2780.030122]  btrfs_truncate_inode_items+0x133/0x1150 [btrfs]
-  [ 2780.030151]  ? btrfs_set_path_blocking+0xb2/0x160 [btrfs]
-  [ 2780.030165]  ? btrfs_search_slot+0x379/0x1000 [btrfs]
-  [ 2780.030195]  btrfs_log_changed_extents.isra.8+0x841/0x93e [btrfs]
-  [ 2780.030202]  ? do_raw_spin_unlock+0x49/0xc0
-  [ 2780.030215]  ? btrfs_get_num_csums+0x10/0x10 [btrfs]
-  [ 2780.030239]  btrfs_log_inode+0xf83/0x1124 [btrfs]
-  [ 2780.030251]  ? __mutex_unlock_slowpath+0x45/0x2a0
-  [ 2780.030275]  btrfs_log_inode_parent+0x2a0/0xe40 [btrfs]
-  [ 2780.030282]  ? dget_parent+0xa1/0x370
-  [ 2780.030309]  btrfs_log_dentry_safe+0x4a/0x70 [btrfs]
-  [ 2780.030329]  btrfs_sync_file+0x3f3/0x490 [btrfs]
-  [ 2780.030339]  do_fsync+0x38/0x60
-  [ 2780.030343]  __x64_sys_fdatasync+0x13/0x20
-  [ 2780.030345]  do_syscall_64+0x5c/0x280
-  [ 2780.030348]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  [ 2780.030356] RIP: 0033:0x7f2d80f6d5f0
-  [ 2780.030361] Code: Bad RIP value.
-  [ 2780.030362] RSP: 002b:00007ffdba3c8548 EFLAGS: 00000246 ORIG_RAX: 000000000000004b
-  [ 2780.030364] RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f2d80f6d5f0
-  [ 2780.030365] RDX: 00007ffdba3c84b0 RSI: 00007ffdba3c84b0 RDI: 0000000000000003
-  [ 2780.030367] RBP: 000000000000004a R08: 0000000000000001 R09: 00007ffdba3c855c
-  [ 2780.030368] R10: 0000000000000078 R11: 0000000000000246 R12: 00000000000001f4
-  [ 2780.030369] R13: 0000000051eb851f R14: 00007ffdba3c85f0 R15: 0000557a49220d90
-
-So fix this by making btrfs_truncate_inode_items() not lock the range in
-the inode's iotree when the target root is a log root, since it's not
-needed to lock the range for log roots as the protection from the inode's
-lock and log_mutex are all that's needed.
-
-Fixes: 28553fa992cb28 ("Btrfs: fix race between shrinking truncate and fiemap")
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system")
+Reported-and-tested-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/inode.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/acpi/acpica/evevent.c |   45 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/acpi/sleep.c          |    7 ++++++
+ include/acpi/acpixf.h         |    1 
+ 3 files changed, 53 insertions(+)
 
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -4752,8 +4752,9 @@ int btrfs_truncate_inode_items(struct bt
- 		return -ENOMEM;
- 	path->reada = READA_BACK;
- 
--	lock_extent_bits(&BTRFS_I(inode)->io_tree, lock_start, (u64)-1,
--			 &cached_state);
-+	if (root->root_key.objectid != BTRFS_TREE_LOG_OBJECTID)
-+		lock_extent_bits(&BTRFS_I(inode)->io_tree, lock_start, (u64)-1,
-+				 &cached_state);
- 
- 	/*
- 	 * We want to drop from the next block forward in case this new size is
-@@ -5017,11 +5018,10 @@ out:
- 		if (!ret && last_size > new_size)
- 			last_size = new_size;
- 		btrfs_ordered_update_i_size(inode, last_size, NULL);
-+		unlock_extent_cached(&BTRFS_I(inode)->io_tree, lock_start,
-+				     (u64)-1, &cached_state);
- 	}
- 
--	unlock_extent_cached(&BTRFS_I(inode)->io_tree, lock_start, (u64)-1,
--			     &cached_state);
--
- 	btrfs_free_path(path);
- 	return ret;
+--- a/drivers/acpi/acpica/evevent.c
++++ b/drivers/acpi/acpica/evevent.c
+@@ -265,4 +265,49 @@ static u32 acpi_ev_fixed_event_dispatch(
+ 		 handler) (acpi_gbl_fixed_event_handlers[event].context));
  }
+ 
++/*******************************************************************************
++ *
++ * FUNCTION:    acpi_any_fixed_event_status_set
++ *
++ * PARAMETERS:  None
++ *
++ * RETURN:      TRUE or FALSE
++ *
++ * DESCRIPTION: Checks the PM status register for active fixed events
++ *
++ ******************************************************************************/
++
++u32 acpi_any_fixed_event_status_set(void)
++{
++	acpi_status status;
++	u32 in_status;
++	u32 in_enable;
++	u32 i;
++
++	status = acpi_hw_register_read(ACPI_REGISTER_PM1_ENABLE, &in_enable);
++	if (ACPI_FAILURE(status)) {
++		return (FALSE);
++	}
++
++	status = acpi_hw_register_read(ACPI_REGISTER_PM1_STATUS, &in_status);
++	if (ACPI_FAILURE(status)) {
++		return (FALSE);
++	}
++
++	/*
++	 * Check for all possible Fixed Events and dispatch those that are active
++	 */
++	for (i = 0; i < ACPI_NUM_FIXED_EVENTS; i++) {
++
++		/* Both the status and enable bits must be on for this event */
++
++		if ((in_status & acpi_gbl_fixed_event_info[i].status_bit_mask) &&
++		    (in_enable & acpi_gbl_fixed_event_info[i].enable_bit_mask)) {
++			return (TRUE);
++		}
++	}
++
++	return (FALSE);
++}
++
+ #endif				/* !ACPI_REDUCED_HARDWARE */
+--- a/drivers/acpi/sleep.c
++++ b/drivers/acpi/sleep.c
+@@ -993,6 +993,13 @@ static bool acpi_s2idle_wake(void)
+ 			return true;
+ 
+ 		/*
++		 * If the status bit of any enabled fixed event is set, the
++		 * wakeup is regarded as valid.
++		 */
++		if (acpi_any_fixed_event_status_set())
++			return true;
++
++		/*
+ 		 * If there are no EC events to process and at least one of the
+ 		 * other enabled GPEs is active, the wakeup is regarded as a
+ 		 * genuine one.
+--- a/include/acpi/acpixf.h
++++ b/include/acpi/acpixf.h
+@@ -749,6 +749,7 @@ ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_sta
+ ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status acpi_enable_all_runtime_gpes(void))
+ ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status acpi_enable_all_wakeup_gpes(void))
+ ACPI_HW_DEPENDENT_RETURN_UINT32(u32 acpi_any_gpe_status_set(void))
++ACPI_HW_DEPENDENT_RETURN_UINT32(u32 acpi_any_fixed_event_status_set(void))
+ 
+ ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status
+ 				acpi_get_gpe_device(u32 gpe_index,
 
 
