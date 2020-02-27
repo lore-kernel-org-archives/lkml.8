@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C55C35E1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E253C52D52
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46E62246A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB0D82084E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:58:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811788;
-	bh=+Ts59TTOA1rvaRdu5/xxg8OWUnAZMchTrOzvI7sDYtg=;
+	s=default; t=1582811930;
+	bh=A5JhqAJW0/T19P0pXEctJKdutmGn5EGnPtPBSXQsXo4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BzDm+sfGowOUUXtsKmserKYWawWankCZDM48PYSCPpgIqsEWkGdif4bjCSx+Mgg+f
-	 Kf7InMg+8WuCKh1r+uFDwZ7JWSOUqJkLXvNOjjyEDgRo7noLkILHLI0mSx0Qw+c2cO
-	 knaXsyhyxBoBeksHln3y+qtREPs6qyUxtFQbO62o=
+	b=nU7FlqxIAwDaQS7u15GaAOiIBx4t/npxvMkn1kihWdt4WfM06obvtl7sy30lkiBQ/
+	 cIteE4ThXlE1WCDdkLuaFjtI7T7PMUnP7du19GN2o4iP0UJ281RjxdZApH8pLf0gfe
+	 sGXzTQ5MFgiTwbvTGM6AquSybJkm4gD/SohbPMZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732134AbgB0N41 (ORCPT
+        id S1732530AbgB0N6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:56:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56858 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:58:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732119AbgB0N4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:56:23 -0500
+        id S1732516AbgB0N6q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:58:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D18D52073D;
-        Thu, 27 Feb 2020 13:56:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3EB6246A9;
+        Thu, 27 Feb 2020 13:58:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811783;
-        bh=+Ts59TTOA1rvaRdu5/xxg8OWUnAZMchTrOzvI7sDYtg=;
+        s=default; t=1582811925;
+        bh=A5JhqAJW0/T19P0pXEctJKdutmGn5EGnPtPBSXQsXo4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xxp4WbKsZCMe86z41Dm+HLT+H0TkrxN3Smea/dNwE4ak5m1EYYGEbqoLlc0adnEzA
-         d4Kpgv1aqd6XW87nB18lw2O7+zGmvcofBcXpeMPaGvp5dJ0WM1Dk+mjaP9gXB6bpvn
-         Yem0OVvB2MPZksathDDCZxgTSPp/JtJ+Wct3TqXQ=
+        b=DwKU3fYWQ5Ke69zsuqrDkTLwttPW30r247HO0WqlGoLzOoynZEJtIW969LhVw1uf9
+         N8VC9QikBbKO8TmL9AvKkIPqFe2SObLtVVGd3KTZSlAgJqhJUk3+n52TnLkDNO3mK/
+         MyaRYRNR+BfUQw6TawRPKhtlzO3I1IIvUsMgkDGA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 099/237] ALSA: sh: Fix compile warning wrt const
-Date:   Thu, 27 Feb 2020 14:35:13 +0100
-Message-Id: <20200227132304.248548092@linuxfoundation.org>
+Subject: [PATCH 4.14 117/237] drm/nouveau/gr/gk20a,gm200-: add terminators to method lists read from fw
+Date:   Thu, 27 Feb 2020 14:35:31 +0100
+Message-Id: <20200227132305.446583590@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -59,39 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Ben Skeggs <bskeggs@redhat.com>
 
-[ Upstream commit f1dd4795b1523fbca7ab4344dd5a8bb439cc770d ]
+[ Upstream commit 7adc77aa0e11f25b0e762859219c70852cd8d56f ]
 
-A long-standing compile warning was seen during build test:
-  sound/sh/aica.c: In function 'load_aica_firmware':
-  sound/sh/aica.c:521:25: warning: passing argument 2 of 'spu_memload' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+Method init is typically ordered by class in the FW image as ThreeD,
+TwoD, Compute.
 
-Fixes: 198de43d758c ("[ALSA] Add ALSA support for the SEGA Dreamcast PCM device")
-Link: https://lore.kernel.org/r/20200105144823.29547-69-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Due to a bug in parsing the FW into our internal format, we've been
+accidentally sending Twod + Compute methods to the ThreeD class, as
+well as Compute methods to the TwoD class - oops.
+
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/sh/aica.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../gpu/drm/nouveau/nvkm/engine/gr/gk20a.c    | 21 ++++++++++---------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-diff --git a/sound/sh/aica.c b/sound/sh/aica.c
-index fdc680ae8aa09..d9acf551a8985 100644
---- a/sound/sh/aica.c
-+++ b/sound/sh/aica.c
-@@ -117,10 +117,10 @@ static void spu_memset(u32 toi, u32 what, int length)
- }
+diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c b/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c
+index de8b806b88fd9..7618b2eb4fdfd 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c
++++ b/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c
+@@ -143,23 +143,24 @@ gk20a_gr_av_to_method(struct gf100_gr *gr, const char *fw_name,
  
- /* spu_memload - write to SPU address space */
--static void spu_memload(u32 toi, void *from, int length)
-+static void spu_memload(u32 toi, const void *from, int length)
- {
- 	unsigned long flags;
--	u32 *froml = from;
-+	const u32 *froml = from;
- 	u32 __iomem *to = (u32 __iomem *) (SPU_MEMORY_BASE + toi);
- 	int i;
- 	u32 val;
+ 	nent = (fuc.size / sizeof(struct gk20a_fw_av));
+ 
+-	pack = vzalloc((sizeof(*pack) * max_classes) +
+-		       (sizeof(*init) * (nent + 1)));
++	pack = vzalloc((sizeof(*pack) * (max_classes + 1)) +
++		       (sizeof(*init) * (nent + max_classes + 1)));
+ 	if (!pack) {
+ 		ret = -ENOMEM;
+ 		goto end;
+ 	}
+ 
+-	init = (void *)(pack + max_classes);
++	init = (void *)(pack + max_classes + 1);
+ 
+-	for (i = 0; i < nent; i++) {
+-		struct gf100_gr_init *ent = &init[i];
++	for (i = 0; i < nent; i++, init++) {
+ 		struct gk20a_fw_av *av = &((struct gk20a_fw_av *)fuc.data)[i];
+ 		u32 class = av->addr & 0xffff;
+ 		u32 addr = (av->addr & 0xffff0000) >> 14;
+ 
+ 		if (prevclass != class) {
+-			pack[classidx].init = ent;
++			if (prevclass) /* Add terminator to the method list. */
++				init++;
++			pack[classidx].init = init;
+ 			pack[classidx].type = class;
+ 			prevclass = class;
+ 			if (++classidx >= max_classes) {
+@@ -169,10 +170,10 @@ gk20a_gr_av_to_method(struct gf100_gr *gr, const char *fw_name,
+ 			}
+ 		}
+ 
+-		ent->addr = addr;
+-		ent->data = av->data;
+-		ent->count = 1;
+-		ent->pitch = 1;
++		init->addr = addr;
++		init->data = av->data;
++		init->count = 1;
++		init->pitch = 1;
+ 	}
+ 
+ 	*ppack = pack;
 -- 
 2.20.1
 
