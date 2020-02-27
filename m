@@ -2,123 +2,127 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C88DDC4BA2D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD88C34022
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 947DC24656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:39:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mNTDcgai"
+	by mail.kernel.org (Postfix) with ESMTP id 532FC24692
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:40:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582810818;
+	bh=7FgmVAvrtnM/nr8UJUSPDq0BSCewXoaDW9k0WBFW4Nw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IjU7DM2djeBG6A5G5KPXDTSb8FdAC3dgkLXOFztbHxSU7NO/nLsIWXa0cIjy0HJea
+	 JL4O1FpzTMXT3L92tcSm1ybbzBhASmEu7Xf/CuFrOiBHmjWcQAo5PXRjZXdrdmpHye
+	 FlEDhIgAjwnGjlMWENasPfwx3Azrqny4vzJe65Qw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729161AbgB0NjK (ORCPT
+        id S1729171AbgB0NkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:39:10 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46140 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729030AbgB0NjK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:39:10 -0500
-Received: by mail-qt1-f195.google.com with SMTP id i14so2219665qtv.13
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 05:39:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Vb7D/cjd/9YIQ7Jlnb2gMsNd7Bubxkbt9Epw1wFmkzI=;
-        b=mNTDcgaiXzvGRQfXcoCJ+JPLWUcOO6QnrlpHhAbwxFedhE8ZmydHeIRzGz0TwG52Pv
-         NTnIBKlCAghnYk9umji2p1kZwz9f2HAq3Joz9IDcCbvdxgtL+uSUTH/4umZp/PnTyVrN
-         Q9pkN0Y8SvutlNC0sUlcEg6fKtCAuo7sfMC5rmtONqIW3wPbwlCfZ47917q2Cgy1xe9M
-         3vpbryDOvLfUNxfKIwCvxI7yPVx49QK/vcUUVbodLaKpWlDUK/TljhS+O/vpGnwhR2eH
-         /YDNUHD5jf8mtGOfjOXiLLelqEHlI5DEsFJEmmK41urdfDgRnS+BN/ax0CPMNit80vC/
-         x1KA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Vb7D/cjd/9YIQ7Jlnb2gMsNd7Bubxkbt9Epw1wFmkzI=;
-        b=IBreMpS6RgjeLHlzY6eKYv8wWO3pB8NzNlSSBztgjT5c2CuHKjZljtTB2IWYqpcqW+
-         tHqwKjgV4y2ahCbYxpwX9ogcTyOrARgze+kyYPwt+Ur883zK71Qd4BbLC+urQawbE8W9
-         3NHl+xiuHeCxY9co/bgDZG9yILiZkFSSGtH4OtS322YOnGAnewShV2q9d5gj4fNN9omy
-         Lx0pXyucIB30DyosA37t9b1gu/5IOs9yLKyyywJ0YNv7qEtXlQkKNGz4ldKjoCea2jBz
-         t4uuHG5syBk8HWIqknaENGwPGzs9NRvwcawHjyo7Bfzh/6jHP/Zlwpp8TIRf3I6lMr04
-         qktQ==
-X-Gm-Message-State: APjAAAWukhETlHruIq9jEP/8rJu9DRzPkk2wRA8EcTD1EauO0WMSuSa8
-        Sdf71PP4ixermNX8wuIh9Fg=
-X-Google-Smtp-Source: APXvYqxu/QHy/RdH++OgLABJnLzSUcE2QyXaBEZmwiKaO06LCDjLXdP7+/MGw2qQ1LA4O1qDUcZYvA==
-X-Received: by 2002:ac8:4244:: with SMTP id r4mr4856648qtm.169.1582810749185;
-        Thu, 27 Feb 2020 05:39:09 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id p18sm3081259qkp.47.2020.02.27.05.39.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 05:39:08 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 8C68A403AD; Thu, 27 Feb 2020 10:39:06 -0300 (-03)
-Date:   Thu, 27 Feb 2020 10:39:06 -0300
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc:     jolsa@redhat.com, xieyisheng1@huawei.com,
-        alexey.budankov@linux.intel.com, treeze.taeung@gmail.com,
-        adrian.hunter@intel.com, tmricht@linux.ibm.com,
-        namhyung@kernel.org, irogers@google.com, songliubraving@fb.com,
-        yao.jin@linux.intel.com, changbin.du@intel.com, leo.yan@linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/8] perf annotate/config: More fixes
-Message-ID: <20200227133906.GE9899@kernel.org>
-References: <20200213064306.160480-1-ravi.bangoria@linux.ibm.com>
+        Thu, 27 Feb 2020 08:40:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34486 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729030AbgB0NkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:40:17 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0336424656;
+        Thu, 27 Feb 2020 13:40:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582810816;
+        bh=7FgmVAvrtnM/nr8UJUSPDq0BSCewXoaDW9k0WBFW4Nw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kbo4m9uOHocsBE9Bn6ot2QmEu4nUvreKafBllzXwx2umv6zC9Rs5h1XIMiGfZy4Ul
+         sAJ3RACn1Cc7wqjOp8/weSf7iu+9OLU8ptaT/j+RhubgjOSXTE6jbSDrVD3NF/5YPK
+         Dq9qwD8/1q1+/aJ9hs/MqGfDI9DOX8cbtYqJ7688=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Megha Dey <megha.dey@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Brian Gerst <brgerst@gmail.com>,
+        Denys Vlasenko <dvlasenk@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.4 001/113] x86/vdso: Use RDPID in preference to LSL when available
+Date:   Thu, 27 Feb 2020 14:35:17 +0100
+Message-Id: <20200227132212.078257488@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
+References: <20200227132211.791484803@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213064306.160480-1-ravi.bangoria@linux.ibm.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Feb 13, 2020 at 12:12:58PM +0530, Ravi Bangoria escreveu:
-> These are the additional set of fixes on top of previous series:
-> http://lore.kernel.org/r/20200204045233.474937-1-ravi.bangoria@linux.ibm.com
+From: Andy Lutomirski <luto@kernel.org>
 
-All applied to perf/urgent, thanks a lot!
+commit a582c540ac1b10f0a7d37415e04c4af42409fd08 upstream.
 
-- Arnaldo
+RDPID is a new instruction that reads MSR_TSC_AUX quickly.  This
+should be considerably faster than reading the GDT.  Add a
+cpufeature for it and use it from __vdso_getcpu() when available.
+
+Tested-by: Megha Dey <megha.dey@intel.com>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Denys Vlasenko <dvlasenk@redhat.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/4f6c3a22012d10f1c65b9ca15800e01b42c7d39d.1479320367.git.luto@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/x86/include/asm/cpufeatures.h |    1 +
+ arch/x86/include/asm/vgtod.h       |    7 ++++++-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -301,6 +301,7 @@
+ /* Intel-defined CPU features, CPUID level 0x00000007:0 (ecx), word 16 */
+ #define X86_FEATURE_PKU		(16*32+ 3) /* Protection Keys for Userspace */
+ #define X86_FEATURE_OSPKE	(16*32+ 4) /* OS Protection Keys Enable */
++#define X86_FEATURE_RDPID	(16*32+ 22) /* RDPID instruction */
  
-> Note for the last patch:
-> I couldn't understand what intel-pt.cache-divisor is really used for.
-> Adrian, can you please help.
-> 
-> Ravi Bangoria (8):
->   perf annotate/tui: Re-render title bar after switching back from
->     script browser
->   perf annotate: Fix --show-total-period for tui/stdio2
->   perf annotate: Fix --show-nr-samples for tui/stdio2
->   perf config: Introduce perf_config_u8()
->   perf annotate: Make perf config effective
->   perf annotate: Prefer cmdline option over default config
->   perf annotate: Fix perf config option description
->   perf config: Document missing config options
-> 
->  tools/perf/Documentation/perf-config.txt | 74 +++++++++++++++++++-
->  tools/perf/builtin-annotate.c            |  4 +-
->  tools/perf/builtin-report.c              |  2 +-
->  tools/perf/builtin-top.c                 |  2 +-
->  tools/perf/ui/browsers/annotate.c        | 19 +++--
->  tools/perf/util/annotate.c               | 89 +++++++++---------------
->  tools/perf/util/annotate.h               |  6 +-
->  tools/perf/util/config.c                 | 12 ++++
->  tools/perf/util/config.h                 |  1 +
->  9 files changed, 134 insertions(+), 75 deletions(-)
-> 
-> -- 
-> 2.24.1
-> 
+ /* AMD-defined CPU features, CPUID level 0x80000007 (ebx), word 17 */
+ #define X86_FEATURE_OVERFLOW_RECOV (17*32+0) /* MCA overflow recovery support */
+--- a/arch/x86/include/asm/vgtod.h
++++ b/arch/x86/include/asm/vgtod.h
+@@ -83,8 +83,13 @@ static inline unsigned int __getcpu(void
+ 	 * works on all CPUs.  This is volatile so that it orders
+ 	 * correctly wrt barrier() and to keep gcc from cleverly
+ 	 * hoisting it out of the calling function.
++	 *
++	 * If RDPID is available, use it.
+ 	 */
+-	asm volatile ("lsl %1,%0" : "=r" (p) : "r" (__PER_CPU_SEG));
++	alternative_io ("lsl %[p],%[seg]",
++			".byte 0xf3,0x0f,0xc7,0xf8", /* RDPID %eax/rax */
++			X86_FEATURE_RDPID,
++			[p] "=a" (p), [seg] "r" (__PER_CPU_SEG));
+ 
+ 	return p;
+ }
 
--- 
 
-- Arnaldo
