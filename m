@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A67F7C3F34B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA386C35DEE
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7263420578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:08:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2D1C20578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:08:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812505;
-	bh=xuTLgFRiyEJJ09mCL7fA4XV7179OPdVEUYD3YCBHzuI=;
+	s=default; t=1582812499;
+	bh=M+3C6Vfw8tIQOCDP4th63PzilReHvAapp2Moe3ZV2mg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SvoNEBLxeV1bMLIFbDKKBnI9SRnD9eOunxJlBSskR07kISSUjipnCKK1mvXkOv0eD
-	 9sMMC2Go/cpvyeiSvdmmg0dXFkDxOyuBnanebdwa3ItNaT9s3f5tWFyzeNwfAuesC2
-	 ORZyPDCN4sjhCoy55aXsMniHUXnsv9NtaDyDZ2Gg=
+	b=TnJZ5SN/gTvxmMmLPwG9G/86Uy+dGCygRCPmHkCazD/xXzROr0/KIee7H+YSFtE/M
+	 4Zi07duYdzP8OkpMskcVBohvWK3bEQTdenji46NT9bG48GR7de6VQKpM+qePgCsY5N
+	 8+XHlmcKYt8UnwOvzO1k2rVp3RxKuvv/YbubnQlw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388244AbgB0OIY (ORCPT
+        id S2388229AbgB0OIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:08:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46140 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:08:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388236AbgB0OIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:08:21 -0500
+        id S2388217AbgB0OIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:08:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA59020578;
-        Thu, 27 Feb 2020 14:08:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3218320578;
+        Thu, 27 Feb 2020 14:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812500;
-        bh=xuTLgFRiyEJJ09mCL7fA4XV7179OPdVEUYD3YCBHzuI=;
+        s=default; t=1582812494;
+        bh=M+3C6Vfw8tIQOCDP4th63PzilReHvAapp2Moe3ZV2mg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wPSRobLWIPrDb2Q2K2DatotGoM694j5F1wIduCyFkI8IHgt+1NMbtcYuw57ydbxQ2
-         0SdpfUExzneKhSz3F3mAxnjd1p+XnF/kdil0kdXrHLFbupfkLfW4XZgEBPDSB+lxGq
-         pFNDjpValsHYhUCnpBlkufAZiTpoY6jA7dxegCBs=
+        b=w/7NjiD4IhDanO6sKwErFoFTrHVfaaj3TozEdA08aKvmKcO13XrGmdADwNdpLCUks
+         lKq4XD7V2KNx1Ef1W3PM4iaoxvsINQz9YwXeDqsEILms5njuNswZ0GfS2et3nCLJRz
+         +I0gMYLK0NeErwOuqQ4A2q8cCdwNc18DAglhambA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pietro Oliva <pietroliva@gmail.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>
-Subject: [PATCH 5.4 041/135] staging: rtl8723bs: Fix potential overuse of kernel memory
-Date:   Thu, 27 Feb 2020 14:36:21 +0100
-Message-Id: <20200227132235.072163016@linuxfoundation.org>
+        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
+Subject: [PATCH 5.4 022/135] staging: vt6656: fix sign of rx_dbm to bb_pre_ed_rssi.
+Date:   Thu, 27 Feb 2020 14:36:02 +0100
+Message-Id: <20200227132232.581719361@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -59,38 +58,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Larry Finger <Larry.Finger@lwfinger.net>
+From: Malcolm Priestley <tvboxspy@gmail.com>
 
-commit 23954cb078febfc63a755301fe77e06bccdb4d2a upstream.
+commit 93134df520f23f4e9998c425b8987edca7016817 upstream.
 
-In routine wpa_supplicant_ioctl(), the user-controlled p->length is
-checked to be at least the size of struct ieee_param size, but the code
-does not detect the case where p->length is greater than the size
-of the struct, thus a malicious user could be wasting kernel memory.
-Fixes commit 554c0a3abf216 ("staging: Add rtl8723bs sdio wifi driver").
+bb_pre_ed_rssi is an u8 rx_dm always returns negative signed
+values add minus operator to always yield positive.
 
-Reported by: Pietro Oliva <pietroliva@gmail.com>
-Cc: Pietro Oliva <pietroliva@gmail.com>
-Cc: Stable <stable@vger.kernel.org>
-Fixes: 554c0a3abf216 ("staging: Add rtl8723bs sdio wifi driver").
-Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
-Link: https://lore.kernel.org/r/20200210180235.21691-5-Larry.Finger@lwfinger.net
+fixes issue where rx sensitivity is always set to maximum because
+the unsigned numbers were always greater then 100.
+
+Fixes: 63b9907f58f1 ("staging: vt6656: mac80211 conversion: create rx function.")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
+Link: https://lore.kernel.org/r/aceac98c-6e69-3ce1-dfec-2bf27b980221@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/rtl8723bs/os_dep/ioctl_linux.c |    2 +-
+ drivers/staging/vt6656/dpc.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-+++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-@@ -3379,7 +3379,7 @@ static int wpa_supplicant_ioctl(struct n
+--- a/drivers/staging/vt6656/dpc.c
++++ b/drivers/staging/vt6656/dpc.c
+@@ -130,7 +130,7 @@ int vnt_rx_data(struct vnt_private *priv
  
- 	/* down(&ieee->wx_sem); */
+ 	vnt_rf_rssi_to_dbm(priv, *rssi, &rx_dbm);
  
--	if (p->length < sizeof(struct ieee_param) || !p->pointer) {
-+	if (!p->pointer || p->length != sizeof(struct ieee_param)) {
- 		ret = -EINVAL;
- 		goto out;
- 	}
+-	priv->bb_pre_ed_rssi = (u8)rx_dbm + 1;
++	priv->bb_pre_ed_rssi = (u8)-rx_dbm + 1;
+ 	priv->current_rssi = priv->bb_pre_ed_rssi;
+ 
+ 	skb_pull(skb, 8);
 
 
