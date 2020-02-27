@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4AD6C3F353
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C884C3F352
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B207920726
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:44:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 242DE2468D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811086;
-	bh=GjFCPIWSETAiRzEcsvJZH/6gWSVnJu8obNs73hbz/xs=;
+	s=default; t=1582811118;
+	bh=geDUjYk7kalEZQlL6jcKj7zv/14uqMb6KblkbR7tOd4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bFQ40tId3wVqiadFMV3OjwM2pkvgPr+LnDnuuk0UlR6i2PvwiRpBRKXLQo3ANQa9d
-	 ufVuvAIz1QuufadkBg+mTFMrZYeldGuWME0HIyRz6op0qt8hP6g+5PgguK6gGe9/CA
-	 01Rtz/Qw1RkSQS3ubxlSUBtb0gTEaLZEydZL9yKU=
+	b=m81YDWahBudFqdwtCD8VaRarbpMi2fZOe0VoRSYfBnZdTudzSU6DN2YPzpqCSZTwO
+	 xfbci1Q6cEFau8AWXLWC7vFH/zeU4JlL3dfV/K2VZtQh7zVKz0UoyQOLGWKidLz3OM
+	 8ctQyWQN1xQnu/KQkJGNV399Cu8KLeKudXsoPLeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730258AbgB0Nop (ORCPT
+        id S1729402AbgB0NpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:44:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40182 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:45:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730242AbgB0Noj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:44:39 -0500
+        id S1729755AbgB0NpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:45:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3740320578;
-        Thu, 27 Feb 2020 13:44:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 242E720726;
+        Thu, 27 Feb 2020 13:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811078;
-        bh=GjFCPIWSETAiRzEcsvJZH/6gWSVnJu8obNs73hbz/xs=;
+        s=default; t=1582811110;
+        bh=geDUjYk7kalEZQlL6jcKj7zv/14uqMb6KblkbR7tOd4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=brLxcqdu3L6BpX9LJ/z7/OVv4OQXzhJWBNBMQNBerP6YHq8q85WrJvR34QCvNsb8G
-         yQt/PySp0YU+PVrsnO/iDNzenSUYrcRcRA81h0pUHxVqHgJffRUni4V9QxRSCQjc/I
-         rHlMORBHD6CtBgrZdI/Bn+ntGysjtSfQ2kfjqbMY=
+        b=TqIUa2/Xg/qMeGtf5qkejSn5PKnvEsk4xK6Kyq7QeJq3ek9l5bxTM4r8kR4ikxK2o
+         ZRPF0OYqLTN9S8XAVWZnsIdBatS9Fao7IWia/VI6iwoBazJn7oKdn9JG7jXazcNMiW
+         qavEIRl5EyKFJbazOuojsOauPiLT9yYe0y8d76eE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Tyler Hicks <code@tyhicks.com>
-Subject: [PATCH 4.4 109/113] ecryptfs: replace BUG_ON with error handling code
-Date:   Thu, 27 Feb 2020 14:37:05 +0100
-Message-Id: <20200227132229.244579940@linuxfoundation.org>
+        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.4 105/113] KVM: apic: avoid calculating pending eoi from an uninitialized val
+Date:   Thu, 27 Feb 2020 14:37:01 +0100
+Message-Id: <20200227132228.583761109@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
 References: <20200227132211.791484803@linuxfoundation.org>
@@ -59,39 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-commit 2c2a7552dd6465e8fde6bc9cccf8d66ed1c1eb72 upstream.
+commit 23520b2def95205f132e167cf5b25c609975e959 upstream.
 
-In crypt_scatterlist, if the crypt_stat argument is not set up
-correctly, the kernel crashes. Instead, by returning an error code
-upstream, the error is handled safely.
+When pv_eoi_get_user() fails, 'val' may remain uninitialized and the return
+value of pv_eoi_get_pending() becomes random. Fix the issue by initializing
+the variable.
 
-The issue is detected via a static analysis tool written by us.
-
-Fixes: 237fead619984 (ecryptfs: fs/Makefile and fs/Kconfig)
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Tyler Hicks <code@tyhicks.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ecryptfs/crypto.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/x86/kvm/lapic.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/fs/ecryptfs/crypto.c
-+++ b/fs/ecryptfs/crypto.c
-@@ -346,8 +346,10 @@ static int crypt_scatterlist(struct ecry
- 	struct extent_crypt_result ecr;
- 	int rc = 0;
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -536,9 +536,11 @@ static inline bool pv_eoi_enabled(struct
+ static bool pv_eoi_get_pending(struct kvm_vcpu *vcpu)
+ {
+ 	u8 val;
+-	if (pv_eoi_get_user(vcpu, &val) < 0)
++	if (pv_eoi_get_user(vcpu, &val) < 0) {
+ 		apic_debug("Can't read EOI MSR value: 0x%llx\n",
+ 			   (unsigned long long)vcpu->arch.pv_eoi.msr_val);
++		return false;
++	}
+ 	return val & 0x1;
+ }
  
--	BUG_ON(!crypt_stat || !crypt_stat->tfm
--	       || !(crypt_stat->flags & ECRYPTFS_STRUCT_INITIALIZED));
-+	if (!crypt_stat || !crypt_stat->tfm
-+	       || !(crypt_stat->flags & ECRYPTFS_STRUCT_INITIALIZED))
-+		return -EINVAL;
-+
- 	if (unlikely(ecryptfs_verbosity > 0)) {
- 		ecryptfs_printk(KERN_DEBUG, "Key size [%zd]; key:\n",
- 				crypt_stat->key_size);
 
 
