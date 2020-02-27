@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA386C35DEE
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9306C52D3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2D1C20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7716B2468D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:08:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812499;
-	bh=M+3C6Vfw8tIQOCDP4th63PzilReHvAapp2Moe3ZV2mg=;
+	s=default; t=1582812530;
+	bh=SQVAAP2kvL9u7b94qtrIiV64wIKilRpYbocpTnql3gE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TnJZ5SN/gTvxmMmLPwG9G/86Uy+dGCygRCPmHkCazD/xXzROr0/KIee7H+YSFtE/M
-	 4Zi07duYdzP8OkpMskcVBohvWK3bEQTdenji46NT9bG48GR7de6VQKpM+qePgCsY5N
-	 8+XHlmcKYt8UnwOvzO1k2rVp3RxKuvv/YbubnQlw=
+	b=rh2pBqKCPH6qEjJh2QlPbzruliaBIFo+Hfu6zw6wWrqMu3ZrGElVOTDM4nAnvVg9A
+	 RFMQzVO4eXSp+VK4BYgE4SUoDkovZnsnt4AA+097v+LHUfgmtJwKIZrpnCjQLzUIGP
+	 21+IYoQZ1X436qj0DYVz+3DiN9iPR/QB4nzde8Qw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388229AbgB0OIS (ORCPT
+        id S1733169AbgB0OIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:08:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46004 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:08:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388217AbgB0OIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:08:15 -0500
+        id S2388283AbgB0OIm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:08:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3218320578;
-        Thu, 27 Feb 2020 14:08:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB75224656;
+        Thu, 27 Feb 2020 14:08:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812494;
-        bh=M+3C6Vfw8tIQOCDP4th63PzilReHvAapp2Moe3ZV2mg=;
+        s=default; t=1582812521;
+        bh=SQVAAP2kvL9u7b94qtrIiV64wIKilRpYbocpTnql3gE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w/7NjiD4IhDanO6sKwErFoFTrHVfaaj3TozEdA08aKvmKcO13XrGmdADwNdpLCUks
-         lKq4XD7V2KNx1Ef1W3PM4iaoxvsINQz9YwXeDqsEILms5njuNswZ0GfS2et3nCLJRz
-         +I0gMYLK0NeErwOuqQ4A2q8cCdwNc18DAglhambA=
+        b=bEcj03dYUFjdiyWExTTap45tC3mYHOTQjHBydb2b8KdpDcWhZPCuv1KscD/KxRIjQ
+         XdI9h++IiX+ZEBuY0OFvy0v/kyGZHZ6fyYJcphCYxIFkAkNh9lMD/P7iQVRnkFOKU/
+         lpiahKcpZ1uQvr9/6/28+IEwjzhzurcQ68rh+/sU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
-Subject: [PATCH 5.4 022/135] staging: vt6656: fix sign of rx_dbm to bb_pre_ed_rssi.
-Date:   Thu, 27 Feb 2020 14:36:02 +0100
-Message-Id: <20200227132232.581719361@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 5.4 049/135] arm64: memory: Add missing brackets to untagged_addr() macro
+Date:   Thu, 27 Feb 2020 14:36:29 +0100
+Message-Id: <20200227132236.508445029@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -58,36 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Malcolm Priestley <tvboxspy@gmail.com>
+From: Will Deacon <will@kernel.org>
 
-commit 93134df520f23f4e9998c425b8987edca7016817 upstream.
+commit d0022c0ef29b78bcbe8a5c5894bd2307143afce1 upstream.
 
-bb_pre_ed_rssi is an u8 rx_dm always returns negative signed
-values add minus operator to always yield positive.
+Add brackets around the evaluation of the 'addr' parameter to the
+untagged_addr() macro so that the cast to 'u64' applies to the result
+of the expression.
 
-fixes issue where rx sensitivity is always set to maximum because
-the unsigned numbers were always greater then 100.
-
-Fixes: 63b9907f58f1 ("staging: vt6656: mac80211 conversion: create rx function.")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
-Link: https://lore.kernel.org/r/aceac98c-6e69-3ce1-dfec-2bf27b980221@gmail.com
+Cc: <stable@vger.kernel.org>
+Fixes: 597399d0cb91 ("arm64: tags: Preserve tags for addresses translated via TTBR1")
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/vt6656/dpc.c |    2 +-
+ arch/arm64/include/asm/memory.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/vt6656/dpc.c
-+++ b/drivers/staging/vt6656/dpc.c
-@@ -130,7 +130,7 @@ int vnt_rx_data(struct vnt_private *priv
+--- a/arch/arm64/include/asm/memory.h
++++ b/arch/arm64/include/asm/memory.h
+@@ -219,7 +219,7 @@ static inline unsigned long kaslr_offset
+ 	((__force __typeof__(addr))sign_extend64((__force u64)(addr), 55))
  
- 	vnt_rf_rssi_to_dbm(priv, *rssi, &rx_dbm);
- 
--	priv->bb_pre_ed_rssi = (u8)rx_dbm + 1;
-+	priv->bb_pre_ed_rssi = (u8)-rx_dbm + 1;
- 	priv->current_rssi = priv->bb_pre_ed_rssi;
- 
- 	skb_pull(skb, 8);
+ #define untagged_addr(addr)	({					\
+-	u64 __addr = (__force u64)addr;					\
++	u64 __addr = (__force u64)(addr);					\
+ 	__addr &= __untagged_addr(__addr);				\
+ 	(__force __typeof__(addr))__addr;				\
+ })
 
 
