@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD05C3F37A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD9FC3F37E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88C532468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F33A2468F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813518;
-	bh=bDVVnOPiBJFbAwok1eeBcXQx8jGyj50nZqeS8zCYhbU=;
+	s=default; t=1582813530;
+	bh=0t2kYAsODT2lhOl+jQme+GSvt5/Gi8zhsfODqfavzOI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=geLCyaZjHn4O0EY6MSBWk80Gx+d2nhMuz94wLK7OoGxnajSI7AVZU3Xf0qM+rY6AB
-	 v0W9EETQzvsEAMfn8AauUwAGvJDuJSeI7BuPg4MGg5qje/Ov6kwBYtpoJAzkbY7w5/
-	 3h3UFbj1iVVMQVv38CN4qoG63tZ2docyTodfEC5U=
+	b=KuW545/h36TB+/MznzYvTBfkGdAcgqi9YyirtRQYvQ4srJITIoGYHCxPf98M4wQWo
+	 MBzW62cBt6L0gvApDI72DyQnOkvFH8nRn3YEgvyn97bRc9TFkSrK2gFJuRpsx0praq
+	 3sQpQr302G9CyU9Nb9kModnFNgtElXS9He8M6ASQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389126AbgB0OZR (ORCPT
+        id S2389198AbgB0OZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:25:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50116 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:25:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388707AbgB0OLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:11:35 -0500
+        id S2387722AbgB0OLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:11:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D504421D7E;
-        Thu, 27 Feb 2020 14:11:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9A0F24697;
+        Thu, 27 Feb 2020 14:11:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812695;
-        bh=bDVVnOPiBJFbAwok1eeBcXQx8jGyj50nZqeS8zCYhbU=;
+        s=default; t=1582812679;
+        bh=0t2kYAsODT2lhOl+jQme+GSvt5/Gi8zhsfODqfavzOI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qwuM4j7QeuZeMS58/anQnEUqbchWL3Gj06m4cxjwnlcbTAPFHCRxCdLRTHfRE5Wvx
-         SCDLe8XAJtUr44Nj/YWkFJu/OhUtYDxkm+5FtC98zaEZWl9gkTzgfE8rHZ53a04iZd
-         IWfsTE1pL2Dt7oLQZLqWNJlRg7Bj2gSsxYfNxhfc=
+        b=oLe78Qu+qLrtsoXVUHN88HYUEd2uo+7v4zNBuSDjyVY0lQ2jOhtuDEav0C9EWRjWk
+         sjwv2Y1MIgtjitNrNw5w4v3X85cUG71POrh/6HomvhzTufj32HnHplp2QzgNiTrYQm
+         /CwCVf/1U38E+NQUTACNCWiWhPTaOMa9Bbg48oW0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
-        Pascal van Leeuwen <pvanleeuwen@rambus.com>,
-        Mimi Zohar <zohar@linux.ibm.com>
-Subject: [PATCH 5.4 117/135] crypto: rename sm3-256 to sm3 in hash_algo_name
-Date:   Thu, 27 Feb 2020 14:37:37 +0100
-Message-Id: <20200227132246.727382171@linuxfoundation.org>
+        stable@vger.kernel.org, Igor Druzhinin <igor.druzhinin@citrix.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>
+Subject: [PATCH 5.4 103/135] drm/i915/gvt: more locking for ppgtt mm LRU list
+Date:   Thu, 27 Feb 2020 14:37:23 +0100
+Message-Id: <20200227132244.712729602@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -61,37 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+From: Igor Druzhinin <igor.druzhinin@citrix.com>
 
-commit 6a30e1b1dcad0ba94fae757f797812d7d8dcb72c upstream.
+commit 0e9d7bb293f3f9c3ee376b126141407efb265f31 upstream.
 
-The name sm3-256 is defined in hash_algo_name in hash_info, but the
-algorithm name implemented in sm3_generic.c is sm3, which will cause
-the sm3-256 algorithm to be not found in some application scenarios of
-the hash algorithm, and an ENOENT error will occur. For example,
-IMA, keys, and other subsystems that reference hash_algo_name all use
-the hash algorithm of sm3.
+When the lock was introduced in commit 72aabfb862e40 ("drm/i915/gvt: Add mutual
+lock for ppgtt mm LRU list") one place got lost.
 
-Fixes: 5ca4c20cfd37 ("keys, trusted: select hash algorithm for TPM2 chips")
-Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Reviewed-by: Pascal van Leeuwen <pvanleeuwen@rambus.com>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Fixes: 72aabfb862e4 ("drm/i915/gvt: Add mutual lock for ppgtt mm LRU list")
+Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
+Reviewed-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/1580742421-25194-1-git-send-email-igor.druzhinin@citrix.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/hash_info.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/i915/gvt/gtt.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/crypto/hash_info.c
-+++ b/crypto/hash_info.c
-@@ -26,7 +26,7 @@ const char *const hash_algo_name[HASH_AL
- 	[HASH_ALGO_TGR_128]	= "tgr128",
- 	[HASH_ALGO_TGR_160]	= "tgr160",
- 	[HASH_ALGO_TGR_192]	= "tgr192",
--	[HASH_ALGO_SM3_256]	= "sm3-256",
-+	[HASH_ALGO_SM3_256]	= "sm3",
- 	[HASH_ALGO_STREEBOG_256] = "streebog256",
- 	[HASH_ALGO_STREEBOG_512] = "streebog512",
- };
+--- a/drivers/gpu/drm/i915/gvt/gtt.c
++++ b/drivers/gpu/drm/i915/gvt/gtt.c
+@@ -1956,7 +1956,11 @@ void _intel_vgpu_mm_release(struct kref
+ 
+ 	if (mm->type == INTEL_GVT_MM_PPGTT) {
+ 		list_del(&mm->ppgtt_mm.list);
++
++		mutex_lock(&mm->vgpu->gvt->gtt.ppgtt_mm_lock);
+ 		list_del(&mm->ppgtt_mm.lru_list);
++		mutex_unlock(&mm->vgpu->gvt->gtt.ppgtt_mm_lock);
++
+ 		invalidate_ppgtt_mm(mm);
+ 	} else {
+ 		vfree(mm->ggtt_mm.virtual_ggtt);
 
 
