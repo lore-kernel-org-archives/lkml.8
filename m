@@ -2,151 +2,120 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C09EC4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B44EBC4BA2D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 400D824697
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88CD424695
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:38:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="JeS4J17P"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FskWtjnN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729082AbgB0MiL (ORCPT
+        id S1729130AbgB0MiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 07:38:11 -0500
-Received: from conuserg-12.nifty.com ([210.131.2.79]:40138 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728982AbgB0MiL (ORCPT
+        Thu, 27 Feb 2020 07:38:24 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:38656 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728977AbgB0MiX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 07:38:11 -0500
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id 01RCbb6U019114;
-        Thu, 27 Feb 2020 21:37:37 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 01RCbb6U019114
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582807057;
-        bh=OfBqph3sclJ76L08S3946c2Ab+KCXHqtiVA7HkK9BFE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=JeS4J17PgWBPIUM4+qnMqoRLn0+3vj7iqACMn6BnXwYD+uQESrarxrHetq2mEFtCP
-         P1qMcqqS0uu+9zvZh1DzGTZNmuM3OI559uymLfWxN9C7ut7yIJdpQCLhfjW015GY+Q
-         ZYh80f+cPASB1amYBWVOVnIGzh/7d/Xwh0LqB6dN0B/wRbc0UliN2fHTFP0PkoguGX
-         PUSVREG2rpYhZmtcUEhv7ek9f5V22oYrusGvlx4QeeRhohwmw8+/f0/WEbyA+Wgi23
-         U/XR1uCeP41JbkBWxgirkfSuWoSnaNa26lMe1Ti1HV+KPDInysyX3x5QkTzq0cwhmI
-         G2Vvhc1+8503g==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: uniphier: rename cache controller nodes to follow json-schema
-Date:   Thu, 27 Feb 2020 21:37:26 +0900
-Message-Id: <20200227123726.12910-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 27 Feb 2020 07:38:23 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01RCc5t7117401;
+        Thu, 27 Feb 2020 06:38:05 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582807085;
+        bh=rajg4uTg/TEsV6CsUleF0jbc10ghlyv7bjJVEvPVLiU=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=FskWtjnNY3OwRDzpQjNUVBsqmFuGzzDUUaB6Knvmlo3V0fmrNa5PSNlX6+uQd4cHG
+         4fSA44R8tHLbSovbpRwMeoWwDoY6uBMUwGT1TmvE3AygtePsainRv6ZOTv7O/PtMrS
+         q4TLs6F981JAxJOz2AWqn0fBGOd2EJHz3XpJXsDM=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01RCc5kG117291
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 27 Feb 2020 06:38:05 -0600
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 27
+ Feb 2020 06:38:04 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 27 Feb 2020 06:38:05 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01RCbnvR100207;
+        Thu, 27 Feb 2020 06:38:02 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vigneshr@ti.com>, <miquel.raynal@bootlin.com>, <han.xu@nxp.com>,
+        <richard@nod.at>, <mripard@kernel.org>, <wens@csie.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
+CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <vkoul@kernel.org>
+Subject: [PATCH 4/7] mtd: rawnand: sunxi: Use dma_request_chan() instead dma_request_slave_channel()
+Date:   Thu, 27 Feb 2020 14:37:46 +0200
+Message-ID: <20200227123749.24064-5-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200227123749.24064-1-peter.ujfalusi@ti.com>
+References: <20200227123749.24064-1-peter.ujfalusi@ti.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Follow the standard nodename pattern
-"^(cache-controller|cpu)(@[0-9a-f,]+)*$" defined in
-schemas/cache-controller.yaml of dt-schema.
+dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+eating up the error code.
 
-Otherwise, after the dt-binding is converted to json-schema,
-'make ARCH=arm dtbs_check' will show a warning like this:
+By using dma_request_chan() directly the driver can support deferred
+probing against DMA.
 
-  l2-cache@500c0000: $nodename:0: 'l2-cache@500c0000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
+ drivers/mtd/nand/raw/sunxi_nand.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
- arch/arm/boot/dts/uniphier-ld4.dtsi  | 2 +-
- arch/arm/boot/dts/uniphier-pro4.dtsi | 2 +-
- arch/arm/boot/dts/uniphier-pro5.dtsi | 4 ++--
- arch/arm/boot/dts/uniphier-pxs2.dtsi | 2 +-
- arch/arm/boot/dts/uniphier-sld8.dtsi | 2 +-
- 5 files changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/arch/arm/boot/dts/uniphier-ld4.dtsi b/arch/arm/boot/dts/uniphier-ld4.dtsi
-index 197bee7d8b7f..06e7400d2940 100644
---- a/arch/arm/boot/dts/uniphier-ld4.dtsi
-+++ b/arch/arm/boot/dts/uniphier-ld4.dtsi
-@@ -51,7 +51,7 @@
- 		ranges;
- 		interrupt-parent = <&intc>;
+diff --git a/drivers/mtd/nand/raw/sunxi_nand.c b/drivers/mtd/nand/raw/sunxi_nand.c
+index 37a4ac0dd85b..3a24c4512af7 100644
+--- a/drivers/mtd/nand/raw/sunxi_nand.c
++++ b/drivers/mtd/nand/raw/sunxi_nand.c
+@@ -2123,8 +2123,16 @@ static int sunxi_nfc_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto out_ahb_reset_reassert;
  
--		l2: l2-cache@500c0000 {
-+		l2: cache-controller@500c0000 {
- 			compatible = "socionext,uniphier-system-cache";
- 			reg = <0x500c0000 0x2000>, <0x503c0100 0x4>,
- 			      <0x506c0000 0x400>;
-diff --git a/arch/arm/boot/dts/uniphier-pro4.dtsi b/arch/arm/boot/dts/uniphier-pro4.dtsi
-index b02bc8a6346b..1c866f0306fc 100644
---- a/arch/arm/boot/dts/uniphier-pro4.dtsi
-+++ b/arch/arm/boot/dts/uniphier-pro4.dtsi
-@@ -59,7 +59,7 @@
- 		ranges;
- 		interrupt-parent = <&intc>;
+-	nfc->dmac = dma_request_slave_channel(dev, "rxtx");
+-	if (nfc->dmac) {
++	nfc->dmac = dma_request_chan(dev, "rxtx");
++	if (IS_ERR(nfc->dmac)) {
++		ret = PTR_ERR(nfc->dmac);
++		if (ret == -EPROBE_DEFER)
++			goto out_ahb_reset_reassert;
++
++		/* Ignore errors to fall back to PIO mode */
++		dev_warn(dev, "failed to request rxtx DMA channel: %d\n", ret);
++		nfc->dmac = NULL;
++	} else {
+ 		struct dma_slave_config dmac_cfg = { };
  
--		l2: l2-cache@500c0000 {
-+		l2: cache-controller@500c0000 {
- 			compatible = "socionext,uniphier-system-cache";
- 			reg = <0x500c0000 0x2000>, <0x503c0100 0x4>,
- 			      <0x506c0000 0x400>;
-diff --git a/arch/arm/boot/dts/uniphier-pro5.dtsi b/arch/arm/boot/dts/uniphier-pro5.dtsi
-index f84a43a10f38..da772429b55a 100644
---- a/arch/arm/boot/dts/uniphier-pro5.dtsi
-+++ b/arch/arm/boot/dts/uniphier-pro5.dtsi
-@@ -131,7 +131,7 @@
- 		ranges;
- 		interrupt-parent = <&intc>;
+ 		dmac_cfg.src_addr = r->start + nfc->caps->reg_io_data;
+@@ -2138,9 +2146,6 @@ static int sunxi_nfc_probe(struct platform_device *pdev)
+ 		if (nfc->caps->extra_mbus_conf)
+ 			writel(readl(nfc->regs + NFC_REG_CTL) |
+ 			       NFC_DMA_TYPE_NORMAL, nfc->regs + NFC_REG_CTL);
+-
+-	} else {
+-		dev_warn(dev, "failed to request rxtx DMA channel\n");
+ 	}
  
--		l2: l2-cache@500c0000 {
-+		l2: cache-controller@500c0000 {
- 			compatible = "socionext,uniphier-system-cache";
- 			reg = <0x500c0000 0x2000>, <0x503c0100 0x8>,
- 			      <0x506c0000 0x400>;
-@@ -144,7 +144,7 @@
- 			next-level-cache = <&l3>;
- 		};
- 
--		l3: l3-cache@500c8000 {
-+		l3: cache-controller@500c8000 {
- 			compatible = "socionext,uniphier-system-cache";
- 			reg = <0x500c8000 0x2000>, <0x503c8100 0x8>,
- 			      <0x506c8000 0x400>;
-diff --git a/arch/arm/boot/dts/uniphier-pxs2.dtsi b/arch/arm/boot/dts/uniphier-pxs2.dtsi
-index 989b2a241822..7044f8700cb2 100644
---- a/arch/arm/boot/dts/uniphier-pxs2.dtsi
-+++ b/arch/arm/boot/dts/uniphier-pxs2.dtsi
-@@ -157,7 +157,7 @@
- 		ranges;
- 		interrupt-parent = <&intc>;
- 
--		l2: l2-cache@500c0000 {
-+		l2: cache-controller@500c0000 {
- 			compatible = "socionext,uniphier-system-cache";
- 			reg = <0x500c0000 0x2000>, <0x503c0100 0x8>,
- 			      <0x506c0000 0x400>;
-diff --git a/arch/arm/boot/dts/uniphier-sld8.dtsi b/arch/arm/boot/dts/uniphier-sld8.dtsi
-index fbfd25050a04..09992163e1f4 100644
---- a/arch/arm/boot/dts/uniphier-sld8.dtsi
-+++ b/arch/arm/boot/dts/uniphier-sld8.dtsi
-@@ -51,7 +51,7 @@
- 		ranges;
- 		interrupt-parent = <&intc>;
- 
--		l2: l2-cache@500c0000 {
-+		l2: cache-controller@500c0000 {
- 			compatible = "socionext,uniphier-system-cache";
- 			reg = <0x500c0000 0x2000>, <0x503c0100 0x4>,
- 			      <0x506c0000 0x400>;
+ 	platform_set_drvdata(pdev, nfc);
 -- 
-2.17.1
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
