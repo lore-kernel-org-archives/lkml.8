@@ -2,110 +2,112 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C7DC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C274C35677
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37A182469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:20:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RA8/G5ut"
+	by mail.kernel.org (Postfix) with ESMTP id 5D15F2073D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:20:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730004AbgB0QUS (ORCPT
+        id S1730117AbgB0QUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 11:20:18 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:58070 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728963AbgB0QUR (ORCPT
+        Thu, 27 Feb 2020 11:20:47 -0500
+Received: from relay10.mail.gandi.net ([217.70.178.230]:43437 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728963AbgB0QUr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 11:20:17 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01RG37SU156213;
-        Thu, 27 Feb 2020 16:20:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=9Vt3KmBfr6qss9HnVAOBJ8DCQFUsK5SMylKYJ5xw3ls=;
- b=RA8/G5uto6hIJfj+y9n8MFIekWCdaK73Sk6oayt71fVvIze9BewmVMxGa+Cqbw8GFYA6
- hpshoPsE9XbPRjfr/ubQW1v0h34BmCGEBi9Yk1I3TiarP8lFVa6NcNGNg8ZN5c/aDlVO
- myxne9vbVYMZG9xCGmDF2yI3/5ZVXNI3u+mqRmtDjk8zb0faluGKJzgCxhDd0rcQ2kJ6
- TpiuyIqTwJwCSkSL3fd/Pbh62IUgxmbmK640yoE0TnIzW83N2fgw0B0P4Q7i/PZL6Gcz
- xkgV6ILZBr0PmcFd4KPK3e4Bbg7draVywr5nbW7GY/yCdu9/H2CpXucxZmDb7YFAQy6A aA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2ydct3c1d6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Feb 2020 16:20:06 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01RGERW8186981;
-        Thu, 27 Feb 2020 16:20:06 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2ydcs5kst7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Feb 2020 16:20:06 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01RGK3Gx002382;
-        Thu, 27 Feb 2020 16:20:03 GMT
-Received: from kili.mountain (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 27 Feb 2020 08:20:03 -0800
-Date:   Thu, 27 Feb 2020 19:19:54 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Jens Wiklander <jens.wiklander@linaro.org>,
-        Rijo Thomas <Rijo-john.Thomas@amd.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
-        tee-dev@lists.linaro.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH] tee: amdtee: out of bounds read in find_session()
-Message-ID: <20200227161954.fo7pbbgomdjkraxq@kili.mountain>
+        Thu, 27 Feb 2020 11:20:47 -0500
+Received: from [10.30.1.20] (lneuilly-657-1-5-103.w81-250.abo.wanadoo.fr [81.250.144.103])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id E9614240011;
+        Thu, 27 Feb 2020 16:20:39 +0000 (UTC)
+Subject: Re: [BUGFIX PATCH] perf probe: Do not depend on dwfl_module_addrsym()
+To:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20200228002553.31b82876b705aaabbd717131@kernel.org>
+ <158281812176.476.14164573830975116234.stgit@devnote2>
+From:   Alexandre Ghiti <alex@ghiti.fr>
+Message-ID: <787c2915-c868-358a-481d-1ffd355d92db@ghiti.fr>
+Date:   Thu, 27 Feb 2020 17:20:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9543 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 malwarescore=0
- mlxlogscore=999 mlxscore=0 phishscore=0 suspectscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002270124
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9543 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 bulkscore=0
- impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0 adultscore=0
- phishscore=0 mlxlogscore=999 mlxscore=0 suspectscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002270124
+In-Reply-To: <158281812176.476.14164573830975116234.stgit@devnote2>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "index" is a user provided value from 0-USHRT_MAX.  If it's over
-TEE_NUM_SESSIONS (31) then it results in an out of bounds read when we
-call test_bit(index, sess->sess_mask).
+On 2/27/20 4:42 PM, Masami Hiramatsu wrote:
+> Do not depend on dwfl_module_addrsym() because it can fail
+> on user-space shared libraries.
+> 
+> Actually, same bug was fixed by commit 664fee3dc379 ("perf
+> probe: Do not use dwfl_module_addrsym if dwarf_diename finds
+> symbol name"), but commit 07d369857808 ("perf probe: Fix
+> wrong address verification) reverted to get actual symbol
+> address from symtab.
+> 
+> This fixes it again by getting symbol address from DIE,
+> and only if the DIE has only address range, it uses
+> dwfl_module_addrsym().
+> 
+> Fixes: 07d369857808 ("perf probe: Fix wrong address verification)
+> Reported-by: Alexandre Ghiti <alex@ghiti.fr>
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> ---
+>   tools/perf/util/probe-finder.c |   11 ++++++++---
+>   1 file changed, 8 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+> index 1c817add6ca4..e4cff49384f4 100644
+> --- a/tools/perf/util/probe-finder.c
+> +++ b/tools/perf/util/probe-finder.c
+> @@ -637,14 +637,19 @@ static int convert_to_trace_point(Dwarf_Die *sp_die, Dwfl_Module *mod,
+>   		return -EINVAL;
+>   	}
+>   
+> -	/* Try to get actual symbol name from symtab */
+> -	symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
+> +	if (dwarf_entrypc(sp_die, &eaddr) == 0) {
+> +		/* If the DIE has entrypc, use it. */
+> +		symbol = dwarf_diename(sp_die);
+> +	} else {
+> +		/* Try to get actual symbol name and address from symtab */
+> +		symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
+> +		eaddr = sym.st_value;
+> +	}
+>   	if (!symbol) {
+>   		pr_warning("Failed to find symbol at 0x%lx\n",
+>   			   (unsigned long)paddr);
+>   		return -ENOENT;
+>   	}
+> -	eaddr = sym.st_value;
+>   
+>   	tp->offset = (unsigned long)(paddr - eaddr);
+>   	tp->address = (unsigned long)paddr;
+> 
 
-Fixes: 757cc3e9ff1d ("tee: add AMD-TEE driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- drivers/tee/amdtee/core.c | 3 +++
- 1 file changed, 3 insertions(+)
+I have just tested your patch, that fixes the issue, so you can add:
 
-diff --git a/drivers/tee/amdtee/core.c b/drivers/tee/amdtee/core.c
-index 6370bb55f512..dbc238c7c263 100644
---- a/drivers/tee/amdtee/core.c
-+++ b/drivers/tee/amdtee/core.c
-@@ -139,6 +139,9 @@ static struct amdtee_session *find_session(struct amdtee_context_data *ctxdata,
- 	u32 index = get_session_index(session);
- 	struct amdtee_session *sess;
- 
-+	if (index >= TEE_NUM_SESSIONS)
-+		return NULL;
-+
- 	list_for_each_entry(sess, &ctxdata->sess_list, list_node)
- 		if (ta_handle == sess->ta_handle &&
- 		    test_bit(index, sess->sess_mask))
--- 
-2.11.0
+Tested-by: Alexandre Ghiti <alex@ghiti.fr>
 
+I added stable in cc.
+
+Thanks,
+
+Alex
