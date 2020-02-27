@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCF7C54FE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA468C54FEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84E1B24688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9071D24691
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813823;
-	bh=IAbXsdKThfWp5kflFnf+H5CpkjsYJ220+iv2NJURT2I=;
+	s=default; t=1582813825;
+	bh=owgbSkQuyuKWV97co5YSL6DxPE/cE2jQQs4y/xcXZ/g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CLVGu+8I3zRB4O8hxjsPgtEQeyQ19xESXlA7N/QQGE3FuuL9R93USK1FmV9ALfZsp
-	 h/I4ReVcAmD0rx9nRStuO4MRdrhUfAVsPg6p1izcbm5P50c13bijW11l+cCFFuZAgi
-	 oVJTH7eHOoTvP/xVGn9NYDFQYaYkxe0pwgeSoY9E=
+	b=KrK+l9khZ1eNLVrxeWj2WHcHlblojadK+VD/EgyMEAdW/dTajEwXDiPW+aR2VhJeQ
+	 fu3juSWrN4n3EIa5tkoMR6+AZV7fYLrAAyjL0clhhKLExFIXlNuryeP5d/S4Jy882M
+	 AKmynOBRdof9gd7bFQy0a0XPHVkMjUD72S5tvyAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388314AbgB0OaW (ORCPT
+        id S2388340AbgB0OaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:30:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41820 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:30:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387713AbgB0OFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:05:12 -0500
+        id S1733260AbgB0OFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:05:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25EFD20801;
-        Thu, 27 Feb 2020 14:05:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B600E20801;
+        Thu, 27 Feb 2020 14:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812311;
-        bh=IAbXsdKThfWp5kflFnf+H5CpkjsYJ220+iv2NJURT2I=;
+        s=default; t=1582812309;
+        bh=owgbSkQuyuKWV97co5YSL6DxPE/cE2jQQs4y/xcXZ/g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N4lr0BJE9XiJlvkta5RjsVc3KQLKxa9uCM3AR8euAavaAYt5LGONU5Q8toyRODWw1
-         5q+P03hHX+1yOm/FLhBpHfdtU271PO90M+BLsIIssPHCtRK/88lrk1mR0dOsafMEit
-         33DnhhgcI48Q8Z7VgJ2K1D1hdx98cHTEJrK6srUI=
+        b=PAm4P1V9EbSRcIsUYXJr7lWVoUblpv4yl2Zi2b4yMbOOGu7vNf6kSPmNBzwBpcy0l
+         ANv+3NDjI1B/JegSD8zYR2AxcyGOXdAXpCyxgzO0vxYqLEV1vXLDyWLM2HIQGUns3T
+         CBSQnhKyyPK+AOyxwUV7bKMmoSBLjF7UyMfnyy1M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rene D Obermueller <cmdrrdo@gmail.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.19 19/97] xhci: Force Maximum Packet size for Full-speed bulk devices to valid range.
-Date:   Thu, 27 Feb 2020 14:36:27 +0100
-Message-Id: <20200227132217.754364763@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Hardik Gajjar <hgajjar@de.adit-jv.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>
+Subject: [PATCH 4.19 28/97] USB: hub: Fix the broken detection of USB3 device in SMSC hub
+Date:   Thu, 27 Feb 2020 14:36:36 +0100
+Message-Id: <20200227132219.193999847@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
 References: <20200227132214.553656188@linuxfoundation.org>
@@ -59,51 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Hardik Gajjar <hgajjar@de.adit-jv.com>
 
-commit f148b9f402ef002b57bcff3964d45abc8ffb6c3f upstream.
+commit 1208f9e1d758c991b0a46a1bd60c616b906bbe27 upstream.
 
-A Full-speed bulk USB audio device (DJ-Tech CTRL) with a invalid Maximum
-Packet Size of 4 causes a xHC "Parameter Error" at enumeration.
+Renesas R-Car H3ULCB + Kingfisher Infotainment Board is either not able
+to detect the USB3.0 mass storage devices or is detecting those as
+USB2.0 high speed devices.
 
-This is because valid Maximum packet sizes for Full-speed bulk endpoints
-are 8, 16, 32 and 64 bytes. Hosts are not required to support other values
-than these. See usb 2 specs section 5.8.3 for details.
+The explanation given by Renesas is that, due to a HW issue, the XHCI
+driver does not wake up after going to sleep on connecting a USB3.0
+device.
 
-The device starts working after forcing the maximum packet size to 8.
-This is most likely the case with other devices as well, so force the
-maximum packet size to a valid range.
+In order to mitigate that, disable the auto-suspend feature
+specifically for SMSC hubs from hub_probe() function, as a quirk.
 
-Cc: stable@vger.kernel.org
-Reported-by: Rene D Obermueller <cmdrrdo@gmail.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200210134553.9144-2-mathias.nyman@linux.intel.com
+Renesas Kingfisher Infotainment Board has two USB3.0 ports (CN2) which
+are connected via USB5534B 4-port SuperSpeed/Hi-Speed, low-power,
+configurable hub controller.
+
+[1] SanDisk USB 3.0 device detected as USB-2.0 before the patch
+ [   74.036390] usb 5-1.1: new high-speed USB device number 4 using xhci-hcd
+ [   74.061598] usb 5-1.1: New USB device found, idVendor=0781, idProduct=5581, bcdDevice= 1.00
+ [   74.069976] usb 5-1.1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+ [   74.077303] usb 5-1.1: Product: Ultra
+ [   74.080980] usb 5-1.1: Manufacturer: SanDisk
+ [   74.085263] usb 5-1.1: SerialNumber: 4C530001110208116550
+
+[2] SanDisk USB 3.0 device detected as USB-3.0 after the patch
+ [   34.565078] usb 6-1.1: new SuperSpeed Gen 1 USB device number 3 using xhci-hcd
+ [   34.588719] usb 6-1.1: New USB device found, idVendor=0781, idProduct=5581, bcdDevice= 1.00
+ [   34.597098] usb 6-1.1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+ [   34.604430] usb 6-1.1: Product: Ultra
+ [   34.608110] usb 6-1.1: Manufacturer: SanDisk
+ [   34.612397] usb 6-1.1: SerialNumber: 4C530001110208116550
+
+Suggested-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Hardik Gajjar <hgajjar@de.adit-jv.com>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1580989763-32291-1-git-send-email-hgajjar@de.adit-jv.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-mem.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/usb/core/hub.c |   15 +++++++++++++++
+ drivers/usb/core/hub.h |    1 +
+ 2 files changed, 16 insertions(+)
 
---- a/drivers/usb/host/xhci-mem.c
-+++ b/drivers/usb/host/xhci-mem.c
-@@ -1475,9 +1475,15 @@ int xhci_endpoint_init(struct xhci_hcd *
- 	/* Allow 3 retries for everything but isoc, set CErr = 3 */
- 	if (!usb_endpoint_xfer_isoc(&ep->desc))
- 		err_count = 3;
--	/* Some devices get this wrong */
--	if (usb_endpoint_xfer_bulk(&ep->desc) && udev->speed == USB_SPEED_HIGH)
--		max_packet = 512;
-+	/* HS bulk max packet should be 512, FS bulk supports 8, 16, 32 or 64 */
-+	if (usb_endpoint_xfer_bulk(&ep->desc)) {
-+		if (udev->speed == USB_SPEED_HIGH)
-+			max_packet = 512;
-+		if (udev->speed == USB_SPEED_FULL) {
-+			max_packet = rounddown_pow_of_two(max_packet);
-+			max_packet = clamp_val(max_packet, 8, 64);
-+		}
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -36,7 +36,9 @@
+ #include "otg_whitelist.h"
+ 
+ #define USB_VENDOR_GENESYS_LOGIC		0x05e3
++#define USB_VENDOR_SMSC				0x0424
+ #define HUB_QUIRK_CHECK_PORT_AUTOSUSPEND	0x01
++#define HUB_QUIRK_DISABLE_AUTOSUSPEND		0x02
+ 
+ #define USB_TP_TRANSMISSION_DELAY	40	/* ns */
+ #define USB_TP_TRANSMISSION_DELAY_MAX	65535	/* ns */
+@@ -1695,6 +1697,10 @@ static void hub_disconnect(struct usb_in
+ 	kfree(hub->buffer);
+ 
+ 	pm_suspend_ignore_children(&intf->dev, false);
++
++	if (hub->quirk_disable_autosuspend)
++		usb_autopm_put_interface(intf);
++
+ 	kref_put(&hub->kref, hub_release);
+ }
+ 
+@@ -1825,6 +1831,11 @@ static int hub_probe(struct usb_interfac
+ 	if (id->driver_info & HUB_QUIRK_CHECK_PORT_AUTOSUSPEND)
+ 		hub->quirk_check_port_auto_suspend = 1;
+ 
++	if (id->driver_info & HUB_QUIRK_DISABLE_AUTOSUSPEND) {
++		hub->quirk_disable_autosuspend = 1;
++		usb_autopm_get_interface(intf);
 +	}
- 	/* xHCI 1.0 and 1.1 indicates that ctrl ep avg TRB Length should be 8 */
- 	if (usb_endpoint_xfer_control(&ep->desc) && xhci->hci_version >= 0x100)
- 		avg_trb_len = 8;
++
+ 	if (hub_configure(hub, &desc->endpoint[0].desc) >= 0)
+ 		return 0;
+ 
+@@ -5405,6 +5416,10 @@ out_hdev_lock:
+ }
+ 
+ static const struct usb_device_id hub_id_table[] = {
++    { .match_flags = USB_DEVICE_ID_MATCH_VENDOR | USB_DEVICE_ID_MATCH_INT_CLASS,
++      .idVendor = USB_VENDOR_SMSC,
++      .bInterfaceClass = USB_CLASS_HUB,
++      .driver_info = HUB_QUIRK_DISABLE_AUTOSUSPEND},
+     { .match_flags = USB_DEVICE_ID_MATCH_VENDOR
+ 			| USB_DEVICE_ID_MATCH_INT_CLASS,
+       .idVendor = USB_VENDOR_GENESYS_LOGIC,
+--- a/drivers/usb/core/hub.h
++++ b/drivers/usb/core/hub.h
+@@ -61,6 +61,7 @@ struct usb_hub {
+ 	unsigned		quiescing:1;
+ 	unsigned		disconnected:1;
+ 	unsigned		in_reset:1;
++	unsigned		quirk_disable_autosuspend:1;
+ 
+ 	unsigned		quirk_check_port_auto_suspend:1;
+ 
 
 
