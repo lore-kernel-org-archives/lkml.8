@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44922C3F357
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB56C3F34D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EEA020801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C64A421D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:53:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811502;
-	bh=tROfg4/dTdtPSZ4Scz9Sud8l8fW0M1Wxe1dm+P1MVuE=;
+	s=default; t=1582811616;
+	bh=NaZ5Ck3m5yTQjNSgYbiMv1Yhr7mLSkoTg4HSsqyCwuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ClJwcH13XA9q9AywmnLa1clcz5rAfzYhtSv/IztxIZBh4/KZSPydxMU8WYKomYI/P
-	 kGeHMpBiPwPudrmFh5HPbcrDK0p6xV3bq32WP19+K1ujHMKeuJa+SwwunEJjzOZT7X
-	 PXBMSxPILrCcYXsTFWyz00PLh94LDK1a/h5wGpcU=
+	b=PuCNg27rRDv8kF0SedHZcRMxP0VkbNvB8WE8ef7ymYUFP1V/5XS3T9b+gBwbUya+C
+	 XkJ62iUJfxGtSxPTRRXvFGKwLOYi0nhjcGIdMpbKkN07V56TUFdLgYc0zRlTOcdImE
+	 M+D65jQZfB+6jjd0/z8fD/JH3IoNr/rzZkpwkW7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731432AbgB0Nvl (ORCPT
+        id S1731737AbgB0Nxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:51:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50832 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:53:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730533AbgB0Nvh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:51:37 -0500
+        id S1731726AbgB0Nxd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:53:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAE97246B9;
-        Thu, 27 Feb 2020 13:51:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCCEF24656;
+        Thu, 27 Feb 2020 13:53:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811497;
-        bh=tROfg4/dTdtPSZ4Scz9Sud8l8fW0M1Wxe1dm+P1MVuE=;
+        s=default; t=1582811613;
+        bh=NaZ5Ck3m5yTQjNSgYbiMv1Yhr7mLSkoTg4HSsqyCwuo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xz9vMlATeL9xL6flS0qDbzMaCpsgreMsHmSYoQH2O/eVpH3wM+c0cV9er9VjlZSet
-         2jOVTISFJa6wKwmMcoWLY1p1qlHelFbLQ4lRqPa6qk0Gye9JqnkMZ+EfUrmMfEyhFv
-         al5CI1hZRt0iCKGW0GLtrfVdM7AoZhO3Hu8l+Jpc=
+        b=RoQUIsbWbheltCSdaldbjbyPbjUFDBQj8/u9nLiv7uveHrgBWGmNp1aDo3l5EVYDE
+         KWwGCxliQiJTnpnNYBEQxxrQptgD4IBKgeRti/KKMSPbW5E3Pn6Y9Ex3BYT8qWr9aT
+         o9VnDQRrFNpFwvp95evJ1qQ6SsegXGnVajPGS8hs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pietro Oliva <pietroliva@gmail.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>
-Subject: [PATCH 4.9 128/165] staging: rtl8188eu: Fix potential overuse of kernel memory
-Date:   Thu, 27 Feb 2020 14:36:42 +0100
-Message-Id: <20200227132249.765813469@linuxfoundation.org>
+        stable@vger.kernel.org, Gaurav Agrawal <agrawalgaurav@gnome.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.14 008/237] Input: synaptics - enable SMBus on ThinkPad L470
+Date:   Thu, 27 Feb 2020 14:33:42 +0100
+Message-Id: <20200227132256.442309624@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
-References: <20200227132230.840899170@linuxfoundation.org>
+In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
+References: <20200227132255.285644406@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,38 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Larry Finger <Larry.Finger@lwfinger.net>
+From: Gaurav Agrawal <agrawalgaurav@gnome.org>
 
-commit 4ddf8ab8d15ddbc52eefb44eb64e38466ce1f70f upstream.
+commit b8a3d819f872e0a3a0a6db0dbbcd48071042fb98 upstream.
 
-In routine wpa_supplicant_ioctl(), the user-controlled p->length is
-checked to be at least the size of struct ieee_param size, but the code
-does not detect the case where p->length is greater than the size
-of the struct, thus a malicious user could be wasting kernel memory.
-Fixes commit a2c60d42d97c ("Add files for new driver - part 16").
+Add touchpad LEN2044 to the list, as it is capable of working with
+psmouse.synaptics_intertouch=1
 
-Reported by: Pietro Oliva <pietroliva@gmail.com>
-Cc: Pietro Oliva <pietroliva@gmail.com>
-Cc: Stable <stable@vger.kernel.org>
-Fixes commit a2c60d42d97c ("Add files for new driver - part 16").
-Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
-Link: https://lore.kernel.org/r/20200210180235.21691-4-Larry.Finger@lwfinger.net
+Signed-off-by: Gaurav Agrawal <agrawalgaurav@gnome.org>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/CADdtggVzVJq5gGNmFhKSz2MBwjTpdN5YVOdr4D3Hkkv=KZRc9g@mail.gmail.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/rtl8188eu/os_dep/ioctl_linux.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/mouse/synaptics.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
-+++ b/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
-@@ -2052,7 +2052,7 @@ static int wpa_supplicant_ioctl(struct n
- 	struct ieee_param *param;
- 	uint ret = 0;
- 
--	if (p->length < sizeof(struct ieee_param) || !p->pointer) {
-+	if (!p->pointer || p->length != sizeof(struct ieee_param)) {
- 		ret = -EINVAL;
- 		goto out;
- 	}
+--- a/drivers/input/mouse/synaptics.c
++++ b/drivers/input/mouse/synaptics.c
+@@ -183,6 +183,7 @@ static const char * const smbus_pnp_ids[
+ 	"LEN0097", /* X280 -> ALPS trackpoint */
+ 	"LEN009b", /* T580 */
+ 	"LEN200f", /* T450s */
++	"LEN2044", /* L470  */
+ 	"LEN2054", /* E480 */
+ 	"LEN2055", /* E580 */
+ 	"SYN3052", /* HP EliteBook 840 G4 */
 
 
