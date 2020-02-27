@@ -2,210 +2,155 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B72B9C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF90AC11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 851182469C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:01:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582833669;
-	bh=i92tSJsBqBk3CzP62C3QM9Ge7+B8VLDLy8QK6K05kzY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=x+16CLXasivps1nx7UzybemHrp+Y8Wlqx5k5jjxMjTxUWylL2pXl6FQQSudHiH8lg
-	 SRftHLm0zTvAmjbrTwMKCXp5vmCreAiuyMrqqg9QOXV7ioFidp7hWZUzRn3tr10lHK
-	 YaKSyUGYqsKxjP8gvMtBlqwvPcl3UIWJq+8hKAzU=
+	by mail.kernel.org (Postfix) with ESMTP id C15D22469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:04:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="rngIFuS/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730775AbgB0UBI (ORCPT
+        id S1730536AbgB0UEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 15:01:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56978 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729594AbgB0UBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 15:01:07 -0500
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85C102469C
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 20:01:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582833666;
-        bh=i92tSJsBqBk3CzP62C3QM9Ge7+B8VLDLy8QK6K05kzY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Af4+Ycw0mp762ZvtUz3b1inyyPqDhnONpKiGtbRNgUnGODZiiRX+jKpuvneJqCMK2
-         yt0KHWD/L0+VcRVkZmE8NyS9VNtXCJ7+ABqNAkVHWpqpVBZlB5Tqz2KB4ffrbqgbkG
-         Rei/ImwXN38VutUjRo2TSMXYrUSmbEnjBMpMScyM=
-Received: by mail-wr1-f44.google.com with SMTP id y17so306401wrn.6
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 12:01:06 -0800 (PST)
-X-Gm-Message-State: APjAAAVaWo5WU4K90kJjHHUWn7VjbCMojR0X8eCZvG5TnH8k0rMxw7tG
-        m7tLFvul6cD3KqrpK0B9ZBG+PE3PVr0PV3bDg4EmbA==
-X-Google-Smtp-Source: APXvYqwNfGcYXWESaIhXXtct1v7f5gXKx5rzPZ8W7+pk2wS+P5lHRdVGAWs4Aafi3JACnyUrHs0Dsd9MpMVFbVYKcC4=
-X-Received: by 2002:adf:f84a:: with SMTP id d10mr551741wrq.208.1582833665009;
- Thu, 27 Feb 2020 12:01:05 -0800 (PST)
+        Thu, 27 Feb 2020 15:04:09 -0500
+Received: from gateway22.websitewelcome.com ([192.185.46.233]:20765 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729441AbgB0UEJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 15:04:09 -0500
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id 3D3591224F
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 14:04:07 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 7POBjtkMZ8vkB7POBjof2I; Thu, 27 Feb 2020 14:04:07 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=QuLua+QDclGaA7VF9OoztLEEN0VMtyjkqur/1lunydU=; b=rngIFuS/c7qaKceiMum9Th5hag
+        oMffc8R+240E6e6iW4JroNfIxMHfB4euD51M9WKbQ9/SiECUVG5KAlmXX8E5jfwhjpVuc70nDSFZy
+        B8qMJn3Up83H7axLZ7sGbv3eidHGLYPM/NhrYJRH1TKujckVdmwfnG/568VslUfEw53Kv9A4fJAP/
+        +AJHLTvcdJ4XZCKtHNxGwevFydbjHAqd8uVeIyPfj0IchglSdGS0OMHOm5HLbUrmIlnkbumIuCmYz
+        8rRmRGfggtKxbqCh91NzSL+GloorCinXJsm1wZ3Yin45wsyYz1dKZDZ/n72QzV0CYRfILJ2jB9DI7
+        Mo7WILVg==;
+Received: from [201.162.169.69] (port=29537 helo=[192.168.43.132])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j7POA-000JeO-Hu; Thu, 27 Feb 2020 14:04:06 -0600
+Subject: Re: [PATCH][next] batman-adv: Replace zero-length array with
+ flexible-array member
+To:     Sven Eckelmann <sven@narfation.org>
+Cc:     Marek Lindner <mareklindner@neomailbox.ch>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Antonio Quartulli <a@unstable.cc>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200217214300.GA14129@embeddedor>
+ <10763787.LixBgDfVEo@sven-edge>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <ba787bf4-1b9b-1b1c-97b0-253ea2329d0d@embeddedor.com>
+Date:   Thu, 27 Feb 2020 14:06:56 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200226011037.7179-1-atish.patra@wdc.com> <20200226011037.7179-4-atish.patra@wdc.com>
- <CAKv+Gu8HdRa5k=h1XF2fm80VEgvuxa_tX_P0qFSdkk=CVc6ffA@mail.gmail.com> <08322b0eeb26b564954a14273baf18db72e2f1e9.camel@wdc.com>
-In-Reply-To: <08322b0eeb26b564954a14273baf18db72e2f1e9.camel@wdc.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 27 Feb 2020 21:00:54 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu_OMs12qBxvZGnrUnMD782yYPpcvBDqRGug2YDhhvcfSw@mail.gmail.com>
-Message-ID: <CAKv+Gu_OMs12qBxvZGnrUnMD782yYPpcvBDqRGug2YDhhvcfSw@mail.gmail.com>
-Subject: Re: [RFC PATCH 3/5] RISC-V: Define fixmap bindings for generic early
- ioremap support
-To:     Atish Patra <Atish.Patra@wdc.com>
-Cc:     "alexios.zavras@intel.com" <alexios.zavras@intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "michal.simek@xilinx.com" <michal.simek@xilinx.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "abner.chang@hpe.com" <abner.chang@hpe.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "daniel.schaefer@hpe.com" <daniel.schaefer@hpe.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
-        "palmer@dabbelt.com" <palmer@dabbelt.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
-        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
-        "bp@suse.de" <bp@suse.de>,
-        "greentime.hu@sifive.com" <greentime.hu@sifive.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "agraf@csgraf.de" <agraf@csgraf.de>,
-        "will@kernel.org" <will@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "leif@nuviainc.com" <leif@nuviainc.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <10763787.LixBgDfVEo@sven-edge>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.169.69
+X-Source-L: No
+X-Exim-ID: 1j7POA-000JeO-Hu
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.132]) [201.162.169.69]:29537
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 9
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Feb 2020 at 20:58, Atish Patra <Atish.Patra@wdc.com> wrote:
->
-> On Wed, 2020-02-26 at 08:08 +0100, Ard Biesheuvel wrote:
-> > On Wed, 26 Feb 2020 at 02:10, Atish Patra <atish.patra@wdc.com>
-> > wrote:
-> > > UEFI uses early IO or memory mappings for runtime services before
-> > > normal ioremap() is usable. This patch only adds minimum necessary
-> > > fixmap bindings and headers for generic ioremap support to work.
-> > >
-> > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> >
-> > Looks reasonable to me,
-> >
-> > Acked-by: Ard Biesheuvel <ardb@kernel.org>
-> >
-> > although I wonder why it is part of this series?
-> >
->
-> because of CONFIG_EFI. With CONFIG_EFI enabled, all the run time
-> service memory mapping code is compiled for RISC-V. I could have
-> createa a separate config for only boot time services or used EFI_STUB
-> at places where CONFI_EFI. But it seems redundant as we will support
-> runtime services soon. Let me know if that's a wrong approach.
->
-
-No that's fine
 
 
+On 2/17/20 15:49, Sven Eckelmann wrote:
 
-> > > ---
-> > >  arch/riscv/Kconfig              |  1 +
-> > >  arch/riscv/include/asm/Kbuild   |  1 +
-> > >  arch/riscv/include/asm/fixmap.h | 21 ++++++++++++++++++++-
-> > >  arch/riscv/include/asm/io.h     |  1 +
-> > >  4 files changed, 23 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> > > index 27bfc7947e44..42c122170cfd 100644
-> > > --- a/arch/riscv/Kconfig
-> > > +++ b/arch/riscv/Kconfig
-> > > @@ -65,6 +65,7 @@ config RISCV
-> > >         select ARCH_HAS_GCOV_PROFILE_ALL
-> > >         select HAVE_COPY_THREAD_TLS
-> > >         select HAVE_ARCH_KASAN if MMU && 64BIT
-> > > +       select GENERIC_EARLY_IOREMAP
-> > >
-> > >  config ARCH_MMAP_RND_BITS_MIN
-> > >         default 18 if 64BIT
-> > > diff --git a/arch/riscv/include/asm/Kbuild
-> > > b/arch/riscv/include/asm/Kbuild
-> > > index ec0ca8c6ab64..517394390106 100644
-> > > --- a/arch/riscv/include/asm/Kbuild
-> > > +++ b/arch/riscv/include/asm/Kbuild
-> > > @@ -4,6 +4,7 @@ generic-y += checksum.h
-> > >  generic-y += compat.h
-> > >  generic-y += device.h
-> > >  generic-y += div64.h
-> > > +generic-y += early_ioremap.h
-> > >  generic-y += extable.h
-> > >  generic-y += flat.h
-> > >  generic-y += dma.h
-> > > diff --git a/arch/riscv/include/asm/fixmap.h
-> > > b/arch/riscv/include/asm/fixmap.h
-> > > index 42d2c42f3cc9..7a4beb7e29a3 100644
-> > > --- a/arch/riscv/include/asm/fixmap.h
-> > > +++ b/arch/riscv/include/asm/fixmap.h
-> > > @@ -25,9 +25,28 @@ enum fixed_addresses {
-> > >  #define FIX_FDT_SIZE   SZ_1M
-> > >         FIX_FDT_END,
-> > >         FIX_FDT = FIX_FDT_END + FIX_FDT_SIZE / PAGE_SIZE - 1,
-> > > +       FIX_EARLYCON_MEM_BASE,
-> > > +
-> > >         FIX_PTE,
-> > >         FIX_PMD,
-> > > -       FIX_EARLYCON_MEM_BASE,
-> > > +       /*
-> > > +        * Make sure that it is 2MB aligned.
-> > > +        */
-> > > +#define NR_FIX_SZ_2M   (SZ_2M / PAGE_SIZE)
-> > > +       FIX_THOLE = NR_FIX_SZ_2M - FIX_PMD - 1,
-> > > +
-> > > +       __end_of_permanent_fixed_addresses,
-> > > +       /*
-> > > +        * Temporary boot-time mappings, used by early_ioremap(),
-> > > +        * before ioremap() is functional.
-> > > +        */
-> > > +#define NR_FIX_BTMAPS          (SZ_256K / PAGE_SIZE)
-> > > +#define FIX_BTMAPS_SLOTS       7
-> > > +#define TOTAL_FIX_BTMAPS       (NR_FIX_BTMAPS * FIX_BTMAPS_SLOTS)
-> > > +
-> > > +       FIX_BTMAP_END = __end_of_permanent_fixed_addresses,
-> > > +       FIX_BTMAP_BEGIN = FIX_BTMAP_END + TOTAL_FIX_BTMAPS - 1,
-> > > +
-> > >         __end_of_fixed_addresses
-> > >  };
-> > >
-> > > diff --git a/arch/riscv/include/asm/io.h
-> > > b/arch/riscv/include/asm/io.h
-> > > index 0f477206a4ed..047f414b6948 100644
-> > > --- a/arch/riscv/include/asm/io.h
-> > > +++ b/arch/riscv/include/asm/io.h
-> > > @@ -14,6 +14,7 @@
-> > >  #include <linux/types.h>
-> > >  #include <asm/mmiowb.h>
-> > >  #include <asm/pgtable.h>
-> > > +#include <asm/early_ioremap.h>
-> > >
-> > >  /*
-> > >   * MMIO access functions are separated out to break dependency
-> > > cycles
-> > > --
-> > > 2.24.0
-> > >
->
-> --
-> Regards,
-> Atish
+>>
+>> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+>> [2] https://github.com/KSPP/linux/issues/21
+>> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+>> ---
+>>  net/batman-adv/distributed-arp-table.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Applied
+> 
+
+Thanks, Sven.
+--
+Gustavo
