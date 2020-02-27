@@ -2,133 +2,197 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7ECC3567B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5598C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A63E6246A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:27:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 726B024691
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:28:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NqlqA9ZQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aq9warKK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730185AbgB0R10 (ORCPT
+        id S1730034AbgB0R2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 12:27:26 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45672 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728413AbgB0R10 (ORCPT
+        Thu, 27 Feb 2020 12:28:50 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45142 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728413AbgB0R2u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 12:27:26 -0500
-Received: by mail-pg1-f196.google.com with SMTP id m15so19460pgv.12;
-        Thu, 27 Feb 2020 09:27:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Nu4qWyGXEitkgI8n8p9Q8iibxQxSQ0j2p8JZ5tAMehw=;
-        b=NqlqA9ZQ0XHJZn2GauKocLVfMdbLajOtWemmVYWblroy1YxjX8ukY/Z7VTn9mAe6/Q
-         tBUtT6JLtx7HsSQWrcR39pygIY2q4UPXtGEEqq6PDepFp0cBfvD9zDhEmPDO7Z7tBv2N
-         8pu7RtEg3tGvAjArQ9XBIyQaEDCJQvfkogWd2KhOLgvFmRmYzehPJjb/v6z8lYAZWJCZ
-         7SNlix8NtONm5bIR2avyWGP7ofcA4sffVMQYNvPIhPX1pxQLoCkYOLM4KZYdYnqjwnBX
-         3cD0F2Na1MAwgETQw8aS/3COzev4Bhtaa0IM700eIul4/h+mCt+MjUnjWvPc29ohXdVB
-         naug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Nu4qWyGXEitkgI8n8p9Q8iibxQxSQ0j2p8JZ5tAMehw=;
-        b=N9blowM/QbzcGmfZ/0IZfqwpZoAggEDrf4Lu3U3BxFqKtsfSgV3ypuhp4OkKV3JI6O
-         FnaGuv2Vj4o1zuYq0EZCbQW8O+OSjGKuuJCJEqSIIngZYqFAZub4pVdgT5L1QlBelYAH
-         pkVoVCDC0o9a26eQyI0jjtT/ZsvP39WLX3ufPK1S+2JRm8l1FOcJ9iWW6oH3ahtrXRgF
-         Ye/ScRVQulO6Y5evRmIp05IWJ4CRA0Y2cxwAO3TpBxYv/4AZt2WqjByII+QSnxyqKkQ1
-         LR5ap6n24/iiYkWoE61KlZr764OSIIanIel+b11aEyRfLSJpXCdBIjtUyH5Knqij3wan
-         xnkg==
-X-Gm-Message-State: APjAAAWCXlqpZn8OiCEMkHTM2P7iT4ysXdedmMVmaYyFCeI8pYMd0y58
-        eKIiD9+bhUTV7AD79TrsaPQ=
-X-Google-Smtp-Source: APXvYqxTraK0soDcR29iTCztQotzJJ+fayOOisQNUhuUn/qARzTiXgh7Zsw5Sn0p9ALeLFGO2lcJdA==
-X-Received: by 2002:a62:5547:: with SMTP id j68mr83320pfb.6.1582824443753;
-        Thu, 27 Feb 2020 09:27:23 -0800 (PST)
-Received: from localhost.localdomain ([103.46.201.150])
-        by smtp.gmail.com with ESMTPSA id b15sm7865783pft.58.2020.02.27.09.27.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 09:27:22 -0800 (PST)
-From:   amanharitsh123 <amanharitsh123@gmail.com>
-Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
-        amanharitsh123@gmail.com, "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jonathan Corbet <corbet@lwn.net>, rcu@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [Linux-kernel-mentees] [PATCH v2] doc: Convert to checklist.txt to checklist.rst
-Date:   Thu, 27 Feb 2020 22:56:24 +0530
-Message-Id: <20200227172625.4976-1-amanharitsh123@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 27 Feb 2020 12:28:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582824529;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=tgd24Z9DDO1trU7ZuAwbZRL98cQ9zB6qUkqBp/ykZi0=;
+        b=aq9warKKGRqg+PaVFThQGs3puAt9TT5mQ4pcBL87HfOgqJCHlYoIWk97LuVPFDHoAuAV6m
+        2AGl7sJ3sjvZBlON4bot9h76G5JUvGiioL+Fin4qMGLfb6b1cnfZ3bBTaNz/5VcmS09dMh
+        jMlJsFVJjm1UY6NZorYNOrbW0iIjwQo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-7-n7XzXH7EPV6orn2Dq9Tjxg-1; Thu, 27 Feb 2020 12:28:43 -0500
+X-MC-Unique: n7XzXH7EPV6orn2Dq9Tjxg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2FDA91005514;
+        Thu, 27 Feb 2020 17:28:42 +0000 (UTC)
+Received: from millenium-falcon.redhat.com (unknown [10.36.118.42])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 938956E3EE;
+        Thu, 27 Feb 2020 17:28:36 +0000 (UTC)
+From:   Mohammed Gamal <mgamal@redhat.com>
+To:     kvm@vger.kernel.org, pbonzini@redhat.com
+Cc:     sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        linux-kernel@vger.kernel.org, Mohammed Gamal <mgamal@redhat.com>
+Subject: [kvm-unit-tests PATCH] x86: access: Add tests for reserved bits of guest physical address
+Date:   Thu, 27 Feb 2020 19:28:26 +0200
+Message-Id: <20200227172826.22004-1-mgamal@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch converts checklist.txt to checklist.rst and
-adds it to index.rst
+This extends the access tests to also test for reserved bits
+in guest physical addresses.
 
-Signed-off-by: Aman Sharma <amanharitsh123@gmail.com>
-Signed-off-by: amanharitsh123 <amanharitsh123@gmail.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
 ---
- Documentation/RCU/{checklist.txt => checklist.rst} | 8 +++++---
- Documentation/RCU/index.rst                        | 1 +
- 2 files changed, 6 insertions(+), 3 deletions(-)
- rename Documentation/RCU/{checklist.txt => checklist.rst} (99%)
+ x86/access.c | 31 +++++++++++++++++++++++++++++--
+ 1 file changed, 29 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/RCU/checklist.txt b/Documentation/RCU/checklist.rst
-similarity index 99%
-rename from Documentation/RCU/checklist.txt
-rename to Documentation/RCU/checklist.rst
-index e98ff261a438..50fd557b9acd 100644
---- a/Documentation/RCU/checklist.txt
-+++ b/Documentation/RCU/checklist.rst
-@@ -1,5 +1,7 @@
--Review Checklist for RCU Patches
-+.. _checklist_doc: 
- 
-+Review Checklist for RCU Patches
-+================================
- 
- This document contains a checklist for producing and reviewing patches
- that make use of RCU.  Violating any of the rules listed below will
-@@ -442,8 +444,8 @@ over a rather long period of time, but improvements are always welcome!
- 
- 	You instead need to use one of the barrier functions:
- 
--	o	call_rcu() -> rcu_barrier()
--	o	call_srcu() -> srcu_barrier()
-+	-	call_rcu() -> rcu_barrier()
-+	-	call_srcu() -> srcu_barrier()
- 
- 	However, these barrier functions are absolutely -not- guaranteed
- 	to wait for a grace period.  In fact, if there are no call_rcu()
-diff --git a/Documentation/RCU/index.rst b/Documentation/RCU/index.rst
-index 81a0a1e5f767..d60eb4ba2cd0 100644
---- a/Documentation/RCU/index.rst
-+++ b/Documentation/RCU/index.rst
-@@ -10,6 +10,7 @@ RCU concepts
-    arrayRCU
-    rcubarrier
-    rcu_dereference
-+   checklist
-    whatisRCU
-    rcu
-    listRCU
--- 
-2.20.1
+diff --git a/x86/access.c b/x86/access.c
+index 7303fc3..b98b403 100644
+--- a/x86/access.c
++++ b/x86/access.c
+@@ -47,6 +47,7 @@ enum {
+     AC_PTE_DIRTY_BIT,
+     AC_PTE_NX_BIT,
+     AC_PTE_BIT51_BIT,
++    AC_PTE_BIT40_BIT,
+=20
+     AC_PDE_PRESENT_BIT,
+     AC_PDE_WRITABLE_BIT,
+@@ -56,6 +57,7 @@ enum {
+     AC_PDE_PSE_BIT,
+     AC_PDE_NX_BIT,
+     AC_PDE_BIT51_BIT,
++    AC_PDE_BIT40_BIT,
+     AC_PDE_BIT13_BIT,
+=20
+     AC_PKU_AD_BIT,
+@@ -82,6 +84,7 @@ enum {
+ #define AC_PTE_DIRTY_MASK     (1 << AC_PTE_DIRTY_BIT)
+ #define AC_PTE_NX_MASK        (1 << AC_PTE_NX_BIT)
+ #define AC_PTE_BIT51_MASK     (1 << AC_PTE_BIT51_BIT)
++#define AC_PTE_BIT40_MASK     (1 << AC_PTE_BIT40_BIT)
+=20
+ #define AC_PDE_PRESENT_MASK   (1 << AC_PDE_PRESENT_BIT)
+ #define AC_PDE_WRITABLE_MASK  (1 << AC_PDE_WRITABLE_BIT)
+@@ -91,6 +94,7 @@ enum {
+ #define AC_PDE_PSE_MASK       (1 << AC_PDE_PSE_BIT)
+ #define AC_PDE_NX_MASK        (1 << AC_PDE_NX_BIT)
+ #define AC_PDE_BIT51_MASK     (1 << AC_PDE_BIT51_BIT)
++#define AC_PDE_BIT40_MASK     (1 << AC_PDE_BIT40_BIT)
+ #define AC_PDE_BIT13_MASK     (1 << AC_PDE_BIT13_BIT)
+=20
+ #define AC_PKU_AD_MASK        (1 << AC_PKU_AD_BIT)
+@@ -115,6 +119,7 @@ const char *ac_names[] =3D {
+     [AC_PTE_DIRTY_BIT] =3D "pte.d",
+     [AC_PTE_NX_BIT] =3D "pte.nx",
+     [AC_PTE_BIT51_BIT] =3D "pte.51",
++    [AC_PTE_BIT40_BIT] =3D "pte.40",
+     [AC_PDE_PRESENT_BIT] =3D "pde.p",
+     [AC_PDE_ACCESSED_BIT] =3D "pde.a",
+     [AC_PDE_WRITABLE_BIT] =3D "pde.rw",
+@@ -123,6 +128,7 @@ const char *ac_names[] =3D {
+     [AC_PDE_PSE_BIT] =3D "pde.pse",
+     [AC_PDE_NX_BIT] =3D "pde.nx",
+     [AC_PDE_BIT51_BIT] =3D "pde.51",
++    [AC_PDE_BIT40_BIT] =3D "pde.40",
+     [AC_PDE_BIT13_BIT] =3D "pde.13",
+     [AC_PKU_AD_BIT] =3D "pkru.ad",
+     [AC_PKU_WD_BIT] =3D "pkru.wd",
+@@ -289,6 +295,14 @@ static _Bool ac_test_legal(ac_test_t *at)
+     if (!F(AC_PDE_PSE) && F(AC_PDE_BIT13))
+         return false;
+=20
++    /*
++     * Shorten the test by avoiding testing too many reserved bit combin=
+ations
++     */
++    if ((F(AC_PDE_BIT51) + F(AC_PDE_BIT40) + F(AC_PDE_BIT13)) > 1)
++        return false;
++    if ((F(AC_PTE_BIT51) + F(AC_PTE_BIT40)) > 1)
++        return false;
++
+     return true;
+ }
+=20
+@@ -375,7 +389,7 @@ static void ac_emulate_access(ac_test_t *at, unsigned=
+ flags)
+         at->ignore_pde =3D PT_ACCESSED_MASK;
+=20
+     pde_valid =3D F(AC_PDE_PRESENT)
+-        && !F(AC_PDE_BIT51) && !F(AC_PDE_BIT13)
++        && !F(AC_PDE_BIT51) && !F(AC_PDE_BIT40) && !F(AC_PDE_BIT13)
+         && !(F(AC_PDE_NX) && !F(AC_CPU_EFER_NX));
+=20
+     if (!pde_valid) {
+@@ -401,7 +415,7 @@ static void ac_emulate_access(ac_test_t *at, unsigned=
+ flags)
+     at->expected_pde |=3D PT_ACCESSED_MASK;
+=20
+     pte_valid =3D F(AC_PTE_PRESENT)
+-        && !F(AC_PTE_BIT51)
++        && !F(AC_PTE_BIT51) && !F(AC_PTE_BIT40)
+         && !(F(AC_PTE_NX) && !F(AC_CPU_EFER_NX));
+=20
+     if (!pte_valid) {
+@@ -510,6 +524,8 @@ static void __ac_setup_specific_pages(ac_test_t *at, =
+ac_pool_t *pool,
+ 		pte |=3D PT64_NX_MASK;
+ 	    if (F(AC_PDE_BIT51))
+ 		pte |=3D 1ull << 51;
++	    if (F(AC_PDE_BIT40))
++                pte |=3D 1ull << 40;
+ 	    if (F(AC_PDE_BIT13))
+ 		pte |=3D 1ull << 13;
+ 	    at->pdep =3D &vroot[index];
+@@ -532,6 +548,8 @@ static void __ac_setup_specific_pages(ac_test_t *at, =
+ac_pool_t *pool,
+ 		pte |=3D PT64_NX_MASK;
+ 	    if (F(AC_PTE_BIT51))
+ 		pte |=3D 1ull << 51;
++	    if (F(AC_PTE_BIT40))
++                pte |=3D 1ull << 40;
+ 	    at->ptep =3D &vroot[index];
+ 	    break;
+ 	}
+@@ -935,6 +953,15 @@ static int ac_test_run(void)
+     printf("run\n");
+     tests =3D successes =3D 0;
+=20
++    if (cpuid_maxphyaddr() >=3D 52) {
++        invalid_mask |=3D AC_PDE_BIT51_MASK;
++        invalid_mask |=3D AC_PTE_BIT51_MASK;
++    }
++    if (cpuid_maxphyaddr() >=3D 41) {
++        invalid_mask |=3D AC_PDE_BIT40_MASK;
++        invalid_mask |=3D AC_PTE_BIT40_MASK;
++    }
++
+     if (this_cpu_has(X86_FEATURE_PKU)) {
+         set_cr4_pke(1);
+         set_cr4_pke(0);
+--=20
+2.21.1
 
