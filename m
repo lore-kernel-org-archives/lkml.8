@@ -2,144 +2,189 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CCAC4BA2D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E80FC4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5650B24695
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5479424695
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:39:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=camlinlimited.onmicrosoft.com header.i=@camlinlimited.onmicrosoft.com header.b="csozP72R"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="heqqcEDG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729208AbgB0Mjj (ORCPT
+        id S1729121AbgB0Mju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 07:39:39 -0500
-Received: from mail-eopbgr100048.outbound.protection.outlook.com ([40.107.10.48]:45834
-        "EHLO GBR01-LO2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728977AbgB0Mji (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 07:39:38 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Zx/p9JhwWO+Jj9bOi0IhQGTv2WPawGOojRkNxTRZjy1S/d3SWSfT8fA//mb5RpK48ezfxDblLzqCNJqJ8gMfVea9Ow9r1cbRbFZYnuWQ6vgBDKJzuovQwuYSYqJ8T5tum5kcAorAQQoaoFBrJ7FvSCIB2gq3ECHpyyhnz0xQXFiXmwQwJWfuSqkoakXm9o/P3IWqS1W4Hydibu8IQm/yjXKgpGMu/7v5oqC0fDQALZQTXVm1Qn98Xm1Us/xj9KBOs/eCqHEEPSNU96xAjY4RbB0E0xyKZlaDjDPxVK/XYUPpDjd7h75Ok4yjUJbddquHst0rmlLNYVGtuD0/BIsjpA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hz7pu0P30E1VYlon+AJ7SwRga23t4g0R2tuHLcd+ep4=;
- b=O17/V6SJkODmpNDe7iqECP00L6SvoO9OyA9vtpE2OLabVYXgSlT9znRjc70ri8OfzFtarh6FtyU83pVLk9Jd72Nc/OqSoUez/pCejs6gh6fsiYV+DpBxCBb7hBceZ9c8E91AWz+Fyknu6hOztpCrF59ETg+k3JWN1CTAf2gKfDdrx4JNBvzIIxf5CIQt2yYt5W59plaZgD7cSrp+H/CXNFgFqy5818GuUmnCgXzs8AHcx+JHvukPtl367g2dsH+ep8bl7mguajLEYG53EgkIEfz9T733vL/hMLOn6B4KyKRtL9YeQhKiuoeexyluRwVJvozSOIbn+rXCj3GSUcsvUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=camlintechnologies.com; dmarc=pass action=none
- header.from=camlintechnologies.com; dkim=pass
- header.d=camlintechnologies.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=camlinlimited.onmicrosoft.com; s=selector2-camlinlimited-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hz7pu0P30E1VYlon+AJ7SwRga23t4g0R2tuHLcd+ep4=;
- b=csozP72RetIqa00+yKOaABiaqCaSGCwc3meYI01mGVTU5jL2/UBlw2jG/ri/79LUcU9WDgro6IqL1oFDW6zGqmtkhgCvjH7POXBkZeh9fMcWvw4Bu2HC/5iSlO85pXt/ZRCeJvzXYRnYvzxw5+b3Yg0dQ3VRqw7E1AZY15UYIzI=
-Received: from CWLP123MB2209.GBRP123.PROD.OUTLOOK.COM (20.176.61.151) by
- CWLP123MB1985.GBRP123.PROD.OUTLOOK.COM (20.176.61.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.18; Thu, 27 Feb 2020 12:39:34 +0000
-Received: from CWLP123MB2209.GBRP123.PROD.OUTLOOK.COM
- ([fe80::fc9c:3a7e:f857:3c78]) by CWLP123MB2209.GBRP123.PROD.OUTLOOK.COM
- ([fe80::fc9c:3a7e:f857:3c78%3]) with mapi id 15.20.2772.012; Thu, 27 Feb 2020
- 12:39:34 +0000
-Received: from [192.168.10.194] (95.143.242.242) by AM3PR05CA0145.eurprd05.prod.outlook.com (2603:10a6:207:3::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14 via Frontend Transport; Thu, 27 Feb 2020 12:39:33 +0000
-From:   Lech Perczak <l.perczak@camlintechnologies.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>, Arnd Bergmann <arnd@arndb.de>,
-        =?utf-8?B?S3J6eXN6dG9mIERyb2JpxYRza2k=?= 
-        <k.drobinski@camlintechnologies.com>,
-        Pawel Lenkow <p.lenkow@camlintechnologies.com>
-Subject: Re: Regression in v4.19.106 breaking waking up of readers of
- /proc/kmsg and /dev/kmsg
-Thread-Topic: Regression in v4.19.106 breaking waking up of readers of
- /proc/kmsg and /dev/kmsg
-Thread-Index: AQHV7V5t8S4uzrFtj0WCWsMdVjN9Yqgu+liAgAAA1gA=
-Date:   Thu, 27 Feb 2020 12:39:34 +0000
-Message-ID: <42d3ce5c-5ffe-8e17-32a3-5127a6c7c7d8@camlintechnologies.com>
-References: <aa0732c6-5c4e-8a8b-a1c1-75ebe3dca05b@camlintechnologies.com>
- <20200227123633.GB962932@kroah.com>
-In-Reply-To: <20200227123633.GB962932@kroah.com>
-Accept-Language: pl-PL, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM3PR05CA0145.eurprd05.prod.outlook.com
- (2603:10a6:207:3::23) To CWLP123MB2209.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:401:6d::23)
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=l.perczak@camlintechnologies.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [95.143.242.242]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 171e1b91-5d05-49be-62f2-08d7bb821927
-x-ms-traffictypediagnostic: CWLP123MB1985:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CWLP123MB1985572B120051450366E4A187EB0@CWLP123MB1985.GBRP123.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:2887;
-x-forefront-prvs: 03264AEA72
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(376002)(39850400004)(396003)(366004)(189003)(199004)(86362001)(66946007)(956004)(66446008)(186003)(8676002)(16526019)(2616005)(4326008)(107886003)(5660300002)(31696002)(54906003)(66556008)(31686004)(81156014)(81166006)(71200400001)(64756008)(8936002)(66476007)(26005)(2906002)(478600001)(6486002)(6916009)(36756003)(52116002)(16576012)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:CWLP123MB1985;H:CWLP123MB2209.GBRP123.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: camlintechnologies.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 7eRA8p8Ummp1OQH8ImfZoWRyleCIKYdRTilL/cE+Yn4klNLby05cbq8cNDwfUGeQ0nIzu5zXtEnAOBcBz+z6jl8WiN1ZYUpqTTjKqUcEST+b3AQbIljLpdzIZL+3ZoycMTsvGQ/5cZegPAkyyB7P9xXAMLG2h6mGb09jGUl4ZE3sXYM1in2p0hcqULxB5TcHEOxherf9USrBGmom0piKTpbW0zmUZWEg9lJ3efasRUxZarFcwwELOZ/aBbEgoSDCMrjO7BpCfP45w5nlNYa0Gp/9t1OXC72HKnZVncJTclfc9VdTajT+rRSnJIkLFjIs/l0b1x1Z2mLidV1H1+d125Ry9eloD3aZD151CHuC0ygfjPWCS3YAR/KGq+DEvvupFzjBTCrFAzV5sqAIbJwpTCCV1Ao9+XHq8faTD+K8X5MwDUISBsrde59cQABksZ9I
-x-ms-exchange-antispam-messagedata: s+I55ZIVi2RngOzKwxx+7AJ1UdZo4zdJBIDtV9jWfwWSUT8InxZET5OeL7Z6n+DHHQzn+82gmB1gOQKDo/L2OA3OxXurGHN5KzNz5VwYrxqb2j7zsLubUQQEJuUZjUu9MZcroMbtI8tIZH0nZbna+g==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E88F003A07A93D48B93588EFE564021E@GBRP123.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: base64
+        Thu, 27 Feb 2020 07:39:50 -0500
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:49941 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728977AbgB0Mjt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 07:39:49 -0500
+Received: from [IPv6:2001:420:44c1:2577:70b8:9d46:3264:f0c0]
+ ([IPv6:2001:420:44c1:2577:70b8:9d46:3264:f0c0])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id 7IS7jE0Y8jmHT7ISBjielx; Thu, 27 Feb 2020 13:39:47 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1582807187; bh=SppaRo1Hod25rsdmHJB5MZdZ32/T0CqLTslF/uXHkrE=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=heqqcEDGtkmETf2Mmzet70PQHrXMcVUCaOZRezDoXcSYAc1bgnZF6sPY0oyU0nfYP
+         iGj3cfaMiyyOWtQyBUdI3Un1RFGWhU9xg33y/ggCmg/NyYsD8yIklhHod9zl0TIzZC
+         9B79uLMIqaBhVQz/ZXl/J0a3JbQN0bM8mZVp6dviSLXeMuEYeA1FnP/JF1AXWHGJ2A
+         ppSsom456bWnkVYj0iLzC6RNjxjEaoFK31bZn1WSMCK4uuWGJ2e94HzcbX1IbpbVw7
+         GS9eQiZ+3mYBiYdfGv3/seP81WJvUr13wqWByQEVTsxdJHT4SQFNZkw9pQHgU7jHQV
+         RRTZy8hOJ52Qg==
+Subject: Re: [PATCHv3 00/11] Implement V4L2_BUF_FLAG_NO_CACHE_* flags
+To:     Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200226111529.180197-1-senozhatsky@chromium.org>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <98205145-1a39-ce29-a2a0-c5abf8376349@xs4all.nl>
+Date:   Thu, 27 Feb 2020 13:39:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-OriginatorOrg: camlintechnologies.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 171e1b91-5d05-49be-62f2-08d7bb821927
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Feb 2020 12:39:34.0237
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: fd4b1729-b18d-46d2-9ba0-2717b852b252
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7oYJLIu/Y1qAmkIe8uywZqBxBJ5DkySlyZfgNRuLOUDS6bNcEvqHqb1h0lztGbv8j3m8X+hV5eTo5mMI60/quu2dlCLYWlLVHzXaFzOskzr7TIy2mD1jG/wDrhBUxnzt
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CWLP123MB1985
+In-Reply-To: <20200226111529.180197-1-senozhatsky@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfIJA8jAKsvKUT+TpJDhqLkEuikjN7i5FZsZ558ClqGVzOf546hR5oEByTPTvV7XJXeRhg4n/RVzT6KhaF8wJFez0kI5nmuXzPZ7VOvjdNk/56wOvVFCb
+ lHe5/EADe/5PzjUITHoweP0fANHxjHv8IUtv3LgF2a87hHL/CWSyTZgvPiayby/6V4TPzpaPx9jit1LNDil4yTXxhv1C83lvPG/XoIYFK+n1Y85wOHmdHdYZ
+ M3uxIQaVAShd3lKQeqVjgZh7wXFvKAkYDcXGznlQ6s294O31qD6ErxMk2NbEN9J/FTjHV/1sTKpYmTao75+wR0jowBDSiTkjHVT1kfR3SPfYjMFrLwwNUgLh
+ voslG1dIlcZDyWfeCJUlOKyd62rysJEbfbLFFUp7BxIZZtOKzuSSv2wtiN/p0e0nltQ0xWCM1cp7TIND56BQbZjtYU+SIZ9QnkUamymDPa+LoN4jl9ebKyu6
+ GknDnVkUDXArlYwOp/yZTsXxJ+VT1XWWgub/Vi33qBzKNt8f5kvcbBipWZZNFA+MBYX0GVpsKahR9pqOvnbRh7GLTdGawxYSkdlZeCdainIbDv4ZMq6CKo4H
+ Si2ukrVu37Xuyt8Ux1g8OknYU/kOGtUJbWNCsZe9cjPQrsw9wfTph31sDNmuYXstCIo=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VyBkbml1IDI3LjAyLjIwMjAgb8KgMTM6MzYsIEdyZWcgS3JvYWgtSGFydG1hbiBwaXN6ZToNCj4g
-T24gVGh1LCBGZWIgMjcsIDIwMjAgYXQgMTE6MDk6NDlBTSArMDAwMCwgTGVjaCBQZXJjemFrIHdy
-b3RlOg0KPj4gSGVsbG8sDQo+Pg0KPj4gQWZ0ZXIgdXBncmFkaW5nIGtlcm5lbCBvbiBvdXIgYm9h
-cmRzIGZyb20gdjQuMTkuMTA1IHRvIHY0LjE5LjEwNiB3ZSBmb3VuZCBvdXQgdGhhdCBzeXNsb2cg
-ZmFpbHMgdG8gcmVhZCB0aGUgbWVzc2FnZXMgYWZ0ZXIgb25lcyByZWFkIGluaXRpYWxseSBhZnRl
-ciBvcGVuaW5nIC9wcm9jL2ttc2cganVzdCBhZnRlciBib290aW5nLg0KPj4gSSBhbHNvIGZvdW5k
-IG91dCwgdGhhdCBvdXRwdXQgb2YgJ2RtZXNnIC0tZm9sbG93JyBhbHNvIGRvZXNuJ3QgcmVhY3Qg
-b24gbmV3IHByaW50a3MgYXBwZWFyaW5nIGZvciB3aGF0ZXZlciByZWFzb24gLSB0byByZWFkIG5l
-dyBtZXNzYWdlcywgcmVvcGVuaW5nIC9wcm9jL2ttc2cgb3IgL2Rldi9rbXNnIHdhcyBuZWVkZWQu
-DQo+PiBJIGJpc2VjdGVkIHRoaXMgZG93biB0byBjb21taXQgMTUzNDFiMWRkNDA5NzQ5ZmE1NjI1
-ZTRiNjMyMDEzYjZiYTgxNjA5YiAoImNoYXIvcmFuZG9tOiBzaWxlbmNlIGEgbG9ja2RlcCBzcGxh
-dCB3aXRoIHByaW50aygpIiksIGFuZCByZXZlcnRpbmcgaXQgb24gdG9wIG9mIHY0LjE5LjEwNiBy
-ZXN0b3JlZCBjb3JyZWN0IGJlaGF2aW91ci4NCj4gVGhhdCBpcyByZWFsbHkgcmVhbGx5IG9kZC4N
-ClZlcnkgb2RkIGl0IGlzIGluZGVlZC4NCj4NCj4+IE15IHRlc3Qgc2NlbmFyaW8gZm9yIGJpc2Vj
-dGluZyB3YXM6DQo+PiAxLiBydW4gJ2RtZXNnIC0tZm9sbG93JyBhcyByb290DQo+PiAyLiBydW4g
-J2VjaG8gdCA+IC9wcm9jL3N5c3JxLXRyaWdnZXInDQo+PiAzLiBJZiB0cmFjZSBhcHBlYXJzIGlu
-IGRtZXNnIG91dHB1dCAtPiBnb29kLCBvdGhlcndpc2UsIGJhZC4gSWYgdHJhY2UgZG9lc24ndCBh
-cHBlYXIgaW4gb3V0cHV0IG9mICdkbWVzZyAtLWZvbGxvdycsIHJlLXJ1bm5pbmcgaXQgd2lsbCBz
-aG93IHRoZSB0cmFjZS4NCj4+DQo+PiBJIHJhbiBteSB0ZXN0cyBvbiBEZWJpYW4gMTAuMyB3aXRo
-IGNvbmZpZ3VyYXRpb24gYmFzZWQgZGlyZWN0bHkgb24gb25lIGZyb20gNC4xOS4wLTgtYW1kNjQg
-KDQuMTkuOTgtMSkgaW4gUWVtdS4NCj4+IEkgY291bGQgcmVwcm9kdWNlIHRoZSBzYW1lIGlzc3Vl
-IG9uIHNldmVyYWwgYm9hcmRzIHdpdGggeDg2IGFuZCBBUk12NyBDUFVzIGFsaWtlLCB3aXRoIDEw
-MCUgcmVwcm9kdWNpYmlsaXR5Lg0KPj4NCj4+IEkgaGF2ZW4ndCB5ZXQgZGlnZ2VkIGludG8gd2h5
-IGV4YWN0bHkgdGhpcyBjb21taXQgYnJlYWtzIG5vdGlmaWNhdGlvbnMgZm9yIHJlYWRlcnMgb2Yg
-L3Byb2Mva21zZyBhbmQgL2Rldi9rbXNnLCBidXQgYXMgcmV2ZXJ0aW5nIGl0IGZpeGVkIHRoZSBp
-c3N1ZSwgSSdtIHByZXR0eSBzdXJlIHRoaXMgaXMgdGhlIG9uZS4gSXQgaXMgcG9zc2libGUgdGhh
-dCB0aGUgc2FtZSBoYXBwZW5lZCBpbiA1LjQgbGluZSwgYnUgSSBoYWRuJ3QgaGFkIGEgY2hhbmNl
-IHRvIHRlc3QgdGhpcyBhcyB3ZWxsIHlldC4NCj4gSSBjYW4gcmV2ZXJ0IHRoaXMsIGJ1dCBpdCBm
-ZWVscyBsaWtlIHRoZXJlIGlzIHNvbWV0aGluZyBlbHNlIGdvaW5nIHdyb25nDQo+IGhlcmUuICBD
-YW4geW91IHRyeSB0aGUgNS40IHRyZWUgdG8gc2VlIGlmIHRoYXQgdG9vIGhhcyB5b3VyIHNhbWUN
-Cj4gcHJvYmxlbT8NClllcywgSSdsbCBjaGVjayBpdCBpbiBhIHNob3J0IHdoaWxlLg0KPg0KPiB0
-aGFua3MsDQo+DQo+IGdyZWcgay1oDQoNCi0tIA0KUG96ZHJhd2lhbS9XaXRoIGtpbmQgcmVnYXJk
-cywNCkxlY2ggUGVyY3phaw0KDQpTci4gU29mdHdhcmUgRW5naW5lZXINCkNhbWxpbiBUZWNobm9s
-b2dpZXMgUG9sYW5kIExpbWl0ZWQgU3AuIHogby5vLg0KDQo=
+On 2/26/20 12:15 PM, Sergey Senozhatsky wrote:
+> Hello,
+> 
+> 	V3 of the patchset, reshuffled and updated.
+> 
+> - Most notable changes:
+> 
+> a) Added a simple helper function vb2_queue_allows_cache_hints(),
+>    which return true if queue has ->allow_cache_hints and when
+>    ->memory is VB2_MEMORY_MMAP.
+>    That is - user space cache and memory consistency hints are now
+>    specifically for MMAP buffers and queues that support hints.
+> 
+> b) Set V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS capability bit only when queue
+>    has ->allow_cache_hints and ->io_modes has VB2_MMAP bit set
+> 
+> c) Clear "incompatible" request's flags when queue does not permit
+>    cache and memory consistency hints (IOW, when vb2_queue_allows_cache_hints()
+>    return false)
+> 
+> 
+> Minor changes:
+> 
+> - Squashed V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS and V4L2_FLAG_MEMORY_NON_CONSISTENT
+>   patches.
+> 
+> - Added more documentation and code comments.
+> 
+> 
+> Previous series:
+> v2 link: https://lore.kernel.org/lkml/20200204025641.218376-1-senozhatsky@chromium.org/
+> v1 link: https://lore.kernel.org/lkml/20191217032034.54897-1-senozhatsky@chromium.org/
+> 
+> 
+> Series Intro
+> ========================================================================
+> 
+>         This is a reworked version of the vb2 cache hints
+> (V4L2_BUF_FLAG_NO_CACHE_INVALIDATE / V4L2_BUF_FLAG_NO_CACHE_CLEAN)
+> support patch series which previsouly was developed by Sakari and
+> Laurent [0].
+> 
+> The patch set attempts to preserve the existing behvaiour - cache
+> sync is performed in ->prepare() and ->finish() (unless the buffer
+> is DMA exported). User space can request “default behavior” override
+> with cache management hints, which are handled on a per-buffer basis
+> and should be supplied with v4l2_buffer ->flags during buffer
+> preparation. There are two possible hints:
+> 
+> - V4L2_BUF_FLAG_NO_CACHE_INVALIDATE
+>         No cache sync on ->finish()
+> 
+> - V4L2_BUF_FLAG_NO_CACHE_CLEAN
+>         No cache sync on ->prepare()
+> 
+> In order to keep things on the safe side, we also require driver
+> to explicitly state which of its queues (if any) support user space
+> cache management hints (such queues should have ->allow_cache_hints
+> bit set).
+> 
+> The patch set also (to some extent) simplifies allocators' ->prepare()
+> and ->finish() callbacks. Namely, we move cache management decision
+> making to the upper - core - layer. For example, if, previously, we
+> would have something like this
+> 
+>         vb2_buffer_done()
+>           vb2_dc_finish()
+>             if (buf->db_attach)
+>                return;
+> 
+> where each allocators' ->finish() callback would either bail
+> out (DMA exported buffer, for instance) or sync, now that "bail
+> out or sync" decision is made before we call into the allocator.
+> 
+> Along with cache management hints, user space is also able to
+> adjust queue's memory consistency attributes. Memory consistency
+> attribute (dma_attrs) is per-queue, yet it plays its role on the
+> allocator level, when we allocate buffers’ private memory (planes).
+> For the time being, only one consistency attribute is supported:
+> DMA_ATTR_NON_CONSISTENT.
+
+v3 looks very good, I only found some minor issues.
+
+I think v4 should be ready to be merged, unless others have more comments.
+
+Regards,
+
+	Hans
+
+> 
+> [0] https://www.mail-archive.com/linux-media@vger.kernel.org/msg112459.html
+> 
+> Sergey Senozhatsky (11):
+>   videobuf2: add cache management members
+>   videobuf2: handle V4L2 buffer cache flags
+>   videobuf2: add V4L2_FLAG_MEMORY_NON_CONSISTENT flag
+>   videobuf2: add queue memory consistency parameter
+>   videobuf2: handle V4L2_FLAG_MEMORY_NON_CONSISTENT flag
+>   videobuf2: factor out planes prepare/finish functions
+>   videobuf2: do not sync caches when we are allowed not to
+>   videobuf2: check ->synced flag in prepare() and finish()
+>   videobuf2: add begin/end cpu_access callbacks to dma-contig
+>   videobuf2: add begin/end cpu_access callbacks to dma-sg
+>   videobuf2: don't test db_attach in dma-contig prepare and finish
+> 
+>  Documentation/media/uapi/v4l/buffer.rst       |  29 +++++
+>  .../media/uapi/v4l/vidioc-create-bufs.rst     |   8 +-
+>  .../media/uapi/v4l/vidioc-reqbufs.rst         |  22 +++-
+>  .../media/common/videobuf2/videobuf2-core.c   | 110 +++++++++++++-----
+>  .../common/videobuf2/videobuf2-dma-contig.c   |  39 ++++++-
+>  .../media/common/videobuf2/videobuf2-dma-sg.c |  36 ++++--
+>  .../media/common/videobuf2/videobuf2-v4l2.c   |  82 ++++++++++++-
+>  drivers/media/dvb-core/dvb_vb2.c              |   2 +-
+>  drivers/media/v4l2-core/v4l2-ioctl.c          |   5 +-
+>  include/media/videobuf2-core.h                |  28 ++++-
+>  include/uapi/linux/videodev2.h                |  11 +-
+>  11 files changed, 314 insertions(+), 58 deletions(-)
+> 
+
