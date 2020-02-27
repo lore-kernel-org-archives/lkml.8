@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A4EC728EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA6BC728F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D495924688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 580C924656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:23:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813403;
-	bh=cXyWnGOXMDI/RpQ47AsYJXfqH3j09CyQ273gSjmt4ek=;
+	s=default; t=1582813415;
+	bh=Gh0r9CNz1XQi1o5EC9F2wUWx/cfLvl0SucLWOQzEXXw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gl3L/N1A5xGbLr/KbJkTvDZhDtvGiITtP8JDSQHkADhg/ZmWRE9w/fLk9cMKBNopF
-	 5PUwa5D+a5eK+62JkBvLkUdDic0s4A0PfyQAxuUvb7g9Ly6B3a0VymWcJUrYuPq9zS
-	 A01vPzEmGM08D7DUyv3TiLubgwcdrkSrXCbDTgGs=
+	b=p4BHbhP9Bdph5/sHipInekmTuIvLuo5VulkYSzkBfjNLcx8GsO3QdMqsoB9GM2C3v
+	 S0G24Yj35GRQt2QHV1BxhwvGGdp3NxMfolABPwEWjg5CPDCpSj5Bolvr9OItT/4VGL
+	 OwNlExJI/MK5RAYOA77cD2Tui88LZmACLLkh/l4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389169AbgB0OOn (ORCPT
+        id S2389527AbgB0OXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:14:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54050 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:23:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389160AbgB0OOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:14:40 -0500
+        id S2389135AbgB0OOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:14:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0BCC24691;
-        Thu, 27 Feb 2020 14:14:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FB7624690;
+        Thu, 27 Feb 2020 14:14:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812880;
-        bh=cXyWnGOXMDI/RpQ47AsYJXfqH3j09CyQ273gSjmt4ek=;
+        s=default; t=1582812869;
+        bh=Gh0r9CNz1XQi1o5EC9F2wUWx/cfLvl0SucLWOQzEXXw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KI1PEwXr55OVwEFIas5qsW+fWKpSdBUGEeqUXWa2S5sb7W3F5xaAU1MgPyFSmR9+M
-         jCHqOkx0ScUQ/MVTdyuxDCSOXT4wzH2JLfJjZj5I1k42onDRPZW6IHTjAk1o0vmab2
-         g/bbYgTwGie3t4RfCqmiKyrWU/1+EKnvzlBRgWAM=
+        b=sUoNryZbzFEfgxEssWcS+ZkhtBLj+bsKlqGYwXVu2CkzqKHNjSpti/dv+JS8/0qYI
+         ekDgW9syY2+4yyrAnHuekT8WuM2GktCc8vPzcioOvEgA1j3U2FpW3EI+uX3JuB3m4g
+         VwPPGF8MLpbQi7sF0wuGG1ZYlBAQf2vGbyPpPEko=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Nantl <jn@forever.cz>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.5 024/150] USB: serial: ch341: fix receiver regression
-Date:   Thu, 27 Feb 2020 14:36:01 +0100
-Message-Id: <20200227132236.387789404@linuxfoundation.org>
+        stable@vger.kernel.org, Pietro Oliva <pietroliva@gmail.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>
+Subject: [PATCH 5.5 047/150] staging: rtl8723bs: Fix potential security hole
+Date:   Thu, 27 Feb 2020 14:36:24 +0100
+Message-Id: <20200227132239.962277163@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -59,52 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Larry Finger <Larry.Finger@lwfinger.net>
 
-commit 7c3d02285ad558691f27fde760bcd841baa27eab upstream.
+commit ac33597c0c0d1d819dccfe001bcd0acef7107e7c upstream.
 
-While assumed not to make a difference, not using the factor-2 prescaler
-makes the receiver more susceptible to errors.
+In routine rtw_hostapd_ioctl(), the user-controlled p->length is assumed
+to be at least the size of struct ieee_param size, but this assumption is
+never checked. This could result in out-of-bounds read/write on kernel
+heap in case a p->length less than the size of struct ieee_param is
+specified by the user. If p->length is allowed to be greater than the size
+of the struct, then a malicious user could be wasting kernel memory.
+Fixes commit 554c0a3abf216 ("0taging: Add rtl8723bs sdio wifi driver").
 
-Specifically, there have been reports of problems with devices that
-cannot generate a 115200 rate with a smaller error than 2.1% (e.g.
-117647 bps). But this can also be reproduced with a low-speed RS232
-tranceiver at 115200 when the input rate matches the nominal rate.
-
-So whenever possible, enable the factor-2 prescaler and halve the
-divisor in order to use settings closer to that of the previous
-algorithm.
-
-Fixes: 35714565089e ("USB: serial: ch341: reimplement line-speed handling")
-Cc: stable <stable@vger.kernel.org>	# 5.5
-Reported-by: Jakub Nantl <jn@forever.cz>
-Tested-by: Jakub Nantl <jn@forever.cz>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Reported by: Pietro Oliva <pietroliva@gmail.com>
+Cc: Pietro Oliva <pietroliva@gmail.com>
+Cc: Stable <stable@vger.kernel.org>
+Fixes 554c0a3abf216 ("0taging: Add rtl8723bs sdio wifi driver").
+Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
+Link: https://lore.kernel.org/r/20200210180235.21691-3-Larry.Finger@lwfinger.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/ch341.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/staging/rtl8723bs/os_dep/ioctl_linux.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/serial/ch341.c
-+++ b/drivers/usb/serial/ch341.c
-@@ -205,6 +205,16 @@ static int ch341_get_divisor(speed_t spe
- 			16 * speed - 16 * CH341_CLKRATE / (clk_div * (div + 1)))
- 		div++;
+--- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
++++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+@@ -4207,7 +4207,7 @@ static int rtw_hostapd_ioctl(struct net_
  
-+	/*
-+	 * Prefer lower base clock (fact = 0) if even divisor.
-+	 *
-+	 * Note that this makes the receiver more tolerant to errors.
-+	 */
-+	if (fact == 1 && div % 2 == 0) {
-+		div /= 2;
-+		fact = 0;
-+	}
-+
- 	return (0x100 - div) << 8 | fact << 2 | ps;
- }
  
+ 	/* if (p->length < sizeof(struct ieee_param) || !p->pointer) { */
+-	if (!p->pointer) {
++	if (!p->pointer || p->length != sizeof(*param)) {
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
 
 
