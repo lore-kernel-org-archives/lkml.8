@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D1EC52D40
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19274C52D30
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70F2A21D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:26:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E32DA2468F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813564;
-	bh=yCsPjBAsKlxu33I6RBsrWMeD8xfNLeJzzaUEFPXUDog=;
+	s=default; t=1582813538;
+	bh=x0dEELmNZAG8RaLNGfeiqpBGNqG0RcdRf9EJzV0JgyI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K/MKLaUz0z/Hg0kzjGX0oIx9yvbrtTNMSJxq8/2zr2oSaUiXyMTqnv+ihf+Ok1KjA
-	 cK83vpYQvW0+n6ZXON88w18JsJ/DLVFnhi57cruJc4qTg5VI9lHQT9vrw+O3asnB6i
-	 B4bcrZwswkzZ2ZW6AM8WekdqYZ2lSkYmuKQcmYMQ=
+	b=zkfR0E9IguZ99zobenSGLTHa1TNA1G6Q087KqOFrfYN+uUxi5xAs2OYbqkEDcNQ6L
+	 Hs6cYywMlistf3xCdhODy3cbAAhgFpCLfJ/ALScBNoTQMAc4RStBzGAyPlieef3sG2
+	 7uj+BAcKKRN239t39TCP2mypRN0JfYK7YWml7EFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389302AbgB0O0D (ORCPT
+        id S2388660AbgB0OLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:26:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48814 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:11:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732973AbgB0OKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:10:38 -0500
+        id S2388620AbgB0OLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:11:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05D7924690;
-        Thu, 27 Feb 2020 14:10:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D20C6246A9;
+        Thu, 27 Feb 2020 14:11:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812637;
-        bh=yCsPjBAsKlxu33I6RBsrWMeD8xfNLeJzzaUEFPXUDog=;
+        s=default; t=1582812664;
+        bh=x0dEELmNZAG8RaLNGfeiqpBGNqG0RcdRf9EJzV0JgyI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iv4XSzwsfflP5bkJyAIJPB7g331sOXJzN69HZyg0t4jELXv6mxQYMNB0sZOgSTUsr
-         sHzm4i7jwcPlkJ2t8yEvLTp+lnNlWvN+S2oipWeU4W5yMwWtYL9Jnkpeh0ubPVYhgv
-         QwCVcBLxt9ZpB0GHn/zhPdc+xQ6Ci+d3OpcJ47C4=
+        b=Va+4TQ+ecCME0HWSBV9Xi5NDkOic2GflZxXW+RSBHE5n7XxzctCzlVxZbgCJimXy6
+         +5nvzUZdYBO+sbTQL4PhKzjxuof6bWWnobD/D6jHl4Bwyo7zwUq0k6LaIIbqOl/Q8x
+         H0J1A+/M9RonP4Uy/2PsI87r2W0Bg0xlp6RiVgfc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 093/135] btrfs: fix bytes_may_use underflow in prealloc error condtition
-Date:   Thu, 27 Feb 2020 14:37:13 +0100
-Message-Id: <20200227132243.246695656@linuxfoundation.org>
+        stable@vger.kernel.org, Gavin Shan <gshan@redhat.com>,
+        Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 066/135] mm/vmscan.c: dont round up scan size for online memory cgroup
+Date:   Thu, 27 Feb 2020 14:36:46 +0100
+Message-Id: <20200227132239.142582271@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -60,96 +61,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Gavin Shan <gshan@redhat.com>
 
-commit b778cf962d71a0e737923d55d0432f3bd287258e upstream.
+commit 76073c646f5f4999d763f471df9e38a5a912d70d upstream.
 
-I hit the following warning while running my error injection stress
-testing:
+Commit 68600f623d69 ("mm: don't miss the last page because of round-off
+error") makes the scan size round up to @denominator regardless of the
+memory cgroup's state, online or offline.  This affects the overall
+reclaiming behavior: the corresponding LRU list is eligible for
+reclaiming only when its size logically right shifted by @sc->priority
+is bigger than zero in the former formula.
 
-  WARNING: CPU: 3 PID: 1453 at fs/btrfs/space-info.h:108 btrfs_free_reserved_data_space_noquota+0xfd/0x160 [btrfs]
-  RIP: 0010:btrfs_free_reserved_data_space_noquota+0xfd/0x160 [btrfs]
-  Call Trace:
-  btrfs_free_reserved_data_space+0x4f/0x70 [btrfs]
-  __btrfs_prealloc_file_range+0x378/0x470 [btrfs]
-  elfcorehdr_read+0x40/0x40
-  ? elfcorehdr_read+0x40/0x40
-  ? btrfs_commit_transaction+0xca/0xa50 [btrfs]
-  ? dput+0xb4/0x2a0
-  ? btrfs_log_dentry_safe+0x55/0x70 [btrfs]
-  ? btrfs_sync_file+0x30e/0x420 [btrfs]
-  ? do_fsync+0x38/0x70
-  ? __x64_sys_fdatasync+0x13/0x20
-  ? do_syscall_64+0x5b/0x1b0
-  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
+For example, the inactive anonymous LRU list should have at least 0x4000
+pages to be eligible for reclaiming when we have 60/12 for
+swappiness/priority and without taking scan/rotation ratio into account.
 
-This happens if we fail to insert our reserved file extent.  At this
-point we've already converted our reservation from ->bytes_may_use to
-->bytes_reserved.  However once we break we will attempt to free
-everything from [cur_offset, end] from ->bytes_may_use, but our extent
-reservation will overlap part of this.
+After the roundup is applied, the inactive anonymous LRU list becomes
+eligible for reclaiming when its size is bigger than or equal to 0x1000
+in the same condition.
 
-Fix this problem by adding ins.offset (our extent allocation size) to
-cur_offset so we remove the actual remaining part from ->bytes_may_use.
+    (0x4000 >> 12) * 60 / (60 + 140 + 1) = 1
+    ((0x1000 >> 12) * 60) + 200) / (60 + 140 + 1) = 1
 
-I validated this fix using my inject-error.py script
+aarch64 has 512MB huge page size when the base page size is 64KB.  The
+memory cgroup that has a huge page is always eligible for reclaiming in
+that case.
 
-python inject-error.py -o should_fail_bio -t cache_save_setup -t \
-	__btrfs_prealloc_file_range \
-	-t insert_reserved_file_extent.constprop.0 \
-	-r "-5" ./run-fsstress.sh
+The reclaiming is likely to stop after the huge page is reclaimed,
+meaing the further iteration on @sc->priority and the silbing and child
+memory cgroups will be skipped.  The overall behaviour has been changed.
+This fixes the issue by applying the roundup to offlined memory cgroups
+only, to give more preference to reclaim memory from offlined memory
+cgroup.  It sounds reasonable as those memory is unlikedly to be used by
+anyone.
 
-where run-fsstress.sh simply mounts and runs fsstress on a disk.
+The issue was found by starting up 8 VMs on a Ampere Mustang machine,
+which has 8 CPUs and 16 GB memory.  Each VM is given with 2 vCPUs and
+2GB memory.  It took 264 seconds for all VMs to be completely up and
+784MB swap is consumed after that.  With this patch applied, it took 236
+seconds and 60MB swap to do same thing.  So there is 10% performance
+improvement for my case.  Note that KSM is disable while THP is enabled
+in the testing.
 
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+         total     used    free   shared  buff/cache   available
+   Mem:  16196    10065    2049       16        4081        3749
+   Swap:  8175      784    7391
+         total     used    free   shared  buff/cache   available
+   Mem:  16196    11324    3656       24        1215        2936
+   Swap:  8175       60    8115
+
+Link: http://lkml.kernel.org/r/20200211024514.8730-1-gshan@redhat.com
+Fixes: 68600f623d69 ("mm: don't miss the last page because of round-off error")
+Signed-off-by: Gavin Shan <gshan@redhat.com>
+Acked-by: Roman Gushchin <guro@fb.com>
+Cc: <stable@vger.kernel.org>	[4.20+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/inode.c |   16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ mm/vmscan.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -10464,6 +10464,7 @@ static int __btrfs_prealloc_file_range(s
- 	struct btrfs_root *root = BTRFS_I(inode)->root;
- 	struct btrfs_key ins;
- 	u64 cur_offset = start;
-+	u64 clear_offset = start;
- 	u64 i_size;
- 	u64 cur_bytes;
- 	u64 last_alloc = (u64)-1;
-@@ -10498,6 +10499,15 @@ static int __btrfs_prealloc_file_range(s
- 				btrfs_end_transaction(trans);
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -2530,10 +2530,13 @@ out:
+ 			/*
+ 			 * Scan types proportional to swappiness and
+ 			 * their relative recent reclaim efficiency.
+-			 * Make sure we don't miss the last page
+-			 * because of a round-off error.
++			 * Make sure we don't miss the last page on
++			 * the offlined memory cgroups because of a
++			 * round-off error.
+ 			 */
+-			scan = DIV64_U64_ROUND_UP(scan * fraction[file],
++			scan = mem_cgroup_online(memcg) ?
++			       div64_u64(scan * fraction[file], denominator) :
++			       DIV64_U64_ROUND_UP(scan * fraction[file],
+ 						  denominator);
  			break;
- 		}
-+
-+		/*
-+		 * We've reserved this space, and thus converted it from
-+		 * ->bytes_may_use to ->bytes_reserved.  Any error that happens
-+		 * from here on out we will only need to clear our reservation
-+		 * for the remaining unreserved area, so advance our
-+		 * clear_offset by our extent size.
-+		 */
-+		clear_offset += ins.offset;
- 		btrfs_dec_block_group_reservations(fs_info, ins.objectid);
- 
- 		last_alloc = ins.offset;
-@@ -10578,9 +10588,9 @@ next:
- 		if (own_trans)
- 			btrfs_end_transaction(trans);
- 	}
--	if (cur_offset < end)
--		btrfs_free_reserved_data_space(inode, NULL, cur_offset,
--			end - cur_offset + 1);
-+	if (clear_offset < end)
-+		btrfs_free_reserved_data_space(inode, NULL, clear_offset,
-+			end - clear_offset + 1);
- 	return ret;
- }
- 
+ 		case SCAN_FILE:
 
 
