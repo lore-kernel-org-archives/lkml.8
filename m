@@ -2,89 +2,105 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB184C4BA3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 04:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A850C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 04:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D24724672
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 04:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F42072467A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 04:13:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CMgGP9Jr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728426AbgB0EMA (ORCPT
+        id S1728335AbgB0EN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 23:12:00 -0500
-Received: from kernel.crashing.org ([76.164.61.194]:36664 "EHLO
-        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728355AbgB0EMA (ORCPT
+        Wed, 26 Feb 2020 23:13:59 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:33352 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727735AbgB0EN6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 23:12:00 -0500
-Received: from localhost (gate.crashing.org [63.228.1.57])
-        (authenticated bits=0)
-        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 01R4AhSr022499
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Wed, 26 Feb 2020 22:10:46 -0600
-Message-ID: <c1f990ad2fd35deeba9e4e937cb19ee5080ea2a8.camel@kernel.crashing.org>
-Subject: Re: [PATCH v4 5/7] ARM: dts: aspeed-g5: add vhub port and endpoint
- properties
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     rentao.bupt@gmail.com, Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
-        taoren@fb.com
-Date:   Thu, 27 Feb 2020 15:10:42 +1100
-In-Reply-To: <20200226230346.672-6-rentao.bupt@gmail.com>
-References: <20200226230346.672-1-rentao.bupt@gmail.com>
-         <20200226230346.672-6-rentao.bupt@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 26 Feb 2020 23:13:58 -0500
+Received: by mail-pj1-f65.google.com with SMTP id m7so2791854pjs.0;
+        Wed, 26 Feb 2020 20:13:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=SIAgH7rKdUKGoshqIOin6FqO+krncW7FxfqiqFVRH3w=;
+        b=CMgGP9JrpMJQQXJGeatjrkj3DhC95cRF/uucrCugOk8qmgtm2tkaH9kSCaLsreQiSR
+         wQrsAxHBI1A4ucPxyHzVI7tTkvD8pgPIZ8TQBFnyOkNSEDE+JGN9wASK06wh0D6S6y9Z
+         WqIOIlaNcnQz6byvBs2HXlpxMz15pa6lwmtw9xFPg4LrdY/hvi1bbEEXjIa2SiBxV427
+         V60Pw/pIw8O+etZkf8N2/3xgCt+KHNcvRD3xYu+g3iPShW8JlfQuISQAVTPu16aDq/CZ
+         V8DXdP9bzm/mowKy3RXjxmV9gjtG4lrcKE2FNldtHMCSR6hlfhPBMSOfLbszDQ4RiiTv
+         kq4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=SIAgH7rKdUKGoshqIOin6FqO+krncW7FxfqiqFVRH3w=;
+        b=IInvClpL20AcEi8UFJ+ira5r01LkaVPugpQASBAWqSb0/LoiZ3PJKzol62aRrU7HG0
+         xiQmQLrWxmWp/atxe5K4QPC2kRplMRkmLaAV5UsU4iikQ9Ws5CuApKaGEHpJ0CrE9wfA
+         yPM/XcToAhFbGDsYAprnMje/G70jdPx/pwn7lNRaMn9FnVnbDNqXB6HY8KQyBhWH8CbV
+         +46kB4E0rCWqubSlZO5Dg8X9ZawD3uZoEIVtlb6aibuV7rsCcwiiSUEUg1OlhU2iZbcV
+         XLbX+1B8GtumYEF9LLmY1Ren9XFY6tM41gDiYev8rYvXhmlwP3OZcj67xaryaDB2IDOP
+         pmtA==
+X-Gm-Message-State: APjAAAVmT0Ut6+4Io/lijt3T38wX9BK4L+pnN8IbUu0Sbl7S7gqp45MK
+        UwbYHxQXk/AxEzaUhuEqrvs=
+X-Google-Smtp-Source: APXvYqwNCawRksnCDdUdstJsoTQIdLsZ9xk/0Jp/7/K0oRLGqKfUxdgwRoyLhBOSUuY/nERUS9Xz+g==
+X-Received: by 2002:a17:90a:cb0f:: with SMTP id z15mr2706443pjt.67.1582776837522;
+        Wed, 26 Feb 2020 20:13:57 -0800 (PST)
+Received: from sh03840pcu.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id c1sm4729856pfa.51.2020.02.26.20.13.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 26 Feb 2020 20:13:57 -0800 (PST)
+From:   Baolin Wang <baolin.wang7@gmail.com>
+To:     linus.walleij@linaro.org
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang7@gmail.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] pinctrl: Export some needed symbols at module load time
+Date:   Thu, 27 Feb 2020 12:13:46 +0800
+Message-Id: <f4e7e20afacb23e6fa7a6b33ea4319b2b3492840.1582776447.git.baolin.wang7@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-02-26 at 15:03 -0800, rentao.bupt@gmail.com wrote:
-> From: Tao Ren <rentao.bupt@gmail.com>
-> 
-> Add "aspeed,vhub-downstream-ports" and "aspeed,vhub-generic-
-> endpoints"
-> properties to describe supported number of vhub ports and endpoints.
-> 
-> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+Export the pin_get_name()/pinconf_generic_parse_dt_config() symbols needed
+by the Spreadtrum pinctrl driver when building it as a module.
 
-Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+---
+ drivers/pinctrl/core.c            | 1 +
+ drivers/pinctrl/pinconf-generic.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-> ---
->  No change in v2/v3/v4.
->    - It's given v4 to align with the version of the patch series.
-> 
->  arch/arm/boot/dts/aspeed-g5.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi
-> b/arch/arm/boot/dts/aspeed-g5.dtsi
-> index ebec0fa8baa7..f12ec04d3cbc 100644
-> --- a/arch/arm/boot/dts/aspeed-g5.dtsi
-> +++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-> @@ -195,6 +195,8 @@
->  			reg = <0x1e6a0000 0x300>;
->  			interrupts = <5>;
->  			clocks = <&syscon ASPEED_CLK_GATE_USBPORT1CLK>;
-> +			aspeed,vhub-downstream-ports = <5>;
-> +			aspeed,vhub-generic-endpoints = <15>;
->  			pinctrl-names = "default";
->  			pinctrl-0 = <&pinctrl_usb2ad_default>;
->  			status = "disabled";
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index 446d84f..893b1ac 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -176,6 +176,7 @@ const char *pin_get_name(struct pinctrl_dev *pctldev, const unsigned pin)
+ 
+ 	return desc->name;
+ }
++EXPORT_SYMBOL_GPL(pin_get_name);
+ 
+ /* Deletes a range of pin descriptors */
+ static void pinctrl_free_pindescs(struct pinctrl_dev *pctldev,
+diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
+index 9eb8630..dfef471 100644
+--- a/drivers/pinctrl/pinconf-generic.c
++++ b/drivers/pinctrl/pinconf-generic.c
+@@ -286,6 +286,7 @@ int pinconf_generic_parse_dt_config(struct device_node *np,
+ 	kfree(cfg);
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(pinconf_generic_parse_dt_config);
+ 
+ int pinconf_generic_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+ 		struct device_node *np, struct pinctrl_map **map,
+-- 
+1.9.1
 
