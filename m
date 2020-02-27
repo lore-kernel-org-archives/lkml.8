@@ -8,65 +8,62 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 841D4C35DF9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F901C35DF9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55A80246A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF41E246A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:13:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KrJU7X7E"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sj6V0kKL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730720AbgB0SKF (ORCPT
+        id S1729503AbgB0SNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 13:10:05 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43408 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729385AbgB0SKE (ORCPT
+        Thu, 27 Feb 2020 13:13:08 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38637 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbgB0SNH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 13:10:04 -0500
-Received: by mail-lj1-f196.google.com with SMTP id e3so225135lja.10;
-        Thu, 27 Feb 2020 10:10:02 -0800 (PST)
+        Thu, 27 Feb 2020 13:13:07 -0500
+Received: by mail-lf1-f68.google.com with SMTP id r14so117445lfm.5;
+        Thu, 27 Feb 2020 10:13:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=JGTvTC5n1dMFf5hqfM1JJ/BZi1c+ZQ0aixXc9pKVWyk=;
-        b=KrJU7X7EIvMKlUEtbUymzld9J6xlBT5wJtUGvAAIKW08mCZFRtSfx8xOROqfuexZjm
-         JgzdQMJpcoKGAr9Sz0TRp3hECEd10uyGdfVINUEuFhgyEKnBX9Q9acsGmO0XTXw/D6Y0
-         GYZwtvYYoQslELF2RcyKz7DfbPy0XW2QIJ8gF4gokZGJp1fHhMyvKVOyRsERN8IJIVRU
-         IHkV/XDshgvI537t6WLPZnMMYSFkLkpFiBmmM8E+LRQmqRD0fDSL4yKDt20D3tRmK3sP
-         p4jIXT6QFwM5U/myoCIPV5M3bcSJKp8O/zr3UOuVSQQo+sKXF59tPU52HlPpgGkFPRd2
-         4t/w==
+        bh=IULXqhszyqMcQoMwWa2PsJp6mRVAsQrFJGxJ4oTw6uE=;
+        b=Sj6V0kKLLBXQ2JRFY4cLp78TYxdyFDwzGgbbciprtwXmE1mQJfsv6vyZd5wDTZUDMU
+         63B0rF9MxqH38mMu+VFN28uBjcmUVJVPGNv1R+pS+9AmRQxnIDspP01znTUUtpZ3f00W
+         L8a9rmYmKwxF6H1zNnxse33OlhorUC+k6EAbxTND4KJKIvRx64Dh3ajcLr9edlKKkxec
+         5EQdBbX3xLcUJEv6djgRFK7f11USPcr5SKQEc9PKW4wpbyTKodxm69LZB67rhKGCJtga
+         G/gUFEDqEqxOkz+pP/8cV86IHj8r5ozrVmt0d3NEYN8/XcvyALM8PBLEYcHUwTn2tBxO
+         X5Ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=JGTvTC5n1dMFf5hqfM1JJ/BZi1c+ZQ0aixXc9pKVWyk=;
-        b=PPluVwlod+vuM5zQoqDcZ6Ac4P4qvVDiz8liXdm3d9ap91e7ZVjQvX0y+7jPrauUoH
-         sL6sAmeBWHt6xItcHjlevS383rLjqeVFNcN9ybmdUmLPnrIJX2OaWpeJ0EXmA67qOsji
-         r6YqFwBv9InOaykGmNUYbO/BxGOgbCD9edJYXdwS9s1bsiFJvQEMbDNJOCnyO9bUCKM+
-         hZLHadFfVyBRkexwQwaJRMH90Q8JWnKj+q/tw0zC71Innv/FU214Pj7qu58LWO9djh1n
-         hOJQRc0xpLKdxGvu5v8iKrlu8alFmCUg6ykGTnayZWza20xvJKjc831YutEDbbnypC5n
-         ZmCw==
-X-Gm-Message-State: ANhLgQ0lTz6/58iUOUkT07q2q/zwjr2wBjESAVAf09Me4KQDmYpods0I
-        2id7R0OqboTjG0gGdgU89EA=
-X-Google-Smtp-Source: ADFU+vt7VurT8NSU0ruym6CjuKGiA65tRemHtqoeZ3SAziIhDR/LByjtv7S5fyvspcm5O9WPA2qWbQ==
-X-Received: by 2002:a2e:9748:: with SMTP id f8mr208065ljj.178.1582827002155;
-        Thu, 27 Feb 2020 10:10:02 -0800 (PST)
+        bh=IULXqhszyqMcQoMwWa2PsJp6mRVAsQrFJGxJ4oTw6uE=;
+        b=D936QbwEErlRZttL6t3qFjHJUMWbnXmIVNMOPlnBiX1KcGLI7lbe7cPOeE+x1Fqjmj
+         jSQGLzlnvKC26emsm447jZ1mNkBsRrlQF/A6r9MklpBsy2SapEoKOMhVQEg6StsHMLFA
+         7RJk0ANWLV2n8p9CmBvuQLSz2brSK2wH6tMobocVg3T6kc2G/vxXIuIIUq6efG4ZNKDH
+         s9WTwAmV0c4o4udPUgmQkASJsqHRHI186GeXDjiKONbqxcS40+yy/7Zr4A40FXSnIUEa
+         u7bwrNgd1k5ZDsS+Fp//kn0Pu/gbiYUt8liuTHhs3etbz6780GSIZ8CoAFXFi/2er5BX
+         95DQ==
+X-Gm-Message-State: ANhLgQ3AfOwoRe+abwne/uiGLPySTQLwP5H4WMic7xN9nIkUuxnAbzzW
+        qC7m1hLviNbhUIM50ou2eQM=
+X-Google-Smtp-Source: ADFU+vsC+ibuHd9fGINaxqkor4ZPzJbV9sKaelWlT3qvBtWEnDmNjmMwcJD566hVwaJ4G4qcT30O/A==
+X-Received: by 2002:a19:c20b:: with SMTP id l11mr330559lfc.135.1582827185929;
+        Thu, 27 Feb 2020 10:13:05 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id t6sm3222170lfe.47.2020.02.27.10.10.00
+        by smtp.gmail.com with ESMTPSA id q4sm1478727ljm.51.2020.02.27.10.13.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 10:10:01 -0800 (PST)
+        Thu, 27 Feb 2020 10:13:05 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1] media: staging: tegra-vde: Use devm_platform_ioremap_resource_byname()
-Date:   Thu, 27 Feb 2020 21:09:15 +0300
-Message-Id: <20200227180915.9541-1-digetx@gmail.com>
+To:     Nick Dyer <nick@shmanahar.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH RE-SEND v1] Input: atmel_mxt_ts - correct local variable type
+Date:   Thu, 27 Feb 2020 21:12:49 +0300
+Message-Id: <20200227181249.10037-1-digetx@gmail.com>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -75,110 +72,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This helps to make code cleaner a tad.
+GCC produces this warning when kernel compiled using `make W=1`:
 
+  warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
+  if (byte_offset >= 0 && byte_offset < cfg->mem_size) {
+
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/staging/media/tegra-vde/vde.c | 55 +++++----------------------
- 1 file changed, 9 insertions(+), 46 deletions(-)
 
-diff --git a/drivers/staging/media/tegra-vde/vde.c b/drivers/staging/media/tegra-vde/vde.c
-index e18fd48981da..d3e63512a765 100644
---- a/drivers/staging/media/tegra-vde/vde.c
-+++ b/drivers/staging/media/tegra-vde/vde.c
-@@ -949,7 +949,6 @@ static int tegra_vde_runtime_resume(struct device *dev)
- static int tegra_vde_probe(struct platform_device *pdev)
+Added my own tested-by, since I actually use this driver.
+
+ drivers/input/touchscreen/atmel_mxt_ts.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+index ae60442efda0..bd0fc4b08608 100644
+--- a/drivers/input/touchscreen/atmel_mxt_ts.c
++++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+@@ -1287,8 +1287,8 @@ static int mxt_prepare_cfg_mem(struct mxt_data *data, struct mxt_cfg *cfg)
  {
- 	struct device *dev = &pdev->dev;
--	struct resource *regs;
- 	struct tegra_vde *vde;
- 	int irq, err;
- 
-@@ -959,75 +958,39 @@ static int tegra_vde_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, vde);
- 
--	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "sxe");
--	if (!regs)
--		return -ENODEV;
--
--	vde->sxe = devm_ioremap_resource(dev, regs);
-+	vde->sxe = devm_platform_ioremap_resource_byname(pdev, "sxe");
- 	if (IS_ERR(vde->sxe))
- 		return PTR_ERR(vde->sxe);
- 
--	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "bsev");
--	if (!regs)
--		return -ENODEV;
--
--	vde->bsev = devm_ioremap_resource(dev, regs);
-+	vde->bsev = devm_platform_ioremap_resource_byname(pdev, "bsev");
- 	if (IS_ERR(vde->bsev))
- 		return PTR_ERR(vde->bsev);
- 
--	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mbe");
--	if (!regs)
--		return -ENODEV;
--
--	vde->mbe = devm_ioremap_resource(dev, regs);
-+	vde->mbe = devm_platform_ioremap_resource_byname(pdev, "mbe");
- 	if (IS_ERR(vde->mbe))
- 		return PTR_ERR(vde->mbe);
- 
--	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ppe");
--	if (!regs)
--		return -ENODEV;
--
--	vde->ppe = devm_ioremap_resource(dev, regs);
-+	vde->ppe = devm_platform_ioremap_resource_byname(pdev, "ppe");
- 	if (IS_ERR(vde->ppe))
- 		return PTR_ERR(vde->ppe);
- 
--	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mce");
--	if (!regs)
--		return -ENODEV;
--
--	vde->mce = devm_ioremap_resource(dev, regs);
-+	vde->mce = devm_platform_ioremap_resource_byname(pdev, "mce");
- 	if (IS_ERR(vde->mce))
- 		return PTR_ERR(vde->mce);
- 
--	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "tfe");
--	if (!regs)
--		return -ENODEV;
--
--	vde->tfe = devm_ioremap_resource(dev, regs);
-+	vde->tfe = devm_platform_ioremap_resource_byname(pdev, "tfe");
- 	if (IS_ERR(vde->tfe))
- 		return PTR_ERR(vde->tfe);
- 
--	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ppb");
--	if (!regs)
--		return -ENODEV;
--
--	vde->ppb = devm_ioremap_resource(dev, regs);
-+	vde->ppb = devm_platform_ioremap_resource_byname(pdev, "ppb");
- 	if (IS_ERR(vde->ppb))
- 		return PTR_ERR(vde->ppb);
- 
--	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "vdma");
--	if (!regs)
--		return -ENODEV;
--
--	vde->vdma = devm_ioremap_resource(dev, regs);
-+	vde->vdma = devm_platform_ioremap_resource_byname(pdev, "vdma");
- 	if (IS_ERR(vde->vdma))
- 		return PTR_ERR(vde->vdma);
- 
--	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "frameid");
--	if (!regs)
--		return -ENODEV;
--
--	vde->frameid = devm_ioremap_resource(dev, regs);
-+	vde->frameid = devm_platform_ioremap_resource_byname(pdev, "frameid");
- 	if (IS_ERR(vde->frameid))
- 		return PTR_ERR(vde->frameid);
- 
+ 	struct device *dev = &data->client->dev;
+ 	struct mxt_object *object;
+-	unsigned int type, instance, size, byte_offset;
+-	int offset;
++	unsigned int type, instance, size;
++	int offset, byte_offset;
+ 	int ret;
+ 	int i;
+ 	u16 reg;
 -- 
 2.24.0
 
