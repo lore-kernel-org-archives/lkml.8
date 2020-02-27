@@ -2,175 +2,114 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBFDC35677
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6680C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CF6824688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F0D9246A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:13:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731334AbgB0PMW (ORCPT
+        id S1729300AbgB0PNa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 10:12:22 -0500
-Received: from mga06.intel.com ([134.134.136.31]:7443 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729584AbgB0PMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 10:12:22 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 07:12:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,492,1574150400"; 
-   d="scan'208";a="350704878"
-Received: from kuha.fi.intel.com ([10.237.72.53])
-  by fmsmga001.fm.intel.com with SMTP; 27 Feb 2020 07:12:17 -0800
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Thu, 27 Feb 2020 17:12:16 +0200
-Date:   Thu, 27 Feb 2020 17:12:16 +0200
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, enric.balletbo@collabora.com,
-        bleung@chromium.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: Add cros-ec Type C port driver
-Message-ID: <20200227151216.GA18240@kuha.fi.intel.com>
-References: <20200220003102.204480-1-pmalani@chromium.org>
- <20200220003102.204480-2-pmalani@chromium.org>
+        Thu, 27 Feb 2020 10:13:30 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:34594 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729096AbgB0PNa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 10:13:30 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1j7Kqk-00086s-85; Thu, 27 Feb 2020 16:13:18 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DE9971C2172;
+        Thu, 27 Feb 2020 16:13:17 +0100 (CET)
+Date:   Thu, 27 Feb 2020 15:13:17 -0000
+From:   "tip-bot2 for Frederic Weisbecker" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/nohz] x86: Remove TIF_NOHZ
+Cc:     Frederic Weisbecker <frederic@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200220003102.204480-2-pmalani@chromium.org>
+Message-ID: <158281639766.28353.18087941373563706810.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The following commit has been merged into the timers/nohz branch of tip:
 
-On Wed, Feb 19, 2020 at 04:30:55PM -0800, Prashant Malani wrote:
-> Some Chrome OS devices with Embedded Controllers (EC) can read and
-> modify Type C port state.
-> 
-> Add an entry in the DT Bindings documentation that lists out the logical
-> device and describes the relevant port information, to be used by the
-> corresponding driver.
-> 
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> ---
-> 
-> Changes in v3:
-> - Fixed license identifier.
-> - Renamed "port" to "connector".
-> - Made "connector" be a "usb-c-connector" compatible property.
-> - Updated port-number description to explain min and max values,
->   and removed $ref which was causing dt_binding_check errors.
-> - Fixed power-role, data-role and try-power-role details to make
->   dt_binding_check pass.
-> - Fixed example to include parent EC SPI DT Node.
-> 
-> Changes in v2:
-> - No changes. Patch first introduced in v2 of series.
-> 
->  .../bindings/chrome/google,cros-ec-typec.yaml | 86 +++++++++++++++++++
->  1 file changed, 86 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> new file mode 100644
-> index 00000000000000..97fd982612f120
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> @@ -0,0 +1,86 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/chrome/google,cros-ec-typec.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Google Chrome OS EC(Embedded Controller) Type C port driver.
-> +
-> +maintainers:
-> +  - Benson Leung <bleung@chromium.org>
-> +  - Prashant Malani <pmalani@chromium.org>
-> +
-> +description:
-> +  Chrome OS devices have an Embedded Controller(EC) which has access to
-> +  Type C port state. This node is intended to allow the host to read and
-> +  control the Type C ports. The node for this device should be under a
-> +  cros-ec node like google,cros-ec-spi.
-> +
-> +properties:
-> +  compatible:
-> +    const: google,cros-ec-typec
-> +
-> +  connector:
-> +    description: A node that represents a physical Type C connector port
-> +      on the device.
-> +    type: object
-> +    properties:
-> +      compatible:
-> +        const: usb-c-connector
-> +      port-number:
-> +        description: The number used by the Chrome OS EC to identify
-> +          this type C port. Valid values are 0 - (EC_USB_PD_MAX_PORTS - 1).
-> +      power-role:
-> +        description: Determines the power role that the Type C port will
-> +          adopt.
-> +        maxItems: 1
-> +        contains:
-> +          enum:
-> +            - sink
-> +            - source
-> +            - dual
-> +      data-role:
-> +        description: Determines the data role that the Type C port will
-> +          adopt.
-> +        maxItems: 1
-> +        contains:
-> +          enum:
-> +            - host
-> +            - device
-> +            - dual
-> +      try-power-role:
-> +        description: Determines the preferred power role of the Type C port.
-> +        maxItems: 1
-> +        contains:
-> +          enum:
-> +            - sink
-> +            - source
-> +            - dual
-> +
-> +    required:
-> +      - port-number
-> +      - power-role
-> +      - data-role
-> +      - try-power-role
+Commit-ID:     68d875131e43a8eed193810c1dfebb027fe2450e
+Gitweb:        https://git.kernel.org/tip/68d875131e43a8eed193810c1dfebb027fe2450e
+Author:        Frederic Weisbecker <frederic@kernel.org>
+AuthorDate:    Tue, 28 Jan 2020 13:50:32 +01:00
+Committer:     Frederic Weisbecker <frederic@kernel.org>
+CommitterDate: Fri, 14 Feb 2020 16:05:19 +01:00
 
-Do you really need to redefine those?
+x86: Remove TIF_NOHZ
 
-I think you just need to mention that there is a required sub-node
-"connector", and the place where it's described. So something
-like this:
+Static keys have replaced TIF_NOHZ to optimize the calls to context
+tracking. We can now safely remove that thread flag.
 
-        Required sub-node:
-        - connector : The "usb-c-connector". The bindings of the
-          connector node are specified in:
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Andy Lutomirski <luto@kernel.org>
+---
+ arch/x86/Kconfig                   | 1 -
+ arch/x86/include/asm/thread_info.h | 2 --
+ 2 files changed, 3 deletions(-)
 
-                Documentation/devicetree/bindings/connector/usb-connector.txt
-
-
-Then you just need to define the Chrome OS EC specific properties, so
-I guess just the "port-number".
-
-
-thanks,
-
--- 
-heikki
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 549eed3..beea770 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -211,7 +211,6 @@ config X86
+ 	select HAVE_STACK_VALIDATION		if X86_64
+ 	select HAVE_RSEQ
+ 	select HAVE_SYSCALL_TRACEPOINTS
+-	select HAVE_TIF_NOHZ			if X86_64
+ 	select HAVE_UNSTABLE_SCHED_CLOCK
+ 	select HAVE_USER_RETURN_NOTIFIER
+ 	select HAVE_GENERIC_VDSO
+diff --git a/arch/x86/include/asm/thread_info.h b/arch/x86/include/asm/thread_info.h
+index 6cb9d1b..384cdde 100644
+--- a/arch/x86/include/asm/thread_info.h
++++ b/arch/x86/include/asm/thread_info.h
+@@ -92,7 +92,6 @@ struct thread_info {
+ #define TIF_NOCPUID		15	/* CPUID is not accessible in userland */
+ #define TIF_NOTSC		16	/* TSC is not accessible in userland */
+ #define TIF_IA32		17	/* IA32 compatibility process */
+-#define TIF_NOHZ		19	/* in adaptive nohz mode */
+ #define TIF_MEMDIE		20	/* is terminating due to OOM killer */
+ #define TIF_POLLING_NRFLAG	21	/* idle is polling for TIF_NEED_RESCHED */
+ #define TIF_IO_BITMAP		22	/* uses I/O bitmap */
+@@ -122,7 +121,6 @@ struct thread_info {
+ #define _TIF_NOCPUID		(1 << TIF_NOCPUID)
+ #define _TIF_NOTSC		(1 << TIF_NOTSC)
+ #define _TIF_IA32		(1 << TIF_IA32)
+-#define _TIF_NOHZ		(1 << TIF_NOHZ)
+ #define _TIF_POLLING_NRFLAG	(1 << TIF_POLLING_NRFLAG)
+ #define _TIF_IO_BITMAP		(1 << TIF_IO_BITMAP)
+ #define _TIF_FORCED_TF		(1 << TIF_FORCED_TF)
