@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1495C3F37D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 129B7C54FCA
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FFFF24690
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB7B024690
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812964;
-	bh=VmyJoJtm/AzdS0db36pkNph7dHXRyE9znS2N+yd5QIw=;
+	s=default; t=1582813048;
+	bh=MGK1Qur0NJz7SAyjMCCjz28nH5j++Jd4iAwKVDhsT+g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TnovHaw1t9vUecF5u9/wCx3LUVlHFPYhGjTo1qwgs9jRMK3rGR/0JJVdXiiKX8ppQ
-	 HwWMooBzeJKyhHx5l6hP9AfW71Akv2udteKQ+8eVPnlyAAQ+alVOt5ktWQ0B6+iA6w
-	 TfkK/1Riz4WwKZJlvfu6Jg63JSTpdgclXQ4rVfGw=
+	b=CPjHB8D3mia1ifCCsIhZgkXSuXZBj/7hAAbviswO1KTj13DZBATVWt4eug2K8gGA+
+	 rZKs/ttYLHfQ+2KPSLqDmIaJgEE8hVF2udW/HfCVh9eLrVlHZLrqDB7jMFqnufWrwi
+	 4nWJyOEWp3zHt44WSfc1IySx4HGnJBLWptnxc704=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389410AbgB0OQD (ORCPT
+        id S2389710AbgB0OR1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:16:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55690 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:17:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389389AbgB0OP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:15:58 -0500
+        id S2389688AbgB0ORX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:17:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 402072468F;
-        Thu, 27 Feb 2020 14:15:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E559B246AD;
+        Thu, 27 Feb 2020 14:17:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812957;
-        bh=VmyJoJtm/AzdS0db36pkNph7dHXRyE9znS2N+yd5QIw=;
+        s=default; t=1582813042;
+        bh=MGK1Qur0NJz7SAyjMCCjz28nH5j++Jd4iAwKVDhsT+g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h4vSVQGTrqo4VqCo5ZTJNCF3bHhxzDl3b8C9g+4EPl66NIuB7K25By5TrIzoiMQce
-         QIpqe3elJ+xJG+JA0ugijHoDgq3LcGQCJxrGVSr7LvxorFlQyptkpotsY9V5iDT/9w
-         8xeLBHHx9gaWmFtlMibDXOCfHg/jO9y7LkkXp3Qg=
+        b=put39t7SukgZ5l4XLbhYtOrdGiWVZ53aPIRvJdf1YYCmKgHCSiQ0NTmRAS9PMtEk6
+         DG3CZeynuU1Jh/zbFKCLfMsCG5M8vO3SePwccIXRCfMZf1hR71Yizj2xEbL5oPezBq
+         Oi1Zn949WIinMc4u5CTJAP/x3CguXqkmlTk3jDEw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiaojie Yuan <xiaojie.yuan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.5 081/150] drm/amdgpu/gfx9: disable gfxoff when reading rlc clock
-Date:   Thu, 27 Feb 2020 14:36:58 +0100
-Message-Id: <20200227132244.804644646@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Jon Bloomfield <jon.bloomfield@intel.com>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH 5.5 115/150] drm/i915/gem: Require per-engine reset support for non-persistent contexts
+Date:   Thu, 27 Feb 2020 14:37:32 +0100
+Message-Id: <20200227132249.678010614@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -59,39 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit 120cf959308e1bda984e40a9edd25ee2d6262efd upstream.
+commit dea8d5ce46d7e7f7270b9804df7d1174f88bfd99 upstream.
 
-Otherwise we readback all ones.  Fixes rlc counter
-readback while gfxoff is active.
+To enable non-persistent contexts, we require a means of cancelling any
+inflight work from that context. This is first done "gracefully" by
+using preemption to kick the active context off the engine, and then
+forcefully by resetting the engine if it is active. If we are unable to
+reset the engine to remove hostile userspace, we should not allow
+userspace to opt into using non-persistent contexts.
 
-Reviewed-by: Xiaojie Yuan <xiaojie.yuan@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+If the per-engine reset fails, we still do a full GPU reset, but that is
+rare and usually indicative of much deeper issues. The damage is already
+done. However, the goal of the interface to allow long running compute
+jobs without causing collateral damage elsewhere, and if we are unable
+to support that we should make that known by not providing the
+interface (and falsely pretending we can).
+
+Fixes: a0e047156cde ("drm/i915/gem: Make context persistence optional")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc: Jon Bloomfield <jon.bloomfield@intel.com>
+Reviewed-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200130164553.1937718-1-chris@chris-wilson.co.uk
+(cherry picked from commit d1b9b5f127bc3797fc274cfa4f363e039f045c3a)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/i915/gem/i915_gem_context.c |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-@@ -3852,6 +3852,7 @@ static uint64_t gfx_v9_0_get_gpu_clock_c
- {
- 	uint64_t clock;
+--- a/drivers/gpu/drm/i915/gem/i915_gem_context.c
++++ b/drivers/gpu/drm/i915/gem/i915_gem_context.c
+@@ -484,6 +484,22 @@ static int __context_set_persistence(str
+ 		if (!(ctx->i915->caps.scheduler & I915_SCHEDULER_CAP_PREEMPTION))
+ 			return -ENODEV;
  
-+	amdgpu_gfx_off_ctrl(adev, false);
- 	mutex_lock(&adev->gfx.gpu_clock_mutex);
- 	if (adev->asic_type == CHIP_VEGA10 && amdgpu_sriov_runtime(adev)) {
- 		uint32_t tmp, lsb, msb, i = 0;
-@@ -3870,6 +3871,7 @@ static uint64_t gfx_v9_0_get_gpu_clock_c
- 			((uint64_t)RREG32_SOC15(GC, 0, mmRLC_GPU_CLOCK_COUNT_MSB) << 32ULL);
++		/*
++		 * If the cancel fails, we then need to reset, cleanly!
++		 *
++		 * If the per-engine reset fails, all hope is lost! We resort
++		 * to a full GPU reset in that unlikely case, but realistically
++		 * if the engine could not reset, the full reset does not fare
++		 * much better. The damage has been done.
++		 *
++		 * However, if we cannot reset an engine by itself, we cannot
++		 * cleanup a hanging persistent context without causing
++		 * colateral damage, and we should not pretend we can by
++		 * exposing the interface.
++		 */
++		if (!intel_has_reset_engine(&ctx->i915->gt))
++			return -ENODEV;
++
+ 		i915_gem_context_clear_persistence(ctx);
  	}
- 	mutex_unlock(&adev->gfx.gpu_clock_mutex);
-+	amdgpu_gfx_off_ctrl(adev, true);
- 	return clock;
- }
  
 
 
