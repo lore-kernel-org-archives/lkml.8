@@ -2,78 +2,148 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC281C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B554C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA592469D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:34:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582810482;
-	bh=hd1EH5Kj0MHO9MQew6AELGq5JlBOz3GHWDMW12fIy1Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=q8l7bhMx8ZWJdKj1mejjTcZ86wWCClaKtm5DUkxE1NnXe9ZZ+XJfXgZk9gGR/UCbE
-	 bcznISl1EHYs6qud+JAIh9r2txJz/dJSr4FZbYFpWhv1WRn/jGpNCu6NbiJ/FfiS3x
-	 L4rjoF9iAxBlZ0r+A2JunBdJfZ5A0aHJPLZ686QY=
+	by mail.kernel.org (Postfix) with ESMTP id 3E12C2469D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:34:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="E1ExY1mN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729187AbgB0Nel (ORCPT
+        id S1729171AbgB0Nel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 27 Feb 2020 08:34:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60990 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729076AbgB0Nel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:56496 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729056AbgB0Nel (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Feb 2020 08:34:41 -0500
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 568AF24656;
-        Thu, 27 Feb 2020 13:34:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582810480;
-        bh=hd1EH5Kj0MHO9MQew6AELGq5JlBOz3GHWDMW12fIy1Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=p9A0+DH5dBJgKnDVpjQb91A7WXwDFyWWxlMo9svI3aYgBDaJ12zZA54pFqYcg/VOj
-         05+PE6RScxbPG/Z9EoLZWmis+g2iqcO9njxxKiHhcV82O4/rtQov/ZMPQN8BDdW7OR
-         F5vF6SQos7BU4qr1AQOzyXgO0Ly3N5bkPoskBM00=
-Date:   Thu, 27 Feb 2020 14:34:38 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org, joel@joelfernandes.org,
-        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
-        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        luto@kernel.org, tony.luck@intel.com, dan.carpenter@oracle.com,
-        mhiramat@kernel.org, Will Deacon <will@kernel.org>,
-        Petr Mladek <pmladek@suse.com>, Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v4 02/27] hardirq/nmi: Allow nested nmi_enter()
-Message-ID: <20200227133437.GB21795@lenoir>
-References: <20200221133416.777099322@infradead.org>
- <20200221134215.149193474@infradead.org>
- <20200221222129.GB28251@lenoir>
- <20200224161318.GG14897@hirez.programming.kicks-ass.net>
- <20200225030905.GB28329@lenoir>
- <20200225154111.GM18400@hirez.programming.kicks-ass.net>
- <20200225221031.GB9599@lenoir>
- <20200227091042.GG18400@hirez.programming.kicks-ass.net>
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01RDYaqZ074222;
+        Thu, 27 Feb 2020 07:34:36 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582810476;
+        bh=FW5GmNYAapO5oyOkSjoIqeKPvH9KeeTBzFhDoHz5tsg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=E1ExY1mNZQrNXQxf2o2LrStoQEtR2GymftqZEmOSwKkRW0dh12a+zIG5S/FwDpzJF
+         eMZbLU5ZKt3/QB638zs+mee4ro7g+XoINC2HtLWDMoYZCCNTrgGtDYCaTi0dlwcruj
+         wB6PfJqBq6SQaEBnYh2xJnTRVA4qHJGVoWVHXibg=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01RDYaG8062925
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 27 Feb 2020 07:34:36 -0600
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 27
+ Feb 2020 07:34:36 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 27 Feb 2020 07:34:36 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01RDYa1Q068024;
+        Thu, 27 Feb 2020 07:34:36 -0600
+Subject: Re: [RESEND PATCH v17 00/17] Multi Color LED Framework
+To:     Pavel Machek <pavel@denx.de>, <dmurphy@ti.com>
+CC:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200127150032.31350-1-dmurphy@ti.com>
+ <42d9687b-b488-22cf-0e9a-ff635b2094e3@ti.com> <20200225101940.GB16252@amd>
+ <be76fdac-9d32-b9b2-c01d-3aa315b14463@gmail.com>
+ <20200226125903.GA2800@duo.ucw.cz>
+ <20f6bdd5-e899-aead-8c35-1c3a3d09145f@gmail.com>
+ <20200227105808.GA27003@duo.ucw.cz> <20200227124329.GA994747@kroah.com>
+ <4c273c06-5024-b2d4-c656-b165015090be@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <53a0af43-abaf-5936-9e23-3c7e71c3e10a@ti.com>
+Date:   Thu, 27 Feb 2020 07:29:22 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200227091042.GG18400@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <4c273c06-5024-b2d4-c656-b165015090be@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 10:10:42AM +0100, Peter Zijlstra wrote:
-> On Tue, Feb 25, 2020 at 11:10:32PM +0100, Frederic Weisbecker wrote:
-> > So here is my previous proposal, based on a simple counter, this time
-> > with comments and a few fixes:
-> 
-> I've presumed your SoB and made this your patch.
+Removing GKH
 
-Ok, thanks!
+On 2/27/20 7:07 AM, Dan Murphy wrote:
+> Pavel
+>
+> On 2/27/20 6:43 AM, Greg KH wrote:
+>> On Thu, Feb 27, 2020 at 11:58:08AM +0100, Pavel Machek wrote:
+>>> Hi, Jacek!
+>>>
+>>> (and thanks for doing this).
+>>>
+>>>> We have here long lasting discussion related to LED multicolor class
+>>>> sysfs interface design. We went through several iterations and worked
+>>>> out the solution with individual file per each color sub-LED in the
+>>>> color directory as shown below:
+>>>>
+>>>> /sys/class/leds/<led>/colors/<color>_intensity
+>>>>
+>>>> This is in line with one-value-per-file sysfs rule, that is being
+>>>> frequently highlighted, and we even had not so long ago a patch
+>>>> for led cpu trigger solving the problem caused by this rule not
+>>>> being adhered to.
+>>> Yep. One of the problems is that it is nice to change all the hardware
+>>> channels at once to produce color (it is often on i2c -- and slow), so
+>>> current proposals use "interesting" kind of latching.
+>>>
+>>>> Now we have the voice below bringing to attention another caveat
+>>>> from sysfs documentation:
+>>>>
+>>>> "it is socially acceptable to express an array of values of the same
+>>>> type"
+>>>>
+>>>> and proposing the interface in the form of two files:
+>>>>
+>>>> channel_intensity (file containing array of u32's)
+>>>> channel_names (usually containing "red green blue")
+>>> And thus I want to have it in one file, so it is naturaly atomic. RGB
+>>> leds with 3 channels are common; I have not user yet, but there are
+>>> RGBW with 4 channels (and some more exotic stuff). I don't expect to
+>>> have more than 5 channels.
+>
+> This is not an accurate statement.  Right now a user can have up to 8 
+> channels to cover all the LEDs defined in the LED core
+>
+> And if the led_colors array expands then this array can expand.
+>
+> We have no control on how many entries the user will put in their DT 
+> so again this number is completely arbitrary.
+>
+> Dan
+>
+The more I think about my above statement it is actually worse to do the 
+arrays.  What checks will we have to implement that the DT won't define 
+an array like this
+
+[red green blue white red green white IR blue yellow]
+
+This array is unbounded at this point.  The sysfs framework will not 
+allow creating files under the directory with the same name so we can 
+bound this to 1 LED color to a file and there will be no duplicates.
+
+Sure we can NACK DT's that do create unbounded color arrays but that 
+means we would have to review every DT file that would add a LED node.
+
+What is expected and what is exposed as capability are two different things.
+
+We don't expect developers to have more then 5 channels but if given the 
+capabilities of doing it eventually it will be done and the framework 
+will break.
+
+Dan
+
