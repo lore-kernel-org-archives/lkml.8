@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD76C3F34F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6FAC54FC1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EBD321D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:08:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 341C620578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812521;
-	bh=7oJbFU+bhBED6CuMJZtavCeSHxcTQ/IBOQ85mSsX9oY=;
+	s=default; t=1582812641;
+	bh=lbUfavA0QXazEebXGTTB+QGvnOCey5tftvN7Gy7aC70=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l03Brv4QbW/uc+q8pPxfpcZZ0zQjSVv21Gxh37QDx56+XTqt/pgB0sue9qISdRr8M
-	 W/9+EP+zF4oefVn3+7qRUyh9sZjwPzFhx7oYEgaGYFbVFz3Sn2wUckK5LnZtu0zS4U
-	 LRE0W+Mi6TBMUq8nwOjNtH7L8nVxqsLJay5Nfmgs=
+	b=pOIuKog67GcEoQft4F12NQHFE9Ky3fd2shC2Iz/bi8lYEudKMVXQZK3xzwikUhUWB
+	 8c6kG/ypdaK+p/8Fh+yxFTjHYbIuQCbux6vfEJpu4uYQzNwp8NQ2v/NafdZhQKelo6
+	 CZDXW9zyK90anAWpOsALZDdzomiBJHKJZkhiXhM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388275AbgB0OIj (ORCPT
+        id S2387650AbgB0OKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:08:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46378 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:10:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388252AbgB0OId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:08:33 -0500
+        id S2388140AbgB0OKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:10:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34FCF21D7E;
-        Thu, 27 Feb 2020 14:08:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9843520714;
+        Thu, 27 Feb 2020 14:10:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812512;
-        bh=7oJbFU+bhBED6CuMJZtavCeSHxcTQ/IBOQ85mSsX9oY=;
+        s=default; t=1582812635;
+        bh=lbUfavA0QXazEebXGTTB+QGvnOCey5tftvN7Gy7aC70=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xHY8iYb3b3qBVXPBDQ0KCz2whBX+ZHnzvVs2kVedbsJxhmkvph8PJAmRDEPHBwNKC
-         5yxEMD8fzf7OybR0CrNiOLnHR1LNU59BhZ/iaNPu2VUGPYpABrFWAkb7Z5PPZQ3HV7
-         17FDmH0b/kN/WeBX8ct3WY8/73RvZug7iKxgadmc=
+        b=v7bYFVqKBlnWHg5tp2p1634VZo3trGcp5EaPBVeLjVObmac5EjbRb679JYWyqxPTe
+         YBFKR70OKf+5YCYLb1cV/Gg86CKBcw/Q7Smy2on86qrW3NO+9c9Vy5JeRjo5XhbuCK
+         gGix2ESaUk9BKL9//+bB6OTgH7tVkMKh8h5DhrrQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.4 046/135] powerpc/entry: Fix an #if which should be an #ifdef in entry_32.S
-Date:   Thu, 27 Feb 2020 14:36:26 +0100
-Message-Id: <20200227132235.935587437@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Jeff Mahoney <jeffm@suse.com>, Qu Wenruo <wqu@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 092/135] btrfs: destroy qgroup extent records on transaction abort
+Date:   Thu, 27 Feb 2020 14:37:12 +0100
+Message-Id: <20200227132243.109812252@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -59,40 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Jeff Mahoney <jeffm@suse.com>
 
-commit 9eb425b2e04e0e3006adffea5bf5f227a896f128 upstream.
+commit 81f7eb00ff5bb8326e82503a32809421d14abb8a upstream.
 
-Fixes: 12c3f1fd87bf ("powerpc/32s: get rid of CPU_FTR_601 feature")
-Cc: stable@vger.kernel.org # v5.4+
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/a99fc0ad65b87a1ba51cfa3e0e9034ee294c3e07.1582034961.git.christophe.leroy@c-s.fr
+We clean up the delayed references when we abort a transaction but we
+leave the pending qgroup extent records behind, leaking memory.
+
+This patch destroys the extent records when we destroy the delayed refs
+and makes sure ensure they're gone before releasing the transaction.
+
+Fixes: 3368d001ba5d ("btrfs: qgroup: Record possible quota-related extent for qgroup.")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Jeff Mahoney <jeffm@suse.com>
+[ Rebased to latest upstream, remove to_qgroup() helper, use
+  rbtree_postorder_for_each_entry_safe() wrapper ]
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/entry_32.S |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/btrfs/disk-io.c     |    1 +
+ fs/btrfs/qgroup.c      |   13 +++++++++++++
+ fs/btrfs/qgroup.h      |    1 +
+ fs/btrfs/transaction.c |    2 ++
+ 4 files changed, 17 insertions(+)
 
---- a/arch/powerpc/kernel/entry_32.S
-+++ b/arch/powerpc/kernel/entry_32.S
-@@ -778,7 +778,7 @@ fast_exception_return:
- 1:	lis	r3,exc_exit_restart_end@ha
- 	addi	r3,r3,exc_exit_restart_end@l
- 	cmplw	r12,r3
--#if CONFIG_PPC_BOOK3S_601
-+#ifdef CONFIG_PPC_BOOK3S_601
- 	bge	2b
- #else
- 	bge	3f
-@@ -786,7 +786,7 @@ fast_exception_return:
- 	lis	r4,exc_exit_restart@ha
- 	addi	r4,r4,exc_exit_restart@l
- 	cmplw	r12,r4
--#if CONFIG_PPC_BOOK3S_601
-+#ifdef CONFIG_PPC_BOOK3S_601
- 	blt	2b
- #else
- 	blt	3f
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -4293,6 +4293,7 @@ static int btrfs_destroy_delayed_refs(st
+ 		cond_resched();
+ 		spin_lock(&delayed_refs->lock);
+ 	}
++	btrfs_qgroup_destroy_extent_records(trans);
+ 
+ 	spin_unlock(&delayed_refs->lock);
+ 
+--- a/fs/btrfs/qgroup.c
++++ b/fs/btrfs/qgroup.c
+@@ -4018,3 +4018,16 @@ out:
+ 	}
+ 	return ret;
+ }
++
++void btrfs_qgroup_destroy_extent_records(struct btrfs_transaction *trans)
++{
++	struct btrfs_qgroup_extent_record *entry;
++	struct btrfs_qgroup_extent_record *next;
++	struct rb_root *root;
++
++	root = &trans->delayed_refs.dirty_extent_root;
++	rbtree_postorder_for_each_entry_safe(entry, next, root, node) {
++		ulist_free(entry->old_roots);
++		kfree(entry);
++	}
++}
+--- a/fs/btrfs/qgroup.h
++++ b/fs/btrfs/qgroup.h
+@@ -414,5 +414,6 @@ int btrfs_qgroup_add_swapped_blocks(stru
+ 		u64 last_snapshot);
+ int btrfs_qgroup_trace_subtree_after_cow(struct btrfs_trans_handle *trans,
+ 		struct btrfs_root *root, struct extent_buffer *eb);
++void btrfs_qgroup_destroy_extent_records(struct btrfs_transaction *trans);
+ 
+ #endif
+--- a/fs/btrfs/transaction.c
++++ b/fs/btrfs/transaction.c
+@@ -51,6 +51,8 @@ void btrfs_put_transaction(struct btrfs_
+ 		BUG_ON(!list_empty(&transaction->list));
+ 		WARN_ON(!RB_EMPTY_ROOT(
+ 				&transaction->delayed_refs.href_root.rb_root));
++		WARN_ON(!RB_EMPTY_ROOT(
++				&transaction->delayed_refs.dirty_extent_root));
+ 		if (transaction->delayed_refs.pending_csums)
+ 			btrfs_err(transaction->fs_info,
+ 				  "pending csums is %llu",
 
 
