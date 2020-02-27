@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A05BC3F348
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0ACEC3F362
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7102220578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C8CF20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811317;
-	bh=1ncGh5Rk9EITS77TL+pGGDb/7PSP3K5PnHevgyuW3vM=;
+	s=default; t=1582811278;
+	bh=tGdP8o+5wmH2dix7IVUCYODW9Z+SAHSKNrxu6lyRy8s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mVKs2pSZYDXnuHQfmeuMZSCXPuKYu6aOnDmDEjkVNEv3q2VkVCYMR8LcdqkWPUjKe
-	 gr6A948BtduW8EDlEk1mifb8l2r5DNeO6MCLCzkHKZ4tY/2wuy5qsW/ITlXr6yNjo0
-	 x5beJBwjmu4TWzsRgCO1HAyNi3Bwhkh8gWIt/q90=
+	b=UykLA2oRaKMXXQTpp6IcpS/Z6gRC5xQ6jS1z8GDT7/Yy5FyyJWL72ni6LumQUAPlK
+	 dur9x6DAw1K+XtAToYp7iBYFzAESd/pXuFABFR88hpFE0VqibaoRDmFxdyO818/9dX
+	 lTCn7pnlF0cDcIqYMMPh6ED7MH7Y/JQU75CN8a3Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730896AbgB0Nsg (ORCPT
+        id S1730786AbgB0Nr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:48:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45352 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:47:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730425AbgB0Nsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:48:33 -0500
+        id S1730779AbgB0Nry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:47:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA96020578;
-        Thu, 27 Feb 2020 13:48:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D42F224656;
+        Thu, 27 Feb 2020 13:47:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811313;
-        bh=1ncGh5Rk9EITS77TL+pGGDb/7PSP3K5PnHevgyuW3vM=;
+        s=default; t=1582811273;
+        bh=tGdP8o+5wmH2dix7IVUCYODW9Z+SAHSKNrxu6lyRy8s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KvmIkrOfOeISQxFa5sMXPdxkfP2Y5L+Sid6k8A8rU5bnf26Jvni2rgqbDiLS0UqBZ
-         xTwwrXeRloWYZApONPEwZgZxjSQAkp2+4Ih5vKHyOB/uhzIIMqLkwZXKEqc9cWPiCO
-         DDCsqt88qhZO2sij+sa9oI31tu9VaB+6iyhrlTl8=
+        b=wmzGtkB1rS5K7o8WOiZ+WLTb4S8l0Lslk8eTq951WoEGg6BM66amZp9RLuUCRXl3K
+         36SbNxREI3gI0UVaL2KxCr1zntqhsCRIIE97C3LX3TNu9mTzYlZU2nn7ue8Avbk4nW
+         hrPeAaDdQG9XcTKx0p/3/RkQKm0ytEmPd9ckLKPM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 082/165] drm/vmwgfx: prevent memory leak in vmw_cmdbuf_res_add
-Date:   Thu, 27 Feb 2020 14:35:56 +0100
-Message-Id: <20200227132243.304829733@linuxfoundation.org>
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 069/165] udf: Fix free space reporting for metadata and virtual partitions
+Date:   Thu, 27 Feb 2020 14:35:43 +0100
+Message-Id: <20200227132241.499535651@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -61,38 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit 40efb09a7f53125719e49864da008495e39aaa1e ]
+[ Upstream commit a4a8b99ec819ca60b49dc582a4287ef03411f117 ]
 
-In vmw_cmdbuf_res_add if drm_ht_insert_item fails the allocated memory
-for cres should be released.
+Free space on filesystems with metadata or virtual partition maps
+currently gets misreported. This is because these partitions are just
+remapped onto underlying real partitions from which keep track of free
+blocks. Take this remapping into account when counting free blocks as
+well.
 
-Fixes: 18e4a4669c50 ("drm/vmwgfx: Fix compat shader namespace")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Reviewed-by: Thomas Hellstrom <thellstrom@vmware.com>
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
+Reported-by: Pali Rohár <pali.rohar@gmail.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/vmwgfx/vmwgfx_cmdbuf_res.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/udf/super.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_cmdbuf_res.c b/drivers/gpu/drm/vmwgfx/vmwgfx_cmdbuf_res.c
-index 1f013d45c9e9a..0c7c3005594cc 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_cmdbuf_res.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_cmdbuf_res.c
-@@ -210,8 +210,10 @@ int vmw_cmdbuf_res_add(struct vmw_cmdbuf_res_manager *man,
- 
- 	cres->hash.key = user_key | (res_type << 24);
- 	ret = drm_ht_insert_item(&man->resources, &cres->hash);
--	if (unlikely(ret != 0))
-+	if (unlikely(ret != 0)) {
-+		kfree(cres);
- 		goto out_invalid_key;
+diff --git a/fs/udf/super.c b/fs/udf/super.c
+index 03369a89600e0..4abdba453885e 100644
+--- a/fs/udf/super.c
++++ b/fs/udf/super.c
+@@ -2460,17 +2460,29 @@ static unsigned int udf_count_free_table(struct super_block *sb,
+ static unsigned int udf_count_free(struct super_block *sb)
+ {
+ 	unsigned int accum = 0;
+-	struct udf_sb_info *sbi;
++	struct udf_sb_info *sbi = UDF_SB(sb);
+ 	struct udf_part_map *map;
++	unsigned int part = sbi->s_partition;
++	int ptype = sbi->s_partmaps[part].s_partition_type;
++
++	if (ptype == UDF_METADATA_MAP25) {
++		part = sbi->s_partmaps[part].s_type_specific.s_metadata.
++							s_phys_partition_ref;
++	} else if (ptype == UDF_VIRTUAL_MAP15 || ptype == UDF_VIRTUAL_MAP20) {
++		/*
++		 * Filesystems with VAT are append-only and we cannot write to
++ 		 * them. Let's just report 0 here.
++		 */
++		return 0;
 +	}
  
- 	cres->state = VMW_CMDBUF_RES_ADD;
- 	cres->res = vmw_resource_reference(res);
+-	sbi = UDF_SB(sb);
+ 	if (sbi->s_lvid_bh) {
+ 		struct logicalVolIntegrityDesc *lvid =
+ 			(struct logicalVolIntegrityDesc *)
+ 			sbi->s_lvid_bh->b_data;
+-		if (le32_to_cpu(lvid->numOfPartitions) > sbi->s_partition) {
++		if (le32_to_cpu(lvid->numOfPartitions) > part) {
+ 			accum = le32_to_cpu(
+-					lvid->freeSpaceTable[sbi->s_partition]);
++					lvid->freeSpaceTable[part]);
+ 			if (accum == 0xFFFFFFFF)
+ 				accum = 0;
+ 		}
+@@ -2479,7 +2491,7 @@ static unsigned int udf_count_free(struct super_block *sb)
+ 	if (accum)
+ 		return accum;
+ 
+-	map = &sbi->s_partmaps[sbi->s_partition];
++	map = &sbi->s_partmaps[part];
+ 	if (map->s_partition_flags & UDF_PART_FLAG_UNALLOC_BITMAP) {
+ 		accum += udf_count_free_bitmap(sb,
+ 					       map->s_uspace.s_bitmap);
 -- 
 2.20.1
 
