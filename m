@@ -2,72 +2,114 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 922BBC4BA06
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 06:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02052C4BA06
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 06:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E5B424683
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 06:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ED2F24683
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 06:59:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="MQx13QXI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727654AbgB0G5y (ORCPT
+        id S1728273AbgB0G7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 01:57:54 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:58754 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726575AbgB0G5x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 01:57:53 -0500
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D6409B76283187EEF587;
-        Thu, 27 Feb 2020 14:57:47 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 27 Feb 2020 14:57:39 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>
-CC:     YueHaibing <yuehaibing@huawei.com>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] drm/tidss: Drop pointless static qualifier in dispc_find_csc()
-Date:   Thu, 27 Feb 2020 06:50:57 +0000
-Message-ID: <20200227065057.92766-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 27 Feb 2020 01:59:46 -0500
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:33030 "EHLO
+        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726575AbgB0G7q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 01:59:46 -0500
+Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id CF1532E15F8;
+        Thu, 27 Feb 2020 09:59:41 +0300 (MSK)
+Received: from iva4-7c3d9abce76c.qloud-c.yandex.net (iva4-7c3d9abce76c.qloud-c.yandex.net [2a02:6b8:c0c:4e8e:0:640:7c3d:9abc])
+        by mxbackcorp1j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id cydo0sNlfQ-xeOKmSoa;
+        Thu, 27 Feb 2020 09:59:41 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1582786781; bh=LwWjZiS5EzXEz+bSSOqPaeyqH6VUxngb/TfuxMV5n4s=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=MQx13QXIYnIgGnoIddsDtjWXj5iwUdpAoMGhZ9JO/GzvdsHSpbM6VrS4LWai5sple
+         PkJxDiDaM7iG3Xoz/aXydRRT5eA+J70ZEK3iujiCyky9qKcsdjTOY+aeEsax0kC8G9
+         IJ6L4a2sRvi7aH+lDVR8Hw6nRMQRdGKB7GxfSic0=
+Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:8448:fbcc:1dac:c863])
+        by iva4-7c3d9abce76c.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id 4wLRz4WkJW-xeVm1Z4H;
+        Thu, 27 Feb 2020 09:59:40 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH RFC 5/5] ext4: Add fallocate2() support
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     tytso@mit.edu, viro@zeniv.linux.org.uk, adilger.kernel@dilger.ca,
+        snitzer@redhat.com, jack@suse.cz, ebiggers@google.com,
+        riteshh@linux.ibm.com, krisman@collabora.com, surajjs@amazon.com,
+        dmonakhov@gmail.com, mbobrowski@mbobrowski.org, enwlinux@gmail.com,
+        sblbir@amazon.com, khazhy@google.com, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
+ <158272447616.281342.14858371265376818660.stgit@localhost.localdomain>
+ <20200226155521.GA24724@infradead.org>
+ <06f9b82c-a519-7053-ec68-a549e02c6f6c@virtuozzo.com>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <19bddb89-c3c4-0f38-dca3-70164dc81a57@yandex-team.ru>
+Date:   Thu, 27 Feb 2020 09:59:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+In-Reply-To: <06f9b82c-a519-7053-ec68-a549e02c6f6c@virtuozzo.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need to have the 'const struct dispc_csc_coef *coef'
-variable static since new value always be assigned before use it.
+On 26/02/2020 23.05, Kirill Tkhai wrote:
+> On 26.02.2020 18:55, Christoph Hellwig wrote:
+>> On Wed, Feb 26, 2020 at 04:41:16PM +0300, Kirill Tkhai wrote:
+>>> This adds a support of physical hint for fallocate2() syscall.
+>>> In case of @physical argument is set for ext4_fallocate(),
+>>> we try to allocate blocks only from [@phisical, @physical + len]
+>>> range, while other blocks are not used.
+>>
+>> Sorry, but this is a complete bullshit interface.  Userspace has
+>> absolutely no business even thinking of physical placement.  If you
+>> want to align allocations to physical block granularity boundaries
+>> that is the file systems job, not the applications job.
+> 
+> Why? There are two contradictory actions that filesystem can't do at the same time:
+> 
+> 1)place files on a distance from each other to minimize number of extents
+>    on possible future growth;
+> 2)place small files in the same big block of block device.
+> 
+> At initial allocation time you never know, which file will stop grow in some future,
+> i.e. which file is suitable for compaction. This knowledge becomes available some time later.
+> Say, if a file has not been changed for a month, it is suitable for compaction with
+> another files like it.
+> 
+> If at allocation time you can determine a file, which won't grow in the future, don't be afraid,
+> and just share your algorithm here.
+> 
+> In Virtuozzo we tried to compact ext4 with existing kernel interface:
+> 
+> https://github.com/dmonakhov/e2fsprogs/blob/e4defrag2/misc/e4defrag2.c
+> 
+> But it does not work well in many situations, and the main problem is blocks allocation
+> in desired place is not possible. Block allocator can't behave excellent for everything.
+> 
+> If this interface bad, can you suggest another interface to make block allocator to know
+> the behavior expected from him in this specific case?
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/gpu/drm/tidss/tidss_dispc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Controlling exact place is odd. I suppose main reason for this that defragmentation
+process wants to control fragmentation during allocating new space.
 
-diff --git a/drivers/gpu/drm/tidss/tidss_dispc.c b/drivers/gpu/drm/tidss/tidss_dispc.c
-index eeb160dc047b..e6cb176484a9 100644
---- a/drivers/gpu/drm/tidss/tidss_dispc.c
-+++ b/drivers/gpu/drm/tidss/tidss_dispc.c
-@@ -1510,7 +1510,7 @@ struct dispc_csc_coef *dispc_find_csc(enum drm_color_encoding encoding,
- static void dispc_vid_csc_setup(struct dispc_device *dispc, u32 hw_plane,
- 				const struct drm_plane_state *state)
- {
--	static const struct dispc_csc_coef *coef;
-+	const struct dispc_csc_coef *coef;
- 
- 	coef = dispc_find_csc(state->color_encoding, state->color_range);
- 	if (!coef) {
+Maybe flag FALLOC_FL_DONT_FRAGMENT (allocate exactly one extent or fail) could solve that problem?
 
-
-
-
-
+Defragmentator could try allocate different sizes and automatically balance fragmentation factor
+without controlling exact disk offsets. Also it could reserve space for expected file growth.
