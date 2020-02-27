@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D728C3F345
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C95FC3F35A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21F06246A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20260246A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811181;
-	bh=EJCV+PHusrPDBvv0wSIgAo83qYaeUgJOuXs5GXpqagc=;
+	s=default; t=1582811162;
+	bh=CxAfZQ85yHal5k9+teaGTcPCjoDGV3TJHRuPbXslCXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UwYsP0fWNDCn3eM1dRkfIzmOQy/6T838C/bs5Tj9EcMBnLbfzBgYi4bPd1CqDVHCT
-	 TjxGRP+d1igma3+dOH6P2yAIOSLuJ2JoFAtvWyDnoEWfHWhmTUpGf57MI0SPoI5Ivy
-	 cMTNZ6d5vQCaUpEVM57aFBwywIbPXtxak+C71pa4=
+	b=x76506+v4uObxx4OPvleZh8VVa29s8PBo185XCNEhZKWXZo0BVXWM0ndhSX6Co/K9
+	 L36B48cOqLlDRD27XnVRDVlzgBhGgrImXzDp3Zz1sVr3/xQbQOjyMrnXzRFtz8e1oO
+	 6TJd+wH673hXQpLvSBF2+JKCTetxayiDz5oDw2ac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730500AbgB0NqT (ORCPT
+        id S1730450AbgB0NqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:46:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42462 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:46:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730167AbgB0NqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:46:14 -0500
+        id S1729528AbgB0Np4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:45:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96AA120578;
-        Thu, 27 Feb 2020 13:46:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A464220578;
+        Thu, 27 Feb 2020 13:45:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811174;
-        bh=EJCV+PHusrPDBvv0wSIgAo83qYaeUgJOuXs5GXpqagc=;
+        s=default; t=1582811156;
+        bh=CxAfZQ85yHal5k9+teaGTcPCjoDGV3TJHRuPbXslCXk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0oGEBZP7eS2R3iM++Y7HqVdaqO3gDIEHcgz0cgL8RbJIDNNPKaXmnOEqrKInCJk4W
-         Q4oBHVL7lRdXenQCteCwBeEF/EsMPfTDMdDOQJ/Xj/g5YzaF8xIj4OnoWc4kDwpn0m
-         R3dG8pSIyIVkCNAXhRvY2jy5R9zuo2hAvlrR02/0=
+        b=MOa6wPjoM4afNdvT2EdfrDPLQY5jOMD0fE5aKaA63CAjSEdfs2rhKqyayNwbyfse8
+         eifxawk3FcuUPFam4II9RTeuud/Mm27WYT6lzhCKJqyavIrran+kuc7Ad/Psklc0ol
+         DtsBaxpsOl8QBaKDMmjrZ6LFeRZFBeoP7SnDro3U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 030/165] gpio: gpio-grgpio: fix possible sleep-in-atomic-context bugs in grgpio_irq_map/unmap()
-Date:   Thu, 27 Feb 2020 14:35:04 +0100
-Message-Id: <20200227132235.398284790@linuxfoundation.org>
+        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>, Tejun Heo <tj@kernel.org>
+Subject: [PATCH 4.9 023/165] cpu/hotplug, stop_machine: Fix stop_machine vs hotplug order
+Date:   Thu, 27 Feb 2020 14:34:57 +0100
+Message-Id: <20200227132234.353061220@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -60,75 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit e36eaf94be8f7bc4e686246eed3cf92d845e2ef8 ]
+[ Upstream commit 45178ac0cea853fe0e405bf11e101bdebea57b15 ]
 
-The driver may sleep while holding a spinlock.
-The function call path (from bottom to top) in Linux 4.19 is:
+Paul reported a very sporadic, rcutorture induced, workqueue failure.
+When the planets align, the workqueue rescuer's self-migrate fails and
+then triggers a WARN for running a work on the wrong CPU.
 
-drivers/gpio/gpio-grgpio.c, 261:
-	request_irq in grgpio_irq_map
-drivers/gpio/gpio-grgpio.c, 255:
-	_raw_spin_lock_irqsave in grgpio_irq_map
+Tejun then figured that set_cpus_allowed_ptr()'s stop_one_cpu() call
+could be ignored! When stopper->enabled is false, stop_machine will
+insta complete the work, without actually doing the work. Worse, it
+will not WARN about this (we really should fix this).
 
-drivers/gpio/gpio-grgpio.c, 318:
-	free_irq in grgpio_irq_unmap
-drivers/gpio/gpio-grgpio.c, 299:
-	_raw_spin_lock_irqsave in grgpio_irq_unmap
+It turns out there is a small window where a freshly online'ed CPU is
+marked 'online' but doesn't yet have the stopper task running:
 
-request_irq() and free_irq() can sleep at runtime.
+	BP				AP
 
-To fix these bugs, request_irq() and free_irq() are called without
-holding the spinlock.
+	bringup_cpu()
+	  __cpu_up(cpu, idle)	 -->	start_secondary()
+					...
+					cpu_startup_entry()
+	  bringup_wait_for_ap()
+	    wait_for_ap_thread() <--	  cpuhp_online_idle()
+					  while (1)
+					    do_idle()
 
-These bugs are found by a static analysis tool STCheck written by myself.
+					... available to run kthreads ...
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Link: https://lore.kernel.org/r/20191218132605.10594-1-baijiaju1990@gmail.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+	    stop_machine_unpark()
+	      stopper->enable = true;
+
+Close this by moving the stop_machine_unpark() into
+cpuhp_online_idle(), such that the stopper thread is ready before we
+start the idle loop and schedule.
+
+Reported-by: "Paul E. McKenney" <paulmck@kernel.org>
+Debugged-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Tested-by: "Paul E. McKenney" <paulmck@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-grgpio.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ kernel/cpu.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpio/gpio-grgpio.c b/drivers/gpio/gpio-grgpio.c
-index 7847dd34f86fc..036a78b704270 100644
---- a/drivers/gpio/gpio-grgpio.c
-+++ b/drivers/gpio/gpio-grgpio.c
-@@ -259,17 +259,16 @@ static int grgpio_irq_map(struct irq_domain *d, unsigned int irq,
- 	lirq->irq = irq;
- 	uirq = &priv->uirqs[lirq->index];
- 	if (uirq->refcnt == 0) {
-+		spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
- 		ret = request_irq(uirq->uirq, grgpio_irq_handler, 0,
- 				  dev_name(priv->dev), priv);
- 		if (ret) {
- 			dev_err(priv->dev,
- 				"Could not request underlying irq %d\n",
- 				uirq->uirq);
--
--			spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
--
- 			return ret;
- 		}
-+		spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
- 	}
- 	uirq->refcnt++;
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index c2573e858009b..1fbe93fefc1fa 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -515,8 +515,7 @@ static int bringup_wait_for_ap(unsigned int cpu)
+ 	if (WARN_ON_ONCE((!cpu_online(cpu))))
+ 		return -ECANCELED;
  
-@@ -315,8 +314,11 @@ static void grgpio_irq_unmap(struct irq_domain *d, unsigned int irq)
- 	if (index >= 0) {
- 		uirq = &priv->uirqs[lirq->index];
- 		uirq->refcnt--;
--		if (uirq->refcnt == 0)
-+		if (uirq->refcnt == 0) {
-+			spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
- 			free_irq(uirq->uirq, priv);
-+			return;
-+		}
- 	}
+-	/* Unpark the stopper thread and the hotplug thread of the target cpu */
+-	stop_machine_unpark(cpu);
++	/* Unpark the hotplug thread of the target cpu */
+ 	kthread_unpark(st->thread);
  
- 	spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
+ 	/*
+@@ -1115,8 +1114,8 @@ void notify_cpu_starting(unsigned int cpu)
+ 
+ /*
+  * Called from the idle task. Wake up the controlling task which brings the
+- * stopper and the hotplug thread of the upcoming CPU up and then delegates
+- * the rest of the online bringup to the hotplug thread.
++ * hotplug thread of the upcoming CPU up and then delegates the rest of the
++ * online bringup to the hotplug thread.
+  */
+ void cpuhp_online_idle(enum cpuhp_state state)
+ {
+@@ -1126,6 +1125,12 @@ void cpuhp_online_idle(enum cpuhp_state state)
+ 	if (state != CPUHP_AP_ONLINE_IDLE)
+ 		return;
+ 
++	/*
++	 * Unpart the stopper thread before we start the idle loop (and start
++	 * scheduling); this ensures the stopper task is always available.
++	 */
++	stop_machine_unpark(smp_processor_id());
++
+ 	st->state = CPUHP_AP_ONLINE_IDLE;
+ 	complete(&st->done);
+ }
 -- 
 2.20.1
 
