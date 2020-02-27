@@ -2,53 +2,53 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9265C34022
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA66C3F34E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87E8B21D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75A2C246A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:44:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582810897;
-	bh=GOe/Q8d9pnM7OTay7ZXq8JIEleloYnDKCFv4IzHU8VM=;
+	s=default; t=1582811075;
+	bh=4zMSgVLvToFvLCsakiT/RfaMvUR1I5kjrs73Rp7VQy4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mOfiVfjbSnHVnk87U/k1pkCF9A05ISZq5J4Yx3WU0dcgP/vgZkrG7ofuRfm5ceQoR
-	 u3Npi+x/y3yi8Udt04DfmkN7PTLQ95qsTOh2MRgmgch0CmvXtGz0/X/1KWbU4dTA4b
-	 qqusiDI+JjY3YUwLytd9L6zS0d0AC2U/7bGvjdEc=
+	b=sRXpJsMF8isMcREjSccN4Kj0HuJrI4SFMnoSeMg/IcNv8Ret3/fZsc0BLx3l40Dw+
+	 LGaXIGEiww2k5fDodk7UVc4tNzSynrac6UzsLIT8eCUrSrioRNWsVeIkiDfhpKkPAV
+	 WPUeeYaStYKXN4MupWWRqm7wRw7dIXTllPsGxudo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729623AbgB0Nlg (ORCPT
+        id S1729566AbgB0Noe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:41:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36200 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:44:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729606AbgB0Nlc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:41:32 -0500
+        id S1729834AbgB0Nob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:44:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43C6420726;
-        Thu, 27 Feb 2020 13:41:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB65620726;
+        Thu, 27 Feb 2020 13:44:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582810891;
-        bh=GOe/Q8d9pnM7OTay7ZXq8JIEleloYnDKCFv4IzHU8VM=;
+        s=default; t=1582811071;
+        bh=4zMSgVLvToFvLCsakiT/RfaMvUR1I5kjrs73Rp7VQy4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xuTwNMvE/XowoBPr7s2XQO/iiApR2CdCVHtad2ZgP6w7ukaZ9q5MXesIqC2Eg/aI6
-         13fPKsavj4+wzY1bORmqYdriVIElQkin3/PkRQzpIH/dGMvuhIMOQH2pNAF9elVWtO
-         OemflxMRFoOGfaWv1XrXWwg5NO9D7uPb7tEzd2tU=
+        b=sUicPGYSmMkSD/7B+nGP5fsum9P2GTvhzv4lXd8iZz8FMa0/xM8nFgxkvAAw4xsV3
+         VHN9hxONY5lHNqOifsN5suXrcpqtaNf1JR308jT1YulVdcJlFWKc8s6ORLfZStz0vv
+         rIRj/Qpf7rSSa0ugCNcuupd/ezSKIvd5NRIn6ebQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Mao Wenan <maowenan@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 037/113] NFC: port100: Convert cpu_to_le16(le16_to_cpu(E1) + E2) to use le16_add_cpu().
-Date:   Thu, 27 Feb 2020 14:35:53 +0100
-Message-Id: <20200227132217.643078727@linuxfoundation.org>
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.4 106/113] Btrfs: fix btrfs_wait_ordered_range() so that it waits for all ordered extents
+Date:   Thu, 27 Feb 2020 14:37:02 +0100
+Message-Id: <20200227132228.731447085@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
 References: <20200227132211.791484803@linuxfoundation.org>
@@ -61,36 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <maowenan@huawei.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit 718eae277e62a26e5862eb72a830b5e0fe37b04a ]
+commit e75fd33b3f744f644061a4f9662bd63f5434f806 upstream.
 
-Convert cpu_to_le16(le16_to_cpu(frame->datalen) + len) to
-use le16_add_cpu(), which is more concise and does the same thing.
+In btrfs_wait_ordered_range() once we find an ordered extent that has
+finished with an error we exit the loop and don't wait for any other
+ordered extents that might be still in progress.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+All the users of btrfs_wait_ordered_range() expect that there are no more
+ordered extents in progress after that function returns. So past fixes
+such like the ones from the two following commits:
+
+  ff612ba7849964 ("btrfs: fix panic during relocation after ENOSPC before
+                   writeback happens")
+
+  28aeeac1dd3080 ("Btrfs: fix panic when starting bg cache writeout after
+                   IO error")
+
+don't work when there are multiple ordered extents in the range.
+
+Fix that by making btrfs_wait_ordered_range() wait for all ordered extents
+even after it finds one that had an error.
+
+Link: https://github.com/kdave/btrfs-progs/issues/228#issuecomment-569777554
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/nfc/port100.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/ordered-data.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nfc/port100.c b/drivers/nfc/port100.c
-index 87d5099967040..3ffbed72adf75 100644
---- a/drivers/nfc/port100.c
-+++ b/drivers/nfc/port100.c
-@@ -545,7 +545,7 @@ static void port100_tx_update_payload_len(void *_frame, int len)
- {
- 	struct port100_frame *frame = _frame;
- 
--	frame->datalen = cpu_to_le16(le16_to_cpu(frame->datalen) + len);
-+	le16_add_cpu(&frame->datalen, len);
- }
- 
- static bool port100_rx_frame_is_valid(void *_frame)
--- 
-2.20.1
-
+--- a/fs/btrfs/ordered-data.c
++++ b/fs/btrfs/ordered-data.c
+@@ -820,10 +820,15 @@ int btrfs_wait_ordered_range(struct inod
+ 		}
+ 		btrfs_start_ordered_extent(inode, ordered, 1);
+ 		end = ordered->file_offset;
++		/*
++		 * If the ordered extent had an error save the error but don't
++		 * exit without waiting first for all other ordered extents in
++		 * the range to complete.
++		 */
+ 		if (test_bit(BTRFS_ORDERED_IOERR, &ordered->flags))
+ 			ret = -EIO;
+ 		btrfs_put_ordered_extent(ordered);
+-		if (ret || end == 0 || end == start)
++		if (end == 0 || end == start)
+ 			break;
+ 		end--;
+ 	}
 
 
