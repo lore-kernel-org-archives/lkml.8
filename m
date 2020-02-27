@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6C7C52D47
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4F1C52D39
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8207120578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:03:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B327424656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:06:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812223;
-	bh=yljGhkhRq4nXZdwCxwo6gP36mgnl7HYuxDNXTLxi0cw=;
+	s=default; t=1582812367;
+	bh=Nrda/e+TI3z53Jr29+WV9NkQUgv+EIWLfO9aFVyzn7s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T6zpBzYwhQBNzsDoWHuyvA6zbH8VPs/usCfHTt/xwbMSMoVJ8F3Pm0OoYD4JDqrlY
-	 yR9oWQHWZaidSVUU7YTK1pxwa2b54WRuN7ExbKpfHsnYvaMIkUg3Rabn2eEOHFeH4L
-	 77WWOLASQpPzGaqp+ZzdsqnKeUK2csdBhCRr2iyg=
+	b=KKTLel6lseBVgsBKmWbPgRJ0prTq4Ovq06HP/amYbTm4dA3s6lLRlE5+qS39zZz2P
+	 aBwdkETJFdkKL7WYXLUgggtwJUKRlBFsCHbMrxrg0Grkq5ExSn41xfxkd5d0R3tkIf
+	 xhgitYNHEzMOW3bzzRnBXFkMlrlS5lHAyEICZOIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387457AbgB0ODm (ORCPT
+        id S2387889AbgB0OGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:03:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39132 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:06:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732738AbgB0ODj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:03:39 -0500
+        id S2387871AbgB0OGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:06:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A36DC20578;
-        Thu, 27 Feb 2020 14:03:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0C4020578;
+        Thu, 27 Feb 2020 14:06:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812219;
-        bh=yljGhkhRq4nXZdwCxwo6gP36mgnl7HYuxDNXTLxi0cw=;
+        s=default; t=1582812363;
+        bh=Nrda/e+TI3z53Jr29+WV9NkQUgv+EIWLfO9aFVyzn7s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CMs6sfWRM0yETAH7d6Qf/r1TZgNfeKgv+MXBPKJm6PmeDhfxucZCCG+jByMc7AHnp
-         vHabGUINk5rqLKZN48gKVY49wb26yhvM/3YrBem+H4NexPIssRhORUNKRIlg8rAg1C
-         aP4KUXPnPkWo/nXmpQOzdQidJ+BgitPRUcb8skqk=
+        b=n/nyoc+Dl//6yYaKBalz0hBZUyTS1EjM0fd2YPteC0sRB5GICoOr+DA40GFWWPXRG
+         RkyT2xq6ZYgMi2ZCo+kVHz9ZoE4NirLF4EBzMK+8epLOgBgZkDzwLErqjoKr1iXCOl
+         s8I1bUZ6bRWnxxiEGjXXvhP/KRVeoYj5ikxPtjFM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pietro Oliva <pietroliva@gmail.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>
-Subject: [PATCH 4.19 31/97] staging: rtl8188eu: Fix potential security hole
-Date:   Thu, 27 Feb 2020 14:36:39 +0100
-Message-Id: <20200227132219.693650313@linuxfoundation.org>
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Tyler Hicks <code@tyhicks.com>
+Subject: [PATCH 4.19 86/97] ecryptfs: replace BUG_ON with error handling code
+Date:   Thu, 27 Feb 2020 14:37:34 +0100
+Message-Id: <20200227132228.648637738@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
 References: <20200227132214.553656188@linuxfoundation.org>
@@ -59,40 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Larry Finger <Larry.Finger@lwfinger.net>
+From: Aditya Pakki <pakki001@umn.edu>
 
-commit 499c405b2b80bb3a04425ba3541d20305e014d3e upstream.
+commit 2c2a7552dd6465e8fde6bc9cccf8d66ed1c1eb72 upstream.
 
-In routine rtw_hostapd_ioctl(), the user-controlled p->length is assumed
-to be at least the size of struct ieee_param size, but this assumption is
-never checked. This could result in out-of-bounds read/write on kernel
-heap in case a p->length less than the size of struct ieee_param is
-specified by the user. If p->length is allowed to be greater than the size
-of the struct, then a malicious user could be wasting kernel memory.
-Fixes commit a2c60d42d97c ("Add files for new driver - part 16").
+In crypt_scatterlist, if the crypt_stat argument is not set up
+correctly, the kernel crashes. Instead, by returning an error code
+upstream, the error is handled safely.
 
-Reported by: Pietro Oliva <pietroliva@gmail.com>
-Cc: Pietro Oliva <pietroliva@gmail.com>
-Cc: Stable <stable@vger.kernel.org>
-Fixes: a2c60d42d97c ("staging: r8188eu: Add files for new driver - part 16")
-Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
-Link: https://lore.kernel.org/r/20200210180235.21691-2-Larry.Finger@lwfinger.net
+The issue is detected via a static analysis tool written by us.
+
+Fixes: 237fead619984 (ecryptfs: fs/Makefile and fs/Kconfig)
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Tyler Hicks <code@tyhicks.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/rtl8188eu/os_dep/ioctl_linux.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ecryptfs/crypto.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
-+++ b/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
-@@ -2819,7 +2819,7 @@ static int rtw_hostapd_ioctl(struct net_
- 		goto out;
- 	}
+--- a/fs/ecryptfs/crypto.c
++++ b/fs/ecryptfs/crypto.c
+@@ -325,8 +325,10 @@ static int crypt_scatterlist(struct ecry
+ 	struct extent_crypt_result ecr;
+ 	int rc = 0;
  
--	if (!p->pointer) {
-+	if (!p->pointer || p->length != sizeof(struct ieee_param)) {
- 		ret = -EINVAL;
- 		goto out;
- 	}
+-	BUG_ON(!crypt_stat || !crypt_stat->tfm
+-	       || !(crypt_stat->flags & ECRYPTFS_STRUCT_INITIALIZED));
++	if (!crypt_stat || !crypt_stat->tfm
++	       || !(crypt_stat->flags & ECRYPTFS_STRUCT_INITIALIZED))
++		return -EINVAL;
++
+ 	if (unlikely(ecryptfs_verbosity > 0)) {
+ 		ecryptfs_printk(KERN_DEBUG, "Key size [%zd]; key:\n",
+ 				crypt_stat->key_size);
 
 
