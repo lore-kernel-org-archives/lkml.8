@@ -2,113 +2,94 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2502BC52D22
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA65AC3F37E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01E1224691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F85324690
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582812962;
+	bh=zQeizCffnB1LJCg2rOWfOBUAYS1E15OjIszt8+jnfws=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ZTtUGlZxoeOa4MJl+uDIYcbbbOlvZUMOxCg5gePSbq2V9RqFNF5lKr/PBowH6/IlY
+	 YwlgASeb+c8aK8iAqrlBAU7F8VArFP93SF4zWNXlu8h/C5btirPaUdJAGfjjKpH2Dp
+	 rtqV6pnvRKSFHt0zjEz32ajLneHnenr1MdJUvHYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389458AbgB0OQN (ORCPT
+        id S2388871AbgB0OQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:16:13 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:34446 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389389AbgB0OQF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:16:05 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1j7JxF-0005AY-KQ; Thu, 27 Feb 2020 15:15:57 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4DAA81C2170;
-        Thu, 27 Feb 2020 15:15:57 +0100 (CET)
-Date:   Thu, 27 Feb 2020 14:15:57 -0000
-From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/entry] x86/irq: Remove useless return value from do_IRQ()
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200225220216.826870369@linutronix.de>
-References: <20200225220216.826870369@linutronix.de>
+        Thu, 27 Feb 2020 09:16:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55638 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389390AbgB0OPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:15:55 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA6BE24691;
+        Thu, 27 Feb 2020 14:15:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582812955;
+        bh=zQeizCffnB1LJCg2rOWfOBUAYS1E15OjIszt8+jnfws=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JdVvGlAkHF5Xb665Z+SPfLy9qq/6+2Fv8Xa10p0eujLjv3YRiUTjmxRKNC49idoKi
+         HkFNUgg6+aMckR+YyyCKFvnjSUqNaf5UqKW3UezayUe2c4B2h6gpl3XvJftmwnWC02
+         cXCzWR3LGkC5hUGHhVVvvd+A3lCPbmoQ5VlGKuWY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.5 080/150] drm/amdgpu/soc15: fix xclk for raven
+Date:   Thu, 27 Feb 2020 14:36:57 +0100
+Message-Id: <20200227132244.671582138@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
+References: <20200227132232.815448360@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Message-ID: <158281295706.28353.9151423427467602652.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/entry branch of tip:
+From: Alex Deucher <alexander.deucher@amd.com>
 
-Commit-ID:     17dbedb5da184b501c5c51fc78d1071005139e48
-Gitweb:        https://git.kernel.org/tip/17dbedb5da184b501c5c51fc78d1071005139e48
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Tue, 25 Feb 2020 22:36:43 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 27 Feb 2020 14:48:40 +01:00
+commit c657b936ea98630ef5ba4f130ab1ad5c534d0165 upstream.
 
-x86/irq: Remove useless return value from do_IRQ()
+It's 25 Mhz (refclk / 4).  This fixes the interpretation
+of the rlc clock counter.
 
-Nothing is using it.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
-Reviewed-by: Andy Lutomirski <luto@kernel.org>
-Link: https://lkml.kernel.org/r/20200225220216.826870369@linutronix.de
+Acked-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/irq.h | 2 +-
- arch/x86/kernel/irq.c      | 3 +--
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/soc15.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/irq.h b/arch/x86/include/asm/irq.h
-index a176f61..72fba0e 100644
---- a/arch/x86/include/asm/irq.h
-+++ b/arch/x86/include/asm/irq.h
-@@ -36,7 +36,7 @@ extern void native_init_IRQ(void);
+--- a/drivers/gpu/drm/amd/amdgpu/soc15.c
++++ b/drivers/gpu/drm/amd/amdgpu/soc15.c
+@@ -270,7 +270,12 @@ static u32 soc15_get_config_memsize(stru
  
- extern void handle_irq(struct irq_desc *desc, struct pt_regs *regs);
- 
--extern __visible unsigned int do_IRQ(struct pt_regs *regs);
-+extern __visible void do_IRQ(struct pt_regs *regs);
- 
- extern void init_ISA_irqs(void);
- 
-diff --git a/arch/x86/kernel/irq.c b/arch/x86/kernel/irq.c
-index 21efee3..c7965ff 100644
---- a/arch/x86/kernel/irq.c
-+++ b/arch/x86/kernel/irq.c
-@@ -230,7 +230,7 @@ u64 arch_irq_stat(void)
-  * SMP cross-CPU interrupts have their own specific
-  * handlers).
-  */
--__visible unsigned int __irq_entry do_IRQ(struct pt_regs *regs)
-+__visible void __irq_entry do_IRQ(struct pt_regs *regs)
+ static u32 soc15_get_xclk(struct amdgpu_device *adev)
  {
- 	struct pt_regs *old_regs = set_irq_regs(regs);
- 	struct irq_desc * desc;
-@@ -263,7 +263,6 @@ __visible unsigned int __irq_entry do_IRQ(struct pt_regs *regs)
- 	exiting_irq();
- 
- 	set_irq_regs(old_regs);
--	return 1;
+-	return adev->clock.spll.reference_freq;
++	u32 reference_clock = adev->clock.spll.reference_freq;
++
++	if (adev->asic_type == CHIP_RAVEN)
++		return reference_clock / 4;
++
++	return reference_clock;
  }
  
- #ifdef CONFIG_X86_LOCAL_APIC
+ 
+
+
