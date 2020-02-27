@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EEBC54FF0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5350EC3F36E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D49B20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B48E20578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:13:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812738;
-	bh=cMSeSs9L1apspwsTCjyLr96T/Czmj2HnGxFqNKSBkyQ=;
+	s=default; t=1582812813;
+	bh=/Z1FwlrqAQpiZx5xw6ycJeKA6LZrTe39tMRJSFipyms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rJrNj82y03mG1KZvhCwhsPNdpJZus/B2EkvUTm6JaAsPns6AWl2SSjYzqCeFWHReb
-	 WY5lNshvU04zT0JZad4R9sT1JxoOUSsKrYa24eOodM2RjIdmhPEnSsIiB9++LwPjRb
-	 a8GUzdhHxVtDRkzZlnY5rKQlYEl7WHcR0ix3rq1Q=
+	b=MGcHBz2UEM/qhh/mDx12t/RB7LcpR7RfK1njQ/TbSkrcNa5BRRSjtrjZ9vjqm84hs
+	 8dAin95Ksdxr6HEkUhXeL226/qHxsKITJ+W48vB960jOc+VST8BQCKPD7GYLkJyT3f
+	 8nqJR84Lj2JsyXq3ECLE29qCdCVsfsdtsyHGRhaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388630AbgB0OMR (ORCPT
+        id S1730812AbgB0ONb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:12:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50890 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:13:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729744AbgB0OMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:12:14 -0500
+        id S2388787AbgB0ONY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:13:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 952BA24690;
-        Thu, 27 Feb 2020 14:12:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6071024697;
+        Thu, 27 Feb 2020 14:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812734;
-        bh=cMSeSs9L1apspwsTCjyLr96T/Czmj2HnGxFqNKSBkyQ=;
+        s=default; t=1582812803;
+        bh=/Z1FwlrqAQpiZx5xw6ycJeKA6LZrTe39tMRJSFipyms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sGYQSoSb86LUKdtEt8pzhjAhBklAvJCr+LAj07DU9NapdRco6ZKB26mXKrlKJoxnE
-         iG0I3YpG/FuTiLB9ipvF59tT2Fhz3gMFAm4N8tEmLiEJhXcFEn6AezHm2CRZGoK1XC
-         1YOrUPmmck4NizORZI6eLCkuJlnRnfrCNs2z+79o=
+        b=III6pwndXVrDw2sSpMB/o/8vLZaJIppbhhZM46tJC9JvJYOl6KOO2jgzC69HcsvEB
+         v2zim9nMNhcrRjE85UZSjiU96kP7CqEF0VNcLSu/nVRsLbewu1ZS2Tr+JoL3Oa5AQk
+         KzH8zacm7dkC0OQdvUGG4x63shNDoV7jwrDe8/wE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huy Nguyen <huyn@mellanox.com>,
-        Mark Bloch <markb@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.4 131/135] net/mlx5: Fix sleep while atomic in mlx5_eswitch_get_vepa
-Date:   Thu, 27 Feb 2020 14:37:51 +0100
-Message-Id: <20200227132248.736682625@linuxfoundation.org>
+        stable@vger.kernel.org, Jerry Snitselaar <jsnitsel@redhat.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 5.5 004/150] iommu/vt-d: Do deferred attachment in iommu_need_mapping()
+Date:   Thu, 27 Feb 2020 14:35:41 +0100
+Message-Id: <20200227132233.391493066@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
-References: <20200227132228.710492098@linuxfoundation.org>
+In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
+References: <20200227132232.815448360@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,61 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huy Nguyen <huyn@mellanox.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-commit 3d9c5e023a0dbf3e117bb416cfefd9405bf5af0c upstream.
+commit a11bfde9c77df1fd350ea27169ab921f511bf5d0 upstream.
 
-rtnl_bridge_getlink is protected by rcu lock, so mlx5_eswitch_get_vepa
-cannot take mutex lock. Two possible issues can happen:
-1. User at the same time change vepa mode via RTM_SETLINK command.
-2. User at the same time change the switchdev mode via devlink netlink
-interface.
+The attachment of deferred devices needs to happen before the check
+whether the device is identity mapped or not. Otherwise the check will
+return wrong results, cause warnings boot failures in kdump kernels, like
 
-Case 1 cannot happen because rtnl executes one message in order.
-Case 2 can happen but we do not expect user to change the switchdev mode
-when changing vepa. Even if a user does it, so he will read a value
-which is no longer valid.
+	WARNING: CPU: 0 PID: 318 at ../drivers/iommu/intel-iommu.c:592 domain_get_iommu+0x61/0x70
 
-Fixes: 8da202b24913 ("net/mlx5: E-Switch, Add support for VEPA in legacy mode.")
-Signed-off-by: Huy Nguyen <huyn@mellanox.com>
-Reviewed-by: Mark Bloch <markb@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+	[...]
+
+	 Call Trace:
+	  __intel_map_single+0x55/0x190
+	  intel_alloc_coherent+0xac/0x110
+	  dmam_alloc_attrs+0x50/0xa0
+	  ahci_port_start+0xfb/0x1f0 [libahci]
+	  ata_host_start.part.39+0x104/0x1e0 [libata]
+
+With the earlier check the kdump boot succeeds and a crashdump is written.
+
+Fixes: 1ee0186b9a12 ("iommu/vt-d: Refactor find_domain() helper")
+Cc: stable@vger.kernel.org # v5.5
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/mellanox/mlx5/core/eswitch.c |   14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+ drivers/iommu/intel-iommu.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-@@ -2319,25 +2319,17 @@ out:
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -2452,9 +2452,6 @@ static void do_deferred_attach(struct de
  
- int mlx5_eswitch_get_vepa(struct mlx5_eswitch *esw, u8 *setting)
+ static struct dmar_domain *deferred_attach_domain(struct device *dev)
  {
--	int err = 0;
+-	if (unlikely(attach_deferred(dev)))
+-		do_deferred_attach(dev);
 -
- 	if (!esw)
- 		return -EOPNOTSUPP;
- 
- 	if (!ESW_ALLOWED(esw))
- 		return -EPERM;
- 
--	mutex_lock(&esw->state_lock);
--	if (esw->mode != MLX5_ESWITCH_LEGACY) {
--		err = -EOPNOTSUPP;
--		goto out;
--	}
-+	if (esw->mode != MLX5_ESWITCH_LEGACY)
-+		return -EOPNOTSUPP;
- 
- 	*setting = esw->fdb_table.legacy.vepa_uplink_rule ? 1 : 0;
--
--out:
--	mutex_unlock(&esw->state_lock);
--	return err;
-+	return 0;
+ 	return find_domain(dev);
  }
  
- int mlx5_eswitch_set_vport_trust(struct mlx5_eswitch *esw,
+@@ -3478,6 +3475,9 @@ static bool iommu_need_mapping(struct de
+ 	if (iommu_dummy(dev))
+ 		return false;
+ 
++	if (unlikely(attach_deferred(dev)))
++		do_deferred_attach(dev);
++
+ 	ret = identity_mapping(dev);
+ 	if (ret) {
+ 		u64 dma_mask = *dev->dma_mask;
+@@ -3841,7 +3841,11 @@ bounce_map_single(struct device *dev, ph
+ 	int prot = 0;
+ 	int ret;
+ 
++	if (unlikely(attach_deferred(dev)))
++		do_deferred_attach(dev);
++
+ 	domain = deferred_attach_domain(dev);
++
+ 	if (WARN_ON(dir == DMA_NONE || !domain))
+ 		return DMA_MAPPING_ERROR;
+ 
 
 
