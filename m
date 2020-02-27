@@ -2,108 +2,120 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E19FAC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC737C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C00CA24656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:39:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B35A024697
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:39:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582814392;
+	bh=SpY9AsGdg7XlSt1I/aCb8556rHUzr0sSJiiICFBDHVI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=vxCUKMJxqxs6COvT5vsu8lbZrkFu41z24ZorOEpQUAnz3+KFzqhQAUyV6NUyStTcN
+	 i8IuIwFP1qw7pXSCzcxjvS8zZibof0YaMyPRPvjDU0+HQNHg68kV9cQiJHDQARDekf
+	 nMaNUci3cAo70UfMKx8TeQfCKslMDs50qCx3u1/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732072AbgB0Ojp (ORCPT
+        id S2387739AbgB0Ojv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:39:45 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:61500 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731544AbgB0Ojn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:39:43 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01REbHvm009184;
-        Thu, 27 Feb 2020 09:39:41 -0500
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ydtrwkewr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Feb 2020 09:39:41 -0500
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 01REdd3f005544
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Thu, 27 Feb 2020 09:39:40 -0500
-Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
- SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 27 Feb 2020 06:39:38 -0800
-Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
- SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 27 Feb 2020 06:39:38 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Thu, 27 Feb 2020 06:39:38 -0800
-Received: from analog.ad.analog.com ([10.48.65.180])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01REdZr5031327;
-        Thu, 27 Feb 2020 09:39:36 -0500
-From:   Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-To:     <broonie@kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-Subject: [PATCH v2] spi: spi-mpc52xx: Use new structure for SPI transfer delays
-Date:   Thu, 27 Feb 2020 16:39:31 +0200
-Message-ID: <20200227143931.20688-1-sergiu.cuciurean@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200227142131.14940-1-sergiu.cuciurean@analog.com>
-References: <20200227142131.14940-1-sergiu.cuciurean@analog.com>
+        Thu, 27 Feb 2020 09:39:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731863AbgB0NyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:54:23 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E93992469F;
+        Thu, 27 Feb 2020 13:54:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582811663;
+        bh=SpY9AsGdg7XlSt1I/aCb8556rHUzr0sSJiiICFBDHVI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vWa8cTXM2exAdpckCzEF8KmkyCwfY+iCVZAXeImCCr0NZsmyscTUi8fkJ/qsoa3jc
+         aijD1tkvLj+QDlIbPf36+YJYCQOw2witPpDFQr7Fk2kSiaStvQdcg2KABneOQRM4e8
+         KZZjzJg2ScyxCHaAJLQX4VTs27C2CqJWHBAfFn3Q=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 053/237] pinctrl: baytrail: Do not clear IRQ flags on direct-irq enabled pins
+Date:   Thu, 27 Feb 2020 14:34:27 +0100
+Message-Id: <20200227132300.699040454@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
+References: <20200227132255.285644406@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-27_04:2020-02-26,2020-02-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- phishscore=0 adultscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- suspectscore=0 clxscore=1015 lowpriorityscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002270116
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In a recent change to the SPI subsystem [1], a new `delay` struct was added
-to replace the `delay_usecs`. This change replaces the current
-`delay_usecs` with `delay` for this driver.
+From: Hans de Goede <hdegoede@redhat.com>
 
-The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
-that both `delay_usecs` & `delay` are used (in this order to preserve
-backwards compatibility).
+[ Upstream commit a23680594da7a9e2696dbcf4f023e9273e2fa40b ]
 
-[1] commit bebcfd272df6 ("spi: introduce `delay` field for
-`spi_transfer` + spi_transfer_delay_exec()")
-Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+Suspending Goodix touchscreens requires changing the interrupt pin to
+output before sending them a power-down command. Followed by wiggling
+the interrupt pin to wake the device up, after which it is put back
+in input mode.
+
+On Bay Trail devices with a Goodix touchscreen direct-irq mode is used
+in combination with listing the pin as a normal GpioIo resource.
+
+This works fine, until the goodix driver gets rmmod-ed and then insmod-ed
+again. In this case byt_gpio_disable_free() calls
+byt_gpio_clear_triggering() which clears the IRQ flags and after that the
+(direct) IRQ no longer triggers.
+
+This commit fixes this by adding a check for the BYT_DIRECT_IRQ_EN flag
+to byt_gpio_clear_triggering().
+
+Note that byt_gpio_clear_triggering() only gets called from
+byt_gpio_disable_free() for direct-irq enabled pins, as these are excluded
+from the irq_valid mask by byt_init_irq_valid_mask().
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
+ drivers/pinctrl/intel/pinctrl-baytrail.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-Changelog v1->v2:
-*Increment the timestamp only if the delay unit is microseconds
-
- drivers/spi/spi-mpc52xx.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/spi/spi-mpc52xx.c b/drivers/spi/spi-mpc52xx.c
-index ef2f24420460..36f941500676 100644
---- a/drivers/spi/spi-mpc52xx.c
-+++ b/drivers/spi/spi-mpc52xx.c
-@@ -248,7 +248,9 @@ static int mpc52xx_spi_fsmstate_transfer(int irq, struct mpc52xx_spi *ms,
- 	ms->len--;
- 	if (ms->len == 0) {
- 		ms->timestamp = get_tbl();
--		ms->timestamp += ms->transfer->delay_usecs * tb_ticks_per_usec;
-+		if (ms->transfer->delay.unit == SPI_DELAY_UNIT_USECS)
-+			ms->timestamp += ms->transfer->delay.value *
-+					 tb_ticks_per_usec;
- 		ms->state = mpc52xx_spi_fsmstate_wait;
- 		return FSM_CONTINUE;
- 	}
+diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
+index 9df5d29d708da..4fb3e44f91331 100644
+--- a/drivers/pinctrl/intel/pinctrl-baytrail.c
++++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
+@@ -958,7 +958,13 @@ static void byt_gpio_clear_triggering(struct byt_gpio *vg, unsigned int offset)
+ 
+ 	raw_spin_lock_irqsave(&byt_lock, flags);
+ 	value = readl(reg);
+-	value &= ~(BYT_TRIG_POS | BYT_TRIG_NEG | BYT_TRIG_LVL);
++
++	/* Do not clear direct-irq enabled IRQs (from gpio_disable_free) */
++	if (value & BYT_DIRECT_IRQ_EN)
++		/* nothing to do */ ;
++	else
++		value &= ~(BYT_TRIG_POS | BYT_TRIG_NEG | BYT_TRIG_LVL);
++
+ 	writel(value, reg);
+ 	raw_spin_unlock_irqrestore(&byt_lock, flags);
+ }
 -- 
-2.17.1
+2.20.1
+
+
 
