@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94010C3F378
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F2CC35E17
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CE1821D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 583632073D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:55:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811746;
-	bh=aWR6Zu59hi5VElOSxItFdgqNPM+v1/JlONAk1/B1yCk=;
+	s=default; t=1582811748;
+	bh=PAiwqRBxUoQ/vvOwZ73K+tg+Kycbas86H93TYURpEm4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MRhLuKnfv0iSV4PfuanW2qGGuskVmyFZ+CKEbW4kMSyY1sjnWrbr33D1B4zOj4uy+
-	 sysyDAgyW1rd94hjvNTQXCQuznQVZ2Jt4caazmZh+xCaFE05/1/cmprUtXYHhlnF4n
-	 8FHLP/h7RdN9ZQvEDwMeKMSUnGoLC8wZO8ue+OmM=
+	b=hJPxjQWTykQyEX6UXlgJk1KIjXUTR8sSeRLztKBR6j0UaL3pRr0qcwq5NDOvEq6jX
+	 UMUt0M4pYuwSUfyyKz9XXWLVO+coeLSuUlHPxTBFxzWMrP5x+12V2FsuqKHRn2zADF
+	 6t3FY+M8YlKTXQaCgDCiWF2YlgZl4mvdw+IpiV9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732017AbgB0Nzo (ORCPT
+        id S1731752AbgB0Nzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:55:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56004 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:55:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732005AbgB0Nzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:55:42 -0500
+        id S1731601AbgB0Nzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:55:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 823F624656;
-        Thu, 27 Feb 2020 13:55:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA35821D7E;
+        Thu, 27 Feb 2020 13:55:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811741;
-        bh=aWR6Zu59hi5VElOSxItFdgqNPM+v1/JlONAk1/B1yCk=;
+        s=default; t=1582811743;
+        bh=PAiwqRBxUoQ/vvOwZ73K+tg+Kycbas86H93TYURpEm4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zGvh0OVSwVtk1jW20P4F5ytRT05wqmTSq8UO47n66pBSrtcn46gi/UlKTpWc5nfDo
-         7GSwTvdj3W6O4v5Ncevj/5d8MPVR1KtV+MDyxAVoFqM91B8OwWbOV8aawpTo410LLo
-         MVwgSsmkdJVjOS2ZEtwYZKJvPVd2zm6EkWxv7/0s=
+        b=WPw04SMmlCWStl3OGcPyKDshAzzdcPA8/hEEpOSmUEO2yZ8Hc/Rqdp1o5XLVvoeSF
+         sr/wR7h63cmYaJ2j4T1W6ftDOeut6TkK/XR31JYwTJBzy8dI/6Q0P3hjNuSzW/w6O5
+         vVE+YRUKrKmIdfpreyLk4pQtXcZwM0Zrlz8o78is=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Kees Cook <keescook@chromium.org>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 084/237] iwlegacy: Fix -Wcast-function-type
-Date:   Thu, 27 Feb 2020 14:34:58 +0100
-Message-Id: <20200227132303.254491343@linuxfoundation.org>
+Subject: [PATCH 4.14 085/237] rtlwifi: rtl_pci: Fix -Wcast-function-type
+Date:   Thu, 27 Feb 2020 14:34:59 +0100
+Message-Id: <20200227132303.320137284@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -63,7 +63,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Phong Tran <tranmanphong@gmail.com>
 
-[ Upstream commit da5e57e8a6a3e69dac2937ba63fa86355628fbb2 ]
+[ Upstream commit cb775c88da5d48a85d99d95219f637b6fad2e0e9 ]
 
 correct usage prototype of callback in tasklet_init().
 Report by https://github.com/KSPP/linux/issues/20
@@ -73,58 +73,44 @@ Reviewed-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlegacy/3945-mac.c | 5 +++--
- drivers/net/wireless/intel/iwlegacy/4965-mac.c | 5 +++--
- 2 files changed, 6 insertions(+), 4 deletions(-)
+ drivers/net/wireless/realtek/rtlwifi/pci.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlegacy/3945-mac.c b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
-index 329f3a63dadd6..0fb81151a1327 100644
---- a/drivers/net/wireless/intel/iwlegacy/3945-mac.c
-+++ b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
-@@ -1399,8 +1399,9 @@ il3945_dump_nic_error_log(struct il_priv *il)
+diff --git a/drivers/net/wireless/realtek/rtlwifi/pci.c b/drivers/net/wireless/realtek/rtlwifi/pci.c
+index 457a0f725c8aa..ab74f31558540 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/pci.c
++++ b/drivers/net/wireless/realtek/rtlwifi/pci.c
+@@ -1091,13 +1091,15 @@ done:
+ 	return ret;
  }
  
- static void
--il3945_irq_tasklet(struct il_priv *il)
-+il3945_irq_tasklet(unsigned long data)
+-static void _rtl_pci_irq_tasklet(struct ieee80211_hw *hw)
++static void _rtl_pci_irq_tasklet(unsigned long data)
  {
-+	struct il_priv *il = (struct il_priv *)data;
- 	u32 inta, handled = 0;
- 	u32 inta_fh;
- 	unsigned long flags;
-@@ -3432,7 +3433,7 @@ il3945_setup_deferred_work(struct il_priv *il)
- 	setup_timer(&il->watchdog, il_bg_watchdog, (unsigned long)il);
- 
- 	tasklet_init(&il->irq_tasklet,
--		     (void (*)(unsigned long))il3945_irq_tasklet,
-+		     il3945_irq_tasklet,
- 		     (unsigned long)il);
++	struct ieee80211_hw *hw = (struct ieee80211_hw *)data;
+ 	_rtl_pci_tx_chk_waitq(hw);
  }
  
-diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
-index de9b6522c43f5..665e82effb03d 100644
---- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
-+++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
-@@ -4363,8 +4363,9 @@ il4965_synchronize_irq(struct il_priv *il)
- }
- 
- static void
--il4965_irq_tasklet(struct il_priv *il)
-+il4965_irq_tasklet(unsigned long data)
+-static void _rtl_pci_prepare_bcn_tasklet(struct ieee80211_hw *hw)
++static void _rtl_pci_prepare_bcn_tasklet(unsigned long data)
  {
-+	struct il_priv *il = (struct il_priv *)data;
- 	u32 inta, handled = 0;
- 	u32 inta_fh;
- 	unsigned long flags;
-@@ -6264,7 +6265,7 @@ il4965_setup_deferred_work(struct il_priv *il)
- 	setup_timer(&il->watchdog, il_bg_watchdog, (unsigned long)il);
++	struct ieee80211_hw *hw = (struct ieee80211_hw *)data;
+ 	struct rtl_priv *rtlpriv = rtl_priv(hw);
+ 	struct rtl_pci *rtlpci = rtl_pcidev(rtl_pcipriv(hw));
+ 	struct rtl_mac *mac = rtl_mac(rtl_priv(hw));
+@@ -1223,10 +1225,10 @@ static void _rtl_pci_init_struct(struct ieee80211_hw *hw,
  
- 	tasklet_init(&il->irq_tasklet,
--		     (void (*)(unsigned long))il4965_irq_tasklet,
-+		     il4965_irq_tasklet,
- 		     (unsigned long)il);
- }
- 
+ 	/*task */
+ 	tasklet_init(&rtlpriv->works.irq_tasklet,
+-		     (void (*)(unsigned long))_rtl_pci_irq_tasklet,
++		     _rtl_pci_irq_tasklet,
+ 		     (unsigned long)hw);
+ 	tasklet_init(&rtlpriv->works.irq_prepare_bcn_tasklet,
+-		     (void (*)(unsigned long))_rtl_pci_prepare_bcn_tasklet,
++		     _rtl_pci_prepare_bcn_tasklet,
+ 		     (unsigned long)hw);
+ 	INIT_WORK(&rtlpriv->works.lps_change_work,
+ 		  rtl_lps_change_work_callback);
 -- 
 2.20.1
 
