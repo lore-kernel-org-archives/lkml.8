@@ -2,107 +2,122 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D685FC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E72C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B670724680
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CD192467B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:20:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TG7xD62g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730125AbgB0TSK (ORCPT
+        id S1730173AbgB0TUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 14:18:10 -0500
-Received: from outbound-smtp26.blacknight.com ([81.17.249.194]:41420 "EHLO
-        outbound-smtp26.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729418AbgB0TSJ (ORCPT
+        Thu, 27 Feb 2020 14:20:33 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33315 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729593AbgB0TUc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 14:18:09 -0500
-Received: from mail.blacknight.com (pemlinmail05.blacknight.ie [81.17.254.26])
-        by outbound-smtp26.blacknight.com (Postfix) with ESMTPS id 15F3CCAB1D
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 19:18:07 +0000 (GMT)
-Received: (qmail 21014 invoked from network); 27 Feb 2020 19:18:06 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 27 Feb 2020 19:18:06 -0000
-Date:   Thu, 27 Feb 2020 19:18:04 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Qian Cai <cai@lca.pw>, Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        paulmck@kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] sched/numa: Acquire RCU lock for checking idle cores during
- NUMA balancing
-Message-ID: <20200227191804.GJ3818@techsingularity.net>
+        Thu, 27 Feb 2020 14:20:32 -0500
+Received: by mail-lj1-f195.google.com with SMTP id y6so539718lji.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 11:20:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wD0YMiaevfN+rD/Y82hagTpEJtCW8Y8b9WogafbNlr4=;
+        b=TG7xD62gYjK7JebjkwSkRbrtK7tgXmZfvP3BlvPcKRsY+UWUX/GDsGuX3IdePtnuL8
+         A7STMFwgkh3q8DBiCkD1Bd4hO3+xgTGI6Rq9MvE3DdiY4jZbP8Ws8SxibxjDpIUDWAFj
+         e5zse9h6xkdEo25W4b5f/heAsIPtHGyjPhWWm3VTiA1CPmNZ2t/Ob9GZN/ywhaBuxI3U
+         6WOqdFskbcxvcsOBubvozsLBge6ki61QQ7YAPKWQ0eM5dBu0OLHiS1C0ZhZ0QxUPyjf8
+         nd+oDjh4DmcwDiFwq+Ffe2Bo+TNWnIzO/dqfvqqg3kUFcXFc3y26crYwUrywzFSOKFid
+         7AuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wD0YMiaevfN+rD/Y82hagTpEJtCW8Y8b9WogafbNlr4=;
+        b=EdPjm11j+N/frLzni12Wf08vUrX19ezMDDNg24zqupR8gieisGVK6bvle01X0RpxXS
+         pRpwml/gLWc3UCdWyckYFrE8tqnj5hb0m31Pz6mRJVNTJkM+y1UdJDgHfZQGCQ7GYggZ
+         q7aylYe+OpQZ7+XLbGhtLQRfIYW3bWkF1pZXDlNL6TU5paLH+7r+PJvNl/w2tmY+iJdE
+         dmuE3BYMHL8+zNTt0a1R545B1Ne5glJJGUYaD6rSnqyeVTLHgIexF1f3QyS7HToQfeXg
+         BEMP11j6qicqm6OfhBdqJkaf29Ywi8v4YDA4PXlPhNt93sfYH3MRr+3tq+5WnuFyhBMZ
+         SmYw==
+X-Gm-Message-State: ANhLgQ26ba1kq+Fl1jlYxuxng5CECYo6BiaRHJe5hWpjbKc29ZXBU4BZ
+        D2xK+IqU5nNiwQ1eDo88Xy4EajRL9pHvRkD+NqY0Xg==
+X-Google-Smtp-Source: ADFU+vvhHL5c/vts6JKe9eR57rFbjH1YdyPqVOP0IJ/L10WMTLbiZ+hO3YSZtqAZvRhxSzUSGJh4bbXuP9SeiXRl7A4=
+X-Received: by 2002:a05:651c:555:: with SMTP id q21mr333700ljp.241.1582831230661;
+ Thu, 27 Feb 2020 11:20:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200227174430.26371-1-sean.j.christopherson@intel.com>
+In-Reply-To: <20200227174430.26371-1-sean.j.christopherson@intel.com>
+From:   Oliver Upton <oupton@google.com>
+Date:   Thu, 27 Feb 2020 11:20:19 -0800
+Message-ID: <CAOQ_Qsg6z4d1oc0-rHQZW_7U9sLtjkAjifbpbGaoQK_Sg9gg1Q@mail.gmail.com>
+Subject: Re: [PATCH] KVM: nVMX: Consult only the "basic" exit reason when
+ routing nested exit
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Xiaoyao Li <xiaoyao.li@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qian Cai reported the following
-
-  The linux-next commit ff7db0bf24db ("sched/numa: Prefer using an idle CPU as a
-  migration target instead of comparing tasks") introduced a boot warning,
-
-  [   86.520534][    T1] WARNING: suspicious RCU usage
-  [   86.520540][    T1] 5.6.0-rc3-next-20200227 #7 Not tainted
-  [   86.520545][    T1] -----------------------------
-  [   86.520551][    T1] kernel/sched/fair.c:5914 suspicious rcu_dereference_check() usage!
-  [   86.520555][    T1]
-  [   86.520555][    T1] other info that might help us debug this:
-  [   86.520555][    T1]
-  [   86.520561][    T1]
-  [   86.520561][    T1] rcu_scheduler_active = 2, debug_locks = 1
-  [   86.520567][    T1] 1 lock held by systemd/1:
-  [   86.520571][    T1]  #0: ffff8887f4b14848 (&mm->mmap_sem#2){++++}, at: do_page_fault+0x1d2/0x998
-  [   86.520594][    T1]
-  [   86.520594][    T1] stack backtrace:
-  [   86.520602][    T1] CPU: 1 PID: 1 Comm: systemd Not tainted 5.6.0-rc3-next-20200227 #7
-
-task_numa_migrate() checks for idle cores when updating NUMA-related statistics.
-This relies on reading a RCU-protected structure in test_idle_cores() via this
-call chain
-
-task_numa_migrate
-  -> update_numa_stats
-    -> numa_idle_core
-      -> test_idle_cores
-
-While the locking could be fine-grained, it is more appropriate to acquire
-the RCU lock for the entire scan of the domain. This patch removes the
-warning triggered at boot time.
-
-Fixes: ff7db0bf24db ("sched/numa: Prefer using an idle CPU as a migration target instead of comparing tasks")
-Reported-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
----
- kernel/sched/fair.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 10f9e6729fcf..1592b6d26239 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -1595,6 +1595,7 @@ static void update_numa_stats(struct task_numa_env *env,
- 	memset(ns, 0, sizeof(*ns));
- 	ns->idle_cpu = -1;
- 
-+	rcu_read_lock();
- 	for_each_cpu(cpu, cpumask_of_node(nid)) {
- 		struct rq *rq = cpu_rq(cpu);
- 
-@@ -1614,6 +1615,7 @@ static void update_numa_stats(struct task_numa_env *env,
- 			idle_core = numa_idle_core(idle_core, cpu);
- 		}
- 	}
-+	rcu_read_unlock();
- 
- 	ns->weight = cpumask_weight(cpumask_of_node(nid));
- 
+On Thu, Feb 27, 2020 at 9:47 AM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> Consult only the basic exit reason, i.e. bits 15:0 of vmcs.EXIT_REASON,
+> when determining whether a nested VM-Exit should be reflected into L1 or
+> handled by KVM in L0.
+>
+> For better or worse, the switch statement in nested_vmx_exit_reflected()
+> currently defaults to "true", i.e. reflects any nested VM-Exit without
+> dedicated logic.  Because the case statements only contain the basic
+> exit reason, any VM-Exit with modifier bits set will be reflected to L1,
+> even if KVM intended to handle it in L0.
+>
+> Practically speaking, this only affects EXIT_REASON_MCE_DURING_VMENTRY,
+> i.e. a #MC that occurs on nested VM-Enter would be incorrectly routed to
+> L1, as "failed VM-Entry" is the only modifier that KVM can currently
+> encounter.  The SMM modifiers will never be generated as KVM doesn't
+> support/employ a SMI Transfer Monitor.  Ditto for "exit from enclave",
+> as KVM doesn't yet support virtualizing SGX, i.e. it's impossible to
+> enter an enclave in a KVM guest (L1 or L2).
+>
+> Fixes: 644d711aa0e1 ("KVM: nVMX: Deciding if L0 or L1 should handle an L2 exit")
+> Cc: Jim Mattson <jmattson@google.com>
+> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/vmx/nested.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index 0946122a8d3b..127065bbde2c 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -5554,7 +5554,7 @@ bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason)
+>                                 vmcs_read32(VM_EXIT_INTR_ERROR_CODE),
+>                                 KVM_ISA_VMX);
+>
+> -       switch (exit_reason) {
+> +       switch ((u16)exit_reason) {
+>         case EXIT_REASON_EXCEPTION_NMI:
+>                 if (is_nmi(intr_info))
+>                         return false;
+> --
+> 2.24.1
+>
+Reviewed-by: Oliver Upton <oupton@google.com>
