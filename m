@@ -2,55 +2,54 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A970C3F348
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43584C3F358
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FAA620726
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:44:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1089120726
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:45:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811060;
-	bh=SBthw1y1SCy+Et+NPmFWXARheYZUgLQBwqsZ6puPn8I=;
+	s=default; t=1582811138;
+	bh=TIjHdADiwkFjXfbpjDNPlSxovxMRHrZrzwi8QVZ2//w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G0YSOLCEiWkdOxXrE2ases2yFZHlv/BEgFZfQZ3YtSdUAK5coyir9C+BEEklm/nZa
-	 Qh7cNB3ugI5YTIPlkB9VsqbO0rJcOdOilWfnqPSBng7fNqw6oqcNxtTn/GOaPzI5b2
-	 8rgXMt9TLNl8/Ef+0xUM6QQG9oAhMjXv/SNKLyZA=
+	b=tT0pYNuV3tTWI4TEULx3HhDtvqnbmmNGCWIeOxL6VtzMJwcYvaPiI3UkdH494ykVd
+	 5XTAImWIO1Gpenj3Y8TLtQ9+G2eA3I7X57i2OwB0MxG3wEcWAWaMvSmBRlszEsvpfq
+	 foSc/BcIWx8xfQv4W7/D1IWoIvK+IyfBolf7OQxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730187AbgB0NoT (ORCPT
+        id S1729564AbgB0Nph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:44:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39728 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:45:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730178AbgB0NoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:44:15 -0500
+        id S1730387AbgB0Npd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:45:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AA0720578;
-        Thu, 27 Feb 2020 13:44:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92AF321D7E;
+        Thu, 27 Feb 2020 13:45:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811055;
-        bh=SBthw1y1SCy+Et+NPmFWXARheYZUgLQBwqsZ6puPn8I=;
+        s=default; t=1582811133;
+        bh=TIjHdADiwkFjXfbpjDNPlSxovxMRHrZrzwi8QVZ2//w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tClYiJE45bUD6Wvx0Dw6rGR91l34+wehsu9FCng1oIRxdVgQ9zs3cDRanTnSzvTN0
-         2GxJKR2mvXb3zBLiN4rPIzpPmUZJre8LAMUk5dViIbiLKOFQHVCqrXPtH6/VGQR2Za
-         AvakV9gNKrHr9HcI6DRNh8BHp2fI62tn/K5VTMKw=
+        b=HL2XC2XxsjWOcUFfkDP2iYTlXESf+Xjn31JJwOuY1l5+UKLOAgx37lW/hVGvaVjJK
+         F/Vm72ygNV4bZ4rTuLnA52DEg4yDwmlqOo2gSCfMv6wtiROk6yckB+YCBX9vX+WWJX
+         hn8bMwfKxFh1zYK+9Q2VSv8lrm9eqQah8dDDksr0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 060/113] drm/nouveau: Fix copy-paste error in nouveau_fence_wait_uevent_handler
-Date:   Thu, 27 Feb 2020 14:36:16 +0100
-Message-Id: <20200227132221.353543969@linuxfoundation.org>
+        stable@vger.kernel.org, Mike Jones <michael-a1.jones@analog.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.9 016/165] hwmon: (pmbus/ltc2978) Fix PMBus polling of MFR_COMMON definitions.
+Date:   Thu, 27 Feb 2020 14:34:50 +0100
+Message-Id: <20200227132233.385054696@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
-References: <20200227132211.791484803@linuxfoundation.org>
+In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
+References: <20200227132230.840899170@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,36 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Mike Jones <michael-a1.jones@analog.com>
 
-[ Upstream commit 1eb013473bff5f95b6fe1ca4dd7deda47257b9c2 ]
+commit cf2b012c90e74e85d8aea7d67e48868069cfee0c upstream.
 
-Like other cases, it should use rcu protected 'chan' rather
-than 'fence->channel' in nouveau_fence_wait_uevent_handler.
+Change 21537dc driver PMBus polling of MFR_COMMON from bits 5/4 to
+bits 6/5. This fixs a LTC297X family bug where polling always returns
+not busy even when the part is busy. This fixes a LTC388X and
+LTM467X bug where polling used PEND and NOT_IN_TRANS, and BUSY was
+not polled, which can lead to NACKing of commands. LTC388X and
+LTM467X modules now poll BUSY and PEND, increasing reliability by
+eliminating NACKing of commands.
 
-Fixes: 0ec5f02f0e2c ("drm/nouveau: prevent stale fence->channel pointers, and protect with rcu")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Mike Jones <michael-a1.jones@analog.com>
+Link: https://lore.kernel.org/r/1580234400-2829-2-git-send-email-michael-a1.jones@analog.com
+Fixes: e04d1ce9bbb49 ("hwmon: (ltc2978) Add polling for chips requiring it")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/nouveau/nouveau_fence.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwmon/pmbus/ltc2978.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_fence.c b/drivers/gpu/drm/nouveau/nouveau_fence.c
-index 574c36b492ee4..fccec23731e24 100644
---- a/drivers/gpu/drm/nouveau/nouveau_fence.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_fence.c
-@@ -157,7 +157,7 @@ nouveau_fence_wait_uevent_handler(struct nvif_notify *notify)
+--- a/drivers/hwmon/pmbus/ltc2978.c
++++ b/drivers/hwmon/pmbus/ltc2978.c
+@@ -89,8 +89,8 @@ enum chips { ltc2974, ltc2975, ltc2977,
  
- 		fence = list_entry(fctx->pending.next, typeof(*fence), head);
- 		chan = rcu_dereference_protected(fence->channel, lockdep_is_held(&fctx->lock));
--		if (nouveau_fence_update(fence->channel, fctx))
-+		if (nouveau_fence_update(chan, fctx))
- 			ret = NVIF_NOTIFY_DROP;
- 	}
- 	spin_unlock_irqrestore(&fctx->lock, flags);
--- 
-2.20.1
-
+ #define LTC_POLL_TIMEOUT		100	/* in milli-seconds */
+ 
+-#define LTC_NOT_BUSY			BIT(5)
+-#define LTC_NOT_PENDING			BIT(4)
++#define LTC_NOT_BUSY			BIT(6)
++#define LTC_NOT_PENDING			BIT(5)
+ 
+ /*
+  * LTC2978 clears peak data whenever the CLEAR_FAULTS command is executed, which
 
 
