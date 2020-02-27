@@ -2,209 +2,78 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EF4C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BA0C4BA06
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E65BC2467F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C708424683
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:11:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZCYFGPMd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CPQPsUrm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbgB0JJg (ORCPT
+        id S1728727AbgB0JLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 04:09:36 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34556 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728686AbgB0JJe (ORCPT
+        Thu, 27 Feb 2020 04:11:18 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:56870 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728629AbgB0JLS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 04:09:34 -0500
-Received: by mail-wm1-f68.google.com with SMTP id i10so5381810wmd.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 01:09:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9d5XsXCVGpg6qu/wTS2MkCO23Bkow9gwYLOhiOzvq0w=;
-        b=ZCYFGPMdIMqWIIqKs905YzODTI7e6WtmXFtj99H8vljntHp3TbOeemaufNUxrCcxqR
-         zeFq2wtOG1pRKgM6YEQb+srVxhh0gm8fUFAV4I5FKv8Pd8PpvlXKfUuH5hnzgJ2lG5V/
-         FbvYQaNnOgVGBMQTByNKHvWLJgm1E2FZn0FcBYpJ6pGwmjnaYNRnTs5CUr6SNm6qZ7Fl
-         e4xGl0NHpJj1geTjnEok9GQB+Cdbai1/jhX9J6L9AHnpjG3EvkL8j4xldGHV/YpWKqpq
-         IX/rOP0pJDNhIKu3tGx0Hlk1f1eoTmdHaAnh8Or+NRLkufWLDxQHh1aIXiLVTzzURIc1
-         BHXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=9d5XsXCVGpg6qu/wTS2MkCO23Bkow9gwYLOhiOzvq0w=;
-        b=MqXS2oqCGekOAzQ1ftw6bvyWhMV8E2jTxBHGJ+5LNC6FjvMwPJjAo5rHV0HXmVeUsP
-         6y6WjIfBusmUXQaR9eQbKrKtF7IpkTvEUN62jiFoFGZTfg1R6CmWkqzS/dDWwNIH8vpk
-         oxPGBgcfGoDJTL0rOuxXC18SPWzSbEwwx+CTdB+wKpuQPptEdn/i7uQsvvsASe/14I6Z
-         3onqePZQPNaCT7XxuhGTfDrKCAlEG7qc4r1Id7OdrvDamLP4GT91X1nuJIXoEDzAZEze
-         IVc/Tud1c7a7u1Ux3nnlhszH1611A2jhT+ZWgz9UvZmneaiZWQ9KyW8oTUDHzYhbFTmV
-         pStg==
-X-Gm-Message-State: APjAAAXG5sIrJem6v9rGUUkpX4kg8QClZ+13OKNjFobzSnCOBL+it2PP
-        WYssSv+hAM67ulsLEAKM0K6x+g==
-X-Google-Smtp-Source: APXvYqyizxMVKRa7iARTRCj9b9lQhnQiE423uIKYcNYgEbblwSjNt1oaqNF93lYCZsnbn2KPApPsOw==
-X-Received: by 2002:a7b:c5da:: with SMTP id n26mr3881431wmk.138.1582794571401;
-        Thu, 27 Feb 2020 01:09:31 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:d916:1723:c1c1:22d? ([2a01:e34:ed2f:f020:d916:1723:c1c1:22d])
-        by smtp.googlemail.com with ESMTPSA id b18sm7076628wru.50.2020.02.27.01.09.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Feb 2020 01:09:30 -0800 (PST)
-Subject: Re: [PATCH V16 1/5] dt-bindings: fsl: scu: add thermal binding
-To:     Anson Huang <Anson.Huang@nxp.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com,
-        will@kernel.org, rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        aisheng.dong@nxp.com, linux@roeck-us.net,
-        srinivas.kandagatla@linaro.org, krzk@kernel.org,
-        fugang.duan@nxp.com, peng.fan@nxp.com, daniel.baluta@nxp.com,
-        bjorn.andersson@linaro.org, olof@lixom.net, dinguyen@kernel.org,
-        leonard.crestez@nxp.com, marcin.juszkiewicz@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-References: <1582330132-13461-1-git-send-email-Anson.Huang@nxp.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <41da5dc1-9d46-da71-4893-5c23e6e3d96a@linaro.org>
-Date:   Thu, 27 Feb 2020 10:09:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 27 Feb 2020 04:11:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=N/eG6R5gRkfiRMhJTTXhdsldDieY9WVtiDoVkj36lRQ=; b=CPQPsUrmvVbg2ZfEz0zCKoLGLr
+        xCxhaUDi6/YSXfrsBteTXdeqGvM6lccotwD/nYdGIrWfVS6lmmOdatfm17h65xq98+E0Rhqb1Ff8t
+        Fnj0594C7tsE5JldKGPjex/V+kpgjW+30JhRo7t9fvLcbWE3rL0dQHKxOoN9we8/UQIVxI+fYz0Yk
+        H8Eu38oG0oNT1pcKpo5NKY0GJSsYqIGQ2lt2iLNKb5wJ1UBhzC7ZbF0Bmgw5kOFlt4gf2kwE3B9hp
+        IsM5/yzSAcPiKhCkbXm2Lrd6aVqbMXlxdrlVvjHMa5Zao5US8PhWd2PS6c//Tb217Ijy9lZqfYCj1
+        CwuBClXw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j7FBt-0000jA-PE; Thu, 27 Feb 2020 09:10:45 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2935430018B;
+        Thu, 27 Feb 2020 10:08:46 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BDF1F2B9AF8CC; Thu, 27 Feb 2020 10:10:42 +0100 (CET)
+Date:   Thu, 27 Feb 2020 10:10:42 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        rostedt@goodmis.org, mingo@kernel.org, joel@joelfernandes.org,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        luto@kernel.org, tony.luck@intel.com, dan.carpenter@oracle.com,
+        mhiramat@kernel.org, Will Deacon <will@kernel.org>,
+        Petr Mladek <pmladek@suse.com>, Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH v4 02/27] hardirq/nmi: Allow nested nmi_enter()
+Message-ID: <20200227091042.GG18400@hirez.programming.kicks-ass.net>
+References: <20200221133416.777099322@infradead.org>
+ <20200221134215.149193474@infradead.org>
+ <20200221222129.GB28251@lenoir>
+ <20200224161318.GG14897@hirez.programming.kicks-ass.net>
+ <20200225030905.GB28329@lenoir>
+ <20200225154111.GM18400@hirez.programming.kicks-ass.net>
+ <20200225221031.GB9599@lenoir>
 MIME-Version: 1.0
-In-Reply-To: <1582330132-13461-1-git-send-email-Anson.Huang@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200225221031.GB9599@lenoir>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/02/2020 01:08, Anson Huang wrote:
-> NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
-> system controller, the system controller is in charge of system
-> power, clock and thermal sensors etc. management, Linux kernel
-> has to communicate with system controller via MU (message unit)
-> IPC to get temperature from thermal sensors, this patch adds
-> binding doc for i.MX system controller thermal driver.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+On Tue, Feb 25, 2020 at 11:10:32PM +0100, Frederic Weisbecker wrote:
+> So here is my previous proposal, based on a simple counter, this time
+> with comments and a few fixes:
 
-I'll will take patches 1, 2 and 3
-
-Thanks!
-
-  -- Daniel
-
-> ---
-> No change.
-> ---
->  .../devicetree/bindings/arm/freescale/fsl,scu.txt        | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> index e07735a8..7f42cc3 100644
-> --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> @@ -166,6 +166,17 @@ Required properties:
->                followed by "fsl,imx-sc-key";
->  - linux,keycodes: See Documentation/devicetree/bindings/input/keys.txt
->  
-> +Thermal bindings based on SCU Message Protocol
-> +------------------------------------------------------------
-> +
-> +Required properties:
-> +- compatible:			Should be :
-> +				  "fsl,imx8qxp-sc-thermal"
-> +				followed by "fsl,imx-sc-thermal";
-> +
-> +- #thermal-sensor-cells:	See Documentation/devicetree/bindings/thermal/thermal.txt
-> +				for a description.
-> +
->  Example (imx8qxp):
->  -------------
->  aliases {
-> @@ -238,6 +249,11 @@ firmware {
->  			compatible = "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
->  			timeout-sec = <60>;
->  		};
-> +
-> +		tsens: thermal-sensor {
-> +			compatible = "fsl,imx8qxp-sc-thermal", "fsl,imx-sc-thermal";
-> +			#thermal-sensor-cells = <1>;
-> +		};
->  	};
->  };
->  
-> 
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+I've presumed your SoB and made this your patch.
