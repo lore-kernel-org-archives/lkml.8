@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19274C52D30
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78610C3F36B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E32DA2468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42E012468F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:25:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813538;
-	bh=x0dEELmNZAG8RaLNGfeiqpBGNqG0RcdRf9EJzV0JgyI=;
+	s=default; t=1582813513;
+	bh=xvG7Q9c1TnSbn9EvpuDSAZA0zsykoYXqY9kglk0SCtU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zkfR0E9IguZ99zobenSGLTHa1TNA1G6Q087KqOFrfYN+uUxi5xAs2OYbqkEDcNQ6L
-	 Hs6cYywMlistf3xCdhODy3cbAAhgFpCLfJ/ALScBNoTQMAc4RStBzGAyPlieef3sG2
-	 7uj+BAcKKRN239t39TCP2mypRN0JfYK7YWml7EFw=
+	b=oCjlOWmokK4cLcIk9jaSUsSZxNZp6J9MF6s21eH3HdUITY2MxgsgA+RfS+rdbxBVW
+	 xdBbpOrf+FIOI06RihK7W7SStEqBxdGlDax0zKq3DH53bmZJRdiotzOG2MeDXexGLr
+	 JRRtRbVfAle9sedxw77VZ/82pKsdgtWW4iglQG4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388660AbgB0OLI (ORCPT
+        id S2388715AbgB0OLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:11:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49398 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:11:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388620AbgB0OLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:11:05 -0500
+        id S2388028AbgB0OLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:11:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D20C6246A9;
-        Thu, 27 Feb 2020 14:11:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FC6120801;
+        Thu, 27 Feb 2020 14:11:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812664;
-        bh=x0dEELmNZAG8RaLNGfeiqpBGNqG0RcdRf9EJzV0JgyI=;
+        s=default; t=1582812692;
+        bh=xvG7Q9c1TnSbn9EvpuDSAZA0zsykoYXqY9kglk0SCtU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Va+4TQ+ecCME0HWSBV9Xi5NDkOic2GflZxXW+RSBHE5n7XxzctCzlVxZbgCJimXy6
-         +5nvzUZdYBO+sbTQL4PhKzjxuof6bWWnobD/D6jHl4Bwyo7zwUq0k6LaIIbqOl/Q8x
-         H0J1A+/M9RonP4Uy/2PsI87r2W0Bg0xlp6RiVgfc=
+        b=Kyfv8Y95kQ1YyEcMw4RJ2g2PlN9/+GCvJAjFpqoFnHKGpnnW+hA8OtxWQ+bhwyCZ4
+         vMkn8sWw6yoD74yG6kA8TMPLcWPrcD+8UPWrKDSoZ9ayRutz23m9ahf6rIHnmroOvs
+         KbjSa/iIEYf672jSYqBmWOTClQHZaWTMQgQyAIS8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gavin Shan <gshan@redhat.com>,
-        Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 066/135] mm/vmscan.c: dont round up scan size for online memory cgroup
-Date:   Thu, 27 Feb 2020 14:36:46 +0100
-Message-Id: <20200227132239.142582271@linuxfoundation.org>
+        stable@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 5.4 116/135] iommu/vt-d: Fix compile warning from intel-svm.h
+Date:   Thu, 27 Feb 2020 14:37:36 +0100
+Message-Id: <20200227132246.594078093@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -61,86 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gavin Shan <gshan@redhat.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-commit 76073c646f5f4999d763f471df9e38a5a912d70d upstream.
+commit e7598fac323aad0e502415edeffd567315994dd6 upstream.
 
-Commit 68600f623d69 ("mm: don't miss the last page because of round-off
-error") makes the scan size round up to @denominator regardless of the
-memory cgroup's state, online or offline.  This affects the overall
-reclaiming behavior: the corresponding LRU list is eligible for
-reclaiming only when its size logically right shifted by @sc->priority
-is bigger than zero in the former formula.
+The intel_svm_is_pasid_valid() needs to be marked inline, otherwise it
+causes the compile warning below:
 
-For example, the inactive anonymous LRU list should have at least 0x4000
-pages to be eligible for reclaiming when we have 60/12 for
-swappiness/priority and without taking scan/rotation ratio into account.
+  CC [M]  drivers/dma/idxd/cdev.o
+In file included from drivers/dma/idxd/cdev.c:9:0:
+./include/linux/intel-svm.h:125:12: warning: ‘intel_svm_is_pasid_valid’ defined but not used [-Wunused-function]
+ static int intel_svm_is_pasid_valid(struct device *dev, int pasid)
+            ^~~~~~~~~~~~~~~~~~~~~~~~
 
-After the roundup is applied, the inactive anonymous LRU list becomes
-eligible for reclaiming when its size is bigger than or equal to 0x1000
-in the same condition.
-
-    (0x4000 >> 12) * 60 / (60 + 140 + 1) = 1
-    ((0x1000 >> 12) * 60) + 200) / (60 + 140 + 1) = 1
-
-aarch64 has 512MB huge page size when the base page size is 64KB.  The
-memory cgroup that has a huge page is always eligible for reclaiming in
-that case.
-
-The reclaiming is likely to stop after the huge page is reclaimed,
-meaing the further iteration on @sc->priority and the silbing and child
-memory cgroups will be skipped.  The overall behaviour has been changed.
-This fixes the issue by applying the roundup to offlined memory cgroups
-only, to give more preference to reclaim memory from offlined memory
-cgroup.  It sounds reasonable as those memory is unlikedly to be used by
-anyone.
-
-The issue was found by starting up 8 VMs on a Ampere Mustang machine,
-which has 8 CPUs and 16 GB memory.  Each VM is given with 2 vCPUs and
-2GB memory.  It took 264 seconds for all VMs to be completely up and
-784MB swap is consumed after that.  With this patch applied, it took 236
-seconds and 60MB swap to do same thing.  So there is 10% performance
-improvement for my case.  Note that KSM is disable while THP is enabled
-in the testing.
-
-         total     used    free   shared  buff/cache   available
-   Mem:  16196    10065    2049       16        4081        3749
-   Swap:  8175      784    7391
-         total     used    free   shared  buff/cache   available
-   Mem:  16196    11324    3656       24        1215        2936
-   Swap:  8175       60    8115
-
-Link: http://lkml.kernel.org/r/20200211024514.8730-1-gshan@redhat.com
-Fixes: 68600f623d69 ("mm: don't miss the last page because of round-off error")
-Signed-off-by: Gavin Shan <gshan@redhat.com>
-Acked-by: Roman Gushchin <guro@fb.com>
-Cc: <stable@vger.kernel.org>	[4.20+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: Borislav Petkov <bp@alien8.de>
+Fixes: 15060aba71711 ('iommu/vt-d: Helper function to query if a pasid has any active users')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/vmscan.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ include/linux/intel-svm.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -2530,10 +2530,13 @@ out:
- 			/*
- 			 * Scan types proportional to swappiness and
- 			 * their relative recent reclaim efficiency.
--			 * Make sure we don't miss the last page
--			 * because of a round-off error.
-+			 * Make sure we don't miss the last page on
-+			 * the offlined memory cgroups because of a
-+			 * round-off error.
- 			 */
--			scan = DIV64_U64_ROUND_UP(scan * fraction[file],
-+			scan = mem_cgroup_online(memcg) ?
-+			       div64_u64(scan * fraction[file], denominator) :
-+			       DIV64_U64_ROUND_UP(scan * fraction[file],
- 						  denominator);
- 			break;
- 		case SCAN_FILE:
+--- a/include/linux/intel-svm.h
++++ b/include/linux/intel-svm.h
+@@ -122,7 +122,7 @@ static inline int intel_svm_unbind_mm(st
+ 	BUG();
+ }
+ 
+-static int intel_svm_is_pasid_valid(struct device *dev, int pasid)
++static inline int intel_svm_is_pasid_valid(struct device *dev, int pasid)
+ {
+ 	return -EINVAL;
+ }
 
 
