@@ -2,54 +2,52 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7447C3F362
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0317C3F343
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:55:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1A862469D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AECD120578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:55:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811764;
-	bh=Zmrtpa0LZihMZl3Ce8bNs5Bu/r1pFub2fc8hCI01eR4=;
+	s=default; t=1582811720;
+	bh=WF3NYj1TKuNCAF22oRTu5F/VqHK5NDhRGMbqNJnN1ww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zXdg/MH+BWPKIhzaOelRuazoelD0yu/pt8JT7zy8ZIPSpjfcqONqu10CSOI3ljYKQ
-	 oxquRELWKdElLLDu8JBOFYUh2vKxGxXFzv+TtGsI3qfYdoqQVPXN2UvVWAPv4vHkBv
-	 8hCuMQZehQvw3hHXnzVGvhhnCPqYFXfTyqranSLY=
+	b=Z0CpVuIPlSo/EB1tlZe/e/B8JsFkX38yKhyDyOGvTAnQw+B9wUTnhGywaEQO2b9eJ
+	 byE2x9bnuc7I5MOXA08b+jpUbiLrASIcRurQ+jtrQBSO+ZbLmZEbqHLP+hw7yEkGgx
+	 uYlPKwfe0qiehQdDn8Gz4LRDOE42N1aUfJ4EYqxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731930AbgB0N4D (ORCPT
+        id S1731849AbgB0NzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:56:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56400 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:55:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732056AbgB0N4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:56:00 -0500
+        id S1731347AbgB0NzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:55:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12B6721D7E;
-        Thu, 27 Feb 2020 13:55:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29C1B2469B;
+        Thu, 27 Feb 2020 13:55:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811759;
-        bh=Zmrtpa0LZihMZl3Ce8bNs5Bu/r1pFub2fc8hCI01eR4=;
+        s=default; t=1582811714;
+        bh=WF3NYj1TKuNCAF22oRTu5F/VqHK5NDhRGMbqNJnN1ww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bUXUds///jULaZJhlol2A0R0NHtKfxWDS9EzIF2eXuZFMJAHKyQL40zL6RriRU6Og
-         YtzBrLH2tzbRYRWL2GuO44Mo+7Lf89JtVn94TMJFOvUdzBp0q6YGIEXuAHg95lbYNV
-         gwdhoNibODw7EaXpB50icHrXNDt0kgC8RJ+fLmTY=
+        b=f1wf+yThe61g/dBqlUZBDJFGj9A5zb3sPiYX0xp2mARVXBrXwnyx4YrMHCmrauVfD
+         BVsn8Sz0iEP6a1ptiKwsH/A2YYrLXxbxgVORitNaqE66atH8u29G7aWaHsMVeB/rTy
+         VkcX/WJwo/xyb6F+1sRiwYDUl2JClwH9IBIJGRrY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiang Zhao <qiang.zhao@nxp.com>,
-        Timur Tabi <timur@kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Li Yang <leoyang.li@nxp.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 073/237] net/wan/fsl_ucc_hdlc: reject muram offsets above 64K
-Date:   Thu, 27 Feb 2020 14:34:47 +0100
-Message-Id: <20200227132302.512954966@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Tso <tytso@mit.edu>,
+        stable@kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 034/237] jbd2: do not clear the BH_Mapped flag when forgetting a metadata buffer
+Date:   Thu, 27 Feb 2020 14:34:08 +0100
+Message-Id: <20200227132259.225846890@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -62,44 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-[ Upstream commit 148587a59f6b85831695e0497d9dd1af5f0495af ]
+[ Upstream commit c96dceeabf765d0b1b1f29c3bf50a5c01315b820 ]
 
-Qiang Zhao points out that these offsets get written to 16-bit
-registers, and there are some QE platforms with more than 64K
-muram. So it is possible that qe_muram_alloc() gives us an allocation
-that can't actually be used by the hardware, so detect and reject
-that.
+Commit 904cdbd41d74 ("jbd2: clear dirty flag when revoking a buffer from
+an older transaction") set the BH_Freed flag when forgetting a metadata
+buffer which belongs to the committing transaction, it indicate the
+committing process clear dirty bits when it is done with the buffer. But
+it also clear the BH_Mapped flag at the same time, which may trigger
+below NULL pointer oops when block_size < PAGE_SIZE.
 
-Reported-by: Qiang Zhao <qiang.zhao@nxp.com>
-Reviewed-by: Timur Tabi <timur@kernel.org>
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Acked-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Li Yang <leoyang.li@nxp.com>
+rmdir 1             kjournald2                 mkdir 2
+                    jbd2_journal_commit_transaction
+		    commit transaction N
+jbd2_journal_forget
+set_buffer_freed(bh1)
+                    jbd2_journal_commit_transaction
+                     commit transaction N+1
+                     ...
+                     clear_buffer_mapped(bh1)
+                                               ext4_getblk(bh2 ummapped)
+                                               ...
+                                               grow_dev_page
+                                                init_page_buffers
+                                                 bh1->b_private=NULL
+                                                 bh2->b_private=NULL
+                     jbd2_journal_put_journal_head(jh1)
+                      __journal_remove_journal_head(hb1)
+		       jh1 is NULL and trigger oops
+
+*) Dir entry block bh1 and bh2 belongs to one page, and the bh2 has
+   already been unmapped.
+
+For the metadata buffer we forgetting, we should always keep the mapped
+flag and clear the dirty flags is enough, so this patch pick out the
+these buffers and keep their BH_Mapped flag.
+
+Link: https://lore.kernel.org/r/20200213063821.30455-3-yi.zhang@huawei.com
+Fixes: 904cdbd41d74 ("jbd2: clear dirty flag when revoking a buffer from an older transaction")
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wan/fsl_ucc_hdlc.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/jbd2/commit.c |   25 +++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wan/fsl_ucc_hdlc.c b/drivers/net/wan/fsl_ucc_hdlc.c
-index 571a1ff8f81f2..6a26cef621935 100644
---- a/drivers/net/wan/fsl_ucc_hdlc.c
-+++ b/drivers/net/wan/fsl_ucc_hdlc.c
-@@ -240,6 +240,11 @@ static int uhdlc_init(struct ucc_hdlc_private *priv)
- 		ret = -ENOMEM;
- 		goto free_riptr;
- 	}
-+	if (riptr != (u16)riptr || tiptr != (u16)tiptr) {
-+		dev_err(priv->dev, "MURAM allocation out of addressable range\n");
-+		ret = -ENOMEM;
-+		goto free_tiptr;
-+	}
+--- a/fs/jbd2/commit.c
++++ b/fs/jbd2/commit.c
+@@ -982,12 +982,29 @@ restart_loop:
+ 		 * pagesize and it is attached to the last partial page.
+ 		 */
+ 		if (buffer_freed(bh) && !jh->b_next_transaction) {
++			struct address_space *mapping;
++
+ 			clear_buffer_freed(bh);
+ 			clear_buffer_jbddirty(bh);
+-			clear_buffer_mapped(bh);
+-			clear_buffer_new(bh);
+-			clear_buffer_req(bh);
+-			bh->b_bdev = NULL;
++
++			/*
++			 * Block device buffers need to stay mapped all the
++			 * time, so it is enough to clear buffer_jbddirty and
++			 * buffer_freed bits. For the file mapping buffers (i.e.
++			 * journalled data) we need to unmap buffer and clear
++			 * more bits. We also need to be careful about the check
++			 * because the data page mapping can get cleared under
++			 * out hands, which alse need not to clear more bits
++			 * because the page and buffers will be freed and can
++			 * never be reused once we are done with them.
++			 */
++			mapping = READ_ONCE(bh->b_page->mapping);
++			if (mapping && !sb_is_blkdev_sb(mapping->host->i_sb)) {
++				clear_buffer_mapped(bh);
++				clear_buffer_new(bh);
++				clear_buffer_req(bh);
++				bh->b_bdev = NULL;
++			}
+ 		}
  
- 	/* Set RIPTR, TIPTR */
- 	iowrite16be(riptr, &priv->ucc_pram->riptr);
--- 
-2.20.1
-
+ 		if (buffer_jbddirty(bh)) {
 
 
