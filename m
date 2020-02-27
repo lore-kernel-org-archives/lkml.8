@@ -2,107 +2,103 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B59C3567B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DEF6C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79861246A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:45:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16A152469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:45:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582821926;
-	bh=avk6uX+4BTbbcHe3QMpkfnMDgU6Bb2r2GlZdK/J3X/A=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=YTqo20mofrEOUXEhktQ64ig/lEddYNbqYC450GynkOzZE409iR1T3h7JGSFy+5elj
-	 poevkTMQR2sKMSn2PeXMkb3s5edwwtAoaoMMWy7KE4VyaQFIKbzd/kVs9kGO9dSOmw
-	 WnS2RzwuGZOeKUOYyp36oIpL/U9+c/rNKAKMOqOg=
+	s=default; t=1582821936;
+	bh=zU5mhQLFtC8qOIyeDHInzfjiSukilwewEIGjM2YptjY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=c9TFwHUuabYKpm8k095ce6NfG7+YbywsuX8LcpVRHc7Jo4X1pNeN77TN651Fif4MU
+	 kSlf6aWB3qh9wisl06x4gWCUmvceImHjZk1TjIMieean4b34WZX25wpxLLMebBmuVr
+	 xDD45wECPujCWIxdTnxNGvx+Ka432WpWDRJnSjIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730464AbgB0QpZ (ORCPT
+        id S1730478AbgB0Qpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 11:45:25 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34110 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730303AbgB0QpY (ORCPT
+        Thu, 27 Feb 2020 11:45:35 -0500
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:39879 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730245AbgB0Qpe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 11:45:24 -0500
-Received: by mail-io1-f67.google.com with SMTP id z190so200727iof.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 08:45:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rS6KqBFssX9ZUdW6+MPkG1KvIc6wVLI2emiU+QF0qwg=;
-        b=XaBoABkOukH7Nu7mt4lsMgCefNzcJQuXa2aVFVbkfZpp6Tb5s+73tbFVKvoyGjA/de
-         rmZCbRd35i75iH1YaR3+beQ0/MRPNMdEGj3CTigZMKUY3xL+M1uKsj1ZAx7tdcdtuV87
-         YOAZpAJF4zquagazdIfTcwOMiCpDIc/iUts64=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rS6KqBFssX9ZUdW6+MPkG1KvIc6wVLI2emiU+QF0qwg=;
-        b=UTpd3rFqij24pv0TBIZqpF/8rIk39Ovc4HGBurccOyAy1SL9MAVsCLpkRK8WV5Rya9
-         IM3hZMAswujtHf4EtDMPtwm7E9MjfF8/Y0x5K8u8skMJ7hFEKEaApyGFy+SDkfK4l+HL
-         NGP0/ciIYTNxod0fvsQZmlNVKeQpj/RIo7CXaBGZ3n6RUfW3sZGU1YRJ3oF/izy0Qw/g
-         xlOXM0pXAzxQ/geeMqlgMYFiEQO/Q69isaUOdNwYGc5R1WRJI23XxwjzsoQsoDcNv0cH
-         sqNKaI9M5RDLak5mi8MdU4PpzHghxQkb3mFKJzHr8iUplH638RYv2s4Rth19zEIWYLF+
-         Nnjw==
-X-Gm-Message-State: APjAAAU5L/CksgSLF0tWWBqCAxfhI+z1xpodgNo60Xktr4CJ40U3mpgA
-        Vl3i1/USqvpcNcAjKpabzQfXFw==
-X-Google-Smtp-Source: APXvYqx/a5Dli7aKEcWZrJspfguzTO9DfNqargT1han0HSOgIYlEsoiSlvvxXv/MLc1HIIpISgSXpg==
-X-Received: by 2002:a6b:700e:: with SMTP id l14mr187328ioc.170.1582821924223;
-        Thu, 27 Feb 2020 08:45:24 -0800 (PST)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id i16sm1978584ils.41.2020.02.27.08.45.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Feb 2020 08:45:23 -0800 (PST)
-Subject: Re: [PATCH] selftest/lkdtm: Use local .gitignore
-To:     Kees Cook <keescook@chromium.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <e4ba4f716599d1d66c8bc60489f4b05764ea8470.1582812034.git.christophe.leroy@c-s.fr>
- <202002270817.1C32C98@keescook>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <f804d7bc-134d-27f8-daa5-6bbf9f28b54d@linuxfoundation.org>
-Date:   Thu, 27 Feb 2020 09:45:22 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 27 Feb 2020 11:45:34 -0500
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 01RGjHj5018817;
+        Fri, 28 Feb 2020 01:45:18 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 01RGjHj5018817
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582821918;
+        bh=SFw1s2zS0IjJjISQmLxUGN24YaawNrIlTzAN8zWk6yc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=pHrjFCewRtvMY7bbl9OpF647nX9RTyHdzhvhKV4DjrqI7jVxULfY6UK/dSIV+E/FE
+         wQwq5nxoBbXQpi+KDLcYI0weq48uJLqJDDzwYmQScibfpe8xlOzWB45QGDa6yq6YJ5
+         MGbVj80bPcLdTaa7ahGCfPeFwE1Sq4eUw0fpHYkvT3HBvKtN2Wvk4DjqYNeqZvCkjJ
+         cKhYymuJY1Wl/Oz2nL38f+nuxlTrp8n6ILHI9QGShJT7Me8Vq6AKklkt9VuikJESDc
+         KYXfWFqMsRaBtmU1owhg/LB5A9vQsowXu2COlaORsVXK5wpp5cKuEr8GAedHCrEgmh
+         vkbY5OB+yyw7w==
+X-Nifty-SrcIP: [209.85.221.179]
+Received: by mail-vk1-f179.google.com with SMTP id r5so81897vkf.2;
+        Thu, 27 Feb 2020 08:45:18 -0800 (PST)
+X-Gm-Message-State: ANhLgQ1UtdG/R/oWJ+W3DMF/QBZM+unzZYwtPjKgVUD2MCyrJU7BX7HV
+        J78Uvv2bRJfWWG722oynH/fmpwJro11O9h8WFWk=
+X-Google-Smtp-Source: ADFU+vufzGHT4b2Qk1L+M+Qsr4BWBYmkBX9BSlBugK7yH1xAwQBNk/3BRr+hoFehSYOBDdMB1utlLESQ9deo5l2iu20=
+X-Received: by 2002:a1f:1bc3:: with SMTP id b186mr54662vkb.96.1582821917207;
+ Thu, 27 Feb 2020 08:45:17 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <202002270817.1C32C98@keescook>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200218100031.10018-1-masahiroy@kernel.org>
+In-Reply-To: <20200218100031.10018-1-masahiroy@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 28 Feb 2020 01:44:41 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASvgJ2tBhM7s-cnpwuy1GZy0kZ96tLETBVuEZSCTCKmcA@mail.gmail.com>
+Message-ID: <CAK7LNASvgJ2tBhM7s-cnpwuy1GZy0kZ96tLETBVuEZSCTCKmcA@mail.gmail.com>
+Subject: Re: [PATCH] fixdep: remove redundant null character check
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/27/20 9:17 AM, Kees Cook wrote:
-> On Thu, Feb 27, 2020 at 02:07:10PM +0000, Christophe Leroy wrote:
->> Commit 68ca0fd272da ("selftest/lkdtm: Don't pollute 'git status'")
->> introduced patterns for git to ignore files generated in
->> tools/testing/selftests/lkdtm/
->>
->> Use local .gitignore file instead of using the root one.
->>
->> Fixes: 68ca0fd272da ("selftest/lkdtm: Don't pollute 'git status'")
->> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> 
-> Yeah, that's better. Thanks!
-> 
-> Acked-by: Kees Cook <keescook@chromium.org>
-> 
+On Tue, Feb 18, 2020 at 7:00 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> If *q is '\0', the condition (isalnum(*q) || *q == '_') is false anyway.
+>
+> Ensuring non-zero *q is redundant.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
 
-I will apply it for next rc.
 
-Thanks. I should have noticed the problem in the previous version.
-It slipped by me. :(
+Applied to linux-kbuild.
 
-thanks,
--- Shuah
+>  scripts/basic/fixdep.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/scripts/basic/fixdep.c b/scripts/basic/fixdep.c
+> index ad2041817985..877ca2c88246 100644
+> --- a/scripts/basic/fixdep.c
+> +++ b/scripts/basic/fixdep.c
+> @@ -246,7 +246,7 @@ static void parse_config_file(const char *p)
+>                 }
+>                 p += 7;
+>                 q = p;
+> -               while (*q && (isalnum(*q) || *q == '_'))
+> +               while (isalnum(*q) || *q == '_')
+>                         q++;
+>                 if (str_ends_with(p, q - p, "_MODULE"))
+>                         r = q - 7;
+> --
+> 2.17.1
+>
 
+
+-- 
+Best Regards
+Masahiro Yamada
