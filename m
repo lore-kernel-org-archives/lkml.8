@@ -2,78 +2,102 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE5CC3F2C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B779C3F2C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC9DD2469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E74B2469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:16:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="FQ+Ch8yW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730120AbgB0WP4 (ORCPT
+        id S1730174AbgB0WQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 17:15:56 -0500
-Received: from kernel.crashing.org ([76.164.61.194]:37082 "EHLO
-        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbgB0WP4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 17:15:56 -0500
-Received: from localhost (gate.crashing.org [63.228.1.57])
-        (authenticated bits=0)
-        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 01RMEmjH029914
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 27 Feb 2020 16:14:52 -0600
-Message-ID: <025fe463a37a01a39e8b988530b36ce79210897b.camel@kernel.crashing.org>
-Subject: Re: [PATCH v4 0/3] printk/console: Fix preferred console handling
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 28 Feb 2020 09:14:47 +1100
-In-Reply-To: <20200218095232.q6tqjmome4fhc6f5@pathway.suse.cz>
-References: <20200213095133.23176-1-pmladek@suse.com>
-         <20200217130308.GA447@jagdpanzerIV.localdomain>
-         <20200218095232.q6tqjmome4fhc6f5@pathway.suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 27 Feb 2020 17:16:19 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:33557 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726460AbgB0WQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 17:16:18 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48T6Sw6TCWz9sNg;
+        Fri, 28 Feb 2020 09:16:16 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1582841777;
+        bh=C0sQUbJcUy3SCxluJOVutQ4Q/pprgmEge+rCNcrvXlw=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=FQ+Ch8yWcGWV3+pKERY7iAIiROMwV+lINicwcODo5g+5qp73grrdmzJPe3+NXh+7r
+         0gB1l5PijcsfeopK9gvtr2ju3aY1x16Am0t12VIEg6gG57lUa+SykMgWF0xPI66mnj
+         5WGmRjOlGY54euU0vvGvYGv3wRAoTWTzr4ChBPu1L5+ywoT10GVX+IVvPYOjCvPMva
+         ujZLPsqpDJjD7TkwVSos3+XQieM/mtqnINm/fwqhpXhYfUwueYx3li1IgOlkdhM8SS
+         szoooUY/aS5MaO1U9a4+lHcDzxPuWrzSjKuH6uTvC2pEOmTlh/klsqVlelMi/1F7ta
+         dJLGiMUJQiI+w==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, mikey@neuling.org,
+        Russell Currey <ruscur@russell.cc>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v4 13/13] powerpc/ptrace: move ptrace_triggered() into hw_breakpoint.c
+In-Reply-To: <4e528bf2-2b53-ae93-cdcc-0c80953f40f2@c-s.fr>
+References: <cover.1582803998.git.christophe.leroy@c-s.fr> <d45c91cf5f83424b8f3989b7ead28c50d8d765a9.1582803998.git.christophe.leroy@c-s.fr> <4e528bf2-2b53-ae93-cdcc-0c80953f40f2@c-s.fr>
+Date:   Fri, 28 Feb 2020 09:16:16 +1100
+Message-ID: <87pndz1xsf.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-02-18 at 10:52 +0100, Petr Mladek wrote:
-> On Mon 2020-02-17 22:03:08, Sergey Senozhatsky wrote:
-> > On (20/02/13 10:51), Petr Mladek wrote:
-> > > Hi,
-> > > 
-> > > I send this on behalf of Benjamin who is traveling at the moment.
-> > > It is an interesting approach to long terms problems with
-> > > matching
-> > > the console preferred on the command line.
-> > > 
-> > > Changes against v3:
-> > > 
-> > > 	+ better check when accepting pre-enabled consoles
-> > > 	+ correct reasoning in the 3rd patch
-> > > 	+ update a comment of CON_CONSDEV definition
-> > > 	+ fixed checkpatch warnings
-> > 
-> > Looks good to me,
-> > 
-> > Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-> 
-> The patchset is commited in printk.git, branch
-> for-5.7-preferred-console.
-> 
-Do you plan to send any of this to -stable ?
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
+> Russel,
+>
+> Le 27/02/2020 =C3=A0 12:49, Christophe Leroy a =C3=A9crit=C2=A0:
+>> ptrace_triggered() is declared in asm/hw_breakpoint.h and
+>> only needed when CONFIG_HW_BREAKPOINT is set, so move it
+>> into hw_breakpoint.c
+>
+> My series v4 is definitely buggy (I included ptrace_decl.h instead=20
+> instead of ptrace-decl.h), how can Snowpatch say build succeeded=20
+> (https://patchwork.ozlabs.org/patch/1245807/) ?
 
-Cheers,
-Ben.
+Which links to:
+  https://openpower.xyz/job/snowpatch/job/snowpatch-linux-sparse/15895//art=
+ifact/linux/report.txt
 
+The actual build log of which is:
+  https://openpower.xyz/job/snowpatch/job/snowpatch-linux-sparse/15895/arti=
+fact/linux/build_new.log
+
+Which contains:
+  scripts/Makefile.build:267: recipe for target 'arch/powerpc/kernel/ptrace=
+/ptrace-altivec.o' failed
+  make[3]: *** [arch/powerpc/kernel/ptrace/ptrace-altivec.o] Error 1
+  make[3]: *** Waiting for unfinished jobs....
+  scripts/Makefile.build:505: recipe for target 'arch/powerpc/kernel/ptrace=
+' failed
+  make[2]: *** [arch/powerpc/kernel/ptrace] Error 2
+  make[2]: *** Waiting for unfinished jobs....
+  scripts/Makefile.build:505: recipe for target 'arch/powerpc/kernel' failed
+  make[1]: *** [arch/powerpc/kernel] Error 2
+  make[1]: *** Waiting for unfinished jobs....
+  Makefile:1681: recipe for target 'arch/powerpc' failed
+  make: *** [arch/powerpc] Error 2
+  make: *** Waiting for unfinished jobs....
+
+Same for ppc64le:
+  https://openpower.xyz/job/snowpatch/job/snowpatch-linux-sparse/15896/arti=
+fact/linux/build_new.log
+
+
+So it seems like snowpatch always reports the build as succeeded even
+when it fails.
+
+cheers
