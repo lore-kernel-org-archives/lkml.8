@@ -2,883 +2,276 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C97C1C35DF9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 166C9C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CF1420726
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:29:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D95EB24650
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:30:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582828256;
+	bh=1uGS0WGGx36bTiFt/zxMMDJzlLSFFaOGU36jwiBX6Lg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tl1hOHTUDC4G92i/hjHIjVlOMp1R/J202FTnnjP1l81J0GjbEf4ZKWU015QiHnq8/
+	 D0vBY3b/JWReAXi4og3DRYbWM58+FSDM2N9lIa9/3NQz/e3YsXOOjCAk6OK4SJZjd+
+	 gOU1on5iCEeGR2qEwNGqS9cMUivxyK5TPd8rlvi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729871AbgB0S34 (ORCPT
+        id S1730111AbgB0Say (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 13:29:56 -0500
-Received: from mx2.suse.de ([195.135.220.15]:36228 "EHLO mx2.suse.de"
+        Thu, 27 Feb 2020 13:30:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729258AbgB0S34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 13:29:56 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id CB166B239;
-        Thu, 27 Feb 2020 18:29:50 +0000 (UTC)
-Subject: Re: [PATCH v10 4/5] soc / drm: mediatek: Move routing control to
- mmsys device
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
-        p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
-        sboyd@kernel.org, ulrich.hecht+renesas@gmail.com,
-        laurent.pinchart@ideasonboard.com
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>, rdunlap@infradead.org,
-        dri-devel@lists.freedesktop.org, Weiyi Lu <weiyi.lu@mediatek.com>,
-        Seiya Wang <seiya.wang@mediatek.com>,
-        linux-clk@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>, wens@csie.org,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        sean.wang@mediatek.com, frank-w@public-files.de,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
-        linux-arm-kernel@lists.infradead.org,
-        Richard Fontana <rfontana@redhat.com>,
-        linux-kernel@vger.kernel.org, matthias.bgg@kernel.org,
-        Daniel Vetter <daniel@ffwll.ch>
-References: <20200227180858.1514157-1-enric.balletbo@collabora.com>
- <20200227180858.1514157-5-enric.balletbo@collabora.com>
-From:   Matthias Brugger <mbrugger@suse.com>
-Autocrypt: addr=mbrugger@suse.com; prefer-encrypt=mutual; keydata=
- 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
- HxUCQ9Y1Y/Ct
-Message-ID: <ff0ffca8-9d01-1f80-c2c8-a696e26d1307@suse.com>
-Date:   Thu, 27 Feb 2020 19:29:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1729258AbgB0Say (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 13:30:54 -0500
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1544D2084E;
+        Thu, 27 Feb 2020 18:30:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582828253;
+        bh=1uGS0WGGx36bTiFt/zxMMDJzlLSFFaOGU36jwiBX6Lg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S+Q4BGnvn7GuQ7dmGCLrsJdtLpl4WJrk2xSPdKjHgyBI7r++6COJGWMbPhbENHUIZ
+         4dupMlrn6V9GBJ6gLT8D925XVX57nMAZyrYmWJ6h/vPxGBwfY/K/YYlYet10zkuLvg
+         oVJOfFotEZpTx3VL3eJRt5SDSwsZ3DK10H6+21IQ=
+Date:   Thu, 27 Feb 2020 10:30:52 -0800
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org
+Subject: Re: [PATCH v2] f2fs: introduce F2FS_IOC_RELEASE_COMPRESS_BLOCKS
+Message-ID: <20200227183052.GA55284@google.com>
+References: <20200227112621.126505-1-yuchao0@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200227180858.1514157-5-enric.balletbo@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227112621.126505-1-yuchao0@huawei.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 02/27, Chao Yu wrote:
+> There are still reserved blocks on compressed inode, this patch
+> introduce a new ioctl to help release reserved blocks back to
+> filesystem, so that userspace can reuse those freed space.
 
+Hmm, once we release the blocks, what happens if we remove the immutable
+bit back?
 
-On 27/02/2020 19:08, Enric Balletbo i Serra wrote:
-> Provide a mtk_mmsys_ddp_connect() and mtk_mmsys_disconnect() functions to
-> replace mtk_ddp_add_comp_to_path() and mtk_ddp_remove_comp_from_path().
-> Those functions will allow DRM driver and others to control the data
-> path routing.
 > 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
 > ---
+> v2:
+> - set inode as immutable in ioctl.
+>  fs/f2fs/f2fs.h |   6 +++
+>  fs/f2fs/file.c | 136 ++++++++++++++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 141 insertions(+), 1 deletion(-)
 > 
-> Changes in v10:
-> - Introduced a new patch to move routing control into mmsys driver.
-> - Removed the patch to use regmap as is not needed anymore.
-> 
-> Changes in v9: None
-> Changes in v8: None
-> Changes in v7: None
-> 
->  drivers/gpu/drm/mediatek/mtk_drm_crtc.c |  13 +-
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.c  | 256 ----------------------
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.h  |   7 -
->  drivers/gpu/drm/mediatek/mtk_drm_drv.c  |  13 +-
->  drivers/soc/mediatek/mtk-mmsys.c        | 275 ++++++++++++++++++++++++
->  include/linux/soc/mediatek/mtk-mmsys.h  |  19 ++
->  6 files changed, 306 insertions(+), 277 deletions(-)
->  create mode 100644 include/linux/soc/mediatek/mtk-mmsys.h
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> index fd4042de12f2..3c89449bea6e 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> @@ -6,6 +6,7 @@
->  #include <linux/clk.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/soc/mediatek/mtk-cmdq.h>
-> +#include <linux/soc/mediatek/mtk-mmsys.h>
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index 23b93a116c73..4a02edc2454b 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -427,6 +427,8 @@ static inline bool __has_cursum_space(struct f2fs_journal *journal,
+>  #define F2FS_IOC_PRECACHE_EXTENTS	_IO(F2FS_IOCTL_MAGIC, 15)
+>  #define F2FS_IOC_RESIZE_FS		_IOW(F2FS_IOCTL_MAGIC, 16, __u64)
+>  #define F2FS_IOC_GET_COMPRESS_BLOCKS	_IOR(F2FS_IOCTL_MAGIC, 17, __u64)
+> +#define F2FS_IOC_RELEASE_COMPRESS_BLOCKS				\
+> +					_IOR(F2FS_IOCTL_MAGIC, 18, __u64)
 >  
->  #include <asm/barrier.h>
->  #include <soc/mediatek/smi.h>
-> @@ -296,9 +297,9 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
->  	}
->  
->  	for (i = 0; i < mtk_crtc->ddp_comp_nr - 1; i++) {
-> -		mtk_ddp_add_comp_to_path(mtk_crtc->config_regs,
-> -					 mtk_crtc->ddp_comp[i]->id,
-> -					 mtk_crtc->ddp_comp[i + 1]->id);
-> +		mtk_mmsys_ddp_connect(mtk_crtc->config_regs,
-> +				      mtk_crtc->ddp_comp[i]->id,
-> +				      mtk_crtc->ddp_comp[i + 1]->id);
->  		mtk_disp_mutex_add_comp(mtk_crtc->mutex,
->  					mtk_crtc->ddp_comp[i]->id);
->  	}
-> @@ -355,9 +356,9 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
->  					   mtk_crtc->ddp_comp[i]->id);
->  	mtk_disp_mutex_disable(mtk_crtc->mutex);
->  	for (i = 0; i < mtk_crtc->ddp_comp_nr - 1; i++) {
-> -		mtk_ddp_remove_comp_from_path(mtk_crtc->config_regs,
-> -					      mtk_crtc->ddp_comp[i]->id,
-> -					      mtk_crtc->ddp_comp[i + 1]->id);
-> +		mtk_mmsys_ddp_disconnect(mtk_crtc->config_regs,
-> +					 mtk_crtc->ddp_comp[i]->id,
-> +					 mtk_crtc->ddp_comp[i + 1]->id);
->  		mtk_disp_mutex_remove_comp(mtk_crtc->mutex,
->  					   mtk_crtc->ddp_comp[i]->id);
->  	}
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> index b885f60f474c..014c1bbe1df2 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> @@ -13,26 +13,6 @@
->  #include "mtk_drm_ddp.h"
->  #include "mtk_drm_ddp_comp.h"
->  
-> -#define DISP_REG_CONFIG_DISP_OVL0_MOUT_EN	0x040
-> -#define DISP_REG_CONFIG_DISP_OVL1_MOUT_EN	0x044
-> -#define DISP_REG_CONFIG_DISP_OD_MOUT_EN		0x048
-> -#define DISP_REG_CONFIG_DISP_GAMMA_MOUT_EN	0x04c
-> -#define DISP_REG_CONFIG_DISP_UFOE_MOUT_EN	0x050
-> -#define DISP_REG_CONFIG_DISP_COLOR0_SEL_IN	0x084
-> -#define DISP_REG_CONFIG_DISP_COLOR1_SEL_IN	0x088
-> -#define DISP_REG_CONFIG_DSIE_SEL_IN		0x0a4
-> -#define DISP_REG_CONFIG_DSIO_SEL_IN		0x0a8
-> -#define DISP_REG_CONFIG_DPI_SEL_IN		0x0ac
-> -#define DISP_REG_CONFIG_DISP_RDMA2_SOUT		0x0b8
-> -#define DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN	0x0c4
-> -#define DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN	0x0c8
-> -#define DISP_REG_CONFIG_MMSYS_CG_CON0		0x100
-> -
-> -#define DISP_REG_CONFIG_DISP_OVL_MOUT_EN	0x030
-> -#define DISP_REG_CONFIG_OUT_SEL			0x04c
-> -#define DISP_REG_CONFIG_DSI_SEL			0x050
-> -#define DISP_REG_CONFIG_DPI_SEL			0x064
-> -
->  #define MT2701_DISP_MUTEX0_MOD0			0x2c
->  #define MT2701_DISP_MUTEX0_SOF0			0x30
->  
-> @@ -94,48 +74,6 @@
->  #define MUTEX_SOF_DSI2			5
->  #define MUTEX_SOF_DSI3			6
->  
-> -#define OVL0_MOUT_EN_COLOR0		0x1
-> -#define OD_MOUT_EN_RDMA0		0x1
-> -#define OD1_MOUT_EN_RDMA1		BIT(16)
-> -#define UFOE_MOUT_EN_DSI0		0x1
-> -#define COLOR0_SEL_IN_OVL0		0x1
-> -#define OVL1_MOUT_EN_COLOR1		0x1
-> -#define GAMMA_MOUT_EN_RDMA1		0x1
-> -#define RDMA0_SOUT_DPI0			0x2
-> -#define RDMA0_SOUT_DPI1			0x3
-> -#define RDMA0_SOUT_DSI1			0x1
-> -#define RDMA0_SOUT_DSI2			0x4
-> -#define RDMA0_SOUT_DSI3			0x5
-> -#define RDMA1_SOUT_DPI0			0x2
-> -#define RDMA1_SOUT_DPI1			0x3
-> -#define RDMA1_SOUT_DSI1			0x1
-> -#define RDMA1_SOUT_DSI2			0x4
-> -#define RDMA1_SOUT_DSI3			0x5
-> -#define RDMA2_SOUT_DPI0			0x2
-> -#define RDMA2_SOUT_DPI1			0x3
-> -#define RDMA2_SOUT_DSI1			0x1
-> -#define RDMA2_SOUT_DSI2			0x4
-> -#define RDMA2_SOUT_DSI3			0x5
-> -#define DPI0_SEL_IN_RDMA1		0x1
-> -#define DPI0_SEL_IN_RDMA2		0x3
-> -#define DPI1_SEL_IN_RDMA1		(0x1 << 8)
-> -#define DPI1_SEL_IN_RDMA2		(0x3 << 8)
-> -#define DSI0_SEL_IN_RDMA1		0x1
-> -#define DSI0_SEL_IN_RDMA2		0x4
-> -#define DSI1_SEL_IN_RDMA1		0x1
-> -#define DSI1_SEL_IN_RDMA2		0x4
-> -#define DSI2_SEL_IN_RDMA1		(0x1 << 16)
-> -#define DSI2_SEL_IN_RDMA2		(0x4 << 16)
-> -#define DSI3_SEL_IN_RDMA1		(0x1 << 16)
-> -#define DSI3_SEL_IN_RDMA2		(0x4 << 16)
-> -#define COLOR1_SEL_IN_OVL1		0x1
-> -
-> -#define OVL_MOUT_EN_RDMA		0x1
-> -#define BLS_TO_DSI_RDMA1_TO_DPI1	0x8
-> -#define BLS_TO_DPI_RDMA1_TO_DSI		0x2
-> -#define DSI_SEL_IN_BLS			0x0
-> -#define DPI_SEL_IN_BLS			0x0
-> -#define DSI_SEL_IN_RDMA			0x1
->  
->  struct mtk_disp_mutex {
->  	int id;
-> @@ -246,200 +184,6 @@ static const struct mtk_ddp_data mt8173_ddp_driver_data = {
->  	.mutex_sof_reg = MT2701_DISP_MUTEX0_SOF0,
->  };
->  
-> -static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
-> -				    enum mtk_ddp_comp_id next,
-> -				    unsigned int *addr)
-> -{
-> -	unsigned int value;
-> -
-> -	if (cur == DDP_COMPONENT_OVL0 && next == DDP_COMPONENT_COLOR0) {
-> -		*addr = DISP_REG_CONFIG_DISP_OVL0_MOUT_EN;
-> -		value = OVL0_MOUT_EN_COLOR0;
-> -	} else if (cur == DDP_COMPONENT_OVL0 && next == DDP_COMPONENT_RDMA0) {
-> -		*addr = DISP_REG_CONFIG_DISP_OVL_MOUT_EN;
-> -		value = OVL_MOUT_EN_RDMA;
-> -	} else if (cur == DDP_COMPONENT_OD0 && next == DDP_COMPONENT_RDMA0) {
-> -		*addr = DISP_REG_CONFIG_DISP_OD_MOUT_EN;
-> -		value = OD_MOUT_EN_RDMA0;
-> -	} else if (cur == DDP_COMPONENT_UFOE && next == DDP_COMPONENT_DSI0) {
-> -		*addr = DISP_REG_CONFIG_DISP_UFOE_MOUT_EN;
-> -		value = UFOE_MOUT_EN_DSI0;
-> -	} else if (cur == DDP_COMPONENT_OVL1 && next == DDP_COMPONENT_COLOR1) {
-> -		*addr = DISP_REG_CONFIG_DISP_OVL1_MOUT_EN;
-> -		value = OVL1_MOUT_EN_COLOR1;
-> -	} else if (cur == DDP_COMPONENT_GAMMA && next == DDP_COMPONENT_RDMA1) {
-> -		*addr = DISP_REG_CONFIG_DISP_GAMMA_MOUT_EN;
-> -		value = GAMMA_MOUT_EN_RDMA1;
-> -	} else if (cur == DDP_COMPONENT_OD1 && next == DDP_COMPONENT_RDMA1) {
-> -		*addr = DISP_REG_CONFIG_DISP_OD_MOUT_EN;
-> -		value = OD1_MOUT_EN_RDMA1;
-> -	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DPI0) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> -		value = RDMA0_SOUT_DPI0;
-> -	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DPI1) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> -		value = RDMA0_SOUT_DPI1;
-> -	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI1) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> -		value = RDMA0_SOUT_DSI1;
-> -	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI2) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> -		value = RDMA0_SOUT_DSI2;
-> -	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI3) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> -		value = RDMA0_SOUT_DSI3;
-> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI1) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> -		value = RDMA1_SOUT_DSI1;
-> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI2) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> -		value = RDMA1_SOUT_DSI2;
-> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI3) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> -		value = RDMA1_SOUT_DSI3;
-> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI0) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> -		value = RDMA1_SOUT_DPI0;
-> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI1) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> -		value = RDMA1_SOUT_DPI1;
-> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI0) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> -		value = RDMA2_SOUT_DPI0;
-> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI1) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> -		value = RDMA2_SOUT_DPI1;
-> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI1) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> -		value = RDMA2_SOUT_DSI1;
-> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI2) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> -		value = RDMA2_SOUT_DSI2;
-> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI3) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> -		value = RDMA2_SOUT_DSI3;
-> -	} else {
-> -		value = 0;
-> -	}
-> -
-> -	return value;
-> -}
-> -
-> -static unsigned int mtk_ddp_sel_in(enum mtk_ddp_comp_id cur,
-> -				   enum mtk_ddp_comp_id next,
-> -				   unsigned int *addr)
-> -{
-> -	unsigned int value;
-> -
-> -	if (cur == DDP_COMPONENT_OVL0 && next == DDP_COMPONENT_COLOR0) {
-> -		*addr = DISP_REG_CONFIG_DISP_COLOR0_SEL_IN;
-> -		value = COLOR0_SEL_IN_OVL0;
-> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI0) {
-> -		*addr = DISP_REG_CONFIG_DPI_SEL_IN;
-> -		value = DPI0_SEL_IN_RDMA1;
-> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI1) {
-> -		*addr = DISP_REG_CONFIG_DPI_SEL_IN;
-> -		value = DPI1_SEL_IN_RDMA1;
-> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI0) {
-> -		*addr = DISP_REG_CONFIG_DSIE_SEL_IN;
-> -		value = DSI0_SEL_IN_RDMA1;
-> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI1) {
-> -		*addr = DISP_REG_CONFIG_DSIO_SEL_IN;
-> -		value = DSI1_SEL_IN_RDMA1;
-> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI2) {
-> -		*addr = DISP_REG_CONFIG_DSIE_SEL_IN;
-> -		value = DSI2_SEL_IN_RDMA1;
-> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI3) {
-> -		*addr = DISP_REG_CONFIG_DSIO_SEL_IN;
-> -		value = DSI3_SEL_IN_RDMA1;
-> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI0) {
-> -		*addr = DISP_REG_CONFIG_DPI_SEL_IN;
-> -		value = DPI0_SEL_IN_RDMA2;
-> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI1) {
-> -		*addr = DISP_REG_CONFIG_DPI_SEL_IN;
-> -		value = DPI1_SEL_IN_RDMA2;
-> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI0) {
-> -		*addr = DISP_REG_CONFIG_DSIE_SEL_IN;
-> -		value = DSI0_SEL_IN_RDMA2;
-> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI1) {
-> -		*addr = DISP_REG_CONFIG_DSIO_SEL_IN;
-> -		value = DSI1_SEL_IN_RDMA2;
-> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI2) {
-> -		*addr = DISP_REG_CONFIG_DSIE_SEL_IN;
-> -		value = DSI2_SEL_IN_RDMA2;
-> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI3) {
-> -		*addr = DISP_REG_CONFIG_DSIE_SEL_IN;
-> -		value = DSI3_SEL_IN_RDMA2;
-> -	} else if (cur == DDP_COMPONENT_OVL1 && next == DDP_COMPONENT_COLOR1) {
-> -		*addr = DISP_REG_CONFIG_DISP_COLOR1_SEL_IN;
-> -		value = COLOR1_SEL_IN_OVL1;
-> -	} else if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DSI0) {
-> -		*addr = DISP_REG_CONFIG_DSI_SEL;
-> -		value = DSI_SEL_IN_BLS;
-> -	} else {
-> -		value = 0;
-> -	}
-> -
-> -	return value;
-> -}
-> -
-> -static void mtk_ddp_sout_sel(void __iomem *config_regs,
-> -			     enum mtk_ddp_comp_id cur,
-> -			     enum mtk_ddp_comp_id next)
-> -{
-> -	if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DSI0) {
-> -		writel_relaxed(BLS_TO_DSI_RDMA1_TO_DPI1,
-> -			       config_regs + DISP_REG_CONFIG_OUT_SEL);
-> -	} else if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DPI0) {
-> -		writel_relaxed(BLS_TO_DPI_RDMA1_TO_DSI,
-> -			       config_regs + DISP_REG_CONFIG_OUT_SEL);
-> -		writel_relaxed(DSI_SEL_IN_RDMA,
-> -			       config_regs + DISP_REG_CONFIG_DSI_SEL);
-> -		writel_relaxed(DPI_SEL_IN_BLS,
-> -			       config_regs + DISP_REG_CONFIG_DPI_SEL);
-> -	}
-> -}
-> -
-> -void mtk_ddp_add_comp_to_path(void __iomem *config_regs,
-> -			      enum mtk_ddp_comp_id cur,
-> -			      enum mtk_ddp_comp_id next)
-> -{
-> -	unsigned int addr, value, reg;
-> -
-> -	value = mtk_ddp_mout_en(cur, next, &addr);
-> -	if (value) {
-> -		reg = readl_relaxed(config_regs + addr) | value;
-> -		writel_relaxed(reg, config_regs + addr);
-> -	}
-> -
-> -	mtk_ddp_sout_sel(config_regs, cur, next);
-> -
-> -	value = mtk_ddp_sel_in(cur, next, &addr);
-> -	if (value) {
-> -		reg = readl_relaxed(config_regs + addr) | value;
-> -		writel_relaxed(reg, config_regs + addr);
-> -	}
-> -}
-> -
-> -void mtk_ddp_remove_comp_from_path(void __iomem *config_regs,
-> -				   enum mtk_ddp_comp_id cur,
-> -				   enum mtk_ddp_comp_id next)
-> -{
-> -	unsigned int addr, value, reg;
-> -
-> -	value = mtk_ddp_mout_en(cur, next, &addr);
-> -	if (value) {
-> -		reg = readl_relaxed(config_regs + addr) & ~value;
-> -		writel_relaxed(reg, config_regs + addr);
-> -	}
-> -
-> -	value = mtk_ddp_sel_in(cur, next, &addr);
-> -	if (value) {
-> -		reg = readl_relaxed(config_regs + addr) & ~value;
-> -		writel_relaxed(reg, config_regs + addr);
-> -	}
-> -}
-> -
->  struct mtk_disp_mutex *mtk_disp_mutex_get(struct device *dev, unsigned int id)
+>  #define F2FS_IOC_GET_VOLUME_NAME	FS_IOC_GETFSLABEL
+>  #define F2FS_IOC_SET_VOLUME_NAME	FS_IOC_SETFSLABEL
+> @@ -3956,6 +3958,10 @@ static inline void f2fs_i_compr_blocks_update(struct inode *inode,
 >  {
->  	struct mtk_ddp *ddp = dev_get_drvdata(dev);
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp.h
-> index 827be424a148..6b691a57be4a 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.h
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.h
-> @@ -12,13 +12,6 @@ struct regmap;
->  struct device;
->  struct mtk_disp_mutex;
+>  	int diff = F2FS_I(inode)->i_cluster_size - blocks;
 >  
-> -void mtk_ddp_add_comp_to_path(void __iomem *config_regs,
-> -			      enum mtk_ddp_comp_id cur,
-> -			      enum mtk_ddp_comp_id next);
-> -void mtk_ddp_remove_comp_from_path(void __iomem *config_regs,
-> -				   enum mtk_ddp_comp_id cur,
-> -				   enum mtk_ddp_comp_id next);
-> -
->  struct mtk_disp_mutex *mtk_disp_mutex_get(struct device *dev, unsigned int id);
->  int mtk_disp_mutex_prepare(struct mtk_disp_mutex *mutex);
->  void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> index 8e2d3cb62ad5..02011d3168df 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> @@ -10,6 +10,7 @@
->  #include <linux/of_address.h>
->  #include <linux/of_platform.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/soc/mediatek/mtk-mmsys.h>
->  #include <linux/dma-mapping.h>
+> +	/* don't update i_compr_blocks if saved blocks were released */
+> +	if (!add && !F2FS_I(inode)->i_compr_blocks)
+> +		return;
+> +
+>  	if (add) {
+>  		F2FS_I(inode)->i_compr_blocks += diff;
+>  		stat_add_compr_blocks(inode, diff);
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 37c1147eb244..b8f01ee9d698 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -550,6 +550,7 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
+>  	bool compressed_cluster = false;
+>  	int cluster_index = 0, valid_blocks = 0;
+>  	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
+> +	bool released = !F2FS_I(dn->inode)->i_compr_blocks;
 >  
->  #include <drm/drm_atomic.h>
-> @@ -425,7 +426,6 @@ static int mtk_drm_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
->  	struct mtk_drm_private *private;
-> -	struct resource *mem;
->  	struct device_node *node;
->  	struct component_match *match = NULL;
->  	int ret;
-> @@ -437,13 +437,10 @@ static int mtk_drm_probe(struct platform_device *pdev)
+>  	if (IS_INODE(dn->node_page) && f2fs_has_extra_attr(dn->inode))
+>  		base = get_extra_isize(dn->inode);
+> @@ -588,7 +589,9 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
+>  			clear_inode_flag(dn->inode, FI_FIRST_BLOCK_WRITTEN);
 >  
->  	private->data = of_device_get_match_data(dev);
->  
-> -	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	private->config_regs = devm_ioremap_resource(dev, mem);
-> -	if (IS_ERR(private->config_regs)) {
-> -		ret = PTR_ERR(private->config_regs);
-> -		dev_err(dev, "Failed to ioremap mmsys-config resource: %d\n",
-> -			ret);
-> -		return ret;
-> +	private->config_regs = dev_get_drvdata(dev->parent);
-> +	if (!private->config_regs) {
-> +		dev_err(dev, "Failed to get MMSYS config registers\n");
-> +		return -ENODEV;
+>  		f2fs_invalidate_blocks(sbi, blkaddr);
+> -		nr_free++;
+> +
+> +		if (released && blkaddr != COMPRESS_ADDR)
+> +			nr_free++;
 >  	}
 >  
->  	/* Iterate over sibling DISP function blocks */
-> diff --git a/drivers/soc/mediatek/mtk-mmsys.c b/drivers/soc/mediatek/mtk-mmsys.c
-> index 473cdf732fb5..a8a98777064e 100644
-> --- a/drivers/soc/mediatek/mtk-mmsys.c
-> +++ b/drivers/soc/mediatek/mtk-mmsys.c
-> @@ -5,14 +5,81 @@
->   */
+>  	if (compressed_cluster)
+> @@ -3403,6 +3406,134 @@ static int f2fs_get_compress_blocks(struct file *filp, unsigned long arg)
+>  	return put_user(blocks, (u64 __user *)arg);
+>  }
 >  
->  #include <linux/clk-provider.h>
-> +#include <linux/device.h>
->  #include <linux/of_device.h>
->  #include <linux/platform_device.h>
-> +#include <linux/soc/mediatek/mtk-mmsys.h>
->  
->  #include "../../clk/mediatek/clk-gate.h"
->  #include "../../clk/mediatek/clk-mtk.h"
-> +#include "../../gpu/drm/mediatek/mtk_drm_ddp.h"
-> +#include "../../gpu/drm/mediatek/mtk_drm_ddp_comp.h"
->  
->  #include <dt-bindings/clock/mt8173-clk.h>
->  
-> +#define DISP_REG_CONFIG_DISP_OVL0_MOUT_EN	0x040
-> +#define DISP_REG_CONFIG_DISP_OVL1_MOUT_EN	0x044
-> +#define DISP_REG_CONFIG_DISP_OD_MOUT_EN		0x048
-> +#define DISP_REG_CONFIG_DISP_GAMMA_MOUT_EN	0x04c
-> +#define DISP_REG_CONFIG_DISP_UFOE_MOUT_EN	0x050
-> +#define DISP_REG_CONFIG_DISP_COLOR0_SEL_IN	0x084
-> +#define DISP_REG_CONFIG_DISP_COLOR1_SEL_IN	0x088
-> +#define DISP_REG_CONFIG_DSIE_SEL_IN		0x0a4
-> +#define DISP_REG_CONFIG_DSIO_SEL_IN		0x0a8
-> +#define DISP_REG_CONFIG_DPI_SEL_IN		0x0ac
-> +#define DISP_REG_CONFIG_DISP_RDMA2_SOUT		0x0b8
-> +#define DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN	0x0c4
-> +#define DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN	0x0c8
-> +#define DISP_REG_CONFIG_MMSYS_CG_CON0		0x100
-> +
-> +#define DISP_REG_CONFIG_DISP_OVL_MOUT_EN	0x030
-> +#define DISP_REG_CONFIG_OUT_SEL			0x04c
-> +#define DISP_REG_CONFIG_DSI_SEL			0x050
-> +#define DISP_REG_CONFIG_DPI_SEL			0x064
-> +
-> +#define OVL0_MOUT_EN_COLOR0			0x1
-> +#define OD_MOUT_EN_RDMA0			0x1
-> +#define OD1_MOUT_EN_RDMA1			BIT(16)
-> +#define UFOE_MOUT_EN_DSI0			0x1
-> +#define COLOR0_SEL_IN_OVL0			0x1
-> +#define OVL1_MOUT_EN_COLOR1			0x1
-> +#define GAMMA_MOUT_EN_RDMA1			0x1
-> +#define RDMA0_SOUT_DPI0				0x2
-> +#define RDMA0_SOUT_DPI1				0x3
-> +#define RDMA0_SOUT_DSI1				0x1
-> +#define RDMA0_SOUT_DSI2				0x4
-> +#define RDMA0_SOUT_DSI3				0x5
-> +#define RDMA1_SOUT_DPI0				0x2
-> +#define RDMA1_SOUT_DPI1				0x3
-> +#define RDMA1_SOUT_DSI1				0x1
-> +#define RDMA1_SOUT_DSI2				0x4
-> +#define RDMA1_SOUT_DSI3				0x5
-> +#define RDMA2_SOUT_DPI0				0x2
-> +#define RDMA2_SOUT_DPI1				0x3
-> +#define RDMA2_SOUT_DSI1				0x1
-> +#define RDMA2_SOUT_DSI2				0x4
-> +#define RDMA2_SOUT_DSI3				0x5
-> +#define DPI0_SEL_IN_RDMA1			0x1
-> +#define DPI0_SEL_IN_RDMA2			0x3
-> +#define DPI1_SEL_IN_RDMA1			(0x1 << 8)
-> +#define DPI1_SEL_IN_RDMA2			(0x3 << 8)
-> +#define DSI0_SEL_IN_RDMA1			0x1
-> +#define DSI0_SEL_IN_RDMA2			0x4
-> +#define DSI1_SEL_IN_RDMA1			0x1
-> +#define DSI1_SEL_IN_RDMA2			0x4
-> +#define DSI2_SEL_IN_RDMA1			(0x1 << 16)
-> +#define DSI2_SEL_IN_RDMA2			(0x4 << 16)
-> +#define DSI3_SEL_IN_RDMA1			(0x1 << 16)
-> +#define DSI3_SEL_IN_RDMA2			(0x4 << 16)
-> +#define COLOR1_SEL_IN_OVL1			0x1
-> +
-> +#define OVL_MOUT_EN_RDMA			0x1
-> +#define BLS_TO_DSI_RDMA1_TO_DPI1		0x8
-> +#define BLS_TO_DPI_RDMA1_TO_DSI			0x2
-> +#define DSI_SEL_IN_BLS				0x0
-> +#define DPI_SEL_IN_BLS				0x0
-> +#define DSI_SEL_IN_RDMA				0x1
-> +
->  static const struct mtk_gate_regs mm0_cg_regs = {
->  	.set_ofs = 0x0104,
->  	.clr_ofs = 0x0108,
-> @@ -110,13 +177,221 @@ static const struct mtk_mmsys_driver_data mt8173_mmsys_driver_data = {
->  	.gates_num = ARRAY_SIZE(mt8173_mm_clks),
->  };
->  
-> +static unsigned int mtk_mmsys_ddp_mout_en(enum mtk_ddp_comp_id cur,
-> +					  enum mtk_ddp_comp_id next,
-> +					  unsigned int *addr)
+> +static int release_compress_blocks(struct dnode_of_data *dn, pgoff_t count)
 > +{
-> +	unsigned int value;
+> +	struct f2fs_sb_info *sbi = F2FS_I_SB(dn->inode);
+> +	unsigned int released_blocks = 0;
+> +	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
 > +
-> +	if (cur == DDP_COMPONENT_OVL0 && next == DDP_COMPONENT_COLOR0) {
-> +		*addr = DISP_REG_CONFIG_DISP_OVL0_MOUT_EN;
-> +		value = OVL0_MOUT_EN_COLOR0;
-> +	} else if (cur == DDP_COMPONENT_OVL0 && next == DDP_COMPONENT_RDMA0) {
-> +		*addr = DISP_REG_CONFIG_DISP_OVL_MOUT_EN;
-> +		value = OVL_MOUT_EN_RDMA;
-> +	} else if (cur == DDP_COMPONENT_OD0 && next == DDP_COMPONENT_RDMA0) {
-> +		*addr = DISP_REG_CONFIG_DISP_OD_MOUT_EN;
-> +		value = OD_MOUT_EN_RDMA0;
-> +	} else if (cur == DDP_COMPONENT_UFOE && next == DDP_COMPONENT_DSI0) {
-> +		*addr = DISP_REG_CONFIG_DISP_UFOE_MOUT_EN;
-> +		value = UFOE_MOUT_EN_DSI0;
-> +	} else if (cur == DDP_COMPONENT_OVL1 && next == DDP_COMPONENT_COLOR1) {
-> +		*addr = DISP_REG_CONFIG_DISP_OVL1_MOUT_EN;
-> +		value = OVL1_MOUT_EN_COLOR1;
-> +	} else if (cur == DDP_COMPONENT_GAMMA && next == DDP_COMPONENT_RDMA1) {
-> +		*addr = DISP_REG_CONFIG_DISP_GAMMA_MOUT_EN;
-> +		value = GAMMA_MOUT_EN_RDMA1;
-> +	} else if (cur == DDP_COMPONENT_OD1 && next == DDP_COMPONENT_RDMA1) {
-> +		*addr = DISP_REG_CONFIG_DISP_OD_MOUT_EN;
-> +		value = OD1_MOUT_EN_RDMA1;
-> +	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DPI0) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> +		value = RDMA0_SOUT_DPI0;
-> +	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DPI1) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> +		value = RDMA0_SOUT_DPI1;
-> +	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI1) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> +		value = RDMA0_SOUT_DSI1;
-> +	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI2) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> +		value = RDMA0_SOUT_DSI2;
-> +	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI3) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> +		value = RDMA0_SOUT_DSI3;
-> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI1) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> +		value = RDMA1_SOUT_DSI1;
-> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI2) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> +		value = RDMA1_SOUT_DSI2;
-> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI3) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> +		value = RDMA1_SOUT_DSI3;
-> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI0) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> +		value = RDMA1_SOUT_DPI0;
-> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI1) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> +		value = RDMA1_SOUT_DPI1;
-> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI0) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> +		value = RDMA2_SOUT_DPI0;
-> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI1) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> +		value = RDMA2_SOUT_DPI1;
-> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI1) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> +		value = RDMA2_SOUT_DSI1;
-> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI2) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> +		value = RDMA2_SOUT_DSI2;
-> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI3) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> +		value = RDMA2_SOUT_DSI3;
-> +	} else {
-> +		value = 0;
+> +	while (count) {
+> +		int compr_blocks = 0;
+> +		block_t blkaddr = f2fs_data_blkaddr(dn);
+> +		int i;
+> +
+> +		if (blkaddr != COMPRESS_ADDR) {
+> +			dn->ofs_in_node += cluster_size;
+> +			goto next;
+> +		}
+> +
+> +		for (i = 0; i < cluster_size; i++, dn->ofs_in_node++) {
+> +			blkaddr = f2fs_data_blkaddr(dn);
+> +
+> +			if (__is_valid_data_blkaddr(blkaddr)) {
+> +				compr_blocks++;
+> +				if (unlikely(!f2fs_is_valid_blkaddr(sbi, blkaddr,
+> +							DATA_GENERIC_ENHANCE)))
+> +					return -EFSCORRUPTED;
+> +			}
+> +
+> +			if (blkaddr != NEW_ADDR)
+> +				continue;
+> +
+> +			dn->data_blkaddr = NULL_ADDR;
+> +			f2fs_set_data_blkaddr(dn);
+> +		}
+> +
+> +		f2fs_i_compr_blocks_update(dn->inode, compr_blocks, false);
+> +		dec_valid_block_count(sbi, dn->inode,
+> +					cluster_size - compr_blocks);
+> +
+> +		released_blocks += cluster_size - compr_blocks;
+> +next:
+> +		count -= cluster_size;
 > +	}
 > +
-> +	return value;
+> +	return released_blocks;
 > +}
 > +
-> +static unsigned int mtk_mmsys_ddp_sel_in(enum mtk_ddp_comp_id cur,
-> +					 enum mtk_ddp_comp_id next,
-> +					 unsigned int *addr)
+> +static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
 > +{
-> +	unsigned int value;
+> +	struct inode *inode = file_inode(filp);
+> +	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+> +	pgoff_t page_idx = 0, last_idx;
+> +	unsigned int released_blocks = 0;
+> +	int ret;
 > +
-> +	if (cur == DDP_COMPONENT_OVL0 && next == DDP_COMPONENT_COLOR0) {
-> +		*addr = DISP_REG_CONFIG_DISP_COLOR0_SEL_IN;
-> +		value = COLOR0_SEL_IN_OVL0;
-> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI0) {
-> +		*addr = DISP_REG_CONFIG_DPI_SEL_IN;
-> +		value = DPI0_SEL_IN_RDMA1;
-> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI1) {
-> +		*addr = DISP_REG_CONFIG_DPI_SEL_IN;
-> +		value = DPI1_SEL_IN_RDMA1;
-> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI0) {
-> +		*addr = DISP_REG_CONFIG_DSIE_SEL_IN;
-> +		value = DSI0_SEL_IN_RDMA1;
-> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI1) {
-> +		*addr = DISP_REG_CONFIG_DSIO_SEL_IN;
-> +		value = DSI1_SEL_IN_RDMA1;
-> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI2) {
-> +		*addr = DISP_REG_CONFIG_DSIE_SEL_IN;
-> +		value = DSI2_SEL_IN_RDMA1;
-> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI3) {
-> +		*addr = DISP_REG_CONFIG_DSIO_SEL_IN;
-> +		value = DSI3_SEL_IN_RDMA1;
-> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI0) {
-> +		*addr = DISP_REG_CONFIG_DPI_SEL_IN;
-> +		value = DPI0_SEL_IN_RDMA2;
-> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI1) {
-> +		*addr = DISP_REG_CONFIG_DPI_SEL_IN;
-> +		value = DPI1_SEL_IN_RDMA2;
-> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI0) {
-> +		*addr = DISP_REG_CONFIG_DSIE_SEL_IN;
-> +		value = DSI0_SEL_IN_RDMA2;
-> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI1) {
-> +		*addr = DISP_REG_CONFIG_DSIO_SEL_IN;
-> +		value = DSI1_SEL_IN_RDMA2;
-> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI2) {
-> +		*addr = DISP_REG_CONFIG_DSIE_SEL_IN;
-> +		value = DSI2_SEL_IN_RDMA2;
-> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI3) {
-> +		*addr = DISP_REG_CONFIG_DSIE_SEL_IN;
-> +		value = DSI3_SEL_IN_RDMA2;
-> +	} else if (cur == DDP_COMPONENT_OVL1 && next == DDP_COMPONENT_COLOR1) {
-> +		*addr = DISP_REG_CONFIG_DISP_COLOR1_SEL_IN;
-> +		value = COLOR1_SEL_IN_OVL1;
-> +	} else if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DSI0) {
-> +		*addr = DISP_REG_CONFIG_DSI_SEL;
-> +		value = DSI_SEL_IN_BLS;
-> +	} else {
-> +		value = 0;
-> +	}
+> +	if (!f2fs_sb_has_compression(F2FS_I_SB(inode)))
+> +		return -EOPNOTSUPP;
 > +
-> +	return value;
-> +}
+> +	if (!f2fs_compressed_file(inode))
+> +		return -EINVAL;
 > +
-> +static void mtk_mmsys_ddp_sout_sel(void __iomem *config_regs,
-> +				   enum mtk_ddp_comp_id cur,
-> +				   enum mtk_ddp_comp_id next)
-> +{
-> +	if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DSI0) {
-> +		writel_relaxed(BLS_TO_DSI_RDMA1_TO_DPI1,
-> +			       config_regs + DISP_REG_CONFIG_OUT_SEL);
-> +	} else if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DPI0) {
-> +		writel_relaxed(BLS_TO_DPI_RDMA1_TO_DSI,
-> +			       config_regs + DISP_REG_CONFIG_OUT_SEL);
-> +		writel_relaxed(DSI_SEL_IN_RDMA,
-> +			       config_regs + DISP_REG_CONFIG_DSI_SEL);
-> +		writel_relaxed(DPI_SEL_IN_BLS,
-> +			       config_regs + DISP_REG_CONFIG_DPI_SEL);
-> +	}
-> +}
+> +	if (f2fs_readonly(sbi->sb))
+> +		return -EROFS;
 > +
-> +void mtk_mmsys_ddp_connect(void __iomem *config_regs,
-> +			   enum mtk_ddp_comp_id cur,
-> +			   enum mtk_ddp_comp_id next)
-> +{
-> +	unsigned int addr, value, reg;
-> +
-> +	value = mtk_mmsys_ddp_mout_en(cur, next, &addr);
-> +	if (value) {
-> +		reg = readl_relaxed(config_regs + addr) | value;
-> +		writel_relaxed(reg, config_regs + addr);
-> +	}
-> +
-> +	mtk_mmsys_ddp_sout_sel(config_regs, cur, next);
-> +
-> +	value = mtk_mmsys_ddp_sel_in(cur, next, &addr);
-> +	if (value) {
-> +		reg = readl_relaxed(config_regs + addr) | value;
-> +		writel_relaxed(reg, config_regs + addr);
-> +	}
-> +}
-> +
-> +void mtk_mmsys_ddp_disconnect(void __iomem *config_regs,
-> +			      enum mtk_ddp_comp_id cur,
-> +			      enum mtk_ddp_comp_id next)
-> +{
-> +	unsigned int addr, value, reg;
-> +
-> +	value = mtk_mmsys_ddp_mout_en(cur, next, &addr);
-> +	if (value) {
-> +		reg = readl_relaxed(config_regs + addr) & ~value;
-> +		writel_relaxed(reg, config_regs + addr);
-> +	}
-> +
-> +	value = mtk_mmsys_ddp_sel_in(cur, next, &addr);
-> +	if (value) {
-> +		reg = readl_relaxed(config_regs + addr) & ~value;
-> +		writel_relaxed(reg, config_regs + addr);
-> +	}
-> +}
-> +
->  static int mtk_mmsys_probe(struct platform_device *pdev)
->  {
->  	struct device_node *node = pdev->dev.of_node;
->  	const struct mtk_mmsys_driver_data *data;
->  	struct clk_onecell_data *clk_data;
-> +	struct device *dev = &pdev->dev;
-> +	void __iomem *config_regs;
-> +	struct resource *mem;
->  	int ret;
->  
-> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	config_regs = devm_ioremap_resource(dev, mem);
-> +	if (IS_ERR(config_regs)) {
-> +		ret = PTR_ERR(config_regs);
-> +		dev_err(dev, "Failed to ioremap mmsys-config resource: %d\n",
-> +			ret);
+> +	ret = mnt_want_write_file(filp);
+> +	if (ret)
 > +		return ret;
+> +
+> +	if (!F2FS_I(inode)->i_compr_blocks)
+> +		goto out;
+> +
+> +	f2fs_balance_fs(F2FS_I_SB(inode), true);
+> +
+> +	inode_lock(inode);
+> +
+> +	if (!IS_IMMUTABLE(inode)) {
+> +		F2FS_I(inode)->i_flags |= F2FS_IMMUTABLE_FL;
+> +		f2fs_set_inode_flags(inode);
+> +		inode->i_ctime = current_time(inode);
+> +		f2fs_mark_inode_dirty_sync(inode, true);
 > +	}
 > +
-> +	platform_set_drvdata(pdev, config_regs);
+> +	down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+> +	down_write(&F2FS_I(inode)->i_mmap_sem);
 > +
->  	clk_data = mtk_alloc_clk_data(CLK_MM_NR_CLK);
->  	if (!clk_data)
->  		return -ENOMEM;
-> diff --git a/include/linux/soc/mediatek/mtk-mmsys.h b/include/linux/soc/mediatek/mtk-mmsys.h
-> new file mode 100644
-> index 000000000000..02fd86e62a8d
-> --- /dev/null
-> +++ b/include/linux/soc/mediatek/mtk-mmsys.h
-> @@ -0,0 +1,19 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (c) 2015 MediaTek Inc.
-> + */
+> +	last_idx = DIV_ROUND_UP(i_size_read(inode), PAGE_SIZE);
 > +
-> +#ifndef __MTK_MMSYS_H
-> +#define __MTK_MMSYS_H
+> +	while (page_idx < last_idx) {
+> +		struct dnode_of_data dn;
+> +		pgoff_t end_offset, count;
 > +
-> +enum mtk_ddp_comp_id;
+> +		set_new_dnode(&dn, inode, NULL, NULL, 0);
+> +		ret = f2fs_get_dnode_of_data(&dn, page_idx, LOOKUP_NODE);
+> +		if (ret) {
+> +			if (ret == -ENOENT) {
+> +				page_idx = f2fs_get_next_page_offset(&dn,
+> +								page_idx);
+> +				ret = 0;
+> +				continue;
+> +			}
+> +			break;
+> +		}
 > +
-> +void mtk_mmsys_ddp_connect(void __iomem *config_regs,
-> +			   enum mtk_ddp_comp_id cur,
-> +			   enum mtk_ddp_comp_id next);
+> +		end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
+> +		count = min(end_offset - dn.ofs_in_node, last_idx - page_idx);
 > +
-> +void mtk_mmsys_ddp_disconnect(void __iomem *config_regs,
-> +			      enum mtk_ddp_comp_id cur,
-> +			      enum mtk_ddp_comp_id next);
+> +		ret = release_compress_blocks(&dn, count);
 > +
-> +#endif /* __MTK_MMSYS_H */
-> 
+> +		f2fs_put_dnode(&dn);
+> +
+> +		if (ret < 0)
+> +			break;
+> +
+> +		page_idx += count;
+> +		released_blocks += ret;
+> +	}
+> +
+> +	up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+> +	up_write(&F2FS_I(inode)->i_mmap_sem);
+> +
+> +	inode_unlock(inode);
+> +out:
+> +	mnt_drop_write_file(filp);
+> +
+> +	if (!ret)
+> +		ret = put_user(released_blocks, (u64 __user *)arg);
+> +
+> +	return ret;
+> +}
+> +
+>  long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>  {
+>  	if (unlikely(f2fs_cp_error(F2FS_I_SB(file_inode(filp)))))
+> @@ -3483,6 +3614,8 @@ long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>  		return f2fs_set_volume_name(filp, arg);
+>  	case F2FS_IOC_GET_COMPRESS_BLOCKS:
+>  		return f2fs_get_compress_blocks(filp, arg);
+> +	case F2FS_IOC_RELEASE_COMPRESS_BLOCKS:
+> +		return f2fs_release_compress_blocks(filp, arg);
+>  	default:
+>  		return -ENOTTY;
+>  	}
+> @@ -3643,6 +3776,7 @@ long f2fs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+>  	case F2FS_IOC_GET_VOLUME_NAME:
+>  	case F2FS_IOC_SET_VOLUME_NAME:
+>  	case F2FS_IOC_GET_COMPRESS_BLOCKS:
+> +	case F2FS_IOC_RELEASE_COMPRESS_BLOCKS:
+>  		break;
+>  	default:
+>  		return -ENOIOCTLCMD;
+> -- 
+> 2.18.0.rc1
