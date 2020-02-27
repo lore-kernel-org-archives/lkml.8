@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1992C3F369
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A00FC3F361
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7142246A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C90F620801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811447;
-	bh=zlIvsWLiIu2vHHDXgrNOvGC1i/J5RK5KM6PJcVaUzck=;
+	s=default; t=1582811418;
+	bh=xr8WmeTkk+Gy+qJX3xRrO9qExlXpFWJa3wPOnUD0IlQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aI9pWIPwP7CyhgThTAWgqHXFkzQGaZxnplSeuOVHZViTPRfnKKboQtQajBjDgemLq
-	 rJe5gkvukYKJnMfG7Je3+tFoqGUhCEhHkC5096w6nI6wDoyWZErJZISA4l8lSqLaUL
-	 hFHl8IGgONTH+HdMfJwINXwDyxY/TbpycVJuSxiM=
+	b=Vd/lGXfdPgzDb5dkzUQe4QohRB+GMxXCxIUcnFJm3vKGMcbpaYkVl2se3UtDjD2cl
+	 ZADz/SH5V6+9AxMO/U9Ue8bW02zD6o1Vf1RKOYP+5TuoKgPecUBfIUuFHxPUzLB1kY
+	 IlgdD82raNjTEQ+U4gKiTu6jNFp8ljR/63rzaZJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730882AbgB0Nuq (ORCPT
+        id S1731193AbgB0NuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:50:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49076 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:50:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731267AbgB0Nul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:50:41 -0500
+        id S1731157AbgB0NuE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:50:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D8FF20578;
-        Thu, 27 Feb 2020 13:50:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADA2420801;
+        Thu, 27 Feb 2020 13:50:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811440;
-        bh=zlIvsWLiIu2vHHDXgrNOvGC1i/J5RK5KM6PJcVaUzck=;
+        s=default; t=1582811404;
+        bh=xr8WmeTkk+Gy+qJX3xRrO9qExlXpFWJa3wPOnUD0IlQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IcfnajvQIpH59qeXKZBxazREgxT49vz8k3ZRPAmD8bAYLSWQ9sgg7CUWAREhSrPdv
-         oUhdzC4k3On55Kqijnft0zIYsYKvnxm25TAQ714rvwi+6lAh26DNezMDBJnDfNgJMh
-         VUVXBbqfzrd00NjU/tphhtqr2Cu62nFARzL2IeDQ=
+        b=SBziOK0Y/0b1Z2rjEk3RMmWt1W7i0JgEg6KGOIAkvkcep87uWb8Q79kmmSL5Flb7m
+         PL+w+kmnsGSJIlF/03yzbRsYpO/v15W0Nfeu2yqL5LwrJBwBVjMCTyWgofDpwpd3ij
+         E1Tu83Rz/LbeRPInIlSFxzclu0/zcdJ4HtWYZ7kg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        David Heinzelmann <heinzelmann.david@gmail.com>,
-        Paul Zimmerman <pauldzim@gmail.com>
-Subject: [PATCH 4.9 126/165] USB: hub: Dont record a connect-change event during reset-resume
-Date:   Thu, 27 Feb 2020 14:36:40 +0100
-Message-Id: <20200227132249.511133760@linuxfoundation.org>
+        stable@vger.kernel.org, Davide Caratti <dcaratti@redhat.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 118/165] net/sched: flower: add missing validation of TCA_FLOWER_FLAGS
+Date:   Thu, 27 Feb 2020 14:36:32 +0100
+Message-Id: <20200227132248.382816241@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -60,84 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Davide Caratti <dcaratti@redhat.com>
 
-commit 8099f58f1ecddf4f374f4828a3dff8397c7cbd74 upstream.
+[ Upstream commit e2debf0852c4d66ba1a8bde12869b196094c70a7 ]
 
-Paul Zimmerman reports that his USB Bluetooth adapter sometimes
-crashes following system resume, when it receives a
-Get-Device-Descriptor request while it is busy doing something else.
+unlike other classifiers that can be offloaded (i.e. users can set flags
+like 'skip_hw' and 'skip_sw'), 'cls_flower' doesn't validate the size of
+netlink attribute 'TCA_FLOWER_FLAGS' provided by user: add a proper entry
+to fl_policy.
 
-Such a request was added by commit a4f55d8b8c14 ("usb: hub: Check
-device descriptor before resusciation").  It gets sent when the hub
-driver's work thread checks whether a connect-change event on an
-enabled port really indicates a new device has been connected, as
-opposed to an old device momentarily disconnecting and then
-reconnecting (which can happen with xHCI host controllers, since they
-automatically enable connected ports).
-
-The same kind of thing occurs when a port's power session is lost
-during system suspend.  When the system wakes up it sees a
-connect-change event on the port, and if the child device's
-persist_enabled flag was set then hub_activate() sets the device's
-reset_resume flag as well as the port's bit in hub->change_bits.  The
-reset-resume code then takes responsibility for checking that the same
-device is still attached to the port, and it does this as part of the
-device's resume pathway.  By the time the hub driver's work thread
-starts up again, the device has already been fully reinitialized and
-is busy doing its own thing.  There's no need for the work thread to
-do the same check a second time, and in fact this unnecessary check is
-what caused the problem that Paul observed.
-
-Note that performing the unnecessary check is not actually a bug.
-Devices are supposed to be able to send descriptors back to the host
-even when they are busy doing something else.  The underlying cause of
-Paul's problem lies in his Bluetooth adapter.  Nevertheless, we
-shouldn't perform the same check twice in a row -- and as a nice side
-benefit, removing the extra check allows the Bluetooth adapter to work
-more reliably.
-
-The work thread performs its check when it sees that the port's bit is
-set in hub->change_bits.  In this situation that bit is interpreted as
-though a connect-change event had occurred on the port _after_ the
-reset-resume, which is not what actually happened.
-
-One possible fix would be to make the reset-resume code clear the
-port's bit in hub->change_bits.  But it seems simpler to just avoid
-setting the bit during hub_activate() in the first place.  That's what
-this patch does.
-
-(Proving that the patch is correct when CONFIG_PM is disabled requires
-a little thought.  In that setting hub_activate() will be called only
-for initialization and resets, since there won't be any resumes or
-reset-resumes.  During initialization and hub resets the hub doesn't
-have any child devices, and so this code path never gets executed.)
-
-Reported-and-tested-by: Paul Zimmerman <pauldzim@gmail.com>
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Link: https://marc.info/?t=157949360700001&r=1&w=2
-CC: David Heinzelmann <heinzelmann.david@gmail.com>
-CC: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2001311037460.1577-100000@iolanthe.rowland.org
+Fixes: 5b33f48842fa ("net/flower: Introduce hardware offload support")
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/core/hub.c |    5 -----
- 1 file changed, 5 deletions(-)
+ net/sched/cls_flower.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -1187,11 +1187,6 @@ static void hub_activate(struct usb_hub
- #ifdef CONFIG_PM
- 			udev->reset_resume = 1;
- #endif
--			/* Don't set the change_bits when the device
--			 * was powered off.
--			 */
--			if (test_bit(port1, hub->power_bits))
--				set_bit(port1, hub->change_bits);
+--- a/net/sched/cls_flower.c
++++ b/net/sched/cls_flower.c
+@@ -364,6 +364,7 @@ static const struct nla_policy fl_policy
+ 	[TCA_FLOWER_KEY_TCP_DST_MASK]	= { .type = NLA_U16 },
+ 	[TCA_FLOWER_KEY_UDP_SRC_MASK]	= { .type = NLA_U16 },
+ 	[TCA_FLOWER_KEY_UDP_DST_MASK]	= { .type = NLA_U16 },
++	[TCA_FLOWER_FLAGS]		= { .type = NLA_U32 },
+ };
  
- 		} else {
- 			/* The power session is gone; tell hub_wq */
+ static void fl_set_key_val(struct nlattr **tb,
 
 
