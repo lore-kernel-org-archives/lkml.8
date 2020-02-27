@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 749AFC52D35
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50722C35677
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48DC020801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F65A24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:03:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812188;
-	bh=m2kCbEicXJNKO8R5aEY0xA0V8g/smXFnErYXcPaD4io=;
+	s=default; t=1582812200;
+	bh=z57J7PEizy77KM3xdAe4s3IQIQNXSoGZGe440Wy2BQk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YhalGxdvn56f20LmHFstFjOSP0Ieh713nca9cLVbb81qYIhLr39oUVoP/lPnsZCL9
-	 uRFMigROs+xX0pZqEUXCT1byZ3eZ/4PfNKpURengclmmhKaDD00Zk6qIymVfjdgJfT
-	 RnkLDJzTei32jinfyrK2gKM3tjEOHkcsoDQIq+lc=
+	b=ZkSuIzJmFzLA7JWvzd4a/5L4do3IFXODng7Q/bffEU0w01WTu6X+nRc4va87yi9R2
+	 rBwj7bm9Gs6QjOZK6BOcN/LZ3ZcPqpzdFjWpzzl3XTl+NsP2WJOzviqrlfuLRcv5nQ
+	 fCK7UD605Pa29ds3u7ldpNd8F3swcjGJdDazW5RQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733261AbgB0ODG (ORCPT
+        id S1733310AbgB0ODS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:03:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38086 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:03:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733253AbgB0ODD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:03:03 -0500
+        id S1732977AbgB0ODQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:03:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 756B621556;
-        Thu, 27 Feb 2020 14:03:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A81020801;
+        Thu, 27 Feb 2020 14:03:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812182;
-        bh=m2kCbEicXJNKO8R5aEY0xA0V8g/smXFnErYXcPaD4io=;
+        s=default; t=1582812195;
+        bh=z57J7PEizy77KM3xdAe4s3IQIQNXSoGZGe440Wy2BQk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UCpmA4Oqli+kq2/BBMadIcztGLkNEftWV24FwagbgJ3JKqsHhAVgmJmMfEGqmo0dj
-         6bZGv9C7le70KZKCOFcCyxCvCEThKR7BzQWj5TG+PvZQAhKKr9FBQm2DJTa1Uk+kdI
-         MEUxqCnUxrHYZqZ5VgK4MzUn+PAipq36LROu7JuI=
+        b=WMxW1cCgYlLnfwmINJnrlSkYyQHXWSLGXaisVLr83eZvdaNAHDfz2zCWUEwFTwgqS
+         0yCiOZHOxiVcqRmQENEic/dIUaxDESliCiJv/QjS5AZIt8Xfh5Tkoslk1LEgR5DWAC
+         YV8XDvA1KvTRku7WTb2DD/KXRTUq5Z+/fy4bAEuw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: [PATCH 4.19 17/97] staging: android: ashmem: Disallow ashmem memory from being remapped
-Date:   Thu, 27 Feb 2020 14:36:25 +0100
-Message-Id: <20200227132217.437325823@linuxfoundation.org>
+        stable@vger.kernel.org, Samuel Holland <samuel@sholland.org>,
+        Chen-Yu Tsai <wens@csie.org>, stable@kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.19 05/97] ASoC: sun8i-codec: Fix setting DAI data format
+Date:   Thu, 27 Feb 2020 14:36:13 +0100
+Message-Id: <20200227132215.467861082@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
 References: <20200227132214.553656188@linuxfoundation.org>
@@ -61,73 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suren Baghdasaryan <surenb@google.com>
+From: Samuel Holland <samuel@sholland.org>
 
-commit 6d67b0290b4b84c477e6a2fc6e005e174d3c7786 upstream.
+commit 96781fd941b39e1f78098009344ebcd7af861c67 upstream.
 
-When ashmem file is mmapped, the resulting vma->vm_file points to the
-backing shmem file with the generic fops that do not check ashmem
-permissions like fops of ashmem do. If an mremap is done on the ashmem
-region, then the permission checks will be skipped. Fix that by disallowing
-mapping operation on the backing shmem file.
+Use the correct mask for this two-bit field. This fixes setting the DAI
+data format to RIGHT_J or DSP_A.
 
-Reported-by: Jann Horn <jannh@google.com>
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-Cc: stable <stable@vger.kernel.org> # 4.4,4.9,4.14,4.18,5.4
-Signed-off-by: Todd Kjos <tkjos@google.com>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Link: https://lore.kernel.org/r/20200127235616.48920-1-tkjos@google.com
+Fixes: 36c684936fae ("ASoC: Add sun8i digital audio codec")
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
+Cc: stable@kernel.org
+Link: https://lore.kernel.org/r/20200217064250.15516-7-samuel@sholland.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/android/ashmem.c |   28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ sound/soc/sunxi/sun8i-codec.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/staging/android/ashmem.c
-+++ b/drivers/staging/android/ashmem.c
-@@ -350,8 +350,23 @@ static inline vm_flags_t calc_vm_may_fla
- 	       _calc_vm_trans(prot, PROT_EXEC,  VM_MAYEXEC);
- }
+--- a/sound/soc/sunxi/sun8i-codec.c
++++ b/sound/soc/sunxi/sun8i-codec.c
+@@ -89,6 +89,7 @@
  
-+static int ashmem_vmfile_mmap(struct file *file, struct vm_area_struct *vma)
-+{
-+	/* do not allow to mmap ashmem backing shmem file directly */
-+	return -EPERM;
-+}
-+
-+static unsigned long
-+ashmem_vmfile_get_unmapped_area(struct file *file, unsigned long addr,
-+				unsigned long len, unsigned long pgoff,
-+				unsigned long flags)
-+{
-+	return current->mm->get_unmapped_area(file, addr, len, pgoff, flags);
-+}
-+
- static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
- {
-+	static struct file_operations vmfile_fops;
- 	struct ashmem_area *asma = file->private_data;
- 	int ret = 0;
- 
-@@ -392,6 +407,19 @@ static int ashmem_mmap(struct file *file
- 		}
- 		vmfile->f_mode |= FMODE_LSEEK;
- 		asma->file = vmfile;
-+		/*
-+		 * override mmap operation of the vmfile so that it can't be
-+		 * remapped which would lead to creation of a new vma with no
-+		 * asma permission checks. Have to override get_unmapped_area
-+		 * as well to prevent VM_BUG_ON check for f_ops modification.
-+		 */
-+		if (!vmfile_fops.mmap) {
-+			vmfile_fops = *vmfile->f_op;
-+			vmfile_fops.mmap = ashmem_vmfile_mmap;
-+			vmfile_fops.get_unmapped_area =
-+					ashmem_vmfile_get_unmapped_area;
-+		}
-+		vmfile->f_op = &vmfile_fops;
+ #define SUN8I_SYS_SR_CTRL_AIF1_FS_MASK		GENMASK(15, 12)
+ #define SUN8I_SYS_SR_CTRL_AIF2_FS_MASK		GENMASK(11, 8)
++#define SUN8I_AIF1CLK_CTRL_AIF1_DATA_FMT_MASK	GENMASK(3, 2)
+ #define SUN8I_AIF1CLK_CTRL_AIF1_WORD_SIZ_MASK	GENMASK(5, 4)
+ #define SUN8I_AIF1CLK_CTRL_AIF1_LRCK_DIV_MASK	GENMASK(8, 6)
+ #define SUN8I_AIF1CLK_CTRL_AIF1_BCLK_DIV_MASK	GENMASK(12, 9)
+@@ -250,7 +251,7 @@ static int sun8i_set_fmt(struct snd_soc_
+ 		return -EINVAL;
  	}
- 	get_file(asma->file);
+ 	regmap_update_bits(scodec->regmap, SUN8I_AIF1CLK_CTRL,
+-			   BIT(SUN8I_AIF1CLK_CTRL_AIF1_DATA_FMT),
++			   SUN8I_AIF1CLK_CTRL_AIF1_DATA_FMT_MASK,
+ 			   value << SUN8I_AIF1CLK_CTRL_AIF1_DATA_FMT);
  
+ 	return 0;
 
 
