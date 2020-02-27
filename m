@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE38C3F359
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6115C3F351
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18F9E21D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EB3D20578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811294;
-	bh=dyJB4AbiRs8UTaYPM1R1ihsyd+1yCPfzHhcMjATqpkc=;
+	s=default; t=1582811198;
+	bh=ajpB8eecB8S6mcm+Ep69bc4C07rF0kg9REsPpgf97+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n1GZjNzkgFRx+rXEKmz3U6sXbKptoIYc71zSr5oI4A6R88aRmHU5yXDMzZQmNqbUg
-	 +R0O5I1NEGtaNWX4eO52vyf+lB+Vc3Rk42n6eYxjochKA1z/Ai9/AXZ2zqfH2hjxiv
-	 U7xdwCBbX2yDzHGr/2mJ1/Ra7sUUe/yQC9AV1El4=
+	b=xF8w2dDY82DQQ4YLJfVSQQMGzbzDZpnwyr8ymIKG08moCr6OCxwSujlMsy+RerGPj
+	 dSwzD2ybN4Z9I5xoEonm6AgGJ/3Bj7+uWEykAAqSE6DxwMUes/K0/DWr/tuE9b33r3
+	 WlVUg1rRT6qwDDmi81qX1kGNBcCQNxxs2Rvk1rPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730839AbgB0NsN (ORCPT
+        id S1730298AbgB0Nqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:48:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44804 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:46:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730831AbgB0NsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:48:10 -0500
+        id S1730535AbgB0Nqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:46:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC44521D7E;
-        Thu, 27 Feb 2020 13:48:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E12E621D7E;
+        Thu, 27 Feb 2020 13:46:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811290;
-        bh=dyJB4AbiRs8UTaYPM1R1ihsyd+1yCPfzHhcMjATqpkc=;
+        s=default; t=1582811194;
+        bh=ajpB8eecB8S6mcm+Ep69bc4C07rF0kg9REsPpgf97+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cwhX5lOy+YFXDc7teLrRlRMnfRNVXrTsY9K9JAvpXToF5GnsghbmmE1OnYQqq+rzE
-         /QAoN15eOWnpGs0UWft5c8qjM5DPPisQabZfpGEMD5JonYmPOTU2PmhIg9Ce/u7g4H
-         311z7LDS0YU1qBSt/uvg7bOgD60hmv/PNBDDw9qA=
+        b=WPWF+s/ZBBC8WVACUrOUITSvOF2I4IzurtZQnwNu+PFOxci7TP01k/TFFWSr0FXPx
+         TBkhSG4+zrK8U59E/NO7uilV8uFiAkWYA2jBL/GCiFhTWaaky81/EueYXJYYX9Ok8f
+         HSHMQTQdwkkxWs7W8OkywQX3/w+geDMwgORTe8xo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Chen Zhou <chenzhou10@huawei.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 074/165] ASoC: atmel: fix build error with CONFIG_SND_ATMEL_SOC_DMA=m
-Date:   Thu, 27 Feb 2020 14:35:48 +0100
-Message-Id: <20200227132242.227421509@linuxfoundation.org>
+Subject: [PATCH 4.9 037/165] usb: gadget: udc: fix possible sleep-in-atomic-context bugs in gr_probe()
+Date:   Thu, 27 Feb 2020 14:35:11 +0100
+Message-Id: <20200227132236.608102745@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -61,41 +60,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Zhou <chenzhou10@huawei.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 8fea78029f5e6ed734ae1957bef23cfda1af4354 ]
+[ Upstream commit 9c1ed62ae0690dfe5d5e31d8f70e70a95cb48e52 ]
 
-If CONFIG_SND_ATMEL_SOC_DMA=m, build error:
+The driver may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-sound/soc/atmel/atmel_ssc_dai.o: In function `atmel_ssc_set_audio':
-(.text+0x7cd): undefined reference to `atmel_pcm_dma_platform_register'
+drivers/usb/gadget/udc/core.c, 1175:
+	kzalloc(GFP_KERNEL) in usb_add_gadget_udc_release
+drivers/usb/gadget/udc/core.c, 1272:
+	usb_add_gadget_udc_release in usb_add_gadget_udc
+drivers/usb/gadget/udc/gr_udc.c, 2186:
+	usb_add_gadget_udc in gr_probe
+drivers/usb/gadget/udc/gr_udc.c, 2183:
+	spin_lock in gr_probe
 
-Function atmel_pcm_dma_platform_register is defined under
-CONFIG SND_ATMEL_SOC_DMA, so select SND_ATMEL_SOC_DMA in
-CONFIG SND_ATMEL_SOC_SSC, same to CONFIG_SND_ATMEL_SOC_PDC.
+drivers/usb/gadget/udc/core.c, 1195:
+	mutex_lock in usb_add_gadget_udc_release
+drivers/usb/gadget/udc/core.c, 1272:
+	usb_add_gadget_udc_release in usb_add_gadget_udc
+drivers/usb/gadget/udc/gr_udc.c, 2186:
+	usb_add_gadget_udc in gr_probe
+drivers/usb/gadget/udc/gr_udc.c, 2183:
+	spin_lock in gr_probe
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-Link: https://lore.kernel.org/r/20200113133242.144550-1-chenzhou10@huawei.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+drivers/usb/gadget/udc/gr_udc.c, 212:
+	debugfs_create_file in gr_probe
+drivers/usb/gadget/udc/gr_udc.c, 2197:
+	gr_dfs_create in gr_probe
+drivers/usb/gadget/udc/gr_udc.c, 2183:
+    spin_lock in gr_probe
+
+drivers/usb/gadget/udc/gr_udc.c, 2114:
+	devm_request_threaded_irq in gr_request_irq
+drivers/usb/gadget/udc/gr_udc.c, 2202:
+	gr_request_irq in gr_probe
+drivers/usb/gadget/udc/gr_udc.c, 2183:
+    spin_lock in gr_probe
+
+kzalloc(GFP_KERNEL), mutex_lock(), debugfs_create_file() and
+devm_request_threaded_irq() can sleep at runtime.
+
+To fix these possible bugs, usb_add_gadget_udc(), gr_dfs_create() and
+gr_request_irq() are called without handling the spinlock.
+
+These bugs are found by a static analysis tool STCheck written by myself.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/atmel/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/gadget/udc/gr_udc.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
-index 22aec9a1e9a49..838d03a138ca2 100644
---- a/sound/soc/atmel/Kconfig
-+++ b/sound/soc/atmel/Kconfig
-@@ -25,6 +25,8 @@ config SND_ATMEL_SOC_DMA
+diff --git a/drivers/usb/gadget/udc/gr_udc.c b/drivers/usb/gadget/udc/gr_udc.c
+index 39b7136d31d9c..9e246d2e55ca3 100644
+--- a/drivers/usb/gadget/udc/gr_udc.c
++++ b/drivers/usb/gadget/udc/gr_udc.c
+@@ -2200,8 +2200,6 @@ static int gr_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	}
  
- config SND_ATMEL_SOC_SSC_DMA
- 	tristate
-+	select SND_ATMEL_SOC_DMA
-+	select SND_ATMEL_SOC_PDC
+-	spin_lock(&dev->lock);
+-
+ 	/* Inside lock so that no gadget can use this udc until probe is done */
+ 	retval = usb_add_gadget_udc(dev->dev, &dev->gadget);
+ 	if (retval) {
+@@ -2210,15 +2208,21 @@ static int gr_probe(struct platform_device *pdev)
+ 	}
+ 	dev->added = 1;
  
- config SND_ATMEL_SOC_SSC
- 	tristate
++	spin_lock(&dev->lock);
++
+ 	retval = gr_udc_init(dev);
+-	if (retval)
++	if (retval) {
++		spin_unlock(&dev->lock);
+ 		goto out;
+-
+-	gr_dfs_create(dev);
++	}
+ 
+ 	/* Clear all interrupt enables that might be left on since last boot */
+ 	gr_disable_interrupts_and_pullup(dev);
+ 
++	spin_unlock(&dev->lock);
++
++	gr_dfs_create(dev);
++
+ 	retval = gr_request_irq(dev, dev->irq);
+ 	if (retval) {
+ 		dev_err(dev->dev, "Failed to request irq %d\n", dev->irq);
+@@ -2247,8 +2251,6 @@ static int gr_probe(struct platform_device *pdev)
+ 		dev_info(dev->dev, "regs: %p, irq %d\n", dev->regs, dev->irq);
+ 
+ out:
+-	spin_unlock(&dev->lock);
+-
+ 	if (retval)
+ 		gr_remove(pdev);
+ 
 -- 
 2.20.1
 
