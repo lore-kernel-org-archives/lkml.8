@@ -2,166 +2,178 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C55DC35DF9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D233C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35C9F2468E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3998D2468E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:30:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vg4eJJf5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="cTr4OZYR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730364AbgB0Tas (ORCPT
+        id S1730420AbgB0Ta5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 14:30:48 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:41781 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729727AbgB0Tas (ORCPT
+        Thu, 27 Feb 2020 14:30:57 -0500
+Received: from gateway20.websitewelcome.com ([192.185.68.24]:45814 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727268AbgB0Ta4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 14:30:48 -0500
-Received: by mail-yw1-f66.google.com with SMTP id h6so693046ywc.8;
-        Thu, 27 Feb 2020 11:30:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ms7ngyPWar2qTVrk3JwekzFVpUj9g8rYLZFTYitG1L4=;
-        b=Vg4eJJf52nV/QEaLGfoy/7pOMlXMCzJV6BDXgLP+8pOfYvE3LNy/3H/PfrcDKy7q36
-         u7cwhlZEJJX+7kbyJg2/1DSKsNeuLzw246fD6Knxztsjj8Bf4o0tSEHvVZA6qF0WMeoW
-         93hpdvMTbKjXeHyc4PVdVHNQWl9pQDquQD0SxKCGIiP2Y0KnPjhfAhYX03LPLQDSGVdP
-         PV9PuPJwl3RHxy0nE5YjVq7St/atqZZzLBkALhdtZBDlQAtzkeLcwNpPxfkHjZ5xveoG
-         P3W4DSI9RBGAa8CjbZd6p1QcwAM1IOzLzgSZdbQqjnYT/ZScv2ym+Q/vvAf/QPfuwcQS
-         N4hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ms7ngyPWar2qTVrk3JwekzFVpUj9g8rYLZFTYitG1L4=;
-        b=V1IgvmsINcmul4rgKzg2kXMdX5l8NUALZodiwW155MaEshBLVlLyOvhmZWOnds/eBJ
-         4ingF4B1V4bpSZDYH6JbZPTOXONNQ2SaOMksYrWMRfrpDCZmzn8cDvOmpceYraKrUSzY
-         7EhUmbnk0mCDsLGwCOUnysfnNCL2jeiRje3YV0dgxJMti51GtbjWVHby17F98QOlftjb
-         DoEj51CEutmDC7OHvIXRNHcmyaauYqV4XS2Gcg4nU3bXLqdIVsJXZ+I8DoqfOwEg9g35
-         wCI1iXtFDoBn43WGuI+cBv4QSWkNAGeZJaWtxPwsmvidDUAhKLguGmhOHNo7h/CzlyPm
-         qmug==
-X-Gm-Message-State: APjAAAUyE5kWK0cby7x+TiiwScV59SU6Cfw1Bm3ERuMRHscrfFG8CO30
-        5tbx/+lP+1ls3DG8DhQiQ5c=
-X-Google-Smtp-Source: APXvYqy+WY0jHqtqjj8JxepUNnPEWKjf5VaeZerNTq74HfE9WncKQwQXPKW8OPgcFRvjWBnQOfVcOA==
-X-Received: by 2002:a81:5305:: with SMTP id h5mr953870ywb.31.1582831846997;
-        Thu, 27 Feb 2020 11:30:46 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id q16sm2846732ywa.110.2020.02.27.11.30.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Feb 2020 11:30:46 -0800 (PST)
-Subject: Re: [PATCH v2] of: overlay: log the error cause on resolver failure
-To:     Luca Ceresoli <luca@lucaceresoli.net>, devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-References: <20200225164540.4520-1-luca@lucaceresoli.net>
- <f9565679-5892-bcf0-f751-bfcac87670a8@gmail.com>
- <40fdf0f2-85a4-9f84-6994-a59b7b56cec4@lucaceresoli.net>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <efcb22be-7fb4-908d-d54f-6a22f1c62ec5@gmail.com>
-Date:   Thu, 27 Feb 2020 13:30:46 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 27 Feb 2020 14:30:56 -0500
+X-Greylist: delayed 1401 seconds by postgrey-1.27 at vger.kernel.org; Thu, 27 Feb 2020 14:30:56 EST
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 82E3C400D3184
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 12:16:32 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 7Os3jadkWSl8q7Os3jEqz3; Thu, 27 Feb 2020 13:30:55 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=4bJAusBDDTCuVM+AvNG1uuSS+0lZFJhJbDhIue2pKek=; b=cTr4OZYRBo4vPeRfkic1DpqvI3
+        LQmKYe7NW8xeCHniNUZKBpPm/q7/zfBOfJgz0FSN/5R1NbYTs3wuqsofOAlXHB8symnav8Av+IlEZ
+        kqNaqik3kg7IZ0EiFtidx8vJG29FZY7T9yb2rxNifDpbgtL8yYxxNse5AueYbApifyACpxzqzv+lt
+        BmYOA9TFHaD+iu15VJ/RAj6apSRQ7ujB3chkB5EpqsAQxQOxwePEMmMYkGVjFlSRfz4U8s/is+1tv
+        Aclz98KWL4/h33dyar/TlpUUU0fhqcfp+SlZQbylmFsD9M667Wk/jD4uZWBdS1kIk3Ie7aCMWqzyy
+        UPEAEnWQ==;
+Received: from [201.162.169.69] (port=8108 helo=[192.168.43.132])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j7Os2-0001yo-Us; Thu, 27 Feb 2020 13:30:55 -0600
+Subject: Re: [PATCH] amba: tegra-ahb: Replace zero-length array with
+ flexible-array member
+To:     Russell King <linux@armlinux.org.uk>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200211210213.GA28043@embeddedor>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <292f9b65-c2b5-c719-ba79-c0db4a11f482@embeddedor.com>
+Date:   Thu, 27 Feb 2020 13:33:46 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <40fdf0f2-85a4-9f84-6994-a59b7b56cec4@lucaceresoli.net>
+In-Reply-To: <20200211210213.GA28043@embeddedor>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.169.69
+X-Source-L: No
+X-Exim-ID: 1j7Os2-0001yo-Us
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.132]) [201.162.169.69]:8108
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 17
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/27/20 2:11 AM, Luca Ceresoli wrote:
-> Hi Frank,
+Hi all,
+
+Friendly ping: Who can take this?
+
+Thanks
+--
+Gustavo
+
+On 2/11/20 15:02, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
 > 
-> On 26/02/20 04:53, Frank Rowand wrote:
->> On 2/25/20 10:45 AM, Luca Ceresoli wrote:
->>> For some of its error paths, of_resolve_phandles() only logs a very generic
->>> error which does not help much in finding the origin of the problem:
->>>
->>>   OF: resolver: overlay phandle fixup failed: -22
->>>
->>> Add error messages for all the error paths that don't have one. Now a
->>> specific message is always emitted, thus also remove the generic catch-all
->>> message emitted before returning.
->>>
->>> For example, in case a DT overlay has a fixup node that is not present in
->>> the base DT __symbols__, this error is now logged:
->>>
->>>   OF: resolver: node gpio9 not found in base DT, fixup failed
->>>
->>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
->>> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
->>> ---
->>>
->>> I don't know in detail the meaning of the adjust_local_phandle_references()
->>> and update_usages_of_a_phandle_reference() error paths, thus I have put
->>> pretty generic messages. Any suggestion on better wording would be welcome.
->>
->> If you have not read the code to understand what the meaning of
->> the errors are, you should not be suggesting changes to the error
->> messages.
->>
->> Only one of the issues detected as errors can possibly be something
->> other than an error either in the resolver.c code or the dtc
->> compiler -- a missing symbol in the live devicetree.  This may
->> be because of failing to compile the base devicetree without
->> symbols, depending on a symbol from another overlay where the
->> other overlay has not been applied, or depending on a symbol
->> from another overlay where the other overlay is applied but
->> the overlay was not compiled with symbols.  (Not meant to be
->> an exhaustive list, but it might be.)  Thus the missing
->> symbol problem might be fixable without a fix to kernel
->> code.  The error message philosophy for overlay related
->> errors is to minimize error messages that help diagnose
->> the precise cause of a kernel code bug, with the intent
->> of keeping the code more compact and readable.  When a
->> bug occurs, debugging messages can be added for the
->> debug session.
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
 > 
-> Got it, sorry about that.
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertenly introduced[3] to the codebase from now on.
 > 
->> Following this philosophy, only the message in the second
->> patch chunk is ok.
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
 > 
-> Then I think you can apply the v1 patch which only contains the message
-> about the problem I experienced, and which was caused by an incorrect DTO:
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  drivers/amba/tegra-ahb.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> https://patchwork.ozlabs.org/patch/1243987/
+> diff --git a/drivers/amba/tegra-ahb.c b/drivers/amba/tegra-ahb.c
+> index b0b688c481e8..e9e5c7bb580c 100644
+> --- a/drivers/amba/tegra-ahb.c
+> +++ b/drivers/amba/tegra-ahb.c
+> @@ -129,7 +129,7 @@ static const u32 tegra_ahb_gizmo[] = {
+>  struct tegra_ahb {
+>  	void __iomem	*regs;
+>  	struct device	*dev;
+> -	u32		ctx[0];
+> +	u32		ctx[];
+>  };
+>  
+>  static inline u32 gizmo_readl(struct tegra_ahb *ahb, u32 offset)
 > 
-> Just ignore the note saying the patch is not for mainline, it's wrong.
-> 
-
-Mostly yes, v1 contains the one place a message should be added.
-
-Let me bike shed a little bit though.
-
-I suggested a different wording for the message in v2, but I
-do not think my attempt at wording was precise enough.  I
-would instead suggest:
-
-  "node label '%s' not found in live devicetree symbols table\n"
-
-Some subtle differences.
-  - It is a node label, not a node name.
-  - If multiple overlays are applied, then the intention may have
-    been to supply the node label via a previously applied overlay
-    instead of from the base devicetree.  So specifying the live
-    devicetree is more accurate.
-
-Please submit v3 for mainline.
-
-Thanks,
-
-Frank
