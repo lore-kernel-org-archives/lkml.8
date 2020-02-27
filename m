@@ -2,68 +2,121 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF81C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF89C35DEE
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39CBF246A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:32:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D906246A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:34:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729987AbgB0Qcc (ORCPT
+        id S1730293AbgB0Qe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 11:32:32 -0500
-Received: from foss.arm.com ([217.140.110.172]:54470 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730206AbgB0Qcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 11:32:31 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 554A21FB;
-        Thu, 27 Feb 2020 08:32:31 -0800 (PST)
-Received: from [10.0.8.126] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9BD7B3F7B4;
-        Thu, 27 Feb 2020 08:32:28 -0800 (PST)
-Subject: Re: [PATCH 0/2] sched, arm64: enable CONFIG_SCHED_SMT for arm64
-To:     Valentin Schneider <valentin.schneider@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        morten.rasmussen@arm.com, qperret@google.com,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        Thu, 27 Feb 2020 11:34:58 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:38832 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1730194AbgB0Qe4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 11:34:56 -0500
+Received: (qmail 3344 invoked by uid 2102); 27 Feb 2020 11:34:55 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 27 Feb 2020 11:34:55 -0500
+Date:   Thu, 27 Feb 2020 11:34:55 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Boqun Feng <boqun.feng@gmail.com>
+cc:     linux-kernel@vger.kernel.org,
+        Andrea Parri <parri.andrea@gmail.com>,
         Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-References: <20200226164118.6405-1-valentin.schneider@arm.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <a1e02a5e-4d1a-7b25-b6de-a3cc556a3a1f@arm.com>
-Date:   Thu, 27 Feb 2020 16:32:27 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        <linux-arch@vger.kernel.org>, <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v3 2/5] Documentation/locking/atomic: Fix atomic-set
+ litmus test
+In-Reply-To: <20200227004049.6853-3-boqun.feng@gmail.com>
+Message-ID: <Pine.LNX.4.44L0.2002271133300.1730-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-In-Reply-To: <20200226164118.6405-1-valentin.schneider@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.02.20 16:41, Valentin Schneider wrote:
-> Hi,
-> 
-> Strictly speaking those two patches are independent, but I figured it would
-> make sense to send them together (since one led to the other).
-> 
-> Patch 1 adds a sanity check against EAS + SMT.
-> Patch 2 enables CONFIG_SCHED_SMT in the arm64 defconfig.
-> 
-> Cheers,
-> Valentin
+On Thu, 27 Feb 2020, Boqun Feng wrote:
 
-With those small questions in 1/2 and 2/2:
+> Currently the litmus test "atomic-set" in atomic_t.txt has a few things
+> to be improved:
+> 
+> 1)	The CPU/Processor numbers "P1,P2" are not only inconsistent with
+> 	the rest of the document, which uses "CPU0" and "CPU1", but also
+> 	unacceptable by the herd tool, which requires processors start
+> 	at "P0".
+> 
+> 2)	The initialization block uses a "atomic_set()", which is OK, but
+> 	it's better to use ATOMIC_INIT() to make clear this is an
+> 	initialization.
+> 
+> 3)	The return value of atomic_add_unless() is discarded
+> 	inexplicitly, which is OK for C language, but it will be helpful
+> 	to the herd tool if we use a void cast to make the discard
+> 	explicit.
+> 
+> Therefore fix these and this is the preparation for adding the litmus
+> test into memory-model litmus-tests directory so that people can
+> understand better about our requirements of atomic APIs and klitmus tool
+> can be used to generate tests.
+> 
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 
-Reviewed-by: "Dietmar Eggemann <dietmar.eggemann@arm.com>"
+Patch 5/5 in this series does basically the same thing for 
+Atomic-RMW+mb__after_atomic-is-stronger-than-acquire.  How come you 
+used one patch for that, but this is split into two patches (2/5 and 
+4/5)?
+
+Alan
+
+> ---
+>  Documentation/atomic_t.txt | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
+> index 0ab747e0d5ac..ceb85ada378e 100644
+> --- a/Documentation/atomic_t.txt
+> +++ b/Documentation/atomic_t.txt
+> @@ -91,15 +91,15 @@ ops. That is:
+>    C atomic-set
+>  
+>    {
+> -    atomic_set(v, 1);
+> +    atomic_t v = ATOMIC_INIT(1);
+>    }
+>  
+> -  P1(atomic_t *v)
+> +  P0(atomic_t *v)
+>    {
+> -    atomic_add_unless(v, 1, 0);
+> +    (void)atomic_add_unless(v, 1, 0);
+>    }
+>  
+> -  P2(atomic_t *v)
+> +  P1(atomic_t *v)
+>    {
+>      atomic_set(v, 0);
+>    }
+> 
+
 
