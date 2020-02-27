@@ -2,114 +2,177 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E13AC4BA3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B84BC4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35A7924696
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:31:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="e/FbEKVO"
+	by mail.kernel.org (Postfix) with ESMTP id E763E24691
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:34:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728974AbgB0Lbe (ORCPT
+        id S1728901AbgB0LeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 06:31:34 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:40730 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728966AbgB0Lbd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 06:31:33 -0500
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id CADA1C0F39;
-        Thu, 27 Feb 2020 11:31:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1582803093; bh=g1PNO3dJwapptFFDIh94Tq3o6pR2tpjxuF2ZTzqCpQ4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=e/FbEKVO3uUAhW35HLE3UQQMuPOCPLX/uZojqRUIr5iCZ06DlOcAHPT1pLDS9dk1s
-         XXdvqpCWEhwHva9WR/nuOe3aykLPC71mJvosJulSktwQruEaS6DuCBYCtPbX/ohugy
-         syUjLN78NP6Daq9YoKM5+r9aPkEo/aGPFe6jcgsMibEAjPBcO3DUeM34tXtKq93xTP
-         RrLPBZBmeuCQheBy8u95FRjhtfXZUCADjs7ezByPbYQTOFa+GLJmc8V6kZjZLrT7A0
-         T+yL04MmPRZLj2qVtTcUCD4JvVVOALBxKzIi0aQ4Eosg/d2hRmdWEjjTd7gH9sFl/I
-         IspoVc4sQmJ+w==
-Received: from de02.synopsys.com (germany.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 87526A005F;
-        Thu, 27 Feb 2020 11:31:26 +0000 (UTC)
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id 6C9633E9E4;
-        Thu, 27 Feb 2020 12:31:26 +0100 (CET)
-From:   Vitor Soares <Vitor.Soares@synopsys.com>
-To:     pgaj@cadence.com, bbrezillon@kernel.org,
-        linux-i3c@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org,
-        Vitor Soares <Vitor.Soares@synopsys.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Subject: [PATCH v2 2/4] i3c: Add modalias sysfs attribute
-Date:   Thu, 27 Feb 2020 12:31:07 +0100
-Message-Id: <a90f64f830128cd12762153de7828b775574c156.1582796652.git.vitor.soares@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1582796652.git.vitor.soares@synopsys.com>
-References: <cover.1582796652.git.vitor.soares@synopsys.com>
-In-Reply-To: <cover.1582796652.git.vitor.soares@synopsys.com>
-References: <cover.1582796652.git.vitor.soares@synopsys.com>
+        Thu, 27 Feb 2020 06:34:19 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39960 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728856AbgB0LeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 06:34:19 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 78822AD14;
+        Thu, 27 Feb 2020 11:34:16 +0000 (UTC)
+Subject: Re: [PATCH] drm/bridge: analogix-anx6345: fix set of link bandwidth
+To:     Icenowy Zheng <icenowy@aosc.io>, Torsten Duwe <duwe@lst.de>
+Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Maxime Ripard <maxime@cerno.tech>
+References: <20200221165127.813325-1-icenowy@aosc.io>
+ <20200221171328.GC6928@lst.de> <1E7BDB0F-639B-42BB-A4B4-A4C8CF94EBE0@aosc.io>
+ <f4109d23-4591-1c52-2822-0a2ba358fe1f@suse.de>
+ <07EED5EC-28C6-473D-B672-509F5C770479@aosc.io>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <08f290ef-7dd0-c8b9-0177-3248fb153eca@suse.de>
+Date:   Thu, 27 Feb 2020 12:34:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <07EED5EC-28C6-473D-B672-509F5C770479@aosc.io>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Create modalias sysfs attribute for modalias devices.
+Hi
 
-Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
----
- drivers/i3c/master.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+Am 26.02.20 um 12:02 schrieb Icenowy Zheng:
+> 
+> 
+> 于 2020年2月26日 GMT+08:00 下午6:58:43, Thomas Zimmermann <tzimmermann@suse.de> 写到:
+>> Hi Iceynow,
+>>
+>> Torsten asked me to merge your patch via drm-misc-next. I'd add the
+>> additional cc and fixes tags that Torsten listed. Are you OK with that?
+> 
+> I think this fixes a driver (and a board) available in 5.6.
+> 
+> Maybe it should enter fixes?
 
-diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
-index b6db828..925e1ed 100644
---- a/drivers/i3c/master.c
-+++ b/drivers/i3c/master.c
-@@ -241,12 +241,34 @@ static ssize_t hdrcap_show(struct device *dev,
- }
- static DEVICE_ATTR_RO(hdrcap);
- 
-+static ssize_t modalias_show(struct device *dev,
-+			     struct device_attribute *da, char *buf)
-+{
-+	struct i3c_device *i3c = dev_to_i3cdev(dev);
-+	struct i3c_device_info devinfo;
-+	u16 manuf, part, ext;
-+
-+	i3c_device_get_info(i3c, &devinfo);
-+	manuf = I3C_PID_MANUF_ID(devinfo.pid);
-+	part = I3C_PID_PART_ID(devinfo.pid);
-+	ext = I3C_PID_EXTRA_INFO(devinfo.pid);
-+
-+	if (I3C_PID_RND_LOWER_32BITS(devinfo.pid))
-+		return sprintf(buf, "i3c:dcr%02Xmanuf%04X", devinfo.dcr,
-+			       manuf);
-+
-+	return sprintf(buf, "i3c:dcr%02Xmanuf%04Xpart%04Xext%04X",
-+		       devinfo.dcr, manuf, part, ext);
-+}
-+static DEVICE_ATTR_RO(modalias);
-+
- static struct attribute *i3c_device_attrs[] = {
- 	&dev_attr_bcr.attr,
- 	&dev_attr_dcr.attr,
- 	&dev_attr_pid.attr,
- 	&dev_attr_dynamic_address.attr,
- 	&dev_attr_hdrcap.attr,
-+	&dev_attr_modalias.attr,
- 	NULL,
- };
- ATTRIBUTE_GROUPS(i3c_device);
+Pushed to drm-misc-fixes
+
+Best regards
+Thomas
+
+> 
+>>
+>> Best regards
+>> Thomas
+>>
+>> Am 22.02.20 um 03:43 schrieb Icenowy Zheng:
+>>>
+>>>
+>>> 于 2020年2月22日 GMT+08:00 上午1:13:28, Torsten Duwe <duwe@lst.de> 写到:
+>>>> On Sat, Feb 22, 2020 at 12:51:27AM +0800, Icenowy Zheng wrote:
+>>>>> Current code tries to store the link rate (in bps, which is a big
+>>>>> number) in a u8, which surely overflow. Then it's converted back to
+>>>>> bandwidth code (which is thus 0) and written to the chip.
+>>>>>
+>>>>> The code sometimes works because the chip will automatically
+>> fallback
+>>>> to
+>>>>> the lowest possible DP link rate (1.62Gbps) when get the invalid
+>>>> value.
+>>>>> However, on the eDP panel of Olimex TERES-I, which wants 2.7Gbps
+>>>> link,
+>>>>> it failed.
+>>>>>
+>>>>> As we had already read the link bandwidth as bandwidth code in
+>>>> earlier
+>>>>> code (to check whether it is supported), use it when setting
+>>>> bandwidth,
+>>>>> instead of converting it to link rate and then converting back.
+>>>>>
+>>>>> Fixes: e1cff82c1097 ("drm/bridge: fix anx6345 compilation for
+>> v5.5")
+>>>>> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+>>>>> ---
+>>>>>  drivers/gpu/drm/bridge/analogix/analogix-anx6345.c | 3 +--
+>>>>>  1 file changed, 1 insertion(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+>>>> b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+>>>>> index 56f55c53abfd..2dfa2fd2a23b 100644
+>>>>> --- a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+>>>>> +++ b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+>>>>> @@ -210,8 +210,7 @@ static int anx6345_dp_link_training(struct
+>>>> anx6345 *anx6345)
+>>>>>  	if (err)
+>>>>>  		return err;
+>>>>>  
+>>>>> -	dpcd[0] = drm_dp_max_link_rate(anx6345->dpcd);
+>>>>> -	dpcd[0] = drm_dp_link_rate_to_bw_code(dpcd[0]);
+>>>>> +	dpcd[0] = dp_bw;
+>>>>
+>>>> Why do you make this assignment and not use dp_bw directly in the
+>> call?
+>>>
+>>> Because the dpcd array is then written as a continous array
+>>> back to DPCD.
+>>>
+>>>>
+>>>>>  	err = regmap_write(anx6345->map[I2C_IDX_DPTX],
+>>>>>  			   SP_DP_MAIN_LINK_BW_SET_REG, dpcd[0]);
+>>>>                                                       ^^^^^^
+>>>>>  	if (err)
+>>>>> -- 
+>>>>> 2.24.1
+>>>>
+>>>> BTW, my version is only a bit more verbose:
+>>>>
+>>>> https://patchwork.freedesktop.org/patch/354344/
+>>>>
+>>>> 	Torsten
+>>>
+> 
+
 -- 
-2.7.4
-
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+(HRB 36809, AG Nürnberg)
+Geschäftsführer: Felix Imendörffer
