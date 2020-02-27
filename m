@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E481C52D44
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC9DC52D4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75EF321D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A62F021556
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812094;
-	bh=NLZDNgH+JCzASQdqmltQXuwK1A91CMeMs19qt5lj1TY=;
+	s=default; t=1582812130;
+	bh=O0GJgcJWu92u4YYPi5EwWb37LHLfxa4LhHB3LFC3roY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vM/b8OGrjy4wsdsZNefi0aJWdQFnHMk+xkfNyUfsmYFTJuj58WV7rH7Fxm3IQVz5G
-	 4xBoNrhiH5hVRfiyAThbVJ+NNnwKiZVuNsyjq0zoe2Nx+Rvan2+1QJ8eGFfax6KcBD
-	 ZKNrMGOuTFlaObXA2jmawohzLbDrpE0b01HCdvb4=
+	b=j5e4Irxaooql3PRczq9ZerLpk62tHkhoQIp0xNERuSmW11W6SbXM7zJYftS9+D2lx
+	 RVG/AXzPy3dF0ZSXaGQnhn/EryEvRfohdfYsuvpTWykSo+TKYgwcOtdfdS2j4kFPZD
+	 P09P8n+vV5+Y25YtyyddtPz86Sle2GbO+v1x0cDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732947AbgB0OBc (ORCPT
+        id S1733066AbgB0OCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:01:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35568 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:02:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732939AbgB0OBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:01:30 -0500
+        id S1733021AbgB0OCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:02:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 015C221556;
-        Thu, 27 Feb 2020 14:01:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5FFC2469D;
+        Thu, 27 Feb 2020 14:02:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812090;
-        bh=NLZDNgH+JCzASQdqmltQXuwK1A91CMeMs19qt5lj1TY=;
+        s=default; t=1582812123;
+        bh=O0GJgcJWu92u4YYPi5EwWb37LHLfxa4LhHB3LFC3roY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JH3xYOSRr1O49EugPFyAhn307oi2ybhOp7c5lWESLDqkdaps1RlWh5wN+dWIggBVG
-         QQV3fUxn7D0IBkbjslafWR2vAtEBNNbXxEkz34Dcn4XOTz8CmegzbGSXusOyYAtmPT
-         jb7I+hKYLbsY6smNlUF+K9irLqQLIjkQZHo5ihJM=
+        b=URqmty1VlfQAvc9p7IGKw12CVxzVnSncvYFFbVBpmd03+tk+XBcZ76t1BCNZt0aQt
+         okMygAUPj09n1kYbwQTn2HKBF0S5DRQ2+ReeuSC6ajjJ614O28nqPUsJ7n21MW6+B5
+         SN9IymSwdXmY7eTN7QVT7HsQlBQveyYjv1/Iklvk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: [PATCH 4.14 218/237] KVM: nVMX: handle nested posted interrupts when apicv is disabled for L1
-Date:   Thu, 27 Feb 2020 14:37:12 +0100
-Message-Id: <20200227132312.203908410@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.14 230/237] genirq/proc: Reject invalid affinity masks (again)
+Date:   Thu, 27 Feb 2020 14:37:24 +0100
+Message-Id: <20200227132313.025857606@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -59,113 +59,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit 91a5f413af596ad01097e59bf487eb07cb3f1331 upstream.
+commit cba6437a1854fde5934098ec3bd0ee83af3129f5 upstream.
 
-Even when APICv is disabled for L1 it can (and, actually, is) still
-available for L2, this means we need to always call
-vmx_deliver_nested_posted_interrupt() when attempting an interrupt
-delivery.
+Qian Cai reported that the WARN_ON() in the x86/msi affinity setting code,
+which catches cases where the affinity setting is not done on the CPU which
+is the current target of the interrupt, triggers during CPU hotplug stress
+testing.
 
-Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+It turns out that the warning which was added with the commit addressing
+the MSI affinity race unearthed yet another long standing bug.
+
+If user space writes a bogus affinity mask, i.e. it contains no online CPUs,
+then it calls irq_select_affinity_usr(). This was introduced for ALPHA in
+
+  eee45269b0f5 ("[PATCH] Alpha: convert to generic irq framework (generic part)")
+
+and subsequently made available for all architectures in
+
+  18404756765c ("genirq: Expose default irq affinity mask (take 3)")
+
+which introduced the circumvention of the affinity setting restrictions for
+interrupt which cannot be moved in process context.
+
+The whole exercise is bogus in various aspects:
+
+  1) If the interrupt is already started up then there is absolutely
+     no point to honour a bogus interrupt affinity setting from user
+     space. The interrupt is already assigned to an online CPU and it
+     does not make any sense to reassign it to some other randomly
+     chosen online CPU.
+
+  2) If the interupt is not yet started up then there is no point
+     either. A subsequent startup of the interrupt will invoke
+     irq_setup_affinity() anyway which will chose a valid target CPU.
+
+So the only correct solution is to just return -EINVAL in case user space
+wrote an affinity mask which does not contain any online CPUs, except for
+ALPHA which has it's own magic sauce for this.
+
+Fixes: 18404756765c ("genirq: Expose default irq affinity mask (take 3)")
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Qian Cai <cai@lca.pw>
+Link: https://lkml.kernel.org/r/878sl8xdbm.fsf@nanos.tec.linutronix.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/kvm_host.h |    2 +-
- arch/x86/kvm/lapic.c            |    5 +----
- arch/x86/kvm/svm.c              |    7 ++++++-
- arch/x86/kvm/vmx.c              |   13 +++++++++----
- 4 files changed, 17 insertions(+), 10 deletions(-)
+ kernel/irq/internals.h |    2 --
+ kernel/irq/manage.c    |   18 ++----------------
+ kernel/irq/proc.c      |   22 ++++++++++++++++++++++
+ 3 files changed, 24 insertions(+), 18 deletions(-)
 
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1006,7 +1006,7 @@ struct kvm_x86_ops {
- 	void (*load_eoi_exitmap)(struct kvm_vcpu *vcpu, u64 *eoi_exit_bitmap);
- 	void (*set_virtual_apic_mode)(struct kvm_vcpu *vcpu);
- 	void (*set_apic_access_page_addr)(struct kvm_vcpu *vcpu, hpa_t hpa);
--	void (*deliver_posted_interrupt)(struct kvm_vcpu *vcpu, int vector);
-+	int (*deliver_posted_interrupt)(struct kvm_vcpu *vcpu, int vector);
- 	int (*sync_pir_to_irr)(struct kvm_vcpu *vcpu);
- 	int (*set_tss_addr)(struct kvm *kvm, unsigned int addr);
- 	int (*get_tdp_level)(struct kvm_vcpu *vcpu);
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -993,11 +993,8 @@ static int __apic_accept_irq(struct kvm_
- 				apic_clear_vector(vector, apic->regs + APIC_TMR);
- 		}
+--- a/kernel/irq/internals.h
++++ b/kernel/irq/internals.h
+@@ -119,8 +119,6 @@ static inline void unregister_handler_pr
  
--		if (vcpu->arch.apicv_active)
--			kvm_x86_ops->deliver_posted_interrupt(vcpu, vector);
--		else {
-+		if (kvm_x86_ops->deliver_posted_interrupt(vcpu, vector)) {
- 			kvm_lapic_set_irr(vector, apic);
+ extern bool irq_can_set_affinity_usr(unsigned int irq);
+ 
+-extern int irq_select_affinity_usr(unsigned int irq);
 -
- 			kvm_make_request(KVM_REQ_EVENT, vcpu);
- 			kvm_vcpu_kick(vcpu);
- 		}
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -4631,8 +4631,11 @@ static void svm_load_eoi_exitmap(struct
- 	return;
- }
+ extern void irq_set_thread_affinity(struct irq_desc *desc);
  
--static void svm_deliver_avic_intr(struct kvm_vcpu *vcpu, int vec)
-+static int svm_deliver_avic_intr(struct kvm_vcpu *vcpu, int vec)
+ extern int irq_do_set_affinity(struct irq_data *data,
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -382,23 +382,9 @@ int irq_setup_affinity(struct irq_desc *
  {
-+	if (!vcpu->arch.apicv_active)
-+		return -1;
-+
- 	kvm_lapic_set_irr(vec, vcpu->arch.apic);
- 	smp_mb__after_atomic();
+ 	return irq_select_affinity(irq_desc_get_irq(desc));
+ }
+-#endif
++#endif /* CONFIG_AUTO_IRQ_AFFINITY */
++#endif /* CONFIG_SMP */
  
-@@ -4641,6 +4644,8 @@ static void svm_deliver_avic_intr(struct
- 		       kvm_cpu_get_apicid(vcpu->cpu));
- 	else
- 		kvm_vcpu_wake_up(vcpu);
-+
-+	return 0;
+-/*
+- * Called when a bogus affinity is set via /proc/irq
+- */
+-int irq_select_affinity_usr(unsigned int irq)
+-{
+-	struct irq_desc *desc = irq_to_desc(irq);
+-	unsigned long flags;
+-	int ret;
+-
+-	raw_spin_lock_irqsave(&desc->lock, flags);
+-	ret = irq_setup_affinity(desc);
+-	raw_spin_unlock_irqrestore(&desc->lock, flags);
+-	return ret;
+-}
+-#endif
+ 
+ /**
+  *	irq_set_vcpu_affinity - Set vcpu affinity for the interrupt
+--- a/kernel/irq/proc.c
++++ b/kernel/irq/proc.c
+@@ -117,6 +117,28 @@ static int irq_affinity_list_proc_show(s
+ 	return show_irq_affinity(AFFINITY_LIST, m);
  }
  
- static bool svm_dy_apicv_has_pending_interrupt(struct kvm_vcpu *vcpu)
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -5541,24 +5541,29 @@ static int vmx_deliver_nested_posted_int
-  * 2. If target vcpu isn't running(root mode), kick it to pick up the
-  * interrupt from PIR in next vmentry.
-  */
--static void vmx_deliver_posted_interrupt(struct kvm_vcpu *vcpu, int vector)
-+static int vmx_deliver_posted_interrupt(struct kvm_vcpu *vcpu, int vector)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	int r;
++#ifndef CONFIG_AUTO_IRQ_AFFINITY
++static inline int irq_select_affinity_usr(unsigned int irq)
++{
++	/*
++	 * If the interrupt is started up already then this fails. The
++	 * interrupt is assigned to an online CPU already. There is no
++	 * point to move it around randomly. Tell user space that the
++	 * selected mask is bogus.
++	 *
++	 * If not then any change to the affinity is pointless because the
++	 * startup code invokes irq_setup_affinity() which will select
++	 * a online CPU anyway.
++	 */
++	return -EINVAL;
++}
++#else
++/* ALPHA magic affinity auto selector. Keep it for historical reasons. */
++static inline int irq_select_affinity_usr(unsigned int irq)
++{
++	return irq_select_affinity(irq);
++}
++#endif
  
- 	r = vmx_deliver_nested_posted_interrupt(vcpu, vector);
- 	if (!r)
--		return;
-+		return 0;
-+
-+	if (!vcpu->arch.apicv_active)
-+		return -1;
- 
- 	if (pi_test_and_set_pir(vector, &vmx->pi_desc))
--		return;
-+		return 0;
- 
- 	/* If a previous notification has sent the IPI, nothing to do.  */
- 	if (pi_test_and_set_on(&vmx->pi_desc))
--		return;
-+		return 0;
- 
- 	if (!kvm_vcpu_trigger_posted_interrupt(vcpu, false))
- 		kvm_vcpu_kick(vcpu);
-+
-+	return 0;
- }
- 
- /*
+ static ssize_t write_irq_affinity(int type, struct file *file,
+ 		const char __user *buffer, size_t count, loff_t *pos)
 
 
