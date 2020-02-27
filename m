@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5883AC3F359
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35685C3F35A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FFC424690
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CD2D24691
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:14:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812929;
-	bh=EbQDuUGt0WEfjAtVVoBBJSO/K69KsAREfIwf2SmiYVY=;
+	s=default; t=1582812841;
+	bh=E0vW91EnFjMbWvi7ObLwZDH0vrqlLgBnMuIIRvTeiF8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YHQ5VEsYF+KzsYYF6+RIaU+lq7mzSVaHfWIjYSbiqKLmF8V7K6x59PY6Wf4SpOxq9
-	 xtWWwCOokbtJ8x0Q4cwU4QRI4r4oETsKCPvQDy+5osKiApXqnthsnGGH+Lvgml12du
-	 GqyNOhjqzLwTBgMLmp46CFcdCetyAAWeLYV+7XcI=
+	b=wq4d+yHTdt3Q0MCX7LKQLKGcYLGKxc2fasV+0hRRrrRsunmHIojGEAC8Qc/pJeu4C
+	 95+QZYu82tZzdLWhgq/lVe9yg8pTRpHsTjWRf1RZO5T0wM6hap5Run874NZd92LhKM
+	 ZToRM37T+5LPUijdjqnkOiV8YH47ShI4QPJ2adtI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389308AbgB0OP1 (ORCPT
+        id S2389049AbgB0OOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:15:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55000 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:14:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389055AbgB0OPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:15:25 -0500
+        id S2389034AbgB0ON5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:13:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23A0120801;
-        Thu, 27 Feb 2020 14:15:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8923524691;
+        Thu, 27 Feb 2020 14:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812924;
-        bh=EbQDuUGt0WEfjAtVVoBBJSO/K69KsAREfIwf2SmiYVY=;
+        s=default; t=1582812836;
+        bh=E0vW91EnFjMbWvi7ObLwZDH0vrqlLgBnMuIIRvTeiF8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AXJ+spW0UupP1HR2LiC27GZ95VY8rcZ6E0ZhaJneQ9P7cT5AoPzcbDe5CxphVUWUc
-         kiQ33LFbqaPGhNYO3+Rb4WEXXv8HqeUyFlkBPPDFxeN5F2FOVX+3Gio9PpIofo7Uy0
-         QEZ5BudxlSis6HFCw++8IXQL5MEx9LS9tlo6erDk=
+        b=L3rV/jIFwY5BT/LLTVYFpjci5xwTquQz3JLHKLpCMawq+hFoHnowcmV0QxIVzSJVt
+         COtEs/nBzitYsNY1dpHhnOI/IGhPMtqamG2/UvoHGCRcOBM0QpRqmYwtuomvGufr/9
+         NRXfgIbExqfekyMzjpkZkE4MSPCM/QJzIum4++kc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@suse.de>
-Subject: [PATCH 5.5 061/150] x86/mce/amd: Fix kobject lifetime
-Date:   Thu, 27 Feb 2020 14:36:38 +0100
-Message-Id: <20200227132242.058180562@linuxfoundation.org>
+        stable@vger.kernel.org, edes <edes@gmx.net>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.5 035/150] USB: core: add endpoint-blacklist quirk
+Date:   Thu, 27 Feb 2020 14:36:12 +0100
+Message-Id: <20200227132237.953205745@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -59,87 +59,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Johan Hovold <johan@kernel.org>
 
-commit 51dede9c05df2b78acd6dcf6a17d21f0877d2d7b upstream.
+commit 73f8bda9b5dc1c69df2bc55c0cbb24461a6391a9 upstream.
 
-Accessing the MCA thresholding controls in sysfs concurrently with CPU
-hotplug can lead to a couple of KASAN-reported issues:
+Add a new device quirk that can be used to blacklist endpoints.
 
-  BUG: KASAN: use-after-free in sysfs_file_ops+0x155/0x180
-  Read of size 8 at addr ffff888367578940 by task grep/4019
+Since commit 3e4f8e21c4f2 ("USB: core: fix check for duplicate
+endpoints") USB core ignores any duplicate endpoints found during
+descriptor parsing.
 
-and
+In order to handle devices where the first interfaces with duplicate
+endpoints are the ones that should have their endpoints ignored, we need
+to add a blacklist.
 
-  BUG: KASAN: use-after-free in show_error_count+0x15c/0x180
-  Read of size 2 at addr ffff888368a05514 by task grep/4454
-
-for example. Both result from the fact that the threshold block
-creation/teardown code frees the descriptor memory itself instead of
-defining proper ->release function and leaving it to the driver core to
-take care of that, after all sysfs accesses have completed.
-
-Do that and get rid of the custom freeing code, fixing the above UAFs in
-the process.
-
-  [ bp: write commit message. ]
-
-Fixes: 95268664390b ("[PATCH] x86_64: mce_amd support for family 0x10 processors")
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20200214082801.13836-1-bp@alien8.de
+Tested-by: edes <edes@gmx.net>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20200203153830.26394-2-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/cpu/mce/amd.c |   17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ drivers/usb/core/config.c  |   11 +++++++++++
+ drivers/usb/core/quirks.c  |   32 ++++++++++++++++++++++++++++++++
+ drivers/usb/core/usb.h     |    3 +++
+ include/linux/usb/quirks.h |    3 +++
+ 4 files changed, 49 insertions(+)
 
---- a/arch/x86/kernel/cpu/mce/amd.c
-+++ b/arch/x86/kernel/cpu/mce/amd.c
-@@ -1161,9 +1161,12 @@ static const struct sysfs_ops threshold_
- 	.store			= store,
- };
- 
-+static void threshold_block_release(struct kobject *kobj);
-+
- static struct kobj_type threshold_ktype = {
- 	.sysfs_ops		= &threshold_ops,
- 	.default_attrs		= default_attrs,
-+	.release		= threshold_block_release,
- };
- 
- static const char *get_name(unsigned int bank, struct threshold_block *b)
-@@ -1365,8 +1368,12 @@ static int threshold_create_bank(unsigne
- 	return err;
- }
- 
--static void deallocate_threshold_block(unsigned int cpu,
--						 unsigned int bank)
-+static void threshold_block_release(struct kobject *kobj)
-+{
-+	kfree(to_block(kobj));
-+}
-+
-+static void deallocate_threshold_block(unsigned int cpu, unsigned int bank)
+--- a/drivers/usb/core/config.c
++++ b/drivers/usb/core/config.c
+@@ -256,6 +256,7 @@ static int usb_parse_endpoint(struct dev
+ 		struct usb_host_interface *ifp, int num_ep,
+ 		unsigned char *buffer, int size)
  {
- 	struct threshold_block *pos = NULL;
- 	struct threshold_block *tmp = NULL;
-@@ -1376,13 +1383,11 @@ static void deallocate_threshold_block(u
- 		return;
- 
- 	list_for_each_entry_safe(pos, tmp, &head->blocks->miscj, miscj) {
--		kobject_put(&pos->kobj);
- 		list_del(&pos->miscj);
--		kfree(pos);
-+		kobject_put(&pos->kobj);
++	struct usb_device *udev = to_usb_device(ddev);
+ 	unsigned char *buffer0 = buffer;
+ 	struct usb_endpoint_descriptor *d;
+ 	struct usb_host_endpoint *endpoint;
+@@ -297,6 +298,16 @@ static int usb_parse_endpoint(struct dev
+ 		goto skip_to_next_endpoint_or_interface_descriptor;
  	}
  
--	kfree(per_cpu(threshold_banks, cpu)[bank]->blocks);
--	per_cpu(threshold_banks, cpu)[bank]->blocks = NULL;
-+	kobject_put(&head->blocks->kobj);
- }
++	/* Ignore blacklisted endpoints */
++	if (udev->quirks & USB_QUIRK_ENDPOINT_BLACKLIST) {
++		if (usb_endpoint_is_blacklisted(udev, ifp, d)) {
++			dev_warn(ddev, "config %d interface %d altsetting %d has a blacklisted endpoint with address 0x%X, skipping\n",
++					cfgno, inum, asnum,
++					d->bEndpointAddress);
++			goto skip_to_next_endpoint_or_interface_descriptor;
++		}
++	}
++
+ 	endpoint = &ifp->endpoint[ifp->desc.bNumEndpoints];
+ 	++ifp->desc.bNumEndpoints;
  
- static void __threshold_remove_blocks(struct threshold_bank *b)
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -472,6 +472,38 @@ static const struct usb_device_id usb_am
+ 	{ }  /* terminating entry must be last */
+ };
+ 
++/*
++ * Entries for blacklisted endpoints that should be ignored when parsing
++ * configuration descriptors.
++ *
++ * Matched for devices with USB_QUIRK_ENDPOINT_BLACKLIST.
++ */
++static const struct usb_device_id usb_endpoint_blacklist[] = {
++	{ }
++};
++
++bool usb_endpoint_is_blacklisted(struct usb_device *udev,
++		struct usb_host_interface *intf,
++		struct usb_endpoint_descriptor *epd)
++{
++	const struct usb_device_id *id;
++	unsigned int address;
++
++	for (id = usb_endpoint_blacklist; id->match_flags; ++id) {
++		if (!usb_match_device(udev, id))
++			continue;
++
++		if (!usb_match_one_id_intf(udev, intf, id))
++			continue;
++
++		address = id->driver_info;
++		if (address == epd->bEndpointAddress)
++			return true;
++	}
++
++	return false;
++}
++
+ static bool usb_match_any_interface(struct usb_device *udev,
+ 				    const struct usb_device_id *id)
+ {
+--- a/drivers/usb/core/usb.h
++++ b/drivers/usb/core/usb.h
+@@ -37,6 +37,9 @@ extern void usb_authorize_interface(stru
+ extern void usb_detect_quirks(struct usb_device *udev);
+ extern void usb_detect_interface_quirks(struct usb_device *udev);
+ extern void usb_release_quirk_list(void);
++extern bool usb_endpoint_is_blacklisted(struct usb_device *udev,
++		struct usb_host_interface *intf,
++		struct usb_endpoint_descriptor *epd);
+ extern int usb_remove_device(struct usb_device *udev);
+ 
+ extern int usb_get_device_descriptor(struct usb_device *dev,
+--- a/include/linux/usb/quirks.h
++++ b/include/linux/usb/quirks.h
+@@ -69,4 +69,7 @@
+ /* Hub needs extra delay after resetting its port. */
+ #define USB_QUIRK_HUB_SLOW_RESET		BIT(14)
+ 
++/* device has blacklisted endpoints */
++#define USB_QUIRK_ENDPOINT_BLACKLIST		BIT(15)
++
+ #endif /* __LINUX_USB_QUIRKS_H */
 
 
