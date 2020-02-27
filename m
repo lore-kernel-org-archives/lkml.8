@@ -2,229 +2,70 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E49C3C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2643C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC395246A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:42:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582821760;
-	bh=ejM305XannDMSXOSlz6q+tuVPZLojRtuk75986kVzCg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=A3qWgviGcpsjl2g2rmD4f6n7fTAi0fkPAWqGC0lOh1zEetcG+/4iCW6Wkm7FrgupD
-	 V3HBvJXyTiU/a6wmq4woLzWF0yASYG7xHn4gUg368+S5RClG6CGhXb9zi1nS67LN7B
-	 pbQbmdiG1bf64z3uAHJlSlbfpGlzQ6CF61bySToo=
+	by mail.kernel.org (Postfix) with ESMTP id 90A442469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:43:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730399AbgB0Qmj (ORCPT
+        id S1730416AbgB0QnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 11:42:39 -0500
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:46973 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729146AbgB0Qmj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 11:42:39 -0500
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 01RGgSNn032144;
-        Fri, 28 Feb 2020 01:42:29 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 01RGgSNn032144
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582821749;
-        bh=Kl3TN2eh546ny6xXnVBhUNVM+StMJOTg1j6RbqQc4Yw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=PM+jqTkZpUpTAOB6lgGVTHx6Fj9Bf+fM3Wlci2ZRT67lowavsmzO+OyCxjDdIfL78
-         a0nLBrm0jbwjxNpxAbLuE9NzkDoylexss5kMITAEEQTCINS0QPEmFRb7aiwXkcXfnG
-         ySpp+QiTxZkxgrmvOnt2kaIHugLDWoWPt8vx41+TEtnLlh0zBNSUOWvCfFbbJggvai
-         PaH8TWUXAez2LvtdsJ6c3MRpnbWYQ1zWOtDxlX0FcPiftt4EumvTDPj33EDai8sjiA
-         Yuk7Eg13x6738iXrFfSiTlTKI6g8XzwgMqcauqtP3WUyoY9mhdxPm+tLNGSV+t+ixG
-         QsyM4NOY9LtdA==
-X-Nifty-SrcIP: [209.85.217.54]
-Received: by mail-vs1-f54.google.com with SMTP id x18so37498vsq.4;
-        Thu, 27 Feb 2020 08:42:28 -0800 (PST)
-X-Gm-Message-State: ANhLgQ2bDfFPoLdb6Ce/vLifzLOR4fqy1bkCmz5gcXJSJpymmgLEQJuM
-        B1VlxMzuMz+ZJfclpoUrCa3M7LIbB+YS9VhtqH0=
-X-Google-Smtp-Source: ADFU+vsh4q8lDg7PVdz5KXpCZ22dWRT4Tb9aCU4TMqhfIxWdgL6cfnwmrm2xUTX+dIexC1qWCc52X5DuKMIq2GNBOC8=
-X-Received: by 2002:a05:6102:190:: with SMTP id r16mr46746vsq.215.1582821747593;
- Thu, 27 Feb 2020 08:42:27 -0800 (PST)
+        Thu, 27 Feb 2020 11:43:00 -0500
+Received: from foss.arm.com ([217.140.110.172]:54616 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729146AbgB0QnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 11:43:00 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D4391FB;
+        Thu, 27 Feb 2020 08:42:59 -0800 (PST)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 079423F7B4;
+        Thu, 27 Feb 2020 08:42:57 -0800 (PST)
+References: <20200226164118.6405-1-valentin.schneider@arm.com> <20200226164118.6405-2-valentin.schneider@arm.com> <20200227130001.GA107011@google.com> <7ce12aa2-1925-f991-a85f-5bd81ba668fb@arm.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Quentin Perret <qperret@google.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        morten.rasmussen@arm.com,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, kernel-team@android.com
+Subject: Re: [PATCH 1/2] sched/topology: Don't enable EAS on SMT systems
+In-reply-to: <7ce12aa2-1925-f991-a85f-5bd81ba668fb@arm.com>
+Date:   Thu, 27 Feb 2020 16:42:55 +0000
+Message-ID: <jhjftewvv5c.mognet@arm.com>
 MIME-Version: 1.0
-References: <20200218094139.78835-1-qperret@google.com> <20200218094139.78835-3-qperret@google.com>
-In-Reply-To: <20200218094139.78835-3-qperret@google.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 28 Feb 2020 01:41:50 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS0D_1k8FUJ+Bre1jrtGvHu28psU_xCa=K24iD7BkcJeA@mail.gmail.com>
-Message-ID: <CAK7LNAS0D_1k8FUJ+Bre1jrtGvHu28psU_xCa=K24iD7BkcJeA@mail.gmail.com>
-Subject: Re: [PATCH v5 2/3] kbuild: split adjust_autoksyms.sh in two parts
-To:     Quentin Perret <qperret@google.com>
-Cc:     Nicolas Pitre <nico@fluxnic.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Matthias Maennich <maennich@google.com>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
-
-On Tue, Feb 18, 2020 at 6:41 PM Quentin Perret <qperret@google.com> wrote:
+On Thu, Feb 27 2020, Dietmar Eggemann wrote:
+>>> +	/* EAS definitely does *not* handle SMT */
+>>> +	if (sched_smt_active())
 >
-> In order to prepare the ground for a build-time optimization, split
-> adjust_autoksyms.sh into two scripts: one that generates autoksyms.h
-> based on all currently available information (whitelist, and .mod
-> files), and the other to inspect the diff between two versions of
-> autoksyms.h and trigger appropriate rebuilds.
+> Can you add a pr_warn() and use the current comment as the warning
+> message? Since we have one for !Asym CPU capacity and !schedutil.
 >
-> Acked-by: Nicolas Pitre <nico@fluxnic.net>
-> Tested-by: Matthias Maennich <maennich@google.com>
-> Reviewed-by: Matthias Maennich <maennich@google.com>
-> Signed-off-by: Quentin Perret <qperret@google.com>
-> ---
->  scripts/adjust_autoksyms.sh | 36 +++-----------------------
->  scripts/gen_autoksyms.sh    | 51 +++++++++++++++++++++++++++++++++++++
->  2 files changed, 55 insertions(+), 32 deletions(-)
->  create mode 100755 scripts/gen_autoksyms.sh
+>>> +		goto free;
+>>> +
 >
-> diff --git a/scripts/adjust_autoksyms.sh b/scripts/adjust_autoksyms.sh
-> index ff46996525d3..2b366d945ccb 100755
-> --- a/scripts/adjust_autoksyms.sh
-> +++ b/scripts/adjust_autoksyms.sh
-> @@ -1,14 +1,13 @@
->  #!/bin/sh
->  # SPDX-License-Identifier: GPL-2.0-only
+> [...]
 >
-> -# Script to create/update include/generated/autoksyms.h and dependency files
-> +# Script to update include/generated/autoksyms.h and dependency files
->  #
->  # Copyright:   (C) 2016  Linaro Limited
->  # Created by:  Nicolas Pitre, January 2016
->  #
->
-> -# Create/update the include/generated/autoksyms.h file from the list
-> -# of all module's needed symbols as recorded on the second line of *.mod files.
-> +# Update the include/generated/autoksyms.h file.
->  #
->  # For each symbol being added or removed, the corresponding dependency
->  # file's timestamp is updated to force a rebuild of the affected source
-> @@ -38,35 +37,8 @@ esac
->  # We need access to CONFIG_ symbols
->  . include/config/auto.conf
->
-> -ksym_wl=/dev/null
-> -if [ -n "$CONFIG_UNUSED_KSYMS_WHITELIST" ]; then
-> -       # Use 'eval' to expand the whitelist path and check if it is relative
-> -       eval ksym_wl="$CONFIG_UNUSED_KSYMS_WHITELIST"
-> -       [ "${ksym_wl}" != "${ksym_wl#/}" ] || ksym_wl="$abs_srctree/$ksym_wl"
-> -       if [ ! -f "$ksym_wl" ]; then
+> There is this 'EAS can be used ...' list of currently 4 items in the
+> build_perf_domains() function header. You could include 'X. No SMT
+> support' there.
+>  ;-)
 
-
-Just a Nit.
-
-Maybe, is testing  -r better ?
-
-'cat - "$ksym_wl"' is piped, so its error code is not checked.
-
-So, checking the read permission here is robust, I think.
-
-
-
-
-> -               echo "ERROR: '$ksym_wl' whitelist file not found" >&2
-> -               exit 1
-> -       fi
-> -fi
-> -
-> -# Generate a new ksym list file with symbols needed by the current
-> -# set of modules.
-> -cat > "$new_ksyms_file" << EOT
-> -/*
-> - * Automatically generated file; DO NOT EDIT.
-> - */
-> -
-> -EOT
-> -sed 's/ko$/mod/' modules.order |
-> -xargs -n1 sed -n -e '2{s/ /\n/g;/^$/!p;}' -- |
-> -cat - "$ksym_wl" |
-> -sort -u |
-> -sed -e 's/\(.*\)/#define __KSYM_\1 1/' >> "$new_ksyms_file"
-> -
-> -# Special case for modversions (see modpost.c)
-> -if [ -n "$CONFIG_MODVERSIONS" ]; then
-> -       echo "#define __KSYM_module_layout 1" >> "$new_ksyms_file"
-> -fi
-> +# Generate a new symbol list file
-> +$CONFIG_SHELL $srctree/scripts/gen_autoksyms.sh "$new_ksyms_file"
->
->  # Extract changes between old and new list and touch corresponding
->  # dependency files.
-> diff --git a/scripts/gen_autoksyms.sh b/scripts/gen_autoksyms.sh
-> new file mode 100755
-> index 000000000000..6c625f52118f
-> --- /dev/null
-> +++ b/scripts/gen_autoksyms.sh
-> @@ -0,0 +1,51 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +
-> +# Create an autoksyms.h header file from the list of all module's needed symbols
-> +# as recorded on the second line of *.mod files and the user-provided symbol
-> +# whitelist.
-> +
-> +set -e
-> +
-> +output_file="$1"
-> +
-> +# Use "make V=1" to debug this script.
-> +case "$KBUILD_VERBOSE" in
-> +*1*)
-> +       set -x
-> +       ;;
-> +esac
-> +
-> +# We need access to CONFIG_ symbols
-> +. include/config/auto.conf
-> +
-> +ksym_wl=/dev/null
-> +if [ -n "$CONFIG_UNUSED_KSYMS_WHITELIST" ]; then
-> +       # Use 'eval' to expand the whitelist path and check if it is relative
-> +       eval ksym_wl="$CONFIG_UNUSED_KSYMS_WHITELIST"
-> +       [ "${ksym_wl}" != "${ksym_wl#/}" ] || ksym_wl="$abs_srctree/$ksym_wl"
-> +       if [ ! -f "$ksym_wl" ]; then
-> +               echo "ERROR: '$ksym_wl' whitelist file not found" >&2
-> +               exit 1
-> +       fi
-> +fi
-> +
-> +# Generate a new ksym list file with symbols needed by the current
-> +# set of modules.
-> +cat > "$output_file" << EOT
-> +/*
-> + * Automatically generated file; DO NOT EDIT.
-> + */
-> +
-> +EOT
-> +
-> +sed 's/ko$/mod/' modules.order |
-> +xargs -n1 sed -n -e '2{s/ /\n/g;/^$/!p;}' -- |
-> +cat - "$ksym_wl" |
-> +sort -u |
-> +sed -e 's/\(.*\)/#define __KSYM_\1 1/' >> "$output_file"
-> +
-> +# Special case for modversions (see modpost.c)
-> +if [ -n "$CONFIG_MODVERSIONS" ]; then
-> +       echo "#define __KSYM_module_layout 1" >> "$output_file"
-> +fi
-> --
-> 2.25.0.265.gbab2e86ba0-goog
->
-
-
--- 
-Best Regards
-Masahiro Yamada
+Right, the rst doc says "EAS on SMT is not supported" but I think that can
+be interpreted as "EAS on !asym SMT". I'll add the warning and update the
+comment.
