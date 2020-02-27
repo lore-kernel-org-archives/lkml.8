@@ -2,59 +2,52 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 623C9C3F35C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E12FC52D4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39E0E24690
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3048720578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:06:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812347;
-	bh=zFUipiL2o9uiiZVWHpaGxnGzMKwZINUr0CoOeUtV38I=;
+	s=default; t=1582812406;
+	bh=w1YCDDfKSqipDH023dOMRWlT5ElOZLdWM2T6svc3yhs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LRDqPiq+G7ZXU+1t0MwbmCt4spWjuV2eeRYWt5sDUfE/IJc28SqrhLVa0PPfw5MTH
-	 zURODEI4yZ4Mdpv/ktl8rtSWZg2GyAN9FVmkIS8+C6f+fpES/6E5TAg+89f7U9nxR6
-	 qFCw7M3ViqX5TPrNTw1jpSp2+m/Od+zuWmUEqfrw=
+	b=R1Y4UApNzJ9ObLOJc1FqcDlaHBrYV6dDD5FIrstazKVu3dmaEM0U8oebnAnmeCUty
+	 0jpWQJUHP9soDABM8tUDkZgO1MfMYVh6RKDeEoPisJungI76LbmnulsUXrOzwEMw+x
+	 W2/qvupL6mfqeSeDXUyT96At9m9Ew3unt+0kyz/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387815AbgB0OFq (ORCPT
+        id S2387655AbgB0OGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:05:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42522 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:06:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387805AbgB0OFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:05:43 -0500
+        id S2387969AbgB0OGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:06:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37EA924656;
-        Thu, 27 Feb 2020 14:05:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABE8B20578;
+        Thu, 27 Feb 2020 14:06:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812342;
-        bh=zFUipiL2o9uiiZVWHpaGxnGzMKwZINUr0CoOeUtV38I=;
+        s=default; t=1582812399;
+        bh=w1YCDDfKSqipDH023dOMRWlT5ElOZLdWM2T6svc3yhs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Aawczdl5cSNErrfX3cQr3F/7VqlJU5x5e2jq1G9r3IJWAQ4/FvcoNX0Mw8RBGJZQd
-         GPZRGH8QjEgZK0Tcw/xgeegakPTzCFFe66vzgCa9dSmiTpjP9bgnG3PLAH7DklX7lz
-         bVqUDXn2Jh3PoPRH2Nq7kLU51uKKQ8im2ZGyGAWI=
+        b=2FYJ6GXWn7IyofPgscG68Z6OD/CpmxmCZpvWp7eWKEw1lb0PbgeycB5/CymowEoUA
+         6/v5i1FEM0DwxGieY4z+DC5y7ov3T6ePMEmO+5iKU/21bDWHBvVDPXaP5O6gpecLZP
+         XpPHaI9AZLi+KoWF08mgahsQqxW3hxx0U7MOliyM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Potapenko <glider@google.com>,
-        Walter Wu <walter-zh.wu@mediatek.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 61/97] lib/stackdepot.c: fix global out-of-bounds in stack_slabs
-Date:   Thu, 27 Feb 2020 14:37:09 +0100
-Message-Id: <20200227132224.502820681@linuxfoundation.org>
+        stable@vger.kernel.org, Shijie Luo <luoshijie1@huawei.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        stable@kernel.org
+Subject: [PATCH 4.19 64/97] ext4: add cond_resched() to __ext4_find_entry()
+Date:   Thu, 27 Feb 2020 14:37:12 +0100
+Message-Id: <20200227132224.958571291@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
 References: <20200227132214.553656188@linuxfoundation.org>
@@ -67,62 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Potapenko <glider@google.com>
+From: Shijie Luo <luoshijie1@huawei.com>
 
-[ Upstream commit 305e519ce48e935702c32241f07d393c3c8fed3e ]
+commit 9424ef56e13a1f14c57ea161eed3ecfdc7b2770e upstream.
 
-Walter Wu has reported a potential case in which init_stack_slab() is
-called after stack_slabs[STACK_ALLOC_MAX_SLABS - 1] has already been
-initialized.  In that case init_stack_slab() will overwrite
-stack_slabs[STACK_ALLOC_MAX_SLABS], which may result in a memory
-corruption.
+We tested a soft lockup problem in linux 4.19 which could also
+be found in linux 5.x.
 
-Link: http://lkml.kernel.org/r/20200218102950.260263-1-glider@google.com
-Fixes: cd11016e5f521 ("mm, kasan: stackdepot implementation. Enable stackdepot for SLAB")
-Signed-off-by: Alexander Potapenko <glider@google.com>
-Reported-by: Walter Wu <walter-zh.wu@mediatek.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+When dir inode takes up a large number of blocks, and if the
+directory is growing when we are searching, it's possible the
+restart branch could be called many times, and the do while loop
+could hold cpu a long time.
+
+Here is the call trace in linux 4.19.
+
+[  473.756186] Call trace:
+[  473.756196]  dump_backtrace+0x0/0x198
+[  473.756199]  show_stack+0x24/0x30
+[  473.756205]  dump_stack+0xa4/0xcc
+[  473.756210]  watchdog_timer_fn+0x300/0x3e8
+[  473.756215]  __hrtimer_run_queues+0x114/0x358
+[  473.756217]  hrtimer_interrupt+0x104/0x2d8
+[  473.756222]  arch_timer_handler_virt+0x38/0x58
+[  473.756226]  handle_percpu_devid_irq+0x90/0x248
+[  473.756231]  generic_handle_irq+0x34/0x50
+[  473.756234]  __handle_domain_irq+0x68/0xc0
+[  473.756236]  gic_handle_irq+0x6c/0x150
+[  473.756238]  el1_irq+0xb8/0x140
+[  473.756286]  ext4_es_lookup_extent+0xdc/0x258 [ext4]
+[  473.756310]  ext4_map_blocks+0x64/0x5c0 [ext4]
+[  473.756333]  ext4_getblk+0x6c/0x1d0 [ext4]
+[  473.756356]  ext4_bread_batch+0x7c/0x1f8 [ext4]
+[  473.756379]  ext4_find_entry+0x124/0x3f8 [ext4]
+[  473.756402]  ext4_lookup+0x8c/0x258 [ext4]
+[  473.756407]  __lookup_hash+0x8c/0xe8
+[  473.756411]  filename_create+0xa0/0x170
+[  473.756413]  do_mkdirat+0x6c/0x140
+[  473.756415]  __arm64_sys_mkdirat+0x28/0x38
+[  473.756419]  el0_svc_common+0x78/0x130
+[  473.756421]  el0_svc_handler+0x38/0x78
+[  473.756423]  el0_svc+0x8/0xc
+[  485.755156] watchdog: BUG: soft lockup - CPU#2 stuck for 22s! [tmp:5149]
+
+Add cond_resched() to avoid soft lockup and to provide a better
+system responding.
+
+Link: https://lore.kernel.org/r/20200215080206.13293-1-luoshijie1@huawei.com
+Signed-off-by: Shijie Luo <luoshijie1@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: stable@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- lib/stackdepot.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ fs/ext4/namei.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/lib/stackdepot.c b/lib/stackdepot.c
-index c5e06c43228f9..34c71973932e0 100644
---- a/lib/stackdepot.c
-+++ b/lib/stackdepot.c
-@@ -92,15 +92,19 @@ static bool init_stack_slab(void **prealloc)
- 		return true;
- 	if (stack_slabs[depot_index] == NULL) {
- 		stack_slabs[depot_index] = *prealloc;
-+		*prealloc = NULL;
- 	} else {
--		stack_slabs[depot_index + 1] = *prealloc;
-+		/* If this is the last depot slab, do not touch the next one. */
-+		if (depot_index + 1 < STACK_ALLOC_MAX_SLABS) {
-+			stack_slabs[depot_index + 1] = *prealloc;
-+			*prealloc = NULL;
-+		}
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -1431,6 +1431,7 @@ restart:
  		/*
- 		 * This smp_store_release pairs with smp_load_acquire() from
- 		 * |next_slab_inited| above and in stack_depot_save().
+ 		 * We deal with the read-ahead logic here.
  		 */
- 		smp_store_release(&next_slab_inited, 1);
- 	}
--	*prealloc = NULL;
- 	return true;
- }
- 
--- 
-2.20.1
-
++		cond_resched();
+ 		if (ra_ptr >= ra_max) {
+ 			/* Refill the readahead buffer */
+ 			ra_ptr = 0;
 
 
