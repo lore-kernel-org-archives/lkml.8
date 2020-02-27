@@ -2,158 +2,122 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD01C4BA35
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 02:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3004CC4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 02:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E849222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 02:04:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 047BA222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 02:04:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W6NNeAqH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728325AbgB0CEP (ORCPT
+        id S1728340AbgB0CEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 21:04:15 -0500
-Received: from muru.com ([72.249.23.125]:57994 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728243AbgB0CEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 21:04:14 -0500
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 18AF7819C;
-        Thu, 27 Feb 2020 02:04:58 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org,
-        Arthur Demchenkov <spinal.by@gmail.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
-Subject: [PATCH 2/2] Input: omap4-keypad - check state again for lost key-up interrupts
-Date:   Wed, 26 Feb 2020 18:04:07 -0800
-Message-Id: <20200227020407.17276-2-tony@atomide.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227020407.17276-1-tony@atomide.com>
-References: <20200227020407.17276-1-tony@atomide.com>
+        Wed, 26 Feb 2020 21:04:44 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34236 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728243AbgB0CEo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 21:04:44 -0500
+Received: by mail-pg1-f196.google.com with SMTP id t3so605101pgn.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 18:04:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=aWG0TNz5JDH1G/ImpDRtx/iO8APM9+1+UpF9HiauD8M=;
+        b=W6NNeAqH3oiZEGV7FggN/AQzZ9mIRG+w5hs5ZBkuNqAOTUCY35YF0TG7CVnqj5k+cN
+         TDsYhovB2X0/Vq3xpT1P7IM5j0sdF0nQFT+mLUpJZH7I0dTEXhL/RcDQijrmp1cYExAb
+         qaDPcMTLHpZBhjiAn2gYeDkvYtX3JNHvHXgagRu0OSSEfVT5khEDz4L8zSb0QSH7zM0t
+         rnD8bDULBaBUcmbsDP29iBbafKPE1GCMq3XXAwhY85lwoArwZXOEhujvEv5S3ektn9TS
+         vRpfVt4j0ADG5K1vNqQx4GiRDItc+cr8EWxzMRFt8MBRB4+aUOQX6KB96KJy48iDPdfE
+         C8kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aWG0TNz5JDH1G/ImpDRtx/iO8APM9+1+UpF9HiauD8M=;
+        b=ISpxjc0rv/kLl0bTvlKDXxY9Ty/5M9pDl++3ypJQyiO8+ecT8rAOYynABJ/4jR9aua
+         gbMWrhXsgKkKIJvt3Tc3d70ZH6h/QalJIIGy/sJU7uewHKKMJ8Jd5skJRailUL8NdDF4
+         b02EcYlMG2wysRuVzT7U1+3xRqMOdK9jIKBtUFOiF+G2DsfaGG/ytuPv/mOZH2ochm62
+         afMX7BzRxmSjxDFO1vgp9f8YBpEu3p2qdNtUrmdsRvO4LAsR6OUwNzsPh7cO3feB5bGh
+         qfM52SlJwZII2cRMr1r746naeRibJYXo5boTxIgDSqNvyfubK6c1/KYhJMGOJtQo0FkW
+         C5Eg==
+X-Gm-Message-State: APjAAAVQY8vN27s6ugwyJYYRBhjFXG0xK8Vw0vC/gZnM2n0LO6yXWes0
+        KGO5zudxLFG4VRtcY7biqlo=
+X-Google-Smtp-Source: APXvYqz1P2UF6CkxavZM5S/0aOCtyQif+XlfpcLRmZyPqNXMYYUOBkkZT3DSvztRIBZXae/3Fs+JDQ==
+X-Received: by 2002:aa7:991e:: with SMTP id z30mr1606065pff.259.1582769083273;
+        Wed, 26 Feb 2020 18:04:43 -0800 (PST)
+Received: from ziqianlu-desktop.localdomain ([47.89.83.64])
+        by smtp.gmail.com with ESMTPSA id iq22sm4123749pjb.9.2020.02.26.18.04.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 18:04:42 -0800 (PST)
+Date:   Thu, 27 Feb 2020 10:04:32 +0800
+From:   Aaron Lu <aaron.lwe@gmail.com>
+To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>
+Cc:     Aubrey Li <aubrey.intel@gmail.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Dario Faggioli <dfaggioli@suse.com>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v4 00/19] Core scheduling v4
+Message-ID: <20200227020432.GA628749@ziqianlu-desktop.localdomain>
+References: <cover.1572437285.git.vpillai@digitalocean.com>
+ <5e3cea14-28d1-bf1e-cabe-fb5b48fdeadc@linux.intel.com>
+ <3c3c56c1-b8dc-652c-535e-74f6dcf45560@linux.intel.com>
+ <CANaguZAz+mw1Oi8ecZt+JuCWbf=g5UvKrdSvAeM82Z1c+9oWAw@mail.gmail.com>
+ <e322a252-f983-e3f3-f823-16d0c16b2867@linux.intel.com>
+ <20200212230705.GA25315@sinkpad>
+ <29d43466-1e18-6b42-d4d0-20ccde20ff07@linux.intel.com>
+ <CAERHkruG4y8si9FrBp7cZNEdfP7EzxbmYwvdF2EvHLf=mU1mgg@mail.gmail.com>
+ <20200225034438.GA617271@ziqianlu-desktop.localdomain>
+ <CANaguZD205ccu1V_2W-QuMRrJA9SjJ5ng1do4NCdLy8NDKKrbA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANaguZD205ccu1V_2W-QuMRrJA9SjJ5ng1do4NCdLy8NDKKrbA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We only have partial errata i689 implemented with Commit 6c3516fed7b6
-("Input: omap-keypad - fix keyboard debounce configuration"). We are
-still missing the check for lost key-up interrupts as described in the
-omap4 silicon errata documentation as Errata ID i689 "1.32 Keyboard Key
-Up Event Can Be Missed":
+On Tue, Feb 25, 2020 at 03:51:37PM -0500, Vineeth Remanan Pillai wrote:
+> On a 2sockets/16cores/32threads VM, I grouped 8 sysbench(cpu mode)
+> > threads into one cgroup(cgA) and another 16 sysbench(cpu mode) threads
+> > into another cgroup(cgB). cgA and cgB's cpusets are set to the same
+> > socket's 8 cores/16 CPUs and cgA's cpu.shares is set to 10240 while cgB's
+> > cpu.shares is set to 2(so consider cgB as noise workload and cgA as
+> > the real workload).
+> >
+> > I had expected cgA to occupy 8 cpus(with each cpu on a different core)
+> 
+> The expected behaviour could also be that 8 processes share 4 cores and
+> 8 hw threads right? This is what we are seeing mostly
 
-"When a key is released for a time shorter than the debounce time,
- in-between 2 key press (KP1 and KP2), the keyboard state machine will go
- to idle mode and will never detect the key release (after KP1, and also
- after KP2), and thus will never generate a new IRQ indicating the key
- release."
+I expect the 8 cgA tasks to spread on each core, instead of occupying
+4 cores/8 hw threads. If they stay on 4 cores/8 hw threads, than on the
+core level, these cores' load would be much higher than other cores
+which are running cgB's tasks, this doesn't look right to me.
 
-Let's just check the keyboard state one more time after no more key
-press events.
-
-Cc: Arthur Demchenkov <spinal.by@gmail.com>
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
-
-Can you guys test if you're still seeing stuck keys here and there
-with this patch applied? Seems to behave for me based on very brief
-testing so not sure if I got it right..
-
----
- drivers/input/keyboard/omap4-keypad.c | 37 ++++++++++++++++++++++++---
- 1 file changed, 33 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/input/keyboard/omap4-keypad.c b/drivers/input/keyboard/omap4-keypad.c
---- a/drivers/input/keyboard/omap4-keypad.c
-+++ b/drivers/input/keyboard/omap4-keypad.c
-@@ -11,6 +11,7 @@
- #include <linux/module.h>
- #include <linux/interrupt.h>
- #include <linux/platform_device.h>
-+#include <linux/delay.h>
- #include <linux/errno.h>
- #include <linux/io.h>
- #include <linux/of.h>
-@@ -57,8 +58,10 @@
- #define OMAP4_KEYPAD_PTV_DIV_128        0x6
- #define OMAP4_KEYPAD_DEBOUNCINGTIME_MS(dbms, ptv)     \
- 	((((dbms) * 1000) / ((1 << ((ptv) + 1)) * (1000000 / 32768))) - 1)
-+#define OMAP4_DEBOUNCE_MS		16	/* In milliseconds */
- #define OMAP4_VAL_DEBOUNCINGTIME_16MS					\
--	OMAP4_KEYPAD_DEBOUNCINGTIME_MS(16, OMAP4_KEYPAD_PTV_DIV_128)
-+	OMAP4_KEYPAD_DEBOUNCINGTIME_MS(OMAP4_DEBOUNCE_MS, \
-+				       OMAP4_KEYPAD_PTV_DIV_128)
- 
- enum {
- 	KBD_REVISION_OMAP4 = 0,
-@@ -119,13 +122,13 @@ static irqreturn_t omap4_keypad_irq_handler(int irq, void *dev_id)
- 	return IRQ_NONE;
- }
- 
--static irqreturn_t omap4_keypad_irq_thread_fn(int irq, void *dev_id)
-+static int omap4_keypad_scan_keys(struct omap4_keypad *keypad_data)
- {
--	struct omap4_keypad *keypad_data = dev_id;
- 	struct input_dev *input_dev = keypad_data->input;
- 	unsigned char key_state[ARRAY_SIZE(keypad_data->key_state)];
- 	unsigned int col, row, code, changed;
- 	u32 *new_state = (u32 *) key_state;
-+	int key_down, keys_pressed = 0;
- 
- 	*new_state = kbd_readl(keypad_data, OMAP4_KBD_FULLCODE31_0);
- 	*(new_state + 1) = kbd_readl(keypad_data, OMAP4_KBD_FULLCODE63_32);
-@@ -140,9 +143,12 @@ static irqreturn_t omap4_keypad_irq_thread_fn(int irq, void *dev_id)
- 				code = MATRIX_SCAN_CODE(row, col,
- 						keypad_data->row_shift);
- 				input_event(input_dev, EV_MSC, MSC_SCAN, code);
-+				key_down = key_state[row] & (1 << col);
- 				input_report_key(input_dev,
- 						 keypad_data->keymap[code],
--						 key_state[row] & (1 << col));
-+						 key_down);
-+				if (key_down)
-+					keys_pressed++;
- 			}
- 		}
- 	}
-@@ -152,6 +158,29 @@ static irqreturn_t omap4_keypad_irq_thread_fn(int irq, void *dev_id)
- 	memcpy(keypad_data->key_state, key_state,
- 		sizeof(keypad_data->key_state));
- 
-+	return keys_pressed;
-+}
-+
-+static irqreturn_t omap4_keypad_irq_thread_fn(int irq, void *dev_id)
-+{
-+	struct omap4_keypad *keypad_data = dev_id;
-+	int new_keys_pressed;
-+
-+	/*
-+	 * Errata ID i689 "1.32 Keyboard Key Up Event Can Be Missed"
-+	 * check keyboard state again for lost key-up interrupts.
-+	 */
-+	do {
-+		new_keys_pressed = omap4_keypad_scan_keys(keypad_data);
-+
-+		/* Check once after debounce time when no more keys down */
-+		if (!new_keys_pressed) {
-+			usleep_range(OMAP4_DEBOUNCE_MS * 1000 * 2,
-+				     OMAP4_DEBOUNCE_MS * 1000 * 3);
-+			new_keys_pressed = omap4_keypad_scan_keys(keypad_data);
-+		}
-+	} while (new_keys_pressed);
-+
- 	/* clear pending interrupts */
- 	kbd_write_irqreg(keypad_data, OMAP4_KBD_IRQSTATUS,
- 			 kbd_read_irqreg(keypad_data, OMAP4_KBD_IRQSTATUS));
--- 
-2.25.1
+I think the end result should be: each core has two tasks queued, one
+cgA task and one cgB task(to maintain load balance on the core level).
+The two tasks are queued on different hw thread, with cgA's task runs
+most of the time on one thread and cgB's task being forced idle most
+of the time on the other thread.
