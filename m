@@ -4,48 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 664C5C3F365
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE3CC54FD8
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EB8C20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:13:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8600124690
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812805;
-	bh=+0asDplfb07wNNmLESV2a03zLzTheHS3Q5EA2UglSmI=;
+	s=default; t=1582813058;
+	bh=A443DwTZMDXtOZiw5vuBoAGw7sigyCpjJWp2qxO9wvk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kjnYGB0FEUCIab/YeQ3eUQzUYsQp7Q/oRCbfyXTIcjEBThW+EwN5zQpISDJ8T/wjh
-	 thXHfDmA5KX274yCbaudzUo5HxB6lPVADAPRSguNxYWHx/+n7QIfzPFEfiR4xHeSiX
-	 /e2s0pXzupCvceaRIpVJ3hEnFh74oHrML1Opn5D4=
+	b=t9sdt/tlOaR6bgR+Icg302HOym1SiHj5+a2Zw8ynJrzQVUFGmdCtCEmAa31OZvv9v
+	 oFcstsyiTOBDQfQcKWj9chrvm0xO7mT54UfnDsXUDpimI6cikW/ccuoCeKuhUCpFPo
+	 uMLtwD1oIxuWFpaGg3H6rQ3YUi6pV4j5Oy/3so3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388366AbgB0ONX (ORCPT
+        id S2389735AbgB0ORh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:13:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52196 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:17:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388958AbgB0ONT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:13:19 -0500
+        id S2389705AbgB0ORd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:17:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5BAF20801;
-        Thu, 27 Feb 2020 14:13:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF1432468F;
+        Thu, 27 Feb 2020 14:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812798;
-        bh=+0asDplfb07wNNmLESV2a03zLzTheHS3Q5EA2UglSmI=;
+        s=default; t=1582813052;
+        bh=A443DwTZMDXtOZiw5vuBoAGw7sigyCpjJWp2qxO9wvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GaBvKdyToTv9IDOqa1Ihwp48Bi/FNPZ+/d9QSDVKOzmZ3LoqNN3jfguwchUR+I7HK
-         GfvP069ryLaWkYx5tquyD2dXH/4hfBKEKNKO5ieDtfJiT0cPlQ9r77Gx5Pkm95nxW4
-         5kz0kVC3n7P5QtE2u6hcAI/Ds+Fyj7YV7JQnZlxc=
+        b=tSSDJgqtK4t7AG/oA+qIxh5SV97yjqZfLD5UXmLXNwB/yB0WuDBWdDpRya+FYpzPI
+         E9SpV8l4/amNTC2LbvVSmlKHHTPV3uUDcJsDwEkCakKqAT1GGfgxXg1Bli5lomJ7fD
+         b1++OIgWB/aU6ZOrVhaywqd8dv6l8f+HB7I5e8HU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Jung <jung@codemercs.com>
-Subject: [PATCH 5.5 020/150] USB: misc: iowarrior: add support for 2 OEMed devices
-Date:   Thu, 27 Feb 2020 14:35:57 +0100
-Message-Id: <20200227132235.691647719@linuxfoundation.org>
+        stable@vger.kernel.org, Rahul Kundu <rahul.kundu@chelsio.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Dakshaja Uppalapati <dakshaja@chelsio.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.5 119/150] scsi: Revert "RDMA/isert: Fix a recently introduced regression related to logout"
+Date:   Thu, 27 Feb 2020 14:37:36 +0100
+Message-Id: <20200227132250.230001659@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -58,87 +63,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Bart Van Assche <bvanassche@acm.org>
 
-commit 461d8deb26a7d70254bc0391feb4fd8a95e674e8 upstream.
+commit 76261ada16dcc3be610396a46d35acc3efbda682 upstream.
 
-Add support for two OEM devices that are identical to existing
-IO-Warrior devices, except for the USB device id.
+Since commit 04060db41178 introduces soft lockups when toggling network
+interfaces, revert it.
 
-Cc: Christoph Jung <jung@codemercs.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200212040422.2991-1-gregkh@linuxfoundation.org
+Link: https://marc.info/?l=target-devel&m=158157054906196
+Cc: Rahul Kundu <rahul.kundu@chelsio.com>
+Cc: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Cc: Sagi Grimberg <sagi@grimberg.me>
+Reported-by: Dakshaja Uppalapati <dakshaja@chelsio.com>
+Fixes: 04060db41178 ("scsi: RDMA/isert: Fix a recently introduced regression related to logout")
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/iowarrior.c |   15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ drivers/infiniband/ulp/isert/ib_isert.c |   12 ++++++++++++
+ drivers/target/iscsi/iscsi_target.c     |    6 +++---
+ 2 files changed, 15 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/misc/iowarrior.c
-+++ b/drivers/usb/misc/iowarrior.c
-@@ -34,6 +34,10 @@
- /* full speed iowarrior */
- #define USB_DEVICE_ID_CODEMERCS_IOW56	0x1503
+--- a/drivers/infiniband/ulp/isert/ib_isert.c
++++ b/drivers/infiniband/ulp/isert/ib_isert.c
+@@ -2575,6 +2575,17 @@ isert_wait4logout(struct isert_conn *ise
+ 	}
+ }
  
-+/* OEMed devices */
-+#define USB_DEVICE_ID_CODEMERCS_IOW24SAG	0x158a
-+#define USB_DEVICE_ID_CODEMERCS_IOW56AM		0x158b
++static void
++isert_wait4cmds(struct iscsi_conn *conn)
++{
++	isert_info("iscsi_conn %p\n", conn);
 +
- /* Get a minor range for your devices from the usb maintainer */
- #ifdef CONFIG_USB_DYNAMIC_MINORS
- #define IOWARRIOR_MINOR_BASE	0
-@@ -133,6 +137,8 @@ static const struct usb_device_id iowarr
- 	{USB_DEVICE(USB_VENDOR_ID_CODEMERCS, USB_DEVICE_ID_CODEMERCS_IOWPV1)},
- 	{USB_DEVICE(USB_VENDOR_ID_CODEMERCS, USB_DEVICE_ID_CODEMERCS_IOWPV2)},
- 	{USB_DEVICE(USB_VENDOR_ID_CODEMERCS, USB_DEVICE_ID_CODEMERCS_IOW56)},
-+	{USB_DEVICE(USB_VENDOR_ID_CODEMERCS, USB_DEVICE_ID_CODEMERCS_IOW24SAG)},
-+	{USB_DEVICE(USB_VENDOR_ID_CODEMERCS, USB_DEVICE_ID_CODEMERCS_IOW56AM)},
- 	{}			/* Terminating entry */
- };
- MODULE_DEVICE_TABLE(usb, iowarrior_ids);
-@@ -357,6 +363,7 @@ static ssize_t iowarrior_write(struct fi
- 	}
- 	switch (dev->product_id) {
- 	case USB_DEVICE_ID_CODEMERCS_IOW24:
-+	case USB_DEVICE_ID_CODEMERCS_IOW24SAG:
- 	case USB_DEVICE_ID_CODEMERCS_IOWPV1:
- 	case USB_DEVICE_ID_CODEMERCS_IOWPV2:
- 	case USB_DEVICE_ID_CODEMERCS_IOW40:
-@@ -371,6 +378,7 @@ static ssize_t iowarrior_write(struct fi
- 		goto exit;
- 		break;
- 	case USB_DEVICE_ID_CODEMERCS_IOW56:
-+	case USB_DEVICE_ID_CODEMERCS_IOW56AM:
- 		/* The IOW56 uses asynchronous IO and more urbs */
- 		if (atomic_read(&dev->write_busy) == MAX_WRITES_IN_FLIGHT) {
- 			/* Wait until we are below the limit for submitted urbs */
-@@ -493,6 +501,7 @@ static long iowarrior_ioctl(struct file
- 	switch (cmd) {
- 	case IOW_WRITE:
- 		if (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW24 ||
-+		    dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW24SAG ||
- 		    dev->product_id == USB_DEVICE_ID_CODEMERCS_IOWPV1 ||
- 		    dev->product_id == USB_DEVICE_ID_CODEMERCS_IOWPV2 ||
- 		    dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW40) {
-@@ -767,7 +776,8 @@ static int iowarrior_probe(struct usb_in
- 		goto error;
- 	}
++	if (conn->sess) {
++		target_sess_cmd_list_set_waiting(conn->sess->se_sess);
++		target_wait_for_sess_cmds(conn->sess->se_sess);
++	}
++}
++
+ /**
+  * isert_put_unsol_pending_cmds() - Drop commands waiting for
+  *     unsolicitate dataout
+@@ -2622,6 +2633,7 @@ static void isert_wait_conn(struct iscsi
  
--	if (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56) {
-+	if ((dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56) ||
-+	    (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56AM)) {
- 		res = usb_find_last_int_out_endpoint(iface_desc,
- 				&dev->int_out_endpoint);
- 		if (res) {
-@@ -780,7 +790,8 @@ static int iowarrior_probe(struct usb_in
- 	/* we have to check the report_size often, so remember it in the endianness suitable for our machine */
- 	dev->report_size = usb_endpoint_maxp(dev->int_in_endpoint);
- 	if ((dev->interface->cur_altsetting->desc.bInterfaceNumber == 0) &&
--	    (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56))
-+	    ((dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56) ||
-+	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56AM)))
- 		/* IOWarrior56 has wMaxPacketSize different from report size */
- 		dev->report_size = 7;
+ 	ib_drain_qp(isert_conn->qp);
+ 	isert_put_unsol_pending_cmds(conn);
++	isert_wait4cmds(conn);
+ 	isert_wait4logout(isert_conn);
  
+ 	queue_work(isert_release_wq, &isert_conn->release_work);
+--- a/drivers/target/iscsi/iscsi_target.c
++++ b/drivers/target/iscsi/iscsi_target.c
+@@ -4149,6 +4149,9 @@ int iscsit_close_connection(
+ 	iscsit_stop_nopin_response_timer(conn);
+ 	iscsit_stop_nopin_timer(conn);
+ 
++	if (conn->conn_transport->iscsit_wait_conn)
++		conn->conn_transport->iscsit_wait_conn(conn);
++
+ 	/*
+ 	 * During Connection recovery drop unacknowledged out of order
+ 	 * commands for this connection, and prepare the other commands
+@@ -4234,9 +4237,6 @@ int iscsit_close_connection(
+ 	target_sess_cmd_list_set_waiting(sess->se_sess);
+ 	target_wait_for_sess_cmds(sess->se_sess);
+ 
+-	if (conn->conn_transport->iscsit_wait_conn)
+-		conn->conn_transport->iscsit_wait_conn(conn);
+-
+ 	ahash_request_free(conn->conn_tx_hash);
+ 	if (conn->conn_rx_hash) {
+ 		struct crypto_ahash *tfm;
 
 
