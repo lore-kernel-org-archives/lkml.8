@@ -2,62 +2,62 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A09C4BA3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14291C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EB2E24672
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6A5524672
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:23:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eQdim8DG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XlaIsJNm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728736AbgB0KXA (ORCPT
+        id S1728762AbgB0KXW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 05:23:00 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38474 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728680AbgB0KXA (ORCPT
+        Thu, 27 Feb 2020 05:23:22 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40372 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728743AbgB0KXW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 05:23:00 -0500
-Received: by mail-wm1-f67.google.com with SMTP id a9so2723027wmj.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 02:22:59 -0800 (PST)
+        Thu, 27 Feb 2020 05:23:22 -0500
+Received: by mail-wr1-f65.google.com with SMTP id r17so2596754wrj.7
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 02:23:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=sTfLhAOXyQsM/9JvXEB+beMo5RzqbCE0B0MOrGv8XP8=;
-        b=eQdim8DGWdoHQ1oSpgtCW69YQsvGUzmtcsPzM8nKdWQGXU8qMw3BsSDdd3F5KAwcqU
-         59K9QQ6WxPezes9SSbJ5Hm4eOi2j20ObhgnGTnKHWs91NkZZWtWhAjfzlnskPOdCNR5z
-         K5wRIb1s5EypBGq5cU6bJjCcl4sJSPto/neSJcXLOAZWkXT8z5/haY5+bgNaOdhj6X6B
-         u4h6xwdeqVLNinS0GB4MVwm/CiAIZrqGkEg0XlWAvtYJtTiGdqoGWw6wm2vtm7DPHC1E
-         cx+GSrfBh13tWY6Tp2qxxc0UzhOrzX4U1Ts7ifnrf1AMX9ffnCz2E+Dhby667IiGtpjO
-         DA9w==
+        bh=oLIOJ26Qy0E0L9mNMISzfbBk0chKT27eNJnPvobybH8=;
+        b=XlaIsJNmz3AV5a6FHVQhUDlgCDJFNcCFu61wSXvbZ2yqiACcEgI9RcKbijZQM1Uk3V
+         Iep7V9VivlbIla7CeQrj3AGw2iR9nfP/QQWxMcCsk5AnPJKk6uN9RougxpjfvzDY8JKt
+         ni0ta5XfLBv06CIWYhBwZ1l1AgPAmd6A+5GM4CqjJuLu7EGI3zng8XQXhY7DzUo7QgEt
+         PN8gXuDsbgWLLWR9QHI+4qkmRPYp4kYqcP1H4oJRAZbASiKw1PP66vOFpIHwfGbrwk4K
+         ZrrSXIxozA/SgghJdIBXsbsM6NjJgAJ2XHnbjwaX9Dx8YeMWg8fg51+fO/3PUj9Q3sQb
+         GuLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=sTfLhAOXyQsM/9JvXEB+beMo5RzqbCE0B0MOrGv8XP8=;
-        b=T1XFIjlg/SkfIGhZnY6eMsXZ4IJ3OnkCkkRfNVesV38a7BhMDLOoKNL9X8pcBv2u+z
-         PTR/uOZQAU26onIbGFc+FtHkVdSHJH+Mni5uLOtR/VMtQa+aP9zulHFjg4f6d2Tq+bal
-         yxeaAMAp50deQIwSyBZuj5ufKm3dZj2eJGiV5OCyzjHHx2dn920jI4lx4UZ2yrs5psHF
-         vn9kmozZJMzTnFPeX4MUt2HY+24lA6z/PYqVXXg6pc2DlumDZhFE796jWhTD2WyEuBPD
-         1PgGdq1Sv/ewNS+myo0bpu3zeD3N7wU6elVeCp6H708pzzEQq03xKuB/wzNJkXx0q7wU
-         pBwg==
-X-Gm-Message-State: APjAAAU4aSievIprehxa8Mfpx7fukXir/L2MnKUtggGBaE4TyjPLhrlI
-        sj8CSAoxnRcUe5BNjlsN6JCTrg==
-X-Google-Smtp-Source: APXvYqzQYm3HFhd2bWH5wFyf4lTQSeAdKusIXmtRHAKSLl5WbFMLtfJMCOa8eQMJCixYLFdpIoPKRg==
-X-Received: by 2002:a7b:ce92:: with SMTP id q18mr816002wmj.70.1582798978468;
-        Thu, 27 Feb 2020 02:22:58 -0800 (PST)
+        bh=oLIOJ26Qy0E0L9mNMISzfbBk0chKT27eNJnPvobybH8=;
+        b=d9N6TjeNOeSdP7L1qcPWWprq0K/W6NbG8Q2YQG5zFMFMfjD3IuOJ3thU2F9fIj+F4+
+         WDGUVx14LWJNtkvQ02W825EYh8hW/3kb/p26nlT0RZuXksI3ltYe5QqzLpO8oD8GlRyK
+         0TRgHuEvE7OG4UYnHIcyR8pIMoagw+mN/4z0GMUwEMC1ggRyq555+NmRoBoMmXFqNdWo
+         8TzMDKRBr/sN4+ZGwmX9cLXfGTVtX/P2TC+D22U15R0KTlJroXkCebVCQtfGm7RPogw2
+         8pX/y6mjY2iYVB2FQ2BHc2H8JN3c1FaSjoYm/yDPto/QGFspm4/Fmr841DeR9ueZASqK
+         u4ig==
+X-Gm-Message-State: APjAAAUA3vfTP/1Zt0tUVX1D1LGpyhHfXG4bx9Ilt9J2x4gA3G807zt8
+        XdP29QpViM27pItdxQqFFFUAwA==
+X-Google-Smtp-Source: APXvYqyRN8V9Y0Jl41C8HY9D2rhJMDvfNBiYRjSQK0UahNKiLDcRHbZ1i610s1gYaCL8J1eGjQbCDg==
+X-Received: by 2002:adf:e908:: with SMTP id f8mr3879971wrm.37.1582798997936;
+        Thu, 27 Feb 2020 02:23:17 -0800 (PST)
 Received: from ?IPv6:2a01:e34:ed2f:f020:d916:1723:c1c1:22d? ([2a01:e34:ed2f:f020:d916:1723:c1c1:22d])
-        by smtp.googlemail.com with ESMTPSA id o3sm8423006wme.36.2020.02.27.02.22.57
+        by smtp.googlemail.com with ESMTPSA id o27sm7453195wro.27.2020.02.27.02.23.16
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Feb 2020 02:22:57 -0800 (PST)
-Subject: Re: [PATCH 1/4] dt-bindings: timer: Add X1000 bindings.
+        Thu, 27 Feb 2020 02:23:17 -0800 (PST)
+Subject: Re: [PATCH 3/4] clocksource: Ingenic: Add support for TCU of X1000.
 To:     =?UTF-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
         <zhouyanjie@wanyeetech.com>, linux-mips@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
@@ -67,7 +67,7 @@ Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
         dongsheng.qiu@ingenic.com
 References: <1582100974-129559-1-git-send-email-zhouyanjie@wanyeetech.com>
- <1582100974-129559-3-git-send-email-zhouyanjie@wanyeetech.com>
+ <1582100974-129559-5-git-send-email-zhouyanjie@wanyeetech.com>
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
  xsFNBFv/yykBEADDdW8RZu7iZILSf3zxq5y8YdaeyZjI/MaqgnvG/c3WjFaunoTMspeusiFE
@@ -123,12 +123,12 @@ Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
  i6D9VoMMi6ICko/CXUZ77OgLtMsy3JtzTRbn/wRySOY2AsMgg0Sw6yJ0wfrVk6XAMoLGjaVt
  X4iPTvwocEhjvrO4eXCicRBocsIB2qZaIj3mlhk2u4AkSpkKm9cN0KWYFUxlENF4/NKWMK+g
  fGfsCsS3cXXiZpufZFGr+GoHwiELqfLEAQ9AhlrHGCKcgVgTOI6NHg==
-Message-ID: <f9c4ba69-c362-44d2-518d-fb69221ff17c@linaro.org>
-Date:   Thu, 27 Feb 2020 11:22:56 +0100
+Message-ID: <9cd1fed5-45a6-bf0b-e15b-6406c288f274@linaro.org>
+Date:   Thu, 27 Feb 2020 11:23:15 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <1582100974-129559-3-git-send-email-zhouyanjie@wanyeetech.com>
+In-Reply-To: <1582100974-129559-5-git-send-email-zhouyanjie@wanyeetech.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -138,28 +138,12 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 19/02/2020 09:29, 周琰杰 (Zhou Yanjie) wrote:
-> Add the timer bindings for the X1000 Soc from Ingenic.
+> X1000 has a different TCU containing OST, since X1000, OST has been
+> independent of TCU. This patch is prepare for later OST driver.
 > 
 > Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> ---
->  Documentation/devicetree/bindings/timer/ingenic,tcu.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
-> index 0b63ceb..91f7049 100644
-> --- a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
-> +++ b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
-> @@ -10,6 +10,7 @@ Required properties:
->    * ingenic,jz4740-tcu
->    * ingenic,jz4725b-tcu
->    * ingenic,jz4770-tcu
-> +  * ingenic,x1000-tcu
->    followed by "simple-mfd".
->  - reg: Should be the offset/length value corresponding to the TCU registers
->  - clocks: List of phandle & clock specifiers for clocks external to the TCU.
 
 Applied, thanks
-
 
 -- 
  <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
