@@ -2,153 +2,171 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D538CC4BA3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE56C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B759A222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54941222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:55:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="YMBhXrnh";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YFRho0yB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728762AbgB0Jza (ORCPT
+        id S1728860AbgB0Jz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 04:55:30 -0500
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:38118 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728666AbgB0Jz2 (ORCPT
+        Thu, 27 Feb 2020 04:55:56 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:50321 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728454AbgB0Jz4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 04:55:28 -0500
-Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 27 Feb 2020 01:55:27 -0800
-Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg04-sd.qualcomm.com with ESMTP; 27 Feb 2020 01:55:24 -0800
-Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id 99122210E9; Thu, 27 Feb 2020 15:25:22 +0530 (IST)
-From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     sivaprak@codeaurora.org
-Subject: [PATCH 1/2] clk: qcom: Add DT bindings for ipq6018 apss clock controller
-Date:   Thu, 27 Feb 2020 15:25:17 +0530
-Message-Id: <1582797318-26288-2-git-send-email-sivaprak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582797318-26288-1-git-send-email-sivaprak@codeaurora.org>
-References: <1582797318-26288-1-git-send-email-sivaprak@codeaurora.org>
+        Thu, 27 Feb 2020 04:55:56 -0500
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 1EF9C6D80;
+        Thu, 27 Feb 2020 04:55:55 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Thu, 27 Feb 2020 04:55:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
+        dOBxBMu6sq33WTKLlcHkrfoyV1zvS7moot7PPNknccs=; b=YMBhXrnhoMVmVtu+
+        0XpTyhq5MbTVZxBJ+jFB5SXvXsk05RFEEYGuTD0PWZ0RhM0KOk11DEgyyifH4Pg/
+        e71CM7ljablzxuXpnXMTXH5e/Wg44XB957wkbT0BeaFEGshuEAo8kIsFFvp0WTn2
+        +Zlc8021OYxa9Lo/nOv/GeQ9Y35UnSZfrr7LUSsEOOuxxi9sthdBJMp/qibeMCke
+        FRmdRA0pelBNbWi2D/64WKJslPH8xlnRudvt4ajxYZTKWKztymg1cCJnUMdIVfxt
+        GMu/qNJcC3Ee2Q0HbjaP3fP+BS4vl2N9i5EdjtusO2yzGlJZIBafmxh1e+1o7dyV
+        pfDOZQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=dOBxBMu6sq33WTKLlcHkrfoyV1zvS7moot7PPNknc
+        cs=; b=YFRho0yB5hnT4D7AB1zIg9bPyfmHxf4r6cx6hR7DGXqd0tP93RxPf21MH
+        K1acucU3zTdd+6t0ONsnF/of9232+iEgmfJCxm7fUWelARM1fwdRgMKutffRsCGG
+        0GOXm6ooCQWxyNbhEuFRVe5Y5H2qrrvKv0DaY/dcx86k6jxYkorEKNHnRxgsRpck
+        cesFa4YPPQVh9KBHBqjBVmKTdiKj1yi8/L46GnrTTuwq9xfeh1vEkYtuZgvsdf5r
+        MkYcApb5N3aI8L6KzJLWSDmxavESjwBr3BkOUVe8i1ZEDaVMXLAQLu/bqWOArPrE
+        kFiYPxViJ+muSwEo12sLUQybNy+Ig==
+X-ME-Sender: <xms:KpJXXitWMVsTtuw_Szixin9m6lqDvMXbwpqEvSitUl02nKjjRrHZHQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrleeigddutdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
+    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecukfhppeduudekrddvtdelrd
+    dukedvrdeludenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
+    ohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
+X-ME-Proxy: <xmx:KpJXXqtajhUm6_lL0JXDUt1zEvUibaGbKZriBAd28fiRvMtzvtwHzw>
+    <xmx:KpJXXnPAgNtkG4mN84UnU1jI6JJA89UmX1LYcZhjmFJuNSCAlFJd8w>
+    <xmx:KpJXXo2-HrFnRGSDDn0XaGshgYtpLyBsVir2_pURHqAStlocp7bvxA>
+    <xmx:K5JXXsCShwB4yyPGWNumFQXq4MB-b5rd_dDmKcciX4V3ObTSO_hePA>
+Received: from mickey.themaw.net (unknown [118.209.182.91])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 58D643280063;
+        Thu, 27 Feb 2020 04:55:48 -0500 (EST)
+Message-ID: <9d7b76c32d09492137a253e692624856388693db.camel@themaw.net>
+Subject: Re: [PATCH 00/11] fs/dcache: Limit # of negative dentries
+From:   Ian Kent <raven@themaw.net>
+To:     Andreas Dilger <adilger@dilger.ca>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     Waiman Long <longman@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-doc@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Eric Biggers <ebiggers@google.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Eric Sandeen <sandeen@redhat.com>
+Date:   Thu, 27 Feb 2020 17:55:43 +0800
+In-Reply-To: <2EDB6FFC-C649-4C80-999B-945678F5CE87@dilger.ca>
+References: <20200226161404.14136-1-longman@redhat.com>
+         <20200226162954.GC24185@bombadil.infradead.org>
+         <2EDB6FFC-C649-4C80-999B-945678F5CE87@dilger.ca>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add dt-binding for ipq6018 apss clock controller
+On Wed, 2020-02-26 at 14:28 -0700, Andreas Dilger wrote:
+> On Feb 26, 2020, at 9:29 AM, Matthew Wilcox <willy@infradead.org>
+> wrote:
+> > On Wed, Feb 26, 2020 at 11:13:53AM -0500, Waiman Long wrote:
+> > > A new sysctl parameter "dentry-dir-max" is introduced which
+> > > accepts a
+> > > value of 0 (default) for no limit or a positive integer 256 and
+> > > up. Small
+> > > dentry-dir-max numbers are forbidden to avoid excessive dentry
+> > > count
+> > > checking which can impact system performance.
+> > 
+> > This is always the wrong approach.  A sysctl is just a way of
+> > blaming
+> > the sysadmin for us not being very good at programming.
+> > 
+> > I agree that we need a way to limit the number of negative
+> > dentries.
+> > But that limit needs to be dynamic and depend on how the system is
+> > being
+> > used, not on how some overworked sysadmin has configured it.
+> > 
+> > So we need an initial estimate for the number of negative dentries
+> > that
+> > we need for good performance.  Maybe it's 1000.  It doesn't really
+> > matter;
+> > it's going to change dynamically.
+> > 
+> > Then we need a metric to let us know whether it needs to be
+> > increased.
+> > Perhaps that's "number of new negative dentries created in the last
+> > second".  And we need to decide how much to increase it; maybe it's
+> > by
+> > 50% or maybe by 10%.  Perhaps somewhere between 10-100% depending
+> > on
+> > how high the recent rate of negative dentry creation has been.
+> > 
+> > We also need a metric to let us know whether it needs to be
+> > decreased.
+> > I'm reluctant to say that memory pressure should be that metric
+> > because
+> > very large systems can let the number of dentries grow in an
+> > unbounded
+> > way.  Perhaps that metric is "number of hits in the negative dentry
+> > cache in the last ten seconds".  Again, we'll need to decide how
+> > much
+> > to shrink the target number by.
+> 
+> OK, so now instead of a single tunable parameter we need three,
+> because
+> these numbers are totally made up and nobody knows the right values.
+> :-)
+> Defaulting the limit to "disabled/no limit" also has the problem that
+> 99.99% of users won't even know this tunable exists, let alone how to
+> set it correctly, so they will continue to see these problems, and
+> the
+> code may as well not exist (i.e. pure overhead), while Waiman has a
+> better idea today of what would be reasonable defaults.
 
-Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
----
- .../devicetree/bindings/clock/qcom,apsscc.yaml     | 58 ++++++++++++++++++++++
- include/dt-bindings/clock/qcom,apss-ipq6018.h      | 26 ++++++++++
- 2 files changed, 84 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
- create mode 100644 include/dt-bindings/clock/qcom,apss-ipq6018.h
+Why have these at all.
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,apsscc.yaml b/Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
-new file mode 100644
-index 0000000..7433721
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
-@@ -0,0 +1,58 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bindings/clock/qcom,apsscc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm IPQ6018 APSS Clock Controller Binding
-+
-+maintainers:
-+  - Stephen Boyd <sboyd@kernel.org>
-+
-+description: |
-+  Qualcomm IPQ6018 APSS clock control module which supports the clocks with
-+  frequencies above 800Mhz.
-+
-+properties:
-+  compatible :
-+    const: qcom,apss-ipq6018
-+
-+  clocks:
-+    description: clocks required for this controller.
-+    maxItems: 4
-+
-+  clock-names:
-+    description: clock output names of required clocks.
-+    maxItems: 4
-+
-+  '#clock-cells':
-+    const: 1
-+
-+  '#reset-cells':
-+    const: 1
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - '#clock-cells'
-+  - '#reset-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+      #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
-+      apss_clk: qcom,apss_clk@b111000 {
-+            compatible = "qcom,apss-ipq6018";
-+            clocks = <&xo>, <&gcc GPLL0>,
-+                        <&gcc GPLL2>, <&gcc GPLL4>;
-+            clock-names = "xo", "gpll0",
-+                         "gpll2", "gpll4";
-+            reg = <0xb11100c 0x5ff4>;
-+            #clock-cells = <1>;
-+            #reset-cells = <1>;
-+      };
-+...
-diff --git a/include/dt-bindings/clock/qcom,apss-ipq6018.h b/include/dt-bindings/clock/qcom,apss-ipq6018.h
-new file mode 100644
-index 0000000..ed9d7d8
---- /dev/null
-+++ b/include/dt-bindings/clock/qcom,apss-ipq6018.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
-+ *
-+ * Permission to use, copy, modify, and/or distribute this software for any
-+ * purpose with or without fee is hereby granted, provided that the above
-+ * copyright notice and this permission notice appear in all copies.
-+ *
-+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
-+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
-+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
-+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-+ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-+ */
-+
-+#ifndef _DT_BINDINGS_CLOCK_QCA_APSS_IPQ6018_H
-+#define _DT_BINDINGS_CLOCK_QCA_APSS_IPQ6018_H
-+
-+#define APSS_PLL_EARLY				0
-+#define APSS_PLL				1
-+#define APCS_ALIAS0_CLK_SRC			2
-+#define APCS_ALIAS0_CORE_CLK			3
-+
-+#endif
--- 
-2.7.4
+Not all file systems even produce negative hashed dentries.
+
+The most beneficial use of them is to improve performance of rapid
+fire lookups for non-existent names. Longer lived negative hashed
+dentries don't give much benefit at all unless they suddenly have
+lots of hits and that would cost a single allocation on the first
+lookup if the dentry ttl expired and the dentry discarded.
+
+A ttl (say jiffies) set at appropriate times could be a better
+choice all round, no sysctl values at all.
+
+Ian
 
