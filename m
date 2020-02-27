@@ -4,39 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB23CC4BA3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 06:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 922BBC4BA06
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 06:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4D7B24687
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 06:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E5B424683
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 06:57:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbgB0Gz4 (ORCPT
+        id S1727654AbgB0G5y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 01:55:56 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11115 "EHLO huawei.com"
+        Thu, 27 Feb 2020 01:57:54 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:58754 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726575AbgB0Gzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 01:55:55 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 70B1A8CB637F1FBEB6AB;
-        Thu, 27 Feb 2020 14:55:52 +0800 (CST)
+        id S1726575AbgB0G5x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 01:57:53 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id D6409B76283187EEF587;
+        Thu, 27 Feb 2020 14:57:47 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 27 Feb 2020 14:55:42 +0800
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 27 Feb 2020 14:57:39 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     Selvin Xavier <selvin.xavier@broadcom.com>,
-        Devesh Sharma <devesh.sharma@broadcom.com>,
-        Somnath Kotur <somnath.kotur@broadcom.com>,
-        Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-CC:     YueHaibing <yuehaibing@huawei.com>, <linux-rdma@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] RDMA/bnxt_re: Remove set but not used variables 'pg' and 'idx'
-Date:   Thu, 27 Feb 2020 06:49:00 +0000
-Message-ID: <20200227064900.92255-1-yuehaibing@huawei.com>
+To:     Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>
+CC:     YueHaibing <yuehaibing@huawei.com>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next] drm/tidss: Drop pointless static qualifier in dispc_find_csc()
+Date:   Thu, 27 Feb 2020 06:50:57 +0000
+Message-ID: <20200227065057.92766-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Type:   text/plain; charset=US-ASCII
@@ -48,44 +45,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
-
-drivers/infiniband/hw/bnxt_re/qplib_rcfw.c: In function '__send_message':
-drivers/infiniband/hw/bnxt_re/qplib_rcfw.c:101:10: warning:
- variable 'idx' set but not used [-Wunused-but-set-variable]
-drivers/infiniband/hw/bnxt_re/qplib_rcfw.c:101:6: warning:
- variable 'pg' set but not used [-Wunused-but-set-variable]
-
-commit cee0c7bba486 ("RDMA/bnxt_re: Refactor command queue management code")
-involved this, but not used.
+There is no need to have the 'const struct dispc_csc_coef *coef'
+variable static since new value always be assigned before use it.
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/infiniband/hw/bnxt_re/qplib_rcfw.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/gpu/drm/tidss/tidss_dispc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/bnxt_re/qplib_rcfw.c b/drivers/infiniband/hw/bnxt_re/qplib_rcfw.c
-index b0b050e5cd12..f01e864bb611 100644
---- a/drivers/infiniband/hw/bnxt_re/qplib_rcfw.c
-+++ b/drivers/infiniband/hw/bnxt_re/qplib_rcfw.c
-@@ -98,7 +98,6 @@ static int __send_message(struct bnxt_qplib_rcfw *rcfw, struct cmdq_base *req,
- 	unsigned long flags;
- 	u32 size, opcode;
- 	u16 cookie, cbit;
--	int pg, idx;
- 	u8 *preq;
+diff --git a/drivers/gpu/drm/tidss/tidss_dispc.c b/drivers/gpu/drm/tidss/tidss_dispc.c
+index eeb160dc047b..e6cb176484a9 100644
+--- a/drivers/gpu/drm/tidss/tidss_dispc.c
++++ b/drivers/gpu/drm/tidss/tidss_dispc.c
+@@ -1510,7 +1510,7 @@ struct dispc_csc_coef *dispc_find_csc(enum drm_color_encoding encoding,
+ static void dispc_vid_csc_setup(struct dispc_device *dispc, u32 hw_plane,
+ 				const struct drm_plane_state *state)
+ {
+-	static const struct dispc_csc_coef *coef;
++	const struct dispc_csc_coef *coef;
  
- 	pdev = rcfw->pdev;
-@@ -167,9 +166,6 @@ static int __send_message(struct bnxt_qplib_rcfw *rcfw, struct cmdq_base *req,
- 	hwq_ptr = (struct bnxt_qplib_cmdqe **)hwq->pbl_ptr;
- 	preq = (u8 *)req;
- 	do {
--		pg = 0;
--		idx = 0;
--
- 		/* Locate the next cmdq slot */
- 		sw_prod = HWQ_CMP(hwq->prod, hwq);
- 		cmdqe = &hwq_ptr[get_cmdq_pg(sw_prod, cmdq_depth)]
+ 	coef = dispc_find_csc(state->color_encoding, state->color_range);
+ 	if (!coef) {
+
+
 
 
 
