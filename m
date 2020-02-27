@@ -2,537 +2,701 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05254C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C15C3567B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF2B9246B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:26:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582820777;
-	bh=IVGoJ1kKEezr89Q3BMGxExIEkdZ6Zd8D82ax0QmGn+8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=BY7q9DS18wPxcKbQdEoDtzwR+uByOz0FAx7+5n+1mVETuRwiTBwTfpK6TJWZDFKiJ
-	 hdG/4wWdai89nKVQ/jPG/PV8M4j6f2b0SW4aEuj1HagLFt4qJd9bXb8CL04pSK0QKI
-	 bTeYEQiotlZzcyfyHRgl/2W602sKZhRRW4IY/1uk=
+	by mail.kernel.org (Postfix) with ESMTP id 8D3C3246B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:26:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730210AbgB0Q0Q (ORCPT
+        id S1730280AbgB0Q0S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 11:26:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56796 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729169AbgB0Q0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 11:26:13 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [163.114.132.128])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 371B9246B1;
-        Thu, 27 Feb 2020 16:26:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582820772;
-        bh=IVGoJ1kKEezr89Q3BMGxExIEkdZ6Zd8D82ax0QmGn+8=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=lDQwQGAviWtsEkRUkHJr1aewYEf86+tfO8pVOlcY0QWsTHq8rbOWzjFDVmTzemoAh
-         MsvwgNqe0NPsRh4matKekke1iH94J12t+sX8NnhVh8MC4WOSg9FuaU5tt0EBE7ESE+
-         Y/xOpVOHAsEzxc5qlYuhxEp0lwECXxWXhLD2z2rY=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 6EE6A3521883; Thu, 27 Feb 2020 07:10:35 -0800 (PST)
-Date:   Thu, 27 Feb 2020 07:10:35 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Amol Grover <frextrite@gmail.com>
-Subject: Re: linux-next: Signed-off-by missing for commit in the rcu tree
-Message-ID: <20200227151035.GI2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200213092504.27fd6dc8@canb.auug.org.au>
- <20200213213821.GH170680@google.com>
+        Thu, 27 Feb 2020 11:26:18 -0500
+Received: from out28-49.mail.aliyun.com ([115.124.28.49]:59589 "EHLO
+        out28-49.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729693AbgB0Q0R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 11:26:17 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.327769-0.00956973-0.662661;DS=CONTINUE|ham_regular_dialog|0.161878-0.00599466-0.832127;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03279;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=23;RT=23;SR=0;TI=SMTPD_---.GtIkN5K_1582820266;
+Received: from 192.168.10.227(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GtIkN5K_1582820266)
+          by smtp.aliyun-inc.com(10.147.40.233);
+          Fri, 28 Feb 2020 00:17:47 +0800
+Subject: Re: [PATCH v6 2/7] MIPS: JZ4780: Introduce SMP support.
+To:     Paul Cercueil <paul@crapouillou.net>
+References: <1582215889-113034-1-git-send-email-zhouyanjie@wanyeetech.com>
+ <1582215889-113034-4-git-send-email-zhouyanjie@wanyeetech.com>
+ <1582223255.3.1@crapouillou.net>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        tglx@linutronix.de, ralf@linux-mips.org, paulburton@kernel.org,
+        jiaxun.yang@flygoat.com, chenhc@lemote.com, sboyd@kernel.org,
+        mturquette@baylibre.com, mark.rutland@arm.com, robh+dt@kernel.org,
+        daniel.lezcano@linaro.org, geert+renesas@glider.be,
+        krzk@kernel.org, ebiederm@xmission.com, miquel.raynal@bootlin.com,
+        keescook@chromium.org, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, dongsheng.qiu@ingenic.com
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <5E57EBA9.4070907@wanyeetech.com>
+Date:   Fri, 28 Feb 2020 00:17:45 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213213821.GH170680@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1582223255.3.1@crapouillou.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 04:38:21PM -0500, Joel Fernandes wrote:
-> On Thu, Feb 13, 2020 at 09:25:04AM +1100, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > Commit
-> > 
-> >   8e3a97174c3b ("doc: Add some more RCU list patterns in the kernel")
-> > 
-> > is missing a Signed-off-by from its author (but does have an
-> > Co-developed-by).
-> 
-> Paul, I believe the issue is my SOB was missing from the patch, could you
-> take the below patch instead which has to SOB? That should correct the issue
-> in -next as they pull from your tree periodically right? Also I fixed
-> Co-developed-by to be Amol.
+Hi Paul,
 
-Done!  Here is hoping that it passes muster.  ;-)
+On 2020年02月21日 02:27, Paul Cercueil wrote:
+> Hi Zhou,
+>
+>
+> Le ven., févr. 21, 2020 at 00:24, 周琰杰 (Zhou Yanjie) 
+> <zhouyanjie@wanyeetech.com> a écrit :
+>> Forward port smp support from kernel 3.18.3 of CI20_linux
+>> to upstream kernel 5.6.
+>>
+>> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> Tested-by: Paul Boddie <paul@boddie.org.uk>
+>> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>> Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+>> ---
+>>
+>> Notes:
+>>     v1->v2:
+>>     1.Remove unnecessary "plat_irq_dispatch(void)" in irq-ingenic.c.
+>>     2.Add a timeout check for "jz4780_boot_secondary()" to avoid a 
+>> dead loop.
+>>     3.Replace hard code in smp.c with macro.
+>>
+>>     v2->v3:
+>>     1.Remove unnecessary "extern void (*r4k_blast_dcache)(void)" in 
+>> smp.c.
+>>     2.Use "for_each_of_cpu_node" instead "for_each_compatible_node" 
+>> in smp.c.
+>>     3.Use "of_cpu_node_to_id" instead "of_property_read_u32_index" in 
+>> smp.c.
+>>     4.Move LCR related operations to jz4780-cgu.c.
+>>
+>>     v3->v4:
+>>     Rebase on top of kernel 5.6-rc1.
+>>
+>>     v4->v5:
+>>     1.Splitting changes involving "jz4780-cgu.c" into separate commit.
+>>     2.Use "request_irq()" replace "setup_irq()".
+>>
+>>     v5->v6:
+>>     In order to have a kernel that works on multiple SoCs at the same
+>>     time, use "IS_ENABLED()" replace "#ifdef".
+>>
+>>  arch/mips/include/asm/mach-jz4740/smp.h |  81 ++++++++++
+>>  arch/mips/jz4740/Kconfig                |   3 +
+>>  arch/mips/jz4740/Makefile               |   5 +
+>>  arch/mips/jz4740/prom.c                 |   4 +
+>>  arch/mips/jz4740/smp-entry.S            |  57 +++++++
+>>  arch/mips/jz4740/smp.c                  | 254 
+>> ++++++++++++++++++++++++++++++++
+>>  arch/mips/kernel/idle.c                 |  36 ++++-
+>>  7 files changed, 439 insertions(+), 1 deletion(-)
+>>  create mode 100644 arch/mips/include/asm/mach-jz4740/smp.h
+>>  create mode 100644 arch/mips/jz4740/smp-entry.S
+>>  create mode 100644 arch/mips/jz4740/smp.c
+>>
+>> diff --git a/arch/mips/include/asm/mach-jz4740/smp.h 
+>> b/arch/mips/include/asm/mach-jz4740/smp.h
+>> new file mode 100644
+>> index 00000000..af3c21b
+>> --- /dev/null
+>> +++ b/arch/mips/include/asm/mach-jz4740/smp.h
+>> @@ -0,0 +1,81 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+>> +/*
+>> + *  Copyright (C) 2013, Paul Burton <paul.burton@imgtec.com>
+>> + *  JZ4780 SMP definitions
+>> + */
+>> +
+>> +#ifndef __MIPS_ASM_MACH_JZ4740_JZ4780_SMP_H__
+>> +#define __MIPS_ASM_MACH_JZ4740_JZ4780_SMP_H__
+>> +
+>> +#define read_c0_corectrl()        __read_32bit_c0_register($12, 2)
+>> +#define write_c0_corectrl(val) __write_32bit_c0_register($12, 2, val)
+>> +
+>> +#define read_c0_corestatus() __read_32bit_c0_register($12, 3)
+>> +#define write_c0_corestatus(val) __write_32bit_c0_register($12, 3, val)
+>> +
+>> +#define read_c0_reim()            __read_32bit_c0_register($12, 4)
+>> +#define write_c0_reim(val) __write_32bit_c0_register($12, 4, val)
+>> +
+>> +#define read_c0_mailbox0()        __read_32bit_c0_register($20, 0)
+>> +#define write_c0_mailbox0(val) __write_32bit_c0_register($20, 0, val)
+>> +
+>> +#define read_c0_mailbox1()        __read_32bit_c0_register($20, 1)
+>> +#define write_c0_mailbox1(val) __write_32bit_c0_register($20, 1, val)
+>> +
+>> +#define smp_clr_pending(mask) do {        \
+>> +        unsigned int stat;        \
+>> +        stat = read_c0_corestatus();    \
+>> +        stat &= ~((mask) & 0xff);    \
+>> +        write_c0_corestatus(stat);    \
+>> +    } while (0)
+>> +
+>> +/*
+>> + * Core Control register
+>> + */
+>> +#define CORECTRL_SLEEP1M_SHIFT    17
+>> +#define CORECTRL_SLEEP1M    (_ULCAST_(0x1) << CORECTRL_SLEEP1M_SHIFT)
+>> +#define CORECTRL_SLEEP0M_SHIFT    16
+>> +#define CORECTRL_SLEEP0M    (_ULCAST_(0x1) << CORECTRL_SLEEP0M_SHIFT)
+>> +#define CORECTRL_RPC1_SHIFT    9
+>> +#define CORECTRL_RPC1        (_ULCAST_(0x1) << CORECTRL_RPC1_SHIFT)
+>> +#define CORECTRL_RPC0_SHIFT    8
+>> +#define CORECTRL_RPC0        (_ULCAST_(0x1) << CORECTRL_RPC0_SHIFT)
+>> +#define CORECTRL_SWRST1_SHIFT    1
+>> +#define CORECTRL_SWRST1        (_ULCAST_(0x1) << CORECTRL_SWRST1_SHIFT)
+>> +#define CORECTRL_SWRST0_SHIFT    0
+>> +#define CORECTRL_SWRST0        (_ULCAST_(0x1) << CORECTRL_SWRST0_SHIFT)
+>> +
+>> +/*
+>> + * Core Status register
+>> + */
+>> +#define CORESTATUS_SLEEP1_SHIFT    17
+>> +#define CORESTATUS_SLEEP1    (_ULCAST_(0x1) << CORESTATUS_SLEEP1_SHIFT)
+>> +#define CORESTATUS_SLEEP0_SHIFT    16
+>> +#define CORESTATUS_SLEEP0    (_ULCAST_(0x1) << CORESTATUS_SLEEP0_SHIFT)
+>> +#define CORESTATUS_IRQ1P_SHIFT    9
+>> +#define CORESTATUS_IRQ1P    (_ULCAST_(0x1) << CORESTATUS_IRQ1P_SHIFT)
+>> +#define CORESTATUS_IRQ0P_SHIFT    8
+>> +#define CORESTATUS_IRQ0P    (_ULCAST_(0x1) << CORESTATUS_IRQ8P_SHIFT)
+>> +#define CORESTATUS_MIRQ1P_SHIFT    1
+>> +#define CORESTATUS_MIRQ1P    (_ULCAST_(0x1) << CORESTATUS_MIRQ1P_SHIFT)
+>> +#define CORESTATUS_MIRQ0P_SHIFT    0
+>> +#define CORESTATUS_MIRQ0P    (_ULCAST_(0x1) << CORESTATUS_MIRQ0P_SHIFT)
+>> +
+>> +/*
+>> + * Reset Entry & IRQ Mask register
+>> + */
+>> +#define REIM_ENTRY_SHIFT    16
+>> +#define REIM_ENTRY        (_ULCAST_(0xffff) << REIM_ENTRY_SHIFT)
+>> +#define REIM_IRQ1M_SHIFT    9
+>> +#define REIM_IRQ1M        (_ULCAST_(0x1) << REIM_IRQ1M_SHIFT)
+>> +#define REIM_IRQ0M_SHIFT    8
+>> +#define REIM_IRQ0M        (_ULCAST_(0x1) << REIM_IRQ0M_SHIFT)
+>> +#define REIM_MBOXIRQ1M_SHIFT    1
+>> +#define REIM_MBOXIRQ1M        (_ULCAST_(0x1) << REIM_MBOXIRQ1M_SHIFT)
+>> +#define REIM_MBOXIRQ0M_SHIFT    0
+>> +#define REIM_MBOXIRQ0M        (_ULCAST_(0x1) << REIM_MBOXIRQ0M_SHIFT)
+>> +
+>> +extern void jz4780_smp_init(void);
+>> +extern void jz4780_secondary_cpu_entry(void);
+>> +
+>> +#endif /* __MIPS_ASM_MACH_JZ4740_JZ4780_SMP_H__ */
+>> diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
+>> index 412d2fa..0239597 100644
+>> --- a/arch/mips/jz4740/Kconfig
+>> +++ b/arch/mips/jz4740/Kconfig
+>> @@ -34,9 +34,12 @@ config MACH_JZ4770
+>>
+>>  config MACH_JZ4780
+>>      bool
+>> +    select GENERIC_CLOCKEVENTS_BROADCAST if SMP
+>>      select MIPS_CPU_SCACHE
+>> +    select NR_CPUS_DEFAULT_2
+>>      select SYS_HAS_CPU_MIPS32_R2
+>>      select SYS_SUPPORTS_HIGHMEM
+>> +    select SYS_SUPPORTS_SMP
+>>
+>>  config MACH_X1000
+>>      bool
+>> diff --git a/arch/mips/jz4740/Makefile b/arch/mips/jz4740/Makefile
+>> index 6de14c0..0a0f024 100644
+>> --- a/arch/mips/jz4740/Makefile
+>> +++ b/arch/mips/jz4740/Makefile
+>> @@ -12,3 +12,8 @@ CFLAGS_setup.o = -I$(src)/../../../scripts/dtc/libfdt
+>>  # PM support
+>>
+>>  obj-$(CONFIG_PM) += pm.o
+>> +
+>> +# SMP support
+>> +
+>> +obj-$(CONFIG_SMP) += smp.o
+>> +obj-$(CONFIG_SMP) += smp-entry.o
+>> diff --git a/arch/mips/jz4740/prom.c b/arch/mips/jz4740/prom.c
+>> index ff4555c..026259e 100644
+>> --- a/arch/mips/jz4740/prom.c
+>> +++ b/arch/mips/jz4740/prom.c
+>> @@ -8,10 +8,14 @@
+>>
+>>  #include <asm/bootinfo.h>
+>>  #include <asm/fw/fw.h>
+>> +#include <asm/mach-jz4740/smp.h>
+>>
+>>  void __init prom_init(void)
+>>  {
+>>      fw_init_cmdline();
+>> +
+>> +    if (IS_ENABLED(CONFIG_MACH_JZ4780) && IS_ENABLED(CONFIG_SMP))
+>> +        jz4780_smp_init();
+>
+> I guess it's OK for a first version, but SMP should really be 
+> decoupled from the SoC version. A SMP-enabled kernel should be able to 
+> also support non-SMP SoCs.
+>
 
-							Thanx, Paul
+OK, will change in next version.
 
-> ---------8<----------
-> From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
-> Subject: [PATCH] doc: Add some more RCU list patterns in the kernel
-> 
-> - Add more information about RCU list patterns taking examples
-> from audit subsystem in the linux kernel.
-> 
-> - Keep the current audit examples, even though the kernel has changed.
-> 
-> - Modify inline text for better passage quality.
-> 
-> - Fix typo in code-blocks and improve code comments.
-> 
-> - Add text formatting (italics, bold and code) for better emphasis.
-> 
-> Patch originally submitted at
-> https://lore.kernel.org/patchwork/patch/1082804/
-> 
-> Co-developed-by: Amol Grover <frextrite@gmail.com>
-> Signed-off-by: Amol Grover <frextrite@gmail.com>
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> ---
->  Documentation/RCU/listRCU.rst | 275 ++++++++++++++++++++++++++--------
->  1 file changed, 211 insertions(+), 64 deletions(-)
-> 
-> diff --git a/Documentation/RCU/listRCU.rst b/Documentation/RCU/listRCU.rst
-> index 7956ff33042b0..55d2b30db481c 100644
-> --- a/Documentation/RCU/listRCU.rst
-> +++ b/Documentation/RCU/listRCU.rst
-> @@ -4,12 +4,61 @@ Using RCU to Protect Read-Mostly Linked Lists
->  =============================================
->  
->  One of the best applications of RCU is to protect read-mostly linked lists
-> -("struct list_head" in list.h).  One big advantage of this approach
-> +(``struct list_head`` in list.h).  One big advantage of this approach
->  is that all of the required memory barriers are included for you in
->  the list macros.  This document describes several applications of RCU,
->  with the best fits first.
->  
-> -Example 1: Read-Side Action Taken Outside of Lock, No In-Place Updates
-> +
-> +Example 1: Read-mostly list: Deferred Destruction
-> +-------------------------------------------------
-> +
-> +A widely used usecase for RCU lists in the kernel is lockless iteration over
-> +all processes in the system. ``task_struct::tasks`` represents the list node that
-> +links all the processes. The list can be traversed in parallel to any list
-> +additions or removals.
-> +
-> +The traversal of the list is done using ``for_each_process()`` which is defined
-> +by the 2 macros::
-> +
-> +	#define next_task(p) \
-> +		list_entry_rcu((p)->tasks.next, struct task_struct, tasks)
-> +
-> +	#define for_each_process(p) \
-> +		for (p = &init_task ; (p = next_task(p)) != &init_task ; )
-> +
-> +The code traversing the list of all processes typically looks like::
-> +
-> +	rcu_read_lock();
-> +	for_each_process(p) {
-> +		/* Do something with p */
-> +	}
-> +	rcu_read_unlock();
-> +
-> +The simplified code for removing a process from a task list is::
-> +
-> +	void release_task(struct task_struct *p)
-> +	{
-> +		write_lock(&tasklist_lock);
-> +		list_del_rcu(&p->tasks);
-> +		write_unlock(&tasklist_lock);
-> +		call_rcu(&p->rcu, delayed_put_task_struct);
-> +	}
-> +
-> +When a process exits, ``release_task()`` calls ``list_del_rcu(&p->tasks)`` under
-> +``tasklist_lock`` writer lock protection, to remove the task from the list of
-> +all tasks. The ``tasklist_lock`` prevents concurrent list additions/removals
-> +from corrupting the list. Readers using ``for_each_process()`` are not protected
-> +with the ``tasklist_lock``. To prevent readers from noticing changes in the list
-> +pointers, the ``task_struct`` object is freed only after one or more grace
-> +periods elapse (with the help of call_rcu()). This deferring of destruction
-> +ensures that any readers traversing the list will see valid ``p->tasks.next``
-> +pointers and deletion/freeing can happen in parallel with traversal of the list.
-> +This pattern is also called an **existence lock**, since RCU pins the object in
-> +memory until all existing readers finish.
-> +
-> +
-> +Example 2: Read-Side Action Taken Outside of Lock: No In-Place Updates
->  ----------------------------------------------------------------------
->  
->  The best applications are cases where, if reader-writer locking were
-> @@ -26,7 +75,7 @@ added or deleted, rather than being modified in place.
->  
->  A straightforward example of this use of RCU may be found in the
->  system-call auditing support.  For example, a reader-writer locked
-> -implementation of audit_filter_task() might be as follows::
-> +implementation of ``audit_filter_task()`` might be as follows::
->  
->  	static enum audit_state audit_filter_task(struct task_struct *tsk)
->  	{
-> @@ -34,7 +83,7 @@ implementation of audit_filter_task() might be as follows::
->  		enum audit_state   state;
->  
->  		read_lock(&auditsc_lock);
-> -		/* Note: audit_netlink_sem held by caller. */
-> +		/* Note: audit_filter_mutex held by caller. */
->  		list_for_each_entry(e, &audit_tsklist, list) {
->  			if (audit_filter_rules(tsk, &e->rule, NULL, &state)) {
->  				read_unlock(&auditsc_lock);
-> @@ -58,7 +107,7 @@ This means that RCU can be easily applied to the read side, as follows::
->  		enum audit_state   state;
->  
->  		rcu_read_lock();
-> -		/* Note: audit_netlink_sem held by caller. */
-> +		/* Note: audit_filter_mutex held by caller. */
->  		list_for_each_entry_rcu(e, &audit_tsklist, list) {
->  			if (audit_filter_rules(tsk, &e->rule, NULL, &state)) {
->  				rcu_read_unlock();
-> @@ -69,18 +118,18 @@ This means that RCU can be easily applied to the read side, as follows::
->  		return AUDIT_BUILD_CONTEXT;
->  	}
->  
-> -The read_lock() and read_unlock() calls have become rcu_read_lock()
-> +The ``read_lock()`` and ``read_unlock()`` calls have become rcu_read_lock()
->  and rcu_read_unlock(), respectively, and the list_for_each_entry() has
-> -become list_for_each_entry_rcu().  The _rcu() list-traversal primitives
-> +become list_for_each_entry_rcu().  The **_rcu()** list-traversal primitives
->  insert the read-side memory barriers that are required on DEC Alpha CPUs.
->  
-> -The changes to the update side are also straightforward.  A reader-writer
-> -lock might be used as follows for deletion and insertion::
-> +The changes to the update side are also straightforward. A reader-writer lock
-> +might be used as follows for deletion and insertion::
->  
->  	static inline int audit_del_rule(struct audit_rule *rule,
->  					 struct list_head *list)
->  	{
-> -		struct audit_entry  *e;
-> +		struct audit_entry *e;
->  
->  		write_lock(&auditsc_lock);
->  		list_for_each_entry(e, list, list) {
-> @@ -113,9 +162,9 @@ Following are the RCU equivalents for these two functions::
->  	static inline int audit_del_rule(struct audit_rule *rule,
->  					 struct list_head *list)
->  	{
-> -		struct audit_entry  *e;
-> +		struct audit_entry *e;
->  
-> -		/* Do not use the _rcu iterator here, since this is the only
-> +		/* No need to use the _rcu iterator here, since this is the only
->  		 * deletion routine. */
->  		list_for_each_entry(e, list, list) {
->  			if (!audit_compare_rule(rule, &e->rule)) {
-> @@ -139,41 +188,41 @@ Following are the RCU equivalents for these two functions::
->  		return 0;
->  	}
->  
-> -Normally, the write_lock() and write_unlock() would be replaced by
-> -a spin_lock() and a spin_unlock(), but in this case, all callers hold
-> -audit_netlink_sem, so no additional locking is required.  The auditsc_lock
-> -can therefore be eliminated, since use of RCU eliminates the need for
-> -writers to exclude readers.  Normally, the write_lock() calls would
-> -be converted into spin_lock() calls.
-> +Normally, the ``write_lock()`` and ``write_unlock()`` would be replaced by a
-> +spin_lock() and a spin_unlock(). But in this case, all callers hold
-> +``audit_filter_mutex``, so no additional locking is required. The
-> +``auditsc_lock`` can therefore be eliminated, since use of RCU eliminates the
-> +need for writers to exclude readers.
->  
->  The list_del(), list_add(), and list_add_tail() primitives have been
->  replaced by list_del_rcu(), list_add_rcu(), and list_add_tail_rcu().
-> -The _rcu() list-manipulation primitives add memory barriers that are
-> -needed on weakly ordered CPUs (most of them!).  The list_del_rcu()
-> -primitive omits the pointer poisoning debug-assist code that would
-> -otherwise cause concurrent readers to fail spectacularly.
-> +The **_rcu()** list-manipulation primitives add memory barriers that are needed on
-> +weakly ordered CPUs (most of them!).  The list_del_rcu() primitive omits the
-> +pointer poisoning debug-assist code that would otherwise cause concurrent
-> +readers to fail spectacularly.
->  
-> -So, when readers can tolerate stale data and when entries are either added
-> -or deleted, without in-place modification, it is very easy to use RCU!
-> +So, when readers can tolerate stale data and when entries are either added or
-> +deleted, without in-place modification, it is very easy to use RCU!
->  
-> -Example 2: Handling In-Place Updates
-> +
-> +Example 3: Handling In-Place Updates
->  ------------------------------------
->  
-> -The system-call auditing code does not update auditing rules in place.
-> -However, if it did, reader-writer-locked code to do so might look as
-> -follows (presumably, the field_count is only permitted to decrease,
-> -otherwise, the added fields would need to be filled in)::
-> +The system-call auditing code does not update auditing rules in place.  However,
-> +if it did, the reader-writer-locked code to do so might look as follows
-> +(assuming only ``field_count`` is updated, otherwise, the added fields would
-> +need to be filled in)::
->  
->  	static inline int audit_upd_rule(struct audit_rule *rule,
->  					 struct list_head *list,
->  					 __u32 newaction,
->  					 __u32 newfield_count)
->  	{
-> -		struct audit_entry  *e;
-> -		struct audit_newentry *ne;
-> +		struct audit_entry *e;
-> +		struct audit_entry *ne;
->  
->  		write_lock(&auditsc_lock);
-> -		/* Note: audit_netlink_sem held by caller. */
-> +		/* Note: audit_filter_mutex held by caller. */
->  		list_for_each_entry(e, list, list) {
->  			if (!audit_compare_rule(rule, &e->rule)) {
->  				e->rule.action = newaction;
-> @@ -188,16 +237,16 @@ otherwise, the added fields would need to be filled in)::
->  
->  The RCU version creates a copy, updates the copy, then replaces the old
->  entry with the newly updated entry.  This sequence of actions, allowing
-> -concurrent reads while doing a copy to perform an update, is what gives
-> -RCU ("read-copy update") its name.  The RCU code is as follows::
-> +concurrent reads while making a copy to perform an update, is what gives
-> +RCU (*read-copy update*) its name.  The RCU code is as follows::
->  
->  	static inline int audit_upd_rule(struct audit_rule *rule,
->  					 struct list_head *list,
->  					 __u32 newaction,
->  					 __u32 newfield_count)
->  	{
-> -		struct audit_entry  *e;
-> -		struct audit_newentry *ne;
-> +		struct audit_entry *e;
-> +		struct audit_entry *ne;
->  
->  		list_for_each_entry(e, list, list) {
->  			if (!audit_compare_rule(rule, &e->rule)) {
-> @@ -215,34 +264,45 @@ RCU ("read-copy update") its name.  The RCU code is as follows::
->  		return -EFAULT;		/* No matching rule */
->  	}
->  
-> -Again, this assumes that the caller holds audit_netlink_sem.  Normally,
-> -the reader-writer lock would become a spinlock in this sort of code.
-> +Again, this assumes that the caller holds ``audit_filter_mutex``.  Normally, the
-> +writer lock would become a spinlock in this sort of code.
->  
-> -Example 3: Eliminating Stale Data
-> +Another use of this pattern can be found in the openswitch driver's *connection
-> +tracking table* code in ``ct_limit_set()``.  The table holds connection tracking
-> +entries and has a limit on the maximum entries.  There is one such table
-> +per-zone and hence one *limit* per zone.  The zones are mapped to their limits
-> +through a hashtable using an RCU-managed hlist for the hash chains. When a new
-> +limit is set, a new limit object is allocated and ``ct_limit_set()`` is called
-> +to replace the old limit object with the new one using list_replace_rcu().
-> +The old limit object is then freed after a grace period using kfree_rcu().
-> +
-> +
-> +Example 4: Eliminating Stale Data
->  ---------------------------------
->  
-> -The auditing examples above tolerate stale data, as do most algorithms
-> +The auditing example above tolerates stale data, as do most algorithms
->  that are tracking external state.  Because there is a delay from the
->  time the external state changes before Linux becomes aware of the change,
-> -additional RCU-induced staleness is normally not a problem.
-> +additional RCU-induced staleness is generally not a problem.
->  
->  However, there are many examples where stale data cannot be tolerated.
->  One example in the Linux kernel is the System V IPC (see the ipc_lock()
-> -function in ipc/util.c).  This code checks a "deleted" flag under a
-> -per-entry spinlock, and, if the "deleted" flag is set, pretends that the
-> +function in ipc/util.c).  This code checks a *deleted* flag under a
-> +per-entry spinlock, and, if the *deleted* flag is set, pretends that the
->  entry does not exist.  For this to be helpful, the search function must
-> -return holding the per-entry spinlock, as ipc_lock() does in fact do.
-> +return holding the per-entry lock, as ipc_lock() does in fact do.
-> +
-> +.. _quick_quiz:
->  
->  Quick Quiz:
-> -	Why does the search function need to return holding the per-entry lock for
-> -	this deleted-flag technique to be helpful?
-> +	For the deleted-flag technique to be helpful, why is it necessary
-> +	to hold the per-entry lock while returning from the search function?
->  
-> -:ref:`Answer to Quick Quiz <answer_quick_quiz_list>`
-> +:ref:`Answer to Quick Quiz <quick_quiz_answer>`
->  
-> -If the system-call audit module were to ever need to reject stale data,
-> -one way to accomplish this would be to add a "deleted" flag and a "lock"
-> -spinlock to the audit_entry structure, and modify audit_filter_task()
-> -as follows::
-> +If the system-call audit module were to ever need to reject stale data, one way
-> +to accomplish this would be to add a ``deleted`` flag and a ``lock`` spinlock to the
-> +audit_entry structure, and modify ``audit_filter_task()`` as follows::
->  
->  	static enum audit_state audit_filter_task(struct task_struct *tsk)
->  	{
-> @@ -267,20 +327,20 @@ as follows::
->  	}
->  
->  Note that this example assumes that entries are only added and deleted.
-> -Additional mechanism is required to deal correctly with the
-> -update-in-place performed by audit_upd_rule().  For one thing,
-> -audit_upd_rule() would need additional memory barriers to ensure
-> -that the list_add_rcu() was really executed before the list_del_rcu().
-> +Additional mechanism is required to deal correctly with the update-in-place
-> +performed by ``audit_upd_rule()``.  For one thing, ``audit_upd_rule()`` would
-> +need additional memory barriers to ensure that the list_add_rcu() was really
-> +executed before the list_del_rcu().
->  
-> -The audit_del_rule() function would need to set the "deleted"
-> -flag under the spinlock as follows::
-> +The ``audit_del_rule()`` function would need to set the ``deleted`` flag under the
-> +spinlock as follows::
->  
->  	static inline int audit_del_rule(struct audit_rule *rule,
->  					 struct list_head *list)
->  	{
-> -		struct audit_entry  *e;
-> +		struct audit_entry *e;
->  
-> -		/* Do not need to use the _rcu iterator here, since this
-> +		/* No need to use the _rcu iterator here, since this
->  		 * is the only deletion routine. */
->  		list_for_each_entry(e, list, list) {
->  			if (!audit_compare_rule(rule, &e->rule)) {
-> @@ -295,6 +355,91 @@ flag under the spinlock as follows::
->  		return -EFAULT;		/* No matching rule */
->  	}
->  
-> +This too assumes that the caller holds ``audit_filter_mutex``.
-> +
-> +
-> +Example 5: Skipping Stale Objects
-> +---------------------------------
-> +
-> +For some usecases, reader performance can be improved by skipping stale objects
-> +during read-side list traversal if the object in concern is pending destruction
-> +after one or more grace periods. One such example can be found in the timerfd
-> +subsystem. When a ``CLOCK_REALTIME`` clock is reprogrammed - for example due to
-> +setting of the system time, then all programmed timerfds that depend on this
-> +clock get triggered and processes waiting on them to expire are woken up in
-> +advance of their scheduled expiry. To facilitate this, all such timers are added
-> +to an RCU-managed ``cancel_list`` when they are setup in
-> +``timerfd_setup_cancel()``::
-> +
-> +	static void timerfd_setup_cancel(struct timerfd_ctx *ctx, int flags)
-> +	{
-> +		spin_lock(&ctx->cancel_lock);
-> +		if ((ctx->clockid == CLOCK_REALTIME &&
-> +		    (flags & TFD_TIMER_ABSTIME) && (flags & TFD_TIMER_CANCEL_ON_SET)) {
-> +			if (!ctx->might_cancel) {
-> +				ctx->might_cancel = true;
-> +				spin_lock(&cancel_lock);
-> +				list_add_rcu(&ctx->clist, &cancel_list);
-> +				spin_unlock(&cancel_lock);
-> +			}
-> +		}
-> +		spin_unlock(&ctx->cancel_lock);
-> +	}
-> +
-> +When a timerfd is freed (fd is closed), then the ``might_cancel`` flag of the
-> +timerfd object is cleared, the object removed from the ``cancel_list`` and
-> +destroyed::
-> +
-> +	int timerfd_release(struct inode *inode, struct file *file)
-> +	{
-> +		struct timerfd_ctx *ctx = file->private_data;
-> +
-> +		spin_lock(&ctx->cancel_lock);
-> +		if (ctx->might_cancel) {
-> +			ctx->might_cancel = false;
-> +			spin_lock(&cancel_lock);
-> +			list_del_rcu(&ctx->clist);
-> +			spin_unlock(&cancel_lock);
-> +		}
-> +		spin_unlock(&ctx->cancel_lock);
-> +
-> +		hrtimer_cancel(&ctx->t.tmr);
-> +		kfree_rcu(ctx, rcu);
-> +		return 0;
-> +	}
-> +
-> +If the ``CLOCK_REALTIME`` clock is set, for example by a time server, the
-> +hrtimer framework calls ``timerfd_clock_was_set()`` which walks the
-> +``cancel_list`` and wakes up processes waiting on the timerfd. While iterating
-> +the ``cancel_list``, the ``might_cancel`` flag is consulted to skip stale
-> +objects::
-> +
-> +	void timerfd_clock_was_set(void)
-> +	{
-> +		struct timerfd_ctx *ctx;
-> +		unsigned long flags;
-> +
-> +		rcu_read_lock();
-> +		list_for_each_entry_rcu(ctx, &cancel_list, clist) {
-> +			if (!ctx->might_cancel)
-> +				continue;
-> +			spin_lock_irqsave(&ctx->wqh.lock, flags);
-> +			if (ctx->moffs != ktime_mono_to_real(0)) {
-> +				ctx->moffs = KTIME_MAX;
-> +				ctx->ticks++;
-> +				wake_up_locked_poll(&ctx->wqh, EPOLLIN);
-> +			}
-> +			spin_unlock_irqrestore(&ctx->wqh.lock, flags);
-> +		}
-> +		rcu_read_unlock();
-> +	}
-> +
-> +The key point here is, because RCU-traversal of the ``cancel_list`` happens
-> +while objects are being added and removed to the list, sometimes the traversal
-> +can step on an object that has been removed from the list. In this example, it
-> +is seen that it is better to skip such objects using a flag.
-> +
-> +
->  Summary
->  -------
->  
-> @@ -303,19 +448,21 @@ the most amenable to use of RCU.  The simplest case is where entries are
->  either added or deleted from the data structure (or atomically modified
->  in place), but non-atomic in-place modifications can be handled by making
->  a copy, updating the copy, then replacing the original with the copy.
-> -If stale data cannot be tolerated, then a "deleted" flag may be used
-> +If stale data cannot be tolerated, then a *deleted* flag may be used
->  in conjunction with a per-entry spinlock in order to allow the search
->  function to reject newly deleted data.
->  
-> -.. _answer_quick_quiz_list:
-> +.. _quick_quiz_answer:
->  
->  Answer to Quick Quiz:
-> -	Why does the search function need to return holding the per-entry
-> -	lock for this deleted-flag technique to be helpful?
-> +	For the deleted-flag technique to be helpful, why is it necessary
-> +	to hold the per-entry lock while returning from the search function?
->  
->  	If the search function drops the per-entry lock before returning,
->  	then the caller will be processing stale data in any case.  If it
->  	is really OK to be processing stale data, then you don't need a
-> -	"deleted" flag.  If processing stale data really is a problem,
-> +	*deleted* flag.  If processing stale data really is a problem,
->  	then you need to hold the per-entry lock across all of the code
->  	that uses the value that was returned.
-> +
-> +:ref:`Back to Quick Quiz <quick_quiz>`
-> -- 
-> 2.25.0.265.gbab2e86ba0-goog
-> 
+>
+>>  }
+>>
+>>  void __init prom_free_prom_memory(void)
+>> diff --git a/arch/mips/jz4740/smp-entry.S b/arch/mips/jz4740/smp-entry.S
+>> new file mode 100644
+>> index 00000000..20049a3
+>> --- /dev/null
+>> +++ b/arch/mips/jz4740/smp-entry.S
+>> @@ -0,0 +1,57 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+>> +/*
+>> + *  Copyright (C) 2013, Paul Burton <paul.burton@imgtec.com>
+>> + *  JZ4780 SMP entry point
+>> + */
+>> +
+>> +#include <asm/addrspace.h>
+>> +#include <asm/asm.h>
+>> +#include <asm/asmmacro.h>
+>> +#include <asm/cacheops.h>
+>> +#include <asm/mipsregs.h>
+>> +
+>> +#define CACHE_SIZE (32 * 1024)
+>> +#define CACHE_LINESIZE 32
+>> +
+>> +.extern jz4780_cpu_entry_sp
+>> +.extern jz4780_cpu_entry_gp
+>> +
+>> +.section .text.smp-entry
+>> +.balign 0x10000
+>> +.set noreorder
+>> +LEAF(jz4780_secondary_cpu_entry)
+>> +    mtc0    zero, CP0_CAUSE
+>> +
+>> +    li    t0, ST0_CU0
+>> +    mtc0    t0, CP0_STATUS
+>> +
+>> +    /* cache setup */
+>> +    li    t0, KSEG0
+>> +    ori    t1, t0, CACHE_SIZE
+>> +    mtc0    zero, CP0_TAGLO, 0
+>> +1:    cache    Index_Store_Tag_I, 0(t0)
+>> +    cache    Index_Store_Tag_D, 0(t0)
+>> +    bne    t0, t1, 1b
+>> +     addiu    t0, t0, CACHE_LINESIZE
+>> +
+>> +    /* kseg0 cache attribute */
+>> +    mfc0    t0, CP0_CONFIG, 0
+>> +    ori    t0, t0, CONF_CM_CACHABLE_NONCOHERENT
+>> +    mtc0    t0, CP0_CONFIG, 0
+>> +
+>> +    /* pagemask */
+>> +    mtc0    zero, CP0_PAGEMASK, 0
+>> +
+>> +    /* retrieve sp */
+>> +    la    t0, jz4780_cpu_entry_sp
+>> +    lw    sp, 0(t0)
+>> +
+>> +    /* retrieve gp */
+>> +    la    t0, jz4780_cpu_entry_gp
+>> +    lw    gp, 0(t0)
+>> +
+>> +    /* jump to the kernel in kseg0 */
+>> +    la    t0, smp_bootstrap
+>> +    jr    t0
+>> +     nop
+>> +    END(jz4780_secondary_cpu_entry)
+>> diff --git a/arch/mips/jz4740/smp.c b/arch/mips/jz4740/smp.c
+>> new file mode 100644
+>> index 00000000..5fe0cf3
+>> --- /dev/null
+>> +++ b/arch/mips/jz4740/smp.c
+>> @@ -0,0 +1,254 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + *  Copyright (C) 2013, Paul Burton <paul.burton@imgtec.com>
+>> + *  JZ4780 SMP
+>> + */
+>> +
+>> +#include <linux/clk.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/of.h>
+>> +#include <linux/sched.h>
+>> +#include <linux/sched/task_stack.h>
+>> +#include <linux/smp.h>
+>> +#include <linux/tick.h>
+>> +#include <asm/mach-jz4740/smp.h>
+>> +#include <asm/smp-ops.h>
+>> +
+>> +static struct clk *cpu_clock_gates[CONFIG_NR_CPUS] = { NULL };
+>> +
+>> +u32 jz4780_cpu_entry_sp;
+>> +u32 jz4780_cpu_entry_gp;
+>> +
+>> +static struct cpumask cpu_running;
+>
+> This is not used anywhere, is it?
+>
+
+It is used in "cpumask_set_cpu".
+
+>> +
+>> +static DEFINE_SPINLOCK(smp_lock);
+>> +
+>> +static irqreturn_t mbox_handler(int irq, void *dev_id)
+>> +{
+>> +    int cpu = smp_processor_id();
+>> +    u32 action, status;
+>> +
+>> +    spin_lock(&smp_lock);
+>> +
+>> +    switch (cpu) {
+>> +    case 0:
+>> +        action = read_c0_mailbox0();
+>> +        write_c0_mailbox0(0);
+>> +        break;
+>> +    case 1:
+>> +        action = read_c0_mailbox1();
+>> +        write_c0_mailbox1(0);
+>> +        break;
+>> +    default:
+>> +        panic("unhandled cpu %d!", cpu);
+>
+> XBurst has 4 mailboxes, maybe add them here?
+>
+
+Sure.
+
+>> +    }
+>> +
+>> +    /* clear pending mailbox interrupt */
+>> +    status = read_c0_corestatus();
+>> +    status &= ~(CORESTATUS_MIRQ0P << cpu);
+>> +    write_c0_corestatus(status);
+>> +
+>> +    spin_unlock(&smp_lock);
+>> +
+>> +    if (action & SMP_RESCHEDULE_YOURSELF)
+>> +        scheduler_ipi();
+>> +    if (action & SMP_CALL_FUNCTION)
+>> +        generic_smp_call_function_interrupt();
+>> +
+>> +    return IRQ_HANDLED;
+>> +}
+>> +
+>> +static void jz4780_smp_setup(void)
+>> +{
+>> +    u32 addr, reim;
+>> +    int cpu;
+>> +
+>> +    reim = read_c0_reim();
+>> +
+>> +    for (cpu = 0; cpu < NR_CPUS; cpu++) {
+>> +        __cpu_number_map[cpu] = cpu;
+>> +        __cpu_logical_map[cpu] = cpu;
+>> +        set_cpu_possible(cpu, true);
+>> +    }
+>> +
+>> +    /* mask mailbox interrupts for this core */
+>> +    reim &= ~REIM_MBOXIRQ0M;
+>> +    write_c0_reim(reim);
+>> +
+>> +    /* clear mailboxes & pending mailbox IRQs */
+>> +    write_c0_mailbox0(0);
+>> +    write_c0_mailbox1(0);
+>> +    write_c0_corestatus(0);
+>> +
+>> +    /* set reset entry point */
+>> +    addr = KSEG1ADDR((u32)&jz4780_secondary_cpu_entry);
+>> +    WARN_ON(addr & ~REIM_ENTRY);
+>> +    reim &= ~REIM_ENTRY;
+>> +    reim |= addr & REIM_ENTRY;
+>> +
+>> +    /* unmask mailbox interrupts for this core */
+>> +    reim |= REIM_MBOXIRQ0M;
+>> +    write_c0_reim(reim);
+>> +    set_c0_status(STATUSF_IP3);
+>> +    irq_enable_hazard();
+>> +
+>> +    cpumask_set_cpu(cpu, &cpu_running);
+>> +}
+>> +
+>> +static void jz4780_smp_prepare_cpus(unsigned int max_cpus)
+>> +{
+>> +    struct device_node *cpu_node;
+>> +    unsigned cpu, ctrl;
+>> +    int err;
+>> +
+>> +    /* setup the mailbox IRQ */
+>> +    err = request_irq(MIPS_CPU_IRQ_BASE + 3, mbox_handler,
+>> +            IRQF_PERCPU | IRQF_NO_THREAD, "core mailbox", NULL);
+>> +    if (err)
+>> +        pr_err("request_irq() on core mailbox failed\n");
+>> +
+>> +    init_cpu_present(cpu_possible_mask);
+>
+> jz4780_smp_setup() marks CPUs 0..NR_CPUS as possible, NR_CPUS being a 
+> config option that can be anywhere between 2 and 256. This basically 
+> says that up to 256 CPUs are actually present.
+>
+
+I will change it in next version.
+
+>> +
+>> +    ctrl = read_c0_corectrl();
+>> +
+>> +    for (cpu = 0; cpu < max_cpus; cpu++) {
+>> +        /* use reset entry point from REIM register */
+>> +        ctrl |= CORECTRL_RPC0 << cpu;
+>
+> max_cpus is just NR_CPUS, so this does not work. You should move this 
+> in the "for_each_of_cpu_node" below.
+>
+
+Sure.
+
+>> +    }
+>> +
+>> +    for_each_of_cpu_node(cpu_node) {
+>> +        cpu = of_cpu_node_to_id(cpu_node);
+>> +        if (cpu < 0) {
+>> +            pr_err("Failed to read index of %s\n",
+>> +                   cpu_node->full_name);
+>> +            continue;
+>> +        }
+>> +
+>> +        cpu_clock_gates[cpu] = of_clk_get(cpu_node, 0);
+>> +        if (IS_ERR(cpu_clock_gates[cpu])) {
+>> +            cpu_clock_gates[cpu] = NULL;
+>> +            continue;
+>> +        }
+>> +
+>> +        err = clk_prepare(cpu_clock_gates[cpu]);
+>> +        if (err)
+>> +            pr_err("Failed to prepare CPU clock gate\n");
+>> +    }
+>> +
+>> +    write_c0_corectrl(ctrl);
+>> +}
+>> +
+>> +static int jz4780_boot_secondary(int cpu, struct task_struct *idle)
+>> +{
+>> +    unsigned long flags;
+>> +    u32 ctrl;
+>> +
+>> +    spin_lock_irqsave(&smp_lock, flags);
+>> +
+>> +    /* ensure the core is in reset */
+>> +    ctrl = read_c0_corectrl();
+>> +    ctrl |= CORECTRL_SWRST0 << cpu;
+>> +    write_c0_corectrl(ctrl);
+>> +
+>> +    /* ungate core clock */
+>> +    if (cpu_clock_gates[cpu])
+>> +        clk_enable(cpu_clock_gates[cpu]);
+>> +
+>> +    /* set entry sp/gp register values */
+>> +    jz4780_cpu_entry_sp = __KSTK_TOS(idle);
+>> +    jz4780_cpu_entry_gp = (u32)task_thread_info(idle);
+>> +    smp_wmb();
+>> +
+>> +    /* take the core out of reset */
+>> +    ctrl &= ~(CORECTRL_SWRST0 << cpu);
+>> +    write_c0_corectrl(ctrl);
+>> +
+>> +    cpumask_set_cpu(cpu, &cpu_running);
+>> +
+>> +    spin_unlock_irqrestore(&smp_lock, flags);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static void jz4780_init_secondary(void)
+>> +{
+>> +}
+>> +
+>> +static void jz4780_smp_finish(void)
+>> +{
+>> +    u32 reim;
+>> +
+>> +    spin_lock(&smp_lock);
+>> +
+>> +    /* unmask mailbox interrupts for this core */
+>> +    reim = read_c0_reim();
+>> +    reim |= REIM_MBOXIRQ0M << smp_processor_id();
+>> +    write_c0_reim(reim);
+>> +
+>> +    spin_unlock(&smp_lock);
+>> +
+>> +    /* unmask interrupts for this core */
+>> +    change_c0_status(ST0_IM, STATUSF_IP3 | STATUSF_IP2 |
+>> +             STATUSF_IP1 | STATUSF_IP0);
+>> +    irq_enable_hazard();
+>> +
+>> +    /* force broadcast timer */
+>> +    tick_broadcast_force();
+>> +}
+>> +
+>> +static void jz4780_send_ipi_single_locked(int cpu, unsigned int action)
+>> +{
+>> +    u32 mbox;
+>> +
+>> +    switch (cpu) {
+>> +    case 0:
+>> +        mbox = read_c0_mailbox0();
+>> +        write_c0_mailbox0(mbox | action);
+>> +        break;
+>> +    case 1:
+>> +        mbox = read_c0_mailbox1();
+>> +        write_c0_mailbox1(mbox | action);
+>> +        break;
+>
+> Same as above - there are 4 mailboxes.
+>
+
+Sure.
+
+>> +    default:
+>> +        panic("unhandled cpu %d!", cpu);
+>> +    }
+>> +}
+>> +
+>> +static void jz4780_send_ipi_single(int cpu, unsigned int action)
+>> +{
+>> +    unsigned long flags;
+>> +
+>> +    spin_lock_irqsave(&smp_lock, flags);
+>> +    jz4780_send_ipi_single_locked(cpu, action);
+>> +    spin_unlock_irqrestore(&smp_lock, flags);
+>> +}
+>> +
+>> +static void jz4780_send_ipi_mask(const struct cpumask *mask,
+>> +                 unsigned int action)
+>> +{
+>> +    unsigned long flags;
+>> +    int cpu;
+>> +
+>> +    spin_lock_irqsave(&smp_lock, flags);
+>> +
+>> +    for_each_cpu(cpu, mask)
+>> +        jz4780_send_ipi_single_locked(cpu, action);
+>> +
+>> +    spin_unlock_irqrestore(&smp_lock, flags);
+>> +}
+>> +
+>> +static struct plat_smp_ops jz4780_smp_ops = {
+>> +    .send_ipi_single = jz4780_send_ipi_single,
+>> +    .send_ipi_mask = jz4780_send_ipi_mask,
+>> +    .init_secondary = jz4780_init_secondary,
+>> +    .smp_finish = jz4780_smp_finish,
+>> +    .boot_secondary = jz4780_boot_secondary,
+>> +    .smp_setup = jz4780_smp_setup,
+>> +    .prepare_cpus = jz4780_smp_prepare_cpus,
+>> +};
+>> +
+>> +void jz4780_smp_init(void)
+>
+> This one can be marked __init.
+>
+
+Sure.
+
+>> +{
+>> +    register_smp_ops(&jz4780_smp_ops);
+>> +}
+>> diff --git a/arch/mips/kernel/idle.c b/arch/mips/kernel/idle.c
+>> index 37f8e78..a3afd98 100644
+>> --- a/arch/mips/kernel/idle.c
+>> +++ b/arch/mips/kernel/idle.c
+>> @@ -18,6 +18,7 @@
+>>  #include <asm/cpu-type.h>
+>>  #include <asm/idle.h>
+>>  #include <asm/mipsregs.h>
+>> +#include <asm/r4kcache.h>
+>>
+>>  /*
+>>   * Not all of the MIPS CPUs have the "wait" instruction available. 
+>> Moreover,
+>> @@ -88,6 +89,34 @@ static void __cpuidle rm7k_wait_irqoff(void)
+>>  }
+>>
+>>  /*
+>> + * The Ingenic jz4780 SMP variant has to write back dirty cache 
+>> lines before
+>> + * executing wait. The CPU & cache clock will be gated until we 
+>> return from
+>> + * the wait, and if another core attempts to access data from our 
+>> data cache
+>> + * during this time then it will lock up.
+>> + */
+>> +void jz4780_smp_wait_irqoff(void)
+>> +{
+>> +    unsigned long pending = read_c0_cause() & read_c0_status() & 
+>> CAUSEF_IP;
+>> +
+>> +    /*
+>> +     * Going to idle has a significant overhead due to the cache 
+>> flush so
+>> +     * try to avoid it if we'll immediately be woken again due to an 
+>> IRQ.
+>> +     */
+>> +    if (!need_resched() && !pending) {
+>> +        r4k_blast_dcache();
+>> +
+>> +        __asm__(
+>> +        "    .set push    \n"
+>> +        "    .set mips3    \n"
+>> +        "    sync        \n"
+>> +        "    wait        \n"
+>> +        "    .set pop    \n");
+>> +    }
+>> +
+>> +    local_irq_enable();
+>> +}
+>> +
+>> +/*
+>>   * Au1 'wait' is only useful when the 32kHz counter is used as timer,
+>>   * since coreclock (and the cp0 counter) stops upon executing it. 
+>> Only an
+>>   * interrupt can wake it, so they must be enabled before entering 
+>> idle modes.
+>> @@ -172,7 +201,6 @@ void __init check_wait(void)
+>>      case CPU_CAVIUM_OCTEON_PLUS:
+>>      case CPU_CAVIUM_OCTEON2:
+>>      case CPU_CAVIUM_OCTEON3:
+>> -    case CPU_XBURST:
+>>      case CPU_LOONGSON32:
+>>      case CPU_XLR:
+>>      case CPU_XLP:
+>> @@ -246,6 +274,12 @@ void __init check_wait(void)
+>>             cpu_wait = r4k_wait;
+>>           */
+>>          break;
+>> +    case CPU_XBURST:
+>> +        if (IS_ENABLED(CONFIG_MACH_JZ4780) &&
+>> +                IS_ENABLED(CONFIG_SMP) && (NR_CPUS > 1))
+>> +            cpu_wait = jz4780_smp_wait_irqoff;
+>> +        else
+>> +            cpu_wait = r4k_wait;
+>>      default:
+>>          break;
+>>      }
+>> -- 
+>> 2.7.4
+>>
+>
+
