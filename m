@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A1DC52D52
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAC9C54FC2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 094FE2468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 813D32469D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:16:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813025;
-	bh=ZHvSsq102DQdsv00nGEhmUEIDE3YqPwo2bdcqPo8WB0=;
+	s=default; t=1582813001;
+	bh=jkYdk5GPjRMF+1Mp6sEtQBoKAH0fRpvJ+jXGrkPxhWg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UQ4e9+u2e6muMJoeZK5x/Lxsj6xPkexVgvn1QKCWZeeDeieFrHAYftP27jMNrQoM+
-	 yISUNha2BMcwA+nnYaRI0w6E3g1DRWQYbyJDQAo+cvHpD9DisO/MkF0rTwO+9xwB8j
-	 ONh+2bdL3mfoH49aCNTPRiZX07HoVFNmhOIdWmyY=
+	b=o5anhN6xl9Y9jght8WVneJ1/n7h+JRR8yRt90KMygSU4d5ueT8TWMq4U7Xh5lZ7do
+	 NLkIW1FmvNq7qI+mK0fOscWPDOgOPeNndbT8695DzdW5npyxPZOIuoANkVOXr2+uvT
+	 YAeelcvnRzBYIXfiw03BgDGQPhJWafZlt1ZeKhyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389640AbgB0ORD (ORCPT
+        id S2389566AbgB0OQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:17:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57302 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:16:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389612AbgB0ORA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:17:00 -0500
+        id S2389513AbgB0OQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:16:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CEA420801;
-        Thu, 27 Feb 2020 14:16:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 321C924697;
+        Thu, 27 Feb 2020 14:16:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813019;
-        bh=ZHvSsq102DQdsv00nGEhmUEIDE3YqPwo2bdcqPo8WB0=;
+        s=default; t=1582812998;
+        bh=jkYdk5GPjRMF+1Mp6sEtQBoKAH0fRpvJ+jXGrkPxhWg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0CC8aW3y7inY8zouyX5xQSeZ1zs0NsXrfovyHZAmjde+CVVdQeJWFjmNRfHXGZX4R
-         V6V8+mOtI0KjzqPKY+deippgZDuG2iu2SbazJEFCKOeEhEXtMTQ7niYwFhBSGFgb25
-         qt/El8uJ6bqZ3g9emZwHqGXKVoWO6Tee/gCD4lj8=
+        b=BGheQ4yvZ7sRalakp7G4pYbv6cB2luBrTbpXibbUL1Ko5miZFk6S46HbbmAWIqlKX
+         ttVSR/r0H6HGa+Q51p24IzBv6U4BuWTgt4Rq2oLIqBRJ2KoqajpqpL2BAsreAEWltH
+         3ouhkw86l33mvIaciZO/Vgn+qQOKEBstwcBz6BwA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eagle Zhou <eagle.zhou@nxp.com>,
-        Fugang Duan <fugang.duan@nxp.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Subject: [PATCH 5.5 066/150] tty: serial: imx: setup the correct sg entry for tx dma
-Date:   Thu, 27 Feb 2020 14:36:43 +0100
-Message-Id: <20200227132242.750692283@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+2202a584a00fffd19fbf@syzkaller.appspotmail.com,
+        Eric Biggers <ebiggers@google.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        stable@kernel.org
+Subject: [PATCH 5.5 096/150] ext4: fix race between writepages and enabling EXT4_EXTENTS_FL
+Date:   Thu, 27 Feb 2020 14:37:13 +0100
+Message-Id: <20200227132247.023835616@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -61,107 +62,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fugang Duan <fugang.duan@nxp.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit f76707831829530ffdd3888bebc108aecefccaa0 upstream.
+commit cb85f4d23f794e24127f3e562cb3b54b0803f456 upstream.
 
-There has oops as below happen on i.MX8MP EVK platform that has
-6G bytes DDR memory.
+If EXT4_EXTENTS_FL is set on an inode while ext4_writepages() is running
+on it, the following warning in ext4_add_complete_io() can be hit:
 
-when (xmit->tail < xmit->head) && (xmit->head == 0),
-it setups one sg entry with sg->length is zero:
-	sg_set_buf(sgl + 1, xmit->buf, xmit->head);
+WARNING: CPU: 1 PID: 0 at fs/ext4/page-io.c:234 ext4_put_io_end_defer+0xf0/0x120
 
-if xmit->buf is allocated from >4G address space, and SDMA only
-support <4G address space, then dma_map_sg() will call swiotlb_map()
-to do bounce buffer copying and mapping.
+Here's a minimal reproducer (not 100% reliable) (root isn't required):
 
-But swiotlb_map() don't allow sg entry's length is zero, otherwise
-report BUG_ON().
+        while true; do
+                sync
+        done &
+        while true; do
+                rm -f file
+                touch file
+                chattr -e file
+                echo X >> file
+                chattr +e file
+        done
 
-So the patch is to correct the tx DMA scatter list.
+The problem is that in ext4_writepages(), ext4_should_dioread_nolock()
+(which only returns true on extent-based files) is checked once to set
+the number of reserved journal credits, and also again later to select
+the flags for ext4_map_blocks() and copy the reserved journal handle to
+ext4_io_end::handle.  But if EXT4_EXTENTS_FL is being concurrently set,
+the first check can see dioread_nolock disabled while the later one can
+see it enabled, causing the reserved handle to unexpectedly be NULL.
 
-Oops:
-[  287.675715] kernel BUG at kernel/dma/swiotlb.c:497!
-[  287.680592] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-[  287.686075] Modules linked in:
-[  287.689133] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.3-00016-g3fdc4e0-dirty #10
-[  287.696872] Hardware name: FSL i.MX8MP EVK (DT)
-[  287.701402] pstate: 80000085 (Nzcv daIf -PAN -UAO)
-[  287.706199] pc : swiotlb_tbl_map_single+0x1fc/0x310
-[  287.711076] lr : swiotlb_map+0x60/0x148
-[  287.714909] sp : ffff800010003c00
-[  287.718221] x29: ffff800010003c00 x28: 0000000000000000
-[  287.723533] x27: 0000000000000040 x26: ffff800011ae0000
-[  287.728844] x25: ffff800011ae09f8 x24: 0000000000000000
-[  287.734155] x23: 00000001b7af9000 x22: 0000000000000000
-[  287.739465] x21: ffff000176409c10 x20: 00000000001f7ffe
-[  287.744776] x19: ffff000176409c10 x18: 000000000000002e
-[  287.750087] x17: 0000000000000000 x16: 0000000000000000
-[  287.755397] x15: 0000000000000000 x14: 0000000000000000
-[  287.760707] x13: ffff00017f334000 x12: 0000000000000001
-[  287.766018] x11: 00000000001fffff x10: 0000000000000000
-[  287.771328] x9 : 0000000000000003 x8 : 0000000000000000
-[  287.776638] x7 : 0000000000000000 x6 : 0000000000000000
-[  287.781949] x5 : 0000000000200000 x4 : 0000000000000000
-[  287.787259] x3 : 0000000000000001 x2 : 00000001b7af9000
-[  287.792570] x1 : 00000000fbfff000 x0 : 0000000000000000
-[  287.797881] Call trace:
-[  287.800328]  swiotlb_tbl_map_single+0x1fc/0x310
-[  287.804859]  swiotlb_map+0x60/0x148
-[  287.808347]  dma_direct_map_page+0xf0/0x130
-[  287.812530]  dma_direct_map_sg+0x78/0xe0
-[  287.816453]  imx_uart_dma_tx+0x134/0x2f8
-[  287.820374]  imx_uart_dma_tx_callback+0xd8/0x168
-[  287.824992]  vchan_complete+0x194/0x200
-[  287.828828]  tasklet_action_common.isra.0+0x154/0x1a0
-[  287.833879]  tasklet_action+0x24/0x30
-[  287.837540]  __do_softirq+0x120/0x23c
-[  287.841202]  irq_exit+0xb8/0xd8
-[  287.844343]  __handle_domain_irq+0x64/0xb8
-[  287.848438]  gic_handle_irq+0x5c/0x148
-[  287.852185]  el1_irq+0xb8/0x180
-[  287.855327]  cpuidle_enter_state+0x84/0x360
-[  287.859508]  cpuidle_enter+0x34/0x48
-[  287.863083]  call_cpuidle+0x18/0x38
-[  287.866571]  do_idle+0x1e0/0x280
-[  287.869798]  cpu_startup_entry+0x20/0x40
-[  287.873721]  rest_init+0xd4/0xe0
-[  287.876949]  arch_call_rest_init+0xc/0x14
-[  287.880958]  start_kernel+0x420/0x44c
-[  287.884622] Code: 9124c021 9417aff8 a94363f7 17ffffd5 (d4210000)
-[  287.890718] ---[ end trace 5bc44c4ab6b009ce ]---
-[  287.895334] Kernel panic - not syncing: Fatal exception in interrupt
-[  287.901686] SMP: stopping secondary CPUs
-[  288.905607] SMP: failed to stop secondary CPUs 0-1
-[  288.910395] Kernel Offset: disabled
-[  288.913882] CPU features: 0x0002,2000200c
-[  288.917888] Memory Limit: none
-[  288.920944] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
+Since changing EXT4_EXTENTS_FL is uncommon, and there may be other races
+related to doing so as well, fix this by synchronizing changing
+EXT4_EXTENTS_FL with ext4_writepages() via the existing
+s_writepages_rwsem (previously called s_journal_flag_rwsem).
 
-Reported-by: Eagle Zhou <eagle.zhou@nxp.com>
-Tested-by: Eagle Zhou <eagle.zhou@nxp.com>
-Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
-Cc: stable <stable@vger.kernel.org>
-Fixes: 7942f8577f2a ("serial: imx: TX DMA: clean up sg initialization")
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Link: https://lore.kernel.org/r/1581401761-6378-1-git-send-email-fugang.duan@nxp.com
+This was originally reported by syzbot without a reproducer at
+https://syzkaller.appspot.com/bug?extid=2202a584a00fffd19fbf,
+but now that dioread_nolock is the default I also started seeing this
+when running syzkaller locally.
+
+Link: https://lore.kernel.org/r/20200219183047.47417-3-ebiggers@kernel.org
+Reported-by: syzbot+2202a584a00fffd19fbf@syzkaller.appspotmail.com
+Fixes: 6b523df4fb5a ("ext4: use transaction reservation for extent conversion in ext4_end_io")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/imx.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext4/ext4.h    |    5 ++++-
+ fs/ext4/migrate.c |   27 +++++++++++++++++++--------
+ 2 files changed, 23 insertions(+), 9 deletions(-)
 
---- a/drivers/tty/serial/imx.c
-+++ b/drivers/tty/serial/imx.c
-@@ -603,7 +603,7 @@ static void imx_uart_dma_tx(struct imx_p
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -1553,7 +1553,10 @@ struct ext4_sb_info {
+ 	struct ratelimit_state s_warning_ratelimit_state;
+ 	struct ratelimit_state s_msg_ratelimit_state;
  
- 	sport->tx_bytes = uart_circ_chars_pending(xmit);
+-	/* Barrier between changing inodes' journal flags and writepages ops. */
++	/*
++	 * Barrier between writepages ops and changing any inode's JOURNAL_DATA
++	 * or EXTENTS flag.
++	 */
+ 	struct percpu_rw_semaphore s_writepages_rwsem;
+ 	struct dax_device *s_daxdev;
+ };
+--- a/fs/ext4/migrate.c
++++ b/fs/ext4/migrate.c
+@@ -407,6 +407,7 @@ static int free_ext_block(handle_t *hand
  
--	if (xmit->tail < xmit->head) {
-+	if (xmit->tail < xmit->head || xmit->head == 0) {
- 		sport->dma_tx_nents = 1;
- 		sg_init_one(sgl, xmit->buf + xmit->tail, sport->tx_bytes);
- 	} else {
+ int ext4_ext_migrate(struct inode *inode)
+ {
++	struct ext4_sb_info *sbi = EXT4_SB(inode->i_sb);
+ 	handle_t *handle;
+ 	int retval = 0, i;
+ 	__le32 *i_data;
+@@ -431,6 +432,8 @@ int ext4_ext_migrate(struct inode *inode
+ 		 */
+ 		return retval;
+ 
++	percpu_down_write(&sbi->s_writepages_rwsem);
++
+ 	/*
+ 	 * Worst case we can touch the allocation bitmaps, a bgd
+ 	 * block, and a block to link in the orphan list.  We do need
+@@ -441,7 +444,7 @@ int ext4_ext_migrate(struct inode *inode
+ 
+ 	if (IS_ERR(handle)) {
+ 		retval = PTR_ERR(handle);
+-		return retval;
++		goto out_unlock;
+ 	}
+ 	goal = (((inode->i_ino - 1) / EXT4_INODES_PER_GROUP(inode->i_sb)) *
+ 		EXT4_INODES_PER_GROUP(inode->i_sb)) + 1;
+@@ -452,7 +455,7 @@ int ext4_ext_migrate(struct inode *inode
+ 	if (IS_ERR(tmp_inode)) {
+ 		retval = PTR_ERR(tmp_inode);
+ 		ext4_journal_stop(handle);
+-		return retval;
++		goto out_unlock;
+ 	}
+ 	i_size_write(tmp_inode, i_size_read(inode));
+ 	/*
+@@ -494,7 +497,7 @@ int ext4_ext_migrate(struct inode *inode
+ 		 */
+ 		ext4_orphan_del(NULL, tmp_inode);
+ 		retval = PTR_ERR(handle);
+-		goto out;
++		goto out_tmp_inode;
+ 	}
+ 
+ 	ei = EXT4_I(inode);
+@@ -576,10 +579,11 @@ err_out:
+ 	ext4_ext_tree_init(handle, tmp_inode);
+ out_stop:
+ 	ext4_journal_stop(handle);
+-out:
++out_tmp_inode:
+ 	unlock_new_inode(tmp_inode);
+ 	iput(tmp_inode);
+-
++out_unlock:
++	percpu_up_write(&sbi->s_writepages_rwsem);
+ 	return retval;
+ }
+ 
+@@ -589,7 +593,8 @@ out:
+ int ext4_ind_migrate(struct inode *inode)
+ {
+ 	struct ext4_extent_header	*eh;
+-	struct ext4_super_block		*es = EXT4_SB(inode->i_sb)->s_es;
++	struct ext4_sb_info		*sbi = EXT4_SB(inode->i_sb);
++	struct ext4_super_block		*es = sbi->s_es;
+ 	struct ext4_inode_info		*ei = EXT4_I(inode);
+ 	struct ext4_extent		*ex;
+ 	unsigned int			i, len;
+@@ -613,9 +618,13 @@ int ext4_ind_migrate(struct inode *inode
+ 	if (test_opt(inode->i_sb, DELALLOC))
+ 		ext4_alloc_da_blocks(inode);
+ 
++	percpu_down_write(&sbi->s_writepages_rwsem);
++
+ 	handle = ext4_journal_start(inode, EXT4_HT_MIGRATE, 1);
+-	if (IS_ERR(handle))
+-		return PTR_ERR(handle);
++	if (IS_ERR(handle)) {
++		ret = PTR_ERR(handle);
++		goto out_unlock;
++	}
+ 
+ 	down_write(&EXT4_I(inode)->i_data_sem);
+ 	ret = ext4_ext_check_inode(inode);
+@@ -650,5 +659,7 @@ int ext4_ind_migrate(struct inode *inode
+ errout:
+ 	ext4_journal_stop(handle);
+ 	up_write(&EXT4_I(inode)->i_data_sem);
++out_unlock:
++	percpu_up_write(&sbi->s_writepages_rwsem);
+ 	return ret;
+ }
 
 
