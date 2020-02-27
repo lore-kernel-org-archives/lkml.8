@@ -2,89 +2,68 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CB0C52D3E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DBEC3F351
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76B9B24656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:33:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814022;
-	bh=Z1DU4+Um6gFHn8qnTTuXqBgAJpwCBlWICAXSJKZeCko=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v4n/jVTWajStx9txb7x7IFhNLvLfsoMoCe3GiTkgZ5olCD0dwfeJjtSjmHDgS7Us/
-	 qdSn2fp6FJHAOiWEoA08LB4pk0IgaN+Y5f/vSh/ZCC3DT4pYzrN49nNe0tfi1EgdUA
-	 lrc/28y+6Glgh26tAtoSdE+xUOQMTEBosrnb30RY=
+	by mail.kernel.org (Postfix) with ESMTP id E818F24688
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:33:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732696AbgB0OAJ (ORCPT
+        id S1730132AbgB0Ods convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:00:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33440 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:33:48 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54244 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732676AbgB0OAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732522AbgB0OAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Feb 2020 09:00:06 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D9C42084E;
-        Thu, 27 Feb 2020 14:00:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812005;
-        bh=Z1DU4+Um6gFHn8qnTTuXqBgAJpwCBlWICAXSJKZeCko=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xtDti9Zi9OnpKMJI9QFPJtUAu6ge5cp1F4McXiOFOkNuMPbp0T3uzpTTDs1cNHlM8
-         El4YODj5W/ZKMtPuKOOFxFu7F4HWAdg+KEaeEA5t9yFZbilhxYcTW9mBonJcePwvwS
-         4Upo1Xhl4d6QbALnwn6NdIUfAbjGq4fY+p7+F8zk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Richard Dodd <richard.o.dodd@gmail.com>
-Subject: [PATCH 4.14 184/237] USB: Fix novation SourceControl XL after suspend
-Date:   Thu, 27 Feb 2020 14:36:38 +0100
-Message-Id: <20200227132309.893790856@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
-References: <20200227132255.285644406@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 0F330AD21;
+        Thu, 27 Feb 2020 14:00:05 +0000 (UTC)
+Date:   Thu, 27 Feb 2020 15:00:04 +0100
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org
+Subject: Re: [PATCH v5] leds: add SGI IP30 led support
+Message-Id: <20200227150004.97154811ecbd2f5ccc22fa64@suse.de>
+In-Reply-To: <20200226140058.GH4080@duo.ucw.cz>
+References: <20200224111733.10320-1-tbogendoerfer@suse.de>
+        <20200226140058.GH4080@duo.ucw.cz>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Dodd <richard.o.dodd@gmail.com>
+On Wed, 26 Feb 2020 15:00:58 +0100
+Pavel Machek <pavel@ucw.cz> wrote:
 
-commit b692056db8ecc7f452b934f016c17348282b7699 upstream.
+> > +	switch (num) {
+> > +	case IP30_LED_SYSTEM:
+> > +		data->cdev.name = "white:system";
+> > +		break;
+> > +	case IP30_LED_FAULT:
+> > +		data->cdev.name = "red:fault";
+> > +		break;
+> 
+> If the white LED normally serves as power indicator for the system, we
+> might want to specify that. Does it?
 
-Currently, the SourceControl will stay in power-down mode after resuming
-from suspend. This patch resets the device after suspend to power it up.
+it could be seen as such, but it will be turned on only after POST has finished
+successfull. So it's off if POST failed, which doesn't make it a real power led
+IMHO.
 
-Signed-off-by: Richard Dodd <richard.o.dodd@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200212142220.36892-1-richard.o.dodd@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Thomas.
 
----
- drivers/usb/core/quirks.c |    3 +++
- 1 file changed, 3 insertions(+)
-
---- a/drivers/usb/core/quirks.c
-+++ b/drivers/usb/core/quirks.c
-@@ -291,6 +291,9 @@ static const struct usb_device_id usb_qu
- 	/* INTEL VALUE SSD */
- 	{ USB_DEVICE(0x8086, 0xf1a5), .driver_info = USB_QUIRK_RESET_RESUME },
- 
-+	/* novation SoundControl XL */
-+	{ USB_DEVICE(0x1235, 0x0061), .driver_info = USB_QUIRK_RESET_RESUME },
-+
- 	{ }  /* terminating entry must be last */
- };
- 
-
-
+-- 
+SUSE Software Solutions Germany GmbH
+HRB 36809 (AG Nürnberg)
+Geschäftsführer: Felix Imendörffer
