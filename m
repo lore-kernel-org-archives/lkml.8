@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D4BC52D30
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B3CC52D37
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 535642469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3819A24690
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:15:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812878;
-	bh=3e95qpOathiCpT3fpvMVTpIad5QufYRPW7eLGapIjoY=;
+	s=default; t=1582812912;
+	bh=NjFPG8xSrKgimw87UF2CW1b5ud1z43xOcu4dU/Mnkqc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KBQsoMfo8dUNo8i+FFa7oApFAZhOzjP8iYrBqnnHgvKV0uu1BG8gQCdeXATQ4W/Ji
-	 qoD2HX4iVsOBm8Lj0OoA3EJh1w86hlw6Rhjpy/wH7CaWQTZInmyXfcHm1ugBxwR4US
-	 AlMrATz5C6AfzbJ3FV0bBSQtXaASaDf1t/3aw3+U=
+	b=o2eV/IdJgRent0mvUYVzcuuhxRlBgE1AFezbCa+MT9rQ7gsxKLl4R8OQYWdr+XLTi
+	 vfDMpDum0TmCifkDfHqiB7PVP2vdzU0mmyCxbO4verJA3heIignlTD77DCTL5Lvsdt
+	 z1CnEFKyhpJmFqH95MmTtYMVxq9QEOMTN7gh6HQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389154AbgB0OOg (ORCPT
+        id S2389259AbgB0OPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:14:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53856 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:15:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388869AbgB0OOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:14:34 -0500
+        id S2389245AbgB0OPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:15:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54A7224691;
-        Thu, 27 Feb 2020 14:14:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D88F20801;
+        Thu, 27 Feb 2020 14:15:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812872;
-        bh=3e95qpOathiCpT3fpvMVTpIad5QufYRPW7eLGapIjoY=;
+        s=default; t=1582812909;
+        bh=NjFPG8xSrKgimw87UF2CW1b5ud1z43xOcu4dU/Mnkqc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hmfbbg4qW4HKL+KZUIIx1HBNqnN0lvH8mh24UBHI/PnWwMGL9uNax2Y+2vtE3lSee
-         FVNpYCPKH2tepBJoKNxya6pGqwCZK9L6GQdpL6X3uIlCa3BDg9C78iE991HpNXAEm2
-         o87DsqSuKaFnoP1C64jn3qRZRVNH9hXmnV5a3O90=
+        b=eKMNgZwuDb+fyJ/AxJ6ujoO1NT7iKn8Ux+4LHgq9ihfDwtTaWIRBmW1+jnk5OjT1E
+         juN0dbpw6DKx2iWqJBOyhvWmTOiEI+NJXvMTKLueO7edPnXwuYkReazLlf5y0/Wue7
+         xrGnmDtFapX6Gz7bSH8oIrxZDTesIZXg8MZOLcOM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pietro Oliva <pietroliva@gmail.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>
-Subject: [PATCH 5.5 048/150] staging: rtl8723bs: Fix potential overuse of kernel memory
-Date:   Thu, 27 Feb 2020 14:36:25 +0100
-Message-Id: <20200227132240.134433315@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>
+Subject: [PATCH 5.5 026/150] vt: selection, handle pending signals in paste_selection
+Date:   Thu, 27 Feb 2020 14:36:03 +0100
+Message-Id: <20200227132236.708097011@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -59,38 +58,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Larry Finger <Larry.Finger@lwfinger.net>
+From: Jiri Slaby <jslaby@suse.cz>
 
-commit 23954cb078febfc63a755301fe77e06bccdb4d2a upstream.
+commit 687bff0cd08f790d540cfb7b2349f0d876cdddec upstream.
 
-In routine wpa_supplicant_ioctl(), the user-controlled p->length is
-checked to be at least the size of struct ieee_param size, but the code
-does not detect the case where p->length is greater than the size
-of the struct, thus a malicious user could be wasting kernel memory.
-Fixes commit 554c0a3abf216 ("staging: Add rtl8723bs sdio wifi driver").
+When pasting a selection to a vt, the task is set as INTERRUPTIBLE while
+waiting for a tty to unthrottle. But signals are not handled at all.
+Normally, this is not a problem as tty_ldisc_receive_buf receives all
+the goods and a user has no reason to interrupt the task.
 
-Reported by: Pietro Oliva <pietroliva@gmail.com>
-Cc: Pietro Oliva <pietroliva@gmail.com>
-Cc: Stable <stable@vger.kernel.org>
-Fixes: 554c0a3abf216 ("staging: Add rtl8723bs sdio wifi driver").
-Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
-Link: https://lore.kernel.org/r/20200210180235.21691-5-Larry.Finger@lwfinger.net
+There are two scenarios where this matters:
+1) when the tty is throttled and a signal is sent to the process, it
+   spins on a CPU until the tty is unthrottled. schedule() does not
+   really echedule, but returns immediately, of course.
+2) when the sel_buffer becomes invalid, KASAN prevents any reads from it
+   and the loop simply does not proceed and spins forever (causing the
+   tty to throttle, but the code never sleeps, the same as above). This
+   sometimes happens as there is a race in the sel_buffer handling code.
+
+So add signal handling to this ioctl (TIOCL_PASTESEL) and return -EINTR
+in case a signal is pending.
+
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200210081131.23572-1-jslaby@suse.cz
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/rtl8723bs/os_dep/ioctl_linux.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/vt/selection.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-+++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-@@ -3373,7 +3373,7 @@ static int wpa_supplicant_ioctl(struct n
+--- a/drivers/tty/vt/selection.c
++++ b/drivers/tty/vt/selection.c
+@@ -29,6 +29,8 @@
+ #include <linux/console.h>
+ #include <linux/tty_flip.h>
  
- 	/* down(&ieee->wx_sem); */
++#include <linux/sched/signal.h>
++
+ /* Don't take this from <ctype.h>: 011-015 on the screen aren't spaces */
+ #define isspace(c)	((c) == ' ')
  
--	if (p->length < sizeof(struct ieee_param) || !p->pointer) {
-+	if (!p->pointer || p->length != sizeof(struct ieee_param)) {
- 		ret = -EINVAL;
- 		goto out;
- 	}
+@@ -350,6 +352,7 @@ int paste_selection(struct tty_struct *t
+ 	unsigned int count;
+ 	struct  tty_ldisc *ld;
+ 	DECLARE_WAITQUEUE(wait, current);
++	int ret = 0;
+ 
+ 	console_lock();
+ 	poke_blanked_console();
+@@ -363,6 +366,10 @@ int paste_selection(struct tty_struct *t
+ 	add_wait_queue(&vc->paste_wait, &wait);
+ 	while (sel_buffer && sel_buffer_lth > pasted) {
+ 		set_current_state(TASK_INTERRUPTIBLE);
++		if (signal_pending(current)) {
++			ret = -EINTR;
++			break;
++		}
+ 		if (tty_throttled(tty)) {
+ 			schedule();
+ 			continue;
+@@ -378,6 +385,6 @@ int paste_selection(struct tty_struct *t
+ 
+ 	tty_buffer_unlock_exclusive(&vc->port);
+ 	tty_ldisc_deref(ld);
+-	return 0;
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(paste_selection);
 
 
