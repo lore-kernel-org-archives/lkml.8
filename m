@@ -7,66 +7,65 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 754C5C3F2C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A46C3F2C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 477F9246A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:07:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4762324677
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 22:07:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mU4IwRfV"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HggjBvjj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730253AbgB0WHK (ORCPT
+        id S1730267AbgB0WH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 17:07:10 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:42270 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730107AbgB0WHJ (ORCPT
+        Thu, 27 Feb 2020 17:07:28 -0500
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:41446 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730120AbgB0WH1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 17:07:09 -0500
-Received: by mail-vs1-f67.google.com with SMTP id w142so694382vsw.9
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 14:07:08 -0800 (PST)
+        Thu, 27 Feb 2020 17:07:27 -0500
+Received: by mail-ua1-f66.google.com with SMTP id f7so249785uaa.8
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 14:07:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=iqKNDeiMvIdCSL5g1lAtM6a4Ex9LPGPv076qA0QF9lE=;
-        b=mU4IwRfVv40ylj1KZhG7HSK0P8maoUVYPcDj7UGjf35I2u77f06PVOHTWkifNWYTUD
-         Ys+1AHL6jXPpn+s3M5wfh69RonHgCQ9LuKBfHHginkUEE7V2pgNuUblYdLrPXS7xmS8R
-         6intotQ33g5TdMYt7fNsAve6mpUz21gBgX0Ls=
+        bh=b8QGsDauXMWl04pUSYOUK2oYeibV2ZardTahQjqaKFk=;
+        b=HggjBvjjWDPJZSURFuVLSTpxwz1KWndp/rAWYhrL+pln1rYsnyCMEyQ3snRtzaNEHg
+         n9IRY4ZR5Wo1EHVL64wxWm9xoF5McMgaU5AOtlrZ+WFnqVK2tbpUk0G/Ph785hgt6It4
+         oS3tzrIWm2mJXWPO4lcujLYuwTH+J1DQiTTc8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=iqKNDeiMvIdCSL5g1lAtM6a4Ex9LPGPv076qA0QF9lE=;
-        b=s9O4t2/MA6X58DLwmuUR/ySWTXVQ2+xxv1oYGBwK8KXI7bK4u1dLAIWl1Puyah6otQ
-         j+XWsW8PLDh9NfS5fFthfSVCTInVpG9SxLJq+nGQ47eYfpVJFXW58JxUCi7utCiJ6Rax
-         n3NvS7I+95qSS8GgNNXj+R/ZepYniUHXxSruqUA7NwDdeq3rVnlXMEnOx/VUe+xk5Fbj
-         WNUInx/Fu9XJL2YhEqavS8XTAUh229zv3ArfTjrNIb1dsVvQMp6suPCHJQ3v3GsMPmt4
-         1YsBj+YjNS0PPThHbjl6xKv1CIEZNO/vjUgsqiu29Pc/fAQu/40GbRlXvsH0iGcS01uf
-         TatQ==
-X-Gm-Message-State: ANhLgQ11042GPQsH9w6STqVkndkRVOTWBxCDOjm4d2mupp9OkI4jFpAB
-        FXC2P0xQNj4WuXBOXWX+leHqa/COBLM=
-X-Google-Smtp-Source: ADFU+vuYNY6TKrjhuIz7L/TJ0d6ckzSRrU6uo6vA7T2WbdVSORruRGFOinCmaK3bUIAUPp3WqtOmAQ==
-X-Received: by 2002:a05:6102:3102:: with SMTP id e2mr877155vsh.179.1582841227731;
-        Thu, 27 Feb 2020 14:07:07 -0800 (PST)
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
-        by smtp.gmail.com with ESMTPSA id w1sm290369vso.22.2020.02.27.14.07.07
+        bh=b8QGsDauXMWl04pUSYOUK2oYeibV2ZardTahQjqaKFk=;
+        b=HlG4lNSfiNgsjjXLb0yeRrqKQoe5e5bRpyHRcyNRuxRV57fiwT3vxwl01DlczicYWv
+         GPxCwZvfR2HVgOqdIaCsV8ygZoAtVcvBprRZOEyvLHw5h2KgX3rqzNDKGy15iU9Ajx7C
+         7Vt/Z488f9yaAlld4vWZtIOsfOWPrjinuwrAz7/HGf0ohC9MHAtDUR4QkZ8sq3lMbL6U
+         JfL3r6l7SlIry7EEFS6kmoOGGPoAvsdlq8rRiU9L0JdY8Cin2TjiQ/QBPUn4lBVoNljA
+         WtUa7rVwNBJ9kLFgrO1Z1siiqTmSgAdmOwiqOlptcXZzOswze2GsBIvYIlNZ0jIOgnGV
+         xb7A==
+X-Gm-Message-State: ANhLgQ3RG9VrukqsE3lpjBh9SGBDXY9+Wx40lqIxU/1JFTfNzkiKVMOd
+        vDkTo60nNtyceF4XM3/RaPnDh+A5mM4=
+X-Google-Smtp-Source: ADFU+vtMN7JI89YF47oCW3XyHKerQ1/DIAQrV/dBe6k3rQ6PAmnfp9ezE6vFB4jsvfLjt0whq3Nt5Q==
+X-Received: by 2002:ab0:3496:: with SMTP id c22mr537511uar.134.1582841246696;
+        Thu, 27 Feb 2020 14:07:26 -0800 (PST)
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com. [209.85.222.42])
+        by smtp.gmail.com with ESMTPSA id c21sm1807389uaq.12.2020.02.27.14.07.25
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Feb 2020 14:07:07 -0800 (PST)
-Received: by mail-ua1-f45.google.com with SMTP id t20so250952uao.7
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 14:07:07 -0800 (PST)
-X-Received: by 2002:ab0:2006:: with SMTP id v6mr499526uak.22.1582841226616;
- Thu, 27 Feb 2020 14:07:06 -0800 (PST)
+        Thu, 27 Feb 2020 14:07:26 -0800 (PST)
+Received: by mail-ua1-f42.google.com with SMTP id o42so246748uad.10
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 14:07:25 -0800 (PST)
+X-Received: by 2002:ab0:6605:: with SMTP id r5mr531711uam.0.1582841245045;
+ Thu, 27 Feb 2020 14:07:25 -0800 (PST)
 MIME-Version: 1.0
-References: <20200226210414.28133-1-linux@roeck-us.net> <20200226210414.28133-4-linux@roeck-us.net>
-In-Reply-To: <20200226210414.28133-4-linux@roeck-us.net>
+References: <20200226210414.28133-1-linux@roeck-us.net> <20200226210414.28133-5-linux@roeck-us.net>
+In-Reply-To: <20200226210414.28133-5-linux@roeck-us.net>
 From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 27 Feb 2020 14:06:55 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=UMB8=qxAH=9VCZk-g6iFqPpM2RnrekmTXuqcOrHkVuLw@mail.gmail.com>
-Message-ID: <CAD=FV=UMB8=qxAH=9VCZk-g6iFqPpM2RnrekmTXuqcOrHkVuLw@mail.gmail.com>
-Subject: Re: [RFT PATCH 3/4] usb: dwc2: Abort transaction after errors with
- unknown reason
+Date:   Thu, 27 Feb 2020 14:07:14 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=VZYOV-uNwPB3zBpfdWV6U0qFeC1HTqwEWR1+x962J3mA@mail.gmail.com>
+Message-ID: <CAD=FV=VZYOV-uNwPB3zBpfdWV6U0qFeC1HTqwEWR1+x962J3mA@mail.gmail.com>
+Subject: Re: [RFT PATCH 4/4] usb: dwc2: Make "trimming xfer length" a debug message
 To:     Guenter Roeck <linux@roeck-us.net>
 Cc:     Minas Harutyunyan <hminas@synopsys.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -86,48 +85,24 @@ Hi,
 
 On Wed, Feb 26, 2020 at 1:04 PM Guenter Roeck <linux@roeck-us.net> wrote:
 >
-> In some situations, the following error messages are reported.
+> With some USB network adapters, such as DM96xx, the following message
+> is seen for each maximum size receive packet.
 >
-> dwc2 ff540000.usb: dwc2_hc_chhltd_intr_dma: Channel 1 - ChHltd set, but reason is unknown
-> dwc2 ff540000.usb: hcint 0x00000002, intsts 0x04000021
+> dwc2 ff540000.usb: dwc2_update_urb_state(): trimming xfer length
 >
-> This is sometimes followed by:
+> This happens because the packet size requested by the driver is 1522
+> bytes, wMaxPacketSize is 64, the dwc2 driver configures the chip to
+> receive 24*64 = 1536 bytes, and the chip does indeed send more than
+> 1522 bytes of data. Since the event does not indicate an error condition,
+> the message is just noise. Demote it to debug level.
 >
-> dwc2 ff540000.usb: dwc2_update_urb_state_abn(): trimming xfer length
->
-> and then:
->
-> WARNING: CPU: 0 PID: 0 at kernel/v4.19/drivers/usb/dwc2/hcd.c:2913
->                         dwc2_assign_and_init_hc+0x98c/0x990
->
-> The warning suggests that an odd buffer address is to be used for DMA.
->
-> After an error is observed, the receive buffer may be full
-> (urb->actual_length >= urb->length). However, the urb is still left in
-> the queue unless three errors were observed in a row. When it is queued
-> again, the dwc2 hcd code translates this into a 1-block transfer.
-> If urb->actual_length (ie the total expected receive length) is not
-> DMA-aligned, the buffer pointer programmed into the chip will be
-> unaligned. This results in the observed warning.
->
-> To solve the problem, abort input transactions after an error with
-> unknown cause if the entire packet was already received. This may be
-> a bit drastic, but we don't really know why the transfer was aborted
-> even though the entire packet was received. Aborting the transfer in
-> this situation is less risky than accepting a potentially corrupted
-> packet.
->
-> With this patch in place, the 'ChHltd set' and 'trimming xfer length'
-> messages are still observed, but there are no more transfer attempts
-> with odd buffer addresses.
->
-> Cc: Boris ARZUR <boris@konbu.org>
-> Cc: Douglas Anderson <dianders@chromium.org>
 > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 > ---
->  drivers/usb/dwc2/hcd_intr.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+>  drivers/usb/dwc2/hcd_intr.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Seems sane to me.  Also suggest a "Fixes" or "Cc: stable" tag.
+Suggest a "Fixes" or "Cc: stable" tag.  This one isn't as important as
+the others, but presumably you'll start hitting it a lot more now
+(whereas previously we'd just crash).
 
 Reviewed-by: Douglas Anderson <dianders@chromium.org>
