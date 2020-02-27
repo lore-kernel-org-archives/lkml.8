@@ -2,110 +2,229 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D90ABC3567B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E49C3C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6E912469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC395246A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:42:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582821760;
+	bh=ejM305XannDMSXOSlz6q+tuVPZLojRtuk75986kVzCg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=A3qWgviGcpsjl2g2rmD4f6n7fTAi0fkPAWqGC0lOh1zEetcG+/4iCW6Wkm7FrgupD
+	 V3HBvJXyTiU/a6wmq4woLzWF0yASYG7xHn4gUg368+S5RClG6CGhXb9zi1nS67LN7B
+	 pbQbmdiG1bf64z3uAHJlSlbfpGlzQ6CF61bySToo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730357AbgB0Ql7 (ORCPT
+        id S1730399AbgB0Qmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 11:41:59 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7780 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730235AbgB0Ql7 (ORCPT
+        Thu, 27 Feb 2020 11:42:39 -0500
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:46973 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729146AbgB0Qmj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 11:41:59 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01RGd10M050806;
-        Thu, 27 Feb 2020 11:40:56 -0500
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ye7120n9b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Feb 2020 11:40:55 -0500
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01RGebP3030539;
-        Thu, 27 Feb 2020 16:40:53 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma01dal.us.ibm.com with ESMTP id 2ydcmm2dux-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Feb 2020 16:40:53 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01RGepGs50069896
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Feb 2020 16:40:51 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 70C88BE053;
-        Thu, 27 Feb 2020 16:40:51 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 29C17BE051;
-        Thu, 27 Feb 2020 16:40:51 +0000 (GMT)
-Received: from t440p.yottatech.com (unknown [9.85.132.1])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Thu, 27 Feb 2020 16:40:50 +0000 (GMT)
-Received: (from gcwilson@localhost)
-        by t440p.yottatech.com (8.15.2/8.15.2/Submit) id 01RGekDr003315;
-        Thu, 27 Feb 2020 10:40:46 -0600
-X-Authentication-Warning: t440p.yottatech.com: gcwilson set sender to gcwilson@linux.ibm.com using -f
-Date:   Thu, 27 Feb 2020 10:40:46 -0600
-From:   George Wilson <gcwilson@linux.ibm.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-integrity@vger.kernel.org,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Stefan Berger <stefanb@linux.ibm.com>,
-        Nayna Jain <nayna@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
-        Linh Pham <phaml@us.ibm.com>
-Subject: Re: [PATCH] tpm: ibmvtpm: retry on H_CLOSED in tpm_ibmvtpm_send()
-Message-ID: <20200227164046.GA1936@us.ibm.com>
-References: <20200227155003.592321-1-gcwilson@linux.ibm.com>
- <20200227162339.GF5140@linux.intel.com>
+        Thu, 27 Feb 2020 11:42:39 -0500
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 01RGgSNn032144;
+        Fri, 28 Feb 2020 01:42:29 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 01RGgSNn032144
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582821749;
+        bh=Kl3TN2eh546ny6xXnVBhUNVM+StMJOTg1j6RbqQc4Yw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PM+jqTkZpUpTAOB6lgGVTHx6Fj9Bf+fM3Wlci2ZRT67lowavsmzO+OyCxjDdIfL78
+         a0nLBrm0jbwjxNpxAbLuE9NzkDoylexss5kMITAEEQTCINS0QPEmFRb7aiwXkcXfnG
+         ySpp+QiTxZkxgrmvOnt2kaIHugLDWoWPt8vx41+TEtnLlh0zBNSUOWvCfFbbJggvai
+         PaH8TWUXAez2LvtdsJ6c3MRpnbWYQ1zWOtDxlX0FcPiftt4EumvTDPj33EDai8sjiA
+         Yuk7Eg13x6738iXrFfSiTlTKI6g8XzwgMqcauqtP3WUyoY9mhdxPm+tLNGSV+t+ixG
+         QsyM4NOY9LtdA==
+X-Nifty-SrcIP: [209.85.217.54]
+Received: by mail-vs1-f54.google.com with SMTP id x18so37498vsq.4;
+        Thu, 27 Feb 2020 08:42:28 -0800 (PST)
+X-Gm-Message-State: ANhLgQ2bDfFPoLdb6Ce/vLifzLOR4fqy1bkCmz5gcXJSJpymmgLEQJuM
+        B1VlxMzuMz+ZJfclpoUrCa3M7LIbB+YS9VhtqH0=
+X-Google-Smtp-Source: ADFU+vsh4q8lDg7PVdz5KXpCZ22dWRT4Tb9aCU4TMqhfIxWdgL6cfnwmrm2xUTX+dIexC1qWCc52X5DuKMIq2GNBOC8=
+X-Received: by 2002:a05:6102:190:: with SMTP id r16mr46746vsq.215.1582821747593;
+ Thu, 27 Feb 2020 08:42:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200227162339.GF5140@linux.intel.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-27_05:2020-02-26,2020-02-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- clxscore=1015 mlxlogscore=797 adultscore=0 mlxscore=0 bulkscore=0
- suspectscore=0 phishscore=0 lowpriorityscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002270125
+References: <20200218094139.78835-1-qperret@google.com> <20200218094139.78835-3-qperret@google.com>
+In-Reply-To: <20200218094139.78835-3-qperret@google.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 28 Feb 2020 01:41:50 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS0D_1k8FUJ+Bre1jrtGvHu28psU_xCa=K24iD7BkcJeA@mail.gmail.com>
+Message-ID: <CAK7LNAS0D_1k8FUJ+Bre1jrtGvHu28psU_xCa=K24iD7BkcJeA@mail.gmail.com>
+Subject: Re: [PATCH v5 2/3] kbuild: split adjust_autoksyms.sh in two parts
+To:     Quentin Perret <qperret@google.com>
+Cc:     Nicolas Pitre <nico@fluxnic.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Matthias Maennich <maennich@google.com>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 06:23:39PM +0200, Jarkko Sakkinen wrote:
-> On Thu, Feb 27, 2020 at 10:50:03AM -0500, George Wilson wrote:
-> > tpm_ibmvtpm_send() can fail during LPM resume with an H_CLOSED return
-> > from ibmvtpm_send_crq().  The PAPR says, 'The “partner partition
-> > suspended” transport event disables the associated CRQ such that any
-> > H_SEND_CRQ hcall() to the associated CRQ returns H_Closed until the CRQ
-> > has been explicitly enabled using the H_ENABLE_CRQ hcall.' This patch
-> > adds a check in tpm_ibmvtpm_send() for an H_CLOSED return from
-> > ibmvtpm_send_crq() and in that case calls tpm_ibmvtpm_resume() and
-> > retries the ibmvtpm_send_crq() once.
-> > 
-> > Reported-by: Linh Pham <phaml@us.ibm.com>
-> > Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-> > Signed-off-by: George Wilson <gcwilson@linux.ibm.com>
-> 
-> What is LPM anyway?
+Hi.
 
-It's PowerVM Live Partition Mobility.
+On Tue, Feb 18, 2020 at 6:41 PM Quentin Perret <qperret@google.com> wrote:
+>
+> In order to prepare the ground for a build-time optimization, split
+> adjust_autoksyms.sh into two scripts: one that generates autoksyms.h
+> based on all currently available information (whitelist, and .mod
+> files), and the other to inspect the diff between two versions of
+> autoksyms.h and trigger appropriate rebuilds.
+>
+> Acked-by: Nicolas Pitre <nico@fluxnic.net>
+> Tested-by: Matthias Maennich <maennich@google.com>
+> Reviewed-by: Matthias Maennich <maennich@google.com>
+> Signed-off-by: Quentin Perret <qperret@google.com>
+> ---
+>  scripts/adjust_autoksyms.sh | 36 +++-----------------------
+>  scripts/gen_autoksyms.sh    | 51 +++++++++++++++++++++++++++++++++++++
+>  2 files changed, 55 insertions(+), 32 deletions(-)
+>  create mode 100755 scripts/gen_autoksyms.sh
+>
+> diff --git a/scripts/adjust_autoksyms.sh b/scripts/adjust_autoksyms.sh
+> index ff46996525d3..2b366d945ccb 100755
+> --- a/scripts/adjust_autoksyms.sh
+> +++ b/scripts/adjust_autoksyms.sh
+> @@ -1,14 +1,13 @@
+>  #!/bin/sh
+>  # SPDX-License-Identifier: GPL-2.0-only
+>
+> -# Script to create/update include/generated/autoksyms.h and dependency files
+> +# Script to update include/generated/autoksyms.h and dependency files
+>  #
+>  # Copyright:   (C) 2016  Linaro Limited
+>  # Created by:  Nicolas Pitre, January 2016
+>  #
+>
+> -# Create/update the include/generated/autoksyms.h file from the list
+> -# of all module's needed symbols as recorded on the second line of *.mod files.
+> +# Update the include/generated/autoksyms.h file.
+>  #
+>  # For each symbol being added or removed, the corresponding dependency
+>  # file's timestamp is updated to force a rebuild of the affected source
+> @@ -38,35 +37,8 @@ esac
+>  # We need access to CONFIG_ symbols
+>  . include/config/auto.conf
+>
+> -ksym_wl=/dev/null
+> -if [ -n "$CONFIG_UNUSED_KSYMS_WHITELIST" ]; then
+> -       # Use 'eval' to expand the whitelist path and check if it is relative
+> -       eval ksym_wl="$CONFIG_UNUSED_KSYMS_WHITELIST"
+> -       [ "${ksym_wl}" != "${ksym_wl#/}" ] || ksym_wl="$abs_srctree/$ksym_wl"
+> -       if [ ! -f "$ksym_wl" ]; then
 
-> 
-> /Jarkko
+
+Just a Nit.
+
+Maybe, is testing  -r better ?
+
+'cat - "$ksym_wl"' is piped, so its error code is not checked.
+
+So, checking the read permission here is robust, I think.
+
+
+
+
+> -               echo "ERROR: '$ksym_wl' whitelist file not found" >&2
+> -               exit 1
+> -       fi
+> -fi
+> -
+> -# Generate a new ksym list file with symbols needed by the current
+> -# set of modules.
+> -cat > "$new_ksyms_file" << EOT
+> -/*
+> - * Automatically generated file; DO NOT EDIT.
+> - */
+> -
+> -EOT
+> -sed 's/ko$/mod/' modules.order |
+> -xargs -n1 sed -n -e '2{s/ /\n/g;/^$/!p;}' -- |
+> -cat - "$ksym_wl" |
+> -sort -u |
+> -sed -e 's/\(.*\)/#define __KSYM_\1 1/' >> "$new_ksyms_file"
+> -
+> -# Special case for modversions (see modpost.c)
+> -if [ -n "$CONFIG_MODVERSIONS" ]; then
+> -       echo "#define __KSYM_module_layout 1" >> "$new_ksyms_file"
+> -fi
+> +# Generate a new symbol list file
+> +$CONFIG_SHELL $srctree/scripts/gen_autoksyms.sh "$new_ksyms_file"
+>
+>  # Extract changes between old and new list and touch corresponding
+>  # dependency files.
+> diff --git a/scripts/gen_autoksyms.sh b/scripts/gen_autoksyms.sh
+> new file mode 100755
+> index 000000000000..6c625f52118f
+> --- /dev/null
+> +++ b/scripts/gen_autoksyms.sh
+> @@ -0,0 +1,51 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +
+> +# Create an autoksyms.h header file from the list of all module's needed symbols
+> +# as recorded on the second line of *.mod files and the user-provided symbol
+> +# whitelist.
+> +
+> +set -e
+> +
+> +output_file="$1"
+> +
+> +# Use "make V=1" to debug this script.
+> +case "$KBUILD_VERBOSE" in
+> +*1*)
+> +       set -x
+> +       ;;
+> +esac
+> +
+> +# We need access to CONFIG_ symbols
+> +. include/config/auto.conf
+> +
+> +ksym_wl=/dev/null
+> +if [ -n "$CONFIG_UNUSED_KSYMS_WHITELIST" ]; then
+> +       # Use 'eval' to expand the whitelist path and check if it is relative
+> +       eval ksym_wl="$CONFIG_UNUSED_KSYMS_WHITELIST"
+> +       [ "${ksym_wl}" != "${ksym_wl#/}" ] || ksym_wl="$abs_srctree/$ksym_wl"
+> +       if [ ! -f "$ksym_wl" ]; then
+> +               echo "ERROR: '$ksym_wl' whitelist file not found" >&2
+> +               exit 1
+> +       fi
+> +fi
+> +
+> +# Generate a new ksym list file with symbols needed by the current
+> +# set of modules.
+> +cat > "$output_file" << EOT
+> +/*
+> + * Automatically generated file; DO NOT EDIT.
+> + */
+> +
+> +EOT
+> +
+> +sed 's/ko$/mod/' modules.order |
+> +xargs -n1 sed -n -e '2{s/ /\n/g;/^$/!p;}' -- |
+> +cat - "$ksym_wl" |
+> +sort -u |
+> +sed -e 's/\(.*\)/#define __KSYM_\1 1/' >> "$output_file"
+> +
+> +# Special case for modversions (see modpost.c)
+> +if [ -n "$CONFIG_MODVERSIONS" ]; then
+> +       echo "#define __KSYM_module_layout 1" >> "$output_file"
+> +fi
+> --
+> 2.25.0.265.gbab2e86ba0-goog
+>
+
 
 -- 
-George Wilson
-IBM Linux Technology Center
-Security Development
+Best Regards
+Masahiro Yamada
