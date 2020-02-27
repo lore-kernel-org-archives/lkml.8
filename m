@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69826C52D5C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E7CC3F36E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 332D820578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:06:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81C5920801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:05:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812371;
-	bh=01jRytznLKB9NL/cMXLTYI82segSPQc/GI+tj9vZssA=;
+	s=default; t=1582812359;
+	bh=uhH67BUgioUdLRY7U4lxoaW4esQN3FChvKJGkYYFphI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sC9zW6PcntRFCumAHoNdfvtK3ErPEIe+Y77LyGzr9vVkJWS5UlX9+q6YJQYrRzB07
-	 YKGciXNbIEiyFnHDSULBfAIR/OydnutuEOM7QUjk3/GwZIP1/d05oabyEosGkL8TSv
-	 7l/zUFt8MyWgFiOEAxcjVWoHX3gjJ9qWUZs+iAGw=
+	b=YEw2FzVuULu2xmbKJVZwiW7omzc/Gcwr1St4G6muB2pS+Dd/baEMGnKAp1U2U9L3H
+	 zgb52ylhRpQU0dca8ybrFWHl4hEcketKChdq9zH11nd3wBowuSYEH4YfIh2ypK4z7f
+	 BaItNAJP5QoQKwDZM2WHUK9qFH7zTr66QS/5NCRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387527AbgB0OGJ (ORCPT
+        id S2387856AbgB0OF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:06:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43120 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:05:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387881AbgB0OGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:06:06 -0500
+        id S2387847AbgB0OFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:05:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C79820578;
-        Thu, 27 Feb 2020 14:06:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C193520578;
+        Thu, 27 Feb 2020 14:05:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812365;
-        bh=01jRytznLKB9NL/cMXLTYI82segSPQc/GI+tj9vZssA=;
+        s=default; t=1582812355;
+        bh=uhH67BUgioUdLRY7U4lxoaW4esQN3FChvKJGkYYFphI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=haug1XZx5QidwRXW9adS9hA3qUJQHC3kmx3ykZJJaO/JcInjITSyJZ0E8UGJoJiId
-         fbmNuKqzGZuvQ3+ldcQe96AEwuANWgTET17XjmbWdtle2C3odC+UhFYsJCJ9UhkynE
-         j4iSJdIV73og75Esz/oKNBGpvJi0SfyG5zgrvNKs=
+        b=DMscM9YhRIqXB6nNaiIyBoaxyvGqy4ecT/tzIiohpTKlobrs+tmWQcPCh8yCCBaks
+         JR5AWvAWSEGg0lrvRMNPrA9DTjqXDVomxK9PnHQx6+g233Ap/ZuXLcGTbQ7PxnGHLI
+         t+sDjWcpAcKQongerGYIXtGpNSV0XgNE3o0CPpf8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 4.19 87/97] iommu/vt-d: Fix compile warning from intel-svm.h
-Date:   Thu, 27 Feb 2020 14:37:35 +0100
-Message-Id: <20200227132228.792681478@linuxfoundation.org>
+        stable@vger.kernel.org, Minas Harutyunyan <hminas@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 4.19 83/97] usb: dwc2: Fix in ISOC request length checking
+Date:   Thu, 27 Feb 2020 14:37:31 +0100
+Message-Id: <20200227132228.139177930@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
 References: <20200227132214.553656188@linuxfoundation.org>
@@ -59,38 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>
 
-commit e7598fac323aad0e502415edeffd567315994dd6 upstream.
+commit 860ef6cd3f90b84a1832f8a6485c90c34d3b588b upstream.
 
-The intel_svm_is_pasid_valid() needs to be marked inline, otherwise it
-causes the compile warning below:
+Moved ISOC request length checking from dwc2_hsotg_start_req() function to
+dwc2_hsotg_ep_queue().
 
-  CC [M]  drivers/dma/idxd/cdev.o
-In file included from drivers/dma/idxd/cdev.c:9:0:
-./include/linux/intel-svm.h:125:12: warning: ‘intel_svm_is_pasid_valid’ defined but not used [-Wunused-function]
- static int intel_svm_is_pasid_valid(struct device *dev, int pasid)
-            ^~~~~~~~~~~~~~~~~~~~~~~~
-
-Reported-by: Borislav Petkov <bp@alien8.de>
-Fixes: 15060aba71711 ('iommu/vt-d: Helper function to query if a pasid has any active users')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: 4fca54aa58293 ("usb: gadget: s3c-hsotg: add multi count support")
+Signed-off-by: Minas Harutyunyan <hminas@synopsys.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/intel-svm.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/dwc2/gadget.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/include/linux/intel-svm.h
-+++ b/include/linux/intel-svm.h
-@@ -130,7 +130,7 @@ static inline int intel_svm_unbind_mm(st
- 	BUG();
- }
+--- a/drivers/usb/dwc2/gadget.c
++++ b/drivers/usb/dwc2/gadget.c
+@@ -1004,11 +1004,6 @@ static void dwc2_hsotg_start_req(struct
+ 	else
+ 		packets = 1;	/* send one packet if length is zero. */
  
--static int intel_svm_is_pasid_valid(struct device *dev, int pasid)
-+static inline int intel_svm_is_pasid_valid(struct device *dev, int pasid)
- {
- 	return -EINVAL;
- }
+-	if (hs_ep->isochronous && length > (hs_ep->mc * hs_ep->ep.maxpacket)) {
+-		dev_err(hsotg->dev, "req length > maxpacket*mc\n");
+-		return;
+-	}
+-
+ 	if (dir_in && index != 0)
+ 		if (hs_ep->isochronous)
+ 			epsize = DXEPTSIZ_MC(packets);
+@@ -1312,6 +1307,13 @@ static int dwc2_hsotg_ep_queue(struct us
+ 	req->actual = 0;
+ 	req->status = -EINPROGRESS;
+ 
++	/* Don't queue ISOC request if length greater than mps*mc */
++	if (hs_ep->isochronous &&
++	    req->length > (hs_ep->mc * hs_ep->ep.maxpacket)) {
++		dev_err(hs->dev, "req length > maxpacket*mc\n");
++		return -EINVAL;
++	}
++
+ 	/* In DDMA mode for ISOC's don't queue request if length greater
+ 	 * than descriptor limits.
+ 	 */
 
 
