@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD61C52D30
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4BBC761A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E558621D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:57:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17B112084E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:56:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811844;
-	bh=C/wdEos4wA2xfQpgeNBE4p1Xv5QaOA7GnM1ypr2cjgE=;
+	s=default; t=1582811795;
+	bh=+wD6czIUhxuJuyD9X9uh5dT1pP9vh8/2qPEPFFBPEDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GcFlDg8uS6sg3TFlDzWj98T/+lJ+AnWQFUOU8WhGf/mC505TEntCHmJa61wcVmz04
-	 GAP7ndCEAHUdYmbrI0x9klYgD/5MvPc2eZkbihR0l/eZ0oxaikLmcHphxOhWzJddww
-	 t9+/qFfgEjXDcTXhXhpsqdLrWCVD3Ox5L5i9PfGQ=
+	b=zcUFxpiuJY/B3kfKSvTp5cYe6oja1NZZvsslS7xHSkfKUTssfhEePBRnmP9grmOLn
+	 /qwLKhvy1i2osr5yoFsCwpNjDifGGsHIFs1JAa5Ow7gz0+P/XZ0JOmNCDLbqi4Sq2t
+	 b6XUY6hbnqvkDTcrQfHpp2KTxsvXSSvYUFG2E498=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732265AbgB0N5V (ORCPT
+        id S1732166AbgB0N4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:57:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57974 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:56:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732251AbgB0N5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:57:13 -0500
+        id S1732144AbgB0N43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:56:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDABC20578;
-        Thu, 27 Feb 2020 13:57:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 993B92084E;
+        Thu, 27 Feb 2020 13:56:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811832;
-        bh=C/wdEos4wA2xfQpgeNBE4p1Xv5QaOA7GnM1ypr2cjgE=;
+        s=default; t=1582811788;
+        bh=+wD6czIUhxuJuyD9X9uh5dT1pP9vh8/2qPEPFFBPEDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZmeMW1o8LRQUKZTVPiON0Qt1sdrXLTxeRUWoXYHKCfMMJC5/lReQXliBWbzjjDEFP
-         Uic4za9E2QP14t5opmErB2ibuOgujfWi8zqKJHZehgT7I7Lkvi7j3R6aQsGZtPqsN8
-         nMrC4KqBAVgg7hZyP059N1cjODkkyf/93oh9wHfY=
+        b=HhR/dRE7OAsI2tL3j2DRJO9YThYbjBwdid6+oudWDMmJYsCbJNy+ePxQc34APoykI
+         AhwPUC45yZ0HYvdW7SQ0OQyiACEkRRaCbvy9Jc6CXEU1oOeNO2mkpBiw2acAaysDWf
+         7DSVHGtDwn37T162n4UPZGS73rY6dpgnDh9E3T1w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 080/237] fore200e: Fix incorrect checks of NULL pointer dereference
-Date:   Thu, 27 Feb 2020 14:34:54 +0100
-Message-Id: <20200227132302.988629389@linuxfoundation.org>
+Subject: [PATCH 4.14 074/237] PCI/IOV: Fix memory leak in pci_iov_add_virtfn()
+Date:   Thu, 27 Feb 2020 14:34:48 +0100
+Message-Id: <20200227132302.582687031@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -60,78 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit bbd20c939c8aa3f27fa30e86691af250bf92973a ]
+[ Upstream commit 8c386cc817878588195dde38e919aa6ba9409d58 ]
 
-In fore200e_send and fore200e_close, the pointers from the arguments
-are dereferenced in the variable declaration block and then checked
-for NULL. The patch fixes these issues by avoiding NULL pointer
-dereferences.
+In the implementation of pci_iov_add_virtfn() the allocated virtfn is
+leaked if pci_setup_device() fails. The error handling is not calling
+pci_stop_and_remove_bus_device(). Change the goto label to failed2.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 156c55325d30 ("PCI: Check for pci_setup_device() failure in pci_iov_add_virtfn()")
+Link: https://lore.kernel.org/r/20191125195255.23740-1-navid.emamdoost@gmail.com
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/atm/fore200e.c | 25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+ drivers/pci/iov.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/atm/fore200e.c b/drivers/atm/fore200e.c
-index f8b7e86907cc2..0a1ad1a1d34fb 100644
---- a/drivers/atm/fore200e.c
-+++ b/drivers/atm/fore200e.c
-@@ -1496,12 +1496,14 @@ fore200e_open(struct atm_vcc *vcc)
- static void
- fore200e_close(struct atm_vcc* vcc)
- {
--    struct fore200e*        fore200e = FORE200E_DEV(vcc->dev);
-     struct fore200e_vcc*    fore200e_vcc;
-+    struct fore200e*        fore200e;
-     struct fore200e_vc_map* vc_map;
-     unsigned long           flags;
- 
-     ASSERT(vcc);
-+    fore200e = FORE200E_DEV(vcc->dev);
-+
-     ASSERT((vcc->vpi >= 0) && (vcc->vpi < 1<<FORE200E_VPI_BITS));
-     ASSERT((vcc->vci >= 0) && (vcc->vci < 1<<FORE200E_VCI_BITS));
- 
-@@ -1546,10 +1548,10 @@ fore200e_close(struct atm_vcc* vcc)
- static int
- fore200e_send(struct atm_vcc *vcc, struct sk_buff *skb)
- {
--    struct fore200e*        fore200e     = FORE200E_DEV(vcc->dev);
--    struct fore200e_vcc*    fore200e_vcc = FORE200E_VCC(vcc);
-+    struct fore200e*        fore200e;
-+    struct fore200e_vcc*    fore200e_vcc;
-     struct fore200e_vc_map* vc_map;
--    struct host_txq*        txq          = &fore200e->host_txq;
-+    struct host_txq*        txq;
-     struct host_txq_entry*  entry;
-     struct tpd*             tpd;
-     struct tpd_haddr        tpd_haddr;
-@@ -1562,9 +1564,18 @@ fore200e_send(struct atm_vcc *vcc, struct sk_buff *skb)
-     unsigned char*          data;
-     unsigned long           flags;
- 
--    ASSERT(vcc);
--    ASSERT(fore200e);
--    ASSERT(fore200e_vcc);
-+    if (!vcc)
-+        return -EINVAL;
-+
-+    fore200e = FORE200E_DEV(vcc->dev);
-+    fore200e_vcc = FORE200E_VCC(vcc);
-+
-+    if (!fore200e)
-+        return -EINVAL;
-+
-+    txq = &fore200e->host_txq;
-+    if (!fore200e_vcc)
-+        return -EINVAL;
- 
-     if (!test_bit(ATM_VF_READY, &vcc->flags)) {
- 	DPRINTK(1, "VC %d.%d.%d not ready for tx\n", vcc->itf, vcc->vpi, vcc->vpi);
+diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+index 0fd8e164339c3..0dc646c1bc3db 100644
+--- a/drivers/pci/iov.c
++++ b/drivers/pci/iov.c
+@@ -179,6 +179,7 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id, int reset)
+ failed2:
+ 	sysfs_remove_link(&dev->dev.kobj, buf);
+ failed1:
++	pci_stop_and_remove_bus_device(virtfn);
+ 	pci_dev_put(dev);
+ 	pci_stop_and_remove_bus_device(virtfn);
+ failed0:
 -- 
 2.20.1
 
