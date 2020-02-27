@@ -2,396 +2,199 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93358C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BA2C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B3482084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5266421556
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 05:41:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H1XyANOT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbgB0Fiy (ORCPT
+        id S1726016AbgB0Flj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 00:38:54 -0500
-Received: from mga07.intel.com ([134.134.136.100]:22722 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgB0Fix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 00:38:53 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 21:38:52 -0800
-X-IronPort-AV: E=Sophos;i="5.70,490,1574150400"; 
-   d="scan'208";a="241933233"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 21:38:52 -0800
-From:   ira.weiny@intel.com
-To:     fstests@vger.kernel.org
-Cc:     Ira Weiny <ira.weiny@intel.com>, linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH] xfs/XXX: Add xfs/XXX
-Date:   Wed, 26 Feb 2020 21:38:47 -0800
-Message-Id: <20200227053847.1888-1-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 27 Feb 2020 00:41:39 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:33419 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbgB0Fli (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 00:41:38 -0500
+Received: by mail-qk1-f193.google.com with SMTP id h4so2080502qkm.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 21:41:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hw6QZPX2qEuN9qM/QrRO1SiFsJK0I5hW92E65JUrSnQ=;
+        b=H1XyANOT4P+YdU62R2o0kOX5KGJssSg9lyyWUVxXWVeXXk2ltMFLHvp3BFtn0YFHdG
+         IMq7rn+/Rex3r8CFCz8vyFIHc15sFy6r3Reb3f5ev05T5CD2XRE6FVDXPs3dylhBmaKp
+         SHAKXEyrR4fiobTKs7vSCOMtzXxrrRfvzjgIOCYcju6V4HK51zjgp32W12aNb+Ywra2R
+         0sEuCjaM7LfdwQqWht+8RRSfZhmG5fa9ovKWKMLBFmHrLjCSmkZ4F/i4UOgxlxAtQH7z
+         ArxRllUhP9QgfxgPbBBliisLaQ7bfwCIZ45k874t3DQfO4p5am0FvR67Bcu3JrmTpElK
+         3IyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hw6QZPX2qEuN9qM/QrRO1SiFsJK0I5hW92E65JUrSnQ=;
+        b=ZlHidKn+dXv3c3o1ITcPEGmP89KPyCKfr3UXQEnis+Sx5EAaUhZIKyCRmBj+Re9p83
+         5gx6a3gQrw9jN7312yZ6Mj6WfvZEEQ7mZb5kFIm/46aEaOAAOIMaDWrK4M29ZjqfxvpH
+         G2hpso3OKZEXmSx4LURmUs+IR8NQjAkVPuj77MvVO0yr9FjrNSC183Cq8hhljTUEXIH4
+         E/SqK38V42Wu4cLGt+AnzgA7RG+bNxQjWp8cS++LnnzuPsTSUJjimjk14pmhfJ6rUdx9
+         hWQqQ3Ci9eJc43IPbhrZNBA2J91TzZu0f/mWH1juaYOT1p5+l70jQPTpxnjuWOPJVLUd
+         yAcQ==
+X-Gm-Message-State: APjAAAWleRq63NbZurKlHhSsZwRK4HVMlXpkL+yNo5FxJBHMbrjRZuTG
+        /G+6iCHsz9GZBotsaPD9nRwMG08LMPywDREL4JXxD/ni
+X-Google-Smtp-Source: APXvYqwRCDTK7/PQmCPexZFvtKN2S33XvqLew6GYL6ph3qna4WnuRZ/2PPJuyNHAogAmfDTWLHxM5biJ+XnNXD75vuM=
+X-Received: by 2002:a05:620a:7ee:: with SMTP id k14mr3379095qkk.170.1582782097545;
+ Wed, 26 Feb 2020 21:41:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <049eb16cf995d3a2dd0de01f4c0ed09965e36f92.1581906151.git.baolin.wang7@gmail.com>
+ <20200224113926.GU3494@dell> <CADBw62ry=+2Rm-Xnar-oeGe_JipvZ9zw=stT7vMHd+QR_m-JEw@mail.gmail.com>
+ <20200225085012.GW3494@dell> <CADBw62q3wF_h83x3SwcX059N5EvMzm0mjVue+8vxn4Nbq0_Xng@mail.gmail.com>
+In-Reply-To: <CADBw62q3wF_h83x3SwcX059N5EvMzm0mjVue+8vxn4Nbq0_Xng@mail.gmail.com>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Thu, 27 Feb 2020 13:41:26 +0800
+Message-ID: <CADBw62o=nw_S9Q4x8S-NK+8Xa6jhzXxRgy0PxEJvcPKrs6WbOg@mail.gmail.com>
+Subject: Re: [RESEND PATCH] mfd: sc27xx: Add USB charger type detection support
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+Hi Lee,
 
-Add XXX to test the various setting of dax flags on files.
+On Tue, Feb 25, 2020 at 5:27 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
+>
+> On Tue, Feb 25, 2020 at 4:49 PM Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > On Tue, 25 Feb 2020, Baolin Wang wrote:
+> >
+> > > Hi Lee,
+> > >
+> > > On Mon, Feb 24, 2020 at 7:38 PM Lee Jones <lee.jones@linaro.org> wrote:
+> > > >
+> > > > On Mon, 17 Feb 2020, Baolin Wang wrote:
+> > > >
+> > > > > The Spreadtrum SC27XX series PMICs supply the USB charger type detection
+> > > > > function, and related registers are located on the PMIC global registers
+> > > > > region, thus we implement and export this function in the MFD driver for
+> > > > > users to get the USB charger type.
+> > > > >
+> > > > > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> > > > > ---
+> > > > >  drivers/mfd/sprd-sc27xx-spi.c   |   52 +++++++++++++++++++++++++++++++++++++++
+> > > > >  include/linux/mfd/sc27xx-pmic.h |    7 ++++++
+> > > > >  2 files changed, 59 insertions(+)
+> > > > >  create mode 100644 include/linux/mfd/sc27xx-pmic.h
+> > > >
+> > > > [...]
+> > > >
+> > > > > +enum usb_charger_type sprd_pmic_detect_charger_type(struct device *dev)
+> > > > > +{
+> > > > > +     struct spi_device *spi = to_spi_device(dev);
+> > > > > +     struct sprd_pmic *ddata = spi_get_drvdata(spi);
+> > > > > +     const struct sprd_pmic_data *pdata = ddata->pdata;
+> > > > > +     enum usb_charger_type type;
+> > > > > +     u32 val;
+> > > > > +     int ret;
+> > > > > +
+> > > > > +     ret = regmap_read_poll_timeout(ddata->regmap, pdata->charger_det, val,
+> > > > > +                                    (val & SPRD_PMIC_CHG_DET_DONE),
+> > > > > +                                    SPRD_PMIC_CHG_DET_DELAY_US,
+> > > > > +                                    SPRD_PMIC_CHG_DET_TIMEOUT);
+> > > > > +     if (ret) {
+> > > > > +             dev_err(&spi->dev, "failed to detect charger type\n");
+> > > > > +             return UNKNOWN_TYPE;
+> > > > > +     }
+> > > > > +
+> > > > > +     switch (val & SPRD_PMIC_CHG_TYPE_MASK) {
+> > > > > +     case SPRD_PMIC_CDP_TYPE:
+> > > > > +             type = CDP_TYPE;
+> > > > > +             break;
+> > > > > +     case SPRD_PMIC_DCP_TYPE:
+> > > > > +             type = DCP_TYPE;
+> > > > > +             break;
+> > > > > +     case SPRD_PMIC_SDP_TYPE:
+> > > > > +             type = SDP_TYPE;
+> > > > > +             break;
+> > > > > +     default:
+> > > > > +             type = UNKNOWN_TYPE;
+> > > > > +             break;
+> > > > > +     }
+> > > > > +
+> > > > > +     return type;
+> > > > > +}
+> > > > > +EXPORT_SYMBOL_GPL(sprd_pmic_detect_charger_type);
+> > > >
+> > > > Where is this called from?
+> > >
+> > > Our USB phy driver will call this API to get the charger type, which
+> > > is used to notify the corresponding current can be drawn to charger
+> > > drivers. And we will introduce users after this patch getting applied.
+> > >
+> > > > Why isn't the charger type detected in the charger driver?
+> > >
+> > > The charger type detection operation is not a part of charger, and its
+> > > related registers are located on the PMIC global registers area. So I
+> > > think the PMIC driver is the right place to implement. Moreover Arnd
+> > > also suggested us to implement these APIs in the PMIC driver if I
+> > > remember correctly.
+> >
+> > You shouldn't think of this as a PMIC driver.  This is a device's
+> > parent were functional drivers are allocated and registered.  Any
+>
+> Right.
+>
+> > useful functionality should be farmed out to the child devices which
+> > are to be appropriately dispersed and located into the subsystems.
+> >
+> > It looks like the charger has access to the same register map as this
+> > parent driver.  I do not see any compelling reason to provide charger
+> > specific functionality in the parent driver at this point.
+>
+> Actually the charger detection is not belonging to the charger
+> subsystem, at least in the hardware design level. The charger
+> detection's theory is detetcing the USB phy D+/D- line to get the
+> charger type, then the hardware will save the charger type into the
+> PMIC global reigsters automatically for users to get. So this is not
+> related with the charger driver, which only supplies charging
+> services, and this is also not belonging to the USB phy, since the
+> related registers are located on the PMIC gloabl registers area. So
+> you still think we should not provide this funcion here?
 
-The final fsx test was derived from Christophs test here but I wanted
-more direct function tests as well so I bundled this together.
+After more investigation, I found I can not move the charger detection
+into the charger driver.
 
-https://www.spinics.net/lists/linux-xfs/msg10124.html
+Cause the USB phy will implement the USB charger support by
+implementing phy->charger_detect() ops (which will call
+sprd_pmic_detect_charger_type() to get the charger type), which means
+the USB phy driver need to get a power supply object by a
+'power-supply' phandle firstly, if we move the charger detection part
+into the charger driver.
 
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+But our charger driver also need to register a USB phy notifier to be
+notified how much current can be drawn from the USB charger framework,
+which means the charger driver need to get a usb_phy object by a
+'phys' phandle[1]. So this two drivers are interdependent and
+dead-lock.
 
----
-This tests against V4 and V5:
-https://lore.kernel.org/lkml/20200227052442.22524-1-ira.weiny@intel.com/
----
- tests/xfs/999     | 279 ++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/999.out |  21 ++++
- tests/xfs/group   |   1 +
- 3 files changed, 301 insertions(+)
- create mode 100755 tests/xfs/999
- create mode 100644 tests/xfs/999.out
+If we implement the charger type detection in the MFD, the USB phy
+driver can get the PMIC device by a phandle easily to get the charger
+type. Moreover from my previous description of the hardware design, I
+still think implementing the charger type detection in the MFD driver
+is a good way now.
 
-diff --git a/tests/xfs/999 b/tests/xfs/999
-new file mode 100755
-index 000000000000..b123f1f39894
---- /dev/null
-+++ b/tests/xfs/999
-@@ -0,0 +1,279 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2019 Intel, Corp.  All Rights Reserved.
-+#
-+# FSQA Test No. 999 (temporary)
-+#
-+# Test setting of DAX flag
-+#
-+seq=`basename $0`
-+seqres=$RESULT_DIR/$seq
-+echo "QA output created by $seq"
-+
-+here=`pwd`
-+status=1	# failure is the default!
-+
-+dax_dir=$TEST_DIR/dax-dir
-+dax_sub_dir=$TEST_DIR/dax-dir/dax-sub-dir
-+dax_inh_file=$dax_dir/dax-inh-file
-+dax_non_inh_file=$dax_dir/dax-non-inh-file
-+non_dax=$TEST_DIR/non-dax
-+dax_file=$TEST_DIR/dax-file
-+dax_file_copy=$TEST_DIR/dax-file-copy
-+dax_file_move=$TEST_DIR/dax-file-move
-+data_file=$TEST_DIR/data-file
-+
-+_cleanup() {
-+	rm -rf $TEST_DIR/*
-+}
-+
-+trap "_cleanup ; exit \$status" 0 1 2 3 15
-+
-+# get standard environment, filters and checks
-+. ./common/rc
-+
-+# real QA test starts here
-+_supported_os Linux
-+_require_xfs_io_command "lsattr"
-+_require_xfs_io_command "chattr" "x"
-+_require_xfs_io_command "statx"
-+_require_test
-+
-+function mount_no_dax {
-+	# mount SCRATCH_DEV with dax option, TEST_DEV not
-+	export MOUNT_OPTIONS=""
-+	export TEST_FS_MOUNT_OPTS=""
-+	_test_unmount
-+	_test_mount
-+	_fs_options $TEST_DEV | grep -qw "dax"
-+	if [ "$?" == "0" ]; then
-+		_notrun "we need $TEST_DEV mount without dax"
-+	fi
-+}
-+
-+function mount_dax {
-+	# mount SCRATCH_DEV with dax option, TEST_DEV not
-+	export MOUNT_OPTIONS=""
-+	export TEST_FS_MOUNT_OPTS=""
-+	_test_unmount
-+	_test_mount "-o dax"
-+	_fs_options $TEST_DEV | grep -qw "dax"
-+	if [ "$?" != "0" ]; then
-+		_notrun "we need $TEST_DEV mount with dax"
-+	fi
-+}
-+
-+function check_phys_dax {
-+	xfs_io -c 'lsattr' $1 | awk -e '{ print $1 }' | grep 'x' &> /dev/null
-+	if [ "$?" != "0" ]; then
-+		echo "FAILED: Did NOT find DAX flag on $1"
-+		status=1; exit
-+	fi
-+}
-+
-+function check_effective_dax {
-+	attr=`xfs_io -c 'statx -r' $1 | grep 'stat.attributes' | awk -e '{ print $3 }'`
-+	masked=$(( $attr & 0x2000 ))
-+	if [ "$masked" != "8192" ]; then
-+		echo "FAILED: Did NOT find VFS DAX flag on $1"
-+		status=1; exit
-+	fi
-+}
-+
-+function check_phys_no_dax {
-+	xfs_io -c 'lsattr' $1 | awk -e '{ print $1 }' | grep 'x' &> /dev/null
-+	if [ "$?" == "0" ]; then
-+		echo "FAILED: Found DAX flag on $1"
-+		status=1; exit
-+	fi
-+}
-+
-+function check_effective_no_dax {
-+	attr=`xfs_io -c 'statx -r' $1 | grep 'stat.attributes' | awk -e '{ print $3 }'`
-+	masked=$(( $attr & 0x2000 ))
-+	if [ "$masked" == "8192" ]; then
-+		echo "FAILED: Found VFS DAX flag on $1"
-+		status=1; exit
-+	fi
-+}
-+
-+echo "running tests..."
-+
-+echo "   *** mount w/o dax flag."
-+mount_no_dax
-+
-+echo "   *** mark dax-dir as dax enabled"
-+mkdir $dax_dir
-+xfs_io -c 'chattr +x' $dax_dir
-+check_phys_dax $dax_dir
-+
-+echo "   *** check file inheritance"
-+touch $dax_inh_file
-+check_phys_dax $dax_inh_file
-+check_effective_dax $dax_inh_file
-+
-+echo "   *** check directory inheritance"
-+mkdir $dax_sub_dir
-+check_phys_dax $dax_sub_dir
-+
-+echo "   *** check changing directory"
-+xfs_io -c 'chattr -x' $dax_dir
-+check_phys_no_dax $dax_dir
-+check_effective_no_dax $dax_dir
-+
-+echo "   *** check non file inheritance"
-+touch $dax_non_inh_file
-+check_phys_no_dax $dax_non_inh_file
-+check_effective_no_dax $dax_non_inh_file
-+
-+echo "   *** check that previous file stays enabled"
-+check_phys_dax $dax_inh_file
-+check_effective_dax $dax_inh_file
-+
-+echo "   *** Reset the directory"
-+xfs_io -c 'chattr +x' $dax_dir
-+check_phys_dax $dax_dir
-+
-+
-+# check mount override
-+# ====================
-+
-+echo "   *** Remount fs with mount flag"
-+mount_dax
-+touch $non_dax
-+check_phys_no_dax $non_dax
-+check_effective_dax $non_dax
-+
-+echo "   *** Check for non-dax files to be dax with mount option"
-+check_effective_dax $dax_non_inh_file
-+
-+echo "   *** check for file dax flag 'sticky-ness' after remount"
-+touch $dax_file
-+xfs_io -c 'chattr +x' $dax_file
-+check_phys_dax $dax_file
-+check_effective_dax $dax_file
-+
-+echo "   *** remount w/o mount flag"
-+mount_no_dax
-+check_phys_dax $dax_file
-+check_effective_dax $dax_file
-+
-+check_phys_no_dax $non_dax
-+check_effective_no_dax $non_dax
-+
-+
-+# Check non-zero file operations
-+# ==============================
-+
-+echo "   *** file should change effective but page cache should be empty"
-+$XFS_IO_PROG -f -c "pwrite 0 10000" $data_file > /dev/null
-+xfs_io -c 'chattr +x' $data_file
-+check_phys_dax $data_file
-+check_effective_dax $data_file
-+
-+
-+# Check inheritance on cp, mv
-+# ===========================
-+
-+echo "   *** check inheritance on cp, mv"
-+cp $non_dax $dax_dir/conv-dax
-+check_phys_dax $dax_dir/conv-dax
-+check_effective_dax $dax_dir/conv-dax
-+
-+echo "   *** Moved files 'don't inherit'"
-+mv $non_dax $dax_dir/move-dax
-+check_phys_no_dax $dax_dir/move-dax
-+check_effective_no_dax $dax_dir/move-dax
-+
-+# Check preservation of phys on cp, mv
-+# ====================================
-+
-+mv $dax_file $dax_file_move
-+check_phys_dax $dax_file_move
-+check_effective_dax $dax_file_move
-+
-+cp $dax_file_move $dax_file_copy
-+check_phys_no_dax $dax_file_copy
-+check_effective_no_dax $dax_file_copy
-+
-+
-+# Verify no mode changes on mmap
-+# ==============================
-+
-+echo "   *** check no mode change when mmaped"
-+
-+dd if=/dev/zero of=$dax_file bs=4096 count=10 > $tmp.log 2>&1
-+
-+# set known state.
-+xfs_io -c 'chattr -x' $dax_file
-+check_phys_no_dax $dax_file
-+check_effective_no_dax $dax_file
-+
-+python3 - << EOF > $tmp.log 2>&1 &
-+import mmap
-+import time
-+print ('mmaping "$dax_file"')
-+f=open("$dax_file", "r+b")
-+mm = mmap.mmap(f.fileno(), 0)
-+print ('mmaped "$dax_file"')
-+while True:
-+	time.sleep(1)
-+EOF
-+pid=$!
-+
-+sleep 1
-+
-+# attempt to should fail
-+xfs_io -c 'chattr +x' $dax_file > /dev/null 2>&1
-+check_phys_no_dax $dax_file
-+check_effective_no_dax $dax_file
-+
-+kill -TERM $pid > /dev/null 2>&1
-+wait $pid > /dev/null 2>&1
-+
-+# after mmap released should work
-+xfs_io -c 'chattr +x' $dax_file
-+check_phys_dax $dax_file
-+check_effective_dax $dax_file
-+
-+
-+# Finally run the test stolen from Christoph Hellwig to test changing the mode
-+# while performing a series of operations
-+# =============================================================================
-+
-+function run_fsx {
-+	options=$1
-+
-+	echo "   *** run 'fsx $options' racing with setting/clearing the DAX flag"
-+	$here/ltp/fsx $options -N 20000 $dax_file > $tmp.log 2>&1 &
-+	pid=$!
-+
-+	if [ ! -n "$pid" ]; then
-+		echo "FAILED to start fsx"
-+		exit 255
-+	fi
-+
-+	# NOTE: fsx runs much faster than these mode changes.
-+	for i in `seq 1 500`; do
-+		xfs_io -c 'chattr +x' $dax_file > /dev/null 2>&1
-+		xfs_io -c 'chattr -x' $dax_file > /dev/null 2>&1
-+	done
-+
-+	wait $pid
-+	status=$?
-+	if [ "$status" != "0" ]; then
-+		cat /sys/kernel/debug/tracing/trace > trace_output
-+		echo "FAILED: fsx exited with status : $status"
-+		echo "        see trace_output"
-+		head $dax_file.fsxlog
-+		exit $status
-+	fi
-+	pid=""
-+}
-+
-+run_fsx ""
-+run_fsx "-A"
-+run_fsx "-Z -r 4096 -w 4096"
-+
-+
-+status=0 ; exit
-diff --git a/tests/xfs/999.out b/tests/xfs/999.out
-new file mode 100644
-index 000000000000..ccb13770ca4d
---- /dev/null
-+++ b/tests/xfs/999.out
-@@ -0,0 +1,21 @@
-+QA output created by 999
-+running tests...
-+   *** mount w/o dax flag.
-+   *** mark dax-dir as dax enabled
-+   *** check file inheritance
-+   *** check directory inheritance
-+   *** check changing directory
-+   *** check non file inheritance
-+   *** check that previous file stays enabled
-+   *** Reset the directory
-+   *** Remount fs with mount flag
-+   *** Check for non-dax files to be dax with mount option
-+   *** check for file dax flag 'sticky-ness' after remount
-+   *** remount w/o mount flag
-+   *** file should change effective but page cache should be empty
-+   *** check inheritance on cp, mv
-+   *** Moved files 'don't inherit'
-+   *** check no mode change when mmaped
-+   *** run 'fsx ' racing with setting/clearing the DAX flag
-+   *** run 'fsx -A' racing with setting/clearing the DAX flag
-+   *** run 'fsx -Z -r 4096 -w 4096' racing with setting/clearing the DAX flag
-diff --git a/tests/xfs/group b/tests/xfs/group
-index 522d4bc44d1f..816883a268bf 100644
---- a/tests/xfs/group
-+++ b/tests/xfs/group
-@@ -511,3 +511,4 @@
- 511 auto quick quota
- 512 auto quick acl attr
- 513 auto mount
-+999 auto
--- 
-2.21.0
+What do you think? Thanks.
 
+[1] https://elixir.bootlin.com/linux/v5.6-rc3/source/drivers/power/supply/sc2731_charger.c#L496
