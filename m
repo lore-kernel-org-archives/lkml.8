@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B65C54FC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5FCC54FC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C50620801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFD1524697
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812639;
-	bh=jmPtdgeeqMMt7a7698ToRbbA8kl/TlVulUpJZ7oGaa0=;
+	s=default; t=1582812645;
+	bh=iluSgnN1rOfZY57dXokOQAsrQJ9zpG4dn4eBK3S1Hao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vlhow7UFVdWoJiYUbMVhPMwkksIJUb6Ttu6xCxOXGVwpWL9e383wcj/sO8ZhimfTq
-	 vdejP5KAYNazWZZv1Wrnts9i6qbW/ZLmnL5C2XbIhg6ph4tMDrD2sb6D5rYGs2h8dc
-	 GDDBFenFDvakFwAtb35REcCZ4vWKYJjJcKo6kEBo=
+	b=vPNnAIPjz82OrcfHFh8yFzStoigIeeY3aX6IcezfDKEAHLsDNurBnS4BfbThXCpOb
+	 5YgivYyyrF0+adpTNeaK5A7uRDIYAqLjY3MdgeUcAzaObV/rkBMafVw9cM13pNvDPe
+	 SZDP5Q2rm3B2jI7WsFDJ702Fl8dRNCJR3x5ZbYNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388563AbgB0OKd (ORCPT
+        id S2388579AbgB0OKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:10:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48686 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:10:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388302AbgB0OKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:10:30 -0500
+        id S2388040AbgB0OKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:10:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3019120714;
-        Thu, 27 Feb 2020 14:10:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29C9920714;
+        Thu, 27 Feb 2020 14:10:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812629;
-        bh=jmPtdgeeqMMt7a7698ToRbbA8kl/TlVulUpJZ7oGaa0=;
+        s=default; t=1582812640;
+        bh=iluSgnN1rOfZY57dXokOQAsrQJ9zpG4dn4eBK3S1Hao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xgvyFQmM3lWHswnkfBtlpIZPPmqAsmu5zob/f8rr+gLC/2T93aHncK6IC5Kd1efGH
-         1imBq0PScaJsqc6sNkXF95MDI6hW9GhVhWGlkPajFOimVrmZ3emZxJvfxJDOeDtsNe
-         96VerU63tF8DrLtcTJ4EJpDU1DrHJv33Y//+zz3E=
+        b=rYWVta5n9KKTVCMpg8g6ATPqTDBosSSSeuZ46kM1vag1WUeuROlIBC6C63CniiI2z
+         xp8Sh7Dtj4d1icClWgNPm/EF855/noEIZ4J9+017W3R+DvCFmEenHadMk4DTnYCPPj
+         ktXMSqZwikpPsgEIjmR3RNAQzoY1LNyq7ZkFRVkY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Keith Busch <kbusch@kernel.org>
-Subject: [PATCH 5.4 064/135] nvme-multipath: Fix memory leak with ana_log_buf
-Date:   Thu, 27 Feb 2020 14:36:44 +0100
-Message-Id: <20200227132238.788230946@linuxfoundation.org>
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        Qu Wenruo <wqu@suse.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 094/135] btrfs: reset fs_root to NULL on error in open_ctree
+Date:   Thu, 27 Feb 2020 14:37:14 +0100
+Message-Id: <20200227132243.388328607@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -61,66 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 3b7830904e17202524bad1974505a9bfc718d31f upstream.
+commit 315bf8ef914f31d51d084af950703aa1e09a728c upstream.
 
-kmemleak reports a memory leak with the ana_log_buf allocated by
-nvme_mpath_init():
+While running my error injection script I hit a panic when we tried to
+clean up the fs_root when freeing the fs_root.  This is because
+fs_info->fs_root == PTR_ERR(-EIO), which isn't great.  Fix this by
+setting fs_info->fs_root = NULL; if we fail to read the root.
 
-unreferenced object 0xffff888120e94000 (size 8208):
-  comm "nvme", pid 6884, jiffies 4295020435 (age 78786.312s)
-    hex dump (first 32 bytes):
-      00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
-      01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
-    backtrace:
-      [<00000000e2360188>] kmalloc_order+0x97/0xc0
-      [<0000000079b18dd4>] kmalloc_order_trace+0x24/0x100
-      [<00000000f50c0406>] __kmalloc+0x24c/0x2d0
-      [<00000000f31a10b9>] nvme_mpath_init+0x23c/0x2b0
-      [<000000005802589e>] nvme_init_identify+0x75f/0x1600
-      [<0000000058ef911b>] nvme_loop_configure_admin_queue+0x26d/0x280
-      [<00000000673774b9>] nvme_loop_create_ctrl+0x2a7/0x710
-      [<00000000f1c7a233>] nvmf_dev_write+0xc66/0x10b9
-      [<000000004199f8d0>] __vfs_write+0x50/0xa0
-      [<0000000065466fef>] vfs_write+0xf3/0x280
-      [<00000000b0db9a8b>] ksys_write+0xc6/0x160
-      [<0000000082156b91>] __x64_sys_write+0x43/0x50
-      [<00000000c34fbb6d>] do_syscall_64+0x77/0x2f0
-      [<00000000bbc574c9>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-nvme_mpath_init() is called by nvme_init_identify() which is called in
-multiple places (nvme_reset_work(), nvme_passthru_end(), etc). This
-means nvme_mpath_init() may be called multiple times before
-nvme_mpath_uninit() (which is only called on nvme_free_ctrl()).
-
-When nvme_mpath_init() is called multiple times, it overwrites the
-ana_log_buf pointer with a new allocation, thus leaking the previous
-allocation.
-
-To fix this, free ana_log_buf before allocating a new one.
-
-Fixes: 0d0b660f214dc490 ("nvme: add ANA support")
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nvme/host/multipath.c |    1 +
+ fs/btrfs/disk-io.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -711,6 +711,7 @@ int nvme_mpath_init(struct nvme_ctrl *ct
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -3203,6 +3203,7 @@ retry_root_backup:
+ 	if (IS_ERR(fs_info->fs_root)) {
+ 		err = PTR_ERR(fs_info->fs_root);
+ 		btrfs_warn(fs_info, "failed to read fs tree: %d", err);
++		fs_info->fs_root = NULL;
+ 		goto fail_qgroup;
  	}
  
- 	INIT_WORK(&ctrl->ana_work, nvme_ana_work);
-+	kfree(ctrl->ana_log_buf);
- 	ctrl->ana_log_buf = kmalloc(ctrl->ana_log_size, GFP_KERNEL);
- 	if (!ctrl->ana_log_buf) {
- 		error = -ENOMEM;
 
 
