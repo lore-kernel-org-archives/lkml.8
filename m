@@ -2,81 +2,110 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C03E5C4BA3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC5BC4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 930F72467B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A661B2467B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:09:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbgB0MIv (ORCPT
+        id S1729004AbgB0MJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 07:08:51 -0500
-Received: from foss.arm.com ([217.140.110.172]:49422 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728932AbgB0MIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 07:08:51 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C2E151FB;
-        Thu, 27 Feb 2020 04:08:50 -0800 (PST)
-Received: from [10.37.12.169] (unknown [10.37.12.169])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 062B73F73B;
-        Thu, 27 Feb 2020 04:08:48 -0800 (PST)
-Subject: Re: [PATCH] sched/fair: Fix kernel build warning in test_idle_cores()
- for !SMT NUMA
-To:     Valentin Schneider <valentin.schneider@arm.com>,
-        linux-kernel@vger.kernel.org
-Cc:     mingo@redhat.com, peterz@infradead.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, mgorman@techsingularity.net
-References: <20200227110053.2514-1-lukasz.luba@arm.com>
- <d2e0fe2d-5891-a2bf-a4c5-2a1f14754c1d@arm.com>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <74d75844-e710-6df8-30a9-acd440394c2e@arm.com>
-Date:   Thu, 27 Feb 2020 12:08:46 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 27 Feb 2020 07:09:45 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:55500 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728856AbgB0MJo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 07:09:44 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01RC7DvE020906;
+        Thu, 27 Feb 2020 07:09:43 -0500
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ydtrwk1cj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Feb 2020 07:09:43 -0500
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 01RC9gGu002110
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Thu, 27 Feb 2020 07:09:42 -0500
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 27 Feb 2020 07:09:41 -0500
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 27 Feb 2020 07:09:41 -0500
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Thu, 27 Feb 2020 07:09:41 -0500
+Received: from analog.ad.analog.com ([10.48.65.180])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01RC9cSB030193;
+        Thu, 27 Feb 2020 07:09:39 -0500
+From:   Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-fpga@vger.kernel.org>
+CC:     <mdf@kernel.org>, Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+Subject: [PATCH] fpga: ice40-spi: Use new structure for SPI transfer delays
+Date:   Thu, 27 Feb 2020 14:09:32 +0200
+Message-ID: <20200227120932.12542-1-sergiu.cuciurean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <d2e0fe2d-5891-a2bf-a4c5-2a1f14754c1d@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-27_03:2020-02-26,2020-02-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ phishscore=0 adultscore=0 spamscore=0 mlxscore=0 mlxlogscore=966
+ suspectscore=0 clxscore=1011 lowpriorityscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002270099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Valentin,
+In a recent change to the SPI subsystem [1], a new `delay` struct was added
+to replace the `delay_usecs`. This change replaces the current
+`delay_usecs` with `delay` for this driver.
 
-On 2/27/20 11:04 AM, Valentin Schneider wrote:
-> Hi Lukasz,
-> 
-> On 2/27/20 11:00 AM, Lukasz Luba wrote:
->> Fix kernel build warning in kernel/sched/fair.c when CONFIG_SCHED_SMT is
->> not set and CONFIG_NUMA_BALANCING is set.
->>
->> kernel/sched/fair.c:1524:20: warning: ‘test_idle_cores’ declared ‘static’ but never defined [-Wunused-function]
->>
-> 
-> I've sent a similar fix yesterday at:
-> 
-> https://lore.kernel.org/lkml/20200226121244.7524-1-valentin.schneider@arm.com/
-> 
+The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
+that both `delay_usecs` & `delay` are used (in this order to preserve
+backwards compatibility).
 
-I've missed it. You are referring in the commit message to wrong change
-(probably HEAD of that branch), while when you try to bisect, it
-will point you to
-ff7db0bf24db sched/numa: Prefer using an idle CPU as a migration target 
-instead of comparing tasks
+[1] commit bebcfd272df6 ("spi: introduce `delay` field for
+`spi_transfer` + spi_transfer_delay_exec()")
 
-I think Mel can simply resend the patches with correct build if Ingo
-is OK.
+Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+---
+ drivers/fpga/ice40-spi.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-If Mel would decide to go with extended approach of ifdefs, then maybe
-it's also good to put in there  numa_idle_core(), which actually uses
-these test_idle_cores() and is_core_idle()
+diff --git a/drivers/fpga/ice40-spi.c b/drivers/fpga/ice40-spi.c
+index 56e112e14a10..8d689fea0dab 100644
+--- a/drivers/fpga/ice40-spi.c
++++ b/drivers/fpga/ice40-spi.c
+@@ -46,10 +46,16 @@ static int ice40_fpga_ops_write_init(struct fpga_manager *mgr,
+ 	struct spi_message message;
+ 	struct spi_transfer assert_cs_then_reset_delay = {
+ 		.cs_change   = 1,
+-		.delay_usecs = ICE40_SPI_RESET_DELAY
++		.delay = {
++			.value = ICE40_SPI_RESET_DELAY,
++			.unit = SPI_DELAY_UNIT_USECS
++		}
+ 	};
+ 	struct spi_transfer housekeeping_delay_then_release_cs = {
+-		.delay_usecs = ICE40_SPI_HOUSEKEEPING_DELAY
++		.delay = {
++			.value = ICE40_SPI_HOUSEKEEPING_DELAY,
++			.unit = SPI_DELAY_UNIT_USECS
++		}
+ 	};
+ 	int ret;
+ 
+-- 
+2.17.1
 
-Regards,
-Lukasz
