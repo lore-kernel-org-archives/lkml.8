@@ -2,119 +2,122 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B8DC35677
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66924C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8D042469B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:19:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582823948;
-	bh=kl/04uM+7lf6zfg55PDxvBrsVB2mcSqNhD3IZxQZju4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KIQdkqM4mSwmnag8O1spdjVBxyXWCk0TWyAm6YqcW4ujYDn1+XmlSflRsEILXPsI1
-	 mVdmjMB9qpxew5cBqjbBysbr0FfrH9H/n3JKxbRYmSVhM60Hh9h0UszcRB11wbQvFf
-	 2z2BkBKY/TxTKft8XRUvelumHCnQNdGuoFiNa0uY=
+	by mail.kernel.org (Postfix) with ESMTP id 3E8412469B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:19:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729732AbgB0RTH (ORCPT
+        id S1729965AbgB0RTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 12:19:07 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:38177 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728413AbgB0RTH (ORCPT
+        Thu, 27 Feb 2020 12:19:39 -0500
+Received: from outbound-smtp24.blacknight.com ([81.17.249.192]:51229 "EHLO
+        outbound-smtp24.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728413AbgB0RTi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 12:19:07 -0500
-Received: by mail-oi1-f194.google.com with SMTP id 2so2919244oiz.5;
-        Thu, 27 Feb 2020 09:19:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EEa7ye+4SNg6W5sroyNYrJMOxOtx09zWUa0ioGPqjd8=;
-        b=b4t1XujXYCvJF1sKtgq/7eqiTpLx0mWszbbBBKagF+vED6KvsrZ3+SS7OdUWBQlCzi
-         1gfcU+sMVU4BF1vodnfPeXcxoFamUgxfRasCyajIe0Wv8U4WzEMa/tyAVVB+mlCiip66
-         jk4QgaO1E8qlCP5kzxpcMEgxZ5YUItbUri64MeS/I870Rre/z78z8xNqdD9+WyKmrmuD
-         9q3a9t4t93bKbirgPRlhd42jFX3EbWc5oH+qwU6Sjz1C+LVV29xDXB8FlYvjsMDrg5aw
-         4OD2AGmTib8Ukca1juQn1PzluG2TM34wul9jQ20vCX0fKTz+yT5YiTMZUr0rMcg5k4om
-         k3OQ==
-X-Gm-Message-State: APjAAAU1mdiRano1xCKOJBoiIP4ayJCA0vHSlQE90Lca5ImeeEPXHcyO
-        itBUrxJCOTbKXtz5TfbEDw==
-X-Google-Smtp-Source: APXvYqyivrbnGPADBq2gCXjpZ0Ulx7DPwJxfGsdNrYwEE5j4rbjAGXZ2yhl3jW4hSxNtdbA1D1ycUA==
-X-Received: by 2002:aca:3857:: with SMTP id f84mr58985oia.150.1582823946480;
-        Thu, 27 Feb 2020 09:19:06 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k201sm2165169oih.43.2020.02.27.09.19.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 09:19:06 -0800 (PST)
-Received: (nullmailer pid 18856 invoked by uid 1000);
-        Thu, 27 Feb 2020 17:19:04 -0000
-Date:   Thu, 27 Feb 2020 11:19:04 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, srv_heupstream@mediatek.com,
-        huijuan.xie@mediatek.com, stonea168@163.com,
-        cawa.cheng@mediatek.com, linux-mediatek@lists.infradead.org,
-        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v9 3/5] dt-bindings: display: mediatek: dpi sample data
- in dual edge support
-Message-ID: <20200227171904.GA17829@bogus>
-References: <20200226053238.31646-1-jitao.shi@mediatek.com>
- <20200226053238.31646-4-jitao.shi@mediatek.com>
+        Thu, 27 Feb 2020 12:19:38 -0500
+Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
+        by outbound-smtp24.blacknight.com (Postfix) with ESMTPS id B2210C0ABC
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 17:19:36 +0000 (GMT)
+Received: (qmail 25326 invoked from network); 27 Feb 2020 17:19:36 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 27 Feb 2020 17:19:36 -0000
+Date:   Thu, 27 Feb 2020 17:19:34 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>, paulmck@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: suspicious RCU due to "Prefer using an idle CPU as a migration
+ target instead of comparing tasks"
+Message-ID: <20200227171934.GI3818@techsingularity.net>
+References: <1582812549.7365.134.camel@lca.pw>
+ <1582814862.7365.135.camel@lca.pw>
+ <jhjimjsvyoe.mognet@arm.com>
+ <1582821327.7365.137.camel@lca.pw>
+ <1582822024.7365.139.camel@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20200226053238.31646-4-jitao.shi@mediatek.com>
+In-Reply-To: <1582822024.7365.139.camel@lca.pw>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 01:32:36PM +0800, Jitao Shi wrote:
-> Add property "pclk-sample" to config the dpi sample on falling (0),
-> rising (1), both falling and rising (2).
+On Thu, Feb 27, 2020 at 11:47:04AM -0500, Qian Cai wrote:
+> On Thu, 2020-02-27 at 11:35 -0500, Qian Cai wrote:
+> > On Thu, 2020-02-27 at 15:26 +0000, Valentin Schneider wrote:
+> > > On Thu, Feb 27 2020, Qian Cai wrote:
+> > > 
+> > > > On Thu, 2020-02-27 at 09:09 -0500, Qian Cai wrote:
+> > > > > The linux-next commit ff7db0bf24db ("sched/numa: Prefer using an idle CPU as a
+> > > > > migration target instead of comparing tasks") introduced a boot warning,
+> > > > 
+> > > > This?
+> > > > 
+> > > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > > > index a61d83ea2930..ca780cd1eae2 100644
+> > > > --- a/kernel/sched/fair.c
+> > > > +++ b/kernel/sched/fair.c
+> > > > @@ -1607,7 +1607,9 @@ static void update_numa_stats(struct task_numa_env *env,
+> > > > if (ns->idle_cpu == -1)
+> > > > ns->idle_cpu = cpu;
+> > > > 
+> > > > +rcu_read_lock();
+> > > > idle_core = numa_idle_core(idle_core, cpu);
+> > > > +rcu_read_unlock();
+> > > > }
+> > > > }
+> > > > 
+> > > 
+> > > 
+> > > Hmph right, we have
+> > > numa_idle_core()->test_idle_cores()->rcu_dereference().
+> > > 
+> > > Dunno if it's preferable to wrap the entirety of update_numa_stats() or
+> > > if that fine-grained read-side section is ok.
+> > 
+> > I could not come up with a better fine-grained one than this.
 > 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  .../devicetree/bindings/display/mediatek/mediatek,dpi.txt       | 2 ++
->  1 file changed, 2 insertions(+)
+> Correction -- this one,
 > 
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-> index a7b1b8bfb65e..4299aa1adf45 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-> @@ -20,6 +20,7 @@ Required properties:
->  Optional properties:
->  - pinctrl-names: Contain "gpiomode" and "dpimode".
->    pinctrl-names see Documentation/devicetree/bindings/pinctrlpinctrl-bindings.txt
-> +- pclk-sample: refer Documentation/devicetree/bindings/media/video-interfaces.txt.
->  
->  Example:
->  
-> @@ -37,6 +38,7 @@ dpi0: dpi@1401d000 {
->  
->  	port {
->  		dpi0_out: endpoint {
-> +			pclk-sample = 0;
 
-Not valid dts syntax: <0>
+Thanks for reporting this!
 
->  			remote-endpoint = <&hdmi0_in>;
->  		};
->  	};
-> -- 
-> 2.21.0
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+The proposed fix would be a lot of rcu locks and unlocks. While they are
+cheap, they're not free and it's a fairly standard pattern to acquire
+the rcu lock when scanning CPUs during a domain search (load balancing,
+nohz balance, idle balance etc). While in this context the lock is only
+needed for SMT, I do not think it's worthwhile fine-graining this or
+conditionally acquiring the rcu lock so will we keep it simple?
+
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 11cdba201425..d34ac4ea5cee 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -1592,6 +1592,7 @@ static void update_numa_stats(struct task_numa_env *env,
+ 	memset(ns, 0, sizeof(*ns));
+ 	ns->idle_cpu = -1;
+ 
++	rcu_read_lock();
+ 	for_each_cpu(cpu, cpumask_of_node(nid)) {
+ 		struct rq *rq = cpu_rq(cpu);
+ 
+@@ -1611,6 +1612,7 @@ static void update_numa_stats(struct task_numa_env *env,
+ 			idle_core = numa_idle_core(idle_core, cpu);
+ 		}
+ 	}
++	rcu_read_unlock();
+ 
+ 	ns->weight = cpumask_weight(cpumask_of_node(nid));
+ 
