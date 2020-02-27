@@ -2,52 +2,52 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CD7C76574
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 857DEC35E0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE15F24656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CFE524656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:36:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814241;
-	bh=2+cmvOTfjefLg7z9K6NEbzvp0YsZpeIAhXSEBWBCpx8=;
+	s=default; t=1582814181;
+	bh=ABpt12Sdooe3Fx5J/Vp+kpGN5zd/p+KMh8wX2CZw/Lk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MI/zuoGg3UdFpjL2WnvMH9uvRdrH13NOjsVKSO4izDvelrk60tzhopAaUYBAqvtRy
-	 GP8j8HtVPOpmQKPhmv4Wm46igc9xDWGjWQFXrMFvTyvcXn/YUttmtkQ+oiqELmsFED
-	 YHV3lq7Il4gxGckcH+5Bp17yw233pIv2I0HVy+dw=
+	b=O8gSIoDCG1EytAHxDqqukE6xTdCmMzsFGyRcnS1MjYN4b8AQ1YNvjya1UCgQmQxMR
+	 HDs4Mw4QPaycOETofYHJa+P6Nk3nyXAksqZOPO/HjkeoZ9IfaCznJRb4xgJea6I62M
+	 NAF4MezSB70btdUo03mrXFMJk9P3InIdlv6FRF+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731942AbgB0N5o (ORCPT
+        id S1732569AbgB0N7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:57:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58622 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:59:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732312AbgB0N5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:57:38 -0500
+        id S1732363AbgB0N67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:58:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74F4E2073D;
-        Thu, 27 Feb 2020 13:57:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C20E824656;
+        Thu, 27 Feb 2020 13:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811857;
-        bh=2+cmvOTfjefLg7z9K6NEbzvp0YsZpeIAhXSEBWBCpx8=;
+        s=default; t=1582811938;
+        bh=ABpt12Sdooe3Fx5J/Vp+kpGN5zd/p+KMh8wX2CZw/Lk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NbQjEvgIkSqr/7UuLfcfW7mH7uMy+KOZeeVZ7KtUq2GlyJo51lD6RkQlGRwcKCrCF
-         TWn1WZeV/eAhtPmySEoz34AZgRIJUuJDt7Y3NHlNGto1H2FvcO9ErpeegG11B1uz32
-         P/E3zx6NqLwuiIIpHVnSUj0tijWWhaL60RuKuyKg=
+        b=QKZfXLl+G6HMsmWUyvbaWn2dG/h4JbCeKEjhOahE4gnXWv87IhihsXMggU8taqlgr
+         Ib814zE/G35/m1AQ6u2HxGKUkt8zJP0UH837edsSEMK4jvydkA8EmN/HilWK/fA9tM
+         M67/RP4BLu3VTHiwotT3n4EVMJyEE0CAOCbxvtYM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 129/237] cmd64x: potential buffer overflow in cmd64x_program_timings()
-Date:   Thu, 27 Feb 2020 14:35:43 +0100
-Message-Id: <20200227132306.236241168@linuxfoundation.org>
+Subject: [PATCH 4.14 112/237] tty: synclink_gt: Adjust indentation in several functions
+Date:   Thu, 27 Feb 2020 14:35:26 +0100
+Message-Id: <20200227132305.120017648@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -60,34 +60,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 117fcc3053606d8db5cef8821dca15022ae578bb ]
+[ Upstream commit 446e76873b5e4e70bdee5db2f2a894d5b4a7d081 ]
 
-The "drive->dn" value is a u8 and it is controlled by root only, but
-it could be out of bounds here so let's check.
+Clang warns:
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+../drivers/tty/synclink_gt.c:1337:3: warning: misleading indentation;
+statement is not part of the previous 'if' [-Wmisleading-indentation]
+        if (C_CRTSCTS(tty)) {
+        ^
+../drivers/tty/synclink_gt.c:1335:2: note: previous statement is here
+        if (I_IXOFF(tty))
+        ^
+../drivers/tty/synclink_gt.c:2563:3: warning: misleading indentation;
+statement is not part of the previous 'if' [-Wmisleading-indentation]
+        if (I_BRKINT(info->port.tty) || I_PARMRK(info->port.tty))
+        ^
+../drivers/tty/synclink_gt.c:2561:2: note: previous statement is here
+        if (I_INPCK(info->port.tty))
+        ^
+../drivers/tty/synclink_gt.c:3221:3: warning: misleading indentation;
+statement is not part of the previous 'else' [-Wmisleading-indentation]
+        set_signals(info);
+        ^
+../drivers/tty/synclink_gt.c:3219:2: note: previous statement is here
+        else
+        ^
+3 warnings generated.
+
+The indentation on these lines is not at all consistent, tabs and spaces
+are mixed together. Convert to just using tabs to be consistent with the
+Linux kernel coding style and eliminate these warnings from clang.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/822
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Link: https://lore.kernel.org/r/20191218023912.13827-1-natechancellor@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ide/cmd64x.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/tty/synclink_gt.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/ide/cmd64x.c b/drivers/ide/cmd64x.c
-index b127ed60c7336..9dde8390da09b 100644
---- a/drivers/ide/cmd64x.c
-+++ b/drivers/ide/cmd64x.c
-@@ -65,6 +65,9 @@ static void cmd64x_program_timings(ide_drive_t *drive, u8 mode)
- 	struct ide_timing t;
- 	u8 arttim = 0;
+diff --git a/drivers/tty/synclink_gt.c b/drivers/tty/synclink_gt.c
+index 344e8c427c7e2..9d68f89a2bf8d 100644
+--- a/drivers/tty/synclink_gt.c
++++ b/drivers/tty/synclink_gt.c
+@@ -1349,10 +1349,10 @@ static void throttle(struct tty_struct * tty)
+ 	DBGINFO(("%s throttle\n", info->device_name));
+ 	if (I_IXOFF(tty))
+ 		send_xchar(tty, STOP_CHAR(tty));
+- 	if (C_CRTSCTS(tty)) {
++	if (C_CRTSCTS(tty)) {
+ 		spin_lock_irqsave(&info->lock,flags);
+ 		info->signals &= ~SerialSignal_RTS;
+-	 	set_signals(info);
++		set_signals(info);
+ 		spin_unlock_irqrestore(&info->lock,flags);
+ 	}
+ }
+@@ -1374,10 +1374,10 @@ static void unthrottle(struct tty_struct * tty)
+ 		else
+ 			send_xchar(tty, START_CHAR(tty));
+ 	}
+- 	if (C_CRTSCTS(tty)) {
++	if (C_CRTSCTS(tty)) {
+ 		spin_lock_irqsave(&info->lock,flags);
+ 		info->signals |= SerialSignal_RTS;
+-	 	set_signals(info);
++		set_signals(info);
+ 		spin_unlock_irqrestore(&info->lock,flags);
+ 	}
+ }
+@@ -2575,8 +2575,8 @@ static void change_params(struct slgt_info *info)
+ 	info->read_status_mask = IRQ_RXOVER;
+ 	if (I_INPCK(info->port.tty))
+ 		info->read_status_mask |= MASK_PARITY | MASK_FRAMING;
+- 	if (I_BRKINT(info->port.tty) || I_PARMRK(info->port.tty))
+- 		info->read_status_mask |= MASK_BREAK;
++	if (I_BRKINT(info->port.tty) || I_PARMRK(info->port.tty))
++		info->read_status_mask |= MASK_BREAK;
+ 	if (I_IGNPAR(info->port.tty))
+ 		info->ignore_status_mask |= MASK_PARITY | MASK_FRAMING;
+ 	if (I_IGNBRK(info->port.tty)) {
+@@ -3207,7 +3207,7 @@ static int tiocmset(struct tty_struct *tty,
+ 		info->signals &= ~SerialSignal_DTR;
  
-+	if (drive->dn >= ARRAY_SIZE(drwtim_regs))
-+		return;
-+
- 	ide_timing_compute(drive, mode, &t, T, 0);
+ 	spin_lock_irqsave(&info->lock,flags);
+- 	set_signals(info);
++	set_signals(info);
+ 	spin_unlock_irqrestore(&info->lock,flags);
+ 	return 0;
+ }
+@@ -3218,7 +3218,7 @@ static int carrier_raised(struct tty_port *port)
+ 	struct slgt_info *info = container_of(port, struct slgt_info, port);
  
- 	/*
+ 	spin_lock_irqsave(&info->lock,flags);
+- 	get_signals(info);
++	get_signals(info);
+ 	spin_unlock_irqrestore(&info->lock,flags);
+ 	return (info->signals & SerialSignal_DCD) ? 1 : 0;
+ }
+@@ -3233,7 +3233,7 @@ static void dtr_rts(struct tty_port *port, int on)
+ 		info->signals |= SerialSignal_RTS | SerialSignal_DTR;
+ 	else
+ 		info->signals &= ~(SerialSignal_RTS | SerialSignal_DTR);
+- 	set_signals(info);
++	set_signals(info);
+ 	spin_unlock_irqrestore(&info->lock,flags);
+ }
+ 
 -- 
 2.20.1
 
