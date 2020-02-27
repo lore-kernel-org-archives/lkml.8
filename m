@@ -2,50 +2,53 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E5AC3F348
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A52C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E73C521D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 947D420578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811040;
-	bh=Z1DU4+Um6gFHn8qnTTuXqBgAJpwCBlWICAXSJKZeCko=;
+	s=default; t=1582810906;
+	bh=iFoKa7kI58lF4drk+uYfJAPj4+6ZzqFP9qh9SqAvIOU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K13XjorU0lBRA7olTswOKtIX/9b034tWKckVMfpxG7dhJZ5PjSJk6dvp12FAQu6vo
-	 1ETZHPRblZ4cw6tylxTI4JPW+bTKASxs23eb3DTqjNnslTmkLtBGjDzDQ8dH5j3Vqf
-	 rA98d4cToSwRawkOuV3iepKLdKssidtg/56XNnD0=
+	b=WWVXSX3Ga0XSzKmuieUp1y+/E0yPXLVcGmJJKrbP0UMP2SJtxqnH8E+JU+d/qSR02
+	 5T2NU6OyIkbqrDlwbfCgzRVz2MRX+JAa6Y2/rTAI8+OkF/4bswEVsNmAyQCpMG/ep1
+	 o0W2ZAaX7/FZEghSxa5GAKEIcjvpi1o9vR38rWTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729735AbgB0Nn6 (ORCPT
+        id S1729651AbgB0Nlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:43:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39198 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:41:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730051AbgB0Nnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:43:51 -0500
+        id S1729636AbgB0Nln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:41:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BCF321D7E;
-        Thu, 27 Feb 2020 13:43:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C43BC20578;
+        Thu, 27 Feb 2020 13:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811031;
-        bh=Z1DU4+Um6gFHn8qnTTuXqBgAJpwCBlWICAXSJKZeCko=;
+        s=default; t=1582810902;
+        bh=iFoKa7kI58lF4drk+uYfJAPj4+6ZzqFP9qh9SqAvIOU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=az4wyxlhacciP1qg1P0PQD1HvyjM2rmw6IVGmgUA4lyDwA6FYSjrszMie/0K1JMQr
-         e/ujDM4w+xyXp4U4ytdtdArAY/0/kBbylvbWCg7UeeBQyyS1CF6UwqLNv8bmb1E6Rm
-         HsiKvMdeANcf0ErNqgnzowTueiTYvtixRnp3D4HU=
+        b=wAylGTodbbNH6s70NSxgVlx3hfF4T99+Bg1my8MvQ5zQnaqVxlVyu1Rwi0dlhIl6C
+         jHH1YZCEktDO8Nxt5951TTH1XyM3vLGdFCTp6zKVN4nI9UDh98ZGx2e8qxyPVKuG/G
+         ZwSlkkabuTkCqeTwIediIU7FMVbTH2waasNBBQI0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Richard Dodd <richard.o.dodd@gmail.com>
-Subject: [PATCH 4.4 089/113] USB: Fix novation SourceControl XL after suspend
-Date:   Thu, 27 Feb 2020 14:36:45 +0100
-Message-Id: <20200227132225.999273787@linuxfoundation.org>
+        stable@vger.kernel.org, Phong Tran <tranmanphong@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 041/113] ipw2x00: Fix -Wcast-function-type
+Date:   Thu, 27 Feb 2020 14:35:57 +0100
+Message-Id: <20200227132218.297632080@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
 References: <20200227132211.791484803@linuxfoundation.org>
@@ -58,33 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Dodd <richard.o.dodd@gmail.com>
+From: Phong Tran <tranmanphong@gmail.com>
 
-commit b692056db8ecc7f452b934f016c17348282b7699 upstream.
+[ Upstream commit ebd77feb27e91bb5fe35a7818b7c13ea7435fb98 ]
 
-Currently, the SourceControl will stay in power-down mode after resuming
-from suspend. This patch resets the device after suspend to power it up.
+correct usage prototype of callback in tasklet_init().
+Report by https://github.com/KSPP/linux/issues/20
 
-Signed-off-by: Richard Dodd <richard.o.dodd@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200212142220.36892-1-richard.o.dodd@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/core/quirks.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/wireless/ipw2x00/ipw2100.c | 7 ++++---
+ drivers/net/wireless/ipw2x00/ipw2200.c | 5 +++--
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
---- a/drivers/usb/core/quirks.c
-+++ b/drivers/usb/core/quirks.c
-@@ -291,6 +291,9 @@ static const struct usb_device_id usb_qu
- 	/* INTEL VALUE SSD */
- 	{ USB_DEVICE(0x8086, 0xf1a5), .driver_info = USB_QUIRK_RESET_RESUME },
+diff --git a/drivers/net/wireless/ipw2x00/ipw2100.c b/drivers/net/wireless/ipw2x00/ipw2100.c
+index 36818c7f30b96..11cfc5822eb03 100644
+--- a/drivers/net/wireless/ipw2x00/ipw2100.c
++++ b/drivers/net/wireless/ipw2x00/ipw2100.c
+@@ -3213,8 +3213,9 @@ static void ipw2100_tx_send_data(struct ipw2100_priv *priv)
+ 	}
+ }
  
-+	/* novation SoundControl XL */
-+	{ USB_DEVICE(0x1235, 0x0061), .driver_info = USB_QUIRK_RESET_RESUME },
-+
- 	{ }  /* terminating entry must be last */
- };
+-static void ipw2100_irq_tasklet(struct ipw2100_priv *priv)
++static void ipw2100_irq_tasklet(unsigned long data)
+ {
++	struct ipw2100_priv *priv = (struct ipw2100_priv *)data;
+ 	struct net_device *dev = priv->net_dev;
+ 	unsigned long flags;
+ 	u32 inta, tmp;
+@@ -6022,7 +6023,7 @@ static void ipw2100_rf_kill(struct work_struct *work)
+ 	spin_unlock_irqrestore(&priv->low_lock, flags);
+ }
  
+-static void ipw2100_irq_tasklet(struct ipw2100_priv *priv);
++static void ipw2100_irq_tasklet(unsigned long data);
+ 
+ static const struct net_device_ops ipw2100_netdev_ops = {
+ 	.ndo_open		= ipw2100_open,
+@@ -6151,7 +6152,7 @@ static struct net_device *ipw2100_alloc_device(struct pci_dev *pci_dev,
+ 	INIT_DELAYED_WORK(&priv->rf_kill, ipw2100_rf_kill);
+ 	INIT_DELAYED_WORK(&priv->scan_event, ipw2100_scan_event);
+ 
+-	tasklet_init(&priv->irq_tasklet, (void (*)(unsigned long))
++	tasklet_init(&priv->irq_tasklet,
+ 		     ipw2100_irq_tasklet, (unsigned long)priv);
+ 
+ 	/* NOTE:  We do not start the deferred work for status checks yet */
+diff --git a/drivers/net/wireless/ipw2x00/ipw2200.c b/drivers/net/wireless/ipw2x00/ipw2200.c
+index ed0adaf1eec44..1e08f94dc4da3 100644
+--- a/drivers/net/wireless/ipw2x00/ipw2200.c
++++ b/drivers/net/wireless/ipw2x00/ipw2200.c
+@@ -1968,8 +1968,9 @@ static void notify_wx_assoc_event(struct ipw_priv *priv)
+ 	wireless_send_event(priv->net_dev, SIOCGIWAP, &wrqu, NULL);
+ }
+ 
+-static void ipw_irq_tasklet(struct ipw_priv *priv)
++static void ipw_irq_tasklet(unsigned long data)
+ {
++	struct ipw_priv *priv = (struct ipw_priv *)data;
+ 	u32 inta, inta_mask, handled = 0;
+ 	unsigned long flags;
+ 	int rc = 0;
+@@ -10705,7 +10706,7 @@ static int ipw_setup_deferred_work(struct ipw_priv *priv)
+ 	INIT_WORK(&priv->qos_activate, ipw_bg_qos_activate);
+ #endif				/* CONFIG_IPW2200_QOS */
+ 
+-	tasklet_init(&priv->irq_tasklet, (void (*)(unsigned long))
++	tasklet_init(&priv->irq_tasklet,
+ 		     ipw_irq_tasklet, (unsigned long)priv);
+ 
+ 	return ret;
+-- 
+2.20.1
+
 
 
