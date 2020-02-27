@@ -2,128 +2,101 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9565C4BA3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BEDC4BA2D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F8792469C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:12:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="L7d9ErvD"
+	by mail.kernel.org (Postfix) with ESMTP id 0A06B2469D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:13:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582809185;
+	bh=YlVUxfcvD/beBDmKrHeJiolRj+Z0v4n2W4m8yS8ZA38=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=a1vb/CasyDQZnD3c/eITlbaCtqw4+xejLSFmPEPrKwYGoReUpaeojqvlnfDfALIwK
+	 MCyfykVtXez+ZvE1iKeVK7uwh4Ixf3d+/tygVTWxTrbVzD33lKr56q1jjfqTejWxeY
+	 tm5B7v5CE5krrhsWx2FTl1U0dMCPlJwlngZ+MVuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729180AbgB0NMi (ORCPT
+        id S1729193AbgB0NNE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:12:38 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:41870 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729099AbgB0NMi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:12:38 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01RDCWwU125508;
-        Thu, 27 Feb 2020 07:12:32 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582809152;
-        bh=pLxe6jHwdRx27qSzO8jEP+RGMhYtXLcs0clPO3xJpWE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=L7d9ErvDbnBViQ0cdy9mUdyVhtaAcNBwsfXvFE9UX+6mkLqgNTXlckwj/7i18P2BC
-         TWCsVd7eIvAbpmZ1rKvCMeofyBv9G0dNAYKNo5gDpyt2vP3bGD8FLutzWrq/StAWTd
-         08SK+bIBytRtDmX+sXtWjeFDO3n6BSj+suH0qAfM=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01RDCWZ2046353;
-        Thu, 27 Feb 2020 07:12:32 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 27
- Feb 2020 07:12:31 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 27 Feb 2020 07:12:31 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01RDCVJk026074;
-        Thu, 27 Feb 2020 07:12:31 -0600
-Subject: Re: [RESEND PATCH v17 00/17] Multi Color LED Framework
-To:     Greg KH <gregkh@linuxfoundation.org>, Pavel Machek <pavel@denx.de>
-CC:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dmurphy@ti.com>
-References: <20200127150032.31350-1-dmurphy@ti.com>
- <42d9687b-b488-22cf-0e9a-ff635b2094e3@ti.com> <20200225101940.GB16252@amd>
- <be76fdac-9d32-b9b2-c01d-3aa315b14463@gmail.com>
- <20200226125903.GA2800@duo.ucw.cz>
- <20f6bdd5-e899-aead-8c35-1c3a3d09145f@gmail.com>
- <20200227105808.GA27003@duo.ucw.cz> <20200227124329.GA994747@kroah.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <4c273c06-5024-b2d4-c656-b165015090be@ti.com>
-Date:   Thu, 27 Feb 2020 07:07:17 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 27 Feb 2020 08:13:04 -0500
+Received: from foss.arm.com ([217.140.110.172]:50276 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729073AbgB0NND (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:13:03 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 10EA030E;
+        Thu, 27 Feb 2020 05:13:03 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B1603F703;
+        Thu, 27 Feb 2020 05:13:02 -0800 (PST)
+Date:   Thu, 27 Feb 2020 13:13:00 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H . J . Lu " <hjl.tools@gmail.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v7 00/11] arm64: Branch Target Identification support
+Message-ID: <20200227131300.GB4062@sirena.org.uk>
+References: <20200226155714.43937-1-broonie@kernel.org>
+ <202002261343.3B2ECE90@keescook>
 MIME-Version: 1.0
-In-Reply-To: <20200227124329.GA994747@kroah.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rJwd6BRFiFCcLxzm"
+Content-Disposition: inline
+In-Reply-To: <202002261343.3B2ECE90@keescook>
+X-Cookie: Edwin Meese made me wear CORDOVANS!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel
 
-On 2/27/20 6:43 AM, Greg KH wrote:
-> On Thu, Feb 27, 2020 at 11:58:08AM +0100, Pavel Machek wrote:
->> Hi, Jacek!
->>
->> (and thanks for doing this).
->>
->>> We have here long lasting discussion related to LED multicolor class
->>> sysfs interface design. We went through several iterations and worked
->>> out the solution with individual file per each color sub-LED in the
->>> color directory as shown below:
->>>
->>> /sys/class/leds/<led>/colors/<color>_intensity
->>>
->>> This is in line with one-value-per-file sysfs rule, that is being
->>> frequently highlighted, and we even had not so long ago a patch
->>> for led cpu trigger solving the problem caused by this rule not
->>> being adhered to.
->> Yep. One of the problems is that it is nice to change all the hardware
->> channels at once to produce color (it is often on i2c -- and slow), so
->> current proposals use "interesting" kind of latching.
->>
->>> Now we have the voice below bringing to attention another caveat
->>> from sysfs documentation:
->>>
->>> "it is socially acceptable to express an array of values of the same
->>> type"
->>>
->>> and proposing the interface in the form of two files:
->>>
->>> channel_intensity (file containing array of u32's)
->>> channel_names (usually containing "red green blue")
->> And thus I want to have it in one file, so it is naturaly atomic. RGB
->> leds with 3 channels are common; I have not user yet, but there are
->> RGBW with 4 channels (and some more exotic stuff). I don't expect to
->> have more than 5 channels.
+--rJwd6BRFiFCcLxzm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This is not an accurate statement.  Right now a user can have up to 8 
-channels to cover all the LEDs defined in the LED core
+On Wed, Feb 26, 2020 at 01:44:59PM -0800, Kees Cook wrote:
 
-And if the led_colors array expands then this array can expand.
+> Looks good. I sent a few more Reviewed-bys where I could. Who is
+> expected to pick this up? Catalin? Will?
 
-We have no control on how many entries the user will put in their DT so 
-again this number is completely arbitrary.
+Thanks, I'm expecting it'll go through the arm64 tree.
 
-Dan
+--rJwd6BRFiFCcLxzm
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> Writing 3 or 4 or 5 numbers all at once in a single sysfs file to
-> represent a single output should be fine.
-> thanks,
->
-> greg k-h
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5XwFwACgkQJNaLcl1U
+h9BVcAf+IT0x9Rm5Qvg7iutzvlk4f961QXDY77LCMmKkuIyjzf2qoM3UKYdN5A+s
+XCh02Tc8GwVaSWaipJplvGn2y3aPrb1oLBU8yp2zkFHk3UuDdkrIhwTqmg9EH6qO
+HMxhgu7d6bKkjgpIMZe78MrbRRJUCej3S9SHehfJjGHStqjcyN65h4a7GJZUkHkB
+8UMKB9ln6VV8BZHBWEZZa875jAojja3k2OzUTrtBmbq7WsuQIsIqjVblRGOIZXNQ
+6ok8vsW83J6iRtR6J46oSoIJqkXjfYucnbP7ulIOQDtUMvpS0O/C982bW0mtMvLB
+Qy9hBI9hA/mdTTxfXA8PF2WvD3HTHQ==
+=r3OK
+-----END PGP SIGNATURE-----
+
+--rJwd6BRFiFCcLxzm--
