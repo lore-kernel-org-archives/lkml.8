@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C55C3F347
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A29C3F36E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C47B2468D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6913821D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811343;
-	bh=V+Ce6ZOwPdQjcoMItnjmu+Ljkq7PcR3PpGh153vbJNo=;
+	s=default; t=1582811357;
+	bh=wdqrxYPyjy0I0lxc+ygjYYNq7crfOp6Bd9hVxhogQZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OcxqlSDZEpHhFGBg85R9QNO6hBDJS2NJFeh0EoY0gZdZa51tYsjH80RwqSlPwhae3
-	 eO1To3fmoEjr8CyfpmygWJ9U0Ar0MSuoj/LkZ9bRieB9gQEVr52O1rWFgL+srSLyk9
-	 NaOPJMd/AWztdIrliGMDXjuxdWaUkxfDl1aaB1fo=
+	b=SnjzIqbu8++zwc4Dxfj1V1/CR/iieGpFoq1wsCCB6Hv5mNPJpLjhlqoDzl5e4VfYG
+	 TBHSLTIsztWdiDP+s7PVIRqpNNEk2dojGw6sZsWxZYBZKw915+SzThLpVgIOvIcJs4
+	 0pmwCPnhH7+149iYLpu8uP5nb8Ie1DRFNFddymsI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730981AbgB0NtC (ORCPT
+        id S1731019AbgB0NtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:49:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46066 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:49:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730973AbgB0Ns6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:48:58 -0500
+        id S1730311AbgB0NtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:49:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AE6C2468D;
-        Thu, 27 Feb 2020 13:48:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBE9C20578;
+        Thu, 27 Feb 2020 13:49:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811338;
-        bh=V+Ce6ZOwPdQjcoMItnjmu+Ljkq7PcR3PpGh153vbJNo=;
+        s=default; t=1582811352;
+        bh=wdqrxYPyjy0I0lxc+ygjYYNq7crfOp6Bd9hVxhogQZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SRCEhLjqQEV7vb2BxJlHc7rtMRLB+u1IDx+tSLniL4GBWifc5Sy7KzZ74HegShzxC
-         cbw3uuxU/3zCeqLbhn4/ERx9ASm1DroUGryn68+LhOyS7DytKsfOgPPINdTrw6juoh
-         dAPbWv9kTUWWi8k89DhaDSL0CIoKih9VfBo6Oktc=
+        b=NPE9FEFkSLoQ+YhBa7ramIQm9Cuhe9fqwmAE234Fq0hbpXW+AyBc2vm7zz07YtxKb
+         6ELqu3JN97g8VYxpp6abndKEw3Zs2poOMxhkxfPBRbWmaFw48FU6CgIhY9ce5WFrjA
+         cIBmAPITz32M8hWkoXCnqc9MuRop9QjJVhZO4kbE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver OHalloran <oohall@gmail.com>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 095/165] powerpc/sriov: Remove VF eeh_dev state when disabling SR-IOV
-Date:   Thu, 27 Feb 2020 14:36:09 +0100
-Message-Id: <20200227132245.170467502@linuxfoundation.org>
+Subject: [PATCH 4.9 100/165] cifs: fix NULL dereference in match_prepath
+Date:   Thu, 27 Feb 2020 14:36:14 +0100
+Message-Id: <20200227132245.804081837@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -61,55 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver O'Halloran <oohall@gmail.com>
+From: Ronnie Sahlberg <lsahlber@redhat.com>
 
-[ Upstream commit 1fb4124ca9d456656a324f1ee29b7bf942f59ac8 ]
+[ Upstream commit fe1292686333d1dadaf84091f585ee903b9ddb84 ]
 
-When disabling virtual functions on an SR-IOV adapter we currently do not
-correctly remove the EEH state for the now-dead virtual functions. When
-removing the pci_dn that was created for the VF when SR-IOV was enabled
-we free the corresponding eeh_dev without removing it from the child device
-list of the eeh_pe that contained it. This can result in crashes due to the
-use-after-free.
+RHBZ: 1760879
 
-Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
-Reviewed-by: Sam Bobroff <sbobroff@linux.ibm.com>
-Tested-by: Sam Bobroff <sbobroff@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190821062655.19735-1-oohall@gmail.com
+Fix an oops in match_prepath() by making sure that the prepath string is not
+NULL before we pass it into strcmp().
+
+This is similar to other checks we make for example in cifs_root_iget()
+
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/pci_dn.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ fs/cifs/connect.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/kernel/pci_dn.c b/arch/powerpc/kernel/pci_dn.c
-index 5926934370702..c8f1b78fbd0e2 100644
---- a/arch/powerpc/kernel/pci_dn.c
-+++ b/arch/powerpc/kernel/pci_dn.c
-@@ -271,9 +271,22 @@ void remove_dev_pci_data(struct pci_dev *pdev)
- 				continue;
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 751bdde6515d5..961fcb40183a4 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -2927,8 +2927,10 @@ match_prepath(struct super_block *sb, struct cifs_mnt_data *mnt_data)
+ {
+ 	struct cifs_sb_info *old = CIFS_SB(sb);
+ 	struct cifs_sb_info *new = mnt_data->cifs_sb;
+-	bool old_set = old->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH;
+-	bool new_set = new->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH;
++	bool old_set = (old->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH) &&
++		old->prepath;
++	bool new_set = (new->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH) &&
++		new->prepath;
  
- #ifdef CONFIG_EEH
--			/* Release EEH device for the VF */
-+			/*
-+			 * Release EEH state for this VF. The PCI core
-+			 * has already torn down the pci_dev for this VF, but
-+			 * we're responsible to removing the eeh_dev since it
-+			 * has the same lifetime as the pci_dn that spawned it.
-+			 */
- 			edev = pdn_to_eeh_dev(pdn);
- 			if (edev) {
-+				/*
-+				 * We allocate pci_dn's for the totalvfs count,
-+				 * but only only the vfs that were activated
-+				 * have a configured PE.
-+				 */
-+				if (edev->pe)
-+					eeh_rmv_from_parent_pe(edev);
-+
- 				pdn->edev = NULL;
- 				kfree(edev);
- 			}
+ 	if (old_set && new_set && !strcmp(new->prepath, old->prepath))
+ 		return 1;
 -- 
 2.20.1
 
