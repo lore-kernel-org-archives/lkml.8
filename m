@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8959DC52D44
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5278FC52D4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58A392468D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:06:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27D5324656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:06:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812402;
-	bh=PkpBb69cdA9vS0C48xa1KZ92FS2urtOs7EHAfGBXYpM=;
+	s=default; t=1582812382;
+	bh=KQwUHAoHkKcrkxEfYWpKsiCRMt+TCx0PRmOlYP6sgUs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w/CdQIUT+3QvEWmWPNeyjsP0p/OYOx57kvjZyuPtqAZEmp/dwUjjQsZ8h8juFiGXF
-	 6fMes3tUEv1UERBLxJv4GC4WLterNv7q3jo5qlySTD+sWUKclk+Xpa5xo+0AyDW7SJ
-	 /99vxLW2g4Pjvj74r+noAGQ5K3GkU+RzM8aHbXGU=
+	b=EBgs33P5mFDxBjHRzkAqbDQkXGNdv4K9E/sTU9WVZ4fL1JHujUBsgIeFfkZzNqsK4
+	 RFcCSRlVqoxTvx8s8VEzjBZgUKjmkRnGBxeWlQRqGNcyhodGGA/5PpBtx9j0+T0mvh
+	 b8/qp9GFutFUZ2YkpchJef9S8HnagwTz5RM+iYiY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387445AbgB0OGk (ORCPT
+        id S2387917AbgB0OGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:06:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43902 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:06:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733107AbgB0OGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:06:37 -0500
+        id S1733131AbgB0OGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:06:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3627E2468D;
-        Thu, 27 Feb 2020 14:06:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E700C246A0;
+        Thu, 27 Feb 2020 14:06:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812396;
-        bh=PkpBb69cdA9vS0C48xa1KZ92FS2urtOs7EHAfGBXYpM=;
+        s=default; t=1582812375;
+        bh=KQwUHAoHkKcrkxEfYWpKsiCRMt+TCx0PRmOlYP6sgUs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d1D8+zjXT/ZPsagWjIHBoxJfbNC30p5OALbkcpeL0cltrX2G1QgC7iUrTCVq4FSBB
-         Lp5QGJRakXPc62hpLMGPQpHmfCY2kGNB8/x8UNBMRra2G5DipAqBSwD9/l1YEMl1FZ
-         8OYnbvC8hjBKKkcAITAoQRv2Kl3J4q0j4fuYo28I=
+        b=aUxJ7uge3QCNuVJ2L8CNk8idmmv7Nmn56lL0Z5MhF+h4Vs34GXGXewFKhAkOtEQGo
+         YNwCjLHTNLvhZeN93DaiL0bg95kVTBdEwPKt77ut+3Uh6vgDa+xyTbIKrn2dUryiKC
+         jeEbH24TLC2Xg138hXnHUyu+8/ECYji6rcOHuQYM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org
-Subject: [PATCH 4.19 63/97] ext4: fix a data race in EXT4_I(inode)->i_disksize
-Date:   Thu, 27 Feb 2020 14:37:11 +0100
-Message-Id: <20200227132224.806676288@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+576cc007eb9f2c968200@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 90/97] ALSA: rawmidi: Avoid bit fields for state flags
+Date:   Thu, 27 Feb 2020 14:37:38 +0100
+Message-Id: <20200227132229.305414528@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
 References: <20200227132214.553656188@linuxfoundation.org>
@@ -59,87 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 35df4299a6487f323b0aca120ea3f485dfee2ae3 upstream.
+commit dfa9a5efe8b932a84b3b319250aa3ac60c20f876 upstream.
 
-EXT4_I(inode)->i_disksize could be accessed concurrently as noticed by
-KCSAN,
+The rawmidi state flags (opened, append, active_sensing) are stored in
+bit fields that can be potentially racy when concurrently accessed
+without any locks.  Although the current code should be fine, there is
+also no any real benefit by keeping the bitfields for this kind of
+short number of members.
 
- BUG: KCSAN: data-race in ext4_write_end [ext4] / ext4_writepages [ext4]
+This patch changes those bit fields flags to the simple bool fields.
+There should be no size increase of the snd_rawmidi_substream by this
+change.
 
- write to 0xffff91c6713b00f8 of 8 bytes by task 49268 on cpu 127:
-  ext4_write_end+0x4e3/0x750 [ext4]
-  ext4_update_i_disksize at fs/ext4/ext4.h:3032
-  (inlined by) ext4_update_inode_size at fs/ext4/ext4.h:3046
-  (inlined by) ext4_write_end at fs/ext4/inode.c:1287
-  generic_perform_write+0x208/0x2a0
-  ext4_buffered_write_iter+0x11f/0x210 [ext4]
-  ext4_file_write_iter+0xce/0x9e0 [ext4]
-  new_sync_write+0x29c/0x3b0
-  __vfs_write+0x92/0xa0
-  vfs_write+0x103/0x260
-  ksys_write+0x9d/0x130
-  __x64_sys_write+0x4c/0x60
-  do_syscall_64+0x91/0xb47
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
- read to 0xffff91c6713b00f8 of 8 bytes by task 24872 on cpu 37:
-  ext4_writepages+0x10ac/0x1d00 [ext4]
-  mpage_map_and_submit_extent at fs/ext4/inode.c:2468
-  (inlined by) ext4_writepages at fs/ext4/inode.c:2772
-  do_writepages+0x5e/0x130
-  __writeback_single_inode+0xeb/0xb20
-  writeback_sb_inodes+0x429/0x900
-  __writeback_inodes_wb+0xc4/0x150
-  wb_writeback+0x4bd/0x870
-  wb_workfn+0x6b4/0x960
-  process_one_work+0x54c/0xbe0
-  worker_thread+0x80/0x650
-  kthread+0x1e0/0x200
-  ret_from_fork+0x27/0x50
-
- Reported by Kernel Concurrency Sanitizer on:
- CPU: 37 PID: 24872 Comm: kworker/u261:2 Tainted: G        W  O L 5.5.0-next-20200204+ #5
- Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
- Workqueue: writeback wb_workfn (flush-7:0)
-
-Since only the read is operating as lockless (outside of the
-"i_data_sem"), load tearing could introduce a logic bug. Fix it by
-adding READ_ONCE() for the read and WRITE_ONCE() for the write.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Link: https://lore.kernel.org/r/1581085751-31793-1-git-send-email-cai@lca.pw
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
+Reported-by: syzbot+576cc007eb9f2c968200@syzkaller.appspotmail.com
+Link: https://lore.kernel.org/r/20200214111316.26939-4-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/ext4.h  |    2 +-
- fs/ext4/inode.c |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ include/sound/rawmidi.h |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -2867,7 +2867,7 @@ static inline void ext4_update_i_disksiz
- 		     !inode_is_locked(inode));
- 	down_write(&EXT4_I(inode)->i_data_sem);
- 	if (newsize > EXT4_I(inode)->i_disksize)
--		EXT4_I(inode)->i_disksize = newsize;
-+		WRITE_ONCE(EXT4_I(inode)->i_disksize, newsize);
- 	up_write(&EXT4_I(inode)->i_data_sem);
- }
- 
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -2569,7 +2569,7 @@ update_disksize:
- 	 * truncate are avoided by checking i_size under i_data_sem.
- 	 */
- 	disksize = ((loff_t)mpd->first_page) << PAGE_SHIFT;
--	if (disksize > EXT4_I(inode)->i_disksize) {
-+	if (disksize > READ_ONCE(EXT4_I(inode)->i_disksize)) {
- 		int err2;
- 		loff_t i_size;
- 
+--- a/include/sound/rawmidi.h
++++ b/include/sound/rawmidi.h
+@@ -92,9 +92,9 @@ struct snd_rawmidi_substream {
+ 	struct list_head list;		/* list of all substream for given stream */
+ 	int stream;			/* direction */
+ 	int number;			/* substream number */
+-	unsigned int opened: 1,		/* open flag */
+-		     append: 1,		/* append flag (merge more streams) */
+-		     active_sensing: 1; /* send active sensing when close */
++	bool opened;			/* open flag */
++	bool append;			/* append flag (merge more streams) */
++	bool active_sensing;		/* send active sensing when close */
+ 	int use_count;			/* use counter (for output) */
+ 	size_t bytes;
+ 	struct snd_rawmidi *rmidi;
 
 
