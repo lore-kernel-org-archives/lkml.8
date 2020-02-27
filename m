@@ -2,93 +2,102 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26151C35E17
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F66C76560
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E80E62469C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:36:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814186;
-	bh=UKNtu5XRs/pDceewTzCYEE9giWtipSmHD1MFay/pACc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LUhHhVdSYiaeAkIpXhMLcHl+F1dudeDzg/NX4+hXWPXW3O3POs//BhnySorGh5RGw
-	 BCZyY5spOP6/giXGy2HEmLH+tmvsB2bGSGTcF1DSjut96rm2BKfTAWiZQB3YCLO2r6
-	 PLgxsY3PAzbReTcqDPoHZthi4wHKn4DQIpJg227A=
+	by mail.kernel.org (Postfix) with ESMTP id 4733324656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:38:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="dR3lnFyh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732913AbgB0OgZ (ORCPT
+        id S1732629AbgB0Oh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:36:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60454 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732563AbgB0N7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:59:06 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1795A2073D;
-        Thu, 27 Feb 2020 13:59:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811945;
-        bh=UKNtu5XRs/pDceewTzCYEE9giWtipSmHD1MFay/pACc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ip2KPLxBLY2JSiuBIcQPdO2kmRcjpF3gRtqxTllXcsaYlAnfF86Vimc20/x0pTRmE
-         1QaQQ7jsELPUTOhkcpIZJ9AwHWGWOjSRYTiLkQq8UOntghxFzQf3sg1vVT9pQHOI8r
-         CZUyWvgjs2kprCXdME1eaRjSkFGFZHmgzXMabbeE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 163/237] help_next should increase position index
-Date:   Thu, 27 Feb 2020 14:36:17 +0100
-Message-Id: <20200227132308.489928813@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
-References: <20200227132255.285644406@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 27 Feb 2020 09:37:59 -0500
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:11808 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732209AbgB0N4u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:56:50 -0500
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01RDuC7d029248;
+        Thu, 27 Feb 2020 07:56:42 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=amPxsDfm7SqjfykuCL5pbWIfRVa+H79NoUbKNKQcYwo=;
+ b=dR3lnFyhMbd0Qb1zP/ziQMoQOlw4VTMPRg5csSA5OMHH/lGbcAo8Bfzxgoc7VSXhId08
+ J0uqRFweXWSmZ5PvpXZ9NjaG+fSRENUZmKKocRd8FRpoxObE+Xbs8WiMDmkBWmrtaY7m
+ jrMGoDuVajPXLPU7bFwBJK//Ip53b7/AFi+Hqm0NjfKxrHK1ktF63vCHOR2a13liDilt
+ 2n59FAzSSiwN5esy/1zFaxkAZXETnDKONOu0mdTEX9g0x7UfI4ScPHszBCBvGI2/5Npl
+ fu9+/AxD0eYYOSgpnq7UXamQ7SPPV3ZSfhS55nFzcHMcKjafzn35f1Anq/sCXPMJjk2P Jg== 
+Authentication-Results: ppops.net;
+        spf=pass smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex01.ad.cirrus.com ([5.172.152.52])
+        by mx0b-001ae601.pphosted.com with ESMTP id 2ydcmbbkp2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 27 Feb 2020 07:56:42 -0600
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 27 Feb
+ 2020 13:56:41 +0000
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Thu, 27 Feb 2020 13:56:41 +0000
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 0F33445D;
+        Thu, 27 Feb 2020 13:56:41 +0000 (UTC)
+Date:   Thu, 27 Feb 2020 13:56:41 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH v2 2/2] mfd: wm8994: Fix unbalanced calls to
+ regulator_bulk_disable()
+Message-ID: <20200227135641.GJ108283@ediswmail.ad.cirrus.com>
+References: <20200226100802.16384-1-m.szyprowski@samsung.com>
+ <CGME20200226100815eucas1p2f4448e3dea078bfc58a8acdc70340c11@eucas1p2.samsung.com>
+ <20200226100802.16384-2-m.szyprowski@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200226100802.16384-2-m.szyprowski@samsung.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-SPF-Result: pass
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ ip4:5.172.152.52 -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 adultscore=0
+ bulkscore=0 malwarescore=0 clxscore=1015 priorityscore=1501 mlxscore=0
+ lowpriorityscore=0 mlxlogscore=556 suspectscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002270111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+On Wed, Feb 26, 2020 at 11:08:02AM +0100, Marek Szyprowski wrote:
+> When runtime PM is enabled, regulators are being controlled by the
+> driver's suspend and resume callbacks. They are also unconditionally
+> enabled at driver's probe(), and disabled in remove() functions. Add
+> more calls to runtime PM framework to ensure that the device's runtime
+> PM state matches the regulators state:
+> 1. at the end of probe() function: set runtime PM state to active, so
+> there will be no spurious call to resume();
+> 2. in remove(), ensure that resume() is called before disabling runtime PM
+> management and unconditionally disabling the regulators.
+> 
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
 
-[ Upstream commit 9f198a2ac543eaaf47be275531ad5cbd50db3edf ]
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-if seq_file .next fuction does not change position index,
-read after some lseek can generate unexpected output.
-
-https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Mike Marshall <hubcap@omnibond.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/orangefs/orangefs-debugfs.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/fs/orangefs/orangefs-debugfs.c b/fs/orangefs/orangefs-debugfs.c
-index 1c59dff530dee..34d1cc98260d2 100644
---- a/fs/orangefs/orangefs-debugfs.c
-+++ b/fs/orangefs/orangefs-debugfs.c
-@@ -305,6 +305,7 @@ static void *help_start(struct seq_file *m, loff_t *pos)
- 
- static void *help_next(struct seq_file *m, void *v, loff_t *pos)
- {
-+	(*pos)++;
- 	gossip_debug(GOSSIP_DEBUGFS_DEBUG, "help_next: start\n");
- 
- 	return NULL;
--- 
-2.20.1
-
-
-
+Thanks,
+Charles
