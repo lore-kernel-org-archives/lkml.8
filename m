@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8733CC3F34A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CF7C52D53
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5737A24656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D7632084E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:58:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811902;
-	bh=jU20o2m4/MwMjTdHW/S1FdBDfn3HPFyKqG/AycpqT0M=;
+	s=default; t=1582811933;
+	bh=IJrHykFkCkyR23gfxYuRwcxF8VQP6BEXnlSz/yBVNzQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ADkuy53qj8105il7lWAdRGAhU1hZ+Iu5ty4likyvePcg1mtBLc5wKrkkOuOJn8QAL
-	 09MUgXIIFwC8m4BFKzjMjww/qdmyu4/HmVbX8bgCaQPxnb7ZNJCNzyGrJwCPuKrkqX
-	 2qLPV/3ydUVx9+sIn1G4hFjU7dbqJ1+/rx9LJlyM=
+	b=X2eUo3vs/eOET/2wCVaDPtVcK48hOQzGp6kpwAb04+DSvO3qOCq2vi2//8WMn++bh
+	 a6MUzHlA64b9Q55r+O+hCWl+G8Y3/UIPuDpU6TEQruLDfMZzDumWr/qMyQoNc+K2vi
+	 3t97ysgQYcaqrWCEpcjsaa7UUe5Wvxbp1rcgprc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732445AbgB0N6U (ORCPT
+        id S1729727AbgB0N6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:58:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59426 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:58:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732433AbgB0N6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:58:17 -0500
+        id S1732523AbgB0N6s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:58:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 006D82073D;
-        Thu, 27 Feb 2020 13:58:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FCC720578;
+        Thu, 27 Feb 2020 13:58:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811896;
-        bh=jU20o2m4/MwMjTdHW/S1FdBDfn3HPFyKqG/AycpqT0M=;
+        s=default; t=1582811927;
+        bh=IJrHykFkCkyR23gfxYuRwcxF8VQP6BEXnlSz/yBVNzQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GkhWjZavuBUVCd/l5PYHYuJ0slln6LqtKNDmTQUi9rj3jD1Sua8uoMWnDHrjzXSUO
-         8gETURxecLiMQtiu1DABpytCMDmMwzWTqp9/b9vJzV1EWHcFnxNLmbgkJF7QtXVe4U
-         64h0UCWrW9AJXe8Ees0A5HtEhhM4OyHTiEfp4x8w=
+        b=QQzto8OZpWHexlD/49+s4fJgJ5q77DIJkxUxZwI2HdrHimSm4FCBrjAnLL5qz2fKC
+         BrpaizHyy2BMUaP1Sb2voe+8BQPcqVuJgEuq5tc9jXlXnMjA3tEVRd3tzCjcKMg2Ps
+         NzP6MrisrTBH4oIwa1Gi7O4P6L9ryIsrFCza9jA8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver OHalloran <oohall@gmail.com>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 142/237] powerpc/sriov: Remove VF eeh_dev state when disabling SR-IOV
-Date:   Thu, 27 Feb 2020 14:35:56 +0100
-Message-Id: <20200227132307.099078303@linuxfoundation.org>
+Subject: [PATCH 4.14 118/237] drm/nouveau: Fix copy-paste error in nouveau_fence_wait_uevent_handler
+Date:   Thu, 27 Feb 2020 14:35:32 +0100
+Message-Id: <20200227132305.512839706@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -61,55 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver O'Halloran <oohall@gmail.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 1fb4124ca9d456656a324f1ee29b7bf942f59ac8 ]
+[ Upstream commit 1eb013473bff5f95b6fe1ca4dd7deda47257b9c2 ]
 
-When disabling virtual functions on an SR-IOV adapter we currently do not
-correctly remove the EEH state for the now-dead virtual functions. When
-removing the pci_dn that was created for the VF when SR-IOV was enabled
-we free the corresponding eeh_dev without removing it from the child device
-list of the eeh_pe that contained it. This can result in crashes due to the
-use-after-free.
+Like other cases, it should use rcu protected 'chan' rather
+than 'fence->channel' in nouveau_fence_wait_uevent_handler.
 
-Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
-Reviewed-by: Sam Bobroff <sbobroff@linux.ibm.com>
-Tested-by: Sam Bobroff <sbobroff@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190821062655.19735-1-oohall@gmail.com
+Fixes: 0ec5f02f0e2c ("drm/nouveau: prevent stale fence->channel pointers, and protect with rcu")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/pci_dn.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/nouveau_fence.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/pci_dn.c b/arch/powerpc/kernel/pci_dn.c
-index 0e395afbf0f49..0e45a446a8c78 100644
---- a/arch/powerpc/kernel/pci_dn.c
-+++ b/arch/powerpc/kernel/pci_dn.c
-@@ -261,9 +261,22 @@ void remove_dev_pci_data(struct pci_dev *pdev)
- 				continue;
+diff --git a/drivers/gpu/drm/nouveau/nouveau_fence.c b/drivers/gpu/drm/nouveau/nouveau_fence.c
+index 99e14e3e0fe4d..72532539369fb 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_fence.c
++++ b/drivers/gpu/drm/nouveau/nouveau_fence.c
+@@ -158,7 +158,7 @@ nouveau_fence_wait_uevent_handler(struct nvif_notify *notify)
  
- #ifdef CONFIG_EEH
--			/* Release EEH device for the VF */
-+			/*
-+			 * Release EEH state for this VF. The PCI core
-+			 * has already torn down the pci_dev for this VF, but
-+			 * we're responsible to removing the eeh_dev since it
-+			 * has the same lifetime as the pci_dn that spawned it.
-+			 */
- 			edev = pdn_to_eeh_dev(pdn);
- 			if (edev) {
-+				/*
-+				 * We allocate pci_dn's for the totalvfs count,
-+				 * but only only the vfs that were activated
-+				 * have a configured PE.
-+				 */
-+				if (edev->pe)
-+					eeh_rmv_from_parent_pe(edev);
-+
- 				pdn->edev = NULL;
- 				kfree(edev);
- 			}
+ 		fence = list_entry(fctx->pending.next, typeof(*fence), head);
+ 		chan = rcu_dereference_protected(fence->channel, lockdep_is_held(&fctx->lock));
+-		if (nouveau_fence_update(fence->channel, fctx))
++		if (nouveau_fence_update(chan, fctx))
+ 			ret = NVIF_NOTIFY_DROP;
+ 	}
+ 	spin_unlock_irqrestore(&fctx->lock, flags);
 -- 
 2.20.1
 
