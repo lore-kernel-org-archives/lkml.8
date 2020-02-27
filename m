@@ -2,114 +2,215 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0857C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A80CEC4BA3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 985EA24680
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:40:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UH4XKGPk"
+	by mail.kernel.org (Postfix) with ESMTP id 7FB892468F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:40:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728861AbgB0KkI (ORCPT
+        id S1728885AbgB0Kku (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 05:40:08 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:14618 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728729AbgB0KkH (ORCPT
+        Thu, 27 Feb 2020 05:40:50 -0500
+Received: from mx04.melco.co.jp ([192.218.140.144]:60548 "EHLO
+        mx04.melco.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728729AbgB0Kku (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 05:40:07 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582800007; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=18e/D4/+MM+g0dJtKJ/+1YUnc9WxGhoPmwqIBBQ28ds=; b=UH4XKGPkC4idmSSRO02AFZYaKltda/HmOVxhlzHrrnO3QkjX81vGiASY3xs++LeQfp1egLv+
- mxo5+aoi7PqsZ4O3oKAscANxZdFQqgLpsWoTn6o9uJuosx0lSgIyRCeLtVg1dTtefhP8ujuJ
- rk9LRgJ8sg287A0uNdumhO/L8co=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e579c7d.7fc534ba30d8-smtp-out-n03;
- Thu, 27 Feb 2020 10:39:57 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C869BC4479C; Thu, 27 Feb 2020 10:39:57 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: stummala)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E41B0C4479D;
-        Thu, 27 Feb 2020 10:39:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E41B0C4479D
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net
-Cc:     Sahitya Tummala <stummala@codeaurora.org>,
+        Thu, 27 Feb 2020 05:40:50 -0500
+Received: from mr04.melco.co.jp (mr04 [133.141.98.166])
+        by mx04.melco.co.jp (Postfix) with ESMTP id E9B943A4438;
+        Thu, 27 Feb 2020 19:40:47 +0900 (JST)
+Received: from mr04.melco.co.jp (unknown [127.0.0.1])
+        by mr04.imss (Postfix) with ESMTP id 48Sq2R5xyrzRk3C;
+        Thu, 27 Feb 2020 19:40:47 +0900 (JST)
+Received: from mf03_second.melco.co.jp (unknown [192.168.20.183])
+        by mr04.melco.co.jp (Postfix) with ESMTP id 48Sq2R5f58zRk2c;
+        Thu, 27 Feb 2020 19:40:47 +0900 (JST)
+Received: from mf03.melco.co.jp (unknown [133.141.98.183])
+        by mf03_second.melco.co.jp (Postfix) with ESMTP id 48Sq2R5nCdzRk5y;
+        Thu, 27 Feb 2020 19:40:47 +0900 (JST)
+Received: from tux532.tad.melco.co.jp (unknown [133.141.243.226])
+        by mf03.melco.co.jp (Postfix) with ESMTP id 48Sq2R5JSlzRkBN;
+        Thu, 27 Feb 2020 19:40:47 +0900 (JST)
+Received:  from tux532.tad.melco.co.jp
+        by tux532.tad.melco.co.jp (unknown) with ESMTP id 01RAel1o017859;
+        Thu, 27 Feb 2020 19:40:47 +0900
+Received: from tux390.tad.melco.co.jp (tux390.tad.melco.co.jp [127.0.0.1])
+        by postfix.imss70 (Postfix) with ESMTP id 7358B17E075;
+        Thu, 27 Feb 2020 19:40:47 +0900 (JST)
+Received: from tux554.tad.melco.co.jp (mailgw1.tad.melco.co.jp [10.168.7.223])
+        by tux390.tad.melco.co.jp (Postfix) with ESMTP id 670B817E073;
+        Thu, 27 Feb 2020 19:40:47 +0900 (JST)
+Received: from tux554.tad.melco.co.jp
+        by tux554.tad.melco.co.jp (unknown) with ESMTP id 01RAelAs011251;
+        Thu, 27 Feb 2020 19:40:47 +0900
+From:   Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+To:     Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp
+Cc:     Mori.Takahiro@ab.MitsubishiElectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] f2fs: Add a new CP flag to help fsck fix resize SPO issues
-Date:   Thu, 27 Feb 2020 16:09:38 +0530
-Message-Id: <1582799978-22277-2-git-send-email-stummala@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1582799978-22277-1-git-send-email-stummala@codeaurora.org>
-References: <1582799978-22277-1-git-send-email-stummala@codeaurora.org>
+Subject: [PATCH] staging: exfat: rename buf_cache_t's 'flag' to 'locked'
+Date:   Thu, 27 Feb 2020 19:40:43 +0900
+Message-Id: <20200227104043.11503-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add and set a new CP flag CP_RESIZEFS_FLAG during
-online resize FS to help fsck fix the metadata mismatch
-that may happen due to SPO during resize, where SB
-got updated but CP data couldn't be written yet.
+buf_cache_t.flag is used only for lock.
+Change the variable name from 'flag' to 'locked' and remove unused definitions.
 
-fsck errors -
-Info: CKPT version = 6ed7bccb
-        Wrong user_block_count(2233856)
-[f2fs_do_mount:3365] Checkpoint is polluted
-
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+Reviewed-by: Takahiro Mori <Mori.Takahiro@ab.MitsubishiElectric.co.jp>
+Signed-off-by: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
 ---
- fs/f2fs/checkpoint.c    | 8 ++++++--
- include/linux/f2fs_fs.h | 1 +
- 2 files changed, 7 insertions(+), 2 deletions(-)
+ drivers/staging/exfat/exfat.h       |  2 +-
+ drivers/staging/exfat/exfat_cache.c | 27 ++++++++++++---------------
+ 2 files changed, 13 insertions(+), 16 deletions(-)
 
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index fdd7f3d..0bd4cdb 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -1301,10 +1301,14 @@ static void update_ckpt_flags(struct f2fs_sb_info *sbi, struct cp_control *cpc)
- 	else
- 		__clear_ckpt_flags(ckpt, CP_ORPHAN_PRESENT_FLAG);
+diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
+index cd3479fc78ba..f588538c67a8 100644
+--- a/drivers/staging/exfat/exfat.h
++++ b/drivers/staging/exfat/exfat.h
+@@ -457,7 +457,7 @@ struct buf_cache_t {
+ 	struct buf_cache_t *hash_prev;
+ 	s32                drv;
+ 	sector_t          sec;
+-	u32               flag;
++	bool              locked;
+ 	struct buffer_head   *buf_bh;
+ };
  
--	if (is_sbi_flag_set(sbi, SBI_NEED_FSCK) ||
--		is_sbi_flag_set(sbi, SBI_IS_RESIZEFS))
-+	if (is_sbi_flag_set(sbi, SBI_NEED_FSCK))
- 		__set_ckpt_flags(ckpt, CP_FSCK_FLAG);
+diff --git a/drivers/staging/exfat/exfat_cache.c b/drivers/staging/exfat/exfat_cache.c
+index 87d019972050..b15203d4e0ae 100644
+--- a/drivers/staging/exfat/exfat_cache.c
++++ b/drivers/staging/exfat/exfat_cache.c
+@@ -8,9 +8,6 @@
+ #include <linux/mutex.h>
+ #include "exfat.h"
  
-+	if (is_sbi_flag_set(sbi, SBI_IS_RESIZEFS))
-+		__set_ckpt_flags(ckpt, CP_RESIZEFS_FLAG);
-+	else
-+		__clear_ckpt_flags(ckpt, CP_RESIZEFS_FLAG);
-+
- 	if (is_sbi_flag_set(sbi, SBI_CP_DISABLED))
- 		__set_ckpt_flags(ckpt, CP_DISABLED_FLAG);
- 	else
-diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
-index ac3f488..3c383dd 100644
---- a/include/linux/f2fs_fs.h
-+++ b/include/linux/f2fs_fs.h
-@@ -125,6 +125,7 @@ struct f2fs_super_block {
- /*
-  * For checkpoint
-  */
-+#define CP_RESIZEFS_FLAG		0x00004000
- #define CP_DISABLED_QUICK_FLAG		0x00002000
- #define CP_DISABLED_FLAG		0x00001000
- #define CP_QUOTA_NEED_FSCK_FLAG		0x00000800
+-#define LOCKBIT		0x01
+-#define DIRTYBIT	0x02
+-
+ /* Local variables */
+ static DEFINE_MUTEX(f_mutex);
+ static DEFINE_MUTEX(b_mutex);
+@@ -141,7 +138,7 @@ void exfat_buf_init(struct super_block *sb)
+ 	for (i = 0; i < FAT_CACHE_SIZE; i++) {
+ 		p_fs->FAT_cache_array[i].drv = -1;
+ 		p_fs->FAT_cache_array[i].sec = ~0;
+-		p_fs->FAT_cache_array[i].flag = 0;
++		p_fs->FAT_cache_array[i].locked = false;
+ 		p_fs->FAT_cache_array[i].buf_bh = NULL;
+ 		p_fs->FAT_cache_array[i].prev = NULL;
+ 		p_fs->FAT_cache_array[i].next = NULL;
+@@ -155,7 +152,7 @@ void exfat_buf_init(struct super_block *sb)
+ 	for (i = 0; i < BUF_CACHE_SIZE; i++) {
+ 		p_fs->buf_cache_array[i].drv = -1;
+ 		p_fs->buf_cache_array[i].sec = ~0;
+-		p_fs->buf_cache_array[i].flag = 0;
++		p_fs->buf_cache_array[i].locked = false;
+ 		p_fs->buf_cache_array[i].buf_bh = NULL;
+ 		p_fs->buf_cache_array[i].prev = NULL;
+ 		p_fs->buf_cache_array[i].next = NULL;
+@@ -289,7 +286,7 @@ u8 *exfat_fat_getblk(struct super_block *sb, sector_t sec)
+ 
+ 	bp->drv = p_fs->drv;
+ 	bp->sec = sec;
+-	bp->flag = 0;
++	bp->locked = false;
+ 
+ 	FAT_cache_insert_hash(sb, bp);
+ 
+@@ -297,7 +294,7 @@ u8 *exfat_fat_getblk(struct super_block *sb, sector_t sec)
+ 		FAT_cache_remove_hash(bp);
+ 		bp->drv = -1;
+ 		bp->sec = ~0;
+-		bp->flag = 0;
++		bp->locked = false;
+ 		bp->buf_bh = NULL;
+ 
+ 		move_to_lru(bp, &p_fs->FAT_cache_lru_list);
+@@ -328,7 +325,7 @@ void exfat_fat_release_all(struct super_block *sb)
+ 		if (bp->drv == p_fs->drv) {
+ 			bp->drv = -1;
+ 			bp->sec = ~0;
+-			bp->flag = 0;
++			bp->locked = false;
+ 
+ 			if (bp->buf_bh) {
+ 				__brelse(bp->buf_bh);
+@@ -366,7 +363,7 @@ static struct buf_cache_t *buf_cache_get(struct super_block *sb, sector_t sec)
+ 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
+ 
+ 	bp = p_fs->buf_cache_lru_list.prev;
+-	while (bp->flag & LOCKBIT)
++	while (bp->locked)
+ 		bp = bp->prev;
+ 
+ 	move_to_mru(bp, &p_fs->buf_cache_lru_list);
+@@ -390,7 +387,7 @@ static u8 *__exfat_buf_getblk(struct super_block *sb, sector_t sec)
+ 
+ 	bp->drv = p_fs->drv;
+ 	bp->sec = sec;
+-	bp->flag = 0;
++	bp->locked = false;
+ 
+ 	buf_cache_insert_hash(sb, bp);
+ 
+@@ -398,7 +395,7 @@ static u8 *__exfat_buf_getblk(struct super_block *sb, sector_t sec)
+ 		buf_cache_remove_hash(bp);
+ 		bp->drv = -1;
+ 		bp->sec = ~0;
+-		bp->flag = 0;
++		bp->locked = false;
+ 		bp->buf_bh = NULL;
+ 
+ 		move_to_lru(bp, &p_fs->buf_cache_lru_list);
+@@ -443,7 +440,7 @@ void exfat_buf_lock(struct super_block *sb, sector_t sec)
+ 
+ 	bp = buf_cache_find(sb, sec);
+ 	if (likely(bp))
+-		bp->flag |= LOCKBIT;
++		bp->locked = true;
+ 
+ 	WARN(!bp, "[EXFAT] failed to find buffer_cache(sector:%llu).\n",
+ 	     (unsigned long long)sec);
+@@ -459,7 +456,7 @@ void exfat_buf_unlock(struct super_block *sb, sector_t sec)
+ 
+ 	bp = buf_cache_find(sb, sec);
+ 	if (likely(bp))
+-		bp->flag &= ~(LOCKBIT);
++		bp->locked = false;
+ 
+ 	WARN(!bp, "[EXFAT] failed to find buffer_cache(sector:%llu).\n",
+ 	     (unsigned long long)sec);
+@@ -478,7 +475,7 @@ void exfat_buf_release(struct super_block *sb, sector_t sec)
+ 	if (likely(bp)) {
+ 		bp->drv = -1;
+ 		bp->sec = ~0;
+-		bp->flag = 0;
++		bp->locked = false;
+ 
+ 		if (bp->buf_bh) {
+ 			__brelse(bp->buf_bh);
+@@ -503,7 +500,7 @@ void exfat_buf_release_all(struct super_block *sb)
+ 		if (bp->drv == p_fs->drv) {
+ 			bp->drv = -1;
+ 			bp->sec = ~0;
+-			bp->flag = 0;
++			bp->locked = false;
+ 
+ 			if (bp->buf_bh) {
+ 				__brelse(bp->buf_bh);
 -- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.25.1
+
