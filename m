@@ -2,178 +2,216 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC98C4BA3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE44C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1420E24691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D7F32467B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:36:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="Yi7Xz2yE";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WXQ+Btyt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N96mK6rd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbgB0Lev (ORCPT
+        id S1728921AbgB0LgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 06:34:51 -0500
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:41971 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728856AbgB0Leu (ORCPT
+        Thu, 27 Feb 2020 06:36:09 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35374 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728856AbgB0LgI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 06:34:50 -0500
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 8EF9E767F;
-        Thu, 27 Feb 2020 06:34:49 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Thu, 27 Feb 2020 06:34:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
-        /WM2YZ2D2kC2nX6ey9Dp12UFoyDaBYP6YdN9OBPRzCI=; b=Yi7Xz2yEteTWYyPV
-        XuOgGIIUQ4kJyUZ+P4eUHdacFShsL0wlqi3+tYWDcZxIbTMPCZC7kKkKqwBU5Vr7
-        mV3KiB80I62eTn/Z/rSMRVA1xKR5HPR6Y1xdqEzpkWYilWVC+139vbvODAqjs7qI
-        7b0uh7GsGFpcHQLHdtaaFmkJ1qlEFr9kI0BkpSTfrSOiARZh/QwJJHcLBVtQZKxX
-        i1RfGu7DmtV2Bg70Kio8NgCh2vcKbQtRXopRbQ3V18BNBKmEtknX04jdAu08Eu+P
-        ilek2b0di/g2LaR09sNv/kyhUqcmRmz7rMJZarFmIFokUN4uKZpCZu3trRfGXC59
-        NNO0bg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=/WM2YZ2D2kC2nX6ey9Dp12UFoyDaBYP6YdN9OBPRz
-        CI=; b=WXQ+Btytbj9wM9gplu/g8YR5EqjlaOsQPw5KeiKVENv41/rQtbwUg/X5d
-        PButX8I33urqRP1cPco2dE+wZC5vG0swH4LEJZ21VW8y3tX/MnZm9wG2Dy1+MRVX
-        Nik9U2eNrcc0HaG8bY5LvA4y/ADSdAFXr0WO7+BfP9A14XeDgyOA0u07mx2GO5eI
-        Qr4FyHIneaBtJD4Gqxgn8/kxyeJc7DIGYXk79iRNCSPHF7XeTxiV/8rTv820i3lO
-        nHTtL9EFn6lS9wNqQM035aMxDCxmTFEIMPFKsOPfi0bdxKEf1ccOCDfiLhMazt01
-        y7jlQF8Bx81Qz/oCfTFEdbFNocLdQ==
-X-ME-Sender: <xms:WKlXXpwoBSSMIpNx92ZIjGKMr7LeHNUzTuUOuinSM_HyHQWj-GJltA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrleeigdeftdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
-    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecukfhppeduudekrddvtdelrd
-    dukedvrdeludenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
-    ohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
-X-ME-Proxy: <xmx:WKlXXkZjZSe1NR_ge1ViMtyXdZbwwq2UcNhnv61CqhxmT7A-B8l49A>
-    <xmx:WKlXXtpYWO0zIoajim09iFfr1ZFgKsuj86KKjpYJzqOgoIfV7-Ctnw>
-    <xmx:WKlXXoGoMgITJUdXzGKgSOrUBFWfHHWjUPULTtlks3eR4oEgBSY9eg>
-    <xmx:WalXXjbUuSjsDmVLDFkg-xH65BT7NdSKqxPbcE61UlYxpJihRGOEnA>
-Received: from mickey.themaw.net (unknown [118.209.182.91])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 5464C328005A;
-        Thu, 27 Feb 2020 06:34:44 -0500 (EST)
-Message-ID: <3e656465c427487e4ea14151b77d391d52cd6bad.camel@themaw.net>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications
- [ver #17]
-From:   Ian Kent <raven@themaw.net>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Miklos Szeredi <mszeredi@redhat.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Date:   Thu, 27 Feb 2020 19:34:40 +0800
-In-Reply-To: <CAJfpegtRoXnPm5_sMYPL2L6FCZU52Tn8wk7NcW-dm4_2x=dD3Q@mail.gmail.com>
-References: <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk>
-         <1582316494.3376.45.camel@HansenPartnership.com>
-         <CAOssrKehjnTwbc6A1VagM5hG_32hy3mXZenx_PdGgcUGxYOaLQ@mail.gmail.com>
-         <1582556135.3384.4.camel@HansenPartnership.com>
-         <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com>
-         <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com>
-         <1582644535.3361.8.camel@HansenPartnership.com>
-         <CAOssrKfaxnHswrKejedFzmYTbYivJ++cPes4c91+BJDfgH4xJA@mail.gmail.com>
-         <1c8db4e2b707f958316941d8edd2073ee7e7b22c.camel@themaw.net>
-         <CAJfpegtRoXnPm5_sMYPL2L6FCZU52Tn8wk7NcW-dm4_2x=dD3Q@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Thu, 27 Feb 2020 06:36:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582803366;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=uVQ4UrFOEJRzhioCmCv1VYaFqrxHNCAJFi8KjCa8cJg=;
+        b=N96mK6rdIWjViAbGX8LcWWjlVecy2UxjAXQZfwmNKmqEyiuZi5ciKG+bYhLQXxuvKqkKiY
+        dUu/hznAZqm5/iV9kVADzJWL2kCBMuqrbMupJI0VZuXKb+/x4cciF1yBk+uQ9iKNz/coRz
+        fn2+5uUUTYTJnskUzCwkdJ4Ejy5GmPk=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-282-POdF_UP0Ma6DRQ5Jt9G_DQ-1; Thu, 27 Feb 2020 06:36:05 -0500
+X-MC-Unique: POdF_UP0Ma6DRQ5Jt9G_DQ-1
+Received: by mail-wm1-f69.google.com with SMTP id z7so900899wmi.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 03:36:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=uVQ4UrFOEJRzhioCmCv1VYaFqrxHNCAJFi8KjCa8cJg=;
+        b=NzOwwSXe+4+zxiUjTxb57WNFwRms7ee0f1wy9qAQ9W6KC86nKv0HWuN8BwBzpjy8oO
+         PglkbCEs0ZEvShF6ew1vFIQr1unnZrsS2Oth5V4fanDfUp0Zzv706DMFV4DqH0ucXxjj
+         FDq46SkQlkSlslh7Id24kxQB72RVYBfihgaS9zDmYU4Am9hf29mJyls8PMgoxpPKWjeZ
+         XHbjNVOz3QR00Mq2b3MqqdAqKV3EfICkMFvddOKAoFeNdUsZY3LKyAAsGxcNUgpZkit5
+         9qX/cAyn83j+0v/W04Gq1e8JMNBU4LHrrFmrVTL3kmceDEEz83EyfC+4uFIPtAObMbMM
+         WoIg==
+X-Gm-Message-State: APjAAAW435GWo+uw18d5+YLZ2n1rR1Yk75ieQZq3TMcbmzLfAqdVeCU0
+        7JzrRmqaP+vlhCSBkhaQUx42HMrPChYI9B9sqAk2gz5v5+GRQfebpXb7U15BEqkxkjZosdtdPIT
+        h2PNYP0alK5NQMTc5S/uePzrq
+X-Received: by 2002:adf:e8c9:: with SMTP id k9mr4544665wrn.168.1582803363743;
+        Thu, 27 Feb 2020 03:36:03 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzDaaM12pU1FU72etvD1vEMwgRRIG+zPVsAVVfIIHJu3O+u7sapzuEbKCmrJwKJUKhyeSmG6A==
+X-Received: by 2002:adf:e8c9:: with SMTP id k9mr4544621wrn.168.1582803363388;
+        Thu, 27 Feb 2020 03:36:03 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id y17sm7457215wrs.82.2020.02.27.03.36.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 03:36:02 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     linmiaohe <linmiaohe@huawei.com>, pbonzini@redhat.com,
+        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
+Cc:     linmiaohe@huawei.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v2] KVM: X86: deprecate obsolete KVM_GET_CPUID2 ioctl
+In-Reply-To: <1582773688-4956-1-git-send-email-linmiaohe@huawei.com>
+References: <1582773688-4956-1-git-send-email-linmiaohe@huawei.com>
+Date:   Thu, 27 Feb 2020 12:36:00 +0100
+Message-ID: <87ftewi7of.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-02-27 at 10:36 +0100, Miklos Szeredi wrote:
-> On Thu, Feb 27, 2020 at 6:06 AM Ian Kent <raven@themaw.net> wrote:
-> 
-> > At the least the question of "do we need a highly efficient way
-> > to query the superblock parameters all at once" needs to be
-> > extended to include mount table enumeration as well as getting
-> > the info.
-> > 
-> > But this is just me thinking about mount table handling and the
-> > quite significant problem we now have with user space scanning
-> > the proc mount tables to get this information.
-> 
-> Right.
-> 
-> So the problem is that currently autofs needs to rescan the proc
-> mount
-> table on every change.   The solution to that is to
+linmiaohe <linmiaohe@huawei.com> writes:
 
-Actually no, that's not quite the problem I see.
+> From: Miaohe Lin <linmiaohe@huawei.com>
+>
+> When kvm_vcpu_ioctl_get_cpuid2() fails, we set cpuid->nent to the value of
+> vcpu->arch.cpuid_nent. But this is in vain as cpuid->nent is not copied to
+> userspace by copy_to_user() from call site. Also cpuid->nent is not updated
+> to indicate how many entries were retrieved on success case. So this ioctl
+> is straight up broken. And in fact, it's not used anywhere. So it should be
+> deprecated.
+>
+> Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> ---
+>  arch/x86/kvm/cpuid.c           | 20 --------------------
+>  arch/x86/kvm/cpuid.h           |  3 ---
+>  arch/x86/kvm/x86.c             | 16 ++--------------
+>  include/uapi/linux/kvm.h       |  1 +
+>  tools/include/uapi/linux/kvm.h |  1 +
+>  5 files changed, 4 insertions(+), 37 deletions(-)
+>
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index b1c469446b07..5e041a1282b8 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -261,26 +261,6 @@ int kvm_vcpu_ioctl_set_cpuid2(struct kvm_vcpu *vcpu,
+>  	return r;
+>  }
+>  
+> -int kvm_vcpu_ioctl_get_cpuid2(struct kvm_vcpu *vcpu,
+> -			      struct kvm_cpuid2 *cpuid,
+> -			      struct kvm_cpuid_entry2 __user *entries)
+> -{
+> -	int r;
+> -
+> -	r = -E2BIG;
+> -	if (cpuid->nent < vcpu->arch.cpuid_nent)
+> -		goto out;
+> -	r = -EFAULT;
+> -	if (copy_to_user(entries, &vcpu->arch.cpuid_entries,
+> -			 vcpu->arch.cpuid_nent * sizeof(struct kvm_cpuid_entry2)))
+> -		goto out;
+> -	return 0;
+> -
+> -out:
+> -	cpuid->nent = vcpu->arch.cpuid_nent;
+> -	return r;
+> -}
+> -
+>  static __always_inline void cpuid_mask(u32 *word, int wordnum)
+>  {
+>  	reverse_cpuid_check(wordnum);
+> diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+> index 7366c618aa04..76555de38e1b 100644
+> --- a/arch/x86/kvm/cpuid.h
+> +++ b/arch/x86/kvm/cpuid.h
+> @@ -19,9 +19,6 @@ int kvm_vcpu_ioctl_set_cpuid(struct kvm_vcpu *vcpu,
+>  int kvm_vcpu_ioctl_set_cpuid2(struct kvm_vcpu *vcpu,
+>  			      struct kvm_cpuid2 *cpuid,
+>  			      struct kvm_cpuid_entry2 __user *entries);
+> -int kvm_vcpu_ioctl_get_cpuid2(struct kvm_vcpu *vcpu,
+> -			      struct kvm_cpuid2 *cpuid,
+> -			      struct kvm_cpuid_entry2 __user *entries);
+>  bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+>  	       u32 *ecx, u32 *edx, bool check_limit);
+>  
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index ddd1d296bd20..a6d99abedb2c 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -4295,21 +4295,9 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+>  					      cpuid_arg->entries);
+>  		break;
+>  	}
+> +	/* KVM_GET_CPUID2 is deprecated, should not be used. */
+>  	case KVM_GET_CPUID2: {
+> -		struct kvm_cpuid2 __user *cpuid_arg = argp;
+> -		struct kvm_cpuid2 cpuid;
+> -
+> -		r = -EFAULT;
+> -		if (copy_from_user(&cpuid, cpuid_arg, sizeof(cpuid)))
+> -			goto out;
+> -		r = kvm_vcpu_ioctl_get_cpuid2(vcpu, &cpuid,
+> -					      cpuid_arg->entries);
+> -		if (r)
+> -			goto out;
+> -		r = -EFAULT;
+> -		if (copy_to_user(cpuid_arg, &cpuid, sizeof(cpuid)))
+> -			goto out;
+> -		r = 0;
+> +		r = -EINVAL;
+>  		break;
+>  	}
 
-autofs handles large mount tables fairly well (necessarily) and
-in time I plan to remove the need to read the proc tables at all
-(that's proven very difficult but I'll get back to that).
+Braces are not really needed not but all other cases in the switch have
+it so let's leave them here too.
 
-This has to be done to resolve the age old problem of autofs not
-being able to handle large direct mount maps. But, because of
-the large number of mounts associated with large direct mount
-maps, other system processes are badly affected too.
+>  	case KVM_GET_MSRS: {
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index 4b95f9a31a2f..61524780603d 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -1380,6 +1380,7 @@ struct kvm_s390_ucas_mapping {
+>  #define KVM_GET_LAPIC             _IOR(KVMIO,  0x8e, struct kvm_lapic_state)
+>  #define KVM_SET_LAPIC             _IOW(KVMIO,  0x8f, struct kvm_lapic_state)
+>  #define KVM_SET_CPUID2            _IOW(KVMIO,  0x90, struct kvm_cpuid2)
+> +/* KVM_GET_CPUID2 is deprecated, should not be used. */
+>  #define KVM_GET_CPUID2            _IOWR(KVMIO, 0x91, struct kvm_cpuid2)
+>  /* Available with KVM_CAP_VAPIC */
+>  #define KVM_TPR_ACCESS_REPORTING  _IOWR(KVMIO, 0x92, struct kvm_tpr_access_ctl)
+> diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
+> index f0a16b4adbbd..2ef719af4c57 100644
+> --- a/tools/include/uapi/linux/kvm.h
+> +++ b/tools/include/uapi/linux/kvm.h
+> @@ -1379,6 +1379,7 @@ struct kvm_s390_ucas_mapping {
+>  #define KVM_GET_LAPIC             _IOR(KVMIO,  0x8e, struct kvm_lapic_state)
+>  #define KVM_SET_LAPIC             _IOW(KVMIO,  0x8f, struct kvm_lapic_state)
+>  #define KVM_SET_CPUID2            _IOW(KVMIO,  0x90, struct kvm_cpuid2)
+> +/* KVM_GET_CPUID2 is deprecated, should not be used. */
 
-So the problem I want to see fixed is the effect of very large
-mount tables on other user space applications, particularly the
-effect when a large number of mounts or umounts are performed.
+"should not be used" pre-patch, post-patch we can say "Can only be used
+as a reliable source of -EINVAL" :-)
 
-Clearly large mount tables not only result from autofs and the
-problems caused by them are slightly different to the mount and
-umount problem I describe. But they are a problem nevertheless
-in the sense that frequent notifications that lead to reading
-a large proc mount table has significant overhead that can't be
-avoided because the table may have changed since the last time
-it was read.
+>  #define KVM_GET_CPUID2            _IOWR(KVMIO, 0x91, struct kvm_cpuid2)
+>  /* Available with KVM_CAP_VAPIC */
+>  #define KVM_TPR_ACCESS_REPORTING  _IOWR(KVMIO, 0x92, struct kvm_tpr_access_ctl)
 
-It's easy to cause several system processes to peg a fair number
-of CPU's when a large number of mounts/umounts are being performed,
-namely systemd, udisks2 and a some others. Also I've seen couple
-of application processes badly affected purely by the presence of
-a large number of mounts in the proc tables, that's not quite so
-bad though.
+Surprisingly (or not), KVM_GET_CPUID2 is not even described in
+Documentation/virt/kvm/api.txt.
 
-> 
->  - add a notification mechanism   - lookup a mount based on path
->  - and a way to selectively query mount/superblock information
-based on path ...
-> 
-> right?
-> 
-> For the notification we have uevents in sysfs, which also supplies
-> the
-> changed parameters.  Taking aside namespace issues and addressing
-> mounts would this work for autofs?
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-The parameters supplied by the notification mechanism are important.
-
-The place this is needed will be libmount since it catches a broad
-number of user space applications, including those I mentioned above
-(well at least systemd, I think also udisks2, very probably others).
-
-So that means mount table info. needs to be maintained, whether that
-can be achieved using sysfs I don't know. Creating and maintaining
-the sysfs tree would be a big challenge I think.
-
-But before trying to work out how to use a notification mechanism
-just having a way to get the info provided by the proc tables using
-a path alone should give initial immediate improvement in libmount.
-
-Ian
+-- 
+Vitaly
 
