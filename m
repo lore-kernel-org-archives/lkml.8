@@ -2,153 +2,116 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1107AC3567B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A33C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D82F4246A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:17:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="dth2WWWZ"
+	by mail.kernel.org (Postfix) with ESMTP id C57C42469B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:17:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582823871;
+	bh=sa147JV2FGJUDr6ETosgy8EqpM2VYq5KtE1TuAGkaxY=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=GKHsUYUdFznTuo/Jj1D9/8l6KE2OOElxHZrK4Y8PVKjsVPXG4FumMx7o+gepegVoX
+	 lhixCeFEwMVItX+SD7HJ5gz4/gUNJa4+W6T7yzDtbPpv70jy1d2D4n5Fn/tGSljt2C
+	 Pq7EHZ8clCG4Id/kdCcjdrvNBjODAlvtugP24kho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729846AbgB0RRH (ORCPT
+        id S1729930AbgB0RRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 12:17:07 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:42302 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728413AbgB0RRH (ORCPT
+        Thu, 27 Feb 2020 12:17:50 -0500
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:27297 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729430AbgB0RRu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 12:17:07 -0500
-Received: by mail-qv1-f66.google.com with SMTP id dc14so1892219qvb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 09:17:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ARo9Rla66Kxeu/Z2V78mx/ehDWu077QNPWdzDFxfOJY=;
-        b=dth2WWWZKp9HGsnWrcnEGnyDwu2blK8iDXb8vLMtoeR2VaMJ3fz37+cGHyNAha/rWV
-         dK1sGTg22oiYuz24KPwTF2AS2YzOdqQyu6b+TiUBCYZk9V0zbua+mDMo3YTMUSvN9nIT
-         EMJKHUaXkpfsveCsIHveNriBa6Vtjb0vFsMy7lGIqEqrtAiZ99Xs/sQZQxUbkx1mzgHf
-         AVJsII2Jxg233IpQwYAVVL3i04SYIDZ8pS2nl8aTFh1Sh2y4snmhOeu+kOn7LsejaKvN
-         5rYQfvFElRSnuNIftRZI411+PoKrYCAMkJ59tu4Fy8L8tWs1KfJP0Uu0uqOwYZUWVb/k
-         btJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ARo9Rla66Kxeu/Z2V78mx/ehDWu077QNPWdzDFxfOJY=;
-        b=Y0KUmDuTR9TinLNUUblHpXuHR/oLWg0OA345236fJ/AMGjgvKQ0X7mRn1kJMbZp+J1
-         leq3jRTdm12dAY+A2xXyvzo8z+tkYgbTmbWMcY6TG3fEJ72pAiaimKeDH3f/EQhJ/ngW
-         8oSPsR7gYji6cO3Cpod6Jy/u6Q2RE0wr0xUsaGi5r4LZ2imHfA8JfDR6JqvE5xrOnJme
-         9sRb63X5tDpjIQS2tosemiW/LUxvepyk0n6rJVPbNRnf/a5APznqgo/IMHpjh6nDfahJ
-         39ncDEq/LGrCWdxdqSp+UMCi0MG8Tx1KN/SfkENrhXxmh/ofwGGt2l3SlQN6qoKEVWC2
-         0w2Q==
-X-Gm-Message-State: APjAAAWjqC6x3qCIZ9FhUKyS9alkoPgF6jIzgAQJVFTmVf+8DFI+7PWh
-        3EWCYhaEO0YR1ACCyZ9iM+QrKw==
-X-Google-Smtp-Source: APXvYqzIGS93ngPFOoj3vliIAB10vgE4M/ehyQsI06gG80887mNylpBqlEfVijkpuc5v919Oz9PGMQ==
-X-Received: by 2002:ad4:5429:: with SMTP id g9mr757799qvt.134.1582823826213;
-        Thu, 27 Feb 2020 09:17:06 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id x14sm3375572qkf.99.2020.02.27.09.17.05
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 27 Feb 2020 09:17:05 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1j7MmW-0003YD-SC; Thu, 27 Feb 2020 13:17:04 -0400
-Date:   Thu, 27 Feb 2020 13:17:04 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Eric Badger <ebadger@gigaio.com>
-Subject: Re: [PATCH v3 0/7] Allow setting caching mode in arch_add_memory()
- for P2PDMA
-Message-ID: <20200227171704.GK31668@ziepe.ca>
-References: <20200221182503.28317-1-logang@deltatee.com>
+        Thu, 27 Feb 2020 12:17:50 -0500
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 01RHHYix032552;
+        Fri, 28 Feb 2020 02:17:34 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 01RHHYix032552
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582823855;
+        bh=hshphCwI9hlBaEv/EA7m0UL3MjbTptk/dX4jdB/N3zo=;
+        h=From:Date:Subject:To:Cc:From;
+        b=Nc5bCj+kuNzNVfc5EfU6LUTx5nBvC/a5sO37DXECEzJP5UpgO1SnLWuecp4Ba2TJN
+         +mRFGKLWFabTjWChAvByMdzB+88Z6mOzQXe++KOOjm7EheAQb6YedB5OLvWYq9Q4S3
+         lNa7W5GkUXXYeJoW8XwDGBHO8t3aKE+hnq0wQZN+p9JDAOiJRI8Y8QBSiVPNDp8sH5
+         fM9F0itHxafY0lt2r41+loIFxa/KZMX2AgwhUHT1OEtTsYmjpqEXDgIJJT7vqRv8Ux
+         BWpBBc+9CxDRqndPaifL4CrIVfXilgCHC2P8i1wj7z3NYGJL2/z+b1ddnLYBo++A0n
+         sbG3UTWkPa3ZA==
+X-Nifty-SrcIP: [209.85.222.41]
+Received: by mail-ua1-f41.google.com with SMTP id c7so1237460uaf.5;
+        Thu, 27 Feb 2020 09:17:34 -0800 (PST)
+X-Gm-Message-State: APjAAAWVHfH0+NJY0KCqfTsk7z1PPrVaUcRylBACedlZ1p3nWWhlpLdd
+        wSyAQ0zirZJca5QNkDo/mmXklwofbBD5JyUzmEI=
+X-Google-Smtp-Source: APXvYqydl8esFpucwUoItXP6yoV9ufMtub38hFn1IFr/D1DHXbSbZGqn5FTEXUWg/LpmrNeEF1EhUGGSLyd78y3FINU=
+X-Received: by 2002:ab0:3485:: with SMTP id c5mr2874123uar.109.1582823853252;
+ Thu, 27 Feb 2020 09:17:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221182503.28317-1-logang@deltatee.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 28 Feb 2020 02:16:57 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASDV1hBV_4U6wHHMFfxsxctFhVpk4gUQ+pYMay1i4Memw@mail.gmail.com>
+Message-ID: <CAK7LNASDV1hBV_4U6wHHMFfxsxctFhVpk4gUQ+pYMay1i4Memw@mail.gmail.com>
+Subject: [GIT PULL] Kbuild fixes for v5.6-rc4
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 11:24:56AM -0700, Logan Gunthorpe wrote:
-> Hi,
-> 
-> This is v3 of the patchset which cleans up a number of minor issues
-> from the feedback of v2 and rebases onto v5.6-rc2. Additional feedback
-> is welcome.
-> 
-> Thanks,
-> 
-> Logan
-> 
-> --
-> 
-> Changes in v3:
->  * Rebased onto v5.6-rc2
->  * Rename mhp_modifiers to mhp_params per David with an updated kernel
->    doc per Dan
->  * Drop support for s390 per David seeing it does not support
->    ZONE_DEVICE yet and there was a potential problem with huge pages.
->  * Added WARN_ON_ONCE in cases where arches recieve non PAGE_KERNEL
->    parameters
->  * Collected David and Micheal's Reviewed-By and Acked-by Tags
-> 
-> Changes in v2:
->  * Rebased onto v5.5-rc5
->  * Renamed mhp_restrictions to mhp_modifiers and added the pgprot field
->    to that structure instead of using an argument for
->    arch_add_memory().
->  * Add patch to drop the unused flags field in mhp_restrictions
-> 
-> A git branch is available here:
-> 
-> https://github.com/sbates130272/linux-p2pmem remap_pages_cache_v3
-> 
-> --
-> 
-> Currently, the page tables created using memremap_pages() are always
-> created with the PAGE_KERNEL cacheing mode. However, the P2PDMA code
-> is creating pages for PCI BAR memory which should never be accessed
-> through the cache and instead use either WC or UC. This still works in
-> most cases, on x86, because the MTRR registers typically override the
-> caching settings in the page tables for all of the IO memory to be
-> UC-. However, this tends not to work so well on other arches or
-> some rare x86 machines that have firmware which does not setup the
-> MTRR registers in this way.
-> 
-> Instead of this, this series proposes a change to arch_add_memory()
-> to take the pgprot required by the mapping which allows us to
-> explicitly set pagetable entries for P2PDMA memory to WC.
+Hi Linus,
 
-Is there a particular reason why WC was selected here? I thought for
-the p2pdma cases there was no kernel user that touched the memory?
+Please pull some more Kbuild fixes.
+Thanks!
 
-I definitely forsee devices where we want UC instead.
 
-Even so, the whole idea looks like the right direction to me.
+The following changes since commit f8788d86ab28f61f7b46eb6be375f8a726783636:
 
-Jason
+  Linux 5.6-rc3 (2020-02-23 16:17:42 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+tags/kbuild-fixes-v5.6-2
+
+for you to fetch changes up to eabc8bcb292fb9a5757b0c8ab7751f41b0a104f8:
+
+  kbuild: get rid of trailing slash from subdir- example (2020-02-27
+10:03:27 +0900)
+
+----------------------------------------------------------------
+Kbuild fixes for v5.6 (2nd)
+
+ - fix missed rebuild of DT schema check
+
+ - add some phony targets to PHONY
+
+ - fix comments and documents
+
+----------------------------------------------------------------
+Masahiro Yamada (6):
+      kbuild: remove wrong documentation about mandatory-y
+      kbuild: fix DT binding schema rule to detect command line changes
+      kbuild: remove unneeded semicolon at the end of cmd_dtb_check
+      kbuild: add dtbs_check to PHONY
+      kbuild: add dt_binding_check to PHONY in a correct place
+      kbuild: get rid of trailing slash from subdir- example
+
+Randy Dunlap (1):
+      kbuild: add comment for V=2 mode
+
+ Documentation/kbuild/makefiles.rst | 5 +----
+ Makefile                           | 4 +++-
+ scripts/Makefile.lib               | 6 +++---
+ 3 files changed, 7 insertions(+), 8 deletions(-)
+
+
+-- 
+Best Regards
+Masahiro Yamada
