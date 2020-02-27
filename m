@@ -2,138 +2,182 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4DFC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA45C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A20BB2468E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52B772469C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:14:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YkAA0quW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hNTfbru9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729876AbgB0UKw (ORCPT
+        id S1729749AbgB0UON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 15:10:52 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:48066 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729737AbgB0UKw (ORCPT
+        Thu, 27 Feb 2020 15:14:13 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:51227 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726758AbgB0UOM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 15:10:52 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01RJqje2016502;
-        Thu, 27 Feb 2020 20:08:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=vTI3356UXLO6daiFtQpiwleqiIyVF/OpFewn1CjzkJE=;
- b=YkAA0quWcullrhDKmChBzEZLwyf6280JvYe130sYSu1xX5sWFUprxvm9hkIgAzF09Pqb
- ZrLJX5xxk3P2qlCMb6YxxN2n7u8SbiMv1M86QvB94OPJithlYzHfnYX+N7JKfl0GCuFr
- zv/myyCtNEkz44gGfcDaNSAap/stuo8QV1CNiSHKiUaINp0Ua/6eJVeXEzdvzfijhccO
- OptP/eLH1fVyvZawvLDz48Nq1cF0k508ni2XiuZA8gIU/ypWsW3wvACKJhjTHRJMHwRt
- 7W4adaStZfqyEM9y2r2kGYp/vHgYNQOfH6g6HGQwR0PbmF1Iwm2CY2H7cwhPQWy4AO8t 8g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2ydct3dcse-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Feb 2020 20:08:59 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01RJm9SZ059733;
-        Thu, 27 Feb 2020 20:08:59 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2ydj4ngmvp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Feb 2020 20:08:59 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01RK8vNL021906;
-        Thu, 27 Feb 2020 20:08:57 GMT
-Received: from localhost.localdomain (/10.159.246.46)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 27 Feb 2020 12:08:57 -0800
-Subject: Re: [PATCH] KVM: nVMX: Consult only the "basic" exit reason when
- routing nested exit
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-References: <20200227174430.26371-1-sean.j.christopherson@intel.com>
-From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Message-ID: <ee8c5eb6-9e3d-620b-d51f-bf0534a05d43@oracle.com>
-Date:   Thu, 27 Feb 2020 12:08:55 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 27 Feb 2020 15:14:12 -0500
+Received: by mail-pj1-f66.google.com with SMTP id fa20so263008pjb.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 12:14:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HueSZx0ts8rrl9axXw3uhQrr5WR5FCAoM3cWMzSUgig=;
+        b=hNTfbru9GbcIsnZTVTdW0TakeEdKmidNn9IGs9Q4vyQM5obrsrI6gbCWhrTP1ZjqiG
+         fNOQO9OikDz6eyrMN7moq6+WGCOBwPrQXpa4mnSSzA1zjBxWb2RPE+/8/vLCTnCaBr6+
+         J/9PTCyTntgmKIZdiizaCQpVBAkIyzUGztMR71yEdQgpX3u3ovwgmtmnr04S4yvqhWy/
+         o/4yKE3uf+lGEqeLvsHPav3OumWq/dUSWNoOD1zYxCtB8GSe/M7PmgK0T9e4u3e1oT3M
+         NI181DWGmEzEoSrD1WNQ30g8z0NTEHw6ZFeB9C8lZAlzm7nGhujoJQ+Am/nLoY1gT+Vo
+         bjsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HueSZx0ts8rrl9axXw3uhQrr5WR5FCAoM3cWMzSUgig=;
+        b=dzksoOj95T4Oawc6gFG4hjDeW8GtIO2M8DvzbT7Q0rJWUAuFlQt1LFQy3ujPV3Y/v5
+         +XW/Bdl0JnVidbqkr71XCx57jV7tsX1TgKo8ooqmeDHcBCVt86k/cIe+wxOB2vMzH7sa
+         71j6haPlhHjvAsaKNcKp1wWP9JIdYHSOdIk4Vo1ZeepqbErmy5cZhOPGikX1evbI96hI
+         iZkk6TEioR1K9gS0HcFVbpqAskDIpYqx+kkiHTlnLVW9E3vy3LNZ4Swsm84kOm3MibN8
+         sq+/zjLRJ4BixQRlR8dMAUXGqMucado0EkwEv+Gc+ksr8RP2H88WYaOu26/8x3ijZtZv
+         c9fw==
+X-Gm-Message-State: APjAAAWMsq3Uf97kfHe37RvVe8Gs1MpMP7O28nVFSCsVzZgmGtRGsekR
+        yjIv2jwv2ckaxyEiepk+nZros2nyfHc=
+X-Google-Smtp-Source: APXvYqyjkedN5nnEyPuP2TOGanlZFuaAlwWxVqtpqMCjioYvsaHmpHmOGZsqvmBEwtv9veLZecW9Cw==
+X-Received: by 2002:a17:90a:191a:: with SMTP id 26mr656861pjg.111.1582834450608;
+        Thu, 27 Feb 2020 12:14:10 -0800 (PST)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id v29sm7349350pgc.72.2020.02.27.12.14.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 12:14:10 -0800 (PST)
+Date:   Thu, 27 Feb 2020 13:14:08 -0700
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Siddharth Gupta <sidgup@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, ohad@wizery.com,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, tsoni@codeaurora.org,
+        psodagud@codeaurora.org
+Subject: Re: [PATCH 4/6] drivers: remoteproc: Add name field for every
+ subdevice
+Message-ID: <20200227201408.GB20116@xps15>
+References: <1582167465-2549-1-git-send-email-sidgup@codeaurora.org>
+ <1582167465-2549-5-git-send-email-sidgup@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200227174430.26371-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9544 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 suspectscore=0
- spamscore=0 adultscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002270137
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9544 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 bulkscore=0
- impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0 adultscore=0
- phishscore=0 mlxlogscore=999 mlxscore=0 suspectscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002270137
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582167465-2549-5-git-send-email-sidgup@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2/27/20 9:44 AM, Sean Christopherson wrote:
-> Consult only the basic exit reason, i.e. bits 15:0 of vmcs.EXIT_REASON,
-> when determining whether a nested VM-Exit should be reflected into L1 or
-> handled by KVM in L0.
->
-> For better or worse, the switch statement in nested_vmx_exit_reflected()
-> currently defaults to "true", i.e. reflects any nested VM-Exit without
-> dedicated logic.  Because the case statements only contain the basic
-> exit reason, any VM-Exit with modifier bits set will be reflected to L1,
-> even if KVM intended to handle it in L0.
->
-> Practically speaking, this only affects EXIT_REASON_MCE_DURING_VMENTRY,
-> i.e. a #MC that occurs on nested VM-Enter would be incorrectly routed to
-> L1, as "failed VM-Entry" is the only modifier that KVM can currently
-> encounter.  The SMM modifiers will never be generated as KVM doesn't
-> support/employ a SMI Transfer Monitor.  Ditto for "exit from enclave",
-> as KVM doesn't yet support virtualizing SGX, i.e. it's impossible to
-> enter an enclave in a KVM guest (L1 or L2).
-
-
-It seems nested_vmx_exit_reflected() deals only with the basic exit 
-reason. If it doesn't need anything beyond bits 15:0, may be 
-vmx_handle_exit() can pass just the base exit reason ?
-
->
-> Fixes: 644d711aa0e1 ("KVM: nVMX: Deciding if L0 or L1 should handle an L2 exit")
-> Cc: Jim Mattson <jmattson@google.com>
-> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+On Wed, Feb 19, 2020 at 06:57:43PM -0800, Siddharth Gupta wrote:
+> From: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+> 
+> When a client driver wishes to utilize functionality from a particular
+> subdevice of a remoteproc, it cannot differentiate between the subdevices
+> that have been added. This patch allows the client driver to distinguish
+> between subdevices and thus utilize their functionality.
+> 
+> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+> Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
 > ---
->   arch/x86/kvm/vmx/nested.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index 0946122a8d3b..127065bbde2c 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -5554,7 +5554,7 @@ bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason)
->   				vmcs_read32(VM_EXIT_INTR_ERROR_CODE),
->   				KVM_ISA_VMX);
->   
-> -	switch (exit_reason) {
-> +	switch ((u16)exit_reason) {
->   	case EXIT_REASON_EXCEPTION_NMI:
->   		if (is_nmi(intr_info))
->   			return false;
-Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+>  drivers/remoteproc/qcom_common.c | 6 ++++++
+>  include/linux/remoteproc.h       | 2 ++
+>  2 files changed, 8 insertions(+)
+> 
+> diff --git a/drivers/remoteproc/qcom_common.c b/drivers/remoteproc/qcom_common.c
+> index 60650bc..5d59538 100644
+> --- a/drivers/remoteproc/qcom_common.c
+> +++ b/drivers/remoteproc/qcom_common.c
+> @@ -58,6 +58,7 @@ void qcom_add_glink_subdev(struct rproc *rproc, struct qcom_rproc_glink *glink)
+>  	glink->dev = dev;
+>  	glink->subdev.start = glink_subdev_start;
+>  	glink->subdev.stop = glink_subdev_stop;
+> +	glink->subdev.name = kstrdup("glink", GFP_KERNEL);
+
+Because @subdev is a member of qcom_rproc_glink (rather than a pointer), it is
+possible to get to glink with container_of().  From there edge->name is
+available - would that work?
+
+>  
+>  	rproc_add_subdev(rproc, &glink->subdev);
+>  }
+> @@ -73,6 +74,7 @@ void qcom_remove_glink_subdev(struct rproc *rproc, struct qcom_rproc_glink *glin
+>  	if (!glink->node)
+>  		return;
+>  
+> +	kfree(glink->subdev.name);
+>  	rproc_remove_subdev(rproc, &glink->subdev);
+>  	of_node_put(glink->node);
+>  }
+> @@ -154,6 +156,7 @@ void qcom_add_smd_subdev(struct rproc *rproc, struct qcom_rproc_subdev *smd)
+>  	smd->dev = dev;
+>  	smd->subdev.start = smd_subdev_start;
+>  	smd->subdev.stop = smd_subdev_stop;
+> +	smd->subdev.name = kstrdup("smd", GFP_KERNEL);
+
+Same as above - qcom_smd_edge has a name.
+
+Worse case scenario, both qcom_rproc_glink and qcom_smd_edge have a device_node
+that can be used as well.
+
+>  
+>  	rproc_add_subdev(rproc, &smd->subdev);
+>  }
+> @@ -169,6 +172,7 @@ void qcom_remove_smd_subdev(struct rproc *rproc, struct qcom_rproc_subdev *smd)
+>  	if (!smd->node)
+>  		return;
+>  
+> +	kfree(smd->subdev.name);
+>  	rproc_remove_subdev(rproc, &smd->subdev);
+>  	of_node_put(smd->node);
+>  }
+> @@ -220,6 +224,7 @@ void qcom_add_ssr_subdev(struct rproc *rproc, struct qcom_rproc_ssr *ssr,
+>  			 const char *ssr_name)
+>  {
+>  	ssr->name = ssr_name;
+> +	ssr->subdev.name = kstrdup("ssr_notifs", GFP_KERNEL);
+>  	ssr->subdev.unprepare = ssr_notify_unprepare;
+>  
+>  	rproc_add_subdev(rproc, &ssr->subdev);
+> @@ -233,6 +238,7 @@ EXPORT_SYMBOL_GPL(qcom_add_ssr_subdev);
+>   */
+>  void qcom_remove_ssr_subdev(struct rproc *rproc, struct qcom_rproc_ssr *ssr)
+>  {
+> +	kfree(ssr->subdev.name);
+>  	rproc_remove_subdev(rproc, &ssr->subdev);
+>  }
+>  EXPORT_SYMBOL_GPL(qcom_remove_ssr_subdev);
+> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> index e2eaba9..e2f60cc 100644
+> --- a/include/linux/remoteproc.h
+> +++ b/include/linux/remoteproc.h
+> @@ -519,6 +519,7 @@ struct rproc {
+>  /**
+>   * struct rproc_subdev - subdevice tied to a remoteproc
+>   * @node: list node related to the rproc subdevs list
+> + * @name: name of the subdevice
+>   * @prepare: prepare function, called before the rproc is started
+>   * @start: start function, called after the rproc has been started
+>   * @stop: stop function, called before the rproc is stopped; the @crashed
+> @@ -527,6 +528,7 @@ struct rproc {
+>   */
+>  struct rproc_subdev {
+>  	struct list_head node;
+> +	char *name;
+>  
+>  	int (*prepare)(struct rproc_subdev *subdev);
+>  	int (*start)(struct rproc_subdev *subdev);
+> -- 
+> Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
