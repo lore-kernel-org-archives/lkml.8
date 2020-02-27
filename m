@@ -2,100 +2,104 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 597FBC3567B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55095C3567B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ACCF246BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:29:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3718E246A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:32:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730256AbgB0Q31 (ORCPT
+        id S1730187AbgB0QcM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 11:29:27 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:36355 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729232AbgB0Q31 (ORCPT
+        Thu, 27 Feb 2020 11:32:12 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:38776 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1730015AbgB0QcM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 11:29:27 -0500
-Received: by mail-oi1-f196.google.com with SMTP id c16so3912261oic.3;
-        Thu, 27 Feb 2020 08:29:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3jXudNkkQRrHswSQ0SFgmC83sC0Xe1CS0lzGEyLon8c=;
-        b=lCC5GCvaMgW3wpjAcAY2H7qtL6GeE21GSR4n+fs4YSoshmDzJ413dxuScHKoxqij9v
-         DJc9LQ961RdriFlF36ko9/UL1fQBd53MSuXcYDp8o0nd1lovnuNdYjOzjXRtUCP4Y1jc
-         G1o0x23A/RhfYptXy/AB2dcd3RWoUieniJNpj9WnUCePw6ZNhC85UTX6FeX7dLB6Lw+L
-         R4ITxUICPeb019QZixauOpd+0UcmWk+4QKe+NJTtjIy2iLsduLuX7TLfiz13owtziRti
-         wZt3VnaG03as4aC6ID/er2lq8Zx6Y98kL/PqdMQfJO4DAWqcG63X5+D+7oazFSMkmP/s
-         R5VQ==
-X-Gm-Message-State: APjAAAUmQPYnxuPJnWdy/DuWiTJNZKjsYPHkKjQ1eHBuBdU/eMQCiqbk
-        NyKjjeVhy2OVSDDGHMat7b/snV1k5gJMcQlGjlo=
-X-Google-Smtp-Source: APXvYqyUfhYfCXxfIpygMIWcy0cqjpe0cJtNKxAMEU7HwDavOmFyIh2NtpJAG7ozbOpNRe59proDJcrYJm8sEB1JY1g=
-X-Received: by 2002:aca:1a06:: with SMTP id a6mr3859856oia.148.1582820966275;
- Thu, 27 Feb 2020 08:29:26 -0800 (PST)
+        Thu, 27 Feb 2020 11:32:12 -0500
+Received: (qmail 3316 invoked by uid 2102); 27 Feb 2020 11:32:11 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 27 Feb 2020 11:32:11 -0500
+Date:   Thu, 27 Feb 2020 11:32:11 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Boqun Feng <boqun.feng@gmail.com>
+cc:     linux-kernel@vger.kernel.org,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        <linux-arch@vger.kernel.org>, <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v3 1/5] tools/memory-model: Add an exception for limitations
+ on _unless() family
+In-Reply-To: <20200227004049.6853-2-boqun.feng@gmail.com>
+Message-ID: <Pine.LNX.4.44L0.2002271129370.1730-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-References: <20200226093703.19765-1-p.yadav@ti.com> <20200226093703.19765-2-p.yadav@ti.com>
-In-Reply-To: <20200226093703.19765-2-p.yadav@ti.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 27 Feb 2020 17:29:15 +0100
-Message-ID: <CAMuHMdUGN8Yu6Tx0=OoLKzyOZ08fvjF6pEWi3ye02pr3Cgj=cg@mail.gmail.com>
-Subject: Re: [PATCH v2 01/11] dt-bindings: spi: allow expressing DTR capability
-To:     Pratyush Yadav <p.yadav@ti.com>
-Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        MTD Maling List <linux-mtd@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pratyush,
+On Thu, 27 Feb 2020, Boqun Feng wrote:
 
-On Wed, Feb 26, 2020 at 10:37 AM Pratyush Yadav <p.yadav@ti.com> wrote:
-> Allow spi devices to express DTR receive and transmit capabilities via
-> the properties "spi-rx-dtr" and "spi-tx-dtr".
->
-> Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
+> According to Luc, atomic_add_unless() is directly provided by herd7,
+> therefore it can be used in litmus tests. So change the limitation
+> section in README to unlimit the use of atomic_add_unless().
 
-Thanks for your patch!
+Is this really true?  Why does herd treat atomic_add_unless() different
+from all the other atomic RMS ops?  All the other ones we support do
+have entries in linux-kernel.def.
 
-> --- a/Documentation/devicetree/bindings/spi/spi-controller.yaml
-> +++ b/Documentation/devicetree/bindings/spi/spi-controller.yaml
-> @@ -120,6 +120,11 @@ patternProperties:
->          description:
->            Delay, in microseconds, after a read transfer.
->
-> +      spi-rx-dtr:
-> +        $ref: /schemas/types.yaml#/definitions/flag
-> +        description:
-> +          Device supports receiving in DTR mode.
+Alan
 
-Please explain "DTR" in the document, at least once, e.g.
+PS: It seems strange to support atomic_add_unless but not 
+atomic_long_add_unless.  The difference between the two is trivial.
 
-    Double Transfer Rate (DTR).
+> 
+> Cc: Luc Maranget <luc.maranget@inria.fr>
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> ---
+>  tools/memory-model/README | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/memory-model/README b/tools/memory-model/README
+> index fc07b52f2028..409211b1c544 100644
+> --- a/tools/memory-model/README
+> +++ b/tools/memory-model/README
+> @@ -207,11 +207,15 @@ The Linux-kernel memory model (LKMM) has the following limitations:
+>  		case as a store release.
+>  
+>  	b.	The "unless" RMW operations are not currently modeled:
+> -		atomic_long_add_unless(), atomic_add_unless(),
+> -		atomic_inc_unless_negative(), and
+> -		atomic_dec_unless_positive().  These can be emulated
+> +		atomic_long_add_unless(), atomic_inc_unless_negative(),
+> +		and atomic_dec_unless_positive().  These can be emulated
+>  		in litmus tests, for example, by using atomic_cmpxchg().
+>  
+> +		One exception of this limitation is atomic_add_unless(),
+> +		which is provided directly by herd7 (so no corresponding
+> +		definition in linux-kernel.def). atomic_add_unless() is
+> +		modeled by herd7 therefore it can be used in litmus tests.
+> +
+>  	c.	The call_rcu() function is not modeled.  It can be
+>  		emulated in litmus tests by adding another process that
+>  		invokes synchronize_rcu() and the body of the callback
+> 
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
