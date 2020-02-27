@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F075C3F346
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD58C3F355
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CEA2222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:42:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 604C621D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:45:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582810974;
-	bh=iKESaSe8KqutxIY0wXUL7WNxpaQHoif996AI3uvbYa4=;
+	s=default; t=1582811108;
+	bh=NhUQGsnafUe+C5Bx0IIl7hrgX87gytrWYkGTQoNos+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BSefXcTgI8JO7UjLMYDR89vWuwOBZVkFtLR9qCH2Nx+9KcY3r9KXgNQejnpiX53A7
-	 Siy0gxJmJolyEhltq5Mk/XbWy5ES5bkQ7vUlTgoiGSuzmW9ZT057WzhOQm/7kJtipX
-	 o86c0/PyF9cHW9gndy19fnRJCYm/pmKAXdZbmW54=
+	b=TVEDyOpczStIeQWc1YR182IfDVoCMV80qxxUqd042J91DOmlQaUl/sPBKWGcLayTU
+	 WXi7fQ2AjIYJv3h/mx7URqDgasIHvybq0IUP2xcZuCqQdUKfmHnx9bpqbk3gvWkXBC
+	 K/sWuZQVc5Vqe5ScarhY6TbkfmtrymFHUaSUSDN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729855AbgB0Nmx (ORCPT
+        id S1730339AbgB0NpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:42:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37958 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:45:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729076AbgB0Nmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:42:51 -0500
+        id S1729949AbgB0No6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:44:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F35EE21D7E;
-        Thu, 27 Feb 2020 13:42:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB42A20578;
+        Thu, 27 Feb 2020 13:44:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582810971;
-        bh=iKESaSe8KqutxIY0wXUL7WNxpaQHoif996AI3uvbYa4=;
+        s=default; t=1582811097;
+        bh=NhUQGsnafUe+C5Bx0IIl7hrgX87gytrWYkGTQoNos+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0Dare2aCaqkvEFH6Vb8AZWZoXX9iL022+x0Ng5jaLpkC7NQS2NJpLWhI02++bOdR1
-         /3dDS/GXysUvUx0Ln2cePSK9TI0xTHLoTTyhWDhQ793QWwi0T3BlYR5fOdjS+5LBv5
-         eQhLwCjvpbZedYxhLL1Xzqul++SJZZXHizBAKByk=
+        b=0UpdUNz6Jtza2BQnHQH7DZvRtMBSIlufY4eFpexim7O9j4bztuWDZ9ZvG+vWZOSNb
+         XpFpE0p1UlFTdR4tMsw60mpZ6CQjXj5sGJGgCCZ9ztUrW2uqNQl4bMDmg5WKWKVD6p
+         PmHfk2Y+2dbiDI8m7pwUVk6C/pGkR3qXPcJQcTgw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Peter=20Gro=C3=9Fe?= <pegro@friiks.de>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 068/113] ALSA: hda - Add docking station support for Lenovo Thinkpad T420s
-Date:   Thu, 27 Feb 2020 14:36:24 +0100
-Message-Id: <20200227132222.676765370@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Zubin Mithra <zsm@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 100/113] netfilter: xt_bpf: add overflow checks
+Date:   Thu, 27 Feb 2020 14:36:56 +0100
+Message-Id: <20200227132227.741017495@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
 References: <20200227132211.791484803@linuxfoundation.org>
@@ -60,33 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Große <pegro@friiks.de>
+From: Jann Horn <jannh@google.com>
 
-[ Upstream commit ef7d84caa5928b40b1c93a26dbe5a3f12737c6ab ]
+[ Upstream commit 6ab405114b0b229151ef06f4e31c7834dd09d0c0 ]
 
-Lenovo Thinkpad T420s uses the same codec as T420, so apply the
-same quirk to enable audio output on a docking station.
+Check whether inputs from userspace are too long (explicit length field too
+big or string not null-terminated) to avoid out-of-bounds reads.
 
-Signed-off-by: Peter Große <pegro@friiks.de>
-Link: https://lore.kernel.org/r/20200122180106.9351-1-pegro@friiks.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+As far as I can tell, this can at worst lead to very limited kernel heap
+memory disclosure or oopses.
+
+This bug can be triggered by an unprivileged user even if the xt_bpf module
+is not loaded: iptables is available in network namespaces, and the xt_bpf
+module can be autoloaded.
+
+Triggering the bug with a classic BPF filter with fake length 0x1000 causes
+the following KASAN report:
+
+==================================================================
+BUG: KASAN: slab-out-of-bounds in bpf_prog_create+0x84/0xf0
+Read of size 32768 at addr ffff8801eff2c494 by task test/4627
+
+CPU: 0 PID: 4627 Comm: test Not tainted 4.15.0-rc1+ #1
+[...]
+Call Trace:
+ dump_stack+0x5c/0x85
+ print_address_description+0x6a/0x260
+ kasan_report+0x254/0x370
+ ? bpf_prog_create+0x84/0xf0
+ memcpy+0x1f/0x50
+ bpf_prog_create+0x84/0xf0
+ bpf_mt_check+0x90/0xd6 [xt_bpf]
+[...]
+Allocated by task 4627:
+ kasan_kmalloc+0xa0/0xd0
+ __kmalloc_node+0x47/0x60
+ xt_alloc_table_info+0x41/0x70 [x_tables]
+[...]
+The buggy address belongs to the object at ffff8801eff2c3c0
+                which belongs to the cache kmalloc-2048 of size 2048
+The buggy address is located 212 bytes inside of
+                2048-byte region [ffff8801eff2c3c0, ffff8801eff2cbc0)
+[...]
+==================================================================
+
+Fixes: e6f30c731718 ("netfilter: x_tables: add xt_bpf match")
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Zubin Mithra <zsm@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_conexant.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/netfilter/xt_bpf.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/sound/pci/hda/patch_conexant.c b/sound/pci/hda/patch_conexant.c
-index 05e745e2f4271..3150ddfbdb25e 100644
---- a/sound/pci/hda/patch_conexant.c
-+++ b/sound/pci/hda/patch_conexant.c
-@@ -866,6 +866,7 @@ static const struct snd_pci_quirk cxt5066_fixups[] = {
- 	SND_PCI_QUIRK(0x17aa, 0x215f, "Lenovo T510", CXT_PINCFG_LENOVO_TP410),
- 	SND_PCI_QUIRK(0x17aa, 0x21ce, "Lenovo T420", CXT_PINCFG_LENOVO_TP410),
- 	SND_PCI_QUIRK(0x17aa, 0x21cf, "Lenovo T520", CXT_PINCFG_LENOVO_TP410),
-+	SND_PCI_QUIRK(0x17aa, 0x21d2, "Lenovo T420s", CXT_PINCFG_LENOVO_TP410),
- 	SND_PCI_QUIRK(0x17aa, 0x21da, "Lenovo X220", CXT_PINCFG_LENOVO_TP410),
- 	SND_PCI_QUIRK(0x17aa, 0x21db, "Lenovo X220-tablet", CXT_PINCFG_LENOVO_TP410),
- 	SND_PCI_QUIRK(0x17aa, 0x38af, "Lenovo IdeaPad Z560", CXT_FIXUP_MUTE_LED_EAPD),
+diff --git a/net/netfilter/xt_bpf.c b/net/netfilter/xt_bpf.c
+index dffee9d47ec4b..7b993f25aab92 100644
+--- a/net/netfilter/xt_bpf.c
++++ b/net/netfilter/xt_bpf.c
+@@ -25,6 +25,9 @@ static int bpf_mt_check(const struct xt_mtchk_param *par)
+ 	struct xt_bpf_info *info = par->matchinfo;
+ 	struct sock_fprog_kern program;
+ 
++	if (info->bpf_program_num_elem > XT_BPF_MAX_NUM_INSTR)
++		return -EINVAL;
++
+ 	program.len = info->bpf_program_num_elem;
+ 	program.filter = info->bpf_program;
+ 
 -- 
 2.20.1
 
