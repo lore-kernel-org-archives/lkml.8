@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 068ECC35DF1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7044C35E17
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7D2921D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 696D920726
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582810892;
-	bh=B4UxOXXTuyg1PM+0VTgj7Q8Xn8Vzwhv8wqGqPLP1DYc=;
+	s=default; t=1582810915;
+	bh=SsNKGqw30yQ9peA9T9IZh1o/PgCY2XYE1wCwxi9YVW8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QjfzBzUGqKjiyRi3nDksRoSC5GlMi2dY2lNqTKLbuwyNs1dCSqy/m/MWIaZ1FcFHg
-	 0zmkVrUFIL8y9FU9s5EIdhmFpCZqNqEmSxitG9oUO5cUDqw+omPg+NNf1hA7S/yD0i
-	 Sb7bWs6LvCedWyUegrE2zdjewYWmh4mE3zbkNIhA=
+	b=RcpVvfqvXbJSzbT4E1MfGyhg8rsWlKIsorJD+FN/3R57Qika+nIUd+087qa4ulhwX
+	 iKdmna211M6unYflHJLmQG1ZcfD/+eaCMXJzvwCpnVLITveIn8vWFOMMHWd6EAneg9
+	 gMgnNo2iJGnm3+6aKOqd5agoELpcZw3+tOJrT5G8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729603AbgB0Nlb (ORCPT
+        id S1729300AbgB0Nly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:41:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36114 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:41:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729164AbgB0Nl1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:41:27 -0500
+        id S1729305AbgB0Nlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:41:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B66C21D7E;
-        Thu, 27 Feb 2020 13:41:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5A4320578;
+        Thu, 27 Feb 2020 13:41:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582810886;
-        bh=B4UxOXXTuyg1PM+0VTgj7Q8Xn8Vzwhv8wqGqPLP1DYc=;
+        s=default; t=1582810912;
+        bh=SsNKGqw30yQ9peA9T9IZh1o/PgCY2XYE1wCwxi9YVW8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x/7zxPmWKQJrh49/TEQRvrpXqPn2nXm0m33E9VXHuco+XHVQlRNnN7KhkZn3k15Fy
-         MTHmTHk73INOirOrxWTxNcXAgPp28LAs7SxuYfc9EWL02xZj5hqyAVPEjcekaKSKQq
-         Wwbptx3zzdTqaxbBAiD0vo/nvhO90excS3pvOlls=
+        b=mW9g/f+AedowbhhuSkZttz/06EgvuUlMDbLJVpB9ubmhJ4hhfvsbd0yQK0/exJDFk
+         fqtrhjzsJthNKVJB0yQprNBBEzuCQu4+UnieM1Dt39CKuMdaANK790IuH17ju86Opd
+         3aRkK6nqpMJ2NzGzCXCz+3gvw98Odksd5BxIx0hc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yu kuai <yukuai3@huawei.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 035/113] drm/amdgpu: remove 4 set but not used variable in amdgpu_atombios_get_connector_info_from_object_table
-Date:   Thu, 27 Feb 2020 14:35:51 +0100
-Message-Id: <20200227132217.325886959@linuxfoundation.org>
+Subject: [PATCH 4.4 044/113] orinoco: avoid assertion in case of NULL pointer
+Date:   Thu, 27 Feb 2020 14:36:00 +0100
+Message-Id: <20200227132218.783957195@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
 References: <20200227132211.791484803@linuxfoundation.org>
@@ -60,72 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit bae028e3e521e8cb8caf2cc16a455ce4c55f2332 ]
+[ Upstream commit c705f9fc6a1736dcf6ec01f8206707c108dca824 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+In ezusb_init, if upriv is NULL, the code crashes. However, the caller
+in ezusb_probe can handle the error and print the failure message.
+The patch replaces the BUG_ON call to error return.
 
-drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c: In function
-'amdgpu_atombios_get_connector_info_from_object_table':
-drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c:376:26: warning: variable
-'grph_obj_num' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c:376:13: warning: variable
-'grph_obj_id' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c:341:37: warning: variable
-'con_obj_type' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c:341:24: warning: variable
-'con_obj_num' set but not used [-Wunused-but-set-variable]
-
-They are never used, so can be removed.
-
-Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c | 19 ++-----------------
- 1 file changed, 2 insertions(+), 17 deletions(-)
+ drivers/net/wireless/orinoco/orinoco_usb.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c
-index 3e90ddcbb24a7..d799927d3a5de 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c
-@@ -319,17 +319,9 @@ bool amdgpu_atombios_get_connector_info_from_object_table(struct amdgpu_device *
- 		path_size += le16_to_cpu(path->usSize);
+diff --git a/drivers/net/wireless/orinoco/orinoco_usb.c b/drivers/net/wireless/orinoco/orinoco_usb.c
+index e434f7ca8ff36..3c5baccd67922 100644
+--- a/drivers/net/wireless/orinoco/orinoco_usb.c
++++ b/drivers/net/wireless/orinoco/orinoco_usb.c
+@@ -1351,7 +1351,8 @@ static int ezusb_init(struct hermes *hw)
+ 	int retval;
  
- 		if (device_support & le16_to_cpu(path->usDeviceTag)) {
--			uint8_t con_obj_id, con_obj_num, con_obj_type;
--
--			con_obj_id =
-+			uint8_t con_obj_id =
- 			    (le16_to_cpu(path->usConnObjectId) & OBJECT_ID_MASK)
- 			    >> OBJECT_ID_SHIFT;
--			con_obj_num =
--			    (le16_to_cpu(path->usConnObjectId) & ENUM_ID_MASK)
--			    >> ENUM_ID_SHIFT;
--			con_obj_type =
--			    (le16_to_cpu(path->usConnObjectId) &
--			     OBJECT_TYPE_MASK) >> OBJECT_TYPE_SHIFT;
+ 	BUG_ON(in_interrupt());
+-	BUG_ON(!upriv);
++	if (!upriv)
++		return -EINVAL;
  
- 			/* Skip TV/CV support */
- 			if ((le16_to_cpu(path->usDeviceTag) ==
-@@ -354,14 +346,7 @@ bool amdgpu_atombios_get_connector_info_from_object_table(struct amdgpu_device *
- 			router.ddc_valid = false;
- 			router.cd_valid = false;
- 			for (j = 0; j < ((le16_to_cpu(path->usSize) - 8) / 2); j++) {
--				uint8_t grph_obj_id, grph_obj_num, grph_obj_type;
--
--				grph_obj_id =
--				    (le16_to_cpu(path->usGraphicObjIds[j]) &
--				     OBJECT_ID_MASK) >> OBJECT_ID_SHIFT;
--				grph_obj_num =
--				    (le16_to_cpu(path->usGraphicObjIds[j]) &
--				     ENUM_ID_MASK) >> ENUM_ID_SHIFT;
-+				uint8_t grph_obj_type=
- 				grph_obj_type =
- 				    (le16_to_cpu(path->usGraphicObjIds[j]) &
- 				     OBJECT_TYPE_MASK) >> OBJECT_TYPE_SHIFT;
+ 	upriv->reply_count = 0;
+ 	/* Write the MAGIC number on the simulated registers to keep
 -- 
 2.20.1
 
