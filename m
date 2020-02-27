@@ -2,55 +2,52 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 374A6C3F34C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55650C3F354
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 054CC20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A8B4246A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811191;
-	bh=lL4pFfsrsx5IvHqyB0CeDf2N+rjFEBCQR0PaBMWEcVk=;
+	s=default; t=1582811135;
+	bh=3nMLF0GMDZJEzkEI901OXR0IIqz5LdAt9sSZZ8ML21I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eedSdP1EEfZ/q8UtJxmzgymgYMXbqnQAcMpOwgiNha3fAVieinmD6Gg4cDY7iW0Zy
-	 LH+U+DZN9oyX8xxxIv/e+pcBsdSxmClmTexQjFgCw1TCo+PMSGk82JX4d41nA/qTiD
-	 q78C5cjj0pIJIerl0YxaQxsG+wPmoi1pfnJCSTak=
+	b=BTnWWDaa7XG+cwqcLQ/OGx2LLaIJYlKy4RIP0EaSE3fxYR1LybcQjWMQLgUSoA4yC
+	 UcSkB7m84TwBF7dUyCSyXZOmmFHLDgtYfoBS/Sv2TvK1V5ubDhC6uC6j7BMdwt2Qlr
+	 WSFRQiuQs1dXHmPvj8VoCLJ/kFJ499V67emKuH9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730521AbgB0Nq3 (ORCPT
+        id S1730388AbgB0Npd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:46:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42620 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:45:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730167AbgB0NqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:46:24 -0500
+        id S1729995AbgB0Np2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:45:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CFAF20801;
-        Thu, 27 Feb 2020 13:46:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0ECE222C2;
+        Thu, 27 Feb 2020 13:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811183;
-        bh=lL4pFfsrsx5IvHqyB0CeDf2N+rjFEBCQR0PaBMWEcVk=;
+        s=default; t=1582811128;
+        bh=3nMLF0GMDZJEzkEI901OXR0IIqz5LdAt9sSZZ8ML21I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PVp4SjeiFz35pquMUycb8QbT+IrhrBfQOhmh81KcehNylXW1KhkwImNLMR10GIOtA
-         EzMwZodVzyYqXcs3wkMh3mspQC5LdWh8D5hIurinx3YrUhMU17iMQc/fkMWmo1ckdq
-         Xd7lGcUNdv+dQAWHpUVEGLQL17jJ35VjwRzZsE3k=
+        b=Sjdv6cF/ouXfAkTh0H+0d/875aUH+8GyUQ6rEuybbk/25bCt2YJjhLIESz/PaC9DO
+         8PugZ5DyHBwVCxsUuph1kFDDNAwiXgVKRN/A8v4RHRBPuLxsxJk5CO/shiHe7Wmau6
+         x3oL6klLWlavGxvwAUI6+69LVpm41Cg5qILLd66Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Matthew Garrett <mjg59@google.com>, linux-efi@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 033/165] efi/x86: Map the entire EFI vendor string before copying it
-Date:   Thu, 27 Feb 2020 14:35:07 +0100
-Message-Id: <20200227132235.916584144@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 4.9 014/165] s390/time: Fix clk type in get_tod_clock
+Date:   Thu, 27 Feb 2020 14:34:48 +0100
+Message-Id: <20200227132233.107298611@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -63,69 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit ffc2760bcf2dba0dbef74013ed73eea8310cc52c ]
+commit 0f8a206df7c920150d2aa45574fba0ab7ff6be4f upstream.
 
-Fix a couple of issues with the way we map and copy the vendor string:
-- we map only 2 bytes, which usually works since you get at least a
-  page, but if the vendor string happens to cross a page boundary,
-  a crash will result
-- only call early_memunmap() if early_memremap() succeeded, or we will
-  call it with a NULL address which it doesn't like,
-- while at it, switch to early_memremap_ro(), and array indexing rather
-  than pointer dereferencing to read the CHAR16 characters.
+Clang warns:
 
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Arvind Sankar <nivedita@alum.mit.edu>
-Cc: Matthew Garrett <mjg59@google.com>
-Cc: linux-efi@vger.kernel.org
-Fixes: 5b83683f32b1 ("x86: EFI runtime service support")
-Link: https://lkml.kernel.org/r/20200103113953.9571-5-ardb@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+In file included from ../arch/s390/boot/startup.c:3:
+In file included from ../include/linux/elf.h:5:
+In file included from ../arch/s390/include/asm/elf.h:132:
+In file included from ../include/linux/compat.h:10:
+In file included from ../include/linux/time.h:74:
+In file included from ../include/linux/time32.h:13:
+In file included from ../include/linux/timex.h:65:
+../arch/s390/include/asm/timex.h:160:20: warning: passing 'unsigned char
+[16]' to parameter of type 'char *' converts between pointers to integer
+types with different sign [-Wpointer-sign]
+        get_tod_clock_ext(clk);
+                          ^~~
+../arch/s390/include/asm/timex.h:149:44: note: passing argument to
+parameter 'clk' here
+static inline void get_tod_clock_ext(char *clk)
+                                           ^
+
+Change clk's type to just be char so that it matches what happens in
+get_tod_clock_ext.
+
+Fixes: 57b28f66316d ("[S390] s390_hypfs: Add new attributes")
+Link: https://github.com/ClangBuiltLinux/linux/issues/861
+Link: http://lkml.kernel.org/r/20200208140858.47970-1-natechancellor@gmail.com
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/platform/efi/efi.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ arch/s390/include/asm/timex.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index b6669d326545a..f08abdf8bb676 100644
---- a/arch/x86/platform/efi/efi.c
-+++ b/arch/x86/platform/efi/efi.c
-@@ -478,7 +478,6 @@ void __init efi_init(void)
- 	efi_char16_t *c16;
- 	char vendor[100] = "unknown";
- 	int i = 0;
--	void *tmp;
+--- a/arch/s390/include/asm/timex.h
++++ b/arch/s390/include/asm/timex.h
+@@ -146,7 +146,7 @@ static inline void get_tod_clock_ext(cha
  
- #ifdef CONFIG_X86_32
- 	if (boot_params.efi_info.efi_systab_hi ||
-@@ -503,14 +502,16 @@ void __init efi_init(void)
- 	/*
- 	 * Show what we know for posterity
- 	 */
--	c16 = tmp = early_memremap(efi.systab->fw_vendor, 2);
-+	c16 = early_memremap_ro(efi.systab->fw_vendor,
-+				sizeof(vendor) * sizeof(efi_char16_t));
- 	if (c16) {
--		for (i = 0; i < sizeof(vendor) - 1 && *c16; ++i)
--			vendor[i] = *c16++;
-+		for (i = 0; i < sizeof(vendor) - 1 && c16[i]; ++i)
-+			vendor[i] = c16[i];
- 		vendor[i] = '\0';
--	} else
-+		early_memunmap(c16, sizeof(vendor) * sizeof(efi_char16_t));
-+	} else {
- 		pr_err("Could not map the firmware vendor!\n");
--	early_memunmap(tmp, 2);
-+	}
+ static inline unsigned long long get_tod_clock(void)
+ {
+-	unsigned char clk[STORE_CLOCK_EXT_SIZE];
++	char clk[STORE_CLOCK_EXT_SIZE];
  
- 	pr_info("EFI v%u.%.02u by %s\n",
- 		efi.systab->hdr.revision >> 16,
--- 
-2.20.1
-
+ 	get_tod_clock_ext(clk);
+ 	return *((unsigned long long *)&clk[1]);
 
 
