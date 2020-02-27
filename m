@@ -2,81 +2,138 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C55DFC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4DFC11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 997762468E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A20BB2468E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:10:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YkAA0quW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730349AbgB0UHH (ORCPT
+        id S1729876AbgB0UKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 15:07:07 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:44748 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729594AbgB0UHH (ORCPT
+        Thu, 27 Feb 2020 15:10:52 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:48066 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729737AbgB0UKw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 15:07:07 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id BD35312199AC7;
-        Thu, 27 Feb 2020 12:07:06 -0800 (PST)
-Date:   Thu, 27 Feb 2020 12:07:06 -0800 (PST)
-Message-Id: <20200227.120706.860764677973553439.davem@davemloft.net>
-To:     gustavo@embeddedor.com
-Cc:     kevin.curtis@farsite.co.uk, khc@pm.waw.pl, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] WAN: Replace zero-length array with
- flexible-array member
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200226212317.GA2172@embeddedor>
-References: <20200226212317.GA2172@embeddedor>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Thu, 27 Feb 2020 15:10:52 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01RJqje2016502;
+        Thu, 27 Feb 2020 20:08:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=vTI3356UXLO6daiFtQpiwleqiIyVF/OpFewn1CjzkJE=;
+ b=YkAA0quWcullrhDKmChBzEZLwyf6280JvYe130sYSu1xX5sWFUprxvm9hkIgAzF09Pqb
+ ZrLJX5xxk3P2qlCMb6YxxN2n7u8SbiMv1M86QvB94OPJithlYzHfnYX+N7JKfl0GCuFr
+ zv/myyCtNEkz44gGfcDaNSAap/stuo8QV1CNiSHKiUaINp0Ua/6eJVeXEzdvzfijhccO
+ OptP/eLH1fVyvZawvLDz48Nq1cF0k508ni2XiuZA8gIU/ypWsW3wvACKJhjTHRJMHwRt
+ 7W4adaStZfqyEM9y2r2kGYp/vHgYNQOfH6g6HGQwR0PbmF1Iwm2CY2H7cwhPQWy4AO8t 8g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2ydct3dcse-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Feb 2020 20:08:59 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01RJm9SZ059733;
+        Thu, 27 Feb 2020 20:08:59 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2ydj4ngmvp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Feb 2020 20:08:59 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01RK8vNL021906;
+        Thu, 27 Feb 2020 20:08:57 GMT
+Received: from localhost.localdomain (/10.159.246.46)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 27 Feb 2020 12:08:57 -0800
+Subject: Re: [PATCH] KVM: nVMX: Consult only the "basic" exit reason when
+ routing nested exit
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
+References: <20200227174430.26371-1-sean.j.christopherson@intel.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <ee8c5eb6-9e3d-620b-d51f-bf0534a05d43@oracle.com>
+Date:   Thu, 27 Feb 2020 12:08:55 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200227174430.26371-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 27 Feb 2020 12:07:06 -0800 (PST)
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9544 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 suspectscore=0
+ spamscore=0 adultscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002270137
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9544 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 bulkscore=0
+ impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0 adultscore=0
+ phishscore=0 mlxlogscore=999 mlxscore=0 suspectscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002270137
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Date: Wed, 26 Feb 2020 15:23:17 -0600
 
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+On 2/27/20 9:44 AM, Sean Christopherson wrote:
+> Consult only the basic exit reason, i.e. bits 15:0 of vmcs.EXIT_REASON,
+> when determining whether a nested VM-Exit should be reflected into L1 or
+> handled by KVM in L0.
+>
+> For better or worse, the switch statement in nested_vmx_exit_reflected()
+> currently defaults to "true", i.e. reflects any nested VM-Exit without
+> dedicated logic.  Because the case statements only contain the basic
+> exit reason, any VM-Exit with modifier bits set will be reflected to L1,
+> even if KVM intended to handle it in L0.
+>
+> Practically speaking, this only affects EXIT_REASON_MCE_DURING_VMENTRY,
+> i.e. a #MC that occurs on nested VM-Enter would be incorrectly routed to
+> L1, as "failed VM-Entry" is the only modifier that KVM can currently
+> encounter.  The SMM modifiers will never be generated as KVM doesn't
+> support/employ a SMI Transfer Monitor.  Ditto for "exit from enclave",
+> as KVM doesn't yet support virtualizing SGX, i.e. it's impossible to
+> enter an enclave in a KVM guest (L1 or L2).
 
-Applied.
+
+It seems nested_vmx_exit_reflected() deals only with the basic exit 
+reason. If it doesn't need anything beyond bits 15:0, may be 
+vmx_handle_exit() can pass just the base exit reason ?
+
+>
+> Fixes: 644d711aa0e1 ("KVM: nVMX: Deciding if L0 or L1 should handle an L2 exit")
+> Cc: Jim Mattson <jmattson@google.com>
+> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>   arch/x86/kvm/vmx/nested.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index 0946122a8d3b..127065bbde2c 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -5554,7 +5554,7 @@ bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason)
+>   				vmcs_read32(VM_EXIT_INTR_ERROR_CODE),
+>   				KVM_ISA_VMX);
+>   
+> -	switch (exit_reason) {
+> +	switch ((u16)exit_reason) {
+>   	case EXIT_REASON_EXCEPTION_NMI:
+>   		if (is_nmi(intr_info))
+>   			return false;
+Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
