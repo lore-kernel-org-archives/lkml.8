@@ -2,137 +2,113 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D9A5C4BA06
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFACC4BA06
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 556AB222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:09:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BqnCB4Er"
+	by mail.kernel.org (Postfix) with ESMTP id 320632467F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 09:09:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582794575;
+	bh=ameTfSpd2/vi0KpT5v31U2fJJecfkJZj9Fk9cp8Z354=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=D17NcVzeshLZg7HNjhmiXy9TuSgsdwCPYrgxQ9LCwPfvIFDgr7iUwFw+5hPGjrgez
+	 MgtHrQqU828XqCMjEyE6qigpDAnv019tRteH/ymwOCJS2w5ndxTwbhpCpLirybPOtX
+	 pfV+ieAa2DudMJ6JJCL8g4eQiCCeiPk6yrzintf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728678AbgB0JJC (ORCPT
+        id S1728722AbgB0JJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 04:09:02 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:32853 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728504AbgB0JJC (ORCPT
+        Thu, 27 Feb 2020 04:09:34 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54914 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728693AbgB0JJd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 04:09:02 -0500
-Received: by mail-pg1-f195.google.com with SMTP id 6so1145935pgk.0;
-        Thu, 27 Feb 2020 01:09:01 -0800 (PST)
+        Thu, 27 Feb 2020 04:09:33 -0500
+Received: by mail-wm1-f68.google.com with SMTP id z12so2570958wmi.4
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 01:09:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7vaQ7QjOo9Se0T2Q2xPF6qY4GtLPfQLgWURgHlmpa9Y=;
-        b=BqnCB4Er3oF2o5IN15+LOkwinBZOxRYQCo4EGX4oH8xeUB3MwJlgFCg0L3JYst45O+
-         JjF6DLkrtqxrp1CK6/ZTiH66sUENhhaOtWYn1Fg5LLgLpaGCRMTIzI2hTQsAwzaCyvR3
-         wfUt+qTC5Na9npr0JTClPBcasifIOadGEk+jWZq3DJr2jkRJX4PyuOs/9RFq2MX8Xkw0
-         KnlTUleiOIqAuQTBfiUCdshOoMA1H90YnZ3IFxLuSBymdnsuVjERa/hXH5sSiHj699Aj
-         ArXDa8oedb8rQ6UG4ZcQ3/3qgayXymHOajWKPfM3ndyqoePz1bd2IYR5bdrBar50E5e0
-         gF7w==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EQQnvINcM1rixtSK0n5nMnVE2atRMKEwNu+vLaqHiK8=;
+        b=o7+HqYSwgM7WAjfV85IkFNtfIy9fR8D0iGhC9tRHvEkFmCq6z4NbuCMHTfp7mWLVJq
+         a3XNWapZW6+U/jgzJVSAnGasEbhjxqSQsAWqMKxB0MhL8UyyzGQlmj9TklHwqx/Jlrvd
+         kJlXw/Xnokb6zyFWFNZbo84PA8I0HFPm2IQYXBv5mPEZGk1q88DoSOiGHOKB7Wb3LJA/
+         yAUh7x8ifRyffjzyJRthKxvBijR+1akOHEB5bj4swUlZX/0RRJUv45hIF2FxHVKdtkyZ
+         khM7PLHS4NsGTk1U+BReJ0BrZw9CS/MxC3ixaNzCXVgrrgxehp2b2/RUy9oPbb7QDjh1
+         jkNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7vaQ7QjOo9Se0T2Q2xPF6qY4GtLPfQLgWURgHlmpa9Y=;
-        b=pkvLTGGYcWjqWHsXyqcNYy0Jvhzvb8eZM8IbYmoR/KSJafbuTNInVCq4d8IsKbRpr2
-         4xUtM5BcMvYWuVGk6/GJHQJ2NJZUh9KBfFsLGzH8BcI6mYTw+nxmUWH0pVCKQz2Q9Hal
-         EmHKYgl5WIkNP9LbXGkuCxZBj/v7lgtKLh8QKSCerjPNZFM30K8QYYdiApfmBRhSZXnd
-         YeVC9viDNNDDN/6kmTvwwMbo3BuThg59Pgc3rG2igm/bwFhqV2BELzkmPdIZM5Wt20o7
-         nM9oK3Z4QP/avmsYrOVNY8sjn8mvrtHSbLAdmhoeeNFNg9fQT2H6h5pNaD0gRuvPBiem
-         5RXg==
-X-Gm-Message-State: APjAAAWkPPUGMTKOXW5UJtl4gSTsFGFlDhSwcd9UWbNyMeW6PWgfj/59
-        YDgpSc+F+m2Ncf64my7Qlkc=
-X-Google-Smtp-Source: APXvYqwrD+o+y8bKo8X5wlJp0Eqfc4ggjlZK8W2rxPa0DGLux+knPP2Ho1qR7dnimC3gqRBfj2k2eA==
-X-Received: by 2002:a65:6715:: with SMTP id u21mr2984536pgf.17.1582794541092;
-        Thu, 27 Feb 2020 01:09:01 -0800 (PST)
-Received: from localhost.localdomain ([103.46.201.26])
-        by smtp.gmail.com with ESMTPSA id 3sm5700096pjg.27.2020.02.27.01.08.57
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EQQnvINcM1rixtSK0n5nMnVE2atRMKEwNu+vLaqHiK8=;
+        b=GGjHseS3ZI5V7Qa/c2tk60kkarT+7ULMYk8tDFOHClWgUMgB6Rddov6pJOpn05AQCI
+         ljR6Uq7VxwtuU8A8Axs4rCb7a+W9UPQWE59iwAlByGBZWJ98r0WFwtmbe1fRR6FgTeI/
+         LBxJlfwZKKIUx8AkwcrZjCttkjUyXfOGeL8Rq87tgDXv4yLV/ZXHdGfp1LIW28TxJkxE
+         4qJnHxSdqIbb4HELNIJn5sG/xMjq60b6VclL/UeZ2aLZ+BycVqGwZLBlgpnD8O0+xqYa
+         Zb7tc49VmD6CHaIdsk5pCI+znQRnymug0f8lBuyBNjqxpB9wLVX/oSBN02c7Bdh6wSh1
+         LAXA==
+X-Gm-Message-State: APjAAAWChGWH6XhqvghoGvbkAPU5IWftlkW4eoNyYxiIK5Eh4Sc9QsUA
+        tl1ak5rx5iT4WAZr/NS+I78=
+X-Google-Smtp-Source: APXvYqzwjzEwDpAwKLGNPAgRYjbuCZtcyo2XzDgdmMq/aDIzoqhOnvXP5fdeNotV7sf3rWp9pHhBxw==
+X-Received: by 2002:a1c:99c5:: with SMTP id b188mr3941990wme.176.1582794571799;
+        Thu, 27 Feb 2020 01:09:31 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id z6sm7011534wrw.36.2020.02.27.01.09.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 01:09:00 -0800 (PST)
-From:   Aman Sharma <amanharitsh123@gmail.com>
-Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
-        amanharitsh123 <amanharitsh123@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
+        Thu, 27 Feb 2020 01:09:31 -0800 (PST)
+Date:   Thu, 27 Feb 2020 10:09:29 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jonathan Corbet <corbet@lwn.net>, rcu@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [Linux-kernel-mentees] [PATCH v2] doc: Convert to checklist.txt to checklist.rst
-Date:   Thu, 27 Feb 2020 14:38:54 +0530
-Message-Id: <20200227090854.18207-1-amanharitsh123@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200225183916.4555-1-amanharitsh123@gmail.com>
-References: <20200225183916.4555-1-amanharitsh123@gmail.com>
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
+ balancer v6
+Message-ID: <20200227090929.GA57547@gmail.com>
+References: <20200224095223.13361-1-mgorman@techsingularity.net>
+ <20200224151641.GA24316@gmail.com>
+ <20200225115901.GB3466@techsingularity.net>
+ <CAKfTPtDN-XP7LAyy-zQ-J=nxv5M1x_f2AZ2qJ8CK6B82f5WwYg@mail.gmail.com>
+ <20200225142430.GC3466@techsingularity.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200225142430.GC3466@techsingularity.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: amanharitsh123 <amanharitsh123@gmail.com>
 
-This patch converts checklist.txt to checklist.rst and
-adds it to index.rst
+* Mel Gorman <mgorman@techsingularity.net> wrote:
 
-Signed-off-by: Aman Sharma <amanharitsh123@gmail.com>
----
- Documentation/RCU/{checklist.txt => checklist.rst} | 8 +++++---
- Documentation/RCU/index.rst                        | 1 +
- 2 files changed, 6 insertions(+), 3 deletions(-)
- rename Documentation/RCU/{checklist.txt => checklist.rst} (99%)
+> On Tue, Feb 25, 2020 at 02:28:16PM +0100, Vincent Guittot wrote:
+> > >
+> > > Will do.
+> > >
+> > > However I noticed that "sched/fair: Fix find_idlest_group() to handle
+> > > CPU affinity" did not make it to tip/sched/core. Peter seemed to think it
+> > > was fine. Was it rejected or is it just sitting in Peter's queue somewhere?
+> > 
+> > The patch has already reached mainline through tip/sched-urgent-for-linus
+> > 
+> 
+> Bah, I pasted the wrong subject. I am thinking of your
+> patch "sched/fair: fix statistics for find_idlest_group" --
+> https://lore.kernel.org/lkml/20200218144534.4564-1-vincent.guittot@linaro.org/
+> It still appears to be relevant or did I miss something else?
 
-diff --git a/Documentation/RCU/checklist.txt b/Documentation/RCU/checklist.rst
-similarity index 99%
-rename from Documentation/RCU/checklist.txt
-rename to Documentation/RCU/checklist.rst
-index e98ff261a438..50fd557b9acd 100644
---- a/Documentation/RCU/checklist.txt
-+++ b/Documentation/RCU/checklist.rst
-@@ -1,5 +1,7 @@
--Review Checklist for RCU Patches
-+.. _checklist_doc: 
- 
-+Review Checklist for RCU Patches
-+================================
- 
- This document contains a checklist for producing and reviewing patches
- that make use of RCU.  Violating any of the rules listed below will
-@@ -442,8 +444,8 @@ over a rather long period of time, but improvements are always welcome!
- 
- 	You instead need to use one of the barrier functions:
- 
--	o	call_rcu() -> rcu_barrier()
--	o	call_srcu() -> srcu_barrier()
-+	-	call_rcu() -> rcu_barrier()
-+	-	call_srcu() -> srcu_barrier()
- 
- 	However, these barrier functions are absolutely -not- guaranteed
- 	to wait for a grace period.  In fact, if there are no call_rcu()
-diff --git a/Documentation/RCU/index.rst b/Documentation/RCU/index.rst
-index 81a0a1e5f767..d60eb4ba2cd0 100644
---- a/Documentation/RCU/index.rst
-+++ b/Documentation/RCU/index.rst
-@@ -10,6 +10,7 @@ RCU concepts
-    arrayRCU
-    rcubarrier
-    rcu_dereference
-+   checklist
-    whatisRCU
-    rcu
-    listRCU
--- 
-2.20.1
+Applied to tip:sched/urgent now, thanks guys!
 
+	Ingo
