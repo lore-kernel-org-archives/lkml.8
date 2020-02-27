@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF34C3F35F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA55C3F34A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63A702469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8C1E222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:43:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811261;
-	bh=fsw8bX3AiW/+z9HUZPwx9bSyI1oArS/BAj87FAOnCEw=;
+	s=default; t=1582810984;
+	bh=kPczogWiXOSiS49EYVauMu0X+s/wJe9Q8hPGsbMerHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FV98z5tNusSKPXZPq7kkS8Zx7IydKrrPXhAbInbR2TEgocBjfCujwbD7zDy/NeGGD
-	 5DwToCnCiph86rp8kTpkJb3qHrieXBifILvRqxrGgZnj2Esz5gzzE8NBt4VG/e9zj6
-	 PSp2+7K+NtvQUaHqWCCPEE5ZlbXh78y7DeslRuFQ=
+	b=e5k73/4TB2/ws7qmLlcQQezgLOThDjAMVjhb1o2BdhkdP+OWDsrb4mRzW2psd0/Do
+	 OwyN58efqbP02sTXDC8n6/1mITd6MMiDZYHM5rHm1kWYQPo2XeHQe35FqmVq14Dybr
+	 l9GV1zSP5F5LMWTOo27RPs7jrQ2diRNm0Zuvq1Vs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730736AbgB0Nrk (ORCPT
+        id S1729608AbgB0NnD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:47:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44146 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:43:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730324AbgB0Nri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:47:38 -0500
+        id S1729580AbgB0NnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:43:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 679B22469F;
-        Thu, 27 Feb 2020 13:47:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 757F320578;
+        Thu, 27 Feb 2020 13:43:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811257;
-        bh=fsw8bX3AiW/+z9HUZPwx9bSyI1oArS/BAj87FAOnCEw=;
+        s=default; t=1582810981;
+        bh=kPczogWiXOSiS49EYVauMu0X+s/wJe9Q8hPGsbMerHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gYgsUoT7KhyA+ni1CML3kYAAbTbd3vbSxtXye6F7rDiXre6VvvwOlAd/3Wk/UMb6g
-         0DURSkbyhh6lHsZirOnP1UriCUvJG0x1KZj+AjuOQ5APshUqm5vl38Q9SHX/UYpGFy
-         YQxHSSbLG504zlcMxHTU703Rx5dN6IKN+HjqO7mM=
+        b=md4rov3naB0J861uvrcftcgWJWZaBwpVZYQlP82/A9GJ2ej8GgBSKKBZxZDwtHREh
+         NfsUOh7TDgAI9vPIaSZ8hXPtoZ8QseNfGrDyEFQTuq1mrTXFhA6frI3Pubv1wCKGJA
+         S+/6Ff5bnxfpprPYOAulHW+3/sIpt7xTrfBHb/tY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Stanislaw Gruszka <stf_xl@wp.pl>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 063/165] PM / devfreq: rk3399_dmc: Add COMPILE_TEST and HAVE_ARM_SMCCC dependency
-Date:   Thu, 27 Feb 2020 14:35:37 +0100
-Message-Id: <20200227132240.678764794@linuxfoundation.org>
+Subject: [PATCH 4.4 072/113] iwlegacy: ensure loop counter addr does not wrap and cause an infinite loop
+Date:   Thu, 27 Feb 2020 14:36:28 +0100
+Message-Id: <20200227132223.297849844@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
-References: <20200227132230.840899170@linuxfoundation.org>
+In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
+References: <20200227132211.791484803@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,50 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chanwoo Choi <cw00.choi@samsung.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit eff5d31f7407fa9d31fb840106f1593399457298 ]
+[ Upstream commit c2f9a4e4a5abfc84c01b738496b3fd2d471e0b18 ]
 
-To build test, add COMPILE_TEST depedency to both ARM_RK3399_DMC_DEVFREQ
-and DEVFREQ_EVENT_ROCKCHIP_DFI configuration. And ARM_RK3399_DMC_DEVFREQ
-used the SMCCC interface so that add HAVE_ARM_SMCCC dependency to prevent
-the build break.
+The loop counter addr is a u16 where as the upper limit of the loop
+is an int. In the unlikely event that the il->cfg->eeprom_size is
+greater than 64K then we end up with an infinite loop since addr will
+wrap around an never reach upper loop limit. Fix this by making addr
+an int.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Addresses-Coverity: ("Infinite loop")
+Fixes: be663ab67077 ("iwlwifi: split the drivers for agn and legacy devices 3945/4965")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Acked-by: Stanislaw Gruszka <stf_xl@wp.pl>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/Kconfig       | 3 ++-
- drivers/devfreq/event/Kconfig | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/wireless/iwlegacy/common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-index 41254e702f1e9..2ce7cc94d78b1 100644
---- a/drivers/devfreq/Kconfig
-+++ b/drivers/devfreq/Kconfig
-@@ -102,7 +102,8 @@ config ARM_TEGRA_DEVFREQ
+diff --git a/drivers/net/wireless/iwlegacy/common.c b/drivers/net/wireless/iwlegacy/common.c
+index 887114582583b..544ab3750ea6e 100644
+--- a/drivers/net/wireless/iwlegacy/common.c
++++ b/drivers/net/wireless/iwlegacy/common.c
+@@ -717,7 +717,7 @@ il_eeprom_init(struct il_priv *il)
+ 	u32 gp = _il_rd(il, CSR_EEPROM_GP);
+ 	int sz;
+ 	int ret;
+-	u16 addr;
++	int addr;
  
- config ARM_RK3399_DMC_DEVFREQ
- 	tristate "ARM RK3399 DMC DEVFREQ Driver"
--	depends on ARCH_ROCKCHIP
-+	depends on (ARCH_ROCKCHIP && HAVE_ARM_SMCCC) || \
-+		(COMPILE_TEST && HAVE_ARM_SMCCC)
- 	select DEVFREQ_EVENT_ROCKCHIP_DFI
- 	select DEVFREQ_GOV_SIMPLE_ONDEMAND
- 	select PM_DEVFREQ_EVENT
-diff --git a/drivers/devfreq/event/Kconfig b/drivers/devfreq/event/Kconfig
-index cd949800eed96..8851bc4e8e3e1 100644
---- a/drivers/devfreq/event/Kconfig
-+++ b/drivers/devfreq/event/Kconfig
-@@ -33,7 +33,7 @@ config DEVFREQ_EVENT_EXYNOS_PPMU
- 
- config DEVFREQ_EVENT_ROCKCHIP_DFI
- 	tristate "ROCKCHIP DFI DEVFREQ event Driver"
--	depends on ARCH_ROCKCHIP
-+	depends on ARCH_ROCKCHIP || COMPILE_TEST
- 	help
- 	  This add the devfreq-event driver for Rockchip SoC. It provides DFI
- 	  (DDR Monitor Module) driver to count ddr load.
+ 	/* allocate eeprom */
+ 	sz = il->cfg->eeprom_size;
 -- 
 2.20.1
 
