@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AF0C52D27
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CA7C54FC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F06FB24697
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51D4A24697
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:19:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813045;
-	bh=S/lCLJfRx7rrtZqEHxOCELQHv6pcJ4W7qh5YuUQB7Yo=;
+	s=default; t=1582813152;
+	bh=Jh+a2lBOCKXDBmG/hoPXRf10wziWKNYL5b/JHbzBHys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hc98+7cPDuFfKzbhVJoJR9lVYNY+56wM2cMi6w0ZRhSlmz5tUIx35zu37ePLM4YNa
-	 2EnrLe408+w+iu4XhpeeoR0Hj8C1xSFiKdiOYvGZ87FR+26q6MuIj/49uYlHl2afgU
-	 nJSJz7mquHskbz3bcUn678P6LRwAI4j3lszs0pv8=
+	b=SntukoLPlJ3WfVxDB6uwRZbSZBoIazhByBRUhSjHavPVd910f+8T8nkDFiiR6o18S
+	 n3WCT/ih8MiFUXN9ioMwBs5sFF7iMpm5HS6HI385efj1QrJ35TNCbGx1DWSzXCCQL9
+	 3p4CtqrXZrb48oBWTK95TxRcGKZSUAbyZ4u9qY+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389693AbgB0ORX (ORCPT
+        id S2389980AbgB0OTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:17:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57702 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:19:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730557AbgB0ORU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:17:20 -0500
+        id S2388960AbgB0OTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:19:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 804522468F;
-        Thu, 27 Feb 2020 14:17:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51ADB2469D;
+        Thu, 27 Feb 2020 14:19:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813040;
-        bh=S/lCLJfRx7rrtZqEHxOCELQHv6pcJ4W7qh5YuUQB7Yo=;
+        s=default; t=1582813141;
+        bh=Jh+a2lBOCKXDBmG/hoPXRf10wziWKNYL5b/JHbzBHys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hFRXgMul09XW72ZmxyXNcSgqrsNMT1zLl2xOSZ/9vTsIbrMINZvX34bj6Qa5wY+LD
-         BLj75aqkkD5yQ+fljrVe8y4PAPCScNme4mlsypcH6J9KgJPvhYspRlMX+s9v+5NfLw
-         OLUiKWWZAfU+O23SaQdeb8v+e+PywuL1SozIjwRI=
+        b=xhjSM/ppDvkXqUA+edvC5Cn/FRpAav3A9lS7K8TmDFOsrqp1wIsnWCR90srffsJkw
+         2FJVSg5otDNdcz0fMXX6y7AX1fiw9Nma+rnbKWrvrHYKvD2UrRlMYRkikZ85+UlkW2
+         sUgq2X94Hq06wSZ7hrlixdzsf0ZLQGCobczUo4k8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 5.5 114/150] drm/bridge: tc358767: fix poll timeouts
-Date:   Thu, 27 Feb 2020 14:37:31 +0100
-Message-Id: <20200227132249.571649531@linuxfoundation.org>
+        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.5 102/150] KVM: apic: avoid calculating pending eoi from an uninitialized val
+Date:   Thu, 27 Feb 2020 14:37:19 +0100
+Message-Id: <20200227132247.843728421@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -60,86 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-commit 8a6483ac634acda3f599f50082c652d2d37199c7 upstream.
+commit 23520b2def95205f132e167cf5b25c609975e959 upstream.
 
-Link training fails with:
+When pv_eoi_get_user() fails, 'val' may remain uninitialized and the return
+value of pv_eoi_get_pending() becomes random. Fix the issue by initializing
+the variable.
 
-  Link training timeout waiting for LT_LOOPDONE!
-  main link enable error: -110
-
-This is caused by too tight timeouts, which were changed recently in
-aa92213f388b ("drm/bridge: tc358767: Simplify polling in tc_link_training()").
-
-With a quick glance, the commit does not change the timeouts. However,
-the method of delaying/sleeping is different, and as the timeout in the
-previous implementation was not explicit, the new version in practice
-has much tighter timeout.
-
-The same change was made to other parts in the driver, but the link
-training timeout is the only one I have seen causing issues.
-Nevertheless, 1 us sleep is not very sane, and the timeouts look pretty
-tight, so lets fix all the timeouts.
-
-One exception was the aux busy poll, where the poll sleep was much
-longer than necessary (or optimal).
-
-I measured the times on my setup, and now the sleep times are set to
-such values that they result in multiple loops, but not too many (say,
-5-10 loops). The timeouts were all increased to 100ms, which should be
-more than enough for all of these, but in case of bad errors, shouldn't
-stop the driver as multi-second timeouts could do.
-
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Fixes: aa92213f388b ("drm/bridge: tc358767: Simplify polling in tc_link_training()")
-Tested-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191209082707.24531-1-tomi.valkeinen@ti.com
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/bridge/tc358767.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/kvm/lapic.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/bridge/tc358767.c
-+++ b/drivers/gpu/drm/bridge/tc358767.c
-@@ -297,7 +297,7 @@ static inline int tc_poll_timeout(struct
- 
- static int tc_aux_wait_busy(struct tc_data *tc)
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -630,9 +630,11 @@ static inline bool pv_eoi_enabled(struct
+ static bool pv_eoi_get_pending(struct kvm_vcpu *vcpu)
  {
--	return tc_poll_timeout(tc, DP0_AUXSTATUS, AUX_BUSY, 0, 1000, 100000);
-+	return tc_poll_timeout(tc, DP0_AUXSTATUS, AUX_BUSY, 0, 100, 100000);
+ 	u8 val;
+-	if (pv_eoi_get_user(vcpu, &val) < 0)
++	if (pv_eoi_get_user(vcpu, &val) < 0) {
+ 		printk(KERN_WARNING "Can't read EOI MSR value: 0x%llx\n",
+ 			   (unsigned long long)vcpu->arch.pv_eoi.msr_val);
++		return false;
++	}
+ 	return val & 0x1;
  }
  
- static int tc_aux_write_data(struct tc_data *tc, const void *data,
-@@ -640,7 +640,7 @@ static int tc_aux_link_setup(struct tc_d
- 	if (ret)
- 		goto err;
- 
--	ret = tc_poll_timeout(tc, DP_PHY_CTRL, PHY_RDY, PHY_RDY, 1, 1000);
-+	ret = tc_poll_timeout(tc, DP_PHY_CTRL, PHY_RDY, PHY_RDY, 100, 100000);
- 	if (ret == -ETIMEDOUT) {
- 		dev_err(tc->dev, "Timeout waiting for PHY to become ready");
- 		return ret;
-@@ -876,7 +876,7 @@ static int tc_wait_link_training(struct
- 	int ret;
- 
- 	ret = tc_poll_timeout(tc, DP0_LTSTAT, LT_LOOPDONE,
--			      LT_LOOPDONE, 1, 1000);
-+			      LT_LOOPDONE, 500, 100000);
- 	if (ret) {
- 		dev_err(tc->dev, "Link training timeout waiting for LT_LOOPDONE!\n");
- 		return ret;
-@@ -949,7 +949,7 @@ static int tc_main_link_enable(struct tc
- 	dp_phy_ctrl &= ~(DP_PHY_RST | PHY_M1_RST | PHY_M0_RST);
- 	ret = regmap_write(tc->regmap, DP_PHY_CTRL, dp_phy_ctrl);
- 
--	ret = tc_poll_timeout(tc, DP_PHY_CTRL, PHY_RDY, PHY_RDY, 1, 1000);
-+	ret = tc_poll_timeout(tc, DP_PHY_CTRL, PHY_RDY, PHY_RDY, 500, 100000);
- 	if (ret) {
- 		dev_err(dev, "timeout waiting for phy become ready");
- 		return ret;
 
 
