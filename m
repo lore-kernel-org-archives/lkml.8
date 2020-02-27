@@ -2,230 +2,116 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C8AC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7752C35DF9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96659246A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:35:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90DEE222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:36:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RHZfJ6Zj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N6zJ2dbo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730515AbgB0Tfb (ORCPT
+        id S1730620AbgB0TgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 14:35:31 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37194 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730380AbgB0Tfb (ORCPT
+        Thu, 27 Feb 2020 14:36:12 -0500
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:44070 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727268AbgB0TgL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 14:35:31 -0500
-Received: by mail-pf1-f194.google.com with SMTP id p14so351755pfn.4
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 11:35:30 -0800 (PST)
+        Thu, 27 Feb 2020 14:36:11 -0500
+Received: by mail-yw1-f67.google.com with SMTP id t141so683911ywc.11;
+        Thu, 27 Feb 2020 11:36:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jDKV/BVhQvBMwfS/RHWg5/AFVijLTVXYoYGSEirzUqw=;
-        b=RHZfJ6ZjFp5sp8ipveWK3eF5Dwye7KVaR6z9iE7vnbShK0NUzQN9/ddpgIgrsGsgEK
-         go3dwiZKpqRZ3qYcFoaAv2UquFiu/gPa+ssqiHVgX5UpONSYMHpPyYe45+eKfCqoV6PD
-         imMXzSGoEl4bONAdPTpTrri0RDknPx1NdKggU=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=fLGX/xGabWa4DPdGXZZH2fnbI6egAflYqmbRP3wBoRk=;
+        b=N6zJ2dbom09soVKZBwSEaOkmzKuE9hdWdmiIjEcYZVzPz9j+3e6d88CVS6nQmZBD8/
+         Tml0iIR+Rhx2eY+1tFlqSuWldV448vR4/b6TP8KkK9V4WiJunu9CEWpjHd0c35VCm7Mv
+         NkL6ih3S4mLnQfbtdrEEh2CZvgm6q/z37WQUnqEmNjy6MYB7fQvIdf/5YE7Kp1SgrAjP
+         QMJFjkEz2X6TWRvUKnzq15JeC+Kt8UiUF4G8S9lucHY5kemnpsDdjz24+MEwC73MyCu+
+         zFEjGlQcXw9LcyIG8IUPC9Rqxu9/kmpzpIotofVaY3B79ZvLMpDC+fZPbL9wJY7r4Bwz
+         dEJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jDKV/BVhQvBMwfS/RHWg5/AFVijLTVXYoYGSEirzUqw=;
-        b=c2pKgrrotNVbz9+lLde7G9WQckO9+FX/miaGzwyV6Kvu5KbEQEh1s4OPnPFJr0gt9M
-         xaa8ejusVfZNTfhNbFu914AEg1jsnVBNkdcQLvS43wqwpe/zezplZewULXN2WIHnVaAV
-         uDMH/3AHHkFZrjFRNKFyR6GJTkWcynPSH/u9ySlHAiNXswic/IQn/SG7DfNq+QimsQDK
-         filFq11FSyEH1K2u3cd+nvAIK/CCIEyiTQ8+hTaqVmdERZKjNHA3iIC0WePwFMZkpAKT
-         RizTrN9srDSxiLyCojjUtcdoU1eRdu86kiXfe6ID2EeTcZuEl7E63hiIOF/i8bWfqN+b
-         8C7w==
-X-Gm-Message-State: APjAAAW62Qt+cQTJf5pmHyhv8zOyiXOpWb+4i3Hip5DTVp2qPSDf213I
-        PiEQnR8KXoK2h1Q2oPzv3CFeDQ==
-X-Google-Smtp-Source: APXvYqyHeYlpEECGTPxzGxPWtF5ov215jrWWJl8MujEvBMWpkviZ0neOmsNjS1WOeToNJ2l0nbJvvA==
-X-Received: by 2002:a62:e80a:: with SMTP id c10mr518798pfi.129.1582832129371;
-        Thu, 27 Feb 2020 11:35:29 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o6sm8598900pfg.180.2020.02.27.11.35.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 11:35:27 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Elena Petrova <lenaptr@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        kasan-dev@googlegroups.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
-        syzkaller@googlegroups.com
-Subject: [PATCH v5 6/6] ubsan: Include bug type in report header
-Date:   Thu, 27 Feb 2020 11:35:16 -0800
-Message-Id: <20200227193516.32566-7-keescook@chromium.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200227193516.32566-1-keescook@chromium.org>
-References: <20200227193516.32566-1-keescook@chromium.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fLGX/xGabWa4DPdGXZZH2fnbI6egAflYqmbRP3wBoRk=;
+        b=XLPkn4SzM2LPqQC9KH7qyQp7xDJ87Z4oWAO4X/8w/HqkoxNd4PhCTM22BJTIs67NKM
+         y73XiI7bhTlpbWGhevhjfBnmHbWMUxFpcSWn9tyyM2qkdhbh2NvoDt4DiioOqDwNgJZ3
+         l+t9SZy4Rb2856ktkPo8TJMvAwz6AVI3BNK+FgnXXGSUkDtlQ2cqU4LjNqEdVvc2yMiR
+         ++c80+Y2ePrrreTVPslPeOEaJWVmQHR0gSbTxTTnaMjyhhqxUuanYQnA4Gr6a8dEMGDx
+         V/aqaKfJ841ohnd5gNjPErPELDhh+rZUU6Ayf+PeMT9PBjTQivCFdvmQJBcOIMEaOjga
+         Tr1Q==
+X-Gm-Message-State: APjAAAWGR6k0ahaiq24ptz5/gh4hw6BDtgDFreHwBq5gurCT6TMbYXaD
+        23djf3N9tTOC3pvkminfLL8=
+X-Google-Smtp-Source: APXvYqwJHOv7SS5SYnVNGRe2pOs7jGSn+gNuBZYYYSutQkryQ/8Kn0gzUQ+cNHliDnH7nPc6ndJYxg==
+X-Received: by 2002:a81:1fc2:: with SMTP id f185mr1016289ywf.241.1582832170706;
+        Thu, 27 Feb 2020 11:36:10 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id k8sm2434906ywa.4.2020.02.27.11.36.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Feb 2020 11:36:10 -0800 (PST)
+Subject: Re: linux-next: Tree for Feb 27 (drivers/of/unittest.c)
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+References: <20200227152223.3d8442f0@canb.auug.org.au>
+ <ed57c797-1d40-0786-2cdc-adae7047a86f@infradead.org>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <3b9459af-767a-0d6a-47c2-900e18acaa98@gmail.com>
+Date:   Thu, 27 Feb 2020 13:36:08 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <ed57c797-1d40-0786-2cdc-adae7047a86f@infradead.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When syzbot tries to figure out how to deduplicate bug reports, it
-prefers seeing a hint about a specific bug type (we can do better than
-just "UBSAN"). This lifts the handler reason into the UBSAN report line
-that includes the file path that tripped a check. Unfortunately, UBSAN
-does not provide function names.
+On 2/27/20 10:23 AM, Randy Dunlap wrote:
+> On 2/26/20 8:22 PM, Stephen Rothwell wrote:
+>> Hi all,
+>>
+>> Changes since 20200226:
+>>
+> 
+> on x86_64:
+> 
+> # CONFIG_GPIOLIB is not set
+> 
+> ../drivers/of/unittest.c: In function ‘unittest_gpio_probe’:
+> ../drivers/of/unittest.c:94:14: error: ‘struct gpio_chip’ has no member named ‘of_node’
+>   devptr->chip.of_node = pdev->dev.of_node;
+>               ^
+> In file included from ../include/linux/kernel.h:15:0,
+>                  from ../include/asm-generic/bug.h:19,
+>                  from ../arch/x86/include/asm/bug.h:83,
+>                  from ../include/linux/bug.h:5,
+>                  from ../include/linux/mmdebug.h:5,
+>                  from ../include/linux/mm.h:9,
+>                  from ../include/linux/memblock.h:13,
+>                  from ../drivers/of/unittest.c:8:
+> ../drivers/of/unittest.c:103:73: error: ‘struct gpio_chip’ has no member named ‘of_node’
+>     "gpiochip_add_data() for node @%pOF failed, ret = %d\n", devptr->chip.of_node, ret);
+>                                                                          ^
+> 
+> Full randconfig file is attached.
+> 
 
-Suggested-by: Dmitry Vyukov <dvyukov@google.com>
-Link: https://lore.kernel.org/lkml/CACT4Y+bsLJ-wFx_TaXqax3JByUOWB3uk787LsyMVcfW6JzzGvg@mail.gmail.com
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- lib/ubsan.c | 36 +++++++++++++++---------------------
- 1 file changed, 15 insertions(+), 21 deletions(-)
+Thanks for the report!
 
-diff --git a/lib/ubsan.c b/lib/ubsan.c
-index 429663eef6a7..f8c0ccf35f29 100644
---- a/lib/ubsan.c
-+++ b/lib/ubsan.c
-@@ -45,13 +45,6 @@ static bool was_reported(struct source_location *location)
- 	return test_and_set_bit(REPORTED_BIT, &location->reported);
- }
- 
--static void print_source_location(const char *prefix,
--				struct source_location *loc)
--{
--	pr_err("%s %s:%d:%d\n", prefix, loc->file_name,
--		loc->line & LINE_MASK, loc->column & COLUMN_MASK);
--}
--
- static bool suppress_report(struct source_location *loc)
- {
- 	return current->in_ubsan || was_reported(loc);
-@@ -140,13 +133,14 @@ static void val_to_string(char *str, size_t size, struct type_descriptor *type,
- 	}
- }
- 
--static void ubsan_prologue(struct source_location *location)
-+static void ubsan_prologue(struct source_location *loc, const char *reason)
- {
- 	current->in_ubsan++;
- 
- 	pr_err("========================================"
- 		"========================================\n");
--	print_source_location("UBSAN: Undefined behaviour in", location);
-+	pr_err("UBSAN: %s in %s:%d:%d\n", reason, loc->file_name,
-+		loc->line & LINE_MASK, loc->column & COLUMN_MASK);
- }
- 
- static void ubsan_epilogue(void)
-@@ -180,12 +174,12 @@ static void handle_overflow(struct overflow_data *data, void *lhs,
- 	if (suppress_report(&data->location))
- 		return;
- 
--	ubsan_prologue(&data->location);
-+	ubsan_prologue(&data->location, type_is_signed(type) ?
-+			"signed-integer-overflow" :
-+			"unsigned-integer-overflow");
- 
- 	val_to_string(lhs_val_str, sizeof(lhs_val_str), type, lhs);
- 	val_to_string(rhs_val_str, sizeof(rhs_val_str), type, rhs);
--	pr_err("%s integer overflow:\n",
--		type_is_signed(type) ? "signed" : "unsigned");
- 	pr_err("%s %c %s cannot be represented in type %s\n",
- 		lhs_val_str,
- 		op,
-@@ -225,7 +219,7 @@ void __ubsan_handle_negate_overflow(struct overflow_data *data,
- 	if (suppress_report(&data->location))
- 		return;
- 
--	ubsan_prologue(&data->location);
-+	ubsan_prologue(&data->location, "negation-overflow");
- 
- 	val_to_string(old_val_str, sizeof(old_val_str), data->type, old_val);
- 
-@@ -245,7 +239,7 @@ void __ubsan_handle_divrem_overflow(struct overflow_data *data,
- 	if (suppress_report(&data->location))
- 		return;
- 
--	ubsan_prologue(&data->location);
-+	ubsan_prologue(&data->location, "division-overflow");
- 
- 	val_to_string(rhs_val_str, sizeof(rhs_val_str), data->type, rhs);
- 
-@@ -264,7 +258,7 @@ static void handle_null_ptr_deref(struct type_mismatch_data_common *data)
- 	if (suppress_report(data->location))
- 		return;
- 
--	ubsan_prologue(data->location);
-+	ubsan_prologue(data->location, "null-ptr-deref");
- 
- 	pr_err("%s null pointer of type %s\n",
- 		type_check_kinds[data->type_check_kind],
-@@ -279,7 +273,7 @@ static void handle_misaligned_access(struct type_mismatch_data_common *data,
- 	if (suppress_report(data->location))
- 		return;
- 
--	ubsan_prologue(data->location);
-+	ubsan_prologue(data->location, "misaligned-access");
- 
- 	pr_err("%s misaligned address %p for type %s\n",
- 		type_check_kinds[data->type_check_kind],
-@@ -295,7 +289,7 @@ static void handle_object_size_mismatch(struct type_mismatch_data_common *data,
- 	if (suppress_report(data->location))
- 		return;
- 
--	ubsan_prologue(data->location);
-+	ubsan_prologue(data->location, "object-size-mismatch");
- 	pr_err("%s address %p with insufficient space\n",
- 		type_check_kinds[data->type_check_kind],
- 		(void *) ptr);
-@@ -354,7 +348,7 @@ void __ubsan_handle_out_of_bounds(struct out_of_bounds_data *data, void *index)
- 	if (suppress_report(&data->location))
- 		return;
- 
--	ubsan_prologue(&data->location);
-+	ubsan_prologue(&data->location, "array-index-out-of-bounds");
- 
- 	val_to_string(index_str, sizeof(index_str), data->index_type, index);
- 	pr_err("index %s is out of range for type %s\n", index_str,
-@@ -375,7 +369,7 @@ void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
- 	if (suppress_report(&data->location))
- 		goto out;
- 
--	ubsan_prologue(&data->location);
-+	ubsan_prologue(&data->location, "shift-out-of-bounds");
- 
- 	val_to_string(rhs_str, sizeof(rhs_str), rhs_type, rhs);
- 	val_to_string(lhs_str, sizeof(lhs_str), lhs_type, lhs);
-@@ -407,7 +401,7 @@ EXPORT_SYMBOL(__ubsan_handle_shift_out_of_bounds);
- 
- void __ubsan_handle_builtin_unreachable(struct unreachable_data *data)
- {
--	ubsan_prologue(&data->location);
-+	ubsan_prologue(&data->location, "unreachable");
- 	pr_err("calling __builtin_unreachable()\n");
- 	ubsan_epilogue();
- 	panic("can't return from __builtin_unreachable()");
-@@ -422,7 +416,7 @@ void __ubsan_handle_load_invalid_value(struct invalid_value_data *data,
- 	if (suppress_report(&data->location))
- 		return;
- 
--	ubsan_prologue(&data->location);
-+	ubsan_prologue(&data->location, "invalid-load");
- 
- 	val_to_string(val_str, sizeof(val_str), data->type, val);
- 
--- 
-2.20.1
+Will fix.
 
+-Frank
