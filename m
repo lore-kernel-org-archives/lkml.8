@@ -2,119 +2,102 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F940C4BA3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF65C4BA3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB6BB2469A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:16:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="gLbEzXfu"
+	by mail.kernel.org (Postfix) with ESMTP id AEEEF24699
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:18:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728963AbgB0MQw (ORCPT
+        id S1728986AbgB0MSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 07:16:52 -0500
-Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:60677 "EHLO
-        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728856AbgB0MQw (ORCPT
+        Thu, 27 Feb 2020 07:18:41 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:26280 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728856AbgB0MSl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 07:16:52 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 620A23FD5F;
-        Thu, 27 Feb 2020 13:16:49 +0100 (CET)
-Authentication-Results: ste-pvt-msa1.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=gLbEzXfu;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
-        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id rfGpzPSC_Tad; Thu, 27 Feb 2020 13:16:48 +0100 (CET)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id B73293F622;
-        Thu, 27 Feb 2020 13:16:46 +0100 (CET)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 07765360058;
-        Thu, 27 Feb 2020 13:16:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1582805806; bh=HS94RJPImzDoQLY2q4Ne/b5a9NMsxYAfRk+4BrMewsw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=gLbEzXfuzrAyw9EoRIHV1y36EvZXgzqWODh7uN9Np4P9BOcC3coXG7IQxrWeJsq3B
-         bmwBK/ss7x+uwsleuEHkleUDcAYo5ayY+0hUiPO6JEA3VFA6oCzv8nIz467Mo9yiL7
-         6hul+ss9vMywmIcQvCaux0tUk+2Pynh9sJKcBeTU=
-Subject: Re: [PATCH v5 1/3] drm/shmem: add support for per object caching
- flags.
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, Guillaume.Gardet@arm.com,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org, gurchetansingh@chromium.org,
-        tzimmermann@suse.de
-References: <20200226154752.24328-1-kraxel@redhat.com>
- <20200226154752.24328-2-kraxel@redhat.com>
- <f1afba4b-9c06-48a3-42c7-046695947e91@shipmail.org>
- <20200227075321.ki74hfjpnsqv2yx2@sirius.home.kraxel.org>
- <41ca197c-136a-75d8-b269-801db44d4cba@shipmail.org>
- <20200227105643.h4klc3ybhpwv2l3x@sirius.home.kraxel.org>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <68a05ace-40bc-76d6-5464-2c96328874b9@shipmail.org>
-Date:   Thu, 27 Feb 2020 13:16:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 27 Feb 2020 07:18:41 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01RCHa5Z028892;
+        Thu, 27 Feb 2020 07:18:36 -0500
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ydtrwk24n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Feb 2020 07:18:36 -0500
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 01RCIZHk044665
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Thu, 27 Feb 2020 07:18:35 -0500
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 27 Feb
+ 2020 04:18:33 -0800
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Thu, 27 Feb 2020 04:18:33 -0800
+Received: from analog.ad.analog.com ([10.48.65.180])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01RCIUEO030445;
+        Thu, 27 Feb 2020 07:18:31 -0500
+From:   Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <jic23@kernel.org>
+CC:     <pmeerw@pmeerw.net>, <Michael.Hennerich@analog.com>,
+        <marcelo.schmitt1@gmail.com>,
+        Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+Subject: [PATCH] iio: adc: ad9292: Use new structure for SPI transfer delays
+Date:   Thu, 27 Feb 2020 14:18:14 +0200
+Message-ID: <20200227121814.14442-1-sergiu.cuciurean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200227105643.h4klc3ybhpwv2l3x@sirius.home.kraxel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-27_03:2020-02-26,2020-02-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ phishscore=0 adultscore=0 spamscore=0 mlxscore=0 mlxlogscore=960
+ suspectscore=0 clxscore=1011 lowpriorityscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002270100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/27/20 11:56 AM, Gerd Hoffmann wrote:
->    Hi,
->
->> I think it might be safe for some integrated graphics where the driver
->> maintainers can guarantee that it's safe on all particular processors used
->> with that driver, but then IMO it should be moved out to those drivers.
->>
->> Other drivers needing write-combine shouldn't really use shmem.
->>
->> So again, to fix the regression, could we revert 0be895893607f ("drm/shmem:
->> switch shmem helper to &drm_gem_object_funcs.mmap") or does that have other
->> implications?
-> This patch isn't a regression.  The old code path has the
-> pgprot_writecombine() call in drm_gem_mmap_obj(), so the behavior
-> is the same before and afterwards.
+In a recent change to the SPI subsystem [1], a new `delay` struct was added
+to replace the `delay_usecs`. This change replaces the current
+`delay_usecs` with `delay` for this driver.
 
-OK. I wasn't checking where this all came from from the start...
+The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
+that both `delay_usecs` & `delay` are used (in this order to preserve
+backwards compatibility).
 
-> But with the patch in place we can easily have shmem helpers do their
-> own thing instead of depending on whatever drm_gem_mmap_obj() is doing.
-> Just using cached mappings unconditionally would be perfectly fine for
-> virtio-gpu.
->
-> Not sure about the other users though.  I'd like to fix the virtio-gpu
-> regression (coming from ttm -> shmem switch) asap, and I don't feel like
-> changing the behavior for other drivers in 5.6-rc is a good idea.
->
-> So I'd like to push patches 1+2 to -fixes and sort everything else later
-> in -next.  OK?
+[1] commit bebcfd272df6 ("spi: introduce `delay` field for
+`spi_transfer` + spi_transfer_delay_exec()")
 
-OK with me. Do we have any idea what drivers are actually using 
-write-combine and decrypted?
+Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+---
+ drivers/iio/adc/ad7292.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-/Thomas
-
-
-
->
-> cheers,
->    Gerd
-
+diff --git a/drivers/iio/adc/ad7292.c b/drivers/iio/adc/ad7292.c
+index a6798f7dfdb8..6595fd196288 100644
+--- a/drivers/iio/adc/ad7292.c
++++ b/drivers/iio/adc/ad7292.c
+@@ -122,7 +122,10 @@ static int ad7292_single_conversion(struct ad7292_state *st,
+ 		{
+ 			.tx_buf = &st->d8,
+ 			.len = 4,
+-			.delay_usecs = 6,
++			.delay = {
++				.value = 6,
++				.unit = SPI_DELAY_UNIT_USECS
++			},
+ 		}, {
+ 			.rx_buf = &st->d16,
+ 			.len = 2,
+-- 
+2.17.1
 
