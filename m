@@ -2,115 +2,147 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A92AC4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88541C4BA2D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 541F724650
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:11:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6582024650
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:12:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbgB0ALT (ORCPT
+        id S1728124AbgB0AMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 19:11:19 -0500
-Received: from mga02.intel.com ([134.134.136.20]:62235 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727987AbgB0ALS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 19:11:18 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 16:11:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,490,1574150400"; 
-   d="scan'208";a="271951474"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga002.fm.intel.com with ESMTP; 26 Feb 2020 16:11:17 -0800
-Date:   Wed, 26 Feb 2020 16:11:17 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        David Laight <David.Laight@aculab.com>
-Subject: Re: [PATCH v2 3/6] kvm: x86: Emulate split-lock access as a write
-Message-ID: <20200227001117.GX9940@linux.intel.com>
-References: <20200203151608.28053-1-xiaoyao.li@intel.com>
- <20200203151608.28053-4-xiaoyao.li@intel.com>
- <95d29a81-62d5-f5b6-0eb6-9d002c0bba23@redhat.com>
- <878sl945tj.fsf@nanos.tec.linutronix.de>
- <d690c2e3-e9ef-a504-ede3-d0059ec1e0f6@redhat.com>
+        Wed, 26 Feb 2020 19:12:32 -0500
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:43219 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728018AbgB0AMc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 19:12:32 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R591e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04396;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0Tr.dLPs_1582762346;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tr.dLPs_1582762346)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 27 Feb 2020 08:12:28 +0800
+Subject: Re: [PATCH] mm: memcontrol: asynchronous reclaim for memory.high
+To:     Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, Tejun Heo <tj@kernel.org>,
+        Roman Gushchin <guro@fb.com>, Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>
+References: <20200219181219.54356-1-hannes@cmpxchg.org>
+ <CALvZod7fya+o8mO+qo=FXjk3WgNje=2P=sxM5StgdBoGNeXRMg@mail.gmail.com>
+ <20200226222642.GB30206@cmpxchg.org>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <2be6ac8d-e290-0a85-5cfa-084968a7fe36@linux.alibaba.com>
+Date:   Wed, 26 Feb 2020 16:12:23 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d690c2e3-e9ef-a504-ede3-d0059ec1e0f6@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200226222642.GB30206@cmpxchg.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 02:34:18PM +0100, Paolo Bonzini wrote:
-> On 11/02/20 14:22, Thomas Gleixner wrote:
-> > Paolo Bonzini <pbonzini@redhat.com> writes:
-> >> On 03/02/20 16:16, Xiaoyao Li wrote:
-> >>> A sane guest should never tigger emulation on a split-lock access, but
-> >>> it cannot prevent malicous guest from doing this. So just emulating the
-> >>> access as a write if it's a split-lock access to avoid malicous guest
-> >>> polluting the kernel log.
-> >>
-> >> Saying that anything doing a split lock access is malicious makes little
-> >> sense.
-> > 
-> > Correct, but we also have to accept, that split lock access can be used
-> > in a malicious way, aka. DoS.
-> 
-> Indeed, a more accurate emulation such as temporarily disabling
-> split-lock detection in the emulator would allow the guest to use split
-> lock access as a vehicle for DoS, but that's not what the commit message
-> says.  If it were only about polluting the kernel log, there's
-> printk_ratelimited for that.  (In fact, if we went for incorrect
-> emulation as in this patch, a rate-limited pr_warn would be a good idea).
-> 
-> It is much more convincing to say that since this is pretty much a
-> theoretical case, we can assume that it is only done with the purpose of
-> DoS-ing the host or something like that, and therefore we kill the guest.
 
-The problem with "kill the guest", and the reason I'd prefer to emulate the
-split-lock as a write, is that killing the guest in this case is annoyingly
-difficult.
 
-Returning X86EMUL_UNHANDLEABLE / EMULATION_FAILED gets KVM to
-handle_emulation_failure(), but handle_emulation_failure() will only "kill"
-the guest if emulation failed in L1 CPL==0.  For all other modes, it will
-inject a #UD and resume the guest.  KVM also injects a #UD for L1 CPL==0,
-but that's the least annoying thing.
+On 2/26/20 2:26 PM, Johannes Weiner wrote:
+> On Wed, Feb 26, 2020 at 12:25:33PM -0800, Shakeel Butt wrote:
+>> On Wed, Feb 19, 2020 at 10:12 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
+>>> We have received regression reports from users whose workloads moved
+>>> into containers and subsequently encountered new latencies. For some
+>>> users these were a nuisance, but for some it meant missing their SLA
+>>> response times. We tracked those delays down to cgroup limits, which
+>>> inject direct reclaim stalls into the workload where previously all
+>>> reclaim was handled my kswapd.
+>>>
+>>> This patch adds asynchronous reclaim to the memory.high cgroup limit
+>>> while keeping direct reclaim as a fallback. In our testing, this
+>>> eliminated all direct reclaim from the affected workload.
+>>>
+>>> memory.high has a grace buffer of about 4% between when it becomes
+>>> exceeded and when allocating threads get throttled. We can use the
+>>> same buffer for the async reclaimer to operate in. If the worker
+>>> cannot keep up and the grace buffer is exceeded, allocating threads
+>>> will fall back to direct reclaim before getting throttled.
+>>>
+>>> For irq-context, there's already async memory.high enforcement. Re-use
+>>> that work item for all allocating contexts, but switch it to the
+>>> unbound workqueue so reclaim work doesn't compete with the workload.
+>>> The work item is per cgroup, which means the workqueue infrastructure
+>>> will create at maximum one worker thread per reclaiming cgroup.
+>>>
+>>> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+>>> ---
+>>>   mm/memcontrol.c | 60 +++++++++++++++++++++++++++++++++++++------------
+>>>   mm/vmscan.c     | 10 +++++++--
+>> This reminds me of the per-memcg kswapd proposal from LSFMM 2018
+>> (https://lwn.net/Articles/753162/).
+> Ah yes, I remember those discussions. :)
+>
+> One thing that has changed since we tried to implement this last was
+> the workqueue concurrency code. We don't have to worry about a single
+> thread or fixed threads per cgroup, because the workqueue code has
+> improved significantly to handle concurrency demands, and having one
+> work item per cgroup makes sure we have anywhere between 0 threads and
+> one thread per cgroup doing this reclaim work, completely on-demand.
 
-Adding a new emulation type isn't an option because this code can be
-triggered through normal emulation.  A new return type could be added for
-split-lock, but that's code I'd really not add, both from an Intel
-perspective and a KVM maintenance perspective.  And, we'd still have the
-conundrum of what to do if/when split-lock #AC is exposed to L1, e.g. in
-that case, KVM should inject an #AC into L1, not kill the guest.  Again,
-totally doable, but ugly and IMO an unnecessary maintenance burden.
+Yes, exactly. Our in-house implementation was just converted to use 
+workqueue instead of dedicated kernel thread for each cgroup.
 
-I completely agree that poorly emulating the instruction from the (likely)
-malicious guest is a hack, but it's a simple and easy to maintain hack.
+>
+> Also, with cgroup2, memory and cpu always have overlapping control
+> domains, so the question who to account the work to becomes a much
+> easier one to answer.
+>
+>> If I understand this correctly, the use-case is that the job instead
+>> of direct reclaiming (potentially in latency sensitive tasks), prefers
+>> a background non-latency sensitive task to do the reclaim. I am
+>> wondering if we can use the memory.high notification along with a new
+>> memcg interface (like memory.try_to_free_pages) to implement a user
+>> space background reclaimer. That would resolve the cpu accounting
+>> concerns as the user space background reclaimer can share the cpu cost
+>> with the task.
+> The idea is not necessarily that the background reclaimer is lower
+> priority work, but that it can execute in parallel on a separate CPU
+> instead of being forced into the execution stream of the main work.
+>
+> So we should be able to fully resolve this problem inside the kernel,
+> without going through userspace, by accounting CPU cycles used by the
+> background reclaim worker to the cgroup that is being reclaimed.
 
-> >> Split lock detection is essentially a debugging feature, there's a
-> >> reason why the MSR is called "TEST_CTL".  So you don't want to make the
-> > 
-> > The fact that it ended up in MSR_TEST_CTL does not say anything. That's
-> > where they it ended up to be as it was hastily cobbled together for
-> > whatever reason.
-> 
-> Or perhaps it was there all the time in test silicon or something like
-> that...  That would be a very plausible reason for all the quirks behind it.
-> 
-> Paolo
-> 
+Actually I'm wondering if we really need account CPU cycles used by 
+background reclaimer or not. For our usecase (this may be not general), 
+the purpose of background reclaimer is to avoid latency sensitive 
+workloads get into direct relcaim (avoid the stall from direct relcaim). 
+In fact it just "steal" CPU cycles from lower priority or best-effort 
+workloads to guarantee latency sensitive workloads behave well. If the 
+"stolen" CPU cycles are accounted, it means the latency sensitive 
+workloads would get throttled from somewhere else later, i.e. by CPU share.
+
+We definitely don't want to the background reclaimer eat all CPU cycles. 
+So, the whole background reclaimer is opt in stuff. The higher level 
+cluster management and administration components make sure the cgroups 
+are setup correctly, i.e. enable for specific cgroups, setup watermark 
+properly, etc.
+
+Of course, this may be not universal and may be just fine for some 
+specific configurations or usecases.
+
+>
+>> One concern with this approach will be that the memory.high
+>> notification is too late and the latency sensitive task has faced the
+>> stall. We can either introduce a threshold notification or another
+>> notification only limit like memory.near_high which can be set based
+>> on the job's rate of allocations and when the usage hits this limit
+>> just notify the user space.
+> Yeah, I think it would be a pretty drastic expansion of the memory
+> controller's interface.
+
