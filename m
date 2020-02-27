@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3A5C4BA37
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 02:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18285C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 02:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA35624672
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 02:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA52D222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 02:47:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728313AbgB0Crk (ORCPT
+        id S1728324AbgB0Crq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 21:47:40 -0500
+        Wed, 26 Feb 2020 21:47:46 -0500
 Received: from mga05.intel.com ([192.55.52.43]:47772 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728235AbgB0Crd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 21:47:33 -0500
+        id S1728173AbgB0Crc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 21:47:32 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
   by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 18:47:32 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,490,1574150400"; 
-   d="scan'208";a="438670612"
+   d="scan'208";a="438670600"
 Received: from gayuk-dev-mach.sc.intel.com ([10.3.79.171])
-  by fmsmga006.fm.intel.com with ESMTP; 26 Feb 2020 18:47:32 -0800
+  by fmsmga006.fm.intel.com with ESMTP; 26 Feb 2020 18:47:31 -0800
 From:   Gayatri Kammela <gayatri.kammela@intel.com>
 To:     platform-driver-x86@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, vishwanath.somayaji@intel.com,
@@ -37,9 +37,9 @@ Cc:     linux-kernel@vger.kernel.org, vishwanath.somayaji@intel.com,
         Chen Zhou <chenzhou10@huawei.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         "David E . Box" <david.e.box@intel.com>
-Subject: [PATCH v1 4/4] platform/x86: intel_pmc_core: fix: Add slp_s0_offset attribute back to tgl_reg_map
-Date:   Wed, 26 Feb 2020 18:43:30 -0800
-Message-Id: <8a3ba27589afd8d66545618f863e0c860ddd1944.1582770011.git.gayatri.kammela@intel.com>
+Subject: [PATCH v1 1/4] platform/x86: intel_pmc_core: fix: Make pmc_core_lpm_display() generic for platforms that support sub-states
+Date:   Wed, 26 Feb 2020 18:43:27 -0800
+Message-Id: <4ed31a98bbb65717f5182f6d512dd4df80c78272.1582770011.git.gayatri.kammela@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1582770011.git.gayatri.kammela@intel.com>
 References: <cover.1582770011.git.gayatri.kammela@intel.com>
@@ -50,35 +50,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If platforms such as Tiger Lake has sub-states of S0ix, then attributes
-such as slps0_dbg_offset become invalid. But slp_s0_offset is still
-valid as it is used to get the pmcdev_base_addr.
-
-Hence, add back slp_s0_offset and remove slps0_dbg_offset attributes.
+Currently pmc_core_lpm_display() uses array of struct pointers i.e.,
+tgl_lpm_maps for Tiger Lake directly to iterate through and to get the
+number of status/live status registers which is hardcoded and will not
+work for future platforms that support sub-states. To maintain
+readability, make pmc_core_lpm_display() generic, so that it can re-used
+for future platforms.
 
 Cc: Chen Zhou <chenzhou10@huawei.com>
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: David E. Box <david.e.box@intel.com>
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
 ---
- drivers/platform/x86/intel_pmc_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/intel_pmc_core.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index bbd3805f36e1..87a6aa4f43fa 100644
+index f4a36fbabf4c..333c6963d270 100644
 --- a/drivers/platform/x86/intel_pmc_core.c
 +++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -556,9 +556,9 @@ static const struct pmc_bit_map *tgl_lpm_maps[] = {
+@@ -979,10 +979,14 @@ static void pmc_core_lpm_display(struct pmc_dev *pmcdev, struct device *dev,
+ 				 const char *str,
+ 				 const struct pmc_bit_map **maps)
+ {
+-	u32 lpm_regs[ARRAY_SIZE(tgl_lpm_maps)-1];
+-	int index, idx, len = 32, bit_mask;
++	int index, idx, len = 32, bit_mask, arr_size = 0;
  
- static const struct pmc_reg_map tgl_reg_map = {
- 	.pfear_sts = ext_tgl_pfear_map,
-+	.slp_s0_offset = CNP_PMC_SLP_S0_RES_COUNTER_OFFSET,
- 	.ltr_show_sts = cnp_ltr_show_map,
- 	.msr_sts = msr_map,
--	.slps0_dbg_offset = CNP_PMC_SLPS0_DBG_OFFSET,
- 	.ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
- 	.regmap_length = CNP_PMC_MMIO_REG_LEN,
- 	.ppfear0_offset = CNP_PMC_HOST_PPFEAR0A,
+-	for (index = 0; tgl_lpm_maps[index]; index++) {
++	for (index = 0; maps[index]; index++)
++		arr_size++;
++
++	u32 lpm_regs[arr_size];
++
++	for (index = 0; maps[index]; index++) {
+ 		lpm_regs[index] = pmc_core_reg_read(pmcdev, offset);
+ 		offset += 4;
+ 	}
 -- 
 2.17.1
 
