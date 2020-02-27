@@ -2,174 +2,335 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D91AC4BA0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BF8C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:56:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C491D24650
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:53:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Uat+WHGe";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="YxaNitAF"
+	by mail.kernel.org (Postfix) with ESMTP id AF0CB21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:56:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728153AbgB0AxG (ORCPT
+        id S1728095AbgB0A4B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 19:53:06 -0500
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:17257 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728075AbgB0AxG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 19:53:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1582764793; x=1614300793;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=ckps28SYkVweMJF2SY5LcXYLlRdGKB1lKG/0P8E/8Bc=;
-  b=Uat+WHGeA95lYAqYSzmd6fXMohHCgNRJIT9wRbwRAe/vbB8cfE6uCbjX
-   TxgcQJ5zqzgUn06NSQUZYafw4OzT1kIaIBZ9pZlWa2QrGVOViS/5eMcEg
-   DhEOHEBaYpjMVHEvjbSeNr8G1MbdL9N9bK5mGOM/fv+GbruUxbdMydl94
-   IHcGckkhq1nQx+QtIaoGb8VRD2fADYuTOsPnXShX68Imxbd9kwjw96IC9
-   M3v7ldpqrvsmzkMgGK5TK1LsZx/jcxg/ye0Q6KtW5e20W6oopMl6qJ57C
-   W5OLbL55omMU55p54pqQOc8z7b8egNMY18KDk+sXIaGtwQSYDEmAq+gwY
-   w==;
-IronPort-SDR: y1wpxpdg5xoeapUxSFqwqe4ZsLwU27M/xSgJ1J/qWHPRpyjZIPD0Xn6kRPg/Zt1zHcHHR4u9h7
- E2Ew8gludEovA75FMB1quVQl+Wqu32hsTrujYpD7GbHtiMgGkTba7svwtxRyOUcykc1OWK5fyC
- cVdc6E59pDI2MBsPEVkEEkEc0AkGhSmj9cE5utJuihl5zkUWrP8kIyh4+QxlKReeim85cPxCqq
- NfBNCQKsgSphHeh6AfU6QEZ+MguE4TyefDI7IU5MICo+XMMrp7GhCtxLPiha4e6sZVKa8YX9on
- 4fI=
-X-IronPort-AV: E=Sophos;i="5.70,490,1574092800"; 
-   d="scan'208";a="232758574"
-Received: from mail-mw2nam12lp2048.outbound.protection.outlook.com (HELO NAM12-MW2-obe.outbound.protection.outlook.com) ([104.47.66.48])
-  by ob1.hgst.iphmx.com with ESMTP; 27 Feb 2020 08:53:09 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZMK4JUiExIpK2yx7oZjYM1sKRT/nnrvUMqKBpr6MBcxIMbv9EkkHGZtRjpYUXrqoDp7P1ci8nI+ZqtZbeyDHIFFtYXIrPo3BjvniAA95bglIfSmalLk9V8VirUzbZ1DEOq8oRg2s1fqsnzYWj5ZmoTfXvDa3357XyUcOb8Db0V7mlKYGW9QeiL3enTVXvrCSr+7VfrCYcEGHwb2DbQi5n8+NwUU3WFUyJ+YXeCRRgxtrfaUY2R48aIc0xsHaZIXtXXjhJSwCDAOj8hiU7gGjgIyaJuaA+dQa0PNW8ihgG4GVmdpYGWrgNfIOsDjvhArJKpDaYtCt94++9KiVaznUGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ckps28SYkVweMJF2SY5LcXYLlRdGKB1lKG/0P8E/8Bc=;
- b=BrM4q7MsyO5hrTN2iXhryyNhDrc1bYzJWDRQwkErdcnZccsMxoKZzrDJfirZKozsgWvEKXe0L+D3ZYSOidi/gqI47334rpAeji5WizBdNfif+4ZJgXI54SG1i68gf0Fn5IfunwgWevebj8vqjLiCkxytI+8lYQmflsX05a4xN8FVe4YoMkxypDKdTPT5Y0tKSISqLTRWgYAIk8yxZxAofVQ+jmqeUlCOGIX1rR3978lcE7vbzeAEXDN6LxXKCZ43RIimpkBgopRo49fwrXYNB9NIeS7le9jdGRr/VNzbmD98x2PbYrz9GusrXWS3Ix8posa1qCCeS71dc5ifXenaNw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ckps28SYkVweMJF2SY5LcXYLlRdGKB1lKG/0P8E/8Bc=;
- b=YxaNitAF3mvbDhT0I6fNs6ll8HwL5OMRzODCE9p1bgxtpapLLEBeNu4JqCieMaMK5j8XccbOXv9mIPSOTkHIWymogY8RAbPjwhbebwVg6JCFzIZ85IL4GLdTW+nj+uG1d8Dh3LIngiRyccNqHSb5CIBQRH1FNkCZHnAltGWkA7A=
-Received: from BYAPR04MB3990.namprd04.prod.outlook.com (2603:10b6:a02:ae::29)
- by BYAPR04MB5864.namprd04.prod.outlook.com (2603:10b6:a03:10d::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Thu, 27 Feb
- 2020 00:53:02 +0000
-Received: from BYAPR04MB3990.namprd04.prod.outlook.com
- ([fe80::ecfa:6b6b:1612:c46e]) by BYAPR04MB3990.namprd04.prod.outlook.com
- ([fe80::ecfa:6b6b:1612:c46e%6]) with mapi id 15.20.2772.012; Thu, 27 Feb 2020
- 00:53:02 +0000
-From:   Atish Patra <Atish.Patra@wdc.com>
-To:     "ardb@kernel.org" <ardb@kernel.org>
-CC:     "alexios.zavras@intel.com" <alexios.zavras@intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "michal.simek@xilinx.com" <michal.simek@xilinx.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "abner.chang@hpe.com" <abner.chang@hpe.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "daniel.schaefer@hpe.com" <daniel.schaefer@hpe.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
-        "palmer@dabbelt.com" <palmer@dabbelt.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
-        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
-        "bp@suse.de" <bp@suse.de>,
-        "greentime.hu@sifive.com" <greentime.hu@sifive.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "agraf@csgraf.de" <agraf@csgraf.de>,
-        "will@kernel.org" <will@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "han_mao@c-sky.com" <han_mao@c-sky.com>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "leif@nuviainc.com" <leif@nuviainc.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-Subject: Re: [RFC PATCH 2/5] include: pe.h: Add RISC-V related PE definition
-Thread-Topic: [RFC PATCH 2/5] include: pe.h: Add RISC-V related PE definition
-Thread-Index: AQHV7EGbQ/hJ0+85jUS9XgnqZeDXpagtDecAgAEqGoA=
-Date:   Thu, 27 Feb 2020 00:53:01 +0000
-Message-ID: <aec81e45ab5ee1104d2088513fe4ca668b83d04a.camel@wdc.com>
-References: <20200226011037.7179-1-atish.patra@wdc.com>
-         <20200226011037.7179-3-atish.patra@wdc.com>
-         <CAKv+Gu-LAfcH5mLZNLk7=A3E43a93FK+8DPYNrx1FANnbo3J7g@mail.gmail.com>
-In-Reply-To: <CAKv+Gu-LAfcH5mLZNLk7=A3E43a93FK+8DPYNrx1FANnbo3J7g@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Atish.Patra@wdc.com; 
-x-originating-ip: [199.255.44.250]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: bde3bbc0-a1c0-480e-c0c7-08d7bb1f65dd
-x-ms-traffictypediagnostic: BYAPR04MB5864:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR04MB58643C25C01B2FD3E02561FEFAEB0@BYAPR04MB5864.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:883;
-x-forefront-prvs: 03264AEA72
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(346002)(396003)(39860400002)(376002)(366004)(189003)(199004)(64756008)(4326008)(66556008)(66446008)(6486002)(26005)(66946007)(7406005)(76116006)(6916009)(186003)(6506007)(7416002)(4744005)(86362001)(66476007)(6512007)(71200400001)(478600001)(8936002)(81156014)(81166006)(36756003)(8676002)(316002)(2906002)(54906003)(5660300002)(2616005);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB5864;H:BYAPR04MB3990.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: GBwmDI9oLkEviR24iCWDI8jF4o1dtMZS+bnsUixry2wDiYDhGs5EjZL/BA6GSshT7MKjfuXD8C3UTfA94PfkfdcuD/H8xrGnkdKAkSlNJrzKcmxuYRcOsGpy+62FDjLmdfV0lDWqs5Qi0ls8VCsubLRzkxNbW8ELBNZPbBOQ/fDFe5yBK9e1JNw5PYb0OO9WsVrclVJIT7LDTCExp7K0ieewoW8fNBAbdQ6tt8goWxTwM2CfjH6Ntqvz480NNGbXo8t+98BYQxz2MQSkvR3d3eLtVhXClM6d1BlUOSFzw5ug78ald46AfTn4jUjRRAKSvrLKMWsFaOm11t37wUmvVbjV5/fSlfPyxWbzme12DEqcNvY1fDkfhJwVnNKMee8OvlTO2gheBLgU18UcI7Cc8DNDMPx+a9m3o5+yk6DKfmqFz9O86r06r7mIpDsBXgox
-x-ms-exchange-antispam-messagedata: Tw1zDQpxzeGe4K0cjGdDrQMQUJ1MDCpSDwEWO38PeLYMJ2CTkjWOf7V3w4V3RvziuZw0BQDbuh1Zu9wcUpowkWKydEUZCg4ZTyp3i233FR8pBx/19972E4XIVQFYfG9IXVeSF6ipxNn95N9wxmpfnQ==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C7DBC50AADC2E642A6F479BB55C8A7B3@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 26 Feb 2020 19:56:01 -0500
+Received: from mga12.intel.com ([192.55.52.136]:62985 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727967AbgB0A4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Feb 2020 19:56:01 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 16:55:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,490,1574150400"; 
+   d="scan'208";a="241865337"
+Received: from pkabrax-mobl.amr.corp.intel.com (HELO [10.251.2.6]) ([10.251.2.6])
+  by orsmga006.jf.intel.com with ESMTP; 26 Feb 2020 16:55:57 -0800
+Subject: Re: [RFC PATCH v9 17/27] x86/cet/shstk: User-mode Shadow Stack
+ support
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
+References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
+ <20200205181935.3712-18-yu-cheng.yu@intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <9847845a-749d-47a3-2a1d-bcc7c35f1bdd@intel.com>
+Date:   Wed, 26 Feb 2020 16:55:56 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bde3bbc0-a1c0-480e-c0c7-08d7bb1f65dd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Feb 2020 00:53:02.0068
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2Kb2O0lTk65YZhEOwK5JIp2Cm9OWsYSiaajMQyg/EU5ZHHGUt1rjOJ9WB9ITlBq9JAQ2ixzAzVIYS+1bemJMNw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5864
+In-Reply-To: <20200205181935.3712-18-yu-cheng.yu@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTAyLTI2IGF0IDA4OjA2ICswMTAwLCBBcmQgQmllc2hldXZlbCB3cm90ZToN
-Cj4gT24gV2VkLCAyNiBGZWIgMjAyMCBhdCAwMjoxMCwgQXRpc2ggUGF0cmEgPGF0aXNoLnBhdHJh
-QHdkYy5jb20+DQo+IHdyb3RlOg0KPiA+IERlZmluZSBSSVNDLVYgcmVsYXRlZCBtYWNoaW5lIHR5
-cGVzLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEF0aXNoIFBhdHJhIDxhdGlzaC5wYXRyYUB3
-ZGMuY29tPg0KPiANCj4gSWYgeW91IHB1dCB0aGVtIGluIGFscGhhYmV0aWNhbCBvcmRlciB3cnQg
-U0gzOg0KPiANCg0KRG9uZS4NCg0KPiBSZXZpZXdlZC1ieTogQXJkIEJpZXNoZXV2ZWwgPGFyZGJA
-a2VybmVsLm9yZz4NCj4gDQoNCj4gDQo+ID4gLS0tDQo+ID4gIGluY2x1ZGUvbGludXgvcGUuaCB8
-IDMgKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKykNCj4gPiANCj4gPiBk
-aWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9wZS5oIGIvaW5jbHVkZS9saW51eC9wZS5oDQo+ID4g
-aW5kZXggOGFkNzFkNzYzYTc3Li42YTdjNDk3ZTRiMWYgMTAwNjQ0DQo+ID4gLS0tIGEvaW5jbHVk
-ZS9saW51eC9wZS5oDQo+ID4gKysrIGIvaW5jbHVkZS9saW51eC9wZS5oDQo+ID4gQEAgLTU2LDYg
-KzU2LDkgQEANCj4gPiAgI2RlZmluZSAgICAgICAgSU1BR0VfRklMRV9NQUNISU5FX1BPV0VSUENG
-UCAgICAweDAxZjENCj4gPiAgI2RlZmluZSAgICAgICAgSU1BR0VfRklMRV9NQUNISU5FX1I0MDAw
-ICAgICAgICAweDAxNjYNCj4gPiAgI2RlZmluZSAgICAgICAgSU1BR0VfRklMRV9NQUNISU5FX1NI
-MyAgICAgICAgICAweDAxYTINCj4gPiArI2RlZmluZSAgICAgICAgSU1BR0VfRklMRV9NQUNISU5F
-X1JJU0NWMzIgICAgICAweDUwMzINCj4gPiArI2RlZmluZSAgICAgICAgSU1BR0VfRklMRV9NQUNI
-SU5FX1JJU0NWNjQgICAgICAweDUwNjQNCj4gPiArI2RlZmluZSAgICAgICAgSU1BR0VfRklMRV9N
-QUNISU5FX1JJU0NWMTI4ICAgICAweDUxMjgNCj4gPiAgI2RlZmluZSAgICAgICAgSU1BR0VfRklM
-RV9NQUNISU5FX1NIM0RTUCAgICAgICAweDAxYTMNCj4gPiAgI2RlZmluZSAgICAgICAgSU1BR0Vf
-RklMRV9NQUNISU5FX1NIM0UgICAgICAgICAweDAxYTQNCj4gPiAgI2RlZmluZSAgICAgICAgSU1B
-R0VfRklMRV9NQUNISU5FX1NINCAgICAgICAgICAweDAxYTYNCj4gPiAtLQ0KPiA+IDIuMjQuMA0K
-PiA+IA0KDQotLSANClJlZ2FyZHMsDQpBdGlzaA0K
+On 2/5/20 10:19 AM, Yu-cheng Yu wrote:
+> This patch adds basic Shadow Stack (SHSTK) enabling/disabling routines.
+> A task's SHSTK is allocated from memory with VM_SHSTK flag and read-only
+> protection.  It has a fixed size of RLIMIT_STACK.
+> 
+> v9:
+> - Change cpu_feature_enabled() to static_cpu_has().
+> - Merge cet_disable_shstk to cet_disable_free_shstk.
+> - Remove the empty slot at the top of the SHSTK, as it is not needed.
+> - Move do_mmap_locked() to alloc_shstk(), which is a static function.
+> 
+> v6:
+> - Create a function do_mmap_locked() for SHSTK allocation.
+> 
+> v2:
+> - Change noshstk to no_cet_shstk.
+> 
+> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+> ---
+>  arch/x86/include/asm/cet.h                    |  31 +++++
+>  arch/x86/include/asm/disabled-features.h      |   8 +-
+>  arch/x86/include/asm/processor.h              |   5 +
+>  arch/x86/kernel/Makefile                      |   2 +
+>  arch/x86/kernel/cet.c                         | 121 ++++++++++++++++++
+>  arch/x86/kernel/cpu/common.c                  |  25 ++++
+>  arch/x86/kernel/process.c                     |   1 +
+>  .../arch/x86/include/asm/disabled-features.h  |   8 +-
+>  8 files changed, 199 insertions(+), 2 deletions(-)
+>  create mode 100644 arch/x86/include/asm/cet.h
+>  create mode 100644 arch/x86/kernel/cet.c
+> 
+> diff --git a/arch/x86/include/asm/cet.h b/arch/x86/include/asm/cet.h
+> new file mode 100644
+> index 000000000000..c44c991ca91f
+> --- /dev/null
+> +++ b/arch/x86/include/asm/cet.h
+> @@ -0,0 +1,31 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _ASM_X86_CET_H
+> +#define _ASM_X86_CET_H
+> +
+> +#ifndef __ASSEMBLY__
+> +#include <linux/types.h>
+> +
+> +struct task_struct;
+> +/*
+> + * Per-thread CET status
+> + */
+> +struct cet_status {
+> +	unsigned long	shstk_base;
+> +	unsigned long	shstk_size;
+> +	unsigned int	shstk_enabled:1;
+> +};
+
+Just out of curiosity, what's the theoretical size limit of shadow
+stacks?  Is there one?
+
+Also, not to nitpick too much, but you could pretty easily save the
+storage of shstk_enabled by using 0 for the size.
+
+> +#ifdef CONFIG_X86_INTEL_CET
+> +int cet_setup_shstk(void);
+> +void cet_disable_free_shstk(struct task_struct *p);
+> +#else
+> +static inline void cet_disable_free_shstk(struct task_struct *p) {}
+> +#endif
+> +
+> +#define cpu_x86_cet_enabled() \
+> +	(static_cpu_has(X86_FEATURE_SHSTK) || \
+> +	 static_cpu_has(X86_FEATURE_IBT))
+> +
+> +#endif /* __ASSEMBLY__ */
+
+You don't need the #ifdef if you stick the X86_FEATUREs in
+disabled-features.h properly.
+
+> diff --git a/arch/x86/kernel/cet.c b/arch/x86/kernel/cet.c
+> new file mode 100644
+> index 000000000000..b4c7d88e9a8f
+> --- /dev/null
+> +++ b/arch/x86/kernel/cet.c
+> @@ -0,0 +1,121 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * cet.c - Control-flow Enforcement (CET)
+> + *
+> + * Copyright (c) 2019, Intel Corporation.
+> + * Yu-cheng Yu <yu-cheng.yu@intel.com>
+> + */
+> +
+> +#include <linux/types.h>
+> +#include <linux/mm.h>
+> +#include <linux/mman.h>
+> +#include <linux/slab.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/sched/signal.h>
+> +#include <linux/compat.h>
+> +#include <asm/msr.h>
+> +#include <asm/user.h>
+> +#include <asm/fpu/internal.h>
+> +#include <asm/fpu/xstate.h>
+> +#include <asm/fpu/types.h>
+> +#include <asm/cet.h>
+> +
+> +static void start_update_msrs(void)
+> +{
+> +	fpregs_lock();
+> +	if (test_thread_flag(TIF_NEED_FPU_LOAD))
+> +		__fpregs_load_activate();
+> +}
+> +
+> +static void end_update_msrs(void)
+> +{
+> +	fpregs_unlock();
+> +}
+> +
+> +static unsigned long cet_get_shstk_addr(void)
+> +{
+> +	struct fpu *fpu = &current->thread.fpu;
+> +	unsigned long ssp = 0;
+> +
+> +	fpregs_lock();
+> +
+> +	if (fpregs_state_valid(fpu, smp_processor_id())) {
+> +		rdmsrl(MSR_IA32_PL3_SSP, ssp);
+> +	} else {
+> +		struct cet_user_state *p;
+> +
+> +		p = get_xsave_addr(&fpu->state.xsave, XFEATURE_CET_USER);
+> +		if (p)
+> +			ssp = p->user_ssp;
+> +	}
+> +
+> +	fpregs_unlock();
+> +	return ssp;
+> +}
+> +
+> +static unsigned long alloc_shstk(unsigned long size)
+> +{
+> +	struct mm_struct *mm = current->mm;
+> +	unsigned long addr, populate;
+> +
+> +	down_write(&mm->mmap_sem);
+> +	addr = do_mmap(NULL, 0, size, PROT_READ, MAP_ANONYMOUS | MAP_PRIVATE,
+> +		       VM_SHSTK, 0, &populate, NULL);
+> +	up_write(&mm->mmap_sem);
+> +
+> +	if (populate)
+> +		mm_populate(addr, populate);
+> +
+> +	return addr;
+> +}
+> +
+> +int cet_setup_shstk(void)
+> +{
+> +	unsigned long addr, size;
+> +	struct cet_status *cet = &current->thread.cet;
+> +
+> +	if (!static_cpu_has(X86_FEATURE_SHSTK))
+> +		return -EOPNOTSUPP;
+> +
+> +	size = rlimit(RLIMIT_STACK);
+
+This doesn't seem right.  In general, I thought you could have disabled
+rlimits, which would mean a size of -1:
+	
+	#define RLIM64_INFINITY         (~0ULL)
+
+Or is there something special about stacks that I'm missing?
+
+Also, does size need to be page aligned?
+
+> +	addr = alloc_shstk(size);
+> +
+> +	if (IS_ERR((void *)addr))
+> +		return PTR_ERR((void *)addr);
+> +
+> +	cet->shstk_base = addr;
+> +	cet->shstk_size = size;
+> +	cet->shstk_enabled = 1;
+> +
+> +	start_update_msrs();
+> +	wrmsrl(MSR_IA32_PL3_SSP, addr + size);
+> +	wrmsrl(MSR_IA32_U_CET, MSR_IA32_CET_SHSTK_EN);
+
+Doesn't MSR_IA32_U_CET have lots of bits?  Won't this blow away other bits?
+
+> +	end_update_msrs();
+> +	return 0;
+> +}
+> +
+> +void cet_disable_free_shstk(struct task_struct *tsk)
+> +{
+> +	struct cet_status *cet = &tsk->thread.cet;
+> +
+> +	if (!static_cpu_has(X86_FEATURE_SHSTK) ||
+> +	    !cet->shstk_enabled || !cet->shstk_base)
+> +		return;
+
+This seems to indicate that you can have ->shstk_base set without it
+being enabled.  But I don't see any spots in the code that do that.
+Confused.
+
+> +	if (!tsk->mm || (tsk->mm != current->mm))
+> +		return;
+> +
+> +	if (tsk == current) {
+> +		u64 msr_val;
+> +
+> +		start_update_msrs();
+> +		rdmsrl(MSR_IA32_U_CET, msr_val);
+> +		wrmsrl(MSR_IA32_U_CET, msr_val & ~MSR_IA32_CET_SHSTK_EN);
+> +		end_update_msrs();
+> +	}
+> +
+> +	vm_munmap(cet->shstk_base, cet->shstk_size);
+
+What about vm_munmap() failure?
