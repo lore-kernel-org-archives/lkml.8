@@ -2,69 +2,135 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 308CEC35DF9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F7C8C35DF9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 182872469B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8268B2469B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:52:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729982AbgB0Rv7 (ORCPT
+        id S1730345AbgB0Rwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 12:51:59 -0500
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:12561 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729382AbgB0Rv6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 12:51:58 -0500
-X-Originating-IP: 83.155.44.161
-Received: from classic (mon69-7-83-155-44-161.fbx.proxad.net [83.155.44.161])
-        (Authenticated sender: hadess@hadess.net)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 052C1240003;
-        Thu, 27 Feb 2020 17:51:54 +0000 (UTC)
-Message-ID: <e7857a3196443ac2a2a997bc9e4799d15168c527.camel@hadess.net>
-Subject: Re: [PATCH v2 0/3] Add support for Goodix GT917S touch controller
-From:   Bastien Nocera <hadess@hadess.net>
-To:     Icenowy Zheng <icenowy@aosc.io>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Ondrej Jirman <megous@megous.com>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 27 Feb 2020 18:51:54 +0100
-In-Reply-To: <20200227160802.7043-1-icenowy@aosc.io>
-References: <20200227160802.7043-1-icenowy@aosc.io>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.35.91 (3.35.91-1.fc32) 
+        Thu, 27 Feb 2020 12:52:31 -0500
+Received: from mga04.intel.com ([192.55.52.120]:14627 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726877AbgB0Rwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 12:52:31 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 09:52:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,492,1574150400"; 
+   d="scan'208";a="232269369"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga008.fm.intel.com with ESMTP; 27 Feb 2020 09:52:30 -0800
+Date:   Thu, 27 Feb 2020 09:52:30 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V4 01/13] fs/xfs: Remove unnecessary initialization of
+ i_rwsem
+Message-ID: <20200227175229.GA7072@iweiny-DESK2.sc.intel.com>
+References: <20200221004134.30599-1-ira.weiny@intel.com>
+ <20200221004134.30599-2-ira.weiny@intel.com>
+ <20200221012625.GT10776@dread.disaster.area>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221012625.GT10776@dread.disaster.area>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-02-28 at 00:07 +0800, Icenowy Zheng wrote:
-> This patchset introduces support for Goodix GT917S touch controller.
+On Fri, Feb 21, 2020 at 12:26:25PM +1100, Dave Chinner wrote:
+> On Thu, Feb 20, 2020 at 04:41:22PM -0800, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > xfs_reinit_inode() -> inode_init_always() already handles calling
+> > init_rwsem(i_rwsem).  Doing so again is unneeded.
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > 
-> The major difference with other touch controllers from Goodix is that
-> the ID string is no longer number-only (it contains a 'S'), so an
-> additional patch is introduced for migrating the ID to a string.
+> Except that this inode has been destroyed and freed by the VFS, and
+> we are now recycling it back into the VFS before we actually
+> physically freed it.
 > 
-> Icenowy Zheng (3):
->   dt-bindings: input: touchscreen: add compatible string for Goodix
->     GT917S
->   Input: goodix - use string-based chip ID
+> Hence we have re-initialise the semaphore because the semaphore can
+> contain internal state that is specific to it's new life cycle (e.g.
+> the lockdep context) that will cause problems if we just assume that
+> the inode is the same inode as it was before we recycled it back
+> into the VFS caches.
+> 
+> So, yes, we actually do need to re-initialise the rwsem here.
 
-I'd put the dt-bindings patch after this change, but I don't think it
-matters much in this case.
+I'm fine dropping the patch...
 
->   Input: goodix - Add support for Goodix GT917S
+But I'm not following how the xfs_reinit_inode() on line 422 does not take care
+of this?
 
-I didn't receive that last patch, whether on my address or the linux-
-input@ list.
+fs/xfs/xfs_icache.c:
 
-Cheers
+ 422                 error = xfs_reinit_inode(mp, inode);
+ 423                 if (error) {
+ 424                         bool wake;
+ 425                         /*
+ 426                          * Re-initializing the inode failed, and we are in deep
+ 427                          * trouble.  Try to re-add it to the reclaim list.
+ 428                          */
+ 429                         rcu_read_lock();
+ 430                         spin_lock(&ip->i_flags_lock);
+ 431                         wake = !!__xfs_iflags_test(ip, XFS_INEW);
+ 432                         ip->i_flags &= ~(XFS_INEW | XFS_IRECLAIM);
+ 433                         if (wake)
+ 434                                 wake_up_bit(&ip->i_flags, __XFS_INEW_BIT);
+ 435                         ASSERT(ip->i_flags & XFS_IRECLAIMABLE);
+ 436                         trace_xfs_iget_reclaim_fail(ip);
+ 437                         goto out_error;
+ 438                 }
+ 439 
+ 440                 spin_lock(&pag->pag_ici_lock);
+ 441                 spin_lock(&ip->i_flags_lock);
+ 442 
+ 443                 /*
+ 444                  * Clear the per-lifetime state in the inode as we are now
+ 445                  * effectively a new inode and need to return to the initial
+ 446                  * state before reuse occurs.
+ 447                  */
+ 448                 ip->i_flags &= ~XFS_IRECLAIM_RESET_FLAGS;
+ 449                 ip->i_flags |= XFS_INEW;
+ 450                 xfs_inode_clear_reclaim_tag(pag, ip->i_ino);
+ 451                 inode->i_state = I_NEW;
+ 452                 ip->i_sick = 0;
+ 453                 ip->i_checked = 0;
+ 454 
+ 455                 ASSERT(!rwsem_is_locked(&inode->i_rwsem));
+ 456                 init_rwsem(&inode->i_rwsem);
+ 457 
+ 458                 spin_unlock(&ip->i_flags_lock);
+ 459                 spin_unlock(&pag->pag_ici_lock);
 
+Does this need to be done under one of these locks?
+
+Ira
+
+> 
+> Cheers,
+> 
+> Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
