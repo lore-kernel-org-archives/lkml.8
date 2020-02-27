@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3635FC3F345
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3BCC3F36A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A19820801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88B9220578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811313;
-	bh=A5JhqAJW0/T19P0pXEctJKdutmGn5EGnPtPBSXQsXo4=;
+	s=default; t=1582811346;
+	bh=MvR9W5cURBNIlhPtsdRr7m1uiN0eF6tW07+/SkPqVPk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=glVtwTxsv+ciwnPxEZQGoE8eLPr+YIt+Vjtv7XUlhOakEbgQWBasV1w38mn4jzAbr
-	 EE7E0z5TeNh8nSIVLW0q7ID3MgDbub6om869Yghil3txFaz0CKk4qgLM6diuqpStl9
-	 4OaqxFjxG9hhNzr4uVx9WBBaaHyf5q6Pqi97zN9U=
+	b=j5hN/LY8t8ozl70e5JS7bCtyybr/n1CGgUGK9Fcg699VNvRxo0it25U0XR5SBQABQ
+	 uaWpYvpaKhd6cdD4A5DqqEIRzNpx8mVypa7ZG6OGBg//pbogFOF9X8le08THRfLzWX
+	 WyjwLZ/6OGZvatwzqlSj8hP15KNULSBt0vSgvJTo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730454AbgB0Nsc (ORCPT
+        id S1730990AbgB0NtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:48:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45200 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:49:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730425AbgB0Ns0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:48:26 -0500
+        id S1730495AbgB0NtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:49:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7622D20578;
-        Thu, 27 Feb 2020 13:48:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56ECE20578;
+        Thu, 27 Feb 2020 13:49:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811305;
-        bh=A5JhqAJW0/T19P0pXEctJKdutmGn5EGnPtPBSXQsXo4=;
+        s=default; t=1582811341;
+        bh=MvR9W5cURBNIlhPtsdRr7m1uiN0eF6tW07+/SkPqVPk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cDLlSgA3NQ/lBfw0M/kxKKtAQ7+6ZOGWIDtUNqHuuiDlP5WISglW44St2yI462sIc
-         wExqdn0Q7R7bjCZbO/Q77w+3M24g78rqFsco6xwV5jSJazQleglQltwS/K0lDKMGVz
-         /wl6ksfq1eDZggBL7lB7XLXFm7sbHm1bRhc69a0E=
+        b=luRMKEUks8N+a8zMPqfMqR328HX4pYFoCggFWh2Prysh4sTwTDH82NL43ptJI2GTF
+         Rm0OtVUXqpx6GyH3F0Ca2a81m23NjcB5pNGzq2nCw8dxyCaTafgrNlEZ8g7idTc/0w
+         uQGNSfGxfz9TanCbxGiQWr2h7JlTYHo7NMoPW5z0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 080/165] drm/nouveau/gr/gk20a,gm200-: add terminators to method lists read from fw
-Date:   Thu, 27 Feb 2020 14:35:54 +0100
-Message-Id: <20200227132243.054422542@linuxfoundation.org>
+Subject: [PATCH 4.9 096/165] jbd2: switch to use jbd2_journal_abort() when failed to submit the commit record
+Date:   Thu, 27 Feb 2020 14:36:10 +0100
+Message-Id: <20200227132245.304004223@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -59,73 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Skeggs <bskeggs@redhat.com>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-[ Upstream commit 7adc77aa0e11f25b0e762859219c70852cd8d56f ]
+[ Upstream commit d0a186e0d3e7ac05cc77da7c157dae5aa59f95d9 ]
 
-Method init is typically ordered by class in the FW image as ThreeD,
-TwoD, Compute.
+We invoke jbd2_journal_abort() to abort the journal and record errno
+in the jbd2 superblock when committing journal transaction besides the
+failure on submitting the commit record. But there is no need for the
+case and we can also invoke jbd2_journal_abort() instead of
+__jbd2_journal_abort_hard().
 
-Due to a bug in parsing the FW into our internal format, we've been
-accidentally sending Twod + Compute methods to the ThreeD class, as
-well as Compute methods to the TwoD class - oops.
-
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Fixes: 818d276ceb83a ("ext4: Add the journal checksum feature")
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20191204124614.45424-2-yi.zhang@huawei.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/nouveau/nvkm/engine/gr/gk20a.c    | 21 ++++++++++---------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ fs/jbd2/commit.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c b/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c
-index de8b806b88fd9..7618b2eb4fdfd 100644
---- a/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c
-@@ -143,23 +143,24 @@ gk20a_gr_av_to_method(struct gf100_gr *gr, const char *fw_name,
- 
- 	nent = (fuc.size / sizeof(struct gk20a_fw_av));
- 
--	pack = vzalloc((sizeof(*pack) * max_classes) +
--		       (sizeof(*init) * (nent + 1)));
-+	pack = vzalloc((sizeof(*pack) * (max_classes + 1)) +
-+		       (sizeof(*init) * (nent + max_classes + 1)));
- 	if (!pack) {
- 		ret = -ENOMEM;
- 		goto end;
+diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
+index 72b5bbfd38447..1d06f81ee8b47 100644
+--- a/fs/jbd2/commit.c
++++ b/fs/jbd2/commit.c
+@@ -779,7 +779,7 @@ start_journal_io:
+ 		err = journal_submit_commit_record(journal, commit_transaction,
+ 						 &cbh, crc32_sum);
+ 		if (err)
+-			__jbd2_journal_abort_hard(journal);
++			jbd2_journal_abort(journal, err);
  	}
  
--	init = (void *)(pack + max_classes);
-+	init = (void *)(pack + max_classes + 1);
- 
--	for (i = 0; i < nent; i++) {
--		struct gf100_gr_init *ent = &init[i];
-+	for (i = 0; i < nent; i++, init++) {
- 		struct gk20a_fw_av *av = &((struct gk20a_fw_av *)fuc.data)[i];
- 		u32 class = av->addr & 0xffff;
- 		u32 addr = (av->addr & 0xffff0000) >> 14;
- 
- 		if (prevclass != class) {
--			pack[classidx].init = ent;
-+			if (prevclass) /* Add terminator to the method list. */
-+				init++;
-+			pack[classidx].init = init;
- 			pack[classidx].type = class;
- 			prevclass = class;
- 			if (++classidx >= max_classes) {
-@@ -169,10 +170,10 @@ gk20a_gr_av_to_method(struct gf100_gr *gr, const char *fw_name,
- 			}
- 		}
- 
--		ent->addr = addr;
--		ent->data = av->data;
--		ent->count = 1;
--		ent->pitch = 1;
-+		init->addr = addr;
-+		init->data = av->data;
-+		init->count = 1;
-+		init->pitch = 1;
+ 	blk_finish_plug(&plug);
+@@ -872,7 +872,7 @@ start_journal_io:
+ 		err = journal_submit_commit_record(journal, commit_transaction,
+ 						&cbh, crc32_sum);
+ 		if (err)
+-			__jbd2_journal_abort_hard(journal);
++			jbd2_journal_abort(journal, err);
  	}
- 
- 	*ppack = pack;
+ 	if (cbh)
+ 		err = journal_wait_on_commit_record(journal, cbh);
 -- 
 2.20.1
 
