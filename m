@@ -2,132 +2,162 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BAB2C35677
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46798C35677
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE2832469B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:55:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eOiS86vi"
+	by mail.kernel.org (Postfix) with ESMTP id 2C7142469B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:57:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730555AbgB0Rzp (ORCPT
+        id S1730011AbgB0R5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 12:55:45 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43569 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729624AbgB0Rzp (ORCPT
+        Thu, 27 Feb 2020 12:57:39 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41033 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbgB0R5i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 12:55:45 -0500
-Received: by mail-io1-f65.google.com with SMTP id n21so383895ioo.10
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 09:55:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NylVHJE6upVF29IVdBuSvP++A0hZb65rcSiVqx/spX0=;
-        b=eOiS86viM71jTaieN8tpKi/iZHr0ck18Lvx7IOIytjUhy17X68LguUFd/elbTXuZLH
-         lM6D06RdoG36UyIH1ELD/OKP4tk2qxDf3avqVhYoVcNgtYw3AgmEXz0Av6gshpEehdP/
-         AO0BzoR/+HGd1J+/TYdPwercOcnCP44Om7rOZiJIJovsCbo5eT78DOyShKW9mdw8lSH/
-         x/QD7aSj0jOfyn4RMFjxgL48f2ZF00YY4/95eP/WgT9N0lCVpWGsHzbS6fecmWThDueV
-         ywuDRWa2kMVvy00eIgULbTOZdthUVPjBNVtNwrwWvMIPB/BmthzIxfXLtVyUOZW9vuou
-         3uOA==
+        Thu, 27 Feb 2020 12:57:38 -0500
+Received: by mail-ot1-f65.google.com with SMTP id v19so3746960ote.8;
+        Thu, 27 Feb 2020 09:57:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=NylVHJE6upVF29IVdBuSvP++A0hZb65rcSiVqx/spX0=;
-        b=uKUtVbfZJ4Lmx+fmoIjEKhAp7SPW5dPO7VRk29AO9C5qNUFmLVkqNU9vsWxVl4FXqU
-         iJSARnEXF7zduupFSehup1hdt/miRD5gh7qfhG/a0iHkgfZJV/k3ko6/LzNLLXvUTXbb
-         t3UVTTZaLnZcPy19+Re2KExri6yAgpoBp65fnH0BxkNQbX3bGgvqj00MGZw+iB4mlnff
-         iPXmrFTUba+NpT5ikxzBukGoizB2lAt1lXLhDRJUewfex5BLATj5zMRNi3eg5t4+LE6v
-         tPEqftzMUh64WLVkjiWMIAQ+AWcNYrK7BrMN93+QBqe1zhcH4MpOkiOFZl1QXEy3xysu
-         09ww==
-X-Gm-Message-State: APjAAAU3YF2BYmy46w/hiP3bJYTxZvasjyA1i+17RCy+7g5uLN5dTZ5R
-        JHO09ReWwAaIBVdQEt9iCEOXatKvqN9Igf5DrY6xzA==
-X-Google-Smtp-Source: APXvYqwFptUgwySCKOI0OSvyxECMDGUM5f6sOv8slHlp/a4KD/nPi+VDoaD1TXchnUg04QgiHVgi/lUA/uQgZeQjMAg=
-X-Received: by 2002:a05:6602:2c91:: with SMTP id i17mr443965iow.26.1582826143722;
- Thu, 27 Feb 2020 09:55:43 -0800 (PST)
+        bh=AE8wb0HG+3vuy1qodVFMwqdvcyEFEcaDAhlJidYfCs0=;
+        b=sXvgBWBybj8Pin0WtXpzccj6sQB8c80C6mV06prDPwqlvT5xdkfH2i1zUngz+KZIVe
+         HMwInSeuQH+aySGAFQkI5BYWMTF5XGkQcawDMGrYlRi+VlarJwIlSPT5UUXdAjBCNk+U
+         dmH7vaobepfo8lJpl/748+IsVr4KETSIjZTnN+EB/kj8SA4cmgD3zs4P/basbDWiFl18
+         gPfLaxc2ClcCzbwHhRVtmIyBxrjn4V+gA+/+dcRKf/2YeipoySnsS6CxgYSDCmmwB4WO
+         oolZBmNS5ManzMgu1E51xXoJaEgbzaMZVMJHZwGkeQ6Pt8sHc7xhrQNtQdeSH/BZJNtJ
+         bm+w==
+X-Gm-Message-State: APjAAAVrsXOE0TRtUWxr1X8PSuZSzJ2vY3LIqiI4PgbprJWSdo/0zky0
+        lCZq5VZhSPguP33R/p1Pq7wrlWeSHIKNthywOXA=
+X-Google-Smtp-Source: APXvYqy3ggWLS/5mUneApKM2x+tXn239hPyRVnHqSbQHT+/fvBYj77PEXaw0d7lsEwKOkN6sn5MDEP7+B/X6E22cwvE=
+X-Received: by 2002:a9d:5c0c:: with SMTP id o12mr67639otk.145.1582826257924;
+ Thu, 27 Feb 2020 09:57:37 -0800 (PST)
 MIME-Version: 1.0
-References: <20200227172306.21426-1-mgamal@redhat.com> <20200227172306.21426-3-mgamal@redhat.com>
-In-Reply-To: <20200227172306.21426-3-mgamal@redhat.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Thu, 27 Feb 2020 09:55:32 -0800
-Message-ID: <CALMp9eR7heTGQ6zwYrK5rJ-xs_wKqz49gfcNtaEC7S6J7n2aFQ@mail.gmail.com>
-Subject: Re: [PATCH 2/5] KVM: VMX: Add guest physical address check in EPT
- violation and misconfig
-To:     Mohammed Gamal <mgamal@redhat.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200227151143.6a6edaf9@canb.auug.org.au> <CAMuHMdVc-vyQfuLUgbF6ei9Qrr+fryA-j1PHsrsjTNiOYvUk+w@mail.gmail.com>
+ <CAOFY-A0=AYDSdGq5tf7s6_kRjnDGLfLjCV9p+LdKbLwyw0J9nA@mail.gmail.com> <CAOFY-A2CFi0pX1BBsuruntk0AM9doseCMnFCJi192BYojaBUUw@mail.gmail.com>
+In-Reply-To: <CAOFY-A2CFi0pX1BBsuruntk0AM9doseCMnFCJi192BYojaBUUw@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 27 Feb 2020 18:57:26 +0100
+Message-ID: <CAMuHMdW-0xuxK_Cd2t3=BZwwOUhrYf-Ctn+frW_1tTsO5eQxOw@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the akpm tree
+To:     Arjun Roy <arjunroy@google.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Soheil Hassas Yeganeh <soheil@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 9:23 AM Mohammed Gamal <mgamal@redhat.com> wrote:
->
-> Check guest physical address against it's maximum physical memory. If
-Nit: "its," without an apostrophe.
+Hi Arjun,
 
-> the guest's physical address exceeds the maximum (i.e. has reserved bits
-> set), inject a guest page fault with PFERR_RSVD_MASK.
+On Thu, Feb 27, 2020 at 6:45 PM Arjun Roy <arjunroy@google.com> wrote:
+> On Thu, Feb 27, 2020 at 9:13 AM Arjun Roy <arjunroy@google.com> wrote:
+> > On Thu, Feb 27, 2020 at 1:03 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > On Thu, Feb 27, 2020 at 5:12 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> > > > After merging the akpm tree, today's linux-next build (sparc defconfig)
+> > > > failed like this:
+> > > >
+> > > > In file included from include/linux/list.h:9:0,
+> > > >                  from include/linux/smp.h:12,
+> > > >                  from include/linux/kernel_stat.h:5,
+> > > >                  from mm/memory.c:42:
+> > > > mm/memory.c: In function 'insert_pages':
+> > > > mm/memory.c:1523:41: error: implicit declaration of function 'pte_index'; did you mean 'page_index'? [-Werror=implicit-function-declaration]
+> > > >    remaining_pages_total, PTRS_PER_PTE - pte_index(addr));
+> > > >                                          ^
+> > > > include/linux/kernel.h:842:40: note: in definition of macro '__typecheck'
+> > > >    (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+> > > >                                         ^
+> > > > include/linux/kernel.h:866:24: note: in expansion of macro '__safe_cmp'
+> > > >   __builtin_choose_expr(__safe_cmp(x, y), \
+> > > >                         ^~~~~~~~~~
+> > > > include/linux/kernel.h:934:27: note: in expansion of macro '__careful_cmp'
+> > > >  #define min_t(type, x, y) __careful_cmp((type)(x), (type)(y), <)
+> > > >                            ^~~~~~~~~~~~~
+> > > > mm/memory.c:1522:26: note: in expansion of macro 'min_t'
+> > > >   pages_to_write_in_pmd = min_t(unsigned long,
+> > > >                           ^~~~~
+> > >
+> > > Same issue on m68k, as per a report from kisskb.
+> > >
+> > > > Caused by patch
+> > > >
+> > > >   "mm/memory.c: add vm_insert_pages()"
+> > > >
+> > > > sparc32 does not implement pte_index at all :-(
+> > >
+> > > Seems like about only half of the architectures do.
+> > >
+> >
+> > :/ I begin to suspect the only sane way to make this work is to have a
+> > per-arch header defined method, returning a bool saying whether
+> > pte_index() is meaningful or not on that arch, and early on in
+> > vm_insert_pages() if that bool returns true, to just call
+> > vm_insert_page() in a loop.
+> >
 >
-> Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
-> ---
->  arch/x86/kvm/vmx/vmx.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+> So, here is what I propose: something like the following macro in a
+> per-arch header:
 >
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 63aaf44edd1f..477d196aa235 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -5162,6 +5162,12 @@ static int handle_ept_violation(struct kvm_vcpu *vcpu)
->         gpa = vmcs_read64(GUEST_PHYSICAL_ADDRESS);
->         trace_kvm_page_fault(gpa, exit_qualification);
+> #define PTE_INDEX_DEFINED 1 // or 0 if it is not
+
+pte_index is already a #define on architectures where it exists, so
+you can just use that.
+
+> In mm/memory.c, another macro:
 >
-> +       /* Check if guest gpa doesn't exceed physical memory limits */
-> +       if (gpa >= (1ull << cpuid_maxphyaddr(vcpu))) {
-> +               kvm_inject_rsvd_bits_pf(vcpu, gpa);
+> #ifndef PTE_INDEX_DEFINED
+> #define PTE_INDEX_DEFINED 0
+> #endifndef
 
-Even if PFERR_RSVD_MASK is set in the page fault error code, shouldn't
-we set still conditionally set:
-    PFERR_WRITE_MASK - for an attempted write
-    PFERR_USER_MASK - for a usermode access
-    PFERR_FETCH_MASK - for an instruction fetch
+No need for the above...
 
-> +               return 1;
-> +       }
-> +
->         /* Is it a read fault? */
->         error_code = (exit_qualification & EPT_VIOLATION_ACC_READ)
->                      ? PFERR_USER_MASK : 0;
-> @@ -5193,6 +5199,13 @@ static int handle_ept_misconfig(struct kvm_vcpu *vcpu)
->          * nGPA here instead of the required GPA.
->          */
->         gpa = vmcs_read64(GUEST_PHYSICAL_ADDRESS);
-> +
-> +       /* Check if guest gpa doesn't exceed physical memory limits */
-> +       if (gpa >= (1ull << cpuid_maxphyaddr(vcpu))) {
-> +               kvm_inject_rsvd_bits_pf(vcpu, gpa);
-
-And here as well?
-
-> +               return 1;
-> +       }
-> +
->         if (!is_guest_mode(vcpu) &&
->             !kvm_io_bus_write(vcpu, KVM_FAST_MMIO_BUS, gpa, 0, NULL)) {
->                 trace_kvm_fast_mmio(gpa);
-> --
-> 2.21.1
+> And inside vm_insert_pages:
 >
+> int vm_insert_pages() {
+>
+> #if PTE_INDEX_DEFINED
+
+... if you use "#ifdef" here.
+
+>
+> // The existing method
+>
+> #else
+>
+> for (i=0; i<n; ++i)
+>         vm_insert_page(i)
+>
+> #endif
+> }
+>
+> That way:
+> 1. No playing whack-a-mole with different architectures
+> 2. Architecture that knows pte_index is meaningful works can define
+> this explicitly
+> 3. Can remove the sparc patches modifying pte_index that Stephen and I
+> contributed.
+>
+> If that sounds acceptable I can cook a patch.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
