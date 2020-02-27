@@ -2,123 +2,102 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF52C35E1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B794C52D2A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1413520578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:07:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812432;
-	bh=R9SqpIgeU1zDbhHTVMDsR1tJseZFGh73G+JBMuf0/8g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bvX2n+/PFT6I0MQ3FCV9QIsRQNs+iaY7CuprlwRA8lbM0AkEXdI1Fi89n/WXp3Wb7
-	 32XlLtmUCwPvH01hsCANB2U1XNeTVGySnvMK1yUvEkS21c3GqF6jZolbDdQEDgk2GN
-	 vnf5pHPrrYn7bHn2coe55P5RRjGMbSoCKhRs01nM=
+	by mail.kernel.org (Postfix) with ESMTP id 6CD5F20578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:07:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388036AbgB0OHK (ORCPT
+        id S2388077AbgB0OHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:07:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44526 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387512AbgB0OHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:07:08 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98B9120578;
-        Thu, 27 Feb 2020 14:07:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812428;
-        bh=R9SqpIgeU1zDbhHTVMDsR1tJseZFGh73G+JBMuf0/8g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IXwKkoVrFPcUG0ck8wPJD/ENykSJ+i1ABy90BzVxRWQaizRliwN2VgWZd4RE04vAs
-         QuR5+W96D9xr/7i6EQyUfBdTbaO7gLqqWXFA82rDyv/Toad5fV3CvUvfWH+wscm394
-         z+1J6wEPUUrSNcKkwk3yzN/FNqjPiw5oU7optUIY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Jung <jung@codemercs.com>
-Subject: [PATCH 5.4 014/135] USB: misc: iowarrior: add support for the 100 device
-Date:   Thu, 27 Feb 2020 14:35:54 +0100
-Message-Id: <20200227132231.270836077@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
-References: <20200227132228.710492098@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 27 Feb 2020 09:07:24 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:6574 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388053AbgB0OHP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:07:15 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01RE56Oo019530;
+        Thu, 27 Feb 2020 09:06:58 -0500
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ydtrx3bry-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Feb 2020 09:06:58 -0500
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 01RE6vJg021702
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Thu, 27 Feb 2020 09:06:57 -0500
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 27 Feb
+ 2020 09:06:55 -0500
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Thu, 27 Feb 2020 09:06:55 -0500
+Received: from analog.ad.analog.com ([10.48.65.180])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01RE6pPD029488;
+        Thu, 27 Feb 2020 09:06:51 -0500
+From:   Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+To:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-wireless@vger.kernel.org>,
+        <libertas-dev@lists.infradead.org>, <kvalo@codeaurora.org>,
+        <davem@davemloft.net>, <gregkh@linuxfoundation.org>
+CC:     <dcbw@redhat.com>, <allison@lohutok.net>, <tglx@linutronix.de>,
+        Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+Subject: [PATCH] net: wireless: marvell: libertas: Use new structure for SPI transfer delays
+Date:   Thu, 27 Feb 2020 16:06:34 +0200
+Message-ID: <20200227140634.9286-1-sergiu.cuciurean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-27_04:2020-02-26,2020-02-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ malwarescore=0 impostorscore=0 clxscore=1011 priorityscore=1501
+ lowpriorityscore=0 phishscore=0 spamscore=0 adultscore=0 mlxlogscore=903
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002270112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In a recent change to the SPI subsystem [1], a new `delay` struct was added
+to replace the `delay_usecs`. This change replaces the current
+`delay_usecs` with `delay` for this driver.
 
-commit bab5417f5f0118ce914bc5b2f8381e959e891155 upstream.
+The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
+that both `delay_usecs` & `delay` are used (in this order to preserve
+backwards compatibility).
 
-Add a new device id for the 100 devie.  It has 4 interfaces like the 28
-and 28L devices but a larger endpoint so more I/O pins.
+[1] commit bebcfd272df6 ("spi: introduce `delay` field for
+`spi_transfer` + spi_transfer_delay_exec()")
 
-Cc: Christoph Jung <jung@codemercs.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200214161148.GA3963518@kroah.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
 ---
- drivers/usb/misc/iowarrior.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/net/wireless/marvell/libertas/if_spi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/misc/iowarrior.c
-+++ b/drivers/usb/misc/iowarrior.c
-@@ -36,6 +36,7 @@
- /* fuller speed iowarrior */
- #define USB_DEVICE_ID_CODEMERCS_IOW28	0x1504
- #define USB_DEVICE_ID_CODEMERCS_IOW28L	0x1505
-+#define USB_DEVICE_ID_CODEMERCS_IOW100	0x1506
+diff --git a/drivers/net/wireless/marvell/libertas/if_spi.c b/drivers/net/wireless/marvell/libertas/if_spi.c
+index d07fe82c557e..3c3f266bf116 100644
+--- a/drivers/net/wireless/marvell/libertas/if_spi.c
++++ b/drivers/net/wireless/marvell/libertas/if_spi.c
+@@ -235,8 +235,9 @@ static int spu_read(struct if_spi_card *card, u16 reg, u8 *buf, int len)
+ 		spi_message_add_tail(&dummy_trans, &m);
+ 	} else {
+ 		/* Busy-wait while the SPU fills the FIFO */
+-		reg_trans.delay_usecs =
++		reg_trans.delay.value =
+ 			DIV_ROUND_UP((100 + (delay * 10)), 1000);
++		reg_trans.delay.unit = SPI_DELAY_UNIT_USECS;
+ 	}
  
- /* OEMed devices */
- #define USB_DEVICE_ID_CODEMERCS_IOW24SAG	0x158a
-@@ -144,6 +145,7 @@ static const struct usb_device_id iowarr
- 	{USB_DEVICE(USB_VENDOR_ID_CODEMERCS, USB_DEVICE_ID_CODEMERCS_IOW56AM)},
- 	{USB_DEVICE(USB_VENDOR_ID_CODEMERCS, USB_DEVICE_ID_CODEMERCS_IOW28)},
- 	{USB_DEVICE(USB_VENDOR_ID_CODEMERCS, USB_DEVICE_ID_CODEMERCS_IOW28L)},
-+	{USB_DEVICE(USB_VENDOR_ID_CODEMERCS, USB_DEVICE_ID_CODEMERCS_IOW100)},
- 	{}			/* Terminating entry */
- };
- MODULE_DEVICE_TABLE(usb, iowarrior_ids);
-@@ -386,6 +388,7 @@ static ssize_t iowarrior_write(struct fi
- 	case USB_DEVICE_ID_CODEMERCS_IOW56AM:
- 	case USB_DEVICE_ID_CODEMERCS_IOW28:
- 	case USB_DEVICE_ID_CODEMERCS_IOW28L:
-+	case USB_DEVICE_ID_CODEMERCS_IOW100:
- 		/* The IOW56 uses asynchronous IO and more urbs */
- 		if (atomic_read(&dev->write_busy) == MAX_WRITES_IN_FLIGHT) {
- 			/* Wait until we are below the limit for submitted urbs */
-@@ -786,7 +789,8 @@ static int iowarrior_probe(struct usb_in
- 	if ((dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56) ||
- 	    (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56AM) ||
- 	    (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28) ||
--	    (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28L)) {
-+	    (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28L) ||
-+	    (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW100)) {
- 		res = usb_find_last_int_out_endpoint(iface_desc,
- 				&dev->int_out_endpoint);
- 		if (res) {
-@@ -802,7 +806,8 @@ static int iowarrior_probe(struct usb_in
- 	    ((dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56) ||
- 	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW56AM) ||
- 	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28) ||
--	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28L)))
-+	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW28L) ||
-+	     (dev->product_id == USB_DEVICE_ID_CODEMERCS_IOW100)))
- 		/* IOWarrior56 has wMaxPacketSize different from report size */
- 		dev->report_size = 7;
- 
-
+ 	/* read in data */
+-- 
+2.17.1
 
