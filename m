@@ -2,151 +2,158 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33687C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADF1C4BA2D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07B0C24693
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 12:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 009AF24693
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:00:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W/sVBBNh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KuBq5io9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729117AbgB0M6y (ORCPT
+        id S1729137AbgB0NAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 07:58:54 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55444 "EHLO
+        Thu, 27 Feb 2020 08:00:08 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:57354 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729019AbgB0M6y (ORCPT
+        by vger.kernel.org with ESMTP id S1729030AbgB0NAH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 07:58:54 -0500
+        Thu, 27 Feb 2020 08:00:07 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582808333;
+        s=mimecast20190719; t=1582808405;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Om0SRg+/XzRunM3fL3lF2XHexrWaTr/sxkRp+GX1RwY=;
-        b=W/sVBBNhp1QXWVCIbgmqXakPPFGBwcU2ohR9Pf1WB/M1YWFAn/6bvwl2qhV4qalVR4vvWL
-        qfoiK6PF2lDwYUFddtVuxYU6T+9oR9oKNbTmJIqzyylFkYBiQXbzq/WjQIU42GaV0+hS07
-        1oydJahhUNkWWjfFlHH2EJkc2VEMr28=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-90-baq8B8pwORaWBaP8aGs9Wg-1; Thu, 27 Feb 2020 07:58:47 -0500
-X-MC-Unique: baq8B8pwORaWBaP8aGs9Wg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 69288477;
-        Thu, 27 Feb 2020 12:58:45 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B9C0E19C58;
-        Thu, 27 Feb 2020 12:58:43 +0000 (UTC)
-Subject: Re: [PATCH] x86/tsc: Add kernel options to disable CPUID and MSR
- calibrations
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Patrick Geary <patrickg@supermicro.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Daniel Drake <drake@endlessm.com>,
-        Michael Zhivich <mzhivich@akamai.com>,
-        linux-doc@vger.kernel.org
-References: <20200226164308.14468-1-prarit@redhat.com>
- <20200226165407.GB18400@hirez.programming.kicks-ass.net>
- <87k149nd4p.fsf@nanos.tec.linutronix.de>
-From:   Prarit Bhargava <prarit@redhat.com>
-Message-ID: <64e49d3f-ac4c-84ca-e663-92f87aae1362@redhat.com>
-Date:   Thu, 27 Feb 2020 07:58:43 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        bh=yoC7+Q3k5WLnxp7SXHpb3nLNBOol+SI5ecqHeVBQT6o=;
+        b=KuBq5io9CIk7RMtAJYiXKPjMOHxMjx+giQbAwc05ys8fACUZQ9q0fmyKz9JHSFA+xxslsQ
+        A7Q19aO4D9fNkM7hmOkQzXQ6FhHRbqj/SutElJFeG29t5EvnN+hGH5C3gsU7QpY1Y/1xRv
+        90oh//Nhk3aogb5Y1V2Mc1X5BhTIRUc=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-102-yz7grF5rMSSIvF18vOG8-A-1; Thu, 27 Feb 2020 08:00:00 -0500
+X-MC-Unique: yz7grF5rMSSIvF18vOG8-A-1
+Received: by mail-qk1-f198.google.com with SMTP id x19so764660qkh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 05:00:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yoC7+Q3k5WLnxp7SXHpb3nLNBOol+SI5ecqHeVBQT6o=;
+        b=JNiSpXIYjaxltHrWNhlp8Y/OTQImc3eLSz2TMZBv7LKAcOeSKyHxoBaAoJDUPIQcal
+         MXSYuVi1IRwKLgu7ceF/pPf/mVuZ9p6VcTN6vh5Kci4APqDSSP7bp5NilYo5X6NL3CCA
+         fT75dSVgxHRHchH/eZdJBe9s3TFPQ+2oqvwF3wak4nODU8FKhKhyAj8mUJvu05LeazIZ
+         wRz7rMPf6NpBD67KpikMgOeKkMGaFzSg5Op6Qg96eHk5ShjeErYVEp5G4LUBOCNIksiK
+         g+WX8pwjZQ2RoKRrEfl086AxOhx+HALWeuxpH7T6GENi3ZzLquRbuHn3IRa7I/P88B8w
+         bdpg==
+X-Gm-Message-State: APjAAAXbOYF8XoLZxhOyFzGe5jDzmUZJ6TPFX1C3mN1+LmUZiscF60qU
+        Wh0Cuar+gY8ZXefKugUCTOIcku7tpOw1Ead7uCkVS9qX/u0rwKPVr5tPbIYJ1g1SwMRovMY7F0Y
+        IjIzhlAjAFuP1aMza9Je8Uw2WY2q2m2pR/IfRMF+B
+X-Received: by 2002:a37:9d4f:: with SMTP id g76mr5470609qke.169.1582808400388;
+        Thu, 27 Feb 2020 05:00:00 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyB1ZBwv26Y4cFnn7kCfXQx+GAZ2he0qsmK5T7PPrFu6gqCb7nTF+1RpD8WVb5jo6MI3w8uyYyLNKkU0qLlL0k=
+X-Received: by 2002:a37:9d4f:: with SMTP id g76mr5470579qke.169.1582808400150;
+ Thu, 27 Feb 2020 05:00:00 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <87k149nd4p.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <PR2PR03MB517975370D754EEF47E062BFE4EB0@PR2PR03MB5179.eurprd03.prod.outlook.com>
+In-Reply-To: <PR2PR03MB517975370D754EEF47E062BFE4EB0@PR2PR03MB5179.eurprd03.prod.outlook.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Thu, 27 Feb 2020 13:59:49 +0100
+Message-ID: <CAO-hwJ+eua8-fNj9o8CxjFyM0i1+R9ZwPMroF9uLUH6NVu3Tdg@mail.gmail.com>
+Subject: Re: [PATCH] Input: elantech - fix x_max/y_max values
+To:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        "Dave.Wang" <dave.wang@emc.com.tw>, jingle <jingle.wu@emc.com.tw>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Enrico Weigelt <info@metux.net>,
+        Allison Randal <allison@lohutok.net>,
+        Aaron Ma <aaron.ma@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Bernd,
+
+[adding Dave and Jingle]
 
 
-On 2/26/20 6:27 PM, Thomas Gleixner wrote:
-> Peter Zijlstra <peterz@infradead.org> writes:
->> On Wed, Feb 26, 2020 at 11:43:08AM -0500, Prarit Bhargava wrote:
->>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
->>> index dbc22d684627..0316aadfff08 100644
->>> --- a/Documentation/admin-guide/kernel-parameters.txt
->>> +++ b/Documentation/admin-guide/kernel-parameters.txt
->>> @@ -4942,7 +4942,7 @@
->>>  			See Documentation/admin-guide/mm/transhuge.rst
->>>  			for more details.
->>>  
->>> -	tsc=		Disable clocksource stability checks for TSC.
->>> +	tsc=option[,option...]	Various TSC options.
->>>  			Format: <string>
->>>  			[x86] reliable: mark tsc clocksource as reliable, this
->>>  			disables clocksource verification at runtime, as well
->>> @@ -4960,6 +4960,12 @@
->>>  			in situations with strict latency requirements (where
->>>  			interruptions from clocksource watchdog are not
->>>  			acceptable).
->>> +			[x86] no_cpuid_calibration: Disable the CPUID TSC
->>> +			calibration.  Used in situations where the CPUID
->>> +			TSC khz does not match the actual CPU TSC khz
->>> +			[x86] no_msr_calibration: Disable the MSR TSC
->>> +			calibration.  Used in situations where the MSR
->>> +			TSC khz does not match the actual CPU TSC khz.
->>
->> Do we want to mention that these situations are mostly broken firmware?
->> Also do mention that if you disable these you might not boot due to not
->> having a PIT/HPET at all?
-> 
-> Right. Same discussion as before.
-> 
-> Also why do we want no_cpuid_calibration and no_msr_calibration? How
+On Thu, Feb 27, 2020 at 12:59 PM Bernd Edlinger
+<bernd.edlinger@hotmail.de> wrote:
+>
+> Since 37548659bb2 moved the querying of the x_max/y_max
 
+Hmm, I am pretty sure checkpatch.pl should have complained here: the
+correct way of mentioning a previous commit is:
+'commit <12+ chars of sha1> ("<title line>")' - ie: 'commit
+37548659bb22 ("Input: elantech - query the min/max information
+beforehand too")'
 
-> should Joe User figure out which one to use? This does not make
-> sense. The point is that the BIOS/Firmware supplied value in system
-> registers is bogus. So something like "skip_firmware_calibration" might
-> be better suitable.
+> values from elantech_set_input_params to elantech_query_info,
+> the returned x_max/y_max values are different than before,
+> at least for some firmware versions.
+>
+> The reason is likely that this is now done before
+> elantech_set_absolute_mode does run.  So it may happen that
+> the returned values are exactly half of what they used to be,
 
+That is weird. Can we get confirmation from Dave or Jingle about that?
 
-no_cpuid_calibration was required for Patrick's case where the CPU was
-overclocked and therefore the CPUID khz value was invalid, but the MSR value is
-good.  I had to skip both to get to the PIT calibration because I had broken FW.
- I don't see how a single skip_firmware_calibration covers these cases.
+> which makes input_report_abs in PS/2 mode report ABS_X values which
+> exceed the x_max value, which is very annoying since the mouse stops
+> to move then, and ABS_Y value become negative, which is benign.
+>
+> This was observed with a MSI GX70 laptop:
+>
+> elantech: assuming hardware version 3 (with firmware version 0x250f01)
+> elantech: Synaptics capabilities query result 0x18, 0x17, 0x0b.
+> elantech: Elan sample query result 05, 0e, 00
+> input: ETPS/2 Elantech Touchpad as /devices/platform/i8042/serio...
+>
+> Correct this by doubling the returned x_max and y_max
+> value for this specific firmware version.
+>
+> Fixes: 37548659bb2 ("Input: elantech - query the min/max
+> information beforehand too")
 
-> 
-> Aside of that this really wants to be combined with the ability to
-> supply the actual frequency on the command line as I suggested in the
-> other thread to cope with machines which do not expose PIT/HPET or have
-> broken variants of them.
+Stephen will complain here: see multiple google results when you
+search for "lkml linux-next: Fixes tag needs some work"
 
-tglx, can you give a lore link to the thread?
+Basically:
+- SHA1 should be at least 12 digits long
+- the commit title should not be split, even if it gets longer than 80 columns.
 
-Thanks,
+Cheers,
+Benjamin
 
-P.
-> 
-> Thanks,
-> 
->         tglx
-> 
-> 
+>
+> Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
+> ---
+>  drivers/input/mouse/elantech.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
+> index 2d8434b..3399db8 100644
+> --- a/drivers/input/mouse/elantech.c
+> +++ b/drivers/input/mouse/elantech.c
+> @@ -1720,6 +1720,10 @@ static int elantech_query_info(struct psmouse *psmouse,
+>
+>                 info->x_max = (0x0f & param[0]) << 8 | param[1];
+>                 info->y_max = (0xf0 & param[0]) << 4 | param[2];
+> +               if (info->fw_version == 0x250f01) {
+> +                       info->x_max <<= 1;
+> +                       info->y_max <<= 1;
+> +               }
+>                 break;
+>
+>         case 4:
+> --
+> 1.9.1
+>
 
