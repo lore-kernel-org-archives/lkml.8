@@ -2,90 +2,210 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA87C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B72B9C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 084602469C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:00:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 851182469C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:01:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582833660;
-	bh=qIVsS+XzVbqXWd6SEbWmrU3nTTwIb5a6E0F6Drpa/Fk=;
+	s=default; t=1582833669;
+	bh=i92tSJsBqBk3CzP62C3QM9Ge7+B8VLDLy8QK6K05kzY=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=U39WlnzipJHOSV3osNJJTP4Ljow4RZtKsL3QgLf3i1VygTqNNFMc4wup6539tnEgV
-	 9EthEAbt9y6dyLONO44xy/3X+VE+GFfoHzbaJQ52BXeyDJOTgt5XmtQpEJhHZjUy2W
-	 TYgVdgC0nm/TQ4yt5bJDhnRIohYattz+yTBBcoQg=
+	b=x+16CLXasivps1nx7UzybemHrp+Y8Wlqx5k5jjxMjTxUWylL2pXl6FQQSudHiH8lg
+	 SRftHLm0zTvAmjbrTwMKCXp5vmCreAiuyMrqqg9QOXV7ioFidp7hWZUzRn3tr10lHK
+	 YaKSyUGYqsKxjP8gvMtBlqwvPcl3UIWJq+8hKAzU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730702AbgB0UA6 (ORCPT
+        id S1730775AbgB0UBI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 15:00:58 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:39024 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727159AbgB0UA6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 15:00:58 -0500
-Received: by mail-lf1-f65.google.com with SMTP id n30so337974lfh.6
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 12:00:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oQC5XL/giSLKULG9Wvy81a1UMPlWPAivXJ99IMsyzPk=;
-        b=HtiHDXlG0JR18/QlUwHqgHaaMmRjCfGt3buf0uUSKYgBFfx+4J7TF6G+NySGsdnlaH
-         B4rOhvT6Ogi7oPnQxzuHB2lE5g+WnqVnP0+hnLDPqz7duPDZnUrbbdNewWrp/tgU8Cat
-         LnVR7BaEsyOiMmriMtKa0e+wMcEpK3a2vIhlQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oQC5XL/giSLKULG9Wvy81a1UMPlWPAivXJ99IMsyzPk=;
-        b=PURcCXUASgpZlgfc37IPcUe9k/KqUp8frkjLWDCvBv8thn3OTkc1Uk2bPmJkO3mHLr
-         P3AuVncaw9iBF5iKf2VMIdrL6S7ZSDQ/1PiMTiDDNjzWWl6c8RWsRA3Mk/kicIFEquLq
-         e4g3VBx3EGp4JGZXd14mOWCESbsExDW+s7OFw2QumvxLr7C0apEciOeWVd7R4+1XXP7A
-         xXVVQESsVhld+cOVE4NgDVL65H3Ow6zkzpJjooz8w15qmuEQBU7fqGmi7CKQ2uVy/HVp
-         yw4LB5g+b+JxbWrO3x0AVtI1cSCdl8nM5MRiXbgi0CmjoQKcLGBamoPyKei55oL+5ciq
-         FpXQ==
-X-Gm-Message-State: ANhLgQ03k3iv4NpJI0EOFuzR0WNgafGUptH7ia9XY7xWWoedyuXyWNHD
-        +/XSEulVZcioVuQR7yoqvhGt17xJSWE=
-X-Google-Smtp-Source: ADFU+vsWdN7xVNGRomzy8BSzp/nTS5EU8vlTtaiu2/AWi5Kishzy/AuHdbWlqmbOyB3lQbp3Hxml3A==
-X-Received: by 2002:ac2:52a2:: with SMTP id r2mr542174lfm.33.1582833654685;
-        Thu, 27 Feb 2020 12:00:54 -0800 (PST)
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
-        by smtp.gmail.com with ESMTPSA id t1sm3871358lji.98.2020.02.27.12.00.53
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Feb 2020 12:00:53 -0800 (PST)
-Received: by mail-lf1-f54.google.com with SMTP id z9so355317lfa.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 12:00:53 -0800 (PST)
-X-Received: by 2002:a19:c106:: with SMTP id r6mr603675lff.10.1582833653416;
- Thu, 27 Feb 2020 12:00:53 -0800 (PST)
+        Thu, 27 Feb 2020 15:01:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56978 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729594AbgB0UBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 15:01:07 -0500
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85C102469C
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 20:01:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582833666;
+        bh=i92tSJsBqBk3CzP62C3QM9Ge7+B8VLDLy8QK6K05kzY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Af4+Ycw0mp762ZvtUz3b1inyyPqDhnONpKiGtbRNgUnGODZiiRX+jKpuvneJqCMK2
+         yt0KHWD/L0+VcRVkZmE8NyS9VNtXCJ7+ABqNAkVHWpqpVBZlB5Tqz2KB4ffrbqgbkG
+         Rei/ImwXN38VutUjRo2TSMXYrUSmbEnjBMpMScyM=
+Received: by mail-wr1-f44.google.com with SMTP id y17so306401wrn.6
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 12:01:06 -0800 (PST)
+X-Gm-Message-State: APjAAAVaWo5WU4K90kJjHHUWn7VjbCMojR0X8eCZvG5TnH8k0rMxw7tG
+        m7tLFvul6cD3KqrpK0B9ZBG+PE3PVr0PV3bDg4EmbA==
+X-Google-Smtp-Source: APXvYqwNfGcYXWESaIhXXtct1v7f5gXKx5rzPZ8W7+pk2wS+P5lHRdVGAWs4Aafi3JACnyUrHs0Dsd9MpMVFbVYKcC4=
+X-Received: by 2002:adf:f84a:: with SMTP id d10mr551741wrq.208.1582833665009;
+ Thu, 27 Feb 2020 12:01:05 -0800 (PST)
 MIME-Version: 1.0
-References: <20200223011154.GY23230@ZenIV.linux.org.uk> <20200223011626.4103706-1-viro@ZenIV.linux.org.uk>
- <20200223011626.4103706-2-viro@ZenIV.linux.org.uk> <CAHk-=wjE0ey=qg2-5+OHg4kVub4x3XLnatcZj5KfU03dd8kZ0A@mail.gmail.com>
- <20200227194312.GD23230@ZenIV.linux.org.uk>
-In-Reply-To: <20200227194312.GD23230@ZenIV.linux.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 27 Feb 2020 12:00:36 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wje=1xYx0N6ERSZfR8TgjSOY_PA2DSCGbE40GNwOeeF4w@mail.gmail.com>
-Message-ID: <CAHk-=wje=1xYx0N6ERSZfR8TgjSOY_PA2DSCGbE40GNwOeeF4w@mail.gmail.com>
-Subject: Re: [RFC][PATCH v2 02/34] fix automount/automount race properly
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200226011037.7179-1-atish.patra@wdc.com> <20200226011037.7179-4-atish.patra@wdc.com>
+ <CAKv+Gu8HdRa5k=h1XF2fm80VEgvuxa_tX_P0qFSdkk=CVc6ffA@mail.gmail.com> <08322b0eeb26b564954a14273baf18db72e2f1e9.camel@wdc.com>
+In-Reply-To: <08322b0eeb26b564954a14273baf18db72e2f1e9.camel@wdc.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 27 Feb 2020 21:00:54 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu_OMs12qBxvZGnrUnMD782yYPpcvBDqRGug2YDhhvcfSw@mail.gmail.com>
+Message-ID: <CAKv+Gu_OMs12qBxvZGnrUnMD782yYPpcvBDqRGug2YDhhvcfSw@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/5] RISC-V: Define fixmap bindings for generic early
+ ioremap support
+To:     Atish Patra <Atish.Patra@wdc.com>
+Cc:     "alexios.zavras@intel.com" <alexios.zavras@intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "michal.simek@xilinx.com" <michal.simek@xilinx.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "abner.chang@hpe.com" <abner.chang@hpe.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "daniel.schaefer@hpe.com" <daniel.schaefer@hpe.com>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+        "bp@suse.de" <bp@suse.de>,
+        "greentime.hu@sifive.com" <greentime.hu@sifive.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "agraf@csgraf.de" <agraf@csgraf.de>,
+        "will@kernel.org" <will@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "leif@nuviainc.com" <leif@nuviainc.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 11:43 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
+On Thu, 27 Feb 2020 at 20:58, Atish Patra <Atish.Patra@wdc.com> wrote:
 >
-> Umm...  A bit of reordering in the beginning eliminates discard1, suggesting
-> s/discard2/discard_locked/...  Incremental would be
+> On Wed, 2020-02-26 at 08:08 +0100, Ard Biesheuvel wrote:
+> > On Wed, 26 Feb 2020 at 02:10, Atish Patra <atish.patra@wdc.com>
+> > wrote:
+> > > UEFI uses early IO or memory mappings for runtime services before
+> > > normal ioremap() is usable. This patch only adds minimum necessary
+> > > fixmap bindings and headers for generic ioremap support to work.
+> > >
+> > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> >
+> > Looks reasonable to me,
+> >
+> > Acked-by: Ard Biesheuvel <ardb@kernel.org>
+> >
+> > although I wonder why it is part of this series?
+> >
+>
+> because of CONFIG_EFI. With CONFIG_EFI enabled, all the run time
+> service memory mapping code is compiled for RISC-V. I could have
+> createa a separate config for only boot time services or used EFI_STUB
+> at places where CONFI_EFI. But it seems redundant as we will support
+> runtime services soon. Let me know if that's a wrong approach.
+>
 
-Ack, thanks.
+No that's fine
 
-          Linus
+
+
+> > > ---
+> > >  arch/riscv/Kconfig              |  1 +
+> > >  arch/riscv/include/asm/Kbuild   |  1 +
+> > >  arch/riscv/include/asm/fixmap.h | 21 ++++++++++++++++++++-
+> > >  arch/riscv/include/asm/io.h     |  1 +
+> > >  4 files changed, 23 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> > > index 27bfc7947e44..42c122170cfd 100644
+> > > --- a/arch/riscv/Kconfig
+> > > +++ b/arch/riscv/Kconfig
+> > > @@ -65,6 +65,7 @@ config RISCV
+> > >         select ARCH_HAS_GCOV_PROFILE_ALL
+> > >         select HAVE_COPY_THREAD_TLS
+> > >         select HAVE_ARCH_KASAN if MMU && 64BIT
+> > > +       select GENERIC_EARLY_IOREMAP
+> > >
+> > >  config ARCH_MMAP_RND_BITS_MIN
+> > >         default 18 if 64BIT
+> > > diff --git a/arch/riscv/include/asm/Kbuild
+> > > b/arch/riscv/include/asm/Kbuild
+> > > index ec0ca8c6ab64..517394390106 100644
+> > > --- a/arch/riscv/include/asm/Kbuild
+> > > +++ b/arch/riscv/include/asm/Kbuild
+> > > @@ -4,6 +4,7 @@ generic-y += checksum.h
+> > >  generic-y += compat.h
+> > >  generic-y += device.h
+> > >  generic-y += div64.h
+> > > +generic-y += early_ioremap.h
+> > >  generic-y += extable.h
+> > >  generic-y += flat.h
+> > >  generic-y += dma.h
+> > > diff --git a/arch/riscv/include/asm/fixmap.h
+> > > b/arch/riscv/include/asm/fixmap.h
+> > > index 42d2c42f3cc9..7a4beb7e29a3 100644
+> > > --- a/arch/riscv/include/asm/fixmap.h
+> > > +++ b/arch/riscv/include/asm/fixmap.h
+> > > @@ -25,9 +25,28 @@ enum fixed_addresses {
+> > >  #define FIX_FDT_SIZE   SZ_1M
+> > >         FIX_FDT_END,
+> > >         FIX_FDT = FIX_FDT_END + FIX_FDT_SIZE / PAGE_SIZE - 1,
+> > > +       FIX_EARLYCON_MEM_BASE,
+> > > +
+> > >         FIX_PTE,
+> > >         FIX_PMD,
+> > > -       FIX_EARLYCON_MEM_BASE,
+> > > +       /*
+> > > +        * Make sure that it is 2MB aligned.
+> > > +        */
+> > > +#define NR_FIX_SZ_2M   (SZ_2M / PAGE_SIZE)
+> > > +       FIX_THOLE = NR_FIX_SZ_2M - FIX_PMD - 1,
+> > > +
+> > > +       __end_of_permanent_fixed_addresses,
+> > > +       /*
+> > > +        * Temporary boot-time mappings, used by early_ioremap(),
+> > > +        * before ioremap() is functional.
+> > > +        */
+> > > +#define NR_FIX_BTMAPS          (SZ_256K / PAGE_SIZE)
+> > > +#define FIX_BTMAPS_SLOTS       7
+> > > +#define TOTAL_FIX_BTMAPS       (NR_FIX_BTMAPS * FIX_BTMAPS_SLOTS)
+> > > +
+> > > +       FIX_BTMAP_END = __end_of_permanent_fixed_addresses,
+> > > +       FIX_BTMAP_BEGIN = FIX_BTMAP_END + TOTAL_FIX_BTMAPS - 1,
+> > > +
+> > >         __end_of_fixed_addresses
+> > >  };
+> > >
+> > > diff --git a/arch/riscv/include/asm/io.h
+> > > b/arch/riscv/include/asm/io.h
+> > > index 0f477206a4ed..047f414b6948 100644
+> > > --- a/arch/riscv/include/asm/io.h
+> > > +++ b/arch/riscv/include/asm/io.h
+> > > @@ -14,6 +14,7 @@
+> > >  #include <linux/types.h>
+> > >  #include <asm/mmiowb.h>
+> > >  #include <asm/pgtable.h>
+> > > +#include <asm/early_ioremap.h>
+> > >
+> > >  /*
+> > >   * MMIO access functions are separated out to break dependency
+> > > cycles
+> > > --
+> > > 2.24.0
+> > >
+>
+> --
+> Regards,
+> Atish
