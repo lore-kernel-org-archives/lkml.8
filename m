@@ -4,53 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5429C3F345
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE9FC54FE8
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D95220801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90AA524656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:31:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813865;
-	bh=kUKSzHdRRHXlQaZVmuHIoD/S65nhOWHRv5mf2gtz24U=;
+	s=default; t=1582813918;
+	bh=KHFU5IGLRHzaH0gh1T6pQ60s3N1CUwn0EGvktTIdu9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XYZ7WLOKpasXbOyhYA/RWCH8uCessTXfSnRG5P35C5NiT3LnCD/bL3GMJEXGWIWUA
-	 uwXoy77lbNz9fmpcp+8pzCm1bgEIUUAASvMAdAdw6QMRrTVNEPh9ixi+T3rIKZe3I5
-	 ptEYECSefufD1N+czUR/POwY5WmwlS3tCYh5OS9Q=
+	b=0qyqhO3yDxXGMlBwwj3z9n+Fye0Ah+vNyG+++50uTpOJnmIRHuTM0EZY68TaGFGbo
+	 MpzVHZ+8jhIioS9pWj3MXZUAp3s4VL6vip7qPeC2EvZFQ+bQaYsgW8H+DaDpWbFWzw
+	 2JG4qR+X72HjU6MSRiXnjzXUpPTW3sR1bN/osMWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387571AbgB0OEV (ORCPT
+        id S1733193AbgB0OCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:04:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40256 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:02:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387552AbgB0OEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:04:14 -0500
+        id S1733181AbgB0OCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:02:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EB4E24656;
-        Thu, 27 Feb 2020 14:04:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98D3E20578;
+        Thu, 27 Feb 2020 14:02:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812253;
-        bh=kUKSzHdRRHXlQaZVmuHIoD/S65nhOWHRv5mf2gtz24U=;
+        s=default; t=1582812162;
+        bh=KHFU5IGLRHzaH0gh1T6pQ60s3N1CUwn0EGvktTIdu9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BXl8w7bzD12JcxXX6eODjeebRkZg268I4VLhqTgpH6Nk3nTC+BRudyPZycjtRmdnN
-         aqT2WSGBsOnMKCVymMplk0Umq4gB+9YBoIUUWZvtFljLwDsNt1NyzSm3tW1wSA3lHl
-         1rCy4vBK7tYEvMJ4XQa6vGRO3UucTcP1z7FVMbSg=
+        b=IP1TFmKhyMZa2+xy7W/vz7HpJvHNX8y0PF82kOncDZD/b94wgv3iowYCq71VZ7xUm
+         t2fwn+Lh8spN5kHbw5G49NmXMK+9xveEpTZqCwSJZdxhgPT1uhzDKHZyORP7QNrvkV
+         UjTq7Mttizri9K1JsEXsMlMl5OUWcl1D3cOsbkj0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Loic Poulain <loic.poulain@linaro.org>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 43/97] serdev: ttyport: restore client ops on deregistration
-Date:   Thu, 27 Feb 2020 14:36:51 +0100
-Message-Id: <20200227132221.585786585@linuxfoundation.org>
+        stable@vger.kernel.org, Brian Masney <masneyb@onstation.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 4.19 01/97] iommu/qcom: Fix bogus detach logic
+Date:   Thu, 27 Feb 2020 14:36:09 +0100
+Message-Id: <20200227132214.797276235@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
 References: <20200227132214.553656188@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -59,107 +64,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Robin Murphy <robin.murphy@arm.com>
 
-commit 0c5aae59270fb1f827acce182786094c9ccf598e upstream.
+commit faf305c51aeabd1ea2d7131e798ef5f55f4a7750 upstream.
 
-The serdev tty-port controller driver should reset the tty-port client
-operations also on deregistration to avoid a NULL-pointer dereference in
-case the port is later re-registered as a normal tty device.
+Currently, the implementation of qcom_iommu_domain_free() is guaranteed
+to do one of two things: WARN() and leak everything, or dereference NULL
+and crash. That alone is terrible, but in fact the whole idea of trying
+to track the liveness of a domain via the qcom_domain->iommu pointer as
+a sanity check is full of fundamentally flawed assumptions. Make things
+robust and actually functional by not trying to be quite so clever.
 
-Note that this can only happen with tty drivers such as 8250 which have
-statically allocated port structures that can end up being reused and
-where a later registration would not register a serdev controller (e.g.
-due to registration errors or if the devicetree has been changed in
-between).
-
-Specifically, this can be an issue for any statically defined ports that
-would be registered by 8250 core when an 8250 driver is being unbound.
-
-Fixes: bed35c6dfa6a ("serdev: add a tty port controller driver")
-Cc: stable <stable@vger.kernel.org>     # 4.11
-Reported-by: Loic Poulain <loic.poulain@linaro.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20200210145730.22762-1-johan@kernel.org
+Reported-by: Brian Masney <masneyb@onstation.org>
+Tested-by: Brian Masney <masneyb@onstation.org>
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Fixes: 0ae349a0f33f ("iommu/qcom: Add qcom_iommu")
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Tested-by: Stephan Gerhold <stephan@gerhold.net>
+Cc: stable@vger.kernel.org # v4.14+
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serdev/serdev-ttyport.c |    6 ++----
- drivers/tty/tty_port.c              |    5 +++--
- include/linux/tty.h                 |    2 ++
- 3 files changed, 7 insertions(+), 6 deletions(-)
+ drivers/iommu/qcom_iommu.c |   28 ++++++++++++----------------
+ 1 file changed, 12 insertions(+), 16 deletions(-)
 
---- a/drivers/tty/serdev/serdev-ttyport.c
-+++ b/drivers/tty/serdev/serdev-ttyport.c
-@@ -265,7 +265,6 @@ struct device *serdev_tty_port_register(
- 					struct device *parent,
- 					struct tty_driver *drv, int idx)
+--- a/drivers/iommu/qcom_iommu.c
++++ b/drivers/iommu/qcom_iommu.c
+@@ -333,21 +333,19 @@ static void qcom_iommu_domain_free(struc
  {
--	const struct tty_port_client_operations *old_ops;
- 	struct serdev_controller *ctrl;
- 	struct serport *serport;
- 	int ret;
-@@ -284,7 +283,6 @@ struct device *serdev_tty_port_register(
+ 	struct qcom_iommu_domain *qcom_domain = to_qcom_iommu_domain(domain);
  
- 	ctrl->ops = &ctrl_ops;
+-	if (WARN_ON(qcom_domain->iommu))    /* forgot to detach? */
+-		return;
+-
+ 	iommu_put_dma_cookie(domain);
  
--	old_ops = port->client_ops;
- 	port->client_ops = &client_ops;
- 	port->client_data = ctrl;
+-	/* NOTE: unmap can be called after client device is powered off,
+-	 * for example, with GPUs or anything involving dma-buf.  So we
+-	 * cannot rely on the device_link.  Make sure the IOMMU is on to
+-	 * avoid unclocked accesses in the TLB inv path:
+-	 */
+-	pm_runtime_get_sync(qcom_domain->iommu->dev);
+-
+-	free_io_pgtable_ops(qcom_domain->pgtbl_ops);
+-
+-	pm_runtime_put_sync(qcom_domain->iommu->dev);
++	if (qcom_domain->iommu) {
++		/*
++		 * NOTE: unmap can be called after client device is powered
++		 * off, for example, with GPUs or anything involving dma-buf.
++		 * So we cannot rely on the device_link.  Make sure the IOMMU
++		 * is on to avoid unclocked accesses in the TLB inv path:
++		 */
++		pm_runtime_get_sync(qcom_domain->iommu->dev);
++		free_io_pgtable_ops(qcom_domain->pgtbl_ops);
++		pm_runtime_put_sync(qcom_domain->iommu->dev);
++	}
  
-@@ -297,7 +295,7 @@ struct device *serdev_tty_port_register(
+ 	kfree(qcom_domain);
+ }
+@@ -392,7 +390,7 @@ static void qcom_iommu_detach_dev(struct
+ 	struct qcom_iommu_domain *qcom_domain = to_qcom_iommu_domain(domain);
+ 	unsigned i;
  
- err_reset_data:
- 	port->client_data = NULL;
--	port->client_ops = old_ops;
-+	port->client_ops = &tty_port_default_client_ops;
- 	serdev_controller_put(ctrl);
+-	if (!qcom_domain->iommu)
++	if (WARN_ON(!qcom_domain->iommu))
+ 		return;
  
- 	return ERR_PTR(ret);
-@@ -312,8 +310,8 @@ int serdev_tty_port_unregister(struct tt
- 		return -ENODEV;
- 
- 	serdev_controller_remove(ctrl);
--	port->client_ops = NULL;
- 	port->client_data = NULL;
-+	port->client_ops = &tty_port_default_client_ops;
- 	serdev_controller_put(ctrl);
- 
- 	return 0;
---- a/drivers/tty/tty_port.c
-+++ b/drivers/tty/tty_port.c
-@@ -52,10 +52,11 @@ static void tty_port_default_wakeup(stru
+ 	pm_runtime_get_sync(qcom_iommu->dev);
+@@ -405,8 +403,6 @@ static void qcom_iommu_detach_dev(struct
+ 		ctx->domain = NULL;
  	}
+ 	pm_runtime_put_sync(qcom_iommu->dev);
+-
+-	qcom_domain->iommu = NULL;
  }
  
--static const struct tty_port_client_operations default_client_ops = {
-+const struct tty_port_client_operations tty_port_default_client_ops = {
- 	.receive_buf = tty_port_default_receive_buf,
- 	.write_wakeup = tty_port_default_wakeup,
- };
-+EXPORT_SYMBOL_GPL(tty_port_default_client_ops);
- 
- void tty_port_init(struct tty_port *port)
- {
-@@ -68,7 +69,7 @@ void tty_port_init(struct tty_port *port
- 	spin_lock_init(&port->lock);
- 	port->close_delay = (50 * HZ) / 100;
- 	port->closing_wait = (3000 * HZ) / 100;
--	port->client_ops = &default_client_ops;
-+	port->client_ops = &tty_port_default_client_ops;
- 	kref_init(&port->kref);
- }
- EXPORT_SYMBOL(tty_port_init);
---- a/include/linux/tty.h
-+++ b/include/linux/tty.h
-@@ -225,6 +225,8 @@ struct tty_port_client_operations {
- 	void (*write_wakeup)(struct tty_port *port);
- };
- 
-+extern const struct tty_port_client_operations tty_port_default_client_ops;
-+
- struct tty_port {
- 	struct tty_bufhead	buf;		/* Locked internally */
- 	struct tty_struct	*tty;		/* Back pointer */
+ static int qcom_iommu_map(struct iommu_domain *domain, unsigned long iova,
 
 
