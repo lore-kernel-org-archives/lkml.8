@@ -2,51 +2,54 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D26C3F365
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABCD3C35DEE
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A14E220801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8472024656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811573;
-	bh=cUNs4BAM2uQGrUxQUfSZY/GPkkgLrq4ubfrALEjXvT8=;
+	s=default; t=1582811638;
+	bh=eD/DJ1LstZ9eNOd8Ti1BbuQe6wDVPeHT7k72/pE1F6o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NBCHPYxGaPpCcNdDmmR00w1tJQu9ahM269cpabsCtZYAVrOQQCLR8U66gc8RvBm2F
-	 AaPuGdYsCGQFVDnu83pUWyTvYHGWZtcO0/Uy4VBpbHYnXsRs78WA5is2kLsl+7/QpC
-	 fSBlp0uOsqhmQ2arbFLrEhDYoVnXnYYQc0iIgBNI=
+	b=OoZKhcZfBU7erVOWzansd6KTP9DC+O17EFYHiIISdjser9EzPZolU/oNhOKd/dq1q
+	 uPsGAIe4tAHjTlhiu2vhxqQXdIP0QjoJaRdrMmDbCDb+eGfEDKOAOd80ujp5ne57I7
+	 Og//1cLwrL1e/DA0LTJ6cBrKdfsEpPEWnJPGseD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731594AbgB0Nww (ORCPT
+        id S1731796AbgB0Nx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:52:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52478 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:53:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731448AbgB0Nwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:52:49 -0500
+        id S1731767AbgB0Nxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:53:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCF4B2084E;
-        Thu, 27 Feb 2020 13:52:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F28D82084E;
+        Thu, 27 Feb 2020 13:53:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811569;
-        bh=cUNs4BAM2uQGrUxQUfSZY/GPkkgLrq4ubfrALEjXvT8=;
+        s=default; t=1582811634;
+        bh=eD/DJ1LstZ9eNOd8Ti1BbuQe6wDVPeHT7k72/pE1F6o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=meK1o/f2Ibi+E/txgWEoEsGzn6ztl+R/7/u1+VKDCDsP87iPIzh1QVry2HM7NGTBy
-         C4yfcnoxyHZ11DdULXi6ET7vORrc9REAO8qRlBSZlFif/XEuX/ENUjomgr/js/Bxi+
-         0ETTIozm2iWxoR4AVDTVixQI0AWY26EgGQIYEnfo=
+        b=RoMR+pppLGgukS9T5VovNYWcCETIQKk374fi1vW5gC6WCc0m8h8t+k7+vcUpP8sji
+         +1+Ua4uQNAgp/yGaYS0mXQXsw66QXtr80avzw6/P6Rs/JTxUpGGofyQNcuD82MAs9F
+         cvXnD7peG9eY4I21bAJ944lWqIyr2ixaEriqqQqo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
-        stable@kernel.org
-Subject: [PATCH 4.14 018/237] ext4: improve explanation of a mount failure caused by a misconfigured kernel
-Date:   Thu, 27 Feb 2020 14:33:52 +0100
-Message-Id: <20200227132257.439071280@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Matthew Bobrowski <mbobrowski@mbobrowski.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Ritesh Harjani <riteshh@linux.ibm.com>,
+        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 043/237] ext4: fix ext4_dax_read/write inode locking sequence for IOCB_NOWAIT
+Date:   Thu, 27 Feb 2020 14:34:17 +0100
+Message-Id: <20200227132259.878232093@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -59,55 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Theodore Ts'o <tytso@mit.edu>
+From: Ritesh Harjani <riteshh@linux.ibm.com>
 
-commit d65d87a07476aa17df2dcb3ad18c22c154315bec upstream.
+[ Upstream commit f629afe3369e9885fd6e9cc7a4f514b6a65cf9e9 ]
 
-If CONFIG_QFMT_V2 is not enabled, but CONFIG_QUOTA is enabled, when a
-user tries to mount a file system with the quota or project quota
-enabled, the kernel will emit a very confusing messsage:
+Apparently our current rwsem code doesn't like doing the trylock, then
+lock for real scheme.  So change our dax read/write methods to just do the
+trylock for the RWF_NOWAIT case.
+This seems to fix AIM7 regression in some scalable filesystems upto ~25%
+in some cases. Claimed in commit 942491c9e6d6 ("xfs: fix AIM7 regression")
 
-    EXT4-fs warning (device vdc): ext4_enable_quotas:5914: Failed to enable quota tracking (type=0, err=-3). Please run e2fsck to fix.
-    EXT4-fs (vdc): mount failed
-
-We will now report an explanatory message indicating which kernel
-configuration options have to be enabled, to avoid customer/sysadmin
-confusion.
-
-Link: https://lore.kernel.org/r/20200215012738.565735-1-tytso@mit.edu
-Google-Bug-Id: 149093531
-Fixes: 7c319d328505b778 ("ext4: make quota as first class supported feature")
+Reviewed-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Matthew Bobrowski <mbobrowski@mbobrowski.org>
+Tested-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
+Link: https://lore.kernel.org/r/20191212055557.11151-2-riteshh@linux.ibm.com
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/super.c |   14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
+ fs/ext4/file.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -2863,17 +2863,11 @@ static int ext4_feature_set_ok(struct su
- 		return 0;
- 	}
+diff --git a/fs/ext4/file.c b/fs/ext4/file.c
+index 4ede0af9d6fe3..acec134da57df 100644
+--- a/fs/ext4/file.c
++++ b/fs/ext4/file.c
+@@ -38,9 +38,10 @@ static ssize_t ext4_dax_read_iter(struct kiocb *iocb, struct iov_iter *to)
+ 	struct inode *inode = file_inode(iocb->ki_filp);
+ 	ssize_t ret;
  
--#ifndef CONFIG_QUOTA
--	if (ext4_has_feature_quota(sb) && !readonly) {
-+#if !defined(CONFIG_QUOTA) || !defined(CONFIG_QFMT_V2)
-+	if (!readonly && (ext4_has_feature_quota(sb) ||
-+			  ext4_has_feature_project(sb))) {
- 		ext4_msg(sb, KERN_ERR,
--			 "Filesystem with quota feature cannot be mounted RDWR "
--			 "without CONFIG_QUOTA");
--		return 0;
--	}
--	if (ext4_has_feature_project(sb) && !readonly) {
--		ext4_msg(sb, KERN_ERR,
--			 "Filesystem with project quota feature cannot be mounted RDWR "
--			 "without CONFIG_QUOTA");
-+			 "The kernel was not built with CONFIG_QUOTA and CONFIG_QFMT_V2");
- 		return 0;
+-	if (!inode_trylock_shared(inode)) {
+-		if (iocb->ki_flags & IOCB_NOWAIT)
++	if (iocb->ki_flags & IOCB_NOWAIT) {
++		if (!inode_trylock_shared(inode))
+ 			return -EAGAIN;
++	} else {
+ 		inode_lock_shared(inode);
  	}
- #endif  /* CONFIG_QUOTA */
+ 	/*
+@@ -188,9 +189,10 @@ ext4_dax_write_iter(struct kiocb *iocb, struct iov_iter *from)
+ 	struct inode *inode = file_inode(iocb->ki_filp);
+ 	ssize_t ret;
+ 
+-	if (!inode_trylock(inode)) {
+-		if (iocb->ki_flags & IOCB_NOWAIT)
++	if (iocb->ki_flags & IOCB_NOWAIT) {
++		if (!inode_trylock(inode))
+ 			return -EAGAIN;
++	} else {
+ 		inode_lock(inode);
+ 	}
+ 	ret = ext4_write_checks(iocb, from);
+-- 
+2.20.1
+
 
 
