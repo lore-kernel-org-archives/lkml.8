@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E94B9C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58BD7C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1F5D246A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:44:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33512246A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:44:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582825486;
-	bh=mpYolZHG8Rvhtyy8ykOU3NvHJt669wKPrtsMsgQb4Cs=;
+	s=default; t=1582825489;
+	bh=Ss39wu4CO0HGAkWqOIMjf6gXKRb0wRKyeT2Jb/dTj4s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2FXBCwxnguId+EQOKsQPKiECeXN0mIWvpkEbgrEoKdC//0MjvVEv9g8fxCzIW3rcg
-	 9l9hdM4q0L4L2xVllvTia3wZjW2RqNz6B6NjBPFBJRutlrLG1jmgc1REOUCbgrfMg3
-	 Q+lBHlKmivZOyrO6YuShvHbOAvzb8p3CMOTKcLP8=
+	b=a7JeSe/V1hvp+9nRvvxxW/EeOyAp//AV9TJ6rBBFEBVhbERf9WLgZvBx5jZ+u1eyk
+	 tCRu1fW99UBaDfdZfHzLt2/Yx6jjY2Rm83f4hJSjtjLfEqBw0nBqSex3ldkRReO4ZV
+	 x+7WNROkMufURcmmAaiscxCJaZP4nx4Vf6cjMuzY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730748AbgB0Rop (ORCPT
+        id S1730768AbgB0Ror (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 12:44:45 -0500
-Received: from foss.arm.com ([217.140.110.172]:55676 "EHLO foss.arm.com"
+        Thu, 27 Feb 2020 12:44:47 -0500
+Received: from foss.arm.com ([217.140.110.172]:55702 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730705AbgB0Ron (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 12:44:43 -0500
+        id S1730705AbgB0Rop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 12:44:45 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5A42106F;
-        Thu, 27 Feb 2020 09:44:42 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6358230E;
+        Thu, 27 Feb 2020 09:44:45 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5BC5A3F73B;
-        Thu, 27 Feb 2020 09:44:42 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A67603F73B;
+        Thu, 27 Feb 2020 09:44:44 -0800 (PST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>
@@ -58,9 +58,9 @@ Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
         linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         Dave Martin <Dave.Martin@arm.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH v8 09/11] arm64: BTI: Reset BTYPE when skipping emulated instructions
-Date:   Thu, 27 Feb 2020 17:44:15 +0000
-Message-Id: <20200227174417.23722-10-broonie@kernel.org>
+Subject: [PATCH v8 10/11] KVM: arm64: BTI: Reset BTYPE when skipping emulated instructions
+Date:   Thu, 27 Feb 2020 17:44:16 +0000
+Message-Id: <20200227174417.23722-11-broonie@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200227174417.23722-1-broonie@kernel.org>
 References: <20200227174417.23722-1-broonie@kernel.org>
@@ -81,24 +81,31 @@ Branches don't trap directly, so we should never need to assign a
 non-zero value to BTYPE here.
 
 Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+Acked-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- arch/arm64/kernel/traps.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/include/asm/kvm_emulate.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-index 3c07a7074145..52ed261e7739 100644
---- a/arch/arm64/kernel/traps.c
-+++ b/arch/arm64/kernel/traps.c
-@@ -335,6 +335,8 @@ void arm64_skip_faulting_instruction(struct pt_regs *regs, unsigned long size)
+diff --git a/arch/arm64/include/asm/kvm_emulate.h b/arch/arm64/include/asm/kvm_emulate.h
+index 688c63412cc2..dee51c1dcb93 100644
+--- a/arch/arm64/include/asm/kvm_emulate.h
++++ b/arch/arm64/include/asm/kvm_emulate.h
+@@ -506,10 +506,12 @@ static inline unsigned long vcpu_data_host_to_guest(struct kvm_vcpu *vcpu,
  
- 	if (compat_user_mode(regs))
- 		advance_itstate(regs);
-+	else
-+		regs->pstate &= ~PSR_BTYPE_MASK;
- }
+ static inline void kvm_skip_instr(struct kvm_vcpu *vcpu, bool is_wide_instr)
+ {
+-	if (vcpu_mode_is_32bit(vcpu))
++	if (vcpu_mode_is_32bit(vcpu)) {
+ 		kvm_skip_instr32(vcpu, is_wide_instr);
+-	else
++	} else {
+ 		*vcpu_pc(vcpu) += 4;
++		*vcpu_cpsr(vcpu) &= ~PSR_BTYPE_MASK;
++	}
  
- static LIST_HEAD(undef_hook);
+ 	/* advance the singlestep state machine */
+ 	*vcpu_cpsr(vcpu) &= ~DBG_SPSR_SS;
 -- 
 2.20.1
 
