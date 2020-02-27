@@ -2,420 +2,109 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58333C3567B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 914AFC3567B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2520D2469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66C6A2469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 17:01:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="uAn0b8d7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729477AbgB0RBK (ORCPT
+        id S1729521AbgB0RBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 12:01:10 -0500
-Received: from smtp-42ac.mail.infomaniak.ch ([84.16.66.172]:39605 "EHLO
-        smtp-42ac.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727211AbgB0RBK (ORCPT
+        Thu, 27 Feb 2020 12:01:41 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45141 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729298AbgB0RBk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 12:01:10 -0500
-Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
-        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id DDFAA1003A4D3;
-        Thu, 27 Feb 2020 18:01:05 +0100 (CET)
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 48SzT85slszlhCmN;
-        Thu, 27 Feb 2020 18:01:00 +0100 (CET)
-Subject: Re: [RFC PATCH v14 01/10] landlock: Add object and rule management
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-security-module@vger.kernel.org, x86@kernel.org
-References: <20200224160215.4136-1-mic@digikod.net>
- <20200227042002.3032-1-hdanton@sina.com>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <216c8e89-2906-4ad5-f8a1-ab3ec50614fe@digikod.net>
-Date:   Thu, 27 Feb 2020 18:01:00 +0100
-User-Agent: 
+        Thu, 27 Feb 2020 12:01:40 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 59so3546648otp.12
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 09:01:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S6h30Tw2mjD0V+USDZTW8hFhBkYs512Lqr51yu3+ofs=;
+        b=uAn0b8d75rtFVOIdOZnsmQfugjpQalJefb4ste8jolUNr1Yv8HzUsChA5IZdX6dVwd
+         XioJKiTWbGnDtU4IboFdBuWNdSUJyhqOywZAqPHtfAPsP5EE2Vctx7h4d3HzmAz8kJg2
+         QEZGCgmxda9Q1U7l8UKx5rYUE8e0CalNOfmq1Gr0p48T3nigCDKHxAA95PerIyA9cG+e
+         dR6hBEjqTyDoYw9c1pPJAGrnBH4XrcTdP2uQp8VES5MNja8u2NBJLM/amQM8kZtjM4o2
+         775/8oUqrrg44OGDHSVN//FW3bxKZ/Q8bzo3dFUV9T7ZLLB9OUQvlYn0dAJ0bMRvvuyk
+         8XAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S6h30Tw2mjD0V+USDZTW8hFhBkYs512Lqr51yu3+ofs=;
+        b=Ka+QSw15241HXa3mxsJOVzvxqb8VvxkDS8pka06q2kKqmt1HASBciLeKgTr2/87VaD
+         soTrWFYzs7rXmjX5Y2awBuSVEwisX1QRZ762VVfi8Ng3pjZ1BRi21uGTAhlB/B4ml81u
+         FGE/3sGzq5Obsy8Vl40z5stzRqFMhodkBRsE/AnTVw/3XJ8XfYZecbevSlOXvezJ1lkj
+         s0GeFaCTas0ksh3i5cqZnKacOU4oc91iExRx5di1QmuMtvqd7BQzMstnPDEBo5PfdrJD
+         y+bBajp1Aa2wNNdA5/3PSo6YZM/CCR+R2bzpXjRGUr6aMVmQiixhP1qg7/FDZ7eaaaA/
+         P6+w==
+X-Gm-Message-State: APjAAAW6Bgzz3Um1lQkBQR9J61Z3ynIfefMIBfcu/p3umx7pinrpQqhl
+        +qja+Oy7RmS+eB12xI/DmqvedUFeezpTEG2hF0yN4Q==
+X-Google-Smtp-Source: APXvYqyXwQILrbtHCsUHMWn42meoZX0KXIZsOEVsgrRpEJ3IcJaY2hGUVFuyZ1kdlGiQhmRiXVOeUC0xDwMJYMZQufs=
+X-Received: by 2002:a9d:64d8:: with SMTP id n24mr525264otl.71.1582822896420;
+ Thu, 27 Feb 2020 09:01:36 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200227042002.3032-1-hdanton@sina.com>
-Content-Type: text/plain; charset=iso-8859-15
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+References: <20200221032720.33893-1-alastair@au1.ibm.com> <20200221032720.33893-15-alastair@au1.ibm.com>
+In-Reply-To: <20200221032720.33893-15-alastair@au1.ibm.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 27 Feb 2020 09:01:25 -0800
+Message-ID: <CAPcyv4iJahL8w3mjfS3C6Pb5PgAsN9+7=FDVgtndU2oHmYYUgQ@mail.gmail.com>
+Subject: Re: [PATCH v3 14/27] powerpc/powernv/pmem: Add support for Admin commands
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>
+Cc:     alastair@d-silva.org,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Feb 20, 2020 at 7:28 PM Alastair D'Silva <alastair@au1.ibm.com> wrote:
+>
+> From: Alastair D'Silva <alastair@d-silva.org>
+>
+> This patch requests the metadata required to issue admin commands, as well
+> as some helper functions to construct and check the completion of the
+> commands.
 
-
-On 27/02/2020 05:20, Hillf Danton wrote:
-> 
-> On Mon, 24 Feb 2020 17:02:06 +0100 Mickaël Salaün 
->> A Landlock object enables to identify a kernel object (e.g. an inode).
->> A Landlock rule is a set of access rights allowed on an object.  Rules
->> are grouped in rulesets that may be tied to a set of processes (i.e.
->> subjects) to enforce a scoped access-control (i.e. a domain).
->>
->> Because Landlock's goal is to empower any process (especially
->> unprivileged ones) to sandbox themselves, we can't rely on a system-wide
->> object identification such as file extended attributes.  Indeed, we need
->> innocuous, composable and modular access-controls.
->>
->> The main challenge with this constraints is to identify kernel objects
->> while this identification is useful (i.e. when a security policy makes
->> use of this object).  But this identification data should be freed once
->> no policy is using it.  This ephemeral tagging should not and may not be
->> written in the filesystem.  We then need to manage the lifetime of a
->> rule according to the lifetime of its object.  To avoid a global lock,
->> this implementation make use of RCU and counters to safely reference
->> objects.
->>
->> A following commit uses this generic object management for inodes.
->>
->> Signed-off-by: Mickaël Salaün <mic@digikod.net>
->> Cc: Andy Lutomirski <luto@amacapital.net>
->> Cc: James Morris <jmorris@namei.org>
->> Cc: Kees Cook <keescook@chromium.org>
->> Cc: Serge E. Hallyn <serge@hallyn.com>
->> ---
->>
->> Changes since v13:
->> * New dedicated implementation, removing the need for eBPF.
->>
->> Previous version:
->> https://lore.kernel.org/lkml/20190721213116.23476-6-mic@digikod.net/
->> ---
->>  MAINTAINERS                |  10 ++
->>  security/Kconfig           |   1 +
->>  security/Makefile          |   2 +
->>  security/landlock/Kconfig  |  15 ++
->>  security/landlock/Makefile |   3 +
->>  security/landlock/object.c | 339 +++++++++++++++++++++++++++++++++++++
->>  security/landlock/object.h | 134 +++++++++++++++
->>  7 files changed, 504 insertions(+)
->>  create mode 100644 security/landlock/Kconfig
->>  create mode 100644 security/landlock/Makefile
->>  create mode 100644 security/landlock/object.c
->>  create mode 100644 security/landlock/object.h
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index fcd79fc38928..206f85768cd9 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -9360,6 +9360,16 @@ F:	net/core/skmsg.c
->>  F:	net/core/sock_map.c
->>  F:	net/ipv4/tcp_bpf.c
->>  
->> +LANDLOCK SECURITY MODULE
->> +M:	Mickaël Salaün <mic@digikod.net>
->> +L:	linux-security-module@vger.kernel.org
->> +W:	https://landlock.io
->> +T:	git https://github.com/landlock-lsm/linux.git
->> +S:	Supported
->> +F:	security/landlock/
->> +K:	landlock
->> +K:	LANDLOCK
->> +
->>  LANTIQ / INTEL Ethernet drivers
->>  M:	Hauke Mehrtens <hauke@hauke-m.de>
->>  L:	netdev@vger.kernel.org
->> diff --git a/security/Kconfig b/security/Kconfig
->> index 2a1a2d396228..9d9981394fb0 100644
->> --- a/security/Kconfig
->> +++ b/security/Kconfig
->> @@ -238,6 +238,7 @@ source "security/loadpin/Kconfig"
->>  source "security/yama/Kconfig"
->>  source "security/safesetid/Kconfig"
->>  source "security/lockdown/Kconfig"
->> +source "security/landlock/Kconfig"
->>  
->>  source "security/integrity/Kconfig"
->>  
->> diff --git a/security/Makefile b/security/Makefile
->> index 746438499029..2472ef96d40a 100644
->> --- a/security/Makefile
->> +++ b/security/Makefile
->> @@ -12,6 +12,7 @@ subdir-$(CONFIG_SECURITY_YAMA)		+= yama
->>  subdir-$(CONFIG_SECURITY_LOADPIN)	+= loadpin
->>  subdir-$(CONFIG_SECURITY_SAFESETID)    += safesetid
->>  subdir-$(CONFIG_SECURITY_LOCKDOWN_LSM)	+= lockdown
->> +subdir-$(CONFIG_SECURITY_LANDLOCK)		+= landlock
->>  
->>  # always enable default capabilities
->>  obj-y					+= commoncap.o
->> @@ -29,6 +30,7 @@ obj-$(CONFIG_SECURITY_YAMA)		+= yama/
->>  obj-$(CONFIG_SECURITY_LOADPIN)		+= loadpin/
->>  obj-$(CONFIG_SECURITY_SAFESETID)       += safesetid/
->>  obj-$(CONFIG_SECURITY_LOCKDOWN_LSM)	+= lockdown/
->> +obj-$(CONFIG_SECURITY_LANDLOCK)	+= landlock/
->>  obj-$(CONFIG_CGROUP_DEVICE)		+= device_cgroup.o
->>  
->>  # Object integrity file lists
->> diff --git a/security/landlock/Kconfig b/security/landlock/Kconfig
->> new file mode 100644
->> index 000000000000..4a321d5b3f67
->> --- /dev/null
->> +++ b/security/landlock/Kconfig
->> @@ -0,0 +1,15 @@
->> +# SPDX-License-Identifier: GPL-2.0-only
->> +
->> +config SECURITY_LANDLOCK
->> +	bool "Landlock support"
->> +	depends on SECURITY
->> +	default n
->> +	help
->> +	  This selects Landlock, a safe sandboxing mechanism.  It enables to
->> +	  restrict processes on the fly (i.e. enforce an access control policy),
->> +	  which can complement seccomp-bpf.  The security policy is a set of access
->> +	  rights tied to an object, which could be a file, a socket or a process.
->> +
->> +	  See Documentation/security/landlock/ for further information.
->> +
->> +	  If you are unsure how to answer this question, answer N.
->> diff --git a/security/landlock/Makefile b/security/landlock/Makefile
->> new file mode 100644
->> index 000000000000..cb6deefbf4c0
->> --- /dev/null
->> +++ b/security/landlock/Makefile
->> @@ -0,0 +1,3 @@
->> +obj-$(CONFIG_SECURITY_LANDLOCK) := landlock.o
->> +
->> +landlock-y := object.o
->> diff --git a/security/landlock/object.c b/security/landlock/object.c
->> new file mode 100644
->> index 000000000000..38fbbb108120
->> --- /dev/null
->> +++ b/security/landlock/object.c
->> @@ -0,0 +1,339 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * Landlock LSM - Object and rule management
->> + *
->> + * Copyright © 2016-2020 Mickaël Salaün <mic@digikod.net>
->> + * Copyright © 2018-2020 ANSSI
->> + *
->> + * Principles and constraints of the object and rule management:
->> + * - Do not leak memory.
->> + * - Try as much as possible to free a memory allocation as soon as it is
->> + *   unused.
->> + * - Do not use global lock.
->> + * - Do not charge processes other than the one requesting a Landlock
->> + *   operation.
->> + */
->> +
->> +#include <linux/bug.h>
->> +#include <linux/compiler.h>
->> +#include <linux/compiler_types.h>
->> +#include <linux/err.h>
->> +#include <linux/errno.h>
->> +#include <linux/fs.h>
->> +#include <linux/kernel.h>
->> +#include <linux/list.h>
->> +#include <linux/rbtree.h>
->> +#include <linux/rcupdate.h>
->> +#include <linux/refcount.h>
->> +#include <linux/slab.h>
->> +#include <linux/spinlock.h>
->> +#include <linux/workqueue.h>
->> +
->> +#include "object.h"
->> +
->> +struct landlock_object *landlock_create_object(
->> +		const enum landlock_object_type type, void *underlying_object)
->> +{
->> +	struct landlock_object *object;
->> +
->> +	if (WARN_ON_ONCE(!underlying_object))
->> +		return NULL;
->> +	object = kzalloc(sizeof(*object), GFP_KERNEL);
->> +	if (!object)
->> +		return NULL;
->> +	refcount_set(&object->usage, 1);
->> +	refcount_set(&object->cleaners, 1);
->> +	spin_lock_init(&object->lock);
->> +	INIT_LIST_HEAD(&object->rules);
->> +	object->type = type;
->> +	WRITE_ONCE(object->underlying_object, underlying_object);
->> +	return object;
->> +}
->> +
->> +struct landlock_object *landlock_get_object(struct landlock_object *object)
->> +	__acquires(object->usage)
->> +{
->> +	__acquire(object->usage);
->> +	/*
->> +	 * If @object->usage equal 0, then it will be ignored by writers, and
->> +	 * underlying_object->object may be replaced, but this is not an issue
->> +	 * for release_object().
->> +	 */
->> +	if (object && refcount_inc_not_zero(&object->usage)) {
->> +		/*
->> +		 * It should not be possible to get a reference to an object if
->> +		 * its underlying object is being terminated (e.g. with
->> +		 * landlock_release_object()), because an object is only
->> +		 * modifiable through such underlying object.  This is not the
->> +		 * case with landlock_get_object_cleaner().
->> +		 */
->> +		WARN_ON_ONCE(!READ_ONCE(object->underlying_object));
->> +		return object;
->> +	}
->> +	return NULL;
->> +}
->> +
->> +static struct landlock_object *get_object_cleaner(
->> +		struct landlock_object *object)
->> +	__acquires(object->cleaners)
->> +{
->> +	__acquire(object->cleaners);
->> +	if (object && refcount_inc_not_zero(&object->cleaners))
->> +		return object;
->> +	return NULL;
->> +}
->> +
->> +/*
->> + * There is two cases when an object should be free and the reference to the
->> + * underlying object should be put:
->> + * - when the last rule tied to this object is removed, which is handled by
->> + *   landlock_put_rule() and then release_object();
->> + * - when the object is being terminated (e.g. no more reference to an inode),
->> + *   which is handled by landlock_put_object().
->> + */
->> +static void put_object_free(struct landlock_object *object)
->> +	__releases(object->cleaners)
->> +{
->> +	__release(object->cleaners);
->> +	if (!refcount_dec_and_test(&object->cleaners))
->> +		return;
->> +	WARN_ON_ONCE(refcount_read(&object->usage));
->> +	/*
->> +	 * Ensures a safe use of @object in the RCU block from
->> +	 * landlock_put_rule().
->> +	 */
->> +	kfree_rcu(object, rcu_free);
->> +}
->> +
->> +/*
->> + * Destroys a newly created and useless object.
->> + */
->> +void landlock_drop_object(struct landlock_object *object)
->> +{
->> +	if (WARN_ON_ONCE(!refcount_dec_and_test(&object->usage)))
->> +		return;
->> +	__acquire(object->cleaners);
->> +	put_object_free(object);
->> +}
->> +
->> +/*
->> + * Puts the underlying object (e.g. inode) if it is the first request to
->> + * release @object, without calling landlock_put_object().
->> + *
->> + * Return true if this call effectively marks @object as released, false
->> + * otherwise.
->> + */
->> +static bool release_object(struct landlock_object *object)
->> +	__releases(&object->lock)
->> +{
->> +	void *underlying_object;
->> +
->> +	lockdep_assert_held(&object->lock);
->> +
->> +	underlying_object = xchg(&object->underlying_object, NULL);
-> 
-> A one-line comment looks needed for xchg.
-
-Ok. This is to have a guarantee that the underlying_object (e.g. the
-inode pointer) is only used once. I'll add a comment.
-
-> 
->> +	spin_unlock(&object->lock);
->> +	might_sleep();
-> 
-> Have trouble working out what might_sleep is put for.
-
-Patch 5 adds a call to landlock_release_inode(underlying_object, object)
-(LANDLOCK_OBJECT_INODE case), which can sleep e.g., with a call to iput().
-
-> 
->> +	if (!underlying_object)
->> +		return false;
->> +
->> +	switch (object->type) {
->> +	case LANDLOCK_OBJECT_INODE:
->> +		break;
->> +	default:
->> +		WARN_ON_ONCE(1);
->> +	}
->> +	return true;
->> +}
->> +
->> +static void put_object_cleaner(struct landlock_object *object)
->> +	__releases(object->cleaners)
->> +{
->> +	/* Let's try an early lockless check. */
->> +	if (list_empty(&object->rules) &&
->> +			READ_ONCE(object->underlying_object)) {
->> +		/*
->> +		 * Puts @object if there is no rule tied to it and the
->> +		 * remaining user is the underlying object.  This check is
->> +		 * atomic because @object->rules and @object->underlying_object
->> +		 * are protected by @object->lock.
->> +		 */
->> +		spin_lock(&object->lock);
->> +		if (list_empty(&object->rules) &&
->> +				READ_ONCE(object->underlying_object) &&
->> +				refcount_dec_if_one(&object->usage)) {
->> +			/*
->> +			 * Releases @object, in place of
->> +			 * landlock_release_object().
->> +			 *
->> +			 * @object is already empty, implying that all its
->> +			 * previous rules are already disabled.
->> +			 *
->> +			 * Unbalance the @object->cleaners counter to reflect
->> +			 * the underlying object release.
->> +			 */
->> +			if (!WARN_ON_ONCE(!release_object(object))) {
-> 
-> Two ! hurt more than help.
-
-Well, it may not look nice but don't you think it is better than a
-WARN_ON_ONCE(1) in the if block?
-
->> +				__acquire(object->cleaners);
->> +				put_object_free(object);
-> 
-> Why put object more than once?
-
-I just replied to Jann about this subject. This is to "unbalance" the
-counter to potentially free it (if there is no more user). I explain it
-here:
-https://lore.kernel.org/lkml/67465638-e22c-5d1a-df37-862b31d999a1@digikod.net/
-
-> 
->> +			}
->> +		} else {
->> +			spin_unlock(&object->lock);
->> +		}
->> +	}
->> +	put_object_free(object);
->> +}
->> +
-> 
+What are the admin commands? Any pointer to a spec? Why does Linux
+need to support these commands?
