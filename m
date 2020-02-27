@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2315DC54FEB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E71F0C54FE0
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE8A82468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDD352468F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813130;
-	bh=C6Encfp0HnT/CKsLIrS/WT4CFL/BGWA8wgTy9t4wzuI=;
+	s=default; t=1582813080;
+	bh=ykYgPFe5bZKcA7cDSYmSIwHSPxKFoHDgvX8LHFOhp/4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MH0KFh46dQfN2M/vhm1IzB+sod4ETSoPMrTffdYWh0Cd45YvqCnfjiFIRTycmHZe1
-	 Y4Kar+VaTPaRVO4OS7TVoe0xyqe7x/7+5dNASK2iFcirQzxhA70atslpXu2HW6dqo8
-	 4AnwuKrSSVO0FoZmBLZ9yIbyfhtrSO4KCJ9+HVsc=
+	b=QSraB4YXVuJoccK8boku7/mHVP6bkuhwwPCu4U/PDD0RsYGzhHULB1tN3tOfjEBXx
+	 Mts7SP55EkfkYwVhWBL2ZmWSuXaONeHZ9pI3/OtDxJ9MubCXV+8aHxGCQTSI78u7Iy
+	 NkovUc5ij+saP4kFYUCtAqoekPTNpGwagu/0s1HQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389667AbgB0OSt (ORCPT
+        id S2389798AbgB0OR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:18:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59348 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:17:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389925AbgB0OSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:18:44 -0500
+        id S2389786AbgB0ORx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:17:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BDB32468F;
-        Thu, 27 Feb 2020 14:18:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40E8A246AC;
+        Thu, 27 Feb 2020 14:17:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813123;
-        bh=C6Encfp0HnT/CKsLIrS/WT4CFL/BGWA8wgTy9t4wzuI=;
+        s=default; t=1582813072;
+        bh=ykYgPFe5bZKcA7cDSYmSIwHSPxKFoHDgvX8LHFOhp/4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Tq7AjCF5+20U/hfY42HYRNoGy+F/ensvQyrNHdEevEFEOQZgUAOVO0/kh6iOFefC
-         xFkYkgyk09G7+28PMWyErDJNz/PkS5YiZjrOLiHeYOmM+bshxqeXeWkc/EVPPdC67F
-         Rd3d/3xZ0YbCANs+0ugzM/1wyDtcAwKcxTJsv6BQ=
+        b=oyMw0EsVGWCe1n+BNXzPq1YQCh6NGoTjbPvGuUz5dOrKo1CeoZ48GfJPSA/Y7thkE
+         sN2aKe8Lev/tvxMTiHDDSbqy8DasDKrAitsZsN0eUjG5hijDaStqWmJntlE5jA/q8p
+         tfT52Resh0N400wDdV7HR2zvZUutLDP7aIFTyXjo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aya Levin <ayal@mellanox.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.5 144/150] net/mlx5e: Reset RQ doorbell counter before moving RQ state from RST to RDY
-Date:   Thu, 27 Feb 2020 14:38:01 +0100
-Message-Id: <20200227132253.568018360@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.5 126/150] ASoC: fsl_sai: Fix exiting path on probing failure
+Date:   Thu, 27 Feb 2020 14:37:43 +0100
+Message-Id: <20200227132251.244029020@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -60,151 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aya Levin <ayal@mellanox.com>
+From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 
-commit 5ee090ed0da649b1febae2b7c285ac77d1e55a0c upstream.
+commit d1520889782dff58610c0b6b54d4cf3211ceb690 upstream.
 
-Initialize RQ doorbell counters to zero prior to moving an RQ from RST
-to RDY state. Per HW spec, when RQ is back to RDY state, the descriptor
-ID on the completion is reset. The doorbell record must comply.
+If the imx-sdma driver is built as a module, the fsl-sai device doesn't
+disable on probing failure, which causes the warning in the next probing:
 
-Fixes: 8276ea1353a4 ("net/mlx5e: Report and recover from CQE with error on RQ")
-Signed-off-by: Aya Levin <ayal@mellanox.com>
-Reported-by: Tariq Toukan <tariqt@mellanox.com>
-Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+==================================================================
+fsl-sai 308a0000.sai: Unbalanced pm_runtime_enable!
+fsl-sai 308a0000.sai: Unbalanced pm_runtime_enable!
+fsl-sai 308a0000.sai: Unbalanced pm_runtime_enable!
+fsl-sai 308a0000.sai: Unbalanced pm_runtime_enable!
+fsl-sai 308a0000.sai: Unbalanced pm_runtime_enable!
+fsl-sai 308a0000.sai: Unbalanced pm_runtime_enable!
+==================================================================
+
+Disabling the device properly fixes the issue.
+
+Fixes: 812ad463e089 ("ASoC: fsl_sai: Add support for runtime pm")
+Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Link: https://lore.kernel.org/r/20200205160436.3813642-1-oleksandr.suvorov@toradex.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en/txrx.h |    8 ++++
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c |    3 +
- drivers/net/ethernet/mellanox/mlx5/core/wq.c      |   39 ++++++++++++++++------
- drivers/net/ethernet/mellanox/mlx5/core/wq.h      |    2 +
- 4 files changed, 43 insertions(+), 9 deletions(-)
+ sound/soc/fsl/fsl_sai.c |   22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/txrx.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/txrx.h
-@@ -179,6 +179,14 @@ mlx5e_tx_dma_unmap(struct device *pdev,
- 	}
- }
+--- a/sound/soc/fsl/fsl_sai.c
++++ b/sound/soc/fsl/fsl_sai.c
+@@ -1019,12 +1019,24 @@ static int fsl_sai_probe(struct platform
+ 	ret = devm_snd_soc_register_component(&pdev->dev, &fsl_component,
+ 			&fsl_sai_dai, 1);
+ 	if (ret)
+-		return ret;
++		goto err_pm_disable;
  
-+static inline void mlx5e_rqwq_reset(struct mlx5e_rq *rq)
-+{
-+	if (rq->wq_type == MLX5_WQ_TYPE_LINKED_LIST_STRIDING_RQ)
-+		mlx5_wq_ll_reset(&rq->mpwqe.wq);
-+	else
-+		mlx5_wq_cyc_reset(&rq->wqe.wq);
-+}
-+
- /* SW parser related functions */
- 
- struct mlx5e_swp_spec {
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -721,6 +721,9 @@ int mlx5e_modify_rq_state(struct mlx5e_r
- 	if (!in)
- 		return -ENOMEM;
- 
-+	if (curr_state == MLX5_RQC_STATE_RST && next_state == MLX5_RQC_STATE_RDY)
-+		mlx5e_rqwq_reset(rq);
-+
- 	rqc = MLX5_ADDR_OF(modify_rq_in, in, ctx);
- 
- 	MLX5_SET(modify_rq_in, in, rq_state, curr_state);
---- a/drivers/net/ethernet/mellanox/mlx5/core/wq.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/wq.c
-@@ -94,6 +94,13 @@ void mlx5_wq_cyc_wqe_dump(struct mlx5_wq
- 	print_hex_dump(KERN_WARNING, "", DUMP_PREFIX_OFFSET, 16, 1, wqe, len, false);
- }
- 
-+void mlx5_wq_cyc_reset(struct mlx5_wq_cyc *wq)
-+{
-+	wq->wqe_ctr = 0;
-+	wq->cur_sz = 0;
-+	mlx5_wq_cyc_update_db_record(wq);
-+}
-+
- int mlx5_wq_qp_create(struct mlx5_core_dev *mdev, struct mlx5_wq_param *param,
- 		      void *qpc, struct mlx5_wq_qp *wq,
- 		      struct mlx5_wq_ctrl *wq_ctrl)
-@@ -192,6 +199,19 @@ err_db_free:
- 	return err;
- }
- 
-+static void mlx5_wq_ll_init_list(struct mlx5_wq_ll *wq)
-+{
-+	struct mlx5_wqe_srq_next_seg *next_seg;
-+	int i;
-+
-+	for (i = 0; i < wq->fbc.sz_m1; i++) {
-+		next_seg = mlx5_wq_ll_get_wqe(wq, i);
-+		next_seg->next_wqe_index = cpu_to_be16(i + 1);
+-	if (sai->soc_data->use_imx_pcm)
+-		return imx_pcm_dma_init(pdev, IMX_SAI_DMABUF_SIZE);
+-	else
+-		return devm_snd_dmaengine_pcm_register(&pdev->dev, NULL, 0);
++	if (sai->soc_data->use_imx_pcm) {
++		ret = imx_pcm_dma_init(pdev, IMX_SAI_DMABUF_SIZE);
++		if (ret)
++			goto err_pm_disable;
++	} else {
++		ret = devm_snd_dmaengine_pcm_register(&pdev->dev, NULL, 0);
++		if (ret)
++			goto err_pm_disable;
 +	}
-+	next_seg = mlx5_wq_ll_get_wqe(wq, i);
-+	wq->tail_next = &next_seg->next_wqe_index;
-+}
 +
- int mlx5_wq_ll_create(struct mlx5_core_dev *mdev, struct mlx5_wq_param *param,
- 		      void *wqc, struct mlx5_wq_ll *wq,
- 		      struct mlx5_wq_ctrl *wq_ctrl)
-@@ -199,9 +219,7 @@ int mlx5_wq_ll_create(struct mlx5_core_d
- 	u8 log_wq_stride = MLX5_GET(wq, wqc, log_wq_stride);
- 	u8 log_wq_sz     = MLX5_GET(wq, wqc, log_wq_sz);
- 	struct mlx5_frag_buf_ctrl *fbc = &wq->fbc;
--	struct mlx5_wqe_srq_next_seg *next_seg;
- 	int err;
--	int i;
- 
- 	err = mlx5_db_alloc_node(mdev, &wq_ctrl->db, param->db_numa_node);
- 	if (err) {
-@@ -220,13 +238,7 @@ int mlx5_wq_ll_create(struct mlx5_core_d
- 
- 	mlx5_init_fbc(wq_ctrl->buf.frags, log_wq_stride, log_wq_sz, fbc);
- 
--	for (i = 0; i < fbc->sz_m1; i++) {
--		next_seg = mlx5_wq_ll_get_wqe(wq, i);
--		next_seg->next_wqe_index = cpu_to_be16(i + 1);
--	}
--	next_seg = mlx5_wq_ll_get_wqe(wq, i);
--	wq->tail_next = &next_seg->next_wqe_index;
--
-+	mlx5_wq_ll_init_list(wq);
- 	wq_ctrl->mdev = mdev;
- 
- 	return 0;
-@@ -237,6 +249,15 @@ err_db_free:
- 	return err;
++	return ret;
++
++err_pm_disable:
++	pm_runtime_disable(&pdev->dev);
++
++	return ret;
  }
  
-+void mlx5_wq_ll_reset(struct mlx5_wq_ll *wq)
-+{
-+	wq->head = 0;
-+	wq->wqe_ctr = 0;
-+	wq->cur_sz = 0;
-+	mlx5_wq_ll_init_list(wq);
-+	mlx5_wq_ll_update_db_record(wq);
-+}
-+
- void mlx5_wq_destroy(struct mlx5_wq_ctrl *wq_ctrl)
- {
- 	mlx5_frag_buf_free(wq_ctrl->mdev, &wq_ctrl->buf);
---- a/drivers/net/ethernet/mellanox/mlx5/core/wq.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/wq.h
-@@ -80,6 +80,7 @@ int mlx5_wq_cyc_create(struct mlx5_core_
- 		       void *wqc, struct mlx5_wq_cyc *wq,
- 		       struct mlx5_wq_ctrl *wq_ctrl);
- void mlx5_wq_cyc_wqe_dump(struct mlx5_wq_cyc *wq, u16 ix, u8 nstrides);
-+void mlx5_wq_cyc_reset(struct mlx5_wq_cyc *wq);
- 
- int mlx5_wq_qp_create(struct mlx5_core_dev *mdev, struct mlx5_wq_param *param,
- 		      void *qpc, struct mlx5_wq_qp *wq,
-@@ -92,6 +93,7 @@ int mlx5_cqwq_create(struct mlx5_core_de
- int mlx5_wq_ll_create(struct mlx5_core_dev *mdev, struct mlx5_wq_param *param,
- 		      void *wqc, struct mlx5_wq_ll *wq,
- 		      struct mlx5_wq_ctrl *wq_ctrl);
-+void mlx5_wq_ll_reset(struct mlx5_wq_ll *wq);
- 
- void mlx5_wq_destroy(struct mlx5_wq_ctrl *wq_ctrl);
- 
+ static int fsl_sai_remove(struct platform_device *pdev)
 
 
