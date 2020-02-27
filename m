@@ -2,150 +2,209 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73030C3F2C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9B7C3F2C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50C93246A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:56:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BE942469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:59:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="da4qGju1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729959AbgB0V4p (ORCPT
+        id S1729987AbgB0V7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 16:56:45 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:36912 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729501AbgB0V4o (ORCPT
+        Thu, 27 Feb 2020 16:59:46 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39405 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729773AbgB0V7p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 16:56:44 -0500
-Received: from dread.disaster.area (pa49-195-202-68.pa.nsw.optusnet.com.au [49.195.202.68])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id A4DF83A32ED;
-        Fri, 28 Feb 2020 08:56:35 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1j7R90-0004QR-Dr; Fri, 28 Feb 2020 08:56:34 +1100
-Date:   Fri, 28 Feb 2020 08:56:34 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     Christoph Hellwig <hch@infradead.org>, tytso@mit.edu,
-        viro@zeniv.linux.org.uk, adilger.kernel@dilger.ca,
-        snitzer@redhat.com, jack@suse.cz, ebiggers@google.com,
-        riteshh@linux.ibm.com, krisman@collabora.com, surajjs@amazon.com,
-        dmonakhov@gmail.com, mbobrowski@mbobrowski.org, enwlinux@gmail.com,
-        sblbir@amazon.com, khazhy@google.com, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH RFC 5/5] ext4: Add fallocate2() support
-Message-ID: <20200227215634.GM10737@dread.disaster.area>
-References: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
- <158272447616.281342.14858371265376818660.stgit@localhost.localdomain>
- <20200226155521.GA24724@infradead.org>
- <06f9b82c-a519-7053-ec68-a549e02c6f6c@virtuozzo.com>
- <20200227073336.GJ10737@dread.disaster.area>
- <2e2ae13e-0757-0831-216d-b363b1727a0d@virtuozzo.com>
+        Thu, 27 Feb 2020 16:59:45 -0500
+Received: by mail-pl1-f196.google.com with SMTP id g6so355939plp.6
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 13:59:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fTXwSB4VEwuhKImP00VDYWj8Af4ja5hCUGthoXkzd7w=;
+        b=da4qGju1+eZ2u8i58+SFACyeBx7k8na1SwRT59gr6pARxKA7OBl7JlfyCR7xI1I3Kf
+         /V/VJ1QOH11rKWuOKFg6KOIQSn+Jf7ZnhVidCNFdPdLe5622MrW8OtaZUl+w8nDRJzjC
+         iU0mCfwyleneSgcMGPjzjbS919tBWgh52msMkbxy2L20TrjcgDaEEE4U+t6Xx4ARA6EY
+         Pd7KbZc4mLkKkKvANfjruzXD6s8EcFm28mA+EXMt6QkUik1OE0lYSQ+hOAKbF+NE85Tg
+         D0yvxM69y5mK8RJgJVo1EUow5kIadB0W6kCJP3apUHPOEgrj7i7YFk3BPvb13ic6uso0
+         TA/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fTXwSB4VEwuhKImP00VDYWj8Af4ja5hCUGthoXkzd7w=;
+        b=MWxVTnm9T2SPnoZG94SwOrGKO01HObP/Aiu833HAtoFOPTt3Q3q+v1+r4jGefpFa9z
+         /g76M5IoN4xB8Qme3a9dhmPR+dThosgRkwvviUcwJL2kVK9O41tD4A9D/UBFkO3wlwS2
+         nNWz32DxCDk/Vo8j5+dzr5jifj/aMU+8Uc1kFVyll5ZrmTWEfobXdgR+7pIpdrxhzXk5
+         b0wHkgL3aO5qtgp/weQur275nRTXNkryNzHQZ3sabwU7IxIg8l+ZQT3ScweFLq1UhK+7
+         nMaNqCm5EuvNErPZsxeqPmblcede2ZZE1Unpvl5F5A06csH17Ty0uKeq0DyM9KKhiKwM
+         XgvA==
+X-Gm-Message-State: APjAAAVIJo5R+nnhRvW8ORw+9GwsBymWtaLlxG14SK/GjfzjEJDyNzyb
+        7jk6f14cI2QjLLpoht00CdyZpw==
+X-Google-Smtp-Source: APXvYqyJbAO6h6eSnb87jvQLhMjQwDPCpkhG8rjKyddMg705cLOaRbLZ4Ipmh0A78bB2EbWpjwj77A==
+X-Received: by 2002:a17:902:c113:: with SMTP id 19mr899784pli.138.1582840783021;
+        Thu, 27 Feb 2020 13:59:43 -0800 (PST)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id p21sm8081275pfn.103.2020.02.27.13.59.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 13:59:42 -0800 (PST)
+Date:   Thu, 27 Feb 2020 14:59:40 -0700
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Siddharth Gupta <sidgup@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, ohad@wizery.com,
+        tsoni@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rishabhb@codeaurora.org, psodagud@codeaurora.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 6/6] remoteproc: qcom: Add notification types to SSR
+Message-ID: <20200227215940.GC20116@xps15>
+References: <1582167465-2549-1-git-send-email-sidgup@codeaurora.org>
+ <1582167465-2549-7-git-send-email-sidgup@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2e2ae13e-0757-0831-216d-b363b1727a0d@virtuozzo.com>
+In-Reply-To: <1582167465-2549-7-git-send-email-sidgup@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=mqTaRPt+QsUAtUurwE173Q==:117 a=mqTaRPt+QsUAtUurwE173Q==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
-        a=SSkiD6HNAAAA:20 a=7-415B0cAAAA:8 a=hjJOWSJPumWB5AbckyoA:9
-        a=7Zwj6sZBwVKJAoWSPKxL6X1jA+E=:19 a=F-BD9Ut2gcChwI3g:21
-        a=9FFcs68v8UOzUGPP:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 02:12:53PM +0300, Kirill Tkhai wrote:
-> On 27.02.2020 10:33, Dave Chinner wrote:
-> > On Wed, Feb 26, 2020 at 11:05:23PM +0300, Kirill Tkhai wrote:
-> >> On 26.02.2020 18:55, Christoph Hellwig wrote:
-> >>> On Wed, Feb 26, 2020 at 04:41:16PM +0300, Kirill Tkhai wrote:
-> >>>> This adds a support of physical hint for fallocate2() syscall.
-> >>>> In case of @physical argument is set for ext4_fallocate(),
-> >>>> we try to allocate blocks only from [@phisical, @physical + len]
-> >>>> range, while other blocks are not used.
-> >>>
-> >>> Sorry, but this is a complete bullshit interface.  Userspace has
-> >>> absolutely no business even thinking of physical placement.  If you
-> >>> want to align allocations to physical block granularity boundaries
-> >>> that is the file systems job, not the applications job.
-> >>
-> >> Why? There are two contradictory actions that filesystem can't do at the same time:
-> >>
-> >> 1)place files on a distance from each other to minimize number of extents
-> >>   on possible future growth;
-> > 
-> > Speculative EOF preallocation at delayed allocation reservation time
-> > provides this.
-> > 
-> >> 2)place small files in the same big block of block device.
-> > 
-> > Delayed allocation during writeback packs files smaller than the
-> > stripe unit of the filesystem tightly.
-> > 
-> > So, yes, we do both of these things at the same time in XFS, and
-> > have for the past 10 years.
-> > 
-> >> At initial allocation time you never know, which file will stop grow in some future,
-> >> i.e. which file is suitable for compaction. This knowledge becomes available some time later.
-> >> Say, if a file has not been changed for a month, it is suitable for compaction with
-> >> another files like it.
-> >>
-> >> If at allocation time you can determine a file, which won't grow in the future, don't be afraid,
-> >> and just share your algorithm here.
-> >>
-> >> In Virtuozzo we tried to compact ext4 with existing kernel interface:
-> >>
-> >> https://github.com/dmonakhov/e2fsprogs/blob/e4defrag2/misc/e4defrag2.c
-> >>
-> >> But it does not work well in many situations, and the main problem is blocks allocation
-> >> in desired place is not possible. Block allocator can't behave excellent for everything.
-> >>
-> >> If this interface bad, can you suggest another interface to make block allocator to know
-> >> the behavior expected from him in this specific case?
-> > 
-> > Write once, long term data:
-> > 
-> > 	fcntl(fd, F_SET_RW_HINT, RWH_WRITE_LIFE_EXTREME);
-> > 
-> > That will allow the the storage stack to group all data with the
-> > same hint together, both in software and in hardware.
+On Wed, Feb 19, 2020 at 06:57:45PM -0800, Siddharth Gupta wrote:
+> The SSR subdevice only adds callback for the unprepare event. Add callbacks
+> for unprepare, start and prepare events. The client driver for a particular
+> remoteproc might be interested in knowing the status of the remoteproc
+> while undergoing SSR, not just when the remoteproc has finished shutting
+> down.
 > 
-> This is interesting option, but it only applicable before write is made. And it's only
-> applicable on your own applications. My usecase is defragmentation of containers, where
-> any applications may run. Most of applications never care whether long or short-term
-> data they write.
+> Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
+> ---
+>  drivers/remoteproc/qcom_common.c | 39 +++++++++++++++++++++++++++++++++++----
+>  include/linux/remoteproc.h       | 15 +++++++++++++++
+>  2 files changed, 50 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/qcom_common.c b/drivers/remoteproc/qcom_common.c
+> index 6714f27..6f04a5b 100644
+> --- a/drivers/remoteproc/qcom_common.c
+> +++ b/drivers/remoteproc/qcom_common.c
+> @@ -183,9 +183,9 @@ EXPORT_SYMBOL_GPL(qcom_remove_smd_subdev);
+>   *
+>   * Returns pointer to srcu notifier head on success, ERR_PTR on failure.
+>   *
+> - * This registers the @notify function as handler for restart notifications. As
+> - * remote processors are stopped this function will be called, with the rproc
+> - * pointer passed as a parameter.
+> + * This registers the @notify function as handler for powerup/shutdown
+> + * notifications. This function will be invoked inside the callbacks registered
+> + * for the ssr subdevice, with the rproc pointer passed as a parameter.
+>   */
+>  void *qcom_register_ssr_notifier(struct rproc *rproc, struct notifier_block *nb)
+>  {
+> @@ -227,11 +227,39 @@ int qcom_unregister_ssr_notifier(void *notify, struct notifier_block *nb)
+>  }
+>  EXPORT_SYMBOL_GPL(qcom_unregister_ssr_notifier);
+>  
+> +static int ssr_notify_prepare(struct rproc_subdev *subdev)
+> +{
+> +	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
+> +
+> +	srcu_notifier_call_chain(ssr->rproc_notif_list,
+> +				 RPROC_BEFORE_POWERUP, (void *)ssr->name);
+> +	return 0;
+> +}
+> +
+> +static int ssr_notify_start(struct rproc_subdev *subdev)
+> +{
+> +	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
+> +
+> +	srcu_notifier_call_chain(ssr->rproc_notif_list,
+> +				 RPROC_AFTER_POWERUP, (void *)ssr->name);
+> +	return 0;
+> +}
+> +
+> +static void ssr_notify_stop(struct rproc_subdev *subdev, bool crashed)
+> +{
+> +	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
+> +
+> +	srcu_notifier_call_chain(ssr->rproc_notif_list,
+> +				 RPROC_BEFORE_SHUTDOWN, (void *)ssr->name);
+> +}
+> +
+> +
+>  static void ssr_notify_unprepare(struct rproc_subdev *subdev)
+>  {
+>  	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
+>  
+> -	srcu_notifier_call_chain(ssr->rproc_notif_list, 0, (void *)ssr->name);
+> +	srcu_notifier_call_chain(ssr->rproc_notif_list,
+> +				 RPROC_AFTER_SHUTDOWN, (void *)ssr->name);
+>  }
+>  
+>  /**
+> @@ -248,6 +276,9 @@ void qcom_add_ssr_subdev(struct rproc *rproc, struct qcom_rproc_ssr *ssr,
+>  {
+>  	ssr->name = ssr_name;
+>  	ssr->subdev.name = kstrdup("ssr_notifs", GFP_KERNEL);
+> +	ssr->subdev.prepare = ssr_notify_prepare;
+> +	ssr->subdev.start = ssr_notify_start;
+> +	ssr->subdev.stop = ssr_notify_stop;
 
-Why is that a problem? They'll be using the default write hint (i.e.
-NONE) and so a hint aware allocation policy will be separating that
-data from all the other data written with specific hints...
+Now that I have a better understanding of what this patchset is doing, I realise
+my comments in patch 04 won't work.  To differentiate the subdevs of an rproc I
+suggest to wrap them in a generic structure with a type and an enum.  That way
+you can differenciate between subdevices without having to add to the core.
 
-And you've mentioned that your application has specific *never write
-again* selection criteria for data it is repacking. And that
-involves rewriting that data.  IOWs, you know exactly what policy
-you want to apply before you rewrite the data, and so what other
-applications do is completely irrelevant for your repacker...
+That being said, I don't understand what patches 5 and 6 are doing...
+Registering with the global ssr_notifiers allowed to gracefully shutdown all the
+MCUs in the system when one of them would go down.  But now that we are using
+the notifier on a per MCU, I really don't see why each subdev couldn't implement
+the right prepare/start/stop functions.
 
-> Maybe, we can make fallocate() care about F_SET_RW_HINT? Say, if RWH_WRITE_LIFE_EXTREME
-> is set, fallocate() tries to allocate space around another inodes with the same hint.
+Am I missing something here?
+ 
 
-That's exactly what I said:
-
-> > That will allow the the storage stack to group all data with the
-> > same hint together, both in software and in hardware.
-
-What the filesystem does with the hint is up to the filesystem
-and the policies that it's developers decide are appropriate. If
-your filesystem doesn't do what you need, talk to the filesystem
-developers about implementing the policy you require.
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+>  	ssr->subdev.unprepare = ssr_notify_unprepare;
+>  	ssr->rproc_notif_list = kzalloc(sizeof(struct srcu_notifier_head),
+>  								GFP_KERNEL);
+> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> index e2f60cc..4be4478 100644
+> --- a/include/linux/remoteproc.h
+> +++ b/include/linux/remoteproc.h
+> @@ -449,6 +449,21 @@ struct rproc_dump_segment {
+>  };
+>  
+>  /**
+> + * enum rproc_notif_type - Different stages of remoteproc notifications
+> + * @RPROC_BEFORE_SHUTDOWN:	unprepare stage of  remoteproc
+> + * @RPROC_AFTER_SHUTDOWN:	stop stage of  remoteproc
+> + * @RPROC_BEFORE_POWERUP:	prepare stage of  remoteproc
+> + * @RPROC_AFTER_POWERUP:	start stage of  remoteproc
+> + */
+> +enum rproc_notif_type {
+> +	RPROC_BEFORE_SHUTDOWN,
+> +	RPROC_AFTER_SHUTDOWN,
+> +	RPROC_BEFORE_POWERUP,
+> +	RPROC_AFTER_POWERUP,
+> +	RPROC_MAX
+> +};
+> +
+> +/**
+>   * struct rproc - represents a physical remote processor device
+>   * @node: list node of this rproc object
+>   * @domain: iommu domain
+> -- 
+> Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
