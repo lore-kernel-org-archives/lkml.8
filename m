@@ -2,99 +2,95 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF55EC3F36B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D63DC3F349
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97E3521D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCA2520578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:08:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812599;
-	bh=X9rl3ZGCnjqX0Ce24td4V97fsDt8ivYeM1csu23KtbA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=n/BTRc1EPLIZETMQB8Kch5wW0s9LyDs34XHyCc2KF8JglJEtVCPWVuC0VJrJbg0s5
-	 hsNBU0wAiBEwHxY8Qvsv+FER7xAzqlMWJjFB2uW3WCs6DNmSmKDmo39r7W5OlDnbb3
-	 cNsFbh4v8zPnv2F9glpbOPMXalOtcGzmFWik7/Ow=
+	s=default; t=1582812497;
+	bh=CmkjkhLeHHiNAXym8hLvSfXzXCM12YtwRWTN1awRdlM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=GHqzBpfUzLk4d6hwUNMe5e1/T+g4IX6JlwYq80j1cAmqgwU474WtZdS70n8KdUqgR
+	 vNIFZGmTMQNSPRw6Qs9JfMaosr0WscjtOhM68+oCVbDvWS8C0/uYP9SAIy0lpV4tGH
+	 Dp50E8ys34HdSoZnZZW1T+hw43toD4HTmtS1w3UM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388443AbgB0OJ5 (ORCPT
+        id S2388220AbgB0OIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:09:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47874 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:08:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730257AbgB0OJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:09:50 -0500
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        id S2387937AbgB0OIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:08:12 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E06EB20578;
-        Thu, 27 Feb 2020 14:09:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B686821D7E;
+        Thu, 27 Feb 2020 14:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812590;
-        bh=X9rl3ZGCnjqX0Ce24td4V97fsDt8ivYeM1csu23KtbA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=LFdE44vcMhziqC8vsqlprJou46T1FdXaTAU/cTGFMoy+JuvwXVnfxZvhShBpXVo9/
-         Ejhv5CEdeoWe0x4rO3WB6EcngNXFybpnYhP+JD2koCrpknOOJ7hjlr6e3SwMwZqf6O
-         tGDeNshu3lujRonV6asb77lm++OB/Rz3dhevOyAw=
-Date:   Thu, 27 Feb 2020 08:09:48 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>
-Subject: Re: [PATCH] pci: brcmstb: Fix build on 32bit ARM platforms with
- older compilers
-Message-ID: <20200227140948.GA78063@google.com>
+        s=default; t=1582812492;
+        bh=CmkjkhLeHHiNAXym8hLvSfXzXCM12YtwRWTN1awRdlM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0x9nxOVfJ3efzPEHkQ2gLVR2F76hWrewTud3ioEl5A9q77U7T+HZO+wffQnxO/KE0
+         TpzwuAovyPgFDt9lNTe2E1z+IJE5fZ75AZOLnTVoR95oy930sF4CwaDGoj8lJAeb58
+         INhl1QaDbsVdfqxBgfsVFkKiAWlboUgZkQBlhksM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Pietro Oliva <pietroliva@gmail.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>
+Subject: [PATCH 5.4 039/135] staging: rtl8188eu: Fix potential overuse of kernel memory
+Date:   Thu, 27 Feb 2020 14:36:19 +0100
+Message-Id: <20200227132234.810642676@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
+References: <20200227132228.710492098@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200227115146.24515-1-m.szyprowski@samsung.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 12:51:46PM +0100, Marek Szyprowski wrote:
-> Some older compilers have no implementation for the helper for 64-bit
-> unsigned division/modulo, so linking pcie-brcmstb driver causes the
-> "undefined reference to `__aeabi_uldivmod'" error.
-> 
-> *rc_bar2_size is always a power of two, because it is calculated as:
-> "1ULL << fls64(entry->res->end - entry->res->start)", so the modulo
-> operation in the subsequent check can be replaced by a simple logical
-> AND with a proper mask.
-> 
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Larry Finger <Larry.Finger@lwfinger.net>
 
-Applied to for-linus for v5.6, thanks!  I added acks from Nicolas and
-Lorenzo and also the Fixes: tag from Lorenzo.
+commit 4ddf8ab8d15ddbc52eefb44eb64e38466ce1f70f upstream.
 
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index d20aabc26273..3a10e678c7f4 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -670,7 +670,7 @@ static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
->  	 *   outbound memory @ 3GB). So instead it will  start at the 1x
->  	 *   multiple of its size
->  	 */
-> -	if (!*rc_bar2_size || *rc_bar2_offset % *rc_bar2_size ||
-> +	if (!*rc_bar2_size || (*rc_bar2_offset & (*rc_bar2_size - 1)) ||
->  	    (*rc_bar2_offset < SZ_4G && *rc_bar2_offset > SZ_2G)) {
->  		dev_err(dev, "Invalid rc_bar2_offset/size: size 0x%llx, off 0x%llx\n",
->  			*rc_bar2_size, *rc_bar2_offset);
-> -- 
-> 2.17.1
-> 
+In routine wpa_supplicant_ioctl(), the user-controlled p->length is
+checked to be at least the size of struct ieee_param size, but the code
+does not detect the case where p->length is greater than the size
+of the struct, thus a malicious user could be wasting kernel memory.
+Fixes commit a2c60d42d97c ("Add files for new driver - part 16").
+
+Reported by: Pietro Oliva <pietroliva@gmail.com>
+Cc: Pietro Oliva <pietroliva@gmail.com>
+Cc: Stable <stable@vger.kernel.org>
+Fixes commit a2c60d42d97c ("Add files for new driver - part 16").
+Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
+Link: https://lore.kernel.org/r/20200210180235.21691-4-Larry.Finger@lwfinger.net
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/staging/rtl8188eu/os_dep/ioctl_linux.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
++++ b/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
+@@ -2025,7 +2025,7 @@ static int wpa_supplicant_ioctl(struct n
+ 	struct ieee_param *param;
+ 	uint ret = 0;
+ 
+-	if (p->length < sizeof(struct ieee_param) || !p->pointer) {
++	if (!p->pointer || p->length != sizeof(struct ieee_param)) {
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
+
+
