@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3BE3C3F348
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08877C3F347
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7F412468D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:42:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE7D3222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:43:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582810976;
-	bh=VRnjWlSGoHS9Lvi/rHGpj+NTxoiIIGFFCtZMdu5pXnI=;
+	s=default; t=1582810981;
+	bh=kBPtiyZuYdViQk6zQW+C2NQ8z2X1HtoqbcMgtHohCss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z7TjqRVVQ2gghMUHmvHtB2OmdCK+Z3m1rlFaQ0f32X6Nyf67aoR/p83kTw+k24aQM
-	 jGN/yfkss8RTG9LL+CME4UafPwVflmVu7/nPFXUnWZtAMZPwHjS1AKxKjQVgJ1HH2L
-	 LG+yUtYmHrqhBe4Nzp8A0V7IWTwhvdap7/W2K6Og=
+	b=hbW1DVhnijc2MP4zVoigXl2NUhERd0EGeIM7FN9ANajw5q9Y4HymAT9kBbPmwjkq6
+	 AmtGBaTZ8XDY6ZUFwQZlTfSi65E6zZuBamQ2cFDmUcn4kL+zgWTyzMvhi1QJwdYKCg
+	 lpsMzu9PjX7IXx3zkhnzjCRfPW/cF7N5RT7h5q4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729864AbgB0Nmz (ORCPT
+        id S1729881AbgB0NnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:42:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37902 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:43:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729842AbgB0Nmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:42:49 -0500
+        id S1729580AbgB0Nmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:42:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAB5320578;
-        Thu, 27 Feb 2020 13:42:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D58020578;
+        Thu, 27 Feb 2020 13:42:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582810968;
-        bh=VRnjWlSGoHS9Lvi/rHGpj+NTxoiIIGFFCtZMdu5pXnI=;
+        s=default; t=1582810974;
+        bh=kBPtiyZuYdViQk6zQW+C2NQ8z2X1HtoqbcMgtHohCss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AuP/Q0AB3DByQAfRLS3MWFyaAawLvIX/hzxdl73STp6m/KTkuiBOzf79Nd2JfHC78
-         fuSOYcZl1JBx2p+u/pkBunmkrZ5xAXlPrUPY15EssXqdfcggmRaQi3d0ZIYLUKhHqr
-         vC0WqvKeb8j2IaPACF/pA5zcLVkA2+fY/3wiAxPg=
+        b=vh+WQTIVgUg+tdA6K4Mi7h5AwH30RzCjqw2XI8lx8953DPYA4a1IRoHX4iAcl+GRw
+         wOZYlbblrjTL82p8YoK+Vy6xnNYUr+p4P8kzUwNg+pi3qtoisFg/pi8XutE0RtuMP9
+         j+Qb9Gs7Ql2GQgNR/wRWzCigryufHfH9IJEEXJdg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Schnelle <sven.schnelle@ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 067/113] s390/ftrace: generate traced function stack frame
-Date:   Thu, 27 Feb 2020 14:36:23 +0100
-Message-Id: <20200227132222.497656354@linuxfoundation.org>
+Subject: [PATCH 4.4 069/113] jbd2: switch to use jbd2_journal_abort() when failed to submit the commit record
+Date:   Thu, 27 Feb 2020 14:36:25 +0100
+Message-Id: <20200227132222.818441725@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
 References: <20200227132211.791484803@linuxfoundation.org>
@@ -61,101 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-[ Upstream commit 45f7a0da600d3c409b5ad8d5ddddacd98ddc8840 ]
+[ Upstream commit d0a186e0d3e7ac05cc77da7c157dae5aa59f95d9 ]
 
-Currently backtrace from ftraced function does not contain ftraced
-function itself. e.g. for "path_openat":
+We invoke jbd2_journal_abort() to abort the journal and record errno
+in the jbd2 superblock when committing journal transaction besides the
+failure on submitting the commit record. But there is no need for the
+case and we can also invoke jbd2_journal_abort() instead of
+__jbd2_journal_abort_hard().
 
-arch_stack_walk+0x15c/0x2d8
-stack_trace_save+0x50/0x68
-stack_trace_call+0x15e/0x3d8
-ftrace_graph_caller+0x0/0x1c <-- ftrace code
-do_filp_open+0x7c/0xe8 <-- ftraced function caller
-do_open_execat+0x76/0x1b8
-open_exec+0x52/0x78
-load_elf_binary+0x180/0x1160
-search_binary_handler+0x8e/0x288
-load_script+0x2a8/0x2b8
-search_binary_handler+0x8e/0x288
-__do_execve_file.isra.39+0x6fa/0xb40
-__s390x_sys_execve+0x56/0x68
-system_call+0xdc/0x2d8
-
-Ftraced function is expected in the backtrace by ftrace kselftests, which
-are now failing. It would also be nice to have it for clarity reasons.
-
-"ftrace_caller" itself is called without stack frame allocated for it
-and does not store its caller (ftraced function). Instead it simply
-allocates a stack frame for "ftrace_trace_function" and sets backchain
-to point to ftraced function stack frame (which contains ftraced function
-caller in saved r14).
-
-To fix this issue make "ftrace_caller" allocate a stack frame
-for itself just to store ftraced function for the stack unwinder.
-As a result backtrace looks like the following:
-
-arch_stack_walk+0x15c/0x2d8
-stack_trace_save+0x50/0x68
-stack_trace_call+0x15e/0x3d8
-ftrace_graph_caller+0x0/0x1c <-- ftrace code
-path_openat+0x6/0xd60  <-- ftraced function
-do_filp_open+0x7c/0xe8 <-- ftraced function caller
-do_open_execat+0x76/0x1b8
-open_exec+0x52/0x78
-load_elf_binary+0x180/0x1160
-search_binary_handler+0x8e/0x288
-load_script+0x2a8/0x2b8
-search_binary_handler+0x8e/0x288
-__do_execve_file.isra.39+0x6fa/0xb40
-__s390x_sys_execve+0x56/0x68
-system_call+0xdc/0x2d8
-
-Reported-by: Sven Schnelle <sven.schnelle@ibm.com>
-Tested-by: Sven Schnelle <sven.schnelle@ibm.com>
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: 818d276ceb83a ("ext4: Add the journal checksum feature")
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20191204124614.45424-2-yi.zhang@huawei.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/mcount.S | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ fs/jbd2/commit.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/kernel/mcount.S b/arch/s390/kernel/mcount.S
-index 6c1c7d399bf95..78ba14546e007 100644
---- a/arch/s390/kernel/mcount.S
-+++ b/arch/s390/kernel/mcount.S
-@@ -23,6 +23,12 @@ ENTRY(ftrace_stub)
- #define STACK_PTREGS	  (STACK_FRAME_OVERHEAD)
- #define STACK_PTREGS_GPRS (STACK_PTREGS + __PT_GPRS)
- #define STACK_PTREGS_PSW  (STACK_PTREGS + __PT_PSW)
-+#ifdef __PACK_STACK
-+/* allocate just enough for r14, r15 and backchain */
-+#define TRACED_FUNC_FRAME_SIZE	24
-+#else
-+#define TRACED_FUNC_FRAME_SIZE	STACK_FRAME_OVERHEAD
-+#endif
+diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
+index 7fe61edb1bb9e..a7d12dd6d56e8 100644
+--- a/fs/jbd2/commit.c
++++ b/fs/jbd2/commit.c
+@@ -797,7 +797,7 @@ start_journal_io:
+ 		err = journal_submit_commit_record(journal, commit_transaction,
+ 						 &cbh, crc32_sum);
+ 		if (err)
+-			__jbd2_journal_abort_hard(journal);
++			jbd2_journal_abort(journal, err);
+ 	}
  
- ENTRY(_mcount)
- 	BR_EX	%r14
-@@ -34,9 +40,16 @@ ENTRY(ftrace_caller)
- #ifndef CC_USING_HOTPATCH
- 	aghi	%r0,MCOUNT_RETURN_FIXUP
- #endif
--	aghi	%r15,-STACK_FRAME_SIZE
-+	# allocate stack frame for ftrace_caller to contain traced function
-+	aghi	%r15,-TRACED_FUNC_FRAME_SIZE
- 	stg	%r1,__SF_BACKCHAIN(%r15)
-+	stg	%r0,(__SF_GPRS+8*8)(%r15)
-+	stg	%r15,(__SF_GPRS+9*8)(%r15)
-+	# allocate pt_regs and stack frame for ftrace_trace_function
-+	aghi	%r15,-STACK_FRAME_SIZE
- 	stg	%r1,(STACK_PTREGS_GPRS+15*8)(%r15)
-+	aghi	%r1,-TRACED_FUNC_FRAME_SIZE
-+	stg	%r1,__SF_BACKCHAIN(%r15)
- 	stg	%r0,(STACK_PTREGS_PSW+8)(%r15)
- 	stmg	%r2,%r14,(STACK_PTREGS_GPRS+2*8)(%r15)
- #ifdef CONFIG_HAVE_MARCH_Z196_FEATURES
+ 	blk_finish_plug(&plug);
+@@ -890,7 +890,7 @@ start_journal_io:
+ 		err = journal_submit_commit_record(journal, commit_transaction,
+ 						&cbh, crc32_sum);
+ 		if (err)
+-			__jbd2_journal_abort_hard(journal);
++			jbd2_journal_abort(journal, err);
+ 	}
+ 	if (cbh)
+ 		err = journal_wait_on_commit_record(journal, cbh);
 -- 
 2.20.1
 
