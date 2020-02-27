@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5400EC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B20C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 221AD246A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBCCC2469C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:24:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="dDHk/b8K"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="aqC01Nj6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731218AbgB0SX6 (ORCPT
+        id S1730828AbgB0SYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 13:23:58 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:39705 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730846AbgB0SWq (ORCPT
+        Thu, 27 Feb 2020 13:24:02 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:59076 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730931AbgB0SWq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Feb 2020 13:22:46 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200227182244euoutp017d38d14c303f061a272fa4e20aef16fb~3VXcoVkFZ1368713687euoutp01R
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 18:22:44 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200227182244euoutp017d38d14c303f061a272fa4e20aef16fb~3VXcoVkFZ1368713687euoutp01R
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200227182245euoutp02e1274d10818dfc9fc5f1329b87971828~3VXdV13H70820908209euoutp02P
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 18:22:45 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200227182245euoutp02e1274d10818dfc9fc5f1329b87971828~3VXdV13H70820908209euoutp02P
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1582827764;
-        bh=DmiQIHRs0Sj/qPkKGLi4Wv869R3WF9XQSaupM7kP8/A=;
+        s=mail20170921; t=1582827765;
+        bh=cJKTgNSJbDoQZHyeL1x+FdaJUqVKgMmO2qQKsp7fgTM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dDHk/b8K7ibPdLhm9hQH0F3zJZn16sE5bo30sQRXz388E8NFjyymTQL+KI2RXVi01
-         itRHwCptNy9WfnxZGWxRFHewBD35qIA3a3Nx7id3OcdtkQ/nZN+o5tuuGpOcV8lI+L
-         hjJg8UGLRye5w77xWXXb3WPptk6bjwQtyOSM6V+4=
+        b=aqC01Nj668ZWukuVExCIKyrDN7eWGXlJqSaAuMJyN49ollKcxbWgNqMWpdxXlbl6g
+         /YwjJRjuSM2ku9Z8szk57Mzh6KGFSaLOJwv/4fo2AVsHCop7HOFYP9f241iLVpw7lw
+         XzowZZQ4gmV3NyYLvxcjZ3gt1LfeAd8E+MneVuWk=
 Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200227182243eucas1p206ec7abf23652cc3a51dd7e0f34d07f3~3VXcQsxAC2012220122eucas1p2d;
-        Thu, 27 Feb 2020 18:22:43 +0000 (GMT)
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200227182244eucas1p18fab46c4dfe4899bf4b895e11ff29083~3VXdAa7CG1308213082eucas1p16;
+        Thu, 27 Feb 2020 18:22:44 +0000 (GMT)
 Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id C7.05.60698.3F8085E5; Thu, 27
-        Feb 2020 18:22:43 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200227182243eucas1p2d95b61a6a3941ffd3bbead3a6ff4a813~3VXcCi3-s3198431984eucas1p2C;
-        Thu, 27 Feb 2020 18:22:43 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200227182243eusmtrp161b587978fbfd0e17577b9e4148a1d7e~3VXcB5hvT0110301103eusmtrp1c;
-        Thu, 27 Feb 2020 18:22:43 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-fc-5e5808f331cd
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 58.05.60698.4F8085E5; Thu, 27
+        Feb 2020 18:22:44 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200227182244eucas1p1e8e9e9567acda2a8cd02844685b6b12a~3VXcgCyUH0931609316eucas1p1C;
+        Thu, 27 Feb 2020 18:22:44 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200227182244eusmtrp28c92a4b30c01416be6d4fb4a1f6e0e11~3VXcfhAqy1813218132eusmtrp2o;
+        Thu, 27 Feb 2020 18:22:44 +0000 (GMT)
+X-AuditID: cbfec7f5-a29ff7000001ed1a-ff-5e5808f42d1a
 Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 73.61.07950.3F8085E5; Thu, 27
-        Feb 2020 18:22:43 +0000 (GMT)
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 7F.B1.08375.4F8085E5; Thu, 27
+        Feb 2020 18:22:44 +0000 (GMT)
 Received: from AMDC3058.digital.local (unknown [106.120.51.71]) by
         eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200227182243eusmtip2f1d8aa5d75d67e4452454f9fc4735311~3VXbjBDyV3109031090eusmtip2r;
+        20200227182243eusmtip241b5fea44ecd07f9f482402b97e2697b~3VXb-FQpT1203512035eusmtip2O;
         Thu, 27 Feb 2020 18:22:43 +0000 (GMT)
 From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 To:     Jens Axboe <axboe@kernel.dk>
@@ -64,170 +64,141 @@ Cc:     Michael Schmitz <schmitzmic@gmail.com>,
         Christoph Hellwig <hch@lst.de>, linux-ide@vger.kernel.org,
         linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
         b.zolnierkie@samsung.com
-Subject: [PATCH v3 10/27] ata: remove EXPORT_SYMBOL_GPL()s not used by
- modules
-Date:   Thu, 27 Feb 2020 19:22:09 +0100
-Message-Id: <20200227182226.19188-11-b.zolnierkie@samsung.com>
+Subject: [PATCH v3 11/27] ata: fix CodingStyle issues in PATA timings code
+Date:   Thu, 27 Feb 2020 19:22:10 +0100
+Message-Id: <20200227182226.19188-12-b.zolnierkie@samsung.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200227182226.19188-1-b.zolnierkie@samsung.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPKsWRmVeSWpSXmKPExsWy7djP87qfOSLiDF4fN7VYfbefzWLjjPWs
-        Fs9u7WWyWLn6KJPFsR2PmCwu75rDZrH8yVpmi7mt09kdODx2zrrL7nH5bKnHocMdjB4nW7+x
-        eOy+2cDm0bdlFaPH501yAexRXDYpqTmZZalF+nYJXBlbZi1lLlgkWzG57TBTA+Nz8S5GTg4J
-        AROJXZ1H2boYuTiEBFYwSnyYe5cZwvnCKNFz7zs7hPOZUWLmjFVMMC0N999BVS1nlPi34CE7
-        XMuC+b/AqtgErCQmtq9iBLFFBBQken6vBFvCLPCeUWLFpL0sIAlhgQCJ3Q2vwIpYBFQl5pyZ
-        C9bMK2AnceHMHDaIdfISW799YgWxOYHiN/q2s0HUCEqcnPkEbA4zUE3z1tlgJ0kIrGKXePT0
-        KQtEs4vEr4vroWxhiVfHt7BD2DISpyf3sEA0rGOU+NvxAqp7O6PE8sn/oFZbS9w59wvI5gBa
-        oSmxfpc+RNhRYv6F6YwgYQkBPokbbwUhjuCTmLRtOjNEmFeio00IolpNYsOyDWwwa7t2rmSG
-        sD0k/n74wDaBUXEWkndmIXlnFsLeBYzMqxjFU0uLc9NTi43zUsv1ihNzi0vz0vWS83M3MQKT
-        0el/x7/uYNz3J+kQowAHoxIP74Id4XFCrIllxZW5hxglOJiVRHg3fg2NE+JNSaysSi3Kjy8q
-        zUktPsQozcGiJM5rvOhlrJBAemJJanZqakFqEUyWiYNTqoHRu3jJtQNH2De/U1/PU7Gv60/c
-        kT/nFZ9s1Gl9F/t6jfi3HeeOvjt3YZmGq4vNjxAG22/FPZk/mi6f1JhadDavIvVbksbRCV/3
-        y7jekl6cOynz2ucL354Iuwb07Nc3Yl0bpM82mT8+WLGjiL3c/zrHw3Ur3TnMX+juljx6Y9Wt
-        pPyVtSxzi49cUmIpzkg01GIuKk4EAKtY2TJCAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNIsWRmVeSWpSXmKPExsVy+t/xe7qfOSLiDFoXKFusvtvPZrFxxnpW
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHKsWRmVeSWpSXmKPExsWy7djP87pfOCLiDF42aVisvtvPZrFxxnpW
         i2e39jJZrFx9lMni2I5HTBaXd81hs1j+ZC2zxdzW6ewOHB47Z91l97h8ttTj0OEORo+Trd9Y
-        PHbfbGDz6NuyitHj8ya5APYoPZui/NKSVIWM/OISW6VoQwsjPUNLCz0jE0s9Q2PzWCsjUyV9
-        O5uU1JzMstQifbsEvYwts5YyFyySrZjcdpipgfG5eBcjJ4eEgIlEw/13zF2MXBxCAksZJd5c
-        +cnaxcgBlJCROL6+DKJGWOLPtS42iJpPjBKr961nAUmwCVhJTGxfxQhiiwgoSPT8XglWxCzw
-        lVFi6aRuZpCEsICfxLHnW5hAbBYBVYk5Z+aC2bwCdhIXzsxhg9ggL7H12ydWEJsTKH6jbztY
-        XEjAVqKr4ykjRL2gxMmZT8AWMwPVN2+dzTyBUWAWktQsJKkFjEyrGEVSS4tz03OLjfSKE3OL
-        S/PS9ZLzczcxAiNm27GfW3Ywdr0LPsQowMGoxMPrsS08Tog1say4MvcQowQHs5II78avoXFC
-        vCmJlVWpRfnxRaU5qcWHGE2BnpjILCWanA+M5rySeENTQ3MLS0NzY3NjMwslcd4OgYMxQgLp
-        iSWp2ampBalFMH1MHJxSDYzM28Q0bXfP9Z9qeyCpfoWlGMeR2WLJnokzU7vX6onX3vXNdt3n
-        6ywtcerc7SN32tmO933ds/YnS96V2psCE/9wMvJYuUj3Xyo5/k/CqEJu2RE25Tbx3csnKiut
-        PMJkcivo1oI3es2P1J82veWeKm26OGpfR8PkpUtCuvRWxX9NurzM7XbZ9A4lluKMREMt5qLi
-        RAD1Lb8KrgIAAA==
-X-CMS-MailID: 20200227182243eucas1p2d95b61a6a3941ffd3bbead3a6ff4a813
+        PHbfbGDz6NuyitHj8ya5APYoLpuU1JzMstQifbsErowLj18wFXyWrlh7fg1LA+MJsS5GTg4J
+        AROJy89fMHYxcnEICaxglDj06wQzhPOFUeLYgRNsEM5nRom2lp2sMC2NzxdBJZYzSlzY1MwG
+        19J1dDJYFZuAlcTE9lWMILaIgIJEz++VYEXMAu8ZJVZM2ssCkhAW8JI4MncSO4jNIqAq8Xrp
+        aWYQm1fATmLHhfWMEOvkJbZ++wQ2lBMofqNvOxtEjaDEyZlPwOYwA9U0b50NdriEwCp2ie6D
+        R4AcDiDHReLWpnyIOcISr45vYYewZST+75zPBFG/jlHib8cLqObtjBLLJ/9jg6iylrhz7hcb
+        yCBmAU2J9bv0IcKOEq2TZjFBzOeTuPFWEOIGPolJ26ZDreWV6GgTgqhWk9iwbAMbzNqunSuZ
+        IWwPia3r1jFPYFScheSbWUi+mYWwdwEj8ypG8dTS4tz01GLjvNRyveLE3OLSvHS95PzcTYzA
+        VHT63/GvOxj3/Uk6xCjAwajEw7tgR3icEGtiWXFl7iFGCQ5mJRHejV9D44R4UxIrq1KL8uOL
+        SnNSiw8xSnOwKInzGi96GSskkJ5YkpqdmlqQWgSTZeLglGpgXK3P4S0W1bc354NYX+zVysUN
+        F8J3921yP6Z3RivbWP+4isfPZfaa0b/E2W237Y774xv6eve3xgMtV8KeP9flFXyyKPvkQe7G
+        hSY7r8d+qZbs3ttV92LC2q45thbutstfRvP+my4e+dq+puqHnt0Km5U75m999+nJwjc3Hhnd
+        XvNq8X2Jpkne25VYijMSDbWYi4oTAUwabUlBAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNIsWRmVeSWpSXmKPExsVy+t/xe7pfOCLiDO5cZLZYfbefzWLjjPWs
+        Fs9u7WWyWLn6KJPFsR2PmCwu75rDZrH8yVpmi7mt09kdODx2zrrL7nH5bKnHocMdjB4nW7+x
+        eOy+2cDm0bdlFaPH501yAexRejZF+aUlqQoZ+cUltkrRhhZGeoaWFnpGJpZ6hsbmsVZGpkr6
+        djYpqTmZZalF+nYJehkXHr9gKvgsXbH2/BqWBsYTYl2MnBwSAiYSjc8XsXUxcnEICSxllJjw
+        oYWxi5EDKCEjcXx9GUSNsMSfa11QNZ8YJb7sv8MMkmATsJKY2L6KEcQWEVCQ6Pm9EqyIWeAr
+        o8TSSd1gRcICXhJH5k5iB7FZBFQlXi89DRbnFbCT2HFhPSPEBnmJrd8+sYLYnEDxG33b2UBs
+        IQFbia6Op4wQ9YISJ2c+YQGxmYHqm7fOZp7AKDALSWoWktQCRqZVjCKppcW56bnFhnrFibnF
+        pXnpesn5uZsYgRGz7djPzTsYL20MPsQowMGoxMO7YEd4nBBrYllxZe4hRgkOZiUR3o1fQ+OE
+        eFMSK6tSi/Lji0pzUosPMZoCPTGRWUo0OR8YzXkl8YamhuYWlobmxubGZhZK4rwdAgdjhATS
+        E0tSs1NTC1KLYPqYODilGhh7Z+0+9m6T1wrHPZq2k69P9S1/uP/aeQGnxFSWb0cdnz+tK1jz
+        fv2if4lXvJP51vdem1DJblrazXxDZ8Y1CZ8L7OZ+8wIub/z8lWvBrhC1uTk250wuaKmwicvn
+        Ppe6svu5VQ3f0Wi+Ktk/Z/Vj5+ZJiJ8+75YxPyLGI7l49eZ/izwuRf09IPZCiaU4I9FQi7mo
+        OBEAbr2rsK4CAAA=
+X-CMS-MailID: 20200227182244eucas1p1e8e9e9567acda2a8cd02844685b6b12a
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200227182243eucas1p2d95b61a6a3941ffd3bbead3a6ff4a813
+X-RootMTR: 20200227182244eucas1p1e8e9e9567acda2a8cd02844685b6b12a
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200227182243eucas1p2d95b61a6a3941ffd3bbead3a6ff4a813
+X-CMS-RootMailID: 20200227182244eucas1p1e8e9e9567acda2a8cd02844685b6b12a
 References: <20200227182226.19188-1-b.zolnierkie@samsung.com>
-        <CGME20200227182243eucas1p2d95b61a6a3941ffd3bbead3a6ff4a813@eucas1p2.samsung.com>
+        <CGME20200227182244eucas1p1e8e9e9567acda2a8cd02844685b6b12a@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove EXPORT_SYMBOL_GPL()s for functions used only by
-the core libata code.
+* fix the overly long line in ata_timing_quantize()
 
-Code size savings on m68k arch using (modified) atari_defconfig:
+* use standard kernel CodingStyle in ata_timing_merge()
 
-   text    data     bss     dec     hex filename
-before:
-  39838     573      40   40451    9e03 drivers/ata/libata-core.o
-  21071     105     576   21752    54f8 drivers/ata/libata-scsi.o
-  17519      18       0   17537    4481 drivers/ata/libata-eh.o
-after:
-  39688     573      40   40301    9d6d drivers/ata/libata-core.o
-  21040     105     576   21721    54d9 drivers/ata/libata-scsi.o
-  17405      18       0   17423    440f drivers/ata/libata-eh.o
+* do not use assignment in if condition in ata_timing_compute()
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+* fix non-standard comment style in ata_timing_compute()
+
 Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 ---
- drivers/ata/libata-core.c | 5 -----
- drivers/ata/libata-eh.c   | 4 ----
- drivers/ata/libata-scsi.c | 1 -
- 3 files changed, 10 deletions(-)
+ drivers/ata/libata-core.c | 42 +++++++++++++++++++++++++--------------
+ 1 file changed, 27 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index dc48e983ccdb..2ec1a49388ee 100644
+index 2ec1a49388ee..acdcedcb3d10 100644
 --- a/drivers/ata/libata-core.c
 +++ b/drivers/ata/libata-core.c
-@@ -80,7 +80,6 @@ const struct ata_port_operations ata_base_port_ops = {
- 	.sched_eh		= ata_std_sched_eh,
- 	.end_eh			= ata_std_end_eh,
- };
--EXPORT_SYMBOL_GPL(ata_base_port_ops);
+@@ -3251,7 +3251,8 @@ static const struct ata_timing ata_timing[] = {
+ #define ENOUGH(v, unit)		(((v)-1)/(unit)+1)
+ #define EZ(v, unit)		((v)?ENOUGH(((v) * 1000), unit):0)
  
- const struct ata_port_operations sata_port_ops = {
- 	.inherits		= &ata_base_port_ops,
-@@ -902,7 +901,6 @@ void ata_unpack_xfermask(unsigned long xfer_mask, unsigned long *pio_mask,
- 	if (udma_mask)
- 		*udma_mask = (xfer_mask & ATA_MASK_UDMA) >> ATA_SHIFT_UDMA;
- }
--EXPORT_SYMBOL_GPL(ata_unpack_xfermask);
- 
- static const struct ata_xfer_ent {
- 	int shift, bits;
-@@ -3425,7 +3423,6 @@ u8 ata_timing_cycle2mode(unsigned int xfer_shift, int cycle)
- 
- 	return last_mode;
- }
--EXPORT_SYMBOL_GPL(ata_timing_cycle2mode);
- 
- /**
-  *	ata_down_xfermask_limit - adjust dev xfer masks downward
-@@ -5051,7 +5048,6 @@ void ata_sg_init(struct ata_queued_cmd *qc, struct scatterlist *sg,
- 	qc->n_elem = n_elem;
- 	qc->cursg = qc->sg;
- }
--EXPORT_SYMBOL_GPL(ata_sg_init);
- 
- #ifdef CONFIG_HAS_DMA
- 
-@@ -6157,7 +6153,6 @@ void ata_host_get(struct ata_host *host)
+-static void ata_timing_quantize(const struct ata_timing *t, struct ata_timing *q, int T, int UT)
++static void ata_timing_quantize(const struct ata_timing *t,
++				struct ata_timing *q, int T, int UT)
  {
- 	kref_get(&host->kref);
- }
--EXPORT_SYMBOL_GPL(ata_host_get);
- 
- void ata_host_put(struct ata_host *host)
+ 	q->setup	= EZ(t->setup,       T);
+ 	q->act8b	= EZ(t->act8b,       T);
+@@ -3267,15 +3268,24 @@ static void ata_timing_quantize(const struct ata_timing *t, struct ata_timing *q
+ void ata_timing_merge(const struct ata_timing *a, const struct ata_timing *b,
+ 		      struct ata_timing *m, unsigned int what)
  {
-diff --git a/drivers/ata/libata-eh.c b/drivers/ata/libata-eh.c
-index 1d231cfab26f..04275f4c8d36 100644
---- a/drivers/ata/libata-eh.c
-+++ b/drivers/ata/libata-eh.c
-@@ -1215,7 +1215,6 @@ void ata_eh_thaw_port(struct ata_port *ap)
- 
- 	DPRINTK("ata%u port thawed\n", ap->print_id);
+-	if (what & ATA_TIMING_SETUP  ) m->setup   = max(a->setup,   b->setup);
+-	if (what & ATA_TIMING_ACT8B  ) m->act8b   = max(a->act8b,   b->act8b);
+-	if (what & ATA_TIMING_REC8B  ) m->rec8b   = max(a->rec8b,   b->rec8b);
+-	if (what & ATA_TIMING_CYC8B  ) m->cyc8b   = max(a->cyc8b,   b->cyc8b);
+-	if (what & ATA_TIMING_ACTIVE ) m->active  = max(a->active,  b->active);
+-	if (what & ATA_TIMING_RECOVER) m->recover = max(a->recover, b->recover);
+-	if (what & ATA_TIMING_DMACK_HOLD) m->dmack_hold = max(a->dmack_hold, b->dmack_hold);
+-	if (what & ATA_TIMING_CYCLE  ) m->cycle   = max(a->cycle,   b->cycle);
+-	if (what & ATA_TIMING_UDMA   ) m->udma    = max(a->udma,    b->udma);
++	if (what & ATA_TIMING_SETUP)
++		m->setup = max(a->setup, b->setup);
++	if (what & ATA_TIMING_ACT8B)
++		m->act8b = max(a->act8b, b->act8b);
++	if (what & ATA_TIMING_REC8B)
++		m->rec8b = max(a->rec8b, b->rec8b);
++	if (what & ATA_TIMING_CYC8B)
++		m->cyc8b = max(a->cyc8b, b->cyc8b);
++	if (what & ATA_TIMING_ACTIVE)
++		m->active = max(a->active, b->active);
++	if (what & ATA_TIMING_RECOVER)
++		m->recover = max(a->recover, b->recover);
++	if (what & ATA_TIMING_DMACK_HOLD)
++		m->dmack_hold = max(a->dmack_hold, b->dmack_hold);
++	if (what & ATA_TIMING_CYCLE)
++		m->cycle = max(a->cycle, b->cycle);
++	if (what & ATA_TIMING_UDMA)
++		m->udma = max(a->udma, b->udma);
  }
--EXPORT_SYMBOL_GPL(ata_eh_thaw_port);
+ EXPORT_SYMBOL_GPL(ata_timing_merge);
  
- static void ata_eh_scsidone(struct scsi_cmnd *scmd)
- {
-@@ -1250,7 +1249,6 @@ void ata_eh_qc_complete(struct ata_queued_cmd *qc)
- 	scmd->retries = scmd->allowed;
- 	__ata_eh_qc_complete(qc);
- }
--EXPORT_SYMBOL_GPL(ata_eh_qc_complete);
+@@ -3306,8 +3316,8 @@ int ata_timing_compute(struct ata_device *adev, unsigned short speed,
+ 	/*
+ 	 * Find the mode.
+ 	 */
+-
+-	if (!(s = ata_timing_find_mode(speed)))
++	s = ata_timing_find_mode(speed);
++	if (!s)
+ 		return -EINVAL;
  
- /**
-  *	ata_eh_qc_retry - Tell midlayer to retry an ATA command after EH
-@@ -1270,7 +1268,6 @@ void ata_eh_qc_retry(struct ata_queued_cmd *qc)
- 		scmd->allowed++;
- 	__ata_eh_qc_complete(qc);
- }
--EXPORT_SYMBOL_GPL(ata_eh_qc_retry);
+ 	memcpy(t, s, sizeof(*s));
+@@ -3363,9 +3373,11 @@ int ata_timing_compute(struct ata_device *adev, unsigned short speed,
+ 		t->recover = t->cycle - t->active;
+ 	}
  
- /**
-  *	ata_dev_disable - disable ATA device
-@@ -4041,7 +4038,6 @@ void ata_do_eh(struct ata_port *ap, ata_prereset_fn_t prereset,
+-	/* In a few cases quantisation may produce enough errors to
+-	   leave t->cycle too low for the sum of active and recovery
+-	   if so we must correct this */
++	/*
++	 * In a few cases quantisation may produce enough errors to
++	 * leave t->cycle too low for the sum of active and recovery
++	 * if so we must correct this.
++	 */
+ 	if (t->active + t->recover > t->cycle)
+ 		t->cycle = t->active + t->recover;
  
- 	ata_eh_finish(ap);
- }
--EXPORT_SYMBOL_GPL(ata_do_eh);
- 
- /**
-  *	ata_std_error_handler - standard error handler
-diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
-index a779ea57f3ad..b8e41c8e6395 100644
---- a/drivers/ata/libata-scsi.c
-+++ b/drivers/ata/libata-scsi.c
-@@ -4535,7 +4535,6 @@ void ata_scsi_simulate(struct ata_device *dev, struct scsi_cmnd *cmd)
- 
- 	cmd->scsi_done(cmd);
- }
--EXPORT_SYMBOL_GPL(ata_scsi_simulate);
- 
- int ata_scsi_add_hosts(struct ata_host *host, struct scsi_host_template *sht)
- {
 -- 
 2.24.1
 
