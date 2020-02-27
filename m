@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F81C7657C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 559A3C76577
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5203324688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 241D224656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:28:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813704;
-	bh=DSFBM7BNuOdb259OtWqXqz7MxqSG3Bzku8QvVO0rB9s=;
+	s=default; t=1582813694;
+	bh=Y+oO0v4pPjWCM/PYx1KrCQTKLulyQAEUeZpbuxHDaAE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bgbeBUZJpdB7lf8ao7KhyA7BYi2eE6JxoVEJb/eylqPNZOlun759yqbc+sXwOHsPl
-	 RFi0wCeRK6Ey5RfTUIO+irDCjYaRWKRc3PBtX7lWO4eD7XaGFLCUFzIdseIfVLMvGb
-	 L+nMD9wGpOPw4IjPU2RuoGG2xkzZIwTJQ4Re2z+Q=
+	b=HwJMwszz09nFSGH66I6j+C+7EB9IHi3jVBJWDY+CWRoajt96BZXYdvAQqN4xPme3X
+	 kOVUWKxfQrBOciYzYQkxFxc5QXzJH+ONmRSzOCtk6GxBPlF3C7dGA3ALihq8mwMqm5
+	 pbQ0OSZmtI8Di8EIMeRDSe5+i4nKovJjmwnzHtHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388122AbgB0OHi (ORCPT
+        id S1730315AbgB0OHz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:07:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45026 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:07:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388088AbgB0OHb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:07:31 -0500
+        id S2387813AbgB0OHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:07:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6047320578;
-        Thu, 27 Feb 2020 14:07:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A421024656;
+        Thu, 27 Feb 2020 14:07:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812450;
-        bh=DSFBM7BNuOdb259OtWqXqz7MxqSG3Bzku8QvVO0rB9s=;
+        s=default; t=1582812471;
+        bh=Y+oO0v4pPjWCM/PYx1KrCQTKLulyQAEUeZpbuxHDaAE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IPweOxXzj8zii6wZezbmeGRMkPVE/nJ6hIoFlu0oQjylVLsGJipcw2Ux1W9ePmV6z
-         prfw5+NPtNVdF772Z3NzU1X1U0CxPo7vzHJoWJN/amCgR7N/8TRxPzAFnlpxCaxa29
-         j8sxXk8ws0Upq71NPikDe6rw4WAAdgk6RmaJx/kg=
+        b=GPv4cIGQyt6uePuUC6RgPI+u15p8uGKMnKN2SRylPpZw9piwv/g4SEMJYfwJ1HFYn
+         Y6UvNJepVxNT6hKBalFZvIXiE2UTIPN8+7LTCPuz+B0mdWArlUr69a1CkvtENFOPUA
+         S20tIfnxtejx0SGmrrKhijwg2Szf926agSjarbAI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Samuel Holland <samuel@sholland.org>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 005/135] ASoC: codec2codec: avoid invalid/double-free of pcm runtime
-Date:   Thu, 27 Feb 2020 14:35:45 +0100
-Message-Id: <20200227132229.738164008@linuxfoundation.org>
+        stable@vger.kernel.org, Richard Dodd <richard.o.dodd@gmail.com>
+Subject: [PATCH 5.4 031/135] USB: Fix novation SourceControl XL after suspend
+Date:   Thu, 27 Feb 2020 14:36:11 +0100
+Message-Id: <20200227132233.749899324@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -59,36 +58,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Samuel Holland <samuel@sholland.org>
+From: Richard Dodd <richard.o.dodd@gmail.com>
 
-commit b6570fdb96edf45bcf71884bd2644bd73d348d1a upstream.
+commit b692056db8ecc7f452b934f016c17348282b7699 upstream.
 
-The PCM runtime was freed during PMU in the case that the event hook
-encountered an error. However, it is also unconditionally freed during
-PMD. Avoid a double-free by dropping the call to kfree in the PMU hook.
+Currently, the SourceControl will stay in power-down mode after resuming
+from suspend. This patch resets the device after suspend to power it up.
 
-Fixes: a72706ed8208 ("ASoC: codec2codec: remove ephemeral variables")
-Cc: stable@vger.kernel.org
-Signed-off-by: Samuel Holland <samuel@sholland.org>
-Link: https://lore.kernel.org/r/20200213061147.29386-2-samuel@sholland.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Richard Dodd <richard.o.dodd@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200212142220.36892-1-richard.o.dodd@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-dapm.c |    3 ---
- 1 file changed, 3 deletions(-)
+ drivers/usb/core/quirks.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -3888,9 +3888,6 @@ snd_soc_dai_link_event_pre_pmu(struct sn
- 	runtime->rate = params_rate(params);
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -449,6 +449,9 @@ static const struct usb_device_id usb_qu
+ 	/* INTEL VALUE SSD */
+ 	{ USB_DEVICE(0x8086, 0xf1a5), .driver_info = USB_QUIRK_RESET_RESUME },
  
- out:
--	if (ret < 0)
--		kfree(runtime);
--
- 	kfree(params);
- 	return ret;
- }
++	/* novation SoundControl XL */
++	{ USB_DEVICE(0x1235, 0x0061), .driver_info = USB_QUIRK_RESET_RESUME },
++
+ 	{ }  /* terminating entry must be last */
+ };
+ 
 
 
