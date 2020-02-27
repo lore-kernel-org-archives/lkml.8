@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC283C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9245C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 778F324656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A173E2468F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:42:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814555;
-	bh=cKSHBxICpc8HLDD17GSyryzs85V7J/Gd/ehm3OodqUY=;
+	s=default; t=1582814562;
+	bh=S0yGJG0Id9N1yY6MyKdC5gdWa6cxWpV1/yYUVgykXEg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lvPP6+6XEcq3kBwlW91SR6W8y5ICx4M9KzG6VTXeunPhyhylAslGQa0bKoKGikaOB
-	 c3lNmJq8EPMuPfRTXpjaH202OJz+RmukTY/XzA26JEuuRuZIzjN3lKKAHstTpmuxFJ
-	 t8reMZYR9zvlc8o3Jn9way25gKFAl1BD3Bedw1Og=
+	b=S/d5dlapD/ARX6kPyv+46VGZyxcK7gYvyXxohlv7l4XIWeTFJZOrlyA5XBSZIOqk6
+	 H+XwBOxLjoVUIyLV5P7N9ZtNC4OhYkuu03peWDsqRdE8wPh0ED6MTduulMvM3gJJ53
+	 jWzpIXiLBKl64uKabLFmscozORaA1SQzbmqdXIys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730060AbgB0Omd (ORCPT
+        id S1731655AbgB0Oml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:42:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47962 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:42:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731166AbgB0NuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:50:10 -0500
+        id S1731159AbgB0NuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:50:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 571F120801;
-        Thu, 27 Feb 2020 13:50:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E194B20578;
+        Thu, 27 Feb 2020 13:50:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811409;
-        bh=cKSHBxICpc8HLDD17GSyryzs85V7J/Gd/ehm3OodqUY=;
+        s=default; t=1582811407;
+        bh=S0yGJG0Id9N1yY6MyKdC5gdWa6cxWpV1/yYUVgykXEg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JQRq/Q75ZajG4p6ZmR7YZrgmUmHQ0t/GgkNmWvC/NlyBUM166ZMOVoTOrkXTC0Ju0
-         O+UJEjegnZr6op+77CnSwJ936LewTjpOU7N9+NqZ4X8BXpWVOVH7tUpw2DidNMRfJm
-         PlVGo9u1OSMUBmcudPBDC5+RuFlhnvFXEORS1wbE=
+        b=UiYB6m+RtZ5T4jy0BaKKlxbu39S0pa4KUb/TnkbHIKKKDlEfo3Y+jS1gT06PAZbSg
+         dnpPFfRHPFtgKszKzHJJf6I5FTblgFrZ4ycSyDwrRPPBOn5a8hyYdS40r00fw3rh8w
+         Z2/0HAubyz4flXpmA2NWIeiEEUYoTMPXwR+U6PEg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 4.9 120/165] vt: selection, handle pending signals in paste_selection
-Date:   Thu, 27 Feb 2020 14:36:34 +0100
-Message-Id: <20200227132248.635930551@linuxfoundation.org>
+        stable@vger.kernel.org, Jordy Zomer <jordy@simplyhacker.com>,
+        Willy Tarreau <w@1wt.eu>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 119/165] floppy: check FDC index for errors before assigning it
+Date:   Thu, 27 Feb 2020 14:36:33 +0100
+Message-Id: <20200227132248.501258745@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -58,63 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Slaby <jslaby@suse.cz>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit 687bff0cd08f790d540cfb7b2349f0d876cdddec upstream.
+commit 2e90ca68b0d2f5548804f22f0dd61145516171e3 upstream.
 
-When pasting a selection to a vt, the task is set as INTERRUPTIBLE while
-waiting for a tty to unthrottle. But signals are not handled at all.
-Normally, this is not a problem as tty_ldisc_receive_buf receives all
-the goods and a user has no reason to interrupt the task.
+Jordy Zomer reported a KASAN out-of-bounds read in the floppy driver in
+wait_til_ready().
 
-There are two scenarios where this matters:
-1) when the tty is throttled and a signal is sent to the process, it
-   spins on a CPU until the tty is unthrottled. schedule() does not
-   really echedule, but returns immediately, of course.
-2) when the sel_buffer becomes invalid, KASAN prevents any reads from it
-   and the loop simply does not proceed and spins forever (causing the
-   tty to throttle, but the code never sleeps, the same as above). This
-   sometimes happens as there is a race in the sel_buffer handling code.
+Which on the face of it can't happen, since as Willy Tarreau points out,
+the function does no particular memory access.  Except through the FDCS
+macro, which just indexes a static allocation through teh current fdc,
+which is always checked against N_FDC.
 
-So add signal handling to this ioctl (TIOCL_PASTESEL) and return -EINTR
-in case a signal is pending.
+Except the checking happens after we've already assigned the value.
 
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200210081131.23572-1-jslaby@suse.cz
+The floppy driver is a disgrace (a lot of it going back to my original
+horrd "design"), and has no real maintainer.  Nobody has the hardware,
+and nobody really cares.  But it still gets used in virtual environment
+because it's one of those things that everybody supports.
+
+The whole thing should be re-written, or at least parts of it should be
+seriously cleaned up.  The 'current fdc' index, which is used by the
+FDCS macro, and which is often shadowed by a local 'fdc' variable, is a
+prime example of how not to write code.
+
+But because nobody has the hardware or the motivation, let's just fix up
+the immediate problem with a nasty band-aid: test the fdc index before
+actually assigning it to the static 'fdc' variable.
+
+Reported-by: Jordy Zomer <jordy@simplyhacker.com>
+Cc: Willy Tarreau <w@1wt.eu>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/vt/selection.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/block/floppy.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/drivers/tty/vt/selection.c
-+++ b/drivers/tty/vt/selection.c
-@@ -341,6 +341,7 @@ int paste_selection(struct tty_struct *t
- 	unsigned int count;
- 	struct  tty_ldisc *ld;
- 	DECLARE_WAITQUEUE(wait, current);
-+	int ret = 0;
- 
- 	console_lock();
- 	poke_blanked_console();
-@@ -354,6 +355,10 @@ int paste_selection(struct tty_struct *t
- 	add_wait_queue(&vc->paste_wait, &wait);
- 	while (sel_buffer && sel_buffer_lth > pasted) {
- 		set_current_state(TASK_INTERRUPTIBLE);
-+		if (signal_pending(current)) {
-+			ret = -EINTR;
-+			break;
-+		}
- 		if (tty_throttled(tty)) {
- 			schedule();
- 			continue;
-@@ -369,5 +374,5 @@ int paste_selection(struct tty_struct *t
- 
- 	tty_buffer_unlock_exclusive(&vc->port);
- 	tty_ldisc_deref(ld);
--	return 0;
-+	return ret;
- }
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -848,14 +848,17 @@ static void reset_fdc_info(int mode)
+ /* selects the fdc and drive, and enables the fdc's input/dma. */
+ static void set_fdc(int drive)
+ {
++	unsigned int new_fdc = fdc;
++
+ 	if (drive >= 0 && drive < N_DRIVE) {
+-		fdc = FDC(drive);
++		new_fdc = FDC(drive);
+ 		current_drive = drive;
+ 	}
+-	if (fdc != 1 && fdc != 0) {
++	if (new_fdc >= N_FDC) {
+ 		pr_info("bad fdc value\n");
+ 		return;
+ 	}
++	fdc = new_fdc;
+ 	set_dor(fdc, ~0, 8);
+ #if N_FDC > 1
+ 	set_dor(1 - fdc, ~8, 0);
 
 
