@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50DE1C7657B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA3DC7659A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2931A24688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0166C24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:29:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813703;
-	bh=kRzhdOxsRy44jcxMVeScwz2Dy3J/se8dLhkDqIglJLI=;
+	s=default; t=1582813757;
+	bh=1+PH6IMGsNVCZMF5qZrfTQPg6A7KXplQfrrGAEMyieg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zcZ36sMrZ+aru0j/upWXBfB0CpHLNteaPvtNMW/A30+JAnmQFtwvLcJLWgklYSFU5
-	 GE8Ok0HoKaO2MICIGX5pTtbcnff84TqNaXgi3jAxMCppjuhVSsSzPsaW5LbChbPBOz
-	 lXDlWY+MV+RpmxZqfQlJU6yysmKfPpoi9QgMppmg=
+	b=e58ZwWlGtHJm/BW1R71n8EVYHkteb01s7pXtfQ27gDSeBHWnbl7/P7w2fcQHXICol
+	 PymzK4SzpoiOuWt6XiJunJSa0wQ4omCOjh3HKCqZDp07U5+POT2Eqy10scitFTvqmB
+	 eBqKm/m+CxjIsvsl6Ufbq55esZjMpasECxor3bnI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387949AbgB0O2V (ORCPT
+        id S2387963AbgB0OGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:28:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45394 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:06:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732992AbgB0OHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:07:46 -0500
+        id S2387940AbgB0OGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:06:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC83621D7E;
-        Thu, 27 Feb 2020 14:07:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1E7520578;
+        Thu, 27 Feb 2020 14:06:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812466;
-        bh=kRzhdOxsRy44jcxMVeScwz2Dy3J/se8dLhkDqIglJLI=;
+        s=default; t=1582812389;
+        bh=1+PH6IMGsNVCZMF5qZrfTQPg6A7KXplQfrrGAEMyieg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y0i+4XPAI4Yt/+AbLsI1GgXR4CyUDbzhov0zd1WsBjK7RZ50mqgu8SwXj6jGkTzTu
-         ArJ/8jKO3wB0lUR/QQ8QWYhRf7vMCdZKTC0ip7NYrhM3Fh8k+vgeXfWvpdbicJ6tf3
-         DhEsee0XamDuubzXMnPW1llRAy3lcFiYFnRCHEjk=
+        b=zGZ0auMCDaXhLtNehFOeKwNrvfbUL+zzL3jORa0oWHPta+17q8c/YzMYF07M4qL3j
+         UQ4iqXaffp4g9M2Ye7hy0Lmq1thTd6i/tPLafDZIF7OrYW7NtVLc6HbIomRvBI5YSg
+         JuLd0HySczx9PpSN8qN92PKnxrxCFUm5US+dI/2Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: [PATCH 5.4 021/135] staging: android: ashmem: Disallow ashmem memory from being remapped
-Date:   Thu, 27 Feb 2020 14:36:01 +0100
-Message-Id: <20200227132232.442118065@linuxfoundation.org>
+        stable@vger.kernel.org, Prabhakar Kushwaha <pkushwaha@marvell.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.19 95/97] ata: ahci: Add shutdown to freeze hardware resources of ahci
+Date:   Thu, 27 Feb 2020 14:37:43 +0100
+Message-Id: <20200227132230.195272711@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
-References: <20200227132228.710492098@linuxfoundation.org>
+In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
+References: <20200227132214.553656188@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,73 +59,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suren Baghdasaryan <surenb@google.com>
+From: Prabhakar Kushwaha <pkushwaha@marvell.com>
 
-commit 6d67b0290b4b84c477e6a2fc6e005e174d3c7786 upstream.
+commit 10a663a1b15134a5a714aa515e11425a44d4fdf7 upstream.
 
-When ashmem file is mmapped, the resulting vma->vm_file points to the
-backing shmem file with the generic fops that do not check ashmem
-permissions like fops of ashmem do. If an mremap is done on the ashmem
-region, then the permission checks will be skipped. Fix that by disallowing
-mapping operation on the backing shmem file.
+device_shutdown() called from reboot or power_shutdown expect
+all devices to be shutdown. Same is true for even ahci pci driver.
+As no ahci shutdown function is implemented, the ata subsystem
+always remains alive with DMA & interrupt support. File system
+related calls should not be honored after device_shutdown().
 
-Reported-by: Jann Horn <jannh@google.com>
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-Cc: stable <stable@vger.kernel.org> # 4.4,4.9,4.14,4.18,5.4
-Signed-off-by: Todd Kjos <tkjos@google.com>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Link: https://lore.kernel.org/r/20200127235616.48920-1-tkjos@google.com
+So defining ahci pci driver shutdown to freeze hardware (mask
+interrupt, stop DMA engine and free DMA resources).
+
+Signed-off-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/android/ashmem.c |   28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ drivers/ata/ahci.c        |    7 +++++++
+ drivers/ata/libata-core.c |   21 +++++++++++++++++++++
+ include/linux/libata.h    |    1 +
+ 3 files changed, 29 insertions(+)
 
---- a/drivers/staging/android/ashmem.c
-+++ b/drivers/staging/android/ashmem.c
-@@ -351,8 +351,23 @@ static inline vm_flags_t calc_vm_may_fla
- 	       _calc_vm_trans(prot, PROT_EXEC,  VM_MAYEXEC);
+--- a/drivers/ata/ahci.c
++++ b/drivers/ata/ahci.c
+@@ -96,6 +96,7 @@ enum board_ids {
+ 
+ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent);
+ static void ahci_remove_one(struct pci_dev *dev);
++static void ahci_shutdown_one(struct pci_dev *dev);
+ static int ahci_vt8251_hardreset(struct ata_link *link, unsigned int *class,
+ 				 unsigned long deadline);
+ static int ahci_avn_hardreset(struct ata_link *link, unsigned int *class,
+@@ -609,6 +610,7 @@ static struct pci_driver ahci_pci_driver
+ 	.id_table		= ahci_pci_tbl,
+ 	.probe			= ahci_init_one,
+ 	.remove			= ahci_remove_one,
++	.shutdown		= ahci_shutdown_one,
+ 	.driver = {
+ 		.pm		= &ahci_pci_pm_ops,
+ 	},
+@@ -1897,6 +1899,11 @@ static int ahci_init_one(struct pci_dev
+ 	return 0;
  }
  
-+static int ashmem_vmfile_mmap(struct file *file, struct vm_area_struct *vma)
++static void ahci_shutdown_one(struct pci_dev *pdev)
 +{
-+	/* do not allow to mmap ashmem backing shmem file directly */
-+	return -EPERM;
++	ata_pci_shutdown_one(pdev);
 +}
 +
-+static unsigned long
-+ashmem_vmfile_get_unmapped_area(struct file *file, unsigned long addr,
-+				unsigned long len, unsigned long pgoff,
-+				unsigned long flags)
-+{
-+	return current->mm->get_unmapped_area(file, addr, len, pgoff, flags);
-+}
-+
- static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
+ static void ahci_remove_one(struct pci_dev *pdev)
  {
-+	static struct file_operations vmfile_fops;
- 	struct ashmem_area *asma = file->private_data;
- 	int ret = 0;
+ 	pm_runtime_get_noresume(&pdev->dev);
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -6780,6 +6780,26 @@ void ata_pci_remove_one(struct pci_dev *
+ 	ata_host_detach(host);
+ }
  
-@@ -393,6 +408,19 @@ static int ashmem_mmap(struct file *file
- 		}
- 		vmfile->f_mode |= FMODE_LSEEK;
- 		asma->file = vmfile;
-+		/*
-+		 * override mmap operation of the vmfile so that it can't be
-+		 * remapped which would lead to creation of a new vma with no
-+		 * asma permission checks. Have to override get_unmapped_area
-+		 * as well to prevent VM_BUG_ON check for f_ops modification.
-+		 */
-+		if (!vmfile_fops.mmap) {
-+			vmfile_fops = *vmfile->f_op;
-+			vmfile_fops.mmap = ashmem_vmfile_mmap;
-+			vmfile_fops.get_unmapped_area =
-+					ashmem_vmfile_get_unmapped_area;
-+		}
-+		vmfile->f_op = &vmfile_fops;
- 	}
- 	get_file(asma->file);
++void ata_pci_shutdown_one(struct pci_dev *pdev)
++{
++	struct ata_host *host = pci_get_drvdata(pdev);
++	int i;
++
++	for (i = 0; i < host->n_ports; i++) {
++		struct ata_port *ap = host->ports[i];
++
++		ap->pflags |= ATA_PFLAG_FROZEN;
++
++		/* Disable port interrupts */
++		if (ap->ops->freeze)
++			ap->ops->freeze(ap);
++
++		/* Stop the port DMA engines */
++		if (ap->ops->port_stop)
++			ap->ops->port_stop(ap);
++	}
++}
++
+ /* move to PCI subsystem */
+ int pci_test_config_bits(struct pci_dev *pdev, const struct pci_bits *bits)
+ {
+@@ -7400,6 +7420,7 @@ EXPORT_SYMBOL_GPL(ata_timing_cycle2mode)
  
+ #ifdef CONFIG_PCI
+ EXPORT_SYMBOL_GPL(pci_test_config_bits);
++EXPORT_SYMBOL_GPL(ata_pci_shutdown_one);
+ EXPORT_SYMBOL_GPL(ata_pci_remove_one);
+ #ifdef CONFIG_PM
+ EXPORT_SYMBOL_GPL(ata_pci_device_do_suspend);
+--- a/include/linux/libata.h
++++ b/include/linux/libata.h
+@@ -1236,6 +1236,7 @@ struct pci_bits {
+ };
+ 
+ extern int pci_test_config_bits(struct pci_dev *pdev, const struct pci_bits *bits);
++extern void ata_pci_shutdown_one(struct pci_dev *pdev);
+ extern void ata_pci_remove_one(struct pci_dev *pdev);
+ 
+ #ifdef CONFIG_PM
 
 
