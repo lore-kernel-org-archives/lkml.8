@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F62C3F354
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D048C3F369
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ABCA20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E272420801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:55:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811677;
-	bh=FDLTKae5L6Lt5h3s6D/TeS96VdvhDxPetZvWw6O8jx4=;
+	s=default; t=1582811704;
+	bh=9HLdkMMX77Gb8gmumIGYRs7r4xKA2witeWT225J7nKA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vOJLVczW8UivtC1ijri5pFGWlBs5vr0wF9Gl+NhsNMpia3N2qtNG6u7EvlrL/rLRQ
-	 DSRayNdZx8Ng+f9aWSnk2939VRmRayxIpViuJnFd5LceVqVS/N5VOyKgayN4h3CqXf
-	 uLouTrN+lAUBncHssy1zMkVYpK8QYvGEeKe2gNsA=
+	b=G8HtasDdCsJpVw3tFmJYhYwI4zpBugJU6j19G8dmrLjjUKFCrA5HXf0m2/SHzRFhV
+	 EfHAsbGlmg8p/22pyy0g/A5gZZnIBK6fuJidQQSLMxVm+CSi2kRmxJBPYcWRiF112l
+	 +tNmShjomfr45TqeOWyeimF8V1Vif4kj7IFWOLv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731880AbgB0Nyc (ORCPT
+        id S1731610AbgB0NzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:54:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54528 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:55:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731871AbgB0Ny0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:54:26 -0500
+        id S1731926AbgB0Ny5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:54:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F6FE20801;
-        Thu, 27 Feb 2020 13:54:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AF902084E;
+        Thu, 27 Feb 2020 13:54:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811665;
-        bh=FDLTKae5L6Lt5h3s6D/TeS96VdvhDxPetZvWw6O8jx4=;
+        s=default; t=1582811696;
+        bh=9HLdkMMX77Gb8gmumIGYRs7r4xKA2witeWT225J7nKA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tWLgkZFyVurS1HeyMi7XIRbRPpxWiRNbbKypDVXdtn6+tgq2wKYZYR0gsHVsn4T0f
-         VkTOybWW5fWydteCRzI3bNqf7/iKPY317s1iSkMZE0rlJ4bgfY6s9rKtKFGBm5u7jo
-         Vvz/oOLrrHYdIHnRehe7MFMC6SNsmgNscqkp8LyY=
+        b=OpGqQmAGw8rJKsIAtT7l/d5L+GrRr3wFF0qicvv1B0IvgXF0dRnTcNgZPecm1yd5l
+         N4aogUxI0rZSDSC4zVEwzQFeNXph4PMwsPd3vryO4CrKR9o0gEL6QQJIGbX3NXQXWa
+         Ew4ZX2p5K/3qJq+mNzRa8soGTHcP+reafNvv4VY0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Matthew Garrett <mjg59@google.com>, linux-efi@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 054/237] efi/x86: Map the entire EFI vendor string before copying it
-Date:   Thu, 27 Feb 2020 14:34:28 +0100
-Message-Id: <20200227132300.786537149@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Luis Henriques <luis.henriques@canonical.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 065/237] tracing: Fix very unlikely race of registering two stat tracers
+Date:   Thu, 27 Feb 2020 14:34:39 +0100
+Message-Id: <20200227132301.821694547@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -63,67 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-[ Upstream commit ffc2760bcf2dba0dbef74013ed73eea8310cc52c ]
+[ Upstream commit dfb6cd1e654315168e36d947471bd2a0ccd834ae ]
 
-Fix a couple of issues with the way we map and copy the vendor string:
-- we map only 2 bytes, which usually works since you get at least a
-  page, but if the vendor string happens to cross a page boundary,
-  a crash will result
-- only call early_memunmap() if early_memremap() succeeded, or we will
-  call it with a NULL address which it doesn't like,
-- while at it, switch to early_memremap_ro(), and array indexing rather
-  than pointer dereferencing to read the CHAR16 characters.
+Looking through old emails in my INBOX, I came across a patch from Luis
+Henriques that attempted to fix a race of two stat tracers registering the
+same stat trace (extremely unlikely, as this is done in the kernel, and
+probably doesn't even exist). The submitted patch wasn't quite right as it
+needed to deal with clean up a bit better (if two stat tracers were the
+same, it would have the same files).
 
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Arvind Sankar <nivedita@alum.mit.edu>
-Cc: Matthew Garrett <mjg59@google.com>
-Cc: linux-efi@vger.kernel.org
-Fixes: 5b83683f32b1 ("x86: EFI runtime service support")
-Link: https://lkml.kernel.org/r/20200103113953.9571-5-ardb@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+But to make the code cleaner, all we needed to do is to keep the
+all_stat_sessions_mutex held for most of the registering function.
+
+Link: http://lkml.kernel.org/r/1410299375-20068-1-git-send-email-luis.henriques@canonical.com
+
+Fixes: 002bb86d8d42f ("tracing/ftrace: separate events tracing and stats tracing engine")
+Reported-by: Luis Henriques <luis.henriques@canonical.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/platform/efi/efi.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ kernel/trace/trace_stat.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index 335a62e74a2e9..5b0275310070e 100644
---- a/arch/x86/platform/efi/efi.c
-+++ b/arch/x86/platform/efi/efi.c
-@@ -480,7 +480,6 @@ void __init efi_init(void)
- 	efi_char16_t *c16;
- 	char vendor[100] = "unknown";
- 	int i = 0;
--	void *tmp;
+diff --git a/kernel/trace/trace_stat.c b/kernel/trace/trace_stat.c
+index bf68af63538b4..92b76f9e25edd 100644
+--- a/kernel/trace/trace_stat.c
++++ b/kernel/trace/trace_stat.c
+@@ -306,7 +306,7 @@ static int init_stat_file(struct stat_session *session)
+ int register_stat_tracer(struct tracer_stat *trace)
+ {
+ 	struct stat_session *session, *node;
+-	int ret;
++	int ret = -EINVAL;
  
- #ifdef CONFIG_X86_32
- 	if (boot_params.efi_info.efi_systab_hi ||
-@@ -505,14 +504,16 @@ void __init efi_init(void)
- 	/*
- 	 * Show what we know for posterity
- 	 */
--	c16 = tmp = early_memremap(efi.systab->fw_vendor, 2);
-+	c16 = early_memremap_ro(efi.systab->fw_vendor,
-+				sizeof(vendor) * sizeof(efi_char16_t));
- 	if (c16) {
--		for (i = 0; i < sizeof(vendor) - 1 && *c16; ++i)
--			vendor[i] = *c16++;
-+		for (i = 0; i < sizeof(vendor) - 1 && c16[i]; ++i)
-+			vendor[i] = c16[i];
- 		vendor[i] = '\0';
--	} else
-+		early_memunmap(c16, sizeof(vendor) * sizeof(efi_char16_t));
-+	} else {
- 		pr_err("Could not map the firmware vendor!\n");
--	early_memunmap(tmp, 2);
-+	}
+ 	if (!trace)
+ 		return -EINVAL;
+@@ -317,17 +317,15 @@ int register_stat_tracer(struct tracer_stat *trace)
+ 	/* Already registered? */
+ 	mutex_lock(&all_stat_sessions_mutex);
+ 	list_for_each_entry(node, &all_stat_sessions, session_list) {
+-		if (node->ts == trace) {
+-			mutex_unlock(&all_stat_sessions_mutex);
+-			return -EINVAL;
+-		}
++		if (node->ts == trace)
++			goto out;
+ 	}
+-	mutex_unlock(&all_stat_sessions_mutex);
  
- 	pr_info("EFI v%u.%.02u by %s\n",
- 		efi.systab->hdr.revision >> 16,
++	ret = -ENOMEM;
+ 	/* Init the session */
+ 	session = kzalloc(sizeof(*session), GFP_KERNEL);
+ 	if (!session)
+-		return -ENOMEM;
++		goto out;
+ 
+ 	session->ts = trace;
+ 	INIT_LIST_HEAD(&session->session_list);
+@@ -336,15 +334,16 @@ int register_stat_tracer(struct tracer_stat *trace)
+ 	ret = init_stat_file(session);
+ 	if (ret) {
+ 		destroy_session(session);
+-		return ret;
++		goto out;
+ 	}
+ 
++	ret = 0;
+ 	/* Register */
+-	mutex_lock(&all_stat_sessions_mutex);
+ 	list_add_tail(&session->session_list, &all_stat_sessions);
++ out:
+ 	mutex_unlock(&all_stat_sessions_mutex);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ void unregister_stat_tracer(struct tracer_stat *trace)
 -- 
 2.20.1
 
