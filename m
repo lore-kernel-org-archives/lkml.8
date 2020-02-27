@@ -2,51 +2,52 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9976CC3F363
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A20C3F358
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DE3921D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:29:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68A7D24688
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:29:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813796;
-	bh=2+nOJ+Cax+uf9tPLypRaBTA0bPbn9+/O+WkLbcA7gns=;
+	s=default; t=1582813773;
+	bh=ebcdWWoidKGN2vbQWUqb4ne5B3dw2J5I8wTEd6ulNAs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dmy0mNRZAi8Ip9Jc7ERW8jrGHH9HthglQ2GnYWyjNPLxgLBAaITj+l4AIjrVEuG7Y
-	 bvSmy0BtKIgycEYoI7tA/N4tCsf+b2YeXnDjeOQ+J7DCQmjSC6jyfAmAGdoP1HlvCv
-	 ecMm6+/DymIMbP2ffXiy9XhZNy/QK+Zx1o5pYK9E=
+	b=UR6+quOK4QUUp7uX7DAgH5NH7o6CKq0QFy4niV2A/u8vuIMBDKKGM2zAKEcNTh3Qa
+	 a/itdRWQ4HFAV5Qpj7FO5XzO86WHfcxeLtILa5k3a0VnJmmyz1aLbMNsFEDJC0ZWO+
+	 /GGWCWVX3Ilxp7IZqZ972c1h4vB8aOcvvnjbRL54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733263AbgB0OF3 (ORCPT
+        id S2388162AbgB0O3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:05:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42086 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:29:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387762AbgB0OFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:05:25 -0500
+        id S1732812AbgB0OGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:06:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADD792469D;
-        Thu, 27 Feb 2020 14:05:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2BAE246A0;
+        Thu, 27 Feb 2020 14:06:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812325;
-        bh=2+nOJ+Cax+uf9tPLypRaBTA0bPbn9+/O+WkLbcA7gns=;
+        s=default; t=1582812370;
+        bh=ebcdWWoidKGN2vbQWUqb4ne5B3dw2J5I8wTEd6ulNAs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tV5BIV5ebO83gcqqgCdxVOU2QhloFxEd3vt2bomL0fsYqniJ5rDrKAIV25iey+b//
-         4uHQhUtD0hi/bDvBVnOmvg9bBI/jh/amlcUVEoxiHR1P8xUz2jCXQChhO/GcyC9ro8
-         bGzfz6rGHTRpKAmVI5j36wVVj5mAVY/p4aMeRYUY=
+        b=1VCLArRUiX1a0G5IT16hLlCogAJd9vIAvIfmgwNjxibif89ncA3/fH2AFAJvvXGuZ
+         UaTOe2+nr1NiMJzTEJJ47hbT5DeLPnrRBq44tiDPunU4QY5y9fX7mp7h+4TTkF3For
+         8amibqHDf6gLXda8GwKH+OuJha21En2JtkoNtSxI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Upton <oupton@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.19 72/97] KVM: nVMX: Check IO instruction VM-exit conditions
-Date:   Thu, 27 Feb 2020 14:37:20 +0100
-Message-Id: <20200227132226.243954788@linuxfoundation.org>
+        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 62/97] drm/nouveau/kms/gv100-: Re-set LUT after clearing for modesets
+Date:   Thu, 27 Feb 2020 14:37:10 +0100
+Message-Id: <20200227132224.657296061@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
 References: <20200227132214.553656188@linuxfoundation.org>
@@ -59,110 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Upton <oupton@google.com>
+From: Lyude Paul <lyude@redhat.com>
 
-commit 35a571346a94fb93b5b3b6a599675ef3384bc75c upstream.
+[ Upstream commit f287d3d19769b1d22cba4e51fa0487f2697713c9 ]
 
-Consult the 'unconditional IO exiting' and 'use IO bitmaps' VM-execution
-controls when checking instruction interception. If the 'use IO bitmaps'
-VM-execution control is 1, check the instruction access against the IO
-bitmaps to determine if the instruction causes a VM-exit.
+While certain modeset operations on gv100+ need us to temporarily
+disable the LUT, we make the mistake of sometimes neglecting to
+reprogram the LUT after such modesets. In particular, moving a head from
+one encoder to another seems to trigger this quite often. GV100+ is very
+picky about having a LUT in most scenarios, so this causes the display
+engine to hang with the following error code:
 
-Signed-off-by: Oliver Upton <oupton@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+disp: chid 1 stat 00005080 reason 5 [INVALID_STATE] mthd 0200 data
+00000001 code 0000002d)
 
+So, fix this by always re-programming the LUT if we're clearing it in a
+state where the wndw is still visible, and has a XLUT handle programmed.
+
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Fixes: facaed62b4cb ("drm/nouveau/kms/gv100: initial support")
+Cc: <stable@vger.kernel.org> # v4.18+
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/vmx.c |   59 ++++++++++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 52 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/nouveau/dispnv50/wndw.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -5731,7 +5731,7 @@ static bool nested_vmx_exit_handled_io(s
- 				       struct vmcs12 *vmcs12)
- {
- 	unsigned long exit_qualification;
--	unsigned int port;
-+	unsigned short port;
- 	int size;
- 
- 	if (!nested_cpu_has(vmcs12, CPU_BASED_USE_IO_BITMAPS))
-@@ -13689,6 +13689,39 @@ static void nested_vmx_entry_failure(str
- 		to_vmx(vcpu)->nested.sync_shadow_vmcs = true;
- }
- 
-+static int vmx_check_intercept_io(struct kvm_vcpu *vcpu,
-+				  struct x86_instruction_info *info)
-+{
-+	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
-+	unsigned short port;
-+	bool intercept;
-+	int size;
-+
-+	if (info->intercept == x86_intercept_in ||
-+	    info->intercept == x86_intercept_ins) {
-+		port = info->src_val;
-+		size = info->dst_bytes;
-+	} else {
-+		port = info->dst_val;
-+		size = info->src_bytes;
-+	}
-+
-+	/*
-+	 * If the 'use IO bitmaps' VM-execution control is 0, IO instruction
-+	 * VM-exits depend on the 'unconditional IO exiting' VM-execution
-+	 * control.
-+	 *
-+	 * Otherwise, IO instruction VM-exits are controlled by the IO bitmaps.
-+	 */
-+	if (!nested_cpu_has(vmcs12, CPU_BASED_USE_IO_BITMAPS))
-+		intercept = nested_cpu_has(vmcs12,
-+					   CPU_BASED_UNCOND_IO_EXITING);
-+	else
-+		intercept = nested_vmx_check_io_bitmaps(vcpu, port, size);
-+
-+	return intercept ? X86EMUL_UNHANDLEABLE : X86EMUL_CONTINUE;
-+}
-+
- static int vmx_check_intercept(struct kvm_vcpu *vcpu,
- 			       struct x86_instruction_info *info,
- 			       enum x86_intercept_stage stage)
-@@ -13696,18 +13729,30 @@ static int vmx_check_intercept(struct kv
- 	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
- 	struct x86_emulate_ctxt *ctxt = &vcpu->arch.emulate_ctxt;
- 
-+	switch (info->intercept) {
- 	/*
- 	 * RDPID causes #UD if disabled through secondary execution controls.
- 	 * Because it is marked as EmulateOnUD, we need to intercept it here.
- 	 */
--	if (info->intercept == x86_intercept_rdtscp &&
--	    !nested_cpu_has2(vmcs12, SECONDARY_EXEC_RDTSCP)) {
--		ctxt->exception.vector = UD_VECTOR;
--		ctxt->exception.error_code_valid = false;
--		return X86EMUL_PROPAGATE_FAULT;
--	}
-+	case x86_intercept_rdtscp:
-+		if (!nested_cpu_has2(vmcs12, SECONDARY_EXEC_RDTSCP)) {
-+			ctxt->exception.vector = UD_VECTOR;
-+			ctxt->exception.error_code_valid = false;
-+			return X86EMUL_PROPAGATE_FAULT;
-+		}
-+		break;
-+
-+	case x86_intercept_in:
-+	case x86_intercept_ins:
-+	case x86_intercept_out:
-+	case x86_intercept_outs:
-+		return vmx_check_intercept_io(vcpu, info);
- 
- 	/* TODO: check more intercepts... */
-+	default:
-+		break;
-+	}
-+
- 	return X86EMUL_UNHANDLEABLE;
- }
- 
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/wndw.c b/drivers/gpu/drm/nouveau/dispnv50/wndw.c
+index b3db4553098d5..d343ae66c64fe 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/wndw.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/wndw.c
+@@ -405,6 +405,8 @@ nv50_wndw_atomic_check(struct drm_plane *plane, struct drm_plane_state *state)
+ 		asyw->clr.ntfy = armw->ntfy.handle != 0;
+ 		asyw->clr.sema = armw->sema.handle != 0;
+ 		asyw->clr.xlut = armw->xlut.handle != 0;
++		if (asyw->clr.xlut && asyw->visible)
++			asyw->set.xlut = asyw->xlut.handle != 0;
+ 		if (wndw->func->image_clr)
+ 			asyw->clr.image = armw->image.handle[0] != 0;
+ 	}
+-- 
+2.20.1
+
 
 
