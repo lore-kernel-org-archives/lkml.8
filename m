@@ -2,51 +2,51 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB7AC52D3E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 331EFC52D37
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D9F921D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04ACF20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:04:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812331;
-	bh=hVmMPzbNUFh4d8/1PFfZVOKJRZ7c2slJRQmWFYW7Hjw=;
+	s=default; t=1582812271;
+	bh=MMPER3vXGImOQD7vMrn6Cc2XnhAMRc+D2cAalFhyRLw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bry7IhJIesGsMBgybXFe6dpICTwVJm2Cd/lBR3xVL22RhaJv1pN+TY8Su5RFpg+pR
-	 3zHLFvUKrjfb2/WMUjuXbYfsLXsmzJ8j7gKNDxYcK7iaQv7i7cRST57hknYxvYVAVs
-	 nHkPmW287kmRUJPywUnJlyD0bNpn2nymCtSabw50=
+	b=XPjlS7ZjAtMQ5Gme+DPb5UCQ4rTExNiuJNg4zAz6MDBAd9ttoff/Ncd55FxxFlD7g
+	 EKoDTM/7cehoD5w7X9/BNp86/eyXavt8Zx7l9tiJUf9AuOgUwTF6wnsI2SQas9mnvT
+	 LXOpXHM33vdPx8yesywxZsIGQqxglnpnlBjYceLE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387780AbgB0OFa (ORCPT
+        id S2387597AbgB0OE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:05:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42154 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:04:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387769AbgB0OF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:05:28 -0500
+        id S2387562AbgB0OER (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:04:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32C9F24691;
-        Thu, 27 Feb 2020 14:05:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB72620578;
+        Thu, 27 Feb 2020 14:04:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812327;
-        bh=hVmMPzbNUFh4d8/1PFfZVOKJRZ7c2slJRQmWFYW7Hjw=;
+        s=default; t=1582812256;
+        bh=MMPER3vXGImOQD7vMrn6Cc2XnhAMRc+D2cAalFhyRLw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z7owrUYlMq4jiNsIVYaBe0eCEFT9emhEWKJQlQJjHkqKbPn8jwT1eMOEzWgGXeRYU
-         FC8hq1t2W4tgjbd4o5/rx/aZU/WRs4uguqjWQhlHDe2aSkGBaxqOu24K4oq2xpeAcG
-         FXGD81WYYn1aSWgn1Rb8MvxsKRSSh7g8jmyu59UQ=
+        b=bFvYVDNPI8LOv+oqFYwAG38eSfEUYOogwUAWPGA0ZkYuWkZe0hf1m7ODc9btK1upv
+         4aV910mh4MMrUNRblcGFHRtouy0fFC1GaWwz7WV/EQGCZO0ovlGKG98TNs0Cwgn+hn
+         d4aZECDhvrGBoCQTlXp4pZhgRuPDi7mbRkHhkjYg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: [PATCH 4.19 73/97] KVM: nVMX: handle nested posted interrupts when apicv is disabled for L1
-Date:   Thu, 27 Feb 2020 14:37:21 +0100
-Message-Id: <20200227132226.392852498@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH 4.19 44/97] MAINTAINERS: Update drm/i915 bug filing URL
+Date:   Thu, 27 Feb 2020 14:36:52 +0100
+Message-Id: <20200227132221.730885310@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
 References: <20200227132214.553656188@linuxfoundation.org>
@@ -59,113 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
+From: Jani Nikula <jani.nikula@intel.com>
 
-commit 91a5f413af596ad01097e59bf487eb07cb3f1331 upstream.
+commit 96228b7df33f8eb9006f8ae96949400aed9bd303 upstream.
 
-Even when APICv is disabled for L1 it can (and, actually, is) still
-available for L2, this means we need to always call
-vmx_deliver_nested_posted_interrupt() when attempting an interrupt
-delivery.
+We've moved from bugzilla to gitlab.
 
-Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200212160434.6437-1-jani.nikula@intel.com
+(cherry picked from commit 3a6a4f0810c8ade6f1ff63c34aa9834176b9d88b)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/kvm_host.h |    2 +-
- arch/x86/kvm/lapic.c            |    5 +----
- arch/x86/kvm/svm.c              |    7 ++++++-
- arch/x86/kvm/vmx.c              |   13 +++++++++----
- 4 files changed, 17 insertions(+), 10 deletions(-)
+ MAINTAINERS |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1040,7 +1040,7 @@ struct kvm_x86_ops {
- 	void (*load_eoi_exitmap)(struct kvm_vcpu *vcpu, u64 *eoi_exit_bitmap);
- 	void (*set_virtual_apic_mode)(struct kvm_vcpu *vcpu);
- 	void (*set_apic_access_page_addr)(struct kvm_vcpu *vcpu, hpa_t hpa);
--	void (*deliver_posted_interrupt)(struct kvm_vcpu *vcpu, int vector);
-+	int (*deliver_posted_interrupt)(struct kvm_vcpu *vcpu, int vector);
- 	int (*sync_pir_to_irr)(struct kvm_vcpu *vcpu);
- 	int (*set_tss_addr)(struct kvm *kvm, unsigned int addr);
- 	int (*set_identity_map_addr)(struct kvm *kvm, u64 ident_addr);
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1060,11 +1060,8 @@ static int __apic_accept_irq(struct kvm_
- 				apic_clear_vector(vector, apic->regs + APIC_TMR);
- 		}
- 
--		if (vcpu->arch.apicv_active)
--			kvm_x86_ops->deliver_posted_interrupt(vcpu, vector);
--		else {
-+		if (kvm_x86_ops->deliver_posted_interrupt(vcpu, vector)) {
- 			kvm_lapic_set_irr(vector, apic);
--
- 			kvm_make_request(KVM_REQ_EVENT, vcpu);
- 			kvm_vcpu_kick(vcpu);
- 		}
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -5140,8 +5140,11 @@ static void svm_load_eoi_exitmap(struct
- 	return;
- }
- 
--static void svm_deliver_avic_intr(struct kvm_vcpu *vcpu, int vec)
-+static int svm_deliver_avic_intr(struct kvm_vcpu *vcpu, int vec)
- {
-+	if (!vcpu->arch.apicv_active)
-+		return -1;
-+
- 	kvm_lapic_set_irr(vec, vcpu->arch.apic);
- 	smp_mb__after_atomic();
- 
-@@ -5150,6 +5153,8 @@ static void svm_deliver_avic_intr(struct
- 		       kvm_cpu_get_apicid(vcpu->cpu));
- 	else
- 		kvm_vcpu_wake_up(vcpu);
-+
-+	return 0;
- }
- 
- static bool svm_dy_apicv_has_pending_interrupt(struct kvm_vcpu *vcpu)
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -6284,24 +6284,29 @@ static int vmx_deliver_nested_posted_int
-  * 2. If target vcpu isn't running(root mode), kick it to pick up the
-  * interrupt from PIR in next vmentry.
-  */
--static void vmx_deliver_posted_interrupt(struct kvm_vcpu *vcpu, int vector)
-+static int vmx_deliver_posted_interrupt(struct kvm_vcpu *vcpu, int vector)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	int r;
- 
- 	r = vmx_deliver_nested_posted_interrupt(vcpu, vector);
- 	if (!r)
--		return;
-+		return 0;
-+
-+	if (!vcpu->arch.apicv_active)
-+		return -1;
- 
- 	if (pi_test_and_set_pir(vector, &vmx->pi_desc))
--		return;
-+		return 0;
- 
- 	/* If a previous notification has sent the IPI, nothing to do.  */
- 	if (pi_test_and_set_on(&vmx->pi_desc))
--		return;
-+		return 0;
- 
- 	if (!kvm_vcpu_trigger_posted_interrupt(vcpu, false))
- 		kvm_vcpu_kick(vcpu);
-+
-+	return 0;
- }
- 
- /*
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7340,7 +7340,7 @@ M:	Joonas Lahtinen <joonas.lahtinen@linu
+ M:	Rodrigo Vivi <rodrigo.vivi@intel.com>
+ L:	intel-gfx@lists.freedesktop.org
+ W:	https://01.org/linuxgraphics/
+-B:	https://01.org/linuxgraphics/documentation/how-report-bugs
++B:	https://gitlab.freedesktop.org/drm/intel/-/wikis/How-to-file-i915-bugs
+ C:	irc://chat.freenode.net/intel-gfx
+ Q:	http://patchwork.freedesktop.org/project/intel-gfx/
+ T:	git git://anongit.freedesktop.org/drm-intel
 
 
