@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C89FDC3F34C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A716BC54FDC
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A16A524691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74CFA20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:30:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813851;
-	bh=eX3CCKJI3h6JY/7HDQXOo9dHoGft1PhSOYahbKrWMz0=;
+	s=default; t=1582813846;
+	bh=B0g55lzRnHh7dRAuqmvIiO2W1H2pOCKPIirhLswgmKo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I5BH2WC1jX9dQi4SYaLLwqnlqTEys/4FWg/iKGl15B5w6WPaA13FIilpy9BkUjefC
-	 BIyUxFKetVQxv503E7T+Y5Al3AWItqcumNDzuMz8lbUhBy+AgNFUV8XdwZZ5qgw8sl
-	 YJS0BfdizgamgGEhWusZkoRJsaMa4hATG0ryDIVY=
+	b=PnWGvP7+HyNBzTUB6lWzBLE6Wk/mN0QaiLvoVWrtiu32dGiTpPrTjS4o/Yz29hFEU
+	 9iRORwdDmv0spkOiMni+CpytIFPJ4HFfkDxOfbx1y+m5Ej2NVo+s7E9JjxiKoAEOsM
+	 xFhjVUAT1vUjmg17WtDm6byi2sS6RznzfzDRH6WA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732790AbgB0OEj (ORCPT
+        id S1733225AbgB0OEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:04:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40608 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:04:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387578AbgB0OEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:04:24 -0500
+        id S2387618AbgB0OEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:04:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E038E20578;
-        Thu, 27 Feb 2020 14:04:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAEE420578;
+        Thu, 27 Feb 2020 14:04:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812263;
-        bh=eX3CCKJI3h6JY/7HDQXOo9dHoGft1PhSOYahbKrWMz0=;
+        s=default; t=1582812278;
+        bh=B0g55lzRnHh7dRAuqmvIiO2W1H2pOCKPIirhLswgmKo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LpMDba0exa/3Z3CbBUZ8TzkPd/8BgaGLQ7bUDh0j0Nn3h44Mk2OQft3ch67fSHUl4
-         ySg0oZMXy1cKtqTer6ud7hjTDr310nTHgmwSt8EDA78h3PcAhsI2Ue74yUT/xxP9F4
-         ACCgd+0X6qBvVEYlcJxWfn/BMppjVPFIBKuL3420=
+        b=kPQf5TcVwIat892TDg8ANMYSz1q79QDFP6XNZI4ClAEO6rDQJa/G7d9Ub2aAjwFWu
+         rSQiIUXmEcjCx/QjUoemjMJt4p01iN+rWAxi4dKuu8luaxQPWLIJnnfdkJsqrLqcmV
+         qyAKU0fB8I3A/I5sr97od1wvdUivBH1avzlynpzw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Keith Busch <kbusch@kernel.org>
-Subject: [PATCH 4.19 47/97] nvme-multipath: Fix memory leak with ana_log_buf
-Date:   Thu, 27 Feb 2020 14:36:55 +0100
-Message-Id: <20200227132222.273136212@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Upton <oupton@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.19 52/97] KVM: nVMX: Dont emulate instructions in guest mode
+Date:   Thu, 27 Feb 2020 14:37:00 +0100
+Message-Id: <20200227132223.073941417@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
 References: <20200227132214.553656188@linuxfoundation.org>
@@ -61,66 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit 3b7830904e17202524bad1974505a9bfc718d31f upstream.
+commit 07721feee46b4b248402133228235318199b05ec upstream.
 
-kmemleak reports a memory leak with the ana_log_buf allocated by
-nvme_mpath_init():
+vmx_check_intercept is not yet fully implemented. To avoid emulating
+instructions disallowed by the L1 hypervisor, refuse to emulate
+instructions by default.
 
-unreferenced object 0xffff888120e94000 (size 8208):
-  comm "nvme", pid 6884, jiffies 4295020435 (age 78786.312s)
-    hex dump (first 32 bytes):
-      00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
-      01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
-    backtrace:
-      [<00000000e2360188>] kmalloc_order+0x97/0xc0
-      [<0000000079b18dd4>] kmalloc_order_trace+0x24/0x100
-      [<00000000f50c0406>] __kmalloc+0x24c/0x2d0
-      [<00000000f31a10b9>] nvme_mpath_init+0x23c/0x2b0
-      [<000000005802589e>] nvme_init_identify+0x75f/0x1600
-      [<0000000058ef911b>] nvme_loop_configure_admin_queue+0x26d/0x280
-      [<00000000673774b9>] nvme_loop_create_ctrl+0x2a7/0x710
-      [<00000000f1c7a233>] nvmf_dev_write+0xc66/0x10b9
-      [<000000004199f8d0>] __vfs_write+0x50/0xa0
-      [<0000000065466fef>] vfs_write+0xf3/0x280
-      [<00000000b0db9a8b>] ksys_write+0xc6/0x160
-      [<0000000082156b91>] __x64_sys_write+0x43/0x50
-      [<00000000c34fbb6d>] do_syscall_64+0x77/0x2f0
-      [<00000000bbc574c9>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-nvme_mpath_init() is called by nvme_init_identify() which is called in
-multiple places (nvme_reset_work(), nvme_passthru_end(), etc). This
-means nvme_mpath_init() may be called multiple times before
-nvme_mpath_uninit() (which is only called on nvme_free_ctrl()).
-
-When nvme_mpath_init() is called multiple times, it overwrites the
-ana_log_buf pointer with a new allocation, thus leaking the previous
-allocation.
-
-To fix this, free ana_log_buf before allocating a new one.
-
-Fixes: 0d0b660f214dc490 ("nvme: add ANA support")
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
+Cc: stable@vger.kernel.org
+[Made commit, added commit msg - Oliver]
+Signed-off-by: Oliver Upton <oupton@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nvme/host/multipath.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kvm/vmx.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -569,6 +569,7 @@ int nvme_mpath_init(struct nvme_ctrl *ct
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -13694,7 +13694,7 @@ static int vmx_check_intercept(struct kv
  	}
  
- 	INIT_WORK(&ctrl->ana_work, nvme_ana_work);
-+	kfree(ctrl->ana_log_buf);
- 	ctrl->ana_log_buf = kmalloc(ctrl->ana_log_size, GFP_KERNEL);
- 	if (!ctrl->ana_log_buf) {
- 		error = -ENOMEM;
+ 	/* TODO: check more intercepts... */
+-	return X86EMUL_CONTINUE;
++	return X86EMUL_UNHANDLEABLE;
+ }
+ 
+ #ifdef CONFIG_X86_64
 
 
