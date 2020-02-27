@@ -2,115 +2,120 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B5CC4BA3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD5DC4BA2D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAB8E24650
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C59124699
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:07:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=blueyonder.co.uk header.i=@blueyonder.co.uk header.b="SAEVmmKl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729076AbgB0NGb (ORCPT
+        id S1729100AbgB0NH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:06:31 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:54690 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729032AbgB0NGb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:06:31 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01RD3ROn004946;
-        Thu, 27 Feb 2020 08:06:30 -0500
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ydtrwk6h0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Feb 2020 08:06:29 -0500
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 01RD6SOu051997
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Thu, 27 Feb 2020 08:06:28 -0500
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 27 Feb
- 2020 08:06:27 -0500
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Thu, 27 Feb 2020 08:06:27 -0500
-Received: from analog.ad.analog.com ([10.48.65.180])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01RD6Pbg025622;
-        Thu, 27 Feb 2020 08:06:25 -0500
-From:   Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        <dmitry.torokhov@gmail.com>, <michael.hennerich@analog.com>
-CC:     Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-Subject: [PATCH] input: touchscreen: ad7877: Use new structure for SPI transfer delays
-Date:   Thu, 27 Feb 2020 15:06:19 +0200
-Message-ID: <20200227130619.28142-1-sergiu.cuciurean@analog.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 27 Feb 2020 08:07:26 -0500
+Received: from know-smtprelay-omc-7.server.virginmedia.net ([80.0.253.71]:50503
+        "EHLO know-smtprelay-omc-7.server.virginmedia.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729032AbgB0NH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:07:26 -0500
+Received: from [192.168.10.214] ([82.47.85.138])
+        by cmsmtp with ESMTPA
+        id 7Isujod9hIUP97IsujMkW8; Thu, 27 Feb 2020 13:07:24 +0000
+X-Originating-IP: [82.47.85.138]
+X-Authenticated-User: sboyce@blueyonder.co.uk
+X-Spam: 0
+X-Authority: v=2.3 cv=Is0wjo3g c=1 sm=1 tr=0 a=mctQX8G8JfdR+oUIdXtpKQ==:117
+ a=mctQX8G8JfdR+oUIdXtpKQ==:17 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=N659UExz7-8A:10 a=x7bEGLp0ZPQA:10 a=a5Gf7U6LAAAA:8 a=VwQbUJbxAAAA:8
+ a=bgUkVmbCD3rZoZhqrOMA:9 a=pILNOxqGKmIA:10 a=VWYBCMy2-3DvUfgBPAUA:22
+ a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=blueyonder.co.uk;
+        s=meg.feb2017; t=1582808844;
+        bh=sUjdiP+ucQtz9xl9wFJ8SnKzMqFUNzNvxRty61OE/Dk=;
+        h=From:Subject:Reply-To:To:Cc:References:Date:In-Reply-To;
+        b=SAEVmmKlvVxLVvduz/ztfiurBZaEIe4I4aaMKPCTq7GYjxf2yARO6lvOs+bG37Els
+         Iz8N2h715ReD3APhpS0nH2cKIuMb/hr4In0co/4zeaf2wjRyGSvPEPylUCvUGJyvOV
+         NIPAVMWCkBnk+ULj/SNUJNFdhJFR8EBp9pv+ViRVUhOdvTVN0fLfczr9Ell4XXs2ji
+         pSdxBYxZjpCvJSmXgWUSanwvvpZsbXtWhHqqDMJrv13Xb4oyj2N14abv51PBSeN5Tw
+         OoFufAHZoSMLPly59lVYGma628Zt7Qu3+mLlBg6TOzBs8Tu27iN03JKAS7sYWXGLXX
+         jXAyisMrhldBQ==
+From:   Sid Boyce <sboyce@blueyonder.co.uk>
+Subject: Re: 5.6-rc3 nouveau failure, 5.6-rc2 OK
+Reply-To: sboyce@blueyonder.co.uk
+To:     Gabriel C <nix.or.die@gmail.com>
+Cc:     LKML Mailing List <linux-kernel@vger.kernel.org>
+References: <ae2dc143-8d38-1942-9ebd-87c9c9c09960@blueyonder.co.uk>
+ <CAEJqkgiXE-ye_P99FGcFM8j7Qqd3npKM9kY44MEnxGZF2_Hntw@mail.gmail.com>
+Organization: blueyonder.co.uk
+Message-ID: <1fa89e07-79e4-4e1e-abc1-ab5563ca00e0@blueyonder.co.uk>
+Date:   Thu, 27 Feb 2020 13:07:24 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-27_03:2020-02-26,2020-02-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- phishscore=0 adultscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- suspectscore=0 clxscore=1015 lowpriorityscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002270103
+In-Reply-To: <CAEJqkgiXE-ye_P99FGcFM8j7Qqd3npKM9kY44MEnxGZF2_Hntw@mail.gmail.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-CMAE-Envelope: MS4wfHebStX2K42/+5OXKzCWfImscIBLuBTVcR57kbd6OrBx766jIJZXACl+lPU+noyPTujomO9lAjhbxGpDAftwhqxB+55oNyPmTCustgLKtbVfFwwvAcnG
+ Pp3N8LpxI34LweU3i9k+T2jXV2nyYn2s/AbBt4k7KYtplY2CR+A7fVQg603HdSI84D6FdUTVD2PUkkvVWL0jOg0JYlPlq/FhO9SsU3V095mZLndABkneilRe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In a recent change to the SPI subsystem [1], a new `delay` struct was added
-to replace the `delay_usecs`. This change replaces the current
-`delay_usecs` with `delay` for this driver.
+Thanks Gabriel.
+The new firmware didn't fix it.
+Regards
+Sid.
 
-The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
-that both `delay_usecs` & `delay` are used (in this order to preserve
-backwards compatibility).
+On 27/02/2020 03:14, Gabriel C wrote:
+> Am Do., 27. Feb. 2020 um 01:24 Uhr schrieb Sid Boyce <sboyce@blueyonder.co.uk>:
+>
+> Hello,
+>
+>> [94.455712] [T411] nouveau 0000:07:00.0 disp ctor failed, -12
+>>
+>> Welcome to openSUSE Tumbleweed 20200224 - Kernel 5.6.0-rc3 (tty1)
+>>
+>> ens3s0: 192.168.10.214 .......
+>>
+>> login:
+>>
+>>
+>> I can login here but X does not start -- lspci
+>>
+>> 07:00.0 VGA compatible controller: NVIDIA Corporation TU117 [GeForce GTX
+>> 1650] (rev a1)
+>>
+>> from dmesg:-
+>>
+>> [Wed Feb 26 22:42:39 2020] nouveau 0000:07:00.0: NVIDIA TU117 (167000a1)
+>> [Wed Feb 26 22:42:39 2020] nouveau 0000:07:00.0: bios: version
+>> 90.17.2a.00.39
+>> [Wed Feb 26 22:44:12 2020] nouveau 0000:07:00.0: disp ctor failed, -12
+>> [Wed Feb 26 22:44:12 2020] nouveau: probe of 0000:07:00.0 failed with
+>> error -12
+>>
+> *Warning* I have no idea bout Nvidia GPU HW :-). I saw this commit in
+> linux-firmware git added 8 days ago:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/commit/?id=2277987a593d54c1e922a9f25445802071015f42
+>
+> Maybe you just need to update your firmware package.
+>
+> BR,
+>
+> Gabriel C.
 
-[1] commit bebcfd272df6 ("spi: introduce `delay` field for
-`spi_transfer` + spi_transfer_delay_exec()")
 
-Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
----
- drivers/input/touchscreen/ad7877.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/input/touchscreen/ad7877.c b/drivers/input/touchscreen/ad7877.c
-index 9b652f61837f..0007aaf5cbd7 100644
---- a/drivers/input/touchscreen/ad7877.c
-+++ b/drivers/input/touchscreen/ad7877.c
-@@ -281,12 +281,14 @@ static int ad7877_read_adc(struct spi_device *spi, unsigned command)
- 
- 	req->xfer[1].tx_buf = &req->ref_on;
- 	req->xfer[1].len = 2;
--	req->xfer[1].delay_usecs = ts->vref_delay_usecs;
-+	req->xfer[1].delay.value = ts->vref_delay_usecs;
-+	req->xfer[1].delay.unit = SPI_DELAY_UNIT_USECS;
- 	req->xfer[1].cs_change = 1;
- 
- 	req->xfer[2].tx_buf = &req->command;
- 	req->xfer[2].len = 2;
--	req->xfer[2].delay_usecs = ts->vref_delay_usecs;
-+	req->xfer[2].delay.value = ts->vref_delay_usecs;
-+	req->xfer[2].delay.unit = SPI_DELAY_UNIT_USECS;
- 	req->xfer[2].cs_change = 1;
- 
- 	req->xfer[3].rx_buf = &req->sample;
-@@ -716,7 +718,8 @@ static int ad7877_probe(struct spi_device *spi)
- 	spin_lock_init(&ts->lock);
- 
- 	ts->model = pdata->model ? : 7877;
--	ts->vref_delay_usecs = pdata->vref_delay_usecs ? : 100;
-+	ts->vref_delay.value = pdata->vref_delay_usecs ? : 100;
-+	ts->vref_delay.unit = SPI_DELAY_UNIT_USECS;
- 	ts->x_plate_ohms = pdata->x_plate_ohms ? : 400;
- 	ts->pressure_max = pdata->pressure_max ? : ~0;
- 
 -- 
-2.17.1
+Sid Boyce ... Hamradio License G3VBV, Licensed Private Pilot
+Emeritus IBM/Amdahl Mainframes and Sun/Fujitsu Servers Tech Support
+Senior Staff Specialist, Cricket Coach
+Microsoft Windows Free Zone - Linux used for all Computing Tasks
 
