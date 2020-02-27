@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FBAC3F358
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E02B5C3F367
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B9BA20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:52:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4D3C21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:53:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811532;
-	bh=wrU3ea9/TGo7Ex9gJ6sYgelucHAoTWTgbTJ3elt/NWs=;
+	s=default; t=1582811590;
+	bh=VRa34IfViZroycYjGfVtmgTTnuPf/AMVcnWpiULlePE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iA+3s8dJmRwRjvH2Hgpj7I5CxWe2ff+a9pj+vIQkYb2ROTasi/JswswkjbpbnSxXx
-	 nsj9NTSaclh/ffCsPUH8mj4aft0yLvg7pd/x84p8tMSagucoFVcELY9xtUUMKByyxF
-	 KupbDf/jVUto5KNrGqF5C+eurvcnCxIEFbCqhZMo=
+	b=ymX3ZXsLcgdilC/kvkXemuSAicxJHPir5PT8vJYShrlvIzWmKGJOIAL3ZfS+Gg4lK
+	 b1su4LQSHFu08631tzBcqIDzqY6VekzqaT2m6Qvepl/DOnvvkratPLP2Zwt9MRXB5i
+	 EIbTGHrdmNaK+6/OX1IfMMzM73sP9f390zgoY8+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731494AbgB0NwL (ORCPT
+        id S1731644AbgB0NxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:52:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51544 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:53:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731487AbgB0NwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:52:06 -0500
+        id S1731635AbgB0NxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:53:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5326A2084E;
-        Thu, 27 Feb 2020 13:52:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17CC220578;
+        Thu, 27 Feb 2020 13:53:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811525;
-        bh=wrU3ea9/TGo7Ex9gJ6sYgelucHAoTWTgbTJ3elt/NWs=;
+        s=default; t=1582811587;
+        bh=VRa34IfViZroycYjGfVtmgTTnuPf/AMVcnWpiULlePE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t/ubvbUofzl0bMI1+XR9/IjCS6RSTrJSnTGej/yPH3+6gQcSw9SmnKs9toctyiiuo
-         xOVPSxMhzTUiHSYIgICGauURp6VFQ4LIEEZaWyUW/ZW140q1HvrMY0ZZdov71oqnY4
-         zzVG9cm53qxgwjQgUWHILn/E8eep6gpEnq79PMA4=
+        b=uQu9FDQfZHIm3YvjWGZKdczzWW5GvmEs4DOME836vSQ3dOLoG+s/gLLi+KGz2gI2g
+         ih8/9xXPsBgLHba2NJBCaXF5PDqAkwMN0seRljc9s1NhHHRd2+iJnBmz22NhuLPJVP
+         GSUULGNyZCfEQfDo8K9qOyQq/+vqJud8nrbkLM4s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Saar Amar <Saar.Amar@microsoft.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Borislav Petkov <bp@suse.de>
-Subject: [PATCH 4.9 129/165] x86/mce/amd: Publish the bank pointer only after setup has succeeded
-Date:   Thu, 27 Feb 2020 14:36:43 +0100
-Message-Id: <20200227132249.887243780@linuxfoundation.org>
+        stable@vger.kernel.org, Babu Moger <babu.moger@amd.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.14 024/237] perf/x86/amd: Add missing L2 misses event spec to AMD Family 17hs event map
+Date:   Thu, 27 Feb 2020 14:33:58 +0100
+Message-Id: <20200227132258.085471347@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
-References: <20200227132230.840899170@linuxfoundation.org>
+In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
+References: <20200227132255.285644406@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,104 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+From: Kim Phillips <kim.phillips@amd.com>
 
-commit 6e5cf31fbe651bed7ba1df768f2e123531132417 upstream.
+commit 25d387287cf0330abf2aad761ce6eee67326a355 upstream.
 
-threshold_create_bank() creates a bank descriptor per MCA error
-thresholding counter which can be controlled over sysfs. It publishes
-the pointer to that bank in a per-CPU variable and then goes on to
-create additional thresholding blocks if the bank has such.
+Commit 3fe3331bb285 ("perf/x86/amd: Add event map for AMD Family 17h"),
+claimed L2 misses were unsupported, due to them not being found in its
+referenced documentation, whose link has now moved [1].
 
-However, that creation of additional blocks in
-allocate_threshold_blocks() can fail, leading to a use-after-free
-through the per-CPU pointer.
+That old documentation listed PMCx064 unit mask bit 3 as:
 
-Therefore, publish that pointer only after all blocks have been setup
-successfully.
+    "LsRdBlkC: LS Read Block C S L X Change to X Miss."
 
-Fixes: 019f34fccfd5 ("x86, MCE, AMD: Move shared bank to node descriptor")
-Reported-by: Saar Amar <Saar.Amar@microsoft.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200128140846.phctkvx5btiexvbx@kili.mountain
+and bit 0 as:
+
+    "IcFillMiss: IC Fill Miss"
+
+We now have new public documentation [2] with improved descriptions, that
+clearly indicate what events those unit mask bits represent:
+
+Bit 3 now clearly states:
+
+    "LsRdBlkC: Data Cache Req Miss in L2 (all types)"
+
+and bit 0 is:
+
+    "IcFillMiss: Instruction Cache Req Miss in L2."
+
+So we can now add support for L2 misses in perf's genericised events as
+PMCx064 with both the above unit masks.
+
+[1] The commit's original documentation reference, "Processor Programming
+    Reference (PPR) for AMD Family 17h Model 01h, Revision B1 Processors",
+    originally available here:
+
+        https://www.amd.com/system/files/TechDocs/54945_PPR_Family_17h_Models_00h-0Fh.pdf
+
+    is now available here:
+
+        https://developer.amd.com/wordpress/media/2017/11/54945_PPR_Family_17h_Models_00h-0Fh.pdf
+
+[2] "Processor Programming Reference (PPR) for Family 17h Model 31h,
+    Revision B0 Processors", available here:
+
+	https://developer.amd.com/wp-content/resources/55803_0.54-PUB.pdf
+
+Fixes: 3fe3331bb285 ("perf/x86/amd: Add event map for AMD Family 17h")
+Reported-by: Babu Moger <babu.moger@amd.com>
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Babu Moger <babu.moger@amd.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20200121171232.28839-1-kim.phillips@amd.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/cpu/mcheck/mce_amd.c |   33 ++++++++++++++++-----------------
- 1 file changed, 16 insertions(+), 17 deletions(-)
+ arch/x86/events/amd/core.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/x86/kernel/cpu/mcheck/mce_amd.c
-+++ b/arch/x86/kernel/cpu/mcheck/mce_amd.c
-@@ -879,8 +879,9 @@ static const char *get_name(unsigned int
- 	return buf_mcatype;
- }
- 
--static int allocate_threshold_blocks(unsigned int cpu, unsigned int bank,
--				     unsigned int block, u32 address)
-+static int allocate_threshold_blocks(unsigned int cpu, struct threshold_bank *tb,
-+				     unsigned int bank, unsigned int block,
-+				     u32 address)
- {
- 	struct threshold_block *b = NULL;
- 	u32 low, high;
-@@ -924,16 +925,12 @@ static int allocate_threshold_blocks(uns
- 
- 	INIT_LIST_HEAD(&b->miscj);
- 
--	if (per_cpu(threshold_banks, cpu)[bank]->blocks) {
--		list_add(&b->miscj,
--			 &per_cpu(threshold_banks, cpu)[bank]->blocks->miscj);
--	} else {
--		per_cpu(threshold_banks, cpu)[bank]->blocks = b;
--	}
-+	if (tb->blocks)
-+		list_add(&b->miscj, &tb->blocks->miscj);
-+	else
-+		tb->blocks = b;
- 
--	err = kobject_init_and_add(&b->kobj, &threshold_ktype,
--				   per_cpu(threshold_banks, cpu)[bank]->kobj,
--				   get_name(bank, b));
-+	err = kobject_init_and_add(&b->kobj, &threshold_ktype, tb->kobj, get_name(bank, b));
- 	if (err)
- 		goto out_free;
- recurse:
-@@ -941,7 +938,7 @@ recurse:
- 	if (!address)
- 		return 0;
- 
--	err = allocate_threshold_blocks(cpu, bank, block, address);
-+	err = allocate_threshold_blocks(cpu, tb, bank, block, address);
- 	if (err)
- 		goto out_free;
- 
-@@ -1026,8 +1023,6 @@ static int threshold_create_bank(unsigne
- 		goto out_free;
- 	}
- 
--	per_cpu(threshold_banks, cpu)[bank] = b;
--
- 	if (is_shared_bank(bank)) {
- 		atomic_set(&b->cpus, 1);
- 
-@@ -1038,9 +1033,13 @@ static int threshold_create_bank(unsigne
- 		}
- 	}
- 
--	err = allocate_threshold_blocks(cpu, bank, 0, msr_ops.misc(bank));
--	if (!err)
--		goto out;
-+	err = allocate_threshold_blocks(cpu, b, bank, 0, msr_ops.misc(bank));
-+	if (err)
-+		goto out_free;
-+
-+	per_cpu(threshold_banks, cpu)[bank] = b;
-+
-+	return 0;
- 
-  out_free:
- 	kfree(b);
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -245,6 +245,7 @@ static const u64 amd_f17h_perfmon_event_
+ 	[PERF_COUNT_HW_CPU_CYCLES]		= 0x0076,
+ 	[PERF_COUNT_HW_INSTRUCTIONS]		= 0x00c0,
+ 	[PERF_COUNT_HW_CACHE_REFERENCES]	= 0xff60,
++	[PERF_COUNT_HW_CACHE_MISSES]		= 0x0964,
+ 	[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]	= 0x00c2,
+ 	[PERF_COUNT_HW_BRANCH_MISSES]		= 0x00c3,
+ 	[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND]	= 0x0287,
 
 
