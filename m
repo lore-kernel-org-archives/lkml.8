@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC0FC3F37F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B65C54FC0
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4BF020801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C50620801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:10:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812618;
-	bh=9wPCMzkHM9+mYWPFSLeEEhGk2FiNuHNNnwHxHh+WAt8=;
+	s=default; t=1582812639;
+	bh=jmPtdgeeqMMt7a7698ToRbbA8kl/TlVulUpJZ7oGaa0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ixEld/xZaxQDFeFtL/5Q+uELt1PPzFgrAR6fKlBfN6PUq1iKNLlormD4Awaju+JJF
-	 d087m9b8SP64cGMo1Gzq7MKIHrF3Ci1Jp3g+OsUrOvNobmMkBZmgVtPB2Rkh/SfHdA
-	 ZrR8hQF2NKOvybLv/m48Y9accZDrynAKkT4sEDYw=
+	b=vlhow7UFVdWoJiYUbMVhPMwkksIJUb6Ttu6xCxOXGVwpWL9e383wcj/sO8ZhimfTq
+	 vdejP5KAYNazWZZv1Wrnts9i6qbW/ZLmnL5C2XbIhg6ph4tMDrD2sb6D5rYGs2h8dc
+	 GDDBFenFDvakFwAtb35REcCZ4vWKYJjJcKo6kEBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388509AbgB0OKR (ORCPT
+        id S2388563AbgB0OKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:10:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48346 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:10:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730787AbgB0OKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:10:11 -0500
+        id S2388302AbgB0OKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:10:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE3CF20801;
-        Thu, 27 Feb 2020 14:10:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3019120714;
+        Thu, 27 Feb 2020 14:10:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812611;
-        bh=9wPCMzkHM9+mYWPFSLeEEhGk2FiNuHNNnwHxHh+WAt8=;
+        s=default; t=1582812629;
+        bh=jmPtdgeeqMMt7a7698ToRbbA8kl/TlVulUpJZ7oGaa0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ppUlIqdvU+LD8YZEVdZD4eekQLTvlSwG2enxe/G0K3OSew/yTKGVfLm17KVkb1Vsf
-         N2DcyZnxMsG3jawrn8HCXYd32a7/1G4gEc9vuBwTbmk5fw9Cl15XwphglxalF7UIoA
-         BZOD3p4oeUjX4IL7NUjlTU6eCu0AbiyHN0iRkCeg=
+        b=xgvyFQmM3lWHswnkfBtlpIZPPmqAsmu5zob/f8rr+gLC/2T93aHncK6IC5Kd1efGH
+         1imBq0PScaJsqc6sNkXF95MDI6hW9GhVhWGlkPajFOimVrmZ3emZxJvfxJDOeDtsNe
+         96VerU63tF8DrLtcTJ4EJpDU1DrHJv33Y//+zz3E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Theodore Tso <tytso@mit.edu>, stable@kernel.org
-Subject: [PATCH 5.4 084/135] ext4: fix mount failure with quota configured as module
-Date:   Thu, 27 Feb 2020 14:37:04 +0100
-Message-Id: <20200227132241.992822466@linuxfoundation.org>
+        stable@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Keith Busch <kbusch@kernel.org>
+Subject: [PATCH 5.4 064/135] nvme-multipath: Fix memory leak with ana_log_buf
+Date:   Thu, 27 Feb 2020 14:36:44 +0100
+Message-Id: <20200227132238.788230946@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132228.710492098@linuxfoundation.org>
 References: <20200227132228.710492098@linuxfoundation.org>
@@ -59,36 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-commit 9db176bceb5c5df4990486709da386edadc6bd1d upstream.
+commit 3b7830904e17202524bad1974505a9bfc718d31f upstream.
 
-When CONFIG_QFMT_V2 is configured as a module, the test in
-ext4_feature_set_ok() fails and so mount of filesystems with quota or
-project features fails. Fix the test to use IS_ENABLED macro which
-works properly even for modules.
+kmemleak reports a memory leak with the ana_log_buf allocated by
+nvme_mpath_init():
 
-Link: https://lore.kernel.org/r/20200221100835.9332-1-jack@suse.cz
-Fixes: d65d87a07476 ("ext4: improve explanation of a mount failure caused by a misconfigured kernel")
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
+unreferenced object 0xffff888120e94000 (size 8208):
+  comm "nvme", pid 6884, jiffies 4295020435 (age 78786.312s)
+    hex dump (first 32 bytes):
+      00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
+      01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
+    backtrace:
+      [<00000000e2360188>] kmalloc_order+0x97/0xc0
+      [<0000000079b18dd4>] kmalloc_order_trace+0x24/0x100
+      [<00000000f50c0406>] __kmalloc+0x24c/0x2d0
+      [<00000000f31a10b9>] nvme_mpath_init+0x23c/0x2b0
+      [<000000005802589e>] nvme_init_identify+0x75f/0x1600
+      [<0000000058ef911b>] nvme_loop_configure_admin_queue+0x26d/0x280
+      [<00000000673774b9>] nvme_loop_create_ctrl+0x2a7/0x710
+      [<00000000f1c7a233>] nvmf_dev_write+0xc66/0x10b9
+      [<000000004199f8d0>] __vfs_write+0x50/0xa0
+      [<0000000065466fef>] vfs_write+0xf3/0x280
+      [<00000000b0db9a8b>] ksys_write+0xc6/0x160
+      [<0000000082156b91>] __x64_sys_write+0x43/0x50
+      [<00000000c34fbb6d>] do_syscall_64+0x77/0x2f0
+      [<00000000bbc574c9>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+nvme_mpath_init() is called by nvme_init_identify() which is called in
+multiple places (nvme_reset_work(), nvme_passthru_end(), etc). This
+means nvme_mpath_init() may be called multiple times before
+nvme_mpath_uninit() (which is only called on nvme_free_ctrl()).
+
+When nvme_mpath_init() is called multiple times, it overwrites the
+ana_log_buf pointer with a new allocation, thus leaking the previous
+allocation.
+
+To fix this, free ana_log_buf before allocating a new one.
+
+Fixes: 0d0b660f214dc490 ("nvme: add ANA support")
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/super.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvme/host/multipath.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -2986,7 +2986,7 @@ static int ext4_feature_set_ok(struct su
- 		return 0;
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -711,6 +711,7 @@ int nvme_mpath_init(struct nvme_ctrl *ct
  	}
  
--#if !defined(CONFIG_QUOTA) || !defined(CONFIG_QFMT_V2)
-+#if !IS_ENABLED(CONFIG_QUOTA) || !IS_ENABLED(CONFIG_QFMT_V2)
- 	if (!readonly && (ext4_has_feature_quota(sb) ||
- 			  ext4_has_feature_project(sb))) {
- 		ext4_msg(sb, KERN_ERR,
+ 	INIT_WORK(&ctrl->ana_work, nvme_ana_work);
++	kfree(ctrl->ana_log_buf);
+ 	ctrl->ana_log_buf = kmalloc(ctrl->ana_log_size, GFP_KERNEL);
+ 	if (!ctrl->ana_log_buf) {
+ 		error = -ENOMEM;
 
 
