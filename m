@@ -2,137 +2,182 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FD8C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C5ACC4BA06
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F399D222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E343924656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 08:28:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="W4UL+6y4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728607AbgB0I1c (ORCPT
+        id S1728599AbgB0I2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 03:27:32 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37784 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728454AbgB0I1c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 03:27:32 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01R8JdaH033821
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 03:27:31 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ydkfa5g2h-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 03:27:31 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
-        Thu, 27 Feb 2020 08:27:28 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 27 Feb 2020 08:27:20 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01R8RJaa58851568
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Feb 2020 08:27:19 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1E4094C044;
-        Thu, 27 Feb 2020 08:27:19 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BB4D34C046;
-        Thu, 27 Feb 2020 08:27:18 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 27 Feb 2020 08:27:18 +0000 (GMT)
-Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id A5F70A01C0;
-        Thu, 27 Feb 2020 19:27:13 +1100 (AEDT)
-Subject: Re: [PATCH v3 14/27] powerpc/powernv/pmem: Add support for Admin
- commands
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
- <20200221032720.33893-15-alastair@au1.ibm.com>
- <c88a3808-3ce9-ff6c-b963-ca9317092145@linux.ibm.com>
-Date:   Thu, 27 Feb 2020 19:27:16 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <c88a3808-3ce9-ff6c-b963-ca9317092145@linux.ibm.com>
+        Thu, 27 Feb 2020 03:28:39 -0500
+Received: from mail-dm6nam12on2065.outbound.protection.outlook.com ([40.107.243.65]:6186
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728454AbgB0I2j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 03:28:39 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CvrDBDVVOfJ/vDMP0sqoy4STCIcrmblgzlcJsqA0ubQGlj0T+60iJSkdELZQxW/jOexlRxvstF3wHtOQMvgUhMOdiGTplEUwbXPUnr1tKH+LJUJfDUZcLYTRTTu2QeJG9AIKpzrk9i9uyhXHVXacnsS61EOzBeZ3ex2hxg6kk74RSqEkF7HAwPGe43YsL02SW7AY/i+1rT0KpWdXmjbJ7ApwkYVOFb6N1TjiOsj2YZommvlZA6+bRwetc29WsKcFhCoeAMcA5IBfFTAv5WBEWY4HbIuuILrG6QMopEj0/JYqSsCUX7yLMTF+7UeiA+vefgiQxZfAnT4CiMqTWBb5Bw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9Qq4uOA3yO+M/yRygpiS5tBhy8VtK31AJPQvRnXv4p4=;
+ b=evb7xq8e98aZAMS+SIz762CfI7EM9+rlgd40V3HGz16EtvIcO0GI/gQn3+Hha2OWXhKwFmfyz4coL3Kwu1CxJ/x+jQRClZ8cvLGBxY7gXecK6VEt4K10KLbXnsJqx96+NSIFtzdlA6cs3NvRLVXreRFj7C+7JOIeHUcqPT2MPvcSoLwTUl0wTRFqCyavl5UuaXwLlOHcNqpJxgWkxFsnsG13Jnm5n6m4MbabnHjqrbs6LjbHpG9c5XSJfcHkpfKH7M2Dy1Pdzjp1bKyglAQC+N331wWm65GxpZ2N9wvs/Q27AKBrqToy1oQ3faMhBlZpkTPbsk+qSdQ49xXgjTKhoQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9Qq4uOA3yO+M/yRygpiS5tBhy8VtK31AJPQvRnXv4p4=;
+ b=W4UL+6y4jND9B9oiihN82h5POvRafnqlmmAKHuJHQh4NokUcBVus+h4QP0nVOVzgfMwodiOjlsDj6eIcDPhiG3GYNcuR9+hD1fW8izqnCuYe1vPdA0j8f4rEeLirXVaNwm3YrF5rWnzt0aKz3dfWsgmsp3d7yVY+ii0LrVTRg60=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Christian.Koenig@amd.com; 
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com (2603:10b6:3:10c::22)
+ by DM5PR12MB1820.namprd12.prod.outlook.com (2603:10b6:3:10d::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15; Thu, 27 Feb
+ 2020 08:28:36 +0000
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::d40e:7339:8605:bc92]) by DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::d40e:7339:8605:bc92%11]) with mapi id 15.20.2750.021; Thu, 27 Feb
+ 2020 08:28:36 +0000
+Subject: Re: [PATCH] RFC: dma-buf: Add an API for importing and exporting sync
+ files
+To:     Bas Nieuwenhuizen <bas@basnieuwenhuizen.nl>,
+        Jason Ekstrand <jason@jlekstrand.net>
+Cc:     Dave Airlie <airlied@redhat.com>,
+        Jesse Hall <jessehall@google.com>,
+        James Jones <jajones@nvidia.com>,
+        Daniel Stone <daniels@collabora.com>,
+        =?UTF-8?Q?Kristian_H=c3=b8gsberg?= <hoegsberg@google.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Chenbo Feng <fengc@google.com>,
+        Greg Hackmann <ghackmann@google.com>,
+        linux-media@vger.kernel.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, linaro-mm-sig@lists.linaro.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+References: <20200225235856.975366-1-jason@jlekstrand.net>
+ <8066d8b2-dd6a-10ef-a7bb-2c18a0661912@amd.com>
+ <20200226100523.GQ2363188@phenom.ffwll.local>
+ <CAOFGe94O66HL212aXqhi9tdYqw---Xm-fwNSV4pxHyPmpSGpbg@mail.gmail.com>
+ <CAP+8YyEUz29fXDW5kO_0ZG6c849=TuFWCK8ynT3LuM+Tn+rMzw@mail.gmail.com>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Message-ID: <810a26e7-4294-a615-b7ee-18148ac70641@amd.com>
+Date:   Thu, 27 Feb 2020 09:28:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+In-Reply-To: <CAP+8YyEUz29fXDW5kO_0ZG6c849=TuFWCK8ynT3LuM+Tn+rMzw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022708-0028-0000-0000-000003DE6B81
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022708-0029-0000-0000-000024A389F3
-Message-Id: <cf2b3037-6436-1244-e125-c95542528823@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-27_02:2020-02-26,2020-02-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=755
- suspectscore=0 malwarescore=0 mlxscore=0 priorityscore=1501
- lowpriorityscore=0 clxscore=1015 bulkscore=0 adultscore=0 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002270067
+Content-Language: en-US
+X-ClientProxiedBy: AM0PR10CA0029.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:208:17c::39) To DM5PR12MB1705.namprd12.prod.outlook.com
+ (2603:10b6:3:10c::22)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by AM0PR10CA0029.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:17c::39) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15 via Frontend Transport; Thu, 27 Feb 2020 08:28:33 +0000
+X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 2fefc28b-8240-46b9-50a5-08d7bb5f09dd
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1820:
+X-Microsoft-Antispam-PRVS: <DM5PR12MB18207C7CA038F70322AE451283EB0@DM5PR12MB1820.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 03264AEA72
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(366004)(39860400002)(396003)(376002)(189003)(199004)(186003)(4326008)(6666004)(2616005)(16526019)(53546011)(31686004)(478600001)(110136005)(5660300002)(52116002)(2906002)(54906003)(316002)(7416002)(6486002)(31696002)(66476007)(66946007)(66556008)(66574012)(81166006)(8936002)(81156014)(8676002)(86362001)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1820;H:DM5PR12MB1705.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: U+o5quqCd3/zAFyzDijHQ3AvLur6Ab/RYmFqscIIlHOkXFckQXU1XOV5a3xiXDGP8nwUvwSfofyuAC78d5YHXBXISMVPTCjjvBeMDjUu9zIqR4M/7H0eNlm7JirhQspZOW7Lba1oiQVJKuGUIVTFg+0TKfpexx6R941b0YIg5mtgNzkWhE0qTJ1xBbK46zMrzBRirI2JjtvH0MCXk6TNAo3T9ziCuRSnC20VEeWazPxuAw7Fg1o2r1jVqMtrGszgJtnE3is/ln/IrQPt8pFw9lwN8Jj8oxLwoPsQBefMxDGNuy6/NGuJuTHByaED/YGAZWFKKvxAOpg/mMTDJCs/bDsmnGlyOTL9cvfWZ2TMwAPlmj/j4IgtLCs5C4vniIvjypICev3Ave7WmuaMifm++bCDIxjnBafyFEGfMBE75F5GMB8dBMLa0ez4ckmcSvz0
+X-MS-Exchange-AntiSpam-MessageData: Y8RDKz4KokE6ayL7JGH1UoOAXzJlVMa3iS5TIb+oL9DlvnY5Q1mGvkeHXjMeaAuWAusRAxap3QIMehQn//SEO1YA7+U+p5yH7WAMB3LEyp4VmkjrJz3aG6Ko0K9S8fO/rtgVsUmK+ajMly+vfifQbSrTnnwZIrwo1GiwXtpBMiRUTVg4aNTSBP5UuWOR1h14PuC3jXZk1PuAk6Uz0mTD4w==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2fefc28b-8240-46b9-50a5-08d7bb5f09dd
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2020 08:28:36.1929
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fv3akRB3ftFbia1vA0hX+LM5A+jjNetxcPCc66UvFtPfDy0kqjdPNp2Jhq0WaGaN
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1820
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/2/20 7:22 pm, Andrew Donnellan wrote:
->> +int admin_command_request(struct ocxlpmem *ocxlpmem, u8 op_code)
->> +{
->> +    u64 val;
->> +    int rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu, 
->> GLOBAL_MMIO_CHI,
->> +                     OCXL_LITTLE_ENDIAN, &val);
->> +    if (rc)
->> +        return rc;
-> 
-> Ignoring the value here expected, you're just trying to verify that you 
-> don't see an error on the read?
+Am 26.02.20 um 17:46 schrieb Bas Nieuwenhuizen:
+> On Wed, Feb 26, 2020 at 4:29 PM Jason Ekstrand <jason@jlekstrand.net> wrote:
+>> On Wed, Feb 26, 2020 at 4:05 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+>>> On Wed, Feb 26, 2020 at 10:16:05AM +0100, Christian König wrote:
+>>> [SNIP]
+>>>> Just imagine that you access some DMA-buf with a shader and that operation
+>>>> is presented as a fence on the DMA-bufs reservation object. And now you can
+>>>> go ahead and replace that fence and free up the memory.
+>>>>
+>>>> Tricking the Linux kernel into allocating page tables in that freed memory
+>>>> is trivial and that's basically it you can overwrite page tables with your
+>>>> shader and gain access to all of system memory :)
+>>>>
+>>>> What we could do is to always make sure that the added fences will complete
+>>>> later than the already existing ones, but that is also rather tricky to get
+>>>> right. I wouldn't do that if we don't have a rather big use case for this.
+>> Right.  I thought about that but I'm still learning how dma_resv
+>> works.  It'd be easy enough to make a fence array that contains both
+>> the old fence and the new fence and replace the old fence with that.
+>> What I don't know is the proper way to replace the exclusive fence
+>> safely.  Some sort of atomic_cpxchg loop, perhaps?  I presume there's
+>> some way of doing it properly because DRM drivers are doing it all the
+>> time.
 
-I see that in the next patch, in ns_command_request() you check that 
-NSCRA is 1 - did you mean to check that ACRA = 1 here?
+First of all you need to grab the lock of the dma_resv object or you 
+can't replace the exclusive nor the shared ones.
 
+This way you don't need to do a atomic_cmpxchg or anything else and 
+still guarantee correct ordering.
 
--- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
+> I think for an exclusive fence you may need to create a fence array
+> that includes the existing exclusive and shared fences in the dma_resv
+> combined with the added fence.
+
+Yes, that at least gives us the correct synchronization.
+
+> However, I'm not sure what the best way is to do garbage collection on
+> that so that we don't get an impossibly list of fence arrays.
+
+Exactly yes. That's also the reason why the dma_fence_chain container I 
+came up with for the sync timeline stuff has such a rather sophisticated 
+garbage collection.
+
+When some of the included fences signal you need to free up the 
+array/chain and make sure that the memory for the container can be reused.
+
+>   (Note
+> the dma_resv has a lock that needs to be taken before adding an
+> exclusive fence, might be useful). Some code that does a thing like
+> this is __dma_resv_make_exclusive in
+> drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c 
+
+Wanted to move that into dma_resv.c for quite a while since there are 
+quite a few other cases where we need this.
+
+Regards,
+Christian.
+
+> The other piece of the puzzle is that on the submit path this would
+> need something to ignore implicit fences. And there semantically the
+> question comes up whether it is safe for a driver to ignore exclusive
+> fences from another driver. (and then we have amdgpu which has its own
+> rules on exclusiveness of its shared fences based on the context. e.g.
+> the current option to ignore implicit fences for a buffer still syncs
+> on exclusive fences on the buffer).
 
