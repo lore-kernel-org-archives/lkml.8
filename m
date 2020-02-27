@@ -2,53 +2,51 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7100CC3F35E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FDCC3F373
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3466720801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD0A224656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:51:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811460;
-	bh=NWoqqcRvkARgzo8Ue2Hk3NscqpAjN0tb33dOjcd04nI=;
+	s=default; t=1582811493;
+	bh=EliFeSDdMi0mT5wTIYtel+ZW30wkztJxSnJZo/GF23g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mZBY0R//saJpU8QiACd78F8oldvTpscAnR2SOcrqPJQl6zs/E1OqPi7nE6LT1LJ+o
-	 WmWGwLThW8mJlZ9ryThbyQuSI9Afw+fzLa1Ji6uQw00MU6doqtYPjD6CeHB0rMOaFL
-	 KnQZi6btGvm8KiKFadClh99hxxoHIvOyZ9IMaL3g=
+	b=ubq/tbDDGZWVnpb3t4B1lD/AaSaY11pn6+doa/2g0IHWVxm6NmuWxhAlPokZYDNjr
+	 DMcvUh8DHV/jZ7qbwIcciEuz5KIIb61s286DSdbB4TRoo+RIuPaYtfFuGEgwj2TLua
+	 1h3av/53cMZ0JB0eC8rkBwRx/baKhnBo68267HFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731317AbgB0Nu7 (ORCPT
+        id S1731012AbgB0Nvc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:50:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49418 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:51:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731301AbgB0Nuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:50:54 -0500
+        id S1730900AbgB0Nv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:51:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E142B20578;
-        Thu, 27 Feb 2020 13:50:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFEBC20801;
+        Thu, 27 Feb 2020 13:51:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811453;
-        bh=NWoqqcRvkARgzo8Ue2Hk3NscqpAjN0tb33dOjcd04nI=;
+        s=default; t=1582811487;
+        bh=EliFeSDdMi0mT5wTIYtel+ZW30wkztJxSnJZo/GF23g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sleT6nu4cZMPsvuk32UHU8fRb1QP33UCl5mJsdOp3tYxt/eHTsGb78CkWA6cLRX5N
-         H2NAzXFPmuAmQSmORZcBFAOALk3S4g0pMcda3B3HN4ytjYWz8JVmtVJ0dbWlCrNJfE
-         LwenpLS9T3n3MDFnVXchVKKU9q2z4OCc2syXjzOI=
+        b=FDrquzMOhEm5IZFihMFXEn+TrO/Dl1SR2PNSJI975m5zWTVulcF+vHHhkYCXrZJeT
+         dtTAuKHHQ/Rznh+7C9/ySa6YzJ+bVDIHelY0JZQQcDlkrbdTPCsDR5L+DITAGMThwn
+         drPpm+meZr+V9G2EYnNC0PGYixvWrdW95JRZYrAg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Gustavo Romero <gromero@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 139/165] powerpc/tm: Fix endianness flip on trap
-Date:   Thu, 27 Feb 2020 14:36:53 +0100
-Message-Id: <20200227132251.358799007@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Upton <oupton@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.9 151/165] KVM: nVMX: Check IO instruction VM-exit conditions
+Date:   Thu, 27 Feb 2020 14:37:05 +0100
+Message-Id: <20200227132252.780927083@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -61,85 +59,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo Romero <gromero@linux.vnet.ibm.com>
+From: Oliver Upton <oupton@google.com>
 
-[ Upstream commit 1c200e63d055ec0125e44a5e386b9b78aada7eb3 ]
+commit 35a571346a94fb93b5b3b6a599675ef3384bc75c upstream.
 
-Currently it's possible that a thread on PPC64 LE has its endianness
-flipped inadvertently to Big-Endian resulting in a crash once the process
-is back from the signal handler.
+Consult the 'unconditional IO exiting' and 'use IO bitmaps' VM-execution
+controls when checking instruction interception. If the 'use IO bitmaps'
+VM-execution control is 1, check the instruction access against the IO
+bitmaps to determine if the instruction causes a VM-exit.
 
-If giveup_all() is called when regs->msr has the bits MSR.FP and MSR.VEC
-disabled (and hence MSR.VSX disabled too) it returns without calling
-check_if_tm_restore_required() which copies regs->msr to ckpt_regs->msr if
-the process caught a signal whilst in transactional mode. Then once in
-setup_tm_sigcontexts() MSR from ckpt_regs.msr is used, but since
-check_if_tm_restore_required() was not called previuosly, gp_regs[PT_MSR]
-gets a copy of invalid MSR bits as MSR in ckpt_regs was not updated from
-regs->msr and so is zeroed. Later when leaving the signal handler once in
-sys_rt_sigreturn() the TS bits of gp_regs[PT_MSR] are checked to determine
-if restore_tm_sigcontexts() must be called to pull in the correct MSR state
-into the user context. Because TS bits are zeroed
-restore_tm_sigcontexts() is never called and MSR restored from the user
-context on returning from the signal handler has the MSR.LE (the endianness
-bit) forced to zero (Big-Endian). That leads, for instance, to 'nop' being
-treated as an illegal instruction in the following sequence:
+Signed-off-by: Oliver Upton <oupton@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-	tbegin.
-	beq	1f
-	trap
-	tend.
-1:	nop
-
-on PPC64 LE machines and the process dies just after returning from the
-signal handler.
-
-PPC64 BE is also affected but in a subtle way since forcing Big-Endian on
-a BE machine does not change the endianness.
-
-This commit fixes the issue described above by ensuring that once in
-setup_tm_sigcontexts() the MSR used is from regs->msr instead of from
-ckpt_regs->msr and by ensuring that we pull in only the MSR.FP, MSR.VEC,
-and MSR.VSX bits from ckpt_regs->msr.
-
-The fix was tested both on LE and BE machines and no regression regarding
-the powerpc/tm selftests was observed.
-
-Signed-off-by: Gustavo Romero <gromero@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/signal_64.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/x86/kvm/vmx.c |   59 ++++++++++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 52 insertions(+), 7 deletions(-)
 
-diff --git a/arch/powerpc/kernel/signal_64.c b/arch/powerpc/kernel/signal_64.c
-index 9d8fd0c74b314..459c4adf47841 100644
---- a/arch/powerpc/kernel/signal_64.c
-+++ b/arch/powerpc/kernel/signal_64.c
-@@ -207,7 +207,7 @@ static long setup_tm_sigcontexts(struct sigcontext __user *sc,
- 	elf_vrreg_t __user *tm_v_regs = sigcontext_vmx_regs(tm_sc);
- #endif
- 	struct pt_regs *regs = tsk->thread.regs;
--	unsigned long msr = tsk->thread.ckpt_regs.msr;
-+	unsigned long msr = tsk->thread.regs->msr;
- 	long err = 0;
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -4647,7 +4647,7 @@ static bool nested_vmx_exit_handled_io(s
+ 				       struct vmcs12 *vmcs12)
+ {
+ 	unsigned long exit_qualification;
+-	unsigned int port;
++	unsigned short port;
+ 	int size;
  
- 	BUG_ON(tsk != current);
-@@ -216,6 +216,12 @@ static long setup_tm_sigcontexts(struct sigcontext __user *sc,
+ 	if (!nested_cpu_has(vmcs12, CPU_BASED_USE_IO_BITMAPS))
+@@ -11349,6 +11349,39 @@ static void nested_vmx_entry_failure(str
+ 		to_vmx(vcpu)->nested.sync_shadow_vmcs = true;
+ }
  
- 	WARN_ON(tm_suspend_disabled);
- 
-+	/* Restore checkpointed FP, VEC, and VSX bits from ckpt_regs as
-+	 * it contains the correct FP, VEC, VSX state after we treclaimed
-+	 * the transaction and giveup_all() was called on reclaiming.
-+	 */
-+	msr |= tsk->thread.ckpt_regs.msr & (MSR_FP | MSR_VEC | MSR_VSX);
++static int vmx_check_intercept_io(struct kvm_vcpu *vcpu,
++				  struct x86_instruction_info *info)
++{
++	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
++	unsigned short port;
++	bool intercept;
++	int size;
 +
- 	/* Remove TM bits from thread's MSR.  The MSR in the sigcontext
- 	 * just indicates to userland that we were doing a transaction, but we
- 	 * don't want to return in transactional state.  This also ensures
--- 
-2.20.1
-
++	if (info->intercept == x86_intercept_in ||
++	    info->intercept == x86_intercept_ins) {
++		port = info->src_val;
++		size = info->dst_bytes;
++	} else {
++		port = info->dst_val;
++		size = info->src_bytes;
++	}
++
++	/*
++	 * If the 'use IO bitmaps' VM-execution control is 0, IO instruction
++	 * VM-exits depend on the 'unconditional IO exiting' VM-execution
++	 * control.
++	 *
++	 * Otherwise, IO instruction VM-exits are controlled by the IO bitmaps.
++	 */
++	if (!nested_cpu_has(vmcs12, CPU_BASED_USE_IO_BITMAPS))
++		intercept = nested_cpu_has(vmcs12,
++					   CPU_BASED_UNCOND_IO_EXITING);
++	else
++		intercept = nested_vmx_check_io_bitmaps(vcpu, port, size);
++
++	return intercept ? X86EMUL_UNHANDLEABLE : X86EMUL_CONTINUE;
++}
++
+ static int vmx_check_intercept(struct kvm_vcpu *vcpu,
+ 			       struct x86_instruction_info *info,
+ 			       enum x86_intercept_stage stage)
+@@ -11356,18 +11389,30 @@ static int vmx_check_intercept(struct kv
+ 	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
+ 	struct x86_emulate_ctxt *ctxt = &vcpu->arch.emulate_ctxt;
+ 
++	switch (info->intercept) {
+ 	/*
+ 	 * RDPID causes #UD if disabled through secondary execution controls.
+ 	 * Because it is marked as EmulateOnUD, we need to intercept it here.
+ 	 */
+-	if (info->intercept == x86_intercept_rdtscp &&
+-	    !nested_cpu_has2(vmcs12, SECONDARY_EXEC_RDTSCP)) {
+-		ctxt->exception.vector = UD_VECTOR;
+-		ctxt->exception.error_code_valid = false;
+-		return X86EMUL_PROPAGATE_FAULT;
+-	}
++	case x86_intercept_rdtscp:
++		if (!nested_cpu_has2(vmcs12, SECONDARY_EXEC_RDTSCP)) {
++			ctxt->exception.vector = UD_VECTOR;
++			ctxt->exception.error_code_valid = false;
++			return X86EMUL_PROPAGATE_FAULT;
++		}
++		break;
++
++	case x86_intercept_in:
++	case x86_intercept_ins:
++	case x86_intercept_out:
++	case x86_intercept_outs:
++		return vmx_check_intercept_io(vcpu, info);
+ 
+ 	/* TODO: check more intercepts... */
++	default:
++		break;
++	}
++
+ 	return X86EMUL_UNHANDLEABLE;
+ }
+ 
 
 
