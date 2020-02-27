@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 172E9C35DEE
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 396ADC728E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E02E324656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:22:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0855E24688
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:23:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813366;
-	bh=BnFFlCjxFODBuIwr4bKs002NfcGhLol1Mq0p8Agwisk=;
+	s=default; t=1582813388;
+	bh=lqpYNNcrPhcEJCoVEm5zSXwt3P8XbK0+uztpjf3ftmk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hJ/2MT8qRIU5XBdGlucEEzJWSndCqkcYrOCxxgozziqDHDhEqsrizXQ43MxafuZeA
-	 zi/IShIXLX4y96h0HlOSjsZCdiioDeT5I50zm7B9F2Bc5DGIp91xzmw8Rp1W5/9tlt
-	 2iGpIVWSim8CJbW6Py/WxZ0lv3rzE66hgci04eLA=
+	b=ko63gsv4z2d7UfTcsOj4gk5YK5Vlg0cN4bLQD9NGW6sm+VXUPn69nBTKJfC327nS9
+	 qTNALrld3MlkncR70pm+OD/EOusOoqXTb1lpnqgYe3qWu1fzYXyFi9DOrz6d08W1f/
+	 e4Hl6GqtOY6ACnVzi80VSAv+K0e4Z6/GOSGtUng0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389577AbgB0OWp (ORCPT
+        id S2389220AbgB0OO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:22:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55364 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:14:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730850AbgB0OPn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:15:43 -0500
+        id S2389213AbgB0OO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:14:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECCF324690;
-        Thu, 27 Feb 2020 14:15:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A3C520801;
+        Thu, 27 Feb 2020 14:14:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812942;
-        bh=BnFFlCjxFODBuIwr4bKs002NfcGhLol1Mq0p8Agwisk=;
+        s=default; t=1582812896;
+        bh=lqpYNNcrPhcEJCoVEm5zSXwt3P8XbK0+uztpjf3ftmk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fIRtQbkge3Apwm1hlRVw7rmPqQbgQm6caHVR2c9dhdX5e2X2nn0lbKz75AfB4XyXR
-         AwjlBejC3S32yrEEA9AYHu5Oew1ANRppG5fbIp5Tew1/jwzgi6i8n4BTU84jqkPHYJ
-         /hA8K26dEd3SiAXBtS94F4Y+nFlKy2WmgjPLZXkA=
+        b=RF+R/LW5iD0KvWYtjNTN04RcafeBZ8yVIxmgQijbKlWxyD20MIZ2wDWC43AoaZBuH
+         dfL4nByHbcZWsaFev37t3XMeATgj0I2KdbrEPH+LOcoLFNOf7VQX2gl/zZcDqwzYKw
+         EBM6iZe0nVrKk7dqTrCKtyTy8qjmecDzPfJcLaNo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gavin Shan <gshan@redhat.com>,
-        Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.5 076/150] mm/vmscan.c: dont round up scan size for online memory cgroup
-Date:   Thu, 27 Feb 2020 14:36:53 +0100
-Message-Id: <20200227132244.069877038@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.5 056/150] powerpc/hugetlb: Fix 8M hugepages on 8xx
+Date:   Thu, 27 Feb 2020 14:36:33 +0100
+Message-Id: <20200227132241.367939382@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -61,86 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gavin Shan <gshan@redhat.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 76073c646f5f4999d763f471df9e38a5a912d70d upstream.
+commit 50a175dd18de7a647e72aca7daf4744e3a5a81e3 upstream.
 
-Commit 68600f623d69 ("mm: don't miss the last page because of round-off
-error") makes the scan size round up to @denominator regardless of the
-memory cgroup's state, online or offline.  This affects the overall
-reclaiming behavior: the corresponding LRU list is eligible for
-reclaiming only when its size logically right shifted by @sc->priority
-is bigger than zero in the former formula.
+With HW assistance all page tables must be 4k aligned, the 8xx drops
+the last 12 bits during the walk.
 
-For example, the inactive anonymous LRU list should have at least 0x4000
-pages to be eligible for reclaiming when we have 60/12 for
-swappiness/priority and without taking scan/rotation ratio into account.
+Redefine HUGEPD_SHIFT_MASK to mask last 12 bits out. HUGEPD_SHIFT_MASK
+is used to for alignment of page table cache.
 
-After the roundup is applied, the inactive anonymous LRU list becomes
-eligible for reclaiming when its size is bigger than or equal to 0x1000
-in the same condition.
-
-    (0x4000 >> 12) * 60 / (60 + 140 + 1) = 1
-    ((0x1000 >> 12) * 60) + 200) / (60 + 140 + 1) = 1
-
-aarch64 has 512MB huge page size when the base page size is 64KB.  The
-memory cgroup that has a huge page is always eligible for reclaiming in
-that case.
-
-The reclaiming is likely to stop after the huge page is reclaimed,
-meaing the further iteration on @sc->priority and the silbing and child
-memory cgroups will be skipped.  The overall behaviour has been changed.
-This fixes the issue by applying the roundup to offlined memory cgroups
-only, to give more preference to reclaim memory from offlined memory
-cgroup.  It sounds reasonable as those memory is unlikedly to be used by
-anyone.
-
-The issue was found by starting up 8 VMs on a Ampere Mustang machine,
-which has 8 CPUs and 16 GB memory.  Each VM is given with 2 vCPUs and
-2GB memory.  It took 264 seconds for all VMs to be completely up and
-784MB swap is consumed after that.  With this patch applied, it took 236
-seconds and 60MB swap to do same thing.  So there is 10% performance
-improvement for my case.  Note that KSM is disable while THP is enabled
-in the testing.
-
-         total     used    free   shared  buff/cache   available
-   Mem:  16196    10065    2049       16        4081        3749
-   Swap:  8175      784    7391
-         total     used    free   shared  buff/cache   available
-   Mem:  16196    11324    3656       24        1215        2936
-   Swap:  8175       60    8115
-
-Link: http://lkml.kernel.org/r/20200211024514.8730-1-gshan@redhat.com
-Fixes: 68600f623d69 ("mm: don't miss the last page because of round-off error")
-Signed-off-by: Gavin Shan <gshan@redhat.com>
-Acked-by: Roman Gushchin <guro@fb.com>
-Cc: <stable@vger.kernel.org>	[4.20+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 22569b881d37 ("powerpc/8xx: Enable 8M hugepage support with HW assistance")
+Cc: stable@vger.kernel.org # v5.0+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/778b1a248c4c7ca79640eeff7740044da6a220a0.1581264115.git.christophe.leroy@c-s.fr
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/vmscan.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/powerpc/include/asm/page.h |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -2429,10 +2429,13 @@ out:
- 			/*
- 			 * Scan types proportional to swappiness and
- 			 * their relative recent reclaim efficiency.
--			 * Make sure we don't miss the last page
--			 * because of a round-off error.
-+			 * Make sure we don't miss the last page on
-+			 * the offlined memory cgroups because of a
-+			 * round-off error.
- 			 */
--			scan = DIV64_U64_ROUND_UP(scan * fraction[file],
-+			scan = mem_cgroup_online(memcg) ?
-+			       div64_u64(scan * fraction[file], denominator) :
-+			       DIV64_U64_ROUND_UP(scan * fraction[file],
- 						  denominator);
- 			break;
- 		case SCAN_FILE:
+--- a/arch/powerpc/include/asm/page.h
++++ b/arch/powerpc/include/asm/page.h
+@@ -295,8 +295,13 @@ static inline bool pfn_valid(unsigned lo
+ /*
+  * Some number of bits at the level of the page table that points to
+  * a hugepte are used to encode the size.  This masks those bits.
++ * On 8xx, HW assistance requires 4k alignment for the hugepte.
+  */
++#ifdef CONFIG_PPC_8xx
++#define HUGEPD_SHIFT_MASK     0xfff
++#else
+ #define HUGEPD_SHIFT_MASK     0x3f
++#endif
+ 
+ #ifndef __ASSEMBLY__
+ 
 
 
