@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A38C5ED27
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C141C54FFD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A04824656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 541C524656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:32:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813950;
-	bh=KQwUHAoHkKcrkxEfYWpKsiCRMt+TCx0PRmOlYP6sgUs=;
+	s=default; t=1582813939;
+	bh=W4/xiG4eiTXSVrIJ6XH12CjYjNUG6YQO84OF6694ykI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D3WnZ8TChy+ovCaVX6SH4Yy2clNUHBh1seuEk0H33n6HYU4050kttMMZ2eDjSWy1Q
-	 luTReA/xMLUZ5W8sIOM1MXTE5Vh+M/hZBRfjRS6tqYFiq0ym00LeER01LMkMorsU1H
-	 vFNGcW8X6EGL9v7n2C1b3207o68Zg5rj9B/Cjw3o=
+	b=h0zGNahp+IvsPJt1HmKMHzjCocg0fvYIwXRdbqTsA7EB6k9y36xGTtL4vVgv++g1X
+	 Pm7dQJW8Iw1doPo3uFj5fRWN6ZXqyZxLtP82tBwYCYcD/c+p4pwl1d3VMfw4EE5WFx
+	 pSGj5wuke1Wc1U45pSkU0yevf4rIWHUm4lN9pfEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733129AbgB0Oc3 (ORCPT
+        id S1733095AbgB0OCU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:32:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36566 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:02:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733049AbgB0OCG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:02:06 -0500
+        id S1733078AbgB0OCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:02:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F26120801;
-        Thu, 27 Feb 2020 14:02:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3F3C20801;
+        Thu, 27 Feb 2020 14:02:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812125;
-        bh=KQwUHAoHkKcrkxEfYWpKsiCRMt+TCx0PRmOlYP6sgUs=;
+        s=default; t=1582812136;
+        bh=W4/xiG4eiTXSVrIJ6XH12CjYjNUG6YQO84OF6694ykI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=drNLo4mD5pqeW7hxLciD4zCTQcX7h82edWKTfqPMFNoYt0UB03WYxKvxw+NT/1aJg
-         vR35kDlPRYbOEWNAMBrM9W7zP6QBfbpvFf4B5LyX2VaUgQjbS9uaU4H8+7dWR8odGk
-         vmM53Pxz2eEuBxh4hbu5XPQyLMnavr9TTbgPbJiw=
+        b=vwiJHYlRi0NRFgKlGun5xX4Fgw3a09Uvm//3Qd4egMwPuMkgvtPtUGxQGCm/26x0K
+         AYYLE5obbBoceShBXthiY89C75jDYTjeqI/9efqBSBpMqLW+FnHQ/PeryqF6GcPMGY
+         kbgcyLu3tKo3p7j/tEYIxWVGS2iquwflz3PXFI80=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+576cc007eb9f2c968200@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 231/237] ALSA: rawmidi: Avoid bit fields for state flags
-Date:   Thu, 27 Feb 2020 14:37:25 +0100
-Message-Id: <20200227132313.094554005@linuxfoundation.org>
+        stable@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        syzbot+adf6c6c2be1c3a718121@syzkaller.appspotmail.com
+Subject: [PATCH 4.14 234/237] netfilter: xt_hashlimit: limit the max size of hashtable
+Date:   Thu, 27 Feb 2020 14:37:28 +0100
+Message-Id: <20200227132313.292102759@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -60,43 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-commit dfa9a5efe8b932a84b3b319250aa3ac60c20f876 upstream.
+commit 8d0015a7ab76b8b1e89a3e5f5710a6e5103f2dd5 upstream.
 
-The rawmidi state flags (opened, append, active_sensing) are stored in
-bit fields that can be potentially racy when concurrently accessed
-without any locks.  Although the current code should be fine, there is
-also no any real benefit by keeping the bitfields for this kind of
-short number of members.
+The user-specified hashtable size is unbound, this could
+easily lead to an OOM or a hung task as we hold the global
+mutex while allocating and initializing the new hashtable.
 
-This patch changes those bit fields flags to the simple bool fields.
-There should be no size increase of the snd_rawmidi_substream by this
-change.
+Add a max value to cap both cfg->size and cfg->max, as
+suggested by Florian.
 
-Reported-by: syzbot+576cc007eb9f2c968200@syzkaller.appspotmail.com
-Link: https://lore.kernel.org/r/20200214111316.26939-4-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Reported-and-tested-by: syzbot+adf6c6c2be1c3a718121@syzkaller.appspotmail.com
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Reviewed-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/sound/rawmidi.h |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/netfilter/xt_hashlimit.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/include/sound/rawmidi.h
-+++ b/include/sound/rawmidi.h
-@@ -92,9 +92,9 @@ struct snd_rawmidi_substream {
- 	struct list_head list;		/* list of all substream for given stream */
- 	int stream;			/* direction */
- 	int number;			/* substream number */
--	unsigned int opened: 1,		/* open flag */
--		     append: 1,		/* append flag (merge more streams) */
--		     active_sensing: 1; /* send active sensing when close */
-+	bool opened;			/* open flag */
-+	bool append;			/* append flag (merge more streams) */
-+	bool active_sensing;		/* send active sensing when close */
- 	int use_count;			/* use counter (for output) */
- 	size_t bytes;
- 	struct snd_rawmidi *rmidi;
+--- a/net/netfilter/xt_hashlimit.c
++++ b/net/netfilter/xt_hashlimit.c
+@@ -845,6 +845,8 @@ hashlimit_mt(const struct sk_buff *skb,
+ 	return hashlimit_mt_common(skb, par, hinfo, &info->cfg, 3);
+ }
+ 
++#define HASHLIMIT_MAX_SIZE 1048576
++
+ static int hashlimit_mt_check_common(const struct xt_mtchk_param *par,
+ 				     struct xt_hashlimit_htable **hinfo,
+ 				     struct hashlimit_cfg3 *cfg,
+@@ -855,6 +857,14 @@ static int hashlimit_mt_check_common(con
+ 
+ 	if (cfg->gc_interval == 0 || cfg->expire == 0)
+ 		return -EINVAL;
++	if (cfg->size > HASHLIMIT_MAX_SIZE) {
++		cfg->size = HASHLIMIT_MAX_SIZE;
++		pr_info_ratelimited("size too large, truncated to %u\n", cfg->size);
++	}
++	if (cfg->max > HASHLIMIT_MAX_SIZE) {
++		cfg->max = HASHLIMIT_MAX_SIZE;
++		pr_info_ratelimited("max too large, truncated to %u\n", cfg->max);
++	}
+ 	if (par->family == NFPROTO_IPV4) {
+ 		if (cfg->srcmask > 32 || cfg->dstmask > 32)
+ 			return -EINVAL;
 
 
