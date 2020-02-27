@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 128A7C7290B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C58A5C7290C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB41A2468F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:24:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D0B92468F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:24:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813457;
-	bh=jTvwhF4KjEeGmTKvwo1HGhYhl0LBnNBc2sIqXvNxEEY=;
+	s=default; t=1582813454;
+	bh=vgHyGpEbgkvdFyWPBhyjtuKYzDwd/vBivZUC26r7QHk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qiN+xmhg2DOJWEHOgQqudbQ+kRRft0/bvVzhRtqOwGMjkVJzg4pj96TW3mLFLTKyC
-	 y/pickhPL92TFISfAsAyTA/vPPiUn1GngYkv9MZlo4J4CcLPAGyljuickvAogFJdPO
-	 706KE9Tc5DW/Ahvq/UebgGdiYsbEKmNHSUFzxovQ=
+	b=I1kECCZCO34AYLoaoWJX54pTnOdAZcatoJnH+VjALxQBBE9VkqApHU003a4KTEAc6
+	 t9SYw4L1x1oMLIEGom92wQVxAEmaZ1lzcMSv+jeUiZxOyNa/283/gDTM2laWGcSt9f
+	 NzXAhprM5P+ciQq9ZNi8CBw1ZNsX/bHEdvx2XFTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729170AbgB0OYQ (ORCPT
+        id S2388956AbgB0ONP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:24:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52118 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:13:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388954AbgB0ONN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:13:13 -0500
+        id S1730803AbgB0ONK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:13:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE1F7246AC;
-        Thu, 27 Feb 2020 14:13:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA94624690;
+        Thu, 27 Feb 2020 14:13:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812793;
-        bh=jTvwhF4KjEeGmTKvwo1HGhYhl0LBnNBc2sIqXvNxEEY=;
+        s=default; t=1582812788;
+        bh=vgHyGpEbgkvdFyWPBhyjtuKYzDwd/vBivZUC26r7QHk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0mcypYgoYT1sgwQNLBgEEWJfatHUGtQtuMtJie805P4CFa7t+rLqKwdiaCrkpLHrz
-         HLTGv+xT5xiBDn44xbwMK+2OHt10sK1HsihfkRGE9IbCF/bxhftkuU4bBAwXNAnAtm
-         nE/lb2+Urvt6o77SnSi8xPZMRH2edD3kwD0xQOno=
+        b=aMJSGqT2/w+FUkOE+MvymPjZBetuksln9pDn/zznDLRCdxvvCDjnWYyZtIh/26jmR
+         kIg1NdYFiaDhb7DfPcgFrgcs5w+nuAom1QzL+8/ne2vjvMSN6SAZyRcTbfwWdZbccR
+         H5nWHUgLOmz4ii2f+zaYymZiNrO9CRw8O6XT2D6w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH 5.5 019/150] thunderbolt: Prevent crash if non-active NVMem file is read
-Date:   Thu, 27 Feb 2020 14:35:56 +0100
-Message-Id: <20200227132235.531755428@linuxfoundation.org>
+        stable@vger.kernel.org, Dave Jones <davej@codemonkey.org.uk>,
+        Filipe Manana <fdmanana@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.5 017/150] btrfs: dont set path->leave_spinning for truncate
+Date:   Thu, 27 Feb 2020 14:35:54 +0100
+Message-Id: <20200227132235.183018429@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -60,63 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 03cd45d2e219301880cabc357e3cf478a500080f upstream.
+commit 52e29e331070cd7d52a64cbf1b0958212a340e28 upstream.
 
-The driver does not populate .reg_read callback for the non-active NVMem
-because the file is supposed to be write-only. However, it turns out
-NVMem subsystem does not yet support this and expects that the .reg_read
-callback is provided. If user reads the binary attribute it triggers
-NULL pointer dereference like this one:
+The only time we actually leave the path spinning is if we're truncating
+a small amount and don't actually free an extent, which is not a common
+occurrence.  We have to set the path blocking in order to add the
+delayed ref anyway, so the first extent we find we set the path to
+blocking and stay blocking for the duration of the operation.  With the
+upcoming file extent map stuff there will be another case that we have
+to have the path blocking, so just swap to blocking always.
 
-  BUG: kernel NULL pointer dereference, address: 0000000000000000
-  ...
-  Call Trace:
-   bin_attr_nvmem_read+0x64/0x80
-   kernfs_fop_read+0xa7/0x180
-   vfs_read+0xbd/0x170
-   ksys_read+0x5a/0xd0
-   do_syscall_64+0x43/0x150
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Note: this patch also fixes a warning after 28553fa992cb ("Btrfs: fix
+race between shrinking truncate and fiemap") got merged that inserts
+extent locks around truncation so the path must not leave spinning locks
+after btrfs_search_slot.
 
-Fix this in the driver by providing .reg_read callback that always
-returns an error.
+  [70.794783] BUG: sleeping function called from invalid context at mm/slab.h:565
+  [70.794834] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 1141, name: rsync
+  [70.794863] 5 locks held by rsync/1141:
+  [70.794876]  #0: ffff888417b9c408 (sb_writers#17){.+.+}, at: mnt_want_write+0x20/0x50
+  [70.795030]  #1: ffff888428de28e8 (&type->i_mutex_dir_key#13/1){+.+.}, at: lock_rename+0xf1/0x100
+  [70.795051]  #2: ffff888417b9c608 (sb_internal#2){.+.+}, at: start_transaction+0x394/0x560
+  [70.795124]  #3: ffff888403081768 (btrfs-fs-01){++++}, at: btrfs_try_tree_write_lock+0x2f/0x160
+  [70.795203]  #4: ffff888403086568 (btrfs-fs-00){++++}, at: btrfs_try_tree_write_lock+0x2f/0x160
+  [70.795222] CPU: 5 PID: 1141 Comm: rsync Not tainted 5.6.0-rc2-backup+ #2
+  [70.795362] Call Trace:
+  [70.795374]  dump_stack+0x71/0xa0
+  [70.795445]  ___might_sleep.part.96.cold.106+0xa6/0xb6
+  [70.795459]  kmem_cache_alloc+0x1d3/0x290
+  [70.795471]  alloc_extent_state+0x22/0x1c0
+  [70.795544]  __clear_extent_bit+0x3ba/0x580
+  [70.795557]  ? _raw_spin_unlock_irq+0x24/0x30
+  [70.795569]  btrfs_truncate_inode_items+0x339/0xe50
+  [70.795647]  btrfs_evict_inode+0x269/0x540
+  [70.795659]  ? dput.part.38+0x29/0x460
+  [70.795671]  evict+0xcd/0x190
+  [70.795682]  __dentry_kill+0xd6/0x180
+  [70.795754]  dput.part.38+0x2ad/0x460
+  [70.795765]  do_renameat2+0x3cb/0x540
+  [70.795777]  __x64_sys_rename+0x1c/0x20
 
-Reported-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Fixes: e6b245ccd524 ("thunderbolt: Add support for host and device NVM firmware upgrade")
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200213095604.1074-1-mika.westerberg@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Dave Jones <davej@codemonkey.org.uk>
+Fixes: 28553fa992cb ("Btrfs: fix race between shrinking truncate and fiemap")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+[ add note ]
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/thunderbolt/switch.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ fs/btrfs/inode.c |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/drivers/thunderbolt/switch.c
-+++ b/drivers/thunderbolt/switch.c
-@@ -274,6 +274,12 @@ out:
- 	return ret;
- }
- 
-+static int tb_switch_nvm_no_read(void *priv, unsigned int offset, void *val,
-+				 size_t bytes)
-+{
-+	return -EPERM;
-+}
-+
- static int tb_switch_nvm_write(void *priv, unsigned int offset, void *val,
- 			       size_t bytes)
- {
-@@ -319,6 +325,7 @@ static struct nvmem_device *register_nvm
- 		config.read_only = true;
- 	} else {
- 		config.name = "nvm_non_active";
-+		config.reg_read = tb_switch_nvm_no_read;
- 		config.reg_write = tb_switch_nvm_write;
- 		config.root_only = true;
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -4814,7 +4814,6 @@ search_again:
+ 		goto out;
  	}
+ 
+-	path->leave_spinning = 1;
+ 	ret = btrfs_search_slot(trans, root, &key, path, -1, 1);
+ 	if (ret < 0)
+ 		goto out;
+@@ -4966,7 +4965,6 @@ delete:
+ 		     root == fs_info->tree_root)) {
+ 			struct btrfs_ref ref = { 0 };
+ 
+-			btrfs_set_path_blocking(path);
+ 			bytes_deleted += extent_num_bytes;
+ 
+ 			btrfs_init_generic_ref(&ref, BTRFS_DROP_DELAYED_REF,
 
 
