@@ -2,110 +2,115 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5916EC35E15
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB43C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3310F24695
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:44:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LGTAxQmc"
+	by mail.kernel.org (Postfix) with ESMTP id 0BF5924695
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:45:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730121AbgB0Sof (ORCPT
+        id S1730145AbgB0SpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 13:44:35 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46911 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729280AbgB0Soe (ORCPT
+        Thu, 27 Feb 2020 13:45:15 -0500
+Received: from charlotte.tuxdriver.com ([70.61.120.58]:48863 "EHLO
+        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728028AbgB0SpO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 13:44:34 -0500
-Received: by mail-pl1-f193.google.com with SMTP id y8so135165pll.13;
-        Thu, 27 Feb 2020 10:44:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=3EzoEiKTJsev6TY3rRthQ7y6X2EMBZONbWFfknQ3mOI=;
-        b=LGTAxQmcY0aBGwm7kjMXVg0YtKiXVE+gXJn4OYJMFT053JxA8AzQtOEk6LSbtAwy1h
-         JD+vQqaLzyjK/3Pg3GDRrZpy2hBUln2bxU/m83bQDATfzeBFHRFmzJLZrjTYRPELvxAX
-         5M4xU/Mtk351EpzyEabHl8uqQukwdZZPd7IaSm0/3IEyk0h7O/koE/imeStf3Wfwca4Z
-         +QtHTkPTyVmcMAyhVydCROwipY1wtFFlaOLz9cHyiORMY+zRvX4eKW0FfPU7hK3iqv6+
-         +j9znRwnLRdYnQdnzhtIkWRABq25g0PdVrptwZQyaTRycLytXKOt/i/vWrM3OQEC5Pbe
-         5mng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=3EzoEiKTJsev6TY3rRthQ7y6X2EMBZONbWFfknQ3mOI=;
-        b=IeRig19/v1pTj1MDW9fDZ8qgz5xbSSoKVVnefNJrlreSF4vi7RaKuOMzMmSgtPusL8
-         roPPAz7agkbdfdYGJSkGbJHp4RyuOyWa1jYFEoje7h1HzY948I/SNtQ30baSniiP2W1x
-         D4G3tI3wUwl9NZcXAPM1TMhHVzlbh2dFmTqtyB69Vt9JRUJOuZAgX14swNGN41dklr9A
-         JbOc8oCsvKtiFJBQ8lE9j/iHptpg1GrleoklJ0pK3rYutHoKPXhSfFpz3TD3EU5HAROr
-         6bGe69ZoxL6mePlHoad4iFLyA9D85IDD06eYDb89CjgmMoQpXCII2LIZdTUnRT/51zVt
-         pLHA==
-X-Gm-Message-State: APjAAAX8FlEH5wrnR8ok8GUNo/Pmv0K+VCLrilLmh2RAM0eBrv+W33+t
-        ksXQoBL/r6ZFtCS9HgPSDUw=
-X-Google-Smtp-Source: APXvYqxNOLK7wXEg+ZMzunWOfKON/mH+l4nPeDMX7WHQm6G3DJM6gPdUDWLxzcwKbMwgD5hDzQDxHQ==
-X-Received: by 2002:a17:902:b583:: with SMTP id a3mr159988pls.180.1582829073345;
-        Thu, 27 Feb 2020 10:44:33 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x6sm7822006pfi.83.2020.02.27.10.44.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 27 Feb 2020 10:44:32 -0800 (PST)
-Date:   Thu, 27 Feb 2020 10:44:31 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.9 000/165] 4.9.215-stable review
-Message-ID: <20200227184431.GA15944@roeck-us.net>
-References: <20200227132230.840899170@linuxfoundation.org>
+        Thu, 27 Feb 2020 13:45:14 -0500
+Received: from uucp by smtp.tuxdriver.com with local-rmail (Exim 4.63)
+        (envelope-from <linville@tuxdriver.com>)
+        id 1j7O9m-0003W9-7k; Thu, 27 Feb 2020 13:45:11 -0500
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+        by localhost.localdomain (8.15.2/8.14.6) with ESMTP id 01RIePji012877;
+        Thu, 27 Feb 2020 13:40:25 -0500
+Received: (from linville@localhost)
+        by localhost.localdomain (8.15.2/8.15.2/Submit) id 01RIePWF012876;
+        Thu, 27 Feb 2020 13:40:25 -0500
+Date:   Thu, 27 Feb 2020 13:40:25 -0500
+From:   "John W. Linville" <linville@tuxdriver.com>
+To:     "Singh, Varunpratap" <Varunpratap.Singh@smartwirelesscompute.com>
+Cc:     "grant.likely@linaro.org" <grant.likely@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "Nagaraj, Vinay" <Vinay.Nagaraj@smartwirelesscompute.com>
+Subject: Re: Query: CNSS WLAN.
+Message-ID: <20200227184025.GB3353@tuxdriver.com>
+References: <SN6PR04MB4142AB972E7046A24F1F911394EB0@SN6PR04MB4142.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <SN6PR04MB4142AB972E7046A24F1F911394EB0@SN6PR04MB4142.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 02:34:34PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.215 release.
-> There are 165 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Varun,
+
+Unfortunately, your questions is well outside of my areas of skill and
+expertise. Hopefully Grant or someone else in your distribution list
+will be more helpful.
+
+Best regards!
+
+John
+
+On Thu, Feb 27, 2020 at 03:25:16PM +0000, Singh, Varunpratap wrote:
+> Hi John,
 > 
-> Responses should be made by Sat, 29 Feb 2020 13:21:24 +0000.
-> Anything received after that time might be too late.
+> I am trying to bring up two wifi-modules simultaneously, on Qualcomm Snapdragon SD820 processor and the Kernel version is 3.18.
+> I connected the modules on PCIe_0 & PCIe_1.
 > 
+> As per my understanding the following device tree structure is responsible for driver probing.
+> qcom,cnss {
+>         compatible = "qcom,cnss";
+>         wlan-bootstrap-gpio = <&tlmm 46 0>;
+>         vdd-wlan-en-supply = <&wlan_en_vreg>;
+>         vdd-wlan-supply = <&rome_vreg>;
+>         vdd-wlan-io-supply = <&pm8994_s4>;
+>         vdd-wlan-xtal-supply = <&pm8994_l30>;
+>         vdd-wlan-core-supply = <&pm8994_s3>;
+>         wlan-ant-switch-supply = <&pm8994_l18_pin_ctrl>;
+>         qcom,wlan-en-vreg-support;
+>         qcom,enable-bootstrap-gpio;
+>         qcom,notify-modem-status;
+>         pinctrl-names = "bootstrap_active", "bootstrap_sleep";
+>         pinctrl-0 = <&cnss_bootstrap_active>;
+>         pinctrl-1 = <&cnss_bootstrap_sleep>;
+>         qcom,wlan-rc-num = <0>;
+>         qcom,wlan-ramdump-dynamic = <0x200000>;
+> 
+>         qcom,msm-bus,name = "msm-cnss";
+>         qcom,msm-bus,num-cases = <4>;
+>         qcom,msm-bus,num-paths = <1>;
+>         qcom,msm-bus,vectors-KBps =
+>         /* No vote */
+>                 <45 512 0 0>,
+>                 /* Up to 200 Mbps */
+>                 <45 512 41421 1520000>,
+>                 /* Up to 400 Mbps */
+>                 <45 512 96650 1520000>,
+>                 /* Up to 800 Mbps */
+>                 <45 512 207108 14432000>;
+> };
+> 
+> Currently if I change the "qcom,wlan-rc-num = <0>;" to "qcom,wlan-rc-num = <1>;" the module connected on PCIe_1 will start working and vice-versa. But as per the requirement we need two probe getting succeeded i.e both the modules should be registered. Please, suggest how can I create two different nodes under cnss structure.
+> 
+> Any suggestion will be valuable.
+> 
+> 
+> 
+> With Regards,
+> Varun Pratap Singh
+> Software Engineer.
 
-Building powerpc:defconfig ... failed
---------------
-Error log:
-In file included from include/linux/bug.h:4:0,
-                 from include/linux/thread_info.h:11,
-                 from include/asm-generic/preempt.h:4,
-                 from ./arch/powerpc/include/generated/asm/preempt.h:1,
-                 from include/linux/preempt.h:59,
-                 from include/linux/spinlock.h:50,
-                 from include/linux/seqlock.h:35,
-                 from include/linux/time.h:5,
-                 from include/uapi/linux/timex.h:56,
-                 from include/linux/timex.h:56,
-                 from include/linux/sched.h:19,
-                 from arch/powerpc/kernel/signal_32.c:20:
-arch/powerpc/kernel/signal_32.c: In function ‘save_tm_user_regs’:
-arch/powerpc/kernel/signal_32.c:521:10: error: ‘tm_suspend_disabled’ undeclared
-
-Also affects v4.14.y.
-
-Guenter
+-- 
+John W. Linville		Someday the world will need a hero, and you
+linville@tuxdriver.com			might be all we have.  Be ready.
