@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C85C3F343
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20128C3F34F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56967246A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB992468D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811212;
-	bh=LuseXJ4uPadvIGWiSNiwoqxMT0xlXCZRNzgYsn14qas=;
+	s=default; t=1582811253;
+	bh=F7DUeTsW+cyMC4RzsgEMADb2jrUEX1Fy6u0Pl9fIC64=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=woJxemeMdKBmxMyC4DxsPEWVKYKmFtekKLOIbFIye6eFG0XQDtbX5WfTp3RLxmCMt
-	 ZhHbL1oGljza6g7aS0YCs8pLRTEdWA7E62S8JkXnjlwPradvVGlgfftk7Zb0p0PtuN
-	 LoNlA1eDcHRNOCQmd4rzqYr9Bs9+ZD3sRx+Woqdw=
+	b=FV0+knnNLrhUp818iTtdGG1XfO7t7opeOMEolYG2nvhpRbXjRKIyNc8xQ42ae+zKi
+	 PilOo86A3wZRysmqNreHAWq3n03G0agatlI37Ugr5TiF+0300/nIz/b843fCsEg17c
+	 N35+iBA/U+vNA8HFwWZSYlltEQF5yQfXzcHZpEsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730593AbgB0Nqu (ORCPT
+        id S1730710AbgB0Nrb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:46:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42998 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:47:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730171AbgB0Nqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:46:42 -0500
+        id S1730696AbgB0Nr2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:47:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A84921D7E;
-        Thu, 27 Feb 2020 13:46:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F70C2468D;
+        Thu, 27 Feb 2020 13:47:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811201;
-        bh=LuseXJ4uPadvIGWiSNiwoqxMT0xlXCZRNzgYsn14qas=;
+        s=default; t=1582811248;
+        bh=F7DUeTsW+cyMC4RzsgEMADb2jrUEX1Fy6u0Pl9fIC64=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CSmAglRTb+SSTdCwcvWJ1MDLzHAQa+qV6u/DjD67d/okqOQJ+0zmOeyS/ebGxs4am
-         /oaOB9ESUzUVEFcHaW6quH0RQqxbR8tUNKElN0ym0pOsEVZ2BTI8DED+FqSqMV37Ey
-         bsurcbKDZ7XfWk1f0K0Cru/lR6lg5pB4mmW8ohCs=
+        b=Pq+VkjozPWo7bojjWggpqbMOkfPYR3p89mfWQC4UEu58a7wEIZTWP1qMTv0/RtYtH
+         g9Jqt/ZM3G2cwzE4mt4K0eCnCO68eZNq6LjQdtD8erfLk4Tq2hQ148wA6FqBOA2Okt
+         9BerFygrGpuuGCR1FMDZvczdHaF8Hb+hYO6QYc+k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Luis Henriques <luis.henriques@canonical.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 040/165] tracing: Fix tracing_stat return values in error handling paths
-Date:   Thu, 27 Feb 2020 14:35:14 +0100
-Message-Id: <20200227132237.040089361@linuxfoundation.org>
+        stable@vger.kernel.org, Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 060/165] drm/mediatek: handle events when enabling/disabling crtc
+Date:   Thu, 27 Feb 2020 14:35:34 +0100
+Message-Id: <20200227132240.248172642@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -61,56 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Henriques <luis.henriques@canonical.com>
+From: Bibby Hsieh <bibby.hsieh@mediatek.com>
 
-[ Upstream commit afccc00f75bbbee4e4ae833a96c2d29a7259c693 ]
+[ Upstream commit 411f5c1eacfebb1f6e40b653d29447cdfe7282aa ]
 
-tracing_stat_init() was always returning '0', even on the error paths.  It
-now returns -ENODEV if tracing_init_dentry() fails or -ENOMEM if it fails
-to created the 'trace_stat' debugfs directory.
+The driver currently handles vblank events only when updating planes on
+an already enabled CRTC. The atomic update API however allows requesting
+an event when enabling or disabling a CRTC. This currently leads to
+event objects being leaked in the kernel and to events not being sent
+out. Fix it.
 
-Link: http://lkml.kernel.org/r/1410299381-20108-1-git-send-email-luis.henriques@canonical.com
-
-Fixes: ed6f1c996bfe4 ("tracing: Check return value of tracing_init_dentry()")
-Signed-off-by: Luis Henriques <luis.henriques@canonical.com>
-[ Pulled from the archeological digging of my INBOX ]
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Signed-off-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_stat.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/kernel/trace/trace_stat.c b/kernel/trace/trace_stat.c
-index 413ff108fbd05..bc97b10e56ccc 100644
---- a/kernel/trace/trace_stat.c
-+++ b/kernel/trace/trace_stat.c
-@@ -277,18 +277,22 @@ static int tracing_stat_init(void)
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+index 01a21dd835b57..1ed60da76a0ce 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+@@ -306,6 +306,7 @@ err_pm_runtime_put:
+ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
+ {
+ 	struct drm_device *drm = mtk_crtc->base.dev;
++	struct drm_crtc *crtc = &mtk_crtc->base;
+ 	int i;
  
- 	d_tracing = tracing_init_dentry();
- 	if (IS_ERR(d_tracing))
--		return 0;
-+		return -ENODEV;
+ 	DRM_DEBUG_DRIVER("%s\n", __func__);
+@@ -327,6 +328,13 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
+ 	mtk_disp_mutex_unprepare(mtk_crtc->mutex);
  
- 	stat_dir = tracefs_create_dir("trace_stat", d_tracing);
--	if (!stat_dir)
-+	if (!stat_dir) {
- 		pr_warn("Could not create tracefs 'trace_stat' entry\n");
-+		return -ENOMEM;
+ 	pm_runtime_put(drm->dev);
++
++	if (crtc->state->event && !crtc->state->active) {
++		spin_lock_irq(&crtc->dev->event_lock);
++		drm_crtc_send_vblank_event(crtc, crtc->state->event);
++		crtc->state->event = NULL;
++		spin_unlock_irq(&crtc->dev->event_lock);
 +	}
- 	return 0;
  }
  
- static int init_stat_file(struct stat_session *session)
- {
--	if (!stat_dir && tracing_stat_init())
--		return -ENODEV;
-+	int ret;
-+
-+	if (!stat_dir && (ret = tracing_stat_init()))
-+		return ret;
- 
- 	session->file = tracefs_create_file(session->ts->name, 0644,
- 					    stat_dir,
+ static void mtk_drm_crtc_enable(struct drm_crtc *crtc)
 -- 
 2.20.1
 
