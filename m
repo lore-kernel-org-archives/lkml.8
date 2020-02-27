@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E89C3F355
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EFBAC3F360
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B139821D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 731F124656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811319;
-	bh=85Fpwrg1s5nFfiNRz/VMyBUDJukDM49smNb0L1R9tok=;
+	s=default; t=1582811269;
+	bh=N02X9PqL+PSwSETJUX0o70lLYJt42J+a+JvNu284jrw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V9XyM/iQBE6LdbmZ/oxwvv1nn7eAcu2/DBu96vsUnzaf3LX2mzRKoK44SyQvBM6AP
-	 8xoWpSamj76n4vFPhQvloxRbhjyUSuGJSkSTHLApGlI1FX6qeXGZVPvX7IdpKs01rW
-	 TgI7MU6JBUdc8a+VY3DCj/avbHwAx2lDIqJbCPmw=
+	b=CJ8sIO3NwSrgoMfuyvkhKgZQZKZVBoHARLo/ERKzeiMfuog+9Q/opBLFVp7w4m7Nc
+	 Koec1DuXHgrln/GFWrpuHAflfRGqTtBi2bNUFtFkPTBRdcWUNDBgs+T+ZMeUWIfmgZ
+	 EQC1ywO629jOY1Sn+Tm6FF6FYEat1yspT+ByEhQ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730905AbgB0Nsh (ORCPT
+        id S1730757AbgB0Nrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:48:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45290 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:47:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730865AbgB0Nsb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:48:31 -0500
+        id S1730461AbgB0Nrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:47:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5834C20578;
-        Thu, 27 Feb 2020 13:48:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54F7C20801;
+        Thu, 27 Feb 2020 13:47:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811310;
-        bh=85Fpwrg1s5nFfiNRz/VMyBUDJukDM49smNb0L1R9tok=;
+        s=default; t=1582811265;
+        bh=N02X9PqL+PSwSETJUX0o70lLYJt42J+a+JvNu284jrw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1zUll2GDLdNkvWcx4mwc3CnbubYrm2lXGqHJcjp4tdSVA39S4zWHmct9iQ17YNzXF
-         HWi8Xw3WlUEzirBHKnB2839A9TiNLB/ZMqZZTYkLLw+GcLlLZvfEI9C/+x0n2/c3WM
-         tGqN/vLzflYdkCORfnUxFELv/PZJNHh/phE+c3sc=
+        b=GEVAQuRHznRcTAFL8RrX3lnzt2sAMtbyN1guEG18fUAsZEeRZdl0v17WOYmjAcEdw
+         GiO2gBWIz/rvlz1o8ClJtFiS45jv0qoY7Re3HL0ODUXt7PT9raQzBRgCQz8+5QIjiG
+         GvTjXs3yHLP4tbZY/B2xVNcIfxe2nsnqnSdVV8kY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 046/165] regulator: rk808: Lower log level on optional GPIOs being not available
-Date:   Thu, 27 Feb 2020 14:35:20 +0100
-Message-Id: <20200227132237.916258831@linuxfoundation.org>
+Subject: [PATCH 4.9 066/165] ALSA: sh: Fix compile warning wrt const
+Date:   Thu, 27 Feb 2020 14:35:40 +0100
+Message-Id: <20200227132241.120737764@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -60,42 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit b8a039d37792067c1a380dc710361905724b9b2f ]
+[ Upstream commit f1dd4795b1523fbca7ab4344dd5a8bb439cc770d ]
 
-RK808 can leverage a couple of GPIOs to tweak the ramp rate during DVS
-(Dynamic Voltage Scaling). These GPIOs are entirely optional but a
-dev_warn() appeared when cleaning this driver to use a more up-to-date
-gpiod API. At least reduce the log level to 'info' as it is totally
-fine to not populate these GPIO on a hardware design.
+A long-standing compile warning was seen during build test:
+  sound/sh/aica.c: In function 'load_aica_firmware':
+  sound/sh/aica.c:521:25: warning: passing argument 2 of 'spu_memload' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
 
-This change is trivial but it is worth not polluting the logs during
-bringup phase by having real warnings and errors sorted out
-correctly.
-
-Fixes: a13eaf02e2d6 ("regulator: rk808: make better use of the gpiod API")
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/r/20191203164709.11127-1-miquel.raynal@bootlin.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 198de43d758c ("[ALSA] Add ALSA support for the SEGA Dreamcast PCM device")
+Link: https://lore.kernel.org/r/20200105144823.29547-69-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/rk808-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/sh/aica.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/rk808-regulator.c b/drivers/regulator/rk808-regulator.c
-index dfa8d50a5d741..28646e4cf3bae 100644
---- a/drivers/regulator/rk808-regulator.c
-+++ b/drivers/regulator/rk808-regulator.c
-@@ -589,7 +589,7 @@ static int rk808_regulator_dt_parse_pdata(struct device *dev,
- 		}
+diff --git a/sound/sh/aica.c b/sound/sh/aica.c
+index fbbc252795599..2a127feb8e293 100644
+--- a/sound/sh/aica.c
++++ b/sound/sh/aica.c
+@@ -117,10 +117,10 @@ static void spu_memset(u32 toi, u32 what, int length)
+ }
  
- 		if (!pdata->dvs_gpio[i]) {
--			dev_warn(dev, "there is no dvs%d gpio\n", i);
-+			dev_info(dev, "there is no dvs%d gpio\n", i);
- 			continue;
- 		}
- 
+ /* spu_memload - write to SPU address space */
+-static void spu_memload(u32 toi, void *from, int length)
++static void spu_memload(u32 toi, const void *from, int length)
+ {
+ 	unsigned long flags;
+-	u32 *froml = from;
++	const u32 *froml = from;
+ 	u32 __iomem *to = (u32 __iomem *) (SPU_MEMORY_BASE + toi);
+ 	int i;
+ 	u32 val;
 -- 
 2.20.1
 
