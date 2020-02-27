@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 318E3C35E15
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE86C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AC5C246B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:15:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 169D3246B2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:15:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uF9Ne9LO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FZxfOfa8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730564AbgB0SPB (ORCPT
+        id S1730638AbgB0SPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 13:15:01 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34007 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730327AbgB0SO7 (ORCPT
+        Thu, 27 Feb 2020 13:15:03 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43260 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730567AbgB0SPB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 13:14:59 -0500
-Received: by mail-ot1-f67.google.com with SMTP id j16so89981otl.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 10:14:58 -0800 (PST)
+        Thu, 27 Feb 2020 13:15:01 -0500
+Received: by mail-ot1-f66.google.com with SMTP id p8so37380oth.10
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 10:15:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=KKHUWz0Uha+CDG15YVmtHwxSiy2XT+hJxNbxwEkR868=;
-        b=uF9Ne9LOzTJajpv69uldX3AlwwCsOG21dTH6WDxjIygZq8IYdQaVrWnpoRAHUbl9pc
-         2Wi8RK01BtA2wDp7AEz+f6DLqMim+kBabrziprkHt9My6ifj58ykYGyRyHk0f9es3E21
-         g0u14rY2qTDrLve2najzfjzWsQnswHdAi8/0gGRta6WRcXc5z61ckYfEbRHgDfNA+rau
-         5KZTIcCWvEgU0UV5SnrOTKQaCVJ55kx24ykG2YMVnJq/iCN8OfLz1tN4luydERR7G6vT
-         wJ/b89Ko0vmX8rUk4Hdg6pvjREuHMOkTE94hzyi/KIvGBF2ITAjvStgSoZnt+yD130XP
-         QgWA==
+        bh=MBcxGM+xg8655uWg7t9Ib3kXfSw3gEEMPIVTQzo5+Rs=;
+        b=FZxfOfa8j3Z9LaKOlTYM37oQt9g55oDEG9tJeX1T3cIG/BQ+Zai1Z+a4KOa5hRH4Dr
+         HdaSyi9uuGcxwWqGtVwRUx2XDHRaa1u5l6rBMaNXKLnkRw4Oie+5vABlAoa3VZuB76+6
+         PulKv7ZGYEE39prNYxv0GCS0Shl/cJ2364pkodVx7TgIIPyYjfPXPYlI8yUuq4kUnjWg
+         xAbJ59IexhQrKqe3VbDXxpoKZdHkcmdQ3sO/vgFPCLbnPM070PbaFhLC6Smcfdan+kJD
+         BHIF2BSDWFOuUsWzq2cSxWaIv5769Ywx/H8IWmrxc8BXJCcPPf1/usyhj8hEFw1WC8UR
+         dFAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KKHUWz0Uha+CDG15YVmtHwxSiy2XT+hJxNbxwEkR868=;
-        b=twm+wVGlpQdLneODF3cFC8+/xwr6NrCRu65db1E1Ad+EUzmstLY5wbba/ExUUVO7nd
-         oSbyp6adhgRK29pVo1IZlPNArOhtjnZM5PL3GtUa7A84trMzmmlXhJ75CA5pYSVxtXMy
-         Rh5HDe31ukNasvljrtuQ6CqRyvUiKrGY6WtqnKlx9jcViV8EtyGXb3hf1YyqRQ0NllHx
-         MnMxFGqCo5ok/heRvkKEMMxlbg7hrACD4C2qI60/ncVN5yENnoWqCbWhua0MIt7kKk+U
-         TNQo6gthF53sKn95Zgho70LSOgukD6XSOc2GY16GZxF+Bl+m9+DfdUM9wxkH5C41Fg1W
-         YOmA==
-X-Gm-Message-State: APjAAAXzF8UBdW2bWZFXWY7FYN+Xq1cRIVdN89wmVz1o0QYBP+Q2XhaM
-        YOU6+byaP0wOh3RsJdwsom8=
-X-Google-Smtp-Source: APXvYqwKPwyDY58hJwakzgtIbOYkNTqQx8h99is5DUCIYu4mGGT47ZNUD2O+KGlJWl3KeKXMNTBy8w==
-X-Received: by 2002:a9d:7f98:: with SMTP id t24mr156313otp.338.1582827298541;
-        Thu, 27 Feb 2020 10:14:58 -0800 (PST)
+        bh=MBcxGM+xg8655uWg7t9Ib3kXfSw3gEEMPIVTQzo5+Rs=;
+        b=cmsoupK6UapZIBOHxNJqTjVA/PH3r/M4Lz+vPbYaBi1D3bxvQHsE6J7RzC8yE32KFj
+         4b2p/gc1g47MzgHPUYBbxQDIlTyzUkMZzgTAoIH3Ok8FYOEFe0F/0eXD0G8xug+C8rYA
+         rw9U2+yW4o8XRBuQGcbbaSOWN+4UNAVjId2V4F0MZxaI0W4L3XEcJSqP0f9rbVz/51Su
+         HMicIviUuzlYVrZPm92FvbCVkdsKlziByoM8BYrtBEt9Us6oeiDotSv+oRGFL/Y/UPB+
+         Ba0UfuVGA9ZJazqMq6GXG/Qru+JQVhQErjOWXmnryr9QHnKDln5NMVst5y9ODkKrhqJG
+         Cj/Q==
+X-Gm-Message-State: APjAAAUq0HqpirTHFZWudKquEc5PgLWHvwg0ndL5xOz88bz5+60WkbTz
+        Hy0L0J2iNO5p2bsyEhi9vdt5bx+cOMoycg==
+X-Google-Smtp-Source: APXvYqyduQK4JBSqSoXg9hATT4oVsXan1YS6W2a4NowiE2fyS+8Af5itf6y4TrPeAMivxVA+3WNBGQ==
+X-Received: by 2002:a05:6830:1e2d:: with SMTP id t13mr176250otr.128.1582827300893;
+        Thu, 27 Feb 2020 10:15:00 -0800 (PST)
 Received: from farregard-ubuntu.kopismobile.org (c-73-177-17-21.hsd1.ms.comcast.net. [73.177.17.21])
-        by smtp.gmail.com with ESMTPSA id t203sm2205534oig.39.2020.02.27.10.14.57
+        by smtp.gmail.com with ESMTPSA id t203sm2205534oig.39.2020.02.27.10.14.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 10:14:58 -0800 (PST)
+        Thu, 27 Feb 2020 10:15:00 -0800 (PST)
 From:   George Hilliard <thirtythreeforty@gmail.com>
 To:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
-Cc:     George Hilliard <thirtythreeforty@gmail.com>,
-        Icenowy Zheng <icenowy@aosc.io>, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/5] musb: sunxi: add support for the suniv MUSB controller
-Date:   Thu, 27 Feb 2020 12:14:50 -0600
-Message-Id: <20200227181452.31558-4-thirtythreeforty@gmail.com>
+Cc:     Icenowy Zheng <icenowy@aosc.io>, linux-kernel@vger.kernel.org,
+        George Hilliard <thirtythreeforty@gmail.com>
+Subject: [PATCH 5/5] ARM: suniv: f1c100s: enable USB on Lichee Pi Nano
+Date:   Thu, 27 Feb 2020 12:14:52 -0600
+Message-Id: <20200227181452.31558-6-thirtythreeforty@gmail.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200227181452.31558-1-thirtythreeforty@gmail.com>
 References: <20200227181452.31558-1-thirtythreeforty@gmail.com>
@@ -75,49 +75,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The suniv SoC has a MUSB controller like the one in A33, but with a SRAM
-region to be claimed.
+From: Icenowy Zheng <icenowy@aosc.io>
 
-Add support for it.
+Lichee Pi Nano has a Micro-USB connector, with its D+, D- pins connected
+to the USB pins of the SoC and ID pin connected to PE2 GPIO.
+
+Enable the USB functionality.
+
+This patch depends on the previous change to the F1C100s device tree.
 
 Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 Signed-off-by: George Hilliard <thirtythreeforty@gmail.com>
 ---
- drivers/usb/musb/sunxi.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ .../arm/boot/dts/suniv-f1c100s-licheepi-nano.dts | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/usb/musb/sunxi.c b/drivers/usb/musb/sunxi.c
-index f3f76f2ac63f..76806b781844 100644
---- a/drivers/usb/musb/sunxi.c
-+++ b/drivers/usb/musb/sunxi.c
-@@ -714,14 +714,17 @@ static int sunxi_musb_probe(struct platform_device *pdev)
- 	INIT_WORK(&glue->work, sunxi_musb_work);
- 	glue->host_nb.notifier_call = sunxi_musb_host_notifier;
+diff --git a/arch/arm/boot/dts/suniv-f1c100s-licheepi-nano.dts b/arch/arm/boot/dts/suniv-f1c100s-licheepi-nano.dts
+index a1154e6c7cb5..c42186e22d45 100644
+--- a/arch/arm/boot/dts/suniv-f1c100s-licheepi-nano.dts
++++ b/arch/arm/boot/dts/suniv-f1c100s-licheepi-nano.dts
+@@ -6,6 +6,8 @@
+ /dts-v1/;
+ #include "suniv-f1c100s.dtsi"
  
--	if (of_device_is_compatible(np, "allwinner,sun4i-a10-musb"))
-+	if (of_device_is_compatible(np, "allwinner,sun4i-a10-musb") ||
-+	    of_device_is_compatible(np, "allwinner,suniv-f1c100s-musb")) {
- 		set_bit(SUNXI_MUSB_FL_HAS_SRAM, &glue->flags);
-+	}
++#include <dt-bindings/gpio/gpio.h>
++
+ / {
+ 	model = "Lichee Pi Nano";
+ 	compatible = "licheepi,licheepi-nano", "allwinner,suniv-f1c100s";
+@@ -19,8 +21,22 @@ chosen {
+ 	};
+ };
  
- 	if (of_device_is_compatible(np, "allwinner,sun6i-a31-musb"))
- 		set_bit(SUNXI_MUSB_FL_HAS_RESET, &glue->flags);
- 
- 	if (of_device_is_compatible(np, "allwinner,sun8i-a33-musb") ||
--	    of_device_is_compatible(np, "allwinner,sun8i-h3-musb")) {
-+	    of_device_is_compatible(np, "allwinner,sun8i-h3-musb") ||
-+	    of_device_is_compatible(np, "allwinner,suniv-f1c100s-musb")) {
- 		set_bit(SUNXI_MUSB_FL_HAS_RESET, &glue->flags);
- 		set_bit(SUNXI_MUSB_FL_NO_CONFIGDATA, &glue->flags);
- 	}
-@@ -814,6 +817,7 @@ static int sunxi_musb_remove(struct platform_device *pdev)
- }
- 
- static const struct of_device_id sunxi_musb_match[] = {
-+	{ .compatible = "allwinner,suniv-f1c100s-musb", },
- 	{ .compatible = "allwinner,sun4i-a10-musb", },
- 	{ .compatible = "allwinner,sun6i-a31-musb", },
- 	{ .compatible = "allwinner,sun8i-a33-musb", },
++&otg_sram {
++	status = "okay";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pe_pins>;
+ 	status = "okay";
+ };
++
++&usb_otg {
++	dr_mode = "otg";
++	status = "okay";
++};
++
++&usbphy {
++	usb0_id_det-gpio = <&pio 4 2 GPIO_ACTIVE_HIGH>; /* PE2 */
++	status = "okay";
++};
 -- 
 2.25.0
 
