@@ -2,174 +2,116 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A253C35677
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22260C34022
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B17724688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECC7F2469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:21:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582816910;
+	bh=T9dOLKG0py6qkERLpwlSZyviHQ5P0/AANhjFWasQW80=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pEcVRa7K8wnrrRKFS9OsdoBnkWC75dkHKKENhXDfk/DrM5sjw6RM3fxeO52CvY4q+
+	 13u2znL2COg/XlcUUULYtrakE7GIYDCydP5/E4HYL9YoI+Rb7XMT/mTEnihYjYIajN
+	 Pg34auhj/4qCA9vbt8RI02QJMjvV0kT0O62tMD1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730905AbgB0PTS (ORCPT
+        id S1729750AbgB0PVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 10:19:18 -0500
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:33007 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729439AbgB0PTR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 10:19:17 -0500
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Eugen.Hristev@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="Eugen.Hristev@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: IsuR96Cb9xvLmy2wbVUHg6Eb0y08j7S6svkniz+pMtYiaNsaxqkTJJcDL3ALFi1P61F9uohEdr
- 0pWekaEntO1lrZUAksk9O+KcQ6lM6iopr2uN49yJTgOVmkaOqpDqCordmlsT9RwQrz0yv33/On
- 7KHMTXeFygZZJ0EJPEMFylPxSOURNQDJCXwcBqFKNMy0gXawYRFzGVHBLXqb+VRWFJiEfTEjsT
- lsNHUFKzreqz0pXDMg6dbsKOXl5BgO1O/ptc7YieoJKrAvSu7Tt1ezgeEQPMjGoBbjwwSQdfet
- j+M=
-X-IronPort-AV: E=Sophos;i="5.70,492,1574146800"; 
-   d="scan'208";a="68206434"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Feb 2020 08:19:16 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 27 Feb 2020 08:19:16 -0700
-Received: from ROB-ULT-M18282.microchip.com (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Thu, 27 Feb 2020 08:19:14 -0700
-From:   Eugen Hristev <eugen.hristev@microchip.com>
-To:     <dave.stevenson@raspberrypi.com>, <andrey.konovalov@linaro.org>,
-        <sakari.ailus@iki.fi>, <linux-media@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Eugen Hristev <eugen.hristev@microchip.com>
-Subject: [PATCH] media: i2c: imx219: add support for enum frame interval
-Date:   Thu, 27 Feb 2020 17:17:52 +0200
-Message-ID: <20200227151752.21985-1-eugen.hristev@microchip.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 27 Feb 2020 10:21:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35498 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729471AbgB0PVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 10:21:48 -0500
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9BFA246A1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 15:21:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582816907;
+        bh=T9dOLKG0py6qkERLpwlSZyviHQ5P0/AANhjFWasQW80=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=DNFTwP3XbjZEMxBVDzd/quWeQ2/givNf4BqjbJUoBPmedhklbXBelhZr8GpvLHpCE
+         SDoAFGlNWK/md5syoNfAGLlhELV6qjO70qCIiIDrLn0GuT8lh91ANWgt+HCVgwq4Fw
+         T4DZ6SqgsMZW6AdxaIywRMs8s2xuTpeuZboaNmT0=
+Received: by mail-wr1-f45.google.com with SMTP id y17so3841308wrn.6
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 07:21:46 -0800 (PST)
+X-Gm-Message-State: APjAAAW0z2PUxSOlR7I3lieV29m7EMYxN9+KAiVpU6TsMnYy0zxq0pI0
+        DYsayUT/gcTR2inMhVyjP8p1n5Tn6yZL2+rt7ASjtw==
+X-Google-Smtp-Source: APXvYqxanNBk76hCAYyAT9ZByxKRvOJ/0QhmbBw3XoLcW0zeZ9Vcwb64GM5wP5AGcQ76Ff4K58RhcGEecK09PohqN3A=
+X-Received: by 2002:a05:6000:110b:: with SMTP id z11mr5530464wrw.252.1582816905187;
+ Thu, 27 Feb 2020 07:21:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+References: <20200226204515.2752095-1-nivedita@alum.mit.edu>
+ <20200226230031.3011645-2-nivedita@alum.mit.edu> <20200227081229.GA29411@gmail.com>
+ <20200227151643.GA3498170@rani.riverdale.lan>
+In-Reply-To: <20200227151643.GA3498170@rani.riverdale.lan>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 27 Feb 2020 16:21:32 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu8BiW6P6Xv3EAPUEmbS3GQMJW=eRr-yygRbForaGDQyyw@mail.gmail.com>
+Message-ID: <CAKv+Gu8BiW6P6Xv3EAPUEmbS3GQMJW=eRr-yygRbForaGDQyyw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] x86/boot/compressed: Fix reloading of GDTR post-relocation
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for enum frame intervals IOCTL.
-The current supported framerates are only available as comments inside
-the code.
-Add support for VIDIOC_ENUM_FRAMEINTERVALS as the enum_frame_interval
-callback as pad ops.
+On Thu, 27 Feb 2020 at 16:16, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> On Thu, Feb 27, 2020 at 09:12:29AM +0100, Ingo Molnar wrote:
+> >
+> > * Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > > Commit ef5a7b5eb13e ("efi/x86: Remove GDT setup from efi_main")
+> > > introduced GDT setup into the 32-bit kernel's startup_32, and reloads
+> > > the GDTR after relocating the kernel for paranoia's sake.
+> > >
+> > > Commit 32d009137a56 ("x86/boot: Reload GDTR after copying to the end of
+> > > the buffer") introduced a similar GDTR reload in the 64-bit kernel.
+> > >
+> > > The GDTR is adjusted by init_size - _end, however this may not be the
+> > > correct offset to apply if the kernel was loaded at a misaligned address
+> > > or below LOAD_PHYSICAL_ADDR, as in that case the decompression buffer
+> > > has an additional offset from the original load address.
+> > >
+> > > This should never happen for a conformant bootloader, but we're being
+> > > paranoid anyway, so just store the new GDT address in there instead of
+> > > adding any offsets, which is simpler as well.
+> > >
+> > > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> > > Fixes: ef5a7b5eb13e ("efi/x86: Remove GDT setup from efi_main")
+> > > Fixes: 32d009137a56 ("x86/boot: Reload GDTR after copying to the end of the buffer")
+> >
+> > Have you or anyone else observed this condition practice, or have a
+> > suspicion that this could happen - or is this a mostly theoretical
+> > concern?
+> >
+> > Thanks,
+> >
+> >       Ingo
+>
+> Right now it's a theoretical concern.
+>
+> I'm working on another patch, to tell the EFI firmware PE loader what
+> the kernel's preferred address is, so that we can avoid having to
+> relocate the kernel in the EFI stub in most cases (ie if the PE loader
+> manages to load us at that address). With those changes, the required
+> adjustment won't be init_size - _end any more, and while fixing it up
+> there, I noticed that it could already be the case that the required
+> adjustment is different.
+>
 
- # v4l2-ctl --list-frameintervals width=1920,height=1080,pixelformat=RG10
- ioctl: VIDIOC_ENUM_FRAMEINTERVALS
-        Interval: Discrete 0.067s (15.000 fps)
-        Interval: Discrete 0.033s (30.000 fps)
-        Interval: Discrete 0.033s (30.000 fps)
-
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
----
-
-Hello,
-
-This is on top of Sakari's tree in linuxtv.org
-
-Thanks
-Eugen
-
- drivers/media/i2c/imx219.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
-
-diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
-index f1effb5a5f66..17fcedd4edb6 100644
---- a/drivers/media/i2c/imx219.c
-+++ b/drivers/media/i2c/imx219.c
-@@ -127,6 +127,8 @@ struct imx219_mode {
- 	unsigned int width;
- 	/* Frame height */
- 	unsigned int height;
-+	/* Frame rate */
-+	u8 fps;
- 
- 	/* V-timing */
- 	unsigned int vts_def;
-@@ -381,6 +383,7 @@ static const struct imx219_mode supported_modes[] = {
- 		/* 8MPix 15fps mode */
- 		.width = 3280,
- 		.height = 2464,
-+		.fps = 15,
- 		.vts_def = IMX219_VTS_15FPS,
- 		.reg_list = {
- 			.num_of_regs = ARRAY_SIZE(mode_3280x2464_regs),
-@@ -391,6 +394,7 @@ static const struct imx219_mode supported_modes[] = {
- 		/* 1080P 30fps cropped */
- 		.width = 1920,
- 		.height = 1080,
-+		.fps = 30,
- 		.vts_def = IMX219_VTS_30FPS_1080P,
- 		.reg_list = {
- 			.num_of_regs = ARRAY_SIZE(mode_1920_1080_regs),
-@@ -401,6 +405,7 @@ static const struct imx219_mode supported_modes[] = {
- 		/* 2x2 binned 30fps mode */
- 		.width = 1640,
- 		.height = 1232,
-+		.fps = 30,
- 		.vts_def = IMX219_VTS_30FPS_BINNED,
- 		.reg_list = {
- 			.num_of_regs = ARRAY_SIZE(mode_1640_1232_regs),
-@@ -680,6 +685,27 @@ static int imx219_enum_frame_size(struct v4l2_subdev *sd,
- 	return 0;
- }
- 
-+static int imx219_enum_frame_interval(struct v4l2_subdev *sd,
-+				      struct v4l2_subdev_pad_config *cfg,
-+				      struct v4l2_subdev_frame_interval_enum *fie)
-+{
-+	struct imx219 *imx219 = to_imx219(sd);
-+
-+	if (fie->index >= ARRAY_SIZE(supported_modes))
-+		return -EINVAL;
-+
-+	if (fie->code != imx219_get_format_code(imx219))
-+		return -EINVAL;
-+
-+	if (fie->pad)
-+		return -EINVAL;
-+
-+	fie->interval.numerator = 1;
-+	fie->interval.denominator = supported_modes[fie->index].fps;
-+
-+	return 0;
-+}
-+
- static void imx219_reset_colorspace(struct v4l2_mbus_framefmt *fmt)
- {
- 	fmt->colorspace = V4L2_COLORSPACE_SRGB;
-@@ -1004,6 +1030,7 @@ static const struct v4l2_subdev_pad_ops imx219_pad_ops = {
- 	.get_fmt = imx219_get_pad_format,
- 	.set_fmt = imx219_set_pad_format,
- 	.enum_frame_size = imx219_enum_frame_size,
-+	.enum_frame_interval = imx219_enum_frame_interval,
- };
- 
- static const struct v4l2_subdev_ops imx219_subdev_ops = {
--- 
-2.20.1
-
+Do you mean setting the image address in the PE/COFF header to the
+preferred address?
