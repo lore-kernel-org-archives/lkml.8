@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40BA1C52D4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40AF8C52D4D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E9F220801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:58:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1288124691
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:58:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811924;
-	bh=i9i7Wl759lILGhGaXlNqPkHgaImx6U0G3qiL2XcD3Bo=;
+	s=default; t=1582811922;
+	bh=D0avc4Yd53LZK96+VQKGS83FQE9xisWU7V0EPWCN+ms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=APpk6Xy4559gMf/lm69JJ0YzFvzUDRbOnFdMH6flnjEhvhGCAk8FVVnZ0/54gN2Eb
-	 MWkkmkBbtzv+NI9klNR7FfpDaKq0n5K66vyEDrrVqvHgN91uxN5xr/rFRbfl+hxINb
-	 SqxKo2FutEKi/e8SHDyXIzzA5i02QkfMxoNWB2/Y=
+	b=DZRn7pTIYYEmHdKebMgS9QHRrhRJYbL8/CsOpCarft1bhycKML9gqxjwheHbFYNcY
+	 Gpbhyxs32xQQKQawl1SfU5MFb3xJBs5ZOKLN9c+f/kJjgmsbREOltCX3jH7dKdUfg4
+	 5eaTgXB5bZl9HfPjemVWYUj/rmiLnmuiTsIfMPs4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732506AbgB0N6m (ORCPT
+        id S1732280AbgB0N6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:58:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59882 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732501AbgB0N6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Feb 2020 08:58:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59816 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732493AbgB0N6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:58:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEF1F21D7E;
-        Thu, 27 Feb 2020 13:58:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43B3120578;
+        Thu, 27 Feb 2020 13:58:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811920;
-        bh=i9i7Wl759lILGhGaXlNqPkHgaImx6U0G3qiL2XcD3Bo=;
+        s=default; t=1582811917;
+        bh=D0avc4Yd53LZK96+VQKGS83FQE9xisWU7V0EPWCN+ms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZhemI9VKPFJFB/ma9YitejuXEOQdD931L9Q9TARUw2S9GMTohpUk9eD6X1JpTlbN3
-         yfqdeTDgqG26+ViUL6XJgIRNfVZn6GaEnlkk7AKL8B1ZZM6csDGUnyMzUulFJpZ++p
-         SkP14DYmEbhmfGvOzRQCxwa1phz2qFtNRRXv5trE=
+        b=z1WPziYwJ8GfJn5ZdLBgRZci94ksZXvhExgu7PynkpiZSx7snmLvCJk2ZdFIQTMXy
+         kwF92tWJXN/wtbMKWwAs9YU4B/zleo8zJAnn4mS/In8cRp9EtdKw/zqdUrc8aSWPvm
+         3CI1p5Td87SidPA7GKMHw5tDVtlHN4kPj5SI0EXk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 151/237] drm/nouveau/disp/nv50-: prevent oops when no channel method map provided
-Date:   Thu, 27 Feb 2020 14:36:05 +0100
-Message-Id: <20200227132307.691942451@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Heyi Guo <guoheyi@huawei.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 150/237] irqchip/gic-v3: Only provision redistributors that are enabled in ACPI
+Date:   Thu, 27 Feb 2020 14:36:04 +0100
+Message-Id: <20200227132307.627173360@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -59,38 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Skeggs <bskeggs@redhat.com>
+From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit 0e6176c6d286316e9431b4f695940cfac4ffe6c2 ]
+[ Upstream commit 926b5dfa6b8dc666ff398044af6906b156e1d949 ]
 
-The implementations for most channel types contains a map of methods to
-priv registers in order to provide debugging info when a disp exception
-has been raised.
+We currently allocate redistributor region structures for
+individual redistributors when ACPI doesn't present us with
+compact MMIO regions covering multiple redistributors.
 
-This info is missing from the implementation of PIO channels as they're
-rather simplistic already, however, if an exception is raised by one of
-them, we'd end up triggering a NULL-pointer deref.  Not ideal...
+It turns out that we allocate these structures even when
+the redistributor is flagged as disabled by ACPI. It works
+fine until someone actually tries to tarse one of these
+structures, and access the corresponding MMIO region.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=206299
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Instead, track the number of enabled redistributors, and
+only allocate what is required. This makes sure that there
+is no invalid data to misuse.
+
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Reported-by: Heyi Guo <guoheyi@huawei.com>
+Tested-by: Heyi Guo <guoheyi@huawei.com>
+Link: https://lore.kernel.org/r/20191216062745.63397-1-guoheyi@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/irqchip/irq-gic-v3.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c b/drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c
-index 0c0310498afdb..cd9666583d4bd 100644
---- a/drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c
-@@ -73,6 +73,8 @@ nv50_disp_chan_mthd(struct nv50_disp_chan *chan, int debug)
+diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+index 3d73746555876..730b3c1cf7f61 100644
+--- a/drivers/irqchip/irq-gic-v3.c
++++ b/drivers/irqchip/irq-gic-v3.c
+@@ -1253,6 +1253,7 @@ static struct
+ 	struct redist_region *redist_regs;
+ 	u32 nr_redist_regions;
+ 	bool single_redist;
++	int enabled_rdists;
+ 	u32 maint_irq;
+ 	int maint_irq_mode;
+ 	phys_addr_t vcpu_base;
+@@ -1347,8 +1348,10 @@ static int __init gic_acpi_match_gicc(struct acpi_subtable_header *header,
+ 	 * If GICC is enabled and has valid gicr base address, then it means
+ 	 * GICR base is presented via GICC
+ 	 */
+-	if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address)
++	if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address) {
++		acpi_data.enabled_rdists++;
+ 		return 0;
++	}
  
- 	if (debug > subdev->debug)
- 		return;
-+	if (!mthd)
-+		return;
+ 	/*
+ 	 * It's perfectly valid firmware can pass disabled GICC entry, driver
+@@ -1378,8 +1381,10 @@ static int __init gic_acpi_count_gicr_regions(void)
  
- 	for (i = 0; (list = mthd->data[i].mthd) != NULL; i++) {
- 		u32 base = chan->head * mthd->addr;
+ 	count = acpi_table_parse_madt(ACPI_MADT_TYPE_GENERIC_INTERRUPT,
+ 				      gic_acpi_match_gicc, 0);
+-	if (count > 0)
++	if (count > 0) {
+ 		acpi_data.single_redist = true;
++		count = acpi_data.enabled_rdists;
++	}
+ 
+ 	return count;
+ }
 -- 
 2.20.1
 
