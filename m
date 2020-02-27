@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6DBEC52D5C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2315DC54FEB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BF9524697
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE8A82468F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:18:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813111;
-	bh=FMY56qzvCJharns2+c9TUhuElzCBrCqVJxbMDnAG4Go=;
+	s=default; t=1582813130;
+	bh=C6Encfp0HnT/CKsLIrS/WT4CFL/BGWA8wgTy9t4wzuI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=czlYh6V9MX41p+9DKMfISWG/uL/50pTpQHtZupRn9VKXGnpdoI3CBhJieGMMLA5vS
-	 zCOQriqL+de1cDWPftUxoJqwNlV33C24MMCmNPmqzElZUkefaSRFciVkl4LVu/LzSx
-	 JqCkqAF2RhmuWjESmWMf5jeJfch8c07skW6VKBjc=
+	b=MH0KFh46dQfN2M/vhm1IzB+sod4ETSoPMrTffdYWh0Cd45YvqCnfjiFIRTycmHZe1
+	 Y4Kar+VaTPaRVO4OS7TVoe0xyqe7x/7+5dNASK2iFcirQzxhA70atslpXu2HW6dqo8
+	 4AnwuKrSSVO0FoZmBLZ9yIbyfhtrSO4KCJ9+HVsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389610AbgB0OS3 (ORCPT
+        id S2389667AbgB0OSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:18:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58944 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:18:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730483AbgB0OSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:18:21 -0500
+        id S2389925AbgB0OSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:18:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABB512468F;
-        Thu, 27 Feb 2020 14:18:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BDB32468F;
+        Thu, 27 Feb 2020 14:18:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813101;
-        bh=FMY56qzvCJharns2+c9TUhuElzCBrCqVJxbMDnAG4Go=;
+        s=default; t=1582813123;
+        bh=C6Encfp0HnT/CKsLIrS/WT4CFL/BGWA8wgTy9t4wzuI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IcISWmWBEshhxiyl6El/h+gyWtyUvdOzYEYSxU+WiH5MjWxnPVOViQ6BdxqfrCSEq
-         6olGBN/TxG+mYbX0OS7J/xuE3degwEG7aakpkK217RE60I3DemMH9Sn3jJKDFJAZL7
-         t5NgQJ+Efgsyw9wweme/msoBVeLo+5EHWDdibTzc=
+        b=2Tq7AjCF5+20U/hfY42HYRNoGy+F/ensvQyrNHdEevEFEOQZgUAOVO0/kh6iOFefC
+         xFkYkgyk09G7+28PMWyErDJNz/PkS5YiZjrOLiHeYOmM+bshxqeXeWkc/EVPPdC67F
+         Rd3d/3xZ0YbCANs+0ugzM/1wyDtcAwKcxTJsv6BQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 5.5 136/150] dma-direct: relax addressability checks in dma_direct_supported
-Date:   Thu, 27 Feb 2020 14:37:53 +0100
-Message-Id: <20200227132252.430410586@linuxfoundation.org>
+        stable@vger.kernel.org, Aya Levin <ayal@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.5 144/150] net/mlx5e: Reset RQ doorbell counter before moving RQ state from RST to RDY
+Date:   Thu, 27 Feb 2020 14:38:01 +0100
+Message-Id: <20200227132253.568018360@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -59,77 +60,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Aya Levin <ayal@mellanox.com>
 
-commit 91ef26f914171cf753330f13724fd9142b5b1640 upstream.
+commit 5ee090ed0da649b1febae2b7c285ac77d1e55a0c upstream.
 
-dma_direct_supported tries to find the minimum addressable bitmask
-based on the end pfn and optional magic that architectures can use
-to communicate the size of the magic ZONE_DMA that can be used
-for bounce buffering.  But between the DMA offsets that can change
-per device (or sometimes even region), the fact the ZONE_DMA isn't
-even guaranteed to be the lowest addresses and failure of having
-proper interfaces to the MM code this fails at least for one
-arm subarchitecture.
+Initialize RQ doorbell counters to zero prior to moving an RQ from RST
+to RDY state. Per HW spec, when RQ is back to RDY state, the descriptor
+ID on the completion is reset. The doorbell record must comply.
 
-As all the legacy DMA implementations have supported 32-bit DMA
-masks, and 32-bit masks are guranteed to always work by the API
-contract (using bounce buffers if needed), we can short cut the
-complicated check and always return true without breaking existing
-assumptions.  Hopefully we can properly clean up the interaction
-with the arch defined zones and the bootmem allocator eventually.
-
-Fixes: ad3c7b18c5b3 ("arm: use swiotlb for bounce buffering on LPAE configs")
-Reported-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Fixes: 8276ea1353a4 ("net/mlx5e: Report and recover from CQE with error on RQ")
+Signed-off-by: Aya Levin <ayal@mellanox.com>
+Reported-by: Tariq Toukan <tariqt@mellanox.com>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/dma/direct.c |   24 +++++++++++-------------
- 1 file changed, 11 insertions(+), 13 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en/txrx.h |    8 ++++
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c |    3 +
+ drivers/net/ethernet/mellanox/mlx5/core/wq.c      |   39 ++++++++++++++++------
+ drivers/net/ethernet/mellanox/mlx5/core/wq.h      |    2 +
+ 4 files changed, 43 insertions(+), 9 deletions(-)
 
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -472,28 +472,26 @@ int dma_direct_mmap(struct device *dev,
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/txrx.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/txrx.h
+@@ -179,6 +179,14 @@ mlx5e_tx_dma_unmap(struct device *pdev,
+ 	}
  }
- #endif /* CONFIG_MMU */
  
--/*
-- * Because 32-bit DMA masks are so common we expect every architecture to be
-- * able to satisfy them - either by not supporting more physical memory, or by
-- * providing a ZONE_DMA32.  If neither is the case, the architecture needs to
-- * use an IOMMU instead of the direct mapping.
-- */
- int dma_direct_supported(struct device *dev, u64 mask)
- {
--	u64 min_mask;
-+	u64 min_mask = (max_pfn - 1) << PAGE_SHIFT;
++static inline void mlx5e_rqwq_reset(struct mlx5e_rq *rq)
++{
++	if (rq->wq_type == MLX5_WQ_TYPE_LINKED_LIST_STRIDING_RQ)
++		mlx5_wq_ll_reset(&rq->mpwqe.wq);
++	else
++		mlx5_wq_cyc_reset(&rq->wqe.wq);
++}
++
+ /* SW parser related functions */
  
--	if (IS_ENABLED(CONFIG_ZONE_DMA))
--		min_mask = DMA_BIT_MASK(zone_dma_bits);
--	else
--		min_mask = DMA_BIT_MASK(32);
+ struct mlx5e_swp_spec {
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -721,6 +721,9 @@ int mlx5e_modify_rq_state(struct mlx5e_r
+ 	if (!in)
+ 		return -ENOMEM;
+ 
++	if (curr_state == MLX5_RQC_STATE_RST && next_state == MLX5_RQC_STATE_RDY)
++		mlx5e_rqwq_reset(rq);
++
+ 	rqc = MLX5_ADDR_OF(modify_rq_in, in, ctx);
+ 
+ 	MLX5_SET(modify_rq_in, in, rq_state, curr_state);
+--- a/drivers/net/ethernet/mellanox/mlx5/core/wq.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/wq.c
+@@ -94,6 +94,13 @@ void mlx5_wq_cyc_wqe_dump(struct mlx5_wq
+ 	print_hex_dump(KERN_WARNING, "", DUMP_PREFIX_OFFSET, 16, 1, wqe, len, false);
+ }
+ 
++void mlx5_wq_cyc_reset(struct mlx5_wq_cyc *wq)
++{
++	wq->wqe_ctr = 0;
++	wq->cur_sz = 0;
++	mlx5_wq_cyc_update_db_record(wq);
++}
++
+ int mlx5_wq_qp_create(struct mlx5_core_dev *mdev, struct mlx5_wq_param *param,
+ 		      void *qpc, struct mlx5_wq_qp *wq,
+ 		      struct mlx5_wq_ctrl *wq_ctrl)
+@@ -192,6 +199,19 @@ err_db_free:
+ 	return err;
+ }
+ 
++static void mlx5_wq_ll_init_list(struct mlx5_wq_ll *wq)
++{
++	struct mlx5_wqe_srq_next_seg *next_seg;
++	int i;
++
++	for (i = 0; i < wq->fbc.sz_m1; i++) {
++		next_seg = mlx5_wq_ll_get_wqe(wq, i);
++		next_seg->next_wqe_index = cpu_to_be16(i + 1);
++	}
++	next_seg = mlx5_wq_ll_get_wqe(wq, i);
++	wq->tail_next = &next_seg->next_wqe_index;
++}
++
+ int mlx5_wq_ll_create(struct mlx5_core_dev *mdev, struct mlx5_wq_param *param,
+ 		      void *wqc, struct mlx5_wq_ll *wq,
+ 		      struct mlx5_wq_ctrl *wq_ctrl)
+@@ -199,9 +219,7 @@ int mlx5_wq_ll_create(struct mlx5_core_d
+ 	u8 log_wq_stride = MLX5_GET(wq, wqc, log_wq_stride);
+ 	u8 log_wq_sz     = MLX5_GET(wq, wqc, log_wq_sz);
+ 	struct mlx5_frag_buf_ctrl *fbc = &wq->fbc;
+-	struct mlx5_wqe_srq_next_seg *next_seg;
+ 	int err;
+-	int i;
+ 
+ 	err = mlx5_db_alloc_node(mdev, &wq_ctrl->db, param->db_numa_node);
+ 	if (err) {
+@@ -220,13 +238,7 @@ int mlx5_wq_ll_create(struct mlx5_core_d
+ 
+ 	mlx5_init_fbc(wq_ctrl->buf.frags, log_wq_stride, log_wq_sz, fbc);
+ 
+-	for (i = 0; i < fbc->sz_m1; i++) {
+-		next_seg = mlx5_wq_ll_get_wqe(wq, i);
+-		next_seg->next_wqe_index = cpu_to_be16(i + 1);
+-	}
+-	next_seg = mlx5_wq_ll_get_wqe(wq, i);
+-	wq->tail_next = &next_seg->next_wqe_index;
 -
--	min_mask = min_t(u64, min_mask, (max_pfn - 1) << PAGE_SHIFT);
-+	/*
-+	 * Because 32-bit DMA masks are so common we expect every architecture
-+	 * to be able to satisfy them - either by not supporting more physical
-+	 * memory, or by providing a ZONE_DMA32.  If neither is the case, the
-+	 * architecture needs to use an IOMMU instead of the direct mapping.
-+	 */
-+	if (mask >= DMA_BIT_MASK(32))
-+		return 1;
++	mlx5_wq_ll_init_list(wq);
+ 	wq_ctrl->mdev = mdev;
  
- 	/*
- 	 * This check needs to be against the actual bit mask value, so
- 	 * use __phys_to_dma() here so that the SME encryption mask isn't
- 	 * part of the check.
- 	 */
-+	if (IS_ENABLED(CONFIG_ZONE_DMA))
-+		min_mask = min_t(u64, min_mask, DMA_BIT_MASK(zone_dma_bits));
- 	return mask >= __phys_to_dma(dev, min_mask);
+ 	return 0;
+@@ -237,6 +249,15 @@ err_db_free:
+ 	return err;
  }
+ 
++void mlx5_wq_ll_reset(struct mlx5_wq_ll *wq)
++{
++	wq->head = 0;
++	wq->wqe_ctr = 0;
++	wq->cur_sz = 0;
++	mlx5_wq_ll_init_list(wq);
++	mlx5_wq_ll_update_db_record(wq);
++}
++
+ void mlx5_wq_destroy(struct mlx5_wq_ctrl *wq_ctrl)
+ {
+ 	mlx5_frag_buf_free(wq_ctrl->mdev, &wq_ctrl->buf);
+--- a/drivers/net/ethernet/mellanox/mlx5/core/wq.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/wq.h
+@@ -80,6 +80,7 @@ int mlx5_wq_cyc_create(struct mlx5_core_
+ 		       void *wqc, struct mlx5_wq_cyc *wq,
+ 		       struct mlx5_wq_ctrl *wq_ctrl);
+ void mlx5_wq_cyc_wqe_dump(struct mlx5_wq_cyc *wq, u16 ix, u8 nstrides);
++void mlx5_wq_cyc_reset(struct mlx5_wq_cyc *wq);
+ 
+ int mlx5_wq_qp_create(struct mlx5_core_dev *mdev, struct mlx5_wq_param *param,
+ 		      void *qpc, struct mlx5_wq_qp *wq,
+@@ -92,6 +93,7 @@ int mlx5_cqwq_create(struct mlx5_core_de
+ int mlx5_wq_ll_create(struct mlx5_core_dev *mdev, struct mlx5_wq_param *param,
+ 		      void *wqc, struct mlx5_wq_ll *wq,
+ 		      struct mlx5_wq_ctrl *wq_ctrl);
++void mlx5_wq_ll_reset(struct mlx5_wq_ll *wq);
+ 
+ void mlx5_wq_destroy(struct mlx5_wq_ctrl *wq_ctrl);
  
 
 
