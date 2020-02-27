@@ -2,181 +2,146 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 323B5C3567B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C618BC11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11AB62469C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A51442469C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:37:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730313AbgB0Qgf (ORCPT
+        id S1730333AbgB0Qha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 11:36:35 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39652 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729970AbgB0Qge (ORCPT
+        Thu, 27 Feb 2020 11:37:30 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:38936 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1730046AbgB0Qha (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 11:36:34 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id EFBD52963F3;
-        Thu, 27 Feb 2020 16:36:32 +0000 (GMT)
-Date:   Thu, 27 Feb 2020 17:36:30 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Pratyush Yadav <p.yadav@ti.com>
-Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v2 03/11] spi: spi-mem: allow specifying whether an op
- is DTR or not
-Message-ID: <20200227173630.40da81da@collabora.com>
-In-Reply-To: <20200226093703.19765-4-p.yadav@ti.com>
-References: <20200226093703.19765-1-p.yadav@ti.com>
-        <20200226093703.19765-4-p.yadav@ti.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 27 Feb 2020 11:37:30 -0500
+Received: (qmail 3400 invoked by uid 2102); 27 Feb 2020 11:37:29 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 27 Feb 2020 11:37:29 -0500
+Date:   Thu, 27 Feb 2020 11:37:29 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Boqun Feng <boqun.feng@gmail.com>
+cc:     linux-kernel@vger.kernel.org,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        <linux-arch@vger.kernel.org>, <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v3 4/5] Documentation/locking/atomic: Add a litmus test
+ for atomic_set()
+In-Reply-To: <20200227004049.6853-5-boqun.feng@gmail.com>
+Message-ID: <Pine.LNX.4.44L0.2002271136110.1730-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Feb 2020 15:06:55 +0530
-Pratyush Yadav <p.yadav@ti.com> wrote:
+On Thu, 27 Feb 2020, Boqun Feng wrote:
 
-> Each phase is given a separate 'is_dtr' field so mixed protocols like
-> 4S-4D-4D can be supported.
+> We already use a litmus test in atomic_t.txt to describe the behavior of
+> an atomic_set() with the an atomic RMW, so add it into atomic-tests
+> directory to make it easily accessible for anyone who cares about the
+> semantics of our atomic APIs.
 > 
-> Also add the mode bits SPI_RX_DTR and SPI_TX_DTR so controllers can
-> specify whether they support DTR modes or not.
+> Additionally, change the sentences describing the test in atomic_t.txt
+> with better wording.
 > 
-> Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 > ---
->  drivers/spi/spi-mem.c       | 23 +++++++++++++++++++++++
->  include/linux/spi/spi-mem.h |  8 ++++++++
->  2 files changed, 31 insertions(+)
+>  ...c-RMW-ops-are-atomic-WRT-atomic_set.litmus | 24 +++++++++++++++++++
+>  Documentation/atomic-tests/README             |  7 ++++++
+>  Documentation/atomic_t.txt                    |  6 ++---
+>  3 files changed, 34 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/atomic-tests/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
 > 
-> diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
-> index e5a46f0eb93b..cb13e0878b95 100644
-> --- a/drivers/spi/spi-mem.c
-> +++ b/drivers/spi/spi-mem.c
-> @@ -99,6 +99,16 @@ void spi_controller_dma_unmap_mem_op_data(struct spi_controller *ctlr,
->  }
->  EXPORT_SYMBOL_GPL(spi_controller_dma_unmap_mem_op_data);
->  
-> +static int spi_check_dtr_req(struct spi_mem *mem, bool tx)
+> diff --git a/Documentation/atomic-tests/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus b/Documentation/atomic-tests/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+> new file mode 100644
+> index 000000000000..5dd7f04e504a
+> --- /dev/null
+> +++ b/Documentation/atomic-tests/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+> @@ -0,0 +1,24 @@
+> +C Atomic-set-observable-to-RMW
+
+This line needs to match the filename.  Aside from that,
+
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+
+
+> +
+> +(*
+> + * Result: Never
+> + *
+> + * Test that atomic_set() cannot break the atomicity of atomic RMWs.
+> + *)
+> +
 > +{
-> +	u32 mode = mem->spi->mode;
-> +
-> +	if ((tx && (mode & SPI_TX_DTR)) || (!tx && (mode & SPI_RX_DTR)))
-> +		return 0;
-> +
-> +	return -ENOTSUPP;
+> +	atomic_t v = ATOMIC_INIT(1);
 > +}
 > +
->  static int spi_check_buswidth_req(struct spi_mem *mem, u8 buswidth, bool tx)
->  {
->  	u32 mode = mem->spi->mode;
-> @@ -154,6 +164,19 @@ bool spi_mem_default_supports_op(struct spi_mem *mem,
->  				   op->data.dir == SPI_MEM_DATA_OUT))
->  		return false;
->  
-> +	if (op->cmd.is_dtr && spi_check_dtr_req(mem, true))
-> +		return false;
+> +P0(atomic_t *v)
+> +{
+> +	(void)atomic_add_unless(v,1,0);
+> +}
 > +
-> +	if (op->addr.is_dtr && spi_check_dtr_req(mem, true))
-> +		return false;
+> +P1(atomic_t *v)
+> +{
+> +	atomic_set(v, 0);
+> +}
 > +
-> +	if (op->dummy.is_dtr && spi_check_dtr_req(mem, true))
-> +		return false;
+> +exists
+> +(v=2)
+> diff --git a/Documentation/atomic-tests/README b/Documentation/atomic-tests/README
+> index ae61201a4271..a1b72410b539 100644
+> --- a/Documentation/atomic-tests/README
+> +++ b/Documentation/atomic-tests/README
+> @@ -2,3 +2,10 @@ This directory contains litmus tests that are typical to describe the semantics
+>  of our atomic APIs. For more information about how to "run" a litmus test or
+>  how to generate a kernel test module based on a litmus test, please see
+>  tools/memory-model/README.
 > +
-> +	if (op->data.dir != SPI_MEM_NO_DATA && op->data.is_dtr &&
-> +	    spi_check_dtr_req(mem, op->data.dir == SPI_MEM_DATA_OUT))
-> +		return false;
+> +============
+> +LITMUS TESTS
+> +============
 > +
-
-Not all controllers use spi_mem_default_supports_op(). Those should be
-patched to reject DTR ops too.
-
->  	return true;
->  }
->  EXPORT_SYMBOL_GPL(spi_mem_default_supports_op);
-> diff --git a/include/linux/spi/spi-mem.h b/include/linux/spi/spi-mem.h
-> index af9ff2f0f1b2..4669082b4e3b 100644
-> --- a/include/linux/spi/spi-mem.h
-> +++ b/include/linux/spi/spi-mem.h
-> @@ -71,6 +71,7 @@ enum spi_mem_data_dir {
->   * struct spi_mem_op - describes a SPI memory operation
->   * @cmd.buswidth: number of IO lines used to transmit the command
->   * @cmd.opcode: operation opcode
-> + * @cmd.is_dtr: whether the command opcode should be sent in DTR mode or not
->   * @addr.nbytes: number of address bytes to send. Can be zero if the operation
->   *		 does not need to send an address
->   * @addr.buswidth: number of IO lines used to transmit the address cycles
-> @@ -78,10 +79,13 @@ enum spi_mem_data_dir {
->   *	      Note that only @addr.nbytes are taken into account in this
->   *	      address value, so users should make sure the value fits in the
->   *	      assigned number of bytes.
-> + * @addr.is_dtr: whether the address should be sent in DTR mode or not
->   * @dummy.nbytes: number of dummy bytes to send after an opcode or address. Can
->   *		  be zero if the operation does not require dummy bytes
->   * @dummy.buswidth: number of IO lanes used to transmit the dummy bytes
-> + * @dummy.is_dtr: whether the dummy bytes should be sent in DTR mode or not
->   * @data.buswidth: number of IO lanes used to send/receive the data
-> + * @data.is_dtr: whether the data should be sent in DTR mode or not
->   * @data.dir: direction of the transfer
->   * @data.nbytes: number of data bytes to send/receive. Can be zero if the
->   *		 operation does not involve transferring data
-> @@ -92,21 +96,25 @@ struct spi_mem_op {
->  	struct {
->  		u8 buswidth;
->  		u8 opcode;
-> +		bool is_dtr;
-
-Hm, maybe use a bitfield here so we can pack other fields if needed.
-Also not convince the 'is_' prefix is useful.
-
-		u8 dtr : 1;
-
->  	} cmd;
+> +Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+> +	Test that atomic_set() cannot break the atomicity of atomic RMWs.
+> diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
+> index ceb85ada378e..67d1d99f8589 100644
+> --- a/Documentation/atomic_t.txt
+> +++ b/Documentation/atomic_t.txt
+> @@ -85,10 +85,10 @@ smp_store_release() respectively. Therefore, if you find yourself only using
+>  the Non-RMW operations of atomic_t, you do not in fact need atomic_t at all
+>  and are doing it wrong.
 >  
->  	struct {
->  		u8 nbytes;
->  		u8 buswidth;
-
-Maybe move the dtr field here so the compiler can pack things instead of
-adding extra padding for the u64 alignment.
-
-		u8 dtr : 1;
-
->  		u64 val;
-> +		bool is_dtr;
->  	} addr;
+> -A subtle detail of atomic_set{}() is that it should be observable to the RMW
+> -ops. That is:
+> +A note for the implementation of atomic_set{}() is that it must not break the
+> +atomicity of the RMW ops. That is:
 >  
->  	struct {
->  		u8 nbytes;
->  		u8 buswidth;
-> +		bool is_dtr;
->  	} dummy;
+> -  C atomic-set
+> +  C Atomic-RMW-ops-are-atomic-WRT-atomic_set
 >  
->  	struct {
->  		u8 buswidth;
-> +		bool is_dtr;
->  		enum spi_mem_data_dir dir;
->  		unsigned int nbytes;
->  		union {
+>    {
+>      atomic_t v = ATOMIC_INIT(1);
+> 
 
