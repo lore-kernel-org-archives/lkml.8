@@ -2,177 +2,120 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B84BC4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC86C4BA3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E763E24691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5048324691
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 11:34:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=blueyonder.co.uk header.i=@blueyonder.co.uk header.b="T4tfyila"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgB0LeT (ORCPT
+        id S1728925AbgB0Lel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 06:34:19 -0500
-Received: from mx2.suse.de ([195.135.220.15]:39960 "EHLO mx2.suse.de"
+        Thu, 27 Feb 2020 06:34:41 -0500
+Received: from know-smtprelay-omc-7.server.virginmedia.net ([80.0.253.71]:34527
+        "EHLO know-smtprelay-omc-7.server.virginmedia.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728856AbgB0LeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 06:34:19 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 78822AD14;
-        Thu, 27 Feb 2020 11:34:16 +0000 (UTC)
-Subject: Re: [PATCH] drm/bridge: analogix-anx6345: fix set of link bandwidth
-To:     Icenowy Zheng <icenowy@aosc.io>, Torsten Duwe <duwe@lst.de>
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Maxime Ripard <maxime@cerno.tech>
-References: <20200221165127.813325-1-icenowy@aosc.io>
- <20200221171328.GC6928@lst.de> <1E7BDB0F-639B-42BB-A4B4-A4C8CF94EBE0@aosc.io>
- <f4109d23-4591-1c52-2822-0a2ba358fe1f@suse.de>
- <07EED5EC-28C6-473D-B672-509F5C770479@aosc.io>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <08f290ef-7dd0-c8b9-0177-3248fb153eca@suse.de>
-Date:   Thu, 27 Feb 2020 12:34:13 +0100
+        id S1728856AbgB0Lel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 06:34:41 -0500
+Received: from [192.168.10.214] ([82.47.85.138])
+        by cmsmtp with ESMTPA
+        id 7HR9joFfJIUP97HR9jMhre; Thu, 27 Feb 2020 11:34:39 +0000
+X-Originating-IP: [82.47.85.138]
+X-Authenticated-User: sboyce@blueyonder.co.uk
+X-Spam: 0
+X-Authority: v=2.3 cv=Is0wjo3g c=1 sm=1 tr=0 a=mctQX8G8JfdR+oUIdXtpKQ==:117
+ a=mctQX8G8JfdR+oUIdXtpKQ==:17 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=N659UExz7-8A:10 a=x7bEGLp0ZPQA:10 a=a5Gf7U6LAAAA:8 a=VwQbUJbxAAAA:8
+ a=bgUkVmbCD3rZoZhqrOMA:9 a=pILNOxqGKmIA:10 a=VWYBCMy2-3DvUfgBPAUA:22
+ a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=blueyonder.co.uk;
+        s=meg.feb2017; t=1582803279;
+        bh=kyU+HwFBHW2yIellqsW7HfGh+tJNY06Lde13A6sZuZM=;
+        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=T4tfyilac2vZkL2q2TlxVyhgebDS9QjK9o86Kx/f1lLi8n4A6ioJ+mJcdCJTH0RmT
+         swmZK32QofJ+IQfsn0zgtdJoJNTnX+YAaU/dSrdWUGRUbEo6sadXZBY6oqz81o22pC
+         PGWlO09tlajW5z+bKDQlxOJ8yTs2Orl8hmaFB1N4b15c1W9SfYmRZzdcJOActMoNOm
+         bqB0vUWTegObcBopOHVvtpNP4f+j6alo5pcLGY4X/E8fRAihwjkmeFkzqx4hyZa4lX
+         V77SibGBok/qxd0YQ1VMaY6hC2zOr3MtIi8SM7f+WdCZZHaP9OE/MKtDpz1NvAC/jO
+         0EenTdevzxvwA==
+Reply-To: sboyce@blueyonder.co.uk
+Subject: Re: 5.6-rc3 nouveau failure, 5.6-rc2 OK
+To:     Gabriel C <nix.or.die@gmail.com>
+Cc:     LKML Mailing List <linux-kernel@vger.kernel.org>
+References: <ae2dc143-8d38-1942-9ebd-87c9c9c09960@blueyonder.co.uk>
+ <CAEJqkgiXE-ye_P99FGcFM8j7Qqd3npKM9kY44MEnxGZF2_Hntw@mail.gmail.com>
+From:   Sid Boyce <sboyce@blueyonder.co.uk>
+Organization: blueyonder.co.uk
+Message-ID: <a2c26090-0b40-1011-503d-68425daf1ef3@blueyonder.co.uk>
+Date:   Thu, 27 Feb 2020 11:34:39 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <07EED5EC-28C6-473D-B672-509F5C770479@aosc.io>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEJqkgiXE-ye_P99FGcFM8j7Qqd3npKM9kY44MEnxGZF2_Hntw@mail.gmail.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-CMAE-Envelope: MS4wfBJzzRL/vOuOHfpayiTIbmJTyaFh1X3lah1kq27GAtjf+qcyDMkHy/hlUR1ZiYwYhh3A/T9KTFaObWcBerCs6qha54inGdhfkamqC+A+BXx5Fvlyh1sh
+ XfIszymtD1oY7/kuJfN5AtP36bhEF1lixUbDEvfm+KvxYOdq9leoy+mABhKWLPjyvBrJ28L0VRfbKAo31s7B62hl2tbkdUpyzvxUZXjXJcUFkStbg2yUXszn
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+Thanks Gabriel.
+I'll do that.
+Regards
+Sid.
 
-Am 26.02.20 um 12:02 schrieb Icenowy Zheng:
-> 
-> 
-> 于 2020年2月26日 GMT+08:00 下午6:58:43, Thomas Zimmermann <tzimmermann@suse.de> 写到:
->> Hi Iceynow,
+On 27/02/2020 03:14, Gabriel C wrote:
+> Am Do., 27. Feb. 2020 um 01:24 Uhr schrieb Sid Boyce <sboyce@blueyonder.co.uk>:
+>
+> Hello,
+>
+>> [94.455712] [T411] nouveau 0000:07:00.0 disp ctor failed, -12
 >>
->> Torsten asked me to merge your patch via drm-misc-next. I'd add the
->> additional cc and fixes tags that Torsten listed. Are you OK with that?
-> 
-> I think this fixes a driver (and a board) available in 5.6.
-> 
-> Maybe it should enter fixes?
-
-Pushed to drm-misc-fixes
-
-Best regards
-Thomas
-
-> 
+>> Welcome to openSUSE Tumbleweed 20200224 - Kernel 5.6.0-rc3 (tty1)
 >>
->> Best regards
->> Thomas
+>> ens3s0: 192.168.10.214 .......
 >>
->> Am 22.02.20 um 03:43 schrieb Icenowy Zheng:
->>>
->>>
->>> 于 2020年2月22日 GMT+08:00 上午1:13:28, Torsten Duwe <duwe@lst.de> 写到:
->>>> On Sat, Feb 22, 2020 at 12:51:27AM +0800, Icenowy Zheng wrote:
->>>>> Current code tries to store the link rate (in bps, which is a big
->>>>> number) in a u8, which surely overflow. Then it's converted back to
->>>>> bandwidth code (which is thus 0) and written to the chip.
->>>>>
->>>>> The code sometimes works because the chip will automatically
->> fallback
->>>> to
->>>>> the lowest possible DP link rate (1.62Gbps) when get the invalid
->>>> value.
->>>>> However, on the eDP panel of Olimex TERES-I, which wants 2.7Gbps
->>>> link,
->>>>> it failed.
->>>>>
->>>>> As we had already read the link bandwidth as bandwidth code in
->>>> earlier
->>>>> code (to check whether it is supported), use it when setting
->>>> bandwidth,
->>>>> instead of converting it to link rate and then converting back.
->>>>>
->>>>> Fixes: e1cff82c1097 ("drm/bridge: fix anx6345 compilation for
->> v5.5")
->>>>> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
->>>>> ---
->>>>>  drivers/gpu/drm/bridge/analogix/analogix-anx6345.c | 3 +--
->>>>>  1 file changed, 1 insertion(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
->>>> b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
->>>>> index 56f55c53abfd..2dfa2fd2a23b 100644
->>>>> --- a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
->>>>> +++ b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
->>>>> @@ -210,8 +210,7 @@ static int anx6345_dp_link_training(struct
->>>> anx6345 *anx6345)
->>>>>  	if (err)
->>>>>  		return err;
->>>>>  
->>>>> -	dpcd[0] = drm_dp_max_link_rate(anx6345->dpcd);
->>>>> -	dpcd[0] = drm_dp_link_rate_to_bw_code(dpcd[0]);
->>>>> +	dpcd[0] = dp_bw;
->>>>
->>>> Why do you make this assignment and not use dp_bw directly in the
->> call?
->>>
->>> Because the dpcd array is then written as a continous array
->>> back to DPCD.
->>>
->>>>
->>>>>  	err = regmap_write(anx6345->map[I2C_IDX_DPTX],
->>>>>  			   SP_DP_MAIN_LINK_BW_SET_REG, dpcd[0]);
->>>>                                                       ^^^^^^
->>>>>  	if (err)
->>>>> -- 
->>>>> 2.24.1
->>>>
->>>> BTW, my version is only a bit more verbose:
->>>>
->>>> https://patchwork.freedesktop.org/patch/354344/
->>>>
->>>> 	Torsten
->>>
-> 
+>> login:
+>>
+>>
+>> I can login here but X does not start -- lspci
+>>
+>> 07:00.0 VGA compatible controller: NVIDIA Corporation TU117 [GeForce GTX
+>> 1650] (rev a1)
+>>
+>> from dmesg:-
+>>
+>> [Wed Feb 26 22:42:39 2020] nouveau 0000:07:00.0: NVIDIA TU117 (167000a1)
+>> [Wed Feb 26 22:42:39 2020] nouveau 0000:07:00.0: bios: version
+>> 90.17.2a.00.39
+>> [Wed Feb 26 22:44:12 2020] nouveau 0000:07:00.0: disp ctor failed, -12
+>> [Wed Feb 26 22:44:12 2020] nouveau: probe of 0000:07:00.0 failed with
+>> error -12
+>>
+> *Warning* I have no idea bout Nvidia GPU HW :-). I saw this commit in
+> linux-firmware git added 8 days ago:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/commit/?id=2277987a593d54c1e922a9f25445802071015f42
+>
+> Maybe you just need to update your firmware package.
+>
+> BR,
+>
+> Gabriel C.
+
 
 -- 
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-(HRB 36809, AG Nürnberg)
-Geschäftsführer: Felix Imendörffer
+Sid Boyce ... Hamradio License G3VBV, Licensed Private Pilot
+Emeritus IBM/Amdahl Mainframes and Sun/Fujitsu Servers Tech Support
+Senior Staff Specialist, Cricket Coach
+Microsoft Windows Free Zone - Linux used for all Computing Tasks
+
