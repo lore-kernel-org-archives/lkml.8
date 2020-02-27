@@ -2,53 +2,52 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FA1C35E1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A65C3F355
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4C232073D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:56:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFA60246A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:55:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811760;
-	bh=oLbUzD+4xeNv+rMD+6MlRuma9jx0gAq0UukvmXmctKw=;
+	s=default; t=1582811712;
+	bh=9loN91LzLqv3kU3rzAlsVgkm9DxvKaVuV8jhC5wp+P4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fAKsSerrUkx2Jm0COR9VYOYaGetZCPW4viwSb14sd9ZmcYhp2GawXs2QtLKOH8pzh
-	 wEwdivQQZ2U1KfqDLtJZAtrPHl3DyTwWhq8hT9tMISxnBRMpyFnhTFqZKiloZT50SE
-	 hGbHH1ELDpbKGK6idKQkvoV7vj0CW5sSGFUE/ebg=
+	b=Gde1l5luGjcITgn6sJi6ooaVYNqYcMyFaSZc3IiQxMwhXxOpkJUT9k2ODVAOx7G5Q
+	 ZyfRO0vqamDCJ0ZzZRN/KHbpuRTrxdqla5Q6XegNEzZFn1yagvP0NM5NUN7r6tBahU
+	 uCfTTb83aK7FijT8k4RoMtwtPv+/bSJySRz/KJ4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732054AbgB0Nz7 (ORCPT
+        id S1731826AbgB0NzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:55:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56300 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:55:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732038AbgB0Nzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:55:55 -0500
+        id S1731944AbgB0NzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:55:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 366DC20578;
-        Thu, 27 Feb 2020 13:55:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5111246A0;
+        Thu, 27 Feb 2020 13:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811754;
-        bh=oLbUzD+4xeNv+rMD+6MlRuma9jx0gAq0UukvmXmctKw=;
+        s=default; t=1582811707;
+        bh=9loN91LzLqv3kU3rzAlsVgkm9DxvKaVuV8jhC5wp+P4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TYevGLbYBluKxCBCaPipbC8gR0+vSa5EHpAceA39V9kSFGspLEPuryWHzxNxYSpAQ
-         AKa8vcxAg4vyJLsUs/XZEQijZVZ/dkHRts4/tZgU0v39eYPB3OvRgiJbz/tSe1DsM0
-         ky18yxuy/fhBX6HpD4BQBDk8fPfkJEdhBWFYhk3Y=
+        b=TLINN8TKA4RQNkzWHylx0L9vU1ba8g2e0P4DJyYWLvexT1kCHZLoFSU9af14sHvQL
+         8jOu2kLgb//CuiKnc+JWIJKfBY2mtrfkoxwUcoy0pAwwdh1FBvZ+YtBxaxtOctNsCI
+         YdxFKGllQFvaX9EJ1mt3is95f+qZjZgvVWcCfAb4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 089/237] scsi: aic7xxx: Adjust indentation in ahc_find_syncrate
-Date:   Thu, 27 Feb 2020 14:35:03 +0100
-Message-Id: <20200227132303.593204276@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Tso <tytso@mit.edu>,
+        stable@kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 033/237] jbd2: move the clearing of b_modified flag to the journal_unmap_buffer()
+Date:   Thu, 27 Feb 2020 14:34:07 +0100
+Message-Id: <20200227132259.158942633@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -61,52 +60,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-[ Upstream commit 4dbc96ad65c45cdd4e895ed7ae4c151b780790c5 ]
+[ Upstream commit 6a66a7ded12baa6ebbb2e3e82f8cb91382814839 ]
 
-Clang warns:
+There is no need to delay the clearing of b_modified flag to the
+transaction committing time when unmapping the journalled buffer, so
+just move it to the journal_unmap_buffer().
 
-../drivers/scsi/aic7xxx/aic7xxx_core.c:2317:5: warning: misleading
-indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-                        if ((syncrate->sxfr_u2 & ST_SXFR) != 0)
-                        ^
-../drivers/scsi/aic7xxx/aic7xxx_core.c:2310:4: note: previous statement
-is here
-                        if (syncrate == &ahc_syncrates[maxsync])
-                        ^
-1 warning generated.
-
-This warning occurs because there is a space amongst the tabs on this
-line. Remove it so that the indentation is consistent with the Linux kernel
-coding style and clang no longer warns.
-
-This has been a problem since the beginning of git history hence no fixes
-tag.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/817
-Link: https://lore.kernel.org/r/20191218014220.52746-1-natechancellor@gmail.com
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Link: https://lore.kernel.org/r/20200213063821.30455-2-yi.zhang@huawei.com
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/aic7xxx/aic7xxx_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/jbd2/commit.c      | 43 +++++++++++++++----------------------------
+ fs/jbd2/transaction.c | 10 ++++++----
+ 2 files changed, 21 insertions(+), 32 deletions(-)
 
-diff --git a/drivers/scsi/aic7xxx/aic7xxx_core.c b/drivers/scsi/aic7xxx/aic7xxx_core.c
-index 3818461640031..fdbb0a3dc9b4f 100644
---- a/drivers/scsi/aic7xxx/aic7xxx_core.c
-+++ b/drivers/scsi/aic7xxx/aic7xxx_core.c
-@@ -2321,7 +2321,7 @@ ahc_find_syncrate(struct ahc_softc *ahc, u_int *period,
- 			 * At some speeds, we only support
- 			 * ST transfers.
- 			 */
--		 	if ((syncrate->sxfr_u2 & ST_SXFR) != 0)
-+			if ((syncrate->sxfr_u2 & ST_SXFR) != 0)
- 				*ppr_options &= ~MSG_EXT_PPR_DT_REQ;
- 			break;
+diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
+index 7dd6133925921..89cbf45a1dcda 100644
+--- a/fs/jbd2/commit.c
++++ b/fs/jbd2/commit.c
+@@ -973,34 +973,21 @@ void jbd2_journal_commit_transaction(journal_t *journal)
+ 		 * it. */
+ 
+ 		/*
+-		* A buffer which has been freed while still being journaled by
+-		* a previous transaction.
+-		*/
+-		if (buffer_freed(bh)) {
+-			/*
+-			 * If the running transaction is the one containing
+-			 * "add to orphan" operation (b_next_transaction !=
+-			 * NULL), we have to wait for that transaction to
+-			 * commit before we can really get rid of the buffer.
+-			 * So just clear b_modified to not confuse transaction
+-			 * credit accounting and refile the buffer to
+-			 * BJ_Forget of the running transaction. If the just
+-			 * committed transaction contains "add to orphan"
+-			 * operation, we can completely invalidate the buffer
+-			 * now. We are rather through in that since the
+-			 * buffer may be still accessible when blocksize <
+-			 * pagesize and it is attached to the last partial
+-			 * page.
+-			 */
+-			jh->b_modified = 0;
+-			if (!jh->b_next_transaction) {
+-				clear_buffer_freed(bh);
+-				clear_buffer_jbddirty(bh);
+-				clear_buffer_mapped(bh);
+-				clear_buffer_new(bh);
+-				clear_buffer_req(bh);
+-				bh->b_bdev = NULL;
+-			}
++		 * A buffer which has been freed while still being journaled
++		 * by a previous transaction, refile the buffer to BJ_Forget of
++		 * the running transaction. If the just committed transaction
++		 * contains "add to orphan" operation, we can completely
++		 * invalidate the buffer now. We are rather through in that
++		 * since the buffer may be still accessible when blocksize <
++		 * pagesize and it is attached to the last partial page.
++		 */
++		if (buffer_freed(bh) && !jh->b_next_transaction) {
++			clear_buffer_freed(bh);
++			clear_buffer_jbddirty(bh);
++			clear_buffer_mapped(bh);
++			clear_buffer_new(bh);
++			clear_buffer_req(bh);
++			bh->b_bdev = NULL;
  		}
+ 
+ 		if (buffer_jbddirty(bh)) {
+diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
+index 7fe422eced89b..f2ff141a4479e 100644
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -2231,14 +2231,16 @@ static int journal_unmap_buffer(journal_t *journal, struct buffer_head *bh,
+ 			return -EBUSY;
+ 		}
+ 		/*
+-		 * OK, buffer won't be reachable after truncate. We just set
+-		 * j_next_transaction to the running transaction (if there is
+-		 * one) and mark buffer as freed so that commit code knows it
+-		 * should clear dirty bits when it is done with the buffer.
++		 * OK, buffer won't be reachable after truncate. We just clear
++		 * b_modified to not confuse transaction credit accounting, and
++		 * set j_next_transaction to the running transaction (if there
++		 * is one) and mark buffer as freed so that commit code knows
++		 * it should clear dirty bits when it is done with the buffer.
+ 		 */
+ 		set_buffer_freed(bh);
+ 		if (journal->j_running_transaction && buffer_jbddirty(bh))
+ 			jh->b_next_transaction = journal->j_running_transaction;
++		jh->b_modified = 0;
+ 		jbd2_journal_put_journal_head(jh);
+ 		spin_unlock(&journal->j_list_lock);
+ 		jbd_unlock_bh_state(bh);
 -- 
 2.20.1
 
