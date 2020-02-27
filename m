@@ -2,54 +2,52 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C79BDC3F358
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7610DC3F356
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9546B20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E8E520801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811407;
-	bh=OjlB9AVcPer6GvN/IsZeDID4gRoeRc0i8+HUSWT00wc=;
+	s=default; t=1582811297;
+	bh=0ghdP1grCzdwHSd1n2a9mI5We/QHyGeZGfESMMJlXHI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OuoS5uvwLFWPGmWlTwfPnO6tyYA4ZLLgbvSuPfTErp+Qr2TRAgv09hk6GQ1VUFyCa
-	 d3aZjsA9Y4QgNJ41nV42hDn6OeG1pFeH+Ed2a3lPdKIHWPYNK2Gc3dFSqazR1LnIW+
-	 4KWwVE30grYws8TTfXto+sfsjdlnpRMU5KFO8HOw=
+	b=X+VHlfqoDeIq+Z4FreOxCPGXk05GGf5ttwweQ3UIpQbXwHo+iR+HkGTXxjawRQR+A
+	 EbL5F93DlFrx3vs67wvl12959Le32+Ud0l3/kS7GhrddDOIciL2v/ruR6VZqs3C0of
+	 ICxfbEeHLK9UJfMheU2wWut2qfXoIVqQGuP8dAvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731158AbgB0NuF (ORCPT
+        id S1730842AbgB0NsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:50:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47542 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:48:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731109AbgB0Ntv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:49:51 -0500
+        id S1730837AbgB0NsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:48:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAC5C20801;
-        Thu, 27 Feb 2020 13:49:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 303E820578;
+        Thu, 27 Feb 2020 13:48:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811391;
-        bh=OjlB9AVcPer6GvN/IsZeDID4gRoeRc0i8+HUSWT00wc=;
+        s=default; t=1582811292;
+        bh=0ghdP1grCzdwHSd1n2a9mI5We/QHyGeZGfESMMJlXHI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2LSAht2pCjuLgNxk4U6vBrNPu2ZBwxvZLf0o94zZFFEeAOKlcJvLPaWq4JUv4UO1F
-         ic+i2XuoTRV5apZcLlO1doAWiTpDTp1W1Uoaax20/8Gb2ryPQsi4Fuf/dHo+T5ziGX
-         QkFAvqeAmuUorXCBdtbAL8A+wahx3nTkmgkcwLIc=
+        b=gWDcitglPOAKtZRoSW5e8Kdt98UGu1h5o6qA8ycOL30RvlCh2kF8WWQVsz5mVv3dO
+         zEUJHFLk4UmVu1Cq2YIurrfXxC0umXAvFuAjTX0royuh3cygSoG4V7u1z08zO72egO
+         NGgjI1J/8YJb2o6mWv+ZePM3QZZDXgEUAUs9O1yE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 087/165] pwm: omap-dmtimer: Remove PWM chip in .remove before making it unfunctional
-Date:   Thu, 27 Feb 2020 14:36:01 +0100
-Message-Id: <20200227132244.012933520@linuxfoundation.org>
+Subject: [PATCH 4.9 075/165] tty: synclinkmp: Adjust indentation in several functions
+Date:   Thu, 27 Feb 2020 14:35:49 +0100
+Message-Id: <20200227132242.376250187@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -62,47 +60,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 43efdc8f0e6d7088ec61bd55a73bf853f002d043 ]
+[ Upstream commit 1feedf61e7265128244f6993f23421f33dd93dbc ]
 
-In the old code (e.g.) mutex_destroy() was called before
-pwmchip_remove(). Between these two calls it is possible that a PWM
-callback is used which tries to grab the mutex.
+Clang warns:
 
-Fixes: 6604c6556db9 ("pwm: Add PWM driver for OMAP using dual-mode timers")
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+../drivers/tty/synclinkmp.c:1456:3: warning: misleading indentation;
+statement is not part of the previous 'if' [-Wmisleading-indentation]
+        if (C_CRTSCTS(tty)) {
+        ^
+../drivers/tty/synclinkmp.c:1453:2: note: previous statement is here
+        if (I_IXOFF(tty))
+        ^
+../drivers/tty/synclinkmp.c:2473:8: warning: misleading indentation;
+statement is not part of the previous 'if' [-Wmisleading-indentation]
+                                                info->port.tty->hw_stopped = 0;
+                                                ^
+../drivers/tty/synclinkmp.c:2471:7: note: previous statement is here
+                                                if ( debug_level >= DEBUG_LEVEL_ISR )
+                                                ^
+../drivers/tty/synclinkmp.c:2482:8: warning: misleading indentation;
+statement is not part of the previous 'if' [-Wmisleading-indentation]
+                                                info->port.tty->hw_stopped = 1;
+                                                ^
+../drivers/tty/synclinkmp.c:2480:7: note: previous statement is here
+                                                if ( debug_level >= DEBUG_LEVEL_ISR )
+                                                ^
+../drivers/tty/synclinkmp.c:2809:3: warning: misleading indentation;
+statement is not part of the previous 'if' [-Wmisleading-indentation]
+        if (I_BRKINT(info->port.tty) || I_PARMRK(info->port.tty))
+        ^
+../drivers/tty/synclinkmp.c:2807:2: note: previous statement is here
+        if (I_INPCK(info->port.tty))
+        ^
+../drivers/tty/synclinkmp.c:3246:3: warning: misleading indentation;
+statement is not part of the previous 'else' [-Wmisleading-indentation]
+        set_signals(info);
+        ^
+../drivers/tty/synclinkmp.c:3244:2: note: previous statement is here
+        else
+        ^
+5 warnings generated.
+
+The indentation on these lines is not at all consistent, tabs and spaces
+are mixed together. Convert to just using tabs to be consistent with the
+Linux kernel coding style and eliminate these warnings from clang.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/823
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Link: https://lore.kernel.org/r/20191218024720.3528-1-natechancellor@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-omap-dmtimer.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/tty/synclinkmp.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
-index 5ad42f33e70c1..2e15acf13893d 100644
---- a/drivers/pwm/pwm-omap-dmtimer.c
-+++ b/drivers/pwm/pwm-omap-dmtimer.c
-@@ -337,6 +337,11 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
- static int pwm_omap_dmtimer_remove(struct platform_device *pdev)
- {
- 	struct pwm_omap_dmtimer_chip *omap = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = pwmchip_remove(&omap->chip);
-+	if (ret)
-+		return ret;
+diff --git a/drivers/tty/synclinkmp.c b/drivers/tty/synclinkmp.c
+index dec156586de1b..2f6df8d74b4aa 100644
+--- a/drivers/tty/synclinkmp.c
++++ b/drivers/tty/synclinkmp.c
+@@ -1467,10 +1467,10 @@ static void throttle(struct tty_struct * tty)
+ 	if (I_IXOFF(tty))
+ 		send_xchar(tty, STOP_CHAR(tty));
  
- 	if (pm_runtime_active(&omap->dm_timer_pdev->dev))
- 		omap->pdata->stop(omap->dm_timer);
-@@ -345,7 +350,7 @@ static int pwm_omap_dmtimer_remove(struct platform_device *pdev)
+- 	if (C_CRTSCTS(tty)) {
++	if (C_CRTSCTS(tty)) {
+ 		spin_lock_irqsave(&info->lock,flags);
+ 		info->serial_signals &= ~SerialSignal_RTS;
+-	 	set_signals(info);
++		set_signals(info);
+ 		spin_unlock_irqrestore(&info->lock,flags);
+ 	}
+ }
+@@ -1496,10 +1496,10 @@ static void unthrottle(struct tty_struct * tty)
+ 			send_xchar(tty, START_CHAR(tty));
+ 	}
  
- 	mutex_destroy(&omap->mutex);
+- 	if (C_CRTSCTS(tty)) {
++	if (C_CRTSCTS(tty)) {
+ 		spin_lock_irqsave(&info->lock,flags);
+ 		info->serial_signals |= SerialSignal_RTS;
+-	 	set_signals(info);
++		set_signals(info);
+ 		spin_unlock_irqrestore(&info->lock,flags);
+ 	}
+ }
+@@ -2485,7 +2485,7 @@ static void isr_io_pin( SLMP_INFO *info, u16 status )
+ 					if (status & SerialSignal_CTS) {
+ 						if ( debug_level >= DEBUG_LEVEL_ISR )
+ 							printk("CTS tx start...");
+-			 			info->port.tty->hw_stopped = 0;
++						info->port.tty->hw_stopped = 0;
+ 						tx_start(info);
+ 						info->pending_bh |= BH_TRANSMIT;
+ 						return;
+@@ -2494,7 +2494,7 @@ static void isr_io_pin( SLMP_INFO *info, u16 status )
+ 					if (!(status & SerialSignal_CTS)) {
+ 						if ( debug_level >= DEBUG_LEVEL_ISR )
+ 							printk("CTS tx stop...");
+-			 			info->port.tty->hw_stopped = 1;
++						info->port.tty->hw_stopped = 1;
+ 						tx_stop(info);
+ 					}
+ 				}
+@@ -2821,8 +2821,8 @@ static void change_params(SLMP_INFO *info)
+ 	info->read_status_mask2 = OVRN;
+ 	if (I_INPCK(info->port.tty))
+ 		info->read_status_mask2 |= PE | FRME;
+- 	if (I_BRKINT(info->port.tty) || I_PARMRK(info->port.tty))
+- 		info->read_status_mask1 |= BRKD;
++	if (I_BRKINT(info->port.tty) || I_PARMRK(info->port.tty))
++		info->read_status_mask1 |= BRKD;
+ 	if (I_IGNPAR(info->port.tty))
+ 		info->ignore_status_mask2 |= PE | FRME;
+ 	if (I_IGNBRK(info->port.tty)) {
+@@ -3192,7 +3192,7 @@ static int tiocmget(struct tty_struct *tty)
+  	unsigned long flags;
  
--	return pwmchip_remove(&omap->chip);
-+	return 0;
+ 	spin_lock_irqsave(&info->lock,flags);
+- 	get_signals(info);
++	get_signals(info);
+ 	spin_unlock_irqrestore(&info->lock,flags);
+ 
+ 	result = ((info->serial_signals & SerialSignal_RTS) ? TIOCM_RTS : 0) |
+@@ -3230,7 +3230,7 @@ static int tiocmset(struct tty_struct *tty,
+ 		info->serial_signals &= ~SerialSignal_DTR;
+ 
+ 	spin_lock_irqsave(&info->lock,flags);
+- 	set_signals(info);
++	set_signals(info);
+ 	spin_unlock_irqrestore(&info->lock,flags);
+ 
+ 	return 0;
+@@ -3242,7 +3242,7 @@ static int carrier_raised(struct tty_port *port)
+ 	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&info->lock,flags);
+- 	get_signals(info);
++	get_signals(info);
+ 	spin_unlock_irqrestore(&info->lock,flags);
+ 
+ 	return (info->serial_signals & SerialSignal_DCD) ? 1 : 0;
+@@ -3258,7 +3258,7 @@ static void dtr_rts(struct tty_port *port, int on)
+ 		info->serial_signals |= SerialSignal_RTS | SerialSignal_DTR;
+ 	else
+ 		info->serial_signals &= ~(SerialSignal_RTS | SerialSignal_DTR);
+- 	set_signals(info);
++	set_signals(info);
+ 	spin_unlock_irqrestore(&info->lock,flags);
  }
  
- static const struct of_device_id pwm_omap_dmtimer_of_match[] = {
 -- 
 2.20.1
 
