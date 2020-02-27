@@ -2,53 +2,56 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA66C3F34E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C97C3F344
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75A2C246A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D6C8222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:44:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811075;
-	bh=4zMSgVLvToFvLCsakiT/RfaMvUR1I5kjrs73Rp7VQy4=;
+	s=default; t=1582811068;
+	bh=8Sq9Q3SopWQkArPviu3M2gJTLQ9i8jBrdyWyREF6ct0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sRXpJsMF8isMcREjSccN4Kj0HuJrI4SFMnoSeMg/IcNv8Ret3/fZsc0BLx3l40Dw+
-	 LGaXIGEiww2k5fDodk7UVc4tNzSynrac6UzsLIT8eCUrSrioRNWsVeIkiDfhpKkPAV
-	 WPUeeYaStYKXN4MupWWRqm7wRw7dIXTllPsGxudo=
+	b=WczWbtEQwwZSrGHZ8PQVqhGr6U9Cb3TZlkUiJbVmk3ZPmMnKNmJscy2EXsQalwJdW
+	 NApCckn3jpP9yBtRe8Pi0lJqnSPyFofFEQWS6UauSoFCsDfyfCJYcGbr2ChStjIm9x
+	 4JQH+0D4ax1LTHi14nv3L7R9ScTBVpbpmm+7IjC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729566AbgB0Noe (ORCPT
+        id S1730216AbgB0No0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:44:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40028 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:44:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729834AbgB0Nob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:44:31 -0500
+        id S1730210AbgB0NoY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:44:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB65620726;
-        Thu, 27 Feb 2020 13:44:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0DC020578;
+        Thu, 27 Feb 2020 13:44:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811071;
-        bh=4zMSgVLvToFvLCsakiT/RfaMvUR1I5kjrs73Rp7VQy4=;
+        s=default; t=1582811063;
+        bh=8Sq9Q3SopWQkArPviu3M2gJTLQ9i8jBrdyWyREF6ct0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sUicPGYSmMkSD/7B+nGP5fsum9P2GTvhzv4lXd8iZz8FMa0/xM8nFgxkvAAw4xsV3
-         VHN9hxONY5lHNqOifsN5suXrcpqtaNf1JR308jT1YulVdcJlFWKc8s6ORLfZStz0vv
-         rIRj/Qpf7rSSa0ugCNcuupd/ezSKIvd5NRIn6ebQ=
+        b=nQR1ZQ7wqSHDfEK2oskIVDQ/FKSQFeoZF6HiGztkdHfCZfg+1bqydvod0FErJy7rY
+         3TQylyQLTTuFIXbCQXQZfKfuGPSsssKMCBaT7Nc5k8PfqPjLd56GHvikRIc1lr5Anr
+         2aTrXnA7Le+taMnzWPJB53XohNoGj3VHw6TbJgX4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.4 106/113] Btrfs: fix btrfs_wait_ordered_range() so that it waits for all ordered extents
-Date:   Thu, 27 Feb 2020 14:37:02 +0100
-Message-Id: <20200227132228.731447085@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Black <nlb@google.com>,
+        Salman Qazi <sqazi@google.com>, Junho Ryu <jayr@google.com>,
+        Khazhismel Kumykov <khazhy@google.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Lee Duncan <lduncan@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 063/113] scsi: iscsi: Dont destroy session if there are outstanding connections
+Date:   Thu, 27 Feb 2020 14:36:19 +0100
+Message-Id: <20200227132221.857800344@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
 References: <20200227132211.791484803@linuxfoundation.org>
@@ -61,59 +64,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Nick Black <nlb@google.com>
 
-commit e75fd33b3f744f644061a4f9662bd63f5434f806 upstream.
+[ Upstream commit 54155ed4199c7aa3fd20866648024ab63c96d579 ]
 
-In btrfs_wait_ordered_range() once we find an ordered extent that has
-finished with an error we exit the loop and don't wait for any other
-ordered extents that might be still in progress.
+A faulty userspace that calls destroy_session() before destroying the
+connections can trigger the failure.  This patch prevents the issue by
+refusing to destroy the session if there are outstanding connections.
 
-All the users of btrfs_wait_ordered_range() expect that there are no more
-ordered extents in progress after that function returns. So past fixes
-such like the ones from the two following commits:
+------------[ cut here ]------------
+kernel BUG at mm/slub.c:306!
+invalid opcode: 0000 [#1] SMP PTI
+CPU: 1 PID: 1224 Comm: iscsid Not tainted 5.4.0-rc2.iscsi+ #7
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+RIP: 0010:__slab_free+0x181/0x350
+[...]
+[ 1209.686056] RSP: 0018:ffffa93d4074fae0 EFLAGS: 00010246
+[ 1209.686694] RAX: ffff934efa5ad800 RBX: 000000008010000a RCX: ffff934efa5ad800
+[ 1209.687651] RDX: ffff934efa5ad800 RSI: ffffeb4041e96b00 RDI: ffff934efd402c40
+[ 1209.688582] RBP: ffffa93d4074fb80 R08: 0000000000000001 R09: ffffffffbb5dfa26
+[ 1209.689425] R10: ffff934efa5ad800 R11: 0000000000000001 R12: ffffeb4041e96b00
+[ 1209.690285] R13: ffff934efa5ad800 R14: ffff934efd402c40 R15: 0000000000000000
+[ 1209.691213] FS:  00007f7945dfb540(0000) GS:ffff934efda80000(0000) knlGS:0000000000000000
+[ 1209.692316] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1209.693013] CR2: 000055877fd3da80 CR3: 0000000077384000 CR4: 00000000000006e0
+[ 1209.693897] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 1209.694773] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 1209.695631] Call Trace:
+[ 1209.695957]  ? __wake_up_common_lock+0x8a/0xc0
+[ 1209.696712]  iscsi_pool_free+0x26/0x40
+[ 1209.697263]  iscsi_session_teardown+0x2f/0xf0
+[ 1209.698117]  iscsi_sw_tcp_session_destroy+0x45/0x60
+[ 1209.698831]  iscsi_if_rx+0xd88/0x14e0
+[ 1209.699370]  netlink_unicast+0x16f/0x200
+[ 1209.699932]  netlink_sendmsg+0x21a/0x3e0
+[ 1209.700446]  sock_sendmsg+0x4f/0x60
+[ 1209.700902]  ___sys_sendmsg+0x2ae/0x320
+[ 1209.701451]  ? cp_new_stat+0x150/0x180
+[ 1209.701922]  __sys_sendmsg+0x59/0xa0
+[ 1209.702357]  do_syscall_64+0x52/0x160
+[ 1209.702812]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[ 1209.703419] RIP: 0033:0x7f7946433914
+[...]
+[ 1209.706084] RSP: 002b:00007fffb99f2378 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+[ 1209.706994] RAX: ffffffffffffffda RBX: 000055bc869eac20 RCX: 00007f7946433914
+[ 1209.708082] RDX: 0000000000000000 RSI: 00007fffb99f2390 RDI: 0000000000000005
+[ 1209.709120] RBP: 00007fffb99f2390 R08: 000055bc84fe9320 R09: 00007fffb99f1f07
+[ 1209.710110] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000038
+[ 1209.711085] R13: 000055bc8502306e R14: 0000000000000000 R15: 0000000000000000
+ Modules linked in:
+ ---[ end trace a2d933ede7f730d8 ]---
 
-  ff612ba7849964 ("btrfs: fix panic during relocation after ENOSPC before
-                   writeback happens")
-
-  28aeeac1dd3080 ("Btrfs: fix panic when starting bg cache writeout after
-                   IO error")
-
-don't work when there are multiple ordered extents in the range.
-
-Fix that by making btrfs_wait_ordered_range() wait for all ordered extents
-even after it finds one that had an error.
-
-Link: https://github.com/kdave/btrfs-progs/issues/228#issuecomment-569777554
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://lore.kernel.org/r/20191226203148.2172200-1-krisman@collabora.com
+Signed-off-by: Nick Black <nlb@google.com>
+Co-developed-by: Salman Qazi <sqazi@google.com>
+Signed-off-by: Salman Qazi <sqazi@google.com>
+Co-developed-by: Junho Ryu <jayr@google.com>
+Signed-off-by: Junho Ryu <jayr@google.com>
+Co-developed-by: Khazhismel Kumykov <khazhy@google.com>
+Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
+Co-developed-by: Gabriel Krisman Bertazi <krisman@collabora.com>
+Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/ordered-data.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/scsi/iscsi_tcp.c            |  4 ++++
+ drivers/scsi/scsi_transport_iscsi.c | 26 +++++++++++++++++++++++---
+ 2 files changed, 27 insertions(+), 3 deletions(-)
 
---- a/fs/btrfs/ordered-data.c
-+++ b/fs/btrfs/ordered-data.c
-@@ -820,10 +820,15 @@ int btrfs_wait_ordered_range(struct inod
- 		}
- 		btrfs_start_ordered_extent(inode, ordered, 1);
- 		end = ordered->file_offset;
-+		/*
-+		 * If the ordered extent had an error save the error but don't
-+		 * exit without waiting first for all other ordered extents in
-+		 * the range to complete.
-+		 */
- 		if (test_bit(BTRFS_ORDERED_IOERR, &ordered->flags))
- 			ret = -EIO;
- 		btrfs_put_ordered_extent(ordered);
--		if (ret || end == 0 || end == start)
-+		if (end == 0 || end == start)
- 			break;
- 		end--;
- 	}
+diff --git a/drivers/scsi/iscsi_tcp.c b/drivers/scsi/iscsi_tcp.c
+index fccb8991bd5b7..64a49dccb0b63 100644
+--- a/drivers/scsi/iscsi_tcp.c
++++ b/drivers/scsi/iscsi_tcp.c
+@@ -872,6 +872,10 @@ free_host:
+ static void iscsi_sw_tcp_session_destroy(struct iscsi_cls_session *cls_session)
+ {
+ 	struct Scsi_Host *shost = iscsi_session_to_shost(cls_session);
++	struct iscsi_session *session = cls_session->dd_data;
++
++	if (WARN_ON_ONCE(session->leadconn))
++		return;
+ 
+ 	iscsi_tcp_r2tpool_free(cls_session->dd_data);
+ 	iscsi_session_teardown(cls_session);
+diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
+index ab32e60736424..20cf01d6ded7e 100644
+--- a/drivers/scsi/scsi_transport_iscsi.c
++++ b/drivers/scsi/scsi_transport_iscsi.c
+@@ -2965,6 +2965,24 @@ iscsi_set_path(struct iscsi_transport *transport, struct iscsi_uevent *ev)
+ 	return err;
+ }
+ 
++static int iscsi_session_has_conns(int sid)
++{
++	struct iscsi_cls_conn *conn;
++	unsigned long flags;
++	int found = 0;
++
++	spin_lock_irqsave(&connlock, flags);
++	list_for_each_entry(conn, &connlist, conn_list) {
++		if (iscsi_conn_get_sid(conn) == sid) {
++			found = 1;
++			break;
++		}
++	}
++	spin_unlock_irqrestore(&connlock, flags);
++
++	return found;
++}
++
+ static int
+ iscsi_set_iface_params(struct iscsi_transport *transport,
+ 		       struct iscsi_uevent *ev, uint32_t len)
+@@ -3539,10 +3557,12 @@ iscsi_if_recv_msg(struct sk_buff *skb, struct nlmsghdr *nlh, uint32_t *group)
+ 		break;
+ 	case ISCSI_UEVENT_DESTROY_SESSION:
+ 		session = iscsi_session_lookup(ev->u.d_session.sid);
+-		if (session)
+-			transport->destroy_session(session);
+-		else
++		if (!session)
+ 			err = -EINVAL;
++		else if (iscsi_session_has_conns(ev->u.d_session.sid))
++			err = -EBUSY;
++		else
++			transport->destroy_session(session);
+ 		break;
+ 	case ISCSI_UEVENT_UNBIND_SESSION:
+ 		session = iscsi_session_lookup(ev->u.d_session.sid);
+-- 
+2.20.1
+
 
 
