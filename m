@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9105BC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF94C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6954624656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C401624656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:39:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814354;
-	bh=KOCqnSRue2jZuqWvcRXRfvOeXREYntooj2FRF/DbVq4=;
+	s=default; t=1582814361;
+	bh=0yykBS6MIZWIYyvz4tIC205U5lYukMIJgO3DEgv1NnU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h2pbllEH3pyr91U9fMCYI1sd4PxCLehaZJypV7SWcs9USLUvUb8zD8NrTS39i1JI2
-	 64C/Ru4PrEo7h9YQ1UiSWrQ1LwHYihIe+Q/aSSYUMJMr51ZgA6/UrxpbevFUjgN4eO
-	 ZN0vGZ1EYsUs87JB3bwGE1sx0vsOwHx0E/bHNi2Q=
+	b=s/RL0w3rnaKXMGSSva/QoXrpk+/Ew6bp0yowa4PuIn25taeLj7P1krGVade0iRuiK
+	 tb1AGXzDk5NzOPDCMH59ABk9TQlRJhk743ZTswHCK118C9cRfiDicKAKUA93Z/Q5i0
+	 QLFkV7UhsL08vYHduY6rTXxl1gvZPcfynVVcQMVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732424AbgB0OjM (ORCPT
+        id S1732563AbgB0OjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:39:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55456 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:39:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731954AbgB0NzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:55:12 -0500
+        id S1731931AbgB0Ny7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:54:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B53162469D;
-        Thu, 27 Feb 2020 13:55:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A456C2469B;
+        Thu, 27 Feb 2020 13:54:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811712;
-        bh=KOCqnSRue2jZuqWvcRXRfvOeXREYntooj2FRF/DbVq4=;
+        s=default; t=1582811699;
+        bh=0yykBS6MIZWIYyvz4tIC205U5lYukMIJgO3DEgv1NnU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F0EX/OnYNj0DPpjeVZuUCBQKYJqrgG4UcUY5olzvCYPY0gmQjCDVpORTNYaUyUPQo
-         u4zcltKZSwtwdOSf4VYWxOtJLLHhQn5xER11KYqdO9+mQ0VLQ2ESIK3LBIYLimwdpc
-         zWXwDt1Dp/BSWN/D3C0E9GZDRKVkRFFgGX+/KTGE=
+        b=tladFDftksfHAMOfw+wZ1EFNLOIgQKk6S/j3kIDLnFNHyRtgjh5TFRaCjo0qB1Agg
+         mSOGN9DeOGO4DpUCuzFwFgqD/0GToqc8viygMBaYwbCNsF72PFiWerP1ARK43q4clq
+         NjnGne/rL6RSm5VYxYBtjRBiEKUzELpkOyTZXv/8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 070/237] clk: qcom: rcg2: Dont crash if our parent cant be found; return an error
-Date:   Thu, 27 Feb 2020 14:34:44 +0100
-Message-Id: <20200227132302.287706643@linuxfoundation.org>
+Subject: [PATCH 4.14 066/237] ext4, jbd2: ensure panic when aborting with zero errno
+Date:   Thu, 27 Feb 2020 14:34:40 +0100
+Message-Id: <20200227132301.908303534@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -61,68 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-[ Upstream commit 908b050114d8fefdddc57ec9fbc213c3690e7f5f ]
+[ Upstream commit 51f57b01e4a3c7d7bdceffd84de35144e8c538e7 ]
 
-When I got my clock parenting slightly wrong I ended up with a crash
-that looked like this:
+JBD2_REC_ERR flag used to indicate the errno has been updated when jbd2
+aborted, and then __ext4_abort() and ext4_handle_error() can invoke
+panic if ERRORS_PANIC is specified. But if the journal has been aborted
+with zero errno, jbd2_journal_abort() didn't set this flag so we can
+no longer panic. Fix this by always record the proper errno in the
+journal superblock.
 
-  Unable to handle kernel NULL pointer dereference at virtual
-  address 0000000000000000
-  ...
-  pc : clk_hw_get_rate+0x14/0x44
-  ...
-  Call trace:
-   clk_hw_get_rate+0x14/0x44
-   _freq_tbl_determine_rate+0x94/0xfc
-   clk_rcg2_determine_rate+0x2c/0x38
-   clk_core_determine_round_nolock+0x4c/0x88
-   clk_core_round_rate_nolock+0x6c/0xa8
-   clk_core_round_rate_nolock+0x9c/0xa8
-   clk_core_set_rate_nolock+0x70/0x180
-   clk_set_rate+0x3c/0x6c
-   of_clk_set_defaults+0x254/0x360
-   platform_drv_probe+0x28/0xb0
-   really_probe+0x120/0x2dc
-   driver_probe_device+0x64/0xfc
-   device_driver_attach+0x4c/0x6c
-   __driver_attach+0xac/0xc0
-   bus_for_each_dev+0x84/0xcc
-   driver_attach+0x2c/0x38
-   bus_add_driver+0xfc/0x1d0
-   driver_register+0x64/0xf8
-   __platform_driver_register+0x4c/0x58
-   msm_drm_register+0x5c/0x60
-   ...
-
-It turned out that clk_hw_get_parent_by_index() was returning NULL and
-we weren't checking.  Let's check it so that we don't crash.
-
-Fixes: ac269395cdd8 ("clk: qcom: Convert to clk_hw based provider APIs")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Link: https://lkml.kernel.org/r/20200203103049.v4.1.I7487325fe8e701a68a07d3be8a6a4b571eca9cfa@changeid
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: 4327ba52afd03 ("ext4, jbd2: ensure entering into panic after recording an error in superblock")
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20191204124614.45424-3-yi.zhang@huawei.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/clk-rcg2.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/jbd2/checkpoint.c |  2 +-
+ fs/jbd2/journal.c    | 15 ++++-----------
+ 2 files changed, 5 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/clk/qcom/clk-rcg2.c b/drivers/clk/qcom/clk-rcg2.c
-index a93439242565d..d3953ea69fda4 100644
---- a/drivers/clk/qcom/clk-rcg2.c
-+++ b/drivers/clk/qcom/clk-rcg2.c
-@@ -210,6 +210,9 @@ static int _freq_tbl_determine_rate(struct clk_hw *hw, const struct freq_tbl *f,
+diff --git a/fs/jbd2/checkpoint.c b/fs/jbd2/checkpoint.c
+index fe4fe155b7fbe..15d129b7494b0 100644
+--- a/fs/jbd2/checkpoint.c
++++ b/fs/jbd2/checkpoint.c
+@@ -168,7 +168,7 @@ void __jbd2_log_wait_for_space(journal_t *journal)
+ 				       "journal space in %s\n", __func__,
+ 				       journal->j_devname);
+ 				WARN_ON(1);
+-				jbd2_journal_abort(journal, 0);
++				jbd2_journal_abort(journal, -EIO);
+ 			}
+ 			write_lock(&journal->j_state_lock);
+ 		} else {
+diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+index b72be822f04f2..eae9ced846d51 100644
+--- a/fs/jbd2/journal.c
++++ b/fs/jbd2/journal.c
+@@ -2128,12 +2128,10 @@ static void __journal_abort_soft (journal_t *journal, int errno)
  
- 	clk_flags = clk_hw_get_flags(hw);
- 	p = clk_hw_get_parent_by_index(hw, index);
-+	if (!p)
-+		return -EINVAL;
-+
- 	if (clk_flags & CLK_SET_RATE_PARENT) {
- 		if (f->pre_div) {
- 			if (!rate)
+ 	__jbd2_journal_abort_hard(journal);
+ 
+-	if (errno) {
+-		jbd2_journal_update_sb_errno(journal);
+-		write_lock(&journal->j_state_lock);
+-		journal->j_flags |= JBD2_REC_ERR;
+-		write_unlock(&journal->j_state_lock);
+-	}
++	jbd2_journal_update_sb_errno(journal);
++	write_lock(&journal->j_state_lock);
++	journal->j_flags |= JBD2_REC_ERR;
++	write_unlock(&journal->j_state_lock);
+ }
+ 
+ /**
+@@ -2175,11 +2173,6 @@ static void __journal_abort_soft (journal_t *journal, int errno)
+  * failure to disk.  ext3_error, for example, now uses this
+  * functionality.
+  *
+- * Errors which originate from within the journaling layer will NOT
+- * supply an errno; a null errno implies that absolutely no further
+- * writes are done to the journal (unless there are any already in
+- * progress).
+- *
+  */
+ 
+ void jbd2_journal_abort(journal_t *journal, int errno)
 -- 
 2.20.1
 
