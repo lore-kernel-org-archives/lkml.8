@@ -2,182 +2,96 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA45C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F37C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52B772469C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68FE62469C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 20:15:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hNTfbru9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bquWi+8f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729749AbgB0UON (ORCPT
+        id S1729812AbgB0UPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 15:14:13 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:51227 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbgB0UOM (ORCPT
+        Thu, 27 Feb 2020 15:15:43 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44071 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726758AbgB0UPn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 15:14:12 -0500
-Received: by mail-pj1-f66.google.com with SMTP id fa20so263008pjb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 12:14:11 -0800 (PST)
+        Thu, 27 Feb 2020 15:15:43 -0500
+Received: by mail-wr1-f66.google.com with SMTP id m16so304831wrx.11;
+        Thu, 27 Feb 2020 12:15:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HueSZx0ts8rrl9axXw3uhQrr5WR5FCAoM3cWMzSUgig=;
-        b=hNTfbru9GbcIsnZTVTdW0TakeEdKmidNn9IGs9Q4vyQM5obrsrI6gbCWhrTP1ZjqiG
-         fNOQO9OikDz6eyrMN7moq6+WGCOBwPrQXpa4mnSSzA1zjBxWb2RPE+/8/vLCTnCaBr6+
-         J/9PTCyTntgmKIZdiizaCQpVBAkIyzUGztMR71yEdQgpX3u3ovwgmtmnr04S4yvqhWy/
-         o/4yKE3uf+lGEqeLvsHPav3OumWq/dUSWNoOD1zYxCtB8GSe/M7PmgK0T9e4u3e1oT3M
-         NI181DWGmEzEoSrD1WNQ30g8z0NTEHw6ZFeB9C8lZAlzm7nGhujoJQ+Am/nLoY1gT+Vo
-         bjsg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=J33BqWoSd9tEESJbD+stgo5KGtSSLbabOsGpVtJHHtw=;
+        b=bquWi+8fZQ/VDIaFczUAc6iR3pFqrtHFrYnukMwaqrYXmPWKS3GTtlWh/1V4jC1fYV
+         ir/8z0OHm/dDCckFyGKKwRJiEPAfY3nrpUGDOjA2dlgrgrbv+1BrA+392sHwCPPtV7IN
+         MaDYQ23bZxby7CyhuM+wiR5c5QJIlgZ1yvC8eQILqYIu41AIMZpPzhEczOKLWsbxCmbl
+         uqORjVMnljGGEtv8D28SOuISWjG1S4e4PuZq4nPo/vtHUzW6eIRHx3J1/VgJBt0cZTvV
+         M3Zh90rSgh4d8rHnwgQ+bCDR1Lo9ePuR8STibjpeV+9NQcdWWb45x7hJhUH9MBB6hPQ7
+         z8sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HueSZx0ts8rrl9axXw3uhQrr5WR5FCAoM3cWMzSUgig=;
-        b=dzksoOj95T4Oawc6gFG4hjDeW8GtIO2M8DvzbT7Q0rJWUAuFlQt1LFQy3ujPV3Y/v5
-         +XW/Bdl0JnVidbqkr71XCx57jV7tsX1TgKo8ooqmeDHcBCVt86k/cIe+wxOB2vMzH7sa
-         71j6haPlhHjvAsaKNcKp1wWP9JIdYHSOdIk4Vo1ZeepqbErmy5cZhOPGikX1evbI96hI
-         iZkk6TEioR1K9gS0HcFVbpqAskDIpYqx+kkiHTlnLVW9E3vy3LNZ4Swsm84kOm3MibN8
-         sq+/zjLRJ4BixQRlR8dMAUXGqMucado0EkwEv+Gc+ksr8RP2H88WYaOu26/8x3ijZtZv
-         c9fw==
-X-Gm-Message-State: APjAAAWMsq3Uf97kfHe37RvVe8Gs1MpMP7O28nVFSCsVzZgmGtRGsekR
-        yjIv2jwv2ckaxyEiepk+nZros2nyfHc=
-X-Google-Smtp-Source: APXvYqyjkedN5nnEyPuP2TOGanlZFuaAlwWxVqtpqMCjioYvsaHmpHmOGZsqvmBEwtv9veLZecW9Cw==
-X-Received: by 2002:a17:90a:191a:: with SMTP id 26mr656861pjg.111.1582834450608;
-        Thu, 27 Feb 2020 12:14:10 -0800 (PST)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id v29sm7349350pgc.72.2020.02.27.12.14.09
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=J33BqWoSd9tEESJbD+stgo5KGtSSLbabOsGpVtJHHtw=;
+        b=cTLEQ0QP0SggpGFzk+GiF0oQcx0U3J4pbVDR2nk79IiRKPorHbUmxc8TVuioP/vw8w
+         ibvbqmpZuS2oFKjKMvbGrIn1lA9mZ/gmJ5MBLtrJAnwlvxhvw0wnuNTBIAUYpr7FiUCe
+         cgIhp1S7+eYhrMNb5GYYl07rGbyYcpelSeNPWXu0ccusNcW+s4Z1Rhg0ZC0DelxS2mhg
+         ORxmOfAcCxyMOnxMsE174mKy6/14zNgrcpN3mDl/tVng/H8Qzzv1KsZIOP/3EdlNgoC7
+         xRM5HrLQZRiHlkBCzXVmFbXgs+HgMUNUKDDqKAZip6b9OLMek+/22dsNt2WgtSM/MG0b
+         WroA==
+X-Gm-Message-State: APjAAAUlUVz8S6f6zxn5Z7ikSPA8gixdXfQMNR+kgoyCQjJ3smt5WGlT
+        rhuWOHI2touSPDj1SkjHAw==
+X-Google-Smtp-Source: APXvYqzFpxNj+R6EzLNVlCdpbjMBg67JDbaynrge1wTN5MEP/xYCmS6Ep6ClwVxwd9grDIWQ7XLKXw==
+X-Received: by 2002:a5d:534c:: with SMTP id t12mr609954wrv.105.1582834541724;
+        Thu, 27 Feb 2020 12:15:41 -0800 (PST)
+Received: from avx2 ([46.53.254.180])
+        by smtp.gmail.com with ESMTPSA id s139sm9380007wme.35.2020.02.27.12.15.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 12:14:10 -0800 (PST)
-Date:   Thu, 27 Feb 2020 13:14:08 -0700
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Siddharth Gupta <sidgup@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, ohad@wizery.com,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, tsoni@codeaurora.org,
-        psodagud@codeaurora.org
-Subject: Re: [PATCH 4/6] drivers: remoteproc: Add name field for every
- subdevice
-Message-ID: <20200227201408.GB20116@xps15>
-References: <1582167465-2549-1-git-send-email-sidgup@codeaurora.org>
- <1582167465-2549-5-git-send-email-sidgup@codeaurora.org>
+        Thu, 27 Feb 2020 12:15:40 -0800 (PST)
+Date:   Thu, 27 Feb 2020 23:15:38 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        jbi.octave@gmail.com
+Subject: [PATCH] proc: annotate close_pdeo() for sparse
+Message-ID: <20200227201538.GA30462@avx2>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1582167465-2549-5-git-send-email-sidgup@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 06:57:43PM -0800, Siddharth Gupta wrote:
-> From: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-> 
-> When a client driver wishes to utilize functionality from a particular
-> subdevice of a remoteproc, it cannot differentiate between the subdevices
-> that have been added. This patch allows the client driver to distinguish
-> between subdevices and thus utilize their functionality.
-> 
-> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-> Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
-> ---
->  drivers/remoteproc/qcom_common.c | 6 ++++++
->  include/linux/remoteproc.h       | 2 ++
->  2 files changed, 8 insertions(+)
-> 
-> diff --git a/drivers/remoteproc/qcom_common.c b/drivers/remoteproc/qcom_common.c
-> index 60650bc..5d59538 100644
-> --- a/drivers/remoteproc/qcom_common.c
-> +++ b/drivers/remoteproc/qcom_common.c
-> @@ -58,6 +58,7 @@ void qcom_add_glink_subdev(struct rproc *rproc, struct qcom_rproc_glink *glink)
->  	glink->dev = dev;
->  	glink->subdev.start = glink_subdev_start;
->  	glink->subdev.stop = glink_subdev_stop;
-> +	glink->subdev.name = kstrdup("glink", GFP_KERNEL);
+From: Jules Irenge <jbi.octave@gmail.com>
 
-Because @subdev is a member of qcom_rproc_glink (rather than a pointer), it is
-possible to get to glink with container_of().  From there edge->name is
-available - would that work?
+Fix sparse locking imbalance warning:
 
->  
->  	rproc_add_subdev(rproc, &glink->subdev);
->  }
-> @@ -73,6 +74,7 @@ void qcom_remove_glink_subdev(struct rproc *rproc, struct qcom_rproc_glink *glin
->  	if (!glink->node)
->  		return;
->  
-> +	kfree(glink->subdev.name);
->  	rproc_remove_subdev(rproc, &glink->subdev);
->  	of_node_put(glink->node);
->  }
-> @@ -154,6 +156,7 @@ void qcom_add_smd_subdev(struct rproc *rproc, struct qcom_rproc_subdev *smd)
->  	smd->dev = dev;
->  	smd->subdev.start = smd_subdev_start;
->  	smd->subdev.stop = smd_subdev_stop;
-> +	smd->subdev.name = kstrdup("smd", GFP_KERNEL);
+	warning: context imbalance in close_pdeo() - unexpected unlock
 
-Same as above - qcom_smd_edge has a name.
+Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+---
 
-Worse case scenario, both qcom_rproc_glink and qcom_smd_edge have a device_node
-that can be used as well.
+ fs/proc/inode.c | 1 +
+ 1 file changed, 1 insertion(+)
 
->  
->  	rproc_add_subdev(rproc, &smd->subdev);
->  }
-> @@ -169,6 +172,7 @@ void qcom_remove_smd_subdev(struct rproc *rproc, struct qcom_rproc_subdev *smd)
->  	if (!smd->node)
->  		return;
->  
-> +	kfree(smd->subdev.name);
->  	rproc_remove_subdev(rproc, &smd->subdev);
->  	of_node_put(smd->node);
->  }
-> @@ -220,6 +224,7 @@ void qcom_add_ssr_subdev(struct rproc *rproc, struct qcom_rproc_ssr *ssr,
->  			 const char *ssr_name)
->  {
->  	ssr->name = ssr_name;
-> +	ssr->subdev.name = kstrdup("ssr_notifs", GFP_KERNEL);
->  	ssr->subdev.unprepare = ssr_notify_unprepare;
->  
->  	rproc_add_subdev(rproc, &ssr->subdev);
-> @@ -233,6 +238,7 @@ EXPORT_SYMBOL_GPL(qcom_add_ssr_subdev);
->   */
->  void qcom_remove_ssr_subdev(struct rproc *rproc, struct qcom_rproc_ssr *ssr)
->  {
-> +	kfree(ssr->subdev.name);
->  	rproc_remove_subdev(rproc, &ssr->subdev);
->  }
->  EXPORT_SYMBOL_GPL(qcom_remove_ssr_subdev);
-> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> index e2eaba9..e2f60cc 100644
-> --- a/include/linux/remoteproc.h
-> +++ b/include/linux/remoteproc.h
-> @@ -519,6 +519,7 @@ struct rproc {
->  /**
->   * struct rproc_subdev - subdevice tied to a remoteproc
->   * @node: list node related to the rproc subdevs list
-> + * @name: name of the subdevice
->   * @prepare: prepare function, called before the rproc is started
->   * @start: start function, called after the rproc has been started
->   * @stop: stop function, called before the rproc is stopped; the @crashed
-> @@ -527,6 +528,7 @@ struct rproc {
->   */
->  struct rproc_subdev {
->  	struct list_head node;
-> +	char *name;
->  
->  	int (*prepare)(struct rproc_subdev *subdev);
->  	int (*start)(struct rproc_subdev *subdev);
-> -- 
-> Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+--- a/fs/proc/inode.c
++++ b/fs/proc/inode.c
+@@ -139,6 +139,7 @@ static void unuse_pde(struct proc_dir_entry *pde)
+ 
+ /* pde is locked on entry, unlocked on exit */
+ static void close_pdeo(struct proc_dir_entry *pde, struct pde_opener *pdeo)
++	__releases(&pde->pde_unload_lock)
+ {
+ 	/*
+ 	 * close() (proc_reg_release()) can't delete an entry and proceed:
