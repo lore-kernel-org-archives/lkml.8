@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD28C52D46
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C6FC3F35E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D648D20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0E1B20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812176;
-	bh=ZznlblGTBFbuds+Sph5WVVJsc6irhIrrzO9HTsUYnug=;
+	s=default; t=1582812085;
+	bh=F7HI2yBfKbtM5rC/N2fY391ZUSDKhrZ+HvCn8X7jv9U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2XnyO9nlyK6sDcBjf8yaMUAX0lsLpPtahrD0Rn369VPVmnIwqcIauEmg45b1hnWsY
-	 qQEJ6ZkpS3xHORNM8UqOaiks+myu7cQGDbYQ2/5GeuOCLTbzVeF7b3foIBANe8BBgz
-	 M9AJIDtWle7dQHNhbpOUpYUi2hkaLhtpUvLbwMdM=
+	b=xaxYJBQbReVG5GM/r3zgiqxLbSQ4fqqCQ5hlNcEiIUS8HvWkkhz6yFHBDBSxs949o
+	 zz09R0FMjQv+WYtl2r7taMif3BgixE69Um/WaUJGzIQy4aMgAf9VUZKfwMqEnMGJsu
+	 FX2ouJepH72oCdR/Z98Eifb4HiguRtyrmPRHqgbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733232AbgB0OCz (ORCPT
+        id S1732911AbgB0OBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:02:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37792 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:01:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733221AbgB0OCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:02:52 -0500
+        id S1732399AbgB0OBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:01:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AC0E24656;
-        Thu, 27 Feb 2020 14:02:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E00A620801;
+        Thu, 27 Feb 2020 14:01:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812172;
-        bh=ZznlblGTBFbuds+Sph5WVVJsc6irhIrrzO9HTsUYnug=;
+        s=default; t=1582812080;
+        bh=F7HI2yBfKbtM5rC/N2fY391ZUSDKhrZ+HvCn8X7jv9U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nqSE5O+w5PE3lMJTnWYGOsyqlWq3MCyawoRs4k3ay4OhAmYVOU1RGnaTyvIEX1/Tr
-         BcdSpmykivnY0jo0ltQYCBCGMnCEnkUu4x0ItIzWWS79IiaWB3AgJdfyUQEK8ukU4f
-         tbl6jDp+zxNcCerrZsoV4UCmqcZubdto59rtOAoA=
+        b=WrlbIC4ZkDdo26LF5hSB423tXizL2drcPs84ZokHXEnLXl9BOb8xce91vo8oIooIZ
+         XmDcDCW94Z4rTgQrDoD+pr91aA1qzfm6/53KX3pX+qS1CHm/vtjUCRK8LEBzNI04FU
+         v4Yg1Wt/8WQ2KdXjOpkctLOeaYyegcyfXe+fovO8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Pitre <nico@fluxnic.net>,
-        Lukas Wunner <lukas@wunner.de>
-Subject: [PATCH 4.19 13/97] vt: fix scrollback flushing on background consoles
-Date:   Thu, 27 Feb 2020 14:36:21 +0100
-Message-Id: <20200227132216.796677344@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        stable@kernel.org
+Subject: [PATCH 4.14 214/237] ext4: rename s_journal_flag_rwsem to s_writepages_rwsem
+Date:   Thu, 27 Feb 2020 14:37:08 +0100
+Message-Id: <20200227132311.931746823@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
-References: <20200227132214.553656188@linuxfoundation.org>
+In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
+References: <20200227132255.285644406@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,61 +60,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Pitre <nico@fluxnic.net>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 3f4ef485be9d54040b695f32ec76d0f1ea50bbf3 upstream.
+commit bbd55937de8f2754adc5792b0f8e5ff7d9c0420e upstream.
 
-Commit a6dbe4427559 ("vt: perform safe console erase in the right
-order") provided fixes to an earlier commit by gathering all console
-scrollback flushing operations in a function of its own. This includes
-the invocation of vc_sw->con_switch() as previously done through a
-update_screen() call. That commit failed to carry over the
-con_is_visible() conditional though, as well as cursor handling, which
-caused problems when "\e[3J" was written to a background console.
+In preparation for making s_journal_flag_rwsem synchronize
+ext4_writepages() with changes to both the EXTENTS and JOURNAL_DATA
+flags (rather than just JOURNAL_DATA as it does currently), rename it to
+s_writepages_rwsem.
 
-One could argue for preserving the call to update_screen(). However
-this does far more than we need, and it is best to remove scrollback
-assumptions from it. Instead let's gather the minimum needed to actually
-perform scrollback flushing properly in that one place.
-
-While at it, let's document the vc_sw->con_switch() side effect being
-relied upon.
-
-Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
-Reported-and-tested-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/nycvar.YSQ.7.76.2001281205560.1655@knanqh.ubzr
+Link: https://lore.kernel.org/r/20200219183047.47417-2-ebiggers@kernel.org
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/vt/vt.c |   15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ fs/ext4/ext4.h  |    2 +-
+ fs/ext4/inode.c |   10 +++++-----
+ fs/ext4/super.c |    6 +++---
+ 3 files changed, 9 insertions(+), 9 deletions(-)
 
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -936,10 +936,21 @@ static void flush_scrollback(struct vc_d
- 	WARN_CONSOLE_UNLOCKED();
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -1533,7 +1533,7 @@ struct ext4_sb_info {
+ 	struct ratelimit_state s_msg_ratelimit_state;
  
- 	set_origin(vc);
--	if (vc->vc_sw->con_flush_scrollback)
-+	if (vc->vc_sw->con_flush_scrollback) {
- 		vc->vc_sw->con_flush_scrollback(vc);
--	else
-+	} else if (con_is_visible(vc)) {
-+		/*
-+		 * When no con_flush_scrollback method is provided then the
-+		 * legacy way for flushing the scrollback buffer is to use
-+		 * a side effect of the con_switch method. We do it only on
-+		 * the foreground console as background consoles have no
-+		 * scrollback buffers in that case and we obviously don't
-+		 * want to switch to them.
-+		 */
-+		hide_cursor(vc);
- 		vc->vc_sw->con_switch(vc);
-+		set_cursor(vc);
-+	}
+ 	/* Barrier between changing inodes' journal flags and writepages ops. */
+-	struct percpu_rw_semaphore s_journal_flag_rwsem;
++	struct percpu_rw_semaphore s_writepages_rwsem;
+ 	struct dax_device *s_daxdev;
+ };
+ 
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -2744,7 +2744,7 @@ static int ext4_writepages(struct addres
+ 	if (unlikely(ext4_forced_shutdown(EXT4_SB(inode->i_sb))))
+ 		return -EIO;
+ 
+-	percpu_down_read(&sbi->s_journal_flag_rwsem);
++	percpu_down_read(&sbi->s_writepages_rwsem);
+ 	trace_ext4_writepages(inode, wbc);
+ 
+ 	if (dax_mapping(mapping)) {
+@@ -2974,7 +2974,7 @@ unplug:
+ out_writepages:
+ 	trace_ext4_writepages_result(inode, wbc, ret,
+ 				     nr_to_write - wbc->nr_to_write);
+-	percpu_up_read(&sbi->s_journal_flag_rwsem);
++	percpu_up_read(&sbi->s_writepages_rwsem);
+ 	return ret;
  }
  
- /*
+@@ -6050,7 +6050,7 @@ int ext4_change_inode_journal_flag(struc
+ 		}
+ 	}
+ 
+-	percpu_down_write(&sbi->s_journal_flag_rwsem);
++	percpu_down_write(&sbi->s_writepages_rwsem);
+ 	jbd2_journal_lock_updates(journal);
+ 
+ 	/*
+@@ -6067,7 +6067,7 @@ int ext4_change_inode_journal_flag(struc
+ 		err = jbd2_journal_flush(journal);
+ 		if (err < 0) {
+ 			jbd2_journal_unlock_updates(journal);
+-			percpu_up_write(&sbi->s_journal_flag_rwsem);
++			percpu_up_write(&sbi->s_writepages_rwsem);
+ 			ext4_inode_resume_unlocked_dio(inode);
+ 			return err;
+ 		}
+@@ -6076,7 +6076,7 @@ int ext4_change_inode_journal_flag(struc
+ 	ext4_set_aops(inode);
+ 
+ 	jbd2_journal_unlock_updates(journal);
+-	percpu_up_write(&sbi->s_journal_flag_rwsem);
++	percpu_up_write(&sbi->s_writepages_rwsem);
+ 
+ 	if (val)
+ 		up_write(&EXT4_I(inode)->i_mmap_sem);
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -939,7 +939,7 @@ static void ext4_put_super(struct super_
+ 	percpu_counter_destroy(&sbi->s_freeinodes_counter);
+ 	percpu_counter_destroy(&sbi->s_dirs_counter);
+ 	percpu_counter_destroy(&sbi->s_dirtyclusters_counter);
+-	percpu_free_rwsem(&sbi->s_journal_flag_rwsem);
++	percpu_free_rwsem(&sbi->s_writepages_rwsem);
+ #ifdef CONFIG_QUOTA
+ 	for (i = 0; i < EXT4_MAXQUOTAS; i++)
+ 		kfree(get_qf_name(sb, sbi, i));
+@@ -4396,7 +4396,7 @@ no_journal:
+ 		err = percpu_counter_init(&sbi->s_dirtyclusters_counter, 0,
+ 					  GFP_KERNEL);
+ 	if (!err)
+-		err = percpu_init_rwsem(&sbi->s_journal_flag_rwsem);
++		err = percpu_init_rwsem(&sbi->s_writepages_rwsem);
+ 
+ 	if (err) {
+ 		ext4_msg(sb, KERN_ERR, "insufficient memory");
+@@ -4490,7 +4490,7 @@ failed_mount6:
+ 	percpu_counter_destroy(&sbi->s_freeinodes_counter);
+ 	percpu_counter_destroy(&sbi->s_dirs_counter);
+ 	percpu_counter_destroy(&sbi->s_dirtyclusters_counter);
+-	percpu_free_rwsem(&sbi->s_journal_flag_rwsem);
++	percpu_free_rwsem(&sbi->s_writepages_rwsem);
+ failed_mount5:
+ 	ext4_ext_release(sb);
+ 	ext4_release_system_zone(sb);
 
 
