@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0ACEC3F362
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 616A2C3F34C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C8CF20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3045420578
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:48:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811278;
-	bh=tGdP8o+5wmH2dix7IVUCYODW9Z+SAHSKNrxu6lyRy8s=;
+	s=default; t=1582811287;
+	bh=nCBXCxNcbVIx/WGGuJXMCDG+UVqAMl/vDM8jemy95yo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UykLA2oRaKMXXQTpp6IcpS/Z6gRC5xQ6jS1z8GDT7/Yy5FyyJWL72ni6LumQUAPlK
-	 dur9x6DAw1K+XtAToYp7iBYFzAESd/pXuFABFR88hpFE0VqibaoRDmFxdyO818/9dX
-	 lTCn7pnlF0cDcIqYMMPh6ED7MH7Y/JQU75CN8a3Y=
+	b=b5Vk8abyQe0hJMCker0qOjs/podnYHgmrvbkgXr3eUne41G6UqTmWQm4DMEk7MS9+
+	 YR1MdRaaItmE3XR9fYSCn1L5nbyAL9HbZ3E/sJOuPO0C+TBEMxARXhN76+ipRsufC1
+	 VNStjgsWm3/VbvNbiQDxj/qMhub+hxFgBth4CICo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730786AbgB0Nr5 (ORCPT
+        id S1730813AbgB0NsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:47:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44466 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:48:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730779AbgB0Nry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:47:54 -0500
+        id S1729543AbgB0Nr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:47:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D42F224656;
-        Thu, 27 Feb 2020 13:47:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A4A820578;
+        Thu, 27 Feb 2020 13:47:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811273;
-        bh=tGdP8o+5wmH2dix7IVUCYODW9Z+SAHSKNrxu6lyRy8s=;
+        s=default; t=1582811278;
+        bh=nCBXCxNcbVIx/WGGuJXMCDG+UVqAMl/vDM8jemy95yo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wmzGtkB1rS5K7o8WOiZ+WLTb4S8l0Lslk8eTq951WoEGg6BM66amZp9RLuUCRXl3K
-         36SbNxREI3gI0UVaL2KxCr1zntqhsCRIIE97C3LX3TNu9mTzYlZU2nn7ue8Avbk4nW
-         hrPeAaDdQG9XcTKx0p/3/RkQKm0ytEmPd9ckLKPM=
+        b=zBNPCH64w3RRrx3b28AKwAGvAAY5k+GFWJhNJyrMPbXKg9ysnHrJffetUQ0iNr2Wn
+         OGQ+OvGWKPmpjvupzduHiQaRCEjhapofO28T2nwNAl81z6b95Qpl6R1cmfuAaSOY0i
+         dNgESsP/wwFJer3yGoPUeJbYJtogM0ad+PoSfNyM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 069/165] udf: Fix free space reporting for metadata and virtual partitions
-Date:   Thu, 27 Feb 2020 14:35:43 +0100
-Message-Id: <20200227132241.499535651@linuxfoundation.org>
+        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Eric Dumazet <edumazet@google.com>
+Subject: [PATCH 4.9 071/165] rcu: Use WRITE_ONCE() for assignments to ->pprev for hlist_nulls
+Date:   Thu, 27 Feb 2020 14:35:45 +0100
+Message-Id: <20200227132241.784009390@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -60,71 +60,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Paul E. McKenney <paulmck@kernel.org>
 
-[ Upstream commit a4a8b99ec819ca60b49dc582a4287ef03411f117 ]
+[ Upstream commit 860c8802ace14c646864795e057349c9fb2d60ad ]
 
-Free space on filesystems with metadata or virtual partition maps
-currently gets misreported. This is because these partitions are just
-remapped onto underlying real partitions from which keep track of free
-blocks. Take this remapping into account when counting free blocks as
-well.
+Eric Dumazet supplied a KCSAN report of a bug that forces use
+of hlist_unhashed_lockless() from sk_unhashed():
 
-Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
-Reported-by: Pali Rohár <pali.rohar@gmail.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
+------------------------------------------------------------------------
+
+BUG: KCSAN: data-race in inet_unhash / inet_unhash
+
+write to 0xffff8880a69a0170 of 8 bytes by interrupt on cpu 1:
+ __hlist_nulls_del include/linux/list_nulls.h:88 [inline]
+ hlist_nulls_del_init_rcu include/linux/rculist_nulls.h:36 [inline]
+ __sk_nulls_del_node_init_rcu include/net/sock.h:676 [inline]
+ inet_unhash+0x38f/0x4a0 net/ipv4/inet_hashtables.c:612
+ tcp_set_state+0xfa/0x3e0 net/ipv4/tcp.c:2249
+ tcp_done+0x93/0x1e0 net/ipv4/tcp.c:3854
+ tcp_write_err+0x7e/0xc0 net/ipv4/tcp_timer.c:56
+ tcp_retransmit_timer+0x9b8/0x16d0 net/ipv4/tcp_timer.c:479
+ tcp_write_timer_handler+0x42d/0x510 net/ipv4/tcp_timer.c:599
+ tcp_write_timer+0xd1/0xf0 net/ipv4/tcp_timer.c:619
+ call_timer_fn+0x5f/0x2f0 kernel/time/timer.c:1404
+ expire_timers kernel/time/timer.c:1449 [inline]
+ __run_timers kernel/time/timer.c:1773 [inline]
+ __run_timers kernel/time/timer.c:1740 [inline]
+ run_timer_softirq+0xc0c/0xcd0 kernel/time/timer.c:1786
+ __do_softirq+0x115/0x33f kernel/softirq.c:292
+ invoke_softirq kernel/softirq.c:373 [inline]
+ irq_exit+0xbb/0xe0 kernel/softirq.c:413
+ exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+ smp_apic_timer_interrupt+0xe6/0x280 arch/x86/kernel/apic/apic.c:1137
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+ native_safe_halt+0xe/0x10 arch/x86/kernel/paravirt.c:71
+ arch_cpu_idle+0x1f/0x30 arch/x86/kernel/process.c:571
+ default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
+ cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+ do_idle+0x1af/0x280 kernel/sched/idle.c:263
+ cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:355
+ start_secondary+0x208/0x260 arch/x86/kernel/smpboot.c:264
+ secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
+
+read to 0xffff8880a69a0170 of 8 bytes by interrupt on cpu 0:
+ sk_unhashed include/net/sock.h:607 [inline]
+ inet_unhash+0x3d/0x4a0 net/ipv4/inet_hashtables.c:592
+ tcp_set_state+0xfa/0x3e0 net/ipv4/tcp.c:2249
+ tcp_done+0x93/0x1e0 net/ipv4/tcp.c:3854
+ tcp_write_err+0x7e/0xc0 net/ipv4/tcp_timer.c:56
+ tcp_retransmit_timer+0x9b8/0x16d0 net/ipv4/tcp_timer.c:479
+ tcp_write_timer_handler+0x42d/0x510 net/ipv4/tcp_timer.c:599
+ tcp_write_timer+0xd1/0xf0 net/ipv4/tcp_timer.c:619
+ call_timer_fn+0x5f/0x2f0 kernel/time/timer.c:1404
+ expire_timers kernel/time/timer.c:1449 [inline]
+ __run_timers kernel/time/timer.c:1773 [inline]
+ __run_timers kernel/time/timer.c:1740 [inline]
+ run_timer_softirq+0xc0c/0xcd0 kernel/time/timer.c:1786
+ __do_softirq+0x115/0x33f kernel/softirq.c:292
+ invoke_softirq kernel/softirq.c:373 [inline]
+ irq_exit+0xbb/0xe0 kernel/softirq.c:413
+ exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+ smp_apic_timer_interrupt+0xe6/0x280 arch/x86/kernel/apic/apic.c:1137
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+ native_safe_halt+0xe/0x10 arch/x86/kernel/paravirt.c:71
+ arch_cpu_idle+0x1f/0x30 arch/x86/kernel/process.c:571
+ default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
+ cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+ do_idle+0x1af/0x280 kernel/sched/idle.c:263
+ cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:355
+ rest_init+0xec/0xf6 init/main.c:452
+ arch_call_rest_init+0x17/0x37
+ start_kernel+0x838/0x85e init/main.c:786
+ x86_64_start_reservations+0x29/0x2b arch/x86/kernel/head64.c:490
+ x86_64_start_kernel+0x72/0x76 arch/x86/kernel/head64.c:471
+ secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-rc6+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine,
+BIOS Google 01/01/2011
+
+------------------------------------------------------------------------
+
+This commit therefore replaces C-language assignments with WRITE_ONCE()
+in include/linux/list_nulls.h and include/linux/rculist_nulls.h.
+
+Reported-by: Eric Dumazet <edumazet@google.com> # For KCSAN
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/udf/super.c | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+ include/linux/list_nulls.h    | 8 ++++----
+ include/linux/rculist_nulls.h | 8 ++++----
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/fs/udf/super.c b/fs/udf/super.c
-index 03369a89600e0..4abdba453885e 100644
---- a/fs/udf/super.c
-+++ b/fs/udf/super.c
-@@ -2460,17 +2460,29 @@ static unsigned int udf_count_free_table(struct super_block *sb,
- static unsigned int udf_count_free(struct super_block *sb)
+diff --git a/include/linux/list_nulls.h b/include/linux/list_nulls.h
+index 87ff4f58a2f01..9e20bf7f46a20 100644
+--- a/include/linux/list_nulls.h
++++ b/include/linux/list_nulls.h
+@@ -71,10 +71,10 @@ static inline void hlist_nulls_add_head(struct hlist_nulls_node *n,
+ 	struct hlist_nulls_node *first = h->first;
+ 
+ 	n->next = first;
+-	n->pprev = &h->first;
++	WRITE_ONCE(n->pprev, &h->first);
+ 	h->first = n;
+ 	if (!is_a_nulls(first))
+-		first->pprev = &n->next;
++		WRITE_ONCE(first->pprev, &n->next);
+ }
+ 
+ static inline void __hlist_nulls_del(struct hlist_nulls_node *n)
+@@ -84,13 +84,13 @@ static inline void __hlist_nulls_del(struct hlist_nulls_node *n)
+ 
+ 	WRITE_ONCE(*pprev, next);
+ 	if (!is_a_nulls(next))
+-		next->pprev = pprev;
++		WRITE_ONCE(next->pprev, pprev);
+ }
+ 
+ static inline void hlist_nulls_del(struct hlist_nulls_node *n)
  {
- 	unsigned int accum = 0;
--	struct udf_sb_info *sbi;
-+	struct udf_sb_info *sbi = UDF_SB(sb);
- 	struct udf_part_map *map;
-+	unsigned int part = sbi->s_partition;
-+	int ptype = sbi->s_partmaps[part].s_partition_type;
-+
-+	if (ptype == UDF_METADATA_MAP25) {
-+		part = sbi->s_partmaps[part].s_type_specific.s_metadata.
-+							s_phys_partition_ref;
-+	} else if (ptype == UDF_VIRTUAL_MAP15 || ptype == UDF_VIRTUAL_MAP20) {
-+		/*
-+		 * Filesystems with VAT are append-only and we cannot write to
-+ 		 * them. Let's just report 0 here.
-+		 */
-+		return 0;
-+	}
+ 	__hlist_nulls_del(n);
+-	n->pprev = LIST_POISON2;
++	WRITE_ONCE(n->pprev, LIST_POISON2);
+ }
  
--	sbi = UDF_SB(sb);
- 	if (sbi->s_lvid_bh) {
- 		struct logicalVolIntegrityDesc *lvid =
- 			(struct logicalVolIntegrityDesc *)
- 			sbi->s_lvid_bh->b_data;
--		if (le32_to_cpu(lvid->numOfPartitions) > sbi->s_partition) {
-+		if (le32_to_cpu(lvid->numOfPartitions) > part) {
- 			accum = le32_to_cpu(
--					lvid->freeSpaceTable[sbi->s_partition]);
-+					lvid->freeSpaceTable[part]);
- 			if (accum == 0xFFFFFFFF)
- 				accum = 0;
- 		}
-@@ -2479,7 +2491,7 @@ static unsigned int udf_count_free(struct super_block *sb)
- 	if (accum)
- 		return accum;
+ /**
+diff --git a/include/linux/rculist_nulls.h b/include/linux/rculist_nulls.h
+index 106f4e0d7bd39..4d71e3687d1ed 100644
+--- a/include/linux/rculist_nulls.h
++++ b/include/linux/rculist_nulls.h
+@@ -33,7 +33,7 @@ static inline void hlist_nulls_del_init_rcu(struct hlist_nulls_node *n)
+ {
+ 	if (!hlist_nulls_unhashed(n)) {
+ 		__hlist_nulls_del(n);
+-		n->pprev = NULL;
++		WRITE_ONCE(n->pprev, NULL);
+ 	}
+ }
  
--	map = &sbi->s_partmaps[sbi->s_partition];
-+	map = &sbi->s_partmaps[part];
- 	if (map->s_partition_flags & UDF_PART_FLAG_UNALLOC_BITMAP) {
- 		accum += udf_count_free_bitmap(sb,
- 					       map->s_uspace.s_bitmap);
+@@ -65,7 +65,7 @@ static inline void hlist_nulls_del_init_rcu(struct hlist_nulls_node *n)
+ static inline void hlist_nulls_del_rcu(struct hlist_nulls_node *n)
+ {
+ 	__hlist_nulls_del(n);
+-	n->pprev = LIST_POISON2;
++	WRITE_ONCE(n->pprev, LIST_POISON2);
+ }
+ 
+ /**
+@@ -93,10 +93,10 @@ static inline void hlist_nulls_add_head_rcu(struct hlist_nulls_node *n,
+ 	struct hlist_nulls_node *first = h->first;
+ 
+ 	n->next = first;
+-	n->pprev = &h->first;
++	WRITE_ONCE(n->pprev, &h->first);
+ 	rcu_assign_pointer(hlist_nulls_first_rcu(h), n);
+ 	if (!is_a_nulls(first))
+-		first->pprev = &n->next;
++		WRITE_ONCE(first->pprev, &n->next);
+ }
+ 
+ /**
 -- 
 2.20.1
 
