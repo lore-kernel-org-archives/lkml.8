@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36986C76561
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1458AC76563
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E1F624656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:37:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3C4324656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:38:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814272;
-	bh=MAyEDk49P2Uh6U18iHPC9skH7iaZ47xAh4eHPg1oWV0=;
+	s=default; t=1582814293;
+	bh=ofwbgNjBWpSvnTCV96oBhMiWdtYCquSy3RtoQ52qE2E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=khIUi4hAl+10gIWvMU7+/Ev3OSXsnFoeKiWB8HQSCsZh2r7chXUwBUCbH6wuSdctl
-	 xgLs3uJKFQVM64R4BNnIgm7WpDKd8Y4+b/1SqXGQtRciznwXszBO1CSmvtfurYuQg6
-	 73uss7ONLS8KlVq22GEZ+D/lgf1EacjuPMO9MOP0=
+	b=CrC4fbEnx2dvEziqosuxMV4AqDzLHpfRV2hjfxqc9LN9k2+VUuKFegMypxFUfLGsH
+	 eWE2fzVTE/tC5Kw6900pJolx9KrgxjtVXkeKQ4rdNmmheSslx6i0ODQVcuJ8dnc5CM
+	 FcV3wqCfeLTLzrNOXXb3LcHQj+QZpcxQEMGGgQy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387844AbgB0Ohu (ORCPT
+        id S2387977AbgB0OiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:37:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57804 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:38:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729397AbgB0N5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:57:05 -0500
+        id S1731876AbgB0N4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:56:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6197020578;
-        Thu, 27 Feb 2020 13:57:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 111162073D;
+        Thu, 27 Feb 2020 13:56:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811824;
-        bh=MAyEDk49P2Uh6U18iHPC9skH7iaZ47xAh4eHPg1oWV0=;
+        s=default; t=1582811801;
+        bh=ofwbgNjBWpSvnTCV96oBhMiWdtYCquSy3RtoQ52qE2E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yOY4DWdjbIskVQM1rI9of4ZXi1rozQREdgGmuvWCi5KJxeOt5s67s7J0QoFNuuVlb
-         PAMB62UNgjjLJDEcLEPxXwacsOjdqXO8hjBusloFYoJ0LkV+EB2V2YxlXmd8OPY79A
-         eShVhMEMOsRUymA12GVsCBTY4poiuFFwONg1NI5o=
+        b=QLYmFZBw9WCR1+hQ1PW0LUEcEiQ6efn9tktTGETuvQN54N7eVOg/Yc3/MnuNa6z9v
+         IDuFGWVPUi0kABvreBSxYdPBfK4742iFDiaH6aP/krWGCbBRa4kY/FTnJOlVCGxyYi
+         uWl9/J+t3L01KBQIHkpQ0A1jQGdijv8a57/YDzow=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 077/237] ARM: dts: imx6: rdu2: Disable WP for USDHC2 and USDHC3
-Date:   Thu, 27 Feb 2020 14:34:51 +0100
-Message-Id: <20200227132302.789337600@linuxfoundation.org>
+Subject: [PATCH 4.14 105/237] soc/tegra: fuse: Correct straps address for older Tegra124 device trees
+Date:   Thu, 27 Feb 2020 14:35:19 +0100
+Message-Id: <20200227132304.653095793@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -64,67 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-[ Upstream commit cd58a174e58649426fb43d7456e5f7d7eab58af1 ]
+[ Upstream commit 2d9ea1934f8ef0dfb862d103389562cc28b4fc03 ]
 
-RDU2 production units come with resistor connecting WP pin to
-correpsonding GPIO DNPed for both SD card slots. Drop any WP related
-configuration and mark both slots with "disable-wp".
+Trying to read out Chip ID before APBMISC registers are mapped won't
+succeed, in a result Tegra124 gets a wrong address for the HW straps
+register if machine uses an old outdated device tree.
 
-Reported-by: Chris Healy <cphealy@gmail.com>
-Reviewed-by: Chris Healy <cphealy@gmail.com>
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: 297c4f3dcbff ("soc/tegra: fuse: Restrict legacy code to 32-bit ARM")
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/soc/tegra/fuse/tegra-apbmisc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-index 849eb3443cde2..719e63092c2ea 100644
---- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-@@ -587,7 +587,7 @@
- 	pinctrl-0 = <&pinctrl_usdhc2>;
- 	bus-width = <4>;
- 	cd-gpios = <&gpio2 2 GPIO_ACTIVE_LOW>;
--	wp-gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
-+	disable-wp;
- 	vmmc-supply = <&reg_3p3v_sd>;
- 	vqmmc-supply = <&reg_3p3v>;
- 	status = "okay";
-@@ -598,7 +598,7 @@
- 	pinctrl-0 = <&pinctrl_usdhc3>;
- 	bus-width = <4>;
- 	cd-gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
--	wp-gpios = <&gpio2 1 GPIO_ACTIVE_HIGH>;
-+	disable-wp;
- 	vmmc-supply = <&reg_3p3v_sd>;
- 	vqmmc-supply = <&reg_3p3v>;
- 	status = "okay";
-@@ -1001,7 +1001,6 @@
- 			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x17059
- 			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x17059
- 			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x17059
--			MX6QDL_PAD_NANDF_D3__GPIO2_IO03		0x40010040
- 			MX6QDL_PAD_NANDF_D2__GPIO2_IO02		0x40010040
- 		>;
- 	};
-@@ -1014,7 +1013,6 @@
- 			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17059
- 			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17059
- 			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
--			MX6QDL_PAD_NANDF_D1__GPIO2_IO01		0x40010040
- 			MX6QDL_PAD_NANDF_D0__GPIO2_IO00		0x40010040
+diff --git a/drivers/soc/tegra/fuse/tegra-apbmisc.c b/drivers/soc/tegra/fuse/tegra-apbmisc.c
+index 5b18f6ffa45c7..cd61c883c19f5 100644
+--- a/drivers/soc/tegra/fuse/tegra-apbmisc.c
++++ b/drivers/soc/tegra/fuse/tegra-apbmisc.c
+@@ -134,7 +134,7 @@ void __init tegra_init_apbmisc(void)
+ 			apbmisc.flags = IORESOURCE_MEM;
  
- 		>;
+ 			/* strapping options */
+-			if (tegra_get_chip_id() == TEGRA124) {
++			if (of_machine_is_compatible("nvidia,tegra124")) {
+ 				straps.start = 0x7000e864;
+ 				straps.end = 0x7000e867;
+ 			} else {
 -- 
 2.20.1
 
