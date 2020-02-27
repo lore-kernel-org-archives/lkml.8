@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C61C35E15
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB00C52D42
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59158246A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D98B324697
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:15:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812942;
-	bh=mmKkonB3meZvyLP6wBrCBJsxOiYU/8KU2KXu+HT6wPk=;
+	s=default; t=1582812957;
+	bh=lCVkZ3hBWA7vW1gICuV8jH8iUHCTS9JYngxU4x4nLzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JTyZSJSotOVClJ3S+TkiDoOswJ322dc95nBsWLGeuCT7usXehWWb8KM5f34XKIbUl
-	 uUq5h2HuF3MTYY0s5rqH8YVcS553+9KsioBJcw0fJ2WHldbypaLqkDYUUqYgbRRHqf
-	 FQCCZH2cILv0z+94vs0VcsPFWPXzULLB09aNlBOU=
+	b=YEpecq0yn110QkvFdB2UNvZxfq83vb56rPDyjC9iM922l3BBTrTO5EZGsPigQutAh
+	 o2Rr1nmHqFbhnRJ2Cp+7B+orKLgN818cKvvLaRIxb3ROgaKzWfye3djn193Lmc0rZO
+	 Tq5RYom2gsp4VgyBA+FkkYzG2PK7eIeClEexkIOE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388953AbgB0OPl (ORCPT
+        id S2389391AbgB0OP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:15:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55252 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:15:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389331AbgB0OPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:15:38 -0500
+        id S2389359AbgB0OPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:15:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AC2620801;
-        Thu, 27 Feb 2020 14:15:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BA9624690;
+        Thu, 27 Feb 2020 14:15:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812937;
-        bh=mmKkonB3meZvyLP6wBrCBJsxOiYU/8KU2KXu+HT6wPk=;
+        s=default; t=1582812952;
+        bh=lCVkZ3hBWA7vW1gICuV8jH8iUHCTS9JYngxU4x4nLzo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MSDXUNSh38HPYkiOKHGWiV011xhyDdGfRd2XQLV6vtyXx96UkkOHc9l2pw7jQDzFU
-         k819sj9wxUx1ak4RbEwTo7YRGMhZOvDJ9A0G51PgHSXAy4ysnB+mrdvRB4j+T68gzw
-         cvgOiXx/pnv18cpF0UtvcSjl779cBWj8GpiDMZPI=
+        b=F6HrnmceNNuJO8+l5be/zKswkfXc0q1TeefS0VrGyjsWIjA9AA1Rk/1Wy8NlUWbbJ
+         09aQ0j3pAPhnBO0EFEQNX19gJtlI9Tg301XAb9EVjjWTzTzis2rJ0lH3LIshkd6J5B
+         22OgH9I5sDtbpwS0vx+soVQ4qnQzvAvBSP76nAYk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Keith Busch <kbusch@kernel.org>
-Subject: [PATCH 5.5 074/150] nvme-multipath: Fix memory leak with ana_log_buf
-Date:   Thu, 27 Feb 2020 14:36:51 +0100
-Message-Id: <20200227132243.793020482@linuxfoundation.org>
+        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
+        Borislav Petkov <bp@suse.de>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH 5.5 062/150] x86/cpu/amd: Enable the fixed Instructions Retired counter IRPERF
+Date:   Thu, 27 Feb 2020 14:36:39 +0100
+Message-Id: <20200227132242.193953916@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -61,66 +60,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Kim Phillips <kim.phillips@amd.com>
 
-commit 3b7830904e17202524bad1974505a9bfc718d31f upstream.
+commit 21b5ee59ef18e27d85810584caf1f7ddc705ea83 upstream.
 
-kmemleak reports a memory leak with the ana_log_buf allocated by
-nvme_mpath_init():
+Commit
 
-unreferenced object 0xffff888120e94000 (size 8208):
-  comm "nvme", pid 6884, jiffies 4295020435 (age 78786.312s)
-    hex dump (first 32 bytes):
-      00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
-      01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
-    backtrace:
-      [<00000000e2360188>] kmalloc_order+0x97/0xc0
-      [<0000000079b18dd4>] kmalloc_order_trace+0x24/0x100
-      [<00000000f50c0406>] __kmalloc+0x24c/0x2d0
-      [<00000000f31a10b9>] nvme_mpath_init+0x23c/0x2b0
-      [<000000005802589e>] nvme_init_identify+0x75f/0x1600
-      [<0000000058ef911b>] nvme_loop_configure_admin_queue+0x26d/0x280
-      [<00000000673774b9>] nvme_loop_create_ctrl+0x2a7/0x710
-      [<00000000f1c7a233>] nvmf_dev_write+0xc66/0x10b9
-      [<000000004199f8d0>] __vfs_write+0x50/0xa0
-      [<0000000065466fef>] vfs_write+0xf3/0x280
-      [<00000000b0db9a8b>] ksys_write+0xc6/0x160
-      [<0000000082156b91>] __x64_sys_write+0x43/0x50
-      [<00000000c34fbb6d>] do_syscall_64+0x77/0x2f0
-      [<00000000bbc574c9>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  aaf248848db50 ("perf/x86/msr: Add AMD IRPERF (Instructions Retired)
+		  performance counter")
 
-nvme_mpath_init() is called by nvme_init_identify() which is called in
-multiple places (nvme_reset_work(), nvme_passthru_end(), etc). This
-means nvme_mpath_init() may be called multiple times before
-nvme_mpath_uninit() (which is only called on nvme_free_ctrl()).
+added support for access to the free-running counter via 'perf -e
+msr/irperf/', but when exercised, it always returns a 0 count:
 
-When nvme_mpath_init() is called multiple times, it overwrites the
-ana_log_buf pointer with a new allocation, thus leaking the previous
-allocation.
+BEFORE:
 
-To fix this, free ana_log_buf before allocating a new one.
+  $ perf stat -e instructions,msr/irperf/ true
 
-Fixes: 0d0b660f214dc490 ("nvme: add ANA support")
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
+   Performance counter stats for 'true':
+
+             624,833      instructions
+                   0      msr/irperf/
+
+Simply set its enable bit - HWCR bit 30 - to make it start counting.
+
+Enablement is restricted to all machines advertising IRPERF capability,
+except those susceptible to an erratum that makes the IRPERF return
+bad values.
+
+That erratum occurs in Family 17h models 00-1fh [1], but not in F17h
+models 20h and above [2].
+
+AFTER (on a family 17h model 31h machine):
+
+  $ perf stat -e instructions,msr/irperf/ true
+
+   Performance counter stats for 'true':
+
+             621,690      instructions
+             622,490      msr/irperf/
+
+[1] Revision Guide for AMD Family 17h Models 00h-0Fh Processors
+[2] Revision Guide for AMD Family 17h Models 30h-3Fh Processors
+
+The revision guides are available from the bugzilla Link below.
+
+ [ bp: Massage commit message. ]
+
+Fixes: aaf248848db50 ("perf/x86/msr: Add AMD IRPERF (Instructions Retired) performance counter")
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: stable@vger.kernel.org
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
+Link: http://lkml.kernel.org/r/20200214201805.13830-1-kim.phillips@amd.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nvme/host/multipath.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/include/asm/msr-index.h |    2 ++
+ arch/x86/kernel/cpu/amd.c        |   14 ++++++++++++++
+ 2 files changed, 16 insertions(+)
 
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -715,6 +715,7 @@ int nvme_mpath_init(struct nvme_ctrl *ct
- 	}
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -512,6 +512,8 @@
+ #define MSR_K7_HWCR			0xc0010015
+ #define MSR_K7_HWCR_SMMLOCK_BIT		0
+ #define MSR_K7_HWCR_SMMLOCK		BIT_ULL(MSR_K7_HWCR_SMMLOCK_BIT)
++#define MSR_K7_HWCR_IRPERF_EN_BIT	30
++#define MSR_K7_HWCR_IRPERF_EN		BIT_ULL(MSR_K7_HWCR_IRPERF_EN_BIT)
+ #define MSR_K7_FID_VID_CTL		0xc0010041
+ #define MSR_K7_FID_VID_STATUS		0xc0010042
  
- 	INIT_WORK(&ctrl->ana_work, nvme_ana_work);
-+	kfree(ctrl->ana_log_buf);
- 	ctrl->ana_log_buf = kmalloc(ctrl->ana_log_size, GFP_KERNEL);
- 	if (!ctrl->ana_log_buf) {
- 		error = -ENOMEM;
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -28,6 +28,7 @@
+ 
+ static const int amd_erratum_383[];
+ static const int amd_erratum_400[];
++static const int amd_erratum_1054[];
+ static bool cpu_has_amd_erratum(struct cpuinfo_x86 *cpu, const int *erratum);
+ 
+ /*
+@@ -978,6 +979,15 @@ static void init_amd(struct cpuinfo_x86
+ 	/* AMD CPUs don't reset SS attributes on SYSRET, Xen does. */
+ 	if (!cpu_has(c, X86_FEATURE_XENPV))
+ 		set_cpu_bug(c, X86_BUG_SYSRET_SS_ATTRS);
++
++	/*
++	 * Turn on the Instructions Retired free counter on machines not
++	 * susceptible to erratum #1054 "Instructions Retired Performance
++	 * Counter May Be Inaccurate".
++	 */
++	if (cpu_has(c, X86_FEATURE_IRPERF) &&
++	    !cpu_has_amd_erratum(c, amd_erratum_1054))
++		msr_set_bit(MSR_K7_HWCR, MSR_K7_HWCR_IRPERF_EN_BIT);
+ }
+ 
+ #ifdef CONFIG_X86_32
+@@ -1105,6 +1115,10 @@ static const int amd_erratum_400[] =
+ static const int amd_erratum_383[] =
+ 	AMD_OSVW_ERRATUM(3, AMD_MODEL_RANGE(0x10, 0, 0, 0xff, 0xf));
+ 
++/* #1054: Instructions Retired Performance Counter May Be Inaccurate */
++static const int amd_erratum_1054[] =
++	AMD_OSVW_ERRATUM(0, AMD_MODEL_RANGE(0x17, 0, 0, 0x2f, 0xf));
++
+ 
+ static bool cpu_has_amd_erratum(struct cpuinfo_x86 *cpu, const int *erratum)
+ {
 
 
