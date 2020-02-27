@@ -2,108 +2,127 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C82C3F365
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 623C9C3F35C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B0712468D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:07:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="PTRZzFHd"
+	by mail.kernel.org (Postfix) with ESMTP id 39E0E24690
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:05:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582812347;
+	bh=zFUipiL2o9uiiZVWHpaGxnGzMKwZINUr0CoOeUtV38I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LRDqPiq+G7ZXU+1t0MwbmCt4spWjuV2eeRYWt5sDUfE/IJc28SqrhLVa0PPfw5MTH
+	 zURODEI4yZ4Mdpv/ktl8rtSWZg2GyAN9FVmkIS8+C6f+fpES/6E5TAg+89f7U9nxR6
+	 qFCw7M3ViqX5TPrNTw1jpSp2+m/Od+zuWmUEqfrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388056AbgB0OHP (ORCPT
+        id S2387815AbgB0OFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:07:15 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:8241 "EHLO pegase1.c-s.fr"
+        Thu, 27 Feb 2020 09:05:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388040AbgB0OHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:07:13 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48SvcZ3tKZz9txk3;
-        Thu, 27 Feb 2020 15:07:10 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=PTRZzFHd; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id JGy_piGfSqVj; Thu, 27 Feb 2020 15:07:10 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48SvcZ2KVgz9txjq;
-        Thu, 27 Feb 2020 15:07:10 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1582812430; bh=pMdxfkWt8aeiCYoGO1Ki4yn2nRsWDCLP+OmE1BowToE=;
-        h=From:Subject:To:Cc:Date:From;
-        b=PTRZzFHdhDZWMdiWgTpcj8Qnhkf2sblpBy9Y5aCk/LF4KJid8g5BjCA4AHnG7Pagc
-         UkhApWrXZS0x9dxmlyG84glSG1R3Tj6tFUAXdDYiSbGH2wjYvc2Gd85T331OQiyBid
-         uIkrQlDgQpcOlJamJBZFVv0yiZ+rWyinEmeUpc94=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 22B5B8B799;
-        Thu, 27 Feb 2020 15:07:11 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id bau3KNBNhPle; Thu, 27 Feb 2020 15:07:11 +0100 (CET)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A06BF8B877;
-        Thu, 27 Feb 2020 15:07:10 +0100 (CET)
-Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 6AEB865403; Thu, 27 Feb 2020 14:07:10 +0000 (UTC)
-Message-Id: <e4ba4f716599d1d66c8bc60489f4b05764ea8470.1582812034.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH] selftest/lkdtm: Use local .gitignore
-To:     Kees Cook <keescook@chromium.org>,
-        Shuah Khan <skhan@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org
-Date:   Thu, 27 Feb 2020 14:07:10 +0000 (UTC)
+        id S2387805AbgB0OFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:05:43 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37EA924656;
+        Thu, 27 Feb 2020 14:05:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582812342;
+        bh=zFUipiL2o9uiiZVWHpaGxnGzMKwZINUr0CoOeUtV38I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Aawczdl5cSNErrfX3cQr3F/7VqlJU5x5e2jq1G9r3IJWAQ4/FvcoNX0Mw8RBGJZQd
+         GPZRGH8QjEgZK0Tcw/xgeegakPTzCFFe66vzgCa9dSmiTpjP9bgnG3PLAH7DklX7lz
+         bVqUDXn2Jh3PoPRH2Nq7kLU51uKKQ8im2ZGyGAWI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alexander Potapenko <glider@google.com>,
+        Walter Wu <walter-zh.wu@mediatek.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 61/97] lib/stackdepot.c: fix global out-of-bounds in stack_slabs
+Date:   Thu, 27 Feb 2020 14:37:09 +0100
+Message-Id: <20200227132224.502820681@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
+References: <20200227132214.553656188@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 68ca0fd272da ("selftest/lkdtm: Don't pollute 'git status'")
-introduced patterns for git to ignore files generated in
-tools/testing/selftests/lkdtm/
+From: Alexander Potapenko <glider@google.com>
 
-Use local .gitignore file instead of using the root one.
+[ Upstream commit 305e519ce48e935702c32241f07d393c3c8fed3e ]
 
-Fixes: 68ca0fd272da ("selftest/lkdtm: Don't pollute 'git status'")
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Walter Wu has reported a potential case in which init_stack_slab() is
+called after stack_slabs[STACK_ALLOC_MAX_SLABS - 1] has already been
+initialized.  In that case init_stack_slab() will overwrite
+stack_slabs[STACK_ALLOC_MAX_SLABS], which may result in a memory
+corruption.
+
+Link: http://lkml.kernel.org/r/20200218102950.260263-1-glider@google.com
+Fixes: cd11016e5f521 ("mm, kasan: stackdepot implementation. Enable stackdepot for SLAB")
+Signed-off-by: Alexander Potapenko <glider@google.com>
+Reported-by: Walter Wu <walter-zh.wu@mediatek.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Kate Stewart <kstewart@linuxfoundation.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .gitignore                               | 4 ----
- tools/testing/selftests/lkdtm/.gitignore | 2 ++
- 2 files changed, 2 insertions(+), 4 deletions(-)
- create mode 100644 tools/testing/selftests/lkdtm/.gitignore
+ lib/stackdepot.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/.gitignore b/.gitignore
-index bb05dce58f8e..b849a72d69d5 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -100,10 +100,6 @@ modules.order
- /include/ksym/
- /arch/*/include/generated/
+diff --git a/lib/stackdepot.c b/lib/stackdepot.c
+index c5e06c43228f9..34c71973932e0 100644
+--- a/lib/stackdepot.c
++++ b/lib/stackdepot.c
+@@ -92,15 +92,19 @@ static bool init_stack_slab(void **prealloc)
+ 		return true;
+ 	if (stack_slabs[depot_index] == NULL) {
+ 		stack_slabs[depot_index] = *prealloc;
++		*prealloc = NULL;
+ 	} else {
+-		stack_slabs[depot_index + 1] = *prealloc;
++		/* If this is the last depot slab, do not touch the next one. */
++		if (depot_index + 1 < STACK_ALLOC_MAX_SLABS) {
++			stack_slabs[depot_index + 1] = *prealloc;
++			*prealloc = NULL;
++		}
+ 		/*
+ 		 * This smp_store_release pairs with smp_load_acquire() from
+ 		 * |next_slab_inited| above and in stack_depot_save().
+ 		 */
+ 		smp_store_release(&next_slab_inited, 1);
+ 	}
+-	*prealloc = NULL;
+ 	return true;
+ }
  
--# Generated lkdtm tests
--/tools/testing/selftests/lkdtm/*.sh
--!/tools/testing/selftests/lkdtm/run.sh
--
- # stgit generated dirs
- patches-*
- 
-diff --git a/tools/testing/selftests/lkdtm/.gitignore b/tools/testing/selftests/lkdtm/.gitignore
-new file mode 100644
-index 000000000000..f26212605b6b
---- /dev/null
-+++ b/tools/testing/selftests/lkdtm/.gitignore
-@@ -0,0 +1,2 @@
-+*.sh
-+!run.sh
 -- 
-2.25.0
+2.20.1
+
+
 
