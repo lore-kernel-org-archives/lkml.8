@@ -2,53 +2,56 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66816C52D23
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1794EC52D36
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D70124691
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6C9A24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:33:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814001;
-	bh=TSu1Jaccg+uhagN4DT/O2q0J9MNnGzfk0sjA/BxXfx4=;
+	s=default; t=1582814007;
+	bh=LbvWt1qaaoHgw126FlvXqbzf1tcad1g/Bm2OGES6oUk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wdu6w5/YLNJX9bLKByf78qndi9vnbCHlJ8xACspP5uCEcHKcAENLi1M6vq/LNw4Jt
-	 zkG+aF773proyyBHkZjvJHGkaAQ1Mnf9XCZZfGconPufq1oaDxhcg+LCpkrBrdcx9j
-	 0VVyzB7Ihu8OZTuyRdUD8yLgWL87oQ7JctXypGUw=
+	b=tEbIgePLsew9g43XP+AW7pZJYy+qRMt/mCLj4zW1ktcmL9ljdJs1cg87xEwAr66bj
+	 V4G5rXQcAzsFmt4NETJ+YSlh+u8P3HzsN+aBiDGrP0BGQDj9MD1Y82J1ve5E7KjMyE
+	 7FPBB8BEsDWdM++hvkcW4cybLU1Y9eS9C4EJyVa0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387416AbgB0OdT (ORCPT
+        id S2387459AbgB0Od0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:33:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34384 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:33:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732801AbgB0OAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:00:48 -0500
+        id S1732752AbgB0OAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:00:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9171A2073D;
-        Thu, 27 Feb 2020 14:00:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D6222073D;
+        Thu, 27 Feb 2020 14:00:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812047;
-        bh=TSu1Jaccg+uhagN4DT/O2q0J9MNnGzfk0sjA/BxXfx4=;
+        s=default; t=1582812031;
+        bh=LbvWt1qaaoHgw126FlvXqbzf1tcad1g/Bm2OGES6oUk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GxtCtg+sB327jdpIYCgOF6aoW/E5hKDqk+CRfEVRD1cs+n3Or1VCoN0ZbfoeK6Nxt
-         UZyzTL/gBXQjWBvhkFrguALW9io85JPdlfYVaTwkOy5hXGgupwybx9omNtKZqevtsd
-         PntmtcJ1YEnCNct9P5/MTMygC6wvkKZKpjZKw9rk=
+        b=Pjokvk3eZi/wpL1Nwn1f/i4/2T5nCHZwhjGNsYHu/dfLsiDofWCaDG1V3MbNxvZ8g
+         4iG/lbymjRWqdfJ9sHsq8UJ9LZW3S0wSNe7OoduJird8V/+36g1gmEtew6ykXIsjuw
+         v/29TpTJtTmOWaQipFncCI+CW0ToD2zs7tj0wugQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eagle Zhou <eagle.zhou@nxp.com>,
-        Fugang Duan <fugang.duan@nxp.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Subject: [PATCH 4.14 194/237] tty: serial: imx: setup the correct sg entry for tx dma
-Date:   Thu, 27 Feb 2020 14:36:48 +0100
-Message-Id: <20200227132310.592242412@linuxfoundation.org>
+        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
+        zhengbin <zhengbin13@huawei.com>,
+        Hu Shiyuan <hushiyuan@huawei.com>,
+        Feilong Lin <linfeilong@huawei.com>, Jan Kara <jack@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 157/237] reiserfs: prevent NULL pointer dereference in reiserfs_insert_item()
+Date:   Thu, 27 Feb 2020 14:36:11 +0100
+Message-Id: <20200227132308.089075940@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -61,107 +64,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fugang Duan <fugang.duan@nxp.com>
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-commit f76707831829530ffdd3888bebc108aecefccaa0 upstream.
+[ Upstream commit aacee5446a2a1aa35d0a49dab289552578657fb4 ]
 
-There has oops as below happen on i.MX8MP EVK platform that has
-6G bytes DDR memory.
+The variable inode may be NULL in reiserfs_insert_item(), but there is
+no check before accessing the member of inode.
 
-when (xmit->tail < xmit->head) && (xmit->head == 0),
-it setups one sg entry with sg->length is zero:
-	sg_set_buf(sgl + 1, xmit->buf, xmit->head);
+Fix this by adding NULL pointer check before calling reiserfs_debug().
 
-if xmit->buf is allocated from >4G address space, and SDMA only
-support <4G address space, then dma_map_sg() will call swiotlb_map()
-to do bounce buffer copying and mapping.
-
-But swiotlb_map() don't allow sg entry's length is zero, otherwise
-report BUG_ON().
-
-So the patch is to correct the tx DMA scatter list.
-
-Oops:
-[  287.675715] kernel BUG at kernel/dma/swiotlb.c:497!
-[  287.680592] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-[  287.686075] Modules linked in:
-[  287.689133] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.3-00016-g3fdc4e0-dirty #10
-[  287.696872] Hardware name: FSL i.MX8MP EVK (DT)
-[  287.701402] pstate: 80000085 (Nzcv daIf -PAN -UAO)
-[  287.706199] pc : swiotlb_tbl_map_single+0x1fc/0x310
-[  287.711076] lr : swiotlb_map+0x60/0x148
-[  287.714909] sp : ffff800010003c00
-[  287.718221] x29: ffff800010003c00 x28: 0000000000000000
-[  287.723533] x27: 0000000000000040 x26: ffff800011ae0000
-[  287.728844] x25: ffff800011ae09f8 x24: 0000000000000000
-[  287.734155] x23: 00000001b7af9000 x22: 0000000000000000
-[  287.739465] x21: ffff000176409c10 x20: 00000000001f7ffe
-[  287.744776] x19: ffff000176409c10 x18: 000000000000002e
-[  287.750087] x17: 0000000000000000 x16: 0000000000000000
-[  287.755397] x15: 0000000000000000 x14: 0000000000000000
-[  287.760707] x13: ffff00017f334000 x12: 0000000000000001
-[  287.766018] x11: 00000000001fffff x10: 0000000000000000
-[  287.771328] x9 : 0000000000000003 x8 : 0000000000000000
-[  287.776638] x7 : 0000000000000000 x6 : 0000000000000000
-[  287.781949] x5 : 0000000000200000 x4 : 0000000000000000
-[  287.787259] x3 : 0000000000000001 x2 : 00000001b7af9000
-[  287.792570] x1 : 00000000fbfff000 x0 : 0000000000000000
-[  287.797881] Call trace:
-[  287.800328]  swiotlb_tbl_map_single+0x1fc/0x310
-[  287.804859]  swiotlb_map+0x60/0x148
-[  287.808347]  dma_direct_map_page+0xf0/0x130
-[  287.812530]  dma_direct_map_sg+0x78/0xe0
-[  287.816453]  imx_uart_dma_tx+0x134/0x2f8
-[  287.820374]  imx_uart_dma_tx_callback+0xd8/0x168
-[  287.824992]  vchan_complete+0x194/0x200
-[  287.828828]  tasklet_action_common.isra.0+0x154/0x1a0
-[  287.833879]  tasklet_action+0x24/0x30
-[  287.837540]  __do_softirq+0x120/0x23c
-[  287.841202]  irq_exit+0xb8/0xd8
-[  287.844343]  __handle_domain_irq+0x64/0xb8
-[  287.848438]  gic_handle_irq+0x5c/0x148
-[  287.852185]  el1_irq+0xb8/0x180
-[  287.855327]  cpuidle_enter_state+0x84/0x360
-[  287.859508]  cpuidle_enter+0x34/0x48
-[  287.863083]  call_cpuidle+0x18/0x38
-[  287.866571]  do_idle+0x1e0/0x280
-[  287.869798]  cpu_startup_entry+0x20/0x40
-[  287.873721]  rest_init+0xd4/0xe0
-[  287.876949]  arch_call_rest_init+0xc/0x14
-[  287.880958]  start_kernel+0x420/0x44c
-[  287.884622] Code: 9124c021 9417aff8 a94363f7 17ffffd5 (d4210000)
-[  287.890718] ---[ end trace 5bc44c4ab6b009ce ]---
-[  287.895334] Kernel panic - not syncing: Fatal exception in interrupt
-[  287.901686] SMP: stopping secondary CPUs
-[  288.905607] SMP: failed to stop secondary CPUs 0-1
-[  288.910395] Kernel Offset: disabled
-[  288.913882] CPU features: 0x0002,2000200c
-[  288.917888] Memory Limit: none
-[  288.920944] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
-
-Reported-by: Eagle Zhou <eagle.zhou@nxp.com>
-Tested-by: Eagle Zhou <eagle.zhou@nxp.com>
-Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
-Cc: stable <stable@vger.kernel.org>
-Fixes: 7942f8577f2a ("serial: imx: TX DMA: clean up sg initialization")
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Link: https://lore.kernel.org/r/1581401761-6378-1-git-send-email-fugang.duan@nxp.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: http://lkml.kernel.org/r/79c5135d-ff25-1cc9-4e99-9f572b88cc00@huawei.com
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Cc: zhengbin <zhengbin13@huawei.com>
+Cc: Hu Shiyuan <hushiyuan@huawei.com>
+Cc: Feilong Lin <linfeilong@huawei.com>
+Cc: Jan Kara <jack@suse.cz>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/imx.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/reiserfs/stree.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/tty/serial/imx.c
-+++ b/drivers/tty/serial/imx.c
-@@ -557,7 +557,7 @@ static void imx_dma_tx(struct imx_port *
- 
- 	sport->tx_bytes = uart_circ_chars_pending(xmit);
- 
--	if (xmit->tail < xmit->head) {
-+	if (xmit->tail < xmit->head || xmit->head == 0) {
- 		sport->dma_tx_nents = 1;
- 		sg_init_one(sgl, xmit->buf + xmit->tail, sport->tx_bytes);
- 	} else {
+diff --git a/fs/reiserfs/stree.c b/fs/reiserfs/stree.c
+index 0037aea97d39a..2946713cb00d6 100644
+--- a/fs/reiserfs/stree.c
++++ b/fs/reiserfs/stree.c
+@@ -2250,7 +2250,8 @@ error_out:
+ 	/* also releases the path */
+ 	unfix_nodes(&s_ins_balance);
+ #ifdef REISERQUOTA_DEBUG
+-	reiserfs_debug(th->t_super, REISERFS_DEBUG_CODE,
++	if (inode)
++		reiserfs_debug(th->t_super, REISERFS_DEBUG_CODE,
+ 		       "reiserquota insert_item(): freeing %u id=%u type=%c",
+ 		       quota_bytes, inode->i_uid, head2type(ih));
+ #endif
+-- 
+2.20.1
+
 
 
