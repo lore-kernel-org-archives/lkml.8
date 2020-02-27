@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20128C3F34F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A39F7C3F350
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB992468D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CCC920801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:46:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811253;
-	bh=F7DUeTsW+cyMC4RzsgEMADb2jrUEX1Fy6u0Pl9fIC64=;
+	s=default; t=1582811193;
+	bh=dh+/m3pp0Va11YkeqaWNOSNxl750IBJBgvOCo1JsN5c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FV0+knnNLrhUp818iTtdGG1XfO7t7opeOMEolYG2nvhpRbXjRKIyNc8xQ42ae+zKi
-	 PilOo86A3wZRysmqNreHAWq3n03G0agatlI37Ugr5TiF+0300/nIz/b843fCsEg17c
-	 N35+iBA/U+vNA8HFwWZSYlltEQF5yQfXzcHZpEsU=
+	b=i/UVYpXCwIRqfPtxfCAvUbNYrJ5PSFiuAlgqZfyETDC/Ov5DNlnTY3Te3WiK6I6O1
+	 N/7IoOTwN2eMLrgZM3mVhlFTHpydzTnEZY5HZYAumWw3eAZfEBfexsvwFtCk6AyCqU
+	 Z7zjXOyB2HovfSggoKtQgSTIwoY2xK016j0Ie+qY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730710AbgB0Nrb (ORCPT
+        id S1730529AbgB0Nqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:47:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43928 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:46:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730696AbgB0Nr2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:47:28 -0500
+        id S1730517AbgB0Nq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:46:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F70C2468D;
-        Thu, 27 Feb 2020 13:47:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5339321D7E;
+        Thu, 27 Feb 2020 13:46:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811248;
-        bh=F7DUeTsW+cyMC4RzsgEMADb2jrUEX1Fy6u0Pl9fIC64=;
+        s=default; t=1582811188;
+        bh=dh+/m3pp0Va11YkeqaWNOSNxl750IBJBgvOCo1JsN5c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pq+VkjozPWo7bojjWggpqbMOkfPYR3p89mfWQC4UEu58a7wEIZTWP1qMTv0/RtYtH
-         g9Jqt/ZM3G2cwzE4mt4K0eCnCO68eZNq6LjQdtD8erfLk4Tq2hQ148wA6FqBOA2Okt
-         9BerFygrGpuuGCR1FMDZvczdHaF8Hb+hYO6QYc+k=
+        b=0w5iGT75bQzBWR1k6IhIZ1cNT0e8YdkyUrLLJUUXk0vtqQGqUnNaaqH/0LcQOjfjq
+         UoH6/lvwsPyqnamD8gTcUob9xKbsZZccMfG8Ti9Jdy+DJDeAes1anZxFigL9COMZ83
+         aitWAHsmxLTG1MeveJqcAsT54JnIP3v7a/TX+mPE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 060/165] drm/mediatek: handle events when enabling/disabling crtc
-Date:   Thu, 27 Feb 2020 14:35:34 +0100
-Message-Id: <20200227132240.248172642@linuxfoundation.org>
+        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 035/165] sparc: Add .exit.data section.
+Date:   Thu, 27 Feb 2020 14:35:09 +0100
+Message-Id: <20200227132236.293069143@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -59,49 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bibby Hsieh <bibby.hsieh@mediatek.com>
+From: David S. Miller <davem@davemloft.net>
 
-[ Upstream commit 411f5c1eacfebb1f6e40b653d29447cdfe7282aa ]
+[ Upstream commit 548f0b9a5f4cffa0cecf62eb12aa8db682e4eee6 ]
 
-The driver currently handles vblank events only when updating planes on
-an already enabled CRTC. The atomic update API however allows requesting
-an event when enabling or disabling a CRTC. This currently leads to
-event objects being leaked in the kernel and to events not being sent
-out. Fix it.
+This fixes build errors of all sorts.
 
-Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
+Also, emit .exit.text unconditionally.
+
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/sparc/kernel/vmlinux.lds.S | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-index 01a21dd835b57..1ed60da76a0ce 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-@@ -306,6 +306,7 @@ err_pm_runtime_put:
- static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
- {
- 	struct drm_device *drm = mtk_crtc->base.dev;
-+	struct drm_crtc *crtc = &mtk_crtc->base;
- 	int i;
+diff --git a/arch/sparc/kernel/vmlinux.lds.S b/arch/sparc/kernel/vmlinux.lds.S
+index 572db686f8458..385d6d04564d5 100644
+--- a/arch/sparc/kernel/vmlinux.lds.S
++++ b/arch/sparc/kernel/vmlinux.lds.S
+@@ -151,12 +151,14 @@ SECTIONS
+ 	}
+ 	PERCPU_SECTION(SMP_CACHE_BYTES)
  
- 	DRM_DEBUG_DRIVER("%s\n", __func__);
-@@ -327,6 +328,13 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
- 	mtk_disp_mutex_unprepare(mtk_crtc->mutex);
- 
- 	pm_runtime_put(drm->dev);
+-#ifdef CONFIG_JUMP_LABEL
+ 	. = ALIGN(PAGE_SIZE);
+ 	.exit.text : {
+ 		EXIT_TEXT
+ 	}
+-#endif
 +
-+	if (crtc->state->event && !crtc->state->active) {
-+		spin_lock_irq(&crtc->dev->event_lock);
-+		drm_crtc_send_vblank_event(crtc, crtc->state->event);
-+		crtc->state->event = NULL;
-+		spin_unlock_irq(&crtc->dev->event_lock);
++	.exit.data : {
++		EXIT_DATA
 +	}
- }
  
- static void mtk_drm_crtc_enable(struct drm_crtc *crtc)
+ 	. = ALIGN(PAGE_SIZE);
+ 	__init_end = .;
 -- 
 2.20.1
 
