@@ -2,166 +2,124 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DEEC34022
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E7AC11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B659F24656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D3A424691
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:43:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dsz/dd+K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731353AbgB0OnU (ORCPT
+        id S1732167AbgB0OnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:43:20 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:13400 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731060AbgB0Ntj (ORCPT
+        Thu, 27 Feb 2020 09:43:24 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:41399 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731358AbgB0OnW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:49:39 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01RDlLkX008336;
-        Thu, 27 Feb 2020 08:49:37 -0500
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ydtrwka5q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Feb 2020 08:49:37 -0500
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 01RDnaUR017473
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Thu, 27 Feb 2020 08:49:36 -0500
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 27 Feb
- 2020 08:49:35 -0500
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Thu, 27 Feb 2020 08:49:35 -0500
-Received: from saturn.ad.analog.com ([10.48.65.109])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01RDnVok027892;
-        Thu, 27 Feb 2020 08:49:33 -0500
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 3/8] iio: core: drop devm_iio_device_free() API call
-Date:   Thu, 27 Feb 2020 15:52:22 +0200
-Message-ID: <20200227135227.12433-3-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200227135227.12433-1-alexandru.ardelean@analog.com>
-References: <20200227135227.12433-1-alexandru.ardelean@analog.com>
+        Thu, 27 Feb 2020 09:43:22 -0500
+Received: by mail-vs1-f65.google.com with SMTP id k188so1967131vsc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 06:43:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z+isuoKHbYPGILyMICbGR0T5QiMYRy4J1XMZ/c0MyCE=;
+        b=dsz/dd+K0I4XD1YrhrhPrHHrR191LtRyLN7aW8hmkbZPgrrvlzPCU2Smg1NEu36eT6
+         KHLffuYRjxM41BUOtcI6irVNls7ebDoaPsitXlh9zLNYML4FI9hSwEqIRBSYmpQPdrk6
+         +5Jc5auj6M+JJe2bJ1uLklew3o9sgGElGwB3XYKUXjOLArCJ0cpQkL84PKxdozFzjvc+
+         KIlGHGfjb2TATOqqIOqDSze6qeAqyF/kaKk98t/jbfQT0r2qx6PrOxDMGQ4f7S6IIwmt
+         dbHDeywyho5NjaxRwEKTM+v75sCIpKtLn9ske4II8+0vX697sx2/ui4at3opVGGi2eJP
+         BmMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z+isuoKHbYPGILyMICbGR0T5QiMYRy4J1XMZ/c0MyCE=;
+        b=oWxc/mRnkHrIChnQsbe/eNyxk1tUdx+dtAkgZ3V55551wKs4cLq0koNDkUwcdl3NOZ
+         KamK+W1N+xNiE3znEAWo7ASs/Qdz4Aq3VjvhwnmIICBfca7Zwy4suUE/DWHWyQS2KQvy
+         VjByaJHw9AHukQMH8+D2gov7h4jtaa8vqdoBFcIzFHqzPi2Wbe7uIKFM63jHUh/wgy4s
+         ozmfgBJp40EkZzUUDzO0F+BE6qcgW8olGhKDwf/flLSy1Y3Wvnhfn/u+HNIJ7os2ZFis
+         xUoe+J/NCMRFm7xL70n48jYBNguPng7kpDKNrXhc19kWegusg5Ear/e23XkOdqA9+OdJ
+         j8cQ==
+X-Gm-Message-State: APjAAAVWja1w3DDxgH959E3GeGkGn6TI6I0WKaCybvoMX67VihY8VSl+
+        gt3Yg3FPWaBbGCPwgc6L+bQEANdjm6lXBmFNpl6cfw==
+X-Google-Smtp-Source: APXvYqwcq58o1fQ/mxg6LapwJjViDpXeZMxMof5dGvU3nXZs+HFFCPF/LbTlE/gRBPnnUHHPHu5q3xLtm8y/xdFNsQ0=
+X-Received: by 2002:a67:f318:: with SMTP id p24mr2787324vsf.240.1582814601592;
+ Thu, 27 Feb 2020 06:43:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-27_04:2020-02-26,2020-02-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- phishscore=0 adultscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- suspectscore=2 clxscore=1015 lowpriorityscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002270109
+References: <20200227024301.217042-1-trishalfonso@google.com> <20200227024301.217042-2-trishalfonso@google.com>
+In-Reply-To: <20200227024301.217042-2-trishalfonso@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 27 Feb 2020 15:43:10 +0100
+Message-ID: <CACT4Y+YFewcbRnY62wLHueVNwyXCSZwO8K7SUR2cg=pxZv8uZA@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/2] KUnit: KASAN Integration
+To:     Patricia Alfonso <trishalfonso@google.com>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        David Gow <davidgow@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>, vincent.guittot@linaro.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's unused so far, so it can't be removed. Also makes sense to remove it
-to discourage weird uses of this call during review.
+On Thu, Feb 27, 2020 at 3:44 AM 'Patricia Alfonso' via kasan-dev
+<kasan-dev@googlegroups.com> wrote:
+>
+> Integrate KASAN into KUnit testing framework.
+>  - Fail tests when KASAN reports an error that is not expected
+>  - Use KUNIT_EXPECT_KASAN_FAIL to expect a KASAN error in KASAN tests
+>  - KUnit struct added to current task to keep track of the current test
+> from KASAN code
+>  - Booleans representing if a KASAN report is expected and if a KASAN
+>  report is found added to kunit struct
+>  - This prints "line# has passed" or "line# has failed"
+>
+> Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
+> ---
+> If anyone has any suggestions on how best to print the failure
+> messages, please share!
+>
+> One issue I have found while testing this is the allocation fails in
+> kmalloc_pagealloc_oob_right() sometimes, but not consistently. This
+> does cause the test to fail on the KUnit side, as expected, but it
+> seems to skip all the tests before this one because the output starts
+> with this failure instead of with the first test, kmalloc_oob_right().
 
-This is the last user of 'devm_iio_device_match()', so it can be removed as
-well in this patch.
+I don't follow this... we don't check output in any way, so how does
+output affect execution?...
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- .../driver-api/driver-model/devres.rst        |  1 -
- drivers/iio/industrialio-core.c               | 31 -------------------
- include/linux/iio/iio.h                       |  2 --
- 3 files changed, 34 deletions(-)
 
-diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
-index 1431d5e44abc..6ae6c67dfec0 100644
---- a/Documentation/driver-api/driver-model/devres.rst
-+++ b/Documentation/driver-api/driver-model/devres.rst
-@@ -284,7 +284,6 @@ I2C
- 
- IIO
-   devm_iio_device_alloc()
--  devm_iio_device_free()
-   devm_iio_device_register()
-   devm_iio_kfifo_allocate()
-   devm_iio_kfifo_free()
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index e4011f8431f9..ebe338a0494f 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -1539,17 +1539,6 @@ static void devm_iio_device_release(struct device *dev, void *res)
- 	iio_device_free(*(struct iio_dev **)res);
- }
- 
--int devm_iio_device_match(struct device *dev, void *res, void *data)
--{
--	struct iio_dev **r = res;
--	if (!r || !*r) {
--		WARN_ON(!r || !*r);
--		return 0;
--	}
--	return *r == data;
--}
--EXPORT_SYMBOL_GPL(devm_iio_device_match);
--
- /**
-  * devm_iio_device_alloc - Resource-managed iio_device_alloc()
-  * @dev:		Device to allocate iio_dev for
-@@ -1558,9 +1547,6 @@ EXPORT_SYMBOL_GPL(devm_iio_device_match);
-  * Managed iio_device_alloc. iio_dev allocated with this function is
-  * automatically freed on driver detach.
-  *
-- * If an iio_dev allocated with this function needs to be freed separately,
-- * devm_iio_device_free() must be used.
-- *
-  * RETURNS:
-  * Pointer to allocated iio_dev on success, NULL on failure.
-  */
-@@ -1585,23 +1571,6 @@ struct iio_dev *devm_iio_device_alloc(struct device *dev, int sizeof_priv)
- }
- EXPORT_SYMBOL_GPL(devm_iio_device_alloc);
- 
--/**
-- * devm_iio_device_free - Resource-managed iio_device_free()
-- * @dev:		Device this iio_dev belongs to
-- * @iio_dev:		the iio_dev associated with the device
-- *
-- * Free iio_dev allocated with devm_iio_device_alloc().
-- */
--void devm_iio_device_free(struct device *dev, struct iio_dev *iio_dev)
--{
--	int rc;
--
--	rc = devres_release(dev, devm_iio_device_release,
--			    devm_iio_device_match, iio_dev);
--	WARN_ON(rc);
--}
--EXPORT_SYMBOL_GPL(devm_iio_device_free);
--
- /**
-  * iio_chrdev_open() - chrdev file open for buffer access and ioctls
-  * @inode:	Inode structure for identifying the device in the file system
-diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-index 0eb9e8d7ec68..2920c065ab9b 100644
---- a/include/linux/iio/iio.h
-+++ b/include/linux/iio/iio.h
-@@ -686,9 +686,7 @@ static inline struct iio_dev *iio_priv_to_dev(void *priv)
- }
- 
- void iio_device_free(struct iio_dev *indio_dev);
--int devm_iio_device_match(struct device *dev, void *res, void *data);
- struct iio_dev *devm_iio_device_alloc(struct device *dev, int sizeof_priv);
--void devm_iio_device_free(struct device *dev, struct iio_dev *indio_dev);
- struct iio_trigger *devm_iio_trigger_alloc(struct device *dev,
- 						const char *fmt, ...);
- void devm_iio_trigger_free(struct device *dev, struct iio_trigger *iio_trig);
--- 
-2.20.1
+> --- a/tools/testing/kunit/kunit_kernel.py
+> +++ b/tools/testing/kunit/kunit_kernel.py
+> @@ -141,7 +141,7 @@ class LinuxSourceTree(object):
+>                 return True
+>
+>         def run_kernel(self, args=[], timeout=None, build_dir=''):
+> -               args.extend(['mem=256M'])
+> +               args.extend(['mem=256M', 'kasan_multi_shot'])
 
+This is better done somewhere else (different default value if
+KASAN_TEST is enabled or something). Or overridden in the KASAN tests.
+Not everybody uses tools/testing/kunit/kunit_kernel.py and this seems
+to be a mandatory part now. This means people will always hit this, be
+confused, figure out they need to flip the value, and only then be
+able to run kunit+kasan.
+
+
+>                 process = self._ops.linux_bin(args, timeout, build_dir)
+>                 with open(os.path.join(build_dir, 'test.log'), 'w') as f:
+>                         for line in process.stdout:
