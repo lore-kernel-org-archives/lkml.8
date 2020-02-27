@@ -2,100 +2,106 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5F1C3F2C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA748C3F2C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06EA0246A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 895152469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:11:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ruAFg28G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AONhiIW3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729816AbgB0VGb (ORCPT
+        id S1729740AbgB0VLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 16:06:31 -0500
-Received: from ozlabs.org ([203.11.71.1]:50943 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726758AbgB0VGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 16:06:30 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48T4wL59ZBz9sPK;
-        Fri, 28 Feb 2020 08:06:26 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1582837587;
-        bh=cCJSoF0aXpa3po0AYy6HcuH3uMIGfsycXBnKbAeZioE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ruAFg28GMEIXGkGML+ceF3L6cO9FboHxypHJXPls6bC0GYYGy5+wRRSpYK4vTnQWO
-         quZEm8EZZ1pXXdlZ98fCe6ouWlz0WHeH4sKM221X5BVAk0JIlKEjdjVWIEE2bZc/L/
-         lfVkwmsM9PCNidS5ZCAIrxKzXAfukwzLHUPN39xiX3TXxu+aW1ZeSBM5em+lsucv0w
-         EORikL4YQqcCfgWPfQE7URJRooLHjTfkRIH92W30fwClDBgUhWSxLQWzrnEJm4B2Ls
-         yiiS6hwZ/Tw54dwWNbYahJ82+vitff7ImfHm6kvU1eGeuInGffCmNmBADuWPSELvAd
-         RnexKl11u5uVg==
-Date:   Fri, 28 Feb 2020 08:06:12 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: linux-next: Fixes tag needs some work in the v4l-dvb tree
-Message-ID: <20200228080612.1858eb8b@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Db3Y2lSijK71uzh7RMOEW_Z";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Thu, 27 Feb 2020 16:11:15 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:54820 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726758AbgB0VLO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 16:11:14 -0500
+Received: by mail-pj1-f67.google.com with SMTP id dw13so313540pjb.4;
+        Thu, 27 Feb 2020 13:11:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Vn2qdMNVtzmTptemarLkmeAQtuC77a4d836dzPxB5VY=;
+        b=AONhiIW3W0Ge7r2OROQVTEDOY/Muz6N+l/AJQzVAQTeiymt7Ls7JttstYeqYGLjLJV
+         fBU+97SrxyDB4jStEuufV+ZiGmMQtDNJCi44m9c7hMoIuwCMlAG0XKKRutTKxKKvKC0F
+         9xx6fj8RxOTY+aglMrEMhXQMEjazSVjBQlMsxW0WhZz4InOzRiIYlDU/4WjJ8kJl7ty+
+         LUVvi4vatINRq5BdBV9V+4TxtA8bhrtFbR2xoy0B0/z/hXlh8xRnrNr8xwKYrE99RRwz
+         +zFFtYFwiUx5r61wlNGeu8d9d/Dbtptyr4uTKSwdidYvSykkZ5Io6GYj7XlGUleud57H
+         N1Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Vn2qdMNVtzmTptemarLkmeAQtuC77a4d836dzPxB5VY=;
+        b=FDLg7SegWMuMjjZ8nrQkOPf0gOcuZQJZsB9OkdXguZGk6FlnxyLHL3YpnE6CAFaM98
+         pCX9gjT3/fmC4/+n2JV2sTqxOqj+C/ekplfY9J+6FF6wQedvSI9XZK5QD1Yr4qtxkaIa
+         E0OA6uUwB0PTEF4NHGUHUMFn7SMXy2S9qlBCL4yDUDq7Rc7SVSJ7dGtF1J8CcjGyY4zy
+         bepcj1pvpNqCghh7YsY9nzVlx3DxLQ8JpuVxhZQmmkUaW5MLambp33ZJc+BfLSyELPFo
+         BRpK5bXaRU9co7MtU5Q3dNyXGabSvoMB9EwMq9cbLloJdi2n02eD+xYMMvnFI+YCE49A
+         yBkg==
+X-Gm-Message-State: APjAAAXnRQtHxGzdoJQ8AXsFtMSUMxBc5U6EOk28Nfnp21nqKYCTkGGD
+        BdbEceDPVMXhIn6gbLo+8g==
+X-Google-Smtp-Source: APXvYqxoQQj1fnYLsu6+7XFbap7bfIOGjDd5lJFw8GC9SapC3mUGkSf3sK+q2+ztL0Gc2aOZBbTGMw==
+X-Received: by 2002:a17:90b:3590:: with SMTP id mm16mr878870pjb.112.1582837873689;
+        Thu, 27 Feb 2020 13:11:13 -0800 (PST)
+Received: from localhost.localdomain ([157.41.21.90])
+        by smtp.gmail.com with ESMTPSA id z27sm8548016pfj.107.2020.02.27.13.11.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 27 Feb 2020 13:11:13 -0800 (PST)
+From:   vivek m <bitu.kv@gmail.com>
+To:     valdis.kletnieks@vt.edu
+Cc:     gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        vivek m <bitu.kv@gmail.com>
+Subject: [PATCH] Staging: exfat: fixed a long line coding style issue
+Date:   Thu, 27 Feb 2020 21:11:05 +0000
+Message-Id: <1582837865-2219-1-git-send-email-bitu.kv@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Db3Y2lSijK71uzh7RMOEW_Z
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Fixed a coding style issue
 
-Hi all,
+Signed-off-by: Vivek M <bitu.kv@gmail.com>
+---
+ drivers/staging/exfat/exfat_blkdev.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-In commit
+diff --git a/drivers/staging/exfat/exfat_blkdev.c b/drivers/staging/exfat/exfat_blkdev.c
+index 0a3dc35..ddff019 100644
+--- a/drivers/staging/exfat/exfat_blkdev.c
++++ b/drivers/staging/exfat/exfat_blkdev.c
+@@ -30,8 +30,9 @@ void exfat_bdev_close(struct super_block *sb)
+ 	p_bd->opened = false;
+ }
+ 
+-int exfat_bdev_read(struct super_block *sb, sector_t secno, struct buffer_head **bh,
+-		    u32 num_secs, bool read)
++int exfat_bdev_read(struct super_block *sb, sector_t secno,
++		    struct buffer_head **bh, u32 num_secs,
++		    bool read)
+ {
+ 	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
+ 	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
+@@ -65,7 +66,8 @@ int exfat_bdev_read(struct super_block *sb, sector_t secno, struct buffer_head *
+ 	return -EIO;
+ }
+ 
+-int exfat_bdev_write(struct super_block *sb, sector_t secno, struct buffer_head *bh,
++int exfat_bdev_write(struct super_block *sb, sector_t secno,
++		     struct buffer_head *bh,
+ 		     u32 num_secs, bool sync)
+ {
+ 	s32 count;
+-- 
+2.7.4
 
-  ab07b1a6ac6e ("media: omap3isp: Prevent enabling CCDC when stopping strea=
-ming")
-
-Fixes tag
-
-  Fixes: dd12ed17ce9e ("omap3isp: Don't restart CCDC if we're about to stop=
-")
-
-has these problem(s):
-
-  - Subject does not match target commit subject
-    Just use
-	git log -1 --format=3D'Fixes: %h ("%s")'
-
-Also, please keep all the commit message tags together at the end of
-the commit message.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Db3Y2lSijK71uzh7RMOEW_Z
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5YL0QACgkQAVBC80lX
-0GwcIgf+PElZgYjvLMGb3mt0nb0Y2qYC6h+VIRjNFnVZuGfFgNsUsvV8Hu6Uc+Ea
-6PKR1kCGHpf4CWOIqsj3rYtTQScqh5k9XnCxpO5u71hpE9+fPffEyHzhXmWPd5o5
-G29nIWErK8pKDVvv6QR0bnVX5vRPQ1c4k9zJLpbPD9S9M/ve93hmP1tHpy3ryhT7
-NAIL2BbqKJHVdtqB/9gUpDNEzUZxsYNcJgI2GUfPV8WsB7fo/OwrEOjSE+/9oY2I
-epewAV5CHOq02Znn/tL8B0ccsrbhwJyS4gy+jAacCRLANZ1w/OLGYar6aodc6KwO
-p2PfbAGWRAM44CnbAzs0TxAwMPLhJw==
-=ULWJ
------END PGP SIGNATURE-----
-
---Sig_/Db3Y2lSijK71uzh7RMOEW_Z--
