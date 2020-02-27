@@ -2,116 +2,91 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 569B1C7656C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E99C7659C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 203A424656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:34:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CE9224656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:36:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814077;
-	bh=8kjWQwZh4p9lzpACl4/d7+9o9McLD4v/gchl/16vOwQ=;
-	h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
-	 References:List-ID:From;
-	b=F0fA3pYPg7AyC8dm5IcmhNCH7lwDGDACU8zt3oIU/wXtSBBvUZ6BJNb1ShhdINt9k
-	 +wgtlnq9P4p7gO0909hspgFkykQiMt5RWxXf7pZd6yfuc317pFsq2g32EANCW4d9t6
-	 6iQiMHgbY0UuZyBVHrF88S78BoymhOgb5G6WHh50=
+	s=default; t=1582814166;
+	bh=UNjkvXfQWWXq/yhRlv52KlW+Vqgo0EflO9SgIZ6VtPg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=iwDrYxw1JAgbdm+VumzYH+2SCLvGAfi/GJNJ4S3wCM6jBTHAy4S4+HvjYAaWFSuqu
+	 5SBE6v3VpTbVj/kIB2FpeprWcY4yMMscGyJkeVUeBfxWWKMv0NVFrkZdWkFf/Xkiq1
+	 FoRPXXWm81qkT+BguLfLGl0cxx35VI8RMCYn2PFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388772AbgB0Oef (ORCPT
+        id S1732609AbgB0N7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:34:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45314 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:59:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388478AbgB0OeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:34:22 -0500
-Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727998AbgB0N7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:59:22 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E94A246C0;
-        Thu, 27 Feb 2020 14:34:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78E6820801;
+        Thu, 27 Feb 2020 13:59:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582814061;
-        bh=8kjWQwZh4p9lzpACl4/d7+9o9McLD4v/gchl/16vOwQ=;
-        h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=bmAaBK83g0mDtsZ1ULHZgkke/Otf/IUe81WDY34NxeQvVEiBSW6XkAFiHjgF3Ym+1
-         VcwyrDFnZ7XOrEaYz3G7TZNWp8P1GVdqZHvpHQ246XSAJdOIxrwhwirBx5r00vW6Ae
-         dKYaHSjmrLrjX36yUJBNEc0IZZ5LzM3dwXIax7FM=
-From:   zanussi@kernel.org
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Daniel Wagner <wagi@monom.org>,
-        Tom Zanussi <zanussi@kernel.org>
-Subject: [PATCH RT 22/23] sched/deadline: Ensure inactive_timer runs in hardirq context
-Date:   Thu, 27 Feb 2020 08:33:33 -0600
-Message-Id: <1831d63baf940e95a4f3450eff01f0478c8601a2.1582814004.git.zanussi@kernel.org>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <cover.1582814004.git.zanussi@kernel.org>
-References: <cover.1582814004.git.zanussi@kernel.org>
-In-Reply-To: <cover.1582814004.git.zanussi@kernel.org>
-References: <cover.1582814004.git.zanussi@kernel.org>
+        s=default; t=1582811960;
+        bh=UNjkvXfQWWXq/yhRlv52KlW+Vqgo0EflO9SgIZ6VtPg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NBgidTsWBarGk8ubo7gxGQD9Ppb16gEj6Pv+Wq9nzl+4iXIOulRo2ZvW85XUvEFMd
+         n9GnQFF9u9AG1b1h+0i+sYu4pvntAKGig7vl6AopZ4SWYafyFEgBraoQQHirfILueG
+         k4+fiduBVmGqOjQJQaMemNtjKaC+Q5aMePICMQU8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Davide Caratti <dcaratti@redhat.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 169/237] net/sched: matchall: add missing validation of TCA_MATCHALL_FLAGS
+Date:   Thu, 27 Feb 2020 14:36:23 +0100
+Message-Id: <20200227132308.883193159@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
+References: <20200227132255.285644406@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juri Lelli <juri.lelli@redhat.com>
+From: Davide Caratti <dcaratti@redhat.com>
 
-v4.14.170-rt75-rc2 stable review patch.
-If anyone has any objections, please let me know.
+[ Upstream commit 1afa3cc90f8fb745c777884d79eaa1001d6927a6 ]
 
------------
+unlike other classifiers that can be offloaded (i.e. users can set flags
+like 'skip_hw' and 'skip_sw'), 'cls_matchall' doesn't validate the size
+of netlink attribute 'TCA_MATCHALL_FLAGS' provided by user: add a proper
+entry to mall_policy.
 
-
-[ Upstream commit ba94e7aed7405c58251b1380e6e7d73aa8284b41 ]
-
-SCHED_DEADLINE inactive timer needs to run in hardirq context (as
-dl_task_timer already does) on PREEMPT_RT
-
-Change the mode to HRTIMER_MODE_REL_HARD.
-
-[ tglx: Fixed up the start site, so mode debugging works ]
-
-Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190731103715.4047-1-juri.lelli@redhat.com
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+Fixes: b87f7936a932 ("net/sched: Add match-all classifier hw offloading.")
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/sched/deadline.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/sched/cls_matchall.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index eb68f7fb8a36..7b04e54bea01 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -252,7 +252,7 @@ static void task_non_contending(struct task_struct *p)
+--- a/net/sched/cls_matchall.c
++++ b/net/sched/cls_matchall.c
+@@ -136,6 +136,7 @@ static void *mall_get(struct tcf_proto *
+ static const struct nla_policy mall_policy[TCA_MATCHALL_MAX + 1] = {
+ 	[TCA_MATCHALL_UNSPEC]		= { .type = NLA_UNSPEC },
+ 	[TCA_MATCHALL_CLASSID]		= { .type = NLA_U32 },
++	[TCA_MATCHALL_FLAGS]		= { .type = NLA_U32 },
+ };
  
- 	dl_se->dl_non_contending = 1;
- 	get_task_struct(p);
--	hrtimer_start(timer, ns_to_ktime(zerolag_time), HRTIMER_MODE_REL);
-+	hrtimer_start(timer, ns_to_ktime(zerolag_time), HRTIMER_MODE_REL_HARD);
- }
- 
- static void task_contending(struct sched_dl_entity *dl_se, int flags)
-@@ -1234,7 +1234,7 @@ void init_dl_inactive_task_timer(struct sched_dl_entity *dl_se)
- {
- 	struct hrtimer *timer = &dl_se->inactive_timer;
- 
--	hrtimer_init(timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+	hrtimer_init(timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
- 	timer->function = inactive_task_timer;
- }
- 
--- 
-2.14.1
+ static int mall_set_parms(struct net *net, struct tcf_proto *tp,
+
 
