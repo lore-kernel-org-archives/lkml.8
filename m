@@ -2,52 +2,52 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 504B0C3F34C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E5EC3F34B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27CE121D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 397A421D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:43:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582810995;
-	bh=dVXJL/T4dMys1FvCdbA1mV3mv1OraNsbPY9kEd0Rh5w=;
+	s=default; t=1582811037;
+	bh=V5P4Q8/ssPM7jQaBPJGmfePv5eUN0NLD6YjtJSHaJkU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iU/C9h9ZrQGWiK4n3uBuST1ITtK6QPOGuSTLMtIl5aykAbeKVwrNr9vSbpbfKyJdD
-	 QhECav3Yl+PuqtbEN5If5wc7Z+CCP0NX17jXbuvv1TB+w6Q81NhSdXLRDC/QlUH9nt
-	 LRJ0qAgfLdoSNQT0V5Yqc9RElf7+DWCvUE6rhvto=
+	b=e86awTu7F5VZ4dS9PFOCgDairwixaF/jAis3mASgByLfrErTSmQnsRz36UwG6UEOP
+	 v2TBrKFwXwB9tGRtIJQUCmz7UMAxJ9rgFB8FvvsiISklA6va+Cl4g+sAWR2/Jp3r+T
+	 tiXHifhmOJHxBceHOyDzLDfC2BJMgG1nbzxndx3o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729928AbgB0NnO (ORCPT
+        id S1729577AbgB0Nn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:43:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38320 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:43:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729615AbgB0NnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:43:10 -0500
+        id S1730035AbgB0Nnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:43:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3BCF20578;
-        Thu, 27 Feb 2020 13:43:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7863221D7E;
+        Thu, 27 Feb 2020 13:43:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582810989;
-        bh=dVXJL/T4dMys1FvCdbA1mV3mv1OraNsbPY9kEd0Rh5w=;
+        s=default; t=1582811033;
+        bh=V5P4Q8/ssPM7jQaBPJGmfePv5eUN0NLD6YjtJSHaJkU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fPFEJDpZ483yU8O+dU9atIaFubGRcvW+DwPxHr/jMA0bDKwfaOLDOh9t3hiWTE7en
-         ndILiz87WnK5Tpp7bjHdn5nzzYgVNkoKkP5OM6r7QQ8PUUqR8i6FS51Vt6TOjURm2t
-         /nbI5dNM/VK9KFl2bcslDC5Uc1BQPaX3uCjQiUXc=
+        b=e5yCq7Jh5U3qDkQB7FzLKLeuRFkCfn74DniZzn5J/pa7/hEhsDSmymc245w0Ng0JJ
+         h63K874I0iwKlOiMgJJczO1+cz1HJ+F59NGNrbX7x+K7UtYAJEJat8MraPyDAEqD+i
+         T1Z01aiz8y0hLPo3leuGI4MVslanbJWl+tFxKyGY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 074/113] trigger_next should increase position index
-Date:   Thu, 27 Feb 2020 14:36:30 +0100
-Message-Id: <20200227132223.637889402@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        David Heinzelmann <heinzelmann.david@gmail.com>,
+        Paul Zimmerman <pauldzim@gmail.com>
+Subject: [PATCH 4.4 090/113] USB: hub: Dont record a connect-change event during reset-resume
+Date:   Thu, 27 Feb 2020 14:36:46 +0100
+Message-Id: <20200227132226.153657625@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132211.791484803@linuxfoundation.org>
 References: <20200227132211.791484803@linuxfoundation.org>
@@ -60,64 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-[ Upstream commit 6722b23e7a2ace078344064a9735fb73e554e9ef ]
+commit 8099f58f1ecddf4f374f4828a3dff8397c7cbd74 upstream.
 
-if seq_file .next fuction does not change position index,
-read after some lseek can generate unexpected output.
+Paul Zimmerman reports that his USB Bluetooth adapter sometimes
+crashes following system resume, when it receives a
+Get-Device-Descriptor request while it is busy doing something else.
 
-Without patch:
- # dd bs=30 skip=1 if=/sys/kernel/tracing/events/sched/sched_switch/trigger
- dd: /sys/kernel/tracing/events/sched/sched_switch/trigger: cannot skip to specified offset
- n traceoff snapshot stacktrace enable_event disable_event enable_hist disable_hist hist
- # Available triggers:
- # traceon traceoff snapshot stacktrace enable_event disable_event enable_hist disable_hist hist
- 6+1 records in
- 6+1 records out
- 206 bytes copied, 0.00027916 s, 738 kB/s
+Such a request was added by commit a4f55d8b8c14 ("usb: hub: Check
+device descriptor before resusciation").  It gets sent when the hub
+driver's work thread checks whether a connect-change event on an
+enabled port really indicates a new device has been connected, as
+opposed to an old device momentarily disconnecting and then
+reconnecting (which can happen with xHCI host controllers, since they
+automatically enable connected ports).
 
-Notice the printing of "# Available triggers:..." after the line.
+The same kind of thing occurs when a port's power session is lost
+during system suspend.  When the system wakes up it sees a
+connect-change event on the port, and if the child device's
+persist_enabled flag was set then hub_activate() sets the device's
+reset_resume flag as well as the port's bit in hub->change_bits.  The
+reset-resume code then takes responsibility for checking that the same
+device is still attached to the port, and it does this as part of the
+device's resume pathway.  By the time the hub driver's work thread
+starts up again, the device has already been fully reinitialized and
+is busy doing its own thing.  There's no need for the work thread to
+do the same check a second time, and in fact this unnecessary check is
+what caused the problem that Paul observed.
 
-With the patch:
- # dd bs=30 skip=1 if=/sys/kernel/tracing/events/sched/sched_switch/trigger
- dd: /sys/kernel/tracing/events/sched/sched_switch/trigger: cannot skip to specified offset
- n traceoff snapshot stacktrace enable_event disable_event enable_hist disable_hist hist
- 2+1 records in
- 2+1 records out
- 88 bytes copied, 0.000526867 s, 167 kB/s
+Note that performing the unnecessary check is not actually a bug.
+Devices are supposed to be able to send descriptors back to the host
+even when they are busy doing something else.  The underlying cause of
+Paul's problem lies in his Bluetooth adapter.  Nevertheless, we
+shouldn't perform the same check twice in a row -- and as a nice side
+benefit, removing the extra check allows the Bluetooth adapter to work
+more reliably.
 
-It only prints the end of the file, and does not restart.
+The work thread performs its check when it sees that the port's bit is
+set in hub->change_bits.  In this situation that bit is interpreted as
+though a connect-change event had occurred on the port _after_ the
+reset-resume, which is not what actually happened.
 
-Link: http://lkml.kernel.org/r/3c35ee24-dd3a-8119-9c19-552ed253388a@virtuozzo.com
+One possible fix would be to make the reset-resume code clear the
+port's bit in hub->change_bits.  But it seems simpler to just avoid
+setting the bit during hub_activate() in the first place.  That's what
+this patch does.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+(Proving that the patch is correct when CONFIG_PM is disabled requires
+a little thought.  In that setting hub_activate() will be called only
+for initialization and resets, since there won't be any resumes or
+reset-resumes.  During initialization and hub resets the hub doesn't
+have any child devices, and so this code path never gets executed.)
+
+Reported-and-tested-by: Paul Zimmerman <pauldzim@gmail.com>
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Link: https://marc.info/?t=157949360700001&r=1&w=2
+CC: David Heinzelmann <heinzelmann.david@gmail.com>
+CC: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2001311037460.1577-100000@iolanthe.rowland.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- kernel/trace/trace_events_trigger.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/usb/core/hub.c |    5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index 8be66a2b0cacf..6524920c6ebc8 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -121,9 +121,10 @@ static void *trigger_next(struct seq_file *m, void *t, loff_t *pos)
- {
- 	struct trace_event_file *event_file = event_file_data(m->private);
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -1171,11 +1171,6 @@ static void hub_activate(struct usb_hub
+ #ifdef CONFIG_PM
+ 			udev->reset_resume = 1;
+ #endif
+-			/* Don't set the change_bits when the device
+-			 * was powered off.
+-			 */
+-			if (test_bit(port1, hub->power_bits))
+-				set_bit(port1, hub->change_bits);
  
--	if (t == SHOW_AVAILABLE_TRIGGERS)
-+	if (t == SHOW_AVAILABLE_TRIGGERS) {
-+		(*pos)++;
- 		return NULL;
--
-+	}
- 	return seq_list_next(t, &event_file->triggers, pos);
- }
- 
--- 
-2.20.1
-
+ 		} else {
+ 			/* The power session is gone; tell hub_wq */
 
 
