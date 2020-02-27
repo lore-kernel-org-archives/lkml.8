@@ -2,65 +2,126 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A233DC4BA35
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 458AAC4BA35
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 01:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 812812467A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C15C2467A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 01:03:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZnUxF4xX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbgB0A7d (ORCPT
+        id S1728105AbgB0BDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 19:59:33 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:35592 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728114AbgB0A7d (ORCPT
+        Wed, 26 Feb 2020 20:03:05 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:38518 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727964AbgB0BDF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 19:59:33 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 382E915AE086D;
-        Wed, 26 Feb 2020 16:59:32 -0800 (PST)
-Date:   Wed, 26 Feb 2020 16:59:31 -0800 (PST)
-Message-Id: <20200226.165931.1079328769851545825.davem@davemloft.net>
-To:     madhuparnabhowmik10@gmail.com
-Cc:     jiri@mellanox.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        frextrite@gmail.com, paulmck@kernel.org
-Subject: Re: [PATCH] net: core: devlink.c: Use built-in RCU list checking
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200225122745.31095-1-madhuparnabhowmik10@gmail.com>
-References: <20200225122745.31095-1-madhuparnabhowmik10@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 26 Feb 2020 16:59:32 -0800 (PST)
+        Wed, 26 Feb 2020 20:03:05 -0500
+Received: by mail-ot1-f65.google.com with SMTP id z9so1355342oth.5;
+        Wed, 26 Feb 2020 17:03:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S769i1368sIwWs8ipSKB7xon/VMLgcv4Y8AvbYRckQY=;
+        b=ZnUxF4xX92wcGG5B4nG/wtaHOfP8fIZUtUVMNIKh6tIoj/xRhvkw9tfbSI+IEPixIU
+         y9owEvyjnBITgIWPXPZx0w0oNk74m8f9xIrINCvemecgRgbZIlj9ds+etFjdpkrIntZg
+         MQZ7iJBnj5Ukvuwov5/JIY3iAwQidcz/TR8DmKqo1WcWVwv6+NVgPRvgzdmxnskkHTiY
+         Mbn5ddCwgNtx4tNr+QJT238BcbqehOGzDYC1AsvAN4cpRbg2/PFCs5ysQ9jCKmLp9NOe
+         V5ZpcV8ObbcYN4ZKwirEocF0OXwiPueA0GenhqaSOhYDFCozGvNvdrtL/xRXg4WW6mgS
+         18Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S769i1368sIwWs8ipSKB7xon/VMLgcv4Y8AvbYRckQY=;
+        b=eJIesfgMRceLThehs8T+j1j0Vx9w4EKZRl25dSW9DcuUEW7/XPggKoKIgfHf3iMEau
+         1tPLEhpKoDAqRdsbBUs68+mxQ//Cvc6ZnCYF66zZKr5GdWx7liUEveRcB6J/4pCt2/5x
+         xqb+tJdU8vQOV9PD9k46wHo11sCGoFCYj/DPLtHcipE2EILo2n+UIfdHo3xza0FP8HQf
+         1QLEepc5wm8feoec7N7IO1PQO/DQoAvOCczO7CS5iMUYIREL9K5kV5IRgWEjVhJcbRrv
+         O2NGeC2on6fNwkCN57KTz4N9MFcHLkFAyfQIrmdyStiY6uM7lV7x+hcU0l3hJwpuZ9zN
+         PFoQ==
+X-Gm-Message-State: APjAAAU6bTgI/VF2+jEhPQEViSCu+c0LCUL/TSAj6gtY4joJswDO5idG
+        uYB+Z1S6dAm/X2518vLofhvDCCVCtd3q9/5ZQ0c=
+X-Google-Smtp-Source: APXvYqxdnQ1bCveubu+e0x1tG27vAUGWa7Yj7IkTOFO7Kz1hD4e+Z1F/Fris3J3KDyHngytIZLW60UvznGsx6PLfCkE=
+X-Received: by 2002:a9d:21c5:: with SMTP id s63mr1283207otb.142.1582765384096;
+ Wed, 26 Feb 2020 17:03:04 -0800 (PST)
+MIME-Version: 1.0
+References: <20200205181935.3712-1-yu-cheng.yu@intel.com> <20200205181935.3712-6-yu-cheng.yu@intel.com>
+ <d4dabb84-5636-2657-c45e-795f3f2dcbbc@intel.com>
+In-Reply-To: <d4dabb84-5636-2657-c45e-795f3f2dcbbc@intel.com>
+From:   "H.J. Lu" <hjl.tools@gmail.com>
+Date:   Wed, 26 Feb 2020 17:02:28 -0800
+Message-ID: <CAMe9rOouOwNC873v=LOv5rJWcbe9Zvg+od8229J33V=ZfrB1rg@mail.gmail.com>
+Subject: Re: [RFC PATCH v9 05/27] x86/cet/shstk: Add Kconfig option for
+ user-mode Shadow Stack protection
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: madhuparnabhowmik10@gmail.com
-Date: Tue, 25 Feb 2020 17:57:45 +0530
+On Wed, Feb 26, 2020 at 10:05 AM Dave Hansen <dave.hansen@intel.com> wrote:
+>
+> On 2/5/20 10:19 AM, Yu-cheng Yu wrote:
+> > +# Check assembler Shadow Stack suppot
+>
+>                                   ^ support
+>
+> > +ifdef CONFIG_X86_INTEL_SHADOW_STACK_USER
+> > +  ifeq ($(call as-instr, saveprevssp, y),)
+> > +      $(error CONFIG_X86_INTEL_SHADOW_STACK_USER not supported by the assembler)
+> > +  endif
+> > +endif
+>
+> Is this *just* looking for instruction support in the assembler?
+>
+> We usually just .byte them, like this for pkeys:
+>
+>         asm volatile(".byte 0x0f,0x01,0xee\n\t"
+>                      : "=a" (pkru), "=d" (edx)
+>                      : "c" (ecx));
+>
+> That way everybody with old toolchains can still build the kernel (and
+> run/test code with your config option on, btw...).
 
-> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> 
-> list_for_each_entry_rcu() has built-in RCU and lock checking.
-> 
-> Pass cond argument to list_for_each_entry_rcu() to silence
-> false lockdep warning when CONFIG_PROVE_RCU_LIST is enabled.
-> 
-> The devlink->lock is held when devlink_dpipe_table_find()
-> is called in non RCU read side section. Therefore, pass struct devlink
-> to devlink_dpipe_table_find() for lockdep checking.
-> 
-> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+CET requires a complete new OS image from kernel, toolchain, run-time.
+CET enabled kernel without the rest of updated OS won't give you CET
+at all.
 
-Applied, thank you.
+-- 
+H.J.
