@@ -2,143 +2,101 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3A5C3F2C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AC6C3F2C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D55B246A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:16:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582838174;
-	bh=UrHtwRX+59wxj5FsZ103No416/pe7XwytFFHZcMTKG0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=N5mClV+IkMHvIQ/5WZ1NRB68BDP8dB+MymYz+BO3OuXrEC9Qq1QTCgistn0EamGdQ
-	 gi6D8bYuMxgLxWzWEDS9osaYdoSW9+NU2wQ5VLDBG2v5iJ5+S5uNGfa9zL+c8ybZ+k
-	 UMDO0buTE0S2LJXYDFni1br79oyBOOBHu0Qlfrf4=
+	by mail.kernel.org (Postfix) with ESMTP id 6620B246A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 21:19:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="KOXKcMJy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729708AbgB0VQN (ORCPT
+        id S1729738AbgB0VTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 16:16:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726758AbgB0VQM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 16:16:12 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [163.114.132.128])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23631246A1;
-        Thu, 27 Feb 2020 21:16:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582838172;
-        bh=UrHtwRX+59wxj5FsZ103No416/pe7XwytFFHZcMTKG0=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Lzi9gISWF37BTk5WlvsEV0DmcMyXH7kVG9kJkP8IIfk1Q0UYPIC2zvCNX7Y/BHNXK
-         i6na91nmvmvY4KaL+/elQnQhyzC41efAbYMxC8hi4ONKbfN/c02JVWCf1spjgMqI3D
-         RbT+57gypKIq4ki6CWYnhFVcfPJzhWO0dMHGX5lI=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 9A73F35226F3; Thu, 27 Feb 2020 13:16:11 -0800 (PST)
-Date:   Thu, 27 Feb 2020 13:16:11 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     madhuparnabhowmik10@gmail.com
-Cc:     josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org, linux-kernel@vger.kernel.org,
-        Amol Grover <frextrite@gmail.com>
-Subject: Re: [PATCH] Enable RCU list lockdep debugging and drop
- CONFIG_PROVE_RCU_LIST
-Message-ID: <20200227211611.GF2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200227202355.6163-1-madhuparnabhowmik10@gmail.com>
+        Thu, 27 Feb 2020 16:19:14 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:37121 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729381AbgB0VTN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 16:19:13 -0500
+Received: by mail-pj1-f67.google.com with SMTP id m13so327958pjb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 13:19:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:date:message-id:mime-version:content-transfer-encoding:cc
+         :from:to;
+        bh=7Z8bz7OXFaCWXmhJZYpG2XBXfx6lWjIKQKOr0ZHUqeg=;
+        b=KOXKcMJypmZQxCEqEbm3eWRS2qkjdOFko2gxA0a/C0HYIjhfuK9EKjM5tRB0B9GaMd
+         ygOeHGghp/WmF8DJAL7hSIZk504YEJcK2JHbJvsttLoy6wdQ6hqg5mkc+eoFjfI+4Fsw
+         bsALbRMQE60i3+5JqXC4e4YZugTkxp2XKWMUcBDAela+4Yz1Q2XlyoUlCKU3iPwaTHf0
+         9xhrkZsPGn1C7GgpjcWhjRH7bfGlvMnDoes1217ZOdGtL6SYaho1x4oS5eBHrAoDiOyV
+         7bmFVsqfaYbSIMIWFfU1wbAubX/qJuXqpUlcCbMKEfe59RlQUH/pVo42XIa2iVyTNrzz
+         VUBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:date:message-id:mime-version
+         :content-transfer-encoding:cc:from:to;
+        bh=7Z8bz7OXFaCWXmhJZYpG2XBXfx6lWjIKQKOr0ZHUqeg=;
+        b=aMZDhf1xl+XrFrXAV/vgnF4CpaXGnACEAasCa52R5mfRaTShHbDKrPtvHO9TmlyHFf
+         Gz0a9Q8AcfzSJd9yZupQ3k60tw0xNVAc+EODgOGg/glcX4rm51EtAuomtI/YS8CjMO7u
+         mQX2sIT+T5gQSNHFrN5nIUdmOMRvrtVyoFLHcvCztqYHkoq0D8rt7b9ViQrCBUmGmimA
+         Qu/VW2jHf7hu5w0x016jHm0CWRcBzqGX0AUabi/30zfBBJD2O3jb1hbDuU9Qr0LhvRqo
+         2E+UzOdWaRmg3jMRAIDYbS+PqxReUFs15cOCfbgdmA3M5WrPmy3vwd/1CbSiCdkE8Yci
+         H/CQ==
+X-Gm-Message-State: APjAAAXoVvoX0aa0XOz7vgGsVI6yuRGdXcq4er7HhTTpKK7J2N66gPG8
+        i5G92aduIYq7B90SWCyrNfTZW7LzTRA=
+X-Google-Smtp-Source: APXvYqzBYfqefBB/2ti0ZyOB0TcFd5pO+B9vbamS9yR2vt1motxQbKl4F76Cojfr37rIsyQM4g1i/A==
+X-Received: by 2002:a17:902:c154:: with SMTP id 20mr740692plj.112.1582838351818;
+        Thu, 27 Feb 2020 13:19:11 -0800 (PST)
+Received: from localhost ([2620:0:1000:2514:23a5:d584:6a92:3e3c])
+        by smtp.gmail.com with ESMTPSA id a18sm8514670pfl.138.2020.02.27.13.19.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 13:19:11 -0800 (PST)
+Subject: [PATCH] mm: Elide a warning when casting void* -> enum
+Date:   Thu, 27 Feb 2020 13:17:41 -0800
+Message-Id: <20200227211741.83165-1-palmer@dabbelt.com>
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200227202355.6163-1-madhuparnabhowmik10@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com, Palmer Dabbelt <palmerdabbelt@google.com>
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     akpm@linux-foundation.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 01:53:55AM +0530, madhuparnabhowmik10@gmail.com wrote:
-> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> 
-> This patch drops the CONFIG_PROVE_RCU_LIST option and instead
-> uses CONFIG_PROVE_RCU for RCU list lockdep debugging.
-> 
-> With this change, RCU list lockdep debugging will be default
-> enabled in CONFIG_PROVE_RCU=y kernels.
-> 
-> Most of the RCU users (in core kernel/, drivers/, and net/
-> subsystem) have already been modified to include lockdep
-> expressions hence RCU list debugging can be enabled by
-> default.
-> 
-> However, there are still chances of enountering
-> false-positive lockdep splats because not everything is converted,
-> in case RCU list primitives are used in non-RCU read-side critical
-> section but under the protection of a lock. It would be okay to
-> have a few false-positives, as long as bugs are identified, since this
-> patch only affects debugging kernels.
-> 
-> Co-developed-by: Amol Grover <frextrite@gmail.com>
-> Signed-off-by: Amol Grover <frextrite@gmail.com>
-> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+From: Palmer Dabbelt <palmerdabbelt@google.com>
 
-Good idea, but could you please left PROVE_RCU_LIST and "select" it from
-CONFIG_PROVE_RCU instead?  This gets the same effect, but also makes it
-easier to change our minds later if we wish to.  It also makes it easier
-to find the various different types of debugging.
+I recently build the RISC-V port with LLVM trunk, which has introduced a
+new warning when casting from a pointer to an enum of a smaller size.
+This patch simply casts to a long in the middle to stop the warning.
+I'd be surprised this is the only one in the kernel, but it's the only
+one I saw.
 
-For a template, please see how CONFIG_PROVE_LOCKING controls the
-value of CONFIG_PROVE_RCU in kernel/rcu/Kconfig.debug.
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+---
+ mm/rmap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-							Thanx, Paul
+diff --git a/mm/rmap.c b/mm/rmap.c
+index b3e381919835..b15e9edde2ac 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -1376,7 +1376,7 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
+ 	struct page *subpage;
+ 	bool ret = true;
+ 	struct mmu_notifier_range range;
+-	enum ttu_flags flags = (enum ttu_flags)arg;
++	enum ttu_flags flags = (enum ttu_flags)(long)arg;
+ 
+ 	/* munlock has nothing to gain from examining un-locked vmas */
+ 	if ((flags & TTU_MUNLOCK) && !(vma->vm_flags & VM_LOCKED))
+-- 
+2.25.1.481.gfbce0eb801-goog
 
-> ---
->  include/linux/rculist.h  |  2 +-
->  kernel/rcu/Kconfig.debug | 11 -----------
->  2 files changed, 1 insertion(+), 12 deletions(-)
-> 
-> diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-> index 63726577c6b8..f517eb421b5e 100644
-> --- a/include/linux/rculist.h
-> +++ b/include/linux/rculist.h
-> @@ -56,7 +56,7 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
->  
->  #define check_arg_count_one(dummy)
->  
-> -#ifdef CONFIG_PROVE_RCU_LIST
-> +#ifdef CONFIG_PROVE_RCU
->  #define __list_check_rcu(dummy, cond, extra...)				\
->  	({								\
->  	check_arg_count_one(extra);					\
-> diff --git a/kernel/rcu/Kconfig.debug b/kernel/rcu/Kconfig.debug
-> index 4aa02eee8f6c..5ec3ea4028e2 100644
-> --- a/kernel/rcu/Kconfig.debug
-> +++ b/kernel/rcu/Kconfig.debug
-> @@ -8,17 +8,6 @@ menu "RCU Debugging"
->  config PROVE_RCU
->  	def_bool PROVE_LOCKING
->  
-> -config PROVE_RCU_LIST
-> -	bool "RCU list lockdep debugging"
-> -	depends on PROVE_RCU && RCU_EXPERT
-> -	default n
-> -	help
-> -	  Enable RCU lockdep checking for list usages. By default it is
-> -	  turned off since there are several list RCU users that still
-> -	  need to be converted to pass a lockdep expression. To prevent
-> -	  false-positive splats, we keep it default disabled but once all
-> -	  users are converted, we can remove this config option.
-> -
->  config TORTURE_TEST
->  	tristate
->  	default n
-> -- 
-> 2.17.1
-> 
