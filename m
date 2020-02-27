@@ -2,103 +2,111 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD553C4BA35
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 01:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C6BC4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 01:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5511208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 01:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 423DE208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 01:50:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WipzyxYr"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="HMQOcY+c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbgB0Bre (ORCPT
+        id S1728214AbgB0Bu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 20:47:34 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:39127 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728091AbgB0Brd (ORCPT
+        Wed, 26 Feb 2020 20:50:57 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40701 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728091AbgB0Bu5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 20:47:33 -0500
-Received: by mail-pj1-f67.google.com with SMTP id e9so441419pjr.4
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 17:47:33 -0800 (PST)
+        Wed, 26 Feb 2020 20:50:57 -0500
+Received: by mail-ed1-f65.google.com with SMTP id p3so1260525edx.7
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 17:50:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=AE6889q2qb8rpie85RPam0pI5EqkhHNnHAqyKfAYF6g=;
-        b=WipzyxYr6BpGAd3Fs5g7ugMep4T529oPKLg3EHu7DidhKJzzpQyR7O6iM3OuPa1P1Q
-         4vufBh0VEUSWsF6Nm0B049A+EKJ1ek3nyzvIFDyrsaxcahNuLUQUgymD3lVotHe1C4ij
-         21wZlxLBJNWqrW6ajkLFAe+GhCxdvgT1ljLxyz1iNrTLaZGgQS1DaQY/EYbdXPYzEZEb
-         cvHpnSGrZ4ABTn1EkmtHbqzi6y+ermUVTHPjIo7NH3Os6a3UCfgNnApIXHPrFUcr3ZYg
-         h1+gESfWpcGIxn/VLhppFZmTxXpxF1DuLI+vF6As93owBNIboO0EKGt7GRwrSgZZallJ
-         vLGQ==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=HEgw/5vVD4QFTc9jVVzJqQpf9a5Q3H97p6+91MGqCtQ=;
+        b=HMQOcY+cn3+cR4t4V1rC6eCBXOjutUinDSIZcfV15h5Sgh+hRsixyRaCIJGjO3wohO
+         p4KxR0escf+XYdyW/Ycy4IC8qgIIuHaIVZgSYI4byvdoPW0maa0ot75qOG900lbnl2PQ
+         Opa7VPnRO4oFpdct25EANibVF7q0Fbaaz8Bp8gSCiF6Zl2pdnc/9D02cvPeHe2zM3uN8
+         mpL9lqgVNbgOG3YX/rbv96M5/Rwgod3BRIYXCr053mWGYotVZHEzd297eFgfKbToJi2N
+         E96nnqGwR8n8DoYf3HRWmGHrxoz8AkjQo1hZLZZTX1i9paPbvL1hmdEp3+amXm5TQCFd
+         JPQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=AE6889q2qb8rpie85RPam0pI5EqkhHNnHAqyKfAYF6g=;
-        b=bMy1VDWnhsS7BKiySmOTDeFQshLLjTLMLcRnCVjiG2ouK0F8IppuaVBylRzIu1vLSm
-         2yVy71T9s/4KgK/ffMDN+wUckS7Er9lWQBXXdGyRymf88g5uQCSqTU2LKVU6BQATawfx
-         4zLnfLXj/Ly5PGmsEe8tkVnb3wE9Q+GTEIWQuik4D/GkugwVUQ9Vzq+2hurJYbR1KcCV
-         NbCgyVMBEgwv0PdXFV6zKIQOqeoY7x/hgG6XtnNy+5Cifb8JFl6TQ5M5xbaRJEOUILOt
-         bTnalngLSGrzs9M6aUgL0n8SCPouFPZfvrJFk+N4DpSmZkl08fHc5WDD2uygmh0TzD+q
-         x9UQ==
-X-Gm-Message-State: APjAAAX7tFhvtzie6+RlGTSJVQ08HKMYgwSiLblMCb3ZpUHUfmFmnzNB
-        jRW9TE3VFwqwyWH1x8y30ePM7Q==
-X-Google-Smtp-Source: APXvYqzsL2huyAGMkpt+mb/l/fm0hl5JvyoDs1hla941bElVQ8Uin2dKH9hhhnr2w8Wq8KTtHlxCsQ==
-X-Received: by 2002:a17:902:c509:: with SMTP id o9mr2160608plx.112.1582768052287;
-        Wed, 26 Feb 2020 17:47:32 -0800 (PST)
-Received: from [100.112.92.218] ([104.133.9.106])
-        by smtp.gmail.com with ESMTPSA id l12sm3983547pgj.16.2020.02.26.17.47.31
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 26 Feb 2020 17:47:31 -0800 (PST)
-Date:   Wed, 26 Feb 2020 17:47:16 -0800 (PST)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Matthew Wilcox <willy@infradead.org>
-cc:     Yang Shi <yang.shi@linux.alibaba.com>,
-        Hugh Dickins <hughd@google.com>,
-        kirill.shutemov@linux.intel.com, aarcange@redhat.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [v2 PATCH] mm: shmem: allow split THP when truncating THP
- partially
-In-Reply-To: <20200227011654.GF24185@bombadil.infradead.org>
-Message-ID: <alpine.LSU.2.11.2002261741340.1640@eggly.anvils>
-References: <1575420174-19171-1-git-send-email-yang.shi@linux.alibaba.com> <alpine.LSU.2.11.1912041601270.12930@eggly.anvils> <00f0bb7d-3c25-a65f-ea94-3e2de8e9bcdd@linux.alibaba.com> <alpine.LSU.2.11.2002241831060.3084@eggly.anvils>
- <cba16817-8555-f84f-134a-1ff9f168247b@linux.alibaba.com> <20200227011654.GF24185@bombadil.infradead.org>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=HEgw/5vVD4QFTc9jVVzJqQpf9a5Q3H97p6+91MGqCtQ=;
+        b=SCJwwCOO7eU2FBkelwpBt0eRb+/bRAPM+hfk/0sWXEebk8wd4WnIU1wW+oP5/6twug
+         nD+8XDu8/fO4Td6bs29v5b8aqmtnV6/MSwsi71PnVmWyrZgGvL+sI2UB5+1XzqYBO2zY
+         B6xVrB77y7yiB2kO5J6Wlu2Lr1xWqCkL93NIDOlB4Faz5MzpQHTOWGCtiCs14YeR2FRO
+         Y8jblVAtNRiI2i86IeFjtTlL/ud4T80jM04AyJkLm7bop2q6q9DqP8UaYx+SJyMmaZXH
+         xGKvq1YP2mLr2E+vln1Vp+rfC+qb0HEM5+Y66NIbkwZtfEvFBewCB7oEkSFtHjgCITS2
+         QiOg==
+X-Gm-Message-State: APjAAAWX9T7uam5nNg1vTpJ6hrB/9ffHPXyjc5RBpMo0/nLNGfiocEky
+        CRiW+ZrBqsHgbYzkzz3cNLbrzKgk9QFdlQfzxbZ2
+X-Google-Smtp-Source: APXvYqwsOqd6MVvm4O57PDlHa7osBKxW/22vVgKnbA1WKNc/rUwTveBb39RZyI73bFjbZ5zhBFK2I/5+qPzbao7EqV4=
+X-Received: by 2002:a17:906:198b:: with SMTP id g11mr1410549ejd.271.1582768254942;
+ Wed, 26 Feb 2020 17:50:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 26 Feb 2020 20:50:44 -0500
+Message-ID: <CAHC9VhSL2M4QBP-_z9U-MMNUAT9G_pnJxrPcNtQs03yi7epYxQ@mail.gmail.com>
+Subject: [GIT PULL] Audit fixes for v5.6 (#1)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-audit@redhat.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Feb 2020, Matthew Wilcox wrote:
-> On Wed, Feb 26, 2020 at 09:43:53AM -0800, Yang Shi wrote:
-> > > No.  The pagevec_lookup_entries() calls from mm/truncate.c prefer the
-> > > new behavior - evicting the head from page cache removes all the tails
-> > > along with it, so getting the tails a waste of time there too, just as
-> > > it was in shmem_undo_range().
-> > 
-> > TBH I'm not a fun of this hack. This would bring in other confusion or
-> > complexity. Pagevec is supposed to count in the number of base page, now it
-> > would treat THP as one page, and there might be mixed base page and THP in
-> > one pagevec. But, I tend to agree avoiding getting those 14 extra pins at
-> > the first place might be a better approach. All the complexity are used to
-> > release those extra pins.
-> 
-> My long-term goal is to eradicate tail pages entirely, so a pagevec will
-> end up containing pages of different sizes.  If you want to help move
-> in this direction, I'd be awfully grateful.  But I wouldn't say that's
-> in any way a prerequisite for fixing this current problem.
+Hi Linus,
 
-You're right to be moving in that direction, but yes, that is a larger
-task, and I think both Yang and I have to decline your awful gratitude :)
+Two audit patches to fix problems found by syzbot, please merge for
+the next v5.6-rcX release.
 
-Hugh
+* Moving audit filter structure fields into a union caused some
+problems in the code which populates that filter structure.  We keep
+the union (that idea is a good one), but we are fixing the code so
+that it doesn't needlessly set fields in the union and mess up the
+error handling.
+
+* The audit_receive_msg() function wasn't validating user input as
+well as it should in all cases, we add the necessary checks.
+
+Thanks,
+-Paul
+
+--
+The following changes since commit cb5172d96d16df72db8b55146b0ec00bfd97f079:
+
+ audit: Add __rcu annotation to RCU pointer (2019-12-09 15:19:03 -0500)
+
+are available in the Git repository at:
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/audit.git
+   tags/audit-pr-20200226
+
+for you to fetch changes up to 756125289285f6e55a03861bf4b6257aa3d19a93:
+
+ audit: always check the netlink payload length in audit_receive_msg()
+   (2020-02-24 16:38:57 -0500)
+
+----------------------------------------------------------------
+audit/stable-5.6 PR 20200226
+
+----------------------------------------------------------------
+Paul Moore (2):
+     audit: fix error handling in audit_data_to_entry()
+     audit: always check the netlink payload length in audit_receive_msg()
+
+kernel/audit.c       | 40 +++++++++++++++--------------
+kernel/auditfilter.c | 71 +++++++++++++++++++++++++++---------------------
+2 files changed, 60 insertions(+), 51 deletions(-)
+
+-- 
+paul moore
+www.paul-moore.com
