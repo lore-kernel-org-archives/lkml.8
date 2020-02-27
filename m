@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB01C54FCE
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DED2C52D51
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 228EF2469D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C15C20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813036;
-	bh=P1XSfdaSgEZICuGIRjIcJt2bPHVLM3N9ff5tD9ONhss=;
+	s=default; t=1582813023;
+	bh=bYKAWCj7wZo3bsAIb6e0JlxfyLzbRVASan1lMyEV94I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tv1/exx/UcyMM1siBi2Dzlyt5Yaq98PXGAwuzmgpcEIgjRYmlnRyZr+Lqlqobi3lQ
-	 IbqbsPM2cpriaHW33CfVGyYlsUkmmvqLt4hJ8r1j6fUiV8BNLyvRFQzdNQGRfHeTWS
-	 B+lQmhwSvg9E4m1aOEXzfpnkrNqQK6YIvwBwhJTo=
+	b=dA+Ro2kiOOcEWmoXG/TSMipAJWUIZGzpdp+WjsINaXzg5AqlQNG7S2dxU6+0sEbpw
+	 4vLILF0+Kv89ONPfzh8hEOxqzqgXAlj7cvbdeOuuIGUC6c07MP3k6HVzQuOWTOf6Hp
+	 GrcFsfRn3zhLTR4nE5xqZgLGzT419W8q7jsjOpI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389682AbgB0ORO (ORCPT
+        id S2389156AbgB0ORC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:17:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57550 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:17:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389671AbgB0ORM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:17:12 -0500
+        id S2389601AbgB0OQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:16:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04602246A0;
-        Thu, 27 Feb 2020 14:17:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20FEE246A0;
+        Thu, 27 Feb 2020 14:16:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582813031;
-        bh=P1XSfdaSgEZICuGIRjIcJt2bPHVLM3N9ff5tD9ONhss=;
+        s=default; t=1582813016;
+        bh=bYKAWCj7wZo3bsAIb6e0JlxfyLzbRVASan1lMyEV94I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tqrl3CpnKLYcknLL7uS0+J35mdjEzzKE/ywGEyIolK6bpmT2O52g6EMHWbORNPFVz
-         qcazN/PN7bMM/LBKKVPIitBwq+1XmqscowmWQuWMuX8QswzyCKdxOmrlreX3b0gPe6
-         nbn4Jx8E98au8PTcEeGogqZywiVHmynUK3fL0ifI=
+        b=K6BHbgZnyoMrdCPy5CQQfz6BvJ3JQUWb+z7m9WtpTgcByyjBwSqxMqiQC2f3JUPcM
+         cQmbqd9cFccX1dA4fbg7EeqC11cQGGEu7tfqRWT8Ko7cOVLstabaD0smiRO7fuj3my
+         Wsrw11Yt2eTP854rNC5v5hGb/16FUNx/graP03Ls=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.5 103/150] crypto: chacha20poly1305 - prevent integer overflow on large input
-Date:   Thu, 27 Feb 2020 14:37:20 +0100
-Message-Id: <20200227132247.974403432@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: [PATCH 5.5 065/150] tty/serial: atmel: manage shutdown in case of RS485 or ISO7816 mode
+Date:   Thu, 27 Feb 2020 14:36:42 +0100
+Message-Id: <20200227132242.600717549@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -60,42 +58,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason A. Donenfeld <Jason@zx2c4.com>
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-commit c9cc0517bba9f0213f1e55172feceb99e5512daf upstream.
+commit 04b5bfe3dc94e64d0590c54045815cb5183fb095 upstream.
 
-This code assigns src_len (size_t) to sl (int), which causes problems
-when src_len is very large. Probably nobody in the kernel should be
-passing this much data to chacha20poly1305 all in one go anyway, so I
-don't think we need to change the algorithm or introduce larger types
-or anything. But we should at least error out early in this case and
-print a warning so that we get reports if this does happen and can look
-into why anybody is possibly passing it that much data or if they're
-accidently passing -1 or similar.
+In atmel_shutdown() we call atmel_stop_rx() and atmel_stop_tx() functions.
+Prevent the rx restart that is implemented in RS485 or ISO7816 modes when
+calling atmel_stop_tx() by using the atomic information tasklet_shutdown
+that is already in place for this purpose.
 
-Fixes: d95312a3ccc0 ("crypto: lib/chacha20poly1305 - reimplement crypt_from_sg() routine")
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: stable@vger.kernel.org # 5.5+
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 98f2082c3ac4 ("tty/serial: atmel: enforce tasklet init and termination sequences")
+Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200210152053.8289-1-nicolas.ferre@microchip.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- lib/crypto/chacha20poly1305.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/tty/serial/atmel_serial.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/lib/crypto/chacha20poly1305.c
-+++ b/lib/crypto/chacha20poly1305.c
-@@ -235,6 +235,9 @@ bool chacha20poly1305_crypt_sg_inplace(s
- 		__le64 lens[2];
- 	} b __aligned(16);
+--- a/drivers/tty/serial/atmel_serial.c
++++ b/drivers/tty/serial/atmel_serial.c
+@@ -574,7 +574,8 @@ static void atmel_stop_tx(struct uart_po
+ 	atmel_uart_writel(port, ATMEL_US_IDR, atmel_port->tx_done_mask);
  
-+	if (WARN_ON(src_len > INT_MAX))
-+		return false;
-+
- 	chacha_load_key(b.k, key);
+ 	if (atmel_uart_is_half_duplex(port))
+-		atmel_start_rx(port);
++		if (!atomic_read(&atmel_port->tasklet_shutdown))
++			atmel_start_rx(port);
  
- 	b.iv[0] = 0;
+ }
+ 
 
 
