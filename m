@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DBEC3F371
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4838C5ED5F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BFDF24688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86BFF24697
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:21:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582813312;
-	bh=A82Y9A3U3/P7mYTp+rSrNOhL2WJfvMTsvO8YMvEjdtk=;
+	s=default; t=1582813270;
+	bh=XMLvaQRC/KuJ1tx84sN3yF4BFTu6dWttZFWCmDfN6HQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z3jY4zNrjjRGX+KqQ99b3WZ2RBCrt6JZ8X/fvstLObt39g5ZNL1vp3mE8ATYR4C23
-	 U7nyDV05X9O0c7yHHCLiiTYnqsCQENEi/65hx9XcDkM7k1UQ8sQ5Z0QUMCqi6FNGLX
-	 UdM4IqqKvdgX8EYtlJj7DH0V9eURBai90stbOjVI=
+	b=J7ZABWfC2zONZF6116BDp401HS1Zs6Sw0NDlXBCzJSbokws/npQodRzt8detpsULv
+	 J3/7MOUJ7o7dwbTuIPVoLDzDIn2DwGhHc7rJkt4I/mQeMfE4OaInQmMJj7/Jv+klb6
+	 hfJcAoSLZ3FOlqwgRHWaNwzvOQAOuDSz40Qnadxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389924AbgB0OVu (ORCPT
+        id S2389914AbgB0OVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:21:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56448 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 09:21:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389485AbgB0OQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:16:21 -0500
+        id S2389700AbgB0ORZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 09:17:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D2482469F;
-        Thu, 27 Feb 2020 14:16:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C3C22468F;
+        Thu, 27 Feb 2020 14:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812980;
-        bh=A82Y9A3U3/P7mYTp+rSrNOhL2WJfvMTsvO8YMvEjdtk=;
+        s=default; t=1582813044;
+        bh=XMLvaQRC/KuJ1tx84sN3yF4BFTu6dWttZFWCmDfN6HQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y0gd5iGwQNI5jynl7KeijZ4g1eGd5j5qSF5Mp8HbExmLQEPe4saPrSoMRPKgqtTlX
-         krZVdYH7RgZF2mKWi9P02IVlBEvNqe/4mho7FyTaUqVU1jDBP1jcIQ5cGrukoA30y7
-         50qqx21/LKOFAXN2AEZ7l0iXurdo4YJvqsEG9YuA=
+        b=dvMeKesWq7z47T1gz0ESx+2WoJb6JoHkbmb+xlILpvPngvP6+TAVKabB6vBnZxXf+
+         YLxlFOyfB50Nwbnl4GN52roH9u0rnzVTpwptVOn/u07NhFD97pkfnln2BS2Zh3pL6p
+         rwwzDsO17aeCEL9ZTxlhJLmyBv4qVhzoCJSbdWmQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Zhou Yanjie <zhouyanjie@wanyeetech.com>, od@zcrc.me,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 5.5 063/150] MIPS: ingenic: DTS: Fix watchdog nodes
-Date:   Thu, 27 Feb 2020 14:36:40 +0100
-Message-Id: <20200227132242.322641300@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH 5.5 116/150] drm/i915/gt: Protect defer_request() from new waiters
+Date:   Thu, 27 Feb 2020 14:37:33 +0100
+Message-Id: <20200227132249.809913684@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
 References: <20200227132232.815448360@linuxfoundation.org>
@@ -65,120 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit 11479e8e3cd896673a15af21cd0f145a4752f01a upstream.
+commit 19b5f3b419a61808ff2713f1f30b8a88fe14ac9b upstream.
 
-The devicetree ABI was broken on purpose by commit 6d532143c915
-("watchdog: jz4740: Use regmap provided by TCU driver"), and
-commit 1d9c30745455 ("watchdog: jz4740: Use WDT clock provided
-by TCU driver"). The commit message of the latter explains why the ABI
-was broken.
+Mika spotted
 
-However, the current devicetree files were not updated to the new ABI
-described in Documentation/devicetree/bindings/timer/ingenic,tcu.txt,
-so the watchdog driver would not probe.
+<4>[17436.705441] general protection fault: 0000 [#1] PREEMPT SMP PTI
+<4>[17436.705447] CPU: 2 PID: 0 Comm: swapper/2 Not tainted 5.5.0+ #1
+<4>[17436.705449] Hardware name: System manufacturer System Product Name/Z170M-PLUS, BIOS 3805 05/16/2018
+<4>[17436.705512] RIP: 0010:__execlists_submission_tasklet+0xc4d/0x16e0 [i915]
+<4>[17436.705516] Code: c5 4c 8d 60 e0 75 17 e9 8c 07 00 00 49 8b 44 24 20 49 39 c5 4c 8d 60 e0 0f 84 7a 07 00 00 49 8b 5c 24 08 49 8b 87 80 00 00 00 <48> 39 83 d8 fe ff ff 75 d9 48 8b 83 88 fe ff ff a8 01 0f 84 b6 05
+<4>[17436.705518] RSP: 0018:ffffc9000012ce80 EFLAGS: 00010083
+<4>[17436.705521] RAX: ffff88822ae42000 RBX: 5a5a5a5a5a5a5a5a RCX: dead000000000122
+<4>[17436.705523] RDX: ffff88822ae42588 RSI: ffff8881e32a7908 RDI: ffff8881c429fd48
+<4>[17436.705525] RBP: ffffc9000012cf00 R08: ffff88822ae42588 R09: 00000000fffffffe
+<4>[17436.705527] R10: ffff8881c429fb80 R11: 00000000a677cf08 R12: ffff8881c42a0aa8
+<4>[17436.705529] R13: ffff8881c429fd38 R14: ffff88822ae42588 R15: ffff8881c429fb80
+<4>[17436.705532] FS:  0000000000000000(0000) GS:ffff88822ed00000(0000) knlGS:0000000000000000
+<4>[17436.705534] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+<4>[17436.705536] CR2: 00007f858c76d000 CR3: 0000000005610003 CR4: 00000000003606e0
+<4>[17436.705538] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+<4>[17436.705540] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+<4>[17436.705542] Call Trace:
+<4>[17436.705545]  <IRQ>
+<4>[17436.705603]  execlists_submission_tasklet+0xc0/0x130 [i915]
 
-Fix this problem by updating the watchdog nodes to comply with the new
-ABI.
+which is us consuming a partially initialised new waiter in
+defer_requests(). We can prevent this by initialising the i915_dependency
+prior to making it visible, and since we are using a concurrent
+list_add/iterator mark them up to the compiler.
 
-Fixes: 6d532143c915 ("watchdog: jz4740: Use regmap provided by TCU driver")
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Cc: od@zcrc.me
-Cc: linux-mips@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: <stable@vger.kernel.org> # v5.5+
+Fixes: 8ee36e048c98 ("drm/i915/execlists: Minimalistic timeslicing")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Mika Kuoppala <mika.kuoppala@linux.intel.com>
+Reviewed-by: Mika Kuoppala <mika.kuoppala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200206204915.2636606-2-chris@chris-wilson.co.uk
+(cherry picked from commit f14f27b1663269a81ed62d3961fe70250a1a0623)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/boot/dts/ingenic/jz4740.dtsi |   17 +++++++++--------
- arch/mips/boot/dts/ingenic/jz4780.dtsi |   17 +++++++++--------
- 2 files changed, 18 insertions(+), 16 deletions(-)
+ drivers/gpu/drm/i915/gt/intel_lrc.c   |    7 ++++++-
+ drivers/gpu/drm/i915/i915_scheduler.c |    6 ++++--
+ 2 files changed, 10 insertions(+), 3 deletions(-)
 
---- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <dt-bindings/clock/jz4740-cgu.h>
-+#include <dt-bindings/clock/ingenic,tcu.h>
+--- a/drivers/gpu/drm/i915/gt/intel_lrc.c
++++ b/drivers/gpu/drm/i915/gt/intel_lrc.c
+@@ -1433,6 +1433,11 @@ last_active(const struct intel_engine_ex
+ 	return *last;
+ }
  
- / {
- 	#address-cells = <1>;
-@@ -45,14 +46,6 @@
- 		#clock-cells = <1>;
- 	};
- 
--	watchdog: watchdog@10002000 {
--		compatible = "ingenic,jz4740-watchdog";
--		reg = <0x10002000 0x10>;
--
--		clocks = <&cgu JZ4740_CLK_RTC>;
--		clock-names = "rtc";
--	};
--
- 	tcu: timer@10002000 {
- 		compatible = "ingenic,jz4740-tcu", "simple-mfd";
- 		reg = <0x10002000 0x1000>;
-@@ -73,6 +66,14 @@
- 
- 		interrupt-parent = <&intc>;
- 		interrupts = <23 22 21>;
++#define for_each_waiter(p__, rq__) \
++	list_for_each_entry_lockless(p__, \
++				     &(rq__)->sched.waiters_list, \
++				     wait_link)
 +
-+		watchdog: watchdog@0 {
-+			compatible = "ingenic,jz4740-watchdog";
-+			reg = <0x0 0xc>;
+ static void defer_request(struct i915_request *rq, struct list_head * const pl)
+ {
+ 	LIST_HEAD(list);
+@@ -1450,7 +1455,7 @@ static void defer_request(struct i915_re
+ 		GEM_BUG_ON(i915_request_is_active(rq));
+ 		list_move_tail(&rq->sched.link, pl);
+ 
+-		list_for_each_entry(p, &rq->sched.waiters_list, wait_link) {
++		for_each_waiter(p, rq) {
+ 			struct i915_request *w =
+ 				container_of(p->waiter, typeof(*w), sched);
+ 
+--- a/drivers/gpu/drm/i915/i915_scheduler.c
++++ b/drivers/gpu/drm/i915/i915_scheduler.c
+@@ -415,8 +415,6 @@ bool __i915_sched_node_add_dependency(st
+ 
+ 	if (!node_signaled(signal)) {
+ 		INIT_LIST_HEAD(&dep->dfs_link);
+-		list_add(&dep->wait_link, &signal->waiters_list);
+-		list_add(&dep->signal_link, &node->signalers_list);
+ 		dep->signaler = signal;
+ 		dep->waiter = node;
+ 		dep->flags = flags;
+@@ -426,6 +424,10 @@ bool __i915_sched_node_add_dependency(st
+ 		    !node_started(signal))
+ 			node->flags |= I915_SCHED_HAS_SEMAPHORE_CHAIN;
+ 
++		/* All set, now publish. Beware the lockless walkers. */
++		list_add(&dep->signal_link, &node->signalers_list);
++		list_add_rcu(&dep->wait_link, &signal->waiters_list);
 +
-+			clocks = <&tcu TCU_CLK_WDT>;
-+			clock-names = "wdt";
-+		};
- 	};
- 
- 	rtc_dev: rtc@10003000 {
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <dt-bindings/clock/jz4780-cgu.h>
-+#include <dt-bindings/clock/ingenic,tcu.h>
- #include <dt-bindings/dma/jz4780-dma.h>
- 
- / {
-@@ -67,6 +68,14 @@
- 
- 		interrupt-parent = <&intc>;
- 		interrupts = <27 26 25>;
-+
-+		watchdog: watchdog@0 {
-+			compatible = "ingenic,jz4780-watchdog";
-+			reg = <0x0 0xc>;
-+
-+			clocks = <&tcu TCU_CLK_WDT>;
-+			clock-names = "wdt";
-+		};
- 	};
- 
- 	rtc_dev: rtc@10003000 {
-@@ -348,14 +357,6 @@
- 		status = "disabled";
- 	};
- 
--	watchdog: watchdog@10002000 {
--		compatible = "ingenic,jz4780-watchdog";
--		reg = <0x10002000 0x10>;
--
--		clocks = <&cgu JZ4780_CLK_RTCLK>;
--		clock-names = "rtc";
--	};
--
- 	nemc: nemc@13410000 {
- 		compatible = "ingenic,jz4780-nemc";
- 		reg = <0x13410000 0x10000>;
+ 		/*
+ 		 * As we do not allow WAIT to preempt inflight requests,
+ 		 * once we have executed a request, along with triggering
 
 
