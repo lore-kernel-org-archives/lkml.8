@@ -2,137 +2,113 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA6AC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C3EC11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0B8B246A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:35:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="W7eppzcT"
+	by mail.kernel.org (Postfix) with ESMTP id 3315D24697
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:36:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730340AbgB0Qfc (ORCPT
+        id S1730346AbgB0QgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 11:35:32 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:42093 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730269AbgB0Qfc (ORCPT
+        Thu, 27 Feb 2020 11:36:07 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:38884 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1730084AbgB0QgH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 11:35:32 -0500
-Received: by mail-qk1-f195.google.com with SMTP id o28so3705311qkj.9
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 08:35:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+EcJEm7tEH8INLM7JNMv3OyedRCfQV//rBTfRfYkoCE=;
-        b=W7eppzcT8/LhiMK5N8+vjgRpaO0XeAO/RoUdqO9b4Bh7Ty9nmIksCIMUyGs82yGA5L
-         TEAMbosWcRnAMXM7MEjnQW8ATs3l/KsrJyiLNMYm89ueEmHCGEAUBQHVpt7+MF7hHKVx
-         D9ffAR01uxLGN5A5C71BWk8MosCttKh/xzU+nasKMPNUGlQfgReYD5YcEguO6LIBYwwf
-         MSkni/phAkzEjCcezYn5bGr+uWYRXG/i8mf/OWpRUlVHp1elQtm4TO2iUpBDxx62TPiv
-         oQBkHdlIMx8jCHBfzuINVmblNBWHD2lPqmveO7m2iM+3z0C+j+HkYWmaUtD/fjtNgkDi
-         D3rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+EcJEm7tEH8INLM7JNMv3OyedRCfQV//rBTfRfYkoCE=;
-        b=nj6Aex0Q5uWKCiluXyGlB0tmJjpwW8XnYZsle8nEnrHNw6zUqhr+PW6Paug31i1xa8
-         MXGL5FRiPHmsZuWTufczM30vMD6PTi+FOyDpEV+PjDgYP8AN6/U5uVNfHbFSbPQ6G5uG
-         6j15wvtVHNxqDlj3FKo0HSTUNFL5e9uc37YZP6pxS+xPkw2w/25hS4sFDAqaDJMdfKvU
-         6jCXU/WabM3m09JI2NDqW/euW9LeepQilv7hGflGec6lcri7QJfhBqwmKZ9rsyNVhX5L
-         wF2VQrjT+HSdmZLCR2bVsQQl6GUIKfR7wIT5JV4UQjUj1Boxk+A4IQaygJHdMlT9vXQZ
-         aGcQ==
-X-Gm-Message-State: APjAAAWamFHM2/KN6Opy98GD4A7UaKvrcMzo0xX/QoVP1gRIUbhz8N0g
-        n+TZb9VKSXaaSnELhbgWOztrYA==
-X-Google-Smtp-Source: APXvYqwQykSPMiBQziGbNSR9rIUFQ2tNyCmHwFJRHfv7N+R1zOTB0fKNcoEBL4OThpHA6RJlb/FHGw==
-X-Received: by 2002:a05:620a:957:: with SMTP id w23mr6823627qkw.473.1582821329986;
-        Thu, 27 Feb 2020 08:35:29 -0800 (PST)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id j127sm3392559qkc.36.2020.02.27.08.35.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Feb 2020 08:35:29 -0800 (PST)
-Message-ID: <1582821327.7365.137.camel@lca.pw>
-Subject: Re: suspicious RCU due to "Prefer using an idle CPU as a migration
- target instead of comparing tasks"
-From:   Qian Cai <cai@lca.pw>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Mel Gorman <mgorman@techsingularity.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>, paulmck@kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 27 Feb 2020 11:35:27 -0500
-In-Reply-To: <jhjimjsvyoe.mognet@arm.com>
-References: <1582812549.7365.134.camel@lca.pw>
-         <1582814862.7365.135.camel@lca.pw> <jhjimjsvyoe.mognet@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 27 Feb 2020 11:36:07 -0500
+Received: (qmail 3376 invoked by uid 2102); 27 Feb 2020 11:36:06 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 27 Feb 2020 11:36:06 -0500
+Date:   Thu, 27 Feb 2020 11:36:06 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Boqun Feng <boqun.feng@gmail.com>
+cc:     linux-kernel@vger.kernel.org,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        <linux-arch@vger.kernel.org>, <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v3 3/5] Documentation/locking/atomic: Introduce atomic-tests
+ directory
+In-Reply-To: <20200227004049.6853-4-boqun.feng@gmail.com>
+Message-ID: <Pine.LNX.4.44L0.2002271135320.1730-100000@iolanthe.rowland.org>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-02-27 at 15:26 +0000, Valentin Schneider wrote:
-> On Thu, Feb 27 2020, Qian Cai wrote:
-> 
-> > On Thu, 2020-02-27 at 09:09 -0500, Qian Cai wrote:
-> > > The linux-next commit ff7db0bf24db ("sched/numa: Prefer using an idle CPU as a
-> > > migration target instead of comparing tasks") introduced a boot warning,
-> > 
-> > This?
-> > 
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index a61d83ea2930..ca780cd1eae2 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -1607,7 +1607,9 @@ static void update_numa_stats(struct task_numa_env *env,
-> > if (ns->idle_cpu == -1)
-> > ns->idle_cpu = cpu;
-> > 
-> > +rcu_read_lock();
-> > idle_core = numa_idle_core(idle_core, cpu);
-> > +rcu_read_unlock();
-> > }
-> > }
-> > 
-> 
-> 
-> Hmph right, we have
-> numa_idle_core()->test_idle_cores()->rcu_dereference().
-> 
-> Dunno if it's preferable to wrap the entirety of update_numa_stats() or
-> if that fine-grained read-side section is ok.
+On Thu, 27 Feb 2020, Boqun Feng wrote:
 
-I could not come up with a better fine-grained one than this.
+> Although we have atomic_t.txt and its friends to describe the semantics
+> of atomic APIs and lib/atomic64_test.c for build testing and testing in
+> UP mode, the tests for our atomic APIs in real SMP mode are still
+> missing. Since now we have the LKMM tool in kernel and litmus tests can
+> be used to generate kernel modules for testing purpose with "klitmus" (a
+> tool from the LKMM toolset), it makes sense to put a few typical litmus
+> tests into kernel so that
+> 
+> 1)	they are the examples to describe the conceptual mode of the
+> 	semantics of atomic APIs, and
+> 
+> 2)	they can be used to generate kernel test modules for anyone
+> 	who is interested to test the atomic APIs implementation (in
+> 	most cases, is the one who implements the APIs for a new arch)
+> 
+> Therefore, introduce the atomic-tests directory for this purpose. The
+> directory is maintained by the LKMM group to make sure the litmus tests
+> are always aligned with our memory model.
+> 
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index a61d83ea2930..980d03fa157c 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -1562,9 +1562,16 @@ static inline int numa_idle_core(int idle_core, int cpu)
- {
- #ifdef CONFIG_SCHED_SMT
- 	if (!static_branch_likely(&sched_smt_present) ||
--	    idle_core >= 0 || !test_idle_cores(cpu, false))
--		return idle_core;
-+	    idle_core >= 0) {
-+		bool idle;
- 
-+		rcu_read_lock();
-+		idle = test_idle_cores(cpu, false);
-+		rcu_read_unlock();
-+
-+		if (!idle)
-+			return idle_core;
-+	}
- 	/*
- 	 * Prefer cores instead of packing HT siblings
- 	 * and triggering future load balancing.
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+
+> ---
+>  Documentation/atomic-tests/README | 4 ++++
+>  MAINTAINERS                       | 1 +
+>  2 files changed, 5 insertions(+)
+>  create mode 100644 Documentation/atomic-tests/README
+> 
+> diff --git a/Documentation/atomic-tests/README b/Documentation/atomic-tests/README
+> new file mode 100644
+> index 000000000000..ae61201a4271
+> --- /dev/null
+> +++ b/Documentation/atomic-tests/README
+> @@ -0,0 +1,4 @@
+> +This directory contains litmus tests that are typical to describe the semantics
+> +of our atomic APIs. For more information about how to "run" a litmus test or
+> +how to generate a kernel test module based on a litmus test, please see
+> +tools/memory-model/README.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ffc7d5712735..ebca5f6263bb 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9718,6 +9718,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev
+>  F:	tools/memory-model/
+>  F:	Documentation/atomic_bitops.txt
+>  F:	Documentation/atomic_t.txt
+> +F:	Documentation/atomic-tests/
+>  F:	Documentation/core-api/atomic_ops.rst
+>  F:	Documentation/core-api/refcount-vs-atomic.rst
+>  F:	Documentation/memory-barriers.txt
+> 
+
