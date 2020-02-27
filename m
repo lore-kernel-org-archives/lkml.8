@@ -2,167 +2,155 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7797C34022
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 474ACC11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEFA6246A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:13:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E51624688
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:14:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G2r3t7rr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dRoiOdVV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730445AbgB0PNn (ORCPT
+        id S1730675AbgB0POi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 10:13:43 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:40146 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729819AbgB0PNl (ORCPT
+        Thu, 27 Feb 2020 10:14:38 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29089 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730383AbgB0POi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 10:13:41 -0500
-Received: by mail-il1-f196.google.com with SMTP id i7so2719422ilr.7
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 07:13:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=m+kylmRZdQ7kHJRK9lKNLqwlSVhHwyYol2gsDgRlfLA=;
-        b=G2r3t7rraJO/jHNvyP5CFwnplNk9lJtpT9K3gnayhn4rcbOA3gSXoz8oCLeE81E/Wt
-         no0Zh7DuWczVpOtO+5F+bZ/zXJJtqem4r07fo5SkxDWfHb9mDBp6nKik1l4JDM8KN/al
-         qqemDCNP9bkaEgHme33rJac7E7n0rUJSoO+8E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=m+kylmRZdQ7kHJRK9lKNLqwlSVhHwyYol2gsDgRlfLA=;
-        b=PttHz4C34jh8IuHMYZWkqeXRR6cRoCzvAUbvoFNFv3GDGM6p01w0eAZQAHKY4VFjkt
-         fxsZKuLm/sssnzhFlaAbQxQzKlVyvIJlH1HqTFMcbQAmqYWr1mwm+PLghfg375SjXenq
-         UIjAa25SrU5+BYXrBLvNJMPTLxcDwOXK39tE+hqy/y5YZqWCaOy+EEPS9E7NcDyGNt7R
-         mYEKGEWw4iCSzBaSxgMpOQ8ZEX1S+qtJpoksUpzyu4g2plt+zDPXtCvXvF/bENam6Q0l
-         qjJsA9cT22HwUKuTP4PHpTvIVCVUQ/Qon4Ro+1m9bx1bw4I4iuz03ihiz/6HgEm9/Bv+
-         Ecyw==
-X-Gm-Message-State: APjAAAVSw7djtD8Ou3+i/Vlx1Ic8c/DCxJFAHRY9u4wZZzYRJXR3x/IY
-        6ACXSV0J1E+j+5Ynb3p+EqwWhv9kV80ME9/gwR/k4w==
-X-Google-Smtp-Source: APXvYqx6ZTgm/JnuJem8YlsSHDER8b5Wil6I0Af4SkhwFk++vp7lU3TdAvSta4JoAfspzedl//Jug2AVYKDt3UXKMdc=
-X-Received: by 2002:a92:d610:: with SMTP id w16mr5875950ilm.283.1582816420405;
- Thu, 27 Feb 2020 07:13:40 -0800 (PST)
+        Thu, 27 Feb 2020 10:14:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582816477;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=KsXD7OC/j5gaz+S/O9WvlSstDKGTM7c7shTcNdfT6SA=;
+        b=dRoiOdVVzPUlgTOstGMQllOMu/E1P9qioktA0cvF4owXeTcFrkEv7vHe/noK8UZiNcjCD+
+        8ofHZhNxlwRcqK42YdNZLJwkeeNwbaZJmR13z3QQxuvySEOjUp193EAow80Hj5W5hOT6NA
+        TuDaBIov2EO0MgJ12QUShlSCh+GEBEw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-354-WDNOwscoO72aO4dxQsI4uw-1; Thu, 27 Feb 2020 10:14:30 -0500
+X-MC-Unique: WDNOwscoO72aO4dxQsI4uw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 693DD1005514;
+        Thu, 27 Feb 2020 15:14:28 +0000 (UTC)
+Received: from ws.net.home (ovpn-204-202.brq.redhat.com [10.40.204.202])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 807061036B25;
+        Thu, 27 Feb 2020 15:14:23 +0000 (UTC)
+Date:   Thu, 27 Feb 2020 16:14:21 +0100
+From:   Karel Zak <kzak@redhat.com>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Ian Kent <raven@themaw.net>, Miklos Szeredi <mszeredi@redhat.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Lennart Poettering <lennart@poettering.net>,
+        Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
+        util-linux@vger.kernel.org
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
+ #17]
+Message-ID: <20200227151421.3u74ijhqt6ekbiss@ws.net.home>
+References: <CAOssrKehjnTwbc6A1VagM5hG_32hy3mXZenx_PdGgcUGxYOaLQ@mail.gmail.com>
+ <1582556135.3384.4.camel@HansenPartnership.com>
+ <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com>
+ <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com>
+ <1582644535.3361.8.camel@HansenPartnership.com>
+ <CAOssrKfaxnHswrKejedFzmYTbYivJ++cPes4c91+BJDfgH4xJA@mail.gmail.com>
+ <1c8db4e2b707f958316941d8edd2073ee7e7b22c.camel@themaw.net>
+ <CAJfpegtRoXnPm5_sMYPL2L6FCZU52Tn8wk7NcW-dm4_2x=dD3Q@mail.gmail.com>
+ <3e656465c427487e4ea14151b77d391d52cd6bad.camel@themaw.net>
+ <CAJfpegu5xLcR=QbAOnUrL49QTem6X6ok7nPU+kLFnNHdPXSh1A@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200225172437.106679-1-hsinyi@chromium.org> <6986e879-cf35-13a5-baae-9ab09ba1a0d7@xs4all.nl>
-In-Reply-To: <6986e879-cf35-13a5-baae-9ab09ba1a0d7@xs4all.nl>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Thu, 27 Feb 2020 23:13:14 +0800
-Message-ID: <CAJMQK-hFQ8ZMAH=C9suud81gwXQaG_=4mx69qeQP=eCFgAXhTQ@mail.gmail.com>
-Subject: Re: [PATCH v3] media: mtk-vpu: avoid unaligned access to DTCM buffer.
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJfpegu5xLcR=QbAOnUrL49QTem6X6ok7nPU+kLFnNHdPXSh1A@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 5:50 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
->
-> On 2/25/20 6:24 PM, Hsin-Yi Wang wrote:
-> > struct vpu_run *run in vpu_init_ipi_handler() is an ioremapped DTCM (Data
-> > Tightly Coupled Memory) buffer shared with AP.  It's not able to do
-> > unaligned access. Otherwise kernel would crash due to unable to handle
-> > kernel paging request.
-> >
-> > struct vpu_run {
-> >       u32 signaled;
-> >       char fw_ver[VPU_FW_VER_LEN];
-> >       unsigned int    dec_capability;
-> >       unsigned int    enc_capability;
-> >       wait_queue_head_t wq;
-> > };
-> >
-> > fw_ver starts at 4 byte boundary. If system enables
-> > CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS, strscpy() will do
-> > read_word_at_a_time(), which tries to read 8-byte: *(unsigned long *)addr
-> >
-> > Copy the string by memcpy_fromio() for this buffer to avoid unaligned
-> > access.
-> >
-> > Fixes: 85709cbf1524 ("media: replace strncpy() by strscpy()")
-> > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> > ---
-> > Change in v3:
-> > - fix sparse warnings.
-> > Change in v2:
-> > - fix sparse warnings.
-> > ---
-> >  drivers/media/platform/mtk-vpu/mtk_vpu.c | 14 ++++++++------
-> >  1 file changed, 8 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/media/platform/mtk-vpu/mtk_vpu.c b/drivers/media/platform/mtk-vpu/mtk_vpu.c
-> > index a768707abb94..e3fd2d1814f3 100644
-> > --- a/drivers/media/platform/mtk-vpu/mtk_vpu.c
-> > +++ b/drivers/media/platform/mtk-vpu/mtk_vpu.c
-> > @@ -603,12 +603,14 @@ EXPORT_SYMBOL_GPL(vpu_load_firmware);
-> >  static void vpu_init_ipi_handler(void *data, unsigned int len, void *priv)
-> >  {
-> >       struct mtk_vpu *vpu = (struct mtk_vpu *)priv;
-> > -     struct vpu_run *run = (struct vpu_run *)data;
-> > -
-> > -     vpu->run.signaled = run->signaled;
-> > -     strscpy(vpu->run.fw_ver, run->fw_ver, sizeof(vpu->run.fw_ver));
-> > -     vpu->run.dec_capability = run->dec_capability;
-> > -     vpu->run.enc_capability = run->enc_capability;
-> > +     struct vpu_run __iomem *run = (struct vpu_run __iomem __force *)data;
->
-> The use of __force is generally a bad sign. Shouldn't the 'void *data' be a
-> 'void __iomem *data'? And vpu->recv_buf should be 'struct share_obj __iomem *recv_buf;'.
-> Probably send_buf as well.
->
-> In other words, the __iomem attribute should be wired up correctly throughout the
-> driver code, and not forcibly applied in one place. That is asking for trouble in
-> the future. Also, sparse only works well in detecting problems if such attributes
-> are applied at the right level.
->
-> Regards,
->
->         Hans
->
-Thanks for your comments. I should check the whole code more
-thoroughly. I do see that vpu->recv_buf is forced cast from void
-__iomem *tcm:
-vpu->recv_buf = (__force struct share_obj *)(vpu->reg.tcm +VPU_DTCM_OFFSET);
-I'll use struct share_obj __iomem *recv_buf; as you suggested. Thanks
+On Thu, Feb 27, 2020 at 02:45:27PM +0100, Miklos Szeredi wrote:
+> > So the problem I want to see fixed is the effect of very large
+> > mount tables on other user space applications, particularly the
+> > effect when a large number of mounts or umounts are performed.
 
-Since all handlers (vpu_init_ipi_handler, vpu_enc_ipi_handler,
-vpu_dec_ipi_handler, and mtk_mdp_vpu_ipi_handler) only do read access
-to this buffer, I think we can also change 'void *data' as 'const void
-*data', and pass another buffer copied from vpu->recv_buf->share_buf
-to handler. In this way we don't have to change to use iomem APIs in
-those handlers.
+Yes, now you have to generate (in kernel) and parse (in
+userspace) all mount table to get information about just 
+one mount table entry. This is typical for umount or systemd.
 
- static void vpu_ipi_handler(struct mtk_vpu *vpu)
- {
--       struct share_obj *rcv_obj = vpu->recv_buf;
-+       struct share_obj __iomem *rcv_obj = vpu->recv_buf;
-        struct vpu_ipi_desc *ipi_desc = vpu->ipi_desc;
--
--       if (rcv_obj->id < IPI_MAX && ipi_desc[rcv_obj->id].handler) {
--               ipi_desc[rcv_obj->id].handler(rcv_obj->share_buf,...
-...
-+       unsigned char data[SHARE_BUF_SIZE];
-+       s32 id = readl(&rcv_obj->id);
-+
-+       memcpy_fromio(data, rcv_obj->share_buf, sizeof(data));
-+       if (id < IPI_MAX && ipi_desc[id].handler) {
-+               ipi_desc[id].handler(data, readl(&rcv_obj->len), ...
-...
+> > >  - add a notification mechanism   - lookup a mount based on path
+> > >  - and a way to selectively query mount/superblock information
+> > based on path ...
+
+For umount-like use-cases we need mountpoint/ to mount entry
+conversion; I guess something like open(mountpoint/) + fsinfo() 
+should be good enough.
+
+For systemd we need the same, but triggered by notification. The ideal
+solution is to get mount entry ID or FD from notification and later use this
+ID or FD to ask for details about the mount entry (probably again fsinfo()).
+The notification has to be usable with in epoll() set.
+
+This solves 99% of our performance issues I guess.
+
+> > So that means mount table info. needs to be maintained, whether that
+> > can be achieved using sysfs I don't know. Creating and maintaining
+> > the sysfs tree would be a big challenge I think.
+
+It will be still necessary to get complete mount table sometimes, but 
+not in performance sensitive scenarios.
+
+I'm not sure about sysfs/, you need somehow resolve namespaces, order
+of the mount entries (which one is the last one), etc. IMHO translate
+mountpoint path to sysfs/ path will be complicated.
+
+> > But before trying to work out how to use a notification mechanism
+> > just having a way to get the info provided by the proc tables using
+> > a path alone should give initial immediate improvement in libmount.
+> 
+> Adding Karel, Lennart, Zbigniew and util-linux@vger...
+> 
+> At a quick glance at libmount and systemd code, it appears that just
+> switching out the implementation in libmount will not be enough:
+> systemd is calling functions like mnt_table_parse_*() when it receives
+> a notification that the mount table changed.
+
+We're ready to change this stuff in systemd if there will be something
+better (something per-mount-entry).
+
+My plan is add new API to libmount to query information about one
+mount entry (but I had no time to play with fsinfo yet).
+
+> What is the end purpose of parsing the mount tables?  Can systemd guys
+> comment on that?
+
+If mount/umount is triggered by systemd than it need verification
+about success and final version of the mount options. It also reads
+information from libmount to get userspace mount options (.e.g.
+_netdev -- libmount uses mount source, target and fsroot to join
+kernel and userpace stuff).
+
+And don't forget that mount units are part of systemd dependencies, so
+umount/mount is important event for systemd and it need details about
+the changes (what, where, ... etc.)
+
+    Karel
+
+-- 
+ Karel Zak  <kzak@redhat.com>
+ http://karelzak.blogspot.com
+
