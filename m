@@ -2,105 +2,223 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 852F9C4BA3B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9080BC4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C58724656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59DF221D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:49:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pxSou091"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gayusqmH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbgB0Hrn (ORCPT
+        id S1728463AbgB0Hs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 02:47:43 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:48206 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728441AbgB0Hrn (ORCPT
+        Thu, 27 Feb 2020 02:48:59 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36469 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727661AbgB0Hs6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 02:47:43 -0500
-X-UUID: 90d4f71a89d54d7e8d5a493b1adcc2dc-20200227
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=63YRAaFL+lbXvbtjs/mfmNkzxs9oDsAdzcTK8UHwzWA=;
-        b=pxSou091h368wkBQ+0ZcyTn/etaoOycO7YaDYlfRpqAXa9X9FTmPeetTc8/Q13kqkk2brDwgorfEEW11G67VM5tTaDnZQgTbgh97Bm8sxjgz/8k3jW6FRWNfgPsoVxMj1/BkmLHEu8IEIZqqriANNicrz4f4PB05dQG/lZLjglY=;
-X-UUID: 90d4f71a89d54d7e8d5a493b1adcc2dc-20200227
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <sam.shih@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1143352225; Thu, 27 Feb 2020 15:47:39 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 27 Feb 2020 15:46:40 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 27 Feb 2020 15:47:42 +0800
-From:   Sam Shih <sam.shih@mediatek.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Sam Shih <sam.shih@mediatek.com>
-Subject: [PATCH 1/1] pwm: mediatek: add longer period support
-Date:   Thu, 27 Feb 2020 15:46:50 +0800
-Message-ID: <1582789610-23133-2-git-send-email-sam.shih@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1582789610-23133-1-git-send-email-sam.shih@mediatek.com>
-References: <1582789610-23133-1-git-send-email-sam.shih@mediatek.com>
+        Thu, 27 Feb 2020 02:48:58 -0500
+Received: by mail-pg1-f193.google.com with SMTP id d9so1036506pgu.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 23:48:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XVoZfIsuqX+Guz4IEAWRuvlxI1qIG+Lk5g5VCiapuB8=;
+        b=gayusqmHGrlCGDHxF7GXlmeMI4qYKI4IdBfb8aV0uVK3N8EChn+0NyO6VIPhDsn5Pj
+         jbpG1wwd/tfS2+qWzw/GJNvrhO/yka2Ft9oWyP490cPr1O0CmNmIt0UbO6lszvHrj+tW
+         w2YPwsIZZ8yoA4tDui2JtVcyKFGGYZ1d2tMNcugOtkh5DBgHRm1P8qgeQNDyWgDPWGxK
+         LrHkJRbBm0S/sfRZSmh0Os/8Sp6xUUsHJr4SQ2ulSGbur8YOnJSQoT3eCJ5FSmr9sDV1
+         KvV0Q87/m8b0peDrgttd51Ow8fkJjjFetmhg3mHRdEJqbZVOAPOVhyZnxXmJsw9Xd6JF
+         7Q3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XVoZfIsuqX+Guz4IEAWRuvlxI1qIG+Lk5g5VCiapuB8=;
+        b=WysPh3g+5aBSRcM3OXj9xdgmMrCZU7uA4HCl+dXmxbhUEZK0GSX9hj+x7C1Rtehf2M
+         MSLOPDg80a342j+kJjFO1nLwVXDnX3xTJid+DtrvJMAUBsVdHhNedbwrBgFR4Ay5+QuV
+         NmjxdjEOq7feWc/bPL/7yXnbRmFXhRmWwOItYyf/L5URNtWJkkBLWdxOhaU40GVVVHhj
+         v1KHPi8Tnnj4jU3az5FnVHt7euvskSStG0xQsxZL19B/GeEMN3Q2bVyzR3uSKjERZ3de
+         UfllsElMpVro0FgV2PqzxKvXhCmteUc2MM2hPWsYp3/GxPvQtKNg+3KapSFbOk0807Up
+         NRaA==
+X-Gm-Message-State: APjAAAUTiomAHb66EQ4k35dGjKuckcDM4I8SftJmZU1pnwBXfF2wt9OQ
+        uuqEwejP3MR1h5KifakbV+w=
+X-Google-Smtp-Source: APXvYqxs93Cc8RsXUNT4cj+O+zzQEnOX3Un2c0pGk0clle3KXvGwzwrZ+eFt9XwrluA3jvaTg/FjTg==
+X-Received: by 2002:a63:f454:: with SMTP id p20mr2905318pgk.149.1582789736965;
+        Wed, 26 Feb 2020 23:48:56 -0800 (PST)
+Received: from js1304-desktop ([114.206.198.176])
+        by smtp.gmail.com with ESMTPSA id y10sm5897363pfq.110.2020.02.26.23.48.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Feb 2020 23:48:56 -0800 (PST)
+Date:   Thu, 27 Feb 2020 16:48:47 +0900
+From:   Joonsoo Kim <js1304@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com
+Subject: Re: [PATCH v2 0/9] workingset protection/detection on the anonymous
+ LRU list
+Message-ID: <20200227074748.GA18113@js1304-desktop>
+References: <1582175513-22601-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <20200226193942.30049da9c090b466bdc5ec23@linux-foundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200226193942.30049da9c090b466bdc5ec23@linux-foundation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhlIHB3bSBjbG9jayBzb3VyY2UgY291bGQgYmUgZGl2aWRlZCBieSAxNjI1IHdpdGggUFdNX0NP
-Tg0KQklUKDMpIHNldHRpbmcgaW4gbWVkaWF0ZWsgaGFyZHdhcmUuDQoNClRoaXMgcGF0Y2ggYWRk
-IHN1cHBvcnQgZm9yIGxvbmdlciBwd20gcGVyaW9kIGNvbmZpZ3VyYXRpb24sDQp3aGljaCBhbGxv
-d2luZyBibGlua2luZyBMRURzIHZpYSBwd20gaW50ZXJmYWNlLg0KDQpTaWduZWQtb2ZmLWJ5OiBT
-YW0gU2hpaCA8c2FtLnNoaWhAbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9wd20vcHdtLW1l
-ZGlhdGVrLmMgfCAyMSArKysrKysrKysrKysrKysrKy0tLS0NCiAxIGZpbGUgY2hhbmdlZCwgMTcg
-aW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvcHdt
-L3B3bS1tZWRpYXRlay5jIGIvZHJpdmVycy9wd20vcHdtLW1lZGlhdGVrLmMNCmluZGV4IGI5NGUw
-ZDA5YzMwMC4uOWFmMzA5YmVhMDFhIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9wd20vcHdtLW1lZGlh
-dGVrLmMNCisrKyBiL2RyaXZlcnMvcHdtL3B3bS1tZWRpYXRlay5jDQpAQCAtMTIxLDggKzEyMSw4
-IEBAIHN0YXRpYyBpbnQgcHdtX21lZGlhdGVrX2NvbmZpZyhzdHJ1Y3QgcHdtX2NoaXAgKmNoaXAs
-IHN0cnVjdCBwd21fZGV2aWNlICpwd20sDQogCQkJICAgICAgIGludCBkdXR5X25zLCBpbnQgcGVy
-aW9kX25zKQ0KIHsNCiAJc3RydWN0IHB3bV9tZWRpYXRla19jaGlwICpwYyA9IHRvX3B3bV9tZWRp
-YXRla19jaGlwKGNoaXApOw0KLQl1MzIgY2xrZGl2ID0gMCwgY250X3BlcmlvZCwgY250X2R1dHks
-IHJlZ193aWR0aCA9IFBXTURXSURUSCwNCi0JICAgIHJlZ190aHJlcyA9IFBXTVRIUkVTOw0KKwl1
-MzIgY2xrZGl2ID0gMCwgY2xrc2VsID0gMCwgY250X3BlcmlvZCwgY250X2R1dHksDQorCSAgICBy
-ZWdfd2lkdGggPSBQV01EV0lEVEgsIHJlZ190aHJlcyA9IFBXTVRIUkVTOw0KIAl1NjQgcmVzb2x1
-dGlvbjsNCiAJaW50IHJldDsNCiANCkBAIC0xNDEsOSArMTQxLDE4IEBAIHN0YXRpYyBpbnQgcHdt
-X21lZGlhdGVrX2NvbmZpZyhzdHJ1Y3QgcHdtX2NoaXAgKmNoaXAsIHN0cnVjdCBwd21fZGV2aWNl
-ICpwd20sDQogCQljbGtkaXYrKzsNCiAJCWNudF9wZXJpb2QgPSBESVZfUk9VTkRfQ0xPU0VTVF9V
-TEwoKHU2NClwZXJpb2RfbnMgKiAxMDAwLA0KIAkJCQkJCSAgIHJlc29sdXRpb24pOw0KKwkJaWYg
-KGNsa2RpdiA+IFBXTV9DTEtfRElWX01BWCAmJiAhY2xrc2VsKSB7DQorCQkJY2xrc2VsID0gMTsN
-CisJCQljbGtkaXYgPSAwOw0KKwkJCXJlc29sdXRpb24gPSAodTY0KU5TRUNfUEVSX1NFQyAqIDEw
-MDAgKiAxNjI1Ow0KKwkJCWRvX2RpdihyZXNvbHV0aW9uLA0KKwkJCQljbGtfZ2V0X3JhdGUocGMt
-PmNsa19wd21zW3B3bS0+aHdwd21dKSk7DQorCQkJY250X3BlcmlvZCA9IERJVl9ST1VORF9DTE9T
-RVNUX1VMTCgNCisJCQkJCSh1NjQpcGVyaW9kX25zICogMTAwMCwgcmVzb2x1dGlvbik7DQorCQl9
-DQogCX0NCiANCi0JaWYgKGNsa2RpdiA+IFBXTV9DTEtfRElWX01BWCkgew0KKwlpZiAoY2xrZGl2
-ID4gUFdNX0NMS19ESVZfTUFYICYmIGNsa3NlbCkgew0KIAkJcHdtX21lZGlhdGVrX2Nsa19kaXNh
-YmxlKGNoaXAsIHB3bSk7DQogCQlkZXZfZXJyKGNoaXAtPmRldiwgInBlcmlvZCAlZCBub3Qgc3Vw
-cG9ydGVkXG4iLCBwZXJpb2RfbnMpOw0KIAkJcmV0dXJuIC1FSU5WQUw7DQpAQCAtMTU5LDcgKzE2
-OCwxMSBAQCBzdGF0aWMgaW50IHB3bV9tZWRpYXRla19jb25maWcoc3RydWN0IHB3bV9jaGlwICpj
-aGlwLCBzdHJ1Y3QgcHdtX2RldmljZSAqcHdtLA0KIAl9DQogDQogCWNudF9kdXR5ID0gRElWX1JP
-VU5EX0NMT1NFU1RfVUxMKCh1NjQpZHV0eV9ucyAqIDEwMDAsIHJlc29sdXRpb24pOw0KLQlwd21f
-bWVkaWF0ZWtfd3JpdGVsKHBjLCBwd20tPmh3cHdtLCBQV01DT04sIEJJVCgxNSkgfCBjbGtkaXYp
-Ow0KKwlpZiAoY2xrc2VsKQ0KKwkJcHdtX21lZGlhdGVrX3dyaXRlbChwYywgcHdtLT5od3B3bSwg
-UFdNQ09OLCBCSVQoMTUpIHwgQklUKDMpIHwNCisJCQkJICAgIGNsa2Rpdik7DQorCWVsc2UNCisJ
-CXB3bV9tZWRpYXRla193cml0ZWwocGMsIHB3bS0+aHdwd20sIFBXTUNPTiwgQklUKDE1KSB8IGNs
-a2Rpdik7DQogCXB3bV9tZWRpYXRla193cml0ZWwocGMsIHB3bS0+aHdwd20sIHJlZ193aWR0aCwg
-Y250X3BlcmlvZCk7DQogCXB3bV9tZWRpYXRla193cml0ZWwocGMsIHB3bS0+aHdwd20sIHJlZ190
-aHJlcywgY250X2R1dHkpOw0KIA0KLS0gDQoyLjE3LjENCg==
+Hello, Andrew.
 
+On Wed, Feb 26, 2020 at 07:39:42PM -0800, Andrew Morton wrote:
+> On Thu, 20 Feb 2020 14:11:44 +0900 js1304@gmail.com wrote:
+> 
+> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> > 
+> > Hello,
+> > 
+> > This patchset implements workingset protection and detection on
+> > the anonymous LRU list.
+> 
+> The test robot measurement got my attention!
+> 
+> http://lkml.kernel.org/r/20200227022905.GH6548@shao2-debian
+
+I really hope to get an attention!!!
+Thanks, test robot and Andrew.
+
+> 
+> > * Changes on v2
+> > - fix a critical bug that uses out of index lru list in
+> > workingset_refault()
+> > - fix a bug that reuses the rotate value for previous page
+> > 
+> > * SUBJECT
+> > workingset protection
+> > 
+> > * PROBLEM
+> > In current implementation, newly created or swap-in anonymous page is
+> > started on the active list. Growing the active list results in rebalancing
+> > active/inactive list so old pages on the active list are demoted to the
+> > inactive list. Hence, hot page on the active list isn't protected at all.
+> > 
+> > Following is an example of this situation.
+> > 
+> > Assume that 50 hot pages on active list and system can contain total
+> > 100 pages. Numbers denote the number of pages on active/inactive
+> > list (active | inactive). (h) stands for hot pages and (uo) stands for
+> > used-once pages.
+> > 
+> > 1. 50 hot pages on active list
+> > 50(h) | 0
+> > 
+> > 2. workload: 50 newly created (used-once) pages
+> > 50(uo) | 50(h)
+> > 
+> > 3. workload: another 50 newly created (used-once) pages
+> > 50(uo) | 50(uo), swap-out 50(h)
+> > 
+> > As we can see, hot pages are swapped-out and it would cause swap-in later.
+> > 
+> > * SOLUTION
+> > Since this is what we want to avoid, this patchset implements workingset
+> > protection. Like as the file LRU list, newly created or swap-in anonymous
+> > page is started on the inactive list. Also, like as the file LRU list,
+> > if enough reference happens, the page will be promoted. This simple
+> > modification changes the above example as following.
+> 
+> One wonders why on earth we weren't doing these things in the first
+> place?
+
+I don't know. I tried to find the origin of this behaviour and found
+that it's from you 18 years ago. :)
+
+It mentions that starting pages on the active list boosts throughput on
+stupid swapstormy test but I cannot guess the exact reason of such
+improvement.
+
+Anyway, Following is the related patch history. Could you remember
+anything about it?
+
+commit 018c71d821e7cfb13470e43778645c899c30c53e
+Author: Andrew Morton <akpm@digeo.com>
+Date:   Thu Oct 31 04:09:19 2002 -0800
+
+    [PATCH] start anon pages on the active list (properly this time)
+
+    Use lru_cache_add_active() so ensure that pages which are, or will be
+    mapped into pagetables are started out on the active list.
+
+commit 1527d0b71fa1e9db1beb22fda689b9086d025455
+Author: Andrew Morton <akpm@digeo.com>
+Date:   Thu Oct 31 04:09:13 2002 -0800
+
+    [PATCH] lru_add_active(): for starting pages on the active list
+
+    This is the first in a series of patches which tune up the 2.5
+    performance under heavy swap loads.
+
+    Throughput on stupid swapstormy tests is increased by 1.5x to 3x.
+    Still about 20% behind 2.4 with multithreaded tests.  That is not
+    easily fixable - the virtual scan tends to apply a form of load
+    control: particular processes are heavily swapped out so the others can
+    get ahead.  With 2.5 all processes make very even progress and much
+    more swapping is needed.  It's on par with 2.4 for single-process
+    swapstorms.
+
+
+    In this patch:
+
+    The code which tries to start mapped pages out on the active list
+    doesn't work very well.  It uses an "is it mapped into pagetables"
+    test.  Which doesn't work for, say, swap readahead pages.  They are not
+    mapped into pagetables when they are spilled onto the LRU.
+
+    So create a new `lru_cache_add_active()' function for deferred addition
+    of pages to their active list.
+
+    Also move mark_page_accessed() from filemap.c to swap.c where all
+    similar functions live.  And teach it to not try to move pages which
+    are in the deferred-addition list onto the active list.  That won't
+    work, and it's bogusly clearing PageReferenced in that case.
+
+    The deferred-addition lists are a pest.  But lru_cache_add used to be
+    really expensive in sime workloads on some machines.  Must persist.
+
+> > * SUBJECT
+> > workingset detection
+> 
+> It sounds like the above simple aging changes provide most of the
+> improvement, and that the workingset changes are less beneficial and a
+> bit more risky/speculative?
+
+I don't think so.
+
+Although test robot just find the improvement of simple ratio changes,
+later patches also have their's own benefit. I found the benefit of
+the other patches on our production workload although it isn't
+mentioned in cover-letter.
+
+And, what this patchset does looks the reasonable thing.
+
+> If so, would it be best for us to concentrate on the aging changes
+> first, let that settle in and spread out and then turn attention to the
+> workingset changes?
+
+I hope that more developer pay an attention on this patchset and
+the patchset are merged together.
+
+Thanks.
