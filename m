@@ -2,136 +2,128 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BEFC4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1507C4BA3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAA2D2072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:16:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="iJco5cwq"
+	by mail.kernel.org (Postfix) with ESMTP id 82BFD2072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 07:19:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbgB0HQz (ORCPT
+        id S1728409AbgB0HTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 02:16:55 -0500
-Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:55442 "EHLO
-        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727336AbgB0HQz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 02:16:55 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id 0DBF53F619;
-        Thu, 27 Feb 2020 08:16:53 +0100 (CET)
-Authentication-Results: pio-pvt-msa3.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=iJco5cwq;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 9s2FL3lWlzPa; Thu, 27 Feb 2020 08:16:52 +0100 (CET)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id ED2B23F56A;
-        Thu, 27 Feb 2020 08:16:49 +0100 (CET)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 54FBC360161;
-        Thu, 27 Feb 2020 08:16:49 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1582787809; bh=czSVFr3N8XD20OuzmIfwTeJukmx6qXdkbu8G6D4uGW4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=iJco5cwq3tifyUhkXULafE2E2SK5e+v+J9B7XYh2qG+7F11JINzsBKZmLzRA9B/2w
-         y2kbglX6cpm9cvR95UVbBEo93uBouanPt0rjIpjhuPqoTbLAvcCHybEOPYpbD0Irog
-         n46IYsNNHpyrXpXirNOiX5dCn1yFly6CK5V20pqU=
-Subject: Re: [PATCH v5 1/3] drm/shmem: add support for per object caching
- flags.
-To:     Chia-I Wu <olvaffe@gmail.com>
-Cc:     Gerd Hoffmann <kraxel@redhat.com>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        Guillaume Gardet <Guillaume.Gardet@arm.com>,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org,
-        Gurchetan Singh <gurchetansingh@chromium.org>,
-        tzimmermann@suse.de
-References: <20200226154752.24328-1-kraxel@redhat.com>
- <20200226154752.24328-2-kraxel@redhat.com>
- <f1afba4b-9c06-48a3-42c7-046695947e91@shipmail.org>
- <CAPaKu7R4VFYnk9UdpguZnkWeKk2ELVnoQ60=i72RN2GkME1ukw@mail.gmail.com>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <614ed528-8d6d-0179-6149-218566d4af06@shipmail.org>
-Date:   Thu, 27 Feb 2020 08:16:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 27 Feb 2020 02:19:31 -0500
+Received: from mga12.intel.com ([192.55.52.136]:22237 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726999AbgB0HTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 02:19:31 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Feb 2020 23:19:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,491,1574150400"; 
+   d="scan'208";a="238310161"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 26 Feb 2020 23:19:30 -0800
+Received: from [10.226.38.56] (unknown [10.226.38.56])
+        by linux.intel.com (Postfix) with ESMTP id 50F62580544;
+        Wed, 26 Feb 2020 23:19:27 -0800 (PST)
+Subject: Re: [PATCH v5 2/2] clk: intel: Add CGU clock driver for a new SoC
+To:     Randy Dunlap <rdunlap@infradead.org>, mturquette@baylibre.com,
+        sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com,
+        linux-clk@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
+        rtanwar <rahul.tanwar@intel.com>
+References: <cover.1582096982.git.rahul.tanwar@linux.intel.com>
+ <6148b5b25d4a6833f0a72801d569ed97ac6ca55b.1582096982.git.rahul.tanwar@linux.intel.com>
+ <e8259928-cb2a-a453-8f2a-1b57c8abdb8c@infradead.org>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <4fb7a643-cbe1-da82-2629-2dbd0c0d143b@linux.intel.com>
+Date:   Thu, 27 Feb 2020 15:19:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <CAPaKu7R4VFYnk9UdpguZnkWeKk2ELVnoQ60=i72RN2GkME1ukw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <e8259928-cb2a-a453-8f2a-1b57c8abdb8c@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/27/20 1:02 AM, Chia-I Wu wrote:
-> On Wed, Feb 26, 2020 at 10:25 AM Thomas Hellström (VMware)
-> <thomas_os@shipmail.org> wrote:
->> Hi, Gerd,
+
+Hi Randy,
+
+On 19/2/2020 3:59 PM, Randy Dunlap wrote:
+> On 2/18/20 11:40 PM, Rahul Tanwar wrote:
+>> From: rtanwar <rahul.tanwar@intel.com>
 >>
+>> Clock Generation Unit(CGU) is a new clock controller IP of a forthcoming
+>> Intel network processor SoC named Lightning Mountain(LGM). It provides
+>> programming interfaces to control & configure all CPU & peripheral clocks.
+>> Add common clock framework based clock controller driver for CGU.
 >>
+>> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+>> ---
+>>  drivers/clk/Kconfig           |   1 +
+>>  drivers/clk/x86/Kconfig       |   8 +
+>>  drivers/clk/x86/Makefile      |   1 +
+>>  drivers/clk/x86/clk-cgu-pll.c | 156 +++++++++++
+>>  drivers/clk/x86/clk-cgu.c     | 636 ++++++++++++++++++++++++++++++++++++++++++
+>>  drivers/clk/x86/clk-cgu.h     | 335 ++++++++++++++++++++++
+>>  drivers/clk/x86/clk-lgm.c     | 492 ++++++++++++++++++++++++++++++++
+>>  7 files changed, 1629 insertions(+)
+>>  create mode 100644 drivers/clk/x86/Kconfig
+>>  create mode 100644 drivers/clk/x86/clk-cgu-pll.c
+>>  create mode 100644 drivers/clk/x86/clk-cgu.c
+>>  create mode 100644 drivers/clk/x86/clk-cgu.h
+>>  create mode 100644 drivers/clk/x86/clk-lgm.c
 >>
->>    #define to_drm_gem_shmem_obj(obj) \
->> diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
->> index a421a2eed48a..aad9324dcf4f 100644
->> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
->> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
->> @@ -254,11 +254,16 @@ static void *drm_gem_shmem_vmap_locked(struct drm_gem_shmem_object *shmem)
->>        if (ret)
->>                goto err_zero_use;
->>
->> -     if (obj->import_attach)
->> +     if (obj->import_attach) {
->>                shmem->vaddr = dma_buf_vmap(obj->import_attach->dmabuf);
->> -     else
->> +     } else {
->> +             pgprot_t prot = PAGE_KERNEL;
->> +
->> +             if (!shmem->map_cached)
->> +                     prot = pgprot_writecombine(prot);
->>                shmem->vaddr = vmap(shmem->pages, obj->size >> PAGE_SHIFT,
->> -                                 VM_MAP, pgprot_writecombine(PAGE_KERNEL));
->> +                                 VM_MAP, prot)
->>
->> Wouldn't a vmap with pgprot_writecombine() create conflicting mappings
->> with the linear kernel map which is not write-combined? Or do you change
->> the linear kernel map of the shmem pages somewhere? vmap bypassess at
->> least the x86 PAT core mapping consistency check and this could
->> potentially cause spuriously overwritten memory.
-> Yeah, I think this creates a conflicting alias.  It seems a call to
-> set_pages_array_wc here or changes elsewhere is needed..
+>> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+>> index bcb257baed06..43dab257e7aa 100644
+>> --- a/drivers/clk/Kconfig
+>> +++ b/drivers/clk/Kconfig
+>> @@ -360,6 +360,7 @@ source "drivers/clk/sunxi-ng/Kconfig"
+>>  source "drivers/clk/tegra/Kconfig"
+>>  source "drivers/clk/ti/Kconfig"
+>>  source "drivers/clk/uniphier/Kconfig"
+>> +source "drivers/clk/x86/Kconfig"
+>>  source "drivers/clk/zynqmp/Kconfig"
+>>  
+>>  endmenu
+> Hi,
 >
-> But this is a pre-existing issue in the shmem helper.  There is also
-> no universal fix (e.g., set_pages_array_wc is x86 only)?  I would hope
-> this series can be merged sooner to fix the regression first.
+>> diff --git a/drivers/clk/x86/Kconfig b/drivers/clk/x86/Kconfig
+>> new file mode 100644
+>> index 000000000000..2e2b9730541f
+>> --- /dev/null
+>> +++ b/drivers/clk/x86/Kconfig
+>> @@ -0,0 +1,8 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only
+>> +config CLK_LGM_CGU
+>> +	depends on (OF && HAS_IOMEM) || COMPILE_TEST
+> This "depends on" looks problematic to me. I guess we shall see when
+> all the build bots get to it.
 
-The problem is this isn't doable with shmem, since that would create 
-interesting problems when pages are swapped out.
+At the moment, i am not able to figure out possible problems in this..
 
-So I would argue that the correct fix is to revert commit 0be895893607f 
-("drm/shmem: switch shmem helper to &drm_gem_object_funcs.mmap")
+>> +	select OF_EARLY_FLATTREE
+> If OF is not set and HAS_IOMEM is not set, but COMPILE_TEST is set,
+> I expect that this should not be attempting to select OF_EARLY_FLATTREE.
+>
+> Have you tried such a config combination?
 
-If some drivers can argue that in their particular environment it's safe 
-to use writecombine in this way, then modifying the page protection 
-should be moved out to those drivers documenting that assumption. Using 
-pgprot_decrypted() in this way could never be safe.
+Agree, that would be a problem. I will change it to
 
-But IMO this should never be part of generic helpers.
+select OF_EARLY_FLATTREE if OF
 
-/Thomas
+Thanks.
 
-
+Regards,
+Rahul
