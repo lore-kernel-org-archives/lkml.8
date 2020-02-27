@@ -2,235 +2,155 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF4F7C34022
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAF7C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8507024688
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:18:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 665FE246A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 15:18:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Sut+2ak8"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="JZkJPJ8G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730746AbgB0PSR (ORCPT
+        id S1730851AbgB0PSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 10:18:17 -0500
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:45356 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730413AbgB0PSR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 10:18:17 -0500
-Received: by mail-vs1-f66.google.com with SMTP id m4so2035145vsa.12
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 07:18:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FE9YlwPCylw4bc5huhKNNCWtGjQT2jR1xXhEcwAql+c=;
-        b=Sut+2ak8Mv+vayB+HbdLvSIcnwFFJMBzHgirvH66v+6Br77Lbl/4SxBwinK+bfEORy
-         KQ5K1Mbv5yaOHdlKTzLUdTUUhZV6hr1sPf+UGQPbdt96i7fvZHDFAOrayy2+V+i4ksAo
-         6QaJNImWXrC4TGUvNVs/B+fEwNUf1hQAe0KTqj1JEeelSbczr0CWEvXHITo8aexG+rjd
-         8xZipEnxAciGpbNAEeRoYeiih7H0AJwHbFWkhquccA4sjl+/0jlNCtgsceK84yfuVUGf
-         h3LKbzuDoDUi7zFP1yCYRQ7A0JHRh2XABAIv1U+lO/QnHnfXYraENOxLHHFqv523I3hT
-         MNuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FE9YlwPCylw4bc5huhKNNCWtGjQT2jR1xXhEcwAql+c=;
-        b=SlMdsKwbyv53nAxBmtTFFmamZapQWowK7PIqOGnpoZpLefXpG0Xf5Ywnbhlo2q33rN
-         bQL2wcew4gXHyLRP3eSZe3sPWqiuRENyK6S7VqASWAhSCuR64MQqdZLAQxrrOjbnIQT1
-         QKKqO43XIadckvyePsUH8M5eZHeFerdBhWJTGrXBe7iRLJ+OA9hJFh/Y2RrSAnpGFyNe
-         flyoiXvPgnIIwH+1ar8KP6phQ+3CVVeYxnDaxLY79fbHko+uUHPdv46WE0QWNwY8ltYV
-         utXAnfxl/Ie5xjriDWK6HA+66uoOZGqUjwolB4Aq6SWahWEyCyKl2hi0fPJ65pvwmN/g
-         4g7Q==
-X-Gm-Message-State: APjAAAXT6Z8hqzlemNc1DgLNyFXTzpSgY5IR+qdoSo3ImrBdwujI1ZSX
-        rWw1e0Wwmp8F0TaWftFeabBbLiDGBAtBaFzvV9rEQw==
-X-Google-Smtp-Source: APXvYqzEB8eUMArq/U0KUS5PJA8nccEaL08bwTgxMEoRDx9khUaRXx7qH5jym/bnPJLKAeBLgAwjaS+1JRqsFWkGO2A=
-X-Received: by 2002:a05:6102:90:: with SMTP id t16mr2849491vsp.140.1582816694984;
- Thu, 27 Feb 2020 07:18:14 -0800 (PST)
+        Thu, 27 Feb 2020 10:18:23 -0500
+Received: from mail-mw2nam10on2119.outbound.protection.outlook.com ([40.107.94.119]:48865
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729652AbgB0PSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 10:18:22 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CdM2Ji5hbZIK3uzZA6XlJXTjXRoyrFEIjGjtmTJDjCqZGCNPPqFjCiBZRcwTX6UxzzyFdlKgBF2QangeYkWhak9ddLscGtqWQRxzqrlEG3/R1G6LCZOoY6O9Ytn9xs/PSYHhUV6MpZUxs9Ksj/xp2bCVV73H49FDvyXWpxEPdDnTb9lnlYwNseRB48A+u384UDfmuIrFFrDaIn1wpaUAiR+fls4ojy2aivO/7+WQVMs93wdAi14Z/Q/jE02AnBnr5uHONXR23QJaR31K4EVLtMGWiZIOvxE3fFRvLiFxKvJx0oXcqBPlfVLokMTdGvZjD80IMs4Tm68GN2l2nNxOIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wFadKPQ0Mv0pEgFhF4GfryHlyUw25cB6Ob8ensJugaQ=;
+ b=Tg9rySQjduaPvxSdBLgFT1K/8ZRDNWCUhNXDvgKzULnE40KfJK1njH+idpWeB63fZVulI4MmMBOXq7lA6h3HNNTP7RMuxUgw5t/uhG5Nwf8wXQ98UQWAi2Gw0HDmqQeSvYwtinkewh6w3fIQpRD+/IGmWo8+TSQj5jCIRzDTFOK8WLJZVW6x76hD12Sc8IovshRhTjDNanW1kaDE8ckWff5IM/+tXXe9HXNgvc8wdP+dpQJOR7dhtLilzjumJ/7LPkHtBOwHJ8OAzLYitBcrJefJtrFeuoGl8qAiwoR2z/7I3CgqPdNLImxDRHwH9zkLO4QH93eS3YrwIcUDRlbIfw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wFadKPQ0Mv0pEgFhF4GfryHlyUw25cB6Ob8ensJugaQ=;
+ b=JZkJPJ8Gt1ZbfToCzplY62ZMsCzoUSGud4QSD4WeZsnhBXQ25Grihvqhl9ccNogfhYVaiWIPWOXC7YZVwVaRrtIzBpQXTzxKw8RD7fgS+pYH7RwLy/XMAsrAbwi9fM+lH1tBPBR06J3TJd7R/0pQcF4e04BufxW7noA8p1RqTk8=
+Received: from BYAPR21MB1286.namprd21.prod.outlook.com (2603:10b6:a03:10a::23)
+ by BYAPR21MB1160.namprd21.prod.outlook.com (2603:10b6:a03:103::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.4; Thu, 27 Feb
+ 2020 15:18:19 +0000
+Received: from BYAPR21MB1286.namprd21.prod.outlook.com
+ ([fe80::8870:5e3e:13db:9217]) by BYAPR21MB1286.namprd21.prod.outlook.com
+ ([fe80::8870:5e3e:13db:9217%3]) with mapi id 15.20.2793.003; Thu, 27 Feb 2020
+ 15:18:19 +0000
+From:   KY Srinivasan <kys@microsoft.com>
+To:     Wei Liu <wei.liu@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: RE: [EXTERNAL] [PATCH] Hyper-V: add myself as a maintainer
+Thread-Topic: [EXTERNAL] [PATCH] Hyper-V: add myself as a maintainer
+Thread-Index: AQHV7M650LATOa+EFkKM7oKHTQUqU6gvJ2bA
+Date:   Thu, 27 Feb 2020 15:18:19 +0000
+Message-ID: <BYAPR21MB128618BFB38F2145D5AF88CFA0EB0@BYAPR21MB1286.namprd21.prod.outlook.com>
+References: <20200226180102.16976-1-wei.liu@kernel.org>
+In-Reply-To: <20200226180102.16976-1-wei.liu@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=kys@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-02-27T15:18:16.9837829Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=56fa3b6c-8c4a-419a-ac0f-17cbc98ff3e2;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=kys@microsoft.com; 
+x-originating-ip: [98.232.2.78]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 73024463-c2ea-4c49-9bb1-08d7bb9846ef
+x-ms-traffictypediagnostic: BYAPR21MB1160:|BYAPR21MB1160:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR21MB11603A66B23FAECC32A0A687A0EB0@BYAPR21MB1160.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:669;
+x-forefront-prvs: 03264AEA72
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(366004)(136003)(346002)(376002)(39860400002)(199004)(189003)(64756008)(66446008)(53546011)(66476007)(6506007)(107886003)(66556008)(7696005)(8990500004)(66946007)(186003)(4326008)(76116006)(26005)(33656002)(478600001)(54906003)(110136005)(71200400001)(316002)(86362001)(8676002)(81166006)(81156014)(2906002)(52536014)(55016002)(10290500003)(5660300002)(8936002)(9686003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR21MB1160;H:BYAPR21MB1286.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /6Qz2tEuugOMGiJ7Ivh8JyWJak+sXJ9VJZ1D1SL2qFTsrZ54XzAA5T4hIcqbwRpSt2TUY0tx1/17wg9X6M8g9xs1iftw1KhXrgICPVHubFfVWCQCiNR/Ydhr+eBug1xTvahjq7indZHAosbg6wiNcnyySSQMqgBz4oW8uLPA7lx9kzdwTS69sD8dI8w/YNTS3L6ABSz0mclnlLXzTV+eR0/P8p9AjlGaul+iHxQs+MhXsOymb1CrLK9ovz48rV380RXFIpo1VHnaG2AKZ3STnGkUJ3+hzLqyG4LSX1hfEtsqtPFFCbA2+oyFIZ1tURo5QngOUpRbQ00mta02+fo0+/zqaYxvDSaB3TJltOU9fyXz+ZUBICjJhG2+lS3TbUCiShYpfn33lJGA7lAWSgfvL6gQzik2Ppi9tZSwxiVibrRTx2R+xirSDKJRcm97S977
+x-ms-exchange-antispam-messagedata: 154oqHVb+wLrI7h11D+cxdixFOjRtk450YUb+fjPNJQbEj0DU370myE3rXITMuXFEBvzv0vS4T7jBLff5saD8y7WrgXh37AwxUDtr9t3QREOvubuzHVR2a/B80Ki2uFSTn1Vix5H5JziKOs8VmftdQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <000000000000c0bffa0586795098@google.com> <0000000000005edcd0059503b4aa@google.com>
- <20191016100134.GA20076@architecture4>
-In-Reply-To: <20191016100134.GA20076@architecture4>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 27 Feb 2020 16:18:04 +0100
-Message-ID: <CACT4Y+bG+DyGuj__tTaVqzr3D7jxEaxL=vbtcsfhnAS2iSWvTQ@mail.gmail.com>
-Subject: Re: WARNING: bad unlock balance in rcu_core
-To:     Gao Xiang <gaoxiang25@huawei.com>
-Cc:     syzbot <syzbot+36baa6c2180e959e19b1@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Jan Kara <jack@suse.cz>,
-        Miao Xie <miaoxie@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 73024463-c2ea-4c49-9bb1-08d7bb9846ef
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Feb 2020 15:18:19.3517
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kp6tu5WPSOvncsDqb7MjAurGD9MwbYHLDS1YmV6yV4LZqjHmfKlohhDju4w8359PIOS6H7mv0O8L2uPBTfJp5g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1160
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 11:58 AM Gao Xiang <gaoxiang25@huawei.com> wrote:
->
-> Hi,
->
-> On Wed, Oct 16, 2019 at 02:27:07AM -0700, syzbot wrote:
-> > syzbot has found a reproducer for the following crash on:
-> >
-> > HEAD commit:    0e9d28bc Add linux-next specific files for 20191015
-> > git tree:       linux-next
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=11745608e00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3d84ca04228b0bf4
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=36baa6c2180e959e19b1
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=159d297f600000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16289b30e00000
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+36baa6c2180e959e19b1@syzkaller.appspotmail.com
-> >
-> > =====================================
-> > WARNING: bad unlock balance detected!
-> > 5.4.0-rc3-next-20191015 #0 Not tainted
-> > -------------------------------------
-> > syz-executor276/8897 is trying to release lock (rcu_callback) at:
-> > [<ffffffff8160e7a4>] __write_once_size include/linux/compiler.h:226 [inline]
-> > [<ffffffff8160e7a4>] __rcu_reclaim kernel/rcu/rcu.h:221 [inline]
-> > [<ffffffff8160e7a4>] rcu_do_batch kernel/rcu/tree.c:2157 [inline]
-> > [<ffffffff8160e7a4>] rcu_core+0x574/0x1560 kernel/rcu/tree.c:2377
-> > but there are no more locks to release!
-> >
-> > other info that might help us debug this:
-> > 1 lock held by syz-executor276/8897:
-> >  #0: ffff88809a3cc0d8 (&type->s_umount_key#40/1){+.+.}, at:
-> > alloc_super+0x158/0x910 fs/super.c:229
-> >
-> > stack backtrace:
-> > CPU: 0 PID: 8897 Comm: syz-executor276 Not tainted 5.4.0-rc3-next-20191015
-> > #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > Call Trace:
-> >  <IRQ>
-> >  __dump_stack lib/dump_stack.c:77 [inline]
-> >  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-> >  print_unlock_imbalance_bug kernel/locking/lockdep.c:4008 [inline]
-> >  print_unlock_imbalance_bug.cold+0x114/0x123 kernel/locking/lockdep.c:3984
-> >  __lock_release kernel/locking/lockdep.c:4244 [inline]
-> >  lock_release+0x5f2/0x960 kernel/locking/lockdep.c:4505
-> >  rcu_lock_release include/linux/rcupdate.h:213 [inline]
-> >  __rcu_reclaim kernel/rcu/rcu.h:223 [inline]
->
-> I have little knowledge about this kind of stuff, but after seeing
-> the dashboard https://syzkaller.appspot.com/bug?extid=36baa6c2180e959e19b1
->
-> I guess this is highly related with ntfs, and in ntfs_fill_super, it
-> has lockdep_off() in ntfs_fill_super...
->
-> In detail, commit 90c1cba2b3b3 ("locking/lockdep: Zap lock classes even
-> with lock debugging disabled") [1], and free_zapped_rcu....
->
-> static void free_zapped_rcu(struct rcu_head *ch)
-> {
->         struct pending_free *pf;
->         unsigned long flags;
->
->         if (WARN_ON_ONCE(ch != &delayed_free.rcu_head))
->                 return;
->
->         raw_local_irq_save(flags);
->         arch_spin_lock(&lockdep_lock);
->         current->lockdep_recursion = 1;   <--- here
->
->         /* closed head */
->         pf = delayed_free.pf + (delayed_free.index ^ 1);
->         __free_zapped_classes(pf);
->         delayed_free.scheduled = false;
->
->         /*
->          * If there's anything on the open list, close and start a new callback.
->          */
->         call_rcu_zapped(delayed_free.pf + delayed_free.index);
->
->         current->lockdep_recursion = 0;
->         arch_spin_unlock(&lockdep_lock);
->         raw_local_irq_restore(flags);
-> }
->
-> Completely guess and untest since I am not familar with that,
-> but in case of that, Cc related people...
-> If I'm wrong, ignore my comments and unintentional noise....
->
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=90c1cba2b3b3851c151229f61801919b2904d437
->
-> Thanks,
-> Gao Xiang
 
 
-Still happens a lot for the past 10 months:
-https://syzkaller.appspot.com/bug?id=0d5bdaf028e4283ad7404609d17e5077f48ff26d
+> -----Original Message-----
+> From: Wei Liu <wei.liu@kernel.org>
+> Sent: Wednesday, February 26, 2020 10:01 AM
+> To: linux-hyperv@vger.kernel.org
+> Cc: Wei Liu <wei.liu@kernel.org>; linux-kernel@vger.kernel.org; KY Sriniv=
+asan
+> <kys@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>; Stephen
+> Hemminger <sthemmin@microsoft.com>; Michael Kelley
+> <mikelley@microsoft.com>
+> Subject: [EXTERNAL] [PATCH] Hyper-V: add myself as a maintainer
+>=20
+> Signed-off-by: Wei Liu <wei.liu@kernel.org>
+Acked-by: K. Y. Srinivasan <kys@microsoft.com>
 
-
-> >  rcu_do_batch kernel/rcu/tree.c:2157 [inline]
-> >  rcu_core+0x594/0x1560 kernel/rcu/tree.c:2377
-> >  rcu_core_si+0x9/0x10 kernel/rcu/tree.c:2386
-> >  __do_softirq+0x262/0x98c kernel/softirq.c:292
-> >  invoke_softirq kernel/softirq.c:373 [inline]
-> >  irq_exit+0x19b/0x1e0 kernel/softirq.c:413
-> >  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
-> >  smp_apic_timer_interrupt+0x1a3/0x610 arch/x86/kernel/apic/apic.c:1137
-> >  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
-> >  </IRQ>
-> > RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:756
-> > [inline]
-> > RIP: 0010:console_unlock+0xbb8/0xf00 kernel/printk/printk.c:2481
-> > Code: f3 88 48 c1 e8 03 42 80 3c 30 00 0f 85 e4 02 00 00 48 83 3d 99 9c 96
-> > 07 00 0f 84 91 01 00 00 e8 be c4 16 00 48 8b 7d 98 57 9d <0f> 1f 44 00 00 e9
-> > 6d ff ff ff e8 a9 c4 16 00 48 8b 7d 08 c7 05 eb
-> > RSP: 0018:ffff88809fd7f8f0 EFLAGS: 00000293 ORIG_RAX: ffffffffffffff13
-> > RAX: ffff8880a8bee540 RBX: 0000000000000200 RCX: 1ffffffff138eea6
-> > RDX: 0000000000000000 RSI: ffffffff815c8592 RDI: 0000000000000293
-> > RBP: ffff88809fd7f978 R08: ffff8880a8bee540 R09: fffffbfff11f4119
-> > R10: fffffbfff11f4118 R11: 0000000000000001 R12: 0000000000000000
-> > R13: ffffffff843f8ca0 R14: dffffc0000000000 R15: ffffffff895e1130
-> >  vprintk_emit+0x2a0/0x700 kernel/printk/printk.c:1996
-> >  vprintk_default+0x28/0x30 kernel/printk/printk.c:2023
-> >  vprintk_func+0x7e/0x189 kernel/printk/printk_safe.c:386
-> >  printk+0xba/0xed kernel/printk/printk.c:2056
-> >  __ntfs_error.cold+0x91/0xc7 fs/ntfs/debug.c:89
-> >  read_ntfs_boot_sector fs/ntfs/super.c:682 [inline]
-> >  ntfs_fill_super+0x1ad3/0x3160 fs/ntfs/super.c:2784
-> >  mount_bdev+0x304/0x3c0 fs/super.c:1415
-> >  ntfs_mount+0x35/0x40 fs/ntfs/super.c:3051
-> >  legacy_get_tree+0x108/0x220 fs/fs_context.c:647
-> >  vfs_get_tree+0x8e/0x300 fs/super.c:1545
-> >  do_new_mount fs/namespace.c:2823 [inline]
-> >  do_mount+0x142e/0x1cf0 fs/namespace.c:3143
-> >  ksys_mount+0xdb/0x150 fs/namespace.c:3352
-> >  __do_sys_mount fs/namespace.c:3366 [inline]
-> >  __se_sys_mount fs/namespace.c:3363 [inline]
-> >  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3363
-> >  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > RIP: 0033:0x4411a9
-> > Code: e8 fc ab 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7
-> > 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff
-> > 0f 83 9b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-> > RSP: 002b:00007ffffff57cf8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-> > RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004411a9
-> > RDX: 0000000020000140 RSI: 0000000020000280 RDI: 00000000200004c0
-> > RBP: 00000000000114e0 R08: 0000000000000000 R09: 00000000004002c8
-> > R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401fd0
-> > R13: 0000000000402060 R14: 0000000000000000 R15: 0000000000000000
-> >
->
+> ---
+> Cc: linux-kernel@vger.kernel.org
+> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: Stephen Hemminger <sthemmin@microsoft.com>
+> Cc: Michael Kelley <mikelley@microsoft.com>
+>=20
+> Sasha's entry hasn't been dropped from the Hyper-V tree yet, but that's e=
+asy to
+> resolve.
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 8f27f40d22bb..ed943f205215 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7739,6 +7739,7 @@ M:	"K. Y. Srinivasan" <kys@microsoft.com>
+>  M:	Haiyang Zhang <haiyangz@microsoft.com>
+>  M:	Stephen Hemminger <sthemmin@microsoft.com>
+>  M:	Sasha Levin <sashal@kernel.org>
+> +M:	Wei Liu <wei.liu@kernel.org>
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git
+>  L:	linux-hyperv@vger.kernel.org
+>  S:	Supported
 > --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/20191016100134.GA20076%40architecture4.
+> 2.20.1
+
