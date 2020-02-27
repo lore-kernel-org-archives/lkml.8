@@ -2,131 +2,193 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A48AC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4FAC35E15
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3229B24695
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D6382469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 18:45:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="DsGFoQGJ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JT4YLk/S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730196AbgB0SpY (ORCPT
+        id S1729735AbgB0Spp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 13:45:24 -0500
-Received: from gateway33.websitewelcome.com ([192.185.145.216]:41961 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729631AbgB0SpX (ORCPT
+        Thu, 27 Feb 2020 13:45:45 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:59069 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729172AbgB0Spo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 13:45:23 -0500
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id AA0A055CC3B
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 12:45:19 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 7O9ujyWXEvBMd7O9uju6Yi; Thu, 27 Feb 2020 12:45:19 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=uJRZdiXQDQ8vWpvOfn+fD+OCasED1rNINY7/9EAl050=; b=DsGFoQGJlsQ6EIWRhqw2AeIHKF
-        rk4i0rWM2GhgKpHOCLaAALk42x2kesw4DArmujow89wMNa3MNOnsyRUrBuQLc3rJM7qGq19IYn1S4
-        QeKCdJIjBKVuJcOhOsryidxy66ShnGyZt+oCWeDnMOXdMO1RDrtTZgHt1gTQ2DhKtatpfy6frqOZF
-        7plM2qaba8xiTOA5iKhDQI0hbqMwhainRew+//Ddak9pa33gd7eeo89rB5+ncqs+YSsjX6XJOeZgz
-        mc21DAFrWDAR+kkq5I58oJwR2E7snDHTBvIFL1ijm+5itK8iMJtbPB+E9lzjRI96/ViYlZOfAhSH4
-        51EKngyA==;
-Received: from [201.162.168.186] (port=16949 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j7O9r-0040oC-Vw; Thu, 27 Feb 2020 12:45:16 -0600
-Date:   Thu, 27 Feb 2020 12:48:08 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] char: mspec: Replace zero-length array with flexible-array
- member
-Message-ID: <20200227184808.GA1925@embeddedor>
+        Thu, 27 Feb 2020 13:45:44 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582829144; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=U/EDQ0pr75hfPnWX/OCbb8FxwwnZ09FdliYUIRis9EI=; b=JT4YLk/S1fdLfsclMxzTkNr1cNa7A44XidYUQCQxQLImtMfc6Najx3Po/z9fRFD7wM9bYoM4
+ IKyyaAq81OPDXfiB+2GQBL6eQCH9N37p02euHo8o+QUmN58iIgcG6tRJQPQ+N08ycQ7WWdlI
+ 3/y1lfxTQSYBn3dQgtxBb7CPX8s=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e580e55.7f4acfb21308-smtp-out-n01;
+ Thu, 27 Feb 2020 18:45:41 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7E811C447AB; Thu, 27 Feb 2020 18:45:41 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 83C15C433A2;
+        Thu, 27 Feb 2020 18:45:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 83C15C433A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Thu, 27 Feb 2020 11:45:34 -0700
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     iommu@lists.linux-foundation.org
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Wen Yang <wen.yang99@zte.com.cn>, will@kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        freedreno@lists.freedesktop.org,
+        Fritz Koenig <frkoenig@google.com>,
+        linux-arm-msm@vger.kernel.org,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sean Paul <sean@poorly.run>,
+        Allison Randal <allison@lohutok.net>,
+        Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org, zhengbin <zhengbin13@huawei.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Drew Davenport <ddavenport@chromium.org>,
+        Brian Masney <masneyb@onstation.org>, robin.murphy@arm.com,
+        Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [Freedreno] [PATCH v5 0/5] iommu/arm-smmu: Split pagetable
+ support for arm-smmu-v2
+Message-ID: <20200227184534.GA25772@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: iommu@lists.linux-foundation.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Wen Yang <wen.yang99@zte.com.cn>,
+        will@kernel.org, Joerg Roedel <joro@8bytes.org>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        freedreno@lists.freedesktop.org, Fritz Koenig <frkoenig@google.com>,
+        linux-arm-msm@vger.kernel.org,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, Sean Paul <sean@poorly.run>,
+        Allison Randal <allison@lohutok.net>,
+        Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org, zhengbin <zhengbin13@huawei.com>,
+        Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+        Drew Davenport <ddavenport@chromium.org>,
+        Brian Masney <masneyb@onstation.org>, robin.murphy@arm.com,
+        Georgi Djakov <georgi.djakov@linaro.org>
+References: <1580248819-12644-1-git-send-email-jcrouse@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.168.186
-X-Source-L: No
-X-Exim-ID: 1j7O9r-0040oC-Vw
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.162.168.186]:16949
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 6
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <1580248819-12644-1-git-send-email-jcrouse@codeaurora.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Tue, Jan 28, 2020 at 03:00:14PM -0700, Jordan Crouse wrote:
+> This is another iteration for the split pagetable support based on the
+> suggestions from Robin and Will [1].
+> 
+> Background: In order to support per-context pagetables the GPU needs to enable
+> split tables so that we can store global buffers in the TTBR1 space leaving the
+> GPU free to program the TTBR0 register with the address of a context specific
+> pagetable.
+> 
+> If the DOMAIN_ATTR_SPLIT_TABLES attribute is set on the domain before attaching,
+> the context bank assigned to the domain will be programmed to allow translations
+> in the TTBR1 space. Translations in the TTBR0 region will be disallowed because,
+> as Robin pointe out, having a un-programmed TTBR0 register is dangerous.
+> 
+> The driver can determine if TTBR1 was successfully programmed by querying
+> DOMAIN_ATTR_SPLIT_TABLES after attaching. The domain geometry will also be
+> updated to reflect the virtual address space for the TTBR1 range.
+> 
+> Upcoming changes will allow auxiliary domains to be attached to the device which
+> will enable and program TTBR0.
+> 
+> This patchset is based on top of linux-next-20200127.
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+Quick ping for feedback so I can respin for (maybe?) 5.6.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+Thanks,
+Jordan
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+> Change log:
+> 
+> v4: Only program TTBR1 when split pagetables are requested. TTBR0 will be
+> enabled later when an auxiliary domain is attached
+> v3: Remove the implementation specific and make split pagetable support
+> part of the generic configuration
+> 
+> [1] https://lists.linuxfoundation.org/pipermail/iommu/2020-January/041373.html
+> 
+> Jordan Crouse (5):
+>   iommu: Add DOMAIN_ATTR_SPLIT_TABLES
+>   iommu/arm-smmu: Add support for TTBR1
+>   drm/msm: Attach the IOMMU device during initialization
+>   drm/msm: Refactor address space initialization
+>   drm/msm/a6xx: Support split pagetables
+> 
+>  drivers/gpu/drm/msm/adreno/a2xx_gpu.c    | 16 ++++++++++
+>  drivers/gpu/drm/msm/adreno/a3xx_gpu.c    |  1 +
+>  drivers/gpu/drm/msm/adreno/a4xx_gpu.c    |  1 +
+>  drivers/gpu/drm/msm/adreno/a5xx_gpu.c    |  1 +
+>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c    | 51 ++++++++++++++++++++++++++++++++
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.c  | 23 ++++++++++----
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.h  |  8 +++++
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c  | 18 ++++-------
+>  drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c | 18 +++++------
+>  drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c |  4 ---
+>  drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c | 18 +++++------
+>  drivers/gpu/drm/msm/msm_drv.h            |  8 ++---
+>  drivers/gpu/drm/msm/msm_gem_vma.c        | 36 ++++------------------
+>  drivers/gpu/drm/msm/msm_gpu.c            | 49 ++----------------------------
+>  drivers/gpu/drm/msm/msm_gpu.h            |  4 +--
+>  drivers/gpu/drm/msm/msm_gpummu.c         |  6 ----
+>  drivers/gpu/drm/msm/msm_iommu.c          | 18 ++++++-----
+>  drivers/gpu/drm/msm/msm_mmu.h            |  1 -
+>  drivers/iommu/arm-smmu.c                 | 48 +++++++++++++++++++++++++-----
+>  drivers/iommu/arm-smmu.h                 | 22 ++++++++++----
+>  include/linux/iommu.h                    |  2 ++
+>  21 files changed, 198 insertions(+), 155 deletions(-)
+> 
+> -- 
+> 2.7.4
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/char/mspec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/char/mspec.c b/drivers/char/mspec.c
-index a9d9f074fbd6..7d583222e8fa 100644
---- a/drivers/char/mspec.c
-+++ b/drivers/char/mspec.c
-@@ -75,7 +75,7 @@ struct vma_data {
- 	enum mspec_page_type type; /* Type of pages allocated. */
- 	unsigned long vm_start;	/* Original (unsplit) base. */
- 	unsigned long vm_end;	/* Original (unsplit) end. */
--	unsigned long maddr[0];	/* Array of MSPEC addresses. */
-+	unsigned long maddr[];	/* Array of MSPEC addresses. */
- };
- 
- /*
 -- 
-2.25.0
-
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
