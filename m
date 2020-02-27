@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8A3C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33804C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9A2324656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:42:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B2C12468F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:42:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582814538;
-	bh=VG8bprn6FtRu7UbsBisMvMt6H54Pw6Et/zMJ75c5l9E=;
+	s=default; t=1582814545;
+	bh=ibY1iA5KxW8FauE0CVu3Or9H6w/lThuoa5wqbXo0y2g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WHT7PrymJBPKeKHYaqLYqR+jQf402I8teapCxvFYYe+LwjVromttQlae0nzcLA5pT
-	 2uq9FoT478SWT/g/+sYrSb18xVZVb9U3yjFxmEXxga3GOag9UALhynqk1aoPl0OqLD
-	 ym4md/ISUBPCORi4ypz2Psa72DVRLX14OZ6OB9Iw=
+	b=W5/MxwH8MGKeW/B8jYKfrxCNjHX14IcL8Dkpmy+Jl6MHfKCTJwO0yyixxUzHpb+f9
+	 oFixVRz2gUlwsZzb+AMwCZs9i6MAhHE4Wvk9oSRs3yD+Y7t2viy11MMDvNGxuJjZ7N
+	 oC5fBJW0LYoRaFdWmrwvpjTqt+DgiblA1fuVaccc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730970AbgB0NuU (ORCPT
+        id S1730508AbgB0NuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:50:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48066 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:50:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731183AbgB0NuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:50:15 -0500
+        id S1731130AbgB0Nt7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:49:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3949B21D7E;
-        Thu, 27 Feb 2020 13:50:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F7F320578;
+        Thu, 27 Feb 2020 13:49:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811414;
-        bh=VG8bprn6FtRu7UbsBisMvMt6H54Pw6Et/zMJ75c5l9E=;
+        s=default; t=1582811398;
+        bh=ibY1iA5KxW8FauE0CVu3Or9H6w/lThuoa5wqbXo0y2g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yOxccv3oSVpBouxBhY0gXmJZtV/kp4dkC1l84XGAwJ1WpZOaH/pt5UWYYvQD2Ndeh
-         cWGOpCkAlXivjuZZdD8nu8k+tNHtzoLHKypMepj64YVP2PyFu/AmiULXDyC8zgNTwM
-         Nu7g4f1pAdCizmAr/t7uDpsKts5UXn2p4rKJ4PZI=
+        b=Ng8DM80PbMgbWml6N/JUmQS8VA7wzbxGY+/ewwHQHOcbhkMvO4qakiBFpXYZpGFfQ
+         b1lf2qz7uV7i87AT/b9vqk8T0Ifbvxtdwh/e8LZozNiZdlHyd39J2b/AHt/imhqX5f
+         i+f+eLORvHUXTrHXezODoqzBPIMhcCh8TTgOOg+Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
-Subject: [PATCH 4.9 122/165] staging: vt6656: fix sign of rx_dbm to bb_pre_ed_rssi.
-Date:   Thu, 27 Feb 2020 14:36:36 +0100
-Message-Id: <20200227132248.939381568@linuxfoundation.org>
+        stable@vger.kernel.org, Firo Yang <firo.yang@suse.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 116/165] enic: prevent waking up stopped tx queues over watchdog reset
+Date:   Thu, 27 Feb 2020 14:36:30 +0100
+Message-Id: <20200227132248.014843769@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
 References: <20200227132230.840899170@linuxfoundation.org>
@@ -58,36 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Malcolm Priestley <tvboxspy@gmail.com>
+From: Firo Yang <firo.yang@suse.com>
 
-commit 93134df520f23f4e9998c425b8987edca7016817 upstream.
+[ Upstream commit 0f90522591fd09dd201065c53ebefdfe3c6b55cb ]
 
-bb_pre_ed_rssi is an u8 rx_dm always returns negative signed
-values add minus operator to always yield positive.
+Recent months, our customer reported several kernel crashes all
+preceding with following message:
+NETDEV WATCHDOG: eth2 (enic): transmit queue 0 timed out
+Error message of one of those crashes:
+BUG: unable to handle kernel paging request at ffffffffa007e090
 
-fixes issue where rx sensitivity is always set to maximum because
-the unsigned numbers were always greater then 100.
+After analyzing severl vmcores, I found that most of crashes are
+caused by memory corruption. And all the corrupted memory areas
+are overwritten by data of network packets. Moreover, I also found
+that the tx queues were enabled over watchdog reset.
 
-Fixes: 63b9907f58f1 ("staging: vt6656: mac80211 conversion: create rx function.")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
-Link: https://lore.kernel.org/r/aceac98c-6e69-3ce1-dfec-2bf27b980221@gmail.com
+After going through the source code, I found that in enic_stop(),
+the tx queues stopped by netif_tx_disable() could be woken up over
+a small time window between netif_tx_disable() and the
+napi_disable() by the following code path:
+napi_poll->
+  enic_poll_msix_wq->
+     vnic_cq_service->
+        enic_wq_service->
+           netif_wake_subqueue(enic->netdev, q_number)->
+              test_and_clear_bit(__QUEUE_STATE_DRV_XOFF, &txq->state)
+In turn, upper netowrk stack could queue skb to ENIC NIC though
+enic_hard_start_xmit(). And this might introduce some race condition.
+
+Our customer comfirmed that this kind of kernel crash doesn't occur over
+90 days since they applied this patch.
+
+Signed-off-by: Firo Yang <firo.yang@suse.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/staging/vt6656/dpc.c |    2 +-
+ drivers/net/ethernet/cisco/enic/enic_main.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/vt6656/dpc.c
-+++ b/drivers/staging/vt6656/dpc.c
-@@ -140,7 +140,7 @@ int vnt_rx_data(struct vnt_private *priv
+--- a/drivers/net/ethernet/cisco/enic/enic_main.c
++++ b/drivers/net/ethernet/cisco/enic/enic_main.c
+@@ -1806,10 +1806,10 @@ static int enic_stop(struct net_device *
+ 	}
  
- 	vnt_rf_rssi_to_dbm(priv, *rssi, &rx_dbm);
+ 	netif_carrier_off(netdev);
+-	netif_tx_disable(netdev);
+ 	if (vnic_dev_get_intr_mode(enic->vdev) == VNIC_DEV_INTR_MODE_MSIX)
+ 		for (i = 0; i < enic->wq_count; i++)
+ 			napi_disable(&enic->napi[enic_cq_wq(enic, i)]);
++	netif_tx_disable(netdev);
  
--	priv->bb_pre_ed_rssi = (u8)rx_dbm + 1;
-+	priv->bb_pre_ed_rssi = (u8)-rx_dbm + 1;
- 	priv->current_rssi = priv->bb_pre_ed_rssi;
- 
- 	frame = skb_data + 8;
+ 	if (!enic_is_dynamic(enic) && !enic_is_sriov_vf(enic))
+ 		enic_dev_del_station_addr(enic);
 
 
