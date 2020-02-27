@@ -2,52 +2,52 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A4EC3F345
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C96A8C3F368
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D9B52084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AB9C21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:52:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582811626;
-	bh=AQXNCwSq4Z50V5yHlLV51EKDB3lSCNe9jOBAJff5fh4=;
+	s=default; t=1582811571;
+	bh=RNLN69BGm8fANgSoBTtbZd9/AhSz5a+ERLa+TyBFI1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cfoNtwdYTJQqUHYB812e6uVW/hBrbMoSgomgNaERhwonD1Ymzy3LfpoIZytP/YK0p
-	 wQ1WpH9tWPlGUFaSIs25AsTrO2s/xVSs9FOxHI1ATgUBPtWRzT2cinCc5e5quJU7mi
-	 ySeifORujJrZdhrPYUAi7PVdF2mHqNo6260S86Sk=
+	b=LVapTfE6eFbLEbiiM+rZel+TCvqebrNiuBqNywqQMvQHNBa1b4Bh6KDoLt66o/9M8
+	 eVkCNL/7XJ23q6oaEd9OxScHjby6lwaPOjwHpm2Aabh6Uj2QjQBo8ao3DHbHSNIPdS
+	 Y/uiQxIfMQXz2zfKTgOD2ZNevRUyx9nUMIuzMh/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731754AbgB0Nxo (ORCPT
+        id S1731585AbgB0Nwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:53:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53574 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:52:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730589AbgB0Nxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 08:53:42 -0500
+        id S1731101AbgB0Nwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:52:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E9B82084E;
-        Thu, 27 Feb 2020 13:53:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6486920801;
+        Thu, 27 Feb 2020 13:52:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582811621;
-        bh=AQXNCwSq4Z50V5yHlLV51EKDB3lSCNe9jOBAJff5fh4=;
+        s=default; t=1582811566;
+        bh=RNLN69BGm8fANgSoBTtbZd9/AhSz5a+ERLa+TyBFI1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dvNnlx3MSoyknP9UyAxda5QBrYkoQ3zVobmz+A+xyOd4vVk0F+/G1TygBwi0hga9+
-         2QVDfdqgsVX90N5GdiGLV8oS11lFJsKogQ3oMigEofquLdjA1EJmVjHAvfM5YYf7/c
-         891XBFOOY5ZODR1oRVlgUytHD+LEWAWikr7EOZXg=
+        b=KC93wqKsllWw50dMh+umJyy5yeZ1nVpNn4iOoqtn49ItEegoSrcLbd83oKGC1ndBT
+         JRS0YGS/hJYsG4oocUqEXy5RpTUMP8um3Hi88OhcPkVJ7buidojEHOxpmLEwl906eT
+         OC5WM6svSl38GsTypadC5/1AAz/8pzDjPsYoDBEo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 4.14 030/237] s390/time: Fix clk type in get_tod_clock
-Date:   Thu, 27 Feb 2020 14:34:04 +0100
-Message-Id: <20200227132258.786516802@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Dilger <adilger@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
+        stable@kernel.org
+Subject: [PATCH 4.14 017/237] ext4: fix checksum errors with indexed dirs
+Date:   Thu, 27 Feb 2020 14:33:51 +0100
+Message-Id: <20200227132257.356800487@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -60,54 +60,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Jan Kara <jack@suse.cz>
 
-commit 0f8a206df7c920150d2aa45574fba0ab7ff6be4f upstream.
+commit 48a34311953d921235f4d7bbd2111690d2e469cf upstream.
 
-Clang warns:
+DIR_INDEX has been introduced as a compat ext4 feature. That means that
+even kernels / tools that don't understand the feature may modify the
+filesystem. This works because for kernels not understanding indexed dir
+format, internal htree nodes appear just as empty directory entries.
+Index dir aware kernels then check the htree structure is still
+consistent before using the data. This all worked reasonably well until
+metadata checksums were introduced. The problem is that these
+effectively made DIR_INDEX only ro-compatible because internal htree
+nodes store checksums in a different place than normal directory blocks.
+Thus any modification ignorant to DIR_INDEX (or just clearing
+EXT4_INDEX_FL from the inode) will effectively cause checksum mismatch
+and trigger kernel errors. So we have to be more careful when dealing
+with indexed directories on filesystems with checksumming enabled.
 
-In file included from ../arch/s390/boot/startup.c:3:
-In file included from ../include/linux/elf.h:5:
-In file included from ../arch/s390/include/asm/elf.h:132:
-In file included from ../include/linux/compat.h:10:
-In file included from ../include/linux/time.h:74:
-In file included from ../include/linux/time32.h:13:
-In file included from ../include/linux/timex.h:65:
-../arch/s390/include/asm/timex.h:160:20: warning: passing 'unsigned char
-[16]' to parameter of type 'char *' converts between pointers to integer
-types with different sign [-Wpointer-sign]
-        get_tod_clock_ext(clk);
-                          ^~~
-../arch/s390/include/asm/timex.h:149:44: note: passing argument to
-parameter 'clk' here
-static inline void get_tod_clock_ext(char *clk)
-                                           ^
+1) We just disallow loading any directory inodes with EXT4_INDEX_FL when
+DIR_INDEX is not enabled. This is harsh but it should be very rare (it
+means someone disabled DIR_INDEX on existing filesystem and didn't run
+e2fsck), e2fsck can fix the problem, and we don't want to answer the
+difficult question: "Should we rather corrupt the directory more or
+should we ignore that DIR_INDEX feature is not set?"
 
-Change clk's type to just be char so that it matches what happens in
-get_tod_clock_ext.
+2) When we find out htree structure is corrupted (but the filesystem and
+the directory should in support htrees), we continue just ignoring htree
+information for reading but we refuse to add new entries to the
+directory to avoid corrupting it more.
 
-Fixes: 57b28f66316d ("[S390] s390_hypfs: Add new attributes")
-Link: https://github.com/ClangBuiltLinux/linux/issues/861
-Link: http://lkml.kernel.org/r/20200208140858.47970-1-natechancellor@gmail.com
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Link: https://lore.kernel.org/r/20200210144316.22081-1-jack@suse.cz
+Fixes: dbe89444042a ("ext4: Calculate and verify checksums for htree nodes")
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/include/asm/timex.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext4/dir.c   |   14 ++++++++------
+ fs/ext4/ext4.h  |    5 ++++-
+ fs/ext4/inode.c |   12 ++++++++++++
+ fs/ext4/namei.c |    7 +++++++
+ 4 files changed, 31 insertions(+), 7 deletions(-)
 
---- a/arch/s390/include/asm/timex.h
-+++ b/arch/s390/include/asm/timex.h
-@@ -155,7 +155,7 @@ static inline void get_tod_clock_ext(cha
+--- a/fs/ext4/dir.c
++++ b/fs/ext4/dir.c
+@@ -125,12 +125,14 @@ static int ext4_readdir(struct file *fil
+ 		if (err != ERR_BAD_DX_DIR) {
+ 			return err;
+ 		}
+-		/*
+-		 * We don't set the inode dirty flag since it's not
+-		 * critical that it get flushed back to the disk.
+-		 */
+-		ext4_clear_inode_flag(file_inode(file),
+-				      EXT4_INODE_INDEX);
++		/* Can we just clear INDEX flag to ignore htree information? */
++		if (!ext4_has_metadata_csum(sb)) {
++			/*
++			 * We don't set the inode dirty flag since it's not
++			 * critical that it gets flushed back to the disk.
++			 */
++			ext4_clear_inode_flag(inode, EXT4_INODE_INDEX);
++		}
+ 	}
  
- static inline unsigned long long get_tod_clock(void)
+ 	if (ext4_has_inline_data(inode)) {
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -2386,8 +2386,11 @@ void ext4_insert_dentry(struct inode *in
+ 			struct ext4_filename *fname);
+ static inline void ext4_update_dx_flag(struct inode *inode)
  {
--	unsigned char clk[STORE_CLOCK_EXT_SIZE];
-+	char clk[STORE_CLOCK_EXT_SIZE];
- 
- 	get_tod_clock_ext(clk);
- 	return *((unsigned long long *)&clk[1]);
+-	if (!ext4_has_feature_dir_index(inode->i_sb))
++	if (!ext4_has_feature_dir_index(inode->i_sb)) {
++		/* ext4_iget() should have caught this... */
++		WARN_ON_ONCE(ext4_has_feature_metadata_csum(inode->i_sb));
+ 		ext4_clear_inode_flag(inode, EXT4_INODE_INDEX);
++	}
+ }
+ static const unsigned char ext4_filetype_table[] = {
+ 	DT_UNKNOWN, DT_REG, DT_DIR, DT_CHR, DT_BLK, DT_FIFO, DT_SOCK, DT_LNK
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -4817,6 +4817,18 @@ struct inode *ext4_iget(struct super_blo
+ 		ret = -EFSCORRUPTED;
+ 		goto bad_inode;
+ 	}
++	/*
++	 * If dir_index is not enabled but there's dir with INDEX flag set,
++	 * we'd normally treat htree data as empty space. But with metadata
++	 * checksumming that corrupts checksums so forbid that.
++	 */
++	if (!ext4_has_feature_dir_index(sb) && ext4_has_metadata_csum(sb) &&
++	    ext4_test_inode_flag(inode, EXT4_INODE_INDEX)) {
++		EXT4_ERROR_INODE(inode,
++				 "iget: Dir with htree data on filesystem without dir_index feature.");
++		ret = -EFSCORRUPTED;
++		goto bad_inode;
++	}
+ 	ei->i_disksize = inode->i_size;
+ #ifdef CONFIG_QUOTA
+ 	ei->i_reserved_quota = 0;
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -2094,6 +2094,13 @@ static int ext4_add_entry(handle_t *hand
+ 		retval = ext4_dx_add_entry(handle, &fname, dir, inode);
+ 		if (!retval || (retval != ERR_BAD_DX_DIR))
+ 			goto out;
++		/* Can we just ignore htree data? */
++		if (ext4_has_metadata_csum(sb)) {
++			EXT4_ERROR_INODE(dir,
++				"Directory has corrupted htree index.");
++			retval = -EFSCORRUPTED;
++			goto out;
++		}
+ 		ext4_clear_inode_flag(dir, EXT4_INODE_INDEX);
+ 		dx_fallback++;
+ 		ext4_mark_inode_dirty(handle, dir);
 
 
