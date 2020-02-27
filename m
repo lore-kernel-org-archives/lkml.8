@@ -2,160 +2,106 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71955C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 06:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7090BC4BA06
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 06:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 407202467F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 06:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 482AD2467F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 06:42:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="dloopdNi"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MODJHYQy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727631AbgB0Gkh (ORCPT
+        id S1727702AbgB0Gl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 01:40:37 -0500
-Received: from mail-vi1eur05on2088.outbound.protection.outlook.com ([40.107.21.88]:15969
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727336AbgB0Gkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 01:40:37 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kw2Blrn9DsFQN0VN13YTk0nVqEOH0AYD84mH6M9bctfPJsxtC3hLoklidIVafiekbck1ZRQla1QuL5TvPa1suajb7HIXAhDe2MMeIzMEMl4V5TRMwZXc6MtjoRfUdAoFiwMzMapZebAS3gYB6nKkjW475jG6sXYsvDhagDV1WnPZCedDzWuuijqoOpQNX5H/3llBXyP0LLfp6nIMjMF8pxHK6TYuZv80J8cQvS/pxB6BytKyjyIJd9iW/koOMqfp5yP/WpzdZVOFcZ5m2oWu5B54eVv11D/uWu2a4PiWvPD2fhZYbcoBuAxtkb+Zr99+B/FKfzJ23/EadH0UqVjyng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J1YYrA6L4HLWQB+gfHL8+ClwSrEO06BVYDwrwVeWJj0=;
- b=IXc0/Rswy/RZnu3ENj8h/WTyJbcp6+MJ8Rz+6Rh9AIL4GMLGEp28NwbJqFKsJ9DKg6Gz8T1kAHgyk5ZLMlr+UDNXV8rD90pspb8ACLkSVBe0Pv4ZhUqLdlMP52pDWXT7cSbVDIqZmIoM1DpG9V3Wai7fPXknkI7IccRrbri5I7AfBpl6r8QYRLX3JB/lroQ9ooK7sZSLaTIjWjk63J6NNpfFXXXRr5eSo/FbE4BlgTMkF/820P4t4R3UcvYQ6pam8CCINqJLyUzXkN/fSgF5/pOatPJBljRrD4HutUoSrfoUFyLIo95LEfwALidr4T7bf7oc9QJfqcrdMwOTVkbNgA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J1YYrA6L4HLWQB+gfHL8+ClwSrEO06BVYDwrwVeWJj0=;
- b=dloopdNibPBJdwWCcktFSMgZfl0+jB86ghkYVy4OGsw8/x3UAHAWAFz1/WySvwS8wiiUNROOGCBUWEJfSyn8w6uIibwnE1IpaXUOsMLxvdv3bA0keyBMvkzNh67McyiFKKoksn2HksM0ib5h/WdTVg+fEihaF0ggQd7Uj3mhGYk=
-Received: from AM6PR04MB6584.eurprd04.prod.outlook.com (20.179.245.21) by
- AM6PR04MB4184.eurprd04.prod.outlook.com (52.135.168.30) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.18; Thu, 27 Feb 2020 06:40:33 +0000
-Received: from AM6PR04MB6584.eurprd04.prod.outlook.com
- ([fe80::3c28:9128:54b1:ee7c]) by AM6PR04MB6584.eurprd04.prod.outlook.com
- ([fe80::3c28:9128:54b1:ee7c%6]) with mapi id 15.20.2750.024; Thu, 27 Feb 2020
- 06:40:33 +0000
-From:   Sherry Sun <sherry.sun@nxp.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "bp@alien8.de" <bp@alien8.de>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "rrichter@marvell.com" <rrichter@marvell.com>,
-        "michal.simek@xilinx.com" <michal.simek@xilinx.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>, Frank Li <frank.li@nxp.com>
-Subject: RE: [PATCH 1/3] dt-bindings: memory-controllers: Add i.MX8MP DDRC
- binding doc
-Thread-Topic: [PATCH 1/3] dt-bindings: memory-controllers: Add i.MX8MP DDRC
- binding doc
-Thread-Index: AQHV6IK+8k6tD6FA5UiH3n0Bux00p6gtwk+AgADd40A=
-Date:   Thu, 27 Feb 2020 06:40:33 +0000
-Message-ID: <AM6PR04MB6584B7F9EA0B2FF80660C74C92EB0@AM6PR04MB6584.eurprd04.prod.outlook.com>
-References: <1582267156-20189-1-git-send-email-sherry.sun@nxp.com>
- <1582267156-20189-2-git-send-email-sherry.sun@nxp.com>
- <20200226172457.GA3267@bogus>
-In-Reply-To: <20200226172457.GA3267@bogus>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=sherry.sun@nxp.com; 
-x-originating-ip: [180.106.106.46]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 90493283-b2f9-4479-4016-08d7bb4ff206
-x-ms-traffictypediagnostic: AM6PR04MB4184:|AM6PR04MB4184:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB4184DE5D3466B6929636B72E92EB0@AM6PR04MB4184.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 03264AEA72
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(396003)(376002)(346002)(39860400002)(189003)(199004)(8936002)(4326008)(54906003)(52536014)(478600001)(6506007)(6916009)(81166006)(81156014)(44832011)(86362001)(55016002)(8676002)(9686003)(7696005)(5660300002)(76116006)(33656002)(71200400001)(186003)(26005)(7416002)(2906002)(53546011)(316002)(66446008)(66556008)(66946007)(64756008)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4184;H:AM6PR04MB6584.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: s6enCh5IDFkG3Wie64VwdidcSsBKZ7pvlg4jsfY+R59Vht+PdH4tgCDq/nvGAYezeYiP2AD02Da3Zk9zWSDA0LluKVOBeJsdLyBfiqd5sB84sZsPIBVXB+PFbtbNdbXYRsm9Ii5sW5Rb2jHBj1L718kNah1hLif+CSXlNDsBs8z3iojVwUEVuZIxaXLoZGcwsT4Z+BbQQzOu+QR3SpuV9BQJl6885J7mV3uW6RU5VDJHN1hslwe8wQy981kInpNjq2asVba8UmKogvHUWo8kEGYlKnR3aJ/j8b4hEK6wYIwzfufRSsiDjZzIEiVIMDihTAc6Btqb7Tm6yUxnNcO5CCgItQVP6P268U6/rhqCwgdvhKESL7pwJC8buCIYhEuGD8MwyTXiuiFKLY/2LFb5NXqcivqe6d4VtVjIVHnFUFQsW+j+8c1sojw1XcRFLDrH
-x-ms-exchange-antispam-messagedata: bavP4aSiGRAfDgErZwMV1Rd3lEDoO7y10qvm3YupdFn+3N5PREJL0CotMdQ2HLAnQr+GGuycqoTF3Tr1+RnW/gil+3q7xSRxx44lwVuTq57C6ueerJhGICumMBmtpYzHhy4smbSzlL2EWAkGcPHF9Q==
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Thu, 27 Feb 2020 01:41:57 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:32763 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727131AbgB0Gl4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 01:41:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582785715;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3WtQm8cciAT/fjByiLCd+SwYSU+Wsh17sH8Rz+Ha9TQ=;
+        b=MODJHYQykxxNS+FBfRPvLvNT0EI5n2htEANVNDUF//+uRtyXorWZfEYPax19lWQdq6urez
+        LGz2uUhrIPXN2VI2eHoRxJdquFXGkN/Zzi9hpwbAB6WhaV+J/ly3HMdNt9PrDnhWfXz0qR
+        9XAh1BE6ZBuU2WVIN0pbKpBwwVgWCGk=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-41-x4TapFPBOY-J7VrVtPooTg-1; Thu, 27 Feb 2020 01:41:53 -0500
+X-MC-Unique: x4TapFPBOY-J7VrVtPooTg-1
+Received: by mail-wr1-f69.google.com with SMTP id o9so868323wrw.14
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2020 22:41:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3WtQm8cciAT/fjByiLCd+SwYSU+Wsh17sH8Rz+Ha9TQ=;
+        b=ISA8UhEydwJ//CfBSM3SaJPaL6mbR2uhMlZQfz/m/i51zhyQEtmrOHATOyYUzWda0a
+         Vx/cU7dLHX1BDk3BgKqhkzSYRLpGtblw1qGZ9JSYUZHnQ6Eg2RiNV0SVj0eK86GsRjr/
+         t0VbrpHovDj92w7e8HGjtKnq1R/MK+AzT+ocUypMe1MgrpMSa3PRcdQJIsG+6lw7yRhW
+         xsMF2wxk2hcD/rUkeeTxhJjcPD1dSlPWfsUU3RukN9MJchbndgBZrFmsWAHlW7maJMwt
+         ZycAVn/jRJw3KRNRKTtIsMIZ1n4984A5mW+viBcPB27Dn/jeMYTrseFVWl2GO8IblORV
+         h+cA==
+X-Gm-Message-State: APjAAAUR1nH+M7JPdV0UCL2EXhynL6ija1qJHccqEEbin8ZWL/FaIQVF
+        QiepuGJVU2u24LfiJfNCtIiUlKtqjT3yVJx0vcfoSBFY3gKSSATtpzxFX0R9JNkBYpDVnf/ZwmB
+        pJk5NAZKtGi/rTe0iRe+SSfJE
+X-Received: by 2002:adf:f3d1:: with SMTP id g17mr2822676wrp.378.1582785712302;
+        Wed, 26 Feb 2020 22:41:52 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyArG/FMFCYBNGHUeD0cJCcpopv6q6Q0n5+XKSdmGhLCIy+1iyQ2uDjJJoigYpVcciUwPCVQg==
+X-Received: by 2002:adf:f3d1:: with SMTP id g17mr2822649wrp.378.1582785711971;
+        Wed, 26 Feb 2020 22:41:51 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:d0d9:ea10:9775:f33f? ([2001:b07:6468:f312:d0d9:ea10:9775:f33f])
+        by smtp.gmail.com with ESMTPSA id g206sm5552090wme.46.2020.02.26.22.41.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Feb 2020 22:41:51 -0800 (PST)
+Subject: Re: [PATCH] Revert "KVM: x86: enable -Werror"
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Christoph Hellwig <hch@lst.de>, torvalds@linux-foundation.org
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200226153929.786743-1-hch@lst.de>
+ <87v9ns1z79.fsf@mpe.ellerman.id.au>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <5f31e38e-2f78-7919-7c60-a1761b9abb2e@redhat.com>
+Date:   Thu, 27 Feb 2020 07:41:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 90493283-b2f9-4479-4016-08d7bb4ff206
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Feb 2020 06:40:33.1641
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cNQpmv7D5BeBnsJDNYIti8vflbrJKhV8AVg3MMnBdzih35L9dYNxe0tY053ud7TPpW+ehaUkYw6yPMVDzh3HNA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4184
+In-Reply-To: <87v9ns1z79.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUm9iLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IGxpbnV4LWtl
-cm5lbC1vd25lckB2Z2VyLmtlcm5lbC5vcmcgPGxpbnV4LWtlcm5lbC0NCj4gb3duZXJAdmdlci5r
-ZXJuZWwub3JnPiBPbiBCZWhhbGYgT2YgUm9iIEhlcnJpbmcNCj4gU2VudDogMjAyMMTqMtTCMjfI
-1SAxOjI1DQo+IFRvOiBTaGVycnkgU3VuIDxzaGVycnkuc3VuQG54cC5jb20+DQo+IENjOiBicEBh
-bGllbjguZGU7IG1jaGVoYWJAa2VybmVsLm9yZzsgdG9ueS5sdWNrQGludGVsLmNvbTsNCj4gamFt
-ZXMubW9yc2VAYXJtLmNvbTsgcnJpY2h0ZXJAbWFydmVsbC5jb207IG1pY2hhbC5zaW1la0B4aWxp
-bnguY29tOw0KPiBzaGF3bmd1b0BrZXJuZWwub3JnOyBzLmhhdWVyQHBlbmd1dHJvbml4LmRlOyBt
-YXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gbGludXgtZWRhY0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
-LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5l
-bC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRsLWxpbnV4LWlteA0KPiA8bGlu
-dXgtaW14QG54cC5jb20+OyBGcmFuayBMaSA8ZnJhbmsubGlAbnhwLmNvbT4NCj4gU3ViamVjdDog
-UmU6IFtQQVRDSCAxLzNdIGR0LWJpbmRpbmdzOiBtZW1vcnktY29udHJvbGxlcnM6IEFkZCBpLk1Y
-OE1QDQo+IEREUkMgYmluZGluZyBkb2MNCj4gDQo+IE9uIEZyaSwgRmViIDIxLCAyMDIwIGF0IDAy
-OjM5OjE0UE0gKzA4MDAsIHNoZXJyeSBzdW4gd3JvdGU6DQo+ID4gRnJvbTogU2hlcnJ5IFN1biA8
-c2hlcnJ5LnN1bkBueHAuY29tPg0KPiA+DQo+ID4gQWRkIGRvY3VtZW50YXRpb24gZm9yIGkuTVg4
-TVAgRERSQyBiaW5kaW5nIGJhc2VkIG9uIHN5bm9wc3lzX2VkYWMNCj4gZG9jLA0KPiA+IHdoaWNo
-IHVzZSB0aGUgc2FtZSBtZW1vcnktY29udHJvbGxlciBJUC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYt
-Ynk6IFNoZXJyeSBTdW4gPHNoZXJyeS5zdW5AbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgLi4uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvbWVtb3J5LWNvbnRyb2xsZXJzL3N5bm9wc3lzLnR4dCAgIHwgOCAr
-KysrKystLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9u
-cygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdA0KPiA+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL21lbW9yeS1jb250cm9sbGVycy9zeW5vcHN5cy50eHQNCj4gPiBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZW1vcnktY29udHJvbGxlcnMvc3lub3BzeXMudHh0
-DQo+ID4gaW5kZXggOWQzMjc2MmM0N2UxLi41YzAzOTU5YTQ1MWYgMTAwNjQ0DQo+ID4gLS0tDQo+
-ID4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVtb3J5LWNvbnRyb2xsZXJz
-L3N5bm9wc3lzLnR4dA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9tZW1vcnktDQo+IGNvbnRyb2xsZXJzL3N5bm9wc3lzLnR4DQo+ID4gKysrIHQNCj4gPiBAQCAt
-NiwxNiArNiwyMCBAQCBidXMgd2lkdGggY29uZmlndXJhdGlvbnMuDQo+ID4gIFRoZSBaeW5xIERE
-UiBFQ0MgY29udHJvbGxlciBoYXMgYW4gb3B0aW9uYWwgRUNDIHN1cHBvcnQgaW4gaGFsZi1idXMN
-Cj4gPiB3aWR0aA0KPiA+ICAoMTYtYml0KSBjb25maWd1cmF0aW9uLg0KPiA+DQo+ID4gLVRoZXNl
-IGJvdGggRUNDIGNvbnRyb2xsZXJzIGNvcnJlY3Qgc2luZ2xlIGJpdCBFQ0MgZXJyb3JzIGFuZCBk
-ZXRlY3QNCj4gPiBkb3VibGUgYml0DQo+ID4gK1RoZSBpLk1YOE1QIEREUiBFQ0MgY29udHJvbGxl
-ciBoYXMgYW4gRUNDIHN1cHBvcnQgaW4gNjQtYml0IGJ1cyB3aWR0aA0KPiA+ICtjb25maWd1cmF0
-aW9ucy4NCj4gPiArDQo+ID4gK1RoZXNlIGFsbCBFQ0MgY29udHJvbGxlcnMgY29ycmVjdCBzaW5n
-bGUgYml0IEVDQyBlcnJvcnMgYW5kIGRldGVjdA0KPiA+ICtkb3VibGUgYml0DQo+IA0KPiBBbGwg
-dGhlIEVDQy4uLg0KPiANCj4gV2l0aCB0aGF0LA0KPiANCj4gUmV2aWV3ZWQtYnk6IFJvYiBIZXJy
-aW5nIDxyb2JoQGtlcm5lbC5vcmc+DQoNClRoYW5rcywgSSB3aWxsIGNvcnJlY3QgaXQuDQoNCkJl
-c3QgcmVnYXJkcw0KU2hlcnJ5IFN1bg0KDQo+IA0KPiA+ICBFQ0MgZXJyb3JzLg0KPiA+DQo+ID4g
-IFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gICAtIGNvbXBhdGlibGU6IE9uZSBvZjoNCj4gPiAg
-CS0gJ3hsbngsenlucS1kZHJjLWEwNScgOiBaeW5xIEREUiBFQ0MgY29udHJvbGxlcg0KPiA+ICAJ
-LSAneGxueCx6eW5xbXAtZGRyYy0yLjQwYScgOiBaeW5xTVAgRERSIEVDQyBjb250cm9sbGVyDQo+
-ID4gKwktICdmc2wsaW14OG1wLWRkcmMnIDogaS5NWDhNUCBERFIgRUNDIGNvbnRyb2xsZXINCj4g
-PiAgIC0gcmVnOiBTaG91bGQgY29udGFpbiBERFIgY29udHJvbGxlciByZWdpc3RlcnMgbG9jYXRp
-b24gYW5kIGxlbmd0aC4NCj4gPg0KPiA+IC1SZXF1aXJlZCBwcm9wZXJ0aWVzIGZvciAieGxueCx6
-eW5xbXAtZGRyYy0yLjQwYSI6DQo+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXMgZm9yICJ4bG54LHp5
-bnFtcC1kZHJjLTIuNDBhIiBhbmQgImZzbCxpbXg4bXAtZGRyYyI6DQo+ID4gICAtIGludGVycnVw
-dHM6IFByb3BlcnR5IHdpdGggYSB2YWx1ZSBkZXNjcmliaW5nIHRoZSBpbnRlcnJ1cHQgbnVtYmVy
-Lg0KPiA+DQo+ID4gIEV4YW1wbGU6DQo+ID4gLS0NCj4gPiAyLjE3LjENCj4gPg0K
+On 27/02/20 04:33, Michael Ellerman wrote:
+> We've had -Werror enabled by default on powerpc for over 10 years, and
+> haven't had many complaints. Possibly that's just because no one builds
+> powerpc kernels ...
+
+I looked for other cases of -Werror being always on in Linux before
+writing this patch.  There are both unconditional cases and others like
+PPC where it's governed by Kconfig.
+
+I will add a Kconfig for now.  It probably should be made global instead
+of having a dozen different Kconfig symbols.
+
+kvm_timer_init should be fixed, though.
+
+Paolo
+
+> The key thing is that it's configurable, so if it does break the build
+> for someone they can just turn it off. It's also off by default for
+> allyes/allmod builds because the user-selectable option disables
+> -Werror, eg:
+
