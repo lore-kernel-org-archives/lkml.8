@@ -2,52 +2,52 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E1AC3F345
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E8BC52D59
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E06624656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 14:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F26B24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:59:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582812100;
-	bh=Io3aWZEz1UDH7fTg9uqpgdeXUzXUiI6+7VhBZmy2uDo=;
+	s=default; t=1582811942;
+	bh=WejT3Jlm73icaZYufA+h2E/dA+9hbApxdmiA8FvbewE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vgYWTZ/2AtuaMfsS/83Aa1fC3F1lOEitWuN+QvAgmB3yV/SkmuhqgxHzAofOd1BNo
-	 jVTIw3IivkLLQxsnPyAltaI5VE80gGmonY+UPqTIz7BOZw0BWAKxx/Ry1mXEwFl7AG
-	 KZGBTvVAld/bXvqj0ZZ9a2Qu85tx4hsFB1A90klA=
+	b=PTet8q1y2jdCAlygXFXp68uUx/8HQ1zEVbAP2W8UnDk9KqmpDmEumVuU19ebeksfG
+	 PrquBMJvC1sTh7Pwn2ESYVv4/+Wf2RrGRU8wByo3XrsE3dT5Kk0E85CX6BXqJLhQ8O
+	 g8TS2qtrsfS7r56x1+Gbrr/bO0S9OrsW76s8vPC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732725AbgB0OBi (ORCPT
+        id S1732554AbgB0N7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 09:01:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35712 "EHLO mail.kernel.org"
+        Thu, 27 Feb 2020 08:59:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732948AbgB0OBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 09:01:36 -0500
+        id S1732343AbgB0N64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:58:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE8BC246AC;
-        Thu, 27 Feb 2020 14:01:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CC9D2084E;
+        Thu, 27 Feb 2020 13:58:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582812095;
-        bh=Io3aWZEz1UDH7fTg9uqpgdeXUzXUiI6+7VhBZmy2uDo=;
+        s=default; t=1582811935;
+        bh=WejT3Jlm73icaZYufA+h2E/dA+9hbApxdmiA8FvbewE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H6pOZM3CRQpEWau2IsAfEaMG0UkEtsV9jNVGbycmyxYkybMQ0CDvVTbjVLx9vYXYW
-         BcxMjMeh2UVcYYmVQnm9+oWRM8kE98N7Jt2/00gVIK9peRq8NE7Ep7PXuyOB12PiWj
-         gQ6wXS9iF3DwaMWYpUm5zg+ME2Vtkob2M3MF4xxc=
+        b=GwoDjw//6mEvOky6uY+ef5Z9sEGjXr6NvOpLjDfQfeWBNIy9kJSDnbbYrVN6DFUU0
+         w74qG2gX4BjZFdV2G9aIbUsVonWqEBJ8mSBSwtkjfYXrUuM6woaQUDaIb7kGKzSA2j
+         hKDLmrKwGUs0v4wycJXbb60TBndOSwyulS8rf5JE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 220/237] btrfs: fix bytes_may_use underflow in prealloc error condtition
-Date:   Thu, 27 Feb 2020 14:37:14 +0100
-Message-Id: <20200227132312.338856956@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 121/237] iommu/arm-smmu-v3: Use WRITE_ONCE() when changing validity of an STE
+Date:   Thu, 27 Feb 2020 14:35:35 +0100
+Message-Id: <20200227132305.709086840@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
 References: <20200227132255.285644406@linuxfoundation.org>
@@ -60,96 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Will Deacon <will@kernel.org>
 
-commit b778cf962d71a0e737923d55d0432f3bd287258e upstream.
+[ Upstream commit d71e01716b3606a6648df7e5646ae12c75babde4 ]
 
-I hit the following warning while running my error injection stress
-testing:
+If, for some bizarre reason, the compiler decided to split up the write
+of STE DWORD 0, we could end up making a partial structure valid.
 
-  WARNING: CPU: 3 PID: 1453 at fs/btrfs/space-info.h:108 btrfs_free_reserved_data_space_noquota+0xfd/0x160 [btrfs]
-  RIP: 0010:btrfs_free_reserved_data_space_noquota+0xfd/0x160 [btrfs]
-  Call Trace:
-  btrfs_free_reserved_data_space+0x4f/0x70 [btrfs]
-  __btrfs_prealloc_file_range+0x378/0x470 [btrfs]
-  elfcorehdr_read+0x40/0x40
-  ? elfcorehdr_read+0x40/0x40
-  ? btrfs_commit_transaction+0xca/0xa50 [btrfs]
-  ? dput+0xb4/0x2a0
-  ? btrfs_log_dentry_safe+0x55/0x70 [btrfs]
-  ? btrfs_sync_file+0x30e/0x420 [btrfs]
-  ? do_fsync+0x38/0x70
-  ? __x64_sys_fdatasync+0x13/0x20
-  ? do_syscall_64+0x5b/0x1b0
-  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Although this probably won't happen, follow the example of the
+context-descriptor code and use WRITE_ONCE() to ensure atomicity of the
+write.
 
-This happens if we fail to insert our reserved file extent.  At this
-point we've already converted our reservation from ->bytes_may_use to
-->bytes_reserved.  However once we break we will attempt to free
-everything from [cur_offset, end] from ->bytes_may_use, but our extent
-reservation will overlap part of this.
-
-Fix this problem by adding ins.offset (our extent allocation size) to
-cur_offset so we remove the actual remaining part from ->bytes_may_use.
-
-I validated this fix using my inject-error.py script
-
-python inject-error.py -o should_fail_bio -t cache_save_setup -t \
-	__btrfs_prealloc_file_range \
-	-t insert_reserved_file_extent.constprop.0 \
-	-r "-5" ./run-fsstress.sh
-
-where run-fsstress.sh simply mounts and runs fsstress on a disk.
-
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/inode.c |   16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ drivers/iommu/arm-smmu-v3.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -10639,6 +10639,7 @@ static int __btrfs_prealloc_file_range(s
- 	struct btrfs_root *root = BTRFS_I(inode)->root;
- 	struct btrfs_key ins;
- 	u64 cur_offset = start;
-+	u64 clear_offset = start;
- 	u64 i_size;
- 	u64 cur_bytes;
- 	u64 last_alloc = (u64)-1;
-@@ -10673,6 +10674,15 @@ static int __btrfs_prealloc_file_range(s
- 				btrfs_end_transaction(trans);
- 			break;
- 		}
-+
-+		/*
-+		 * We've reserved this space, and thus converted it from
-+		 * ->bytes_may_use to ->bytes_reserved.  Any error that happens
-+		 * from here on out we will only need to clear our reservation
-+		 * for the remaining unreserved area, so advance our
-+		 * clear_offset by our extent size.
-+		 */
-+		clear_offset += ins.offset;
- 		btrfs_dec_block_group_reservations(fs_info, ins.objectid);
- 
- 		last_alloc = ins.offset;
-@@ -10753,9 +10763,9 @@ next:
- 		if (own_trans)
- 			btrfs_end_transaction(trans);
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index 09eb258a9a7de..29feafa8007fb 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -1145,7 +1145,8 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_device *smmu, u32 sid,
  	}
--	if (cur_offset < end)
--		btrfs_free_reserved_data_space(inode, NULL, cur_offset,
--			end - cur_offset + 1);
-+	if (clear_offset < end)
-+		btrfs_free_reserved_data_space(inode, NULL, clear_offset,
-+			end - clear_offset + 1);
- 	return ret;
- }
  
+ 	arm_smmu_sync_ste_for_sid(smmu, sid);
+-	dst[0] = cpu_to_le64(val);
++	/* See comment in arm_smmu_write_ctx_desc() */
++	WRITE_ONCE(dst[0], cpu_to_le64(val));
+ 	arm_smmu_sync_ste_for_sid(smmu, sid);
+ 
+ 	/* It's likely that we'll want to use the new STE soon */
+-- 
+2.20.1
+
 
 
