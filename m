@@ -2,66 +2,145 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A3EC11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AB8C3567B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96DCB24697
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:25:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="X5NOBosu"
+	by mail.kernel.org (Postfix) with ESMTP id E8F32246BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 16:26:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582820775;
+	bh=WmU71Lj4UDtNZ82BoefiR89GTcfxg2tFZvzAqtQOSZQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=Ps4fnwkxSetsRAxCFAlLgtWFkfvW+5+W3iKp/T8pOmC8xf25o2sFCXAxz/24hs57Z
+	 n5eZHU/tkhJr3Em8/vR4T98urgB2Z+RKkBEpoN/mTHo+IvUl+OdWe/Br3Xm8/StLCn
+	 TdgkOqBClE3RHVZFhRQg/I5zJCwOgwPdrB3cETb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730127AbgB0QZL (ORCPT
+        id S1730172AbgB0Q0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 11:25:11 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:37192 "EHLO vps0.lunn.ch"
+        Thu, 27 Feb 2020 11:26:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729263AbgB0QZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 11:25:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=myK1TSi18MdPxmOQZpDiX3sYSnyZ25KLFXk55FWunf4=; b=X5NOBosuXvExNlJSbVImpgBJGs
-        tDGCWPSZ2beY8QTPnQYFBM3qzW57GqVUJoyEwRO9pbJDm0CXlmElPMEpJACZOhTynfPPSIJMEtFEm
-        njf7hh6vQB+q/fRGQly3KXs7Hd0Q0dPVaotLl8BEwaR/u1KR+IGaUp1cWpIvR+mr9w1g=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1j7LyE-0006AU-Iq; Thu, 27 Feb 2020 17:25:06 +0100
-Date:   Thu, 27 Feb 2020 17:25:06 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Quentin Schulz <foss@0leil.net>
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>, davem@davemloft.net,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 3/3] net: phy: mscc: implement RGMII skew delay
- configuration
-Message-ID: <20200227162506.GD5245@lunn.ch>
-References: <20200227152859.1687119-1-antoine.tenart@bootlin.com>
- <20200227152859.1687119-4-antoine.tenart@bootlin.com>
- <1f267571ddd9d1caf3e95afe31e47e30@0leil.net>
+        id S1729402AbgB0Q0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 11:26:13 -0500
+Received: from paulmck-ThinkPad-P72.home (unknown [163.114.132.128])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3675224697;
+        Thu, 27 Feb 2020 16:26:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582820772;
+        bh=WmU71Lj4UDtNZ82BoefiR89GTcfxg2tFZvzAqtQOSZQ=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=0AEWJ49a5eR1VGeCnDgdj2Al1+fI8AncWZnozP9Pw/ByyAzg4mN4U7T/6tCHtGyRo
+         hOJ0nIE+WpGzBn9d9+6TJBGsRm7JjRKybwS29KzVKMBEPogHM83ACoGc1X7gESbAyu
+         //tE3ILHCkISn6TJLDEn5zyANd+BCU5ceoUmMCRY=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 6225335226D2; Thu, 27 Feb 2020 07:47:55 -0800 (PST)
+Date:   Thu, 27 Feb 2020 07:47:55 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 0/5] Documentation/locking/atomic: Add litmus tests
+ for atomic APIs
+Message-ID: <20200227154755.GJ2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200227004049.6853-1-boqun.feng@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1f267571ddd9d1caf3e95afe31e47e30@0leil.net>
+In-Reply-To: <20200227004049.6853-1-boqun.feng@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Also, do we actually need to write that register only when skews are defined
-> in the DT? Can't we just write to it anyway (I guess the fact that 0_2 skew
-> is actually 0 in value should put me on the right path but I prefer to ask).
+On Thu, Feb 27, 2020 at 08:40:44AM +0800, Boqun Feng wrote:
+> A recent discussion raises up the requirement for having test cases for
+> atomic APIs:
+> 
+> 	https://lore.kernel.org/lkml/20200213085849.GL14897@hirez.programming.kicks-ass.net/
+> 
+> , and since we already have a way to generate a test module from a
+> litmus test with klitmus[1]. It makes sense that we add more litmus
+> tests for atomic APIs. And based on the previous discussion, I create a
+> new directory Documentation/atomic-tests and put these litmus tests
+> here.
+> 
+> This patchset starts the work by adding the litmus tests which are
+> already used in atomic_t.txt, and also improve the atomic_t.txt to make
+> it consistent with the litmus tests.
+> 
+> Previous version:
+> v1: https://lore.kernel.org/linux-doc/20200214040132.91934-1-boqun.feng@gmail.com/
+> v2: https://lore.kernel.org/lkml/20200219062627.104736-1-boqun.feng@gmail.com/
+> 
+> Changes since v2:
+> 
+> *	Change from "RFC" to "PATCH".
+> 
+> *	Wording improvement in atomic_t.txt as per Alan's suggestion.
+> 
+> *	Add a new patch describing the usage of atomic_add_unless() is
+> 	not limited anymore for LKMM litmus tests.
+> 
+> My PR on supporting "(void) expr;" statement has been merged by Luc
+> (Thank you, Luc). So all the litmus tests in this patchset can be
+> handled by the herdtools compiled from latest master branch of the
+> source code.
+> 
+> Comments and suggestions are welcome!
+> 
+> Regards,
+> Boqun
 
-Hi Quentin
+Queued for further review, thank you, Boqun!
 
-Ideally, you don't want to rely on the boot loader doing some
-magic. So i would prefer the skew is set to 0 if the properties are
-not present.
+							Thanx, Paul
 
-    Andrew
+> [1]: http://diy.inria.fr/doc/litmus.html#klitmus
+> 
+> Boqun Feng (5):
+>   tools/memory-model: Add an exception for limitations on _unless()
+>     family
+>   Documentation/locking/atomic: Fix atomic-set litmus test
+>   Documentation/locking/atomic: Introduce atomic-tests directory
+>   Documentation/locking/atomic: Add a litmus test for atomic_set()
+>   Documentation/locking/atomic: Add a litmus test smp_mb__after_atomic()
+> 
+>  ...ter_atomic-is-stronger-than-acquire.litmus | 32 +++++++++++++++++++
+>  ...c-RMW-ops-are-atomic-WRT-atomic_set.litmus | 24 ++++++++++++++
+>  Documentation/atomic-tests/README             | 16 ++++++++++
+>  Documentation/atomic_t.txt                    | 24 +++++++-------
+>  MAINTAINERS                                   |  1 +
+>  tools/memory-model/README                     | 10 ++++--
+>  6 files changed, 92 insertions(+), 15 deletions(-)
+>  create mode 100644 Documentation/atomic-tests/Atomic-RMW+mb__after_atomic-is-stronger-than-acquire.litmus
+>  create mode 100644 Documentation/atomic-tests/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+>  create mode 100644 Documentation/atomic-tests/README
+> 
+> -- 
+> 2.25.0
+> 
