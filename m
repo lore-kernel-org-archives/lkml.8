@@ -2,122 +2,156 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E72C11D3D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E18C11D3D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CD192467B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:20:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TG7xD62g"
+	by mail.kernel.org (Postfix) with ESMTP id AB8C324691
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 19:29:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730173AbgB0TUd (ORCPT
+        id S1730155AbgB0T3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 14:20:33 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33315 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729593AbgB0TUc (ORCPT
+        Thu, 27 Feb 2020 14:29:35 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:37258 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1729687AbgB0T3f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 14:20:32 -0500
-Received: by mail-lj1-f195.google.com with SMTP id y6so539718lji.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 11:20:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wD0YMiaevfN+rD/Y82hagTpEJtCW8Y8b9WogafbNlr4=;
-        b=TG7xD62gYjK7JebjkwSkRbrtK7tgXmZfvP3BlvPcKRsY+UWUX/GDsGuX3IdePtnuL8
-         A7STMFwgkh3q8DBiCkD1Bd4hO3+xgTGI6Rq9MvE3DdiY4jZbP8Ws8SxibxjDpIUDWAFj
-         e5zse9h6xkdEo25W4b5f/heAsIPtHGyjPhWWm3VTiA1CPmNZ2t/Ob9GZN/ywhaBuxI3U
-         6WOqdFskbcxvcsOBubvozsLBge6ki61QQ7YAPKWQ0eM5dBu0OLHiS1C0ZhZ0QxUPyjf8
-         nd+oDjh4DmcwDiFwq+Ffe2Bo+TNWnIzO/dqfvqqg3kUFcXFc3y26crYwUrywzFSOKFid
-         7AuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wD0YMiaevfN+rD/Y82hagTpEJtCW8Y8b9WogafbNlr4=;
-        b=EdPjm11j+N/frLzni12Wf08vUrX19ezMDDNg24zqupR8gieisGVK6bvle01X0RpxXS
-         pRpwml/gLWc3UCdWyckYFrE8tqnj5hb0m31Pz6mRJVNTJkM+y1UdJDgHfZQGCQ7GYggZ
-         q7aylYe+OpQZ7+XLbGhtLQRfIYW3bWkF1pZXDlNL6TU5paLH+7r+PJvNl/w2tmY+iJdE
-         dmuE3BYMHL8+zNTt0a1R545B1Ne5glJJGUYaD6rSnqyeVTLHgIexF1f3QyS7HToQfeXg
-         BEMP11j6qicqm6OfhBdqJkaf29Ywi8v4YDA4PXlPhNt93sfYH3MRr+3tq+5WnuFyhBMZ
-         SmYw==
-X-Gm-Message-State: ANhLgQ26ba1kq+Fl1jlYxuxng5CECYo6BiaRHJe5hWpjbKc29ZXBU4BZ
-        D2xK+IqU5nNiwQ1eDo88Xy4EajRL9pHvRkD+NqY0Xg==
-X-Google-Smtp-Source: ADFU+vvhHL5c/vts6JKe9eR57rFbjH1YdyPqVOP0IJ/L10WMTLbiZ+hO3YSZtqAZvRhxSzUSGJh4bbXuP9SeiXRl7A4=
-X-Received: by 2002:a05:651c:555:: with SMTP id q21mr333700ljp.241.1582831230661;
- Thu, 27 Feb 2020 11:20:30 -0800 (PST)
+        Thu, 27 Feb 2020 14:29:35 -0500
+Received: (qmail 1906 invoked by uid 2102); 27 Feb 2020 14:29:34 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 27 Feb 2020 14:29:34 -0500
+Date:   Thu, 27 Feb 2020 14:29:34 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Marco Felsch <m.felsch@pengutronix.de>
+cc:     gregkh@linuxfoundation.org, <Thinh.Nguyen@synopsys.com>,
+        <harry.pan@intel.com>, <nobuta.keiya@fujitsu.com>,
+        <malat@debian.org>, <kai.heng.feng@canonical.com>,
+        <chiasheng.lee@intel.com>, <andreyknvl@google.com>,
+        <heinzelmann.david@gmail.com>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel@pengutronix.de>,
+        kbuild test robot <lkp@intel.com>
+Subject: Re: [RFC PATCH v2] USB: hub: fix port suspend/resume
+In-Reply-To: <20200227164142.dsnbrxtk747tnvma@pengutronix.de>
+Message-ID: <Pine.LNX.4.44L0.2002271353300.1307-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-References: <20200227174430.26371-1-sean.j.christopherson@intel.com>
-In-Reply-To: <20200227174430.26371-1-sean.j.christopherson@intel.com>
-From:   Oliver Upton <oupton@google.com>
-Date:   Thu, 27 Feb 2020 11:20:19 -0800
-Message-ID: <CAOQ_Qsg6z4d1oc0-rHQZW_7U9sLtjkAjifbpbGaoQK_Sg9gg1Q@mail.gmail.com>
-Subject: Re: [PATCH] KVM: nVMX: Consult only the "basic" exit reason when
- routing nested exit
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 9:47 AM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> Consult only the basic exit reason, i.e. bits 15:0 of vmcs.EXIT_REASON,
-> when determining whether a nested VM-Exit should be reflected into L1 or
-> handled by KVM in L0.
->
-> For better or worse, the switch statement in nested_vmx_exit_reflected()
-> currently defaults to "true", i.e. reflects any nested VM-Exit without
-> dedicated logic.  Because the case statements only contain the basic
-> exit reason, any VM-Exit with modifier bits set will be reflected to L1,
-> even if KVM intended to handle it in L0.
->
-> Practically speaking, this only affects EXIT_REASON_MCE_DURING_VMENTRY,
-> i.e. a #MC that occurs on nested VM-Enter would be incorrectly routed to
-> L1, as "failed VM-Entry" is the only modifier that KVM can currently
-> encounter.  The SMM modifiers will never be generated as KVM doesn't
-> support/employ a SMI Transfer Monitor.  Ditto for "exit from enclave",
-> as KVM doesn't yet support virtualizing SGX, i.e. it's impossible to
-> enter an enclave in a KVM guest (L1 or L2).
->
-> Fixes: 644d711aa0e1 ("KVM: nVMX: Deciding if L0 or L1 should handle an L2 exit")
-> Cc: Jim Mattson <jmattson@google.com>
-> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/vmx/nested.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index 0946122a8d3b..127065bbde2c 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -5554,7 +5554,7 @@ bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason)
->                                 vmcs_read32(VM_EXIT_INTR_ERROR_CODE),
->                                 KVM_ISA_VMX);
->
-> -       switch (exit_reason) {
-> +       switch ((u16)exit_reason) {
->         case EXIT_REASON_EXCEPTION_NMI:
->                 if (is_nmi(intr_info))
->                         return false;
-> --
-> 2.24.1
->
-Reviewed-by: Oliver Upton <oupton@google.com>
+On Thu, 27 Feb 2020, Marco Felsch wrote:
+
+> On 20-02-27 11:18, Alan Stern wrote:
+
+> > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > > ---
+> > > Hi,
+> > > 
+> > > this v2 contains the fixes
+> > > 
+> > > Reported-by: kbuild test robot <lkp@intel.com>
+> > 
+> > Everything below the "---" line, except the patch itself, gets ignored.  
+> > You need to move this Reported-by: up higher.
+> 
+> I know, I put it here because the patch isn't part of the kernel. IMHO a
+> 
+> Signed-off-by:
+> Reported-by: 
+> 
+> looks a bit strange.
+
+Not at all.  That sort of thing occurs all the time; just look at a few 
+commits in the kernel or patches on the mailing lists.  Especially ones 
+that are bug fixes.
+
+> > > diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+> > > index 3405b146edc9..c294484e478d 100644
+> > > --- a/drivers/usb/core/hub.c
+> > > +++ b/drivers/usb/core/hub.c
+> > > @@ -3323,10 +3323,6 @@ int usb_port_suspend(struct usb_device *udev, pm_message_t msg)
+> > >  		usb_set_device_state(udev, USB_STATE_SUSPENDED);
+> > >  	}
+> > >  
+> > > -	if (status == 0 && !udev->do_remote_wakeup && udev->persist_enabled
+> > > -			&& test_and_clear_bit(port1, hub->child_usage_bits))
+> > > -		pm_runtime_put_sync(&port_dev->dev);
+> > > -
+> > >  	usb_mark_last_busy(hub->hdev);
+> > >  
+> > >  	usb_unlock_port(port_dev);
+> > > @@ -3514,15 +3510,6 @@ int usb_port_resume(struct usb_device *udev, pm_message_t msg)
+> > >  	int		status;
+> > >  	u16		portchange, portstatus;
+> > >  
+> > > -	if (!test_and_set_bit(port1, hub->child_usage_bits)) {
+> > > -		status = pm_runtime_get_sync(&port_dev->dev);
+> > > -		if (status < 0) {
+> > > -			dev_dbg(&udev->dev, "can't resume usb port, status %d\n",
+> > > -					status);
+> > > -			return status;
+> > > -		}
+> > > -	}
+> > > -
+> > 
+> > Why do you get rid of these two sections of code?  Won't that cause
+> > runtime PM to stop working properly?
+> 
+> Both runtime_pm calls are part of the suspend/resume logic so this code
+> isn't called during runtime PM.
+
+I'm not quite sure what you mean by that.  In any case, it would be 
+completely wrong to think that usb_port_suspend isn't involved in 
+runtime PM.
+
+In fact, usb_port_suspend is _more_ important for runtime suspend than
+for system sleep.  The reason is simple: If you want to put a USB
+device into runtime suspend, you have to tell its upstream hub's port
+to enable the suspend feature (i.e., call usb_port_suspend).  But if
+you want to put an entire bus of USB devices to sleep for a system
+suspend, all you have to do is tell the host controller to stop sending
+packets; the ports don't need any notification.
+
+(Actually the situation is more complicated for USB 3.  But you get the 
+idea.)
+
+> As far as I understood it correctly the
+> purpose of those section was to trigger port poweroff if the device
+> supports it upon a system-suspend.
+
+No, the purpose of the sections you removed is to trigger port poweroff
+when the device goes into any type of suspend, either system or
+runtime.  Of course, as you discovered, during system sleep the code
+doesn't actually turn off the port power -- that's a bug.  But during
+runtime PM it does.
+
+> Therefore I came up with my question:
+> https://www.spinics.net/lists/linux-usb/msg190537.html.
+
+> > Also, try to find better names.  Maybe usb_port_sleep and 
+> > usb_port_wake, or usb_port_system_suspend and usb_port_system_resume.
+> 
+> IMHO usb_port_suspend/resume should be the best ;)
+
+Okay, so long as they are static and won't conflict with the functions 
+in hub.c.
+
+Alan Stern
+
+PS: There's one more thing you need to know -- I completely forgot 
+about it until just now.  During system sleep, we have to make sure 
+that the child device gets suspended _before_ and resumed _after_ the 
+port.  If it happened the other way, we'd be in trouble.
+
+(The proper ordering would be automatic if the child USB device was
+registered under the port device, but for historical reasons it isn't;
+it gets registered directly under the parent hub.)
+
+This means you'll have to call device_pm_wait_for_dev() at the 
+appropriate places in the suspend and resume pathways.
+
