@@ -2,83 +2,83 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 852FCC4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B81E7C4BA0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5104E24670
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 792C424670
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 00:41:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F2qNJqQ/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nkdkXloi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgB0AlJ (ORCPT
+        id S1728164AbgB0AlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Feb 2020 19:41:09 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:33965 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727987AbgB0AlI (ORCPT
+        Wed, 26 Feb 2020 19:41:12 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:42685 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728134AbgB0AlJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Feb 2020 19:41:08 -0500
-Received: by mail-qk1-f193.google.com with SMTP id 11so1555427qkd.1;
-        Wed, 26 Feb 2020 16:41:06 -0800 (PST)
+        Wed, 26 Feb 2020 19:41:09 -0500
+Received: by mail-qt1-f194.google.com with SMTP id r5so1024187qtt.9;
+        Wed, 26 Feb 2020 16:41:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=xZ2H7GSAMnnXMQ7tQkUf2nC+EabJVUC+NrDmPk4E/8c=;
-        b=F2qNJqQ/nxukuQLqMQ8LDKqVQBLaSEuhqxKYY3WL/1rQyqPyPcnxh+w8Y4m0c3No+e
-         e4yL6M5uxZDuAqzoNlVWrhOBmVeSU8rbwoXtMb7Xli80pnCYFx83Dl/svFSdGA+nHulk
-         SHhVulTUyXtftksHmP9YYkk8cUKNCViCConM8aBI8QDFXfr2FsWS8NcYA7utOy0683RP
-         pldYJOLfnIWiGTFxL12qoI0QnijGKROo86t/gmiuEnqeh0nfh5hrVhCu3StbKi0LeCzt
-         ij5GElt/oaE3OaPO14+F1yQ4w3D5OincfD8sS8rpkJuHC5xxx5bcuGXaTF52r11WFvIX
-         gKmQ==
+        bh=hXaVpGqqToiZNRZTnPuTvkrof7XCekzeFTv2omJ7ql0=;
+        b=nkdkXloivKU173/MWNM6WK/cxC4RDEdhnqox7q0e4paup7yzZXhSS/dtIqZeo092ZO
+         lEM6C19TxUOGKyXCwRzfMsk+JvVhJjshkAdbcyrU2GnIs4qxH1wBr27QC8H3V76TzJfu
+         pO0fveZc4PIBymtccnGRP6kk3bzZdsX9PJCOHHbDWMzv1vxQYBFMCpD52r3yYGGpISnw
+         g+mSjEjPUXUZWGUBOkTU2zb7u5TmHcnXAgfAxXx5KqIrJAfLpG1mtMxGVh8+OYzAcpaF
+         T9+c93TeFIcAkB4F60P66lnCDCdMokKVLtAGXlLDcRIpPQ02AjGx5lPNwQkE7D6DRULg
+         M5Ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xZ2H7GSAMnnXMQ7tQkUf2nC+EabJVUC+NrDmPk4E/8c=;
-        b=IOM0MdWP6sli1WmNxXG6xkIH/aQiobcPE5Vstme1hIT3rX64mT55XIKt8xJVB3x7ER
-         0+ZD2bf+qvePPsSA2nX5AS68EiyJhQI9eJudw7Bmzaimzi3wtiSigz0ESHvvx5gnR6tO
-         j0tb1OG7Ah8JFoRZCM6/Cj2qt51cUx0jRvLCzt/jkoBGFPZF/+NgI2xzn/za4DJbU7du
-         itibIrhGW+bIcS5F/53BoBBAEzPKA2Jw6B+Jsp9ZVteJyTtUS8PfuPIQGHJbnO8CqlG1
-         57UI2MwTTXuPr6WZXWFN9hgWUhswg7CJTxKpXlTUi4w5+Fi5Yqwyk5k+jYP8plNgPN6S
-         OBWg==
-X-Gm-Message-State: APjAAAXTfXyxvXpcWYfy2drk+Kq4Uv+REyhMmJbufLYiw9Wqv1vPo/Ss
-        ks5RDv0fjhJcDJxGaQEZOYw=
-X-Google-Smtp-Source: APXvYqxbrLXw6tXXxDuP+1PBrZ9eNPIEJkkS+t9oY+RvDA8x2O1me/3roihbgHVvYBApBxtXmr+KSA==
-X-Received: by 2002:a37:584:: with SMTP id 126mr2098625qkf.109.1582764065840;
-        Wed, 26 Feb 2020 16:41:05 -0800 (PST)
+        bh=hXaVpGqqToiZNRZTnPuTvkrof7XCekzeFTv2omJ7ql0=;
+        b=AedjYmn7hE/p3uDD7QiWuT1toSoLsgkPvFTzo3oZ68CKmeo5PhIHspiMFWKrRULXVF
+         OM7raBtNL55YpnbjmD9kFn0SS9u/aznrHeOaUG+RxKAKCJi37x+ZGez6e/DkVOHfrcA8
+         MzUncnQvW1RrusNLnCQPlsts8NZagVQYi5DuK+k8jB9sTUC4Vv8Waud1y5nHPPSar48b
+         iuxRnVitr0DFj2sbmqPE94JOlnYYvCY6W1YJKhsFi4THU5joKE8EN/EiYq4maWUqmyn5
+         Z+n52fbO03kmEt3H6VbE9tUDC5UjPO7sCK///FCwMLFHBMyOCA/vSU94az/kWSgQpta9
+         KBiw==
+X-Gm-Message-State: APjAAAWm4Os9h8fDqarTob9bq4WJnyEhJIFLhMWURT1Sv8mxAtD91fhK
+        2NRHoA60ZvYyrgrhi7mVpo8=
+X-Google-Smtp-Source: APXvYqw5pvVvN7mOL2p4Pk8A/0lk2PPcd8yX9vRcB+kKAVZnu1D4pBVV2urj4dhqVjohZuR29FnWGQ==
+X-Received: by 2002:ac8:4e43:: with SMTP id e3mr1879990qtw.129.1582764067329;
+        Wed, 26 Feb 2020 16:41:07 -0800 (PST)
 Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id v10sm2023422qtp.22.2020.02.26.16.41.04
+        by smtp.gmail.com with ESMTPSA id i14sm1991310qtm.60.2020.02.26.16.41.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Feb 2020 16:41:05 -0800 (PST)
+        Wed, 26 Feb 2020 16:41:06 -0800 (PST)
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 21246210B8;
-        Wed, 26 Feb 2020 19:41:04 -0500 (EST)
+        by mailauth.nyi.internal (Postfix) with ESMTP id 24F7B210B8;
+        Wed, 26 Feb 2020 19:41:06 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 26 Feb 2020 19:41:04 -0500
-X-ME-Sender: <xms:IBBXXp0byI8Sr1nDu6VpUAIgtrlRuKCMN0Ry4a51SkX4P-y0ZWBNGQ>
+  by compute4.internal (MEProxy); Wed, 26 Feb 2020 19:41:06 -0500
+X-ME-Sender: <xms:IhBXXnawAJTaFggTdUfktB0k9HKWod9G2w5kmE9gffK4ZJidNUDexw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrleehgddvjecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepuehoqhhunhcu
-    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucfkphephedvrd
-    duheehrdduuddurdejudenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepmhgr
-    ihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqd
-    eiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhl
-    rdgtohhmsehfihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:IBBXXiqhLDuq95SCxipoY0USLZMaMlu1AeklX_bKUstbsb6bz9Pehg>
-    <xmx:IBBXXq1ZajnbXx-U5tRwjunkoodHC4S34iNuX1mpw6GPT6x-ZlvQQg>
-    <xmx:IBBXXr26NzkUi5vBxayz9uU2VVE7EoL4ItgLR8Rpn8OVuC9nAwgkaQ>
-    <xmx:IBBXXg8NCRnsrgeQOyuxkvyj6WtqEkzsZ7FLVm1IeOFoOJYNxkSJzOErAq0>
+    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucffohhmrghinh
+    epkhgvrhhnvghlrdhorhhgnecukfhppeehvddrudehhedrudduuddrjedunecuvehluhhs
+    thgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvsh
+    hmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheeh
+    vddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:IhBXXut_bnYXHtu5GuNp2ENNjesUnfVEtzQUi0aNAYtKlExABxVQRA>
+    <xmx:IhBXXgE9gNVuLXhkD54A4IDgo50AwenxnyEWmdsR3dLCE1DtWiBcQg>
+    <xmx:IhBXXqwJpRpXaNnwQF0hfDkgTY1S_8f1CqzX4rFc935lVSoy7ovmrg>
+    <xmx:IhBXXnlq7AGNF3Q8yLXGZ88SCtKxhka2rRDyRYmz7Bn98hBjxEvRVpEZ4RU>
 Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 93B4F328005D;
-        Wed, 26 Feb 2020 19:41:03 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9680B328005D;
+        Wed, 26 Feb 2020 19:41:05 -0500 (EST)
 From:   Boqun Feng <boqun.feng@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Alan Stern <stern@rowland.harvard.edu>,
@@ -100,9 +100,9 @@ Cc:     Alan Stern <stern@rowland.harvard.edu>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         linux-arch@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: [PATCH v3 2/5] Documentation/locking/atomic: Fix atomic-set litmus test
-Date:   Thu, 27 Feb 2020 08:40:46 +0800
-Message-Id: <20200227004049.6853-3-boqun.feng@gmail.com>
+Subject: [PATCH v3 3/5] Documentation/locking/atomic: Introduce atomic-tests directory
+Date:   Thu, 27 Feb 2020 08:40:47 +0800
+Message-Id: <20200227004049.6853-4-boqun.feng@gmail.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200227004049.6853-1-boqun.feng@gmail.com>
 References: <20200227004049.6853-1-boqun.feng@gmail.com>
@@ -113,57 +113,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the litmus test "atomic-set" in atomic_t.txt has a few things
-to be improved:
+Although we have atomic_t.txt and its friends to describe the semantics
+of atomic APIs and lib/atomic64_test.c for build testing and testing in
+UP mode, the tests for our atomic APIs in real SMP mode are still
+missing. Since now we have the LKMM tool in kernel and litmus tests can
+be used to generate kernel modules for testing purpose with "klitmus" (a
+tool from the LKMM toolset), it makes sense to put a few typical litmus
+tests into kernel so that
 
-1)	The CPU/Processor numbers "P1,P2" are not only inconsistent with
-	the rest of the document, which uses "CPU0" and "CPU1", but also
-	unacceptable by the herd tool, which requires processors start
-	at "P0".
+1)	they are the examples to describe the conceptual mode of the
+	semantics of atomic APIs, and
 
-2)	The initialization block uses a "atomic_set()", which is OK, but
-	it's better to use ATOMIC_INIT() to make clear this is an
-	initialization.
+2)	they can be used to generate kernel test modules for anyone
+	who is interested to test the atomic APIs implementation (in
+	most cases, is the one who implements the APIs for a new arch)
 
-3)	The return value of atomic_add_unless() is discarded
-	inexplicitly, which is OK for C language, but it will be helpful
-	to the herd tool if we use a void cast to make the discard
-	explicit.
-
-Therefore fix these and this is the preparation for adding the litmus
-test into memory-model litmus-tests directory so that people can
-understand better about our requirements of atomic APIs and klitmus tool
-can be used to generate tests.
+Therefore, introduce the atomic-tests directory for this purpose. The
+directory is maintained by the LKMM group to make sure the litmus tests
+are always aligned with our memory model.
 
 Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 ---
- Documentation/atomic_t.txt | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ Documentation/atomic-tests/README | 4 ++++
+ MAINTAINERS                       | 1 +
+ 2 files changed, 5 insertions(+)
+ create mode 100644 Documentation/atomic-tests/README
 
-diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
-index 0ab747e0d5ac..ceb85ada378e 100644
---- a/Documentation/atomic_t.txt
-+++ b/Documentation/atomic_t.txt
-@@ -91,15 +91,15 @@ ops. That is:
-   C atomic-set
- 
-   {
--    atomic_set(v, 1);
-+    atomic_t v = ATOMIC_INIT(1);
-   }
- 
--  P1(atomic_t *v)
-+  P0(atomic_t *v)
-   {
--    atomic_add_unless(v, 1, 0);
-+    (void)atomic_add_unless(v, 1, 0);
-   }
- 
--  P2(atomic_t *v)
-+  P1(atomic_t *v)
-   {
-     atomic_set(v, 0);
-   }
+diff --git a/Documentation/atomic-tests/README b/Documentation/atomic-tests/README
+new file mode 100644
+index 000000000000..ae61201a4271
+--- /dev/null
++++ b/Documentation/atomic-tests/README
+@@ -0,0 +1,4 @@
++This directory contains litmus tests that are typical to describe the semantics
++of our atomic APIs. For more information about how to "run" a litmus test or
++how to generate a kernel test module based on a litmus test, please see
++tools/memory-model/README.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ffc7d5712735..ebca5f6263bb 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9718,6 +9718,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev
+ F:	tools/memory-model/
+ F:	Documentation/atomic_bitops.txt
+ F:	Documentation/atomic_t.txt
++F:	Documentation/atomic-tests/
+ F:	Documentation/core-api/atomic_ops.rst
+ F:	Documentation/core-api/refcount-vs-atomic.rst
+ F:	Documentation/memory-barriers.txt
 -- 
 2.25.0
 
