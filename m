@@ -2,205 +2,174 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E235C4BA24
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F06C4BA24
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB41C24695
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:56:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2457F24695
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 10:56:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vG2PYhFG"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jVisvYKH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728846AbgB0Kz7 (ORCPT
+        id S1728858AbgB0K4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 05:55:59 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:17149 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728759AbgB0Kz7 (ORCPT
+        Thu, 27 Feb 2020 05:56:22 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:57270 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728753AbgB0K4V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 05:55:59 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582800958; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=3cZIt2T45FhuR9MsW/GWNiPSGv9vPQ9J3TLcsSxKz20=; b=vG2PYhFGCDkZdxrM5bdhmAqR/nfDHSQ/tZ2SFWpaYlnwkHV+ncBGdSR1g0qh3i5z+bLrwWjc
- n9sX6RIpSViqCRp68sv1jmeYf1Swe5CMRH+MsgLqzVeB8UOCfxQCk0viJHtc6UZ4x1O3aHui
- yE9JGODDRL1dZrFmnINc3zZFx2g=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e57a033.7fb5ee1ab110-smtp-out-n01;
- Thu, 27 Feb 2020 10:55:47 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 75737C433A2; Thu, 27 Feb 2020 10:55:47 +0000 (UTC)
-Received: from [10.242.242.60] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sivaprak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B4C3BC43383;
-        Thu, 27 Feb 2020 10:55:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B4C3BC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
-Subject: Re: [PATCH 1/2] clk: qcom: Add DT bindings for ipq6018 apss clock
- controller
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org
-References: <1582797318-26288-1-git-send-email-sivaprak@codeaurora.org>
- <1582797318-26288-2-git-send-email-sivaprak@codeaurora.org>
- <e94805e32d1264ca9a162891db26730e@codeaurora.org>
-From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Message-ID: <28fb9f7c-2b62-93e3-4d22-ea428d36d94f@codeaurora.org>
-Date:   Thu, 27 Feb 2020 16:25:41 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 27 Feb 2020 05:56:21 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01RAuI8M094000;
+        Thu, 27 Feb 2020 04:56:18 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582800978;
+        bh=qrOArVbmaysBNG/5Zcrr0CQj4hbp7hIz3cShFmM0xTI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=jVisvYKHyyoobZqFK2kllRJDxh5YKYj6J7Pl88py0AA6zphAHq9/5dkfapR2e1JCs
+         9slvJwBraT0TFFPPG4w9PYMm+mYN+uq4RwkPZYe4O1pNQE0vNtCDps6V6o73NKQiRd
+         1P/sOWVOyiMipanZ1QnRwSL37PP9KJES3i7/zFsg=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01RAuI0M125925
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 27 Feb 2020 04:56:18 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 27
+ Feb 2020 04:56:17 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 27 Feb 2020 04:56:17 -0600
+Received: from [10.1.3.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01RAuGIm061589;
+        Thu, 27 Feb 2020 04:56:16 -0600
+Subject: Re: [PATCH] drm/tilcdc: remove check for return value of debugfs
+ functions.
+To:     Wambui Karuga <wambui.karugax@gmail.com>, <tomi.valkeinen@ti.com>,
+        <airlied@linux.ie>, <daniel@ffwll.ch>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <gregkh@linuxfoundation.org>
+References: <20200218155534.15504-1-wambui.karugax@gmail.com>
+ <20200218155534.15504-2-wambui.karugax@gmail.com>
+From:   Jyri Sarha <jsarha@ti.com>
+Autocrypt: addr=jsarha@ti.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <5f96fcbb-9e21-c741-3094-4c42e1634811@ti.com>
+Date:   Thu, 27 Feb 2020 12:56:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <e94805e32d1264ca9a162891db26730e@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+In-Reply-To: <20200218155534.15504-2-wambui.karugax@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sibi,
+On 18/02/2020 17:55, Wambui Karuga wrote:
+> Remove the check and error handling of the return value of
+> drm_debugfs_create_files as it is not needed in tilcdc_debugfs_init.
+> Also remove local variables that are not used after the changes.
+> 
+> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
 
-Thanks for the review.
+Reviewed-by: Jyri Sarha <jsarha@ti.com>
+Tested-by: Jyri Sarha <jsarha@ti.com>
 
-On 2/27/2020 4:08 PM, Sibi Sankar wrote:
-> Hey Sivaprakash,
->
-> On 2020-02-27 15:25, Sivaprakash Murugesan wrote:
->> add dt-binding for ipq6018 apss clock controller
->>
->> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
->> ---
->>  .../devicetree/bindings/clock/qcom,apsscc.yaml     | 58 
->> ++++++++++++++++++++++
->>  include/dt-bindings/clock/qcom,apss-ipq6018.h      | 26 ++++++++++
->>  2 files changed, 84 insertions(+)
->>  create mode 100644 
->> Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
->>  create mode 100644 include/dt-bindings/clock/qcom,apss-ipq6018.h
->>
->> diff --git a/Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
->> b/Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
->> new file mode 100644
->> index 0000000..7433721
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
->> @@ -0,0 +1,58 @@
->> +# SPDX-License-Identifier: GPL-2.0-only
->
-> Dual license
-missed it. will add in next series.
->
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/bindings/clock/qcom,apsscc.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm IPQ6018 APSS Clock Controller Binding
->> +
->> +maintainers:
->> +  - Stephen Boyd <sboyd@kernel.org>
->> +
->> +description: |
->> +  Qualcomm IPQ6018 APSS clock control module which supports the 
->> clocks with
->> +  frequencies above 800Mhz.
->> +
->> +properties:
->> +  compatible :
->> +    const: qcom,apss-ipq6018
->
-> Please use qcom,<chip>-<device>
-> instead.
-ok.
->
->> +
->> +  clocks:
->> +    description: clocks required for this controller.
->> +    maxItems: 4
->> +
->> +  clock-names:
->> +    description: clock output names of required clocks.
->> +    maxItems: 4
->> +
->> +  '#clock-cells':
->> +    const: 1
->> +
->> +  '#reset-cells':
->> +    const: 1
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - '#clock-cells'
->> +  - '#reset-cells'
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +      #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
->> +      apss_clk: qcom,apss_clk@b111000 {
->> +            compatible = "qcom,apss-ipq6018";
->> +            clocks = <&xo>, <&gcc GPLL0>,
->> +                        <&gcc GPLL2>, <&gcc GPLL4>;
->> +            clock-names = "xo", "gpll0",
->> +                         "gpll2", "gpll4";
->> +            reg = <0xb11100c 0x5ff4>;
->> +            #clock-cells = <1>;
->> +            #reset-cells = <1>;
->> +      };
->> +...
->> diff --git a/include/dt-bindings/clock/qcom,apss-ipq6018.h
->> b/include/dt-bindings/clock/qcom,apss-ipq6018.h
->> new file mode 100644
->> index 0000000..ed9d7d8
->> --- /dev/null
->> +++ b/include/dt-bindings/clock/qcom,apss-ipq6018.h
->> @@ -0,0 +1,26 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
->> + *
->> + * Permission to use, copy, modify, and/or distribute this software 
->> for any
->> + * purpose with or without fee is hereby granted, provided that the 
->> above
->> + * copyright notice and this permission notice appear in all copies.
->> + *
->> + * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL 
->> WARRANTIES
->> + * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
->> + * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE 
->> LIABLE FOR
->> + * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY 
->> DAMAGES
->> + * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER 
->> IN AN
->> + * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING 
->> OUT OF
->> + * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
->
-> ^^ is not needed just the SPDX
-> license identifier is enough.
->
-ok.
+I'll merge this to drm-misc-next tomorrow.
 
-Thanks,
+Thank you for the patch,
+Jyri
 
-Siva
+
+> ---
+>  drivers/gpu/drm/tilcdc/tilcdc_drv.c | 15 ++++-----------
+>  1 file changed, 4 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/tilcdc/tilcdc_drv.c b/drivers/gpu/drm/tilcdc/tilcdc_drv.c
+> index 0791a0200cc3..3f7071eb9c78 100644
+> --- a/drivers/gpu/drm/tilcdc/tilcdc_drv.c
+> +++ b/drivers/gpu/drm/tilcdc/tilcdc_drv.c
+> @@ -480,24 +480,17 @@ static struct drm_info_list tilcdc_debugfs_list[] = {
+>  
+>  static int tilcdc_debugfs_init(struct drm_minor *minor)
+>  {
+> -	struct drm_device *dev = minor->dev;
+>  	struct tilcdc_module *mod;
+> -	int ret;
+>  
+> -	ret = drm_debugfs_create_files(tilcdc_debugfs_list,
+> -			ARRAY_SIZE(tilcdc_debugfs_list),
+> -			minor->debugfs_root, minor);
+> +	drm_debugfs_create_files(tilcdc_debugfs_list,
+> +				 ARRAY_SIZE(tilcdc_debugfs_list),
+> +				 minor->debugfs_root, minor);
+>  
+>  	list_for_each_entry(mod, &module_list, list)
+>  		if (mod->funcs->debugfs_init)
+>  			mod->funcs->debugfs_init(mod, minor);
+>  
+> -	if (ret) {
+> -		dev_err(dev->dev, "could not install tilcdc_debugfs_list\n");
+> -		return ret;
+> -	}
+> -
+> -	return ret;
+> +	return 0;
+>  }
+>  #endif
+>  
+> 
+
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
