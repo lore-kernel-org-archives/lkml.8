@@ -2,101 +2,100 @@ Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BEDC4BA2D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05207C4BA3B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A06B2469D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:13:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582809185;
-	bh=YlVUxfcvD/beBDmKrHeJiolRj+Z0v4n2W4m8yS8ZA38=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a1vb/CasyDQZnD3c/eITlbaCtqw4+xejLSFmPEPrKwYGoReUpaeojqvlnfDfALIwK
-	 MCyfykVtXez+ZvE1iKeVK7uwh4Ixf3d+/tygVTWxTrbVzD33lKr56q1jjfqTejWxeY
-	 tm5B7v5CE5krrhsWx2FTl1U0dMCPlJwlngZ+MVuA=
+	by mail.kernel.org (Postfix) with ESMTP id DA5AF2469C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 13:13:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729193AbgB0NNE (ORCPT
+        id S1729203AbgB0NNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 08:13:04 -0500
-Received: from foss.arm.com ([217.140.110.172]:50276 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729073AbgB0NND (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:13:23 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:19292 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729032AbgB0NNX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 08:13:23 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01RDDFtN029179;
+        Thu, 27 Feb 2020 08:13:15 -0500
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ydtrx370p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Feb 2020 08:13:15 -0500
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 01RDD88T053299
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Thu, 27 Feb 2020 08:13:08 -0500
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 27 Feb
+ 2020 08:13:07 -0500
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Thu, 27 Feb 2020 08:13:07 -0500
+Received: from analog.ad.analog.com ([10.48.65.180])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01RDD2gD025942;
         Thu, 27 Feb 2020 08:13:03 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 10EA030E;
-        Thu, 27 Feb 2020 05:13:03 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B1603F703;
-        Thu, 27 Feb 2020 05:13:02 -0800 (PST)
-Date:   Thu, 27 Feb 2020 13:13:00 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        "H . J . Lu " <hjl.tools@gmail.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Florian Weimer <fweimer@redhat.com>,
-        Sudakshina Das <sudi.das@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v7 00/11] arm64: Branch Target Identification support
-Message-ID: <20200227131300.GB4062@sirena.org.uk>
-References: <20200226155714.43937-1-broonie@kernel.org>
- <202002261343.3B2ECE90@keescook>
+From:   Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+To:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-wpan@vger.kernel.org>, <davem@davemloft.net>,
+        <stefan@datenfreihafen.org>, <alex.aring@gmail.com>,
+        <h.morris@cascoda.com>
+CC:     Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+Subject: [PATCH] net: ieee802154: ca8210: Use new structure for SPI transfer delays
+Date:   Thu, 27 Feb 2020 15:12:45 +0200
+Message-ID: <20200227131245.30309-1-sergiu.cuciurean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rJwd6BRFiFCcLxzm"
-Content-Disposition: inline
-In-Reply-To: <202002261343.3B2ECE90@keescook>
-X-Cookie: Edwin Meese made me wear CORDOVANS!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-27_03:2020-02-26,2020-02-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ malwarescore=0 impostorscore=0 clxscore=1011 priorityscore=1501
+ lowpriorityscore=0 phishscore=0 spamscore=0 adultscore=0 mlxlogscore=999
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002270103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In a recent change to the SPI subsystem [1], a new `delay` struct was added
+to replace the `delay_usecs`. This change replaces the current
+`delay_usecs` with `delay` for this driver.
 
---rJwd6BRFiFCcLxzm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
+that both `delay_usecs` & `delay` are used (in this order to preserve
+backwards compatibility).
 
-On Wed, Feb 26, 2020 at 01:44:59PM -0800, Kees Cook wrote:
+[1] commit bebcfd272df6 ("spi: introduce `delay` field for
+`spi_transfer` + spi_transfer_delay_exec()")
 
-> Looks good. I sent a few more Reviewed-bys where I could. Who is
-> expected to pick this up? Catalin? Will?
+Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+---
+ drivers/net/ieee802154/ca8210.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thanks, I'm expecting it'll go through the arm64 tree.
+diff --git a/drivers/net/ieee802154/ca8210.c b/drivers/net/ieee802154/ca8210.c
+index 430c93786153..e04c3b60cae7 100644
+--- a/drivers/net/ieee802154/ca8210.c
++++ b/drivers/net/ieee802154/ca8210.c
+@@ -946,7 +946,8 @@ static int ca8210_spi_transfer(
+ 	cas_ctl->transfer.bits_per_word = 0; /* Use device setting */
+ 	cas_ctl->transfer.tx_buf = cas_ctl->tx_buf;
+ 	cas_ctl->transfer.rx_buf = cas_ctl->tx_in_buf;
+-	cas_ctl->transfer.delay_usecs = 0;
++	cas_ctl->transfer.delay.value = 0;
++	cas_ctl->transfer.delay.unit = SPI_DELAY_UNIT_USECS;
+ 	cas_ctl->transfer.cs_change = 0;
+ 	cas_ctl->transfer.len = sizeof(struct mac_message);
+ 	cas_ctl->msg.complete = ca8210_spi_transfer_complete;
+-- 
+2.17.1
 
---rJwd6BRFiFCcLxzm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5XwFwACgkQJNaLcl1U
-h9BVcAf+IT0x9Rm5Qvg7iutzvlk4f961QXDY77LCMmKkuIyjzf2qoM3UKYdN5A+s
-XCh02Tc8GwVaSWaipJplvGn2y3aPrb1oLBU8yp2zkFHk3UuDdkrIhwTqmg9EH6qO
-HMxhgu7d6bKkjgpIMZe78MrbRRJUCej3S9SHehfJjGHStqjcyN65h4a7GJZUkHkB
-8UMKB9ln6VV8BZHBWEZZa875jAojja3k2OzUTrtBmbq7WsuQIsIqjVblRGOIZXNQ
-6ok8vsW83J6iRtR6J46oSoIJqkXjfYucnbP7ulIOQDtUMvpS0O/C982bW0mtMvLB
-Qy9hBI9hA/mdTTxfXA8PF2WvD3HTHQ==
-=r3OK
------END PGP SIGNATURE-----
-
---rJwd6BRFiFCcLxzm--
