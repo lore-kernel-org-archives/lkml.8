@@ -2,80 +2,209 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E82C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7605C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 852A42469C
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83FE8246A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:16:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="XvmPksJe"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mmpv59bE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgB1XOq (ORCPT
+        id S1726688AbgB1XQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 18:14:46 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:34064 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbgB1XOp (ORCPT
+        Fri, 28 Feb 2020 18:16:24 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50600 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725957AbgB1XQY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 18:14:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8pDsHz6RetCNui6JYWKr66Fx8NY1FuyyASaCfvg/lxg=; b=XvmPksJeCDRXQQ5cf5W6h+Oyq
-        07ckpCnqKtXSeEZHq0eDZjLkdffizLd1S1gB8DyrRI+E7yTcx29QP5VTQqjOhsXngaXGCncZj7FCU
-        GV9Uj6UZvOljifCkTCmiGkq5WEKu+tQcukwSjaT6xeJVNwyIGSS3zGpwYwAZzWZ9y7MjlkRYkKC+x
-        NT19YcagLlX7y/IukSvsABe8EeZr3xuT3uNFWvFDi+CXmQR0dS65zJ6i5vCq4JO8KZwRnNhSLCvIc
-        F+9VR5aYhdF3Wpe7F2kuCzk6ZsSbhkSIVYZamt0gFxkagG/n1sNUSJs2o6kZ3fNP+/sbqhjGNdahW
-        Ez8iyOR+g==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:58244)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1j7oq3-0006ca-Vk; Fri, 28 Feb 2020 23:14:36 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1j7oq1-0002N1-7N; Fri, 28 Feb 2020 23:14:33 +0000
-Date:   Fri, 28 Feb 2020 23:14:33 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Chris Snook <chris.snook@gmail.com>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        Vivien Didelot <vivien.didelot@gmail.com>
-Subject: Re: [PATCH v9] net: ag71xx: port to phylink
-Message-ID: <20200228231433.GW25745@shell.armlinux.org.uk>
-References: <20200228145049.17602-1-o.rempel@pengutronix.de>
+        Fri, 28 Feb 2020 18:16:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582931782;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=FFNtyPEO7ZLHkoemtDDIXS2+6UBUM9dbd+oueyee19E=;
+        b=Mmpv59bE031e7frybDxAfMeyGCr9ljiU1JUR6JW3I7beUzN8PCfwujQ+mHvNo98KZxGv4I
+        NaFJq6wEGmRy5huPg1d4GZnqluwwUf96dEXjiHH6I2KMxxVv57PfmTvUDYDVu42I/5kAxe
+        1D/3GevQWJfmj0bbI4pCBo51ckrjkXc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-218-KhxuM6SaPZK063QXXdeFHQ-1; Fri, 28 Feb 2020 18:16:13 -0500
+X-MC-Unique: KhxuM6SaPZK063QXXdeFHQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A40698017CC;
+        Fri, 28 Feb 2020 23:16:11 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-18.pek2.redhat.com [10.72.8.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BFE4119756;
+        Fri, 28 Feb 2020 23:16:02 +0000 (UTC)
+Date:   Sat, 29 Feb 2020 07:15:57 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     yu kuai <yukuai3@huawei.com>
+Cc:     axboe@kernel.dk, chaitanya.kulkarni@wdc.com, damien.lemoal@wdc.com,
+        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com,
+        ajay.joshi@wdc.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
+        zhangxiaoxu5@huawei.com, luoshijie1@huawei.com
+Subject: Re: [PATCH V2] block: rename 'q->debugfs_dir' and
+ 'q->blk_trace->dir' in blk_unregister_queue()
+Message-ID: <20200228231557.GA18123@ming.t460p>
+References: <20200213081252.32395-1-yukuai3@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200228145049.17602-1-o.rempel@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200213081252.32395-1-yukuai3@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 03:50:49PM +0100, Oleksij Rempel wrote:
-> The port to phylink was done as close as possible to initial
-> functionality.
+On Thu, Feb 13, 2020 at 04:12:52PM +0800, yu kuai wrote:
+> syzbot is reporting use after free bug in debugfs_remove[1].
 > 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> This is because in request_queue, 'q->debugfs_dir' and
+> 'q->blk_trace->dir' could be the same dir. And in __blk_release_queue(),
+> blk_mq_debugfs_unregister() will remove everything inside the dir.
+> 
+> With futher investigation of the reporduce repro, the problem can be
+> reporduced by following procedure:
+> 
+> 1. LOOP_CTL_ADD, create a request_queue q1, blk_mq_debugfs_register() will
+> create the dir.
+> 2. LOOP_CTL_REMOVE, blk_release_queue() will add q1 to release queue.
+> 3. LOOP_CTL_ADD, create another request_queue q2,blk_mq_debugfs_register()
+> will fail because the dir aready exist.
+> 4. BLKTRACESETUP, create two files(msg and dropped) inside the dir.
+> 5. call __blk_release_queue() for q1, debugfs_remove_recursive() will
+> delete the files created in step 4.
+> 6. LOOP_CTL_REMOVE, blk_release_queue() will add q2 to release queue.
+> And when __blk_release_queue() is called for q2, blk_trace_shutdown() will
+> try to release the two files created in step 4, wich are aready released
+> in step 5.
+> 
+> thread1		         |kworker                   |thread2
+>  ----------------------- | ------------------------ | --------------------
+> loop_control_ioctl       |                          |
+>  loop_add                |                          |
+>   blk_mq_debugfs_register|                          |
+>    debugfs_create_dir    |                          |
+> loop_control_ioctl       |                          |
+>  loop_remove		 |                          |
+>   blk_release_queue      |                          |
+>    schedule_work         |                          |
+>                          |                          |loop_control_ioctl
+>                          |                          | loop_add
+>                          |                          |  ...
+>                          |                          |blk_trace_ioctl
+>                          |                          | __blk_trace_setup
+>                          |                          |   debugfs_create_file
+>                          |__blk_release_queue       |
+>                          | blk_mq_debugfs_unregister|
+>                          |  debugfs_remove_recursive|
+>                          |                          |loop_control_ioctl
+>                          |                          | loop_remove
+>                          |                          |  ...
+>                          |__blk_release_queue       |
+>                          | blk_trace_shutdown       |
+>                          |  debugfs_remove          |
+> 
+> commit dc9edc44de6c ("block: Fix a blk_exit_rl() regression") pushed the
+> final release of request_queue to a workqueue, so, when loop_add() is
+> called again(step 3), __blk_release_queue() might not been called yet,
+> which causes the problem.
+> 
+> Fix the problem by renaming 'q->debugfs_dir' or 'q->blk_trace->dir'
+> in blk_unregister_queue() if they exist.
+> 
+> [1] https://syzkaller.appspot.com/bug?extid=903b72a010ad6b7a40f2
+> References: CVE-2019-19770
+> Fixes: commit dc9edc44de6c ("block: Fix a blk_exit_rl() regression")
+> Reported-by: syzbot <syz...@syzkaller.appspotmail.com>
+> Signed-off-by: yu kuai <yukuai3@huawei.com>
+> ---
+> Changes in V2:
+>  add device name to the new dir name
+>  fix compile err when 'CONFIG_BLK_DEBUG_FS' is not enabled
+>  add treatment of 'q->blk_trace->dir'
+> 
+>  block/blk-sysfs.c | 42 ++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+> 
+> diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+> index fca9b158f4a0..1da8d4a4915a 100644
+> --- a/block/blk-sysfs.c
+> +++ b/block/blk-sysfs.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/blktrace_api.h>
+>  #include <linux/blk-mq.h>
+>  #include <linux/blk-cgroup.h>
+> +#include <linux/debugfs.h>
+>  
+>  #include "blk.h"
+>  #include "blk-mq.h"
+> @@ -1011,6 +1012,46 @@ int blk_register_queue(struct gendisk *disk)
+>  }
+>  EXPORT_SYMBOL_GPL(blk_register_queue);
+>  
+> +#ifdef CONFIG_DEBUG_FS
+> +/*
+> + * blk_prepare_release_queue - rename q->debugfs_dir and q->blk_trace->dir
+> + * @q: request_queue of which the dir to be renamed belong to.
+> + *
+> + * Because the final release of request_queue is in a workqueue, the
+> + * cleanup might not been finished yet while the same device start to
+> + * create. It's not correct if q->debugfs_dir still exist while trying
+> + * to create a new one.
+> + */
+> +static void blk_prepare_release_queue(struct request_queue *q)
+> +{
+> +	struct dentry *new = NULL;
+> +	struct dentry **old = NULL;
+> +	char name[DNAME_INLINE_LEN];
+> +	int i = 0;
+> +
+> +#ifdef CONFIG_BLK_DEBUG_FS
+> +	if (!IS_ERR_OR_NULL(q->debugfs_dir))
+> +		old = &q->debugfs_dir;
+> +#endif
+> +#ifdef CONFIG_BLK_DEV_IO_TRACE
+> +	/* q->debugfs_dir and q->blk_trace->dir can't both exist */
+> +	if (q->blk_trace && !IS_ERR_OR_NULL(q->blk_trace->dir))
+> +		old = &q->blk_trace->dir;
+> +#endif
 
-Looks fine from a phylink point of view now, thanks.
+If blk_trace->dir isn't same with .debugfs_dir, you will just rename
+blk_trace->dir, this way can't avoid the failure in step3, can it?
 
-Acked-by: Russell King <rmk+kernel@armlinux.org.uk>
+I understand that we just need to rename .debugfs_dir, meantime making
+sure blktrace code removes correct debugfs dir, is that enough for fixing
+this issue?
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+> +	if (old == NULL)
+> +		return;
+> +	while (new == NULL) {
+> +		sprintf(name, "ready_to_remove_%s_%d",
+> +				kobject_name(q->kobj.parent), i++);
+> +		new = debugfs_rename(blk_debugfs_root, *old,
+> +				     blk_debugfs_root, name);
+> +	}
+
+The above code can be run concurrently with blktrace shutdown, so race might
+exit between the two code paths, then bt->dir may has been renamed or being
+renamed in debugfs_remove(bt->dir), can this function work as expected or
+correct?
+
+And there is dead loop risk, so suggest to not rename this way.
+
+
+Thanks, 
+Ming
+
