@@ -2,149 +2,159 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1082C3F2D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06DC8C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A35A246A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDBDC246A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:13:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eb5jF986"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbgB1OLj (ORCPT
+        id S1726918AbgB1ONj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 09:11:39 -0500
-Received: from foss.arm.com ([217.140.110.172]:39026 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725796AbgB1OLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 09:11:38 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4A6DC31B;
-        Fri, 28 Feb 2020 06:11:37 -0800 (PST)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B99B3F7B4;
-        Fri, 28 Feb 2020 06:11:33 -0800 (PST)
-Date:   Fri, 28 Feb 2020 14:11:30 +0000
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Will Deacon <will@kernel.org>
-List-Id: <soc.lore.kernel.org>
-Cc:     Rob Herring <robh@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        soc@kernel.org, Robert Richter <rrichter@marvell.com>,
-        Jon Loeliger <jdl@jdl.com>, Alexander Graf <graf@amazon.com>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Mark Langsdorf <mlangsdo@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        James Morse <james.morse@arm.com>,
-        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-        kvm@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [RFC PATCH 06/11] iommu: arm-smmu: Remove Calxeda secure mode
- quirk
-Message-ID: <20200228141130.18be5bb8@donnerap.cambridge.arm.com>
-In-Reply-To: <20200228135645.GA4745@willie-the-truck>
-References: <20200218171321.30990-1-robh@kernel.org>
-        <20200218171321.30990-7-robh@kernel.org>
-        <20200218172000.GF1133@willie-the-truck>
-        <CAL_JsqJn1kG6gah+4318NQfJ4PaS3x3woWEUh08+OTfOcD+1MQ@mail.gmail.com>
-        <20200228100446.GA2395@willie-the-truck>
-        <20200228102556.1dde016e@donnerap.cambridge.arm.com>
-        <20200228105024.GC2395@willie-the-truck>
-        <20200228134254.03fc5e1b@donnerap.cambridge.arm.com>
-        <20200228135645.GA4745@willie-the-truck>
-Organization: ARM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+        Fri, 28 Feb 2020 09:13:39 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:37310 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbgB1ONj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 09:13:39 -0500
+Received: by mail-il1-f196.google.com with SMTP id a6so2823810ilc.4;
+        Fri, 28 Feb 2020 06:13:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1vX3IGGP77c2b/3UBHdZdGDWsxibLNsHOtAy3Rk4ea4=;
+        b=eb5jF9862cw9ZNPWS2BvKJuITHtXepRuabw7mxV7xRO+8D+2SngMexFxgDTVD+V35t
+         oHVN6Ce4xkmFc7ISDc7IMIBCBYRIIwmYsx3NSZqeTVvi9eYu4/zkw81aHP8+AOrfb4aT
+         hDmO9chY/TibE2rw06l2pOvmQ5ncep1JWCow0G9ag2U53lTNDYvkL7CHv9726DMOz0GN
+         N3J0GghJvjRzRlLex3aSibA70NvsVJo2uw0MCdVVqvR4mThQRMca2LtykoMtRYw1WPPN
+         oPGV0iMjabGSrkTDOhgV/0kPT5qNaacw1iGqUPR6TgRk0rTBhiwCx8OYJJJG3pvgHSIe
+         SgVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1vX3IGGP77c2b/3UBHdZdGDWsxibLNsHOtAy3Rk4ea4=;
+        b=edR4c6MCdhMp2VjeEBa2bbC01g/CwLU0XHrH2OW3GlYwT5WLdrIegAN+ITOfbUD+iO
+         LyfGP6ra7lP25bSQZn9g7FiJOAygDRAYyjZ6bWD+uq6wn/M76wijfumomlN+caLNz6iL
+         Fa6s5CxXhYNpoK87WuZMHz1fbdytpkCPocvkxqpCP2clkNk6HAA8uIW5vNK9gbMFFe7+
+         Gxjn99cAATSmVFjr6YPFiqjKsEtd51y3V9kapT4xzrf8DOzqBuu6n3Dr4gXRUx0QQbjL
+         PbfaXqTDVUkgJxWdSAz8AsdQ3Cw29Vcc8L4eQ8IS6zCEis2Aa4gWntxL5X3DmiZA3cmk
+         KD4g==
+X-Gm-Message-State: APjAAAV+sXyUHvlAuoNBXY2cH+8D2f//3g7HqMwbKxAKJqagdttHtud+
+        NatzMV/H6uWOH7acQB1pbgRIm8nsj+mnwaIZIWo=
+X-Google-Smtp-Source: APXvYqxv4pjc0mDsPsYIF8OsFcm97Hn8jLb7CSA55Nkj4jwxNpC4wckooDbw1Z4EEjs5UBMaly87MDsrWBLMiCvEa7A=
+X-Received: by 2002:a05:6e02:4c:: with SMTP id i12mr4248350ilr.112.1582899217185;
+ Fri, 28 Feb 2020 06:13:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <6ea7e486-a3f3-7def-1f88-2e645e3b9780@canonical.com> <6567c8fa690d9f9a0682ee22e528fcd5e3b51212.camel@kernel.org>
+In-Reply-To: <6567c8fa690d9f9a0682ee22e528fcd5e3b51212.camel@kernel.org>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Fri, 28 Feb 2020 15:13:30 +0100
+Message-ID: <CAOi1vP8wYvmngMCig3nJg45J93D2Ah=m3J91YpgRZ9hhscLe6w@mail.gmail.com>
+Subject: Re: libceph: follow redirect replies from osds
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Sage Weil <sage@redhat.co>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Feb 2020 13:56:46 +0000
-Will Deacon <will@kernel.org> wrote:
+On Fri, Feb 28, 2020 at 3:01 PM Jeff Layton <jlayton@kernel.org> wrote:
+>
+> On Fri, 2020-02-28 at 12:46 +0000, Colin Ian King wrote:
+> > Hi,
+> >
+> > Static analysis with Coverity has detected a potential issue in the
+> > following commit in function ceph_redirect_decode():
+> >
+> > commit 205ee1187a671c3b067d7f1e974903b44036f270
+> > Author: Ilya Dryomov <ilya.dryomov@inktank.com>
+> > Date:   Mon Jan 27 17:40:20 2014 +0200
+> >
+> >     libceph: follow redirect replies from osds
+> >
+> > The issue is as follows:
+> >
+> >
+> > 3486        len = ceph_decode_32(p);
+> >
+> > Unused value (UNUSED_VALUE)
+> > assigned_pointer: Assigning value from len to *p here, but that stored
+> > value is overwritten before it can be used.
+> >
+> > 3487        *p += len; /* skip osd_instructions */
+> > 3488
+> > 3489        /* skip the rest */
+> >
+> > value_overwrite: Overwriting previous write to *p with value from
+> > struct_end.
+> >
+> > 3490        *p = struct_end;
+> >
+> > The *p assignment in line 3487 is effectively being overwritten by the
+> > *p assignment in 3490.  Maybe the following is correct:
+> >
+> >         len = ceph_decode_32(p);
+> > -       p += len; /* skip osd_instructions */
+> > +       struct_end = *p + len;  /* skip osd_instructions */
+> >
+> >         /* skip the rest */
+> >         *p = struct_end;
+> >
+> > I'm not familiar with the ceph structure here, so I'm not sure what the
+> > correct fix would be.
+> >
+>
+> Probably something like this? (untested, of course)
+>
+> ----------------------
+>
+> [PATCH] libceph: fix up Coverity warning in ceph_redirect_decode
+>
+> We're going to skip to the end of the msg after checking the
+> object_name anyway, so there is no need to separately decode
+> the osd instructions that follow it.
+>
+> Reported-by: Colin Ian King <colin.king@canonical.com>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  net/ceph/osd_client.c | 3 ---
+>  1 file changed, 3 deletions(-)
+>
+> diff --git a/net/ceph/osd_client.c b/net/ceph/osd_client.c
+> index 8ff2856e2d52..51810db4130a 100644
+> --- a/net/ceph/osd_client.c
+> +++ b/net/ceph/osd_client.c
+> @@ -3483,9 +3483,6 @@ static int ceph_redirect_decode(void **p, void
+> *end,
+>                 goto e_inval;
+>         }
+>
+> -       len = ceph_decode_32(p);
+> -       *p += len; /* skip osd_instructions */
+> -
+>         /* skip the rest */
+>         *p = struct_end;
+>  out:
 
-> On Fri, Feb 28, 2020 at 01:42:54PM +0000, Andre Przywara wrote:
-> > On Fri, 28 Feb 2020 10:50:25 +0000
-> > Will Deacon <will@kernel.org> wrote:  
-> > > On Fri, Feb 28, 2020 at 10:25:56AM +0000, Andre Przywara wrote:  
-> > > > > On Tue, Feb 25, 2020 at 04:01:54PM -0600, Rob Herring wrote:    
-> > > > > > Seems we're leaving the platform support for now, but I think we never
-> > > > > > actually enabled SMMU support. It's not in the dts either in mainline
-> > > > > > nor the version I have which should be close to what shipped in
-> > > > > > firmware. So as long as Andre agrees, this one is good to apply.      
-> > > > > 
-> > > > > Andre? Can I queue this one for 5.7, please?    
-> > > > 
-> > > > I was wondering how much of a pain it is to keep it in? AFAICS there are
-> > > > other users of the "impl" indirection. If those goes away, I would be
-> > > > happy to let Calxeda go.    
-> > > 
-> > > The impl stuff is new, so we'll keep it around. The concern is more about
-> > > testing (see below).
-> > >   
-> > > > But Eric had the magic DT nodes to get the SMMU working, and I used that
-> > > > before, with updating the DT either on flash or dynamically via U-Boot.    
-> > > 
-> > > What did you actually use the SMMU for, though? The
-> > > 'arm_iommu_create_mapping()' interface isn't widely used and, given that
-> > > highbank doesn't support KVM, the use-cases for VFIO are pretty limited
-> > > too.  
-> > 
-> > AFAIK Highbank doesn't have the SMMU, probably mostly for that reason.
-> > I have a DT snippet for Midway, and that puts the MMIO base at ~36GB, which is not possible on Highbank.
-> > So I think that the quirk is really meant and needed for Midway.  
-> 
-> Sorry, but I don't follow your reasoning here. The MMIO base has nothing
-> to do with the quirk,
+Yeah, I have had the same patch in a local branch here since last year:
 
-It hasn't, but Highbank has no LPAE, so couldn't possible have a device at such an address. And this is the only MMIO address I know of.
+https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg2092861.html
 
-> although doing some digging it looks like your
-> conclusion about this applying to Midway (ecx-2000?) is correct:
-> 
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-January/226095.html
+I'll make sure to push it out this time ;)
 
-Right, thanks for that find. Yes, Midway is the codename for the ECX-2000 SoC product.
+Thanks,
 
-Cheers,
-Andre
- 
-> > > > So I don't know exactly *how* desperate you are with removing this, or if
-> > > > there are other reasons than "negative diffstat", but if possible I would
-> > > > like to keep it in.    
-> > > 
-> > > It's more that we *do* make quite a lot of changes to the arm-smmu driver
-> > > and it's never tested with this quirk. If you're stepping up to run smmu
-> > > tests on my queue for each release on highbank, then great, but otherwise
-> > > I'd rather not carry the code for fun. The change in diffstat is minimal
-> > > (we're going to need to hooks for nvidia, who broke things in a different
-> > > way).  
-> > 
-> > I am about to set up some more sophisticated testing, and will include
-> > some SMMU bits in it.  
-> 
-> Yes, please.
-> 
-> Will
-
+                Ilya
