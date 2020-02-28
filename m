@@ -2,172 +2,145 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 418F3C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2988C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 187A02469D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:50:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582905031;
-	bh=J8YaD3XysmkNtxkj5J5klSCDqrtpxqc61S9xpF9emqE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wTLrVq6SPwykll/Tdx3oo3LA2R7v4rd+et6T8vEhJPicYi6S3mB9+gk4mLm77eZln
-	 rfv/XiIgnw6sYiOn+fuW2RxRF05Zdhwb+fHZgZovEy7yBJxuo6dkPNB79CuOd1vqOS
-	 4tY4Pl3D0gYfdnoSixMI7Zd5ltQnla4VK8wZETMo=
+	by mail.kernel.org (Postfix) with ESMTP id C4DAA246AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:52:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727169AbgB1Pu3 (ORCPT
+        id S1727116AbgB1Pw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 10:50:29 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39299 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726974AbgB1Pu2 (ORCPT
+        Fri, 28 Feb 2020 10:52:58 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:54444 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726956AbgB1Pw6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 10:50:28 -0500
-Received: by mail-ot1-f65.google.com with SMTP id x97so2984261ota.6;
-        Fri, 28 Feb 2020 07:50:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wojIa6rVa31vXzIE/lHtQ3suG/pesMoWRIYn0QkiXJQ=;
-        b=GKp2h67x0g8NP8ohkmYCNtxAC1neHe69EKV3Gmk+veYOSGFWBf3aeYq7p2OTNtpln0
-         D0hw0+E+MSKf2i92oKFxJtU8PXuYxETff13C9UQdriym0X0D+ZT4Ac/H3kMcOVbFXoQt
-         RNJqRwe2oK0AmyEA6ZWv9Ef5pOKIpnB629pCDENjZ0z7Ced68rKvuG0wSp8VzQauA9kU
-         6YB8XXLhbbf48NiHFNQRbBBJkDBB9R0Qp72EJyRlmtvKFr5vuwsOmPAT9JjIFwyHDcx6
-         PvhdRTm3p/FKKSfH7SwdFKdA/kX7TrvDpD3FJI7wWisYmRLxgFKUkZIiCbInpJcLCVhw
-         DBTw==
-X-Gm-Message-State: APjAAAVm+k1jTVCR8g0w7F7iesZUDeS1EzqmgQVYpHSckNkv0+BJV+r3
-        BfZ26dLziDce9T0rjx1KnA==
-X-Google-Smtp-Source: APXvYqwt/R/pC1bGU/7oJf7NOrLG0KKZF7zg8vbj/26gV3Nsi5k0hBqYVdC8MOsZ04YH1PU4R0ebjw==
-X-Received: by 2002:a9d:d06:: with SMTP id 6mr3954158oti.176.1582905019525;
-        Fri, 28 Feb 2020 07:50:19 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e22sm3271814ote.32.2020.02.28.07.50.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 07:50:18 -0800 (PST)
-Received: (nullmailer pid 27282 invoked by uid 1000);
-        Fri, 28 Feb 2020 15:50:17 -0000
-Date:   Fri, 28 Feb 2020 09:50:17 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 2/9] ASoC: meson: convert axg tdm interface to schema
-Message-ID: <20200228155017.GA24730@bogus>
-References: <20200224145821.262873-1-jbrunet@baylibre.com>
- <20200224145821.262873-3-jbrunet@baylibre.com>
+        Fri, 28 Feb 2020 10:52:58 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j7hwT-0008I1-Db; Fri, 28 Feb 2020 15:52:45 +0000
+Date:   Fri, 28 Feb 2020 16:52:44 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Steven Whitehouse <swhiteho@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
+ #17]
+Message-ID: <20200228155244.k4h4hz3dqhl7q7ks@wittgenstein>
+References: <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk>
+ <1582316494.3376.45.camel@HansenPartnership.com>
+ <CAOssrKehjnTwbc6A1VagM5hG_32hy3mXZenx_PdGgcUGxYOaLQ@mail.gmail.com>
+ <1582556135.3384.4.camel@HansenPartnership.com>
+ <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com>
+ <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com>
+ <1582644535.3361.8.camel@HansenPartnership.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200224145821.262873-3-jbrunet@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1582644535.3361.8.camel@HansenPartnership.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 03:58:14PM +0100, Jerome Brunet wrote:
-> Convert the DT binding documentation for the Amlogic tdm interface to
-> schema.
+On Tue, Feb 25, 2020 at 07:28:55AM -0800, James Bottomley wrote:
+> On Tue, 2020-02-25 at 12:13 +0000, Steven Whitehouse wrote:
+> > Hi,
+> > 
+> > On 24/02/2020 15:28, Miklos Szeredi wrote:
+> > > On Mon, Feb 24, 2020 at 3:55 PM James Bottomley
+> > > <James.Bottomley@hansenpartnership.com> wrote:
+> > > 
+> > > > Once it's table driven, certainly a sysfs directory becomes
+> > > > possible. The problem with ST_DEV is filesystems like btrfs and
+> > > > xfs that may have multiple devices.
+> > > 
+> > > For XFS there's always  a single sb->s_dev though, that's what
+> > > st_dev will be set to on all files.
+> > > 
+> > > Btrfs subvolume is sort of a lightweight superblock, so basically
+> > > all such st_dev's are aliases of the same master superblock.  So
+> > > lookup of all subvolume st_dev's could result in referencing the
+> > > same underlying struct super_block (just like /proc/$PID will
+> > > reference the same underlying task group regardless of which of the
+> > > task group member's PID is used).
+> > > 
+> > > Having this info in sysfs would spare us a number of issues that a
+> > > set of new syscalls would bring.  The question is, would that be
+> > > enough, or is there a reason that sysfs can't be used to present
+> > > the various filesystem related information that fsinfo is supposed
+> > > to present?
+> > > 
+> > > Thanks,
+> > > Miklos
+> > > 
+> > 
+> > We need a unique id for superblocks anyway. I had wondered about
+> > using s_dev some time back, but for the reasons mentioned earlier in
+> > this thread I think it might just land up being confusing and
+> > difficult to manage. While fake s_devs are created for sbs that don't
+> > have a device, I can't help thinking that something closer to
+> > ifindex, but for superblocks, is needed here. That would avoid the
+> > issue of which device number to use.
+> > 
+> > In fact we need that anyway for the notifications, since without
+> > that  there is a race that can lead to missing remounts of the same
+> > device, in  case a umount/mount pair is missed due to an overrun, and
+> > then fsinfo returns the same device as before, with potentially the
+> > same mount options too. So I think a unique id for a superblock is a
+> > generically useful feature, which would also allow for sensible sysfs
+> > directory naming, if required,
 > 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  .../bindings/sound/amlogic,axg-tdm-iface.txt  | 22 -------
->  .../bindings/sound/amlogic,axg-tdm-iface.yaml | 57 +++++++++++++++++++
->  2 files changed, 57 insertions(+), 22 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.txt
->  create mode 100644 Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.yaml
+> But would this be informative and useful for the user?  I'm sure we can
+> find a persistent id for a persistent superblock, but what about tmpfs
+> ... that's going to have to change with every reboot.  It's going to be
+> remarkably inconvenient if I want to get fsinfo on /run to have to keep
+> finding what the id is.
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.txt
-> deleted file mode 100644
-> index cabfb26a5f22..000000000000
-> --- a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.txt
-> +++ /dev/null
-> @@ -1,22 +0,0 @@
-> -* Amlogic Audio TDM Interfaces
-> -
-> -Required properties:
-> -- compatible: 'amlogic,axg-tdm-iface'
-> -- clocks: list of clock phandle, one for each entry clock-names.
-> -- clock-names: should contain the following:
-> -  * "sclk" : bit clock.
-> -  * "lrclk": sample clock
-> -  * "mclk" : master clock
-> -	     -> optional if the interface is in clock slave mode.
-> -- #sound-dai-cells: must be 0.
-> -
-> -Example of TDM_A on the A113 SoC:
-> -
-> -tdmif_a: audio-controller@0 {
-> -	compatible = "amlogic,axg-tdm-iface";
-> -	#sound-dai-cells = <0>;
-> -	clocks = <&clkc_audio AUD_CLKID_MST_A_MCLK>,
-> -		 <&clkc_audio AUD_CLKID_MST_A_SCLK>,
-> -		 <&clkc_audio AUD_CLKID_MST_A_LRCLK>;
-> -	clock-names = "mclk", "sclk", "lrclk";
-> -};
-> diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.yaml b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.yaml
-> new file mode 100644
-> index 000000000000..5f04f9cf30a0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.yaml
-> @@ -0,0 +1,57 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/amlogic,axg-tdm-iface.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Amlogic Audio TDM Interfaces
-> +
-> +maintainers:
-> +  - Jerome Brunet <jbrunet@baylibre.com>
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^audio-controller-.*"
-> +
-> +  "#sound-dai-cells":
-> +    const: 0
-> +
-> +  compatible:
-> +    items:
-> +      - const: 'amlogic,axg-tdm-iface'
-> +
-> +  clocks:
-> +    minItems: 2
-> +    maxItems: 3
-> +    items:
-> +      - description: Bit clock
-> +      - description: Sample clock
-> +      - description: Master clock #optional
-> +
-> +  clock-names:
-> +    minItems: 2
-> +    maxItems: 3
-> +    items:
-> +      - const: sclk
-> +      - const: lrclk
-> +      - const: mclk
-> +
-> +required:
-> +  - "#sound-dai-cells"
-> +  - compatible
-> +  - clocks
-> +  - clock-names
+> The other thing a file descriptor does that sysfs doesn't is that it
+> solves the information leak: if I'm in a mount namespace that has no
+> access to certain mounts, I can't fspick them and thus I can't see the
+> information.  By default, with sysfs I can.
 
-Add an:
+Difficult to figure out which part of the thread to reply too. :)
 
-additionalProperties: false
+sysfs strikes me as fundamentally misguided for this task.
 
-With that,
+Init systems or any large-scale daemon will hate parsing things, there's
+that and parts of the reason why mountinfo sucks is because of parsing a
+possibly a potentially enormous file. Exposing information in sysfs will
+require parsing again one way or the other. I've been discussing these
+bottlenecks with Lennart quite a bit and reliable and performant mount
+notifications without needing to parse stuff is very high on the issue
+list. But even if that isn't an issue for some reason the namespace
+aspect is definitely something I'd consider a no-go.
+James has been poking at this a little already and I agree. More
+specifically, sysfs and proc already are a security nightmare for
+namespace-aware workloads and require special care. Not leaking
+information in any way is a difficult task. I mean, over the last two
+years I sent quite a lot of patches to the networking-namespace aware
+part of sysfs alone either fixing information leaks, or making other
+parts namespace aware that weren't and were causing issues (There's
+another large-ish series sitting in Dave's tree right now.). And tbh,
+network namespacing in sysfs is imho trivial compared to what we would
+need to do to handle mount namespacing and especially mount propagation.
+fsinfo() is way cleaner and ultimately simpler approach. We very much
+want it file-descriptor based. The mount api opens up the road to secure
+and _delegatable_ querying of filesystem information.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Christian
