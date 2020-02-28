@@ -2,114 +2,162 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F8FC3F2D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02466C3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCE0C246AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:40:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE7B92469D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:41:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="J8Yk12NM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V+4T56gi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727252AbgB1PkV (ORCPT
+        id S1727174AbgB1Pla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 10:40:21 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39459 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727080AbgB1PkV (ORCPT
+        Fri, 28 Feb 2020 10:41:30 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39735 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727060AbgB1Pla (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 10:40:21 -0500
-Received: by mail-io1-f66.google.com with SMTP id h3so3842010ioj.6
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 07:40:21 -0800 (PST)
+        Fri, 28 Feb 2020 10:41:30 -0500
+Received: by mail-wm1-f66.google.com with SMTP id c84so3647624wme.4;
+        Fri, 28 Feb 2020 07:41:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9LqrzC6b4MYZRRh7fElw2sFSCD8yqepAp1R1qGOOE9o=;
-        b=J8Yk12NMM3aPoUGzMtUEGaWQFyt3fGjSMbPBBqAHvUe0SiUviOzH6VRNTh7x/BJ7Nk
-         fo5M6inLsbXFrgRv1vvzEFHoaLLfvF0hcPU0nGmaPzvQ0XYHYF3wvsXRgaRhkpjx0NjV
-         kUMeGbbANhNsXkeTJ9LhowDRAkP/N2ybtUnaA=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XNr9LS4NdBHHOaGNbY4Rvbef+Vzw8n41HfwyhtLS84U=;
+        b=V+4T56gijWkocDCf9UuoVhIlpqQou5tVyjGVTxcqIhks9Ikt5iJs6SyM+ArNyb3AaJ
+         yXm2/PfBheCmPfkkn1K6kgvJEoMAoaZ2SPw4G0BZmG8lpER5EEBuQ9KQET1ESWQO7nas
+         /IErfsz4Cf7rsxnTfdkNspNCHZsac6f7X1wNWhuB9kmzFq4sKC6Bbuo5SWEJ6XdoNlsb
+         o/0dh8BcJQlEQbIk3V3c+FmVxXyS91iHErWDX/ssZZAgW55B720dQtLlsl66IN3ixKEu
+         PB2r3pZunzJMhrXyfDjwGlmv06I8TlRt/6U7jeExuuLhrJVMk+T288qgq3AQLUvsgWEp
+         zukg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9LqrzC6b4MYZRRh7fElw2sFSCD8yqepAp1R1qGOOE9o=;
-        b=O4KEOW//gH7qY9hIYaR94kbWqEaMVSnFuRldYAMlYl7eqqwyswJn4knLosX/BOUyPJ
-         CkIp9cnxWJSS2kmvvIC/bRjIxuAB3KlHUjNF+2EZkG3vpWiHC9X6W1U7xqyn732SxdO0
-         KfrKLXsybM02XVMo657ZuAEHZHgkU65F2SuJqD/O58KsSK19S2nov3TE+10z1nhppcb1
-         O/D9MqqXODVmnpzFBXUb4r6OYO7Dmn6lGK3bHJ9b+LXeJvJZnAuef8s2wsOsV8g8xecq
-         4obYRPHB6Vbtw2yclRAbu9rZzFBVIC44rHBJ3qhuVG8sPFmuebWoMaFbzjIfI8dskfto
-         NXzQ==
-X-Gm-Message-State: APjAAAWVZfgCbeakrD3UWKm4JAf6P6BVz2n3vlAw0HcT0eXd2Yq2BSIR
-        F/L29hAkURNU8Yh8BhJY2uRkMYz8VVdIyFjBMg1Ipg==
-X-Google-Smtp-Source: APXvYqxWaKGs/GMkcpGpUL7E+8RUggAdz5iFOr+Psoqlg5UOSbDYmueoqkK9GE5rgDFb+W9horX9kqWoe/ME2cmp0yI=
-X-Received: by 2002:a02:6a10:: with SMTP id l16mr3820784jac.77.1582904420636;
- Fri, 28 Feb 2020 07:40:20 -0800 (PST)
-MIME-Version: 1.0
-References: <CAOssrKehjnTwbc6A1VagM5hG_32hy3mXZenx_PdGgcUGxYOaLQ@mail.gmail.com>
- <1582556135.3384.4.camel@HansenPartnership.com> <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com>
- <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com> <1582644535.3361.8.camel@HansenPartnership.com>
- <CAOssrKfaxnHswrKejedFzmYTbYivJ++cPes4c91+BJDfgH4xJA@mail.gmail.com>
- <1c8db4e2b707f958316941d8edd2073ee7e7b22c.camel@themaw.net>
- <CAJfpegtRoXnPm5_sMYPL2L6FCZU52Tn8wk7NcW-dm4_2x=dD3Q@mail.gmail.com>
- <3e656465c427487e4ea14151b77d391d52cd6bad.camel@themaw.net>
- <CAJfpegu5xLcR=QbAOnUrL49QTem6X6ok7nPU+kLFnNHdPXSh1A@mail.gmail.com>
- <20200227151421.3u74ijhqt6ekbiss@ws.net.home> <ba2b44cc1382c62be3ac896a5476c8e1dc7c0230.camel@themaw.net>
- <CAJfpeguXPmw+PfZJFOscGLm0oe7dUQY4CYXazx9=x020Fbe86A@mail.gmail.com> <1582902521.3338.20.camel@HansenPartnership.com>
-In-Reply-To: <1582902521.3338.20.camel@HansenPartnership.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Fri, 28 Feb 2020 16:40:09 +0100
-Message-ID: <CAJfpegtZ0EYhQYeUmqYNd+Y+K88g4P6BKahhtf7VkuXZoe_UYQ@mail.gmail.com>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
-To:     James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc:     Ian Kent <raven@themaw.net>, Karel Zak <kzak@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Lennart Poettering <lennart@poettering.net>,
-        =?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XNr9LS4NdBHHOaGNbY4Rvbef+Vzw8n41HfwyhtLS84U=;
+        b=p39LCpTucuj2fGtr76bR0oOAQPv+bp3x3p8BXDWIm02LnEPIHPtadf72K4BtTwyQog
+         U54KECF2tS/V1JaM06udReNYbnEedAvjv9IiVTKU2Z00PPv/TPgO9pEEwL6OlKgsz83P
+         ujm/ERBVZq6xyVx6ZaU74k1dCVJth+aMMmFPGj8x+H/cI2Gl88pv9qUs8Mmc2LHL6iyU
+         6hl1WwsbCqdpRd+WigNKD6sKHklT7Qxm94cb12vywCgn7fMBSBnkNzuhQTFSvDDFo6OW
+         OzHQGYgSJKc/pl6wyI8ta32jrT72A5bf7Hzb+w4Uc8kUmqJObZ81+CxEa42VxU4Owx4b
+         pFpA==
+X-Gm-Message-State: APjAAAUtM8nNOd9y8UM1khRP53kYG4u/uWAwzqQDtCFkrII7WsXjLpn/
+        2OKtx46OIly6eM1l/b1oVhA=
+X-Google-Smtp-Source: APXvYqx07nbNnJcNa+gIPlfmOe/rE95wPUQ9FmQByVrfLSt460UDzFev6s0hSOVfySBvJ0w5DozNQA==
+X-Received: by 2002:a1c:4908:: with SMTP id w8mr5178421wma.57.1582904488030;
+        Fri, 28 Feb 2020 07:41:28 -0800 (PST)
+Received: from prasmi.home ([2a00:23c8:2510:d000:3855:fd13:6b76:a11b])
+        by smtp.gmail.com with ESMTPSA id k16sm13355349wrd.17.2020.02.28.07.41.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 07:41:27 -0800 (PST)
+From:   Lad Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        util-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     Andrew Murray <andrew.murray@arm.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v5 0/7] Add support for PCIe controller to work in endpoint mode on R-Car SoCs
+Date:   Fri, 28 Feb 2020 15:41:15 +0000
+Message-Id: <20200228154122.14164-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 4:09 PM James Bottomley
-<James.Bottomley@hansenpartnership.com> wrote:
+This patch series adds support for PCIe controller on rcar to work in
+endpoint mode, this also extends the epf framework to handle base region
+for mapping PCI address locally.
 
-> Containers are file based entities, so file descriptors are their most
-> natural thing and they have full ACL protection within the container
-> (can't open the file, can't then get the fd).  The other reason
-> container people like file descriptors (all the Xat system calls that
-> have been introduced) is that if we do actually need to break the
-> boundaries or privileges of the container, we can do so by getting the
-> orchestration system to pass in a fd the interior of the container
-> wouldn't have access to.
+Note:
+The cadence/rockchip/designware endpoint drivers are build tested only.
 
-Yeah, agreed about the simplicity of fd based access.   Then again a
-filesystem access would allow immediate access to all scripts,
-languages, etc.  That, I think is a huge bonus compared to the
-ioctl-like mess that the current proposal is, which would require
-library, utility, language binding updates on all changes.  Ugh.
+Changes for v5:
+1] Rebased the patches on next branch of https://git.kernel.org/pub/scm/
+   linux/kernel/git/helgaas/pci.git
+2] Fixed review comments reported by Kishon while fetching the matching
+   window in function pci_epc_get_matching_window()
+3] Fixed review comments reported by Bjorn
+   a] Split patch up first patch so that its easier to review and incremental
+   b] Fixed typos
+4] Included Reviewed tag from Rob for the dt-binding patch
+5] Fixed issue reported by Nathan for assigning variable to itself
 
-One way to resolve that is to have the mount information
-magic-symlinked from /proc/PID/fdmount/FD directly to the mountinfo
-dir, which would then have a link into the sbinfo dir.  With other
-access denied to all except sysadmin.
+Changes for v4:
+1] Fixed dtb_check error reported by Rob
+2] Fixed review comments reported by Kishon
+   a] Dropped pci_epc_find_best_fit_window()
+   b] Fixed initializing mem ptr in __pci_epc_mem_init()
+   c] Dropped map_size from pci_epc_mem_window structure
 
-Would that work?
+Changes for v3:
+1] Fixed review comments from Bjorn and Kishon.
+3] Converted to DT schema
 
-Thanks,
-Miklos
+Changes for v2:
+1] Fixed review comments from Biju for dt-bindings to include an example
+   for a tested platform.
+2] Fixed review comments from Kishon to extend the features of outbound
+   regions in epf framework.
+3] Added support to parse outbound-ranges in OF.
+
+Lad Prabhakar (7):
+  PCI: rcar: Rename pcie-rcar.c to pcie-rcar-host.c
+  PCI: rcar: Move shareable code to a common file
+  PCI: rcar: Fix calculating mask for PCIEPAMR register
+  PCI: endpoint: Add support to handle multiple base for mapping
+    outbound memory
+  dt-bindings: PCI: rcar: Add bindings for R-Car PCIe endpoint
+    controller
+  PCI: rcar: Add support for rcar PCIe controller in endpoint mode
+  misc: pci_endpoint_test: Add Device ID for RZ/G2E PCIe controller
+
+ .../devicetree/bindings/pci/rcar-pci-ep.yaml       |   76 ++
+ arch/arm64/configs/defconfig                       |    2 +-
+ drivers/misc/pci_endpoint_test.c                   |    3 +
+ drivers/pci/controller/Kconfig                     |   15 +-
+ drivers/pci/controller/Makefile                    |    3 +-
+ drivers/pci/controller/cadence/pcie-cadence-ep.c   |    7 +-
+ drivers/pci/controller/dwc/pcie-designware-ep.c    |   29 +-
+ drivers/pci/controller/pcie-rcar-ep.c              |  490 ++++++++
+ drivers/pci/controller/pcie-rcar-host.c            | 1053 +++++++++++++++++
+ drivers/pci/controller/pcie-rcar.c                 | 1229 +-------------------
+ drivers/pci/controller/pcie-rcar.h                 |  129 ++
+ drivers/pci/controller/pcie-rockchip-ep.c          |    7 +-
+ drivers/pci/endpoint/pci-epc-mem.c                 |  167 ++-
+ include/linux/pci-epc.h                            |   39 +-
+ 14 files changed, 1985 insertions(+), 1264 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
+ create mode 100644 drivers/pci/controller/pcie-rcar-ep.c
+ create mode 100644 drivers/pci/controller/pcie-rcar-host.c
+ create mode 100644 drivers/pci/controller/pcie-rcar.h
+
+-- 
+2.7.4
+
