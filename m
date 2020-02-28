@@ -2,30 +2,30 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F5EC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 01:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC30C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 01:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20E37246A5
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 01:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDA2A246A5
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 01:02:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730537AbgB1BCp (ORCPT
+        id S1730607AbgB1BCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 20:02:45 -0500
-Received: from mga14.intel.com ([192.55.52.115]:40111 "EHLO mga14.intel.com"
+        Thu, 27 Feb 2020 20:02:46 -0500
+Received: from mga14.intel.com ([192.55.52.115]:40114 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730534AbgB1BCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 20:02:43 -0500
+        id S1730577AbgB1BCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 20:02:45 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 17:02:42 -0800
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 17:02:43 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
-   d="scan'208";a="317976996"
+   d="scan'208";a="317977010"
 Received: from skuppusw-desk.jf.intel.com ([10.7.201.16])
   by orsmga001.jf.intel.com with ESMTP; 27 Feb 2020 17:02:42 -0800
 From:   sathyanarayanan.kuppuswamy@linux.intel.com
@@ -34,10 +34,12 @@ Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         ashok.raj@intel.com,
         Kuppuswamy Sathyanarayanan 
         <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: [PATCH v16 0/9] Add Error Disconnect Recover (EDR) support
-Date:   Thu, 27 Feb 2020 16:59:42 -0800
-Message-Id: <cover.1582850766.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v16 6/9] PCI/AER: Allow clearing Error Status Register in FF mode
+Date:   Thu, 27 Feb 2020 16:59:48 -0800
+Message-Id: <9e71cba3596213b40d7c280bf57d8938189c2866.1582850766.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.1582850766.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <cover.1582850766.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,117 +49,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-This patchset adds support for following features:
+As per PCI firmware specification r3.2 System Firmware Intermediary
+(SFI) _OSC and DPC Updates ECR
+(https://members.pcisig.com/wg/PCI-SIG/document/13563), sec titled "DPC
+Event Handling Implementation Note", page 10, Error Disconnect Recover
+(EDR) support allows OS to handle error recovery and clearing Error
+Registers even in FF mode. So create new API pci_aer_raw_clear_status()
+which allows clearing AER registers without FF mode checks.
 
-1. Error Disconnect Recover (EDR) support.
-2. _OSC based negotiation support for DPC.
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+---
+ drivers/pci/pci.h      |  2 ++
+ drivers/pci/pcie/aer.c | 22 ++++++++++++++++++----
+ 2 files changed, 20 insertions(+), 4 deletions(-)
 
-You can find EDR spec in the following link.
-
-https://members.pcisig.com/wg/PCI-SIG/document/12614
-
-Changes since v15:
- * Splitted Patch # 3 in previous set into multiple patches.
- * Refactored EDR driver use pci_dev instead of dpc_dev.
- * Added some debug logs to EDR driver.
- * Used pci_aer_raw_clear_status() for clearing AER errors in EDR path.
- * Addressed other comments from Bjorn.
- * Rebased patches on top of Bjorns "PCI/DPC: Move data to struct pci_dev" patch.
-
-Changes since v14:
- * Rebased on top of v5.6-rc1
-
-Changes since v13:
- * Moved all EDR related code to edr.c
- * Addressed Bjorns comments.
-
-Changes since v12:
- * Addressed Bjorns comments.
- * Added check for CONFIG_PCIE_EDR before requesting DPC control from firmware.
- * Removed ff_check parameter from AER APIs.
- * Used macros for _OST return status values in DPC driver.
-
-Changes since v11:
- * Allowed error recovery to proceed after successful reset_link().
- * Used correct ACPI handle for sending EDR status.
- * Rebased on top of v5.5-rc5
-
-Changes since v10:
- * Added "edr_enabled" member to dpc priv structure, which is used to cache EDR
-   enabling status based on status of pcie_ports_dpc_native and FF mode.
- * Changed type of _DSM argument from Integer to Package in acpi_enable_dpc_port()
-   function to fix ACPI related boot warnings.
- * Rebased on top of v5.5-rc3
-
-Changes since v9:
- * Removed caching of pcie_aer_get_firmware_first() in dpc driver.
- * Added proper spec reference in git log for patch 5 & 7.
- * Added new function parameter "ff_check" to pci_cleanup_aer_uncorrect_error_status(),
-   pci_aer_clear_fatal_status() and pci_cleanup_aer_error_status_regs() functions.
- * Rebased on top of v5.4-rc5
-
-Changes since v8:
- * Rebased on top of v5.4-rc1
-
-Changes since v7:
- * Updated DSM version number to match the spec.
-
-Changes since v6:
- * Modified the order of patches to enable EDR only after all necessary support is added in kernel.
- * Addressed Bjorn comments.
-
-Changes since v5:
- * Addressed Keith's comments.
- * Added additional check for FF mode in pci_aer_init().
- * Updated commit history of "PCI/DPC: Add support for DPC recovery on NON_FATAL errors" patch.
-
-Changes since v4:
- * Rebased on top of v5.3-rc1
- * Fixed lock/unlock issue in edr_handle_event().
- * Merged "Update error status after reset_link()" patch into this patchset.
-
-Changes since v3:
- * Moved EDR related ACPI functions/definitions to pci-acpi.c
- * Modified commit history in few patches to include spec reference.
- * Added support to handle DPC triggered by NON_FATAL errors.
- * Added edr_lock to protect PCI device receiving duplicate EDR notifications.
- * Addressed Bjorn comments.
-
-Changes since v2:
- * Split EDR support patch into multiple patches.
- * Addressed Bjorn comments.
-
-Changes since v1:
- * Rebased on top of v5.1-rc1
-
-Kuppuswamy Sathyanarayanan (9):
-  PCI/ERR: Update error status after reset_link()
-  PCI/AER: Move pci_cleanup_aer_error_status_regs() declaration to pci.h
-  PCI/ERR: Remove service dependency in pcie_do_recovery()
-  PCI/ERR: Return status of pcie_do_recovery()
-  PCI/DPC: Cache DPC capabilities in pci_init_capabilities()
-  PCI/AER: Allow clearing Error Status Register in FF mode
-  PCI/DPC: Export DPC error recovery functions
-  PCI/DPC: Add Error Disconnect Recover (EDR) support
-  PCI/ACPI: Enable EDR support
-
- drivers/acpi/pci_root.c   |  16 +++
- drivers/pci/pci-acpi.c    |   3 +
- drivers/pci/pci.h         |  16 ++-
- drivers/pci/pcie/Kconfig  |  10 ++
- drivers/pci/pcie/Makefile |   1 +
- drivers/pci/pcie/aer.c    |  33 +++--
- drivers/pci/pcie/dpc.c    |  46 ++++---
- drivers/pci/pcie/edr.c    | 251 ++++++++++++++++++++++++++++++++++++++
- drivers/pci/pcie/err.c    |  26 ++--
- drivers/pci/probe.c       |   1 +
- include/linux/acpi.h      |   6 +-
- include/linux/aer.h       |   5 -
- include/linux/pci-acpi.h  |   8 ++
- include/linux/pci.h       |   1 +
- 14 files changed, 377 insertions(+), 46 deletions(-)
- create mode 100644 drivers/pci/pcie/edr.c
-
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index e57e78b619f8..c239e6dd2542 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -655,6 +655,7 @@ extern const struct attribute_group aer_stats_attr_group;
+ void pci_aer_clear_fatal_status(struct pci_dev *dev);
+ void pci_aer_clear_device_status(struct pci_dev *dev);
+ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev);
++int pci_aer_raw_clear_status(struct pci_dev *dev);
+ #else
+ static inline void pci_no_aer(void) { }
+ static inline void pci_aer_init(struct pci_dev *d) { }
+@@ -665,6 +666,7 @@ static inline int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+ {
+ 	return -EINVAL;
+ }
++int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL; }
+ #endif
+ 
+ #ifdef CONFIG_ACPI
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 1235eca0a2e6..70a1493d8aa6 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -420,7 +420,16 @@ void pci_aer_clear_fatal_status(struct pci_dev *dev)
+ 		pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, status);
+ }
+ 
+-int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
++/**
++ * pci_aer_raw_clear_status - Clear AER error registers.
++ * @dev: the PCI device
++ *
++ * NOTE: Allows clearing error registers in both FF and
++ * non FF modes.
++ *
++ * Returns 0 on success, or negative on failure.
++ */
++int pci_aer_raw_clear_status(struct pci_dev *dev)
+ {
+ 	int pos;
+ 	u32 status;
+@@ -433,9 +442,6 @@ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+ 	if (!pos)
+ 		return -EIO;
+ 
+-	if (pcie_aer_get_firmware_first(dev))
+-		return -EIO;
+-
+ 	port_type = pci_pcie_type(dev);
+ 	if (port_type == PCI_EXP_TYPE_ROOT_PORT) {
+ 		pci_read_config_dword(dev, pos + PCI_ERR_ROOT_STATUS, &status);
+@@ -451,6 +457,14 @@ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
+ 	return 0;
+ }
+ 
++int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
++{
++	if (pcie_aer_get_firmware_first(dev))
++		return -EIO;
++
++	return pci_aer_raw_clear_status(dev);
++}
++
+ void pci_save_aer_state(struct pci_dev *dev)
+ {
+ 	struct pci_cap_saved_state *save_state;
 -- 
 2.21.0
 
