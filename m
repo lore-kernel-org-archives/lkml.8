@@ -3,96 +3,167 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7107AC3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A0FC3F2CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4797D246A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0A27246A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:19:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GWPQDj5H"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lF8EzwU6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgB1ISD (ORCPT
+        id S1726440AbgB1ITe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 03:18:03 -0500
-Received: from mailgw02.mediatek.com ([1.203.163.81]:53409 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725871AbgB1ISD (ORCPT
+        Fri, 28 Feb 2020 03:19:34 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34835 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbgB1ITe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 03:18:03 -0500
-X-UUID: c135d94be70544ebb46313f0defd9a6b-20200228
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=Tbydff45iGovy+Y4pjIMl85obrLQehvyczoepJ8vfGk=;
-        b=GWPQDj5HSmo6isC2wgMpOGgJfprlDURFOfpym3tzrpwhlkTwU/HX29RvOI6v6A1B7CTXExsWpHNHfqDEIo1hCXk+fDRx6aETmGzTlwAzp3HdAVQm5dPY4wZVaTLTJ4huoh+frGPDRN4Plz1GhBu7AeM/pR0rDVgk3ySopodkI54=;
-X-UUID: c135d94be70544ebb46313f0defd9a6b-20200228
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <jitao.shi@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 145473930; Fri, 28 Feb 2020 16:15:18 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33DR.mediatek.inc
- (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 28 Feb
- 2020 16:11:04 +0800
-Received: from mszsdclx1018.gcn.mediatek.inc (10.16.6.18) by
- MTKCAS32.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Fri, 28 Feb 2020 16:15:31 +0800
-From:   Jitao Shi <jitao.shi@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-CC:     <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
-        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
-        <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
-        <stonea168@163.com>, <huijuan.xie@mediatek.com>,
-        Jitao Shi <jitao.shi@mediatek.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v11 1/6] dt-bindings: media: add pclk-sample dual edge property
-Date:   Fri, 28 Feb 2020 16:14:36 +0800
-Message-ID: <20200228081441.88179-2-jitao.shi@mediatek.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200228081441.88179-1-jitao.shi@mediatek.com>
-References: <20200228081441.88179-1-jitao.shi@mediatek.com>
+        Fri, 28 Feb 2020 03:19:34 -0500
+Received: by mail-pf1-f193.google.com with SMTP id i19so1344374pfa.2
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 00:19:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=82hR3jxtPv4UggNL0wzEkgrjlskYE39vomAxuJiCLBc=;
+        b=lF8EzwU6FiMyfYM17VgdfJRlWA1Cngg7w662b4E4QrKszsubmtKTlYbyi5xobHoLQK
+         3i6p/VlC6tP3jrlL++O+5zrHqkw+7BzZY5YEg9hT+d9iCru4cq++vUG6ZFd9758OuQMD
+         a9X+2PvDkLyvjcKf6zLj6h/twbH9Wb8B+vH9dmkGPEQXqA53hWhTsPv25xz9sAKkSCT7
+         TVN/jNsx5Q5wQb7mfmdqMiEtEjR6aTmAQDcq+a9WUjLqOmflo7sJbVnbx0yXZ81447nk
+         /j1mmawMVmBu37FXmc0oIfCUnrDW8BmszNpbWdPIyfrTrYtfN5Kh5PvNHWuLrCMY9m+K
+         21SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=82hR3jxtPv4UggNL0wzEkgrjlskYE39vomAxuJiCLBc=;
+        b=ud7mI9uRj/O1fF7r/WGVtnGvA1w87+EeJ5APiiLhuW6n4dimOkzbOYx6gAMOXr4RtC
+         2XJutWXx7KXIncMKpDYfHE0WAun8e9d/K0c/D00A8Fq66F8YlvLp+7sdjJ/RAUIU5Gjf
+         Sa0P2ojRXyhxn7mKc/RWPM6uK2pkx6tVgtlQCYQ2B39WYZ9B4PqpXjofA877IuutA4ys
+         yz3Kd3DoanAodB6Z0bCZiVSkeqnD7kpFh/X2D54B67uwwugCj6M2v1jWOULR9xIDdika
+         jTCS8JBGsnggSw3eLafl2jHnJ8T0mRYL5QRuNV19WgnraIat+KMvdljgy4zN459ulnhq
+         Zl7Q==
+X-Gm-Message-State: APjAAAVbvwatzjtF68L7yj7Yt9bBqyUGzn2Fk2NSg7Em/G1uGondUNtI
+        7d+j9qP4HafeGN5nYeVh1cI=
+X-Google-Smtp-Source: APXvYqziHDDhfs5tzanK2PouHCdpnTx5zN5eNwSrR+ezntHCZVaBiSIlLux4fDYTeNcdcrX8aNgYkQ==
+X-Received: by 2002:a62:e708:: with SMTP id s8mr3377192pfh.122.1582877972863;
+        Fri, 28 Feb 2020 00:19:32 -0800 (PST)
+Received: from localhost.localdomain ([103.87.56.81])
+        by smtp.gmail.com with ESMTPSA id w18sm10370516pfq.167.2020.02.28.00.19.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 00:19:31 -0800 (PST)
+From:   Amol Grover <frextrite@gmail.com>
+To:     Corey Minyard <minyard@acm.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     openipmi-developer@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        John Garry <john.garry@huawei.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        "Paul E . Mckenney" <paulmck@kernel.org>,
+        Amol Grover <frextrite@gmail.com>
+Subject: [PATCH] ipmi: Fix RCU list lockdep debugging warnings
+Date:   Fri, 28 Feb 2020 13:47:33 +0530
+Message-Id: <20200228081731.18149-1-frextrite@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: C4EC0BAD58171A37724C1E29B2A853F904ADF8554BB626EB8C789C3FE532C6412000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-U29tZSBjaGlwcydzIHNhbXBsZSBtb2RlIGFyZSByaXNpbmcsIGZhbGxpbmcgYW5kIGR1YWwgZWRn
-ZSAoYm90aA0KZmFsbGluZyBhbmQgcmlzaW5nIGVkZ2UpLg0KRXh0ZXJuIHRoZSBwY2xrLXNhbXBs
-ZSBwcm9wZXJ0eSB0byBzdXBwb3J0IGR1YWwgZWRnZS4NCg0KQWNrZWQtYnk6IFJvYiBIZXJyaW5n
-IDxyb2JoQGtlcm5lbC5vcmc+DQpSZXZpZXdlZC1ieTogQ0sgSHUgPGNrLmh1QG1lZGlhdGVrLmNv
-bT4NClNpZ25lZC1vZmYtYnk6IEppdGFvIFNoaSA8aml0YW8uc2hpQG1lZGlhdGVrLmNvbT4NCi0t
-LQ0KIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1pbnRlcmZh
-Y2VzLnR4dCB8IDQgKystLQ0KIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDIgZGVs
-ZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQNCmluZGV4IGY4ODRhZGEwYmZmYy4u
-ZGE5YWQyNDkzNWRiIDEwMDY0NA0KLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0DQorKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQNCkBAIC0xMTgsOCArMTE4
-LDggQEAgT3B0aW9uYWwgZW5kcG9pbnQgcHJvcGVydGllcw0KIC0gZGF0YS1lbmFibGUtYWN0aXZl
-OiBzaW1pbGFyIHRvIEhTWU5DIGFuZCBWU1lOQywgc3BlY2lmaWVzIHRoZSBkYXRhIGVuYWJsZQ0K
-ICAgc2lnbmFsIHBvbGFyaXR5Lg0KIC0gZmllbGQtZXZlbi1hY3RpdmU6IGZpZWxkIHNpZ25hbCBs
-ZXZlbCBkdXJpbmcgdGhlIGV2ZW4gZmllbGQgZGF0YSB0cmFuc21pc3Npb24uDQotLSBwY2xrLXNh
-bXBsZTogc2FtcGxlIGRhdGEgb24gcmlzaW5nICgxKSBvciBmYWxsaW5nICgwKSBlZGdlIG9mIHRo
-ZSBwaXhlbCBjbG9jaw0KLSAgc2lnbmFsLg0KKy0gcGNsay1zYW1wbGU6IHNhbXBsZSBkYXRhIG9u
-IHJpc2luZyAoMSksIGZhbGxpbmcgKDApIG9yIGJvdGggcmlzaW5nIGFuZA0KKyAgZmFsbGluZyAo
-MikgZWRnZSBvZiB0aGUgcGl4ZWwgY2xvY2sgc2lnbmFsLg0KIC0gc3luYy1vbi1ncmVlbi1hY3Rp
-dmU6IGFjdGl2ZSBzdGF0ZSBvZiBTeW5jLW9uLWdyZWVuIChTb0cpIHNpZ25hbCwgMC8xIGZvcg0K
-ICAgTE9XL0hJR0ggcmVzcGVjdGl2ZWx5Lg0KIC0gZGF0YS1sYW5lczogYW4gYXJyYXkgb2YgcGh5
-c2ljYWwgZGF0YSBsYW5lIGluZGV4ZXMuIFBvc2l0aW9uIG9mIGFuIGVudHJ5DQotLSANCjIuMjEu
-MA0K
+It is completely safe to traverse ipmi_interfaces and
+intf->users under SRCU read lock using list_for_each_entry_rcu().
+Tell lockdep about it as well else it will show false-positive
+warnings as the one below.
+
+Fixes the following false-positive warning and others that may follow.
+
+[   29.772408] =============================
+[   29.776863] WARNING: suspicious RCU usage
+[   29.780915] 5.6.0-rc3-00001-g907305ae6618-dirty #1755 Not tainted
+[   29.787046] -----------------------------
+[   29.791100] drivers/char/ipmi/ipmi_msghandler.c:744 RCU-list traversed in
+non-reader section!!
+
+Reported-by: John Garry <john.garry@huawei.com>
+Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Amol Grover <frextrite@gmail.com>
+---
+ drivers/char/ipmi/ipmi_msghandler.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
+index cad9563f8f48..d202022c69de 100644
+--- a/drivers/char/ipmi/ipmi_msghandler.c
++++ b/drivers/char/ipmi/ipmi_msghandler.c
+@@ -741,7 +741,8 @@ int ipmi_smi_watcher_register(struct ipmi_smi_watcher *watcher)
+ 	list_add(&watcher->link, &smi_watchers);
+ 
+ 	index = srcu_read_lock(&ipmi_interfaces_srcu);
+-	list_for_each_entry_rcu(intf, &ipmi_interfaces, link) {
++	list_for_each_entry_rcu(intf, &ipmi_interfaces, link,
++				srcu_read_lock_held(&ipmi_interfaces_srcu)) {
+ 		int intf_num = READ_ONCE(intf->intf_num);
+ 
+ 		if (intf_num == -1)
+@@ -1188,7 +1189,8 @@ int ipmi_create_user(unsigned int          if_num,
+ 		return -ENOMEM;
+ 
+ 	index = srcu_read_lock(&ipmi_interfaces_srcu);
+-	list_for_each_entry_rcu(intf, &ipmi_interfaces, link) {
++	list_for_each_entry_rcu(intf, &ipmi_interfaces, link,
++				srcu_read_lock_held(&ipmi_interfaces_srcu)) {
+ 		if (intf->intf_num == if_num)
+ 			goto found;
+ 	}
+@@ -1241,7 +1243,8 @@ int ipmi_get_smi_info(int if_num, struct ipmi_smi_info *data)
+ 	struct ipmi_smi *intf;
+ 
+ 	index = srcu_read_lock(&ipmi_interfaces_srcu);
+-	list_for_each_entry_rcu(intf, &ipmi_interfaces, link) {
++	list_for_each_entry_rcu(intf, &ipmi_interfaces, link,
++				srcu_read_lock_held(&ipmi_interfaces_srcu)) {
+ 		if (intf->intf_num == if_num)
+ 			goto found;
+ 	}
+@@ -4098,7 +4101,8 @@ static int handle_read_event_rsp(struct ipmi_smi *intf,
+ 	 * getting events.
+ 	 */
+ 	index = srcu_read_lock(&intf->users_srcu);
+-	list_for_each_entry_rcu(user, &intf->users, link) {
++	list_for_each_entry_rcu(user, &intf->users, link,
++				srcu_read_lock_held(&intf->users_srcu)) {
+ 		if (!user->gets_events)
+ 			continue;
+ 
+@@ -4453,7 +4457,8 @@ static void handle_new_recv_msgs(struct ipmi_smi *intf)
+ 		int index;
+ 
+ 		index = srcu_read_lock(&intf->users_srcu);
+-		list_for_each_entry_rcu(user, &intf->users, link) {
++		list_for_each_entry_rcu(user, &intf->users, link,
++					srcu_read_lock_held(&intf->users_srcu)) {
+ 			if (user->handler->ipmi_watchdog_pretimeout)
+ 				user->handler->ipmi_watchdog_pretimeout(
+ 					user->handler_data);
+@@ -4746,7 +4751,8 @@ static void ipmi_timeout(struct timer_list *unused)
+ 		return;
+ 
+ 	index = srcu_read_lock(&ipmi_interfaces_srcu);
+-	list_for_each_entry_rcu(intf, &ipmi_interfaces, link) {
++	list_for_each_entry_rcu(intf, &ipmi_interfaces, link,
++				srcu_read_lock_held(&ipmi_interfaces_srcu)) {
+ 		if (atomic_read(&intf->event_waiters)) {
+ 			intf->ticks_to_req_ev--;
+ 			if (intf->ticks_to_req_ev == 0) {
+-- 
+2.25.0
 
