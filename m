@@ -2,101 +2,222 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE9FC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B70C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3C872469D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E42A52469D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:09:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tjPyr+q5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730654AbgB1DJH (ORCPT
+        id S1730700AbgB1DJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 22:09:07 -0500
-Received: from mga04.intel.com ([192.55.52.120]:52592 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730569AbgB1DJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 22:09:07 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 19:09:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
-   d="scan'208";a="232410956"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 27 Feb 2020 19:09:06 -0800
-Received: from [10.226.38.23] (unknown [10.226.38.23])
-        by linux.intel.com (Postfix) with ESMTP id 9638158045A;
-        Thu, 27 Feb 2020 19:09:00 -0800 (PST)
-Subject: Re: [PATCH v11 1/2] dt-bindings: spi: Add schema for Cadence QSPI
- Controller driver
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        broonie@kernel.org, vigneshr@ti.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, simon.k.r.goldschmidt@gmail.com,
-        dinguyen@kernel.org, tien.fong.chee@intel.com, marex@denx.de,
-        mark.rutland@arm.com, linux-mtd@lists.infradead.org,
-        dwmw2@infradead.org, richard@nod.at, computersforpeace@gmail.com,
-        boris.brezillon@free-electrons.com, cyrille.pitchen@atmel.com,
-        david.oberhollenzer@sigma-star.at, miquel.raynal@bootlin.com,
-        tudor.ambarus@gmail.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com
-References: <20200227062708.21544-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200227062708.21544-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200227170748.GA19661@bogus>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <3ec7c41f-f074-3b0a-25c6-1ac04f524bbb@linux.intel.com>
-Date:   Fri, 28 Feb 2020 11:08:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Thu, 27 Feb 2020 22:09:18 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35208 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730569AbgB1DJR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 22:09:17 -0500
+Received: by mail-lj1-f196.google.com with SMTP id a12so569951ljj.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 19:09:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=TjCzG5NSP6eI0dKZwneA+fl8/Ikexg52Y5QCjmtem24=;
+        b=tjPyr+q5fKYfhIxa/2RR8Jz7ZxB5Bh/V850E5RpGRzI6sj2Q6Y0R5bJO3+5R9dAiUk
+         e2irt2I6htBM519JDf2PzRkRFAdpjO9NBZ/k95/IsqVWFkSCOpXaNANrM4WMl6AYuDeS
+         FXJdsUuDIATid68YhPENzTo0BUndVZm5OdKdkCOATfOF4B8jsfjxrHgaZdkpKMUOSurB
+         v6hl8pdhD5OjXnceNWEDsMKJST4ry6dsbt4db2pm+VxnBEn8GNSdYbhsHDSWPO9Pb26H
+         cYMyxJjH2imihojFuSnWHAPWK1L3kzXK08HpxsdoAtRxUuU+HHOLKBYfLJlKMTaA3Z+k
+         rljw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=TjCzG5NSP6eI0dKZwneA+fl8/Ikexg52Y5QCjmtem24=;
+        b=pMyIlaGGIIMjzlc7GqfsHkR5TlzrGwucvULjDP8aso8oOygXEWsLDeIaPCeLwaW1tK
+         hp9phGprn0RBK406QFPZo9+rUtZttydNCVi0HCzJmMPiwuytht1418uvVJmWOPwssWn7
+         z+cxeoU3VTEAfxot4n62Dpkkmy+Jdl2ZBM4bDFSzPhj3O+Trxfns5IWpPZ0eNnNBpRNt
+         qYXfwED19nE0xiOj0HpRUnx0cVGi1Il/8K3x7chro5D5htq9aYscQYOwFVBluCOZF+Yp
+         RTVJeypD++36vNHtwtHDpQDIZ4QJssILzmAxoiyQ1qVoBFqhHtSv4od7tZe8LnDvS7V8
+         bT+A==
+X-Gm-Message-State: ANhLgQ1jfwLgOjAWWpCBMtihLILHzLDfrEt9qRzWy7isIhhAau/D8ec9
+        tG6QOqnlUTqcpQZ5Cj9VmA6o8j0VW8TqhTLC+joF4Q==
+X-Google-Smtp-Source: ADFU+vuSuY09khfpVx6XU3P6ALa1B0C+2ZslGsbVTOuskabM2UZA4frYa4LaFtE66juTafnLjXoXPUM8u7VL4x9ku9U=
+X-Received: by 2002:a05:651c:1072:: with SMTP id y18mr1383581ljm.243.1582859355487;
+ Thu, 27 Feb 2020 19:09:15 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200227170748.GA19661@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200227132230.840899170@linuxfoundation.org>
+In-Reply-To: <20200227132230.840899170@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 28 Feb 2020 08:39:04 +0530
+Message-ID: <CA+G9fYsrUorARUDsqR__uMKNjxZa-jGe8AEro66wNhO3Ea0Lig@mail.gmail.com>
+Subject: Re: [PATCH 4.9 000/165] 4.9.215-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
-
-On 28/2/2020 1:07 AM, Rob Herring wrote:
-> On Thu, 27 Feb 2020 14:27:07 +0800, "Ramuthevar,Vadivel MuruganX" wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> Add dt-bindings documentation for Cadence-QSPI controller to support
->> spi based flash memories.
->>
->> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> ---
->>   .../devicetree/bindings/mtd/cadence-quadspi.txt    |  67 ----------
->>   .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 142 +++++++++++++++++++++
->>   2 files changed, 142 insertions(+), 67 deletions(-)
->>   delete mode 100644 Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
->>   create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
->>
-> My bot found errors running 'make dt_binding_check' on your patch:
-
-Thanks!,  Sorry for the trouble , next time will run and fix it up.
-
-Regards
-Vadivel
+On Thu, 27 Feb 2020 at 19:15, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> warning: no schema found in file: Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml: ignoring, error in schema: patternProperties: cdns,read-delay
-> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml: patternProperties:cdns,read-delay: {'description': 'Delay in 4 microseconds, read capture logic, in clock cycles.'} is not valid under any of the given schemas (Possible causes of the failure):
-> 	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml: patternProperties:cdns,read-delay: 'not' is a required property
+> This is the start of the stable review cycle for the 4.9.215 release.
+> There are 165 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/spi/cdns,qspi-nor.example.dts' failed
-> make[1]: *** [Documentation/devicetree/bindings/spi/cdns,qspi-nor.example.dts] Error 1
-> Makefile:1263: recipe for target 'dt_binding_check' failed
-> make: *** [dt_binding_check] Error 2
+> Responses should be made by Sat, 29 Feb 2020 13:21:24 +0000.
+> Anything received after that time might be too late.
 >
-> See https://patchwork.ozlabs.org/patch/1245559
-> Please check and re-submit.
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.9.215-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.9.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.9.215-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.9.y
+git commit: b8e4943d6bee55c8a2c077fc7639d0b8e8127e1a
+git describe: v4.9.214-166-gb8e4943d6bee
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
+ld/v4.9.214-166-gb8e4943d6bee
+
+No regressions (compared to build v4.9.214)
+
+No fixes (compared to build v4.9.214)
+
+Ran 26738 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* v4l2-compliance
+* ltp-cve-tests
+* network-basic-tests
+* spectre-meltdown-checker-test
+* ltp-open-posix-tests
+* kvm-unit-tests
+* ltp-cap_bounds-64k-page_size-tests
+* ltp-cap_bounds-kasan-tests
+* ltp-commands-64k-page_size-tests
+* ltp-commands-kasan-tests
+* ltp-containers-64k-page_size-tests
+* ltp-containers-kasan-tests
+* ltp-cpuhotplug-64k-page_size-tests
+* ltp-cpuhotplug-kasan-tests
+* ltp-crypto-64k-page_size-tests
+* ltp-crypto-kasan-tests
+* ltp-crypto-tests
+* ltp-cve-64k-page_size-tests
+* ltp-cve-kasan-tests
+* ltp-dio-64k-page_size-tests
+* ltp-dio-kasan-tests
+* ltp-fcntl-locktests-64k-page_size-tests
+* ltp-fcntl-locktests-kasan-tests
+* ltp-filecaps-64k-page_size-tests
+* ltp-filecaps-kasan-tests
+* ltp-fs-64k-page_size-tests
+* ltp-fs-kasan-tests
+* ltp-fs_bind-64k-page_size-tests
+* ltp-fs_bind-kasan-tests
+* ltp-fs_perms_simple-64k-page_size-tests
+* ltp-fs_perms_simple-kasan-tests
+* ltp-fsx-64k-page_size-tests
+* ltp-fsx-kasan-tests
+* ltp-hugetlb-64k-page_size-tests
+* ltp-hugetlb-kasan-tests
+* ltp-io-64k-page_size-tests
+* ltp-io-kasan-tests
+* ltp-ipc-64k-page_size-tests
+* ltp-ipc-kasan-tests
+* ltp-math-64k-page_size-tests
+* ltp-math-kasan-tests
+* ltp-mm-64k-page_size-tests
+* ltp-mm-kasan-tests
+* ltp-nptl-64k-page_size-tests
+* ltp-nptl-kasan-tests
+* ltp-pty-64k-page_size-tests
+* ltp-pty-kasan-tests
+* ltp-sched-64k-page_size-tests
+* ltp-sched-kasan-tests
+* ltp-securebits-64k-page_size-tests
+* ltp-securebits-kasan-tests
+* ltp-syscalls-64k-page_size-tests
+* ltp-syscalls-compat-tests
+* ltp-syscalls-kasan-tests
+* prep-tmp-disk
+* ssuite
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
