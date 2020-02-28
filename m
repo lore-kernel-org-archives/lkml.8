@@ -2,151 +2,105 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9AB7C3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC72C3F2D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8474420578
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 556A720578
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:59:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="yBXqMB+4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbgB1Izz (ORCPT
+        id S1726700AbgB1I7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 03:55:55 -0500
-Received: from mga03.intel.com ([134.134.136.65]:44919 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726005AbgB1Izz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 03:55:55 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 00:55:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,495,1574150400"; 
-   d="scan'208";a="272566543"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
-  by fmsmga002.fm.intel.com with ESMTP; 28 Feb 2020 00:55:40 -0800
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        Zi Yan <ziy@nvidia.com>, Michal Hocko <mhocko@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        "Johannes Weiner" <hannes@cmpxchg.org>,
-        Hugh Dickins <hughd@google.com>,
-        "Alexander Duyck" <alexander.duyck@gmail.com>
-Subject: Re: [RFC 0/3] mm: Discard lazily freed pages when migrating
-References: <20200228033819.3857058-1-ying.huang@intel.com>
-        <20200228034248.GE29971@bombadil.infradead.org>
-        <87a7538977.fsf@yhuang-dev.intel.com>
-        <edae2736-3239-0bdc-499c-560fc234c974@redhat.com>
-Date:   Fri, 28 Feb 2020 16:55:40 +0800
-In-Reply-To: <edae2736-3239-0bdc-499c-560fc234c974@redhat.com> (David
-        Hildenbrand's message of "Fri, 28 Feb 2020 09:22:56 +0100")
-Message-ID: <871rqf850z.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 28 Feb 2020 03:59:31 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:59464 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbgB1I7a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 03:59:30 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01S8rZNS168728;
+        Fri, 28 Feb 2020 08:58:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=m8ZK8pkfb4XwejHqrBGYrQiX+gig22p3Tw6PRBncsAE=;
+ b=yBXqMB+45PYHsm0xtTJQRbstWEuVLiV32VQSareRf1y3rWJBPnIjTLyFW7IJdEKao15R
+ BvzQm44fhIz93MJWpI71vARNDF2gXe4X39lLXlykDdER2QERrmuwU9VLc5apGYmppENz
+ xPEXpLShxLUZTCvm8KnaZk2tHYd7PR+1U1cXDW2nCY2QLBflfkI/hnQkTkyXkjsHxoZW
+ 14yNeDGxZdQuqctznB02hJByCtd77hFCpZlrXoqELKbc5OT3posfs/nKtKgtUbr56n8i
+ crBjWlk7gF2wf2240IjlXxB6kXPe9lvWgD5X1TBzVjUJ/gvHpnI9oXF7gi4yC1b0hbFy gg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2ydcsnsgtg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Feb 2020 08:58:40 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01S8v7kO144923;
+        Fri, 28 Feb 2020 08:58:40 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2ydcsesd0j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Feb 2020 08:58:40 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01S8wacn001457;
+        Fri, 28 Feb 2020 08:58:36 GMT
+Received: from [10.39.209.75] (/10.39.209.75)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 28 Feb 2020 00:58:36 -0800
+Subject: Re: [patch 1/8] x86/entry/64: Trace irqflags unconditionally on when
+ returing to user space
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>
+References: <20200225220801.571835584@linutronix.de>
+ <20200225221305.295289073@linutronix.de>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <ba43f7e4-14a9-66bb-dc36-8d28dac0ef0f@oracle.com>
+Date:   Fri, 28 Feb 2020 09:58:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+In-Reply-To: <20200225221305.295289073@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9544 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 bulkscore=0
+ spamscore=0 mlxlogscore=901 mlxscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002280074
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9544 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 bulkscore=0
+ lowpriorityscore=0 mlxlogscore=958 phishscore=0 spamscore=0 adultscore=0
+ suspectscore=0 impostorscore=0 clxscore=1015 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002280073
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David Hildenbrand <david@redhat.com> writes:
 
-> On 28.02.20 08:25, Huang, Ying wrote:
->> Hi, Matthew,
->> 
->> Matthew Wilcox <willy@infradead.org> writes:
->> 
->>> On Fri, Feb 28, 2020 at 11:38:16AM +0800, Huang, Ying wrote:
->>>> MADV_FREE is a lazy free mechanism in Linux.  According to the manpage
->>>> of mavise(2), the semantics of MADV_FREE is,
->>>>
->>>>   The application no longer requires the pages in the range specified
->>>>   by addr and len.  The kernel can thus free these pages, but the
->>>>   freeing could be delayed until memory pressure occurs. ...
->>>>
->>>> Originally, the pages freed lazily by MADV_FREE will only be freed
->>>> really by page reclaiming when there is memory pressure or when
->>>> unmapping the address range.  In addition to that, there's another
->>>> opportunity to free these pages really, when we try to migrate them.
->>>>
->>>> The main value to do that is to avoid to create the new memory
->>>> pressure immediately if possible.  Instead, even if the pages are
->>>> required again, they will be allocated gradually on demand.  That is,
->>>> the memory will be allocated lazily when necessary.  This follows the
->>>> common philosophy in the Linux kernel, allocate resources lazily on
->>>> demand.
->>>
->>> Do you have an example program which does this (and so benefits)?
->> 
->> Sorry, what do you mean exactly for "this" here?  Call
->> madvise(,,MADV_FREE)?  Or migrate pages?
->> 
->>> If so, can you quantify the benefit at all?
->> 
->> The question is what is the right workload?  For example, I can build a
->> scenario as below to show benefit.
->
-> We usually don't optimize for theoretical issues. Is there a real-life
-> workload you are trying to optimize this code for?
+On 2/25/20 11:08 PM, Thomas Gleixner wrote:
+> User space cannot longer disable interrupts so trace return to user space
+> unconditionally as IRQS_ON.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>   arch/x86/entry/entry_64.S |    4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
 
-We don't use a specific workload because we thought this is a general
-optimization.  I will explain more later in this email.
+Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 
->> 
->> - run program A in node 0 with many lazily freed pages
->> 
->> - run program B in node 1, so that the free memory on node 1 is low
->> 
->> - migrate the program A from node 0 to node 1, so that the program B is
->>   influenced by the memory pressure created by migrating lazily freed
->>   pages.
->> 
->
-> E.g., free page reporting in QEMU wants to use MADV_FREE. The guest will
-> report currently free pages to the hypervisor, which will MADV_FREE the
-> reported memory. As long as there is no memory pressure, there is no
-> need to actually free the pages. Once the guest reuses such a page, it
-> could happen that there is still the old page and pulling in in a fresh
-> (zeroed) page can be avoided.
->
-> AFAIKs, after your change, we would get more pages discarded from our
-> guest, resulting in more fresh (zeroed) pages having to be pulled in
-> when a guest touches a reported free page again. But OTOH, page
-> migration is speed up (avoiding to migrate these pages).
-
-Let's look at this problem in another perspective.  To migrate the
-MADV_FREE pages of the QEMU process from the node A to the node B, we
-need to free the original pages in the node A, and (maybe) allocate the
-same number of pages in the node B.  So the question becomes
-
-- we may need to allocate some pages in the node B
-- these pages may be accessed by the application or not
-- we should allocate all these pages in advance or allocate them lazily
-  when they are accessed.
-
-We thought the common philosophy in Linux kernel is to allocate lazily.
-
-That is, because we will always free the original pages in the node A,
-the question isn't whether we should free these MADV_FREE pages, but
-whether we should allocate the same number of pages in the node B before
-we know whether they are really needed.  We thought this is similar as
-whether we should allocate all physical pages when mmap().
-
-> However, one important question, will you always discard memory when
-> migrating pages, or only if there is memory pressure on the migration
-> target?
-
-We will always discard memory when migrating pages.  Our reasoning is as
-above.
-
-Best Regards,
-Huang, Ying
+alex.
