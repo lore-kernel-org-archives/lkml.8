@@ -2,47 +2,120 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 127F3C3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CED1C3F2D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E52AC246A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F6ED246AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:53:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="djvlR8dT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgB1Iw0 (ORCPT
+        id S1726744AbgB1Ixn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 03:52:26 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:48562 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbgB1Iw0 (ORCPT
+        Fri, 28 Feb 2020 03:53:43 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52147 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726378AbgB1Ixn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 03:52:26 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 96CD9292A95
-Subject: Re: [PATCH] platform/chrome: cros_ec_rpmsg: Fix race with host event.
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>, ohad@wizery.com,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-remoteproc@vger.kernel.org
-References: <20200214082638.92070-1-pihsun@chromium.org>
- <83b03af1-5518-599a-3f82-ee204992edbf@collabora.com>
- <CANdKZ0fuK1Nm_fPNKAss29pqghCcwjN3acYHi6Ez5==envgKgA@mail.gmail.com>
- <84a66ac1-c36a-fa72-a406-9c3396c1bdf2@collabora.com>
-Message-ID: <6c78727d-8a65-097d-224d-48d93f6ceaa7@collabora.com>
-Date:   Fri, 28 Feb 2020 09:52:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 28 Feb 2020 03:53:43 -0500
+Received: by mail-wm1-f67.google.com with SMTP id t23so2336017wmi.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 00:53:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=oPmfbH/VN//hr6zphyggj3FNTyzdqrj0mhzn9wcbAF4=;
+        b=djvlR8dT39wIMOJ6JqJ5f/7x+HI3BSgTr5GIREnT4ZAsceT0FpRA7a0ywZ0dSzmPxF
+         AS0ffDvPoCWPaCdNG8sFMjD4hfkiCw2Fl8ocyCL4va85dM/Ce0h9AdgEmxs5AiwYKEoq
+         M0Ll/WLHfic5L/g50RLD7+7VIRDVG13oa5Fhr7485svPmMNFc+w5Qh732Vl47ti4rLfH
+         canbtaCOcw5YNJV98nKqXRcCFZYHAGcs5PE/5zhWxV/r8+ng0Nh5L7quKEexDmN5sklH
+         FJaWsNz18H7n0XNklrrbzvHs6efNr0yBejGF9aPx2zKTMvkleaS6rC1oPLY37Uy/Lg3Y
+         yHDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oPmfbH/VN//hr6zphyggj3FNTyzdqrj0mhzn9wcbAF4=;
+        b=FxazuYYtKYCckdljhwLpRFbi41A/gjpc9hGqPAoAVCNSkE7jvoo2Y1p/JRg2hDqxDR
+         ovNMsd3++7tFQiepVhenBYGF2FuNrV4rBo7ZNCu13woFx14/TIqPCvNfkcFEGX8dmxzN
+         ZmKSKiV/wo4WGPGhW9RD6NDjCkJscjmYiGGPU/6XOYMO/PLAl9LpLQLDXICc13nUkcm2
+         7aV2QitaCDiZ5Wl6Q4WgzHXnuOYMM8aYLWNKFa3LHsnPojgjNcSAHzuf/aqQXOzoIX/O
+         ai+cbW1nXtxYMHt9ryy1H62jtaUJWRXmpxJB2OrODqXcRULxCoZcl2EQKf0mA/C3VkHt
+         WZvw==
+X-Gm-Message-State: APjAAAXhdLlDdr4zcdXNft81p/pMlbGeWCK1IjM+c4ZzppLnLvF5Z8bR
+        Ts3Ez/nA2RXmOg2ZmaqiK/+qbQ==
+X-Google-Smtp-Source: APXvYqwqw0w8kj5U00AbZ2wrM0nyvr1emJKZpByzmypAeakrNOtZosPACGcBI/KOs6ypyFS1kIuv3Q==
+X-Received: by 2002:a7b:c4cc:: with SMTP id g12mr4068558wmk.68.1582880019426;
+        Fri, 28 Feb 2020 00:53:39 -0800 (PST)
+Received: from [10.44.66.8] ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id z8sm11050459wrv.74.2020.02.28.00.53.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 28 Feb 2020 00:53:38 -0800 (PST)
+Subject: Re: [V4, 2/3] interconnect: qcom: Add SC7180 interconnect provider
+ driver
+To:     Odelu Kukatla <okukatla@codeaurora.org>, linux-pm@vger.kernel.org
+Cc:     daidavid1@codeaurora.org, bjorn.andersson@linaro.org,
+        evgreen@google.com, Andy Gross <agross@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        sboyd@kernel.org, ilina@codeaurora.org, seansw@qti.qualcomm.com,
+        elder@linaro.org, linux-arm-msm-owner@vger.kernel.org
+References: <1582646384-1458-1-git-send-email-okukatla@codeaurora.org>
+ <1582646384-1458-3-git-send-email-okukatla@codeaurora.org>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <568574bd-c036-988e-bf95-9c06704d143a@linaro.org>
+Date:   Fri, 28 Feb 2020 10:53:37 +0200
 MIME-Version: 1.0
-In-Reply-To: <84a66ac1-c36a-fa72-a406-9c3396c1bdf2@collabora.com>
+In-Reply-To: <1582646384-1458-3-git-send-email-okukatla@codeaurora.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -51,114 +124,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pi-Hsun,
+Hi Odelu,
 
-On 17/2/20 16:55, Enric Balletbo i Serra wrote:
-> Dear remoteproc experts,
-> 
-> cc'ing you for if we can have your feedback on this change.
-> 
-> Thanks Pi-Hsun, for your quick answer, makes sense but I'm still feeling that I
-> miss something (probably because I'm not a remoteproc expert), so I added the
-> Remoteproc people for if they can comment this patch. We have time as we're in
-> rc2 only, so I'd like to wait a bit in case they can take a look.
-> 
-> If no answer is received I'll take a second look and apply the patch.
-> 
+Thank you for this patchset!
 
-I'll pick this patch, just I want to request a minor change.
-
-> Thanks,
->  Enric
+On 2/25/20 17:59, Odelu Kukatla wrote:
+> Add driver for the Qualcomm interconnect buses found in SC7180 based
+> platforms. The topology consists of several NoCs that are controlled by
+> a remote processor that collects the aggregated bandwidth for each
+> master-slave pairs.
 > 
-> On 15/2/20 4:56, Pi-Hsun Shih wrote:
->> Hi Enric,
->>
->> On Fri, Feb 14, 2020 at 11:10 PM Enric Balletbo i Serra
->> <enric.balletbo@collabora.com> wrote:
->>>
->>> Hi Pi-Hsun,
->>>
->>> On 14/2/20 9:26, Pi-Hsun Shih wrote:
->>>> Host event can be sent by remoteproc by any time, and
->>>> cros_ec_rpmsg_callback would be called after cros_ec_rpmsg_create_ept.
->>>> But the cros_ec_device is initialized after that, which cause host event
->>>> handler to use cros_ec_device that are not initialized properly yet.
->>>>
->>>
->>> I don't have the hardware to test but, can't we call first cros_ec_register and
->>> then cros_ec_rpmsg_create_ept?
->>>
->>> Start receiving driver callbacks before finishing to probe the drivers itself
->>> sounds weird to me.
->>>
->>> Thanks,
->>>  Enric
->>
->> Since cros_ec_register calls cros_ec_query_all, which sends message to
->> remoteproc using cros_ec_pkt_xfer_rpmsg (to query protocol version),
->> the ec_rpmsg->ept need to be ready before calling cros_ec_register.
->>
->>>
->>>> Fix this by don't schedule host event handler before cros_ec_register
->>>> returns. Instead, remember that we have a pending host event, and
->>>> schedule host event handler after cros_ec_register.
->>>>
->>>> Fixes: 71cddb7097e2 ("platform/chrome: cros_ec_rpmsg: Fix race with host command when probe failed.")
->>>> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
->>>> ---
->>>>  drivers/platform/chrome/cros_ec_rpmsg.c | 16 +++++++++++++++-
->>>>  1 file changed, 15 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/platform/chrome/cros_ec_rpmsg.c b/drivers/platform/chrome/cros_ec_rpmsg.c
->>>> index dbc3f5523b83..7e8629e3db74 100644
->>>> --- a/drivers/platform/chrome/cros_ec_rpmsg.c
->>>> +++ b/drivers/platform/chrome/cros_ec_rpmsg.c
->>>> @@ -44,6 +44,8 @@ struct cros_ec_rpmsg {
->>>>       struct completion xfer_ack;
->>>>       struct work_struct host_event_work;
->>>>       struct rpmsg_endpoint *ept;
->>>> +     bool has_pending_host_event;
->>>> +     bool probe_done;
+> Signed-off-by: Odelu Kukatla <okukatla@codeaurora.org>
+> ---
+>  drivers/interconnect/qcom/Kconfig  |   9 +
+>  drivers/interconnect/qcom/Makefile |   2 +
+>  drivers/interconnect/qcom/sc7180.c | 641 +++++++++++++++++++++++++++++++++++++
+>  drivers/interconnect/qcom/sc7180.h | 149 +++++++++
+>  4 files changed, 801 insertions(+)
+>  create mode 100644 drivers/interconnect/qcom/sc7180.c
+>  create mode 100644 drivers/interconnect/qcom/sc7180.h
+> 
+> diff --git a/drivers/interconnect/qcom/Kconfig b/drivers/interconnect/qcom/Kconfig
+> index 08cfd67..c8e74b0 100644
+> --- a/drivers/interconnect/qcom/Kconfig
+> +++ b/drivers/interconnect/qcom/Kconfig
+> @@ -42,6 +42,15 @@ config INTERCONNECT_QCOM_RPMH
+>  	depends on INTERCONNECT_QCOM || COMPILE_TEST
+>  	depends on QCOM_COMMAND_DB
+>  
+> +config INTERCONNECT_QCOM_SC7180
+> +	tristate "Qualcomm SC7180 interconnect driver"
+> +	depends on INTERCONNECT_QCOM
+> +	select INTERCONNECT_QCOM_RPMH
+> +	select INTERCONNECT_QCOM_BCM_VOTER
 
+IMHO, we should still list here the dependencies here, or for some randconfig
+builds we may get warnings for unmet direct dependencies. So i think you got
+it right in your v3.
 
-Could you try if just calling driver_probe_done() when needed works, so we don't
-need to add a new boolean flag for this?
+btw. It is also a good practice to list the changes in your cover letter, so
+people who have looked at previous versions of that patches would know what
+changed.
+
+> +	help
+> +	  This is a driver for the Qualcomm Network-on-Chip on sc7180-based
+> +	  platforms.
+> +
+>  config INTERCONNECT_QCOM_SDM845
+>  	tristate "Qualcomm SDM845 interconnect driver"
+>  	depends on INTERCONNECT_QCOM
+> diff --git a/drivers/interconnect/qcom/Makefile b/drivers/interconnect/qcom/Makefile
+> index d591bb5..5325558 100644
+> --- a/drivers/interconnect/qcom/Makefile
+> +++ b/drivers/interconnect/qcom/Makefile
+> @@ -5,6 +5,7 @@ qnoc-msm8916-objs			:= msm8916.o
+>  qnoc-msm8974-objs			:= msm8974.o
+>  qnoc-qcs404-objs			:= qcs404.o
+>  icc-rpmh-obj				:= icc-rpmh.o
+> +qnoc-sc7180-objs			:= sc7180.o
+>  qnoc-sdm845-objs			:= sdm845.o
+>  icc-smd-rpm-objs			:= smd-rpm.o
+>  
+> @@ -13,5 +14,6 @@ obj-$(CONFIG_INTERCONNECT_QCOM_MSM8916) += qnoc-msm8916.o
+>  obj-$(CONFIG_INTERCONNECT_QCOM_MSM8974) += qnoc-msm8974.o
+>  obj-$(CONFIG_INTERCONNECT_QCOM_QCS404) += qnoc-qcs404.o
+>  obj-$(CONFIG_INTERCONNECT_QCOM_RPMH) += icc-rpmh.o
+> +obj-$(CONFIG_INTERCONNECT_QCOM_SC7180) += qnoc-sc7180.o
+>  obj-$(CONFIG_INTERCONNECT_QCOM_SDM845) += qnoc-sdm845.o
+>  obj-$(CONFIG_INTERCONNECT_QCOM_SMD_RPM) += icc-smd-rpm.o
+> diff --git a/drivers/interconnect/qcom/sc7180.c b/drivers/interconnect/qcom/sc7180.c
+> new file mode 100644
+> index 0000000..dcf493d
+> --- /dev/null
+> +++ b/drivers/interconnect/qcom/sc7180.c
+> @@ -0,0 +1,641 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+> + *
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/interconnect.h>
+> +#include <linux/interconnect-provider.h>
+> +#include <linux/module.h>
+> +#include <linux/of_platform.h>
+
+I thought you will remove this? Maybe you missed some of the comments on v2.
+Please check.
 
 Thanks,
- Enric
-
->>>>  };
->>>>
->>>>  /**
->>>> @@ -177,7 +179,14 @@ static int cros_ec_rpmsg_callback(struct rpmsg_device *rpdev, void *data,
->>>>               memcpy(ec_dev->din, resp->data, len);
->>>>               complete(&ec_rpmsg->xfer_ack);
->>>>       } else if (resp->type == HOST_EVENT_MARK) {
->>>> -             schedule_work(&ec_rpmsg->host_event_work);
->>>> +             /*
->>>> +              * If the host event is sent before cros_ec_register is
->>>> +              * finished, queue the host event.
->>>> +              */
->>>> +             if (ec_rpmsg->probe_done)
->>>> +                     schedule_work(&ec_rpmsg->host_event_work);
->>>> +             else
->>>> +                     ec_rpmsg->has_pending_host_event = true;
->>>>       } else {
->>>>               dev_warn(ec_dev->dev, "rpmsg received invalid type = %d",
->>>>                        resp->type);
->>>> @@ -240,6 +249,11 @@ static int cros_ec_rpmsg_probe(struct rpmsg_device *rpdev)
->>>>               return ret;
->>>>       }
->>>>
->>>> +     ec_rpmsg->probe_done = true;
->>>> +
->>>> +     if (ec_rpmsg->has_pending_host_event)
->>>> +             schedule_work(&ec_rpmsg->host_event_work);
->>>> +
->>>>       return 0;
->>>>  }
->>>>
->>>>
->>>> base-commit: b19e8c68470385dd2c5440876591fddb02c8c402
->>>>
+Georgi
