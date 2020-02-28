@@ -2,273 +2,177 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ADD0C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D13AC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6E8721927
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 308D7246A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:20:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MONMVmL5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T9JYwdcF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgB1WP4 (ORCPT
+        id S1726525AbgB1WUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 17:15:56 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:44560 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726740AbgB1WPz (ORCPT
+        Fri, 28 Feb 2020 17:20:00 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23164 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725957AbgB1WUA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 17:15:55 -0500
-Received: by mail-vs1-f67.google.com with SMTP id p6so2949437vsj.11
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 14:15:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=izrh7YjDkt7UIn90MCxZtkunk1I466I2NQe0fd5UD1c=;
-        b=MONMVmL5nJ2o7dqPCcAtuwwGnyiEV0Qi7eGjTKznec56QQA51gYOydJ5vVGSyoxi5f
-         79zwoYTsxv3Pw8fls6sBncB/7dvkthXNFRasH0eJkuTelWtCJb1CBNhQRjetfZjL/e9L
-         6yN9TbInwe0hR6I386DP5thL71lzcNBYW0kTsj25S/giiDROjYa6yZRyjCFQljUrJoPr
-         R1ZYrcZxRYErw6a/PQa2YH2Cqa4vhR80oIIvRXm8pX6BLPtls0QqsU2bXAtzvDbRXbAo
-         SNRPdwpGcTKV/2E15lddgYYSE9Th4Q58GMvolAxdmocSsDP49dIcoyqJfgjEhU31YeWj
-         taBg==
+        Fri, 28 Feb 2020 17:20:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582928398;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Bw5Jnhp7KqPb5r94FhJWL4ZVprMiJ57A5xuYCAkv6DM=;
+        b=T9JYwdcF8wA4XGgtfODvFK4AGtNFOSyD/vwe2No8CwshzkYZjokVbOmW7Lu5LlQyZ7p9Zc
+        wh639JMip6P6qUqP8cPKNMTh339Sou5JeTVMrkMVCc8TBYD+uqgg7u79xt3PRwwtm7Ay9T
+        uhdY+vpioHY9tJ21OGLQUao9SmP2tNw=
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com
+ [209.85.166.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-166-X7ET3VtSOQyYUpQVwKYx1w-1; Fri, 28 Feb 2020 17:19:57 -0500
+X-MC-Unique: X7ET3VtSOQyYUpQVwKYx1w-1
+Received: by mail-il1-f197.google.com with SMTP id i67so4755762ilf.5
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 14:19:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=izrh7YjDkt7UIn90MCxZtkunk1I466I2NQe0fd5UD1c=;
-        b=NG6Zsl3eosB04WUeSkftS8xFMRkPqRL6fXYGvANv5Mi9OyDmgPa1oBRMQ9xlDpNsXC
-         S3akimJjOwowRFJzhoG2d0Y3+hfBLgMNYycGmKZh95pK5ZltWyURfdrKAXFBVY4m5VHp
-         flFc03GVaNDsUmKUpeetwH5/2GNXOogYxgbHDCQq5ztvDa8C/sB/B2lSb+cvtp36HwQ2
-         ut8/TiVxKLRRQ/pZKLkHVGOzv7C8igPnzkYKRNC1a3gkpImHmXgnE2BU82aQes64r33J
-         vzvgMbKcJFJPUJ8aKgeX+RZxDLP89845zV9uztuqw9Tvnchb9wvb+VD8jRfaA0lkf/uc
-         Tvtg==
-X-Gm-Message-State: ANhLgQ3H3Lbhhod6dbXQWw47mtyh3zvDk7UVMzVzSU+3ezhuVyAvxvEA
-        xVdQf6byG3xdSWC1I6IWQjVyfSEgx6l/w83tLafNsw==
-X-Google-Smtp-Source: ADFU+vswZnMJG5T1/Ed3hnj2geK/OAsTlMewPwkaQ/rsOZA9oEezP0rsg5umK7KP+mqBa+9/nuq90DHtBwMWGk3s5+Y=
-X-Received: by 2002:a67:fd63:: with SMTP id h3mr4111090vsa.221.1582928153315;
- Fri, 28 Feb 2020 14:15:53 -0800 (PST)
+        bh=Bw5Jnhp7KqPb5r94FhJWL4ZVprMiJ57A5xuYCAkv6DM=;
+        b=BU/V287OkI+TIWew1V0HJ45bdNthCnGBSM0bA5dgxZpimGre2IkV1h3PNZQzTGD8cp
+         +OinQhTAY+Rd9mR8PpuJJ8B7vfNkq7jRjeArI6/6TOdPd8sEsiMmvm0BEtzFyISdOAxr
+         O92iBTwT7AJgBddFv9S/+s4QT1UNlOabJXKDc4ttbkwF77ltCaHB9OTbdWUItWFk0yp/
+         XiQ77My8lMFlXksy2Oi/cZU7wA33QndXdcZIsTOk1ZswOJ3xhJTGptssiBX5PTOjJUhh
+         NwJuD0YAgdo7vpVAR7XS95+qjH9ZctWP9+xaSdWKZC6MmpjqDd426ps5unEvLlCloLwH
+         1Qfg==
+X-Gm-Message-State: APjAAAWBL02mng9Kg2kMh+DLuLNhqpmbrTFWNebtMwavIZCzMudfrCN0
+        GLLkKzQo59YEZIMkowxpNfKCLJqa19s1K484vpLI58skQ2/+3BwRyCh0y/mHdVGuNcvZfoSGY+j
+        2axraur+IwBzFxW3TXdlpALvQM+ztkqSnrBSlQVdD
+X-Received: by 2002:a02:84ee:: with SMTP id f101mr5290812jai.7.1582928396008;
+        Fri, 28 Feb 2020 14:19:56 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwOw4io9YQxYqs7muQh08Wi5KSyvP4Fx8ks9FOupRVElFoJFO/gjY7DAVMFEkm98oQfXCmYnmWSU5Uq/+CB9hE=
+X-Received: by 2002:a02:84ee:: with SMTP id f101mr5290771jai.7.1582928395604;
+ Fri, 28 Feb 2020 14:19:55 -0800 (PST)
 MIME-Version: 1.0
-References: <20200219014433.88424-1-minchan@kernel.org> <20200219014433.88424-2-minchan@kernel.org>
-In-Reply-To: <20200219014433.88424-2-minchan@kernel.org>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Fri, 28 Feb 2020 14:15:42 -0800
-Message-ID: <CAJuCfpGdOUp4pU2TyC3O=kCwL85wOc5szbNVTy9iSLe-CKVvzA@mail.gmail.com>
-Subject: Re: [PATCH v6 1/7] mm: pass task and mm to do_madvise
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        oleksandr@redhat.com, Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>, sj38.park@gmail.com,
-        alexander.h.duyck@linux.intel.com, Jann Horn <jannh@google.com>,
-        Jens Axboe <axboe@kernel.dk>
+References: <20200223172559.6912-1-jarkko.sakkinen@linux.intel.com>
+ <20200224100932.GA15526@wind.enjellic.com> <20200224211317.GJ29865@linux.intel.com>
+ <20200228220212.GA7978@wind.enjellic.com>
+In-Reply-To: <20200228220212.GA7978@wind.enjellic.com>
+From:   Nathaniel McCallum <npmccallum@redhat.com>
+Date:   Fri, 28 Feb 2020 17:19:45 -0500
+Message-ID: <CAOASepMmFC5bmoETu_KP967u+vFkqb385JckU1uFHHaVKNVaFw@mail.gmail.com>
+Subject: Re: [PATCH v27 00/22] Intel SGX foundations
+To:     "Dr. Greg" <greg@enjellic.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
+        Patrick Uiterwijk <puiterwijk@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 5:44 PM Minchan Kim <minchan@kernel.org> wrote:
+On Fri, Feb 28, 2020 at 5:04 PM Dr. Greg <greg@enjellic.com> wrote:
 >
-> In upcoming patches, do_madvise will be called from external process
-> context so we shouldn't asssume "current" is always hinted process's
-> task_struct. Furthermore, we couldn't access mm_struct via task->mm
-> once it's verified by access_mm which will be introduced in next
-> patch[1]. And let's pass *current* and current->mm as arguments of
-> do_madvise so it shouldn't change existing behavior but prepare
-> next patch to make review easy.
+> On Mon, Feb 24, 2020 at 01:13:17PM -0800, Sean Christopherson wrote:
 >
-> Note: io_madvise pass NULL as target_task argument of do_madvise
-> because it couldn't know who is target.
+> Hi, I hope the week is ending well for everyone.
 >
-> [1] http://lore.kernel.org/r/CAG48ez27=pwm5m_N_988xT1huO7g7h6arTQL44zev6TD-h-7Tg@mail.gmail.com
+> > On Mon, Feb 24, 2020 at 04:09:32AM -0600, Dr. Greg wrote:
+> > > On Sun, Feb 23, 2020 at 07:25:37PM +0200, Jarkko Sakkinen wrote:
+> > >
+> > > Good morning, I hope the week is starting well for everyone.
+> > >
+> > > > Intel(R) SGX is a set of CPU instructions that can be used by
+> > > > applications to set aside private regions of code and data. The code
+> > > > outside the enclave is disallowed to access the memory inside the
+> > > > enclave by the CPU access control.
+> > >
+> > > Do we misinterpret or is the driver not capable of being built in
+> > > modular form?
 >
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Cc: Jann Horn <jannh@google.com>
-> Signed-off-by: Minchan Kim <minchan@kernel.org>
-> ---
->  fs/io_uring.c      |  2 +-
->  include/linux/mm.h |  3 ++-
->  mm/madvise.c       | 34 +++++++++++++++++++---------------
->  3 files changed, 22 insertions(+), 17 deletions(-)
+> > Correct.
 >
-> diff --git a/fs/io_uring.c b/fs/io_uring.c
-> index 63beda9bafc5..a858da2ae2f4 100644
-> --- a/fs/io_uring.c
-> +++ b/fs/io_uring.c
-> @@ -2736,7 +2736,7 @@ static int io_madvise(struct io_kiocb *req, struct io_kiocb **nxt,
->         if (force_nonblock)
->                 return -EAGAIN;
+> That is what we had concluded, thanks for the verification.
 >
-> -       ret = do_madvise(ma->addr, ma->len, ma->advice);
-> +       ret = do_madvise(NULL, req->work.mm, ma->addr, ma->len, ma->advice);
->         if (ret < 0)
->                 req_set_fail_links(req);
->         io_cqring_add_event(req, ret);
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 52269e56c514..bc16c8774328 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -2323,7 +2323,8 @@ extern int __do_munmap(struct mm_struct *, unsigned long, size_t,
->                        struct list_head *uf, bool downgrade);
->  extern int do_munmap(struct mm_struct *, unsigned long, size_t,
->                      struct list_head *uf);
-> -extern int do_madvise(unsigned long start, size_t len_in, int behavior);
-> +extern int do_madvise(struct task_struct *target_task, struct mm_struct *mm,
-> +               unsigned long start, size_t len_in, int behavior);
+> > > If not, it would appear that this functionality has been lost since
+> > > version 19 of the driver, admittedly some time ago.
 >
->  static inline unsigned long
->  do_mmap_pgoff(struct file *file, unsigned long addr,
-> diff --git a/mm/madvise.c b/mm/madvise.c
-> index 43b47d3fae02..f75c86b6c463 100644
-> --- a/mm/madvise.c
-> +++ b/mm/madvise.c
-> @@ -254,6 +254,7 @@ static long madvise_willneed(struct vm_area_struct *vma,
->                              struct vm_area_struct **prev,
->                              unsigned long start, unsigned long end)
->  {
-> +       struct mm_struct *mm = vma->vm_mm;
->         struct file *file = vma->vm_file;
->         loff_t offset;
+> > It was removed in v20[*].
 >
-> @@ -288,12 +289,12 @@ static long madvise_willneed(struct vm_area_struct *vma,
->          */
->         *prev = NULL;   /* tell sys_madvise we drop mmap_sem */
->         get_file(file);
-> -       up_read(&current->mm->mmap_sem);
-> +       up_read(&mm->mmap_sem);
->         offset = (loff_t)(start - vma->vm_start)
->                         + ((loff_t)vma->vm_pgoff << PAGE_SHIFT);
->         vfs_fadvise(file, offset, end - start, POSIX_FADV_WILLNEED);
->         fput(file);
-> -       down_read(&current->mm->mmap_sem);
-> +       down_read(&mm->mmap_sem);
->         return 0;
->  }
+> We didn't see documentation of this in any of the v20 release bullet
+> points, hence the question.
 >
-> @@ -676,7 +677,6 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
->         if (nr_swap) {
->                 if (current->mm == mm)
->                         sync_mm_rss(mm);
-> -
->                 add_mm_counter(mm, MM_SWAPENTS, nr_swap);
->         }
->         arch_leave_lazy_mmu_mode();
-> @@ -756,6 +756,8 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
->                                   unsigned long start, unsigned long end,
->                                   int behavior)
->  {
-> +       struct mm_struct *mm = vma->vm_mm;
-> +
->         *prev = vma;
->         if (!can_madv_lru_vma(vma))
->                 return -EINVAL;
-> @@ -763,8 +765,8 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
->         if (!userfaultfd_remove(vma, start, end)) {
->                 *prev = NULL; /* mmap_sem has been dropped, prev is stale */
+> > > > * Allow the driver to be compiled as a module now that it no code is using
+> > > >   its routines and it only uses exported symbols. Now the driver is
+> > > >   essentially just a thin ioctl layer.
 >
-> -               down_read(&current->mm->mmap_sem);
-> -               vma = find_vma(current->mm, start);
-> +               down_read(&mm->mmap_sem);
-> +               vma = find_vma(mm, start);
->                 if (!vma)
->                         return -ENOMEM;
->                 if (start < vma->vm_start) {
-> @@ -818,6 +820,7 @@ static long madvise_remove(struct vm_area_struct *vma,
->         loff_t offset;
->         int error;
->         struct file *f;
-> +       struct mm_struct *mm = vma->vm_mm;
+> > > Not having the driver available in modular form obviously makes
+> > > work on the driver a bit more cumbersome.
 >
->         *prev = NULL;   /* tell sys_madvise we drop mmap_sem */
+> > Heh, depends on your development environment, e.g. I do 99% of my
+> > testing in a VM with a very minimal kernel that even an anemic
+> > system can incrementally build in a handful of seconds.
 >
-> @@ -845,13 +848,13 @@ static long madvise_remove(struct vm_area_struct *vma,
->         get_file(f);
->         if (userfaultfd_remove(vma, start, end)) {
->                 /* mmap_sem was not released by userfaultfd_remove() */
-> -               up_read(&current->mm->mmap_sem);
-> +               up_read(&mm->mmap_sem);
->         }
->         error = vfs_fallocate(f,
->                                 FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
->                                 offset, end - start);
->         fput(f);
-> -       down_read(&current->mm->mmap_sem);
-> +       down_read(&mm->mmap_sem);
->         return error;
->  }
+> Lacking a collection of big beefy development machines with 256+
+> gigabytes of RAM isn't the challenge, rebooting to test functionality
+> on the physical hardware is what is a bit of a nuisance.
 >
-> @@ -1044,7 +1047,8 @@ madvise_behavior_valid(int behavior)
->   *  -EBADF  - map exists, but area maps something that isn't a file.
->   *  -EAGAIN - a kernel resource was temporarily unavailable.
->   */
-> -int do_madvise(unsigned long start, size_t len_in, int behavior)
-> +int do_madvise(struct task_struct *target_task, struct mm_struct *mm,
-> +               unsigned long start, size_t len_in, int behavior)
->  {
->         unsigned long end, tmp;
->         struct vm_area_struct *vma, *prev;
-> @@ -1082,10 +1086,10 @@ int do_madvise(unsigned long start, size_t len_in, int behavior)
+> > > I'm assuming that the lack of module support is secondary to some
+> > > innate architectural issues with the driver?
 >
->         write = madvise_need_mmap_write(behavior);
->         if (write) {
-> -               if (down_write_killable(&current->mm->mmap_sem))
-> +               if (down_write_killable(&mm->mmap_sem))
->                         return -EINTR;
->         } else {
-> -               down_read(&current->mm->mmap_sem);
-> +               down_read(&mm->mmap_sem);
->         }
+> > As of today, the only part of the driver that can be extracted into
+> > a module is effectively the ioctl() handlers, i.e. a module would
+> > just be an ioctl() wrapper around a bunch of in-kernel
+> > functionality.  At that point, building the "driver" as a module
+> > doesn't provide any novel benefit, e.g.  very little memory
+> > footprint savings, reloading the module wouldn't "fix" any bugs with
+> > EPC management, SGX can still be forcefully disabled via kernel
+> > parameter, etc...  And on the flip side, allowing it to be a module
+> > would require exporting a non-trivial number of APIs that really
+> > shouldn't be exposed outside of the SGX subsystem.
+> >
+> > As for why things are baked into the kernel:
+> >
+> >   - EPC management: support for future enhancements (KVM and EPC cgroup).
+> >
+> >   - Reclaim: don't add a unnecessary infrastructure, i.e. avoid a callback
+> >     mechanism for which there is a single implementation.
+> >
+> >   - Tracking of LEPUBKEYHASH MSRs: KVM support.
 >
->         /*
-> @@ -1093,7 +1097,7 @@ int do_madvise(unsigned long start, size_t len_in, int behavior)
->          * ranges, just ignore them, but return -ENOMEM at the end.
->          * - different from the way of handling in mlock etc.
->          */
-> -       vma = find_vma_prev(current->mm, start, &prev);
-> +       vma = find_vma_prev(mm, start, &prev);
->         if (vma && start > vma->vm_start)
->                 prev = vma;
+> I don't doubt the justifications, just a bit unusual for a driver, but
+> this driver is obviously a bit unusual.
 >
-> @@ -1130,19 +1134,19 @@ int do_madvise(unsigned long start, size_t len_in, int behavior)
->                 if (prev)
->                         vma = prev->vm_next;
->                 else    /* madvise_remove dropped mmap_sem */
-> -                       vma = find_vma(current->mm, start);
-> +                       vma = find_vma(mm, start);
->         }
->  out:
->         blk_finish_plug(&plug);
->         if (write)
-> -               up_write(&current->mm->mmap_sem);
-> +               up_write(&mm->mmap_sem);
->         else
-> -               up_read(&current->mm->mmap_sem);
-> +               up_read(&mm->mmap_sem);
+> It will be interesting to see if the distros compile it in.
+
+We (Fedora) plan to as soon as it is merged. I even plan to ask for a backport.
+
+> Thank you for the clarifications, have a good weekend.
 >
->         return error;
->  }
+> Dr. Greg
 >
->  SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
->  {
-> -       return do_madvise(start, len_in, behavior);
-> +       return do_madvise(current, current->mm, start, len_in, behavior);
->  }
-> --
-> 2.25.0.265.gbab2e86ba0-goog
+> As always,
+> Dr. Greg Wettstein, Ph.D    Worker / Principal Engineer
+> IDfusion, LLC
+> 4206 19th Ave N.            Specialists in SGX secured infrastructure.
+> Fargo, ND  58102
+> PH: 701-281-1686            CELL: 701-361-2319
+> EMAIL: gw@idfusion.org
+> ------------------------------------------------------------------------------
+> "We are confronted with insurmountable opportunities."
+>                                 -- Walt Kelly
 >
 
-Reviewed-by: Suren Baghdasaryan <surenb@google.com>
