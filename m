@@ -2,107 +2,163 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CEF5C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB487C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4A002064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:00:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82C672064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:01:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=me.com header.i=@me.com header.b="ddn28xO3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="AteLBv85"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727168AbgB1QAu (ORCPT
+        id S1727273AbgB1QBE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:00:50 -0500
-Received: from st43p00im-ztdg10073201.me.com ([17.58.63.177]:44507 "EHLO
-        st43p00im-ztdg10073201.me.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727110AbgB1QAu (ORCPT
+        Fri, 28 Feb 2020 11:01:04 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.170]:36141 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727177AbgB1QBD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:00:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai;
-        t=1582905648; bh=Jp5Jx4TT3jU6jf6tGENjtbuH3RdcUZ/t+syzDFb4508=;
-        h=Date:From:To:Subject:Message-ID:Content-Type;
-        b=ddn28xO36TnsDne0mn8CLJQ7TPSP9bzqJocPvW9t735IWgyMWsOPWmMem8EAioqZ+
-         IIkQkq+bSpy4gL/oQbGnsfIy6BbDleFxHaVqG7hoZS1BiKq1Bd5FO+OuuHjP7JYrmm
-         8no4hBawJeBuGNEjyUtTJVlzu26Q2HxoIz+lCjjIUZWJI2KEXpVQ/TVPYEwMgWwZS6
-         X0St9457hQlUpr43qJ1i1RD8nNmNryUhJVjVj452D2amLA3i/rydHQMzAPt9ZwRgMX
-         lhYn55c78OaoRYcvBgjYB6NwwJHV5RwdFLCUDUO4SKnXzjIAGswsyJVYcw0FHo7fvE
-         d7ZnSSBaq47tA==
-Received: from shwetrath.localdomain (unknown [66.199.8.131])
-        by st43p00im-ztdg10073201.me.com (Postfix) with ESMTPSA id B34E222214B;
-        Fri, 28 Feb 2020 16:00:47 +0000 (UTC)
-Date:   Fri, 28 Feb 2020 11:00:45 -0500
-From:   Vijay Thakkar <vijaythakkar@me.com>
-To:     Kim Phillips <kim.phillips@amd.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
-        Jon Grimm <jon.grimm@amd.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] perf vendor events amd: add Zen2 events
-Message-ID: <20200228160045.GA23708@shwetrath.localdomain>
-References: <20200225192815.50388-1-vijaythakkar@me.com>
- <20200225192815.50388-3-vijaythakkar@me.com>
- <6f2a1097-a656-8226-1be3-36a337539412@amd.com>
+        Fri, 28 Feb 2020 11:01:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582905660;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=3vVLyvNBvLoUPS7a958Mox8CACN92ClzYCsPXl4lY7g=;
+        b=AteLBv85qK73Kw2VZvb8tNJyrbK1Erf2GjwPGFM5i2lRGxcjv83Uo91ing+JEScVtN
+        3xw6iKP80FVDU6eU/zo04quhqdZ+PvFItVk1BOkRT39OVpf1zS9b+tUXB32b6grRTDvj
+        Zvq0yorTz2SWtRA+cQ0KuyHHaB5NdtO5cCZwxsUM9t2Wy/AnSo1pSEk1fIP1g+JVbN/n
+        TrapXRE/+04nVsZtEGKyQW0odEv+LBg127Kr8clTL1CW8UW6e/uiwBEfseKsBcdh08w3
+        KA9UFigOu2oKyju5oFfKvPBq1+ifvuboXANLJ/eTr+ZbkQYLJq5yO4CnL8llxxrInl0D
+        DTAQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6G1+ULkA="
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
+        with ESMTPSA id y0a02cw1SG0s1l2
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Fri, 28 Feb 2020 17:00:54 +0100 (CET)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Subject: [PATCH v8 0/7] MIPS: CI20: Add efuse driver for Ingenic JZ4780 and attach to DM9000 for stable MAC addresses
+Date:   Fri, 28 Feb 2020 17:00:46 +0100
+Message-Id: <cover.1582905653.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6f2a1097-a656-8226-1be3-36a337539412@amd.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2020-02-28_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 clxscore=1015 mlxscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-2002280127
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > +  {
-> > +    "EventName": "ls_pref_instr_disp.prefetch_nta",
-> > +    "EventCode": "0x4b",
-> > +    "BriefDescription": "Software Prefetch Instructions (PREFETCHNTA instruction) Dispatched.",
-> > +    "PublicDescription": "Software Prefetch Instructions (PREFETCHNTA instruction) Dispatched.",
-> > +    "UMask": "0x4"
-> > +  },
-> > +  {
-> > +    "EventName": "ls_pref_instr_disp.store_prefetch_w",
-> > +    "EventCode": "0x4b",
-> > +    "BriefDescription": "Software Prefetch Instructions (3DNow PREFETCHW instruction) Dispatched.",
-> > +    "PublicDescription": "Software Prefetch Instructions (3DNow PREFETCHW instruction) Dispatched.",
-> > +    "UMask": "0x2"
-> > +  },
-> > +  {
-> > +    "EventName": "ls_pref_instr_disp.load_prefetch_w",
-> > +    "EventCode": "0x4b",
-> > +    "BriefDescription": "Prefetch, Prefetch_T0_T1_T2.",
-> > +    "PublicDescription": "Software Prefetch Instructions Dispatched. Prefetch, Prefetch_T0_T1_T2.",
-> > +    "UMask": "0x1"
-> > +  },
-These three are present in the PPR for model 71h (56176 Rev 3.06 - Jul
-17, 2019) but are missing from the PPR for model 31h (55803 Rev 0.54 -
-Sep 12, 2019). Not sure what to do about it. 
+* fix a compiler warning/error (reported by Paul Cercueil <paul@crapouillou.net>)
+* remove clock-names from properties (suggested by Paul Cercueil <paul@crapouillou.net>)
 
-Similarly, PMC 0x0AF - Dispatch Resource Stall Cycles 0 only has one
-subcounter in the model 31h PPR, whereas the PPR for 71h is the one that
-contains the eight subcounters we see in the mainline right now.
+PATCH V7 2020-02-28 14:58:30:
+* use devm_add_action_or_reset to unprepare clock in case of error (suggested by Paul Cercueil <paul@crapouillou.net>)
+* use already existing constants to check for overflow of rd_adj and rd_strobe
+* remove clock-names from bindings example and DTS (suggested by Paul Cercueil <paul@crapouillou.net>)
+* addition for nemc driver to handle this correctly (contributed by Paul Cercueil <paul@crapouillou.net>)
+* make efuse a child node of nemc to avoid problems with overlapping
+  reg address ranges (suggested by Paul Cercueil <paul@crapouillou.net>)
 
-There could be more subtle differences like these, since I have not
-really compared the PPR versions that thoroughly. I was going with the
-assumption that since both are for SoCs based on the Zen2, they would
-have identical events. 
+PATCH V6 2020-02-26 12:16:07:
+* add dependency on CONFIG_OF and select REGMAP_MMIO (suggested by Paul Cercueil <paul@crapouillou.net>)
+* add clk_prepare_enable() (suggested by Paul Cercueil <paul@crapouillou.net>)
+* inline jz4780_efuse_read_32bytes() since it is only used once
+* remove read optimization for full block (suggested by Paul Cercueil <paul@crapouillou.net>)
+* simplify calculations for rd_adj and rd_strobe (suggested by Paul Cercueil <paul@crapouillou.net>)
+* do calculations for rd_adj and rd_strobe in local variables
+* fix overflow check (did allow for 5 bit values although register is 4 bit wide)
+* fixes for yaml (sugested by Andreas Kemnade <andreas@kemnade.info>)
 
-Otherwise, I have made all the other changes and corrections, and will
-send in v3 after you suggest how to proceed about the above two.
+PATCH V5 2020-02-22 11:25:35:
+* no longer RFC but PATCH
+* add yaml bindings (by Andreas Kemnade <andreas@kemnade.info>)
+* fixes to yaml (suggested by Rob Herring <robh@kernel.org>)
 
-Best,
-Vijay
+RFC V4 2020-02-17 17:55:35:
+* removed read_only for nvmem config because there is no write method
+* Kconfig: replaced depends MACH_JZ4780 with MACH_INGENIC
+* run through checkpatch and fixed issues
+* made use of devm_nvram_register() and get rid of jz4780_efuse_remove()
+  (suggested by Srinivas Kandagatla <srinivas.kandagatla@linaro.org>)
+* squashed previous patch 1/9 and 2/9 into single (regmap based) driver
+
+RFC V3 2020-02-16 20:20:59:
+
+This series is based on and a follow up for
+
+https://lore.kernel.org/patchwork/cover/868157/
+
+("[v2,0/2] Add efuse driver for Ingenic JZ4780 SoC")
+
+Original authors were
+PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+Mathieu Malaterre <malat@debian.org>
+
+and there are additions / code improvements by
+H. Nikolaus Schaller <hns@goldelico.com>
+Paul Cercueil <paul@crapouillou.net>
+
+This setup works, if the dm9000 driver is compiled
+as a module.
+
+Therefore it is all RFC level. It is also not completely
+checkpatched.
+
+
+H. Nikolaus Schaller (1):
+  MIPS: DTS: CI20: make DM9000 Ethernet controller use NVMEM to find the
+    default MAC address
+
+Paul Cercueil (1):
+  memory: jz4780_nemc: Only request IO memory the driver will use
+
+PrasannaKumar Muralidharan (5):
+  nvmem: add driver for JZ4780 efuse
+  Bindings: nvmem: add bindings for JZ4780 efuse
+  Documentation: ABI: nvmem: add documentation for JZ4780 efuse ABI
+  nvmem: MAINTAINERS: add maintainer for JZ4780 efuse driver
+  MIPS: DTS: JZ4780: define node for JZ4780 efuse
+
+ .../ABI/testing/sysfs-driver-jz4780-efuse     |  16 ++
+ .../bindings/nvmem/ingenic,jz4780-efuse.yaml  |  45 ++++
+ MAINTAINERS                                   |   5 +
+ arch/mips/boot/dts/ingenic/ci20.dts           |   3 +
+ arch/mips/boot/dts/ingenic/jz4780.dtsi        |  19 +-
+ drivers/memory/jz4780-nemc.c                  |  15 +-
+ drivers/nvmem/Kconfig                         |  12 +
+ drivers/nvmem/Makefile                        |   2 +
+ drivers/nvmem/jz4780-efuse.c                  | 239 ++++++++++++++++++
+ 9 files changed, 353 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-jz4780-efuse
+ create mode 100644 Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
+ create mode 100644 drivers/nvmem/jz4780-efuse.c
+
+-- 
+2.23.0
+
