@@ -2,26 +2,25 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12493C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA17FC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDA8C2469D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:08:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB91224699
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:08:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbgB1PIg (ORCPT
+        id S1727237AbgB1PIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 10:08:36 -0500
-Received: from 8bytes.org ([81.169.241.247]:56056 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727196AbgB1PIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Feb 2020 10:08:35 -0500
+Received: from 8bytes.org ([81.169.241.247]:56162 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727173AbgB1PIe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 10:08:34 -0500
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 4B972680; Fri, 28 Feb 2020 16:08:31 +0100 (CET)
+        id 59ED360E; Fri, 28 Feb 2020 16:08:30 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     iommu@lists.linux-foundation.org
 Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
@@ -40,9 +39,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 14/14] iommu: Move fwspec->iommu_priv to struct dev_iommu
-Date:   Fri, 28 Feb 2020 16:08:20 +0100
-Message-Id: <20200228150820.15340-15-joro@8bytes.org>
+Subject: [PATCH 10/14] iommu/renesas: Use accessor functions for iommu private data
+Date:   Fri, 28 Feb 2020 16:08:16 +0100
+Message-Id: <20200228150820.15340-11-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200228150820.15340-1-joro@8bytes.org>
 References: <20200228150820.15340-1-joro@8bytes.org>
@@ -53,57 +52,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Move the pointer for iommu private data from struct iommu_fwspec to
-struct dev_iommu.
+Make use of dev_iommu_priv_set/get() functions.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- include/linux/iommu.h | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/iommu/ipmmu-vmsa.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index 904fb24418e5..77fc6bb35fe9 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -369,6 +369,7 @@ struct iommu_fault_param {
-  *
-  * @fault_param: IOMMU detected device fault reporting data
-  * @fwspec:	 IOMMU fwspec data
-+ * @priv:	 IOMMU Driver private data
-  *
-  * TODO: migrate other per device data pointers under iommu_dev_data, e.g.
-  *	struct iommu_group	*iommu_group;
-@@ -377,6 +378,7 @@ struct dev_iommu {
- 	struct mutex lock;
- 	struct iommu_fault_param	*fault_param;
- 	struct iommu_fwspec		*fwspec;
-+	void				*priv;
- };
+diff --git a/drivers/iommu/ipmmu-vmsa.c b/drivers/iommu/ipmmu-vmsa.c
+index ecb3f9464dd5..310cf09feea3 100644
+--- a/drivers/iommu/ipmmu-vmsa.c
++++ b/drivers/iommu/ipmmu-vmsa.c
+@@ -89,9 +89,7 @@ static struct ipmmu_vmsa_domain *to_vmsa_domain(struct iommu_domain *dom)
  
- int  iommu_device_register(struct iommu_device *iommu);
-@@ -589,7 +591,6 @@ struct iommu_group *fsl_mc_device_group(struct device *dev);
- struct iommu_fwspec {
- 	const struct iommu_ops	*ops;
- 	struct fwnode_handle	*iommu_fwnode;
--	void			*iommu_priv;
- 	u32			flags;
- 	u32			num_pasid_bits;
- 	unsigned int		num_ids;
-@@ -629,12 +630,12 @@ static inline void dev_iommu_fwspec_set(struct device *dev,
- 
- static inline void *dev_iommu_priv_get(struct device *dev)
+ static struct ipmmu_vmsa_device *to_ipmmu(struct device *dev)
  {
--	return dev->iommu->fwspec->iommu_priv;
-+	return dev->iommu->priv;
+-	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+-
+-	return fwspec ? fwspec->iommu_priv : NULL;
++	return dev_iommu_priv_get(dev);
  }
  
- static inline void dev_iommu_priv_set(struct device *dev, void *priv)
+ #define TLB_LOOP_TIMEOUT		100	/* 100us */
+@@ -727,14 +725,13 @@ static phys_addr_t ipmmu_iova_to_phys(struct iommu_domain *io_domain,
+ static int ipmmu_init_platform_device(struct device *dev,
+ 				      struct of_phandle_args *args)
  {
--	dev->iommu->fwspec->iommu_priv = priv;
-+	dev->iommu->priv = priv;
- }
+-	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+ 	struct platform_device *ipmmu_pdev;
  
- int iommu_probe_device(struct device *dev);
+ 	ipmmu_pdev = of_find_device_by_node(args->np);
+ 	if (!ipmmu_pdev)
+ 		return -ENODEV;
+ 
+-	fwspec->iommu_priv = platform_get_drvdata(ipmmu_pdev);
++	dev_iommu_priv_set(dev, platform_get_drvdata(ipmmu_pdev));
+ 
+ 	return 0;
+ }
 -- 
 2.17.1
 
