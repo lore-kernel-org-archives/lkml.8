@@ -2,157 +2,116 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A570C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2294BC3F2D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F82D246AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:03:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E728624699
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:05:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fxqGCszp"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="YIp65SgP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbgB1PDZ (ORCPT
+        id S1726956AbgB1PF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 10:03:25 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35996 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726720AbgB1PDY (ORCPT
+        Fri, 28 Feb 2020 10:05:57 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:40807 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726805AbgB1PF4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 10:03:24 -0500
-Received: by mail-wm1-f65.google.com with SMTP id g83so1334595wme.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 07:03:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=M993Xxg570Z0qNth+AfgZmhK2IPDaBi6vXhUHO9PeJw=;
-        b=fxqGCszp3U5TsaRO8DeMwhFdG9VCC5MFftPvMMFEJqZP+CwEr4KSsqnlcjv1enzIkm
-         XbtoKSQk0K3qLppIp49AHQ0MG8MO9Gu9oB0Aw5+Ce3sivUFewhs/RIL2n4wFPZlK5IbC
-         nj6YOkZUYbb81Nir0LBidFtn6yePYS2AVsWDf8+2wbBRcsedbSJdieZ3TAylWGVCFBnJ
-         pKp2q3LsoH6MQePzJUTz+QQX7cCRsNUAouRM6c30kLJWXOqsS1asoNuSRi+K26n2RFWD
-         8mHDo1wUMYUQD6co5OjEIYBKzD1Iohxt64AC/ik6DZFIUmolV7Y3d6Ur0i0zim0fQnw4
-         IbRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=M993Xxg570Z0qNth+AfgZmhK2IPDaBi6vXhUHO9PeJw=;
-        b=tHBjZs/okdIJjtovmrzKP7lKBzBqyol8jyPv7FTmKpnImbquPxXhylYgvX7fJpc444
-         JnnspN1sjKb6GX4L+WMnPlwbBRwXJvQBN9gr3BUU0Nh0yotpHz7AxkG19Zz4/VW5PCwl
-         aGpvXDvUvRMLiSqdPBDIT5PlJuseHruia3/snonQHEY8zDZ6VUvX1S9Rv71YDsdrywgG
-         cLLh0G8aPeHQIVEWP273ZFjv+o6pLIJuCgNsk1GwspQG94LugNxhSe7cQT1EwbuAoTbK
-         vNVEXOOi7ladFMBShokEJ/swGQyJ6f71EgBLD44Xi4JzMVDUmKVxo/uv7dcagM8Ogn+A
-         Zjmg==
-X-Gm-Message-State: APjAAAWavM3SG9K0yptGBs6JN59s63q9HZFXkrtt4lTl/gMc+W/MGGrJ
-        9axwt3obhsIVJ+QIlYON3+8=
-X-Google-Smtp-Source: APXvYqwNSQFWyVhTdvukpuDwLPKGh9J5VLffoz16pWUJG+qow3vh1xugI/kVAVbZ5FBaDlNbHvIsqg==
-X-Received: by 2002:a05:600c:251:: with SMTP id 17mr5174861wmj.59.1582902202694;
-        Fri, 28 Feb 2020 07:03:22 -0800 (PST)
-Received: from opensdev.fritz.box (business-178-015-117-054.static.arcor-ip.net. [178.15.117.54])
-        by smtp.gmail.com with ESMTPSA id m125sm2540235wmf.8.2020.02.28.07.03.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 07:03:22 -0800 (PST)
-From:   shiva.linuxworks@gmail.com
-X-Google-Original-From: sshivamurthy@micron.com
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Shivamurthy Shastri <sshivamurthy@micron.com>
-Subject: [PATCH v5 1/6] mtd: spinand: micron: Generalize the OOB layout structure and function names
-Date:   Fri, 28 Feb 2020 16:03:06 +0100
-Message-Id: <20200228150311.12184-2-sshivamurthy@micron.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200228150311.12184-1-sshivamurthy@micron.com>
-References: <20200228150311.12184-1-sshivamurthy@micron.com>
+        Fri, 28 Feb 2020 10:05:56 -0500
+X-UUID: c0943b4c5a8c4db8a9781917ac9ea4cd-20200228
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=afn0AiUTWzXbXY5VokBw7o3NfO+VtwljFnYyh1mt1oc=;
+        b=YIp65SgPT8zuhTLBrBE7JlukFDrYR4YVlAm1tCX/nOtttWt7IH8gyh9X3aGUB6TTCUVfo1vqUJTbp0v79npyxx/jfkXUpb+KLO3IEx+PxBMebNim0FQmNWltK4ZFy17Yn3upZrtC0ugD6WdnpzkE86AwhuDpGGYCCSl4PI3fvuA=;
+X-UUID: c0943b4c5a8c4db8a9781917ac9ea4cd-20200228
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 235942894; Fri, 28 Feb 2020 23:05:52 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 28 Feb 2020 23:05:01 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 28 Feb 2020 23:05:33 +0800
+Message-ID: <1582902351.14824.10.camel@mtksdaap41>
+Subject: Re: [PATCH v3 13/13] soc: mediatek: cmdq: add set event function
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        "Ming-Fan Chen" <ming-fan.chen@mediatek.com>
+Date:   Fri, 28 Feb 2020 23:05:51 +0800
+In-Reply-To: <1582897461-15105-15-git-send-email-dennis-yc.hsieh@mediatek.com>
+References: <1582897461-15105-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1582897461-15105-15-git-send-email-dennis-yc.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shivamurthy Shastri <sshivamurthy@micron.com>
-
-In order to add new Micron SPI NAND devices, we generalized the OOB
-layout structure and function names.
-
-Signed-off-by: Shivamurthy Shastri <sshivamurthy@micron.com>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
----
- drivers/mtd/nand/spi/micron.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/mtd/nand/spi/micron.c b/drivers/mtd/nand/spi/micron.c
-index 7d7b1f7fcf71..c028d0d7e236 100644
---- a/drivers/mtd/nand/spi/micron.c
-+++ b/drivers/mtd/nand/spi/micron.c
-@@ -34,38 +34,38 @@ static SPINAND_OP_VARIANTS(update_cache_variants,
- 		SPINAND_PROG_LOAD_X4(false, 0, NULL, 0),
- 		SPINAND_PROG_LOAD(false, 0, NULL, 0));
- 
--static int mt29f2g01abagd_ooblayout_ecc(struct mtd_info *mtd, int section,
--					struct mtd_oob_region *region)
-+static int micron_8_ooblayout_ecc(struct mtd_info *mtd, int section,
-+				  struct mtd_oob_region *region)
- {
- 	if (section)
- 		return -ERANGE;
- 
--	region->offset = 64;
--	region->length = 64;
-+	region->offset = mtd->oobsize / 2;
-+	region->length = mtd->oobsize / 2;
- 
- 	return 0;
- }
- 
--static int mt29f2g01abagd_ooblayout_free(struct mtd_info *mtd, int section,
--					 struct mtd_oob_region *region)
-+static int micron_8_ooblayout_free(struct mtd_info *mtd, int section,
-+				   struct mtd_oob_region *region)
- {
- 	if (section)
- 		return -ERANGE;
- 
- 	/* Reserve 2 bytes for the BBM. */
- 	region->offset = 2;
--	region->length = 62;
-+	region->length = (mtd->oobsize / 2) - 2;
- 
- 	return 0;
- }
- 
--static const struct mtd_ooblayout_ops mt29f2g01abagd_ooblayout = {
--	.ecc = mt29f2g01abagd_ooblayout_ecc,
--	.free = mt29f2g01abagd_ooblayout_free,
-+static const struct mtd_ooblayout_ops micron_8_ooblayout = {
-+	.ecc = micron_8_ooblayout_ecc,
-+	.free = micron_8_ooblayout_free,
- };
- 
--static int mt29f2g01abagd_ecc_get_status(struct spinand_device *spinand,
--					 u8 status)
-+static int micron_8_ecc_get_status(struct spinand_device *spinand,
-+				   u8 status)
- {
- 	switch (status & MICRON_STATUS_ECC_MASK) {
- 	case STATUS_ECC_NO_BITFLIPS:
-@@ -98,8 +98,8 @@ static const struct spinand_info micron_spinand_table[] = {
- 					      &write_cache_variants,
- 					      &update_cache_variants),
- 		     0,
--		     SPINAND_ECCINFO(&mt29f2g01abagd_ooblayout,
--				     mt29f2g01abagd_ecc_get_status)),
-+		     SPINAND_ECCINFO(&micron_8_ooblayout,
-+				     micron_8_ecc_get_status)),
- };
- 
- static int micron_spinand_detect(struct spinand_device *spinand)
--- 
-2.17.1
+SGksIERlbm5pczoNCg0KT24gRnJpLCAyMDIwLTAyLTI4IGF0IDIxOjQ0ICswODAwLCBEZW5uaXMg
+WUMgSHNpZWggd3JvdGU6DQo+IEFkZCBzZXQgZXZlbnQgZnVuY3Rpb24gaW4gY21kcSBoZWxwZXIg
+ZnVuY3Rpb25zIHRvIHNldCBzcGVjaWZpYyBldmVudC4NCj4gDQoNClJldmlld2VkLWJ5OiBDSyBI
+dSA8Y2suaHVAbWVkaWF0ZWsuY29tPg0KDQo+IFNpZ25lZC1vZmYtYnk6IERlbm5pcyBZQyBIc2ll
+aCA8ZGVubmlzLXljLmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL3NvYy9t
+ZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYyAgIHwgMTUgKysrKysrKysrKysrKysrDQo+ICBpbmNs
+dWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5oIHwgIDEgKw0KPiAgaW5jbHVkZS9s
+aW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaCAgICB8ICA5ICsrKysrKysrKw0KPiAgMyBmaWxl
+cyBjaGFuZ2VkLCAyNSBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9z
+b2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGst
+Y21kcS1oZWxwZXIuYw0KPiBpbmRleCA0MDZlMWQzNGQyMzQuLjczOGY4M2Q5MGI1OSAxMDA2NDQN
+Cj4gLS0tIGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gKysrIGIv
+ZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gQEAgLTMyNiw2ICszMjYs
+MjEgQEAgaW50IGNtZHFfcGt0X2NsZWFyX2V2ZW50KHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1MTYg
+ZXZlbnQpDQo+ICB9DQo+ICBFWFBPUlRfU1lNQk9MKGNtZHFfcGt0X2NsZWFyX2V2ZW50KTsNCj4g
+IA0KPiAraW50IGNtZHFfcGt0X3NldF9ldmVudChzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTE2IGV2
+ZW50KQ0KPiArew0KPiArCXN0cnVjdCBjbWRxX2luc3RydWN0aW9uIGluc3QgPSB7IHswfSB9Ow0K
+PiArDQo+ICsJaWYgKGV2ZW50ID49IENNRFFfTUFYX0VWRU5UKQ0KPiArCQlyZXR1cm4gLUVJTlZB
+TDsNCj4gKw0KPiArCWluc3Qub3AgPSBDTURRX0NPREVfV0ZFOw0KPiArCWluc3QudmFsdWUgPSBD
+TURRX1dGRV9VUERBVEUgfCBDTURRX1dGRV9VUERBVEVfVkFMVUU7DQo+ICsJaW5zdC5ldmVudCA9
+IGV2ZW50Ow0KPiArDQo+ICsJcmV0dXJuIGNtZHFfcGt0X2FwcGVuZF9jb21tYW5kKHBrdCwgaW5z
+dCk7DQo+ICt9DQo+ICtFWFBPUlRfU1lNQk9MKGNtZHFfcGt0X3NldF9ldmVudCk7DQo+ICsNCj4g
+IGludCBjbWRxX3BrdF9wb2xsKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1OCBzdWJzeXMsDQo+ICAJ
+CSAgdTE2IG9mZnNldCwgdTMyIHZhbHVlKQ0KPiAgew0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9s
+aW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaCBiL2luY2x1ZGUvbGludXgvbWFpbGJveC9t
+dGstY21kcS1tYWlsYm94LmgNCj4gaW5kZXggNDJkMmEzMGU2YTcwLi5iYTJkODExMTgzYTkgMTAw
+NjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmgNCj4g
+KysrIGIvaW5jbHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaA0KPiBAQCAtMTcs
+NiArMTcsNyBAQA0KPiAgI2RlZmluZSBDTURRX0pVTVBfUEFTUwkJCUNNRFFfSU5TVF9TSVpFDQo+
+ICANCj4gICNkZWZpbmUgQ01EUV9XRkVfVVBEQVRFCQkJQklUKDMxKQ0KPiArI2RlZmluZSBDTURR
+X1dGRV9VUERBVEVfVkFMVUUJCUJJVCgxNikNCj4gICNkZWZpbmUgQ01EUV9XRkVfV0FJVAkJCUJJ
+VCgxNSkNCj4gICNkZWZpbmUgQ01EUV9XRkVfV0FJVF9WQUxVRQkJMHgxDQo+ICANCj4gZGlmZiAt
+LWdpdCBhL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmggYi9pbmNsdWRlL2xp
+bnV4L3NvYy9tZWRpYXRlay9tdGstY21kcS5oDQo+IGluZGV4IGQ2Mzc0OTQ0MDY5Ny4uY2E3MDI5
+NmFlMTIwIDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21k
+cS5oDQo+ICsrKyBiL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmgNCj4gQEAg
+LTE2OCw2ICsxNjgsMTUgQEAgaW50IGNtZHFfcGt0X3dmZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCwg
+dTE2IGV2ZW50LCBib29sIGNsZWFyKTsNCj4gICAqLw0KPiAgaW50IGNtZHFfcGt0X2NsZWFyX2V2
+ZW50KHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1MTYgZXZlbnQpOw0KPiAgDQo+ICsvKioNCj4gKyAq
+IGNtZHFfcGt0X3NldF9ldmVudCgpIC0gYXBwZW5kIHNldCBldmVudCBjb21tYW5kIHRvIHRoZSBD
+TURRIHBhY2tldA0KPiArICogQHBrdDoJdGhlIENNRFEgcGFja2V0DQo+ICsgKiBAZXZlbnQ6CXRo
+ZSBkZXNpcmVkIGV2ZW50IHRvIGJlIHNldA0KPiArICoNCj4gKyAqIFJldHVybjogMCBmb3Igc3Vj
+Y2VzczsgZWxzZSB0aGUgZXJyb3IgY29kZSBpcyByZXR1cm5lZA0KPiArICovDQo+ICtpbnQgY21k
+cV9wa3Rfc2V0X2V2ZW50KHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1MTYgZXZlbnQpOw0KPiArDQo+
+ICAvKioNCj4gICAqIGNtZHFfcGt0X3BvbGwoKSAtIEFwcGVuZCBwb2xsaW5nIGNvbW1hbmQgdG8g
+dGhlIENNRFEgcGFja2V0LCBhc2sgR0NFIHRvDQo+ICAgKgkJICAgICBleGVjdXRlIGFuIGluc3Ry
+dWN0aW9uIHRoYXQgd2FpdCBmb3IgYSBzcGVjaWZpZWQNCg0K
 
