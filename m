@@ -2,128 +2,121 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3700C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7BDC3F2D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7403B2469F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:23:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="KTWA0Miy"
+	by mail.kernel.org (Postfix) with ESMTP id CC85A2469F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:26:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgB1KXx (ORCPT
+        id S1726824AbgB1K0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 05:23:53 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46447 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbgB1KXx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 05:23:53 -0500
-Received: by mail-wr1-f68.google.com with SMTP id j7so2256304wrp.13
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 02:23:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9BWu8iueEzRzeq+ljMw3GO5DRJ7WpLyt4g4K03+Dz2U=;
-        b=KTWA0MiyIymXK1ATe6uz1WTX+uZh1NFjhSn/HYL20oh5JOrl+xuw5wSOntPWjheDpX
-         kGr7V+YNENnDtmAZmSBYWYXNd6tx9zjgzOSGVbzH1OIStw6HhgbolY1tuhAAUOwChI+x
-         CxIpmiEZXhMn419GAw1JLw2n4CnMiqmhilpsrOvduDDzT8BGQT23vXZr8LVxi1VC08Vk
-         np7JOcGNQwnxwRe2kxffJGMutUFJ51YmnTePtg30An5qzu0nhYBUgOVq3ceedls5Nqel
-         g7uhLy9OzxwW75lYS5R7WwPDCgGDirl6nncK2xueTAhZUageI22Ms0ns5dvu+4RrP7gG
-         34Ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9BWu8iueEzRzeq+ljMw3GO5DRJ7WpLyt4g4K03+Dz2U=;
-        b=KU93MEiIiAZjjQSrgHiXX9f+61PPp17MZm0S053K+cNqBrBaUxtLEivDJ+g/h53t9G
-         7e8AXuo8c8wSb37COdif9+MI75DGYRmMu7rjh+3aBYYwUoG1fVpBJfelJMutr6b32D8f
-         fD7LJ+xJ2FR+P+tczX5hTAIDROp9YeVJiHPpHzb/JsRS1IhKXf860PJQNpMpgnCmEwZM
-         S296cxU1Nl9AOkaHYB5d3aW8895k68dw59r5muK7cwj0NF+HSp613E6mbeQvwB//IVXm
-         ZDwKNVOaUF+BptX613mPQpa2UTLUKbA15N9nrTIG80dlwAjtXDTpHA1+kp+7I2PoPGk4
-         OrNQ==
-X-Gm-Message-State: APjAAAVQIcs4exAB/ZIYgAKgtYWyma4ebCLb/DMOOhlDQbaRr2XKZqUi
-        P6r/PMQFau/Vb6BWHPc/VEPV97kPH8VsRQ==
-X-Google-Smtp-Source: APXvYqxH9owCTU7Ao+s51LMXcNiAO5qGpIEiVwOzyQhqkpDRULgg/35xMMXIZiEqRYYQVhOhgVu2Nw==
-X-Received: by 2002:a5d:5148:: with SMTP id u8mr4423764wrt.132.1582885429318;
-        Fri, 28 Feb 2020 02:23:49 -0800 (PST)
-Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id z14sm8597747wrg.76.2020.02.28.02.23.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 02:23:48 -0800 (PST)
-Date:   Fri, 28 Feb 2020 11:23:46 +0100
-From:   LABBE Corentin <clabbe@baylibre.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     davem@davemloft.net, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] crypto: drbg: DRBG_CTR should select CTR
-Message-ID: <20200228102346.GA1662@Red>
-References: <1582127495-5871-1-git-send-email-clabbe@baylibre.com>
- <1582127495-5871-2-git-send-email-clabbe@baylibre.com>
- <20200228003052.GA9060@gondor.apana.org.au>
+        Fri, 28 Feb 2020 05:26:09 -0500
+Received: from foss.arm.com ([217.140.110.172]:36148 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726440AbgB1K0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 05:26:09 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0806D4B2;
+        Fri, 28 Feb 2020 02:26:08 -0800 (PST)
+Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1FBBF3F73B;
+        Fri, 28 Feb 2020 02:26:04 -0800 (PST)
+Date:   Fri, 28 Feb 2020 10:25:56 +0000
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Will Deacon <will@kernel.org>
+List-Id: <soc.lore.kernel.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        soc@kernel.org, Robert Richter <rrichter@marvell.com>,
+        Jon Loeliger <jdl@jdl.com>, Alexander Graf <graf@amazon.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Mark Langsdorf <mlangsdo@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        James Morse <james.morse@arm.com>,
+        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+        kvm@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [RFC PATCH 06/11] iommu: arm-smmu: Remove Calxeda secure mode
+ quirk
+Message-ID: <20200228102556.1dde016e@donnerap.cambridge.arm.com>
+In-Reply-To: <20200228100446.GA2395@willie-the-truck>
+References: <20200218171321.30990-1-robh@kernel.org>
+        <20200218171321.30990-7-robh@kernel.org>
+        <20200218172000.GF1133@willie-the-truck>
+        <CAL_JsqJn1kG6gah+4318NQfJ4PaS3x3woWEUh08+OTfOcD+1MQ@mail.gmail.com>
+        <20200228100446.GA2395@willie-the-truck>
+Organization: ARM
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200228003052.GA9060@gondor.apana.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 11:30:52AM +1100, Herbert Xu wrote:
-> On Wed, Feb 19, 2020 at 03:51:35PM +0000, Corentin Labbe wrote:
-> > if CRYPTO_DRBG_CTR is builtin and CTR is module, allocating such algo
-> > will fail.
-> > DRBG: could not allocate CTR cipher TFM handle: ctr(aes)
-> > alg: drbg: Failed to reset rng
-> > alg: drbg: Test 0 failed for drbg_pr_ctr_aes128
-> > DRBG: could not allocate CTR cipher TFM handle: ctr(aes)
-> > alg: drbg: Failed to reset rng
-> > alg: drbg: Test 0 failed for drbg_nopr_ctr_aes128
-> > DRBG: could not allocate CTR cipher TFM handle: ctr(aes)
-> > alg: drbg: Failed to reset rng
-> > alg: drbg: Test 0 failed for drbg_nopr_ctr_aes192
-> > DRBG: could not allocate CTR cipher TFM handle: ctr(aes)
-> > alg: drbg: Failed to reset rng
-> > ialg: drbg: Test 0 failed for drbg_nopr_ctr_aes256
+On Fri, 28 Feb 2020 10:04:47 +0000
+Will Deacon <will@kernel.org> wrote:
+
+Hi,
+
+> On Tue, Feb 25, 2020 at 04:01:54PM -0600, Rob Herring wrote:
+> > On Tue, Feb 18, 2020 at 11:20 AM Will Deacon <will@kernel.org> wrote:  
+> > >
+> > > On Tue, Feb 18, 2020 at 11:13:16AM -0600, Rob Herring wrote:  
+> > > > Cc: Will Deacon <will@kernel.org>
+> > > > Cc: Robin Murphy <robin.murphy@arm.com>
+> > > > Cc: Joerg Roedel <joro@8bytes.org>
+> > > > Cc: iommu@lists.linux-foundation.org
+> > > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > > > ---
+> > > > Do not apply yet.  
+> > >
+> > > Pleeeeease? ;)
+> > >  
+> > > >  drivers/iommu/arm-smmu-impl.c | 43 -----------------------------------
+> > > >  1 file changed, 43 deletions(-)  
+> > >
+> > > Yes, I'm happy to get rid of this. Sadly, I don't think we can remove
+> > > anything from 'struct arm_smmu_impl' because most implementations fall
+> > > just short of perfect.
+> > >
+> > > Anyway, let me know when I can push the button and I'll queue this in
+> > > the arm-smmu tree.  
 > > 
-> > Since setting DRBG_CTR=CTR lead to a recursive dependency, let's depends
-> > on CTR=y
-> > 
-> > Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-> > ---
-> >  crypto/Kconfig | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/crypto/Kconfig b/crypto/Kconfig
-> > index 6d27fc6a7bf5..eddeb43fc01c 100644
-> > --- a/crypto/Kconfig
-> > +++ b/crypto/Kconfig
-> > @@ -1822,7 +1822,7 @@ config CRYPTO_DRBG_HASH
-> >  config CRYPTO_DRBG_CTR
-> >  	bool "Enable CTR DRBG"
-> >  	select CRYPTO_AES
-> > -	depends on CRYPTO_CTR
-> > +	depends on CRYPTO_CTR=y
+> > Seems we're leaving the platform support for now, but I think we never
+> > actually enabled SMMU support. It's not in the dts either in mainline
+> > nor the version I have which should be close to what shipped in
+> > firmware. So as long as Andre agrees, this one is good to apply.  
 > 
-> This should be turned into a select.
-> 
+> Andre? Can I queue this one for 5.7, please?
 
-it fail also if I select it:
-crypto/Kconfig:1800:error: recursive dependency detected!
-crypto/Kconfig:1800:	symbol CRYPTO_DRBG_MENU is selected by CRYPTO_RNG_DEFAULT
-crypto/Kconfig:83:	symbol CRYPTO_RNG_DEFAULT is selected by CRYPTO_SEQIV
-crypto/Kconfig:330:	symbol CRYPTO_SEQIV is selected by CRYPTO_CTR
-crypto/Kconfig:370:	symbol CRYPTO_CTR is selected by CRYPTO_DRBG_CTR
-crypto/Kconfig:1822:	symbol CRYPTO_DRBG_CTR depends on CRYPTO_DRBG_MENU
+I was wondering how much of a pain it is to keep it in? AFAICS there are other users of the "impl" indirection. If those goes away, I would be happy to let Calxeda go.
+But Eric had the magic DT nodes to get the SMMU working, and I used that before, with updating the DT either on flash or dynamically via U-Boot.
 
-I forgot to say it in the commit message.
-I will send a v2 with an updated commit message.
+So I don't know exactly *how* desperate you are with removing this, or if there are other reasons than "negative diffstat", but if possible I would like to keep it in.
 
-Regards
+Cheers,
+Andre.
