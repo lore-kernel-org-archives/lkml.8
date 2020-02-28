@@ -2,109 +2,211 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE660C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C664BC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A271E246A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94B94246AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:17:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PwfWjye5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M5jzpjho"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgB1KQo (ORCPT
+        id S1726915AbgB1KRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 05:16:44 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28865 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726766AbgB1KQo (ORCPT
+        Fri, 28 Feb 2020 05:17:12 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:44384 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726583AbgB1KRM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 05:16:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582885003;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=eVoGLbtnYzXWlmc48w0t/0qrnxkTvQefS/f9aokidUA=;
-        b=PwfWjye5QTLBcABwlf9U/iP6ZBjcDQFk4ZuRCvNKvWDrbGRSzaTyW5PO+uRL2HSZU9Dck+
-        +K6CtzyPzko6yFcWA0Z4mOd42q5T8n5uMTDOGbvb2JlRID6xecqDY9x8AMTwqWix4eI3hW
-        VDocAQ6ls9uFd/MmppZTT6MgUQCLtPA=
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
- [209.85.167.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-150-aROSRINmPOmvXvPhI84mxg-1; Fri, 28 Feb 2020 05:16:40 -0500
-X-MC-Unique: aROSRINmPOmvXvPhI84mxg-1
-Received: by mail-lf1-f69.google.com with SMTP id j204so347186lfj.3
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 02:16:40 -0800 (PST)
+        Fri, 28 Feb 2020 05:17:12 -0500
+Received: by mail-qt1-f196.google.com with SMTP id j23so1578195qtr.11;
+        Fri, 28 Feb 2020 02:17:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=R7uaMNCZeASeOiOXVcNL4zVrX7ClVNCtzMIR7D9YARI=;
+        b=M5jzpjhoiTL/oUp6xuFKtEY63effT2sUVgJjJmNXj3CKo4K5hId3e3NWuS4qZve423
+         9sxxPP+n7VetNDTfhIA3YeUdd5eHjLJYn9Pk66qZqvLTNzjyZtTu04H3tB9Yr7oOtrhk
+         BIRyEwbgA1EN/8P3zePzye49iQdtgxw382349nzurRzJSrGwJGfLCK0ZEK4lhqAwghaO
+         IqmPdgyBSdW9Py6Cxaiq9kJQR6RjDd1AWsQdaMbSUL9uHGOHl8LwbIJTUf9PRVWs5bKI
+         HSHrGLNx+iwdGZezp9uUuG7Bvox3UChr+g4Uz+KSTkKTjmb8zp1Cu9xnCNf1fw1zbgH8
+         PdJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=eVoGLbtnYzXWlmc48w0t/0qrnxkTvQefS/f9aokidUA=;
-        b=J89qdou+TcF6Tx6dNhHg8SxCokkc1kXYaGgW7TwB8SpKt6qswRm+Sk7Pp1XETFy/0U
-         WnqYVG5WKLaTo+G7raaVZEX30vH6gq6mwTMEZHJdrQDpOpq3HgpcF3UKkD4grWQVHZF2
-         ZFIMwukp8R2XmBDNpxLCXP7sD3EhD/nSK4tKz5dnvVb8A5DQ2KN3AMW2Oq25k2p8cZ9l
-         OWb0/QcaB5hxf68ObDPvFDUdbtQWvfcpcRLy1Ddcb54cEuxZao2pdS6Ld+mLqXeci8Yo
-         e7y3W1CkR3sI5Do/NRJhFm+DuNkK9XqLTF3fDa1XuqA6NyEn+oVvQXq+T5ucypick4lD
-         2Jqw==
-X-Gm-Message-State: ANhLgQ3koK+jkrhqMSzo+kqCq6bvteyIAKEeNELyF9HabV3KdzdWI3p+
-        RhVjeuF/khYNBTFFRqbUcg8b7NcgV299fvzm3itr2UQpeFhXBy4dBztKmXtaI9FEnmu292wKOap
-        CKa3lpXnTwBJJS6sh6y2A86Mw
-X-Received: by 2002:a19:7d04:: with SMTP id y4mr2282666lfc.111.1582884998573;
-        Fri, 28 Feb 2020 02:16:38 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vvXO5F7cH4hg0ivZxLRqZGLTBjzmF9Evdui+BrIiVguCGiV5KpQodnEEMWnFVLVq1UTeuRPKQ==
-X-Received: by 2002:a19:7d04:: with SMTP id y4mr2282655lfc.111.1582884998373;
-        Fri, 28 Feb 2020 02:16:38 -0800 (PST)
-Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
-        by smtp.gmail.com with ESMTPSA id 19sm4543665lfp.86.2020.02.28.02.16.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 02:16:37 -0800 (PST)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id AC741180362; Fri, 28 Feb 2020 11:16:36 +0100 (CET)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Luigi Rizzo <lrizzo@google.com>, netdev@vger.kernel.org,
-        davem@davemloft.net, hawk@kernel.org, sameehj@amazon.com
-Cc:     linux-kernel@vger.kernel.org, Luigi Rizzo <lrizzo@google.com>
-Subject: Re: [PATCH v3 net-next] netdev attribute to control xdpgeneric skb linearization
-In-Reply-To: <20200227173428.5298-1-lrizzo@google.com>
-References: <20200227173428.5298-1-lrizzo@google.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Fri, 28 Feb 2020 11:16:36 +0100
-Message-ID: <87h7zbuid7.fsf@toke.dk>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R7uaMNCZeASeOiOXVcNL4zVrX7ClVNCtzMIR7D9YARI=;
+        b=QGi9q7PBk0V2B20FzB88BldbAboCTn4cDizrDo+YpVg0kEE8P/ZHOcdaoln25HVl0+
+         fsJe+Q3n2+JyJYZn4NBRDQBbcPekTM+RpV1xUlDLomo/Y/eaGGVbwNcVlFuR4FidJ43d
+         PQPYf1wQ/W5jkROVCWpjWukpQFXfVx44pxIDpKqDlxBF52KISZvjTXjU6AEDo4h3rScB
+         0nBHR2RFrJq8kaoqhs6zPzsEjL33QqA8rX7olfbRd5y1jJrB16vQUOWEEP160gRwBxbs
+         XuteVkN6w94fwQdfRBNzOUeMUqgbLUKU0eQOW81Hv9jfJVypResZohA3kG9uk9lTnj1i
+         stDw==
+X-Gm-Message-State: APjAAAU/SflbxNHa2/pIz9xyjcv/eI6f3ckRwX71OmoXPdrENWoyk6ki
+        v+WeHqUIXYxy+736dOylp7rR2s6uBNNRyk6gX8g=
+X-Google-Smtp-Source: APXvYqxweHj0HtlXLVo6Lgw13u2NbrMu5Gcgnh2LV/lpLDTC3ghCPLkqUIAwAehfrZ7V63E215bt4sUGI6E+ef3pgcU=
+X-Received: by 2002:ac8:351c:: with SMTP id y28mr3392484qtb.379.1582885030664;
+ Fri, 28 Feb 2020 02:17:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200226232550.GA191068@google.com> <20200226232713.GA191903@google.com>
+In-Reply-To: <20200226232713.GA191903@google.com>
+From:   Fawad Lateef <fawadlateef@gmail.com>
+Date:   Fri, 28 Feb 2020 11:16:59 +0100
+Message-ID: <CAGgoGu4oyvaDmTDY337UXUyJz1vDwsKtdkqD5k9heQdPpMfmYg@mail.gmail.com>
+Subject: Re: Help needed in understanding weird PCIe issue on imx6q (PCIe just
+ goes bad)
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Luigi Rizzo <lrizzo@google.com> writes:
+Hi Bjorn,
 
-> Add a netdevice flag to control skb linearization in generic xdp mode.
+Thanks for your reply. Please see my comments below.
+
+By the way, I have another development kit from "Embedded Artists"
+with i.MX6Q SOM. I did similar test quickly (with WLAN attached to
+PCIe root-complex _not_ PLX switch). This one also showed same
+behavior though I have to confirm this properly (working on it). Then
+at-least I can say its not exactly issue of Phytec SOM.
+
+On Thu, 27 Feb 2020 at 00:27, Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> The attribute can be modified through
-> 	/sys/class/net/<DEVICE>/xdp_linearize
-> The default is 1 (on)
+> [+cc Richard, Lucas]
+>
+> On Wed, Feb 26, 2020 at 05:25:52PM -0600, Bjorn Helgaas wrote:
+> > On Sat, Feb 22, 2020 at 04:25:41PM +0100, Fawad Lateef wrote:
+> > > Hello,
+> > >
+> > > I am trying to figure-out an issue on our i.MX6Q platform based design
+> > > where PCIe interface goes bad.
+> > >
+> > > We have a Phytec i.MX6Q eMMC SOM, attached to our custom designed
+> > > board. PCIe root-complex from i.MX6Q is attached to PLX switch
+> > > (PEX8605).
+> > >
+> > > Linux kernel version is 4.19.9x and also 4.14.134 (from phytec's
+> > > linux-mainline repo). Kernel do not have PCIe hot-plug and PNP enabled
+> > > in config.
+> > >
+> > > PLX switch #PERST is attached to a GPIO pin and stays in disable state
+> > > until Linux is booted. So at boot time only PCIe root-complex is
+> > > initialized by kernel.
+> > >
+> > > After boot if I do "lspci -v"  and see everything good from PCIe
+> > > root-complex (below):
+> > >
+> > > ~ # lspci -v
+> > > 00:00.0 PCI bridge: Synopsys, Inc. Device abcd (rev 01) (prog-if 00
+> > > [Normal decode])
+> > > Flags: bus master, fast devsel, latency 0, IRQ 295
+> > > Memory at 01000000 (32-bit, non-prefetchable) [size=1M]
+> > > Bus: primary=00, secondary=01, subordinate=ff, sec-latency=0
+> > > I/O behind bridge: None
+> > > Memory behind bridge: None
+> > > Prefetchable memory behind bridge: None
+> > > [virtual] Expansion ROM at 01100000 [disabled] [size=64K]
+> > > Capabilities: [40] Power Management version 3
+> > > Capabilities: [50] MSI: Enable+ Count=1/1 Maskable+ 64bit+
+> > > Capabilities: [70] Express Root Port (Slot-), MSI 00
+> > > Capabilities: [100] Advanced Error Reporting
+> > > Capabilities: [140] Virtual Channel
+> > > Kernel driver in use: pcieport
+> > >
+> > >
+> > > Then I enable the #PERST pin of PLX switch, everything is still good
+> > > (no rescan on Linux is done yet)
+> > >
+> > > ~ # echo 139 > /sys/class/gpio/export
+> > > ~ # echo out > /sys/class/gpio/gpio139/direction
+> > > ~ # echo 1 > /sys/class/gpio/gpio139/value
+> > > ~ # lspci -v
+> > > 00:00.0 PCI bridge: Synopsys, Inc. Device abcd (rev 01) (prog-if 00
+> > > [Normal decode])
+> > > Flags: bus master, fast devsel, latency 0, IRQ 295
+> > > Memory at 01000000 (32-bit, non-prefetchable) [size=1M]
+> > > Bus: primary=00, secondary=01, subordinate=ff, sec-latency=0
+> > > I/O behind bridge: None
+> > > Memory behind bridge: None
+> > > Prefetchable memory behind bridge: None
+> > > [virtual] Expansion ROM at 01100000 [disabled] [size=64K]
+> > > Capabilities: [40] Power Management version 3
+> > > Capabilities: [50] MSI: Enable+ Count=1/1 Maskable+ 64bit+
+> > > Capabilities: [70] Express Root Port (Slot-), MSI 00
+> > > Capabilities: [100] Advanced Error Reporting
+> > > Capabilities: [140] Virtual Channel
+> > > Kernel driver in use: pcieport
+> > >
+> > >
+> > > Now just disable/put-in-reset the PLX switch (Linux don't see the
+> > > switch yet, as no rescan on PCIe was done). Now "lspci -v" and
+> > > root-complex goes bad.
+> > >
+> > > ~ # echo 0 > /sys/class/gpio/gpio139/value
+> > > ~ # lspci -v
+> > > 00:00.0 PCI bridge: Synopsys, Inc. Device abcd (rev 01) (prog-if 00
+> > > [Normal decode])
+> > > Flags: fast devsel, IRQ 295
+> > > Memory at 01000000 (64-bit, prefetchable) [disabled] [size=1M]
+> > > Bus: primary=00, secondary=00, subordinate=00, sec-latency=0
+> > > I/O behind bridge: 00000000-00000fff [size=4K]
+> > > Memory behind bridge: 00000000-000fffff [size=1M]
+> > > Prefetchable memory behind bridge: 00000000-000fffff [size=1M]
+> > > [virtual] Expansion ROM at 01100000 [disabled] [size=64K]
+> > > Capabilities: [40] Power Management version 3
+> > > Capabilities: [50] MSI: Enable- Count=1/1 Maskable+ 64bit+
+> > > Capabilities: [70] Express Root Port (Slot-), MSI 00
+> > > Capabilities: [100] Advanced Error Reporting
+> > > Capabilities: [140] Virtual Channel
+> > > Kernel driver in use: pcieport
+> > >
+> > > ~ # uname -a
+> > > Linux buildroot-2019.08-imx6 4.14.134-phy2 #1 SMP Thu Feb 20 12:13:33
+> > > UTC 2020 armv7l GNU/Linux
+> > > ~ #
+> > >
+> > >
+> > > I am really not sure what is going wrong here. Did I am missing
+> > > something basic?
+> >
+> > I agree, it looks like something's wrong, but I really don't have any
+> > ideas.
+> >
+> > I would start by using "lspci -xxxx" to see the actual values we get
+> > from config space.  It looks like we're reading zeros from at least
+> > the bus and window registers.
 
-Calling it just 'xdp_linearize' implies (to me) that it also affects
-driver-mode XDP. So maybe generic_xdp_linearize ?
+Somehow "lspci -xxxx" generate kernel crash ("imprecise external
+abort") on both Phytec and Embedded Artists SOMs. lspci with -xxx (3
+x) works but not 4 x. Seems like i.MX6 general issue?
 
-[...]
+> >
+> > You could also instrument the i.MX config accessors in case there's
+> > something strange going on there.  Maybe try to reproduce this on a
+> > current upstream kernel?
 
-> +
-> +What:		/sys/class/net/<iface>/xdp_linearize
-> +Date:		Jan 2020
-> +KernelVersion:	5.6
-> +Contact:	netdev@vger.kernel.org
-> +Description:
-> +		boolean controlling whether skb should be linearized in
-> +		generic xdp. Defaults to true.
+I will try to read i.MX PCIe config registers, but I think those will
+be read through PCIe interface and when it goes bad, devmem or any
+other access to root-complex memory-address hangs the full SOM, not
+even sys-rq works.
 
-Could you also add a few words explaining what the tradeoff here is?
-Something like: "turning this off can increase the performance of
-generic XDP at the cost of making the content of making the XDP program
-unable to access packet fragments after the first one"
+I was playing with 5.2.xx kernel earlier, but didn't try it on
+recently. Will do a clean build with it again and see if I can face
+similar situation.
 
--Toke
+Thanks,
 
+Fawad Lateef
+
+> >
+> > Bjorn
