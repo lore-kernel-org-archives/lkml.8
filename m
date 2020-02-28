@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39639C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 20:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F936C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 20:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CACE246AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 20:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 766AB24677
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 20:10:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbgB1UJv (ORCPT
+        id S1727206AbgB1UKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 15:09:51 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:55830 "EHLO
+        Fri, 28 Feb 2020 15:10:09 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:55850 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgB1UJv (ORCPT
+        with ESMTP id S1725730AbgB1UKJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 15:09:51 -0500
+        Fri, 28 Feb 2020 15:10:09 -0500
 Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4739415995575;
-        Fri, 28 Feb 2020 12:09:50 -0800 (PST)
-Date:   Fri, 28 Feb 2020 12:09:49 -0800 (PST)
-Message-Id: <20200228.120949.760457265313124104.davem@davemloft.net>
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id B1931159A8840;
+        Fri, 28 Feb 2020 12:10:08 -0800 (PST)
+Date:   Fri, 28 Feb 2020 12:10:08 -0800 (PST)
+Message-Id: <20200228.121008.1872143054307710068.davem@davemloft.net>
 To:     gustavo@embeddedor.com
-Cc:     kuba@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        jiri@mellanox.com, nhorman@tuxdriver.com, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] net: core: Replace zero-length array with
+Cc:     kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] bonding: Replace zero-length array with
  flexible-array member
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200228134324.GA29394@embeddedor>
-References: <20200228134324.GA29394@embeddedor>
+In-Reply-To: <20200228135629.GA30289@embeddedor>
+References: <20200228135629.GA30289@embeddedor>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 28 Feb 2020 12:09:50 -0800 (PST)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 28 Feb 2020 12:10:08 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Date: Fri, 28 Feb 2020 07:43:24 -0600
+Date: Fri, 28 Feb 2020 07:56:29 -0600
 
 > The current codebase makes use of the zero-length array language
 > extension to the C90 standard, but the preferred mechanism to declare
