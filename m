@@ -2,97 +2,132 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDA2C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1D1C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDE81222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:26:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EB90222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:27:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbgB1W0r (ORCPT
+        id S1726791AbgB1W1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 17:26:47 -0500
-Received: from mga04.intel.com ([192.55.52.120]:64794 "EHLO mga04.intel.com"
+        Fri, 28 Feb 2020 17:27:22 -0500
+Received: from mga14.intel.com ([192.55.52.115]:63312 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726151AbgB1W0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 17:26:47 -0500
+        id S1725957AbgB1W1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 17:27:21 -0500
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 14:26:46 -0800
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 14:27:20 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,497,1574150400"; 
-   d="scan'208";a="232392124"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga008.jf.intel.com with ESMTP; 28 Feb 2020 14:26:46 -0800
-Date:   Fri, 28 Feb 2020 14:26:46 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Mohammed Gamal <mgamal@redhat.com>, kvm@vger.kernel.org,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] KVM: x86: mmu: Add guest physical address check in
- translate_gpa()
-Message-ID: <20200228222646.GI2329@linux.intel.com>
-References: <20200227172306.21426-1-mgamal@redhat.com>
- <20200227172306.21426-6-mgamal@redhat.com>
- <f81e0503-bc35-d682-4440-68b81c10784f@redhat.com>
+   d="scan'208";a="227683345"
+Received: from jkalwas-mobl.ger.corp.intel.com (HELO mara.localdomain) ([10.249.154.47])
+  by orsmga007.jf.intel.com with ESMTP; 28 Feb 2020 14:27:16 -0800
+Received: from sailus by mara.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@linux.intel.com>)
+        id 1j7o6B-0000Ha-Ij; Sat, 29 Feb 2020 00:27:13 +0200
+Date:   Sat, 29 Feb 2020 00:27:10 +0200
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Steve Longerbeam <slongerbeam@gmail.com>
+Cc:     linux-media@vger.kernel.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Rui Miguel Silva <rmfrfs@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [RESEND PATCH v3 02/17] media: v4l2-fwnode: Pass notifier to
+ v4l2_async_register_fwnode_subdev()
+Message-ID: <20200228222710.GA1068@mara.localdomain>
+References: <20200215194136.10131-1-slongerbeam@gmail.com>
+ <20200215194136.10131-3-slongerbeam@gmail.com>
+ <20200225150721.GO5379@paasikivi.fi.intel.com>
+ <c9b232d6-07c9-d13d-18aa-3e1e640aadc2@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <f81e0503-bc35-d682-4440-68b81c10784f@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c9b232d6-07c9-d13d-18aa-3e1e640aadc2@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 07:00:33PM +0100, Paolo Bonzini wrote:
-> On 27/02/20 18:23, Mohammed Gamal wrote:
-> > In case of running a guest with 4-level page tables on a 5-level page
-> > table host, it might happen that a guest might have a physical address
-> > with reserved bits set, but the host won't see that and trap it.
+Hi Steve,
+
+Btw. I think probably a smaller list of recipients would be just fine on the
+next version.
+
+On Fri, Feb 28, 2020 at 10:16:06AM -0800, Steve Longerbeam wrote:
+> Hi Sakari,
+> 
+> On 2/25/20 7:07 AM, Sakari Ailus wrote:
+> > Hi Steve,
 > > 
-> > Hence, we need to check page faults' physical addresses against the guest's
-> > maximum physical memory and if it's exceeded, we need to add
-> > the PFERR_RSVD_MASK bits to the PF's error code.
+> > On Sat, Feb 15, 2020 at 11:41:21AM -0800, Steve Longerbeam wrote:
+> > > Instead of allocating a notifier in v4l2_async_register_fwnode_subdev(),
+> > > have the caller provide one. This allows the caller to implement
+> > > notifier ops (bind, unbind).
+> > > 
+> > > The caller is now responsible for first initializing its notifier with a
+> > > call to v4l2_async_notifier_init().
+> > > 
+> > > Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+> > Instead of improving v4l2_async_register_fwnode_subdev(), could you convert
+> > the users (IMX driver in this case) to call the preferred APIs instead? As
+> > the lines below show, v4l2_async_register_fwnode_subdev() has only two
+> > users left --- the other one of which is the IMX driver. After converting
+> > these two, we could just remove this API.
+> > 
+> > See e.g. drivers/media/pci/intel/ipu3/ipu3-cio2.c and
+> > drivers/media/platform/omap3isp/isp.c for examples.
 > 
-> You can just set it to PFERR_RSVD_MASK | PFERR_PRESENT_MASK (no need to
-> use an "|") and return UNMAPPED_GBA.  But I would have thought that this
-> is not needed and the
+> Shouldn't v4l2_async_notifier_add_fwnode_remote_subdev() check for the
+> availability of the remote before adding it to the notifier's asd list, as
+> in:
 > 
->                 if (unlikely(FNAME(is_rsvd_bits_set)(mmu, pte, walker->level))) {
->                         errcode = PFERR_RSVD_MASK | PFERR_PRESENT_MASK;
->                         goto error;
->                 }
+> diff --git a/drivers/media/v4l2-core/v4l2-async.c
+> b/drivers/media/v4l2-core/v4l2-async.c
+> index 8bde33c21ce4..b48ed68c6c6c 100644
+> --- a/drivers/media/v4l2-core/v4l2-async.c
+> +++ b/drivers/media/v4l2-core/v4l2-async.c
+> @@ -615,7 +615,7 @@ v4l2_async_notifier_add_fwnode_remote_subdev(struct
+> v4l2_async_notifier *notif,
+>         int ret;
 > 
-> code would have catch the reserved bits.
+>         remote = fwnode_graph_get_remote_port_parent(endpoint);
+> -       if (!remote)
+> +       if (!remote || !fwnode_device_is_available(remote))
+>                 return -ENOTCONN;
+> 
+>         asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
+> 
+> 
+> Otherwise we are back to the problem that the notifier will never complete
+> because the remote's driver is not probed.
 
-That would be my assumption as well.  The only manual check should be in
-the top level EPT and NPT handlers.
+fwnode_graph_get_endpoint_by_id() only gives you endpoints that belong to an
+enabled device (unless requested otherwise). So the there's need to check
+the same in v4l2-fwnode.c.
 
-> > Also make sure the error code isn't overwritten by the page table walker.
-> 
-> Returning UNMAPPED_GVA would remove that as well.
-> 
-> I'm not sure this patch is enough however.  For a usermode access with
-> "!pte.u pte.40" for example you should be getting:
-> 
-> - a #PF with PRESENT|USER error code on a machine with physical address
-> width >=41; in this case you don't get an EPT violation or misconfig.
-> 
-> - a #PF with RSVD error code on a machine with physical address with <41.
-> 
-> You can enable verbose mode in access.c to see if this case is being generated,
-> and if so debug it.
-> 
-> The solution for this would be to trap page faults and do a page table
-> walk (with vcpu->arch.walk_mmu->gva_to_gpa) to find the correct error
-> code.
-> 
-> Paolo
-> 
+-- 
+Regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
