@@ -2,110 +2,159 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B51C8C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B00C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 824DD246AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:15:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89AFD246AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:16:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QGgynOA/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tS9wg1JO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbgB1SPN (ORCPT
+        id S1726682AbgB1SQL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 13:15:13 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41590 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgB1SPM (ORCPT
+        Fri, 28 Feb 2020 13:16:11 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:55908 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbgB1SQL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 13:15:12 -0500
-Received: by mail-pg1-f193.google.com with SMTP id b1so1907698pgm.8;
-        Fri, 28 Feb 2020 10:15:10 -0800 (PST)
+        Fri, 28 Feb 2020 13:16:11 -0500
+Received: by mail-pj1-f66.google.com with SMTP id a18so1606311pjs.5;
+        Fri, 28 Feb 2020 10:16:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Clif/mEcnn3ME/k5ycRzrGKqtOc9D+bOeqjCbBVwdps=;
-        b=QGgynOA/VJOt/cG7OnLMz+tVY8zs6kY14i9YkqCvq1ahYk47pCnYiv/aqOf/3LTayR
-         ZaUOLFUzqVsLIewhEEKma7/IjqWgzAUizeJpcAzf6BdNwxt1ENmE3tJ+jCUabTX1TpEq
-         g4D6LXm38BYO72RrF1NOIztO8b9g3/CyJQ3Ym5A75lOj5yWaShYE3nHie3OIZY0oKzYq
-         3cA4qDtaY4M2uLTc7FS5OXhp+LWYNLbgDls8zw0B+Y+tZK6OgHwl6sarj1kK489NVc2g
-         jR1UY1btuYEsvbwn28cQXnRw92zOl2xpiE760psokXpVjQQsIRMjFdMKv6BhIbWFY/D2
-         wU5w==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=BVlQGMV/dlLGU8gmf4FB65yDuYZrcSYwu3rmOUHQCKU=;
+        b=tS9wg1JOmqNfXXI8nSE7wGqf4MWa4f0ygw9aMUvNcOlwmaudIrd1RdgRs5mDtGoulM
+         QQnEOv23JAjX9lCxJH8QCkXYo1oUZAI3dR4RZ8ncR/03QZ7Zp0p3zhRvFI7cGX0I59dv
+         b4b+j6B1u8Qbelz/2W31Aac7KVddqaR789yUSRTsWJZRzdO2J2a2VK3GX29MaeDUmbQr
+         uM+08i0puvKfi6JO/Q9Dm6MQRgqf8zv+5TEb4CSrQhAUm/TgKfNeHEKfVF94pTtgc962
+         mulOvvlQ2zW/PuchGstri/gdmsDIBB115xh2IITn/NR3nEEHkSKPxR5yXJdIEDOi9vUT
+         DCAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Clif/mEcnn3ME/k5ycRzrGKqtOc9D+bOeqjCbBVwdps=;
-        b=U9kCpWvGQHuOmhReg/JNR6d9mxPfFi23RibuZukAlBZbPiqUdKQKcIfLTgkTvXB20J
-         0MaWkSI3byBskPnOqJCUwLWps+T+4jWmHQetTbjTP2x5jW4zfAeTLPyIymhJHPJpZXsv
-         5dBIjo+JeOq3Wa+X8tJdWvkQAaoSRJkToppWLzACozV8weorn6UNXFIvXXS+CYtTsS6q
-         JBXWX17TNLFyOGO5zafJrvzC1OR8/ZM/AQaX2vR4/xirrEn+prWxE39Sjj1/nWR3bSRN
-         vFFixsKncVaxrniIO6MbPyuDRh/pU3Ezs+OtAYQez4s2OIkRNXFykBmAaKve1lLCbwqW
-         w+ew==
-X-Gm-Message-State: APjAAAX88l3q3l51we9ou+SMnlWiYrx0GeiIBUairqR5kg5DvmylCr6T
-        RLF1zmGTzmV+J1VkX6qZ6fM=
-X-Google-Smtp-Source: APXvYqxWA8rvGE5/pCJKCoTTMPwDvIxb42dP3gBtBzfZ3HBMzKlZQp9VC5RuRR2HgISpMP+Xw1cRCw==
-X-Received: by 2002:a63:257:: with SMTP id 84mr5681448pgc.304.1582913710121;
-        Fri, 28 Feb 2020 10:15:10 -0800 (PST)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id 1sm7990801pff.11.2020.02.28.10.15.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 10:15:09 -0800 (PST)
-Date:   Fri, 28 Feb 2020 10:15:07 -0800
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Michael Walle <michael@walle.cc>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [RFC PATCH v2 0/2] AT8031 PHY timestamping support
-Message-ID: <20200228181507.GA4744@localhost>
-References: <20200228180226.22986-1-michael@walle.cc>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=BVlQGMV/dlLGU8gmf4FB65yDuYZrcSYwu3rmOUHQCKU=;
+        b=ahdEMOCsFvcHeo//EU7oPSWHH12HBm/j7QGRKD5JINHeq1NzCqUSrZFyjbegwmXv9f
+         MP7JLFHh3pLRHrNVP6dF0uBD5RunHSshjLm+nybTO8Q6rKGK8PURykmVRrrV3TgFETGn
+         50cw2uALRKtKKHdqTMmAP7bfq4UvRdP20thbP3+k/RrSBmekZAGaSj2q5qAPt168E3c6
+         GSRNVZZgSv0Ym3fgjL3Gx59OtB2EkZjSUUzcXs3orS/z2Kc1yj2plSDM3wmd/sfnOX2h
+         R/GSUgDyGTQO2s+Dv1ePSQNSpOCx5UQuZQvPKltwkLQUqWTT19qhFFch/vLviLD2AZQa
+         c+3g==
+X-Gm-Message-State: APjAAAV0Zow3xbhp4YU4DOzs7XdjWhhyspXethuxVQbbaUhY3/QcgeVZ
+        smAupyoZGY73Z7TIfcP0+Jc=
+X-Google-Smtp-Source: APXvYqwJV6NXOWi/9kpfdOV26a82C6ZHklO6PCZixEzsPy5UNqDSWCPvB0B6NoGHXvzOSey5lcIDFg==
+X-Received: by 2002:a17:902:7797:: with SMTP id o23mr4889179pll.298.1582913769852;
+        Fri, 28 Feb 2020 10:16:09 -0800 (PST)
+Received: from [172.30.88.172] (sjewanfw1-nat.mentorg.com. [139.181.7.34])
+        by smtp.gmail.com with ESMTPSA id p17sm6148220pff.116.2020.02.28.10.16.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Feb 2020 10:16:08 -0800 (PST)
+Subject: Re: [RESEND PATCH v3 02/17] media: v4l2-fwnode: Pass notifier to
+ v4l2_async_register_fwnode_subdev()
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     linux-media@vger.kernel.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Rui Miguel Silva <rmfrfs@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200215194136.10131-1-slongerbeam@gmail.com>
+ <20200215194136.10131-3-slongerbeam@gmail.com>
+ <20200225150721.GO5379@paasikivi.fi.intel.com>
+From:   Steve Longerbeam <slongerbeam@gmail.com>
+Message-ID: <c9b232d6-07c9-d13d-18aa-3e1e640aadc2@gmail.com>
+Date:   Fri, 28 Feb 2020 10:16:06 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200228180226.22986-1-michael@walle.cc>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200225150721.GO5379@paasikivi.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 07:02:24PM +0100, Michael Walle wrote:
->  (1) The PHY doesn't support atomic reading of the (timestamp,
->      messageType, sequenceId) tuple. The workaround is to read the
->      timestamp again and check if it has changed. Actually, you'd have
->      to read the complete tuple again.
+Hi Sakari,
 
-This HW is broken by design :(
+On 2/25/20 7:07 AM, Sakari Ailus wrote:
+> Hi Steve,
+>
+> On Sat, Feb 15, 2020 at 11:41:21AM -0800, Steve Longerbeam wrote:
+>> Instead of allocating a notifier in v4l2_async_register_fwnode_subdev(),
+>> have the caller provide one. This allows the caller to implement
+>> notifier ops (bind, unbind).
+>>
+>> The caller is now responsible for first initializing its notifier with a
+>> call to v4l2_async_notifier_init().
+>>
+>> Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+> Instead of improving v4l2_async_register_fwnode_subdev(), could you convert
+> the users (IMX driver in this case) to call the preferred APIs instead? As
+> the lines below show, v4l2_async_register_fwnode_subdev() has only two
+> users left --- the other one of which is the IMX driver. After converting
+> these two, we could just remove this API.
+>
+> See e.g. drivers/media/pci/intel/ipu3/ipu3-cio2.c and
+> drivers/media/platform/omap3isp/isp.c for examples.
 
-> But if you're using a P2P clock with peer delay requests this whole
-> thing falls apart because of caveat (3). You'll often see messages like
->   received SYNC without timestamp
-> or
->  received PDELAY_RESP without timestamp
-> in linuxptp. Sometimes it working for some time and then it starts to
-> loosing packets. I suspect this depends on how the PDELAY messages are
-> interleaved with the SYNC message. If there is not enough time to until
-> the next event message is received either of these two messages won't
-> have a timestamp.
+Shouldn't v4l2_async_notifier_add_fwnode_remote_subdev() check for the 
+availability of the remote before adding it to the notifier's asd list, 
+as in:
 
-And even the case where a Sync and a DelayResp arrive at nearly the
-same time will fail.
+diff --git a/drivers/media/v4l2-core/v4l2-async.c 
+b/drivers/media/v4l2-core/v4l2-async.c
+index 8bde33c21ce4..b48ed68c6c6c 100644
+--- a/drivers/media/v4l2-core/v4l2-async.c
++++ b/drivers/media/v4l2-core/v4l2-async.c
+@@ -615,7 +615,7 @@ v4l2_async_notifier_add_fwnode_remote_subdev(struct 
+v4l2_async_notifier *notif,
+         int ret;
 
-> The PHY also supports appending the timestamp to the actual ethernet frame,
-> but this seems to only work when the PHY is connected via RGMII. I've never
-> get it to work with a SGMII connection.
+         remote = fwnode_graph_get_remote_port_parent(endpoint);
+-       if (!remote)
++       if (!remote || !fwnode_device_is_available(remote))
+                 return -ENOTCONN;
 
-This is the way to go.  I would try to get the vendor's help in making
-this work.
+         asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
 
-Thanks,
-Richard
+
+Otherwise we are back to the problem that the notifier will never 
+complete because the remote's driver is not probed.
+
+Steve
+
+>
+>> ---
+>> Changes in v3:
+>> - added the missing calls to unregister/cleanup the new subdev notifiers.
+>>    Reported by Rui Silva.
+>> ---
+>>   drivers/media/platform/video-mux.c         |  8 +++++++-
+>>   drivers/media/v4l2-core/v4l2-fwnode.c      | 11 +----------
+>>   drivers/staging/media/imx/imx6-mipi-csi2.c |  7 ++++++-
+>>   drivers/staging/media/imx/imx7-media-csi.c |  7 ++++++-
+>>   drivers/staging/media/imx/imx7-mipi-csis.c |  9 ++++++++-
+>>   include/media/v4l2-fwnode.h                | 12 ++++++++----
+>>   6 files changed, 36 insertions(+), 18 deletions(-)
+
