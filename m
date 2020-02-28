@@ -2,89 +2,91 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B34FBC3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49822C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80C53246AE
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:38:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582904322;
-	bh=eWr8/WpC2O17oQHeLDZioP2hzlETzVQX9Py9r9q3da8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ijr70ta2OoTfRY+ZzaPV9WG6GVFsD0vL3OE5xBtLWScuw8zQPGzRrY+G2ObHxC2oy
-	 O5m+HgCrpLIuLYXVj6LU771EFPJsI/OP3USkqZeuonCqCnt/UMxxAg3xNdnk42JsyS
-	 P0jWKraoO0UNR+gwzKpXjfy9vG9ELjuxm0rn03QQ=
+	by mail.kernel.org (Postfix) with ESMTP id 1A78A2469D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:39:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="TXXSvD1x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbgB1Pil (ORCPT
+        id S1727158AbgB1PjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 10:38:41 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:38102 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727102AbgB1Pil (ORCPT
+        Fri, 28 Feb 2020 10:39:15 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:48351 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726905AbgB1PjP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 10:38:41 -0500
-Received: by mail-oi1-f196.google.com with SMTP id 2so3237817oiz.5;
-        Fri, 28 Feb 2020 07:38:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kzp8PYWkgcEJuLkvHiddGePNM790Izf5gnCAE/DVflQ=;
-        b=uDqUwyGTBDpvp+WTDp6c1tmoU5zGbVgN8n0fQ59l9zPph+WKBgqcozNkK8yxrWbmhH
-         R7JKcVtzyK6Ogl8hnUrA50OA3sbfE+nR9ZC02c+h378oIf++Y0Nog7vMgYZd/rkMJgqL
-         JLEsu1e92ilvAUqlTtqT0tz7iR34MdHwPwJKKY1STsvy4s5SxsF8wneJW7qReaw/wccM
-         y35wTBYYBshcHgpEHoHC9acKlrOfgx8lcOV61mBtD03Q/RWokOvEkqojwXfYAQPIL8h5
-         BW4L7tBEjs+g24J64hJlOGZPatliJuiia01BBhWwa+58/PCQrYjEHo08xBn3R+zM1nix
-         tigA==
-X-Gm-Message-State: APjAAAUthaNfwT6bitlyGTGCqdk/ofeyI7lEexnGlPkU7Urf1fqt43Zh
-        J/o6Jj4AiFmtzG4IxU8WDw==
-X-Google-Smtp-Source: APXvYqyFCbbaWxASGjgkqt8CGTYQw2r42ByREAdAYeAbwJV5wm5PWr4vDTIgmOlKhTkJfMbEiPNjcg==
-X-Received: by 2002:aca:cd46:: with SMTP id d67mr3640911oig.156.1582904320355;
-        Fri, 28 Feb 2020 07:38:40 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a26sm1571820oid.17.2020.02.28.07.38.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 07:38:39 -0800 (PST)
-Received: (nullmailer pid 7232 invoked by uid 1000);
-        Fri, 28 Feb 2020 15:38:39 -0000
-Date:   Fri, 28 Feb 2020 09:38:39 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v3 4/4] dt-bindings: PCI: cadence: Deprecate
- inbound/outbound specific bindings
-Message-ID: <20200228153839.GA7180@bogus>
-References: <20200224130905.952-1-kishon@ti.com>
- <20200224130905.952-5-kishon@ti.com>
+        Fri, 28 Feb 2020 10:39:15 -0500
+X-UUID: 3e229069cc984930aa813cf1bd848ed5-20200228
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=K1/FjNHc57KhQ76Cn3QZo1foNtzkkZjOg40TS1GEvyY=;
+        b=TXXSvD1xoKc4AxHzgApu4M+YEl7tlzngM7EeOwPiXedjYZDZFko6yJFaVrMuVddQmZo8L9lP6vlBTCvjreHEPKmV4ZdvpO4A6dh3fvwejvZsTnW+UDVPnSHUEzf6XAx/b6S8iTaZWapB414hEMZr7y8cbu2d7zRw9kJGk7nQwhs=;
+X-UUID: 3e229069cc984930aa813cf1bd848ed5-20200228
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1342788308; Fri, 28 Feb 2020 23:39:10 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 28 Feb 2020 23:38:15 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 28 Feb 2020 23:39:00 +0800
+Message-ID: <1582904349.14824.19.camel@mtksdaap41>
+Subject: Re: [PATCH v3 05/13] soc: mediatek: cmdq: return send msg error code
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        "Ming-Fan Chen" <ming-fan.chen@mediatek.com>
+Date:   Fri, 28 Feb 2020 23:39:09 +0800
+In-Reply-To: <1582897461-15105-7-git-send-email-dennis-yc.hsieh@mediatek.com>
+References: <1582897461-15105-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1582897461-15105-7-git-send-email-dennis-yc.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200224130905.952-5-kishon@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Feb 2020 18:39:05 +0530, Kishon Vijay Abraham I wrote:
-> Deprecate cdns,max-outbound-regions and cdns,no-bar-match-nbits as both
-> these could be derived from "ranges" and "dma-ranges" property.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml | 3 +--
->  Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml      | 1 +
->  Documentation/devicetree/bindings/pci/cdns-pcie.yaml           | 1 +
->  3 files changed, 3 insertions(+), 2 deletions(-)
-> 
+SGksIERlbm5pczoNCg0KT24gRnJpLCAyMDIwLTAyLTI4IGF0IDIxOjQ0ICswODAwLCBEZW5uaXMg
+WUMgSHNpZWggd3JvdGU6DQo+IFJldHVybiBlcnJvciBjb2RlIHRvIGNsaWVudCBpZiBzZW5kIG1l
+c3NhZ2UgZmFpbCwNCj4gc28gdGhhdCBjbGllbnQgaGFzIGNoYW5jZSB0byBlcnJvciBoYW5kbGlu
+Zy4NCj4gDQo+IEZpeGVzOiA1NzZmMWI0YmM4MDIgKCJzb2M6IG1lZGlhdGVrOiBBZGQgTWVkaWF0
+ZWsgQ01EUSBoZWxwZXIiKQ0KPiBTaWduZWQtb2ZmLWJ5OiBEZW5uaXMgWUMgSHNpZWggPGRlbm5p
+cy15Yy5oc2llaEBtZWRpYXRlay5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9zb2MvbWVkaWF0ZWsv
+bXRrLWNtZHEtaGVscGVyLmMgfCA0ICsrLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlv
+bnMoKyksIDIgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVk
+aWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1o
+ZWxwZXIuYw0KPiBpbmRleCAyZTFiYzUxMzU2OWIuLjA2OTg2MTJkZTVhZCAxMDA2NDQNCj4gLS0t
+IGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gKysrIGIvZHJpdmVy
+cy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gQEAgLTM1MSwxMSArMzUxLDExIEBA
+IGludCBjbWRxX3BrdF9mbHVzaF9hc3luYyhzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgY21kcV9hc3lu
+Y19mbHVzaF9jYiBjYiwNCj4gIAkJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmY2xpZW50LT5sb2Nr
+LCBmbGFncyk7DQo+ICAJfQ0KPiAgDQo+IC0JbWJveF9zZW5kX21lc3NhZ2UoY2xpZW50LT5jaGFu
+LCBwa3QpOw0KPiArCWVyciA9IG1ib3hfc2VuZF9tZXNzYWdlKGNsaWVudC0+Y2hhbiwgcGt0KTsN
+Cj4gIAkvKiBXZSBjYW4gc2VuZCBuZXh0IHBhY2tldCBpbW1lZGlhdGVseSwgc28ganVzdCBjYWxs
+IHR4ZG9uZS4gKi8NCj4gIAltYm94X2NsaWVudF90eGRvbmUoY2xpZW50LT5jaGFuLCAwKTsNCg0K
+SWYgZXJyb3IgaGFwcGVuLCB3aHkgdHggaXMgZG9uZT8gSSB0aGluayB5b3Ugc2hvdWxkIHJldHVy
+biBpbW1lZGlhdGVseQ0Kd2hlbiBlcnJvciBoYXBwZW4uDQoNClJlZ2FyZHMsDQpDSw0KDQo+ICAN
+Cj4gLQlyZXR1cm4gMDsNCj4gKwlyZXR1cm4gZXJyOw0KPiAgfQ0KPiAgRVhQT1JUX1NZTUJPTChj
+bWRxX3BrdF9mbHVzaF9hc3luYyk7DQo+ICANCg0K
 
-Reviewed-by: Rob Herring <robh@kernel.org>
