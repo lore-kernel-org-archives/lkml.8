@@ -2,398 +2,317 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A72E6C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 20:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B01C3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 20:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 642B6246A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 20:31:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SFVAEyNc"
+	by mail.kernel.org (Postfix) with ESMTP id E79E424690
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 20:36:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582922188;
+	bh=82G5bMsbbX/PJ9S7g4In+ZAGDal1cM6uHXZ3zbPyr8Q=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=CF7xA2K/OL1KAlugYBwf0adIaATh16/Q/bx7B7Wk8AmVOPQp2BPIFdWgzMzrsiJQK
+	 OlAR6w5Zwwud1I7dIIzA1cbzDPUAPiWuk6Q6Ghu0+52oCqbNPa2s5ZUwNscSpHh6PB
+	 nOnW7jPx9IZ2p/Pqs7X+0ktjR6MR0Sfc0cu/2dgw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbgB1UbS (ORCPT
+        id S1726631AbgB1UgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 15:31:18 -0500
-Received: from mail-oi1-f176.google.com ([209.85.167.176]:40617 "EHLO
-        mail-oi1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgB1UbS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 15:31:18 -0500
-Received: by mail-oi1-f176.google.com with SMTP id j80so2118147oih.7
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 12:31:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QFpZW+DHoy8Dzc/faFrSVeSwAbEA+B+wfKfwlAW8gXM=;
-        b=SFVAEyNc1f5queWj+07amWwlmHutO+lwn2Pm7tFglVSR+SwizNCl5Vtvj2FDhfCLF6
-         KOMJuGYxNlegZgmwty7GMjj6jDOfuMV2aTSoZu+CyiI4C/Srqz5LHf8DfBa18CDq/niW
-         g3tzRg0rRZJ6XD30/uJgqNe9BLuR/w25xqlWmq2z0Q0PNISW2JKaJ6TuSq6mDYHPaVe7
-         DpOPr8RtKTHgssAxdCYS59TNAA/PpQzwUZe3pxoqIaCU/ugPPj+dSboBtWLNIm3N9KpO
-         5AXWRV9HBPcFFcv3VKwJQYoTQSVx/yg1HQlnFrZWG/VHY/H0QqcIAGDGFoJlhMDkm/pF
-         iXXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QFpZW+DHoy8Dzc/faFrSVeSwAbEA+B+wfKfwlAW8gXM=;
-        b=EBV+F9u7LfvB7rUYM2I60y9TwLG0m6Pfh1bz90K1XG1VHtxqdB8+qT3NYCyIPCxbSC
-         /Moqrqpffl9yngeqbo+riLrsouDjgKp87P/A/ip2+/kQGqKbiME9BkDB2TUWlxJOnJ9j
-         dTgbC8AjV2P9vbjsUMKcIJKCqG+VasQs57r8kskPNDTyA2LgMy76ntHYM2vwKhGCZc0z
-         NQOL1JD/Fu+DyVmY091AeneqNiSQq+5i49X+pW/Z0nSqg77Tw2e8JsZiucu4OIlG2yQd
-         46NWBW0azWN5pKZ15iAwUnvnLnqIydR+8mOxcbRsGRfw6FFeJ6dtuYJDovaTvP2Skejo
-         pT5Q==
-X-Gm-Message-State: APjAAAXcTVHtU0I84z/8L0ZMdzGFoJL12AXLDH7pE92Teo/D1x2MVYuM
-        poxKmJow/R/lAfAWcpCU/LvGuDgKq3dxdzh7KCQquw==
-X-Google-Smtp-Source: APXvYqxDd1SYnF8mCBMJdsqGi+Cd8k2+4G9bJnTyiDA35lI0ibSTjlJzHNg8iVjaEXY+GCATgeqcwHhpxAvyiJ+rtfc=
-X-Received: by 2002:a54:4510:: with SMTP id l16mr4405863oil.70.1582921876062;
- Fri, 28 Feb 2020 12:31:16 -0800 (PST)
-MIME-Version: 1.0
-References: <CANpmjNMOmirPRKbjX9=V+eZD-YsEvfhUU8r6EDefkOJTBLDYNQ@mail.gmail.com>
- <Pine.LNX.4.44L0.2002281424410.1599-100000@iolanthe.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.2002281424410.1599-100000@iolanthe.rowland.org>
-From:   Marco Elver <elver@google.com>
-Date:   Fri, 28 Feb 2020 21:31:04 +0100
-Message-ID: <CANpmjNOzh2S1fvKa+5agFoE+0ZUVUe=K2hgw3i_hj6F48Ga0Gw@mail.gmail.com>
-Subject: Re: [PATCH] tools/memory-model/Documentation: Fix "conflict" definition
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 28 Feb 2020 15:36:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43366 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbgB1UgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 15:36:24 -0500
+Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00A2D24690;
+        Fri, 28 Feb 2020 20:36:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582922182;
+        bh=82G5bMsbbX/PJ9S7g4In+ZAGDal1cM6uHXZ3zbPyr8Q=;
+        h=From:To:Cc:Subject:Date:From;
+        b=j5k27icMOr5YfokqXjjMWO1g95b2bVgj8Lbilm6RYfDo9JZCHI91t5DVLuJjh/M59
+         2eQMjN0efa+rz7o2yXgl1zUHsUROMVRT5P+hJNq6NJSttICLoXyIcZ5pvmPTb51lmp
+         FPP9H5FHMGvInhpr6bDXQfVWzGmWRHjxoKII1iHQ=
+From:   Dinh Nguyen <dinguyen@kernel.org>
+To:     sboyd@kernel.org
+Cc:     dinguyen@kernel.org, mturquette@baylibre.com,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] clk: socfpga: stratix10: use new parent data scheme
+Date:   Fri, 28 Feb 2020 14:36:11 -0600
+Message-Id: <20200228203611.15507-1-dinguyen@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Feb 2020 at 21:20, Alan Stern <stern@rowland.harvard.edu> wrote:
->
-> On Fri, 28 Feb 2020, Marco Elver wrote:
->
-> > On Fri, 28 Feb 2020 at 19:54, Marco Elver <elver@google.com> wrote:
-> > >
-> > > On Fri, 28 Feb 2020 at 18:24, Alan Stern <stern@rowland.harvard.edu> wrote:
-> > > >
-> > > > On Fri, 28 Feb 2020, Marco Elver wrote:
-> > > >
-> > > > > For language-level memory consistency models that are adaptations of
-> > > > > data-race-free, the definition of "data race" can be summarized as
-> > > > > "concurrent conflicting accesses, where at least one is non-sync/plain".
-> > > > >
-> > > > > The definition of "conflict" should not include the type of access nor
-> > > > > whether the accesses are concurrent or not, which this patch addresses
-> > > > > for explanation.txt.
-> > > >
-> > > > Why shouldn't it?  Can you provide any references to justify this
-> > > > assertion?
-> > >
-> > > The definition of "conflict" as we know it and is cited by various
-> > > papers on memory consistency models appeared in [1]: "Two accesses to
-> > > the same variable conflict if at least one is a write; two operations
-> > > conflict if they execute conflicting accesses."
-> > >
-> > > The LKMM as well as C11 are adaptations of data-race-free, which are
-> > > based on the work in [2]. Necessarily, we need both conflicting data
-> > > operations (plain) and synchronization operations (marked). C11's
-> > > definition is based on [3], which defines a "data race" as:  "Two
-> > > memory operations conflict if they access the same memory location,
-> > > and at least one of them is a store, atomic store, or atomic
-> > > read-modify-write operation. In a sequentially consistent execution,
-> > > two memory operations from different threads form a type 1 data race
-> > > if they conflict, at least one of them is a data operation, and they
-> > > are adjacent in <T (i.e., they may be executed concurrently)."
-> > >
-> > > [1] D. Shasha, M. Snir, "Efficient and Correct Execution of Parallel
-> > > Programs that Share Memory", 1988.
-> > >       URL: http://snir.cs.illinois.edu/listed/J21.pdf
-> > >
-> > > [2] S. Adve, "Designing Memory Consistency Models for Shared-Memory
-> > > Multiprocessors", 1993.
-> > >       URL: http://sadve.cs.illinois.edu/Publications/thesis.pdf
-> > >
-> > > [3] H.-J. Boehm, S. Adve, "Foundations of the C++ Concurrency Memory
-> > > Model", 2008.
-> > >      URL: https://www.hpl.hp.com/techreports/2008/HPL-2008-56.pdf
->
-> Okay, very good.  Please include at least one of these citations in the
-> description of the next version of your patch.
->
-> > > > Also, note two things: (1) The existing text does not include
-> > > > concurrency in the definition of "conflict".  (2) Your new text does
-> > > > include the type of access in the definition (you say that at least one
-> > > > of the accesses must be a write).
-> > >
-> > > Yes, "conflict" is defined in terms of "access to the same memory
-> > > location and at least one performs a write" (can be any operation that
-> > > performs a write, including RMWs etc.). It should not include
-> > > concurrency. We can have conflicting operations that are not
-> > > concurrent, but these will never be data races.
-> > >
-> > > > > The definition of "data race" remains unchanged, but the informal
-> > > > > definition for "conflict" is restored to what can be found in the
-> > > > > literature.
-> > > >
-> > > > It does not remain unchanged.  You removed the portion that talks about
-> > > > accesses executing on different CPUs or threads.  Without that
-> > > > restriction, you raise the nonsensical possibility that a single thread
-> > > > may by definition have a data race with itself (since modern CPUs use
-> > > > multiple-instruction dispatch, in which several instructions can
-> > > > execute at the same time).
-> > >
-> > > Andrea raised the point that "occur on different CPUs (or in different
-> > > threads on the same CPU)" can be interpreted as "in different threads
-> > > [even if they are serialized via some other synchronization]".
-> > >
-> > > Arguably, no sane memory model or abstract machine model permits
-> > > observable intra-thread concurrency of instructions in the same
-> > > thread. At the abstract machine level, whether or not there is true
-> > > parallelism shouldn't be something that the model concerns itself
-> > > with. Simply talking about "concurrency" is unambiguous, unless the
-> > > model says intra-thread concurrency is a thing.
-> > >
-> > > I can add it back if it helps make this clearer, but we need to mention both.
->
-> Then by all means, let's mention both.
->
-> > > > > Signed-by: Marco Elver <elver@google.com>
-> > > > > ---
-> > > > >  tools/memory-model/Documentation/explanation.txt | 15 ++++++---------
-> > > > >  1 file changed, 6 insertions(+), 9 deletions(-)
-> > > > >
-> > > > > diff --git a/tools/memory-model/Documentation/explanation.txt b/tools/memory-model/Documentation/explanation.txt
-> > > > > index e91a2eb19592a..11cf89b5b85d9 100644
-> > > > > --- a/tools/memory-model/Documentation/explanation.txt
-> > > > > +++ b/tools/memory-model/Documentation/explanation.txt
-> > > > > @@ -1986,18 +1986,15 @@ violates the compiler's assumptions, which would render the ultimate
-> > > > >  outcome undefined.
-> > > > >
-> > > > >  In technical terms, the compiler is allowed to assume that when the
-> > > > > -program executes, there will not be any data races.  A "data race"
-> > > > > -occurs when two conflicting memory accesses execute concurrently;
-> > > > > -two memory accesses "conflict" if:
-> > > > > +program executes, there will not be any data races. A "data race"
-> > > >
-> > > > Unnecessary (and inconsistent with the rest of the document) whitespace
-> > > > change.
-> > >
-> > > Reverted.
-> > >
-> > > > > +occurs if:
-> > > > >
-> > > > > -     they access the same location,
-> > > > > +     two concurrent memory accesses "conflict";
-> > > > >
-> > > > > -     they occur on different CPUs (or in different threads on the
-> > > > > -     same CPU),
-> > > > > +     and at least one of the accesses is a plain access;
-> > > > >
-> > > > > -     at least one of them is a plain access,
-> > > > > -
-> > > > > -     and at least one of them is a store.
-> > > > > +     where two memory accesses "conflict" if they access the same
-> > > > > +     memory location, and at least one performs a write;
-> > > > >
-> > > > >  The LKMM tries to determine whether a program contains two conflicting
-> > > > >  accesses which may execute concurrently; if it does then the LKMM says
-> > > >
-> > > > To tell the truth, the only major change I can see here (apart from the
-> > > > "differenct CPUs" restriction) is that you want to remove the "at least
-> > > > one is plain" part from the definition of "conflict" and instead make
-> > > > it a separate requirement for a data race.  That's fine with me in
-> > > > principle, but there ought to be an easier way of doing it.
-> > >
-> > > Yes pretty much. The model needs to be able to talk about "conflicting
-> > > synchronization accesses" where all accesses are marked. Right now the
-> > > definition of conflict doesn't permit that.
-> > >
-> > > > Furthermore, this section of explanation.txt goes on to use the words
-> > > > "conflict" and "conflicting" in a way that your patch doesn't address.
-> > > > For example, shortly after this spot it says "Determining whether two
-> > > > accesses conflict is easy"; you should change it to say "Determining
-> > > > whether two accesses conflict and at least one of them is plain is
-> > > > easy" -- but this looks pretty ungainly.  A better approach might be to
-> > > > introduce a new term, define it to mean "conflicting accesses at least
-> > > > one of which is plain", and then use it instead throughout.
-> > >
-> > > The definition of "conflict" as used in the later text is synonymous
-> > > with "data race".
-> >
-> > Correction: it's "data race" minus "concurrent" which makes things
-> > more difficult. In which case, fixing this becomes more difficult.
-> >
-> > > > Alternatively, you could simply leave the text as it stands and just
-> > > > add a parenthetical disclaimer pointing out that in the CS literature,
-> > > > the term "conflict" is used even when both accesses are marked, so the
-> > > > usage here is somewhat non-standard.
-> > >
-> > > The definition of what a "conflict" is, is decades old [1, 2]. I
-> > > merely thought we should avoid changing fundamental definitions that
-> > > have not changed in decades, to avoid confusing people. The literature
-> > > on memory models is confusing enough, so fundamental definitions that
-> > > are "common ground" shouldn't be changed if it can be avoided. I think
-> > > here it is pretty trivial to avoid.
->
-> All right.  Here is my suggestion for a patch that does more or less
-> what you want.  Fiddle around with it until you like the end result and
-> let's see what you get.
+Convert, where possible, the stratix10 clock driver to the new parent
+data scheme by specifying the parent data for clocks that have multiple
+parents.
 
-Great, thank you!  I'll go through it and send v2 soon (won't get to
-it today though).
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+---
+ drivers/clk/socfpga/clk-gate-s10.c   |   5 +-
+ drivers/clk/socfpga/clk-periph-s10.c |  10 ++-
+ drivers/clk/socfpga/clk-pll-s10.c    |   4 +-
+ drivers/clk/socfpga/clk-s10.c        | 110 ++++++++++++++++++++-------
+ drivers/clk/socfpga/stratix10-clk.h  |   8 +-
+ 5 files changed, 96 insertions(+), 41 deletions(-)
 
-Thanks,
--- Marco
+diff --git a/drivers/clk/socfpga/clk-gate-s10.c b/drivers/clk/socfpga/clk-gate-s10.c
+index 8be4722f6064..083b2ec21fdd 100644
+--- a/drivers/clk/socfpga/clk-gate-s10.c
++++ b/drivers/clk/socfpga/clk-gate-s10.c
+@@ -70,7 +70,6 @@ struct clk *s10_register_gate(const struct stratix10_gate_clock *clks, void __io
+ 	struct clk *clk;
+ 	struct socfpga_gate_clk *socfpga_clk;
+ 	struct clk_init_data init;
+-	const char * const *parent_names = clks->parent_names;
+ 	const char *parent_name = clks->parent_name;
+ 
+ 	socfpga_clk = kzalloc(sizeof(*socfpga_clk), GFP_KERNEL);
+@@ -108,7 +107,9 @@ struct clk *s10_register_gate(const struct stratix10_gate_clock *clks, void __io
+ 	init.flags = clks->flags;
+ 
+ 	init.num_parents = clks->num_parents;
+-	init.parent_names = parent_names ? parent_names : &parent_name;
++	init.parent_names = parent_name ? &parent_name : NULL;
++	if (init.parent_names == NULL)
++		init.parent_data = clks->parent_data;
+ 	socfpga_clk->hw.hw.init = &init;
+ 
+ 	clk = clk_register(NULL, &socfpga_clk->hw.hw);
+diff --git a/drivers/clk/socfpga/clk-periph-s10.c b/drivers/clk/socfpga/clk-periph-s10.c
+index dd6d4056e9de..397b77b89b16 100644
+--- a/drivers/clk/socfpga/clk-periph-s10.c
++++ b/drivers/clk/socfpga/clk-periph-s10.c
+@@ -81,7 +81,6 @@ struct clk *s10_register_periph(const struct stratix10_perip_c_clock *clks,
+ 	struct clk_init_data init;
+ 	const char *name = clks->name;
+ 	const char *parent_name = clks->parent_name;
+-	const char * const *parent_names = clks->parent_names;
+ 
+ 	periph_clk = kzalloc(sizeof(*periph_clk), GFP_KERNEL);
+ 	if (WARN_ON(!periph_clk))
+@@ -94,7 +93,9 @@ struct clk *s10_register_periph(const struct stratix10_perip_c_clock *clks,
+ 	init.flags = clks->flags;
+ 
+ 	init.num_parents = clks->num_parents;
+-	init.parent_names = parent_names ? parent_names : &parent_name;
++	init.parent_names = parent_name ? &parent_name : NULL;
++	if (init.parent_names == NULL)
++		init.parent_data = clks->parent_data;
+ 
+ 	periph_clk->hw.hw.init = &init;
+ 
+@@ -114,7 +115,6 @@ struct clk *s10_register_cnt_periph(const struct stratix10_perip_cnt_clock *clks
+ 	struct clk_init_data init;
+ 	const char *name = clks->name;
+ 	const char *parent_name = clks->parent_name;
+-	const char * const *parent_names = clks->parent_names;
+ 
+ 	periph_clk = kzalloc(sizeof(*periph_clk), GFP_KERNEL);
+ 	if (WARN_ON(!periph_clk))
+@@ -137,7 +137,9 @@ struct clk *s10_register_cnt_periph(const struct stratix10_perip_cnt_clock *clks
+ 	init.flags = clks->flags;
+ 
+ 	init.num_parents = clks->num_parents;
+-	init.parent_names = parent_names ? parent_names : &parent_name;
++	init.parent_names = parent_name ? &parent_name : NULL;
++	if (init.parent_names == NULL)
++		init.parent_data = clks->parent_data;
+ 
+ 	periph_clk->hw.hw.init = &init;
+ 
+diff --git a/drivers/clk/socfpga/clk-pll-s10.c b/drivers/clk/socfpga/clk-pll-s10.c
+index a301bb22f36c..bcd3f14e9145 100644
+--- a/drivers/clk/socfpga/clk-pll-s10.c
++++ b/drivers/clk/socfpga/clk-pll-s10.c
+@@ -117,7 +117,6 @@ struct clk *s10_register_pll(const struct stratix10_pll_clock *clks,
+ 	struct socfpga_pll *pll_clk;
+ 	struct clk_init_data init;
+ 	const char *name = clks->name;
+-	const char * const *parent_names = clks->parent_names;
+ 
+ 	pll_clk = kzalloc(sizeof(*pll_clk), GFP_KERNEL);
+ 	if (WARN_ON(!pll_clk))
+@@ -134,7 +133,8 @@ struct clk *s10_register_pll(const struct stratix10_pll_clock *clks,
+ 	init.flags = clks->flags;
+ 
+ 	init.num_parents = clks->num_parents;
+-	init.parent_names = parent_names;
++	init.parent_names = NULL;
++	init.parent_data = clks->parent_data;
+ 	pll_clk->hw.hw.init = &init;
+ 
+ 	pll_clk->hw.bit_idx = SOCFPGA_PLL_POWER;
+diff --git a/drivers/clk/socfpga/clk-s10.c b/drivers/clk/socfpga/clk-s10.c
+index dea7c6c7d269..ed11c8509a15 100644
+--- a/drivers/clk/socfpga/clk-s10.c
++++ b/drivers/clk/socfpga/clk-s10.c
+@@ -12,35 +12,87 @@
+ 
+ #include "stratix10-clk.h"
+ 
+-static const char * const pll_mux[] = { "osc1", "cb-intosc-hs-div2-clk",
+-					"f2s-free-clk",};
+-static const char * const cntr_mux[] = { "main_pll", "periph_pll",
+-					 "osc1", "cb-intosc-hs-div2-clk",
+-					 "f2s-free-clk"};
+-static const char * const boot_mux[] = { "osc1", "cb-intosc-hs-div2-clk",};
+-
+-static const char * const noc_free_mux[] = {"main_noc_base_clk",
+-					    "peri_noc_base_clk",
+-					    "osc1", "cb-intosc-hs-div2-clk",
+-					    "f2s-free-clk"};
+-
+-static const char * const emaca_free_mux[] = {"peri_emaca_clk", "boot_clk"};
+-static const char * const emacb_free_mux[] = {"peri_emacb_clk", "boot_clk"};
+-static const char * const emac_ptp_free_mux[] = {"peri_emac_ptp_clk", "boot_clk"};
+-static const char * const gpio_db_free_mux[] = {"peri_gpio_db_clk", "boot_clk"};
+-static const char * const sdmmc_free_mux[] = {"main_sdmmc_clk", "boot_clk"};
+-static const char * const s2f_usr1_free_mux[] = {"peri_s2f_usr1_clk", "boot_clk"};
+-static const char * const psi_ref_free_mux[] = {"peri_psi_ref_clk", "boot_clk"};
+-static const char * const mpu_mux[] = { "mpu_free_clk", "boot_clk",};
+-
+-static const char * const s2f_usr0_mux[] = {"f2s-free-clk", "boot_clk"};
+-static const char * const emac_mux[] = {"emaca_free_clk", "emacb_free_clk"};
+-static const char * const noc_mux[] = {"noc_free_clk", "boot_clk"};
+-
+-static const char * const mpu_free_mux[] = {"main_mpu_base_clk",
+-					    "peri_mpu_base_clk",
+-					    "osc1", "cb-intosc-hs-div2-clk",
+-					    "f2s-free-clk"};
++static const struct clk_parent_data pll_mux[] = {
++	{ .name = "osc1" },
++	{ .name = "cb-intosc-hs-div2-clk" },
++	{ .name = "f2s-free-clk" },
++};
++
++static const struct clk_parent_data cntr_mux[] = {
++	{ .name = "main_pll", },
++	{ .name = "periph_pll", },
++	{ .name = "osc1", },
++	{ .name = "cb-intosc-hs-div2-clk", },
++	{ .name = "f2s-free-clk", },
++};
++
++static const struct clk_parent_data boot_mux[] = {
++	{ .name = "osc1" },
++	{ .name = "cb-intosc-hs-div2-clk" },
++};
++
++static const struct clk_parent_data noc_free_mux[] = {
++	{ .name = "main_noc_base_clk", },
++	{ .name = "peri_noc_base_clk", },
++	{ .name = "osc1", },
++	{ .name = "cb-intosc-hs-div2-clk", },
++	{ .name = "f2s-free-clk", },
++};
++
++static const struct clk_parent_data emaca_free_mux[] = {
++	{ .name = "peri_emaca_clk", },
++	{ .name = "boot_clk", },
++};
++
++static const struct clk_parent_data emacb_free_mux[] = {
++	{ .name = "peri_emacb_clk", },
++	{ .name = "boot_clk", },
++};
++static const struct clk_parent_data emac_ptp_free_mux[] = {
++	{ .name = "peri_emac_ptp_clk", },
++	{ .name = "boot_clk", },
++};
++static const struct clk_parent_data gpio_db_free_mux[] = {
++	{ .name = "peri_gpio_db_clk", },
++	{ .name = "boot_clk", },
++};
++static const struct clk_parent_data sdmmc_free_mux[] = {
++	{ .name = "main_sdmmc_clk", },
++	{ .name = "boot_clk", },
++};
++static const struct clk_parent_data s2f_usr1_free_mux[] = {
++	{ .name = "peri_s2f_usr1_clk", },
++	{ .name = "boot_clk", },
++};
++static const struct clk_parent_data psi_ref_free_mux[] = {
++	{ .name = "peri_psi_ref_clk", },
++	{ .name = "boot_clk", },
++};
++static const struct clk_parent_data mpu_mux[] = {
++	{ .name = "mpu_free_clk", },
++	{ .name = "boot_clk", },
++};
++
++static const struct clk_parent_data s2f_usr0_mux[] = {
++	{ .name = "f2s-free-clk", },
++	{ .name = "boot_clk", },
++};
++static const struct clk_parent_data emac_mux[] = {
++	{ .name = "emaca_free_clk", },
++	{ .name = "emacb_free_clk", },
++};
++static const struct clk_parent_data noc_mux[] = {
++	{ .name = "noc_free_clk", },
++	{ .name = "boot_clk", },
++};
++
++static const struct clk_parent_data mpu_free_mux[] = {
++	{ .name = "main_mpu_base_clk", },
++	{ .name = "peri_mpu_base_clk", },
++	{ .name = "osc1", },
++	{ .name = "cb-intosc-hs-div2-clk", },
++	{ .name = "f2s-free-clk", },
++};
+ 
+ /* clocks in AO (always on) controller */
+ static const struct stratix10_pll_clock s10_pll_clks[] = {
+diff --git a/drivers/clk/socfpga/stratix10-clk.h b/drivers/clk/socfpga/stratix10-clk.h
+index fcabef42249c..ffbd1fb2c8ef 100644
+--- a/drivers/clk/socfpga/stratix10-clk.h
++++ b/drivers/clk/socfpga/stratix10-clk.h
+@@ -14,7 +14,7 @@ struct stratix10_clock_data {
+ struct stratix10_pll_clock {
+ 	unsigned int		id;
+ 	const char		*name;
+-	const char		*const *parent_names;
++	const struct clk_parent_data	*parent_data;
+ 	u8			num_parents;
+ 	unsigned long		flags;
+ 	unsigned long		offset;
+@@ -24,7 +24,7 @@ struct stratix10_perip_c_clock {
+ 	unsigned int		id;
+ 	const char		*name;
+ 	const char		*parent_name;
+-	const char		*const *parent_names;
++	const struct clk_parent_data	*parent_data;
+ 	u8			num_parents;
+ 	unsigned long		flags;
+ 	unsigned long		offset;
+@@ -34,7 +34,7 @@ struct stratix10_perip_cnt_clock {
+ 	unsigned int		id;
+ 	const char		*name;
+ 	const char		*parent_name;
+-	const char		*const *parent_names;
++	const struct clk_parent_data	*parent_data;
+ 	u8			num_parents;
+ 	unsigned long		flags;
+ 	unsigned long		offset;
+@@ -47,7 +47,7 @@ struct stratix10_gate_clock {
+ 	unsigned int		id;
+ 	const char		*name;
+ 	const char		*parent_name;
+-	const char		*const *parent_names;
++	const struct clk_parent_data	*parent_data;
+ 	u8			num_parents;
+ 	unsigned long		flags;
+ 	unsigned long		gate_reg;
+-- 
+2.17.1
 
-> Alan
->
->
-> Index: usb-devel/tools/memory-model/Documentation/explanation.txt
-> ===================================================================
-> --- usb-devel.orig/tools/memory-model/Documentation/explanation.txt
-> +++ usb-devel/tools/memory-model/Documentation/explanation.txt
-> @@ -1987,28 +1987,30 @@ outcome undefined.
->
->  In technical terms, the compiler is allowed to assume that when the
->  program executes, there will not be any data races.  A "data race"
-> -occurs when two conflicting memory accesses execute concurrently;
-> -two memory accesses "conflict" if:
-> +occurs when two conflicting memory accesses execute concurrently and
-> +at least one of them is plain.  Two memory accesses "conflict" if:
->
->         they access the same location,
->
->         they occur on different CPUs (or in different threads on the
->         same CPU),
->
-> -       at least one of them is a plain access,
-> -
->         and at least one of them is a store.
->
-> -The LKMM tries to determine whether a program contains two conflicting
-> -accesses which may execute concurrently; if it does then the LKMM says
-> -there is a potential data race and makes no predictions about the
-> -program's outcome.
-> -
-> -Determining whether two accesses conflict is easy; you can see that
-> -all the concepts involved in the definition above are already part of
-> -the memory model.  The hard part is telling whether they may execute
-> -concurrently.  The LKMM takes a conservative attitude, assuming that
-> -accesses may be concurrent unless it can prove they cannot.
-> +We'll say that two accesses are "race candidates" if they conflict and
-> +at least one of them is plain.  Whether or not two candidates actually
-> +do race in a given execution then depends on whether they are
-> +concurrent.  The LKMM tries to determine whether a program contains
-> +two race candidates which may execute concurrently; if it does then
-> +the LKMM says there is a potential data race and makes no predictions
-> +about the program's outcome.
-> +
-> +Determining whether two accesses are race candidates is easy; you can
-> +see that all the concepts involved in the definition above are already
-> +part of the memory model.  The hard part is telling whether they may
-> +execute concurrently.  The LKMM takes a conservative attitude,
-> +assuming that accesses may be concurrent unless it can prove they
-> +are not.
->
->  If two memory accesses aren't concurrent then one must execute before
->  the other.  Therefore the LKMM decides two accesses aren't concurrent
-> @@ -2171,8 +2173,8 @@ again, now using plain accesses for buf:
->         }
->
->  This program does not contain a data race.  Although the U and V
-> -accesses conflict, the LKMM can prove they are not concurrent as
-> -follows:
-> +accesses are race candidates, the LKMM can prove they are not
-> +concurrent as follows:
->
->         The smp_wmb() fence in P0 is both a compiler barrier and a
->         cumul-fence.  It guarantees that no matter what hash of
-> @@ -2326,12 +2328,11 @@ could now perform the load of x before t
->  a control dependency but no address dependency at the machine level).
->
->  Finally, it turns out there is a situation in which a plain write does
-> -not need to be w-post-bounded: when it is separated from the
-> -conflicting access by a fence.  At first glance this may seem
-> -impossible.  After all, to be conflicting the second access has to be
-> -on a different CPU from the first, and fences don't link events on
-> -different CPUs.  Well, normal fences don't -- but rcu-fence can!
-> -Here's an example:
-> +not need to be w-post-bounded: when it is separated from the other
-> +race-candidate access by a fence.  At first glance this may seem
-> +impossible.  After all, to be race candidates the two accesses must
-> +be on different CPUs, and fences don't link events on different CPUs.
-> +Well, normal fences don't -- but rcu-fence can!  Here's an example:
->
->         int x, y;
->
-> @@ -2367,7 +2368,7 @@ concurrent and there is no race, even th
->  isn't w-post-bounded by any marked accesses.
->
->  Putting all this material together yields the following picture.  For
-> -two conflicting stores W and W', where W ->co W', the LKMM says the
-> +race-candidate stores W and W', where W ->co W', the LKMM says the
->  stores don't race if W can be linked to W' by a
->
->         w-post-bounded ; vis ; w-pre-bounded
-> @@ -2380,8 +2381,8 @@ sequence, and if W' is plain then they a
->
->         w-post-bounded ; vis ; r-pre-bounded
->
-> -sequence.  For a conflicting load R and store W, the LKMM says the two
-> -accesses don't race if R can be linked to W by an
-> +sequence.  For race-candidate load R and store W, the LKMM says the
-> +two accesses don't race if R can be linked to W by an
->
->         r-post-bounded ; xb* ; w-pre-bounded
->
-> @@ -2413,20 +2414,20 @@ is, the rules governing the memory subsy
->  satisfy a load request and its determination of where a store will
->  fall in the coherence order):
->
-> -       If R and W conflict and it is possible to link R to W by one
-> -       of the xb* sequences listed above, then W ->rfe R is not
-> -       allowed (i.e., a load cannot read from a store that it
-> +       If R and W are race candidates and it is possible to link R to
-> +       W by one of the xb* sequences listed above, then W ->rfe R is
-> +       not allowed (i.e., a load cannot read from a store that it
->         executes before, even if one or both is plain).
->
-> -       If W and R conflict and it is possible to link W to R by one
-> -       of the vis sequences listed above, then R ->fre W is not
-> -       allowed (i.e., if a store is visible to a load then the load
-> -       must read from that store or one coherence-after it).
-> -
-> -       If W and W' conflict and it is possible to link W to W' by one
-> -       of the vis sequences listed above, then W' ->co W is not
-> -       allowed (i.e., if one store is visible to a second then the
-> -       second must come after the first in the coherence order).
-> +       If W and R are race candidates and it is possible to link W to
-> +       R by one of the vis sequences listed above, then R ->fre W is
-> +       not allowed (i.e., if a store is visible to a load then the
-> +       load must read from that store or one coherence-after it).
-> +
-> +       If W and W' are race candidates and it is possible to link W
-> +       to W' by one of the vis sequences listed above, then W' ->co W
-> +       is not allowed (i.e., if one store is visible to a second then
-> +       the second must come after the first in the coherence order).
->
->  This is the extent to which the LKMM deals with plain accesses.
->  Perhaps it could say more (for example, plain accesses might
->
