@@ -2,94 +2,138 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E58FEC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 291D7C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B50BB246B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEFF52468E
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:35:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="M893la1W"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sEJi1F7K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbgB1QfK (ORCPT
+        id S1726765AbgB1Qfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:35:10 -0500
-Received: from mout.gmx.net ([212.227.17.22]:48917 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725877AbgB1QfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:35:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1582907688;
-        bh=YcG6r7F3VVt7DQsFNhV4JbQ/Bh6aKNh0DkfRxFndYAA=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=M893la1WZgDW7/xWaBckbU4Odje3StaE2YcrGjt7TLxyK3pbX/Ea23pa9tN/cHEH7
-         joHd8VOqO6RSYD0a0SS6Ty3j2XCMW2ucMF+AzxWLxQmzVPStkZStnqrxLMH4lEZRAD
-         CzydVU3Wqs7ndlgvC4LH1dlsW2OpHQHQinHzZuGU=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [185.53.40.15] ([185.53.40.15]) by web-mail.gmx.net
- (3c-app-gmx-bap21.server.lan [172.19.172.91]) (via HTTP); Fri, 28 Feb 2020
- 17:34:47 +0100
+        Fri, 28 Feb 2020 11:35:51 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55894 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbgB1Qfv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 11:35:51 -0500
+Received: by mail-wm1-f66.google.com with SMTP id q9so3802736wmj.5
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 08:35:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=HcG/EOqr8+CrfwSO/n77ulX+/pcSO4hIkOvdzBU4ykI=;
+        b=sEJi1F7K5C+WPjvqrp9HyIGTw2H29ojkfm6wa2Y8BrBZ6IDEgfpQX014Yj00Hjp3am
+         D0ndUXBuV8xdg7vnbJea8LEch/4ncITWTbIIbTh0B9FPLPJyK/WxgkI15BHguHlIFb1U
+         iL8c1dGxMO1t0uauBjyIgLI2lKgUbxiJh/MsHbQKt/aqowgM8b24xmeDQim/Utq+i0ty
+         IOD6/gFjloEH9FTzrkpHXzb5+oDNK9nxvQ9QxsXPSCj3/lNZSvpk2jwerbx97hK/m4/J
+         BJVxgIjNVMk5xD6u30d3PZ2mPJDn9jR8XMc1CrljcD45WvV/NQ50UICwJ7uYxZFXYjST
+         zhPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=HcG/EOqr8+CrfwSO/n77ulX+/pcSO4hIkOvdzBU4ykI=;
+        b=t3am9KSohgCJUGr41jMJgPMlBTpjllTIzgLe5tiWYBQFAiXXz7tIVri9O12/QaW4Cn
+         NbONO6p8b0FGH11oETWqQotdQUEXcWcdDAYg0IyTf2NtRSW8fxLTKlRkkNen9ZtIRjh3
+         6TP5938sbIklnqp64diXKiM1kpZwhFi3qXBgy0ScXiFbmTWsUsixYgVZzsTrgKANBfsb
+         B85UNQazmqh82f7SuH22lmKILxXDeaaWIeiDGG3jFooUWV+NiFZqZrsqPBL1SUrsNw/Q
+         7ivHko1mAk/gQwmzg/QkeAoXwM5XykEbZjn/El/JHAqFvJJc9Rr2DHYtUshRghp8ZFAX
+         VFlg==
+X-Gm-Message-State: APjAAAVc6wJHN9GJuFD3m3VtmE4iyXFLJhgpUj30rulxpgd1bH/jbIP4
+        TB1CzIdoLBdm83o6CsFniQEOng==
+X-Google-Smtp-Source: APXvYqxGJidQ2k3iW7VpU0ESuoj1p6lTJ5v2plfr2HD4Loc/kWeaZpO3URuGldRyIxcAcgk6NjvbPQ==
+X-Received: by 2002:a7b:cb97:: with SMTP id m23mr5343325wmi.37.1582907748312;
+        Fri, 28 Feb 2020 08:35:48 -0800 (PST)
+Received: from vingu-book ([2a01:e0a:f:6020:9522:3a6c:498:7b7d])
+        by smtp.gmail.com with ESMTPSA id r6sm13392923wrq.92.2020.02.28.08.35.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 28 Feb 2020 08:35:47 -0800 (PST)
+Date:   Fri, 28 Feb 2020 17:35:45 +0100
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: 5.6-rc3: WARNING: CPU: 48 PID: 17435 at kernel/sched/fair.c:380
+ enqueue_task_fair+0x328/0x440
+Message-ID: <20200228163545.GA18662@vingu-book>
+References: <ace7327f-0fd6-4f36-39ae-a8d7d1c7f06b@de.ibm.com>
+ <afacbbd1-3d6b-c537-34e2-5b455e1c2267@de.ibm.com>
+ <CAKfTPtBikHzpHY-NdRJFfOFxx+S3=4Y0aPM5s0jpHs40+9BaGA@mail.gmail.com>
+ <b073a50e-4b86-56db-3fbd-6869b2716b34@de.ibm.com>
+ <1a607a98-f12a-77bd-2062-c3e599614331@de.ibm.com>
+ <CAKfTPtBZ2X8i6zMgrA1gNJmwoSnyRc76yXmLZEwboJmF-R9QVg@mail.gmail.com>
+ <b664f050-72d6-a483-be0a-8504f687f225@de.ibm.com>
 MIME-Version: 1.0
-Message-ID: <trinity-1aeda07b-567b-4a31-a709-36199975894b-1582907687950@3c-app-gmx-bap21>
-From:   "Frank Wunderlich" <frank-w@public-files.de>
-To:     "Bibby Hsieh" <bibby.hsieh@mediatek.com>
-Cc:     "David Airlie" <airlied@linux.ie>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        "Daniel Vetter" <daniel.vetter@ffwll.ch>,
-        dri-devel@lists.freedesktop.org,
-        linux-mediatek@lists.infradead.org, drinkcat@chromium.org,
-        "Bibby Hsieh" <bibby.hsieh@mediatek.com>,
-        srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org,
-        tfiga@chromium.org, "CK Hu" <ck.hu@mediatek.com>,
-        "Thierry Reding" <thierry.reding@gmail.com>,
-        "Philipp Zabel" <p.zabel@pengutronix.de>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [BUG] [PATCH v5 3/7] drm/mediatek: update cursors by using async
- atomic update
-Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 28 Feb 2020 17:34:47 +0100
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <20191210050526.4437-4-bibby.hsieh@mediatek.com>
-References: <20191210050526.4437-1-bibby.hsieh@mediatek.com>
- <20191210050526.4437-4-bibby.hsieh@mediatek.com>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:2wHSXETBujv7ubTGIwZ5VrMFtJmoX/njL13MkH8s5eovSX+Y+sTe0+BByPkiM5mY2rzQm
- gKpnl5HTR1TX8ZwimXy747VbCYUysGQw+GdtehRIGT5il+WUm2aG81V2Bu0Dpft2U3SY51brmqYE
- H0JgZOtLaL0+tXa8kZMGxWwyoVLkjFO5i3HFnIccGF/d2ihL7iTlHuSy3H9axD1B76whc67PrgRz
- VBlEsXrblvHd0UmCQ6WWGJeRXN83aG2f7ScyhV9hAm1fz/xBSUnehkXcTmbnfvD6ndAjICp0ek9M
- Rc=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:K7AD3qghSCg=:KDuvUtyqh0IxQhZ8dH9kvu
- UkMiaACx+8TarnVTvKLAKYfLysNr+9tfMvPZLRxVtUh1T0O1DBm4Rko4sdLxfCcUGMflBCrDF
- ciX4YIyA6kuUTwucfzx22ITRFECEbD2yoh1WgJbxUXd9NJYwXopioXyMMrwaM6xnYz/nLIr7o
- mUGZMog7Dou+NeR5Em4TB8BEgRtUTLT6+nfdjLNz4ShGizgdYRFKt+/vHZk/V1IW+aFci1vsg
- LHvupXQWPTqlYNA3JS0Km5lF3zWjBdUJIGrdIGympZEuHb5mAtd4vGX9XsCeZH3p1WjQ/MpQY
- 4acYwTHnCUAyGf7pGu2tzR8WsBvTvBOIW4Q8I03JkR+4har3qSWjIcdqgk2ff+6RSbEXVjquZ
- C7mZBt3pEMeZjKM+Z1HkvLnv2XrRM8CB/s3gUG3quARYuumwpA7BH7F7fOTjduxgqWlhv3YVO
- mhEDvNNyn9mge3Vz9N5MalwRkGJ5FJFlPEG9tEBlGoHxehlLMAMYcXVl4oE5ffpiFOpSG15y4
- rm2LvOfG+tHze6Pl5a18bTr459tAbHXJYVUGnvmhov147zK1eBq3bFk9JHKV0fMl5up+E2is1
- +YOSmDnrCG2i9TqD76kwDIFdZnprjEY1f1rR8oEq2QgrAsYW0byi74bJRq34xclYgmkooSZsk
- eGfDPVeomp5G0jsWbOdU4oBMCEo7ol8LkDiWjXMdSbjZUOrU62FolI9j7z62bk/OQrp0=
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b664f050-72d6-a483-be0a-8504f687f225@de.ibm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Le vendredi 28 févr. 2020 à 16:42:27 (+0100), Christian Borntraeger a écrit :
+> 
+> 
+> On 28.02.20 16:37, Vincent Guittot wrote:
+> > On Fri, 28 Feb 2020 at 16:08, Christian Borntraeger
+> > <borntraeger@de.ibm.com> wrote:
+> >>
+> >> Also happened with 5.4:
+> >> Seems that I just happen to have an interesting test workload/system size interaction
+> >> on a newly installed system that triggers this.
+> > 
+> > you will probably go back to 5.1 which is the version where we put
+> > back the deletion of unused cfs_rq from the list which can trigger the
+> > warning:
+> > commit 039ae8bcf7a5 : (Fix O(nr_cgroups) in the load balancing path)
+> > 
+> > AFAICT, we haven't changed this since
+> 
+> So you do know what is the problem? If not is there any debug option or
+> patch that I could apply to give you more information?
 
-as talked to Bibby directly, this Patch seems to create a bug with touchscreens. Cursor is displayed on old position if changing its position. e.g. Cursor was on X1,Y1 and i touch to new position X2,Y2 the "click" is recognized on right position (i try to ), but cursor is displayed on X1,Y1
+No I don't know what is happening. Your test probably goes through an unexpected path
 
-have made a small video and uploaded to my gdrive [1]...
+Would it be difficult for me to reproduce your test env ?
 
-here i use lightdm login manager and selecting the username/password-fields alternately. Focus follows, but cursor is always displayed on prior position
+There is an optimization in the code which could generate problem if assumption is not
+true. Could you try the patch below ?
 
-tried to revert this commit [2], but there are many depencies failing the revert, have not yet got all depending commits reverted
+---
+ kernel/sched/fair.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-regards Frank
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 3c8a379c357e..beb773c23e7d 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4035,8 +4035,8 @@ enqueue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+ 		__enqueue_entity(cfs_rq, se);
+ 	se->on_rq = 1;
+ 
++	list_add_leaf_cfs_rq(cfs_rq);
+ 	if (cfs_rq->nr_running == 1) {
+-		list_add_leaf_cfs_rq(cfs_rq);
+ 		check_enqueue_throttle(cfs_rq);
+ 	}
+ }
+-- 
+2.17.1
 
-[1] https://drive.google.com/open?id=1Qy0tYnbO9zNGdjCWY18O-dMYbFuPrq_i
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=920fffcc891276a855cb3ce1e7361d2e9cb72581
+
+
+> 
