@@ -2,251 +2,225 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51691C3F2D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A067EC3F2CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14466246A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:49:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582861777;
-	bh=iwxrTGynkOfWlbUrmXcC+fusbk4wm6HN0H5LZJ5gDN4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jFEYs7qGqTk4Kxf4UQ08s2jXZaPQuTLAax7m4MszOheAtsOT9AfDjjSxgSHNqYIDk
-	 u6RexrwATNhAL3dj5pZOQRDwPHszBt7Svy9yP4sIAyCwvTMdrAjSTbnfW9GQI2TJQ+
-	 UWSkWz097tYJtnYF1qzEga5pFUzgpLlzmvHUOAGs=
+	by mail.kernel.org (Postfix) with ESMTP id 6A08A246A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:50:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k+WIxfd+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730802AbgB1Dtg (ORCPT
+        id S1730823AbgB1Duc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 22:49:36 -0500
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:43740 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730586AbgB1Dtg (ORCPT
+        Thu, 27 Feb 2020 22:50:32 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43382 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730712AbgB1Dub (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 22:49:36 -0500
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 01S3nVlx010153;
-        Fri, 28 Feb 2020 12:49:32 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 01S3nVlx010153
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582861773;
-        bh=0NA3c9ClvYWuHtCt4C8GLQVJE0FJkSJ4u+rIf89zeHg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=R4c+9yjcvOE2sEQspIq91LVOb2UQ+h9DTGwsJDEAAx7oMvRlFGOzk31w2bNxLamGZ
-         LPoD0IZ0nppfL1n/wd84+/1nO6OST8tLzN4QltfpyeVuFIsYu1J4+XArs0/7/CqttR
-         RkubVUaZnxUMWJxCW2jDvWH4V5b5FIs9pcifJZMrf8OFKbrXw9IWrHxWKTQcSSji5X
-         DR/JYk31sw9OpX4aTO95XqVwoiWMMNat2oHswj/7z4OMWu5fMAlG3HkzQYtoIui3yq
-         0WFnLbYXzzfbZRwiuljXqeHpHHc1nvNW0VdEINoLYUznjzL/98OxKS4a8hThr0qvJS
-         2zyxjnVaDL6kg==
-X-Nifty-SrcIP: [209.85.217.51]
-Received: by mail-vs1-f51.google.com with SMTP id g15so1147908vsf.1;
-        Thu, 27 Feb 2020 19:49:32 -0800 (PST)
-X-Gm-Message-State: ANhLgQ0hmS32e2WdU1NZElLdj4dfvBtjG1aHXSA2uQE/kbnCFkVP3tXW
-        mILVsdbSXKQV1RUW1sBk2co6OJNg3M04Jk3YG6k=
-X-Google-Smtp-Source: ADFU+vtgzns8RGzyKG8zrynO/4mPoxb0CGvRKAbbbXqzGGgP6fnJkububhLMea2CIvqS+X2cWTJVQ0EN0vu/seUEuds=
-X-Received: by 2002:a67:fa4b:: with SMTP id j11mr1471344vsq.155.1582861770888;
- Thu, 27 Feb 2020 19:49:30 -0800 (PST)
+        Thu, 27 Feb 2020 22:50:31 -0500
+Received: by mail-lj1-f194.google.com with SMTP id e3so1698694lja.10
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 19:50:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=PViNmrTZ4hjqF/LWHkWDjhiCPF00XzEuHwQhWDhjXLo=;
+        b=k+WIxfd+LNuA4z7q6e827jCAzYJNUlSFhXYQAR5tyH4HCXGapSfpYu5f+5OOhFikJG
+         W4WVk57It7+Y8E208AC5THzcdYD71iiCUws5LrH1WaihvxF3H8i5yuInl/VmGtuLI65j
+         yVohHQIxeB5lcJrh1pR7XPkF0Rm8gRZ1nRh2kIE+XWBNHjWsBkw/1pTZMlJtHgfZ5y4U
+         Y7gZl68jnftWDDNjDYpZ+n+d2hnZGL3zdpA29XchGiptrfxk4Q3N+vjQ+emFzN4RnFxW
+         RdxRTMWRdZ/HxJRD7ZPhPwSrhYVPziK9FYxzePaXJPwbddxuWh8ssISxej+PY8EtxQLE
+         DLOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=PViNmrTZ4hjqF/LWHkWDjhiCPF00XzEuHwQhWDhjXLo=;
+        b=Q028Tt97FQPYfKcz5o70Vd9Jm0nY2HiJZG28urIBXO0zsEaiaxxH9qjOXzfy+k6hUR
+         I1XGKxVcOUuW5jMDzfU9PEOIlOVZlDzEcIjr9KSy9Smim7wScFA40DI8Ec4VFeGdn4DR
+         ag6dvDL7Wa8u4I2mhh7I4gRA2moMvzyj+7ZF12Ayo0Qc43w47mB9iS9UuaiScHIhLAog
+         NKU7FPEOV3WqtktvQ0CdYwPYxmsJBI+ZsPYIKwct6kGRhXRgzgooiv8tGuePHnqITMkM
+         TsKjbE23E6MDoj6FCH1C7p4Gb+BuS1+CSL/bHnfZMhq8yiBeGKwvGZINj1AQO4ooVltw
+         zzzg==
+X-Gm-Message-State: ANhLgQ0BNdsoijSgINaV0oo0OfAgP4BezNowHaes+DFOgbdgW50+BVD0
+        IVIp5sXDEPQG0d78TURLa4XNG7DfkZXpSjREE5ZRZ9xP3r4=
+X-Google-Smtp-Source: ADFU+vv3GU37vpmAFRxL1JJzGTxhNMMpyyDcg68b2PFrAwZb5yVNO8DqnbAZ0B7T9IKeyjXlqNyI9lENGwUyw15JHTg=
+X-Received: by 2002:a05:651c:1072:: with SMTP id y18mr1468231ljm.243.1582861829448;
+ Thu, 27 Feb 2020 19:50:29 -0800 (PST)
 MIME-Version: 1.0
-References: <20200228034640.25247-1-masahiroy@kernel.org>
-In-Reply-To: <20200228034640.25247-1-masahiroy@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 28 Feb 2020 12:48:54 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS9uWyvFeVkxtbkuBrnqumYzzLfcsUrVByHHyons4m8hA@mail.gmail.com>
-Message-ID: <CAK7LNAS9uWyvFeVkxtbkuBrnqumYzzLfcsUrVByHHyons4m8hA@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: use KBUILD_DEFCONFIG as the fallback for DEFCONFIG_LIST
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, linux-um@lists.infradead.org,
-        sparclinux <sparclinux@vger.kernel.org>
+References: <20200227132232.815448360@linuxfoundation.org>
+In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 28 Feb 2020 09:20:18 +0530
+Message-ID: <CA+G9fYsJyqW95UU-KKNqQOQVSVNaBF9ZyNps+vbxHUtJ1S==gg@mail.gmail.com>
+Subject: Re: [PATCH 5.5 000/150] 5.5.7-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 12:47 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+On Thu, 27 Feb 2020 at 19:53, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> Most of the Kconfig commands (except defconfig and all*config) read
-> the .config file as a base set of CONFIG options.
+> This is the start of the stable review cycle for the 5.5.7 release.
+> There are 150 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> When it does not exist, the files in DEFCONFIG_LIST are searched in
-> this order and loaded if found.
+> Responses should be made by Sat, 29 Feb 2020 13:21:24 +0000.
+> Anything received after that time might be too late.
 >
-> I do not see much sense in the last two lines in DEFCONFIG_LIST.
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.5.7-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.5.y
+> and the diffstat can be found below.
 >
-> [1] ARCH_DEFCONFIG
+> thanks,
 >
-> The entry for DEFCONFIG_LIST is guarded by 'depends on !UML'. So, the
-> ARCH_DEFCONFIG definition in arch/x86/um/Kconfig is meaningless.
->
-> arch/{sh,sparc,x86}/Kconfig define ARCH_DEFCONFIG depending on 32 or
-> 64 bit variant symbols. This is a little bit strange; ARCH_DEFCONFIG
-> should be a fixed string because the base config file is loaded before
-> the symbol evaluation stage.
->
-> Using KBUILD_DEFCONFIG makes more sense because it is fixed before
-> Kconfig is invoked. Fortunately, arch/{sh,sparc,x86}/Makefile define it
-> in the same way, and it works as expected. Hence, replace ARCH_DEFCONFIG
-> with "arch/$(SRCARCH)/configs/$(KBUILD_DEFCONFIG)".
->
-> [2] arch/$(ARCH)/defconfig
->
-> This file path is no longer valid. The defconfig files are always located
-> in the arch configs/ directories.
->
->   $ find arch -name defconfig | sort
->   arch/alpha/configs/defconfig
->   arch/arm64/configs/defconfig
->   arch/csky/configs/defconfig
->   arch/nds32/configs/defconfig
->   arch/riscv/configs/defconfig
->   arch/s390/configs/defconfig
->   arch/unicore32/configs/defconfig
->
-> The path arch/*/configs/defconfig is already covered by
-> "arch/$(SRCARCH)/configs/$(KBUILD_DEFCONFIG)". So, this file path is
-> not necessary.
->
-> I moved the default KBUILD_DEFCONFIG to the top Makefile. Otherwise,
-> the 7 architectures listed above would end up with endless loop of
-> syncconfig.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> greg k-h
 
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-I forgot to say this.
-This is v2.
+Summary
+------------------------------------------------------------------------
 
-Changes in v2:
-  - Move KBUILD_DEFCONFIG to fix endless loop of syncconfig
+kernel: 5.5.7-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.5.y
+git commit: 986ea77a7c4444449bba2f289b959786acef45cd
+git describe: v5.5.6-151-g986ea77a7c44
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.5-oe/bui=
+ld/v5.5.6-151-g986ea77a7c44
 
+No regressions (compared to build v5.5.6)
 
-> ---
->
->  Makefile                 | 3 +++
->  arch/sh/Kconfig          | 5 -----
->  arch/sparc/Kconfig       | 5 -----
->  arch/x86/Kconfig         | 5 -----
->  arch/x86/um/Kconfig      | 5 -----
->  init/Kconfig             | 3 +--
->  scripts/kconfig/Makefile | 4 ----
->  7 files changed, 4 insertions(+), 26 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index 81d130ad9534..17cc09304561 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -388,6 +388,9 @@ endif
->  KCONFIG_CONFIG ?= .config
->  export KCONFIG_CONFIG
->
-> +# Default file for 'make defconfig'. This may be overridden by arch-Makefile.
-> +export KBUILD_DEFCONFIG := defconfig
-> +
->  # SHELL used by kbuild
->  CONFIG_SHELL := sh
->
-> diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
-> index 9ece111b0254..b4f0e37b83eb 100644
-> --- a/arch/sh/Kconfig
-> +++ b/arch/sh/Kconfig
-> @@ -87,11 +87,6 @@ config SUPERH64
->         select HAVE_EXIT_THREAD
->         select KALLSYMS
->
-> -config ARCH_DEFCONFIG
-> -       string
-> -       default "arch/sh/configs/shx3_defconfig" if SUPERH32
-> -       default "arch/sh/configs/cayman_defconfig" if SUPERH64
-> -
->  config GENERIC_BUG
->         def_bool y
->         depends on BUG && SUPERH32
-> diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
-> index c1dd6dd642f4..0de15380d1fc 100644
-> --- a/arch/sparc/Kconfig
-> +++ b/arch/sparc/Kconfig
-> @@ -95,11 +95,6 @@ config SPARC64
->         select PCI_DOMAINS if PCI
->         select ARCH_HAS_GIGANTIC_PAGE
->
-> -config ARCH_DEFCONFIG
-> -       string
-> -       default "arch/sparc/configs/sparc32_defconfig" if SPARC32
-> -       default "arch/sparc/configs/sparc64_defconfig" if SPARC64
-> -
->  config ARCH_PROC_KCORE_TEXT
->         def_bool y
->
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index beea77046f9b..98935f4387f9 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -240,11 +240,6 @@ config OUTPUT_FORMAT
->         default "elf32-i386" if X86_32
->         default "elf64-x86-64" if X86_64
->
-> -config ARCH_DEFCONFIG
-> -       string
-> -       default "arch/x86/configs/i386_defconfig" if X86_32
-> -       default "arch/x86/configs/x86_64_defconfig" if X86_64
-> -
->  config LOCKDEP_SUPPORT
->         def_bool y
->
-> diff --git a/arch/x86/um/Kconfig b/arch/x86/um/Kconfig
-> index a8985e1f7432..95d26a69088b 100644
-> --- a/arch/x86/um/Kconfig
-> +++ b/arch/x86/um/Kconfig
-> @@ -27,11 +27,6 @@ config X86_64
->         def_bool 64BIT
->         select MODULES_USE_ELF_RELA
->
-> -config ARCH_DEFCONFIG
-> -       string
-> -       default "arch/um/configs/i386_defconfig" if X86_32
-> -       default "arch/um/configs/x86_64_defconfig" if X86_64
-> -
->  config 3_LEVEL_PGTABLES
->         bool "Three-level pagetables" if !64BIT
->         default 64BIT
-> diff --git a/init/Kconfig b/init/Kconfig
-> index 20a6ac33761c..240c1ed15c69 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -6,8 +6,7 @@ config DEFCONFIG_LIST
->         default "/lib/modules/$(shell,uname -r)/.config"
->         default "/etc/kernel-config"
->         default "/boot/config-$(shell,uname -r)"
-> -       default ARCH_DEFCONFIG
-> -       default "arch/$(ARCH)/defconfig"
-> +       default "arch/$(SRCARCH)/configs/$(KBUILD_DEFCONFIG)"
->
->  config CC_IS_GCC
->         def_bool $(success,$(CC) --version | head -n 1 | grep -q gcc)
-> diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
-> index 5887ceb6229e..c9d0a4a8efb3 100644
-> --- a/scripts/kconfig/Makefile
-> +++ b/scripts/kconfig/Makefile
-> @@ -12,10 +12,6 @@ else
->  Kconfig := Kconfig
->  endif
->
-> -ifndef KBUILD_DEFCONFIG
-> -KBUILD_DEFCONFIG := defconfig
-> -endif
-> -
->  ifeq ($(quiet),silent_)
->  silent := -s
->  endif
-> --
-> 2.17.1
->
+No fixes (compared to build v5.5.6)
 
+Ran 29362 total tests in the following environments and test suites.
 
--- 
-Best Regards
-Masahiro Yamada
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libgpiod
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* network-basic-tests
+* ltp-fs-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* ltp-cap_bounds-64k-page_size-tests
+* ltp-cap_bounds-kasan-tests
+* ltp-commands-64k-page_size-tests
+* ltp-commands-kasan-tests
+* ltp-containers-64k-page_size-tests
+* ltp-containers-kasan-tests
+* ltp-cpuhotplug-64k-page_size-tests
+* ltp-cpuhotplug-kasan-tests
+* ltp-crypto-64k-page_size-tests
+* ltp-crypto-kasan-tests
+* ltp-crypto-tests
+* ltp-cve-64k-page_size-tests
+* ltp-cve-kasan-tests
+* ltp-dio-64k-page_size-tests
+* ltp-dio-kasan-tests
+* ltp-fcntl-locktests-64k-page_size-tests
+* ltp-fcntl-locktests-kasan-tests
+* ltp-filecaps-64k-page_size-tests
+* ltp-filecaps-kasan-tests
+* ltp-fs-64k-page_size-tests
+* ltp-fs-kasan-tests
+* ltp-fs_bind-64k-page_size-tests
+* ltp-fs_bind-kasan-tests
+* ltp-fs_perms_simple-64k-page_size-tests
+* ltp-fs_perms_simple-kasan-tests
+* ltp-fsx-64k-page_size-tests
+* ltp-fsx-kasan-tests
+* ltp-hugetlb-64k-page_size-tests
+* ltp-hugetlb-kasan-tests
+* ltp-io-64k-page_size-tests
+* ltp-io-kasan-tests
+* ltp-ipc-64k-page_size-tests
+* ltp-ipc-kasan-tests
+* ltp-math-64k-page_size-tests
+* ltp-math-kasan-tests
+* ltp-mm-64k-page_size-tests
+* ltp-mm-kasan-tests
+* ltp-nptl-64k-page_size-tests
+* ltp-nptl-kasan-tests
+* ltp-pty-64k-page_size-tests
+* ltp-pty-kasan-tests
+* ltp-sched-64k-page_size-tests
+* ltp-sched-kasan-tests
+* ltp-securebits-64k-page_size-tests
+* ltp-securebits-kasan-tests
+* ltp-syscalls-64k-page_size-tests
+* ltp-syscalls-compat-tests
+* ltp-syscalls-kasan-tests
+* ssuite
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
