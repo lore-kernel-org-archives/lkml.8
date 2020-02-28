@@ -2,247 +2,144 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DA8C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 20:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E939C3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 20:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA1CF20665
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 20:39:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27ACD24691
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 20:43:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="gHm1LeLA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbgB1UjU (ORCPT
+        id S1726740AbgB1UnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 15:39:20 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:36597 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725769AbgB1UjU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 15:39:20 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j7mPk-0007vL-LX; Fri, 28 Feb 2020 20:39:16 +0000
-Date:   Fri, 28 Feb 2020 21:39:15 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Subject: Re: [PATCH 3/3] proc: Remove the now unnecessary internal mount of
- proc
-Message-ID: <20200228203915.jelui3l5xue5utpx@wittgenstein>
-References: <20200212203833.GQ23230@ZenIV.linux.org.uk>
- <20200212204124.GR23230@ZenIV.linux.org.uk>
- <CAHk-=wi5FOGV_3tALK3n6E2fK3Oa_yCYkYQtCSaXLSEm2DUCKg@mail.gmail.com>
- <87lfp7h422.fsf@x220.int.ebiederm.org>
- <CAHk-=wgmn9Qds0VznyphouSZW6e42GWDT5H1dpZg8pyGDGN+=w@mail.gmail.com>
- <87pnejf6fz.fsf@x220.int.ebiederm.org>
- <871rqpaswu.fsf_-_@x220.int.ebiederm.org>
- <871rqk2brn.fsf_-_@x220.int.ebiederm.org>
- <878skmsbyy.fsf_-_@x220.int.ebiederm.org>
- <87r1yeqxbp.fsf_-_@x220.int.ebiederm.org>
+        Fri, 28 Feb 2020 15:43:05 -0500
+Received: from mout.gmx.net ([212.227.15.19]:47289 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725769AbgB1UnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 15:43:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1582922580;
+        bh=mnDLdHX2jiK86oTf4iMjN6Ul6eAwKIxqADER55BWgUk=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=gHm1LeLAu63ND9noxnJ5ymlI79AIjr9NYEGsoG3w8taGyfCnUj81LPzvv27d9ONSz
+         RHIf9ZZJZpLcA5jesIRQAXnOa9tXsjm8Keo335A5N4jntMZpO4P6X1SgTn2aVqRwmC
+         LYLihhF8/rS6uRRR7EiHbNjSOZU2+GFQaYTJx4go=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([109.40.65.191]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MLiCo-1iq73z44oq-00HjTB; Fri, 28
+ Feb 2020 21:43:00 +0100
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-doc@vger.kernel.org
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org
+Subject: [PATCH] docs: kernel-docs: Remove "Here is its" at the end of lines
+Date:   Fri, 28 Feb 2020 21:41:45 +0100
+Message-Id: <20200228204147.8622-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87r1yeqxbp.fsf_-_@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:p8CgkGvumOFen7nK/zSvLjGFcepfCf3eS+ZZ6ffWYBqcwaNcntv
+ XLRmbidNszU29wrByfTLAeSevCMnjz2YoiUEunmy0xj08p5RCYkLVSu62uMBLK8twDtYo7L
+ 2EVEmhMHHrXbQIf8QeBcV3J9ETL3U2rw+ScFrhds2bbjMV5/Y/qPyr+ty2I1u0qA/F88EgH
+ due6CH5BYqa7RK+qkhd/A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:39oJChzYCHw=:VMDsjOZVGzIlMIyuuK2P8E
+ dpHH3g/gzLGKKgGy2K4Od7ZIjEY6bzHFH939MzBYZICQFOTFVg8YlbdAGu4LVkYq2B/IdB0be
+ zrLeg2bTbR1Imju0MiLRcrqPAhxE3wr5yPXHyZ7eJCNUxmls+NCfnnejFQnQHBqEheqeUb8h8
+ P/Zy4m/HdkH2ItN/tA3cHmJdiCSZjxlmczNcPUl5CG6XMdhgWZGNGpRCytRSgvH9qcyCvioNg
+ aMCGxWpv+uijnHeHz7E/eeyRL8VThTfGzWz9yC6wxWo0FQJ4RXanbmf6ipZje5ikPkEhazInh
+ 1wX0aESg2+XHPu9iq0yycgjPCJoHnxHh4ebzDAJI0kcaOhMwUoJVbGRjy+V4o+4037QpdNDAL
+ dWlvRd4PgJ8tGknnNR9rXK4OKYOV8wu3UjhG5M5NKFsSDPm7mjnd6sgGpg7xt90MQRR4cmnF/
+ TVi5jXOq04cKfJ20h7gJPW8/Um3CupbP0hWZDZSZ6IEIBAFY4L3SPAAaxmvo+bw0x6UOZwCNb
+ aXWsrAcZmhIkZmZ1HN4c2Kl3gsRzl2aKoP8bMhbo1woVZ7asgg7KCK72HiVE4ZifksC94ERrN
+ mrz+GXcIwnhQ8suaAnoRsHsHvtpidF8xTQ1oV9hy466C2IiGqbgBdVC3Eh/K4KI4VsWD2Fh0Y
+ uYDYPcbRD6GIj/z8FmHQpJYR+dk3HigXkgkwG7r7rGLAhrupYQA6jFtPgkXHYIoEE6y8OuGVk
+ fMtRpQJa8YJabrtkHifASSz/zJ641GDikbixGv/XPZQ2PJUMQWyLflUKmq8JfdldZeUyeqYTT
+ HYAocPp3nEIcWCLbP3iOmzd8hZQ3s3om8cTKPvg6NcheH/OM2f9PK8Tv5eUDbZUz6yLEYU43Z
+ j11fhHlMY4+CqBEeuO32J2PDxgBtoGbBkz1C4hHgVcNbzrlzNsLbPScE/csWLIgcy/dU5Gc9h
+ MHWICP7MJCKUCZ/Cg0bdQ4GqR9DkNQDrU1m4XbUL1gLiXUytQhVoh2iqRl5HRFgSR7brYiEk6
+ i6QVsFvqi+1hRua1F0eZTKWyCqT1UEe01nt15zCGibfiVPUEBFz2sdoH268N7LqvW0+DfgMlt
+ YdDJdmvkDMNLtKv+P+OVTgbQhgNncqf/v+KCR2rbE2vMx4Yh52spENM9FhVt9FnPpj7eS2ysw
+ x6PwFI2fIGmwHWkIy0Y/qQJ18A02F8XSh8aEXRaVCJcCLaKhfoMAsZtJlpK2ABoBj83Wubl3A
+ 8VQUeUppI3sI4Toiw
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 02:19:22PM -0600, Eric W. Biederman wrote:
-> 
-> There remains no more code in the kernel using pids_ns->proc_mnt,
-> therefore remove it from the kernel.
-> 
-> The big benefit of this change is that one of the most error prone and
-> tricky parts of the pid namespace implementation, maintaining kernel
-> mounts of proc is removed.
-> 
-> In addition removing the unnecessary complexity of the kernel mount
-> fixes a regression that caused the proc mount options to be ignored.
-> Now that the initial mount of proc comes from userspace, those mount
-> options are again honored.  This fixes Android's usage of the proc
-> hidepid option.
-> 
-> Reported-by: Alistair Strachan <astrachan@google.com>
-> Fixes: e94591d0d90c ("proc: Convert proc_mount to use mount_ns.")
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> ---
->  fs/proc/root.c                | 36 -----------------------------------
+Before commit 9e03ea7f683e ("Documentation/kernel-docs.txt: convert it
+to ReST markup"), it read:
 
-What about proc_flush_task()? Or is this on top of your other series?
+       Description: Linux Journal Kernel Korner article. Here is its
+       abstract: "..."
 
->  include/linux/pid_namespace.h |  2 --
->  include/linux/proc_ns.h       |  5 -----
->  kernel/pid.c                  |  8 --------
->  kernel/pid_namespace.c        |  7 -------
->  5 files changed, 58 deletions(-)
-> 
-> diff --git a/fs/proc/root.c b/fs/proc/root.c
-> index 608233dfd29c..2633f10446c3 100644
-> --- a/fs/proc/root.c
-> +++ b/fs/proc/root.c
-> @@ -292,39 +292,3 @@ struct proc_dir_entry proc_root = {
->  	.subdir		= RB_ROOT,
->  	.name		= "/proc",
->  };
-> -
-> -int pid_ns_prepare_proc(struct pid_namespace *ns)
-> -{
-> -	struct proc_fs_context *ctx;
-> -	struct fs_context *fc;
-> -	struct vfsmount *mnt;
-> -
-> -	fc = fs_context_for_mount(&proc_fs_type, SB_KERNMOUNT);
-> -	if (IS_ERR(fc))
-> -		return PTR_ERR(fc);
-> -
-> -	if (fc->user_ns != ns->user_ns) {
-> -		put_user_ns(fc->user_ns);
-> -		fc->user_ns = get_user_ns(ns->user_ns);
-> -	}
-> -
-> -	ctx = fc->fs_private;
-> -	if (ctx->pid_ns != ns) {
-> -		put_pid_ns(ctx->pid_ns);
-> -		get_pid_ns(ns);
-> -		ctx->pid_ns = ns;
-> -	}
-> -
-> -	mnt = fc_mount(fc);
-> -	put_fs_context(fc);
-> -	if (IS_ERR(mnt))
-> -		return PTR_ERR(mnt);
-> -
-> -	ns->proc_mnt = mnt;
-> -	return 0;
-> -}
-> -
-> -void pid_ns_release_proc(struct pid_namespace *ns)
-> -{
-> -	kern_unmount(ns->proc_mnt);
-> -}
-> diff --git a/include/linux/pid_namespace.h b/include/linux/pid_namespace.h
-> index 2ed6af88794b..4956e362e55e 100644
-> --- a/include/linux/pid_namespace.h
-> +++ b/include/linux/pid_namespace.h
-> @@ -33,7 +33,6 @@ struct pid_namespace {
->  	unsigned int level;
->  	struct pid_namespace *parent;
->  #ifdef CONFIG_PROC_FS
-> -	struct vfsmount *proc_mnt;
->  	struct dentry *proc_self;
->  	struct dentry *proc_thread_self;
->  #endif
-> @@ -42,7 +41,6 @@ struct pid_namespace {
->  #endif
->  	struct user_namespace *user_ns;
->  	struct ucounts *ucounts;
-> -	struct work_struct proc_work;
->  	kgid_t pid_gid;
->  	int hide_pid;
->  	int reboot;	/* group exit code if this pidns was rebooted */
-> diff --git a/include/linux/proc_ns.h b/include/linux/proc_ns.h
-> index 4626b1ac3b6c..e1106a077c1a 100644
-> --- a/include/linux/proc_ns.h
-> +++ b/include/linux/proc_ns.h
-> @@ -50,16 +50,11 @@ enum {
->  
->  #ifdef CONFIG_PROC_FS
->  
-> -extern int pid_ns_prepare_proc(struct pid_namespace *ns);
-> -extern void pid_ns_release_proc(struct pid_namespace *ns);
->  extern int proc_alloc_inum(unsigned int *pino);
->  extern void proc_free_inum(unsigned int inum);
->  
->  #else /* CONFIG_PROC_FS */
->  
-> -static inline int pid_ns_prepare_proc(struct pid_namespace *ns) { return 0; }
-> -static inline void pid_ns_release_proc(struct pid_namespace *ns) {}
-> -
->  static inline int proc_alloc_inum(unsigned int *inum)
->  {
->  	*inum = 1;
-> diff --git a/kernel/pid.c b/kernel/pid.c
-> index ca08d6a3aa77..60820e72634c 100644
-> --- a/kernel/pid.c
-> +++ b/kernel/pid.c
-> @@ -144,9 +144,6 @@ void free_pid(struct pid *pid)
->  			/* Handle a fork failure of the first process */
->  			WARN_ON(ns->child_reaper);
->  			ns->pid_allocated = 0;
-> -			/* fall through */
-> -		case 0:
-> -			schedule_work(&ns->proc_work);
->  			break;
->  		}
->  
-> @@ -247,11 +244,6 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
->  		tmp = tmp->parent;
->  	}
->  
-> -	if (unlikely(is_child_reaper(pid))) {
-> -		if (pid_ns_prepare_proc(ns))
-> -			goto out_free;
-> -	}
-> -
->  	get_pid_ns(ns);
->  	refcount_set(&pid->count, 1);
->  	for (type = 0; type < PIDTYPE_MAX; ++type)
-> diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
-> index d40017e79ebe..318fcc6ba301 100644
-> --- a/kernel/pid_namespace.c
-> +++ b/kernel/pid_namespace.c
-> @@ -57,12 +57,6 @@ static struct kmem_cache *create_pid_cachep(unsigned int level)
->  	return READ_ONCE(*pkc);
->  }
->  
-> -static void proc_cleanup_work(struct work_struct *work)
+In Sphinx' HTML formatting, however, the "Here is its" doesn't make
+sense anymore, because the "Abstract:" is clearly separated.
 
-There's a comment in kernel/pid_namespace.c that references
-proc_cleanup_work(). Can you please remove that as well?
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ Documentation/process/kernel-docs.rst | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-> -{
-> -	struct pid_namespace *ns = container_of(work, struct pid_namespace, proc_work);
-> -	pid_ns_release_proc(ns);
-> -}
-> -
->  static struct ucounts *inc_pid_namespaces(struct user_namespace *ns)
->  {
->  	return inc_ucount(ns, current_euid(), UCOUNT_PID_NAMESPACES);
-> @@ -114,7 +108,6 @@ static struct pid_namespace *create_pid_namespace(struct user_namespace *user_ns
->  	ns->user_ns = get_user_ns(user_ns);
->  	ns->ucounts = ucounts;
->  	ns->pid_allocated = PIDNS_ADDING;
-> -	INIT_WORK(&ns->proc_work, proc_cleanup_work);
->  
->  	return ns;
->  
-> -- 
-> 2.25.0
-> 
+diff --git a/Documentation/process/kernel-docs.rst b/Documentation/process=
+/kernel-docs.rst
+index 7a45a8e36ea7..9d6d0ac4fca9 100644
+=2D-- a/Documentation/process/kernel-docs.rst
++++ b/Documentation/process/kernel-docs.rst
+@@ -313,7 +313,7 @@ On-line docs
+       :URL: http://www.linuxjournal.com/article.php?sid=3D2391
+       :Date: 1997
+       :Keywords: RAID, MD driver.
+-      :Description: Linux Journal Kernel Korner article. Here is its
++      :Description: Linux Journal Kernel Korner article.
+       :Abstract: *A description of the implementation of the RAID-1,
+         RAID-4 and RAID-5 personalities of the MD device driver in the
+         Linux kernel, providing users with high performance and reliable,
+@@ -338,7 +338,7 @@ On-line docs
+       :Date: 1996
+       :Keywords: device driver, module, loading/unloading modules,
+         allocating resources.
+-      :Description: Linux Journal Kernel Korner article. Here is its
++      :Description: Linux Journal Kernel Korner article.
+       :Abstract: *This is the first of a series of four articles
+         co-authored by Alessandro Rubini and Georg Zezchwitz which presen=
+t
+         a practical approach to writing Linux device drivers as kernel
+@@ -354,7 +354,7 @@ On-line docs
+       :Keywords: character driver, init_module, clean_up module,
+         autodetection, mayor number, minor number, file operations,
+         open(), close().
+-      :Description: Linux Journal Kernel Korner article. Here is its
++      :Description: Linux Journal Kernel Korner article.
+       :Abstract: *This article, the second of four, introduces part of
+         the actual code to create custom module implementing a character
+         device driver. It describes the code for module initialization an=
+d
+@@ -367,7 +367,7 @@ On-line docs
+       :Date: 1996
+       :Keywords: read(), write(), select(), ioctl(), blocking/non
+         blocking mode, interrupt handler.
+-      :Description: Linux Journal Kernel Korner article. Here is its
++      :Description: Linux Journal Kernel Korner article.
+       :Abstract: *This article, the third of four on writing character
+         device drivers, introduces concepts of reading, writing, and usin=
+g
+         ioctl-calls*.
+@@ -378,7 +378,7 @@ On-line docs
+       :URL: http://www.linuxjournal.com/article.php?sid=3D1222
+       :Date: 1996
+       :Keywords: interrupts, irqs, DMA, bottom halves, task queues.
+-      :Description: Linux Journal Kernel Korner article. Here is its
++      :Description: Linux Journal Kernel Korner article.
+       :Abstract: *This is the fourth in a series of articles about
+         writing character device drivers as loadable kernel modules. This
+         month, we further investigate the field of interrupt handling.
+=2D-
+2.20.1
+
