@@ -2,162 +2,327 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D55FC3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A00A8C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03856222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:57:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZKbwFGtP"
+	by mail.kernel.org (Postfix) with ESMTP id 63232246A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:57:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582873049;
+	bh=+rH1XpINpBtrm88dqha9DYIzJHHfZ5HEryEX8ySQ3v8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=dqeoiklOFnMGWBoeAcmSOwKEs6Mnp4g5jLfxk6gaiEgMt9i3oM2s2ZE++qkKeqQrE
+	 AQNT+NwmheoW60fsls2ncIvSJlrQP6FEaAt0347R0YrKC3pzgVKSnSiXXHdwwcwzR1
+	 oy7R73vmAMu2xmo04dOlVTtehl0JdrHFw8T77aqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbgB1G5A (ORCPT
+        id S1726889AbgB1G52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 01:57:00 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:36551 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbgB1G47 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 01:56:59 -0500
-Received: by mail-qv1-f65.google.com with SMTP id ff2so894319qvb.3;
-        Thu, 27 Feb 2020 22:56:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y01M/2zdHCZcq/LUwDdnQfmblvhfbJOn2D+Py6njg7g=;
-        b=ZKbwFGtPtc2xfkSIQh1fpVq2oIEcHMYmuGCZgeHsYFzw6OrDBybr7dn68Ya6Haf12t
-         4vU4ZDPCwz/A8AuWJON2bqbmPVLFJP7BgcWM/moPEl4FAinQuPpI2DYx5geA/nHXcA/K
-         GCDXCScmwy7+mQHcGNMyA+STiUkaz0BwlCl9ctxf18xxXTukTMCg1p3eTCbkojg8fo5k
-         0u0DUmmXRhcOvC2VPcUHs5w//ck4/LHiObI0OVIM6hCI1rX3b0oZ2yD65ima+PxeIIro
-         tAlElbsYlY52UiaPrnpoIHCLHKFUAo6+jaGrKFymTy8slT8vP8vyeNYbNA2YVZRtN6c0
-         W2kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y01M/2zdHCZcq/LUwDdnQfmblvhfbJOn2D+Py6njg7g=;
-        b=GWqdwJKc2S62x96WBWgD0O+Oimz6n4CBRqrjGSEpM0vZB6WCDtJ53jHpa1noXKTYto
-         0dKqaci7G5MyDwGQf4lPWtV+3tU7GSHSVSGDkI5qff4cBBznJFb+yrO515SUiDjhvrrG
-         TLjAS/U01HikxZGo5ZGRMOu9Ju563NZASQh6ADiTifccHnJsEWz4ufGpHtjiPVaAu7B4
-         U4KpWCKSpPrX8r7gYngR2l2O4BRVFLGOLgULzTCom1MmLZRIedvuF9BWto6J7sk5vYzF
-         oLZhrkF8H4EjuR2FI+D7vphfEpYr6FrsEK3/yFdEHd8Cmnk7gYE/KdAHWPGjQVwX87Fk
-         YPYg==
-X-Gm-Message-State: APjAAAWgmuvpRcM3zV0/KDfzNOVae7WwLyAsWWUvpWDRC2O2lvSIzTON
-        l1tExIChztX6cqgMmzSHfffeBTP7yKo/MMISlek=
-X-Google-Smtp-Source: APXvYqzj5j0vPNWa4F9PJfSQ8lKIGPn+N9t3wsMNUwuluF4E14JSjeMvx2/NNDaPp5uF+vkPGCMI5QJ3InE97/22PGw=
-X-Received: by 2002:a05:6214:a46:: with SMTP id ee6mr2639365qvb.32.1582873018570;
- Thu, 27 Feb 2020 22:56:58 -0800 (PST)
+        Fri, 28 Feb 2020 01:57:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34638 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725870AbgB1G51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 01:57:27 -0500
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 959E5246B6
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 06:57:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582873046;
+        bh=+rH1XpINpBtrm88dqha9DYIzJHHfZ5HEryEX8ySQ3v8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=1IXlJ9iAroPkej8YtxatmI+am+jjVjZK896xJjmwx0XgK4O9354IrhfiFdeMnmL0c
+         yp5cRueU1MwnDlssmO/84v1WjeIWjW0ryn5kanidXZZFZnG4J0ltw1/dAHUYzylpe0
+         EcRcTppk9/rAED5Y/tn6ZGtrY8njx9ogaYLF6wtc=
+Received: by mail-wm1-f49.google.com with SMTP id a141so2014378wme.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 22:57:26 -0800 (PST)
+X-Gm-Message-State: APjAAAVjS1IX5Xn1l4ENG4Xbj//rsYqeDib9Lb/nHxbFrDpgm9IN5kl9
+        009Z7p8FuVd+R/eD9+NhmEMOpzfINY+XWkdpjPdMEw==
+X-Google-Smtp-Source: APXvYqxtrGbWvZZne3m36BaZC5k/CTyLwXh+VURvxHGT0Tcc9qYyqdtozf4p3oSB1pCY8XemvKU0wJ114Y5Za7eguo4=
+X-Received: by 2002:a1c:bc46:: with SMTP id m67mr3136039wmf.40.1582873044773;
+ Thu, 27 Feb 2020 22:57:24 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1582770784.git.shengjiu.wang@nxp.com> <ffd5ff2fd0e8ad03a97f6a640630cff767d73fa7.1582770784.git.shengjiu.wang@nxp.com>
- <20200227034121.GA20540@Asurada-Nvidia.nvidia.com> <CAA+D8AMzqpC35_CR2dCG6a_h4FzvZ6orXkPSYh_1o1d8hv+BMg@mail.gmail.com>
- <20200227174540.GA17040@Asurada-Nvidia.nvidia.com> <CAA+D8AM6t79cPoNmt-8HbGwTSM9bfXSW8g76HtkCF7eauL_Xmw@mail.gmail.com>
- <20200228063958.GA473@NICOLINC-LT.nvidia.com>
-In-Reply-To: <20200228063958.GA473@NICOLINC-LT.nvidia.com>
-From:   Shengjiu Wang <shengjiu.wang@gmail.com>
-Date:   Fri, 28 Feb 2020 14:56:47 +0800
-Message-ID: <CAA+D8AMAV=d8FDL4wmUaAx7h7ZBaTZyKJcwXqkA+oWDLLF6oYw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] ASoC: fsl_asrc: Change asrc_width to asrc_format
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200226011037.7179-1-atish.patra@wdc.com> <20200226011037.7179-6-atish.patra@wdc.com>
+ <CAKv+Gu_iAzQ6et13aACarqns8-xzQ+YSqj+m3mVGGy=ny8GJBg@mail.gmail.com>
+ <26172d39fdb5ecd951ade0a89566c010f6166a03.camel@wdc.com> <CAKv+Gu8i93gM0dMqzbhvNbqsgd9dHCMGzX7E47uusrUvv6xRJA@mail.gmail.com>
+ <46e9873e288134f638cd8726a2c15c9ca63860ce.camel@wdc.com>
+In-Reply-To: <46e9873e288134f638cd8726a2c15c9ca63860ce.camel@wdc.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Fri, 28 Feb 2020 07:57:14 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu_2dCj74VvCMRQ9yFgBtJRENasBbEV0bwcfqLQwuaj0=A@mail.gmail.com>
+Message-ID: <CAKv+Gu_2dCj74VvCMRQ9yFgBtJRENasBbEV0bwcfqLQwuaj0=A@mail.gmail.com>
+Subject: Re: [RFC PATCH 5/5] RISC-V: Add EFI stub support.
+To:     Atish Patra <Atish.Patra@wdc.com>
+Cc:     "alexios.zavras@intel.com" <alexios.zavras@intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "michal.simek@xilinx.com" <michal.simek@xilinx.com>,
+        "abner.chang@hpe.com" <abner.chang@hpe.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "daniel.schaefer@hpe.com" <daniel.schaefer@hpe.com>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "bp@suse.de" <bp@suse.de>,
+        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+        "greentime.hu@sifive.com" <greentime.hu@sifive.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "agraf@csgraf.de" <agraf@csgraf.de>,
+        "will@kernel.org" <will@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "han_mao@c-sky.com" <han_mao@c-sky.com>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "leif@nuviainc.com" <leif@nuviainc.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 2:40 PM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
+On Fri, 28 Feb 2020 at 02:05, Atish Patra <Atish.Patra@wdc.com> wrote:
 >
-> On Fri, Feb 28, 2020 at 10:54:02AM +0800, Shengjiu Wang wrote:
-> > Hi
-> >
-> > On Fri, Feb 28, 2020 at 1:45 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
-> > >
-> > > On Thu, Feb 27, 2020 at 01:10:19PM +0800, Shengjiu Wang wrote:
-> > > > On Thu, Feb 27, 2020 at 11:43 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
+> On Thu, 2020-02-27 at 20:59 +0100, Ard Biesheuvel wrote:
+> > On Thu, 27 Feb 2020 at 20:53, Atish Patra <Atish.Patra@wdc.com>
+> > wrote:
+> > > On Wed, 2020-02-26 at 08:28 +0100, Ard Biesheuvel wrote:
+> > > > On Wed, 26 Feb 2020 at 02:10, Atish Patra <atish.patra@wdc.com>
+> > > > wrote:
+> > > > > Add a RISC-V architecture specific stub code that actually
+> > > > > copies
+> > > > > the
+> > > > > actual kernel image to a valid address and jump to it after
+> > > > > boot
+> > > > > services
+> > > > > are terminated. Enable UEFI related kernel configs as well for
+> > > > > RISC-V.
 > > > > >
-> > > > > On Thu, Feb 27, 2020 at 10:41:55AM +0800, Shengjiu Wang wrote:
-> > > > > > asrc_format is more inteligent variable, which is align
-> > > > > > with the alsa definition snd_pcm_format_t.
-> > > > > >
-> > > > > > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> > > > > > ---
-> > > > > >  sound/soc/fsl/fsl_asrc.c     | 23 +++++++++++------------
-> > > > > >  sound/soc/fsl/fsl_asrc.h     |  4 ++--
-> > > > > >  sound/soc/fsl/fsl_asrc_dma.c |  2 +-
-> > > > > >  3 files changed, 14 insertions(+), 15 deletions(-)
-> > > > > >
-> > > > > > diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
-> > > > > > index 0dcebc24c312..2b6a1643573c 100644
-> > > > > > --- a/sound/soc/fsl/fsl_asrc.c
-> > > > > > +++ b/sound/soc/fsl/fsl_asrc.c
+> > > > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > > > > ---
+> > > > >  arch/riscv/Kconfig                        |  20 ++++
+> > > > >  arch/riscv/Makefile                       |   1 +
+> > > > >  arch/riscv/configs/defconfig              |   1 +
+> > > > >  drivers/firmware/efi/libstub/Makefile     |   8 ++
+> > > > >  drivers/firmware/efi/libstub/riscv-stub.c | 135
+> > > > > ++++++++++++++++++++++
+> > > > >  5 files changed, 165 insertions(+)
+> > > > >  create mode 100644 drivers/firmware/efi/libstub/riscv-stub.c
 > > > > >
-> > > > > > @@ -600,11 +599,6 @@ static int fsl_asrc_dai_hw_params(struct snd_pcm_substream *substream,
-> > > > > >
-> > > > > >       pair->config = &config;
-> > > > > >
-> > > > > > -     if (asrc_priv->asrc_width == 16)
-> > > > > > -             format = SNDRV_PCM_FORMAT_S16_LE;
-> > > > > > -     else
-> > > > > > -             format = SNDRV_PCM_FORMAT_S24_LE;
+> > > > > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> > > > > index 42c122170cfd..68b1d565e51d 100644
+> > > > > --- a/arch/riscv/Kconfig
+> > > > > +++ b/arch/riscv/Kconfig
+> > > > > @@ -372,10 +372,30 @@ config CMDLINE_FORCE
 > > > > >
-> > > > > It feels better to me that we have format settings in hw_params().
+> > > > >  endchoice
 > > > > >
-> > > > > Why not let fsl_easrc align with this? Any reason that I'm missing?
+> > > > > +config EFI_STUB
+> > > > > +       bool
+> > > > > +
+> > > > > +config EFI
+> > > > > +       bool "UEFI runtime support"
+> > > > > +       depends on OF
+> > > > > +       select LIBFDT
+> > > > > +       select UCS2_STRING
+> > > > > +       select EFI_PARAMS_FROM_FDT
+> > > > > +       select EFI_STUB
+> > > > > +       select EFI_GENERIC_ARCH_STUB
+> > > > > +       default y
+> > > > > +       help
+> > > > > +         This option provides support for runtime services
+> > > > > provided
+> > > > > +         by UEFI firmware (such as non-volatile variables,
+> > > > > realtime
+> > > > > +          clock, and platform reset). A UEFI stub is also
+> > > > > provided
+> > > > > to
+> > > > > +         allow the kernel to be booted as an EFI application.
+> > > > > This
+> > > > > +         is only useful on systems that have UEFI firmware.
+> > > > > +
+> > > > >  endmenu
+> > > > >
+> > > > >  menu "Power management options"
+> > > > >
+> > > > >  source "kernel/power/Kconfig"
+> > > > > +source "drivers/firmware/Kconfig"
+> > > > >
+> > > > >  endmenu
+> > > > > diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+> > > > > index b9009a2fbaf5..0afaa89ba9ad 100644
+> > > > > --- a/arch/riscv/Makefile
+> > > > > +++ b/arch/riscv/Makefile
+> > > > > @@ -78,6 +78,7 @@ head-y := arch/riscv/kernel/head.o
+> > > > >  core-y += arch/riscv/
+> > > > >
+> > > > >  libs-y += arch/riscv/lib/
+> > > > > +core-$(CONFIG_EFI_STUB) +=
+> > > > > $(objtree)/drivers/firmware/efi/libstub/lib.a
+> > > > >
+> > > > >  PHONY += vdso_install
+> > > > >  vdso_install:
+> > > > > diff --git a/arch/riscv/configs/defconfig
+> > > > > b/arch/riscv/configs/defconfig
+> > > > > index e2ff95cb3390..0a5d3578f51e 100644
+> > > > > --- a/arch/riscv/configs/defconfig
+> > > > > +++ b/arch/riscv/configs/defconfig
+> > > > > @@ -125,3 +125,4 @@ CONFIG_DEBUG_BLOCK_EXT_DEVT=y
+> > > > >  # CONFIG_FTRACE is not set
+> > > > >  # CONFIG_RUNTIME_TESTING_MENU is not set
+> > > > >  CONFIG_MEMTEST=y
+> > > > > +CONFIG_EFI=y
+> > > > > diff --git a/drivers/firmware/efi/libstub/Makefile
+> > > > > b/drivers/firmware/efi/libstub/Makefile
+> > > > > index 2c5b76787126..38facb61745b 100644
+> > > > > --- a/drivers/firmware/efi/libstub/Makefile
+> > > > > +++ b/drivers/firmware/efi/libstub/Makefile
+> > > > > @@ -21,6 +21,8 @@ cflags-$(CONFIG_ARM64)                :=
+> > > > > $(subst
+> > > > > $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
+> > > > >  cflags-$(CONFIG_ARM)           := $(subst
+> > > > > $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
+> > > > >                                    -fno-builtin -fpic \
+> > > > >                                    $(call cc-option,-mno-
+> > > > > single-
+> > > > > pic-base)
+> > > > > +cflags-$(CONFIG_RISCV)         := $(subst
+> > > > > $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
+> > > > > +                                  -fpic
+> > > > >
+> > > > >  cflags-$(CONFIG_EFI_GENERIC_ARCH_STUB) +=
+> > > > > -I$(srctree)/scripts/dtc/libfdt
+> > > > >
+> > > > > @@ -55,6 +57,7 @@ lib-
+> > > > > $(CONFIG_EFI_GENERIC_ARCH_STUB)           +=
+> > > > > efi-stub.o fdt.o string.o \
+> > > > >  lib-$(CONFIG_ARM)              += arm32-stub.o
+> > > > >  lib-$(CONFIG_ARM64)            += arm64-stub.o
+> > > > >  lib-$(CONFIG_X86)              += x86-stub.o
+> > > > > +lib-$(CONFIG_RISCV)            += riscv-stub.o
+> > > > >  CFLAGS_arm32-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
+> > > > >  CFLAGS_arm64-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
+> > > > >
+> > > > > @@ -79,6 +82,11 @@ STUBCOPY_FLAGS-$(CONFIG_ARM64)       += --
+> > > > > prefix-alloc-sections=.init \
+> > > > >                                    --prefix-symbols=__efistub_
+> > > > >  STUBCOPY_RELOC-$(CONFIG_ARM64) := R_AARCH64_ABS
+> > > > >
+> > > > > +STUBCOPY_FLAGS-$(CONFIG_RISCV) += --prefix-alloc-
+> > > > > sections=.init \
+> > > > > +                                  --prefix-symbols=__efistub_
+> > > > > +STUBCOPY_RELOC-$(CONFIG_RISCV) := R_RISCV_HI20
+> > > > > +
+> > > > > +
+> > > > >  $(obj)/%.stub.o: $(obj)/%.o FORCE
+> > > > >         $(call if_changed,stubcopy)
+> > > > >
+> > > > > diff --git a/drivers/firmware/efi/libstub/riscv-stub.c
+> > > > > b/drivers/firmware/efi/libstub/riscv-stub.c
+> > > > > new file mode 100644
+> > > > > index 000000000000..3935b29ea93a
+> > > > > --- /dev/null
+> > > > > +++ b/drivers/firmware/efi/libstub/riscv-stub.c
+> > > > > @@ -0,0 +1,135 @@
+> > > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > > +/*
+> > > > > + * Copyright (C) 2013, 2014 Linaro Ltd;  <roy.franz@linaro.org
+> > > > > >
+> > > > > + * Copyright (C) 2020 Western Digital Corporation or its
+> > > > > affiliates.
+> > > > > + *
+> > > > > + * This file implements the EFI boot stub for the RISC-V
+> > > > > kernel.
+> > > > > + * Adapted from ARM64 version at
+> > > > > drivers/firmware/efi/libstub/arm64-stub.c.
+> > > > > + */
+> > > > > +
+> > > > > +#include <linux/efi.h>
+> > > > > +#include <linux/libfdt.h>
+> > > > > +#include <linux/libfdt_env.h>
+> > > > > +#include <asm/efi.h>
+> > > > > +#include <asm/sections.h>
+> > > > > +
+> > > > > +#include "efistub.h"
+> > > > > +/*
+> > > > > + * RISCV requires the kernel image to placed TEXT_OFFSET bytes
+> > > > > beyond a 2 MB
+> > > > > + * aligned base for 64 bit and 4MB for 32 bit.
+> > > > > + */
+> > > > > +#if IS_ENABLED(CONFIG_64BIT)
 > > > >
-> > > > because the asrc_width is not formal,  in the future we can direct
+> > > > You can use #ifdef here
+> > > >
 > > >
-> > > Hmm..that's our DT binding. And I don't feel it is a problem
-> > > to be ASoC irrelative.
+> > > ok.
 > > >
-> > > > input the format from the dts. format involve the info about width.
+> > > > > +#define MIN_KIMG_ALIGN SZ_2M
+> > > > > +#else
+> > > > > +#define MIN_KIMG_ALIGN SZ_4M
+> > > > > +#endif
+> > > > > +/*
+> > > > > + * TEXT_OFFSET ensures that we don't overwrite the firmware
+> > > > > that
+> > > > > probably sits
+> > > > > + * at the beginning of the DRAM.
+> > > > > + */
+> > > >
+> > > > Ugh. Really? On an EFI system, that memory should be reserved in
+> > > > some
+> > > > way, we shouldn't be able to stomp on it like that.
+> > > >
 > > >
-> > > Is there such any formal ASoC binding? I don't see those PCM
-> > > formats under include/dt-bindings/ folder. How are we going
-> > > to involve those formats in DT?
+> > > Currently, we reserve the initial 128KB for run time firmware(only
+> > > openSBI for now, EDK2 later) by using PMP (physical memory
+> > > protection).
+> > > Any acess to that region from supervisor mode (i.e. U-Boot) will
+> > > result
+> > > in a fault.
+> > >
+> > > Is it mandatory for UEFI to reserve the beginning of the DRAM ?
+> > >
 > >
-> > There is no formal binding of this case.
+> > It is mandatory to describe which memory is usable and which memory
+> > is
+> > reserved. If this memory is not usable, you either describe it as
+> > reserved, or not describe it at all. Describing it as usable memory,
+> > allocating it for the kernel but with a hidden agreement that it is
+> > reserved is highly likely to cause problems down the road.
 > >
-> > I think it is not good to convert width to format, because, for example
 >
-> The thing is that fsl_easrc does the conversion too... It just
-> does in the probe instead of hw_params(), and then copies them
-> in the hw_params(). So I don't see obvious benefit by doing so.
+> I completely agree with you on this. We have been talking to have a
+> booting guide and memory map document for RISC-V Linux to document all
+> the idiosyncries of RISC-V. But that has not happend until now.
+> Once, the ordered booting patches are merged, I will try to take a stab
+> at it.
 >
-> > width = 24,  there is two option, we can select format S24_LE,  or
-> > format S24_3LE,  width is ambiguous for selecting.
-> >
-> > In EASRC, it support other two 24bit format U24_LE, U24_3LE .
+> Other than that, do we need to describe it somewhere in U-boot wrt to
+> UEFI so that it doesn't allocate memory from that region ?
 >
-> I understood the reason here, but am not seeing the necessity,
-> at this point.
->
-> > if we use the format in DT, then it is clear for usage in driver.
->
-> I think this is the thing that we should address first. If we
-> have such a binding being added with the new fsl_easrc driver,
-> I'd love to see the old driver aligning with the new one.
->
-> Otherwise, we can keep the old way, and change it when the new
-> binding is ready.
 
-ok,  I will change the binding this time in next version.
+It is an idiosyncrasy that the firmware should hide from the OS.
 
-best regards
-wang shengjiu
+What if GRUB comes along and attempts to allocate that memory? Do we
+also have to teach it that the first 128 KB memory of free memory are
+magic and should not be touched?
+
+So the answer is to mark it as reserved. This way, no UEFI tools,
+bootloaders etc will ever try to use it. Then, in the stub, you can
+tweak the existing code to cheat a bit, and make the TEXT_OFFSET
+window overlap the 128 KB reserved window at the bottom of memory.
+Doing that in the stub is fine - this is part of the kernel so it can
+know about crazy RISC-V rules.
