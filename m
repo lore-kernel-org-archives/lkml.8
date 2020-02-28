@@ -2,182 +2,109 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA67C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE660C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DDEE246AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:16:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A271E246A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:16:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BLsyzh4j"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PwfWjye5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgB1KQS (ORCPT
+        id S1726901AbgB1KQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 05:16:18 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48961 "EHLO
+        Fri, 28 Feb 2020 05:16:44 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28865 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726626AbgB1KQR (ORCPT
+        with ESMTP id S1726766AbgB1KQo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 05:16:17 -0500
+        Fri, 28 Feb 2020 05:16:44 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582884976;
+        s=mimecast20190719; t=1582885003;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=8Yuq0w99xWOCSYSMhOpYFNZZ7MnQhsxMdcr2Kk7+fsM=;
-        b=BLsyzh4jatwVCEGpU3+gB9yEONiUDTIKHJYwvB3ha69n/j3bIOVozYgvuxs4gjRnhR43zz
-        nbIlu5DxYD5wzBq/SiOiI5XiuT3pwbpdVyv5UumjgrbZotWv0bvtBnpkcgz9f4AFqW8rnL
-        NWuM1q+nqxAr73kt/K6AXK9sntXK7vA=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-182-Gmz7v2obM0uXOj3ZxVLm2A-1; Fri, 28 Feb 2020 05:16:14 -0500
-X-MC-Unique: Gmz7v2obM0uXOj3ZxVLm2A-1
-Received: by mail-wr1-f72.google.com with SMTP id f10so1142938wrv.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 02:16:14 -0800 (PST)
+        bh=eVoGLbtnYzXWlmc48w0t/0qrnxkTvQefS/f9aokidUA=;
+        b=PwfWjye5QTLBcABwlf9U/iP6ZBjcDQFk4ZuRCvNKvWDrbGRSzaTyW5PO+uRL2HSZU9Dck+
+        +K6CtzyPzko6yFcWA0Z4mOd42q5T8n5uMTDOGbvb2JlRID6xecqDY9x8AMTwqWix4eI3hW
+        VDocAQ6ls9uFd/MmppZTT6MgUQCLtPA=
+Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
+ [209.85.167.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-150-aROSRINmPOmvXvPhI84mxg-1; Fri, 28 Feb 2020 05:16:40 -0500
+X-MC-Unique: aROSRINmPOmvXvPhI84mxg-1
+Received: by mail-lf1-f69.google.com with SMTP id j204so347186lfj.3
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 02:16:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8Yuq0w99xWOCSYSMhOpYFNZZ7MnQhsxMdcr2Kk7+fsM=;
-        b=RoNGktcVcHinn3+Z2Chk9hTdwBSeIt7Oj3YZxCDH6LrdvjX4Q0Tj7Cm54sFjanrISa
-         ZZbKAvM3AuenZv3g88Pi8fhdEdOcAt42VOzUwTPEdlfMulWIaYYqi0bajMzTEYffx9M8
-         2nxqWQtM0YmnGL1lG/k1DxySZ5FFSzqs1aEHviHDN+mzeQ0THRUV+7qrv2ZSp9+P/v4O
-         2Z+tMmktB4aJr11Pb7lYgjH2C/1Cz/Ix4vKVLCOo8u2v8W/WcLLpioqkbfmFXdfUMt70
-         rv0EDCVtXFB4vcxkFw3/fs+Dw0FhGoDPDSsGZRwMKBAhIZ+CIrJjKWrBWr+4Wkl7r0Tf
-         ztKw==
-X-Gm-Message-State: APjAAAU2jLkys3DPp27MvAalnCgrVDPnudiEw9ssB6lsF/zn6LNACx2s
-        I0KzN3jMt6WUjerSh9g73cocaTIi4AMMQjPR9WMbywWUOFcL3oyVIL8bhAWm8a1Aav/ArSqt/dG
-        so9yJLlZTildHwVfCP4r0gxMQ
-X-Received: by 2002:a05:600c:2503:: with SMTP id d3mr4093675wma.84.1582884972241;
-        Fri, 28 Feb 2020 02:16:12 -0800 (PST)
-X-Google-Smtp-Source: APXvYqww48iU01L+2UIHDN8maT/6XhdwCadWPyvh9i05KWipKkTPXTpA9aSzjcGgKDcRq+I5vQkURw==
-X-Received: by 2002:a05:600c:2503:: with SMTP id d3mr4093643wma.84.1582884971917;
-        Fri, 28 Feb 2020 02:16:11 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:d0d9:ea10:9775:f33f? ([2001:b07:6468:f312:d0d9:ea10:9775:f33f])
-        by smtp.gmail.com with ESMTPSA id 133sm1683182wmd.5.2020.02.28.02.16.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Feb 2020 02:16:11 -0800 (PST)
-Subject: Re: [PATCH 1/3] KVM: VMX: Always VMCLEAR in-use VMCSes during crash
- with kexec support
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200227223047.13125-1-sean.j.christopherson@intel.com>
- <20200227223047.13125-2-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <9edc8cef-9aa4-11ca-f8f2-a1fea990b87e@redhat.com>
-Date:   Fri, 28 Feb 2020 11:16:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=eVoGLbtnYzXWlmc48w0t/0qrnxkTvQefS/f9aokidUA=;
+        b=J89qdou+TcF6Tx6dNhHg8SxCokkc1kXYaGgW7TwB8SpKt6qswRm+Sk7Pp1XETFy/0U
+         WnqYVG5WKLaTo+G7raaVZEX30vH6gq6mwTMEZHJdrQDpOpq3HgpcF3UKkD4grWQVHZF2
+         ZFIMwukp8R2XmBDNpxLCXP7sD3EhD/nSK4tKz5dnvVb8A5DQ2KN3AMW2Oq25k2p8cZ9l
+         OWb0/QcaB5hxf68ObDPvFDUdbtQWvfcpcRLy1Ddcb54cEuxZao2pdS6Ld+mLqXeci8Yo
+         e7y3W1CkR3sI5Do/NRJhFm+DuNkK9XqLTF3fDa1XuqA6NyEn+oVvQXq+T5ucypick4lD
+         2Jqw==
+X-Gm-Message-State: ANhLgQ3koK+jkrhqMSzo+kqCq6bvteyIAKEeNELyF9HabV3KdzdWI3p+
+        RhVjeuF/khYNBTFFRqbUcg8b7NcgV299fvzm3itr2UQpeFhXBy4dBztKmXtaI9FEnmu292wKOap
+        CKa3lpXnTwBJJS6sh6y2A86Mw
+X-Received: by 2002:a19:7d04:: with SMTP id y4mr2282666lfc.111.1582884998573;
+        Fri, 28 Feb 2020 02:16:38 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vvXO5F7cH4hg0ivZxLRqZGLTBjzmF9Evdui+BrIiVguCGiV5KpQodnEEMWnFVLVq1UTeuRPKQ==
+X-Received: by 2002:a19:7d04:: with SMTP id y4mr2282655lfc.111.1582884998373;
+        Fri, 28 Feb 2020 02:16:38 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
+        by smtp.gmail.com with ESMTPSA id 19sm4543665lfp.86.2020.02.28.02.16.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 02:16:37 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id AC741180362; Fri, 28 Feb 2020 11:16:36 +0100 (CET)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Luigi Rizzo <lrizzo@google.com>, netdev@vger.kernel.org,
+        davem@davemloft.net, hawk@kernel.org, sameehj@amazon.com
+Cc:     linux-kernel@vger.kernel.org, Luigi Rizzo <lrizzo@google.com>
+Subject: Re: [PATCH v3 net-next] netdev attribute to control xdpgeneric skb linearization
+In-Reply-To: <20200227173428.5298-1-lrizzo@google.com>
+References: <20200227173428.5298-1-lrizzo@google.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Fri, 28 Feb 2020 11:16:36 +0100
+Message-ID: <87h7zbuid7.fsf@toke.dk>
 MIME-Version: 1.0
-In-Reply-To: <20200227223047.13125-2-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/02/20 23:30, Sean Christopherson wrote:
-> -void loaded_vmcs_init(struct loaded_vmcs *loaded_vmcs)
-> +void loaded_vmcs_init(struct loaded_vmcs *loaded_vmcs, bool in_use)
->  {
->  	vmcs_clear(loaded_vmcs->vmcs);
->  	if (loaded_vmcs->shadow_vmcs && loaded_vmcs->launched)
->  		vmcs_clear(loaded_vmcs->shadow_vmcs);
+Luigi Rizzo <lrizzo@google.com> writes:
+
+> Add a netdevice flag to control skb linearization in generic xdp mode.
+>
+> The attribute can be modified through
+> 	/sys/class/net/<DEVICE>/xdp_linearize
+> The default is 1 (on)
+
+Calling it just 'xdp_linearize' implies (to me) that it also affects
+driver-mode XDP. So maybe generic_xdp_linearize ?
+
+[...]
+
 > +
-> +	if (in_use) {
-> +		list_del(&loaded_vmcs->loaded_vmcss_on_cpu_link);
-> +
-> +		/*
-> +		 * Ensure deleting loaded_vmcs from its current percpu list
-> +		 * completes before setting loaded_vmcs->vcpu to -1, otherwise
-> +		 * a different cpu can see vcpu == -1 first and add loaded_vmcs
-> +		 * to its percpu list before it's deleted from this cpu's list.
-> +		 * Pairs with the smp_rmb() in vmx_vcpu_load_vmcs().
-> +		 */
-> +		smp_wmb();
-> +	}
-> +
+> +What:		/sys/class/net/<iface>/xdp_linearize
+> +Date:		Jan 2020
+> +KernelVersion:	5.6
+> +Contact:	netdev@vger.kernel.org
+> +Description:
+> +		boolean controlling whether skb should be linearized in
+> +		generic xdp. Defaults to true.
 
-I'd like to avoid the new in_use argument and, also, I think it's a 
-little bit nicer to always invoke the memory barrier.  Even though we 
-use "asm volatile" for vmclear and therefore the compiler is already 
-taken care of, in principle it's more correct to order the ->cpu write 
-against vmclear's.
+Could you also add a few words explaining what the tradeoff here is?
+Something like: "turning this off can increase the performance of
+generic XDP at the cost of making the content of making the XDP program
+unable to access packet fragments after the first one"
 
-This gives the following patch on top:
-
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index c9d6152e7a4d..77a64110577b 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -656,25 +656,24 @@ static int vmx_set_guest_msr(struct vcpu_vmx *vmx, struct shared_msr_entry *msr,
- 	return ret;
- }
- 
--void loaded_vmcs_init(struct loaded_vmcs *loaded_vmcs, bool in_use)
-+void loaded_vmcs_init(struct loaded_vmcs *loaded_vmcs)
- {
- 	vmcs_clear(loaded_vmcs->vmcs);
- 	if (loaded_vmcs->shadow_vmcs && loaded_vmcs->launched)
- 		vmcs_clear(loaded_vmcs->shadow_vmcs);
- 
--	if (in_use) {
-+	if (!list_empty(&loaded_vmcs->loaded_vmcss_on_cpu_link))
- 		list_del(&loaded_vmcs->loaded_vmcss_on_cpu_link);
- 
--		/*
--		 * Ensure deleting loaded_vmcs from its current percpu list
--		 * completes before setting loaded_vmcs->vcpu to -1, otherwise
--		 * a different cpu can see vcpu == -1 first and add loaded_vmcs
--		 * to its percpu list before it's deleted from this cpu's list.
--		 * Pairs with the smp_rmb() in vmx_vcpu_load_vmcs().
--		 */
--		smp_wmb();
--	}
--
-+	/*
-+	 * Ensure all writes to loaded_vmcs, including deleting it
-+	 * from its current percpu list, complete before setting
-+	 * loaded_vmcs->vcpu to -1; otherwise,, a different cpu can
-+	 * see vcpu == -1 first and add loaded_vmcs to its percpu
-+	 * list before it's deleted from this cpu's list.  Pairs
-+	 * with the smp_rmb() in vmx_vcpu_load_vmcs().
-+	 */
-+	smp_wmb();
- 	loaded_vmcs->cpu = -1;
- 	loaded_vmcs->launched = 0;
- }
-@@ -701,7 +700,7 @@ static void __loaded_vmcs_clear(void *arg)
- 	if (per_cpu(current_vmcs, cpu) == loaded_vmcs->vmcs)
- 		per_cpu(current_vmcs, cpu) = NULL;
- 
--	loaded_vmcs_init(loaded_vmcs, true);
-+	loaded_vmcs_init(loaded_vmcs);
- }
- 
- void loaded_vmcs_clear(struct loaded_vmcs *loaded_vmcs)
-@@ -2568,7 +2567,8 @@ int alloc_loaded_vmcs(struct loaded_vmcs *loaded_vmcs)
- 
- 	loaded_vmcs->shadow_vmcs = NULL;
- 	loaded_vmcs->hv_timer_soft_disabled = false;
--	loaded_vmcs_init(loaded_vmcs, false);
-+	INIT_LIST_HEAD(&loaded_vmcs->loaded_vmcss_on_cpu_link);
-+	loaded_vmcs_init(loaded_vmcs);
- 
- 	if (cpu_has_vmx_msr_bitmap()) {
- 		loaded_vmcs->msr_bitmap = (unsigned long *)
-
-Paolo
+-Toke
 
