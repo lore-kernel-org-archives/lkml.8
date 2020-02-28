@@ -2,189 +2,161 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F17C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4750C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F7A2468E
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E4C02469C
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:24:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="mpfnNyH8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbgB1QYF (ORCPT
+        id S1726733AbgB1QYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:24:05 -0500
-Received: from mga17.intel.com ([192.55.52.151]:12638 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgB1QYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:24:04 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 08:24:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,496,1574150400"; 
-   d="scan'208";a="350947379"
-Received: from kuha.fi.intel.com ([10.237.72.53])
-  by fmsmga001.fm.intel.com with SMTP; 28 Feb 2020 08:24:01 -0800
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 28 Feb 2020 18:24:00 +0200
-Date:   Fri, 28 Feb 2020 18:24:00 +0200
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Prashant Malani <pmalani@chromium.org>,
-        linux-kernel@vger.kernel.org, enric.balletbo@collabora.com,
-        bleung@chromium.org, devicetree@vger.kernel.org,
-        Guenter Roeck <groeck@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: Add cros-ec Type C port driver
-Message-ID: <20200228162400.GA27904@kuha.fi.intel.com>
-References: <20200220003102.204480-1-pmalani@chromium.org>
- <20200220003102.204480-2-pmalani@chromium.org>
- <158279287307.177367.4599344664477592900@swboyd.mtv.corp.google.com>
- <20200227163825.GB18240@kuha.fi.intel.com>
- <158284127336.4688.623067902277673206@swboyd.mtv.corp.google.com>
+        Fri, 28 Feb 2020 11:24:35 -0500
+Received: from mail-dm6nam11on2084.outbound.protection.outlook.com ([40.107.223.84]:6183
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725730AbgB1QYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 11:24:34 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=C7QvNGdiEZVnWswDR1crr8Dx92AIBRaf1HJLjAVptm2alFI3caeFUmT2sOCBAoo3YR3Xa1WXiNp4spoj28PAqSXELzovsMKoclQWwA83XlI2GPtcAPInAPPx92jvhsQusif3e8rMILIqRAoTF643WrVTCF0LTXErA+CqTfwecdM5C0//ySwzDAmirxgK6zOJBzrIq3Q8IVW7bAmWL1ucuTm+6QyyLGJ00sxfjrYWCqirzXG0tumCjcwFOkfSJhNwUybQZm3sM5jzNFKJ0Us0cAbZWI9I6tcJMkY8EYZLePrDI6IFDAAWJ7TDxrN3/8cG55t3DYlfNAtDub2B+40Xgg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=teqrggq7Dg9SZDKnxbigLMQL23p2YqrY+PNN2zQpAhU=;
+ b=msNW04gFui0JoOJSFCSEIv693I+btxe+00DmmRnC44go6fSYZSgNca1bY2y5RbjmCeQ2fsw53FYpOKYOHPfxe0gxm3CEAhNH2KMYRg665bPSELhg7mFqcWmPPE9uXgYO4ndVNRadsySGjzjtXKbVyufJdyVqIeyqk2nHUXfJSyM8IwA5Ow5LSrStSU87gxmqDV/5duFPfkJlR7CeBEtEwg/s4TXn1hhWbTLXP2GQJDfr8UxP5fDopKH/ZrQuIq2cgB4+MOF5nEAcdXzSLSYDB6vEEuFaWKMKV0dqdm/1ISX2AISekxLlmeXUMHEuMzJONU82qPoLTIIjOY/4PWg5xw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=teqrggq7Dg9SZDKnxbigLMQL23p2YqrY+PNN2zQpAhU=;
+ b=mpfnNyH8gtKVg0pMXMh54Ieb0GdvPhcSFmVuhIUVI0M/GzfGPsVY94HYN0MIdxF+Z6STdTfLeSiTpuz7jhbgbKAlfSMlqD50ic7gw2JBAijrxcCiBpF0+4Wti6zlwieNC/YDkqadTs/G/mhbBnknhqn7uI07pBgIZoiN9I80Xig=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=kim.phillips@amd.com; 
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com (2603:10b6:805:75::33)
+ by SN6PR12MB2655.namprd12.prod.outlook.com (2603:10b6:805:72::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.16; Fri, 28 Feb
+ 2020 16:24:32 +0000
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::dd6f:a575:af8e:4f1b]) by SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::dd6f:a575:af8e:4f1b%7]) with mapi id 15.20.2772.018; Fri, 28 Feb 2020
+ 16:24:32 +0000
+Subject: Re: [PATCH v2 2/3] perf vendor events amd: add Zen2 events
+To:     Vijay Thakkar <vijaythakkar@me.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>,
+        Jon Grimm <jon.grimm@amd.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+References: <20200225192815.50388-1-vijaythakkar@me.com>
+ <20200225192815.50388-3-vijaythakkar@me.com>
+ <6f2a1097-a656-8226-1be3-36a337539412@amd.com>
+ <20200228160045.GA23708@shwetrath.localdomain>
+From:   Kim Phillips <kim.phillips@amd.com>
+Message-ID: <f7dba82f-beac-2669-c7e7-5a85edc2798d@amd.com>
+Date:   Fri, 28 Feb 2020 10:24:29 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+In-Reply-To: <20200228160045.GA23708@shwetrath.localdomain>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DM6PR02CA0076.namprd02.prod.outlook.com
+ (2603:10b6:5:1f4::17) To SN6PR12MB2845.namprd12.prod.outlook.com
+ (2603:10b6:805:75::33)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <158284127336.4688.623067902277673206@swboyd.mtv.corp.google.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.236.136.247] (165.204.77.1) by DM6PR02CA0076.namprd02.prod.outlook.com (2603:10b6:5:1f4::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.16 via Frontend Transport; Fri, 28 Feb 2020 16:24:31 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: adf5be8a-de93-4eda-f083-08d7bc6ab10c
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2655:|SN6PR12MB2655:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR12MB2655D2992B49ADE6F77B0EA887E80@SN6PR12MB2655.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 0327618309
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(366004)(39860400002)(136003)(346002)(189003)(199004)(478600001)(8676002)(53546011)(6486002)(2616005)(956004)(7416002)(186003)(31686004)(16526019)(81166006)(8936002)(81156014)(6916009)(26005)(16576012)(2906002)(66556008)(66476007)(66946007)(5660300002)(86362001)(31696002)(52116002)(54906003)(316002)(36756003)(4326008)(44832011);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2655;H:SN6PR12MB2845.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ywUyta0bGCusxz1op/YW05QvtmnjpX9pdH3Cuo4wEpLk7VYN/ssmEYQLh0DAwqkg/Jtd3FFLrgtYnrWE34zXLdrkOG/qilke7/bO+DNyEmMwvbOXtRInTysQRMAQ8WnNGDzgxCdwhOwBBugSbJ9hNYFBsoaYPself7eeLoazJu9XrG7ucMFEbLJtO1Z+L0Wu8fp8tKJRHrcBXSGNBpE5sBiRjJrFDvQtP5e9oWyYr7qHviPNgw3DB//i9vvKIzdCvjeKxpIPSKZonTCvjY2AKN6N02eJ6RY/jMOUdaiZBFMDfnj7qYs2Vihutdw04meiE/NTnw7lj//Nc7LTCvKC4dScNblsnql8XM3h0OKTGKOg+EKjKulNtyw7+sDocKLOiouK8lNBAxpO0+sAdgngjHgReNkpbEfVCyJyuU7U+hEWlqwChkN0MPxmLKb2HM9b
+X-MS-Exchange-AntiSpam-MessageData: SYO6ng+ZffeXAMCnIb7XzqNvvArbFw9vzQeCdP0bxtM0lKgvbavzRylR2T+8CCvTuo0+Gxc65/j6pxEss0qFl80maxLBj1pCHv9/tFU4YcdxEZZb2AAHCa7FHPpMRw0AJMru+1TIVBPEznyCxLg3HQ==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: adf5be8a-de93-4eda-f083-08d7bc6ab10c
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2020 16:24:32.1251
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KWO+8KJw5Z7kMqpbAzbyFkNvWC4+bmWnGZhswT3/MmY+4qEyFIZm+YSvQ4K3f14pdMsJAnqd4rsB5p+Ov+mlfg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2655
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+On 2/28/20 10:00 AM, Vijay Thakkar wrote:
+>>> +  {
+>>> +    "EventName": "ls_pref_instr_disp.prefetch_nta",
+>>> +    "EventCode": "0x4b",
+>>> +    "BriefDescription": "Software Prefetch Instructions (PREFETCHNTA instruction) Dispatched.",
+>>> +    "PublicDescription": "Software Prefetch Instructions (PREFETCHNTA instruction) Dispatched.",
+>>> +    "UMask": "0x4"
+>>> +  },
+>>> +  {
+>>> +    "EventName": "ls_pref_instr_disp.store_prefetch_w",
+>>> +    "EventCode": "0x4b",
+>>> +    "BriefDescription": "Software Prefetch Instructions (3DNow PREFETCHW instruction) Dispatched.",
+>>> +    "PublicDescription": "Software Prefetch Instructions (3DNow PREFETCHW instruction) Dispatched.",
+>>> +    "UMask": "0x2"
+>>> +  },
+>>> +  {
+>>> +    "EventName": "ls_pref_instr_disp.load_prefetch_w",
+>>> +    "EventCode": "0x4b",
+>>> +    "BriefDescription": "Prefetch, Prefetch_T0_T1_T2.",
+>>> +    "PublicDescription": "Software Prefetch Instructions Dispatched. Prefetch, Prefetch_T0_T1_T2.",
+>>> +    "UMask": "0x1"
+>>> +  },
+> These three are present in the PPR for model 71h (56176 Rev 3.06 - Jul
+> 17, 2019) but are missing from the PPR for model 31h (55803 Rev 0.54 -
+> Sep 12, 2019). Not sure what to do about it. 
 
-On Thu, Feb 27, 2020 at 02:07:53PM -0800, Stephen Boyd wrote:
-> Quoting Heikki Krogerus (2020-02-27 08:38:25)
-> > Hi Stephen,
-> > 
-> > On Thu, Feb 27, 2020 at 12:41:13AM -0800, Stephen Boyd wrote:
-> > > > +examples:
-> > > > +  - |+
-> > > > +    cros_ec: ec@0 {
-> > > > +      compatible = "google,cros-ec-spi";
-> > > > +
-> > > > +      typec {
-> > > > +        compatible = "google,cros-ec-typec";
-> > > > +
-> > > > +        usb_con: connector {
-> > > > +          compatible = "usb-c-connector";
-> > > > +          port-number = <0>;
-> > > > +          power-role = "dual";
-> > > > +          data-role = "dual";
-> > > > +          try-power-role = "source";
-> > > > +        };
-> > > 
-> > > I thought that perhaps this would be done with the OF graph APIs instead
-> > > of being a child of the ec node. I don't see how the usb connector is
-> > > anything besides a child of the top-level root node because it's
-> > > typically on the board. We put board level components at the root.
-> > 
-> > No.
-> > 
-> > The above follows the usb-connector bindings, so it is correct:
-> > Documentation/devicetree/bindings/connector/usb-connector.txt
-> > 
-> > So the connector is always a child of the "CC controller" with the USB
-> > Type-C connectors, which in this case is the EC (from operating systems
-> > perspective). The "CC controller" controls connectors, and it doesn't
-> > actually do anything else. So placing the connectors under the
-> > "connector controller" is also logically correct.
-> 
-> Ah ok I see. The graph binding is for describing the data path, not the
-> control path. Makes sense. 
-> 
-> > 
-> > > Yes, the connector is intimately involved with the EC here, but I would
-> > > think that we would have an OF graph connection from the USB controller
-> > > on the SoC to the USB connector, traversing through anything that may be
-> > > in that path, such as a USB hub. Maybe the connector node itself can
-> > > point to the EC type-c controller with some property like
-> > 
-> > I think your idea here is that there should be only a single node for
-> > each connector that is then linked with every component that it is
-> > physically connected to (right?), but please note that that is not
-> > enough. Every component attached to the connector must have its own
-> > child node that represents the "port" that is physically connected to
-> > the USB Type-C connector.
-> > 
-> > So for example, the USB controller nodes have child nodes for every
-> > USB2 port as well as for every USB3 port. Similarly, the GPU
-> > controllers have child node for every DisplayPort, etc. And I believe
-> > that is already how it has been done in DT (and also in ACPI).
-> 
-> It looks like perhaps you're conflating ports in USB spec with the OF
-> graph port? I want there to be one node per type-c connector that I can
-> physically see on the device. Is that not sufficient?
+They're producing nonzero counts on my model 31h, so leave them in?
 
-It is. We don't need more than one node that represents the physical
-connector (and we should not have more than one node for that). And
-actually, I was not mixing the OF graph ports and USB ports... I
-think I should be talking about PHY instead of "port". That is
-probable more clear.
+> Similarly, PMC 0x0AF - Dispatch Resource Stall Cycles 0 only has one
+> subcounter in the model 31h PPR, whereas the PPR for 71h is the one that
+> contains the eight subcounters we see in the mainline right now.
 
-My point is that every PHY that is connected to a Type-C connector
-must still be represented with its own node in devicetree and ACPI. So
-there still needs to be a node for the USB2 PHY, USB3 PHY, DisplayPort
-PHY, etc., on top of the connector node. I got the picture that you
-are proposing that we don't need those PHY nodes anymore since we have
-the connector nodes, but maybe I misunderstood?
+I'm getting nonzero values on my model 31h for that event's
+various unit masks, too.
 
-> Are there any examples of the type-c connector in DT? I see some
-> NXP/Freescale boards and one Renesas board so far. Maybe there are other
-> discussions I can read up on?
-> 
-> > 
-> > Those "port" nodes then just need to be linked with the "connector"
-> > node. I think for that the idea was to use OF graph, but I'm really
-> > sceptical about that. The problem is that with the USB Type-C
-> > connectors we have to be able to identify the connections, i.e. which
-> > endpoint is the USB2 port, which is the DisplayPort and so on, and OF
-> > graph does not give any means to do that on its own. We will have to
-> > rely on separate device properties in order to do the identification.
-> > Currently it is not documented anywhere which property should be used
-> > for that.
-> 
-> I hope that this patch series can document this.
+> There could be more subtle differences like these, since I have not
+> really compared the PPR versions that thoroughly. I was going with the
+> assumption that since both are for SoCs based on the Zen2, they would
+> have identical events. 
 
-Well, we do need that to be documented, but do we really need to block
-this series because of that? This driver does not depend on OF graph
-yet.
+I think that's a reasonable assumption.
 
-> Why can't that work by having multiple OF graph ports for USB2 port,
-> DisplayPort, USB3 port, etc? The data path goes to the connector and
-> we can attach more information to each port node to describe what
-> type of endpoint is there like a DisplayPort capable type-c
-> connector for example.
+> Otherwise, I have made all the other changes and corrections, and will
+> send in v3 after you suggest how to proceed about the above two.
 
-The PHY nodes we must still always have. So the OF graph will always
-describe the connection between the PHY and the connector, and the
-connection between the PHY and the controller must be described
-separately.
+Thanks, I'd veer toward making them available despite differences in PPR
+versions.
 
-> > For ACPI we are going to propose that with every type of connection,
-> > there should be a device property that returns a reference to the
-> > appropriate port. That way there are no problems identifying the
-> > connections. All we need to do is to define the property names for
-> > every type of connection. "usb2-port" for the USB2 or high speed port,
-> > "usb3-port" for USB3, etc.
-> > 
-> 
-> That sounds like something we should figure out now for DT firmwares
-> too. For this particular binding, I don't know if we need to do anything
-> besides figure out how to represent multiple connectors underneath the
-> EC node. The other properties seem fairly generic and so I'd expect this
-> series to migrate
-> Documentation/devicetree/bindings/connector/usb-connector.txt to YAML
-> and refine the binding with anything necessary, like a 'reg' property to
-> allow multiple ports to exist underneath the "CC controller".
+Thanks,
 
-OK.
-
-thanks,
-
--- 
-heikki
+Kim
