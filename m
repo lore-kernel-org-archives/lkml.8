@@ -2,97 +2,108 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E76C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AD7C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AA9F246A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9236F246A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:50:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b4Lweuy0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgB1TqR (ORCPT
+        id S1726674AbgB1TuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 14:46:17 -0500
-Received: from lists.gateworks.com ([108.161.130.12]:55899 "EHLO
-        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgB1TqR (ORCPT
+        Fri, 28 Feb 2020 14:50:12 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:42800 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbgB1TuL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 14:46:17 -0500
-Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
-        by lists.gateworks.com with esmtp (Exim 4.82)
-        (envelope-from <tharvey@gateworks.com>)
-        id 1j7lbO-0005Rf-VP; Fri, 28 Feb 2020 19:47:15 +0000
-From:   Tim Harvey <tharvey@gateworks.com>
-To:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Tim Harvey <tharvey@gateworks.com>
-Subject: [PATCH] ARM: dts: imx6qdl-gw5910: add CC1352 UART
-Date:   Fri, 28 Feb 2020 11:46:07 -0800
-Message-Id: <1582919167-28690-1-git-send-email-tharvey@gateworks.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 28 Feb 2020 14:50:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=MQLRxFDsNnQ4JQhc5wBShCTpfmOkOqYbr8PMSU0Vj4g=; b=b4Lweuy0vRcXWdNTbWnD02tCTf
+        I9OlWlryhbG2M02AnrL6siDc0jBH3kKXRxdQr/L9CUkPRbEBV1oXJgAoN+ZSObYdo/iNW3wfS4lLK
+        /b3nSEJd2QVgnSYQGJjUX3M0bTQ8BwWfSIRUXbtlaU2osUf6TMgiasQCsjHeXBle3s3DiUBX7CkWK
+        fDWuiae4AQeSgTrSREUTktvJShl9KY5/HXLuCHHt5nORPMt9wekM2lwF3034dPhlj6+64OnBJbkve
+        2evW/bhx8XwlHmm+S3xQPCQEFxwsKCcB0nwI2HD6cg/b5DNn7Eg5fOwRmafWoo+jTyl0urRwJH13g
+        G/x8MGUg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j7le4-00014p-Do; Fri, 28 Feb 2020 19:50:00 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BD50B30067C;
+        Fri, 28 Feb 2020 20:48:01 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 471BC2B73FC15; Fri, 28 Feb 2020 20:49:58 +0100 (CET)
+Date:   Fri, 28 Feb 2020 20:49:58 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        kernel@collabora.com, krisman@collabora.com, shuah@kernel.org,
+        linux-kselftest@vger.kernel.org, rostedt@goodmis.org,
+        ryao@gentoo.org, dvhart@infradead.org, mingo@redhat.com,
+        z.figura12@gmail.com, steven@valvesoftware.com,
+        pgriffais@valvesoftware.com, steven@liquorix.net,
+        malteskarupke@web.de
+Subject: Re: [PATCH v3 1/4] futex: Implement mechanism to wait on any of
+ several futexes
+Message-ID: <20200228194958.GO14946@hirez.programming.kicks-ass.net>
+References: <20200213214525.183689-1-andrealmeid@collabora.com>
+ <20200213214525.183689-2-andrealmeid@collabora.com>
+ <20200228190717.GM18400@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200228190717.GM18400@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The GW5910-C revision adds a TI CC1352 connected to IMX UART4
+On Fri, Feb 28, 2020 at 08:07:17PM +0100, Peter Zijlstra wrote:
+> On Thu, Feb 13, 2020 at 06:45:22PM -0300, André Almeida wrote:
+> > @@ -150,4 +153,21 @@ struct robust_list_head {
+> >    (((op & 0xf) << 28) | ((cmp & 0xf) << 24)		\
+> >     | ((oparg & 0xfff) << 12) | (cmparg & 0xfff))
+> >  
+> > +/*
+> > + * Maximum number of multiple futexes to wait for
+> > + */
+> > +#define FUTEX_MULTIPLE_MAX_COUNT	128
+> > +
+> > +/**
+> > + * struct futex_wait_block - Block of futexes to be waited for
+> > + * @uaddr:	User address of the futex
+> > + * @val:	Futex value expected by userspace
+> > + * @bitset:	Bitset for the optional bitmasked wakeup
+> > + */
+> > +struct futex_wait_block {
+> > +	__u32 __user *uaddr;
+> > +	__u32 val;
+> > +	__u32 bitset;
+> > +};
+> 
+> So I have a problem with this vector layout, it doesn't allow for
+> per-futex flags, and esp. with that multi-size futex support that
+> becomes important, but also with the already extand private/shared and
+> wait_bitset flags this means you cannot have a vector with mixed wait
+> types.
 
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
----
- arch/arm/boot/dts/imx6qdl-gw5910.dtsi | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+Alternatively, we throw the entire single-syscall futex interface under
+the bus and design a bunch of new syscalls that are natively vectored or
+something.
 
-diff --git a/arch/arm/boot/dts/imx6qdl-gw5910.dtsi b/arch/arm/boot/dts/imx6qdl-gw5910.dtsi
-index be1af74..30fe47f 100644
---- a/arch/arm/boot/dts/imx6qdl-gw5910.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-gw5910.dtsi
-@@ -220,6 +220,14 @@
- 	status = "okay";
- };
- 
-+/* cc1352 */
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart3>;
-+	uart-has-rtscts;
-+	status = "okay";
-+};
-+
- /* Sterling-LWB Bluetooth */
- &uart4 {
- 	pinctrl-names = "default";
-@@ -411,6 +419,23 @@
- 		>;
- 	};
- 
-+	pinctrl_uart3: uart3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_D24__UART3_TX_DATA	0x1b0b1
-+			MX6QDL_PAD_EIM_D25__UART3_RX_DATA	0x1b0b1
-+			MX6QDL_PAD_EIM_D23__UART3_RTS_B		0x1b0b1
-+			MX6QDL_PAD_EIM_D31__UART3_CTS_B		0x1b0b1
-+			MX6QDL_PAD_EIM_A25__GPIO5_IO02		0x4001b0b1 /* DIO20 */
-+			MX6QDL_PAD_DISP0_DAT11__GPIO5_IO05	0x4001b0b1 /* DIO14 */
-+			MX6QDL_PAD_DISP0_DAT12__GPIO5_IO06	0x4001b0b1 /* DIO15 */
-+			MX6QDL_PAD_DISP0_DAT14__GPIO5_IO08	0x1b0b1 /* TMS */
-+			MX6QDL_PAD_DISP0_DAT15__GPIO5_IO09	0x1b0b1 /* TCK */
-+			MX6QDL_PAD_DISP0_DAT16__GPIO5_IO10	0x1b0b1 /* TDO */
-+			MX6QDL_PAD_DISP0_DAT17__GPIO5_IO11	0x1b0b1 /* TDI */
-+			MX6QDL_PAD_DISP0_DAT23__GPIO5_IO17	0x4001b0b1 /* RST# */
-+		>;
-+	};
-+
- 	pinctrl_uart4: uart4grp {
- 		fsl,pins = <
- 			MX6QDL_PAD_CSI0_DAT12__UART4_TX_DATA	0x1b0b1
--- 
-2.7.4
+Thomas mentioned something like that, the problem is, ofcourse, that we
+then want to fix a whole bunch of historical ills, and the probmem
+becomes much bigger.
 
+Thomas?
