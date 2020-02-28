@@ -2,93 +2,106 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DFEC3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3261BC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EE4D2469D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:12:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A44424699
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582902758;
-	bh=fY6Rmei2EuhvgzIyAwnOSvyfTyjQYRh6rM/zrQJ1n4Q=;
+	s=default; t=1582902802;
+	bh=F3zdByQIKN7XMYu5LbyWm7srbXTTmLdOEB4M/SS8g8M=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SR02LyGNtdn8OEAD6y4RWWYJheJ6gWcqLWdPNJqwJpsH7JocY3yH6xypvC/gaxwyn
-	 qjQz3LsZB2y2nguLleWccDJcZn8G/YdtZcTYd6CILlW24voslQZOpupEAFZGm2v8W9
-	 EbD3MDyVKARq7P7UIyypkN3s1PxFrnid8s7t25Vo=
+	b=tR9Bd4r6LXbR9N6cPXYvF9dUZ0yT62te52qKH+H7Qmo+Q32iMujkGzzNoc/tCPZi5
+	 07Al7mDxzEc+IVMDkWWL0WT+3p4yHOoPfWVWqe/NyqC6vN2FNyUQlomqsgaxe4Ecb7
+	 SYkkNZY5vo7H319Y86EufeFokfYTYw9+dodBlmsg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgB1PMh (ORCPT
+        id S1727125AbgB1PNU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 10:12:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47578 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726720AbgB1PMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 10:12:37 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0270624699;
-        Fri, 28 Feb 2020 15:12:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582902756;
-        bh=fY6Rmei2EuhvgzIyAwnOSvyfTyjQYRh6rM/zrQJ1n4Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=M9CZE0wxLfCmineUNQdBju90sGGwnWPWKOOWVsmIoPeU5KNlGjppDbJGL+5AMPu94
-         RlP9Kl5BSnlPCcBAA6QVhHYvBOBOZqZ3mBuCIu04JyZDXQSIOz2UX8+hm9BfCr81S/
-         8uo1TcRttUYygYp1aa7s5BT+V5hzuTeIe9rrRwZI=
-Date:   Fri, 28 Feb 2020 16:12:33 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Subject: Re: [PATCH 5.5 000/150] 5.5.7-stable review
-Message-ID: <20200228151233.GB3136847@kroah.com>
-References: <20200227132232.815448360@linuxfoundation.org>
- <CA+G9fYsJyqW95UU-KKNqQOQVSVNaBF9ZyNps+vbxHUtJ1S==gg@mail.gmail.com>
+        Fri, 28 Feb 2020 10:13:20 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42042 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726720AbgB1PNU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 10:13:20 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 66so2840277otd.9;
+        Fri, 28 Feb 2020 07:13:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zWo4qKuY/7ed4cYkYmCoOxOnA9Dj1w1J7SKejk3R5Z8=;
+        b=f8a2ptHfbp7rG9/fdH0kYvy1uAUYE9EKzsVx6gsNhiHbbU5Wrtr6ZJrEFQsN3RFzKw
+         8XCEPUdA9TGH0g2aDc0HusgYSuvfZt3kfUbrteFlxn2GwXf6MkNlo3K34cPlHV3CrOVn
+         Vnjm+SsXs743JLPk/3N4WDP9Q2K+XzP1cyZ0s+Rvna4RYHmaLPUBHgn/CFJ+27PPuCne
+         6P/UqdNFrlK0dH4rsZZ2J43mKaTf900ve/qeGPJVOx97NsbqqyU84DyJAvC5SLMxjgNm
+         rlBZXQkGWzMCgopsfr+fjZg4jD2aXCSefCTHY0ZJo0J5mgSEPyfZGfDM4dvLNmUZkLGo
+         qfMQ==
+X-Gm-Message-State: APjAAAV8vn7RCWZfh4L/Tt6f2HvB/QHhXuFRBvba/wsEXK47L5gI027O
+        nRqDoRWC+rZv8hO5H0EXkA==
+X-Google-Smtp-Source: APXvYqyIDBoCrTlnHsHo2ZWFLHbyIgEN0Y3a+LU5KpD+GDt608oltIOTk0QNBmppbKHbi9r4/mPT0A==
+X-Received: by 2002:a9d:6e02:: with SMTP id e2mr3884732otr.194.1582902799599;
+        Fri, 28 Feb 2020 07:13:19 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l207sm3264961oih.25.2020.02.28.07.13.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 07:13:18 -0800 (PST)
+Received: (nullmailer pid 4200 invoked by uid 1000);
+        Fri, 28 Feb 2020 15:13:17 -0000
+Date:   Fri, 28 Feb 2020 09:13:17 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     peng.fan@nxp.com
+Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de,
+        jassisinghbrar@gmail.com, leonard.crestez@nxp.com,
+        o.rempel@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, m.felsch@pengutronix.de, hongxing.zhu@nxp.com,
+        aisheng.dong@nxp.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/3] dt-bindings: mailbox: imx-mu: add fsl,scu property
+Message-ID: <20200228151317.GA404@bogus>
+References: <1582546474-21721-1-git-send-email-peng.fan@nxp.com>
+ <1582546474-21721-2-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYsJyqW95UU-KKNqQOQVSVNaBF9ZyNps+vbxHUtJ1S==gg@mail.gmail.com>
+In-Reply-To: <1582546474-21721-2-git-send-email-peng.fan@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 09:20:18AM +0530, Naresh Kamboju wrote:
-> On Thu, 27 Feb 2020 at 19:53, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.5.7 release.
-> > There are 150 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Sat, 29 Feb 2020 13:21:24 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.7-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
+On Mon, Feb 24, 2020 at 08:14:32PM +0800, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
+> Add fsl,scu property, this needs to be enabled for SCU channel type.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/mailbox/fsl,mu.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> index 9c43357c5924..5b502bcf7122 100644
+> --- a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> +++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> @@ -45,6 +45,7 @@ Optional properties:
+>  -------------------
+>  - clocks :	phandle to the input clock.
+>  - fsl,mu-side-b : Should be set for side B MU.
+> +- fsl,scu: Support i.MX8/8X SCU channel type
 
-Wonderful, thanks for testing all of these and letting me know.
+What's the type for this?
 
-greg k-h
+Perhaps update the example.
+
+>  
+>  Examples:
+>  --------
+> -- 
+> 2.16.4
+> 
