@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A290C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB2EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDA8A246A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 714E5246BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:01:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="PIzata/s"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HoPwK4+A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgB1KBR (ORCPT
+        id S1726877AbgB1KBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 05:01:17 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:54858 "EHLO
+        Fri, 28 Feb 2020 05:01:16 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:54849 "EHLO
         mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbgB1KBQ (ORCPT
+        with ESMTP id S1726005AbgB1KBQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Feb 2020 05:01:16 -0500
 Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200228100115euoutp020445ab5ae3097588501ffef29071e450~3iK4IJWIK0064500645euoutp02X
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 10:01:15 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200228100115euoutp020445ab5ae3097588501ffef29071e450~3iK4IJWIK0064500645euoutp02X
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200228100114euoutp0240151014777242484779087c8721b99a~3iK3q_K-C3158831588euoutp02O
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 10:01:14 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200228100114euoutp0240151014777242484779087c8721b99a~3iK3q_K-C3158831588euoutp02O
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1582884075;
-        bh=r7iAjpDLPSMkIvQyWiR/gtZC7/Uvo9W8WiBUY3bIyxc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PIzata/sP4ssB420HUNMBxV8UovlTZ/bOsqBbDGF0D0Eluz4VkzaFP7ACpdVCPsC1
-         F2aATp9RNdfDcMVKnrNTQSFUEaHzO493qrJG9112JzvkvtC3ruCCGtEiQ692qrIWV5
-         P0EDQ6SnR1QdeT0arlG+eGJpiuYuD57VMU9j3uyY=
+        s=mail20170921; t=1582884074;
+        bh=hRJ3MYQboR7HKJUsUn0rBsOQmcUWW+EA/19lIqK9+5E=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=HoPwK4+AXClM/ZLG0zytwAN5THtEwLHwiAKyoUTDoujLy+gvixjBRspLOlYqpKMEb
+         mUh96svibA2cvEXuFnGzwGHOGDMJCF4BeW85kDeVTAoOwfa/YbpexEt7b05075h+X6
+         O55D6fyw3DCqvT28oFF6LuEkmL0xIvdsfXTQV7SI=
 Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
         eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200228100114eucas1p1cf7b49552dc788c951afde0977ae8c62~3iK337i5z0578605786eucas1p1A;
+        20200228100114eucas1p1ab3ab5ea55735ba5411f400718e63354~3iK3aIrmE0576705767eucas1p1N;
         Fri, 28 Feb 2020 10:01:14 +0000 (GMT)
 Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id E6.C5.60679.AE4E85E5; Fri, 28
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 16.C5.60679.AE4E85E5; Fri, 28
         Feb 2020 10:01:14 +0000 (GMT)
 Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
         eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200228100114eucas1p23f608fce62f751125d5107721744ce22~3iK3lkMDh1701517015eucas1p2C;
-        Fri, 28 Feb 2020 10:01:14 +0000 (GMT)
+        20200228100113eucas1p26b8a378be47794225f5d75fb9583d43c~3iK3Gmryk3053730537eucas1p2Q;
+        Fri, 28 Feb 2020 10:01:13 +0000 (GMT)
 Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
         eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200228100114eusmtrp14b1f1d52c6b219b563d9245797aed779~3iK3k73EN1359213592eusmtrp10;
-        Fri, 28 Feb 2020 10:01:14 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-0a-5e58e4ea50f4
+        20200228100113eusmtrp1e5251aed83458584d21c4cc6c2801664~3iK3F6pAx1359213592eusmtrp1x;
+        Fri, 28 Feb 2020 10:01:13 +0000 (GMT)
+X-AuditID: cbfec7f4-0cbff7000001ed07-07-5e58e4eaa0ec
 Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 93.53.08375.AE4E85E5; Fri, 28
-        Feb 2020 10:01:14 +0000 (GMT)
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id A2.53.08375.9E4E85E5; Fri, 28
+        Feb 2020 10:01:13 +0000 (GMT)
 Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
         eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200228100113eusmtip1ab4804ebe72bd37332090963029f9851~3iK3GKNRQ2243522435eusmtip1b;
+        20200228100113eusmtip11fa26a027dff2fd3262a75c23cb3599d~3iK2qsHe52262722627eusmtip1T;
         Fri, 28 Feb 2020 10:01:13 +0000 (GMT)
 From:   Marek Szyprowski <m.szyprowski@samsung.com>
 To:     patches@opensource.cirrus.com, alsa-devel@alsa-project.org,
@@ -66,71 +66,71 @@ Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
         Lee Jones <lee.jones@linaro.org>,
         Charles Keepax <ckeepax@opensource.cirrus.com>,
         Liam Girdwood <lgirdwood@gmail.com>
-Subject: [PATCH 2/2] ASoC: wm8994: Silence warnings during deferred probe
-Date:   Fri, 28 Feb 2020 11:00:38 +0100
-Message-Id: <20200228100038.27748-2-m.szyprowski@samsung.com>
+Subject: [PATCH 1/2] mfd: wm8994: Silence warning about supplies during
+ deferred probe
+Date:   Fri, 28 Feb 2020 11:00:37 +0100
+Message-Id: <20200228100038.27748-1-m.szyprowski@samsung.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200228100038.27748-1-m.szyprowski@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIKsWRmVeSWpSXmKPExsWy7djPc7qvnkTEGXw6rmdx5eIhJoupD5+w
-        WVxp3cRocf/rUUaLb1c6mCwu75rDZrH2yF12i8/v97NaHH7TzurA6bHhcxObx85Zd9k9Nq3q
-        ZPO4c20Pm8f0Of8ZPfq2rGL0+LxJLoA9issmJTUnsyy1SN8ugSvjz4JHTAW72CoWNnxgamBc
-        w9rFyMkhIWAiMWP7QTBbSGAFo8SE3pQuRi4g+wujxNL2j6wQzmdGiSn7trDAdKy/ewMqsZxR
-        Yu6cfexwLRu3TmcEqWITMJToetvFBmKLCMRJLF+8gAmkiFngF6PE50+bmEASwgKeEivW3gVb
-        ziKgKrH+yAuwOK+ArcShHx3sEOvkJVZvOMAMYnMK2EmcvP0MbJCEQDe7ROvRXiaIIheJ+Xc3
-        QH0kLPHq+BaoZhmJ05N7WCAamhklHp5byw7h9DBKXG6awQhRZS1x59wvoFs5gO7TlFi/Sx8i
-        7CjxbudCdpCwhACfxI23giBhZiBz0rbpzBBhXomONiGIajWJWcfXwa09eOESM4TtIXHjchs0
-        hCYyStxfuo55AqP8LIRlCxgZVzGKp5YW56anFhvlpZbrFSfmFpfmpesl5+duYgQmlNP/jn/Z
-        wbjrT9IhRgEORiUe3gU7wuOEWBPLiitzDzFKcDArifBu/BoaJ8SbklhZlVqUH19UmpNafIhR
-        moNFSZzXeNHLWCGB9MSS1OzU1ILUIpgsEwenVANjzgar/XuNrnJpPV7uECf5Z84TddNFbJrr
-        5R5v3fFkY3DEAtePmSt7H/xYyuH56s7qxStXCbaJ7ndlfXxF3ut3tY265IXYjMVlZ9OSLXMy
-        l9jbe2X/lbg24VdAl1h8rE7E0RTePrFfv7xNb5Tulw1NOXfk5P3ccqlp4Zu7Mj2/h8zY5iY/
-        JfC5EktxRqKhFnNRcSIAZubgjCQDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrELMWRmVeSWpSXmKPExsVy+t/xu7qvnkTEGSx6L2Vx5eIhJoupD5+w
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpileLIzCtJLcpLzFFi42LZduznOd1XTyLiDA6c5ra4cvEQk8XUh0/Y
+        LK60bmK0uP/1KKPFtysdTBaXd81hs1h75C67xef3+1ktDr9pZ3Xg9NjwuYnNY+esu+wem1Z1
+        snncubaHzWP6nP+MHn1bVjF6fN4kF8AexWWTkpqTWZZapG+XwJVxfOlHpoIDbBUvZi5lamBc
+        w9rFyMkhIWAi0fz2CnMXIxeHkMAKRombp6awQThfGCV23bzLCuF8ZpT49uo/E0zL56VrmCAS
+        yxkltmyZzgzX0vpvJjtIFZuAoUTX2y42EFtEIE5i+eIFYB3MAr8YJT5/2gTkcHAIC0RIfH6m
+        CVLDIqAqsXrNRLCjeAVsJa6dncQOsU1eYvWGA8wQ9mc2ia7pghC2i8TdkxsYIWxhiVfHt0DV
+        y0icntzDArJLQqCZUeLhubXsEE4Po8TlphlQHdYSd879YgM5gllAU2L9Ln2IsKPE8tsTwG6T
+        EOCTuPEWbBczkDlpG8iTIGFeiY42IYhqNYlZx9fBrT144RLUmR4SP34vZgcpFxKIlVh81WwC
+        o9wshFULGBlXMYqnlhbnpqcWG+WllusVJ+YWl+al6yXn525iBKaM0/+Of9nBuOtP0iFGAQ5G
+        JR7eBTvC44RYE8uKK3MPMUpwMCuJ8G78GhonxJuSWFmVWpQfX1Sak1p8iFGag0VJnNd40ctY
+        IYH0xJLU7NTUgtQimCwTB6dUAyPz0Z+Xt33f905O1+T52SBzk2qeVw8+Fmj3Kv1K/Ljku0ht
+        YI+L5ZYfAdEFqjIrvFmYvVuPG/j2t77elMOaKMO15vaztzsPMJm+tVizPKdGUffRmi2d1mfu
+        2Za+3s4jbTTntG9r66XV3y8uv3Yy/oxpqEy3PKtS/6rTG28tv18RveiroNikGGYlluKMREMt
+        5qLiRAAW90ZoFQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFLMWRmVeSWpSXmKPExsVy+t/xu7ovn0TEGcw/YGVx5eIhJoupD5+w
         WVxp3cRocf/rUUaLb1c6mCwu75rDZrH2yF12i8/v97NaHH7TzurA6bHhcxObx85Zd9k9Nq3q
         ZPO4c20Pm8f0Of8ZPfq2rGL0+LxJLoA9Ss+mKL+0JFUhI7+4xFYp2tDCSM/Q0kLPyMRSz9DY
-        PNbKyFRJ384mJTUnsyy1SN8uQS/jz4JHTAW72CoWNnxgamBcw9rFyMkhIWAisf7uDSCbi0NI
-        YCmjRNPDt4wQCRmJk9MaoIqEJf5c62KDKPrEKHF07jSwBJuAoUTXW5AEJ4eIQILEoeUtzCBF
-        zAL/GCXePbrJDJIQFvCUWLH2LlgDi4CqxPojL5hAbF4BW4lDPzrYITbIS6zecACsnlPATuLk
-        7WdgNUJANUfnPGSewMi3gJFhFaNIamlxbnpusaFecWJucWleul5yfu4mRmB4bzv2c/MOxksb
-        gw8xCnAwKvHwLtgRHifEmlhWXJl7iFGCg1lJhHfj19A4Id6UxMqq1KL8+KLSnNTiQ4ymQEdN
-        ZJYSTc4Hxl5eSbyhqaG5haWhubG5sZmFkjhvh8DBGCGB9MSS1OzU1ILUIpg+Jg5OqQbGbk7D
-        ogiT60o1WW/Wfj10oF3LRX9r+f6zL09e665/r7z40+9E8Vwx9VOmSx5qHdvidj+tkv2l45fr
-        560k9C1uL/XvM9j1I+L07jeeuU7T1LYs8z0Rx/7v+mR9paCaFwxmKxSmmLUunlkh3bgit2/C
-        tXuawUn/dwk9O5Z0vI1hxh++LROeVnyarMRSnJFoqMVcVJwIAM1hzieFAgAA
-X-CMS-MailID: 20200228100114eucas1p23f608fce62f751125d5107721744ce22
+        PNbKyFRJ384mJTUnsyy1SN8uQS/j+NKPTAUH2CpezFzK1MC4hrWLkZNDQsBE4vPSNUxdjFwc
+        QgJLGSVe35/GDpGQkTg5rQGqSFjiz7UuNoiiT4wSTYfnM4Ek2AQMJbregiQ4OUQEEiQOLW9h
+        BiliFvjHKPHu0U1mkISwQJjEmqbHjCA2i4CqxOo1E8Gm8grYSlw7Owlqm7zE6g0HmCcw8ixg
+        ZFjFKJJaWpybnltsqFecmFtcmpeul5yfu4kRGK7bjv3cvIPx0sbgQ4wCHIxKPLwLdoTHCbEm
+        lhVX5h5ilOBgVhLh3fg1NE6INyWxsiq1KD++qDQntfgQoynQ8onMUqLJ+cBYyiuJNzQ1NLew
+        NDQ3Njc2s1AS5+0QOBgjJJCeWJKanZpakFoE08fEwSnVwGgVXc/yvmjp7jsyGp8dvN68N7mv
+        IZ6pW+R32Nq6MCorVU/VyHnaswbV3Xvyrrdb3AnqPC+o8Hca43a35f3HD70XsDBy4v3n1Rnb
+        E3ejvj3svuzOOcYcFW3LuQ7USgm1n7E94nlGY43b/mN7l7X8UTnKVddfeWe3zIOT3w+9O/9q
+        i8d75zzONiWW4oxEQy3mouJEAD97ahxtAgAA
+X-CMS-MailID: 20200228100113eucas1p26b8a378be47794225f5d75fb9583d43c
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200228100114eucas1p23f608fce62f751125d5107721744ce22
+X-RootMTR: 20200228100113eucas1p26b8a378be47794225f5d75fb9583d43c
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200228100114eucas1p23f608fce62f751125d5107721744ce22
-References: <20200228100038.27748-1-m.szyprowski@samsung.com>
-        <CGME20200228100114eucas1p23f608fce62f751125d5107721744ce22@eucas1p2.samsung.com>
+X-CMS-RootMailID: 20200228100113eucas1p26b8a378be47794225f5d75fb9583d43c
+References: <CGME20200228100113eucas1p26b8a378be47794225f5d75fb9583d43c@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Don't confuse user with meaningless warning about the failure in getting
-clocks in case of deferred probe.
+supplies in case of deferred probe.
 
 Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 ---
- sound/soc/codecs/wm8994.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/mfd/wm8994-core.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/wm8994.c b/sound/soc/codecs/wm8994.c
-index 15ce64a48a87..b4d8da8eb479 100644
---- a/sound/soc/codecs/wm8994.c
-+++ b/sound/soc/codecs/wm8994.c
-@@ -4601,7 +4601,8 @@ static int wm8994_probe(struct platform_device *pdev)
- 	ret = devm_clk_bulk_get_optional(pdev->dev.parent, ARRAY_SIZE(wm8994->mclk),
- 					 wm8994->mclk);
- 	if (ret < 0) {
--		dev_err(&pdev->dev, "Failed to get clocks: %d\n", ret);
+diff --git a/drivers/mfd/wm8994-core.c b/drivers/mfd/wm8994-core.c
+index 1e9fe7d92597..bfee2f8ba17f 100644
+--- a/drivers/mfd/wm8994-core.c
++++ b/drivers/mfd/wm8994-core.c
+@@ -393,7 +393,9 @@ static int wm8994_device_init(struct wm8994 *wm8994, int irq)
+ 	ret = regulator_bulk_get(wm8994->dev, wm8994->num_supplies,
+ 				 wm8994->supplies);
+ 	if (ret != 0) {
+-		dev_err(wm8994->dev, "Failed to get supplies: %d\n", ret);
 +		if (ret != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Failed to get clocks: %d\n", ret);
- 		return ret;
++			dev_err(wm8994->dev, "Failed to get supplies: %d\n",
++				ret);
+ 		goto err;
  	}
  
 -- 
