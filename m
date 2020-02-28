@@ -2,93 +2,178 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B6ABC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E2CC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 028DD222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:17:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1A00222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:17:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T85BmpDr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgB1TQ7 (ORCPT
+        id S1726859AbgB1TRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 14:16:59 -0500
-Received: from mga14.intel.com ([192.55.52.115]:49692 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725827AbgB1TQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 14:16:58 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 11:16:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,497,1574150400"; 
-   d="scan'208";a="385584427"
-Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.252.14.243]) ([10.252.14.243])
-  by orsmga004.jf.intel.com with ESMTP; 28 Feb 2020 11:16:55 -0800
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Cezary Rojewski <cezary.rojewski@intel.com>
-Subject: Question about enabling trave_events on module load
-Message-ID: <8107a684-3ade-2457-28e4-c7e29ab1b1f5@intel.com>
-Date:   Fri, 28 Feb 2020 20:16:54 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 28 Feb 2020 14:17:51 -0500
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:44855 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbgB1TRv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 14:17:51 -0500
+Received: by mail-ua1-f66.google.com with SMTP id a33so1364509uad.11
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 11:17:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uXA3/+C+Ws03rM5oecAfvZ0EjvjFdg2ZbM6QXJtOnis=;
+        b=T85BmpDrleLyl915HxeMadTD8HviR0L4YI8g1TPE3bzM0UctdJVLSN9P2/laHAAMSR
+         upFTHz+wPJzr7i4Kmsk87YXVm3GIj8ZRb29Jod2t6WqHxNhpchtwJDD3oQSj5yOOZ+VA
+         0xFJMmVLfXQegbcviPjOWZJAOHv/hAvB7tfno8C6Cc4qnuJG4rnyd7SewPIMeLg5qfTP
+         0iOb2BIh6w+DBm+BgJgnPIbzYb6W1N0uSTX0wHehFWdXEmViuSrDILQJS2dFGSvWI7n+
+         9QAM8+Tr/LSd7aW7pyGeSy14nQvI3fNhAz79HVyqyE4Y+nSqVU7aqfQq2cgQ04SgFn1n
+         sI3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uXA3/+C+Ws03rM5oecAfvZ0EjvjFdg2ZbM6QXJtOnis=;
+        b=tRXm2JL3ZnsAnlQlASRqiFpfzsd52J6hbf4bhSCDVQbYV06qjiKQr72C8KbSm33ccZ
+         8B/03GtsZpBS7NWb23yrEQmg4ENUd8TXBTbg8Sr6Hj93KRZHa2RYHtGgWS61z0EP9X+w
+         HNOKntXlDMhcEF/vylGL0mY+nmGx6XZK1SfPvgUktdip1/AN5C3OKjyP1t05E/ZOQwUw
+         4jkmD8TJsl4jAH0yGTNv2dwAgM/e9F2tQM210f6/3Ezg4i9+CdKMu7dTE47Y7oFlGove
+         0ayEXOIiPJ/DnVKbV4MOoWObYbtSLO3TqI+l+pNWmMSzA4wBnYdypVT+/WwArNKupoLA
+         TQDw==
+X-Gm-Message-State: ANhLgQ3LOL+EK2SUtxyWral/hq2pzLiR0WcPJ6s5ujdTQUGUnvp4srwL
+        aNImMzuzNDl3BSxZYnE7pRIHGjVWZ/SttR2sqFkz7SFhJSg=
+X-Google-Smtp-Source: ADFU+vvsbZIc5VB+r9XiljUrppstnkF/gEQRydJ0xpNF0569jfMXKelO0dOU5dM371tMVLG+h8JPKHod/4zNraTMhww=
+X-Received: by 2002:a9f:36ca:: with SMTP id p68mr2882516uap.112.1582917469575;
+ Fri, 28 Feb 2020 11:17:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200224021029.142701-1-adelva@google.com> <20200224021029.142701-3-adelva@google.com>
+ <20200227232253.GA5966@bogus>
+In-Reply-To: <20200227232253.GA5966@bogus>
+From:   Alistair Delva <adelva@google.com>
+Date:   Fri, 28 Feb 2020 11:17:38 -0800
+Message-ID: <CANDihLFFUoauKxwcNDNE4=PuhzHSpB+FecxFJOn5H2GkreiYhw@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] dt-bindings: pmem-region: Document memory-region
+To:     Rob Herring <robh@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Kenny Root <kroot@google.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Device Tree <devicetree@vger.kernel.org>,
+        linux-nvdimm@lists.01.org, kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Steven,
+Hi Rob,
 
-I bet that is not the first time said question is asked - that's for 
-sure - but I failed to find a method for solving the issue, that is: not 
-missing a single trace from the moment given module is loaded. Maybe I'm 
-missing something or documentation wasn't clear enough and that's why 
-I'm here.
+Thanks for reviewing.
 
-If I am, please point to towards the right direction. Then you can slap 
-me for not reading the documentation carefully.
+On Thu, Feb 27, 2020 at 3:22 PM Rob Herring <robh@kernel.org> wrote:
+>> On Sun, Feb 23, 2020 at 06:10:29PM -0800, Alistair Delva wrote:
+> > From: Kenny Root <kroot@google.com>
+> >
+> > Add documentation and example for memory-region in pmem.
+> >
+> > Signed-off-by: Kenny Root <kroot@google.com>
+> > Signed-off-by: Alistair Delva <adelva@google.com>
+> > Cc: "Oliver O'Halloran" <oohall@gmail.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Dan Williams <dan.j.williams@intel.com>
+> > Cc: Vishal Verma <vishal.l.verma@intel.com>
+> > Cc: Dave Jiang <dave.jiang@intel.com>
+> > Cc: Ira Weiny <ira.weiny@intel.com>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-nvdimm@lists.01.org
+> > Cc: kernel-team@android.com
+> > ---
+> > [v3: adelva: remove duplicate "From:"]
+> >  .../devicetree/bindings/pmem/pmem-region.txt  | 29 +++++++++++++++++++
+> >  1 file changed, 29 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pmem/pmem-region.txt b/Documentation/devicetree/bindings/pmem/pmem-region.txt
+> > index 5cfa4f016a00..0ec87bd034e0 100644
+> > --- a/Documentation/devicetree/bindings/pmem/pmem-region.txt
+> > +++ b/Documentation/devicetree/bindings/pmem/pmem-region.txt
+> > @@ -29,6 +29,18 @@ Required properties:
+> >               in a separate device node. Having multiple address ranges in a
+> >               node implies no special relationship between the two ranges.
+> >
+> > +             This property may be replaced or supplemented with a
+> > +             memory-region property. Only one of reg or memory-region
+> > +             properties is required.
+> > +
+> > +     - memory-region:
+> > +             Reference to the reserved memory node. The reserved memory
+> > +             node should be defined as per the bindings in
+> > +             reserved-memory.txt
+>
+> Though we've never enforced it, but /reserved-memory should be within
+> the bounds of /memory node(s). Is that the intent here? If so, how does
+> that work? Wouldn't all the memory be persistent then? Or some other
+> system processor is preserving the contents?
 
-"trace_event=" cmdline option seems to target built-in tracepoints 
-_only_ so ain't much of a help to me. After digging the past for some 
-time, I've found a very promising thread:
-	tracing: Enable tracepoints via module parameters
-	https://lore.kernel.org/patchwork/patch/240185/
+On the systems we're working with, the RAM remains refreshed across
+reboots, but the contents of RAM could be changed by something outside
+of Linux (i.e. the bootloader). By reserving this region in DT for
+pmem we are saying "this is persistent like the rest of RAM on this
+device, but it is also not going to be touched by anything besides
+this Linux driver".
 
-Sadly, I wasn't able to find _that_ solution (or anything similar for 
-that matter) implemented into the kernel.
+> > +
+> > +             This property may be replaced or supplemented with a reg
+> > +             property. Only one of reg or memory-region is required.
+> > +
+> >  Optional properties:
+> >       - Any relevant NUMA assocativity properties for the target platform.
+> >
+> > @@ -63,3 +75,20 @@ Examples:
+> >               volatile;
+> >       };
+> >
+> > +
+> > +     /*
+> > +      * This example uses a reserved-memory entry instead of
+> > +      * specifying the memory region directly in the node.
+> > +      */
+> > +
+> > +     reserved-memory {
+> > +             pmem_1: pmem@5000 {
+> > +                     no-map;
+>
+> Just add 'compatible = "pmem-region";' here and be done with it. Why add
+> a layer of indirection?
 
-So far, the only option I came with was separating traces into a 
-built-in piece that declares all events upfront so "trace_event=" option 
-has something to hook into. Said piece is of course made of a standard 
-trace header file filled with macro usage and a .c file with handful of 
-EXPORT_TRACEPOINT_SYMBOL(s).
+Sure, I'll do that..
 
-While that solution could suffice, localization is the problem here - if 
-a tree my module is built in is configured via -m, the built-in piece 
-won't expose symbols at all and 'make' will leave me with bunch of 
-"ERROR: <symbol> undefined" for every module my traces were used in. To 
-fix the problem, I've relocated my trace .c file to /kernel/trace/. 
-Finally it compiles and works as intended..
+> > +                     reg = <0x00005000 0x00001000>;
+> > +             };
+> > +     };
+> > +
+> > +     pmem@1 {
+>
+> No 'reg', so shouldn't have a unit-address here.
 
-Not really satisfying, though. While there are some examples of 
-subsystems keeping their trace .c in /kernel/trace (e.g.: 
-power-traces.c), I don't believe that place is open for _every single 
-driver_ to dump their trace sources into.
-
-If indeed traces cannot be enabled on module load, then this is a gap.
-While not everyone looked satisfied in the 9year old thread, I believe 
-having the gap closed is important - and userspace can always be 
-improved upon as time passes.
+..then I guess I can just delete this. v4 incoming.
 
 
-Thank you in advance for your input and time.
-
-Czarek
+> > +             compatible = "pmem-region";
+> > +             memory-region = <&pmem_1>;
+> > +     };
+> > --
+> > 2.25.0.265.gbab2e86ba0-goog
+> >
+>
+> --
+> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
+>
