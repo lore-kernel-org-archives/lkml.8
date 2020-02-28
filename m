@@ -2,96 +2,78 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB52C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF15C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76E4524699
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:31:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NwOPK07i"
+	by mail.kernel.org (Postfix) with ESMTP id DE539246AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:33:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582893199;
+	bh=iI9Izp1/xx+N6k2MZVXAFgzynuOg+3ILMN2IFASspNo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ylSKvKySShNDiLUEbkdH6TiRIR8PlyXK87lv9ULrnyhQoQDq3o6r9+wXQBHdv7oTF
+	 yPzkZXTDyNZk5mqXw/GU9Nlz8FcH6nP5kAYofVFNET0iAjX+DwPF2xjaVnR90gu65e
+	 kuHUIY21+gXdEVo8sRL1CkpbmFqhLCyQkaQEZIYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbgB1MbI (ORCPT
+        id S1725906AbgB1MdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 07:31:08 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38897 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725802AbgB1MbH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 07:31:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582893066;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2RooJPrqf81zft4ke8YUUk8aT1Ot7fHdQHDbAT/pgK0=;
-        b=NwOPK07i7IoY2NLS+1PZcsr+CC3IpVbfgJxPwhAE5S1uJfK1+YL0KVRe9NNh+LkpHhTVio
-        ua2p4vVPxxyg3T05a42OyITV42c9cL2DkSM1ppCpmzCeZHNeZdmlEtLN7+rUeyryAlnL8C
-        sN7OM0rGshH3+dBQbnyST+ZpPQgJRG8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-197-xA0PywavMw-iwRf2hXkv3g-1; Fri, 28 Feb 2020 07:31:05 -0500
-X-MC-Unique: xA0PywavMw-iwRf2hXkv3g-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 28 Feb 2020 07:33:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50932 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbgB1MdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 07:33:17 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A185C108C314;
-        Fri, 28 Feb 2020 12:31:03 +0000 (UTC)
-Received: from carbon (ovpn-200-19.brq.redhat.com [10.40.200.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D1056E3EE;
-        Fri, 28 Feb 2020 12:30:55 +0000 (UTC)
-Date:   Fri, 28 Feb 2020 13:30:54 +0100
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Luigi Rizzo <lrizzo@google.com>
-Cc:     brouer@redhat.com, netdev@vger.kernel.org, toke@redhat.com,
-        davem@davemloft.net, sameehj@amazon.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] netdev attribute to control xdpgeneric skb
- linearization
-Message-ID: <20200228133054.47cc4d71@carbon>
-In-Reply-To: <20200228105435.75298-1-lrizzo@google.com>
-References: <20200228105435.75298-1-lrizzo@google.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CD00246A8;
+        Fri, 28 Feb 2020 12:33:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582893197;
+        bh=iI9Izp1/xx+N6k2MZVXAFgzynuOg+3ILMN2IFASspNo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=olfkeknYTpfaX/G5LJGKxEF7bCQJHQDBcFV0o4Y32z0y3RCRqnI9oG1BX+JRrVIDM
+         jVnYWDRgGEVWdB5aQsvMkI+iM0U2ehwm8z6utSeJMQEYPYQ30Yt2oo2dGT96FB5Kf0
+         JeU4N0FzFT0mpC2zqdVHP/N1OEZsd2Ohi8L+71pg=
+Date:   Fri, 28 Feb 2020 12:33:12 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     Corentin Labbe <clabbe.montjoie@gmail.com>, tj@kernel.org,
+        jiangshanlai@gmail.com, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-crypto@vger.kernel.org
+Subject: Re: WARNING: at kernel/workqueue.c:1473 __queue_work+0x3b8/0x3d0
+Message-ID: <20200228123311.GE3275@willie-the-truck>
+References: <20200217204803.GA13479@Red>
+ <20200218163504.y5ofvaejleuf5tbh@ca-dmjordan1.us.oracle.com>
+ <20200220090350.GA19858@Red>
+ <20200221174223.r3y6tugavp3k5jdl@ca-dmjordan1.us.oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221174223.r3y6tugavp3k5jdl@ca-dmjordan1.us.oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Feb 2020 02:54:35 -0800
-Luigi Rizzo <lrizzo@google.com> wrote:
+On Fri, Feb 21, 2020 at 12:42:23PM -0500, Daniel Jordan wrote:
+> On Thu, Feb 20, 2020 at 10:03:50AM +0100, Corentin Labbe wrote:
+> > But I got the same with plain next (like yesterday 5.6.0-rc2-next-20200219 and tomorow 5.6.0-rc2-next-20200220) and master got the same issue.
+> 
+> Thanks.  I've been trying to reproduce this on an arm board but it's taking a
+> while to get it setup since I've never used it for kernel work.
+> 
+> Hoping to get it up soon, though someone with a working setup may be in a
+> better position to help with this.
 
-> diff --git a/net/core/dev.c b/net/core/dev.c
-> index dbbfff123196..c539489d3166 100644
-> --- a/net/core/dev.c
-> +++ b/net/core/dev.c
-> @@ -4520,9 +4520,12 @@ static u32 netif_receive_generic_xdp(struct sk_buff *skb,
->  	/* XDP packets must be linear and must have sufficient headroom
->  	 * of XDP_PACKET_HEADROOM bytes. This is the guarantee that also
->  	 * native XDP provides, thus we need to do it here as well.
-> +	 * For non shared skbs, xdpgeneric_linearize controls linearization.
->  	 */
-> -	if (skb_cloned(skb) || skb_is_nonlinear(skb) ||
-> -	    skb_headroom(skb) < XDP_PACKET_HEADROOM) {
-> +	if (skb_cloned(skb) ||
-> +	    (skb->dev->xdpgeneric_linearize &&
-> +	     (skb_is_nonlinear(skb) ||
-> +	      skb_headroom(skb) < XDP_PACKET_HEADROOM))) {
->  		int hroom = XDP_PACKET_HEADROOM - skb_headroom(skb);
->  		int troom = skb->tail + skb->data_len - skb->end;
+Any joy with this? It sounded to me like the issue also happens on a
+mainline kernel. If this is the case, have you managed to bisect it?
 
-Have you checked that calling bpf_xdp_adjust_tail() is not breaking anything?
+Cheers,
 
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
-
+Will
