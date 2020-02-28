@@ -6,43 +6,43 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BF4C3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5FAC3F2D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7CB924690
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C63A524690
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:38:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730846AbgB1Dio (ORCPT
+        id S1730862AbgB1Dis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 22:38:44 -0500
+        Thu, 27 Feb 2020 22:38:48 -0500
 Received: from mga09.intel.com ([134.134.136.24]:36522 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730835AbgB1Dio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 22:38:44 -0500
+        id S1730796AbgB1Dis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 22:38:48 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 19:38:43 -0800
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 19:38:47 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
-   d="scan'208";a="232107370"
+   d="scan'208";a="232107402"
 Received: from yhuang-dev.sh.intel.com ([10.239.159.23])
-  by orsmga008.jf.intel.com with ESMTP; 27 Feb 2020 19:38:40 -0800
+  by orsmga008.jf.intel.com with ESMTP; 27 Feb 2020 19:38:44 -0800
 From:   "Huang, Ying" <ying.huang@intel.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Huang Ying <ying.huang@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
         David Hildenbrand <david@redhat.com>,
         Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
         Zi Yan <ziy@nvidia.com>, Michal Hocko <mhocko@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         Minchan Kim <minchan@kernel.org>,
         Johannes Weiner <hannes@cmpxchg.org>,
         Hugh Dickins <hughd@google.com>
-Subject: [RFC 2/3] mm: Add a new page flag PageLayzyFree() for MADV_FREE
-Date:   Fri, 28 Feb 2020 11:38:18 +0800
-Message-Id: <20200228033819.3857058-3-ying.huang@intel.com>
+Subject: [RFC 3/3] mm: Discard lazily freed pages when migrating
+Date:   Fri, 28 Feb 2020 11:38:19 +0800
+Message-Id: <20200228033819.3857058-4-ying.huang@intel.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200228033819.3857058-1-ying.huang@intel.com>
 References: <20200228033819.3857058-1-ying.huang@intel.com>
@@ -55,163 +55,146 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Huang Ying <ying.huang@intel.com>
 
-Now !PageSwapBacked() is used as the flag for the pages freed lazily
-via MADV_FREE.  This isn't obvious enough.  So Dave suggested to add a
-new page flag for that to improve the code readability.
+MADV_FREE is a lazy free mechanism in Linux.  According to the manpage
+of mavise(2), the semantics of MADV_FREE is,
+
+  The application no longer requires the pages in the range specified
+  by addr and len.  The kernel can thus free these pages, but the
+  freeing could be delayed until memory pressure occurs. ...
+
+Originally, the pages freed lazily by MADV_FREE will only be freed
+really by page reclaiming when there is memory pressure or when
+unmapping the address range.  In addition to that, there's another
+opportunity to free these pages really, when we try to migrate them.
+
+The main value to do that is to avoid to create the new memory
+pressure immediately if possible.  Instead, even if the pages are
+required again, they will be allocated gradually on demand.  That is,
+the memory will be allocated lazily when necessary.  This follows the
+common philosophy in the Linux kernel, allocate resources lazily on
+demand.
 
 Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
 Cc: David Hildenbrand <david@redhat.com>
 Cc: Mel Gorman <mgorman@suse.de>
 Cc: Vlastimil Babka <vbabka@suse.cz>
 Cc: Zi Yan <ziy@nvidia.com>
 Cc: Michal Hocko <mhocko@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
 Cc: Minchan Kim <minchan@kernel.org>
 Cc: Johannes Weiner <hannes@cmpxchg.org>
 Cc: Hugh Dickins <hughd@google.com>
 ---
- include/linux/page-flags.h | 25 +++++++++++++++++++++++++
- mm/rmap.c                  |  6 +++---
- mm/swap.c                  | 11 +++--------
- mm/vmscan.c                |  7 +++----
- 4 files changed, 34 insertions(+), 15 deletions(-)
+ include/linux/migrate.h |  4 ++++
+ mm/huge_memory.c        | 20 +++++++++++++++-----
+ mm/migrate.c            | 16 +++++++++++++++-
+ mm/rmap.c               | 10 ++++++++++
+ 4 files changed, 44 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index 49c2697046b9..759748fbcfad 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -498,6 +498,31 @@ static __always_inline int PageKsm(struct page *page)
- TESTPAGEFLAG_FALSE(Ksm)
- #endif
+diff --git a/include/linux/migrate.h b/include/linux/migrate.h
+index 72120061b7d4..2c6cf985a8d3 100644
+--- a/include/linux/migrate.h
++++ b/include/linux/migrate.h
+@@ -14,8 +14,12 @@ typedef void free_page_t(struct page *page, unsigned long private);
+  * Return values from addresss_space_operations.migratepage():
+  * - negative errno on page migration failure;
+  * - zero on page migration success;
++ *
++ * __unmap_and_move() can also return 1 to indicate the page can be
++ * discarded instead of migrated.
+  */
+ #define MIGRATEPAGE_SUCCESS		0
++#define MIGRATEPAGE_DISCARD		1
  
-+/*
-+ * For pages freed lazily via MADV_FREE.  lazyfree pages are clean
-+ * anonymous pages.  They have SwapBacked flag cleared to distinguish
-+ * with normal anonymous pages
-+ */
-+static __always_inline int PageLazyFree(struct page *page)
-+{
-+	page = compound_head(page);
-+	return PageAnon(page) && !PageSwapBacked(page);
-+}
-+
-+static __always_inline void SetPageLazyFree(struct page *page)
-+{
-+	VM_BUG_ON_PAGE(PageTail(page), page);
-+	VM_BUG_ON_PAGE(!PageAnon(page), page);
-+	ClearPageSwapBacked(page);
-+}
-+
-+static __always_inline void ClearPageLazyFree(struct page *page)
-+{
-+	VM_BUG_ON_PAGE(PageTail(page), page);
-+	VM_BUG_ON_PAGE(!PageAnon(page), page);
-+	SetPageSwapBacked(page);
-+}
-+
- u64 stable_page_flags(struct page *page);
+ enum migrate_reason {
+ 	MR_COMPACTION,
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index b1e069e68189..b64f356ab77e 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -3063,11 +3063,21 @@ void set_pmd_migration_entry(struct page_vma_mapped_walk *pvmw,
+ 	pmdval = pmdp_invalidate(vma, address, pvmw->pmd);
+ 	if (pmd_dirty(pmdval))
+ 		set_page_dirty(page);
+-	entry = make_migration_entry(page, pmd_write(pmdval));
+-	pmdswp = swp_entry_to_pmd(entry);
+-	if (pmd_soft_dirty(pmdval))
+-		pmdswp = pmd_swp_mksoft_dirty(pmdswp);
+-	set_pmd_at(mm, address, pvmw->pmd, pmdswp);
++	/* Clean lazyfree page, discard instead of migrate */
++	if (PageLazyFree(page) && !PageDirty(page)) {
++		pmd_clear(pvmw->pmd);
++		zap_deposited_table(mm, pvmw->pmd);
++		/* Invalidate as we cleared the pmd */
++		mmu_notifier_invalidate_range(mm, address,
++					      address + HPAGE_PMD_SIZE);
++		add_mm_counter(mm, MM_ANONPAGES, -HPAGE_PMD_NR);
++	} else {
++		entry = make_migration_entry(page, pmd_write(pmdval));
++		pmdswp = swp_entry_to_pmd(entry);
++		if (pmd_soft_dirty(pmdval))
++			pmdswp = pmd_swp_mksoft_dirty(pmdswp);
++		set_pmd_at(mm, address, pvmw->pmd, pmdswp);
++	}
+ 	page_remove_rmap(page, true);
+ 	put_page(page);
+ }
+diff --git a/mm/migrate.c b/mm/migrate.c
+index 981f8374a6ef..b7e7d18af94c 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -1122,6 +1122,11 @@ static int __unmap_and_move(struct page *page, struct page *newpage,
+ 			goto out_unlock_both;
+ 		}
+ 		page_was_mapped = 1;
++		/* Clean lazyfree page, discard instead of migrate */
++		if (PageLazyFree(page) && !PageDirty(page)) {
++			rc = MIGRATEPAGE_DISCARD;
++			goto out_unlock_both;
++		}
+ 	}
  
- static inline int PageUptodate(struct page *page)
+ 	if (!page_mapped(page))
+@@ -1242,7 +1247,16 @@ static ICE_noinline int unmap_and_move(new_page_t get_new_page,
+ 				num_poisoned_pages_inc();
+ 		}
+ 	} else {
+-		if (rc != -EAGAIN) {
++		/*
++		 * If page is discard instead of migrated, release
++		 * reference grabbed during isolation, free the new
++		 * page.  For the caller, this is same as migrating
++		 * successfully.
++		 */
++		if (rc == MIGRATEPAGE_DISCARD) {
++			put_page(page);
++			rc = MIGRATEPAGE_SUCCESS;
++		} else if (rc != -EAGAIN) {
+ 			if (likely(!__PageMovable(page))) {
+ 				putback_lru_page(page);
+ 				goto put_new;
 diff --git a/mm/rmap.c b/mm/rmap.c
-index 03c5b116d30e..1dcbb1771dd7 100644
+index 1dcbb1771dd7..bb52883f7b2d 100644
 --- a/mm/rmap.c
 +++ b/mm/rmap.c
-@@ -1598,7 +1598,7 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
- 			 * Store the swap location in the pte.
- 			 * See handle_pte_fault() ...
- 			 */
--			if (unlikely(PageSwapBacked(page) != PageSwapCache(page))) {
-+			if (unlikely(PageLazyFree(page) == PageSwapCache(page))) {
- 				WARN_ON_ONCE(1);
- 				ret = false;
- 				/* We have to invalidate as we cleared the pte */
-@@ -1609,7 +1609,7 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
- 			}
+@@ -1569,6 +1569,16 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
+ 			swp_entry_t entry;
+ 			pte_t swp_pte;
  
- 			/* MADV_FREE page check */
--			if (!PageSwapBacked(page)) {
-+			if (PageLazyFree(page)) {
- 				if (!PageDirty(page)) {
- 					/* Invalidate as we cleared the pte */
- 					mmu_notifier_invalidate_range(mm,
-@@ -1623,7 +1623,7 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
- 				 * discarded. Remap the page to page table.
- 				 */
++			/* Clean lazyfree page, discard instead of migrate */
++			if (PageLazyFree(page) && !PageDirty(page) &&
++			    !(flags & TTU_SPLIT_FREEZE)) {
++				/* Invalidate as we cleared the pte */
++				mmu_notifier_invalidate_range(mm,
++						address, address + PAGE_SIZE);
++				dec_mm_counter(mm, MM_ANONPAGES);
++				goto discard;
++			}
++
+ 			if (arch_unmap_one(mm, vma, address, pteval) < 0) {
  				set_pte_at(mm, address, pvmw.pte, pteval);
--				SetPageSwapBacked(page);
-+				ClearPageLazyFree(page);
  				ret = false;
- 				page_vma_mapped_walk_done(&pvmw);
- 				break;
-diff --git a/mm/swap.c b/mm/swap.c
-index f502a2155e85..bd5e40e14c94 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -564,7 +564,7 @@ static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec,
- static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec,
- 			    void *arg)
- {
--	if (PageLRU(page) && PageAnon(page) && PageSwapBacked(page) &&
-+	if (PageLRU(page) && PageAnon(page) && !PageLazyFree(page) &&
- 	    !PageSwapCache(page) && !PageUnevictable(page)) {
- 		bool active = PageActive(page);
- 
-@@ -572,12 +572,7 @@ static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec,
- 				       LRU_INACTIVE_ANON + active);
- 		ClearPageActive(page);
- 		ClearPageReferenced(page);
--		/*
--		 * lazyfree pages are clean anonymous pages. They have
--		 * SwapBacked flag cleared to distinguish normal anonymous
--		 * pages
--		 */
--		ClearPageSwapBacked(page);
-+		SetPageLazyFree(page);
- 		add_page_to_lru_list(page, lruvec, LRU_INACTIVE_FILE);
- 
- 		__count_vm_events(PGLAZYFREE, hpage_nr_pages(page));
-@@ -678,7 +673,7 @@ void deactivate_page(struct page *page)
-  */
- void mark_page_lazyfree(struct page *page)
- {
--	if (PageLRU(page) && PageAnon(page) && PageSwapBacked(page) &&
-+	if (PageLRU(page) && PageAnon(page) && !PageLazyFree(page) &&
- 	    !PageSwapCache(page) && !PageUnevictable(page)) {
- 		struct pagevec *pvec = &get_cpu_var(lru_lazyfree_pvecs);
- 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index f14c8c6069a6..0aaee7052fb0 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1043,8 +1043,7 @@ static void page_check_dirty_writeback(struct page *page,
- 	 * Anonymous pages are not handled by flushers and must be written
- 	 * from reclaim context. Do not stall reclaim based on them
- 	 */
--	if (!page_is_file_cache(page) ||
--	    (PageAnon(page) && !PageSwapBacked(page))) {
-+	if (!page_is_file_cache(page) || PageLazyFree(page)) {
- 		*dirty = false;
- 		*writeback = false;
- 		return;
-@@ -1235,7 +1234,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
- 		 * Try to allocate it some swap space here.
- 		 * Lazyfree page could be freed directly
- 		 */
--		if (PageAnon(page) && PageSwapBacked(page)) {
-+		if (PageAnon(page) && !PageLazyFree(page)) {
- 			if (!PageSwapCache(page)) {
- 				if (!(sc->gfp_mask & __GFP_IO))
- 					goto keep_locked;
-@@ -1411,7 +1410,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
- 			}
- 		}
- 
--		if (PageAnon(page) && !PageSwapBacked(page)) {
-+		if (PageLazyFree(page)) {
- 			/* follow __remove_mapping for reference */
- 			if (!page_ref_freeze(page, 1))
- 				goto keep_locked;
 -- 
 2.25.0
 
