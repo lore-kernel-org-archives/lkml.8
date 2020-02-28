@@ -4,37 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE67C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 485B5C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91547246AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2102A246AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:57:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbgB1P5P (ORCPT
+        id S1727305AbgB1P5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 10:57:15 -0500
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:45645 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727180AbgB1P5O (ORCPT
+        Fri, 28 Feb 2020 10:57:20 -0500
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:39555 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727159AbgB1P5O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Feb 2020 10:57:14 -0500
 X-Originating-IP: 90.89.41.158
 Received: from localhost (lfbn-tou-1-1473-158.w90-89.abo.wanadoo.fr [90.89.41.158])
         (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id F39891C0011;
-        Fri, 28 Feb 2020 15:57:11 +0000 (UTC)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id E129060015;
+        Fri, 28 Feb 2020 15:57:10 +0000 (UTC)
 From:   Antoine Tenart <antoine.tenart@bootlin.com>
 To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
         hkallweit1@gmail.com
 Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         foss@0leil.net
-Subject: [PATCH net-next v2 1/3] net: phy: mscc: add support for RGMII MAC mode
-Date:   Fri, 28 Feb 2020 16:57:00 +0100
-Message-Id: <20200228155702.2062570-2-antoine.tenart@bootlin.com>
+Subject: [PATCH net-next v2 3/3] net: phy: mscc: RGMII skew delay configuration
+Date:   Fri, 28 Feb 2020 16:57:02 +0100
+Message-Id: <20200228155702.2062570-4-antoine.tenart@bootlin.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200228155702.2062570-1-antoine.tenart@bootlin.com>
 References: <20200228155702.2062570-1-antoine.tenart@bootlin.com>
@@ -45,74 +44,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for connecting VSC8584 PHYs to the MAC using
-RGMII.
+This patch adds support for configuring the RGMII skew delays in Rx and
+Tx. The delay value is retrieved from the device tree, and set based on
+the PHY interface mode (rgmii, rgmii-id, rgmii-rx, rgmii-tx). If no
+configuration is provided in the device tree, or of a delay isn't used,
+its value will be set to the default one at probe time: this driver do
+not rely anymore on the bootloader configuration for RGMII skews.
 
 Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
 ---
- drivers/net/phy/mscc.c | 33 +++++++++++++++++++++------------
- 1 file changed, 21 insertions(+), 12 deletions(-)
+ drivers/net/phy/mscc.c | 50 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
 diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
-index d24577de0775..c389d7e59f91 100644
+index c389d7e59f91..4e9d788d95b9 100644
 --- a/drivers/net/phy/mscc.c
 +++ b/drivers/net/phy/mscc.c
-@@ -272,6 +272,7 @@ enum macsec_bank {
- #define MAC_CFG_MASK			  0xc000
- #define MAC_CFG_SGMII			  0x0000
- #define MAC_CFG_QSGMII			  0x4000
-+#define MAC_CFG_RGMII			  0x8000
+@@ -192,6 +192,10 @@ enum macsec_bank {
+ /* Extended Page 2 Registers */
+ #define MSCC_PHY_CU_PMD_TX_CNTL		  16
  
- /* Test page Registers */
- #define MSCC_PHY_TEST_PAGE_5		  5
-@@ -2751,27 +2752,35 @@ static int vsc8584_config_init(struct phy_device *phydev)
++#define MSCC_PHY_RGMII_SETTINGS		  18
++#define RGMII_SKEW_RX_POS		  1
++#define RGMII_SKEW_TX_POS		  4
++
+ #define MSCC_PHY_RGMII_CNTL		  20
+ #define RGMII_RX_CLK_DELAY_MASK		  0x0070
+ #define RGMII_RX_CLK_DELAY_POS		  4
+@@ -2680,6 +2684,49 @@ static bool vsc8584_is_pkg_init(struct phy_device *phydev, bool reversed)
+ 	return false;
+ }
  
- 	val = phy_base_read(phydev, MSCC_PHY_MAC_CFG_FASTLINK);
- 	val &= ~MAC_CFG_MASK;
--	if (phydev->interface == PHY_INTERFACE_MODE_QSGMII)
-+	if (phydev->interface == PHY_INTERFACE_MODE_QSGMII) {
- 		val |= MAC_CFG_QSGMII;
--	else
-+	} else if (phydev->interface == PHY_INTERFACE_MODE_SGMII) {
- 		val |= MAC_CFG_SGMII;
-+	} else if (phy_interface_is_rgmii(phydev)) {
-+		val |= MAC_CFG_RGMII;
-+	} else {
-+		ret = -EINVAL;
-+		goto err;
++static void vsc8584_rgmii_set_skews(struct phy_device *phydev)
++{
++	u32 skew_rx, skew_tx;
++	struct device *dev = &phydev->mdio.dev;
++
++	/* We first set the Rx and Tx skews to their default value in h/w
++	 * (0.2 ns).
++	 */
++	skew_rx = VSC8584_RGMII_SKEW_0_2;
++	skew_tx = VSC8584_RGMII_SKEW_0_2;
++
++	/* Based on the interface mode, we then retrieve (if available) Rx
++	 * and/or Tx skews from the device tree. We do not fail if the
++	 * properties do not exist, the default skew configuration is a valid
++	 * one.
++	 */
++	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
++	    phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID)
++		of_property_read_u32(dev->of_node, "vsc8584,rgmii-skew-rx",
++				     &skew_rx);
++	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
++	    phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID)
++		of_property_read_u32(dev->of_node, "vsc8584,rgmii-skew-tx",
++				     &skew_tx);
++
++	/* Make sure we did not retrieve unsupported values. */
++	if (skew_rx > VSC8584_RGMII_SKEW_3_4) {
++		phydev_err(phydev, "Invalid Rx skew, fix the device tree.");
++		skew_rx = VSC8584_RGMII_SKEW_0_2;
 +	}
++	if (skew_tx > VSC8584_RGMII_SKEW_3_4) {
++		phydev_err(phydev, "Invalid Tx skew, fix the device tree.");
++		skew_tx = VSC8584_RGMII_SKEW_0_2;
++	}
++
++	/* Finally we do apply the skew configuration. */
++	phy_modify_paged(phydev, MSCC_PHY_PAGE_EXTENDED_2,
++			 MSCC_PHY_RGMII_SETTINGS,
++			 (0x7 << RGMII_SKEW_RX_POS) | (0x7 << RGMII_SKEW_TX_POS),
++			 (skew_rx << RGMII_SKEW_RX_POS) |
++			 (skew_tx << RGMII_SKEW_TX_POS));
++}
++
+ static int vsc8584_config_init(struct phy_device *phydev)
+ {
+ 	struct vsc8531_private *vsc8531 = phydev->priv;
+@@ -2826,6 +2873,9 @@ static int vsc8584_config_init(struct phy_device *phydev)
+ 	       (VSC8584_MAC_IF_SELECTION_SGMII << VSC8584_MAC_IF_SELECTION_POS);
+ 	ret = phy_write(phydev, MSCC_PHY_EXT_PHY_CNTL_1, val);
  
- 	ret = phy_base_write(phydev, MSCC_PHY_MAC_CFG_FASTLINK, val);
++	if (phy_interface_is_rgmii(phydev))
++		vsc8584_rgmii_set_skews(phydev);
++
+ 	ret = genphy_soft_reset(phydev);
  	if (ret)
- 		goto err;
- 
--	val = PROC_CMD_MCB_ACCESS_MAC_CONF | PROC_CMD_RST_CONF_PORT |
--		PROC_CMD_READ_MOD_WRITE_PORT;
--	if (phydev->interface == PHY_INTERFACE_MODE_QSGMII)
--		val |= PROC_CMD_QSGMII_MAC;
--	else
--		val |= PROC_CMD_SGMII_MAC;
-+	if (!phy_interface_is_rgmii(phydev)) {
-+		val = PROC_CMD_MCB_ACCESS_MAC_CONF | PROC_CMD_RST_CONF_PORT |
-+		      PROC_CMD_READ_MOD_WRITE_PORT;
-+		if (phydev->interface == PHY_INTERFACE_MODE_QSGMII)
-+			val |= PROC_CMD_QSGMII_MAC;
-+		else
-+			val |= PROC_CMD_SGMII_MAC;
- 
--	ret = vsc8584_cmd(phydev, val);
--	if (ret)
--		goto err;
-+		ret = vsc8584_cmd(phydev, val);
-+		if (ret)
-+			goto err;
- 
--	usleep_range(10000, 20000);
-+		usleep_range(10000, 20000);
-+	}
- 
- 	/* Disable SerDes for 100Base-FX */
- 	ret = vsc8584_cmd(phydev, PROC_CMD_FIBER_MEDIA_CONF |
+ 		return ret;
 -- 
 2.24.1
 
