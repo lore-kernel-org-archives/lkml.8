@@ -2,242 +2,119 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5C7C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23848C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03B9A2072A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E19C52072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:55:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="B62jc43u"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="i5Zcoth6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgB1Ozp (ORCPT
+        id S1727180AbgB1Ozr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 09:55:45 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42401 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726874AbgB1Ozp (ORCPT
+        Fri, 28 Feb 2020 09:55:47 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:15064 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726906AbgB1Ozq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 09:55:45 -0500
-Received: by mail-wr1-f67.google.com with SMTP id p18so3239865wre.9
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 06:55:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xGS5E2ij2aXZmAzDZgbLote3FIscLuyNLJZj/fAHfoY=;
-        b=B62jc43uVwB+e901ispu1vxFEQ7Wp1qg7mVXscpz1axaQGsSYsbePkXeBjW+oxF8GH
-         9kcxgVsM3USCw66QCdbhF6eKsrZVQpmWmXV7woHotQm4cHAFZdEsbyW00STfy8dj672h
-         n7MirNd559c3v6aCr0yazVzMv49m9N5Oyc71VPKvIT24PQow/vZ29KULyQZKfrd4YDtj
-         fPNl+/jspNdD3tzDigKNl0QF94yeaPcrr1M5zqmM7somJGwxEMXZ/3pl+BTX5Q+oJZwp
-         qRW8+S6e9lft+CvnDvCceg5HR7evBrBnNL5WAhSa7z6O3hPUfx/p12VODfPNXysADgo+
-         UNRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xGS5E2ij2aXZmAzDZgbLote3FIscLuyNLJZj/fAHfoY=;
-        b=um2DvsJeBP/r/lg6uBzxvi4Ri+tHP/CILYWm+pVF4gibTa+y3zJZgViEAGgNfHVlKD
-         Ev4Cyu9KGI7mctcOgDhR2mKv4QL4g96yBTlPvZZXlQ1qSE4z6nY7F9Oh8EopRm7Su5g7
-         2u5BPSjaHYjt2H2KPUU18qiNwEBHq4unH2/X2iZwiJkaJ1yE0jLWJAr9Ae08KStkFqve
-         RVd7sEP3rC8p1FHvcgENuXCSPDw+rUEkVFmIAsKMxJVhPHFV+6KC4mmeU2o5pUt/SKAc
-         0UDKpkRYVmC1qrQw1lipGx3YXFntsMwRl5mL0uf1SkfigOHMRRgSpOBW0n3tFreTHaHk
-         8Nxg==
-X-Gm-Message-State: APjAAAU74sd32VF+7N6UgIDyvEY/lwVhEaJmjMv/kz1+vfefsw9rf7w0
-        lwZiSv/1+rZH74OVGCQXmk4Z1JmPHq2tJfSG+eTwBA==
-X-Google-Smtp-Source: APXvYqzgmFzHYyLRQoXsMIusyYo0s0nDR+ALWz0qQnJfNjhpYVKzH75PuAjjImnefSFuWpO2ab0zHaKimik2QW5Wbls=
-X-Received: by 2002:adf:e542:: with SMTP id z2mr5471702wrm.150.1582901742631;
- Fri, 28 Feb 2020 06:55:42 -0800 (PST)
-MIME-Version: 1.0
-References: <20200227151752.21985-1-eugen.hristev@microchip.com>
- <CAPY8ntB17QjCSyefwTrMhudwkiFYT_5x3i1=KjzFv+p6tbrQEA@mail.gmail.com>
- <c6c1082d-3f40-c709-39cf-d1547f0c0308@microchip.com> <CAPY8ntDrsEJboMr2=Phce=mT6DJpivhE--L00qd4uecF81AXkg@mail.gmail.com>
- <4d89fcc2-07bb-f83d-94e2-d0c3c1520471@microchip.com>
-In-Reply-To: <4d89fcc2-07bb-f83d-94e2-d0c3c1520471@microchip.com>
-From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date:   Fri, 28 Feb 2020 14:55:25 +0000
-Message-ID: <CAPY8ntDmQuzqWfkq_4+Jvc8BFzQh+XnVMt0ZyNBbzmk4GEPnfg@mail.gmail.com>
-Subject: Re: [PATCH] media: i2c: imx219: add support for enum frame interval
-To:     Eugen.Hristev@microchip.com
-Cc:     Andrey Konovalov <andrey.konovalov@linaro.org>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
+        Fri, 28 Feb 2020 09:55:46 -0500
+X-UUID: bec45df404ff4219a8476fd81106c3f9-20200228
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=KupROzX3aGOHBHNRJXxfTvVaiYRDVDCR4a16idnL8VA=;
+        b=i5Zcoth6DexXSmXFNfAo4B6rl2NkfsojbC3nBlrWeDPp4kyLQrXpvwZeDdC8hRWFlcmSous5b/Mbr0AFA/N+RWBCKFZJ7xISDX7pwPurp16w3GDp9qsbQWazZuag0bRcfpC2i9Mvf6hP0uFTDXNYrwA9PS7r6G7Sb1lOTGVD6U0=;
+X-UUID: bec45df404ff4219a8476fd81106c3f9-20200228
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 425614716; Fri, 28 Feb 2020 22:55:42 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 28 Feb 2020 22:54:47 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 28 Feb 2020 22:55:23 +0800
+Message-ID: <1582901741.14824.6.camel@mtksdaap41>
+Subject: Re: [PATCH v3 09/13] soc: mediatek: cmdq: add write_s value function
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        "Ming-Fan Chen" <ming-fan.chen@mediatek.com>
+Date:   Fri, 28 Feb 2020 22:55:41 +0800
+In-Reply-To: <1582897461-15105-11-git-send-email-dennis-yc.hsieh@mediatek.com>
+References: <1582897461-15105-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1582897461-15105-11-git-send-email-dennis-yc.hsieh@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Feb 2020 at 14:34, <Eugen.Hristev@microchip.com> wrote:
->
-> On 28.02.2020 16:16, Dave Stevenson wrote:
-> > On Fri, 28 Feb 2020 at 14:05, <Eugen.Hristev@microchip.com> wrote:
-> >>
-> >> On 28.02.2020 15:44, Dave Stevenson wrote:
-> >>> Hi Eugen.
-> >>>
-> >>> On Thu, 27 Feb 2020 at 15:19, Eugen Hristev <eugen.hristev@microchip.com> wrote:
-> >>>>
-> >>>> Add support for enum frame intervals IOCTL.
-> >>>> The current supported framerates are only available as comments inside
-> >>>> the code.
-> >>>> Add support for VIDIOC_ENUM_FRAMEINTERVALS as the enum_frame_interval
-> >>>> callback as pad ops.
-> >>>>
-> >>>>    # v4l2-ctl --list-frameintervals width=1920,height=1080,pixelformat=RG10
-> >>>>    ioctl: VIDIOC_ENUM_FRAMEINTERVALS
-> >>>>           Interval: Discrete 0.067s (15.000 fps)
-> >>>>           Interval: Discrete 0.033s (30.000 fps)
-> >>>>           Interval: Discrete 0.033s (30.000 fps)
-> >>>
-> >>> But the frame rates are not discrete. You have frame rate control via
-> >>> V4L2_CID_VBLANK, which can be used in conjunction with V4L2_CID_HBLANK
-> >>> and V4L2_CID_PIXEL_RATE to determine actual frame period.
-> >>>
-> >>> See https://linuxtv.org/downloads/v4l-dvb-apis-new/uapi/v4l/ext-ctrls-image-source.html?highlight=v4l2_cid_vblank
-> >>> I believe this is the preferred route to doing frame rate control on
-> >>> image sensors. I assume someone will correct me if I'm wrong on that.
-> >>
-> >>
-> >> Okay... , I was guided towards this by the comments in the code, saying
-> >> that the three supported modes are at a constant frame per second...
-> >>
-> >> Those comments are wrong then ?
-> >
-> > Yes, the comments for each of the modes (eg "/* 8MPix 15fps mode */")
-> > probably shouldn't have the frame rate in them. I don't see any other
-> > references. Those frame rates are the defaults only, as set via eg
-> > IMX219_VTS_15FPS.
-> >
-> > I originally wrote the driver without frame rate control, and the
-> > comments obviously didn't get updated when VTS/HTS support was added
-> > :-/
->
-> So in my understanding, actually, to get actual frame rate, we should
-> use another control, and the enum frame intervals is actually impossible
-> to use, since the sensor supports a multitude of frame rates, and it
-> would be egregious to enumerate them all.
->
-> Is this the case ?
->
-> My idea was that v4l2-ctl --list-formats-ext will not show anything
-> related to frame rate. So using this command, will only get the
-> resolution, but don't know what to expect in terms of frame rate.
-> Wouldn't be useful to implement this 'default' frame rate in this IOCTL ?
+SGksIERlbm5pczoNCg0KT24gRnJpLCAyMDIwLTAyLTI4IGF0IDIxOjQ0ICswODAwLCBEZW5uaXMg
+WUMgSHNpZWggd3JvdGU6DQo+IGFkZCB3cml0ZV9zIGZ1bmN0aW9uIGluIGNtZHEgaGVscGVyIGZ1
+bmN0aW9ucyB3aGljaA0KPiB3cml0ZXMgYSBjb25zdGFudCB2YWx1ZSB0byBhZGRyZXNzIHdpdGgg
+bGFyZ2UgZG1hDQo+IGFjY2VzcyBzdXBwb3J0Lg0KPiANCg0KUmV2aWV3ZWQtYnk6IENLIEh1IDxj
+ay5odUBtZWRpYXRlay5jb20+DQoNCj4gU2lnbmVkLW9mZi1ieTogRGVubmlzIFlDIEhzaWVoIDxk
+ZW5uaXMteWMuaHNpZWhAbWVkaWF0ZWsuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvc29jL21lZGlh
+dGVrL210ay1jbWRxLWhlbHBlci5jIHwgMjYgKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4g
+IGluY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmggIHwgMTQgKysrKysrKysrKysr
+KysNCj4gIDIgZmlsZXMgY2hhbmdlZCwgNDAgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jIGIvZHJpdmVycy9zb2Mv
+bWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gaW5kZXggNDI4Zjk5Mjg4Y2E2Li4xMzM2NTIz
+ZWI3ZDQgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBl
+ci5jDQo+ICsrKyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+IEBA
+IC0yNjksNiArMjY5LDMyIEBAIGludCBjbWRxX3BrdF93cml0ZV9zKHN0cnVjdCBjbWRxX3BrdCAq
+cGt0LCB1MTYgaGlnaF9hZGRyX3JlZ19pZHgsDQo+ICB9DQo+ICBFWFBPUlRfU1lNQk9MKGNtZHFf
+cGt0X3dyaXRlX3MpOw0KPiAgDQo+ICtpbnQgY21kcV9wa3Rfd3JpdGVfc192YWx1ZShzdHJ1Y3Qg
+Y21kcV9wa3QgKnBrdCwgdTE2IGhpZ2hfYWRkcl9yZWdfaWR4LA0KPiArCQkJICAgdTE2IGFkZHJf
+bG93LCB1MzIgdmFsdWUsIHUzMiBtYXNrKQ0KPiArew0KPiArCXN0cnVjdCBjbWRxX2luc3RydWN0
+aW9uIGluc3QgPSB7IHswfSB9Ow0KPiArCWludCBlcnI7DQo+ICsNCj4gKwlpZiAobWFzayAhPSBV
+MzJfTUFYKSB7DQo+ICsJCWluc3Qub3AgPSBDTURRX0NPREVfTUFTSzsNCj4gKwkJaW5zdC5tYXNr
+ID0gfm1hc2s7DQo+ICsJCWVyciA9IGNtZHFfcGt0X2FwcGVuZF9jb21tYW5kKHBrdCwgaW5zdCk7
+DQo+ICsJCWlmIChlcnIgPCAwKQ0KPiArCQkJcmV0dXJuIGVycjsNCj4gKw0KPiArCQlpbnN0Lm9w
+ID0gQ01EUV9DT0RFX1dSSVRFX1NfTUFTSzsNCj4gKwl9IGVsc2Ugew0KPiArCQlpbnN0Lm9wID0g
+Q01EUV9DT0RFX1dSSVRFX1M7DQo+ICsJfQ0KPiArDQo+ICsJaW5zdC5zb3AgPSBoaWdoX2FkZHJf
+cmVnX2lkeDsNCj4gKwlpbnN0Lm9mZnNldCA9IGFkZHJfbG93Ow0KPiArCWluc3QudmFsdWUgPSB2
+YWx1ZTsNCj4gKw0KPiArCXJldHVybiBjbWRxX3BrdF9hcHBlbmRfY29tbWFuZChwa3QsIGluc3Qp
+Ow0KPiArfQ0KPiArRVhQT1JUX1NZTUJPTChjbWRxX3BrdF93cml0ZV9zX3ZhbHVlKTsNCj4gKw0K
+PiAgaW50IGNtZHFfcGt0X3dmZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTE2IGV2ZW50KQ0KPiAg
+ew0KPiAgCXN0cnVjdCBjbWRxX2luc3RydWN0aW9uIGluc3QgPSB7IHswfSB9Ow0KPiBkaWZmIC0t
+Z2l0IGEvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaCBiL2luY2x1ZGUvbGlu
+dXgvc29jL21lZGlhdGVrL210ay1jbWRxLmgNCj4gaW5kZXggMDFiNDE4NGFmMzEwLi5mZWMyOTJh
+YWM4M2MgMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRx
+LmgNCj4gKysrIGIvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaA0KPiBAQCAt
+MTM1LDYgKzEzNSwyMCBAQCBpbnQgY21kcV9wa3RfcmVhZF9zKHN0cnVjdCBjbWRxX3BrdCAqcGt0
+LCB1MTYgaGlnaF9hZGRyX3JlZ19pZHgsIHUxNiBhZGRyX2xvdywNCj4gIGludCBjbWRxX3BrdF93
+cml0ZV9zKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1MTYgaGlnaF9hZGRyX3JlZ19pZHgsDQo+ICAJ
+CSAgICAgdTE2IGFkZHJfbG93LCB1MTYgc3JjX3JlZ19pZHgsIHUzMiBtYXNrKTsNCj4gIA0KPiAr
+LyoqDQo+ICsgKiBjbWRxX3BrdF93cml0ZV9zX3ZhbHVlKCkgLSBhcHBlbmQgd3JpdGVfcyBjb21t
+YW5kIHdpdGggbWFzayB0byB0aGUgQ01EUQ0KPiArICoJCQkgICAgICBwYWNrZXQgd2hpY2ggd3Jp
+dGUgdmFsdWUgdG8gYSBwaHlzaWNhbCBhZGRyZXNzDQo+ICsgKiBAcGt0Ogl0aGUgQ01EUSBwYWNr
+ZXQNCj4gKyAqIEBoaWdoX2FkZHJfcmVnX2lkeDoJaW50ZXJuYWwgcmVnaXNnZXIgSUQgd2hpY2gg
+Y29udGFpbnMgaGlnaCBhZGRyZXNzIG9mIHBhDQo+ICsgKiBAYWRkcl9sb3c6CWxvdyBhZGRyZXNz
+IG9mIHBhDQo+ICsgKiBAdmFsdWU6CXRoZSBzcGVjaWZpZWQgdGFyZ2V0IHZhbHVlDQo+ICsgKiBA
+bWFzazoJdGhlIHNwZWNpZmllZCB0YXJnZXQgbWFzaw0KPiArICoNCj4gKyAqIFJldHVybjogMCBm
+b3Igc3VjY2VzczsgZWxzZSB0aGUgZXJyb3IgY29kZSBpcyByZXR1cm5lZA0KPiArICovDQo+ICtp
+bnQgY21kcV9wa3Rfd3JpdGVfc192YWx1ZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTE2IGhpZ2hf
+YWRkcl9yZWdfaWR4LA0KPiArCQkJICAgdTE2IGFkZHJfbG93LCB1MzIgdmFsdWUsIHUzMiBtYXNr
+KTsNCj4gKw0KPiAgLyoqDQo+ICAgKiBjbWRxX3BrdF93ZmUoKSAtIGFwcGVuZCB3YWl0IGZvciBl
+dmVudCBjb21tYW5kIHRvIHRoZSBDTURRIHBhY2tldA0KPiAgICogQHBrdDoJdGhlIENNRFEgcGFj
+a2V0DQoNCg==
 
-I'll defer to Sakari or others on the original reasoning behind it. I
-was basing imx219 on other recently merged Bayer sensor drivers.
-
-Having individual control of HTS and VTS allows slightly finer control
-of exactly how the sensor frames. It also matches with exposure time
-being set in lines, therefore you need to know the time per horizontal
-line to convert from units of time.
-If the driver were implementing ENUM_FRAME_INTERVALS / [S|G]_PARM then
-you'd still need to support HTS/VTS for exposure, so why duplicate
-settings?
-
-> Thanks for explanations
-> >
-> >> Thanks for replying,
-> >>
-> >> Eugen
-> >>
-> >>>
-> >>>     Dave
-> >>>
-> >>>> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> >>>> ---
-> >>>>
-> >>>> Hello,
-> >>>>
-> >>>> This is on top of Sakari's tree in linuxtv.org
-> >>>>
-> >>>> Thanks
-> >>>> Eugen
-> >>>>
-> >>>>    drivers/media/i2c/imx219.c | 27 +++++++++++++++++++++++++++
-> >>>>    1 file changed, 27 insertions(+)
-> >>>>
-> >>>> diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
-> >>>> index f1effb5a5f66..17fcedd4edb6 100644
-> >>>> --- a/drivers/media/i2c/imx219.c
-> >>>> +++ b/drivers/media/i2c/imx219.c
-> >>>> @@ -127,6 +127,8 @@ struct imx219_mode {
-> >>>>           unsigned int width;
-> >>>>           /* Frame height */
-> >>>>           unsigned int height;
-> >>>> +       /* Frame rate */
-> >>>> +       u8 fps;
-> >>>>
-> >>>>           /* V-timing */
-> >>>>           unsigned int vts_def;
-> >>>> @@ -381,6 +383,7 @@ static const struct imx219_mode supported_modes[] = {
-> >>>>                   /* 8MPix 15fps mode */
-> >>>>                   .width = 3280,
-> >>>>                   .height = 2464,
-> >>>> +               .fps = 15,
-> >>>>                   .vts_def = IMX219_VTS_15FPS,
-> >>>>                   .reg_list = {
-> >>>>                           .num_of_regs = ARRAY_SIZE(mode_3280x2464_regs),
-> >>>> @@ -391,6 +394,7 @@ static const struct imx219_mode supported_modes[] = {
-> >>>>                   /* 1080P 30fps cropped */
-> >>>>                   .width = 1920,
-> >>>>                   .height = 1080,
-> >>>> +               .fps = 30,
-> >>>>                   .vts_def = IMX219_VTS_30FPS_1080P,
-> >>>>                   .reg_list = {
-> >>>>                           .num_of_regs = ARRAY_SIZE(mode_1920_1080_regs),
-> >>>> @@ -401,6 +405,7 @@ static const struct imx219_mode supported_modes[] = {
-> >>>>                   /* 2x2 binned 30fps mode */
-> >>>>                   .width = 1640,
-> >>>>                   .height = 1232,
-> >>>> +               .fps = 30,
-> >>>>                   .vts_def = IMX219_VTS_30FPS_BINNED,
-> >>>>                   .reg_list = {
-> >>>>                           .num_of_regs = ARRAY_SIZE(mode_1640_1232_regs),
-> >>>> @@ -680,6 +685,27 @@ static int imx219_enum_frame_size(struct v4l2_subdev *sd,
-> >>>>           return 0;
-> >>>>    }
-> >>>>
-> >>>> +static int imx219_enum_frame_interval(struct v4l2_subdev *sd,
-> >>>> +                                     struct v4l2_subdev_pad_config *cfg,
-> >>>> +                                     struct v4l2_subdev_frame_interval_enum *fie)
-> >>>> +{
-> >>>> +       struct imx219 *imx219 = to_imx219(sd);
-> >>>> +
-> >>>> +       if (fie->index >= ARRAY_SIZE(supported_modes))
-> >>>> +               return -EINVAL;
-> >>>> +
-> >>>> +       if (fie->code != imx219_get_format_code(imx219))
-> >>>> +               return -EINVAL;
-> >>>> +
-> >>>> +       if (fie->pad)
-> >>>> +               return -EINVAL;
-> >>>> +
-> >>>> +       fie->interval.numerator = 1;
-> >>>> +       fie->interval.denominator = supported_modes[fie->index].fps;
-> >>>> +
-> >>>> +       return 0;
-> >>>> +}
-> >>>> +
-> >>>>    static void imx219_reset_colorspace(struct v4l2_mbus_framefmt *fmt)
-> >>>>    {
-> >>>>           fmt->colorspace = V4L2_COLORSPACE_SRGB;
-> >>>> @@ -1004,6 +1030,7 @@ static const struct v4l2_subdev_pad_ops imx219_pad_ops = {
-> >>>>           .get_fmt = imx219_get_pad_format,
-> >>>>           .set_fmt = imx219_set_pad_format,
-> >>>>           .enum_frame_size = imx219_enum_frame_size,
-> >>>> +       .enum_frame_interval = imx219_enum_frame_interval,
-> >>>>    };
-> >>>>
-> >>>>    static const struct v4l2_subdev_ops imx219_subdev_ops = {
-> >>>> --
-> >>>> 2.20.1
-> >>>>
-> >>
->
