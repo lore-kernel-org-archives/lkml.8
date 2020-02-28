@@ -2,181 +2,62 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E92BEC3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED14C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0935246AA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:39:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ameog9Zp"
+	by mail.kernel.org (Postfix) with ESMTP id AA722246A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:40:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgB1KjT (ORCPT
+        id S1726744AbgB1Kki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 05:39:19 -0500
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:46730 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbgB1KjS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 05:39:18 -0500
-Received: by mail-vs1-f65.google.com with SMTP id t12so1602246vso.13;
-        Fri, 28 Feb 2020 02:39:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IVkeix1fcnYZXRBUxfNVTT56PIOklSoyZMm+hTUJTz0=;
-        b=Ameog9Zplz9fAzkjb6NxOLgSMttnlM8uqXZaWcCJ1N+7pd6rAmQgf1NkyDX0hZOt3T
-         wWV2Xrl+rAqWG8MwHYmsMGLU4pB4suuNd06Ev9ZeFjdo3oxqO40wHYIoR3qw2MNWRo/K
-         UCFlIxe9qUeFjcFgfwUShKXmY8xiI0/srqeQ/W279OjO4bcsX7SpbqBh24dNwiDt++aL
-         zmHJ6n7Th3+Eqfh2JJ5xVp0GS1UATfwzqohFkVaDFNsqV6591Eap7TtCPbvqwqeSMFhu
-         8wxA/A2lAHK0xqRohlG4FBFOIRxWAtjchpgAso7x67VHxq8QpeHBqRnXNb80rchhR3uM
-         BfPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IVkeix1fcnYZXRBUxfNVTT56PIOklSoyZMm+hTUJTz0=;
-        b=l39XTe7cR2Ig6chcmEKSNHcZbgXnw0Vtq4edxDAi+QEYYMebsRQGXaJdVdDfcVwp76
-         tfFjF2wvq0W2zyno69htsL/XUAT7n5cyVfFH1BD2hgnZav8kEeKwq6tlIjSuaPhwj7Lw
-         5u/K8qneWiVqduLwQFTkPGn/PL5U7iLqRRJBSbUD0QoIXGxWfEuJ5S9LihzXYKyPIo+Y
-         EdLASgk2aCEcqqpWrwxROWGflZpuHLdhmZIzJcH/eFuZiCoeC4wtl9C91vPAlaYwRQin
-         LHyLLBRHkB5kQkitrVj9E7sQDoOMMU3IDl4+CDx/4tQsCiGWGDNxGI/ASk3T5DQBQw1z
-         WNJA==
-X-Gm-Message-State: ANhLgQ2w/ZY+g2be4HPYB6GFckyxiTgvIRK6gWOl5RMDsbrLoxvSDceG
-        rd3fKnNUNeUkCtQer6q75lgKHeb6K3vZd/ijGLfdpXXG
-X-Google-Smtp-Source: ADFU+vueeYEl9uMwIRv51UteUXQvmnDkMiNGIO2wkpX77fcl1BU/O4Ks+yfXVc+t5PicvqKK+dNtCRByY+iZ7df3CnA=
-X-Received: by 2002:a67:e912:: with SMTP id c18mr2058699vso.72.1582886357500;
- Fri, 28 Feb 2020 02:39:17 -0800 (PST)
+        Fri, 28 Feb 2020 05:40:38 -0500
+Received: from foss.arm.com ([217.140.110.172]:36324 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726063AbgB1Kki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 05:40:38 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C65774B2;
+        Fri, 28 Feb 2020 02:40:37 -0800 (PST)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E09FB3F73B;
+        Fri, 28 Feb 2020 02:40:36 -0800 (PST)
+Date:   Fri, 28 Feb 2020 10:40:34 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Zeng Tao <prime.zeng@hisilicon.com>
+Cc:     linuxarm@huawei.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH] cpu-topology: Fix the potential data corruption
+Message-ID: <20200228104034.GB26973@bogus>
+References: <1582878945-50415-1-git-send-email-prime.zeng@hisilicon.com>
 MIME-Version: 1.0
-References: <20200106104339.215511-1-christian.gmeiner@gmail.com> <78e5e739269ee8f7467284ad88d2097e2ad991ba.camel@pengutronix.de>
-In-Reply-To: <78e5e739269ee8f7467284ad88d2097e2ad991ba.camel@pengutronix.de>
-From:   Christian Gmeiner <christian.gmeiner@gmail.com>
-Date:   Fri, 28 Feb 2020 11:39:05 +0100
-Message-ID: <CAH9NwWe85qELoLisKgVdZYeeBkngAk9qQVNDA3=cp4_uRwXsEw@mail.gmail.com>
-Subject: Re: [PATCH] drm/etnaviv: rework perfmon query infrastructure
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        The etnaviv authors <etnaviv@lists.freedesktop.org>,
-        stable@vger.kernel.org,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582878945-50415-1-git-send-email-prime.zeng@hisilicon.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lucas,
-
-Am Mi., 26. Feb. 2020 um 16:19 Uhr schrieb Lucas Stach <l.stach@pengutronix.de>:
+On Fri, Feb 28, 2020 at 04:35:45PM +0800, Zeng Tao wrote:
+> Currently there are only 10 bytes to store the cpu-topology info.
+> That is:
+> snprintf(buffer, 10, "cluster%d",i);
+> snprintf(buffer, 10, "thread%d",i);
+> snprintf(buffer, 10, "core%d",i);
 >
-> Hi Christian,
->
-> sorry for taking so long to get around to this.
->
+> In the boundary test, if the cluster number exceeds 100, there will be a
 
-No problem...
+I don't understand you mention of 100 in particular above. I can see issue
+if there are cluster with more than 2-digit id. Though highly unlikely for
+now, but I don't have objection to the patch.
 
-> On Mo, 2020-01-06 at 11:43 +0100, Christian Gmeiner wrote:
-> > Report the correct perfmon domains and signals depending
-> > on the supported feature flags.
-> >
-> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > Fixes: 9e2c2e273012 ("drm/etnaviv: add infrastructure to query perf counter")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
-> > ---
-> >  drivers/gpu/drm/etnaviv/etnaviv_perfmon.c | 57 ++++++++++++++++++++---
-> >  1 file changed, 50 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-> > index 8adbf2861bff..7ae8f347ca06 100644
-> > --- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-> > +++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-> > @@ -32,6 +32,7 @@ struct etnaviv_pm_domain {
-> >  };
-> >
-> >  struct etnaviv_pm_domain_meta {
-> > +     unsigned int feature;
-> >       const struct etnaviv_pm_domain *domains;
-> >       u32 nr_domains;
-> >  };
-> > @@ -410,36 +411,78 @@ static const struct etnaviv_pm_domain doms_vg[] = {
-> >
-> >  static const struct etnaviv_pm_domain_meta doms_meta[] = {
-> >       {
-> > +             .feature = chipFeatures_PIPE_3D,
-> >               .nr_domains = ARRAY_SIZE(doms_3d),
-> >               .domains = &doms_3d[0]
-> >       },
-> >       {
-> > +             .feature = chipFeatures_PIPE_2D,
-> >               .nr_domains = ARRAY_SIZE(doms_2d),
-> >               .domains = &doms_2d[0]
-> >       },
-> >       {
-> > +             .feature = chipFeatures_PIPE_VG,
-> >               .nr_domains = ARRAY_SIZE(doms_vg),
-> >               .domains = &doms_vg[0]
-> >       }
-> >  };
-> >
-> > +static unsigned int num_pm_domains(const struct etnaviv_gpu *gpu)
-> > +{
-> > +     unsigned int num = 0, i;
-> > +
-> > +     for (i = 0; i < ARRAY_SIZE(doms_meta); i++) {
-> > +             const struct etnaviv_pm_domain_meta *meta = &doms_meta[i];
-> > +
-> > +             if (gpu->identity.features & meta->feature)
-> > +                     num += meta->nr_domains;
-> > +     }
-> > +
-> > +     return num;
-> > +}
-> > +
-> > +static const struct etnaviv_pm_domain *pm_domain(const struct etnaviv_gpu *gpu,
-> > +     unsigned int index)
-> > +{
-> > +     const struct etnaviv_pm_domain *domain = NULL;
-> > +     unsigned int offset = 0, i;
-> > +
-> > +     for (i = 0; i < ARRAY_SIZE(doms_meta); i++) {
-> > +             const struct etnaviv_pm_domain_meta *meta = &doms_meta[i];
-> > +
-> > +             if (!(gpu->identity.features & meta->feature))
-> > +                     continue;
-> > +
-> > +             if (meta->nr_domains < (index - offset)) {
-> > +                     offset += meta->nr_domains;
-> > +                     continue;
-> > +             }
-> > +
-> > +             domain = meta->domains + (index - offset);
-> > +     }
-> > +
-> > +     BUG_ON(!domain);
->
-> This is a no-go. BUG_ON is reserved for only the most severe kernel
-> bugs where you can't possibly continue without risking a corruption of
-> non-volatile state. This isn't the case here, please instead just make
-> the callers handle a NULL return gracefully.
->
-
-Fixed it in V2.
-
--- 
-greets
 --
-Christian Gmeiner, MSc
-
-https://christian-gmeiner.info/privacypolicy
+Regards,
+Sudeep
