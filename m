@@ -2,122 +2,120 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AAB1C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD305C3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41D81246B4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:04:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582916697;
-	bh=UesoGr7t/2MKstHF09Zw/YmrCnhxnd6E/ryWREAGKVw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1UDsV/k5EU7tdT2mAX0DnokQCHOzSbBIlymrxBg6MLq8+/dHbJ9YG2F0fYGKWsnbI
-	 w2GUX7dKFpxrIGhNpyRgRSf9CuEqux7ScZ5q6+xV2I7NMvV54RJUhBthnJvbmdjvHb
-	 cgxeCqyFwemGUW+PJEV2w0WGmrmYMvcgggTMIKcw=
+	by mail.kernel.org (Postfix) with ESMTP id A9E9620637
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 19:07:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mAOpR2Do"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbgB1TE4 (ORCPT
+        id S1726752AbgB1THe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 14:04:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47200 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725769AbgB1TEz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 14:04:55 -0500
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1273246A2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 19:04:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582916695;
-        bh=UesoGr7t/2MKstHF09Zw/YmrCnhxnd6E/ryWREAGKVw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fFJM2FCuy7QFdGXgSKrkP85wNsyoiCzc3v9IgqBr+GgCOg+zvEnQX1bggwEdzBF+X
-         rQ2SrDsWqaUkeeWDZo4appgz1vd22jVoc9s3p7/sGsEZkH6a6K7Dxz/Sn1yA3VHSxW
-         WJFpOmIWN7jucic+pi4Hl9lw1JZ0iTt47TTaFyY4=
-Received: by mail-wr1-f46.google.com with SMTP id z15so4269685wrl.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 11:04:54 -0800 (PST)
-X-Gm-Message-State: APjAAAVMKrxVLdEi7DV/Gt6zTD2NTlqs4omoSlfufPOCf6xCcXsHHdzU
-        D9imOBuYXSc3dl2sWm24jh7kG2qVTsJk5UBPqUjjOA==
-X-Google-Smtp-Source: APXvYqz9C+Iv+4ybH2afVkhhwrf/0BdhKo9MdU1cz23vp2xqg8SYqWklTH5/w3c6agKrCvvZScsbAf0CMaFBSYCWX7A=
-X-Received: by 2002:adf:dd4d:: with SMTP id u13mr6026862wrm.70.1582916693251;
- Fri, 28 Feb 2020 11:04:53 -0800 (PST)
+        Fri, 28 Feb 2020 14:07:34 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:57390 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgB1THe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 14:07:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=HBMzr5gVP04tC4f4R0gYNtZC362qpqZcYA/7B43qKm0=; b=mAOpR2DontHhiQgwYCuhfeYSlk
+        f5xW2Pl5Dr+qa+UVACw5k/O2+derp8VPFWmK7V97i3J/GBFIre2/mEASYcWD904r/nCcQPNS6lr+f
+        H77kAaim+yF+TIJ9wKU1fP1OCTUPRhiqLP1w9koAAScMRrN31Bu5CYxTr9GRa2z8mwQnmo/0kkmJx
+        J7U8mrlkqGxViI+I3x6wl6IODHpaQN9wT0UDhs4bHbqvw9IhKpMKDxjFCzDRzB8eST7TisoMwEJ+6
+        9xdYGw/YLCLz1qAiMs/83p6e0SNJ/Z92AnrrQ83g1KhXpfLmzGAjJioQHRcYt64GdtsH1PeOKc4dE
+        iTkCxr3Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j7kym-0002M6-Ge; Fri, 28 Feb 2020 19:07:20 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3E926300478;
+        Fri, 28 Feb 2020 20:05:21 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9957B2B98DCA1; Fri, 28 Feb 2020 20:07:17 +0100 (CET)
+Date:   Fri, 28 Feb 2020 20:07:17 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        kernel@collabora.com, krisman@collabora.com, shuah@kernel.org,
+        linux-kselftest@vger.kernel.org, rostedt@goodmis.org,
+        ryao@gentoo.org, dvhart@infradead.org, mingo@redhat.com,
+        z.figura12@gmail.com, steven@valvesoftware.com,
+        pgriffais@valvesoftware.com, steven@liquorix.net
+Subject: Re: [PATCH v3 1/4] futex: Implement mechanism to wait on any of
+ several futexes
+Message-ID: <20200228190717.GM18400@hirez.programming.kicks-ass.net>
+References: <20200213214525.183689-1-andrealmeid@collabora.com>
+ <20200213214525.183689-2-andrealmeid@collabora.com>
 MIME-Version: 1.0
-References: <6bf68d0facc36553324c38ec798b0feebf6742b7.1582915284.git.luto@kernel.org>
- <c80e3380-d484-1b01-a638-0ee130dea11a@redhat.com>
-In-Reply-To: <c80e3380-d484-1b01-a638-0ee130dea11a@redhat.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 28 Feb 2020 11:04:41 -0800
-X-Gmail-Original-Message-ID: <CALCETrUG0B2QLYYp8h+5KiZ4LpVDZ00XEPsgh4DbbDX9Mx5-EQ@mail.gmail.com>
-Message-ID: <CALCETrUG0B2QLYYp8h+5KiZ4LpVDZ00XEPsgh4DbbDX9Mx5-EQ@mail.gmail.com>
-Subject: Re: [PATCH] x86/kvm: Handle async page faults directly through do_page_fault()
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Radim Krcmar <rkrcmar@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200213214525.183689-2-andrealmeid@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 11:01 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 28/02/20 19:42, Andy Lutomirski wrote:
-> > KVM overloads #PF to indicate two types of not-actually-page-fault
-> > events.  Right now, the KVM guest code intercepts them by modifying
-> > the IDT and hooking the #PF vector.  This makes the already fragile
-> > fault code even harder to understand, and it also pollutes call
-> > traces with async_page_fault and do_async_page_fault for normal page
-> > faults.
-> >
-> > Clean it up by moving the logic into do_page_fault() using a static
-> > branch.  This gets rid of the platform trap_init override mechanism
-> > completely.
-> >
-> > Signed-off-by: Andy Lutomirski <luto@kernel.org>
->
-> Acked-by: Paolo Bonzini <pbonzini@redhat.com>
->
-> Just one thing:
->
-> > @@ -1505,6 +1506,25 @@ do_page_fault(struct pt_regs *regs, unsigned long hw_error_code,
-> >               unsigned long address)
-> >  {
-> >       prefetchw(&current->mm->mmap_sem);
-> > +     /*
-> > +      * KVM has two types of events that are, logically, interrupts, but
-> > +      * are unfortunately delivered using the #PF vector.
->
-> At least the not-present case isn't entirely an interrupt because it
-> must be delivered precisely.  Regarding the page-ready case you're
-> right, it could be an interrupt. However, generally speaking this is not
-> a problem.  Using something in memory rather than overloading the error
-> code was the mistake.
+On Thu, Feb 13, 2020 at 06:45:22PM -0300, André Almeida wrote:
+> @@ -150,4 +153,21 @@ struct robust_list_head {
+>    (((op & 0xf) << 28) | ((cmp & 0xf) << 24)		\
+>     | ((oparg & 0xfff) << 12) | (cmparg & 0xfff))
+>  
+> +/*
+> + * Maximum number of multiple futexes to wait for
+> + */
+> +#define FUTEX_MULTIPLE_MAX_COUNT	128
+> +
+> +/**
+> + * struct futex_wait_block - Block of futexes to be waited for
+> + * @uaddr:	User address of the futex
+> + * @val:	Futex value expected by userspace
+> + * @bitset:	Bitset for the optional bitmasked wakeup
+> + */
+> +struct futex_wait_block {
+> +	__u32 __user *uaddr;
+> +	__u32 val;
+> +	__u32 bitset;
+> +};
 
+So I have a problem with this vector layout, it doesn't allow for
+per-futex flags, and esp. with that multi-size futex support that
+becomes important, but also with the already extand private/shared and
+wait_bitset flags this means you cannot have a vector with mixed wait
+types.
 
+>  #endif /* _UAPI_LINUX_FUTEX_H */
+> diff --git a/kernel/futex.c b/kernel/futex.c
+> index 0cf84c8664f2..58cf9eb2b851 100644
+> --- a/kernel/futex.c
+> +++ b/kernel/futex.c
+> @@ -215,6 +215,8 @@ struct futex_pi_state {
+>   * @rt_waiter:		rt_waiter storage for use with requeue_pi
+>   * @requeue_pi_key:	the requeue_pi target futex key
+>   * @bitset:		bitset for the optional bitmasked wakeup
+> + * @uaddr:             userspace address of futex
+> + * @uval:              expected futex's value
+>   *
+>   * We use this hashed waitqueue, instead of a normal wait_queue_entry_t, so
+>   * we can wake only the relevant ones (hashed queues may be shared).
+> @@ -237,6 +239,8 @@ struct futex_q {
+>  	struct rt_mutex_waiter *rt_waiter;
+>  	union futex_key *requeue_pi_key;
+>  	u32 bitset;
+> +	u32 __user *uaddr;
+> +	u32 uval;
+>  } __randomize_layout;
 
->
-> > +      * These events are
-> > +      * "you just accessed valid memory, but the host doesn't have it right
-> > +      * not, so I'll put you to sleep if you continue" and "that memory
-> > +      * you tried to access earlier is available now."
-> > +      *
-> > +      * We are relying on the interrupted context being sane (valid
-> > +      * RSP, relevant locks not held, etc.), which is fine as long as
-> > +      * the the interrupted context had IF=1.
->
-> This is not about IF=0/IF=1; the KVM code is careful about taking
-> spinlocks only with IRQs disabled, and async PF is not delivered if the
-> interrupted context had IF=0.  The problem is that the memory location
-> is not reentrant if an NMI is delivered in the wrong window, as you hint
-> below.
-
-If an async PF is delivered with IF=0, then, unless something else
-clever happens to make it safe, we are toast.  The x86 entry code
-cannot handle #PF (or most other entries) at arbitrary places.  I'll
-improve the comment in v2.
+That creates a hole for no reason.
