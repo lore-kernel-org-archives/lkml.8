@@ -2,169 +2,124 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3960C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D83EFC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6B9A246AA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD04D246A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:41:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IAEW3CVv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725928AbgB1LlY (ORCPT
+        id S1726586AbgB1Ll4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 06:41:24 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:50510 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbgB1LlY (ORCPT
+        Fri, 28 Feb 2020 06:41:56 -0500
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:39011 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgB1Ll4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 06:41:24 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: alyssa)
-        with ESMTPSA id E2D642969BB
-Date:   Fri, 28 Feb 2020 06:41:18 -0500
-From:   Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v2] drm: panfrost: Silence warnings during deferred probe
-Message-ID: <20200228114118.GA1822@kevin>
-References: <CGME20200228094033eucas1p2fa2f6cea3b882e758992d97da2fc50ed@eucas1p2.samsung.com>
- <20200228094026.26983-1-m.szyprowski@samsung.com>
+        Fri, 28 Feb 2020 06:41:56 -0500
+Received: by mail-ua1-f68.google.com with SMTP id c21so849651uam.6;
+        Fri, 28 Feb 2020 03:41:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qgRBXu3UXujfUu/YLJD5NKUPvJ1HubicGzZMJLwxdxg=;
+        b=IAEW3CVv+KdBq/tsDmXVgbaGMpkVLw+nS6/uh+feLTX2l/1du9WV8lusAvjmcEmOIV
+         bNu2OCsnBP45jQuDGoCKbt9l5pmQE8rHCL3QyU0kWtTKlSWNdfw8NzPLglFuHqGjA4of
+         eWRId6NmuKmUVV4FBVpvpsKuH2jKQMyqVoYkZ792Gn63fWXY7177B2UB469VAukJ3/Yn
+         zGHrRZBilpo6WHVZtm465Eth9XVfMRS/9d7NjqyIVBoKtXA9qvyAKaWaYw7isPvoHRNW
+         jzU1nMB430hd4068R/xsTj59X4e47eyMJOsC3Vf51CwwRs+P8z7eqRL4NawHSJPXYN8Z
+         yigg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qgRBXu3UXujfUu/YLJD5NKUPvJ1HubicGzZMJLwxdxg=;
+        b=CidnHKZXUjNIDdsJbKGsHViptlw2bO+921uqoo5JgE66zGNVPsveB3qRyROUH36O07
+         rjS+Qg4mD78O1dDIJ2m/rD9ricykbUlIRlethFE99VzKZea7/C0lm6o6dhwE7W8Bsb8f
+         ys0yKNVNgdRCWTdjroJyDzRYLoPTi2KZg2G9x9yRAoGOEYBthgOXtD8j+EHHWRs2aSX6
+         /p5yc1R/2Wx6I+pEMYtdg4rwTgdTMMkHpv7kHiFB2DWMH5p32rvjHFiRQam3qvIdAVsa
+         vQ2l5x4tPE+q/h2Jajl84PciNimbQTBNCKdsPmbsm6A4NXIMUDMlYVDDF2mYwBJ8YR9g
+         1G9A==
+X-Gm-Message-State: ANhLgQ2iXziaWLLLYnNCHOBbG75iZBgFvQJtAMXNwMCzUVAvK99IDRxe
+        +UltbXMauKF8Q6Ur/AU+wa2jLZVN0r4urAY7qeDlzdOtsw4=
+X-Google-Smtp-Source: ADFU+vviIyKdulGmcFSh6KBXyhcte0zMAWs0zR8cPkGD3oMYMNar1XHGJ2FhVykv3IvpNgamMnEP8S9KxVjPWCkDT7I=
+X-Received: by 2002:a9f:3b02:: with SMTP id i2mr1670019uah.33.1582890115091;
+ Fri, 28 Feb 2020 03:41:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="DocE+STaALJfprDB"
-Content-Disposition: inline
-In-Reply-To: <20200228094026.26983-1-m.szyprowski@samsung.com>
+References: <20200228044518.20314-1-gmayyyha@gmail.com> <CAOi1vP-K+e0N26qpthLcst8HLE-FAMGSE9XwBhj1dPBiLyN-iA@mail.gmail.com>
+In-Reply-To: <CAOi1vP-K+e0N26qpthLcst8HLE-FAMGSE9XwBhj1dPBiLyN-iA@mail.gmail.com>
+From:   Yanhu Cao <gmayyyha@gmail.com>
+Date:   Fri, 28 Feb 2020 19:41:44 +0800
+Message-ID: <CAB9OAC0dURDHgqGDVCg_Gd+EhH-9_n4-mycgsqfxS64GRgd4Og@mail.gmail.com>
+Subject: Re: [PATCH] ceph: using POOL FULL flag instead of OSDMAP FULL flag
+To:     Ilya Dryomov <idryomov@gmail.com>
+Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Feb 28, 2020 at 6:23 PM Ilya Dryomov <idryomov@gmail.com> wrote:
+>
+> On Fri, Feb 28, 2020 at 5:45 AM Yanhu Cao <gmayyyha@gmail.com> wrote:
+> >
+> > OSDMAP_FULL and OSDMAP_NEARFULL are deprecated since mimic.
+> >
+> > Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
+> > ---
+> >  fs/ceph/file.c                  |  6 ++++--
+> >  include/linux/ceph/osd_client.h |  2 ++
+> >  include/linux/ceph/osdmap.h     |  3 ++-
+> >  net/ceph/osd_client.c           | 23 +++++++++++++----------
+> >  4 files changed, 21 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> > index 7e0190b1f821..60ea1eed1b84 100644
+> > --- a/fs/ceph/file.c
+> > +++ b/fs/ceph/file.c
+> > @@ -1482,7 +1482,8 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
+> >         }
+> >
+> >         /* FIXME: not complete since it doesn't account for being at quota */
+> > -       if (ceph_osdmap_flag(&fsc->client->osdc, CEPH_OSDMAP_FULL)) {
+> > +       if (pool_flag(&fsc->client->osdc, ci->i_layout.pool_id,
+> > +                               CEPH_POOL_FLAG_FULL)) {
+> >                 err = -ENOSPC;
+> >                 goto out;
+> >         }
+> > @@ -1575,7 +1576,8 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
+> >         }
+> >
+> >         if (written >= 0) {
+> > -               if (ceph_osdmap_flag(&fsc->client->osdc, CEPH_OSDMAP_NEARFULL))
+> > +               if (pool_flag(&fsc->client->osdc, ci->i_layout.pool_id,
+> > +                                       CEPH_POOL_FLAG_NEARFULL))
+>
+> Hi Yanhu,
+>
+> Have you considered pre-mimic clusters here?  They are still supported
+> (and will continue to be supported for the foreseeable future).
+>
+> Thanks,
+>
+>                 Ilya
 
---DocE+STaALJfprDB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I have tested it work on Luminous, I think it work too since
+ceph-v0.80(https://github.com/ceph/ceph/blob/b78644e7dee100e48dfeca32c9270a6b210d3003/src/osd/osd_types.h#L815)
+alread have pool FLAG_FULL.
 
-Reviewed-by: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-
-On Fri, Feb 28, 2020 at 10:40:26AM +0100, Marek Szyprowski wrote:
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
-> v2:
-> - fixed build warning
-> ---
->  drivers/gpu/drm/panfrost/panfrost_device.c | 26 +++++++++++++++-------
->  1 file changed, 18 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm=
-/panfrost/panfrost_device.c
-> index 238fb6d54df4..2c4ada3041b1 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_device.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_device.c
-> @@ -21,7 +21,9 @@ static int panfrost_reset_init(struct panfrost_device *=
-pfdev)
-> =20
->  	pfdev->rstc =3D devm_reset_control_array_get(pfdev->dev, false, true);
->  	if (IS_ERR(pfdev->rstc)) {
-> -		dev_err(pfdev->dev, "get reset failed %ld\n", PTR_ERR(pfdev->rstc));
-> +		if (PTR_ERR(pfdev->rstc) !=3D -EPROBE_DEFER)
-> +			dev_err(pfdev->dev, "get reset failed %ld\n",
-> +				PTR_ERR(pfdev->rstc));
->  		return PTR_ERR(pfdev->rstc);
->  	}
-> =20
-> @@ -44,7 +46,9 @@ static int panfrost_clk_init(struct panfrost_device *pf=
-dev)
-> =20
->  	pfdev->clock =3D devm_clk_get(pfdev->dev, NULL);
->  	if (IS_ERR(pfdev->clock)) {
-> -		dev_err(pfdev->dev, "get clock failed %ld\n", PTR_ERR(pfdev->clock));
-> +		if (PTR_ERR(pfdev->clock) !=3D -EPROBE_DEFER)
-> +			dev_err(pfdev->dev, "get clock failed %ld\n",
-> +				PTR_ERR(pfdev->clock));
->  		return PTR_ERR(pfdev->clock);
->  	}
-> =20
-> @@ -57,8 +61,9 @@ static int panfrost_clk_init(struct panfrost_device *pf=
-dev)
-> =20
->  	pfdev->bus_clock =3D devm_clk_get_optional(pfdev->dev, "bus");
->  	if (IS_ERR(pfdev->bus_clock)) {
-> -		dev_err(pfdev->dev, "get bus_clock failed %ld\n",
-> -			PTR_ERR(pfdev->bus_clock));
-> +		if (PTR_ERR(pfdev->bus_clock) !=3D -EPROBE_DEFER)
-> +			dev_err(pfdev->dev, "get bus_clock failed %ld\n",
-> +				PTR_ERR(pfdev->bus_clock));
->  		return PTR_ERR(pfdev->bus_clock);
->  	}
-> =20
-> @@ -92,7 +97,9 @@ static int panfrost_regulator_init(struct panfrost_devi=
-ce *pfdev)
->  	pfdev->regulator =3D devm_regulator_get(pfdev->dev, "mali");
->  	if (IS_ERR(pfdev->regulator)) {
->  		ret =3D PTR_ERR(pfdev->regulator);
-> -		dev_err(pfdev->dev, "failed to get regulator: %d\n", ret);
-> +		if (ret !=3D -EPROBE_DEFER)
-> +			dev_err(pfdev->dev, "failed to get regulator: %d\n",
-> +				ret);
->  		return ret;
->  	}
-> =20
-> @@ -124,19 +131,22 @@ int panfrost_device_init(struct panfrost_device *pf=
-dev)
-> =20
->  	err =3D panfrost_clk_init(pfdev);
->  	if (err) {
-> -		dev_err(pfdev->dev, "clk init failed %d\n", err);
-> +		if (err !=3D -EPROBE_DEFER)
-> +			dev_err(pfdev->dev, "clk init failed %d\n", err);
->  		return err;
->  	}
-> =20
->  	err =3D panfrost_regulator_init(pfdev);
->  	if (err) {
-> -		dev_err(pfdev->dev, "regulator init failed %d\n", err);
-> +		if (err !=3D -EPROBE_DEFER)
-> +			dev_err(pfdev->dev, "regulator init failed %d\n", err);
->  		goto err_out0;
->  	}
-> =20
->  	err =3D panfrost_reset_init(pfdev);
->  	if (err) {
-> -		dev_err(pfdev->dev, "reset init failed %d\n", err);
-> +		if (err !=3D -EPROBE_DEFER)
-> +			dev_err(pfdev->dev, "reset init failed %d\n", err);
->  		goto err_out1;
->  	}
-> =20
-> --=20
-> 2.17.1
->=20
-
---DocE+STaALJfprDB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEQ17gm7CvANAdqvY4/v5QWgr1WA0FAl5Y/FgACgkQ/v5QWgr1
-WA3hPA/8D8FD7YP04EmoAQJS3nr1VRTZ6AYjtocsQTMh/CKOy11fb1XKbch8Jhci
-tlTF3Zd4/LA7UBS1Ki5eIXe7fpEbqsWMLcqQcl9h53e4EKuReg06NjM5f8uU9N79
-T9DD2KaYytCq4WxXymItoFSbVQn9w3z6jDXal3zGrDlALmgOYfASe+Er4SNr23gO
-J0ULpqCXk2kbU3Pbs1qfl0I2JnzGKBtLztv03Ijls8Oj/7DTwsGYqTnOack0giqb
-wnqoc/hCO0zBKxXQnqfJmyGWvgFzU1ivwW9KkvE/b/MmNyBAheyHNr/bQ6jnbHt5
-8A9WMh/VBCfhJklybWAL4vu6MQGKd5GEO8bZCusagO9w01LLyLC7D3b3YDsRLLW5
-HNXZEWvtXcoN29YuFSVkZCXlNdkX7ruANcfZxTzV01NpJNuFRT2uHk1lal20UX51
-FRDbC3FPpPp9riEMBRE3+6FinWZounaf4rKXlWuSCg+JmXlbNM6XxzNS36vkDQV1
-o9roxzN0mk01r6ih8l+yu05DwrzMpT1v7jdeNC1GtKRMQWJbS3jrmxpLXWbauEY0
-dYGfvwTEgohh0KCAk/s/I1LrYEGyBx9aEJHr+1DMLRLpfuEwO5FMhcF5UHzZvyBm
-3pao5k3Ku6wPR7Z8XXxGMLCOYgGcU9m7+rITccw+uecgMpjJgN8=
-=vJWj
------END PGP SIGNATURE-----
-
---DocE+STaALJfprDB--
+CephFS doesn't write synchronously even if CEPH_OSDMAP_NEARFULL is
+used, then should fixed by CEPH_POOL_FLAG_NEARFULL.
