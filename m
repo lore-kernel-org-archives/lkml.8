@@ -2,160 +2,186 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E961C3F2D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70367C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1B9424672
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:37:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ZRx8M3Wn"
+	by mail.kernel.org (Postfix) with ESMTP id 3BBD324672
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:39:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582882767;
+	bh=IzNmcJ7U0/BTEJT9R69BcJEZiJ8/uEbsNv2my6tGCak=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=WAFaHSBz+UPQuGNsHnNJUjp8zAfqHo9D/sTyYZaXucQK80DZZ7c/S1gV/7gnH0ZxN
+	 Lk+p8uLRgKK+n9+s31ySsimuEcTB3oL0AJggclY72Ji6JJtmcI0XHiUajq1txtzVjX
+	 9eawGlcBuaocLgWosol5zdsmTxwNvcyMBGxQNCkY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgB1Jht (ORCPT
+        id S1726887AbgB1Jj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 04:37:49 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:15222 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726642AbgB1Jht (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 04:37:49 -0500
-X-UUID: f3b7790cce4e46a48dd3fb5a2e6e76ae-20200228
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=wbDyMawynlrwHWkUP0rf/CmT5tZ9aeV3JKqgN+jnUl8=;
-        b=ZRx8M3Wnifgb+h9tl0gfO6h5jaIQLReCZBPxWaOoSwovd/QlrWYu7DNqjAV7NACZooSZvcV1UjGyrTZFHhGlelpTLEpVpDaTzAsdymzfuVlK1mzucRwLmXvIUAEG4Lg9dM29X9j1G1KMI2s9myAZmEISNLp5h5GGR4IRTf7Lc8I=;
-X-UUID: f3b7790cce4e46a48dd3fb5a2e6e76ae-20200228
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1750308215; Fri, 28 Feb 2020 17:37:45 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 28 Feb 2020 17:36:54 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 28 Feb 2020 17:37:27 +0800
-Message-ID: <1582882664.22475.6.camel@mtksdaap41>
-Subject: Re: [PATCH v10 4/5] soc / drm: mediatek: Move routing control to
- mmsys device
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <p.zabel@pengutronix.de>, <airlied@linux.ie>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <ulrich.hecht+renesas@gmail.com>,
-        <laurent.pinchart@ideasonboard.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        <rdunlap@infradead.org>, <dri-devel@lists.freedesktop.org>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        "Seiya Wang" <seiya.wang@mediatek.com>,
-        <linux-clk@vger.kernel.org>,
-        "Collabora Kernel ML" <kernel@collabora.com>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>, <wens@csie.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <sean.wang@mediatek.com>, <frank-w@public-files.de>,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>, <hsinyi@chromium.org>,
-        Matthias Brugger <mbrugger@suse.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <matthias.bgg@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>
-Date:   Fri, 28 Feb 2020 17:37:44 +0800
-In-Reply-To: <20200227180858.1514157-5-enric.balletbo@collabora.com>
-References: <20200227180858.1514157-1-enric.balletbo@collabora.com>
-         <20200227180858.1514157-5-enric.balletbo@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 28 Feb 2020 04:39:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52932 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726583AbgB1JjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 04:39:25 -0500
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DE31246A8
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 09:39:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582882764;
+        bh=IzNmcJ7U0/BTEJT9R69BcJEZiJ8/uEbsNv2my6tGCak=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=mfVhI3U7WgaG7HdhhVCoCFGnnO+tlWQgayuuJLZKrk2YhdSJ0dD7/ywvBGJehMx/T
+         butg6dL0el/qn+BmmkMJfzjip3qibc0m1M8iWDAFAcSkz0U4ChlMUXjpLaAKNklJDE
+         KTaqTl8cQ0dqHc4OuYjwzldwbYNDCc6gtjhXcm4s=
+Received: by mail-wr1-f41.google.com with SMTP id e8so2178307wrm.5
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 01:39:24 -0800 (PST)
+X-Gm-Message-State: APjAAAUMi2RtvIA/GHmXxlkY2uOsZ/lm8yrAqU42GChxCp2gY+x5u75v
+        WzHDwTOy0I78+e2tdGHec1pbRKcCoPQ6EZwRZkRlUw==
+X-Google-Smtp-Source: APXvYqw5gA3YZv1LzWlD3AARUWxVwVyYS9iAeVMMVhZsQfyrQFSP5pXrxfcpCa/oVyi8ZMO8/nnhscpw2LeYqcZZ1NU=
+X-Received: by 2002:adf:e742:: with SMTP id c2mr3971569wrn.262.1582882762798;
+ Fri, 28 Feb 2020 01:39:22 -0800 (PST)
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200217113947.2070436-1-javierm@redhat.com> <0fd1b499-3a5e-c78e-0279-186a4c424217@redhat.com>
+ <5c60e016-fb30-b33d-39c6-ea30a4f777cb@redhat.com> <30819cad-1a00-1ea7-13cf-d1d15c0fa96c@redhat.com>
+In-Reply-To: <30819cad-1a00-1ea7-13cf-d1d15c0fa96c@redhat.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Fri, 28 Feb 2020 10:39:12 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu869JovSC9AdCC1yvcKF_Qpa0U3dr_kF2_e3zZMaDDs+Q@mail.gmail.com>
+Message-ID: <CAKv+Gu869JovSC9AdCC1yvcKF_Qpa0U3dr_kF2_e3zZMaDDs+Q@mail.gmail.com>
+Subject: Re: [RESEND PATCH v2] efi: Only print errors about failing to get
+ certs if EFI vars are found
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Javier Martinez Canillas <javierm@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Eric Richter <erichte@linux.ibm.com>,
+        James Morris <jmorris@namei.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        linux-security-module <linux-security-module@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEVucmljOg0KDQpPbiBUaHUsIDIwMjAtMDItMjcgYXQgMTk6MDggKzAxMDAsIEVucmljIEJh
-bGxldGJvIGkgU2VycmEgd3JvdGU6DQo+IFByb3ZpZGUgYSBtdGtfbW1zeXNfZGRwX2Nvbm5lY3Qo
-KSBhbmQgbXRrX21tc3lzX2Rpc2Nvbm5lY3QoKSBmdW5jdGlvbnMgdG8NCj4gcmVwbGFjZSBtdGtf
-ZGRwX2FkZF9jb21wX3RvX3BhdGgoKSBhbmQgbXRrX2RkcF9yZW1vdmVfY29tcF9mcm9tX3BhdGgo
-KS4NCj4gVGhvc2UgZnVuY3Rpb25zIHdpbGwgYWxsb3cgRFJNIGRyaXZlciBhbmQgb3RoZXJzIHRv
-IGNvbnRyb2wgdGhlIGRhdGENCj4gcGF0aCByb3V0aW5nLg0KPiANCj4gU2lnbmVkLW9mZi1ieTog
-RW5yaWMgQmFsbGV0Ym8gaSBTZXJyYSA8ZW5yaWMuYmFsbGV0Ym9AY29sbGFib3JhLmNvbT4NCj4g
-LS0tDQo+IA0KPiBDaGFuZ2VzIGluIHYxMDoNCj4gLSBJbnRyb2R1Y2VkIGEgbmV3IHBhdGNoIHRv
-IG1vdmUgcm91dGluZyBjb250cm9sIGludG8gbW1zeXMgZHJpdmVyLg0KPiAtIFJlbW92ZWQgdGhl
-IHBhdGNoIHRvIHVzZSByZWdtYXAgYXMgaXMgbm90IG5lZWRlZCBhbnltb3JlLg0KPiANCj4gQ2hh
-bmdlcyBpbiB2OTogTm9uZQ0KPiBDaGFuZ2VzIGluIHY4OiBOb25lDQo+IENoYW5nZXMgaW4gdjc6
-IE5vbmUNCj4gDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMgfCAg
-MTMgKy0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jICB8IDI1NiAt
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Ry
-bV9kZHAuaCAgfCAgIDcgLQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2
-LmMgIHwgIDEzICstDQo+ICBkcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstbW1zeXMuYyAgICAgICAg
-fCAyNzUgKysrKysrKysrKysrKysrKysrKysrKysrDQo+ICBpbmNsdWRlL2xpbnV4L3NvYy9tZWRp
-YXRlay9tdGstbW1zeXMuaCAgfCAgMTkgKysNCj4gIDYgZmlsZXMgY2hhbmdlZCwgMzA2IGluc2Vy
-dGlvbnMoKyksIDI3NyBkZWxldGlvbnMoLSkNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRl
-L2xpbnV4L3NvYy9tZWRpYXRlay9tdGstbW1zeXMuaA0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRp
-YXRlay9tdGtfZHJtX2NydGMuYw0KPiBpbmRleCBmZDQwNDJkZTEyZjIuLjNjODk0NDliZWE2ZSAx
-MDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jDQo+
-ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYw0KPiBAQCAtNiw2
-ICs2LDcgQEANCj4gICNpbmNsdWRlIDxsaW51eC9jbGsuaD4NCj4gICNpbmNsdWRlIDxsaW51eC9w
-bV9ydW50aW1lLmg+DQo+ICAjaW5jbHVkZSA8bGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmg+
-DQo+ICsjaW5jbHVkZSA8bGludXgvc29jL21lZGlhdGVrL210ay1tbXN5cy5oPg0KPiAgDQo+ICAj
-aW5jbHVkZSA8YXNtL2JhcnJpZXIuaD4NCj4gICNpbmNsdWRlIDxzb2MvbWVkaWF0ZWsvc21pLmg+
-DQo+IEBAIC0yOTYsOSArMjk3LDkgQEAgc3RhdGljIGludCBtdGtfY3J0Y19kZHBfaHdfaW5pdChz
-dHJ1Y3QgbXRrX2RybV9jcnRjICptdGtfY3J0YykNCj4gIAl9DQo+ICANCj4gIAlmb3IgKGkgPSAw
-OyBpIDwgbXRrX2NydGMtPmRkcF9jb21wX25yIC0gMTsgaSsrKSB7DQo+IC0JCW10a19kZHBfYWRk
-X2NvbXBfdG9fcGF0aChtdGtfY3J0Yy0+Y29uZmlnX3JlZ3MsDQo+IC0JCQkJCSBtdGtfY3J0Yy0+
-ZGRwX2NvbXBbaV0tPmlkLA0KPiAtCQkJCQkgbXRrX2NydGMtPmRkcF9jb21wW2kgKyAxXS0+aWQp
-Ow0KPiArCQltdGtfbW1zeXNfZGRwX2Nvbm5lY3QobXRrX2NydGMtPmNvbmZpZ19yZWdzLA0KPiAr
-CQkJCSAgICAgIG10a19jcnRjLT5kZHBfY29tcFtpXS0+aWQsDQo+ICsJCQkJICAgICAgbXRrX2Ny
-dGMtPmRkcF9jb21wW2kgKyAxXS0+aWQpOw0KDQpXaGVuIENPTkZJR19NVEtfTU1TWVMgaXMgbm90
-IGVuYWJsZSwgdGhpcyB3b3VsZCBidWlsdCBmYWlsLiBTbyBtYWtlIHNvbWUNCm1vZGlmaWNhdGlv
-biBpbiBLY29uZmlnLg0KDQo+ICAJCW10a19kaXNwX211dGV4X2FkZF9jb21wKG10a19jcnRjLT5t
-dXRleCwNCj4gIAkJCQkJbXRrX2NydGMtPmRkcF9jb21wW2ldLT5pZCk7DQo+ICAJfQ0KPiBAQCAt
-MzU1LDkgKzM1Niw5IEBAIHN0YXRpYyB2b2lkIG10a19jcnRjX2RkcF9od19maW5pKHN0cnVjdCBt
-dGtfZHJtX2NydGMgKm10a19jcnRjKQ0KPiAgCQkJCQkgICBtdGtfY3J0Yy0+ZGRwX2NvbXBbaV0t
-PmlkKTsNCj4gIAltdGtfZGlzcF9tdXRleF9kaXNhYmxlKG10a19jcnRjLT5tdXRleCk7DQo+ICAJ
-Zm9yIChpID0gMDsgaSA8IG10a19jcnRjLT5kZHBfY29tcF9uciAtIDE7IGkrKykgew0KPiAtCQlt
-dGtfZGRwX3JlbW92ZV9jb21wX2Zyb21fcGF0aChtdGtfY3J0Yy0+Y29uZmlnX3JlZ3MsDQo+IC0J
-CQkJCSAgICAgIG10a19jcnRjLT5kZHBfY29tcFtpXS0+aWQsDQo+IC0JCQkJCSAgICAgIG10a19j
-cnRjLT5kZHBfY29tcFtpICsgMV0tPmlkKTsNCj4gKwkJbXRrX21tc3lzX2RkcF9kaXNjb25uZWN0
-KG10a19jcnRjLT5jb25maWdfcmVncywNCj4gKwkJCQkJIG10a19jcnRjLT5kZHBfY29tcFtpXS0+
-aWQsDQo+ICsJCQkJCSBtdGtfY3J0Yy0+ZGRwX2NvbXBbaSArIDFdLT5pZCk7DQo+ICAJCW10a19k
-aXNwX211dGV4X3JlbW92ZV9jb21wKG10a19jcnRjLT5tdXRleCwNCj4gIAkJCQkJICAgbXRrX2Ny
-dGMtPmRkcF9jb21wW2ldLT5pZCk7DQo+ICAJfQ0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
-ZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
-X2RybV9kZHAuYw0KPiBpbmRleCBiODg1ZjYwZjQ3NGMuLjAxNGMxYmJlMWRmMiAxMDA2NDQNCj4g
-LS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMNCj4gKysrIGIvZHJp
-dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMNCj4gQEAgLTEzLDI2ICsxMyw2IEBA
-DQo+ICAjaW5jbHVkZSAibXRrX2RybV9kZHAuaCINCj4gICNpbmNsdWRlICJtdGtfZHJtX2RkcF9j
-b21wLmgiDQo+ICANCg0KW3NuaXBdDQoNCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvc29j
-L21lZGlhdGVrL210ay1tbXN5cy5oIGIvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLW1t
-c3lzLmgNCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAwMDAwMDAwLi4wMmZk
-ODZlNjJhOGQNCj4gLS0tIC9kZXYvbnVsbA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L3NvYy9tZWRp
-YXRlay9tdGstbW1zeXMuaA0KPiBAQCAtMCwwICsxLDE5IEBADQo+ICsvKiBTUERYLUxpY2Vuc2Ut
-SWRlbnRpZmllcjogR1BMLTIuMC1vbmx5ICovDQo+ICsvKg0KPiArICogQ29weXJpZ2h0IChjKSAy
-MDE1IE1lZGlhVGVrIEluYy4NCj4gKyAqLw0KPiArDQo+ICsjaWZuZGVmIF9fTVRLX01NU1lTX0gN
-Cj4gKyNkZWZpbmUgX19NVEtfTU1TWVNfSA0KPiArDQo+ICtlbnVtIG10a19kZHBfY29tcF9pZDsN
-Cj4gKw0KPiArdm9pZCBtdGtfbW1zeXNfZGRwX2Nvbm5lY3Qodm9pZCBfX2lvbWVtICpjb25maWdf
-cmVncywNCg0KSSBwcmVmZXIgdGhlIGZpcnN0IHBhcmFtZXRlciB0byBiZSAnc3RydWN0IGRldmlj
-ZSAqZGV2JyB3aGljaCBpcyB0aGUNCmRldmljZSBwb2ludGVyIG9mIG1tc3lzIGRldmljZS4gYW5k
-IG1tc3lzIGRyaXZlciBjb3VsZCB1c2UgdGhpcyBwb2ludGVyDQp0byBnZXQgaXRzIHJlZ2lzdGVy
-IGFkZHJlc3MuDQoNClJlZ2FyZHMsDQpDSw0KDQo+ICsJCQkgICBlbnVtIG10a19kZHBfY29tcF9p
-ZCBjdXIsDQo+ICsJCQkgICBlbnVtIG10a19kZHBfY29tcF9pZCBuZXh0KTsNCj4gKw0KPiArdm9p
-ZCBtdGtfbW1zeXNfZGRwX2Rpc2Nvbm5lY3Qodm9pZCBfX2lvbWVtICpjb25maWdfcmVncywNCj4g
-KwkJCSAgICAgIGVudW0gbXRrX2RkcF9jb21wX2lkIGN1ciwNCj4gKwkJCSAgICAgIGVudW0gbXRr
-X2RkcF9jb21wX2lkIG5leHQpOw0KPiArDQo+ICsjZW5kaWYgLyogX19NVEtfTU1TWVNfSCAqLw0K
-DQo=
+On Fri, 28 Feb 2020 at 10:35, David Hildenbrand <david@redhat.com> wrote:
+>
+> On 28.02.20 10:31, David Hildenbrand wrote:
+> > On 28.02.20 10:19, David Hildenbrand wrote:
+> >> On 17.02.20 12:39, Javier Martinez Canillas wrote:
+> >>> If CONFIG_LOAD_UEFI_KEYS is enabled, the kernel attempts to load the certs
+> >>> from the db, dbx and MokListRT EFI variables into the appropriate keyrings.
+> >>>
+> >>> But it just assumes that the variables will be present and prints an error
+> >>> if the certs can't be loaded, even when is possible that the variables may
+> >>> not exist. For example the MokListRT variable will only be present if shim
+> >>> is used.
+> >>>
+> >>> So only print an error message about failing to get the certs list from an
+> >>> EFI variable if this is found. Otherwise these printed errors just pollute
+> >>> the kernel log ring buffer with confusing messages like the following:
+> >>>
+> >>> [    5.427251] Couldn't get size: 0x800000000000000e
+> >>> [    5.427261] MODSIGN: Couldn't get UEFI db list
+> >>> [    5.428012] Couldn't get size: 0x800000000000000e
+> >>> [    5.428023] Couldn't get UEFI MokListRT
+> >>>
+> >>> Reported-by: Hans de Goede <hdegoede@redhat.com>
+> >>> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+> >>> Tested-by: Hans de Goede <hdegoede@redhat.com>
+> >>
+> >> This patch seems to break a very basic x86-64 QEMU setup (booting
+> >> upstream kernel with a F31 initrd - are you running basic boot tests?).
+> >> Luckily, it only took me 5 minutes to identify this patch. Reverting
+> >> this patch from linux-next fixes it for me.
+> >>
+> >>
+> >> [    1.042766] Loaded X.509 cert 'Build time autogenerated kernel key: 6625d6e34255935276d2c9851e2458909a4bcd69'
+> >> [    1.044314] zswap: loaded using pool lzo/zbud
+> >> [    1.045663] Key type ._fscrypt registered
+> >> [    1.046154] Key type .fscrypt registered
+> >> [    1.046524] Key type fscrypt-provisioning registered
+> >> [    1.051178] Key type big_key registered
+> >> [    1.055108] Key type encrypted registered
+> >> [    1.055513] BUG: kernel NULL pointer dereference, address: 0000000000000000
+> >> [    1.056172] #PF: supervisor instruction fetch in kernel mode
+> >> [    1.056706] #PF: error_code(0x0010) - not-present page
+> >> [    1.057367] PGD 0 P4D 0
+> >> [    1.057729] Oops: 0010 [#1] SMP NOPTI
+> >> [    1.058249] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc3-next-20200228+ #79
+> >> [    1.059167] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.4
+> >> [    1.060230] RIP: 0010:0x0
+> >> [    1.060478] Code: Bad RIP value.
+> >> [    1.060786] RSP: 0018:ffffbc7880637d98 EFLAGS: 00010246
+> >> [    1.061281] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffbc7880637dc8
+> >> [    1.061954] RDX: 0000000000000000 RSI: ffffbc7880637df0 RDI: ffffffffa73c40be
+> >> [    1.062611] RBP: ffffbc7880637e20 R08: ffffbc7880637dac R09: ffffa0238f4ba6c0
+> >> [    1.063278] R10: 0000000000000000 R11: 0000000000000001 R12: 0000000000000000
+> >> [    1.063956] R13: ffffa024bdd6f660 R14: 0000000000000000 R15: 0000000000000000
+> >> [    1.064609] FS:  0000000000000000(0000) GS:ffffa023fdd00000(0000) knlGS:0000000000000000
+> >> [    1.065360] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >> [    1.065900] CR2: ffffffffffffffd6 CR3: 00000000b1610000 CR4: 00000000000006e0
+> >> [    1.066562] Call Trace:
+> >> [    1.066803]  load_uefi_certs+0xc8/0x2bb
+> >> [    1.067171]  ? get_cert_list+0xfb/0xfb
+> >> [    1.067523]  do_one_initcall+0x5d/0x2f0
+> >> [    1.067894]  ? rcu_read_lock_sched_held+0x52/0x80
+> >> [    1.068337]  kernel_init_freeable+0x243/0x2c2
+> >> [    1.068751]  ? rest_init+0x23a/0x23a
+> >> [    1.069095]  kernel_init+0xa/0x106
+> >> [    1.069416]  ret_from_fork+0x27/0x50
+> >> [    1.069759] Modules linked in:
+> >> [    1.070050] CR2: 0000000000000000
+> >> [    1.070361] ---[ end trace fcce9bb4feb21d99 ]---
+> >>
+> >>
+> >
+> > Sorry, wrong mail identified, the patch is actually
+> >
+> > commit 6b75d54d5258ccd655387a00bbe1b00f92f4d965
+> > Author: Ard Biesheuvel <ardb@kernel.org>
+> > Date:   Sun Feb 16 19:46:25 2020 +0100
+> >
+> >     integrity: Check properly whether EFI GetVariable() is available
+> >
+> >     Testing the value of the efi.get_variable function pointer is not
+> >
+> > which made it work. (not even able to find that patch on lkml ...)
+>
+> To clarify for Ard, your patch breaks a basic QEMU setup (see above,
+> NULL pointer dereference). Reverting your patch from linux-next makes it
+> work again.
+>
 
+Does this fix it?
+
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index 41269a95ff85..d1746a579c99 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -300,12 +300,12 @@ static int __init efisubsys_init(void)
+ {
+        int error;
+
+-       if (!efi_enabled(EFI_BOOT))
+-               return 0;
+-
+        if (!efi_enabled(EFI_RUNTIME_SERVICES))
+                efi.runtime_supported_mask = 0;
+
++       if (!efi_enabled(EFI_BOOT))
++               return 0;
++
+        if (efi.runtime_supported_mask) {
+                /*
+                 * Since we process only one efi_runtime_service() at a time, an
