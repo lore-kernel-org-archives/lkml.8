@@ -2,130 +2,222 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49134C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF52C3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27069246A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E99FF246A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:48:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Iko0zZMw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbgB1MqP (ORCPT
+        id S1726287AbgB1Msz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 07:46:15 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:45246 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgB1MqO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 07:46:14 -0500
-Received: from [82.43.126.140] (helo=[192.168.0.11])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1j7f1w-0005r1-H0; Fri, 28 Feb 2020 12:46:12 +0000
-To:     Ilya Dryomov <idryomov@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.co>,
-        ceph-devel@vger.kernel.org
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- mQINBE6TJCgBEACo6nMNvy06zNKj5tiwDsXXS+LhT+LwtEsy9EnraKYXAf2xwazcICSjX06e
- fanlyhB0figzQO0n/tP7BcfMVNG7n1+DC71mSyRK1ZERcG1523ajvdZOxbBCTvTitYOy3bjs
- +LXKqeVMhK3mRvdTjjmVpWnWqJ1LL+Hn12ysDVVfkbtuIm2NoaSEC8Ae8LSSyCMecd22d9Pn
- LR4UeFgrWEkQsqROq6ZDJT9pBLGe1ZS0pVGhkRyBP9GP65oPev39SmfAx9R92SYJygCy0pPv
- BMWKvEZS/7bpetPNx6l2xu9UvwoeEbpzUvH26PHO3DDAv0ynJugPCoxlGPVf3zcfGQxy3oty
- dNTWkP6Wh3Q85m+AlifgKZudjZLrO6c+fAw/jFu1UMjNuyhgShtFU7NvEzL3RqzFf9O1qM2m
- uj83IeFQ1FZ65QAiCdTa3npz1vHc7N4uEQBUxyXgXfCI+A5yDnjHwzU0Y3RYS52TA3nfa08y
- LGPLTf5wyAREkFYou20vh5vRvPASoXx6auVf1MuxokDShVhxLpryBnlKCobs4voxN54BUO7m
- zuERXN8kadsxGFzItAyfKYzEiJrpUB1yhm78AecDyiPlMjl99xXk0zs9lcKriaByVUv/NsyJ
- FQj/kmdxox3XHi9K29kopFszm1tFiDwCFr/xumbZcMY17Yi2bQARAQABtCVDb2xpbiBLaW5n
- IDxjb2xpbi5raW5nQGNhbm9uaWNhbC5jb20+iQI2BBMBCAAhBQJOkyQoAhsDBQsJCAcDBRUK
- CQgLBRYCAwEAAh4BAheAAAoJEGjCh9/GqAImsBcP9i6C/qLewfi7iVcOwqF9avfGzOPf7CVr
- n8CayQnlWQPchmGKk6W2qgnWI2YLIkADh53TS0VeSQ7Tetj8f1gV75eP0Sr/oT/9ovn38QZ2
- vN8hpZp0GxOUrzkvvPjpH+zdmKSaUsHGp8idfPpZX7XeBO0yojAs669+3BrnBcU5wW45SjSV
- nfmVj1ZZj3/yBunb+hgNH1QRcm8ZPICpjvSsGFClTdB4xu2AR28eMiL/TTg9k8Gt72mOvhf0
- fS0/BUwcP8qp1TdgOFyiYpI8CGyzbfwwuGANPSupGaqtIRVf+/KaOdYUM3dx/wFozZb93Kws
- gXR4z6tyvYCkEg3x0Xl9BoUUyn9Jp5e6FOph2t7TgUvv9dgQOsZ+V9jFJplMhN1HPhuSnkvP
- 5/PrX8hNOIYuT/o1AC7K5KXQmr6hkkxasjx16PnCPLpbCF5pFwcXc907eQ4+b/42k+7E3fDA
- Erm9blEPINtt2yG2UeqEkL+qoebjFJxY9d4r8PFbEUWMT+t3+dmhr/62NfZxrB0nTHxDVIia
- u8xM+23iDRsymnI1w0R78yaa0Eea3+f79QsoRW27Kvu191cU7QdW1eZm05wO8QUvdFagVVdW
- Zg2DE63Fiin1AkGpaeZG9Dw8HL3pJAJiDe0KOpuq9lndHoGHs3MSa3iyQqpQKzxM6sBXWGfk
- EkK5Ag0ETpMkKAEQAMX6HP5zSoXRHnwPCIzwz8+inMW7mJ60GmXSNTOCVoqExkopbuUCvinN
- 4Tg+AnhnBB3R1KTHreFGoz3rcV7fmJeut6CWnBnGBtsaW5Emmh6gZbO5SlcTpl7QDacgIUuT
- v1pgewVHCcrKiX0zQDJkcK8FeLUcB2PXuJd6sJg39kgsPlI7R0OJCXnvT/VGnd3XPSXXoO4K
- cr5fcjsZPxn0HdYCvooJGI/Qau+imPHCSPhnX3WY/9q5/WqlY9cQA8tUC+7mgzt2VMjFft1h
- rp/CVybW6htm+a1d4MS4cndORsWBEetnC6HnQYwuC4bVCOEg9eXMTv88FCzOHnMbE+PxxHzW
- 3Gzor/QYZGcis+EIiU6hNTwv4F6fFkXfW6611JwfDUQCAHoCxF3B13xr0BH5d2EcbNB6XyQb
- IGngwDvnTyKHQv34wE+4KtKxxyPBX36Z+xOzOttmiwiFWkFp4c2tQymHAV70dsZTBB5Lq06v
- 6nJs601Qd6InlpTc2mjd5mRZUZ48/Y7i+vyuNVDXFkwhYDXzFRotO9VJqtXv8iqMtvS4xPPo
- 2DtJx6qOyDE7gnfmk84IbyDLzlOZ3k0p7jorXEaw0bbPN9dDpw2Sh9TJAUZVssK119DJZXv5
- 2BSc6c+GtMqkV8nmWdakunN7Qt/JbTcKlbH3HjIyXBy8gXDaEto5ABEBAAGJAh8EGAEIAAkF
- Ak6TJCgCGwwACgkQaMKH38aoAiZ4lg/+N2mkx5vsBmcsZVd3ys3sIsG18w6RcJZo5SGMxEBj
- t1UgyIXWI9lzpKCKIxKx0bskmEyMy4tPEDSRfZno/T7p1mU7hsM4owi/ic0aGBKP025Iok9G
- LKJcooP/A2c9dUV0FmygecRcbIAUaeJ27gotQkiJKbi0cl2gyTRlolKbC3R23K24LUhYfx4h
- pWj8CHoXEJrOdHO8Y0XH7059xzv5oxnXl2SD1dqA66INnX+vpW4TD2i+eQNPgfkECzKzGj+r
- KRfhdDZFBJj8/e131Y0t5cu+3Vok1FzBwgQqBnkA7dhBsQm3V0R8JTtMAqJGmyOcL+JCJAca
- 3Yi81yLyhmYzcRASLvJmoPTsDp2kZOdGr05Dt8aGPRJL33Jm+igfd8EgcDYtG6+F8MCBOult
- TTAu+QAijRPZv1KhEJXwUSke9HZvzo1tNTlY3h6plBsBufELu0mnqQvHZmfa5Ay99dF+dL1H
- WNp62+mTeHsX6v9EACH4S+Cw9Q1qJElFEu9/1vFNBmGY2vDv14gU2xEiS2eIvKiYl/b5Y85Q
- QLOHWV8up73KK5Qq/6bm4BqVd1rKGI9un8kezUQNGBKre2KKs6wquH8oynDP/baoYxEGMXBg
- GF/qjOC6OY+U7kNUW3N/A7J3M2VdOTLu3hVTzJMZdlMmmsg74azvZDV75dUigqXcwjE=
-Subject: re: libceph: follow redirect replies from osds
-Message-ID: <6ea7e486-a3f3-7def-1f88-2e645e3b9780@canonical.com>
-Date:   Fri, 28 Feb 2020 12:46:11 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Fri, 28 Feb 2020 07:48:55 -0500
+Received: from mail-mw2nam10on2054.outbound.protection.outlook.com ([40.107.94.54]:6048
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725884AbgB1Msz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 07:48:55 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LDBp6NY9US5w3ZSDdqP3jKBU8B6UwAEP0cGfNkW+nTGGl2N3gH/gCbJO1b8JYns/th4NDHxsfUvgbdQrFjaBwpDW1cx+pZLA2AbKcHgfDMfMAEfUw5YimpCP1hCFruXDAxcfmiSMKwrx7EGlGWixqKAMeJF3Mvera2o02IRWayfdNFU4VaWVMYOg7AuYuqLPQOTbBNpNqlLdhT+dSAqqzU+aDlmoglSd9+lp8PaL8XMFKbyMWXNkkaI+im2WD+X8HKO/lxU5oXR7xncvJTRv7q3H/CZXOAuEGpSZ9dhzLh+9RpkdLeouIzxIUNv8XQN4sna6T4NOc5cpEIAgXjXvVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oeVnHWRIJpqsTSPxuPZoK8E4R4fhwl/QTvxPcTOH1QI=;
+ b=oN7pTvWqPC4utc3Xcef6rW5Mpk5sOxgfOAqbxggFjjZdES+TKuYSefd6HD3NfbTwD2uVCNx3GONjP7DqqUzOFDHjXiTgN6iLmZI1LCtEiztZodGuLsoZX4Az700pShdHVT5j1wZRAB9jAcWRN51LhadrXBXHjtV1775K6ElQM6SJPt6LNZVAqw8hZoeFosEWIGBnuK5REgRsQo6ZzY13rqDdKcm6I3U3Unadi0hQlnOv096he63nDHKl3cgU8uBI4J2cwx3UDHzQY+WB1Cqz0YEFc+w8i5udFj+O1fWE0Pcc+venDvGhUpDLHe+V81LYPvwfdzWtYV/vM8xFfFX0+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oeVnHWRIJpqsTSPxuPZoK8E4R4fhwl/QTvxPcTOH1QI=;
+ b=Iko0zZMw9WSETZTzLzT8voY8IDMAqLxorYnJlkOeLvF1UxpHrhDWE7rtXt+7pltgCHrnuNIEtg4nnKPMX+xAbbKLXc0A1UTtIonBXY+rS7DTJY6YbvKujr8FYBrt/x5J+SYhoQiRdFxFWWZZXMBG5qL0vijXIExEx0+gvGqZ17I=
+Received: from MN2PR02MB6336.namprd02.prod.outlook.com (2603:10b6:208:1b8::30)
+ by MN2PR02MB6686.namprd02.prod.outlook.com (2603:10b6:208:1d0::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.18; Fri, 28 Feb
+ 2020 12:48:49 +0000
+Received: from MN2PR02MB6336.namprd02.prod.outlook.com
+ ([fe80::f452:65fb:14c7:dd6b]) by MN2PR02MB6336.namprd02.prod.outlook.com
+ ([fe80::f452:65fb:14c7:dd6b%7]) with mapi id 15.20.2772.018; Fri, 28 Feb 2020
+ 12:48:49 +0000
+From:   Bharat Kumar Gogada <bharatku@xilinx.com>
+To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        Ravikiran Gummaluri <rgummal@xilinx.com>,
+        "maz@kernel.org" <maz@kernel.org>
+Subject: RE: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
+Thread-Topic: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
+Thread-Index: AQHV14gyqXPkldKNt0SLTelX37u03Kgr8Z6AgAAlV5CABIIlAIAAIZtQ
+Date:   Fri, 28 Feb 2020 12:48:48 +0000
+Message-ID: <MN2PR02MB6336569F378683B05B262D4AA5E80@MN2PR02MB6336.namprd02.prod.outlook.com>
+References: <1580400771-12382-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+ <1580400771-12382-3-git-send-email-bharat.kumar.gogada@xilinx.com>
+ <20200225114013.GB6913@e121166-lin.cambridge.arm.com>
+ <MN2PR02MB63365B50058B35AA37341BC9A5ED0@MN2PR02MB6336.namprd02.prod.outlook.com>
+ <20200228104442.GA2874@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20200228104442.GA2874@e121166-lin.cambridge.arm.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=bharatku@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: bdabd4a8-da17-4866-860b-08d7bc4c8e95
+x-ms-traffictypediagnostic: MN2PR02MB6686:|MN2PR02MB6686:
+x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR02MB6686A6B67ABBCEB72C86C13BA5E80@MN2PR02MB6686.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0327618309
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(376002)(136003)(396003)(39860400002)(189003)(199004)(478600001)(316002)(26005)(5660300002)(6506007)(64756008)(66476007)(66556008)(186003)(66446008)(54906003)(52536014)(7696005)(86362001)(76116006)(66946007)(81156014)(4326008)(8936002)(9686003)(2906002)(8676002)(55016002)(6916009)(33656002)(71200400001)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB6686;H:MN2PR02MB6336.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: pETMEZGT5F4qugC4wTEl0icgEyfS9an3R4a42NnbfvByu9lXPyzMZiSvdWtaDJiYCXFLuNQydWoU2Okhxcz7J5lsyOjTaNoVqBQbN+iUjyLzqQv78ZiS/0RMFeKlJ3hV5B1dR4uH5DOBc9A6BgivHnzJ38qmELYq5MYFwlxgc63RA2lIkWkQ+/n9bKOK2OhGZu5DithR1bPp95F5ME2fzj9aoqv8NOaDEndLcjfk7p08DfikMcyz7NpcxK46IfsU2RYCx6fFANcZ2sCRcF6zBuQn4Z0DeU735zsyktdIbXpaWMWz03ax/eVOj2raFm3VCHLZbxhGBqcN0bE6FiW4UFbBFrHWQcvbxWVSVLdGoNGYpED6AwXopAskFgVN+0msJMEiriQc6HeLDtXsL/9Fq+VVbpRRv8Kcs0XlT7e1ED0qAhz9cmH4+HELs+OlQieH
+x-ms-exchange-antispam-messagedata: 8pK0sYdMjb9g8IzHdTrOwh7ePJNRgkF7VyQOqkdiMHE9+CuFw3UyLZWPn6tU4prtnlbL8o3Zzgz5v/EnZq6u8+MgKj9BPAUyu3OJqWSOLlTFddMdi06Iuq4fuT9rG+fAlN4S5hS58AexJwnNdLdlcw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bdabd4a8-da17-4866-860b-08d7bc4c8e95
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2020 12:48:49.0465
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7nbOD6oead0RAqSJWKDSRQFIVOPNvAX98qdogBDrCqWa/WR0Op/y15y8B6CNGsJGo7S6Z45VDnT0plX6bRMsYw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6686
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+> Subject: Re: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port dri=
+ver
+>=20
+> [+MarcZ, FHI]
+>=20
+> On Tue, Feb 25, 2020 at 02:39:56PM +0000, Bharat Kumar Gogada wrote:
+>=20
+> [...]
+>=20
+> > > > +/* ECAM definitions */
+> > > > +#define ECAM_BUS_NUM_SHIFT		20
+> > > > +#define ECAM_DEV_NUM_SHIFT		12
+> > >
+> > > You don't need these ECAM_* defines, you can use pci_generic_ecam_ops=
+.
+> > Does this need separate ranges region for ECAM space ?
+> > We have ECAM and controller space in same region.
+>=20
+> You can create an ECAM window with pci_ecam_create where *cfgres
+> represent the ECAM area, I don't get what you mean by "same region".
+>=20
+> Do you mean "contiguous" ? Or something else ?
+Yes, contiguous; within ECAM region some space is for controller registers.
+>=20
+> > > > +
+> > > > +/**
+> > > > + * struct xilinx_cpm_pcie_port - PCIe port information
+> > > > + * @reg_base: Bridge Register Base
+> > > > + * @cpm_base: CPM System Level Control and Status Register(SLCR)
+> > > > +Base
+> > > > + * @irq: Interrupt number
+> > > > + * @root_busno: Root Bus number
+> > > > + * @dev: Device pointer
+> > > > + * @leg_domain: Legacy IRQ domain pointer
+> > > > + * @irq_misc: Legacy and error interrupt number  */ struct
+> > > > +xilinx_cpm_pcie_port {
+> > > > +	void __iomem *reg_base;
+> > > > +	void __iomem *cpm_base;
+> > > > +	u32 irq;
+> > > > +	u8 root_busno;
+> > > > +	struct device *dev;
+> > > > +	struct irq_domain *leg_domain;
+> > > > +	int irq_misc;
+> > > > +};
+> > > > +
+> > > > +static inline u32 pcie_read(struct xilinx_cpm_pcie_port *port,
+> > > > +u32
+> > > > +reg) {
+> > > > +	return readl(port->reg_base + reg); }
+> > > > +
+> > > > +static inline void pcie_write(struct xilinx_cpm_pcie_port *port,
+> > > > +			      u32 val, u32 reg)
+> > > > +{
+> > > > +	writel(val, port->reg_base + reg); }
+> > > > +
+> > > > +static inline bool cpm_pcie_link_up(struct xilinx_cpm_pcie_port
+> > > > +*port) {
+> > > > +	return (pcie_read(port, XILINX_CPM_PCIE_REG_PSCR) &
+> > > > +		XILINX_CPM_PCIE_REG_PSCR_LNKUP) ? 1 : 0;
+> > >
+> > > 	u32 val =3D pcie_read(port, XILINX_CPM_PCIE_REG_PSCR);
+> > >
+> > > 	return val & XILINX_CPM_PCIE_REG_PSCR_LNKUP;
+> > >
+> > > And this function call is not that informative anyway - it is used
+> > > just to print a log whose usefulness is questionable.
+> > We need this logging information customers are using this info in case
+> > of link down failure.
+>=20
+> Out of curiosity, to do what ?
+They use this information as first level debug and initiate a query to xili=
+nx support team.=20
+>=20
+> [...]
+>=20
+> > > > +/**
+> > > > + * xilinx_cpm_pcie_intx_map - Set the handler for the INTx and
+> > > > +mark IRQ as valid
+> > > > + * @domain: IRQ domain
+> > > > + * @irq: Virtual IRQ number
+> > > > + * @hwirq: HW interrupt number
+> > > > + *
+> > > > + * Return: Always returns 0.
+> > > > + */
+> > > > +static int xilinx_cpm_pcie_intx_map(struct irq_domain *domain,
+> > > > +				    unsigned int irq, irq_hw_number_t hwirq) {
+> > > > +	irq_set_chip_and_handler(irq, &dummy_irq_chip,
+> > > > +handle_simple_irq);
+> > >
+> > > INTX are level IRQs, the flow handler must be handle_level_irq.
+> > Accepted will change.
+> > >
+> > > > +	irq_set_chip_data(irq, domain->host_data);
+> > > > +	irq_set_status_flags(irq, IRQ_LEVEL);
+> > >
+> > > The way INTX are handled in this patch is wrong. You must set-up a
+> > > chained IRQ with the appropriate flow handler, current code uses an
+> > > IRQ action and that's an IRQ layer violation and it goes without sayi=
+ng that it
+> is almost certainly broken.
+> > In our controller we use same irq line for controller errors and
+> > legacy errors.  we have two cases here where error interrupts are
+> > self-consumed by controller, and legacy interrupts are flow handled.
+> > Its not INTX handling alone for this IRQ line .  So chained IRQ can be
+> > used for self consumed interrupts too ?
+>=20
+> No. In this specific case both solutions are not satisfying, we need to g=
+ive it
+> some thought, I will talk to Marc (CC'ed) to find the best option here go=
+ing
+> forward.
+>=20
+Ok, will wait for Marc to provide inputs.
 
-Static analysis with Coverity has detected a potential issue in the
-following commit in function ceph_redirect_decode():
-
-commit 205ee1187a671c3b067d7f1e974903b44036f270
-Author: Ilya Dryomov <ilya.dryomov@inktank.com>
-Date:   Mon Jan 27 17:40:20 2014 +0200
-
-    libceph: follow redirect replies from osds
-
-The issue is as follows:
-
-
-3486        len = ceph_decode_32(p);
-
-Unused value (UNUSED_VALUE)
-assigned_pointer: Assigning value from len to *p here, but that stored
-value is overwritten before it can be used.
-
-3487        *p += len; /* skip osd_instructions */
-3488
-3489        /* skip the rest */
-
-value_overwrite: Overwriting previous write to *p with value from
-struct_end.
-
-3490        *p = struct_end;
-
-The *p assignment in line 3487 is effectively being overwritten by the
-*p assignment in 3490.  Maybe the following is correct:
-
-        len = ceph_decode_32(p);
--       p += len; /* skip osd_instructions */
-+       struct_end = *p + len;  /* skip osd_instructions */
-
-        /* skip the rest */
-        *p = struct_end;
-
-I'm not familiar with the ceph structure here, so I'm not sure what the
-correct fix would be.
-
-Colin
+Regards,
+Bharat
