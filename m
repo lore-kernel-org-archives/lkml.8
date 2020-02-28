@@ -2,57 +2,77 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 361B8C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1758FC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D1422469F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:04:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E80A02469F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:04:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Wa3ZaFht"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726167AbgB1SE0 (ORCPT
+        id S1726627AbgB1SEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 13:04:26 -0500
-Received: from muru.com ([72.249.23.125]:58290 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725769AbgB1SEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 13:04:25 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 84557806C;
-        Fri, 28 Feb 2020 18:05:10 +0000 (UTC)
-Date:   Fri, 28 Feb 2020 10:04:22 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org,
-        Arthur Demchenkov <spinal.by@gmail.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>, ruleh <ruleh@gmx.de>
-Subject: Re: [PATCHv2 0/3] Lost key-up interrupt handling for omap4-keypad
-Message-ID: <20200228180422.GN37466@atomide.com>
-References: <20200228171223.11444-1-tony@atomide.com>
+        Fri, 28 Feb 2020 13:04:48 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:57250 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbgB1SEs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 13:04:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=CmBWpIKnnVWtlhcroBgVPn++r+PthFu+2xU5l1vUPNA=; b=Wa3ZaFhtWJ4Hy9wtAsjYEfN2o4
+        V0PZ+M9bh68HsduPFTOqG8No+xXjnGXslx1yHoBU+ikNAFzs6lLd6T6nYgR4khNxBJsLWySctRIi4
+        /ggGthuLa2kTOn2v7eqBXJQ6ntSg7Hh7FC874lLxj5htTN2H+hfB/HBxFaiw7ER/zIYGRDEu4SjoB
+        NwLVY7/kRcm34FMiRHvzAvORSt42Ol1iaTbeFuKK48t6P0K36fo+0dnVzHD1A62iVCWzDu59ohPKp
+        wkOva5VlewEX9Eob2QG+yRVZqOCWfp9e9SbCWjoUDkNuMfgLJghiy2egmjYD9RteV09lT+btsA67j
+        QlDIFWYA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j7k0B-0004dA-Ox; Fri, 28 Feb 2020 18:04:43 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CCFB030067C;
+        Fri, 28 Feb 2020 19:02:44 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 386F3209E76B5; Fri, 28 Feb 2020 19:04:41 +0100 (CET)
+Date:   Fri, 28 Feb 2020 19:04:41 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        intel-gfx@lists.freedesktop.org
+Subject: Re: [PATCH] drm/i915: Minimize uaccess exposure in
+ i915_gem_execbuffer2_ioctl()
+Message-ID: <20200228180441.GL18400@hirez.programming.kicks-ass.net>
+References: <ed52cfb852d2772bf20f48614d75f1d1b1451995.1582841072.git.jpoimboe@redhat.com>
+ <20200227223542.GE23230@ZenIV.linux.org.uk>
+ <20200228010342.3j3awgvvgvitif7z@treble>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200228171223.11444-1-tony@atomide.com>
+In-Reply-To: <20200228010342.3j3awgvvgvitif7z@treble>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [200228 17:13]:
-> I can still reproduce one issue where a fast shift-shift-j can produce an
-> upper case J instead of j for example. This seems unrelated to the controller
-> idling with state issue probably, maybe it's some debouncing related issue.
-> So far playing with the debouncing configuration has not helped with this
-> issue though. Anyways, please test if you're seeing stuck keys on droid4.
+On Thu, Feb 27, 2020 at 07:03:42PM -0600, Josh Poimboeuf wrote:
+> > And why not mark gen8_canonical_addr() __always_inline?
+> 
+> Right, marking those two functions as __always_inline is the other
+> option.  The problem is, if you keep doing it, eventually you end up
+> with __always_inline-itis spreading all over the place.  And it affects
+> all the other callers, at least in the CONFIG_CC_OPTIMIZE_FOR_SIZE case.
+> At least this fix is localized.
 
-Oh so turns out this can be dealt with by first scanning for any lost
-key-up events. I just sent out patch 4/3 to this series to fix that.
-
-Regards,
-
-Tony
+I'm all for __always_inline in this case, the compiler not inlining sign
+extention is just retarded,
