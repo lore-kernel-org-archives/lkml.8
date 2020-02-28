@@ -2,196 +2,108 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA83DC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 918B1C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D28E246AA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:39:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6638A246B3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:39:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Uo712UO7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbgB1LjG (ORCPT
+        id S1726805AbgB1LjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 06:39:06 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:44638 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726451AbgB1LjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 06:39:05 -0500
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 11420E61C5EEB366BDFB;
-        Fri, 28 Feb 2020 19:38:46 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 28 Feb 2020 19:38:36 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <axboe@kernel.dk>
-CC:     <linux-ide@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>, <takondra@cisco.com>,
-        <tj@kernel.org>, "John Garry" <john.garry@huawei.com>
-Subject: [PATCH] libata: Remove extra scsi_host_put() in ata_scsi_add_hosts()
-Date:   Fri, 28 Feb 2020 19:33:35 +0800
-Message-ID: <1582889615-146214-1-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Fri, 28 Feb 2020 06:39:16 -0500
+Received: from mail-pj1-f52.google.com ([209.85.216.52]:33151 "EHLO
+        mail-pj1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726451AbgB1LjQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 06:39:16 -0500
+Received: by mail-pj1-f52.google.com with SMTP id m7so4303693pjs.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 03:39:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ziAc3Mla8xF8RThiT9RDbHiUPBgQNQRjNzhxmEJKPBI=;
+        b=Uo712UO7G9rKVyqN2AewidkdDnhXrqXFF6S81IEiC/JHl5NAllVgieR/51erXXMTjB
+         4rXaAySUQwHwlxNU5LOyfqHrJpV6qhtlTGtDex7QrcfZID9nXOtF5GfmdKs5P23xbHXM
+         jrNkNZL4k7to01dgJaHLmCnV3qp/NG0YWeaKk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ziAc3Mla8xF8RThiT9RDbHiUPBgQNQRjNzhxmEJKPBI=;
+        b=JBtNPVMd7INxNli8DJKrPo0MNmP5N3gkyD4i9QeZEDypuQonLUk3g+xDYlPM057nTy
+         QtOs6K43ynPoc2CUINf5Lp9Ohlf5OC6Jga7sLDjLVYeo2TuKA3VOxPJEN+U1yFVTQKd0
+         kWMJGn1EQa32uyZLShNGuX8lNmZzT3VRTtPqiTYDfYrqhf4WJK+cMKdqGopnfzboyZJ0
+         l1g0CnwqqVcIdMnzhvK/8Nt3yiCG+g7I9nJ5W0LH2/m0FPvqC5pGNpvHN51M6eSdMC9j
+         TjsJsP2ea4lJLmFLF3gxxxgVKs1mlBSvTzNH4YOkmmO3J++36kGEc/Daec9tbnl8E+vX
+         71GA==
+X-Gm-Message-State: APjAAAWof1gLrzJSfN5Q8ikOmozMc9s1g5Rxof1lHM1fOA4mcIK/vV6O
+        DnZKlKFKlQYztOP1yZrwwO2I7g==
+X-Google-Smtp-Source: APXvYqx1o0UUcIcmWEAYPT5Lm+FW8M2YK9NHnQGVnRLMf6dcWL3dFJ0hUPE6fzphU1UogSBVs1Ko8g==
+X-Received: by 2002:a17:902:8c91:: with SMTP id t17mr3428561plo.98.1582889954918;
+        Fri, 28 Feb 2020 03:39:14 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id y5sm10715100pfr.169.2020.02.28.03.39.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 03:39:13 -0800 (PST)
+Date:   Fri, 28 Feb 2020 20:39:11 +0900
+From:   Sergey Senozhatsky <senozhatsky@chromium.org>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv3 05/11] videobuf2: handle
+ V4L2_FLAG_MEMORY_NON_CONSISTENT flag
+Message-ID: <20200228113911.GA121952@google.com>
+References: <20200226111529.180197-1-senozhatsky@chromium.org>
+ <20200226111529.180197-6-senozhatsky@chromium.org>
+ <8ea79a02-8346-2b1d-c2d8-3a3b36480320@xs4all.nl>
+ <20200228035759.GP122464@google.com>
+ <7c936a58-7ad9-60a5-1f4a-e86ee358752a@xs4all.nl>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7c936a58-7ad9-60a5-1f4a-e86ee358752a@xs4all.nl>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the call to scsi_add_host_with_dma() in ata_scsi_add_hosts() fails,
-then we may get use-after-free KASAN warns:
+On (20/02/28 09:50), Hans Verkuil wrote:
+> On 2/28/20 4:57 AM, Sergey Senozhatsky wrote:
+> > On (20/02/27 13:36), Hans Verkuil wrote:
+> > [..]
+[..]
+> >>> +    * - __u32
+> >>> +      - ``reserved``\ [6]
+> >>>        - A place holder for future extensions. Drivers and applications
+> >>>  	must set the array to zero.
+> >>
+> >> Old drivers and applications still think reserved is [7] and will zero this.
+> > 
+> > Just to make sure, does this mean that you also want me to drop the
+> > "Drivers and applications must set the array to zero" sentence?
+> 
+> Not for the reserved field, only for the flags field.
 
-==================================================================
-BUG: KASAN: use-after-free in kobject_put+0x24/0x180
-Read of size 1 at addr ffff0026b8c80364 by task swapper/0/1
-CPU: 1 PID: 1 Comm: swapper/0 Tainted: G        W         5.6.0-rc3-00004-g5a71b206ea82-dirty #1765
-Hardware name: Huawei TaiShan 200 (Model 2280)/BC82AMDD, BIOS 2280-V2 CS V3.B160.01 02/24/2020
-Call trace:
-dump_backtrace+0x0/0x298
-show_stack+0x14/0x20
-dump_stack+0x118/0x190
-print_address_description.isra.9+0x6c/0x3b8
-__kasan_report+0x134/0x23c
-kasan_report+0xc/0x18
-__asan_load1+0x5c/0x68
-kobject_put+0x24/0x180
-put_device+0x10/0x20
-scsi_host_put+0x10/0x18
-ata_devres_release+0x74/0xb0
-release_nodes+0x2d0/0x470
-devres_release_all+0x50/0x78
-really_probe+0x2d4/0x560
-driver_probe_device+0x7c/0x148
-device_driver_attach+0x94/0xa0
-__driver_attach+0xa8/0x110
-bus_for_each_dev+0xe8/0x158
-driver_attach+0x30/0x40
-bus_add_driver+0x220/0x2e0
-driver_register+0xbc/0x1d0
-__pci_register_driver+0xbc/0xd0
-ahci_pci_driver_init+0x20/0x28
-do_one_initcall+0xf0/0x608
-kernel_init_freeable+0x31c/0x384
-kernel_init+0x10/0x118
-ret_from_fork+0x10/0x18
+Got it.
 
-Allocated by task 5:
-save_stack+0x28/0xc8
-__kasan_kmalloc.isra.8+0xbc/0xd8
-kasan_kmalloc+0xc/0x18
-__kmalloc+0x1a8/0x280
-scsi_host_alloc+0x44/0x678
-ata_scsi_add_hosts+0x74/0x268
-ata_host_register+0x228/0x488
-ahci_host_activate+0x1c4/0x2a8
-ahci_init_one+0xd18/0x1298
-local_pci_probe+0x74/0xf0
-work_for_cpu_fn+0x2c/0x48
-process_one_work+0x488/0xc08
-worker_thread+0x330/0x5d0
-kthread+0x1c8/0x1d0
-ret_from_fork+0x10/0x18
+So V4 is ready. Do you think it'll make sense to send it
+out now or next week?
 
-Freed by task 5:
-save_stack+0x28/0xc8
-__kasan_slab_free+0x118/0x180
-kasan_slab_free+0x10/0x18
-slab_free_freelist_hook+0xa4/0x1a0
-kfree+0xd4/0x3a0
-scsi_host_dev_release+0x100/0x148
-device_release+0x7c/0xe0
-kobject_put+0xb0/0x180
-put_device+0x10/0x20
-scsi_host_put+0x10/0x18
-ata_scsi_add_hosts+0x210/0x268
-ata_host_register+0x228/0x488
-ahci_host_activate+0x1c4/0x2a8
-ahci_init_one+0xd18/0x1298
-local_pci_probe+0x74/0xf0
-work_for_cpu_fn+0x2c/0x48
-process_one_work+0x488/0xc08
-worker_thread+0x330/0x5d0
-kthread+0x1c8/0x1d0
-ret_from_fork+0x10/0x18
-
-There is also refcount issue, as well:
-WARNING: CPU: 1 PID: 1 at lib/refcount.c:28 refcount_warn_saturate+0xf8/0x170
-
-The issue is that we make an erroneous extra call to scsi_host_put()
-for that host:
-
-So in ahci_init_one()->ata_host_alloc_pinfo()->ata_host_alloc(), we setup
-a device release method - ata_devres_release() - which intends to release
-the SCSI hosts:
-
-static void ata_devres_release(struct device *gendev, void *res)
-{
-	...
-	for (i = 0; i < host->n_ports; i++) {
-		struct ata_port *ap = host->ports[i];
-
-		if (!ap)
-			continue;
-
-		if (ap->scsi_host)
-			scsi_host_put(ap->scsi_host);
-
-	}
-	...
-}
-
-However in the ata_scsi_add_hosts() error path, we also call
-scsi_host_put() for the SCSI hosts.
-
-Fix by removing the the scsi_host_put() calls in ata_scsi_add_hosts() and
-leave this to ata_devres_release().
-
-Fixes: f31871951b38 ("libata: separate out ata_host_alloc() and ata_host_register()")
-Signed-off-by: John Garry <john.garry@huawei.com>
----
-Another approach here is to keep the scsi_host_put() call in
-ata_scsi_add_hosts(), but just clear ap->scsi_host there. It may be
-better, as it keeps the alloc and put together, which is more logical.
-
-I went with this one as it removes code, instead of adding it, above. And
-it also ensures we have a single location for the scsi_host_put() for
-ap->host set.
-
-diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
-index eb2eb599e602..061eebf85e6d 100644
---- a/drivers/ata/libata-scsi.c
-+++ b/drivers/ata/libata-scsi.c
-@@ -4562,22 +4562,19 @@ int ata_scsi_add_hosts(struct ata_host *host, struct scsi_host_template *sht)
- 		 */
- 		shost->max_host_blocked = 1;
- 
--		rc = scsi_add_host_with_dma(ap->scsi_host,
--						&ap->tdev, ap->host->dev);
-+		rc = scsi_add_host_with_dma(shost, &ap->tdev, ap->host->dev);
- 		if (rc)
--			goto err_add;
-+			goto err_alloc;
- 	}
- 
- 	return 0;
- 
-- err_add:
--	scsi_host_put(host->ports[i]->scsi_host);
-  err_alloc:
- 	while (--i >= 0) {
- 		struct Scsi_Host *shost = host->ports[i]->scsi_host;
- 
-+		/* scsi_host_put() is in ata_devres_release() */
- 		scsi_remove_host(shost);
--		scsi_host_put(shost);
- 	}
- 	return rc;
- }
--- 
-2.17.1
-
+	-ss
