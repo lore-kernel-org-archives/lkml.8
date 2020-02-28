@@ -2,95 +2,71 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5818C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62791C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A96D7246A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:06:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yta4/Xk0"
+	by mail.kernel.org (Postfix) with ESMTP id 4050C246A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:08:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgB1SGg (ORCPT
+        id S1726118AbgB1SIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 13:06:36 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:45738 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbgB1SGg (ORCPT
+        Fri, 28 Feb 2020 13:08:21 -0500
+Received: from smtprelay0242.hostedemail.com ([216.40.44.242]:57186 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725730AbgB1SIV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 13:06:36 -0500
-Received: by mail-il1-f195.google.com with SMTP id p8so3451959iln.12
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 10:06:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=q/u3S7XYfqg1NhqIgbh8eCbf32/eSCjaraTCABx9w4Q=;
-        b=yta4/Xk00nxXXJJerA9pXGKHKj0QE/n8NsJR7d8qpVc3Oztd/mAVfk87XeoiceFH1j
-         0CoMXAIFLpoU6cSkk7iMCQpTKNa3+8U/Q22Uw3r4Cp+hfZ8VtCeZbfGhh1CwXTbpkfKH
-         sUQotmwz5eVnATs6IQvgW5HLL0diFuHQLdX0rZMBIx5Zdwp4xXcv7EyhuNL4Rb5ETf8t
-         tdhkgsDOsMr79E72aIhZESWPRH5DWFQj+xTu7S5GbDxo0Z7NVQqMmoPWVnAl5YrvnQwt
-         wXSYtES5N1FkpcVTJ5zasDAtJGWROIjmqVHXUXpT5F+QJSP7UbgqtcAyaq1DdhSOlQ6t
-         BZsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=q/u3S7XYfqg1NhqIgbh8eCbf32/eSCjaraTCABx9w4Q=;
-        b=Oy592nG50+9GAxs1/LJ2zZp7gnG6wTJgdtM9lNqYQbw3LQl9KeQRLrTYvzFs88Oiea
-         QHojtDnNOmbcc7woe/w67JT5Hxp+Z8W/TYibFdzGYxEXbazRikgL21QT+h/M6g5lrF8X
-         nJ7ZIwohBkDrYSBxJmmg3+yCZp0NqCzAenVLlXSxQ9a9RiAFcP97rxRRv8qtjCoQ0kFX
-         9Ai3whlL40IYWyEtcL+3x76kHlDsoKQb7PLtJMTsVOrchWFDiJxJYsjRjaqiGmiWNLrY
-         2TtjWA+/YangeQEeEip1OJ0hQXAtGrHtemCWHB20rHnrQlksnMVFcWU+IXVp2N7Tho1/
-         J+Pw==
-X-Gm-Message-State: APjAAAVDecxhVyk4Po2Yx0My6bcBx9PK+mklRaF9+7najrFL3I7qxWWZ
-        mD1hXJednMQYxS2cbj5L6RO7J09G+qQ=
-X-Google-Smtp-Source: APXvYqzOpqwGZFVcW1gjeRtV6mM27enIksjXvRVdgTtJaXp9eDfpAzR47kq45BEUFZ2eTkkFo/7bJA==
-X-Received: by 2002:a92:c04e:: with SMTP id o14mr5814460ilf.133.1582913195360;
-        Fri, 28 Feb 2020 10:06:35 -0800 (PST)
-Received: from [172.22.22.10] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.googlemail.com with ESMTPSA id t19sm2381286ioc.38.2020.02.28.10.06.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Feb 2020 10:06:34 -0800 (PST)
-Subject: Re: [PATCH] bitfield.h: add FIELD_MAX() and field_max()
-From:   Alex Elder <elder@linaro.org>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-References: <20200228165343.8272-1-elder@linaro.org>
- <20200228095611.023085fd@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <d6bf67ba-3546-c582-21a6-30cbd4edd984@linaro.org>
-Message-ID: <16889e77-31cf-58f6-c27e-5b8a6b3e604d@linaro.org>
-Date:   Fri, 28 Feb 2020 12:06:09 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 28 Feb 2020 13:08:21 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 8F291837F24A;
+        Fri, 28 Feb 2020 18:08:19 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: lunch56_2b73572b6e63e
+X-Filterd-Recvd-Size: 1764
+Received: from XPS-9350.home (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf04.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 28 Feb 2020 18:08:18 +0000 (UTC)
+Message-ID: <a81f6072c8adfc5343fbc249f355c9ea5ced698e.camel@perches.com>
+Subject: Re: [PATCH 4.14 111/237] tty: synclinkmp: Adjust indentation in
+ several functions
+From:   Joe Perches <joe@perches.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Date:   Fri, 28 Feb 2020 10:06:45 -0800
+In-Reply-To: <20200228071239.GC2895159@kroah.com>
+References: <20200227132255.285644406@linuxfoundation.org>
+         <20200227132305.054909944@linuxfoundation.org>
+         <11c17de7c525997ddddab995223828bdec8e8e93.camel@perches.com>
+         <20200228071239.GC2895159@kroah.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-In-Reply-To: <d6bf67ba-3546-c582-21a6-30cbd4edd984@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/28/20 12:04 PM, Alex Elder wrote:
+On Fri, 2020-02-28 at 08:12 +0100, Greg Kroah-Hartman wrote:
+> On Thu, Feb 27, 2020 at 07:55:49PM -0800, Joe Perches wrote:
+> > On Thu, 2020-02-27 at 14:35 +0100, Greg Kroah-Hartman wrote:
+> > > From: Nathan Chancellor <natechancellor@gmail.com>
+> > 
+> > I believe these sorts of whitespace only changes should
+> > not be applied to a stable branch unless it's useful for
+> > porting other actual defect fixes.
 > 
-> 
-> I find field_max() to be a good name for what I'm looking for.
+> I want to get clang build warnings down to the same level that gcc build
+> warnings are, so that they become useful in detecting new issues.  That
+> is why I add these types of patches to the stable trees.
 
-Sorry I wanted to add this but clicked "send" too fast.
+New issues should be found in the current kernel.
+Backporting whitespace changes is value-free.
 
-Yes it's the same as field_mask(), but that name only *implies*
-it is the same as the maximum value.  I mean, they're the same,
-but the name I'm suggesting conveys its purpose better.
 
-					-Alex
