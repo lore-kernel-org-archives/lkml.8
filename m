@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 679D8C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7F5C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4229C246AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:19:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B949246AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:19:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="VgpjZG41"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="ShnbsPTe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgB1STv (ORCPT
+        id S1726884AbgB1STs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 13:19:51 -0500
-Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.104]:14927 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbgB1STq (ORCPT
+        Fri, 28 Feb 2020 13:19:48 -0500
+Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.123]:26074 "EHLO
+        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbgB1STm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 13:19:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582913983;
+        Fri, 28 Feb 2020 13:19:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582913979;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=Z24TgJFOcoIvJO9KSWhl04XKycU4Iur75xW70ibCPIo=;
-        b=VgpjZG41nuJLEzccIg2AyPEm3tFH1q6OlkV193kEa1gxA62W4whi3fA0r2D33HWgb5
-        TNcgggmppDG/obGPUQsJaI+PGvrFxDBYBnTC1OnvMF23iOxcm1zLH2RktWY6/wNswYDL
-        jIIpyjFxswaf6asq9FetEPvs03DNs4MhpHybae/G8/cltFPbM5/I0kvtmGqwQCQ1vx1F
-        lAWzXtwvdpD08v2g6l9PGh86bBUWh8tTIHr9GAIAbspiBDcBHOVviwwJycjWeiWim/2k
-        6ATiGrK6rvt1pnGwdYQO9W/XTM5KDLZbdQvjx/wDn9Xwqe4Is2ZEvkkjKDgtMnLY17o3
-        Wr8A==
+        bh=KXDxjYvjEmkF3JyQOKq8VWv0rkPPoGHlQy9Z7iMTutw=;
+        b=ShnbsPTe/Ud6ZycmKuMOJ16E4r7RpmUCPfLYe+IfocTVZM81Nlj3dqer8PHaSL/fdw
+        u3izFC1/hWQQNy0Rx9UBL9pzDIGXn2/OFXtvZ2KKNaBTaLxW6MrWCDCk5dz92LXfgzOQ
+        l0UDyroTTChS6WV4Y+gZAUL6weHXJHs5IKHYb1ue4DhcjRvQ3oFI4Yo2zD4xxsVMNp3/
+        cojfwWaPPoio9S5B8kJ6r6bM05AsGHuu01FgBnLVNOLz+0MK04FSJTcXyp5lZc6kZM7S
+        fuJxrcqdjqc4fsuM8U8lKbJwxj8Ba0dz1XqaYc0N9Sp9bUOwdnic/6VzfZcGHyZ1+kSw
+        6OaQ==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6G1+ULkA="
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
-        with ESMTPSA id y0a02cw1SIJZ2Ln
+        with ESMTPSA id y0a02cw1SIJb2Lq
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Fri, 28 Feb 2020 19:19:35 +0100 (CET)
+        Fri, 28 Feb 2020 19:19:37 +0100 (CET)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     Paul Cercueil <paul@crapouillou.net>,
         Paul Boddie <paul@boddie.org.uk>,
@@ -61,12 +61,10 @@ To:     Paul Cercueil <paul@crapouillou.net>,
 Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, Sam Ravnborg <sam@ravnborg.org>,
-        Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [RFC v2 1/8] dt-bindings: display: add ingenic-jz4780-lcd DT Schema
-Date:   Fri, 28 Feb 2020 19:19:26 +0100
-Message-Id: <b4a73a1c542fab9d05d12b56c547b555b6a9b062.1582913973.git.hns@goldelico.com>
+        kernel@pyra-handheld.com
+Subject: [RFC v2 4/8] drm: ingenic: add jz4780 Synopsys HDMI driver.
+Date:   Fri, 28 Feb 2020 19:19:29 +0100
+Message-Id: <818cca0cda7a5dbb29d818468e47681f5882e1e1.1582913973.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1582913973.git.hns@goldelico.com>
 References: <cover.1582913973.git.hns@goldelico.com>
@@ -77,105 +75,170 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam Ravnborg <sam@ravnborg.org>
+From: Paul Boddie <paul@boddie.org.uk>
 
-Add DT bindings for the LCD controller on the jz4780 SoC
-Based on .txt binding from Zubair Lutfullah Kakakhel
+A specialisation of the generic Synopsys HDMI driver is employed for JZ4780
+HDMI support. This requires a new driver, plus device tree and configuration
+modifications.
 
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Cc: H. Nikolaus Schaller <hns@goldelico.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
+Signed-off-by: Paul Boddie <paul@boddie.org.uk>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- .../bindings/display/ingenic-jz4780-lcd.yaml  | 78 +++++++++++++++++++
- 1 file changed, 78 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
+ drivers/gpu/drm/ingenic/Kconfig          |   8 ++
+ drivers/gpu/drm/ingenic/Makefile         |   1 +
+ drivers/gpu/drm/ingenic/dw_hdmi-jz4780.c | 120 +++++++++++++++++++++++
+ 3 files changed, 129 insertions(+)
+ create mode 100644 drivers/gpu/drm/ingenic/dw_hdmi-jz4780.c
 
-diff --git a/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml b/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
+diff --git a/drivers/gpu/drm/ingenic/Kconfig b/drivers/gpu/drm/ingenic/Kconfig
+index d82c3d37ec9c..44bfd0d35af1 100644
+--- a/drivers/gpu/drm/ingenic/Kconfig
++++ b/drivers/gpu/drm/ingenic/Kconfig
+@@ -14,3 +14,11 @@ config DRM_INGENIC
+ 	  Choose this option for DRM support for the Ingenic SoCs.
+ 
+ 	  If M is selected the module will be called ingenic-drm.
++
++config DRM_DW_HDMI_JZ4780
++	tristate "HDMI Support for Ingenic JZ4780"
++	depends on DRM_INGENIC
++	depends on OF
++	select DRM_DW_HDMI
++	help
++	  Choose this option for HDMI output from the Ingenic JZ4780.
+diff --git a/drivers/gpu/drm/ingenic/Makefile b/drivers/gpu/drm/ingenic/Makefile
+index 11cac42ce0bb..238383de63c7 100644
+--- a/drivers/gpu/drm/ingenic/Makefile
++++ b/drivers/gpu/drm/ingenic/Makefile
+@@ -1 +1,2 @@
+ obj-$(CONFIG_DRM_INGENIC) += ingenic-drm.o
++obj-$(CONFIG_DRM_DW_HDMI_JZ4780) += dw_hdmi-jz4780.o
+diff --git a/drivers/gpu/drm/ingenic/dw_hdmi-jz4780.c b/drivers/gpu/drm/ingenic/dw_hdmi-jz4780.c
 new file mode 100644
-index 000000000000..c71415a3a342
+index 000000000000..fa379e337263
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
-@@ -0,0 +1,78 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/ingenic-jz4780-lcd.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/gpu/drm/ingenic/dw_hdmi-jz4780.c
+@@ -0,0 +1,120 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (C) 2011-2013 Freescale Semiconductor, Inc.
++ * Copyright (C) 2019 Paul Boddie <paul@boddie.org.uk>
++ *
++ * Derived from dw_hdmi-imx.c with i.MX portions removed.
++ * Probe and remove operations derived from rcar_dw_hdmi.c.
++ */
 +
-+title: Bindings for Ingenic JZ4780 LCD Controller
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
 +
-+maintainers:
-+  - Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-+  - H. Nikolaus Schaller <hns@goldelico.com>
++#include <drm/bridge/dw_hdmi.h>
++#include <drm/drm_of.h>
 +
-+description: |
-+  LCD Controller is the Display Controller for the Ingenic JZ4780 SoC
++static const struct dw_hdmi_mpll_config jz4780_mpll_cfg[] = {
++	{ 45250000,  { { 0x01e0, 0x0000 },
++		       { 0x21e1, 0x0000 },
++		       { 0x41e2, 0x0000 } } },
++	{ 92500000,  { { 0x0140, 0x0005 },
++		       { 0x2141, 0x0005 },
++		       { 0x4142, 0x0005 } } },
++	{ 148500000, { { 0x00a0, 0x000a },
++		       { 0x20a1, 0x000a },
++		       { 0x40a2, 0x000a } } },
++	{ 216000000, { { 0x00a0, 0x000a },
++		       { 0x2001, 0x000f },
++		       { 0x4002, 0x000f } } },
++	{ ~0UL,      { { 0x0000, 0x0000 },
++		       { 0x0000, 0x0000 },
++		       { 0x0000, 0x0000 } } }
++};
 +
-+properties:
-+  compatible:
-+    items:
-+      - const: ingenic,jz4780-lcd
++static const struct dw_hdmi_curr_ctrl jz4780_cur_ctr[] = {
++	/*pixelclk     bpp8    bpp10   bpp12 */
++	{ 54000000,  { 0x091c, 0x091c, 0x06dc } },
++	{ 58400000,  { 0x091c, 0x06dc, 0x06dc } },
++	{ 72000000,  { 0x06dc, 0x06dc, 0x091c } },
++	{ 74250000,  { 0x06dc, 0x0b5c, 0x091c } },
++	{ 118800000, { 0x091c, 0x091c, 0x06dc } },
++	{ 216000000, { 0x06dc, 0x0b5c, 0x091c } },
++	{ ~0UL,      { 0x0000, 0x0000, 0x0000 } },
++};
 +
-+  reg:
-+    maxItems: 1
-+    description: the address & size of the LCD controller registers
++/*
++ * Resistance term 133Ohm Cfg
++ * PREEMP config 0.00
++ * TX/CK level 10
++ */
++static const struct dw_hdmi_phy_config jz4780_phy_config[] = {
++	/*pixelclk   symbol   term   vlev */
++	{ 216000000, 0x800d, 0x0005, 0x01ad},
++	{ ~0UL,      0x0000, 0x0000, 0x0000}
++};
 +
-+  interrupts:
-+    maxItems: 1
-+    description: Specifies the interrupt provided by parent
++static enum drm_mode_status
++jz4780_hdmi_mode_valid(struct drm_connector *con,
++		       const struct drm_display_mode *mode)
++{
++	if (mode->clock < 13500)
++		return MODE_CLOCK_LOW;
++	/* FIXME: Hardware is capable of 270MHz, but setup data is missing. */
++	if (mode->clock > 216000)
++		return MODE_CLOCK_HIGH;
 +
-+  clocks:
-+    maxItems: 2
-+    description: Clock specifiers for the JZ4780_CLK_TVE JZ4780_CLK_LCD0PIXCLK
++	return MODE_OK;
++}
 +
-+  clock-names:
-+    items:
-+      - const: lcd_clk
-+      - const: lcd_pixclk
++static struct dw_hdmi_plat_data jz4780_dw_hdmi_plat_data = {
++	.mpll_cfg   = jz4780_mpll_cfg,
++	.cur_ctr    = jz4780_cur_ctr,
++	.phy_config = jz4780_phy_config,
++	.mode_valid = jz4780_hdmi_mode_valid,
++};
 +
-+  port:
-+    type: object
-+    description: |
-+      A port node with endpoint definitions as defined in
-+      Documentation/devicetree/bindings/media/video-interfaces.txt
++static const struct of_device_id jz4780_dw_hdmi_dt_ids[] = {
++	{ .compatible = "ingenic,jz4780-dw-hdmi" },
++	{ /* Sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, jz4780_dw_hdmi_dt_ids);
 +
-+required:
-+    - compatible
-+    - reg
-+    - interrupts
-+    - clocks
-+    - clock-names
-+    - port
++static int jz4780_dw_hdmi_probe(struct platform_device *pdev)
++{
++	struct dw_hdmi *hdmi;
 +
-+additionalProperties: false
++	hdmi = dw_hdmi_probe(pdev, &jz4780_dw_hdmi_plat_data);
++	if (IS_ERR(hdmi))
++		return PTR_ERR(hdmi);
 +
-+examples:
-+  - |
-+    #include <dt-bindings/clock/jz4780-cgu.h>
-+    lcd: jz4780-lcdk@0x13050000 {
-+        compatible = "ingenic,jz4780-lcd";
-+        reg = <0x13050000 0x1800>;
++	platform_set_drvdata(pdev, hdmi);
 +
-+        clocks = <&cgu JZ4780_CLK_TVE>, <&cgu JZ4780_CLK_LCD0PIXCLK>;
-+        clock-names = "lcd_clk", "lcd_pixclk";
++	return 0;
++}
 +
-+        interrupt-parent = <&intc>;
-+        interrupts = <31>;
++static int jz4780_dw_hdmi_remove(struct platform_device *pdev)
++{
++	struct dw_hdmi *hdmi = platform_get_drvdata(pdev);
 +
-+        jz4780_lcd_out: port {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
++	dw_hdmi_remove(hdmi);
 +
-+            jz4780_out_hdmi: endpoint@0 {
-+                reg = <0>;
-+                remote-endpoint = <&hdmi_in_lcd>;
-+            };
-+        };
-+    };
++	return 0;
++}
 +
-+...
++static struct platform_driver jz4780_dw_hdmi_platform_driver = {
++	.probe  = jz4780_dw_hdmi_probe,
++	.remove = jz4780_dw_hdmi_remove,
++	.driver = {
++		.name = "dw-hdmi-jz4780",
++		.of_match_table = jz4780_dw_hdmi_dt_ids,
++	},
++};
++
++module_platform_driver(jz4780_dw_hdmi_platform_driver);
++
++MODULE_AUTHOR("Andy Yan <andy.yan@rock-chips.com>");
++MODULE_AUTHOR("Yakir Yang <ykk@rock-chips.com>");
++MODULE_AUTHOR("Paul Boddie <paul@boddie.org.uk>");
++MODULE_DESCRIPTION("Ingenic JZ4780 DW-HDMI Driver Extension");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:dw-hdmi-jz4780");
 -- 
 2.23.0
 
