@@ -7,84 +7,86 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBF5C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A849C3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03EBD246B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:20:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CFCB246AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:22:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AiUb6onF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fa//2cfD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbgB1XU4 (ORCPT
+        id S1726658AbgB1XWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 18:20:56 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:38023 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726627AbgB1XU4 (ORCPT
+        Fri, 28 Feb 2020 18:22:54 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:37766 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725957AbgB1XWx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 18:20:56 -0500
-Received: by mail-lf1-f68.google.com with SMTP id w22so2311215lfk.5
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 15:20:53 -0800 (PST)
+        Fri, 28 Feb 2020 18:22:53 -0500
+Received: by mail-lj1-f193.google.com with SMTP id q23so5197402ljm.4
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 15:22:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=IUCuvsoT8/LPUAazzHuf3BSlY/LuzBm/RZCQW8qkafc=;
-        b=AiUb6onFScs/DAQJxoWCQUJu07Ygr0wcS1Pv2MbH6OyAjWjgozRxwf6cNtCwOtlfVR
-         StL7/AuHIW0sbWv7NYip4IeQ3WOfVl8K+fzviBHY+O0vwd3X7fxSjz41UytCU5pFjIoA
-         Aj9gufEaX3ovYzGXMaPshc1QkuAjwholpDgzRax7GEvEpmZf06tYZ3d9zzaIeuFHWZIm
-         j41Pn3Li/q7s/VutdqRXw+8LiL7jgl4AFztDLVpC3ruoqCw4G8iPpD6CP1ybCpQkNhP6
-         GQksQkjbHI7sVqDVLH42/NIVMLVijAowK7Z57JkUzabEyP7k8fCQWxnPc8tyA+Bj8Onq
-         U+eA==
+        bh=2eqxeoYIrVLOIQ7hh1SkaHG4jTSn1JrLp5pMhF228gg=;
+        b=fa//2cfD9xxk9b6pZ6Yw33KdAqjyxP/fqbFuCPrtvpvcXafVEnloRfDXvaBe0dN0Qa
+         fINSDiTXoEkKpAHbZR0/CdQGXzw4BkWxKqFbvTTlF2t30WImNasawyhoby7EbJk0v4sP
+         eFf8Y1wTo/G2c4D/JkpUKxEmXnYI5Cv+VsODpIJdCdKwfbE8trfou+O6r4JHKG9284Qv
+         VKRG+jTEXuy0aWblF9Jkk49FRn1B4uyIvX52L5y2JhQ/ZLISwAnuVEoiuN976mSXrGfs
+         khNSj9gFNkG3O9Qxt+VkpLOxS+pBmxH+KEZlYmCfeNRuyviRcA4DHcXPIw388fNvkykP
+         RL9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=IUCuvsoT8/LPUAazzHuf3BSlY/LuzBm/RZCQW8qkafc=;
-        b=is/x8tbtvcyFMIN9oPWQIZU5zYX0PfxkVzSEtp2vQiSJvBWICJeXrii1zS0t3uCIzZ
-         qjUp+jPdT4lL39JFvtW0LT+aA7n2Mw36bsHmSLAFvu/IiYLkVZMBryE7jDP2PDyt3E+r
-         yzE2sYch0c6V6hBD7I2lwyPq7pryC+JvRgd+tAvA9AiaJGgvckEU1dgcVKEmecQi6tJt
-         pZHBWG7kJk5CUhb3NYuEBtYP4dioxIDmU4SklBYwAimxNhr2ZOnY71dJkDtbDhXIwtYh
-         GkaysZpnFs8jmnnDhd4vW4MTsIucRfAbKix8x5+BPrB38NCMsh/eaXh/Ftvc0ADRHyoa
-         Ms4Q==
-X-Gm-Message-State: ANhLgQ1zP7aUzEQiap7FmoBRTr2yGt9Mngxh9PBiiCn4x7V2ohCEaEzS
-        AjYj6YzrfdGn2oDq+Voxq+6vGzS4sXanOY/nOvUhFw==
-X-Google-Smtp-Source: ADFU+vvIU0LlYeHeLDZSjyzG9od8EC9fwjBLEALNd8L/0q/e9uAE6B+ghoG9n8TaFthveqPymw6YMKolM/LvPYLRYQQ=
-X-Received: by 2002:a19:110:: with SMTP id 16mr3859186lfb.21.1582932052865;
- Fri, 28 Feb 2020 15:20:52 -0800 (PST)
+        bh=2eqxeoYIrVLOIQ7hh1SkaHG4jTSn1JrLp5pMhF228gg=;
+        b=jvg3hirvxqGiWxY45tl8Tvtnp8OJ3kLItA58Bg1nPWTCvGdYapHGGA5pY7c1Py/AJU
+         cceaWTbUswgU/X9/Zq9F5nNe9LXSXLwPrWxBwh52rCwC5OqmNFCtnB0OmPjR2Ud6xca5
+         g3Efb2fNAm+qw6rZ8Ibdn8WG4HjKHC51BOGV7wPh8UUeQ9MC8e98TJUktkP18nMgeAwh
+         tNjP2+VgrvdAswQO4xQTXmplzvf74Ow8kGdGCX/+XnIqTBL7xJKAsudjWv5FHlAz767J
+         wydCANgYX9+Vu+4i7lo2Hgtzb/w9HqjMj8hn7THWrdFljGCd6jayAVHU0hTZEAnc1BUy
+         ObCQ==
+X-Gm-Message-State: ANhLgQ0kLU5QHxiVRB5UdEoIo+aPpqSHzRLd8ZFqfz4kB3f9oWoO4Dlm
+        nFlB60URE0kfrnGdkhCGBqJI+N2zv8Frd7emBpEKTQ==
+X-Google-Smtp-Source: ADFU+vv4jorIIrhlu3IkFg1e8VzFI1djLIzV0XhA4c7hYwnb2v6uJwaQ90o8fQbNN3FP42H3eq2tJ/643zwjgaSocV8=
+X-Received: by 2002:a05:651c:2c7:: with SMTP id f7mr4238077ljo.125.1582932172096;
+ Fri, 28 Feb 2020 15:22:52 -0800 (PST)
 MIME-Version: 1.0
-References: <20200226135323.1840-1-brgl@bgdev.pl>
-In-Reply-To: <20200226135323.1840-1-brgl@bgdev.pl>
+References: <20200222060435.971-1-yamada.masahiro@socionext.com> <20200222060435.971-3-yamada.masahiro@socionext.com>
+In-Reply-To: <20200222060435.971-3-yamada.masahiro@socionext.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 29 Feb 2020 00:20:41 +0100
-Message-ID: <CACRpkdY4=bU-gMywttvnRbgu=CG0TtKx5DFiV-Gio5DBDV08-g@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: fix bitmap operations related to line event watching
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Date:   Sat, 29 Feb 2020 00:22:41 +0100
+Message-ID: <CACRpkdaj8jiABWU8Nj1p8=8HbDoi3zh4yMedVQ9C9BppqMT65w@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] dt-bingings: pinctrl: Convert UniPhier pin
+ controller to json-schema
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Kent Gibson <warthog618@gmail.com>
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 2:53 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Sat, Feb 22, 2020 at 7:05 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Convert the UniPhier pin controller binding to DT schema format.
 >
-> When operating on the bits of watched_lines bitmap, we're using
-> desc_to_gpio() which returns the GPIO number from the global numberspace.
-> This leads to all sorts of memory corruptions and invalid behavior. We
-> should switch to using gpio_chip_hwgpio() instead.
->
-> Fixes: 51c1064e82e7 ("gpiolib: add new ioctl() for monitoring changes in line info")
-> Reported-by: Kent Gibson <warthog618@gmail.com>
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-This looks good but where should it be applied?
-It fails to apply to my devel branch where this lives.
+I see this was applied, I had some comments on the previous
+version but they can be addressed with follow-up patches.
 
 Yours,
 Linus Walleij
