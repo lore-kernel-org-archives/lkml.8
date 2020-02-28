@@ -2,82 +2,80 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D87C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3780DC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6479246A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:53:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gs0s1D2l"
+	by mail.kernel.org (Postfix) with ESMTP id EE649246A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:55:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582901734;
+	bh=uzF6Z9bvJm0pdIJlxAl+oKX05ewzkC/oD3pRBGnDBvw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=w43HW4fjsA7Awe40IvwlJwepzDig6M42sP1Ll/36VB9JVIPtFaIWZyadBAwMj5Agv
+	 je3CtN96+pur75SL8l+nrjBkUlAs4RIJHzOEspwNsdxSVWNxtEPMPpD73wDyPelgjB
+	 ABebQQxRq9UotSdTlJtR8K8NTsozyW9jilPxWI60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbgB1Oxq (ORCPT
+        id S1727040AbgB1Ozd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 09:53:46 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49083 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726788AbgB1Oxq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 09:53:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582901625;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=Me2iAT/yAJmgAK/C/Xnwh9cHR9F8E6hzn8OdATiSink=;
-        b=gs0s1D2lFfcA5l1B2hHjxv1Yoq+DCLuxSimQmGoZx7Ob+hCUTh7bBKkMI0vtOaYgIHZTKL
-        9nWhVL1b8wjH7vcfZ31qOIsYjs8Q7gz4TiIkfrDFNPfL/l47mhs8cWELj5RTthc11vbZjo
-        NbXM7V8Itg51mMrS/1Q8yAAlQ3sI1GI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-75-_ZDKfHEGNxaTGc1nay5_ZA-1; Fri, 28 Feb 2020 09:53:36 -0500
-X-MC-Unique: _ZDKfHEGNxaTGc1nay5_ZA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 28 Feb 2020 09:55:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42556 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726682AbgB1Ozc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 09:55:32 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B3E8813E5;
-        Fri, 28 Feb 2020 14:53:34 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 22CD590CC8;
-        Fri, 28 Feb 2020 14:53:32 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-To:     linux-api@vger.kernel.org
-cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, metze@samba.org,
-        torvalds@linux-foundation.org, cyphar@cyphar.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Have RESOLVE_* flags superseded AT_* flags for new syscalls?
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <96562.1582901612.1@warthog.procyon.org.uk>
-Date:   Fri, 28 Feb 2020 14:53:32 +0000
-Message-ID: <96563.1582901612@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        by mail.kernel.org (Postfix) with ESMTPSA id 52107246A0;
+        Fri, 28 Feb 2020 14:55:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582901731;
+        bh=uzF6Z9bvJm0pdIJlxAl+oKX05ewzkC/oD3pRBGnDBvw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=M+RDVR5DhyOio5Z4jZFVwnnai4AGoFwBAYNiL93GnNbvELW/wTC+W32G3kBNsWlrm
+         tPqtiw6UrVbJqhd+CzDozkerEsOn5ivs2mfn5S8XzbjL6puAyHna6hk4Fx/XEAunuM
+         xOi+v1aDVYFJK1FrxbSXRGOPHPkD3sAZGwNXWpzA=
+Date:   Fri, 28 Feb 2020 23:55:28 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [v2 0/1] Documentation: bootconfig: Documentation updates
+Message-Id: <20200228235528.acfc091ee58d4d685a119f4f@kernel.org>
+In-Reply-To: <0d7d201c-e313-6129-7cfa-4e61eb31342d@web.de>
+References: <158287861133.18632.12035327305997207220.stgit@devnote2>
+        <957cef56-04b0-3889-6c95-a8ed7606b68d@web.de>
+        <20200228222311.f5b9448027031b16a3be372a@kernel.org>
+        <0d7d201c-e313-6129-7cfa-4e61eb31342d@web.de>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	
-I've been told that RESOLVE_* flags, which can be found in linux/openat2.h,
-should be used instead of the equivalent AT_* flags for new system calls.  Is
-this the case?
+On Fri, 28 Feb 2020 15:05:42 +0100
+Markus Elfring <Markus.Elfring@web.de> wrote:
 
-If so, should we comment them as being deprecated in the header file?  And
-should they be in linux/fcntl.h rather than linux/openat2.h?
+> > So, if you are interested in it, I don't stop you to write it up.
+> 
+> Will the collaboration continue anyhow?
 
-Also:
+It's your turn. "ask not what your community can do for you - ask what you can do for your community." :)
+Collaboration is not just talking, but move things step forward.
 
- (*) It should be noted that the RESOLVE_* flags are not a superset of the
-     AT_* flags (there's no equivalent of AT_NO_AUTOMOUNT for example).
+> Will the clarification become more constructive for remaining challenges?
 
- (*) It has been suggested that AT_SYMLINK_NOFOLLOW should be the default, but
-     only RESOLVE_NO_SYMLINKS exists.
+If you think so, you can send a patch for it.
 
-David
+Thank you,
 
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
