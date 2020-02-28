@@ -2,155 +2,108 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3C9C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4CDC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFCD82469F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:26:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="SToHZC4O"
+	by mail.kernel.org (Postfix) with ESMTP id 4D1F42469F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:26:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582885604;
+	bh=o0qutHD9EBMfJPLV5KzCP/GRGnjCK4Ufxj2NpkFlet4=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=D6ctk94mktZGstplXpJMh/Y00k9Ewhq2SpSkTWx1+3TTQo7JFkYu1Q+YbJZ4HtTU2
+	 WeWaBNNtzlc5QfRoGyT4sXlM4+2naORnVvyga489lZToxzJMKuH/hgVmonlbnq8lCC
+	 aw10jp6SGu/n/6nKZvRtNWbfWmkE+co6wkA7VI+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgB1K0l (ORCPT
+        id S1726901AbgB1K0k convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 05:26:41 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:41257 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbgB1K0j (ORCPT
+        Fri, 28 Feb 2020 05:26:40 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37341 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbgB1K0j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Feb 2020 05:26:39 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id B719023EC4;
-        Fri, 28 Feb 2020 11:26:36 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1582885596;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JD2GcxRcyRHyxJNPoNSaMvwCSde4eO14BTyUP9NZW6w=;
-        b=SToHZC4OE6rvse39oPJXX2Q9inJgFheKTK5P+jjZYtrWoqBplO97oBYw7O3csPrOuXuIEN
-        0aUtunNDkM7fZwg4F86/l8vEE+e/YXW2eTnA9ZzR3KFZNlQwgxNg/DL/TsvmjF0kFKR/Cx
-        NqxUCp95i52VS0OVn/dMrfSnJ0UR81A=
+Received: by mail-oi1-f193.google.com with SMTP id q84so2390440oic.4;
+        Fri, 28 Feb 2020 02:26:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=/2wWBljI3pqok1pAzElv5E6shSe+mwLsPBa4DozoQaI=;
+        b=Fd69Mp45GlX1uhNQuRvxWdJvvO2AnUF1t0iYg7gn8x8Q4Fg3TnD1yxt2V/YasHGswX
+         LPjCBsWCc3MVmKqvKrhydwxZAe/UxQs4WAhMlgK5nRJ/V/0h9RO5WwVeJFFIakqAWO/m
+         Bs8MBk7xLlCz2D6P8cJ7h2D367/DE+ikB1Ev3OIWlvc2U/6lWT/9GW0Tho43nDrV8hzL
+         0Z8L3Qe7IXOQQz4eG6h9/1LAQek7bqQCUN6PHKDuSRezJmg26CnpgZZ7+R1QnQAlB2wH
+         XW8I01L+9iNxJFQk7/7JstJco6G8CzF5lXHPe1xRWKUTtHpDevw7r0eCKbHtUzqmUgxg
+         HmHA==
+X-Gm-Message-State: APjAAAXjTMX1MP0XpUCQQzLwXZzQGSNE99F5cFG0T+B9flsQJc87dXFD
+        DRNTz1rVrpoMt0GodJiN9pErXDfRJv1FseZ7MSU+bPlR
+X-Google-Smtp-Source: APXvYqwrCbXjL1lD9ksqBAXzUNh1E8EUx9WP7n/PhsY2yIVm+9bRMCsvdJBReO1eFWEDJocwVaco5snbr+73zbNykmI=
+X-Received: by 2002:a54:4e96:: with SMTP id c22mr2739283oiy.110.1582885598134;
+ Fri, 28 Feb 2020 02:26:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 28 Feb 2020 11:26:36 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] serial: earlycon: prefer EARLYCON_DECLARE() variant
-In-Reply-To: <20200220174607.24285-1-michael@walle.cc>
-References: <20200220174607.24285-1-michael@walle.cc>
-Message-ID: <ba54e9c14d4e0947df964964c020bc71@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: /
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: B719023EC4
-X-Spamd-Result: default: False [-0.10 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         RCPT_COUNT_THREE(0.00)[4];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         MID_RHS_MATCH_FROM(0.00)[]
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 28 Feb 2020 11:26:27 +0100
+Message-ID: <CAJZ5v0gWVkz7Denfz59r6xXbUjvXWOifEVO4T2tr7EZpWL3oJw@mail.gmail.com>
+Subject: [GIT PULL] Power management fixes for v5.6-rc4
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Hi Linus,
+
+Please pull from the tag
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ pm-5.6-rc4
+
+with top-most commit 189c6967fe61729fa7e9cdc32690b08fc7eebe41
+
+ Merge branches 'pm-sleep' and 'pm-devfreq'
+
+on top of commit f8788d86ab28f61f7b46eb6be375f8a726783636
+
+ Linux 5.6-rc3
+
+to receive power management fixes for 5.6-rc4.
+
+These fix a recent cpufreq initialization regression (Rafael Wysocki),
+revert a devfreq commit that made incompatible changes and broke
+user land on some systems (Orson Zhai), drop a stale reference to
+a document that has gone away recently (Jonathan Neuschäfer) and
+fix a typo in a hibernation code comment (Alexandre Belloni).
+
+Thanks!
 
 
-Am 2020-02-20 18:46, schrieb Michael Walle:
-> If a driver exposes early consoles with EARLYCON_DECLARE() and
-> OF_EARLYCON_DECLARE(), pefer the non-OF variant if the user specifies 
-> it
-> by
->   earlycon=<driver>,<options>
-> 
-> The rationale behind this is that some drivers register multiple setup
-> functions under the same driver name. Eg.
-> 
-> OF_EARLYCON_DECLARE(lpuart, "fsl,vf610-lpuart", 
-> lpuart_early_console_setup);
-> OF_EARLYCON_DECLARE(lpuart32, "fsl,ls1021a-lpuart",
-> lpuart32_early_console_setup);
-> OF_EARLYCON_DECLARE(lpuart32, "fsl,imx7ulp-lpuart",
-> lpuart32_imx_early_console_setup);
-> EARLYCON_DECLARE(lpuart, lpuart_early_console_setup);
-> EARLYCON_DECLARE(lpuart32, lpuart32_early_console_setup);
-> 
-> It depends on the order of the entries which console_setup() actually
-> gets called. To make things worse, I guess it also depends on the
-> compiler how these are ordered. Thus always prefer the 
-> EARLYCON_DECLARE()
-> ones.
+---------------
 
-Do you have an opinon on this proposal?
+Alexandre Belloni (1):
+      PM / hibernate: fix typo "reserverd_size" -> "reserved_size"
 
--michael
+Jonathan Neuschäfer (1):
+      Documentation: power: Drop reference to interface.rst
 
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
->  drivers/tty/serial/earlycon.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/drivers/tty/serial/earlycon.c 
-> b/drivers/tty/serial/earlycon.c
-> index c14873b67803..2ae9190b64bb 100644
-> --- a/drivers/tty/serial/earlycon.c
-> +++ b/drivers/tty/serial/earlycon.c
-> @@ -170,6 +170,7 @@ static int __init register_earlycon(char *buf,
-> const struct earlycon_id *match)
->  int __init setup_earlycon(char *buf)
->  {
->  	const struct earlycon_id **p_match;
-> +	bool empty_compatible = true;
-> 
->  	if (!buf || !buf[0])
->  		return -EINVAL;
-> @@ -177,6 +178,7 @@ int __init setup_earlycon(char *buf)
->  	if (early_con.flags & CON_ENABLED)
->  		return -EALREADY;
-> 
-> +again:
->  	for (p_match = __earlycon_table; p_match < __earlycon_table_end;
->  	     p_match++) {
->  		const struct earlycon_id *match = *p_match;
-> @@ -185,6 +187,10 @@ int __init setup_earlycon(char *buf)
->  		if (strncmp(buf, match->name, len))
->  			continue;
-> 
-> +		/* prefer entries with empty compatible */
-> +		if (empty_compatible && *match->compatible)
-> +			continue;
-> +
->  		if (buf[len]) {
->  			if (buf[len] != ',')
->  				continue;
-> @@ -195,6 +201,11 @@ int __init setup_earlycon(char *buf)
->  		return register_earlycon(buf, match);
->  	}
-> 
-> +	if (empty_compatible) {
-> +		empty_compatible = false;
-> +		goto again;
-> +	}
-> +
->  	return -ENOENT;
->  }
+Orson Zhai (1):
+      Revert "PM / devfreq: Modify the device name as devfreq(X) for sysfs"
+
+Rafael J. Wysocki (1):
+      cpufreq: Fix policy initialization for internal governor drivers
+
+---------------
+
+ Documentation/power/index.rst |  1 -
+ drivers/cpufreq/cpufreq.c     | 12 ++++++++++--
+ drivers/devfreq/devfreq.c     |  4 +---
+ kernel/power/snapshot.c       |  2 +-
+ 4 files changed, 12 insertions(+), 7 deletions(-)
