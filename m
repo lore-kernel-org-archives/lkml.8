@@ -2,161 +2,129 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C541C3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A13DBC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8FE62469D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7666C246A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:03:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=russell.cc header.i=@russell.cc header.b="hmuZ9Bx5";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jza5eG7E"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E/VnF2uy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730829AbgB1ECl (ORCPT
+        id S1730862AbgB1EDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 23:02:41 -0500
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:49759 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730736AbgB1ECl (ORCPT
+        Thu, 27 Feb 2020 23:03:13 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:36601 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730736AbgB1EDM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 23:02:41 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id 6587480F;
-        Thu, 27 Feb 2020 23:02:39 -0500 (EST)
-Received: from imap35 ([10.202.2.85])
-  by compute5.internal (MEProxy); Thu, 27 Feb 2020 23:02:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=russell.cc; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type:content-transfer-encoding; s=fm1; bh=yDNr6
-        cIp+q6/+ecebXB5XIPiNj/FLJ3ZWp+FFBnyePQ=; b=hmuZ9Bx5DouFkImGnpHjm
-        afcJX/vqOgpiYmp/4/McrkRHqA5EuONL655Qj+b+4j7J9hIBZF6UGjUZHIj60nzm
-        0FPYZtRoklOBQUH59CMzJm0vWGOAUG1iprX88rA9hLvlHT61MwDiChTnKUbeeHml
-        /pJ3B8cX7jwygwseJyn1Yjc/6GobbY4lbfQ6AGNTG2yFRFpO4rhrQp/ql8sTacKL
-        QRF/u0LAewxfBWuHa64sLLhnX7nVJ/0gxARS/QcINiJh7D0lQB1B3g4NKoOyJvwh
-        Q0zfz1aqWaCAEjVvybXhnVDZU4EuHd5zJZhP3FuBzMqvQMV4523qMcqEF0b+1oUw
-        w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=yDNr6cIp+q6/+ecebXB5XIPiNj/FLJ3ZWp+FFBnye
-        PQ=; b=jza5eG7Er+x/TQZ1O99s6GZ+cQRP5fd9XdaDO3xN7UPh0DR19ZgIiiyS3
-        8i1OSuKAk4SerQRk+WUSFDgGFxjnItViPKA7T86pCOTR2uCtx4iOFEnD0gnIhSwA
-        XQOzFSM0lfoyol2q1SfiHNBSsJd9llACE6j+3+sjWszXCMZRWUpI2qwi9DxBVEAK
-        cJmHgXXa1HGp7Cf1FKUqvEHAPaMpMtn0aBgO/OfoCxgq1J8D+PAF11bCSxe5gwiX
-        oAFKer+RFqXTDNjmypair9hJ/AKsyNMNHRd3jGcTafGzF4k6bzf2RsNGoYbu9E/c
-        bs12/b8/NQOepHyWbENFGpFWZsoHw==
-X-ME-Sender: <xms:3pBYXhR83RYqKPQLI-Ae0f0lek3mSW_dxOUc0VVmcV470Sfx51Imaw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrleejgdeikecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
-    hrlhcuvffnffculddvtddmnecujfgurhepofgfggfkjghffffhvffutgfgsehtqhertder
-    reejnecuhfhrohhmpedftfhushhsvghllhcuvehurhhrvgihfdcuoehruhhstghurhesrh
-    hushhsvghllhdrtggtqeenucffohhmrghinhepohiilhgrsghsrdhorhhgpdhophgvnhhp
-    ohifvghrrdighiiinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
-    hfrhhomheprhhushgtuhhrsehruhhsshgvlhhlrdgttg
-X-ME-Proxy: <xmx:3pBYXmobO1AiVzZ7gm-qsms1tEX-tPsiCh0kErdlcrWRmEFUxXb-1g>
-    <xmx:3pBYXiXPl34miLHkcfcYUE1eHVPPSjw7h7GluDfAk3LFEWGN7MDfUg>
-    <xmx:3pBYXs9aTaoea54uFnl4IEH4-vnJPBxXG8qbIz7Lm1aR3EPM6h3IGg>
-    <xmx:35BYXgjFBdgXurWFS-Ho1KR7WwTAAoC2lQEDtj14VGaLWtGAjg3ijg>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 0ACB414C014D; Thu, 27 Feb 2020 23:02:37 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-967-g014f925-fmstable-20200226v1
-Mime-Version: 1.0
-Message-Id: <95816cae-565b-40a8-a3bf-4733672c6e91@www.fastmail.com>
-In-Reply-To: <b2b97a86-2f29-af14-52c2-a69ef6202b75@linux.ibm.com>
-References: <cover.1582803998.git.christophe.leroy@c-s.fr>
- <d45c91cf5f83424b8f3989b7ead28c50d8d765a9.1582803998.git.christophe.leroy@c-s.fr>
- <4e528bf2-2b53-ae93-cdcc-0c80953f40f2@c-s.fr>
- <87pndz1xsf.fsf@mpe.ellerman.id.au>
- <b2b97a86-2f29-af14-52c2-a69ef6202b75@linux.ibm.com>
-Date:   Fri, 28 Feb 2020 15:02:14 +1100
-From:   "Russell Currey" <ruscur@russell.cc>
-To:     "Andrew Donnellan" <ajd@linux.ibm.com>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        "Christophe Leroy" <christophe.leroy@c-s.fr>,
-        "Benjamin Herrenschmidt" <benh@kernel.crashing.org>,
-        "Paul Mackerras" <paulus@samba.org>, mikey@neuling.org
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Subject: =?UTF-8?Q?Re:_[PATCH_v4_13/13]_powerpc/ptrace:_move_ptrace=5Ftriggered()?=
- =?UTF-8?Q?_into_hw=5Fbreakpoint.c?=
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        Thu, 27 Feb 2020 23:03:12 -0500
+Received: by mail-pj1-f68.google.com with SMTP id gv17so722092pjb.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 20:03:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=n06LPF76AGlFyu3px3XA7keYv9Nj0np/EAZ7d2DaCjk=;
+        b=E/VnF2uyJTkB+VM5CNaV5k0gccIMZAi3b3mcDfzYqsYfIoZ63P1LHZFJpO2Goiv8MX
+         gFMRgrh4f3tV6czHNvtZfkGCdeJhu9xp/62UtHLQUxC75KIzHA5Jlr9GfG49FdvStlLF
+         L5Qpm7CXg6odc9iYpa0wxXJ8bDOAI5PUznqNj41wsFYE/0B3XO/uMfBkpJJguq2pMXTX
+         PClxs4RQEFCearSfKiNoXelt/3EWBTCWvXr6sthJh9WU9Y+/IFvhqC3g+xC01C74ltu2
+         5VmkOgYrvCq3gxdz+JB9I1s1xAzPZPGtG/iYFWFWW/GYdmPJGESTD6kyyWoSHU5fifyo
+         Ss6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=n06LPF76AGlFyu3px3XA7keYv9Nj0np/EAZ7d2DaCjk=;
+        b=nCAhbfIUEGlN/Eim6/quyjJdABnFlPexTx7LsNScgsrrIaWRwxVoHkPlMygThiTypT
+         oDZwfxN6L7410a37A+FBAeQBWj9sEYG+gjd2BiCZ/ERcr+bnoaAIRZi/Jh8S89x+mxvX
+         v0Zwr0RovuaGcYVb3BpsB3uijytBPNSI82FuaxeUFdjDGTeSOVj6Tlu+p/VeodkSUERq
+         O164uTjZWTdy7sGgBz1U1p/EkXNf0jj0qx0xFk8FtbZZ+YX2LHquhUWECgvPNrqZFI5g
+         KutC0vMIkYLWvT5tbBroUbT3tLYwe/Vzn/jzWCltAWmsLc0tuIpBgpImXSwGmw/30UjP
+         Pm6w==
+X-Gm-Message-State: APjAAAWI0LApEBv0vE81RGo9uI6EYOmpw3Lhwu0XTLTtoNJpZhmcaUM7
+        gS3t3CyzfC/Ah41I03M2Vqs=
+X-Google-Smtp-Source: APXvYqyzsTaCPNcK0kE9GMAKVJzjfmXwp/cufCznytHLEzdjK8vt+n6gEuIHuExc4F3uSt6/RR3Y1Q==
+X-Received: by 2002:a17:902:264:: with SMTP id 91mr2138284plc.335.1582862591643;
+        Thu, 27 Feb 2020 20:03:11 -0800 (PST)
+Received: from js1304-desktop ([114.206.198.176])
+        by smtp.gmail.com with ESMTPSA id u7sm8640380pfh.128.2020.02.27.20.03.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Feb 2020 20:03:11 -0800 (PST)
+Date:   Fri, 28 Feb 2020 13:03:03 +0900
+From:   Joonsoo Kim <js1304@gmail.com>
+To:     Aaron Lu <aaron.lwe@gmail.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com
+Subject: Re: [PATCH v2 0/9] workingset protection/detection on the anonymous
+ LRU list
+Message-ID: <20200228040214.GA21040@js1304-desktop>
+References: <1582175513-22601-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <20200226193942.30049da9c090b466bdc5ec23@linux-foundation.org>
+ <20200227134806.GC39625@cmpxchg.org>
+ <20200228032358.GB634650@ziqianlu-desktop.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228032358.GB634650@ziqianlu-desktop.localdomain>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This was my fault, I should really test changes like these before they g=
-o live.  Apologies for the confusion caused
+Hello,
 
---=20
-  Russell Currey
-  ruscur@russell.cc
+On Fri, Feb 28, 2020 at 11:23:58AM +0800, Aaron Lu wrote:
+> On Thu, Feb 27, 2020 at 08:48:06AM -0500, Johannes Weiner wrote:
+> > On Wed, Feb 26, 2020 at 07:39:42PM -0800, Andrew Morton wrote:
+> > > It sounds like the above simple aging changes provide most of the
+> > > improvement, and that the workingset changes are less beneficial and a
+> > > bit more risky/speculative?
+> > > 
+> > > If so, would it be best for us to concentrate on the aging changes
+> > > first, let that settle in and spread out and then turn attention to the
+> > > workingset changes?
+> > 
+> > Those two patches work well for some workloads (like the benchmark),
+> > but not for others. The full patchset makes sure both types work well.
+> > 
+> > Specifically, the existing aging strategy for anon assumes that most
+> > anon pages allocated are hot. That's why they all start active and we
+> > then do second-chance with the small inactive LRU to filter out the
+> > few cold ones to swap out. This is true for many common workloads.
+> > 
+> > The benchmark creates a larger-than-memory set of anon pages with a
+> > flat access profile - to the VM a flood of one-off pages. Joonsoo's
+> 
+> test: swap-w-rand-mt, which is a multi thread swap write intensive
+> workload so there will be swap out and swap ins.
+> 
+> > first two patches allow the VM to usher those pages in and out of
+> 
+> Weird part is, the robot says the performance gain comes from the 1st
+> patch only, which adjust the ratio, not including the 2nd patch which
+> makes anon page starting from inactive list.
+> 
+> I find the performance gain hard to explain...
 
-On Fri, Feb 28, 2020, at 2:59 PM, Andrew Donnellan wrote:
-> On 28/2/20 9:16 am, Michael Ellerman wrote:
-> > Christophe Leroy <christophe.leroy@c-s.fr> writes:
-> >> Russel,
-> >>
-> >> Le 27/02/2020 =C3=A0 12:49, Christophe Leroy a =C3=A9crit=C2=A0:
-> >>> ptrace_triggered() is declared in asm/hw_breakpoint.h and
-> >>> only needed when CONFIG_HW_BREAKPOINT is set, so move it
-> >>> into hw_breakpoint.c
-> >>
-> >> My series v4 is definitely buggy (I included ptrace_decl.h instead
-> >> instead of ptrace-decl.h), how can Snowpatch say build succeeded
-> >> (https://patchwork.ozlabs.org/patch/1245807/) ?
-> >=20
-> > Which links to:
-> >    https://openpower.xyz/job/snowpatch/job/snowpatch-linux-sparse/15=
-895//artifact/linux/report.txt
-> >=20
-> > The actual build log of which is:
-> >    https://openpower.xyz/job/snowpatch/job/snowpatch-linux-sparse/15=
-895/artifact/linux/build_new.log
-> >=20
-> > Which contains:
-> >    scripts/Makefile.build:267: recipe for target 'arch/powerpc/kerne=
-l/ptrace/ptrace-altivec.o' failed
-> >    make[3]: *** [arch/powerpc/kernel/ptrace/ptrace-altivec.o] Error =
-1
-> >    make[3]: *** Waiting for unfinished jobs....
-> >    scripts/Makefile.build:505: recipe for target 'arch/powerpc/kerne=
-l/ptrace' failed
-> >    make[2]: *** [arch/powerpc/kernel/ptrace] Error 2
-> >    make[2]: *** Waiting for unfinished jobs....
-> >    scripts/Makefile.build:505: recipe for target 'arch/powerpc/kerne=
-l' failed
-> >    make[1]: *** [arch/powerpc/kernel] Error 2
-> >    make[1]: *** Waiting for unfinished jobs....
-> >    Makefile:1681: recipe for target 'arch/powerpc' failed
-> >    make: *** [arch/powerpc] Error 2
-> >    make: *** Waiting for unfinished jobs....
-> >=20
-> > Same for ppc64le:
-> >    https://openpower.xyz/job/snowpatch/job/snowpatch-linux-sparse/15=
-896/artifact/linux/build_new.log
-> >=20
-> >=20
-> > So it seems like snowpatch always reports the build as succeeded eve=
-n
-> > when it fails.
->=20
-> Turns out there was an issue in a recent change in our build script=20=
+Let me explain the reason of the performance gain.
 
-> which caused build failures to return the wrong exit code and put the=20=
+1st patch provides more second chance to the anonymous pages.
+In swap-w-rand-mt test, memory used by all threads is greater than the
+amount of the system memory, but, memory used by each thread would
+not be much. So, although it is a rand test, there is a locality
+in each thread's job. More second chance helps to exploit this
+locality so performance could be improved.
 
-> wrong text in the reports, because of some confusion with bash=20
-> subshells. I've fixed it (I think).
->=20
-> --=20
-> Andrew Donnellan              OzLabs, ADL Canberra
-> ajd@linux.ibm.com             IBM Australia Limited
->=20
->
+Thanks.
