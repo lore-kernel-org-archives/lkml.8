@@ -2,192 +2,135 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA72CC3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D844C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80C6624699
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:24:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BiCNBCpD"
+	by mail.kernel.org (Postfix) with ESMTP id 0DA4C24699
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:24:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726277AbgB1RYE (ORCPT
+        id S1726589AbgB1RYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 12:24:04 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:43496 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725769AbgB1RYE (ORCPT
+        Fri, 28 Feb 2020 12:24:55 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:44930 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1725769AbgB1RYz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 12:24:04 -0500
-Received: by mail-yw1-f66.google.com with SMTP id f204so3981300ywc.10;
-        Fri, 28 Feb 2020 09:24:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-transfer-encoding:content-language;
-        bh=8DBagXdO92SGZD18edolNudaDY7BySfxVES4onPKc48=;
-        b=BiCNBCpDhvom4uoBEgi6wWUf78Kj5hpmt5TQuapy9qcR64nz4OnJs4O7vU8LcLUu1Q
-         Nfy/foDa3tGn4/w4Qq2UVG6M4CVuzCmn9cGtWCFzLZD/gC/cBKSKqjOgg1Y3L5Yy0mGv
-         PDHzM2BiUkH/rSgYYhZ/pZYHhX40OjyNXBiHVxpBfnnDjWLEmX58heB6u2EeaeQzIDcy
-         6/UrxwaLyrcFcHFVPAHwz4hCE5WmYIR+hl7l9Q9Zqhhks6gu/viQxHQ2VyXC/iKyyhnS
-         TRQifnXdpH2I43DBTHtwz6C4YTGxMhpodWZtaFd/rok5ZYFKXb0osBRKqJwU0XgXJ6eg
-         8KBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=8DBagXdO92SGZD18edolNudaDY7BySfxVES4onPKc48=;
-        b=XX1+gNaPKc4Z0uSrQBdJ/DdWScm3Ut8RGOKW0NTnB5j/vyjhF/DO42AkeAgVp5fnH5
-         TmWGHH97mAPICbaEtOSVEPpi7HvRu+0qMkOeabSso9TYlxs1wv9LNwaxnZsfl5FKX1wn
-         CzMIWVE4weW+CKbyoUJm09cTD6dCn2j/NTSb1tKf2BLUrybeAQenSw8V0QPlznA3mozO
-         VTDl+pO8YaXl5/lDc4Wd15FME1dBt97mJELQqKJc0jylgIH6wm2GjKH0BaitfK8LZPCI
-         UCnnwZ31Ktkzzepw0iptArnex9HQ2fHqdlsaHz9lzo1jZ0E6tjZv0MoibHMwel18s9pr
-         2aYQ==
-X-Gm-Message-State: APjAAAXgeeppPAgeNn1QnfX+WQaFJr+y6U+alE28Bzpylg5WjtXWoaJg
-        JyI4wwOdZ+P06vE4O4ltRwqwlsklsj8=
-X-Google-Smtp-Source: APXvYqzjFFyA3EgEXXPFZc4AK1Co1/BHuEDPNq3NoVt9mMTOgu4Ojh5FyaxarOeEjgtDprXLfIV49w==
-X-Received: by 2002:a25:b16:: with SMTP id 22mr4521149ybl.380.1582910643178;
-        Fri, 28 Feb 2020 09:24:03 -0800 (PST)
-Received: from [192.168.1.111] (96-42-251-64.dhcp.roch.mn.charter.com. [96.42.251.64])
-        by smtp.gmail.com with ESMTPSA id a202sm4221235ywe.8.2020.02.28.09.24.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Feb 2020 09:24:02 -0800 (PST)
-Subject: Re: [PATCH v2] ARM: dts: rainier: Set PCA9552 pin types
-To:     Matthew Barth <msbarth@linux.ibm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>, openbmc@lists.ozlabs.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Eddie James <eajames@linux.ibm.com>
-References: <20200225201415.431668-1-msbarth@linux.ibm.com>
-From:   Brandon Wyman <bjwyman@gmail.com>
-Message-ID: <ec4c675a-b1db-c2d5-97d0-dcff44123db0@gmail.com>
-Date:   Fri, 28 Feb 2020 11:24:01 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 28 Feb 2020 12:24:55 -0500
+Received: (qmail 4543 invoked by uid 2102); 28 Feb 2020 12:24:54 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 28 Feb 2020 12:24:54 -0500
+Date:   Fri, 28 Feb 2020 12:24:54 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Marco Elver <elver@google.com>
+cc:     paulmck@kernel.org, <andreyknvl@google.com>, <glider@google.com>,
+        <dvyukov@google.com>, <kasan-dev@googlegroups.com>,
+        <linux-kernel@vger.kernel.org>, <parri.andrea@gmail.com>,
+        <will@kernel.org>, <peterz@infradead.org>, <boqun.feng@gmail.com>,
+        <npiggin@gmail.com>, <dhowells@redhat.com>, <j.alglave@ucl.ac.uk>,
+        <luc.maranget@inria.fr>, <akiyks@gmail.com>, <dlustig@nvidia.com>,
+        <joel@joelfernandes.org>, <linux-arch@vger.kernel.org>
+Subject: Re: [PATCH] tools/memory-model/Documentation: Fix "conflict" definition
+In-Reply-To: <20200228164621.87523-1-elver@google.com>
+Message-ID: <Pine.LNX.4.44L0.2002281202230.1599-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-In-Reply-To: <20200225201415.431668-1-msbarth@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 28 Feb 2020, Marco Elver wrote:
 
-On 2020-02-25 14:14, Matthew Barth wrote:
-> All 16 pins of the PCA9552 at 7-bit address 0x61 should be set as type
-> GPIO.
->
-> Signed-off-by: Matthew Barth <msbarth@linux.ibm.com>
+> For language-level memory consistency models that are adaptations of
+> data-race-free, the definition of "data race" can be summarized as
+> "concurrent conflicting accesses, where at least one is non-sync/plain".
+> 
+> The definition of "conflict" should not include the type of access nor
+> whether the accesses are concurrent or not, which this patch addresses
+> for explanation.txt.
+
+Why shouldn't it?  Can you provide any references to justify this 
+assertion?
+
+Also, note two things: (1) The existing text does not include
+concurrency in the definition of "conflict".  (2) Your new text does
+include the type of access in the definition (you say that at least one
+of the accesses must be a write).
+
+> The definition of "data race" remains unchanged, but the informal
+> definition for "conflict" is restored to what can be found in the
+> literature.
+
+It does not remain unchanged.  You removed the portion that talks about
+accesses executing on different CPUs or threads.  Without that
+restriction, you raise the nonsensical possibility that a single thread
+may by definition have a data race with itself (since modern CPUs use
+multiple-instruction dispatch, in which several instructions can
+execute at the same time).
+
+> Signed-by: Marco Elver <elver@google.com>
 > ---
-> v2: Added leds-pca955x.h include
->      Added upstream to patch
-> ---
-Reviewed-by: Brandon Wyman <bjwyman@gmail.com>
-> ---
->   arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts | 17 +++++++++++++++++
->   1 file changed, 17 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-> index c63cefce636d..d9fa9fd48058 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-> @@ -4,6 +4,7 @@
->   
->   #include "aspeed-g6.dtsi"
->   #include <dt-bindings/gpio/aspeed-gpio.h>
-> +#include <dt-bindings/leds/leds-pca955x.h>
->   
->   / {
->   	model = "Rainier";
-> @@ -351,66 +352,82 @@
->   
->   		gpio@0 {
->   			reg = <0>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@1 {
->   			reg = <1>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@2 {
->   			reg = <2>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@3 {
->   			reg = <3>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@4 {
->   			reg = <4>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@5 {
->   			reg = <5>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@6 {
->   			reg = <6>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@7 {
->   			reg = <7>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@8 {
->   			reg = <8>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@9 {
->   			reg = <9>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@10 {
->   			reg = <10>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@11 {
->   			reg = <11>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@12 {
->   			reg = <12>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@13 {
->   			reg = <13>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@14 {
->   			reg = <14>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@15 {
->   			reg = <15>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   	};
->   
+>  tools/memory-model/Documentation/explanation.txt | 15 ++++++---------
+>  1 file changed, 6 insertions(+), 9 deletions(-)
+> 
+> diff --git a/tools/memory-model/Documentation/explanation.txt b/tools/memory-model/Documentation/explanation.txt
+> index e91a2eb19592a..11cf89b5b85d9 100644
+> --- a/tools/memory-model/Documentation/explanation.txt
+> +++ b/tools/memory-model/Documentation/explanation.txt
+> @@ -1986,18 +1986,15 @@ violates the compiler's assumptions, which would render the ultimate
+>  outcome undefined.
+>  
+>  In technical terms, the compiler is allowed to assume that when the
+> -program executes, there will not be any data races.  A "data race"
+> -occurs when two conflicting memory accesses execute concurrently;
+> -two memory accesses "conflict" if:
+> +program executes, there will not be any data races. A "data race"
+
+Unnecessary (and inconsistent with the rest of the document) whitespace 
+change.
+
+> +occurs if:
+>  
+> -	they access the same location,
+> +	two concurrent memory accesses "conflict";
+>  
+> -	they occur on different CPUs (or in different threads on the
+> -	same CPU),
+> +	and at least one of the accesses is a plain access;
+>  
+> -	at least one of them is a plain access,
+> -
+> -	and at least one of them is a store.
+> +	where two memory accesses "conflict" if they access the same
+> +	memory location, and at least one performs a write;
+>  
+>  The LKMM tries to determine whether a program contains two conflicting
+>  accesses which may execute concurrently; if it does then the LKMM says
+
+To tell the truth, the only major change I can see here (apart from the
+"differenct CPUs" restriction) is that you want to remove the "at least
+one is plain" part from the definition of "conflict" and instead make
+it a separate requirement for a data race.  That's fine with me in
+principle, but there ought to be an easier way of doing it.
+
+Furthermore, this section of explanation.txt goes on to use the words
+"conflict" and "conflicting" in a way that your patch doesn't address.  
+For example, shortly after this spot it says "Determining whether two
+accesses conflict is easy"; you should change it to say "Determining
+whether two accesses conflict and at least one of them is plain is
+easy" -- but this looks pretty ungainly.  A better approach might be to
+introduce a new term, define it to mean "conflicting accesses at least
+one of which is plain", and then use it instead throughout.
+
+Alternatively, you could simply leave the text as it stands and just
+add a parenthetical disclaimer pointing out that in the CS literature,
+the term "conflict" is used even when both accesses are marked, so the
+usage here is somewhat non-standard.
+
+Alan
+
