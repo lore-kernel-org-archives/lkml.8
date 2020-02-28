@@ -2,112 +2,140 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 935F9C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4894C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B2642469F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:33:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EZcxPLjY"
+	by mail.kernel.org (Postfix) with ESMTP id 894EF246AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:34:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582904055;
+	bh=+E+cDEQIOn/+OaQUF5/dHoKA3nKROt11LTRj27zC9aA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=On2X+wnCgdITonA93EqfWDuWxJi1K1tobtgmGUwwXeui4AoJZWy9F6GB48iQ/q/KD
+	 JUEM4d79foc5ORlScGRyX42d/kFGwncSvJ8Dv7yfyMeSjtTKfn7hIftgxWm4eJrUvM
+	 VGy43sjArmFRObDBmaReQtGPT4dWAI8Cn1YOKaXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbgB1Pd3 (ORCPT
+        id S1727145AbgB1PeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 10:33:29 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:58446 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727009AbgB1Pd2 (ORCPT
+        Fri, 28 Feb 2020 10:34:14 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45947 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726956AbgB1PeO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 10:33:28 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01SFNbpO014854;
-        Fri, 28 Feb 2020 15:33:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=UECnQ/oTwdSNKe5Xwj90yZ1hGNYLYSWaAjIgZTEoUHg=;
- b=EZcxPLjYQUuIr1PPWvoGLq8u79eUUlRU43u5TEmqxPhBi58LneZRsmGtX7jN2h7oOgTE
- J6PFnqBvcjuZWqJqgzFrWd7iPEhDmnuvRtQzWBym7/lSpBz64UPxkLreMt+krvxlk6FR
- FoxP+HtsaLrv9ibUQjJpQ8UgA+Cxz6+aNL15PRw1k/QmRrB+dGeCRUK7RMREF8f6AXBA
- z0BjLYFzNtvQW+i/D0/PJ7IHsDq0Wu8JhhdhwMLeuXhOh+rjacsQK+a+gadD6ffQnpK3
- 2kl9efrg2X6O5AE/2STjo1Rrp0AhHytXh1aMF3+XDjmgae2gZ1XvC4RPQMbAx3pIFFBR Ng== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2ydcsnun8q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Feb 2020 15:33:18 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01SFWNsH144227;
-        Fri, 28 Feb 2020 15:33:17 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2ydcsepxuh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Feb 2020 15:33:17 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01SFXE50018142;
-        Fri, 28 Feb 2020 15:33:15 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 28 Feb 2020 07:33:14 -0800
-Date:   Fri, 28 Feb 2020 10:33:31 -0500
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>, tj@kernel.org,
-        jiangshanlai@gmail.com, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-crypto@vger.kernel.org
-Subject: Re: WARNING: at kernel/workqueue.c:1473 __queue_work+0x3b8/0x3d0
-Message-ID: <20200228153331.uimy62rat2tdxxod@ca-dmjordan1.us.oracle.com>
-References: <20200217204803.GA13479@Red>
- <20200218163504.y5ofvaejleuf5tbh@ca-dmjordan1.us.oracle.com>
- <20200220090350.GA19858@Red>
- <20200221174223.r3y6tugavp3k5jdl@ca-dmjordan1.us.oracle.com>
- <20200228123311.GE3275@willie-the-truck>
+        Fri, 28 Feb 2020 10:34:14 -0500
+Received: by mail-oi1-f195.google.com with SMTP id v19so3173996oic.12;
+        Fri, 28 Feb 2020 07:34:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JHoIxRhgYioRssl3aItHva/kMqhlc714/thZOuTd344=;
+        b=N9O6QWZ9j3Tb9YEFOprQHaawNP5VSf6yKHN8ZbSmG2DdheszGQlAlizeOlfLmuEBgC
+         jygAyah4fHnfDV5WDB6tG0KPMCJB8Qn3sb3FzXuvb2GfaQ6LQLKLqMcjchGXJbAVZCjU
+         Z44NlqRDw2icEVt+G3v5g23fe6QJ6Z6f2+LDuVdXIDAoHmPPWL4wMcTS66S1Mk5dr0lG
+         R9+28gd1y7LhSvXvmFZ8UHAOutlhmo8PHeyqvy0qE65gq6PSrQEVHhLIWIRtUXjodt36
+         /zURg0K/HwI9f+TvrcI5fudT/WGwObnuzocWX2y2N1qESNd7stWDNwK1ckDfVxID+DV1
+         e38Q==
+X-Gm-Message-State: APjAAAXoOtlcHZOAkZC2qreL3mCCNdcNhRL09+Ly+Ll9TKIBPMogVAko
+        NUbHRAFR1Vo0T+8bq9gBSQ==
+X-Google-Smtp-Source: APXvYqxGbQolRQFv5+0zxGuLWsBLC8hwoIZ3Faz/JTGNBK5nNQnnwNk9b0SEpFexZcs116M+q/rSjA==
+X-Received: by 2002:aca:f1c6:: with SMTP id p189mr3641411oih.159.1582904053100;
+        Fri, 28 Feb 2020 07:34:13 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t22sm3245899otq.18.2020.02.28.07.34.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 07:34:12 -0800 (PST)
+Received: (nullmailer pid 450 invoked by uid 1000);
+        Fri, 28 Feb 2020 15:34:11 -0000
+Date:   Fri, 28 Feb 2020 09:34:11 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: PCI: Add PCI Endpoint Controller
+ Schema
+Message-ID: <20200228153411.GA7882@bogus>
+References: <20200224130905.952-1-kishon@ti.com>
+ <20200224130905.952-2-kishon@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200228123311.GE3275@willie-the-truck>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9545 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 phishscore=0
- mlxlogscore=727 spamscore=0 suspectscore=0 mlxscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002280123
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9545 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 bulkscore=0
- lowpriorityscore=0 mlxlogscore=793 phishscore=0 spamscore=0 adultscore=0
- suspectscore=0 impostorscore=0 clxscore=1015 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002280122
+In-Reply-To: <20200224130905.952-2-kishon@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 12:33:12PM +0000, Will Deacon wrote:
-> On Fri, Feb 21, 2020 at 12:42:23PM -0500, Daniel Jordan wrote:
-> > On Thu, Feb 20, 2020 at 10:03:50AM +0100, Corentin Labbe wrote:
-> > > But I got the same with plain next (like yesterday 5.6.0-rc2-next-20200219 and tomorow 5.6.0-rc2-next-20200220) and master got the same issue.
-> > 
-> > Thanks.  I've been trying to reproduce this on an arm board but it's taking a
-> > while to get it setup since I've never used it for kernel work.
-> > 
-> > Hoping to get it up soon, though someone with a working setup may be in a
-> > better position to help with this.
+On Mon, Feb 24, 2020 at 06:39:02PM +0530, Kishon Vijay Abraham I wrote:
+> Define a common schema for PCI Endpoint Controllers.
 > 
-> Any joy with this? It sounded to me like the issue also happens on a
-> mainline kernel. If this is the case, have you managed to bisect it?
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  .../devicetree/bindings/pci/pci-ep.yaml       | 41 +++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/pci-ep.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/pci-ep.yaml b/Documentation/devicetree/bindings/pci/pci-ep.yaml
+> new file mode 100644
+> index 000000000000..2287771a066a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/pci-ep.yaml
+> @@ -0,0 +1,41 @@
+> +# SPDX-License-Identifier: (GPL2.0-only OR BSD-2-Clause)
 
-I managed to get recent mainline (rawhide) booting days ago but wasn't able to
-reproduce on a rpi 3b+.
+Typo. Run checkpatch.
 
-My plan had been to try debug-by-email next, but then something exploded
-internally and I haven't had time for it yet.  Still intending to help once the
-explosion is contained, provided someone can't get to it sooner.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/pci-ep.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: PCI Endpoint Controller Schema
+> +
+> +description: |
+> +  Common properties for PCI Endpoint Controller Nodes.
+> +
+> +maintainers:
+> +  - Kishon Vijay Abraham I <kishon@ti.com>
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^pcie-ep?@"
 
-thanks,
-Daniel
+Why the '?'? Let's define the name and fix anything that doesn't match.
+
+> +
+> +  max-functions:
+> +    description: Maximum number of functions that can be configured
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint8
+> +    minimum: 1
+> +    default: 1
+> +    maximum: 255
+> +
+> +  max-link-speed:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [ 1, 2, 3, 4 ]
+> +
+> +  num-lanes:
+> +    description: maximum number of lanes
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 1
+> +    default: 1
+> +    maximum: 16
+> +
+> +required:
+> +  - compatible
+> -- 
+> 2.17.1
+> 
