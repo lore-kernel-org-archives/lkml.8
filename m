@@ -2,362 +2,250 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF1BC3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 516B0C3F2D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A76824695
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DE9D246A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:08:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="XdkIwGyK"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="dssF3bih"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbgB1IGH (ORCPT
+        id S1726440AbgB1IIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 03:06:07 -0500
-Received: from mail-eopbgr60124.outbound.protection.outlook.com ([40.107.6.124]:40418
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725911AbgB1IGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 03:06:07 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PXaNVMCeob9o3DFcfCSPqmZodkYuD8uEUTGfpP088s7pzKG3QK136i9TIN1thvxyWicpapUu/SKCTyzDPUXil03LmBa5AtkUZjUX8A05DjIIWT23sfXjAu8aVWQkcB+HDBQgCkTRSSkEBra4t7DXhBhl7XD04SeZtAuPePY54ULMOOfgAsKUueqf3dR5KBXDCR7EjyTqYSI8h8n8gYsFM0W7f8KVuyQ+qGgtdEH0gKxY8mZsiMcRN4gXPW0HfLApkFZykAZ0fh6ObIoUz6yiLx5lswUeTAiOrD0slrCk+u9j/zTZ7IvO+nlP/DxUROnaQ4pRsoAIHm6bbnhwEnZjJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qz3J9JG6aVS3qfZGzswKsnVEZ7afW+p4sfO8DsCC/Z4=;
- b=cWpmB0WLUdCDGvVGCQLYdXIszTPrjoYlH9StqOtd5uctdzXSN+6YIPBj5JRirr06/eYANB+VOtgWhiqr3/MMr1boyZP86q2ermFWARbFgD2DwTbWnf3IYXEZ5Jk9VB0jScZZ8bzhBA3+GUyH5aKSP6qR+kQfTpa5ddwr6LBVpuW9EKyqfda5Yf/pFRBgFCj79DMq8V4SgklvgPsYJfTZS9HjqvDhjJqYgpa4Lz11F84XceZ3v89va06ukvslExFUtOCx6YOYh+dHEA4i3gcaC2b2i/+e+p5whiQGu+mmJmmDj+XfAJUSUyN5O6BC6cjFA+ve3NE+UYtoKUszzqZ6PA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
- dkim=pass header.d=plvision.eu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qz3J9JG6aVS3qfZGzswKsnVEZ7afW+p4sfO8DsCC/Z4=;
- b=XdkIwGyKDf0RMP1uGfDXEh6oXgED8YzHYbTHa9BDYhql8BNOdWo3DBSfusCO3cuG4Cg7rJTb6OTsOOs3uHfNUDCVEXgISuBDBDfkUWdP42lu07EO97Oq/gZ2JyAd43IhrtPynwy45ErGicX18gTGPdzfoAxk/ey+nqam/mbpUqw=
-Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM (10.165.195.138) by
- VI1P190MB0494.EURP190.PROD.OUTLOOK.COM (10.165.196.161) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.17; Fri, 28 Feb 2020 08:06:02 +0000
-Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
- ([fe80::a587:f64e:cbb8:af96]) by VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
- ([fe80::a587:f64e:cbb8:af96%4]) with mapi id 15.20.2772.012; Fri, 28 Feb 2020
- 08:06:02 +0000
-Received: from plvision.eu (217.20.186.93) by AM5PR0102CA0013.eurprd01.prod.exchangelabs.com (2603:10a6:206::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14 via Frontend Transport; Fri, 28 Feb 2020 08:06:01 +0000
-From:   Vadym Kochan <vadym.kochan@plvision.eu>
-To:     Jiri Pirko <jiri@resnulli.us>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
-        Serhiy Pshyk <serhiy.pshyk@plvision.eu>
-Subject: Re: [RFC net-next 1/3] net: marvell: prestera: Add Switchdev driver
- for Prestera family ASIC device 98DX325x (AC3x)
-Thread-Topic: [RFC net-next 1/3] net: marvell: prestera: Add Switchdev driver
- for Prestera family ASIC device 98DX325x (AC3x)
-Thread-Index: AQHV6/jzY7yqWky1LUqTk1e6REHYB6gvGuCAgAEo+gA=
-Date:   Fri, 28 Feb 2020 08:06:02 +0000
-Message-ID: <20200228080554.GA17929@plvision.eu>
-References: <20200225163025.9430-1-vadym.kochan@plvision.eu>
- <20200225163025.9430-2-vadym.kochan@plvision.eu>
- <20200227142259.GF26061@nanopsycho>
-In-Reply-To: <20200227142259.GF26061@nanopsycho>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM5PR0102CA0013.eurprd01.prod.exchangelabs.com
- (2603:10a6:206::26) To VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:802:35::10)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vadym.kochan@plvision.eu; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [217.20.186.93]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b7261409-1d49-4634-a047-08d7bc250d50
-x-ms-traffictypediagnostic: VI1P190MB0494:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1P190MB0494D8A329CD4CA4EDED619D95E80@VI1P190MB0494.EURP190.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0327618309
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(346002)(366004)(136003)(39830400003)(199004)(189003)(66556008)(66946007)(66476007)(81156014)(81166006)(64756008)(8676002)(54906003)(66446008)(6916009)(2906002)(508600001)(52116002)(316002)(5660300002)(26005)(1076003)(7696005)(44832011)(186003)(107886003)(36756003)(2616005)(71200400001)(8886007)(86362001)(4326008)(956004)(55016002)(8936002)(16526019)(33656002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1P190MB0494;H:VI1P190MB0399.EURP190.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: plvision.eu does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: rIZKS1hKTXzVEUUNsT7V3eXsIAMge+wxS7vnLo9Fb2VGrShSjBZ3v70I+L1t1DnwYn0pDI0UYlXA7xn6TficACpYux1a+3fJHwpB8PVT3fTo3uxnnzGxqr6iFJDRuTMc0TEwM91BZPDPEqW/E6JjEjeJekN6S9IIWdSanS66QuP1qlu2NXa+kMh27xuQIixb5rZArKq5CA60VkXpzvAtgxJeeg0zvNxHx2BD1vUQLUJ82OiZD9YPeeLcqiHmYwdF5xlHQOOO1d0u9tDTydoTOd2AlHMGlJvxFThkckV8BpCowft8HLd3CSaOE9hdvQtA3ml+q/aB8B76fsrMcq4+l0OTvBUYxvXfTOIYL1zeZ1bV2IqXUIOP+4BtXMTOZ9iFwg7GCxJAEuWr7pEZZrDdLh+xAq8y9NSPs1OnCTvuDLVFalMcFabkF86EgqQEMZ/n
-x-ms-exchange-antispam-messagedata: sZMDsv8TP1s7RbqfLBr2WcBSEAQEAHv3zC5YdjoTIpOrOd0/gQ9Katwcz4LuTONz6sXmQ+sPOEEJPk4aCdOhrWP2QrH68vDEeqkPFwB+QlDIwNqM+LnXp7S2FvyuIuPKr0YlkhkJ/WfotbZCDPKrBg==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <145EA1E5D35E2D41B7284E75B50BF773@EURP190.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 28 Feb 2020 03:08:07 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:22316 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725892AbgB1IIH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 03:08:07 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01S84TLH010774;
+        Fri, 28 Feb 2020 09:07:50 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=STMicroelectronics;
+ bh=MFKa27m3+mIoApWSAUCG9GPF8e+NvtbwdWYlYTRGNRs=;
+ b=dssF3bihvIH/mI+pbPnu8DkqSxvkNSqdk6h+gJSX95NbXimAVxG4j8X7bXqdETcNGYjJ
+ RHGbP8yaOrYMHSPJjg2Hf7bFv1cg3yRE6xQuroQdclqNQqu/X7p4xiC30pYUQUeqwSAb
+ 3+EbvMWWEQkc4Z2amyss6Dyse8zudNRiYbjGXTddnpGbEiKLAY2AGSYm9t0+2ELxtLKT
+ TnnUoONFIroqZF2vsnVBPWVIVd/bFmjxbTll8kAxcEIKKYTLKORGn00wHl4Is2dI2T6o
+ UnZJx6ZulTUWKOa/kjb/guA4+YKYzi007nVc/0eQA0VYru3zTKc/ljhyDtxn9vCAdD48 5Q== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yepwptdgv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Feb 2020 09:07:50 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A4C0010002A;
+        Fri, 28 Feb 2020 09:07:46 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5EEBF2A6489;
+        Fri, 28 Feb 2020 09:07:46 +0100 (CET)
+Received: from localhost (10.75.127.44) by SFHDAG6NODE1.st.com (10.75.127.16)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Feb 2020 09:07:45
+ +0100
+From:   Yannick Fertre <yannick.fertre@st.com>
+To:     Yannick Fertre <yannick.fertre@st.com>,
+        Philippe Cornu <philippe.cornu@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] drm/stm: ltdc: check number of endpoints
+Date:   Fri, 28 Feb 2020 09:07:38 +0100
+Message-ID: <1582877258-1112-1-git-send-email-yannick.fertre@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-X-OriginatorOrg: plvision.eu
-X-MS-Exchange-CrossTenant-Network-Message-Id: b7261409-1d49-4634-a047-08d7bc250d50
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2020 08:06:02.2172
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ch23l4QfadNys4j/wbOtrbcHB8Y+x+8z/drhpg2RS/AsZHz9myF/o+bHMOTAHav+X+LfrJxavjcLbb9ImmVhy64Ng7yEgGF8HvIJNq3lYYQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1P190MB0494
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG6NODE1.st.com
+ (10.75.127.16)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-28_02:2020-02-26,2020-02-28 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiri,
+Number of endpoints could exceed the fix value MAX_ENDPOINTS(2).
+Instead of increase simply this value, the number of endpoint
+could be read from device tree. Load sequence has been a little
+rework to take care of several panel or bridge which can be
+connected/disconnected or enable/disable.
 
-On Thu, Feb 27, 2020 at 03:22:59PM +0100, Jiri Pirko wrote:
-> Tue, Feb 25, 2020 at 05:30:54PM CET, vadym.kochan@plvision.eu wrote:
-> >Marvell Prestera 98DX326x integrates up to 24 ports of 1GbE with 8
-> >ports of 10GbE uplinks or 2 ports of 40Gbps stacking for a largely
-> >wireless SMB deployment.
-> >
-> >This driver implementation includes only L1 & basic L2 support.
-> >
-> >The core Prestera switching logic is implemented in prestera.c, there is
-> >an intermediate hw layer between core logic and firmware. It is
-> >implemented in prestera_hw.c, the purpose of it is to encapsulate hw
-> >related logic, in future there is a plan to support more devices with
-> >different HW related configurations.
-> >
-> >The following Switchdev features are supported:
-> >
-> >    - VLAN-aware bridge offloading
-> >    - VLAN-unaware bridge offloading
-> >    - FDB offloading (learning, ageing)
-> >    - Switchport configuration
-> >
-> >Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
-> >Signed-off-by: Andrii Savka <andrii.savka@plvision.eu>
-> >Signed-off-by: Oleksandr Mazur <oleksandr.mazur@plvision.eu>
-> >Signed-off-by: Serhiy Boiko <serhiy.boiko@plvision.eu>
-> >Signed-off-by: Serhiy Pshyk <serhiy.pshyk@plvision.eu>
-> >Signed-off-by: Taras Chornyi <taras.chornyi@plvision.eu>
-> >Signed-off-by: Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>
-> >---
+Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
+---
+ drivers/gpu/drm/stm/ltdc.c | 102 +++++++++++++++++++++++----------------------
+ 1 file changed, 52 insertions(+), 50 deletions(-)
 
-[SNIP]
+diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
+index df585fe..f894968 100644
+--- a/drivers/gpu/drm/stm/ltdc.c
++++ b/drivers/gpu/drm/stm/ltdc.c
+@@ -42,8 +42,6 @@
 
-> >+};
-> >+
-> >+struct mvsw_msg_cmd {
-> >+	u32 type;
-> >+} __packed __aligned(4);
-> >+
-> >+struct mvsw_msg_ret {
-> >+	struct mvsw_msg_cmd cmd;
-> >+	u32 status;
-> >+} __packed __aligned(4);
-> >+
-> >+struct mvsw_msg_common_request {
-> >+	struct mvsw_msg_cmd cmd;
-> >+} __packed __aligned(4);
-> >+
-> >+struct mvsw_msg_common_response {
-> >+	struct mvsw_msg_ret ret;
-> >+} __packed __aligned(4);
-> >+
-> >+union mvsw_msg_switch_param {
-> >+	u32 ageing_timeout;
-> >+};
-> >+
-> >+struct mvsw_msg_switch_attr_cmd {
-> >+	struct mvsw_msg_cmd cmd;
-> >+	union mvsw_msg_switch_param param;
-> >+} __packed __aligned(4);
-> >+
-> >+struct mvsw_msg_switch_init_ret {
-> >+	struct mvsw_msg_ret ret;
-> >+	u32 port_count;
-> >+	u32 mtu_max;
-> >+	u8  switch_id;
-> >+	u8  mac[ETH_ALEN];
-> >+} __packed __aligned(4);
-> >+
-> >+struct mvsw_msg_port_autoneg_param {
-> >+	u64 link_mode;
-> >+	u8  enable;
-> >+	u8  fec;
-> >+};
-> >+
-> >+struct mvsw_msg_port_cap_param {
-> >+	u64 link_mode;
-> >+	u8  type;
-> >+	u8  fec;
-> >+	u8  transceiver;
-> >+};
-> >+
-> >+union mvsw_msg_port_param {
-> >+	u8  admin_state;
-> >+	u8  oper_state;
-> >+	u32 mtu;
-> >+	u8  mac[ETH_ALEN];
-> >+	u8  accept_frm_type;
-> >+	u8  learning;
-> >+	u32 speed;
-> >+	u8  flood;
-> >+	u32 link_mode;
-> >+	u8  type;
-> >+	u8  duplex;
-> >+	u8  fec;
-> >+	u8  mdix;
-> >+	struct mvsw_msg_port_autoneg_param autoneg;
-> >+	struct mvsw_msg_port_cap_param cap;
-> >+};
-> >+
-> >+struct mvsw_msg_port_attr_cmd {
-> >+	struct mvsw_msg_cmd cmd;
-> >+	u32 attr;
-> >+	u32 port;
-> >+	u32 dev;
-> >+	union mvsw_msg_port_param param;
-> >+} __packed __aligned(4);
-> >+
-> >+struct mvsw_msg_port_attr_ret {
-> >+	struct mvsw_msg_ret ret;
-> >+	union mvsw_msg_port_param param;
-> >+} __packed __aligned(4);
-> >+
-> >+struct mvsw_msg_port_stats_ret {
-> >+	struct mvsw_msg_ret ret;
-> >+	u64 stats[MVSW_PORT_CNT_MAX];
-> >+} __packed __aligned(4);
-> >+
-> >+struct mvsw_msg_port_info_cmd {
-> >+	struct mvsw_msg_cmd cmd;
-> >+	u32 port;
-> >+} __packed __aligned(4);
-> >+
-> >+struct mvsw_msg_port_info_ret {
-> >+	struct mvsw_msg_ret ret;
-> >+	u32 hw_id;
-> >+	u32 dev_id;
-> >+	u16 fp_id;
-> >+} __packed __aligned(4);
-> >+
-> >+struct mvsw_msg_vlan_cmd {
-> >+	struct mvsw_msg_cmd cmd;
-> >+	u32 port;
-> >+	u32 dev;
-> >+	u16 vid;
-> >+	u8  is_member;
-> >+	u8  is_tagged;
-> >+} __packed __aligned(4);
-> >+
-> >+struct mvsw_msg_fdb_cmd {
-> >+	struct mvsw_msg_cmd cmd;
-> >+	u32 port;
-> >+	u32 dev;
-> >+	u8  mac[ETH_ALEN];
-> >+	u16 vid;
-> >+	u8  dynamic;
-> >+	u32 flush_mode;
-> >+} __packed __aligned(4);
-> >+
-> >+struct mvsw_msg_event {
-> >+	u16 type;
-> >+	u16 id;
-> >+} __packed __aligned(4);
-> >+
-> >+union mvsw_msg_event_fdb_param {
-> >+	u8 mac[ETH_ALEN];
-> >+};
-> >+
-> >+struct mvsw_msg_event_fdb {
-> >+	struct mvsw_msg_event id;
-> >+	u32 port_id;
-> >+	u32 vid;
-> >+	union mvsw_msg_event_fdb_param param;
-> >+} __packed __aligned(4);
-> >+
-> >+union mvsw_msg_event_port_param {
-> >+	u32 oper_state;
-> >+};
-> >+
-> >+struct mvsw_msg_event_port {
-> >+	struct mvsw_msg_event id;
-> >+	u32 port_id;
-> >+	union mvsw_msg_event_port_param param;
-> >+} __packed __aligned(4);
-> >+
-> >+struct mvsw_msg_bridge_cmd {
-> >+	struct mvsw_msg_cmd cmd;
-> >+	u32 port;
-> >+	u32 dev;
-> >+	u16 bridge;
-> >+} __packed __aligned(4);
-> >+
-> >+struct mvsw_msg_bridge_ret {
-> >+	struct mvsw_msg_ret ret;
-> >+	u16 bridge;
-> >+} __packed __aligned(4);
-> >+
-> >+#define fw_check_resp(_response)	\
-> >+({								\
-> >+	int __er =3D 0;						\
-> >+	typeof(_response) __r =3D (_response);			\
-> >+	if (__r->ret.cmd.type !=3D MVSW_MSG_TYPE_ACK)		\
-> >+		__er =3D -EBADE;					\
-> >+	else if (__r->ret.status !=3D MVSW_MSG_ACK_OK)		\
-> >+		__er =3D -EINVAL;					\
-> >+	(__er);							\
-> >+})
-> >+
-> >+#define __fw_send_req_resp(_switch, _type, _request, _response, _wait)	=
-\
->=20
-> Please try to avoid doing functions in macros like this one and the
-> previous one.
->=20
->=20
-> >+({								\
-> >+	int __e;						\
-> >+	typeof(_switch) __sw =3D (_switch);			\
-> >+	typeof(_request) __req =3D (_request);			\
-> >+	typeof(_response) __resp =3D (_response);			\
-> >+	__req->cmd.type =3D (_type);				\
-> >+	__e =3D __sw->dev->send_req(__sw->dev,			\
-> >+		(u8 *)__req, sizeof(*__req),			\
-> >+		(u8 *)__resp, sizeof(*__resp),			\
-> >+		_wait);						\
-> >+	if (!__e)						\
-> >+		__e =3D fw_check_resp(__resp);			\
-> >+	(__e);							\
-> >+})
-> >+
-> >+#define fw_send_req_resp(_sw, _t, _req, _resp)	\
-> >+	__fw_send_req_resp(_sw, _t, _req, _resp, 0)
-> >+
-> >+#define fw_send_req_resp_wait(_sw, _t, _req, _resp, _wait)	\
-> >+	__fw_send_req_resp(_sw, _t, _req, _resp, _wait)
-> >+
-> >+#define fw_send_req(_sw, _t, _req)	\
->=20
-> This should be function, not define
+ #define MAX_IRQ 4
 
-Yeah, I understand your point, but here was the reason:
+-#define MAX_ENDPOINTS 2
+-
+ #define HWVER_10200 0x010200
+ #define HWVER_10300 0x010300
+ #define HWVER_20101 0x020101
+@@ -1201,36 +1199,20 @@ int ltdc_load(struct drm_device *ddev)
+ 	struct ltdc_device *ldev = ddev->dev_private;
+ 	struct device *dev = ddev->dev;
+ 	struct device_node *np = dev->of_node;
+-	struct drm_bridge *bridge[MAX_ENDPOINTS] = {NULL};
+-	struct drm_panel *panel[MAX_ENDPOINTS] = {NULL};
++	struct drm_bridge *bridge;
++	struct drm_panel *panel;
+ 	struct drm_crtc *crtc;
+ 	struct reset_control *rstc;
+ 	struct resource *res;
+-	int irq, ret, i, endpoint_not_ready = -ENODEV;
++	int irq, i, nb_endpoints;
++	int ret = -ENODEV;
 
-all packed structs which defined here in prestera_hw.c
-are used for transmission request/return to/from the firmware, each of
-the struct requires to have req/ret member (depends if it is request or
-return from the firmware), and the purpose of the macro is to avoid case
-when someone can forget to add req/ret member to the new such structure.
+ 	DRM_DEBUG_DRIVER("\n");
 
->=20
->=20
-> >+({							\
-> >+	struct mvsw_msg_common_response __re;		\
-> >+	(fw_send_req_resp(_sw, _t, _req, &__re));	\
-> >+})
-> >+
+-	/* Get endpoints if any */
+-	for (i = 0; i < MAX_ENDPOINTS; i++) {
+-		ret = drm_of_find_panel_or_bridge(np, 0, i, &panel[i],
+-						  &bridge[i]);
+-
+-		/*
+-		 * If at least one endpoint is -EPROBE_DEFER, defer probing,
+-		 * else if at least one endpoint is ready, continue probing.
+-		 */
+-		if (ret == -EPROBE_DEFER)
+-			return ret;
+-		else if (!ret)
+-			endpoint_not_ready = 0;
+-	}
+-
+-	if (endpoint_not_ready)
+-		return endpoint_not_ready;
+-
+-	rstc = devm_reset_control_get_exclusive(dev, NULL);
+-
+-	mutex_init(&ldev->err_lock);
++	/* Get number of endpoints */
++	nb_endpoints = of_graph_get_endpoint_count(np);
++	if (!nb_endpoints)
++		return -ENODEV;
 
-Regards,
-Vadym Kochan,
+ 	ldev->pixel_clk = devm_clk_get(dev, "lcd");
+ 	if (IS_ERR(ldev->pixel_clk)) {
+@@ -1244,6 +1226,43 @@ int ltdc_load(struct drm_device *ddev)
+ 		return -ENODEV;
+ 	}
+
++	/* Get endpoints if any */
++	for (i = 0; i < nb_endpoints; i++) {
++		ret = drm_of_find_panel_or_bridge(np, 0, i, &panel, &bridge);
++
++		/*
++		 * If at least one endpoint is -ENODEV, continue probing,
++		 * else if at least one endpoint returned an error
++		 * (ie -EPROBE_DEFER) then stop probing.
++		 */
++		if (ret == -ENODEV)
++			continue;
++		else if (ret)
++			goto err;
++
++		if (panel) {
++			bridge = drm_panel_bridge_add_typed(panel,
++							    DRM_MODE_CONNECTOR_DPI);
++			if (IS_ERR(bridge)) {
++				DRM_ERROR("panel-bridge endpoint %d\n", i);
++				ret = PTR_ERR(bridge);
++				goto err;
++			}
++		}
++
++		if (bridge) {
++			ret = ltdc_encoder_init(ddev, bridge);
++			if (ret) {
++				DRM_ERROR("init encoder endpoint %d\n", i);
++				goto err;
++			}
++		}
++	}
++
++	rstc = devm_reset_control_get_exclusive(dev, NULL);
++
++	mutex_init(&ldev->err_lock);
++
+ 	if (!IS_ERR(rstc)) {
+ 		reset_control_assert(rstc);
+ 		usleep_range(10, 20);
+@@ -1285,27 +1304,7 @@ int ltdc_load(struct drm_device *ddev)
+ 			DRM_ERROR("Failed to register LTDC interrupt\n");
+ 			goto err;
+ 		}
+-	}
+
+-	/* Add endpoints panels or bridges if any */
+-	for (i = 0; i < MAX_ENDPOINTS; i++) {
+-		if (panel[i]) {
+-			bridge[i] = drm_panel_bridge_add_typed(panel[i],
+-							       DRM_MODE_CONNECTOR_DPI);
+-			if (IS_ERR(bridge[i])) {
+-				DRM_ERROR("panel-bridge endpoint %d\n", i);
+-				ret = PTR_ERR(bridge[i]);
+-				goto err;
+-			}
+-		}
+-
+-		if (bridge[i]) {
+-			ret = ltdc_encoder_init(ddev, bridge[i]);
+-			if (ret) {
+-				DRM_ERROR("init encoder endpoint %d\n", i);
+-				goto err;
+-			}
+-		}
+ 	}
+
+ 	crtc = devm_kzalloc(dev, sizeof(*crtc), GFP_KERNEL);
+@@ -1340,8 +1339,8 @@ int ltdc_load(struct drm_device *ddev)
+
+ 	return 0;
+ err:
+-	for (i = 0; i < MAX_ENDPOINTS; i++)
+-		drm_panel_bridge_remove(bridge[i]);
++	for (i = 0; i < nb_endpoints; i++)
++		drm_of_panel_bridge_remove(ddev->dev->of_node, 0, i);
+
+ 	clk_disable_unprepare(ldev->pixel_clk);
+
+@@ -1350,11 +1349,14 @@ int ltdc_load(struct drm_device *ddev)
+
+ void ltdc_unload(struct drm_device *ddev)
+ {
+-	int i;
++	struct device *dev = ddev->dev;
++	int nb_endpoints, i;
+
+ 	DRM_DEBUG_DRIVER("\n");
+
+-	for (i = 0; i < MAX_ENDPOINTS; i++)
++	nb_endpoints = of_graph_get_endpoint_count(dev->of_node);
++
++	for (i = 0; i < nb_endpoints; i++)
+ 		drm_of_panel_bridge_remove(ddev->dev->of_node, 0, i);
+
+ 	pm_runtime_disable(ddev->dev);
+--
+2.7.4
+
