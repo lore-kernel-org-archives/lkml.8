@@ -2,142 +2,171 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6791DC3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 02:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D908BC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 02:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40B12246A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 02:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A37C12469B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 02:54:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TBD1vGhu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NLXOOXtP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730624AbgB1CyP (ORCPT
+        id S1730646AbgB1Cye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 21:54:15 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41666 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726943AbgB1CyO (ORCPT
+        Thu, 27 Feb 2020 21:54:34 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:55911 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726943AbgB1Cye (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 21:54:14 -0500
-Received: by mail-qt1-f195.google.com with SMTP id l21so1013145qtr.8;
-        Thu, 27 Feb 2020 18:54:14 -0800 (PST)
+        Thu, 27 Feb 2020 21:54:34 -0500
+Received: by mail-pj1-f67.google.com with SMTP id a18so639630pjs.5
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 18:54:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=22hz3EXYq0SzN1Wu2fonmhGKwST6HFX0P3UPEDmpwXo=;
-        b=TBD1vGhuloKu8RtFPWQxFgHHziYiJYOdde1353qzy2LmcoeF0TiDjDX1vZWq4i+I1G
-         PxOGEuwdm3jskEG8pUt/6K0JSYZJ0j+CUnc9p9tBIyyk6ljb/P7YZkENFlOKudEIAHIz
-         lYZu3V4cVEiJhkcItpRev2T8F2Xv+xbwvQMzSApqjce7q0xJzmAlfnCRx7iznMqtFpMw
-         D9hPjaUJnzrxXvBACyVYK5QgZxg449iJK2ULaQ3hg4IfAgfp2YuQsaC0pP09+/AMME+N
-         e7XkK8nJFvXHADovHj3sQyLpUp4qgFKouUF/Xr15HR9gMjka5EcBntqIZbCRQm7aoS9P
-         Mm+g==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=XKoYXksDrflEVWxx489gzRo7OdqlZb9D0qCiQZUBdvI=;
+        b=NLXOOXtP24zTmGIZU+y3WhhXRlNVs4Yea2dlBh55x7RSbWQIQqovzQJcGQzPdyRK7v
+         kBCktxWgY5TxsvyRCt1ol0t+jSMWJ/1OVjsGHzWsYbkxpc585F2myxuy8wVu4c7hZB7c
+         5RuF3ZA4IzsRyH17ChwA8MT1ap+Au9pxncjiFUpT8lXMTYZWzHd1CPd0gkElkGIHRiZG
+         i7g9et6mZaK/4Y4wNBBMAIqt4PjrSluvzS89w5p+5pEE2ds96lTqqVhIjp1Z0QSNtS0K
+         U83E4G2UnBhJLwATZ/Yf22irKO/gwYOMBYs1ghcrZTzpmJ1PFn6G6jBoZ5MWfehA6APo
+         hBKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=22hz3EXYq0SzN1Wu2fonmhGKwST6HFX0P3UPEDmpwXo=;
-        b=DgQl2P/yX/tamwH2Mjm/3dxMArx2aAV/QCXI1dgjXEMfg/vp+CrM2nWYcp2t0Vhdzp
-         K+6eF9VAchaF9Leub1ImGrGMNwdo6SjqF6TAxesYoYgT8IMWZr2SnlJzqKn84a/2tRE5
-         4xS5RJKKkWCyB9gXSy8BXNK1HFvAp7jXdSPad76j2KxxwBIaUH0geu0YKyhEvT8H5InD
-         TY7U5ZSC1itwWw5F2pOMi/j4BqWbMYBq0awODF9hJxEZ5jDLfi86CSKaz9TNuElN2LIK
-         deEiPun7oKDPW75FcV6WM0i8CF407VmKBjVf2q4BprXYSoa4j3XfteeBUr1zdCJJyHR8
-         iS/A==
-X-Gm-Message-State: APjAAAWom6DIhIXuD3zbAP02xCHmJBVRgCW0NwSvRRiqJzfRKgD1TGs9
-        fC1fLHleS4/MfPuRGgExEKWC4/8S92cAvBbKv2HXjR3B
-X-Google-Smtp-Source: APXvYqx40ohLVeMfivRLcPCJq0RBwQ9BYmvFVQpKE5DzCFxMCXj1+DIF7ZrkDxeYve2lklZXhdcB7wpqqqroi1Qjtfk=
-X-Received: by 2002:ac8:7b45:: with SMTP id m5mr2482318qtu.360.1582858453803;
- Thu, 27 Feb 2020 18:54:13 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XKoYXksDrflEVWxx489gzRo7OdqlZb9D0qCiQZUBdvI=;
+        b=BxEuuMWbjEK6+6EG5+rfYtxzwgc3UhH6sbSORq5wlO8nH45E0mj9K+V5o0jzQdeCAN
+         wb/B++q2It4OteNw72bGFtj07tvNP2Z9EVMNr2OwS+7aEmqLRKdi7oqQpRIoP9TsyR8O
+         Red6HFNPFVFRgcG6svGSmZ9I/Tj8jNy+otllhONBR4m6nbk6l81Zxx/4i3P8NL6m1xqA
+         0xdZBLUxyDWdrft4VPj+XRw740sBgXzYwmJHj52U5hYTXjt4LKpnAJbteg0j31V2qnv2
+         g5J45qZemOJ8OQqqcLCZ9gQXvOfuGdoPYJ0DwmgfGGUJBbE9lB8FQPqLStW9E02fd+fr
+         1pWw==
+X-Gm-Message-State: APjAAAVDhqpq5ebGBABe2FzwWk9+Q+LjUbgtMr/K0O97x6SqFR+uh3Rj
+        ouDI1Z+5hd0+BvIBUQHoxw8=
+X-Google-Smtp-Source: APXvYqykwYQ+TDBNEHvZ+RAP91zJiQkJQNM+2Ew+mMoUbxD11tOOSldrr62NaA1CxlnPZV08wBaCZw==
+X-Received: by 2002:a17:90a:a406:: with SMTP id y6mr2295163pjp.115.1582858472455;
+        Thu, 27 Feb 2020 18:54:32 -0800 (PST)
+Received: from ziqianlu-desktop.localdomain ([47.89.83.64])
+        by smtp.gmail.com with ESMTPSA id e28sm8273973pgn.21.2020.02.27.18.54.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 18:54:31 -0800 (PST)
+Date:   Fri, 28 Feb 2020 10:54:05 +0800
+From:   Aaron Lu <aaron.lwe@gmail.com>
+To:     Phil Auld <pauld@redhat.com>
+Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Dario Faggioli <dfaggioli@suse.com>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v4 00/19] Core scheduling v4
+Message-ID: <20200228025405.GA634650@ziqianlu-desktop.localdomain>
+References: <3c3c56c1-b8dc-652c-535e-74f6dcf45560@linux.intel.com>
+ <CANaguZAz+mw1Oi8ecZt+JuCWbf=g5UvKrdSvAeM82Z1c+9oWAw@mail.gmail.com>
+ <e322a252-f983-e3f3-f823-16d0c16b2867@linux.intel.com>
+ <20200212230705.GA25315@sinkpad>
+ <29d43466-1e18-6b42-d4d0-20ccde20ff07@linux.intel.com>
+ <CAERHkruG4y8si9FrBp7cZNEdfP7EzxbmYwvdF2EvHLf=mU1mgg@mail.gmail.com>
+ <20200225034438.GA617271@ziqianlu-desktop.localdomain>
+ <CANaguZD205ccu1V_2W-QuMRrJA9SjJ5ng1do4NCdLy8NDKKrbA@mail.gmail.com>
+ <20200227020432.GA628749@ziqianlu-desktop.localdomain>
+ <20200227141032.GA30178@pauld.bos.csb>
 MIME-Version: 1.0
-References: <cover.1582770784.git.shengjiu.wang@nxp.com> <ffd5ff2fd0e8ad03a97f6a640630cff767d73fa7.1582770784.git.shengjiu.wang@nxp.com>
- <20200227034121.GA20540@Asurada-Nvidia.nvidia.com> <CAA+D8AMzqpC35_CR2dCG6a_h4FzvZ6orXkPSYh_1o1d8hv+BMg@mail.gmail.com>
- <20200227174540.GA17040@Asurada-Nvidia.nvidia.com>
-In-Reply-To: <20200227174540.GA17040@Asurada-Nvidia.nvidia.com>
-From:   Shengjiu Wang <shengjiu.wang@gmail.com>
-Date:   Fri, 28 Feb 2020 10:54:02 +0800
-Message-ID: <CAA+D8AM6t79cPoNmt-8HbGwTSM9bfXSW8g76HtkCF7eauL_Xmw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] ASoC: fsl_asrc: Change asrc_width to asrc_format
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227141032.GA30178@pauld.bos.csb>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
-
-On Fri, Feb 28, 2020 at 1:45 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
->
-> On Thu, Feb 27, 2020 at 01:10:19PM +0800, Shengjiu Wang wrote:
-> > On Thu, Feb 27, 2020 at 11:43 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
-> > >
-> > > On Thu, Feb 27, 2020 at 10:41:55AM +0800, Shengjiu Wang wrote:
-> > > > asrc_format is more inteligent variable, which is align
-> > > > with the alsa definition snd_pcm_format_t.
+On Thu, Feb 27, 2020 at 09:10:33AM -0500, Phil Auld wrote:
+> Hi Aaron,
+> 
+> On Thu, Feb 27, 2020 at 10:04:32AM +0800 Aaron Lu wrote:
+> > On Tue, Feb 25, 2020 at 03:51:37PM -0500, Vineeth Remanan Pillai wrote:
+> > > On a 2sockets/16cores/32threads VM, I grouped 8 sysbench(cpu mode)
+> > > > threads into one cgroup(cgA) and another 16 sysbench(cpu mode) threads
+> > > > into another cgroup(cgB). cgA and cgB's cpusets are set to the same
+> > > > socket's 8 cores/16 CPUs and cgA's cpu.shares is set to 10240 while cgB's
+> > > > cpu.shares is set to 2(so consider cgB as noise workload and cgA as
+> > > > the real workload).
 > > > >
-> > > > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> > > > ---
-> > > >  sound/soc/fsl/fsl_asrc.c     | 23 +++++++++++------------
-> > > >  sound/soc/fsl/fsl_asrc.h     |  4 ++--
-> > > >  sound/soc/fsl/fsl_asrc_dma.c |  2 +-
-> > > >  3 files changed, 14 insertions(+), 15 deletions(-)
-> > > >
-> > > > diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
-> > > > index 0dcebc24c312..2b6a1643573c 100644
-> > > > --- a/sound/soc/fsl/fsl_asrc.c
-> > > > +++ b/sound/soc/fsl/fsl_asrc.c
-> > >
-> > > > @@ -600,11 +599,6 @@ static int fsl_asrc_dai_hw_params(struct snd_pcm_substream *substream,
-> > > >
-> > > >       pair->config = &config;
-> > > >
-> > > > -     if (asrc_priv->asrc_width == 16)
-> > > > -             format = SNDRV_PCM_FORMAT_S16_LE;
-> > > > -     else
-> > > > -             format = SNDRV_PCM_FORMAT_S24_LE;
-> > >
-> > > It feels better to me that we have format settings in hw_params().
-> > >
-> > > Why not let fsl_easrc align with this? Any reason that I'm missing?
-> >
-> > because the asrc_width is not formal,  in the future we can direct
->
-> Hmm..that's our DT binding. And I don't feel it is a problem
-> to be ASoC irrelative.
->
-> > input the format from the dts. format involve the info about width.
->
-> Is there such any formal ASoC binding? I don't see those PCM
-> formats under include/dt-bindings/ folder. How are we going
-> to involve those formats in DT?
+> > > > I had expected cgA to occupy 8 cpus(with each cpu on a different core)
+> > > 
+> > > The expected behaviour could also be that 8 processes share 4 cores and
+> > > 8 hw threads right? This is what we are seeing mostly
+> > 
+> > I expect the 8 cgA tasks to spread on each core, instead of occupying
+> > 4 cores/8 hw threads. If they stay on 4 cores/8 hw threads, than on the
+> > core level, these cores' load would be much higher than other cores
+> > which are running cgB's tasks, this doesn't look right to me.
+> > 
+> 
+> I don't think that's a valid assumption, at least since the load balancer rework.
+> 
+> The scheduler will be looking much more at the number of running task versus
+> the group weight. So in this case 2 running tasks, 2 siblings at the core level
+> will look fine. There will be no reason to migrate. 
 
-There is no formal binding of this case.
+In the absence of core scheduling, I agree there is no reason to migrate
+since no matter how to migrate, the end result is one high-weight task
+sharing a core with another (high or low weight) task. But with core
+scheduling, things can be different: if the high weight tasks are
+spread among cores, then these high weight tasks can enjoy the core
+alone(by force idling its sibling) and get better performance.
 
-I think it is not good to convert width to format, because, for example
-width = 24,  there is two option, we can select format S24_LE,  or
-format S24_3LE,  width is ambiguous for selecting.
+I'm thinking to use core scheduling to protect main workload's
+performance in a colocated environment, similar to the realtime use
+case described here:
+https://lwn.net/Articles/799454/
 
-In EASRC, it support other two 24bit format U24_LE, U24_3LE .
+I'll quote the relevant part here:
+"
+But core scheduling can force sibling CPUs to go idle when a realtime
+process is running on the core, thus preventing this kind of
+interference. That opens the door to enabling SMT whenever a core has no
+realtime work, but effectively disabling it when realtime constraints
+apply, getting the best of both worlds. 
+"
 
-if we use the format in DT, then it is clear for usage in driver.
+Using cpuset for the main workload to only allow its task run on one HT
+of each core might also solve this, but I had hoped not to need use
+cpuset as that can add complexity in deployment.
 
+> > I think the end result should be: each core has two tasks queued, one
+> > cgA task and one cgB task(to maintain load balance on the core level).
+> > The two tasks are queued on different hw thread, with cgA's task runs
+> > most of the time on one thread and cgB's task being forced idle most
+> > of the time on the other thread.
+> > 
+> 
+> With the core scheduler that does not seem to be a desired outcome. I think
+> grouping the 8 cgA tasks on the 8 cpus of 4 cores seems right. 
+> 
 
-best regards
-wang shengjiu
+When the core wide weight is somewhat balanced, yes I definitely agree.
+But when core wide weight mismatch a lot, I'm not so sure since if these
+high weight task is spread among cores, with the feature of core
+scheduling, these high weight tasks can get better performance. So this
+appeared to me like a question of: is it desirable to protect/enhance
+high weight task performance in the presence of core scheduling?
