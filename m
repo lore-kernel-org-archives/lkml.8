@@ -2,107 +2,120 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA71BC3F2D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55217C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6DCD246A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:49:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i4x1Q60C"
+	by mail.kernel.org (Postfix) with ESMTP id 37E14246B0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:50:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgB1JtO (ORCPT
+        id S1726796AbgB1JuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 04:49:14 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54730 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726005AbgB1JtO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 04:49:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582883352;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xaUE2NO4gGXPZu75rog8Ham7snpA9hfQBixkkzfUHPs=;
-        b=i4x1Q60Ca4Obu6gDrq7DJ2Uss8M/aqc9TTSsmhY4/UIFHPBitwkEZ4KPD7tWt/XSvmoNM0
-        6bC26jEvR0kcU+pqRfOr7y6FNuxUQpkDIw3Mg5nlQHThV67Gc9ok5Ye+qMYh4kS7LFOy4v
-        xb7++ex5PC70NKv0hZxV40uQqmAsHSY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-311-cDxzfgL2P66JhpQWm0MxKg-1; Fri, 28 Feb 2020 04:49:08 -0500
-X-MC-Unique: cDxzfgL2P66JhpQWm0MxKg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2953E8010E8;
-        Fri, 28 Feb 2020 09:49:06 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-150.ams2.redhat.com [10.36.116.150])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8CF235E1AF;
-        Fri, 28 Feb 2020 09:49:05 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 9412D17447; Fri, 28 Feb 2020 10:49:03 +0100 (CET)
-Date:   Fri, 28 Feb 2020 10:49:03 +0100
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Thomas =?utf-8?Q?Hellstr=C3=B6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     dri-devel@lists.freedesktop.org, Guillaume.Gardet@arm.com,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        gurchetansingh@chromium.org, tzimmermann@suse.de, yuq825@gmail.com,
-        noralf@tronnes.org, robh@kernel.org
-Subject: Re: [PATCH v5 1/3] drm/shmem: add support for per object caching
- flags.
-Message-ID: <20200228094903.g7yf73mtnbjyu4ez@sirius.home.kraxel.org>
-References: <20200226154752.24328-1-kraxel@redhat.com>
- <20200226154752.24328-2-kraxel@redhat.com>
- <f1afba4b-9c06-48a3-42c7-046695947e91@shipmail.org>
- <20200227075321.ki74hfjpnsqv2yx2@sirius.home.kraxel.org>
- <41ca197c-136a-75d8-b269-801db44d4cba@shipmail.org>
- <20200227105643.h4klc3ybhpwv2l3x@sirius.home.kraxel.org>
- <68a05ace-40bc-76d6-5464-2c96328874b9@shipmail.org>
- <20200227132137.irruicvlkxpdo3so@sirius.home.kraxel.org>
- <78eb099e-020f-91d1-672e-15176bf12cd4@shipmail.org>
+        Fri, 28 Feb 2020 04:50:04 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36304 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726413AbgB1JuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 04:50:03 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 093F6B2D4;
+        Fri, 28 Feb 2020 09:50:01 +0000 (UTC)
+Date:   Fri, 28 Feb 2020 09:49:54 +0000
+From:   Mel Gorman <mgorman@suse.de>
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
+        Zi Yan <ziy@nvidia.com>, Michal Hocko <mhocko@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Hugh Dickins <hughd@google.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Subject: Re: [RFC 0/3] mm: Discard lazily freed pages when migrating
+Message-ID: <20200228094954.GB3772@suse.de>
+References: <20200228033819.3857058-1-ying.huang@intel.com>
+ <20200228034248.GE29971@bombadil.infradead.org>
+ <87a7538977.fsf@yhuang-dev.intel.com>
+ <edae2736-3239-0bdc-499c-560fc234c974@redhat.com>
+ <871rqf850z.fsf@yhuang-dev.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <78eb099e-020f-91d1-672e-15176bf12cd4@shipmail.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <871rqf850z.fsf@yhuang-dev.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  Hi,
-
-> > Not clue about the others (lima, tiny, panfrost, v3d).  Maybe they use
-> > write-combine just because this is what they got by default from
-> > drm_gem_mmap_obj().  Maybe they actually need that.  Trying to Cc:
-> > maintainters (and drop stable@).
-
-> > virtio-gpu needs it, otherwise the host can't show the virtual display.
-> > cirrus bounces everything via blits to vram, so it should be ok without
-> > decrypted.  I guess that implies we should make decrypted configurable.
+On Fri, Feb 28, 2020 at 04:55:40PM +0800, Huang, Ying wrote:
+> > E.g., free page reporting in QEMU wants to use MADV_FREE. The guest will
+> > report currently free pages to the hypervisor, which will MADV_FREE the
+> > reported memory. As long as there is no memory pressure, there is no
+> > need to actually free the pages. Once the guest reuses such a page, it
+> > could happen that there is still the old page and pulling in in a fresh
+> > (zeroed) page can be avoided.
+> >
+> > AFAIKs, after your change, we would get more pages discarded from our
+> > guest, resulting in more fresh (zeroed) pages having to be pulled in
+> > when a guest touches a reported free page again. But OTOH, page
+> > migration is speed up (avoiding to migrate these pages).
 > 
-> Decrypted here is clearly incorrect and violates the SEV spec, regardless of
-> a config option.
+> Let's look at this problem in another perspective.  To migrate the
+> MADV_FREE pages of the QEMU process from the node A to the node B, we
+> need to free the original pages in the node A, and (maybe) allocate the
+> same number of pages in the node B.  So the question becomes
 > 
-> The only correct way is currently to use dma_alloc_coherent() and
-> mmap_coherent() to allocate decrypted memory and then use the
-> pgprot_decrypted flag.
+> - we may need to allocate some pages in the node B
+> - these pages may be accessed by the application or not
+> - we should allocate all these pages in advance or allocate them lazily
+>   when they are accessed.
+> 
+> We thought the common philosophy in Linux kernel is to allocate lazily.
+> 
 
-Hmm, virtio-gpu uses the dma api to allow the host access the gem
-object.  So I think I have to correct the statement above, if I
-understands things correctly the dma api will use (properly allocated)
-decrypted bounce buffers and the virtio-gpu shmem objects don't need
-pgprot_decrypted mappings.
+I also think there needs to be an example of a real application that
+benefits from this new behaviour. Consider the possible sources of page
+migration
 
-That leaves the question what to do about pgprot_writecombine().  Any
-comments from the driver maintainers (see first paragraph)?
+1. NUMA balancing -- The application has to read/write the data for this
+   to trigger. In the case of write, MADV_FREE is cancelled and it's
+   mostly likely going to be a write unless it's an application bug.
+2. sys_movepages -- the application has explictly stated the data is in
+   use on a particular node yet any MADV_FREE page gets discarded
+3. Compaction -- there may be no memory pressure at all but the
+   MADV_FREE memory is discarded prematurely
 
-cheers,
-  Gerd
+In the first case, the data is explicitly in use, most likely due to
+a write in which case it's inappropriate to discard. Discarding and
+reallocating a zero'd page is not expected. In second case, the data is
+likely in use or else why would the system call be used? In the third case
+the timing of when MADV_FREE pages disappear is arbitrary as it can happen
+without any actual memory pressure.  This may or may not be problematic but
+it leads to unpredictable latencies for applications that use MADV_FREE
+for a quick malloc/free implementation.  Before, as long as there is no
+pressure, the reuse of a MADV_FREE incurs just a small penalty but now
+with compaction it does not matter if the system avoids memory pressure
+because they may still incur a fault to allocate and zero a new page.
 
+There is a hypothetical fourth case which I only mention because of your
+email address. If persistent memory is ever used for tiered memory then
+MADV_FREE pages that migrate from dram to pmem gets discarded instead
+of migrated. When it's reused, it gets reallocated from dram regardless
+of whether that region is hot or not.  This may lead to an odd scenario
+whereby applications occupy dram prematurely due to a single reference
+of a MADV_FREE page.
+
+It's all subtle enough that we really should have an example application
+in mind that benefits so we can weigh the benefits against the potential
+risks.
+
+-- 
+Mel Gorman
+SUSE Labs
