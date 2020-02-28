@@ -2,69 +2,72 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F93DC3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 07:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 801E3C3F2CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 07:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDF392467B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 07:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57F35246AA
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 07:56:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgB1Hy3 (ORCPT
+        id S1726476AbgB1H4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 02:54:29 -0500
-Received: from mga09.intel.com ([134.134.136.24]:59601 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726860AbgB1Hy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 02:54:29 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 23:54:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,495,1574150400"; 
-   d="scan'208";a="232158707"
-Received: from shao2-debian.sh.intel.com (HELO [10.239.13.3]) ([10.239.13.3])
-  by orsmga008.jf.intel.com with ESMTP; 27 Feb 2020 23:54:27 -0800
-Subject: Re: [KVM] a06230b62b: kvm-unit-tests.vmx.fail
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Oliver Upton <oupton@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        lkp@lists.01.org
-References: <20200228074408.GM6548@shao2-debian>
- <96533a86-feca-ace8-952b-7e5c88732ee5@redhat.com>
-From:   Rong Chen <rong.a.chen@intel.com>
-Message-ID: <8b9491a2-85a2-1dd0-bc06-26831ba2d6d6@intel.com>
-Date:   Fri, 28 Feb 2020 15:54:19 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 28 Feb 2020 02:56:32 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:53972 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726077AbgB1H4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 02:56:31 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 2C76D39943DAE07629C6;
+        Fri, 28 Feb 2020 15:56:27 +0800 (CST)
+Received: from localhost (10.173.223.234) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Fri, 28 Feb 2020
+ 15:56:21 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <oder_chiou@realtek.com>, <lgirdwood@gmail.com>,
+        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] ASoC: rt5682: Make rt5682_clock_config static
+Date:   Fri, 28 Feb 2020 15:56:09 +0800
+Message-ID: <20200228075609.38236-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-In-Reply-To: <96533a86-feca-ace8-952b-7e5c88732ee5@redhat.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain
+X-Originating-IP: [10.173.223.234]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fix sparse warning:
+
+sound/soc/codecs/rt5682-sdw.c:163:5: warning:
+ symbol 'rt5682_clock_config' was not declared. Should it be static?
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ sound/soc/codecs/rt5682-sdw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sound/soc/codecs/rt5682-sdw.c b/sound/soc/codecs/rt5682-sdw.c
+index fc31d04..1d6963d 100644
+--- a/sound/soc/codecs/rt5682-sdw.c
++++ b/sound/soc/codecs/rt5682-sdw.c
+@@ -160,7 +160,7 @@ static int rt5682_read_prop(struct sdw_slave *slave)
+ #define RT5682_CLK_FREQ_2400000HZ 2400000
+ #define RT5682_CLK_FREQ_12288000HZ 12288000
+ 
+-int rt5682_clock_config(struct device *dev)
++static int rt5682_clock_config(struct device *dev)
+ {
+ 	struct rt5682_priv *rt5682 = dev_get_drvdata(dev);
+ 	unsigned int clk_freq, value;
+-- 
+2.7.4
 
 
-On 2/28/20 3:51 PM, Paolo Bonzini wrote:
-> On 28/02/20 08:44, kernel test robot wrote:
->> [31mFAIL[0m vmx (408415 tests, 3 unexpected failures, 2 expected failures, 5 skipped)
-> Please include the commit of kvm-unit-tests that you are using. You are
-> likely missing "vmx: tweak XFAILS for #DB test".
->
-> Paolo
->
-
-Hi Paolo,
-
-Many thanks for your help, we'll update it and test again.
-
-Best Regards,
-Rong Chen
