@@ -2,327 +2,105 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E98C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB497C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEED920732
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:15:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACBB120732
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:15:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="dXA4qckv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgB1LPM (ORCPT
+        id S1726892AbgB1LPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 06:15:12 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:41534 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726673AbgB1LPM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 06:15:12 -0500
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E76B9384A98F9223624F;
-        Fri, 28 Feb 2020 19:15:08 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 28 Feb 2020 19:14:58 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: compress: support zstd compress algorithm
-Date:   Fri, 28 Feb 2020 19:14:56 +0800
-Message-ID: <20200228111456.11311-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Fri, 28 Feb 2020 06:15:48 -0500
+Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:55063 "EHLO
+        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726400AbgB1LPs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 06:15:48 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id ACB013F81C;
+        Fri, 28 Feb 2020 12:15:46 +0100 (CET)
+Authentication-Results: ste-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=dXA4qckv;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
+        dkim=pass (1024-bit key) header.d=shipmail.org
+Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id d-1Dvl-SzUOP; Fri, 28 Feb 2020 12:15:45 +0100 (CET)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 3BB2B3F36B;
+        Fri, 28 Feb 2020 12:15:43 +0100 (CET)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 8CA7C3600E5;
+        Fri, 28 Feb 2020 12:15:43 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1582888543; bh=ArwgEIDl33P4ZVBnnUz1ZjkbHAQUFSsMubAJIywx/Dw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=dXA4qckvxvs38papKi+Rq7RwtKShCBkWbmM74jOvNle/S8S8SMggwZ3W2PAfgRoHF
+         3Z5Gf+870LYx97tW/GupcjknFHKl77ofdAqxwSmYdkK5KNwLBJeMGr2o6VAIiDSlOW
+         N3SsxKv0uZx3szrA6HRq85S1yEs6lpRNOQMNF+yg=
+Subject: Re: [PATCH] drm/shmem: drop pgprot_decrypted()
+To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
+Cc:     David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200228104723.18757-1-kraxel@redhat.com>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <997a1baa-dc71-47d3-6e93-4dc953844d68@shipmail.org>
+Date:   Fri, 28 Feb 2020 12:15:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200228104723.18757-1-kraxel@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add zstd compress algorithm support, use "compress_algorithm=zstd"
-mountoption to enable it.
+On 2/28/20 11:47 AM, Gerd Hoffmann wrote:
+> Was added by commit 95cf9264d5f3 ("x86, drm, fbdev: Do not specify
+> encrypted memory for video mappings"), then it was kept through various
+> changes.
+>
+> While vram actually needs decrypted mappings this is not correct for
+> shmem gem objects which live in main memory not io memory, so remove the
+> call.
+>
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> ---
+>   drivers/gpu/drm/drm_gem_shmem_helper.c | 1 -
+>   1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
+> index aad9324dcf4f..df31e5782eed 100644
+> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
+> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
+> @@ -548,7 +548,6 @@ int drm_gem_shmem_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma)
+>   	vma->vm_page_prot = vm_get_page_prot(vma->vm_flags);
+>   	if (!shmem->map_cached)
+>   		vma->vm_page_prot = pgprot_writecombine(vma->vm_page_prot);
+> -	vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
+>   	vma->vm_ops = &drm_gem_shmem_vm_ops;
+>   
+>   	return 0;
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- Documentation/filesystems/f2fs.txt |   4 +-
- fs/f2fs/Kconfig                    |   9 ++
- fs/f2fs/compress.c                 | 151 +++++++++++++++++++++++++++++
- fs/f2fs/f2fs.h                     |   2 +
- fs/f2fs/super.c                    |   7 ++
- include/trace/events/f2fs.h        |   3 +-
- 6 files changed, 173 insertions(+), 3 deletions(-)
+Reviewed-by: Thomas Hellstrom <thellstrom@vmware.com>
 
-diff --git a/Documentation/filesystems/f2fs.txt b/Documentation/filesystems/f2fs.txt
-index 4eb3e2ddd00e..b1a66cf0e967 100644
---- a/Documentation/filesystems/f2fs.txt
-+++ b/Documentation/filesystems/f2fs.txt
-@@ -235,8 +235,8 @@ checkpoint=%s[:%u[%]]     Set to "disable" to turn off checkpointing. Set to "en
-                        hide up to all remaining free space. The actual space that
-                        would be unusable can be viewed at /sys/fs/f2fs/<disk>/unusable
-                        This space is reclaimed once checkpoint=enable.
--compress_algorithm=%s  Control compress algorithm, currently f2fs supports "lzo"
--                       and "lz4" algorithm.
-+compress_algorithm=%s  Control compress algorithm, currently f2fs supports "lzo",
-+                       "lz4" and "zstd" algorithm.
- compress_log_size=%u   Support configuring compress cluster size, the size will
-                        be 4KB * (1 << %u), 16KB is minimum size, also it's
-                        default size.
-diff --git a/fs/f2fs/Kconfig b/fs/f2fs/Kconfig
-index f0faada30f30..bb68d21e1f8c 100644
---- a/fs/f2fs/Kconfig
-+++ b/fs/f2fs/Kconfig
-@@ -118,3 +118,12 @@ config F2FS_FS_LZ4
- 	default y
- 	help
- 	  Support LZ4 compress algorithm, if unsure, say Y.
-+
-+config F2FS_FS_ZSTD
-+	bool "ZSTD compression support"
-+	depends on F2FS_FS_COMPRESSION
-+	select ZSTD_COMPRESS
-+	select ZSTD_DECOMPRESS
-+	default y
-+	help
-+	  Support ZSTD compress algorithm, if unsure, say Y.
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index bd3ea01db448..c8e1175eaf4e 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -11,6 +11,7 @@
- #include <linux/backing-dev.h>
- #include <linux/lzo.h>
- #include <linux/lz4.h>
-+#include <linux/zstd.h>
- 
- #include "f2fs.h"
- #include "node.h"
-@@ -291,6 +292,151 @@ static const struct f2fs_compress_ops f2fs_lz4_ops = {
- };
- #endif
- 
-+#ifdef CONFIG_F2FS_FS_ZSTD
-+#define F2FS_ZSTD_DEFAULT_CLEVEL	1
-+
-+static int zstd_init_compress_ctx(struct compress_ctx *cc)
-+{
-+	return 0;
-+}
-+
-+static void zstd_destroy_compress_ctx(struct compress_ctx *cc)
-+{
-+}
-+
-+static int zstd_compress_pages(struct compress_ctx *cc)
-+{
-+	ZSTD_parameters params;
-+	ZSTD_CStream *stream;
-+	ZSTD_inBuffer inbuf;
-+	ZSTD_outBuffer outbuf;
-+	void *workspace;
-+	unsigned int workspace_size;
-+	int src_size = cc->rlen;
-+	int dst_size = src_size - PAGE_SIZE - COMPRESS_HEADER_SIZE;
-+	int ret;
-+
-+	params = ZSTD_getParams(F2FS_ZSTD_DEFAULT_CLEVEL, src_size, 0);
-+	workspace_size = ZSTD_CStreamWorkspaceBound(params.cParams);
-+
-+	workspace = f2fs_kvmalloc(F2FS_I_SB(cc->inode),
-+					workspace_size, GFP_NOFS);
-+	if (!workspace)
-+		return -ENOMEM;
-+
-+	stream = ZSTD_initCStream(params, 0,
-+					workspace, workspace_size);
-+	if (!stream) {
-+		printk_ratelimited("%sF2FS-fs (%s): %s ZSTD_initCStream failed\n",
-+				KERN_ERR, F2FS_I_SB(cc->inode)->sb->s_id,
-+				__func__);
-+		ret = -EIO;
-+		goto free_workspace;
-+	}
-+
-+	inbuf.pos = 0;
-+	inbuf.src = cc->rbuf;
-+	inbuf.size = src_size;
-+
-+	outbuf.pos = 0;
-+	outbuf.dst = cc->cbuf->cdata;
-+	outbuf.size = dst_size;
-+
-+	ret = ZSTD_compressStream(stream, &outbuf, &inbuf);
-+	if (ZSTD_isError(ret)) {
-+		printk_ratelimited("%sF2FS-fs (%s): %s ZSTD_compressStream failed, ret: %d\n",
-+				KERN_ERR, F2FS_I_SB(cc->inode)->sb->s_id,
-+				__func__, ZSTD_getErrorCode(ret));
-+		ret = -EIO;
-+		goto free_workspace;
-+	}
-+
-+	ret = ZSTD_endStream(stream, &outbuf);
-+	if (ZSTD_isError(ret)) {
-+		printk_ratelimited("%sF2FS-fs (%s): %s ZSTD_endStream returned %d\n",
-+				KERN_ERR, F2FS_I_SB(cc->inode)->sb->s_id,
-+				__func__, ZSTD_getErrorCode(ret));
-+		ret = -EIO;
-+		goto free_workspace;
-+	}
-+
-+	cc->clen = outbuf.pos;
-+
-+	ret = 0;
-+free_workspace:
-+	kvfree(workspace);
-+	return ret;
-+}
-+
-+static int zstd_decompress_pages(struct decompress_io_ctx *dic)
-+{
-+	ZSTD_parameters params;
-+	ZSTD_DStream *stream;
-+	ZSTD_inBuffer inbuf;
-+	ZSTD_outBuffer outbuf;
-+	void *workspace;
-+	unsigned int workspace_size;
-+	int ret;
-+
-+	params = ZSTD_getParams(F2FS_ZSTD_DEFAULT_CLEVEL, dic->clen, 0);
-+	workspace_size = ZSTD_DStreamWorkspaceBound(MAX_COMPRESS_WINDOW_SIZE);
-+
-+	workspace = f2fs_kvmalloc(F2FS_I_SB(dic->inode),
-+					workspace_size, GFP_NOFS);
-+	if (!workspace)
-+		return -ENOMEM;
-+
-+	stream = ZSTD_initDStream(MAX_COMPRESS_WINDOW_SIZE,
-+					workspace, workspace_size);
-+	if (!stream) {
-+		printk_ratelimited("%sF2FS-fs (%s): %s ZSTD_initDStream failed\n",
-+				KERN_ERR, F2FS_I_SB(dic->inode)->sb->s_id,
-+				__func__);
-+		ret = -EIO;
-+		goto free_workspace;
-+	}
-+
-+	inbuf.pos = 0;
-+	inbuf.src = dic->cbuf->cdata;
-+	inbuf.size = dic->clen;
-+
-+	outbuf.pos = 0;
-+	outbuf.dst = dic->rbuf;
-+	outbuf.size = dic->rlen;
-+
-+	ret = ZSTD_decompressStream(stream, &outbuf, &inbuf);
-+	if (ZSTD_isError(ret)) {
-+		printk_ratelimited("%sF2FS-fs (%s): %s ZSTD_compressStream failed, ret: %d\n",
-+				KERN_ERR, F2FS_I_SB(dic->inode)->sb->s_id,
-+				__func__, ZSTD_getErrorCode(ret));
-+		ret = -EIO;
-+		goto free_workspace;
-+	}
-+
-+	if (dic->rlen != outbuf.pos) {
-+		printk_ratelimited("%sF2FS-fs (%s): %s ZSTD invalid rlen:%zu, "
-+				"expected:%lu\n", KERN_ERR,
-+				F2FS_I_SB(dic->inode)->sb->s_id,
-+				__func__, dic->rlen,
-+				PAGE_SIZE << dic->log_cluster_size);
-+		ret = -EIO;
-+		goto free_workspace;
-+	}
-+
-+	ret = 0;
-+free_workspace:
-+	kvfree(workspace);
-+	return ret;
-+}
-+
-+static const struct f2fs_compress_ops f2fs_zstd_ops = {
-+	.init_compress_ctx	= zstd_init_compress_ctx,
-+	.destroy_compress_ctx	= zstd_destroy_compress_ctx,
-+	.compress_pages		= zstd_compress_pages,
-+	.decompress_pages	= zstd_decompress_pages,
-+};
-+#endif
-+
- static const struct f2fs_compress_ops *f2fs_cops[COMPRESS_MAX] = {
- #ifdef CONFIG_F2FS_FS_LZO
- 	&f2fs_lzo_ops,
-@@ -302,6 +448,11 @@ static const struct f2fs_compress_ops *f2fs_cops[COMPRESS_MAX] = {
- #else
- 	NULL,
- #endif
-+#ifdef CONFIG_F2FS_FS_ZSTD
-+	&f2fs_zstd_ops,
-+#else
-+	NULL,
-+#endif
- };
- 
- bool f2fs_is_compress_backend_ready(struct inode *inode)
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 5ca9efaf2ddc..f4bcbbd5e9ed 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -1231,6 +1231,7 @@ enum fsync_mode {
- enum compress_algorithm_type {
- 	COMPRESS_LZO,
- 	COMPRESS_LZ4,
-+	COMPRESS_ZSTD,
- 	COMPRESS_MAX,
- };
- 
-@@ -1294,6 +1295,7 @@ struct decompress_io_ctx {
- #define NULL_CLUSTER			((unsigned int)(~0))
- #define MIN_COMPRESS_LOG_SIZE		2
- #define MAX_COMPRESS_LOG_SIZE		8
-+#define MAX_COMPRESS_WINDOW_SIZE	((PAGE_SIZE) << MAX_COMPRESS_LOG_SIZE)
- 
- struct f2fs_sb_info {
- 	struct super_block *sb;			/* pointer to VFS super block */
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 9f435191f1e5..db3a63f7c769 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -829,6 +829,10 @@ static int parse_options(struct super_block *sb, char *options)
- 					!strcmp(name, "lz4")) {
- 				F2FS_OPTION(sbi).compress_algorithm =
- 								COMPRESS_LZ4;
-+			} else if (strlen(name) == 4 &&
-+					!strcmp(name, "zstd")) {
-+				F2FS_OPTION(sbi).compress_algorithm =
-+								COMPRESS_ZSTD;
- 			} else {
- 				kfree(name);
- 				return -EINVAL;
-@@ -1419,6 +1423,9 @@ static inline void f2fs_show_compress_options(struct seq_file *seq,
- 	case COMPRESS_LZ4:
- 		algtype = "lz4";
- 		break;
-+	case COMPRESS_ZSTD:
-+		algtype = "zstd";
-+		break;
- 	}
- 	seq_printf(seq, ",compress_algorithm=%s", algtype);
- 
-diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
-index 67a97838c2a0..d97adfc327f0 100644
---- a/include/trace/events/f2fs.h
-+++ b/include/trace/events/f2fs.h
-@@ -153,7 +153,8 @@ TRACE_DEFINE_ENUM(CP_PAUSE);
- #define show_compress_algorithm(type)					\
- 	__print_symbolic(type,						\
- 		{ COMPRESS_LZO,		"LZO" },			\
--		{ COMPRESS_LZ4,		"LZ4" })
-+		{ COMPRESS_LZ4,		"LZ4" },			\
-+		{ COMPRESS_ZSTD,	"ZSTD" })
- 
- struct f2fs_sb_info;
- struct f2fs_io_info;
--- 
-2.18.0.rc1
+Thanks,
+
+Thomas
+
 
