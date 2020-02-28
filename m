@@ -2,45 +2,46 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CBEAC3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC37C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26255246B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC1D6246AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:19:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="aZ75bPb3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="nw5x2mPC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbgB1STl (ORCPT
+        id S1726846AbgB1STr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 13:19:41 -0500
-Received: from mo4-p03-ob.smtp.rzone.de ([81.169.146.173]:21610 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgB1STk (ORCPT
+        Fri, 28 Feb 2020 13:19:47 -0500
+Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.123]:17528 "EHLO
+        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbgB1STm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 13:19:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582913978;
+        Fri, 28 Feb 2020 13:19:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582913980;
         s=strato-dkim-0002; d=goldelico.com;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=mtibfl3if76oFyUx4VaWIyxio7nt25pVHxLuChFLvDo=;
-        b=aZ75bPb3UYuN4N9aN0YBIWyrBOK/iZY8Ir6WhYzlfk445MnNbt/XqzVeFpHOQeHqYu
-        XpeqYIQ6uaOu08zU/kkP+WidWdRPzzcmHA0gwY4PIcIlzF4URVYwReZ+zcNnPOb43sYb
-        44Az9IukV0TptjcO3EI1bBW6S3pfh0cUQs7iVaZQZfuA0qrfFYc4asptQZKhyWcEjMjL
-        fp0pYh57py+WLFb5k1R9k4j+hsiUjV811aHdzKf5TtCIZNyXUgldWhAebHTMsE7OUZIC
-        0S36kvn3doNRlyuhZRgWCQwLyEcvarBp5G5BhLoz8kuaaNhwv7vJTpEVmjs0m2i09wab
-        JZ8A==
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=xsODhkpVGkDQnLLErU6wOpwUWKFJnPJTBh47MaWfiIU=;
+        b=nw5x2mPC3aXbhf3Q6WsgXIcLS6dy85nv/jTNqzV5UxlJl7Xk7F/V0Lp+5U35QIoUpW
+        nJTZqRavhkgCPeh/LSLoybRZ4VViVGyVW3eRLwtCHHLF/rVsgrFm2iXRjSXeqezNYjjG
+        57YqC6X9cKn3WQv1QvR5KlDbtdzID03BsNvCwnkdx16xCXBeEUZvokNQITWo7oBiGJGV
+        hY4EVkGkmosgLWmnEc9T18q1iTr1fMdnu4ZiV8kNBtELJtdhjS9tLCrYo5SGbimJdjEY
+        g5y6C5ognIp6mp48nSfZ2bir3sI2LzPHIihn1G5b47u0dB4vNP6ztxxdvP2p3XCZA0hP
+        aelA==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6G1+ULkA="
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
-        with ESMTPSA id y0a02cw1SIJY2Lm
+        with ESMTPSA id y0a02cw1SIJc2Lr
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Fri, 28 Feb 2020 19:19:34 +0100 (CET)
+        Fri, 28 Feb 2020 19:19:38 +0100 (CET)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     Paul Cercueil <paul@crapouillou.net>,
         Paul Boddie <paul@boddie.org.uk>,
@@ -61,68 +62,81 @@ Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
         kernel@pyra-handheld.com
-Subject: [RFC v2 0/8] MIPS: CI20: add HDMI out support 
-Date:   Fri, 28 Feb 2020 19:19:25 +0100
-Message-Id: <cover.1582913973.git.hns@goldelico.com>
+Subject: [RFC v2 5/8] pinctrl: ingenic: add hdmi-ddc pin control group
+Date:   Fri, 28 Feb 2020 19:19:30 +0100
+Message-Id: <010d6ad3473fb4b1f1041888a071796180cdd838.1582913973.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1582913973.git.hns@goldelico.com>
+References: <cover.1582913973.git.hns@goldelico.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Converted .txt bindings to .yaml (by Sam Ravnborg <sam@ravnborg.org> - big THANKS)
+From: Paul Boddie <paul@boddie.org.uk>
 
-RFC V1 2020-02-26 20:13:06:
-This patch series adds HDMI output to the jz4780/CI20 board.
+Signed-off-by: Paul Boddie <paul@boddie.org.uk>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+---
+ drivers/pinctrl/pinctrl-ingenic.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-It is based on taking the old 3.18 vendor kernel and trying
-to achieve the same with modern DTS setup and new/modified
-drivers.
-
-Unfortunately, in this first RFC, only EDID and creation of
-/dev/fb0 are working. Also, HDMI hot plugging is detected.
-
-But there is no HDMI output signal. So some tiny piece seems
-to be missing to enable/configure the Synposys HDMI controller.
-
-We need help from the community to fix this.
-
-Original authors of most patches are
-* Paul Boddie <paul@boddie.org.uk>
-* Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-
-
-H. Nikolaus Schaller (2):
-  drm: ingenic-drm: add MODULE_DEVICE_TABLE
-  MIPS: CI20: defconfig: configure for DRM_DW_HDMI_JZ4780
-
-Paul Boddie (4):
-  drm: ingenic: add jz4780 Synopsys HDMI driver.
-  pinctrl: ingenic: add hdmi-ddc pin control group
-  MIPS: DTS: jz4780: account for Synopsys HDMI driver and LCD controller
-  MIPS: DTS: CI20: add HDMI setup
-
-Sam Ravnborg (2):
-  dt-bindings: display: add ingenic-jz4780-lcd DT Schema
-  dt-bindings: display: add ingenic-jz4780-hdmi DT Schema
-
- .../bindings/display/ingenic-jz4780-hdmi.yaml |  83 ++++++++++++
- .../bindings/display/ingenic-jz4780-lcd.yaml  |  78 ++++++++++++
- arch/mips/boot/dts/ingenic/ci20.dts           |  64 ++++++++++
- arch/mips/boot/dts/ingenic/jz4780.dtsi        |  32 +++++
- arch/mips/configs/ci20_defconfig              |   3 +
- drivers/gpu/drm/ingenic/Kconfig               |   8 ++
- drivers/gpu/drm/ingenic/Makefile              |   1 +
- drivers/gpu/drm/ingenic/dw_hdmi-jz4780.c      | 120 ++++++++++++++++++
- drivers/gpu/drm/ingenic/ingenic-drm.c         |   2 +
- drivers/pinctrl/pinctrl-ingenic.c             |   7 +
- 10 files changed, 398 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.yaml
- create mode 100644 Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
- create mode 100644 drivers/gpu/drm/ingenic/dw_hdmi-jz4780.c
-
+diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
+index 96f04d121ebd..1599a003c31f 100644
+--- a/drivers/pinctrl/pinctrl-ingenic.c
++++ b/drivers/pinctrl/pinctrl-ingenic.c
+@@ -4,6 +4,7 @@
+  *
+  * Copyright (c) 2017 Paul Cercueil <paul@crapouillou.net>
+  * Copyright (c) 2019 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
++ * Copyright (c) 2017, 2019 Paul Boddie <paul@boddie.org.uk>
+  */
+ 
+ #include <linux/compiler.h>
+@@ -900,6 +901,7 @@ static int jz4780_mmc0_8bit_a_pins[] = { 0x04, 0x05, 0x06, 0x07, 0x18, };
+ static int jz4780_i2c3_pins[] = { 0x6a, 0x6b, };
+ static int jz4780_i2c4_e_pins[] = { 0x8c, 0x8d, };
+ static int jz4780_i2c4_f_pins[] = { 0xb9, 0xb8, };
++static int jz4780_hdmi_ddc_pins[] = { 0xb9, 0xb8, };
+ 
+ static int jz4780_uart2_data_funcs[] = { 1, 1, };
+ static int jz4780_uart2_hwflow_funcs[] = { 1, 1, };
+@@ -908,6 +910,7 @@ static int jz4780_mmc0_8bit_a_funcs[] = { 1, 1, 1, 1, 1, };
+ static int jz4780_i2c3_funcs[] = { 1, 1, };
+ static int jz4780_i2c4_e_funcs[] = { 1, 1, };
+ static int jz4780_i2c4_f_funcs[] = { 1, 1, };
++static int jz4780_hdmi_ddc_funcs[] = { 0, 0, };
+ 
+ static const struct group_desc jz4780_groups[] = {
+ 	INGENIC_PIN_GROUP("uart0-data", jz4770_uart0_data),
+@@ -950,6 +953,7 @@ static const struct group_desc jz4780_groups[] = {
+ 	INGENIC_PIN_GROUP("i2c3-data", jz4780_i2c3),
+ 	INGENIC_PIN_GROUP("i2c4-data-e", jz4780_i2c4_e),
+ 	INGENIC_PIN_GROUP("i2c4-data-f", jz4780_i2c4_f),
++	INGENIC_PIN_GROUP("hdmi-ddc", jz4780_hdmi_ddc),
+ 	INGENIC_PIN_GROUP("cim-data", jz4770_cim_8bit),
+ 	INGENIC_PIN_GROUP("lcd-24bit", jz4770_lcd_24bit),
+ 	{ "lcd-no-pins", },
+@@ -982,6 +986,7 @@ static const char *jz4780_nemc_groups[] = {
+ static const char *jz4780_i2c3_groups[] = { "i2c3-data", };
+ static const char *jz4780_i2c4_groups[] = { "i2c4-data-e", "i2c4-data-f", };
+ static const char *jz4780_cim_groups[] = { "cim-data", };
++static const char *jz4780_hdmi_ddc_groups[] = { "hdmi-ddc", };
+ 
+ static const struct function_desc jz4780_functions[] = {
+ 	{ "uart0", jz4770_uart0_groups, ARRAY_SIZE(jz4770_uart0_groups), },
+@@ -1014,6 +1019,8 @@ static const struct function_desc jz4780_functions[] = {
+ 	{ "pwm5", jz4770_pwm5_groups, ARRAY_SIZE(jz4770_pwm5_groups), },
+ 	{ "pwm6", jz4770_pwm6_groups, ARRAY_SIZE(jz4770_pwm6_groups), },
+ 	{ "pwm7", jz4770_pwm7_groups, ARRAY_SIZE(jz4770_pwm7_groups), },
++	{ "hdmi-ddc", jz4780_hdmi_ddc_groups,
++		      ARRAY_SIZE(jz4780_hdmi_ddc_groups), },
+ };
+ 
+ static const struct ingenic_chip_info jz4780_chip_info = {
 -- 
 2.23.0
 
