@@ -6,70 +6,109 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D21ABC3F2D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 07:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C46C3F2D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 07:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA97A2469D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 07:13:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 780AB246AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 07:15:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582874035;
-	bh=o/o+rN5J4FJ4IIagYXkFJQhrIf0lltnoDOw1DAcmzdM=;
+	s=default; t=1582874125;
+	bh=bzqcvY1+w7p+H0tBmGUux2b6d1gIUiq/keZNLNBznKc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iDilP00uRVjGgOqWHopAU3lycccx8/mRYPCRTNDxndLX3e4jQxmxB8oUPgv/sujd4
-	 Iz9NlsEuTD/a5zsaxCS6NH2BbYT+9ILuzui3JSxdU8EFt4smwQr8jBdRSCc3i6NZ5Z
-	 2qBYZAfLfQMvpY14fbWjHeITN+uRg9mDsA5p2y2o=
+	b=HZBAJqzR2mQiYyDeut+vpT4T0UVwP1rtLcugLVyi3uMbmernDufKJxAgtAkSpPoj2
+	 Bz/M3lMhwX46lGx+LPefbIwm6DU+NSMErLZjgEFAl3jd8bO8FQU4BCMIWKZ5T2RM8E
+	 iLzo2JTl6xQJfHJv77N0dazQ8XW3Kf5Ck/ZkNq4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbgB1HNy (ORCPT
+        id S1726935AbgB1HPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 02:13:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37872 "EHLO mail.kernel.org"
+        Fri, 28 Feb 2020 02:15:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725870AbgB1HNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 02:13:54 -0500
+        id S1726583AbgB1HPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 02:15:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0D332469D;
-        Fri, 28 Feb 2020 07:13:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6D562469D;
+        Fri, 28 Feb 2020 07:15:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582874033;
-        bh=o/o+rN5J4FJ4IIagYXkFJQhrIf0lltnoDOw1DAcmzdM=;
+        s=default; t=1582874123;
+        bh=bzqcvY1+w7p+H0tBmGUux2b6d1gIUiq/keZNLNBznKc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=I/D6XxShaZ6ro8TQKYSlFcK+uJdQpeFMGyE0Etro7zuB96L+kaGikISoBbeCWmd2K
-         /E01jygjTXEc6tSAggWq79ABUUb6+CJEOZZM6tjKsj7TPIW41h0Gd/3LRr7uGR3sZH
-         qdpelqE5y7tU5B2DmSQAInXsKLg0xGqJQrfzcU7U=
-Date:   Fri, 28 Feb 2020 08:12:39 +0100
+        b=XxdwK4hX9SZG6cAVJ0xxZYzqkemDxOmWY+1cEmTnG4oE4Is+PBG7kHaRUPLcqZa6I
+         d6IGDzBLr4do0Wg1pJ5rCWIJV/BjZIkr2D3Cl0iJkW8GoyZG6jjyNX/oSPJsGpkcGC
+         3xXHY8ZcCXVl//QBuWTZ6yQC5BG057R15eUhlo4Q=
+Date:   Fri, 28 Feb 2020 08:15:20 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.14 111/237] tty: synclinkmp: Adjust indentation in
- several functions
-Message-ID: <20200228071239.GC2895159@kroah.com>
-References: <20200227132255.285644406@linuxfoundation.org>
- <20200227132305.054909944@linuxfoundation.org>
- <11c17de7c525997ddddab995223828bdec8e8e93.camel@perches.com>
+To:     Andrew Donnellan <ajd@linux.ibm.com>
+Cc:     Alastair D'Silva <alastair@au1.ibm.com>, alastair@d-silva.org,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Subject: Re: [PATCH v3 25/27] powerpc/powernv/pmem: Expose the serial number
+ in sysfs
+Message-ID: <20200228071520.GA2897773@kroah.com>
+References: <20200221032720.33893-1-alastair@au1.ibm.com>
+ <20200221032720.33893-26-alastair@au1.ibm.com>
+ <96687fbf-38ab-13ff-ca19-ccb67bbc4405@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <11c17de7c525997ddddab995223828bdec8e8e93.camel@perches.com>
+In-Reply-To: <96687fbf-38ab-13ff-ca19-ccb67bbc4405@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 07:55:49PM -0800, Joe Perches wrote:
-> On Thu, 2020-02-27 at 14:35 +0100, Greg Kroah-Hartman wrote:
-> > From: Nathan Chancellor <natechancellor@gmail.com>
+On Fri, Feb 28, 2020 at 05:25:31PM +1100, Andrew Donnellan wrote:
+> On 21/2/20 2:27 pm, Alastair D'Silva wrote:
+> > +int ocxlpmem_sysfs_add(struct ocxlpmem *ocxlpmem)
+> > +{
+> > +	int i, rc;
+> > +
+> > +	for (i = 0; i < ARRAY_SIZE(attrs); i++) {
+> > +		rc = device_create_file(&ocxlpmem->dev, &attrs[i]);
+> > +		if (rc) {
+> > +			for (; --i >= 0;)
+> > +				device_remove_file(&ocxlpmem->dev, &attrs[i]);
 > 
-> I believe these sorts of whitespace only changes should
-> not be applied to a stable branch unless it's useful for
-> porting other actual defect fixes.
+> I'd rather avoid weird for loop constructs if possible.
+> 
+> Is it actually dangerous to call device_remove_file() on an attr that hasn't
+> been added? If not then I'd rather define an err: label and loop over the
+> whole array there.
 
-I want to get clang build warnings down to the same level that gcc build
-warnings are, so that they become useful in detecting new issues.  That
-is why I add these types of patches to the stable trees.
+None of this should be used at all, just use attribute groups properly
+and the driver core will handle this all for you.
+
+device_create/remove_file should never be called by anyone anymore if at all
+possible.
 
 thanks,
 
