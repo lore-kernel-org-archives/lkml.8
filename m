@@ -2,113 +2,132 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE022C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06337C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AADEB246B4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE6C224650
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:33:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g0xgaarU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgB1W3P (ORCPT
+        id S1726764AbgB1WdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 17:29:15 -0500
-Received: from mga09.intel.com ([134.134.136.24]:16822 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725957AbgB1W3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 17:29:15 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 14:29:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,497,1574150400"; 
-   d="scan'208";a="232670993"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga008.fm.intel.com with ESMTP; 28 Feb 2020 14:29:13 -0800
-Date:   Fri, 28 Feb 2020 14:29:13 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Mohammed Gamal <mgamal@redhat.com>
-Cc:     kvm@vger.kernel.org, pbonzini@redhat.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/5] KVM: x86: Add function to inject guest page fault
- with reserved bits set
-Message-ID: <20200228222913.GJ2329@linux.intel.com>
-References: <20200227172306.21426-1-mgamal@redhat.com>
- <20200227172306.21426-2-mgamal@redhat.com>
+        Fri, 28 Feb 2020 17:33:12 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43395 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725957AbgB1WdM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 17:33:12 -0500
+Received: by mail-lj1-f195.google.com with SMTP id e3so5039527lja.10
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 14:33:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kpMCwJPHsrLHrJr/d/YMgs2GY9/L334aO8TrlrMaCrA=;
+        b=g0xgaarU05W3RSjtAPA9tblHgqI6V0WPrwGkBFm1qkHKVRGZCKgYUKlrVXvftftHow
+         nnsJ7vO0KEApkPGIbs4EuQF6ysI3PtAWtYxocPPwiFezn49DVXs0JgdF8ugNvdvJSnXC
+         oCSYRW7DSRCFAzBU4mp/E3C4uS+SpA0DGRZVqTPZMe5TPIGLJ/7DzuD5pAY9aTRRGXc4
+         eBHRMO/0odwgM3kPTcsEgdG2TRgcZSsXO48emgRRJZB65r8PSjSYEj+jJZHhtguCGsZP
+         V9+uwYPRBEjD00y8GLfojLelEEWNO/7Ocv/ur+p1nu+asiIjpD9Pc/SglIpw3nTMi1xC
+         HcdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kpMCwJPHsrLHrJr/d/YMgs2GY9/L334aO8TrlrMaCrA=;
+        b=ejRcST7ytNTDpUnKnXOD4dcv9qWLK0aWFvSl1pqbmgEcgmx5ahKUdFe9YkpyTCbrEe
+         cZ8O8pVbY2cEU++gV+bVcnGP1DiIjuhth9+loP6gElalkhOFychuwAIx0H8hpn9l63Xh
+         O1M453Tsy2ywnwO+Ra2Q+XNN3boKkUd6Ws/+ZRa2xRq74RE365fgU6wdH7sniU+EXHjn
+         3SYkQo0Heu2IMfrYFZpbKsq1RlW97E3jk+CglSr35v1Gw7j8wYhC1OT35t4Fj9F+TA2r
+         yC69vwBcTjUNYPXdQnoZ9cw9/pgrkiV/W28K6t6/61nM+fRO+7OHIDjVT1gJDycU94No
+         4cig==
+X-Gm-Message-State: ANhLgQ3MrKtNLJFBCCLwNFNpay0uXGVvLyyQQNPicnTge31Mn4GyHx1A
+        76mo49h2Le0FY/GaHcsQzVVKcSLI1uWaAGZx/8rp+w==
+X-Google-Smtp-Source: ADFU+vtc1OzGddV5djfc//H/DNZzPS/rutyJLa99T7WGqAXyEX27iUhLOlCXVDp8//D7AaqwnHMg9AMSkedfxzU5NNk=
+X-Received: by 2002:a2e:9013:: with SMTP id h19mr4375691ljg.223.1582929188647;
+ Fri, 28 Feb 2020 14:33:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200227172306.21426-2-mgamal@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200221154837.18845-1-brgl@bgdev.pl> <20200221154837.18845-4-brgl@bgdev.pl>
+In-Reply-To: <20200221154837.18845-4-brgl@bgdev.pl>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 28 Feb 2020 23:32:57 +0100
+Message-ID: <CACRpkdYtHqTBr7HW4Oex+igAbyb3PuS16uq1DXe4mK2vzxNoCw@mail.gmail.com>
+Subject: Re: [PATCH v5 3/5] gpiolib: use kref in gpio_desc
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Khouloud Touil <ktouil@baylibre.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 07:23:02PM +0200, Mohammed Gamal wrote:
-> Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
-> ---
->  arch/x86/kvm/x86.c | 14 ++++++++++++++
->  arch/x86/kvm/x86.h |  1 +
->  2 files changed, 15 insertions(+)
-> 
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 359fcd395132..434c55a8b719 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -10494,6 +10494,20 @@ u64 kvm_spec_ctrl_valid_bits(struct kvm_vcpu *vcpu)
->  }
->  EXPORT_SYMBOL_GPL(kvm_spec_ctrl_valid_bits);
->  
-> +void kvm_inject_rsvd_bits_pf(struct kvm_vcpu *vcpu, gpa_t gpa)
-> +{
-> +	struct x86_exception fault;
-> +
-> +	fault.vector = PF_VECTOR;
-> +	fault.error_code_valid = true;
-> +	fault.error_code = PFERR_RSVD_MASK;
+On Fri, Feb 21, 2020 at 4:48 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-As Jim pointed out, by definition this is PRESENT.  Other bits needs to
-be translated from the VMCS.EXIT_QUALIFICATION field and/or manually
-calculated for EPT.  I assume NPT is more or less good to go, i.e. just
-pass in the error_code?
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> GPIO descriptors are freed by consumers using gpiod_put(). The name of
+> this function suggests some reference counting is going on but it's not
+> true.
+>
+> Use kref to actually introduce reference counting for gpio_desc objects.
+> Add a corresponding gpiod_get() helper for increasing the reference count.
+>
+> This doesn't change anything for already existing (correct) drivers but
+> allows us to keep track of GPIO descs used by multiple users.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-> +	fault.nested_page_fault = false;
-> +	fault.address = gpa;
+I'm having some trouble figuring out if we might be reinventing
+a wheel here.
 
-Taking the GPA is wrong, @address is CR3, a GVA.
+A while back there was a proposed patch to add device links
+between GPIO producers and consumers, so that a GPIO
+chip won't be dropped while there are active consumers.
 
-> +	kvm_inject_page_fault(vcpu, &fault);
+(I don't remember who sent the patch.)
 
-This needs to be
+We have a similar functionality in pin control if the
+.link_consumers property is set on the pincontrol device.
+I was thinking about making that compulsory at one point.
 
-	vcpu->arch.walk_mmu->inject_page_fault(vcpu, &fault);
+The device links use a kref already existing in struct
+device and would in this case be the kref in the struct
+device for the struct gpio_device.
 
-so that L1 (nested VMX) can intercept the #PF.
+So if that existed, gpiod_ref could just grab another
+device_link_add().
 
-> +}
-> +EXPORT_SYMBOL_GPL(kvm_inject_rsvd_bits_pf);
-> +
->  EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_exit);
->  EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_fast_mmio);
->  EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_inj_virq);
-> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-> index 3624665acee4..7d8ab28a6983 100644
-> --- a/arch/x86/kvm/x86.h
-> +++ b/arch/x86/kvm/x86.h
-> @@ -276,6 +276,7 @@ int kvm_mtrr_get_msr(struct kvm_vcpu *vcpu, u32 msr, u64 *pdata);
->  bool kvm_mtrr_check_gfn_range_consistency(struct kvm_vcpu *vcpu, gfn_t gfn,
->  					  int page_num);
->  bool kvm_vector_hashing_enabled(void);
-> +void kvm_inject_rsvd_bits_pf(struct kvm_vcpu *vcpu, gpa_t gpa);
->  int x86_emulate_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
->  			    int emulation_type, void *insn, int insn_len);
->  enum exit_fastpath_completion handle_fastpath_set_msr_irqoff(struct kvm_vcpu *vcpu);
-> -- 
-> 2.21.1
-> 
+Maybe we should just add device links between all
+GPIO consumers (devices) and struct gpio_device:s
+struct device and implement it like this so we don't
+have to back out of this later?
+
+C.f. commit
+commit 036f394dd77f8117346874151793ec38967d843f
+pinctrl: Enable device link creation for pin control
+
+(...)
+> @@ -81,6 +81,7 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
+>  struct gpio_descs *__must_check gpiod_get_array_optional(struct device *dev,
+>                                                         const char *con_id,
+>                                                         enum gpiod_flags flags);
+> +struct gpio_desc *gpiod_ref(struct gpio_desc *desc);
+>  void gpiod_put(struct gpio_desc *desc);
+>  void gpiod_put_array(struct gpio_descs *descs);
+
+You forgot to add a stub for the case where GPIOLIB is not
+compiled in I think? (Lower in the same file.)
+
+Yours,
+Linus Walleij
