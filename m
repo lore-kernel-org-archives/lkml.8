@@ -2,44 +2,42 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C2BC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDD2C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB397246A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27BA3246B2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:35:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726277AbgB1MdZ (ORCPT
+        id S1726016AbgB1Mfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 07:33:25 -0500
-Received: from foss.arm.com ([217.140.110.172]:37544 "EHLO foss.arm.com"
+        Fri, 28 Feb 2020 07:35:39 -0500
+Received: from foss.arm.com ([217.140.110.172]:37584 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgB1MdZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 07:33:25 -0500
+        id S1725730AbgB1Mfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 07:35:38 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B68224B2;
-        Fri, 28 Feb 2020 04:33:24 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E87D4B2;
+        Fri, 28 Feb 2020 04:35:38 -0800 (PST)
 Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 800F53F7B4;
-        Fri, 28 Feb 2020 04:33:23 -0800 (PST)
-Subject: Re: [PATCH] arm64: dts: rockchip: fix cpu compatible property for
- rk3308
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B36883F7B4;
+        Fri, 28 Feb 2020 04:35:36 -0800 (PST)
+Subject: Re: [PATCH 1/4] dt-bindings: arm: fix Rockchip Kylin board bindings
 To:     Johan Jonker <jbx6244@gmail.com>, heiko@sntech.de
 Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org
-References: <20200228084827.16198-1-jbx6244@gmail.com>
+References: <20200228061436.13506-1-jbx6244@gmail.com>
 From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <6a6beced-a8cb-448e-a4b2-331cd09d0c61@arm.com>
-Date:   Fri, 28 Feb 2020 12:33:21 +0000
+Message-ID: <73b41bd1-01e9-6af8-afc8-b1a96614d026@arm.com>
+Date:   Fri, 28 Feb 2020 12:35:34 +0000
 User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200228084827.16198-1-jbx6244@gmail.com>
+In-Reply-To: <20200228061436.13506-1-jbx6244@gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
@@ -48,69 +46,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/02/2020 8:48 am, Johan Jonker wrote:
-> A test with the command below gives for example these errors:
+On 28/02/2020 6:14 am, Johan Jonker wrote:
+> A test with the command below gives this error:
 > 
-> arch/arm64/boot/dts/rockchip/rk3308-evb.dt.yaml: cpu@0: compatible:
-> Additional items are not allowed ('arm,armv8' was unexpected)
-> arch/arm64/boot/dts/rockchip/rk3308-evb.dt.yaml: cpu@0: compatible:
-> ['arm,cortex-a35', 'arm,armv8']
-> is too long
+> arch/arm/boot/dts/rk3036-kylin.dt.yaml: /: compatible:
+> ['rockchip,rk3036-kylin', 'rockchip,rk3036']
+> is not valid under any of the given schemas
 > 
-> Fix these errors by removing the last argument of
-> the cpu compatible property in rk3308.dtsi.
+> Fix this error by changing 'rockchip,kylin-rk3036' to
+> 'rockchip,rk3036-kylin' in rockchip.yaml.
 
-Bah, seems this snuck in a couple of releases after we blitzed the last 
-of these from the tree :)
+Although I can guess, it might be worth a note to explain why it's the 
+binding rather than the DTS that gets changed here.
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Robin.
 
-> make ARCH=arm64
-> dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/cpus.yaml
+> make ARCH=arm dtbs_check
+> DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/rockchip.yaml
 > 
 > Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 > ---
->   arch/arm64/boot/dts/rockchip/rk3308.dtsi | 8 ++++----
->   1 file changed, 4 insertions(+), 4 deletions(-)
+>   Documentation/devicetree/bindings/arm/rockchip.yaml | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3308.dtsi b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-> index 116f1900e..3bd5bc860 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-> @@ -40,7 +40,7 @@
+> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+> index 874b0eaa2..203158038 100644
+> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
+> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+> @@ -443,7 +443,7 @@ properties:
 >   
->   		cpu0: cpu@0 {
->   			device_type = "cpu";
-> -			compatible = "arm,cortex-a35", "arm,armv8";
-> +			compatible = "arm,cortex-a35";
->   			reg = <0x0 0x0>;
->   			enable-method = "psci";
->   			clocks = <&cru ARMCLK>;
-> @@ -53,7 +53,7 @@
+>         - description: Rockchip Kylin
+>           items:
+> -          - const: rockchip,kylin-rk3036
+> +          - const: rockchip,rk3036-kylin
+>             - const: rockchip,rk3036
 >   
->   		cpu1: cpu@1 {
->   			device_type = "cpu";
-> -			compatible = "arm,cortex-a35", "arm,armv8";
-> +			compatible = "arm,cortex-a35";
->   			reg = <0x0 0x1>;
->   			enable-method = "psci";
->   			operating-points-v2 = <&cpu0_opp_table>;
-> @@ -63,7 +63,7 @@
->   
->   		cpu2: cpu@2 {
->   			device_type = "cpu";
-> -			compatible = "arm,cortex-a35", "arm,armv8";
-> +			compatible = "arm,cortex-a35";
->   			reg = <0x0 0x2>;
->   			enable-method = "psci";
->   			operating-points-v2 = <&cpu0_opp_table>;
-> @@ -73,7 +73,7 @@
->   
->   		cpu3: cpu@3 {
->   			device_type = "cpu";
-> -			compatible = "arm,cortex-a35", "arm,armv8";
-> +			compatible = "arm,cortex-a35";
->   			reg = <0x0 0x3>;
->   			enable-method = "psci";
->   			operating-points-v2 = <&cpu0_opp_table>;
+>         - description: Rockchip PX3 Evaluation board
 > 
