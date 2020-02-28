@@ -2,165 +2,117 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B708C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A36C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F01024677
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AE182469F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:47:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582915417;
-	bh=Jt8BeKjttTR4qmJpdeJtCcYF636hGa6EhSfih278ecw=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=smQ28mAiByUq7wrNaIit8cjwuOCII7zG59Vrm2WGSuzsV6d0G+M+F9XqWsSD7gBH3
-	 dQNxjr4n/aoRaabR2ygnpY5XTbYefl//XTz+8va/PJoIWVtSq9oHU/e+ZdKHZhYMm+
-	 3H0RiEQn+7r/1f+6VmMRgPN3Zh89NLRm9B7/M3MA=
+	s=default; t=1582915631;
+	bh=kskxhZvQ39ItP8wb+LeaJo3d5PU60DJHeaW+XT0a0Vw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=G7XnYjlit9MlwVnsbr3v/r1auMNgXpQDMUaDkK7+4jmqC4oeeMWk1XuxwcLwE4vde
+	 EopOVZkW4YWbstr/RgmbJqOHLiPenMANCVF9JzwtLuEw1LKBXEhctSj6Br6I68xPXK
+	 g6Nhk56L95pdh7TGOMw/+4oASKwFAFFxs1a7HJXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgB1Sng (ORCPT
+        id S1726561AbgB1SrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 13:43:36 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:36316 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbgB1Snf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 13:43:35 -0500
-Received: by mail-io1-f68.google.com with SMTP id d15so4533003iog.3
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 10:43:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=moBvHo+PTilRWFkHOSs3qSLIv/tOzADb8Es4P0sl9A4=;
-        b=SsiA+gq4Oo+ubZQXvcRExrh5NfW6GLe9g4JUQI/KH4QsPvKRz4QNqomuzJzwyk7YDa
-         lMTgOTmFuYCvxYc5xXgthDOExlRMgtWcfRrgkCotfmYIALKHgnSgXtUONERx+9ZPRnWA
-         +skhwvRdMP3b21fpLh78V52Ee8lz1/l1XMfvk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=moBvHo+PTilRWFkHOSs3qSLIv/tOzADb8Es4P0sl9A4=;
-        b=r4YkOk/4Tu0p/YN4Tv8JtOyplHTxEia8qT6Qwf3cUWwvW+m7Gh93OxAgOJvnshA7SM
-         NNEcu/gZ/UB0WGD6CoKEJ3lzmXKeMsnT90k+gXnfrpc+Uq52xarAk0+xYd+oB705zAlK
-         GeJJT4fBk7R3mKF/0ARbN9C6jVyfFyP9OXlr+RvYG3N2FgPZlso8laljZwcDijPOV/ls
-         WMNOKBZ7EDvMl5dftWpHwoCyHCtFZdIm9KF5tc1ZMfCbnZLWe+N1kG2/LjVxX1VRd0w7
-         nMMifguBzrHwRk6zm6rJph+6q7dDacIvXCDJQbnYKHezCcYmEihi0rhY2Zz8VoCjrsIj
-         +46A==
-X-Gm-Message-State: APjAAAVagt6fy3MBJ6wXXOacUaKfZXIoXKr/xYY49nYhJUhqGu6kk3lT
-        XLQJ5CxVnhqu8nu0KYdHgXiEaw==
-X-Google-Smtp-Source: APXvYqwcG8lwkJgB3d/ZO1F4ZoMeFM/E3+QmylfeUoe+iG4RNtc5jkbVqye8lQKuc9S4XFj6YfaKnA==
-X-Received: by 2002:a05:6638:501:: with SMTP id i1mr4392752jar.25.1582915414850;
-        Fri, 28 Feb 2020 10:43:34 -0800 (PST)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id g16sm2150292ioc.13.2020.02.28.10.43.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Feb 2020 10:43:34 -0800 (PST)
-Subject: Re: [ANN] Kselftest integration into Kernel CI
-To:     "Bird, Tim" <Tim.Bird@sony.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <3b3dc707-7ae7-955b-69fe-b9abe9ae26c5@linuxfoundation.org>
- <MWHPR13MB08954921D3B29D9AA824A2A0FDE80@MWHPR13MB0895.namprd13.prod.outlook.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <f361d23d-f721-ab2c-6797-3b04f0616567@linuxfoundation.org>
-Date:   Fri, 28 Feb 2020 11:43:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 28 Feb 2020 13:47:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41360 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbgB1SrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 13:47:09 -0500
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCC882469F
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 18:47:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582915629;
+        bh=kskxhZvQ39ItP8wb+LeaJo3d5PU60DJHeaW+XT0a0Vw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=b57hkR+y2RHTVdMrS19zE2t13g1EmPGZ+DoDcprpL26Hvg5tGy/Y00tCGUkc+gWZ/
+         7IZKUIzl7r9VWDN2qRazoXozaLFXLG5Ehu6D1IEzs3tuTOvit5VJdcMZEjNsxiuGwo
+         PgOPgp2zQ/3/hONG0BiO6qa3wMH6SavNMbzWdjKo=
+Received: by mail-wr1-f45.google.com with SMTP id l5so4167150wrx.4
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 10:47:08 -0800 (PST)
+X-Gm-Message-State: APjAAAX3qPsDHuibVlrR7ZKgBltKVd2CezJXmJQU9KTVISWanwMbKELt
+        LGv8ydtQV/H1/6gFJnSgjw3h8b6szg5DJv1edqL1lA==
+X-Google-Smtp-Source: APXvYqwgfrlpKF7mQR7lpP15+7uYz1zSgrSceDJy2L2D9fY9Mgg+cjOixSCbQ8YPWL+uxrC6lh1AWU3fT1BJAnNZunc=
+X-Received: by 2002:adf:ea85:: with SMTP id s5mr5927227wrm.75.1582915627219;
+ Fri, 28 Feb 2020 10:47:07 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <MWHPR13MB08954921D3B29D9AA824A2A0FDE80@MWHPR13MB0895.namprd13.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200227132826.195669-1-brgerst@gmail.com> <20200227132826.195669-6-brgerst@gmail.com>
+In-Reply-To: <20200227132826.195669-6-brgerst@gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 28 Feb 2020 10:46:55 -0800
+X-Gmail-Original-Message-ID: <CALCETrXyYd=pqThrXQgbz5cqQTr8SKHZey4FGq5aV2_=CS4p9Q@mail.gmail.com>
+Message-ID: <CALCETrXyYd=pqThrXQgbz5cqQTr8SKHZey4FGq5aV2_=CS4p9Q@mail.gmail.com>
+Subject: Re: [PATCH v3 5/8] x86: Move 32-bit compat syscalls to common location
+To:     Brian Gerst <brgerst@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/28/20 10:50 AM, Bird, Tim wrote:
-> 
-> 
->> -----Original Message-----
->> From:  Shuah Khan
->>
->> Integrating Kselftest into Kernel CI rings depends on Kselftest build
->> and install framework to support Kernel CI use-cases. I am kicking off
->> an effort to support Kselftest runs in Kernel CI rings. Running these
->> tests in Kernel CI rings will help quality of kernel releases, both
->> stable and mainline.
->>
->> What is required for full support?
->>
->> 1. Cross-compilation & relocatable build support
->> 2. Generates objects in objdir/kselftest without cluttering main objdir
->> 3. Leave source directory clean
->> 4. Installs correctly in objdir/kselftest/kselftest_install and adds
->>      itself to run_kselftest.sh script generated during install.
->>
->> Note that install step is necessary for all files to be installed for
->> run time support.
->>
->> I looked into the current status and identified problems. The work is
->> minimal to add full support. Out of 80+ tests, 7 fail to cross-build
->> and 1 fails to install correctly.
->>
->> List is below:
->>
->> Tests fails to build: bpf, capabilities, kvm, memfd, mqueue, timens, vm
->> Tests fail to install: android (partial failure)
->> Leaves source directory dirty: bpf, seccomp
->>
->> I have patches ready for the following issues:
->>
->> Kselftest objects (test dirs) clutter top level object directory.
->> seccomp_bpf generates objects in the source directory.
->>
->> I created a topic branch to collect all the patches:
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/?h=kernelci
->>
->> I am going to start working on build problems. If anybody is
->> interested in helping me with this effort, don't hesitate to
->> contact me. I first priority is fixing build and install and
->> then look into tests that leave the source directory dirty.
-> 
-> I'm interested in this.  I'd like the same cleanups in order to run
-> kselftest in Fuego, and I can try it with additional toolchains
-> and boards.  Unfortunately, in terms of running tests, almost all
-> the boards in my lab are running old kernels.  So the tests results
-> aren't useful for upstream work.  But I can still test
-> compilation and install issues, for the kselftest tests themselves.
-> 
+On Thu, Feb 27, 2020 at 5:28 AM Brian Gerst <brgerst@gmail.com> wrote:
+>
+> Move the 32-bit wrappers for syscalls that take 64-bit arguments (loff_t)
+> to a common location so that native 32-bit can use them in preparation for
+> enabling pt_regs-based syscalls.
 
-Testing compilation and install issues is very valuable. This is one
-area that hasn't been test coverage compared to running tests. So it
-great if you can help with build/install on linux-next to catch
-problems in new tests. I am finding that older tests have been stable
-and as new tests come in, we tend to miss catching these types of
-problems.
+Can you clarify the purpose?  Even having read the series up to this
+point, I have no idea what this has to do with pt_regs.
 
-Especially cross-builds and installs on arm64 and others.
+I think some renaming is in order.  Consider:
 
->>
->> Detailed report can be found here:
->>
->> https://drive.google.com/file/d/11nnWOKIzzOrE4EiucZBn423lzSU_eNNv/view?usp=sharing
-> 
-> Is there anything you'd like me to look at specifically?  Do you want me to start
-> at the bottom of the list and work up?  I could look at 'vm' or 'timens'.
-> 
+>
+> -COMPAT_SYSCALL_DEFINE3(x86_ftruncate64, unsigned int, fd,
+> -                      unsigned long, offset_low, unsigned long, offset_high)
 
-Yes you can start with vm and timens.
+It used to be at least a little bit clear what was going on.  There's
+this compat-only mess that changes arguments for ftruncate64.  But
+now:
 
-thanks,
--- Shuah
+> +SYSCALL_DEFINE3(x86_ftruncate64, unsigned int, fd,
+> +               unsigned long, offset_low, unsigned long, offset_high)
+>  {
+>         return ksys_ftruncate(fd, ((loff_t) offset_high << 32) | offset_low);
+>  }
+
+What is this "x86" ftruncate64 thing?
+
+Maybe call it ia32_ftructate?  Or at least do something to indicate
+that this is for a specific ABI.
+
+> diff --git a/arch/x86/um/sys_call_table_32.c b/arch/x86/um/sys_call_table_32.c
+> index 9649b5ad2ca2..d5520e92f89d 100644
+> --- a/arch/x86/um/sys_call_table_32.c
+> +++ b/arch/x86/um/sys_call_table_32.c
+> @@ -26,6 +26,16 @@
+>
+>  #define old_mmap sys_old_mmap
+>
+> +#define sys_x86_pread sys_pread64
+> +#define sys_x86_pwrite sys_pwrite64
+> +#define sys_x86_truncate64 sys_truncate64
+> +#define sys_x86_ftruncate64 sys_ftruncate64
+> +#define sys_x86_readahead sys_readahead
+> +#define sys_x86_fadvise64 sys_fadvise64
+> +#define sys_x86_fadvise64_64 sys_fadvise64_64
+> +#define sys_x86_sync_file_range sys_sync_file_range
+> +#define sys_x86_fallocate sys_fallocate
+
+Can this not be killed by changing the table itself instead of adding
+a bunch of defines?
