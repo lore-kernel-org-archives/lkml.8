@@ -4,137 +4,147 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B0FC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF65C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1817D246A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 613C2246A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:37:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Am0FD42/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F2A2q3es"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgB1Ke4 (ORCPT
+        id S1726890AbgB1Khl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 05:34:56 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:49995 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726063AbgB1Kez (ORCPT
+        Fri, 28 Feb 2020 05:37:41 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37943 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726413AbgB1Khk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 05:34:55 -0500
+        Fri, 28 Feb 2020 05:37:40 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582886094;
+        s=mimecast20190719; t=1582886259;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=b9BiqptG5CvKmVJGgPPEg6FbrIABgQ16W4CEhy9cQo4=;
-        b=Am0FD42/IXUe7ra6fBUf43fgW/wJ8nwKwnkGnAjBjM8jJYzEnvzeVTTT6KYbS+dKd9qjyG
-        U4001UMjeLpDODMISbrzwI8FJr2tf3MIV9Yc1yxGUuevc8nkKbZ1hRCb+x3i6bs55t22mm
-        t3nVLgduCjIHYVUr9XtUdDPKhJpe32k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-477-WkdMyT2vNu6cy-v1klaoWA-1; Fri, 28 Feb 2020 05:34:50 -0500
-X-MC-Unique: WkdMyT2vNu6cy-v1klaoWA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 134821005510;
-        Fri, 28 Feb 2020 10:34:49 +0000 (UTC)
-Received: from localhost (ovpn-12-49.pek2.redhat.com [10.72.12.49])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6BA348681F;
-        Fri, 28 Feb 2020 10:34:45 +0000 (UTC)
-Date:   Fri, 28 Feb 2020 18:34:42 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richardw.yang@linux.intel.com>
-Subject: Re: [PATCH v2 2/2] mm/memory_hotplug: cleanup __add_pages()
-Message-ID: <20200228103442.GL24216@MiWiFi-R3L-srv>
-References: <20200228095819.10750-1-david@redhat.com>
- <20200228095819.10750-3-david@redhat.com>
+        bh=mt6Lbh5dkQYRs/xWyErDmgV7Bs1CQ+l7mA9OrMtPMT8=;
+        b=F2A2q3esQcNxQw3dDX9SeYex9dj1IW3fVPP07J7raSv4HpAWPBcrWgLESr2xBigYg6cTqC
+        n2ax8SttoV0QTmCdExjuXefeXkYQl/Dfseq6r/vXLj2xAoH0Gy33OSfaRJ5W7wkFT1acT5
+        n27jZVwyhmAaU6cTk/3UVtxgDZrpKlw=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-68-NhvBJ72dOF2_2JbmuSjDQQ-1; Fri, 28 Feb 2020 05:37:37 -0500
+X-MC-Unique: NhvBJ72dOF2_2JbmuSjDQQ-1
+Received: by mail-wr1-f71.google.com with SMTP id s13so1149935wru.7
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 02:37:37 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mt6Lbh5dkQYRs/xWyErDmgV7Bs1CQ+l7mA9OrMtPMT8=;
+        b=s0kREj/uiDJBJjI2YepGx5yv3tXueBL33BMNwEsOW+tIc/SR1yNnJ+dZ4dpRjyx318
+         8LWfogbDaormuhAfF4o8oKLhrNY5tIQ26jdYfjELPJIv69bkB5LfzrFZthKcPeD7FORM
+         fVdA5H/ngnPdch2xA73O3XizpXvddBnljt2OS9gOiZeVOC8w/ebcO6SnzUxhDe8bYaqV
+         A2FLtwMDGTp/+xC+tpl8uyAVBzT2EbTpjJwK2LYWAWQDlO8ceA6Jeqwm9v9q+yoZ/p64
+         HScFVQOg7XygsXBLPmlAFWsR1srXqgRfD6l0eucwXewhgav5rIfdxeXIQEW1vq1H7FJB
+         ExqA==
+X-Gm-Message-State: APjAAAX8PuHHoDOim4jSR06vMC74X6TFk0iljKws733avQIi4zcnmMXi
+        nybvpaJ8MRpkW921pLwycxPwjv+HdnBcFPUQ1X/VWiJ8x20JOx1je0P15tj+tYilx/P7jRf9clE
+        FrKJR20ZvzkxwVmCOGGHsLr/f
+X-Received: by 2002:a7b:c119:: with SMTP id w25mr4365882wmi.112.1582886256423;
+        Fri, 28 Feb 2020 02:37:36 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxO68+fSfsLzIp2GguTwy+MpiSH4P0lBmHz7MUOl2WGlMyLbizhSUbzh/reh6bCAI4UPdib8A==
+X-Received: by 2002:a7b:c119:: with SMTP id w25mr4365851wmi.112.1582886256129;
+        Fri, 28 Feb 2020 02:37:36 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:d0d9:ea10:9775:f33f? ([2001:b07:6468:f312:d0d9:ea10:9775:f33f])
+        by smtp.gmail.com with ESMTPSA id y7sm15045583wmd.1.2020.02.28.02.37.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Feb 2020 02:37:35 -0800 (PST)
+Subject: Re: [PATCH v2] kvm: x86: Limit the number of "kvm: disabled by bios"
+ messages
+To:     Erwan Velu <erwanaliasr1@gmail.com>
+Cc:     Erwan Velu <e.velu@criteo.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "open list:KERNEL VIRTUAL MACHINE FOR X86 (KVM/x86)" 
+        <kvm@vger.kernel.org>,
+        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
+        <linux-kernel@vger.kernel.org>
+References: <20200214143035.607115-1-e.velu@criteo.com>
+ <20200227180047.53888-1-e.velu@criteo.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <dbcda2fb-2062-acdc-af03-fad5d667a742@redhat.com>
+Date:   Fri, 28 Feb 2020 11:37:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200228095819.10750-3-david@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <20200227180047.53888-1-e.velu@criteo.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/28/20 at 10:58am, David Hildenbrand wrote:
-> Let's drop the basically unused section stuff and simplify. The logic
-> now matches the logic in __remove_pages().
+On 27/02/20 19:00, Erwan Velu wrote:
+> In older version of systemd(219), at boot time, udevadm is called with :
+> 	/usr/bin/udevadm trigger --type=devices --action=add"
 > 
-> Cc: Segher Boessenkool <segher@kernel.crashing.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Wei Yang <richardw.yang@linux.intel.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+> This program generates an echo "add" in /sys/devices/system/cpu/cpu<x>/uevent,
+> leading to the "kvm: disabled by bios" message in case of your Bios disabled
+> the virtualization extensions.
+> 
+> On a modern system running up to 256 CPU threads, this pollutes the Kernel logs.
+> 
+> This patch offers to ratelimit this message to avoid any userspace program triggering
+> this uevent printing this message too often.
+> 
+> This patch is only a workaround but greatly reduce the pollution without
+> breaking the current behavior of printing a message if some try to instantiate
+> KVM on a system that doesn't support it.
+> 
+> Note that recent versions of systemd (>239) do not have trigger this behavior.
+> 
+> This patch will be useful at least for some using older systemd with recent Kernels.
+> 
+> Signed-off-by: Erwan Velu <e.velu@criteo.com>
 > ---
->  mm/memory_hotplug.c | 18 +++++++-----------
->  1 file changed, 7 insertions(+), 11 deletions(-)
+>  arch/x86/kvm/x86.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 8fe7e32dad48..1a00b5a37ef6 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -307,8 +307,9 @@ static int check_hotplug_memory_addressable(unsigned long pfn,
->  int __ref __add_pages(int nid, unsigned long pfn, unsigned long nr_pages,
->  		struct mhp_restrictions *restrictions)
->  {
-> +	const unsigned long end_pfn = pfn + nr_pages;
-> +	unsigned long cur_nr_pages;
->  	int err;
-> -	unsigned long nr, start_sec, end_sec;
->  	struct vmem_altmap *altmap = restrictions->altmap;
->  
->  	err = check_hotplug_memory_addressable(pfn, nr_pages);
-> @@ -331,18 +332,13 @@ int __ref __add_pages(int nid, unsigned long pfn, unsigned long nr_pages,
->  	if (err)
->  		return err;
->  
-> -	start_sec = pfn_to_section_nr(pfn);
-> -	end_sec = pfn_to_section_nr(pfn + nr_pages - 1);
-> -	for (nr = start_sec; nr <= end_sec; nr++) {
-> -		unsigned long pfns;
-> -
-> -		pfns = min(nr_pages, PAGES_PER_SECTION
-> -				- (pfn & ~PAGE_SECTION_MASK));
-> -		err = sparse_add_section(nid, pfn, pfns, altmap);
-> +	for (; pfn < end_pfn; pfn += cur_nr_pages) {
-> +		/* Select all remaining pages up to the next section boundary */
-> +		cur_nr_pages = min(end_pfn - pfn,
-> +				   SECTION_ALIGN_UP(pfn + 1) - pfn);
-> +		err = sparse_add_section(nid, pfn, cur_nr_pages, altmap);
-
-Honestly, I am not a big fan of this kind of code refactoring. The old
-code may span seveal more lines or define several several more veriables,
-but logic is clear, and no visible defect. It's hard to say how much we
-can benefit from this kind of code simplifying, and reviewing it will take
-people more time. While for the code style consistency with
-__remove_page(), I would like to see it's merged. My personal opinion.
-
-Reviewed-by: Baoquan He <bhe@redhat.com>
-
->  		if (err)
->  			break;
-> -		pfn += pfns;
-> -		nr_pages -= pfns;
->  		cond_resched();
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 359fcd395132..c8a90231befe 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -7308,12 +7308,12 @@ int kvm_arch_init(void *opaque)
 >  	}
->  	vmemmap_populate_print_last();
-> -- 
-> 2.24.1
+>  
+>  	if (!ops->cpu_has_kvm_support()) {
+> -		printk(KERN_ERR "kvm: no hardware support\n");
+> +		pr_err_ratelimited("kvm: no hardware support\n");
+>  		r = -EOPNOTSUPP;
+>  		goto out;
+>  	}
+>  	if (ops->disabled_by_bios()) {
+> -		printk(KERN_ERR "kvm: disabled by bios\n");
+> +		pr_err_ratelimited("kvm: disabled by bios\n");
+>  		r = -EOPNOTSUPP;
+>  		goto out;
+>  	}
 > 
+
+Queued, thanks.
+
+Paolo
 
