@@ -5,65 +5,69 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C49C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75AA6C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C139246AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D65A246AA
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:01:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GXN2TwlT"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K56MuzoH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730296AbgB1ABX (ORCPT
+        id S1730317AbgB1ABZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 19:01:23 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:34407 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729867AbgB1ABU (ORCPT
+        Thu, 27 Feb 2020 19:01:25 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33470 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730279AbgB1ABX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 19:01:20 -0500
-Received: by mail-pj1-f68.google.com with SMTP id f2so3724596pjq.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 16:01:19 -0800 (PST)
+        Thu, 27 Feb 2020 19:01:23 -0500
+Received: by mail-pf1-f194.google.com with SMTP id n7so716865pfn.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 16:01:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=UhZ7upFOZbJwSu3t6sj7kyMuepSiW+0wthtVyYvfUW8=;
-        b=GXN2TwlTYNwiK+ybctcNCG0N1o4mmEfgJ3tnGih4vm5ywp9y4TrkN7Ufd9T3240JQy
-         E16DACTSaDDNdfolSmZkf2EnIwxAkoDtU4kGsVdvLeQnFGFncVNe6tE644aMszLX9q3B
-         X299mdovMzxD4NedWt/1mwa1YRvXp1azy1t/0=
+        bh=J9YtfCHL5s52dZTQkxs/+RndppOjr/z9RSlKj3vVFK4=;
+        b=K56MuzoHmJUhOwYAvoCivoJ3u+vvHwEXYBXxV/vaNqkwrMWvn6gZRUNGCDOMEWNWxq
+         sZ+TLzbq8VZvxFT/X6aSYuuccKjRlkbPYenzAHHaZxxWuXBdnkU665sEaogmT61k4o7h
+         JOsNBpxmKp7ISBaWRhouukTSaZ5dtB2hELDJg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=UhZ7upFOZbJwSu3t6sj7kyMuepSiW+0wthtVyYvfUW8=;
-        b=qQPC4yeo15WmcvVhmgUxVUXeEpaVC+tssrteEIoNZ9h3EaLAendSKL7IQEtCKD05Uw
-         9MiwqjPWFoDGq0m86/DvSAT1/E6tH0h2O1qE0eJpuSRMUFRHlaE5JY0cPQ2iJOdyEI3n
-         bFCm22/+qXySayR30C9mQx+MraWHH6y6/zsOsllo4+Q2AHb9SpSsbBfYfvW6mA5jxPIW
-         8wXTEd2RUDpIyF/2SGEJcwn4sdgPRpqD7V694VBCYrf1QtcAKb1XjHhcC8AHtVkSjWHZ
-         H8Iptv5LfxHKZ7BoLbtrgX27r58+o9KeCMczTZp85HI9636fWAfxR+uT680jDbJsc0QA
-         68Zg==
-X-Gm-Message-State: APjAAAVQJeYwYbkidw+y8Hs1mtVDbKrDUEjSY1iDF5qPWudhktwDZI18
-        PxYjRPrM9LNLERUAEuJaY00wAA==
-X-Google-Smtp-Source: APXvYqxiJCqNV8OEfXmb1fBc5jiE7n4/3DOvj4v7SG/Rln8ytNDHgILInJ8gkTkQ+TEqyjFoPLN0cw==
-X-Received: by 2002:a17:90a:d80b:: with SMTP id a11mr1588095pjv.142.1582848079067;
-        Thu, 27 Feb 2020 16:01:19 -0800 (PST)
+        bh=J9YtfCHL5s52dZTQkxs/+RndppOjr/z9RSlKj3vVFK4=;
+        b=i+CBXvTxRuOFB2PU27+pT0gRHcFSMy+S3WGlAfaEGs54YT+oMoomtL08bihyw/S2ke
+         mh1Bq1kcgvre/0RXqord66ngCITztoWdWPrUY8KmFfnJ2z7COfy6SiuMpyiOUgMT5HeY
+         Vic6Qmx8N/qSO6VwPp6mQYu53/J/huLDcw33b2L2a7ajsTM5UN+Z0bcqT3zKPkUTZzUO
+         gdDsvw7XT6cNKppUCtuQKrVMumWpNFBRLijmf35ugtwVBPkmEcjklzsCY+sZJtz6l3l3
+         7mNqJYVwT0zqmcetdVI4k9frOFQQKebWYCWyH4z0KD4KCTmXU1phAqVtkI2ScTGQC5S8
+         wvyQ==
+X-Gm-Message-State: APjAAAW6N6zU64i+79wWpY3nJLMcNF5MRxX1onPShGlwUJ+kXn//xEUX
+        AfeghOV5FbU4vmW7MEK/+HmmMg==
+X-Google-Smtp-Source: APXvYqw3AgR5lreXOHV0mcPtons4OK9hEvjDW+aai6cRQfG4L95jHGQf/AsHHClO7ZoWLJCOWZ81ZQ==
+X-Received: by 2002:aa7:9891:: with SMTP id r17mr1587416pfl.205.1582848082152;
+        Thu, 27 Feb 2020 16:01:22 -0800 (PST)
 Received: from thgarnie.kir.corp.google.com ([2620:0:1008:1100:6e62:16fa:a60c:1d24])
-        by smtp.gmail.com with ESMTPSA id c18sm7314476pgw.17.2020.02.27.16.01.18
+        by smtp.gmail.com with ESMTPSA id c18sm7314476pgw.17.2020.02.27.16.01.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 16:01:18 -0800 (PST)
+        Thu, 27 Feb 2020 16:01:21 -0800 (PST)
 From:   Thomas Garnier <thgarnie@chromium.org>
 To:     kernel-hardening@lists.openwall.com
 Cc:     kristen@linux.intel.com, keescook@chromium.org,
         Thomas Garnier <thgarnie@chromium.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v11 05/11] x86: pm-trace - Adapt assembly for PIE support
-Date:   Thu, 27 Feb 2020 16:00:50 -0800
-Message-Id: <20200228000105.165012-6-thgarnie@chromium.org>
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v11 07/11] x86/acpi: Adapt assembly for PIE support
+Date:   Thu, 27 Feb 2020 16:00:52 -0800
+Message-Id: <20200228000105.165012-8-thgarnie@chromium.org>
 X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
 In-Reply-To: <20200228000105.165012-1-thgarnie@chromium.org>
 References: <20200228000105.165012-1-thgarnie@chromium.org>
@@ -74,28 +78,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change assembly to use the new _ASM_MOVABS macro instead of _ASM_MOV for
-the assembly to be PIE compatible.
+Change the assembly code to use only relative references of symbols for the
+kernel to be PIE compatible.
 
 Signed-off-by: Thomas Garnier <thgarnie@chromium.org>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/include/asm/pm-trace.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/acpi/wakeup_64.S | 31 ++++++++++++++++---------------
+ 1 file changed, 16 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/include/asm/pm-trace.h b/arch/x86/include/asm/pm-trace.h
-index bfa32aa428e5..972070806ce9 100644
---- a/arch/x86/include/asm/pm-trace.h
-+++ b/arch/x86/include/asm/pm-trace.h
-@@ -8,7 +8,7 @@
- do {								\
- 	if (pm_trace_enabled) {					\
- 		const void *tracedata;				\
--		asm volatile(_ASM_MOV " $1f,%0\n"		\
-+		asm volatile(_ASM_MOVABS " $1f,%0\n"		\
- 			     ".section .tracedata,\"a\"\n"	\
- 			     "1:\t.word %c1\n\t"		\
- 			     _ASM_PTR " %c2\n"			\
+diff --git a/arch/x86/kernel/acpi/wakeup_64.S b/arch/x86/kernel/acpi/wakeup_64.S
+index c8daa92f38dc..8e221285d9f1 100644
+--- a/arch/x86/kernel/acpi/wakeup_64.S
++++ b/arch/x86/kernel/acpi/wakeup_64.S
+@@ -15,7 +15,7 @@
+ 	 * Hooray, we are in Long 64-bit mode (but still running in low memory)
+ 	 */
+ SYM_FUNC_START(wakeup_long64)
+-	movq	saved_magic, %rax
++	movq	saved_magic(%rip), %rax
+ 	movq	$0x123456789abcdef0, %rdx
+ 	cmpq	%rdx, %rax
+ 	je	2f
+@@ -31,14 +31,14 @@ SYM_FUNC_START(wakeup_long64)
+ 	movw	%ax, %es
+ 	movw	%ax, %fs
+ 	movw	%ax, %gs
+-	movq	saved_rsp, %rsp
++	movq	saved_rsp(%rip), %rsp
+ 
+-	movq	saved_rbx, %rbx
+-	movq	saved_rdi, %rdi
+-	movq	saved_rsi, %rsi
+-	movq	saved_rbp, %rbp
++	movq	saved_rbx(%rip), %rbx
++	movq	saved_rdi(%rip), %rdi
++	movq	saved_rsi(%rip), %rsi
++	movq	saved_rbp(%rip), %rbp
+ 
+-	movq	saved_rip, %rax
++	movq	saved_rip(%rip), %rax
+ 	jmp	*%rax
+ SYM_FUNC_END(wakeup_long64)
+ 
+@@ -48,7 +48,7 @@ SYM_FUNC_START(do_suspend_lowlevel)
+ 	xorl	%eax, %eax
+ 	call	save_processor_state
+ 
+-	movq	$saved_context, %rax
++	leaq	saved_context(%rip), %rax
+ 	movq	%rsp, pt_regs_sp(%rax)
+ 	movq	%rbp, pt_regs_bp(%rax)
+ 	movq	%rsi, pt_regs_si(%rax)
+@@ -67,13 +67,14 @@ SYM_FUNC_START(do_suspend_lowlevel)
+ 	pushfq
+ 	popq	pt_regs_flags(%rax)
+ 
+-	movq	$.Lresume_point, saved_rip(%rip)
++	leaq	.Lresume_point(%rip), %rax
++	movq	%rax, saved_rip(%rip)
+ 
+-	movq	%rsp, saved_rsp
+-	movq	%rbp, saved_rbp
+-	movq	%rbx, saved_rbx
+-	movq	%rdi, saved_rdi
+-	movq	%rsi, saved_rsi
++	movq	%rsp, saved_rsp(%rip)
++	movq	%rbp, saved_rbp(%rip)
++	movq	%rbx, saved_rbx(%rip)
++	movq	%rdi, saved_rdi(%rip)
++	movq	%rsi, saved_rsi(%rip)
+ 
+ 	addq	$8, %rsp
+ 	movl	$3, %edi
+@@ -85,7 +86,7 @@ SYM_FUNC_START(do_suspend_lowlevel)
+ 	.align 4
+ .Lresume_point:
+ 	/* We don't restore %rax, it must be 0 anyway */
+-	movq	$saved_context, %rax
++	leaq	saved_context(%rip), %rax
+ 	movq	saved_context_cr4(%rax), %rbx
+ 	movq	%rbx, %cr4
+ 	movq	saved_context_cr3(%rax), %rbx
 -- 
 2.25.1.481.gfbce0eb801-goog
 
