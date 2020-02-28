@@ -2,183 +2,148 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 100FAC3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A16B7C3F2D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBFC3222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:51:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CAD0222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:53:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="THDt18G/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LhKQSXHn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgB1Gvg (ORCPT
+        id S1726694AbgB1GxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 01:51:36 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46491 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbgB1Gvg (ORCPT
+        Fri, 28 Feb 2020 01:53:07 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39205 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbgB1GxH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 01:51:36 -0500
-Received: by mail-wr1-f67.google.com with SMTP id j7so1617157wrp.13;
-        Thu, 27 Feb 2020 22:51:33 -0800 (PST)
+        Fri, 28 Feb 2020 01:53:07 -0500
+Received: by mail-pf1-f193.google.com with SMTP id l7so1225343pff.6
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 22:53:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=avF1EF6lpJLVVsTfVWBjTe/8KtvDZSIsmNvBiNuGKMg=;
-        b=THDt18G/FXoJ1iM+KNQB/v0hI6yvWK8bMDHDcfQSKeziHQIqYblvqJmEftpLKrhco2
-         SFveE9Xs3bCIREUxBls+XpZ5opNASmRCLv3D66hN1WEbzNxO90PCG4cSn+mVp+I8scI7
-         76mmSNwWiM+r92MlP+IZooSJ68GqKRUU2EDFk3sGPFzTdUcFLgdjFTp/wJQycrbHQfbs
-         U7iwR6po+Ej26juHt0u7x5m8iNe+0c+7Vrq61sMfAtTT3Ig+HMKFng3edsIIBv6W5Bm7
-         eRP0damzsRhWhiMonIWppR7VoRP6tfA6gyqPyfWwtTUofME3qfkNfJnrFUpozKjdx9Mn
-         7nig==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8jcqmZWRuzpY+irIgL2xLgBa8KgqT66J5i07241XqA0=;
+        b=LhKQSXHnNWOgbv3WUG1Q+LWA6Bvl74g6d/7JfQDofL2rVfpY9oWb+uCJ8l7L3SwmSH
+         oaFoK5hORHEaNN1nWVtl9MR2hbyjh8YUrHDuGpC/7uU8Ojc2PaeuwOp2p8Y4ozAxvWLh
+         xOQx2ncZkgSzpKzmK4tP/hoD3U0f7XM7lGSAeGhzHeh7crMQo9lpDo5ZNLru5a9Q+Srd
+         Zsbd7NXfMxZdmxVU7x7NcDMSM8sKf1IXQnIQTFOn6yxtRVAMt6Vx+5UiU/QGaOJ1lJRl
+         97Jm83mYUxenTTcpiB75oy6nlX45oagdNE6fhUaeP00Jt8Jtp04uuM/cTp2FV5vQbfQZ
+         kuJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=avF1EF6lpJLVVsTfVWBjTe/8KtvDZSIsmNvBiNuGKMg=;
-        b=bCIjAWXKFWlJ4vOyUQ7rtR6/DtO1OTtVWpdn/R+ghfVTbTvBXpSZM4jN5cC0+GDwYS
-         SsxwzF7jgQaUHmvpwmzVHEKvctBY8IOL5oiN/jcmJbyC6Gr9++NS4PPU2PFX9gHsobIX
-         jm9hTAtbOzyRSVNgNv1pXLZ0FlIAykhgKFjyDiw4TBQoOdQURyeqGL7jly6ieC3exlWF
-         OSr6ZHysrLMsGnGvamwLAvC6JQj57+0cJxcRjvJtBwlOoH3a+c6uTI7hDVT7x5RNomiy
-         sdH/R4e5WxCtS4pS33T+6s9CdACbJnnXj3iMThW7zSjF3M+wpExfetC3L+qsg9lotpH0
-         kE6w==
-X-Gm-Message-State: APjAAAXCFehncvGBD+ELltBEcnry1sTV+HBCdHVrZJKUIsMkgJfs40kq
-        SPG05RhV2tjQOFPMglQ2/dKgmrXuoColPkEJrmg=
-X-Google-Smtp-Source: APXvYqwvp4piUvF/SYce0tbofShEvKkPpBAb2O8nmlEOvn8MBRHMN7izLp5juCXAuFJGAECrBbht8pmjEp8qcymSoVM=
-X-Received: by 2002:a5d:62d0:: with SMTP id o16mr3205209wrv.197.1582872693018;
- Thu, 27 Feb 2020 22:51:33 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8jcqmZWRuzpY+irIgL2xLgBa8KgqT66J5i07241XqA0=;
+        b=WrClrsrAlGqgVptVa2Hn83cxut0Qa0JfrrSdp7JO4UuEKFSBLYM00TABlaaOy0CA4z
+         JtesZZg1sqRKiVhpf0QzF7JOgtnM4Ymoos924734x5Ycb3990WJk95iZmHGE8Oo0v+5h
+         7OuhqBavXnStsuwgRf+YCol6eA+ZTZ0TOBolB9Mf87HCpC+fiID7mQF52EiDvNpMzqUs
+         PTc7Sh7gPTrYWOpWgiyHmWrbCy7gJ6kAoM44p6AcLuTvk6oUu/P40hWTiWEox87vSH1p
+         w+mVXS8ktNgDZuKWD5bVD3UBw4c32Aarih7R77DfaUvgwebV5iQrSvQipfjjuWhFXip+
+         c8Mg==
+X-Gm-Message-State: APjAAAV5lyJ+IYdR3FTpdsnRuniVG0HXShsQu6VOopNHCs041Xw0+ZkD
+        kICEQFTNEaTkKJnRii3X3ts=
+X-Google-Smtp-Source: APXvYqx6DjkvLom4D6+eR+vEt1Vpx0hDeuYho2m4pWKvA3y2g5GgIXfU5+/m2UvNIh08vbHcXWeNaQ==
+X-Received: by 2002:a63:7e09:: with SMTP id z9mr3121039pgc.383.1582872786530;
+        Thu, 27 Feb 2020 22:53:06 -0800 (PST)
+Received: from js1304-desktop ([114.206.198.176])
+        by smtp.gmail.com with ESMTPSA id b3sm9829932pft.73.2020.02.27.22.53.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Feb 2020 22:53:05 -0800 (PST)
+Date:   Fri, 28 Feb 2020 15:52:59 +0900
+From:   Joonsoo Kim <js1304@gmail.com>
+To:     Aaron Lu <aaron.lwe@gmail.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com
+Subject: Re: [PATCH v2 0/9] workingset protection/detection on the anonymous
+ LRU list
+Message-ID: <20200228065214.GA17349@js1304-desktop>
+References: <1582175513-22601-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <20200226193942.30049da9c090b466bdc5ec23@linux-foundation.org>
+ <20200227134806.GC39625@cmpxchg.org>
+ <20200228032358.GB634650@ziqianlu-desktop.localdomain>
+ <20200228040214.GA21040@js1304-desktop>
+ <20200228055726.GA674737@ziqianlu-desktop.localdomain>
 MIME-Version: 1.0
-References: <20200228002244.15240-1-keescook@chromium.org>
-In-Reply-To: <20200228002244.15240-1-keescook@chromium.org>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Fri, 28 Feb 2020 07:51:21 +0100
-Message-ID: <CA+icZUVRnjOWKZynAGDniXD_H9KRccONmeKHs25DPPU1c8ZcGg@mail.gmail.com>
-Subject: Re: [PATCH 0/9] Enable orphan section warning
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Borislav Petkov <bp@suse.de>, "H.J. Lu" <hjl.tools@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <masahiroy@kernel.org>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
-        linux-kbuild@vger.kernel.org,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228055726.GA674737@ziqianlu-desktop.localdomain>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 1:22 AM Kees Cook <keescook@chromium.org> wrote:
->
-> Hi!
->
-> A recent bug was solved for builds linked with ld.lld, and tracking
-> it down took way longer than it needed to (a year). Ultimately, it
-> boiled down to differences between ld.bfd and ld.lld's handling of
-> orphan sections. Similarly, the recent FGKASLR series brough up orphan
-> section handling too[2]. In both cases, it would have been nice if the
-> linker was running with --orphan-handling=warn so that surprise sections
-> wouldn't silently get mapped into the kernel image at locations up to
-> the whim of the linker's orphan handling logic. Instead, all desired
-> sections should be explicitly identified in the linker script (to be
-> either kept or discarded) with any orphans throwing a warning. The
-> powerpc architecture actually already does this, so this series seeks
-> to extend this coverage to x86, arm64, and arm.
->
-> This series depends on tip/x86/boot (where recent .eh_frame fixes[3]
-> landed), and has a minor conflict[4] with the ARM tree (related to
-> the earlier mentioned bug). As it uses refactorings in the asm-generic
-> linker script, and makes changes to kbuild, I think the cleanest place
-> for this series to land would also be through -tip. Once again (like
-> my READ_IMPLIES_EXEC series), I'm looking to get maintainer Acks so
-> this can go all together with the least disruption. Splitting it up by
-> architecture seems needlessly difficult.
->
-> Thanks!
->
-> -Kees
->
-> [1] https://github.com/ClangBuiltLinux/linux/issues/282
-> [2] https://lore.kernel.org/lkml/202002242122.AA4D1B8@keescook/
-> [3] https://lore.kernel.org/lkml/158264960194.28353.10560165361470246192.tip-bot2@tip-bot2/
-> [4] https://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=8959/1
->
+On Fri, Feb 28, 2020 at 01:57:26PM +0800, Aaron Lu wrote:
+> On Fri, Feb 28, 2020 at 01:03:03PM +0900, Joonsoo Kim wrote:
+> > Hello,
+> > 
+> > On Fri, Feb 28, 2020 at 11:23:58AM +0800, Aaron Lu wrote:
+> > > On Thu, Feb 27, 2020 at 08:48:06AM -0500, Johannes Weiner wrote:
+> > > > On Wed, Feb 26, 2020 at 07:39:42PM -0800, Andrew Morton wrote:
+> > > > > It sounds like the above simple aging changes provide most of the
+> > > > > improvement, and that the workingset changes are less beneficial and a
+> > > > > bit more risky/speculative?
+> > > > > 
+> > > > > If so, would it be best for us to concentrate on the aging changes
+> > > > > first, let that settle in and spread out and then turn attention to the
+> > > > > workingset changes?
+> > > > 
+> > > > Those two patches work well for some workloads (like the benchmark),
+> > > > but not for others. The full patchset makes sure both types work well.
+> > > > 
+> > > > Specifically, the existing aging strategy for anon assumes that most
+> > > > anon pages allocated are hot. That's why they all start active and we
+> > > > then do second-chance with the small inactive LRU to filter out the
+> > > > few cold ones to swap out. This is true for many common workloads.
+> > > > 
+> > > > The benchmark creates a larger-than-memory set of anon pages with a
+> > > > flat access profile - to the VM a flood of one-off pages. Joonsoo's
+> > > 
+> > > test: swap-w-rand-mt, which is a multi thread swap write intensive
+> > > workload so there will be swap out and swap ins.
+> > > 
+> > > > first two patches allow the VM to usher those pages in and out of
+> > > 
+> > > Weird part is, the robot says the performance gain comes from the 1st
+> > > patch only, which adjust the ratio, not including the 2nd patch which
+> > > makes anon page starting from inactive list.
+> > > 
+> > > I find the performance gain hard to explain...
+> > 
+> > Let me explain the reason of the performance gain.
+> > 
+> > 1st patch provides more second chance to the anonymous pages.
+> 
+> By second chance, do I understand correctely this refers to pages on 
+> inactive list get moved back to active list?
 
-Hi Kees,
+Yes.
 
-is this an updated version of what you have in your
-kees/linux.git#linker/orphans/x86-arm Git branch?
+> 
+> > In swap-w-rand-mt test, memory used by all threads is greater than the
+> > amount of the system memory, but, memory used by each thread would
+> > not be much. So, although it is a rand test, there is a locality
+> > in each thread's job. More second chance helps to exploit this
+> > locality so performance could be improved.
+> 
+> Does this mean there should be fewer vmstat.pswpout and vmstat.pswpin
+> with patch1 compared to vanilla?
 
-Especially, I saw a difference in [2] and "[PATCH 4/9] x86/boot: Warn
-on orphan section placement"
-
-[ arch/x86/boot/compressed/Makefile ]
-
-+KBUILD_LDFLAGS += --no-ld-generated-unwind-info
-
-Can you comment on why this KBUILD_LDFLAGS was added/needed?
-
-I like when people offer their work in a Git branch.
-Do you plan to do that?
+It depends on the workload. If the workload consists of anonymous
+pages only, I think, yes, pswpout/pswpin would be lower than vanilla
+with patch #1. With large inactive list, we can easily find the
+frequently referenced page and it would result in less swap in/out.
 
 Thanks.
-
-Regards,
-- Sedat -
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=linker/orphans/x86-arm
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=linker/orphans/x86-arm&id=e43aa77956c40b9b6db0b37b3780423aa2e661ad
-
-
-
-> H.J. Lu (1):
->   Add RUNTIME_DISCARD_EXIT to generic DISCARDS
->
-> Kees Cook (8):
->   scripts/link-vmlinux.sh: Delay orphan handling warnings until final
->     link
->   vmlinux.lds.h: Add .gnu.version* to DISCARDS
->   x86/build: Warn on orphan section placement
->   x86/boot: Warn on orphan section placement
->   arm64/build: Use common DISCARDS in linker script
->   arm64/build: Warn on orphan section placement
->   arm/build: Warn on orphan section placement
->   arm/boot: Warn on orphan section placement
->
->  arch/arm/Makefile                             |  4 ++++
->  arch/arm/boot/compressed/Makefile             |  2 ++
->  arch/arm/boot/compressed/vmlinux.lds.S        | 17 ++++++--------
->  .../arm/{kernel => include/asm}/vmlinux.lds.h | 22 ++++++++++++++-----
->  arch/arm/kernel/vmlinux-xip.lds.S             |  5 ++---
->  arch/arm/kernel/vmlinux.lds.S                 |  5 ++---
->  arch/arm64/Makefile                           |  4 ++++
->  arch/arm64/kernel/vmlinux.lds.S               | 13 +++++------
->  arch/x86/Makefile                             |  4 ++++
->  arch/x86/boot/compressed/Makefile             |  3 ++-
->  arch/x86/boot/compressed/vmlinux.lds.S        | 13 +++++++++++
->  arch/x86/kernel/vmlinux.lds.S                 |  7 ++++++
->  include/asm-generic/vmlinux.lds.h             | 11 ++++++++--
->  scripts/link-vmlinux.sh                       |  6 +++++
->  14 files changed, 85 insertions(+), 31 deletions(-)
->  rename arch/arm/{kernel => include/asm}/vmlinux.lds.h (92%)
->
-> --
-> 2.20.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200228002244.15240-1-keescook%40chromium.org.
