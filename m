@@ -2,236 +2,116 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C50FC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D423C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A68E246A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:18:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582910324;
-	bh=k1hRL5DeZtkyFL/eURkkMrJR8KB4iCX+iuuPzyAjih4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uUhTOefLSk8DrNUfPKcl5tMZvwCebJfVDP7YI1WNw7bGvHA1Lp8EznB/2oayZdpj6
-	 SMziwrQlRipodULiQO+LTSgRoutivPUnYUlHe/Y26oIWbKmLZe3zEw1RI457DZqcV7
-	 rbUbhiCgYK2/6NedZRrs1zkevT2e/q5KoVK9X3PM=
+	by mail.kernel.org (Postfix) with ESMTP id 23661246A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:20:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eBFnR84q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbgB1RSn (ORCPT
+        id S1726490AbgB1RUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 12:18:43 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40724 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgB1RSn (ORCPT
+        Fri, 28 Feb 2020 12:20:18 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50761 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725730AbgB1RUS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 12:18:43 -0500
-Received: by mail-ot1-f66.google.com with SMTP id a36so3262261otb.7;
-        Fri, 28 Feb 2020 09:18:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pb+PJoJtW2sA5x/kLQp2vnmzDsqGqr65TnSBcPMbR7g=;
-        b=E2mwvy0jwFxBpHSSU+X1mxXeFxw1vTw0rZl4V9k0m6/khPt7BSRVq3cdGvkQfIZHTq
-         j5ptbdqOB5jPNwrM+PRHoAkIhJRP3iuQgvMLlNArt5oTsIe2MK50WEE7gXRNg+xYhQml
-         MB0r45iBPLHlIKf4U7VDqBrr40MF3SdYrypK5yxfByfCi3QnSZHiSJouIR5393/2fihd
-         gSkUS/5yEzuWfYdZ3GJ3d/QWiyisioK4cMknOekDqpRTJ+ip5v7xZk1UjDp/76zFcE14
-         3leOf8JGgRKhF52Na9w4fYsGWgRSHvBqycvhPpOclGc9CN5t5PxxepqltSD7ThE32xdL
-         qRWg==
-X-Gm-Message-State: APjAAAX1GD8QcrXWj4SQEE0qUGy9iWl+1VnoEziI+0qSxVUkg+9u7X7m
-        sCf0cHfVYOxDEOqNOiTuzg==
-X-Google-Smtp-Source: APXvYqzab5ENBUX7/Dqgb0kBzOfn28/rFZnWr1rJG7CNXgNlbWqOdHwOkN1Yv4PRdvFnNLEteaDSbQ==
-X-Received: by 2002:a05:6830:160c:: with SMTP id g12mr4121358otr.82.1582910320121;
-        Fri, 28 Feb 2020 09:18:40 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id z17sm3296727oic.15.2020.02.28.09.18.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 09:18:39 -0800 (PST)
-Received: (nullmailer pid 26488 invoked by uid 1000);
-        Fri, 28 Feb 2020 17:18:38 -0000
-Date:   Fri, 28 Feb 2020 11:18:38 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 3/9] ASoC: meson: convert axg tdm formatters to schema
-Message-ID: <20200228171838.GA27450@bogus>
-References: <20200224145821.262873-1-jbrunet@baylibre.com>
- <20200224145821.262873-4-jbrunet@baylibre.com>
+        Fri, 28 Feb 2020 12:20:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582910417;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=SLpeFMA4sRAI4ECcBIIKWdo+aICNDL5CSmKLK+F8+i0=;
+        b=eBFnR84qp5/7CxRDW1BsPyA7JbI6JC2d/XkXncu2AEDGLZqBtWJS3+eFO3ayL0nfhuLUNG
+        w510p31Yb+jZ46ByFRLZb2pFhpNQeVVYFXmDOafos+tNuBTYEHRdQcP5RhABQ+yws56MYj
+        juhhKqcIKWiaHaG2VWUlPlTTAnNK3VY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-149-lAPqJ_M1Og6n7jJs4daPvg-1; Fri, 28 Feb 2020 12:20:13 -0500
+X-MC-Unique: lAPqJ_M1Og6n7jJs4daPvg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DACB610CE7A3;
+        Fri, 28 Feb 2020 17:20:10 +0000 (UTC)
+Received: from krava (unknown [10.36.118.62])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 437568AC39;
+        Fri, 28 Feb 2020 17:20:07 +0000 (UTC)
+Date:   Fri, 28 Feb 2020 18:20:04 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 03/13] kprobes: Add symbols for kprobe insn pages
+Message-ID: <20200228172004.GI5451@krava>
+References: <20200228135125.567-1-adrian.hunter@intel.com>
+ <20200228135125.567-4-adrian.hunter@intel.com>
+ <20200228233600.5f5c733584eac08b8a4a2b70@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200224145821.262873-4-jbrunet@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200228233600.5f5c733584eac08b8a4a2b70@kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 03:58:15PM +0100, Jerome Brunet wrote:
-> Convert the DT binding documentation for the Amlogic tdm formatters to
-> schema.
+On Fri, Feb 28, 2020 at 11:36:00PM +0900, Masami Hiramatsu wrote:
+> Hi Adrian,
 > 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  .../sound/amlogic,axg-tdm-formatters.txt      | 36 --------
->  .../sound/amlogic,axg-tdm-formatters.yaml     | 92 +++++++++++++++++++
->  2 files changed, 92 insertions(+), 36 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt
->  create mode 100644 Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.yaml
+> On Fri, 28 Feb 2020 15:51:15 +0200
+> Adrian Hunter <adrian.hunter@intel.com> wrote:
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt
-> deleted file mode 100644
-> index 5996c0cd89c2..000000000000
-> --- a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt
-> +++ /dev/null
-> @@ -1,36 +0,0 @@
-> -* Amlogic Audio TDM formatters
-> -
-> -Required properties:
-> -- compatible: 'amlogic,axg-tdmin' or
-> -	      'amlogic,axg-tdmout' or
-> -	      'amlogic,g12a-tdmin' or
-> -	      'amlogic,g12a-tdmout' or
-> -	      'amlogic,sm1-tdmin' or
-> -	      'amlogic,sm1-tdmout
-> -- reg: physical base address of the controller and length of memory
-> -       mapped region.
-> -- clocks: list of clock phandle, one for each entry clock-names.
-> -- clock-names: should contain the following:
-> -  * "pclk"     : peripheral clock.
-> -  * "sclk"     : bit clock.
-> -  * "sclk_sel" : bit clock input multiplexer.
-> -  * "lrclk"    : sample clock
-> -  * "lrclk_sel": sample clock input multiplexer
-> -
-> -Optional property:
-> -- resets: phandle to the dedicated reset line of the tdm formatter.
-> -
-> -Example of TDMOUT_A on the S905X2 SoC:
-> -
-> -tdmout_a: audio-controller@500 {
-> -	compatible = "amlogic,axg-tdmout";
-> -	reg = <0x0 0x500 0x0 0x40>;
-> -	resets = <&clkc_audio AUD_RESET_TDMOUT_A>;
-> -	clocks = <&clkc_audio AUD_CLKID_TDMOUT_A>,
-> -		 <&clkc_audio AUD_CLKID_TDMOUT_A_SCLK>,
-> -		 <&clkc_audio AUD_CLKID_TDMOUT_A_SCLK_SEL>,
-> -		 <&clkc_audio AUD_CLKID_TDMOUT_A_LRCLK>,
-> -		 <&clkc_audio AUD_CLKID_TDMOUT_A_LRCLK>;
-> -	clock-names = "pclk", "sclk", "sclk_sel",
-> -		      "lrclk", "lrclk_sel";
-> -};
-> diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.yaml b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.yaml
-> new file mode 100644
-> index 000000000000..f6f3bfb546f5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.yaml
-> @@ -0,0 +1,92 @@
-> +# SPDX-License-Identifier: GPL-2.0
-
-Dual license please as you're the only author of the .txt file.
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/amlogic,axg-tdm-formatters.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Amlogic Audio AXG TDM formatters
-> +
-> +maintainers:
-> +  - Jerome Brunet <jbrunet@baylibre.com>
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^audio-controller@.*"
-> +
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +        - enum:
-> +          - amlogic,g12a-tdmout
-> +          - amlogic,sm1-tdmout
-> +          - amlogic,axg-tdmout
-> +      - items:
-> +        - enum:
-> +          - amlogic,g12a-tdmin
-> +          - amlogic,sm1-tdmin
-> +        - const:
-> +            amlogic,axg-tdmin
-> +      - items:
-> +        - const:
-> +            amlogic,axg-tdmin
-> +
-> +  clocks:
-> +    items:
-> +      - description: Peripheral clock
-> +      - description: Bit clock
-> +      - description: Bit clock input multiplexer
-> +      - description: Sample clock
-> +      - description: Sample clock input multiplexer
-> +
-> +  clock-names:
-> +    items:
-> +      - const: pclk
-> +      - const: sclk
-> +      - const: sclk_sel
-> +      - const: lrclk
-> +      - const: lrclk_sel
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +
-> +if:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        enum:
-> +          - amlogic,g12a-tdmin
-> +          - amlogic,sm1-tdmin
-> +          - amlogic,g12a-tdmout
-> +          - amlogic,sm1-tdmout
-> +then:
-> +  required:
-> +    - resets
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/axg-audio-clkc.h>
-> +    #include <dt-bindings/reset/amlogic,meson-g12a-audio-reset.h>
-> +
-> +    tdmout_a: audio-controller@500 {
-> +        compatible = "amlogic,g12a-tdmout",
-> +                     "amlogic,axg-tdmout";
-
-This fails validation.
-
-> +        reg = <0x0 0x500 0x0 0x40>;
-> +        resets = <&clkc_audio AUD_RESET_TDMOUT_A>;
-> +        clocks = <&clkc_audio AUD_CLKID_TDMOUT_A>,
-> +                 <&clkc_audio AUD_CLKID_TDMOUT_A_SCLK>,
-> +                 <&clkc_audio AUD_CLKID_TDMOUT_A_SCLK_SEL>,
-> +                 <&clkc_audio AUD_CLKID_TDMOUT_A_LRCLK>,
-> +                 <&clkc_audio AUD_CLKID_TDMOUT_A_LRCLK>;
-> +        clock-names = "pclk", "sclk", "sclk_sel",
-> +                      "lrclk", "lrclk_sel";
-> +    };
-> +
-> -- 
-> 2.24.1
+> > Symbols are needed for tools to describe instruction addresses. Pages
+> > allocated for kprobe's purposes need symbols to be created for them.
+> > Add such symbols to be visible via /proc/kallsyms.
 > 
+> I like this idea :)
+> 
+> > 
+> > Note: kprobe insn pages are not used if ftrace is configured. To see the
+> > effect of this patch, the kernel must be configured with:
+> > 
+> > 	# CONFIG_FUNCTION_TRACER is not set
+> > 	CONFIG_KPROBES=y
+> > 
+> > and for optimised kprobes:
+> > 
+> > 	CONFIG_OPTPROBES=y
+> > 
+> > Example on x86:
+> > 
+> > 	# perf probe __schedule
+> > 	Added new event:
+> > 	  probe:__schedule     (on __schedule)
+> > 	# cat /proc/kallsyms | grep '\[kprobe\]'
+> > 	ffffffffc0035000 t kprobe_insn_page     [kprobe]
+> > 	ffffffffc0054000 t kprobe_optinsn_page  [kprobe]
+> 
+> Could you make the module name as [kprobes] ?
+> BTW, it seems to pretend to be a module, but is there no concern of
+> confusing users? Shouldn't it be [*kprobes] so that it is non-exist
+> module name?
+
+note we already have bpf symbols as [bpf] module
+
+jirka
+
