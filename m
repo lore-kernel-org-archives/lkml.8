@@ -2,146 +2,199 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B79D7C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E465DC3F2CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8662824692
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B962924692
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:27:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eTpcztdH"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qdaDLB40"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730805AbgB1DYw (ORCPT
+        id S1730758AbgB1D1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 22:24:52 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44492 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730772AbgB1DYw (ORCPT
+        Thu, 27 Feb 2020 22:27:39 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40654 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730646AbgB1D1j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 22:24:52 -0500
-Received: by mail-pf1-f196.google.com with SMTP id y5so941656pfb.11
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 19:24:51 -0800 (PST)
+        Thu, 27 Feb 2020 22:27:39 -0500
+Received: by mail-oi1-f193.google.com with SMTP id a142so1523107oii.7
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 19:27:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=H/v7KsyZaSnIQHt4LUxp0DK1a2Lu38EDYZabaVLVetk=;
-        b=eTpcztdHQTm5/rDIVIQIhxvItqZKHbqp4cI9mZTTdONiVx8F9HtFEuVvn1jG1sN9n/
-         4SrvRPjkf814oGpFtngkhLRb9OmPMwakJjkTERr22C9HsAbrrD4FkhOuL+GrYHrP8nBs
-         z7KhCttgvL/kQKAwVpE5ZgWyF2grXLwev9S00BA9I/UuqmzkutEzH0bess2NzdVxCarZ
-         42o3bA6puBJJVbN1Q5nS/y6caMe/Vnmd+dALa1VEMt1AfqmotHqc0pMv9a3SKIAUAzmQ
-         bnOkoHLEMMkeQYo2WRuSM11EggSJyEJQInx0OVpgjN49XXFCDoheLw3GT5M6pYkadBwW
-         Masg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NDgUQnCysZ7NFsIwDokx6+x5eoZKUCkBzb/ZNj5Uk14=;
+        b=qdaDLB40g+oyHb7JAcITCqVVaUs363TrbWV1T7QaYfFPpjtX8uy60Dkj2GU6XBpJGN
+         lAN731kvw5+DtZs/Jmqj9a2zAwq3yyiugAXweWmF+/7ozu2pZbH5NlF01boeMxI4jdgy
+         wPRxGYAstclqvIhU99ubI0HPyarsbPFL0vGzov59t9CBbria3MovzKiPtqyjDYHWW2JH
+         2VT7OciJqRRyU7x4MX7hi9uKOBuzKgCDwo/tWsH1Su907YVLYbNXINavQw2gJe+mO85A
+         /jDNEzcKqvCRg53uCe5vIYRMa8+V2F9YUQ2DdfHUYcFd8Xslim1gBU7pGdnNPZQA37BA
+         sbBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=H/v7KsyZaSnIQHt4LUxp0DK1a2Lu38EDYZabaVLVetk=;
-        b=YDuUYQr8sGwKFXZ9uWnRneKp9iFvM5AEevaASwy0Ri43J05Iedw+x8plQua0mwEYjS
-         KB+6fH9FU+5EQPcbUP9cz2kDQcCFqapfamDKFSFLqO4ADrM6flTbmMpxBuQr/JBMcfS9
-         XI8a8pdIIHPgyp+cqMY+R6bImukL9hKWwz1NNsot20/L18uFvNfvCSlQPBaU6ftfDkiq
-         Om8sbmRyZdzi0F9sWw0zztLXdEPhqDb2KtWRBwDz9pe9JLTd4bgrOIpOwexViV/9w/2n
-         QX6BCT2KmFlXAIudS2Fpvoc9VD/o2NEjv8LjMBBWRxvsp3cNSpLBU4+bPLuD7g3bY3wv
-         O9Fg==
-X-Gm-Message-State: APjAAAWH56N/b3qL1xELs0J6hS9u46MtNgeax4deKCu+s1ZC8yr0wncz
-        JpqrGtKb45RmtUnPVlosQLa1Kw==
-X-Google-Smtp-Source: APXvYqxcXORPyb7DbvPZYryfw+X2PjFVWDfnTU6OxjUhkfzPetW6eG/5nxsAIrTsbdOAHZeW0urarw==
-X-Received: by 2002:a63:df02:: with SMTP id u2mr2341345pgg.403.1582860291347;
-        Thu, 27 Feb 2020 19:24:51 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id y9sm112165pjj.17.2020.02.27.19.24.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 19:24:50 -0800 (PST)
-Date:   Thu, 27 Feb 2020 19:24:48 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vkoul@kernel.org, daniel.lezcano@linaro.org, sivaa@codeaurora.org,
-        Andy Gross <agross@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] dt-bindings: thermal: tsens: Add qcom,tsens-v2 to
- msm8996.dtsi compatible
-Message-ID: <20200228032448.GB210720@yoga>
-References: <cover.1582705101.git.amit.kucheria@linaro.org>
- <4e337c4a4194bb15f9efec67821f38504de1704c.1582705101.git.amit.kucheria@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NDgUQnCysZ7NFsIwDokx6+x5eoZKUCkBzb/ZNj5Uk14=;
+        b=FTvj7j5e+YneaAja2l3npVYTANQd+h1E5yzJWjjaiz88RnO9L4RTXEYD5SV9tCLsad
+         jcbCyZc4GdVtFqkBu7w6T83V7qiVrYqarrDKOsIkGbyqTb5Xw5Nz/EsSftz3b7Agerds
+         opq0HBKodAitY6a+YNj818PCtu8iR1MD8oWfX9x197sfnJmiG4ZuIuLRJN4bcqNCEWEB
+         3ZZzse4bWPhEjPpOIhcAeLJvZRu6qqUjyHstWQ0zVu2r6E/ie7hxv4dBqlUXjcEEiKXn
+         XcRzXwrqHRwjlcW7vjPCEWskPvNeNn71Znkb3SuMfqqT7dWqbwqRrBiLh9ssXYlDiT3P
+         Jeig==
+X-Gm-Message-State: APjAAAU5wcQDKCkJNYOvrguRjqZ/QzdZFbFr+gqbIzeuglLOl6RfHLag
+        qOb6NH9giGvd73QyDPk3elDYb+8nv2hDsh/tSsTDzQ==
+X-Google-Smtp-Source: APXvYqyOVn3TXyhx+GoHYcgMBBF9yOdT1HuTV+3w8j1kxYzXCl2z3YA80qnpCa43jnHHo1tUjwE1QG14/Zn3P7OrhMk=
+X-Received: by 2002:aca:5205:: with SMTP id g5mr5640oib.43.1582860458043; Thu,
+ 27 Feb 2020 19:27:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4e337c4a4194bb15f9efec67821f38504de1704c.1582705101.git.amit.kucheria@linaro.org>
+References: <20200222014038.180923-1-saravanak@google.com> <20200222014038.180923-3-saravanak@google.com>
+In-Reply-To: <20200222014038.180923-3-saravanak@google.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Thu, 27 Feb 2020 19:27:01 -0800
+Message-ID: <CAGETcx-xxd_E=-zF5+a58queyGg_5JX9tbCm49YBtcvFUhVEZw@mail.gmail.com>
+Subject: Re: [PATCH v1 2/5] driver core: Add fw_devlink kernel commandline option
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Len Brown <lenb@kernel.org>
+Cc:     Android Kernel Team <kernel-team@android.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 26 Feb 01:31 PST 2020, Amit Kucheria wrote:
-
-As with patch 2, $subject should have an appropriate prefix. Please
-update this.
-
-Regards,
-Bjorn
-
-> The qcom-tsens binding requires a SoC-specific and a TSENS
-> family-specific binding to be specified in the compatible string.
-> 
-> Since them family-specific binding is not listed in the .dtsi file, we
-> see the following warnings in 'make dtbs_check'. Fix them.
-> 
-> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
-> thermal-sensor@4a9000: compatible: ['qcom,msm8996-tsens'] is not valid
-> under any of the given schemas (Possible causes of the failure):
-> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
-> thermal-sensor@4a9000: compatible: ['qcom,msm8996-tsens'] is too short
-> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
-> thermal-sensor@4a9000: compatible:0: 'qcom,msm8996-tsens' is not one of
-> ['qcom,msm8916-tsens', 'qcom,msm8974-tsens']
-> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
-> thermal-sensor@4a9000: compatible:0: 'qcom,msm8996-tsens' is not one of
-> ['qcom,msm8976-tsens', 'qcom,qcs404-tsens']
-> 
-> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
-> thermal-sensor@4ad000: compatible: ['qcom,msm8996-tsens'] is not valid
-> under any of the given schemas (Possible causes of the failure):
-> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
-> thermal-sensor@4ad000: compatible: ['qcom,msm8996-tsens'] is too short
-> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
-> thermal-sensor@4ad000: compatible:0: 'qcom,msm8996-tsens' is not one of
-> ['qcom,msm8916-tsens', 'qcom,msm8974-tsens']
-> /home/amit/work/builds/build-aarch64/arch/arm64/boot/dts/qcom/msm8996-mtp.dt.yaml:
-> thermal-sensor@4ad000: compatible:0: 'qcom,msm8996-tsens' is not one of
-> ['qcom,msm8976-tsens', 'qcom,qcs404-tsens']
-> 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+On Fri, Feb 21, 2020 at 5:40 PM Saravana Kannan <saravanak@google.com> wrote:
+>
+> fwnode_operations.add_links allows creating device links from
+> information provided by firmware.
+>
+> fwnode_operations.add_links is currently implemented only by
+> OF/devicetree code and a specific case of efi. However, there's nothing
+> preventing ACPI or other firmware types from implementing it.
+>
+> The OF implementation is currently controlled by a kernel commandline
+> parameter called of_devlink.
+>
+> Since this feature is generic isn't limited to OF, add a generic
+> fw_devlink kernel commandline parameter to control this feature across
+> firmware types.
+>
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
 > ---
->  arch/arm64/boot/dts/qcom/msm8996.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> index 7ae082ea14ea..f157cd4f53b4 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> @@ -446,7 +446,7 @@
->  		};
->  
->  		tsens0: thermal-sensor@4a9000 {
-> -			compatible = "qcom,msm8996-tsens";
-> +			compatible = "qcom,msm8996-tsens", "qcom,tsens-v2";
->  			reg = <0x004a9000 0x1000>, /* TM */
->  			      <0x004a8000 0x1000>; /* SROT */
->  			#qcom,sensors = <13>;
-> @@ -457,7 +457,7 @@
->  		};
->  
->  		tsens1: thermal-sensor@4ad000 {
-> -			compatible = "qcom,msm8996-tsens";
-> +			compatible = "qcom,msm8996-tsens", "qcom,tsens-v2";
->  			reg = <0x004ad000 0x1000>, /* TM */
->  			      <0x004ac000 0x1000>; /* SROT */
->  			#qcom,sensors = <8>;
-> -- 
-> 2.20.1
-> 
+>  .../admin-guide/kernel-parameters.txt         | 18 +++++++++++++
+>  drivers/base/core.c                           | 27 ++++++++++++++++++-
+>  include/linux/fwnode.h                        |  2 ++
+>  3 files changed, 46 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index dbc22d684627..29985152b66d 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -1350,6 +1350,24 @@
+>                         can be changed at run time by the max_graph_depth file
+>                         in the tracefs tracing directory. default: 0 (no limit)
+>
+> +       fw_devlink=     [KNL] Create device links between consumer and supplier
+> +                       devices by scanning the firmware to infer the
+> +                       consumer/supplier relationships. This feature is
+> +                       especially useful when drivers are loaded as modules as
+> +                       it ensures proper ordering of tasks like device probing
+> +                       (suppliers first, then consumers), supplier boot state
+> +                       clean up (only after all consumers have probed),
+> +                       suspend/resume & runtime PM (consumers first, then
+> +                       suppliers).
+> +                       Format: { off | permissive | on | rpm }
+> +                       off --  Don't create device links from firmware info.
+> +                       permissive -- Create device links from firmware info
+> +                               but use it only for ordering boot state clean
+> +                               up (sync_state() calls).
+> +                       on --   Create device links from firmware info and use it
+> +                               to enforce probe and suspend/resume ordering.
+> +                       rpm --  Like "on", but also use to order runtime PM.
+> +
+
+A bit of bikeshedding myself: I could rename "on" to "enforce" and
+"rpm" to "enforce-rpm".
+
+Let me know if any of you have a strong preference on these two options.
+
+-Saravana
+
+>         gamecon.map[2|3]=
+>                         [HW,JOY] Multisystem joystick and NES/SNES/PSX pad
+>                         support via parallel port (up to 5 devices per port)
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index d32a3aefff32..aeaca8a3aad9 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -2345,6 +2345,31 @@ static int device_private_init(struct device *dev)
+>         return 0;
+>  }
+>
+> +u32 fw_devlink_flags;
+> +static int __init fw_devlink_setup(char *arg)
+> +{
+> +       if (!arg)
+> +               return -EINVAL;
+> +
+> +       if (strcmp(arg, "off") == 0) {
+> +               fw_devlink_flags = 0;
+> +       } else if (strcmp(arg, "permissive") == 0) {
+> +               fw_devlink_flags = DL_FLAG_SYNC_STATE_ONLY;
+> +       } else if (strcmp(arg, "on") == 0) {
+> +               fw_devlink_flags = DL_FLAG_AUTOPROBE_CONSUMER;
+> +       } else if (strcmp(arg, "rpm") == 0) {
+> +               fw_devlink_flags = DL_FLAG_AUTOPROBE_CONSUMER |
+> +                                  DL_FLAG_PM_RUNTIME;
+> +       }
+> +       return 0;
+> +}
+> +early_param("fw_devlink", fw_devlink_setup);
+> +
+> +u32 fw_devlink_get_flags(void)
+> +{
+> +       return fw_devlink_flags;
+> +}
+> +
+>  /**
+>   * device_add - add device to device hierarchy.
+>   * @dev: device.
+> @@ -2493,7 +2518,7 @@ int device_add(struct device *dev)
+>          */
+>         device_link_add_missing_supplier_links();
+>
+> -       if (fwnode_has_op(dev->fwnode, add_links)) {
+> +       if (fw_devlink_flags && fwnode_has_op(dev->fwnode, add_links)) {
+>                 fw_ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
+>                 if (fw_ret == -ENODEV)
+>                         device_link_wait_for_mandatory_supplier(dev);
+> diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
+> index 8feeb94b8acc..e0abafbb17f8 100644
+> --- a/include/linux/fwnode.h
+> +++ b/include/linux/fwnode.h
+> @@ -170,4 +170,6 @@ struct fwnode_operations {
+>         } while (false)
+>  #define get_dev_from_fwnode(fwnode)    get_device((fwnode)->dev)
+>
+> +extern u32 fw_devlink_get_flags(void);
+> +
+>  #endif
+> --
+> 2.25.0.265.gbab2e86ba0-goog
+>
