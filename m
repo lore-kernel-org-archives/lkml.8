@@ -2,101 +2,170 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 554D3C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2389BC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2741A246A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:29:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="xQOEV1dM"
+	by mail.kernel.org (Postfix) with ESMTP id EB459246B9
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:31:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbgB1Q3r (ORCPT
+        id S1726490AbgB1Qb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:29:47 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:38864 "EHLO vps0.lunn.ch"
+        Fri, 28 Feb 2020 11:31:57 -0500
+Received: from foss.arm.com ([217.140.110.172]:41040 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725769AbgB1Q3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:29:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=+BarUbHa0DIMdCJ4YdKKTqxazU9JIOJIattKcJIKp40=; b=xQOEV1dMosp6MpKKNHyWKgNUG2
-        drkXV8/kyPRJNcKRNN+ZWdGEhmFcYDfwQb7u4dq0oxKOKP6+I6eDOI/GMhBJLHpWuMqOJTEWBD7Uh
-        brZHUK3ZPjY1RN1IL9FzKiaWbLdBqqsKR+ODLgaMZAVhzpChNR3GQlZR16Jq6E5RvL4I=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1j7iWE-00056A-L7; Fri, 28 Feb 2020 17:29:42 +0100
-Date:   Fri, 28 Feb 2020 17:29:42 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Antoine Tenart <antoine.tenart@bootlin.com>
-Cc:     davem@davemloft.net, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        foss@0leil.net
-Subject: Re: [PATCH net-next v2 3/3] net: phy: mscc: RGMII skew delay
- configuration
-Message-ID: <20200228162942.GF29979@lunn.ch>
-References: <20200228155702.2062570-1-antoine.tenart@bootlin.com>
- <20200228155702.2062570-4-antoine.tenart@bootlin.com>
+        id S1725730AbgB1Qb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 11:31:57 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC96C31B;
+        Fri, 28 Feb 2020 08:31:56 -0800 (PST)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E1F673F73B;
+        Fri, 28 Feb 2020 08:31:53 -0800 (PST)
+Subject: Re: [PATCH v9 10/12] arm64: implement Shadow Call Stack
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20200225173933.74818-1-samitolvanen@google.com>
+ <20200225173933.74818-11-samitolvanen@google.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <56b82a54-044a-75ec-64e5-6ba25b19571f@arm.com>
+Date:   Fri, 28 Feb 2020 16:31:51 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200228155702.2062570-4-antoine.tenart@bootlin.com>
+In-Reply-To: <20200225173933.74818-11-samitolvanen@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +static void vsc8584_rgmii_set_skews(struct phy_device *phydev)
+Hi Sami,
+
+On 25/02/2020 17:39, Sami Tolvanen wrote:
+> This change implements shadow stack switching, initial SCS set-up,
+> and interrupt shadow stacks for arm64.
+
+> diff --git a/arch/arm64/include/asm/scs.h b/arch/arm64/include/asm/scs.h
+> new file mode 100644
+> index 000000000000..c50d2b0c6c5f
+> --- /dev/null
+> +++ b/arch/arm64/include/asm/scs.h
+> @@ -0,0 +1,37 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _ASM_SCS_H
+> +#define _ASM_SCS_H
+> +
+> +#ifndef __ASSEMBLY__
+
+As the whole file is guarded by this, why do you need to include it in assembly files at all?
+
+
+> +
+> +#include <linux/scs.h>
+> +
+> +#ifdef CONFIG_SHADOW_CALL_STACK
+> +
+> +extern void scs_init_irq(void);
+> +
+> +static __always_inline void scs_save(struct task_struct *tsk)
 > +{
-> +	u32 skew_rx, skew_tx;
-> +	struct device *dev = &phydev->mdio.dev;
+> +	void *s;
 > +
-> +	/* We first set the Rx and Tx skews to their default value in h/w
-> +	 * (0.2 ns).
-> +	 */
-> +	skew_rx = VSC8584_RGMII_SKEW_0_2;
-> +	skew_tx = VSC8584_RGMII_SKEW_0_2;
+> +	asm volatile("mov %0, x18" : "=r" (s));
+> +	task_set_scs(tsk, s);
+> +}
 > +
-> +	/* Based on the interface mode, we then retrieve (if available) Rx
-> +	 * and/or Tx skews from the device tree. We do not fail if the
-> +	 * properties do not exist, the default skew configuration is a valid
-> +	 * one.
-> +	 */
-> +	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
-> +	    phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID)
-> +		of_property_read_u32(dev->of_node, "vsc8584,rgmii-skew-rx",
-> +				     &skew_rx);
-> +	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
-> +	    phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID)
-> +		of_property_read_u32(dev->of_node, "vsc8584,rgmii-skew-tx",
-> +				     &skew_tx);
+> +static inline void scs_overflow_check(struct task_struct *tsk)
+> +{
+> +	if (unlikely(scs_corrupted(tsk)))
+> +		panic("corrupted shadow stack detected inside scheduler\n");
 
-Hi Antoine
+Could this ever catch anything with CONFIG_SHADOW_CALL_STACK_VMAP?
+Wouldn't we have hit the vmalloc guard page at the point of overflow?
 
-That is not the correct meaning of PHY_INTERFACE_MODE_RGMII_ID etc.
-PHY_INTERFACE_MODE_RGMII_ID means add a 2ns delay on both RX and TX.
-PHY_INTERFACE_MODE_RGMII_RXID means add a 2ns delay on the RX.
-PHY_INTERFACE_MODE_RGMII means 0 delay, with the assumption that
-either the MAC is adding the delay, or the PCB is designed with extra
-copper tracks to add the delay.
 
-You only need "vsc8584,rgmii-skew-rx" when 2ns is not correct for you
-board, and you need more fine grain control.
+> +}
+> +
+> +#else /* CONFIG_SHADOW_CALL_STACK */
+> +
+> +static inline void scs_init_irq(void) {}
+> +static inline void scs_save(struct task_struct *tsk) {}
+> +static inline void scs_overflow_check(struct task_struct *tsk) {}
+> +
+> +#endif /* CONFIG_SHADOW_CALL_STACK */
+> +
+> +#endif /* __ASSEMBLY __ */
+> +
+> +#endif /* _ASM_SCS_H */
 
-What is not clearly defined, is how you combine
-PHY_INTERFACE_MODE_RGMII* with DT properties. I guess i would enforce
-that phydev->interface is PHY_INTERFACE_MODE_RGMII and then the delays
-in DT are absolute values.
 
-There is also some discussion about what should go in DT. #defines
-like you have, or time in pS, and the driver converts to register
-values. I generally push towards pS.
 
-	 Andrew
+> diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
+> index 9461d812ae27..4b18c3bbdea5 100644
+> --- a/arch/arm64/kernel/entry.S
+> +++ b/arch/arm64/kernel/entry.S
+
+If I corrupt x18 so that we take an exception (mov x18, xzr), we take that exception
+whenever we run C code. The CPU 'vanishes' and I get a very upset scheduler shortly after.
+
+Stack misalignment has the same problem, but the overflow test (eventually) catches that,
+then calls panic() using the overflow stack. (See the kernel_ventry macro and __bad_stack
+in entry.S)
+
+It would be nice to have a per-cpu stack that we switch to when on the overflow stack.
+(this would catch the scs overflow hitting the guard page too, as we should eat through
+the regular stack until we overflowed it!)
+
+
+> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> index d4ed9a19d8fe..f2cb344f998c 100644
+> --- a/arch/arm64/kernel/smp.c
+> +++ b/arch/arm64/kernel/smp.c
+> @@ -358,6 +359,9 @@ void cpu_die(void)
+>  {
+>  	unsigned int cpu = smp_processor_id();
+>
+> +	/* Save the shadow stack pointer before exiting the idle task */
+
+I can't work out why this needs to be before before idle_task_exit()...
+It needs to run before init_idle(), which calls scs_task_reset(), but all that is on the
+cpu_up() path. (if it is to pair those up, any reason core code can't do both?)
+
+
+> +	scs_save(current);
+> +
+>  	idle_task_exit();
+>
+>  	local_daif_mask();
+>
+
+
+Reviewed-by: James Morse <james.morse@arm.com>
+
+
+Thanks!
+
+James
