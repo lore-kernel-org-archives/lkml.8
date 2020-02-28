@@ -2,110 +2,132 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15559C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DE7C3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D35B3246A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:36:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582900568;
-	bh=GViqnt9aMahJxT9Ojl/PRqucwOXqJ+vehe0XrxcLudM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=C3ZnPZAbekOwJZHsk/qKmnZPGb+SLWzku1VoLHgkY6yHZlNqQznSxCO4uux/gsM4Z
-	 UvFWSy7vUCco3fyHjVGPOofMfCXlYvdsUPobOErNz7uqSKbrSGGFkEQAf1hdykYYom
-	 MCm6jxvfv7lJr4VdMxH9SOP9mhrXOjC6JYwoVKxk=
+	by mail.kernel.org (Postfix) with ESMTP id 2842520665
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:36:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="cxNF3kUw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgB1OgH (ORCPT
+        id S1727027AbgB1Og3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 09:36:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36134 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726561AbgB1OgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 09:36:07 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DCE12469F;
-        Fri, 28 Feb 2020 14:36:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582900566;
-        bh=GViqnt9aMahJxT9Ojl/PRqucwOXqJ+vehe0XrxcLudM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pC27lY0obvs7DuaDAxkIjaU5lldxuXYltK4uhKdgZ7MtZTLXKKCR7gYiH2RhT0AZ6
-         nZ2KkS8hIXgsok8xRj4nCbY7so2XcNnapubg2+D9Z59N69Gs0MpbjUYhk7h3s4d1HB
-         Nn8fx8JjIZVl5xV3SU48LqnWfnCHKVPY/7icTaBs=
-Date:   Fri, 28 Feb 2020 23:36:00 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Fri, 28 Feb 2020 09:36:29 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:38486 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbgB1Og2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 09:36:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1582900587; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rog/tSTAvNcd3kQJ+OVeh4UTSpCdgj4vmk6kCxigbqA=;
+        b=cxNF3kUw6YGZ1KT+uO/2j5e+rd3DK0gTwhU2XDST7hc1FAM30TRyvQ50kvvVtXOZTW8MSx
+        FzuYBSqXJU/LAlxUZh0VyuN/ky8rYfrR59sHoKJ+3uNEswzrlmqa8xUL/vl+7DJJL23Muv
+        rMWXCNqkU1U4Zx/f0as8f5NvIJpp+rg=
+Date:   Fri, 28 Feb 2020 11:36:08 -0300
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v3 5/6] MIPS: DTS: CI20: multiple DTS improvements
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Boddie <paul@boddie.org.uk>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 03/13] kprobes: Add symbols for kprobe insn pages
-Message-Id: <20200228233600.5f5c733584eac08b8a4a2b70@kernel.org>
-In-Reply-To: <20200228135125.567-4-adrian.hunter@intel.com>
-References: <20200228135125.567-1-adrian.hunter@intel.com>
-        <20200228135125.567-4-adrian.hunter@intel.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Message-Id: <1582900568.3.2@crapouillou.net>
+In-Reply-To: <01795b270ad025ffffbf80e115b3b2d138a20ffe.1581884459.git.hns@goldelico.com>
+References: <cover.1581884459.git.hns@goldelico.com>
+        <01795b270ad025ffffbf80e115b3b2d138a20ffe.1581884459.git.hns@goldelico.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adrian,
+Hi Nikolaus,
 
-On Fri, 28 Feb 2020 15:51:15 +0200
-Adrian Hunter <adrian.hunter@intel.com> wrote:
+Le dim., f=E9vr. 16, 2020 at 21:20, H. Nikolaus Schaller=20
+<hns@goldelico.com> a =E9crit :
+> a) add DT node for SW1 as Enter button
+>=20
+> The SW1 button can be used as a simple one-button keyboard
+> and is connected to PD17.
+>=20
+> Note: SW1 has a second meaning to change the boot sequence
+> when pressed while powering on.
+>=20
+> b) give eth0_power a defined voltage.
+>=20
+> This is a 3.3V power switch (DVNET3.3V ).
+>=20
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+>  arch/mips/boot/dts/ingenic/ci20.dts | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>=20
+> diff --git a/arch/mips/boot/dts/ingenic/ci20.dts=20
+> b/arch/mips/boot/dts/ingenic/ci20.dts
+> index 1ab55be707af..4bacefa2cfce 100644
+> --- a/arch/mips/boot/dts/ingenic/ci20.dts
+> +++ b/arch/mips/boot/dts/ingenic/ci20.dts
+> @@ -4,6 +4,7 @@
+>  #include "jz4780.dtsi"
+>  #include <dt-bindings/clock/ingenic,tcu.h>
+>  #include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+>=20
+>  / {
+>  	compatible =3D "img,ci20", "ingenic,jz4780";
+> @@ -25,6 +26,17 @@
+>  		       0x30000000 0x30000000>;
+>  	};
+>=20
+> +	gpio-keys {
+> +		compatible =3D "gpio-keys";
+> +
+> +		sw1 {
+> +			label =3D "ci20:sw1";
+> +			linux,code =3D <KEY_ENTER>;
 
-> Symbols are needed for tools to describe instruction addresses. Pages
-> allocated for kprobe's purposes need symbols to be created for them.
-> Add such symbols to be visible via /proc/kallsyms.
+Why KEY_ENTER? It would make it impossible for applications to know=20
+that it's actually the switch that has been pressed an not the keyboard.
 
-I like this idea :)
+> +			gpios =3D <&gpd 17 GPIO_ACTIVE_HIGH>;
+> +			wakeup-source;
+> +		};
+> +	};
+> +
+>  	leds {
+>  		compatible =3D "gpio-leds";
+>=20
+> @@ -56,6 +68,8 @@
+>  	eth0_power: fixedregulator@0 {
+>  		compatible =3D "regulator-fixed";
+>  		regulator-name =3D "eth0_power";
+> +		regulator-min-microvolt =3D <3300000>;
+> +		regulator-max-microvolt =3D <3300000>;
+>  		gpio =3D <&gpb 25 GPIO_ACTIVE_LOW>;
+>  		enable-active-high;
+>  	};
+> --
+> 2.23.0
+>=20
 
-> 
-> Note: kprobe insn pages are not used if ftrace is configured. To see the
-> effect of this patch, the kernel must be configured with:
-> 
-> 	# CONFIG_FUNCTION_TRACER is not set
-> 	CONFIG_KPROBES=y
-> 
-> and for optimised kprobes:
-> 
-> 	CONFIG_OPTPROBES=y
-> 
-> Example on x86:
-> 
-> 	# perf probe __schedule
-> 	Added new event:
-> 	  probe:__schedule     (on __schedule)
-> 	# cat /proc/kallsyms | grep '\[kprobe\]'
-> 	ffffffffc0035000 t kprobe_insn_page     [kprobe]
-> 	ffffffffc0054000 t kprobe_optinsn_page  [kprobe]
+=
 
-Could you make the module name as [kprobes] ?
-BTW, it seems to pretend to be a module, but is there no concern of
-confusing users? Shouldn't it be [*kprobes] so that it is non-exist
-module name?
-
-Thank you,
-
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
