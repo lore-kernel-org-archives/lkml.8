@@ -2,115 +2,91 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19748C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D55EAC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF3162467B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A94B32467B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:04:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C2469RYv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgB1RDp (ORCPT
+        id S1726621AbgB1REi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 12:03:45 -0500
-Received: from sauhun.de ([88.99.104.3]:59882 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbgB1RDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 12:03:45 -0500
-Received: from localhost (p54B3301B.dip0.t-ipconnect.de [84.179.48.27])
-        by pokefinder.org (Postfix) with ESMTPSA id D2A142C1E8B;
-        Fri, 28 Feb 2020 18:03:42 +0100 (CET)
-Date:   Fri, 28 Feb 2020 18:03:42 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Martin Volf <martin.volf.42@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] i2c: i801: Fix iTCO_wdt resource creation if PMC
- is not present
-Message-ID: <20200228170342.GC1130@ninjato>
-References: <20200226132122.62805-1-mika.westerberg@linux.intel.com>
+        Fri, 28 Feb 2020 12:04:38 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46904 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbgB1REi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 12:04:38 -0500
+Received: by mail-lf1-f66.google.com with SMTP id v6so2597448lfo.13
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 09:04:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ag++hFwSaxms76jjBY38O9GLxRcogtFcUqUmThhruMU=;
+        b=C2469RYvzJFrDA9eyS6Q0P+WnOlCNLJOQIRhjG3dqYOVATCbRKm2zPLgh5AWsTm3KP
+         lql3XEWQ7rl4DE+Z0YYr0jzNZ/of3pT7dXojWll72VKQqg7D4lHIuH7ualLVo7S+ZAo2
+         PJhMph0IOaHKES7g4VbZBWwN2eEMZORVQw8oB1PASS4O/iTzFMuDMq/Nfb0Dpe+4Dhse
+         YwIg3puzeX7NJnUVoVmMPAaTlEjcEohuttivdwlOt7h747uouCCKLoxSkfwhffB4NjdH
+         Q5ZWrSxh8unJhw4Bvk6bIqHcfnIYVP23drraevUvNvl1HhnX9QCeRtge0Fg1IhSBrDep
+         IRrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ag++hFwSaxms76jjBY38O9GLxRcogtFcUqUmThhruMU=;
+        b=cdoSZEUo/GbekG312vIv+wFG2rG7iKQJKcrDV/c1RYUvR77fbRLJPFj/qs//EMEZTu
+         b0ZL+zYNFpjvYOCQ9JwyDXKsmC4icBEjOI35m4II/pP1ALijwu3zGS0GBht5bsBl3Qlo
+         WDpMHYSK6svj9Z6KK017R2KfvfDe37IexM9COsH4/Zbe9rEJDHKbzoPbfIzwhiInBHiR
+         h6I3edblJnW228Z+nDbfHj0lJxn5rW31mpHOeCkJnsnL4O3x4atRl8nRvk5CrD0ED0b/
+         QuB5RADIKeF2F0iCdlp8M0ZpLfTMgtAICQ+He5F+Hzxr+itK8RTs8U4ayDdHTSM9oTlI
+         TGBg==
+X-Gm-Message-State: ANhLgQ2/XArNjmhAUG37VDRHxprf5S8rh23ohjllTxdNaS3v/Er9h19A
+        J4etiuiJO3VF6lmuB8U6gg6Jz9ySNj2red96Ip1y0g==
+X-Google-Smtp-Source: ADFU+vs45S3Va+IDiHfrOjaho98KADVTBz0BwybJiGifhTsu5xbRqNCGRyUgeTAyRPCpfyidi58SwUDNEuUSNHOt+P4=
+X-Received: by 2002:a19:87:: with SMTP id 129mr3107760lfa.217.1582909476235;
+ Fri, 28 Feb 2020 09:04:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="da4uJneut+ArUgXk"
-Content-Disposition: inline
-In-Reply-To: <20200226132122.62805-1-mika.westerberg@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <AM6PR10MB22635CBCBF559AEB9A5C2BFF80120@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+ <20200226010722.2042-1-shreyas.joshi@biamp.com>
+In-Reply-To: <20200226010722.2042-1-shreyas.joshi@biamp.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 28 Feb 2020 18:04:24 +0100
+Message-ID: <CACRpkdbP5LqH_DehOfSRoF6_4xuXExB-uhkX-9ALK9yFHjC4NQ@mail.gmail.com>
+Subject: Re: [PATCH V6] mfd: da9062: Add support for interrupt polarity
+ defined in device tree
+To:     Shreyas Joshi <shreyasjoshi15@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Shreyas Joshi <shreyas.joshi@biamp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Feb 26, 2020 at 2:08 AM Shreyas Joshi <shreyasjoshi15@gmail.com> wrote:
 
---da4uJneut+ArUgXk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> The da9062 interrupt handler cannot necessarily be low active.
+> Add a function to configure the interrupt type based on what is defined in the device tree.
+> The allowable interrupt type is either low or high level trigger.
+>
+> Signed-off-by: Shreyas Joshi <shreyas.joshi@biamp.com>
+> ---
+>
+> V6:
+>   Changed regmap_reg_range to exclude DA9062AA_CONFIG_B for writeable
+>   Added regmap_reg_range DA9062AA_CONFIG_A for readable
 
-On Wed, Feb 26, 2020 at 04:21:19PM +0300, Mika Westerberg wrote:
-> Hi all,
->=20
-> This series aims to fix the issue reported by Martin Volf [1] that preven=
-ts
-> the nct6775 driver from loading.
->=20
-> I added Fixes tag to the last patch but not stable tag because the other
-> two patches it depends are not really stable material IMO. Please let me
-> know if there is a better way to organize these :)
->=20
-> I tested this on Intel Whiskey Lake based system (CNL derived) and on Com=
-et
-> Lake-V based system (SPT derived and the iTCO_wdt still works and I can s=
-ee
-> the expected resources in /proc/ioports and /proc/iomem.
->=20
-> The previous version of the patch series can be found here:
->=20
->   https://lore.kernel.org/linux-hwmon/20200225123802.88984-1-mika.westerb=
-erg@linux.intel.com/
->=20
-> Changes from the previous version:
->=20
->   * Call request_region() also for iTCO_vendorsupport
->   * Drop the core populating ICH_RES_IO_SMI completely from i2c-i801.c
->=20
-> [1] https://lore.kernel.org/linux-hwmon/CAM1AHpQ4196tyD=3DHhBu-2donSsuoga=
-bkfP03v1YF26Q7_BgvgA@mail.gmail.com/
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-I can take this series via I2C. Just wanted to let you know that I am
-aiming for rc5, because I'd like to have this in linux-next for a week
-to make sure we don't regress again (despite all precautions) somewhere
-else.
-
-Thanks to everyone to get this regression handled in such a concentrated
-manner!
-
-
---da4uJneut+ArUgXk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5ZR+4ACgkQFA3kzBSg
-Kbb29A//YUY3JKyYa6plCWxNQj6H12cc6EdXrS4lOnESwx89pq9ITm98Juu/VPqe
-41Y0idzm2RNeq9ez7J6lxzGfYul5TkAxex+FGirUlp5GwrtrpRq2WFptcCR66Vx3
-Tx4hw4bnValX5pWvQegGpvCX0kvFvMu4/Lv47C8nCWEljm0L0j144MTgXfgzCRKb
-1iElopnX9Y7c0p5SaJUmM13WjHi9Y4TloOjmeIcGjOpEcQ0YzdsPeFfuGpn17FhX
-Ninbdux+DM94gWEuK6e3Xc3HAyz3zQDN9b1MR0A/0UqjoeEUspa2yvSOEOcNcDDH
-KyD7No8DbVNc6n8dLmncQqf+jZ4yN2hPMy/6YaJGhjk40hJI8M1cYC3jVqj8bnYA
-ItjrjV7QANSUwP+Kne2qCf5rQ10P18SJXaDd8s8cWXBmOh1Y6U9XsaDRrbfuXBO1
-t0Lr6ssJZ3/RCu+X8wVMAIqgBQkhV57T0HItN8xeNhS8HpSopXank5tKVhQaUx7N
-vy4E8AoTO/T/mkNdjiUFfhDCxRqUElM5V5gtYJEl+B5Bx//2f1doGMBa0A+UIOk4
-oMsevqtEXyPacx7U7gaXbverDoLwppf2zNclJ9aSopCDoyHUBTjbvIw2aHQA3oyz
-uvhVF1Re0owL3aqfAuXbPQtUdLMdJRELXEIa0dcwOi89leiCdmc=
-=71Zy
------END PGP SIGNATURE-----
-
---da4uJneut+ArUgXk--
+Yours,
+Linus Walleij
