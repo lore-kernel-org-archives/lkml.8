@@ -2,155 +2,100 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED062C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A518FC3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C55C52469D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:28:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j6znWTYL"
+	by mail.kernel.org (Postfix) with ESMTP id 7287A246A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:30:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582896640;
+	bh=53oCsur/c2ZxKBhkRNnzQEppXhuuy+9+hAg0PfAHndc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GlhL4lfhDaeb9e0GvI1OKTB/01STBYhJ/12o9hSdnQWphahai4KPIQWpGa62g8U0t
+	 hlg6yTtc2kXwVuLWQG1h32GT5ueWNzNSX2AJzxVtg7nJuB2PRqvlaoh8cFAek4ohkS
+	 ZHPo16gkb1Sy035efavPNcF585XWHF+rqVQeuLas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgB1N2l (ORCPT
+        id S1726621AbgB1Naj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 08:28:41 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46488 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbgB1N2l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 08:28:41 -0500
-Received: by mail-wr1-f67.google.com with SMTP id j7so2879989wrp.13;
-        Fri, 28 Feb 2020 05:28:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NrHT7T88RoyQjD1urqyZZ0aRh9a3eutzKOCuX5K1yeY=;
-        b=j6znWTYLAzRRvkNdjZ9zjIGXFuDM7tFBO5sd5AZONq1ZAuvPhGMFHHQOAoP61wNFNI
-         mNHtRD/kP22UvMXlJ5U3VoD1aUGzx6sA9covL0XoeczLGAAjioSJiDDNcQC4NskJXa6q
-         0EFE3AyjZ/CkTqKnG23nCGcNxYr4hN0h+3Z6ZnqPkULjB6NGlS0UIKjC1FZm8taT0yTZ
-         qEhmjFrXYy3BYHOU3YFz9EzKp63awNX/eiyDNLZcfi3ZZVdeM5B6PwIZzbFriEQPT8zv
-         ZIgCDKgj2COpOcdpjZ8iZDxOlFRZNROL9pmbfA8xT5yHobnGvQ0uIRxTTMHafZufC2m5
-         +tow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NrHT7T88RoyQjD1urqyZZ0aRh9a3eutzKOCuX5K1yeY=;
-        b=Cbc70BVQ/PKBosUkN5UtwqX8R5D4dksQz9/1GwL2UTZCGMltJIdxJJfwrFhgxJY7Ll
-         UXoq/mwMFSmCAuKHcb57bM2PBWuTBqe878/N3NPoc8AVIlkY+xT0vepcLfeZ/bXKdfKr
-         DnuvnVTssdlOakgdMNMeh6GTBPobFSXYmmfqy8drYUElhK7WesB/NpBA67aFN9IghsAe
-         UWqA4DBpCXgFrEbBcXA2cIqMP11uqQ3+ndZY/9TxssKb+ZBACmy33xCaNtZlFSei5Arm
-         t2zfk0AfeNWEpEkMLNryERvon7L8TXkvXF/0EoOxg3sbU7QQjWS4xHSTUOcp68iWROlF
-         ci1Q==
-X-Gm-Message-State: APjAAAVlseQfpcmyTK7QqT9dQW8GvfH2FpzKUnnn2r3br1g4T48fxAai
-        9PdDKBNMfwaF7PjSgApCZ8A=
-X-Google-Smtp-Source: APXvYqzcazyu+zLUhQgdULQfW0b/6JUEwzdAx/yhhMPyZiEnDR8uFexywppZaicqNefTUid2wvto4g==
-X-Received: by 2002:a5d:5609:: with SMTP id l9mr4697197wrv.48.1582896518952;
-        Fri, 28 Feb 2020 05:28:38 -0800 (PST)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id q9sm12906735wrx.18.2020.02.28.05.28.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Feb 2020 05:28:38 -0800 (PST)
-Subject: Re: [PATCH 3/4] dt-bindings: arm: fix Rockchip rk3399-evb bindings
-To:     Robin Murphy <robin.murphy@arm.com>, heiko@sntech.de
-Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-References: <20200228061436.13506-1-jbx6244@gmail.com>
- <20200228061436.13506-3-jbx6244@gmail.com>
- <78b8b53f-2e2a-3804-41fb-bb2610947ca2@arm.com>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <229c3511-d99d-8bac-6241-0088c5fc13ef@gmail.com>
-Date:   Fri, 28 Feb 2020 14:28:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 28 Feb 2020 08:30:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43092 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725876AbgB1Naj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 08:30:39 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13F3D2469D;
+        Fri, 28 Feb 2020 13:30:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582896638;
+        bh=53oCsur/c2ZxKBhkRNnzQEppXhuuy+9+hAg0PfAHndc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FkJYHhdeolWLtiYAGUPfgv89vtSOHwEeK5vwuh2v3+G7gXm3RLhrmsCE1oFQtDWwq
+         A8XFh7mw2AOW6rXaGPBY7r5tjbhffNUlDuzDyrGuxNWzf1x8JFd7ZwBAsNsgovMfBQ
+         cLnWz9guSmC5cJeRdSFGTIsDYjGPOKaz7p+7SzHc=
+Date:   Fri, 28 Feb 2020 14:30:36 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Miles Chen <miles.chen@mediatek.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 60/97] lib/stackdepot: Fix outdated comments
+Message-ID: <20200228133036.GB3021902@kroah.com>
+References: <20200227132214.553656188@linuxfoundation.org>
+ <20200227132224.337663006@linuxfoundation.org>
+ <20200228130532.GA2979@duo.ucw.cz>
+ <20200228132455.GA3021902@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <78b8b53f-2e2a-3804-41fb-bb2610947ca2@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228132455.GA3021902@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
-
-When I look at the review process of rk3399-evb.dts
-it is mentioned here:
-
-https://lore.kernel.org/patchwork/patch/672327/
-
->> +	model = "Rockchip RK3399 Evaluation Board";
->> +	compatible = "rockchip,rk3399-evb", "rockchip,rk3399",
->> +		     "google,rk3399evb-rev2", google,rk3399evb-rev1",
->> +		     "google,rk3399evb-rev0" ;
+On Fri, Feb 28, 2020 at 02:24:55PM +0100, Greg Kroah-Hartman wrote:
+> On Fri, Feb 28, 2020 at 02:05:33PM +0100, Pavel Machek wrote:
+> > Hi!
+> > 
+> > > [ Upstream commit ee050dc83bc326ad5ef8ee93bca344819371e7a5 ]
+> > > 
+> > > Replace "depot_save_stack" with "stack_depot_save" in code comments because
+> > > depot_save_stack() was replaced in commit c0cfc337264c ("lib/stackdepot:
+> > > Provide functions which operate on plain storage arrays") and removed in
+> > > commit 56d8f079c51a ("lib/stackdepot: Remove obsolete functions")
+> > 
+> > This is wrong.
+> > 
+> > > +++ b/lib/stackdepot.c
+> > > @@ -96,7 +96,7 @@ static bool init_stack_slab(void **prealloc)
+> > >  		stack_slabs[depot_index + 1] = *prealloc;
+> > >  		/*
+> > >  		 * This smp_store_release pairs with smp_load_acquire() from
+> > > -		 * |next_slab_inited| above and in depot_save_stack().
+> > > +		 * |next_slab_inited| above and in stack_depot_save().
+> > >  		 */
+> > >  		smp_store_release(&next_slab_inited, 1);
+> > >  	}
+> > 
+> > May have been outdated for mainline, but they are actually okay for
+> > 4.19.
 > 
-> can you check against which compatibles that coreboot really matches?
-> 
-> As we said that the evb changed between rev1 and rev2, I would expect the 
-> compatible to be something like
-> 
-> 	compatible = "rockchip,rk3399-evb",  "google,rk3399evb-rev2", 
-> 			"rockchip,rk3399";
-> 
-> leaving out the rev1 and rev0
+> Good catch, I'll go drop this from the stable queues (4.14, 4.9, and 4.19).
 
-The consensus in version 4 ends in what is shown in the dts file, so I
-changed it in rockchip.yaml. Things from the past maybe can better be
-explained by Heiko. Please advise if this patch needs to change and in
-what file.
+Ah, nope, this patch is needed for the "real" patch here, 305e519ce48e
+("lib/stackdepot.c: fix global out-of-bounds in stack_slabs")
 
-Kind regards,
+Hm, it's not that big of a deal, I'll go fix that up by hand...
 
-Johan
+But that explains why it is included here.
 
+thanks,
 
-On 2/28/20 1:42 PM, Robin Murphy wrote:
-> On 28/02/2020 6:14 am, Johan Jonker wrote:
->> A test with the command below gives this error:
->>
->> arch/arm64/boot/dts/rockchip/rk3399-evb.dt.yaml: /: compatible:
->> ['rockchip,rk3399-evb', 'rockchip,rk3399', 'google,rk3399evb-rev2']
->> is not valid under any of the given schemas
->>
->> Fix this error by adding 'google,rk3399evb-rev2' to the compatible
->> property in rockchip.yaml
->>
->> make ARCH=arm64 dtbs_check
->> DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/rockchip.yaml
->>
->> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
->> ---
->>   Documentation/devicetree/bindings/arm/rockchip.yaml | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml
->> b/Documentation/devicetree/bindings/arm/rockchip.yaml
->> index d303790f5..6c6e8273e 100644
->> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
->> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
->> @@ -509,6 +509,7 @@ properties:
->>           items:
->>             - const: rockchip,rk3399-evb
->>             - const: rockchip,rk3399
->> +          - const: google,rk3399evb-rev2
-> 
-> This looks wrong - the board can't reasonably be a *more* general match
-> than the SoC. If this is supposed to represent a specific variant of the
-> basic EVB design then it should come before "rockchip,rk3399-evb" (and
-> possibly be optional if other variants also exist).
-> 
-> Robin.
-> 
->>           - description: Rockchip RK3399 Sapphire standalone
->>           items:
->>
-
+greg k-h
