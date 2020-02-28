@@ -2,160 +2,164 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF37C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7347EC3F2CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E106924695
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4125824695
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:45:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="RhWLgJDS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ghHHuqnn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgB1Imd (ORCPT
+        id S1726642AbgB1IpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 03:42:33 -0500
-Received: from mail-eopbgr70119.outbound.protection.outlook.com ([40.107.7.119]:36289
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725877AbgB1Imd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 03:42:33 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PfBzK537LSF3eX1M3KauZHJ7HiCKgOed07kILEsJMXbY8X7jo1HU4CyI22KUlcvXEKsDLB3o9V4snPCBh8nonVVh42py8ATe6Cl+C8Nm3VPFg8CN+q5ErX/9Y2MHhbRvTSJ4KexW7esNB7uIymcrVe+f/fMfiYS9mQw6X4wIM61kCk/FzJiL3d0VVncTKgaHpsLfoVg/ueB3EGL4/txDGw7ZAGVkVzhXbdfqIkkrwfJwrLfmch/fx8ay6v+MXQfhkD4esaS1ViPHaWMYOuSY1K0NlqeXZaGiYw2W27FlTjFgs6g5apKh+7piA3G7aOzFMIAMHz4lg77m0Xfgun8uZA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=knvowosbv4iaeSg07t2TRgITO0gRFVHrFW6OinWE4dk=;
- b=aBFBPhIO4367Is5ZP1OrfGwHEmuQSpc3QlBoeL7qQv0qQXeFXLsBgvQuEHHQ6IM0z14j9QUVqTfvPkn6YzOQSflSiwVbg8Chyqc1Nzu56Ri8MdrR5ImR++oK9F7uWRqQuvjJopPBWwrPpeHqLMp0Np/jDwNgES7VnnLhGANGqsEfTm1JMQynJXc/ZLJXHZ7az8qkSab1AqOFOMV5ggjVN8oJQ3EE40vNV8qudCrCgsVxLuDUa0HUrPkiuI8aTK2Qo/0kBknoZDK4N73gr3PZfoUsyFupDLJ7vkj4hypw1s40JD+tNN8FaTCeBbqdrdNG9FzX+s3V05hT63FKDBclhA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
- dkim=pass header.d=nokia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
- s=selector1-nokia-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=knvowosbv4iaeSg07t2TRgITO0gRFVHrFW6OinWE4dk=;
- b=RhWLgJDSyU3v9o+j/hv9Fsv46FYSZgwC+18NDG+AJt3j5FwIyug+ycd+yKNqRYuTQzS5v+KCDt3o+dPiKytksdx5SFhkfVjlukKPOM4n+F2HGF+aSaQpZoM9GFb2Z/wQzC5N800Hjz8AmH6QgXkA2acc/emaLKa2Epf02giP8yA=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=tommi.t.rantala@nokia.com; 
-Received: from HE1PR0702MB3675.eurprd07.prod.outlook.com (10.167.127.12) by
- HE1PR0702MB3628.eurprd07.prod.outlook.com (10.167.126.32) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.13; Fri, 28 Feb 2020 08:42:28 +0000
-Received: from HE1PR0702MB3675.eurprd07.prod.outlook.com
- ([fe80::2806:c34c:d469:8e87]) by HE1PR0702MB3675.eurprd07.prod.outlook.com
- ([fe80::2806:c34c:d469:8e87%5]) with mapi id 15.20.2793.003; Fri, 28 Feb 2020
- 08:42:27 +0000
-From:   Tommi Rantala <tommi.t.rantala@nokia.com>
-To:     stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc:     Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 4.14] tuntap: correctly set SOCKWQ_ASYNC_NOSPACE
-Date:   Fri, 28 Feb 2020 10:42:16 +0200
-Message-Id: <20200228084216.15816-1-tommi.t.rantala@nokia.com>
-X-Mailer: git-send-email 2.21.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: HE1PR0402CA0022.eurprd04.prod.outlook.com
- (2603:10a6:3:d0::32) To HE1PR0702MB3675.eurprd07.prod.outlook.com
- (2603:10a6:7:85::12)
+        Fri, 28 Feb 2020 03:45:15 -0500
+Received: from mail-wr1-f53.google.com ([209.85.221.53]:42594 "EHLO
+        mail-wr1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbgB1IpO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 03:45:14 -0500
+Received: by mail-wr1-f53.google.com with SMTP id p18so1961161wre.9
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 00:45:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7c0V49nxq31QWpSDD2qj+bopPB57VY53jiKZIRAdTJU=;
+        b=ghHHuqnnMkyG9mGaWqKyEmmHT4LTKahAQRqtuBa4JZqyxoq2beJcIePW+RR8YgNEg0
+         XGUW/50bIbs2htL3pIJ/fH9eWCPI5p7FQnKCFbGOfZsObRjawtzkiuh3P1X+colLE4yn
+         3fUvMz61Cuhtle97k45qDticKJfd3kMn7QkOY3G2Ii9+a8RptUdFJCh0UZSTmRuUBcU5
+         ZigTFMt7n3RRXURgNWasQV7LUgK8ADdhxWFBv7OKFlJkNdRMyeF/6nNppHIfm4KvFLhw
+         +JmhoWpDsEPPe+y1+MfSSFyxrzEXGtmrpc5mM/zQ8om+3XUqOxh7FcptNOEAdo2v4Iq1
+         xi8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7c0V49nxq31QWpSDD2qj+bopPB57VY53jiKZIRAdTJU=;
+        b=F01sFnhZdsh/TZmxIrtnW/vlr6p8ml+Ck6l/lU05GYC65XQqgoHiogDzp8/WXpFZxx
+         TUfSe/Y3EwD65MTJKLGbCtqhqn6J10maoRt2pzfNys5QFZg1p2JAkLqyYmU9sTBIIMj+
+         HVLPtctaOJvlTkTKuD9/9NwSzR3EU9gipqYxMGrw80M/AdJDtdpGFcDvniOPner4vJ2o
+         9oJOTrHBPz2aujqu1XbHBvdwgR9kt+pVuGF1OffVK5CaPzqEPn/dmHdLvzpFuI3ExaDP
+         Z/G20ABMO11icP6Iud+yjuQlOjYqW4ofVhr5NyMXGBrJt/Pt+R4pKnMhqUSzyfiV+a/6
+         2PtQ==
+X-Gm-Message-State: APjAAAW3f2umREc30XZvxkCWi8ULgbE5Cmm2yzvzXB5T7hY2cncDCH1d
+        BZ+KV1bv+1+UT1k6WvYsFU0jVA==
+X-Google-Smtp-Source: APXvYqwGU4+WVO39fvJHE+QydH0jCFM8adott15SJfcWfhhqAWLWjRsKKtyx03W0hXsZxjkMzfu5+A==
+X-Received: by 2002:a5d:6b88:: with SMTP id n8mr3877726wrx.288.1582879511985;
+        Fri, 28 Feb 2020 00:45:11 -0800 (PST)
+Received: from [10.44.66.8] ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id z19sm1138078wmi.35.2020.02.28.00.45.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 28 Feb 2020 00:45:11 -0800 (PST)
+Subject: Re: [V4, 1/3] dt-bindings: interconnect: Add Qualcomm SC7180 DT
+ bindings
+To:     Odelu Kukatla <okukatla@codeaurora.org>, daidavid1@codeaurora.org,
+        bjorn.andersson@linaro.org, evgreen@google.com,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     sboyd@kernel.org, ilina@codeaurora.org, seansw@qti.qualcomm.com,
+        elder@linaro.org, linux-arm-msm-owner@vger.kernel.org
+References: <1582646384-1458-1-git-send-email-okukatla@codeaurora.org>
+ <1582646384-1458-2-git-send-email-okukatla@codeaurora.org>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <4eb48a57-508c-02fd-fca7-d2fd8d959eef@linaro.org>
+Date:   Fri, 28 Feb 2020 10:45:09 +0200
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from trfedora.emea.nsn-net.net (131.228.2.19) by HE1PR0402CA0022.eurprd04.prod.outlook.com (2603:10a6:3:d0::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15 via Frontend Transport; Fri, 28 Feb 2020 08:42:27 +0000
-X-Mailer: git-send-email 2.21.1
-X-Originating-IP: [131.228.2.19]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 0c0ce852-c867-4e11-79d2-08d7bc2a23f8
-X-MS-TrafficTypeDiagnostic: HE1PR0702MB3628:
-X-Microsoft-Antispam-PRVS: <HE1PR0702MB362870D41C4F51700FDDEEF9B4E80@HE1PR0702MB3628.eurprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1247;
-X-Forefront-PRVS: 0327618309
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(396003)(39860400002)(376002)(366004)(136003)(199004)(189003)(36756003)(6486002)(6512007)(5660300002)(6506007)(2616005)(26005)(478600001)(16526019)(956004)(66476007)(66556008)(81156014)(4326008)(66946007)(8936002)(81166006)(8676002)(6666004)(316002)(2906002)(1076003)(52116002)(186003)(86362001)(103116003);DIR:OUT;SFP:1102;SCL:1;SRVR:HE1PR0702MB3628;H:HE1PR0702MB3675.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: nokia.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3WswW6+WRm5OAYFqrbZT9mb0nIbj7VAc683iGgsGxzVqv1p7ARn4Q+a/75E8vEnxnhs9CBqXHvsHZAIKEKGa5gdA+GxaDFBLox1CQ95B0wXSLQq0HMYVF4gnbN5GrBKKAaHr3gr+EmY7sCFs46hi+5tzgi5W//yiAKKCDlMrXa+7IbvPOTEX4wWC6sWPTR90/CMFjx9pdulYx0BBQInF+AMfy957hdUYCz08BFihp4YP2UKuKWt9ykoPm5TkgpD8GyqWI3HXliAzy4zyIDdmCVpUiRwdrYHXt7xMuuxG0e0wqKdg0PP6477A2j59r/1RHCx33aG1tQ8wp32EVm6/hOYW2u40Ih/l9sMXYw6fFOW8cNXxby6taJhfhlBLzGhTbVboluJj3CoWtaEDhz6DQjUrAlpKOtqHluuVdIVYipEpZIjnvL9YgR8p0Jx4P+fu
-X-MS-Exchange-AntiSpam-MessageData: 20pr1PgoOZTrJinTCm5eLNg5eT6o955qZLviud4eUvtT1VLZ/s9Mw2wjTXUyKdrvxUCG3lrhSDlEZAAsOvs1qSsAyLIjznXYLR0JPPbfe+z9bBP8F1pCRm15i6//imJuAsRdRo+pfUA2Y3627+2oWg==
-X-OriginatorOrg: nokia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0c0ce852-c867-4e11-79d2-08d7bc2a23f8
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2020 08:42:27.5658
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5d471751-9675-428d-917b-70f44f9630b0
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: d/G1myJFD1JdMZH8p0TmtjQEXilCnnp0sbHhzVdd8EhNclllKHtC8lirQXS0Jt1nN9GLll0C1jvlFj27hGxozMStSjOz7dCNIs5UvSmBH5k=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0702MB3628
+In-Reply-To: <1582646384-1458-2-git-send-email-okukatla@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Wang <jasowang@redhat.com>
+Hi Odelu,
 
-[ Upstream commit 2f3ab6221e4c87960347d65c7cab9bd917d1f637 ]
+On 2/25/20 17:59, Odelu Kukatla wrote:
+> The Qualcomm SC7180 platform has several bus fabrics that could be
+> controlled and tuned dynamically according to the bandwidth demand.
+> 
+> Signed-off-by: Odelu Kukatla <okukatla@codeaurora.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../bindings/interconnect/qcom,sc7180.yaml         |  85 +++++++++++
+>  include/dt-bindings/interconnect/qcom,sc7180.h     | 161 +++++++++++++++++++++
+>  2 files changed, 246 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+>  create mode 100644 include/dt-bindings/interconnect/qcom,sc7180.h
+> 
+> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml b/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+> new file mode 100644
+> index 0000000..2cb7d4e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+> @@ -0,0 +1,85 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/interconnect/qcom,sc7180.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title:  Qualcomm SC7180 Network-On-Chip Interconnect
+> +
+> +maintainers:
+> +  - Georgi Djakov <georgi.djakov@linaro.org>
 
-When link is down, writes to the device might fail with
--EIO. Userspace needs an indication when the status is resolved.  As a
-fix, tun_net_open() attempts to wake up writers - but that is only
-effective if SOCKWQ_ASYNC_NOSPACE has been set in the past. This is
-not the case of vhost_net which only poll for EPOLLOUT after it meets
-errors during sendmsg().
+Hey, this should be you, not me.
 
-This patch fixes this by making sure SOCKWQ_ASYNC_NOSPACE is set when
-socket is not writable or device is down to guarantee EPOLLOUT will be
-raised in either tun_chr_poll() or tun_sock_write_space() after device
-is up.
-
-Cc: Hannes Frederic Sowa <hannes@stressinduktion.org>
-Cc: Eric Dumazet <edumazet@google.com>
-Fixes: 1bd4978a88ac2 ("tun: honor IFF_UP in tun_get_user()")
-Signed-off-by: Jason Wang <jasowang@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Tommi Rantala <tommi.t.rantala@nokia.com>
----
- drivers/net/tun.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-index 3086211829a7..ba34f61d70de 100644
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -1134,6 +1134,13 @@ static void tun_net_init(struct net_device *dev)
- 	dev->max_mtu = MAX_MTU - dev->hard_header_len;
- }
- 
-+static bool tun_sock_writeable(struct tun_struct *tun, struct tun_file *tfile)
-+{
-+	struct sock *sk = tfile->socket.sk;
-+
-+	return (tun->dev->flags & IFF_UP) && sock_writeable(sk);
-+}
-+
- /* Character device part */
- 
- /* Poll */
-@@ -1156,10 +1163,14 @@ static unsigned int tun_chr_poll(struct file *file, poll_table *wait)
- 	if (!skb_array_empty(&tfile->tx_array))
- 		mask |= POLLIN | POLLRDNORM;
- 
--	if (tun->dev->flags & IFF_UP &&
--	    (sock_writeable(sk) ||
--	     (!test_and_set_bit(SOCKWQ_ASYNC_NOSPACE, &sk->sk_socket->flags) &&
--	      sock_writeable(sk))))
-+	/* Make sure SOCKWQ_ASYNC_NOSPACE is set if not writable to
-+	 * guarantee EPOLLOUT to be raised by either here or
-+	 * tun_sock_write_space(). Then process could get notification
-+	 * after it writes to a down device and meets -EIO.
-+	 */
-+	if (tun_sock_writeable(tun, tfile) ||
-+	    (!test_and_set_bit(SOCKWQ_ASYNC_NOSPACE, &sk->sk_socket->flags) &&
-+	     tun_sock_writeable(tun, tfile)))
- 		mask |= POLLOUT | POLLWRNORM;
- 
- 	if (tun->dev->reg_state != NETREG_REGISTERED)
--- 
-2.21.1
-
+Thanks,
+Georgi
