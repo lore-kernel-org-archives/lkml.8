@@ -2,93 +2,123 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 736E4C3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C123C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45DF520732
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D17E2469B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:11:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730904AbgB1EJh (ORCPT
+        id S1730878AbgB1ELX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 23:09:37 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:53921 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730885AbgB1EJg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 23:09:36 -0500
-Received: from callcc.thunk.org (guestnat-104-133-8-109.corp.google.com [104.133.8.109] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 01S49UB5027674
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Feb 2020 23:09:32 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 46D5B421A71; Thu, 27 Feb 2020 23:09:30 -0500 (EST)
-Date:   Thu, 27 Feb 2020 23:09:30 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
-Subject: Re: [PATCH v2] random: always use batched entropy for
- get_random_u{32,64}
-Message-ID: <20200228040930.GB101220@mit.edu>
-References: <CAHmME9o+Nh0=0QBimOJLXpLitQ9p6rsAut+Zvb4A1-iEjGn3jw@mail.gmail.com>
- <20200221201037.30231-1-Jason@zx2c4.com>
+        Thu, 27 Feb 2020 23:11:23 -0500
+Received: from mga06.intel.com ([134.134.136.31]:56670 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730586AbgB1ELX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 23:11:23 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 20:11:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
+   d="scan'208";a="272497840"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 27 Feb 2020 20:11:20 -0800
+Received: from [10.226.38.23] (unknown [10.226.38.23])
+        by linux.intel.com (Postfix) with ESMTP id 77C5558052E;
+        Thu, 27 Feb 2020 20:11:11 -0800 (PST)
+Subject: Re: [PATCH v11 2/2] spi: cadence-quadspi: Add support for the Cadence
+ QSPI controller
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        broonie@kernel.org, vigneshr@ti.com, robh+dt@kernel.org,
+        marex@denx.de, devicetree@vger.kernel.org,
+        tien.fong.chee@intel.com, tudor.ambarus@gmail.com,
+        boris.brezillon@free-electrons.com, richard@nod.at,
+        qi-ming.wu@intel.com, simon.k.r.goldschmidt@gmail.com,
+        david.oberhollenzer@sigma-star.at, dinguyen@kernel.org,
+        linux-mtd@lists.infradead.org, miquel.raynal@bootlin.com,
+        cheol.yong.kim@intel.com, mark.rutland@arm.com,
+        computersforpeace@gmail.com, dwmw2@infradead.org,
+        cyrille.pitchen@atmel.com
+References: <20200227062708.21544-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200227062708.21544-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200227183032.77ef0795@collabora.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <f82e4964-f030-9aac-5895-a715921ed6db@linux.intel.com>
+Date:   Fri, 28 Feb 2020 12:11:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221201037.30231-1-Jason@zx2c4.com>
+In-Reply-To: <20200227183032.77ef0795@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 09:10:37PM +0100, Jason A. Donenfeld wrote:
-> It turns out that RDRAND is pretty slow. Comparing these two
-> constructions:
-> 
->   for (i = 0; i < CHACHA_BLOCK_SIZE; i += sizeof(ret))
->     arch_get_random_long(&ret);
-> 
-> and
-> 
->   long buf[CHACHA_BLOCK_SIZE / sizeof(long)];
->   extract_crng((u8 *)buf);
-> 
-> it amortizes out to 352 cycles per long for the top one and 107 cycles
-> per long for the bottom one, on Coffee Lake Refresh, Intel Core i9-9880H.
-> 
-> And importantly, the top one has the drawback of not benefiting from the
-> real rng, whereas the bottom one has all the nice benefits of using our
-> own chacha rng. As get_random_u{32,64} gets used in more places (perhaps
-> beyond what it was originally intended for when it was introduced as
-> get_random_{int,long} back in the md5 monstrosity era), it seems like it
-> might be a good thing to strengthen its posture a tiny bit. Doing this
-> should only be stronger and not any weaker because that pool is already
-> initialized with a bunch of rdrand data (when available). This way, we
-> get the benefits of the hardware rng as well as our own rng.
-> 
-> Another benefit of this is that we no longer hit pitfalls of the recent
-> stream of AMD bugs in RDRAND. One often used code pattern for various
-> things is:
-> 
->   do {
->   	val = get_random_u32();
->   } while (hash_table_contains_key(val));
-> 
-> That recent AMD bug rendered that pattern useless, whereas we're really
-> very certain that chacha20 output will give pretty distributed numbers,
-> no matter what.
-> 
-> So, this simplification seems better both from a security perspective
-> and from a performance perspective.
-> 
-> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Hi Boris,
 
-Thanks, applied.
+      Thank you so much for the review comments...
 
-						- Ted
+On 28/2/2020 1:30 AM, Boris Brezillon wrote:
+> On Thu, 27 Feb 2020 14:27:08 +0800
+> "Ramuthevar, Vadivel MuruganX"
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> Add support for the Cadence QSPI controller. This controller is
+>> present in the Intel Lightning Mountain(LGM) SoCs, Altera and TI SoCs.
+>> This driver has been tested on the Intel LGM SoCs.
+>>
+>> This driver does not support generic SPI and also the implementation
+>> only supports spi-mem interface to replace the existing driver in
+>> mtd/spi-nor/cadence-quadspi.c, the existing driver only support SPI-NOR
+>> flash memory
+> Is it really supporting SPI NORs only, or is it just that you only
+> tested it with a spi-nor?
+
+The existing drivers/mtd/spi-nor/cadence-quadspi.c supports SPI-NORs 
+only, because the driver is developed
+
+such a way that it does not support other SPI based flash memories, also 
+never uses SPI/SPI-MEM based framework.
+
+So we Vignesh suggested me to  develop the new driver which supports 
+both SPI-NOR and SPI-NAND based on the SPI-MEM framework.
+
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+>> Reported-by: kbuild test robot <lkp@intel.com>
+>> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Reported-by? What has been reported?
+Sure, will remove it.
+>
+>> ---
+>>   drivers/mtd/spi-nor/Kconfig                        |  11 -
+>>   drivers/mtd/spi-nor/Makefile                       |   1 -
+>>   drivers/spi/Kconfig                                |  10 +
+>>   drivers/spi/Makefile                               |   1 +
+>>   .../spi-cadence-quadspi.c}                         | 641 ++++++++++-----------
+> Looks like this could be split in several patches to ease the review:
+>
+> 1/ convert to spi-mem
+> 2/ move the driver to drivers/spi
+> 3/ add support for intel,lgm-qspi
+>
+> other than that, that's good to see one more spi-nor controller driver
+> converted to spi-mem.
+
+Agreed!, will split as per your suggestions.
+
+Regards
+Vadivel
+>
