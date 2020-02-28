@@ -2,237 +2,207 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1FAC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2916C3F2CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 491242087F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:00:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1EFB2087F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:01:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KfsPUQe/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="og7wbWl6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730124AbgB1AA6 (ORCPT
+        id S1730148AbgB1ABL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 19:00:58 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:11962 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728993AbgB1AA6 (ORCPT
+        Thu, 27 Feb 2020 19:01:11 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:36824 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730031AbgB1ABL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 19:00:58 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582848056; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=sxdjaXAFvzStZVWpkXqd8Oa4CInabS6KmEzidWgB4u4=;
- b=KfsPUQe/8j+Wj6pm3e2pKOpCXpjrcPhoNpbjVPAcbGhL573dP76IilfaFtF1WOkUBzoWQIq5
- oNj9bcKTyYy8ncPvY7ZrAIIQz17BJrso5WUzk+oNVr3r+C6zTQWsXtm50u/K/xA9r2+ZsY4U
- S9u1Ji2p2IO9Ssb8UX1n0f+weQk=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e585816.7fa3af2da5e0-smtp-out-n02;
- Fri, 28 Feb 2020 00:00:22 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8EFB3C447A2; Fri, 28 Feb 2020 00:00:22 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: rishabhb)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6B74AC43383;
-        Fri, 28 Feb 2020 00:00:21 +0000 (UTC)
+        Thu, 27 Feb 2020 19:01:11 -0500
+Received: by mail-pj1-f65.google.com with SMTP id gv17so488222pjb.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 16:01:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AjOtp5FR+EutG91iiiNHeLTtXSRa+F8rsDdCFbNQiKA=;
+        b=og7wbWl6rTie1f9y+17pPNODfxhRLbqyDmNOgU3ni+5ldYJnCUnsKtnloJk0Et5Vjq
+         JIIzeny0AtgNula80xkra5O9DFF//GYNz4kKVUZxQzcux2YO2BZl++Zo6OBw2K2+iUKK
+         w0a3VGbl1Got9ch5YVPfo5JI2si+sbT1lhW6Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AjOtp5FR+EutG91iiiNHeLTtXSRa+F8rsDdCFbNQiKA=;
+        b=KmYKNDO1DQAjaSsLNpgHKJl78gAs5NSfD99SNQJUA7d0Kg3cQf8SYtVeMdHib6tQ/u
+         +LuZfYe6oJSX1fqyDm85yOTyJW4Jh0OeC+qrdVwrhxdqqcTVcLHzSSnCc/cHdie8Im12
+         U4xQgfbtjce2l/2T7XqeGU349wLwHbzFR01Zj9DWGlpJ3O5nPMjlPdeNZ4lN0sQmUlAB
+         d6y9lVuNZkOL0AODvGkZRMMdX0JesV50jGD+XyYzZ3WyRK0w8aVvbfRigAAJAmtFtq0O
+         aKg5lM/0Jf1z2P43/xrApvQN1i7Zm24k0LxAbGnFHg0GG/qq/3CFHTUgYwZwC1dMAS+N
+         snEg==
+X-Gm-Message-State: APjAAAUMpUhMy8GnHopnkGIgWLefSkk26aiQO9OJbXFYOt28a8/s3Fh8
+        5vfw8+OqylKxQ7d+G9bmosQ+Jg==
+X-Google-Smtp-Source: APXvYqzOftm1lL+gALRY9HoLca3CVgYdN/lXyS29L66lhzrvv8B7l3DTwmKTJiw1+t9iUzbkbEElYw==
+X-Received: by 2002:a17:90a:ef17:: with SMTP id k23mr1496185pjz.139.1582848069749;
+        Thu, 27 Feb 2020 16:01:09 -0800 (PST)
+Received: from thgarnie.kir.corp.google.com ([2620:0:1008:1100:6e62:16fa:a60c:1d24])
+        by smtp.gmail.com with ESMTPSA id c18sm7314476pgw.17.2020.02.27.16.01.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2020 16:01:09 -0800 (PST)
+From:   Thomas Garnier <thgarnie@chromium.org>
+To:     kernel-hardening@lists.openwall.com
+Cc:     kristen@linux.intel.com, keescook@chromium.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Cao jin <caoj.fnst@cn.fujitsu.com>,
+        Allison Randal <allison@lohutok.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, linux-pm@vger.kernel.org
+Subject: [PATCH v11 00/11] x86: PIE support to extend KASLR randomization
+Date:   Thu, 27 Feb 2020 16:00:45 -0800
+Message-Id: <20200228000105.165012-1-thgarnie@chromium.org>
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 27 Feb 2020 16:00:21 -0800
-From:   rishabhb@codeaurora.org
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Siddharth Gupta <sidgup@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, ohad@wizery.com, tsoni@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, psodagud@codeaurora.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 6/6] remoteproc: qcom: Add notification types to SSR
-In-Reply-To: <20200227215940.GC20116@xps15>
-References: <1582167465-2549-1-git-send-email-sidgup@codeaurora.org>
- <1582167465-2549-7-git-send-email-sidgup@codeaurora.org>
- <20200227215940.GC20116@xps15>
-Message-ID: <1a615fcd5a5c435d1d8babe8d5c3f8c3@codeaurora.org>
-X-Sender: rishabhb@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-27 13:59, Mathieu Poirier wrote:
-> On Wed, Feb 19, 2020 at 06:57:45PM -0800, Siddharth Gupta wrote:
->> The SSR subdevice only adds callback for the unprepare event. Add 
->> callbacks
->> for unprepare, start and prepare events. The client driver for a 
->> particular
->> remoteproc might be interested in knowing the status of the remoteproc
->> while undergoing SSR, not just when the remoteproc has finished 
->> shutting
->> down.
->> 
->> Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
->> ---
->>  drivers/remoteproc/qcom_common.c | 39 
->> +++++++++++++++++++++++++++++++++++----
->>  include/linux/remoteproc.h       | 15 +++++++++++++++
->>  2 files changed, 50 insertions(+), 4 deletions(-)
->> 
->> diff --git a/drivers/remoteproc/qcom_common.c 
->> b/drivers/remoteproc/qcom_common.c
->> index 6714f27..6f04a5b 100644
->> --- a/drivers/remoteproc/qcom_common.c
->> +++ b/drivers/remoteproc/qcom_common.c
->> @@ -183,9 +183,9 @@ EXPORT_SYMBOL_GPL(qcom_remove_smd_subdev);
->>   *
->>   * Returns pointer to srcu notifier head on success, ERR_PTR on 
->> failure.
->>   *
->> - * This registers the @notify function as handler for restart 
->> notifications. As
->> - * remote processors are stopped this function will be called, with 
->> the rproc
->> - * pointer passed as a parameter.
->> + * This registers the @notify function as handler for 
->> powerup/shutdown
->> + * notifications. This function will be invoked inside the callbacks 
->> registered
->> + * for the ssr subdevice, with the rproc pointer passed as a 
->> parameter.
->>   */
->>  void *qcom_register_ssr_notifier(struct rproc *rproc, struct 
->> notifier_block *nb)
->>  {
->> @@ -227,11 +227,39 @@ int qcom_unregister_ssr_notifier(void *notify, 
->> struct notifier_block *nb)
->>  }
->>  EXPORT_SYMBOL_GPL(qcom_unregister_ssr_notifier);
->> 
->> +static int ssr_notify_prepare(struct rproc_subdev *subdev)
->> +{
->> +	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
->> +
->> +	srcu_notifier_call_chain(ssr->rproc_notif_list,
->> +				 RPROC_BEFORE_POWERUP, (void *)ssr->name);
->> +	return 0;
->> +}
->> +
->> +static int ssr_notify_start(struct rproc_subdev *subdev)
->> +{
->> +	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
->> +
->> +	srcu_notifier_call_chain(ssr->rproc_notif_list,
->> +				 RPROC_AFTER_POWERUP, (void *)ssr->name);
->> +	return 0;
->> +}
->> +
->> +static void ssr_notify_stop(struct rproc_subdev *subdev, bool 
->> crashed)
->> +{
->> +	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
->> +
->> +	srcu_notifier_call_chain(ssr->rproc_notif_list,
->> +				 RPROC_BEFORE_SHUTDOWN, (void *)ssr->name);
->> +}
->> +
->> +
->>  static void ssr_notify_unprepare(struct rproc_subdev *subdev)
->>  {
->>  	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
->> 
->> -	srcu_notifier_call_chain(ssr->rproc_notif_list, 0, (void 
->> *)ssr->name);
->> +	srcu_notifier_call_chain(ssr->rproc_notif_list,
->> +				 RPROC_AFTER_SHUTDOWN, (void *)ssr->name);
->>  }
->> 
->>  /**
->> @@ -248,6 +276,9 @@ void qcom_add_ssr_subdev(struct rproc *rproc, 
->> struct qcom_rproc_ssr *ssr,
->>  {
->>  	ssr->name = ssr_name;
->>  	ssr->subdev.name = kstrdup("ssr_notifs", GFP_KERNEL);
->> +	ssr->subdev.prepare = ssr_notify_prepare;
->> +	ssr->subdev.start = ssr_notify_start;
->> +	ssr->subdev.stop = ssr_notify_stop;
-> 
-> Now that I have a better understanding of what this patchset is doing, 
-> I realise
-> my comments in patch 04 won't work.  To differentiate the subdevs of an 
-> rproc I
-> suggest to wrap them in a generic structure with a type and an enum.  
-> That way
-> you can differenciate between subdevices without having to add to the 
-> core.
-Ok. I can try that.
-> 
-> That being said, I don't understand what patches 5 and 6 are doing...
-> Registering with the global ssr_notifiers allowed to gracefully 
-> shutdown all the
-> MCUs in the system when one of them would go down.  But now that we are 
-> using
-> the notifier on a per MCU, I really don't see why each subdev couldn't 
-> implement
-> the right prepare/start/stop functions.
-> 
-> Am I missing something here?
-We only want kernel clients to be notified when the Remoteproc they are 
-interested
-in changes state. For e.g. audio kernel driver should be notified when 
-audio
-processor goes down but it does not care about any other remoteproc.
-If you are suggesting that these kernel clients be added as subdevices 
-then
-we will end up having many subdevices registered to each remoteproc. So 
-we
-implemented a notifier chain per Remoteproc. This keeps the SSR 
-notifications as
-the subdevice per remoteproc, and all interested clients can register to 
-it.
-> 
-> 
->>  	ssr->subdev.unprepare = ssr_notify_unprepare;
->>  	ssr->rproc_notif_list = kzalloc(sizeof(struct srcu_notifier_head),
->>  								GFP_KERNEL);
->> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
->> index e2f60cc..4be4478 100644
->> --- a/include/linux/remoteproc.h
->> +++ b/include/linux/remoteproc.h
->> @@ -449,6 +449,21 @@ struct rproc_dump_segment {
->>  };
->> 
->>  /**
->> + * enum rproc_notif_type - Different stages of remoteproc 
->> notifications
->> + * @RPROC_BEFORE_SHUTDOWN:	unprepare stage of  remoteproc
->> + * @RPROC_AFTER_SHUTDOWN:	stop stage of  remoteproc
->> + * @RPROC_BEFORE_POWERUP:	prepare stage of  remoteproc
->> + * @RPROC_AFTER_POWERUP:	start stage of  remoteproc
->> + */
->> +enum rproc_notif_type {
->> +	RPROC_BEFORE_SHUTDOWN,
->> +	RPROC_AFTER_SHUTDOWN,
->> +	RPROC_BEFORE_POWERUP,
->> +	RPROC_AFTER_POWERUP,
->> +	RPROC_MAX
->> +};
->> +
->> +/**
->>   * struct rproc - represents a physical remote processor device
->>   * @node: list node of this rproc object
->>   * @domain: iommu domain
->> --
->> Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->> a Linux Foundation Collaborative Project
->> 
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Minor changes based on feedback and rebase from v10.
+
+Splitting the previous serie in two. This part contains assembly code
+changes required for PIE but without any direct dependencies with the
+rest of the patchset.
+
+Note: Using objtool to detect non-compliant PIE relocations is not yet
+possible as this patchset only includes the simplest PIE changes.
+Additional changes are needed in kvm, xen and percpu code.
+
+Changes:
+ - patch v11 (assembly);
+   - Fix comments on x86/entry/64.
+   - Remove KASLR PIE explanation on all commits.
+   - Add note on objtool not being possible at this stage of the patchset.
+ - patch v10 (assembly):
+   - Swap rax for rdx on entry/64 changes based on feedback.
+   - Addressed feedback from Borislav Petkov on boot, paravirt, alternatives
+     and globally.
+   - Rebased the patchset and ensure it works with large kaslr (not included).
+ - patch v9 (assembly):
+   - Moved to relative reference for sync_core based on feedback.
+   - x86/crypto had multiple algorithms deleted, removed PIE changes to them.
+   - fix typo on comment end line.
+ - patch v8 (assembly):
+   - Fix issues in crypto changes (thanks to Eric Biggers).
+   - Remove unnecessary jump table change.
+   - Change author and signoff to chromium email address.
+ - patch v7 (assembly):
+   - Split patchset and reorder changes.
+ - patch v6:
+   - Rebase on latest changes in jump tables and crypto.
+   - Fix wording on couple commits.
+   - Revisit checkpatch warnings.
+   - Moving to @chromium.org.
+ - patch v5:
+   - Adapt new crypto modules for PIE.
+   - Improve per-cpu commit message.
+   - Fix xen 32-bit build error with .quad.
+   - Remove extra code for ftrace.
+ - patch v4:
+   - Simplify early boot by removing global variables.
+   - Modify the mcount location script for __mcount_loc intead of the address
+     read in the ftrace implementation.
+   - Edit commit description to explain better where the kernel can be located.
+   - Streamlined the testing done on each patch proposal. Always testing
+     hibernation, suspend, ftrace and kprobe to ensure no regressions.
+ - patch v3:
+   - Update on message to describe longer term PIE goal.
+   - Minor change on ftrace if condition.
+   - Changed code using xchgq.
+ - patch v2:
+   - Adapt patch to work post KPTI and compiler changes
+   - Redo all performance testing with latest configs and compilers
+   - Simplify mov macro on PIE (MOVABS now)
+   - Reduce GOT footprint
+ - patch v1:
+   - Simplify ftrace implementation.
+   - Use gcc mstack-protector-guard-reg=%gs with PIE when possible.
+ - rfc v3:
+   - Use --emit-relocs instead of -pie to reduce dynamic relocation space on
+     mapped memory. It also simplifies the relocation process.
+   - Move the start the module section next to the kernel. Remove the need for
+     -mcmodel=large on modules. Extends module space from 1 to 2G maximum.
+   - Support for XEN PVH as 32-bit relocations can be ignored with
+     --emit-relocs.
+   - Support for GOT relocations previously done automatically with -pie.
+   - Remove need for dynamic PLT in modules.
+   - Support dymamic GOT for modules.
+ - rfc v2:
+   - Add support for global stack cookie while compiler default to fs without
+     mcmodel=kernel
+   - Change patch 7 to correctly jump out of the identity mapping on kexec load
+     preserve.
+
+These patches make some of the changes necessary to build the kernel as
+Position Independent Executable (PIE) on x86_64. Another patchset will
+add the PIE option and larger architecture changes. PIE allows the kernel to be
+placed below the 0xffffffff80000000 increasing the range of KASLR.
+
+The patches:
+ - 1, 3-11: Change in assembly code to be PIE compliant.
+ - 2: Add a new _ASM_MOVABS macro to fetch a symbol address generically.
+
+diffstat:
+ crypto/aegis128-aesni-asm.S         |    6 +-
+ crypto/aesni-intel_asm.S            |    8 +--
+ crypto/aesni-intel_avx-x86_64.S     |    3 -
+ crypto/camellia-aesni-avx-asm_64.S  |   42 +++++++--------
+ crypto/camellia-aesni-avx2-asm_64.S |   44 ++++++++--------
+ crypto/camellia-x86_64-asm_64.S     |    8 +--
+ crypto/cast5-avx-x86_64-asm_64.S    |   50 ++++++++++--------
+ crypto/cast6-avx-x86_64-asm_64.S    |   44 +++++++++-------
+ crypto/des3_ede-asm_64.S            |   96 ++++++++++++++++++++++++------------
+ crypto/ghash-clmulni-intel_asm.S    |    4 -
+ crypto/glue_helper-asm-avx.S        |    4 -
+ crypto/glue_helper-asm-avx2.S       |    6 +-
+ crypto/sha256-avx2-asm.S            |   18 ++++--
+ entry/entry_64.S                    |   16 ++++--
+ include/asm/alternative.h           |    6 +-
+ include/asm/asm.h                   |    1 
+ include/asm/bug.h                   |    2 
+ include/asm/paravirt_types.h        |   32 ++++++++++--
+ include/asm/pm-trace.h              |    2 
+ include/asm/processor.h             |    6 +-
+ kernel/acpi/wakeup_64.S             |   31 ++++++-----
+ kernel/head_64.S                    |   15 +++--
+ kernel/relocate_kernel_64.S         |    2 
+ power/hibernate_asm_64.S            |    4 -
+ 24 files changed, 268 insertions(+), 182 deletions(-)
+
+Patchset is based on next-20200227.
+
+
