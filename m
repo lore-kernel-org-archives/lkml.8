@@ -2,108 +2,141 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C231C3F2D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A6FC3F2CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FEAC2469D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:58:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FLoUb8YW"
+	by mail.kernel.org (Postfix) with ESMTP id 5CF7B2469D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:00:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730818AbgB1D6G (ORCPT
+        id S1730821AbgB1EAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 22:58:06 -0500
-Received: from mail-pl1-f172.google.com ([209.85.214.172]:33727 "EHLO
-        mail-pl1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730782AbgB1D6F (ORCPT
+        Thu, 27 Feb 2020 23:00:06 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17374 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730736AbgB1EAF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 22:58:05 -0500
-Received: by mail-pl1-f172.google.com with SMTP id ay11so704229plb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 19:58:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8xTrl5tDJ3LgMjVjznAF2IZeLLj4bLTa5BFypN0t3zI=;
-        b=FLoUb8YWIBuLFoC4a674VnvdxctknREYD8PsnvPRqrRhKsCe12ZRSw+75eaa+Dlup8
-         MCLEWHv+XMbgSPaH9rDmqjz2BP7UVMNjqglwAa/87DKW6m47xejUIaAVeWnkBb1w8558
-         sW0TsJVbQTh+l68RVz8wB7l1Tgmy7ImR47CWQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8xTrl5tDJ3LgMjVjznAF2IZeLLj4bLTa5BFypN0t3zI=;
-        b=gwZ87WlTYWaeIiL/2hBRczi4aMdtHXkp29XXri6yDrvZrKkn9Y5dZSMs7Cf0LWa23R
-         0P7IlKK1V4LHFUyzl0R8XVEaH+8LhARTQVgNjDs/lYAFT8mrQ0dTn2AmUGnAT1OqQ2kl
-         qBMB0XHfh6BRcIuz0YA6HApOEozJ0DZxV1wW5v+c0t+OG0ykRgCNkfcnfLgvpn1YckhH
-         olr6Rlzz7Lv6UwHdszWRR8lr7R0Kp5vLp/yXrdzLS2ie7aq9Q5PdvRHjOCnas2kfHiqh
-         1v77PXOAEEnj+iKNCX6Qu0QftzUPGz9wpPxbuPw36veLfN4oAT3N6WU8vElAmh+TK8Ba
-         M9pA==
-X-Gm-Message-State: APjAAAVeeQY7xy43dQKmlmw7C774xLFp3NUOTcJpMWeT7d/GuK7Ddo3o
-        qU7ra5KAG19OQtysMh0166kUVQ==
-X-Google-Smtp-Source: APXvYqyvxjKuYMmtpPhK74Cp/7Nhm3vufNA08w1WY2arWJ6e2j4fSSY/TtpCAkQC5CTdLTtF/shCvQ==
-X-Received: by 2002:a17:90a:1f8c:: with SMTP id x12mr2512123pja.27.1582862283222;
-        Thu, 27 Feb 2020 19:58:03 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id c68sm9251950pfc.156.2020.02.27.19.58.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2020 19:58:02 -0800 (PST)
-Date:   Fri, 28 Feb 2020 12:57:59 +0900
-From:   Sergey Senozhatsky <senozhatsky@chromium.org>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv3 05/11] videobuf2: handle
- V4L2_FLAG_MEMORY_NON_CONSISTENT flag
-Message-ID: <20200228035759.GP122464@google.com>
-References: <20200226111529.180197-1-senozhatsky@chromium.org>
- <20200226111529.180197-6-senozhatsky@chromium.org>
- <8ea79a02-8346-2b1d-c2d8-3a3b36480320@xs4all.nl>
+        Thu, 27 Feb 2020 23:00:05 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01S3tCKk079398
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 23:00:04 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yepwtehp5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 23:00:04 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
+        Fri, 28 Feb 2020 04:00:02 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 28 Feb 2020 03:59:59 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01S3xwHk56098974
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Feb 2020 03:59:58 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 69E15A4051;
+        Fri, 28 Feb 2020 03:59:58 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 15DEFA4040;
+        Fri, 28 Feb 2020 03:59:58 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 28 Feb 2020 03:59:58 +0000 (GMT)
+Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 266FFA01F5;
+        Fri, 28 Feb 2020 14:59:53 +1100 (AEDT)
+Subject: Re: [PATCH v4 13/13] powerpc/ptrace: move ptrace_triggered() into
+ hw_breakpoint.c
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, mikey@neuling.org,
+        Russell Currey <ruscur@russell.cc>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <cover.1582803998.git.christophe.leroy@c-s.fr>
+ <d45c91cf5f83424b8f3989b7ead28c50d8d765a9.1582803998.git.christophe.leroy@c-s.fr>
+ <4e528bf2-2b53-ae93-cdcc-0c80953f40f2@c-s.fr>
+ <87pndz1xsf.fsf@mpe.ellerman.id.au>
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+Date:   Fri, 28 Feb 2020 14:59:56 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8ea79a02-8346-2b1d-c2d8-3a3b36480320@xs4all.nl>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <87pndz1xsf.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022804-4275-0000-0000-000003A63229
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022803-4276-0000-0000-000038BAA584
+Message-Id: <b2b97a86-2f29-af14-52c2-a69ef6202b75@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-27_08:2020-02-26,2020-02-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ mlxlogscore=796 adultscore=0 mlxscore=0 suspectscore=0 clxscore=1015
+ bulkscore=0 phishscore=0 lowpriorityscore=0 spamscore=0 impostorscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002280034
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/02/27 13:36), Hans Verkuil wrote:
-[..]
-> >  	other changes, then set ``count`` to 0, ``memory`` to
-> >  	``V4L2_MEMORY_MMAP`` and ``format.type`` to the buffer type.
-> >      * - __u32
-> > -      - ``reserved``\ [7]
-> > +      - ``flags``
-> > +      - Specifies additional buffer management attributes.
-> > +	See :ref:`memory-flags`. Old drivers and applications must set it to
-> > +	zero.
+On 28/2/20 9:16 am, Michael Ellerman wrote:
+> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+>> Russel,
+>>
+>> Le 27/02/2020 à 12:49, Christophe Leroy a écrit :
+>>> ptrace_triggered() is declared in asm/hw_breakpoint.h and
+>>> only needed when CONFIG_HW_BREAKPOINT is set, so move it
+>>> into hw_breakpoint.c
+>>
+>> My series v4 is definitely buggy (I included ptrace_decl.h instead
+>> instead of ptrace-decl.h), how can Snowpatch say build succeeded
+>> (https://patchwork.ozlabs.org/patch/1245807/) ?
 > 
-> Drop the last sentence, it's not relevant.
+> Which links to:
+>    https://openpower.xyz/job/snowpatch/job/snowpatch-linux-sparse/15895//artifact/linux/report.txt
 > 
-> > +
-> > +    * - __u32
-> > +      - ``reserved``\ [6]
-> >        - A place holder for future extensions. Drivers and applications
-> >  	must set the array to zero.
+> The actual build log of which is:
+>    https://openpower.xyz/job/snowpatch/job/snowpatch-linux-sparse/15895/artifact/linux/build_new.log
 > 
-> Old drivers and applications still think reserved is [7] and will zero this.
+> Which contains:
+>    scripts/Makefile.build:267: recipe for target 'arch/powerpc/kernel/ptrace/ptrace-altivec.o' failed
+>    make[3]: *** [arch/powerpc/kernel/ptrace/ptrace-altivec.o] Error 1
+>    make[3]: *** Waiting for unfinished jobs....
+>    scripts/Makefile.build:505: recipe for target 'arch/powerpc/kernel/ptrace' failed
+>    make[2]: *** [arch/powerpc/kernel/ptrace] Error 2
+>    make[2]: *** Waiting for unfinished jobs....
+>    scripts/Makefile.build:505: recipe for target 'arch/powerpc/kernel' failed
+>    make[1]: *** [arch/powerpc/kernel] Error 2
+>    make[1]: *** Waiting for unfinished jobs....
+>    Makefile:1681: recipe for target 'arch/powerpc' failed
+>    make: *** [arch/powerpc] Error 2
+>    make: *** Waiting for unfinished jobs....
+> 
+> Same for ppc64le:
+>    https://openpower.xyz/job/snowpatch/job/snowpatch-linux-sparse/15896/artifact/linux/build_new.log
+> 
+> 
+> So it seems like snowpatch always reports the build as succeeded even
+> when it fails.
 
-Just to make sure, does this mean that you also want me to drop the
-"Drivers and applications must set the array to zero" sentence?
+Turns out there was an issue in a recent change in our build script 
+which caused build failures to return the wrong exit code and put the 
+wrong text in the reports, because of some confusion with bash 
+subshells. I've fixed it (I think).
 
-	-ss
+-- 
+Andrew Donnellan              OzLabs, ADL Canberra
+ajd@linux.ibm.com             IBM Australia Limited
+
