@@ -2,135 +2,109 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D844C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DD5C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA4C24699
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D452124699
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:26:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="fnmrjyYT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbgB1RYz (ORCPT
+        id S1726975AbgB1R0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 12:24:55 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:44930 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1725769AbgB1RYz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 12:24:55 -0500
-Received: (qmail 4543 invoked by uid 2102); 28 Feb 2020 12:24:54 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 28 Feb 2020 12:24:54 -0500
-Date:   Fri, 28 Feb 2020 12:24:54 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Marco Elver <elver@google.com>
-cc:     paulmck@kernel.org, <andreyknvl@google.com>, <glider@google.com>,
-        <dvyukov@google.com>, <kasan-dev@googlegroups.com>,
-        <linux-kernel@vger.kernel.org>, <parri.andrea@gmail.com>,
-        <will@kernel.org>, <peterz@infradead.org>, <boqun.feng@gmail.com>,
-        <npiggin@gmail.com>, <dhowells@redhat.com>, <j.alglave@ucl.ac.uk>,
-        <luc.maranget@inria.fr>, <akiyks@gmail.com>, <dlustig@nvidia.com>,
-        <joel@joelfernandes.org>, <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH] tools/memory-model/Documentation: Fix "conflict" definition
-In-Reply-To: <20200228164621.87523-1-elver@google.com>
-Message-ID: <Pine.LNX.4.44L0.2002281202230.1599-100000@iolanthe.rowland.org>
+        Fri, 28 Feb 2020 12:26:20 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:38954 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbgB1R0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 12:26:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=dPwpiIlKKcaHNDUd0CNUUN+MvX4RTwnCjX7uFREeo4w=; b=fnmrjyYTrZVwCVWcpYIPwBdrxL
+        PsJ+nybeehvJ/rQzFGIDbuggw7BZ49VvdOirQxUtrFFmBSkrxdV6nQZ03YOV1fb9B+7ss+on6hqTO
+        YABnRZ1QCittLZ2TJt0vpWm2Hi2nXbfVlO1nSBdRjz+Uliin7UPon35uZk69NNLEjCjM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1j7jOy-0005Pm-2L; Fri, 28 Feb 2020 18:26:16 +0100
+Date:   Fri, 28 Feb 2020 18:26:16 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Antoine Tenart <antoine.tenart@bootlin.com>
+Cc:     davem@davemloft.net, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        foss@0leil.net
+Subject: Re: [PATCH net-next v2 3/3] net: phy: mscc: RGMII skew delay
+ configuration
+Message-ID: <20200228172616.GG29979@lunn.ch>
+References: <20200228155702.2062570-1-antoine.tenart@bootlin.com>
+ <20200228155702.2062570-4-antoine.tenart@bootlin.com>
+ <20200228162942.GF29979@lunn.ch>
+ <20200228164839.GH1686232@kwain>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228164839.GH1686232@kwain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Feb 2020, Marco Elver wrote:
+> I did not know that, thanks for the explanation! So if ID/TXID/RXID is
+> used, I should configure the Rx and/or Tx skew with
+> VSC8584_RGMII_SKEW_2_0, except if the dt says otherwise.
 
-> For language-level memory consistency models that are adaptations of
-> data-race-free, the definition of "data race" can be summarized as
-> "concurrent conflicting accesses, where at least one is non-sync/plain".
+Yes.
+
+> > What is not clearly defined, is how you combine
+> > PHY_INTERFACE_MODE_RGMII* with DT properties. I guess i would enforce
+> > that phydev->interface is PHY_INTERFACE_MODE_RGMII and then the delays
+> > in DT are absolute values.
 > 
-> The definition of "conflict" should not include the type of access nor
-> whether the accesses are concurrent or not, which this patch addresses
-> for explanation.txt.
+> So, if there's a value in the device tree, and the mode corresponds
+> (RXID for Rx skew), we do use the dt value. That should look like what's
+> in the patch (except for the default value used when no configuration is
+> provided in the dt).
 
-Why shouldn't it?  Can you provide any references to justify this 
-assertion?
+No. I would not do that. PHY_INTERFACE_MODE_RGMII_RXID means 2ns delay
+for RX. So how do you then interpret the DT property. Is it 2ns + the
+DT delay? That would then mean you need negative values in DT if you
+want short delays than 2ns.
 
-Also, note two things: (1) The existing text does not include
-concurrency in the definition of "conflict".  (2) Your new text does
-include the type of access in the definition (you say that at least one
-of the accesses must be a write).
+Which is why i suggest PHY_INTERFACE_MODE_RGMII. It is then clear you
+have a base delay of 0ns, and the DT property then has the absolute
+value of the delay.
 
-> The definition of "data race" remains unchanged, but the informal
-> definition for "conflict" is restored to what can be found in the
-> literature.
-
-It does not remain unchanged.  You removed the portion that talks about
-accesses executing on different CPUs or threads.  Without that
-restriction, you raise the nonsensical possibility that a single thread
-may by definition have a data race with itself (since modern CPUs use
-multiple-instruction dispatch, in which several instructions can
-execute at the same time).
-
-> Signed-by: Marco Elver <elver@google.com>
-> ---
->  tools/memory-model/Documentation/explanation.txt | 15 ++++++---------
->  1 file changed, 6 insertions(+), 9 deletions(-)
+> > There is also some discussion about what should go in DT. #defines
+> > like you have, or time in pS, and the driver converts to register
+> > values. I generally push towards pS.
 > 
-> diff --git a/tools/memory-model/Documentation/explanation.txt b/tools/memory-model/Documentation/explanation.txt
-> index e91a2eb19592a..11cf89b5b85d9 100644
-> --- a/tools/memory-model/Documentation/explanation.txt
-> +++ b/tools/memory-model/Documentation/explanation.txt
-> @@ -1986,18 +1986,15 @@ violates the compiler's assumptions, which would render the ultimate
->  outcome undefined.
->  
->  In technical terms, the compiler is allowed to assume that when the
-> -program executes, there will not be any data races.  A "data race"
-> -occurs when two conflicting memory accesses execute concurrently;
-> -two memory accesses "conflict" if:
-> +program executes, there will not be any data races. A "data race"
+> That would allow a more generic dt binding, and could be used by other
+> PHY drivers. The difficulty would be to map the pS to allowed values in
+> the h/w. Should we round them to the upper or lower bound?
 
-Unnecessary (and inconsistent with the rest of the document) whitespace 
-change.
+I would document the accepted values in DT, and return -EINVAL if DT
+does not exactly match one of the listed values. Plus a phydev_err()
+message to help debug.
 
-> +occurs if:
->  
-> -	they access the same location,
-> +	two concurrent memory accesses "conflict";
->  
-> -	they occur on different CPUs (or in different threads on the
-> -	same CPU),
-> +	and at least one of the accesses is a plain access;
->  
-> -	at least one of them is a plain access,
-> -
-> -	and at least one of them is a store.
-> +	where two memory accesses "conflict" if they access the same
-> +	memory location, and at least one performs a write;
->  
->  The LKMM tries to determine whether a program contains two conflicting
->  accesses which may execute concurrently; if it does then the LKMM says
+> I also saw the micrel-ksz90x1 dt documentation describes many skews, not
+> only one for Rx and one for Tx. How would the generic dt binding would
+> look like then?
 
-To tell the truth, the only major change I can see here (apart from the
-"differenct CPUs" restriction) is that you want to remove the "at least
-one is plain" part from the definition of "conflict" and instead make
-it a separate requirement for a data race.  That's fine with me in
-principle, but there ought to be an easier way of doing it.
+It is a balancing act. Do you actually need dt properties for your
+hardware? Are the standard 2ns delays sufficient. For many designs it
+is. Just because the hardware supports all sorts of configurations,
+are they actually needed? It seems like adding delays are needed for a
+few boards. But do all the properties exposed for the Micrel PHY every
+get used, or is it a case of, the hardware has it, lets make it
+available, even if nobody ever uses it?
 
-Furthermore, this section of explanation.txt goes on to use the words
-"conflict" and "conflicting" in a way that your patch doesn't address.  
-For example, shortly after this spot it says "Determining whether two
-accesses conflict is easy"; you should change it to say "Determining
-whether two accesses conflict and at least one of them is plain is
-easy" -- but this looks pretty ungainly.  A better approach might be to
-introduce a new term, define it to mean "conflicting accesses at least
-one of which is plain", and then use it instead throughout.
+So i think a standardized DT for delays is good, but i would not go
+any further.
 
-Alternatively, you could simply leave the text as it stands and just
-add a parenthetical disclaimer pointing out that in the CS literature,
-the term "conflict" is used even when both accesses are marked, so the
-usage here is somewhat non-standard.
-
-Alan
-
+    Andrew
