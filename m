@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B9ADC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE8FC3F2D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB547246AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99CF1246B4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:43:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zBkwyrIR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oeEG5s49"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbgB1Wnm (ORCPT
+        id S1727445AbgB1Wnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 17:43:42 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:42419 "EHLO
+        Fri, 28 Feb 2020 17:43:47 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:46025 "EHLO
         mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727075AbgB1Wm2 (ORCPT
+        with ESMTP id S1727003AbgB1WmY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 17:42:28 -0500
-Received: by mail-yw1-f65.google.com with SMTP id n127so4915933ywd.9
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 14:42:26 -0800 (PST)
+        Fri, 28 Feb 2020 17:42:24 -0500
+Received: by mail-yw1-f65.google.com with SMTP id d206so4890309ywa.12
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 14:42:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DXUsvnza60UtTVHeA0SEYDL54izSmT+eKj1dJg7901k=;
-        b=zBkwyrIRT2VQCZrKqeo8hD9SffR31dj0Xbxd9aLZ7HKZcXJsB58rN5SCvX6QnMidtW
-         BQWnkaXKqqZC4JvT5FNxmkdOHb7jS81Hl0QVGbuDrgCCWK68fmxVXZ40KuQubRtYQ/BS
-         3MZCy3xcKv3xW6EPq4RejKNlxs5pDtv2KaUis0S3Kk8K3gUclbkEdQkMtm4yACtfCtH/
-         dld+T2Sv2dnOOJHgSBlkhnEcYwKteutPgP6ixEyDMAgJGw0hiwL+qzvIriJDJN0duv6s
-         lQcpMdYHD7vXnAaEh++oBNwsOvuBEiHKJNT/kzNoK0rex3DQ0x62e71/iJYxGes0X+Gw
-         U0GA==
+        bh=dy6rQ4eMObqJkHXDR4c+2Co/ufIH9Vkxn2UrqymA1DE=;
+        b=oeEG5s49ighQkbOVmxlHVSaJOP3puRx4Om3NXCgbGYBEWLxTRXxjEvzgoGIzQ1bPlU
+         JMNRxbxYcx0541MyL5Jx8/574xFROX7m8dJ1IcddRR7YDKeZAv94OHKcfuQ3/Lm1tTLg
+         7PV1BNeBdYspnp/2rrY7+vEvvbosZhFAikFyzxE6x33pOA3JUdCV8/WHuNXceshVozDx
+         6aBlbJhY5zkK+2gS4YTfuiOhX7W0bZkSlC+aGBZ096RxheJ6Xusb3mmKhn4SG93jPVVp
+         GBErlpapL8NXngpU2aq7jbO2M7nTxs7Ln1+dKKI97+hN0haHY3ctCYe6oSsViW/qyIkn
+         pD4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DXUsvnza60UtTVHeA0SEYDL54izSmT+eKj1dJg7901k=;
-        b=Eqbb3y4OGhztpY/UTeVdIMcU26GFih1FH0B1+lx1isbkoLmgpHjHdh6nC+RgFM2lUe
-         rOmhQ1YpqVRrrBtX4U1jfoW8EwWMGvJl5hZ51FkYbruAE3VweGeBn7n7S3wbqBRgcQRg
-         V5Aws1XTvU+Z+tqggS9ELz+bMQhJ6Kg7iZxmf3AhS2rl5xRpFyvSxHUEhjFNzNp/4/VX
-         xCWglXKKvz1nwBfo+MtcbngyrS4uPc5sd5nj4fWdlDekICAKfRHhm1HYVXKMK7kIBmTM
-         TOh/2LKbkLZG/9AcZOa5BET4mLzTYLk3RqtciB3ODMl/qEv1SiuRvBy/EQMhS20ipVXG
-         UfPw==
-X-Gm-Message-State: APjAAAVxkE/dSX72joC24dossmj60hEbiW3YCBJRueKHlxbMfybAcgZj
-        Y48ubwoUlZfemkm4hLlx2xj9iA==
-X-Google-Smtp-Source: APXvYqxyW4soXdzZPdyegb6d75oLvQrGzzrMdTb6rvzdcmDgTMLwgv+oZ34S4Ou1z2FMlgnutz6b2g==
-X-Received: by 2002:a81:4858:: with SMTP id v85mr6689328ywa.288.1582929745070;
-        Fri, 28 Feb 2020 14:42:25 -0800 (PST)
+        bh=dy6rQ4eMObqJkHXDR4c+2Co/ufIH9Vkxn2UrqymA1DE=;
+        b=l5QSVl0dWZomvT3nfMteoF2FYyzLxpWeGGalfgNybZIV9vqCEcmC0r5jNbDjX0IilV
+         IGAnxTzuBT4OhhavDY09ywQcunT92Iv0CUMVkoanYM39pqqGOCkM2pRRWOS8m6n1Uv+t
+         Vw0p8/lWO8U4UNRn1z84fylTQKH98QRgY8k6Sm3mdbUQpUU3HMNtJwg314UNeIv4OvJp
+         xnho0ggktTK3G2g2VRodi3V/lg+A98nDT9bJPl6eBLX1JimiXlZ197Nt9Bl/QMNw8NvG
+         eEtW3go7yZ5NcoozA2JUoVuiI5obT5M3pUdMBnqzcCC9O9HgcS7s7H91s/c/D5avQPIq
+         Ef3Q==
+X-Gm-Message-State: APjAAAXFRrLqrsFbKXHkVA4GXT6tMZPR49C68gT9SPD0BMxuUm+9b42W
+        ap9OKd84TElhY4cytGnVVdY9tg==
+X-Google-Smtp-Source: APXvYqxY4dMbBw5dk+AKermRHzX5ZAHb4drnCIZ+Vk2yT4rc10jOenkx14/qy2SIAtrOs8FL/5KxXg==
+X-Received: by 2002:a5b:54b:: with SMTP id r11mr5992335ybp.17.1582929740245;
+        Fri, 28 Feb 2020 14:42:20 -0800 (PST)
 Received: from localhost.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id d188sm4637830ywe.50.2020.02.28.14.42.22
+        by smtp.gmail.com with ESMTPSA id d188sm4637830ywe.50.2020.02.28.14.42.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 14:42:24 -0800 (PST)
+        Fri, 28 Feb 2020 14:42:19 -0800 (PST)
 From:   Alex Elder <elder@linaro.org>
 To:     Arnd Bergmann <arnd@arndb.de>, David Miller <davem@davemloft.net>
 Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -75,9 +75,9 @@ Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 07/17] soc: qcom: ipa: the generic software interface
-Date:   Fri, 28 Feb 2020 16:41:54 -0600
-Message-Id: <20200228224204.17746-8-elder@linaro.org>
+Subject: [PATCH 05/17] soc: qcom: ipa: clocking, interrupts, and memory
+Date:   Fri, 28 Feb 2020 16:41:52 -0600
+Message-Id: <20200228224204.17746-6-elder@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200228224204.17746-1-elder@linaro.org>
 References: <20200228224204.17746-1-elder@linaro.org>
@@ -88,2130 +88,1222 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch includes "gsi.c", which implements the generic software
-interface (GSI) for IPA.  The generic software interface abstracts
-channels, which provide a means of transferring data either from the
-AP to the IPA, or from the IPA to the AP.  A ring buffer of "transfer
-elements" (TREs) is used to describe data transfers to perform.  The
-AP writes a doorbell register associated with a channel to let it know
-it has added new entries (for an AP->IPA channel) or has finished
-processing entries (for an IPA->AP channel).
+This patch incorporates three source files (and their headers).  They're
+grouped into one patch mainly for the purpose of making the number and
+size of patches in this series somewhat reasonable.
 
-Each channel also has an event ring buffer, used by the IPA to
-communicate information about events related to a channel (for
-example, the completion of TREs).  The IPA writes its own doorbell
-register, which triggers an interrupt on the AP, to signal that
-new event information has arrived.
+  - "ipa_clock.c" and "ipa_clock.h" implement clocking for the IPA device.
+    The IPA has a single core clock managed by the common clock framework.
+    In addition, the IPA has three buses whose bandwidth is managed by the
+    Linux interconnect framework.  At this time the core clock and all
+    three buses are either on or off; we don't yet do any more fine-grained
+    management than that.  The core clock and interconnects are enabled
+    and disabled as a unit, using a unified clock-like abstraction,
+    ipa_clock_get()/ipa_clock_put().
+
+  - "ipa_interrupt.c" and "ipa_interrupt.h" implement IPA interrupts.
+    There are two hardware IRQs used by the IPA driver (the other is
+    the GSI interrupt, described in a separate patch).  Several types
+    of interrupt are handled by the IPA IRQ handler; these are not part
+    of data/fast path.
+
+  - The IPA has a region of local memory that is accessible by the AP
+    (and modem).  Within that region are areas with certain defined
+    purposes.  "ipa_mem.c" and "ipa_mem.h" define those regions, and
+    implement their initialization.
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/net/ipa/gsi.c | 2097 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 2097 insertions(+)
- create mode 100644 drivers/net/ipa/gsi.c
+ drivers/net/ipa/ipa_clock.c     | 313 +++++++++++++++++++++++++++++++
+ drivers/net/ipa/ipa_clock.h     |  53 ++++++
+ drivers/net/ipa/ipa_interrupt.c | 253 +++++++++++++++++++++++++
+ drivers/net/ipa/ipa_interrupt.h | 117 ++++++++++++
+ drivers/net/ipa/ipa_mem.c       | 314 ++++++++++++++++++++++++++++++++
+ drivers/net/ipa/ipa_mem.h       |  90 +++++++++
+ 6 files changed, 1140 insertions(+)
+ create mode 100644 drivers/net/ipa/ipa_clock.c
+ create mode 100644 drivers/net/ipa/ipa_clock.h
+ create mode 100644 drivers/net/ipa/ipa_interrupt.c
+ create mode 100644 drivers/net/ipa/ipa_interrupt.h
+ create mode 100644 drivers/net/ipa/ipa_mem.c
+ create mode 100644 drivers/net/ipa/ipa_mem.h
 
-diff --git a/drivers/net/ipa/gsi.c b/drivers/net/ipa/gsi.c
+diff --git a/drivers/net/ipa/ipa_clock.c b/drivers/net/ipa/ipa_clock.c
 new file mode 100644
-index 000000000000..f48d74f44592
+index 000000000000..a60ffb801285
 --- /dev/null
-+++ b/drivers/net/ipa/gsi.c
-@@ -0,0 +1,2097 @@
++++ b/drivers/net/ipa/ipa_clock.c
+@@ -0,0 +1,313 @@
 +// SPDX-License-Identifier: GPL-2.0
 +
-+/* Copyright (c) 2015-2018, The Linux Foundation. All rights reserved.
++/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
 + * Copyright (C) 2018-2020 Linaro Ltd.
 + */
 +
-+#include <linux/types.h>
-+#include <linux/bits.h>
-+#include <linux/bitfield.h>
++#include <linux/atomic.h>
 +#include <linux/mutex.h>
-+#include <linux/completion.h>
-+#include <linux/io.h>
-+#include <linux/bug.h>
-+#include <linux/interrupt.h>
-+#include <linux/platform_device.h>
-+#include <linux/netdevice.h>
++#include <linux/clk.h>
++#include <linux/device.h>
++#include <linux/interconnect.h>
 +
-+#include "gsi.h"
-+#include "gsi_reg.h"
-+#include "gsi_private.h"
-+#include "gsi_trans.h"
-+#include "ipa_gsi.h"
-+#include "ipa_data.h"
++#include "ipa.h"
++#include "ipa_clock.h"
++#include "ipa_modem.h"
 +
 +/**
-+ * DOC: The IPA Generic Software Interface
++ * DOC: IPA Clocking
 + *
-+ * The generic software interface (GSI) is an integral component of the IPA,
-+ * providing a well-defined communication layer between the AP subsystem
-+ * and the IPA core.  The modem uses the GSI layer as well.
++ * The "IPA Clock" manages both the IPA core clock and the interconnects
++ * (buses) the IPA depends on as a single logical entity.  A reference count
++ * is incremented by "get" operations and decremented by "put" operations.
++ * Transitions of that count from 0 to 1 result in the clock and interconnects
++ * being enabled, and transitions of the count from 1 to 0 cause them to be
++ * disabled.  We currently operate the core clock at a fixed clock rate, and
++ * all buses at a fixed average and peak bandwidth.  As more advanced IPA
++ * features are enabled, we can make better use of clock and bus scaling.
 + *
-+ *	--------	     ---------
-+ *	|      |	     |	     |
-+ *	|  AP  +<---.	.----+ Modem |
-+ *	|      +--. |	| .->+	     |
-+ *	|      |  | |	| |  |	     |
-+ *	--------  | |	| |  ---------
-+ *		  v |	v |
-+ *		--+-+---+-+--
-+ *		|    GSI    |
-+ *		|-----------|
-+ *		|	    |
-+ *		|    IPA    |
-+ *		|	    |
-+ *		-------------
-+ *
-+ * In the above diagram, the AP and Modem represent "execution environments"
-+ * (EEs), which are independent operating environments that use the IPA for
-+ * data transfer.
-+ *
-+ * Each EE uses a set of unidirectional GSI "channels," which allow transfer
-+ * of data to or from the IPA.  A channel is implemented as a ring buffer,
-+ * with a DRAM-resident array of "transfer elements" (TREs) available to
-+ * describe transfers to or from other EEs through the IPA.  A transfer
-+ * element can also contain an immediate command, requesting the IPA perform
-+ * actions other than data transfer.
-+ *
-+ * Each TRE refers to a block of data--also located DRAM.  After writing one
-+ * or more TREs to a channel, the writer (either the IPA or an EE) writes a
-+ * doorbell register to inform the receiving side how many elements have
-+ * been written.
-+ *
-+ * Each channel has a GSI "event ring" associated with it.  An event ring
-+ * is implemented very much like a channel ring, but is always directed from
-+ * the IPA to an EE.  The IPA notifies an EE (such as the AP) about channel
-+ * events by adding an entry to the event ring associated with the channel.
-+ * The GSI then writes its doorbell for the event ring, causing the target
-+ * EE to be interrupted.  Each entry in an event ring contains a pointer
-+ * to the channel TRE whose completion the event represents.
-+ *
-+ * Each TRE in a channel ring has a set of flags.  One flag indicates whether
-+ * the completion of the transfer operation generates an entry (and possibly
-+ * an interrupt) in the channel's event ring.  Other flags allow transfer
-+ * elements to be chained together, forming a single logical transaction.
-+ * TRE flags are used to control whether and when interrupts are generated
-+ * to signal completion of channel transfers.
-+ *
-+ * Elements in channel and event rings are completed (or consumed) strictly
-+ * in order.  Completion of one entry implies the completion of all preceding
-+ * entries.  A single completion interrupt can therefore communicate the
-+ * completion of many transfers.
-+ *
-+ * Note that all GSI registers are little-endian, which is the assumed
-+ * endianness of I/O space accesses.  The accessor functions perform byte
-+ * swapping if needed (i.e., for a big endian CPU).
++ * An IPA clock reference must be held for any access to IPA hardware.
 + */
 +
-+/* Delay period for interrupt moderation (in 32KHz IPA internal timer ticks) */
-+#define GSI_EVT_RING_INT_MODT	(32 * 1) /* 1ms under 32KHz clock */
++#define	IPA_CORE_CLOCK_RATE		(75UL * 1000 * 1000)	/* Hz */
 +
-+#define GSI_CMD_TIMEOUT		5	/* seconds */
++/* Interconnect path bandwidths (each times 1000 bytes per second) */
++#define IPA_MEMORY_AVG			(80 * 1000)	/* 80 MBps */
++#define IPA_MEMORY_PEAK			(600 * 1000)
 +
-+#define GSI_MHI_EVENT_ID_START	10	/* 1st event id reserved for MHI */
-+#define GSI_MHI_EVENT_ID_END	16	/* Last event id reserved for MHI */
++#define IPA_IMEM_AVG			(80 * 1000)
++#define IPA_IMEM_PEAK			(350 * 1000)
 +
-+#define GSI_ISR_MAX_ITER	50	/* Detect interrupt storms */
++#define IPA_CONFIG_AVG			(40 * 1000)
++#define IPA_CONFIG_PEAK			(40 * 1000)
 +
-+/* An entry in an event ring */
-+struct gsi_event {
-+	__le64 xfer_ptr;
-+	__le16 len;
-+	u8 reserved1;
-+	u8 code;
-+	__le16 reserved2;
-+	u8 type;
-+	u8 chid;
-+};
-+
-+/* Hardware values from the error log register error code field */
-+enum gsi_err_code {
-+	GSI_INVALID_TRE_ERR			= 0x1,
-+	GSI_OUT_OF_BUFFERS_ERR			= 0x2,
-+	GSI_OUT_OF_RESOURCES_ERR		= 0x3,
-+	GSI_UNSUPPORTED_INTER_EE_OP_ERR		= 0x4,
-+	GSI_EVT_RING_EMPTY_ERR			= 0x5,
-+	GSI_NON_ALLOCATED_EVT_ACCESS_ERR	= 0x6,
-+	GSI_HWO_1_ERR				= 0x8,
-+};
-+
-+/* Hardware values from the error log register error type field */
-+enum gsi_err_type {
-+	GSI_ERR_TYPE_GLOB	= 0x1,
-+	GSI_ERR_TYPE_CHAN	= 0x2,
-+	GSI_ERR_TYPE_EVT	= 0x3,
-+};
-+
-+/* Hardware values used when programming an event ring */
-+enum gsi_evt_chtype {
-+	GSI_EVT_CHTYPE_MHI_EV	= 0x0,
-+	GSI_EVT_CHTYPE_XHCI_EV	= 0x1,
-+	GSI_EVT_CHTYPE_GPI_EV	= 0x2,
-+	GSI_EVT_CHTYPE_XDCI_EV	= 0x3,
-+};
-+
-+/* Hardware values used when programming a channel */
-+enum gsi_channel_protocol {
-+	GSI_CHANNEL_PROTOCOL_MHI	= 0x0,
-+	GSI_CHANNEL_PROTOCOL_XHCI	= 0x1,
-+	GSI_CHANNEL_PROTOCOL_GPI	= 0x2,
-+	GSI_CHANNEL_PROTOCOL_XDCI	= 0x3,
-+};
-+
-+/* Hardware values representing an event ring immediate command opcode */
-+enum gsi_evt_cmd_opcode {
-+	GSI_EVT_ALLOCATE	= 0x0,
-+	GSI_EVT_RESET		= 0x9,
-+	GSI_EVT_DE_ALLOC	= 0xa,
-+};
-+
-+/* Hardware values representing a generic immediate command opcode */
-+enum gsi_generic_cmd_opcode {
-+	GSI_GENERIC_HALT_CHANNEL	= 0x1,
-+	GSI_GENERIC_ALLOCATE_CHANNEL	= 0x2,
-+};
-+
-+/* Hardware values representing a channel immediate command opcode */
-+enum gsi_ch_cmd_opcode {
-+	GSI_CH_ALLOCATE	= 0x0,
-+	GSI_CH_START	= 0x1,
-+	GSI_CH_STOP	= 0x2,
-+	GSI_CH_RESET	= 0x9,
-+	GSI_CH_DE_ALLOC	= 0xa,
-+};
-+
-+/** gsi_channel_scratch_gpi - GPI protocol scratch register
-+ * @max_outstanding_tre:
-+ *	Defines the maximum number of TREs allowed in a single transaction
-+ *	on a channel (in bytes).  This determines the amount of prefetch
-+ *	performed by the hardware.  We configure this to equal the size of
-+ *	the TLV FIFO for the channel.
-+ * @outstanding_threshold:
-+ *	Defines the threshold (in bytes) determining when the sequencer
-+ *	should update the channel doorbell.  We configure this to equal
-+ *	the size of two TREs.
++/**
++ * struct ipa_clock - IPA clocking information
++ * @count:		Clocking reference count
++ * @mutex;		Protects clock enable/disable
++ * @core:		IPA core clock
++ * @memory_path:	Memory interconnect
++ * @imem_path:		Internal memory interconnect
++ * @config_path:	Configuration space interconnect
 + */
-+struct gsi_channel_scratch_gpi {
-+	u64 reserved1;
-+	u16 reserved2;
-+	u16 max_outstanding_tre;
-+	u16 reserved3;
-+	u16 outstanding_threshold;
++struct ipa_clock {
++	atomic_t count;
++	struct mutex mutex; /* protects clock enable/disable */
++	struct clk *core;
++	struct icc_path *memory_path;
++	struct icc_path *imem_path;
++	struct icc_path *config_path;
 +};
 +
-+/** gsi_channel_scratch - channel scratch configuration area
-+ *
-+ * The exact interpretation of this register is protocol-specific.
-+ * We only use GPI channels; see struct gsi_channel_scratch_gpi, above.
-+ */
-+union gsi_channel_scratch {
-+	struct gsi_channel_scratch_gpi gpi;
-+	struct {
-+		u32 word1;
-+		u32 word2;
-+		u32 word3;
-+		u32 word4;
-+	} data;
-+};
-+
-+/* Check things that can be validated at build time. */
-+static void gsi_validate_build(void)
++static struct icc_path *
++ipa_interconnect_init_one(struct device *dev, const char *name)
 +{
-+	/* This is used as a divisor */
-+	BUILD_BUG_ON(!GSI_RING_ELEMENT_SIZE);
++	struct icc_path *path;
 +
-+	/* Code assumes the size of channel and event ring element are
-+	 * the same (and fixed).  Make sure the size of an event ring
-+	 * element is what's expected.
-+	 */
-+	BUILD_BUG_ON(sizeof(struct gsi_event) != GSI_RING_ELEMENT_SIZE);
++	path = of_icc_get(dev, name);
++	if (IS_ERR(path))
++		dev_err(dev, "error %d getting memory interconnect\n",
++			PTR_ERR(path));
 +
-+	/* Hardware requires a 2^n ring size.  We ensure the number of
-+	 * elements in an event ring is a power of 2 elsewhere; this
-+	 * ensure the elements themselves meet the requirement.
-+	 */
-+	BUILD_BUG_ON(!is_power_of_2(GSI_RING_ELEMENT_SIZE));
-+
-+	/* The channel element size must fit in this field */
-+	BUILD_BUG_ON(GSI_RING_ELEMENT_SIZE > field_max(ELEMENT_SIZE_FMASK));
-+
-+	/* The event ring element size must fit in this field */
-+	BUILD_BUG_ON(GSI_RING_ELEMENT_SIZE > field_max(EV_ELEMENT_SIZE_FMASK));
++	return path;
 +}
 +
-+/* Return the channel id associated with a given channel */
-+static u32 gsi_channel_id(struct gsi_channel *channel)
++/* Initialize interconnects required for IPA operation */
++static int ipa_interconnect_init(struct ipa_clock *clock, struct device *dev)
 +{
-+	return channel - &channel->gsi->channel[0];
-+}
++	struct icc_path *path;
 +
-+static void gsi_irq_ieob_enable(struct gsi *gsi, u32 evt_ring_id)
-+{
-+	u32 val;
++	path = ipa_interconnect_init_one(dev, "memory");
++	if (IS_ERR(path))
++		goto err_return;
++	clock->memory_path = path;
 +
-+	gsi->event_enable_bitmap |= BIT(evt_ring_id);
-+	val = gsi->event_enable_bitmap;
-+	iowrite32(val, gsi->virt + GSI_CNTXT_SRC_IEOB_IRQ_MSK_OFFSET);
-+}
++	path = ipa_interconnect_init_one(dev, "imem");
++	if (IS_ERR(path))
++		goto err_memory_path_put;
++	clock->imem_path = path;
 +
-+static void gsi_isr_ieob_clear(struct gsi *gsi, u32 mask)
-+{
-+	iowrite32(mask, gsi->virt + GSI_CNTXT_SRC_IEOB_IRQ_CLR_OFFSET);
-+}
-+
-+static void gsi_irq_ieob_disable(struct gsi *gsi, u32 evt_ring_id)
-+{
-+	u32 val;
-+
-+	gsi->event_enable_bitmap &= ~BIT(evt_ring_id);
-+	val = gsi->event_enable_bitmap;
-+	iowrite32(val, gsi->virt + GSI_CNTXT_SRC_IEOB_IRQ_MSK_OFFSET);
-+}
-+
-+/* Enable all GSI_interrupt types */
-+static void gsi_irq_enable(struct gsi *gsi)
-+{
-+	u32 val;
-+
-+	/* We don't use inter-EE channel or event interrupts */
-+	val = GSI_CNTXT_TYPE_IRQ_MSK_ALL;
-+	val &= ~MSK_INTER_EE_CH_CTRL_FMASK;
-+	val &= ~MSK_INTER_EE_EV_CTRL_FMASK;
-+	iowrite32(val, gsi->virt + GSI_CNTXT_TYPE_IRQ_MSK_OFFSET);
-+
-+	val = GENMASK(gsi->channel_count - 1, 0);
-+	iowrite32(val, gsi->virt + GSI_CNTXT_SRC_CH_IRQ_MSK_OFFSET);
-+
-+	val = GENMASK(gsi->evt_ring_count - 1, 0);
-+	iowrite32(val, gsi->virt + GSI_CNTXT_SRC_EV_CH_IRQ_MSK_OFFSET);
-+
-+	/* Each IEOB interrupt is enabled (later) as needed by channels */
-+	iowrite32(0, gsi->virt + GSI_CNTXT_SRC_IEOB_IRQ_MSK_OFFSET);
-+
-+	val = GSI_CNTXT_GLOB_IRQ_ALL;
-+	iowrite32(val, gsi->virt + GSI_CNTXT_GLOB_IRQ_EN_OFFSET);
-+
-+	/* Never enable GSI_BREAK_POINT */
-+	val = GSI_CNTXT_GSI_IRQ_ALL & ~EN_BREAK_POINT_FMASK;
-+	iowrite32(val, gsi->virt + GSI_CNTXT_GSI_IRQ_EN_OFFSET);
-+}
-+
-+/* Disable all GSI_interrupt types */
-+static void gsi_irq_disable(struct gsi *gsi)
-+{
-+	iowrite32(0, gsi->virt + GSI_CNTXT_GSI_IRQ_EN_OFFSET);
-+	iowrite32(0, gsi->virt + GSI_CNTXT_GLOB_IRQ_EN_OFFSET);
-+	iowrite32(0, gsi->virt + GSI_CNTXT_SRC_IEOB_IRQ_MSK_OFFSET);
-+	iowrite32(0, gsi->virt + GSI_CNTXT_SRC_EV_CH_IRQ_MSK_OFFSET);
-+	iowrite32(0, gsi->virt + GSI_CNTXT_SRC_CH_IRQ_MSK_OFFSET);
-+	iowrite32(0, gsi->virt + GSI_CNTXT_TYPE_IRQ_MSK_OFFSET);
-+}
-+
-+/* Return the virtual address associated with a ring index */
-+void *gsi_ring_virt(struct gsi_ring *ring, u32 index)
-+{
-+	/* Note: index *must* be used modulo the ring count here */
-+	return ring->virt + (index % ring->count) * GSI_RING_ELEMENT_SIZE;
-+}
-+
-+/* Return the 32-bit DMA address associated with a ring index */
-+static u32 gsi_ring_addr(struct gsi_ring *ring, u32 index)
-+{
-+	return (ring->addr & GENMASK(31, 0)) + index * GSI_RING_ELEMENT_SIZE;
-+}
-+
-+/* Return the ring index of a 32-bit ring offset */
-+static u32 gsi_ring_index(struct gsi_ring *ring, u32 offset)
-+{
-+	return (offset - gsi_ring_addr(ring, 0)) / GSI_RING_ELEMENT_SIZE;
-+}
-+
-+/* Issue a GSI command by writing a value to a register, then wait for
-+ * completion to be signaled.  Reports an error if the command times out.
-+ * (Timeout is not expected, and suggests broken hardware.)
-+ */
-+static int
-+gsi_command(struct gsi *gsi, u32 reg, u32 val, struct completion *completion)
-+{
-+	reinit_completion(completion);
-+
-+	iowrite32(val, gsi->virt + reg);
-+	if (!wait_for_completion_timeout(completion, GSI_CMD_TIMEOUT * HZ))
-+		return -ETIMEDOUT;
++	path = ipa_interconnect_init_one(dev, "config");
++	if (IS_ERR(path))
++		goto err_imem_path_put;
++	clock->config_path = path;
 +
 +	return 0;
++
++err_imem_path_put:
++	icc_put(clock->imem_path);
++err_memory_path_put:
++	icc_put(clock->memory_path);
++err_return:
++	return PTR_ERR(path);
 +}
 +
-+/* Return the hardware's notion of the current state of an event ring */
-+static enum gsi_evt_ring_state
-+gsi_evt_ring_state(struct gsi *gsi, u32 evt_ring_id)
++/* Inverse of ipa_interconnect_init() */
++static void ipa_interconnect_exit(struct ipa_clock *clock)
 +{
-+	u32 val;
-+
-+	val = ioread32(gsi->virt + GSI_EV_CH_E_CNTXT_0_OFFSET(evt_ring_id));
-+
-+	return u32_get_bits(val, EV_CHSTATE_FMASK);
++	icc_put(clock->config_path);
++	icc_put(clock->imem_path);
++	icc_put(clock->memory_path);
 +}
 +
-+/* Return whether an event ring's state is valid for an operation */
-+static bool gsi_evt_ring_state_valid(struct gsi *gsi, u32 evt_ring_id,
-+				     enum gsi_evt_cmd_opcode opcode)
++/* Currently we only use one bandwidth level, so just "enable" interconnects */
++static int ipa_interconnect_enable(struct ipa *ipa)
 +{
-+	struct gsi_evt_ring *evt_ring = &gsi->evt_ring[evt_ring_id];
-+	struct device *dev = evt_ring->channel->gsi->dev;
-+	enum gsi_evt_ring_state state = evt_ring->state;
-+	bool valid;
-+
-+	switch (opcode) {
-+	case GSI_EVT_ALLOCATE:
-+		valid = state == GSI_EVT_RING_STATE_NOT_ALLOCATED;
-+		break;
-+
-+	case GSI_EVT_RESET:
-+		valid = state == GSI_EVT_RING_STATE_ALLOCATED ||
-+			state == GSI_EVT_RING_STATE_ERROR;
-+		break;
-+
-+	case GSI_EVT_DE_ALLOC:
-+		valid = state == GSI_EVT_RING_STATE_ALLOCATED;
-+		break;
-+
-+	default:
-+		dev_err(dev,
-+			"event ring %u unrecognized state %u for opcode %u\n",
-+			evt_ring_id, state, opcode);
-+		return false;
-+	}
-+
-+	if (!valid)
-+		dev_err(dev,
-+			"event ring %u unexpected state %u for opcode %u\n",
-+			evt_ring_id, state, opcode);
-+
-+	return valid;
-+}
-+
-+/* Issue an event ring command and wait for it to complete */
-+static int evt_ring_command(struct gsi *gsi, u32 evt_ring_id,
-+			    enum gsi_evt_cmd_opcode opcode)
-+{
-+	struct gsi_evt_ring *evt_ring = &gsi->evt_ring[evt_ring_id];
-+	struct completion *completion = &evt_ring->completion;
-+	u32 val;
++	struct ipa_clock *clock = ipa->clock;
 +	int ret;
 +
-+	if (!gsi_evt_ring_state_valid(gsi, evt_ring_id, opcode))
-+		return -EINVAL;
-+
-+	val = u32_encode_bits(evt_ring_id, EV_CHID_FMASK);
-+	val |= u32_encode_bits(opcode, EV_OPCODE_FMASK);
-+
-+	ret = gsi_command(gsi, GSI_EV_CH_CMD_OFFSET, val, completion);
++	ret = icc_set_bw(clock->memory_path, IPA_MEMORY_AVG, IPA_MEMORY_PEAK);
 +	if (ret)
-+		dev_err(gsi->dev,
-+			"error %d issuing command %u to event ring %u\n",
-+			ret, opcode, evt_ring_id);
-+
-+	return ret;
-+}
-+
-+/* Allocate an event ring in NOT_ALLOCATED state */
-+static int gsi_evt_ring_alloc_command(struct gsi *gsi, u32 evt_ring_id)
-+{
-+	struct gsi_evt_ring *evt_ring = &gsi->evt_ring[evt_ring_id];
-+	int ret;
-+
-+	/* Get initial event ring state */
-+	evt_ring->state = gsi_evt_ring_state(gsi, evt_ring_id);
-+
-+	ret = evt_ring_command(gsi, evt_ring_id, GSI_EVT_ALLOCATE);
-+	if (!ret && evt_ring->state != GSI_EVT_RING_STATE_ALLOCATED) {
-+		dev_err(gsi->dev, "bad event ring state (%u) after alloc\n",
-+			evt_ring->state);
-+		ret = -EIO;
-+	}
-+
-+	return ret;
-+}
-+
-+/* Reset a GSI event ring in ALLOCATED or ERROR state. */
-+static void gsi_evt_ring_reset_command(struct gsi *gsi, u32 evt_ring_id)
-+{
-+	struct gsi_evt_ring *evt_ring = &gsi->evt_ring[evt_ring_id];
-+	int ret;
-+
-+	ret = evt_ring_command(gsi, evt_ring_id, GSI_EVT_RESET);
-+	if (!ret && evt_ring->state != GSI_EVT_RING_STATE_ALLOCATED)
-+		dev_err(gsi->dev, "bad event ring state (%u) after reset\n",
-+			evt_ring->state);
-+}
-+
-+/* Issue a hardware de-allocation request for an allocated event ring */
-+static void gsi_evt_ring_de_alloc_command(struct gsi *gsi, u32 evt_ring_id)
-+{
-+	struct gsi_evt_ring *evt_ring = &gsi->evt_ring[evt_ring_id];
-+	int ret;
-+
-+	ret = evt_ring_command(gsi, evt_ring_id, GSI_EVT_DE_ALLOC);
-+	if (!ret && evt_ring->state != GSI_EVT_RING_STATE_NOT_ALLOCATED)
-+		dev_err(gsi->dev, "bad event ring state (%u) after dealloc\n",
-+			evt_ring->state);
-+}
-+
-+/* Return the hardware's notion of the current state of a channel */
-+static enum gsi_channel_state
-+gsi_channel_state(struct gsi *gsi, u32 channel_id)
-+{
-+	u32 val;
-+
-+	val = ioread32(gsi->virt + GSI_CH_C_CNTXT_0_OFFSET(channel_id));
-+
-+	return u32_get_bits(val, CHSTATE_FMASK);
-+}
-+
-+/* Return whether a channel's state is valid for an operation */
-+static bool gsi_channel_state_valid(struct gsi *gsi, u32 channel_id,
-+				    enum gsi_ch_cmd_opcode opcode)
-+{
-+	struct gsi_channel *channel = &gsi->channel[channel_id];
-+	enum gsi_channel_state state = channel->state;
-+	struct device *dev = channel->gsi->dev;
-+	bool valid;
-+
-+	switch (opcode) {
-+	case GSI_CH_ALLOCATE:
-+		valid = state == GSI_CHANNEL_STATE_NOT_ALLOCATED;
-+		break;
-+
-+	case GSI_CH_START:
-+		valid = state == GSI_CHANNEL_STATE_ALLOCATED ||
-+			state == GSI_CHANNEL_STATE_STOP_IN_PROC ||
-+			state == GSI_CHANNEL_STATE_STOPPED;
-+		break;
-+
-+	case GSI_CH_STOP:
-+		valid = state == GSI_CHANNEL_STATE_STARTED ||
-+			state == GSI_CHANNEL_STATE_STOP_IN_PROC ||
-+			state == GSI_CHANNEL_STATE_ERROR;
-+		break;
-+
-+	case GSI_CH_RESET:
-+		valid = state == GSI_CHANNEL_STATE_STOPPED;
-+		break;
-+
-+	case GSI_CH_DE_ALLOC:
-+		valid = state == GSI_CHANNEL_STATE_ALLOCATED;
-+		break;
-+
-+	default:
-+		dev_err(dev,
-+			"channel %u unrecognized state %u for opcode %u\n",
-+			channel_id, state, opcode);
-+		return false;
-+	}
-+
-+	if (!valid)
-+		dev_err(dev, "channel %u unexpected state %u for opcode %u\n",
-+			channel_id, state, opcode);
-+
-+	return valid;
-+}
-+
-+/* Issue a channel command and wait for it to complete */
-+static int
-+gsi_channel_command(struct gsi_channel *channel, enum gsi_ch_cmd_opcode opcode)
-+{
-+	struct completion *completion = &channel->completion;
-+	u32 channel_id = gsi_channel_id(channel);
-+	u32 val;
-+	int ret;
-+
-+	if (!gsi_channel_state_valid(channel->gsi, channel_id, opcode))
-+		return -EINVAL;
-+
-+	val = u32_encode_bits(channel_id, CH_CHID_FMASK);
-+	val |= u32_encode_bits(opcode, CH_OPCODE_FMASK);
-+
-+	ret = gsi_command(channel->gsi, GSI_CH_CMD_OFFSET, val, completion);
-+	if (ret)
-+		dev_err(channel->gsi->dev,
-+			"error %d issuing command %u to channel %u\n",
-+			ret, opcode, channel_id);
-+
-+	return ret;
-+}
-+
-+/* Allocate GSI channel in NOT_ALLOCATED state */
-+static int gsi_channel_alloc_command(struct gsi *gsi, u32 channel_id)
-+{
-+	struct gsi_channel *channel = &gsi->channel[channel_id];
-+	int ret;
-+
-+	/* Get initial channel state */
-+	channel->state = gsi_channel_state(gsi, channel_id);
-+
-+	ret = gsi_channel_command(channel, GSI_CH_ALLOCATE);
-+	if (!ret && channel->state != GSI_CHANNEL_STATE_ALLOCATED) {
-+		dev_err(gsi->dev, "bad channel state (%u) after alloc\n",
-+			channel->state);
-+		ret = -EIO;
-+	}
-+
-+	return ret;
-+}
-+
-+/* Start an ALLOCATED channel */
-+static int gsi_channel_start_command(struct gsi_channel *channel)
-+{
-+	int ret;
-+
-+	ret = gsi_channel_command(channel, GSI_CH_START);
-+	if (!ret && channel->state != GSI_CHANNEL_STATE_STARTED) {
-+		dev_err(channel->gsi->dev,
-+			"bad channel state (%u) after start\n",
-+			channel->state);
-+		ret = -EIO;
-+	}
-+
-+	return ret;
-+}
-+
-+/* Stop a GSI channel in STARTED state */
-+static int gsi_channel_stop_command(struct gsi_channel *channel)
-+{
-+	int ret;
-+
-+	ret = gsi_channel_command(channel, GSI_CH_STOP);
-+	if (ret || channel->state == GSI_CHANNEL_STATE_STOPPED)
 +		return ret;
 +
-+	/* We may have to try again if stop is in progress */
-+	if (channel->state == GSI_CHANNEL_STATE_STOP_IN_PROC)
-+		return -EAGAIN;
++	ret = icc_set_bw(clock->imem_path, IPA_IMEM_AVG, IPA_IMEM_PEAK);
++	if (ret)
++		goto err_memory_path_disable;
 +
-+	dev_err(channel->gsi->dev, "bad channel state (%u) after stop\n",
-+		channel->state);
-+
-+	return -EIO;
-+}
-+
-+/* Reset a GSI channel in ALLOCATED or ERROR state. */
-+static void gsi_channel_reset_command(struct gsi_channel *channel)
-+{
-+	int ret;
-+
-+	msleep(1);	/* A short delay is required before a RESET command */
-+
-+	ret = gsi_channel_command(channel, GSI_CH_RESET);
-+	if (!ret && channel->state != GSI_CHANNEL_STATE_ALLOCATED)
-+		dev_err(channel->gsi->dev,
-+			"bad channel state (%u) after reset\n",
-+			channel->state);
-+}
-+
-+/* Deallocate an ALLOCATED GSI channel */
-+static void gsi_channel_de_alloc_command(struct gsi *gsi, u32 channel_id)
-+{
-+	struct gsi_channel *channel = &gsi->channel[channel_id];
-+	int ret;
-+
-+	ret = gsi_channel_command(channel, GSI_CH_DE_ALLOC);
-+	if (!ret && channel->state != GSI_CHANNEL_STATE_NOT_ALLOCATED)
-+		dev_err(gsi->dev, "bad channel state (%u) after dealloc\n",
-+			channel->state);
-+}
-+
-+/* Ring an event ring doorbell, reporting the last entry processed by the AP.
-+ * The index argument (modulo the ring count) is the first unfilled entry, so
-+ * we supply one less than that with the doorbell.  Update the event ring
-+ * index field with the value provided.
-+ */
-+static void gsi_evt_ring_doorbell(struct gsi *gsi, u32 evt_ring_id, u32 index)
-+{
-+	struct gsi_ring *ring = &gsi->evt_ring[evt_ring_id].ring;
-+	u32 val;
-+
-+	ring->index = index;	/* Next unused entry */
-+
-+	/* Note: index *must* be used modulo the ring count here */
-+	val = gsi_ring_addr(ring, (index - 1) % ring->count);
-+	iowrite32(val, gsi->virt + GSI_EV_CH_E_DOORBELL_0_OFFSET(evt_ring_id));
-+}
-+
-+/* Program an event ring for use */
-+static void gsi_evt_ring_program(struct gsi *gsi, u32 evt_ring_id)
-+{
-+	struct gsi_evt_ring *evt_ring = &gsi->evt_ring[evt_ring_id];
-+	size_t size = evt_ring->ring.count * GSI_RING_ELEMENT_SIZE;
-+	u32 val;
-+
-+	val = u32_encode_bits(GSI_EVT_CHTYPE_GPI_EV, EV_CHTYPE_FMASK);
-+	val |= EV_INTYPE_FMASK;
-+	val |= u32_encode_bits(GSI_RING_ELEMENT_SIZE, EV_ELEMENT_SIZE_FMASK);
-+	iowrite32(val, gsi->virt + GSI_EV_CH_E_CNTXT_0_OFFSET(evt_ring_id));
-+
-+	val = u32_encode_bits(size, EV_R_LENGTH_FMASK);
-+	iowrite32(val, gsi->virt + GSI_EV_CH_E_CNTXT_1_OFFSET(evt_ring_id));
-+
-+	/* The context 2 and 3 registers store the low-order and
-+	 * high-order 32 bits of the address of the event ring,
-+	 * respectively.
-+	 */
-+	val = evt_ring->ring.addr & GENMASK(31, 0);
-+	iowrite32(val, gsi->virt + GSI_EV_CH_E_CNTXT_2_OFFSET(evt_ring_id));
-+
-+	val = evt_ring->ring.addr >> 32;
-+	iowrite32(val, gsi->virt + GSI_EV_CH_E_CNTXT_3_OFFSET(evt_ring_id));
-+
-+	/* Enable interrupt moderation by setting the moderation delay */
-+	val = u32_encode_bits(GSI_EVT_RING_INT_MODT, MODT_FMASK);
-+	val |= u32_encode_bits(1, MODC_FMASK);	/* comes from channel */
-+	iowrite32(val, gsi->virt + GSI_EV_CH_E_CNTXT_8_OFFSET(evt_ring_id));
-+
-+	/* No MSI write data, and MSI address high and low address is 0 */
-+	iowrite32(0, gsi->virt + GSI_EV_CH_E_CNTXT_9_OFFSET(evt_ring_id));
-+	iowrite32(0, gsi->virt + GSI_EV_CH_E_CNTXT_10_OFFSET(evt_ring_id));
-+	iowrite32(0, gsi->virt + GSI_EV_CH_E_CNTXT_11_OFFSET(evt_ring_id));
-+
-+	/* We don't need to get event read pointer updates */
-+	iowrite32(0, gsi->virt + GSI_EV_CH_E_CNTXT_12_OFFSET(evt_ring_id));
-+	iowrite32(0, gsi->virt + GSI_EV_CH_E_CNTXT_13_OFFSET(evt_ring_id));
-+
-+	/* Finally, tell the hardware we've completed event 0 (arbitrary) */
-+	gsi_evt_ring_doorbell(gsi, evt_ring_id, 0);
-+}
-+
-+/* Return the last (most recent) transaction completed on a channel. */
-+static struct gsi_trans *gsi_channel_trans_last(struct gsi_channel *channel)
-+{
-+	struct gsi_trans_info *trans_info = &channel->trans_info;
-+	struct gsi_trans *trans;
-+
-+	spin_lock_bh(&trans_info->spinlock);
-+
-+	if (!list_empty(&trans_info->complete))
-+		trans = list_last_entry(&trans_info->complete,
-+					struct gsi_trans, links);
-+	else if (!list_empty(&trans_info->polled))
-+		trans = list_last_entry(&trans_info->polled,
-+					struct gsi_trans, links);
-+	else
-+		trans = NULL;
-+
-+	/* Caller will wait for this, so take a reference */
-+	if (trans)
-+		refcount_inc(&trans->refcount);
-+
-+	spin_unlock_bh(&trans_info->spinlock);
-+
-+	return trans;
-+}
-+
-+/* Wait for transaction activity on a channel to complete */
-+static void gsi_channel_trans_quiesce(struct gsi_channel *channel)
-+{
-+	struct gsi_trans *trans;
-+
-+	/* Get the last transaction, and wait for it to complete */
-+	trans = gsi_channel_trans_last(channel);
-+	if (trans) {
-+		wait_for_completion(&trans->completion);
-+		gsi_trans_free(trans);
-+	}
-+}
-+
-+/* Stop channel activity.  Transactions may not be allocated until thawed. */
-+static void gsi_channel_freeze(struct gsi_channel *channel)
-+{
-+	gsi_channel_trans_quiesce(channel);
-+
-+	napi_disable(&channel->napi);
-+
-+	gsi_irq_ieob_disable(channel->gsi, channel->evt_ring_id);
-+}
-+
-+/* Allow transactions to be used on the channel again. */
-+static void gsi_channel_thaw(struct gsi_channel *channel)
-+{
-+	gsi_irq_ieob_enable(channel->gsi, channel->evt_ring_id);
-+
-+	napi_enable(&channel->napi);
-+}
-+
-+/* Program a channel for use */
-+static void gsi_channel_program(struct gsi_channel *channel, bool doorbell)
-+{
-+	size_t size = channel->tre_ring.count * GSI_RING_ELEMENT_SIZE;
-+	u32 channel_id = gsi_channel_id(channel);
-+	union gsi_channel_scratch scr = { };
-+	struct gsi_channel_scratch_gpi *gpi;
-+	struct gsi *gsi = channel->gsi;
-+	u32 wrr_weight = 0;
-+	u32 val;
-+
-+	/* Arbitrarily pick TRE 0 as the first channel element to use */
-+	channel->tre_ring.index = 0;
-+
-+	/* We program all channels to use GPI protocol */
-+	val = u32_encode_bits(GSI_CHANNEL_PROTOCOL_GPI, CHTYPE_PROTOCOL_FMASK);
-+	if (channel->toward_ipa)
-+		val |= CHTYPE_DIR_FMASK;
-+	val |= u32_encode_bits(channel->evt_ring_id, ERINDEX_FMASK);
-+	val |= u32_encode_bits(GSI_RING_ELEMENT_SIZE, ELEMENT_SIZE_FMASK);
-+	iowrite32(val, gsi->virt + GSI_CH_C_CNTXT_0_OFFSET(channel_id));
-+
-+	val = u32_encode_bits(size, R_LENGTH_FMASK);
-+	iowrite32(val, gsi->virt + GSI_CH_C_CNTXT_1_OFFSET(channel_id));
-+
-+	/* The context 2 and 3 registers store the low-order and
-+	 * high-order 32 bits of the address of the channel ring,
-+	 * respectively.
-+	 */
-+	val = channel->tre_ring.addr & GENMASK(31, 0);
-+	iowrite32(val, gsi->virt + GSI_CH_C_CNTXT_2_OFFSET(channel_id));
-+
-+	val = channel->tre_ring.addr >> 32;
-+	iowrite32(val, gsi->virt + GSI_CH_C_CNTXT_3_OFFSET(channel_id));
-+
-+	/* Command channel gets low weighted round-robin priority */
-+	if (channel->command)
-+		wrr_weight = field_max(WRR_WEIGHT_FMASK);
-+	val = u32_encode_bits(wrr_weight, WRR_WEIGHT_FMASK);
-+
-+	/* Max prefetch is 1 segment (do not set MAX_PREFETCH_FMASK) */
-+
-+	/* Enable the doorbell engine if requested */
-+	if (doorbell)
-+		val |= USE_DB_ENG_FMASK;
-+
-+	if (!channel->use_prefetch)
-+		val |= USE_ESCAPE_BUF_ONLY_FMASK;
-+
-+	iowrite32(val, gsi->virt + GSI_CH_C_QOS_OFFSET(channel_id));
-+
-+	/* Now update the scratch registers for GPI protocol */
-+	gpi = &scr.gpi;
-+	gpi->max_outstanding_tre = gsi_channel_trans_tre_max(gsi, channel_id) *
-+					GSI_RING_ELEMENT_SIZE;
-+	gpi->outstanding_threshold = 2 * GSI_RING_ELEMENT_SIZE;
-+
-+	val = scr.data.word1;
-+	iowrite32(val, gsi->virt + GSI_CH_C_SCRATCH_0_OFFSET(channel_id));
-+
-+	val = scr.data.word2;
-+	iowrite32(val, gsi->virt + GSI_CH_C_SCRATCH_1_OFFSET(channel_id));
-+
-+	val = scr.data.word3;
-+	iowrite32(val, gsi->virt + GSI_CH_C_SCRATCH_2_OFFSET(channel_id));
-+
-+	/* We must preserve the upper 16 bits of the last scratch register.
-+	 * The next sequence assumes those bits remain unchanged between the
-+	 * read and the write.
-+	 */
-+	val = ioread32(gsi->virt + GSI_CH_C_SCRATCH_3_OFFSET(channel_id));
-+	val = (scr.data.word4 & GENMASK(31, 16)) | (val & GENMASK(15, 0));
-+	iowrite32(val, gsi->virt + GSI_CH_C_SCRATCH_3_OFFSET(channel_id));
-+
-+	/* All done! */
-+}
-+
-+static void gsi_channel_deprogram(struct gsi_channel *channel)
-+{
-+	/* Nothing to do */
-+}
-+
-+/* Start an allocated GSI channel */
-+int gsi_channel_start(struct gsi *gsi, u32 channel_id)
-+{
-+	struct gsi_channel *channel = &gsi->channel[channel_id];
-+	u32 evt_ring_id = channel->evt_ring_id;
-+	int ret;
-+
-+	mutex_lock(&gsi->mutex);
-+
-+	ret =  gsi_channel_start_command(channel);
-+
-+	mutex_unlock(&gsi->mutex);
-+
-+	/* Clear the channel's event ring interrupt in case it's pending */
-+	gsi_isr_ieob_clear(gsi, BIT(evt_ring_id));
-+
-+	gsi_channel_thaw(channel);
++	ret = icc_set_bw(clock->config_path, IPA_CONFIG_AVG, IPA_CONFIG_PEAK);
++	if (ret)
++		goto err_imem_path_disable;
 +
 +	return 0;
-+}
 +
-+/* Stop a started channel */
-+int gsi_channel_stop(struct gsi *gsi, u32 channel_id)
-+{
-+	struct gsi_channel *channel = &gsi->channel[channel_id];
-+	int ret;
-+
-+	gsi_channel_freeze(channel);
-+
-+	/* Channel could have entered STOPPED state since last call if the
-+	 * STOP command timed out.  We won't stop a channel if stopping it
-+	 * was successful previously (so we still want the freeze above).
-+	 */
-+	if (channel->state == GSI_CHANNEL_STATE_STOPPED)
-+		return 0;
-+
-+	mutex_lock(&gsi->mutex);
-+
-+	ret = gsi_channel_stop_command(channel);
-+
-+	mutex_unlock(&gsi->mutex);
-+
-+	/* Thaw the channel if we need to retry (or on error) */
-+	if (ret)
-+		gsi_channel_thaw(channel);
++err_imem_path_disable:
++	(void)icc_set_bw(clock->imem_path, 0, 0);
++err_memory_path_disable:
++	(void)icc_set_bw(clock->memory_path, 0, 0);
 +
 +	return ret;
 +}
 +
-+/* Reset and reconfigure a channel (possibly leaving doorbell disabled) */
-+void gsi_channel_reset(struct gsi *gsi, u32 channel_id, bool db_enable)
++/* To disable an interconnect, we just its bandwidth to 0 */
++static int ipa_interconnect_disable(struct ipa *ipa)
 +{
-+	struct gsi_channel *channel = &gsi->channel[channel_id];
++	struct ipa_clock *clock = ipa->clock;
++	int ret;
 +
-+	mutex_lock(&gsi->mutex);
++	ret = icc_set_bw(clock->memory_path, 0, 0);
++	if (ret)
++		return ret;
 +
-+	/* Due to a hardware quirk we need to reset RX channels twice. */
-+	gsi_channel_reset_command(channel);
-+	if (!channel->toward_ipa)
-+		gsi_channel_reset_command(channel);
++	ret = icc_set_bw(clock->imem_path, 0, 0);
++	if (ret)
++		goto err_memory_path_reenable;
 +
-+	gsi_channel_program(channel, db_enable);
-+	gsi_channel_trans_cancel_pending(channel);
-+
-+	mutex_unlock(&gsi->mutex);
-+}
-+
-+/* Stop a STARTED channel for suspend (only stop if RX and requested) */
-+int gsi_channel_suspend(struct gsi *gsi, u32 channel_id, bool stop)
-+{
-+	struct gsi_channel *channel = &gsi->channel[channel_id];
-+
-+	if (stop && !channel->toward_ipa)
-+		return gsi_channel_stop(gsi, channel_id);
-+
-+	gsi_channel_freeze(channel);
++	ret = icc_set_bw(clock->config_path, 0, 0);
++	if (ret)
++		goto err_imem_path_reenable;
 +
 +	return 0;
++
++err_imem_path_reenable:
++	(void)icc_set_bw(clock->imem_path, IPA_IMEM_AVG, IPA_IMEM_PEAK);
++err_memory_path_reenable:
++	(void)icc_set_bw(clock->memory_path, IPA_MEMORY_AVG, IPA_MEMORY_PEAK);
++
++	return ret;
 +}
 +
-+/* Resume a suspended channel (starting wll be requested if STOPPED) */
-+int gsi_channel_resume(struct gsi *gsi, u32 channel_id, bool start)
++/* Turn on IPA clocks, including interconnects */
++static int ipa_clock_enable(struct ipa *ipa)
 +{
-+	struct gsi_channel *channel = &gsi->channel[channel_id];
++	int ret;
 +
-+	if (start && !channel->toward_ipa)
-+		return gsi_channel_start(gsi, channel_id);
++	ret = ipa_interconnect_enable(ipa);
++	if (ret)
++		return ret;
 +
-+	gsi_channel_thaw(channel);
++	ret = clk_prepare_enable(ipa->clock->core);
++	if (ret)
++		ipa_interconnect_disable(ipa);
 +
-+	return 0;
++	return ret;
 +}
 +
-+/**
-+ * gsi_channel_tx_queued() - Report queued TX transfers for a channel
-+ * @channel:	Channel for which to report
-+ *
-+ * Report to the network stack the number of bytes and transactions that
-+ * have been queued to hardware since last call.  This and the next function
-+ * supply information used by the network stack for throttling.
-+ *
-+ * For each channel we track the number of transactions used and bytes of
-+ * data those transactions represent.  We also track what those values are
-+ * each time this function is called.  Subtracting the two tells us
-+ * the number of bytes and transactions that have been added between
-+ * successive calls.
-+ *
-+ * Calling this each time we ring the channel doorbell allows us to
-+ * provide accurate information to the network stack about how much
-+ * work we've given the hardware at any point in time.
++/* Inverse of ipa_clock_enable() */
++static void ipa_clock_disable(struct ipa *ipa)
++{
++	clk_disable_unprepare(ipa->clock->core);
++	(void)ipa_interconnect_disable(ipa);
++}
++
++/* Get an IPA clock reference, but only if the reference count is
++ * already non-zero.  Returns true if the additional reference was
++ * added successfully, or false otherwise.
 + */
-+void gsi_channel_tx_queued(struct gsi_channel *channel)
++bool ipa_clock_get_additional(struct ipa *ipa)
 +{
-+	u32 trans_count;
-+	u32 byte_count;
-+
-+	byte_count = channel->byte_count - channel->queued_byte_count;
-+	trans_count = channel->trans_count - channel->queued_trans_count;
-+	channel->queued_byte_count = channel->byte_count;
-+	channel->queued_trans_count = channel->trans_count;
-+
-+	ipa_gsi_channel_tx_queued(channel->gsi, gsi_channel_id(channel),
-+				  trans_count, byte_count);
++	return !!atomic_inc_not_zero(&ipa->clock->count);
 +}
 +
-+/**
-+ * gsi_channel_tx_update() - Report completed TX transfers
-+ * @channel:	Channel that has completed transmitting packets
-+ * @trans:	Last transation known to be complete
++/* Get an IPA clock reference.  If the reference count is non-zero, it is
++ * incremented and return is immediate.  Otherwise it is checked again
++ * under protection of the mutex, and if appropriate the clock (and
++ * interconnects) are enabled suspended endpoints (if any) are resumed
++ * before returning.
 + *
-+ * Compute the number of transactions and bytes that have been transferred
-+ * over a TX channel since the given transaction was committed.  Report this
-+ * information to the network stack.
-+ *
-+ * At the time a transaction is committed, we record its channel's
-+ * committed transaction and byte counts *in the transaction*.
-+ * Completions are signaled by the hardware with an interrupt, and
-+ * we can determine the latest completed transaction at that time.
-+ *
-+ * The difference between the byte/transaction count recorded in
-+ * the transaction and the count last time we recorded a completion
-+ * tells us exactly how much data has been transferred between
-+ * completions.
-+ *
-+ * Calling this each time we learn of a newly-completed transaction
-+ * allows us to provide accurate information to the network stack
-+ * about how much work has been completed by the hardware at a given
-+ * point in time.
++ * Incrementing the reference count is intentionally deferred until
++ * after the clock is running and endpoints are resumed.
 + */
-+static void
-+gsi_channel_tx_update(struct gsi_channel *channel, struct gsi_trans *trans)
++void ipa_clock_get(struct ipa *ipa)
 +{
-+	u64 byte_count = trans->byte_count + trans->len;
-+	u64 trans_count = trans->trans_count + 1;
++	struct ipa_clock *clock = ipa->clock;
++	int ret;
 +
-+	byte_count -= channel->compl_byte_count;
-+	channel->compl_byte_count += byte_count;
-+	trans_count -= channel->compl_trans_count;
-+	channel->compl_trans_count += trans_count;
-+
-+	ipa_gsi_channel_tx_completed(channel->gsi, gsi_channel_id(channel),
-+				     trans_count, byte_count);
-+}
-+
-+/* Channel control interrupt handler */
-+static void gsi_isr_chan_ctrl(struct gsi *gsi)
-+{
-+	u32 channel_mask;
-+
-+	channel_mask = ioread32(gsi->virt + GSI_CNTXT_SRC_CH_IRQ_OFFSET);
-+	iowrite32(channel_mask, gsi->virt + GSI_CNTXT_SRC_CH_IRQ_CLR_OFFSET);
-+
-+	while (channel_mask) {
-+		u32 channel_id = __ffs(channel_mask);
-+		struct gsi_channel *channel;
-+
-+		channel_mask ^= BIT(channel_id);
-+
-+		channel = &gsi->channel[channel_id];
-+		channel->state = gsi_channel_state(gsi, channel_id);
-+
-+		complete(&channel->completion);
-+	}
-+}
-+
-+/* Event ring control interrupt handler */
-+static void gsi_isr_evt_ctrl(struct gsi *gsi)
-+{
-+	u32 event_mask;
-+
-+	event_mask = ioread32(gsi->virt + GSI_CNTXT_SRC_EV_CH_IRQ_OFFSET);
-+	iowrite32(event_mask, gsi->virt + GSI_CNTXT_SRC_EV_CH_IRQ_CLR_OFFSET);
-+
-+	while (event_mask) {
-+		u32 evt_ring_id = __ffs(event_mask);
-+		struct gsi_evt_ring *evt_ring;
-+
-+		event_mask ^= BIT(evt_ring_id);
-+
-+		evt_ring = &gsi->evt_ring[evt_ring_id];
-+		evt_ring->state = gsi_evt_ring_state(gsi, evt_ring_id);
-+
-+		complete(&evt_ring->completion);
-+	}
-+}
-+
-+/* Global channel error interrupt handler */
-+static void
-+gsi_isr_glob_chan_err(struct gsi *gsi, u32 err_ee, u32 channel_id, u32 code)
-+{
-+	if (code == GSI_OUT_OF_RESOURCES_ERR) {
-+		dev_err(gsi->dev, "channel %u out of resources\n", channel_id);
-+		complete(&gsi->channel[channel_id].completion);
++	/* If the clock is running, just bump the reference count */
++	if (ipa_clock_get_additional(ipa))
 +		return;
++
++	/* Otherwise get the mutex and check again */
++	mutex_lock(&clock->mutex);
++
++	/* A reference might have been added before we got the mutex. */
++	if (ipa_clock_get_additional(ipa))
++		goto out_mutex_unlock;
++
++	ret = ipa_clock_enable(ipa);
++	if (ret) {
++		dev_err(&ipa->pdev->dev, "error %d enabling IPA clock\n", ret);
++		goto out_mutex_unlock;
 +	}
 +
-+	/* Report, but otherwise ignore all other error codes */
-+	dev_err(gsi->dev, "channel %u global error ee 0x%08x code 0x%08x\n",
-+		channel_id, err_ee, code);
++	ipa_endpoint_resume(ipa);
++
++	atomic_inc(&clock->count);
++
++out_mutex_unlock:
++	mutex_unlock(&clock->mutex);
 +}
 +
-+/* Global event error interrupt handler */
-+static void
-+gsi_isr_glob_evt_err(struct gsi *gsi, u32 err_ee, u32 evt_ring_id, u32 code)
++/* Attempt to remove an IPA clock reference.  If this represents the last
++ * reference, suspend endpoints and disable the clock (and interconnects)
++ * under protection of a mutex.
++ */
++void ipa_clock_put(struct ipa *ipa)
 +{
-+	if (code == GSI_OUT_OF_RESOURCES_ERR) {
-+		struct gsi_evt_ring *evt_ring = &gsi->evt_ring[evt_ring_id];
-+		u32 channel_id = gsi_channel_id(evt_ring->channel);
++	struct ipa_clock *clock = ipa->clock;
 +
-+		complete(&evt_ring->completion);
-+		dev_err(gsi->dev, "evt_ring for channel %u out of resources\n",
-+			channel_id);
++	/* If this is not the last reference there's nothing more to do */
++	if (!atomic_dec_and_mutex_lock(&clock->count, &clock->mutex))
 +		return;
++
++	ipa_endpoint_suspend(ipa);
++
++	ipa_clock_disable(ipa);
++
++	mutex_unlock(&clock->mutex);
++}
++
++/* Initialize IPA clocking */
++struct ipa_clock *ipa_clock_init(struct device *dev)
++{
++	struct ipa_clock *clock;
++	struct clk *clk;
++	int ret;
++
++	clk = clk_get(dev, "core");
++	if (IS_ERR(clk)) {
++		dev_err(dev, "error %d getting core clock\n", PTR_ERR(clk));
++		return ERR_CAST(clk);
 +	}
 +
-+	/* Report, but otherwise ignore all other error codes */
-+	dev_err(gsi->dev, "event ring %u global error ee %u code 0x%08x\n",
-+		evt_ring_id, err_ee, code);
-+}
-+
-+/* Global error interrupt handler */
-+static void gsi_isr_glob_err(struct gsi *gsi)
-+{
-+	enum gsi_err_type type;
-+	enum gsi_err_code code;
-+	u32 which;
-+	u32 val;
-+	u32 ee;
-+
-+	/* Get the logged error, then reinitialize the log */
-+	val = ioread32(gsi->virt + GSI_ERROR_LOG_OFFSET);
-+	iowrite32(0, gsi->virt + GSI_ERROR_LOG_OFFSET);
-+	iowrite32(~0, gsi->virt + GSI_ERROR_LOG_CLR_OFFSET);
-+
-+	ee = u32_get_bits(val, ERR_EE_FMASK);
-+	which = u32_get_bits(val, ERR_VIRT_IDX_FMASK);
-+	type = u32_get_bits(val, ERR_TYPE_FMASK);
-+	code = u32_get_bits(val, ERR_CODE_FMASK);
-+
-+	if (type == GSI_ERR_TYPE_CHAN)
-+		gsi_isr_glob_chan_err(gsi, ee, which, code);
-+	else if (type == GSI_ERR_TYPE_EVT)
-+		gsi_isr_glob_evt_err(gsi, ee, which, code);
-+	else	/* type GSI_ERR_TYPE_GLOB should be fatal */
-+		dev_err(gsi->dev, "unexpected global error 0x%08x\n", type);
-+}
-+
-+/* Generic EE interrupt handler */
-+static void gsi_isr_gp_int1(struct gsi *gsi)
-+{
-+	u32 result;
-+	u32 val;
-+
-+	val = ioread32(gsi->virt + GSI_CNTXT_SCRATCH_0_OFFSET);
-+	result = u32_get_bits(val, GENERIC_EE_RESULT_FMASK);
-+	if (result != GENERIC_EE_SUCCESS_FVAL)
-+		dev_err(gsi->dev, "global INT1 generic result %u\n", result);
-+
-+	complete(&gsi->completion);
-+}
-+/* Inter-EE interrupt handler */
-+static void gsi_isr_glob_ee(struct gsi *gsi)
-+{
-+	u32 val;
-+
-+	val = ioread32(gsi->virt + GSI_CNTXT_GLOB_IRQ_STTS_OFFSET);
-+
-+	if (val & ERROR_INT_FMASK)
-+		gsi_isr_glob_err(gsi);
-+
-+	iowrite32(val, gsi->virt + GSI_CNTXT_GLOB_IRQ_CLR_OFFSET);
-+
-+	val &= ~ERROR_INT_FMASK;
-+
-+	if (val & EN_GP_INT1_FMASK) {
-+		val ^= EN_GP_INT1_FMASK;
-+		gsi_isr_gp_int1(gsi);
++	ret = clk_set_rate(clk, IPA_CORE_CLOCK_RATE);
++	if (ret) {
++		dev_err(dev, "error setting core clock rate to %u\n",
++			ret, IPA_CORE_CLOCK_RATE);
++		goto err_clk_put;
 +	}
 +
-+	if (val)
-+		dev_err(gsi->dev, "unexpected global interrupt 0x%08x\n", val);
-+}
-+
-+/* I/O completion interrupt event */
-+static void gsi_isr_ieob(struct gsi *gsi)
-+{
-+	u32 event_mask;
-+
-+	event_mask = ioread32(gsi->virt + GSI_CNTXT_SRC_IEOB_IRQ_OFFSET);
-+	gsi_isr_ieob_clear(gsi, event_mask);
-+
-+	while (event_mask) {
-+		u32 evt_ring_id = __ffs(event_mask);
-+
-+		event_mask ^= BIT(evt_ring_id);
-+
-+		gsi_irq_ieob_disable(gsi, evt_ring_id);
-+		napi_schedule(&gsi->evt_ring[evt_ring_id].channel->napi);
++	clock = kzalloc(sizeof(*clock), GFP_KERNEL);
++	if (!clock) {
++		ret = -ENOMEM;
++		goto err_clk_put;
 +	}
++	clock->core = clk;
++
++	ret = ipa_interconnect_init(clock, dev);
++	if (ret)
++		goto err_kfree;
++
++	mutex_init(&clock->mutex);
++	atomic_set(&clock->count, 0);
++
++	return clock;
++
++err_kfree:
++	kfree(clock);
++err_clk_put:
++	clk_put(clk);
++
++	return ERR_PTR(ret);
 +}
 +
-+/* General event interrupts represent serious problems, so report them */
-+static void gsi_isr_general(struct gsi *gsi)
++/* Inverse of ipa_clock_init() */
++void ipa_clock_exit(struct ipa_clock *clock)
 +{
-+	struct device *dev = gsi->dev;
-+	u32 val;
++	struct clk *clk = clock->core;
 +
-+	val = ioread32(gsi->virt + GSI_CNTXT_GSI_IRQ_STTS_OFFSET);
-+	iowrite32(val, gsi->virt + GSI_CNTXT_GSI_IRQ_CLR_OFFSET);
-+
-+	if (val)
-+		dev_err(dev, "unexpected general interrupt 0x%08x\n", val);
++	WARN_ON(atomic_read(&clock->count) != 0);
++	mutex_destroy(&clock->mutex);
++	ipa_interconnect_exit(clock);
++	kfree(clock);
++	clk_put(clk);
 +}
+diff --git a/drivers/net/ipa/ipa_clock.h b/drivers/net/ipa/ipa_clock.h
+new file mode 100644
+index 000000000000..bc52b35e6bb2
+--- /dev/null
++++ b/drivers/net/ipa/ipa_clock.h
+@@ -0,0 +1,53 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
++ * Copyright (C) 2018-2020 Linaro Ltd.
++ */
++#ifndef _IPA_CLOCK_H_
++#define _IPA_CLOCK_H_
++
++struct device;
++
++struct ipa;
 +
 +/**
-+ * gsi_isr() - Top level GSI interrupt service routine
-+ * @irq:	Interrupt number (ignored)
-+ * @dev_id:	GSI pointer supplied to request_irq()
++ * ipa_clock_init() - Initialize IPA clocking
++ * @dev:	IPA device
 + *
-+ * This is the main handler function registered for the GSI IRQ. Each type
-+ * of interrupt has a separate handler function that is called from here.
++ * @Return:	A pointer to an ipa_clock structure, or a pointer-coded error
 + */
-+static irqreturn_t gsi_isr(int irq, void *dev_id)
-+{
-+	struct gsi *gsi = dev_id;
-+	u32 intr_mask;
-+	u32 cnt = 0;
++struct ipa_clock *ipa_clock_init(struct device *dev);
 +
-+	while ((intr_mask = ioread32(gsi->virt + GSI_CNTXT_TYPE_IRQ_OFFSET))) {
-+		/* intr_mask contains bitmask of pending GSI interrupts */
++/**
++ * ipa_clock_exit() - Inverse of ipa_clock_init()
++ * @clock:	IPA clock pointer
++ */
++void ipa_clock_exit(struct ipa_clock *clock);
++
++/**
++ * ipa_clock_get() - Get an IPA clock reference
++ * @ipa:	IPA pointer
++ *
++ * This call blocks if this is the first reference.
++ */
++void ipa_clock_get(struct ipa *ipa);
++
++/**
++ * ipa_clock_get_additional() - Get an IPA clock reference if not first
++ * @ipa:	IPA pointer
++ *
++ * This returns immediately, and only takes a reference if not the first
++ */
++bool ipa_clock_get_additional(struct ipa *ipa);
++
++/**
++ * ipa_clock_put() - Drop an IPA clock reference
++ * @ipa:	IPA pointer
++ *
++ * This drops a clock reference.  If the last reference is being dropped,
++ * the clock is stopped and RX endpoints are suspended.  This call will
++ * not block unless the last reference is dropped.
++ */
++void ipa_clock_put(struct ipa *ipa);
++
++#endif /* _IPA_CLOCK_H_ */
+diff --git a/drivers/net/ipa/ipa_interrupt.c b/drivers/net/ipa/ipa_interrupt.c
+new file mode 100644
+index 000000000000..90353987c45f
+--- /dev/null
++++ b/drivers/net/ipa/ipa_interrupt.c
+@@ -0,0 +1,253 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/* Copyright (c) 2014-2018, The Linux Foundation. All rights reserved.
++ * Copyright (C) 2018-2020 Linaro Ltd.
++ */
++
++/* DOC: IPA Interrupts
++ *
++ * The IPA has an interrupt line distinct from the interrupt used by the GSI
++ * code.  Whereas GSI interrupts are generally related to channel events (like
++ * transfer completions), IPA interrupts are related to other events related
++ * to the IPA.  Some of the IPA interrupts come from a microcontroller
++ * embedded in the IPA.  Each IPA interrupt type can be both masked and
++ * acknowledged independent of the others.
++ *
++ * Two of the IPA interrupts are initiated by the microcontroller.  A third
++ * can be generated to signal the need for a wakeup/resume when an IPA
++ * endpoint has been suspended.  There are other IPA events, but at this
++ * time only these three are supported.
++ */
++
++#include <linux/types.h>
++#include <linux/interrupt.h>
++
++#include "ipa.h"
++#include "ipa_clock.h"
++#include "ipa_reg.h"
++#include "ipa_endpoint.h"
++#include "ipa_interrupt.h"
++
++/**
++ * struct ipa_interrupt - IPA interrupt information
++ * @ipa:		IPA pointer
++ * @irq:		Linux IRQ number used for IPA interrupts
++ * @enabled:		Mask indicating which interrupts are enabled
++ * @handler:		Array of handlers indexed by IPA interrupt ID
++ */
++struct ipa_interrupt {
++	struct ipa *ipa;
++	u32 irq;
++	u32 enabled;
++	ipa_irq_handler_t handler[IPA_IRQ_COUNT];
++};
++
++/* Returns true if the interrupt type is associated with the microcontroller */
++static bool ipa_interrupt_uc(struct ipa_interrupt *interrupt, u32 irq_id)
++{
++	return irq_id == IPA_IRQ_UC_0 || irq_id == IPA_IRQ_UC_1;
++}
++
++/* Process a particular interrupt type that has been received */
++static void ipa_interrupt_process(struct ipa_interrupt *interrupt, u32 irq_id)
++{
++	bool uc_irq = ipa_interrupt_uc(interrupt, irq_id);
++	struct ipa *ipa = interrupt->ipa;
++	u32 mask = BIT(irq_id);
++
++	/* For microcontroller interrupts, clear the interrupt right away,
++	 * "to avoid clearing unhandled interrupts."
++	 */
++	if (uc_irq)
++		iowrite32(mask, ipa->reg_virt + IPA_REG_IRQ_CLR_OFFSET);
++
++	if (irq_id < IPA_IRQ_COUNT && interrupt->handler[irq_id])
++		interrupt->handler[irq_id](interrupt->ipa, irq_id);
++
++	/* Clearing the SUSPEND_TX interrupt also clears the register
++	 * that tells us which suspended endpoint(s) caused the interrupt,
++	 * so defer clearing until after the handler has been called.
++	 */
++	if (!uc_irq)
++		iowrite32(mask, ipa->reg_virt + IPA_REG_IRQ_CLR_OFFSET);
++}
++
++/* Process all IPA interrupt types that have been signaled */
++static void ipa_interrupt_process_all(struct ipa_interrupt *interrupt)
++{
++	struct ipa *ipa = interrupt->ipa;
++	u32 enabled = interrupt->enabled;
++	u32 mask;
++
++	/* The status register indicates which conditions are present,
++	 * including conditions whose interrupt is not enabled.  Handle
++	 * only the enabled ones.
++	 */
++	mask = ioread32(ipa->reg_virt + IPA_REG_IRQ_STTS_OFFSET);
++	while ((mask &= enabled)) {
 +		do {
-+			u32 gsi_intr = BIT(__ffs(intr_mask));
++			u32 irq_id = __ffs(mask);
 +
-+			intr_mask ^= gsi_intr;
++			mask ^= BIT(irq_id);
 +
-+			switch (gsi_intr) {
-+			case CH_CTRL_FMASK:
-+				gsi_isr_chan_ctrl(gsi);
-+				break;
-+			case EV_CTRL_FMASK:
-+				gsi_isr_evt_ctrl(gsi);
-+				break;
-+			case GLOB_EE_FMASK:
-+				gsi_isr_glob_ee(gsi);
-+				break;
-+			case IEOB_FMASK:
-+				gsi_isr_ieob(gsi);
-+				break;
-+			case GENERAL_FMASK:
-+				gsi_isr_general(gsi);
-+				break;
-+			default:
-+				dev_err(gsi->dev,
-+					"%s: unrecognized type 0x%08x\n",
-+					__func__, gsi_intr);
-+				break;
-+			}
-+		} while (intr_mask);
-+
-+		if (++cnt > GSI_ISR_MAX_ITER) {
-+			dev_err(gsi->dev, "interrupt flood\n");
-+			break;
-+		}
++			ipa_interrupt_process(interrupt, irq_id);
++		} while (mask);
++		mask = ioread32(ipa->reg_virt + IPA_REG_IRQ_STTS_OFFSET);
 +	}
++}
++
++/* Threaded part of the IPA IRQ handler */
++static irqreturn_t ipa_isr_thread(int irq, void *dev_id)
++{
++	struct ipa_interrupt *interrupt = dev_id;
++
++	ipa_clock_get(interrupt->ipa);
++
++	ipa_interrupt_process_all(interrupt);
++
++	ipa_clock_put(interrupt->ipa);
 +
 +	return IRQ_HANDLED;
 +}
 +
-+/* Return the transaction associated with a transfer completion event */
-+static struct gsi_trans *gsi_event_trans(struct gsi_channel *channel,
-+					 struct gsi_event *event)
++/* Hard part (i.e., "real" IRQ handler) of the IRQ handler */
++static irqreturn_t ipa_isr(int irq, void *dev_id)
 +{
-+	u32 tre_offset;
-+	u32 tre_index;
-+
-+	/* Event xfer_ptr records the TRE it's associated with */
-+	tre_offset = le64_to_cpu(event->xfer_ptr) & GENMASK(31, 0);
-+	tre_index = gsi_ring_index(&channel->tre_ring, tre_offset);
-+
-+	return gsi_channel_trans_mapped(channel, tre_index);
-+}
-+
-+/**
-+ * gsi_evt_ring_rx_update() - Record lengths of received data
-+ * @evt_ring:	Event ring associated with channel that received packets
-+ * @index:	Event index in ring reported by hardware
-+ *
-+ * Events for RX channels contain the actual number of bytes received into
-+ * the buffer.  Every event has a transaction associated with it, and here
-+ * we update transactions to record their actual received lengths.
-+ *
-+ * This function is called whenever we learn that the GSI hardware has filled
-+ * new events since the last time we checked.  The ring's index field tells
-+ * the first entry in need of processing.  The index provided is the
-+ * first *unfilled* event in the ring (following the last filled one).
-+ *
-+ * Events are sequential within the event ring, and transactions are
-+ * sequential within the transaction pool.
-+ *
-+ * Note that @index always refers to an element *within* the event ring.
-+ */
-+static void gsi_evt_ring_rx_update(struct gsi_evt_ring *evt_ring, u32 index)
-+{
-+	struct gsi_channel *channel = evt_ring->channel;
-+	struct gsi_ring *ring = &evt_ring->ring;
-+	struct gsi_trans_info *trans_info;
-+	struct gsi_event *event_done;
-+	struct gsi_event *event;
-+	struct gsi_trans *trans;
-+	u32 byte_count = 0;
-+	u32 old_index;
-+	u32 event_avail;
-+
-+	trans_info = &channel->trans_info;
-+
-+	/* We'll start with the oldest un-processed event.  RX channels
-+	 * replenish receive buffers in single-TRE transactions, so we
-+	 * can just map that event to its transaction.  Transactions
-+	 * associated with completion events are consecutive.
-+	 */
-+	old_index = ring->index;
-+	event = gsi_ring_virt(ring, old_index);
-+	trans = gsi_event_trans(channel, event);
-+
-+	/* Compute the number of events to process before we wrap,
-+	 * and determine when we'll be done processing events.
-+	 */
-+	event_avail = ring->count - old_index % ring->count;
-+	event_done = gsi_ring_virt(ring, index);
-+	do {
-+		trans->len = __le16_to_cpu(event->len);
-+		byte_count += trans->len;
-+
-+		/* Move on to the next event and transaction */
-+		if (--event_avail)
-+			event++;
-+		else
-+			event = gsi_ring_virt(ring, 0);
-+		trans = gsi_trans_pool_next(&trans_info->pool, trans);
-+	} while (event != event_done);
-+
-+	/* We record RX bytes when they are received */
-+	channel->byte_count += byte_count;
-+	channel->trans_count++;
-+}
-+
-+/* Initialize a ring, including allocating DMA memory for its entries */
-+static int gsi_ring_alloc(struct gsi *gsi, struct gsi_ring *ring, u32 count)
-+{
-+	size_t size = count * GSI_RING_ELEMENT_SIZE;
-+	struct device *dev = gsi->dev;
-+	dma_addr_t addr;
-+
-+	/* Hardware requires a 2^n ring size, with alignment equal to size */
-+	ring->virt = dma_alloc_coherent(dev, size, &addr, GFP_KERNEL);
-+	if (ring->virt && addr % size) {
-+		dma_free_coherent(dev, size, ring->virt, ring->addr);
-+		dev_err(dev, "unable to alloc 0x%zx-aligned ring buffer\n",
-+				size);
-+		return -EINVAL;	/* Not a good error value, but distinct */
-+	} else if (!ring->virt) {
-+		return -ENOMEM;
-+	}
-+	ring->addr = addr;
-+	ring->count = count;
-+
-+	return 0;
-+}
-+
-+/* Free a previously-allocated ring */
-+static void gsi_ring_free(struct gsi *gsi, struct gsi_ring *ring)
-+{
-+	size_t size = ring->count * GSI_RING_ELEMENT_SIZE;
-+
-+	dma_free_coherent(gsi->dev, size, ring->virt, ring->addr);
-+}
-+
-+/* Allocate an available event ring id */
-+static int gsi_evt_ring_id_alloc(struct gsi *gsi)
-+{
-+	u32 evt_ring_id;
-+
-+	if (gsi->event_bitmap == ~0U) {
-+		dev_err(gsi->dev, "event rings exhausted\n");
-+		return -ENOSPC;
-+	}
-+
-+	evt_ring_id = ffz(gsi->event_bitmap);
-+	gsi->event_bitmap |= BIT(evt_ring_id);
-+
-+	return (int)evt_ring_id;
-+}
-+
-+/* Free a previously-allocated event ring id */
-+static void gsi_evt_ring_id_free(struct gsi *gsi, u32 evt_ring_id)
-+{
-+	gsi->event_bitmap &= ~BIT(evt_ring_id);
-+}
-+
-+/* Ring a channel doorbell, reporting the first un-filled entry */
-+void gsi_channel_doorbell(struct gsi_channel *channel)
-+{
-+	struct gsi_ring *tre_ring = &channel->tre_ring;
-+	u32 channel_id = gsi_channel_id(channel);
-+	struct gsi *gsi = channel->gsi;
-+	u32 val;
-+
-+	/* Note: index *must* be used modulo the ring count here */
-+	val = gsi_ring_addr(tre_ring, tre_ring->index % tre_ring->count);
-+	iowrite32(val, gsi->virt + GSI_CH_C_DOORBELL_0_OFFSET(channel_id));
-+}
-+
-+/* Consult hardware, move any newly completed transactions to completed list */
-+static void gsi_channel_update(struct gsi_channel *channel)
-+{
-+	u32 evt_ring_id = channel->evt_ring_id;
-+	struct gsi *gsi = channel->gsi;
-+	struct gsi_evt_ring *evt_ring;
-+	struct gsi_trans *trans;
-+	struct gsi_ring *ring;
-+	u32 offset;
-+	u32 index;
-+
-+	evt_ring = &gsi->evt_ring[evt_ring_id];
-+	ring = &evt_ring->ring;
-+
-+	/* See if there's anything new to process; if not, we're done.  Note
-+	 * that index always refers to an entry *within* the event ring.
-+	 */
-+	offset = GSI_EV_CH_E_CNTXT_4_OFFSET(evt_ring_id);
-+	index = gsi_ring_index(ring, ioread32(gsi->virt + offset));
-+	if (index == ring->index % ring->count)
-+		return;
-+
-+	/* Get the transaction for the latest completed event.  Take a
-+	 * reference to keep it from completing before we give the events
-+	 * for this and previous transactions back to the hardware.
-+	 */
-+	trans = gsi_event_trans(channel, gsi_ring_virt(ring, index - 1));
-+	refcount_inc(&trans->refcount);
-+
-+	/* For RX channels, update each completed transaction with the number
-+	 * of bytes that were actually received.  For TX channels, report
-+	 * the number of transactions and bytes this completion represents
-+	 * up the network stack.
-+	 */
-+	if (channel->toward_ipa)
-+		gsi_channel_tx_update(channel, trans);
-+	else
-+		gsi_evt_ring_rx_update(evt_ring, index);
-+
-+	gsi_trans_move_complete(trans);
-+
-+	/* Tell the hardware we've handled these events */
-+	gsi_evt_ring_doorbell(channel->gsi, channel->evt_ring_id, index);
-+
-+	gsi_trans_free(trans);
-+}
-+
-+/**
-+ * gsi_channel_poll_one() - Return a single completed transaction on a channel
-+ * @channel:	Channel to be polled
-+ *
-+ * @Return:	 Transaction pointer, or null if none are available
-+ *
-+ * This function returns the first entry on a channel's completed transaction
-+ * list.  If that list is empty, the hardware is consulted to determine
-+ * whether any new transactions have completed.  If so, they're moved to the
-+ * completed list and the new first entry is returned.  If there are no more
-+ * completed transactions, a null pointer is returned.
-+ */
-+static struct gsi_trans *gsi_channel_poll_one(struct gsi_channel *channel)
-+{
-+	struct gsi_trans *trans;
-+
-+	/* Get the first transaction from the completed list */
-+	trans = gsi_channel_trans_complete(channel);
-+	if (!trans) {
-+		/* List is empty; see if there's more to do */
-+		gsi_channel_update(channel);
-+		trans = gsi_channel_trans_complete(channel);
-+	}
-+
-+	if (trans)
-+		gsi_trans_move_polled(trans);
-+
-+	return trans;
-+}
-+
-+/**
-+ * gsi_channel_poll() - NAPI poll function for a channel
-+ * @napi:	NAPI structure for the channel
-+ * @budget:	Budget supplied by NAPI core
-+
-+ * @Return:	 Number of items polled (<= budget)
-+ *
-+ * Single transactions completed by hardware are polled until either
-+ * the budget is exhausted, or there are no more.  Each transaction
-+ * polled is passed to gsi_trans_complete(), to perform remaining
-+ * completion processing and retire/free the transaction.
-+ */
-+static int gsi_channel_poll(struct napi_struct *napi, int budget)
-+{
-+	struct gsi_channel *channel;
-+	int count = 0;
-+
-+	channel = container_of(napi, struct gsi_channel, napi);
-+	while (count < budget) {
-+		struct gsi_trans *trans;
-+
-+		trans = gsi_channel_poll_one(channel);
-+		if (!trans)
-+			break;
-+		gsi_trans_complete(trans);
-+	}
-+
-+	if (count < budget) {
-+		napi_complete(&channel->napi);
-+		gsi_irq_ieob_enable(channel->gsi, channel->evt_ring_id);
-+	}
-+
-+	return count;
-+}
-+
-+/* The event bitmap represents which event ids are available for allocation.
-+ * Set bits are not available, clear bits can be used.  This function
-+ * initializes the map so all events supported by the hardware are available,
-+ * then precludes any reserved events from being allocated.
-+ */
-+static u32 gsi_event_bitmap_init(u32 evt_ring_max)
-+{
-+	u32 event_bitmap = GENMASK(BITS_PER_LONG - 1, evt_ring_max);
-+
-+	event_bitmap |= GENMASK(GSI_MHI_EVENT_ID_END, GSI_MHI_EVENT_ID_START);
-+
-+	return event_bitmap;
-+}
-+
-+/* Setup function for event rings */
-+static void gsi_evt_ring_setup(struct gsi *gsi)
-+{
-+	/* Nothing to do */
-+}
-+
-+/* Inverse of gsi_evt_ring_setup() */
-+static void gsi_evt_ring_teardown(struct gsi *gsi)
-+{
-+	/* Nothing to do */
-+}
-+
-+/* Setup function for a single channel */
-+static int gsi_channel_setup_one(struct gsi *gsi, u32 channel_id,
-+				 bool db_enable)
-+{
-+	struct gsi_channel *channel = &gsi->channel[channel_id];
-+	u32 evt_ring_id = channel->evt_ring_id;
-+	int ret;
-+
-+	if (!channel->gsi)
-+		return 0;	/* Ignore uninitialized channels */
-+
-+	ret = gsi_evt_ring_alloc_command(gsi, evt_ring_id);
-+	if (ret)
-+		return ret;
-+
-+	gsi_evt_ring_program(gsi, evt_ring_id);
-+
-+	ret = gsi_channel_alloc_command(gsi, channel_id);
-+	if (ret)
-+		goto err_evt_ring_de_alloc;
-+
-+	gsi_channel_program(channel, db_enable);
-+
-+	if (channel->toward_ipa)
-+		netif_tx_napi_add(&gsi->dummy_dev, &channel->napi,
-+				  gsi_channel_poll, NAPI_POLL_WEIGHT);
-+	else
-+		netif_napi_add(&gsi->dummy_dev, &channel->napi,
-+			       gsi_channel_poll, NAPI_POLL_WEIGHT);
-+
-+	return 0;
-+
-+err_evt_ring_de_alloc:
-+	/* We've done nothing with the event ring yet so don't reset */
-+	gsi_evt_ring_de_alloc_command(gsi, evt_ring_id);
-+
-+	return ret;
-+}
-+
-+/* Inverse of gsi_channel_setup_one() */
-+static void gsi_channel_teardown_one(struct gsi *gsi, u32 channel_id)
-+{
-+	struct gsi_channel *channel = &gsi->channel[channel_id];
-+	u32 evt_ring_id = channel->evt_ring_id;
-+
-+	if (!channel->gsi)
-+		return;		/* Ignore uninitialized channels */
-+
-+	netif_napi_del(&channel->napi);
-+
-+	gsi_channel_deprogram(channel);
-+	gsi_channel_de_alloc_command(gsi, channel_id);
-+	gsi_evt_ring_reset_command(gsi, evt_ring_id);
-+	gsi_evt_ring_de_alloc_command(gsi, evt_ring_id);
-+}
-+
-+static int gsi_generic_command(struct gsi *gsi, u32 channel_id,
-+			       enum gsi_generic_cmd_opcode opcode)
-+{
-+	struct completion *completion = &gsi->completion;
-+	u32 val;
-+	u32 ret;
-+
-+	val = u32_encode_bits(opcode, GENERIC_OPCODE_FMASK);
-+	val |= u32_encode_bits(channel_id, GENERIC_CHID_FMASK);
-+	val |= u32_encode_bits(GSI_EE_MODEM, GENERIC_EE_FMASK);
-+
-+	ret = gsi_command(gsi, GSI_GENERIC_CMD_OFFSET, val, completion);
-+	if (ret)
-+		dev_err(gsi->dev,
-+			"error %d issuing generic command %u for channel %u\n",
-+			ret, opcode, channel_id);
-+
-+	return ret;
-+}
-+
-+static int gsi_modem_channel_alloc(struct gsi *gsi, u32 channel_id)
-+{
-+	return gsi_generic_command(gsi, channel_id,
-+				   GSI_GENERIC_ALLOCATE_CHANNEL);
-+}
-+
-+static void gsi_modem_channel_halt(struct gsi *gsi, u32 channel_id)
-+{
-+	int ret;
-+
-+	ret = gsi_generic_command(gsi, channel_id, GSI_GENERIC_HALT_CHANNEL);
-+	if (ret)
-+		dev_err(gsi->dev, "error %d halting modem channel %u\n",
-+			channel_id);
-+}
-+
-+/* Setup function for channels */
-+static int gsi_channel_setup(struct gsi *gsi, bool db_enable)
-+{
-+	u32 channel_id = 0;
++	struct ipa_interrupt *interrupt = dev_id;
++	struct ipa *ipa = interrupt->ipa;
 +	u32 mask;
-+	int ret;
 +
-+	gsi_evt_ring_setup(gsi);
-+	gsi_irq_enable(gsi);
++	mask = ioread32(ipa->reg_virt + IPA_REG_IRQ_STTS_OFFSET);
++	if (mask & interrupt->enabled)
++		return IRQ_WAKE_THREAD;
 +
-+	mutex_lock(&gsi->mutex);
++	/* Nothing in the mask was supposed to cause an interrupt */
++	iowrite32(mask, ipa->reg_virt + IPA_REG_IRQ_CLR_OFFSET);
 +
-+	do {
-+		ret = gsi_channel_setup_one(gsi, channel_id, db_enable);
-+		if (ret)
-+			goto err_unwind;
-+	} while (++channel_id < gsi->channel_count);
++	dev_err(&ipa->pdev->dev, "%s: unexpected interrupt, mask 0x%08x\n",
++		__func__, mask);
 +
-+	/* Make sure no channels were defined that hardware does not support */
-+	while (channel_id < GSI_CHANNEL_COUNT_MAX) {
-+		struct gsi_channel *channel = &gsi->channel[channel_id++];
-+
-+		if (!channel->gsi)
-+			continue;	/* Ignore uninitialized channels */
-+
-+		dev_err(gsi->dev, "channel %u not supported by hardware\n",
-+			channel_id - 1);
-+		channel_id = gsi->channel_count;
-+		goto err_unwind;
-+	}
-+
-+	/* Allocate modem channels if necessary */
-+	mask = gsi->modem_channel_bitmap;
-+	while (mask) {
-+		u32 modem_channel_id = __ffs(mask);
-+
-+		ret = gsi_modem_channel_alloc(gsi, modem_channel_id);
-+		if (ret)
-+			goto err_unwind_modem;
-+
-+		/* Clear bit from mask only after success (for unwind) */
-+		mask ^= BIT(modem_channel_id);
-+	}
-+
-+	mutex_unlock(&gsi->mutex);
-+
-+	return 0;
-+
-+err_unwind_modem:
-+	/* Compute which modem channels need to be deallocated */
-+	mask ^= gsi->modem_channel_bitmap;
-+	while (mask) {
-+		u32 channel_id = __fls(mask);
-+
-+		mask ^= BIT(channel_id);
-+
-+		gsi_modem_channel_halt(gsi, channel_id);
-+	}
-+
-+err_unwind:
-+	while (channel_id--)
-+		gsi_channel_teardown_one(gsi, channel_id);
-+
-+	mutex_unlock(&gsi->mutex);
-+
-+	gsi_irq_disable(gsi);
-+	gsi_evt_ring_teardown(gsi);
-+
-+	return ret;
++	return IRQ_HANDLED;
 +}
 +
-+/* Inverse of gsi_channel_setup() */
-+static void gsi_channel_teardown(struct gsi *gsi)
++/* Common function used to enable/disable TX_SUSPEND for an endpoint */
++static void ipa_interrupt_suspend_control(struct ipa_interrupt *interrupt,
++					  u32 endpoint_id, bool enable)
 +{
-+	u32 mask = gsi->modem_channel_bitmap;
-+	u32 channel_id;
-+
-+	mutex_lock(&gsi->mutex);
-+
-+	while (mask) {
-+		u32 channel_id = __fls(mask);
-+
-+		mask ^= BIT(channel_id);
-+
-+		gsi_modem_channel_halt(gsi, channel_id);
-+	}
-+
-+	channel_id = gsi->channel_count - 1;
-+	do
-+		gsi_channel_teardown_one(gsi, channel_id);
-+	while (channel_id--);
-+
-+	mutex_unlock(&gsi->mutex);
-+
-+	gsi_irq_disable(gsi);
-+	gsi_evt_ring_teardown(gsi);
-+}
-+
-+/* Setup function for GSI.  GSI firmware must be loaded and initialized */
-+int gsi_setup(struct gsi *gsi, bool db_enable)
-+{
++	struct ipa *ipa = interrupt->ipa;
++	u32 mask = BIT(endpoint_id);
 +	u32 val;
 +
-+	/* Here is where we first touch the GSI hardware */
-+	val = ioread32(gsi->virt + GSI_GSI_STATUS_OFFSET);
-+	if (!(val & ENABLED_FMASK)) {
-+		dev_err(gsi->dev, "GSI has not been enabled\n");
-+		return -EIO;
-+	}
-+
-+	val = ioread32(gsi->virt + GSI_GSI_HW_PARAM_2_OFFSET);
-+
-+	gsi->channel_count = u32_get_bits(val, NUM_CH_PER_EE_FMASK);
-+	if (!gsi->channel_count) {
-+		dev_err(gsi->dev, "GSI reports zero channels supported\n");
-+		return -EINVAL;
-+	}
-+	if (gsi->channel_count > GSI_CHANNEL_COUNT_MAX) {
-+		dev_warn(gsi->dev,
-+			"limiting to %u channels (hardware supports %u)\n",
-+			 GSI_CHANNEL_COUNT_MAX, gsi->channel_count);
-+		gsi->channel_count = GSI_CHANNEL_COUNT_MAX;
-+	}
-+
-+	gsi->evt_ring_count = u32_get_bits(val, NUM_EV_PER_EE_FMASK);
-+	if (!gsi->evt_ring_count) {
-+		dev_err(gsi->dev, "GSI reports zero event rings supported\n");
-+		return -EINVAL;
-+	}
-+	if (gsi->evt_ring_count > GSI_EVT_RING_COUNT_MAX) {
-+		dev_warn(gsi->dev,
-+			"limiting to %u event rings (hardware supports %u)\n",
-+			 GSI_EVT_RING_COUNT_MAX, gsi->evt_ring_count);
-+		gsi->evt_ring_count = GSI_EVT_RING_COUNT_MAX;
-+	}
-+
-+	/* Initialize the error log */
-+	iowrite32(0, gsi->virt + GSI_ERROR_LOG_OFFSET);
-+
-+	/* Writing 1 indicates IRQ interrupts; 0 would be MSI */
-+	iowrite32(1, gsi->virt + GSI_CNTXT_INTSET_OFFSET);
-+
-+	return gsi_channel_setup(gsi, db_enable);
++	/* assert(mask & ipa->available); */
++	val = ioread32(ipa->reg_virt + IPA_REG_SUSPEND_IRQ_EN_OFFSET);
++	if (enable)
++		val |= mask;
++	else
++		val &= ~mask;
++	iowrite32(val, ipa->reg_virt + IPA_REG_SUSPEND_IRQ_EN_OFFSET);
 +}
 +
-+/* Inverse of gsi_setup() */
-+void gsi_teardown(struct gsi *gsi)
++/* Enable TX_SUSPEND for an endpoint */
++void
++ipa_interrupt_suspend_enable(struct ipa_interrupt *interrupt, u32 endpoint_id)
 +{
-+	gsi_channel_teardown(gsi);
++	ipa_interrupt_suspend_control(interrupt, endpoint_id, true);
 +}
 +
-+/* Initialize a channel's event ring */
-+static int gsi_channel_evt_ring_init(struct gsi_channel *channel)
++/* Disable TX_SUSPEND for an endpoint */
++void
++ipa_interrupt_suspend_disable(struct ipa_interrupt *interrupt, u32 endpoint_id)
 +{
-+	struct gsi *gsi = channel->gsi;
-+	struct gsi_evt_ring *evt_ring;
-+	int ret;
-+
-+	ret = gsi_evt_ring_id_alloc(gsi);
-+	if (ret < 0)
-+		return ret;
-+	channel->evt_ring_id = ret;
-+
-+	evt_ring = &gsi->evt_ring[channel->evt_ring_id];
-+	evt_ring->channel = channel;
-+
-+	ret = gsi_ring_alloc(gsi, &evt_ring->ring, channel->event_count);
-+	if (!ret)
-+		return 0;	/* Success! */
-+
-+	dev_err(gsi->dev, "error %d allocating channel %u event ring\n",
-+		ret, gsi_channel_id(channel));
-+
-+	gsi_evt_ring_id_free(gsi, channel->evt_ring_id);
-+
-+	return ret;
++	ipa_interrupt_suspend_control(interrupt, endpoint_id, false);
 +}
 +
-+/* Inverse of gsi_channel_evt_ring_init() */
-+static void gsi_channel_evt_ring_exit(struct gsi_channel *channel)
++/* Clear the suspend interrupt for all endpoints that signaled it */
++void ipa_interrupt_suspend_clear_all(struct ipa_interrupt *interrupt)
 +{
-+	u32 evt_ring_id = channel->evt_ring_id;
-+	struct gsi *gsi = channel->gsi;
-+	struct gsi_evt_ring *evt_ring;
++	struct ipa *ipa = interrupt->ipa;
++	u32 val;
 +
-+	evt_ring = &gsi->evt_ring[evt_ring_id];
-+	gsi_ring_free(gsi, &evt_ring->ring);
-+	gsi_evt_ring_id_free(gsi, evt_ring_id);
++	val = ioread32(ipa->reg_virt + IPA_REG_IRQ_SUSPEND_INFO_OFFSET);
++	iowrite32(val, ipa->reg_virt + IPA_REG_SUSPEND_IRQ_CLR_OFFSET);
 +}
 +
-+/* Init function for event rings */
-+static void gsi_evt_ring_init(struct gsi *gsi)
++/* Simulate arrival of an IPA TX_SUSPEND interrupt */
++void ipa_interrupt_simulate_suspend(struct ipa_interrupt *interrupt)
 +{
-+	u32 evt_ring_id = 0;
-+
-+	gsi->event_bitmap = gsi_event_bitmap_init(GSI_EVT_RING_COUNT_MAX);
-+	gsi->event_enable_bitmap = 0;
-+	do
-+		init_completion(&gsi->evt_ring[evt_ring_id].completion);
-+	while (++evt_ring_id < GSI_EVT_RING_COUNT_MAX);
++	ipa_interrupt_process(interrupt, IPA_IRQ_TX_SUSPEND);
 +}
 +
-+/* Inverse of gsi_evt_ring_init() */
-+static void gsi_evt_ring_exit(struct gsi *gsi)
++/* Add a handler for an IPA interrupt */
++void ipa_interrupt_add(struct ipa_interrupt *interrupt,
++		       enum ipa_irq_id ipa_irq, ipa_irq_handler_t handler)
 +{
-+	/* Nothing to do */
++	struct ipa *ipa = interrupt->ipa;
++
++	/* assert(ipa_irq < IPA_IRQ_COUNT); */
++	interrupt->handler[ipa_irq] = handler;
++
++	/* Update the IPA interrupt mask to enable it */
++	interrupt->enabled |= BIT(ipa_irq);
++	iowrite32(interrupt->enabled, ipa->reg_virt + IPA_REG_IRQ_EN_OFFSET);
 +}
 +
-+static bool gsi_channel_data_valid(struct gsi *gsi,
-+				   const struct ipa_gsi_endpoint_data *data)
++/* Remove the handler for an IPA interrupt type */
++void
++ipa_interrupt_remove(struct ipa_interrupt *interrupt, enum ipa_irq_id ipa_irq)
 +{
-+#ifdef IPA_VALIDATION
-+	u32 channel_id = data->channel_id;
-+	struct device *dev = gsi->dev;
++	struct ipa *ipa = interrupt->ipa;
 +
-+	/* Make sure channel ids are in the range driver supports */
-+	if (channel_id >= GSI_CHANNEL_COUNT_MAX) {
-+		dev_err(dev, "bad channel id %u (must be less than %u)\n",
-+			channel_id, GSI_CHANNEL_COUNT_MAX);
-+		return false;
-+	}
++	/* assert(ipa_irq < IPA_IRQ_COUNT); */
++	/* Update the IPA interrupt mask to disable it */
++	interrupt->enabled &= ~BIT(ipa_irq);
++	iowrite32(interrupt->enabled, ipa->reg_virt + IPA_REG_IRQ_EN_OFFSET);
 +
-+	if (data->ee_id != GSI_EE_AP && data->ee_id != GSI_EE_MODEM) {
-+		dev_err(dev, "bad EE id %u (AP or modem)\n", data->ee_id);
-+		return false;
-+	}
-+
-+	if (!data->channel.tlv_count ||
-+	    data->channel.tlv_count > GSI_TLV_MAX) {
-+		dev_err(dev, "channel %u bad tlv_count %u (must be 1..%u)\n",
-+			channel_id, data->channel.tlv_count, GSI_TLV_MAX);
-+		return false;
-+	}
-+
-+	/* We have to allow at least one maximally-sized transaction to
-+	 * be outstanding (which would use tlv_count TREs).  Given how
-+	 * gsi_channel_tre_max() is computed, tre_count has to be almost
-+	 * twice the TLV FIFO size to satisfy this requirement.
-+	 */
-+	if (data->channel.tre_count < 2 * data->channel.tlv_count - 1) {
-+		dev_err(dev, "channel %u TLV count %u exceeds TRE count %u\n",
-+			channel_id, data->channel.tlv_count,
-+			data->channel.tre_count);
-+		return false;
-+	}
-+
-+	if (!is_power_of_2(data->channel.tre_count)) {
-+		dev_err(dev, "channel %u bad tre_count %u (not power of 2)\n",
-+			channel_id, data->channel.tre_count);
-+		return false;
-+	}
-+
-+	if (!is_power_of_2(data->channel.event_count)) {
-+		dev_err(dev, "channel %u bad event_count %u (not power of 2)\n",
-+			channel_id, data->channel.event_count);
-+		return false;
-+	}
-+#endif /* IPA_VALIDATION */
-+
-+	return true;
++	interrupt->handler[ipa_irq] = NULL;
 +}
 +
-+/* Init function for a single channel */
-+static int gsi_channel_init_one(struct gsi *gsi,
-+				const struct ipa_gsi_endpoint_data *data,
-+				bool command, bool prefetch)
++/* Set up the IPA interrupt framework */
++struct ipa_interrupt *ipa_interrupt_setup(struct ipa *ipa)
 +{
-+	struct gsi_channel *channel;
-+	u32 tre_count;
-+	int ret;
-+
-+	if (!gsi_channel_data_valid(gsi, data))
-+		return -EINVAL;
-+
-+	/* Worst case we need an event for every outstanding TRE */
-+	if (data->channel.tre_count > data->channel.event_count) {
-+		dev_warn(gsi->dev, "channel %u limited to %u TREs\n",
-+			data->channel_id, data->channel.tre_count);
-+		tre_count = data->channel.event_count;
-+	} else {
-+		tre_count = data->channel.tre_count;
-+	}
-+
-+	channel = &gsi->channel[data->channel_id];
-+	memset(channel, 0, sizeof(*channel));
-+
-+	channel->gsi = gsi;
-+	channel->toward_ipa = data->toward_ipa;
-+	channel->command = command;
-+	channel->use_prefetch = command && prefetch;
-+	channel->tlv_count = data->channel.tlv_count;
-+	channel->tre_count = tre_count;
-+	channel->event_count = data->channel.event_count;
-+	init_completion(&channel->completion);
-+
-+	ret = gsi_channel_evt_ring_init(channel);
-+	if (ret)
-+		goto err_clear_gsi;
-+
-+	ret = gsi_ring_alloc(gsi, &channel->tre_ring, data->channel.tre_count);
-+	if (ret) {
-+		dev_err(gsi->dev, "error %d allocating channel %u ring\n",
-+			ret, data->channel_id);
-+		goto err_channel_evt_ring_exit;
-+	}
-+
-+	ret = gsi_channel_trans_init(gsi, data->channel_id);
-+	if (ret)
-+		goto err_ring_free;
-+
-+	if (command) {
-+		u32 tre_max = gsi_channel_tre_max(gsi, data->channel_id);
-+
-+		ret = ipa_cmd_pool_init(channel, tre_max);
-+	}
-+	if (!ret)
-+		return 0;	/* Success! */
-+
-+	gsi_channel_trans_exit(channel);
-+err_ring_free:
-+	gsi_ring_free(gsi, &channel->tre_ring);
-+err_channel_evt_ring_exit:
-+	gsi_channel_evt_ring_exit(channel);
-+err_clear_gsi:
-+	channel->gsi = NULL;	/* Mark it not (fully) initialized */
-+
-+	return ret;
-+}
-+
-+/* Inverse of gsi_channel_init_one() */
-+static void gsi_channel_exit_one(struct gsi_channel *channel)
-+{
-+	if (!channel->gsi)
-+		return;		/* Ignore uninitialized channels */
-+
-+	if (channel->command)
-+		ipa_cmd_pool_exit(channel);
-+	gsi_channel_trans_exit(channel);
-+	gsi_ring_free(channel->gsi, &channel->tre_ring);
-+	gsi_channel_evt_ring_exit(channel);
-+}
-+
-+/* Init function for channels */
-+static int gsi_channel_init(struct gsi *gsi, bool prefetch, u32 count,
-+			    const struct ipa_gsi_endpoint_data *data,
-+			    bool modem_alloc)
-+{
-+	int ret = 0;
-+	u32 i;
-+
-+	gsi_evt_ring_init(gsi);
-+
-+	/* The endpoint data array is indexed by endpoint name */
-+	for (i = 0; i < count; i++) {
-+		bool command = i == IPA_ENDPOINT_AP_COMMAND_TX;
-+
-+		if (ipa_gsi_endpoint_data_empty(&data[i]))
-+			continue;	/* Skip over empty slots */
-+
-+		/* Mark modem channels to be allocated (hardware workaround) */
-+		if (data[i].ee_id == GSI_EE_MODEM) {
-+			if (modem_alloc)
-+				gsi->modem_channel_bitmap |=
-+						BIT(data[i].channel_id);
-+			continue;
-+		}
-+
-+		ret = gsi_channel_init_one(gsi, &data[i], command, prefetch);
-+		if (ret)
-+			goto err_unwind;
-+	}
-+
-+	return ret;
-+
-+err_unwind:
-+	while (i--) {
-+		if (ipa_gsi_endpoint_data_empty(&data[i]))
-+			continue;
-+		if (modem_alloc && data[i].ee_id == GSI_EE_MODEM) {
-+			gsi->modem_channel_bitmap &= ~BIT(data[i].channel_id);
-+			continue;
-+		}
-+		gsi_channel_exit_one(&gsi->channel[data->channel_id]);
-+	}
-+	gsi_evt_ring_exit(gsi);
-+
-+	return ret;
-+}
-+
-+/* Inverse of gsi_channel_init() */
-+static void gsi_channel_exit(struct gsi *gsi)
-+{
-+	u32 channel_id = GSI_CHANNEL_COUNT_MAX - 1;
-+
-+	do
-+		gsi_channel_exit_one(&gsi->channel[channel_id]);
-+	while (channel_id--);
-+	gsi->modem_channel_bitmap = 0;
-+
-+	gsi_evt_ring_exit(gsi);
-+}
-+
-+/* Init function for GSI.  GSI hardware does not need to be "ready" */
-+int gsi_init(struct gsi *gsi, struct platform_device *pdev, bool prefetch,
-+	     u32 count, const struct ipa_gsi_endpoint_data *data,
-+	     bool modem_alloc)
-+{
-+	struct resource *res;
-+	resource_size_t size;
++	struct device *dev = &ipa->pdev->dev;
++	struct ipa_interrupt *interrupt;
 +	unsigned int irq;
 +	int ret;
 +
-+	gsi_validate_build();
-+
-+	gsi->dev = &pdev->dev;
-+
-+	/* The GSI layer performs NAPI on all endpoints.  NAPI requires a
-+	 * network device structure, but the GSI layer does not have one,
-+	 * so we must create a dummy network device for this purpose.
-+	 */
-+	init_dummy_netdev(&gsi->dummy_dev);
-+
-+	/* Get the GSI IRQ and request for it to wake the system */
-+	ret = platform_get_irq_byname(pdev, "gsi");
++	ret = platform_get_irq_byname(ipa->pdev, "ipa");
 +	if (ret <= 0) {
-+		dev_err(gsi->dev,
-+			"DT error %d getting \"gsi\" IRQ property\n", ret);
-+		return ret ? : -EINVAL;
++		dev_err(dev, "DT error %d getting \"ipa\" IRQ property\n",
++			ret);
++		return ERR_PTR(ret ? : -EINVAL);
 +	}
 +	irq = ret;
 +
-+	ret = request_irq(irq, gsi_isr, 0, "gsi", gsi);
++	interrupt = kzalloc(sizeof(*interrupt), GFP_KERNEL);
++	if (!interrupt)
++		return ERR_PTR(-ENOMEM);
++	interrupt->ipa = ipa;
++	interrupt->irq = irq;
++
++	/* Start with all IPA interrupts disabled */
++	iowrite32(0, ipa->reg_virt + IPA_REG_IRQ_EN_OFFSET);
++
++	ret = request_threaded_irq(irq, ipa_isr, ipa_isr_thread, IRQF_ONESHOT,
++				   "ipa", interrupt);
 +	if (ret) {
-+		dev_err(gsi->dev, "error %d requesting \"gsi\" IRQ\n", ret);
-+		return ret;
-+	}
-+	gsi->irq = irq;
-+
-+	ret = enable_irq_wake(gsi->irq);
-+	if (ret)
-+		dev_warn(gsi->dev, "error %d enabling gsi wake irq\n", ret);
-+	gsi->irq_wake_enabled = !ret;
-+
-+	/* Get GSI memory range and map it */
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "gsi");
-+	if (!res) {
-+		dev_err(gsi->dev,
-+			"DT error getting \"gsi\" memory property\n");
-+		ret = -ENODEV;
-+		goto err_disable_irq_wake;
++		dev_err(dev, "error %d requesting \"ipa\" IRQ\n", ret);
++		goto err_kfree;
 +	}
 +
-+	size = resource_size(res);
-+	if (res->start > U32_MAX || size > U32_MAX - res->start) {
-+		dev_err(gsi->dev, "DT memory resource \"gsi\" out of range\n");
-+		ret = -EINVAL;
-+		goto err_disable_irq_wake;
++	return interrupt;
++
++err_kfree:
++	kfree(interrupt);
++
++	return ERR_PTR(ret);
++}
++
++/* Tear down the IPA interrupt framework */
++void ipa_interrupt_teardown(struct ipa_interrupt *interrupt)
++{
++	free_irq(interrupt->irq, interrupt);
++	kfree(interrupt);
++}
+diff --git a/drivers/net/ipa/ipa_interrupt.h b/drivers/net/ipa/ipa_interrupt.h
+new file mode 100644
+index 000000000000..d4f4c1c9f0b1
+--- /dev/null
++++ b/drivers/net/ipa/ipa_interrupt.h
+@@ -0,0 +1,117 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
++ * Copyright (C) 2018-2020 Linaro Ltd.
++ */
++#ifndef _IPA_INTERRUPT_H_
++#define _IPA_INTERRUPT_H_
++
++#include <linux/types.h>
++#include <linux/bits.h>
++
++struct ipa;
++struct ipa_interrupt;
++
++/**
++ * enum ipa_irq_id - IPA interrupt type
++ * @IPA_IRQ_UC_0:	Microcontroller event interrupt
++ * @IPA_IRQ_UC_1:	Microcontroller response interrupt
++ * @IPA_IRQ_TX_SUSPEND:	Data ready interrupt
++ *
++ * The data ready interrupt is signaled if data has arrived that is destined
++ * for an AP RX endpoint whose underlying GSI channel is suspended/stopped.
++ */
++enum ipa_irq_id {
++	IPA_IRQ_UC_0		= 2,
++	IPA_IRQ_UC_1		= 3,
++	IPA_IRQ_TX_SUSPEND	= 14,
++	IPA_IRQ_COUNT,		/* Number of interrupt types (not an index) */
++};
++
++/**
++ * typedef ipa_irq_handler_t - IPA interrupt handler function type
++ * @ipa:	IPA pointer
++ * @irq_id:	interrupt type
++ *
++ * Callback function registered by ipa_interrupt_add() to handle a specific
++ * IPA interrupt type
++ */
++typedef void (*ipa_irq_handler_t)(struct ipa *ipa, enum ipa_irq_id irq_id);
++
++/**
++ * ipa_interrupt_add() - Register a handler for an IPA interrupt type
++ * @irq_id:	IPA interrupt type
++ * @handler:	Handler function for the interrupt
++ *
++ * Add a handler for an IPA interrupt and enable it.  IPA interrupt
++ * handlers are run in threaded interrupt context, so are allowed to
++ * block.
++ */
++void ipa_interrupt_add(struct ipa_interrupt *interrupt, enum ipa_irq_id irq_id,
++		       ipa_irq_handler_t handler);
++
++/**
++ * ipa_interrupt_remove() - Remove the handler for an IPA interrupt type
++ * @interrupt:	IPA interrupt structure
++ * @irq_id:	IPA interrupt type
++ *
++ * Remove an IPA interrupt handler and disable it.
++ */
++void ipa_interrupt_remove(struct ipa_interrupt *interrupt,
++			  enum ipa_irq_id irq_id);
++
++/**
++ * ipa_interrupt_suspend_enable - Enable TX_SUSPEND for an endpoint
++ * @interrupt:		IPA interrupt structure
++ * @endpoint_id:	Endpoint whose interrupt should be enabled
++ *
++ * Note:  The "TX" in the name is from the perspective of the IPA hardware.
++ * A TX_SUSPEND interrupt arrives on an AP RX enpoint when packet data can't
++ * be delivered to the endpoint because it is suspended (or its underlying
++ * channel is stopped).
++ */
++void ipa_interrupt_suspend_enable(struct ipa_interrupt *interrupt,
++				  u32 endpoint_id);
++
++/**
++ * ipa_interrupt_suspend_disable - Disable TX_SUSPEND for an endpoint
++ * @interrupt:		IPA interrupt structure
++ * @endpoint_id:	Endpoint whose interrupt should be disabled
++ */
++void ipa_interrupt_suspend_disable(struct ipa_interrupt *interrupt,
++				   u32 endpoint_id);
++
++/**
++ * ipa_interrupt_suspend_clear_all - clear all suspend interrupts
++ * @interrupt:	IPA interrupt structure
++ *
++ * Clear the TX_SUSPEND interrupt for all endpoints that signaled it.
++ */
++void ipa_interrupt_suspend_clear_all(struct ipa_interrupt *interrupt);
++
++/**
++ * ipa_interrupt_simulate_suspend() - Simulate TX_SUSPEND IPA interrupt
++ * @interrupt:	IPA interrupt structure
++ *
++ * This calls the TX_SUSPEND interrupt handler, as if such an interrupt
++ * had been signaled.  This is needed to work around a hardware quirk
++ * that occurs if aggregation is active on an endpoint when its underlying
++ * channel is suspended.
++ */
++void ipa_interrupt_simulate_suspend(struct ipa_interrupt *interrupt);
++
++/**
++ * ipa_interrupt_setup() - Set up the IPA interrupt framework
++ * @ipa:	IPA pointer
++ *
++ * @Return:	Pointer to IPA SMP2P info, or a pointer-coded error
++ */
++struct ipa_interrupt *ipa_interrupt_setup(struct ipa *ipa);
++
++/**
++ * ipa_interrupt_teardown() - Tear down the IPA interrupt framework
++ * @interrupt:	IPA interrupt structure
++ */
++void ipa_interrupt_teardown(struct ipa_interrupt *interrupt);
++
++#endif /* _IPA_INTERRUPT_H_ */
+diff --git a/drivers/net/ipa/ipa_mem.c b/drivers/net/ipa/ipa_mem.c
+new file mode 100644
+index 000000000000..42d2c29d9f0c
+--- /dev/null
++++ b/drivers/net/ipa/ipa_mem.c
+@@ -0,0 +1,314 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
++ * Copyright (C) 2019-2020 Linaro Ltd.
++ */
++
++#include <linux/types.h>
++#include <linux/bitfield.h>
++#include <linux/bug.h>
++#include <linux/dma-mapping.h>
++#include <linux/io.h>
++
++#include "ipa.h"
++#include "ipa_reg.h"
++#include "ipa_cmd.h"
++#include "ipa_mem.h"
++#include "ipa_data.h"
++#include "ipa_table.h"
++#include "gsi_trans.h"
++
++/* "Canary" value placed between memory regions to detect overflow */
++#define IPA_MEM_CANARY_VAL		cpu_to_le32(0xdeadbeef)
++
++/* Add an immediate command to a transaction that zeroes a memory region */
++static void
++ipa_mem_zero_region_add(struct gsi_trans *trans, const struct ipa_mem *mem)
++{
++	struct ipa *ipa = container_of(trans->gsi, struct ipa, gsi);
++	dma_addr_t addr = ipa->zero_addr;
++
++	if (!mem->size)
++		return;
++
++	ipa_cmd_dma_shared_mem_add(trans, mem->offset, mem->size, addr, true);
++}
++
++/**
++ * ipa_mem_setup() - Set up IPA AP and modem shared memory areas
++ *
++ * Set up the shared memory regions in IPA local memory.  This involves
++ * zero-filling memory regions, and in the case of header memory, telling
++ * the IPA where it's located.
++ *
++ * This function performs the initial setup of this memory.  If the modem
++ * crashes, its regions are re-zeroed in ipa_mem_zero_modem().
++ *
++ * The AP informs the modem where its portions of memory are located
++ * in a QMI exchange that occurs at modem startup.
++ *
++ * @Return:	0 if successful, or a negative error code
++ */
++int ipa_mem_setup(struct ipa *ipa)
++{
++	dma_addr_t addr = ipa->zero_addr;
++	struct gsi_trans *trans;
++	u32 offset;
++	u16 size;
++
++	/* Get a transaction to define the header memory region and to zero
++	 * the processing context and modem memory regions.
++	 */
++	trans = ipa_cmd_trans_alloc(ipa, 4);
++	if (!trans) {
++		dev_err(&ipa->pdev->dev, "no transaction for memory setup\n");
++		return -EBUSY;
 +	}
 +
-+	gsi->virt = ioremap(res->start, size);
-+	if (!gsi->virt) {
-+		dev_err(gsi->dev, "unable to remap \"gsi\" memory\n");
-+		ret = -ENOMEM;
-+		goto err_disable_irq_wake;
++	/* Initialize IPA-local header memory.  The modem and AP header
++	 * regions are contiguous, and initialized together.
++	 */
++	offset = ipa->mem[IPA_MEM_MODEM_HEADER].offset;
++	size = ipa->mem[IPA_MEM_MODEM_HEADER].size;
++	size += ipa->mem[IPA_MEM_AP_HEADER].size;
++
++	ipa_cmd_hdr_init_local_add(trans, offset, size, addr);
++
++	ipa_mem_zero_region_add(trans, &ipa->mem[IPA_MEM_MODEM_PROC_CTX]);
++
++	ipa_mem_zero_region_add(trans, &ipa->mem[IPA_MEM_AP_PROC_CTX]);
++
++	ipa_mem_zero_region_add(trans, &ipa->mem[IPA_MEM_MODEM]);
++
++	gsi_trans_commit_wait(trans);
++
++	/* Tell the hardware where the processing context area is located */
++	iowrite32(ipa->mem_offset + offset,
++		  ipa->reg_virt + IPA_REG_LOCAL_PKT_PROC_CNTXT_BASE_OFFSET);
++
++	return 0;
++}
++
++void ipa_mem_teardown(struct ipa *ipa)
++{
++	/* Nothing to do */
++}
++
++#ifdef IPA_VALIDATE
++
++static bool ipa_mem_valid(struct ipa *ipa, enum ipa_mem_id mem_id)
++{
++	const struct ipa_mem *mem = &ipa->mem[mem_id];
++	struct device *dev = &ipa->pdev->dev;
++	u16 size_multiple;
++
++	/* Other than modem memory, sizes must be a multiple of 8 */
++	size_multiple = mem_id == IPA_MEM_MODEM ? 4 : 8;
++	if (mem->size % size_multiple)
++		dev_err(dev, "region %u size not a multiple of %u bytes\n",
++			mem_id, size_multiple);
++	else if (mem->offset % 8)
++		dev_err(dev, "region %u offset not 8-byte aligned\n", mem_id);
++	else if (mem->offset < mem->canary_count * sizeof(__le32))
++		dev_err(dev, "region %u offset too small for %hu canaries\n",
++			mem_id, mem->canary_count);
++	else if (mem->offset + mem->size > ipa->mem_size)
++		dev_err(dev, "region %u ends beyond memory limit (0x%08x)\n",
++			mem_id, ipa->mem_size);
++	else
++		return true;
++
++	return false;
++}
++
++#else /* !IPA_VALIDATE */
++
++static bool ipa_mem_valid(struct ipa *ipa, enum ipa_mem_id mem_id)
++{
++	return true;
++}
++
++#endif /*! IPA_VALIDATE */
++
++/**
++ * ipa_mem_config() - Configure IPA shared memory
++ *
++ * @Return:	0 if successful, or a negative error code
++ */
++int ipa_mem_config(struct ipa *ipa)
++{
++	struct device *dev = &ipa->pdev->dev;
++	enum ipa_mem_id mem_id;
++	dma_addr_t addr;
++	u32 mem_size;
++	void *virt;
++	u32 val;
++
++	/* Check the advertised location and size of the shared memory area */
++	val = ioread32(ipa->reg_virt + IPA_REG_SHARED_MEM_SIZE_OFFSET);
++
++	/* The fields in the register are in 8 byte units */
++	ipa->mem_offset = 8 * u32_get_bits(val, SHARED_MEM_BADDR_FMASK);
++	/* Make sure the end is within the region's mapped space */
++	mem_size = 8 * u32_get_bits(val, SHARED_MEM_SIZE_FMASK);
++
++	/* If the sizes don't match, issue a warning */
++	if (ipa->mem_offset + mem_size > ipa->mem_size) {
++		dev_warn(dev, "ignoring larger reported memory size: 0x%08x\n",
++			mem_size);
++	} else if (ipa->mem_offset + mem_size < ipa->mem_size) {
++		dev_warn(dev, "limiting IPA memory size to 0x%08x\n",
++			 mem_size);
++		ipa->mem_size = mem_size;
 +	}
 +
-+	ret = gsi_channel_init(gsi, prefetch, count, data, modem_alloc);
-+	if (ret)
-+		goto err_iounmap;
++	/* Prealloc DMA memory for zeroing regions */
++	virt = dma_alloc_coherent(dev, IPA_MEM_MAX, &addr, GFP_KERNEL);
++	if (!virt)
++		return -ENOMEM;
++	ipa->zero_addr = addr;
++	ipa->zero_virt = virt;
++	ipa->zero_size = IPA_MEM_MAX;
 +
-+	mutex_init(&gsi->mutex);
-+	init_completion(&gsi->completion);
++	/* Verify each defined memory region is valid, and if indicated
++	 * for the region, write "canary" values in the space prior to
++	 * the region's base address.
++	 */
++	for (mem_id = 0; mem_id < IPA_MEM_COUNT; mem_id++) {
++		const struct ipa_mem *mem = &ipa->mem[mem_id];
++		u16 canary_count;
++		__le32 *canary;
++
++		/* Validate all regions (even undefined ones) */
++		if (!ipa_mem_valid(ipa, mem_id))
++			goto err_dma_free;
++
++		/* Skip over undefined regions */
++		if (!mem->offset && !mem->size)
++			continue;
++
++		canary_count = mem->canary_count;
++		if (!canary_count)
++			continue;
++
++		/* Write canary values in the space before the region */
++		canary = ipa->mem_virt + ipa->mem_offset + mem->offset;
++		do
++			*--canary = IPA_MEM_CANARY_VAL;
++		while (--canary_count);
++	}
++
++	/* Make sure filter and route table memory regions are valid */
++	if (!ipa_table_valid(ipa))
++		goto err_dma_free;
++
++	/* Validate memory-related properties relevant to immediate commands */
++	if (!ipa_cmd_data_valid(ipa))
++		goto err_dma_free;
++
++	/* Verify the microcontroller ring alignment (0 is OK too) */
++	if (ipa->mem[IPA_MEM_UC_EVENT_RING].offset % 1024) {
++		dev_err(dev, "microcontroller ring not 1024-byte aligned\n");
++		goto err_dma_free;
++	}
 +
 +	return 0;
 +
-+err_iounmap:
-+	iounmap(gsi->virt);
-+err_disable_irq_wake:
-+	if (gsi->irq_wake_enabled)
-+		(void)disable_irq_wake(gsi->irq);
-+	free_irq(gsi->irq, gsi);
++err_dma_free:
++	dma_free_coherent(dev, IPA_MEM_MAX, ipa->zero_virt, ipa->zero_addr);
 +
-+	return ret;
++	return -EINVAL;
 +}
 +
-+/* Inverse of gsi_init() */
-+void gsi_exit(struct gsi *gsi)
++/* Inverse of ipa_mem_config() */
++void ipa_mem_deconfig(struct ipa *ipa)
 +{
-+	mutex_destroy(&gsi->mutex);
-+	gsi_channel_exit(gsi);
-+	if (gsi->irq_wake_enabled)
-+		(void)disable_irq_wake(gsi->irq);
-+	free_irq(gsi->irq, gsi);
-+	iounmap(gsi->virt);
++	struct device *dev = &ipa->pdev->dev;
++
++	dma_free_coherent(dev, ipa->zero_size, ipa->zero_virt, ipa->zero_addr);
++	ipa->zero_size = 0;
++	ipa->zero_virt = NULL;
++	ipa->zero_addr = 0;
 +}
 +
-+/* The maximum number of outstanding TREs on a channel.  This limits
-+ * a channel's maximum number of transactions outstanding (worst case
-+ * is one TRE per transaction).
++/**
++ * ipa_mem_zero_modem() - Zero IPA-local memory regions owned by the modem
 + *
-+ * The absolute limit is the number of TREs in the channel's TRE ring,
-+ * and in theory we should be able use all of them.  But in practice,
-+ * doing that led to the hardware reporting exhaustion of event ring
-+ * slots for writing completion information.  So the hardware limit
-+ * would be (tre_count - 1).
-+ *
-+ * We reduce it a bit further though.  Transaction resource pools are
-+ * sized to be a little larger than this maximum, to allow resource
-+ * allocations to always be contiguous.  The number of entries in a
-+ * TRE ring buffer is a power of 2, and the extra resources in a pool
-+ * tends to nearly double the memory allocated for it.  Reducing the
-+ * maximum number of outstanding TREs allows the number of entries in
-+ * a pool to avoid crossing that power-of-2 boundary, and this can
-+ * substantially reduce pool memory requirements.  The number we
-+ * reduce it by matches the number added in gsi_trans_pool_init().
++ * Zero regions of IPA-local memory used by the modem.  These are configured
++ * (and initially zeroed) by ipa_mem_setup(), but if the modem crashes and
++ * restarts via SSR we need to re-initialize them.  A QMI message tells the
++ * modem where to find regions of IPA local memory it needs to know about
++ * (these included).
 + */
-+u32 gsi_channel_tre_max(struct gsi *gsi, u32 channel_id)
++int ipa_mem_zero_modem(struct ipa *ipa)
 +{
-+	struct gsi_channel *channel = &gsi->channel[channel_id];
++	struct gsi_trans *trans;
 +
-+	/* Hardware limit is channel->tre_count - 1 */
-+	return channel->tre_count - (channel->tlv_count - 1);
++	/* Get a transaction to zero the modem memory, modem header,
++	 * and modem processing context regions.
++	 */
++	trans = ipa_cmd_trans_alloc(ipa, 3);
++	if (!trans) {
++		dev_err(&ipa->pdev->dev,
++			"no transaction to zero modem memory\n");
++		return -EBUSY;
++	}
++
++	ipa_mem_zero_region_add(trans, &ipa->mem[IPA_MEM_MODEM_HEADER]);
++
++	ipa_mem_zero_region_add(trans, &ipa->mem[IPA_MEM_MODEM_PROC_CTX]);
++
++	ipa_mem_zero_region_add(trans, &ipa->mem[IPA_MEM_MODEM]);
++
++	gsi_trans_commit_wait(trans);
++
++	return 0;
 +}
 +
-+/* Returns the maximum number of TREs in a single transaction for a channel */
-+u32 gsi_channel_trans_tre_max(struct gsi *gsi, u32 channel_id)
++/* Perform memory region-related initialization */
++int ipa_mem_init(struct ipa *ipa, u32 count, const struct ipa_mem *mem)
 +{
-+	struct gsi_channel *channel = &gsi->channel[channel_id];
++	struct device *dev = &ipa->pdev->dev;
++	struct resource *res;
++	int ret;
 +
-+	return channel->tlv_count;
++	if (count > IPA_MEM_COUNT) {
++		dev_err(dev, "to many memory regions (%u > %u)\n",
++			count, IPA_MEM_COUNT);
++		return -EINVAL;
++	}
++
++	ret = dma_set_mask_and_coherent(&ipa->pdev->dev, DMA_BIT_MASK(64));
++	if (ret) {
++		dev_err(dev, "error %d setting DMA mask\n", ret);
++		return ret;
++	}
++
++	res = platform_get_resource_byname(ipa->pdev, IORESOURCE_MEM,
++					   "ipa-shared");
++	if (!res) {
++		dev_err(dev,
++			"DT error getting \"ipa-shared\" memory property\n");
++		return -ENODEV;
++	}
++
++	ipa->mem_virt = memremap(res->start, resource_size(res), MEMREMAP_WC);
++	if (!ipa->mem_virt) {
++		dev_err(dev, "unable to remap \"ipa-shared\" memory\n");
++		return -ENOMEM;
++	}
++
++	ipa->mem_addr = res->start;
++	ipa->mem_size = resource_size(res);
++
++	/* The ipa->mem[] array is indexed by enum ipa_mem_id values */
++	ipa->mem = mem;
++
++	return 0;
 +}
++
++/* Inverse of ipa_mem_init() */
++void ipa_mem_exit(struct ipa *ipa)
++{
++	memunmap(ipa->mem_virt);
++}
+diff --git a/drivers/net/ipa/ipa_mem.h b/drivers/net/ipa/ipa_mem.h
+new file mode 100644
+index 000000000000..065cb499ebe5
+--- /dev/null
++++ b/drivers/net/ipa/ipa_mem.h
+@@ -0,0 +1,90 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
++ * Copyright (C) 2019-2020 Linaro Ltd.
++ */
++#ifndef _IPA_MEM_H_
++#define _IPA_MEM_H_
++
++struct ipa;
++
++/**
++ * DOC: IPA Local Memory
++ *
++ * The IPA has a block of shared memory, divided into regions used for
++ * specific purposes.
++ *
++ * The regions within the shared block are bounded by an offset (relative to
++ * the "ipa-shared" memory range) and size found in the IPA_SHARED_MEM_SIZE
++ * register.
++ *
++ * Each region is optionally preceded by one or more 32-bit "canary" values.
++ * These are meant to detect out-of-range writes (if they become corrupted).
++ * A given region (such as a filter or routing table) has the same number
++ * of canaries for all IPA hardware versions.  Still, the number used is
++ * defined in the config data, allowing for generic handling of regions.
++ *
++ * The set of memory regions is defined in configuration data.  They are
++ * subject to these constraints:
++ * - a zero offset and zero size represents and undefined region
++ * - a region's offset is defined to be *past* all "canary" values
++ * - offset must be large enough to account for all canaries
++ * - a region's size may be zero, but may still have canaries
++ * - all offsets must be 8-byte aligned
++ * - most sizes must be a multiple of 8
++ * - modem memory size must be a multiple of 4
++ * - the microcontroller ring offset must be a multiple of 1024
++ */
++
++/* The maximum allowed size for any memory region */
++#define IPA_MEM_MAX	(2 * PAGE_SIZE)
++
++/* IPA-resident memory region ids */
++enum ipa_mem_id {
++	IPA_MEM_UC_SHARED,		/* 0 canaries */
++	IPA_MEM_UC_INFO,		/* 0 canaries */
++	IPA_MEM_V4_FILTER_HASHED,	/* 2 canaries */
++	IPA_MEM_V4_FILTER,		/* 2 canaries */
++	IPA_MEM_V6_FILTER_HASHED,	/* 2 canaries */
++	IPA_MEM_V6_FILTER,		/* 2 canaries */
++	IPA_MEM_V4_ROUTE_HASHED,	/* 2 canaries */
++	IPA_MEM_V4_ROUTE,		/* 2 canaries */
++	IPA_MEM_V6_ROUTE_HASHED,	/* 2 canaries */
++	IPA_MEM_V6_ROUTE,		/* 2 canaries */
++	IPA_MEM_MODEM_HEADER,		/* 2 canaries */
++	IPA_MEM_AP_HEADER,		/* 0 canaries */
++	IPA_MEM_MODEM_PROC_CTX,		/* 2 canaries */
++	IPA_MEM_AP_PROC_CTX,		/* 0 canaries */
++	IPA_MEM_PDN_CONFIG,		/* 2 canaries (IPA v4.0 and above) */
++	IPA_MEM_STATS_QUOTA,		/* 2 canaries (IPA v4.0 and above) */
++	IPA_MEM_STATS_TETHERING,	/* 0 canaries (IPA v4.0 and above) */
++	IPA_MEM_STATS_DROP,		/* 0 canaries (IPA v4.0 and above) */
++	IPA_MEM_MODEM,			/* 0 canaries */
++	IPA_MEM_UC_EVENT_RING,		/* 1 canary */
++	IPA_MEM_COUNT,			/* Number of regions (not an index) */
++};
++
++/**
++ * struct ipa_mem - IPA local memory region description
++ * @offset:		offset in IPA memory space to base of the region
++ * @size:		size in bytes base of the region
++ * @canary_count	# 32-bit "canary" values that precede region
++ */
++struct ipa_mem {
++	u32 offset;
++	u16 size;
++	u16 canary_count;
++};
++
++int ipa_mem_config(struct ipa *ipa);
++void ipa_mem_deconfig(struct ipa *ipa);
++
++int ipa_mem_setup(struct ipa *ipa);
++void ipa_mem_teardown(struct ipa *ipa);
++
++int ipa_mem_zero_modem(struct ipa *ipa);
++
++int ipa_mem_init(struct ipa *ipa, u32 count, const struct ipa_mem *mem);
++void ipa_mem_exit(struct ipa *ipa);
++
++#endif /* _IPA_MEM_H_ */
 -- 
 2.20.1
 
