@@ -2,93 +2,111 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE29CC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 484DCC3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB031246B5
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:16:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HxJHR12d"
+	by mail.kernel.org (Postfix) with ESMTP id 2621E246B5
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:19:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgB1NQy (ORCPT
+        id S1726562AbgB1NTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 08:16:54 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:34865 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbgB1NQx (ORCPT
+        Fri, 28 Feb 2020 08:19:42 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51562 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbgB1NTm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 08:16:53 -0500
-Received: by mail-lf1-f67.google.com with SMTP id z9so2097454lfa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 05:16:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d2j+xwWiY9wlH7AtLJK3OvsykaZ/u5FJZyPROvoiy1g=;
-        b=HxJHR12dqabYx6zhDgCZD/hJGDITKwemITUtUDZOyk/Yt7H+qaUfjQtBS/a0AHDTzC
-         F9AA33/VUSLG5pULibxByHL4WExkcYA0R5mgTQdjitbAuZ9jivnhui2PTI5d8OFXXBIw
-         Sd5Jh0q+CFejsuT54GGnaxVCFCg+fZT38NtsU6g9igX2qJOGrGmMXLehFdtxjurISOhD
-         rG5lk92ewSrN83PbluJZfi41RM+GlMWm7cgd5Oc5Rcgx01IwMZr2N30HPz8lo7WOgnqd
-         Lx80wMZIZEe9EbHWposU9rNFo4LVI1unkD5T8Pc46K0n+6N5p1DZHyP88AlSVmmYW7pW
-         ZSgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d2j+xwWiY9wlH7AtLJK3OvsykaZ/u5FJZyPROvoiy1g=;
-        b=PkDhtWeYmekLK/zQCSPIt7c+gjxs6MBmBAVJc46yWJdMaPLWrvgP6m81wlk4DgP0vE
-         4ZcB/ak9SsMuuKeu68uhmi6JoR3h/mjMh5v8TiK4y7WOaf8KWe0dBrrMJz/D+TnFhkYF
-         QfToNBSieDDLVljUqGwUiQBa8xBpgiVnNbGwx2+f6RZSe3V3TfVdkpiErQvkjvYXQGpQ
-         G1O1Kw9RzRb2/Yf3JxQvb8wnPWs16CRP0RTSTA/GSasF/qClWOQose8LT4dYng0wm6JN
-         IIiOmt3ukABDT19C3bAk8shkoDDQ8ZrZhhn8Nl3cFvZDwjjiKmkyCTP0WgMxXAwj8jSt
-         28lA==
-X-Gm-Message-State: ANhLgQ3efLoVbweGpGNl2S1zdR3kLz/GQdpDaWM1xuGmJ31l/rvVNauN
-        nBz8erpwmN22i2cetwuYnxR2kDDmXwlzBYjaEfeLcg==
-X-Google-Smtp-Source: ADFU+vsgVdf5ixS/e74l5Eg9jm2LlOCk+LwWAKinRI2yuiFWgmTOny7+7QQPst2uBqeBcz3Eq8WslUWOUECUikODDqA=
-X-Received: by 2002:ac2:5328:: with SMTP id f8mr2636959lfh.47.1582895810190;
- Fri, 28 Feb 2020 05:16:50 -0800 (PST)
+        Fri, 28 Feb 2020 08:19:42 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id B0434296B9F;
+        Fri, 28 Feb 2020 13:19:40 +0000 (GMT)
+Date:   Fri, 28 Feb 2020 14:18:14 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Pratyush Yadav <p.yadav@ti.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Richard Weinberger <richard@nod.at>,
+        Mark Brown <broonie@kernel.org>, Sekhar Nori <nsekhar@ti.com>,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-mtd@lists.infradead.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v2 06/11] mtd: spi-nor: add support for DTR protocol
+Message-ID: <20200228141814.633c7195@collabora.com>
+In-Reply-To: <20200228120750.hstohetdnqja2g2p@ti.com>
+References: <20200226093703.19765-1-p.yadav@ti.com>
+        <20200226093703.19765-7-p.yadav@ti.com>
+        <20200227175841.51435e3f@collabora.com>
+        <20200228093658.zc3uifqg4zruokq3@ti.com>
+        <20200228115355.5033798f@collabora.com>
+        <20200228120750.hstohetdnqja2g2p@ti.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20200228040047.14808-1-yuehaibing@huawei.com> <20200228063429.47528-1-yuehaibing@huawei.com>
-In-Reply-To: <20200228063429.47528-1-yuehaibing@huawei.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Feb 2020 14:16:39 +0100
-Message-ID: <CACRpkda3=z80WY_W3EN=tiYruYfGjxPAHYjBALNj39kqDtjkzA@mail.gmail.com>
-Subject: Re: [PATCH v2 -next] pinctrl: da9062: Fix error gpiolib.h path
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Support Opensource <support.opensource@diasemi.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 7:35 AM YueHaibing <yuehaibing@huawei.com> wrote:
+On Fri, 28 Feb 2020 17:37:50 +0530
+Pratyush Yadav <p.yadav@ti.com> wrote:
 
-> gcc 7.4.0 build fails:
->
-> drivers/pinctrl/pinctrl-da9062.c:28:10: fatal error: ../gpio/gpiolib.h: No such file or directory
->  #include <../gpio/gpiolib.h>
->           ^~~~~~~~~~~~~~~~~~~
->
-> Fix this wrong include path.
->
-> Fixes: 56cc3af4e8c8 ("pinctrl: da9062: add driver support")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
-> v2: Fix wrong path
+ 
+> > Isn't there an EXIT sequence that allows NORs to return to a single 
+> > SPI state?  
+> 
+> Yes there is, but it comes with a lot of strings attached. There is a 
+> hardware reset pin on some flashes that puts the flash in Power-on-Reset 
+> (POR) mode. But that pin is not mandatory. It also might not be 
+> connected on a given board.
+> 
+> The other option is a "Soft Reset" (also optional), which puts the flash 
+> in POR mode after it is given the soft reset command. But to send the 
+> command you need to know the mode the device is in. On top of that, the 
+> Soft Reset opcode differs between flashes. According to the xSPI spec, 
+> some flashes can have the opcode as 0xF0 and some others can have it as 
+> a two command sequence of 0x66 and 0x99.
+> 
+> And the cherry on top is the fact that these reset operations return to 
+> a state based on the value of the non-volatile bits. So, if the 
+> non-volatile configuration is 8D-8D-8D mode, then all these resets 
+> achieve nothing.
 
-Good catch!
+Looks like flash vendors don't learn from their mistakes, they keep
+adding more features without really thinking about backward
+compatibility :-(.
 
-Patch applied with Marco's ACK.
+> >   
+> > > 
+> > >     So, the only solution I can now think of is having the flash name in 
+> > >     its compatible string in the device tree. This way we can skip all 
+> > >     the Read ID ugliness and can have flash-specific hooks to make it 
+> > >     easier to detect the mode it is in (though I wonder if it is even 
+> > >     possible to detect the mode in a flash that doesn't have SFDP in 
+> > >     8D-8D-8D).  
+> > 
+> > Hm, I'd really like to avoid that if possible.  
+> 
+> Unfortunately, I don't really see a better alternative. Just so I 
+> understand this better, why do you think it is something worth avoiding?
 
-Yours,
-Linus Walleij
+There are 2 main reasons:
+
+1/ board manufacturers usually source their flashes from different
+vendors so they're not tied to one of them. That means you can't really
+make the compatible too specific or you'd have to deal with DT variants
+(one variant per-flash).
+
+2/ I feel like once we start accepting specific compats, people will
+try to abuse it and decide that they need one for their flash too,
+before even trying to see if there's not a different way to detect the
+flash.
