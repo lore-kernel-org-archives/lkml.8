@@ -2,109 +2,85 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DD5C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D267EC3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D452124699
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95DDA24699
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:27:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="fnmrjyYT"
+	dkim=pass (2048-bit key) header.d=me.com header.i=@me.com header.b="krieKsgg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgB1R0U (ORCPT
+        id S1726627AbgB1R1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 12:26:20 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:38954 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgB1R0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 12:26:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=dPwpiIlKKcaHNDUd0CNUUN+MvX4RTwnCjX7uFREeo4w=; b=fnmrjyYTrZVwCVWcpYIPwBdrxL
-        PsJ+nybeehvJ/rQzFGIDbuggw7BZ49VvdOirQxUtrFFmBSkrxdV6nQZ03YOV1fb9B+7ss+on6hqTO
-        YABnRZ1QCittLZ2TJt0vpWm2Hi2nXbfVlO1nSBdRjz+Uliin7UPon35uZk69NNLEjCjM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1j7jOy-0005Pm-2L; Fri, 28 Feb 2020 18:26:16 +0100
-Date:   Fri, 28 Feb 2020 18:26:16 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Antoine Tenart <antoine.tenart@bootlin.com>
-Cc:     davem@davemloft.net, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        foss@0leil.net
-Subject: Re: [PATCH net-next v2 3/3] net: phy: mscc: RGMII skew delay
- configuration
-Message-ID: <20200228172616.GG29979@lunn.ch>
-References: <20200228155702.2062570-1-antoine.tenart@bootlin.com>
- <20200228155702.2062570-4-antoine.tenart@bootlin.com>
- <20200228162942.GF29979@lunn.ch>
- <20200228164839.GH1686232@kwain>
+        Fri, 28 Feb 2020 12:27:09 -0500
+Received: from ms11p00im-qufo17291301.me.com ([17.58.38.42]:39720 "EHLO
+        ms11p00im-qufo17291301.me.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725769AbgB1R1J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 12:27:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai;
+        t=1582910826; bh=ItSj1ZjtgSNl/dANtXNTjGWbaWQwhfI7P3O1XWJ55E4=;
+        h=Date:From:To:Subject:Message-ID:Content-Type;
+        b=krieKsggzXv/tuwbXG7GUdpzmU7DUQcRp6N4xoR+noDIs570NuHClo+w77t10upzt
+         cJ2rqaYSiaN9AwbA0R3XSqhx1X3pQn5lJ5fti0uoAQ2R2iGGhnriBu4vB3hSe9dlBq
+         2sgntp4MkmxSYl3U4b/Ddm322XmN++NU1F568tuB9gPQDaixw/z0/9+5OTaV6xZ32f
+         8eMFgWyP5Sf+soZF26Ex46YDG3knh225MlCiWizmYBtNPX72hvwIhJq/PTgPTYZxkn
+         5Ov85u66DzbcJKKRB0RY6basqfQ0rvfPVdYReGhqTdM0Kao4yXc2W2oVIM1Djdhden
+         rYyN4R84Hh6+g==
+Received: from shwetrath.localdomain (unknown [66.199.8.131])
+        by ms11p00im-qufo17291301.me.com (Postfix) with ESMTPSA id D907810071C;
+        Fri, 28 Feb 2020 17:27:05 +0000 (UTC)
+Date:   Fri, 28 Feb 2020 12:27:03 -0500
+From:   Vijay Thakkar <vijaythakkar@me.com>
+To:     Kim Phillips <kim.phillips@amd.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
+        Jon Grimm <jon.grimm@amd.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] perf vendor events amd: add Zen2 events
+Message-ID: <20200228172703.GA34885@shwetrath.localdomain>
+References: <20200225192815.50388-1-vijaythakkar@me.com>
+ <20200225192815.50388-3-vijaythakkar@me.com>
+ <6f2a1097-a656-8226-1be3-36a337539412@amd.com>
+ <20200228160045.GA23708@shwetrath.localdomain>
+ <f7dba82f-beac-2669-c7e7-5a85edc2798d@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200228164839.GH1686232@kwain>
+In-Reply-To: <f7dba82f-beac-2669-c7e7-5a85edc2798d@amd.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2020-02-28_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 clxscore=1015 mlxscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-2002280134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I did not know that, thanks for the explanation! So if ID/TXID/RXID is
-> used, I should configure the Rx and/or Tx skew with
-> VSC8584_RGMII_SKEW_2_0, except if the dt says otherwise.
+> They're producing nonzero counts on my model 31h, so leave them in?
 
-Yes.
+> I'm getting nonzero values on my model 31h for that event's
+> various unit masks, too.
+Okay, will do.
 
-> > What is not clearly defined, is how you combine
-> > PHY_INTERFACE_MODE_RGMII* with DT properties. I guess i would enforce
-> > that phydev->interface is PHY_INTERFACE_MODE_RGMII and then the delays
-> > in DT are absolute values.
-> 
-> So, if there's a value in the device tree, and the mode corresponds
-> (RXID for Rx skew), we do use the dt value. That should look like what's
-> in the patch (except for the default value used when no configuration is
-> provided in the dt).
+> Thanks, I'd veer toward making them available despite differences in PPR
+> versions.
 
-No. I would not do that. PHY_INTERFACE_MODE_RGMII_RXID means 2ns delay
-for RX. So how do you then interpret the DT property. Is it 2ns + the
-DT delay? That would then mean you need negative values in DT if you
-want short delays than 2ns.
+Okay, that is consistent with what I have done so far for the Zen1
+counters that are not mentioned in the Zen2 PPRs. Great! I will send v3
+in a bit.
 
-Which is why i suggest PHY_INTERFACE_MODE_RGMII. It is then clear you
-have a base delay of 0ns, and the DT property then has the absolute
-value of the delay.
-
-> > There is also some discussion about what should go in DT. #defines
-> > like you have, or time in pS, and the driver converts to register
-> > values. I generally push towards pS.
-> 
-> That would allow a more generic dt binding, and could be used by other
-> PHY drivers. The difficulty would be to map the pS to allowed values in
-> the h/w. Should we round them to the upper or lower bound?
-
-I would document the accepted values in DT, and return -EINVAL if DT
-does not exactly match one of the listed values. Plus a phydev_err()
-message to help debug.
-
-> I also saw the micrel-ksz90x1 dt documentation describes many skews, not
-> only one for Rx and one for Tx. How would the generic dt binding would
-> look like then?
-
-It is a balancing act. Do you actually need dt properties for your
-hardware? Are the standard 2ns delays sufficient. For many designs it
-is. Just because the hardware supports all sorts of configurations,
-are they actually needed? It seems like adding delays are needed for a
-few boards. But do all the properties exposed for the Micrel PHY every
-get used, or is it a case of, the hardware has it, lets make it
-available, even if nobody ever uses it?
-
-So i think a standardized DT for delays is good, but i would not go
-any further.
-
-    Andrew
+Best,
+Vijay
