@@ -2,470 +2,195 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA22FC3F2D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15259C3F2D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E612246A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D290924695
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:31:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ei0PJgy+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jE67j5cc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgB1J1Y (ORCPT
+        id S1726661AbgB1Jbc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 04:27:24 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36491 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726538AbgB1J1Y (ORCPT
+        Fri, 28 Feb 2020 04:31:32 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54763 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbgB1Jbb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 04:27:24 -0500
-Received: by mail-pf1-f194.google.com with SMTP id i13so1434129pfe.3
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 01:27:21 -0800 (PST)
+        Fri, 28 Feb 2020 04:31:31 -0500
+Received: by mail-wm1-f65.google.com with SMTP id z12so2426412wmi.4
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 01:31:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=R+ZVsQEfFmm5mmr2UOpFRtgQPxGpKprBATgdp/b7kpQ=;
-        b=Ei0PJgy+aXiDubKVMfHQRjcFbggFnUOvurkkW5Kfu7w3JHZh7gkBcihTwaSWJusnfQ
-         sjBlG7Q0yg15mncHMgNJZch4wUPVSuO9/eu26nUk1U63E29D7+GROWR1PcS80oSOpmGB
-         iUzhZRKFaj44ozRzYmXSMW6Szf4eZZeoN8xcev7DUVTjRAlpIjgegNwfMI9Hjc30FO4Y
-         5FzMcg0/Okz6pFyJo90zeOAXobtAt85hLaVUARkhL54Em6Glv3ON2KKEbl360uferwt1
-         4TT7N1Ip7nN46h05OKf/+2Wq1DxnYu+GRKrN1IxrNrT1lmr5GLPLbYOp2CjK1+IHRGMg
-         x7uw==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MHeQm6U+o0608Xi2QEDKzTbxNSKLm6MuqMAztV8dmJM=;
+        b=jE67j5ccRqZv9eK3iRUZLVykttz9c5sI8MK/YsOKN3jPVJFZJhmO4HrvBYpDo76iM7
+         B5NhRsZHEeYebBhF7xDDNPfgZHWdQJFJeZyZlL+CrAtLT35iy5E0m46pahcfydTs03Tc
+         fsyLquzsE28rqLEUzgEECrvaySmdEb04RpbPt3DeB3FtQCzTdBS1Ve09Ja7U+XTXmDEl
+         3p0THzcCVczmCnPGDFHeqYSQXxkgcYKIDaFJpef3jx9PlM3jZIwXL3fR/uZ3MWisT0pk
+         cR9t/lYOussthGdnFjc9OnagjXXsLew9M6zM5HO15RX2Jknpkma5/9RJYyqFSScmftRi
+         ty0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=R+ZVsQEfFmm5mmr2UOpFRtgQPxGpKprBATgdp/b7kpQ=;
-        b=HYbAen3uHFZu+PME3XP7IGn8Q8uQlgx7pAwBcnxOCDhtY4G1U31OJsUxiItyEBP59A
-         p0eCeOnH8+Qo29h159bxu4yAtHh5Sny/CT6+Ss7KIywx7hwfYBEB0/CYn/R3wg7N7ufo
-         SnUMlGUCUtr2yl425kJUHwyjAcQJ06v0sGuCttrJSdysGvBDc8991qNIpgafToJ75h0n
-         cHuQxKWw2yYSpHpwS/qsMCBrOw91EbafRQut41/AUw9PzKr0u302DWFtUySd2HKwMaWv
-         WicYDcvIjdnHllvElzSzW3BgOQWhxKY8lxtcCI9aQOpJp2sUX3OHAK+YkGucbdHPgWjm
-         3SHg==
-X-Gm-Message-State: APjAAAWW+80lyCRU8DXyB6+JT6YLiGnScn7No0Hgc43kMM0uVn2WKneZ
-        8jCNqeaXK8yZkpGvtAaTww6DBlaEy+c=
-X-Google-Smtp-Source: APXvYqxq9uTfOSaVqbJnXKOsnMW+iFZDWs+6n3Ys8rUGsMhVWh2aFBoLkZOXQdbrOvf90mqO35N2Vw==
-X-Received: by 2002:a65:6917:: with SMTP id s23mr3529351pgq.321.1582882040888;
-        Fri, 28 Feb 2020 01:27:20 -0800 (PST)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id f19sm2550853pgf.33.2020.02.28.01.27.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 01:27:20 -0800 (PST)
-Date:   Fri, 28 Feb 2020 01:27:19 -0800 (PST)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Tom Lendacky <thomas.lendacky@amd.com>
-cc:     Christoph Hellwig <hch@lst.de>,
-        "Singh, Brijesh" <brijesh.singh@amd.com>,
-        "Grimm, Jon" <jon.grimm@amd.com>, Joerg Roedel <joro@8bytes.org>,
-        baekhw@google.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Subject: Re: [rfc] dma-mapping: preallocate unencrypted DMA atomic pool
-In-Reply-To: <b22416ec-cc28-3fd2-3a10-89840be173fa@amd.com>
-Message-ID: <alpine.DEB.2.21.2002280118461.165532@chino.kir.corp.google.com>
-References: <alpine.DEB.2.21.1912311738130.68206@chino.kir.corp.google.com> <b22416ec-cc28-3fd2-3a10-89840be173fa@amd.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=MHeQm6U+o0608Xi2QEDKzTbxNSKLm6MuqMAztV8dmJM=;
+        b=CQhD7pBTTtXzxdQKirbvBB33bGcs95ptPisqkRt6F0uVIHVNsH9GP/URcUfNMRVlpT
+         m7+CdUvTGOdkdP7uL80MPb40+oOp+sEYMZ3WPZT6rfLA9qKiajwoobe16m6h0pKMwQna
+         BLY6loIgKkVf99/ji9bsDcsLf5w0+LhsNH+NfFv7lVZt3vZVx+vRtfryEkUk6Ouj+E2W
+         LFgOaNl2QCgwBjjx1iE+poyRfZiKEpRP/vHc/t/MPZb/2oB1ayuizOE6jNfNltWVvZ3Z
+         6my8ZZTjX76qqPSDMzob6qDiX7QTcBziS+zV+ttmpSRD95gMl1dtaYslpoMS8Fk22giB
+         TRJQ==
+X-Gm-Message-State: APjAAAU9seT9HFc5nCO0tRGsfptDoaSaFud1PVllCUw0k/2ss8PYqGvt
+        SJYdlx/lSFwsYcihVC3I4WpogQ==
+X-Google-Smtp-Source: APXvYqyF4k/gTiOodnjjGmlgUAFqePXdEZSWAR3mecnKr9zQIIfkcdyGRMU46SrUVXmpQYryG154Sw==
+X-Received: by 2002:a05:600c:2:: with SMTP id g2mr3921747wmc.18.1582882288774;
+        Fri, 28 Feb 2020 01:31:28 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:9002:9a61:c019:3c99? ([2a01:e34:ed2f:f020:9002:9a61:c019:3c99])
+        by smtp.googlemail.com with ESMTPSA id q125sm1409867wme.19.2020.02.28.01.31.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Feb 2020 01:31:28 -0800 (PST)
+Subject: Re: [PATCH RESEND 2/4] thermal: imx8mm: Add support for i.MX8MM
+ thermal monitoring unit
+To:     Anson Huang <anson.huang@nxp.com>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>, Jun Li <jun.li@nxp.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     dl-linux-imx <linux-imx@nxp.com>
+References: <1582186646-22096-1-git-send-email-Anson.Huang@nxp.com>
+ <1582186646-22096-2-git-send-email-Anson.Huang@nxp.com>
+ <f8dfdb39-14e5-4ee2-927a-fecbcd66c71e@linaro.org>
+ <DB3PR0402MB39163AE75E59613AB6B21575F5E80@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <07994b0e-9735-2f3e-e5c3-a57e2344dbc0@linaro.org>
+Date:   Fri, 28 Feb 2020 10:31:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <DB3PR0402MB39163AE75E59613AB6B21575F5E80@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jan 2020, Tom Lendacky wrote:
+On 28/02/2020 02:12, Anson Huang wrote:
+> Hi, Daniel
 
-> On 12/31/19 7:54 PM, David Rientjes wrote:
-> > Christoph, Thomas, is something like this (without the diagnosic 
-> > information included in this patch) acceptable for these allocations?  
-> > Adding expansion support when the pool is half depleted wouldn't be *that* 
-> > hard.
+[ ... ]
+
+>>> +static int tmu_get_temp(void *data, int *temp) {
+>>> +	struct imx8mm_tmu *tmu = data;
+>>> +	u32 val;
+>>> +
+>>> +	/* the temp sensor need about 1ms to finish the measurement */
+>>> +	usleep_range(1000, 2000);
+>>
+>> Why do yo need to force a delay here? If the sensor can not be read more
+>> than one time every 1ms, then specify that in the DT switching the polling to
+>> the right value, no?
 > 
-> Sorry for the delay in responding...  Overall, I think this will work
-> well. If you want the default size to be adjustable, you can always go
-> with a Kconfig setting or a command line parameter or both (I realize the
-> command line parameter is not optimal).
-> 
+> The polling time(2 seconds) is OK for this case, adding this sleep is to prevent user from reading
+> temperature from sysfs interface very frequently like less than 1ms, does it make sense? 
 
-Ok, so we've determined that we don't only have a dependency on GFP_DMA 
-memory through the DMA API in a non-blocking context that needs to be 
-unencrypted, but also GFP_KERNEL.  We don't have a dependency on GFP_DMA32 
-memory (yet) but should likely provision for it.
+Not really, well except if the user is able to press the keys in less
+than 1ms :)
 
-So my patch would change by actually providing three separate pools, one 
-for ZONE_DMA, one for ZONE_DMA32, and one for ZONE_NORMAL.  The ZONE_DMA 
-already exists in the form of the atomic_pool, so it would add two 
-additional pools that likely start out at the same size and dynamically 
-expand with a kworker when its usage approaches the limitatios of the 
-pool.  I don't necessarily like needing three separate pools, but I can't 
-think of a better way to provide unencrypted memory for non-blocking 
-allocations that work for all possible device gfp masks.
+If the userspace writes a polling script reading the temperature in a
+busy loop, there is nothing we can do against silly programming :/
 
-My idea right now is to create all three pools instead of the single 
-atomic_pool, all 256KB in size, and anytime their usage reaches half their 
-limit, we kick off some background work to double the size of the pool 
-with GFP_KERNEL | __GFP_NORETRY.  Our experimentation suggests that a 
-kworker would actually respond in time for this.
+However, it could interesting to add a <min polling interval> in the
+thermal structure and handle that from the core framework by caching the
+last value and return it in case get_temp is called too fast.
 
-Any objections to this approach?  If so, an alternative suggestion would 
-be appreciated :)  I plan on all atomic pools to be unencrypted at the 
-time the allocation is successful unless there is some strange need for 
-non-blocking atomic allocations through the DMA API that should *not* be 
-encrypted.
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-> Just a couple of overall comments about the use of variable names and
-> messages using both unencrypted and encrypted, I think the use should be
-> consistent throughout the patch.
-> 
-> Thanks,
-> Tom
-> 
-> > 
-> > Or are there alternatives we should consider?  Thanks!
-> > 
-> > 
-> > 
-> > 
-> > When AMD SEV is enabled in the guest, all allocations through 
-> > dma_pool_alloc_page() must call set_memory_decrypted() for unencrypted 
-> > DMA.  This includes dma_pool_alloc() and dma_direct_alloc_pages().  These 
-> > calls may block which is not allowed in atomic allocation contexts such as 
-> > from the NVMe driver.
-> > 
-> > Preallocate a complementary unecrypted DMA atomic pool that is initially 
-> > 4MB in size.  This patch does not contain dynamic expansion, but that 
-> > could be added if necessary.
-> > 
-> > In our stress testing, our peak unecrypted DMA atomic allocation 
-> > requirements is ~1.4MB, so 4MB is plenty.  This pool is similar to the 
-> > existing DMA atomic pool but is unencrypted.
-> > 
-> > Signed-off-by: David Rientjes <rientjes@google.com>
-> > ---
-> >  Based on v5.4 HEAD.
-> > 
-> >  This commit contains diagnostic information and is not intended for use 
-> >  in a production environment.
-> > 
-> >  arch/x86/Kconfig            |   1 +
-> >  drivers/iommu/dma-iommu.c   |   5 +-
-> >  include/linux/dma-mapping.h |   7 ++-
-> >  kernel/dma/direct.c         |  16 ++++-
-> >  kernel/dma/remap.c          | 116 ++++++++++++++++++++++++++----------
-> >  5 files changed, 108 insertions(+), 37 deletions(-)
-> > 
-> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > --- a/arch/x86/Kconfig
-> > +++ b/arch/x86/Kconfig
-> > @@ -1530,6 +1530,7 @@ config X86_CPA_STATISTICS
-> >  config AMD_MEM_ENCRYPT
-> >  	bool "AMD Secure Memory Encryption (SME) support"
-> >  	depends on X86_64 && CPU_SUP_AMD
-> > +	select DMA_DIRECT_REMAP
-> >  	select DYNAMIC_PHYSICAL_MASK
-> >  	select ARCH_USE_MEMREMAP_PROT
-> >  	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
-> > diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> > --- a/drivers/iommu/dma-iommu.c
-> > +++ b/drivers/iommu/dma-iommu.c
-> > @@ -928,7 +928,7 @@ static void __iommu_dma_free(struct device *dev, size_t size, void *cpu_addr)
-> >  
-> >  	/* Non-coherent atomic allocation? Easy */
-> >  	if (IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
-> > -	    dma_free_from_pool(cpu_addr, alloc_size))
-> > +	    dma_free_from_pool(dev, cpu_addr, alloc_size))
-> >  		return;
-> >  
-> >  	if (IS_ENABLED(CONFIG_DMA_REMAP) && is_vmalloc_addr(cpu_addr)) {
-> > @@ -1011,7 +1011,8 @@ static void *iommu_dma_alloc(struct device *dev, size_t size,
-> >  
-> >  	if (IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
-> >  	    !gfpflags_allow_blocking(gfp) && !coherent)
-> > -		cpu_addr = dma_alloc_from_pool(PAGE_ALIGN(size), &page, gfp);
-> > +		cpu_addr = dma_alloc_from_pool(dev, PAGE_ALIGN(size), &page,
-> > +					       gfp);
-> >  	else
-> >  		cpu_addr = iommu_dma_alloc_pages(dev, size, &page, gfp, attrs);
-> >  	if (!cpu_addr)
-> > diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-> > --- a/include/linux/dma-mapping.h
-> > +++ b/include/linux/dma-mapping.h
-> > @@ -629,9 +629,10 @@ void *dma_common_pages_remap(struct page **pages, size_t size,
-> >  			pgprot_t prot, const void *caller);
-> >  void dma_common_free_remap(void *cpu_addr, size_t size);
-> >  
-> > -bool dma_in_atomic_pool(void *start, size_t size);
-> > -void *dma_alloc_from_pool(size_t size, struct page **ret_page, gfp_t flags);
-> > -bool dma_free_from_pool(void *start, size_t size);
-> > +bool dma_in_atomic_pool(struct device *dev, void *start, size_t size);
-> > +void *dma_alloc_from_pool(struct device *dev, size_t size,
-> > +			  struct page **ret_page, gfp_t flags);
-> > +bool dma_free_from_pool(struct device *dev, void *start, size_t size);
-> >  
-> >  int
-> >  dma_common_get_sgtable(struct device *dev, struct sg_table *sgt, void *cpu_addr,
-> > diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-> > --- a/kernel/dma/direct.c
-> > +++ b/kernel/dma/direct.c
-> > @@ -10,6 +10,7 @@
-> >  #include <linux/dma-direct.h>
-> >  #include <linux/scatterlist.h>
-> >  #include <linux/dma-contiguous.h>
-> > +#include <linux/dma-mapping.h>
-> >  #include <linux/dma-noncoherent.h>
-> >  #include <linux/pfn.h>
-> >  #include <linux/set_memory.h>
-> > @@ -131,6 +132,13 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
-> >  	struct page *page;
-> >  	void *ret;
-> >  
-> > +	if (!gfpflags_allow_blocking(gfp) && force_dma_unencrypted(dev)) {
-> > +		ret = dma_alloc_from_pool(dev, size, &page, gfp);
-> > +		if (!ret)
-> > +			return NULL;
-> > +		goto done;
-> > +	}
-> > +
-> >  	page = __dma_direct_alloc_pages(dev, size, dma_handle, gfp, attrs);
-> >  	if (!page)
-> >  		return NULL;
-> > @@ -156,7 +164,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
-> >  		__dma_direct_free_pages(dev, size, page);
-> >  		return NULL;
-> >  	}
-> > -
-> > +done:
-> >  	ret = page_address(page);
-> >  	if (force_dma_unencrypted(dev)) {
-> >  		set_memory_decrypted((unsigned long)ret, 1 << get_order(size));
-> > @@ -185,6 +193,12 @@ void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
-> >  {
-> >  	unsigned int page_order = get_order(size);
-> >  
-> > +	if (force_dma_unencrypted(dev) &&
-> > +	    dma_in_atomic_pool(dev, cpu_addr, size)) {
-> > +		dma_free_from_pool(dev, cpu_addr, size);
-> > +		return;
-> > +	}
-> > +
-> >  	if ((attrs & DMA_ATTR_NO_KERNEL_MAPPING) &&
-> >  	    !force_dma_unencrypted(dev)) {
-> >  		/* cpu_addr is a struct page cookie, not a kernel address */
-> > diff --git a/kernel/dma/remap.c b/kernel/dma/remap.c
-> > --- a/kernel/dma/remap.c
-> > +++ b/kernel/dma/remap.c
-> > @@ -8,6 +8,7 @@
-> >  #include <linux/dma-contiguous.h>
-> >  #include <linux/init.h>
-> >  #include <linux/genalloc.h>
-> > +#include <linux/set_memory.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/vmalloc.h>
-> >  
-> > @@ -100,9 +101,11 @@ void dma_common_free_remap(void *cpu_addr, size_t size)
-> >  
-> >  #ifdef CONFIG_DMA_DIRECT_REMAP
-> >  static struct gen_pool *atomic_pool __ro_after_init;
-> > +static struct gen_pool *atomic_pool_unencrypted __ro_after_init;
-> >  
-> >  #define DEFAULT_DMA_COHERENT_POOL_SIZE  SZ_256K
-> >  static size_t atomic_pool_size __initdata = DEFAULT_DMA_COHERENT_POOL_SIZE;
-> > +static size_t atomic_pool_unencrypted_size __initdata = SZ_4M;
-> >  
-> >  static int __init early_coherent_pool(char *p)
-> >  {
-> > @@ -120,10 +123,11 @@ static gfp_t dma_atomic_pool_gfp(void)
-> >  	return GFP_KERNEL;
-> >  }
-> >  
-> > -static int __init dma_atomic_pool_init(void)
-> > +static int __init __dma_atomic_pool_init(struct gen_pool **pool,
-> > +				size_t pool_size, bool unencrypt)
-> >  {
-> > -	unsigned int pool_size_order = get_order(atomic_pool_size);
-> > -	unsigned long nr_pages = atomic_pool_size >> PAGE_SHIFT;
-> > +	unsigned int pool_size_order = get_order(pool_size);
-> > +	unsigned long nr_pages = pool_size >> PAGE_SHIFT;
-> >  	struct page *page;
-> >  	void *addr;
-> >  	int ret;
-> > @@ -136,78 +140,128 @@ static int __init dma_atomic_pool_init(void)
-> >  	if (!page)
-> >  		goto out;
-> >  
-> > -	arch_dma_prep_coherent(page, atomic_pool_size);
-> > +	arch_dma_prep_coherent(page, pool_size);
-> >  
-> > -	atomic_pool = gen_pool_create(PAGE_SHIFT, -1);
-> > -	if (!atomic_pool)
-> > +	*pool = gen_pool_create(PAGE_SHIFT, -1);
-> > +	if (!*pool)
-> >  		goto free_page;
-> >  
-> > -	addr = dma_common_contiguous_remap(page, atomic_pool_size,
-> > +	addr = dma_common_contiguous_remap(page, pool_size,
-> >  					   pgprot_dmacoherent(PAGE_KERNEL),
-> >  					   __builtin_return_address(0));
-> >  	if (!addr)
-> >  		goto destroy_genpool;
-> >  
-> > -	ret = gen_pool_add_virt(atomic_pool, (unsigned long)addr,
-> > -				page_to_phys(page), atomic_pool_size, -1);
-> > +	ret = gen_pool_add_virt(*pool, (unsigned long)addr, page_to_phys(page),
-> > +				pool_size, -1);
-> >  	if (ret)
-> >  		goto remove_mapping;
-> > -	gen_pool_set_algo(atomic_pool, gen_pool_first_fit_order_align, NULL);
-> > +	gen_pool_set_algo(*pool, gen_pool_first_fit_order_align, NULL);
-> > +	if (unencrypt)
-> > +		set_memory_decrypted((unsigned long)page_to_virt(page), nr_pages);
-> >  
-> > -	pr_info("DMA: preallocated %zu KiB pool for atomic allocations\n",
-> > -		atomic_pool_size / 1024);
-> > +	pr_info("DMA: preallocated %zu KiB pool for atomic allocations%s\n",
-> > +		pool_size >> 10, unencrypt ? " (unencrypted)" : "");
-> >  	return 0;
-> >  
-> >  remove_mapping:
-> > -	dma_common_free_remap(addr, atomic_pool_size);
-> > +	dma_common_free_remap(addr, pool_size);
-> >  destroy_genpool:
-> > -	gen_pool_destroy(atomic_pool);
-> > -	atomic_pool = NULL;
-> > +	gen_pool_destroy(*pool);
-> > +	*pool = NULL;
-> >  free_page:
-> >  	if (!dma_release_from_contiguous(NULL, page, nr_pages))
-> >  		__free_pages(page, pool_size_order);
-> >  out:
-> > -	pr_err("DMA: failed to allocate %zu KiB pool for atomic coherent allocation\n",
-> > -		atomic_pool_size / 1024);
-> > +	pr_err("DMA: failed to allocate %zu KiB pool for atomic coherent allocation%s\n",
-> > +		pool_size >> 10, unencrypt ? " (unencrypted)" : "");
-> >  	return -ENOMEM;
-> >  }
-> > +
-> > +static int __init dma_atomic_pool_init(void)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = __dma_atomic_pool_init(&atomic_pool, atomic_pool_size, false);
-> > +	if (ret)
-> > +		return ret;
-> > +	return __dma_atomic_pool_init(&atomic_pool_unencrypted,
-> > +				      atomic_pool_unencrypted_size, true);
-> > +}
-> >  postcore_initcall(dma_atomic_pool_init);
-> >  
-> > -bool dma_in_atomic_pool(void *start, size_t size)
-> > +static inline struct gen_pool *dev_to_pool(struct device *dev)
-> >  {
-> > -	if (unlikely(!atomic_pool))
-> > -		return false;
-> > +	if (force_dma_unencrypted(dev))
-> > +		return atomic_pool_unencrypted;
-> > +	return atomic_pool;
-> > +}
-> > +
-> > +bool dma_in_atomic_pool(struct device *dev, void *start, size_t size)
-> > +{
-> > +	struct gen_pool *pool = dev_to_pool(dev);
-> >  
-> > -	return addr_in_gen_pool(atomic_pool, (unsigned long)start, size);
-> > +	if (unlikely(!pool))
-> > +		return false;
-> > +	return addr_in_gen_pool(pool, (unsigned long)start, size);
-> >  }
-> >  
-> > -void *dma_alloc_from_pool(size_t size, struct page **ret_page, gfp_t flags)
-> > +static struct gen_pool *atomic_pool __ro_after_init;
-> > +static size_t encrypted_pool_size;
-> > +static size_t encrypted_pool_size_max;
-> > +static spinlock_t encrypted_pool_size_lock;
-> > +
-> > +void *dma_alloc_from_pool(struct device *dev, size_t size,
-> > +			  struct page **ret_page, gfp_t flags)
-> >  {
-> > +	struct gen_pool *pool = dev_to_pool(dev);
-> >  	unsigned long val;
-> >  	void *ptr = NULL;
-> >  
-> > -	if (!atomic_pool) {
-> > -		WARN(1, "coherent pool not initialised!\n");
-> > +	if (!pool) {
-> > +		WARN(1, "%scoherent pool not initialised!\n",
-> > +			force_dma_unencrypted(dev) ? "encrypted " : "");
-> >  		return NULL;
-> >  	}
-> >  
-> > -	val = gen_pool_alloc(atomic_pool, size);
-> > +	val = gen_pool_alloc(pool, size);
-> >  	if (val) {
-> > -		phys_addr_t phys = gen_pool_virt_to_phys(atomic_pool, val);
-> > +		phys_addr_t phys = gen_pool_virt_to_phys(pool, val);
-> >  
-> >  		*ret_page = pfn_to_page(__phys_to_pfn(phys));
-> >  		ptr = (void *)val;
-> >  		memset(ptr, 0, size);
-> > +		if (force_dma_unencrypted(dev)) {
-> > +			unsigned long flags;
-> > +
-> > +			spin_lock_irqsave(&encrypted_pool_size_lock, flags);
-> > +			encrypted_pool_size += size;
-> > +			if (encrypted_pool_size > encrypted_pool_size_max) {
-> > +				encrypted_pool_size_max = encrypted_pool_size;
-> > +				pr_info("max encrypted pool size now %lu\n",
-> > +					encrypted_pool_size_max);
-> > +			}
-> > +			spin_unlock_irqrestore(&encrypted_pool_size_lock, flags);
-> > +		}
-> >  	}
-> >  
-> >  	return ptr;
-> >  }
-> >  
-> > -bool dma_free_from_pool(void *start, size_t size)
-> > +bool dma_free_from_pool(struct device *dev, void *start, size_t size)
-> >  {
-> > -	if (!dma_in_atomic_pool(start, size))
-> > +	struct gen_pool *pool = dev_to_pool(dev);
-> > +
-> > +	if (!dma_in_atomic_pool(dev, start, size))
-> >  		return false;
-> > -	gen_pool_free(atomic_pool, (unsigned long)start, size);
-> > +	gen_pool_free(pool, (unsigned long)start, size);
-> > +	if (force_dma_unencrypted(dev)) {
-> > +		unsigned long flags;
-> > +
-> > +		spin_lock_irqsave(&encrypted_pool_size_lock, flags);
-> > +		encrypted_pool_size -= size;
-> > +		spin_unlock_irqrestore(&encrypted_pool_size_lock, flags);
-> > +	}
-> >  	return true;
-> >  }
-> >  
-> > @@ -220,7 +274,7 @@ void *arch_dma_alloc(struct device *dev, size_t size, dma_addr_t *dma_handle,
-> >  	size = PAGE_ALIGN(size);
-> >  
-> >  	if (!gfpflags_allow_blocking(flags)) {
-> > -		ret = dma_alloc_from_pool(size, &page, flags);
-> > +		ret = dma_alloc_from_pool(dev, size, &page, flags);
-> >  		if (!ret)
-> >  			return NULL;
-> >  		goto done;
-> > @@ -251,7 +305,7 @@ void *arch_dma_alloc(struct device *dev, size_t size, dma_addr_t *dma_handle,
-> >  void arch_dma_free(struct device *dev, size_t size, void *vaddr,
-> >  		dma_addr_t dma_handle, unsigned long attrs)
-> >  {
-> > -	if (!dma_free_from_pool(vaddr, PAGE_ALIGN(size))) {
-> > +	if (!dma_free_from_pool(dev, vaddr, PAGE_ALIGN(size))) {
-> >  		phys_addr_t phys = dma_to_phys(dev, dma_handle);
-> >  		struct page *page = pfn_to_page(__phys_to_pfn(phys));
-> >  
-> > 
-> 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
