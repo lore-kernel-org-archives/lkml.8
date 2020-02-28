@@ -2,223 +2,130 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7919C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 408A7C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C07AB24692
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:29:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Esy8PrSD"
+	by mail.kernel.org (Postfix) with ESMTP id 1935B246A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:30:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582860633;
+	bh=BWlDwlEUuY8N6oCQ2u90XkUxBuJmR3UNJmvOXpQ30Nc=;
+	h=From:Subject:To:Cc:Date:List-ID:From;
+	b=j9eYMLgQC5jhsP1uHmnMy0URU2podkEh8OIMVICJ/eGH/S9s1uSLkU+EVYMS/5M6U
+	 FyjrJ271I1CcH54V8wXA+6kzug1Dl3IliMBJcVfp4+JbJ0WonPQB+qb+UFXXgv9Cqr
+	 sEBkqdsf4LKiMAWW9bfXWCOGMDTU4GqTVgG3Vh4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730772AbgB1D3p (ORCPT
+        id S1730800AbgB1Dab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 22:29:45 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37241 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730668AbgB1D3p (ORCPT
+        Thu, 27 Feb 2020 22:30:31 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:40073 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730722AbgB1Dab (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 22:29:45 -0500
-Received: by mail-lf1-f67.google.com with SMTP id b15so1031443lfc.4
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 19:29:43 -0800 (PST)
+        Thu, 27 Feb 2020 22:30:31 -0500
+Received: by mail-io1-f67.google.com with SMTP id x1so1921130iop.7
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 19:30:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=78tHbOll36uBw2XMxvLXTIrb/7Hwcn3/bSQBtRwNyV4=;
-        b=Esy8PrSDrE8pziSziw6UMtRLBPv9knn60C6HwboX7hLSXMn40d9NOyO5Pmi6O/EkBd
-         feru0BtMSB6K1RwlP1g+aFOiMHS5b8fdanX3dnXciHmFxqlOkPFBXPKKgX0JXYwbv0NH
-         R8v6TbaLCvh9+RmXjcvW9As+oQ6zojN2AnzUIGs3E7I4wrdgMedhWxNl+tO3pzi5BK5R
-         3iq0B09gkoAtBGPaNQyQpUomEmacdCA/z+aRX1i99vcMelOLfeEPM6HV2Pzkz+NXeFfs
-         L2fsF2RbrEcGgxaZy+P0vnGbotgZSh7/WwQPPBK1KMZ86GyJlVV4MPp6ECO4btrqF0eI
-         Yhew==
+        d=linuxfoundation.org; s=google;
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=N2BqVG9jx759fspM1MT4M/EZFAbzaNvfYYtJ27AebE4=;
+        b=N2SMZK75zttYmtEci9QhvN9q0T3gR8N1y2DXBkP/FAfwpMtO/qP0D3ol0K302v2fUu
+         yYKz66WG+tqPtRD1YXIihCXjM7C/OmUbJeV+fKDZW0I2ee1I3wlFuD1eA0Lt5akLCjNv
+         BZct/jGS0PIoSVO+53rAqD7EAR0WnJoJfj7D4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=78tHbOll36uBw2XMxvLXTIrb/7Hwcn3/bSQBtRwNyV4=;
-        b=R6AIMBCUuAthXhKW7S6vc+CwwbciDYAiCJWGQcvuPxRtxdhEH+/4wC5d+yNERePRHM
-         tyBiJCXg9H4X3r9n4XRJpS3XOpiU6y9KwSP8k+HnHwzYt15odw3NIVGSAT3HlTcqMZeE
-         Yk0ik+MhM5VW74/Z3D7+Ldn0wiwFZ/3iK1fbMnQ2mDHMW+eYYGQ4joTl095HcGZPlTKr
-         9xs9IuCTJlOwsr2oWkwl3pgo9H/TS8KHrDdiy0LVZNOSU7HiLqAy3ES3tsyr0fhgDEqN
-         AO+Yw04g42vzwuB/AkOV3SKJfBtG5ugRfM9k1UBj8vyFEncnUAEE4pMT5JjvGmQnAWmj
-         fOgg==
-X-Gm-Message-State: ANhLgQ2Oum9SnKaQhGttUFhIcRdZ+aIr74AYsdS3JNcy68zfR+eUseRd
-        s/+rI177m2zS6AE3YLmsrNdQk8bP880j3v0EPvl1/YU7zjs=
-X-Google-Smtp-Source: ADFU+vvuQAgNrjgT3mnY4SiNWU/Oj1NGZRYrcJYA8fh4Jpu4CjS8OByXAxe/MyN76/cnDE/LRq0wM3dCm6lifHt9UGA=
-X-Received: by 2002:a05:6512:3e5:: with SMTP id n5mr1359899lfq.55.1582860582649;
- Thu, 27 Feb 2020 19:29:42 -0800 (PST)
-MIME-Version: 1.0
-References: <20200227132255.285644406@linuxfoundation.org>
-In-Reply-To: <20200227132255.285644406@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 28 Feb 2020 08:59:30 +0530
-Message-ID: <CA+G9fYse5vNkUmMJ7E5DL2NcY9Cp1RUdAJif+DVsDdv+u9QiTw@mail.gmail.com>
-Subject: Re: [PATCH 4.14 000/237] 4.14.172-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=N2BqVG9jx759fspM1MT4M/EZFAbzaNvfYYtJ27AebE4=;
+        b=tQvS9C9JUMQOQwlDP/w0wz6NLHPVruwp8uCro4uKzDatTwLHFox9MO3reY2VXXafjw
+         8JdWnxPs5NdTQeFtiP0tFQm+I+CO1NE0W0j1usuAbjjNmty95crpl7qkeFPA7NnJ7wOe
+         qpnn0r8D23nSDXsg5xwEZsQV0ck89bvInPk0L4HoUtVS/r0UPmwJgfd1YaUy//UBgFMR
+         ZjY3UQmWGPE0c/FHHUx84Tbn6dCM/xFNVYWAOwaEttXLG9+UHhfo7KcgzpvrIZ2Mw53E
+         9LsIuqmV4gQUA8caEgEDGOAS8tj7JgIpha9OSqp/dz00WeU8dSu/REro5pY4RzKfsTBc
+         ajfQ==
+X-Gm-Message-State: APjAAAXgkk+cJx0TpO0QAUAIAh8lhbLMzD40alTfKcTIAWVmihfXqPyW
+        OI4u91MSqEZQ6dExii0JZz+lQQ==
+X-Google-Smtp-Source: APXvYqxFjEjYwzRJo+N7QAQV/FfJizpn+0hpd4pUy3fw28ntwGYm6O9O1lan6t5XdxvvnlCfMGS8mA==
+X-Received: by 2002:a6b:4e13:: with SMTP id c19mr1974583iob.58.1582860630607;
+        Thu, 27 Feb 2020 19:30:30 -0800 (PST)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id l2sm2614532ilo.6.2020.02.27.19.30.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Feb 2020 19:30:29 -0800 (PST)
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Subject: [ANN] Kselftest integration into Kernel CI
+To:     "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Linus Torvalds <torvalds@linux-foundation.org>
+Message-ID: <3b3dc707-7ae7-955b-69fe-b9abe9ae26c5@linuxfoundation.org>
+Date:   Thu, 27 Feb 2020 20:30:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Feb 2020 at 19:23, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.14.172 release.
-> There are 237 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 29 Feb 2020 13:21:24 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.14.172-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.14.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Integrating Kselftest into Kernel CI rings depends on Kselftest build
+and install framework to support Kernel CI use-cases. I am kicking off
+an effort to support Kselftest runs in Kernel CI rings. Running these
+tests in Kernel CI rings will help quality of kernel releases, both
+stable and mainline.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+What is required for full support?
 
-Summary
-------------------------------------------------------------------------
+1. Cross-compilation & relocatable build support
+2. Generates objects in objdir/kselftest without cluttering main objdir
+3. Leave source directory clean
+4. Installs correctly in objdir/kselftest/kselftest_install and adds
+    itself to run_kselftest.sh script generated during install.
 
-kernel: 4.14.172-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.14.y
-git commit: 47e811c62a4a89755af4c26a95985cec9cf10e80
-git describe: v4.14.171-238-g47e811c62a4a
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
-ild/v4.14.171-238-g47e811c62a4a
+Note that install step is necessary for all files to be installed for
+run time support.
 
-No regressions (compared to build v4.14.171)
+I looked into the current status and identified problems. The work is
+minimal to add full support. Out of 80+ tests, 7 fail to cross-build
+and 1 fails to install correctly.
 
-No fixes (compared to build v4.14.171)
+List is below:
 
-Ran 28113 total tests in the following environments and test suites.
+Tests fails to build: bpf, capabilities, kvm, memfd, mqueue, timens, vm
+Tests fail to install: android (partial failure)
+Leaves source directory dirty: bpf, seccomp
 
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
+I have patches ready for the following issues:
 
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* network-basic-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* ltp-cap_bounds-64k-page_size-tests
-* ltp-cap_bounds-kasan-tests
-* ltp-commands-64k-page_size-tests
-* ltp-commands-kasan-tests
-* ltp-containers-64k-page_size-tests
-* ltp-containers-kasan-tests
-* ltp-cpuhotplug-64k-page_size-tests
-* ltp-cpuhotplug-kasan-tests
-* ltp-crypto-64k-page_size-tests
-* ltp-crypto-kasan-tests
-* ltp-crypto-tests
-* ltp-cve-64k-page_size-tests
-* ltp-cve-kasan-tests
-* ltp-dio-64k-page_size-tests
-* ltp-dio-kasan-tests
-* ltp-fcntl-locktests-64k-page_size-tests
-* ltp-fcntl-locktests-kasan-tests
-* ltp-filecaps-64k-page_size-tests
-* ltp-filecaps-kasan-tests
-* ltp-fs-64k-page_size-tests
-* ltp-fs-kasan-tests
-* ltp-fs_bind-64k-page_size-tests
-* ltp-fs_bind-kasan-tests
-* ltp-fs_perms_simple-64k-page_size-tests
-* ltp-fs_perms_simple-kasan-tests
-* ltp-fsx-64k-page_size-tests
-* ltp-fsx-kasan-tests
-* ltp-hugetlb-64k-page_size-tests
-* ltp-hugetlb-kasan-tests
-* ltp-io-64k-page_size-tests
-* ltp-io-kasan-tests
-* ltp-ipc-64k-page_size-tests
-* ltp-ipc-kasan-tests
-* ltp-math-64k-page_size-tests
-* ltp-math-kasan-tests
-* ltp-mm-64k-page_size-tests
-* ltp-mm-kasan-tests
-* ltp-nptl-64k-page_size-tests
-* ltp-nptl-kasan-tests
-* ltp-pty-64k-page_size-tests
-* ltp-pty-kasan-tests
-* ltp-sched-64k-page_size-tests
-* ltp-sched-kasan-tests
-* ltp-securebits-64k-page_size-tests
-* ltp-securebits-kasan-tests
-* ltp-syscalls-64k-page_size-tests
-* ltp-syscalls-compat-tests
-* ltp-syscalls-kasan-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
+Kselftest objects (test dirs) clutter top level object directory.
+seccomp_bpf generates objects in the source directory.
 
---=20
-Linaro LKFT
-https://lkft.linaro.org
+I created a topic branch to collect all the patches:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/?h=kernelci
+
+I am going to start working on build problems. If anybody is
+interested in helping me with this effort, don't hesitate to
+contact me. I first priority is fixing build and install and
+then look into tests that leave the source directory dirty.
+
+Detailed report can be found here:
+
+https://drive.google.com/file/d/11nnWOKIzzOrE4EiucZBn423lzSU_eNNv/view?usp=sharing
+
+thanks,
+-- Shuah
