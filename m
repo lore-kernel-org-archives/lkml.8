@@ -2,61 +2,152 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A09C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E5FC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D01A9246A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F01F6246A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:47:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f0LxLDIT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgB1Rrx convert rfc822-to-8bit (ORCPT
+        id S1726822AbgB1Rr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 12:47:53 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:37750 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgB1Rrx (ORCPT
+        Fri, 28 Feb 2020 12:47:56 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41435 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgB1Rrz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 12:47:53 -0500
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j7jjh-0003xG-Gx; Fri, 28 Feb 2020 18:47:41 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id E66F2100EA1; Fri, 28 Feb 2020 18:47:40 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        xen-devel@lists.xenproject.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        "VMware\, Inc." <pv-drivers@vmware.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] x86/ioperm: add new paravirt function update_io_bitmap
-In-Reply-To: <4715c1af-5854-9f2c-2145-fba43e82d350@suse.com>
-References: <20200218154712.25490-1-jgross@suse.com> <4715c1af-5854-9f2c-2145-fba43e82d350@suse.com>
-Date:   Fri, 28 Feb 2020 18:47:40 +0100
-Message-ID: <87wo86fvsz.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Fri, 28 Feb 2020 12:47:55 -0500
+Received: by mail-pg1-f196.google.com with SMTP id b1so1870647pgm.8;
+        Fri, 28 Feb 2020 09:47:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=mbF4XFiS6x/5BZS7mexCEPridbNKUPiWYRQsLCRNJCo=;
+        b=f0LxLDIT9xWUUwmWVjj7NAoPKpnD7jNta4pnOvb8zuLmJ7ug/BN1fsEt4Tb1W1QcIx
+         2LXz+ekxLiyFG/NuSHPHBd0ypxFgI0FPbBYMesDgvODDWQNhsakGmAmhc9gjOmNVL4R9
+         xwnf0IBRo0R+2gZe/p0AQIdUzFsE9sTGp0j0StwPhrwh4bnYdexajmr2m4gIXz1U3t7X
+         lnEJJzMjXkNBt65X9dV5kjk6ViNBvd8E9FMDHAT5SVWfqKt5cuCItAES9mcLHCMShxRU
+         JRdcr/LAfjoa64JeA9GChMEBHGzeYTA14H2hURszIqDrBhO2Vvfn1NlA3pSO6FaiTXgt
+         iuTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=mbF4XFiS6x/5BZS7mexCEPridbNKUPiWYRQsLCRNJCo=;
+        b=XKgPfHSdmgAFiftkIkAoiKmanTGrZqlFhWJYsbMZ+HzMdLPYXc+L4pZjvP/akwbZ2O
+         6a6Sw3A05AuNzAy0whbO5eIhCbB2JEhDntTcne5AIvBcabw9zzlXBQ+siTibp9qM6UgZ
+         fQTaXTY4yeV3dkOOLAbPQ8D1zTMNwSayb4GqjtrA/+ik2C7o/KEOZAHsVvcmaP38llJ5
+         /tzlIx0OkUvextbEo/CH14BDLQShOnN6gW/mtEYE5r1+2mYpBJX2IACQtT2EnhoSphtE
+         LtKLXaqWE4otQNWTLfgk8YTyIXYewzWdebaXbZVLrbBLeR9yqvTze/UTyvs95JlmxVf1
+         kJSg==
+X-Gm-Message-State: APjAAAWJIGkW5hWgY1BV3KR4uaN/t4Vt3uojS42HH30rqIbpgWdkS21o
+        ICAW4SItMYaRq58bpZ0fRA==
+X-Google-Smtp-Source: APXvYqzpLT3JS4qNYEKWFKVXnrzTHsEGd1zfzZoEsVvoqi+FrVXXK08r8LC4AINXmrpIKnPh/nX2Yg==
+X-Received: by 2002:aa7:8ad9:: with SMTP id b25mr5505864pfd.70.1582912074291;
+        Fri, 28 Feb 2020 09:47:54 -0800 (PST)
+Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:55e:f10b:ac46:7428:aa52:2d70])
+        by smtp.gmail.com with ESMTPSA id 10sm11599587pfu.132.2020.02.28.09.47.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 09:47:53 -0800 (PST)
+From:   madhuparnabhowmik10@gmail.com
+To:     rjw@rjwysocki.net, pavel@ucw.cz, len.brown@intel.com,
+        gregkh@linuxfoundation.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org, frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: [PATCH 2/2] drivers: base: power: wakeup.c: Use built-in RCU list checking
+Date:   Fri, 28 Feb 2020 23:17:45 +0530
+Message-Id: <20200228174745.9308-1-madhuparnabhowmik10@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jürgen Groß <jgross@suse.com> writes:
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-> Friendly ping...
+Pass cond argument to list_for_each_entry_rcu() to fix the
+following false positive lockdep warning and other uses of
+list_for_each_entry_rcu() in wakeup.c.
 
-Ooops. I pick it up first thing tomorrow morning
+[  331.934648] =============================
+[  331.934650] WARNING: suspicious RCU usage
+[  331.934653] 5.6.0-rc1+ #5 Not tainted
+[  331.934655] -----------------------------
+[  331.934657] drivers/base/power/wakeup.c:408 RCU-list traversed in non-reader section!!
+
+[  333.025156] =============================
+[  333.025161] WARNING: suspicious RCU usage
+[  333.025168] 5.6.0-rc1+ #5 Not tainted
+[  333.025173] -----------------------------
+[  333.025180] drivers/base/power/wakeup.c:424 RCU-list traversed in non-reader section!!
+
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+---
+ drivers/base/power/wakeup.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+index 27f3e60608e5..d9fefc65ac34 100644
+--- a/drivers/base/power/wakeup.c
++++ b/drivers/base/power/wakeup.c
+@@ -405,7 +405,8 @@ void device_wakeup_arm_wake_irqs(void)
+ 	int srcuidx;
+ 
+ 	srcuidx = srcu_read_lock(&wakeup_srcu);
+-	list_for_each_entry_rcu(ws, &wakeup_sources, entry)
++	list_for_each_entry_rcu(ws, &wakeup_sources, entry,
++				srcu_read_lock_held(&wakeup_srcu))
+ 		dev_pm_arm_wake_irq(ws->wakeirq);
+ 	srcu_read_unlock(&wakeup_srcu, srcuidx);
+ }
+@@ -421,7 +422,8 @@ void device_wakeup_disarm_wake_irqs(void)
+ 	int srcuidx;
+ 
+ 	srcuidx = srcu_read_lock(&wakeup_srcu);
+-	list_for_each_entry_rcu(ws, &wakeup_sources, entry)
++	list_for_each_entry_rcu(ws, &wakeup_sources, entry,
++				srcu_read_lock_held(&wakeup_srcu))
+ 		dev_pm_disarm_wake_irq(ws->wakeirq);
+ 	srcu_read_unlock(&wakeup_srcu, srcuidx);
+ }
+@@ -874,7 +876,8 @@ void pm_print_active_wakeup_sources(void)
+ 	struct wakeup_source *last_activity_ws = NULL;
+ 
+ 	srcuidx = srcu_read_lock(&wakeup_srcu);
+-	list_for_each_entry_rcu(ws, &wakeup_sources, entry) {
++	list_for_each_entry_rcu(ws, &wakeup_sources, entry,
++				srcu_read_lock_held(&wakeup_srcu)) {
+ 		if (ws->active) {
+ 			pm_pr_dbg("active wakeup source: %s\n", ws->name);
+ 			active = 1;
+@@ -1025,7 +1028,8 @@ void pm_wakep_autosleep_enabled(bool set)
+ 	int srcuidx;
+ 
+ 	srcuidx = srcu_read_lock(&wakeup_srcu);
+-	list_for_each_entry_rcu(ws, &wakeup_sources, entry) {
++	list_for_each_entry_rcu(ws, &wakeup_sources, entry,
++				srcu_read_lock_held(&wakeup_srcu)) {
+ 		spin_lock_irq(&ws->lock);
+ 		if (ws->autosleep_enabled != set) {
+ 			ws->autosleep_enabled = set;
+@@ -1104,7 +1108,8 @@ static void *wakeup_sources_stats_seq_start(struct seq_file *m,
+ 	}
+ 
+ 	*srcuidx = srcu_read_lock(&wakeup_srcu);
+-	list_for_each_entry_rcu(ws, &wakeup_sources, entry) {
++	list_for_each_entry_rcu(ws, &wakeup_sources, entry,
++				srcu_read_lock_held(&wakeup_srcu)) {
+ 		if (n-- <= 0)
+ 			return ws;
+ 	}
+-- 
+2.17.1
+
