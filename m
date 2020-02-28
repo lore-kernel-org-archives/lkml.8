@@ -2,200 +2,112 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 617E8C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF30C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF182469D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6055D24699
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:17:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgB1PQM (ORCPT
+        id S1727073AbgB1PRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 10:16:12 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57970 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726945AbgB1PQM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 10:16:12 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01SFFcKc105420;
-        Fri, 28 Feb 2020 10:16:00 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yepxphvrr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Feb 2020 10:15:59 -0500
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01SFFxa3107442;
-        Fri, 28 Feb 2020 10:15:59 -0500
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yepxphuy1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Feb 2020 10:15:56 -0500
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01SFC17N007473;
-        Fri, 28 Feb 2020 15:14:55 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma03dal.us.ibm.com with ESMTP id 2yepv2pkys-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Feb 2020 15:14:55 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01SFEshx16253840
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Feb 2020 15:14:54 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 333582805C;
-        Fri, 28 Feb 2020 15:14:54 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3C33028068;
-        Fri, 28 Feb 2020 15:14:53 +0000 (GMT)
-Received: from [9.211.148.203] (unknown [9.211.148.203])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 28 Feb 2020 15:14:53 +0000 (GMT)
-Subject: Re: [PATCH v2] ARM: dts: rainier: Set PCA9552 pin types
-To:     Matthew Barth <msbarth@linux.ibm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>, openbmc@lists.ozlabs.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Brandon Wyman <bjwyman@gmail.com>
-References: <20200225201415.431668-1-msbarth@linux.ibm.com>
-From:   Eddie James <eajames@linux.ibm.com>
-Message-ID: <59ceccbd-b776-51fc-e80b-39427c70ec70@linux.ibm.com>
-Date:   Fri, 28 Feb 2020 09:14:52 -0600
+        Fri, 28 Feb 2020 10:17:21 -0500
+Received: from mx2.suse.de ([195.135.220.15]:53750 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726650AbgB1PRU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 10:17:20 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 03ABBAF55;
+        Fri, 28 Feb 2020 15:17:17 +0000 (UTC)
+Subject: Re: [PATCH 2/2] mm,thp,compaction,cma: allow THP migration for CMA
+ allocations
+To:     Rik van Riel <riel@surriel.com>, linux-kernel@vger.kernel.org
+Cc:     kernel-team@fb.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        mhocko@kernel.org, mgorman@techsingularity.net,
+        rientjes@google.com, aarcange@redhat.com
+References: <cover.1582321645.git.riel@surriel.com>
+ <3289dc5e6c4c3174999598d8293adf8ed3e93b57.1582321645.git.riel@surriel.com>
+ <05027092-a43e-756f-4fee-78f29a048ca1@suse.cz>
+ <b3529cfa33f55d47aa2e017c8b0291395c302a02.camel@surriel.com>
+ <81c8d2fa-a8ae-82b8-f359-bba055fbff68@suse.cz>
+ <bd867dba881347a21757fba908f48a6e23e72439.camel@surriel.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ mQINBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
+ KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
+ 87tMFA+u+L4Z5xAzIimfLD5EKC56kJ1CsXlM8S/LHcmdD9Ctkn3trYDNnat0eoAcfPIP2OZ+
+ 9oe9IF/R28zmh0ifLXyJQQz5ofdj4bPf8ecEW0rhcqHfTD8k4yK0xxt3xW+6Exqp9n9bydiy
+ tcSAw/TahjW6yrA+6JhSBv1v2tIm+itQc073zjSX8OFL51qQVzRFr7H2UQG33lw2QrvHRXqD
+ Ot7ViKam7v0Ho9wEWiQOOZlHItOOXFphWb2yq3nzrKe45oWoSgkxKb97MVsQ+q2SYjJRBBH4
+ 8qKhphADYxkIP6yut/eaj9ImvRUZZRi0DTc8xfnvHGTjKbJzC2xpFcY0DQbZzuwsIZ8OPJCc
+ LM4S7mT25NE5kUTG/TKQCk922vRdGVMoLA7dIQrgXnRXtyT61sg8PG4wcfOnuWf8577aXP1x
+ 6mzw3/jh3F+oSBHb/GcLC7mvWreJifUL2gEdssGfXhGWBo6zLS3qhgtwjay0Jl+kza1lo+Cv
+ BB2T79D4WGdDuVa4eOrQ02TxqGN7G0Biz5ZLRSFzQSQwLn8fbwARAQABtCBWbGFzdGltaWwg
+ QmFia2EgPHZiYWJrYUBzdXNlLmN6PokCVAQTAQoAPgIbAwULCQgHAwUVCgkICwUWAgMBAAIe
+ AQIXgBYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJcbbyGBQkH8VTqAAoJECJPp+fMgqZkpGoP
+ /1jhVihakxw1d67kFhPgjWrbzaeAYOJu7Oi79D8BL8Vr5dmNPygbpGpJaCHACWp+10KXj9yz
+ fWABs01KMHnZsAIUytVsQv35DMMDzgwVmnoEIRBhisMYOQlH2bBn/dqBjtnhs7zTL4xtqEcF
+ 1hoUFEByMOey7gm79utTk09hQE/Zo2x0Ikk98sSIKBETDCl4mkRVRlxPFl4O/w8dSaE4eczH
+ LrKezaFiZOv6S1MUKVKzHInonrCqCNbXAHIeZa3JcXCYj1wWAjOt9R3NqcWsBGjFbkgoKMGD
+ usiGabetmQjXNlVzyOYdAdrbpVRNVnaL91sB2j8LRD74snKsV0Wzwt90YHxDQ5z3M75YoIdl
+ byTKu3BUuqZxkQ/emEuxZ7aRJ1Zw7cKo/IVqjWaQ1SSBDbZ8FAUPpHJxLdGxPRN8Pfw8blKY
+ 8mvLJKoF6i9T6+EmlyzxqzOFhcc4X5ig5uQoOjTIq6zhLO+nqVZvUDd2Kz9LMOCYb516cwS/
+ Enpi0TcZ5ZobtLqEaL4rupjcJG418HFQ1qxC95u5FfNki+YTmu6ZLXy+1/9BDsPuZBOKYpUm
+ 3HWSnCS8J5Ny4SSwfYPH/JrtberWTcCP/8BHmoSpS/3oL3RxrZRRVnPHFzQC6L1oKvIuyXYF
+ rkybPXYbmNHN+jTD3X8nRqo+4Qhmu6SHi3Vq
+Message-ID: <1094fc21-9104-1410-bc03-f1934dbfcd66@suse.cz>
+Date:   Fri, 28 Feb 2020 16:17:17 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200225201415.431668-1-msbarth@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <bd867dba881347a21757fba908f48a6e23e72439.camel@surriel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-28_04:2020-02-28,2020-02-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- impostorscore=0 phishscore=0 spamscore=0 suspectscore=0 clxscore=1015
- bulkscore=0 mlxlogscore=999 priorityscore=1501 mlxscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002280121
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2/26/20 6:53 PM, Rik van Riel wrote:
+> On Wed, 2020-02-26 at 10:48 +0100, Vlastimil Babka wrote:
+>> On 2/25/20 7:44 PM, Rik van Riel wrote:
+>>
+>> Uh, is it any different from base pages which have to pass the same
+>> check? I
+>> guess the caller could do e.g. lru_add_drain_all() first.
+> 
+> You are right, it is not different.
+> 
+> As for lru_add_drain_all(), I wonder at what point that
+> should happen?
 
-On 2/25/20 2:14 PM, Matthew Barth wrote:
-> All 16 pins of the PCA9552 at 7-bit address 0x61 should be set as type
-> GPIO.
->
-> Signed-off-by: Matthew Barth <msbarth@linux.ibm.com>
+Right now it seems to be done in alloc_contig_range(), but rather late.
 
+> It appears that the order in which things are done does
+> not really provide a good moment:
+> 1) decide to attempt allocating a range of memory
+> 2) scan each page block for unmovable pages
+> 3) if no unmovable pages are found, mark the page block
+>    MIGRATE_ISOLATE
+> 
+> I wonder if we should do things the opposite way, first
+> marking the page block MIGRATE_ISOLATE (to prevent new
+> allocations), then scanning it, and calling lru_add_drain_all
+> if we encounter a page that looks like it could benefit from
+> that.
+> 
+> If we still see unmovable pages after that, it is cheap
+> enough to set the page block back to its previous state.
 
-Reviewed-by: Eddie James <eajames@linux.ibm.com>
-
-
-> ---
-> v2: Added leds-pca955x.h include
->      Added upstream to patch
-> ---
-> ---
->   arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts | 17 +++++++++++++++++
->   1 file changed, 17 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-> index c63cefce636d..d9fa9fd48058 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-> @@ -4,6 +4,7 @@
->   
->   #include "aspeed-g6.dtsi"
->   #include <dt-bindings/gpio/aspeed-gpio.h>
-> +#include <dt-bindings/leds/leds-pca955x.h>
->   
->   / {
->   	model = "Rainier";
-> @@ -351,66 +352,82 @@
->   
->   		gpio@0 {
->   			reg = <0>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@1 {
->   			reg = <1>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@2 {
->   			reg = <2>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@3 {
->   			reg = <3>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@4 {
->   			reg = <4>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@5 {
->   			reg = <5>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@6 {
->   			reg = <6>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@7 {
->   			reg = <7>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@8 {
->   			reg = <8>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@9 {
->   			reg = <9>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@10 {
->   			reg = <10>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@11 {
->   			reg = <11>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@12 {
->   			reg = <12>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@13 {
->   			reg = <13>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@14 {
->   			reg = <14>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   
->   		gpio@15 {
->   			reg = <15>;
-> +			type = <PCA955X_TYPE_GPIO>;
->   		};
->   	};
->   
+Yeah seems like the whole has_unmovable_pages() thing isn't much useful
+here. It might prevent some unnecessary action like isolating something,
+then finding non-movable page and rolling back the isolation. But maybe
+it's not worth the savings, and also has_unmovable_pages() being false
+doesn't guarantee succeed in the actual isolate+migrate attempt.  And if
+it can cause a false negative due to lru pages not drained, then it's
+actually worse than if it wasn't called at all.
