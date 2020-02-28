@@ -2,111 +2,98 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8277C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 206F6C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A3452469D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F30B12469D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:47:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbgB1Pp5 (ORCPT
+        id S1727084AbgB1PrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 10:45:57 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22506 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727061AbgB1Pp5 (ORCPT
+        Fri, 28 Feb 2020 10:47:09 -0500
+Received: from shelob.surriel.com ([96.67.55.147]:49878 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbgB1PrJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 10:45:57 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01SFZdQu059253
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 10:45:56 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yepwu2x16-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 10:45:56 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <imbrenda@linux.ibm.com>;
-        Fri, 28 Feb 2020 15:45:53 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 28 Feb 2020 15:45:48 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01SFioZe35717538
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Feb 2020 15:44:50 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5F4D752051;
-        Fri, 28 Feb 2020 15:45:47 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.145.11.131])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id A345552050;
-        Fri, 28 Feb 2020 15:45:46 +0000 (GMT)
-Date:   Fri, 28 Feb 2020 16:45:44 +0100
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     linux-next@vger.kernel.org, akpm@linux-foundation.org
-Cc:     borntraeger@de.ibm.com, david@redhat.com, aarcange@redhat.com,
-        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
-        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: Re: [RFC v1 1/2] fixup for 9947ea2c1e608e32669d5caeb67b3e3fba3309e8
- "mm/gup: track FOLL_PIN pages"
-In-Reply-To: <20200228154322.329228-2-imbrenda@linux.ibm.com>
-References: <20200228154322.329228-1-imbrenda@linux.ibm.com>
-        <20200228154322.329228-2-imbrenda@linux.ibm.com>
-Organization: IBM
+        Fri, 28 Feb 2020 10:47:09 -0500
+Received: from [2603:3005:d05:2b00:6e0b:84ff:fee2:98bb] (helo=imladris.surriel.com)
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1j7hqw-0007MR-U8; Fri, 28 Feb 2020 10:47:02 -0500
+Date:   Fri, 28 Feb 2020 10:47:00 -0500
+From:   Rik van Riel <riel@surriel.com>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        akpm@linux-foundation.org, linux-mm@kvack.org, mhocko@kernel.org,
+        mgorman@techsingularity.net, rientjes@google.com,
+        aarcange@redhat.com, ziy@nvidia.com
+Subject: [PATCH] fix
+ mmthpcompactioncma-allow-thp-migration-for-cma-allocations.patch
+Message-ID: <20200228104700.0af2f18d@imladris.surriel.com>
+In-Reply-To: <ceacd12e-a005-8035-7d88-f79a45a05975@suse.cz>
+References: <cover.1582321646.git.riel@surriel.com>
+        <20200227213238.1298752-2-riel@surriel.com>
+        <df83c62f-209f-b1fd-3a5c-c81c82cb2606@oracle.com>
+        <7800e98e3688c124ac3672284b87d67321e1c29e.camel@surriel.com>
+        <67185d77-87aa-400d-475c-4435d8b7be11@suse.cz>
+        <47198271414db19cecbfa1a6ea685577dad3a72c.camel@surriel.com>
+        <ceacd12e-a005-8035-7d88-f79a45a05975@suse.cz>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022815-4275-0000-0000-000003A66629
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022815-4276-0000-0000-000038BAFC16
-Message-Id: <20200228164544.6360f17e@p-imbrenda>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-28_04:2020-02-28,2020-02-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=999 adultscore=0 mlxscore=0 suspectscore=0 clxscore=1015
- bulkscore=0 phishscore=0 lowpriorityscore=0 spamscore=0 impostorscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002280124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sorry, this one was a mistake, please ignore
+Thank you Mike & Vlastimil!
 
+---8<---
 
-On Fri, 28 Feb 2020 16:43:20 +0100
-Claudio Imbrenda <imbrenda@linux.ibm.com> wrote:
+commit 27f3cd5473d8bbf591b61d8b93b98bc333980d0d
+Author: Rik van Riel <riel@surriel.com>
+Date:   Fri Feb 28 10:41:48 2020 -0500
 
-> in case pin fails, we need to unpin, just a put_page will not be
-> enough
-> 
-> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-> ---
->  mm/gup.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index f589299b0d4a..0b9a806898f3 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -2134,7 +2134,10 @@ static int gup_pte_range(pmd_t pmd, unsigned
-> long addr, unsigned long end, goto pte_unmap;
->  
->  		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
-> -			put_page(head);
-> +			if (flags & FOLL_GET)
-> +				put_page(head);
-> +			else if (flags & FOLL_PIN)
-> +				unpin_user_page(head);
->  			goto pte_unmap;
->  		}
->  
+Subject: fix mmthpcompactioncma-allow-thp-migration-for-cma-allocations.patch
+    
+Mike Kravetz pointed out that the second if condition could do the
+wrong thing for hugetlbfs pages, and that check really only needs
+to run on THPs.
+    
+Cleanup suggested by Vlastimil.
+  
+Thank you both!
+    
+Suggested-by: Mike Kravetz <mike.kravetz@oracle.com>
+Suggested-by: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: Rik van Riel <riel@surriel.com>
 
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 4afa13dd3738..71f78a590236 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -8274,12 +8274,12 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
+ 			struct page *head = compound_head(page);
+ 			unsigned int skip_pages;
+ 
+-			if (PageHuge(page) &&
+-			    !hugepage_migration_supported(page_hstate(head)))
+-				return page;
+-
+-			if (!PageLRU(head) && !__PageMovable(head))
++			if (PageHuge(page)) {
++				if (!hugepage_migration_supported(page_hstate(head)))
++					return page;
++			} else if (!PageLRU(head) && !__PageMovable(head)) {
+ 				return page;
++			}
+ 
+ 			skip_pages = compound_nr(head) - (page - head);
+ 			iter += skip_pages - 1;
