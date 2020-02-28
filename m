@@ -5,70 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C43FC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF1FC3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B44D2084E
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:54:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7F2C246AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:54:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="bHmAAUIs"
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="ZDU2GZES"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgB1Lyp (ORCPT
+        id S1726990AbgB1Lyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 06:54:45 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54021 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbgB1Lyn (ORCPT
+        Fri, 28 Feb 2020 06:54:51 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36364 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726907AbgB1Lyt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 06:54:43 -0500
-Received: by mail-wm1-f66.google.com with SMTP id f15so2894173wml.3
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 03:54:41 -0800 (PST)
+        Fri, 28 Feb 2020 06:54:49 -0500
+Received: by mail-wm1-f67.google.com with SMTP id g83so691894wme.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 03:54:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cloudflare.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=dVH4CZ/n/vhyeHw9aVUUIAVRq16r7bKo+J9/E7OEnjE=;
-        b=bHmAAUIs9fimdJTLzM8yQpg8MLtiKm5C2atBpZIX4EXpYn/qjemNAkmbn4PO1lbzbW
-         u92BoJOu87va2tEgUJxx5svM3xZ6VNwJKiXf2Xs19jg5RL3ZJZ5V73NLGg+61s6FmPpV
-         q597nf4pKfbAjUCSRMjyyxHi/e1CCXxS12jCc=
+        bh=HoFYtcPzLOdXmJSpnI9oxmsckwj1qwuaarNzyZTmmCM=;
+        b=ZDU2GZESxvovUnDTrwa17IAiaG7klEje07x5TEY28Qh48XCSNlRbvs7pa2sHI0usWT
+         Xyn0RPCO7yiS4rK4q2KSWPUxmf3sMRJIZACDT1TAwcGb2ET/6z6tgRKrNqkAcCBbzB6G
+         9uRoDyhgzZMosVXFPDr56sev5YtAOkHiqaPUs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=dVH4CZ/n/vhyeHw9aVUUIAVRq16r7bKo+J9/E7OEnjE=;
-        b=r1fi/2XBpo3djJd2GY6Hx/PIHKQ+qadw7RFdmjgDv4r5IzX91AgyXIBWrsckoLoNlC
-         tdSqLt5lK6NHNnf82RMJtwRMcBQzUoBKZ3R7PdDv2Ssdtts9j8uNuYqbsgMcTE333HMK
-         hri7jzKthn5kpww+EuK3RLReVCxKeODjetLRbfGjDrPBewkzXiAqMY1GOJJzj2zBtUBJ
-         ZaIrj6D9lvZE0QqNjrbobeODRRffbX9JlRTOxnmTNonM1VTCysQ/B1NtmsHcH87tXPsi
-         hA62yXXmSglJmWz1zI9exPqwb/pbSseBvBiDudFgUhofwdrbRy/d2BowDe/DVbO1Z9MM
-         j5zw==
-X-Gm-Message-State: APjAAAXzC5uM9UAveQgr2FQB2Os7zvYcS+v/8DgYsgavvwAqROfEprsh
-        rTwk3OoVPAcy65IqhvHHGhWP/g==
-X-Google-Smtp-Source: APXvYqxGKFWCi9Ja0FAVGcrXkzZsEB9M0lE0ExQgrS2WAs/PJ9wiFR4R4zT87ATQpEIFIFZ4ZsE5eQ==
-X-Received: by 2002:a05:600c:2046:: with SMTP id p6mr4288882wmg.167.1582890879464;
-        Fri, 28 Feb 2020 03:54:39 -0800 (PST)
+        bh=HoFYtcPzLOdXmJSpnI9oxmsckwj1qwuaarNzyZTmmCM=;
+        b=DLA6bllKHbQxJZngswf7Sbx0chKm7USdDtpysbgdYd1jHnbA+xKFHy86ZnSrqKwLdL
+         1DV9yey8c2+ytR6gHb5ZxU48IBIJx7fYL6MqnGy/SOH/WjvBgcHG5RHd1rZ4v0mLRE2z
+         AoZeb+ZCe6rQ4jqS/EbXCWdwbJn0NWKQ/Xz35BQPKKSPMn5FQ9R8cGc9AY9y9iT33Ewm
+         ST8HBBmYXBJw2gQPlOMm5+vxfsyDt9TG5mCIr8akWCi7ORaYLw8zV2H9KsjsbLnSzX0L
+         /UBISCrgBx2qRRbOXJ3kbCHNwm7WgNbjnrs9uxD2DSbNbDwRjnUbgApcdjlGkJW6Xqnx
+         CqZw==
+X-Gm-Message-State: APjAAAWtcRif5tSPcygJwXraCw+TwPRRvRCAfXHJ/BFIJ2281hv5ir4a
+        TDdeYgw6FFyAJd+RVdra6+UgMQ==
+X-Google-Smtp-Source: APXvYqwlltjmJMIOJUL8xle55YXZJ7drEPZLLWRp/NTeFh5QAs99+dn4VyW67C87UH6VmPAx7u/yog==
+X-Received: by 2002:a1c:7f0d:: with SMTP id a13mr4369339wmd.182.1582890885565;
+        Fri, 28 Feb 2020 03:54:45 -0800 (PST)
 Received: from antares.lan (b.2.d.a.1.b.1.b.2.c.5.e.0.3.d.4.f.f.6.2.a.5.a.7.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:7a5a:26ff:4d30:e5c2:b1b1:ad2b])
-        by smtp.gmail.com with ESMTPSA id q125sm2044284wme.19.2020.02.28.03.54.37
+        by smtp.gmail.com with ESMTPSA id q125sm2044284wme.19.2020.02.28.03.54.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 03:54:38 -0800 (PST)
+        Fri, 28 Feb 2020 03:54:45 -0800 (PST)
 From:   Lorenz Bauer <lmb@cloudflare.com>
-To:     john.fastabend@gmail.com, Daniel Borkmann <daniel@iogearbox.net>,
+To:     john.fastabend@gmail.com, Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Cc:     kernel-team@cloudflare.com, Lorenz Bauer <lmb@cloudflare.com>,
         Jakub Sitnicki <jakub@cloudflare.com>,
-        Lorenz Bauer <lmb@cloudflare.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Alexei Starovoitov <ast@kernel.org>
-Cc:     kernel-team@cloudflare.com, netdev@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
         bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH bpf-next v2 4/9] skmsg: introduce sk_psock_hooks
-Date:   Fri, 28 Feb 2020 11:53:39 +0000
-Message-Id: <20200228115344.17742-5-lmb@cloudflare.com>
+Subject: [PATCH bpf-next v2 7/9] selftests: bpf: add tests for UDP sockets in sockmap
+Date:   Fri, 28 Feb 2020 11:53:42 +0000
+Message-Id: <20200228115344.17742-8-lmb@cloudflare.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200228115344.17742-1-lmb@cloudflare.com>
 References: <20200228115344.17742-1-lmb@cloudflare.com>
@@ -79,394 +75,324 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sockmap works by overriding some of the callbacks in sk->sk_prot, while
-leaving others untouched. This means that we need access to the struct proto
-for any protocol we want to support. For IPv4 this is trivial, since both
-TCP and UDP are always compiled in. IPv6 may be disabled or compiled as a
-module, so the existing TCP sockmap hooks use some trickery to lazily
-initialize the modified struct proto for TCPv6.
+Expand the TCP sockmap test suite to also check UDP sockets.
 
-Pull this logic into a standalone struct sk_psock_hooks, so that it can be
-re-used by UDP sockmap.
-
+Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
 Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
 ---
- include/linux/skmsg.h |  36 +++++++++-----
- include/net/tcp.h     |   1 -
- net/core/skmsg.c      |  55 +++++++++++++++++++++
- net/core/sock_map.c   |  24 ++++-----
- net/ipv4/tcp_bpf.c    | 112 ++++++++++++------------------------------
- 5 files changed, 118 insertions(+), 110 deletions(-)
+ .../selftests/bpf/prog_tests/sockmap_listen.c | 157 ++++++++++++++----
+ 1 file changed, 127 insertions(+), 30 deletions(-)
 
-diff --git a/include/linux/skmsg.h b/include/linux/skmsg.h
-index c881094387db..174c76c725fb 100644
---- a/include/linux/skmsg.h
-+++ b/include/linux/skmsg.h
-@@ -109,6 +109,16 @@ struct sk_psock {
+diff --git a/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c b/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
+index 4ba41dd26d6b..52aa468bdccd 100644
+--- a/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
++++ b/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
+@@ -108,6 +108,22 @@
+ 		__ret;                                                         \
+ 	})
+ 
++#define xsend(fd, buf, len, flags)                                             \
++	({                                                                     \
++		ssize_t __ret = send((fd), (buf), (len), (flags));             \
++		if (__ret == -1)                                               \
++			FAIL_ERRNO("send");                                    \
++		__ret;                                                         \
++	})
++
++#define xrecv(fd, buf, len, flags)                                             \
++	({                                                                     \
++		ssize_t __ret = recv((fd), (buf), (len), (flags));             \
++		if (__ret == -1)                                               \
++			FAIL_ERRNO("recv");                                    \
++		__ret;                                                         \
++	})
++
+ #define xsocket(family, sotype, flags)                                         \
+ 	({                                                                     \
+ 		int __ret = socket(family, sotype, flags);                     \
+@@ -330,7 +346,7 @@ static void test_insert_bound(int family, int sotype, int mapfd)
+ 	xclose(s);
+ }
+ 
+-static void test_insert_listening(int family, int sotype, int mapfd)
++static void test_insert(int family, int sotype, int mapfd)
+ {
+ 	u64 value;
+ 	u32 key;
+@@ -467,7 +483,7 @@ static void test_lookup_32_bit_value(int family, int sotype, int mapfd)
+ 	xclose(s);
+ }
+ 
+-static void test_update_listening(int family, int sotype, int mapfd)
++static void test_update_existing(int family, int sotype, int mapfd)
+ {
+ 	int s1, s2;
+ 	u64 value;
+@@ -1116,7 +1132,7 @@ static void test_reuseport_select_listening(int family, int sotype,
+ {
+ 	struct sockaddr_storage addr;
+ 	unsigned int pass;
+-	int s, c, p, err;
++	int s, c, err;
+ 	socklen_t len;
+ 	u64 value;
+ 	u32 key;
+@@ -1145,19 +1161,33 @@ static void test_reuseport_select_listening(int family, int sotype,
+ 	if (err)
+ 		goto close_cli;
+ 
+-	p = xaccept(s, NULL, NULL);
+-	if (p < 0)
+-		goto close_cli;
++	if (sotype == SOCK_STREAM) {
++		int p;
++
++		p = xaccept(s, NULL, NULL);
++		if (p < 0)
++			goto close_cli;
++		xclose(p);
++	} else {
++		char b = 'a';
++		ssize_t n;
++
++		n = xsend(c, &b, sizeof(b), 0);
++		if (n == -1)
++			goto close_cli;
++
++		n = xrecv(s, &b, sizeof(b), 0);
++		if (n == -1)
++			goto close_cli;
++	}
+ 
+ 	key = SK_PASS;
+ 	err = xbpf_map_lookup_elem(verd_map, &key, &pass);
+ 	if (err)
+-		goto close_peer;
++		goto close_cli;
+ 	if (pass != 1)
+ 		FAIL("want pass count 1, have %d", pass);
+ 
+-close_peer:
+-	xclose(p);
+ close_cli:
+ 	xclose(c);
+ close_srv:
+@@ -1201,9 +1231,24 @@ static void test_reuseport_select_connected(int family, int sotype,
+ 	if (err)
+ 		goto close_cli0;
+ 
+-	p0 = xaccept(s, NULL, NULL);
+-	if (err)
+-		goto close_cli0;
++	if (sotype == SOCK_STREAM) {
++		p0 = xaccept(s, NULL, NULL);
++		if (p0 < 0)
++			goto close_cli0;
++	} else {
++		p0 = xsocket(family, sotype, 0);
++		if (p0 < 0)
++			goto close_cli0;
++
++		len = sizeof(addr);
++		err = xgetsockname(c0, sockaddr(&addr), &len);
++		if (err)
++			goto close_cli0;
++
++		err = xconnect(p0, sockaddr(&addr), len);
++		if (err)
++			goto close_cli0;
++	}
+ 
+ 	/* Update sock_map[0] to redirect to a connected socket */
+ 	key = 0;
+@@ -1216,8 +1261,24 @@ static void test_reuseport_select_connected(int family, int sotype,
+ 	if (c1 < 0)
+ 		goto close_peer0;
+ 
++	len = sizeof(addr);
++	err = xgetsockname(s, sockaddr(&addr), &len);
++	if (err)
++		goto close_srv;
++
+ 	errno = 0;
+ 	err = connect(c1, sockaddr(&addr), len);
++	if (sotype == SOCK_DGRAM) {
++		char b = 'a';
++		ssize_t n;
++
++		n = xsend(c1, &b, sizeof(b), 0);
++		if (n == -1)
++			goto close_cli1;
++
++		n = recv(c1, &b, sizeof(b), 0);
++		err = n == -1;
++	}
+ 	if (!err || errno != ECONNREFUSED)
+ 		FAIL_ERRNO("connect: expected ECONNREFUSED");
+ 
+@@ -1281,7 +1342,18 @@ static void test_reuseport_mixed_groups(int family, int sotype, int sock_map,
+ 		goto close_srv2;
+ 
+ 	err = connect(c, sockaddr(&addr), len);
+-	if (err && errno != ECONNREFUSED) {
++	if (sotype == SOCK_DGRAM) {
++		char b = 'a';
++		ssize_t n;
++
++		n = xsend(c, &b, sizeof(b), 0);
++		if (n == -1)
++			goto close_cli;
++
++		n = recv(c, &b, sizeof(b), 0);
++		err = n == -1;
++	}
++	if (!err || errno != ECONNREFUSED) {
+ 		FAIL_ERRNO("connect: expected ECONNREFUSED");
+ 		goto close_cli;
+ 	}
+@@ -1302,9 +1374,9 @@ static void test_reuseport_mixed_groups(int family, int sotype, int sock_map,
+ 	xclose(s1);
+ }
+ 
+-#define TEST(fn)                                                               \
++#define TEST(fn, ...)                                                          \
+ 	{                                                                      \
+-		fn, #fn                                                        \
++		fn, #fn, __VA_ARGS__                                           \
+ 	}
+ 
+ static void test_ops_cleanup(const struct bpf_map *map)
+@@ -1353,18 +1425,31 @@ static const char *map_type_str(const struct bpf_map *map)
+ 	}
+ }
+ 
++static const char *sotype_str(int sotype)
++{
++	switch (sotype) {
++	case SOCK_DGRAM:
++		return "UDP";
++	case SOCK_STREAM:
++		return "TCP";
++	default:
++		return "unknown";
++	}
++}
++
+ static void test_ops(struct test_sockmap_listen *skel, struct bpf_map *map,
+ 		     int family, int sotype)
+ {
+ 	const struct op_test {
+ 		void (*fn)(int family, int sotype, int mapfd);
+ 		const char *name;
++		int sotype;
+ 	} tests[] = {
+ 		/* insert */
+ 		TEST(test_insert_invalid),
+ 		TEST(test_insert_opened),
+-		TEST(test_insert_bound),
+-		TEST(test_insert_listening),
++		TEST(test_insert_bound, SOCK_STREAM),
++		TEST(test_insert),
+ 		/* delete */
+ 		TEST(test_delete_after_insert),
+ 		TEST(test_delete_after_close),
+@@ -1373,28 +1458,32 @@ static void test_ops(struct test_sockmap_listen *skel, struct bpf_map *map,
+ 		TEST(test_lookup_after_delete),
+ 		TEST(test_lookup_32_bit_value),
+ 		/* update */
+-		TEST(test_update_listening),
++		TEST(test_update_existing),
+ 		/* races with insert/delete */
+-		TEST(test_destroy_orphan_child),
+-		TEST(test_syn_recv_insert_delete),
+-		TEST(test_race_insert_listen),
++		TEST(test_destroy_orphan_child, SOCK_STREAM),
++		TEST(test_syn_recv_insert_delete, SOCK_STREAM),
++		TEST(test_race_insert_listen, SOCK_STREAM),
+ 		/* child clone */
+-		TEST(test_clone_after_delete),
+-		TEST(test_accept_after_delete),
+-		TEST(test_accept_before_delete),
++		TEST(test_clone_after_delete, SOCK_STREAM),
++		TEST(test_accept_after_delete, SOCK_STREAM),
++		TEST(test_accept_before_delete, SOCK_STREAM),
  	};
- };
+-	const char *family_name, *map_name;
++	const char *family_name, *map_name, *sotype_name;
+ 	const struct op_test *t;
+ 	char s[MAX_TEST_NAME];
+ 	int map_fd;
  
-+struct sk_psock_hooks {
-+	struct proto *base_ipv6;
-+	struct proto *ipv4;
-+	struct proto *ipv6;
-+	spinlock_t ipv6_lock;
-+	int (*rebuild_proto)(struct proto prot[], struct proto *base);
-+	struct proto *(*choose_proto)(struct proto prot[],
-+				      struct sk_psock *psock);
-+};
+ 	family_name = family_str(family);
+ 	map_name = map_type_str(map);
++	sotype_name = sotype_str(sotype);
+ 	map_fd = bpf_map__fd(map);
+ 
+ 	for (t = tests; t < tests + ARRAY_SIZE(tests); t++) {
+-		snprintf(s, sizeof(s), "%s %s %s", map_name, family_name,
+-			 t->name);
++		snprintf(s, sizeof(s), "%s %s %s %s", map_name, family_name,
++			 sotype_name, t->name);
 +
- int sk_msg_alloc(struct sock *sk, struct sk_msg *msg, int len,
- 		 int elem_first_coalesce);
- int sk_msg_clone(struct sock *sk, struct sk_msg *dst, struct sk_msg *src,
-@@ -335,23 +345,14 @@ static inline void sk_psock_cork_free(struct sk_psock *psock)
- 	}
- }
++		if (t->sotype != 0 && t->sotype != sotype)
++			continue;
  
--static inline void sk_psock_update_proto(struct sock *sk,
--					 struct sk_psock *psock,
--					 struct proto *ops)
--{
--	psock->saved_unhash = sk->sk_prot->unhash;
--	psock->saved_close = sk->sk_prot->close;
--	psock->saved_write_space = sk->sk_write_space;
--
--	psock->sk_proto = sk->sk_prot;
--	/* Pairs with lockless read in sk_clone_lock() */
--	WRITE_ONCE(sk->sk_prot, ops);
--}
--
- static inline void sk_psock_restore_proto(struct sock *sk,
- 					  struct sk_psock *psock)
+ 		if (!test__start_subtest(s))
+ 			continue;
+@@ -1427,6 +1516,7 @@ static void test_redir(struct test_sockmap_listen *skel, struct bpf_map *map,
+ 	for (t = tests; t < tests + ARRAY_SIZE(tests); t++) {
+ 		snprintf(s, sizeof(s), "%s %s %s", map_name, family_name,
+ 			 t->name);
++
+ 		if (!test__start_subtest(s))
+ 			continue;
+ 
+@@ -1441,26 +1531,31 @@ static void test_reuseport(struct test_sockmap_listen *skel,
+ 		void (*fn)(int family, int sotype, int socket_map,
+ 			   int verdict_map, int reuseport_prog);
+ 		const char *name;
++		int sotype;
+ 	} tests[] = {
+ 		TEST(test_reuseport_select_listening),
+ 		TEST(test_reuseport_select_connected),
+ 		TEST(test_reuseport_mixed_groups),
+ 	};
+ 	int socket_map, verdict_map, reuseport_prog;
+-	const char *family_name, *map_name;
++	const char *family_name, *map_name, *sotype_name;
+ 	const struct reuseport_test *t;
+ 	char s[MAX_TEST_NAME];
+ 
+ 	family_name = family_str(family);
+ 	map_name = map_type_str(map);
++	sotype_name = sotype_str(sotype);
+ 
+ 	socket_map = bpf_map__fd(map);
+ 	verdict_map = bpf_map__fd(skel->maps.verdict_map);
+ 	reuseport_prog = bpf_program__fd(skel->progs.prog_reuseport);
+ 
+ 	for (t = tests; t < tests + ARRAY_SIZE(tests); t++) {
+-		snprintf(s, sizeof(s), "%s %s %s", map_name, family_name,
+-			 t->name);
++		snprintf(s, sizeof(s), "%s %s %s %s", map_name, family_name,
++			 sotype_name, t->name);
++
++		if (t->sotype != 0 && t->sotype != sotype)
++			continue;
+ 
+ 		if (!test__start_subtest(s))
+ 			continue;
+@@ -1473,8 +1568,10 @@ static void run_tests(struct test_sockmap_listen *skel, struct bpf_map *map,
+ 		      int family)
  {
-+	if (!psock->sk_proto)
-+		return;
-+
- 	sk->sk_prot->unhash = psock->saved_unhash;
-+
- 	if (inet_sk(sk)->is_icsk) {
- 		tcp_update_ulp(sk, psock->sk_proto, psock->saved_write_space);
- 	} else {
-@@ -424,4 +425,13 @@ static inline void psock_progs_drop(struct sk_psock_progs *progs)
- 	psock_set_prog(&progs->skb_verdict, NULL);
+ 	test_ops(skel, map, family, SOCK_STREAM);
++	test_ops(skel, map, family, SOCK_DGRAM);
+ 	test_redir(skel, map, family, SOCK_STREAM);
+ 	test_reuseport(skel, map, family, SOCK_STREAM);
++	test_reuseport(skel, map, family, SOCK_DGRAM);
  }
  
-+static inline int sk_psock_hooks_init(struct sk_psock_hooks *hooks,
-+				       struct proto *ipv4_base)
-+{
-+	spin_lock_init(&hooks->ipv6_lock);
-+	return hooks->rebuild_proto(hooks->ipv4, ipv4_base);
-+}
-+
-+int sk_psock_hooks_install(struct sk_psock_hooks *hooks, struct sock *sk);
-+
- #endif /* _LINUX_SKMSG_H */
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index f5503b2c7bed..37f89ed7919c 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -2197,7 +2197,6 @@ struct sk_psock;
- 
- #ifdef CONFIG_BPF_STREAM_PARSER
- int tcp_bpf_init(struct sock *sk);
--void tcp_bpf_reinit(struct sock *sk);
- void tcp_bpf_clone(const struct sock *sk, struct sock *newsk);
- #else
- static inline void tcp_bpf_clone(const struct sock *sk, struct sock *newsk)
-diff --git a/net/core/skmsg.c b/net/core/skmsg.c
-index c479372f2cd2..8d46ded3b1a5 100644
---- a/net/core/skmsg.c
-+++ b/net/core/skmsg.c
-@@ -840,3 +840,58 @@ void sk_psock_stop_strp(struct sock *sk, struct sk_psock *psock)
- 	strp_stop(&parser->strp);
- 	parser->enabled = false;
- }
-+
-+static inline int sk_psock_hooks_init_ipv6(struct sk_psock_hooks *hooks,
-+					    struct proto *base)
-+{
-+	int ret = 0;
-+
-+	if (likely(base == smp_load_acquire(&hooks->base_ipv6)))
-+		return 0;
-+
-+	spin_lock_bh(&hooks->ipv6_lock);
-+	if (likely(base != hooks->base_ipv6)) {
-+		ret = hooks->rebuild_proto(hooks->ipv6, base);
-+		if (!ret)
-+			smp_store_release(&hooks->base_ipv6, base);
-+	}
-+	spin_unlock_bh(&hooks->ipv6_lock);
-+	return ret;
-+}
-+
-+int sk_psock_hooks_install(struct sk_psock_hooks *hooks, struct sock *sk)
-+{
-+	struct sk_psock *psock = sk_psock(sk);
-+	struct proto *prot_base;
-+
-+	WARN_ON_ONCE(!rcu_read_lock_held());
-+
-+	if (unlikely(!psock))
-+		return -EINVAL;
-+
-+	/* Initialize saved callbacks and original proto only once, since this
-+	 * function may be called multiple times for a psock, e.g. when
-+	 * psock->progs.msg_parser is updated.
-+	 *
-+	 * Since we've not installed the hooks, psock is not yet in use and
-+	 * we can initialize it without synchronization.
-+	 */
-+	if (!psock->sk_proto) {
-+		struct proto *prot = READ_ONCE(sk->sk_prot);
-+
-+		if (sk->sk_family == AF_INET6 &&
-+		    sk_psock_hooks_init_ipv6(hooks, prot))
-+			return -EINVAL;
-+
-+		psock->saved_unhash = prot->unhash;
-+		psock->saved_close = prot->close;
-+		psock->saved_write_space = sk->sk_write_space;
-+
-+		psock->sk_proto = prot;
-+	}
-+
-+	/* Pairs with lockless read in sk_clone_lock() */
-+	prot_base = sk->sk_family == AF_INET ? hooks->ipv4 : hooks->ipv6;
-+	WRITE_ONCE(sk->sk_prot, hooks->choose_proto(prot_base, psock));
-+	return 0;
-+}
-diff --git a/net/core/sock_map.c b/net/core/sock_map.c
-index 459b3ba16023..c84cc9fc7f6b 100644
---- a/net/core/sock_map.c
-+++ b/net/core/sock_map.c
-@@ -170,8 +170,8 @@ static int sock_map_link(struct bpf_map *map, struct sk_psock_progs *progs,
- 			 struct sock *sk)
- {
- 	struct bpf_prog *msg_parser, *skb_parser, *skb_verdict;
--	bool skb_progs, sk_psock_is_new = false;
- 	struct sk_psock *psock;
-+	bool skb_progs;
- 	int ret;
- 
- 	skb_verdict = READ_ONCE(progs->skb_verdict);
-@@ -206,9 +206,8 @@ static int sock_map_link(struct bpf_map *map, struct sk_psock_progs *progs,
- 	if (psock) {
- 		if ((msg_parser && READ_ONCE(psock->progs.msg_parser)) ||
- 		    (skb_progs  && READ_ONCE(psock->progs.skb_parser))) {
--			sk_psock_put(sk, psock);
- 			ret = -EBUSY;
--			goto out_progs;
-+			goto out_drop;
- 		}
- 	} else {
- 		psock = sk_psock_init(sk, map->numa_node);
-@@ -216,18 +215,14 @@ static int sock_map_link(struct bpf_map *map, struct sk_psock_progs *progs,
- 			ret = -ENOMEM;
- 			goto out_progs;
- 		}
--		sk_psock_is_new = true;
- 	}
- 
- 	if (msg_parser)
- 		psock_set_prog(&psock->progs.msg_parser, msg_parser);
--	if (sk_psock_is_new) {
--		ret = tcp_bpf_init(sk);
--		if (ret < 0)
--			goto out_drop;
--	} else {
--		tcp_bpf_reinit(sk);
--	}
-+
-+	ret = tcp_bpf_init(sk);
-+	if (ret < 0)
-+		goto out_drop;
- 
- 	write_lock_bh(&sk->sk_callback_lock);
- 	if (skb_progs && !psock->parser.enabled) {
-@@ -264,15 +259,14 @@ static int sock_map_link_no_progs(struct bpf_map *map, struct sock *sk)
- 	if (IS_ERR(psock))
- 		return PTR_ERR(psock);
- 
--	if (psock) {
--		tcp_bpf_reinit(sk);
--		return 0;
--	}
-+	if (psock)
-+		goto init;
- 
- 	psock = sk_psock_init(sk, map->numa_node);
- 	if (!psock)
- 		return -ENOMEM;
- 
-+init:
- 	ret = tcp_bpf_init(sk);
- 	if (ret < 0)
- 		sk_psock_put(sk, psock);
-diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
-index 3f9a50e54c1d..390717eae10e 100644
---- a/net/ipv4/tcp_bpf.c
-+++ b/net/ipv4/tcp_bpf.c
-@@ -531,25 +531,23 @@ static int tcp_bpf_sendpage(struct sock *sk, struct page *page, int offset,
- 	return copied ? copied : err;
- }
- 
--enum {
--	TCP_BPF_IPV4,
--	TCP_BPF_IPV6,
--	TCP_BPF_NUM_PROTS,
--};
--
- enum {
- 	TCP_BPF_BASE,
- 	TCP_BPF_TX,
- 	TCP_BPF_NUM_CFGS,
- };
- 
--static struct proto *tcpv6_prot_saved __read_mostly;
--static DEFINE_SPINLOCK(tcpv6_prot_lock);
--static struct proto tcp_bpf_prots[TCP_BPF_NUM_PROTS][TCP_BPF_NUM_CFGS];
--
--static void tcp_bpf_rebuild_protos(struct proto prot[TCP_BPF_NUM_CFGS],
--				   struct proto *base)
-+static int tcp_bpf_rebuild_proto(struct proto prot[], struct proto *base)
- {
-+	/* In order to avoid retpoline, we make assumptions when we call
-+	 * into ops if e.g. a psock is not present. Make sure they are
-+	 * indeed valid assumptions.
-+	 */
-+	if (base->recvmsg  != tcp_recvmsg ||
-+	    base->sendmsg  != tcp_sendmsg ||
-+	    base->sendpage != tcp_sendpage)
-+		return -ENOTSUPP;
-+
- 	prot[TCP_BPF_BASE]			= *base;
- 	prot[TCP_BPF_BASE].unhash		= sock_map_unhash;
- 	prot[TCP_BPF_BASE].close		= sock_map_close;
-@@ -559,91 +557,42 @@ static void tcp_bpf_rebuild_protos(struct proto prot[TCP_BPF_NUM_CFGS],
- 	prot[TCP_BPF_TX]			= prot[TCP_BPF_BASE];
- 	prot[TCP_BPF_TX].sendmsg		= tcp_bpf_sendmsg;
- 	prot[TCP_BPF_TX].sendpage		= tcp_bpf_sendpage;
--}
--
--static void tcp_bpf_check_v6_needs_rebuild(struct sock *sk, struct proto *ops)
--{
--	if (sk->sk_family == AF_INET6 &&
--	    unlikely(ops != smp_load_acquire(&tcpv6_prot_saved))) {
--		spin_lock_bh(&tcpv6_prot_lock);
--		if (likely(ops != tcpv6_prot_saved)) {
--			tcp_bpf_rebuild_protos(tcp_bpf_prots[TCP_BPF_IPV6], ops);
--			smp_store_release(&tcpv6_prot_saved, ops);
--		}
--		spin_unlock_bh(&tcpv6_prot_lock);
--	}
--}
--
--static int __init tcp_bpf_v4_build_proto(void)
--{
--	tcp_bpf_rebuild_protos(tcp_bpf_prots[TCP_BPF_IPV4], &tcp_prot);
- 	return 0;
- }
--core_initcall(tcp_bpf_v4_build_proto);
- 
--static void tcp_bpf_update_sk_prot(struct sock *sk, struct sk_psock *psock)
-+static struct proto *tcp_bpf_choose_proto(struct proto prot[],
-+					  struct sk_psock *psock)
- {
--	int family = sk->sk_family == AF_INET6 ? TCP_BPF_IPV6 : TCP_BPF_IPV4;
--	int config = psock->progs.msg_parser   ? TCP_BPF_TX   : TCP_BPF_BASE;
-+	int config = psock->progs.msg_parser ? TCP_BPF_TX : TCP_BPF_BASE;
- 
--	sk_psock_update_proto(sk, psock, &tcp_bpf_prots[family][config]);
-+	return &prot[config];
- }
- 
--static void tcp_bpf_reinit_sk_prot(struct sock *sk, struct sk_psock *psock)
--{
--	int family = sk->sk_family == AF_INET6 ? TCP_BPF_IPV6 : TCP_BPF_IPV4;
--	int config = psock->progs.msg_parser   ? TCP_BPF_TX   : TCP_BPF_BASE;
--
--	/* Reinit occurs when program types change e.g. TCP_BPF_TX is removed
--	 * or added requiring sk_prot hook updates. We keep original saved
--	 * hooks in this case.
--	 *
--	 * Pairs with lockless read in sk_clone_lock().
--	 */
--	WRITE_ONCE(sk->sk_prot, &tcp_bpf_prots[family][config]);
--}
--
--static int tcp_bpf_assert_proto_ops(struct proto *ops)
--{
--	/* In order to avoid retpoline, we make assumptions when we call
--	 * into ops if e.g. a psock is not present. Make sure they are
--	 * indeed valid assumptions.
--	 */
--	return ops->recvmsg  == tcp_recvmsg &&
--	       ops->sendmsg  == tcp_sendmsg &&
--	       ops->sendpage == tcp_sendpage ? 0 : -ENOTSUPP;
--}
-+static struct proto tcp_bpf_ipv4[TCP_BPF_NUM_CFGS];
-+static struct proto tcp_bpf_ipv6[TCP_BPF_NUM_CFGS];
-+static struct sk_psock_hooks tcp_bpf_hooks __read_mostly = {
-+	.ipv4 = &tcp_bpf_ipv4[0],
-+	.ipv6 = &tcp_bpf_ipv6[0],
-+	.rebuild_proto = tcp_bpf_rebuild_proto,
-+	.choose_proto = tcp_bpf_choose_proto,
-+};
- 
--void tcp_bpf_reinit(struct sock *sk)
-+static int __init tcp_bpf_init_psock_hooks(void)
- {
--	struct sk_psock *psock;
--
--	sock_owned_by_me(sk);
--
--	rcu_read_lock();
--	psock = sk_psock(sk);
--	tcp_bpf_reinit_sk_prot(sk, psock);
--	rcu_read_unlock();
-+	return sk_psock_hooks_init(&tcp_bpf_hooks, &tcp_prot);
- }
-+core_initcall(tcp_bpf_init_psock_hooks);
- 
- int tcp_bpf_init(struct sock *sk)
- {
--	struct proto *ops = READ_ONCE(sk->sk_prot);
--	struct sk_psock *psock;
-+	int ret;
- 
- 	sock_owned_by_me(sk);
- 
- 	rcu_read_lock();
--	psock = sk_psock(sk);
--	if (unlikely(!psock || psock->sk_proto ||
--		     tcp_bpf_assert_proto_ops(ops))) {
--		rcu_read_unlock();
--		return -EINVAL;
--	}
--	tcp_bpf_check_v6_needs_rebuild(sk, ops);
--	tcp_bpf_update_sk_prot(sk, psock);
-+	ret = sk_psock_hooks_install(&tcp_bpf_hooks, sk);
- 	rcu_read_unlock();
--	return 0;
-+	return ret;
- }
- 
- /* If a child got cloned from a listening socket that had tcp_bpf
-@@ -653,10 +602,11 @@ int tcp_bpf_init(struct sock *sk)
-  */
- void tcp_bpf_clone(const struct sock *sk, struct sock *newsk)
- {
--	int family = sk->sk_family == AF_INET6 ? TCP_BPF_IPV6 : TCP_BPF_IPV4;
- 	struct proto *prot = newsk->sk_prot;
- 
--	if (prot == &tcp_bpf_prots[family][TCP_BPF_BASE])
-+	/* TCP_LISTEN can only use TCP_BPF_BASE, so this is safe */
-+	if (unlikely(prot == &tcp_bpf_ipv4[TCP_BPF_BASE] ||
-+		     prot == &tcp_bpf_ipv6[TCP_BPF_BASE]))
- 		newsk->sk_prot = sk->sk_prot_creator;
- }
- #endif /* CONFIG_BPF_STREAM_PARSER */
+ void test_sockmap_listen(void)
 -- 
 2.20.1
 
