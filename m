@@ -2,92 +2,88 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 412C4C3F2D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABF7C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A3C724692
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:34:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Bd791Ixi"
+	by mail.kernel.org (Postfix) with ESMTP id CD683246A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:35:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582860924;
+	bh=bj1WrnSQVnFoIj3k8BTk2xhWVva1ZbWMO1HNMcVAvFw=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=uNArfTv9rL6UGFgoH1C65ebvclgTMbVFHZj/aIycwbc9H6dyCxKkBGDh6F5MznNag
+	 14YrkMFo+0vvCUchfG2UdWxf1paToxdcMHt0+YjbvzCB0VbaBhJIOD02JMjdkaNZgB
+	 AeXfNl3LfPMv/++tZpGqAg6lQkIzUgY29FhiAzo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730748AbgB1DeU (ORCPT
+        id S1730794AbgB1DfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 22:34:20 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:41658 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730638AbgB1DeT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 22:34:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=8ohWsBNybdoUlsH9268dif1L9MEaj5QT7JAO8j1ggLc=; b=Bd791Ixini1pwewoL2V9vEiHTl
-        xbdtRGLm8B+bBqUJvH8F9vnusQAImUKO3DvyUVsUFB5at16CO4xiM2a16YujtnqTUV6fBuQwDqsJg
-        vbXEKlTxmXsD2dAMAl3yqiO7rQdvBMSeltt79eRQgjkE+o0DPBieLMdG6WLVt5NArdeChc4o5ix9k
-        7/fEAVGXho0E/oWy5es6qshWghH/Yy7ggoSNr2UyTQj8JRSBBoVvpVFGQiGezil6RA4OuH0KLiiBX
-        7puBjkRprI2OixIexMypB1eRkx67+XRiHaLYqnMiDXYp9tDCGOXpCiSNxV4H7DNJCUByG2zLRY/aS
-        vPHSUE1w==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j7WPk-0003d7-Dn; Fri, 28 Feb 2020 03:34:12 +0000
-Date:   Thu, 27 Feb 2020 19:34:12 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Ian Kent <raven@themaw.net>
-Cc:     Andreas Dilger <adilger@dilger.ca>,
-        Waiman Long <longman@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-doc@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Eric Biggers <ebiggers@google.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Eric Sandeen <sandeen@redhat.com>
-Subject: Re: [PATCH 00/11] fs/dcache: Limit # of negative dentries
-Message-ID: <20200228033412.GD29971@bombadil.infradead.org>
-References: <20200226161404.14136-1-longman@redhat.com>
- <20200226162954.GC24185@bombadil.infradead.org>
- <2EDB6FFC-C649-4C80-999B-945678F5CE87@dilger.ca>
- <9d7b76c32d09492137a253e692624856388693db.camel@themaw.net>
+        Thu, 27 Feb 2020 22:35:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37718 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730630AbgB1DfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 22:35:23 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E37D20665;
+        Fri, 28 Feb 2020 03:35:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582860923;
+        bh=bj1WrnSQVnFoIj3k8BTk2xhWVva1ZbWMO1HNMcVAvFw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=M03vmg4smuyU8J07MbTZ6ELPYfx+zr11c3bSUnsYRiTS/7rIMux8Hqt4lKXM1ggUS
+         Q7jHukr/dzVNGNE8ytFcd3yE4exnvN3dDHyCO/rLpJW7DhSpCp+NFMMS61kKmLxyPr
+         L2L/PS7+99mqU+MznwEVD+h6VLojU7Xnb6eveGuI=
+Subject: Re: [PATCH 5.5 000/150] 5.5.7-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200227132232.815448360@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <e1772ba8-f03a-4423-b41c-ca54e85ad7e2@kernel.org>
+Date:   Thu, 27 Feb 2020 20:35:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9d7b76c32d09492137a253e692624856388693db.camel@themaw.net>
+In-Reply-To: <20200227132232.815448360@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 05:55:43PM +0800, Ian Kent wrote:
-> Not all file systems even produce negative hashed dentries.
+On 2/27/20 6:35 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.5.7 release.
+> There are 150 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> The most beneficial use of them is to improve performance of rapid
-> fire lookups for non-existent names. Longer lived negative hashed
-> dentries don't give much benefit at all unless they suddenly have
-> lots of hits and that would cost a single allocation on the first
-> lookup if the dentry ttl expired and the dentry discarded.
+> Responses should be made by Sat, 29 Feb 2020 13:21:24 +0000.
+> Anything received after that time might be too late.
 > 
-> A ttl (say jiffies) set at appropriate times could be a better
-> choice all round, no sysctl values at all.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.7-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-The canonical argument in favour of negative dentries is to improve
-application startup time as every application searches the library path
-for the same libraries.  Only they don't do that any more:
+Compiled and booted on my test system. No dmesg regressions.
 
-$ strace -e file cat /dev/null
-execve("/bin/cat", ["cat", "/dev/null"], 0x7ffd5f7ddda8 /* 44 vars */) = 0
-access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
-openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
-openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
-openat(AT_FDCWD, "/usr/lib/locale/locale-archive", O_RDONLY|O_CLOEXEC) = 3
-openat(AT_FDCWD, "/dev/null", O_RDONLY) = 3
+thanks,
+-- Shuah
 
-So, are they still useful?  Or should we, say, keep at most 100 around?
