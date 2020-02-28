@@ -2,108 +2,80 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD728C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E82C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B2FE246AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:14:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 852A42469C
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:14:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kh0IHMIo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="XvmPksJe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgB1XOP (ORCPT
+        id S1726998AbgB1XOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 18:14:15 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40898 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbgB1XON (ORCPT
+        Fri, 28 Feb 2020 18:14:46 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:34064 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbgB1XOp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 18:14:13 -0500
-Received: by mail-lj1-f193.google.com with SMTP id 143so5151364ljj.7
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 15:14:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RCFPQwGCfT36oBbvj50m2uhGBMYQU9mYzXWYujIs4Hg=;
-        b=kh0IHMIo5od/nculv7hDPQMJFWDqd7L2ggdxa28vc2GbDL11KjY3AP7gBaaHvdYvgU
-         ItJO0bOTaDyfOHKp6uuqoFuFDP+l83ZahPqIzY5/M6W8PgfmRtSng2UPsbV3zPSlusy7
-         B2toKtW0M3bWb46BQIFEaYRuUSXStlOcIhjKByteCrDb4nRKYoAx2jYbOv5sLn3rHso7
-         hLP7/bXCPT5nQTRx2MH+kHumisUwTDrS0qlR11C9lg+SvO6Vrk9FD26ExX3LlTrs0sHA
-         w2EaYNYlEJr+G4zOl/vhjPaQ0qolNI0xoE5Ur5X5P37dbUdZcQh1aMo2P0k8A/3veynn
-         jpoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RCFPQwGCfT36oBbvj50m2uhGBMYQU9mYzXWYujIs4Hg=;
-        b=Btq9mnWGAyZBTYcGxE+mfHfct4DvKbJYypq4FLDTnEUSW4VDUKu2wQz2Ui331q407O
-         yvD5ZuMU6s0p91DdgvJaioEtdCjBBAQmSwmZ3gH+xZyozbVrH2L1CYqqsdmjDp2BRSMU
-         uHaIX5P3mWPUraeR70h/JpxHb5LwL5G6HzSZObCbSSmCc892oPpfAP1/lY+GQrxwzSW/
-         BDUc6Qa+uWttmremOpccwI9a00HiMOTL6tIuDmyEcrt57Tdev9QrpFW3diZ2GcpOex2x
-         bzzjjUW3RfObfHc4SG9a8YoElFBqtDKC1U5SHxbC2TfPdkgtMh6dtdhDo2CQpMp68Slu
-         In3w==
-X-Gm-Message-State: ANhLgQ2ZGDkqLX+XbgIlddwuN0VNHd2m3OTQ8rY+J+TLa9iwKbDkUl1Y
-        wRQL+oTjn+FSaCh3WvCapthU7I5rA9vg3iDq3d/NaQ==
-X-Google-Smtp-Source: ADFU+vt57HUFay7Zyzi0sUqoX3MQ7XhyigC8Oy5ud//G8IeLLctZCnZPrRZW+5/WocYm1DlW4ITeot6fjbHBh7PuDu0=
-X-Received: by 2002:a05:651c:2c7:: with SMTP id f7mr4222255ljo.125.1582931651687;
- Fri, 28 Feb 2020 15:14:11 -0800 (PST)
+        Fri, 28 Feb 2020 18:14:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=8pDsHz6RetCNui6JYWKr66Fx8NY1FuyyASaCfvg/lxg=; b=XvmPksJeCDRXQQ5cf5W6h+Oyq
+        07ckpCnqKtXSeEZHq0eDZjLkdffizLd1S1gB8DyrRI+E7yTcx29QP5VTQqjOhsXngaXGCncZj7FCU
+        GV9Uj6UZvOljifCkTCmiGkq5WEKu+tQcukwSjaT6xeJVNwyIGSS3zGpwYwAZzWZ9y7MjlkRYkKC+x
+        NT19YcagLlX7y/IukSvsABe8EeZr3xuT3uNFWvFDi+CXmQR0dS65zJ6i5vCq4JO8KZwRnNhSLCvIc
+        F+9VR5aYhdF3Wpe7F2kuCzk6ZsSbhkSIVYZamt0gFxkagG/n1sNUSJs2o6kZ3fNP+/sbqhjGNdahW
+        Ez8iyOR+g==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:58244)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1j7oq3-0006ca-Vk; Fri, 28 Feb 2020 23:14:36 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1j7oq1-0002N1-7N; Fri, 28 Feb 2020 23:14:33 +0000
+Date:   Fri, 28 Feb 2020 23:14:33 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Chris Snook <chris.snook@gmail.com>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        Vivien Didelot <vivien.didelot@gmail.com>
+Subject: Re: [PATCH v9] net: ag71xx: port to phylink
+Message-ID: <20200228231433.GW25745@shell.armlinux.org.uk>
+References: <20200228145049.17602-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-References: <cover.1582647809.git.Asmaa@mellanox.com> <7ef84476a00e8771cf1edf5745c378273b760f5d.1582647809.git.Asmaa@mellanox.com>
- <DB6PR0501MB27121431EA6DCCB476B73F1DDAED0@DB6PR0501MB2712.eurprd05.prod.outlook.com>
-In-Reply-To: <DB6PR0501MB27121431EA6DCCB476B73F1DDAED0@DB6PR0501MB2712.eurprd05.prod.outlook.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 29 Feb 2020 00:14:00 +0100
-Message-ID: <CACRpkdZhs=ZYkcYb5bNqK_ayWEVk9=J0w--ELW-vcvoSvG9cxg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] gpio: add driver for Mellanox BlueField 2 GPIO controller
-To:     Asmaa Mnebhi <Asmaa@mellanox.com>
-Cc:     "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228145049.17602-1-o.rempel@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 5:42 PM Asmaa Mnebhi <Asmaa@mellanox.com> wrote:
+On Fri, Feb 28, 2020 at 03:50:49PM +0100, Oleksij Rempel wrote:
+> The port to phylink was done as close as possible to initial
+> functionality.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
-> I have addressed your comments and tested the code. Please note
->  that the YU_ARM_GPIO_LOCK is a shared resource between the 3
->  gpio blocks instances.
-> So now that we have split up the gpio_chip into 3 instances, we need to share
->  that LOCK resource accordingly. I have created a global variable for that purpose.
+Looks fine from a phylink point of view now, thanks.
 
-Fair enough, all looks so much nicer now :)
+Acked-by: Russell King <rmk+kernel@armlinux.org.uk>
 
-This:
-
-+       /*
-+        * Although the arm_gpio_lock was set in the probe function,
-+        * check again it is still enabled to be able to write to the
-+        * ModeX registers.
-+        */
-+       spin_lock(&gs->gc.bgpio_lock);
-+       ret = mlxbf2_gpio_lock_acquire();
-+       if (ret < 0) {
-+               spin_unlock(&gs->gc.bgpio_lock);
-+               return ret;
-+       }
-
-Is open-coded in two places, please create a helper function for this
-or just merge it into mlbx2_gpio_lock_acquire() since it is done all the
-time when that is called.
-
-> Also note, that although it is not supported in this driver at the moment, some
-> gpio interrupt registers will be similar to that LOCK i.e. they are shared among
-> the  3 gpio block instances.
-
-It's a good start like this.
-The robot complains about devm_ioremap_nocache
-which is now deleted, use devm_ioremap() simply, they are
-all write-through.
-
-Yours,
-Linus Walleij
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
