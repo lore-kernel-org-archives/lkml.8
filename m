@@ -2,116 +2,113 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF99C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1B8C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2313D2072A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FBDB2072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:00:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dM53bfJA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gWkmDDpO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbgB1O7w (ORCPT
+        id S1727210AbgB1PAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 09:59:52 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55525 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727154AbgB1O7t (ORCPT
+        Fri, 28 Feb 2020 10:00:09 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:43770 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbgB1PAJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 09:59:49 -0500
-Received: by mail-wm1-f66.google.com with SMTP id q9so3471288wmj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 06:59:48 -0800 (PST)
+        Fri, 28 Feb 2020 10:00:09 -0500
+Received: by mail-qv1-f65.google.com with SMTP id p2so1443000qvo.10
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 07:00:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=M5EizECLIpIUfC0QN1DsU3CZsuQMZC0Kr0ghGHK94gY=;
-        b=dM53bfJArZO9qb5NtLhcf9fc9MxXTPGgqO3tpgopcYReBgUho5eqi1N4rMXS9hsPIO
-         bbkpxg0yo51Fvf4BwzAb4CfC2sD63X2WtvYWPLv7cWyQJCSog1KpwF/phVOuKjfH99JJ
-         si+flQaseTvCB76w9gaIft838bkEKFINaKQPDPUJqbRvPBdgdGK4dq3u9k7rwTn2eefk
-         +8h1z3G9nTC219sIi3SczvSOuhixetoUyuZS3is+6yOodcVIRq0cvQOlyKQkOqHjExts
-         cesC9CkNqVWYffLyDEpvK9r+ytutG+WzBm0nWlZm9LOR53/lp5I+OvPt7g2WJhONK3WZ
-         i+kg==
+        d=gmail.com; s=20161025;
+        h=date:user-agent:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:from:message-id;
+        bh=r5uJ0wc4GP6HMgk5dq1KYlyGtIduf4ShNQhhfVhz1nE=;
+        b=gWkmDDpOSlkv9Ic9GMdNfELw4HMWqoAsExS08gBqTziNlHzRr5xfESyYkvcspSpEsH
+         +WN/rsdiA/knyr+7z71BuvlUx9lQR39NtdirexnJZiQ723aAbeKIgpk8xBulOMe+rdJ0
+         +y6X8saQMXHosfXCVxocBqKrlF+xj8gxUnZupqX2dIk0B0TMcWct/XBCEe/jBquZXBrP
+         1sp9caUxOI2hETLUiLk/8KLThCmMfc4nyM3PppNrSWQW518xCpPdrIAyFYn8cePXR5AF
+         uGUyo5/F0/RjiWGirZyPPSToUb3nUSm8RujndM9+nLH6r9i5UWFDzYpxCU2EC7VlHP0K
+         jTmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=M5EizECLIpIUfC0QN1DsU3CZsuQMZC0Kr0ghGHK94gY=;
-        b=WNgT2pSYy9eJ5+lmkGDQ2/q+eQDfOQlrBo0gmP0khcLGZ0Vd0EwLKlV44KAG2qVG00
-         iUOvuTb4ckoz7cLswPYOVBlgafz0v77gTOZekKD6LdZ+Ty6YnjZ4VNyBGSCEa5gPvQKc
-         9FRn9TCNiTyRCLCyC+2AjCR3q0cA2GX6/Ht+u/+3c+RLgQYVTFmzBVnHbECdJRJayXpX
-         WP0tIdob9J0g6+yD9QmlZYfrROHSmE8dPThTLm83DjjJrrsqMxUOi4n9d+YdcKrSQNg6
-         Gs5NoSjmA3f92oyTH+E4qDAzBEkTsVyP6G6y9HTpuQZkWRqtV4H8Ulq7WISqRd3v5LGP
-         PByg==
-X-Gm-Message-State: APjAAAVGXRwj3CNQTKU10V6iHEethYnGbKbiJiYGQTcrHfKJKkclvaER
-        nSYoDe4std74nfUMugNcqW07hNemU1g=
-X-Google-Smtp-Source: APXvYqxjbt3ytt/Dr/1YIZdifDKh3nOAVB9e7+Uemwzlc/bYGS1B9wcC4muJfMkxNQXqLI4fVgr6sA==
-X-Received: by 2002:a1c:1d06:: with SMTP id d6mr4888765wmd.99.1582901988027;
-        Fri, 28 Feb 2020 06:59:48 -0800 (PST)
-Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id n3sm2659348wmc.27.2020.02.28.06.59.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 28 Feb 2020 06:59:47 -0800 (PST)
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-To:     linux-pm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, georgi.djakov@linaro.org,
-        evgreen@chromium.org, bjorn.andersson@linaro.org
-Subject: [PATCH] interconnect: Mark all dummy functions as static inline
-Date:   Fri, 28 Feb 2020 16:59:45 +0200
-Message-Id: <20200228145945.13579-1-georgi.djakov@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=r5uJ0wc4GP6HMgk5dq1KYlyGtIduf4ShNQhhfVhz1nE=;
+        b=dZEGbeoZnJZVronyl8VLj+u5oaLB9l1/Qy2Od2hdgXIk85bYtJVA8PXgI0B+nvHrPk
+         Z4XbnFNNRR2UHp9/s0xYt9KQg19kh1xb6oEaMqI5N20Dc4ppqRaLlT+pTDA1W3tp0Ki9
+         EfJzXSd/3m9OM9KEsBdSb1zTg1GKqBeiB2NCuZ64+ElAaHY4fKNbLhrfJcyE+i2ddJpg
+         e1H1Np40gVtmfLe4QjVdTCMx+38iONBb50IlOahBSyETdxOXEGUV9ecyE/tlkNHrFTQt
+         INFSfZx/yIsOLa2JZZN9TrRwVmrKVKflf98a+JHDdjFBSqhupr8LcTMvChOWX+2oB7pR
+         xr4g==
+X-Gm-Message-State: APjAAAWQAU2z5E0ux2OvmlHlMyySP7gY8CHxWf9nDugOCNy7Gx1sVGcn
+        euSXb1dXlvlVvQVrNHDQCzU=
+X-Google-Smtp-Source: APXvYqyH2Xyw/iwda4WHtfv9SDFijySfjhvKt9+TST9YSBEW2aUTZNcPLrRfdAec9u6JTx1X0AfPyA==
+X-Received: by 2002:ad4:580e:: with SMTP id dd14mr4143382qvb.84.1582902006795;
+        Fri, 28 Feb 2020 07:00:06 -0800 (PST)
+Received: from [192.168.0.76] (177.206.220.193.dynamic.adsl.gvt.net.br. [177.206.220.193])
+        by smtp.gmail.com with ESMTPSA id r37sm5109037qtj.44.2020.02.28.07.00.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 28 Feb 2020 07:00:06 -0800 (PST)
+Date:   Fri, 28 Feb 2020 11:59:56 -0300
+User-Agent: K-9 Mail for Android
+In-Reply-To: <3fa6d985-1401-d767-a4bc-ce0efc420429@linux.ibm.com>
+References: <20200204045233.474937-1-ravi.bangoria@linux.ibm.com> <20200206190412.GD1669706@krava> <20200227141110.GF10761@kernel.org> <3fa6d985-1401-d767-a4bc-ce0efc420429@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 0/6] perf annotate: Misc fixes / improvements
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+CC:     Jiri Olsa <jolsa@redhat.com>, namhyung@kernel.org,
+        irogers@google.com, songliubraving@fb.com, yao.jin@linux.intel.com,
+        linux-kernel@vger.kernel.org
+From:   Arnaldo Melo <arnaldo.melo@gmail.com>
+Message-ID: <11A3D3E8-133A-4235-856C-D8C3C1400264@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are a few dummy stub functions that are not marked as static inline
-yet. Currently this header file is not included in any other file outside
-of drivers/interconnect/, but that might not be the case in the future.
-If this file gets included and the framework is disabled, we will be see
-warnings. Let's fix this in advance.
 
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
- include/linux/interconnect-provider.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/interconnect-provider.h b/include/linux/interconnect-provider.h
-index 0c494534b4d3..5b64e267bfb3 100644
---- a/include/linux/interconnect-provider.h
-+++ b/include/linux/interconnect-provider.h
-@@ -117,7 +117,7 @@ static inline struct icc_node *icc_node_create(int id)
- 	return ERR_PTR(-ENOTSUPP);
- }
- 
--void icc_node_destroy(int id)
-+static inline void icc_node_destroy(int id)
- {
- }
- 
-@@ -126,16 +126,16 @@ static inline int icc_link_create(struct icc_node *node, const int dst_id)
- 	return -ENOTSUPP;
- }
- 
--int icc_link_destroy(struct icc_node *src, struct icc_node *dst)
-+static inline int icc_link_destroy(struct icc_node *src, struct icc_node *dst)
- {
- 	return -ENOTSUPP;
- }
- 
--void icc_node_add(struct icc_node *node, struct icc_provider *provider)
-+static inline void icc_node_add(struct icc_node *node, struct icc_provider *provider)
- {
- }
- 
--void icc_node_del(struct icc_node *node)
-+static inline void icc_node_del(struct icc_node *node)
- {
- }
- 
+On February 28, 2020 11:42:27 AM GMT-03:00, Ravi Bangoria <ravi=2Ebangoria=
+@linux=2Eibm=2Ecom> wrote:
+>
+>
+>On 2/27/20 7:41 PM, Arnaldo Carvalho de Melo wrote:
+>> Em Thu, Feb 06, 2020 at 08:04:12PM +0100, Jiri Olsa escreveu:
+>>> On Tue, Feb 04, 2020 at 10:22:27AM +0530, Ravi Bangoria wrote:
+>>>> Few fixes / improvements related to perf annotate=2E
+>>>>
+>>>> v2:
+>https://lore=2Ekernel=2Eorg/r/20200124080432=2E8065-1-ravi=2Ebangoria@lin=
+ux=2Eibm=2Ecom
+>>>>
+>>>> v2->v3:
+>>>>   - [PATCH v3 2/6] New function annotation_line__exit() to clear
+>>>>     annotation_line objects=2E
+>>>
+>>> Acked-by: Jiri Olsa <jolsa@redhat=2Ecom>
+>>=20
+>> Thanks applied the series to perf/urgent as it contains a fix=2E
+>
+>Thanks Arnaldo=2E I don't see patch #5 and #6 in perf/urgent=2E You misse=
+d
+>them?
+>Or didn't consider for perf/urgent :) ?
+=20
+Yep
+
+>
+>Ravi
+
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
