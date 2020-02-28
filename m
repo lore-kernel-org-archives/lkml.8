@@ -2,46 +2,67 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B91C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C7CC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88DBC246A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69C7C246AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:54:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sov6ePTi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgB1Wwu (ORCPT
+        id S1726720AbgB1WyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 17:52:50 -0500
-Received: from mga01.intel.com ([192.55.52.88]:64083 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726277AbgB1Wwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 17:52:42 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 14:52:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,497,1574150400"; 
-   d="scan'208";a="439387486"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga006.fm.intel.com with ESMTP; 28 Feb 2020 14:52:42 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        Fri, 28 Feb 2020 17:54:07 -0500
+Received: from mail-wm1-f51.google.com ([209.85.128.51]:52498 "EHLO
+        mail-wm1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbgB1WyH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 17:54:07 -0500
+Received: by mail-wm1-f51.google.com with SMTP id p9so5096206wmc.2;
+        Fri, 28 Feb 2020 14:54:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UboDU9Ej5tW2nx/yEIvaM0e2XXSDSBexpcQy2rl6/ZY=;
+        b=sov6ePTi4iwbWlheqBYFidwE8Fh+EVBEm2mEGjkOuZsVQtQ/ED2kDFkLiY3eoWj0GK
+         pZVeMwxbyJPBiPfVc26P5M2Ql5L69+h+pkY8IO4jSRVhIil34fS17Xa27QkFSjdfO7j+
+         x7z6TRbSLqBI+p6mQRyPaZZVYgD+kzqFr+4t8v45DXd0k5QbqOfYBVn1t7B6GIdzw1g2
+         zSc/oYgVJ1cy9DlyAF+BmYjBRGC3nftMgA8mMsaSdnA0VTpcCGjzYRWk8fIV4+Ro1Kcj
+         GI/nNiyca6uN5LOEYV+sVCQUiTWCpadg5XZbb3wlst1iYzmj7ij4GXImV3uS+UAv9S8Y
+         vfdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UboDU9Ej5tW2nx/yEIvaM0e2XXSDSBexpcQy2rl6/ZY=;
+        b=UfVRBB6Q0J2Rl6+cSdbGEwAnWbfL81ZvoQV4t3ORtt0Hq18gyeEF1BkSNvGr6Os9Hg
+         g1ibVquAwz7ikWIYGj+3LLcDOTRH1GOR7LRC/XNqiCdeBH0X7pj47120+A2mesA8iJyn
+         3nPgY3HD6exDSNJyDz6BRJ0mpYIdN/g4KK2nh831XY/fN1z53hpUIyWx/Yb3YY8SH1sg
+         7sGTCdtJqTzC0CpEsP3tkXAbP0C/OTxR32Ai9JA9vN4cRZ42Q9OmIRoLx0Z1wJmCBd+0
+         2q98sO0Pw/0IF5r2T/5gTDdCevg2xsTYE/Loxj0m4QIaQq7BROKYxa7mx9LUH/n4F4Fc
+         Pz/Q==
+X-Gm-Message-State: APjAAAVmBbygcPpEFTFqhv4nCWnxoHacpnLTeKkuylOAv14/PMOmqwRN
+        nT0Jt77qLCUQvVpgvMLn00T8TTjk
+X-Google-Smtp-Source: APXvYqyFcdRsSZAGuSTp3co+jN4UFYaw4G4x2fTqCXTrEQnEw5LK+dwElUwaHYRMNYJx9GRbNHTYqQ==
+X-Received: by 2002:a05:600c:114d:: with SMTP id z13mr6670849wmz.105.1582930445580;
+        Fri, 28 Feb 2020 14:54:05 -0800 (PST)
+Received: from localhost.localdomain ([109.126.130.242])
+        by smtp.gmail.com with ESMTPSA id f1sm14603773wro.85.2020.02.28.14.54.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 14:54:05 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] KVM: x86/mmu: Ignore guest CR3 on fast root switch for direct MMU
-Date:   Fri, 28 Feb 2020 14:52:39 -0800
-Message-Id: <20200228225240.8646-2-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200228225240.8646-1-sean.j.christopherson@intel.com>
-References: <20200228225240.8646-1-sean.j.christopherson@intel.com>
+Subject: [PATCH 0/5] return nxt propagation within io-wq ctx
+Date:   Sat, 29 Feb 2020 01:53:06 +0300
+Message-Id: <cover.1582929017.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -49,45 +70,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ignore the guest's CR3 when looking for a cached root for a direct MMU,
-the guest's CR3 has no impact on the direct MMU's shadow pages (the
-role check ensures compatibility with CR0.WP, etc...).
+After io_put_req_find_next() was patched, handlers no more return
+next work, but enqueue them through io_queue_async_work() (mostly
+by io_put_work() -> io_put_req()). The patchset fixes that.
 
-Zero out root_cr3 when allocating the direct roots to make it clear that
-it's ignored.
+Patches 1-2 clean up and removes all futile attempts to get nxt from
+the opcode handlers. The 3rd one moves all this propagation idea into
+work->put_work(). And the rest ones are small clean up on top.
 
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/mmu/mmu.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+Pavel Begunkov (5):
+  io_uring: remove @nxt from the handlers
+  io_uring/io-wq: pass *work instead of **workptr
+  io_uring/io-wq: allow put_work return next work
+  io_uring: remove extra nxt check after punt
+  io_uring: remove io_prep_next_work()
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index c4e0b97f82ac..9d617b9dc78f 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -3730,7 +3730,9 @@ static int mmu_alloc_direct_roots(struct kvm_vcpu *vcpu)
- 		vcpu->arch.mmu->root_hpa = __pa(vcpu->arch.mmu->pae_root);
- 	} else
- 		BUG();
--	vcpu->arch.mmu->root_cr3 = vcpu->arch.mmu->get_cr3(vcpu);
-+
-+	/* root_cr3 is ignored for direct MMUs. */
-+	vcpu->arch.mmu->root_cr3 = 0;
- 
- 	return 0;
- }
-@@ -4272,8 +4274,8 @@ static bool cached_root_available(struct kvm_vcpu *vcpu, gpa_t new_cr3,
- 	for (i = 0; i < KVM_MMU_NUM_PREV_ROOTS; i++) {
- 		swap(root, mmu->prev_roots[i]);
- 
--		if (new_cr3 == root.cr3 && VALID_PAGE(root.hpa) &&
--		    page_header(root.hpa) != NULL &&
-+		if ((new_role.direct || new_cr3 == root.cr3) &&
-+		    VALID_PAGE(root.hpa) && page_header(root.hpa) &&
- 		    new_role.word == page_header(root.hpa)->role.word)
- 			break;
- 	}
+ fs/io-wq.c    |  28 ++---
+ fs/io-wq.h    |   4 +-
+ fs/io_uring.c | 334 ++++++++++++++++++++------------------------------
+ 3 files changed, 146 insertions(+), 220 deletions(-)
+
 -- 
-2.24.1
+2.24.0
 
