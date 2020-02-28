@@ -6,164 +6,65 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B7FC3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 07:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F93DC3F2CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 07:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84DF92467B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 07:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDF392467B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 07:54:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgB1HyV (ORCPT
+        id S1727080AbgB1Hy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 02:54:21 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30062 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726860AbgB1HyU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 02:54:20 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01S7nmS0063161
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 02:54:19 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yepy24n4h-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 02:54:19 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Fri, 28 Feb 2020 07:54:15 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 28 Feb 2020 07:54:12 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01S7sBLS54132926
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Feb 2020 07:54:11 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 65121A4065;
-        Fri, 28 Feb 2020 07:54:11 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4734AA4067;
-        Fri, 28 Feb 2020 07:54:11 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.152.224.219])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 28 Feb 2020 07:54:11 +0000 (GMT)
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: 5.6-rc3: WARNING: CPU: 48 PID: 17435 at kernel/sched/fair.c:380
- enqueue_task_fair+0x328/0x440
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Fri, 28 Feb 2020 08:54:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 28 Feb 2020 02:54:29 -0500
+Received: from mga09.intel.com ([134.134.136.24]:59601 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726860AbgB1Hy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 02:54:29 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 23:54:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,495,1574150400"; 
+   d="scan'208";a="232158707"
+Received: from shao2-debian.sh.intel.com (HELO [10.239.13.3]) ([10.239.13.3])
+  by orsmga008.jf.intel.com with ESMTP; 27 Feb 2020 23:54:27 -0800
+Subject: Re: [KVM] a06230b62b: kvm-unit-tests.vmx.fail
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Oliver Upton <oupton@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        lkp@lists.01.org
+References: <20200228074408.GM6548@shao2-debian>
+ <96533a86-feca-ace8-952b-7e5c88732ee5@redhat.com>
+From:   Rong Chen <rong.a.chen@intel.com>
+Message-ID: <8b9491a2-85a2-1dd0-bc06-26831ba2d6d6@intel.com>
+Date:   Fri, 28 Feb 2020 15:54:19 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <96533a86-feca-ace8-952b-7e5c88732ee5@redhat.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022807-0008-0000-0000-0000035738A3
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022807-0009-0000-0000-00004A785CFC
-Message-Id: <ace7327f-0fd6-4f36-39ae-a8d7d1c7f06b@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-28_01:2020-02-26,2020-02-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 mlxscore=0 spamscore=0 mlxlogscore=593 bulkscore=0
- malwarescore=0 priorityscore=1501 clxscore=1015 adultscore=0 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002280065
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter,
 
-it seems that your new assert did trigger for me:
 
-The system was running fine for 4 hours and then this happened.
-Unfortunately I have no idea if this reproduces and if so how.
+On 2/28/20 3:51 PM, Paolo Bonzini wrote:
+> On 28/02/20 08:44, kernel test robot wrote:
+>> [31mFAIL[0m vmx (408415 tests, 3 unexpected failures, 2 expected failures, 5 skipped)
+> Please include the commit of kvm-unit-tests that you are using. You are
+> likely missing "vmx: tweak XFAILS for #DB test".
+>
+> Paolo
+>
 
-[15260.753944] ------------[ cut here ]------------
-[15260.753949] rq->tmp_alone_branch != &rq->leaf_cfs_rq_list
-[15260.753959] WARNING: CPU: 48 PID: 17435 at kernel/sched/fair.c:380 enqueue_task_fair+0x328/0x440
-[15260.753961] Modules linked in: kvm xt_CHECKSUM xt_MASQUERADE nf_nat_tftp nf_conntrack_tftp xt_CT tun bridge stp llc xt_tcpudp ip6t_REJECT nf_reject_ipv6 ip6t_rpfilter ipt_REJECT nf_reject_ipv4 xt_conntrack ip6table_nat ip6table_mangle ip6table_raw ip6table_security iptable_nat nf_nat iptable_mangle iptable_raw iptable_security nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ip_set nfnetlink ip6table_filter ip6_tables iptable_filter rpcrdma sunrpc rdma_ucm rdma_cm iw_cm ib_cm configfs s390_trng mlx5_ib ghash_s390 prng ib_uverbs aes_s390 ib_core des_s390 libdes sha3_512_s390 genwqe_card vfio_ccw vfio_mdev sha3_256_s390 mdev crc_itu_t sha512_s390 vfio_iommu_type1 sha1_s390 vfio eadm_sch zcrypt_cex4 sch_fq_codel ip_tables x_tables mlx5_core sha256_s390 sha_common pkey zcrypt rng_core autofs4
-[15260.754002] CPU: 48 PID: 17435 Comm: cc1 Not tainted 5.6.0-rc3+ #24
-[15260.754004] Hardware name: IBM 3906 M04 704 (LPAR)
-[15260.754005] Krnl PSW : 0404c00180000000 0000000942282e3c (enqueue_task_fair+0x32c/0x440)
-[15260.754008]            R:0 T:1 IO:0 EX:0 Key:0 M:1 W:0 P:0 AS:3 CC:0 PM:0 RI:0 EA:3
-[15260.754010] Krnl GPRS: 00000000000003e0 0000001fbd60ee00 000000000000002d 00000009435347c2
-[15260.754012]            000000000000002c 00000009428ec950 0000000900000000 0000000000000001
-[15260.754013]            0000001fbd60ed00 0000001fbd60ed00 0000001fbd60ee00 0000000000000000
-[15260.754014]            0000001c633ea000 0000000942c34670 0000000942282e38 000003e00140baf8
-[15260.754066] Krnl Code: 0000000942282e2c: c020005d39d8	larl	%r2,0000000942e2a1dc
-                          0000000942282e32: c0e5fffdcc3f	brasl	%r14,000000094223c6b0
-                         #0000000942282e38: af000000		mc	0,0
-                         >0000000942282e3c: a7f4ff22		brc	15,0000000942282c80
-                          0000000942282e40: 41b06340		la	%r11,832(%r6)
-                          0000000942282e44: e3d063480004	lg	%r13,840(%r6)
-                          0000000942282e4a: b904004b		lgr	%r4,%r11
-                          0000000942282e4e: b904003d		lgr	%r3,%r13
-[15260.754080] Call Trace:
-[15260.754083]  [<0000000942282e3c>] enqueue_task_fair+0x32c/0x440 
-[15260.754085] ([<0000000942282e38>] enqueue_task_fair+0x328/0x440)
-[15260.754087]  [<0000000942272d78>] activate_task+0x88/0xf0 
-[15260.754088]  [<00000009422732e8>] ttwu_do_activate+0x58/0x78 
-[15260.754090]  [<00000009422742ce>] try_to_wake_up+0x256/0x650 
-[15260.754093]  [<000000094229248e>] swake_up_locked.part.0+0x2e/0x70 
-[15260.754095]  [<00000009422927ac>] swake_up_one+0x54/0x88 
-[15260.754151]  [<000003ff8044c15a>] kvm_vcpu_wake_up+0x52/0x78 [kvm] 
-[15260.754161]  [<000003ff8046af02>] kvm_s390_vcpu_wakeup+0x2a/0x40 [kvm] 
-[15260.754171]  [<000003ff8046b68e>] kvm_s390_idle_wakeup+0x6e/0xa0 [kvm] 
-[15260.754175]  [<00000009422dd05c>] __hrtimer_run_queues+0x114/0x2f0 
-[15260.754178]  [<00000009422dddb4>] hrtimer_interrupt+0x12c/0x2a8 
-[15260.754181]  [<0000000942200d3c>] do_IRQ+0xac/0xb0 
-[15260.754185]  [<0000000942c25684>] ext_int_handler+0x130/0x134 
-[15260.754186] Last Breaking-Event-Address:
-[15260.754189]  [<000000094223c710>] __warn_printk+0x60/0x68
-[15260.754190] ---[ end trace e84a48be72a8b514 ]---
+Hi Paolo,
 
+Many thanks for your help, we'll update it and test again.
+
+Best Regards,
+Rong Chen
