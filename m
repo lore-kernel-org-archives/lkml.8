@@ -2,115 +2,147 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BAEBC3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDC7C3F2D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E816246A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 968DC246A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:16:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="DbCz0WOa";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PSm463IY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730910AbgB1ELZ (ORCPT
+        id S1730823AbgB1EQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 23:11:25 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:54396 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730712AbgB1ELY (ORCPT
+        Thu, 27 Feb 2020 23:16:52 -0500
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:38229 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730586AbgB1EQw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 23:11:24 -0500
-Received: from callcc.thunk.org (guestnat-104-133-8-109.corp.google.com [104.133.8.109] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 01S4BEUH028088
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Feb 2020 23:11:16 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 99EFC421A71; Thu, 27 Feb 2020 23:11:14 -0500 (EST)
-Date:   Thu, 27 Feb 2020 23:11:14 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Qian Cai <cai@lca.pw>
-Cc:     elver@google.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] char/random: fix data races at timer_rand_state
-Message-ID: <20200228041114.GC101220@mit.edu>
-References: <1582648024-13111-1-git-send-email-cai@lca.pw>
+        Thu, 27 Feb 2020 23:16:52 -0500
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailnew.nyi.internal (Postfix) with ESMTP id D9474646B;
+        Thu, 27 Feb 2020 23:16:50 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Thu, 27 Feb 2020 23:16:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
+        aE2IYxZTehpip3xr3YzMaz8G54Fjh1Vf5hK0hWj6PNc=; b=DbCz0WOac8rw4TA6
+        wB+zI5SzfARtJvhWm2f95dLSo0otr/j408lvwc2beEfrvzpE5G5QsD1gJvxUrHqD
+        cKcurBRK+1nvjr/ZD6s2B8UrE2Up8QpP4Yt/s/C1k7NYOSRjhJ1aw1ixfboKgGQF
+        ALI+5WtU0WL63yKqVq5hTdFsrGMlrRM5f0DksuSYOLKVptrS7icirMovGZijSt7L
+        bAVuqMnKmZrPG0zUl9tOwQVd/M9Yn7lS72cVLPvMUyn/djrH1T2W5l3CrjJAB6fv
+        PlB1rAb7zLXsQcaBwx+hAsccBk5gZzxXHE49DDxerI3EgEw5pXiAPgu8RUoOj6cV
+        5o2B7g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=aE2IYxZTehpip3xr3YzMaz8G54Fjh1Vf5hK0hWj6P
+        Nc=; b=PSm463IY9wZU6tdLq9t1F4YjsMnJkbXzf7zDZprkGPvJKi/vVj/DcrcbG
+        i5tze/VhMOPNKeUAdKCR5SLZqn+q0Fl9YLJpQqdnuT67Y5Zyu3G2R2VbJm/J7Nty
+        Zc76K957Oc8mKOnu2sNJ/0oN4D3Vz3VfnirPQGQCnC1ok5ZQDtbdXrE2aaw27O2U
+        pZ5oKmygNAGd5GPrxtEEresLPe7SQQcOuzKOJrbRU/JO41bmHfQ2YIQxlteDk6n+
+        rG+fyZsKow1/Ubu/I+lG/hhFyYJtWqsb3EPqlxp0ZQMiaZ+tKYa3rC+UY//aIbQ3
+        giF05/Qv7uxtnwwuS/7synkvPwpXQ==
+X-ME-Sender: <xms:MJRYXtbOs51l8DszbXbPoxmI6GWko9fbQBpjX6Az5y4uyAcmZf5byQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrleejgdejtdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
+    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecukfhppeduudekrddvtdelrd
+    dukedvrdeludenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
+    ohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
+X-ME-Proxy: <xmx:MJRYXrPHz4a-aKx_MVipDW_F7vj3ZkxFTh-Mbr_fnIX6hoVhfApDBw>
+    <xmx:MJRYXhLNAfc9GCtBkkv9n_lytkwuiYZ9szl9DqiNX1G6xMr60YzwIQ>
+    <xmx:MJRYXpbXsIbGC_jxTOFzMSrv-FCSluj1lObI3ahd8wutFpluuI2JzA>
+    <xmx:MpRYXpgdUO3ZXewy5VW-RRxAklqN6SnOFpUfT-Cbr6AS-R_dL5gbeA>
+Received: from mickey.themaw.net (unknown [118.209.182.91])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 69A473280059;
+        Thu, 27 Feb 2020 23:16:43 -0500 (EST)
+Message-ID: <769be2c66746ff199bf6be1db9101c60b372948d.camel@themaw.net>
+Subject: Re: [PATCH 00/11] fs/dcache: Limit # of negative dentries
+From:   Ian Kent <raven@themaw.net>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Andreas Dilger <adilger@dilger.ca>,
+        Waiman Long <longman@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-doc@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Eric Biggers <ebiggers@google.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Eric Sandeen <sandeen@redhat.com>
+Date:   Fri, 28 Feb 2020 12:16:39 +0800
+In-Reply-To: <20200228033412.GD29971@bombadil.infradead.org>
+References: <20200226161404.14136-1-longman@redhat.com>
+         <20200226162954.GC24185@bombadil.infradead.org>
+         <2EDB6FFC-C649-4C80-999B-945678F5CE87@dilger.ca>
+         <9d7b76c32d09492137a253e692624856388693db.camel@themaw.net>
+         <20200228033412.GD29971@bombadil.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582648024-13111-1-git-send-email-cai@lca.pw>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 11:27:04AM -0500, Qian Cai wrote:
-> Fields in "struct timer_rand_state" could be accessed concurrently.
-> Lockless plain reads and writes result in data races. Fix them by adding
-> pairs of READ|WRITE_ONCE(). The data races were reported by KCSAN,
+On Thu, 2020-02-27 at 19:34 -0800, Matthew Wilcox wrote:
+> On Thu, Feb 27, 2020 at 05:55:43PM +0800, Ian Kent wrote:
+> > Not all file systems even produce negative hashed dentries.
+> > 
+> > The most beneficial use of them is to improve performance of rapid
+> > fire lookups for non-existent names. Longer lived negative hashed
+> > dentries don't give much benefit at all unless they suddenly have
+> > lots of hits and that would cost a single allocation on the first
+> > lookup if the dentry ttl expired and the dentry discarded.
+> > 
+> > A ttl (say jiffies) set at appropriate times could be a better
+> > choice all round, no sysctl values at all.
 > 
->  BUG: KCSAN: data-race in add_timer_randomness / add_timer_randomness
+> The canonical argument in favour of negative dentries is to improve
+> application startup time as every application searches the library
+> path
+> for the same libraries.  Only they don't do that any more:
 > 
->  write to 0xffff9f320a0a01d0 of 8 bytes by interrupt on cpu 22:
->   add_timer_randomness+0x100/0x190
->   add_timer_randomness at drivers/char/random.c:1152
->   add_disk_randomness+0x85/0x280
->   scsi_end_request+0x43a/0x4a0
->   scsi_io_completion+0xb7/0x7e0
->   scsi_finish_command+0x1ed/0x2a0
->   scsi_softirq_done+0x1c9/0x1d0
->   blk_done_softirq+0x181/0x1d0
->   __do_softirq+0xd9/0x57c
->   irq_exit+0xa2/0xc0
->   do_IRQ+0x8b/0x190
->   ret_from_intr+0x0/0x42
->   cpuidle_enter_state+0x15e/0x980
->   cpuidle_enter+0x69/0xc0
->   call_cpuidle+0x23/0x40
->   do_idle+0x248/0x280
->   cpu_startup_entry+0x1d/0x1f
->   start_secondary+0x1b2/0x230
->   secondary_startup_64+0xb6/0xc0
+> $ strace -e file cat /dev/null
+> execve("/bin/cat", ["cat", "/dev/null"], 0x7ffd5f7ddda8 /* 44 vars
+> */) = 0
+> access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or
+> directory)
+> openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+> openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6",
+> O_RDONLY|O_CLOEXEC) = 3
+> openat(AT_FDCWD, "/usr/lib/locale/locale-archive",
+> O_RDONLY|O_CLOEXEC) = 3
+> openat(AT_FDCWD, "/dev/null", O_RDONLY) = 3
 > 
->  no locks held by swapper/22/0.
->  irq event stamp: 32871382
->  _raw_spin_unlock_irqrestore+0x53/0x60
->  _raw_spin_lock_irqsave+0x21/0x60
->  _local_bh_enable+0x21/0x30
->  irq_exit+0xa2/0xc0
-> 
->  read to 0xffff9f320a0a01d0 of 8 bytes by interrupt on cpu 2:
->   add_timer_randomness+0xe8/0x190
->   add_disk_randomness+0x85/0x280
->   scsi_end_request+0x43a/0x4a0
->   scsi_io_completion+0xb7/0x7e0
->   scsi_finish_command+0x1ed/0x2a0
->   scsi_softirq_done+0x1c9/0x1d0
->   blk_done_softirq+0x181/0x1d0
->   __do_softirq+0xd9/0x57c
->   irq_exit+0xa2/0xc0
->   do_IRQ+0x8b/0x190
->   ret_from_intr+0x0/0x42
->   cpuidle_enter_state+0x15e/0x980
->   cpuidle_enter+0x69/0xc0
->   call_cpuidle+0x23/0x40
->   do_idle+0x248/0x280
->   cpu_startup_entry+0x1d/0x1f
->   start_secondary+0x1b2/0x230
->   secondary_startup_64+0xb6/0xc0
-> 
->  no locks held by swapper/2/0.
->  irq event stamp: 37846304
->  _raw_spin_unlock_irqrestore+0x53/0x60
->  _raw_spin_lock_irqsave+0x21/0x60
->  _local_bh_enable+0x21/0x30
->  irq_exit+0xa2/0xc0
-> 
->  Reported by Kernel Concurrency Sanitizer on:
->  Hardware name: HP ProLiant BL660c Gen9, BIOS I38 10/17/2018
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
+> So, are they still useful?  Or should we, say, keep at most 100
+> around?
 
-Thanks, applied.
+Who knows how old apps will be on distros., ;)
 
-					- Ted
+But I don't think it matters.
+
+The VFS will (should) work fine without a minimum negative hashed
+dentry count (and hashed since unhashed negative dentries are
+summarily executed on final dput()) and a ttl should keep frequently
+used ones around long enough to satisfy this sort of thing should it
+be needed.
+
+Even the ttl value should be resilient to a large range of values,
+just not so much very small ones.
+
+Ian
+
