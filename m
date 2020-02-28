@@ -2,98 +2,113 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 206F6C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CCEC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F30B12469D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17F132469D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:47:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JVg/n2sI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgB1PrJ (ORCPT
+        id S1727192AbgB1PrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 10:47:09 -0500
-Received: from shelob.surriel.com ([96.67.55.147]:49878 "EHLO
-        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbgB1PrJ (ORCPT
+        Fri, 28 Feb 2020 10:47:21 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:57991 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727120AbgB1PrU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 10:47:09 -0500
-Received: from [2603:3005:d05:2b00:6e0b:84ff:fee2:98bb] (helo=imladris.surriel.com)
-        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <riel@shelob.surriel.com>)
-        id 1j7hqw-0007MR-U8; Fri, 28 Feb 2020 10:47:02 -0500
-Date:   Fri, 28 Feb 2020 10:47:00 -0500
-From:   Rik van Riel <riel@surriel.com>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org, mhocko@kernel.org,
-        mgorman@techsingularity.net, rientjes@google.com,
-        aarcange@redhat.com, ziy@nvidia.com
-Subject: [PATCH] fix
- mmthpcompactioncma-allow-thp-migration-for-cma-allocations.patch
-Message-ID: <20200228104700.0af2f18d@imladris.surriel.com>
-In-Reply-To: <ceacd12e-a005-8035-7d88-f79a45a05975@suse.cz>
-References: <cover.1582321646.git.riel@surriel.com>
-        <20200227213238.1298752-2-riel@surriel.com>
-        <df83c62f-209f-b1fd-3a5c-c81c82cb2606@oracle.com>
-        <7800e98e3688c124ac3672284b87d67321e1c29e.camel@surriel.com>
-        <67185d77-87aa-400d-475c-4435d8b7be11@suse.cz>
-        <47198271414db19cecbfa1a6ea685577dad3a72c.camel@surriel.com>
-        <ceacd12e-a005-8035-7d88-f79a45a05975@suse.cz>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 28 Feb 2020 10:47:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582904839;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=M5VyH6QG78kcYA9fsol/765vHxQ9ZwPBQuyaapR5VWs=;
+        b=JVg/n2sIcC4IqXWiBfR9uLTCNULrI0+Vf20qfHIfrCtL3fW2OEOBMWhc6bOWE5LDSKCCXB
+        a8f90gbhO4svQ3rEoEG7xByaAafSkxniwCLU8J4+9klQG/0dujCsEWEkrxXAUNV5JN09FC
+        qs0A97rdAzw9XYPhhJLWGVz0byOIS/A=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-427-mQ_0rQDoOnSMA1s8I2K5_w-1; Fri, 28 Feb 2020 10:47:14 -0500
+X-MC-Unique: mQ_0rQDoOnSMA1s8I2K5_w-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 51DB4107ACC5;
+        Fri, 28 Feb 2020 15:47:12 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-123-107.rdu2.redhat.com [10.10.123.107])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C300390793;
+        Fri, 28 Feb 2020 15:47:08 +0000 (UTC)
+Subject: Re: [PATCH 00/11] fs/dcache: Limit # of negative dentries
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Eric Biggers <ebiggers@google.com>,
+        Eric Sandeen <sandeen@redhat.com>
+References: <20200226161404.14136-1-longman@redhat.com>
+ <20200227083029.GL10737@dread.disaster.area>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <e9625cae-ee3f-3e58-903d-dabc131c8c9b@redhat.com>
+Date:   Fri, 28 Feb 2020 10:47:07 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200227083029.GL10737@dread.disaster.area>
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you Mike & Vlastimil!
+On 2/27/20 3:30 AM, Dave Chinner wrote:
+> On Wed, Feb 26, 2020 at 11:13:53AM -0500, Waiman Long wrote:
+>> As there is no limit for negative dentries, it is possible that a sizeable
+>> portion of system memory can be tied up in dentry cache slabs. Dentry slabs
+>> are generally recalimable if the dentries are in the LRUs. Still having
+>> too much memory used up by dentries can be problematic:
+> I don't get it.
+>
+> Why isn't the solution simply "constrain the application generating
+> unbound numbers of dentries to a memcg"?
+>
+> Then when the memcg runs out of memory, it will start reclaiming the
+> dentries that were allocated inside the memcg that are using all
+> it's resources, thereby preventing unbound growth of the dentry
+> cache.
+>
+> I mean, this sort of resource control is exactly what memcgs are
+> supposed to be used for and are already used for. I don't see why we
+> need all this complexity for global dentry resource management when
+> memcgs should already provide an effective means of managing and
+> placing bounds on the amount of memory any specific application can
+> use...
 
----8<---
+Using memcg is one way to limit the damage. The argument that excessive
+negative dentries can push out existing memory objects that can be more
+useful if left alone still applies. Daemons that run in the root memcg
+has no limitation on how much memory that they can use.
 
-commit 27f3cd5473d8bbf591b61d8b93b98bc333980d0d
-Author: Rik van Riel <riel@surriel.com>
-Date:   Fri Feb 28 10:41:48 2020 -0500
+There can also be memcgs with high memory limits and long running
+applications. memcg is certainly a useful tool in this regards, but it
+doesn't solve all the problem.
 
-Subject: fix mmthpcompactioncma-allow-thp-migration-for-cma-allocations.patch
-    
-Mike Kravetz pointed out that the second if condition could do the
-wrong thing for hugetlbfs pages, and that check really only needs
-to run on THPs.
-    
-Cleanup suggested by Vlastimil.
-  
-Thank you both!
-    
-Suggested-by: Mike Kravetz <mike.kravetz@oracle.com>
-Suggested-by: Vlastimil Babka <vbabka@suse.cz>
-Signed-off-by: Rik van Riel <riel@surriel.com>
+Cheers,
+Longman
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 4afa13dd3738..71f78a590236 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -8274,12 +8274,12 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
- 			struct page *head = compound_head(page);
- 			unsigned int skip_pages;
- 
--			if (PageHuge(page) &&
--			    !hugepage_migration_supported(page_hstate(head)))
--				return page;
--
--			if (!PageLRU(head) && !__PageMovable(head))
-+			if (PageHuge(page)) {
-+				if (!hugepage_migration_supported(page_hstate(head)))
-+					return page;
-+			} else if (!PageLRU(head) && !__PageMovable(head)) {
- 				return page;
-+			}
- 
- 			skip_pages = compound_nr(head) - (page - head);
- 			iter += skip_pages - 1;
+
