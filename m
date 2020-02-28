@@ -2,154 +2,115 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC416C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 21:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB24C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 21:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B69D220637
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 21:50:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mW96jfeg"
+	by mail.kernel.org (Postfix) with ESMTP id F2E962469F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 21:54:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgB1Vu6 (ORCPT
+        id S1726603AbgB1VyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 16:50:58 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35366 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgB1Vu5 (ORCPT
+        Fri, 28 Feb 2020 16:54:01 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39130 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725957AbgB1VyB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 16:50:57 -0500
-Received: by mail-lj1-f193.google.com with SMTP id a12so3886525ljj.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 13:50:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fXH0XTxwssZu/l+4X5oAuR9SqggcCROpsGbcXwJvrqA=;
-        b=mW96jfeglAZLByoAMZs51HsXxurOLdnvn7/kJk4cPKSvtrtzEcwPh/WcuUR/n4ZimP
-         gJ1STaJE3Z4gZgXPb6McgLe7AtbFfpPrQQIJRswAqfL3U5p+fCb50cCBBaX2x24doKSG
-         Jg3CW6nijHV9T+v2JiW7idDsQD33C1YopjdVU=
+        Fri, 28 Feb 2020 16:54:01 -0500
+Received: by mail-ot1-f67.google.com with SMTP id x97so4013725ota.6;
+        Fri, 28 Feb 2020 13:54:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fXH0XTxwssZu/l+4X5oAuR9SqggcCROpsGbcXwJvrqA=;
-        b=sgOuCxYFlTGp4xQdLeO0sgIVBU6JR/1wQ3SwgzMPASzPV27Pv6RZAZp9H4fuZkVpVF
-         BKXDD10dg0Ukvm46qddWz/sbIVDEFFykja3pWtsQubBG2V10QstXmpDepf9puNTMIA/c
-         2ONEYw1v/bK1fnWzgjTSkAM73065g/iWLygRmJlc/dhvdBAJJIDgZT9aUlNA64ZC9tt2
-         lgOtYlIcRv98t5Pfj7AW1NuufDsKQlUyN9INuiJIUV8UWqehHg6Ry2HgYVi2AgCLCpHt
-         W7UlnrDwHHv7Nj5gTdomOgcma0LhGCcCtKFtuvx2rXdnW6pIF8qLwXm6of7P9ltQIrLE
-         dSdA==
-X-Gm-Message-State: ANhLgQ3a3JUIBnN4PVS/uRVzut27/Vrrt0reAjSO6VUFplq6GnVCnyHR
-        qwOpeGD5StSrqY6x6rC5YJlLVSXEKCk=
-X-Google-Smtp-Source: ADFU+vsBFNhdKICZRALJmKSAK0INYOGfIpaKny/I0ERvbSt85P91Z9wX9mvVXNcBgB02cfYalopIBA==
-X-Received: by 2002:a2e:a361:: with SMTP id i1mr4018159ljn.29.1582926654509;
-        Fri, 28 Feb 2020 13:50:54 -0800 (PST)
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
-        by smtp.gmail.com with ESMTPSA id z67sm5827269lfa.50.2020.02.28.13.50.53
-        for <linux-kernel@vger.kernel.org>
+        bh=pDVNEc+emqEYhHMEI0BkQh8VuJ0zUAhAe+A2963SxX0=;
+        b=BhqHVZ2BqQuaGPgq01e0uENA0LzH4IW4LbLEg18hF44ZhNSsjptFlWRf7mdSTrv2B5
+         nyhE4QjOIO0Zi3bv7qvmF1y2mXU94UT2CkNn34mDw92FK1xO2hMc0OZYcrY/AvbuHF3O
+         ytYJh3L3r4Zi+tADmEkHsCAJLiJ3+t3FHLMACuv45BEgMNUqPJ84ELsgwcprDfbgw+BF
+         ZAjZFig4VPTAMbZf6PIp9O5gEYbnLHxo1iaxVJg7SbLxcGegBHLwE6PtwtxzMnRe9Goj
+         0edfYjMIOe9+FRJVdnER342QK7GU0SbCekf1vxlYsLn6GvpJuJe35hz9jr4pGS+/2iNl
+         gKdw==
+X-Gm-Message-State: APjAAAXsFRSHRklY3pV+F9u7njfYAh/ObPNHX+JG6RZffDRJ4yRx9BTn
+        N9cTgAT49QolC9W0Wbe82iUYtiYXITA=
+X-Google-Smtp-Source: APXvYqwcD8KegygDg2uXmfGc0b5s3g2iOWW8QB+yGdhZqZT2cbFUJgwyKh2XZap9Gmfhgkl0wuZRrg==
+X-Received: by 2002:a9d:7593:: with SMTP id s19mr4713096otk.219.1582926840159;
+        Fri, 28 Feb 2020 13:54:00 -0800 (PST)
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com. [209.85.210.51])
+        by smtp.gmail.com with ESMTPSA id 17sm2358741oth.7.2020.02.28.13.53.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Feb 2020 13:50:53 -0800 (PST)
-Received: by mail-lf1-f41.google.com with SMTP id 7so3161891lfz.11
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 13:50:53 -0800 (PST)
-X-Received: by 2002:a19:c611:: with SMTP id w17mr3806178lff.59.1582926652932;
- Fri, 28 Feb 2020 13:50:52 -0800 (PST)
+        Fri, 28 Feb 2020 13:53:59 -0800 (PST)
+Received: by mail-ot1-f51.google.com with SMTP id x97so4013634ota.6;
+        Fri, 28 Feb 2020 13:53:59 -0800 (PST)
+X-Received: by 2002:a05:6830:1c8:: with SMTP id r8mr5033412ota.63.1582926839216;
+ Fri, 28 Feb 2020 13:53:59 -0800 (PST)
 MIME-Version: 1.0
-References: <1582889903-12890-1-git-send-email-mkshah@codeaurora.org> <1582889903-12890-3-git-send-email-mkshah@codeaurora.org>
-In-Reply-To: <1582889903-12890-3-git-send-email-mkshah@codeaurora.org>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Fri, 28 Feb 2020 13:50:16 -0800
-X-Gmail-Original-Message-ID: <CAE=gft5aOtOx6MyuNuv3ebc6ZHmG_W3i0EA3HJjKceYMr7Nx3A@mail.gmail.com>
-Message-ID: <CAE=gft5aOtOx6MyuNuv3ebc6ZHmG_W3i0EA3HJjKceYMr7Nx3A@mail.gmail.com>
-Subject: Re: [PATCH v9 2/3] soc: qcom: rpmh: Update dirty flag only when data changes
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
+References: <20200221174754.5295-1-michael@walle.cc> <20200221174754.5295-4-michael@walle.cc>
+ <CAL_JsqL8QGKARtRAfjCMyk4Pp7EWhFMV8JQpveHoJ2OyH5kBPA@mail.gmail.com>
+ <CADRPPNR1n1sviJnhq_zuUFJcMYqsVKy0O7NOF1pxF_4VH+dasg@mail.gmail.com>
+ <CAL_JsqKMNFFG5H4gPQwRdcTpfHynqZWo2A2db-oL7EmvTNqNkQ@mail.gmail.com>
+ <639a1df72fbeda77436b282a99f17995@walle.cc> <24b9a657a65f75a4f4f10baa17561451@walle.cc>
+In-Reply-To: <24b9a657a65f75a4f4f10baa17561451@walle.cc>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Fri, 28 Feb 2020 15:53:47 -0600
+X-Gmail-Original-Message-ID: <CADRPPNQong1bD83ncHTj1OHip9LEV9PFOnPN3Jo00aZT056eiw@mail.gmail.com>
+Message-ID: <CADRPPNQong1bD83ncHTj1OHip9LEV9PFOnPN3Jo00aZT056eiw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/9] tty: serial: fsl_lpuart: handle EPROBE_DEFER for DMA
+To:     Michael Walle <michael@walle.cc>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        Vabhav Sharma <vabhav.sharma@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 3:38 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+On Fri, Feb 28, 2020 at 3:51 PM Michael Walle <michael@walle.cc> wrote:
 >
-> Currently rpmh ctrlr dirty flag is set for all cases regardless of data
-> is really changed or not. Add changes to update dirty flag when data is
-> changed to newer values.
+> Am 2020-02-28 12:46, schrieb Michael Walle:
+> > Hi Rob, Hi Leo,
+> >
+> > Am 2020-02-28 00:03, schrieb Rob Herring:
+> >> On Thu, Feb 27, 2020 at 4:49 PM Li Yang <leoyang.li@nxp.com> wrote:
+> >>>
+> >>> On Thu, Feb 27, 2020 at 4:35 PM Rob Herring <robh+dt@kernel.org>
+> >>> wrote:
+> >>> >
+> >>> > On Fri, Feb 21, 2020 at 11:48 AM Michael Walle <michael@walle.cc> wrote:
+> >>> > >
+> >>> > > The DMA channel might not be available at the first probe time. This is
+> >>> > > esp. the case if the DMA controller has an IOMMU mapping.
+> >>> > >
+> >>> > > Use the new dma_request_chan() API and handle EPROBE_DEFER errors. Also
+> >>> > > reorder the code a bit, so that we don't prepare the whole UART just to
+> >>> > > determine that the DMA channel is not ready yet and we have to undo all
+> >>> > > the stuff. Try to map the DMA channels earlier.
+> >>> >
+> >>> > Changing this means you never probe successfully if you boot a kernel
+> >>> > with the DMA driver disabled (or it's IOMMU disabled). Some other
+> >>> > drivers request DMA in open() and can work either way.
+> >
+> > Oh, I see.
+> >
+> >>> We got this exact issue previously with another driver.  When the
+> >
+> > What driver is it? I've been working on the i2c-mxs.c driver which has
 >
-> Also move dirty flag updates to happen from within cache_lock and remove
-> unnecessary INIT_LIST_HEAD() call and a default case from switch.
->
-> Fixes: 600513dfeef3 ("drivers: qcom: rpmh: cache sleep/wake state requests")
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> Reviewed-by: Srinivas Rao L <lsrao@codeaurora.org>
-> ---
->  drivers/soc/qcom/rpmh.c | 21 +++++++++++++--------
->  1 file changed, 13 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
-> index eb0ded0..f28afe4 100644
-> --- a/drivers/soc/qcom/rpmh.c
-> +++ b/drivers/soc/qcom/rpmh.c
-> @@ -133,26 +133,30 @@ static struct cache_req *cache_rpm_request(struct rpmh_ctrlr *ctrlr,
->
->         req->addr = cmd->addr;
->         req->sleep_val = req->wake_val = UINT_MAX;
-> -       INIT_LIST_HEAD(&req->list);
->         list_add_tail(&req->list, &ctrlr->cache);
->
->  existing:
->         switch (state) {
->         case RPMH_ACTIVE_ONLY_STATE:
-> -               if (req->sleep_val != UINT_MAX)
-> +               if (req->sleep_val != UINT_MAX) {
->                         req->wake_val = cmd->data;
-> +                       ctrlr->dirty = true;
-> +               }
->                 break;
->         case RPMH_WAKE_ONLY_STATE:
-> -               req->wake_val = cmd->data;
-> +               if (req->wake_val != cmd->data) {
-> +                       req->wake_val = cmd->data;
-> +                       ctrlr->dirty = true;
-> +               }
->                 break;
->         case RPMH_SLEEP_STATE:
-> -               req->sleep_val = cmd->data;
-> -               break;
-> -       default:
-> +               if (req->sleep_val != cmd->data) {
-> +                       req->sleep_val = cmd->data;
-> +                       ctrlr->dirty = true;
-> +               }
->                 break;
->         }
->
-> -       ctrlr->dirty = true;
->  unlock:
->         spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
->
-> @@ -287,6 +291,7 @@ static void cache_batch(struct rpmh_ctrlr *ctrlr, struct batch_cache_req *req)
->
->         spin_lock_irqsave(&ctrlr->cache_lock, flags);
->         list_add_tail(&req->list, &ctrlr->batch_cache);
-> +       ctrlr->dirty = true;
+> whoops, i2c-imx.c, not i2c-mxs.c
 
-Is this fixing a case where we were not previously marking the
-controller dirty but should have? I notice there's a fixes tag, but it
-would be helpful to add something to the commit text indicating that
-you're fixing a missing case where the controller should have been
-marked dirty. With that fixed, you can add my tag:
+Ya.  Same one.  I have added CONFIG_FSL_EDMA into the arm64/defconfig
+as a workaround.
 
-Reviewed-by: Evan Green <evgreen@chromium.org>
+Regards,
+Leo
