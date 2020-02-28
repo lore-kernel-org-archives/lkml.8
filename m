@@ -2,219 +2,137 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79447C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A90FCC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 272DC246A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:26:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D0BC2469D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:27:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="XJgLJvBa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="h39UGB4e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgB1N06 (ORCPT
+        id S1726562AbgB1N14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 08:26:58 -0500
-Received: from mx1.tq-group.com ([62.157.118.193]:52777 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726673AbgB1N05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 08:26:57 -0500
-IronPort-SDR: XOPpaeBNeTzozFGsYiPqCIOKkf5giIjyyTeFjQ/yBOBmOJ9LdFsjOBJyBJwO4mmF1mS9/OAHtM
- FTHL7yeIbgmrL1THuX/CK96bjW1vRF2juN3VRJiY3Kz4iDKgwVlAUY2EHfYGZc94a5ZvhxhWJQ
- G1IdktYwFEWk12+TZ/BAMVqaIGDjpDIOx8xFdWyibxEZ0CBZoFpJVkwBcJa9CEacvViLwS5AOH
- t7PMN1bvfomWboVfC0Tr0BWnM4+WuUSOtkSKD76pNAZ1nypyuyPBuN2ouwCRN5glfzfHGwqLVo
- ORA=
-X-IronPort-AV: E=Sophos;i="5.70,496,1574118000"; 
-   d="scan'208";a="11157171"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 28 Feb 2020 14:26:55 +0100
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Fri, 28 Feb 2020 14:26:55 +0100
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Fri, 28 Feb 2020 14:26:55 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1582896415; x=1614432415;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=7y5bI79HEJXh1PgG/zHqrk8tD2vnb6fquG3FliyVWMY=;
-  b=XJgLJvBa4jLoF14Kwlrbd/2N4USaktu8Zxj6KNu2nKxBzSPprjZEVx1T
-   /PNmew1Z3J/3BNtdOWXcUwZZx/7tOOcYbz/gnjgTgXGBbOg/xO1HvAwBF
-   cg7XUJKrehh/ynzKqt1I6YSPdvo/t1U81fnsNFUh720lG/qmyqczYZ7mc
-   BDJqTYpWepvt5bJ4BsUat42mZU8wVaQ5j+c3O63kJB8HOXaM7z98O/XCs
-   iehcjr8nDPeByA0d+UeR57vmd5sa09v9JjBbl1BSew0tLRlcrQyg4rT70
-   QWYuer0AyY7c3pL1QE19L6s6xT9CvhzewnRqBFPtnLgWWwiBrjgOPiavs
-   Q==;
-IronPort-SDR: D2bOJmLuTR8ZhZ+KEh+Jmvr7rt9otbDN4djc3ixeqEfiFm36SQVabQUP/ArnfI4LWCZgaPjkcv
- io3xmxewNjkz0egwiXBdgRX/0AoYcmG4UGbFYmBahvhrWES1ZgcqKQzfjfJqSfHC0dExqeJRu0
- /VcmHiYdo1Tuz1pk6oMU+EYqRZFdvIiV6XOr3GeCW6ec/Ylv1a4inGjh/x6DraT6npBalxhnoy
- KnZkJ334d4Ctvw91UsDXzNh3B1pcJx1UAxKKr+FaVuFnZ/YzZv+bOPN/hSWD7EDCXmhhBfgCFa
- 9qE=
-X-IronPort-AV: E=Sophos;i="5.70,496,1574118000"; 
-   d="scan'208";a="11157170"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 28 Feb 2020 14:26:55 +0100
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id DDD67280065;
-        Fri, 28 Feb 2020 14:27:03 +0100 (CET)
-Message-ID: <23144d65d94460d70fd66d67d1f9875303c7bce8.camel@ew.tq-group.com>
-Subject: Re: (EXT) Re: (EXT) Re: [PATCH 1/4] pwm: pca9685: remove unused
- duty_cycle struct element
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 28 Feb 2020 14:26:52 +0100
-In-Reply-To: <20200226192103.bodplhjson7drvgm@pengutronix.de>
-References: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
-         <20200226151034.7i3h5blmrwre2yzg@pengutronix.de>
-         <32ec35c2b3da119dd2c7bc09742796a0d8a9607e.camel@ew.tq-group.com>
-         <20200226192103.bodplhjson7drvgm@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 28 Feb 2020 08:27:56 -0500
+Received: from gateway36.websitewelcome.com ([192.185.201.2]:39921 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725943AbgB1N14 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 08:27:56 -0500
+X-Greylist: delayed 445 seconds by postgrey-1.27 at vger.kernel.org; Fri, 28 Feb 2020 08:27:55 EST
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id 67DB5400CB660
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 06:42:48 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 7fgGjILiJRP4z7fgGjgktL; Fri, 28 Feb 2020 07:27:52 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=arRYXiDb6WyCDYMZcCGJW6no8X0qWd9RaYLstjwKJ2w=; b=h39UGB4ezyb2xE4jBSWQqhkIod
+        lJeFub8UQJBNs+j2o0LWtStK171i/ElA8nicf7KHRm8xDV8Gmh+baHKzzKGmXA1CEBq63n7CrJAte
+        T9fWIA9L1c87GSWcvG19FwzHKYXmQ1LotZPGXckZ71Saa7nSdks57J+m8kTRAWjlhXFAxs0cjjPS+
+        itahoJUYalOZy7N8oeWXkUijIvXB2sROEkDWX2kxkFiePUoJOyH4QzWqEYOW/Q79glG1cGUOtcSwC
+        h+Kt2BYBaEupo67wwvxsXCfGfUYZWplKkH2qpaUK0dGrOP15U+JmFFokntPgeWGhTNQaOUUI3+kRH
+        ENvcqPgQ==;
+Received: from [201.162.240.44] (port=22657 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j7fgD-001Kes-Ip; Fri, 28 Feb 2020 07:27:51 -0600
+Date:   Fri, 28 Feb 2020 07:30:45 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] l2tp: Replace zero-length array with flexible-array
+ member
+Message-ID: <20200228133045.GA22318@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.240.44
+X-Source-L: No
+X-Exim-ID: 1j7fgD-001Kes-Ip
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.162.240.44]:22657
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 26
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-02-26 at 20:21 +0100, Uwe Kleine-König wrote:
-> On Wed, Feb 26, 2020 at 06:03:02PM +0100, Matthias Schiffer wrote:
-> > On Wed, 2020-02-26 at 16:10 +0100, Uwe Kleine-König wrote:
-> > > Hello Matthias,
-> > > 
-> > > as you seem to have this hardware on your desk, it would be great
-> > > if
-> > > you
-> > > could answer the following questions:
-> > > 
-> > >  - Does the hardware complete the currently running period before
-> > >    applying a new setting?
-> > 
-> > The datasheet claims:
-> > 
-> > > Because the loading of the LEDn_ON and LEDn_OFF registers is via
-> > > the
-> > > I 2 C-bus, and
-> > > asynchronous to the internal oscillator, we want to ensure that
-> > > we do
-> > > not see any visual
-> > > artifacts of changing the ON and OFF values. This is achieved by
-> > > updating the changes at
-> > > the end of the LOW cycle.
-> > 
-> > My interpretation is that the hardware will complete its period
-> > before
-> > applying the new settings. I might check with a scope tomorrow-ish.
-> 
-> I agree given that you can update duty_cycle and period in a single
-> write as you considered below. Maybe it is worth playing with small
-> periods and a slow i2c bus speed (or hijack the bus by simulating a
-> clock stretch).
->  
-> > >  - Is this racy somehow (i.e. can it happen that when going from
-> > >    duty_cycle/period = 1000/5000 to duty_cycle/period =
-> > > 4000/10000 the
-> > >    output is 1000/10000 (or 4000/5000) for one cycle)?
-> > 
-> > It currently is racy. It should be possible to fix that either by
-> > updating all 4 registers in a single I2C write, or by using the
-> > "update
-> > on ACK" mode which requires all 4 registers to be updated before
-> > the
-> > new setting is applied (I'm not sure if this mode would require
-> > using a
-> > single I2C write as well though).
-> 
-> I can offer a second pair of eyeballs to interpret the datasheet.
-> Will
-> take a look tomorrow.
-> 
-> > >  - Does the hardware complete the currently running period before
-> > >    .enabled = false is configured?
-> > 
-> > As my interpretation is that new settings are applied
-> > asynchronously, I
-> > assume that the final running period is completed after .enabled is
-> > set
-> > to false.
-> > 
-> > >  - How does the output pin behave on a disabled PWM. (Usual
-> > > candidates
-> > >    are: freeze where is just happens to be, constant inactive and
-> > >    High-Z).
-> > 
-> > Constant inactive. This is also the case when the chip is put into
-> > sleep mode. Note that the interpretation of "inactive" depends in
-> > the
-> > invert flag in the MODE2 register.
-> 
-> This is optimal.
-> 
-> > As it turns out, this driver is broken in yet another way I didn't
-> > find
-> > before: For changing the global prescaler the chip needs to be put
-> > into
-> > sleep mode, but the driver doesn't follow the restart sequence
-> > described in the datasheet when waking it back up. In consequence,
-> > changing the period of one PWM does not only modify the period of
-> > all
-> > PWMs (which is bad enough, but can't be avoided with this
-> > hardware),
-> > but it also leaves all PWMs disabled...
-> > 
-> > As this hardware only has a single prescaler for all PWMs, should
-> > changing the period for individual PWMs even be allowed at all?
-> > Maybe
-> > only when all other PWMs are inactive?
-> 
-> yes, that is the general approach. Please document this in a
-> Limitiations: paragraph. See drivers/pwm/pwm-imx-tpm.c which has a
-> similar problem.
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-This raises the question what to do about the GPIO mode supported by
-the driver: While the period does not affect GPIO usage of PWMs,
-changing the period would put the chip in sleep mode and thus briefly
-disable active GPIOs. I assume that this should preclude changing the
-period when there are any PWMs requsted as GPIOs, but now the order in
-which things are initialized becomes crucial:
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-- All references to PWMs of the same PCA9685 must specify the same
-period
-- When requesting a PWM as GPIO, no period can be specified
-=> When a PWM referenced as GPIO is requested before the first actual
-PWM, setting the correct period becomes impossible.
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-I can't think of a nice solution that doesn't require serious rework -
-maybe we need at least an optional period property in DTS to support
-this case? This could either be implemented as a default period or a
-fixed period.
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-A more elaborate solution could be to remove the GPIO code from PCA9685
-and implement a generic GPIO-PWM driver instead that could be
-configured in DTS (again, I have no idea how to support non-DTS
-platforms). Unfortunately, I assume I won't have time to realize such a
-solution myself.
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
-Matthias
+Lastly, fix the following checkpatch warning:
+CHECK: Prefer kernel type 'u8' over 'uint8_t'
+#50: FILE: net/l2tp/l2tp_core.h:119:
++	uint8_t			priv[];	/* private data */
 
+This issue was found with the help of Coccinelle.
 
->  
-> > I could imagine setting it in DTS instead (but I'm not sure what to
-> > do
-> > about non-OF users of this driver, for example when configured via
-> > ACPI).
-> 
-> I don't like fixing the period in the device tree. This isn't a
-> hardware
-> property and it is less flexible than possible.
-> 
-> Best regards
-> Uwe
-> 
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ net/l2tp/l2tp_core.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/l2tp/l2tp_core.h b/net/l2tp/l2tp_core.h
+index 2db3d50d10a4..10cf7c3dcbb3 100644
+--- a/net/l2tp/l2tp_core.h
++++ b/net/l2tp/l2tp_core.h
+@@ -116,7 +116,7 @@ struct l2tp_session {
+ 	void (*recv_skb)(struct l2tp_session *session, struct sk_buff *skb, int data_len);
+ 	void (*session_close)(struct l2tp_session *session);
+ 	void (*show)(struct seq_file *m, void *priv);
+-	uint8_t			priv[0];	/* private data */
++	u8			priv[];	/* private data */
+ };
+ 
+ /* Describes the tunnel. It contains info to track all the associated
+-- 
+2.25.0
 
