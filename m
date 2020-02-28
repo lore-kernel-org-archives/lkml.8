@@ -2,102 +2,131 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9502CC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 209D7C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC5C2067C
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:07:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582895261;
-	bh=82O9Q4K3fw+DxlKKNILi3KCVgL4Kq+Mu3Um5a9/JeOU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PqUVeKIYGRU3mcUlX7HoerrCXbKK0ZipuASNpkpmTYdcRgkGnb9f9koug6UztI1oO
-	 lucmxZKK5ambZExUeuWbZyM3zpulvHV3JEkoU8jBsI+G/zz553s8kghevbj5W1MFFv
-	 Sj4NiEGgTqj0gMW87w+bzafpkBZOVFzhgLUjn7hA=
+	by mail.kernel.org (Postfix) with ESMTP id EC53B246AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:07:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="v3wDl50J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbgB1NHk (ORCPT
+        id S1726642AbgB1NH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 08:07:40 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39400 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbgB1NHk (ORCPT
+        Fri, 28 Feb 2020 08:07:58 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:55518 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbgB1NH5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 08:07:40 -0500
-Received: by mail-pg1-f195.google.com with SMTP id s2so646348pgv.6
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 05:07:37 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aX8lWjzLnVjmxiN9TcAcGkrQKJfwGRC+NlHJIQaBb3E=;
-        b=ak54Gs27w0dWBG+vXT3xX9T2P1FYNis+Pinsw3Aspu/19oO3OAbPg8VTihlo1feqyh
-         9cNLWMcPDtRs2B4zpmtGCx5egzK+9U6iXE5o0Yhyo3lzfEI///QGU3BshLSvq/ZanlU7
-         VVD0HvxwbN4tzjdmFf0N7Nmtr69/v5jI7068H0ffgrN0X8ylKTdt20JgT58FObicoz/n
-         B5DdMOhIJGy3ljDCLebYnU734zlU8HJHkKLVRelnMlB3hRYiWIS8YGLFHYnl18omh+Fq
-         v6LcPIwy0s+HOv3/wCwbeq909l+UhEPBxuYOtOIZmKD+OO3/362DoejBq6MUGyLeYkL1
-         aHJA==
-X-Gm-Message-State: APjAAAWtsXr1Lo5oACBzI6F8kNR3+tj5CMmIFcYBfLOKVvwH0tOl7P1Y
-        p94YeaHg0PjGfALoZtBORsk=
-X-Google-Smtp-Source: APXvYqwD/9fmH32eVCZEP5+6HvThzzEZEn76c0ySdjqM8akpO/1BRkFVXK4aJiqyQMOXIbXqcmMTLQ==
-X-Received: by 2002:a63:114a:: with SMTP id 10mr4448655pgr.185.1582895257294;
-        Fri, 28 Feb 2020 05:07:37 -0800 (PST)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id a18sm2926947pfr.148.2020.02.28.05.07.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 05:07:35 -0800 (PST)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 2E59E4042C; Fri, 28 Feb 2020 13:07:35 +0000 (UTC)
-Date:   Fri, 28 Feb 2020 13:07:35 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Junyong Sun <sunjy516@gmail.com>
-Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
-        sunjunyong@xiaomi.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] firmware: fix a double abort case with
- fw_load_sysfs_fallback
-Message-ID: <20200228130735.GA11244@42.do-not-panic.com>
-References: <1582876593-27926-1-git-send-email-sunjunyong@xiaomi.com>
+        Fri, 28 Feb 2020 08:07:57 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01SD7oNp092411;
+        Fri, 28 Feb 2020 07:07:50 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582895270;
+        bh=9IuRAp1wMaSf2kT39F2JerSrH1w8/KtNCnW151fDA7s=;
+        h=From:To:CC:Subject:Date;
+        b=v3wDl50JfZ+cN6tCkci8rP4aP6ysAsqG/ybdZOxIRtC6qKG+1aI6eNyq32fnpQ9VK
+         Rx03YMClw1jlo2jbteAJKPpG1NXSEjeYnC3oJIiF0m8bGsmY8DHFHiwdVjdXDAbPK3
+         I2zSG5z/Ww/ocByhfB59g7A4v7HKVn7Q4RAcsd4s=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01SD7o7j105524;
+        Fri, 28 Feb 2020 07:07:50 -0600
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 28
+ Feb 2020 07:07:49 -0600
+Received: from localhost.localdomain (10.64.41.19) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 28 Feb 2020 07:07:49 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 01SD7lcs037330;
+        Fri, 28 Feb 2020 07:07:48 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dan.j.williams@intel.com>, <geert@linux-m68k.org>
+Subject: [PATCH v4 0/2] dmaengine: Initial debugfs support
+Date:   Fri, 28 Feb 2020 15:07:45 +0200
+Message-ID: <20200228130747.22905-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582876593-27926-1-git-send-email-sunjunyong@xiaomi.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 03:56:33PM +0800, Junyong Sun wrote:
-> fw_sysfs_wait_timeout may return err with -ENOENT
-> at fw_load_sysfs_fallback and firmware is already
-> in abort status, no need to abort again, so skip it.
+Hi,
 
-What exactly is caused by this issue though? Are you seeing
-a kernel panic, some extra messages in the kernel log? This
-informationw ould be useful for the kernel commit log.
+Changes since v3:
+- Create a directory for dmaengine and name the initial file as summary
+- Function to get the debugfs root for DMA drivers if they want to place files
+- Custom dbg_summary_show implementation for k3-udma
 
-> Signed-off-by: Junyong Sun <sunjunyong@xiaomi.com>
-> ---
->  drivers/base/firmware_loader/fallback.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
-> index 8704e1b..1e9c96e 100644
-> --- a/drivers/base/firmware_loader/fallback.c
-> +++ b/drivers/base/firmware_loader/fallback.c
-> @@ -525,7 +525,7 @@ static int fw_load_sysfs_fallback(struct fw_sysfs *fw_sysfs,
->  	}
->  
->  	retval = fw_sysfs_wait_timeout(fw_priv, timeout);
-> -	if (retval < 0) {
-> +	if (retval < 0 && retval != -ENOENT) {
->  		mutex_lock(&fw_lock);
->  		fw_load_abort(fw_sysfs);
->  		mutex_unlock(&fw_lock);
-> -- 
-> 2.7.4
-> 
+Changes since v2:
+- Use dma_chan_name() for printing the channel's name
+
+Changes since v1:
+- Use much more simplified fops for the debugfs file (via DEFINE_SHOW_ATTRIBUTE)
+- do not allow modification to dma_device_list while the debugfs file is read
+- rename the slave_name to dbg_client_name (it is only for debugging)
+- print information about dma_router if it is used by the channel
+- Formating of the output slightly changed
+
+The basic debugfs file (/sys/kernel/debug/dmaengine/summary) can be used to
+query basic information about the DMAengine usage (am654-evm):
+
+# cat /sys/kernel/debug/dmaengine/summary
+dma0 (285c0000.dma-controller): number of channels: 96
+
+dma1 (31150000.dma-controller): number of channels: 267
+ dma1chan0    | 2b00000.mcasp:tx
+ dma1chan1    | 2b00000.mcasp:rx
+ dma1chan2    | in-use
+ dma1chan3    | in-use
+ dma1chan4    | in-use
+ dma1chan5    | in-use
+
+Drivers can implement custom dbg_summary_show to add extended information via
+the summary file, like with the second patch for k3-udma (j721e-evm):
+
+# cat /sys/kernel/debug/dmaengine/summary
+dma0 (285c0000.dma-controller): number of channels: 24
+
+dma1 (31150000.dma-controller): number of channels: 84
+ dma1chan0    | 2b00000.mcasp:tx (MEM_TO_DEV, tchan16 [0x1010 -> 0xc400], PDMA[ ACC32 BURST ], TR mode)
+ dma1chan1    | 2b00000.mcasp:rx (DEV_TO_MEM, rchan16 [0x4400 -> 0x9010], PDMA[ ACC32 BURST ], TR mode)
+ dma1chan2    | 2ba0000.mcasp:tx (MEM_TO_DEV, tchan17 [0x1011 -> 0xc507], PDMA[ ACC32 BURST ], TR mode)
+ dma1chan3    | 2ba0000.mcasp:rx (DEV_TO_MEM, rchan17 [0x4507 -> 0x9011], PDMA[ ACC32 BURST ], TR mode)
+ dma1chan4    | in-use (MEM_TO_MEM, chan0 pair [0x1000 -> 0x9000], PSI-L Native, TR mode)
+ dma1chan5    | in-use (MEM_TO_MEM, chan1 pair [0x1001 -> 0x9001], PSI-L Native, TR mode)
+ dma1chan6    | in-use (MEM_TO_MEM, chan4 pair [0x1004 -> 0x9004], PSI-L Native, TR mode)
+ dma1chan7    | in-use (MEM_TO_MEM, chan5 pair [0x1005 -> 0x9005], PSI-L Native, TR mode)
+ 
+Regards,
+Peter
+---
+Peter Ujfalusi (2):
+  dmaengine: Add basic debugfs support
+  dmaengine: ti: k3-udma: Implement custom dbg_summary_show for debugfs
+
+ drivers/dma/dmaengine.c   | 77 +++++++++++++++++++++++++++++++++++++++
+ drivers/dma/dmaengine.h   |  6 +++
+ drivers/dma/ti/k3-udma.c  | 63 ++++++++++++++++++++++++++++++++
+ include/linux/dmaengine.h | 12 +++++-
+ 4 files changed, 157 insertions(+), 1 deletion(-)
+
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
