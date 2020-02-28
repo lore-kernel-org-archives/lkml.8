@@ -2,124 +2,105 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7DD8C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE0FC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F6AB246AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:42:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="pyLLKGEF"
+	by mail.kernel.org (Postfix) with ESMTP id 6C3D2246A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:42:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgB1OmS (ORCPT
+        id S1727173AbgB1Omi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 09:42:18 -0500
-Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.123]:24748 "EHLO
-        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbgB1OmS (ORCPT
+        Fri, 28 Feb 2020 09:42:38 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54072 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726738AbgB1Omi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 09:42:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582900936;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=prI0PeMixLchyFrb/KnSuAfI0TjVkeTP61TcH/1S8WU=;
-        b=pyLLKGEFTok3PIQg4m4H1dK/ttNAqtPcwtgftPcYPVTRBgf6iBWYlmIrkKK1aIQ87C
-        IdiCyqG6hfGP0MMvw/UI7N18aJasYfuUrHgWSzen6KLgIImn8rDXKj6sBUZKXxPxu7qX
-        12ZYF9u7T4+LG0t593IkI2D4/KhP6ymBWKNUnZtNfXoGEFYvE4vfiWaT1aNNJhMrR0TB
-        CmArAYBvyNRr+UX6UXcHLUX4FSxbwyhBDfgFNbkxLw9ZuyVRxrmvXSKF1WkGwKHiEBTK
-        5T67G25dwod4OwkX+ourgJWaO6/AIvqXrXfPLXBIqQQxJwHer8xS1mGwmZedAEuXl3g2
-        fmiw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlaYXAcKqg=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
-        with ESMTPSA id y0a02cw1SEg11Kp
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Fri, 28 Feb 2020 15:42:01 +0100 (CET)
-Subject: Re: [PATCH v3 5/6] MIPS: DTS: CI20: multiple DTS improvements
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=iso-8859-1
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <1582900568.3.2@crapouillou.net>
-Date:   Fri, 28 Feb 2020 15:42:01 +0100
-Cc:     Paul Boddie <paul@boddie.org.uk>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <6EC236FB-2F3F-4556-8711-66F5AAE2D574@goldelico.com>
-References: <cover.1581884459.git.hns@goldelico.com> <01795b270ad025ffffbf80e115b3b2d138a20ffe.1581884459.git.hns@goldelico.com> <1582900568.3.2@crapouillou.net>
-To:     Paul Cercueil <paul@crapouillou.net>
-X-Mailer: Apple Mail (2.3124)
+        Fri, 28 Feb 2020 09:42:38 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01SEeniJ182198
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 09:42:37 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yepwj904r-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 09:42:36 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Fri, 28 Feb 2020 14:42:35 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 28 Feb 2020 14:42:32 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01SEgV6k52625422
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Feb 2020 14:42:31 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DE4A2AE056;
+        Fri, 28 Feb 2020 14:42:31 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2250EAE045;
+        Fri, 28 Feb 2020 14:42:29 +0000 (GMT)
+Received: from [9.199.58.51] (unknown [9.199.58.51])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 28 Feb 2020 14:42:28 +0000 (GMT)
+Subject: Re: [PATCH v3 0/6] perf annotate: Misc fixes / improvements
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, namhyung@kernel.org,
+        irogers@google.com, songliubraving@fb.com, yao.jin@linux.intel.com,
+        linux-kernel@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20200204045233.474937-1-ravi.bangoria@linux.ibm.com>
+ <20200206190412.GD1669706@krava> <20200227141110.GF10761@kernel.org>
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Date:   Fri, 28 Feb 2020 20:12:27 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200227141110.GF10761@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022814-0020-0000-0000-000003AE8044
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022814-0021-0000-0000-00002206A41B
+Message-Id: <3fa6d985-1401-d767-a4bc-ce0efc420429@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-28_04:2020-02-28,2020-02-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ adultscore=0 suspectscore=0 malwarescore=0 spamscore=0 impostorscore=0
+ lowpriorityscore=0 clxscore=1015 priorityscore=1501 mlxlogscore=915
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002280116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-> Am 28.02.2020 um 15:36 schrieb Paul Cercueil <paul@crapouillou.net>:
->=20
-> Hi Nikolaus,
->=20
-> Le dim., f=E9vr. 16, 2020 at 21:20, H. Nikolaus Schaller =
-<hns@goldelico.com> a =E9crit :
->> a) add DT node for SW1 as Enter button
->> The SW1 button can be used as a simple one-button keyboard
->> and is connected to PD17.
->> Note: SW1 has a second meaning to change the boot sequence
->> when pressed while powering on.
->> b) give eth0_power a defined voltage.
->> This is a 3.3V power switch (DVNET3.3V ).
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> ---
->> arch/mips/boot/dts/ingenic/ci20.dts | 14 ++++++++++++++
->> 1 file changed, 14 insertions(+)
->> diff --git a/arch/mips/boot/dts/ingenic/ci20.dts =
-b/arch/mips/boot/dts/ingenic/ci20.dts
->> index 1ab55be707af..4bacefa2cfce 100644
->> --- a/arch/mips/boot/dts/ingenic/ci20.dts
->> +++ b/arch/mips/boot/dts/ingenic/ci20.dts
->> @@ -4,6 +4,7 @@
->> #include "jz4780.dtsi"
->> #include <dt-bindings/clock/ingenic,tcu.h>
->> #include <dt-bindings/gpio/gpio.h>
->> +#include <dt-bindings/input/input.h>
->> / {
->> 	compatible =3D "img,ci20", "ingenic,jz4780";
->> @@ -25,6 +26,17 @@
->> 		       0x30000000 0x30000000>;
->> 	};
->> +	gpio-keys {
->> +		compatible =3D "gpio-keys";
->> +
->> +		sw1 {
->> +			label =3D "ci20:sw1";
->> +			linux,code =3D <KEY_ENTER>;
->=20
-> Why KEY_ENTER? It would make it impossible for applications to know =
-that it's actually the switch that has been pressed an not the keyboard.
 
-Ah, ok. I didn't think about the use case that a physical keyboard is =
-connected to one of the USB ports.
+On 2/27/20 7:41 PM, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Feb 06, 2020 at 08:04:12PM +0100, Jiri Olsa escreveu:
+>> On Tue, Feb 04, 2020 at 10:22:27AM +0530, Ravi Bangoria wrote:
+>>> Few fixes / improvements related to perf annotate.
+>>>
+>>> v2: https://lore.kernel.org/r/20200124080432.8065-1-ravi.bangoria@linux.ibm.com
+>>>
+>>> v2->v3:
+>>>   - [PATCH v3 2/6] New function annotation_line__exit() to clear
+>>>     annotation_line objects.
+>>
+>> Acked-by: Jiri Olsa <jolsa@redhat.com>
+> 
+> Thanks applied the series to perf/urgent as it contains a fix.
 
-What else would you propose? I think your argument is for every existing =
-KEY_CODE. Should we add a new one?
+Thanks Arnaldo. I don't see patch #5 and #6 in perf/urgent. You missed them?
+Or didn't consider for perf/urgent :) ?
 
-BR and thanks,
-Nikolaus
-
-
+Ravi
 
