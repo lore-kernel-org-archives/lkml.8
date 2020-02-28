@@ -2,221 +2,102 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF52EC3F2D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08906C3F2CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF4E20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D166424690
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 03:37:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pvTH561/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OJ7Z5xT8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730809AbgB1DgG (ORCPT
+        id S1730811AbgB1DhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 22:36:06 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46644 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730665AbgB1DgG (ORCPT
+        Thu, 27 Feb 2020 22:37:02 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57023 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730630AbgB1DhC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 22:36:06 -0500
-Received: by mail-lf1-f66.google.com with SMTP id v6so992879lfo.13
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 19:36:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=FVT7qEYhm80HqJbc3aWKfNzrLg9U8y0nUBfDpf5KnMg=;
-        b=pvTH561/K3ONvmMTS2sJ0tskdzovHpjj41uO2R9CLtDmRqcW0n3CZbTzicXccYr3K9
-         lD2aLl+mm0rYiigoxjmaAqSGcCgA4v2xlli7pdQWC9229vSGdOaMXZsU3L2R+/9j8Qib
-         qmMfsq36on+JjhbXc/FDkZBZ7tXWsqjkMynIk2O9l/G8DstFxqyocwuaaCveMI2BjUZc
-         foXcMAMVYvE9dhDwIRONN5+9hUeBuA/zhR3vuoMNKJmqaErKB783bj8UFOIT5dKS0R9W
-         NT21NGmI26AbxAxA26tOhqvsS6XFiejQ0BqopZNSmA2LdcJuk6Rz/ts2KqyQNUJE1XBI
-         +IWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=FVT7qEYhm80HqJbc3aWKfNzrLg9U8y0nUBfDpf5KnMg=;
-        b=TGkkZ752hhAE6sU1BSv+R2jCP0R7Y9Zj3E6QTt+TbhT6eFXA+B98E6X7kOVG0GVXd4
-         iuE1g8enC9ri6g5mrBaTrUMgWJWNP9YNfSw/xoMPewLzN1l+flLuq+dk9mxzKrT6DQZn
-         Pmajlzq8AimZxyGRYIGZwhdLP1acvlzj/JGbFy0FD8udXKBG/rpT8dHYLFWf1QVMsNzE
-         AHaqF6/P2MfIPdEEKVrP9JYsFmMEHHtb7ZW81yMVZmgc+FngiIw3/SPMv1v7StQPlAXS
-         2ztMefbNOS3NyTdlHY8RBfF0ZCG+Gb6GdXHnMzuRWTu9mP8MspXikuCVs8A49AD4mb7+
-         Qp4w==
-X-Gm-Message-State: ANhLgQ1rkQ0106vLPw2Ox/xTtNhJ57a9BOokj+5o6iOpfvfTexdR22W5
-        68dgfBG6Iy1gbkG4zTw4c0ZfiaN964NFwQJaJ3xVSA==
-X-Google-Smtp-Source: ADFU+vvlRW8ztAcPO+osmfqDpO30hIpVhisGrk2kWl2sseV5L3WzBosUr1QJcpxZIXzUEO2mlXWAaTfTi5wI9PLftJs=
-X-Received: by 2002:a19:4f43:: with SMTP id a3mr1330526lfk.6.1582860962178;
- Thu, 27 Feb 2020 19:36:02 -0800 (PST)
+        Thu, 27 Feb 2020 22:37:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582861021;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=aDJjztBIb3g7WuQ8tm9j5jVgnbmxznk84OuAMLjRbBQ=;
+        b=OJ7Z5xT8kgtMXRIZOYfxNCfKkLv5Sbffh+O4OLYmv7legVzzY5N4ziVV5LnbWBvrolKVyy
+        iQN5whzpD2El2X9cbczqtxB8HH5QQaqFJW7XMYvPvf5Jxjr3sGJ9UVJiSNBy7bTniKEQPj
+        gYQDXTqPmwi9dAwJg32mcbyYjD5dIjU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-1-RILYYk35OgShqd8ub0Y2sA-1; Thu, 27 Feb 2020 22:36:57 -0500
+X-MC-Unique: RILYYk35OgShqd8ub0Y2sA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0C33B10509B8;
+        Fri, 28 Feb 2020 03:36:55 +0000 (UTC)
+Received: from localhost (ovpn-12-49.pek2.redhat.com [10.72.12.49])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 36AE45D9CD;
+        Fri, 28 Feb 2020 03:36:50 +0000 (UTC)
+Date:   Fri, 28 Feb 2020 11:36:48 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Kristen Carlson Accardi <kristen@linux.intel.com>,
+        dyoung@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, arjan@linux.intel.com,
+        rick.p.edgecombe@intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        kexec@lists.infradead.org
+Subject: Re: [RFC PATCH 09/11] kallsyms: hide layout and expose seed
+Message-ID: <20200228033648.GJ24216@MiWiFi-R3L-srv>
+References: <20200205223950.1212394-1-kristen@linux.intel.com>
+ <20200205223950.1212394-10-kristen@linux.intel.com>
+ <202002060428.08B14F1@keescook>
+ <a915e1eb131551aa766fde4c14de5a3e825af667.camel@linux.intel.com>
+ <20200227024253.GA5707@MiWiFi-R3L-srv>
+ <202002270802.1CA8B32AC@keescook>
 MIME-Version: 1.0
-References: <20200227132214.553656188@linuxfoundation.org>
-In-Reply-To: <20200227132214.553656188@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 28 Feb 2020 09:05:50 +0530
-Message-ID: <CA+G9fYuy_Td284_oTdxMb45vXsAZfCnTGYG8NfHA2XvemZ_hjQ@mail.gmail.com>
-Subject: Re: [PATCH 4.19 00/97] 4.19.107-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202002270802.1CA8B32AC@keescook>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Feb 2020 at 19:33, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.19.107 release.
-> There are 97 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 29 Feb 2020 13:21:24 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.107-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On 02/27/20 at 08:02am, Kees Cook wrote:
+> On Thu, Feb 27, 2020 at 10:42:53AM +0800, Baoquan He wrote:
+> > On 02/06/20 at 09:51am, Kristen Carlson Accardi wrote:
+> > > On Thu, 2020-02-06 at 04:32 -0800, Kees Cook wrote:
+> > 
+> > > > In the past, making kallsyms entirely unreadable seemed to break
+> > > > weird
+> > > > stuff in userspace. How about having an alternative view that just
+> > > > contains a alphanumeric sort of the symbol names (and they will
+> > > > continue
+> > > > to have zeroed addresses for unprivileged users)?
+> > > > 
+> > > > Or perhaps we wait to hear about this causing a problem, and deal
+> > > > with
+> > > > it then? :)
+> > > > 
+> > > 
+> > > Yeah - I don't know what people want here. Clearly, we can't leave
+> > > kallsyms the way it is. Removing it entirely is a pretty fast way to
+> > > figure out how people use it though :).
+> > 
+> > Kexec-tools and makedumpfile are the users of /proc/kallsyms currently. 
+> > We use kallsyms to get page_offset_base and _stext.
+> 
+> AIUI, those run as root so they'd be able to consume the uncensored
+> output.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Yes, they have to be run under root.
 
-Summary
-------------------------------------------------------------------------
-kernel: 4.19.107-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: 6ed3dd5c1f76bc99760b8d2dee47709961c3596e
-git describe: v4.19.106-98-g6ed3dd5c1f76
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.106-98-g6ed3dd5c1f76
-
-No regressions (compared to build v4.19.106)
-
-No fixes (compared to build v4.19.106)
-
-Ran 28502 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-fs-tests
-* network-basic-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* ltp-cap_bounds-64k-page_size-tests
-* ltp-cap_bounds-kasan-tests
-* ltp-commands-64k-page_size-tests
-* ltp-commands-kasan-tests
-* ltp-containers-64k-page_size-tests
-* ltp-containers-kasan-tests
-* ltp-cpuhotplug-64k-page_size-tests
-* ltp-cpuhotplug-kasan-tests
-* ltp-crypto-64k-page_size-tests
-* ltp-crypto-kasan-tests
-* ltp-crypto-tests
-* ltp-cve-64k-page_size-tests
-* ltp-cve-kasan-tests
-* ltp-dio-64k-page_size-tests
-* ltp-dio-kasan-tests
-* ltp-fcntl-locktests-64k-page_size-tests
-* ltp-fcntl-locktests-kasan-tests
-* ltp-filecaps-64k-page_size-tests
-* ltp-filecaps-kasan-tests
-* ltp-fs-kasan-tests
-* ltp-fs_bind-64k-page_size-tests
-* ltp-fs_bind-kasan-tests
-* ltp-fs_perms_simple-64k-page_size-tests
-* ltp-fs_perms_simple-kasan-tests
-* ltp-fsx-64k-page_size-tests
-* ltp-fsx-kasan-tests
-* ltp-hugetlb-64k-page_size-tests
-* ltp-hugetlb-kasan-tests
-* ltp-io-64k-page_size-tests
-* ltp-io-kasan-tests
-* ltp-ipc-64k-page_size-tests
-* ltp-ipc-kasan-tests
-* ltp-math-64k-page_size-tests
-* ltp-math-kasan-tests
-* ltp-mm-64k-page_size-tests
-* ltp-mm-kasan-tests
-* ltp-nptl-64k-page_size-tests
-* ltp-nptl-kasan-tests
-* ltp-pty-64k-page_size-tests
-* ltp-pty-kasan-tests
-* ltp-sched-64k-page_size-tests
-* ltp-sched-kasan-tests
-* ltp-securebits-64k-page_size-tests
-* ltp-securebits-kasan-tests
-* ltp-syscalls-64k-page_size-tests
-* ltp-syscalls-kasan-tests
-* ssuite
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
