@@ -2,99 +2,109 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E46C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 055E4C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2C09246A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:57:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C949F246A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:57:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HDfY5fT3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgB1J5g (ORCPT
+        id S1726946AbgB1J5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 04:57:36 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:26105 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726400AbgB1J5g (ORCPT
+        Fri, 28 Feb 2020 04:57:52 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:55508 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726400AbgB1J5w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 04:57:36 -0500
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-146-WZaAI-opPNCY3__hcJiY0A-1; Fri, 28 Feb 2020 04:57:33 -0500
-X-MC-Unique: WZaAI-opPNCY3__hcJiY0A-1
-Received: by mail-wr1-f71.google.com with SMTP id z1so1116431wrs.9
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 01:57:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=d8+GwUHzIftWzqoVbVQjzy/I+4cuxvvj+bnHjbB7E24=;
-        b=hgWm+n8gkNOBdrzdudACoi72gjH3I9cdZuYfmSJxYr7/WncWVwdJptBbH8A0Bpwz6y
-         Cvw+pj19NNoBdOyspsnHvYm+whTEgEmsMNO6xFDG7cIcyPveoTFCShXRFu8vgvq03LOT
-         XeSnQtk9aa34EJdoYTf6ZpAlOreSPDC8WHO6dTIdIrfZMpoJW897eG4OAL93DwIV0wBR
-         BuXDcrwVmc2aEzQ4LJoFF71oDja6QKU2u15o2exTIgzIVtuSkQprDu+YdiSQh+XK6I0O
-         iKM4KjFk4D8wecBaINXZgVCMbgUKuFlvLvDgi8eAwpn1f8s3BYEx1qIWez6Dc3bL+MlL
-         2XrQ==
-X-Gm-Message-State: APjAAAX+ZFEoJEtWpMZHqzI/Mdg4ssfH6ThJH3Zz+wruLRyr0RFaQWCj
-        6Wp4fOR6W9U1JSLYtk7w98BZvMjkPlcwpEJUfJXNz3hZXodJ88q7puqRhQI873ivnHMQ4LJqu1r
-        jLq+HMMxSECnVhWg7q+tr6Y6s
-X-Received: by 2002:adf:fa86:: with SMTP id h6mr3984573wrr.418.1582883852390;
-        Fri, 28 Feb 2020 01:57:32 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxqgS9rDQqsKiBqjZd3BIt0aCW27gk2+4hbj//MY004AmWXLLy+jIX2/mdKC4rzAbqEFnh7jA==
-X-Received: by 2002:adf:fa86:: with SMTP id h6mr3984549wrr.418.1582883852092;
-        Fri, 28 Feb 2020 01:57:32 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:d0d9:ea10:9775:f33f? ([2001:b07:6468:f312:d0d9:ea10:9775:f33f])
-        by smtp.gmail.com with ESMTPSA id h81sm788075wme.12.2020.02.28.01.57.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Feb 2020 01:57:31 -0800 (PST)
-Subject: Re: [PATCH] KVM: nVMX: Consult only the "basic" exit reason when
- routing nested exit
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-References: <20200227174430.26371-1-sean.j.christopherson@intel.com>
- <ee8c5eb6-9e3d-620b-d51f-bf0534a05d43@oracle.com>
- <20200227205153.GC17014@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <10a7327c-4f2b-bf44-1590-a33ae1cad604@redhat.com>
-Date:   Fri, 28 Feb 2020 10:57:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 28 Feb 2020 04:57:52 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01S9vkUb011813;
+        Fri, 28 Feb 2020 03:57:46 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582883866;
+        bh=RSDVCTsvy2Z5fJHhflSr1pvfzLu6/aSaZ+MblDcsENY=;
+        h=From:To:CC:Subject:Date;
+        b=HDfY5fT36bE48VKedLzyOyPti1z7wvMDg9HJpSGFDpZr2cGYmdqBXRc7lYaEw8lT7
+         meunFAW7ujI0UNkXVPJbRU9wBMYTEnxewwbHS4qJWBQN4izYg61wLgjGTebcLuUwR6
+         vz8LnweLVeMmoyaO3bBZzLrlS/tRo2/CF4Agb1lU=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01S9vke4045809
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 28 Feb 2020 03:57:46 -0600
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 28
+ Feb 2020 03:57:46 -0600
+Received: from localhost.localdomain (10.64.41.19) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 28 Feb 2020 03:57:46 -0600
+Received: from uda0131933.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 01S9vhLE115767;
+        Fri, 28 Feb 2020 03:57:43 -0600
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+CC:     Tony Lindgren <tony@atomide.com>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>
+Subject: [PATCH v2 0/5] pwm: omap-dmtimer: Allow for dynamic pwm period updates
+Date:   Fri, 28 Feb 2020 15:26:45 +0530
+Message-ID: <20200228095651.32464-1-lokeshvutla@ti.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20200227205153.GC17014@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/02/20 21:51, Sean Christopherson wrote:
-> So part of me thinks the best way to resolve the printing would be to
-> modify VMX_EXIT_REASONS to do "| VMX_EXIT_REASONS_FAILED_VMENTRY" where
-> appropriate, i.e. on INVALID_STATE, MSR_LOAD_FAIL and MCE_DURING_VMENTRY.
-> The downside of that approach is it breaks again when new modifiers come
-> along, e.g. SGX's ENCLAVE_EXIT.  But again, the modifier is likely useful
-> information.
-> 
-> I think the most foolproof and informative way to handle this would be to
-> add a macro and/or helper function, e.g. kvm_print_vmx_exit_reason(), to
-> wrap __print_symbolic(__entry->exit_code, VMX_EXIT_REASONS) so that it
-> prints both the name of the basic exit reason as well as the names for
-> any modifiers.
-> 
-> TL;DR: I still like this patch as is, especially since it'll be easy to
-> backport.  I'll send a separate patch for the tracepoint issue.
+This series fixes minor issues in config callback and allows for on the
+fly updates for pwm period and duty cycle. This is mainly intended to
+allow pwm omap dmtimer to be used for generating a 1PPS signal that can be
+syncronized to PTP clock in CPTS module available in AM335x and AM57xx SoCs.
 
-Agreed, thanks.  I queued this one.
+Series depends on the following series:
+- https://patchwork.kernel.org/patch/11379875/
+- https://patchwork.kernel.org/project/linux-omap/list/?series=248929 
 
-Paolo
+Full dependencies can be seen here:
+https://github.com/lokeshvutla/linux/tree/devel/pwm-1pps-generation-v2
+
+Changes since v1:
+- Updated commit description in PATCH 1
+- Added a brief about PWM generation using OMAP DM timer.
+- Updated the pwm stop callback to allow for completing the current pwm
+  cycle.
+- Added the limitaitons of hardware.
+- Used hw status instead of relying on pwm framework for state update.
+
+Lokesh Vutla (6):
+  pwm: omap-dmtimer: Drop unused header file
+  pwm: omap-dmtimer: Update description for pwm omap dm timer
+  pwm: omap-dmtimer: Fix pwm enabling sequence
+  pwm: omap-dmtimer: Fix pwm disabling sequence
+  pwm: omap-dmtimer: Do not disable pwm before changing
+    period/duty_cycle
+  pwm: omap-dmtimer: Implement .apply callback
+
+ drivers/pwm/pwm-omap-dmtimer.c                | 248 +++++++++++++-----
+ include/clocksource/timer-ti-dm.h             |   3 +-
+ .../linux/platform_data/pwm_omap_dmtimer.h    |  90 -------
+ 3 files changed, 178 insertions(+), 163 deletions(-)
+ delete mode 100644 include/linux/platform_data/pwm_omap_dmtimer.h
+
+-- 
+2.23.0
 
