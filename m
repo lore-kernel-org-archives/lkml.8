@@ -2,202 +2,164 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C04C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEE1C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6B0E24697
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:49:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iaQwtQAw"
+	by mail.kernel.org (Postfix) with ESMTP id C1EBE246A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:54:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgB1KtT (ORCPT
+        id S1726765AbgB1KyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 05:49:19 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:36966 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726538AbgB1KtT (ORCPT
+        Fri, 28 Feb 2020 05:54:00 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:50020 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbgB1KyA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 05:49:19 -0500
-Received: by mail-oi1-f196.google.com with SMTP id q84so2442380oic.4
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 02:49:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aqdR1FawIDcIjcDWnx2zMMW5yAMtp4uyQmYJLmHNyd8=;
-        b=iaQwtQAwDokvpkvWtIBMKO18MBEUopLMOwY9kq5JljpHlqghSzpzTp05zUOBKX2UEB
-         Hki8du07pvSvsc2LTNwO3MwSZwjMC/0tN2RTSIR/VslJnKL0e8tocfEjzO92MwzYqQF2
-         bgIDhZUCF4QVFg8pm48+sSE89EuR3eTPVtXIR8lQv3AK0H7RwH9fYPXdVvhVYaWq9IWO
-         ueLfIzlutMBh/lGXQH59NzcJvK5dR12h6t1jPhkXlBg0Ep0dQcy++eJluetM321O694/
-         1F3Tl2bl05QUq1rXWwIPNeuxfEQ7xmih5ZOorVWIr/tS99pYhJGvIvPOri0DL+geVl/1
-         poUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aqdR1FawIDcIjcDWnx2zMMW5yAMtp4uyQmYJLmHNyd8=;
-        b=crrFoIYLexM3zqrEQVNVW+jm6qh3QFmwhW0JSfPhks4bIc7gvosglttdSN92rashd3
-         mhwPJTe/FsOetWo7nqYqwHjWdjwjL624zKLQasnwvxvDu84vJJAEMDEscaGQsCDej5z4
-         7tK16YcwRDSQWTPz/M6qdzTMv+WukrFkcysM4kBgiJbGMnX3s+HmEyPuQ9tdHnLtXPEZ
-         1tISMaT53oNkW0J9YfotOaBZXd/97uMUjjYAhYevgDYoyLZdcnK1ya76HwFO9ar5C5cR
-         Yz/0PboheBxk53MTM4mY3qbwG5X1/7ety4obIQU1wILNEsHjaIy5lQB8pLOFBP582jgX
-         ZEfw==
-X-Gm-Message-State: APjAAAW0UNhieSGdnqs7SvJRGbhSOE2SUAt3RT3HA0lBGiqgdQEGkGnk
-        c5fhjM+z6CzNP4jsL6lyGMQvO/lhOOQ33kfEdnQwUtQX
-X-Google-Smtp-Source: APXvYqxQL6CLzR9Ev8U0HMJC6wiM0zIinQqhyFi62qJn3GpWoGc6pgY/YDb7QjypTAohz7rkgxsaQGw1WqcqZT4LehU=
-X-Received: by 2002:a05:6808:8d5:: with SMTP id k21mr2640215oij.121.1582886957457;
- Fri, 28 Feb 2020 02:49:17 -0800 (PST)
+        Fri, 28 Feb 2020 05:54:00 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 15DF9293656;
+        Fri, 28 Feb 2020 10:53:58 +0000 (GMT)
+Date:   Fri, 28 Feb 2020 11:53:55 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Pratyush Yadav <p.yadav@ti.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, linux-mtd@lists.infradead.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v2 06/11] mtd: spi-nor: add support for DTR protocol
+Message-ID: <20200228115355.5033798f@collabora.com>
+In-Reply-To: <20200228093658.zc3uifqg4zruokq3@ti.com>
+References: <20200226093703.19765-1-p.yadav@ti.com>
+        <20200226093703.19765-7-p.yadav@ti.com>
+        <20200227175841.51435e3f@collabora.com>
+        <20200228093658.zc3uifqg4zruokq3@ti.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20200228044018.1263-1-cai@lca.pw>
-In-Reply-To: <20200228044018.1263-1-cai@lca.pw>
-From:   Marco Elver <elver@google.com>
-Date:   Fri, 28 Feb 2020 11:49:06 +0100
-Message-ID: <CANpmjNNe4OebUdTR5Z=23FK55gXOJmzdnEfXt8_3xjQ0P+foFA@mail.gmail.com>
-Subject: Re: [PATCH] mm/swap: annotate data races for lru_rotate_pvecs
-To:     Qian Cai <cai@lca.pw>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Feb 2020 at 05:40, Qian Cai <cai@lca.pw> wrote:
->
-> Read to lru_add_pvec->nr could be interrupted and then write to the same
-> variable. The write has local interrupt disabled, but the plain reads
-> result in data races. However, it is unlikely the compilers could
-> do much damage here given that lru_add_pvec->nr is a "unsigned char" and
-> there is an existing compiler barrier. Thus, annotate the reads using the
-> data_race() macro. The data races were reported by KCSAN,
+On Fri, 28 Feb 2020 15:06:58 +0530
+Pratyush Yadav <p.yadav@ti.com> wrote:
 
-Note that, the fact that the writer has local interrupts disabled for
-the write is irrelevant because it's the interrupt that triggered
-while the read was happening that led to the concurrent write.
+> Hi Boris,
+> 
+> On 27/02/20 05:58PM, Boris Brezillon wrote:
+> > On Wed, 26 Feb 2020 15:06:58 +0530
+> > Pratyush Yadav <p.yadav@ti.com> wrote:
+> >   
+> > > Double Transfer Rate (DTR) is SPI protocol in which data is transferred
+> > > on each clock edge as opposed to on each clock cycle. Make
+> > > framework-level changes to allow supporting flashes in DTR mode.
+> > > 
+> > > Right now, mixed DTR modes are not supported. So, for example a mode
+> > > like 4S-4D-4D will not work. All phases need to be either DTR or STR.  
+> > 
+> > Didn't go deep into the patch but at first glance you don't seem to
+> > extend the framework to support stateful modes as I tried to do here
+> > [1]. That's really something we should address before considering
+> > supporting xD-xD-xD modes, unless the SPI-NOR only supports one
+> > stateful mode. If we don't do that first, we might face all sort of
+> > unpleasant issues:
+> > 
+> > * kexec not working correctly because the previous kernel left the NOR
+> >   in an unknown state
+> > * suspend/resume not working properly
+> > * linux not booting properly because the bootloader left the device in
+> >   its non-default mode
+> > * ...  
+> 
+> Correct. I am working on a follow-up series that takes care of these 
+> problems. The series will allow spi-nor to detect what mode the flash is 
+> in and then run the SFPD procedure in that mode (or maybe switch to 
+> single SPI mode and then go about its business as usual? I haven't 
+> figured out all the details yet).
+> 
+> So for the context of this series, assume we are handed the flash in 
+> single SPI mode.
+>  
+> > [1]https://patchwork.kernel.org/cover/10638055/  
+> 
+> BTW, I took a quick look at this series but I don't see any code that 
+> tries to detect which mode the flash is in (which is the troublesome 
+> part [0]). So, for example, if the bootloader leaves the flash in 
+> 8D-8D-8D mode, how would your series handle that situation?
 
-I assume you ran this with CONFIG_KCSAN_INTERRUPT_WATCHER=y?  The
-option is disabled by default (see its help-text). I don't know if we
-want to deal with data races due to interrupts right now, especially
-those that just result in 'data_race' annotations. Thoughts?
+Oh, it's definitely not taking care of that, it was just paving the
+road for spi-nor state tracking. You'd need to extend it to support
+8D-8D-8D to 1-1-1 transitions at boot time (if that's even possible).
 
-Thanks,
--- Marco
+> 
+> [0] There are multiple problems to take care of when trying to detect 
+>     which mode a flash is in. We can try reading SFDP in each mode and 
+>     whichever mode gives us the correct "SFDP" signature is the mode the 
+>     flash is in. But the problem is that even in xSPI standard Read SFDP 
+>     command is optional in 8D-8D-8D mode, let alone non-xSPI flashes.
+>     Another problem is that the address bytes and dummy cycles for Read 
+>     SFDP are not the same for every flash. The xSPI standard says 
+>     address bytes can be 3/4 and dummy cycles can be 8/20. So, for 
+>     example, Cypress s28hs/s28ht family and Micron Xccela (mt35x) family 
+>     use 4 address bytes, but the Adesto ATXP032/ATXP032R flashes use 3 
+>     address bytes.
 
->  BUG: KCSAN: data-race in lru_add_drain_cpu / rotate_reclaimable_page
->
->  write to 0xffff9291ebcb8a40 of 1 bytes by interrupt on cpu 23:
->   rotate_reclaimable_page+0x2df/0x490
->   pagevec_add at include/linux/pagevec.h:81
->   (inlined by) rotate_reclaimable_page at mm/swap.c:259
->   end_page_writeback+0x1b5/0x2b0
->   end_swap_bio_write+0x1d0/0x280
->   bio_endio+0x297/0x560
->   dec_pending+0x218/0x430 [dm_mod]
->   clone_endio+0xe4/0x2c0 [dm_mod]
->   bio_endio+0x297/0x560
->   blk_update_request+0x201/0x920
->   scsi_end_request+0x6b/0x4a0
->   scsi_io_completion+0xb7/0x7e0
->   scsi_finish_command+0x1ed/0x2a0
->   scsi_softirq_done+0x1c9/0x1d0
->   blk_done_softirq+0x181/0x1d0
->   __do_softirq+0xd9/0x57c
->   irq_exit+0xa2/0xc0
->   do_IRQ+0x8b/0x190
->   ret_from_intr+0x0/0x42
->   delay_tsc+0x46/0x80
->   __const_udelay+0x3c/0x40
->   __udelay+0x10/0x20
->   kcsan_setup_watchpoint+0x202/0x3a0
->   __tsan_read1+0xc2/0x100
->   lru_add_drain_cpu+0xb8/0x3f0
->   lru_add_drain+0x25/0x40
->   shrink_active_list+0xe1/0xc80
->   shrink_lruvec+0x766/0xb70
->   shrink_node+0x2d6/0xca0
->   do_try_to_free_pages+0x1f7/0x9a0
->   try_to_free_pages+0x252/0x5b0
->   __alloc_pages_slowpath+0x458/0x1290
->   __alloc_pages_nodemask+0x3bb/0x450
->   alloc_pages_vma+0x8a/0x2c0
->   do_anonymous_page+0x16e/0x6f0
->   __handle_mm_fault+0xcd5/0xd40
->   handle_mm_fault+0xfc/0x2f0
->   do_page_fault+0x263/0x6f9
->   page_fault+0x34/0x40
->
->  read to 0xffff9291ebcb8a40 of 1 bytes by task 37761 on cpu 23:
->   lru_add_drain_cpu+0xb8/0x3f0
->   lru_add_drain_cpu at mm/swap.c:602
->   lru_add_drain+0x25/0x40
->   shrink_active_list+0xe1/0xc80
->   shrink_lruvec+0x766/0xb70
->   shrink_node+0x2d6/0xca0
->   do_try_to_free_pages+0x1f7/0x9a0
->   try_to_free_pages+0x252/0x5b0
->   __alloc_pages_slowpath+0x458/0x1290
->   __alloc_pages_nodemask+0x3bb/0x450
->   alloc_pages_vma+0x8a/0x2c0
->   do_anonymous_page+0x16e/0x6f0
->   __handle_mm_fault+0xcd5/0xd40
->   handle_mm_fault+0xfc/0x2f0
->   do_page_fault+0x263/0x6f9
->   page_fault+0x34/0x40
->
->  2 locks held by oom02/37761:
->   #0: ffff9281e5928808 (&mm->mmap_sem#2){++++}, at: do_page_fault
->   #1: ffffffffb3ade380 (fs_reclaim){+.+.}, at: fs_reclaim_acquire.part
->  irq event stamp: 1949217
->  trace_hardirqs_on_thunk+0x1a/0x1c
->  __do_softirq+0x2e7/0x57c
->  __do_softirq+0x34c/0x57c
->  irq_exit+0xa2/0xc0
->
->  Reported by Kernel Concurrency Sanitizer on:
->  CPU: 23 PID: 37761 Comm: oom02 Not tainted 5.6.0-rc3-next-20200226+ #6
->  Hardware name: HP ProLiant BL660c Gen9, BIOS I38 10/17/2018
->
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
->
-> BTW, while at it, I had also looked at other pagevec there, but could
-> not tell for  sure if they could be interrupted resulting in data races,
-> so I leave them out for now.
->
->  mm/swap.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/mm/swap.c b/mm/swap.c
-> index cf39d24ada2a..c922f99dab85 100644
-> --- a/mm/swap.c
-> +++ b/mm/swap.c
-> @@ -599,7 +599,8 @@ void lru_add_drain_cpu(int cpu)
->                 __pagevec_lru_add(pvec);
->
->         pvec = &per_cpu(lru_rotate_pvecs, cpu);
-> -       if (pagevec_count(pvec)) {
-> +       /* Disabling interrupts below acts as a compiler barrier. */
-> +       if (data_race(pagevec_count(pvec))) {
->                 unsigned long flags;
->
->                 /* No harm done if a racing interrupt already did this */
-> @@ -744,7 +745,7 @@ void lru_add_drain_all(void)
->                 struct work_struct *work = &per_cpu(lru_add_drain_work, cpu);
->
->                 if (pagevec_count(&per_cpu(lru_add_pvec, cpu)) ||
-> -                   pagevec_count(&per_cpu(lru_rotate_pvecs, cpu)) ||
-> +                   data_race(pagevec_count(&per_cpu(lru_rotate_pvecs, cpu))) ||
->                     pagevec_count(&per_cpu(lru_deactivate_file_pvecs, cpu)) ||
->                     pagevec_count(&per_cpu(lru_deactivate_pvecs, cpu)) ||
->                     pagevec_count(&per_cpu(lru_lazyfree_pvecs, cpu)) ||
-> --
-> 2.21.0 (Apple Git-122.2)
->
+I'd rather go with something simpler and more widely supported than SFDP
+reads. Don't we have a simple command that's supported by all flashes
+and returns well known data. Isn't there an EXIT sequence that allows
+NORs to return to a single SPI state?
+
+> 
+>     Say that a flash supports Read SFDP in 8D-8D-8D mode and we try all 
+>     the combinations to find out which mode the flash is in, we now have 
+>     the problem of actually identifying the flash. Unfortunately, the 
+>     Read ID command is not uniform across flash vendors. The Micron 
+>     Xccela flashes use 8 dummy cycles and no address bytes for Read ID. 
+>     The Cypress s28hs/t family uses configurable dummy cycles 
+>     (defaulting to 3) and needs 4 dummy address bytes all of which are 
+>     0.
+
+Yep, that's what I complained about when I tried to support the
+Macronix flash. They didn't plan for a reliable RETURN-TO-SINGLE-SPI
+sequence which would not conflict with any other existing SPI commands,
+and that's a real problem.
+
+> 
+>     If we can't find out which flash it is, we can't run its fixup 
+>     hooks, and might end up running it with incorrect settings. And all 
+>     this is assuming a flash even has SFDP and has it available in all 
+>     modes.
+
+Absolutely.
+
+> 
+>     So, the only solution I can now think of is having the flash name in 
+>     its compatible string in the device tree. This way we can skip all 
+>     the Read ID ugliness and can have flash-specific hooks to make it 
+>     easier to detect the mode it is in (though I wonder if it is even 
+>     possible to detect the mode in a flash that doesn't have SFDP in 
+>     8D-8D-8D).
+
+Hm, I'd really like to avoid that if possible.
+
+> 
+>     Thoughts? Is there a better way to solve this problem that I didn't 
+>     think of?
+> 
+
+Nope, except maybe mandate that the bootloader always put the NOR in
+single SPI mode before booting Linux (and Linux should do the same,
+which is what my series was trying to address IIRC).
