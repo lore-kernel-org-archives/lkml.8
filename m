@@ -7,58 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2EEC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40506C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B60F0246B4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10F59246AE
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:01:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582898472;
-	bh=H5Y+yAnCSl+PFmR1aDIu3aEg6j13sURb3jHPBostipg=;
+	s=default; t=1582898478;
+	bh=l+2EfmcZOjafeTnHGdFpV29cI4AdppFdQ/imGLCkQxk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yY82yO1bXV10SQBafLk6+aTqHa90OlIR95WiLRINRFJFZUvTs4hqbYmrixGlMc0qG
-	 gZ++gaIrynBTBPa/QwgqZTVX1ojChn2wr+JvWdcbU5/gl4uKnWkFFs4PVPsii8PYC7
-	 Wj3RZ6C+FYZTjf1Y/il4Poyp+IUgCkH3SSJ48g60=
+	b=oQT84hvlVLacub8g2zfuwNjcZbBJ0h86eZv6PbA2JzKHJIRYrxwa35njaUFkjPFhd
+	 Y1+cpZVhbUD/LcPW8jDK2tzatLYzl/H5QvaSmCeJMT+WywLd9OFkGryOPmVUpNv/j6
+	 DcM38SrhCnEh4IS7Qil2KiBP5msKIIkRYDHD5eFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbgB1OBL (ORCPT
+        id S1727446AbgB1OBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 09:01:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58682 "EHLO mail.kernel.org"
+        Fri, 28 Feb 2020 09:01:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727096AbgB1OBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 09:01:11 -0500
+        id S1727096AbgB1OBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 09:01:15 -0500
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C69DB246BE;
-        Fri, 28 Feb 2020 14:01:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3FD9246B9;
+        Fri, 28 Feb 2020 14:01:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582898470;
-        bh=H5Y+yAnCSl+PFmR1aDIu3aEg6j13sURb3jHPBostipg=;
+        s=default; t=1582898474;
+        bh=l+2EfmcZOjafeTnHGdFpV29cI4AdppFdQ/imGLCkQxk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U2ka5BCiTDLfwHxerUhQ4c31bZX/pjsLFmHtNrYk7DjMWJSlWEzpIkYyEHgOg2+gD
-         w0BW3py/ixZMdkBiqO44UE2HLcE+n9nVsGKtKFCwMIbfjfrcbKRZlEzWN6K4Zs9651
-         KnSRX6iu0+83YCbGJpiIVec4qadz2nOFU0gF9tds=
+        b=XtICU7ObEdXA7UyVmqjUDG0G90mTvQc+cFyVZPgf4qVJF6WKzKFerTBy8dkHlgghQ
+         Yi10boQFqkEMRPWzpUqybzk2jdx2zlSLPof0OpeqyFeBZwnQqKwoIGi5Dog69vF22n
+         7Vt5ry7aPnM36d7jmVFvtanydc2E+NXjAGVa1Vac=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Changbin Du <changbin.du@intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>, Song Liu <songliubraving@fb.com>,
-        Taeung Song <treeze.taeung@gmail.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Yisheng Xie <xieyisheng1@huawei.com>,
+        He Zhe <zhe.he@windriver.com>, Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 10/15] perf config: Document missing config options
-Date:   Fri, 28 Feb 2020 11:00:09 -0300
-Message-Id: <20200228140014.1236-11-acme@kernel.org>
+Subject: [PATCH 11/15] perf probe: Check return value of strlist__add() for -ENOMEM
+Date:   Fri, 28 Feb 2020 11:00:10 -0300
+Message-Id: <20200228140014.1236-12-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200228140014.1236-1-acme@kernel.org>
 References: <20200228140014.1236-1-acme@kernel.org>
@@ -69,106 +65,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+From: He Zhe <zhe.he@windriver.com>
 
-While documenting annotate.show_nr_samples config option, I found many
-other config options missing in perf-config documentation. Add them.
+strlist__add() may fail with -ENOMEM. Check it and give debugging hint
+in advance.
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Changbin Du <changbin.du@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Leo Yan <leo.yan@linaro.org>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Kate Stewart <kstewart@linuxfoundation.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Taeung Song <treeze.taeung@gmail.com>
-Cc: Thomas Richter <tmricht@linux.ibm.com>
-Cc: Yisheng Xie <xieyisheng1@huawei.com>
-Link: http://lore.kernel.org/lkml/20200213064306.160480-9-ravi.bangoria@linux.ibm.com
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lore.kernel.org/lkml/1582727404-180095-1-git-send-email-zhe.he@windriver.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-config.txt | 44 ++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ tools/perf/builtin-probe.c   |  6 ++++--
+ tools/perf/util/probe-file.c | 28 ++++++++++++++++++++++++----
+ 2 files changed, 28 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-index 9dae0df3ab7e..8ead55593984 100644
---- a/tools/perf/Documentation/perf-config.txt
-+++ b/tools/perf/Documentation/perf-config.txt
-@@ -518,6 +518,12 @@ top.*::
- 		column by default.
- 		The default is 'true'.
+diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
+index 26bc5923e6b5..70548df2abb9 100644
+--- a/tools/perf/builtin-probe.c
++++ b/tools/perf/builtin-probe.c
+@@ -449,7 +449,8 @@ static int perf_del_probe_events(struct strfilter *filter)
+ 		ret = probe_file__del_strlist(kfd, klist);
+ 		if (ret < 0)
+ 			goto error;
+-	}
++	} else if (ret == -ENOMEM)
++		goto error;
  
-+	top.call-graph::
-+		This is identical to 'call-graph.record-mode', except it is
-+		applicable only for 'top' subcommand. This option ONLY setup
-+		the unwind method. To enable 'perf top' to actually use it,
-+		the command line option -g must be specified.
-+
- man.*::
- 	man.viewer::
- 		This option can assign a tool to view manual pages when 'help'
-@@ -545,6 +551,16 @@ record.*::
- 		But if this option is 'no-cache', it will not update the build-id cache.
- 		'skip' skips post-processing and does not update the cache.
+ 	ret2 = probe_file__get_events(ufd, filter, ulist);
+ 	if (ret2 == 0) {
+@@ -459,7 +460,8 @@ static int perf_del_probe_events(struct strfilter *filter)
+ 		ret2 = probe_file__del_strlist(ufd, ulist);
+ 		if (ret2 < 0)
+ 			goto error;
+-	}
++	} else if (ret2 == -ENOMEM)
++		goto error;
  
-+	record.call-graph::
-+		This is identical to 'call-graph.record-mode', except it is
-+		applicable only for 'record' subcommand. This option ONLY setup
-+		the unwind method. To enable 'perf record' to actually use it,
-+		the command line option -g must be specified.
-+
-+	record.aio::
-+		Use 'n' control blocks in asynchronous (Posix AIO) trace writing
-+		mode ('n' default: 1, max: 4).
-+
- diff.*::
- 	diff.order::
- 		This option sets the number of columns to sort the result.
-@@ -594,6 +610,11 @@ trace.*::
- 		"libbeauty", the default, to use the same argument beautifiers used in the
- 		strace-like sys_enter+sys_exit lines.
+ 	if (ret == -ENOENT && ret2 == -ENOENT)
+ 		pr_warning("\"%s\" does not hit any event.\n", str);
+diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
+index 5003ba403345..0f5fda11675f 100644
+--- a/tools/perf/util/probe-file.c
++++ b/tools/perf/util/probe-file.c
+@@ -301,10 +301,15 @@ int probe_file__get_events(int fd, struct strfilter *filter,
+ 		p = strchr(ent->s, ':');
+ 		if ((p && strfilter__compare(filter, p + 1)) ||
+ 		    strfilter__compare(filter, ent->s)) {
+-			strlist__add(plist, ent->s);
++			ret = strlist__add(plist, ent->s);
++			if (ret == -ENOMEM) {
++				pr_err("strlist__add failed with -ENOMEM\n");
++				goto out;
++			}
+ 			ret = 0;
+ 		}
+ 	}
++out:
+ 	strlist__delete(namelist);
  
-+ftrace.*::
-+	ftrace.tracer::
-+		Can be used to select the default tracer. Possible values are
-+		'function' and 'function_graph'.
+ 	return ret;
+@@ -511,7 +516,11 @@ static int probe_cache__load(struct probe_cache *pcache)
+ 				ret = -EINVAL;
+ 				goto out;
+ 			}
+-			strlist__add(entry->tevlist, buf);
++			ret = strlist__add(entry->tevlist, buf);
++			if (ret == -ENOMEM) {
++				pr_err("strlist__add failed with -ENOMEM\n");
++				goto out;
++			}
+ 		}
+ 	}
+ out:
+@@ -672,7 +681,12 @@ int probe_cache__add_entry(struct probe_cache *pcache,
+ 		command = synthesize_probe_trace_command(&tevs[i]);
+ 		if (!command)
+ 			goto out_err;
+-		strlist__add(entry->tevlist, command);
++		ret = strlist__add(entry->tevlist, command);
++		if (ret == -ENOMEM) {
++			pr_err("strlist__add failed with -ENOMEM\n");
++			goto out_err;
++		}
 +
- llvm.*::
- 	llvm.clang-path::
- 		Path to clang. If omit, search it from $PATH.
-@@ -638,6 +659,29 @@ scripts.*::
- 	The script gets the same options passed as a full perf script,
- 	in particular -i perfdata file, --cpu, --tid
+ 		free(command);
+ 	}
+ 	list_add_tail(&entry->node, &pcache->entries);
+@@ -853,9 +867,15 @@ int probe_cache__scan_sdt(struct probe_cache *pcache, const char *pathname)
+ 			break;
+ 		}
  
-+convert.*::
+-		strlist__add(entry->tevlist, buf);
++		ret = strlist__add(entry->tevlist, buf);
 +
-+	convert.queue-size::
-+		Limit the size of ordered_events queue, so we could control
-+		allocation size of perf data files without proper finished
-+		round events.
+ 		free(buf);
+ 		entry = NULL;
 +
-+intel-pt.*::
-+
-+	intel-pt.cache-divisor::
-+
-+	intel-pt.mispred-all::
-+		If set, Intel PT decoder will set the mispred flag on all
-+		branches.
-+
-+auxtrace.*::
-+
-+	auxtrace.dumpdir::
-+		s390 only. The directory to save the auxiliary trace buffer
-+		can be changed using this option. Ex, auxtrace.dumpdir=/tmp.
-+		If the directory does not exist or has the wrong file type,
-+		the current directory is used.
-+
- SEE ALSO
- --------
- linkperf:perf[1]
++		if (ret == -ENOMEM) {
++			pr_err("strlist__add failed with -ENOMEM\n");
++			break;
++		}
+ 	}
+ 	if (entry) {
+ 		list_del_init(&entry->node);
 -- 
 2.21.1
 
