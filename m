@@ -2,199 +2,105 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A77C3F2D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1182FC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDDC1246A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8E39246A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:43:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="E6gd4vSR"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BFWoalgG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgB1Jl7 (ORCPT
+        id S1726740AbgB1JnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 04:41:59 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:54182 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbgB1Jl7 (ORCPT
+        Fri, 28 Feb 2020 04:43:16 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:58912 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbgB1JnQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 04:41:59 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01S9fhu5008401;
-        Fri, 28 Feb 2020 03:41:44 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582882904;
-        bh=8orCeNVUYKEqvaE5+0ekeRoeQdHfMuNLd4upouXDyDs=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=E6gd4vSRRVlBj9qVdEpyLi3/qGtGaM5U1ji7hbKWXeyBRJxF7TRk+NPWDt7xzNtpN
-         mdcnrLe7cvshhXHmSSM/X6ziHs7kP6cHFs2mjsStRVkuPyrpAqVEGiNfkOGIhmLai1
-         oiqx6XQAWLH520YXgglyxZ/YcUZApTtmRuCV4Noc=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01S9fhlG127045
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 28 Feb 2020 03:41:43 -0600
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 28
- Feb 2020 03:41:43 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 28 Feb 2020 03:41:43 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01S9fgZB102283;
-        Fri, 28 Feb 2020 03:41:43 -0600
-Date:   Fri, 28 Feb 2020 15:11:42 +0530
-From:   Pratyush Yadav <p.yadav@ti.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-CC:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-mtd@lists.infradead.org>
-Subject: Re: [PATCH v2 04/11] spi: spi-mem: allow specifying a command's
- extension
-Message-ID: <20200228094142.436fjee5fb7w6pd2@ti.com>
-References: <20200226093703.19765-1-p.yadav@ti.com>
- <20200226093703.19765-5-p.yadav@ti.com>
- <20200227174406.66bf6f84@collabora.com>
+        Fri, 28 Feb 2020 04:43:16 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01S9csAt037250;
+        Fri, 28 Feb 2020 09:42:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=0RIA5wb+M8E43mxXTN9Jsz9OGPpfP9TqMPggc6XvIEQ=;
+ b=BFWoalgGO2R0mLxmH95LDphU++DX3fr8tAn6K187SbJs7plZWjwXZYDwxzVYTWV0Nt8C
+ /Xblz8rWLeJCyWCekGZ5QXN1hpPaWoe2gN1yw9zJ8FlWvLMz7BDpqr5XjP2toIwS5+aw
+ FjrdCeIJ4RbbLbt2ky+IrFaWxg8fHzm6sZZXO5lIahuaWvFXoPDhfPR4BQHw6WZUEyzl
+ g8oVMFTlm4emAEkbjGnnCw5tRzs0RC8uOJoJ3oiDABUOqFTGmUSUSrDnqAXIGethFXAx
+ XGH4QlMw3dGq+xicUh6T5PvUFmTm/7LAGeEH6GT8HvpAdMco8/neZKZ3M6AjsXy/oo/y UQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2yf0dm815r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Feb 2020 09:42:34 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01S9ajnF187839;
+        Fri, 28 Feb 2020 09:40:34 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2ydcseurdg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Feb 2020 09:40:34 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01S9eWGP023741;
+        Fri, 28 Feb 2020 09:40:32 GMT
+Received: from [10.39.209.75] (/10.39.209.75)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 28 Feb 2020 01:40:32 -0800
+Subject: Re: [patch 03/24] x86/entry/64: Reorder idtentries
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>
+References: <20200225221606.511535280@linutronix.de>
+ <20200225222648.485203436@linutronix.de>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <22110eb1-6c69-78a1-a469-80a50c82334b@oracle.com>
+Date:   Fri, 28 Feb 2020 10:40:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200227174406.66bf6f84@collabora.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20200225222648.485203436@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9544 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 bulkscore=0
+ spamscore=0 mlxlogscore=825 mlxscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002280080
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9544 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 clxscore=1015
+ bulkscore=0 impostorscore=0 mlxscore=0 priorityscore=1501 phishscore=0
+ spamscore=0 malwarescore=0 mlxlogscore=882 adultscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002280080
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/02/20 05:44PM, Boris Brezillon wrote:
-> On Wed, 26 Feb 2020 15:06:56 +0530
-> Pratyush Yadav <p.yadav@ti.com> wrote:
-> 
-> > In xSPI mode, flashes expect 2-byte opcodes. The second byte is called
-> > the "command extension". There can be 3 types of extensions in xSPI:
-> > repeat, invert, and hex. When the extension type is "repeat", the same
-> > opcode is sent twice. When it is "invert", the second byte is the
-> > inverse of the opcode. When it is "hex" an additional opcode byte based
-> > is sent with the command whose value can be anything.
-> > 
-> > Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
-> > ---
-> >  drivers/spi/spi-mem.c       | 23 +++++++++++++++++++++++
-> >  include/linux/spi/spi-mem.h | 24 ++++++++++++++++++++++++
-> >  2 files changed, 47 insertions(+)
-> > 
-> > diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
-> > index cb13e0878b95..3838ddc9aeec 100644
-> > --- a/drivers/spi/spi-mem.c
-> > +++ b/drivers/spi/spi-mem.c
-> > @@ -462,6 +462,29 @@ int spi_mem_adjust_op_size(struct spi_mem *mem, struct spi_mem_op *op)
-> >  }
-> >  EXPORT_SYMBOL_GPL(spi_mem_adjust_op_size);
-> >  
-> > +int spi_mem_get_cmd_ext(const struct spi_mem_op *op, u8 *ext)
-> > +{
-> > +	switch (op->cmd.ext_type) {
-> > +	case SPI_MEM_EXT_INVERT:
-> > +		*ext = ~op->cmd.opcode;
-> > +		break;
-> > +
-> > +	case SPI_MEM_EXT_REPEAT:
-> > +		*ext = op->cmd.opcode;
-> > +		break;
-> > +
-> > +	case SPI_MEM_EXT_HEX:
-> > +		*ext = op->cmd.ext;
-> > +		break;
-> > +
-> > +	default:
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(spi_mem_get_cmd_ext);
-> > +
-> >  static ssize_t spi_mem_no_dirmap_read(struct spi_mem_dirmap_desc *desc,
-> >  				      u64 offs, size_t len, void *buf)
-> >  {
-> > diff --git a/include/linux/spi/spi-mem.h b/include/linux/spi/spi-mem.h
-> > index 4669082b4e3b..06ccab17e4d0 100644
-> > --- a/include/linux/spi/spi-mem.h
-> > +++ b/include/linux/spi/spi-mem.h
-> > @@ -67,11 +67,31 @@ enum spi_mem_data_dir {
-> >  	SPI_MEM_DATA_OUT,
-> >  };
-> >  
-> > +/**
-> > + * enum spi_mem_cmd_ext - describes the command opcode extension in DTR mode
-> > + * @SPI_MEM_EXT_NONE: no extension. This is the default, and is used in Legacy
-> > + *		      SPI mode
-> > + * @SPI_MEM_EXT_REPEAT: the extension is same as the opcode
-> > + * @SPI_MEM_EXT_INVERT: the extension is the bitwise inverse of the opcode
-> > + * @SPI_MEM_EXT_HEX: the extension is any hex value. The command and opcode
-> > + *		     combine to form a 16-bit opcode.
-> > + */
-> > +enum spi_mem_cmd_ext {
-> > +	SPI_MEM_EXT_NONE = 0,
-> > +	SPI_MEM_EXT_REPEAT,
-> > +	SPI_MEM_EXT_INVERT,
-> > +	SPI_MEM_EXT_HEX,
-> > +};
-> > +
-> >  /**
-> >   * struct spi_mem_op - describes a SPI memory operation
-> >   * @cmd.buswidth: number of IO lines used to transmit the command
-> >   * @cmd.opcode: operation opcode
-> >   * @cmd.is_dtr: whether the command opcode should be sent in DTR mode or not
-> > + * @cmd.ext_type: type of the command opcode extension in DTR mode
-> > + * @cmd.ext: value of the command opcode extension in DTR mode. It is
-> > + *	     only set when 'ext_type' is 'SPI_MEM_EXT_HEX'. In all other
-> > + *	     cases, the extension can be directly derived from the opcode.
-> >   * @addr.nbytes: number of address bytes to send. Can be zero if the operation
-> >   *		 does not need to send an address
-> >   * @addr.buswidth: number of IO lines used to transmit the address cycles
-> > @@ -97,6 +117,8 @@ struct spi_mem_op {
-> >  		u8 buswidth;
-> >  		u8 opcode;
-> >  		bool is_dtr;
-> > +		enum spi_mem_cmd_ext ext_type;
-> > +		u8 ext;
-> 
-> Could we instead make opcode an u16 (or u8[2]) and pass the number of
-> bytes, as done for the other addr? Mode can be extracted from the
-> opcode/nbytes values if really needed, and the caller would be
-> responsible for filling those fields properly (which shouldn't be too
-> hard)
 
-Ok. Will do.
- 
-> >  	} cmd;
-> >  
-> >  	struct {
-> > @@ -361,6 +383,8 @@ int spi_mem_driver_register_with_owner(struct spi_mem_driver *drv,
-> >  
-> >  void spi_mem_driver_unregister(struct spi_mem_driver *drv);
-> >  
-> > +int spi_mem_get_cmd_ext(const struct spi_mem_op *op, u8 *ext);
-> > +
-> >  #define spi_mem_driver_register(__drv)                                  \
-> >  	spi_mem_driver_register_with_owner(__drv, THIS_MODULE)
-> >  
+On 2/25/20 11:16 PM, Thomas Gleixner wrote:
+> Move them all together so verifying the cleanup patches for binary
+> equivalence will be easier.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>   arch/x86/entry/entry_64.S |   42 +++++++++++++++++++-----------------------
+>   1 file changed, 19 insertions(+), 23 deletions(-)
 > 
 
--- 
-Regards,
-Pratyush Yadav
-Texas Instruments India
+Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+
+alex.
+
