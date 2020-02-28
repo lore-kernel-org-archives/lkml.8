@@ -2,105 +2,81 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 553DAC3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5087CC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A174246A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:14:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sWbwqJ5F"
+	by mail.kernel.org (Postfix) with ESMTP id 248E1222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:15:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgB1GOt (ORCPT
+        id S1726758AbgB1GPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 01:14:49 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53766 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726816AbgB1GOs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 01:14:48 -0500
-Received: by mail-wm1-f65.google.com with SMTP id f15so1939099wml.3;
-        Thu, 27 Feb 2020 22:14:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=gnsdy3185ncPeDCu04aM13mod5LknXvQmY6PFV6k+Es=;
-        b=sWbwqJ5FFtEag/dRIgtrIWnyWc+3s/A91H3JPqrpyB+iE6SQogJjDL1r+AI+DJ1EEw
-         zWq2oGLU9ArISWq5LR+PH+fjBKVjSbZ5RhiLdJvxIih/TJMTzzvr2EYKbDddKTGxs6Zv
-         SCSRivHvVGozcmJPj1za9jv4VireOKoEzQ7ZFnCQfZhGrg0hraklxJxjuMRUVTfqhJl/
-         BZBPqNsqGvgx7sgSRJGQH2tFWSqtzozR4ckbUtxxAxXvGMvLachJ+JXRGvn+nMDPKZdC
-         Onb6Ykx1imL8l98OALk5VZt9gTR9GRwY5YVUQpd84RXGUm0mzjd7otq3PudlpGQqerdF
-         14cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=gnsdy3185ncPeDCu04aM13mod5LknXvQmY6PFV6k+Es=;
-        b=ES1kC23zHSgqg/cLjsDZy7oD/WujVtZPMC0sMJ21TWRvIJVc4/+V/CdHRtPO1fU3F2
-         mVO3MtFVPpU1aIsHB8q+CfkBuJx9wl+1RcCEdR2d58UD82OtvxnnEUPFAHbnai7RSD9h
-         WR+5J22juP3wpP8zJMyCshTrsdLAGlo3LZ0wLDqB0MP11sUuPi0/nAM2rFiqKPzR6Pxn
-         SkX5HJRQKVx6xaiBCGQ0hwJ6sRi/dJcU99EdK/CtlxOrJgwdOfuoQ8ckAZuiz30Ln+FL
-         0678txOjQruH70hrJ+eNZp++9SkCd7gGyjhD3f6K4n5vnwfA52ZNXi3aTb8K9/rNk2kV
-         2aOA==
-X-Gm-Message-State: APjAAAUmL52R+Ah+oJBSUaPG3y/Q9sFCBGoKK27OZauzu5ZXGmPI5MXo
-        lLoj00GhuNFNk1XI2p7Y9eA=
-X-Google-Smtp-Source: APXvYqxvicgbrGm82t+XVd96YBTlzhDK+AmuO43jDyiUn5cCb6UCtMVmCCw2P8kKev3sOpHQ65zqEA==
-X-Received: by 2002:a1c:f707:: with SMTP id v7mr2964697wmh.121.1582870484899;
-        Thu, 27 Feb 2020 22:14:44 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id w7sm682554wmi.9.2020.02.27.22.14.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Feb 2020 22:14:44 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4] dt-bindings: arm: fix Rockchip rk3399-evb bindings
-Date:   Fri, 28 Feb 2020 07:14:35 +0100
-Message-Id: <20200228061436.13506-3-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200228061436.13506-1-jbx6244@gmail.com>
-References: <20200228061436.13506-1-jbx6244@gmail.com>
+        Fri, 28 Feb 2020 01:15:44 -0500
+Received: from mga02.intel.com ([134.134.136.20]:49165 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725862AbgB1GPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 01:15:44 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 22:15:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
+   d="scan'208";a="257017344"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 27 Feb 2020 22:15:43 -0800
+Received: from [10.226.38.23] (unknown [10.226.38.23])
+        by linux.intel.com (Postfix) with ESMTP id 148405805EF;
+        Thu, 27 Feb 2020 22:15:36 -0800 (PST)
+Subject: Re: [PATCH v11 2/2] spi: cadence-quadspi: Add support for the Cadence
+ QSPI controller
+To:     Mark Brown <broonie@kernel.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        vigneshr@ti.com, robh+dt@kernel.org, marex@denx.de,
+        devicetree@vger.kernel.org, tien.fong.chee@intel.com,
+        tudor.ambarus@gmail.com, boris.brezillon@free-electrons.com,
+        richard@nod.at, qi-ming.wu@intel.com,
+        simon.k.r.goldschmidt@gmail.com, david.oberhollenzer@sigma-star.at,
+        dinguyen@kernel.org, linux-mtd@lists.infradead.org,
+        miquel.raynal@bootlin.com, cheol.yong.kim@intel.com,
+        mark.rutland@arm.com, computersforpeace@gmail.com,
+        dwmw2@infradead.org, cyrille.pitchen@atmel.com
+References: <20200227062708.21544-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200227062708.21544-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200227183032.77ef0795@collabora.com> <20200227173224.GH4062@sirena.org.uk>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <5a63a66b-e82a-30bf-5939-842549299772@linux.intel.com>
+Date:   Fri, 28 Feb 2020 14:15:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+MIME-Version: 1.0
+In-Reply-To: <20200227173224.GH4062@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A test with the command below gives this error:
+Hi Mark,
 
-arch/arm64/boot/dts/rockchip/rk3399-evb.dt.yaml: /: compatible:
-['rockchip,rk3399-evb', 'rockchip,rk3399', 'google,rk3399evb-rev2']
-is not valid under any of the given schemas
+On 28/2/2020 1:32 AM, Mark Brown wrote:
+> On Thu, Feb 27, 2020 at 06:30:32PM +0100, Boris Brezillon wrote:
+>> "Ramuthevar, Vadivel MuruganX"
+>>> Reported-by: kbuild test robot <lkp@intel.com>
+>>> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+>> Reported-by? What has been reported?
+> There were static checker issues with some of the earlier versions.
+> Vadivel, normally you wouldn't carry tags like that forward when you fix
+> them.
 
-Fix this error by adding 'google,rk3399evb-rev2' to the compatible
-property in rockchip.yaml
+Than you Mark, will remove it in the next patch-set.
 
-make ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/rockchip.yaml
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- Documentation/devicetree/bindings/arm/rockchip.yaml | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-index d303790f5..6c6e8273e 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-+++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-@@ -509,6 +509,7 @@ properties:
-         items:
-           - const: rockchip,rk3399-evb
-           - const: rockchip,rk3399
-+          - const: google,rk3399evb-rev2
- 
-       - description: Rockchip RK3399 Sapphire standalone
-         items:
--- 
-2.11.0
-
+Regards
+Vadivel
