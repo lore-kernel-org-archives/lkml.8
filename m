@@ -6,89 +6,160 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF317C3F2D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED221C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B52FD246A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4B12246A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 04:36:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MctIsrXy"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="cbWtCJyF";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vdfhsT/6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730878AbgB1Efp (ORCPT
+        id S1730915AbgB1EgV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 23:35:45 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:47963 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730800AbgB1Efo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 23:35:44 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48TGtj6nKXz9sP7;
-        Fri, 28 Feb 2020 15:35:41 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1582864542;
-        bh=o5exsgAAp151ds41PjkAUqIozPruPAUIKNBr3jGMf+A=;
-        h=Date:From:To:Cc:Subject:From;
-        b=MctIsrXy6/bptovpzjZbuKVeOY+iUFpkpbano9DF1qYxcqXk4J59Ot+xrAgOtI3gF
-         F49LnKaDRdAXEU2sfSCRdK/4mhJN76WRI/jsgkSbfdPxAPwQsKr0tAFPJoDNlt5bnj
-         DErMg/0ebbHXLxfiqQzTTRN6Bl2odShiNuNi1UDInpVBsxZzFnAKwdLfnNVkqUXMUk
-         NU92ZSE3rYlxcTDisYt3FpvtHp0M1LcDyDZSfYe3wpGcN95YKEyyakdljOSx24GVM8
-         CsJGiRg9RYeaVGqQ2wV3xW9fvK0Q7rwxam3YXSd8KKAjlhwN51yeTHwW4xoLlCV02T
-         MLdzBbd9SxRzA==
-Date:   Fri, 28 Feb 2020 15:35:32 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Thu, 27 Feb 2020 23:36:21 -0500
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:52333 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730793AbgB1EgV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 23:36:21 -0500
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 3E6076573;
+        Thu, 27 Feb 2020 23:36:20 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Thu, 27 Feb 2020 23:36:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
+        3WY2k+wyv/F2CiLcUJNjhJJ2CbiLhEloXtegwZmGOs4=; b=cbWtCJyFrMFrhKmt
+        YcCc/qBGZCPSKx03p6UXr8j5TAWMOyv9+dt5n904GQsWLm94mJzNOtFaZSpDrhhu
+        vVnuL4ITDvbK8MBvlRL/Os0h7tTBWjqD0kn5OjhLQncRwZny3kfKcWvU9XPHEH85
+        OgLZQKMgr8TYqKl6Gt/vdeIDNWUnB+aou4kYBOfjB0wo+XWqlB4EpoiZRL5EAclq
+        USEt8nXuDwvCmdXi9Vt4volM9Sqys+B7ZVruWy7PXMRrxccAq9pXuD/HRzA54NIq
+        M/vapExoBAcdKbMBgcroJ2RHuzoSurCVLOomFSFdmbU9EtUDPAQ4Jn4+acV5Ndl+
+        VQo14w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=3WY2k+wyv/F2CiLcUJNjhJJ2CbiLhEloXtegwZmGO
+        s4=; b=vdfhsT/6T1ESlW0AmTA5425oTjD28dxtD9MNv8TwHS6vuDzux16ikDEBu
+        DTUb25AnlXL41rdd6Dzr47DZeO9lB/DK29CVUIqaGaqfepBE1Toexc+zwp0Rrnz+
+        s42qSFRDIEHxUNi7SuD6d29OXornMBDBqIVKCteuyLjUl/l6rvs4thcrqD8ssxkt
+        VsWBfkL8HsPXIY4Uz+Gsup2Oqw9cVQv7b/VHBrPG7liCqW6JPQI8eRDRTlcJeMGB
+        XLXUc1cGXt6ag3V87ldlNNV4XTgFrFizedjniZ/6GMZOM8ioIdEKPeRhozpwvDtn
+        AcIk3n/lNQ/tjG812XVv7Evpk9oVA==
+X-ME-Sender: <xms:wphYXvdyASBnv7OJuMLVzpKtPSy69sNJUbtn8RDiV27TPO_IN0vJ6w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrleejgdejgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
+    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecukfhppeduudekrddvtdelrd
+    dukedvrdeludenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
+    ohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
+X-ME-Proxy: <xmx:wphYXniBlbhAlIGV8ijL0T3ZBYWD99eVpeotS2cKjfomUcoFx00vbg>
+    <xmx:wphYXnNNbXG4BQZBRgzRO-IzjyQcaIDihWOnX9YfRaji5H2tdRYGKg>
+    <xmx:wphYXt5hUBj-JmJZvmhSlwoO75HgW8feYU7GRS2G1hWEg9YYkMWSfA>
+    <xmx:xJhYXiX5GoGLTI08CYM_TmmP8z0p5A9Nv3WA8tMSXW55MWV7OFwlfw>
+Received: from mickey.themaw.net (unknown [118.209.182.91])
+        by mail.messagingengine.com (Postfix) with ESMTPA id BE34A3280067;
+        Thu, 27 Feb 2020 23:36:12 -0500 (EST)
+Message-ID: <5598cd24defe490016479518c7344201f6dfa0eb.camel@themaw.net>
+Subject: Re: [PATCH 00/11] fs/dcache: Limit # of negative dentries
+From:   Ian Kent <raven@themaw.net>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Andreas Dilger <adilger@dilger.ca>,
+        Waiman Long <longman@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arjun Roy <arjunroy@google.com>
-Subject: linux-next: build warning after merge of the akpm tree
-Message-ID: <20200228153532.1c0fa33f@canb.auug.org.au>
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-doc@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Eric Biggers <ebiggers@google.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Eric Sandeen <sandeen@redhat.com>
+Date:   Fri, 28 Feb 2020 12:36:09 +0800
+In-Reply-To: <769be2c66746ff199bf6be1db9101c60b372948d.camel@themaw.net>
+References: <20200226161404.14136-1-longman@redhat.com>
+         <20200226162954.GC24185@bombadil.infradead.org>
+         <2EDB6FFC-C649-4C80-999B-945678F5CE87@dilger.ca>
+         <9d7b76c32d09492137a253e692624856388693db.camel@themaw.net>
+         <20200228033412.GD29971@bombadil.infradead.org>
+         <769be2c66746ff199bf6be1db9101c60b372948d.camel@themaw.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/.xVBs+ewrCK/BVnJ=8HdE9z";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/.xVBs+ewrCK/BVnJ=8HdE9z
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, 2020-02-28 at 12:16 +0800, Ian Kent wrote:
+> On Thu, 2020-02-27 at 19:34 -0800, Matthew Wilcox wrote:
+> > On Thu, Feb 27, 2020 at 05:55:43PM +0800, Ian Kent wrote:
+> > > Not all file systems even produce negative hashed dentries.
+> > > 
+> > > The most beneficial use of them is to improve performance of
+> > > rapid
+> > > fire lookups for non-existent names. Longer lived negative hashed
+> > > dentries don't give much benefit at all unless they suddenly have
+> > > lots of hits and that would cost a single allocation on the first
+> > > lookup if the dentry ttl expired and the dentry discarded.
+> > > 
+> > > A ttl (say jiffies) set at appropriate times could be a better
+> > > choice all round, no sysctl values at all.
+> > 
+> > The canonical argument in favour of negative dentries is to improve
+> > application startup time as every application searches the library
+> > path
+> > for the same libraries.  Only they don't do that any more:
+> > 
+> > $ strace -e file cat /dev/null
+> > execve("/bin/cat", ["cat", "/dev/null"], 0x7ffd5f7ddda8 /* 44 vars
+> > */) = 0
+> > access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file
+> > or
+> > directory)
+> > openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+> > openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6",
+> > O_RDONLY|O_CLOEXEC) = 3
+> > openat(AT_FDCWD, "/usr/lib/locale/locale-archive",
+> > O_RDONLY|O_CLOEXEC) = 3
+> > openat(AT_FDCWD, "/dev/null", O_RDONLY) = 3
+> > 
+> > So, are they still useful?  Or should we, say, keep at most 100
+> > around?
+> 
+> Who knows how old apps will be on distros., ;)
 
-Hi all,
+Or what admins put in the PATH, I've seen oddness in that
+a lot.
 
-After merging the akpm tree, today's linux-next build (sparc defconfig)
-produced this warning:
+> 
+> But I don't think it matters.
 
-mm/memory.c:1463:12: warning: 'insert_page_in_batch_locked' defined but not=
- used [-Wunused-function]
- static int insert_page_in_batch_locked(struct mm_struct *mm, pmd_t *pmd,
-            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+And I don't think I made my answer to the question clear.
 
-Introduced by commit
+I don't think setting a minimum matters but there are other
+sources of a possibly significant number of lookups on
+paths that don't exist. I've seen evidence recently
+(although I suspect unfounded) that systemd can generate
+lots of these lookups at times.
 
-  4a879e02dd49 ("mm/memory.c: add vm_insert_pages()")
+And let's not forget that file systems are the primary
+source of these and not all create them on lookups.
+I may be mistaken, but I think ext4 does not while xfs
+definitely does.
 
---=20
-Cheers,
-Stephen Rothwell
+The more important metric I think is calculating a sensible
+maximum to be pruned to prevent getting bogged down as there
+could be times when a lot of these are present. After all this
+is meant to be an iterative pruning measure.
 
---Sig_/.xVBs+ewrCK/BVnJ=8HdE9z
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Ian
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5YmJQACgkQAVBC80lX
-0Gx4Vgf9Hv8bgyf0xRo2OPnKXT7QqCkkaZpuNKuCsg57kbqeL4TQ9F/zAcdgS5nJ
-RJ+ZVvn7oQt2SnUR+X5h3NMKsGfe1idL2kSc3+DG/VU0c5uw91SC3nW2LQQd3s+9
-XLXzQh07jDuupFwZECqWeklRssa+Iuw5EV50cc4y7EN2TGk/bk5gkrlLRybaeXhk
-5cAgJU3ljWo0+YeYGvq/1d/mA52ntsrXDqDArYkXRZXmer6jjx888WER6Tddulqv
-rWfG49089DTpYGTQYCPhSLf9276NVf7dUEWbn6gn6IP56fja9QHVp7OTuZ0QQLQi
-lvupmCzG6cGIOEYjsXOEh9bYphe35w==
-=71oQ
------END PGP SIGNATURE-----
-
---Sig_/.xVBs+ewrCK/BVnJ=8HdE9z--
