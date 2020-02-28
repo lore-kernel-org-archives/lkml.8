@@ -2,77 +2,123 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1758FC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1441AC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E80A02469F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B742469F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:05:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Wa3ZaFht"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iGAlaKd7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgB1SEs (ORCPT
+        id S1726758AbgB1SFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 13:04:48 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:57250 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725769AbgB1SEs (ORCPT
+        Fri, 28 Feb 2020 13:05:00 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:38899 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbgB1SE7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 13:04:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=CmBWpIKnnVWtlhcroBgVPn++r+PthFu+2xU5l1vUPNA=; b=Wa3ZaFhtWJ4Hy9wtAsjYEfN2o4
-        V0PZ+M9bh68HsduPFTOqG8No+xXjnGXslx1yHoBU+ikNAFzs6lLd6T6nYgR4khNxBJsLWySctRIi4
-        /ggGthuLa2kTOn2v7eqBXJQ6ntSg7Hh7FC874lLxj5htTN2H+hfB/HBxFaiw7ER/zIYGRDEu4SjoB
-        NwLVY7/kRcm34FMiRHvzAvORSt42Ol1iaTbeFuKK48t6P0K36fo+0dnVzHD1A62iVCWzDu59ohPKp
-        wkOva5VlewEX9Eob2QG+yRVZqOCWfp9e9SbCWjoUDkNuMfgLJghiy2egmjYD9RteV09lT+btsA67j
-        QlDIFWYA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j7k0B-0004dA-Ox; Fri, 28 Feb 2020 18:04:43 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CCFB030067C;
-        Fri, 28 Feb 2020 19:02:44 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 386F3209E76B5; Fri, 28 Feb 2020 19:04:41 +0100 (CET)
-Date:   Fri, 28 Feb 2020 19:04:41 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
+        Fri, 28 Feb 2020 13:04:59 -0500
+Received: by mail-il1-f194.google.com with SMTP id f5so3482805ilq.5
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 10:04:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2O1NCkfJ2WMrflY789rXqGNgLsaY7bc+9Uwap1q5Dd8=;
+        b=iGAlaKd7frggtGr9qU5OveJX3QYIeBEb2Q2D8IhyxAYHRivIPq/6YdJh2H+NLDrimJ
+         N/80pLg4XkJLfrZIfMG8rPAYyFQRuDeRhGiXa9kHPXfNeXs1NhnynSJYcD6h5NpB7O9Q
+         cX0uSgDyh5t10T4kY5orZvUGl9jespPLFXzaglyEGyFaxlw7xy+RgY9OwY75b6YogHIQ
+         i/p5PBWH2W56ogvBSJ5HCNYhGJq6cvZYjYCSIqgXJ2gN1sL0UxVKBJhGObuhSJCJiyHj
+         0aMBaAW5FBDV1tEP/856F8K74VLp/CJEFSSPIxUTFchrTeGWRfAX0peneQQ7sNvM5Jia
+         6n2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2O1NCkfJ2WMrflY789rXqGNgLsaY7bc+9Uwap1q5Dd8=;
+        b=P1JT4qJYW0j6g5gm6oOBHFXlQD/leoyfeUugDrySo9V2BOy40Kto+FNSrJA1KifLyq
+         02TKYMTm1kdidwEPdszGZkrtmIr0aid22+NrpO8c7u/PNh2u23pTaQCLQpP8QyrBRgbs
+         CSla8QTObHmC3c7PG29r2gjOsyaCQh2dlG1ajHTiQe2NeI+1Az0PK8rpPCg/hwGS9GIj
+         rTk75PCGbnOTsrojXC4JmwZ+SWJd8FHQcbqe6FwnYeO9y22KDjRE4U8ds4MhpODN4p8P
+         OXcVtukJp3JlQGshy55Nr1UfAgIgGn3l2UNBdZirqR+MWXjmnS2uiaDRN5snIMBv0nF5
+         Sg1g==
+X-Gm-Message-State: APjAAAWHxLssW+Md8D3igSzqUprtkAoS5J/Fiu+Af5vB3chfFkcr7S5A
+        +LD/JTCRdCu23ysbduLEFVL2nJoaSGY=
+X-Google-Smtp-Source: APXvYqyyTjxmeypUh9ojVqSOjNB6BYZh6l5eLyAMeDHIxqZT3lYXN44WiyanvKGR3i1OOhAU7Jnp2Q==
+X-Received: by 2002:a92:d609:: with SMTP id w9mr5884208ilm.46.1582913098663;
+        Fri, 28 Feb 2020 10:04:58 -0800 (PST)
+Received: from [172.22.22.10] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.googlemail.com with ESMTPSA id v3sm3320819ili.0.2020.02.28.10.04.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Feb 2020 10:04:58 -0800 (PST)
+Subject: Re: [PATCH] bitfield.h: add FIELD_MAX() and field_max()
+To:     Jakub Kicinski <kuba@kernel.org>
 Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        intel-gfx@lists.freedesktop.org
-Subject: Re: [PATCH] drm/i915: Minimize uaccess exposure in
- i915_gem_execbuffer2_ioctl()
-Message-ID: <20200228180441.GL18400@hirez.programming.kicks-ass.net>
-References: <ed52cfb852d2772bf20f48614d75f1d1b1451995.1582841072.git.jpoimboe@redhat.com>
- <20200227223542.GE23230@ZenIV.linux.org.uk>
- <20200228010342.3j3awgvvgvitif7z@treble>
+        Johannes Berg <johannes@sipsolutions.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+References: <20200228165343.8272-1-elder@linaro.org>
+ <20200228095611.023085fd@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <d6bf67ba-3546-c582-21a6-30cbd4edd984@linaro.org>
+Date:   Fri, 28 Feb 2020 12:04:32 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200228010342.3j3awgvvgvitif7z@treble>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200228095611.023085fd@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 07:03:42PM -0600, Josh Poimboeuf wrote:
-> > And why not mark gen8_canonical_addr() __always_inline?
+On 2/28/20 11:56 AM, Jakub Kicinski wrote:
+> On Fri, 28 Feb 2020 10:53:43 -0600 Alex Elder wrote:
+>> Define FIELD_MAX(), which supplies the maximum value that can be
+>> represented by a field value.  Define field_max() as well, to go
+>> along with the lower-case forms of the field mask functions.
+>>
+>> Signed-off-by: Alex Elder <elder@linaro.org>
+>> ---
+>>
+>>  NOTE:	I'm not entirely sure who owns/maintains this file so
+>> 	I'm sending it to those who have committed things to it.
+>> 	I hope someone will just take it in after review; I use
+>> 	field_max() in some code I'm about to send out.
 > 
-> Right, marking those two functions as __always_inline is the other
-> option.  The problem is, if you keep doing it, eventually you end up
-> with __always_inline-itis spreading all over the place.  And it affects
-> all the other callers, at least in the CONFIG_CC_OPTIMIZE_FOR_SIZE case.
-> At least this fix is localized.
+> Could you give us an example use?
+> 
+> Is it that you find the current macros misnamed or there's something
+> you can't do? Or are you trying to set fields to max?
 
-I'm all for __always_inline in this case, the compiler not inlining sign
-extention is just retarded,
+I'm trying to validate variable values are in range before attempting
+to use them in a bitfield.
+
+
+I find field_max() to be a good name for what I'm looking for.
+
+					-Alex
+
+#define FOO_FMASK	0x000ff000
+
+static u32 register = 0x12345678;
+
+int foo(u32 value)
+{
+	if (value > field_max(FOO_FMASK))
+		return -EINVAL;
+
+	u32_replace_bits(&register, value, FOO_FMASK);
+	
+	return 0;
+}
