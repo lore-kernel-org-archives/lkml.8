@@ -2,104 +2,109 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CEAC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B26EC3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 167232469C
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5109821556
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:31:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V68BGD6c"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sMe5Q6us"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbgB1X1u (ORCPT
+        id S1726751AbgB1XbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 18:27:50 -0500
-Received: from mail-pj1-f74.google.com ([209.85.216.74]:40652 "EHLO
-        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgB1X1u (ORCPT
+        Fri, 28 Feb 2020 18:31:03 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33039 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbgB1XbD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 18:27:50 -0500
-Received: by mail-pj1-f74.google.com with SMTP id md7so1237591pjb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 15:27:50 -0800 (PST)
+        Fri, 28 Feb 2020 18:31:03 -0500
+Received: by mail-lj1-f196.google.com with SMTP id y6so5224457lji.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 15:31:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=ob/5oXc1aBLbQ8gDjyGAYrNAMQyHz5Vfyh0BFVF2PXg=;
-        b=V68BGD6c6nVMGPh8VWAab/99utI1iJ7FNm8spdAwS9N91x27TbfKcivQxfuwgFhI7n
-         sE/ly+W7L/HdZAccinIme+WmvN/1ccX5fPUV3RFFUkjuCYPrggyP4vU4HH1mGvtqxuGE
-         1MLt0GpOBFAK8WVDz0iEZayq9PHhyOgOycdeBdEnlDm74IolVteLLaXUQd0uFO3B0kes
-         T0hTWrbleB+JbqBQF8Aqphegfm7AG7/xeLCGSkI57lf3/RO76Zlsfmud2z/aolu1KTCE
-         7zP3W00/tYkGS/s1WSSnnxGyRCvmZi/ZLozDw60KBefAgB9N3veAzod8F41d5Ukq69UK
-         sUvw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FJMOjeid6sdwgXv4TTvMxMhevRyWK73UfsN1mnUN154=;
+        b=sMe5Q6usg9+F4riRxov5cjG3cyELLD3oY3eqeIrCM0aMmY7BGEfLMLJT1SZ1gK0IwN
+         UFNBkrP7J25JufhFor+00VbaiY0V3wNFi5Y0V6yp/yTwjh7YTnRrLqyZ7eaDMrvF/TzZ
+         Dd+uXEyp9pONbPMH+vFvJHPbmE3J7xZx3HwKpXwcCLupuc+vQZA6GenODw9SfH6Az6nZ
+         hzzXjyLjydDHeMjOWfWF8PjkvIagnRsfW3bwZi7A4bzOB19Lx7TbyhEccYzR/YHRJNAZ
+         eoJubijvMqEQ04/8kdlkwXDI6wo5CzuUN5RPHEtk0Zeu1q+sM3u3109tFuStjvE6jYPa
+         NuOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=ob/5oXc1aBLbQ8gDjyGAYrNAMQyHz5Vfyh0BFVF2PXg=;
-        b=mCZHeZ/+nR+TzoVqh8bjo75nUNbr3Z/KfzedYIUJKaXn2vAghiUsAl3+1AKGD6Lcd4
-         5CXldQBU5AXRVDTUpz/SgtyQVwWbnTxm2h0HMWIQ6CednFTPDQJ41NgS1kFV+L4LvPKC
-         SvydmegadqerHypPcappDFkva5Bn7K4YUcZzcJb3Gk1w4+L+N5nBw1tMIKctvh6jmNV8
-         ktU8zxKwaKzx98KoIz/uClPMCGrbJjDRbu3NzejFLr7OGPmtJizZ6iouOW6wFHf9REpi
-         yfm0Au7sU6DEbKmrhcXl5phCRJV+seYkn5ku4jDL2QJpbTk4BDbwqzTye0roJiQd08ja
-         stVw==
-X-Gm-Message-State: APjAAAWOqhvo0hgmb2ZcYrKLA9nuziw6LHhXOfex4c+2rIoToMUjdfNX
-        95pKTmqf7eTsBWEBp4Q1G+03mD0hFLl0uMwj
-X-Google-Smtp-Source: APXvYqy+LMQ7kC0uc5IE8dzERpI0LHDaCj6brMoJUpX00hk6yAbzjJv039vBP0TBIJUBGpswJ96ErCym/lWu6FiH
-X-Received: by 2002:a63:1210:: with SMTP id h16mr6864227pgl.408.1582932469440;
- Fri, 28 Feb 2020 15:27:49 -0800 (PST)
-Date:   Fri, 28 Feb 2020 15:27:36 -0800
-Message-Id: <20200228232736.182780-1-rammuthiah@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH RESEND] virtio: virtio_pci_legacy: Remove default y from Kconfig
-From:   Ram Muthiah <rammuthiah@google.com>
-To:     "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, kernel-team@android.com,
-        Ram Muthiah <rammuthiah@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FJMOjeid6sdwgXv4TTvMxMhevRyWK73UfsN1mnUN154=;
+        b=NG72WODpQq8zD6qlznbXpSRMdHWuN/974Yh2R8oL4ED52LKxuVDrEZW5PKSC3thbaS
+         BwgFJj9+dcsIBLuLuHMdXD/fxz/84nPN3q8KDKCzbv8op2uCSpvlLvHcRGfzebi/Es97
+         cBoe2obY8VH2XYiDNZZPx2QZmbHTp09OX8TbkE0v7DI7A0vzgqAtcBBkPUupAEY64j9t
+         NGzJ1XHCIMRE784rA6Cu5pDeHI9GY86GJVpX8R1hNWVFf/atz6lhgL0uWCJwpwRG1LD2
+         saPCmbgVL+9XiJ5q68YqXNq0EDi1s3YzkDcmurlCeght/0xhuJ/j4SwRja1L8JNIhh6X
+         Y6bQ==
+X-Gm-Message-State: ANhLgQ12v/9F73lwEFOj6ymRqsfNMjMBEsqZJxzqkXaorB7Rt6t6vFWn
+        KKUbFDQiiCY+GTMe4D1t03bAGLPTBvja9Kep1lEo7Q==
+X-Google-Smtp-Source: ADFU+vsxoOHRMUZvXuoHzVp2SunBEAeVGYJ5QRP7my8lror2nKWFrPn2yB/CjkXexreMLjBZgrvV44n23yoajzkayqA=
+X-Received: by 2002:a05:651c:2049:: with SMTP id t9mr4108228ljo.39.1582932660936;
+ Fri, 28 Feb 2020 15:31:00 -0800 (PST)
+MIME-Version: 1.0
+References: <20200227185837.GA4469@embeddedor>
+In-Reply-To: <20200227185837.GA4469@embeddedor>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 29 Feb 2020 00:30:50 +0100
+Message-ID: <CACRpkda4wEck_JYpMYuQ+pAkaVo1JUE9nUpNseCBRCFADpZ9Ug@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: sirf/atlas7: Replace zero-length array with
+ flexible-array member
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Barry Song <baohua@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The legacy pci driver should no longer be default enabled. QEMU has
-implemented support for Virtio 1 for virtio-pci since June 2015
-on SHA dfb8e184db75.
+On Thu, Feb 27, 2020 at 7:55 PM Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
 
-Signed-off-by: Ram Muthiah <rammuthiah@google.com>
----
- drivers/virtio/Kconfig | 6 ------
- 1 file changed, 6 deletions(-)
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+>
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+>
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+>
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+>
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+>
+> This issue was found with the help of Coccinelle.
+>
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
-index 078615cf2afc..eacd0b90d32b 100644
---- a/drivers/virtio/Kconfig
-+++ b/drivers/virtio/Kconfig
-@@ -26,7 +26,6 @@ config VIRTIO_PCI
- 
- config VIRTIO_PCI_LEGACY
- 	bool "Support for legacy virtio draft 0.9.X and older devices"
--	default y
- 	depends on VIRTIO_PCI
- 	---help---
-           Virtio PCI Card 0.9.X Draft (circa 2014) and older device support.
-@@ -36,11 +35,6 @@ config VIRTIO_PCI_LEGACY
- 	  If disabled, you get a slightly smaller, non-transitional driver,
- 	  with no legacy compatibility.
- 
--          So look out into your driveway.  Do you have a flying car?  If
--          so, you can happily disable this option and virtio will not
--          break.  Otherwise, leave it set.  Unless you're testing what
--          life will be like in The Future.
--
- 	  If unsure, say Y.
- 
- config VIRTIO_PMEM
--- 
-2.25.0.265.gbab2e86ba0-goog
+Patch applied!
 
+Yours,
+Linus Walleij
