@@ -1,89 +1,157 @@
-Return-Path: <SRS0=BMk7=4P=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15426C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E70C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB817206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Feb 2020 23:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C13E82087F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:00:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZqA9ZpZ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730119AbgB0X5m (ORCPT
+        id S1729959AbgB1AAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 18:57:42 -0500
-Received: from mga03.intel.com ([134.134.136.65]:12972 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728993AbgB0X5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 18:57:41 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 15:57:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
-   d="scan'208";a="232368034"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga008.fm.intel.com with ESMTP; 27 Feb 2020 15:57:39 -0800
-Date:   Thu, 27 Feb 2020 15:57:39 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH 1/2] kvm: vmx: Use basic exit reason to check if it's the
- specific VM EXIT
-Message-ID: <20200227235739.GM17014@linux.intel.com>
-References: <20200224020751.1469-2-xiaoyao.li@intel.com>
- <87lfosp9xs.fsf@vitty.brq.redhat.com>
- <d9744594-4a66-d867-f785-64ce4d42b848@intel.com>
- <87imjwp24x.fsf@vitty.brq.redhat.com>
- <20200224161728.GC29865@linux.intel.com>
- <50134028-ef7a-46c6-7602-095c47406ed7@intel.com>
- <20200225061317.GV29865@linux.intel.com>
- <bb2d36b4-a077-691e-d59e-f65bf534d1ff@intel.com>
- <20200226235924.GW9940@linux.intel.com>
- <022bf970-1b86-d952-5563-0d18c9eea6e2@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <022bf970-1b86-d952-5563-0d18c9eea6e2@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Thu, 27 Feb 2020 19:00:09 -0500
+Received: from mail-qk1-f202.google.com ([209.85.222.202]:43897 "EHLO
+        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728993AbgB1AAJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 19:00:09 -0500
+Received: by mail-qk1-f202.google.com with SMTP id k194so1203575qke.10
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2020 16:00:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=UnGEUXFlTBCBPshIVdS6XExVwEXBFybs+wps5bqBFfU=;
+        b=ZqA9ZpZ5GnZovgjwmeGhGPDca2UmvTs4hRN0ST7NikKc3qUD+KGMpwtKGyW5QGxv1A
+         lMgbp0lPx36sq+iGlJCBX+ZgfX/+pQ71BCHn95YwwY8PkFF9+SgDGCV9GpWCLzMVxm3X
+         9s1drcGlA1wahwzNdlnI06QggAm/iY30ymefmOZ0pe7tM8TZ0kjKkaJaCVmpCpCINUWR
+         rKiPs9QLiVGoq78pNXfAit5PURw9miOeDwuG4eaepkqq0sL2WPdjpwWHjl0Uj1GOKzvl
+         kOszvSTFEstsDOVZytiBj2/q+bJe0iTFKwN2619P4qYhXPRu/a1GMVTv/RKcJn5WVdGd
+         xlDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=UnGEUXFlTBCBPshIVdS6XExVwEXBFybs+wps5bqBFfU=;
+        b=Z7JmRJgM5/tUJL8IsaQ6eHxsofWlrOu7GiVnAJeqxFBkR21UxZy0MpYCNLyAhifRD2
+         k3oEp5bGaIf6GqjTs1lZBEVDMMyYRgc8ByklOsSKpTmALcxmGzgr5FvF/Zt4maZkuzIi
+         8CpDBM+q+5jCwtXmWa3TfsyyglpzjluHIoI3KuhmuxpOgocQg3yIIgXUq8c+yottpmEi
+         yjofSChQRuDcBf7hY5DE3MdVPahYcCCdAjXIPCsMHyxBwRTOMY7IX69AVfHggYtw/Qfm
+         3TUcEmnl37Yuu/QHbLQ92xvZdrau61jbsQYeknQ5b0g1G8DILKZyggEr89/Vrgw/4rKi
+         u3mA==
+X-Gm-Message-State: APjAAAXvV9kUs6HrQ3ImvPnJmdtOMKw/o2LogO/o1Y3jxkCJeM05ZJNT
+        bF/XrpBECUtedaXBCLhTlrtvVugDioWBmwF3LvasBA==
+X-Google-Smtp-Source: APXvYqx8yOpMNyp9qq3byswIiE05FjNihHdRXbu6Cytxhx3fB0hwlhohcuwYBesKmfcZTuHVXykmLq7u6HLFipt5HCWAYg==
+X-Received: by 2002:a37:4f51:: with SMTP id d78mr2117183qkb.28.1582848007962;
+ Thu, 27 Feb 2020 16:00:07 -0800 (PST)
+Date:   Thu, 27 Feb 2020 16:00:01 -0800
+Message-Id: <20200228000001.240428-1-brendanhiggins@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+Subject: [PATCH v1] Revert "software node: Simplify software_node_release() function"
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     gregkh@linuxfoundation.org, rafael@kernel.org
+Cc:     linux-kernel@vger.kernel.org, davidgow@google.com,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Heidi Fahim <heidifahim@google.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 04:35:20PM +0800, Xiaoyao Li wrote:
-> On 2/27/2020 7:59 AM, Sean Christopherson wrote:
-> >Ah, good point.  But, that's just another bug in my psuedo patch :-)
-> >It's literally one call site that needs to be updated.  E.g.
-> >
-> >	if (is_guest_mode(vcpu) && nested_vmx_exit_reflected(vcpu, exit_reason))
-> >		return nested_vmx_reflect_vmexit(vcpu, full_exit_reason);
-> >
-> 
-> shouldn't we also pass full_exit_reason to nested_vmx_exit_reflected()?
+This reverts commit 3df85a1ae51f6b256982fe9d17c2dc5bfb4cc402.
 
-Yep, see the patch I sent.  Alternatively, and perhaps a better approach
-once we have the union, would be to not pass exit_reason at all and instead
-have nested_vmx_exit_reflected() grab it directly from vmx->...
+The reverted commit says "It's possible to release the node ID
+immediately when fwnode_remove_software_node() is called, no need to
+wait for software_node_release() with that." However, releasing the node
+ID before waiting for software_node_release() to be called causes the
+node ID to be released before the kobject and the underlying sysfs
+entry; this means there is a period of time where a sysfs entry exists
+that is associated with an unallocated node ID.
 
-> 
-> >Everywhere else KVM calls nested_vmx_reflect_vmexit() is (currently) done
-> 
-> I guess you wanted to say nested_vmx_vmexit() not
-> nested_vmx_reflect_vmexit() here.
+Once consequence of this is that there is a race condition where it is
+possible to call fwnode_create_software_node() with no parent node
+specified (NULL) and have it fail with -EEXIST because the node ID that
+was assigned is still associated with a stale sysfs entry that hasn't
+been cleaned up yet.
 
-Ya.
+Although it is difficult to reproduce this race condition under normal
+conditions, it can be deterministically reproduced with the following
+minconfig on UML:
+
+CONFIG_KUNIT_DRIVER_PE_TEST=y
+CONFIG_DEBUG_KERNEL=y
+CONFIG_DEBUG_OBJECTS=y
+CONFIG_DEBUG_OBJECTS_TIMERS=y
+CONFIG_DEBUG_KOBJECT_RELEASE=y
+CONFIG_KUNIT=y
+
+Running the tests with this configuration causes the following failure:
+
+<snip>
+kobject: 'node0' ((____ptrval____)): kobject_release, parent (____ptrval____) (delayed 400)
+	ok 1 - pe_test_uints
+sysfs: cannot create duplicate filename '/kernel/software_nodes/node0'
+CPU: 0 PID: 28 Comm: kunit_try_catch Not tainted 5.6.0-rc3-next-20200227 #14
+<snip>
+kobject_add_internal failed for node0 with -EEXIST, don't try to register things with the same name in the same directory.
+kobject: 'node0' ((____ptrval____)): kobject_release, parent (____ptrval____) (delayed 100)
+	# pe_test_uint_arrays: ASSERTION FAILED at drivers/base/test/property-entry-test.c:123
+	Expected node is not error, but is: -17
+	not ok 2 - pe_test_uint_arrays
+<snip>
+
+Reported-by: Heidi Fahim <heidifahim@google.com>
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/base/swnode.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+index 0b081dee1e95c..de8d3543e8fe3 100644
+--- a/drivers/base/swnode.c
++++ b/drivers/base/swnode.c
+@@ -608,6 +608,13 @@ static void software_node_release(struct kobject *kobj)
+ {
+ 	struct swnode *swnode = kobj_to_swnode(kobj);
  
-> >with a hardcoded value (except handle_vmfunc(), but I actually want to
-> >change that one).
-> >
-> 
++	if (swnode->parent) {
++		ida_simple_remove(&swnode->parent->child_ids, swnode->id);
++		list_del(&swnode->entry);
++	} else {
++		ida_simple_remove(&swnode_root_ids, swnode->id);
++	}
++
+ 	if (swnode->allocated) {
+ 		property_entries_free(swnode->node->properties);
+ 		kfree(swnode->node);
+@@ -773,13 +780,6 @@ void fwnode_remove_software_node(struct fwnode_handle *fwnode)
+ 	if (!swnode)
+ 		return;
+ 
+-	if (swnode->parent) {
+-		ida_simple_remove(&swnode->parent->child_ids, swnode->id);
+-		list_del(&swnode->entry);
+-	} else {
+-		ida_simple_remove(&swnode_root_ids, swnode->id);
+-	}
+-
+ 	kobject_put(&swnode->kobj);
+ }
+ EXPORT_SYMBOL_GPL(fwnode_remove_software_node);
+-- 
+2.25.1.481.gfbce0eb801-goog
+
