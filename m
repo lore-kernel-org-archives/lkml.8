@@ -2,145 +2,102 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FBCC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9502CC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52BB124691
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EC5C2067C
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 13:07:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582895261;
+	bh=82O9Q4K3fw+DxlKKNILi3KCVgL4Kq+Mu3Um5a9/JeOU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PqUVeKIYGRU3mcUlX7HoerrCXbKK0ZipuASNpkpmTYdcRgkGnb9f9koug6UztI1oO
+	 lucmxZKK5ambZExUeuWbZyM3zpulvHV3JEkoU8jBsI+G/zz553s8kghevbj5W1MFFv
+	 Sj4NiEGgTqj0gMW87w+bzafpkBZOVFzhgLUjn7hA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgB1NGG convert rfc822-to-8bit (ORCPT
+        id S1726287AbgB1NHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 08:06:06 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49094 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725861AbgB1NGF (ORCPT
+        Fri, 28 Feb 2020 08:07:40 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39400 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbgB1NHk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 08:06:05 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01SD4Nsh070469
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 08:06:04 -0500
-Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [158.85.210.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yepxap6aq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 08:06:04 -0500
-Received: from localhost
-        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
-        for <linux-kernel@vger.kernel.org> from <BMT@zurich.ibm.com>;
-        Fri, 28 Feb 2020 13:06:03 -0000
-Received: from us1b3-smtp04.a3dr.sjc01.isc4sb.com (10.122.203.161)
-        by smtp.notes.na.collabserv.com (10.122.47.39) with smtp.notes.na.collabserv.com ESMTP;
-        Fri, 28 Feb 2020 13:05:54 -0000
-Received: from us1b3-mail162.a3dr.sjc03.isc4sb.com ([10.160.174.187])
-          by us1b3-smtp04.a3dr.sjc01.isc4sb.com
-          with ESMTP id 2020022813055366-387445 ;
-          Fri, 28 Feb 2020 13:05:53 +0000 
-In-Reply-To: <20200227164622.GJ31668@ziepe.ca>
-Subject: Re: Re: possible deadlock in cma_netdev_callback
-From:   "Bernard Metzler" <BMT@zurich.ibm.com>
-To:     "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc:     "syzbot" <syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com>,
-        chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        netdev@vger.kernel.org, parav@mellanox.com,
-        syzkaller-bugs@googlegroups.com, willy@infradead.org
-Date:   Fri, 28 Feb 2020 13:05:53 +0000
+        Fri, 28 Feb 2020 08:07:40 -0500
+Received: by mail-pg1-f195.google.com with SMTP id s2so646348pgv.6
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 05:07:37 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aX8lWjzLnVjmxiN9TcAcGkrQKJfwGRC+NlHJIQaBb3E=;
+        b=ak54Gs27w0dWBG+vXT3xX9T2P1FYNis+Pinsw3Aspu/19oO3OAbPg8VTihlo1feqyh
+         9cNLWMcPDtRs2B4zpmtGCx5egzK+9U6iXE5o0Yhyo3lzfEI///QGU3BshLSvq/ZanlU7
+         VVD0HvxwbN4tzjdmFf0N7Nmtr69/v5jI7068H0ffgrN0X8ylKTdt20JgT58FObicoz/n
+         B5DdMOhIJGy3ljDCLebYnU734zlU8HJHkKLVRelnMlB3hRYiWIS8YGLFHYnl18omh+Fq
+         v6LcPIwy0s+HOv3/wCwbeq909l+UhEPBxuYOtOIZmKD+OO3/362DoejBq6MUGyLeYkL1
+         aHJA==
+X-Gm-Message-State: APjAAAWtsXr1Lo5oACBzI6F8kNR3+tj5CMmIFcYBfLOKVvwH0tOl7P1Y
+        p94YeaHg0PjGfALoZtBORsk=
+X-Google-Smtp-Source: APXvYqwD/9fmH32eVCZEP5+6HvThzzEZEn76c0ySdjqM8akpO/1BRkFVXK4aJiqyQMOXIbXqcmMTLQ==
+X-Received: by 2002:a63:114a:: with SMTP id 10mr4448655pgr.185.1582895257294;
+        Fri, 28 Feb 2020 05:07:37 -0800 (PST)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id a18sm2926947pfr.148.2020.02.28.05.07.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 05:07:35 -0800 (PST)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 2E59E4042C; Fri, 28 Feb 2020 13:07:35 +0000 (UTC)
+Date:   Fri, 28 Feb 2020 13:07:35 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Junyong Sun <sunjy516@gmail.com>
+Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
+        sunjunyong@xiaomi.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] firmware: fix a double abort case with
+ fw_load_sysfs_fallback
+Message-ID: <20200228130735.GA11244@42.do-not-panic.com>
+References: <1582876593-27926-1-git-send-email-sunjunyong@xiaomi.com>
 MIME-Version: 1.0
-Sensitivity: 
-Importance: Normal
-X-Priority: 3 (Normal)
-References: <20200227164622.GJ31668@ziepe.ca>,<20200227155335.GI31668@ziepe.ca>
- <20200226204238.GC31668@ziepe.ca> <000000000000153fac059f740693@google.com>
- <OF0B62EDE7.E13D40E8-ON0025851B.0037F560-0025851B.0037F56C@notes.na.collabserv.com>
- <OF0C6D63D8.F1817050-ON0025851B.0059D878-0025851B.0059D887@notes.na.collabserv.com>
-X-Mailer: IBM iNotes ($HaikuForm 1054.1) | IBM Domino Build
- SCN1812108_20180501T0841_FP62 November 04, 2019 at 09:47
-X-KeepSent: F9E6CFC6:7E79459D-0025851C:00472582;
- type=4; name=$KeepSent
-X-LLNOutbound: False
-X-Disclaimed: 15259
-X-TNEFEvaluated: 1
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset=UTF-8
-x-cbid: 20022813-6283-0000-0000-000000FF3003
-X-IBM-SpamModules-Scores: BY=0.02035; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
- SC=0.399202; ST=0; TS=0; UL=0; ISC=; MB=0.005929
-X-IBM-SpamModules-Versions: BY=3.00012657; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000293; SDB=6.01340466; UDB=6.00714387; IPR=6.01122828;
- MB=3.00031010; MTD=3.00000008; XFM=3.00000015; UTC=2020-02-28 13:06:01
-X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
-X-IBM-AV-VERSION: SAVI=2020-02-28 12:46:26 - 6.00011059
-x-cbparentid: 20022813-6284-0000-0000-000000CD3278
-Message-Id: <OFF9E6CFC6.7E79459D-ON0025851C.00472582-0025851C.0047F357@notes.na.collabserv.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-28_04:2020-02-26,2020-02-28 signatures=0
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582876593-27926-1-git-send-email-sunjunyong@xiaomi.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------"Jason Gunthorpe" <jgg@ziepe.ca> wrote: -----
+On Fri, Feb 28, 2020 at 03:56:33PM +0800, Junyong Sun wrote:
+> fw_sysfs_wait_timeout may return err with -ENOENT
+> at fw_load_sysfs_fallback and firmware is already
+> in abort status, no need to abort again, so skip it.
 
->To: "Bernard Metzler" <BMT@zurich.ibm.com>
->From: "Jason Gunthorpe" <jgg@ziepe.ca>
->Date: 02/27/2020 05:46PM
->Cc: "syzbot" <syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com>,
->chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
->linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
->netdev@vger.kernel.org, parav@mellanox.com,
->syzkaller-bugs@googlegroups.com, willy@infradead.org
->Subject: [EXTERNAL] Re: possible deadlock in cma_netdev_callback
->
->On Thu, Feb 27, 2020 at 04:21:21PM +0000, Bernard Metzler wrote:
->> 
->> >To: "Bernard Metzler" <BMT@zurich.ibm.com>
->> >From: "Jason Gunthorpe" <jgg@ziepe.ca>
->> >Date: 02/27/2020 04:53PM
->> >Cc: "syzbot"
-><syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com>,
->> >chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
->> >linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
->> >netdev@vger.kernel.org, parav@mellanox.com,
->> >syzkaller-bugs@googlegroups.com, willy@infradead.org
->> >Subject: [EXTERNAL] Re: possible deadlock in cma_netdev_callback
->> >
->> >On Thu, Feb 27, 2020 at 10:11:13AM +0000, Bernard Metzler wrote:
->> >
->> >> Thanks for letting me know! Hmm, we cannot use RCU locks since
->> >> we potentially sleep. One solution would be to create a list
->> >> of matching interfaces while under lock, unlock and use that
->> >> list for calling siw_listen_address() (which may sleep),
->> >> right...?
->> >
->> >Why do you need to iterate over addresses anyhow? Shouldn't the
->> >listen
->> >just be done with the address the user gave and a BIND DEVICE to
->the
->> >device siw is connected to?
->> 
->> The user may give a wildcard local address, so we'd have
->> to bind to all addresses of that device...
->
->AFAIK a wild card bind using BIND DEVICE works just fine?
->
->Jason
->
-Thanks Jason, absolutely! And it makes things so easy...
+What exactly is caused by this issue though? Are you seeing
+a kernel panic, some extra messages in the kernel log? This
+informationw ould be useful for the kernel commit log.
 
-Let me prepare and send a patch which drops all that
-jumbo mumbo logic to iterate over interface addresses
-if the socket interface does the right things anyway.
-
-It implies further simplifications to the siw connection
-management, since with that we never have to maintain a
-list of listening siw endpoints on a given cm_id; it will
-always be max one. I'll cleanup the code accordingly and
-prepare an extra cleanup patch, which I can send only
-later (have a very tight schedule this week).
-
-Bernard.
-
+> Signed-off-by: Junyong Sun <sunjunyong@xiaomi.com>
+> ---
+>  drivers/base/firmware_loader/fallback.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
+> index 8704e1b..1e9c96e 100644
+> --- a/drivers/base/firmware_loader/fallback.c
+> +++ b/drivers/base/firmware_loader/fallback.c
+> @@ -525,7 +525,7 @@ static int fw_load_sysfs_fallback(struct fw_sysfs *fw_sysfs,
+>  	}
+>  
+>  	retval = fw_sysfs_wait_timeout(fw_priv, timeout);
+> -	if (retval < 0) {
+> +	if (retval < 0 && retval != -ENOENT) {
+>  		mutex_lock(&fw_lock);
+>  		fw_load_abort(fw_sysfs);
+>  		mutex_unlock(&fw_lock);
+> -- 
+> 2.7.4
+> 
