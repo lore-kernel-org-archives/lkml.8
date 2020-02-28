@@ -2,62 +2,65 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB35C3F2D3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 331F2C3F2D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12F26246AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5D92246AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 22:42:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oDzkbR7R"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mj9hwy6M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgB1WmL (ORCPT
+        id S1726944AbgB1WmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 17:42:11 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:43942 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbgB1WmL (ORCPT
+        Fri, 28 Feb 2020 17:42:16 -0500
+Received: from mail-yw1-f53.google.com ([209.85.161.53]:42265 "EHLO
+        mail-yw1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726894AbgB1WmO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 17:42:11 -0500
-Received: by mail-yw1-f67.google.com with SMTP id u78so127653ywf.10
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 14:42:10 -0800 (PST)
+        Fri, 28 Feb 2020 17:42:14 -0500
+Received: by mail-yw1-f53.google.com with SMTP id n127so4915455ywd.9
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 14:42:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oMZxZrJ7Bl6W7lIllps1//BZzQUZEEMLhplq5QKAqeg=;
-        b=oDzkbR7R4NzPzmaT//fTmrzHcCOKEMQHBe9r7VqhE/ldZx8JdDmCONOjnyK/uYRDKj
-         mabkq79qRqJFZc3w4CK7VhFMvdD5YMSC8mnkI5sn/Z9fREwE2S8WGpbjppe0XUp9N9p4
-         Q/98pdlJq28+U8ixvVWL4fZ7tL+9/Uk5F9CDtLpIaMlNeY1ncYQ26MUqRR0wSXJk5MJv
-         buWtsnriVQeWjjWc5v3fj1hgaF8OToIEcqHOf38c3AEkiic8+HDTQLOvtqr8HP1WyRSS
-         qACdW2pHSHnSbcR7+CS5mHA6ICpZTuA5ajDJG0+bjZE0Ru3AM2qyQ5ageuDrWXPyHhcX
-         fiQg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=HtBzbHspY1ceZ7S67aMewQoXLRoYH4pgWqbzOtj2eMg=;
+        b=mj9hwy6Mti/O7HjLER8byZFrS6mQPnULSPL+IsIJxNascr6MeZ5AB2qGRvjTefcMSZ
+         18R+SgT30GwZ4bOD9f6h70qzWgSQCpyOJ1Ci0My6NpF1PeK2sfuFOy+L26Iw2u5iykZJ
+         KUzFFkDOWzlmjCiLA8XjW0Dce9a+dMruT4IBdgosALThxkL4scOOGUmJzoWLDxcgbWJZ
+         n7rgrKbZgKI1lcQu/rT9rtJZdvFFb7c/B4Fh8szXwhGefieXISiFbmdPyCBqIG54/bq0
+         KVsyA1NYzN1F/Uk9gB55Zyz6J0nzGYY3aPVCzxClV/ed0Ay2Q0ImXNNaqnf6mpJaWI9x
+         9v3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oMZxZrJ7Bl6W7lIllps1//BZzQUZEEMLhplq5QKAqeg=;
-        b=DtqSDuvJ79Jo6Y1kaz5vSjPnVdcwMHOQc4VLJJY+LWMNK4Dk519nMl7Z82b2l7/JCP
-         G9LDexUpZDRpNtTyRPO4HcG/GzIUbmR/ZbtomfQDpnxuKSYphIomVNTyKqhOZuFxw7wl
-         I45XgAhKbq5LfLMe8Ue1+yeM/0I43G0tP4XKi5q14hVbqx7twFDb0BICgeElj9JhuhS3
-         zdC3gTuMTXtC2Zs9+qBAkqKeGaCceesH3HXEm9DRC1o0QXT/ItoAMg4+ROF+DDl9StH3
-         hU2cflYJYLZuw0cvgQExsQ6y5jWflOpMEprvoVzrQO63qBIEk6ZJ6ZdxYsKvZw6JPJwt
-         Q03g==
-X-Gm-Message-State: APjAAAXgg2Gu9X8jt5GD4DV80qDTWNsEjZZgaSfv7hl5rCuia0kXLanb
-        Z4sCB7gBXl3deE3HCDAPG91b8A==
-X-Google-Smtp-Source: APXvYqwbqaT0saJvvn1kO9AMPxhCtCU02r6P8JPFybRCZw7gJ1GttFT36f9OLbROm/kzLbUGxjOrBg==
-X-Received: by 2002:a81:82c5:: with SMTP id s188mr6858670ywf.59.1582929729704;
-        Fri, 28 Feb 2020 14:42:09 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=HtBzbHspY1ceZ7S67aMewQoXLRoYH4pgWqbzOtj2eMg=;
+        b=A8DyeNDXST3e0+5yu/l8Yw8F1ljSt/IR1rAi8Y091jBpcj2N6BAHPMmvrpTyt8fRRW
+         F57j/rFHD6KJjAqi+BmSpQtkp0aaZcTgLlxGFxpc91wNO1U/NUtCmSiv1B4q0PPxAgDe
+         cfSI957rUfNNBGBuTX4y4/aN8AT9CElHXxEQkv0IiiX72H9C1a1fWWs8Mf83/PPZaaGy
+         K+op4UA2OYcwU1aoLFZFGxWa0s5lNCJCITVga7hUp0j4D7ICGATNar/31/8Ltwic0EdA
+         1gYqwkhceE/mkQ6oHqjlzYCdvTcP5VSBf4jDaurtqP6Met82oxcBeq81H7aBQXaICDuM
+         tPxw==
+X-Gm-Message-State: APjAAAUa5s349N1vNuJnmwhKWM2Pa2t3YfXYAQ4yPJ4KepkM7I8QvVcJ
+        z0inEw3V72aNz5OlTCuEQPgbrg==
+X-Google-Smtp-Source: APXvYqz1pRiPHzLlLz3CG+TFCb/qvF248lOfBZnJVqUl3hArx6azdJ7lWy0mw/HNLBIzcvfQJDUZhg==
+X-Received: by 2002:a0d:d64d:: with SMTP id y74mr6951357ywd.386.1582929733568;
+        Fri, 28 Feb 2020 14:42:13 -0800 (PST)
 Received: from localhost.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id d188sm4637830ywe.50.2020.02.28.14.42.07
+        by smtp.gmail.com with ESMTPSA id d188sm4637830ywe.50.2020.02.28.14.42.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 14:42:08 -0800 (PST)
+        Fri, 28 Feb 2020 14:42:13 -0800 (PST)
 From:   Alex Elder <elder@linaro.org>
-To:     Arnd Bergmann <arnd@arndb.de>, David Miller <davem@davemloft.net>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Miller <davem@davemloft.net>
 Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         Andy Gross <agross@kernel.org>,
         Johannes Berg <johannes@sipsolutions.net>,
@@ -67,18 +70,18 @@ Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         Susheel Yadav Yadagiri <syadagir@codeaurora.org>,
         Chaitanya Pratapa <cpratapa@codeaurora.org>,
         Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
         Ohad Ben-Cohen <ohad@wizery.com>,
         Siddharth Gupta <sidgup@codeaurora.org>,
         netdev@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 00/17] net: introduce Qualcomm IPA driver (UPDATED)
-Date:   Fri, 28 Feb 2020 16:41:47 -0600
-Message-Id: <20200228224204.17746-1-elder@linaro.org>
+        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: [PATCH 02/17] dt-bindings: soc: qcom: add IPA bindings
+Date:   Fri, 28 Feb 2020 16:41:49 -0600
+Message-Id: <20200228224204.17746-3-elder@linaro.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200228224204.17746-1-elder@linaro.org>
+References: <20200228224204.17746-1-elder@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -86,249 +89,221 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series presents the driver for the Qualcomm IP Accelerator (IPA).
+Add the binding definitions for the "qcom,ipa" device tree node.
 
-I have posted earlier versions of this code previously, but it has
-undergone quite a bit of development since the last time, so rather
-than calling it "version 3" I'm just treating it as a new series
-(indicating it's been updated in this message).  The fast/data path
-is the same as before.  But the driver now (nearly) supports a
-second platform, its transaction handling has been generalized
-and improved, and modem activities are now handled in a more
-unified way.
+Signed-off-by: Alex Elder <elder@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
 
-This series is available (based on v5.6-rc3) in branch "ipa_updated-v1"
-in this git repository:
-  https://git.linaro.org/people/alex.elder/linux.git
-
-The branch depends on other code that I sent out for review earlier
-today.  The first is a very simple patch (which I already know will
-be updated, but generally seems acceptable), and the second is a small
-series of bugfixes for remoteproc:
-  https://lore.kernel.org/lkml/20200228165343.8272-1-elder@linaro.org/
-  https://lore.kernel.org/lkml/20200228183359.16229-1-elder@linaro.org/
-
-
-I want to address some of the discussion that arose last time.
-
-First, there was the WWAN discussion.  Here's the history:
-  - This was last posted nine months ago.
-  - Reviewers at that time favored developing a new WWAN subsystem that
-    would be used for managing devices like this.  And the suggestion
-    was to not accept this driver until that could be developed.
-  - Along the way, Apple acquired much of Intel's modem business.
-    And as a result, the generic framework became less pressing.
-  - I did participate in the WWAN subsystem design however, and
-    although it went dormant for a while it's been resurrected:
-      https://lore.kernel.org/netdev/20200225100053.16385-1-johannes@sipsolutions.net/
-  - Unfortunately the proposed WWAN design was not an easy fit
-    with Qualcomm's integrated modem interfaces.  Given that
-    rmnet is a supported link type for in the upstream "iproute2"
-    package (more on this below), I have opted not to integrate
-    with any WWAN subsystem.
-
-So in summary, this driver does not integrate with a generic WWAN
-framework.  And I'd like it to be accepted upstream despite that.
-
-
-Next, Arnd Bergmann had some concerns about flow control.  (Note:
-some of my discussions with Arnd about this were offline.) The
-overall architecture here also involves the "rmnet" driver:
-  drivers/net/ethernet/qualcomm/rmnet
-
-The rmnet driver presents a network device for use.  It connects
-with another network device presented, by the IPA driver.  The
-rmnet driver wraps (and unwraps) packets transferred to (and from)
-the IPA driver with QMAP headers.
-
-   ---------------
-   | rmnet_data0 |    <-- "real" netdev
-   ---------------
-          ||       }- QMAP spoken here
-   --------------
-   | rmnet_ipa0 |     <-- also netdev, transporting QMAP packets
-   --------------
-          ||
-   --------------
-  ( IPA hardware )
-   --------------
-
-Arnd's concern was that the rmnet_data0 network device does not
-have the benefit of information about the state of the underlying
-IPA hardware in order to be effective in controlling TX flow.
-The feared result is over-buffering of TX packets (bufferbloat).
-I began working on some simple experiments to see whether (or how
-much) his concern was warranted.  But it turned out that completing
-these experiments was much more work than had been hoped.
-
-The rmnet driver is present in the upstream kernel.  There is also
-support for the rmnet link type in the upstream "ip" user space
-command in the "iproute2" package.  Changing the layering of rmnet
-over IPA likely involves deprecating the rmnet driver and its
-support in "iproute2".  I would really rather not go down that
-path.
-
-There is precedent for this sort of layering of network devices
-(L2TP, VLAN).  And any architecture like this would suffer the
-issues Arnd mentioned; the problem is not limited to rmnet and IPA.
-I do think this is a problem worth solving, but the prudent thing
-to do might be to try to solve it more generally.
-
-So to summarize on this issue, this driver does not attempt to
-change the way the rmnet and IPA drivers work together.  And even
-though I think Arnd's concerns warrant more investigation, I'd like
-this driver to to be accepted upstream without any change to this
-architecture.
-
-
-Finally, a more technical description for the series, and some
-acknowledgements to some people who contributed to it.
-
-The IPA is a component present in some Qualcomm SoCs that allows
-network functions such as aggregation, filtering, routing, and NAT
-to be performed without active involvement of the main application
-processor (AP).
-
-In this initial patch series these advanced features are not
-implemented.  The IPA driver simply provides a network interface
-that makes the modem's LTE network available in Linux.  This initial
-series supports only the Qualcomm SDM845 SoC.  The Qualcomm SC7180
-SoC is partially supported, and support for other platforms will
-follow.
-
-This code is derived from a driver developed by Qualcomm.  A version
-of the original source can be seen here:
-  https://source.codeaurora.org/quic/la/kernel/msm-4.9/tree
-in the "drivers/platform/msm/ipa" directory.  Many were involved in
-developing this, but the following individuals deserve explicit
-acknowledgement for their substantial contributions:
-
-    Abhishek Choubey
-    Ady Abraham
-    Chaitanya Pratapa
-    David Arinzon
-    Ghanim Fodi
-    Gidon Studinski
-    Ravi Gummadidala
-    Shihuan Liu
-    Skylar Chang
+ NOTE:	Rob, you signed off on this last year.  I made a single
+	change to it (which you suggested):  the license is now
+	dual GPL 2.0/BSD 2-clause.  If you have any objection to
+	including your sign-off please say so.
 
 					-Alex
 
-Alex Elder (17):
-  remoteproc: add IPA notification to q6v5 driver
-  dt-bindings: soc: qcom: add IPA bindings
-  soc: qcom: ipa: main code
-  soc: qcom: ipa: configuration data
-  soc: qcom: ipa: clocking, interrupts, and memory
-  soc: qcom: ipa: GSI headers
-  soc: qcom: ipa: the generic software interface
-  soc: qcom: ipa: IPA interface to GSI
-  soc: qcom: ipa: GSI transactions
-  soc: qcom: ipa: IPA endpoints
-  soc: qcom: ipa: filter and routing tables
-  soc: qcom: ipa: immediate commands
-  soc: qcom: ipa: modem and microcontroller
-  soc: qcom: ipa: AP/modem communications
-  soc: qcom: ipa: support build of IPA code
-  MAINTAINERS: add entry for the Qualcomm IPA driver
-  arm64: dts: sdm845: add IPA information
-
- .../devicetree/bindings/net/qcom,ipa.yaml     |  192 ++
- MAINTAINERS                                   |    6 +
- arch/arm64/boot/dts/qcom/sdm845.dtsi          |   51 +
- drivers/net/Kconfig                           |    2 +
- drivers/net/Makefile                          |    1 +
- drivers/net/ipa/Kconfig                       |   19 +
- drivers/net/ipa/Makefile                      |   12 +
- drivers/net/ipa/gsi.c                         | 2097 +++++++++++++++++
- drivers/net/ipa/gsi.h                         |  257 ++
- drivers/net/ipa/gsi_private.h                 |  118 +
- drivers/net/ipa/gsi_reg.h                     |  417 ++++
- drivers/net/ipa/gsi_trans.c                   |  786 ++++++
- drivers/net/ipa/gsi_trans.h                   |  226 ++
- drivers/net/ipa/ipa.h                         |  148 ++
- drivers/net/ipa/ipa_clock.c                   |  313 +++
- drivers/net/ipa/ipa_clock.h                   |   53 +
- drivers/net/ipa/ipa_cmd.c                     |  680 ++++++
- drivers/net/ipa/ipa_cmd.h                     |  195 ++
- drivers/net/ipa/ipa_data-sc7180.c             |  307 +++
- drivers/net/ipa/ipa_data-sdm845.c             |  329 +++
- drivers/net/ipa/ipa_data.h                    |  280 +++
- drivers/net/ipa/ipa_endpoint.c                | 1706 ++++++++++++++
- drivers/net/ipa/ipa_endpoint.h                |  110 +
- drivers/net/ipa/ipa_gsi.c                     |   54 +
- drivers/net/ipa/ipa_gsi.h                     |   60 +
- drivers/net/ipa/ipa_interrupt.c               |  253 ++
- drivers/net/ipa/ipa_interrupt.h               |  117 +
- drivers/net/ipa/ipa_main.c                    |  954 ++++++++
- drivers/net/ipa/ipa_mem.c                     |  314 +++
- drivers/net/ipa/ipa_mem.h                     |   90 +
- drivers/net/ipa/ipa_modem.c                   |  383 +++
- drivers/net/ipa/ipa_modem.h                   |   31 +
- drivers/net/ipa/ipa_qmi.c                     |  538 +++++
- drivers/net/ipa/ipa_qmi.h                     |   41 +
- drivers/net/ipa/ipa_qmi_msg.c                 |  663 ++++++
- drivers/net/ipa/ipa_qmi_msg.h                 |  252 ++
- drivers/net/ipa/ipa_reg.c                     |   38 +
- drivers/net/ipa/ipa_reg.h                     |  476 ++++
- drivers/net/ipa/ipa_smp2p.c                   |  335 +++
- drivers/net/ipa/ipa_smp2p.h                   |   48 +
- drivers/net/ipa/ipa_table.c                   |  700 ++++++
- drivers/net/ipa/ipa_table.h                   |  103 +
- drivers/net/ipa/ipa_uc.c                      |  211 ++
- drivers/net/ipa/ipa_uc.h                      |   32 +
- drivers/net/ipa/ipa_version.h                 |   23 +
- drivers/remoteproc/Kconfig                    |    6 +
- drivers/remoteproc/Makefile                   |    1 +
- drivers/remoteproc/qcom_q6v5_ipa_notify.c     |   85 +
- drivers/remoteproc/qcom_q6v5_mss.c            |   42 +-
- .../linux/remoteproc/qcom_q6v5_ipa_notify.h   |   82 +
- 50 files changed, 14235 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/net/qcom,ipa.yaml     | 192 ++++++++++++++++++
+ 1 file changed, 192 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/net/qcom,ipa.yaml
- create mode 100644 drivers/net/ipa/Kconfig
- create mode 100644 drivers/net/ipa/Makefile
- create mode 100644 drivers/net/ipa/gsi.c
- create mode 100644 drivers/net/ipa/gsi.h
- create mode 100644 drivers/net/ipa/gsi_private.h
- create mode 100644 drivers/net/ipa/gsi_reg.h
- create mode 100644 drivers/net/ipa/gsi_trans.c
- create mode 100644 drivers/net/ipa/gsi_trans.h
- create mode 100644 drivers/net/ipa/ipa.h
- create mode 100644 drivers/net/ipa/ipa_clock.c
- create mode 100644 drivers/net/ipa/ipa_clock.h
- create mode 100644 drivers/net/ipa/ipa_cmd.c
- create mode 100644 drivers/net/ipa/ipa_cmd.h
- create mode 100644 drivers/net/ipa/ipa_data-sc7180.c
- create mode 100644 drivers/net/ipa/ipa_data-sdm845.c
- create mode 100644 drivers/net/ipa/ipa_data.h
- create mode 100644 drivers/net/ipa/ipa_endpoint.c
- create mode 100644 drivers/net/ipa/ipa_endpoint.h
- create mode 100644 drivers/net/ipa/ipa_gsi.c
- create mode 100644 drivers/net/ipa/ipa_gsi.h
- create mode 100644 drivers/net/ipa/ipa_interrupt.c
- create mode 100644 drivers/net/ipa/ipa_interrupt.h
- create mode 100644 drivers/net/ipa/ipa_main.c
- create mode 100644 drivers/net/ipa/ipa_mem.c
- create mode 100644 drivers/net/ipa/ipa_mem.h
- create mode 100644 drivers/net/ipa/ipa_modem.c
- create mode 100644 drivers/net/ipa/ipa_modem.h
- create mode 100644 drivers/net/ipa/ipa_qmi.c
- create mode 100644 drivers/net/ipa/ipa_qmi.h
- create mode 100644 drivers/net/ipa/ipa_qmi_msg.c
- create mode 100644 drivers/net/ipa/ipa_qmi_msg.h
- create mode 100644 drivers/net/ipa/ipa_reg.c
- create mode 100644 drivers/net/ipa/ipa_reg.h
- create mode 100644 drivers/net/ipa/ipa_smp2p.c
- create mode 100644 drivers/net/ipa/ipa_smp2p.h
- create mode 100644 drivers/net/ipa/ipa_table.c
- create mode 100644 drivers/net/ipa/ipa_table.h
- create mode 100644 drivers/net/ipa/ipa_uc.c
- create mode 100644 drivers/net/ipa/ipa_uc.h
- create mode 100644 drivers/net/ipa/ipa_version.h
- create mode 100644 drivers/remoteproc/qcom_q6v5_ipa_notify.c
- create mode 100644 include/linux/remoteproc/qcom_q6v5_ipa_notify.h
 
+diff --git a/Documentation/devicetree/bindings/net/qcom,ipa.yaml b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
+new file mode 100644
+index 000000000000..91d08f2c7791
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
+@@ -0,0 +1,192 @@
++# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/qcom,ipa.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm IP Accelerator (IPA)
++
++maintainers:
++  - Alex Elder <elder@kernel.org>
++
++description:
++  This binding describes the Qualcomm IPA.  The IPA is capable of offloading
++  certain network processing tasks (e.g. filtering, routing, and NAT) from
++  the main processor.
++
++  The IPA sits between multiple independent "execution environments,"
++  including the Application Processor (AP) and the modem.  The IPA presents
++  a Generic Software Interface (GSI) to each execution environment.
++  The GSI is an integral part of the IPA, but it is logically isolated
++  and has a distinct interrupt and a separately-defined address space.
++
++  See also soc/qcom/qcom,smp2p.txt and interconnect/interconnect.txt.
++
++  - |
++    --------             ---------
++    |      |             |       |
++    |  AP  +<---.   .----+ Modem |
++    |      +--. |   | .->+       |
++    |      |  | |   | |  |       |
++    --------  | |   | |  ---------
++              v |   v |
++            --+-+---+-+--
++            |    GSI    |
++            |-----------|
++            |           |
++            |    IPA    |
++            |           |
++            -------------
++
++properties:
++  compatible:
++      const: "qcom,sdm845-ipa"
++
++  reg:
++    items:
++      - description: IPA registers
++      - description: IPA shared memory
++      - description: GSI registers
++
++  reg-names:
++    items:
++      - const: ipa-reg
++      - const: ipa-shared
++      - const: gsi
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++      const: core
++
++  interrupts:
++    items:
++      - description: IPA interrupt (hardware IRQ)
++      - description: GSI interrupt (hardware IRQ)
++      - description: Modem clock query interrupt (smp2p interrupt)
++      - description: Modem setup ready interrupt (smp2p interrupt)
++
++  interrupt-names:
++    items:
++      - const: ipa
++      - const: gsi
++      - const: ipa-clock-query
++      - const: ipa-setup-ready
++
++  interconnects:
++    items:
++      - description: Interconnect path between IPA and main memory
++      - description: Interconnect path between IPA and internal memory
++      - description: Interconnect path between IPA and the AP subsystem
++
++  interconnect-names:
++    items:
++      - const: memory
++      - const: imem
++      - const: config
++
++  qcom,smem-states:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: State bits used in by the AP to signal the modem.
++    items:
++    - description: Whether the "ipa-clock-enabled" state bit is valid
++    - description: Whether the IPA clock is enabled (if valid)
++
++  qcom,smem-state-names:
++    $ref: /schemas/types.yaml#/definitions/string-array
++    description: The names of the state bits used for SMP2P output
++    items:
++      - const: ipa-clock-enabled-valid
++      - const: ipa-clock-enabled
++
++  modem-init:
++    type: boolean
++    description:
++      If present, it indicates that the modem is responsible for
++      performing early IPA initialization, including loading and
++      validating firwmare used by the GSI.
++
++  modem-remoteproc:
++    $ref: /schemas/types.yaml#definitions/phandle
++    description:
++      This defines the phandle to the remoteproc node representing
++      the modem subsystem.  This is requied so the IPA driver can
++      receive and act on notifications of modem up/down events.
++
++  memory-region:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    maxItems: 1
++    description:
++      If present, a phandle for a reserved memory area that holds
++      the firmware passed to Trust Zone for authentication.  Required
++      when Trust Zone (not the modem) performs early initialization.
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - interrupts
++  - interconnects
++  - qcom,smem-states
++  - modem-remoteproc
++
++oneOf:
++  - required:
++    - modem-init
++  - required:
++    - memory-region
++
++examples:
++  - |
++        smp2p-mpss {
++                compatible = "qcom,smp2p";
++                ipa_smp2p_out: ipa-ap-to-modem {
++                        qcom,entry-name = "ipa";
++                        #qcom,smem-state-cells = <1>;
++                };
++
++                ipa_smp2p_in: ipa-modem-to-ap {
++                        qcom,entry-name = "ipa";
++                        interrupt-controller;
++                        #interrupt-cells = <2>;
++                };
++        };
++        ipa@1e40000 {
++                compatible = "qcom,sdm845-ipa";
++
++                modem-init;
++                modem-remoteproc = <&mss_pil>;
++
++                reg = <0 0x1e40000 0 0x7000>,
++                        <0 0x1e47000 0 0x2000>,
++                        <0 0x1e04000 0 0x2c000>;
++                reg-names = "ipa-reg",
++                                "ipa-shared";
++                                "gsi";
++
++                interrupts-extended = <&intc 0 311 IRQ_TYPE_EDGE_RISING>,
++                                        <&intc 0 432 IRQ_TYPE_LEVEL_HIGH>,
++                                        <&ipa_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
++                                        <&ipa_smp2p_in 1 IRQ_TYPE_EDGE_RISING>;
++                interrupt-names = "ipa",
++                                        "gsi",
++                                        "ipa-clock-query",
++                                        "ipa-setup-ready";
++
++                clocks = <&rpmhcc RPMH_IPA_CLK>;
++                clock-names = "core";
++
++                interconnects =
++                        <&rsc_hlos MASTER_IPA &rsc_hlos SLAVE_EBI1>,
++                        <&rsc_hlos MASTER_IPA &rsc_hlos SLAVE_IMEM>,
++                        <&rsc_hlos MASTER_APPSS_PROC &rsc_hlos SLAVE_IPA_CFG>;
++                interconnect-names = "memory",
++                                        "imem",
++                                        "config";
++
++                qcom,smem-states = <&ipa_smp2p_out 0>,
++                                        <&ipa_smp2p_out 1>;
++                qcom,smem-state-names = "ipa-clock-enabled-valid",
++                                        "ipa-clock-enabled";
++        };
 -- 
 2.20.1
 
