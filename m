@@ -2,119 +2,130 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23848C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37808C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E19C52072A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:55:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="i5Zcoth6"
+	by mail.kernel.org (Postfix) with ESMTP id F19A3246A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:56:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbgB1Ozr (ORCPT
+        id S1726998AbgB1O4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 09:55:47 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:15064 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726906AbgB1Ozq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 09:55:46 -0500
-X-UUID: bec45df404ff4219a8476fd81106c3f9-20200228
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=KupROzX3aGOHBHNRJXxfTvVaiYRDVDCR4a16idnL8VA=;
-        b=i5Zcoth6DexXSmXFNfAo4B6rl2NkfsojbC3nBlrWeDPp4kyLQrXpvwZeDdC8hRWFlcmSous5b/Mbr0AFA/N+RWBCKFZJ7xISDX7pwPurp16w3GDp9qsbQWazZuag0bRcfpC2i9Mvf6hP0uFTDXNYrwA9PS7r6G7Sb1lOTGVD6U0=;
-X-UUID: bec45df404ff4219a8476fd81106c3f9-20200228
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 425614716; Fri, 28 Feb 2020 22:55:42 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 28 Feb 2020 22:54:47 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 28 Feb 2020 22:55:23 +0800
-Message-ID: <1582901741.14824.6.camel@mtksdaap41>
-Subject: Re: [PATCH v3 09/13] soc: mediatek: cmdq: add write_s value function
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        "Ming-Fan Chen" <ming-fan.chen@mediatek.com>
-Date:   Fri, 28 Feb 2020 22:55:41 +0800
-In-Reply-To: <1582897461-15105-11-git-send-email-dennis-yc.hsieh@mediatek.com>
-References: <1582897461-15105-1-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1582897461-15105-11-git-send-email-dennis-yc.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 28 Feb 2020 09:56:34 -0500
+Received: from mail.manjaro.org ([176.9.38.148]:47146 "EHLO mail.manjaro.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726562AbgB1O4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 09:56:33 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.manjaro.org (Postfix) with ESMTP id D085F3941E12;
+        Fri, 28 Feb 2020 15:56:31 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at manjaro.org
+Received: from mail.manjaro.org ([127.0.0.1])
+        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 1dWdwfYRA7sh; Fri, 28 Feb 2020 15:56:29 +0100 (CET)
+Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Add initial support for
+ Pinebook Pro
+To:     =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        Alexis Ballier <aballier@gentoo.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Nick Xie <nick@khadas.com>,
+        Kever Yang <kever.yang@rock-chips.com>,
+        Vivek Unune <npcomplete13@gmail.com>,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        anarsoul@gmail.com, enric.balletbo@collabora.com
+References: <20200227180630.166982-1-t.schramm@manjaro.org>
+ <20200227180630.166982-3-t.schramm@manjaro.org> <12370413.gKdrHkWbHd@diego>
+From:   Tobias Schramm <t.schramm@manjaro.org>
+Message-ID: <37190f26-48aa-dcad-d4b1-8a534ba1360e@manjaro.org>
+Date:   Fri, 28 Feb 2020 15:57:10 +0100
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <12370413.gKdrHkWbHd@diego>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US-large
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIERlbm5pczoNCg0KT24gRnJpLCAyMDIwLTAyLTI4IGF0IDIxOjQ0ICswODAwLCBEZW5uaXMg
-WUMgSHNpZWggd3JvdGU6DQo+IGFkZCB3cml0ZV9zIGZ1bmN0aW9uIGluIGNtZHEgaGVscGVyIGZ1
-bmN0aW9ucyB3aGljaA0KPiB3cml0ZXMgYSBjb25zdGFudCB2YWx1ZSB0byBhZGRyZXNzIHdpdGgg
-bGFyZ2UgZG1hDQo+IGFjY2VzcyBzdXBwb3J0Lg0KPiANCg0KUmV2aWV3ZWQtYnk6IENLIEh1IDxj
-ay5odUBtZWRpYXRlay5jb20+DQoNCj4gU2lnbmVkLW9mZi1ieTogRGVubmlzIFlDIEhzaWVoIDxk
-ZW5uaXMteWMuaHNpZWhAbWVkaWF0ZWsuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvc29jL21lZGlh
-dGVrL210ay1jbWRxLWhlbHBlci5jIHwgMjYgKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4g
-IGluY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmggIHwgMTQgKysrKysrKysrKysr
-KysNCj4gIDIgZmlsZXMgY2hhbmdlZCwgNDAgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jIGIvZHJpdmVycy9zb2Mv
-bWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gaW5kZXggNDI4Zjk5Mjg4Y2E2Li4xMzM2NTIz
-ZWI3ZDQgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBl
-ci5jDQo+ICsrKyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+IEBA
-IC0yNjksNiArMjY5LDMyIEBAIGludCBjbWRxX3BrdF93cml0ZV9zKHN0cnVjdCBjbWRxX3BrdCAq
-cGt0LCB1MTYgaGlnaF9hZGRyX3JlZ19pZHgsDQo+ICB9DQo+ICBFWFBPUlRfU1lNQk9MKGNtZHFf
-cGt0X3dyaXRlX3MpOw0KPiAgDQo+ICtpbnQgY21kcV9wa3Rfd3JpdGVfc192YWx1ZShzdHJ1Y3Qg
-Y21kcV9wa3QgKnBrdCwgdTE2IGhpZ2hfYWRkcl9yZWdfaWR4LA0KPiArCQkJICAgdTE2IGFkZHJf
-bG93LCB1MzIgdmFsdWUsIHUzMiBtYXNrKQ0KPiArew0KPiArCXN0cnVjdCBjbWRxX2luc3RydWN0
-aW9uIGluc3QgPSB7IHswfSB9Ow0KPiArCWludCBlcnI7DQo+ICsNCj4gKwlpZiAobWFzayAhPSBV
-MzJfTUFYKSB7DQo+ICsJCWluc3Qub3AgPSBDTURRX0NPREVfTUFTSzsNCj4gKwkJaW5zdC5tYXNr
-ID0gfm1hc2s7DQo+ICsJCWVyciA9IGNtZHFfcGt0X2FwcGVuZF9jb21tYW5kKHBrdCwgaW5zdCk7
-DQo+ICsJCWlmIChlcnIgPCAwKQ0KPiArCQkJcmV0dXJuIGVycjsNCj4gKw0KPiArCQlpbnN0Lm9w
-ID0gQ01EUV9DT0RFX1dSSVRFX1NfTUFTSzsNCj4gKwl9IGVsc2Ugew0KPiArCQlpbnN0Lm9wID0g
-Q01EUV9DT0RFX1dSSVRFX1M7DQo+ICsJfQ0KPiArDQo+ICsJaW5zdC5zb3AgPSBoaWdoX2FkZHJf
-cmVnX2lkeDsNCj4gKwlpbnN0Lm9mZnNldCA9IGFkZHJfbG93Ow0KPiArCWluc3QudmFsdWUgPSB2
-YWx1ZTsNCj4gKw0KPiArCXJldHVybiBjbWRxX3BrdF9hcHBlbmRfY29tbWFuZChwa3QsIGluc3Qp
-Ow0KPiArfQ0KPiArRVhQT1JUX1NZTUJPTChjbWRxX3BrdF93cml0ZV9zX3ZhbHVlKTsNCj4gKw0K
-PiAgaW50IGNtZHFfcGt0X3dmZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTE2IGV2ZW50KQ0KPiAg
-ew0KPiAgCXN0cnVjdCBjbWRxX2luc3RydWN0aW9uIGluc3QgPSB7IHswfSB9Ow0KPiBkaWZmIC0t
-Z2l0IGEvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaCBiL2luY2x1ZGUvbGlu
-dXgvc29jL21lZGlhdGVrL210ay1jbWRxLmgNCj4gaW5kZXggMDFiNDE4NGFmMzEwLi5mZWMyOTJh
-YWM4M2MgMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRx
-LmgNCj4gKysrIGIvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaA0KPiBAQCAt
-MTM1LDYgKzEzNSwyMCBAQCBpbnQgY21kcV9wa3RfcmVhZF9zKHN0cnVjdCBjbWRxX3BrdCAqcGt0
-LCB1MTYgaGlnaF9hZGRyX3JlZ19pZHgsIHUxNiBhZGRyX2xvdywNCj4gIGludCBjbWRxX3BrdF93
-cml0ZV9zKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1MTYgaGlnaF9hZGRyX3JlZ19pZHgsDQo+ICAJ
-CSAgICAgdTE2IGFkZHJfbG93LCB1MTYgc3JjX3JlZ19pZHgsIHUzMiBtYXNrKTsNCj4gIA0KPiAr
-LyoqDQo+ICsgKiBjbWRxX3BrdF93cml0ZV9zX3ZhbHVlKCkgLSBhcHBlbmQgd3JpdGVfcyBjb21t
-YW5kIHdpdGggbWFzayB0byB0aGUgQ01EUQ0KPiArICoJCQkgICAgICBwYWNrZXQgd2hpY2ggd3Jp
-dGUgdmFsdWUgdG8gYSBwaHlzaWNhbCBhZGRyZXNzDQo+ICsgKiBAcGt0Ogl0aGUgQ01EUSBwYWNr
-ZXQNCj4gKyAqIEBoaWdoX2FkZHJfcmVnX2lkeDoJaW50ZXJuYWwgcmVnaXNnZXIgSUQgd2hpY2gg
-Y29udGFpbnMgaGlnaCBhZGRyZXNzIG9mIHBhDQo+ICsgKiBAYWRkcl9sb3c6CWxvdyBhZGRyZXNz
-IG9mIHBhDQo+ICsgKiBAdmFsdWU6CXRoZSBzcGVjaWZpZWQgdGFyZ2V0IHZhbHVlDQo+ICsgKiBA
-bWFzazoJdGhlIHNwZWNpZmllZCB0YXJnZXQgbWFzaw0KPiArICoNCj4gKyAqIFJldHVybjogMCBm
-b3Igc3VjY2VzczsgZWxzZSB0aGUgZXJyb3IgY29kZSBpcyByZXR1cm5lZA0KPiArICovDQo+ICtp
-bnQgY21kcV9wa3Rfd3JpdGVfc192YWx1ZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTE2IGhpZ2hf
-YWRkcl9yZWdfaWR4LA0KPiArCQkJICAgdTE2IGFkZHJfbG93LCB1MzIgdmFsdWUsIHUzMiBtYXNr
-KTsNCj4gKw0KPiAgLyoqDQo+ICAgKiBjbWRxX3BrdF93ZmUoKSAtIGFwcGVuZCB3YWl0IGZvciBl
-dmVudCBjb21tYW5kIHRvIHRoZSBDTURRIHBhY2tldA0KPiAgICogQHBrdDoJdGhlIENNRFEgcGFj
-a2V0DQoNCg==
+Hi Heiko,
+
+thanks for the review. I'll implement the changes and send a v2.
+
+>> +		compatible = "gpio-leds";
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&pwrled_gpio &slpled_gpio>;
+>> +
+>> +		green-led {
+>> +			color = <LED_COLOR_ID_GREEN>;
+>> +			default-state = "off";
+>> +			function = LED_FUNCTION_POWER;
+>> +			gpios = <&gpio0 RK_PB3 GPIO_ACTIVE_HIGH>;
+>> +			label = "green:disk-activity";
+>> +			linux,default-trigger = "mmc2";
+> hmm, LED_FUNCTION_POWER but trigger for mmc2 ?
+> So if there is no activity on the LED it looks to be off?
+
+I see why this is looking weird. It does not make a whole lot of sense
+at the moment and I'll change that for v2. 
+
+However I have a patch in the making that adds "-inverted" variants for
+all triggers so the power LED can be turned of briefly to indicate mmc
+activity.
+
+Not sure wether people will like it or not but I'll try it as a RFC.
+
+>> +	 * of wakeup sources without disabling the whole key
+> Also can you explain the problem a bit? If there is a deficit in the input
+> subsystem regarding wakeup events, dt is normally not the place to work
+> around things [we're supposed to be OS independent]
+
+The issue is that some users wanted to be able to control the wakeup
+functionality of the keys separately via sysfs. That does not seem to be
+possible when combining both keys into one gpio-keys node. A more
+detailed explanation of the issue can be found at [1].
+
+>> +&i2c0 {
+>> +	clock-frequency = <400000>;
+>> +	i2c-scl-rising-time-ns = <168>;
+>> +	i2c-scl-falling-time-ns = <4>;
+>> +	status = "okay";
+>> +
+>> +	rk808: pmic@1b {
+>> +		compatible = "rockchip,rk808";
+>> +		reg = <0x1b>;
+>> +		#clock-cells = <1>;
+>> +		clock-output-names = "xin32k", "rk808-clkout2";
+>> +		interrupt-parent = <&gpio3>;
+>> +		interrupts = <10 IRQ_TYPE_LEVEL_LOW>;
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&pmic_int_l_gpio>;
+>> +		rockchip,system-power-controller;
+>> +		wakeup-source;
+>> +
+>> +		vddio-supply = <&vcc_3v0>;
+> where does this come from? Aka it's not specified in the dt-binding
+> (though the example falsely uses it) and also not referenced in the driver.
+
+This does likely come from the BSP dts. Seems I missed it while checking
+bindings.
+
+
+Thanks again for the review,
+
+Tobias
+
+
+[1] https://gitlab.manjaro.org/tsys/linux-pinebook-pro/issues/5
 
