@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32343C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB22CC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0981E246A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79441246A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 11:35:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k/JZQ00I"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c0HuMjCc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbgB1Le6 (ORCPT
+        id S1726536AbgB1LfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 06:34:58 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44255 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbgB1Le6 (ORCPT
+        Fri, 28 Feb 2020 06:35:03 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36199 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbgB1LfD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 06:34:58 -0500
-Received: by mail-pg1-f193.google.com with SMTP id a14so1359345pgb.11
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 03:34:56 -0800 (PST)
+        Fri, 28 Feb 2020 06:35:03 -0500
+Received: by mail-pg1-f194.google.com with SMTP id d9so1383766pgu.3
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 03:35:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=HJEEF+ZoXF3+Nd4diWecS36bLcljIlgCVbyfxnITy0g=;
-        b=k/JZQ00IhfViLeK6G0njVXZ+whnThIG8lZANGkpgh80P/Y9DAoOPXtOjwaXFEvZlho
-         oz9AlqAiMyxygoKt0ftGvwJtLrK7uIWroi+5Gq5I/wxXz3PzeGj1/EaDjmKcvABvVPcg
-         MaBY6borR8Pn/mMueS/cgTmeyhF63ywAsnH963GgDtDlOD3UwHCtkYb6yTCWMbvd+GZg
-         h0CPoJTu9VlPuuAVr0IKrhtCX4r5dLBgzUnHWkZRljK4KM+SYf4I55KsyP+iy92yTxcr
-         4rbE5aGfhTpQmaVltG2anr8eA8bM40vH4JqnfetYkYVtmCJ3w8+SBU7m6iKhkHqw4iM7
-         m1Yg==
+        bh=WaTuQUSD3FMKmtCCA0ipNCi0y5rbOoaZk9gisNac/9g=;
+        b=c0HuMjCc+aTrgTZ7ztGz5UY2xFznt+qwmoB6AYlPqgnGS6AgQww4emfDwoa7uoDtVK
+         IHINFeakoVuNaa8KmBiReuI8Q6/c9kNyJvZkJXgxkvytNtv193Whi3I/ftWKNionoNnP
+         xOYiZUiLuIMeuwdPiC47pPYVhs+GC1OQLHamYcl6LE7D7X1fMfIym14wwo6dGQMxHw1S
+         Ao+p2ou4rN8gMDZVrs5CQ6Em0Rfs7PvMeThMhWkaUySm3HmUh8shLALPc8yAoD1EyO2q
+         dSEbrXe0ZM0Mz/CHx8GnzJH+95XfypzauvI2x3rjPtgTW8oqATxismqGx2DPtBgcl9dV
+         0t1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=HJEEF+ZoXF3+Nd4diWecS36bLcljIlgCVbyfxnITy0g=;
-        b=jlIewJEmD3/5eozYYCXjHFDoVJw3rMQOPvlT7E5x0s77VckuOo4MmyniqO0fXVn/PY
-         S2oOn1tLWP5ECqgT2vnm+w6+tiz529T4WxkAEMWveoDCiHCIvyNcNlE+YTRvm/Z8gqF2
-         kRRaNmHMszG9yJdeiJBRpXF8BXFBuMV698VB72bS/X9O9OJ2LFKMAw0E+4Rpx6TikE7O
-         9cG/RY8jkzQVStzq+IQYiqWVJ5S4i0tGg6Mu4qUQJgL8sDWcG4YM+lfRxw3VDFVSs3gN
-         QF97EhFCxTYGNu2/Cbg/v0G/80KN/WMFoI4bPZ2JFyjNFVMQtHfTttS3Bxidjvd4dBOT
-         s0WQ==
-X-Gm-Message-State: APjAAAX9jbkZeYEFwMwKtlQGZDJW9X9clONXI9WdjNN1oP+/afgzPisb
-        cOskJ+JyZzkLw98l59vxxg==
-X-Google-Smtp-Source: APXvYqzjxd/Sq/oiTAGLmX1fGiq0C3UXJLMhVbet4cdnBwIB+rQQLDWwYP/Y2VJjq2wMVZgl16uJlA==
-X-Received: by 2002:a05:6a00:2ba:: with SMTP id q26mr2742501pfs.249.1582889696147;
-        Fri, 28 Feb 2020 03:34:56 -0800 (PST)
+        bh=WaTuQUSD3FMKmtCCA0ipNCi0y5rbOoaZk9gisNac/9g=;
+        b=UUvDijbvum3jh5kkEciqZ/KbVQ3KFxu5lv8CNySjsm3Aq7V3TDfw64K8tPkzh9iC5/
+         DeuIhmWGjDbHX+3NSs9J0tl8p8NuAxmii/7oVBMGFOfFa5v1Qfxk/XsuvxnfCY5vp2qw
+         8PX2n76GsDpZgzPHEKd/bBHFXwJRGIuQd5nM3v4DMXoBfVh9HmeMoKLn13tlOPxmZoTc
+         YiRIKR9WDG04RqTiYcf8df67Uat7ftzOmtEVpIEY2ZLyCKBfdo7FgaZ06Ja6NhldEdvs
+         47+pSUNx7jz0UjkYMm95uybznrNnZpOEfI/wOQ1seg2VtWdqXbtIbvuxpgCbYlu6XgvZ
+         sSRA==
+X-Gm-Message-State: APjAAAVvlWEasmQiu9QFO4d44E0y7eKWsM8zOzRC0JQ5sAAdu9jZK4rZ
+        SpHPgkw4R2t6YFglnoaniQ==
+X-Google-Smtp-Source: APXvYqyMqYfx+Gl5paJ1UpKaYGQTelDIg9hDLU17UT8ZUVgANMbncsehzNg7hFkBoLvpxUMcMxDuJA==
+X-Received: by 2002:a63:e20d:: with SMTP id q13mr4096480pgh.6.1582889702220;
+        Fri, 28 Feb 2020 03:35:02 -0800 (PST)
 Received: from mylaptop.redhat.com ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id d14sm11402168pfq.117.2020.02.28.03.34.50
+        by smtp.gmail.com with ESMTPSA id d14sm11402168pfq.117.2020.02.28.03.34.56
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 28 Feb 2020 03:34:55 -0800 (PST)
+        Fri, 28 Feb 2020 03:35:01 -0800 (PST)
 From:   Pingfan Liu <kernelfans@gmail.com>
 To:     linux-mm@kvack.org
 Cc:     Pingfan Liu <kernelfans@gmail.com>,
@@ -69,9 +69,9 @@ Cc:     Pingfan Liu <kernelfans@gmail.com>,
         Keith Busch <keith.busch@intel.com>,
         Christoph Hellwig <hch@infradead.org>,
         Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCHv5 1/3] mm/gup: rename nr as nr_pinned in internal_get_user_pages_fast()
-Date:   Fri, 28 Feb 2020 19:32:28 +0800
-Message-Id: <1582889550-9101-2-git-send-email-kernelfans@gmail.com>
+Subject: [PATCHv5 2/3] mm/gup: fix omission of check on FOLL_LONGTERM in gup fast path
+Date:   Fri, 28 Feb 2020 19:32:29 +0800
+Message-Id: <1582889550-9101-3-git-send-email-kernelfans@gmail.com>
 X-Mailer: git-send-email 2.7.5
 In-Reply-To: <1582889550-9101-1-git-send-email-kernelfans@gmail.com>
 References: <1582889550-9101-1-git-send-email-kernelfans@gmail.com>
@@ -80,8 +80,20 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To better reflect the held state of pages and make code self-explaining,
-rename nr as nr_pinned.
+FOLL_LONGTERM suggests a pin which is going to be given to hardware and
+can't move. It would truncate CMA permanently and should be excluded.
+
+FOLL_LONGTERM has already been checked in the slow path, but not checked in
+the fast path, which means a possible leak of CMA page to longterm pinned
+requirement through this crack.
+
+Place a check in try_get_compound_head() in the fast path.
+
+Some note about the check:
+Huge page's subpages have the same migrate type due to either
+allocation from a free_list[] or alloc_contig_range() with param
+MIGRATE_MOVABLE. So it is enough to check on a single subpage
+by is_migrate_cma_page(subpage)
 
 Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
 Cc: Ira Weiny <ira.weiny@intel.com>
@@ -97,56 +109,81 @@ Cc: Shuah Khan <shuah@kernel.org>
 To: linux-mm@kvack.org
 Cc: linux-kernel@vger.kernel.org
 ---
- mm/gup.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ mm/gup.c | 26 +++++++++++++++++++-------
+ 1 file changed, 19 insertions(+), 7 deletions(-)
 
 diff --git a/mm/gup.c b/mm/gup.c
-index 1b521e0..cd8075e 100644
+index cd8075e..f0d6804 100644
 --- a/mm/gup.c
 +++ b/mm/gup.c
-@@ -2432,7 +2432,7 @@ static int internal_get_user_pages_fast(unsigned long start, int nr_pages,
- 					struct page **pages)
+@@ -33,9 +33,21 @@ struct follow_page_context {
+  * Return the compound head page with ref appropriately incremented,
+  * or NULL if that failed.
+  */
+-static inline struct page *try_get_compound_head(struct page *page, int refs)
++static inline struct page *try_get_compound_head(struct page *page, int refs,
++	unsigned int flags)
  {
- 	unsigned long addr, len, end;
--	int nr = 0, ret = 0;
-+	int nr_pinned = 0, ret = 0;
+-	struct page *head = compound_head(page);
++	struct page *head;
++
++	/*
++	 * Huge page's subpages have the same migrate type due to either
++	 * allocation from a free_list[] or alloc_contig_range() with param
++	 * MIGRATE_MOVABLE. So it is enough to check on a single subpage.
++	 */
++	if (unlikely(flags & FOLL_LONGTERM) &&
++		is_migrate_cma_page(page))
++		return NULL;
++
++	head = compound_head(page);
  
- 	if (WARN_ON_ONCE(gup_flags & ~(FOLL_WRITE | FOLL_LONGTERM |
- 				       FOLL_FORCE | FOLL_PIN)))
-@@ -2451,25 +2451,25 @@ static int internal_get_user_pages_fast(unsigned long start, int nr_pages,
- 	if (IS_ENABLED(CONFIG_HAVE_FAST_GUP) &&
- 	    gup_fast_permitted(start, end)) {
- 		local_irq_disable();
--		gup_pgd_range(addr, end, gup_flags, pages, &nr);
-+		gup_pgd_range(addr, end, gup_flags, pages, &nr_pinned);
- 		local_irq_enable();
--		ret = nr;
-+		ret = nr_pinned;
- 	}
+ 	if (WARN_ON_ONCE(page_ref_count(head) < 0))
+ 		return NULL;
+@@ -1908,7 +1920,7 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+ 		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
+ 		page = pte_page(pte);
  
--	if (nr < nr_pages) {
-+	if (nr_pinned < nr_pages) {
- 		/* Try to get the remaining pages with get_user_pages */
--		start += nr << PAGE_SHIFT;
--		pages += nr;
-+		start += nr_pinned << PAGE_SHIFT;
-+		pages += nr_pinned;
+-		head = try_get_compound_head(page, 1);
++		head = try_get_compound_head(page, 1, flags);
+ 		if (!head)
+ 			goto pte_unmap;
  
--		ret = __gup_longterm_unlocked(start, nr_pages - nr,
-+		ret = __gup_longterm_unlocked(start, nr_pages - nr_pinned,
- 					      gup_flags, pages);
+@@ -2083,7 +2095,7 @@ static int gup_hugepte(pte_t *ptep, unsigned long sz, unsigned long addr,
+ 	page = head + ((addr & (sz-1)) >> PAGE_SHIFT);
+ 	refs = record_subpages(page, addr, end, pages + *nr);
  
- 		/* Have to be a bit careful with return values */
--		if (nr > 0) {
-+		if (nr_pinned > 0) {
- 			if (ret < 0)
--				ret = nr;
-+				ret = nr_pinned;
- 			else
--				ret += nr;
-+				ret += nr_pinned;
- 		}
- 	}
+-	head = try_get_compound_head(head, refs);
++	head = try_get_compound_head(head, refs, flags);
+ 	if (!head)
+ 		return 0;
+ 
+@@ -2142,7 +2154,7 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+ 	page = pmd_page(orig) + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
+ 	refs = record_subpages(page, addr, end, pages + *nr);
+ 
+-	head = try_get_compound_head(pmd_page(orig), refs);
++	head = try_get_compound_head(pmd_page(orig), refs, flags);
+ 	if (!head)
+ 		return 0;
+ 
+@@ -2174,7 +2186,7 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
+ 	page = pud_page(orig) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
+ 	refs = record_subpages(page, addr, end, pages + *nr);
+ 
+-	head = try_get_compound_head(pud_page(orig), refs);
++	head = try_get_compound_head(pud_page(orig), refs, flags);
+ 	if (!head)
+ 		return 0;
+ 
+@@ -2203,7 +2215,7 @@ static int gup_huge_pgd(pgd_t orig, pgd_t *pgdp, unsigned long addr,
+ 	page = pgd_page(orig) + ((addr & ~PGDIR_MASK) >> PAGE_SHIFT);
+ 	refs = record_subpages(page, addr, end, pages + *nr);
+ 
+-	head = try_get_compound_head(pgd_page(orig), refs);
++	head = try_get_compound_head(pgd_page(orig), refs, flags);
+ 	if (!head)
+ 		return 0;
  
 -- 
 2.7.5
