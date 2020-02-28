@@ -2,143 +2,120 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C7CC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A17ECC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7764C246A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:02:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CL9iaiJX"
+	by mail.kernel.org (Postfix) with ESMTP id 6F0782051A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:03:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727542AbgB1OCE (ORCPT
+        id S1726872AbgB1ODB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 09:02:04 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:46457 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbgB1OCE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 09:02:04 -0500
-Received: by mail-il1-f194.google.com with SMTP id t17so2735507ilm.13;
-        Fri, 28 Feb 2020 06:02:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pWC6hUGSYTvKGmvspilEVbUqriHozG3huRtnRptYN7k=;
-        b=CL9iaiJX4jVWm0t6py+rKHh6pdcu5gyKwJRrMtGHpgMZi145sJNBYXihHNDyac/03g
-         e1z6KcUyjk9Z8d3GKt2Gjyy9MWP/SUXcRsqxZjK92/Mmur3u11EOQIACt8dCqe8wQF07
-         mhvTm9Txebr5p4rSvd4A1JInMNFuU8cdTcvt24bWYxRs1Cgw2a40s6WHz9sOwUTAfk4S
-         LgcNqXkeS2OONibFl5eN+k44de5K15NMenTt+L2efou1krG2rVi8xCEKIa1CzALKr3NH
-         YmkR/U4ssm1MxThEza9F+zfv/wh9UW/1nUKf4QNEbkkVUY9nRjn9mdeSUcwmearxAyeO
-         dqug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pWC6hUGSYTvKGmvspilEVbUqriHozG3huRtnRptYN7k=;
-        b=oG5bx8T6W9OQwHn9AYGUYj4oXQFoKlDfmtZ15eRJXSgDSCl9rHZgRIVPDMViihKU/P
-         WlnB5cXubHbGiiiSBq91pu3qkPRTIrzBmSt5gmvFjb/809d1FywYbxaQSPcEMkhywQ80
-         dOCvpB9HvQIzKZqkfv/iBJs6O3dAeUXvYxsLBAziSZuH0wWgdnn7R1KZ1lu3sHqaUFIo
-         gYtp1mDV8Mb+GlVpkctu7ooNm0z5CA2p1X/6J8VplpP/xL4NHrdUYEZEivnxZtRMzSdf
-         PkLbqw3O6PZ2a0zunffjaM8ifOWBS6s3mXzcpHOaAFLJUpnTSEjonmCEVDnaQ024lEc1
-         UgZg==
-X-Gm-Message-State: APjAAAU9uF/P19KsE5S57E7KBk55l2HE/NLc316Xz1uIqskbqXXN9Ynv
-        DJ8OwSq/GxKWBEvJnARx8Mgx2l3zm9kNj3/9MkqtohyB+mw=
-X-Google-Smtp-Source: APXvYqzpizMXzoB3+5TWvVXyeS0Arlh5AwX7bFUMwjwM78tpaENzJ68sgFyqQcY1mE799R1L7Cnw1e0fq1moKsAd8zU=
-X-Received: by 2002:a92:3991:: with SMTP id h17mr4670801ilf.131.1582898523278;
- Fri, 28 Feb 2020 06:02:03 -0800 (PST)
+        Fri, 28 Feb 2020 09:03:01 -0500
+Received: from mga18.intel.com ([134.134.136.126]:43356 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726151AbgB1ODA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 09:03:00 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 06:03:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,496,1574150400"; 
+   d="scan'208";a="242385619"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
+  by orsmga006.jf.intel.com with ESMTP; 28 Feb 2020 06:02:57 -0800
+Subject: Re: [PATCH V2 03/13] kprobes: Add symbols for kprobe insn pages
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <20200212124949.3589-1-adrian.hunter@intel.com>
+ <20200212124949.3589-4-adrian.hunter@intel.com>
+ <20200226152151.GA217283@krava>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <76b53846-86ab-f0a6-1e8f-fece412099ae@intel.com>
+Date:   Fri, 28 Feb 2020 16:02:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200228044518.20314-1-gmayyyha@gmail.com> <CAOi1vP-K+e0N26qpthLcst8HLE-FAMGSE9XwBhj1dPBiLyN-iA@mail.gmail.com>
- <CAB9OAC0dURDHgqGDVCg_Gd+EhH-9_n4-mycgsqfxS64GRgd4Og@mail.gmail.com>
-In-Reply-To: <CAB9OAC0dURDHgqGDVCg_Gd+EhH-9_n4-mycgsqfxS64GRgd4Og@mail.gmail.com>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Fri, 28 Feb 2020 15:01:56 +0100
-Message-ID: <CAOi1vP_opdc=OP70T2eiamMWa-o71nU8t_LYyTCytqT5BT8gdQ@mail.gmail.com>
-Subject: Re: [PATCH] ceph: using POOL FULL flag instead of OSDMAP FULL flag
-To:     Yanhu Cao <gmayyyha@gmail.com>
-Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200226152151.GA217283@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 12:41 PM Yanhu Cao <gmayyyha@gmail.com> wrote:
->
-> On Fri, Feb 28, 2020 at 6:23 PM Ilya Dryomov <idryomov@gmail.com> wrote:
-> >
-> > On Fri, Feb 28, 2020 at 5:45 AM Yanhu Cao <gmayyyha@gmail.com> wrote:
-> > >
-> > > OSDMAP_FULL and OSDMAP_NEARFULL are deprecated since mimic.
-> > >
-> > > Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
-> > > ---
-> > >  fs/ceph/file.c                  |  6 ++++--
-> > >  include/linux/ceph/osd_client.h |  2 ++
-> > >  include/linux/ceph/osdmap.h     |  3 ++-
-> > >  net/ceph/osd_client.c           | 23 +++++++++++++----------
-> > >  4 files changed, 21 insertions(+), 13 deletions(-)
-> > >
-> > > diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-> > > index 7e0190b1f821..60ea1eed1b84 100644
-> > > --- a/fs/ceph/file.c
-> > > +++ b/fs/ceph/file.c
-> > > @@ -1482,7 +1482,8 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
-> > >         }
-> > >
-> > >         /* FIXME: not complete since it doesn't account for being at quota */
-> > > -       if (ceph_osdmap_flag(&fsc->client->osdc, CEPH_OSDMAP_FULL)) {
-> > > +       if (pool_flag(&fsc->client->osdc, ci->i_layout.pool_id,
-> > > +                               CEPH_POOL_FLAG_FULL)) {
-> > >                 err = -ENOSPC;
-> > >                 goto out;
-> > >         }
-> > > @@ -1575,7 +1576,8 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
-> > >         }
-> > >
-> > >         if (written >= 0) {
-> > > -               if (ceph_osdmap_flag(&fsc->client->osdc, CEPH_OSDMAP_NEARFULL))
-> > > +               if (pool_flag(&fsc->client->osdc, ci->i_layout.pool_id,
-> > > +                                       CEPH_POOL_FLAG_NEARFULL))
-> >
-> > Hi Yanhu,
-> >
-> > Have you considered pre-mimic clusters here?  They are still supported
-> > (and will continue to be supported for the foreseeable future).
-> >
-> > Thanks,
-> >
-> >                 Ilya
->
-> I have tested it work on Luminous, I think it work too since
-> ceph-v0.80(https://github.com/ceph/ceph/blob/b78644e7dee100e48dfeca32c9270a6b210d3003/src/osd/osd_types.h#L815)
-> alread have pool FLAG_FULL.
+On 26/02/20 5:21 pm, Jiri Olsa wrote:
+> On Wed, Feb 12, 2020 at 02:49:39PM +0200, Adrian Hunter wrote:
+>> Symbols are needed for tools to describe instruction addresses. Pages
+>> allocated for kprobe's purposes need symbols to be created for them.
+>> Add such symbols to be visible via /proc/kallsyms.
+>>
+>> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> 
+> SNIP
+> 
+>> @@ -272,6 +273,8 @@ static inline bool is_kprobe_##__name##_slot(unsigned long addr)	\
+>>  {									\
+>>  	return __is_insn_slot_addr(&kprobe_##__name##_slots, addr);	\
+>>  }
+>> +#define KPROBE_INSN_PAGE_SYM		"kprobe_insn_page"
+>> +#define KPROBE_OPTINSN_PAGE_SYM		"kprobe_optinsn_page"
+>>  #else /* __ARCH_WANT_KPROBES_INSN_SLOT */
+>>  #define DEFINE_INSN_CACHE_OPS(__name)					\
+>>  static inline bool is_kprobe_##__name##_slot(unsigned long addr)	\
+>> @@ -373,6 +376,13 @@ void dump_kprobe(struct kprobe *kp);
+>>  void *alloc_insn_page(void);
+>>  void free_insn_page(void *page);
+>>  
+>> +int kprobe_get_kallsym(unsigned int symnum, unsigned long *value, char *type,
+>> +		       char *sym);
+>> +int kprobe_cache_get_kallsym(struct kprobe_insn_cache *c, unsigned int *symnum,
+>> +			     unsigned long *value, char *type, char *sym);
+>> +
+>> +int arch_kprobe_get_kallsym(unsigned int *symnum, unsigned long *value,
+>> +			    char *type, char *sym);
+>>  #else /* !CONFIG_KPROBES: */
+>>  
+>>  static inline int kprobes_built_in(void)
+>> @@ -435,6 +445,24 @@ static inline bool within_kprobe_blacklist(unsigned long addr)
+>>  {
+>>  	return true;
+>>  }
+>> +static inline int kprobe_get_kallsym(unsigned int symnum, unsigned long *value,
+>> +				     char *type, char *sym)
+>> +{
+>> +	return 0;
+>> +}
+>> +static inline int kprobe_cache_get_kallsym(struct kprobe_insn_cache *c,
+>> +					   unsigned int *symnum,
+>> +					   unsigned long *value, char *type,
+>> +					   char *sym)
+>> +{
+>> +	return 0;
+>> +}
+>> +static inline int arch_kprobe_get_kallsym(unsigned int *symnum,
+>> +					  unsigned long *value, char *type,
+>> +					  char *sym)
+>> +{
+>> +	return 0;
+>> +}
+> 
+> there's another arch_kprobe_get_kallsym marked as __weak,
+> is above function superfluous?
 
-But not FLAG_NEARFULL, which appeared in mimic.
-
->
-> CephFS doesn't write synchronously even if CEPH_OSDMAP_NEARFULL is
-> used, then should fixed by CEPH_POOL_FLAG_NEARFULL.
-
-I'm not sure I follow.
-
--    if (ceph_osdmap_flag(&fsc->client->osdc, CEPH_OSDMAP_NEARFULL))
-+    if (pool_flag(&fsc->client->osdc, ci->i_layout.pool_id,
-+                            CEPH_POOL_FLAG_NEARFULL))
-
-AFAICT this change would effectively disable this branch for pre-mimic
-clusters.  Are you saying this branch is already broken?
-
-Thanks,
-
-                Ilya
+Yes, it is removed in V3.
