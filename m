@@ -2,64 +2,64 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48486C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E63BC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A1D24691
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:45:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582886742;
-	bh=PCQtNVK5kUheVsS/hcAmfga2Muvb8cMpwOkvE8/P/aQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ypJmRw4SDp8moY8/qzvxkPMf/Qp0J9xXbM0zCYaURa/BYCMXYdsPJ/w/F+6SybTBK
-	 fJ8LMYDikqvMGb6I4Qk94GuzvPK1tYaqWNeQbWPNKvn3gUBAvE5aFTgEz4t1JhY+4/
-	 2/LpP0QtWq2HTlHjfdtuahC5brR2fvcaTXdx29f4=
+	by mail.kernel.org (Postfix) with ESMTP id 3E1C824697
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 10:46:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LhmwIPdr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbgB1Kpk (ORCPT
+        id S1726894AbgB1KqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 05:45:40 -0500
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:20008 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbgB1Kpk (ORCPT
+        Fri, 28 Feb 2020 05:46:13 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43579 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbgB1KqM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 05:45:40 -0500
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 01SAjZiL017509;
-        Fri, 28 Feb 2020 19:45:35 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 01SAjZiL017509
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582886735;
-        bh=AVWPDjvEFkL5nZDtBP72nvXCX+4qaLVka0coBrV64D8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=u8IBV3SfBwXEchtxhDXF8Dji6oYDaaJZNyhD0p3923ssYwY7daukuG+/ZwPWEpoRj
-         YtlNx0RX13NH6r4MYJmfUzirJ6bEx5Lo0hJkr1OX2eSucBA2Thgu9xFwr7eVFRMC44
-         jeookHN/xeyPR25zrSjTvX3iXQNHdO+VOg1+/9oj/c0YXQAaRJTdsWsDrZ1qgfdpOl
-         53KcxqzgTZ0Q0iDJcIpr8DlOlWvB/fS6n+XNOVITlOv5+4OaufgJbfqGkZvYvkln8M
-         MtgFpMYTeHvbGMv7WcWiwgl8BYcgubjFubdWB5tTpIT7I5PpLnLU1NfrDF3TiK6jpF
-         enHkOX+VediwA==
-X-Nifty-SrcIP: [209.85.217.48]
-Received: by mail-vs1-f48.google.com with SMTP id r18so1640535vso.5;
-        Fri, 28 Feb 2020 02:45:35 -0800 (PST)
-X-Gm-Message-State: ANhLgQ0ovsptjidtv2mqDO0Qm7zpXblOv9eKdEUOxP+0jAq00qmMtuXc
-        fKjjmyXzB37k0RrTx+iu2mXN1/MBXTUmiI2ZJ1Q=
-X-Google-Smtp-Source: ADFU+vuT4IEKXTX14l2zA9Pn0Pag7bwinoTJNY2RRdKibw8N1mxf/ANOn4DHp/+jSmwUFj20bsSXGkGbGr0YnjKgM30=
-X-Received: by 2002:a05:6102:48b:: with SMTP id n11mr2189284vsa.181.1582886734408;
- Fri, 28 Feb 2020 02:45:34 -0800 (PST)
-MIME-Version: 1.0
-References: <20200218094139.78835-1-qperret@google.com> <20200218094139.78835-3-qperret@google.com>
- <CAK7LNAS0D_1k8FUJ+Bre1jrtGvHu28psU_xCa=K24iD7BkcJeA@mail.gmail.com> <20200228100302.GA228304@google.com>
-In-Reply-To: <20200228100302.GA228304@google.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 28 Feb 2020 19:44:58 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATADSQDp9bGzChE1xck_vw_6B6joLXXozDBrWWv4f=v=w@mail.gmail.com>
-Message-ID: <CAK7LNATADSQDp9bGzChE1xck_vw_6B6joLXXozDBrWWv4f=v=w@mail.gmail.com>
-Subject: Re: [PATCH v5 2/3] kbuild: split adjust_autoksyms.sh in two parts
-To:     Quentin Perret <qperret@google.com>
+        Fri, 28 Feb 2020 05:46:12 -0500
+Received: by mail-wr1-f65.google.com with SMTP id e10so957037wrr.10
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 02:46:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WroTn4ZOSoWOI3ov0YWSSJUWyAnuK2wVB2xk4MqHAcc=;
+        b=LhmwIPdrdZKpLzy/06ivR114pWiTD8AkY4r+Z8gIpWanabMMYs66F+chnVJMHYAj2p
+         EQdsRe7kxLBGiAG1Op/O0O/A1PcZoPdG4+Q/B4VPKPeZFD02wX1hp4csQC0coTSa8o2A
+         D5zO5vvFeWHlvpJlsDQowCEuMhPx/T7pSSOFLH5goxsoFvm/DqN70t02JJ9FC+szfOjo
+         oM1C9CC5bwOmmGwhyQUibA6FSh2SUK+QMCqmdGmFDcidAJMUZXXiHCwuJa8+qW0IwRDj
+         HbBhVHc8HLNKucYRpT3uexbCfzvpBjxySZlVYqMS4+YxeBDKcSOaY0pAPM5FXzDfuhPg
+         NyHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WroTn4ZOSoWOI3ov0YWSSJUWyAnuK2wVB2xk4MqHAcc=;
+        b=akV03dACYluX4/uMLHgit2ATz/bl3q9uS1nB47iJmD2WduLPw0QT5rpxkBeYsEhPHz
+         Kq82UMKTM/88/ZLMzrKjb+kgskodq7Me1HOQW6xsUTgRxFSCKZltytq9POnfXwT7yblB
+         IO8ge/a+trhU5J09W6627pGWe5D0JIbMpmVO8dJ8tyOvM13/pzL/ZL68RZo7yKVF2QGA
+         VUfUWDiSmIzhDjegFhhUwEzDUtZNqeNj1vVma2qrO+WCOJznZBgolKC/DNS1QtHoVLxh
+         AllGCdRQbSKs88wlhdyPidAbvUerbZZ1AXhDqtwZzvoFIIK9FGAXR3w73cbv4V0YQSmS
+         d9+w==
+X-Gm-Message-State: APjAAAUOQ0/axzdLfuvRp97Da0Wrk4FK0kQe+MBq66pI02H9opNnbILY
+        MuZ5couNpAXuhzqs3FCreG9vYXjhEOk=
+X-Google-Smtp-Source: APXvYqwJOE0fqXlVeja/r5Fj91sS1NrDnRD2e4QVZWt0hqhAnh6s1ILszXX+lUHYng+CHur/FGDR2A==
+X-Received: by 2002:adf:fe83:: with SMTP id l3mr4471825wrr.41.1582886770366;
+        Fri, 28 Feb 2020 02:46:10 -0800 (PST)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id i4sm1610787wmd.23.2020.02.28.02.46.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2020 02:46:09 -0800 (PST)
+Date:   Fri, 28 Feb 2020 10:46:06 +0000
+From:   Quentin Perret <qperret@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
 Cc:     Nicolas Pitre <nico@fluxnic.net>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
@@ -67,110 +67,65 @@ Cc:     Nicolas Pitre <nico@fluxnic.net>,
         "Cc: Android Kernel" <kernel-team@android.com>,
         Jessica Yu <jeyu@kernel.org>,
         Christoph Hellwig <hch@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v5 3/3] kbuild: generate autoksyms.h early
+Message-ID: <20200228104606.GA139632@google.com>
+References: <20200218094139.78835-1-qperret@google.com>
+ <20200218094139.78835-4-qperret@google.com>
+ <CAK7LNASCrTj4_RgtxvZm0ei_HExYaPPMJodngKXBOL+=GODv5w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNASCrTj4_RgtxvZm0ei_HExYaPPMJodngKXBOL+=GODv5w@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 7:03 PM Quentin Perret <qperret@google.com> wrote:
->
-> On Friday 28 Feb 2020 at 01:41:50 (+0900), Masahiro Yamada wrote:
-> > Hi.
+On Friday 28 Feb 2020 at 19:42:41 (+0900), Masahiro Yamada wrote:
+> On Tue, Feb 18, 2020 at 6:41 PM Quentin Perret <qperret@google.com> wrote:
 > >
-> > On Tue, Feb 18, 2020 at 6:41 PM Quentin Perret <qperret@google.com> wrote:
-> > >
-> > > In order to prepare the ground for a build-time optimization, split
-> > > adjust_autoksyms.sh into two scripts: one that generates autoksyms.h
-> > > based on all currently available information (whitelist, and .mod
-> > > files), and the other to inspect the diff between two versions of
-> > > autoksyms.h and trigger appropriate rebuilds.
-> > >
-> > > Acked-by: Nicolas Pitre <nico@fluxnic.net>
-> > > Tested-by: Matthias Maennich <maennich@google.com>
-> > > Reviewed-by: Matthias Maennich <maennich@google.com>
-> > > Signed-off-by: Quentin Perret <qperret@google.com>
-> > > ---
-> > >  scripts/adjust_autoksyms.sh | 36 +++-----------------------
-> > >  scripts/gen_autoksyms.sh    | 51 +++++++++++++++++++++++++++++++++++++
-> > >  2 files changed, 55 insertions(+), 32 deletions(-)
-> > >  create mode 100755 scripts/gen_autoksyms.sh
-> > >
-> > > diff --git a/scripts/adjust_autoksyms.sh b/scripts/adjust_autoksyms.sh
-> > > index ff46996525d3..2b366d945ccb 100755
-> > > --- a/scripts/adjust_autoksyms.sh
-> > > +++ b/scripts/adjust_autoksyms.sh
-> > > @@ -1,14 +1,13 @@
-> > >  #!/bin/sh
-> > >  # SPDX-License-Identifier: GPL-2.0-only
-> > >
-> > > -# Script to create/update include/generated/autoksyms.h and dependency files
-> > > +# Script to update include/generated/autoksyms.h and dependency files
-> > >  #
-> > >  # Copyright:   (C) 2016  Linaro Limited
-> > >  # Created by:  Nicolas Pitre, January 2016
-> > >  #
-> > >
-> > > -# Create/update the include/generated/autoksyms.h file from the list
-> > > -# of all module's needed symbols as recorded on the second line of *.mod files.
-> > > +# Update the include/generated/autoksyms.h file.
-> > >  #
-> > >  # For each symbol being added or removed, the corresponding dependency
-> > >  # file's timestamp is updated to force a rebuild of the affected source
-> > > @@ -38,35 +37,8 @@ esac
-> > >  # We need access to CONFIG_ symbols
-> > >  . include/config/auto.conf
-> > >
-> > > -ksym_wl=/dev/null
-> > > -if [ -n "$CONFIG_UNUSED_KSYMS_WHITELIST" ]; then
-> > > -       # Use 'eval' to expand the whitelist path and check if it is relative
-> > > -       eval ksym_wl="$CONFIG_UNUSED_KSYMS_WHITELIST"
-> > > -       [ "${ksym_wl}" != "${ksym_wl#/}" ] || ksym_wl="$abs_srctree/$ksym_wl"
-> > > -       if [ ! -f "$ksym_wl" ]; then
+> > When doing a cold build, autoksyms.h starts empty, and is updated late
+> > in the build process to have visibility over the symbols used by in-tree
+> > drivers. But since the symbol whitelist is known upfront, it can be used
+> > to pre-populate autoksyms.h and maximize the amount of code that can be
+> > compiled to its final state in a single pass, hence reducing build time.
 > >
+> > Do this by using gen_autoksyms.sh to initialize autoksyms.h instead of
+> > creating an empty file.
 > >
-> > Just a Nit.
+> > Acked-by: Nicolas Pitre <nico@fluxnic.net>
+> > Tested-by: Matthias Maennich <maennich@google.com>
+> > Reviewed-by: Matthias Maennich <maennich@google.com>
+> > Signed-off-by: Quentin Perret <qperret@google.com>
+> > ---
+> >  Makefile                 | 7 +++++--
+> >  scripts/gen_autoksyms.sh | 3 ++-
+> >  2 files changed, 7 insertions(+), 3 deletions(-)
 > >
-> > Maybe, is testing  -r better ?
+> > diff --git a/Makefile b/Makefile
+> > index 84b71845c43f..17b7e7f441bd 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -1062,9 +1062,12 @@ endif
 > >
-> > 'cat - "$ksym_wl"' is piped, so its error code is not checked.
+> >  autoksyms_h := $(if $(CONFIG_TRIM_UNUSED_KSYMS), include/generated/autoksyms.h)
 > >
-> > So, checking the read permission here is robust, I think.
->
-> Right, that's a good point. And actually, I think we want both -f and
-> -r. -r alone would consider a path to a folder as correct.
->
-> This should do the trick:
+> > +quiet_cmd_autoksyms_h = GEN     $@
+> > +      cmd_autoksyms_h = mkdir -p $(dir $@); $(CONFIG_SHELL) \
+> > +                       $(srctree)/scripts/gen_autoksyms.sh $@
+> 
+> 
+> When you send v6,
+> could you wrap the line as follows (CONFIG_SHELL in the next line)  ?
+> 
+>          cmd_autoksyms_h = mkdir -p $(dir $@); \
+>                           $(CONFIG_SHELL) $(srctree)/scripts/gen_autoksyms.sh $@
+> 
+> 
+> This still fits in 80-cols.
 
+Will do.
 
-Sounds good.
-
-Thanks.
-
-
-
->
-> diff --git a/scripts/gen_autoksyms.sh b/scripts/gen_autoksyms.sh
-> index 679c9f05e4b4..16c0b2ddaa4c 100755
-> --- a/scripts/gen_autoksyms.sh
-> +++ b/scripts/gen_autoksyms.sh
-> @@ -24,7 +24,7 @@ if [ -n "$CONFIG_UNUSED_KSYMS_WHITELIST" ]; then
->         # Use 'eval' to expand the whitelist path and check if it is relative
->         eval ksym_wl="$CONFIG_UNUSED_KSYMS_WHITELIST"
->         [ "${ksym_wl}" != "${ksym_wl#/}" ] || ksym_wl="$abs_srctree/$ksym_wl"
-> -       if [ ! -f "$ksym_wl" ]; then
-> +       if [ ! -f "$ksym_wl" ] || [ ! -r "$ksym_wl" ]; then
->                 echo "ERROR: '$ksym_wl' whitelist file not found" >&2
->                 exit 1
->         fi
->
-> I'll send a v6 shortly.
->
-> Thanks!
-> Quentin
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+Thanks,
+Quentin
