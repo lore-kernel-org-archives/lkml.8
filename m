@@ -2,103 +2,113 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C62E1C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B22BC3F2D4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 995AE2468D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:44:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="D2rlkH59"
+	by mail.kernel.org (Postfix) with ESMTP id 4B4E8246A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:45:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgB1QoH (ORCPT
+        id S1726788AbgB1QpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:44:07 -0500
-Received: from mail-qk1-f170.google.com ([209.85.222.170]:33340 "EHLO
-        mail-qk1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbgB1QoH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:44:07 -0500
-Received: by mail-qk1-f170.google.com with SMTP id p62so827689qkb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 08:44:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CCtY0Qacs9wOnWXud8i9ge7LpLEsLeAVVMXg1sWOnyw=;
-        b=D2rlkH59BNrsno4OCSGNHcrjEAEc9dr5OL5Qxmrk0mGVZ34lYCzS5cZTjosC6ZnVAT
-         3BFQdQ19TdF4h2LaE8zjalI05AhcG72NHec77qPlHBWRH//SFAx+6Y/5MFykyexwMyTo
-         5ehmgBUpXVcOXVyQgB5zYxYRnNPB6qnk1vakhcOAqTDTvuXJORKyj4s7iPsaF7Z9mVvs
-         OaLgkjs4jNzhJFyKOy3/54RTg4d+xhP9DVLc9uuRZTvbJuwUXwufSD53LmnE6z252pdA
-         kwSOVwoTuMXfzH/TqkKMKz3g/PF439oIoM+KPEmqOG89ccSKJctElfIZLiEFLhjwSLFB
-         V6KA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CCtY0Qacs9wOnWXud8i9ge7LpLEsLeAVVMXg1sWOnyw=;
-        b=XSBb2+z3j88w2+onjmq0fWO8HVqhi0c71cfln0NO9D34h/YWS3IwYD02Vay3BY9rwa
-         OCTsh3DqKPoNtx92PkRqQM8217LeXyoe6abJHcz6FibCJRaNENzwWQEexnCsK5mU6Umq
-         dBNi0WY4VNq54Hi0BPdYWAqwFgk4gR8z+mTdc7s5mir1DdbZkp4T1L5XVXNdkbMzjrF6
-         PBEpIOHrFX7oyfwi+8KOYxymYHRLsabP6rKyigoVsKimqS6B7O/FtJoGhFpwJHYuPiuz
-         YJjqdAUd/oV6p4GfulnC6o57D0SBvdg+Bb2oO8rA4ne00lkLw1xEtOy4TWLhosotOECG
-         TmCQ==
-X-Gm-Message-State: APjAAAVnwn3J1ocyGVomfXkrEJHlkh5STDrwTN5tKYQS6hU3SslMnseh
-        J2ZlILitFmYAueNnBQ5p/nQyfw==
-X-Google-Smtp-Source: APXvYqxfCTu7tTgRtENnzEaKttDXe85vEF0rcY8Ey+zJZn71YPOTRBCqwgqrX+uZgpau/Nsyi1/g3A==
-X-Received: by 2002:a37:4d10:: with SMTP id a16mr5155052qkb.325.1582908246112;
-        Fri, 28 Feb 2020 08:44:06 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id r10sm5110838qkm.23.2020.02.28.08.44.05
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 28 Feb 2020 08:44:05 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1j7ik9-0001sw-BL; Fri, 28 Feb 2020 12:44:05 -0400
-Date:   Fri, 28 Feb 2020 12:44:05 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Selvin Xavier <selvin.xavier@broadcom.com>,
-        Devesh Sharma <devesh.sharma@broadcom.com>,
-        Somnath Kotur <somnath.kotur@broadcom.com>,
-        Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH -next] RDMA/bnxt_re: Remove set but not used variables
- 'pg' and 'idx'
-Message-ID: <20200228164405.GC7181@ziepe.ca>
-References: <20200227064900.92255-1-yuehaibing@huawei.com>
+        Fri, 28 Feb 2020 11:45:00 -0500
+Received: from foss.arm.com ([217.140.110.172]:41244 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725900AbgB1QpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 11:45:00 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 37B4931B;
+        Fri, 28 Feb 2020 08:44:59 -0800 (PST)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D2293F73B;
+        Fri, 28 Feb 2020 08:44:56 -0800 (PST)
+Subject: Re: [PATCH v5 2/7] arm64: trap to EL1 accesses to AMU counters from
+ EL0
+To:     Ionela Voinescu <ionela.voinescu@arm.com>
+Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
+        maz@kernel.org, suzuki.poulose@arm.com, sudeep.holla@arm.com,
+        lukasz.luba@arm.com, valentin.schneider@arm.com,
+        dietmar.eggemann@arm.com, rjw@rjwysocki.net,
+        pkondeti@codeaurora.org, peterz@infradead.org, mingo@redhat.com,
+        vincent.guittot@linaro.org, viresh.kumar@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Steve Capper <steve.capper@arm.com>
+References: <20200226132947.29738-1-ionela.voinescu@arm.com>
+ <20200226132947.29738-3-ionela.voinescu@arm.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <206c1a87-12aa-a4d4-8fc3-0b03c6125897@arm.com>
+Date:   Fri, 28 Feb 2020 16:44:53 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200227064900.92255-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200226132947.29738-3-ionela.voinescu@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 06:49:00AM +0000, YueHaibing wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
-> 
-> drivers/infiniband/hw/bnxt_re/qplib_rcfw.c: In function '__send_message':
-> drivers/infiniband/hw/bnxt_re/qplib_rcfw.c:101:10: warning:
->  variable 'idx' set but not used [-Wunused-but-set-variable]
-> drivers/infiniband/hw/bnxt_re/qplib_rcfw.c:101:6: warning:
->  variable 'pg' set but not used [-Wunused-but-set-variable]
-> 
-> commit cee0c7bba486 ("RDMA/bnxt_re: Refactor command queue management code")
-> involved this, but not used.
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/infiniband/hw/bnxt_re/qplib_rcfw.c | 4 ----
->  1 file changed, 4 deletions(-)
+Hi Ionela,
 
-Applied to for-next, thanks
+On 26/02/2020 13:29, Ionela Voinescu wrote:
+> The activity monitors extension is an optional extension introduced
+> by the ARMv8.4 CPU architecture. In order to access the activity
+> monitors counters safely, if desired, the kernel should detect the
+> presence of the extension through the feature register, and mediate
+> the access.
+> 
+> Therefore, disable direct accesses to activity monitors counters
+> from EL0 (userspace) and trap them to EL1 (kernel).
+> 
+> To be noted that the ARM64_AMU_EXTN kernel config and the disable_amu
+> kernel parameter do not have an effect on this code. Given that the
+> amuserenr_el0 resets to an UNKNOWN value, setting the trap of EL0
+> accesses to EL1 is always attempted for safety and security
+> considerations.
 
-Jason
+> diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
+> index aafed6902411..7103027b4e64 100644
+> --- a/arch/arm64/mm/proc.S
+> +++ b/arch/arm64/mm/proc.S
+
+> @@ -131,6 +131,7 @@ alternative_endif
+>  	ubfx	x11, x11, #1, #1
+>  	msr	oslar_el1, x11
+>  	reset_pmuserenr_el0 x0			// Disable PMU access from EL0
+> +	reset_amuserenr_el0 x0			// Disable AMU access from EL0
+>  
+>  alternative_if ARM64_HAS_RAS_EXTN
+>  	msr_s	SYS_DISR_EL1, xzr
+
+(This above hunk is in: cpu_do_resume, and this next one is __cpu_setup,)
+
+> @@ -423,6 +424,8 @@ SYM_FUNC_START(__cpu_setup)
+>  	isb					// Unmask debug exceptions now,
+>  	enable_dbg				// since this is per-cpu
+>  	reset_pmuserenr_el0 x0			// Disable PMU access from EL0
+> +	reset_amuserenr_el0 x0			// Disable AMU access from EL0
+
+I think you only need this in __cpu_setup. The entry-point from cpu-idle calls:
+| cpu_resume
+| ->__cpu_setup
+| -->reset_amuserenr_el0
+| ->_cpu_resume
+| -->cpu_do_resume
+| --->reset_amuserenr_el0
+
+(Which means the PMU reset call is redundant too).
+
+Its harmless, and needs cleaning up already, so regardless:
+Reviewed-by: James Morse <james.morse@arm.com>
+
+
+
+Thanks,
+
+James
