@@ -4,85 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9001CC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F5BC3F2CF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE0E24695
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 076D3246A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:40:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbgB1Ik2 (ORCPT
+        id S1726563AbgB1Ikh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 03:40:28 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11121 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725877AbgB1Ik1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 03:40:27 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 69D972B2DC7E9AB1EB50;
-        Fri, 28 Feb 2020 16:40:19 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.24) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 28 Feb 2020 16:40:11 +0800
-From:   Zeng Tao <prime.zeng@hisilicon.com>
-To:     <sudeep.holla@arm.com>
-CC:     <linuxarm@huawei.com>, Zeng Tao <prime.zeng@hisilicon.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] cpu-topology: Fix the potential data corruption
-Date:   Fri, 28 Feb 2020 16:35:45 +0800
-Message-ID: <1582878945-50415-1-git-send-email-prime.zeng@hisilicon.com>
-X-Mailer: git-send-email 2.8.1
+        Fri, 28 Feb 2020 03:40:37 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:59945 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725877AbgB1Ikh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 03:40:37 -0500
+Received: from [109.168.11.45] (port=51130 helo=pc-ceresoli.dev.aim)
+        by hostingweb31.netsons.net with esmtpa (Exim 4.92)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1j7bCE-000aM0-Va; Fri, 28 Feb 2020 09:40:35 +0100
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+To:     devicetree@vger.kernel.org
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Luca Ceresoli <luca@lucaceresoli.net>
+Subject: [PATCH v3] of: overlay: log the error cause on resolver failure
+Date:   Fri, 28 Feb 2020 09:40:27 +0100
+Message-Id: <20200228084027.10797-1-luca@lucaceresoli.net>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.165.24]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently there are only 10 bytes to store the cpu-topology info.
-That is:
-snprintf(buffer, 10, "cluster%d",i);
-snprintf(buffer, 10, "thread%d",i);
-snprintf(buffer, 10, "core%d",i);
+When a DT overlay has a node label that is not present in the live
+devicetree symbols table, this error is printed:
 
-In the boundary test, if the cluster number exceeds 100, there will be a
-data corrution, and the kernel will fall into dead loop. in the cluster
-parse function.
+  OF: resolver: overlay phandle fixup failed: -22
+  create_overlay: Failed to create overlay (err=-22)
 
-So in this patch, enlarge the buffer to fix such potential issues.
+which does not help much in finding the node label that caused the problem
+and fix the overlay source.
 
-Signed-off-by: Zeng Tao <prime.zeng@hisilicon.com>
+Add an error message with the name of the node label that caused the
+error. The new output is:
+
+  OF: resolver: node label 'gpio9' not found in live devicetree symbols table
+  OF: resolver: overlay phandle fixup failed: -22
+  create_overlay: Failed to create overlay (err=-22)
+
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+
 ---
- drivers/base/arch_topology.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-index 6119e11..f489883 100644
---- a/drivers/base/arch_topology.c
-+++ b/drivers/base/arch_topology.c
-@@ -281,7 +281,7 @@ static int __init get_cpu_for_node(struct device_node *node)
- static int __init parse_core(struct device_node *core, int package_id,
- 			     int core_id)
- {
--	char name[10];
-+	char name[20];
- 	bool leaf = true;
- 	int i = 0;
- 	int cpu;
-@@ -327,7 +327,7 @@ static int __init parse_core(struct device_node *core, int package_id,
+Changed in v3:
+ - add only the message from v1, but as reworded by Frank
+
+Changed in v2:
+ - add a message for each error path that does not have one yet
+---
+ drivers/of/resolver.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+index 83c766233181..b278ab4338ce 100644
+--- a/drivers/of/resolver.c
++++ b/drivers/of/resolver.c
+@@ -321,8 +321,11 @@ int of_resolve_phandles(struct device_node *overlay)
  
- static int __init parse_cluster(struct device_node *cluster, int depth)
- {
--	char name[10];
-+	char name[20];
- 	bool leaf = true;
- 	bool has_cores = false;
- 	struct device_node *c;
+ 		err = of_property_read_string(tree_symbols,
+ 				prop->name, &refpath);
+-		if (err)
++		if (err) {
++			pr_err("node label '%s' not found in live devicetree symbols table\n",
++			       prop->name);
+ 			goto out;
++		}
+ 
+ 		refnode = of_find_node_by_path(refpath);
+ 		if (!refnode) {
 -- 
-2.8.1
+2.25.1
 
