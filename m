@@ -2,105 +2,199 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0C2C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF963C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FC842469D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2C282469D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 15:44:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbgB1PoY (ORCPT
+        id S1727383AbgB1Poy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 10:44:24 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50834 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726974AbgB1PoX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 10:44:23 -0500
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01SFcc2Q118486
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 10:44:23 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yepy3ry7d-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 10:43:32 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <imbrenda@linux.ibm.com>;
-        Fri, 28 Feb 2020 15:43:30 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 28 Feb 2020 15:43:27 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01SFhQnW52101170
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Feb 2020 15:43:26 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 157BBAE04D;
-        Fri, 28 Feb 2020 15:43:26 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4BA2FAE056;
-        Fri, 28 Feb 2020 15:43:25 +0000 (GMT)
-Received: from p-imbrenda.emea.ibm.com (unknown [9.145.11.131])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 28 Feb 2020 15:43:25 +0000 (GMT)
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     linux-next@vger.kernel.org, akpm@linux-foundation.org
-Cc:     borntraeger@de.ibm.com, david@redhat.com, aarcange@redhat.com,
-        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
-        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [RFC v1 1/2] mm/gup: fixup for 9947ea2c1e608e32 "mm/gup: track FOLL_PIN pages"
-Date:   Fri, 28 Feb 2020 16:43:21 +0100
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200228154322.329228-1-imbrenda@linux.ibm.com>
-References: <20200228154322.329228-1-imbrenda@linux.ibm.com>
+        Fri, 28 Feb 2020 10:44:54 -0500
+Received: from mga02.intel.com ([134.134.136.20]:20687 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727083AbgB1Poy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 10:44:54 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2020 07:44:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,496,1574150400"; 
+   d="scan'208";a="385528002"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga004.jf.intel.com with ESMTP; 28 Feb 2020 07:44:53 -0800
+Date:   Fri, 28 Feb 2020 07:44:53 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: x86: Remove superfluous brackets in
+ kvm_arch_dev_ioctl()
+Message-ID: <20200228154453.GC2329@linux.intel.com>
+References: <20200228052527.148384-1-xiaoyao.li@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022815-0012-0000-0000-0000038B3507
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022815-0013-0000-0000-000021C7E25A
-Message-Id: <20200228154322.329228-3-imbrenda@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-28_04:2020-02-28,2020-02-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 mlxscore=0 spamscore=0 phishscore=0 adultscore=0
- impostorscore=0 bulkscore=0 clxscore=1015 malwarescore=0 mlxlogscore=830
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002280124
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228052527.148384-1-xiaoyao.li@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case pin fails, we need to unpin, a simple put_page will not be enough
+On Fri, Feb 28, 2020 at 01:25:27PM +0800, Xiaoyao Li wrote:
+> Remove unnecessary brackets from the case statements in
 
-Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
----
- mm/gup.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+They aren't unnecessary, e.g. simply taking away brackets without
+refactoring the code will break the build.
 
-diff --git a/mm/gup.c b/mm/gup.c
-index f589299b0d4a..0b9a806898f3 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -2134,7 +2134,10 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
- 			goto pte_unmap;
- 
- 		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
--			put_page(head);
-+			if (flags & FOLL_GET)
-+				put_page(head);
-+			else if (flags & FOLL_PIN)
-+				unpin_user_page(head);
- 			goto pte_unmap;
- 		}
- 
--- 
-2.24.1
+> kvm_arch_dev_ioctl().
+> 
+> The brackets are visually confusing and error-prone, e.g., brackets of
 
+They're confusing when they're broken, but IMO they're a non-issue when
+used correctly, which is the vast majority of the time.  I wouldn't say I
+love brackets, but for me it's preferrable to having a big pile of
+variables at the top of the function.  I also find having the struct type
+in the case helpful, e.g. it's easy to figure out which struct corresponds
+to which ioctl in the API.
+
+And despite this being the second instance of this style of bug in KVM in
+the last few months, I don't think it's fair to call brackets error-prone.
+These are literally the only two times I've ever seen this class of bug.
+
+Regardless, using brackets to create a new scope in a case statement is a
+widely used pattern:
+
+  $ git grep case | grep ": {" | wc -l
+  1954
+
+Eliminating all current and future uses isn't realistic.
+
+A better way to help prevent these type of bugs from being introduced
+would be to teach checkpatch to issue a warning if a set of brackets
+encapsulates a case statement.
+
+Fixing this particular bug is then a small patch, and maybe throw in an
+opportunistic cleanup to add a "break" in the default path.
+
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 2103101eca78..f059697bf61e 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -3485,6 +3485,7 @@ long kvm_arch_dev_ioctl(struct file *filp,
+                        goto out;
+                r = 0;
+                break;
++       }
+        case KVM_GET_MSR_FEATURE_INDEX_LIST: {
+                struct kvm_msr_list __user *user_msr_list = argp;
+                struct kvm_msr_list msr_list;
+@@ -3510,9 +3511,9 @@ long kvm_arch_dev_ioctl(struct file *filp,
+        case KVM_GET_MSRS:
+                r = msr_io(NULL, argp, do_get_msr_feature, 1);
+                break;
+-       }
+        default:
+                r = -EINVAL;
++               break;
+        }
+ out:
+        return r;
+
+> case KVM_X86_GET_MCE_CAP_SUPPORTED accidently includes case
+> KVM_GET_MSR_FEATURE_INDEX_LIST and KVM_GET_MSRS.
+> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> ---
+>  arch/x86/kvm/x86.c | 33 ++++++++++++++-------------------
+>  1 file changed, 14 insertions(+), 19 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index ddd1d296bd20..9efd693189df 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -3412,14 +3412,16 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>  long kvm_arch_dev_ioctl(struct file *filp,
+>  			unsigned int ioctl, unsigned long arg)
+>  {
+> -	void __user *argp = (void __user *)arg;
+> +	struct kvm_msr_list __user *user_msr_list;
+> +	struct kvm_cpuid2 __user *cpuid_arg;
+> +	struct kvm_msr_list msr_list;
+> +	struct kvm_cpuid2 cpuid;
+> +	unsigned int n;
+>  	long r;
+>  
+>  	switch (ioctl) {
+> -	case KVM_GET_MSR_INDEX_LIST: {
+> -		struct kvm_msr_list __user *user_msr_list = argp;
+> -		struct kvm_msr_list msr_list;
+> -		unsigned n;
+> +	case KVM_GET_MSR_INDEX_LIST:
+> +		user_msr_list = (void __user *)arg;
+>  
+>  		r = -EFAULT;
+>  		if (copy_from_user(&msr_list, user_msr_list, sizeof(msr_list)))
+> @@ -3441,11 +3443,9 @@ long kvm_arch_dev_ioctl(struct file *filp,
+>  			goto out;
+>  		r = 0;
+>  		break;
+> -	}
+>  	case KVM_GET_SUPPORTED_CPUID:
+> -	case KVM_GET_EMULATED_CPUID: {
+> -		struct kvm_cpuid2 __user *cpuid_arg = argp;
+> -		struct kvm_cpuid2 cpuid;
+> +	case KVM_GET_EMULATED_CPUID:
+> +		cpuid_arg = (void __user *)arg;
+>  
+>  		r = -EFAULT;
+>  		if (copy_from_user(&cpuid, cpuid_arg, sizeof(cpuid)))
+> @@ -3461,18 +3461,15 @@ long kvm_arch_dev_ioctl(struct file *filp,
+>  			goto out;
+>  		r = 0;
+>  		break;
+> -	}
+> -	case KVM_X86_GET_MCE_CAP_SUPPORTED: {
+> +	case KVM_X86_GET_MCE_CAP_SUPPORTED:
+>  		r = -EFAULT;
+> -		if (copy_to_user(argp, &kvm_mce_cap_supported,
+> +		if (copy_to_user((void __user *)arg, &kvm_mce_cap_supported,
+>  				 sizeof(kvm_mce_cap_supported)))
+>  			goto out;
+>  		r = 0;
+>  		break;
+> -	case KVM_GET_MSR_FEATURE_INDEX_LIST: {
+> -		struct kvm_msr_list __user *user_msr_list = argp;
+> -		struct kvm_msr_list msr_list;
+> -		unsigned int n;
+> +	case KVM_GET_MSR_FEATURE_INDEX_LIST:
+> +		user_msr_list = (void __user *)arg;
+>  
+>  		r = -EFAULT;
+>  		if (copy_from_user(&msr_list, user_msr_list, sizeof(msr_list)))
+> @@ -3490,11 +3487,9 @@ long kvm_arch_dev_ioctl(struct file *filp,
+>  			goto out;
+>  		r = 0;
+>  		break;
+> -	}
+>  	case KVM_GET_MSRS:
+> -		r = msr_io(NULL, argp, do_get_msr_feature, 1);
+> +		r = msr_io(NULL, (void __user *)arg, do_get_msr_feature, 1);
+>  		break;
+> -	}
+>  	default:
+>  		r = -EINVAL;
+>  	}
+> -- 
+> 2.19.1
+> 
