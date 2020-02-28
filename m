@@ -2,307 +2,165 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18708C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B708C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D969524677
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F01024677
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 18:43:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582915381;
-	bh=eAl5CYW0aDLQd2hTkXyJKqFnRf+gxtnaW7YBSBf6F3k=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=JD/q2Kmq0YR14umsSIFvIboDyNNvXQZw/RkfLhFuZxSNNaTmABSXF1GpOsierKxiv
-	 2eYzZH7uhO3nbWpLYvpk9ATv35mto9BE2cKDcgRJbxMNYgRa+IsY+sh2ZCehC+Q0Xm
-	 OCWRy0bCTZ5Rq3WlmrHTfLqWuakdmv8eUYvMkKV4=
+	s=default; t=1582915417;
+	bh=Jt8BeKjttTR4qmJpdeJtCcYF636hGa6EhSfih278ecw=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=smQ28mAiByUq7wrNaIit8cjwuOCII7zG59Vrm2WGSuzsV6d0G+M+F9XqWsSD7gBH3
+	 dQNxjr4n/aoRaabR2ygnpY5XTbYefl//XTz+8va/PJoIWVtSq9oHU/e+ZdKHZhYMm+
+	 3H0RiEQn+7r/1f+6VmMRgPN3Zh89NLRm9B7/M3MA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgB1Sm7 (ORCPT
+        id S1726805AbgB1Sng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 13:42:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40474 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgB1Sm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 13:42:58 -0500
-Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBCE924677;
-        Fri, 28 Feb 2020 18:42:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582915376;
-        bh=eAl5CYW0aDLQd2hTkXyJKqFnRf+gxtnaW7YBSBf6F3k=;
-        h=From:To:Cc:Subject:Date:From;
-        b=pCihTVHhkIKLnGn/N6n/O0W/d3KcUxDOoL7RyyzM47k0sjhzpj55zBfjR8tDe5SD2
-         a/q10QdaVZgewaEVMYNpAcVi9W8gm2tbbbIDapgKri0TA53DZAZ09W6+7xC8/ooXKr
-         wMQ6kXFd1M/jZt4IA3FnyT48FHubHcfvvDewbwhg=
-From:   Andy Lutomirski <luto@kernel.org>
-To:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        kvm list <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>
-Cc:     Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH] x86/kvm: Handle async page faults directly through do_page_fault()
-Date:   Fri, 28 Feb 2020 10:42:48 -0800
-Message-Id: <6bf68d0facc36553324c38ec798b0feebf6742b7.1582915284.git.luto@kernel.org>
-X-Mailer: git-send-email 2.24.1
+        Fri, 28 Feb 2020 13:43:36 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36316 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbgB1Snf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 13:43:35 -0500
+Received: by mail-io1-f68.google.com with SMTP id d15so4533003iog.3
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 10:43:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=moBvHo+PTilRWFkHOSs3qSLIv/tOzADb8Es4P0sl9A4=;
+        b=SsiA+gq4Oo+ubZQXvcRExrh5NfW6GLe9g4JUQI/KH4QsPvKRz4QNqomuzJzwyk7YDa
+         lMTgOTmFuYCvxYc5xXgthDOExlRMgtWcfRrgkCotfmYIALKHgnSgXtUONERx+9ZPRnWA
+         +skhwvRdMP3b21fpLh78V52Ee8lz1/l1XMfvk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=moBvHo+PTilRWFkHOSs3qSLIv/tOzADb8Es4P0sl9A4=;
+        b=r4YkOk/4Tu0p/YN4Tv8JtOyplHTxEia8qT6Qwf3cUWwvW+m7Gh93OxAgOJvnshA7SM
+         NNEcu/gZ/UB0WGD6CoKEJ3lzmXKeMsnT90k+gXnfrpc+Uq52xarAk0+xYd+oB705zAlK
+         GeJJT4fBk7R3mKF/0ARbN9C6jVyfFyP9OXlr+RvYG3N2FgPZlso8laljZwcDijPOV/ls
+         WMNOKBZ7EDvMl5dftWpHwoCyHCtFZdIm9KF5tc1ZMfCbnZLWe+N1kG2/LjVxX1VRd0w7
+         nMMifguBzrHwRk6zm6rJph+6q7dDacIvXCDJQbnYKHezCcYmEihi0rhY2Zz8VoCjrsIj
+         +46A==
+X-Gm-Message-State: APjAAAVagt6fy3MBJ6wXXOacUaKfZXIoXKr/xYY49nYhJUhqGu6kk3lT
+        XLQJ5CxVnhqu8nu0KYdHgXiEaw==
+X-Google-Smtp-Source: APXvYqwcG8lwkJgB3d/ZO1F4ZoMeFM/E3+QmylfeUoe+iG4RNtc5jkbVqye8lQKuc9S4XFj6YfaKnA==
+X-Received: by 2002:a05:6638:501:: with SMTP id i1mr4392752jar.25.1582915414850;
+        Fri, 28 Feb 2020 10:43:34 -0800 (PST)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id g16sm2150292ioc.13.2020.02.28.10.43.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Feb 2020 10:43:34 -0800 (PST)
+Subject: Re: [ANN] Kselftest integration into Kernel CI
+To:     "Bird, Tim" <Tim.Bird@sony.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <3b3dc707-7ae7-955b-69fe-b9abe9ae26c5@linuxfoundation.org>
+ <MWHPR13MB08954921D3B29D9AA824A2A0FDE80@MWHPR13MB0895.namprd13.prod.outlook.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <f361d23d-f721-ab2c-6797-3b04f0616567@linuxfoundation.org>
+Date:   Fri, 28 Feb 2020 11:43:33 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <MWHPR13MB08954921D3B29D9AA824A2A0FDE80@MWHPR13MB0895.namprd13.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KVM overloads #PF to indicate two types of not-actually-page-fault
-events.  Right now, the KVM guest code intercepts them by modifying
-the IDT and hooking the #PF vector.  This makes the already fragile
-fault code even harder to understand, and it also pollutes call
-traces with async_page_fault and do_async_page_fault for normal page
-faults.
+On 2/28/20 10:50 AM, Bird, Tim wrote:
+> 
+> 
+>> -----Original Message-----
+>> From:  Shuah Khan
+>>
+>> Integrating Kselftest into Kernel CI rings depends on Kselftest build
+>> and install framework to support Kernel CI use-cases. I am kicking off
+>> an effort to support Kselftest runs in Kernel CI rings. Running these
+>> tests in Kernel CI rings will help quality of kernel releases, both
+>> stable and mainline.
+>>
+>> What is required for full support?
+>>
+>> 1. Cross-compilation & relocatable build support
+>> 2. Generates objects in objdir/kselftest without cluttering main objdir
+>> 3. Leave source directory clean
+>> 4. Installs correctly in objdir/kselftest/kselftest_install and adds
+>>      itself to run_kselftest.sh script generated during install.
+>>
+>> Note that install step is necessary for all files to be installed for
+>> run time support.
+>>
+>> I looked into the current status and identified problems. The work is
+>> minimal to add full support. Out of 80+ tests, 7 fail to cross-build
+>> and 1 fails to install correctly.
+>>
+>> List is below:
+>>
+>> Tests fails to build: bpf, capabilities, kvm, memfd, mqueue, timens, vm
+>> Tests fail to install: android (partial failure)
+>> Leaves source directory dirty: bpf, seccomp
+>>
+>> I have patches ready for the following issues:
+>>
+>> Kselftest objects (test dirs) clutter top level object directory.
+>> seccomp_bpf generates objects in the source directory.
+>>
+>> I created a topic branch to collect all the patches:
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/?h=kernelci
+>>
+>> I am going to start working on build problems. If anybody is
+>> interested in helping me with this effort, don't hesitate to
+>> contact me. I first priority is fixing build and install and
+>> then look into tests that leave the source directory dirty.
+> 
+> I'm interested in this.  I'd like the same cleanups in order to run
+> kselftest in Fuego, and I can try it with additional toolchains
+> and boards.  Unfortunately, in terms of running tests, almost all
+> the boards in my lab are running old kernels.  So the tests results
+> aren't useful for upstream work.  But I can still test
+> compilation and install issues, for the kselftest tests themselves.
+> 
 
-Clean it up by moving the logic into do_page_fault() using a static
-branch.  This gets rid of the platform trap_init override mechanism
-completely.
+Testing compilation and install issues is very valuable. This is one
+area that hasn't been test coverage compared to running tests. So it
+great if you can help with build/install on linux-next to catch
+problems in new tests. I am finding that older tests have been stable
+and as new tests come in, we tend to miss catching these types of
+problems.
 
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
----
- arch/x86/entry/entry_64.S       |  4 ----
- arch/x86/include/asm/kvm_para.h | 17 +++++++++++++++-
- arch/x86/include/asm/x86_init.h |  2 --
- arch/x86/kernel/kvm.c           | 36 +++++++++++++++++++--------------
- arch/x86/kernel/traps.c         |  2 --
- arch/x86/kernel/x86_init.c      |  1 -
- arch/x86/mm/fault.c             | 20 ++++++++++++++++++
- 7 files changed, 57 insertions(+), 25 deletions(-)
+Especially cross-builds and installs on arm64 and others.
 
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index f2bb91e87877..be1fc6f2fe85 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -1202,10 +1202,6 @@ idtentry xendebug		do_debug		has_error_code=0
- idtentry general_protection	do_general_protection	has_error_code=1
- idtentry page_fault		do_page_fault		has_error_code=1	read_cr2=1
- 
--#ifdef CONFIG_KVM_GUEST
--idtentry async_page_fault	do_async_page_fault	has_error_code=1	read_cr2=1
--#endif
--
- #ifdef CONFIG_X86_MCE
- idtentry machine_check		do_mce			has_error_code=0	paranoid=1
- #endif
-diff --git a/arch/x86/include/asm/kvm_para.h b/arch/x86/include/asm/kvm_para.h
-index 9b4df6eaa11a..4d72f5488584 100644
---- a/arch/x86/include/asm/kvm_para.h
-+++ b/arch/x86/include/asm/kvm_para.h
-@@ -92,7 +92,17 @@ void kvm_async_pf_task_wait(u32 token, int interrupt_kernel);
- void kvm_async_pf_task_wake(u32 token);
- u32 kvm_read_and_reset_pf_reason(void);
- extern void kvm_disable_steal_time(void);
--void do_async_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address);
-+extern bool do_kvm_handle_async_pf(struct pt_regs *regs, unsigned long error_code, unsigned long address);
-+
-+DECLARE_STATIC_KEY_FALSE(kvm_async_pf_enabled);
-+
-+static inline bool kvm_handle_async_pf(struct pt_regs *regs, unsigned long error_code, unsigned long address)
-+{
-+	if (static_branch_unlikely(&kvm_async_pf_enabled))
-+		return do_kvm_handle_async_pf(regs, error_code, address);
-+	else
-+		return false;
-+}
- 
- #ifdef CONFIG_PARAVIRT_SPINLOCKS
- void __init kvm_spinlock_init(void);
-@@ -130,6 +140,11 @@ static inline void kvm_disable_steal_time(void)
- {
- 	return;
- }
-+
-+static inline bool kvm_handle_async_pf(struct pt_regs *regs, unsigned long error_code, unsigned long address)
-+{
-+	return false;
-+}
- #endif
- 
- #endif /* _ASM_X86_KVM_PARA_H */
-diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
-index 96d9cd208610..6807153c0410 100644
---- a/arch/x86/include/asm/x86_init.h
-+++ b/arch/x86/include/asm/x86_init.h
-@@ -50,14 +50,12 @@ struct x86_init_resources {
-  * @pre_vector_init:		init code to run before interrupt vectors
-  *				are set up.
-  * @intr_init:			interrupt init code
-- * @trap_init:			platform specific trap setup
-  * @intr_mode_select:		interrupt delivery mode selection
-  * @intr_mode_init:		interrupt delivery mode setup
-  */
- struct x86_init_irqs {
- 	void (*pre_vector_init)(void);
- 	void (*intr_init)(void);
--	void (*trap_init)(void);
- 	void (*intr_mode_select)(void);
- 	void (*intr_mode_init)(void);
- };
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index d817f255aed8..93ab0cbd304e 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -35,6 +35,8 @@
- #include <asm/tlb.h>
- #include <asm/cpuidle_haltpoll.h>
- 
-+DEFINE_STATIC_KEY_FALSE(kvm_async_pf_enabled);
-+
- static int kvmapf = 1;
- 
- static int __init parse_no_kvmapf(char *arg)
-@@ -242,25 +244,29 @@ u32 kvm_read_and_reset_pf_reason(void)
- EXPORT_SYMBOL_GPL(kvm_read_and_reset_pf_reason);
- NOKPROBE_SYMBOL(kvm_read_and_reset_pf_reason);
- 
--dotraplinkage void
--do_async_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address)
-+bool
-+do_kvm_handle_async_pf(struct pt_regs *regs, unsigned long error_code, unsigned long address)
- {
-+	/*
-+	 * If we get a page fault right here, the pf_reason seems likely
-+	 * to be clobbered.  Bummer.
-+	 */
-+
- 	switch (kvm_read_and_reset_pf_reason()) {
- 	default:
--		do_page_fault(regs, error_code, address);
--		break;
-+		return false;
- 	case KVM_PV_REASON_PAGE_NOT_PRESENT:
- 		/* page is swapped out by the host. */
- 		kvm_async_pf_task_wait((u32)address, !user_mode(regs));
--		break;
-+		return true;
- 	case KVM_PV_REASON_PAGE_READY:
- 		rcu_irq_enter();
- 		kvm_async_pf_task_wake((u32)address);
- 		rcu_irq_exit();
--		break;
-+		return true;
- 	}
- }
--NOKPROBE_SYMBOL(do_async_page_fault);
-+NOKPROBE_SYMBOL(do_kvm_handle_async_pf);
- 
- static void __init paravirt_ops_setup(void)
- {
-@@ -306,7 +312,11 @@ static notrace void kvm_guest_apic_eoi_write(u32 reg, u32 val)
- static void kvm_guest_cpu_init(void)
- {
- 	if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF) && kvmapf) {
--		u64 pa = slow_virt_to_phys(this_cpu_ptr(&apf_reason));
-+		u64 pa;
-+
-+		WARN_ON_ONCE(!static_branch_likely(&kvm_async_pf_enabled));
-+
-+		pa = slow_virt_to_phys(this_cpu_ptr(&apf_reason));
- 
- #ifdef CONFIG_PREEMPTION
- 		pa |= KVM_ASYNC_PF_SEND_ALWAYS;
-@@ -570,11 +580,6 @@ static int kvm_cpu_down_prepare(unsigned int cpu)
- }
- #endif
- 
--static void __init kvm_apf_trap_init(void)
--{
--	update_intr_gate(X86_TRAP_PF, async_page_fault);
--}
--
- static DEFINE_PER_CPU(cpumask_var_t, __pv_tlb_mask);
- 
- static void kvm_flush_tlb_others(const struct cpumask *cpumask,
-@@ -611,8 +616,6 @@ static void __init kvm_guest_init(void)
- 	register_reboot_notifier(&kvm_pv_reboot_nb);
- 	for (i = 0; i < KVM_TASK_SLEEP_HASHSIZE; i++)
- 		raw_spin_lock_init(&async_pf_sleepers[i].lock);
--	if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF))
--		x86_init.irqs.trap_init = kvm_apf_trap_init;
- 
- 	if (kvm_para_has_feature(KVM_FEATURE_STEAL_TIME)) {
- 		has_steal_clock = 1;
-@@ -652,6 +655,9 @@ static void __init kvm_guest_init(void)
- 	 * overcommitted.
- 	 */
- 	hardlockup_detector_disable();
-+
-+	if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF) && kvmapf)
-+		static_branch_enable(&kvm_async_pf_enabled);
- }
- 
- static noinline uint32_t __kvm_cpuid_base(void)
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 6ef00eb6fbb9..bcb514c801f2 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -936,7 +936,5 @@ void __init trap_init(void)
- 
- 	idt_setup_ist_traps();
- 
--	x86_init.irqs.trap_init();
--
- 	idt_setup_debugidt_traps();
- }
-diff --git a/arch/x86/kernel/x86_init.c b/arch/x86/kernel/x86_init.c
-index 85f1a90c55cd..123f1c1f1788 100644
---- a/arch/x86/kernel/x86_init.c
-+++ b/arch/x86/kernel/x86_init.c
-@@ -79,7 +79,6 @@ struct x86_init_ops x86_init __initdata = {
- 	.irqs = {
- 		.pre_vector_init	= init_ISA_irqs,
- 		.intr_init		= native_init_IRQ,
--		.trap_init		= x86_init_noop,
- 		.intr_mode_select	= apic_intr_mode_select,
- 		.intr_mode_init		= apic_intr_mode_init
- 	},
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index fa4ea09593ab..ba04be080142 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -30,6 +30,7 @@
- #include <asm/desc.h>			/* store_idt(), ...		*/
- #include <asm/cpu_entry_area.h>		/* exception stack		*/
- #include <asm/pgtable_areas.h>		/* VMALLOC_START, ...		*/
-+#include <asm/kvm_para.h>		/* kvm_handle_async_pf		*/
- 
- #define CREATE_TRACE_POINTS
- #include <asm/trace/exceptions.h>
-@@ -1505,6 +1506,25 @@ do_page_fault(struct pt_regs *regs, unsigned long hw_error_code,
- 		unsigned long address)
- {
- 	prefetchw(&current->mm->mmap_sem);
-+	/*
-+	 * KVM has two types of events that are, logically, interrupts, but
-+	 * are unfortunately delivered using the #PF vector.  These events are
-+	 * "you just accessed valid memory, but the host doesn't have it right
-+	 * not, so I'll put you to sleep if you continue" and "that memory
-+	 * you tried to access earlier is available now."
-+	 *
-+	 * We are relying on the interrupted context being sane (valid
-+	 * RSP, relevant locks not held, etc.), which is fine as long as
-+	 * the the interrupted context had IF=1.  We are also relying on
-+	 * the KVM async pf type field and CR2 being read consistently
-+	 * instead of getting values from real and async page faults
-+	 * mixed up.
-+	 *
-+	 * Fingers crossed.
-+	 */
-+	if (kvm_handle_async_pf(regs, hw_error_code, address))
-+		return;
-+
- 	trace_page_fault_entries(regs, hw_error_code, address);
- 
- 	if (unlikely(kmmio_fault(regs, address)))
--- 
-2.24.1
+>>
+>> Detailed report can be found here:
+>>
+>> https://drive.google.com/file/d/11nnWOKIzzOrE4EiucZBn423lzSU_eNNv/view?usp=sharing
+> 
+> Is there anything you'd like me to look at specifically?  Do you want me to start
+> at the bottom of the list and work up?  I could look at 'vm' or 'timens'.
+> 
 
+Yes you can start with vm and timens.
+
+thanks,
+-- Shuah
