@@ -2,110 +2,119 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FB7C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E08FC3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2055E2469F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D913D2469F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:14:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uEOAohEG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ud1iRBpF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgB1RNR (ORCPT
+        id S1726758AbgB1ROQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 12:13:17 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38715 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgB1RNQ (ORCPT
+        Fri, 28 Feb 2020 12:14:16 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:54301 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgB1ROQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 12:13:16 -0500
-Received: by mail-pg1-f196.google.com with SMTP id d6so1833976pgn.5;
-        Fri, 28 Feb 2020 09:13:15 -0800 (PST)
+        Fri, 28 Feb 2020 12:14:16 -0500
+Received: by mail-pj1-f66.google.com with SMTP id dw13so1543882pjb.4;
+        Fri, 28 Feb 2020 09:14:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xJi6vZcYcttW+MZfr9/rRJo0DF++IJ1/RUDtbKhU1AY=;
-        b=uEOAohEGBRoCSThVEmWLtAKPOqOCFMCaUcBA+F58HYQJ4WlwP99B0kkn5pagoVx9ia
-         ciyWMsE+sn335hZ75HM6QJ1hCDukb9Suie1cGGMW2CGkSeudg/JIePTCYGESVNsyzVvx
-         2yCpjoSiVB7B58PbXo5dzIdwKsB7nXSsB4qu/5qixVM9wJDBDP8LorAMIphl8QEyUu4w
-         tx7Ljaicm2ngq5StYDxBLLfcaHDE9bo08CT29iQoLWRs9BnkembEXNKAuMFTbN1kZnc+
-         rMUXNfZRE9iQg6Pvk4U20jO1SK28BuxQMZVUdpXosWbGA1asQrgJqXSeTclTNd72OGDS
-         4akw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version;
+        bh=yMv5xu9YgcDWDsypzsNvCc1G+AinxBPAgahcuFPEI+8=;
+        b=ud1iRBpFWJF3bAoC2V3s3V4LUBMorh5LE5RqU0SgsnxcgS53emgMHeOOGrYReaWCPL
+         w4jyIiqiE3OG8js1PfMDeQB8E5PPSsP16RJtuMKHa/UNw7OVNb7TYqSSnd8ahB98O1IA
+         rlpJWlRPDuIpAXWeJxhq4X2SjmpOvPkxxjMQyUNWj7rDOtsgmWbN825LK7pFvSjYN7//
+         x9KBx8p08BnTXqcg59nStiLU7cs0hyH2VtV+gYbTjfgMmbSrucR7SEt/t2SG+m0Bo/UF
+         z9E6xB/10lgeg6+t1cZEbrZXfjSLE9iZWH3fSu48414v2QJIg5HLjamAp5rn5Vc1OnZe
+         lrig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xJi6vZcYcttW+MZfr9/rRJo0DF++IJ1/RUDtbKhU1AY=;
-        b=hoH0F2fupTBp2Ul+dYtwWyTm5hqo9KQbuVYZAv3ddJZAE35xFfW1p9j50Zls5QYlZ1
-         QgEdblzqPojmIfeC/qXsoQiZ3IXoTMBzP1b9GioVUbyNXk4X5zo1sQUa8iQqzreW9stL
-         wp0YS4Hrfy0J1jnGABhyDJpg224asygP0KmeJ4xOQnndzzGPtNyWqGPvfaIct2o1CUjL
-         xHzMKWlU/OxlocEijIO5uzcJh0sYNwo5Q6SKdBNTa3cMNy+O3HC/rnS5bFesYPMzkThZ
-         GZ+fuFphse9REpHumog9VTMOfQhQz/RtwKtNS1LfZJvCG7eicGbJcb9nq8exCar6xRK5
-         FKxQ==
-X-Gm-Message-State: APjAAAUSe5bLd6ffKCGMhpn/5Lb5YEimgMgKPoD2SqRwAjLhM7nzQ1ms
-        XXSgqXE+AE91qP7hkwKNE3M=
-X-Google-Smtp-Source: APXvYqwRnGkDeSmzVIq5t1dNZsR0afEyiIO9TeGMrlGYsOPCoVbGkguOPHdpxhLdA+JLiDLGB3FEAw==
-X-Received: by 2002:a63:1d22:: with SMTP id d34mr5495224pgd.21.1582909995462;
-        Fri, 28 Feb 2020 09:13:15 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q13sm11203198pgh.30.2020.02.28.09.13.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 28 Feb 2020 09:13:14 -0800 (PST)
-Date:   Fri, 28 Feb 2020 09:13:14 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version;
+        bh=yMv5xu9YgcDWDsypzsNvCc1G+AinxBPAgahcuFPEI+8=;
+        b=i5GdhdcjQfCwG3Ylaab4bMsvaKdq1bH69Z073SvUEwZEZm/3KqUXZuQfliBIB9KD9Z
+         zZBNBaULlRDmre1R4YufAmZbANCkwCtBsIA1x+IK+Zmnlf9IQEUYzrEt+IbLh+fkbkU2
+         JrBx8pk8OHAiyBRGoAGDTxcZtmqUd3vE4DWKYKRBxbZZHLf3v/sYm9fCwKY3shYqJULw
+         wVqy51fKlhKWmkGsbKPpg3kZWmuDZmsfng1VKvEVf+EABliUdFoeSW0XjWK6zOqiKoE3
+         yDFc9BfRTKaukFwPz6ZKJn5HnTNJLBatTnNKcW83ct7+H1ViGQLWXbL+w2VBmLAZz3p/
+         t76w==
+X-Gm-Message-State: APjAAAUcE4OvPeL0Bz0dGz/JJcPDieeven+roMAxGn71LAsbGBsb4uCW
+        8/7ZCfSmoGUgUoWi7YwmqL04vaBC
+X-Google-Smtp-Source: APXvYqz4eS9G3b2PGiQZRgkjMvUxaRgisw1x1Lr1PCrTvpqw6i8RVcfJIvOUTi3OfL21i55zTlJdxA==
+X-Received: by 2002:a17:902:ec01:: with SMTP id l1mr4972539pld.205.1582910055262;
+        Fri, 28 Feb 2020 09:14:15 -0800 (PST)
+Received: from [172.20.55.224] ([2620:10d:c090:500::4:3ffc])
+        by smtp.gmail.com with ESMTPSA id z27sm12307181pfj.107.2020.02.28.09.14.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 28 Feb 2020 09:14:14 -0800 (PST)
+From:   "Jonathan Lemon" <jonathan.lemon@gmail.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     "=?utf-8?b?QmrDtnJuIFTDtnBlbA==?=" <bjorn.topel@intel.com>,
+        "Magnus Karlsson" <magnus.karlsson@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Jakub Kicinski" <kuba@kernel.org>,
+        "Alexei Starovoitov" <ast@kernel.org>,
+        "Daniel Borkmann" <daniel@iogearbox.net>,
+        "Jesper Dangaard Brouer" <hawk@kernel.org>,
+        "John Fastabend" <john.fastabend@gmail.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] watchdog: add support for resetting keepalive timers
- at start
-Message-ID: <20200228171314.GA14594@roeck-us.net>
-References: <20200228142331.13716-1-t-kristo@ti.com>
- <20200228142331.13716-3-t-kristo@ti.com>
+Subject: Re: [PATCH] [next] xdp: Replace zero-length array with flexible-array
+ member
+Date:   Fri, 28 Feb 2020 09:14:12 -0800
+X-Mailer: MailMate (1.13.1r5671)
+Message-ID: <6FEAF24E-27CF-4840-8134-595D27275976@gmail.com>
+In-Reply-To: <20200228131907.GA17911@embeddedor>
+References: <20200228131907.GA17911@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200228142331.13716-3-t-kristo@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 04:23:29PM +0200, Tero Kristo wrote:
-> Current watchdog core pets the timer always after the initial keepalive
-> time has expired from boot-up. This is incorrect for certain timers that
-> don't like to be petted immediately when they are started, if they have
-> not been running over the boot.
-> 
-> To allow drivers to reset their keepalive timers during startup, add
-> a new watchdog flag to the api, WDOG_RESET_KEEPALIVE.
-> 
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> ---
->  drivers/watchdog/watchdog_dev.c | 2 ++
->  include/linux/watchdog.h        | 1 +
->  2 files changed, 3 insertions(+)
-> 
-> diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
-> index 8b5c742f24e8..131e40c21703 100644
-> --- a/drivers/watchdog/watchdog_dev.c
-> +++ b/drivers/watchdog/watchdog_dev.c
-> @@ -283,6 +283,8 @@ static int watchdog_start(struct watchdog_device *wdd)
->  		set_bit(WDOG_ACTIVE, &wdd->status);
->  		wd_data->last_keepalive = started_at;
->  		watchdog_update_worker(wdd);
-> +		if (test_bit(WDOG_RESET_KEEPALIVE, &wdd->status))
-> +			wd_data->last_hw_keepalive = started_at;
 
-I don't think the additional flag is needed. The code should just set
-last_hw_keepalive. After all, it already sets last_keepalive, which
-determines when the next internal keepalive will be sent. It makes sense
-to also set last_hw_keepalive to prevent the next keepalive from being
-sent too early.
 
-Guenter
+On 28 Feb 2020, at 5:19, Gustavo A. R. Silva wrote:
+
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+>
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+>
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+>
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+>
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+>
+> This issue was found with the help of Coccinelle.
+>
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+
+Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
