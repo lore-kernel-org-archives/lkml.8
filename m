@@ -6,48 +6,68 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4C1C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E37C3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA5722468E
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:38:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A05FD246AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:39:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbgB1OiH (ORCPT
+        id S1726947AbgB1Ojl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 09:38:07 -0500
-Received: from mail1.ugh.no ([178.79.162.34]:55216 "EHLO mail1.ugh.no"
+        Fri, 28 Feb 2020 09:39:41 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54742 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726788AbgB1OiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 09:38:07 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail1.ugh.no (Postfix) with ESMTP id 833E024EBA8;
-        Fri, 28 Feb 2020 15:38:05 +0100 (CET)
-Received: from mail1.ugh.no ([127.0.0.1])
-        by localhost (catastrophix.ugh.no [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id uRS-mdNYuDgz; Fri, 28 Feb 2020 15:38:05 +0100 (CET)
-Received: from [10.255.64.11] (unknown [185.176.245.143])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: andre@tomt.net)
-        by mail.ugh.no (Postfix) with ESMTPSA id C655A24EB4A;
-        Fri, 28 Feb 2020 15:38:04 +0100 (CET)
-Subject: Re: [PATCH 5.5 000/150] 5.5.7-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-References: <20200227132232.815448360@linuxfoundation.org>
- <d6212f9e-7e8d-95bd-18ca-8c44de224b28@tomt.net>
- <20200228122240.GA3012646@kroah.com>
-From:   Andre Tomt <andre@tomt.net>
-Message-ID: <faad1735-e6b7-badb-3fcc-69c4c467bca2@tomt.net>
-Date:   Fri, 28 Feb 2020 15:38:04 +0100
+        id S1726682AbgB1Ojl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 09:39:41 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 0DBC1B147;
+        Fri, 28 Feb 2020 14:39:39 +0000 (UTC)
+Subject: Re: [PATCH v2 2/2] mm,thp,compaction,cma: allow THP migration for CMA
+ allocations
+To:     Rik van Riel <riel@surriel.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-kernel@vger.kernel.org
+Cc:     kernel-team@fb.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        mhocko@kernel.org, mgorman@techsingularity.net,
+        rientjes@google.com, aarcange@redhat.com, ziy@nvidia.com
+References: <cover.1582321646.git.riel@surriel.com>
+ <20200227213238.1298752-2-riel@surriel.com>
+ <df83c62f-209f-b1fd-3a5c-c81c82cb2606@oracle.com>
+ <7800e98e3688c124ac3672284b87d67321e1c29e.camel@surriel.com>
+ <67185d77-87aa-400d-475c-4435d8b7be11@suse.cz>
+ <47198271414db19cecbfa1a6ea685577dad3a72c.camel@surriel.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ mQINBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
+ KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
+ 87tMFA+u+L4Z5xAzIimfLD5EKC56kJ1CsXlM8S/LHcmdD9Ctkn3trYDNnat0eoAcfPIP2OZ+
+ 9oe9IF/R28zmh0ifLXyJQQz5ofdj4bPf8ecEW0rhcqHfTD8k4yK0xxt3xW+6Exqp9n9bydiy
+ tcSAw/TahjW6yrA+6JhSBv1v2tIm+itQc073zjSX8OFL51qQVzRFr7H2UQG33lw2QrvHRXqD
+ Ot7ViKam7v0Ho9wEWiQOOZlHItOOXFphWb2yq3nzrKe45oWoSgkxKb97MVsQ+q2SYjJRBBH4
+ 8qKhphADYxkIP6yut/eaj9ImvRUZZRi0DTc8xfnvHGTjKbJzC2xpFcY0DQbZzuwsIZ8OPJCc
+ LM4S7mT25NE5kUTG/TKQCk922vRdGVMoLA7dIQrgXnRXtyT61sg8PG4wcfOnuWf8577aXP1x
+ 6mzw3/jh3F+oSBHb/GcLC7mvWreJifUL2gEdssGfXhGWBo6zLS3qhgtwjay0Jl+kza1lo+Cv
+ BB2T79D4WGdDuVa4eOrQ02TxqGN7G0Biz5ZLRSFzQSQwLn8fbwARAQABtCBWbGFzdGltaWwg
+ QmFia2EgPHZiYWJrYUBzdXNlLmN6PokCVAQTAQoAPgIbAwULCQgHAwUVCgkICwUWAgMBAAIe
+ AQIXgBYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJcbbyGBQkH8VTqAAoJECJPp+fMgqZkpGoP
+ /1jhVihakxw1d67kFhPgjWrbzaeAYOJu7Oi79D8BL8Vr5dmNPygbpGpJaCHACWp+10KXj9yz
+ fWABs01KMHnZsAIUytVsQv35DMMDzgwVmnoEIRBhisMYOQlH2bBn/dqBjtnhs7zTL4xtqEcF
+ 1hoUFEByMOey7gm79utTk09hQE/Zo2x0Ikk98sSIKBETDCl4mkRVRlxPFl4O/w8dSaE4eczH
+ LrKezaFiZOv6S1MUKVKzHInonrCqCNbXAHIeZa3JcXCYj1wWAjOt9R3NqcWsBGjFbkgoKMGD
+ usiGabetmQjXNlVzyOYdAdrbpVRNVnaL91sB2j8LRD74snKsV0Wzwt90YHxDQ5z3M75YoIdl
+ byTKu3BUuqZxkQ/emEuxZ7aRJ1Zw7cKo/IVqjWaQ1SSBDbZ8FAUPpHJxLdGxPRN8Pfw8blKY
+ 8mvLJKoF6i9T6+EmlyzxqzOFhcc4X5ig5uQoOjTIq6zhLO+nqVZvUDd2Kz9LMOCYb516cwS/
+ Enpi0TcZ5ZobtLqEaL4rupjcJG418HFQ1qxC95u5FfNki+YTmu6ZLXy+1/9BDsPuZBOKYpUm
+ 3HWSnCS8J5Ny4SSwfYPH/JrtberWTcCP/8BHmoSpS/3oL3RxrZRRVnPHFzQC6L1oKvIuyXYF
+ rkybPXYbmNHN+jTD3X8nRqo+4Qhmu6SHi3Vq
+Message-ID: <ceacd12e-a005-8035-7d88-f79a45a05975@suse.cz>
+Date:   Fri, 28 Feb 2020 15:39:38 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200228122240.GA3012646@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <47198271414db19cecbfa1a6ea685577dad3a72c.camel@surriel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,51 +75,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28.02.2020 13:22, Greg Kroah-Hartman wrote:
-> On Fri, Feb 28, 2020 at 01:06:00PM +0100, Andre Tomt wrote:
->> On 27.02.2020 14:35, Greg Kroah-Hartman wrote:
->>> This is the start of the stable review cycle for the 5.5.7 release.
->>> There are 150 patches in this series, all will be posted as a response
->>> to this one.  If anyone has any issues with these being applied, please
->>> let me know.
+On 2/28/20 3:32 PM, Rik van Riel wrote:
+
+>>> Does that need to be the following, then?
 >>>
->>> Responses should be made by Sat, 29 Feb 2020 13:21:24 +0000.
->>> Anything received after that time might be too late.
+>>>      if (PageTransHuge(head) && !PageHuge(page) && !PageLRU(head)
+>>> &&
+>>> !__PageMovable(head))
+>>>                  return page;
 >>
->> There is something going on with USB in this release. My AMD X570 board is
->> constantly having ports stop working, while a older AMD X399 board seems
->> fine (maybe, there is an ATEN USB extender involved on the X570 system)
->>
->> I've only had time to do very rudimentary debugging, but reverting all usb
->> and xhci related patches seems to have solved it, eg:
->>
->>> <snip>
->>
->> I might be able to narrow it down in a day or two.
+>> I would instead make it an "else if" to the "if (PageHuge(page)...)"
+>> above.
 > 
-> Narrowing it down would be good, try sticking with either the hub or
-> xhci patches.  And, 'git bisect' might make it easier.
+> That was my first thought too, but that could break on
+> pages that are PageHuge when hugepage_migration_supported
+> returns true.
 
-It seems to be caused by "USB: hub: Don't record a connect-change event 
-during reset-resume". Running 5.5.7-rc1 with only that patch reverted 
-works fine.
+Right, so then
 
-Also happens with the X399. And only when the ATEN UCE260 USB extender 
-is involved. Connecting a device is the problem, if it is connected at 
-boot, things seem fine, until you connect something new. Then the port 
-dies completely, dead even if you disconnect the extender and plug 
-something in directly - until system is rebooted (perhaps driver reload 
-would work too - have not tested.)
+if (PageHuge()) {
+	if (!migration_supported) return false;
+} else if (!PageLRU(head) ...) {
+   etc...
 
-Aw well, the problem does seem a little narrower than I expected at first :)
-
-There's no errors in the kernel log at all. The last thing logged is 
-that whatever device was on the other end got disconnected.
-
-> Also, does Linus's current tree show the same problems for you?
-
-Yes, it does
-
-Unfortunately, email deliverability will be terrible for me for a few 
-days (there was a mishap), so if you could loop in the 
-author/maintainers for me that would be good.
+IMHO it's better than adding more tests to the second if.
