@@ -2,147 +2,159 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB5EC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E80E6C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4339524699
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBE962468D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:41:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="czUtcTbX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="olqIOHkF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbgB1Qle (ORCPT
+        id S1726788AbgB1Qlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:41:34 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53706 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725928AbgB1Qld (ORCPT
+        Fri, 28 Feb 2020 11:41:55 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41643 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbgB1Qlz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:41:33 -0500
-Received: by mail-wm1-f66.google.com with SMTP id f15so3844030wml.3;
-        Fri, 28 Feb 2020 08:41:31 -0800 (PST)
+        Fri, 28 Feb 2020 11:41:55 -0500
+Received: by mail-ed1-f67.google.com with SMTP id c26so4048726eds.8
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 08:41:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=X5lwKhEkYPb9uFlg3S0kiEOPjUxyOuwawAZ72KaGw1I=;
-        b=czUtcTbXEvp4mZ7wtGwtLvOLqcZDZlcZuz3vhgz+v/+rlvyULWIomKGtLHqP8fikwu
-         g83gvPCTOCs5rTKZgRIL6gVLYZggOrS5iRFJmwgwj5iIISr9NRYe3v7hdocYspriLyOx
-         zQ0xYB9h0wlpxsoi0pb/IMf/O+nB/jgyii3rlke9Hlgn7k3pBu0uGLW/i/11iKeTscB0
-         Roghbmt5MLisRFksRBXU6TGaUQfpebPc5oBID2VTurhw3Wglf7nVzXv0+j0kgJLI5bNq
-         1eXN0OSorz7i52T937g+ngq+oIh2jMPqLT/316e443cQip13YNuFNi/+/QOoDsIzZcIh
-         bD+A==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ldf8hYsODju3QfMuQceixPCm/gYiMPapiNP2c55hvY8=;
+        b=olqIOHkF6nsW9UYb36nMIzd9lU3s+uRqS8wOR3h+TWG0ta18aKezAaCKixv6gGPxUK
+         c73TR/s6tYA9rZOfOJF4Ady5JMGtZY+hzChGh6zLbscqlrLWUMVqi/C2YcYch6GUV1/g
+         s61HJHjR2efaala0vgj64Lj9PlShUwxgCshyR7y28f2vS5WpYFIwPBXT9+u/kxW+OLnP
+         plrBWmysnZ2K4ReVWEZxPeP3v1vACgn5hyiCXW4cBmJBdIa6dW6PiKy9mLvM/X5uC8WL
+         vYi/06mnmp2hD3XGRHYvd/YAg2Dg3ZZTT4jzHlE56A3+6daLQZSTkB+TwlUNHpdT7jq2
+         mkrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=X5lwKhEkYPb9uFlg3S0kiEOPjUxyOuwawAZ72KaGw1I=;
-        b=C8p6n2Ekn4YBljw7ZtkpzHvkkYsXi3Jz+noe3vpgobHMasS2Y4RBRkk+1Mkm/Rwk3W
-         6H/UDDjAlrjttAUYipoN8EaZd7U8uCMKE9GrusYor13+DiuY9Qtg4ZnkiDs4TBsT8qp2
-         XgO+30H3gyHnel1ftUOvLrbuDnThvp+9wNTe2khUt65WApDR9f/s3JBXNT7zpueHbJ7a
-         gk1WVP82rsA+RjeROjiwuPWzZpI60MYg/DXbzz2czfacKoYuNg/iKZWLGmuoW5DWdytU
-         OZkc931htUQjKykfDh3+YpH/pD4gWm5J6Y4btpECbANCZvyyZPG1BpTmwvjIMw7YnmGW
-         PHhQ==
-X-Gm-Message-State: APjAAAWfS2jt8eaeb/GflR2ENcTzh3HOoZ1gcHdmLnv8yvPzdpcNrikt
-        JVhb8/Rci1GdR+XjpE36Aec=
-X-Google-Smtp-Source: APXvYqzocoSmWjrOQ3OYNBEyzBu4M21vN1njgPy+5EDu+DImCvi/+Wkhc/Ch9Qtn3ou8YPNSaZfcIA==
-X-Received: by 2002:a1c:a9d1:: with SMTP id s200mr5766137wme.181.1582908091322;
-        Fri, 28 Feb 2020 08:41:31 -0800 (PST)
-Received: from prasmi.home ([2a00:23c8:2510:d000:3855:fd13:6b76:a11b])
-        by smtp.gmail.com with ESMTPSA id t187sm3028493wmt.25.2020.02.28.08.41.30
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ldf8hYsODju3QfMuQceixPCm/gYiMPapiNP2c55hvY8=;
+        b=Sqg1r6rnkeww7GiBlfBOQFHbqg3ABHYtbADMtckADyEW6vKaYjxhdEaMxznfNK6Tzn
+         +2eXE/h/P7kq0gFUKec2E2sb9V6olQ3GYspY+MRcZSFgiEtQ/y3ivYJq85MmgMKzz8Df
+         vY9TqO6GpMNXZNNTvA3muH2yY2mh3iOEj1YQXrIfTDGxmkxPeigLN4filceKmB3rwf5N
+         1XbYwJignr8lGhPwaIIny3/itI+JM1vw5ijlc8aNao8gaGL3ZQ0h1PLlccSO87hPFaNg
+         D1qB6xsCG9VkD2oYienjoDhOHGBTlAPPj6VZe6LpbR9IwEylYFSXo3pu7Hwl2V/s4eZt
+         vX2g==
+X-Gm-Message-State: APjAAAWs/YrTtKJoC4qFj3BeoCV+Mp0rBTgBHiZ+ok6gF2s6xclbzWtG
+        MX0HyunF2i0B57YBGQ/LYl0=
+X-Google-Smtp-Source: APXvYqyBIXoVMdxp+IBNcq5UuXpt1k3/I3znDe1yS0Q/R9hOHsI1A7Z2npgvGIC0J9uYyTHKpa9bxg==
+X-Received: by 2002:a05:6402:c08:: with SMTP id co8mr5180686edb.197.1582908113875;
+        Fri, 28 Feb 2020 08:41:53 -0800 (PST)
+Received: from smtp.gmail.com (1.77.115.89.rev.vodafone.pt. [89.115.77.1])
+        by smtp.gmail.com with ESMTPSA id b14sm579365edx.64.2020.02.28.08.41.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 08:41:30 -0800 (PST)
-From:   Lad Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Fabio Estevam <festevam@gmail.com>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH] media: i2c: ov5645: Add virtual_channel module parameter
-Date:   Fri, 28 Feb 2020 16:41:26 +0000
-Message-Id: <20200228164126.17517-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 28 Feb 2020 08:41:52 -0800 (PST)
+Date:   Fri, 28 Feb 2020 13:41:45 -0300
+From:   Melissa Wen <melissa.srw@gmail.com>
+To:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian Konig <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] drm/amd/display: dc_link: code clean up on
+ enable_link_dp function
+Message-ID: <922a2d0df348e72588405dedd4f9a296448f51c3.1582907436.git.melissa.srw@gmail.com>
+References: <cover.1582907436.git.melissa.srw@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1582907436.git.melissa.srw@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-OV5645 can operate in virtual channel 0-3 in CSI2 interfaces, this patch
-adds support for module parameter virtual_channel to select the required
-channel. By default OV5645 operates in virtual channel 0.
+Coding style clean up on enable_link_dp function as suggested by
+checkpatch.pl:
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+CHECK: Lines should not end with a '('
+WARNING: line over 80 characters
+WARNING: suspect code indent for conditional statements (8, 24)
+CHECK: braces {} should be used on all arms of this statement
+ERROR: else should follow close brace '}'
+CHECK: Comparison to NULL could be written
+       "link->preferred_training_settings.fec_enable"
+
+Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
 ---
- drivers/media/i2c/ov5645.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ drivers/gpu/drm/amd/display/dc/core/dc_link.c | 29 +++++++++----------
+ 1 file changed, 14 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/media/i2c/ov5645.c b/drivers/media/i2c/ov5645.c
-index a6c17d15d754..0a0671164623 100644
---- a/drivers/media/i2c/ov5645.c
-+++ b/drivers/media/i2c/ov5645.c
-@@ -54,6 +54,7 @@
- #define OV5645_TIMING_TC_REG21		0x3821
- #define		OV5645_SENSOR_MIRROR		BIT(1)
- #define OV5645_MIPI_CTRL00		0x4800
-+#define OV5645_REG_DEBUG_MODE		0x4814
- #define OV5645_PRE_ISP_TEST_SETTING_1	0x503d
- #define		OV5645_TEST_PATTERN_MASK	0x3
- #define		OV5645_SET_TEST_PATTERN(x)	((x) & OV5645_TEST_PATTERN_MASK)
-@@ -61,6 +62,11 @@
- #define OV5645_SDE_SAT_U		0x5583
- #define OV5645_SDE_SAT_V		0x5584
- 
-+static u8 virtual_channel;
-+module_param(virtual_channel, byte, 0644);
-+MODULE_PARM_DESC(virtual_channel,
-+		 "MIPI CSI-2 virtual channel (0..3), default 0");
-+
- /* regulator supplies */
- static const char * const ov5645_supply_name[] = {
- 	"vdddo", /* Digital I/O (1.8V) supply */
-@@ -983,12 +989,34 @@ static int ov5645_get_selection(struct v4l2_subdev *sd,
- 	return 0;
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+index 02e1ad318203..eb9894e416ed 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+@@ -1498,9 +1498,8 @@ static void enable_stream_features(struct pipe_ctx *pipe_ctx)
+ 	}
  }
  
-+static int ov5645_set_virtual_channel(struct ov5645 *ov5645)
-+{
-+	u8 temp, channel = virtual_channel;
-+	int ret;
-+
-+	if (channel > 3)
-+		return -EINVAL;
-+
-+	ret = ov5645_read_reg(ov5645, OV5645_REG_DEBUG_MODE, &temp);
-+	if (ret)
-+		return ret;
-+
-+	temp &= ~(3 << 6);
-+	temp |= (channel << 6);
-+
-+	return ov5645_write_reg(ov5645, OV5645_REG_DEBUG_MODE, temp);
-+}
-+
- static int ov5645_s_stream(struct v4l2_subdev *subdev, int enable)
+-static enum dc_status enable_link_dp(
+-		struct dc_state *state,
+-		struct pipe_ctx *pipe_ctx)
++static enum dc_status enable_link_dp(struct dc_state *state,
++				     struct pipe_ctx *pipe_ctx)
  {
- 	struct ov5645 *ov5645 = to_ov5645(subdev);
- 	int ret;
+ 	struct dc_stream_state *stream = pipe_ctx->stream;
+ 	enum dc_status status;
+@@ -1532,7 +1531,8 @@ static enum dc_status enable_link_dp(
+ 	pipe_ctx->stream_res.pix_clk_params.requested_sym_clk =
+ 			link_settings.link_rate * LINK_RATE_REF_FREQ_IN_KHZ;
+ 	if (state->clk_mgr && !apply_seamless_boot_optimization)
+-		state->clk_mgr->funcs->update_clocks(state->clk_mgr, state, false);
++		state->clk_mgr->funcs->update_clocks(state->clk_mgr,
++						     state, false);
  
- 	if (enable) {
-+		ret = ov5645_set_virtual_channel(ov5645);
-+		if (ret < 0)
-+			return ret;
+ 	// during mode switch we do DP_SET_POWER off then on, and OUI is lost
+ 	dpcd_set_source_specific_data(link);
+@@ -1540,21 +1540,20 @@ static enum dc_status enable_link_dp(
+ 	skip_video_pattern = true;
+ 
+ 	if (link_settings.link_rate == LINK_RATE_LOW)
+-			skip_video_pattern = false;
+-
+-	if (perform_link_training_with_retries(
+-			&link_settings,
+-			skip_video_pattern,
+-			LINK_TRAINING_ATTEMPTS,
+-			pipe_ctx,
+-			pipe_ctx->stream->signal)) {
++		skip_video_pattern = false;
 +
- 		ret = ov5645_set_register_array(ov5645,
- 					ov5645->current_mode->data,
- 					ov5645->current_mode->data_size);
++	if (perform_link_training_with_retries(&link_settings,
++					       skip_video_pattern,
++					       LINK_TRAINING_ATTEMPTS,
++					       pipe_ctx,
++					       pipe_ctx->stream->signal)) {
+ 		link->cur_link_settings = link_settings;
+ 		status = DC_OK;
+-	}
+-	else
++	} else {
+ 		status = DC_FAIL_DP_LINK_TRAINING;
++	}
+ 
+-	if (link->preferred_training_settings.fec_enable != NULL)
++	if (link->preferred_training_settings.fec_enable)
+ 		fec_enable = *link->preferred_training_settings.fec_enable;
+ 	else
+ 		fec_enable = true;
 -- 
-2.20.1
+2.25.0
 
