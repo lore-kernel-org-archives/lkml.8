@@ -5,64 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 721C0C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE33C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4043D246AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0408B2469C
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 23:38:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ETuMVD3u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OPc0DEPT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgB1Xik (ORCPT
+        id S1726946AbgB1Xir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 18:38:40 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33797 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbgB1Xii (ORCPT
+        Fri, 28 Feb 2020 18:38:47 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36764 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726490AbgB1Xij (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 18:38:38 -0500
-Received: by mail-wm1-f66.google.com with SMTP id i10so9297793wmd.1;
-        Fri, 28 Feb 2020 15:38:35 -0800 (PST)
+        Fri, 28 Feb 2020 18:38:39 -0500
+Received: by mail-wm1-f67.google.com with SMTP id g83so2965554wme.1;
+        Fri, 28 Feb 2020 15:38:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=Ssw6UNJlKT+KneadMWBdq0id//CH16BE3vLYYGo0tJw=;
-        b=ETuMVD3uSw4cPuzOEG6cejQ7mAAbXHJiom6+SfeQ/q6nTtdHdS/1x7giawsIaAe43h
-         C00xowVojLpzdEytNAmHl1L0G7qd4ASn3p31SPMgjxoYBx0nRzFrHY+kPdT6Hb32Sh8y
-         A9A+8lYxTP6D4nhlbJo1iJNYaFIPuwih20nmtyGhZJz+o455j3Hv8powzef1WXfFwoQL
-         N0KdpjzHhCpNFPXNBAtMBo80fQrloi+NhLJB1Wn5cpVhwFzmWYl/N+5+P6N+J8WGxO9p
-         Y6zIHvgAHhFJDo+/JcHSzuuY/yaLz1GrsJc2vERtY3SVKwdomMhuia9RI7ZEklT1q8QA
-         FVSA==
+        bh=GRyD73+GSi9Lm/Wnjz97qUrMihtNT3qCFZff2uV1q3Q=;
+        b=OPc0DEPTXhASqB8iFysDlUl7R04o9dI9FTcr0sEWQgPImf1XU8ilLgs78waEj8Dxhz
+         lcpV4MsJ0ItRHgQ1UoPsDAUwZdoSF/jodJkIHuhTU0LioLfHX9PUzw+Oa8VvukTV7yNF
+         LIoHAhB7jcv2b7y4YK/Wq7Qd6Fe1FEci06GJ8KPrRLJAasUVAVfe013B9udW46NRH4z3
+         jxhmrB9/XXkNv++wnc+MM91Ocols+mpX0Fc1hLBRWqBJvY16LNnbq55FJEoibJoolsmd
+         FK1jY39fuZqrkArcK718HDB3d/BxUpZkzaAhpxCuQbDrf17AU0d4N0TBllfF1oYrIhv1
+         R2Xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Ssw6UNJlKT+KneadMWBdq0id//CH16BE3vLYYGo0tJw=;
-        b=LO5GYmP1XJhC6PxfkQK247KQU1fGMqidYqFqvjpEMh6F6zpjH321slePpMAriw31+w
-         L3Le/3y/z//niAakwWe01MBWrOJC0D0MbIjcWLSxFoGS2cqWZInjUuorfv86jbyO41vE
-         FygnaEvNHwfo8eVU76BaHTgjQFH/JwX0v2wzPj4reRWlnwLnwz+wvVji/8endaLobT+V
-         fJ7r1rlurjWkDafgx2bM9poAoZFRRaw1Qe7o4a+7ecnFTjbwQnMtPgBPD8MPgWJM6g7U
-         8pvZFvomhMw3kAwmtLbChtnEITPwsTsACAhoAKd2iA6SYXi7d5yLyJvgkZtDbauNRMUt
-         ovyQ==
-X-Gm-Message-State: APjAAAWao60hQ0saXSPDJEtYuWq/TzRerh2XSmAnUhHVGRhHsFOEVZTB
-        hUEncZHXkG181J6q0IjRXQ8=
-X-Google-Smtp-Source: APXvYqzX9CYi9wStGzGyLkpz3zZpP7nYFuT4SRr7OE/SgbEMFBEj2EE7uPky38yTQ6E8wCYdqiodQg==
-X-Received: by 2002:a1c:38c7:: with SMTP id f190mr6708279wma.94.1582933115216;
-        Fri, 28 Feb 2020 15:38:35 -0800 (PST)
+        bh=GRyD73+GSi9Lm/Wnjz97qUrMihtNT3qCFZff2uV1q3Q=;
+        b=Pbw5XoXpTTy5NzcntXAKzNyJ6ITgZaKqfu9rXzKTt2JMFmp9ByKpM/b3oaMVU33m+T
+         G6+P4LOkAxnrnoXtz0khihvzW7NukGVz8rTElPqQEVjvCYaQu6PFZG/qyowop/LIhzyQ
+         MinQwC+It8w/4i9/KGnfsxh8ypYXNXboYWrUwL9Wiwdk30RMZy8RLGpcQHk4OzhypFve
+         bwB6EwYqFsuoDBVmMlRCJ/7J3+Et7UVUl2Ajnr+zqiiZMhm/m51GVgsW+J0pjxljOsFC
+         6iG1lxcu7BOd/5Eq9XxkqaDMJiSGriOJBUkKqfY8P73X7gwmftZTywWXj+d4/JRlkEre
+         KAIg==
+X-Gm-Message-State: APjAAAVPfgrqOPud4BDnhEgV3hKzXW2f9H2pERr1ZNUejJDp2vj94QEh
+        Mia+a8EiCCy1BR+xOzicvxm6YiH2
+X-Google-Smtp-Source: APXvYqwGmJv4CLVdON+QAVcCgbgl2aXiow0ONPnEGiGPuKuoyTNbtvbGd0o3k7nZOiie/NNxE+j3jQ==
+X-Received: by 2002:a1c:61c3:: with SMTP id v186mr1037548wmb.113.1582933118348;
+        Fri, 28 Feb 2020 15:38:38 -0800 (PST)
 Received: from localhost.localdomain ([109.126.130.242])
-        by smtp.gmail.com with ESMTPSA id q1sm13762512wrw.5.2020.02.28.15.38.33
+        by smtp.gmail.com with ESMTPSA id q1sm13762512wrw.5.2020.02.28.15.38.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 15:38:34 -0800 (PST)
+        Fri, 28 Feb 2020 15:38:37 -0800 (PST)
 From:   Pavel Begunkov <asml.silence@gmail.com>
 To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/5] io_uring/io-wq: allow put_work return next work
-Date:   Sat, 29 Feb 2020 02:37:27 +0300
-Message-Id: <6280f7ebf6bec855f8667ecc7bc97bb07fb39b83.1582932860.git.asml.silence@gmail.com>
+Subject: [PATCH v2 5/5] io_uring: remove io_prep_next_work()
+Date:   Sat, 29 Feb 2020 02:37:29 +0300
+Message-Id: <6a71864e848e3368fbc7ba493c18bb71e1eb3743.1582932860.git.asml.silence@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <cover.1582932860.git.asml.silence@gmail.com>
 References: <cover.1582932860.git.asml.silence@gmail.com>
@@ -73,129 +73,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Formerly work->func() was returning next work to exeucute. Make put_work
-do the same. As put_work() is the last thing happening with work during
-issuing, it have all info needed to deduce the next job.
+io-wq about IO_WQ_WORK_UNBOUND flag only while enqueueing, so it's
+useless setting it for a next req of a link. Thet only useful thing
+there is io_prep_linked_timeout(). Inline it.
 
 Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
 ---
- fs/io-wq.c    | 17 +++++------------
- fs/io-wq.h    |  2 +-
- fs/io_uring.c | 29 ++++++++++++++++++++++++++---
- 3 files changed, 32 insertions(+), 16 deletions(-)
+ fs/io_uring.c | 13 +------------
+ 1 file changed, 1 insertion(+), 12 deletions(-)
 
-diff --git a/fs/io-wq.c b/fs/io-wq.c
-index a830eddaffbe..8bdda5e23dcd 100644
---- a/fs/io-wq.c
-+++ b/fs/io-wq.c
-@@ -443,7 +443,7 @@ static void io_wq_switch_creds(struct io_worker *worker,
- static void io_worker_handle_work(struct io_worker *worker)
- 	__releases(wqe->lock)
- {
--	struct io_wq_work *work, *old_work = NULL, *put_work = NULL;
-+	struct io_wq_work *work, *old_work = NULL;
- 	struct io_wqe *wqe = worker->wqe;
- 	struct io_wq *wq = wqe->wq;
- 
-@@ -464,8 +464,6 @@ static void io_worker_handle_work(struct io_worker *worker)
- 			wqe->flags |= IO_WQE_FLAG_STALLED;
- 
- 		spin_unlock_irq(&wqe->lock);
--		if (put_work && wq->put_work)
--			wq->put_work(old_work);
- 		if (!work)
- 			break;
- next:
-@@ -497,10 +495,8 @@ static void io_worker_handle_work(struct io_worker *worker)
- 		if (test_bit(IO_WQ_BIT_CANCEL, &wq->state))
- 			work->flags |= IO_WQ_WORK_CANCEL;
- 
--		if (wq->get_work && !(work->flags & IO_WQ_WORK_INTERNAL)) {
--			put_work = work;
-+		if (wq->get_work && !(work->flags & IO_WQ_WORK_INTERNAL))
- 			wq->get_work(work);
--		}
- 
- 		old_work = work;
- 		work->func(work);
-@@ -509,6 +505,9 @@ static void io_worker_handle_work(struct io_worker *worker)
- 		worker->cur_work = NULL;
- 		spin_unlock_irq(&worker->lock);
- 
-+		if (wq->put_work && !(work->flags & IO_WQ_WORK_INTERNAL))
-+			wq->put_work(&work);
-+
- 		spin_lock_irq(&wqe->lock);
- 
- 		if (hash != -1U) {
-@@ -517,12 +516,6 @@ static void io_worker_handle_work(struct io_worker *worker)
- 		}
- 		if (work && work != old_work) {
- 			spin_unlock_irq(&wqe->lock);
--
--			if (put_work && wq->put_work) {
--				wq->put_work(put_work);
--				put_work = NULL;
--			}
--
- 			/* dependent work not hashed */
- 			hash = -1U;
- 			goto next;
-diff --git a/fs/io-wq.h b/fs/io-wq.h
-index 508615af4552..f1d717e9acc1 100644
---- a/fs/io-wq.h
-+++ b/fs/io-wq.h
-@@ -83,7 +83,7 @@ struct io_wq_work {
- 	} while (0)						\
- 
- typedef void (get_work_fn)(struct io_wq_work *);
--typedef void (put_work_fn)(struct io_wq_work *);
-+typedef void (put_work_fn)(struct io_wq_work **);
- 
- struct io_wq_data {
- 	struct user_struct *user;
 diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 54dfa9b71864..5a579f686f9e 100644
+index cefbae582b5f..b16cad7ebe40 100644
 --- a/fs/io_uring.c
 +++ b/fs/io_uring.c
-@@ -6064,11 +6064,34 @@ static int io_sqe_files_update(struct io_ring_ctx *ctx, void __user *arg,
- 	return __io_sqe_files_update(ctx, &up, nr_args);
+@@ -999,17 +999,6 @@ static inline void io_req_work_drop_env(struct io_kiocb *req)
+ 	}
  }
  
--static void io_put_work(struct io_wq_work *work)
-+static void io_link_work_cb(struct io_wq_work *work)
+-static inline void io_prep_next_work(struct io_kiocb *req,
+-				     struct io_kiocb **link)
+-{
+-	const struct io_op_def *def = &io_op_defs[req->opcode];
+-
+-	if (!(req->flags & REQ_F_ISREG) && def->unbound_nonreg_file)
+-		req->work.flags |= IO_WQ_WORK_UNBOUND;
+-
+-	*link = io_prep_linked_timeout(req);
+-}
+-
+ static inline bool io_prep_async_work(struct io_kiocb *req,
+ 				      struct io_kiocb **link)
  {
--	struct io_kiocb *req = container_of(work, struct io_kiocb, work);
-+	struct io_kiocb *link = work->data;
+@@ -6076,8 +6065,8 @@ static void io_wq_assign_next(struct io_wq_work **workptr, struct io_kiocb *req)
+ {
+ 	struct io_kiocb *link;
  
--	io_put_req(req);
-+	io_queue_linked_timeout(link);
-+	io_wq_submit_work(work);
-+}
-+
-+static void io_wq_assign_next(struct io_wq_work **workptr, struct io_kiocb *req)
-+{
-+	struct io_kiocb *link;
-+
-+	io_prep_next_work(req, &link);
-+	*workptr = &req->work;
-+	if (link) {
-+		req->work.func = io_link_work_cb;
-+		req->work.data = link;
-+	}
-+}
-+
-+static void io_put_work(struct io_wq_work **workptr)
-+{
-+	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
-+	struct io_kiocb *nxt = NULL;
-+
-+	io_put_req_find_next(req, &nxt);
-+	if (nxt)
-+		io_wq_assign_next(workptr, nxt);
- }
- 
- static void io_get_work(struct io_wq_work *work)
+-	io_prep_next_work(req, &link);
+ 	*workptr = &req->work;
++	link = io_prep_linked_timeout(req);
+ 	if (link) {
+ 		req->work.func = io_link_work_cb;
+ 		req->work.data = link;
 -- 
 2.24.0
 
