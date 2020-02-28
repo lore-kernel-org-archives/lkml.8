@@ -2,111 +2,174 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E800CC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E340C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDDAA246A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8E152469F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:47:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CqcNDJAz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="DuXnIaxv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbgB1Opg (ORCPT
+        id S1726990AbgB1Ors (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 09:45:36 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:49806 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbgB1Opg (ORCPT
+        Fri, 28 Feb 2020 09:47:48 -0500
+Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.120]:16014 "EHLO
+        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726788AbgB1Ors (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 09:45:36 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01SEjXZM059045;
-        Fri, 28 Feb 2020 08:45:33 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582901133;
-        bh=LClidEhMakJ9azCSCmF19f1My8yyf6YsRzolNJCMSE8=;
-        h=From:To:CC:Subject:Date;
-        b=CqcNDJAzE/7vA52SGId7T2zcxynj+YOTqoZngDOnG1mzcJILq0SpGD4BnIkS175sx
-         LUoPS8Itw0s0Nktf8p766l1eIT5W1zgGFRvIKGD9YrB0BHD82MjaWNAYtUqGUhwRPN
-         Y1ft8XUa2HYyex3PFUcE6FoFRMIidPzcQ5zr0H24=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01SEjXow063219
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 28 Feb 2020 08:45:33 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 28
- Feb 2020 08:45:31 -0600
-Received: from localhost.localdomain (10.64.41.19) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 28 Feb 2020 08:45:31 -0600
-Received: from sokoban.bb.dnainternet.fi (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 01SEjTi4079785;
-        Fri, 28 Feb 2020 08:45:30 -0600
-From:   Tero Kristo <t-kristo@ti.com>
-To:     <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
-        <linux-pm@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH] cpufreq: ti-cpufreq: Add support for OPP_PLUS
-Date:   Fri, 28 Feb 2020 16:45:29 +0200
-Message-ID: <20200228144529.14548-1-t-kristo@ti.com>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 28 Feb 2020 09:47:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582901266;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=qqf0pjro2BO53k2Y7GVfbuwFuheFtgoTpJWiEKvgrfU=;
+        b=DuXnIaxvDxvKje5KSNOFNgz0Whd19uiAhPLuChjOmTj/iXgpkBJPmWCAZPT82wg4nD
+        RH2utvfp3seqQ62deuRCGKIxjmsQVnpYhYVXD3eQYK3JRa1/pTDIoeZvsUNNQ5yhOGVc
+        vNlhpWUCEdxmzXGoJoh5dFnJ4dZCZvA2VF9LVNKMFPiGBP6Ns5hKNIM6gtq2tLHe3PWe
+        YNymJYgBP/NhcuTgIHSdHT3cKPzzhn/X7hqYHMRLDu8osfoFF08f/zMHzJXGO4ZpUE6J
+        lbgo6Kv9v4EZfh74yrt0nQG/d3mTV9JQ1wS5jk3l8dBcgYIkDd0Meec+1/l7dZY9UhHv
+        tMlw==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlaYXAcKqg=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
+        with ESMTPSA id y0a02cw1SEla1Lw
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Fri, 28 Feb 2020 15:47:36 +0100 (CET)
+Subject: Re: [PATCH v7 3/7] Bindings: nvmem: add bindings for JZ4780 efuse
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=iso-8859-1
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <1582900837.3.3@crapouillou.net>
+Date:   Fri, 28 Feb 2020 15:47:36 +0100
+Cc:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Mathieu Malaterre <malat@debian.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <9B96463B-CEDE-46EF-87C4-395EB919C78F@goldelico.com>
+References: <cover.1582898302.git.hns@goldelico.com> <ebd523e39aac31b087affcfa984738204fa8b542.1582898302.git.hns@goldelico.com> <1582900837.3.3@crapouillou.net>
+To:     Paul Cercueil <paul@crapouillou.net>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lokesh Vutla <lokeshvutla@ti.com>
 
-DRA762 SoC introduces OPP_PLUS which runs at 1.8GHz. Add
-support for this OPP in ti-cpufreq driver.
+> Am 28.02.2020 um 15:40 schrieb Paul Cercueil <paul@crapouillou.net>:
+>=20
+> Hi Nikolaus,
+>=20
+>=20
+> Le ven., f=E9vr. 28, 2020 at 14:58, H. Nikolaus Schaller =
+<hns@goldelico.com> a =E9crit :
+>> From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+>> This patch brings support for the JZ4780 efuse. Currently it only =
+exposes
+>> a read only access to the entire 8K bits efuse memory.
+>> Tested-by: Mathieu Malaterre <malat@debian.org>
+>> Signed-off-by: PrasannaKumar Muralidharan =
+<prasannatsmkumar@gmail.com>
+>> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> [converted to yaml]
+>> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+>> ---
+>> .../bindings/nvmem/ingenic,jz4780-efuse.yaml  | 49 =
++++++++++++++++++++
+>> 1 file changed, 49 insertions(+)
+>> create mode 100644 =
+Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
+>> diff --git =
+a/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml =
+b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
+>> new file mode 100644
+>> index 000000000000..ce6690c50a34
+>> --- /dev/null
+>> +++ =
+b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
+>> @@ -0,0 +1,49 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/nvmem/ingenic,jz4780-efuse.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Ingenic JZ EFUSE driver bindings
+>> +
+>> +maintainers:
+>> +  - PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+>> +
+>> +allOf:
+>> +  - $ref: "nvmem.yaml#"
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - ingenic,jz4780-efuse
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    # Handle for the ahb for the efuse.
+>> +    maxItems: 1
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: ahb2
+>=20
+> You still have clock-names here. You can remove it completely.
 
-Acked-by: Dave Gerlach <d-gerlach@ti.com>
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
----
- drivers/cpufreq/ti-cpufreq.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+I have just removed them from required: and the examples: because
+I think they are optional. Or are they forbidden?
 
-diff --git a/drivers/cpufreq/ti-cpufreq.c b/drivers/cpufreq/ti-cpufreq.c
-index 557cb513bf7f..d62b6b21325a 100644
---- a/drivers/cpufreq/ti-cpufreq.c
-+++ b/drivers/cpufreq/ti-cpufreq.c
-@@ -25,11 +25,14 @@
- 
- #define DRA7_EFUSE_HAS_OD_MPU_OPP		11
- #define DRA7_EFUSE_HAS_HIGH_MPU_OPP		15
-+#define DRA76_EFUSE_HAS_PLUS_MPU_OPP		18
- #define DRA7_EFUSE_HAS_ALL_MPU_OPP		23
-+#define DRA76_EFUSE_HAS_ALL_MPU_OPP		24
- 
- #define DRA7_EFUSE_NOM_MPU_OPP			BIT(0)
- #define DRA7_EFUSE_OD_MPU_OPP			BIT(1)
- #define DRA7_EFUSE_HIGH_MPU_OPP			BIT(2)
-+#define DRA76_EFUSE_PLUS_MPU_OPP		BIT(3)
- 
- #define OMAP3_CONTROL_DEVICE_STATUS		0x4800244C
- #define OMAP3_CONTROL_IDCODE			0x4830A204
-@@ -80,6 +83,9 @@ static unsigned long dra7_efuse_xlate(struct ti_cpufreq_data *opp_data,
- 	 */
- 
- 	switch (efuse) {
-+	case DRA76_EFUSE_HAS_PLUS_MPU_OPP:
-+	case DRA76_EFUSE_HAS_ALL_MPU_OPP:
-+		calculated_efuse |= DRA76_EFUSE_PLUS_MPU_OPP;
- 	case DRA7_EFUSE_HAS_ALL_MPU_OPP:
- 	case DRA7_EFUSE_HAS_HIGH_MPU_OPP:
- 		calculated_efuse |= DRA7_EFUSE_HIGH_MPU_OPP;
--- 
-2.17.1
+>=20
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +
+>> +unevaluatedProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/clock/jz4780-cgu.h>
+>> +
+>> +    efuse@134100d0 {
+>> +        compatible =3D "ingenic,jz4780-efuse";
+>> +        reg =3D <0x134100d0 0x2c>;
+>> +
+>> +        clocks =3D <&cgu JZ4780_CLK_AHB2>;
+>> +    };
+>> +
+>> +...
+>> --
+>> 2.23.0
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+BR,
+Nikolaus
+
