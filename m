@@ -2,100 +2,188 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75475C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 883DFC3F2D3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49E07246A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ED2B246A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 17:16:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582910201;
+	bh=IDaZjLZxrZLRt50u+ZaYanMdErYZ7ar+lCyzISvKj2o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sdnaFWQRvOFzkQGGcAH8otk2EaHQeKYU/T6SF/uA0dhEb9hrjla9W0udmEhuMYcup
+	 3OwXXwtKa5Y79KSKrP15T9n6Yt8oIaKBbsIvpm3lQ26MOm4Q56NMTV875Suztd6AUp
+	 E3VOFalBaFaJJcbmwaRRnl29eJU+sPFsL+iXoBZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbgB1RPU (ORCPT
+        id S1726562AbgB1RQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 12:15:20 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:34502 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbgB1RPT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 12:15:19 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j7jE8-002VQ3-Fz; Fri, 28 Feb 2020 17:15:04 +0000
-Date:   Fri, 28 Feb 2020 17:15:04 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ian Kent <raven@themaw.net>, Karel Zak <kzak@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Lennart Poettering <lennart@poettering.net>,
-        Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
-        util-linux@vger.kernel.org
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
- #17]
-Message-ID: <20200228171504.GK23230@ZenIV.linux.org.uk>
-References: <CAOssrKfaxnHswrKejedFzmYTbYivJ++cPes4c91+BJDfgH4xJA@mail.gmail.com>
- <1c8db4e2b707f958316941d8edd2073ee7e7b22c.camel@themaw.net>
- <CAJfpegtRoXnPm5_sMYPL2L6FCZU52Tn8wk7NcW-dm4_2x=dD3Q@mail.gmail.com>
- <3e656465c427487e4ea14151b77d391d52cd6bad.camel@themaw.net>
- <CAJfpegu5xLcR=QbAOnUrL49QTem6X6ok7nPU+kLFnNHdPXSh1A@mail.gmail.com>
- <20200227151421.3u74ijhqt6ekbiss@ws.net.home>
- <ba2b44cc1382c62be3ac896a5476c8e1dc7c0230.camel@themaw.net>
- <CAJfpeguXPmw+PfZJFOscGLm0oe7dUQY4CYXazx9=x020Fbe86A@mail.gmail.com>
- <20200228122712.GA3013026@kroah.com>
- <CAJfpegsGgjnyZiB+ionfnnk+_e+5oaC-5nmGq+mLxWs1RcwsPw@mail.gmail.com>
+        Fri, 28 Feb 2020 12:16:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41928 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbgB1RQk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 12:16:40 -0500
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38C86246AE;
+        Fri, 28 Feb 2020 17:16:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582910199;
+        bh=IDaZjLZxrZLRt50u+ZaYanMdErYZ7ar+lCyzISvKj2o=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=WE1j9aFo5u71FkqhULMUZ32EgunKxjjLmN4sqCikQG6oKVcohm+HTAPry5CI+zK5I
+         ouuZ7XMgikz00NqOGVlYGJ1Xht0xbn1dZ9zoT82jGq7PqpmfecBdPe13yK0sdNMryQ
+         2YcPKNie2iqm/l26mqGO1+87yUwl/KY5kR3zrtCw=
+Received: by mail-qk1-f170.google.com with SMTP id f140so3632591qke.11;
+        Fri, 28 Feb 2020 09:16:39 -0800 (PST)
+X-Gm-Message-State: APjAAAXzS4s0fWpkpCPjONCC7stPF+x+sBvOK6p2ZaVWxEMiVcXP2VMJ
+        cyfr0bUn301JIo6HmDOCxuTFeKsHHWmGDcWIAQ==
+X-Google-Smtp-Source: APXvYqwm/UEHV7zIm/RLE/ehDEw018Mzqy218BUmwoYZizs7XmEV5j7FEcuMv4eYBsp5fxF5wJIcJGeBjuznVZuuysk=
+X-Received: by 2002:ae9:e711:: with SMTP id m17mr5272958qka.393.1582910198275;
+ Fri, 28 Feb 2020 09:16:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpegsGgjnyZiB+ionfnnk+_e+5oaC-5nmGq+mLxWs1RcwsPw@mail.gmail.com>
+References: <20200224145821.262873-1-jbrunet@baylibre.com> <20200224145821.262873-3-jbrunet@baylibre.com>
+ <20200228155017.GA24730@bogus> <1jpndyejkn.fsf@starbuckisacylon.baylibre.com>
+In-Reply-To: <1jpndyejkn.fsf@starbuckisacylon.baylibre.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 28 Feb 2020 11:16:27 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+K=XHXmPbKrkO1_jnUO8sOyCM-XRpCmEX0+aWwBoBbVw@mail.gmail.com>
+Message-ID: <CAL_Jsq+K=XHXmPbKrkO1_jnUO8sOyCM-XRpCmEX0+aWwBoBbVw@mail.gmail.com>
+Subject: Re: [PATCH 2/9] ASoC: meson: convert axg tdm interface to schema
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Kevin Hilman <khilman@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 05:24:23PM +0100, Miklos Szeredi wrote:
-> On Fri, Feb 28, 2020 at 1:27 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> 
-> > > Superblocks and mounts could get enumerated by a unique identifier.
-> > > mnt_id seems to be good for mounts, s_dev may or may not be good for
-> > > superblock, but  s_id (as introduced in this patchset) could be used
-> > > instead.
+On Fri, Feb 28, 2020 at 10:57 AM Jerome Brunet <jbrunet@baylibre.com> wrote:
+>
+>
+> On Fri 28 Feb 2020 at 16:50, Rob Herring <robh@kernel.org> wrote:
+>
+> > On Mon, Feb 24, 2020 at 03:58:14PM +0100, Jerome Brunet wrote:
+> >> Convert the DT binding documentation for the Amlogic tdm interface to
+> >> schema.
+> >>
+> >> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> >> ---
+> >>  .../bindings/sound/amlogic,axg-tdm-iface.txt  | 22 -------
+> >>  .../bindings/sound/amlogic,axg-tdm-iface.yaml | 57 +++++++++++++++++++
+> >>  2 files changed, 57 insertions(+), 22 deletions(-)
+> >>  delete mode 100644 Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.txt
+> >>  create mode 100644 Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.txt
+> >> deleted file mode 100644
+> >> index cabfb26a5f22..000000000000
+> >> --- a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.txt
+> >> +++ /dev/null
+> >> @@ -1,22 +0,0 @@
+> >> -* Amlogic Audio TDM Interfaces
+> >> -
+> >> -Required properties:
+> >> -- compatible: 'amlogic,axg-tdm-iface'
+> >> -- clocks: list of clock phandle, one for each entry clock-names.
+> >> -- clock-names: should contain the following:
+> >> -  * "sclk" : bit clock.
+> >> -  * "lrclk": sample clock
+> >> -  * "mclk" : master clock
+> >> -         -> optional if the interface is in clock slave mode.
+> >> -- #sound-dai-cells: must be 0.
+> >> -
+> >> -Example of TDM_A on the A113 SoC:
+> >> -
+> >> -tdmif_a: audio-controller@0 {
+> >> -    compatible = "amlogic,axg-tdm-iface";
+> >> -    #sound-dai-cells = <0>;
+> >> -    clocks = <&clkc_audio AUD_CLKID_MST_A_MCLK>,
+> >> -             <&clkc_audio AUD_CLKID_MST_A_SCLK>,
+> >> -             <&clkc_audio AUD_CLKID_MST_A_LRCLK>;
+> >> -    clock-names = "mclk", "sclk", "lrclk";
+> >> -};
+> >> diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.yaml b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.yaml
+> >> new file mode 100644
+> >> index 000000000000..5f04f9cf30a0
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-iface.yaml
+> >> @@ -0,0 +1,57 @@
+> >> +# SPDX-License-Identifier: GPL-2.0
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/sound/amlogic,axg-tdm-iface.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: Amlogic Audio TDM Interfaces
+> >> +
+> >> +maintainers:
+> >> +  - Jerome Brunet <jbrunet@baylibre.com>
+> >> +
+> >> +properties:
+> >> +  $nodename:
+> >> +    pattern: "^audio-controller-.*"
+> >> +
+> >> +  "#sound-dai-cells":
+> >> +    const: 0
+> >> +
+> >> +  compatible:
+> >> +    items:
+> >> +      - const: 'amlogic,axg-tdm-iface'
+> >> +
+> >> +  clocks:
+> >> +    minItems: 2
+> >> +    maxItems: 3
+> >> +    items:
+> >> +      - description: Bit clock
+> >> +      - description: Sample clock
+> >> +      - description: Master clock #optional
+> >> +
+> >> +  clock-names:
+> >> +    minItems: 2
+> >> +    maxItems: 3
+> >> +    items:
+> >> +      - const: sclk
+> >> +      - const: lrclk
+> >> +      - const: mclk
+> >> +
+> >> +required:
+> >> +  - "#sound-dai-cells"
+> >> +  - compatible
+> >> +  - clocks
+> >> +  - clock-names
 > >
-> > So what would the sysfs tree look like with this?
-> 
-> For a start something like this:
-> 
-> mounts/$MOUNT_ID/
->   parent -> ../$PARENT_ID
->   super -> ../../supers/$SUPER_ID
->   root: path from mount root to fs root (could be optional as usually
-> they are the same)
->   mountpoint -> $MOUNTPOINT
->   flags: mount flags
->   propagation: mount propagation
->   children/$CHILD_ID -> ../../$CHILD_ID
-> 
->  supers/$SUPER_ID/
->    type: fstype
->    source: mount source (devname)
->    options: csv of mount options
+> > Add an:
+> >
+> > additionalProperties: false
+>
+> I did not put that on purpose.
+> Most of the amlogic devices use an generic ASoC property called
+> "sound-name-prefix"
+>
+> You may see examples of that in
+> arch/arm64/boot/dts/amlogic/meson-axg.dtsi.
+>
+> That property is not expressed in json schema yet, and I don't
+> really know what is the best way to add that.
 
-Oh, wonderful.  So let me see if I got it right - any namespace operation
-can create/destroy/move around an arbitrary amount of sysfs objects.
-Better yet, we suddenly have to express the lifetime rules for struct mount
-and struct superblock in terms of struct device garbage.
+Just assume it is (and I believe there's a patch I reviewed adding
+it). Regardless, you still need to define what the strings are.
 
-I'm less than thrilled by the entire fsinfo circus, but this really takes
-the cake.
+> Adding 'additionalProperties: false' right now would generate a fair
+> amount of warning with 'make dtbs_check'
 
-In case it needs to be spelled out: NAK.
+That's a good way to have a todo...
+
+Rob
