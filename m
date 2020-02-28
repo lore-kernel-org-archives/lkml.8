@@ -2,86 +2,112 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C7AC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CFE9C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B287724691
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E88B2469D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 00:31:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730270AbgB1AbB (ORCPT
+        id S1730334AbgB1AbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Feb 2020 19:31:01 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:55586 "EHLO fornost.hmeau.com"
+        Thu, 27 Feb 2020 19:31:18 -0500
+Received: from mga06.intel.com ([134.134.136.31]:44215 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730117AbgB1AbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Feb 2020 19:31:01 -0500
-Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1j7TYK-0008Qp-Q2; Fri, 28 Feb 2020 11:30:54 +1100
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 28 Feb 2020 11:30:52 +1100
-Date:   Fri, 28 Feb 2020 11:30:52 +1100
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Corentin Labbe <clabbe@baylibre.com>
-Cc:     davem@davemloft.net, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] crypto: drbg: DRBG_CTR should select CTR
-Message-ID: <20200228003052.GA9060@gondor.apana.org.au>
-References: <1582127495-5871-1-git-send-email-clabbe@baylibre.com>
- <1582127495-5871-2-git-send-email-clabbe@baylibre.com>
+        id S1730290AbgB1AbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Feb 2020 19:31:18 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2020 16:31:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,493,1574150400"; 
+   d="scan'208";a="230941858"
+Received: from wggoh-mobl.gar.corp.intel.com (HELO [10.254.45.93]) ([10.254.45.93])
+  by fmsmga007.fm.intel.com with ESMTP; 27 Feb 2020 16:31:16 -0800
+Subject: Re: [alsa-devel] [PATCH AUTOSEL 5.5 406/542] ASoC: SOF: Intel: hda:
+ Fix SKL dai count
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
+        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+References: <20200214154854.6746-1-sashal@kernel.org>
+ <20200214154854.6746-406-sashal@kernel.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <aa50de05-6122-0ce4-e6e9-5fa587169adf@linux.intel.com>
+Date:   Thu, 27 Feb 2020 18:31:16 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582127495-5871-2-git-send-email-clabbe@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200214154854.6746-406-sashal@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 03:51:35PM +0000, Corentin Labbe wrote:
-> if CRYPTO_DRBG_CTR is builtin and CTR is module, allocating such algo
-> will fail.
-> DRBG: could not allocate CTR cipher TFM handle: ctr(aes)
-> alg: drbg: Failed to reset rng
-> alg: drbg: Test 0 failed for drbg_pr_ctr_aes128
-> DRBG: could not allocate CTR cipher TFM handle: ctr(aes)
-> alg: drbg: Failed to reset rng
-> alg: drbg: Test 0 failed for drbg_nopr_ctr_aes128
-> DRBG: could not allocate CTR cipher TFM handle: ctr(aes)
-> alg: drbg: Failed to reset rng
-> alg: drbg: Test 0 failed for drbg_nopr_ctr_aes192
-> DRBG: could not allocate CTR cipher TFM handle: ctr(aes)
-> alg: drbg: Failed to reset rng
-> ialg: drbg: Test 0 failed for drbg_nopr_ctr_aes256
+Hi Sasha,
+
+On 2/14/20 9:46 AM, Sasha Levin wrote:
+> From: Cezary Rojewski <cezary.rojewski@intel.com>
 > 
-> Since setting DRBG_CTR=CTR lead to a recursive dependency, let's depends
-> on CTR=y
+> [ Upstream commit a6947c9d86bcfd61b758b5693eba58defe7fd2ae ]
 > 
-> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+> With fourth pin added for iDisp for skl_dai, update SOF_SKL_DAI_NUM to
+> account for the change. Without this, dais from the bottom of the list
+> are skipped. In current state that's the case for 'Alt Analog CPU DAI'.
+> 
+> Fixes: ac42b142cd76 ("ASoC: SOF: Intel: hda: Add iDisp4 DAI")
+
+This patch generates a kernel oops with v5.5.6 - mainly because the 
+initial commit ac42b142cd76 is missing, which ends-up creating an empty 
+entry in the skl_dai[] array.
+
+This was just reported to us, see logs at
+https://github.com/thesofproject/sof/issues/2418
+
+the same problem is likely to happen with 5.4-stable
+[PATCH AUTOSEL 5.4 349/459] ASoC: SOF: Intel: hda: Fix SKL dai count
+
+Since the initial commit to be fixed was not included, the -stable 
+branches should probably revert this patch? Adding ac42b142cd76 should 
+also not generate any problems, I tested it on top of v5.5.6
+
+The 'right' fix should be to use ARRAY_SIZE instead of hard-coded 
+defines, but there are multiple dependencies so we'd probably need to 
+refactor the code to so so.
+
+Let me know if you want more details or additional help,
+-Pierre
+
+> Signed-off-by: Cezary Rojewski <cezary.rojewski@intel.com>
+> Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> Link: https://lore.kernel.org/r/20200113114054.9716-1-cezary.rojewski@intel.com
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 > ---
->  crypto/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>   sound/soc/sof/intel/hda.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/crypto/Kconfig b/crypto/Kconfig
-> index 6d27fc6a7bf5..eddeb43fc01c 100644
-> --- a/crypto/Kconfig
-> +++ b/crypto/Kconfig
-> @@ -1822,7 +1822,7 @@ config CRYPTO_DRBG_HASH
->  config CRYPTO_DRBG_CTR
->  	bool "Enable CTR DRBG"
->  	select CRYPTO_AES
-> -	depends on CRYPTO_CTR
-> +	depends on CRYPTO_CTR=y
-
-This should be turned into a select.
-
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> diff --git a/sound/soc/sof/intel/hda.h b/sound/soc/sof/intel/hda.h
+> index 63df888dddb6c..de0115294c74e 100644
+> --- a/sound/soc/sof/intel/hda.h
+> +++ b/sound/soc/sof/intel/hda.h
+> @@ -348,7 +348,7 @@
+>   
+>   /* Number of DAIs */
+>   #if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA)
+> -#define SOF_SKL_NUM_DAIS		14
+> +#define SOF_SKL_NUM_DAIS		15
+>   #else
+>   #define SOF_SKL_NUM_DAIS		8
+>   #endif
+> 
