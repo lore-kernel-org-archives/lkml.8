@@ -2,125 +2,211 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CBFC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47DABC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E5D246A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:14:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D79EE246A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 14:17:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DfuA4gDi"
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="MgTFEFGY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgB1OOe (ORCPT
+        id S1726946AbgB1ORF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 09:14:34 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:60824 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbgB1OOd (ORCPT
+        Fri, 28 Feb 2020 09:17:05 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35512 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbgB1ORF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 09:14:33 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01SEDGEH030147;
-        Fri, 28 Feb 2020 14:13:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=UF/Ibz9yEueUU22SCkllkLeUsJGMpQJosNWzjRfm4q8=;
- b=DfuA4gDiYFYTEwRPM7UPr3Yun86W/GL9O8uMto1GTjJtIdgbDNXCoI2WsR/ddlWDVwic
- v13RacE1BpwokFiTz+4M8pGmIANn5yFVWTiW6A+mm4YmhyYTTcIEB7BEkgtLysk+Uhqx
- UGMYe7fbRqSzKlJF4juYKj/S1329HC36i9oXCwzGG+TrBdhNaUjbZ2727qVqO1ZfKrya
- ZaRRYNt+RwMp9BTTPnXh+Q7t7iEig9pPHIuOv+fM+glHEmyztjfqfcGsneTxUZAlT6Yo
- 8EPXK53kEGn3tfdvoquSTSPVUmCfZkI4lcjb/aEjCU3uEdCRO4gNzGGJEbIVpXpErzG9 uw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2ydct3k21e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Feb 2020 14:13:48 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01SEDQAr163224;
-        Fri, 28 Feb 2020 14:13:47 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2ydcsfch93-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Feb 2020 14:13:47 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01SEDgTQ001236;
-        Fri, 28 Feb 2020 14:13:42 GMT
-Received: from [10.39.209.75] (/10.39.209.75)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 28 Feb 2020 06:13:42 -0800
-Subject: Re: [patch 07/24] x86/traps: Prepare for using DEFINE_IDTENTRY
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-References: <20200225221606.511535280@linutronix.de>
- <20200225222648.880108780@linutronix.de>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <af1808f4-93a3-d015-753f-168c742f89f7@oracle.com>
-Date:   Fri, 28 Feb 2020 15:13:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Fri, 28 Feb 2020 09:17:05 -0500
+Received: by mail-wm1-f68.google.com with SMTP id m3so3374548wmi.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 06:17:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8QBm7R3xlxAhuSE+0uXBIZCibfmQ8WAvm9KSgI2y8Bg=;
+        b=MgTFEFGYRxO35Y/TnfH8vIhaghe+pJo9d8ygiKI2Gq1cWTmgnwgCN4mq3VY7oFRDJo
+         ifeXfd6kg8sCy2IOYl7JuGKJyXJQuI5X44eGzJnfFbMfBwHNbo9Nvghd4dAXYDVIL9cZ
+         JgbopiJIykDDSWmXeed0OZlhPvWLZT6Ohp/Ki6l5pzzIajkRgsVba4Sqav4ArGi0TLUE
+         ec+dGKDjqKXukIJS0MSxJ/0CByOnX6YeCcVEH8RgwC5wEYrXHJBslASnpf8YsyjfsyjZ
+         oXqmLZhMwFyGsUj2ObNoX+GbLrsdo9gb6mzqqtP1Dw9v61Q+Z37mn6lOg7fcXwN0bykf
+         7lYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8QBm7R3xlxAhuSE+0uXBIZCibfmQ8WAvm9KSgI2y8Bg=;
+        b=ma2V6Z9s1QDlkBNOH5Z5hpEPbzH/JVVo4EjbZ1wablkHBumARy1MrIFDNVodm7Whgs
+         SlQE9PY0WNgIIQkgIaedweGQT7PUxd7p0+y87GhArGtUGA7roxVLigEt0q+xzkHr2VMS
+         OyN3qe/zxDlzQAbbHOv3P6qfl8L3Jk9vNKngLx7Gk+rAn6r1zJ2TwAuulxUZrR/9AUY5
+         3D62FsYeA+CUups8uUWMbO3QUGF8x5e1srWTHeL5uyOhDZgYIKWdUc52x+viruN7LeDJ
+         cLQTDl/gAx5NNI70WVL6UXdF+XdnLieU89nrzr7lMXVpALJxc3p2iwJkygBSkywhp9V+
+         NWWw==
+X-Gm-Message-State: APjAAAVZy4gGLxsInyYY2UmXkp+Lx6qRVslx5/QuTi80QNWb+MPK7NRF
+        XzaVIY4yHSusFmJl0amyDSKWbPZL0IuP+Pvy3sPdFA==
+X-Google-Smtp-Source: APXvYqxkHCB48+pxrOHcVJDSE17+Ga5BNvqMpU2fc84KSi05R7xzvp9lc8Qsjf1VrpUlF9tG4tBm1doUOShD6w0xhUU=
+X-Received: by 2002:a05:600c:2c48:: with SMTP id r8mr4810726wmg.183.1582899423068;
+ Fri, 28 Feb 2020 06:17:03 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200225222648.880108780@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9544 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 bulkscore=0
- spamscore=0 mlxlogscore=999 mlxscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002280112
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9544 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 bulkscore=0
- impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0 adultscore=0
- phishscore=0 mlxlogscore=999 mlxscore=0 suspectscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002280112
+References: <20200227151752.21985-1-eugen.hristev@microchip.com>
+ <CAPY8ntB17QjCSyefwTrMhudwkiFYT_5x3i1=KjzFv+p6tbrQEA@mail.gmail.com> <c6c1082d-3f40-c709-39cf-d1547f0c0308@microchip.com>
+In-Reply-To: <c6c1082d-3f40-c709-39cf-d1547f0c0308@microchip.com>
+From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date:   Fri, 28 Feb 2020 14:16:45 +0000
+Message-ID: <CAPY8ntDrsEJboMr2=Phce=mT6DJpivhE--L00qd4uecF81AXkg@mail.gmail.com>
+Subject: Re: [PATCH] media: i2c: imx219: add support for enum frame interval
+To:     Eugen.Hristev@microchip.com
+Cc:     Andrey Konovalov <andrey.konovalov@linaro.org>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 28 Feb 2020 at 14:05, <Eugen.Hristev@microchip.com> wrote:
+>
+> On 28.02.2020 15:44, Dave Stevenson wrote:
+> > Hi Eugen.
+> >
+> > On Thu, 27 Feb 2020 at 15:19, Eugen Hristev <eugen.hristev@microchip.com> wrote:
+> >>
+> >> Add support for enum frame intervals IOCTL.
+> >> The current supported framerates are only available as comments inside
+> >> the code.
+> >> Add support for VIDIOC_ENUM_FRAMEINTERVALS as the enum_frame_interval
+> >> callback as pad ops.
+> >>
+> >>   # v4l2-ctl --list-frameintervals width=1920,height=1080,pixelformat=RG10
+> >>   ioctl: VIDIOC_ENUM_FRAMEINTERVALS
+> >>          Interval: Discrete 0.067s (15.000 fps)
+> >>          Interval: Discrete 0.033s (30.000 fps)
+> >>          Interval: Discrete 0.033s (30.000 fps)
+> >
+> > But the frame rates are not discrete. You have frame rate control via
+> > V4L2_CID_VBLANK, which can be used in conjunction with V4L2_CID_HBLANK
+> > and V4L2_CID_PIXEL_RATE to determine actual frame period.
+> >
+> > See https://linuxtv.org/downloads/v4l-dvb-apis-new/uapi/v4l/ext-ctrls-image-source.html?highlight=v4l2_cid_vblank
+> > I believe this is the preferred route to doing frame rate control on
+> > image sensors. I assume someone will correct me if I'm wrong on that.
+>
+>
+> Okay... , I was guided towards this by the comments in the code, saying
+> that the three supported modes are at a constant frame per second...
+>
+> Those comments are wrong then ?
 
-On 2/25/20 11:16 PM, Thomas Gleixner wrote:
-> Prepare for using IDTENTRY to define the C exception/trap entry points. It
-> would be possible to glue this into the existing macro maze, but it's
-> simpler and better to read at the end to just make them distinct. Provide
-> a trivial inline helper to read the trap address.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->   arch/x86/kernel/traps.c |    5 +++++
->   1 file changed, 5 insertions(+)
-> 
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-> @@ -274,6 +274,11 @@ static void do_error_trap(struct pt_regs
->   	}
->   }
->   
-> +static inline void __user *error_get_trap_addr(struct pt_regs *regs)
-> +{
-> +	return (void __user *)uprobe_get_trap_addr(regs);
-> +}
-> +
->   #define IP ((void __user *)uprobe_get_trap_addr(regs))
+Yes, the comments for each of the modes (eg "/* 8MPix 15fps mode */")
+probably shouldn't have the frame rate in them. I don't see any other
+references. Those frame rates are the defaults only, as set via eg
+IMX219_VTS_15FPS.
 
-And you will eventually get rid of this IP macro, right?
+I originally wrote the driver without frame rate control, and the
+comments obviously didn't get updated when VTS/HTS support was added
+:-/
 
-Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
-
-alex.
-
->   #define DO_ERROR(trapnr, signr, sicode, addr, str, name)		   \
->   dotraplinkage void do_##name(struct pt_regs *regs, long error_code)	   \
-> 
-> 
+> Thanks for replying,
+>
+> Eugen
+>
+> >
+> >    Dave
+> >
+> >> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+> >> ---
+> >>
+> >> Hello,
+> >>
+> >> This is on top of Sakari's tree in linuxtv.org
+> >>
+> >> Thanks
+> >> Eugen
+> >>
+> >>   drivers/media/i2c/imx219.c | 27 +++++++++++++++++++++++++++
+> >>   1 file changed, 27 insertions(+)
+> >>
+> >> diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
+> >> index f1effb5a5f66..17fcedd4edb6 100644
+> >> --- a/drivers/media/i2c/imx219.c
+> >> +++ b/drivers/media/i2c/imx219.c
+> >> @@ -127,6 +127,8 @@ struct imx219_mode {
+> >>          unsigned int width;
+> >>          /* Frame height */
+> >>          unsigned int height;
+> >> +       /* Frame rate */
+> >> +       u8 fps;
+> >>
+> >>          /* V-timing */
+> >>          unsigned int vts_def;
+> >> @@ -381,6 +383,7 @@ static const struct imx219_mode supported_modes[] = {
+> >>                  /* 8MPix 15fps mode */
+> >>                  .width = 3280,
+> >>                  .height = 2464,
+> >> +               .fps = 15,
+> >>                  .vts_def = IMX219_VTS_15FPS,
+> >>                  .reg_list = {
+> >>                          .num_of_regs = ARRAY_SIZE(mode_3280x2464_regs),
+> >> @@ -391,6 +394,7 @@ static const struct imx219_mode supported_modes[] = {
+> >>                  /* 1080P 30fps cropped */
+> >>                  .width = 1920,
+> >>                  .height = 1080,
+> >> +               .fps = 30,
+> >>                  .vts_def = IMX219_VTS_30FPS_1080P,
+> >>                  .reg_list = {
+> >>                          .num_of_regs = ARRAY_SIZE(mode_1920_1080_regs),
+> >> @@ -401,6 +405,7 @@ static const struct imx219_mode supported_modes[] = {
+> >>                  /* 2x2 binned 30fps mode */
+> >>                  .width = 1640,
+> >>                  .height = 1232,
+> >> +               .fps = 30,
+> >>                  .vts_def = IMX219_VTS_30FPS_BINNED,
+> >>                  .reg_list = {
+> >>                          .num_of_regs = ARRAY_SIZE(mode_1640_1232_regs),
+> >> @@ -680,6 +685,27 @@ static int imx219_enum_frame_size(struct v4l2_subdev *sd,
+> >>          return 0;
+> >>   }
+> >>
+> >> +static int imx219_enum_frame_interval(struct v4l2_subdev *sd,
+> >> +                                     struct v4l2_subdev_pad_config *cfg,
+> >> +                                     struct v4l2_subdev_frame_interval_enum *fie)
+> >> +{
+> >> +       struct imx219 *imx219 = to_imx219(sd);
+> >> +
+> >> +       if (fie->index >= ARRAY_SIZE(supported_modes))
+> >> +               return -EINVAL;
+> >> +
+> >> +       if (fie->code != imx219_get_format_code(imx219))
+> >> +               return -EINVAL;
+> >> +
+> >> +       if (fie->pad)
+> >> +               return -EINVAL;
+> >> +
+> >> +       fie->interval.numerator = 1;
+> >> +       fie->interval.denominator = supported_modes[fie->index].fps;
+> >> +
+> >> +       return 0;
+> >> +}
+> >> +
+> >>   static void imx219_reset_colorspace(struct v4l2_mbus_framefmt *fmt)
+> >>   {
+> >>          fmt->colorspace = V4L2_COLORSPACE_SRGB;
+> >> @@ -1004,6 +1030,7 @@ static const struct v4l2_subdev_pad_ops imx219_pad_ops = {
+> >>          .get_fmt = imx219_get_pad_format,
+> >>          .set_fmt = imx219_set_pad_format,
+> >>          .enum_frame_size = imx219_enum_frame_size,
+> >> +       .enum_frame_interval = imx219_enum_frame_interval,
+> >>   };
+> >>
+> >>   static const struct v4l2_subdev_ops imx219_subdev_ops = {
+> >> --
+> >> 2.20.1
+> >>
+>
