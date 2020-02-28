@@ -6,101 +6,117 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B246EC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B2BC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2E8246A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:22:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38828246AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 12:27:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582892566;
-	bh=Wuw3bvUL29Jo42Nc55JCwqlCxD0ejzs3UCoKQSs9lGQ=;
+	s=default; t=1582892838;
+	bh=m93yM93vQbcHMkGCkK/OGG8kf11IbeXU6ORroxAAGzo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r0h5vLcZcZkSNuwbY+QNECVBSvMj36gb5+dGSJYHHnhojDG2tofHGReXuWTGTx0OZ
-	 VLUSZXxKHf3//HxllzIxMdTEZKxmV88jCEvPKODCxELcrAAX4tEwu9pQmDN4OOSvTT
-	 69hmxqNZTGGQioGjipF0ifFDRmpfxw+a9Wi4r9d4=
+	b=jOcmDrx2II+0FSxD0uVXjh72tzQzAjHgLatWzwG3YWK84c1qjnuClLSveYxbEKRCJ
+	 95f4085FlI6zki3qGCEVPohXBITzJcSBUvhVRUz+5nDaugo0b71q4R2q4SQXLxrAKR
+	 Dyy/GEqRyAAu5mv+Kr9gMxiOrYZgBgYZSdzTZYWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbgB1MWp (ORCPT
+        id S1726094AbgB1M1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 07:22:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47760 "EHLO mail.kernel.org"
+        Fri, 28 Feb 2020 07:27:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725943AbgB1MWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 07:22:45 -0500
+        id S1725802AbgB1M1R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 07:27:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EC4A24699;
-        Fri, 28 Feb 2020 12:22:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1632D246A3;
+        Fri, 28 Feb 2020 12:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582892562;
-        bh=Wuw3bvUL29Jo42Nc55JCwqlCxD0ejzs3UCoKQSs9lGQ=;
+        s=default; t=1582892834;
+        bh=m93yM93vQbcHMkGCkK/OGG8kf11IbeXU6ORroxAAGzo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=e8PVnIanWSuARmWWSGRKXAd5nhh2EKSu0UkoGAoN3SXZ6Wy9usn+CkcBTORMaJANl
-         5A96sTi/Eb/KoiK8OmofVa5Qddj0i64ncUI0Hvze/+NFriRKEu2hViOC6o5EEjf/xO
-         MxFPUDQfmCN4EbDdHx8NE3xCmrkMCLyLDqC5XJmc=
-Date:   Fri, 28 Feb 2020 13:22:40 +0100
+        b=1qkwABoJTSe5SmM+7+hNubXHM41yKugx1YRFHDmMnoOK5YYsRXnCmI+7Quf+GWlwi
+         Bsu0HcZJviHZoYaZPpZHFb/vRkds/rPDV/VIY8AovPBUoT3uvbuxw3yFlFhMyyAs6G
+         ZzL4KOs+fv5qzsr28SX0dPrQDm2L4JnAnSNwmRAM=
+Date:   Fri, 28 Feb 2020 13:27:12 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Andre Tomt <andre@tomt.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.5 000/150] 5.5.7-stable review
-Message-ID: <20200228122240.GA3012646@kroah.com>
-References: <20200227132232.815448360@linuxfoundation.org>
- <d6212f9e-7e8d-95bd-18ca-8c44de224b28@tomt.net>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Ian Kent <raven@themaw.net>, Karel Zak <kzak@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Lennart Poettering <lennart@poettering.net>,
+        Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
+        util-linux@vger.kernel.org
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
+ #17]
+Message-ID: <20200228122712.GA3013026@kroah.com>
+References: <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com>
+ <1582644535.3361.8.camel@HansenPartnership.com>
+ <CAOssrKfaxnHswrKejedFzmYTbYivJ++cPes4c91+BJDfgH4xJA@mail.gmail.com>
+ <1c8db4e2b707f958316941d8edd2073ee7e7b22c.camel@themaw.net>
+ <CAJfpegtRoXnPm5_sMYPL2L6FCZU52Tn8wk7NcW-dm4_2x=dD3Q@mail.gmail.com>
+ <3e656465c427487e4ea14151b77d391d52cd6bad.camel@themaw.net>
+ <CAJfpegu5xLcR=QbAOnUrL49QTem6X6ok7nPU+kLFnNHdPXSh1A@mail.gmail.com>
+ <20200227151421.3u74ijhqt6ekbiss@ws.net.home>
+ <ba2b44cc1382c62be3ac896a5476c8e1dc7c0230.camel@themaw.net>
+ <CAJfpeguXPmw+PfZJFOscGLm0oe7dUQY4CYXazx9=x020Fbe86A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d6212f9e-7e8d-95bd-18ca-8c44de224b28@tomt.net>
+In-Reply-To: <CAJfpeguXPmw+PfZJFOscGLm0oe7dUQY4CYXazx9=x020Fbe86A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 01:06:00PM +0100, Andre Tomt wrote:
-> On 27.02.2020 14:35, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.5.7 release.
-> > There are 150 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Sat, 29 Feb 2020 13:21:24 +0000.
-> > Anything received after that time might be too late.
+On Fri, Feb 28, 2020 at 09:35:17AM +0100, Miklos Szeredi wrote:
+> On Fri, Feb 28, 2020 at 1:43 AM Ian Kent <raven@themaw.net> wrote:
 > 
-> There is something going on with USB in this release. My AMD X570 board is
-> constantly having ports stop working, while a older AMD X399 board seems
-> fine (maybe, there is an ATEN USB extender involved on the X570 system)
+> > > I'm not sure about sysfs/, you need somehow resolve namespaces, order
+> > > of the mount entries (which one is the last one), etc. IMHO translate
+> > > mountpoint path to sysfs/ path will be complicated.
+> >
+> > I wonder about that too, after all sysfs contains a tree of nodes
+> > from which the view is created unlike proc which translates kernel
+> > information directly based on what the process should see.
+> >
+> > We'll need to wait a bit and see what Miklos has in mind for mount
+> > table enumeration and nothing has been said about name spaces yet.
 > 
-> I've only had time to do very rudimentary debugging, but reverting all usb
-> and xhci related patches seems to have solved it, eg:
+> Adding Greg for sysfs knowledge.
 > 
-> > usb-dwc2-fix-in-isoc-request-length-checking.patch
-> > usb-gadget-composite-fix-bmaxpower-for-superspeedplus.patch
-> > usb-dwc3-debug-fix-string-position-formatting-mixup-with-ret-and-len.patch
-> > usb-dwc3-gadget-check-for-ioc-lst-bit-in-trb-ctrl-fields.patch
-> > usb-dwc2-fix-set-clear_feature-and-get_status-flows.patch
-> > usb-hub-fix-the-broken-detection-of-usb3-device-in-smsc-hub.patch
-> > usb-hub-don-t-record-a-connect-change-event-during-reset-resume.patch
-> > usb-fix-novation-sourcecontrol-xl-after-suspend.patch
-> > usb-uas-fix-a-plug-unplug-racing.patch
-> > usb-quirks-blacklist-duplicate-ep-on-sound-devices-usbpre2.patch
-> > usb-core-add-endpoint-blacklist-quirk.patch
-> > xhci-fix-memory-leak-when-caching-protocol-extended-capability-psi-tables-take-2.patch
-> > xhci-apply-xhci_pme_stuck_quirk-to-intel-comet-lake-platforms.patch
-> > xhci-fix-runtime-pm-enabling-for-quirky-intel-hosts.patch
-> > xhci-force-maximum-packet-size-for-full-speed-bulk-devices-to-valid-range.patch
-> > usb-serial-ch341-fix-receiver-regression.patch
-> > usb-misc-iowarrior-add-support-for-the-100-device.patch
-> > usb-misc-iowarrior-add-support-for-the-28-and-28l-devices.patch
-> > usb-misc-iowarrior-add-support-for-2-oemed-devices.patch
+> As far as I understand the sysfs model is, basically:
 > 
-> I might be able to narrow it down in a day or two.
+>   - list of devices sorted by class and address
+>   - with each class having a given set of attributes
 
-Narrowing it down would be good, try sticking with either the hub or
-xhci patches.  And, 'git bisect' might make it easier.
+Close enough :)
 
-Also, does Linus's current tree show the same problems for you?
+> Superblocks and mounts could get enumerated by a unique identifier.
+> mnt_id seems to be good for mounts, s_dev may or may not be good for
+> superblock, but  s_id (as introduced in this patchset) could be used
+> instead.
+
+So what would the sysfs tree look like with this?
+
+> As for namespaces, that's "just" an access control issue, AFAICS.
+> For example a task with a non-initial mount namespace should not have
+> access to attributes of mounts outside of its namespace.  Checking
+> access to superblock attributes would be similar: scan the list of
+> mounts and only allow access if at least one mount would get access.
+
+sysfs does handle namespaces, look at how networking does this.  But,
+it's not exactly the simplest thing to do so, so be careful with that as
+this is going to be essential for this type of work.
 
 thanks,
 
