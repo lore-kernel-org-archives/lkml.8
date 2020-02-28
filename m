@@ -2,180 +2,103 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3965AC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D1DC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C94B2468D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FACB2468D
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 16:43:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XkgKXpMV"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="RvJrc8Fl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbgB1Qn3 (ORCPT
+        id S1726891AbgB1Qnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 11:43:29 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:41923 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbgB1Qn2 (ORCPT
+        Fri, 28 Feb 2020 11:43:53 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:33103 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgB1Qnx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 11:43:28 -0500
-Received: by mail-ed1-f65.google.com with SMTP id c26so4054515eds.8
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 08:43:27 -0800 (PST)
+        Fri, 28 Feb 2020 11:43:53 -0500
+Received: by mail-qk1-f193.google.com with SMTP id p62so826974qkb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2020 08:43:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=ziepe.ca; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=10ldW0StfDF5LQn5px5zjojzk7W9mvvMvbddw+jgFsA=;
-        b=XkgKXpMVRw195GbFLaoE1Lus3mosOPFgls1V02Wvy1Vj5vnwWa/HRfYURh8n8PZpaJ
-         GkkkX3RdNYcvyJtM4AnWGWxiNk9HM4LBrUL9G2/xBYaUn4nNhl0jhV83HNR6fI2ajKQK
-         /ETtlOkksDL/o5pz0bHC7Wi+BlJ3qRQlsiTOta/ifPscYgV+XNiDtrl/yZPGF4t75ctM
-         hTdDnCOg8YNAMiVoC8iwHNfW0zk4ML4bSbxMwJV4BwBXuY7sdgvNCYaZG6l6vkc81t78
-         6/ZYVosISVmDrBi4WrIDONYZVhLbUBgjnMstgqn+Q1pUDlwXXRVCti9+m6gKW29nAtsd
-         wgNg==
+         :content-disposition:in-reply-to:user-agent;
+        bh=gHDxDO8TDc5u4ZNxLNS+33PTzco5vMggiWWW76WodtA=;
+        b=RvJrc8FlyuHOKcny5m+BwW8XSJoU2B88Hx6Gq0HI6prgJ4vhorOigPsuhgTL+UPk2H
+         vAHPXcyT/eukU41x+e3u5euF45lYa2lvbJYEdqgpyPiZbwNF5MOSJeC5Hj1RHxMCkvJ3
+         Omf7SzHUFmaR4flCAkE+fE6IVVDsBzmfhHL2OfWLY4WGHd1up25Vik5CeE3Yz2X/8Wk0
+         5rwvJ6TlIF8rMNSuwVurXc9TMs6uIycZJeA3jwMniWbmCSBxuDvttnzlDPETQo7aBB1B
+         z4AeNKedwPGr7WrScRGa8jnLjZCDu3jAbqemhkK+wJn56/jXYkDgrTO0fKGjZ3LaINgF
+         houQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=10ldW0StfDF5LQn5px5zjojzk7W9mvvMvbddw+jgFsA=;
-        b=PKMV24c6TMyRtqsaFhePHyIVEZFe8D1BKQXcg94tm5ddwVLlIziuJgt+oxRP2P0pnt
-         UkUtdc2phh63sfIPlKXjByNQNgLvhUl5h7wwA19yt7waBCQ38ee6TvIMfWZZAm8P3qUd
-         5fbD0LhfYavB0nn5TmkXVM8iJAVUAbLRQzBT41LyLwj6ug5m1x5GDLxLmZV/ybc+XPMZ
-         Hg+ZOZH/XfVFjPu9IyPhEXH7G+9ZHlmNQPkPIG2PRfhrH6OHCFJqWdFcCagwCiLNFJor
-         apY9r9r11K2ul+5KSt2F2P7k6WjmPYPt9Zg9xqkwPOupLcjbJhdEb/sIUE5u70A8e+7F
-         D93A==
-X-Gm-Message-State: APjAAAURxHHOmMxbymMhomTidVzW+CuRgYsO9raB1b7KRq6+Jo9a4BUV
-        xv96zf/hLockCd4RlBpQgls=
-X-Google-Smtp-Source: APXvYqxq6JyAJsx/ABxv5xVgyd+/eUW8LdQVVIyzQs61/8UwUjygLRJ5olX/k0a0wg+uYk8PR3GkRQ==
-X-Received: by 2002:a50:eb04:: with SMTP id y4mr4879876edp.170.1582908207050;
-        Fri, 28 Feb 2020 08:43:27 -0800 (PST)
-Received: from smtp.gmail.com (1.77.115.89.rev.vodafone.pt. [89.115.77.1])
-        by smtp.gmail.com with ESMTPSA id g6sm318212edm.29.2020.02.28.08.43.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2020 08:43:26 -0800 (PST)
-Date:   Fri, 28 Feb 2020 13:43:19 -0300
-From:   Melissa Wen <melissa.srw@gmail.com>
-To:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian Konig <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] drm/amd/display: dc_link: code clean up on detect_dp
- function
-Message-ID: <60bc9ed29e4136eedd3b92c9fd536310b6b9c00d.1582907436.git.melissa.srw@gmail.com>
-References: <cover.1582907436.git.melissa.srw@gmail.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gHDxDO8TDc5u4ZNxLNS+33PTzco5vMggiWWW76WodtA=;
+        b=OPU5Imo4db1/ypT07JrC87rHuXxv8jbqQGi1LN7R5/iGAi77iuJiNaHvrsBSiL0D7r
+         /opjpOGGL1NUj5Y7l6vBOqtH8JzH4Zs8oKvLAGS0IXlTsVWwD2Qk+uxnCXJabLgZGpwH
+         tUByncAPVCyK1d/cyE4rf1klXcMhDo7TeT9YIFo41Fz8MZ4QjXbAu/Cdgxkxx2GzYIT/
+         Vi4P71QLHMdX0DvkMAtmgc+gwSB/nxCxg5sKGRgynmHiYyP+5ZrIvwZfRIcGZKg1upqa
+         UJc1W4CmaBBlb7v03TurdXoNtJ2dRNNuirByG02WFsnrCbftrCXmEBNBW1KdnP+VfPnt
+         AYYQ==
+X-Gm-Message-State: APjAAAUP5qcOk8abarLN8D1mZm9pJnRHwyErchhvVM9fxnvpMOXSV2wi
+        klegcU5ecFYz959gYgvVJW6riw==
+X-Google-Smtp-Source: APXvYqzBhOX0/kLPJk49mxXMzogAU84GKqlm3r8j1HUFxZpyRXpvN3hPumnCHPyW4VENNJ4odofEnQ==
+X-Received: by 2002:a37:4a16:: with SMTP id x22mr5481103qka.88.1582908232233;
+        Fri, 28 Feb 2020 08:43:52 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id j18sm5193793qka.95.2020.02.28.08.43.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 28 Feb 2020 08:43:51 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1j7ijv-0001se-FT; Fri, 28 Feb 2020 12:43:51 -0400
+Date:   Fri, 28 Feb 2020 12:43:51 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Selvin Xavier <selvin.xavier@broadcom.com>,
+        Devesh Sharma <devesh.sharma@broadcom.com>,
+        Somnath Kotur <somnath.kotur@broadcom.com>,
+        Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH -next] RDMA/bnxt_re: Remove set but not used variable
+ 'dev_attr'
+Message-ID: <20200228164351.GB7181@ziepe.ca>
+References: <20200227064542.91205-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1582907436.git.melissa.srw@gmail.com>
+In-Reply-To: <20200227064542.91205-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Removes codestyle issues on detect_dp function as suggested by
-checkpatch.pl.
+On Thu, Feb 27, 2020 at 06:45:42AM +0000, YueHaibing wrote:
+> Fixes gcc '-Wunused-but-set-variable' warning:
+> 
+> drivers/infiniband/hw/bnxt_re/ib_verbs.c: In function 'bnxt_re_create_gsi_qp':
+> drivers/infiniband/hw/bnxt_re/ib_verbs.c:1283:30: warning:
+>  variable 'dev_attr' set but not used [-Wunused-but-set-variable]
+> 
+> commit 8dae419f9ec7 ("RDMA/bnxt_re: Refactor queue pair creation code")
+> involved this, but not used, so remove it.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/infiniband/hw/bnxt_re/ib_verbs.c | 2 --
+>  1 file changed, 2 deletions(-)
 
-CHECK: Lines should not end with a '('
-WARNING: Missing a blank line after declarations
-WARNING: line over 80 characters
-CHECK: Alignment should match open parenthesis
+Applied to for-next, thanks
 
-Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
----
- drivers/gpu/drm/amd/display/dc/core/dc_link.c | 35 +++++++++----------
- 1 file changed, 16 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-index eb9894e416ed..549bea1d725c 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-@@ -585,14 +585,14 @@ static void read_current_link_settings_on_detect(struct dc_link *link)
- 		LINK_SPREAD_05_DOWNSPREAD_30KHZ : LINK_SPREAD_DISABLED;
- }
- 
--static bool detect_dp(
--	struct dc_link *link,
--	struct display_sink_capability *sink_caps,
--	bool *converter_disable_audio,
--	struct audio_support *audio_support,
--	enum dc_detect_reason reason)
-+static bool detect_dp(struct dc_link *link,
-+		      struct display_sink_capability *sink_caps,
-+		      bool *converter_disable_audio,
-+		      struct audio_support *audio_support,
-+		      enum dc_detect_reason reason)
- {
- 	bool boot = false;
-+
- 	sink_caps->signal = link_detect_sink(link, reason);
- 	sink_caps->transaction_type =
- 		get_ddc_transaction_type(sink_caps->signal);
-@@ -609,9 +609,8 @@ static bool detect_dp(
- 			sink_caps->signal = SIGNAL_TYPE_DISPLAY_PORT_MST;
- 			link->type = dc_connection_mst_branch;
- 
--			dal_ddc_service_set_transaction_type(
--							link->ddc,
--							sink_caps->transaction_type);
-+			dal_ddc_service_set_transaction_type(link->ddc,
-+							     sink_caps->transaction_type);
- 
- 			/*
- 			 * This call will initiate MST topology discovery. Which
-@@ -640,13 +639,10 @@ static bool detect_dp(
- 			if (reason == DETECT_REASON_BOOT)
- 				boot = true;
- 
--			dm_helpers_dp_update_branch_info(
--				link->ctx,
--				link);
-+			dm_helpers_dp_update_branch_info(link->ctx, link);
- 
--			if (!dm_helpers_dp_mst_start_top_mgr(
--				link->ctx,
--				link, boot)) {
-+			if (!dm_helpers_dp_mst_start_top_mgr(link->ctx,
-+							     link, boot)) {
- 				/* MST not supported */
- 				link->type = dc_connection_single;
- 				sink_caps->signal = SIGNAL_TYPE_DISPLAY_PORT;
-@@ -654,7 +650,7 @@ static bool detect_dp(
- 		}
- 
- 		if (link->type != dc_connection_mst_branch &&
--			is_dp_active_dongle(link)) {
-+		    is_dp_active_dongle(link)) {
- 			/* DP active dongles */
- 			link->type = dc_connection_active_dongle;
- 			if (!link->dpcd_caps.sink_count.bits.SINK_COUNT) {
-@@ -665,14 +661,15 @@ static bool detect_dp(
- 				return true;
- 			}
- 
--			if (link->dpcd_caps.dongle_type != DISPLAY_DONGLE_DP_HDMI_CONVERTER)
-+			if (link->dpcd_caps.dongle_type !=
-+			    DISPLAY_DONGLE_DP_HDMI_CONVERTER)
- 				*converter_disable_audio = true;
- 		}
- 	} else {
- 		/* DP passive dongles */
- 		sink_caps->signal = dp_passive_dongle_detection(link->ddc,
--				sink_caps,
--				audio_support);
-+								sink_caps,
-+								audio_support);
- 	}
- 
- 	return true;
--- 
-2.25.0
-
+Jason
