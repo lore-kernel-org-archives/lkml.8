@@ -2,180 +2,197 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EFAC3F2D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 707BDC3F2D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:12:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BDFF246A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:12:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582870352;
-	bh=cRh1tPtGAw1viMwKMfbbGI536nqanUnqN75l1R2pCEU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=j3P870c5mEDNHY5OWErrHtQKoRAOg+V/U4LAfa5AvOkN4sLCwri6gkWFgQkK41oAp
-	 f2H6aHyHJYFCYfyuT0Gemz523tHnF+sAUAC3RTmVt+TTnKXtUr91QvxhrS4e4qMZn1
-	 wbj+W2saUWQwOsD4Uek/K22heUDvjzf+yBfzqJ8s=
+	by mail.kernel.org (Postfix) with ESMTP id 3EAF4246A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 06:12:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DfTtz8qo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726188AbgB1GMb (ORCPT
+        id S1726631AbgB1GMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 01:12:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51158 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725805AbgB1GMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 01:12:30 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CC392468A;
-        Fri, 28 Feb 2020 06:12:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582870349;
-        bh=cRh1tPtGAw1viMwKMfbbGI536nqanUnqN75l1R2pCEU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nGZAYuX9p1OHbRA8wVx4VtO2aEFzdLkn0VVPIkNOTeGQry6CHXDeUqngNhMQtbFfR
-         NepeMTt3K6kF4WC0BYSkAivz5lljD632eLhDm3LFsXRcCfbJItJVVp4ULlgItDEHOY
-         +n0YLLiOcES6i5UxN2eWHKEhhbPDTUikp/YB/zDw=
-Date:   Fri, 28 Feb 2020 15:12:26 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Markus Elfring <Markus.Elfring@web.de>
-Subject: Re: [PATCH 1/2] Documentation: bootconfig: Update boot
- configuration documentation
-Message-Id: <20200228151226.3672a6e575d985ed2cda33aa@kernel.org>
-In-Reply-To: <c8494bca-a5f7-0bc6-63f5-b9ec056eb894@infradead.org>
-References: <158278834245.14966.6179457011671073018.stgit@devnote2>
-        <158278835238.14966.16157216423901327777.stgit@devnote2>
-        <c8494bca-a5f7-0bc6-63f5-b9ec056eb894@infradead.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 28 Feb 2020 01:12:42 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40287 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbgB1GMl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Feb 2020 01:12:41 -0500
+Received: by mail-qk1-f194.google.com with SMTP id m2so1962387qka.7;
+        Thu, 27 Feb 2020 22:12:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=wyty40W/Qu8GnwhYqxyjqRT5oV/6aZoaZV9g8IYFv9c=;
+        b=DfTtz8qok49FosFplrh33Y+hSE7m7IFREBcDa+rJ4zLj4+VeOtCsBkIFXcNYtxef9Q
+         S7JbDBWkvaFQKb3mdWIJ/cG8ZHYyVUUVvNEEYt/0ChtAsLIM9jPz/T6ZN6T5D29TY7/J
+         Y+iYrGfeDeKpbgkjx+/P+sjdyauQ3p5dH4mp/ClLnOTzOvy4aT8xdnT+vPQali2uKCDf
+         7eJXnOiqP+JNRcbASlmRqG0sKiB7DoXXxzRLZ75C25GmlUn3yGv/fVYY+CyCsJ1u+RPJ
+         /b1yWW81IIxTDabnFSHbA2wluSDV4B7QCYCa22P5BvRwB3ZTIF8r29N7qAL7n0UNhSgO
+         kkoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wyty40W/Qu8GnwhYqxyjqRT5oV/6aZoaZV9g8IYFv9c=;
+        b=HlMJ4DSwsiGkBKeDQNsnHQyDFfBgn9czHvisOJKqIwE3248xe+3BnejB3U1eDLgz2N
+         V9o/I+tWjFqBoDMhmRt1jT3+FRJA52DZUZfaSqD04AKcL+jRWwG9NQtf8CPF8X537WCF
+         utn83OUYW2GsIafp3V9/d3S9f5fqcUrUoCpYjuphvhHXREDupCrjfM+UtpRs77AQ6D5d
+         drbLgb+u5rocC0jBz0yUytQeG2ip5GU4JwPbkxNbXtIYKYQJWbeIbqvSgrR5jk658ZND
+         lxSLkGOUbWW8s6C6kiGcLdOd+uL0zP6z00CWGd78IzUEzV4jUBMtCn1jY3Ce3BEe7W4u
+         5I2Q==
+X-Gm-Message-State: APjAAAVDoK2QBkhcD+sArM6l/ghNc3rJ8HUoiu+/GQOrjJyyGP3VJ2eR
+        i5G6Ij0EdQR528PsK/q47Xc=
+X-Google-Smtp-Source: APXvYqyQ/W/wSgr89mAFJI+Vkpgacn91PVqegXumByTWinq73Oahtc3x5zuqEslYTpx5bV+7JFY3UQ==
+X-Received: by 2002:ae9:e413:: with SMTP id q19mr3129318qkc.248.1582870360131;
+        Thu, 27 Feb 2020 22:12:40 -0800 (PST)
+Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
+        by smtp.gmail.com with ESMTPSA id n12sm4482218qkg.89.2020.02.27.22.12.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Feb 2020 22:12:39 -0800 (PST)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 00FB321FE5;
+        Fri, 28 Feb 2020 01:12:38 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Fri, 28 Feb 2020 01:12:38 -0500
+X-ME-Sender: <xms:VK9YXjtuyRD1ML6U8iahQ1YTxvwTYpCHHjZVeoJm3AB8stlaIybH5g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrleejgdelgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
+    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucffohhmrghinh
+    epkhgvrhhnvghlrdhorhhgpdhinhhrihgrrdhfrhenucfkphephedvrdduheehrdduuddu
+    rdejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    gsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdei
+    gedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfih
+    igmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:VK9YXnpBDuVCU3KlMZF2U1uDLkdDTh_z5L00xk6z4YKjlwDIzbE7Yg>
+    <xmx:VK9YXi6Zt_kD7rVL1UBlywYHL3pxLLfNp7bKZ3-0GZr0ONyufUYsiQ>
+    <xmx:VK9YXsqQ--OyU2onyUZewe7cqOCSz22mIR_LBFT7tRW1Dfu8gZeB4w>
+    <xmx:Va9YXsn-tlpdEVVg-wauh9yuLigtr5EV17UQxcPtQnLxqOpxntrNnqj-UBY>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 70FB03060BD1;
+        Fri, 28 Feb 2020 01:12:36 -0500 (EST)
+Date:   Fri, 28 Feb 2020 14:12:34 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Andrea Parri <parri.andrea@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 0/5] Documentation/locking/atomic: Add litmus tests
+ for atomic APIs
+Message-ID: <20200228061234.GS69864@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+References: <20200227004049.6853-1-boqun.feng@gmail.com>
+ <20200227175441.GB12046@andrea>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227175441.GB12046@andrea>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Feb 2020 20:50:19 -0800
-Randy Dunlap <rdunlap@infradead.org> wrote:
-
-> Hi,
-> A few more comments for you:
-> 
-> On 2/26/20 11:25 PM, Masami Hiramatsu wrote:
-> > Update boot configuration documentation.
+On Thu, Feb 27, 2020 at 06:54:41PM +0100, Andrea Parri wrote:
+> On Thu, Feb 27, 2020 at 08:40:44AM +0800, Boqun Feng wrote:
+> > A recent discussion raises up the requirement for having test cases for
+> > atomic APIs:
 > > 
-> >  - Not using "config" abbreviation but configuration or description.
-> >  - Rewrite descriptions of node and its maxinum number.
-> >  - Add a section of use cases of boot configuration.
-> >  - Move how to use bootconfig to earlier section.
-> >  - Fix some typos, indents and format mistakes.
+> > 	https://lore.kernel.org/lkml/20200213085849.GL14897@hirez.programming.kicks-ass.net/
 > > 
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > ---
-> >  Documentation/admin-guide/bootconfig.rst |  172 +++++++++++++++++++-----------
-> >  Documentation/trace/boottime-trace.rst   |    2 
-> >  2 files changed, 112 insertions(+), 62 deletions(-)
+> > , and since we already have a way to generate a test module from a
+> > litmus test with klitmus[1]. It makes sense that we add more litmus
+> > tests for atomic APIs. And based on the previous discussion, I create a
+> > new directory Documentation/atomic-tests and put these litmus tests
+> > here.
 > > 
-> > diff --git a/Documentation/admin-guide/bootconfig.rst b/Documentation/admin-guide/bootconfig.rst
-> > index cf2edcd09183..4bac98250bc0 100644
-> > --- a/Documentation/admin-guide/bootconfig.rst
-> > +++ b/Documentation/admin-guide/bootconfig.rst
-> > @@ -11,19 +11,98 @@ Boot Configuration
-> >  Overview
-> >  ========
-> >  
-> > -The boot configuration expands the current kernel command line to support
-> > +Boot configuration expands the current kernel command line to support
-> >  additional key-value data when booting the kernel in an efficient way.
+> > This patchset starts the work by adding the litmus tests which are
+> > already used in atomic_t.txt, and also improve the atomic_t.txt to make
+> > it consistent with the litmus tests.
+> > 
+> > Previous version:
+> > v1: https://lore.kernel.org/linux-doc/20200214040132.91934-1-boqun.feng@gmail.com/
+> > v2: https://lore.kernel.org/lkml/20200219062627.104736-1-boqun.feng@gmail.com/
+> > 
+> > Changes since v2:
+> > 
+> > *	Change from "RFC" to "PATCH".
+> > 
+> > *	Wording improvement in atomic_t.txt as per Alan's suggestion.
+> > 
+> > *	Add a new patch describing the usage of atomic_add_unless() is
+> > 	not limited anymore for LKMM litmus tests.
+> > 
+> > My PR on supporting "(void) expr;" statement has been merged by Luc
+> > (Thank you, Luc). So all the litmus tests in this patchset can be
+> > handled by the herdtools compiled from latest master branch of the
+> > source code.
+> > 
+> > Comments and suggestions are welcome!
 > 
->                 maybe      s/when/while/
-
-Ah, right.
-
+> A few nits (see inline), but otherwise the series looks good to me;
+> with those fixed, please feel free to add:
 > 
-> > -This allows administrators to pass a structured-Key config file.
-> > +This allows administrators to pass a structured-Key configuration file
-> > +as a way to supplement the kernel command line to pass system boot parameters.
-> >  
-> > -Config File Syntax
-> > -==================
-> > +Compared with the kernel command line, the boot configuration can provide
-> > +scalability (up to 32 KiB configurations), readability (structured
-> 
-> This makes it sound like bootconfig supports 32 thousand configurations, but
-> (I think) it allows up to 32 KiB of configuration data.
-
-OK, I'll add "data".
-
-> 
-> > +configuration with comments) and compact expression of option groups.
-> > +
-> > +When to Use the Boot Configuration?
-> > +-----------------------------------
-> > +
-> > +The boot configuration supports kernel command line options and init daemon
-> > +boot options. All sub-keys under "kernel" root key are passed as a part of
-> > +kernel command line [1]_, and one under "init" root key are passed as a part
-> 
->                                  ones  {or those}
-
-OK.
-
-> 
-> > +of init command line. For example, ::
-> > +
-> > +   root=UUID=8cd79b08-bda0-4b9d-954c-5d5f34b98c82 ro quiet splash console=ttyS0,115200n8 console=tty0
-> > +
-> > +This can be written as following boot configuration file.::
-> > +
-> > +   kernel {
-> > +      root = "UUID=8cd79b08-bda0-4b9d-954c-5d5f34b98c82" # nvme0n1p3
-> > +      ro       # mount rootfs as read only
-> > +      quiet    # No console log
-> > +      splash   # show splash image on boot screen
-> > +      console = "ttyS0,115200n8" # 1st console to serial device
-> > +      console += tty0            # add 2nd console
-> > +   }
-> > +
-> > +If you think that kernel/init options becomes too long to write in boot-loader
-> > +configuration file or want to comment on each options, you can use this
-> 
->                                          on each option,
-
-Oops, OK. 
-
-> 
-> > +boot configuration. If unsure, you can still continue to use the legacy
-> > +kernel command line.
-> > +
-> > +Also, some subsystem may depend on the boot configuration, and it has own
-> > +root key. For example, ftrace boot-time tracer uses "ftrace" root key to
-> > +describe their options [2]_. In this case, you need to use the boot
-> 
->             its
-
-OK
-
-Thank you!
-
-> 
-> > +configuration.
-> > +
-> > +.. [1] See :ref:`Documentation/admin-guide/kernel-parameters.rst <kernelparameters>`
-> > +.. [2] See :ref:`Documentation/trace/boottime-trace.rst <boottimetrace>`
-> 
-> 
-> -- 
-> ~Randy
+> Acked-by: Andrea Parri <parri.andrea@gmail.com>
 > 
 
+Thank you and Alan! I will fix those in the next version.
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Regards,
+Boqun
+
+> to the entire series.
+> 
+> Thanks,
+>   Andrea
+> 
+> 
+> > 
+> > Regards,
+> > Boqun
+> > 
+> > [1]: http://diy.inria.fr/doc/litmus.html#klitmus
+> > 
+> > Boqun Feng (5):
+> >   tools/memory-model: Add an exception for limitations on _unless()
+> >     family
+> >   Documentation/locking/atomic: Fix atomic-set litmus test
+> >   Documentation/locking/atomic: Introduce atomic-tests directory
+> >   Documentation/locking/atomic: Add a litmus test for atomic_set()
+> >   Documentation/locking/atomic: Add a litmus test smp_mb__after_atomic()
+> > 
+> >  ...ter_atomic-is-stronger-than-acquire.litmus | 32 +++++++++++++++++++
+> >  ...c-RMW-ops-are-atomic-WRT-atomic_set.litmus | 24 ++++++++++++++
+> >  Documentation/atomic-tests/README             | 16 ++++++++++
+> >  Documentation/atomic_t.txt                    | 24 +++++++-------
+> >  MAINTAINERS                                   |  1 +
+> >  tools/memory-model/README                     | 10 ++++--
+> >  6 files changed, 92 insertions(+), 15 deletions(-)
+> >  create mode 100644 Documentation/atomic-tests/Atomic-RMW+mb__after_atomic-is-stronger-than-acquire.litmus
+> >  create mode 100644 Documentation/atomic-tests/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+> >  create mode 100644 Documentation/atomic-tests/README
+> > 
+> > -- 
+> > 2.25.0
+> > 
