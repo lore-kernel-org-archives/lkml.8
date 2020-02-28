@@ -2,215 +2,743 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BCA5C3F2CF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C21FC3F2D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD878246A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00CBF246A8
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 09:36:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZrIOzViF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RbVCAHge"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgB1Jfb (ORCPT
+        id S1726892AbgB1JgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 04:35:31 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33336 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726642AbgB1Jfb (ORCPT
+        Fri, 28 Feb 2020 04:36:14 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:36586 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726538AbgB1JgO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 04:35:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582882530;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=H9mzUDxRVetooVherOzlH07tNF8Ied45V4Iiu5Mh0KM=;
-        b=ZrIOzViFNeiZJtAb7tvIDZwoCPILcad/71o0vMf7ZAb1MhxphkImmkC/Vj4dHsELKX4UOZ
-        +HgW9goWoSGQBOHo0tpWHw9up8j6sWxlLB7ZZgZxqZJGwcZHq1eRD3uaxmKSNs3bZAd9/j
-        9dEWZ5k3AJZdwIdA44qMqdb/HhvnfzI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-208-hzM-64btOf2KR2nFOXdfLA-1; Fri, 28 Feb 2020 04:35:26 -0500
-X-MC-Unique: hzM-64btOf2KR2nFOXdfLA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 868D48017CC;
-        Fri, 28 Feb 2020 09:35:24 +0000 (UTC)
-Received: from [10.36.117.180] (ovpn-117-180.ams2.redhat.com [10.36.117.180])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 32F4187B08;
-        Fri, 28 Feb 2020 09:35:19 +0000 (UTC)
-Subject: Re: [RESEND PATCH v2] efi: Only print errors about failing to get
- certs if EFI vars are found
-From:   David Hildenbrand <david@redhat.com>
-To:     Javier Martinez Canillas <javierm@redhat.com>,
-        linux-kernel@vger.kernel.org
-Cc:     linux-efi@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Eric Richter <erichte@linux.ibm.com>,
-        James Morris <jmorris@namei.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        linux-security-module@vger.kernel.org,
-        Ard Biesheuvel <ardb@kernel.org>
-References: <20200217113947.2070436-1-javierm@redhat.com>
- <0fd1b499-3a5e-c78e-0279-186a4c424217@redhat.com>
- <5c60e016-fb30-b33d-39c6-ea30a4f777cb@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <30819cad-1a00-1ea7-13cf-d1d15c0fa96c@redhat.com>
-Date:   Fri, 28 Feb 2020 10:35:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 28 Feb 2020 04:36:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ktulIN/2Y/Th6kw1gj8Ul/Cp6ielyuYE0DjV2+/3Dfg=; b=RbVCAHgeQiRRL5Q2dyVEiNQz+O
+        c2I4yRgURpZqJ4Quv85cDXAe6ZR7DKMHQ0Dj1RxqORo3hBW8O7lDPBh5NKjSH5P5NNSd6v/vSgKKf
+        QSOsXsl5Ne6iCscH4YhelsRtNQODwZhUdfUaqAXEsDL/HhSA0nr9RBPDYKq8YoCwvDPBEzGLWnfYq
+        MKiZBxe0hAuLKTmebG0OGijhQZdxyJSExaC7QrXBxJuZwFIcF99MRQu5amc+44BglMnS9V8H/VGHd
+        RBtM7f8itYXprwtEyTe/Yhee4CmzTgiMKxALvAA+CTt9NsX7woqYP4YMxSsBAROVeaYSRofPtPeye
+        Hm8ma4qQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j7c3z-0000ki-AH; Fri, 28 Feb 2020 09:36:07 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D16FA300478;
+        Fri, 28 Feb 2020 10:34:07 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2A01F2B9DC304; Fri, 28 Feb 2020 10:36:04 +0100 (CET)
+Date:   Fri, 28 Feb 2020 10:36:04 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>, Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v10] perf: Sharing PMU counters across compatible events
+Message-ID: <20200228093604.GH18400@hirez.programming.kicks-ass.net>
+References: <20200123083127.446105-1-songliubraving@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <5c60e016-fb30-b33d-39c6-ea30a4f777cb@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200123083127.446105-1-songliubraving@fb.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28.02.20 10:31, David Hildenbrand wrote:
-> On 28.02.20 10:19, David Hildenbrand wrote:
->> On 17.02.20 12:39, Javier Martinez Canillas wrote:
->>> If CONFIG_LOAD_UEFI_KEYS is enabled, the kernel attempts to load the certs
->>> from the db, dbx and MokListRT EFI variables into the appropriate keyrings.
->>>
->>> But it just assumes that the variables will be present and prints an error
->>> if the certs can't be loaded, even when is possible that the variables may
->>> not exist. For example the MokListRT variable will only be present if shim
->>> is used.
->>>
->>> So only print an error message about failing to get the certs list from an
->>> EFI variable if this is found. Otherwise these printed errors just pollute
->>> the kernel log ring buffer with confusing messages like the following:
->>>
->>> [    5.427251] Couldn't get size: 0x800000000000000e
->>> [    5.427261] MODSIGN: Couldn't get UEFI db list
->>> [    5.428012] Couldn't get size: 0x800000000000000e
->>> [    5.428023] Couldn't get UEFI MokListRT
->>>
->>> Reported-by: Hans de Goede <hdegoede@redhat.com>
->>> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
->>> Tested-by: Hans de Goede <hdegoede@redhat.com>
->>
->> This patch seems to break a very basic x86-64 QEMU setup (booting
->> upstream kernel with a F31 initrd - are you running basic boot tests?).
->> Luckily, it only took me 5 minutes to identify this patch. Reverting
->> this patch from linux-next fixes it for me.
->>
->>
->> [    1.042766] Loaded X.509 cert 'Build time autogenerated kernel key: 6625d6e34255935276d2c9851e2458909a4bcd69'
->> [    1.044314] zswap: loaded using pool lzo/zbud
->> [    1.045663] Key type ._fscrypt registered
->> [    1.046154] Key type .fscrypt registered
->> [    1.046524] Key type fscrypt-provisioning registered
->> [    1.051178] Key type big_key registered
->> [    1.055108] Key type encrypted registered
->> [    1.055513] BUG: kernel NULL pointer dereference, address: 0000000000000000
->> [    1.056172] #PF: supervisor instruction fetch in kernel mode
->> [    1.056706] #PF: error_code(0x0010) - not-present page
->> [    1.057367] PGD 0 P4D 0 
->> [    1.057729] Oops: 0010 [#1] SMP NOPTI
->> [    1.058249] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc3-next-20200228+ #79
->> [    1.059167] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.4
->> [    1.060230] RIP: 0010:0x0
->> [    1.060478] Code: Bad RIP value.
->> [    1.060786] RSP: 0018:ffffbc7880637d98 EFLAGS: 00010246
->> [    1.061281] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffbc7880637dc8
->> [    1.061954] RDX: 0000000000000000 RSI: ffffbc7880637df0 RDI: ffffffffa73c40be
->> [    1.062611] RBP: ffffbc7880637e20 R08: ffffbc7880637dac R09: ffffa0238f4ba6c0
->> [    1.063278] R10: 0000000000000000 R11: 0000000000000001 R12: 0000000000000000
->> [    1.063956] R13: ffffa024bdd6f660 R14: 0000000000000000 R15: 0000000000000000
->> [    1.064609] FS:  0000000000000000(0000) GS:ffffa023fdd00000(0000) knlGS:0000000000000000
->> [    1.065360] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [    1.065900] CR2: ffffffffffffffd6 CR3: 00000000b1610000 CR4: 00000000000006e0
->> [    1.066562] Call Trace:
->> [    1.066803]  load_uefi_certs+0xc8/0x2bb
->> [    1.067171]  ? get_cert_list+0xfb/0xfb
->> [    1.067523]  do_one_initcall+0x5d/0x2f0
->> [    1.067894]  ? rcu_read_lock_sched_held+0x52/0x80
->> [    1.068337]  kernel_init_freeable+0x243/0x2c2
->> [    1.068751]  ? rest_init+0x23a/0x23a
->> [    1.069095]  kernel_init+0xa/0x106
->> [    1.069416]  ret_from_fork+0x27/0x50
->> [    1.069759] Modules linked in:
->> [    1.070050] CR2: 0000000000000000
->> [    1.070361] ---[ end trace fcce9bb4feb21d99 ]---
->>
->>
+On Thu, Jan 23, 2020 at 12:31:27AM -0800, Song Liu wrote:
+> This patch tries to enable PMU sharing. When multiple perf_events are
+> counting the same metric, they can share the hardware PMU counter. We
+> call these events as "compatible events".
 > 
-> Sorry, wrong mail identified, the patch is actually
+> The PMU sharing are limited to events within the same perf_event_context
+> (ctx). When a event is installed or enabled, search the ctx for compatible
+> events. This is implemented in perf_event_setup_dup(). One of these
+> compatible events are picked as the master (stored in event->dup_master).
+> Similarly, when the event is removed or disabled, perf_event_remove_dup()
+> is used to clean up sharing.
 > 
-> commit 6b75d54d5258ccd655387a00bbe1b00f92f4d965
-> Author: Ard Biesheuvel <ardb@kernel.org>
-> Date:   Sun Feb 16 19:46:25 2020 +0100
-> 
->     integrity: Check properly whether EFI GetVariable() is available
-> 
->     Testing the value of the efi.get_variable function pointer is not
-> 
-> which made it work. (not even able to find that patch on lkml ...)
+> A new state PERF_EVENT_STATE_ENABLED is introduced for the master event.
+> This state is used when the slave event is ACTIVE, but the master event
+> is not.
 
-To clarify for Ard, your patch breaks a basic QEMU setup (see above,
-NULL pointer dereference). Reverting your patch from linux-next makes it
-work again.
+This is maybe not as clear as it could be; how do we end up there and
+what are the ramifications. I spend a fair amount of time trying to work
+out WTH we need that master_count thing.
+
+> On the critical paths (add, del read), sharing PMU counters doesn't
+> increase the complexity. Helper functions event_pmu_[add|del|read]() are
+> introduced to cover these cases. All these functions have O(1) time
+> complexity.
+
+So the good news is that this patch looked entirely reasonable, and so I
+had a good look at it. The bad news is that it is completely and utterly
+broken...
+
+> +/* prepare the dup_master, this event is its own dup_master */
+> +static void perf_event_init_dup_master(struct perf_event *event)
+> +{
+> +	bool is_active = event->state == PERF_EVENT_STATE_ACTIVE;
+> +	s64 count, child_count;
+> +
+> +	WARN_ON_ONCE(event->dup_active_count != 0);
+> +	event->dup_master = event;
+> +	/*
+> +	 * dup_master->count is used by the hw PMC, and shared with other
+> +	 * events, so we have to read from dup_master->master_count. Copy
+> +	 * event->count to event->master_count.
+> +	 *
+> +	 * Same logic for child_count and master_child_count.
+
+I _really_ don't see how that same applies to child_count, the PMU
+driver does not ever touch that. In fact I think actually doing this for
+the child_count is actively wrong.
+
+> +	 */
+
+One callsite does ->pmu->read() right before calling this, the other I'm
+not sure about. It makes much more sense to do it here.
+
+> +	count = local64_read(&event->count);
+
+> +	child_count = atomic64_read(&event->child_count);
+> +	local64_set(&event->master_count, count);
+> +	atomic64_set(&event->master_child_count, child_count);
+> +
+> +	if (is_active) {
+> +		event->dup_base_count = count;
+> +		event->dup_base_child_count = child_count;
+> +
+> +		event->dup_active_count = 1;
+> +	}
+
+For active events, this function is completely buggered, fixable though.
+See below.
+
+> +}
+> +
+> +/* tear down dup_master, no more sharing for this event */
+> +static void perf_event_exit_dup_master(struct perf_event *event)
+> +{
+
+This hard relies on event->state being <=INACTIVE, no assertion.
+
+> +	event->dup_active_count = 0;
+> +
+> +	event->dup_master = NULL;
+> +	/* restore event->count and event->child_count */
+> +	local64_set(&event->count, local64_read(&event->master_count));
+> +	atomic64_set(&event->child_count,
+> +		     atomic64_read(&event->master_child_count));
+> +}
+> +
+> +/*
+> + * sync data count from dup_master to event, called on event_pmu_read()
+> + * and event_pmu_del()
+> + */
+> +static void event_sync_dup_count(struct perf_event *event,
+> +				 struct perf_event *master)
+> +{
+> +	u64 new_count;
+> +	u64 new_child_count;
+> +
+> +	event->pmu->read(master);
+> +	new_count = local64_read(&master->count);
+> +	new_child_count = atomic64_read(&master->child_count);
+> +
+> +	if (event == master) {
+> +		local64_add(new_count - event->dup_base_count,
+> +			    &event->master_count);
+> +		atomic64_add(new_child_count - event->dup_base_child_count,
+> +			     &event->master_child_count);
+> +	} else {
+> +		local64_add(new_count - event->dup_base_count, &event->count);
+> +		atomic64_add(new_child_count - event->dup_base_child_count,
+> +			     &event->child_count);
+> +	}
+> +
+> +	/* save dup_base_* for next sync */
+> +	event->dup_base_count = new_count;
+> +	event->dup_base_child_count = new_child_count;
+> +}
+
+This function is completely and utterly buggered. Even if you discount
+all the child_count stuff.
+
+See the thing is that while 'event->state == ACTIVE' an NMI can at all
+times do pmu->read() on it. The above is trivially not NMI-safe.
+Furthermore, the direct concequence of that is that ->dup_master and
+->dup_count need to be consistent and *that* is violated pretty much all
+over the place (perf_event_init_dup_master() for the active case for
+instance).
+
+> +
+> +/* After adding a event to the ctx, try find compatible event(s). */
+> +static void perf_event_setup_dup(struct perf_event *event,
+> +				 struct perf_event_context *ctx)
+> +
+> +{
+> +	struct perf_event *tmp;
+> +
+> +	if (!perf_event_can_share(event))
+> +		return;
+> +
+> +	/* look for dup with other events */
+> +	list_for_each_entry(tmp, &ctx->event_list, event_entry) {
+> +		if (tmp == event ||
+> +		    !perf_event_can_share(tmp) ||
+> +		    !perf_event_compatible(event, tmp))
+> +			continue;
+> +
+> +		/* first dup, pick tmp as the master */
+> +		if (!tmp->dup_master) {
+> +			if (tmp->state == PERF_EVENT_STATE_ACTIVE)
+> +				tmp->pmu->read(tmp);
+> +			perf_event_init_dup_master(tmp);
+
+This is the one that does the read prior to init_dup_master().
+
+> +		}
+> +
+> +		event->dup_master = tmp->dup_master;
+> +		break;
+> +	}
+> +}
+> +
+> +static int event_pmu_add(struct perf_event *event,
+> +			 struct perf_event_context *ctx);
+
+AFAICT this fwd-decl is pointless.
+
+> +/* Remove dup_master for the event */
+> +static void perf_event_remove_dup(struct perf_event *event,
+> +				  struct perf_event_context *ctx)
+> +
+> +{
+> +	struct perf_event *tmp, *new_master;
+> +
+> +	int dup_count, active_count;
+> +
+> +	/* no sharing */
+> +	if (!event->dup_master)
+> +		return;
+> +
+> +	WARN_ON_ONCE(event->state < PERF_EVENT_STATE_OFF ||
+> +		     event->state > PERF_EVENT_STATE_ENABLED);
+
+The below has code that relies on the event actually being inactive; and
+while we know we've done event_sched_out() when we get here, this is
+rather unfortunate.
+
+I've not gone through this yet to see if we can simply move the call
+until after we've set state. Also, list_del_event() actively deals with
+<OFF, so I'm thinking that part of the WARN is just plain wrong.
+
+> +
+> +	/* this event is not the master */
+> +	if (event->dup_master != event) {
+> +		event->dup_master = NULL;
+> +		return;
+> +	}
+> +
+> +	/* this event is the master */
+> +	dup_count = 0;
+> +	new_master = NULL;
+> +	list_for_each_entry(tmp, &ctx->event_list, event_entry) {
+> +		if (tmp->dup_master != event || tmp == event)
+> +			continue;
+> +		if (!new_master)
+> +			new_master = tmp;
+> +
+> +		/* only init new_master when we need to (dup_count > 1) */
+> +		if (dup_count == 1)
+> +			perf_event_init_dup_master(new_master);
+> +
+> +		if (tmp->state == PERF_EVENT_STATE_ACTIVE) {
+> +			/* sync read from old master */
+> +			event_sync_dup_count(tmp, event);
+> +
+> +			/* prepare to read from new master */
+> +			tmp->dup_base_count = local64_read(&new_master->count);
+> +			tmp->dup_base_child_count =
+> +				atomic64_read(&new_master->child_count);
+> +		}
+> +		tmp->dup_master = new_master;
+> +		dup_count++;
+> +	}
+
+Now consider that for ACTIVE events we need ->dup_master and ->dup_count
+to be consistent at all times and cry. Please see below; I've made an
+attempt at fixing all that.
+
+> +	active_count = event->dup_active_count;
+> +	perf_event_exit_dup_master(event);
+> +
+> +	if (!dup_count)
+> +		return;
+> +
+> +	if (dup_count == 1)  /* no more sharing */
+> +		new_master->dup_master = NULL;
+> +	else
+> +		new_master->dup_active_count = active_count;
+> +
+> +	if (active_count) {
+> +		/* copy hardware configure to switch faster */
+> +		if (event->pmu->copy_hw_config)
+> +			event->pmu->copy_hw_config(event, new_master);
+> +
+> +		perf_pmu_disable(new_master->pmu);
+> +		WARN_ON_ONCE(new_master->pmu->add(new_master, PERF_EF_START));
+> +		perf_pmu_enable(new_master->pmu);
+> +		if (new_master->state == PERF_EVENT_STATE_INACTIVE)
+> +			/*
+> +			 * We don't need to update time, so don't call
+> +			 * perf_event_set_state().
+> +			 */
+> +			new_master->state = PERF_EVENT_STATE_ENABLED;
+
+CodingStyle wants { } on any multi-line. The comment fails to mention
+the critical bit though; *WHY* ?!?
+
+> +	}
+> +}
 
 
--- 
-Thanks,
+> @@ -2106,13 +2358,15 @@ event_sched_out(struct perf_event *event,
+>  
+>  	perf_pmu_disable(event->pmu);
+>  
+> -	event->pmu->del(event, 0);
+> +	event_pmu_del(event, ctx);
+>  	event->oncpu = -1;
+>  
+>  	if (READ_ONCE(event->pending_disable) >= 0) {
+>  		WRITE_ONCE(event->pending_disable, -1);
+>  		state = PERF_EVENT_STATE_OFF;
+> -	}
+> +	} else if (event->dup_master == event &&
+> +		   event->dup_active_count)
+> +		state = PERF_EVENT_STATE_ENABLED;
 
-David / dhildenb
+That can simply be: 'else if (event->dup_active) {', dup_active being
+non-zero implies event->dup_master==event.
 
+Also, I think you've stumbled on a pre-existing bug here. We have
+->state==ACTIVE after pmu->del(), this means an NMI hitting at this spot
+can call pmu->read() on an unscheduled event, which is *fail*.
+
+I'll go think about how to fix that.
+
+
+Find below the delta I ended up with. Note that I didn't nearly fix
+everything I found wrong, nor do I have a high confidence in the things
+I did do fix, I've been suffering horrible head-aches the past few days
+:/
+
+---
+
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -562,6 +562,7 @@ struct perf_addr_filter_range {
+  *
+  * PERF_EVENT_STATE_ENABLED:	Special state for PMC sharing: the hw PMC
+  *				is enabled, but this event is not counting.
++ *				See perf_event_init_dup_master().
+  */
+ enum perf_event_state {
+ 	PERF_EVENT_STATE_DEAD		= -4,
+@@ -775,13 +776,11 @@ struct perf_event {
+ #endif
+ 	struct list_head		sb_list;
+ 
+-	/* check event_sync_dup_count() for the use of dup_base_* */
+-	u64				dup_base_count;
+-	u64				dup_base_child_count;
+-	/* when this event is master,  read from master*count */
++	int				dup_active;
++	/* See event_pmu_read_dup() */
++	local64_t			dup_count;
++	/* See perf_event_init_dup_master() */
+ 	local64_t			master_count;
+-	atomic64_t			master_child_count;
+-	int				dup_active_count;
+ #endif /* CONFIG_PERF_EVENTS */
+ };
+ 
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -1783,80 +1783,87 @@ static inline bool perf_event_compatible
+ 	return memcmp(&event_a->attr, &event_b->attr, event_a->attr.size) == 0;
+ }
+ 
+-/* prepare the dup_master, this event is its own dup_master */
+ static void perf_event_init_dup_master(struct perf_event *event)
+ {
+ 	bool is_active = event->state == PERF_EVENT_STATE_ACTIVE;
+-	s64 count, child_count;
++	u64 count;
++
++	WARN_ON_ONCE(event->dup_active != 0);
+ 
+-	WARN_ON_ONCE(event->dup_active_count != 0);
+-	event->dup_master = event;
+ 	/*
+-	 * dup_master->count is used by the hw PMC, and shared with other
+-	 * events, so we have to read from dup_master->master_count. Copy
+-	 * event->count to event->master_count.
++	 * The event sharing scheme allows for duplicate events to be ACTIVE
++	 * while the master is not. In order to facilitate this, the master
++	 * will be put in the ENABLED state whenever it has active duplicates
++	 * but is itself *not* ACTIVE.
+ 	 *
+-	 * Same logic for child_count and master_child_count.
++	 * When ENABLED the master event is scheduled, but its counter must
++	 * appear stalled. Since the PMU driver updates event->count, the
++	 * master must keep a shadow counter for itself, this is
++	 * event->master_count.
+ 	 */
++
++	if (is_active)
++		event->pmu->read(event);
++
+ 	count = local64_read(&event->count);
+-	child_count = atomic64_read(&event->child_count);
+ 	local64_set(&event->master_count, count);
+-	atomic64_set(&event->master_child_count, child_count);
+ 
+ 	if (is_active) {
+-		event->dup_base_count = count;
+-		event->dup_base_child_count = child_count;
+-
+-		event->dup_active_count = 1;
++		local64_set(&event->dup_count, count);
++		event->dup_active = 1;
+ 	}
++
++	barrier();
++
++	WRITE_ONCE(event->dup_master, event);
+ }
+ 
+ /* tear down dup_master, no more sharing for this event */
+ static void perf_event_exit_dup_master(struct perf_event *event)
+ {
+-	event->dup_active_count = 0;
++	WARN_ON_ONCE(event->state < PERF_EVENT_STATE_OFF ||
++		     event->state > PERF_EVENT_STATE_INACTIVE);
++
++	event->dup_active = 0;
++	WRITE_ONCE(event->dup_master, NULL);
++
++	barrier();
+ 
+-	event->dup_master = NULL;
+ 	/* restore event->count and event->child_count */
+ 	local64_set(&event->count, local64_read(&event->master_count));
+-	atomic64_set(&event->child_count,
+-		     atomic64_read(&event->master_child_count));
+ }
+ 
++#define EVENT_TOMBSTONE	((void *)-1L)
++
+ /*
+  * sync data count from dup_master to event, called on event_pmu_read()
+  * and event_pmu_del()
+  */
+-static void event_sync_dup_count(struct perf_event *event,
+-				 struct perf_event *master)
++static void
++event_pmu_read_dup(struct perf_event *event, struct perf_event *master)
+ {
+-	u64 new_count;
+-	u64 new_child_count;
++	u64 prev_count, new_count;
+ 
+-	event->pmu->read(master);
+-	new_count = local64_read(&master->count);
+-	new_child_count = atomic64_read(&master->child_count);
++	if (master == EVENT_TOMBSTONE)
++		return;
+ 
+-	if (event == master) {
+-		local64_add(new_count - event->dup_base_count,
+-			    &event->master_count);
+-		atomic64_add(new_child_count - event->dup_base_child_count,
+-			     &event->master_child_count);
+-	} else {
+-		local64_add(new_count - event->dup_base_count, &event->count);
+-		atomic64_add(new_child_count - event->dup_base_child_count,
+-			     &event->child_count);
+-	}
++again:
++	prev_count = local64_read(&event->dup_count);
++	if (master->state > PERF_EVENT_STATE_INACTIVE)
++		master->pmu->read(master);
++	new_count = local64_read(&master->count);
++	if (local64_cmpxchg(&event->dup_count, prev_count, new_count) != prev_count)
++		goto again;
+ 
+-	/* save dup_base_* for next sync */
+-	event->dup_base_count = new_count;
+-	event->dup_base_child_count = new_child_count;
++	if (event == master)
++		local64_add(new_count - prev_count, &event->master_count);
++	else
++		local64_add(new_count - prev_count, &event->count);
+ }
+ 
+ /* After adding a event to the ctx, try find compatible event(s). */
+-static void perf_event_setup_dup(struct perf_event *event,
+-				 struct perf_event_context *ctx)
+-
++static void
++perf_event_setup_dup(struct perf_event *event, struct perf_event_context *ctx)
+ {
+ 	struct perf_event *tmp;
+ 
+@@ -1871,28 +1878,21 @@ static void perf_event_setup_dup(struct
+ 			continue;
+ 
+ 		/* first dup, pick tmp as the master */
+-		if (!tmp->dup_master) {
+-			if (tmp->state == PERF_EVENT_STATE_ACTIVE)
+-				tmp->pmu->read(tmp);
++		if (!tmp->dup_master)
+ 			perf_event_init_dup_master(tmp);
+-		}
+ 
+ 		event->dup_master = tmp->dup_master;
+ 		break;
+ 	}
+ }
+ 
+-static int event_pmu_add(struct perf_event *event,
+-			 struct perf_event_context *ctx);
+-
+ /* Remove dup_master for the event */
+-static void perf_event_remove_dup(struct perf_event *event,
+-				  struct perf_event_context *ctx)
+-
++static void
++perf_event_remove_dup(struct perf_event *event, struct perf_event_context *ctx)
+ {
+ 	struct perf_event *tmp, *new_master;
+-
+ 	int dup_count, active_count;
++	int ret;
+ 
+ 	/* no sharing */
+ 	if (!event->dup_master)
+@@ -1911,38 +1911,62 @@ static void perf_event_remove_dup(struct
+ 	dup_count = 0;
+ 	new_master = NULL;
+ 	list_for_each_entry(tmp, &ctx->event_list, event_entry) {
++		u64 count;
++
+ 		if (tmp->dup_master != event || tmp == event)
+ 			continue;
+ 		if (!new_master)
+ 			new_master = tmp;
+ 
+-		/* only init new_master when we need to (dup_count > 1) */
+-		if (dup_count == 1)
+-			perf_event_init_dup_master(new_master);
+-
+ 		if (tmp->state == PERF_EVENT_STATE_ACTIVE) {
+ 			/* sync read from old master */
+-			event_sync_dup_count(tmp, event);
+-
+-			/* prepare to read from new master */
+-			tmp->dup_base_count = local64_read(&new_master->count);
+-			tmp->dup_base_child_count =
+-				atomic64_read(&new_master->child_count);
++			event_pmu_read_dup(tmp, event);
+ 		}
+-		tmp->dup_master = new_master;
++
++		/*
++		 * Flip an active event to a new master; this is tricky because
++		 * for an active event event_pmu_read() can be called at any
++		 * time from NMI context.
++		 *
++		 * This means we need to have ->dup_master and
++		 * ->dup_count consistent at all times. Of course we cannot do
++		 * two writes at once :/
++		 *
++		 * Instead, flip ->dup_master to EVENT_TOMBSTONE, this will
++		 * make event_pmu_read_dup() NOP. Then we can set
++		 * ->dup_count and finally set ->dup_master to the new_master
++		 * to let event_pmu_read_dup() rip.
++		 */
++		WRITE_ONCE(tmp->dup_master, EVENT_TOMBSTONE);
++		barrier();
++
++		count = local64_read(&new_master->count);
++		local64_set(&tmp->dup_count, count);
++
++		if (tmp == new_master)
++			local64_set(&tmp->master_count, count);
++
++		barrier();
++		WRITE_ONCE(tmp->dup_master, new_master);
+ 		dup_count++;
+ 	}
+ 
+-	active_count = event->dup_active_count;
++	active_count = event->dup_active;
+ 	perf_event_exit_dup_master(event);
+ 
+ 	if (!dup_count)
+ 		return;
+ 
+-	if (dup_count == 1)  /* no more sharing */
+-		new_master->dup_master = NULL;
+-	else
+-		new_master->dup_active_count = active_count;
++	if (dup_count == 1) {
++		/*
++		 * We set up as a master, but there aren't any more duplicates.
++		 * Simply clear ->dup_master, as ->master_count == ->count per
++		 * the above.
++		 */
++		WRITE_ONCE(new_master->dup_master, NULL);
++	} else {
++		new_master->dup_active = active_count;
++	}
+ 
+ 	if (active_count) {
+ 		/* copy hardware configure to switch faster */
+@@ -1950,14 +1974,21 @@ static void perf_event_remove_dup(struct
+ 			event->pmu->copy_hw_config(event, new_master);
+ 
+ 		perf_pmu_disable(new_master->pmu);
+-		WARN_ON_ONCE(new_master->pmu->add(new_master, PERF_EF_START));
+-		perf_pmu_enable(new_master->pmu);
+-		if (new_master->state == PERF_EVENT_STATE_INACTIVE)
++		ret = new_master->pmu->add(new_master, PERF_EF_START);
++		/*
++		 * Since we just removed the old master (@event), it should be
++		 * impossible to fail to schedule the new master, an identical
++		 * event.
++		 */
++		WARN_ON_ONCE(ret);
++		if (new_master->state == PERF_EVENT_STATE_INACTIVE) {
+ 			/*
+ 			 * We don't need to update time, so don't call
+ 			 * perf_event_set_state().
+ 			 */
+ 			new_master->state = PERF_EVENT_STATE_ENABLED;
++		}
++		perf_pmu_enable(new_master->pmu);
+ 	}
+ }
+ 
+@@ -2403,8 +2434,7 @@ static int event_pmu_add(struct perf_eve
+ 		return event->pmu->add(event, PERF_EF_START);
+ 
+ 	master = event->dup_master;
+-
+-	if (!master->dup_active_count) {
++	if (!master->dup_active) {
+ 		ret = event->pmu->add(master, PERF_EF_START);
+ 		if (ret)
+ 			return ret;
+@@ -2413,10 +2443,10 @@ static int event_pmu_add(struct perf_eve
+ 			perf_event_set_state(master, PERF_EVENT_STATE_ENABLED);
+ 	}
+ 
+-	master->dup_active_count++;
++	master->dup_active++;
+ 	master->pmu->read(master);
+-	event->dup_base_count = local64_read(&master->count);
+-	event->dup_base_child_count = atomic64_read(&master->child_count);
++	local64_set(&event->dup_count, local64_read(&master->count));
++
+ 	return 0;
+ }
+ 
+@@ -2430,11 +2460,11 @@ static void event_pmu_del(struct perf_ev
+ 		return event->pmu->del(event, 0);
+ 
+ 	master = event->dup_master;
+-	event_sync_dup_count(event, master);
+-	if (--master->dup_active_count == 0) {
++	if (!--master->dup_active) {
+ 		event->pmu->del(master, 0);
+ 		perf_event_set_state(master, PERF_EVENT_STATE_INACTIVE);
+ 	}
++	event_pmu_read_dup(event, master);
+ }
+ 
+ /* PMU sharing aware version of event->pmu->read() */
+@@ -2443,7 +2473,7 @@ static void event_pmu_read(struct perf_e
+ 	if (!event->dup_master)
+ 		return event->pmu->read(event);
+ 
+-	event_sync_dup_count(event, event->dup_master);
++	event_pmu_read_dup(event, event->dup_master);
+ }
+ 
+ static void
+@@ -2474,9 +2504,10 @@ event_sched_out(struct perf_event *event
+ 	if (READ_ONCE(event->pending_disable) >= 0) {
+ 		WRITE_ONCE(event->pending_disable, -1);
+ 		state = PERF_EVENT_STATE_OFF;
+-	} else if (event->dup_master == event &&
+-		   event->dup_active_count)
++	} else if (event->dup_active) {
++		WARN_ON_ONCE(event->dup_master != event);
+ 		state = PERF_EVENT_STATE_ENABLED;
++	}
+ 	perf_event_set_state(event, state);
+ 
+ 	if (!is_software_event(event))
+@@ -4453,12 +4484,14 @@ static void __perf_event_read(void *info
+ 
+ static inline u64 perf_event_count(struct perf_event *event)
+ {
+-	if (event->dup_master == event) {
+-		return local64_read(&event->master_count) +
+-			atomic64_read(&event->master_child_count);
+-	}
++	u64 count;
+ 
+-	return local64_read(&event->count) + atomic64_read(&event->child_count);
++	if (likely(event->dup_master != event))
++		count = local64_read(&event->count);
++	else
++		count = local64_read(&event->master_count);
++
++	return count + atomic64_read(&event->child_count);
+ }
+ 
+ /*
+@@ -12207,10 +12240,7 @@ static void sync_child_event(struct perf
+ 	/*
+ 	 * Add back the child's count to the parent's count:
+ 	 */
+-	if (parent_event->dup_master == parent_event)
+-		atomic64_add(child_val, &parent_event->master_child_count);
+-	else
+-		atomic64_add(child_val, &parent_event->child_count);
++	atomic64_add(child_val, &parent_event->child_count);
+ 	atomic64_add(child_event->total_time_enabled,
+ 		     &parent_event->child_total_time_enabled);
+ 	atomic64_add(child_event->total_time_running,
