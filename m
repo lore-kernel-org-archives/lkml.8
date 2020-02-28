@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F6DCC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 20:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9958AC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 20:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1151D24677
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 20:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C32D24677
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 20:09:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgB1UJh (ORCPT
+        id S1727152AbgB1UJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 15:09:37 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:55804 "EHLO
+        Fri, 28 Feb 2020 15:09:44 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:55816 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgB1UJg (ORCPT
+        with ESMTP id S1725730AbgB1UJn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 15:09:36 -0500
+        Fri, 28 Feb 2020 15:09:43 -0500
 Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0948615995575;
-        Fri, 28 Feb 2020 12:09:36 -0800 (PST)
-Date:   Fri, 28 Feb 2020 12:09:35 -0800 (PST)
-Message-Id: <20200228.120935.757538787445893720.davem@davemloft.net>
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id BD88A159A883D;
+        Fri, 28 Feb 2020 12:09:42 -0800 (PST)
+Date:   Fri, 28 Feb 2020 12:09:42 -0800 (PST)
+Message-Id: <20200228.120942.1100932450531500626.davem@davemloft.net>
 To:     gustavo@embeddedor.com
-Cc:     gerrit@erg.abdn.ac.uk, kuba@kernel.org, dccp@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH][next] net: dccp: Replace zero-length array with
+Cc:     steffen.klassert@secunet.com, herbert@gondor.apana.org.au,
+        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, kuba@kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] ipv6: Replace zero-length array with
  flexible-array member
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200228133337.GA23619@embeddedor>
-References: <20200228133337.GA23619@embeddedor>
+In-Reply-To: <20200228133641.GA27169@embeddedor>
+References: <20200228133641.GA27169@embeddedor>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 28 Feb 2020 12:09:36 -0800 (PST)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 28 Feb 2020 12:09:43 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Date: Fri, 28 Feb 2020 07:33:37 -0600
+Date: Fri, 28 Feb 2020 07:36:41 -0600
 
 > The current codebase makes use of the zero-length array language
 > extension to the C90 standard, but the preferred mechanism to declare
