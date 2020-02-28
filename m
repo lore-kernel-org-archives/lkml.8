@@ -2,91 +2,132 @@ Return-Path: <SRS0=RI2K=4Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0031BC3F2D0
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1A3C3F2D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C61E724695
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D79BB24695
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Feb 2020 08:48:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t8nLVzUA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgB1IrV (ORCPT
+        id S1726614AbgB1Isg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Feb 2020 03:47:21 -0500
-Received: from proxima.lasnet.de ([78.47.171.185]:53144 "EHLO
-        proxima.lasnet.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbgB1IrV (ORCPT
+        Fri, 28 Feb 2020 03:48:36 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38314 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbgB1Isg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Feb 2020 03:47:21 -0500
-X-Greylist: delayed 329 seconds by postgrey-1.27 at vger.kernel.org; Fri, 28 Feb 2020 03:47:19 EST
-Received: from localhost.localdomain (p200300E9D71B9939E2C0865DB6B8C4EC.dip0.t-ipconnect.de [IPv6:2003:e9:d71b:9939:e2c0:865d:b6b8:c4ec])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: stefan@datenfreihafen.org)
-        by proxima.lasnet.de (Postfix) with ESMTPSA id 53515C087E;
-        Fri, 28 Feb 2020 09:41:49 +0100 (CET)
-From:   Stefan Schmidt <stefan@datenfreihafen.org>
-Subject: Re: [PATCH] net: ieee802154: ca8210: Use new structure for SPI
- transfer delays
-To:     Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-wpan@vger.kernel.org, davem@davemloft.net,
-        alex.aring@gmail.com, h.morris@cascoda.com
-References: <20200227131245.30309-1-sergiu.cuciurean@analog.com>
-Message-ID: <70e215d7-b523-8aff-d0bc-eea6bfce3dac@datenfreihafen.org>
-Date:   Fri, 28 Feb 2020 09:41:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200227131245.30309-1-sergiu.cuciurean@analog.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 28 Feb 2020 03:48:36 -0500
+Received: by mail-wm1-f65.google.com with SMTP id n64so977014wme.3;
+        Fri, 28 Feb 2020 00:48:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=kSTO66soFbvc/5Jm/tEDfZFDRH8dNbe8ver6F7pISSU=;
+        b=t8nLVzUAuYfbtG81ZKfM6k4Iiq22yAcFELg8c8fyrEXnuq3RHaTsEVHWCRrcekNowk
+         zwoaEr5b5s6BsOhLnMu9vvrFjpmZL3ydmLdEqkP/Mdju3GROnN3RgJgS3FWS67RRebmn
+         QV/qBZ2xvvuxMB/Lg4vxXzkAvlXBl2Msegis4TD2qOVuYQv3SDnw9aNU3uggXdZejCVg
+         ebQzb4QZD20BbpcsqzSRifFqAl68kzyTIGdK/rfoY0fYJ3wQkHgt/NUH0L0ytTXmlT3O
+         dFVJGkGWudoMVg0UHBWRKFBIbHKJbwiGzvUsDs/7L3u3w5r+hKqUbutT8u3geyTges5B
+         7Iig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=kSTO66soFbvc/5Jm/tEDfZFDRH8dNbe8ver6F7pISSU=;
+        b=hTWGlOjNLGK/zcvu3Bs0MbtuayfBEJ0rSp0aTAIKHVpyDFTDz5tyZKHho1uDppAS/I
+         frsq8picHOhyKONc9vlrwrSoU8me9NFmKSp9ORCGQiVVk2kkSORn23iO4lFISMRioEwU
+         X/xZh6s2x8hzAODgCElOfH94byHG8PrSCwDC/sAoNtCIi346J5HSZg0BL6X2DqVwLHTd
+         6G7rdfmjXf+FFQ7hDC5dJrGmS4Jz6WpxvHZT0kbTsAB7WwgoQJQmBMUr9DG15mZ8POtW
+         Fm/I6PYS1HHqpG8bE5/nBZCCq5et+Q+VY402cgdU2EHcVykfifkZAAxxCVyeaRZmYVP7
+         UBaA==
+X-Gm-Message-State: APjAAAXIet2YXma1zse9dIxMAlEc3py+1WCy8cVmNI+Ky0Wu1hb+Z/4t
+        Jvx+/SRE/thwxvr3GOYuXEddo9lG
+X-Google-Smtp-Source: APXvYqyqHsz+mxqVS4aLRQAeppLeop3ADBWwBXJvRWEgLA6x8ZR5U0eUOgB2g79t4bbxWiNTpy4Ayw==
+X-Received: by 2002:a1c:2b44:: with SMTP id r65mr3659938wmr.72.1582879714750;
+        Fri, 28 Feb 2020 00:48:34 -0800 (PST)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id y3sm1209337wmi.14.2020.02.28.00.48.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 28 Feb 2020 00:48:34 -0800 (PST)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: rockchip: fix cpu compatible property for rk3308
+Date:   Fri, 28 Feb 2020 09:48:27 +0100
+Message-Id: <20200228084827.16198-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello.
+A test with the command below gives for example these errors:
 
-On 27.02.20 14:12, Sergiu Cuciurean wrote:
-> In a recent change to the SPI subsystem [1], a new `delay` struct was added
-> to replace the `delay_usecs`. This change replaces the current
-> `delay_usecs` with `delay` for this driver.
-> 
-> The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
-> that both `delay_usecs` & `delay` are used (in this order to preserve
-> backwards compatibility).
-> 
-> [1] commit bebcfd272df6 ("spi: introduce `delay` field for
-> `spi_transfer` + spi_transfer_delay_exec()")
-> 
-> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-> ---
->   drivers/net/ieee802154/ca8210.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ieee802154/ca8210.c b/drivers/net/ieee802154/ca8210.c
-> index 430c93786153..e04c3b60cae7 100644
-> --- a/drivers/net/ieee802154/ca8210.c
-> +++ b/drivers/net/ieee802154/ca8210.c
-> @@ -946,7 +946,8 @@ static int ca8210_spi_transfer(
->   	cas_ctl->transfer.bits_per_word = 0; /* Use device setting */
->   	cas_ctl->transfer.tx_buf = cas_ctl->tx_buf;
->   	cas_ctl->transfer.rx_buf = cas_ctl->tx_in_buf;
-> -	cas_ctl->transfer.delay_usecs = 0;
-> +	cas_ctl->transfer.delay.value = 0;
-> +	cas_ctl->transfer.delay.unit = SPI_DELAY_UNIT_USECS;
->   	cas_ctl->transfer.cs_change = 0;
->   	cas_ctl->transfer.len = sizeof(struct mac_message);
->   	cas_ctl->msg.complete = ca8210_spi_transfer_complete;
-> 
+arch/arm64/boot/dts/rockchip/rk3308-evb.dt.yaml: cpu@0: compatible:
+Additional items are not allowed ('arm,armv8' was unexpected)
+arch/arm64/boot/dts/rockchip/rk3308-evb.dt.yaml: cpu@0: compatible:
+['arm,cortex-a35', 'arm,armv8']
+is too long
 
+Fix these errors by removing the last argument of
+the cpu compatible property in rk3308.dtsi.
 
-This patch has been applied to the wpan-next tree and will be
-part of the next pull request to net-next. Thanks!
+make ARCH=arm64
+dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/cpus.yaml
 
-regards
-Stefan Schmidt
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3308.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3308.dtsi b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
+index 116f1900e..3bd5bc860 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
+@@ -40,7 +40,7 @@
+ 
+ 		cpu0: cpu@0 {
+ 			device_type = "cpu";
+-			compatible = "arm,cortex-a35", "arm,armv8";
++			compatible = "arm,cortex-a35";
+ 			reg = <0x0 0x0>;
+ 			enable-method = "psci";
+ 			clocks = <&cru ARMCLK>;
+@@ -53,7 +53,7 @@
+ 
+ 		cpu1: cpu@1 {
+ 			device_type = "cpu";
+-			compatible = "arm,cortex-a35", "arm,armv8";
++			compatible = "arm,cortex-a35";
+ 			reg = <0x0 0x1>;
+ 			enable-method = "psci";
+ 			operating-points-v2 = <&cpu0_opp_table>;
+@@ -63,7 +63,7 @@
+ 
+ 		cpu2: cpu@2 {
+ 			device_type = "cpu";
+-			compatible = "arm,cortex-a35", "arm,armv8";
++			compatible = "arm,cortex-a35";
+ 			reg = <0x0 0x2>;
+ 			enable-method = "psci";
+ 			operating-points-v2 = <&cpu0_opp_table>;
+@@ -73,7 +73,7 @@
+ 
+ 		cpu3: cpu@3 {
+ 			device_type = "cpu";
+-			compatible = "arm,cortex-a35", "arm,armv8";
++			compatible = "arm,cortex-a35";
+ 			reg = <0x0 0x3>;
+ 			enable-method = "psci";
+ 			operating-points-v2 = <&cpu0_opp_table>;
+-- 
+2.11.0
+
